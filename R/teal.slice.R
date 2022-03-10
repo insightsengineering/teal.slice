@@ -18,4 +18,5 @@
 #' @importFrom shinyjs hide
 #' @importFrom stats setNames
 #' @importFrom teal.data dataset
+#' @importFrom teal.widgets optionalSelectInput
 NULL
