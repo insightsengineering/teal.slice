@@ -1,19 +1,52 @@
-Package: nesttemplate
-Title: `pkgdown` template for NEST packages
+Type: Package
+Package: teal.slice
+Title: Filter module for teal applications
 Version: 0.0.0.9001
-Authors@R: 
-    person("NEST", , , "basel.nestcicd@roche.com", role = c("aut", "cre"))
-Description: This is a private template for use by core NEST packages.
-    Please don't use for your own code.
-License: MIT + file LICENSE
-URL: https://github.com/insightsengineering/nesttemplate,
-    https://insightsengineering.github.io/nesttemplate/
-BugReports: https://github.com/insightsengineering/nesttemplate/issues
-Suggests: 
+Date: 2022-01-27
+Authors@R: c(
+    person("NEST", , , "basel.nestcicd@roche.com", role = c("aut", "cre")),
+    person("Nikolas", "Burkoff", , "nikolas.burkoff@roche.com", role = "aut"),
+    person("Mahmoud", "Hallal", , "mahmoud.hallal@roche.com", role = "aut"),
+    person("Dawid", "Kaledkowski", , "dawid.kaledkowski@roche.com", role = "aut"),
+    person("Maciej", "Nasinski", , "maciej.nasinski@contractors.roche.com", role = "aut"),
+    person("Konrad", "Pagacz", , "konrad.pagacz@contractors.roche.com", role = "aut"),
+    person("Pawel", "Rucki", , "pawel.rucki@contractors.roche.com", role = "aut"),
+    person("Junlue", "Zhao", , "zhaoj88@gene.com", role = "aut"),
+    person("Tadeusz", "Lewandowski", , "tadeusz.lewandowski@roche.com", role = "ctb"),
+    person("Roche", role = c("cph", "fnd"))
+  )
+Description: Filter module for teal applications.
+License: Apache License 2.0 | file LICENSE
+Depends:
+    R (>= 4.0),
+    shiny
+Imports:
+    checkmate,
+    dplyr,
+    ggplot2,
+    grDevices,
+    lifecycle,
+    logger (>= 0.2.0),
+    methods,
+    R6,
+    shinyjs,
+    shinyWidgets (>= 0.5.0),
+    stats,
+    teal.data,
+    teal.logger,
+    teal.widgets
+Suggests:
     knitr,
-    rmarkdown
-VignetteBuilder: 
+    MultiAssayExperiment,
+    rmarkdown,
+    scda (>= 0.1.2),
+    scda.2021 (>= 0.1.2),
+    SummarizedExperiment,
+    testthat (>= 2.0)
+VignetteBuilder:
     knitr
+RdMacros:
+    lifecycle
 Encoding: UTF-8
 LazyData: true
 Roxygen: list(markdown = TRUE)
