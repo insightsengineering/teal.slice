@@ -18,7 +18,7 @@ MAEFilteredDataset R6 class"><!-- mathjax --><script src="https://cdnjs.cloudfla
       </button>
       <span class="navbar-brand">
         <a class="navbar-link" href="../index.html">teal.slice</a>
-        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.0.0.9001</span>
+        <span class="version label label-default" data-toggle="tooltip" data-placement="bottom" title="">0.0.0.9002</span>
       </span>
     </div>
 
@@ -39,15 +39,6 @@ MAEFilteredDataset R6 class"><!-- mathjax --><script src="https://cdnjs.cloudfla
 <li>
   <a href="../news/index.html">Changelog</a>
 </li>
-<!-- start_releases -->
-<li class="dropdown">
-	<a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
-Other releases
-<span class="caret"></span></a><ul class="dropdown-menu" role="menu">
-   <li><a href="../index.html">latest</a></li>
-   <li><a href="..//index.html"></a></li>
-</ul></li>
-<!-- end_releases -->
       </ul><ul class="nav navbar-nav navbar-right"><li>
   <a href="https://github.com/insightsengineering/teal.slice" class="external-link">
     <span class="fa fa-github"></span>
@@ -221,8 +212,9 @@ to the referred column.</p></dd>
 </div>
 <div class="section">
 <h4 id="examples">Examples<a class="anchor" aria-label="anchor" href="#examples"></a></h4>
-<p></p><div class="r example copy"><div class="sourceCode"><pre><code><span class="va">dataset</span> <span class="op">&lt;-</span> <span class="fu">teal.slice</span><span class="fu">:::</span><span class="va"><a href="../reference/MAEFilteredDataset.html">MAEFilteredDataset</a></span><span class="op">$</span><span class="fu">new</span><span class="op">(</span>
-  <span class="fu">teal.data</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/teal.data/man/dataset.html" class="external-link">dataset</a></span><span class="op">(</span><span class="st">"MAE"</span>, <span class="fu">MultiAssayExperiment</span><span class="fu">::</span><span class="va"><a href="http://waldronlab.io/MultiAssayExperiment/reference/miniACC.html" class="external-link">miniACC</a></span><span class="op">)</span>
+<p></p><div class="r example copy"><div class="sourceCode"><pre><code><span class="fu">utils</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">miniACC</span>, package <span class="op">=</span> <span class="st">"MultiAssayExperiment"</span><span class="op">)</span>
+<span class="va">dataset</span> <span class="op">&lt;-</span> <span class="fu">teal.slice</span><span class="fu">:::</span><span class="va"><a href="../reference/MAEFilteredDataset.html">MAEFilteredDataset</a></span><span class="op">$</span><span class="fu">new</span><span class="op">(</span>
+  <span class="fu">teal.data</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/teal.data/man/dataset.html" class="external-link">dataset</a></span><span class="op">(</span><span class="st">"MAE"</span>, <span class="va">miniACC</span><span class="op">)</span>
 <span class="op">)</span>
 <span class="va">fs</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>
   subjects <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>
@@ -339,8 +331,9 @@ an ID string that corresponds with the ID used to call the module's UI function.
 <span class="r-in"><span class="co">## Method `MAEFilteredDataset$set_filter_state`</span></span>
 <span class="r-in"><span class="co">## ------------------------------------------------</span></span>
 <span class="r-in"></span>
+<span class="r-in"><span class="fu">utils</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">miniACC</span>, package <span class="op">=</span> <span class="st">"MultiAssayExperiment"</span><span class="op">)</span></span>
 <span class="r-in"><span class="va">dataset</span> <span class="op">&lt;-</span> <span class="fu">teal.slice</span><span class="fu">:::</span><span class="va">MAEFilteredDataset</span><span class="op">$</span><span class="fu">new</span><span class="op">(</span></span>
-<span class="r-in">  <span class="fu">teal.data</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/teal.data/man/dataset.html" class="external-link">dataset</a></span><span class="op">(</span><span class="st">"MAE"</span>, <span class="fu">MultiAssayExperiment</span><span class="fu">::</span><span class="va"><a href="http://waldronlab.io/MultiAssayExperiment/reference/miniACC.html" class="external-link">miniACC</a></span><span class="op">)</span></span>
+<span class="r-in">  <span class="fu">teal.data</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/teal.data/man/dataset.html" class="external-link">dataset</a></span><span class="op">(</span><span class="st">"MAE"</span>, <span class="va">miniACC</span><span class="op">)</span></span>
 <span class="r-in"><span class="op">)</span></span>
 <span class="r-in"><span class="va">fs</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span></span>
 <span class="r-in">  subjects <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span></span>
