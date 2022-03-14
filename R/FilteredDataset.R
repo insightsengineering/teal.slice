@@ -72,6 +72,7 @@
 #'
 #' # MAEFilteredDataset example
 #' library(MultiAssayExperiment)
+#' data(miniACC)
 #' MAE_d <- teal.data::dataset("MAE", miniACC, metadata = list(type = "MAE"))
 #' MAE_fd <- teal.slice:::init_filtered_dataset(MAE_d)
 #' \dontrun{
@@ -998,8 +999,9 @@ MAEFilteredDataset <- R6::R6Class( # nolint
     #'  to the referred column.
     #' @param ... ignored.
     #' @examples
+    #' utils::data(miniACC, package = "MultiAssayExperiment")
     #' dataset <- teal.slice:::MAEFilteredDataset$new(
-    #'   teal.data::dataset("MAE", MultiAssayExperiment::miniACC)
+    #'   teal.data::dataset("MAE", miniACC)
     #' )
     #' fs <- list(
     #'   subjects = list(

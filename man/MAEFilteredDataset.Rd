@@ -14,8 +14,9 @@
 ## Method `MAEFilteredDataset$set_filter_state`
 ## ------------------------------------------------
 
+utils::data(miniACC, package = "MultiAssayExperiment")
 dataset <- teal.slice:::MAEFilteredDataset$new(
-  teal.data::dataset("MAE", MultiAssayExperiment::miniACC)
+  teal.data::dataset("MAE", miniACC)
 )
 fs <- list(
   subjects = list(
@@ -187,8 +188,9 @@ to the referred column.}
 }
 \subsection{Examples}{
 \if{html}{\out{<div class="r example copy">}}
-\preformatted{dataset <- teal.slice:::MAEFilteredDataset$new(
-  teal.data::dataset("MAE", MultiAssayExperiment::miniACC)
+\preformatted{utils::data(miniACC, package = "MultiAssayExperiment")
+dataset <- teal.slice:::MAEFilteredDataset$new(
+  teal.data::dataset("MAE", miniACC)
 )
 fs <- list(
   subjects = list(

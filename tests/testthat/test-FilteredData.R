@@ -222,7 +222,8 @@ testthat::test_that("FilteredData$get_filter_state returns list identical to inp
   code = {
     datasets <- FilteredData$new()
     datasets$set_dataset(teal.data::dataset("iris", iris))
-    datasets$set_dataset(teal.data::dataset("mae", MultiAssayExperiment::miniACC))
+    utils::data(miniACC, package = "MultiAssayExperiment")
+    datasets$set_dataset(teal.data::dataset("mae", miniACC))
     fs <- list(
       iris = list(
         Sepal.Length = list(selected = c(5.1, 6.4), keep_na = TRUE, keep_inf = FALSE),
@@ -349,7 +350,8 @@ adsl <- as.data.frame(as.list(setNames(nm = c(teal.data::get_cdisc_keys("ADSL"))
 adsl$sex <- c("F")
 datasets$set_dataset(teal.data::cdisc_dataset("ADSL", adsl))
 datasets$set_dataset(teal.data::dataset("mock_iris", head(iris)))
-datasets$set_dataset(teal.data::dataset("miniACC", MultiAssayExperiment::miniACC))
+utils::data(miniACC, package = "MultiAssayExperiment")
+datasets$set_dataset(teal.data::dataset("miniACC", miniACC))
 
 testthat::test_that("get_filter_overview accepts all datasets argument input", {
   testthat::expect_error(isolate(datasets$get_filter_overview("all")), NA)

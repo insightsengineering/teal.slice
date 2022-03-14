@@ -82,6 +82,7 @@ shinyApp(
 
 # MAEFilteredDataset example
 library(MultiAssayExperiment)
+data(miniACC)
 MAE_d <- teal.data::dataset("MAE", miniACC, metadata = list(type = "MAE"))
 MAE_fd <- teal.slice:::init_filtered_dataset(MAE_d)
 \dontrun{

@@ -13,8 +13,7 @@ testthat::test_that("init_filtered_dataset returns a CDISCFilteredDataset when p
 })
 
 testthat::test_that("init_filtered_dataset returns an MAEFilteredDataset when passed an MAE", {
-  library("MultiAssayExperiment")
-  data("miniACC")
+  utils::data("miniACC", package = "MultiAssayExperiment")
   mock_mae <- teal.data::dataset("mock", miniACC)
   testthat::expect_error(filtered_dataset <- init_filtered_dataset(
     dataset = mock_mae

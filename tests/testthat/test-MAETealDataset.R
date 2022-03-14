@@ -1,18 +1,21 @@
 testthat::test_that("MAETealDataset constructors do not raise exceptions", {
-  testthat::expect_silent(teal.data::dataset("testMAE", MultiAssayExperiment::miniACC))
+  utils::data(miniACC, package = "MultiAssayExperiment")
+  testthat::expect_silent(teal.data::dataset("testMAE", miniACC))
   code_class <- teal.data:::CodeClass$new(
-    "testMAE <- MultiAssayExperiment::miniACC",
+    "utils::data(miniACC, package = \"MultiAssayExperiment\")
+    testMAE <- miniACC",
     dataname = "testMAE"
   )
   testthat::expect_silent(
-    teal.data::dataset(dataname = "testMAE", x = MultiAssayExperiment::miniACC, code = code_class)
+    teal.data::dataset(dataname = "testMAE", x = miniACC, code = code_class)
   )
 })
 
 testthat::test_that("MAETealDataset$recreate updates the class fields", {
-  mae <- teal.data::dataset("testMAE", MultiAssayExperiment::miniACC)
+  utils::data(miniACC, package = "MultiAssayExperiment")
+  mae <- teal.data::dataset("testMAE", miniACC)
 
-  suppressWarnings(new_data <- MultiAssayExperiment::miniACC[, , "RNASeq2GeneNorm"]) # warning only on rocker 4.1
+  suppressWarnings(new_data <- miniACC[, , "RNASeq2GeneNorm"]) # warning only on rocker 4.1
   new_name <- "new_name"
   new_label <- "new_label"
   new_code <- "new_code"
@@ -33,12 +36,13 @@ testthat::test_that("MAETealDataset$recreate updates the class fields", {
 })
 
 testthat::test_that("MAETealDataset getters and setters", {
-  mae <- teal.data::dataset(dataname = "miniACC", x = MultiAssayExperiment::miniACC)
+  utils::data(miniACC, package = "MultiAssayExperiment")
+  mae <- teal.data::dataset(dataname = "miniACC", x = miniACC)
 
   testthat::expect_equal(mae$get_dataname(), "miniACC")
   testthat::expect_equal(mae$get_datanames(), mae$get_dataname())
 
-  testthat::expect_equal(mae$get_raw_data(), MultiAssayExperiment::miniACC)
+  testthat::expect_equal(mae$get_raw_data(), miniACC)
 
   new_label <- "new_label"
   testthat::expect_silent(mae$set_dataset_label(new_label))
@@ -57,7 +61,8 @@ testthat::test_that("MAETealDataset getters and setters", {
 })
 
 testthat::test_that("MAETealDataset$is_pulled returns true", {
-  mae <- teal.data::dataset(dataname = "miniACC", x = MultiAssayExperiment::miniACC)
+  utils::data(miniACC, package = "MultiAssayExperiment")
+  mae <- teal.data::dataset(dataname = "miniACC", x = miniACC)
   testthat::expect_true(mae$is_pulled())
 })
 
@@ -147,12 +152,14 @@ testthat::test_that("Error raised when executing MAETealDataset$check and code i
 })
 
 testthat::test_that("MAETealDataset$check_keys doesn't throw if constructed with correct keys", {
-  mae <- teal.data::dataset(dataname = "miniACC", x = MultiAssayExperiment::miniACC, keys = "patientID")
+  utils::data(miniACC, package = "MultiAssayExperiment")
+  mae <- teal.data::dataset(dataname = "miniACC", x = miniACC, keys = "patientID")
   testthat::expect_silent(mae$check_keys())
 })
 
 testthat::test_that("MAETealDataset$check_keys throws if constructed with keys not present in colData", {
-  mae <- teal.data::dataset(dataname = "miniACC", x = MultiAssayExperiment::miniACC, keys = "wrong keys")
+  utils::data(miniACC, package = "MultiAssayExperiment")
+  mae <- teal.data::dataset(dataname = "miniACC", x = miniACC, keys = "wrong keys")
   testthat::expect_error(
     mae$check_keys(),
     regexp = "do not exist in the data"
@@ -181,11 +188,13 @@ testthat::test_that("Error raised executing MAETealDataset$check_keys and duplic
 })
 
 testthat::test_that("dataset() does not throw when passed a MultiAssayExperiment object", {
-  testthat::expect_error(teal.data::dataset("mae", MultiAssayExperiment::miniACC), NA)
+  utils::data(miniACC, package = "MultiAssayExperiment")
+  testthat::expect_error(teal.data::dataset("mae", miniACC), NA)
 })
 
 testthat::test_that("dataset() constructor returns the same as MAETealDataset$new()", {
-  mae1 <- teal.data::dataset("mae", MultiAssayExperiment::miniACC)
-  mae2 <- teal.data::dataset("mae", MultiAssayExperiment::miniACC)
+  utils::data(miniACC, package = "MultiAssayExperiment")
+  mae1 <- teal.data::dataset("mae", miniACC)
+  mae2 <- teal.data::dataset("mae", miniACC)
   testthat::expect_equal(mae1, mae2)
 })

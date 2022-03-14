@@ -78,7 +78,8 @@ isolate(datasets$get_call("mtcars"))
 
 datasets <- teal.slice:::FilteredData$new()
 datasets$set_dataset(teal.data::dataset("iris", iris))
-datasets$set_dataset(teal.data::dataset("mae", MultiAssayExperiment::miniACC))
+utils::data(miniACC, package = "MultiAssayExperiment")
+datasets$set_dataset(teal.data::dataset("mae", miniACC))
 fs <- list(
   iris = list(
     Sepal.Length = list(selected = c(5.1, 6.4), keep_na = TRUE, keep_inf = FALSE),
@@ -588,7 +589,8 @@ nested list of filter selections applied to datasets.}
 \if{html}{\out{<div class="r example copy">}}
 \preformatted{datasets <- teal.slice:::FilteredData$new()
 datasets$set_dataset(teal.data::dataset("iris", iris))
-datasets$set_dataset(teal.data::dataset("mae", MultiAssayExperiment::miniACC))
+utils::data(miniACC, package = "MultiAssayExperiment")
+datasets$set_dataset(teal.data::dataset("mae", miniACC))
 fs <- list(
   iris = list(
     Sepal.Length = list(selected = c(5.1, 6.4), keep_na = TRUE, keep_inf = FALSE),

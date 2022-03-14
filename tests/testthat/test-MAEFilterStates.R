@@ -31,8 +31,7 @@ testthat::test_that("The constructor initializes a queue", {
 })
 
 testthat::test_that("get_call returns a call filtering an MAE object using ChoicesFilterState", {
-  library(MultiAssayExperiment)
-  data(miniACC)
+  utils::data(miniACC, package = "MultiAssayExperiment")
   filter_states <- MAEFilterStates$new(
     input_dataname = "test",
     output_dataname = "output",
@@ -58,8 +57,7 @@ testthat::test_that("get_call returns a call filtering an MAE object using Choic
 })
 
 testthat::test_that("get_call returns a call filtering an MAE object using RangeFilterState", {
-  library(MultiAssayExperiment)
-  data(miniACC)
+  utils::data(miniACC, package = "MultiAssayExperiment")
   filter_states <- MAEFilterStates$new(
     input_dataname = "test",
     output_dataname = "output",
@@ -94,6 +92,7 @@ testthat::test_that("get_call returns a call filtering an MAE object using Range
 testthat::test_that(
   "MAEFilterStates$set_filter_state sets filters in FilterState(s) specified by the named list",
   code = {
+    utils::data(miniACC, package = "MultiAssayExperiment")
     maefs <- MAEFilterStates$new(
       input_dataname = "test",
       output_dataname = "test_filtered",
@@ -106,7 +105,7 @@ testthat::test_that(
       vital_status = 1,
       gender = "female"
     )
-    maefs$set_filter_state(state = fs, data = MultiAssayExperiment::miniACC)
+    maefs$set_filter_state(state = fs, data = miniACC)
 
     testthat::expect_equal(
       isolate(maefs$get_call()),
@@ -123,6 +122,7 @@ testthat::test_that(
 )
 
 testthat::test_that("MAEFilterStates$set_filter_state updates filter state which was set already", {
+  utils::data(miniACC, package = "MultiAssayExperiment")
   maefs <- MAEFilterStates$new(
     input_dataname = "test",
     output_dataname = "test_filtered",
@@ -136,7 +136,7 @@ testthat::test_that("MAEFilterStates$set_filter_state updates filter state which
       years_to_birth = c(30, 50),
       vital_status = 1
     ),
-    data = MultiAssayExperiment::miniACC
+    data = miniACC
   )
 
   maefs$set_filter_state(
@@ -144,7 +144,7 @@ testthat::test_that("MAEFilterStates$set_filter_state updates filter state which
       years_to_birth = c(31, 50),
       gender = "female"
     ),
-    data = MultiAssayExperiment::miniACC
+    data = miniACC
   )
 
   testthat::expect_equal(
@@ -160,6 +160,7 @@ testthat::test_that("MAEFilterStates$set_filter_state updates filter state which
 testthat::test_that(
   "MAEFilterStates$set_filter_state throws error when not using a named list",
   code = {
+    utils::data(miniACC, package = "MultiAssayExperiment")
     maefs <- MAEFilterStates$new(
       input_dataname = "test",
       output_dataname = "test_filtered",
@@ -172,13 +173,14 @@ testthat::test_that(
       vital_status = 1,
       gender = "female"
     )
-    testthat::expect_error(maefs$set_filter_state(state = fs, data = MultiAssayExperiment::miniACC))
+    testthat::expect_error(maefs$set_filter_state(state = fs, data = miniACC))
   }
 )
 
 testthat::test_that(
   "MAEFilterStates$get_filter_state returns list identical to input",
   code = {
+    utils::data(miniACC, package = "MultiAssayExperiment")
     maefs <- MAEFilterStates$new(
       input_dataname = "test",
       output_dataname = "test_filtered",
@@ -191,7 +193,7 @@ testthat::test_that(
       vital_status = list(selected = "1", keep_na = FALSE),
       gender = list(selected = "female", keep_na = TRUE)
     )
-    maefs$set_filter_state(state = fs, data = MultiAssayExperiment::miniACC)
+    maefs$set_filter_state(state = fs, data = miniACC)
     testthat::expect_equal(isolate(maefs$get_filter_state()), fs)
   }
 )
@@ -199,6 +201,7 @@ testthat::test_that(
 testthat::test_that(
   "MAEFilterStates$remove_filter_state removes filters in FilterState(s)",
   code = {
+    utils::data(miniACC, package = "MultiAssayExperiment")
     maefs <- MAEFilterStates$new(
       input_dataname = "test",
       output_dataname = "test_filtered",
@@ -213,7 +216,7 @@ testthat::test_that(
     )
     years_to_birth_remove_fs <- "years_to_birth"
 
-    maefs$set_filter_state(state = fs, data = MultiAssayExperiment::miniACC)
+    maefs$set_filter_state(state = fs, data = miniACC)
     maefs$remove_filter_state(years_to_birth_remove_fs)
 
     testthat::expect_equal(
@@ -233,6 +236,7 @@ testthat::test_that(
   "MAEFilterStates$remove_filter_state throws warning when name is not in FilterStates",
   code = {
     teal.logger::suppress_logs()
+    utils::data(miniACC, package = "MultiAssayExperiment")
     maefs <- MAEFilterStates$new(
       input_dataname = "test",
       output_dataname = "test_filtered",
@@ -247,7 +251,7 @@ testthat::test_that(
     )
     years_to_birth_remove_fs <- "years_to_birth2"
 
-    maefs$set_filter_state(state = fs, data = MultiAssayExperiment::miniACC)
+    maefs$set_filter_state(state = fs, data = miniACC)
     testthat::expect_warning(maefs$remove_filter_state(years_to_birth_remove_fs))
   }
 )
