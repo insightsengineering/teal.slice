@@ -101,3 +101,22 @@ testthat::test_that("remove_filter_state throws warning when element_id is not i
 
   testthat::expect_warning(filter_states$remove_filter_state("B"))
 })
+
+testthat::test_that(
+  "MatrixFilterStates$ui_add_filter_state returns a message inside a div when data has no rows or no columns",
+  code = {
+    mfs <- MatrixFilterStates$new(
+      input_dataname = "iris",
+      output_dataname = "iris_filtered",
+      datalabel = "test"
+    )
+    testthat::expect_identical(
+      mfs$ui_add_filter_state("id", as.matrix(data.frame())),
+      div("no sample variables available")
+    )
+    testthat::expect_identical(
+      mfs$ui_add_filter_state("id", as.matrix(data.frame(A = numeric(0)))),
+      div("no samples available")
+    )
+  }
+)

@@ -240,3 +240,18 @@ testthat::test_that(
     testthat::expect_warning(dffs$remove_filter_state("Species2"))
   }
 )
+
+testthat::test_that(
+  "DFFilterStates$ui_add_filter_state returns a message inside a div when data has no rows or no columns",
+  code = {
+    dffs <- DFFilterStates$new(
+      input_dataname = "iris",
+      output_dataname = "iris_filtered",
+      datalabel = character(0),
+      varlabels = character(0),
+      keys = character(0)
+    )
+    testthat::expect_identical(dffs$ui_add_filter_state("id", data.frame()), div("no sample variables available"))
+    testthat::expect_identical(dffs$ui_add_filter_state("id", data.frame(A = numeric(0))), div("no samples available"))
+  }
+)

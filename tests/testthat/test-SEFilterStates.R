@@ -1,4 +1,4 @@
-get_test_data <- function() {
+get_test_data <- function(no_data = FALSE) {
   library(SummarizedExperiment)
   nrows <- 200
   ncols <- 6
@@ -14,11 +14,24 @@ get_test_data <- function() {
     row.names = LETTERS[1:6]
   )
 
-  obj <- SummarizedExperiment(
-    assays = list(counts = counts),
-    rowRanges = row_ranges,
-    colData = cdata
-  )
+  if (no_data) {
+    list(
+      SummarizedExperiment(
+        rowData = data.frame(),
+        colData = data.frame()
+      ),
+      SummarizedExperiment(
+        rowData = data.frame(A = numeric(0)),
+        colData = data.frame(A = numeric(0))
+      )
+    )
+  } else {
+    obj <- SummarizedExperiment(
+      assays = list(counts = counts),
+      rowRanges = row_ranges,
+      colData = cdata
+    )
+  }
 }
 
 testthat::test_that("The constructor does not throw", {
@@ -372,5 +385,30 @@ testthat::test_that(
 
     sefs$set_filter_state(state = fs, data = obj)
     testthat::expect_warning(sefs$remove_filter_state(list(subset = list("feature_id2"))))
+  }
+)
+
+testthat::test_that(
+  "SEFilterStates$ui_add_filter_state returns a message inside a div when data has no rows or no columns",
+  code = {
+    sefs <- SEFilterStates$new(
+      input_dataname = "test",
+      output_dataname = "test_filtered",
+      datalabel = character(0)
+    )
+    testthat::expect_identical(
+      sefs$ui_add_filter_state("id", get_test_data(TRUE)[[1]]),
+      div(
+        div("no sample variables available"),
+        div("no sample variables available")
+      )
+    )
+    testthat::expect_identical(
+      sefs$ui_add_filter_state("id", get_test_data(TRUE)[[2]]),
+      div(
+        div("no samples available"),
+        div("no samples available")
+      )
+    )
   }
 )

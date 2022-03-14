@@ -255,3 +255,30 @@ testthat::test_that(
     testthat::expect_warning(maefs$remove_filter_state(years_to_birth_remove_fs))
   }
 )
+
+testthat::test_that(
+  "MAEFilterStates$ui_add_filter_state returns a message inside a div when data has no rows or no columns",
+  code = {
+    maefs <- MAEFilterStates$new(
+      input_dataname = "iris",
+      output_dataname = "iris_filtered",
+      datalabel = character(0),
+      varlabels = character(0),
+      keys = character(0)
+    )
+
+    x <- MultiAssayExperiment::miniACC
+    x@colData <- MultiAssayExperiment::DataFrame()
+    testthat::expect_identical(
+      maefs$ui_add_filter_state("id", x),
+      div("no sample variables available")
+    )
+
+    y <- MultiAssayExperiment::miniACC
+    y@colData <- MultiAssayExperiment::DataFrame(data.frame(A = numeric()))
+    testthat::expect_identical(
+      maefs$ui_add_filter_state("id", y),
+      div("no samples available")
+    )
+  }
+)

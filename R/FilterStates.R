@@ -891,8 +891,10 @@ DFFilterStates <- R6::R6Class( # nolint
 
       ns <- NS(id)
 
-      if (nrow(data) == 0) {
-        div(sprintf("data '%s' has zero rows", deparse(private$input_dataname)))
+      if (ncol(data) == 0) {
+        div("no sample variables available")
+      } else if (nrow(data) == 0) {
+        div("no samples available")
       } else {
         div(
           teal.widgets::optionalSelectInput(
@@ -1248,8 +1250,10 @@ MAEFilterStates <- R6::R6Class( # nolint
 
       ns <- NS(id)
 
-      if (nrow(SummarizedExperiment::colData(data)) == 0) {
-        div(sprintf("colData of '%s' has zero rows", deparse(private$input_dataname)))
+      if (ncol(SummarizedExperiment::colData(data)) == 0) {
+        div("no sample variables available")
+      } else if (nrow(SummarizedExperiment::colData(data)) == 0) {
+        div("no samples available")
       } else {
         teal.widgets::optionalSelectInput(
           ns("var_to_add"),
@@ -1709,8 +1713,10 @@ SEFilterStates <- R6::R6Class( # nolint
 
       ns <- NS(id)
 
-      row_input <- if (nrow(SummarizedExperiment::rowData(data)) == 0) {
-        div(sprintf("rowData of '%s' has zero rows", deparse(private$input_dataname)))
+      row_input <- if (ncol(SummarizedExperiment::rowData(data)) == 0) {
+        div("no sample variables available")
+      } else if (nrow(SummarizedExperiment::rowData(data)) == 0) {
+        div("no samples available")
       } else {
         teal.widgets::optionalSelectInput(
           ns("row_to_add"),
@@ -1722,8 +1728,10 @@ SEFilterStates <- R6::R6Class( # nolint
         )
       }
 
-      col_input <- if (nrow(SummarizedExperiment::colData(data)) == 0) {
-        span(sprintf("colData of '%s' has zero rows", deparse(private$input_dataname)))
+      col_input <- if (ncol(SummarizedExperiment::colData(data)) == 0) {
+        div("no sample variables available")
+      } else if (nrow(SummarizedExperiment::colData(data)) == 0) {
+        div("no samples available")
       } else {
         teal.widgets::optionalSelectInput(
           ns("col_to_add"),
@@ -2130,8 +2138,10 @@ MatrixFilterStates <- R6::R6Class( # nolint
 
       ns <- NS(id)
 
-      if (nrow(data) == 0) {
-        div(sprintf("data '%s' has zero rows", deparse(private$input_dataname)))
+      if (ncol(data) == 0) {
+        div("no sample variables available")
+      } else if (nrow(data) == 0) {
+        div("no samples available")
       } else {
         teal.widgets::optionalSelectInput(
           ns("var_to_add"),
