@@ -267,14 +267,15 @@ testthat::test_that(
       keys = character(0)
     )
 
-    x <- MultiAssayExperiment::miniACC
+    utils::data(miniACC, package = "MultiAssayExperiment")
+    x <- miniACC
     x@colData <- MultiAssayExperiment::DataFrame()
     testthat::expect_identical(
       maefs$ui_add_filter_state("id", x),
       div("no sample variables available")
     )
 
-    y <- MultiAssayExperiment::miniACC
+    y <- miniACC
     y@colData <- MultiAssayExperiment::DataFrame(data.frame(A = numeric()))
     testthat::expect_identical(
       maefs$ui_add_filter_state("id", y),
