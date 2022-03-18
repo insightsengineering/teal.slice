@@ -147,7 +147,7 @@ testthat::test_that(
       ),
       mtcars = list(
         cyl = c(4, 6),
-        disp = default_filter()
+        disp = list()
       )
     )
     datasets$set_filter_state(state = fs)
@@ -191,7 +191,7 @@ testthat::test_that(
       ),
       mtcars = list(
         cyl = c(4, 6),
-        disp = default_filter()
+        disp = list()
       )
     )
     testthat::expect_error(datasets$set_filter_state(state = fs))
@@ -211,7 +211,7 @@ testthat::test_that(
       ),
       mtcars = list(
         cyl = c(4, 6),
-        disp = default_filter()
+        disp = list()
       )
     )
     testthat::expect_error(datasets$set_filter_state(state = fs))
@@ -256,7 +256,7 @@ testthat::test_that("FilteredData$remove_filter_state removes states defined in 
     ),
     mtcars = list(
       cyl = c(4, 6),
-      disp = default_filter()
+      disp = list()
     )
   )
   datasets$set_filter_state(state = fs)
@@ -285,7 +285,7 @@ testthat::test_that(
       ),
       mtcars = list(
         cyl = c(4, 6),
-        disp = default_filter()
+        disp = list()
       )
     )
     datasets$set_filter_state(state = fs)
@@ -320,7 +320,7 @@ testthat::test_that(
       ),
       mtcars = list(
         cyl = c(4, 6),
-        disp = default_filter()
+        disp = list()
       )
     )
     datasets$set_filter_state(state = fs)

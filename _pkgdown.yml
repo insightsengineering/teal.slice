@@ -22,7 +22,6 @@ reference:
     desc: Other useful functions for users and developers.
     contents:
       - choices_labeled
-      - default_filter
       - get_filter_expr
   - title: For Developers
     subtitle: R6 Classes

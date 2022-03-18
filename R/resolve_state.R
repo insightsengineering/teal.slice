@@ -6,7 +6,7 @@
 #' returns `NULL` as during the initialization of `FilterState` values are set to
 #' default.
 #'
-#' @param x (`list`,`vector`, `default_filter`)\cr
+#' @param x (`list`,`vector`)\cr
 #'  values of the variable used in filter. Depending on the `FilterState` type
 #'  list must contain these fields:
 #'  \itemize{
@@ -35,7 +35,7 @@
 #' @examples
 #' teal.slice:::resolve_state(list(c(1, 2), keep_na = FALSE, keep_inf = TRUE))
 #' teal.slice:::resolve_state(c(1, 2, Inf))
-#' teal.slice:::resolve_state(default_filter())
+#' teal.slice:::resolve_state(list())
 resolve_state <- function(x) {
   UseMethod("resolve_state")
 }
@@ -71,6 +71,9 @@ resolve_state.default_filter <- function(x, filter_state) { # nolint
 #' @keywords internal
 #' @export
 resolve_state.list <- function(x) {
+  if (identical(x, list())) {
+    return(x)
+  }
   if (is.null(names(x))) {
     names(x) <- rep("", length(x))
   }

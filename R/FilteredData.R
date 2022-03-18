@@ -892,29 +892,6 @@ FilteredData <- R6::R6Class( # nolint
 
 # Wrapper functions for `FilteredData` class ----
 
-#' Refers the default filter state
-#'
-#' @description `r lifecycle::badge("stable")`
-#' You can use it to refer to the variable's default filter state,
-#' which will be set when `FilteredData$set_data` is called.
-#'
-#' @details
-#' This is a simple wrapper around an S3 class.
-#'
-#' @return `default_filter` a default filter object
-#'
-#' @export
-#' @examples
-#' default_filter() # test printing
-default_filter <- function() {
-  structure(list(), class = "default_filter")
-}
-
-#' @export
-print.default_filter <- function(x, ...) {
-  cat("This will pick the default filter state for the variable.\n")
-}
-
 
 #' Gets filter expression for multiple datanames taking into account its order.
 #'

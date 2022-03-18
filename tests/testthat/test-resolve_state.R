@@ -42,8 +42,14 @@ testthat::test_that("resolve_state returns keep_inf = TRUE if any element of the
 })
 
 testthat::test_that("resolve_state for default filter results in empty list", {
-  testthat::expect_identical(resolve_state(default_filter()), list())
+  df <- structure(list(), class = "default_filter")
+  testthat::expect_identical(resolve_state(df), list())
 })
+
+testthat::test_that("resolve_state for empty list results in empty list", {
+  testthat::expect_identical(resolve_state(list()), list())
+})
+
 
 testthat::test_that("resolve_state throws when passed a list with more than one unnamed element", {
   state <- list(1, 2)

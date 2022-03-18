@@ -16,7 +16,7 @@ resolve_state(x)
 \method{resolve_state}{list}(x)
 }
 \arguments{
-\item{x}{(\code{list},\code{vector}, \code{default_filter})\cr
+\item{x}{(\code{list},\code{vector})\cr
 values of the variable used in filter. Depending on the \code{FilterState} type
 list must contain these fields:
 \itemize{
@@ -44,7 +44,7 @@ of the passed \code{filter_state}.
 \examples{
 teal.slice:::resolve_state(list(c(1, 2), keep_na = FALSE, keep_inf = TRUE))
 teal.slice:::resolve_state(c(1, 2, Inf))
-teal.slice:::resolve_state(default_filter())
+teal.slice:::resolve_state(list())
 }
 \seealso{
 \itemize{

@@ -86,7 +86,7 @@ filtered_data_set.TealData <- function(data, datasets) { # nolintr
 #'   To initialize with specific variable filter with all values on start, one
 #'   can use
 #'   ```
-#'   list(Species = default_filter())
+#'   list(Species = list())
 #'   ```
 #'   `filter` should be set with respect to the class of the column:
 #'   * `numeric`: `selected` should be a two elements vector defining the range
