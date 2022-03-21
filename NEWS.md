@@ -1,4 +1,4 @@
-# teal.slice 0.0.0.9007
+# teal.slice 0.0.0.9008
 
 * Initial release of `teal.slice` a package providing a filter module for `teal` applications.
 
