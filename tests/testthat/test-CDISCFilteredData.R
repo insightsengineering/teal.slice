@@ -38,7 +38,7 @@ test_that("set filter state", {
 })
 
 test_that("get_varlabels returns the column labels of the passed dataset", {
-  teal.data::variable_labels(adsl) <- colnames(adsl)
+  formatable::var_labels(adsl) <- colnames(adsl)
   on.exit(ds$set_dataset(teal.data::dataset("ADSL", adsl)))
 
   data <- adsl
@@ -46,12 +46,12 @@ test_that("get_varlabels returns the column labels of the passed dataset", {
   ds$set_dataset(teal.data::dataset("ADSL", data))
   expect_equal(
     ds$get_varlabels("ADSL"),
-    teal.data::variable_labels(adsl, fill = FALSE)
+    formatable::var_labels(adsl, fill = FALSE)
   )
   # only some variables
   expect_equal(
     ds$get_varlabels("ADSL", variables = c("sex")),
-    teal.data::variable_labels(adsl, fill = FALSE)[c("sex")]
+    formatable::var_labels(adsl, fill = FALSE)[c("sex")]
   )
 })
 
