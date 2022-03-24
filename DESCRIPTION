@@ -36,7 +36,7 @@ Imports:
     teal.logger,
     teal.widgets
 Suggests:
-    formatable,
+    formatters,
     knitr,
     MultiAssayExperiment,
     rmarkdown,
