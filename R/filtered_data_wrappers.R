@@ -42,7 +42,7 @@ filtered_data_set.TealData <- function(data, datasets) { # nolintr
   for (dataset in data$get_datasets()) {
     datasets$set_dataset(dataset)
   }
-
+  datasets$set_check(data$get_check())
   return(invisible(NULL))
 }
 

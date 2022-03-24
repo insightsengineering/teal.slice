@@ -176,6 +176,13 @@ FilteredData <- R6::R6Class( # nolint
     },
 
     #' @description
+    #' Returns whether the datasets in the object have had a reproducibility check
+    #' @return `logical`
+    get_check = function() {
+      private$.check
+    },
+
+    #' @description
     #' Gets data attributes for a given dataset
     #'
     #' Sets and gets the data attribute on unfiltered data as it is never modified
@@ -330,6 +337,16 @@ FilteredData <- R6::R6Class( # nolint
         teal.data::get_dataset(dataset)
       )
 
+      invisible(self)
+    },
+
+    #' @description
+    #' sets whether the datasets in the object have had a reproducibility check
+    #' @param check (`logical`) whether datasets have had reproducibility check
+    #' @return (`self`)
+    set_check = function(check) {
+      checkmate::assert_flag(check)
+      private$.check <- check
       invisible(self)
     },
 
@@ -801,6 +818,9 @@ FilteredData <- R6::R6Class( # nolint
 
     # private attributes ----
     filtered_datasets = list(),
+
+    # whether the datasets had a reproducibility check
+    .check = FALSE,
 
     # preprocessing code used to generate the unfiltered datasets as a string
     code = teal.data:::CodeClass$new(),

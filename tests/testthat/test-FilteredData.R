@@ -444,3 +444,23 @@ testthat::test_that("get_filter_expr returns a string with a filtering expressio
     paste("iris_FILTERED <- iris", "mtcars_FILTERED <- mtcars", sep = "\n")
   )
 })
+
+testthat::test_that("FilteredData from TealData preserves the check field when check is FALSE", {
+  filtered_data <- FilteredData$new()
+  data <- teal.data::teal_data(
+    teal.data::dataset("df_1", data.frame(x = 1:10), code = "df_1 <- data.frame(x = 1:10)"),
+    check = FALSE
+  )
+  filtered_data_set(data, filtered_data)
+  testthat::expect_false(filtered_data$get_check())
+})
+
+testthat::test_that("FilteredData from TealData preserves the check field when check is TRUE", {
+  filtered_data <- FilteredData$new()
+  data <- teal.data::teal_data(
+    teal.data::dataset("df_1", data.frame(x = 1:10), code = "df_1 <- data.frame(x = 1:10)"),
+    check = TRUE
+  )
+  filtered_data_set(data, filtered_data)
+  testthat::expect_true(filtered_data$get_check())
+})

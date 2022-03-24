@@ -116,6 +116,7 @@ isolate(datasets$get_call("ADTTE"))
 \if{html}{
 \out{<details ><summary>Inherited methods</summary>}
 \itemize{
+\item \out{<span class="pkg-link" data-pkg="teal.slice" data-topic="FilteredData" data-id="get_check">}\href{../../teal.slice/html/FilteredData.html#method-get_check}{\code{teal.slice::FilteredData$get_check()}}\out{</span>}
 \item \out{<span class="pkg-link" data-pkg="teal.slice" data-topic="FilteredData" data-id="get_code">}\href{../../teal.slice/html/FilteredData.html#method-get_code}{\code{teal.slice::FilteredData$get_code()}}\out{</span>}
 \item \out{<span class="pkg-link" data-pkg="teal.slice" data-topic="FilteredData" data-id="get_data">}\href{../../teal.slice/html/FilteredData.html#method-get_data}{\code{teal.slice::FilteredData$get_data()}}\out{</span>}
 \item \out{<span class="pkg-link" data-pkg="teal.slice" data-topic="FilteredData" data-id="get_data_attr">}\href{../../teal.slice/html/FilteredData.html#method-get_data_attr}{\code{teal.slice::FilteredData$get_data_attr()}}\out{</span>}
@@ -133,6 +134,7 @@ isolate(datasets$get_call("ADTTE"))
 \item \out{<span class="pkg-link" data-pkg="teal.slice" data-topic="FilteredData" data-id="remove_all_filter_states">}\href{../../teal.slice/html/FilteredData.html#method-remove_all_filter_states}{\code{teal.slice::FilteredData$remove_all_filter_states()}}\out{</span>}
 \item \out{<span class="pkg-link" data-pkg="teal.slice" data-topic="FilteredData" data-id="remove_filter_state">}\href{../../teal.slice/html/FilteredData.html#method-remove_filter_state}{\code{teal.slice::FilteredData$remove_filter_state()}}\out{</span>}
 \item \out{<span class="pkg-link" data-pkg="teal.slice" data-topic="FilteredData" data-id="restore_state_from_bookmark">}\href{../../teal.slice/html/FilteredData.html#method-restore_state_from_bookmark}{\code{teal.slice::FilteredData$restore_state_from_bookmark()}}\out{</span>}
+\item \out{<span class="pkg-link" data-pkg="teal.slice" data-topic="FilteredData" data-id="set_check">}\href{../../teal.slice/html/FilteredData.html#method-set_check}{\code{teal.slice::FilteredData$set_check()}}\out{</span>}
 \item \out{<span class="pkg-link" data-pkg="teal.slice" data-topic="FilteredData" data-id="set_code">}\href{../../teal.slice/html/FilteredData.html#method-set_code}{\code{teal.slice::FilteredData$set_code()}}\out{</span>}
 \item \out{<span class="pkg-link" data-pkg="teal.slice" data-topic="FilteredData" data-id="set_filter_state">}\href{../../teal.slice/html/FilteredData.html#method-set_filter_state}{\code{teal.slice::FilteredData$set_filter_state()}}\out{</span>}
 \item \out{<span class="pkg-link" data-pkg="teal.slice" data-topic="FilteredData" data-id="srv_filter_overview">}\href{../../teal.slice/html/FilteredData.html#method-srv_filter_overview}{\code{teal.slice::FilteredData$srv_filter_overview()}}\out{</span>}

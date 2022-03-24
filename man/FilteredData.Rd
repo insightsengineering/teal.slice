@@ -112,6 +112,7 @@ shiny::isolate(datasets$get_filter_state())
 \item \href{#method-get_code}{\code{FilteredData$get_code()}}
 \item \href{#method-get_filtered_dataset}{\code{FilteredData$get_filtered_dataset()}}
 \item \href{#method-get_data}{\code{FilteredData$get_data()}}
+\item \href{#method-get_check}{\code{FilteredData$get_check()}}
 \item \href{#method-get_data_attr}{\code{FilteredData$get_data_attr()}}
 \item \href{#method-get_metadata}{\code{FilteredData$get_metadata()}}
 \item \href{#method-get_join_keys}{\code{FilteredData$get_join_keys()}}
@@ -121,6 +122,7 @@ shiny::isolate(datasets$get_filter_state())
 \item \href{#method-get_varnames}{\code{FilteredData$get_varnames()}}
 \item \href{#method-handle_active_datanames}{\code{FilteredData$handle_active_datanames()}}
 \item \href{#method-set_dataset}{\code{FilteredData$set_dataset()}}
+\item \href{#method-set_check}{\code{FilteredData$set_check()}}
 \item \href{#method-set_code}{\code{FilteredData$set_code()}}
 \item \href{#method-get_filter_state}{\code{FilteredData$get_filter_state()}}
 \item \href{#method-set_filter_state}{\code{FilteredData$set_filter_state()}}
@@ -320,6 +322,19 @@ For \code{filtered = FALSE}, the original data set with
 \item{\code{filtered}}{(\code{logical}) whether to return a filtered or unfiltered dataset}
 }
 \if{html}{\out{</div>}}
+}
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-get_check"></a>}}
+\if{latex}{\out{\hypertarget{method-get_check}{}}}
+\subsection{Method \code{get_check()}}{
+Returns whether the datasets in the object have had a reproducibility check
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{FilteredData$get_check()}\if{html}{\out{</div>}}
+}
+
+\subsection{Returns}{
+\code{logical}
 }
 }
 \if{html}{\out{<hr>}}
@@ -524,6 +539,26 @@ the object containing data and attributes.}
 }
 \subsection{Returns}{
 (\code{self}) invisibly this \code{FilteredTealData}
+}
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-set_check"></a>}}
+\if{latex}{\out{\hypertarget{method-set_check}{}}}
+\subsection{Method \code{set_check()}}{
+sets whether the datasets in the object have had a reproducibility check
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{FilteredData$set_check(check)}\if{html}{\out{</div>}}
+}
+
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{check}}{(\code{logical}) whether datasets have had reproducibility check}
+}
+\if{html}{\out{</div>}}
+}
+\subsection{Returns}{
+(\code{self})
 }
 }
 \if{html}{\out{<hr>}}
