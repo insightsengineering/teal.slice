@@ -56,13 +56,10 @@ check_ellipsis <- function(..., stop = FALSE, allowed_args = character(0)) {
 
 #' Whether the variable name is good to use within Show R Code
 #'
-#' Spaces are problematic because the variables must be escaped
-#' with backticks.
-#' Also, they should not start with a number as R may silently make
-#' it valid by changing it.
+#' Spaces are problematic because the variables must be escaped with backticks.
+#' Also, they should not start with a number as R may silently make it valid by changing it.
 #' Therefore, we only allow alphanumeric characters with underscores.
-#' The first character of the `name` must be an alphabetic character
-#' and can be followed by alphanumeric characters.
+#' The first character of the `name` must be an alphabetic character and can be followed by alphanumeric characters.
 #'
 #' @md
 #'
@@ -77,13 +74,13 @@ check_ellipsis <- function(..., stop = FALSE, allowed_args = character(0)) {
 #' teal.slice:::check_simple_name("aas2df")
 #' teal.slice:::check_simple_name("ADSL")
 #' teal.slice:::check_simple_name("ADSLmodified")
+#' teal.slice:::check_simple_name("ADSL_modified")
 #' teal.slice:::check_simple_name("ADSL_2")
 #' teal.slice:::check_simple_name("a1")
 #' # the following fail
 #' \dontrun{
 #' teal.slice:::check_simple_name("1a")
 #' teal.slice:::check_simple_name("ADSL.modified")
-#' teal.slice:::check_simple_name("ADSL_modified")
 #' teal.slice:::check_simple_name("a1...")
 #' teal.slice:::check_simple_name("ADSL_FILTERED")
 #' }
@@ -103,15 +100,12 @@ check_simple_name <- function(name) {
 }
 
 #' Check that a given range is valid
-#' @param subinterval (`numeric` or `date`)\cr
-#'  vector of length 2 to be  compared against the full range.
-#' @param range (`numeric` or `date`)\cr
-#'  vector of length 2 containing the full range to validate against.
-#' @param pre_msg `character` message to print before error for
-#'   additional context.
 #'
-#' @return `NULL` if `subinterval` is a valid range or error with message
-#'   otherwise.
+#' @param subinterval (`numeric` or `date`)\cr vector of length 2 to be compared against the full range.
+#' @param range (`numeric` or `date`)\cr vector of length 2 containing the full range to validate against.
+#' @param pre_msg `character` message to print before error for additional context.
+#'
+#' @return `NULL` if `subinterval` is a valid range or error with message otherwise.
 #' @keywords internal
 #'
 #' @examples
@@ -156,12 +150,11 @@ check_in_range <- function(subinterval, range, pre_msg = "") {
 
 #' Check that one set is a subset of another
 #'
-#' Raises an error message if not and says which elements are not in
-#' the allowed `choices`.
+#' Raises an error message if not and says which elements are not in the allowed `choices`.
 #'
-#' @param subset `collection-like` should be a subset of `choices`
+#' @param subset `collection-like` should be a subset of `choices`, the second argument
 #' @param choices `collection-like` superset
-#' @param pre_msg `character` message to print before
+#' @param pre_msg `character` message to print before error should there be any errors
 #' @keywords internal
 #'
 #' @examples
@@ -192,15 +185,14 @@ check_in_subset <- function(subset, choices, pre_msg = "") {
 #' Set state of `FilterState`
 #'
 #' @description
-#' Set state of `FilterState`. Function can change states in [`FilterState`] in two ways, by:
+#' Set state of `FilterState`. Function can change states in [`FilterState`] in two ways:
 #' - changing `reactive` state fields which triggers observers in the `FilterState`.
 #' - change state directly.
 #'
-#' For more, please see section "Modifying state" in '`FilterState`]
+#' For more, please see section "Modifying state" in [`FilterState`]
 #'
 #' @inheritParams init_filter_state
-#' @param value (named `list`)\cr
-#'  see `set_state` method in [`FilterState`].
+#' @param value (named `list`)\cr see `set_state` method in [`FilterState`].
 #' @param is_reactive (`logical(1)`)\cr
 #'  - `TRUE` to change `reactive` fields which triggers observers in the `FilterState`
 #'  - `FALSE` to change the state directly.

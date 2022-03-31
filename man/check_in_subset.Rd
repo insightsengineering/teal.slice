@@ -7,15 +7,14 @@
 check_in_subset(subset, choices, pre_msg = "")
 }
 \arguments{
-\item{subset}{\code{collection-like} should be a subset of \code{choices}}
+\item{subset}{\code{collection-like} should be a subset of \code{choices}, the second argument}
 
 \item{choices}{\code{collection-like} superset}
 
-\item{pre_msg}{\code{character} message to print before}
+\item{pre_msg}{\code{character} message to print before error should there be any errors}
 }
 \description{
-Raises an error message if not and says which elements are not in
-the allowed \code{choices}.
+Raises an error message if not and says which elements are not in the allowed \code{choices}.
 }
 \examples{
 check_in_subset <- teal.slice:::check_in_subset
