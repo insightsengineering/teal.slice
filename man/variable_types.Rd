@@ -2,21 +2,21 @@
 % Please edit documentation in R/variable_types.R
 \name{variable_types}
 \alias{variable_types}
-\title{Get classes selected columns from dataset}
+\title{Get classes of selected columns from dataset}
 \usage{
 variable_types(data, columns = NULL)
 }
 \arguments{
 \item{data}{(\code{data.frame}) data to determine variable types from}
 
-\item{columns}{(atomic vector of \code{character} or \code{NULL}) column names chosen chosen from \code{data},
-\code{NULL} for all data columns}
+\item{columns}{(atomic vector of \code{character} or \code{NULL}) column names chosen from \code{data}.
+The value of \code{NULL} will be interpreted to mean all columns.}
 }
 \value{
 (atomic vector of \code{character}) classes of \code{columns} from provided \code{data}
 }
 \description{
-Get classes selected columns from dataset
+Get classes of selected columns from dataset
 }
 \examples{
 teal.slice:::variable_types(
