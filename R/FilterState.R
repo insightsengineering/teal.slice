@@ -1452,7 +1452,9 @@ RangeFilterState <- R6::R6Class( # nolint
               # because we extended real range into rounded one we need to apply intersect(range_input, range_real)
               selection_state <- as.numeric(
                 c(max(input$selection[1], private$choices[1]), min(input$selection[2], private$choices[2]))
-              )
+              ) %>%
+                pmax(private$choices[1]) %>%
+                pmin(private$choices[2])
               if (!setequal(selection_state, self$get_selected())) {
                 validate(
                   need(
