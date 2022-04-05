@@ -7,7 +7,7 @@
 check_in_subset(subset, choices, pre_msg = "")
 }
 \arguments{
-\item{subset}{\code{collection-like} should be a subset of \code{choices}, the second argument}
+\item{subset}{\code{collection-like} should be a subset of the second argument \code{choices}}
 
 \item{choices}{\code{collection-like} superset}
 
