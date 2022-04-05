@@ -152,7 +152,7 @@ check_in_range <- function(subinterval, range, pre_msg = "") {
 #'
 #' Raises an error message if not and says which elements are not in the allowed `choices`.
 #'
-#' @param subset `collection-like` should be a subset of `choices`, the second argument
+#' @param subset `collection-like` should be a subset of the second argument `choices`
 #' @param choices `collection-like` superset
 #' @param pre_msg `character` message to print before error should there be any errors
 #' @keywords internal
