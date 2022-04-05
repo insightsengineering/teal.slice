@@ -1,4 +1,4 @@
-# teal.slice 0.0.0.9011.1
+# teal.slice 0.0.0.9011.2
 
 * Initial release of `teal.slice` - a package providing a filter module for `teal` applications.
 
@@ -9,6 +9,8 @@
 
 ### Bug fixes
 * Add counts to filtering categorical variables bar charts in the filtering panel in cases where they were missing.
+* Fixed a bug causing an error when both sliders of `RangeFilterState` where put to either end of the allowed range
+in the `UI`.
 
 ### Miscellaneous
 * Added `is_any_filtered` method to all `FilterState` classes to detect if selected values actually filters out any data. This is used to decide if an explicit filter statement is added to the call.
