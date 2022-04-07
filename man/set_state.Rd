@@ -10,8 +10,7 @@ set_state(x, value, is_reactive = shiny::isRunning())
 \item{x}{(\code{vector})\cr
 values of the variable used in filter}
 
-\item{value}{(named \code{list})\cr
-see \code{set_state} method in \code{\link{FilterState}}.}
+\item{value}{(named \code{list})\cr see \code{set_state} method in \code{\link{FilterState}}.}
 
 \item{is_reactive}{(\code{logical(1)})\cr
 \itemize{
@@ -23,12 +22,12 @@ see \code{set_state} method in \code{\link{FilterState}}.}
 invisible \code{NULL}
 }
 \description{
-Set state of \code{FilterState}. Function can change states in \code{\link{FilterState}} in two ways, by:
+Set state of \code{FilterState}. Function can change states in \code{\link{FilterState}} in two ways:
 \itemize{
 \item changing \code{reactive} state fields which triggers observers in the \code{FilterState}.
 \item change state directly.
 }
 
-For more, please see section "Modifying state" in '\code{FilterState}]
+For more, please see section "Modifying state" in \code{\link{FilterState}}
 }
 \keyword{internal}

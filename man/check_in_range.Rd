@@ -7,18 +7,14 @@
 check_in_range(subinterval, range, pre_msg = "")
 }
 \arguments{
-\item{subinterval}{(\code{numeric} or \code{date})\cr
-vector of length 2 to be  compared against the full range.}
+\item{subinterval}{(\code{numeric} or \code{date})\cr vector of length 2 to be compared against the full range.}
 
-\item{range}{(\code{numeric} or \code{date})\cr
-vector of length 2 containing the full range to validate against.}
+\item{range}{(\code{numeric} or \code{date})\cr vector of length 2 containing the full range to validate against.}
 
-\item{pre_msg}{\code{character} message to print before error for
-additional context.}
+\item{pre_msg}{\code{character} message to print before error for additional context.}
 }
 \value{
-\code{NULL} if \code{subinterval} is a valid range or error with message
-otherwise.
+\code{NULL} if \code{subinterval} is a valid range or error with message otherwise.
 }
 \description{
 Check that a given range is valid
