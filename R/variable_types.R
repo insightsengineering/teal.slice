@@ -1,9 +1,9 @@
 
-#' Get classes selected columns from dataset
+#' Get classes of selected columns from dataset
 #'
 #' @param data (`data.frame`) data to determine variable types from
-#' @param columns (atomic vector of `character` or `NULL`) column names chosen chosen from `data`,
-#'   `NULL` for all data columns
+#' @param columns (atomic vector of `character` or `NULL`) column names chosen from `data`.
+#'   The value of `NULL` will be interpreted to mean all columns.
 #'
 #' @return (atomic vector of `character`) classes of `columns` from provided `data`
 #' @keywords internal
