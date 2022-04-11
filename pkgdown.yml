@@ -3,7 +3,7 @@ pkgdown: 2.0.2
 pkgdown_sha: ~
 articles:
   filter-panel: filter-panel.html
-last_built: 2022-04-07T18:52Z
+last_built: 2022-04-11T12:43Z
 urls:
   reference: https://insightsengineering.github.io/teal.slice/reference
   article: https://insightsengineering.github.io/teal.slice/articles
