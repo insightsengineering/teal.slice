@@ -1,4 +1,4 @@
-# teal.slice 0.1.0.9001
+# teal.slice 0.1.0.9002
 
 ### Miscellaneous
 * Added a template to the `pkgdown` site.
