@@ -1,0 +1,12 @@
+---
+title: "Introduction to teal.slice"
+author: "Dawid Kałędkowski"
+date: "8/11/2021"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Introduction to teal.slice}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+## Start
