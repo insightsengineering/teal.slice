@@ -19,7 +19,7 @@ to be considered for further analysis and it includes a summary showing the numb
 
 The filter panel contains three panels:
 
-1) top panel showing the number of records (observations) remaining after the filters have been applied
+1) top panel showing the number of records (observations) remaining after the filters have been applied. For `CDISC` data, the number of unique subjects remaining in the filtered dataset is also shown. 
 2) middle panel showing the current active filters and these can be changed/removed here
 3) bottom panel to allow new columns of the datasets to be added as filters
 
@@ -37,7 +37,8 @@ Depending on the data type of the selected variable, different filters are shown
 
 
 For `CDISC` data, filtering records in a parent dataset (i.e. `ADSL`) will also apply the same filter to all child datasets and in child datasets it is only possible to filter columns not found in its parent's dataset. For general relational data the filter panel treats each dataset independently irrespective of relationships between datasets. This can lead to some unintuitive behavior so be careful filtering general relational data.
-The filter panel also supports filtering `MultiAssayExperiment` data.
+The filter panel also supports filtering `MultiAssayExperiment` data where filters can be applied on the
+subjects data level `(colData(MAE))` and on each experiment level `(MAE[["experiment name"]])`.
 
 
 ## Information for R developers using the filter panel
