@@ -1,10 +1,10 @@
 ---
-title: "Filter panel"
+title: "Filter panel for NEST developers"
 author: "Dawid Kałędkowski"
 date: "8/11/2021"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{Filter panel}
+  %\VignetteIndexEntry{Filter panel for NEST developers}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
@@ -347,7 +347,7 @@ app <- shinyApp(
   ),
   server = function(input, output, session) {
     datasets$srv_filter_panel("filter_panel")
-    output$filter_state <- renderText(print(get_filter_state(datasets)))
+    output$filter_state <- renderPrint(get_filter_state(datasets))
     output$rcode <- renderText(
       paste(
         sapply(c("iris", "mtcars"), datasets$get_call),

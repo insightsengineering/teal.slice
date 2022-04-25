@@ -62,7 +62,7 @@ testthat::test_that("set_filter_state throws error when list is unnamed", {
 
   testthat::expect_error(
     filter_states$set_filter_state(state = fs, data = test),
-    "Assertion on 'checkmate::test_null(names(state))' failed. FALSE.",
+    "Assertion on 'checkmate::test_null(names(state))' failed: FALSE.",
     fixed = TRUE
   )
 })
