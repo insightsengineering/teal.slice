@@ -347,7 +347,7 @@ app <- shinyApp(
   ),
   server = function(input, output, session) {
     datasets$srv_filter_panel("filter_panel")
-    output$filter_state <- renderPrint(print(get_filter_state(datasets)))
+    output$filter_state <- renderPrint(get_filter_state(datasets))
     output$rcode <- renderText(
       paste(
         sapply(c("iris", "mtcars"), datasets$get_call),
