@@ -33,7 +33,7 @@ The `mtcars` dataset has filtered out all records other than those with `(gear =
 knitr::include_graphics("./images/teal-slice/filter-panel.png")
 ```
 
-Depending on the data type of the selected variable, different filters are shown, for example data pickers, range sliders, checkbox inputs.
+Depending on the data type of the selected variable, different filters are shown, for example date pickers, range sliders, checkbox inputs.
 
 
 For `CDISC` data, filtering records in a parent dataset (i.e. `ADSL`) will also apply the same filter to all child datasets and in child datasets it is only possible to filter columns not found in its parent's dataset. For general relational data the filter panel treats each dataset independently irrespective of relationships between datasets.
