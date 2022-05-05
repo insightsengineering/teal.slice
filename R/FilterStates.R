@@ -205,6 +205,16 @@ FilterStates <- R6::R6Class( # nolint
       logger::log_trace("Instantiated { class(self)[1] }, dataname: { deparse1(private$input_dataname) }")
       invisible(self)
     },
+
+    #' @description
+    #' Returns the formatted string representing this `FilterStates` object.
+    #'
+    #' @return `character(1)` the formatted string
+    #'
+    format = function() {
+      stop("Pure virtual method")
+    },
+
     #' @description
     #' Filter call
     #'
@@ -687,6 +697,18 @@ DFFilterStates <- R6::R6Class( # nolint
           ReactiveQueue$new()
         )
       )
+    },
+
+    #' @description
+    #' Returns the formatted string representing this `FilterStates` object.
+    #'
+    #' @return `character(1)` the formatted string
+    #' @examples
+    #'
+    format = function() {
+      formatted_states <- c()
+      for (state in get_filter_states()) formatted_states <- c(formatted_states, state$format())
+      paste(formatted_states, collapse = "\n")
     },
 
     #' Get function name

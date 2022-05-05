@@ -554,7 +554,6 @@ DefaultFilteredDataset <- R6::R6Class( # nolint
     #' @param dataset (`TealDataset`)\cr
     #'  single dataset for which filters are rendered
     initialize = function(dataset) {
-      stopifnot(is(dataset, "TealDataset"))
       super$initialize(dataset)
       dataname <- dataset$get_dataname()
 

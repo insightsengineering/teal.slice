@@ -355,6 +355,17 @@ FilterState <- R6::R6Class( # nolint
     },
 
     #' @description
+    #' Returns a formatted string representing this `FilterState`.
+    #'
+    #' @return `character(1)` the formatted string
+    #'
+    format = function() {
+      formatted <- c(paste("Filtering on", self$get_varname()))
+      formatted <- c(formatted, paste0("  ", "Selected: ", format(self$get_selected())))
+      paste(formatted, collapse = "\n")
+    },
+
+    #' @description
     #' Returns reproducible condition call for current selection relevant
     #' for selected variable type.
     #' Method is using internal reactive values which makes it reactive
@@ -370,7 +381,7 @@ FilterState <- R6::R6Class( # nolint
     #' @return (`name` or `character(1)`)
     get_dataname = function(deparse = TRUE) {
       if (isTRUE(deparse)) {
-        deparse(private$input_dataname)
+        deparse1(private$input_dataname)
       } else {
         private$input_dataname
       }
@@ -397,7 +408,7 @@ FilterState <- R6::R6Class( # nolint
     #' @return (`name` or `character(1)`)
     get_varname = function(deparse = FALSE) {
       if (isTRUE(deparse)) {
-        deparse(private$varname)
+        deparse1(private$varname)
       } else {
         private$varname
       }
