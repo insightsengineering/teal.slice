@@ -357,11 +357,16 @@ FilterState <- R6::R6Class( # nolint
     #' @description
     #' Returns a formatted string representing this `FilterState`.
     #'
+    #' @param indent (`numeric(1)`) the number of spaces before after each new line character of the formatted string.
+    #' Default: 0
     #' @return `character(1)` the formatted string
     #'
-    format = function() {
-      formatted <- c(paste("Filtering on", self$get_varname()))
-      formatted <- c(formatted, paste0("  ", "Selected: ", format(self$get_selected())))
+    format = function(indent = 0) {
+      checkmate::assert_number(indent, finite = TRUE)
+
+      formatted <- c(paste0(rep(" ", indent), "Filtering on: ", self$get_varname()))
+      selected <- paste0(format(self$get_selected(), nsmall = 3), collapse = " ")
+      formatted <- c(formatted, paste0(rep(" ", indent), "  ", "Selected: ", selected))
       paste(formatted, collapse = "\n")
     },
 

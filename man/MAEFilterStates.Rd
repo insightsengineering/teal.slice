@@ -8,6 +8,19 @@ Specialization of \code{FilterStates} for \code{MultiAssayExperiment}.
 
 Specialization of \code{FilterStates} for \code{MultiAssayExperiment}.
 }
+\examples{
+
+## ------------------------------------------------
+## Method `MAEFilterStates$format`
+## ------------------------------------------------
+
+
+Get function name
+
+Get function name used to create filter call.
+For `MAEFilterStates`
+`MultiAssayExperiment::subsetByColData` is used.
+}
 \keyword{Initialize}
 \keyword{`MAEFilterStates`}
 \keyword{internal}
@@ -19,6 +32,7 @@ Specialization of \code{FilterStates} for \code{MultiAssayExperiment}.
 \subsection{Public methods}{
 \itemize{
 \item \href{#method-new}{\code{MAEFilterStates$new()}}
+\item \href{#method-format}{\code{MAEFilterStates$format()}}
 \item \href{#method-get_fun}{\code{MAEFilterStates$get_fun()}}
 \item \href{#method-server}{\code{MAEFilterStates$server()}}
 \item \href{#method-get_filter_state}{\code{MAEFilterStates$get_filter_state()}}
@@ -73,15 +87,36 @@ text label value.}
 labels of the variables used in this object}
 
 \item{\code{keys}}{(\code{character})\cr
-key columns names
-Get function name
-
-Get function name used to create filter call.
-For \code{MAEFilterStates}
-\code{MultiAssayExperiment::subsetByColData} is used.}
+key columns names}
 }
 \if{html}{\out{</div>}}
 }
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-format"></a>}}
+\if{latex}{\out{\hypertarget{method-format}{}}}
+\subsection{Method \code{format()}}{
+Returns the formatted string representing this \code{MAEFilterStates} object.
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{MAEFilterStates$format()}\if{html}{\out{</div>}}
+}
+
+\subsection{Returns}{
+\code{character(1)} the formatted string
+}
+\subsection{Examples}{
+\if{html}{\out{<div class="r example copy">}}
+\preformatted{
+Get function name
+
+Get function name used to create filter call.
+For `MAEFilterStates`
+`MultiAssayExperiment::subsetByColData` is used.
+}
+\if{html}{\out{</div>}}
+
+}
+
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-get_fun"></a>}}

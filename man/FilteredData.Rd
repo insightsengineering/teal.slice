@@ -97,7 +97,7 @@ fs <- list(
   )
 )
 datasets$set_filter_state(state = fs)
-cat(datasets$get_formatted_filter_state())
+cat(shiny::isolate(datasets$get_formatted_filter_state()))
 
 
 ## ------------------------------------------------
@@ -664,7 +664,7 @@ fs <- list(
   )
 )
 datasets$set_filter_state(state = fs)
-cat(datasets$get_formatted_filter_state())
+cat(shiny::isolate(datasets$get_formatted_filter_state()))
 
 }
 \if{html}{\out{</div>}}

@@ -82,7 +82,6 @@ FilteredData <- R6::R6Class( # nolint
       names(private$filtered_datasets)
     },
 
-
     #' Gets data label for the dataset
     #'
     #' Useful to display in `Show R Code`.
@@ -314,7 +313,6 @@ FilteredData <- R6::R6Class( # nolint
       datanames <- self$get_filterable_datanames(datanames)
       intersect(self$datanames(), datanames)
     },
-
 
     #' @description
     #' Adds a `TealDataset` object to this `FilteredData`

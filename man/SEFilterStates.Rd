@@ -8,6 +8,14 @@ Specialization of \code{FilterStates} for \code{SummaryExperiment}.
 
 Specialization of \code{FilterStates} for \code{SummaryExperiment}.
 }
+\examples{
+
+## ------------------------------------------------
+## Method `SEFilterStates$format`
+## ------------------------------------------------
+
+
+}
 \keyword{Initialize}
 \keyword{`SEFilterStates`}
 \keyword{internal}
@@ -19,6 +27,7 @@ Specialization of \code{FilterStates} for \code{SummaryExperiment}.
 \subsection{Public methods}{
 \itemize{
 \item \href{#method-new}{\code{SEFilterStates$new()}}
+\item \href{#method-format}{\code{SEFilterStates$format()}}
 \item \href{#method-server}{\code{SEFilterStates$server()}}
 \item \href{#method-get_filter_state}{\code{SEFilterStates$get_filter_state()}}
 \item \href{#method-set_filter_state}{\code{SEFilterStates$set_filter_state()}}
@@ -65,6 +74,27 @@ text label value.}
 }
 \if{html}{\out{</div>}}
 }
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-format"></a>}}
+\if{latex}{\out{\hypertarget{method-format}{}}}
+\subsection{Method \code{format()}}{
+Returns the formatted string representing this \code{MAEFilterStates} object.
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{SEFilterStates$format()}\if{html}{\out{</div>}}
+}
+
+\subsection{Returns}{
+\code{character(1)} the formatted string
+}
+\subsection{Examples}{
+\if{html}{\out{<div class="r example copy">}}
+\preformatted{
+}
+\if{html}{\out{</div>}}
+
+}
+
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-server"></a>}}

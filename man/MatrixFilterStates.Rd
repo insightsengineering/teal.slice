@@ -8,6 +8,14 @@ Specialization of \code{FilterStates} for a base matrix.
 
 Specialization of \code{FilterStates} for a base matrix.
 }
+\examples{
+
+## ------------------------------------------------
+## Method `MatrixFilterStates$format`
+## ------------------------------------------------
+
+
+}
 \keyword{Initialize}
 \keyword{`MatrixFilterStates`}
 \keyword{internal}
@@ -19,6 +27,7 @@ Specialization of \code{FilterStates} for a base matrix.
 \subsection{Public methods}{
 \itemize{
 \item \href{#method-new}{\code{MatrixFilterStates$new()}}
+\item \href{#method-format}{\code{MatrixFilterStates$format()}}
 \item \href{#method-server}{\code{MatrixFilterStates$server()}}
 \item \href{#method-get_filter_state}{\code{MatrixFilterStates$get_filter_state()}}
 \item \href{#method-set_filter_state}{\code{MatrixFilterStates$set_filter_state()}}
@@ -65,6 +74,27 @@ text label value.}
 }
 \if{html}{\out{</div>}}
 }
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-format"></a>}}
+\if{latex}{\out{\hypertarget{method-format}{}}}
+\subsection{Method \code{format()}}{
+Returns the formatted string representing this \code{MatrixFilterStates} object.
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{MatrixFilterStates$format()}\if{html}{\out{</div>}}
+}
+
+\subsection{Returns}{
+\code{character(1)} the formatted string
+}
+\subsection{Examples}{
+\if{html}{\out{<div class="r example copy">}}
+\preformatted{
+}
+\if{html}{\out{</div>}}
+
+}
+
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-server"></a>}}

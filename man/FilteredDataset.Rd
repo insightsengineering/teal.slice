@@ -15,6 +15,7 @@ components of the \code{TealDataset}.
 \subsection{Public methods}{
 \itemize{
 \item \href{#method-new}{\code{FilteredDataset$new()}}
+\item \href{#method-get_formatted_filter_state}{\code{FilteredDataset$get_formatted_filter_state()}}
 \item \href{#method-add_to_eval_env}{\code{FilteredDataset$add_to_eval_env()}}
 \item \href{#method-queues_empty}{\code{FilteredDataset$queues_empty()}}
 \item \href{#method-get_call}{\code{FilteredDataset$get_call()}}
@@ -56,6 +57,19 @@ Initializes this \code{FilteredDataset} object
 single dataset for which filters are rendered}
 }
 \if{html}{\out{</div>}}
+}
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-get_formatted_filter_state"></a>}}
+\if{latex}{\out{\hypertarget{method-get_formatted_filter_state}{}}}
+\subsection{Method \code{get_formatted_filter_state()}}{
+Returns a string representation of the filter state in this \code{FilteredDataset}.
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{FilteredDataset$get_formatted_filter_state()}\if{html}{\out{</div>}}
+}
+
+\subsection{Returns}{
+\code{character(1)} the formatted string representing the filter state
 }
 }
 \if{html}{\out{<hr>}}

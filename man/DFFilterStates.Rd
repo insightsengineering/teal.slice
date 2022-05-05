@@ -11,6 +11,16 @@ Specialization of \code{FilterStates} for a base \code{data.frame}.
 \examples{
 
 ## ------------------------------------------------
+## Method `DFFilterStates$format`
+## ------------------------------------------------
+
+
+Get function name
+
+Get function name used to create filter call.
+For `DFFilterStates` `dplyr::filter` is used
+
+## ------------------------------------------------
 ## Method `DFFilterStates$set_filter_state`
 ## ------------------------------------------------
 
@@ -76,6 +86,7 @@ shiny::isolate(dffs$get_filter_state())
 \subsection{Public methods}{
 \itemize{
 \item \href{#method-new}{\code{DFFilterStates$new()}}
+\item \href{#method-format}{\code{DFFilterStates$format()}}
 \item \href{#method-get_fun}{\code{DFFilterStates$get_fun()}}
 \item \href{#method-server}{\code{DFFilterStates$server()}}
 \item \href{#method-get_filter_state}{\code{DFFilterStates$get_filter_state()}}
@@ -124,14 +135,35 @@ text label value.}
 labels of the variables used in this object}
 
 \item{\code{keys}}{(\code{character})\cr
-key columns names
-Get function name
-
-Get function name used to create filter call.
-For \code{DFFilterStates} \code{dplyr::filter} is used}
+key columns names}
 }
 \if{html}{\out{</div>}}
 }
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-format"></a>}}
+\if{latex}{\out{\hypertarget{method-format}{}}}
+\subsection{Method \code{format()}}{
+Returns the formatted string representing this \code{FilterStates} object.
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{DFFilterStates$format()}\if{html}{\out{</div>}}
+}
+
+\subsection{Returns}{
+\code{character(1)} the formatted string
+}
+\subsection{Examples}{
+\if{html}{\out{<div class="r example copy">}}
+\preformatted{
+Get function name
+
+Get function name used to create filter call.
+For `DFFilterStates` `dplyr::filter` is used
+}
+\if{html}{\out{</div>}}
+
+}
+
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-get_fun"></a>}}

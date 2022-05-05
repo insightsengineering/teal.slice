@@ -57,6 +57,7 @@ or using \code{set_selected}, \code{set_keep_na} or \code{set_keep_inf}
 \itemize{
 \item \href{#method-new}{\code{FilterState$new()}}
 \item \href{#method-destroy_observers}{\code{FilterState$destroy_observers()}}
+\item \href{#method-format}{\code{FilterState$format()}}
 \item \href{#method-get_call}{\code{FilterState$get_call()}}
 \item \href{#method-get_dataname}{\code{FilterState$get_dataname()}}
 \item \href{#method-get_keep_na}{\code{FilterState$get_keep_na()}}
@@ -127,6 +128,27 @@ Destroy observers stored in \code{private$observers}.
 \if{html}{\out{<div class="r">}}\preformatted{FilterState$destroy_observers()}\if{html}{\out{</div>}}
 }
 
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-format"></a>}}
+\if{latex}{\out{\hypertarget{method-format}{}}}
+\subsection{Method \code{format()}}{
+Returns a formatted string representing this \code{FilterState}.
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{FilterState$format(indent = 0)}\if{html}{\out{</div>}}
+}
+
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{indent}}{(\code{numeric(1)}) the number of spaces before after each new line character of the formatted string.
+Default: 0}
+}
+\if{html}{\out{</div>}}
+}
+\subsection{Returns}{
+\code{character(1)} the formatted string
+}
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-get_call"></a>}}

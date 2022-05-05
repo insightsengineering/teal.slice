@@ -707,7 +707,7 @@ DFFilterStates <- R6::R6Class( # nolint
     #'
     format = function() {
       formatted_states <- c()
-      for (state in get_filter_states()) formatted_states <- c(formatted_states, state$format())
+      for (state in self$queue_get(1L)) formatted_states <- c(formatted_states, state$format())
       paste(formatted_states, collapse = "\n")
     },
 
@@ -1104,6 +1104,18 @@ MAEFilterStates <- R6::R6Class( # nolint
       return(invisible(self))
     },
 
+    #' @description
+    #' Returns the formatted string representing this `MAEFilterStates` object.
+    #'
+    #' @return `character(1)` the formatted string
+    #' @examples
+    #'
+    format = function() {
+      formatted_states <- c("Subject filters:")
+      for (state in self$queue_get(1L)) formatted_states <- c(formatted_states, state$format())
+      paste(formatted_states, collapse = "\n")
+    },
+
     #' Get function name
     #'
     #' Get function name used to create filter call.
@@ -1455,6 +1467,28 @@ SEFilterStates <- R6::R6Class( # nolint
           select = ReactiveQueue$new()
         )
       )
+    },
+
+    #' @description
+    #' Returns the formatted string representing this `MAEFilterStates` object.
+    #'
+    #' @return `character(1)` the formatted string
+    #' @examples
+    #'
+    format = function() {
+      formatted_states <- c()
+
+      if (!is.null(self$queue_get(queue_index = "subset"))) {
+        formatted_states <- c(formatted_states, "Subsetting:")
+        for(state in self$queue_get(queue_index = "subset")) formatted_states <- c(formatted_states, state$format())
+      }
+
+      if (!is.null(self$queue_get(queue_index = "select"))) {
+        formatted_states <- c(formatted_states, "Selecting:")
+        for(state in self$queue_get(queue_index = "select")) formatted_states <- c(formatted_states, state$format())
+      }
+
+      paste(formatted_states, collapse = "\n")
     },
 
     #' @description
@@ -1990,6 +2024,18 @@ MatrixFilterStates <- R6::R6Class( # nolint
           subset = ReactiveQueue$new()
         )
       )
+    },
+
+    #' @description
+    #' Returns the formatted string representing this `MatrixFilterStates` object.
+    #'
+    #' @return `character(1)` the formatted string
+    #' @examples
+    #'
+    format = function() {
+      formatted_states <- c()
+      for (state in self$queue_get(queue_index = "subset")) formatted_states <- c(formatted_states, state$format())
+      paste(formatted_states, collapse = "\n")
     },
 
     #' @description
