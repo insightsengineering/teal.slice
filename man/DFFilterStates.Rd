@@ -15,10 +15,6 @@ Specialization of \code{FilterStates} for a base \code{data.frame}.
 ## ------------------------------------------------
 
 
-Get function name
-
-Get function name used to create filter call.
-For `DFFilterStates` `dplyr::filter` is used
 
 ## ------------------------------------------------
 ## Method `DFFilterStates$set_filter_state`
@@ -163,10 +159,6 @@ Returns the formatted string representing this \code{FilterStates} object.
 \subsection{Examples}{
 \if{html}{\out{<div class="r example copy">}}
 \preformatted{
-Get function name
-
-Get function name used to create filter call.
-For `DFFilterStates` `dplyr::filter` is used
 }
 \if{html}{\out{</div>}}
 
@@ -177,6 +169,10 @@ For `DFFilterStates` `dplyr::filter` is used
 \if{html}{\out{<a id="method-get_fun"></a>}}
 \if{latex}{\out{\hypertarget{method-get_fun}{}}}
 \subsection{Method \code{get_fun()}}{
+Get function name
+
+Get function name used to create filter call.
+For \code{DFFilterStates} \code{dplyr::filter} is used
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{DFFilterStates$get_fun()}\if{html}{\out{</div>}}
 }

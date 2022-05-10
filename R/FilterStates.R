@@ -723,6 +723,7 @@ DFFilterStates <- R6::R6Class( # nolint
       paste(formatted_states, collapse = "\n")
     },
 
+    #' @description
     #' Get function name
     #'
     #' Get function name used to create filter call.

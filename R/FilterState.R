@@ -1289,6 +1289,23 @@ RangeFilterState <- R6::R6Class( # nolint
     },
 
     #' @description
+    #' Returns a formatted string representing this `LogicalFilterState`.
+    #'
+    #' @param indent (`numeric(1)`) the number of spaces before after each new line character of the formatted string.
+    #' Default: 0
+    #' @return `character(1)` the formatted string
+    #'
+    format = function(indent = 0) {
+      checkmate::assert_number(indent, finite = TRUE)
+
+      whitespace_indent <- paste0(rep(" ", indent), collapse = "")
+      formatted <- c(paste0(whitespace_indent, "Filtering on: ", self$get_varname()))
+      selected <- format(self$get_selected(), nsmall = 3)
+      formatted <- c(formatted, paste0(whitespace_indent, "  ", "Range: ", selected[1], " - ", selected[2]))
+      paste(formatted, collapse = "\n")
+    },
+
+    #' @description
     #' Answers the question of whether the current settings and values selected actually filters out any values.
     #' @return logical scalar
     is_any_filtered = function() {

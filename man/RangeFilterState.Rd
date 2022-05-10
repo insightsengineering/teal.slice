@@ -45,6 +45,7 @@ filter$set_selected(c(2, 3))
 \subsection{Public methods}{
 \itemize{
 \item \href{#method-new}{\code{RangeFilterState$new()}}
+\item \href{#method-format}{\code{RangeFilterState$format()}}
 \item \href{#method-is_any_filtered}{\code{RangeFilterState$is_any_filtered()}}
 \item \href{#method-get_call}{\code{RangeFilterState$get_call()}}
 \item \href{#method-get_keep_inf}{\code{RangeFilterState$get_keep_inf()}}
@@ -63,7 +64,6 @@ filter$set_selected(c(2, 3))
 \out{<details ><summary>Inherited methods</summary>}
 \itemize{
 \item \out{<span class="pkg-link" data-pkg="teal.slice" data-topic="FilterState" data-id="destroy_observers">}\href{../../teal.slice/html/FilterState.html#method-destroy_observers}{\code{teal.slice::FilterState$destroy_observers()}}\out{</span>}
-\item \out{<span class="pkg-link" data-pkg="teal.slice" data-topic="FilterState" data-id="format">}\href{../../teal.slice/html/FilterState.html#method-format}{\code{teal.slice::FilterState$format()}}\out{</span>}
 \item \out{<span class="pkg-link" data-pkg="teal.slice" data-topic="FilterState" data-id="get_dataname">}\href{../../teal.slice/html/FilterState.html#method-get_dataname}{\code{teal.slice::FilterState$get_dataname()}}\out{</span>}
 \item \out{<span class="pkg-link" data-pkg="teal.slice" data-topic="FilterState" data-id="get_keep_na">}\href{../../teal.slice/html/FilterState.html#method-get_keep_na}{\code{teal.slice::FilterState$get_keep_na()}}\out{</span>}
 \item \out{<span class="pkg-link" data-pkg="teal.slice" data-topic="FilterState" data-id="get_selected">}\href{../../teal.slice/html/FilterState.html#method-get_selected}{\code{teal.slice::FilterState$get_selected()}}\out{</span>}
@@ -115,6 +115,27 @@ whether condition calls should be prefixed by dataname. Possible values:
 }}
 }
 \if{html}{\out{</div>}}
+}
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-format"></a>}}
+\if{latex}{\out{\hypertarget{method-format}{}}}
+\subsection{Method \code{format()}}{
+Returns a formatted string representing this \code{LogicalFilterState}.
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{RangeFilterState$format(indent = 0)}\if{html}{\out{</div>}}
+}
+
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{indent}}{(\code{numeric(1)}) the number of spaces before after each new line character of the formatted string.
+Default: 0}
+}
+\if{html}{\out{</div>}}
+}
+\subsection{Returns}{
+\code{character(1)} the formatted string
 }
 }
 \if{html}{\out{<hr>}}
