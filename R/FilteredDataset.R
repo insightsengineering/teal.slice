@@ -174,7 +174,7 @@ FilteredDataset <- R6::R6Class( # nolint
     #'
     get_formatted_filter_state = function() {
       out <- c(paste0("Filters for dataset: ", self$get_dataname()))
-      for (states in self$get_filter_states()) out <- c(out, states$format())
+      for (states in self$get_filter_states()) out <- c(out, states$format(indent = 2))
       paste(out, collapse = "\n")
     },
 

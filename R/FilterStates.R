@@ -207,11 +207,19 @@ FilterStates <- R6::R6Class( # nolint
     },
 
     #' @description
+    #' Returns the input dataname
+    #' @return (`character(1)`) the input dataname
+    get_datalabel = function() {
+      private$datalabel
+    },
+
+    #' @description
     #' Returns the formatted string representing this `FilterStates` object.
     #'
+    #' @param indent (`numeric(1)`) the number of spaces before each line of the representation
     #' @return `character(1)` the formatted string
     #'
-    format = function() {
+    format = function(indent) {
       stop("Pure virtual method")
     },
 
@@ -702,12 +710,16 @@ DFFilterStates <- R6::R6Class( # nolint
     #' @description
     #' Returns the formatted string representing this `FilterStates` object.
     #'
+    #' @param indent (`numeric(1)`) the number of spaces before each line of the representation
     #' @return `character(1)` the formatted string
     #' @examples
     #'
-    format = function() {
+    format = function(indent = 0) {
       formatted_states <- c()
-      for (state in self$queue_get(1L)) formatted_states <- c(formatted_states, state$format())
+
+      for (state in self$queue_get(1L)) {
+        formatted_states <- c(formatted_states, paste0(state$format(indent = indent)))
+      }
       paste(formatted_states, collapse = "\n")
     },
 
@@ -1107,13 +1119,19 @@ MAEFilterStates <- R6::R6Class( # nolint
     #' @description
     #' Returns the formatted string representing this `MAEFilterStates` object.
     #'
+    #' @param indent (`numeric(1)`) the number of spaces before each line of the representation
     #' @return `character(1)` the formatted string
     #' @examples
     #'
-    format = function() {
-      formatted_states <- c("Subject filters:")
-      for (state in self$queue_get(1L)) formatted_states <- c(formatted_states, state$format())
-      paste(formatted_states, collapse = "\n")
+    format = function(indent = 0) {
+      checkmate::assert_number(indent, finite = TRUE)
+
+      if (length(self$queue_get(1L)) > 0) {
+        whitespace_indent <- paste0(rep(" ", indent), collapse = "")
+        formatted_states <- c(paste0(whitespace_indent, "Subject filters:"))
+        for (state in self$queue_get(1L)) formatted_states <- c(formatted_states, state$format(indent = indent + 2))
+        paste(formatted_states, collapse = "\n")
+      }
     },
 
     #' Get function name
@@ -1472,23 +1490,33 @@ SEFilterStates <- R6::R6Class( # nolint
     #' @description
     #' Returns the formatted string representing this `MAEFilterStates` object.
     #'
+    #' @param indent (`numeric(1)`) the number of spaces before each line of the representation
     #' @return `character(1)` the formatted string
     #' @examples
     #'
-    format = function() {
-      formatted_states <- c()
+    format = function(indent = 0) {
+      checkmate::assert_number(indent, finite = TRUE)
 
+      whitespace_indent <- paste0(rep(" ", indent), collapse = "")
+      formatted_states <- c()
       if (!is.null(self$queue_get(queue_index = "subset"))) {
-        formatted_states <- c(formatted_states, "Subsetting:")
-        for(state in self$queue_get(queue_index = "subset")) formatted_states <- c(formatted_states, state$format())
+        formatted_states <- c(formatted_states, paste0(whitespace_indent, "  Subsetting:"))
+        for (state in self$queue_get(queue_index = "subset")) {
+          formatted_states <- c(formatted_states, state$format(indent = indent + 4))
+        }
       }
 
       if (!is.null(self$queue_get(queue_index = "select"))) {
-        formatted_states <- c(formatted_states, "Selecting:")
-        for(state in self$queue_get(queue_index = "select")) formatted_states <- c(formatted_states, state$format())
+        formatted_states <- c(formatted_states, paste0(whitespace_indent, "Selecting:"))
+        for (state in self$queue_get(queue_index = "select")) {
+          formatted_states <- c(formatted_states, state$format(indent = indent + 4))
+        }
       }
 
-      paste(formatted_states, collapse = "\n")
+      if (length(formatted_states) > 0) {
+        formatted_states <- c(paste0(whitespace_indent, "Assay ", self$get_datalabel(), " filters:"), formatted_states)
+        paste(formatted_states, collapse = "\n")
+      }
     },
 
     #' @description
@@ -2029,12 +2057,18 @@ MatrixFilterStates <- R6::R6Class( # nolint
     #' @description
     #' Returns the formatted string representing this `MatrixFilterStates` object.
     #'
+    #' @param indent (`numeric(1)`) the number of spaces before each line of the representation
     #' @return `character(1)` the formatted string
     #' @examples
     #'
-    format = function() {
+    format = function(indent = 0) {
+      checkmate::assert_number(indent, finite = TRUE)
+
       formatted_states <- c()
-      for (state in self$queue_get(queue_index = "subset")) formatted_states <- c(formatted_states, state$format())
+      whitespace_indent <- paste0(rep(" ", indent), collapse = "")
+      for (state in self$queue_get(queue_index = "subset")) {
+        formatted_states <- c(formatted_states, state$format(indent = indent + 2))
+      }
       paste(formatted_states, collapse = "\n")
     },
 

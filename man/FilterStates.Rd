@@ -45,6 +45,7 @@ isolate(filter_states$get_call())
 \subsection{Public methods}{
 \itemize{
 \item \href{#method-new}{\code{FilterStates$new()}}
+\item \href{#method-get_datalabel}{\code{FilterStates$get_datalabel()}}
 \item \href{#method-format}{\code{FilterStates$format()}}
 \item \href{#method-get_call}{\code{FilterStates$get_call()}}
 \item \href{#method-get_fun}{\code{FilterStates$get_fun()}}
@@ -88,14 +89,34 @@ text label value.}
 }
 }
 \if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-get_datalabel"></a>}}
+\if{latex}{\out{\hypertarget{method-get_datalabel}{}}}
+\subsection{Method \code{get_datalabel()}}{
+Returns the input dataname
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{FilterStates$get_datalabel()}\if{html}{\out{</div>}}
+}
+
+\subsection{Returns}{
+(\code{character(1)}) the input dataname
+}
+}
+\if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-format"></a>}}
 \if{latex}{\out{\hypertarget{method-format}{}}}
 \subsection{Method \code{format()}}{
 Returns the formatted string representing this \code{FilterStates} object.
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{FilterStates$format()}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{FilterStates$format(indent)}\if{html}{\out{</div>}}
 }
 
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{indent}}{(\code{numeric(1)}) the number of spaces before each line of the representation}
+}
+\if{html}{\out{</div>}}
+}
 \subsection{Returns}{
 \code{character(1)} the formatted string
 }

@@ -364,9 +364,10 @@ FilterState <- R6::R6Class( # nolint
     format = function(indent = 0) {
       checkmate::assert_number(indent, finite = TRUE)
 
-      formatted <- c(paste0(rep(" ", indent), "Filtering on: ", self$get_varname()))
+      whitespace_indent <- paste0(rep(" ", indent), collapse = "")
+      formatted <- c(paste0(whitespace_indent, "Filtering on: ", self$get_varname()))
       selected <- paste0(format(self$get_selected(), nsmall = 3), collapse = " ")
-      formatted <- c(formatted, paste0(rep(" ", indent), "  ", "Selected: ", selected))
+      formatted <- c(formatted, paste0(whitespace_indent, "  ", "Selected: ", selected))
       paste(formatted, collapse = "\n")
     },
 
