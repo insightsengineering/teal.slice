@@ -4,16 +4,9 @@ Title: Filter module for teal applications
 Version: 0.1.0.9002
 Date: 2022-04-07
 Authors@R: c(
-    person("NEST", , , "basel.nestcicd@roche.com", role = c("aut", "cre")),
-    person("Nikolas", "Burkoff", , "nikolas.burkoff@roche.com", role = "aut"),
-    person("Mahmoud", "Hallal", , "mahmoud.hallal@roche.com", role = "aut"),
-    person("Dawid", "Kaledkowski", , "dawid.kaledkowski@roche.com", role = "aut"),
-    person("Maciej", "Nasinski", , "maciej.nasinski@contractors.roche.com", role = "aut"),
-    person("Konrad", "Pagacz", , "konrad.pagacz@contractors.roche.com", role = "aut"),
-    person("Pawel", "Rucki", , "pawel.rucki@contractors.roche.com", role = "aut"),
-    person("Junlue", "Zhao", , "zhaoj88@gene.com", role = "aut"),
-    person("Tadeusz", "Lewandowski", , "tadeusz.lewandowski@roche.com", role = "ctb"),
-    person("Roche", role = c("cph", "fnd"))
+    person("Dawid", "Kaledkowski", , "dawid.kaledkowski@roche.com", role = c("aut", "cre")),
+    person("Pawel", "Rucki", , "pawel.rucki@roche.com", role = "aut"),
+    person("F. Hoffmann-La Roche AG", role = c("cph", "fnd"))
   )
 Description: Filter module for teal applications.
 License: Apache License 2.0 | file LICENSE
