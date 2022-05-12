@@ -199,3 +199,50 @@ testthat::test_that(
     )
   }
 )
+
+# Format
+testthat::test_that("$format() is a FilterStates's method that accepts indent", {
+  test_date <- as.Date("13/07/2013", format = "%d/%m/%y")
+  filter_state <- DateFilterState$new(test_date, varname = "test_date")
+  testthat::expect_error(shiny::isolate(filter_state$format(indent = 0)), regexp = NA)
+})
+
+testthat::test_that("$format() asserts that indent is numeric", {
+  test_date <- as.Date("13/07/2013", format = "%d/%m/%y")
+  filter_state <- DateFilterState$new(test_date, varname = "test_date")
+  testthat::expect_error(
+    filter_state$format(indent = "wrong type"),
+    regexp = "Assertion on 'indent' failed: Must be of type 'number'"
+  )
+})
+
+testthat::test_that("$format() returns a string representation the FilterState object", {
+  test_date <- as.Date("13/07/2013", format = "%d/%m/%y")
+  filter_state <- DateFilterState$new(test_date, varname = "test")
+  filter_state$set_state(list(selected = c(test_date, test_date)))
+  testthat::expect_equal(
+    shiny::isolate(filter_state$format(indent = 0)),
+    paste(
+      "Filtering on: test",
+      "  Selected range: 2020-07-13 - 2020-07-13",
+      "  Include missing values: FALSE",
+      sep = "\n"
+    )
+  )
+})
+
+testthat::test_that("$format() prepends spaces to every line of the returned string", {
+  test_date <- as.Date("13/07/2013", format = "%d/%m/%y")
+  filter_state <- DateFilterState$new(test_date, varname = "test")
+  filter_state$set_state(list(selected = c(test_date, test_date)))
+  for (i in 1:3) {
+    whitespace_indent <- paste0(rep(" ", i), collapse = "")
+    testthat::expect_equal(
+      shiny::isolate(filter_state$format(indent = !!(i))),
+      sprintf(
+        "%sFiltering on: test\n%1$s  Selected range: 2020-07-13 - 2020-07-13\n%1$s  Include missing values: FALSE",
+        format("", width = i)
+      )
+    )
+  }
+})

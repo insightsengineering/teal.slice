@@ -2,29 +2,11 @@
 % Please edit documentation in R/FilterStates.R
 \name{MAEFilterStates}
 \alias{MAEFilterStates}
-\title{Specialization of \code{FilterStates} for \code{MultiAssayExperiment}.}
+\title{MAEFilterStates}
 \description{
 Specialization of \code{FilterStates} for \code{MultiAssayExperiment}.
-
-Specialization of \code{FilterStates} for \code{MultiAssayExperiment}.
 }
-\examples{
-
-## ------------------------------------------------
-## Method `MAEFilterStates$format`
-## ------------------------------------------------
-
-
-Get function name
-
-Get function name used to create filter call.
-For `MAEFilterStates`
-`MultiAssayExperiment::subsetByColData` is used.
-}
-\keyword{Initialize}
-\keyword{`MAEFilterStates`}
 \keyword{internal}
-\keyword{object}
 \section{Super class}{
 \code{\link[teal.slice:FilterStates]{teal.slice::FilterStates}} -> \code{MAEFilterStates}
 }
@@ -61,6 +43,9 @@ For `MAEFilterStates`
 \if{html}{\out{<a id="method-new"></a>}}
 \if{latex}{\out{\hypertarget{method-new}{}}}
 \subsection{Method \code{new()}}{
+Initializes \code{MAEFilterStates} object
+
+Initialize \code{MAEFilterStates} object
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{MAEFilterStates$new(
   input_dataname,
@@ -112,24 +97,13 @@ Returns the formatted string representing this \code{MAEFilterStates} object.
 \subsection{Returns}{
 \code{character(1)} the formatted string
 }
-\subsection{Examples}{
-\if{html}{\out{<div class="r example copy">}}
-\preformatted{
-Get function name
-
-Get function name used to create filter call.
-For `MAEFilterStates`
-`MultiAssayExperiment::subsetByColData` is used.
-}
-\if{html}{\out{</div>}}
-
-}
-
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-get_fun"></a>}}
 \if{latex}{\out{\hypertarget{method-get_fun}{}}}
 \subsection{Method \code{get_fun()}}{
+Returns function name used to create filter call.
+For \code{MAEFilterStates} \code{MultiAssayExperiment::subsetByColData} is used.
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{MAEFilterStates$get_fun()}\if{html}{\out{</div>}}
 }
@@ -207,7 +181,7 @@ column in \code{colData(data)}.}
 \if{html}{\out{<a id="method-remove_filter_state"></a>}}
 \if{latex}{\out{\hypertarget{method-remove_filter_state}{}}}
 \subsection{Method \code{remove_filter_state()}}{
-Remove a variable from the \code{ReactiveQueue} and its corresponding UI element.
+Removes a variable from the \code{ReactiveQueue} and its corresponding UI element.
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{MAEFilterStates$remove_filter_state(element_id)}\if{html}{\out{</div>}}
 }

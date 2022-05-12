@@ -2,24 +2,11 @@
 % Please edit documentation in R/FilterStates.R
 \name{SEFilterStates}
 \alias{SEFilterStates}
-\title{Specialization of \code{FilterStates} for \code{SummaryExperiment}.}
+\title{SEFilterStates}
 \description{
 Specialization of \code{FilterStates} for \code{SummaryExperiment}.
-
-Specialization of \code{FilterStates} for \code{SummaryExperiment}.
 }
-\examples{
-
-## ------------------------------------------------
-## Method `SEFilterStates$format`
-## ------------------------------------------------
-
-
-}
-\keyword{Initialize}
-\keyword{`SEFilterStates`}
 \keyword{internal}
-\keyword{object}
 \section{Super class}{
 \code{\link[teal.slice:FilterStates]{teal.slice::FilterStates}} -> \code{SEFilterStates}
 }
@@ -56,6 +43,9 @@ Specialization of \code{FilterStates} for \code{SummaryExperiment}.
 \if{html}{\out{<a id="method-new"></a>}}
 \if{latex}{\out{\hypertarget{method-new}{}}}
 \subsection{Method \code{new()}}{
+Initialize \code{SEFilterStates} object
+
+Initialize \code{SEFilterStates} object
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{SEFilterStates$new(input_dataname, output_dataname, datalabel)}\if{html}{\out{</div>}}
 }
@@ -95,14 +85,6 @@ Returns the formatted string representing this \code{MAEFilterStates} object.
 \subsection{Returns}{
 \code{character(1)} the formatted string
 }
-\subsection{Examples}{
-\if{html}{\out{<div class="r example copy">}}
-\preformatted{
-}
-\if{html}{\out{</div>}}
-
-}
-
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-server"></a>}}

@@ -201,55 +201,41 @@ testthat::test_that(
 )
 
 # Format
-testthat::test_that("$format is a FilterStates's method that accepts indent", {
+testthat::test_that("$format() is a FilterStates's method that accepts indent", {
   testthat::expect_error(shiny::isolate(FilterState$new(c(7), varname = "test")$format(indent = 0)), regexp = NA)
 })
 
-testthat::test_that("$format asserts that indent is numeric", {
+testthat::test_that("$format() asserts that indent is numeric", {
   testthat::expect_error(
     FilterState$new(c(7), varname = "test")$format(indent = "wrong type"),
     regexp = "Assertion on 'indent' failed: Must be of type 'number'"
   )
 })
 
-testthat::test_that("$format returns a string representation the FilterState object", {
+testthat::test_that("$format() returns a string representation the FilterState object", {
   filter_state <- FilterState$new(c(7), varname = "test")
   filter_state$set_state(list(selected = c(7, 7)))
   testthat::expect_equal(
     shiny::isolate(filter_state$format(indent = 0)),
-    paste0(c(
+    paste(
       "Filtering on: test",
-      "  Selected: 7.000 7.000"),
-      collapse = "\n"
+      "  Selected values: 7.000 7.000",
+      "  Include missing values: FALSE",
+      sep = "\n"
     )
   )
 })
 
-testthat::test_that("$format appends NULL when there is no selection", {
-  filter_state <- FilterState$new(c(7), varname = "test")
-  testthat::expect_equal(
-    shiny::isolate(filter_state$format(indent = 0)),
-    paste0(c(
-      "Filtering on: test",
-      "  Selected: NULL"
-    ),
-    collapse = "\n"
-    )
-  )
-})
-
-testthat::test_that("$format prepends spaces to every line of the returned string", {
+testthat::test_that("$format() prepends spaces to every line of the returned string", {
   filter_state <- FilterState$new(c(7), varname = "test")
   filter_state$set_state(list(selected = c(7, 7)))
-  for(i in 1:3) {
+  for (i in 1:3) {
     whitespace_indent <- paste0(rep(" ", i), collapse = "")
     testthat::expect_equal(
       shiny::isolate(filter_state$format(indent = !!(i))),
-      paste0(c(
-        paste0(whitespace_indent, "Filtering on: test"),
-        paste0(whitespace_indent, "  Selected: 7.000 7.000")
-      ),
-      collapse = "\n"
+      sprintf(
+        "%sFiltering on: test\n%1$s  Selected values: 7.000 7.000\n%1$s  Include missing values: FALSE",
+        format("", width = i)
       )
     )
   }

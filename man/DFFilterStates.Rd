@@ -2,19 +2,11 @@
 % Please edit documentation in R/FilterStates.R
 \name{DFFilterStates}
 \alias{DFFilterStates}
-\title{Specialization of \code{FilterStates} for a base \code{data.frame}.}
+\title{DFFFilterStates}
 \description{
-Specialization of \code{FilterStates} for a base \code{data.frame}.
-
 Specialization of \code{FilterStates} for a base \code{data.frame}.
 }
 \examples{
-
-## ------------------------------------------------
-## Method `DFFilterStates$format`
-## ------------------------------------------------
-
-
 
 ## ------------------------------------------------
 ## Method `DFFilterStates$set_filter_state`
@@ -35,46 +27,7 @@ dffs$set_filter_state(state = fs, data = iris)
 shiny::isolate(dffs$get_filter_state())
 
 }
-\keyword{(`...`).}
-\keyword{(`dplyr::filter`),}
-\keyword{Initializes}
-\keyword{This}
-\keyword{`DFFilterStates`}
-\keyword{`ReactiveQueue`}
-\keyword{`ReactiveQueue`.}
-\keyword{`input_dataname`,}
-\keyword{`output_dataname`}
-\keyword{a}
-\keyword{and}
-\keyword{are}
-\keyword{arguments}
-\keyword{associated}
-\keyword{by}
-\keyword{calling}
-\keyword{class}
-\keyword{conditions}
-\keyword{contains}
-\keyword{function}
-\keyword{initializing}
 \keyword{internal}
-\keyword{list}
-\keyword{means}
-\keyword{name}
-\keyword{no}
-\keyword{object}
-\keyword{of}
-\keyword{passed}
-\keyword{setting}
-\keyword{single}
-\keyword{specified}
-\keyword{that}
-\keyword{the}
-\keyword{this}
-\keyword{to}
-\keyword{unnamed}
-\keyword{when}
-\keyword{which}
-\keyword{with}
 \section{Super class}{
 \code{\link[teal.slice:FilterStates]{teal.slice::FilterStates}} -> \code{DFFilterStates}
 }
@@ -111,6 +64,13 @@ shiny::isolate(dffs$get_filter_state())
 \if{html}{\out{<a id="method-new"></a>}}
 \if{latex}{\out{\hypertarget{method-new}{}}}
 \subsection{Method \code{new()}}{
+Initializes \code{DFFilterStates} object
+
+Initializes \code{DFFilterStates} object by setting \code{input_dataname},
+\code{output_dataname} and initializing \code{ReactiveQueue}. This class contains a
+single \code{ReactiveQueue} with no specified name which means that
+when calling the function associated to this class (\code{dplyr::filter}), a list of
+conditions are passed to unnamed arguments (\code{...}).
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{DFFilterStates$new(input_dataname, output_dataname, datalabel, varlabels, keys)}\if{html}{\out{</div>}}
 }
@@ -156,14 +116,6 @@ Returns the formatted string representing this \code{FilterStates} object.
 \subsection{Returns}{
 \code{character(1)} the formatted string
 }
-\subsection{Examples}{
-\if{html}{\out{<div class="r example copy">}}
-\preformatted{
-}
-\if{html}{\out{</div>}}
-
-}
-
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-get_fun"></a>}}

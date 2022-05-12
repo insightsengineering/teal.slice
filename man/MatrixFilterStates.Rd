@@ -2,24 +2,11 @@
 % Please edit documentation in R/FilterStates.R
 \name{MatrixFilterStates}
 \alias{MatrixFilterStates}
-\title{Specialization of \code{FilterStates} for a base matrix.}
+\title{MatrixFilterStates}
 \description{
 Specialization of \code{FilterStates} for a base matrix.
-
-Specialization of \code{FilterStates} for a base matrix.
 }
-\examples{
-
-## ------------------------------------------------
-## Method `MatrixFilterStates$format`
-## ------------------------------------------------
-
-
-}
-\keyword{Initialize}
-\keyword{`MatrixFilterStates`}
 \keyword{internal}
-\keyword{object}
 \section{Super class}{
 \code{\link[teal.slice:FilterStates]{teal.slice::FilterStates}} -> \code{MatrixFilterStates}
 }
@@ -56,6 +43,9 @@ Specialization of \code{FilterStates} for a base matrix.
 \if{html}{\out{<a id="method-new"></a>}}
 \if{latex}{\out{\hypertarget{method-new}{}}}
 \subsection{Method \code{new()}}{
+Initialize \code{MatrixFilterStates} object
+
+Initialize \code{MatrixFilterStates} object
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{MatrixFilterStates$new(input_dataname, output_dataname, datalabel)}\if{html}{\out{</div>}}
 }
@@ -95,14 +85,6 @@ Returns the formatted string representing this \code{MatrixFilterStates} object.
 \subsection{Returns}{
 \code{character(1)} the formatted string
 }
-\subsection{Examples}{
-\if{html}{\out{<div class="r example copy">}}
-\preformatted{
-}
-\if{html}{\out{</div>}}
-
-}
-
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-server"></a>}}

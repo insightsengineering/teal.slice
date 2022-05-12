@@ -665,14 +665,15 @@ FilterStates <- R6::R6Class( # nolint
   )
 )
 
-#' Specialization of `FilterStates` for a base `data.frame`.
+#' @title DFFFilterStates
+#' @description Specialization of `FilterStates` for a base `data.frame`.
 #'
 #' @keywords internal
 DFFilterStates <- R6::R6Class( # nolint
   classname = "DFFilterStates",
   inherit = FilterStates,
   public = list(
-    #' Initializes `DFFilterStates` object
+    #' @description Initializes `DFFilterStates` object
     #'
     #' Initializes `DFFilterStates` object by setting `input_dataname`,
     #' `output_dataname` and initializing `ReactiveQueue`. This class contains a
@@ -712,14 +713,13 @@ DFFilterStates <- R6::R6Class( # nolint
     #'
     #' @param indent (`numeric(1)`) the number of spaces before each line of the representation
     #' @return `character(1)` the formatted string
-    #' @examples
-    #'
     format = function(indent = 0) {
-      formatted_states <- c()
+      checkmate::assert_number(indent, finite = TRUE, lower = 0)
 
-      for (state in self$queue_get(1L)) {
-        formatted_states <- c(formatted_states, paste0(state$format(indent = indent)))
-      }
+      formatted_states <- vapply(
+        self$queue_get(1L), function(state) state$format(indent = indent),
+        USE.NAMES = FALSE, FUN.VALUE = character(1)
+      )
       paste(formatted_states, collapse = "\n")
     },
 
@@ -1076,13 +1076,14 @@ DFFilterStates <- R6::R6Class( # nolint
 )
 
 
-#' Specialization of `FilterStates` for `MultiAssayExperiment`.
+#' @title MAEFilterStates
+#' @description Specialization of `FilterStates` for `MultiAssayExperiment`.
 #' @keywords internal
 MAEFilterStates <- R6::R6Class( # nolint
   classname = "MAEFilterStates",
   inherit = FilterStates,
   public = list(
-    #' Initialize `MAEFilterStates` object
+    #' @description Initializes `MAEFilterStates` object
     #'
     #' Initialize `MAEFilterStates` object
     #'
@@ -1122,24 +1123,19 @@ MAEFilterStates <- R6::R6Class( # nolint
     #'
     #' @param indent (`numeric(1)`) the number of spaces before each line of the representation
     #' @return `character(1)` the formatted string
-    #' @examples
-    #'
     format = function(indent = 0) {
-      checkmate::assert_number(indent, finite = TRUE)
+      checkmate::assert_number(indent, finite = TRUE, lower = 0)
 
       if (length(self$queue_get(1L)) > 0) {
-        whitespace_indent <- paste0(rep(" ", indent), collapse = "")
-        formatted_states <- c(paste0(whitespace_indent, "Subject filters:"))
+        formatted_states <- sprintf("%sSubject filters:", format("", width = indent))
         for (state in self$queue_get(1L)) formatted_states <- c(formatted_states, state$format(indent = indent + 2))
         paste(formatted_states, collapse = "\n")
       }
     },
 
-    #' Get function name
-    #'
-    #' Get function name used to create filter call.
-    #' For `MAEFilterStates`
-    #' `MultiAssayExperiment::subsetByColData` is used.
+    #' @description
+    #' Returns function name used to create filter call.
+    #' For `MAEFilterStates` `MultiAssayExperiment::subsetByColData` is used.
     #' @return `character(1)`
     get_fun = function() {
       return("MultiAssayExperiment::subsetByColData")
@@ -1248,7 +1244,8 @@ MAEFilterStates <- R6::R6Class( # nolint
       NULL
     },
 
-    #' @description Remove a variable from the `ReactiveQueue` and its corresponding UI element.
+    #' @description
+    #' Removes a variable from the `ReactiveQueue` and its corresponding UI element.
     #'
     #' @param element_id (`character(1)`)\cr name of `ReactiveQueue` element.
     #'
@@ -1456,13 +1453,14 @@ MAEFilterStates <- R6::R6Class( # nolint
   )
 )
 
-#' Specialization of `FilterStates` for `SummaryExperiment`.
+#' @title SEFilterStates
+#' @description Specialization of `FilterStates` for `SummaryExperiment`.
 #' @keywords internal
 SEFilterStates <- R6::R6Class( # nolint
   classname = "SEFilterStates",
   inherit = FilterStates,
   public = list(
-    #' Initialize `SEFilterStates` object
+    #' @description Initialize `SEFilterStates` object
     #'
     #' Initialize `SEFilterStates` object
     #'
@@ -1493,12 +1491,10 @@ SEFilterStates <- R6::R6Class( # nolint
     #'
     #' @param indent (`numeric(1)`) the number of spaces before each line of the representation
     #' @return `character(1)` the formatted string
-    #' @examples
-    #'
     format = function(indent = 0) {
-      checkmate::assert_number(indent, finite = TRUE)
+      checkmate::assert_number(indent, finite = TRUE, lower = 0)
 
-      whitespace_indent <- paste0(rep(" ", indent), collapse = "")
+      whitespace_indent <- format("", width = indent)
       formatted_states <- c()
       if (!is.null(self$queue_get(queue_index = "subset"))) {
         formatted_states <- c(formatted_states, paste0(whitespace_indent, "  Subsetting:"))
@@ -1508,7 +1504,7 @@ SEFilterStates <- R6::R6Class( # nolint
       }
 
       if (!is.null(self$queue_get(queue_index = "select"))) {
-        formatted_states <- c(formatted_states, paste0(whitespace_indent, "Selecting:"))
+        formatted_states <- c(formatted_states, paste0(whitespace_indent, "  Selecting:"))
         for (state in self$queue_get(queue_index = "select")) {
           formatted_states <- c(formatted_states, state$format(indent = indent + 4))
         }
@@ -2027,13 +2023,14 @@ SEFilterStates <- R6::R6Class( # nolint
   )
 )
 
-#' Specialization of `FilterStates` for a base matrix.
+#' @title MatrixFilterStates
+#' @description Specialization of `FilterStates` for a base matrix.
 #' @keywords internal
 MatrixFilterStates <- R6::R6Class( # nolint
   classname = "MatrixFilterStates",
   inherit = FilterStates,
   public = list(
-    #' Initialize `MatrixFilterStates` object
+    #' @description Initialize `MatrixFilterStates` object
     #'
     #' Initialize `MatrixFilterStates` object
     #'
@@ -2060,10 +2057,8 @@ MatrixFilterStates <- R6::R6Class( # nolint
     #'
     #' @param indent (`numeric(1)`) the number of spaces before each line of the representation
     #' @return `character(1)` the formatted string
-    #' @examples
-    #'
     format = function(indent = 0) {
-      checkmate::assert_number(indent, finite = TRUE)
+      checkmate::assert_number(indent, finite = TRUE, lower = 0)
 
       formatted_states <- c()
       whitespace_indent <- paste0(rep(" ", indent), collapse = "")
