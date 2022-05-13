@@ -2101,8 +2101,8 @@ DateFilterState <- R6::R6Class( # nolint
         "%sFiltering on: %s\n%1$s  Selected range: %s - %s\n%1$s  Include missing values: %s",
         format("", width = indent),
         self$get_varname(deparse = TRUE),
-        format(self$get_selected(), nsmall = 3)[1],
-        format(self$get_selected(), nsmall = 3)[2],
+        format(self$get_selected()[1], nsmall = 3),
+        format(self$get_selected()[2], nsmall = 3),
         format(self$get_keep_na())
       )
     },

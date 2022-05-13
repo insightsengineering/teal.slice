@@ -207,8 +207,8 @@ FilterStates <- R6::R6Class( # nolint
     },
 
     #' @description
-    #' Returns the input dataname
-    #' @return (`character(1)`) the input dataname
+    #' Returns the label of the dataset
+    #' @return (`character(1)`) the label
     get_datalabel = function() {
       private$datalabel
     },
@@ -2061,7 +2061,6 @@ MatrixFilterStates <- R6::R6Class( # nolint
       checkmate::assert_number(indent, finite = TRUE, lower = 0)
 
       formatted_states <- c()
-      whitespace_indent <- paste0(rep(" ", indent), collapse = "")
       for (state in self$queue_get(queue_index = "subset")) {
         formatted_states <- c(formatted_states, state$format(indent = indent + 2))
       }
