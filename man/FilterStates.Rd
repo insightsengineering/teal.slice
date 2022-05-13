@@ -92,13 +92,13 @@ text label value.}
 \if{html}{\out{<a id="method-get_datalabel"></a>}}
 \if{latex}{\out{\hypertarget{method-get_datalabel}{}}}
 \subsection{Method \code{get_datalabel()}}{
-Returns the input dataname
+Returns the label of the dataset
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{FilterStates$get_datalabel()}\if{html}{\out{</div>}}
 }
 
 \subsection{Returns}{
-(\code{character(1)}) the input dataname
+(\code{character(1)}) the label
 }
 }
 \if{html}{\out{<hr>}}

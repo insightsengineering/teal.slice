@@ -444,6 +444,13 @@ FilterState <- R6::R6Class( # nolint
     },
 
     #' @description
+    #' Prints this `FilterState` object
+    print = function(...) {
+      cat(shiny::isolate(self$format()))
+      cat("\n")
+    },
+
+    #' @description
     #' Set if `NA` should be kept
     #' @param value (`logical(1)`)\cr
     #'  value(s) which come from the filter selection. Value is set in `server`

@@ -295,6 +295,13 @@ FilterStates <- R6::R6Class( # nolint
     },
 
     #' @description
+    #' Prints this `FilterStates` object
+    print = function(...) {
+      cat(shiny::isolate(self$format()))
+      cat("\n")
+    },
+
+    #' @description
     #' Gets the name of the function used to filter the data in this `FilterStates`.
     #'
     #' Get function name used to create filter call. By default it's a
