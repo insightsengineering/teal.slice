@@ -48,6 +48,7 @@ isolate(filter_states$get_call())
 \item \href{#method-get_datalabel}{\code{FilterStates$get_datalabel()}}
 \item \href{#method-format}{\code{FilterStates$format()}}
 \item \href{#method-get_call}{\code{FilterStates$get_call()}}
+\item \href{#method-print}{\code{FilterStates$print()}}
 \item \href{#method-get_fun}{\code{FilterStates$get_fun()}}
 \item \href{#method-queue_empty}{\code{FilterStates$queue_empty()}}
 \item \href{#method-queue_get}{\code{FilterStates$queue_get()}}
@@ -140,6 +141,23 @@ no-op call such as \code{x <- x}.
 
 \subsection{Returns}{
 \code{call} or \code{NULL}
+}
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-print"></a>}}
+\if{latex}{\out{\hypertarget{method-print}{}}}
+\subsection{Method \code{print()}}{
+Prints this \code{FilterStates} object
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{FilterStates$print(...)}\if{html}{\out{</div>}}
+}
+
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{...}}{additional arguments to this method}
+}
+\if{html}{\out{</div>}}
 }
 }
 \if{html}{\out{<hr>}}

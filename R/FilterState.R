@@ -445,6 +445,8 @@ FilterState <- R6::R6Class( # nolint
 
     #' @description
     #' Prints this `FilterState` object
+    #'
+    #' @param ... additional arguments to this method
     print = function(...) {
       cat(shiny::isolate(self$format()))
       cat("\n")

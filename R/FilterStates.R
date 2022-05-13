@@ -296,6 +296,8 @@ FilterStates <- R6::R6Class( # nolint
 
     #' @description
     #' Prints this `FilterStates` object
+    #'
+    #' @param ... additional arguments to this method
     print = function(...) {
       cat(shiny::isolate(self$format()))
       cat("\n")
@@ -672,7 +674,7 @@ FilterStates <- R6::R6Class( # nolint
   )
 )
 
-#' @title DFFFilterStates
+#' @title `DFFFilterStates`
 #' @description Specialization of `FilterStates` for a base `data.frame`.
 #'
 #' @keywords internal
@@ -1083,7 +1085,7 @@ DFFilterStates <- R6::R6Class( # nolint
 )
 
 
-#' @title MAEFilterStates
+#' @title `MAEFilterStates`
 #' @description Specialization of `FilterStates` for `MultiAssayExperiment`.
 #' @keywords internal
 MAEFilterStates <- R6::R6Class( # nolint
@@ -1460,7 +1462,7 @@ MAEFilterStates <- R6::R6Class( # nolint
   )
 )
 
-#' @title SEFilterStates
+#' @title `SEFilterStates`
 #' @description Specialization of `FilterStates` for `SummaryExperiment`.
 #' @keywords internal
 SEFilterStates <- R6::R6Class( # nolint
@@ -2030,7 +2032,7 @@ SEFilterStates <- R6::R6Class( # nolint
   )
 )
 
-#' @title MatrixFilterStates
+#' @title `MatrixFilterStates`
 #' @description Specialization of `FilterStates` for a base matrix.
 #' @keywords internal
 MatrixFilterStates <- R6::R6Class( # nolint
