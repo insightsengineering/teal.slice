@@ -20,4 +20,3 @@ the `dependencies = FALSE` argument to `install_github` it may produce an error.
 
 See package vignettes `browseVignettes(package = "teal.slice")` for usage of this package.
 
-
