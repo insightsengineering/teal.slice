@@ -12,7 +12,7 @@ Abstract class to encapsulate filter states"><!-- mathjax --><script src="https:
     
     <a class="navbar-brand me-2" href="../index.html">teal.slice</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.0.9002</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.0.9003</small>
 
     <div style="width: 140px; margin-left: 0.5rem;"> <small class="nav-text text-muted me-auto">part of</small> <img src="https://github.com/insightsengineering/hex-stickers/blob/main/PNG/nest.png?raw=true" alt="NEST" style="height: 30px;"><a href="https://pharmaverse.org/" class="external-link"><img src="https://github.com/insightsengineering/hex-stickers/blob/main/PNG/pharmaverse.png?raw=true" alt="pharmaverse" style="height: 30px;"></a> </div>
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -35,15 +35,6 @@ Abstract class to encapsulate filter states"><!-- mathjax --><script src="https:
 <li class="nav-item">
   <a class="nav-link" href="../news/index.html">Changelog</a>
 </li>
-<!-- start_releases -->
-<li class="dropdown">
-	<a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
-Other releases
-<span class="caret"></span></a><ul class="dropdown-menu" role="menu">
-   <li><a href="../index.html">latest</a></li>
-   <li><a href="..//index.html"></a></li>
-</ul></li>
-<!-- end_releases -->
       </ul><form class="form-inline my-2 my-lg-0" role="search">
         <input type="search" class="form-control me-sm-2" aria-label="Toggle navigation" name="search-input" data-search-index="../search.json" id="search-input" placeholder="Search for" autocomplete="off"></form>
 
@@ -115,6 +106,7 @@ or using <code>set_selected</code>, <code>set_keep_na</code> or <code>set_keep_i
 
 <ul><li><p><a href="#method-new"><code>FilterState$new()</code></a></p></li>
 <li><p><a href="#method-destroy_observers"><code>FilterState$destroy_observers()</code></a></p></li>
+<li><p><a href="#method-format"><code>FilterState$format()</code></a></p></li>
 <li><p><a href="#method-get_call"><code>FilterState$get_call()</code></a></p></li>
 <li><p><a href="#method-get_dataname"><code>FilterState$get_dataname()</code></a></p></li>
 <li><p><a href="#method-get_keep_na"><code>FilterState$get_keep_na()</code></a></p></li>
@@ -122,6 +114,7 @@ or using <code>set_selected</code>, <code>set_keep_na</code> or <code>set_keep_i
 <li><p><a href="#method-get_varname"><code>FilterState$get_varname()</code></a></p></li>
 <li><p><a href="#method-get_selected"><code>FilterState$get_selected()</code></a></p></li>
 <li><p><a href="#method-get_state"><code>FilterState$get_state()</code></a></p></li>
+<li><p><a href="#method-print"><code>FilterState$print()</code></a></p></li>
 <li><p><a href="#method-set_keep_na"><code>FilterState$set_keep_na()</code></a></p></li>
 <li><p><a href="#method-set_keep_na_reactive"><code>FilterState$set_keep_na_reactive()</code></a></p></li>
 <li><p><a href="#method-set_na_rm"><code>FilterState$set_na_rm()</code></a></p></li>
@@ -187,13 +180,34 @@ whether condition calls should be prefixed by dataname. Possible values:</p><ul>
 </div>
 
 
+</div><p></p><hr><a id="method-format"></a><div class="section">
+<h3 id="method-format-">Method <code><a href="https://rdrr.io/r/base/format.html" class="external-link">format()</a></code><a class="anchor" aria-label="anchor" href="#method-format-"></a></h3>
+<p>Returns a formatted string representing this <code>FilterState</code>.</p><div class="section">
+<h4 id="usage-2">Usage<a class="anchor" aria-label="anchor" href="#usage-2"></a></h4>
+<p></p><div class="r"><div class="sourceCode"><pre><code><span class="va">FilterState</span><span class="op">$</span><span class="fu">format</span><span class="op">(</span>indent <span class="op">=</span> <span class="fl">0</span><span class="op">)</span></code></pre></div><p></p></div>
+</div>
+
+<div class="section">
+<h4 id="arguments-1">Arguments<a class="anchor" aria-label="anchor" href="#arguments-1"></a></h4>
+<p></p><div class="arguments"><dl><dt><code>indent</code></dt>
+<dd><p>(<code>numeric(1)</code>) the number of spaces before after each new line character of the formatted string.
+Default: 0</p></dd>
+
+
+</dl><p></p></div>
+</div>
+<div class="section">
+<h4 id="returns">Returns<a class="anchor" aria-label="anchor" href="#returns"></a></h4>
+<p><code>character(1)</code> the formatted string</p>
+</div>
+
 </div><p></p><hr><a id="method-get_call"></a><div class="section">
 <h3 id="method-get-call-">Method <code>get_call()</code><a class="anchor" aria-label="anchor" href="#method-get-call-"></a></h3>
 <p>Returns reproducible condition call for current selection relevant
 for selected variable type.
 Method is using internal reactive values which makes it reactive
 and must be executed in reactive or isolated context.</p><div class="section">
-<h4 id="usage-2">Usage<a class="anchor" aria-label="anchor" href="#usage-2"></a></h4>
+<h4 id="usage-3">Usage<a class="anchor" aria-label="anchor" href="#usage-3"></a></h4>
 <p></p><div class="r"><div class="sourceCode"><pre><code><span class="va">FilterState</span><span class="op">$</span><span class="fu">get_call</span><span class="op">(</span><span class="op">)</span></code></pre></div><p></p></div>
 </div>
 
@@ -201,12 +215,12 @@ and must be executed in reactive or isolated context.</p><div class="section">
 </div><p></p><hr><a id="method-get_dataname"></a><div class="section">
 <h3 id="method-get-dataname-">Method <code>get_dataname()</code><a class="anchor" aria-label="anchor" href="#method-get-dataname-"></a></h3>
 <p>Returns dataname</p><div class="section">
-<h4 id="usage-3">Usage<a class="anchor" aria-label="anchor" href="#usage-3"></a></h4>
+<h4 id="usage-4">Usage<a class="anchor" aria-label="anchor" href="#usage-4"></a></h4>
 <p></p><div class="r"><div class="sourceCode"><pre><code><span class="va">FilterState</span><span class="op">$</span><span class="fu">get_dataname</span><span class="op">(</span>deparse <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></code></pre></div><p></p></div>
 </div>
 
 <div class="section">
-<h4 id="arguments-1">Arguments<a class="anchor" aria-label="anchor" href="#arguments-1"></a></h4>
+<h4 id="arguments-2">Arguments<a class="anchor" aria-label="anchor" href="#arguments-2"></a></h4>
 <p></p><div class="arguments"><dl><dt><code>deparse</code></dt>
 <dd><p>(<code>logical(1)</code>)<br>
 whether dataname should be deparsed. <code>TRUE</code> by default</p></dd>
@@ -215,43 +229,43 @@ whether dataname should be deparsed. <code>TRUE</code> by default</p></dd>
 </dl><p></p></div>
 </div>
 <div class="section">
-<h4 id="returns">Returns<a class="anchor" aria-label="anchor" href="#returns"></a></h4>
+<h4 id="returns-1">Returns<a class="anchor" aria-label="anchor" href="#returns-1"></a></h4>
 <p>(<code>name</code> or <code>character(1)</code>)</p>
 </div>
 
 </div><p></p><hr><a id="method-get_keep_na"></a><div class="section">
 <h3 id="method-get-keep-na-">Method <code>get_keep_na()</code><a class="anchor" aria-label="anchor" href="#method-get-keep-na-"></a></h3>
 <p>Returns current <code>keep_na</code> selection</p><div class="section">
-<h4 id="usage-4">Usage<a class="anchor" aria-label="anchor" href="#usage-4"></a></h4>
+<h4 id="usage-5">Usage<a class="anchor" aria-label="anchor" href="#usage-5"></a></h4>
 <p></p><div class="r"><div class="sourceCode"><pre><code><span class="va">FilterState</span><span class="op">$</span><span class="fu">get_keep_na</span><span class="op">(</span><span class="op">)</span></code></pre></div><p></p></div>
 </div>
 
 <div class="section">
-<h4 id="returns-1">Returns<a class="anchor" aria-label="anchor" href="#returns-1"></a></h4>
+<h4 id="returns-2">Returns<a class="anchor" aria-label="anchor" href="#returns-2"></a></h4>
 <p>(<code>logical(1)</code>)</p>
 </div>
 
 </div><p></p><hr><a id="method-get_varlabel"></a><div class="section">
 <h3 id="method-get-varlabel-">Method <code>get_varlabel()</code><a class="anchor" aria-label="anchor" href="#method-get-varlabel-"></a></h3>
 <p>Returns variable label</p><div class="section">
-<h4 id="usage-5">Usage<a class="anchor" aria-label="anchor" href="#usage-5"></a></h4>
+<h4 id="usage-6">Usage<a class="anchor" aria-label="anchor" href="#usage-6"></a></h4>
 <p></p><div class="r"><div class="sourceCode"><pre><code><span class="va">FilterState</span><span class="op">$</span><span class="fu">get_varlabel</span><span class="op">(</span><span class="op">)</span></code></pre></div><p></p></div>
 </div>
 
 <div class="section">
-<h4 id="returns-2">Returns<a class="anchor" aria-label="anchor" href="#returns-2"></a></h4>
+<h4 id="returns-3">Returns<a class="anchor" aria-label="anchor" href="#returns-3"></a></h4>
 <p>(<code>character(1)</code>)</p>
 </div>
 
 </div><p></p><hr><a id="method-get_varname"></a><div class="section">
 <h3 id="method-get-varname-">Method <code>get_varname()</code><a class="anchor" aria-label="anchor" href="#method-get-varname-"></a></h3>
 <p>Get variable name</p><div class="section">
-<h4 id="usage-6">Usage<a class="anchor" aria-label="anchor" href="#usage-6"></a></h4>
+<h4 id="usage-7">Usage<a class="anchor" aria-label="anchor" href="#usage-7"></a></h4>
 <p></p><div class="r"><div class="sourceCode"><pre><code><span class="va">FilterState</span><span class="op">$</span><span class="fu">get_varname</span><span class="op">(</span>deparse <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></code></pre></div><p></p></div>
 </div>
 
 <div class="section">
-<h4 id="arguments-2">Arguments<a class="anchor" aria-label="anchor" href="#arguments-2"></a></h4>
+<h4 id="arguments-3">Arguments<a class="anchor" aria-label="anchor" href="#arguments-3"></a></h4>
 <p></p><div class="arguments"><dl><dt><code>deparse</code></dt>
 <dd><p>(<code>logical(1)</code>)<br>
 whether variable name should be deparsed. <code>FALSE</code> by default</p></dd>
@@ -260,44 +274,60 @@ whether variable name should be deparsed. <code>FALSE</code> by default</p></dd>
 </dl><p></p></div>
 </div>
 <div class="section">
-<h4 id="returns-3">Returns<a class="anchor" aria-label="anchor" href="#returns-3"></a></h4>
+<h4 id="returns-4">Returns<a class="anchor" aria-label="anchor" href="#returns-4"></a></h4>
 <p>(<code>name</code> or <code>character(1)</code>)</p>
 </div>
 
 </div><p></p><hr><a id="method-get_selected"></a><div class="section">
 <h3 id="method-get-selected-">Method <code>get_selected()</code><a class="anchor" aria-label="anchor" href="#method-get-selected-"></a></h3>
 <p>Get selected values from <code>FilterState</code></p><div class="section">
-<h4 id="usage-7">Usage<a class="anchor" aria-label="anchor" href="#usage-7"></a></h4>
+<h4 id="usage-8">Usage<a class="anchor" aria-label="anchor" href="#usage-8"></a></h4>
 <p></p><div class="r"><div class="sourceCode"><pre><code><span class="va">FilterState</span><span class="op">$</span><span class="fu">get_selected</span><span class="op">(</span><span class="op">)</span></code></pre></div><p></p></div>
 </div>
 
 <div class="section">
-<h4 id="returns-4">Returns<a class="anchor" aria-label="anchor" href="#returns-4"></a></h4>
+<h4 id="returns-5">Returns<a class="anchor" aria-label="anchor" href="#returns-5"></a></h4>
 <p>class of the returned object depends of class of the <code>FilterState</code></p>
 </div>
 
 </div><p></p><hr><a id="method-get_state"></a><div class="section">
 <h3 id="method-get-state-">Method <code>get_state()</code><a class="anchor" aria-label="anchor" href="#method-get-state-"></a></h3>
 <p>Returns the filtering state.</p><div class="section">
-<h4 id="usage-8">Usage<a class="anchor" aria-label="anchor" href="#usage-8"></a></h4>
+<h4 id="usage-9">Usage<a class="anchor" aria-label="anchor" href="#usage-9"></a></h4>
 <p></p><div class="r"><div class="sourceCode"><pre><code><span class="va">FilterState</span><span class="op">$</span><span class="fu">get_state</span><span class="op">(</span><span class="op">)</span></code></pre></div><p></p></div>
 </div>
 
 <div class="section">
-<h4 id="returns-5">Returns<a class="anchor" aria-label="anchor" href="#returns-5"></a></h4>
+<h4 id="returns-6">Returns<a class="anchor" aria-label="anchor" href="#returns-6"></a></h4>
 <p><code>list</code> containing values taken from the reactive fields:</p><ul><li><p><code>selected</code> (<code>atomic</code>) length depends on a <code>FilterState</code> variant.</p></li>
 <li><p><code>keep_na</code> (<code>logical(1)</code>) whether <code>NA</code> should be kept.</p></li>
 </ul></div>
 
+</div><p></p><hr><a id="method-print"></a><div class="section">
+<h3 id="method-print-">Method <code><a href="https://rdrr.io/r/base/print.html" class="external-link">print()</a></code><a class="anchor" aria-label="anchor" href="#method-print-"></a></h3>
+<p>Prints this <code>FilterState</code> object</p><div class="section">
+<h4 id="usage-10">Usage<a class="anchor" aria-label="anchor" href="#usage-10"></a></h4>
+<p></p><div class="r"><div class="sourceCode"><pre><code><span class="va">FilterState</span><span class="op">$</span><span class="fu">print</span><span class="op">(</span><span class="va">...</span><span class="op">)</span></code></pre></div><p></p></div>
+</div>
+
+<div class="section">
+<h4 id="arguments-4">Arguments<a class="anchor" aria-label="anchor" href="#arguments-4"></a></h4>
+<p></p><div class="arguments"><dl><dt><code>...</code></dt>
+<dd><p>additional arguments to this method</p></dd>
+
+
+</dl><p></p></div>
+</div>
+
 </div><p></p><hr><a id="method-set_keep_na"></a><div class="section">
 <h3 id="method-set-keep-na-">Method <code>set_keep_na()</code><a class="anchor" aria-label="anchor" href="#method-set-keep-na-"></a></h3>
 <p>Set if <code>NA</code> should be kept</p><div class="section">
-<h4 id="usage-9">Usage<a class="anchor" aria-label="anchor" href="#usage-9"></a></h4>
+<h4 id="usage-11">Usage<a class="anchor" aria-label="anchor" href="#usage-11"></a></h4>
 <p></p><div class="r"><div class="sourceCode"><pre><code><span class="va">FilterState</span><span class="op">$</span><span class="fu">set_keep_na</span><span class="op">(</span><span class="va">value</span><span class="op">)</span></code></pre></div><p></p></div>
 </div>
 
 <div class="section">
-<h4 id="arguments-3">Arguments<a class="anchor" aria-label="anchor" href="#arguments-3"></a></h4>
+<h4 id="arguments-5">Arguments<a class="anchor" aria-label="anchor" href="#arguments-5"></a></h4>
 <p></p><div class="arguments"><dl><dt><code>value</code></dt>
 <dd><p>(<code>logical(1)</code>)<br>
 value(s) which come from the filter selection. Value is set in <code>server</code>
@@ -311,12 +341,12 @@ modules after selecting check-box-input in the shiny interface. Values are set t
 </div><p></p><hr><a id="method-set_keep_na_reactive"></a><div class="section">
 <h3 id="method-set-keep-na-reactive-">Method <code>set_keep_na_reactive()</code><a class="anchor" aria-label="anchor" href="#method-set-keep-na-reactive-"></a></h3>
 <p>Set if <code>NA</code> should be kept when using <code>set_filter_state</code></p><div class="section">
-<h4 id="usage-10">Usage<a class="anchor" aria-label="anchor" href="#usage-10"></a></h4>
+<h4 id="usage-12">Usage<a class="anchor" aria-label="anchor" href="#usage-12"></a></h4>
 <p></p><div class="r"><div class="sourceCode"><pre><code><span class="va">FilterState</span><span class="op">$</span><span class="fu">set_keep_na_reactive</span><span class="op">(</span><span class="va">value</span><span class="op">)</span></code></pre></div><p></p></div>
 </div>
 
 <div class="section">
-<h4 id="arguments-4">Arguments<a class="anchor" aria-label="anchor" href="#arguments-4"></a></h4>
+<h4 id="arguments-6">Arguments<a class="anchor" aria-label="anchor" href="#arguments-6"></a></h4>
 <p></p><div class="arguments"><dl><dt><code>value</code></dt>
 <dd><p>(<code>logical(1)</code>)<br>
 value(s) which come from the filter selection. Value is set in <code>server</code>
@@ -332,12 +362,12 @@ modules when using <code>set_filter_state</code> instead of the shiny interface.
 <p>Some methods needs additional <code>!is.na(varame)</code> condition to not include
 missing values. When <code>private$na_rm = TRUE</code> is set, <code>self$get_call</code> returns
 condition extended by <code>!is.na</code> condition.</p><div class="section">
-<h4 id="usage-11">Usage<a class="anchor" aria-label="anchor" href="#usage-11"></a></h4>
+<h4 id="usage-13">Usage<a class="anchor" aria-label="anchor" href="#usage-13"></a></h4>
 <p></p><div class="r"><div class="sourceCode"><pre><code><span class="va">FilterState</span><span class="op">$</span><span class="fu">set_na_rm</span><span class="op">(</span><span class="va">value</span><span class="op">)</span></code></pre></div><p></p></div>
 </div>
 
 <div class="section">
-<h4 id="arguments-5">Arguments<a class="anchor" aria-label="anchor" href="#arguments-5"></a></h4>
+<h4 id="arguments-7">Arguments<a class="anchor" aria-label="anchor" href="#arguments-7"></a></h4>
 <p></p><div class="arguments"><dl><dt><code>value</code></dt>
 <dd><p>(<code>logical(1)</code>) when <code>TRUE</code>, <code>FilterState$get_call</code> appends an expression
 removing <code>NA</code> values to the filter expression returned by <code>get_call</code></p></dd>
@@ -349,12 +379,12 @@ removing <code>NA</code> values to the filter expression returned by <code>get_c
 </div><p></p><hr><a id="method-set_selected"></a><div class="section">
 <h3 id="method-set-selected-">Method <code>set_selected()</code><a class="anchor" aria-label="anchor" href="#method-set-selected-"></a></h3>
 <p>Set selection</p><div class="section">
-<h4 id="usage-12">Usage<a class="anchor" aria-label="anchor" href="#usage-12"></a></h4>
+<h4 id="usage-14">Usage<a class="anchor" aria-label="anchor" href="#usage-14"></a></h4>
 <p></p><div class="r"><div class="sourceCode"><pre><code><span class="va">FilterState</span><span class="op">$</span><span class="fu">set_selected</span><span class="op">(</span><span class="va">value</span><span class="op">)</span></code></pre></div><p></p></div>
 </div>
 
 <div class="section">
-<h4 id="arguments-6">Arguments<a class="anchor" aria-label="anchor" href="#arguments-6"></a></h4>
+<h4 id="arguments-8">Arguments<a class="anchor" aria-label="anchor" href="#arguments-8"></a></h4>
 <p></p><div class="arguments"><dl><dt><code>value</code></dt>
 <dd><p>(<code>vector</code>)<br>
 value(s) which come from the filter selection. Values are set in <code>server</code>
@@ -369,12 +399,12 @@ same as <code>private$choices</code>.</p></dd>
 </div><p></p><hr><a id="method-set_selected_reactive"></a><div class="section">
 <h3 id="method-set-selected-reactive-">Method <code>set_selected_reactive()</code><a class="anchor" aria-label="anchor" href="#method-set-selected-reactive-"></a></h3>
 <p>Set selection when using <code>set_filter_state</code></p><div class="section">
-<h4 id="usage-13">Usage<a class="anchor" aria-label="anchor" href="#usage-13"></a></h4>
+<h4 id="usage-15">Usage<a class="anchor" aria-label="anchor" href="#usage-15"></a></h4>
 <p></p><div class="r"><div class="sourceCode"><pre><code><span class="va">FilterState</span><span class="op">$</span><span class="fu">set_selected_reactive</span><span class="op">(</span><span class="va">value</span><span class="op">)</span></code></pre></div><p></p></div>
 </div>
 
 <div class="section">
-<h4 id="arguments-7">Arguments<a class="anchor" aria-label="anchor" href="#arguments-7"></a></h4>
+<h4 id="arguments-9">Arguments<a class="anchor" aria-label="anchor" href="#arguments-9"></a></h4>
 <p></p><div class="arguments"><dl><dt><code>value</code></dt>
 <dd><p>(<code>vector</code>)<br>
 value(s) which come from the filters set by the user. Values are set in <code>server</code>
@@ -389,12 +419,12 @@ same as <code>private$choices</code>.</p></dd>
 </div><p></p><hr><a id="method-set_state"></a><div class="section">
 <h3 id="method-set-state-">Method <code><a href="set_state.html">set_state()</a></code><a class="anchor" aria-label="anchor" href="#method-set-state-"></a></h3>
 <p>Set state</p><div class="section">
-<h4 id="usage-14">Usage<a class="anchor" aria-label="anchor" href="#usage-14"></a></h4>
+<h4 id="usage-16">Usage<a class="anchor" aria-label="anchor" href="#usage-16"></a></h4>
 <p></p><div class="r"><div class="sourceCode"><pre><code><span class="va">FilterState</span><span class="op">$</span><span class="fu">set_state</span><span class="op">(</span><span class="va">state</span><span class="op">)</span></code></pre></div><p></p></div>
 </div>
 
 <div class="section">
-<h4 id="arguments-8">Arguments<a class="anchor" aria-label="anchor" href="#arguments-8"></a></h4>
+<h4 id="arguments-10">Arguments<a class="anchor" aria-label="anchor" href="#arguments-10"></a></h4>
 <p></p><div class="arguments"><dl><dt><code>state</code></dt>
 <dd><p>(<code>list</code>)<br>
 contains fields relevant for a specific class</p><ul><li><p><code>selected</code> defines initial selection</p></li>
@@ -408,12 +438,12 @@ contains fields relevant for a specific class</p><ul><li><p><code>selected</code
 </div><p></p><hr><a id="method-set_state_reactive"></a><div class="section">
 <h3 id="method-set-state-reactive-">Method <code>set_state_reactive()</code><a class="anchor" aria-label="anchor" href="#method-set-state-reactive-"></a></h3>
 <p>Set state when using <code>set_filter_state</code></p><div class="section">
-<h4 id="usage-15">Usage<a class="anchor" aria-label="anchor" href="#usage-15"></a></h4>
+<h4 id="usage-17">Usage<a class="anchor" aria-label="anchor" href="#usage-17"></a></h4>
 <p></p><div class="r"><div class="sourceCode"><pre><code><span class="va">FilterState</span><span class="op">$</span><span class="fu">set_state_reactive</span><span class="op">(</span><span class="va">state</span><span class="op">)</span></code></pre></div><p></p></div>
 </div>
 
 <div class="section">
-<h4 id="arguments-9">Arguments<a class="anchor" aria-label="anchor" href="#arguments-9"></a></h4>
+<h4 id="arguments-11">Arguments<a class="anchor" aria-label="anchor" href="#arguments-11"></a></h4>
 <p></p><div class="arguments"><dl><dt><code>state</code></dt>
 <dd><p>(<code>list</code>)<br>
 contains fields relevant for a specific class</p><ul><li><p><code>selected</code> defines initial selection</p></li>
@@ -427,12 +457,12 @@ contains fields relevant for a specific class</p><ul><li><p><code>selected</code
 </div><p></p><hr><a id="method-server"></a><div class="section">
 <h3 id="method-server-">Method <code>server()</code><a class="anchor" aria-label="anchor" href="#method-server-"></a></h3>
 <p>Server module</p><div class="section">
-<h4 id="usage-16">Usage<a class="anchor" aria-label="anchor" href="#usage-16"></a></h4>
+<h4 id="usage-18">Usage<a class="anchor" aria-label="anchor" href="#usage-18"></a></h4>
 <p></p><div class="r"><div class="sourceCode"><pre><code><span class="va">FilterState</span><span class="op">$</span><span class="fu">server</span><span class="op">(</span><span class="va">id</span><span class="op">)</span></code></pre></div><p></p></div>
 </div>
 
 <div class="section">
-<h4 id="arguments-10">Arguments<a class="anchor" aria-label="anchor" href="#arguments-10"></a></h4>
+<h4 id="arguments-12">Arguments<a class="anchor" aria-label="anchor" href="#arguments-12"></a></h4>
 <p></p><div class="arguments"><dl><dt><code>id</code></dt>
 <dd><p>(<code>character(1)</code>)<br>
 an ID string that corresponds with the ID used to call the module's UI function.</p></dd>
@@ -441,19 +471,19 @@ an ID string that corresponds with the ID used to call the module's UI function.
 </dl><p></p></div>
 </div>
 <div class="section">
-<h4 id="returns-6">Returns<a class="anchor" aria-label="anchor" href="#returns-6"></a></h4>
+<h4 id="returns-7">Returns<a class="anchor" aria-label="anchor" href="#returns-7"></a></h4>
 <p><code>moduleServer</code> function which returns <code>NULL</code></p>
 </div>
 
 </div><p></p><hr><a id="method-ui"></a><div class="section">
 <h3 id="method-ui-">Method <code><a href="https://usethis.r-lib.org/reference/ui.html" class="external-link">ui()</a></code><a class="anchor" aria-label="anchor" href="#method-ui-"></a></h3>
 <p>UI Module</p><div class="section">
-<h4 id="usage-17">Usage<a class="anchor" aria-label="anchor" href="#usage-17"></a></h4>
+<h4 id="usage-19">Usage<a class="anchor" aria-label="anchor" href="#usage-19"></a></h4>
 <p></p><div class="r"><div class="sourceCode"><pre><code><span class="va">FilterState</span><span class="op">$</span><span class="fu">ui</span><span class="op">(</span><span class="va">id</span><span class="op">)</span></code></pre></div><p></p></div>
 </div>
 
 <div class="section">
-<h4 id="arguments-11">Arguments<a class="anchor" aria-label="anchor" href="#arguments-11"></a></h4>
+<h4 id="arguments-13">Arguments<a class="anchor" aria-label="anchor" href="#arguments-13"></a></h4>
 <p></p><div class="arguments"><dl><dt><code>id</code></dt>
 <dd><p>(<code>character(1)</code>)<br>
 id of shiny element. UI for this class contains simple message
@@ -490,12 +520,12 @@ return a <code>NULL</code></p></dd>
 </div><p></p><hr><a id="method-clone"></a><div class="section">
 <h3 id="method-clone-">Method <code>clone()</code><a class="anchor" aria-label="anchor" href="#method-clone-"></a></h3>
 <p>The objects of this class are cloneable with this method.</p><div class="section">
-<h4 id="usage-18">Usage<a class="anchor" aria-label="anchor" href="#usage-18"></a></h4>
+<h4 id="usage-20">Usage<a class="anchor" aria-label="anchor" href="#usage-20"></a></h4>
 <p></p><div class="r"><div class="sourceCode"><pre><code><span class="va">FilterState</span><span class="op">$</span><span class="fu">clone</span><span class="op">(</span>deep <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></code></pre></div><p></p></div>
 </div>
 
 <div class="section">
-<h4 id="arguments-12">Arguments<a class="anchor" aria-label="anchor" href="#arguments-12"></a></h4>
+<h4 id="arguments-14">Arguments<a class="anchor" aria-label="anchor" href="#arguments-14"></a></h4>
 <p></p><div class="arguments"><dl><dt><code>deep</code></dt>
 <dd><p>Whether to make a deep clone.</p></dd>
 
