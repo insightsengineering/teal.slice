@@ -1,6 +1,7 @@
 # teal.slice
 
 `teal.slice` is an R library used in the development of `teal` `shiny` modules. It provides:
+
 * a class accepting an array of `data.frames` as an input, then supporting basic `dplyr` operations on the data,
 * a method returning the code needed to slice the data in the desired way,
 * a set of `shiny` modules helping to acquire the desired slice of data using a `shiny` `GUI`.
