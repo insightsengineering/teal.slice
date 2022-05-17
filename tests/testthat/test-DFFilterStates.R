@@ -255,3 +255,49 @@ testthat::test_that(
     testthat::expect_identical(dffs$ui_add_filter_state("id", data.frame(A = numeric(0))), div("no samples available"))
   }
 )
+
+# Format
+testthat::test_that("$format() is a method of DFFilterStates", {
+  testthat::expect_error(DFFilterStates$new(
+    input_dataname = "test",
+    output_dataname = "test",
+    datalabel = character(0),
+    varlabels = "test",
+    keys = "test"
+  )$format(), NA)
+})
+
+testthat::test_that("$format() asserts the indent argument is a number", {
+  testthat::expect_error(
+    DFFilterStates$new(
+      input_dataname = "test",
+      output_dataname = "test",
+      datalabel = character(0),
+      varlabels = "test",
+      keys = "test"
+    )$format(indent = "wrong type"),
+    regexp = "Assertion on 'indent' failed: Must be of type 'number'"
+  )
+})
+
+testthat::test_that("$format() concatenates its FilterState elements using \\n without additional indent", {
+  dffs <- DFFilterStates$new(
+    input_dataname = "iris",
+    output_dataname = "iris_filtered",
+    datalabel = character(0),
+    varlabels = character(0),
+    keys = character(0)
+  )
+  fs <- list(
+    Sepal.Length = list(selected = c(5.1, 6.4), keep_na = TRUE, keep_inf = TRUE),
+    Species = list(selected = c("setosa", "versicolor"), keep_na = FALSE)
+  )
+  dffs$set_filter_state(state = fs, data = iris)
+
+  sepal_filter <- dffs$queue_get(1L)[[1]]
+  species_filter <- dffs$queue_get(1L)[[2]]
+  shiny::isolate(testthat::expect_equal(
+    dffs$format(),
+    paste(sepal_filter$format(indent = 0), species_filter$format(indent = 0), sep = "\n")
+  ))
+})

@@ -45,7 +45,10 @@ isolate(filter_states$get_call())
 \subsection{Public methods}{
 \itemize{
 \item \href{#method-new}{\code{FilterStates$new()}}
+\item \href{#method-get_datalabel}{\code{FilterStates$get_datalabel()}}
+\item \href{#method-format}{\code{FilterStates$format()}}
 \item \href{#method-get_call}{\code{FilterStates$get_call()}}
+\item \href{#method-print}{\code{FilterStates$print()}}
 \item \href{#method-get_fun}{\code{FilterStates$get_fun()}}
 \item \href{#method-queue_empty}{\code{FilterStates$queue_empty()}}
 \item \href{#method-queue_get}{\code{FilterStates$queue_get()}}
@@ -87,6 +90,39 @@ text label value.}
 }
 }
 \if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-get_datalabel"></a>}}
+\if{latex}{\out{\hypertarget{method-get_datalabel}{}}}
+\subsection{Method \code{get_datalabel()}}{
+Returns the label of the dataset
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{FilterStates$get_datalabel()}\if{html}{\out{</div>}}
+}
+
+\subsection{Returns}{
+(\code{character(1)}) the label
+}
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-format"></a>}}
+\if{latex}{\out{\hypertarget{method-format}{}}}
+\subsection{Method \code{format()}}{
+Returns the formatted string representing this \code{FilterStates} object.
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{FilterStates$format(indent)}\if{html}{\out{</div>}}
+}
+
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{indent}}{(\code{numeric(1)}) the number of spaces before each line of the representation}
+}
+\if{html}{\out{</div>}}
+}
+\subsection{Returns}{
+\code{character(1)} the formatted string
+}
+}
+\if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-get_call"></a>}}
 \if{latex}{\out{\hypertarget{method-get_call}{}}}
 \subsection{Method \code{get_call()}}{
@@ -105,6 +141,23 @@ no-op call such as \code{x <- x}.
 
 \subsection{Returns}{
 \code{call} or \code{NULL}
+}
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-print"></a>}}
+\if{latex}{\out{\hypertarget{method-print}{}}}
+\subsection{Method \code{print()}}{
+Prints this \code{FilterStates} object
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{FilterStates$print(...)}\if{html}{\out{</div>}}
+}
+
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{...}}{additional arguments to this method}
+}
+\if{html}{\out{</div>}}
 }
 }
 \if{html}{\out{<hr>}}

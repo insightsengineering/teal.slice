@@ -66,6 +66,7 @@ shiny::isolate(dataset$get_filter_state())
 \item \out{<span class="pkg-link" data-pkg="teal.slice" data-topic="FilteredDataset" data-id="get_filter_states">}\href{../../teal.slice/html/FilteredDataset.html#method-get_filter_states}{\code{teal.slice::FilteredDataset$get_filter_states()}}\out{</span>}
 \item \out{<span class="pkg-link" data-pkg="teal.slice" data-topic="FilteredDataset" data-id="get_filterable_varnames">}\href{../../teal.slice/html/FilteredDataset.html#method-get_filterable_varnames}{\code{teal.slice::FilteredDataset$get_filterable_varnames()}}\out{</span>}
 \item \out{<span class="pkg-link" data-pkg="teal.slice" data-topic="FilteredDataset" data-id="get_filtered_dataname">}\href{../../teal.slice/html/FilteredDataset.html#method-get_filtered_dataname}{\code{teal.slice::FilteredDataset$get_filtered_dataname()}}\out{</span>}
+\item \out{<span class="pkg-link" data-pkg="teal.slice" data-topic="FilteredDataset" data-id="get_formatted_filter_state">}\href{../../teal.slice/html/FilteredDataset.html#method-get_formatted_filter_state}{\code{teal.slice::FilteredDataset$get_formatted_filter_state()}}\out{</span>}
 \item \out{<span class="pkg-link" data-pkg="teal.slice" data-topic="FilteredDataset" data-id="get_hash">}\href{../../teal.slice/html/FilteredDataset.html#method-get_hash}{\code{teal.slice::FilteredDataset$get_hash()}}\out{</span>}
 \item \out{<span class="pkg-link" data-pkg="teal.slice" data-topic="FilteredDataset" data-id="get_join_keys">}\href{../../teal.slice/html/FilteredDataset.html#method-get_join_keys}{\code{teal.slice::FilteredDataset$get_join_keys()}}\out{</span>}
 \item \out{<span class="pkg-link" data-pkg="teal.slice" data-topic="FilteredDataset" data-id="get_keys">}\href{../../teal.slice/html/FilteredDataset.html#method-get_keys}{\code{teal.slice::FilteredDataset$get_keys()}}\out{</span>}
@@ -114,16 +115,16 @@ applies to one argument (\code{...}) in \code{dplyr::filter} call.
 
 \subsection{Returns}{
 filter \code{call} or \code{list} of filter calls
-Gets the reactive values from the active \code{FilterState} objects.
-
-Get all active filters from this dataset in form of the nested list.
-The output list is a compatible input to \code{self$set_filter_state}.
 }
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-get_filter_state"></a>}}
 \if{latex}{\out{\hypertarget{method-get_filter_state}{}}}
 \subsection{Method \code{get_filter_state()}}{
+Gets the reactive values from the active \code{FilterState} objects.
+
+Get all active filters from this dataset in form of the nested list.
+The output list is a compatible input to \code{self$set_filter_state}.
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{DefaultFilteredDataset$get_filter_state()}\if{html}{\out{</div>}}
 }

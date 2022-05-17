@@ -2,16 +2,11 @@
 % Please edit documentation in R/FilterStates.R
 \name{SEFilterStates}
 \alias{SEFilterStates}
-\title{Specialization of \code{FilterStates} for \code{SummaryExperiment}.}
+\title{\code{SEFilterStates}}
 \description{
 Specialization of \code{FilterStates} for \code{SummaryExperiment}.
-
-Specialization of \code{FilterStates} for \code{SummaryExperiment}.
 }
-\keyword{Initialize}
-\keyword{`SEFilterStates`}
 \keyword{internal}
-\keyword{object}
 \section{Super class}{
 \code{\link[teal.slice:FilterStates]{teal.slice::FilterStates}} -> \code{SEFilterStates}
 }
@@ -19,6 +14,7 @@ Specialization of \code{FilterStates} for \code{SummaryExperiment}.
 \subsection{Public methods}{
 \itemize{
 \item \href{#method-new}{\code{SEFilterStates$new()}}
+\item \href{#method-format}{\code{SEFilterStates$format()}}
 \item \href{#method-server}{\code{SEFilterStates$server()}}
 \item \href{#method-get_filter_state}{\code{SEFilterStates$get_filter_state()}}
 \item \href{#method-set_filter_state}{\code{SEFilterStates$set_filter_state()}}
@@ -32,7 +28,9 @@ Specialization of \code{FilterStates} for \code{SummaryExperiment}.
 \out{<details ><summary>Inherited methods</summary>}
 \itemize{
 \item \out{<span class="pkg-link" data-pkg="teal.slice" data-topic="FilterStates" data-id="get_call">}\href{../../teal.slice/html/FilterStates.html#method-get_call}{\code{teal.slice::FilterStates$get_call()}}\out{</span>}
+\item \out{<span class="pkg-link" data-pkg="teal.slice" data-topic="FilterStates" data-id="get_datalabel">}\href{../../teal.slice/html/FilterStates.html#method-get_datalabel}{\code{teal.slice::FilterStates$get_datalabel()}}\out{</span>}
 \item \out{<span class="pkg-link" data-pkg="teal.slice" data-topic="FilterStates" data-id="get_fun">}\href{../../teal.slice/html/FilterStates.html#method-get_fun}{\code{teal.slice::FilterStates$get_fun()}}\out{</span>}
+\item \out{<span class="pkg-link" data-pkg="teal.slice" data-topic="FilterStates" data-id="print">}\href{../../teal.slice/html/FilterStates.html#method-print}{\code{teal.slice::FilterStates$print()}}\out{</span>}
 \item \out{<span class="pkg-link" data-pkg="teal.slice" data-topic="FilterStates" data-id="queue_empty">}\href{../../teal.slice/html/FilterStates.html#method-queue_empty}{\code{teal.slice::FilterStates$queue_empty()}}\out{</span>}
 \item \out{<span class="pkg-link" data-pkg="teal.slice" data-topic="FilterStates" data-id="queue_get">}\href{../../teal.slice/html/FilterStates.html#method-queue_get}{\code{teal.slice::FilterStates$queue_get()}}\out{</span>}
 \item \out{<span class="pkg-link" data-pkg="teal.slice" data-topic="FilterStates" data-id="queue_initialize">}\href{../../teal.slice/html/FilterStates.html#method-queue_initialize}{\code{teal.slice::FilterStates$queue_initialize()}}\out{</span>}
@@ -46,6 +44,9 @@ Specialization of \code{FilterStates} for \code{SummaryExperiment}.
 \if{html}{\out{<a id="method-new"></a>}}
 \if{latex}{\out{\hypertarget{method-new}{}}}
 \subsection{Method \code{new()}}{
+Initialize \code{SEFilterStates} object
+
+Initialize \code{SEFilterStates} object
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{SEFilterStates$new(input_dataname, output_dataname, datalabel)}\if{html}{\out{</div>}}
 }
@@ -64,6 +65,26 @@ name of the output data on the lhs of the assignment expression.}
 text label value.}
 }
 \if{html}{\out{</div>}}
+}
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-format"></a>}}
+\if{latex}{\out{\hypertarget{method-format}{}}}
+\subsection{Method \code{format()}}{
+Returns the formatted string representing this \code{MAEFilterStates} object.
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{SEFilterStates$format(indent = 0)}\if{html}{\out{</div>}}
+}
+
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{indent}}{(\code{numeric(1)}) the number of spaces before each line of the representation}
+}
+\if{html}{\out{</div>}}
+}
+\subsection{Returns}{
+\code{character(1)} the formatted string
 }
 }
 \if{html}{\out{<hr>}}

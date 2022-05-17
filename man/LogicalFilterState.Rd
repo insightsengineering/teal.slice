@@ -56,12 +56,14 @@ filter$set_selected(TRUE)
 \out{<details ><summary>Inherited methods</summary>}
 \itemize{
 \item \out{<span class="pkg-link" data-pkg="teal.slice" data-topic="FilterState" data-id="destroy_observers">}\href{../../teal.slice/html/FilterState.html#method-destroy_observers}{\code{teal.slice::FilterState$destroy_observers()}}\out{</span>}
+\item \out{<span class="pkg-link" data-pkg="teal.slice" data-topic="FilterState" data-id="format">}\href{../../teal.slice/html/FilterState.html#method-format}{\code{teal.slice::FilterState$format()}}\out{</span>}
 \item \out{<span class="pkg-link" data-pkg="teal.slice" data-topic="FilterState" data-id="get_dataname">}\href{../../teal.slice/html/FilterState.html#method-get_dataname}{\code{teal.slice::FilterState$get_dataname()}}\out{</span>}
 \item \out{<span class="pkg-link" data-pkg="teal.slice" data-topic="FilterState" data-id="get_keep_na">}\href{../../teal.slice/html/FilterState.html#method-get_keep_na}{\code{teal.slice::FilterState$get_keep_na()}}\out{</span>}
 \item \out{<span class="pkg-link" data-pkg="teal.slice" data-topic="FilterState" data-id="get_selected">}\href{../../teal.slice/html/FilterState.html#method-get_selected}{\code{teal.slice::FilterState$get_selected()}}\out{</span>}
 \item \out{<span class="pkg-link" data-pkg="teal.slice" data-topic="FilterState" data-id="get_state">}\href{../../teal.slice/html/FilterState.html#method-get_state}{\code{teal.slice::FilterState$get_state()}}\out{</span>}
 \item \out{<span class="pkg-link" data-pkg="teal.slice" data-topic="FilterState" data-id="get_varlabel">}\href{../../teal.slice/html/FilterState.html#method-get_varlabel}{\code{teal.slice::FilterState$get_varlabel()}}\out{</span>}
 \item \out{<span class="pkg-link" data-pkg="teal.slice" data-topic="FilterState" data-id="get_varname">}\href{../../teal.slice/html/FilterState.html#method-get_varname}{\code{teal.slice::FilterState$get_varname()}}\out{</span>}
+\item \out{<span class="pkg-link" data-pkg="teal.slice" data-topic="FilterState" data-id="print">}\href{../../teal.slice/html/FilterState.html#method-print}{\code{teal.slice::FilterState$print()}}\out{</span>}
 \item \out{<span class="pkg-link" data-pkg="teal.slice" data-topic="FilterState" data-id="set_keep_na">}\href{../../teal.slice/html/FilterState.html#method-set_keep_na}{\code{teal.slice::FilterState$set_keep_na()}}\out{</span>}
 \item \out{<span class="pkg-link" data-pkg="teal.slice" data-topic="FilterState" data-id="set_keep_na_reactive">}\href{../../teal.slice/html/FilterState.html#method-set_keep_na_reactive}{\code{teal.slice::FilterState$set_keep_na_reactive()}}\out{</span>}
 \item \out{<span class="pkg-link" data-pkg="teal.slice" data-topic="FilterState" data-id="set_na_rm">}\href{../../teal.slice/html/FilterState.html#method-set_na_rm}{\code{teal.slice::FilterState$set_na_rm()}}\out{</span>}
