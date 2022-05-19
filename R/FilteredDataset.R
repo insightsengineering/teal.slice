@@ -166,6 +166,18 @@ FilteredDataset <- R6::R6Class( # nolint
       invisible(self)
     },
 
+
+    #' @description
+    #' Returns a string representation of the filter state in this `FilteredDataset`.
+    #'
+    #' @return `character(1)` the formatted string representing the filter state
+    #'
+    get_formatted_filter_state = function() {
+      out <- paste0("Filters for dataset: ", self$get_dataname())
+      for (states in self$get_filter_states()) out <- c(out, states$format(indent = 2))
+      paste(out, collapse = "\n")
+    },
+
     #' @description
     #' Adds objects to the filter call evaluation environment
     #' @param name (`character`) object name
@@ -554,7 +566,6 @@ DefaultFilteredDataset <- R6::R6Class( # nolint
     #' @param dataset (`TealDataset`)\cr
     #'  single dataset for which filters are rendered
     initialize = function(dataset) {
-      stopifnot(is(dataset, "TealDataset"))
       super$initialize(dataset)
       dataname <- dataset$get_dataname()
 
@@ -591,6 +602,7 @@ DefaultFilteredDataset <- R6::R6Class( # nolint
       )
     },
 
+    #' @description
     #' Gets the reactive values from the active `FilterState` objects.
     #'
     #' Get all active filters from this dataset in form of the nested list.

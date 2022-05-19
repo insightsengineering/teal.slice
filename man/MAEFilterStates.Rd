@@ -2,16 +2,11 @@
 % Please edit documentation in R/FilterStates.R
 \name{MAEFilterStates}
 \alias{MAEFilterStates}
-\title{Specialization of \code{FilterStates} for \code{MultiAssayExperiment}.}
+\title{\code{MAEFilterStates}}
 \description{
 Specialization of \code{FilterStates} for \code{MultiAssayExperiment}.
-
-Specialization of \code{FilterStates} for \code{MultiAssayExperiment}.
 }
-\keyword{Initialize}
-\keyword{`MAEFilterStates`}
 \keyword{internal}
-\keyword{object}
 \section{Super class}{
 \code{\link[teal.slice:FilterStates]{teal.slice::FilterStates}} -> \code{MAEFilterStates}
 }
@@ -19,6 +14,7 @@ Specialization of \code{FilterStates} for \code{MultiAssayExperiment}.
 \subsection{Public methods}{
 \itemize{
 \item \href{#method-new}{\code{MAEFilterStates$new()}}
+\item \href{#method-format}{\code{MAEFilterStates$format()}}
 \item \href{#method-get_fun}{\code{MAEFilterStates$get_fun()}}
 \item \href{#method-server}{\code{MAEFilterStates$server()}}
 \item \href{#method-get_filter_state}{\code{MAEFilterStates$get_filter_state()}}
@@ -33,6 +29,8 @@ Specialization of \code{FilterStates} for \code{MultiAssayExperiment}.
 \out{<details ><summary>Inherited methods</summary>}
 \itemize{
 \item \out{<span class="pkg-link" data-pkg="teal.slice" data-topic="FilterStates" data-id="get_call">}\href{../../teal.slice/html/FilterStates.html#method-get_call}{\code{teal.slice::FilterStates$get_call()}}\out{</span>}
+\item \out{<span class="pkg-link" data-pkg="teal.slice" data-topic="FilterStates" data-id="get_datalabel">}\href{../../teal.slice/html/FilterStates.html#method-get_datalabel}{\code{teal.slice::FilterStates$get_datalabel()}}\out{</span>}
+\item \out{<span class="pkg-link" data-pkg="teal.slice" data-topic="FilterStates" data-id="print">}\href{../../teal.slice/html/FilterStates.html#method-print}{\code{teal.slice::FilterStates$print()}}\out{</span>}
 \item \out{<span class="pkg-link" data-pkg="teal.slice" data-topic="FilterStates" data-id="queue_empty">}\href{../../teal.slice/html/FilterStates.html#method-queue_empty}{\code{teal.slice::FilterStates$queue_empty()}}\out{</span>}
 \item \out{<span class="pkg-link" data-pkg="teal.slice" data-topic="FilterStates" data-id="queue_get">}\href{../../teal.slice/html/FilterStates.html#method-queue_get}{\code{teal.slice::FilterStates$queue_get()}}\out{</span>}
 \item \out{<span class="pkg-link" data-pkg="teal.slice" data-topic="FilterStates" data-id="queue_initialize">}\href{../../teal.slice/html/FilterStates.html#method-queue_initialize}{\code{teal.slice::FilterStates$queue_initialize()}}\out{</span>}
@@ -46,6 +44,9 @@ Specialization of \code{FilterStates} for \code{MultiAssayExperiment}.
 \if{html}{\out{<a id="method-new"></a>}}
 \if{latex}{\out{\hypertarget{method-new}{}}}
 \subsection{Method \code{new()}}{
+Initializes \code{MAEFilterStates} object
+
+Initialize \code{MAEFilterStates} object
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{MAEFilterStates$new(
   input_dataname,
@@ -73,20 +74,37 @@ text label value.}
 labels of the variables used in this object}
 
 \item{\code{keys}}{(\code{character})\cr
-key columns names
-Get function name
-
-Get function name used to create filter call.
-For \code{MAEFilterStates}
-\code{MultiAssayExperiment::subsetByColData} is used.}
+key columns names}
 }
 \if{html}{\out{</div>}}
+}
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-format"></a>}}
+\if{latex}{\out{\hypertarget{method-format}{}}}
+\subsection{Method \code{format()}}{
+Returns the formatted string representing this \code{MAEFilterStates} object.
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{MAEFilterStates$format(indent = 0)}\if{html}{\out{</div>}}
+}
+
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{indent}}{(\code{numeric(1)}) the number of spaces before each line of the representation}
+}
+\if{html}{\out{</div>}}
+}
+\subsection{Returns}{
+\code{character(1)} the formatted string
 }
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-get_fun"></a>}}
 \if{latex}{\out{\hypertarget{method-get_fun}{}}}
 \subsection{Method \code{get_fun()}}{
+Returns function name used to create filter call.
+For \code{MAEFilterStates} \code{MultiAssayExperiment::subsetByColData} is used.
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{MAEFilterStates$get_fun()}\if{html}{\out{</div>}}
 }
@@ -164,7 +182,7 @@ column in \code{colData(data)}.}
 \if{html}{\out{<a id="method-remove_filter_state"></a>}}
 \if{latex}{\out{\hypertarget{method-remove_filter_state}{}}}
 \subsection{Method \code{remove_filter_state()}}{
-Remove a variable from the \code{ReactiveQueue} and its corresponding UI element.
+Removes a variable from the \code{ReactiveQueue} and its corresponding UI element.
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{MAEFilterStates$remove_filter_state(element_id)}\if{html}{\out{</div>}}
 }

@@ -73,6 +73,34 @@ isolate(datasets$get_call("iris"))
 isolate(datasets$get_call("mtcars"))
 
 ## ------------------------------------------------
+## Method `FilteredData$get_formatted_filter_state`
+## ------------------------------------------------
+
+datasets <- teal.slice:::FilteredData$new()
+datasets$set_dataset(teal.data::dataset("iris", iris))
+utils::data(miniACC, package = "MultiAssayExperiment")
+datasets$set_dataset(teal.data::dataset("mae", miniACC))
+fs <- list(
+  iris = list(
+    Sepal.Length = list(selected = c(5.1, 6.4), keep_na = TRUE, keep_inf = FALSE),
+    Species = list(selected = c("setosa", "versicolor"), keep_na = FALSE)
+  ),
+  mae = list(
+    subjects = list(
+      years_to_birth = list(selected = c(30, 50), keep_na = TRUE, keep_inf = FALSE),
+      vital_status = list(selected = "1", keep_na = FALSE),
+      gender = list(selected = "female", keep_na = TRUE)
+    ),
+    RPPAArray = list(
+      subset = list(ARRAY_TYPE = list(selected = "", keep_na = TRUE))
+    )
+  )
+)
+datasets$set_filter_state(state = fs)
+cat(shiny::isolate(datasets$get_formatted_filter_state()))
+
+
+## ------------------------------------------------
 ## Method `FilteredData$set_filter_state`
 ## ------------------------------------------------
 
@@ -125,6 +153,7 @@ shiny::isolate(datasets$get_filter_state())
 \item \href{#method-set_check}{\code{FilteredData$set_check()}}
 \item \href{#method-set_code}{\code{FilteredData$set_code()}}
 \item \href{#method-get_filter_state}{\code{FilteredData$get_filter_state()}}
+\item \href{#method-get_formatted_filter_state}{\code{FilteredData$get_formatted_filter_state()}}
 \item \href{#method-set_filter_state}{\code{FilteredData$set_filter_state()}}
 \item \href{#method-remove_filter_state}{\code{FilteredData$remove_filter_state()}}
 \item \href{#method-remove_all_filter_states}{\code{FilteredData$remove_all_filter_states()}}
@@ -599,6 +628,49 @@ The output list is a compatible input to \code{self$set_filter_state}.
 \code{list} with named elements corresponding to \code{FilteredDataset} objects
 with active filters.
 }
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-get_formatted_filter_state"></a>}}
+\if{latex}{\out{\hypertarget{method-get_formatted_filter_state}{}}}
+\subsection{Method \code{get_formatted_filter_state()}}{
+Returns the filter state formatted for printing to an \code{IO} device.
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{FilteredData$get_formatted_filter_state()}\if{html}{\out{</div>}}
+}
+
+\subsection{Returns}{
+\code{character} the pre-formatted filter state
+}
+\subsection{Examples}{
+\if{html}{\out{<div class="r example copy">}}
+\preformatted{datasets <- teal.slice:::FilteredData$new()
+datasets$set_dataset(teal.data::dataset("iris", iris))
+utils::data(miniACC, package = "MultiAssayExperiment")
+datasets$set_dataset(teal.data::dataset("mae", miniACC))
+fs <- list(
+  iris = list(
+    Sepal.Length = list(selected = c(5.1, 6.4), keep_na = TRUE, keep_inf = FALSE),
+    Species = list(selected = c("setosa", "versicolor"), keep_na = FALSE)
+  ),
+  mae = list(
+    subjects = list(
+      years_to_birth = list(selected = c(30, 50), keep_na = TRUE, keep_inf = FALSE),
+      vital_status = list(selected = "1", keep_na = FALSE),
+      gender = list(selected = "female", keep_na = TRUE)
+    ),
+    RPPAArray = list(
+      subset = list(ARRAY_TYPE = list(selected = "", keep_na = TRUE))
+    )
+  )
+)
+datasets$set_filter_state(state = fs)
+cat(shiny::isolate(datasets$get_formatted_filter_state()))
+
+}
+\if{html}{\out{</div>}}
+
+}
+
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-set_filter_state"></a>}}

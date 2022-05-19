@@ -45,6 +45,7 @@ filter$set_selected(c(2, 3))
 \subsection{Public methods}{
 \itemize{
 \item \href{#method-new}{\code{RangeFilterState$new()}}
+\item \href{#method-format}{\code{RangeFilterState$format()}}
 \item \href{#method-is_any_filtered}{\code{RangeFilterState$is_any_filtered()}}
 \item \href{#method-get_call}{\code{RangeFilterState$get_call()}}
 \item \href{#method-get_keep_inf}{\code{RangeFilterState$get_keep_inf()}}
@@ -68,6 +69,7 @@ filter$set_selected(c(2, 3))
 \item \out{<span class="pkg-link" data-pkg="teal.slice" data-topic="FilterState" data-id="get_selected">}\href{../../teal.slice/html/FilterState.html#method-get_selected}{\code{teal.slice::FilterState$get_selected()}}\out{</span>}
 \item \out{<span class="pkg-link" data-pkg="teal.slice" data-topic="FilterState" data-id="get_varlabel">}\href{../../teal.slice/html/FilterState.html#method-get_varlabel}{\code{teal.slice::FilterState$get_varlabel()}}\out{</span>}
 \item \out{<span class="pkg-link" data-pkg="teal.slice" data-topic="FilterState" data-id="get_varname">}\href{../../teal.slice/html/FilterState.html#method-get_varname}{\code{teal.slice::FilterState$get_varname()}}\out{</span>}
+\item \out{<span class="pkg-link" data-pkg="teal.slice" data-topic="FilterState" data-id="print">}\href{../../teal.slice/html/FilterState.html#method-print}{\code{teal.slice::FilterState$print()}}\out{</span>}
 \item \out{<span class="pkg-link" data-pkg="teal.slice" data-topic="FilterState" data-id="set_keep_na">}\href{../../teal.slice/html/FilterState.html#method-set_keep_na}{\code{teal.slice::FilterState$set_keep_na()}}\out{</span>}
 \item \out{<span class="pkg-link" data-pkg="teal.slice" data-topic="FilterState" data-id="set_keep_na_reactive">}\href{../../teal.slice/html/FilterState.html#method-set_keep_na_reactive}{\code{teal.slice::FilterState$set_keep_na_reactive()}}\out{</span>}
 \item \out{<span class="pkg-link" data-pkg="teal.slice" data-topic="FilterState" data-id="set_na_rm">}\href{../../teal.slice/html/FilterState.html#method-set_na_rm}{\code{teal.slice::FilterState$set_na_rm()}}\out{</span>}
@@ -114,6 +116,27 @@ whether condition calls should be prefixed by dataname. Possible values:
 }}
 }
 \if{html}{\out{</div>}}
+}
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-format"></a>}}
+\if{latex}{\out{\hypertarget{method-format}{}}}
+\subsection{Method \code{format()}}{
+Returns a formatted string representing this \code{LogicalFilterState}.
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{RangeFilterState$format(indent = 0)}\if{html}{\out{</div>}}
+}
+
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{indent}}{(\code{numeric(1)}) the number of spaces before after each new line character of the formatted string.
+Default: 0}
+}
+\if{html}{\out{</div>}}
+}
+\subsection{Returns}{
+\code{character(1)} the formatted string
 }
 }
 \if{html}{\out{<hr>}}

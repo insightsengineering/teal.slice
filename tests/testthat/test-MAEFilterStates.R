@@ -283,3 +283,58 @@ testthat::test_that(
     )
   }
 )
+
+# Format
+testthat::test_that("$format() is a method of DFFilterStates", {
+  testthat::expect_error(MAEFilterStates$new(
+    input_dataname = "iris",
+    output_dataname = "iris_filtered",
+    datalabel = character(0),
+    varlabels = character(0),
+    keys = character(0)
+  )$format(), NA)
+})
+
+testthat::test_that("$format() asserts the indent argument is a number", {
+  testthat::expect_error(
+    MAEFilterStates$new(
+      input_dataname = "iris",
+      output_dataname = "iris_filtered",
+      datalabel = character(0),
+      varlabels = character(0),
+      keys = character(0)
+    )$format(indent = "wrong type"),
+    regexp = "Assertion on 'indent' failed: Must be of type 'number'"
+  )
+})
+
+testthat::test_that("$format() concatenates its FilterState elements using \\n and indents the FilterState objects", {
+  utils::data(miniACC, package = "MultiAssayExperiment")
+  maefs <- MAEFilterStates$new(
+    input_dataname = "test",
+    output_dataname = "test_filtered",
+    datalabel = character(0),
+    varlabels = character(0),
+    keys = character(0)
+  )
+
+  maefs$set_filter_state(
+    state = list(
+      years_to_birth = c(30, 50),
+      vital_status = 1
+    ),
+    data = miniACC
+  )
+
+  years_to_birth_filter <- maefs$queue_get(1L)[[1]]
+  vital_status_filter <- maefs$queue_get(1L)[[2]]
+  shiny::isolate(testthat::expect_equal(
+    maefs$format(),
+    paste(
+      "Subject filters:",
+      years_to_birth_filter$format(indent = 2),
+      vital_status_filter$format(indent = 2),
+      sep = "\n"
+    )
+  ))
+})

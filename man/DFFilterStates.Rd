@@ -2,10 +2,8 @@
 % Please edit documentation in R/FilterStates.R
 \name{DFFilterStates}
 \alias{DFFilterStates}
-\title{Specialization of \code{FilterStates} for a base \code{data.frame}.}
+\title{\code{DFFFilterStates}}
 \description{
-Specialization of \code{FilterStates} for a base \code{data.frame}.
-
 Specialization of \code{FilterStates} for a base \code{data.frame}.
 }
 \examples{
@@ -29,46 +27,7 @@ dffs$set_filter_state(state = fs, data = iris)
 shiny::isolate(dffs$get_filter_state())
 
 }
-\keyword{(`...`).}
-\keyword{(`dplyr::filter`),}
-\keyword{Initializes}
-\keyword{This}
-\keyword{`DFFilterStates`}
-\keyword{`ReactiveQueue`}
-\keyword{`ReactiveQueue`.}
-\keyword{`input_dataname`,}
-\keyword{`output_dataname`}
-\keyword{a}
-\keyword{and}
-\keyword{are}
-\keyword{arguments}
-\keyword{associated}
-\keyword{by}
-\keyword{calling}
-\keyword{class}
-\keyword{conditions}
-\keyword{contains}
-\keyword{function}
-\keyword{initializing}
 \keyword{internal}
-\keyword{list}
-\keyword{means}
-\keyword{name}
-\keyword{no}
-\keyword{object}
-\keyword{of}
-\keyword{passed}
-\keyword{setting}
-\keyword{single}
-\keyword{specified}
-\keyword{that}
-\keyword{the}
-\keyword{this}
-\keyword{to}
-\keyword{unnamed}
-\keyword{when}
-\keyword{which}
-\keyword{with}
 \section{Super class}{
 \code{\link[teal.slice:FilterStates]{teal.slice::FilterStates}} -> \code{DFFilterStates}
 }
@@ -76,6 +35,7 @@ shiny::isolate(dffs$get_filter_state())
 \subsection{Public methods}{
 \itemize{
 \item \href{#method-new}{\code{DFFilterStates$new()}}
+\item \href{#method-format}{\code{DFFilterStates$format()}}
 \item \href{#method-get_fun}{\code{DFFilterStates$get_fun()}}
 \item \href{#method-server}{\code{DFFilterStates$server()}}
 \item \href{#method-get_filter_state}{\code{DFFilterStates$get_filter_state()}}
@@ -90,6 +50,8 @@ shiny::isolate(dffs$get_filter_state())
 \out{<details ><summary>Inherited methods</summary>}
 \itemize{
 \item \out{<span class="pkg-link" data-pkg="teal.slice" data-topic="FilterStates" data-id="get_call">}\href{../../teal.slice/html/FilterStates.html#method-get_call}{\code{teal.slice::FilterStates$get_call()}}\out{</span>}
+\item \out{<span class="pkg-link" data-pkg="teal.slice" data-topic="FilterStates" data-id="get_datalabel">}\href{../../teal.slice/html/FilterStates.html#method-get_datalabel}{\code{teal.slice::FilterStates$get_datalabel()}}\out{</span>}
+\item \out{<span class="pkg-link" data-pkg="teal.slice" data-topic="FilterStates" data-id="print">}\href{../../teal.slice/html/FilterStates.html#method-print}{\code{teal.slice::FilterStates$print()}}\out{</span>}
 \item \out{<span class="pkg-link" data-pkg="teal.slice" data-topic="FilterStates" data-id="queue_empty">}\href{../../teal.slice/html/FilterStates.html#method-queue_empty}{\code{teal.slice::FilterStates$queue_empty()}}\out{</span>}
 \item \out{<span class="pkg-link" data-pkg="teal.slice" data-topic="FilterStates" data-id="queue_get">}\href{../../teal.slice/html/FilterStates.html#method-queue_get}{\code{teal.slice::FilterStates$queue_get()}}\out{</span>}
 \item \out{<span class="pkg-link" data-pkg="teal.slice" data-topic="FilterStates" data-id="queue_initialize">}\href{../../teal.slice/html/FilterStates.html#method-queue_initialize}{\code{teal.slice::FilterStates$queue_initialize()}}\out{</span>}
@@ -103,6 +65,13 @@ shiny::isolate(dffs$get_filter_state())
 \if{html}{\out{<a id="method-new"></a>}}
 \if{latex}{\out{\hypertarget{method-new}{}}}
 \subsection{Method \code{new()}}{
+Initializes \code{DFFilterStates} object
+
+Initializes \code{DFFilterStates} object by setting \code{input_dataname},
+\code{output_dataname} and initializing \code{ReactiveQueue}. This class contains a
+single \code{ReactiveQueue} with no specified name which means that
+when calling the function associated to this class (\code{dplyr::filter}), a list of
+conditions are passed to unnamed arguments (\code{...}).
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{DFFilterStates$new(input_dataname, output_dataname, datalabel, varlabels, keys)}\if{html}{\out{</div>}}
 }
@@ -124,19 +93,39 @@ text label value.}
 labels of the variables used in this object}
 
 \item{\code{keys}}{(\code{character})\cr
-key columns names
-Get function name
-
-Get function name used to create filter call.
-For \code{DFFilterStates} \code{dplyr::filter} is used}
+key columns names}
 }
 \if{html}{\out{</div>}}
+}
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-format"></a>}}
+\if{latex}{\out{\hypertarget{method-format}{}}}
+\subsection{Method \code{format()}}{
+Returns the formatted string representing this \code{FilterStates} object.
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{DFFilterStates$format(indent = 0)}\if{html}{\out{</div>}}
+}
+
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{indent}}{(\code{numeric(1)}) the number of spaces before each line of the representation}
+}
+\if{html}{\out{</div>}}
+}
+\subsection{Returns}{
+\code{character(1)} the formatted string
 }
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-get_fun"></a>}}
 \if{latex}{\out{\hypertarget{method-get_fun}{}}}
 \subsection{Method \code{get_fun()}}{
+Get function name
+
+Get function name used to create filter call.
+For \code{DFFilterStates} \code{dplyr::filter} is used
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{DFFilterStates$get_fun()}\if{html}{\out{</div>}}
 }

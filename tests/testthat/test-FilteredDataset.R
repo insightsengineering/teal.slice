@@ -140,3 +140,19 @@ testthat::test_that("get_metadata returns the metadata of the data passed to the
   )
   testthat::expect_null(filtered_dataset$get_metadata())
 })
+
+# Format
+testthat::test_that("$get_formatted_filter_state returns a string representation of filters", {
+  dataset <- DefaultFilteredDataset$new(teal.data::dataset("iris", iris))
+  fs <- list(
+    Sepal.Length = list(selected = c(5.1, 6.4), keep_na = TRUE, keep_inf = TRUE),
+    Species = list(selected = c("setosa", "versicolor"), keep_na = FALSE)
+  )
+  dataset$set_filter_state(state = fs)
+  states <- dataset$get_filter_states()[[1]]
+
+  testthat::expect_equal(
+    shiny::isolate(dataset$get_formatted_filter_state()),
+    paste("Filters for dataset: iris", shiny::isolate(states$format(indent = 2)), sep = "\n")
+  )
+})

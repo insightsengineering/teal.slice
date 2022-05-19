@@ -57,6 +57,7 @@ or using \code{set_selected}, \code{set_keep_na} or \code{set_keep_inf}
 \itemize{
 \item \href{#method-new}{\code{FilterState$new()}}
 \item \href{#method-destroy_observers}{\code{FilterState$destroy_observers()}}
+\item \href{#method-format}{\code{FilterState$format()}}
 \item \href{#method-get_call}{\code{FilterState$get_call()}}
 \item \href{#method-get_dataname}{\code{FilterState$get_dataname()}}
 \item \href{#method-get_keep_na}{\code{FilterState$get_keep_na()}}
@@ -64,6 +65,7 @@ or using \code{set_selected}, \code{set_keep_na} or \code{set_keep_inf}
 \item \href{#method-get_varname}{\code{FilterState$get_varname()}}
 \item \href{#method-get_selected}{\code{FilterState$get_selected()}}
 \item \href{#method-get_state}{\code{FilterState$get_state()}}
+\item \href{#method-print}{\code{FilterState$print()}}
 \item \href{#method-set_keep_na}{\code{FilterState$set_keep_na()}}
 \item \href{#method-set_keep_na_reactive}{\code{FilterState$set_keep_na_reactive()}}
 \item \href{#method-set_na_rm}{\code{FilterState$set_na_rm()}}
@@ -127,6 +129,27 @@ Destroy observers stored in \code{private$observers}.
 \if{html}{\out{<div class="r">}}\preformatted{FilterState$destroy_observers()}\if{html}{\out{</div>}}
 }
 
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-format"></a>}}
+\if{latex}{\out{\hypertarget{method-format}{}}}
+\subsection{Method \code{format()}}{
+Returns a formatted string representing this \code{FilterState}.
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{FilterState$format(indent = 0)}\if{html}{\out{</div>}}
+}
+
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{indent}}{(\code{numeric(1)}) the number of spaces before after each new line character of the formatted string.
+Default: 0}
+}
+\if{html}{\out{</div>}}
+}
+\subsection{Returns}{
+\code{character(1)} the formatted string
+}
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-get_call"></a>}}
@@ -237,6 +260,23 @@ Returns the filtering state.
 \item \code{selected} (\code{atomic}) length depends on a \code{FilterState} variant.
 \item \code{keep_na} (\code{logical(1)}) whether \code{NA} should be kept.
 }
+}
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-print"></a>}}
+\if{latex}{\out{\hypertarget{method-print}{}}}
+\subsection{Method \code{print()}}{
+Prints this \code{FilterState} object
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{FilterState$print(...)}\if{html}{\out{</div>}}
+}
+
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{...}}{additional arguments to this method}
+}
+\if{html}{\out{</div>}}
 }
 }
 \if{html}{\out{<hr>}}
