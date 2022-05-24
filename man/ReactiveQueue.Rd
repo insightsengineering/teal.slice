@@ -14,26 +14,26 @@ the last one to be returned from it.
 \section{Methods}{
 \subsection{Public methods}{
 \itemize{
-\item \href{#method-new}{\code{ReactiveQueue$new()}}
-\item \href{#method-get}{\code{ReactiveQueue$get()}}
-\item \href{#method-clone}{\code{ReactiveQueue$clone()}}
+\item \href{#method-ReactiveQueue-new}{\code{ReactiveQueue$new()}}
+\item \href{#method-ReactiveQueue-get}{\code{ReactiveQueue$get()}}
+\item \href{#method-ReactiveQueue-clone}{\code{ReactiveQueue$clone()}}
 }
 }
-\if{html}{
-\out{<details ><summary>Inherited methods</summary>}
-\itemize{
-\item \out{<span class="pkg-link" data-pkg="teal.slice" data-topic="Queue" data-id="empty">}\href{../../teal.slice/html/Queue.html#method-empty}{\code{teal.slice::Queue$empty()}}\out{</span>}
-\item \out{<span class="pkg-link" data-pkg="teal.slice" data-topic="Queue" data-id="pop">}\href{../../teal.slice/html/Queue.html#method-pop}{\code{teal.slice::Queue$pop()}}\out{</span>}
-\item \out{<span class="pkg-link" data-pkg="teal.slice" data-topic="Queue" data-id="print">}\href{../../teal.slice/html/Queue.html#method-print}{\code{teal.slice::Queue$print()}}\out{</span>}
-\item \out{<span class="pkg-link" data-pkg="teal.slice" data-topic="Queue" data-id="push">}\href{../../teal.slice/html/Queue.html#method-push}{\code{teal.slice::Queue$push()}}\out{</span>}
-\item \out{<span class="pkg-link" data-pkg="teal.slice" data-topic="Queue" data-id="remove">}\href{../../teal.slice/html/Queue.html#method-remove}{\code{teal.slice::Queue$remove()}}\out{</span>}
-\item \out{<span class="pkg-link" data-pkg="teal.slice" data-topic="Queue" data-id="size">}\href{../../teal.slice/html/Queue.html#method-size}{\code{teal.slice::Queue$size()}}\out{</span>}
-}
-\out{</details>}
-}
+\if{html}{\out{
+<details><summary>Inherited methods</summary>
+<ul>
+<li><span class="pkg-link" data-pkg="teal.slice" data-topic="Queue" data-id="empty"><a href='../../teal.slice/html/Queue.html#method-Queue-empty'><code>teal.slice::Queue$empty()</code></a></li>
+<li><span class="pkg-link" data-pkg="teal.slice" data-topic="Queue" data-id="pop"><a href='../../teal.slice/html/Queue.html#method-Queue-pop'><code>teal.slice::Queue$pop()</code></a></li>
+<li><span class="pkg-link" data-pkg="teal.slice" data-topic="Queue" data-id="print"><a href='../../teal.slice/html/Queue.html#method-Queue-print'><code>teal.slice::Queue$print()</code></a></li>
+<li><span class="pkg-link" data-pkg="teal.slice" data-topic="Queue" data-id="push"><a href='../../teal.slice/html/Queue.html#method-Queue-push'><code>teal.slice::Queue$push()</code></a></li>
+<li><span class="pkg-link" data-pkg="teal.slice" data-topic="Queue" data-id="remove"><a href='../../teal.slice/html/Queue.html#method-Queue-remove'><code>teal.slice::Queue$remove()</code></a></li>
+<li><span class="pkg-link" data-pkg="teal.slice" data-topic="Queue" data-id="size"><a href='../../teal.slice/html/Queue.html#method-Queue-size'><code>teal.slice::Queue$size()</code></a></li>
+</ul>
+</details>
+}}
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-new"></a>}}
-\if{latex}{\out{\hypertarget{method-new}{}}}
+\if{html}{\out{<a id="method-ReactiveQueue-new"></a>}}
+\if{latex}{\out{\hypertarget{method-ReactiveQueue-new}{}}}
 \subsection{Method \code{new()}}{
 Initializes \code{ReactiveQueue} by setting empty \code{reactiveVal}
 \subsection{Usage}{
@@ -42,8 +42,8 @@ Initializes \code{ReactiveQueue} by setting empty \code{reactiveVal}
 
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-get"></a>}}
-\if{latex}{\out{\hypertarget{method-get}{}}}
+\if{html}{\out{<a id="method-ReactiveQueue-get"></a>}}
+\if{latex}{\out{\hypertarget{method-ReactiveQueue-get}{}}}
 \subsection{Method \code{get()}}{
 Get queue
 \subsection{Usage}{
@@ -64,8 +64,8 @@ values stored in the queue
 }
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-clone"></a>}}
-\if{latex}{\out{\hypertarget{method-clone}{}}}
+\if{html}{\out{<a id="method-ReactiveQueue-clone"></a>}}
+\if{latex}{\out{\hypertarget{method-ReactiveQueue-clone}{}}}
 \subsection{Method \code{clone()}}{
 The objects of this class are cloneable with this method.
 \subsection{Usage}{

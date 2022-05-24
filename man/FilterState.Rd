@@ -55,32 +55,32 @@ or using \code{set_selected}, \code{set_keep_na} or \code{set_keep_inf}
 \section{Methods}{
 \subsection{Public methods}{
 \itemize{
-\item \href{#method-new}{\code{FilterState$new()}}
-\item \href{#method-destroy_observers}{\code{FilterState$destroy_observers()}}
-\item \href{#method-format}{\code{FilterState$format()}}
-\item \href{#method-get_call}{\code{FilterState$get_call()}}
-\item \href{#method-get_dataname}{\code{FilterState$get_dataname()}}
-\item \href{#method-get_keep_na}{\code{FilterState$get_keep_na()}}
-\item \href{#method-get_varlabel}{\code{FilterState$get_varlabel()}}
-\item \href{#method-get_varname}{\code{FilterState$get_varname()}}
-\item \href{#method-get_selected}{\code{FilterState$get_selected()}}
-\item \href{#method-get_state}{\code{FilterState$get_state()}}
-\item \href{#method-print}{\code{FilterState$print()}}
-\item \href{#method-set_keep_na}{\code{FilterState$set_keep_na()}}
-\item \href{#method-set_keep_na_reactive}{\code{FilterState$set_keep_na_reactive()}}
-\item \href{#method-set_na_rm}{\code{FilterState$set_na_rm()}}
-\item \href{#method-set_selected}{\code{FilterState$set_selected()}}
-\item \href{#method-set_selected_reactive}{\code{FilterState$set_selected_reactive()}}
-\item \href{#method-set_state}{\code{FilterState$set_state()}}
-\item \href{#method-set_state_reactive}{\code{FilterState$set_state_reactive()}}
-\item \href{#method-server}{\code{FilterState$server()}}
-\item \href{#method-ui}{\code{FilterState$ui()}}
-\item \href{#method-clone}{\code{FilterState$clone()}}
+\item \href{#method-FilterState-new}{\code{FilterState$new()}}
+\item \href{#method-FilterState-destroy_observers}{\code{FilterState$destroy_observers()}}
+\item \href{#method-FilterState-format}{\code{FilterState$format()}}
+\item \href{#method-FilterState-get_call}{\code{FilterState$get_call()}}
+\item \href{#method-FilterState-get_dataname}{\code{FilterState$get_dataname()}}
+\item \href{#method-FilterState-get_keep_na}{\code{FilterState$get_keep_na()}}
+\item \href{#method-FilterState-get_varlabel}{\code{FilterState$get_varlabel()}}
+\item \href{#method-FilterState-get_varname}{\code{FilterState$get_varname()}}
+\item \href{#method-FilterState-get_selected}{\code{FilterState$get_selected()}}
+\item \href{#method-FilterState-get_state}{\code{FilterState$get_state()}}
+\item \href{#method-FilterState-print}{\code{FilterState$print()}}
+\item \href{#method-FilterState-set_keep_na}{\code{FilterState$set_keep_na()}}
+\item \href{#method-FilterState-set_keep_na_reactive}{\code{FilterState$set_keep_na_reactive()}}
+\item \href{#method-FilterState-set_na_rm}{\code{FilterState$set_na_rm()}}
+\item \href{#method-FilterState-set_selected}{\code{FilterState$set_selected()}}
+\item \href{#method-FilterState-set_selected_reactive}{\code{FilterState$set_selected_reactive()}}
+\item \href{#method-FilterState-set_state}{\code{FilterState$set_state()}}
+\item \href{#method-FilterState-set_state_reactive}{\code{FilterState$set_state_reactive()}}
+\item \href{#method-FilterState-server}{\code{FilterState$server()}}
+\item \href{#method-FilterState-ui}{\code{FilterState$ui()}}
+\item \href{#method-FilterState-clone}{\code{FilterState$clone()}}
 }
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-new"></a>}}
-\if{latex}{\out{\hypertarget{method-new}{}}}
+\if{html}{\out{<a id="method-FilterState-new"></a>}}
+\if{latex}{\out{\hypertarget{method-FilterState-new}{}}}
 \subsection{Method \code{new()}}{
 Initialize a \code{FilterState} object
 \subsection{Usage}{
@@ -121,8 +121,8 @@ whether condition calls should be prefixed by dataname. Possible values:
 }
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-destroy_observers"></a>}}
-\if{latex}{\out{\hypertarget{method-destroy_observers}{}}}
+\if{html}{\out{<a id="method-FilterState-destroy_observers"></a>}}
+\if{latex}{\out{\hypertarget{method-FilterState-destroy_observers}{}}}
 \subsection{Method \code{destroy_observers()}}{
 Destroy observers stored in \code{private$observers}.
 \subsection{Usage}{
@@ -131,8 +131,8 @@ Destroy observers stored in \code{private$observers}.
 
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-format"></a>}}
-\if{latex}{\out{\hypertarget{method-format}{}}}
+\if{html}{\out{<a id="method-FilterState-format"></a>}}
+\if{latex}{\out{\hypertarget{method-FilterState-format}{}}}
 \subsection{Method \code{format()}}{
 Returns a formatted string representing this \code{FilterState}.
 \subsection{Usage}{
@@ -152,8 +152,8 @@ Default: 0}
 }
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-get_call"></a>}}
-\if{latex}{\out{\hypertarget{method-get_call}{}}}
+\if{html}{\out{<a id="method-FilterState-get_call"></a>}}
+\if{latex}{\out{\hypertarget{method-FilterState-get_call}{}}}
 \subsection{Method \code{get_call()}}{
 Returns reproducible condition call for current selection relevant
 for selected variable type.
@@ -165,8 +165,8 @@ and must be executed in reactive or isolated context.
 
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-get_dataname"></a>}}
-\if{latex}{\out{\hypertarget{method-get_dataname}{}}}
+\if{html}{\out{<a id="method-FilterState-get_dataname"></a>}}
+\if{latex}{\out{\hypertarget{method-FilterState-get_dataname}{}}}
 \subsection{Method \code{get_dataname()}}{
 Returns dataname
 \subsection{Usage}{
@@ -186,8 +186,8 @@ whether dataname should be deparsed. \code{TRUE} by default}
 }
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-get_keep_na"></a>}}
-\if{latex}{\out{\hypertarget{method-get_keep_na}{}}}
+\if{html}{\out{<a id="method-FilterState-get_keep_na"></a>}}
+\if{latex}{\out{\hypertarget{method-FilterState-get_keep_na}{}}}
 \subsection{Method \code{get_keep_na()}}{
 Returns current \code{keep_na} selection
 \subsection{Usage}{
@@ -199,8 +199,8 @@ Returns current \code{keep_na} selection
 }
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-get_varlabel"></a>}}
-\if{latex}{\out{\hypertarget{method-get_varlabel}{}}}
+\if{html}{\out{<a id="method-FilterState-get_varlabel"></a>}}
+\if{latex}{\out{\hypertarget{method-FilterState-get_varlabel}{}}}
 \subsection{Method \code{get_varlabel()}}{
 Returns variable label
 \subsection{Usage}{
@@ -212,8 +212,8 @@ Returns variable label
 }
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-get_varname"></a>}}
-\if{latex}{\out{\hypertarget{method-get_varname}{}}}
+\if{html}{\out{<a id="method-FilterState-get_varname"></a>}}
+\if{latex}{\out{\hypertarget{method-FilterState-get_varname}{}}}
 \subsection{Method \code{get_varname()}}{
 Get variable name
 \subsection{Usage}{
@@ -233,8 +233,8 @@ whether variable name should be deparsed. \code{FALSE} by default}
 }
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-get_selected"></a>}}
-\if{latex}{\out{\hypertarget{method-get_selected}{}}}
+\if{html}{\out{<a id="method-FilterState-get_selected"></a>}}
+\if{latex}{\out{\hypertarget{method-FilterState-get_selected}{}}}
 \subsection{Method \code{get_selected()}}{
 Get selected values from \code{FilterState}
 \subsection{Usage}{
@@ -246,8 +246,8 @@ class of the returned object depends of class of the \code{FilterState}
 }
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-get_state"></a>}}
-\if{latex}{\out{\hypertarget{method-get_state}{}}}
+\if{html}{\out{<a id="method-FilterState-get_state"></a>}}
+\if{latex}{\out{\hypertarget{method-FilterState-get_state}{}}}
 \subsection{Method \code{get_state()}}{
 Returns the filtering state.
 \subsection{Usage}{
@@ -263,8 +263,8 @@ Returns the filtering state.
 }
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-print"></a>}}
-\if{latex}{\out{\hypertarget{method-print}{}}}
+\if{html}{\out{<a id="method-FilterState-print"></a>}}
+\if{latex}{\out{\hypertarget{method-FilterState-print}{}}}
 \subsection{Method \code{print()}}{
 Prints this \code{FilterState} object
 \subsection{Usage}{
@@ -280,8 +280,8 @@ Prints this \code{FilterState} object
 }
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-set_keep_na"></a>}}
-\if{latex}{\out{\hypertarget{method-set_keep_na}{}}}
+\if{html}{\out{<a id="method-FilterState-set_keep_na"></a>}}
+\if{latex}{\out{\hypertarget{method-FilterState-set_keep_na}{}}}
 \subsection{Method \code{set_keep_na()}}{
 Set if \code{NA} should be kept
 \subsection{Usage}{
@@ -300,8 +300,8 @@ modules after selecting check-box-input in the shiny interface. Values are set t
 }
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-set_keep_na_reactive"></a>}}
-\if{latex}{\out{\hypertarget{method-set_keep_na_reactive}{}}}
+\if{html}{\out{<a id="method-FilterState-set_keep_na_reactive"></a>}}
+\if{latex}{\out{\hypertarget{method-FilterState-set_keep_na_reactive}{}}}
 \subsection{Method \code{set_keep_na_reactive()}}{
 Set if \code{NA} should be kept when using \code{set_filter_state}
 \subsection{Usage}{
@@ -320,8 +320,8 @@ modules when using \code{set_filter_state} instead of the shiny interface. Value
 }
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-set_na_rm"></a>}}
-\if{latex}{\out{\hypertarget{method-set_na_rm}{}}}
+\if{html}{\out{<a id="method-FilterState-set_na_rm"></a>}}
+\if{latex}{\out{\hypertarget{method-FilterState-set_na_rm}{}}}
 \subsection{Method \code{set_na_rm()}}{
 Some methods needs additional \code{!is.na(varame)} condition to not include
 missing values. When \code{private$na_rm = TRUE} is set, \code{self$get_call} returns
@@ -340,8 +340,8 @@ removing \code{NA} values to the filter expression returned by \code{get_call}}
 }
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-set_selected"></a>}}
-\if{latex}{\out{\hypertarget{method-set_selected}{}}}
+\if{html}{\out{<a id="method-FilterState-set_selected"></a>}}
+\if{latex}{\out{\hypertarget{method-FilterState-set_selected}{}}}
 \subsection{Method \code{set_selected()}}{
 Set selection
 \subsection{Usage}{
@@ -361,8 +361,8 @@ same as \code{private$choices}.}
 }
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-set_selected_reactive"></a>}}
-\if{latex}{\out{\hypertarget{method-set_selected_reactive}{}}}
+\if{html}{\out{<a id="method-FilterState-set_selected_reactive"></a>}}
+\if{latex}{\out{\hypertarget{method-FilterState-set_selected_reactive}{}}}
 \subsection{Method \code{set_selected_reactive()}}{
 Set selection when using \code{set_filter_state}
 \subsection{Usage}{
@@ -382,8 +382,8 @@ same as \code{private$choices}.}
 }
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-set_state"></a>}}
-\if{latex}{\out{\hypertarget{method-set_state}{}}}
+\if{html}{\out{<a id="method-FilterState-set_state"></a>}}
+\if{latex}{\out{\hypertarget{method-FilterState-set_state}{}}}
 \subsection{Method \code{set_state()}}{
 Set state
 \subsection{Usage}{
@@ -404,8 +404,8 @@ contains fields relevant for a specific class
 }
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-set_state_reactive"></a>}}
-\if{latex}{\out{\hypertarget{method-set_state_reactive}{}}}
+\if{html}{\out{<a id="method-FilterState-set_state_reactive"></a>}}
+\if{latex}{\out{\hypertarget{method-FilterState-set_state_reactive}{}}}
 \subsection{Method \code{set_state_reactive()}}{
 Set state when using \code{set_filter_state}
 \subsection{Usage}{
@@ -426,8 +426,8 @@ contains fields relevant for a specific class
 }
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-server"></a>}}
-\if{latex}{\out{\hypertarget{method-server}{}}}
+\if{html}{\out{<a id="method-FilterState-server"></a>}}
+\if{latex}{\out{\hypertarget{method-FilterState-server}{}}}
 \subsection{Method \code{server()}}{
 Server module
 \subsection{Usage}{
@@ -447,8 +447,8 @@ an ID string that corresponds with the ID used to call the module's UI function.
 }
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-ui"></a>}}
-\if{latex}{\out{\hypertarget{method-ui}{}}}
+\if{html}{\out{<a id="method-FilterState-ui"></a>}}
+\if{latex}{\out{\hypertarget{method-FilterState-ui}{}}}
 \subsection{Method \code{ui()}}{
 UI Module
 \subsection{Usage}{
@@ -492,8 +492,8 @@ return a \code{NULL}}
 }
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-clone"></a>}}
-\if{latex}{\out{\hypertarget{method-clone}{}}}
+\if{html}{\out{<a id="method-FilterState-clone"></a>}}
+\if{latex}{\out{\hypertarget{method-FilterState-clone}{}}}
 \subsection{Method \code{clone()}}{
 The objects of this class are cloneable with this method.
 \subsection{Usage}{

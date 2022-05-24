@@ -13,36 +13,36 @@ Specialization of \code{FilterStates} for \code{SummaryExperiment}.
 \section{Methods}{
 \subsection{Public methods}{
 \itemize{
-\item \href{#method-new}{\code{SEFilterStates$new()}}
-\item \href{#method-format}{\code{SEFilterStates$format()}}
-\item \href{#method-server}{\code{SEFilterStates$server()}}
-\item \href{#method-get_filter_state}{\code{SEFilterStates$get_filter_state()}}
-\item \href{#method-set_filter_state}{\code{SEFilterStates$set_filter_state()}}
-\item \href{#method-remove_filter_state}{\code{SEFilterStates$remove_filter_state()}}
-\item \href{#method-ui_add_filter_state}{\code{SEFilterStates$ui_add_filter_state()}}
-\item \href{#method-srv_add_filter_state}{\code{SEFilterStates$srv_add_filter_state()}}
-\item \href{#method-clone}{\code{SEFilterStates$clone()}}
+\item \href{#method-SEFilterStates-new}{\code{SEFilterStates$new()}}
+\item \href{#method-SEFilterStates-format}{\code{SEFilterStates$format()}}
+\item \href{#method-SEFilterStates-server}{\code{SEFilterStates$server()}}
+\item \href{#method-SEFilterStates-get_filter_state}{\code{SEFilterStates$get_filter_state()}}
+\item \href{#method-SEFilterStates-set_filter_state}{\code{SEFilterStates$set_filter_state()}}
+\item \href{#method-SEFilterStates-remove_filter_state}{\code{SEFilterStates$remove_filter_state()}}
+\item \href{#method-SEFilterStates-ui_add_filter_state}{\code{SEFilterStates$ui_add_filter_state()}}
+\item \href{#method-SEFilterStates-srv_add_filter_state}{\code{SEFilterStates$srv_add_filter_state()}}
+\item \href{#method-SEFilterStates-clone}{\code{SEFilterStates$clone()}}
 }
 }
-\if{html}{
-\out{<details ><summary>Inherited methods</summary>}
-\itemize{
-\item \out{<span class="pkg-link" data-pkg="teal.slice" data-topic="FilterStates" data-id="get_call">}\href{../../teal.slice/html/FilterStates.html#method-get_call}{\code{teal.slice::FilterStates$get_call()}}\out{</span>}
-\item \out{<span class="pkg-link" data-pkg="teal.slice" data-topic="FilterStates" data-id="get_datalabel">}\href{../../teal.slice/html/FilterStates.html#method-get_datalabel}{\code{teal.slice::FilterStates$get_datalabel()}}\out{</span>}
-\item \out{<span class="pkg-link" data-pkg="teal.slice" data-topic="FilterStates" data-id="get_fun">}\href{../../teal.slice/html/FilterStates.html#method-get_fun}{\code{teal.slice::FilterStates$get_fun()}}\out{</span>}
-\item \out{<span class="pkg-link" data-pkg="teal.slice" data-topic="FilterStates" data-id="print">}\href{../../teal.slice/html/FilterStates.html#method-print}{\code{teal.slice::FilterStates$print()}}\out{</span>}
-\item \out{<span class="pkg-link" data-pkg="teal.slice" data-topic="FilterStates" data-id="queue_empty">}\href{../../teal.slice/html/FilterStates.html#method-queue_empty}{\code{teal.slice::FilterStates$queue_empty()}}\out{</span>}
-\item \out{<span class="pkg-link" data-pkg="teal.slice" data-topic="FilterStates" data-id="queue_get">}\href{../../teal.slice/html/FilterStates.html#method-queue_get}{\code{teal.slice::FilterStates$queue_get()}}\out{</span>}
-\item \out{<span class="pkg-link" data-pkg="teal.slice" data-topic="FilterStates" data-id="queue_initialize">}\href{../../teal.slice/html/FilterStates.html#method-queue_initialize}{\code{teal.slice::FilterStates$queue_initialize()}}\out{</span>}
-\item \out{<span class="pkg-link" data-pkg="teal.slice" data-topic="FilterStates" data-id="queue_push">}\href{../../teal.slice/html/FilterStates.html#method-queue_push}{\code{teal.slice::FilterStates$queue_push()}}\out{</span>}
-\item \out{<span class="pkg-link" data-pkg="teal.slice" data-topic="FilterStates" data-id="queue_remove">}\href{../../teal.slice/html/FilterStates.html#method-queue_remove}{\code{teal.slice::FilterStates$queue_remove()}}\out{</span>}
-\item \out{<span class="pkg-link" data-pkg="teal.slice" data-topic="FilterStates" data-id="ui">}\href{../../teal.slice/html/FilterStates.html#method-ui}{\code{teal.slice::FilterStates$ui()}}\out{</span>}
-}
-\out{</details>}
-}
+\if{html}{\out{
+<details><summary>Inherited methods</summary>
+<ul>
+<li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilterStates" data-id="get_call"><a href='../../teal.slice/html/FilterStates.html#method-FilterStates-get_call'><code>teal.slice::FilterStates$get_call()</code></a></li>
+<li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilterStates" data-id="get_datalabel"><a href='../../teal.slice/html/FilterStates.html#method-FilterStates-get_datalabel'><code>teal.slice::FilterStates$get_datalabel()</code></a></li>
+<li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilterStates" data-id="get_fun"><a href='../../teal.slice/html/FilterStates.html#method-FilterStates-get_fun'><code>teal.slice::FilterStates$get_fun()</code></a></li>
+<li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilterStates" data-id="print"><a href='../../teal.slice/html/FilterStates.html#method-FilterStates-print'><code>teal.slice::FilterStates$print()</code></a></li>
+<li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilterStates" data-id="queue_empty"><a href='../../teal.slice/html/FilterStates.html#method-FilterStates-queue_empty'><code>teal.slice::FilterStates$queue_empty()</code></a></li>
+<li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilterStates" data-id="queue_get"><a href='../../teal.slice/html/FilterStates.html#method-FilterStates-queue_get'><code>teal.slice::FilterStates$queue_get()</code></a></li>
+<li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilterStates" data-id="queue_initialize"><a href='../../teal.slice/html/FilterStates.html#method-FilterStates-queue_initialize'><code>teal.slice::FilterStates$queue_initialize()</code></a></li>
+<li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilterStates" data-id="queue_push"><a href='../../teal.slice/html/FilterStates.html#method-FilterStates-queue_push'><code>teal.slice::FilterStates$queue_push()</code></a></li>
+<li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilterStates" data-id="queue_remove"><a href='../../teal.slice/html/FilterStates.html#method-FilterStates-queue_remove'><code>teal.slice::FilterStates$queue_remove()</code></a></li>
+<li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilterStates" data-id="ui"><a href='../../teal.slice/html/FilterStates.html#method-FilterStates-ui'><code>teal.slice::FilterStates$ui()</code></a></li>
+</ul>
+</details>
+}}
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-new"></a>}}
-\if{latex}{\out{\hypertarget{method-new}{}}}
+\if{html}{\out{<a id="method-SEFilterStates-new"></a>}}
+\if{latex}{\out{\hypertarget{method-SEFilterStates-new}{}}}
 \subsection{Method \code{new()}}{
 Initialize \code{SEFilterStates} object
 
@@ -68,8 +68,8 @@ text label value.}
 }
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-format"></a>}}
-\if{latex}{\out{\hypertarget{method-format}{}}}
+\if{html}{\out{<a id="method-SEFilterStates-format"></a>}}
+\if{latex}{\out{\hypertarget{method-SEFilterStates-format}{}}}
 \subsection{Method \code{format()}}{
 Returns the formatted string representing this \code{MAEFilterStates} object.
 \subsection{Usage}{
@@ -88,8 +88,8 @@ Returns the formatted string representing this \code{MAEFilterStates} object.
 }
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-server"></a>}}
-\if{latex}{\out{\hypertarget{method-server}{}}}
+\if{html}{\out{<a id="method-SEFilterStates-server"></a>}}
+\if{latex}{\out{\hypertarget{method-SEFilterStates-server}{}}}
 \subsection{Method \code{server()}}{
 Server module
 \subsection{Usage}{
@@ -109,8 +109,8 @@ an ID string that corresponds with the ID used to call the module's UI function.
 }
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-get_filter_state"></a>}}
-\if{latex}{\out{\hypertarget{method-get_filter_state}{}}}
+\if{html}{\out{<a id="method-SEFilterStates-get_filter_state"></a>}}
+\if{latex}{\out{\hypertarget{method-SEFilterStates-get_filter_state}{}}}
 \subsection{Method \code{get_filter_state()}}{
 Gets the reactive values from the active \code{FilterState} objects.
 
@@ -127,8 +127,8 @@ The output list is a compatible input to \code{self$set_filter_state}.
 }
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-set_filter_state"></a>}}
-\if{latex}{\out{\hypertarget{method-set_filter_state}{}}}
+\if{html}{\out{<a id="method-SEFilterStates-set_filter_state"></a>}}
+\if{latex}{\out{\hypertarget{method-SEFilterStates-set_filter_state}{}}}
 \subsection{Method \code{set_filter_state()}}{
 Set filter state
 \subsection{Usage}{
@@ -156,8 +156,8 @@ the name of the column in \code{rowData(data)} and \code{colData(data)}.}
 }
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-remove_filter_state"></a>}}
-\if{latex}{\out{\hypertarget{method-remove_filter_state}{}}}
+\if{html}{\out{<a id="method-SEFilterStates-remove_filter_state"></a>}}
+\if{latex}{\out{\hypertarget{method-SEFilterStates-remove_filter_state}{}}}
 \subsection{Method \code{remove_filter_state()}}{
 Remove a variable from the \code{ReactiveQueue} and its corresponding UI element.
 \subsection{Usage}{
@@ -176,8 +176,8 @@ Remove a variable from the \code{ReactiveQueue} and its corresponding UI element
 }
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-ui_add_filter_state"></a>}}
-\if{latex}{\out{\hypertarget{method-ui_add_filter_state}{}}}
+\if{html}{\out{<a id="method-SEFilterStates-ui_add_filter_state"></a>}}
+\if{latex}{\out{\hypertarget{method-SEFilterStates-ui_add_filter_state}{}}}
 \subsection{Method \code{ui_add_filter_state()}}{
 Shiny UI module to add filter variable
 \subsection{Usage}{
@@ -202,8 +202,8 @@ shiny.tag
 }
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-srv_add_filter_state"></a>}}
-\if{latex}{\out{\hypertarget{method-srv_add_filter_state}{}}}
+\if{html}{\out{<a id="method-SEFilterStates-srv_add_filter_state"></a>}}
+\if{latex}{\out{\hypertarget{method-SEFilterStates-srv_add_filter_state}{}}}
 \subsection{Method \code{srv_add_filter_state()}}{
 Shiny server module to add filter variable
 
@@ -237,8 +237,8 @@ and \code{rowData} are separate shiny entities.}
 }
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-clone"></a>}}
-\if{latex}{\out{\hypertarget{method-clone}{}}}
+\if{html}{\out{<a id="method-SEFilterStates-clone"></a>}}
+\if{latex}{\out{\hypertarget{method-SEFilterStates-clone}{}}}
 \subsection{Method \code{clone()}}{
 The objects of this class are cloneable with this method.
 \subsection{Usage}{

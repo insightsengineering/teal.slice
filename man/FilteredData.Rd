@@ -131,43 +131,43 @@ shiny::isolate(datasets$get_filter_state())
 \section{Methods}{
 \subsection{Public methods}{
 \itemize{
-\item \href{#method-new}{\code{FilteredData$new()}}
-\item \href{#method-datanames}{\code{FilteredData$datanames()}}
-\item \href{#method-get_datalabel}{\code{FilteredData$get_datalabel()}}
-\item \href{#method-get_filterable_datanames}{\code{FilteredData$get_filterable_datanames()}}
-\item \href{#method-get_filterable_varnames}{\code{FilteredData$get_filterable_varnames()}}
-\item \href{#method-get_call}{\code{FilteredData$get_call()}}
-\item \href{#method-get_code}{\code{FilteredData$get_code()}}
-\item \href{#method-get_filtered_dataset}{\code{FilteredData$get_filtered_dataset()}}
-\item \href{#method-get_data}{\code{FilteredData$get_data()}}
-\item \href{#method-get_check}{\code{FilteredData$get_check()}}
-\item \href{#method-get_data_attr}{\code{FilteredData$get_data_attr()}}
-\item \href{#method-get_metadata}{\code{FilteredData$get_metadata()}}
-\item \href{#method-get_join_keys}{\code{FilteredData$get_join_keys()}}
-\item \href{#method-get_filter_overview}{\code{FilteredData$get_filter_overview()}}
-\item \href{#method-get_keys}{\code{FilteredData$get_keys()}}
-\item \href{#method-get_varlabels}{\code{FilteredData$get_varlabels()}}
-\item \href{#method-get_varnames}{\code{FilteredData$get_varnames()}}
-\item \href{#method-handle_active_datanames}{\code{FilteredData$handle_active_datanames()}}
-\item \href{#method-set_dataset}{\code{FilteredData$set_dataset()}}
-\item \href{#method-set_check}{\code{FilteredData$set_check()}}
-\item \href{#method-set_code}{\code{FilteredData$set_code()}}
-\item \href{#method-get_filter_state}{\code{FilteredData$get_filter_state()}}
-\item \href{#method-get_formatted_filter_state}{\code{FilteredData$get_formatted_filter_state()}}
-\item \href{#method-set_filter_state}{\code{FilteredData$set_filter_state()}}
-\item \href{#method-remove_filter_state}{\code{FilteredData$remove_filter_state()}}
-\item \href{#method-remove_all_filter_states}{\code{FilteredData$remove_all_filter_states()}}
-\item \href{#method-restore_state_from_bookmark}{\code{FilteredData$restore_state_from_bookmark()}}
-\item \href{#method-ui_filter_panel}{\code{FilteredData$ui_filter_panel()}}
-\item \href{#method-srv_filter_panel}{\code{FilteredData$srv_filter_panel()}}
-\item \href{#method-ui_filter_overview}{\code{FilteredData$ui_filter_overview()}}
-\item \href{#method-srv_filter_overview}{\code{FilteredData$srv_filter_overview()}}
-\item \href{#method-clone}{\code{FilteredData$clone()}}
+\item \href{#method-FilteredData-new}{\code{FilteredData$new()}}
+\item \href{#method-FilteredData-datanames}{\code{FilteredData$datanames()}}
+\item \href{#method-FilteredData-get_datalabel}{\code{FilteredData$get_datalabel()}}
+\item \href{#method-FilteredData-get_filterable_datanames}{\code{FilteredData$get_filterable_datanames()}}
+\item \href{#method-FilteredData-get_filterable_varnames}{\code{FilteredData$get_filterable_varnames()}}
+\item \href{#method-FilteredData-get_call}{\code{FilteredData$get_call()}}
+\item \href{#method-FilteredData-get_code}{\code{FilteredData$get_code()}}
+\item \href{#method-FilteredData-get_filtered_dataset}{\code{FilteredData$get_filtered_dataset()}}
+\item \href{#method-FilteredData-get_data}{\code{FilteredData$get_data()}}
+\item \href{#method-FilteredData-get_check}{\code{FilteredData$get_check()}}
+\item \href{#method-FilteredData-get_data_attr}{\code{FilteredData$get_data_attr()}}
+\item \href{#method-FilteredData-get_metadata}{\code{FilteredData$get_metadata()}}
+\item \href{#method-FilteredData-get_join_keys}{\code{FilteredData$get_join_keys()}}
+\item \href{#method-FilteredData-get_filter_overview}{\code{FilteredData$get_filter_overview()}}
+\item \href{#method-FilteredData-get_keys}{\code{FilteredData$get_keys()}}
+\item \href{#method-FilteredData-get_varlabels}{\code{FilteredData$get_varlabels()}}
+\item \href{#method-FilteredData-get_varnames}{\code{FilteredData$get_varnames()}}
+\item \href{#method-FilteredData-handle_active_datanames}{\code{FilteredData$handle_active_datanames()}}
+\item \href{#method-FilteredData-set_dataset}{\code{FilteredData$set_dataset()}}
+\item \href{#method-FilteredData-set_check}{\code{FilteredData$set_check()}}
+\item \href{#method-FilteredData-set_code}{\code{FilteredData$set_code()}}
+\item \href{#method-FilteredData-get_filter_state}{\code{FilteredData$get_filter_state()}}
+\item \href{#method-FilteredData-get_formatted_filter_state}{\code{FilteredData$get_formatted_filter_state()}}
+\item \href{#method-FilteredData-set_filter_state}{\code{FilteredData$set_filter_state()}}
+\item \href{#method-FilteredData-remove_filter_state}{\code{FilteredData$remove_filter_state()}}
+\item \href{#method-FilteredData-remove_all_filter_states}{\code{FilteredData$remove_all_filter_states()}}
+\item \href{#method-FilteredData-restore_state_from_bookmark}{\code{FilteredData$restore_state_from_bookmark()}}
+\item \href{#method-FilteredData-ui_filter_panel}{\code{FilteredData$ui_filter_panel()}}
+\item \href{#method-FilteredData-srv_filter_panel}{\code{FilteredData$srv_filter_panel()}}
+\item \href{#method-FilteredData-ui_filter_overview}{\code{FilteredData$ui_filter_overview()}}
+\item \href{#method-FilteredData-srv_filter_overview}{\code{FilteredData$srv_filter_overview()}}
+\item \href{#method-FilteredData-clone}{\code{FilteredData$clone()}}
 }
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-new"></a>}}
-\if{latex}{\out{\hypertarget{method-new}{}}}
+\if{html}{\out{<a id="method-FilteredData-new"></a>}}
+\if{latex}{\out{\hypertarget{method-FilteredData-new}{}}}
 \subsection{Method \code{new()}}{
 Initialize a \code{FilteredData} object
 \subsection{Usage}{
@@ -176,8 +176,8 @@ Initialize a \code{FilteredData} object
 
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-datanames"></a>}}
-\if{latex}{\out{\hypertarget{method-datanames}{}}}
+\if{html}{\out{<a id="method-FilteredData-datanames"></a>}}
+\if{latex}{\out{\hypertarget{method-FilteredData-datanames}{}}}
 \subsection{Method \code{datanames()}}{
 Gets datanames
 
@@ -195,8 +195,8 @@ Useful to display in \verb{Show R Code}.
 }
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-get_datalabel"></a>}}
-\if{latex}{\out{\hypertarget{method-get_datalabel}{}}}
+\if{html}{\out{<a id="method-FilteredData-get_datalabel"></a>}}
+\if{latex}{\out{\hypertarget{method-FilteredData-get_datalabel}{}}}
 \subsection{Method \code{get_datalabel()}}{
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{FilteredData$get_datalabel(dataname)}\if{html}{\out{</div>}}
@@ -214,8 +214,8 @@ Useful to display in \verb{Show R Code}.
 }
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-get_filterable_datanames"></a>}}
-\if{latex}{\out{\hypertarget{method-get_filterable_datanames}{}}}
+\if{html}{\out{<a id="method-FilteredData-get_filterable_datanames"></a>}}
+\if{latex}{\out{\hypertarget{method-FilteredData-get_filterable_datanames}{}}}
 \subsection{Method \code{get_filterable_datanames()}}{
 Gets dataset names of a given dataname for the filtering.
 \subsection{Usage}{
@@ -234,8 +234,8 @@ Gets dataset names of a given dataname for the filtering.
 }
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-get_filterable_varnames"></a>}}
-\if{latex}{\out{\hypertarget{method-get_filterable_varnames}{}}}
+\if{html}{\out{<a id="method-FilteredData-get_filterable_varnames"></a>}}
+\if{latex}{\out{\hypertarget{method-FilteredData-get_filterable_varnames}{}}}
 \subsection{Method \code{get_filterable_varnames()}}{
 Gets variable names of a given dataname for the filtering.
 \subsection{Usage}{
@@ -254,8 +254,8 @@ Gets variable names of a given dataname for the filtering.
 }
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-get_call"></a>}}
-\if{latex}{\out{\hypertarget{method-get_call}{}}}
+\if{html}{\out{<a id="method-FilteredData-get_call"></a>}}
+\if{latex}{\out{\hypertarget{method-FilteredData-get_call}{}}}
 \subsection{Method \code{get_call()}}{
 Gets a \code{call} to filter the dataset according to the filter state
 
@@ -290,8 +290,8 @@ calls
 }
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-get_code"></a>}}
-\if{latex}{\out{\hypertarget{method-get_code}{}}}
+\if{html}{\out{<a id="method-FilteredData-get_code"></a>}}
+\if{latex}{\out{\hypertarget{method-FilteredData-get_code}{}}}
 \subsection{Method \code{get_code()}}{
 Gets the R preprocessing code string that generates the unfiltered datasets
 \subsection{Usage}{
@@ -310,8 +310,8 @@ Gets the R preprocessing code string that generates the unfiltered datasets
 }
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-get_filtered_dataset"></a>}}
-\if{latex}{\out{\hypertarget{method-get_filtered_dataset}{}}}
+\if{html}{\out{<a id="method-FilteredData-get_filtered_dataset"></a>}}
+\if{latex}{\out{\hypertarget{method-FilteredData-get_filtered_dataset}{}}}
 \subsection{Method \code{get_filtered_dataset()}}{
 Gets \code{FilteredDataset} object which contains all informations
 related to specific dataset.
@@ -332,8 +332,8 @@ name of the dataset.}
 }
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-get_data"></a>}}
-\if{latex}{\out{\hypertarget{method-get_data}{}}}
+\if{html}{\out{<a id="method-FilteredData-get_data"></a>}}
+\if{latex}{\out{\hypertarget{method-FilteredData-get_data}{}}}
 \subsection{Method \code{get_data()}}{
 Gets filtered or unfiltered dataset
 
@@ -354,8 +354,8 @@ For \code{filtered = FALSE}, the original data set with
 }
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-get_check"></a>}}
-\if{latex}{\out{\hypertarget{method-get_check}{}}}
+\if{html}{\out{<a id="method-FilteredData-get_check"></a>}}
+\if{latex}{\out{\hypertarget{method-FilteredData-get_check}{}}}
 \subsection{Method \code{get_check()}}{
 Returns whether the datasets in the object have had a reproducibility check
 \subsection{Usage}{
@@ -367,8 +367,8 @@ Returns whether the datasets in the object have had a reproducibility check
 }
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-get_data_attr"></a>}}
-\if{latex}{\out{\hypertarget{method-get_data_attr}{}}}
+\if{html}{\out{<a id="method-FilteredData-get_data_attr"></a>}}
+\if{latex}{\out{\hypertarget{method-FilteredData-get_data_attr}{}}}
 \subsection{Method \code{get_data_attr()}}{
 Gets data attributes for a given dataset
 
@@ -392,8 +392,8 @@ value of attribute, may be \code{NULL} if it does not exist
 }
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-get_metadata"></a>}}
-\if{latex}{\out{\hypertarget{method-get_metadata}{}}}
+\if{html}{\out{<a id="method-FilteredData-get_metadata"></a>}}
+\if{latex}{\out{\hypertarget{method-FilteredData-get_metadata}{}}}
 \subsection{Method \code{get_metadata()}}{
 Gets metadata for a given dataset
 \subsection{Usage}{
@@ -412,8 +412,8 @@ value of metadata for given data (or \code{NULL} if it does not exist)
 }
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-get_join_keys"></a>}}
-\if{latex}{\out{\hypertarget{method-get_join_keys}{}}}
+\if{html}{\out{<a id="method-FilteredData-get_join_keys"></a>}}
+\if{latex}{\out{\hypertarget{method-FilteredData-get_join_keys}{}}}
 \subsection{Method \code{get_join_keys()}}{
 Get join keys between two datasets.
 \subsection{Usage}{
@@ -434,8 +434,8 @@ Get join keys between two datasets.
 }
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-get_filter_overview"></a>}}
-\if{latex}{\out{\hypertarget{method-get_filter_overview}{}}}
+\if{html}{\out{<a id="method-FilteredData-get_filter_overview"></a>}}
+\if{latex}{\out{\hypertarget{method-FilteredData-get_filter_overview}{}}}
 \subsection{Method \code{get_filter_overview()}}{
 Get filter overview table in form of X (filtered) / Y (non-filtered)
 
@@ -458,8 +458,8 @@ Get keys for the dataset
 }
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-get_keys"></a>}}
-\if{latex}{\out{\hypertarget{method-get_keys}{}}}
+\if{html}{\out{<a id="method-FilteredData-get_keys"></a>}}
+\if{latex}{\out{\hypertarget{method-FilteredData-get_keys}{}}}
 \subsection{Method \code{get_keys()}}{
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{FilteredData$get_keys(dataname)}\if{html}{\out{</div>}}
@@ -477,8 +477,8 @@ Get keys for the dataset
 }
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-get_varlabels"></a>}}
-\if{latex}{\out{\hypertarget{method-get_varlabels}{}}}
+\if{html}{\out{<a id="method-FilteredData-get_varlabels"></a>}}
+\if{latex}{\out{\hypertarget{method-FilteredData-get_varlabels}{}}}
 \subsection{Method \code{get_varlabels()}}{
 Gets labels of variables in the data
 
@@ -505,8 +505,8 @@ attribute does not exist for the data
 }
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-get_varnames"></a>}}
-\if{latex}{\out{\hypertarget{method-get_varnames}{}}}
+\if{html}{\out{<a id="method-FilteredData-get_varnames"></a>}}
+\if{latex}{\out{\hypertarget{method-FilteredData-get_varnames}{}}}
 \subsection{Method \code{get_varnames()}}{
 Gets variable names
 \subsection{Usage}{
@@ -527,8 +527,8 @@ otherwise, it makes sure that it is a subset of the available datanames
 }
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-handle_active_datanames"></a>}}
-\if{latex}{\out{\hypertarget{method-handle_active_datanames}{}}}
+\if{html}{\out{<a id="method-FilteredData-handle_active_datanames"></a>}}
+\if{latex}{\out{\hypertarget{method-FilteredData-handle_active_datanames}{}}}
 \subsection{Method \code{handle_active_datanames()}}{
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{FilteredData$handle_active_datanames(datanames)}\if{html}{\out{</div>}}
@@ -546,8 +546,8 @@ the intersection of \code{self$datanames()} and \code{datanames}
 }
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-set_dataset"></a>}}
-\if{latex}{\out{\hypertarget{method-set_dataset}{}}}
+\if{html}{\out{<a id="method-FilteredData-set_dataset"></a>}}
+\if{latex}{\out{\hypertarget{method-FilteredData-set_dataset}{}}}
 \subsection{Method \code{set_dataset()}}{
 Adds a \code{TealDataset} object to this \code{FilteredData}
 
@@ -571,8 +571,8 @@ the object containing data and attributes.}
 }
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-set_check"></a>}}
-\if{latex}{\out{\hypertarget{method-set_check}{}}}
+\if{html}{\out{<a id="method-FilteredData-set_check"></a>}}
+\if{latex}{\out{\hypertarget{method-FilteredData-set_check}{}}}
 \subsection{Method \code{set_check()}}{
 sets whether the datasets in the object have had a reproducibility check
 \subsection{Usage}{
@@ -591,8 +591,8 @@ sets whether the datasets in the object have had a reproducibility check
 }
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-set_code"></a>}}
-\if{latex}{\out{\hypertarget{method-set_code}{}}}
+\if{html}{\out{<a id="method-FilteredData-set_code"></a>}}
+\if{latex}{\out{\hypertarget{method-FilteredData-set_code}{}}}
 \subsection{Method \code{set_code()}}{
 Sets the R preprocessing code for single dataset
 \subsection{Usage}{
@@ -613,8 +613,8 @@ unfiltered datasets}
 }
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-get_filter_state"></a>}}
-\if{latex}{\out{\hypertarget{method-get_filter_state}{}}}
+\if{html}{\out{<a id="method-FilteredData-get_filter_state"></a>}}
+\if{latex}{\out{\hypertarget{method-FilteredData-get_filter_state}{}}}
 \subsection{Method \code{get_filter_state()}}{
 Gets the reactive values from the active \code{FilterState} objects.
 
@@ -630,8 +630,8 @@ with active filters.
 }
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-get_formatted_filter_state"></a>}}
-\if{latex}{\out{\hypertarget{method-get_formatted_filter_state}{}}}
+\if{html}{\out{<a id="method-FilteredData-get_formatted_filter_state"></a>}}
+\if{latex}{\out{\hypertarget{method-FilteredData-get_formatted_filter_state}{}}}
 \subsection{Method \code{get_formatted_filter_state()}}{
 Returns the filter state formatted for printing to an \code{IO} device.
 \subsection{Usage}{
@@ -673,8 +673,8 @@ cat(shiny::isolate(datasets$get_formatted_filter_state()))
 
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-set_filter_state"></a>}}
-\if{latex}{\out{\hypertarget{method-set_filter_state}{}}}
+\if{html}{\out{<a id="method-FilteredData-set_filter_state"></a>}}
+\if{latex}{\out{\hypertarget{method-FilteredData-set_filter_state}{}}}
 \subsection{Method \code{set_filter_state()}}{
 Sets active filter states.
 \subsection{Usage}{
@@ -723,8 +723,8 @@ shiny::isolate(datasets$get_filter_state())
 
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-remove_filter_state"></a>}}
-\if{latex}{\out{\hypertarget{method-remove_filter_state}{}}}
+\if{html}{\out{<a id="method-FilteredData-remove_filter_state"></a>}}
+\if{latex}{\out{\hypertarget{method-FilteredData-remove_filter_state}{}}}
 \subsection{Method \code{remove_filter_state()}}{
 Remove one or more \code{FilterState} of a \code{FilteredDataset} in a \code{FilteredData} object
 \subsection{Usage}{
@@ -744,8 +744,8 @@ nested list of filter selections applied to datasets.}
 }
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-remove_all_filter_states"></a>}}
-\if{latex}{\out{\hypertarget{method-remove_all_filter_states}{}}}
+\if{html}{\out{<a id="method-FilteredData-remove_all_filter_states"></a>}}
+\if{latex}{\out{\hypertarget{method-FilteredData-remove_all_filter_states}{}}}
 \subsection{Method \code{remove_all_filter_states()}}{
 Remove all \code{FilterStates} of a \code{FilteredDataset} or all \code{FilterStates} of a \code{FilteredData} object
 \subsection{Usage}{
@@ -765,8 +765,8 @@ datanames to remove their \code{FilterStates} or empty which removes all \code{F
 }
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-restore_state_from_bookmark"></a>}}
-\if{latex}{\out{\hypertarget{method-restore_state_from_bookmark}{}}}
+\if{html}{\out{<a id="method-FilteredData-restore_state_from_bookmark"></a>}}
+\if{latex}{\out{\hypertarget{method-FilteredData-restore_state_from_bookmark}{}}}
 \subsection{Method \code{restore_state_from_bookmark()}}{
 Sets this object from a bookmarked state
 
@@ -800,8 +800,8 @@ the (active) datasets and allows to filter the datasets.}
 }
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-ui_filter_panel"></a>}}
-\if{latex}{\out{\hypertarget{method-ui_filter_panel}{}}}
+\if{html}{\out{<a id="method-FilteredData-ui_filter_panel"></a>}}
+\if{latex}{\out{\hypertarget{method-FilteredData-ui_filter_panel}{}}}
 \subsection{Method \code{ui_filter_panel()}}{
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{FilteredData$ui_filter_panel(id)}\if{html}{\out{</div>}}
@@ -818,8 +818,8 @@ Server function for filter panel}
 }
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-srv_filter_panel"></a>}}
-\if{latex}{\out{\hypertarget{method-srv_filter_panel}{}}}
+\if{html}{\out{<a id="method-FilteredData-srv_filter_panel"></a>}}
+\if{latex}{\out{\hypertarget{method-FilteredData-srv_filter_panel}{}}}
 \subsection{Method \code{srv_filter_panel()}}{
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{FilteredData$srv_filter_panel(id, active_datanames = function() "all")}\if{html}{\out{</div>}}
@@ -850,8 +850,8 @@ the number of unique subjects.
 }
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-ui_filter_overview"></a>}}
-\if{latex}{\out{\hypertarget{method-ui_filter_overview}{}}}
+\if{html}{\out{<a id="method-FilteredData-ui_filter_overview"></a>}}
+\if{latex}{\out{\hypertarget{method-FilteredData-ui_filter_overview}{}}}
 \subsection{Method \code{ui_filter_overview()}}{
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{FilteredData$ui_filter_overview(id)}\if{html}{\out{</div>}}
@@ -868,8 +868,8 @@ data}
 }
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-srv_filter_overview"></a>}}
-\if{latex}{\out{\hypertarget{method-srv_filter_overview}{}}}
+\if{html}{\out{<a id="method-FilteredData-srv_filter_overview"></a>}}
+\if{latex}{\out{\hypertarget{method-FilteredData-srv_filter_overview}{}}}
 \subsection{Method \code{srv_filter_overview()}}{
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{FilteredData$srv_filter_overview(id, active_datanames = function() "all")}\if{html}{\out{</div>}}
@@ -894,8 +894,8 @@ panel will be hidden.}
 }
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-clone"></a>}}
-\if{latex}{\out{\hypertarget{method-clone}{}}}
+\if{html}{\out{<a id="method-FilteredData-clone"></a>}}
+\if{latex}{\out{\hypertarget{method-FilteredData-clone}{}}}
 \subsection{Method \code{clone()}}{
 The objects of this class are cloneable with this method.
 \subsection{Usage}{
