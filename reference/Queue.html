@@ -14,7 +14,7 @@ the last one to be returned from it."><!-- mathjax --><script src="https://cdnjs
     
     <a class="navbar-brand me-2" href="../index.html">teal.slice</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.0.9004</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.0.9005</small>
 
     <div style="width: 140px; margin-left: 0.5rem;"> <small class="nav-text text-muted me-auto">part of</small> <img src="https://github.com/insightsengineering/hex-stickers/blob/main/PNG/nest.png?raw=true" alt="NEST" style="height: 30px;"><a href="https://pharmaverse.org/" class="external-link"><img src="https://github.com/insightsengineering/hex-stickers/blob/main/PNG/pharmaverse.png?raw=true" alt="pharmaverse" style="height: 30px;"></a> </div>
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -37,15 +37,6 @@ the last one to be returned from it."><!-- mathjax --><script src="https://cdnjs
 <li class="nav-item">
   <a class="nav-link" href="../news/index.html">Changelog</a>
 </li>
-<!-- start_releases -->
-<li class="dropdown">
-	<a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
-Other releases
-<span class="caret"></span></a><ul class="dropdown-menu" role="menu">
-   <li><a href="../index.html">latest</a></li>
-   <li><a href="..//index.html"></a></li>
-</ul></li>
-<!-- end_releases -->
       </ul><form class="form-inline my-2 my-lg-0" role="search">
         <input type="search" class="form-control me-sm-2" aria-label="Toggle navigation" name="search-input" data-search-index="../search.json" id="search-input" placeholder="Search for" autocomplete="off"></form>
 
@@ -80,15 +71,15 @@ the last one to be returned from it.</p>
 <div class="section">
 <h3 id="public-methods">Public methods<a class="anchor" aria-label="anchor" href="#public-methods"></a></h3>
 
-<ul><li><p><a href="#method-push"><code>Queue$push()</code></a></p></li>
-<li><p><a href="#method-pop"><code>Queue$pop()</code></a></p></li>
-<li><p><a href="#method-empty"><code>Queue$empty()</code></a></p></li>
-<li><p><a href="#method-size"><code>Queue$size()</code></a></p></li>
-<li><p><a href="#method-get"><code>Queue$get()</code></a></p></li>
-<li><p><a href="#method-remove"><code>Queue$remove()</code></a></p></li>
-<li><p><a href="#method-print"><code>Queue$print()</code></a></p></li>
-<li><p><a href="#method-clone"><code>Queue$clone()</code></a></p></li>
-</ul></div><p></p><hr><a id="method-push"></a><div class="section">
+<ul><li><p><a href="#method-Queue-push"><code>Queue$push()</code></a></p></li>
+<li><p><a href="#method-Queue-pop"><code>Queue$pop()</code></a></p></li>
+<li><p><a href="#method-Queue-empty"><code>Queue$empty()</code></a></p></li>
+<li><p><a href="#method-Queue-size"><code>Queue$size()</code></a></p></li>
+<li><p><a href="#method-Queue-get"><code>Queue$get()</code></a></p></li>
+<li><p><a href="#method-Queue-remove"><code>Queue$remove()</code></a></p></li>
+<li><p><a href="#method-Queue-print"><code>Queue$print()</code></a></p></li>
+<li><p><a href="#method-Queue-clone"><code>Queue$clone()</code></a></p></li>
+</ul></div><p></p><hr><a id="method-Queue-push"></a><div class="section">
 <h3 id="method-push-">Method <code>push()</code><a class="anchor" aria-label="anchor" href="#method-push-"></a></h3>
 <p>Adds another element to this queue.</p><div class="section">
 <h4 id="usage">Usage<a class="anchor" aria-label="anchor" href="#usage"></a></h4>
@@ -108,7 +99,7 @@ the last one to be returned from it.</p>
 <p>invisibly self</p>
 </div>
 
-</div><p></p><hr><a id="method-pop"></a><div class="section">
+</div><p></p><hr><a id="method-Queue-pop"></a><div class="section">
 <h3 id="method-pop-">Method <code>pop()</code><a class="anchor" aria-label="anchor" href="#method-pop-"></a></h3>
 <p>Returns the first added element to this queue and removes it
 from this queue.</p><div class="section">
@@ -121,7 +112,7 @@ from this queue.</p><div class="section">
 <p>the first added element to this queue or <code>NULL</code> if this queue is empty</p>
 </div>
 
-</div><p></p><hr><a id="method-empty"></a><div class="section">
+</div><p></p><hr><a id="method-Queue-empty"></a><div class="section">
 <h3 id="method-empty-">Method <code>empty()</code><a class="anchor" aria-label="anchor" href="#method-empty-"></a></h3>
 <p>Removes all elements from this queue.</p><div class="section">
 <h4 id="usage-2">Usage<a class="anchor" aria-label="anchor" href="#usage-2"></a></h4>
@@ -133,7 +124,7 @@ from this queue.</p><div class="section">
 <p>invisibly self</p>
 </div>
 
-</div><p></p><hr><a id="method-size"></a><div class="section">
+</div><p></p><hr><a id="method-Queue-size"></a><div class="section">
 <h3 id="method-size-">Method <code>size()</code><a class="anchor" aria-label="anchor" href="#method-size-"></a></h3>
 <p>Returns the number of elements in this queue.</p><div class="section">
 <h4 id="usage-3">Usage<a class="anchor" aria-label="anchor" href="#usage-3"></a></h4>
@@ -145,7 +136,7 @@ from this queue.</p><div class="section">
 <p>the number of elements in this queue</p>
 </div>
 
-</div><p></p><hr><a id="method-get"></a><div class="section">
+</div><p></p><hr><a id="method-Queue-get"></a><div class="section">
 <h3 id="method-get-">Method <code><a href="https://rdrr.io/r/base/get.html" class="external-link">get()</a></code><a class="anchor" aria-label="anchor" href="#method-get-"></a></h3>
 <p>Returns an array of elements in this queue. The order of elements is chronological:
 the first elements in the returned array is the oldest element added to this queue.</p><div class="section">
@@ -168,7 +159,7 @@ Default: FALSE</p></dd>
 <p>the array of elements in this queue</p>
 </div>
 
-</div><p></p><hr><a id="method-remove"></a><div class="section">
+</div><p></p><hr><a id="method-Queue-remove"></a><div class="section">
 <h3 id="method-remove-">Method <code><a href="https://rdrr.io/r/base/rm.html" class="external-link">remove()</a></code><a class="anchor" aria-label="anchor" href="#method-remove-"></a></h3>
 <p>Removes the eldest occurrence of elements from this queue. Relies on implicit
 conversions of R types to compare a removed element with elements in this queue.</p><div class="section">
@@ -189,7 +180,7 @@ conversions of R types to compare a removed element with elements in this queue.
 <p>invisibly self</p>
 </div>
 
-</div><p></p><hr><a id="method-print"></a><div class="section">
+</div><p></p><hr><a id="method-Queue-print"></a><div class="section">
 <h3 id="method-print-">Method <code><a href="https://rdrr.io/r/base/print.html" class="external-link">print()</a></code><a class="anchor" aria-label="anchor" href="#method-print-"></a></h3>
 <p>Prints this queue.</p><div class="section">
 <h4 id="usage-6">Usage<a class="anchor" aria-label="anchor" href="#usage-6"></a></h4>
@@ -209,7 +200,7 @@ conversions of R types to compare a removed element with elements in this queue.
 <p>invisibly self</p>
 </div>
 
-</div><p></p><hr><a id="method-clone"></a><div class="section">
+</div><p></p><hr><a id="method-Queue-clone"></a><div class="section">
 <h3 id="method-clone-">Method <code>clone()</code><a class="anchor" aria-label="anchor" href="#method-clone-"></a></h3>
 <p>The objects of this class are cloneable with this method.</p><div class="section">
 <h4 id="usage-7">Usage<a class="anchor" aria-label="anchor" href="#usage-7"></a></h4>

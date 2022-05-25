@@ -12,7 +12,7 @@ Class to encapsulate filtered datasets"><!-- mathjax --><script src="https://cdn
     
     <a class="navbar-brand me-2" href="../index.html">teal.slice</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.0.9004</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.0.9005</small>
 
     <div style="width: 140px; margin-left: 0.5rem;"> <small class="nav-text text-muted me-auto">part of</small> <img src="https://github.com/insightsengineering/hex-stickers/blob/main/PNG/nest.png?raw=true" alt="NEST" style="height: 30px;"><a href="https://pharmaverse.org/" class="external-link"><img src="https://github.com/insightsengineering/hex-stickers/blob/main/PNG/pharmaverse.png?raw=true" alt="pharmaverse" style="height: 30px;"></a> </div>
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -35,15 +35,6 @@ Class to encapsulate filtered datasets"><!-- mathjax --><script src="https://cdn
 <li class="nav-item">
   <a class="nav-link" href="../news/index.html">Changelog</a>
 </li>
-<!-- start_releases -->
-<li class="dropdown">
-	<a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
-Other releases
-<span class="caret"></span></a><ul class="dropdown-menu" role="menu">
-   <li><a href="../index.html">latest</a></li>
-   <li><a href="..//index.html"></a></li>
-</ul></li>
-<!-- end_releases -->
       </ul><form class="form-inline my-2 my-lg-0" role="search">
         <input type="search" class="form-control me-sm-2" aria-label="Toggle navigation" name="search-input" data-search-index="../search.json" id="search-input" placeholder="Search for" autocomplete="off"></form>
 
@@ -100,39 +91,39 @@ Other variables cannot be used for filtering the data in this class.</p></li>
 <div class="section">
 <h3 id="public-methods">Public methods<a class="anchor" aria-label="anchor" href="#public-methods"></a></h3>
 
-<ul><li><p><a href="#method-new"><code>FilteredData$new()</code></a></p></li>
-<li><p><a href="#method-datanames"><code>FilteredData$datanames()</code></a></p></li>
-<li><p><a href="#method-get_datalabel"><code>FilteredData$get_datalabel()</code></a></p></li>
-<li><p><a href="#method-get_filterable_datanames"><code>FilteredData$get_filterable_datanames()</code></a></p></li>
-<li><p><a href="#method-get_filterable_varnames"><code>FilteredData$get_filterable_varnames()</code></a></p></li>
-<li><p><a href="#method-get_call"><code>FilteredData$get_call()</code></a></p></li>
-<li><p><a href="#method-get_code"><code>FilteredData$get_code()</code></a></p></li>
-<li><p><a href="#method-get_filtered_dataset"><code>FilteredData$get_filtered_dataset()</code></a></p></li>
-<li><p><a href="#method-get_data"><code>FilteredData$get_data()</code></a></p></li>
-<li><p><a href="#method-get_check"><code>FilteredData$get_check()</code></a></p></li>
-<li><p><a href="#method-get_data_attr"><code>FilteredData$get_data_attr()</code></a></p></li>
-<li><p><a href="#method-get_metadata"><code>FilteredData$get_metadata()</code></a></p></li>
-<li><p><a href="#method-get_join_keys"><code>FilteredData$get_join_keys()</code></a></p></li>
-<li><p><a href="#method-get_filter_overview"><code>FilteredData$get_filter_overview()</code></a></p></li>
-<li><p><a href="#method-get_keys"><code>FilteredData$get_keys()</code></a></p></li>
-<li><p><a href="#method-get_varlabels"><code>FilteredData$get_varlabels()</code></a></p></li>
-<li><p><a href="#method-get_varnames"><code>FilteredData$get_varnames()</code></a></p></li>
-<li><p><a href="#method-handle_active_datanames"><code>FilteredData$handle_active_datanames()</code></a></p></li>
-<li><p><a href="#method-set_dataset"><code>FilteredData$set_dataset()</code></a></p></li>
-<li><p><a href="#method-set_check"><code>FilteredData$set_check()</code></a></p></li>
-<li><p><a href="#method-set_code"><code>FilteredData$set_code()</code></a></p></li>
-<li><p><a href="#method-get_filter_state"><code>FilteredData$get_filter_state()</code></a></p></li>
-<li><p><a href="#method-get_formatted_filter_state"><code>FilteredData$get_formatted_filter_state()</code></a></p></li>
-<li><p><a href="#method-set_filter_state"><code>FilteredData$set_filter_state()</code></a></p></li>
-<li><p><a href="#method-remove_filter_state"><code>FilteredData$remove_filter_state()</code></a></p></li>
-<li><p><a href="#method-remove_all_filter_states"><code>FilteredData$remove_all_filter_states()</code></a></p></li>
-<li><p><a href="#method-restore_state_from_bookmark"><code>FilteredData$restore_state_from_bookmark()</code></a></p></li>
-<li><p><a href="#method-ui_filter_panel"><code>FilteredData$ui_filter_panel()</code></a></p></li>
-<li><p><a href="#method-srv_filter_panel"><code>FilteredData$srv_filter_panel()</code></a></p></li>
-<li><p><a href="#method-ui_filter_overview"><code>FilteredData$ui_filter_overview()</code></a></p></li>
-<li><p><a href="#method-srv_filter_overview"><code>FilteredData$srv_filter_overview()</code></a></p></li>
-<li><p><a href="#method-clone"><code>FilteredData$clone()</code></a></p></li>
-</ul></div><p></p><hr><a id="method-new"></a><div class="section">
+<ul><li><p><a href="#method-FilteredData-new"><code>FilteredData$new()</code></a></p></li>
+<li><p><a href="#method-FilteredData-datanames"><code>FilteredData$datanames()</code></a></p></li>
+<li><p><a href="#method-FilteredData-get_datalabel"><code>FilteredData$get_datalabel()</code></a></p></li>
+<li><p><a href="#method-FilteredData-get_filterable_datanames"><code>FilteredData$get_filterable_datanames()</code></a></p></li>
+<li><p><a href="#method-FilteredData-get_filterable_varnames"><code>FilteredData$get_filterable_varnames()</code></a></p></li>
+<li><p><a href="#method-FilteredData-get_call"><code>FilteredData$get_call()</code></a></p></li>
+<li><p><a href="#method-FilteredData-get_code"><code>FilteredData$get_code()</code></a></p></li>
+<li><p><a href="#method-FilteredData-get_filtered_dataset"><code>FilteredData$get_filtered_dataset()</code></a></p></li>
+<li><p><a href="#method-FilteredData-get_data"><code>FilteredData$get_data()</code></a></p></li>
+<li><p><a href="#method-FilteredData-get_check"><code>FilteredData$get_check()</code></a></p></li>
+<li><p><a href="#method-FilteredData-get_data_attr"><code>FilteredData$get_data_attr()</code></a></p></li>
+<li><p><a href="#method-FilteredData-get_metadata"><code>FilteredData$get_metadata()</code></a></p></li>
+<li><p><a href="#method-FilteredData-get_join_keys"><code>FilteredData$get_join_keys()</code></a></p></li>
+<li><p><a href="#method-FilteredData-get_filter_overview"><code>FilteredData$get_filter_overview()</code></a></p></li>
+<li><p><a href="#method-FilteredData-get_keys"><code>FilteredData$get_keys()</code></a></p></li>
+<li><p><a href="#method-FilteredData-get_varlabels"><code>FilteredData$get_varlabels()</code></a></p></li>
+<li><p><a href="#method-FilteredData-get_varnames"><code>FilteredData$get_varnames()</code></a></p></li>
+<li><p><a href="#method-FilteredData-handle_active_datanames"><code>FilteredData$handle_active_datanames()</code></a></p></li>
+<li><p><a href="#method-FilteredData-set_dataset"><code>FilteredData$set_dataset()</code></a></p></li>
+<li><p><a href="#method-FilteredData-set_check"><code>FilteredData$set_check()</code></a></p></li>
+<li><p><a href="#method-FilteredData-set_code"><code>FilteredData$set_code()</code></a></p></li>
+<li><p><a href="#method-FilteredData-get_filter_state"><code>FilteredData$get_filter_state()</code></a></p></li>
+<li><p><a href="#method-FilteredData-get_formatted_filter_state"><code>FilteredData$get_formatted_filter_state()</code></a></p></li>
+<li><p><a href="#method-FilteredData-set_filter_state"><code>FilteredData$set_filter_state()</code></a></p></li>
+<li><p><a href="#method-FilteredData-remove_filter_state"><code>FilteredData$remove_filter_state()</code></a></p></li>
+<li><p><a href="#method-FilteredData-remove_all_filter_states"><code>FilteredData$remove_all_filter_states()</code></a></p></li>
+<li><p><a href="#method-FilteredData-restore_state_from_bookmark"><code>FilteredData$restore_state_from_bookmark()</code></a></p></li>
+<li><p><a href="#method-FilteredData-ui_filter_panel"><code>FilteredData$ui_filter_panel()</code></a></p></li>
+<li><p><a href="#method-FilteredData-srv_filter_panel"><code>FilteredData$srv_filter_panel()</code></a></p></li>
+<li><p><a href="#method-FilteredData-ui_filter_overview"><code>FilteredData$ui_filter_overview()</code></a></p></li>
+<li><p><a href="#method-FilteredData-srv_filter_overview"><code>FilteredData$srv_filter_overview()</code></a></p></li>
+<li><p><a href="#method-FilteredData-clone"><code>FilteredData$clone()</code></a></p></li>
+</ul></div><p></p><hr><a id="method-FilteredData-new"></a><div class="section">
 <h3 id="method-new-">Method <code><a href="https://rdrr.io/r/methods/new.html" class="external-link">new()</a></code><a class="anchor" aria-label="anchor" href="#method-new-"></a></h3>
 <p>Initialize a <code>FilteredData</code> object</p><div class="section">
 <h4 id="usage">Usage<a class="anchor" aria-label="anchor" href="#usage"></a></h4>
@@ -140,7 +131,7 @@ Other variables cannot be used for filtering the data in this class.</p></li>
 </div>
 
 
-</div><p></p><hr><a id="method-datanames"></a><div class="section">
+</div><p></p><hr><a id="method-FilteredData-datanames"></a><div class="section">
 <h3 id="method-datanames-">Method <code>datanames()</code><a class="anchor" aria-label="anchor" href="#method-datanames-"></a></h3>
 <p>Gets datanames</p>
 <p>The datanames are returned in the order in which they must be
@@ -156,7 +147,7 @@ Gets data label for the dataset</p>
 <p>Useful to display in <code>Show R Code</code>.</p>
 </div>
 
-</div><p></p><hr><a id="method-get_datalabel"></a><div class="section">
+</div><p></p><hr><a id="method-FilteredData-get_datalabel"></a><div class="section">
 <h3 id="method-get-datalabel-">Method <code>get_datalabel()</code><a class="anchor" aria-label="anchor" href="#method-get-datalabel-"></a></h3>
 
 <div class="section">
@@ -177,7 +168,7 @@ Gets data label for the dataset</p>
 <p>(<code>character</code>) keys of dataset</p>
 </div>
 
-</div><p></p><hr><a id="method-get_filterable_datanames"></a><div class="section">
+</div><p></p><hr><a id="method-FilteredData-get_filterable_datanames"></a><div class="section">
 <h3 id="method-get-filterable-datanames-">Method <code>get_filterable_datanames()</code><a class="anchor" aria-label="anchor" href="#method-get-filterable-datanames-"></a></h3>
 <p>Gets dataset names of a given dataname for the filtering.</p><div class="section">
 <h4 id="usage-3">Usage<a class="anchor" aria-label="anchor" href="#usage-3"></a></h4>
@@ -197,7 +188,7 @@ Gets data label for the dataset</p>
 <p>(<code>character</code> vector) of dataset names</p>
 </div>
 
-</div><p></p><hr><a id="method-get_filterable_varnames"></a><div class="section">
+</div><p></p><hr><a id="method-FilteredData-get_filterable_varnames"></a><div class="section">
 <h3 id="method-get-filterable-varnames-">Method <code><a href="get_filterable_varnames.html">get_filterable_varnames()</a></code><a class="anchor" aria-label="anchor" href="#method-get-filterable-varnames-"></a></h3>
 <p>Gets variable names of a given dataname for the filtering.</p><div class="section">
 <h4 id="usage-4">Usage<a class="anchor" aria-label="anchor" href="#usage-4"></a></h4>
@@ -217,7 +208,7 @@ Gets data label for the dataset</p>
 <p>(<code>character</code> vector) of variable names</p>
 </div>
 
-</div><p></p><hr><a id="method-get_call"></a><div class="section">
+</div><p></p><hr><a id="method-FilteredData-get_call"></a><div class="section">
 <h3 id="method-get-call-">Method <code>get_call()</code><a class="anchor" aria-label="anchor" href="#method-get-call-"></a></h3>
 <p>Gets a <code>call</code> to filter the dataset according to the filter state</p>
 <p>It returns a <code>call</code> to filter the dataset only, assuming the
@@ -248,7 +239,7 @@ capturing a function call).</p>
 calls</p>
 </div>
 
-</div><p></p><hr><a id="method-get_code"></a><div class="section">
+</div><p></p><hr><a id="method-FilteredData-get_code"></a><div class="section">
 <h3 id="method-get-code-">Method <code>get_code()</code><a class="anchor" aria-label="anchor" href="#method-get-code-"></a></h3>
 <p>Gets the R preprocessing code string that generates the unfiltered datasets</p><div class="section">
 <h4 id="usage-6">Usage<a class="anchor" aria-label="anchor" href="#usage-6"></a></h4>
@@ -268,7 +259,7 @@ calls</p>
 <p>(<code>character</code>) deparsed code</p>
 </div>
 
-</div><p></p><hr><a id="method-get_filtered_dataset"></a><div class="section">
+</div><p></p><hr><a id="method-FilteredData-get_filtered_dataset"></a><div class="section">
 <h3 id="method-get-filtered-dataset-">Method <code>get_filtered_dataset()</code><a class="anchor" aria-label="anchor" href="#method-get-filtered-dataset-"></a></h3>
 <p>Gets <code>FilteredDataset</code> object which contains all informations
 related to specific dataset.</p><div class="section">
@@ -290,7 +281,7 @@ name of the dataset.</p></dd>
 <p><code>FilteredDataset</code> object or list of <code>FilteredDataset</code></p>
 </div>
 
-</div><p></p><hr><a id="method-get_data"></a><div class="section">
+</div><p></p><hr><a id="method-FilteredData-get_data"></a><div class="section">
 <h3 id="method-get-data-">Method <code>get_data()</code><a class="anchor" aria-label="anchor" href="#method-get-data-"></a></h3>
 <p>Gets filtered or unfiltered dataset</p>
 <p>For <code>filtered = FALSE</code>, the original data set with
@@ -312,7 +303,7 @@ name of the dataset.</p></dd>
 </dl><p></p></div>
 </div>
 
-</div><p></p><hr><a id="method-get_check"></a><div class="section">
+</div><p></p><hr><a id="method-FilteredData-get_check"></a><div class="section">
 <h3 id="method-get-check-">Method <code>get_check()</code><a class="anchor" aria-label="anchor" href="#method-get-check-"></a></h3>
 <p>Returns whether the datasets in the object have had a reproducibility check</p><div class="section">
 <h4 id="usage-9">Usage<a class="anchor" aria-label="anchor" href="#usage-9"></a></h4>
@@ -324,7 +315,7 @@ name of the dataset.</p></dd>
 <p><code>logical</code></p>
 </div>
 
-</div><p></p><hr><a id="method-get_data_attr"></a><div class="section">
+</div><p></p><hr><a id="method-FilteredData-get_data_attr"></a><div class="section">
 <h3 id="method-get-data-attr-">Method <code>get_data_attr()</code><a class="anchor" aria-label="anchor" href="#method-get-data-attr-"></a></h3>
 <p>Gets data attributes for a given dataset</p>
 <p>Sets and gets the data attribute on unfiltered data as it is never modified
@@ -350,7 +341,7 @@ as attributes.</p><div class="section">
 <p>value of attribute, may be <code>NULL</code> if it does not exist</p>
 </div>
 
-</div><p></p><hr><a id="method-get_metadata"></a><div class="section">
+</div><p></p><hr><a id="method-FilteredData-get_metadata"></a><div class="section">
 <h3 id="method-get-metadata-">Method <code>get_metadata()</code><a class="anchor" aria-label="anchor" href="#method-get-metadata-"></a></h3>
 <p>Gets metadata for a given dataset</p><div class="section">
 <h4 id="usage-11">Usage<a class="anchor" aria-label="anchor" href="#usage-11"></a></h4>
@@ -370,7 +361,7 @@ as attributes.</p><div class="section">
 <p>value of metadata for given data (or <code>NULL</code> if it does not exist)</p>
 </div>
 
-</div><p></p><hr><a id="method-get_join_keys"></a><div class="section">
+</div><p></p><hr><a id="method-FilteredData-get_join_keys"></a><div class="section">
 <h3 id="method-get-join-keys-">Method <code>get_join_keys()</code><a class="anchor" aria-label="anchor" href="#method-get-join-keys-"></a></h3>
 <p>Get join keys between two datasets.</p><div class="section">
 <h4 id="usage-12">Usage<a class="anchor" aria-label="anchor" href="#usage-12"></a></h4>
@@ -394,7 +385,7 @@ as attributes.</p><div class="section">
 <p>(<code>named character</code>) vector with column names</p>
 </div>
 
-</div><p></p><hr><a id="method-get_filter_overview"></a><div class="section">
+</div><p></p><hr><a id="method-FilteredData-get_filter_overview"></a><div class="section">
 <h3 id="method-get-filter-overview-">Method <code>get_filter_overview()</code><a class="anchor" aria-label="anchor" href="#method-get-filter-overview-"></a></h3>
 <p>Get filter overview table in form of X (filtered) / Y (non-filtered)</p>
 <p>This is intended to be presented in the application.
@@ -417,7 +408,7 @@ The content for each of the data names is defined in <code>get_filter_overview_i
 Get keys for the dataset</p>
 </div>
 
-</div><p></p><hr><a id="method-get_keys"></a><div class="section">
+</div><p></p><hr><a id="method-FilteredData-get_keys"></a><div class="section">
 <h3 id="method-get-keys-">Method <code>get_keys()</code><a class="anchor" aria-label="anchor" href="#method-get-keys-"></a></h3>
 
 <div class="section">
@@ -438,7 +429,7 @@ Get keys for the dataset</p>
 <p>(<code>character</code>) keys of dataset</p>
 </div>
 
-</div><p></p><hr><a id="method-get_varlabels"></a><div class="section">
+</div><p></p><hr><a id="method-FilteredData-get_varlabels"></a><div class="section">
 <h3 id="method-get-varlabels-">Method <code>get_varlabels()</code><a class="anchor" aria-label="anchor" href="#method-get-varlabels-"></a></h3>
 <p>Gets labels of variables in the data</p>
 <p>Variables are the column names of the data.
@@ -467,7 +458,7 @@ if <code>NULL</code>, for all variables in data</p></dd>
 attribute does not exist for the data</p>
 </div>
 
-</div><p></p><hr><a id="method-get_varnames"></a><div class="section">
+</div><p></p><hr><a id="method-FilteredData-get_varnames"></a><div class="section">
 <h3 id="method-get-varnames-">Method <code>get_varnames()</code><a class="anchor" aria-label="anchor" href="#method-get-varnames-"></a></h3>
 <p>Gets variable names</p><div class="section">
 <h4 id="usage-16">Usage<a class="anchor" aria-label="anchor" href="#usage-16"></a></h4>
@@ -489,7 +480,7 @@ When active_datanames is "all", sets them to all datanames
 otherwise, it makes sure that it is a subset of the available datanames</p>
 </div>
 
-</div><p></p><hr><a id="method-handle_active_datanames"></a><div class="section">
+</div><p></p><hr><a id="method-FilteredData-handle_active_datanames"></a><div class="section">
 <h3 id="method-handle-active-datanames-">Method <code>handle_active_datanames()</code><a class="anchor" aria-label="anchor" href="#method-handle-active-datanames-"></a></h3>
 
 <div class="section">
@@ -510,7 +501,7 @@ otherwise, it makes sure that it is a subset of the available datanames</p>
 <p>the intersection of <code>self$datanames()</code> and <code>datanames</code></p>
 </div>
 
-</div><p></p><hr><a id="method-set_dataset"></a><div class="section">
+</div><p></p><hr><a id="method-FilteredData-set_dataset"></a><div class="section">
 <h3 id="method-set-dataset-">Method <code>set_dataset()</code><a class="anchor" aria-label="anchor" href="#method-set-dataset-"></a></h3>
 <p>Adds a <code>TealDataset</code> object to this <code>FilteredData</code></p>
 <p>Adds a dataset and preserve all attributes attached to this object.
@@ -534,7 +525,7 @@ the object containing data and attributes.</p></dd>
 <p>(<code>self</code>) invisibly this <code>FilteredTealData</code></p>
 </div>
 
-</div><p></p><hr><a id="method-set_check"></a><div class="section">
+</div><p></p><hr><a id="method-FilteredData-set_check"></a><div class="section">
 <h3 id="method-set-check-">Method <code>set_check()</code><a class="anchor" aria-label="anchor" href="#method-set-check-"></a></h3>
 <p>sets whether the datasets in the object have had a reproducibility check</p><div class="section">
 <h4 id="usage-19">Usage<a class="anchor" aria-label="anchor" href="#usage-19"></a></h4>
@@ -554,7 +545,7 @@ the object containing data and attributes.</p></dd>
 <p>(<code>self</code>)</p>
 </div>
 
-</div><p></p><hr><a id="method-set_code"></a><div class="section">
+</div><p></p><hr><a id="method-FilteredData-set_code"></a><div class="section">
 <h3 id="method-set-code-">Method <code>set_code()</code><a class="anchor" aria-label="anchor" href="#method-set-code-"></a></h3>
 <p>Sets the R preprocessing code for single dataset</p><div class="section">
 <h4 id="usage-20">Usage<a class="anchor" aria-label="anchor" href="#usage-20"></a></h4>
@@ -576,7 +567,7 @@ unfiltered datasets</p></dd>
 <p>(<code>self</code>)</p>
 </div>
 
-</div><p></p><hr><a id="method-get_filter_state"></a><div class="section">
+</div><p></p><hr><a id="method-FilteredData-get_filter_state"></a><div class="section">
 <h3 id="method-get-filter-state-">Method <code><a href="filter_state_api.html">get_filter_state()</a></code><a class="anchor" aria-label="anchor" href="#method-get-filter-state-"></a></h3>
 <p>Gets the reactive values from the active <code>FilterState</code> objects.</p>
 <p>Gets all active filters in the form of a nested list.
@@ -591,7 +582,7 @@ The output list is a compatible input to <code>self$set_filter_state</code>.</p>
 with active filters.</p>
 </div>
 
-</div><p></p><hr><a id="method-get_formatted_filter_state"></a><div class="section">
+</div><p></p><hr><a id="method-FilteredData-get_formatted_filter_state"></a><div class="section">
 <h3 id="method-get-formatted-filter-state-">Method <code>get_formatted_filter_state()</code><a class="anchor" aria-label="anchor" href="#method-get-formatted-filter-state-"></a></h3>
 <p>Returns the filter state formatted for printing to an <code>IO</code> device.</p><div class="section">
 <h4 id="usage-22">Usage<a class="anchor" aria-label="anchor" href="#usage-22"></a></h4>
@@ -629,7 +620,7 @@ with active filters.</p>
 </div>
 
 
-</div><p></p><hr><a id="method-set_filter_state"></a><div class="section">
+</div><p></p><hr><a id="method-FilteredData-set_filter_state"></a><div class="section">
 <h3 id="method-set-filter-state-">Method <code><a href="filter_state_api.html">set_filter_state()</a></code><a class="anchor" aria-label="anchor" href="#method-set-filter-state-"></a></h3>
 <p>Sets active filter states.</p><div class="section">
 <h4 id="usage-23">Usage<a class="anchor" aria-label="anchor" href="#usage-23"></a></h4>
@@ -676,7 +667,7 @@ nested list of filter selections applied to datasets.</p></dd>
 </div>
 
 
-</div><p></p><hr><a id="method-remove_filter_state"></a><div class="section">
+</div><p></p><hr><a id="method-FilteredData-remove_filter_state"></a><div class="section">
 <h3 id="method-remove-filter-state-">Method <code><a href="filter_state_api.html">remove_filter_state()</a></code><a class="anchor" aria-label="anchor" href="#method-remove-filter-state-"></a></h3>
 <p>Remove one or more <code>FilterState</code> of a <code>FilteredDataset</code> in a <code>FilteredData</code> object</p><div class="section">
 <h4 id="usage-24">Usage<a class="anchor" aria-label="anchor" href="#usage-24"></a></h4>
@@ -697,7 +688,7 @@ nested list of filter selections applied to datasets.</p></dd>
 <p><code>NULL</code></p>
 </div>
 
-</div><p></p><hr><a id="method-remove_all_filter_states"></a><div class="section">
+</div><p></p><hr><a id="method-FilteredData-remove_all_filter_states"></a><div class="section">
 <h3 id="method-remove-all-filter-states-">Method <code>remove_all_filter_states()</code><a class="anchor" aria-label="anchor" href="#method-remove-all-filter-states-"></a></h3>
 <p>Remove all <code>FilterStates</code> of a <code>FilteredDataset</code> or all <code>FilterStates</code> of a <code>FilteredData</code> object</p><div class="section">
 <h4 id="usage-25">Usage<a class="anchor" aria-label="anchor" href="#usage-25"></a></h4>
@@ -718,7 +709,7 @@ datanames to remove their <code>FilterStates</code> or empty which removes all <
 <p><code>NULL</code></p>
 </div>
 
-</div><p></p><hr><a id="method-restore_state_from_bookmark"></a><div class="section">
+</div><p></p><hr><a id="method-FilteredData-restore_state_from_bookmark"></a><div class="section">
 <h3 id="method-restore-state-from-bookmark-">Method <code>restore_state_from_bookmark()</code><a class="anchor" aria-label="anchor" href="#method-restore-state-from-bookmark-"></a></h3>
 <p>Sets this object from a bookmarked state</p>
 <p>Only sets the filter state, does not set the data
@@ -751,7 +742,7 @@ the (active) datasets and allows to filter the datasets.</p></dd>
 </dl><p></p></div>
 </div>
 
-</div><p></p><hr><a id="method-ui_filter_panel"></a><div class="section">
+</div><p></p><hr><a id="method-FilteredData-ui_filter_panel"></a><div class="section">
 <h3 id="method-ui-filter-panel-">Method <code>ui_filter_panel()</code><a class="anchor" aria-label="anchor" href="#method-ui-filter-panel-"></a></h3>
 
 <div class="section">
@@ -770,7 +761,7 @@ Server function for filter panel</p></dd>
 </dl><p></p></div>
 </div>
 
-</div><p></p><hr><a id="method-srv_filter_panel"></a><div class="section">
+</div><p></p><hr><a id="method-FilteredData-srv_filter_panel"></a><div class="section">
 <h3 id="method-srv-filter-panel-">Method <code>srv_filter_panel()</code><a class="anchor" aria-label="anchor" href="#method-srv-filter-panel-"></a></h3>
 
 <div class="section">
@@ -805,7 +796,7 @@ the number of rows/observations in each dataset,
 the number of unique subjects.</p>
 </div>
 
-</div><p></p><hr><a id="method-ui_filter_overview"></a><div class="section">
+</div><p></p><hr><a id="method-FilteredData-ui_filter_overview"></a><div class="section">
 <h3 id="method-ui-filter-overview-">Method <code>ui_filter_overview()</code><a class="anchor" aria-label="anchor" href="#method-ui-filter-overview-"></a></h3>
 
 <div class="section">
@@ -824,7 +815,7 @@ data</p></dd>
 </dl><p></p></div>
 </div>
 
-</div><p></p><hr><a id="method-srv_filter_overview"></a><div class="section">
+</div><p></p><hr><a id="method-FilteredData-srv_filter_overview"></a><div class="section">
 <h3 id="method-srv-filter-overview-">Method <code>srv_filter_overview()</code><a class="anchor" aria-label="anchor" href="#method-srv-filter-overview-"></a></h3>
 
 <div class="section">
@@ -854,7 +845,7 @@ panel will be hidden.</p></dd>
 <p><code>moduleServer</code> function which returns <code>NULL</code></p>
 </div>
 
-</div><p></p><hr><a id="method-clone"></a><div class="section">
+</div><p></p><hr><a id="method-FilteredData-clone"></a><div class="section">
 <h3 id="method-clone-">Method <code>clone()</code><a class="anchor" aria-label="anchor" href="#method-clone-"></a></h3>
 <p>The objects of this class are cloneable with this method.</p><div class="section">
 <h4 id="usage-31">Usage<a class="anchor" aria-label="anchor" href="#usage-31"></a></h4>

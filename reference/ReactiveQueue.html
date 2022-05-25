@@ -12,7 +12,7 @@ the last one to be returned from it."><!-- mathjax --><script src="https://cdnjs
     
     <a class="navbar-brand me-2" href="../index.html">teal.slice</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.0.9004</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.0.9005</small>
 
     <div style="width: 140px; margin-left: 0.5rem;"> <small class="nav-text text-muted me-auto">part of</small> <img src="https://github.com/insightsengineering/hex-stickers/blob/main/PNG/nest.png?raw=true" alt="NEST" style="height: 30px;"><a href="https://pharmaverse.org/" class="external-link"><img src="https://github.com/insightsengineering/hex-stickers/blob/main/PNG/pharmaverse.png?raw=true" alt="pharmaverse" style="height: 30px;"></a> </div>
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -35,15 +35,6 @@ the last one to be returned from it."><!-- mathjax --><script src="https://cdnjs
 <li class="nav-item">
   <a class="nav-link" href="../news/index.html">Changelog</a>
 </li>
-<!-- start_releases -->
-<li class="dropdown">
-	<a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
-Other releases
-<span class="caret"></span></a><ul class="dropdown-menu" role="menu">
-   <li><a href="../index.html">latest</a></li>
-   <li><a href="..//index.html"></a></li>
-</ul></li>
-<!-- end_releases -->
       </ul><form class="form-inline my-2 my-lg-0" role="search">
         <input type="search" class="form-control me-sm-2" aria-label="Toggle navigation" name="search-input" data-search-index="../search.json" id="search-input" placeholder="Search for" autocomplete="off"></form>
 
@@ -81,16 +72,16 @@ the last one to be returned from it.</p>
 <div class="section">
 <h3 id="public-methods">Public methods<a class="anchor" aria-label="anchor" href="#public-methods"></a></h3>
 
-<ul><li><p><a href="#method-new"><code>ReactiveQueue$new()</code></a></p></li>
-<li><p><a href="#method-get"><code>ReactiveQueue$get()</code></a></p></li>
-<li><p><a href="#method-clone"><code>ReactiveQueue$clone()</code></a></p></li>
-</ul></div><p><details><summary>Inherited methods</summary><ul><li><p><span class="pkg-link" data-pkg="teal.slice" data-topic="Queue" data-id="empty"><a href="Queue.html#method-empty"><code>teal.slice::Queue$empty()</code></a></span></p></li>
-<li><p><span class="pkg-link" data-pkg="teal.slice" data-topic="Queue" data-id="pop"><a href="Queue.html#method-pop"><code>teal.slice::Queue$pop()</code></a></span></p></li>
-<li><p><span class="pkg-link" data-pkg="teal.slice" data-topic="Queue" data-id="print"><a href="Queue.html#method-print"><code>teal.slice::Queue$print()</code></a></span></p></li>
-<li><p><span class="pkg-link" data-pkg="teal.slice" data-topic="Queue" data-id="push"><a href="Queue.html#method-push"><code>teal.slice::Queue$push()</code></a></span></p></li>
-<li><p><span class="pkg-link" data-pkg="teal.slice" data-topic="Queue" data-id="remove"><a href="Queue.html#method-remove"><code>teal.slice::Queue$remove()</code></a></span></p></li>
-<li><p><span class="pkg-link" data-pkg="teal.slice" data-topic="Queue" data-id="size"><a href="Queue.html#method-size"><code>teal.slice::Queue$size()</code></a></span></p></li>
-</ul></details></p><hr><a id="method-new"></a><div class="section">
+<ul><li><p><a href="#method-ReactiveQueue-new"><code>ReactiveQueue$new()</code></a></p></li>
+<li><p><a href="#method-ReactiveQueue-get"><code>ReactiveQueue$get()</code></a></p></li>
+<li><p><a href="#method-ReactiveQueue-clone"><code>ReactiveQueue$clone()</code></a></p></li>
+</ul></div><p><details><summary>Inherited methods</summary><ul><li><span class="pkg-link" data-pkg="teal.slice" data-topic="Queue" data-id="empty"><a href="Queue.html#method-empty"><code>teal.slice::Queue$empty()</code></a></span></li>
+<li><span class="pkg-link" data-pkg="teal.slice" data-topic="Queue" data-id="pop"><a href="Queue.html#method-pop"><code>teal.slice::Queue$pop()</code></a></span></li>
+<li><span class="pkg-link" data-pkg="teal.slice" data-topic="Queue" data-id="print"><a href="Queue.html#method-print"><code>teal.slice::Queue$print()</code></a></span></li>
+<li><span class="pkg-link" data-pkg="teal.slice" data-topic="Queue" data-id="push"><a href="Queue.html#method-push"><code>teal.slice::Queue$push()</code></a></span></li>
+<li><span class="pkg-link" data-pkg="teal.slice" data-topic="Queue" data-id="remove"><a href="Queue.html#method-remove"><code>teal.slice::Queue$remove()</code></a></span></li>
+<li><span class="pkg-link" data-pkg="teal.slice" data-topic="Queue" data-id="size"><a href="Queue.html#method-size"><code>teal.slice::Queue$size()</code></a></span></li>
+</ul></details></p><hr><a id="method-ReactiveQueue-new"></a><div class="section">
 <h3 id="method-new-">Method <code><a href="https://rdrr.io/r/methods/new.html" class="external-link">new()</a></code><a class="anchor" aria-label="anchor" href="#method-new-"></a></h3>
 <p>Initializes <code>ReactiveQueue</code> by setting empty <code>reactiveVal</code></p><div class="section">
 <h4 id="usage">Usage<a class="anchor" aria-label="anchor" href="#usage"></a></h4>
@@ -98,7 +89,7 @@ the last one to be returned from it.</p>
 </div>
 
 
-</div><p></p><hr><a id="method-get"></a><div class="section">
+</div><p></p><hr><a id="method-ReactiveQueue-get"></a><div class="section">
 <h3 id="method-get-">Method <code><a href="https://rdrr.io/r/base/get.html" class="external-link">get()</a></code><a class="anchor" aria-label="anchor" href="#method-get-"></a></h3>
 <p>Get queue</p><div class="section">
 <h4 id="usage-1">Usage<a class="anchor" aria-label="anchor" href="#usage-1"></a></h4>
@@ -120,7 +111,7 @@ whether order of elements in the queue should be reversed.
 <p>values stored in the queue</p>
 </div>
 
-</div><p></p><hr><a id="method-clone"></a><div class="section">
+</div><p></p><hr><a id="method-ReactiveQueue-clone"></a><div class="section">
 <h3 id="method-clone-">Method <code>clone()</code><a class="anchor" aria-label="anchor" href="#method-clone-"></a></h3>
 <p>The objects of this class are cloneable with this method.</p><div class="section">
 <h4 id="usage-2">Usage<a class="anchor" aria-label="anchor" href="#usage-2"></a></h4>
