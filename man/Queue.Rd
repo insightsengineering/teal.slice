@@ -12,19 +12,19 @@ the last one to be returned from it.
 \section{Methods}{
 \subsection{Public methods}{
 \itemize{
-\item \href{#method-push}{\code{Queue$push()}}
-\item \href{#method-pop}{\code{Queue$pop()}}
-\item \href{#method-empty}{\code{Queue$empty()}}
-\item \href{#method-size}{\code{Queue$size()}}
-\item \href{#method-get}{\code{Queue$get()}}
-\item \href{#method-remove}{\code{Queue$remove()}}
-\item \href{#method-print}{\code{Queue$print()}}
-\item \href{#method-clone}{\code{Queue$clone()}}
+\item \href{#method-Queue-push}{\code{Queue$push()}}
+\item \href{#method-Queue-pop}{\code{Queue$pop()}}
+\item \href{#method-Queue-empty}{\code{Queue$empty()}}
+\item \href{#method-Queue-size}{\code{Queue$size()}}
+\item \href{#method-Queue-get}{\code{Queue$get()}}
+\item \href{#method-Queue-remove}{\code{Queue$remove()}}
+\item \href{#method-Queue-print}{\code{Queue$print()}}
+\item \href{#method-Queue-clone}{\code{Queue$clone()}}
 }
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-push"></a>}}
-\if{latex}{\out{\hypertarget{method-push}{}}}
+\if{html}{\out{<a id="method-Queue-push"></a>}}
+\if{latex}{\out{\hypertarget{method-Queue-push}{}}}
 \subsection{Method \code{push()}}{
 Adds another element to this queue.
 \subsection{Usage}{
@@ -43,8 +43,8 @@ invisibly self
 }
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-pop"></a>}}
-\if{latex}{\out{\hypertarget{method-pop}{}}}
+\if{html}{\out{<a id="method-Queue-pop"></a>}}
+\if{latex}{\out{\hypertarget{method-Queue-pop}{}}}
 \subsection{Method \code{pop()}}{
 Returns the first added element to this queue and removes it
 from this queue.
@@ -57,8 +57,8 @@ the first added element to this queue or \code{NULL} if this queue is empty
 }
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-empty"></a>}}
-\if{latex}{\out{\hypertarget{method-empty}{}}}
+\if{html}{\out{<a id="method-Queue-empty"></a>}}
+\if{latex}{\out{\hypertarget{method-Queue-empty}{}}}
 \subsection{Method \code{empty()}}{
 Removes all elements from this queue.
 \subsection{Usage}{
@@ -70,8 +70,8 @@ invisibly self
 }
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-size"></a>}}
-\if{latex}{\out{\hypertarget{method-size}{}}}
+\if{html}{\out{<a id="method-Queue-size"></a>}}
+\if{latex}{\out{\hypertarget{method-Queue-size}{}}}
 \subsection{Method \code{size()}}{
 Returns the number of elements in this queue.
 \subsection{Usage}{
@@ -83,8 +83,8 @@ the number of elements in this queue
 }
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-get"></a>}}
-\if{latex}{\out{\hypertarget{method-get}{}}}
+\if{html}{\out{<a id="method-Queue-get"></a>}}
+\if{latex}{\out{\hypertarget{method-Queue-get}{}}}
 \subsection{Method \code{get()}}{
 Returns an array of elements in this queue. The order of elements is chronological:
 the first elements in the returned array is the oldest element added to this queue.
@@ -106,8 +106,8 @@ the array of elements in this queue
 }
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-remove"></a>}}
-\if{latex}{\out{\hypertarget{method-remove}{}}}
+\if{html}{\out{<a id="method-Queue-remove"></a>}}
+\if{latex}{\out{\hypertarget{method-Queue-remove}{}}}
 \subsection{Method \code{remove()}}{
 Removes the eldest occurrence of elements from this queue. Relies on implicit
 conversions of R types to compare a removed element with elements in this queue.
@@ -127,8 +127,8 @@ invisibly self
 }
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-print"></a>}}
-\if{latex}{\out{\hypertarget{method-print}{}}}
+\if{html}{\out{<a id="method-Queue-print"></a>}}
+\if{latex}{\out{\hypertarget{method-Queue-print}{}}}
 \subsection{Method \code{print()}}{
 Prints this queue.
 \subsection{Usage}{
@@ -147,8 +147,8 @@ invisibly self
 }
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-clone"></a>}}
-\if{latex}{\out{\hypertarget{method-clone}{}}}
+\if{html}{\out{<a id="method-Queue-clone"></a>}}
+\if{latex}{\out{\hypertarget{method-Queue-clone}{}}}
 \subsection{Method \code{clone()}}{
 The objects of this class are cloneable with this method.
 \subsection{Usage}{

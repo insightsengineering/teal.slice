@@ -38,44 +38,44 @@ shiny::isolate(dataset$get_filter_state())
 \section{Methods}{
 \subsection{Public methods}{
 \itemize{
-\item \href{#method-new}{\code{MAEFilteredDataset$new()}}
-\item \href{#method-get_call}{\code{MAEFilteredDataset$get_call()}}
-\item \href{#method-get_data}{\code{MAEFilteredDataset$get_data()}}
-\item \href{#method-get_filter_overview_info}{\code{MAEFilteredDataset$get_filter_overview_info()}}
-\item \href{#method-get_filterable_varnames}{\code{MAEFilteredDataset$get_filterable_varnames()}}
-\item \href{#method-set_filter_state}{\code{MAEFilteredDataset$set_filter_state()}}
-\item \href{#method-remove_filter_state}{\code{MAEFilteredDataset$remove_filter_state()}}
-\item \href{#method-ui_add_filter_state}{\code{MAEFilteredDataset$ui_add_filter_state()}}
-\item \href{#method-srv_add_filter_state}{\code{MAEFilteredDataset$srv_add_filter_state()}}
-\item \href{#method-clone}{\code{MAEFilteredDataset$clone()}}
+\item \href{#method-MAEFilteredDataset-new}{\code{MAEFilteredDataset$new()}}
+\item \href{#method-MAEFilteredDataset-get_call}{\code{MAEFilteredDataset$get_call()}}
+\item \href{#method-MAEFilteredDataset-get_data}{\code{MAEFilteredDataset$get_data()}}
+\item \href{#method-MAEFilteredDataset-get_filter_overview_info}{\code{MAEFilteredDataset$get_filter_overview_info()}}
+\item \href{#method-MAEFilteredDataset-get_filterable_varnames}{\code{MAEFilteredDataset$get_filterable_varnames()}}
+\item \href{#method-MAEFilteredDataset-set_filter_state}{\code{MAEFilteredDataset$set_filter_state()}}
+\item \href{#method-MAEFilteredDataset-remove_filter_state}{\code{MAEFilteredDataset$remove_filter_state()}}
+\item \href{#method-MAEFilteredDataset-ui_add_filter_state}{\code{MAEFilteredDataset$ui_add_filter_state()}}
+\item \href{#method-MAEFilteredDataset-srv_add_filter_state}{\code{MAEFilteredDataset$srv_add_filter_state()}}
+\item \href{#method-MAEFilteredDataset-clone}{\code{MAEFilteredDataset$clone()}}
 }
 }
-\if{html}{
-\out{<details ><summary>Inherited methods</summary>}
-\itemize{
-\item \out{<span class="pkg-link" data-pkg="teal.slice" data-topic="FilteredDataset" data-id="add_to_eval_env">}\href{../../teal.slice/html/FilteredDataset.html#method-add_to_eval_env}{\code{teal.slice::FilteredDataset$add_to_eval_env()}}\out{</span>}
-\item \out{<span class="pkg-link" data-pkg="teal.slice" data-topic="FilteredDataset" data-id="get_data_reactive">}\href{../../teal.slice/html/FilteredDataset.html#method-get_data_reactive}{\code{teal.slice::FilteredDataset$get_data_reactive()}}\out{</span>}
-\item \out{<span class="pkg-link" data-pkg="teal.slice" data-topic="FilteredDataset" data-id="get_dataname">}\href{../../teal.slice/html/FilteredDataset.html#method-get_dataname}{\code{teal.slice::FilteredDataset$get_dataname()}}\out{</span>}
-\item \out{<span class="pkg-link" data-pkg="teal.slice" data-topic="FilteredDataset" data-id="get_dataset">}\href{../../teal.slice/html/FilteredDataset.html#method-get_dataset}{\code{teal.slice::FilteredDataset$get_dataset()}}\out{</span>}
-\item \out{<span class="pkg-link" data-pkg="teal.slice" data-topic="FilteredDataset" data-id="get_filter_state">}\href{../../teal.slice/html/FilteredDataset.html#method-get_filter_state}{\code{teal.slice::FilteredDataset$get_filter_state()}}\out{</span>}
-\item \out{<span class="pkg-link" data-pkg="teal.slice" data-topic="FilteredDataset" data-id="get_filter_states">}\href{../../teal.slice/html/FilteredDataset.html#method-get_filter_states}{\code{teal.slice::FilteredDataset$get_filter_states()}}\out{</span>}
-\item \out{<span class="pkg-link" data-pkg="teal.slice" data-topic="FilteredDataset" data-id="get_filtered_dataname">}\href{../../teal.slice/html/FilteredDataset.html#method-get_filtered_dataname}{\code{teal.slice::FilteredDataset$get_filtered_dataname()}}\out{</span>}
-\item \out{<span class="pkg-link" data-pkg="teal.slice" data-topic="FilteredDataset" data-id="get_formatted_filter_state">}\href{../../teal.slice/html/FilteredDataset.html#method-get_formatted_filter_state}{\code{teal.slice::FilteredDataset$get_formatted_filter_state()}}\out{</span>}
-\item \out{<span class="pkg-link" data-pkg="teal.slice" data-topic="FilteredDataset" data-id="get_hash">}\href{../../teal.slice/html/FilteredDataset.html#method-get_hash}{\code{teal.slice::FilteredDataset$get_hash()}}\out{</span>}
-\item \out{<span class="pkg-link" data-pkg="teal.slice" data-topic="FilteredDataset" data-id="get_join_keys">}\href{../../teal.slice/html/FilteredDataset.html#method-get_join_keys}{\code{teal.slice::FilteredDataset$get_join_keys()}}\out{</span>}
-\item \out{<span class="pkg-link" data-pkg="teal.slice" data-topic="FilteredDataset" data-id="get_keys">}\href{../../teal.slice/html/FilteredDataset.html#method-get_keys}{\code{teal.slice::FilteredDataset$get_keys()}}\out{</span>}
-\item \out{<span class="pkg-link" data-pkg="teal.slice" data-topic="FilteredDataset" data-id="get_metadata">}\href{../../teal.slice/html/FilteredDataset.html#method-get_metadata}{\code{teal.slice::FilteredDataset$get_metadata()}}\out{</span>}
-\item \out{<span class="pkg-link" data-pkg="teal.slice" data-topic="FilteredDataset" data-id="get_varlabels">}\href{../../teal.slice/html/FilteredDataset.html#method-get_varlabels}{\code{teal.slice::FilteredDataset$get_varlabels()}}\out{</span>}
-\item \out{<span class="pkg-link" data-pkg="teal.slice" data-topic="FilteredDataset" data-id="get_varnames">}\href{../../teal.slice/html/FilteredDataset.html#method-get_varnames}{\code{teal.slice::FilteredDataset$get_varnames()}}\out{</span>}
-\item \out{<span class="pkg-link" data-pkg="teal.slice" data-topic="FilteredDataset" data-id="queues_empty">}\href{../../teal.slice/html/FilteredDataset.html#method-queues_empty}{\code{teal.slice::FilteredDataset$queues_empty()}}\out{</span>}
-\item \out{<span class="pkg-link" data-pkg="teal.slice" data-topic="FilteredDataset" data-id="server">}\href{../../teal.slice/html/FilteredDataset.html#method-server}{\code{teal.slice::FilteredDataset$server()}}\out{</span>}
-\item \out{<span class="pkg-link" data-pkg="teal.slice" data-topic="FilteredDataset" data-id="ui">}\href{../../teal.slice/html/FilteredDataset.html#method-ui}{\code{teal.slice::FilteredDataset$ui()}}\out{</span>}
-}
-\out{</details>}
-}
+\if{html}{\out{
+<details><summary>Inherited methods</summary>
+<ul>
+<li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilteredDataset" data-id="add_to_eval_env"><a href='../../teal.slice/html/FilteredDataset.html#method-FilteredDataset-add_to_eval_env'><code>teal.slice::FilteredDataset$add_to_eval_env()</code></a></li>
+<li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilteredDataset" data-id="get_data_reactive"><a href='../../teal.slice/html/FilteredDataset.html#method-FilteredDataset-get_data_reactive'><code>teal.slice::FilteredDataset$get_data_reactive()</code></a></li>
+<li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilteredDataset" data-id="get_dataname"><a href='../../teal.slice/html/FilteredDataset.html#method-FilteredDataset-get_dataname'><code>teal.slice::FilteredDataset$get_dataname()</code></a></li>
+<li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilteredDataset" data-id="get_dataset"><a href='../../teal.slice/html/FilteredDataset.html#method-FilteredDataset-get_dataset'><code>teal.slice::FilteredDataset$get_dataset()</code></a></li>
+<li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilteredDataset" data-id="get_filter_state"><a href='../../teal.slice/html/FilteredDataset.html#method-FilteredDataset-get_filter_state'><code>teal.slice::FilteredDataset$get_filter_state()</code></a></li>
+<li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilteredDataset" data-id="get_filter_states"><a href='../../teal.slice/html/FilteredDataset.html#method-FilteredDataset-get_filter_states'><code>teal.slice::FilteredDataset$get_filter_states()</code></a></li>
+<li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilteredDataset" data-id="get_filtered_dataname"><a href='../../teal.slice/html/FilteredDataset.html#method-FilteredDataset-get_filtered_dataname'><code>teal.slice::FilteredDataset$get_filtered_dataname()</code></a></li>
+<li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilteredDataset" data-id="get_formatted_filter_state"><a href='../../teal.slice/html/FilteredDataset.html#method-FilteredDataset-get_formatted_filter_state'><code>teal.slice::FilteredDataset$get_formatted_filter_state()</code></a></li>
+<li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilteredDataset" data-id="get_hash"><a href='../../teal.slice/html/FilteredDataset.html#method-FilteredDataset-get_hash'><code>teal.slice::FilteredDataset$get_hash()</code></a></li>
+<li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilteredDataset" data-id="get_join_keys"><a href='../../teal.slice/html/FilteredDataset.html#method-FilteredDataset-get_join_keys'><code>teal.slice::FilteredDataset$get_join_keys()</code></a></li>
+<li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilteredDataset" data-id="get_keys"><a href='../../teal.slice/html/FilteredDataset.html#method-FilteredDataset-get_keys'><code>teal.slice::FilteredDataset$get_keys()</code></a></li>
+<li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilteredDataset" data-id="get_metadata"><a href='../../teal.slice/html/FilteredDataset.html#method-FilteredDataset-get_metadata'><code>teal.slice::FilteredDataset$get_metadata()</code></a></li>
+<li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilteredDataset" data-id="get_varlabels"><a href='../../teal.slice/html/FilteredDataset.html#method-FilteredDataset-get_varlabels'><code>teal.slice::FilteredDataset$get_varlabels()</code></a></li>
+<li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilteredDataset" data-id="get_varnames"><a href='../../teal.slice/html/FilteredDataset.html#method-FilteredDataset-get_varnames'><code>teal.slice::FilteredDataset$get_varnames()</code></a></li>
+<li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilteredDataset" data-id="queues_empty"><a href='../../teal.slice/html/FilteredDataset.html#method-FilteredDataset-queues_empty'><code>teal.slice::FilteredDataset$queues_empty()</code></a></li>
+<li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilteredDataset" data-id="server"><a href='../../teal.slice/html/FilteredDataset.html#method-FilteredDataset-server'><code>teal.slice::FilteredDataset$server()</code></a></li>
+<li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilteredDataset" data-id="ui"><a href='../../teal.slice/html/FilteredDataset.html#method-FilteredDataset-ui'><code>teal.slice::FilteredDataset$ui()</code></a></li>
+</ul>
+</details>
+}}
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-new"></a>}}
-\if{latex}{\out{\hypertarget{method-new}{}}}
+\if{html}{\out{<a id="method-MAEFilteredDataset-new"></a>}}
+\if{latex}{\out{\hypertarget{method-MAEFilteredDataset-new}{}}}
 \subsection{Method \code{new()}}{
 Initialize \code{MAEFilteredDataset} object
 \subsection{Usage}{
@@ -92,8 +92,8 @@ single dataset for which filters are rendered}
 }
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-get_call"></a>}}
-\if{latex}{\out{\hypertarget{method-get_call}{}}}
+\if{html}{\out{<a id="method-MAEFilteredDataset-get_call"></a>}}
+\if{latex}{\out{\hypertarget{method-MAEFilteredDataset-get_call}{}}}
 \subsection{Method \code{get_call()}}{
 Get filter expression
 
@@ -116,8 +116,8 @@ filter \code{call} or \code{list} of filter calls
 }
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-get_data"></a>}}
-\if{latex}{\out{\hypertarget{method-get_data}{}}}
+\if{html}{\out{<a id="method-MAEFilteredDataset-get_data"></a>}}
+\if{latex}{\out{\hypertarget{method-MAEFilteredDataset-get_data}{}}}
 \subsection{Method \code{get_data()}}{
 Gets raw data of this dataset
 \subsection{Usage}{
@@ -137,8 +137,8 @@ whether returned data should be filtered or not}
 }
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-get_filter_overview_info"></a>}}
-\if{latex}{\out{\hypertarget{method-get_filter_overview_info}{}}}
+\if{html}{\out{<a id="method-MAEFilteredDataset-get_filter_overview_info"></a>}}
+\if{latex}{\out{\hypertarget{method-MAEFilteredDataset-get_filter_overview_info}{}}}
 \subsection{Method \code{get_filter_overview_info()}}{
 Get filter overview rows of a dataset
 \subsection{Usage}{
@@ -150,8 +150,8 @@ Get filter overview rows of a dataset
 }
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-get_filterable_varnames"></a>}}
-\if{latex}{\out{\hypertarget{method-get_filterable_varnames}{}}}
+\if{html}{\out{<a id="method-MAEFilteredDataset-get_filterable_varnames"></a>}}
+\if{latex}{\out{\hypertarget{method-MAEFilteredDataset-get_filterable_varnames}{}}}
 \subsection{Method \code{get_filterable_varnames()}}{
 Gets variable names for the filtering.
 \subsection{Usage}{
@@ -163,8 +163,8 @@ Gets variable names for the filtering.
 }
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-set_filter_state"></a>}}
-\if{latex}{\out{\hypertarget{method-set_filter_state}{}}}
+\if{html}{\out{<a id="method-MAEFilteredDataset-set_filter_state"></a>}}
+\if{latex}{\out{\hypertarget{method-MAEFilteredDataset-set_filter_state}{}}}
 \subsection{Method \code{set_filter_state()}}{
 Set filter state
 \subsection{Usage}{
@@ -212,8 +212,8 @@ shiny::isolate(dataset$get_filter_state())
 
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-remove_filter_state"></a>}}
-\if{latex}{\out{\hypertarget{method-remove_filter_state}{}}}
+\if{html}{\out{<a id="method-MAEFilteredDataset-remove_filter_state"></a>}}
+\if{latex}{\out{\hypertarget{method-MAEFilteredDataset-remove_filter_state}{}}}
 \subsection{Method \code{remove_filter_state()}}{
 Remove one or more \code{FilterState} of a \code{MAEFilteredDataset}
 \subsection{Usage}{
@@ -233,8 +233,8 @@ Named list of variables to remove their \code{FilterState}.}
 }
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-ui_add_filter_state"></a>}}
-\if{latex}{\out{\hypertarget{method-ui_add_filter_state}{}}}
+\if{html}{\out{<a id="method-MAEFilteredDataset-ui_add_filter_state"></a>}}
+\if{latex}{\out{\hypertarget{method-MAEFilteredDataset-ui_add_filter_state}{}}}
 \subsection{Method \code{ui_add_filter_state()}}{
 UI module to add filter variable for this dataset
 
@@ -256,8 +256,8 @@ function - shiny UI module
 }
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-srv_add_filter_state"></a>}}
-\if{latex}{\out{\hypertarget{method-srv_add_filter_state}{}}}
+\if{html}{\out{<a id="method-MAEFilteredDataset-srv_add_filter_state"></a>}}
+\if{latex}{\out{\hypertarget{method-MAEFilteredDataset-srv_add_filter_state}{}}}
 \subsection{Method \code{srv_add_filter_state()}}{
 Server module to add filter variable for this dataset
 
@@ -285,8 +285,8 @@ an ID string that corresponds with the ID used to call the module's UI function.
 }
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-clone"></a>}}
-\if{latex}{\out{\hypertarget{method-clone}{}}}
+\if{html}{\out{<a id="method-MAEFilteredDataset-clone"></a>}}
+\if{latex}{\out{\hypertarget{method-MAEFilteredDataset-clone}{}}}
 \subsection{Method \code{clone()}}{
 The objects of this class are cloneable with this method.
 \subsection{Usage}{

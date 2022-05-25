@@ -44,39 +44,39 @@ filter$set_selected(c(date + 1, date + 2))
 \section{Methods}{
 \subsection{Public methods}{
 \itemize{
-\item \href{#method-new}{\code{DateFilterState$new()}}
-\item \href{#method-format}{\code{DateFilterState$format()}}
-\item \href{#method-is_any_filtered}{\code{DateFilterState$is_any_filtered()}}
-\item \href{#method-get_call}{\code{DateFilterState$get_call()}}
-\item \href{#method-ui}{\code{DateFilterState$ui()}}
-\item \href{#method-server}{\code{DateFilterState$server()}}
-\item \href{#method-set_selected}{\code{DateFilterState$set_selected()}}
-\item \href{#method-clone}{\code{DateFilterState$clone()}}
+\item \href{#method-DateFilterState-new}{\code{DateFilterState$new()}}
+\item \href{#method-DateFilterState-format}{\code{DateFilterState$format()}}
+\item \href{#method-DateFilterState-is_any_filtered}{\code{DateFilterState$is_any_filtered()}}
+\item \href{#method-DateFilterState-get_call}{\code{DateFilterState$get_call()}}
+\item \href{#method-DateFilterState-ui}{\code{DateFilterState$ui()}}
+\item \href{#method-DateFilterState-server}{\code{DateFilterState$server()}}
+\item \href{#method-DateFilterState-set_selected}{\code{DateFilterState$set_selected()}}
+\item \href{#method-DateFilterState-clone}{\code{DateFilterState$clone()}}
 }
 }
-\if{html}{
-\out{<details ><summary>Inherited methods</summary>}
-\itemize{
-\item \out{<span class="pkg-link" data-pkg="teal.slice" data-topic="FilterState" data-id="destroy_observers">}\href{../../teal.slice/html/FilterState.html#method-destroy_observers}{\code{teal.slice::FilterState$destroy_observers()}}\out{</span>}
-\item \out{<span class="pkg-link" data-pkg="teal.slice" data-topic="FilterState" data-id="get_dataname">}\href{../../teal.slice/html/FilterState.html#method-get_dataname}{\code{teal.slice::FilterState$get_dataname()}}\out{</span>}
-\item \out{<span class="pkg-link" data-pkg="teal.slice" data-topic="FilterState" data-id="get_keep_na">}\href{../../teal.slice/html/FilterState.html#method-get_keep_na}{\code{teal.slice::FilterState$get_keep_na()}}\out{</span>}
-\item \out{<span class="pkg-link" data-pkg="teal.slice" data-topic="FilterState" data-id="get_selected">}\href{../../teal.slice/html/FilterState.html#method-get_selected}{\code{teal.slice::FilterState$get_selected()}}\out{</span>}
-\item \out{<span class="pkg-link" data-pkg="teal.slice" data-topic="FilterState" data-id="get_state">}\href{../../teal.slice/html/FilterState.html#method-get_state}{\code{teal.slice::FilterState$get_state()}}\out{</span>}
-\item \out{<span class="pkg-link" data-pkg="teal.slice" data-topic="FilterState" data-id="get_varlabel">}\href{../../teal.slice/html/FilterState.html#method-get_varlabel}{\code{teal.slice::FilterState$get_varlabel()}}\out{</span>}
-\item \out{<span class="pkg-link" data-pkg="teal.slice" data-topic="FilterState" data-id="get_varname">}\href{../../teal.slice/html/FilterState.html#method-get_varname}{\code{teal.slice::FilterState$get_varname()}}\out{</span>}
-\item \out{<span class="pkg-link" data-pkg="teal.slice" data-topic="FilterState" data-id="print">}\href{../../teal.slice/html/FilterState.html#method-print}{\code{teal.slice::FilterState$print()}}\out{</span>}
-\item \out{<span class="pkg-link" data-pkg="teal.slice" data-topic="FilterState" data-id="set_keep_na">}\href{../../teal.slice/html/FilterState.html#method-set_keep_na}{\code{teal.slice::FilterState$set_keep_na()}}\out{</span>}
-\item \out{<span class="pkg-link" data-pkg="teal.slice" data-topic="FilterState" data-id="set_keep_na_reactive">}\href{../../teal.slice/html/FilterState.html#method-set_keep_na_reactive}{\code{teal.slice::FilterState$set_keep_na_reactive()}}\out{</span>}
-\item \out{<span class="pkg-link" data-pkg="teal.slice" data-topic="FilterState" data-id="set_na_rm">}\href{../../teal.slice/html/FilterState.html#method-set_na_rm}{\code{teal.slice::FilterState$set_na_rm()}}\out{</span>}
-\item \out{<span class="pkg-link" data-pkg="teal.slice" data-topic="FilterState" data-id="set_selected_reactive">}\href{../../teal.slice/html/FilterState.html#method-set_selected_reactive}{\code{teal.slice::FilterState$set_selected_reactive()}}\out{</span>}
-\item \out{<span class="pkg-link" data-pkg="teal.slice" data-topic="FilterState" data-id="set_state">}\href{../../teal.slice/html/FilterState.html#method-set_state}{\code{teal.slice::FilterState$set_state()}}\out{</span>}
-\item \out{<span class="pkg-link" data-pkg="teal.slice" data-topic="FilterState" data-id="set_state_reactive">}\href{../../teal.slice/html/FilterState.html#method-set_state_reactive}{\code{teal.slice::FilterState$set_state_reactive()}}\out{</span>}
-}
-\out{</details>}
-}
+\if{html}{\out{
+<details><summary>Inherited methods</summary>
+<ul>
+<li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilterState" data-id="destroy_observers"><a href='../../teal.slice/html/FilterState.html#method-FilterState-destroy_observers'><code>teal.slice::FilterState$destroy_observers()</code></a></li>
+<li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilterState" data-id="get_dataname"><a href='../../teal.slice/html/FilterState.html#method-FilterState-get_dataname'><code>teal.slice::FilterState$get_dataname()</code></a></li>
+<li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilterState" data-id="get_keep_na"><a href='../../teal.slice/html/FilterState.html#method-FilterState-get_keep_na'><code>teal.slice::FilterState$get_keep_na()</code></a></li>
+<li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilterState" data-id="get_selected"><a href='../../teal.slice/html/FilterState.html#method-FilterState-get_selected'><code>teal.slice::FilterState$get_selected()</code></a></li>
+<li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilterState" data-id="get_state"><a href='../../teal.slice/html/FilterState.html#method-FilterState-get_state'><code>teal.slice::FilterState$get_state()</code></a></li>
+<li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilterState" data-id="get_varlabel"><a href='../../teal.slice/html/FilterState.html#method-FilterState-get_varlabel'><code>teal.slice::FilterState$get_varlabel()</code></a></li>
+<li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilterState" data-id="get_varname"><a href='../../teal.slice/html/FilterState.html#method-FilterState-get_varname'><code>teal.slice::FilterState$get_varname()</code></a></li>
+<li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilterState" data-id="print"><a href='../../teal.slice/html/FilterState.html#method-FilterState-print'><code>teal.slice::FilterState$print()</code></a></li>
+<li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilterState" data-id="set_keep_na"><a href='../../teal.slice/html/FilterState.html#method-FilterState-set_keep_na'><code>teal.slice::FilterState$set_keep_na()</code></a></li>
+<li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilterState" data-id="set_keep_na_reactive"><a href='../../teal.slice/html/FilterState.html#method-FilterState-set_keep_na_reactive'><code>teal.slice::FilterState$set_keep_na_reactive()</code></a></li>
+<li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilterState" data-id="set_na_rm"><a href='../../teal.slice/html/FilterState.html#method-FilterState-set_na_rm'><code>teal.slice::FilterState$set_na_rm()</code></a></li>
+<li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilterState" data-id="set_selected_reactive"><a href='../../teal.slice/html/FilterState.html#method-FilterState-set_selected_reactive'><code>teal.slice::FilterState$set_selected_reactive()</code></a></li>
+<li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilterState" data-id="set_state"><a href='../../teal.slice/html/FilterState.html#method-FilterState-set_state'><code>teal.slice::FilterState$set_state()</code></a></li>
+<li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilterState" data-id="set_state_reactive"><a href='../../teal.slice/html/FilterState.html#method-FilterState-set_state_reactive'><code>teal.slice::FilterState$set_state_reactive()</code></a></li>
+</ul>
+</details>
+}}
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-new"></a>}}
-\if{latex}{\out{\hypertarget{method-new}{}}}
+\if{html}{\out{<a id="method-DateFilterState-new"></a>}}
+\if{latex}{\out{\hypertarget{method-DateFilterState-new}{}}}
 \subsection{Method \code{new()}}{
 Initialize a \code{FilterState} object
 \subsection{Usage}{
@@ -116,8 +116,8 @@ whether condition calls should be prefixed by dataname. Possible values:
 }
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-format"></a>}}
-\if{latex}{\out{\hypertarget{method-format}{}}}
+\if{html}{\out{<a id="method-DateFilterState-format"></a>}}
+\if{latex}{\out{\hypertarget{method-DateFilterState-format}{}}}
 \subsection{Method \code{format()}}{
 Returns a formatted string representing this \code{DateFilterState}.
 \subsection{Usage}{
@@ -137,8 +137,8 @@ Default: 0}
 }
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-is_any_filtered"></a>}}
-\if{latex}{\out{\hypertarget{method-is_any_filtered}{}}}
+\if{html}{\out{<a id="method-DateFilterState-is_any_filtered"></a>}}
+\if{latex}{\out{\hypertarget{method-DateFilterState-is_any_filtered}{}}}
 \subsection{Method \code{is_any_filtered()}}{
 Answers the question of whether the current settings and values selected actually filters out any values.
 \subsection{Usage}{
@@ -150,8 +150,8 @@ logical scalar
 }
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-get_call"></a>}}
-\if{latex}{\out{\hypertarget{method-get_call}{}}}
+\if{html}{\out{<a id="method-DateFilterState-get_call"></a>}}
+\if{latex}{\out{\hypertarget{method-DateFilterState-get_call}{}}}
 \subsection{Method \code{get_call()}}{
 Returns reproducible condition call for current selection.
 For this class returned call looks like
@@ -166,8 +166,8 @@ optional \verb{is.na(<varname>)}.
 }
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-ui"></a>}}
-\if{latex}{\out{\hypertarget{method-ui}{}}}
+\if{html}{\out{<a id="method-DateFilterState-ui"></a>}}
+\if{latex}{\out{\hypertarget{method-DateFilterState-ui}{}}}
 \subsection{Method \code{ui()}}{
 UI Module for \code{DateFilterState}.
 This UI element contains two date selections for \code{min} and \code{max}
@@ -186,8 +186,8 @@ id of shiny element}
 }
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-server"></a>}}
-\if{latex}{\out{\hypertarget{method-server}{}}}
+\if{html}{\out{<a id="method-DateFilterState-server"></a>}}
+\if{latex}{\out{\hypertarget{method-DateFilterState-server}{}}}
 \subsection{Method \code{server()}}{
 Server module
 \subsection{Usage}{
@@ -207,8 +207,8 @@ an ID string that corresponds with the ID used to call the module's UI function.
 }
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-set_selected"></a>}}
-\if{latex}{\out{\hypertarget{method-set_selected}{}}}
+\if{html}{\out{<a id="method-DateFilterState-set_selected"></a>}}
+\if{latex}{\out{\hypertarget{method-DateFilterState-set_selected}{}}}
 \subsection{Method \code{set_selected()}}{
 Sets the selected time frame of this \code{DateFilterState}.
 \subsection{Usage}{
@@ -241,8 +241,8 @@ filter$set_selected(c(date + 1, date + 2))
 
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-clone"></a>}}
-\if{latex}{\out{\hypertarget{method-clone}{}}}
+\if{html}{\out{<a id="method-DateFilterState-clone"></a>}}
+\if{latex}{\out{\hypertarget{method-DateFilterState-clone}{}}}
 \subsection{Method \code{clone()}}{
 The objects of this class are cloneable with this method.
 \subsection{Usage}{
