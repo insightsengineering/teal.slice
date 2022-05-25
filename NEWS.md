@@ -1,7 +1,12 @@
 # teal.slice 0.1.0.9006
 
+### New features
+* Added a `Getting started` vignette.
+* Added a formatting function for filter panel classes.
+
 ### Miscellaneous
 * Added a template to the `pkgdown` site.
+* Updated package authors.
 
 # teal.slice 0.1.0
 
