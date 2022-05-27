@@ -6,7 +6,7 @@
 ### Miscellaneous
 * Added a template to the `pkgdown` site.
 * Updated package authors.
-* Added vignettes for extracting and merging data.
+* Added package vignettes.
 
 # teal.slice 0.1.0
 
