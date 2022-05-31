@@ -104,49 +104,50 @@ isolate(datasets$get_call("ADTTE"))
 \section{Methods}{
 \subsection{Public methods}{
 \itemize{
-\item \href{#method-datanames}{\code{CDISCFilteredData$datanames()}}
-\item \href{#method-get_call}{\code{CDISCFilteredData$get_call()}}
-\item \href{#method-get_filterable_datanames}{\code{CDISCFilteredData$get_filterable_datanames()}}
-\item \href{#method-get_filterable_varnames}{\code{CDISCFilteredData$get_filterable_varnames()}}
-\item \href{#method-get_parentname}{\code{CDISCFilteredData$get_parentname()}}
-\item \href{#method-set_dataset}{\code{CDISCFilteredData$set_dataset()}}
-\item \href{#method-clone}{\code{CDISCFilteredData$clone()}}
+\item \href{#method-CDISCFilteredData-datanames}{\code{CDISCFilteredData$datanames()}}
+\item \href{#method-CDISCFilteredData-get_call}{\code{CDISCFilteredData$get_call()}}
+\item \href{#method-CDISCFilteredData-get_filterable_datanames}{\code{CDISCFilteredData$get_filterable_datanames()}}
+\item \href{#method-CDISCFilteredData-get_filterable_varnames}{\code{CDISCFilteredData$get_filterable_varnames()}}
+\item \href{#method-CDISCFilteredData-get_parentname}{\code{CDISCFilteredData$get_parentname()}}
+\item \href{#method-CDISCFilteredData-set_dataset}{\code{CDISCFilteredData$set_dataset()}}
+\item \href{#method-CDISCFilteredData-clone}{\code{CDISCFilteredData$clone()}}
 }
 }
-\if{html}{
-\out{<details ><summary>Inherited methods</summary>}
-\itemize{
-\item \out{<span class="pkg-link" data-pkg="teal.slice" data-topic="FilteredData" data-id="get_check">}\href{../../teal.slice/html/FilteredData.html#method-get_check}{\code{teal.slice::FilteredData$get_check()}}\out{</span>}
-\item \out{<span class="pkg-link" data-pkg="teal.slice" data-topic="FilteredData" data-id="get_code">}\href{../../teal.slice/html/FilteredData.html#method-get_code}{\code{teal.slice::FilteredData$get_code()}}\out{</span>}
-\item \out{<span class="pkg-link" data-pkg="teal.slice" data-topic="FilteredData" data-id="get_data">}\href{../../teal.slice/html/FilteredData.html#method-get_data}{\code{teal.slice::FilteredData$get_data()}}\out{</span>}
-\item \out{<span class="pkg-link" data-pkg="teal.slice" data-topic="FilteredData" data-id="get_data_attr">}\href{../../teal.slice/html/FilteredData.html#method-get_data_attr}{\code{teal.slice::FilteredData$get_data_attr()}}\out{</span>}
-\item \out{<span class="pkg-link" data-pkg="teal.slice" data-topic="FilteredData" data-id="get_datalabel">}\href{../../teal.slice/html/FilteredData.html#method-get_datalabel}{\code{teal.slice::FilteredData$get_datalabel()}}\out{</span>}
-\item \out{<span class="pkg-link" data-pkg="teal.slice" data-topic="FilteredData" data-id="get_filter_overview">}\href{../../teal.slice/html/FilteredData.html#method-get_filter_overview}{\code{teal.slice::FilteredData$get_filter_overview()}}\out{</span>}
-\item \out{<span class="pkg-link" data-pkg="teal.slice" data-topic="FilteredData" data-id="get_filter_state">}\href{../../teal.slice/html/FilteredData.html#method-get_filter_state}{\code{teal.slice::FilteredData$get_filter_state()}}\out{</span>}
-\item \out{<span class="pkg-link" data-pkg="teal.slice" data-topic="FilteredData" data-id="get_filtered_dataset">}\href{../../teal.slice/html/FilteredData.html#method-get_filtered_dataset}{\code{teal.slice::FilteredData$get_filtered_dataset()}}\out{</span>}
-\item \out{<span class="pkg-link" data-pkg="teal.slice" data-topic="FilteredData" data-id="get_join_keys">}\href{../../teal.slice/html/FilteredData.html#method-get_join_keys}{\code{teal.slice::FilteredData$get_join_keys()}}\out{</span>}
-\item \out{<span class="pkg-link" data-pkg="teal.slice" data-topic="FilteredData" data-id="get_keys">}\href{../../teal.slice/html/FilteredData.html#method-get_keys}{\code{teal.slice::FilteredData$get_keys()}}\out{</span>}
-\item \out{<span class="pkg-link" data-pkg="teal.slice" data-topic="FilteredData" data-id="get_metadata">}\href{../../teal.slice/html/FilteredData.html#method-get_metadata}{\code{teal.slice::FilteredData$get_metadata()}}\out{</span>}
-\item \out{<span class="pkg-link" data-pkg="teal.slice" data-topic="FilteredData" data-id="get_varlabels">}\href{../../teal.slice/html/FilteredData.html#method-get_varlabels}{\code{teal.slice::FilteredData$get_varlabels()}}\out{</span>}
-\item \out{<span class="pkg-link" data-pkg="teal.slice" data-topic="FilteredData" data-id="get_varnames">}\href{../../teal.slice/html/FilteredData.html#method-get_varnames}{\code{teal.slice::FilteredData$get_varnames()}}\out{</span>}
-\item \out{<span class="pkg-link" data-pkg="teal.slice" data-topic="FilteredData" data-id="handle_active_datanames">}\href{../../teal.slice/html/FilteredData.html#method-handle_active_datanames}{\code{teal.slice::FilteredData$handle_active_datanames()}}\out{</span>}
-\item \out{<span class="pkg-link" data-pkg="teal.slice" data-topic="FilteredData" data-id="initialize">}\href{../../teal.slice/html/FilteredData.html#method-initialize}{\code{teal.slice::FilteredData$initialize()}}\out{</span>}
-\item \out{<span class="pkg-link" data-pkg="teal.slice" data-topic="FilteredData" data-id="remove_all_filter_states">}\href{../../teal.slice/html/FilteredData.html#method-remove_all_filter_states}{\code{teal.slice::FilteredData$remove_all_filter_states()}}\out{</span>}
-\item \out{<span class="pkg-link" data-pkg="teal.slice" data-topic="FilteredData" data-id="remove_filter_state">}\href{../../teal.slice/html/FilteredData.html#method-remove_filter_state}{\code{teal.slice::FilteredData$remove_filter_state()}}\out{</span>}
-\item \out{<span class="pkg-link" data-pkg="teal.slice" data-topic="FilteredData" data-id="restore_state_from_bookmark">}\href{../../teal.slice/html/FilteredData.html#method-restore_state_from_bookmark}{\code{teal.slice::FilteredData$restore_state_from_bookmark()}}\out{</span>}
-\item \out{<span class="pkg-link" data-pkg="teal.slice" data-topic="FilteredData" data-id="set_check">}\href{../../teal.slice/html/FilteredData.html#method-set_check}{\code{teal.slice::FilteredData$set_check()}}\out{</span>}
-\item \out{<span class="pkg-link" data-pkg="teal.slice" data-topic="FilteredData" data-id="set_code">}\href{../../teal.slice/html/FilteredData.html#method-set_code}{\code{teal.slice::FilteredData$set_code()}}\out{</span>}
-\item \out{<span class="pkg-link" data-pkg="teal.slice" data-topic="FilteredData" data-id="set_filter_state">}\href{../../teal.slice/html/FilteredData.html#method-set_filter_state}{\code{teal.slice::FilteredData$set_filter_state()}}\out{</span>}
-\item \out{<span class="pkg-link" data-pkg="teal.slice" data-topic="FilteredData" data-id="srv_filter_overview">}\href{../../teal.slice/html/FilteredData.html#method-srv_filter_overview}{\code{teal.slice::FilteredData$srv_filter_overview()}}\out{</span>}
-\item \out{<span class="pkg-link" data-pkg="teal.slice" data-topic="FilteredData" data-id="srv_filter_panel">}\href{../../teal.slice/html/FilteredData.html#method-srv_filter_panel}{\code{teal.slice::FilteredData$srv_filter_panel()}}\out{</span>}
-\item \out{<span class="pkg-link" data-pkg="teal.slice" data-topic="FilteredData" data-id="ui_filter_overview">}\href{../../teal.slice/html/FilteredData.html#method-ui_filter_overview}{\code{teal.slice::FilteredData$ui_filter_overview()}}\out{</span>}
-\item \out{<span class="pkg-link" data-pkg="teal.slice" data-topic="FilteredData" data-id="ui_filter_panel">}\href{../../teal.slice/html/FilteredData.html#method-ui_filter_panel}{\code{teal.slice::FilteredData$ui_filter_panel()}}\out{</span>}
-}
-\out{</details>}
-}
+\if{html}{\out{
+<details><summary>Inherited methods</summary>
+<ul>
+<li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilteredData" data-id="get_check"><a href='../../teal.slice/html/FilteredData.html#method-FilteredData-get_check'><code>teal.slice::FilteredData$get_check()</code></a></li>
+<li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilteredData" data-id="get_code"><a href='../../teal.slice/html/FilteredData.html#method-FilteredData-get_code'><code>teal.slice::FilteredData$get_code()</code></a></li>
+<li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilteredData" data-id="get_data"><a href='../../teal.slice/html/FilteredData.html#method-FilteredData-get_data'><code>teal.slice::FilteredData$get_data()</code></a></li>
+<li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilteredData" data-id="get_data_attr"><a href='../../teal.slice/html/FilteredData.html#method-FilteredData-get_data_attr'><code>teal.slice::FilteredData$get_data_attr()</code></a></li>
+<li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilteredData" data-id="get_datalabel"><a href='../../teal.slice/html/FilteredData.html#method-FilteredData-get_datalabel'><code>teal.slice::FilteredData$get_datalabel()</code></a></li>
+<li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilteredData" data-id="get_filter_overview"><a href='../../teal.slice/html/FilteredData.html#method-FilteredData-get_filter_overview'><code>teal.slice::FilteredData$get_filter_overview()</code></a></li>
+<li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilteredData" data-id="get_filter_state"><a href='../../teal.slice/html/FilteredData.html#method-FilteredData-get_filter_state'><code>teal.slice::FilteredData$get_filter_state()</code></a></li>
+<li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilteredData" data-id="get_filtered_dataset"><a href='../../teal.slice/html/FilteredData.html#method-FilteredData-get_filtered_dataset'><code>teal.slice::FilteredData$get_filtered_dataset()</code></a></li>
+<li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilteredData" data-id="get_formatted_filter_state"><a href='../../teal.slice/html/FilteredData.html#method-FilteredData-get_formatted_filter_state'><code>teal.slice::FilteredData$get_formatted_filter_state()</code></a></li>
+<li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilteredData" data-id="get_join_keys"><a href='../../teal.slice/html/FilteredData.html#method-FilteredData-get_join_keys'><code>teal.slice::FilteredData$get_join_keys()</code></a></li>
+<li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilteredData" data-id="get_keys"><a href='../../teal.slice/html/FilteredData.html#method-FilteredData-get_keys'><code>teal.slice::FilteredData$get_keys()</code></a></li>
+<li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilteredData" data-id="get_metadata"><a href='../../teal.slice/html/FilteredData.html#method-FilteredData-get_metadata'><code>teal.slice::FilteredData$get_metadata()</code></a></li>
+<li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilteredData" data-id="get_varlabels"><a href='../../teal.slice/html/FilteredData.html#method-FilteredData-get_varlabels'><code>teal.slice::FilteredData$get_varlabels()</code></a></li>
+<li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilteredData" data-id="get_varnames"><a href='../../teal.slice/html/FilteredData.html#method-FilteredData-get_varnames'><code>teal.slice::FilteredData$get_varnames()</code></a></li>
+<li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilteredData" data-id="handle_active_datanames"><a href='../../teal.slice/html/FilteredData.html#method-FilteredData-handle_active_datanames'><code>teal.slice::FilteredData$handle_active_datanames()</code></a></li>
+<li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilteredData" data-id="initialize"><a href='../../teal.slice/html/FilteredData.html#method-FilteredData-initialize'><code>teal.slice::FilteredData$initialize()</code></a></li>
+<li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilteredData" data-id="remove_all_filter_states"><a href='../../teal.slice/html/FilteredData.html#method-FilteredData-remove_all_filter_states'><code>teal.slice::FilteredData$remove_all_filter_states()</code></a></li>
+<li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilteredData" data-id="remove_filter_state"><a href='../../teal.slice/html/FilteredData.html#method-FilteredData-remove_filter_state'><code>teal.slice::FilteredData$remove_filter_state()</code></a></li>
+<li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilteredData" data-id="restore_state_from_bookmark"><a href='../../teal.slice/html/FilteredData.html#method-FilteredData-restore_state_from_bookmark'><code>teal.slice::FilteredData$restore_state_from_bookmark()</code></a></li>
+<li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilteredData" data-id="set_check"><a href='../../teal.slice/html/FilteredData.html#method-FilteredData-set_check'><code>teal.slice::FilteredData$set_check()</code></a></li>
+<li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilteredData" data-id="set_code"><a href='../../teal.slice/html/FilteredData.html#method-FilteredData-set_code'><code>teal.slice::FilteredData$set_code()</code></a></li>
+<li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilteredData" data-id="set_filter_state"><a href='../../teal.slice/html/FilteredData.html#method-FilteredData-set_filter_state'><code>teal.slice::FilteredData$set_filter_state()</code></a></li>
+<li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilteredData" data-id="srv_filter_overview"><a href='../../teal.slice/html/FilteredData.html#method-FilteredData-srv_filter_overview'><code>teal.slice::FilteredData$srv_filter_overview()</code></a></li>
+<li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilteredData" data-id="srv_filter_panel"><a href='../../teal.slice/html/FilteredData.html#method-FilteredData-srv_filter_panel'><code>teal.slice::FilteredData$srv_filter_panel()</code></a></li>
+<li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilteredData" data-id="ui_filter_overview"><a href='../../teal.slice/html/FilteredData.html#method-FilteredData-ui_filter_overview'><code>teal.slice::FilteredData$ui_filter_overview()</code></a></li>
+<li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilteredData" data-id="ui_filter_panel"><a href='../../teal.slice/html/FilteredData.html#method-FilteredData-ui_filter_panel'><code>teal.slice::FilteredData$ui_filter_panel()</code></a></li>
+</ul>
+</details>
+}}
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-datanames"></a>}}
-\if{latex}{\out{\hypertarget{method-datanames}{}}}
+\if{html}{\out{<a id="method-CDISCFilteredData-datanames"></a>}}
+\if{latex}{\out{\hypertarget{method-CDISCFilteredData-datanames}{}}}
 \subsection{Method \code{datanames()}}{
 Get datanames
 
@@ -161,8 +162,8 @@ evaluated (in case of dependencies).
 }
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-get_call"></a>}}
-\if{latex}{\out{\hypertarget{method-get_call}{}}}
+\if{html}{\out{<a id="method-CDISCFilteredData-get_call"></a>}}
+\if{latex}{\out{\hypertarget{method-CDISCFilteredData-get_call}{}}}
 \subsection{Method \code{get_call()}}{
 Returns the filter \code{call} to filter a single dataset including the \code{inner_join}
 with its parent dataset. It assumes that the filtered datasets it depends
@@ -183,8 +184,8 @@ on are available.
 }
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-get_filterable_datanames"></a>}}
-\if{latex}{\out{\hypertarget{method-get_filterable_datanames}{}}}
+\if{html}{\out{<a id="method-CDISCFilteredData-get_filterable_datanames"></a>}}
+\if{latex}{\out{\hypertarget{method-CDISCFilteredData-get_filterable_datanames}{}}}
 \subsection{Method \code{get_filterable_datanames()}}{
 Get names of datasets available for filtering
 \subsection{Usage}{
@@ -203,8 +204,8 @@ Get names of datasets available for filtering
 }
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-get_filterable_varnames"></a>}}
-\if{latex}{\out{\hypertarget{method-get_filterable_varnames}{}}}
+\if{html}{\out{<a id="method-CDISCFilteredData-get_filterable_varnames"></a>}}
+\if{latex}{\out{\hypertarget{method-CDISCFilteredData-get_filterable_varnames}{}}}
 \subsection{Method \code{get_filterable_varnames()}}{
 Gets variable names of a given dataname for the filtering. This excludes parent dataset variable names.
 \subsection{Usage}{
@@ -223,8 +224,8 @@ Gets variable names of a given dataname for the filtering. This excludes parent 
 }
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-get_parentname"></a>}}
-\if{latex}{\out{\hypertarget{method-get_parentname}{}}}
+\if{html}{\out{<a id="method-CDISCFilteredData-get_parentname"></a>}}
+\if{latex}{\out{\hypertarget{method-CDISCFilteredData-get_parentname}{}}}
 \subsection{Method \code{get_parentname()}}{
 Get parent dataset name
 \subsection{Usage}{
@@ -243,8 +244,8 @@ Get parent dataset name
 }
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-set_dataset"></a>}}
-\if{latex}{\out{\hypertarget{method-set_dataset}{}}}
+\if{html}{\out{<a id="method-CDISCFilteredData-set_dataset"></a>}}
+\if{latex}{\out{\hypertarget{method-CDISCFilteredData-set_dataset}{}}}
 \subsection{Method \code{set_dataset()}}{
 Add dataset
 
@@ -268,8 +269,8 @@ object containing data and attributes.}
 }
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-clone"></a>}}
-\if{latex}{\out{\hypertarget{method-clone}{}}}
+\if{html}{\out{<a id="method-CDISCFilteredData-clone"></a>}}
+\if{latex}{\out{\hypertarget{method-CDISCFilteredData-clone}{}}}
 \subsection{Method \code{clone()}}{
 The objects of this class are cloneable with this method.
 \subsection{Usage}{

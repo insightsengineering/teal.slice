@@ -1,4 +1,14 @@
-# teal.slice 0.0.0.9011.2
+# teal.slice 0.1.0.9007
+
+### New features
+* Added a formatting function for filter panel classes.
+
+### Miscellaneous
+* Added a template to the `pkgdown` site.
+* Updated package authors.
+* Added package vignettes.
+
+# teal.slice 0.1.0
 
 * Initial release of `teal.slice` - a package providing a filter module for `teal` applications.
 

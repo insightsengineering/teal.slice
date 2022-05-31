@@ -19,8 +19,6 @@ test_that("'extract_type' must be specified with 'input_dataname'", {
   )
 })
 
-
-
 testthat::test_that("init_filter_state accepts, name or call as input_dataname", {
   testthat::expect_error(
     init_filter_state(7, varname = "test", input_dataname = NULL),
@@ -97,4 +95,9 @@ testthat::test_that("init_filter_state returns a ChoicesFilterState, if passed a
 testthat::test_that("init_filter_state return a LogicalFilterState, if passed a logical array", {
   testthat::expect_error(fs <- init_filter_state(c(TRUE), varname = "test"), NA)
   testthat::expect_true(is(fs, "LogicalFilterState"))
+})
+
+testthat::test_that("init_filter_state default accepts a list", {
+  fs <- init_filter_state(list(1, 2, 3), varname = "test")
+  testthat::expect_true(inherits(fs, "FilterState"))
 })

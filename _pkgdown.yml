@@ -2,8 +2,7 @@
 url: https://insightsengineering.github.io/teal.slice
 
 template:
-  params:
-    bootswatch: cerulean
+  package: nesttemplate
 
 navbar:
   right:

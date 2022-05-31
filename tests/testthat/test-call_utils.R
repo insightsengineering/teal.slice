@@ -606,7 +606,7 @@ test_that("call_extract_list - varname argument", {
   )
   expect_error(
     call_extract_list("data", quote(data$var)),
-    "Assertion on 'varname'"
+    "Assertion on 'dollar'"
   )
 })
 

@@ -44,40 +44,42 @@ filter$set_selected(c(2, 3))
 \section{Methods}{
 \subsection{Public methods}{
 \itemize{
-\item \href{#method-new}{\code{RangeFilterState$new()}}
-\item \href{#method-is_any_filtered}{\code{RangeFilterState$is_any_filtered()}}
-\item \href{#method-get_call}{\code{RangeFilterState$get_call()}}
-\item \href{#method-get_keep_inf}{\code{RangeFilterState$get_keep_inf()}}
-\item \href{#method-get_state}{\code{RangeFilterState$get_state()}}
-\item \href{#method-ui}{\code{RangeFilterState$ui()}}
-\item \href{#method-server}{\code{RangeFilterState$server()}}
-\item \href{#method-set_keep_inf}{\code{RangeFilterState$set_keep_inf()}}
-\item \href{#method-set_keep_inf_reactive}{\code{RangeFilterState$set_keep_inf_reactive()}}
-\item \href{#method-set_state}{\code{RangeFilterState$set_state()}}
-\item \href{#method-set_state_reactive}{\code{RangeFilterState$set_state_reactive()}}
-\item \href{#method-set_selected}{\code{RangeFilterState$set_selected()}}
-\item \href{#method-clone}{\code{RangeFilterState$clone()}}
+\item \href{#method-RangeFilterState-new}{\code{RangeFilterState$new()}}
+\item \href{#method-RangeFilterState-format}{\code{RangeFilterState$format()}}
+\item \href{#method-RangeFilterState-is_any_filtered}{\code{RangeFilterState$is_any_filtered()}}
+\item \href{#method-RangeFilterState-get_call}{\code{RangeFilterState$get_call()}}
+\item \href{#method-RangeFilterState-get_keep_inf}{\code{RangeFilterState$get_keep_inf()}}
+\item \href{#method-RangeFilterState-get_state}{\code{RangeFilterState$get_state()}}
+\item \href{#method-RangeFilterState-ui}{\code{RangeFilterState$ui()}}
+\item \href{#method-RangeFilterState-server}{\code{RangeFilterState$server()}}
+\item \href{#method-RangeFilterState-set_keep_inf}{\code{RangeFilterState$set_keep_inf()}}
+\item \href{#method-RangeFilterState-set_keep_inf_reactive}{\code{RangeFilterState$set_keep_inf_reactive()}}
+\item \href{#method-RangeFilterState-set_state}{\code{RangeFilterState$set_state()}}
+\item \href{#method-RangeFilterState-set_state_reactive}{\code{RangeFilterState$set_state_reactive()}}
+\item \href{#method-RangeFilterState-set_selected}{\code{RangeFilterState$set_selected()}}
+\item \href{#method-RangeFilterState-clone}{\code{RangeFilterState$clone()}}
 }
 }
-\if{html}{
-\out{<details ><summary>Inherited methods</summary>}
-\itemize{
-\item \out{<span class="pkg-link" data-pkg="teal.slice" data-topic="FilterState" data-id="destroy_observers">}\href{../../teal.slice/html/FilterState.html#method-destroy_observers}{\code{teal.slice::FilterState$destroy_observers()}}\out{</span>}
-\item \out{<span class="pkg-link" data-pkg="teal.slice" data-topic="FilterState" data-id="get_dataname">}\href{../../teal.slice/html/FilterState.html#method-get_dataname}{\code{teal.slice::FilterState$get_dataname()}}\out{</span>}
-\item \out{<span class="pkg-link" data-pkg="teal.slice" data-topic="FilterState" data-id="get_keep_na">}\href{../../teal.slice/html/FilterState.html#method-get_keep_na}{\code{teal.slice::FilterState$get_keep_na()}}\out{</span>}
-\item \out{<span class="pkg-link" data-pkg="teal.slice" data-topic="FilterState" data-id="get_selected">}\href{../../teal.slice/html/FilterState.html#method-get_selected}{\code{teal.slice::FilterState$get_selected()}}\out{</span>}
-\item \out{<span class="pkg-link" data-pkg="teal.slice" data-topic="FilterState" data-id="get_varlabel">}\href{../../teal.slice/html/FilterState.html#method-get_varlabel}{\code{teal.slice::FilterState$get_varlabel()}}\out{</span>}
-\item \out{<span class="pkg-link" data-pkg="teal.slice" data-topic="FilterState" data-id="get_varname">}\href{../../teal.slice/html/FilterState.html#method-get_varname}{\code{teal.slice::FilterState$get_varname()}}\out{</span>}
-\item \out{<span class="pkg-link" data-pkg="teal.slice" data-topic="FilterState" data-id="set_keep_na">}\href{../../teal.slice/html/FilterState.html#method-set_keep_na}{\code{teal.slice::FilterState$set_keep_na()}}\out{</span>}
-\item \out{<span class="pkg-link" data-pkg="teal.slice" data-topic="FilterState" data-id="set_keep_na_reactive">}\href{../../teal.slice/html/FilterState.html#method-set_keep_na_reactive}{\code{teal.slice::FilterState$set_keep_na_reactive()}}\out{</span>}
-\item \out{<span class="pkg-link" data-pkg="teal.slice" data-topic="FilterState" data-id="set_na_rm">}\href{../../teal.slice/html/FilterState.html#method-set_na_rm}{\code{teal.slice::FilterState$set_na_rm()}}\out{</span>}
-\item \out{<span class="pkg-link" data-pkg="teal.slice" data-topic="FilterState" data-id="set_selected_reactive">}\href{../../teal.slice/html/FilterState.html#method-set_selected_reactive}{\code{teal.slice::FilterState$set_selected_reactive()}}\out{</span>}
-}
-\out{</details>}
-}
+\if{html}{\out{
+<details><summary>Inherited methods</summary>
+<ul>
+<li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilterState" data-id="destroy_observers"><a href='../../teal.slice/html/FilterState.html#method-FilterState-destroy_observers'><code>teal.slice::FilterState$destroy_observers()</code></a></li>
+<li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilterState" data-id="get_dataname"><a href='../../teal.slice/html/FilterState.html#method-FilterState-get_dataname'><code>teal.slice::FilterState$get_dataname()</code></a></li>
+<li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilterState" data-id="get_keep_na"><a href='../../teal.slice/html/FilterState.html#method-FilterState-get_keep_na'><code>teal.slice::FilterState$get_keep_na()</code></a></li>
+<li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilterState" data-id="get_selected"><a href='../../teal.slice/html/FilterState.html#method-FilterState-get_selected'><code>teal.slice::FilterState$get_selected()</code></a></li>
+<li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilterState" data-id="get_varlabel"><a href='../../teal.slice/html/FilterState.html#method-FilterState-get_varlabel'><code>teal.slice::FilterState$get_varlabel()</code></a></li>
+<li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilterState" data-id="get_varname"><a href='../../teal.slice/html/FilterState.html#method-FilterState-get_varname'><code>teal.slice::FilterState$get_varname()</code></a></li>
+<li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilterState" data-id="print"><a href='../../teal.slice/html/FilterState.html#method-FilterState-print'><code>teal.slice::FilterState$print()</code></a></li>
+<li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilterState" data-id="set_keep_na"><a href='../../teal.slice/html/FilterState.html#method-FilterState-set_keep_na'><code>teal.slice::FilterState$set_keep_na()</code></a></li>
+<li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilterState" data-id="set_keep_na_reactive"><a href='../../teal.slice/html/FilterState.html#method-FilterState-set_keep_na_reactive'><code>teal.slice::FilterState$set_keep_na_reactive()</code></a></li>
+<li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilterState" data-id="set_na_rm"><a href='../../teal.slice/html/FilterState.html#method-FilterState-set_na_rm'><code>teal.slice::FilterState$set_na_rm()</code></a></li>
+<li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilterState" data-id="set_selected_reactive"><a href='../../teal.slice/html/FilterState.html#method-FilterState-set_selected_reactive'><code>teal.slice::FilterState$set_selected_reactive()</code></a></li>
+</ul>
+</details>
+}}
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-new"></a>}}
-\if{latex}{\out{\hypertarget{method-new}{}}}
+\if{html}{\out{<a id="method-RangeFilterState-new"></a>}}
+\if{latex}{\out{\hypertarget{method-RangeFilterState-new}{}}}
 \subsection{Method \code{new()}}{
 Initialize a \code{FilterState} object
 \subsection{Usage}{
@@ -117,8 +119,29 @@ whether condition calls should be prefixed by dataname. Possible values:
 }
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-is_any_filtered"></a>}}
-\if{latex}{\out{\hypertarget{method-is_any_filtered}{}}}
+\if{html}{\out{<a id="method-RangeFilterState-format"></a>}}
+\if{latex}{\out{\hypertarget{method-RangeFilterState-format}{}}}
+\subsection{Method \code{format()}}{
+Returns a formatted string representing this \code{LogicalFilterState}.
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{RangeFilterState$format(indent = 0)}\if{html}{\out{</div>}}
+}
+
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{indent}}{(\code{numeric(1)}) the number of spaces before after each new line character of the formatted string.
+Default: 0}
+}
+\if{html}{\out{</div>}}
+}
+\subsection{Returns}{
+\code{character(1)} the formatted string
+}
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-RangeFilterState-is_any_filtered"></a>}}
+\if{latex}{\out{\hypertarget{method-RangeFilterState-is_any_filtered}{}}}
 \subsection{Method \code{is_any_filtered()}}{
 Answers the question of whether the current settings and values selected actually filters out any values.
 \subsection{Usage}{
@@ -130,8 +153,8 @@ logical scalar
 }
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-get_call"></a>}}
-\if{latex}{\out{\hypertarget{method-get_call}{}}}
+\if{html}{\out{<a id="method-RangeFilterState-get_call"></a>}}
+\if{latex}{\out{\hypertarget{method-RangeFilterState-get_call}{}}}
 \subsection{Method \code{get_call()}}{
 Returns reproducible condition call for current selection.
 For this class returned call looks like
@@ -146,8 +169,8 @@ optional \verb{is.na(<varname>)} and \verb{is.finite(<varname>)}.
 }
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-get_keep_inf"></a>}}
-\if{latex}{\out{\hypertarget{method-get_keep_inf}{}}}
+\if{html}{\out{<a id="method-RangeFilterState-get_keep_inf"></a>}}
+\if{latex}{\out{\hypertarget{method-RangeFilterState-get_keep_inf}{}}}
 \subsection{Method \code{get_keep_inf()}}{
 Returns current \code{keep_inf} selection
 \subsection{Usage}{
@@ -159,8 +182,8 @@ Returns current \code{keep_inf} selection
 }
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-get_state"></a>}}
-\if{latex}{\out{\hypertarget{method-get_state}{}}}
+\if{html}{\out{<a id="method-RangeFilterState-get_state"></a>}}
+\if{latex}{\out{\hypertarget{method-RangeFilterState-get_state}{}}}
 \subsection{Method \code{get_state()}}{
 Returns the filtering state.
 \subsection{Usage}{
@@ -180,8 +203,8 @@ of the range and two checkboxes whether to keep the \code{NA} or \code{Inf}  val
 }
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-ui"></a>}}
-\if{latex}{\out{\hypertarget{method-ui}{}}}
+\if{html}{\out{<a id="method-RangeFilterState-ui"></a>}}
+\if{latex}{\out{\hypertarget{method-RangeFilterState-ui}{}}}
 \subsection{Method \code{ui()}}{
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{RangeFilterState$ui(id)}\if{html}{\out{</div>}}
@@ -197,8 +220,8 @@ id of shiny element}
 }
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-server"></a>}}
-\if{latex}{\out{\hypertarget{method-server}{}}}
+\if{html}{\out{<a id="method-RangeFilterState-server"></a>}}
+\if{latex}{\out{\hypertarget{method-RangeFilterState-server}{}}}
 \subsection{Method \code{server()}}{
 Server module
 \subsection{Usage}{
@@ -218,8 +241,8 @@ an ID string that corresponds with the ID used to call the module's UI function.
 }
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-set_keep_inf"></a>}}
-\if{latex}{\out{\hypertarget{method-set_keep_inf}{}}}
+\if{html}{\out{<a id="method-RangeFilterState-set_keep_inf"></a>}}
+\if{latex}{\out{\hypertarget{method-RangeFilterState-set_keep_inf}{}}}
 \subsection{Method \code{set_keep_inf()}}{
 Set if \code{Inf} should be kept
 \subsection{Usage}{
@@ -238,8 +261,8 @@ modules after selecting check-box-input in the shiny interface. Values are set t
 }
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-set_keep_inf_reactive"></a>}}
-\if{latex}{\out{\hypertarget{method-set_keep_inf_reactive}{}}}
+\if{html}{\out{<a id="method-RangeFilterState-set_keep_inf_reactive"></a>}}
+\if{latex}{\out{\hypertarget{method-RangeFilterState-set_keep_inf_reactive}{}}}
 \subsection{Method \code{set_keep_inf_reactive()}}{
 Set if \code{Inf} should be kept when passing filters using \code{set_filter_state}
 \subsection{Usage}{
@@ -258,8 +281,8 @@ modules after setting the filters using \code{set_filter_state}. Values are set 
 }
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-set_state"></a>}}
-\if{latex}{\out{\hypertarget{method-set_state}{}}}
+\if{html}{\out{<a id="method-RangeFilterState-set_state"></a>}}
+\if{latex}{\out{\hypertarget{method-RangeFilterState-set_state}{}}}
 \subsection{Method \code{set_state()}}{
 Set state
 \subsection{Usage}{
@@ -281,8 +304,8 @@ contains fields relevant for a specific class
 }
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-set_state_reactive"></a>}}
-\if{latex}{\out{\hypertarget{method-set_state_reactive}{}}}
+\if{html}{\out{<a id="method-RangeFilterState-set_state_reactive"></a>}}
+\if{latex}{\out{\hypertarget{method-RangeFilterState-set_state_reactive}{}}}
 \subsection{Method \code{set_state_reactive()}}{
 Set state when using \code{set_filter_state}
 \subsection{Usage}{
@@ -304,8 +327,8 @@ contains fields relevant for a specific class
 }
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-set_selected"></a>}}
-\if{latex}{\out{\hypertarget{method-set_selected}{}}}
+\if{html}{\out{<a id="method-RangeFilterState-set_selected"></a>}}
+\if{latex}{\out{\hypertarget{method-RangeFilterState-set_selected}{}}}
 \subsection{Method \code{set_selected()}}{
 Sets the selected values of this \code{RangeFilterState}.
 \subsection{Usage}{
@@ -332,8 +355,8 @@ filter$set_selected(c(2, 3))
 
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-clone"></a>}}
-\if{latex}{\out{\hypertarget{method-clone}{}}}
+\if{html}{\out{<a id="method-RangeFilterState-clone"></a>}}
+\if{latex}{\out{\hypertarget{method-RangeFilterState-clone}{}}}
 \subsection{Method \code{clone()}}{
 The objects of this class are cloneable with this method.
 \subsection{Usage}{

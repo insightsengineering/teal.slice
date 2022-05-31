@@ -355,6 +355,25 @@ FilterState <- R6::R6Class( # nolint
     },
 
     #' @description
+    #' Returns a formatted string representing this `FilterState`.
+    #'
+    #' @param indent (`numeric(1)`) the number of spaces before after each new line character of the formatted string.
+    #' Default: 0
+    #' @return `character(1)` the formatted string
+    #'
+    format = function(indent = 0) {
+      checkmate::assert_number(indent, finite = TRUE, lower = 0)
+
+      sprintf(
+        "%sFiltering on: %s\n%1$s  Selected values: %s\n%1$s  Include missing values: %s",
+        format("", width = indent),
+        self$get_varname(deparse = TRUE),
+        paste0(format(self$get_selected(), nsmall = 3), collapse = " "),
+        format(self$get_keep_na())
+      )
+    },
+
+    #' @description
     #' Returns reproducible condition call for current selection relevant
     #' for selected variable type.
     #' Method is using internal reactive values which makes it reactive
@@ -370,7 +389,7 @@ FilterState <- R6::R6Class( # nolint
     #' @return (`name` or `character(1)`)
     get_dataname = function(deparse = TRUE) {
       if (isTRUE(deparse)) {
-        deparse(private$input_dataname)
+        deparse1(private$input_dataname)
       } else {
         private$input_dataname
       }
@@ -397,7 +416,7 @@ FilterState <- R6::R6Class( # nolint
     #' @return (`name` or `character(1)`)
     get_varname = function(deparse = FALSE) {
       if (isTRUE(deparse)) {
-        deparse(private$varname)
+        deparse1(private$varname)
       } else {
         private$varname
       }
@@ -422,6 +441,14 @@ FilterState <- R6::R6Class( # nolint
         selected = self$get_selected(),
         keep_na = self$get_keep_na()
       )
+    },
+
+    #' @description
+    #' Prints this `FilterState` object
+    #'
+    #' @param ... additional arguments to this method
+    print = function(...) {
+      cat(shiny::isolate(self$format()), "\n")
     },
 
     #' @description
@@ -1272,6 +1299,26 @@ RangeFilterState <- R6::R6Class( # nolint
     },
 
     #' @description
+    #' Returns a formatted string representing this `LogicalFilterState`.
+    #'
+    #' @param indent (`numeric(1)`) the number of spaces before after each new line character of the formatted string.
+    #' Default: 0
+    #' @return `character(1)` the formatted string
+    #'
+    format = function(indent = 0) {
+      checkmate::assert_number(indent, finite = TRUE, lower = 0)
+
+      sprintf(
+        "%sFiltering on: %s\n%1$s  Selected range: %s - %s\n%1$s  Include missing values: %s",
+        format("", width = indent),
+        self$get_varname(deparse = TRUE),
+        format(self$get_selected(), nsmall = 3)[1],
+        format(self$get_selected(), nsmall = 3)[2],
+        format(self$get_keep_na())
+      )
+    },
+
+    #' @description
     #' Answers the question of whether the current settings and values selected actually filters out any values.
     #' @return logical scalar
     is_any_filtered = function() {
@@ -2049,6 +2096,26 @@ DateFilterState <- R6::R6Class( # nolint
     },
 
     #' @description
+    #' Returns a formatted string representing this `DateFilterState`.
+    #'
+    #' @param indent (`numeric(1)`) the number of spaces before after each new line character of the formatted string.
+    #' Default: 0
+    #' @return `character(1)` the formatted string
+    #'
+    format = function(indent = 0) {
+      checkmate::assert_number(indent, finite = TRUE, lower = 0)
+
+      sprintf(
+        "%sFiltering on: %s\n%1$s  Selected range: %s - %s\n%1$s  Include missing values: %s",
+        format("", width = indent),
+        self$get_varname(deparse = TRUE),
+        format(self$get_selected()[1], nsmall = 3),
+        format(self$get_selected()[2], nsmall = 3),
+        format(self$get_keep_na())
+      )
+    },
+
+    #' @description
     #' Answers the question of whether the current settings and values selected actually filters out any values.
     #' @return logical scalar
     is_any_filtered = function() {
@@ -2344,6 +2411,26 @@ DatetimeFilterState <- R6::R6Class( # nolint
       }
 
       return(invisible(self))
+    },
+
+    #' @description
+    #' Returns a formatted string representing this `DatetimeFilterState`.
+    #'
+    #' @param indent (`numeric(1)`) the number of spaces before after each new line character of the formatted string.
+    #' Default: 0
+    #' @return `character(1)` the formatted string
+    #'
+    format = function(indent = 0) {
+      checkmate::assert_number(indent, finite = TRUE, lower = 0)
+
+      sprintf(
+        "%sFiltering on: %s\n%1$s  Selected range: %s - %s\n%1$s  Include missing values: %s",
+        format("", width = indent),
+        self$get_varname(deparse = TRUE),
+        format(self$get_selected(), nsmall = 3)[1],
+        format(self$get_selected(), nsmall = 3)[2],
+        format(self$get_keep_na())
+      )
     },
 
     #' @description

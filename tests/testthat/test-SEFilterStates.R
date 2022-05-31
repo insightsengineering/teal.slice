@@ -412,3 +412,55 @@ testthat::test_that(
     )
   }
 )
+
+# Format
+testthat::test_that("$format() is a method of SEFilterStates", {
+  testthat::expect_error(
+    SEFilterStates$new(
+      input_dataname = "test",
+      output_dataname = "test_filtered",
+      datalabel = character(0)
+    )$format(),
+    NA
+  )
+})
+
+testthat::test_that("$format() asserts the indent argument is a number", {
+  testthat::expect_error(
+    SEFilterStates$new(
+      input_dataname = "test",
+      output_dataname = "test_filtered",
+      datalabel = character(0)
+    )$format(indent = "wrong type"),
+    regexp = "Assertion on 'indent' failed: Must be of type 'number'"
+  )
+})
+
+testthat::test_that("$format() concatenates its FilterState elements using \\n and indents the FilterState strings", {
+  test <- get_test_data()
+  sefs <- SEFilterStates$new(
+    input_dataname = "test",
+    output_dataname = "test_filtered",
+    datalabel = "Label"
+  )
+
+  fs <- list(
+    select = list(Treatment = "ChIP"),
+    subset = list(feature_id = c("ID001", "ID002"))
+  )
+  sefs$set_filter_state(state = fs, data = test)
+
+  treatment_filter <- sefs$queue_get("select")[[1]]
+  feature_filter <- sefs$queue_get("subset")[[1]]
+  shiny::isolate(testthat::expect_equal(
+    sefs$format(),
+    paste(
+      "Assay Label filters:",
+      "  Subsetting:",
+      feature_filter$format(indent = 4),
+      "  Selecting:",
+      treatment_filter$format(indent = 4),
+      sep = "\n"
+    )
+  ))
+})

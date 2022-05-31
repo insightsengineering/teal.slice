@@ -2,10 +2,8 @@
 % Please edit documentation in R/FilterStates.R
 \name{DFFilterStates}
 \alias{DFFilterStates}
-\title{Specialization of \code{FilterStates} for a base \code{data.frame}.}
+\title{\code{DFFFilterStates}}
 \description{
-Specialization of \code{FilterStates} for a base \code{data.frame}.
-
 Specialization of \code{FilterStates} for a base \code{data.frame}.
 }
 \examples{
@@ -29,80 +27,51 @@ dffs$set_filter_state(state = fs, data = iris)
 shiny::isolate(dffs$get_filter_state())
 
 }
-\keyword{(`...`).}
-\keyword{(`dplyr::filter`),}
-\keyword{Initializes}
-\keyword{This}
-\keyword{`DFFilterStates`}
-\keyword{`ReactiveQueue`}
-\keyword{`ReactiveQueue`.}
-\keyword{`input_dataname`,}
-\keyword{`output_dataname`}
-\keyword{a}
-\keyword{and}
-\keyword{are}
-\keyword{arguments}
-\keyword{associated}
-\keyword{by}
-\keyword{calling}
-\keyword{class}
-\keyword{conditions}
-\keyword{contains}
-\keyword{function}
-\keyword{initializing}
 \keyword{internal}
-\keyword{list}
-\keyword{means}
-\keyword{name}
-\keyword{no}
-\keyword{object}
-\keyword{of}
-\keyword{passed}
-\keyword{setting}
-\keyword{single}
-\keyword{specified}
-\keyword{that}
-\keyword{the}
-\keyword{this}
-\keyword{to}
-\keyword{unnamed}
-\keyword{when}
-\keyword{which}
-\keyword{with}
 \section{Super class}{
 \code{\link[teal.slice:FilterStates]{teal.slice::FilterStates}} -> \code{DFFilterStates}
 }
 \section{Methods}{
 \subsection{Public methods}{
 \itemize{
-\item \href{#method-new}{\code{DFFilterStates$new()}}
-\item \href{#method-get_fun}{\code{DFFilterStates$get_fun()}}
-\item \href{#method-server}{\code{DFFilterStates$server()}}
-\item \href{#method-get_filter_state}{\code{DFFilterStates$get_filter_state()}}
-\item \href{#method-set_filter_state}{\code{DFFilterStates$set_filter_state()}}
-\item \href{#method-remove_filter_state}{\code{DFFilterStates$remove_filter_state()}}
-\item \href{#method-ui_add_filter_state}{\code{DFFilterStates$ui_add_filter_state()}}
-\item \href{#method-srv_add_filter_state}{\code{DFFilterStates$srv_add_filter_state()}}
-\item \href{#method-clone}{\code{DFFilterStates$clone()}}
+\item \href{#method-DFFilterStates-new}{\code{DFFilterStates$new()}}
+\item \href{#method-DFFilterStates-format}{\code{DFFilterStates$format()}}
+\item \href{#method-DFFilterStates-get_fun}{\code{DFFilterStates$get_fun()}}
+\item \href{#method-DFFilterStates-server}{\code{DFFilterStates$server()}}
+\item \href{#method-DFFilterStates-get_filter_state}{\code{DFFilterStates$get_filter_state()}}
+\item \href{#method-DFFilterStates-set_filter_state}{\code{DFFilterStates$set_filter_state()}}
+\item \href{#method-DFFilterStates-remove_filter_state}{\code{DFFilterStates$remove_filter_state()}}
+\item \href{#method-DFFilterStates-ui_add_filter_state}{\code{DFFilterStates$ui_add_filter_state()}}
+\item \href{#method-DFFilterStates-srv_add_filter_state}{\code{DFFilterStates$srv_add_filter_state()}}
+\item \href{#method-DFFilterStates-clone}{\code{DFFilterStates$clone()}}
 }
 }
-\if{html}{
-\out{<details ><summary>Inherited methods</summary>}
-\itemize{
-\item \out{<span class="pkg-link" data-pkg="teal.slice" data-topic="FilterStates" data-id="get_call">}\href{../../teal.slice/html/FilterStates.html#method-get_call}{\code{teal.slice::FilterStates$get_call()}}\out{</span>}
-\item \out{<span class="pkg-link" data-pkg="teal.slice" data-topic="FilterStates" data-id="queue_empty">}\href{../../teal.slice/html/FilterStates.html#method-queue_empty}{\code{teal.slice::FilterStates$queue_empty()}}\out{</span>}
-\item \out{<span class="pkg-link" data-pkg="teal.slice" data-topic="FilterStates" data-id="queue_get">}\href{../../teal.slice/html/FilterStates.html#method-queue_get}{\code{teal.slice::FilterStates$queue_get()}}\out{</span>}
-\item \out{<span class="pkg-link" data-pkg="teal.slice" data-topic="FilterStates" data-id="queue_initialize">}\href{../../teal.slice/html/FilterStates.html#method-queue_initialize}{\code{teal.slice::FilterStates$queue_initialize()}}\out{</span>}
-\item \out{<span class="pkg-link" data-pkg="teal.slice" data-topic="FilterStates" data-id="queue_push">}\href{../../teal.slice/html/FilterStates.html#method-queue_push}{\code{teal.slice::FilterStates$queue_push()}}\out{</span>}
-\item \out{<span class="pkg-link" data-pkg="teal.slice" data-topic="FilterStates" data-id="queue_remove">}\href{../../teal.slice/html/FilterStates.html#method-queue_remove}{\code{teal.slice::FilterStates$queue_remove()}}\out{</span>}
-\item \out{<span class="pkg-link" data-pkg="teal.slice" data-topic="FilterStates" data-id="ui">}\href{../../teal.slice/html/FilterStates.html#method-ui}{\code{teal.slice::FilterStates$ui()}}\out{</span>}
-}
-\out{</details>}
-}
+\if{html}{\out{
+<details><summary>Inherited methods</summary>
+<ul>
+<li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilterStates" data-id="get_call"><a href='../../teal.slice/html/FilterStates.html#method-FilterStates-get_call'><code>teal.slice::FilterStates$get_call()</code></a></li>
+<li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilterStates" data-id="get_datalabel"><a href='../../teal.slice/html/FilterStates.html#method-FilterStates-get_datalabel'><code>teal.slice::FilterStates$get_datalabel()</code></a></li>
+<li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilterStates" data-id="print"><a href='../../teal.slice/html/FilterStates.html#method-FilterStates-print'><code>teal.slice::FilterStates$print()</code></a></li>
+<li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilterStates" data-id="queue_empty"><a href='../../teal.slice/html/FilterStates.html#method-FilterStates-queue_empty'><code>teal.slice::FilterStates$queue_empty()</code></a></li>
+<li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilterStates" data-id="queue_get"><a href='../../teal.slice/html/FilterStates.html#method-FilterStates-queue_get'><code>teal.slice::FilterStates$queue_get()</code></a></li>
+<li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilterStates" data-id="queue_initialize"><a href='../../teal.slice/html/FilterStates.html#method-FilterStates-queue_initialize'><code>teal.slice::FilterStates$queue_initialize()</code></a></li>
+<li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilterStates" data-id="queue_push"><a href='../../teal.slice/html/FilterStates.html#method-FilterStates-queue_push'><code>teal.slice::FilterStates$queue_push()</code></a></li>
+<li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilterStates" data-id="queue_remove"><a href='../../teal.slice/html/FilterStates.html#method-FilterStates-queue_remove'><code>teal.slice::FilterStates$queue_remove()</code></a></li>
+<li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilterStates" data-id="ui"><a href='../../teal.slice/html/FilterStates.html#method-FilterStates-ui'><code>teal.slice::FilterStates$ui()</code></a></li>
+</ul>
+</details>
+}}
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-new"></a>}}
-\if{latex}{\out{\hypertarget{method-new}{}}}
+\if{html}{\out{<a id="method-DFFilterStates-new"></a>}}
+\if{latex}{\out{\hypertarget{method-DFFilterStates-new}{}}}
 \subsection{Method \code{new()}}{
+Initializes \code{DFFilterStates} object
+
+Initializes \code{DFFilterStates} object by setting \code{input_dataname},
+\code{output_dataname} and initializing \code{ReactiveQueue}. This class contains a
+single \code{ReactiveQueue} with no specified name which means that
+when calling the function associated to this class (\code{dplyr::filter}), a list of
+conditions are passed to unnamed arguments (\code{...}).
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{DFFilterStates$new(input_dataname, output_dataname, datalabel, varlabels, keys)}\if{html}{\out{</div>}}
 }
@@ -124,19 +93,39 @@ text label value.}
 labels of the variables used in this object}
 
 \item{\code{keys}}{(\code{character})\cr
-key columns names
-Get function name
-
-Get function name used to create filter call.
-For \code{DFFilterStates} \code{dplyr::filter} is used}
+key columns names}
 }
 \if{html}{\out{</div>}}
 }
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-get_fun"></a>}}
-\if{latex}{\out{\hypertarget{method-get_fun}{}}}
+\if{html}{\out{<a id="method-DFFilterStates-format"></a>}}
+\if{latex}{\out{\hypertarget{method-DFFilterStates-format}{}}}
+\subsection{Method \code{format()}}{
+Returns the formatted string representing this \code{FilterStates} object.
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{DFFilterStates$format(indent = 0)}\if{html}{\out{</div>}}
+}
+
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{indent}}{(\code{numeric(1)}) the number of spaces before each line of the representation}
+}
+\if{html}{\out{</div>}}
+}
+\subsection{Returns}{
+\code{character(1)} the formatted string
+}
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-DFFilterStates-get_fun"></a>}}
+\if{latex}{\out{\hypertarget{method-DFFilterStates-get_fun}{}}}
 \subsection{Method \code{get_fun()}}{
+Get function name
+
+Get function name used to create filter call.
+For \code{DFFilterStates} \code{dplyr::filter} is used
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{DFFilterStates$get_fun()}\if{html}{\out{</div>}}
 }
@@ -146,8 +135,8 @@ For \code{DFFilterStates} \code{dplyr::filter} is used}
 }
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-server"></a>}}
-\if{latex}{\out{\hypertarget{method-server}{}}}
+\if{html}{\out{<a id="method-DFFilterStates-server"></a>}}
+\if{latex}{\out{\hypertarget{method-DFFilterStates-server}{}}}
 \subsection{Method \code{server()}}{
 Server module
 \subsection{Usage}{
@@ -167,8 +156,8 @@ an ID string that corresponds with the ID used to call the module's UI function.
 }
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-get_filter_state"></a>}}
-\if{latex}{\out{\hypertarget{method-get_filter_state}{}}}
+\if{html}{\out{<a id="method-DFFilterStates-get_filter_state"></a>}}
+\if{latex}{\out{\hypertarget{method-DFFilterStates-get_filter_state}{}}}
 \subsection{Method \code{get_filter_state()}}{
 Gets the reactive values from the active \code{FilterState} objects.
 
@@ -183,8 +172,8 @@ The output list is a compatible input to \code{self$set_filter_state}.
 }
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-set_filter_state"></a>}}
-\if{latex}{\out{\hypertarget{method-set_filter_state}{}}}
+\if{html}{\out{<a id="method-DFFilterStates-set_filter_state"></a>}}
+\if{latex}{\out{\hypertarget{method-DFFilterStates-set_filter_state}{}}}
 \subsection{Method \code{set_filter_state()}}{
 Set filter state
 \subsection{Usage}{
@@ -240,8 +229,8 @@ shiny::isolate(dffs$get_filter_state())
 
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-remove_filter_state"></a>}}
-\if{latex}{\out{\hypertarget{method-remove_filter_state}{}}}
+\if{html}{\out{<a id="method-DFFilterStates-remove_filter_state"></a>}}
+\if{latex}{\out{\hypertarget{method-DFFilterStates-remove_filter_state}{}}}
 \subsection{Method \code{remove_filter_state()}}{
 Remove a \code{FilterState} from the \code{ReactiveQueue}.
 \subsection{Usage}{
@@ -260,8 +249,8 @@ Remove a \code{FilterState} from the \code{ReactiveQueue}.
 }
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-ui_add_filter_state"></a>}}
-\if{latex}{\out{\hypertarget{method-ui_add_filter_state}{}}}
+\if{html}{\out{<a id="method-DFFilterStates-ui_add_filter_state"></a>}}
+\if{latex}{\out{\hypertarget{method-DFFilterStates-ui_add_filter_state}{}}}
 \subsection{Method \code{ui_add_filter_state()}}{
 Shiny UI module to add filter variable
 \subsection{Usage}{
@@ -284,8 +273,8 @@ shiny.tag
 }
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-srv_add_filter_state"></a>}}
-\if{latex}{\out{\hypertarget{method-srv_add_filter_state}{}}}
+\if{html}{\out{<a id="method-DFFilterStates-srv_add_filter_state"></a>}}
+\if{latex}{\out{\hypertarget{method-DFFilterStates-srv_add_filter_state}{}}}
 \subsection{Method \code{srv_add_filter_state()}}{
 Shiny server module to add filter variable
 
@@ -328,8 +317,8 @@ return \code{character(1)}
 }
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-clone"></a>}}
-\if{latex}{\out{\hypertarget{method-clone}{}}}
+\if{html}{\out{<a id="method-DFFilterStates-clone"></a>}}
+\if{latex}{\out{\hypertarget{method-DFFilterStates-clone}{}}}
 \subsection{Method \code{clone()}}{
 The objects of this class are cloneable with this method.
 \subsection{Usage}{

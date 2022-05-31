@@ -44,26 +44,29 @@ isolate(filter_states$get_call())
 \section{Methods}{
 \subsection{Public methods}{
 \itemize{
-\item \href{#method-new}{\code{FilterStates$new()}}
-\item \href{#method-get_call}{\code{FilterStates$get_call()}}
-\item \href{#method-get_fun}{\code{FilterStates$get_fun()}}
-\item \href{#method-queue_empty}{\code{FilterStates$queue_empty()}}
-\item \href{#method-queue_get}{\code{FilterStates$queue_get()}}
-\item \href{#method-queue_initialize}{\code{FilterStates$queue_initialize()}}
-\item \href{#method-queue_push}{\code{FilterStates$queue_push()}}
-\item \href{#method-queue_remove}{\code{FilterStates$queue_remove()}}
-\item \href{#method-ui}{\code{FilterStates$ui()}}
-\item \href{#method-get_filter_state}{\code{FilterStates$get_filter_state()}}
-\item \href{#method-set_filter_state}{\code{FilterStates$set_filter_state()}}
-\item \href{#method-remove_filter_state}{\code{FilterStates$remove_filter_state()}}
-\item \href{#method-ui_add_filter_state}{\code{FilterStates$ui_add_filter_state()}}
-\item \href{#method-srv_add_filter_state}{\code{FilterStates$srv_add_filter_state()}}
-\item \href{#method-clone}{\code{FilterStates$clone()}}
+\item \href{#method-FilterStates-new}{\code{FilterStates$new()}}
+\item \href{#method-FilterStates-get_datalabel}{\code{FilterStates$get_datalabel()}}
+\item \href{#method-FilterStates-format}{\code{FilterStates$format()}}
+\item \href{#method-FilterStates-get_call}{\code{FilterStates$get_call()}}
+\item \href{#method-FilterStates-print}{\code{FilterStates$print()}}
+\item \href{#method-FilterStates-get_fun}{\code{FilterStates$get_fun()}}
+\item \href{#method-FilterStates-queue_empty}{\code{FilterStates$queue_empty()}}
+\item \href{#method-FilterStates-queue_get}{\code{FilterStates$queue_get()}}
+\item \href{#method-FilterStates-queue_initialize}{\code{FilterStates$queue_initialize()}}
+\item \href{#method-FilterStates-queue_push}{\code{FilterStates$queue_push()}}
+\item \href{#method-FilterStates-queue_remove}{\code{FilterStates$queue_remove()}}
+\item \href{#method-FilterStates-ui}{\code{FilterStates$ui()}}
+\item \href{#method-FilterStates-get_filter_state}{\code{FilterStates$get_filter_state()}}
+\item \href{#method-FilterStates-set_filter_state}{\code{FilterStates$set_filter_state()}}
+\item \href{#method-FilterStates-remove_filter_state}{\code{FilterStates$remove_filter_state()}}
+\item \href{#method-FilterStates-ui_add_filter_state}{\code{FilterStates$ui_add_filter_state()}}
+\item \href{#method-FilterStates-srv_add_filter_state}{\code{FilterStates$srv_add_filter_state()}}
+\item \href{#method-FilterStates-clone}{\code{FilterStates$clone()}}
 }
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-new"></a>}}
-\if{latex}{\out{\hypertarget{method-new}{}}}
+\if{html}{\out{<a id="method-FilterStates-new"></a>}}
+\if{latex}{\out{\hypertarget{method-FilterStates-new}{}}}
 \subsection{Method \code{new()}}{
 Initializes this \code{FilterStates} object.
 \subsection{Usage}{
@@ -87,8 +90,41 @@ text label value.}
 }
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-get_call"></a>}}
-\if{latex}{\out{\hypertarget{method-get_call}{}}}
+\if{html}{\out{<a id="method-FilterStates-get_datalabel"></a>}}
+\if{latex}{\out{\hypertarget{method-FilterStates-get_datalabel}{}}}
+\subsection{Method \code{get_datalabel()}}{
+Returns the label of the dataset
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{FilterStates$get_datalabel()}\if{html}{\out{</div>}}
+}
+
+\subsection{Returns}{
+(\code{character(1)}) the label
+}
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-FilterStates-format"></a>}}
+\if{latex}{\out{\hypertarget{method-FilterStates-format}{}}}
+\subsection{Method \code{format()}}{
+Returns the formatted string representing this \code{FilterStates} object.
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{FilterStates$format(indent)}\if{html}{\out{</div>}}
+}
+
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{indent}}{(\code{numeric(1)}) the number of spaces before each line of the representation}
+}
+\if{html}{\out{</div>}}
+}
+\subsection{Returns}{
+\code{character(1)} the formatted string
+}
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-FilterStates-get_call"></a>}}
+\if{latex}{\out{\hypertarget{method-FilterStates-get_call}{}}}
 \subsection{Method \code{get_call()}}{
 Filter call
 
@@ -108,8 +144,25 @@ no-op call such as \code{x <- x}.
 }
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-get_fun"></a>}}
-\if{latex}{\out{\hypertarget{method-get_fun}{}}}
+\if{html}{\out{<a id="method-FilterStates-print"></a>}}
+\if{latex}{\out{\hypertarget{method-FilterStates-print}{}}}
+\subsection{Method \code{print()}}{
+Prints this \code{FilterStates} object
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{FilterStates$print(...)}\if{html}{\out{</div>}}
+}
+
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{...}}{additional arguments to this method}
+}
+\if{html}{\out{</div>}}
+}
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-FilterStates-get_fun"></a>}}
+\if{latex}{\out{\hypertarget{method-FilterStates-get_fun}{}}}
 \subsection{Method \code{get_fun()}}{
 Gets the name of the function used to filter the data in this \code{FilterStates}.
 
@@ -124,8 +177,8 @@ Get function name used to create filter call. By default it's a
 }
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-queue_empty"></a>}}
-\if{latex}{\out{\hypertarget{method-queue_empty}{}}}
+\if{html}{\out{<a id="method-FilterStates-queue_empty"></a>}}
+\if{latex}{\out{\hypertarget{method-FilterStates-queue_empty}{}}}
 \subsection{Method \code{queue_empty()}}{
 Remove all \code{FilterState} objects from all queues in this \code{FilterStates}.
 \subsection{Usage}{
@@ -137,8 +190,8 @@ NULL
 }
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-queue_get"></a>}}
-\if{latex}{\out{\hypertarget{method-queue_get}{}}}
+\if{html}{\out{<a id="method-FilterStates-queue_get"></a>}}
+\if{latex}{\out{\hypertarget{method-FilterStates-queue_get}{}}}
 \subsection{Method \code{queue_get()}}{
 Returns a list of \code{FilterState} objects stored in this \code{FilterStates.}
 \subsection{Usage}{
@@ -161,8 +214,8 @@ name of \code{ReactiveQueue} element.}
 }
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-queue_initialize"></a>}}
-\if{latex}{\out{\hypertarget{method-queue_initialize}{}}}
+\if{html}{\out{<a id="method-FilterStates-queue_initialize"></a>}}
+\if{latex}{\out{\hypertarget{method-FilterStates-queue_initialize}{}}}
 \subsection{Method \code{queue_initialize()}}{
 Sets \code{ReactiveQueue} objects.
 \subsection{Usage}{
@@ -179,8 +232,8 @@ must be a list even if single \code{ReactiveQueue} is set.}
 }
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-queue_push"></a>}}
-\if{latex}{\out{\hypertarget{method-queue_push}{}}}
+\if{html}{\out{<a id="method-FilterStates-queue_push"></a>}}
+\if{latex}{\out{\hypertarget{method-FilterStates-queue_push}{}}}
 \subsection{Method \code{queue_push()}}{
 Adds a new \code{FilterState} object to this \code{FilterStates}
 \subsection{Usage}{
@@ -203,8 +256,8 @@ name of the \code{ReactiveQueue} element.}
 }
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-queue_remove"></a>}}
-\if{latex}{\out{\hypertarget{method-queue_remove}{}}}
+\if{html}{\out{<a id="method-FilterStates-queue_remove"></a>}}
+\if{latex}{\out{\hypertarget{method-FilterStates-queue_remove}{}}}
 \subsection{Method \code{queue_remove()}}{
 Removes a single filter state
 
@@ -232,8 +285,8 @@ name of \code{ReactiveQueue} element.}
 }
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-ui"></a>}}
-\if{latex}{\out{\hypertarget{method-ui}{}}}
+\if{html}{\out{<a id="method-FilterStates-ui"></a>}}
+\if{latex}{\out{\hypertarget{method-FilterStates-ui}{}}}
 \subsection{Method \code{ui()}}{
 Shiny UI module
 
@@ -257,8 +310,8 @@ shiny.tag
 }
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-get_filter_state"></a>}}
-\if{latex}{\out{\hypertarget{method-get_filter_state}{}}}
+\if{html}{\out{<a id="method-FilterStates-get_filter_state"></a>}}
+\if{latex}{\out{\hypertarget{method-FilterStates-get_filter_state}{}}}
 \subsection{Method \code{get_filter_state()}}{
 Gets the reactive values from the active \code{FilterState} objects.
 
@@ -273,8 +326,8 @@ The output list is a compatible input to \code{self$set_filter_state}.
 }
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-set_filter_state"></a>}}
-\if{latex}{\out{\hypertarget{method-set_filter_state}{}}}
+\if{html}{\out{<a id="method-FilterStates-set_filter_state"></a>}}
+\if{latex}{\out{\hypertarget{method-FilterStates-set_filter_state}{}}}
 \subsection{Method \code{set_filter_state()}}{
 Sets active \code{FilterState} objects.
 \subsection{Usage}{
@@ -299,8 +352,8 @@ function which throws an error
 }
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-remove_filter_state"></a>}}
-\if{latex}{\out{\hypertarget{method-remove_filter_state}{}}}
+\if{html}{\out{<a id="method-FilterStates-remove_filter_state"></a>}}
+\if{latex}{\out{\hypertarget{method-FilterStates-remove_filter_state}{}}}
 \subsection{Method \code{remove_filter_state()}}{
 Remove a single \code{FilterState} from the \code{ReactiveQueue}.
 \subsection{Usage}{
@@ -320,8 +373,8 @@ Name of variable to remove its \code{FilterState}.}
 }
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-ui_add_filter_state"></a>}}
-\if{latex}{\out{\hypertarget{method-ui_add_filter_state}{}}}
+\if{html}{\out{<a id="method-FilterStates-ui_add_filter_state"></a>}}
+\if{latex}{\out{\hypertarget{method-FilterStates-ui_add_filter_state}{}}}
 \subsection{Method \code{ui_add_filter_state()}}{
 Shiny UI module to add filter variable.
 \subsection{Usage}{
@@ -344,8 +397,8 @@ shiny.tag
 }
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-srv_add_filter_state"></a>}}
-\if{latex}{\out{\hypertarget{method-srv_add_filter_state}{}}}
+\if{html}{\out{<a id="method-FilterStates-srv_add_filter_state"></a>}}
+\if{latex}{\out{\hypertarget{method-FilterStates-srv_add_filter_state}{}}}
 \subsection{Method \code{srv_add_filter_state()}}{
 Shiny server module to add filter variable
 \subsection{Usage}{
@@ -385,8 +438,8 @@ is equivalent to \code{private$ns(queue_index)}. This means that
 }
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-clone"></a>}}
-\if{latex}{\out{\hypertarget{method-clone}{}}}
+\if{html}{\out{<a id="method-FilterStates-clone"></a>}}
+\if{latex}{\out{\hypertarget{method-FilterStates-clone}{}}}
 \subsection{Method \code{clone()}}{
 The objects of this class are cloneable with this method.
 \subsection{Usage}{

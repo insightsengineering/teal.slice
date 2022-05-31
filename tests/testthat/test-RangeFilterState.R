@@ -255,3 +255,45 @@ testthat::test_that(
     )
   }
 )
+
+
+# Format
+testthat::test_that("$format() is a FilterStates's method that accepts indent", {
+  filter_state <- RangeFilterState$new(7, varname = "test")
+  testthat::expect_error(shiny::isolate(filter_state$format(indent = 0)), regexp = NA)
+})
+
+testthat::test_that("$format() asserts that indent is numeric", {
+  testthat::expect_error(
+    RangeFilterState$new(c(7), varname = "test")$format(indent = "wrong type"),
+    regexp = "Assertion on 'indent' failed: Must be of type 'number'"
+  )
+})
+
+testthat::test_that("$format() returns a string representation the FilterState object", {
+  filter_state <- RangeFilterState$new(c(7), varname = "test")
+  filter_state$set_state(list(selected = c(7, 7)))
+  testthat::expect_equal(
+    shiny::isolate(filter_state$format(indent = 0)),
+    paste(
+      "Filtering on: test",
+      "  Selected range: 7.000 - 7.000",
+      "  Include missing values: FALSE",
+      sep = "\n"
+    )
+  )
+})
+
+testthat::test_that("$format() prepends spaces to every line of the returned string", {
+  filter_state <- RangeFilterState$new(c(7), varname = "test")
+  filter_state$set_state(list(selected = c(7, 7)))
+  for (i in 1:3) {
+    testthat::expect_equal(
+      shiny::isolate(filter_state$format(indent = !!(i))),
+      sprintf(
+        "%sFiltering on: test\n%1$s  Selected range: 7.000 - 7.000\n%1$s  Include missing values: FALSE",
+        format("", width = i)
+      )
+    )
+  }
+})

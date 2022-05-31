@@ -82,7 +82,6 @@ FilteredData <- R6::R6Class( # nolint
       names(private$filtered_datasets)
     },
 
-
     #' Gets data label for the dataset
     #'
     #' Useful to display in `Show R Code`.
@@ -315,7 +314,6 @@ FilteredData <- R6::R6Class( # nolint
       intersect(self$datanames(), datanames)
     },
 
-
     #' @description
     #' Adds a `TealDataset` object to this `FilteredData`
     #'
@@ -375,6 +373,40 @@ FilteredData <- R6::R6Class( # nolint
     get_filter_state = function() {
       states <- lapply(self$get_filtered_dataset(), function(x) x$get_filter_state())
       Filter(function(x) length(x) > 0, states)
+    },
+
+    #' @description
+    #' Returns the filter state formatted for printing to an `IO` device.
+    #'
+    #' @return `character` the pre-formatted filter state
+    #' @examples
+    #' datasets <- teal.slice:::FilteredData$new()
+    #' datasets$set_dataset(teal.data::dataset("iris", iris))
+    #' utils::data(miniACC, package = "MultiAssayExperiment")
+    #' datasets$set_dataset(teal.data::dataset("mae", miniACC))
+    #' fs <- list(
+    #'   iris = list(
+    #'     Sepal.Length = list(selected = c(5.1, 6.4), keep_na = TRUE, keep_inf = FALSE),
+    #'     Species = list(selected = c("setosa", "versicolor"), keep_na = FALSE)
+    #'   ),
+    #'   mae = list(
+    #'     subjects = list(
+    #'       years_to_birth = list(selected = c(30, 50), keep_na = TRUE, keep_inf = FALSE),
+    #'       vital_status = list(selected = "1", keep_na = FALSE),
+    #'       gender = list(selected = "female", keep_na = TRUE)
+    #'     ),
+    #'     RPPAArray = list(
+    #'       subset = list(ARRAY_TYPE = list(selected = "", keep_na = TRUE))
+    #'     )
+    #'   )
+    #' )
+    #' datasets$set_filter_state(state = fs)
+    #' cat(shiny::isolate(datasets$get_formatted_filter_state()))
+    #'
+    get_formatted_filter_state = function() {
+      out <- c()
+      for (filtered_dataset in self$get_filtered_dataset()) out <- c(out, filtered_dataset$get_formatted_filter_state())
+      paste(out, collapse = "\n")
     },
 
     #' @description

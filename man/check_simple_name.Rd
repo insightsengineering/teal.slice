@@ -10,13 +10,10 @@ check_simple_name(name)
 \item{name}{\verb{character, single or vector} name to check}
 }
 \description{
-Spaces are problematic because the variables must be escaped
-with backticks.
-Also, they should not start with a number as R may silently make
-it valid by changing it.
+Spaces are problematic because the variables must be escaped with backticks.
+Also, they should not start with a number as R may silently make it valid by changing it.
 Therefore, we only allow alphanumeric characters with underscores.
-The first character of the \code{name} must be an alphabetic character
-and can be followed by alphanumeric characters.
+The first character of the \code{name} must be an alphabetic character and can be followed by alphanumeric characters.
 }
 \note{
 The suffix '_FILTERED' is reserved for filtered data and is not
@@ -26,13 +23,13 @@ allowed in the dataset name.
 teal.slice:::check_simple_name("aas2df")
 teal.slice:::check_simple_name("ADSL")
 teal.slice:::check_simple_name("ADSLmodified")
+teal.slice:::check_simple_name("ADSL_modified")
 teal.slice:::check_simple_name("ADSL_2")
 teal.slice:::check_simple_name("a1")
 # the following fail
 \dontrun{
 teal.slice:::check_simple_name("1a")
 teal.slice:::check_simple_name("ADSL.modified")
-teal.slice:::check_simple_name("ADSL_modified")
 teal.slice:::check_simple_name("a1...")
 teal.slice:::check_simple_name("ADSL_FILTERED")
 }

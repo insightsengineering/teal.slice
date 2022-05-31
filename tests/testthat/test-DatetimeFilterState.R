@@ -211,3 +211,55 @@ testthat::test_that(
     )
   }
 )
+
+# Format
+testthat::test_that("$format() is a FilterStates's method that accepts indent", {
+  object <- as.POSIXct(8, origin = "1900/01/01", tz = "GMT")
+  filter_state <- DatetimeFilterState$new(object, varname = "test")
+  testthat::expect_error(shiny::isolate(filter_state$format(indent = 0)), regexp = NA)
+})
+
+testthat::test_that("$format() asserts that indent is numeric", {
+  object <- as.POSIXct(8, origin = "1900/01/01", tz = "GMT")
+  filter_state <- DatetimeFilterState$new(object, varname = "test")
+  testthat::expect_error(
+    filter_state$format(indent = "wrong type"),
+    regexp = "Assertion on 'indent' failed: Must be of type 'number'"
+  )
+})
+
+testthat::test_that("$format() returns a string representation the FilterState object", {
+  object <- as.POSIXct(8, origin = "1900/01/01", tz = "GMT")
+  filter_state <- DatetimeFilterState$new(object, varname = "test")
+  filter_state$set_state(list(selected = c(object, object)))
+  testthat::expect_equal(
+    shiny::isolate(filter_state$format(indent = 0)),
+    paste(
+      "Filtering on: test",
+      "  Selected range: 1900-01-01 00:00:08 - 1900-01-01 00:00:08",
+      "  Include missing values: FALSE",
+      sep = "\n"
+    )
+  )
+})
+
+testthat::test_that("$format() prepends spaces to every line of the returned string", {
+  object <- as.POSIXct(8, origin = "1900/01/01", tz = "GMT")
+  filter_state <- DatetimeFilterState$new(object, varname = "test")
+  filter_state$set_state(list(selected = c(object, object)))
+  for (i in 1:3) {
+    whitespace_indent <- paste0(rep(" ", i), collapse = "")
+    testthat::expect_equal(
+      shiny::isolate(filter_state$format(indent = !!(i))),
+      sprintf(
+        paste(
+          "%sFiltering on: test",
+          "%1$s  Selected range: 1900-01-01 00:00:08 - 1900-01-01 00:00:08",
+          "%1$s  Include missing values: FALSE",
+          sep = "\n"
+        ),
+        format("", width = i)
+      )
+    )
+  }
+})
