@@ -146,7 +146,7 @@ Depending on the type of the filter state, there are different UI inputs - for e
 `use_inf` checkbox button.
 `private$selected`, `private$use_na`, `private$use_inf` are reactive values and they trigger
 re-execution of `FilterState$get_call` whenever their values change.
-Constructor of `FilterState` has `extract_type` argument which impacts returned call. `extract_type`
+The constructor of `FilterState` has `extract_type` argument which impacts returned call. `extract_type`
 can be unspecified, `"matrix"` or `"list"` and its value corresponds to the type of the variable prefix
 in the returned condition call. For example if `FilterState` is initialized with
 `extract_type = "matrix"` then the variable in the condition call looks like
@@ -164,7 +164,7 @@ Above diagram presents the filter panel classes and their responsibilities when 
 
 - `FilterState$get_call()` returns a single condition call based on single variable
 - `ReactiveQueue` is a container which stores multiple condition calls. `ReactiveQueue` objects are
-  kept in a list where the names of elements are set after argument names.
+  kept in a list where the names of elements are set after the argument names.
 - `FilterStates$get_call()` returns a single filter call by gathering conditions returned from `FilterState` and
   combining them by `&` operator grouped by argument name.
 - `FilteredDataset$get_call()` returns the list of calls taken from `FilterStates` object(s).
