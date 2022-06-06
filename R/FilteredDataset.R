@@ -384,6 +384,7 @@ FilteredDataset <- R6::R6Class( # nolint
       if_multiple_filter_states <- length(self$get_filter_states()) > 1
       span(
         id = id,
+        include_css_files("filter-panel"),
         div(
           id = ns("whole_ui"), # to hide it entirely
           fluidRow(
