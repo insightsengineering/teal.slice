@@ -1,25 +1,25 @@
 testthat::test_that("The constructor accepts a POSIXct or POSIXlt object", {
-  testthat::expect_error(DatetimeFilterState$new(as.POSIXct(8, origin = "1900/01/01"), varname = "test"), NA)
-  testthat::expect_error(DatetimeFilterState$new(as.POSIXlt(8, origin = "1900/01/01"), varname = "test"), NA)
+  testthat::expect_error(DatetimeFilterState$new(as.POSIXct(8, origin = "1900/01/01 00:00:00"), varname = "test"), NA)
+  testthat::expect_error(DatetimeFilterState$new(as.POSIXlt(8, origin = "1900/01/01 00:00:00"), varname = "test"), NA)
 })
 
 testthat::test_that("get_call returns a condition true for the object supplied in the constructor", {
-  object <- as.POSIXct(8, origin = "1900/01/01")
+  object <- as.POSIXct(8, origin = "1900/01/01 00:00:00")
   filter_state <- DatetimeFilterState$new(object, varname = "object")
   testthat::expect_true(eval(isolate(filter_state$get_call())))
 })
 
 testthat::test_that("get_call set selected accepts an array of two POSIXct objects", {
-  object <- as.POSIXct(8, origin = "1900/01/01")
+  object <- as.POSIXct(8, origin = "1900/01/01 00:00:00")
   filter_state <- DatetimeFilterState$new(object, varname = "object")
   testthat::expect_error(filter_state$set_selected(c(object, object)), NA)
 })
 
 testthat::test_that("get_call returns a condition true for the object in the selected range", {
-  objects <- as.POSIXct(c(1:5), origin = "1900/01/01")
+  objects <- as.POSIXct(c(1:5), origin = "1900/01/01 00:00:00")
   filter_state <- DatetimeFilterState$new(objects, varname = "test")
   filter_state$set_selected(c(objects[2], objects[3]))
-  test <- as.POSIXct(c(1:4), origin = "1900/01/01")
+  test <- as.POSIXct(c(1:4), origin = "1900/01/01 00:00:00")
   testthat::expect_equal(eval(isolate(filter_state$get_call())), c(FALSE, TRUE, TRUE, FALSE))
   testthat::expect_equal(
     isolate(filter_state$get_call()),
@@ -31,14 +31,14 @@ testthat::test_that("get_call returns a condition true for the object in the sel
 })
 
 testthat::test_that("get_call returns a condition evaluating to TRUE for NA values after set_keep_na(TRUE)", {
-  objects <- as.POSIXct(c(1, NA), origin = "1900/01/01")
+  objects <- as.POSIXct(c(1, NA), origin = "1900/01/01 00:00:00")
   filter_state <- DatetimeFilterState$new(objects, varname = "objects")
   filter_state$set_keep_na(TRUE)
   testthat::expect_equal(eval(isolate(filter_state$get_call()))[2], TRUE)
 })
 
 testthat::test_that("get_call returns a condition evaluating to NA for NA values", {
-  objects <- as.POSIXct(c(1, NA), origin = "1900/01/01")
+  objects <- as.POSIXct(c(1, NA), origin = "1900/01/01 00:00:00")
   filter_state <- DatetimeFilterState$new(objects, varname = "objects")
   testthat::expect_equal(eval(isolate(filter_state$get_call()))[2], NA)
 })
@@ -57,7 +57,7 @@ testthat::test_that("DatetimeFilterState echoes the timezone of the ISO object p
 
 testthat::test_that("set_selected warns when the selected range intersects the possible range
   but is not fully included in it", {
-  objects <- as.POSIXct(c(2, 3), origin = "1900/01/01")
+  objects <- as.POSIXct(c(2, 3), origin = "1900/01/01 00:00:00")
   filter_state <- DatetimeFilterState$new(objects, varname = "objects")
   testthat::expect_warning(filter_state$set_selected(c(objects[1] - 1, objects[1])), "outside of the possible range")
   testthat::expect_warning(filter_state$set_selected(c(objects[2], objects[2] + 1)), "outside of the possible range")
@@ -68,7 +68,7 @@ testthat::test_that("set_selected warns when the selected range intersects the p
 })
 
 testthat::test_that("set_selected throws when the selected range is completely outside of the possible range", {
-  objects <- as.POSIXct(c(2, 3), origin = "1900/01/01")
+  objects <- as.POSIXct(c(2, 3), origin = "1900/01/01 00:00:00")
   filter_state <- DatetimeFilterState$new(objects, varname = "objects")
   testthat::expect_error(
     suppressWarnings(filter_state$set_selected(c(objects[2] + 1, objects[2] + 2))),
@@ -77,7 +77,7 @@ testthat::test_that("set_selected throws when the selected range is completely o
 })
 
 testthat::test_that("set_selected limits the selected range to the lower and the upper bound of the possible range", {
-  objects <- as.POSIXct(c(2, 3), origin = "1900/01/01")
+  objects <- as.POSIXct(c(2, 3), origin = "1900/01/01 00:00:00")
   filter_state <- DatetimeFilterState$new(objects, varname = "objects")
   suppressWarnings(filter_state$set_selected(c(objects[1] - 1, objects[1])))
   testthat::expect_equal(isolate(filter_state$get_selected()), c(objects[1], objects[1]))
@@ -90,7 +90,7 @@ testthat::test_that("set_selected limits the selected range to the lower and the
 })
 
 testthat::test_that("set_selected throws when the value type cannot be interpreted as POSIX", {
-  objects <- as.POSIXct(c(1, 2, 3), origin = "1900/01/01")
+  objects <- as.POSIXct(c(1, 2, 3), origin = "1900/01/01 00:00:00")
   filter_state <- DatetimeFilterState$new(objects, varname = "objects")
   testthat::expect_error(
     filter_state$set_selected(c("a", "b")),
@@ -99,7 +99,7 @@ testthat::test_that("set_selected throws when the value type cannot be interpret
 })
 
 testthat::test_that("set_state needs a named list with selected and keep_na elements", {
-  objects <- as.POSIXct(c(1:4), origin = "1900/01/01")
+  objects <- as.POSIXct(c(1:4), origin = "1900/01/01 00:00:00")
   filter_state <- DatetimeFilterState$new(objects, varname = "test")
   testthat::expect_error(
     filter_state$set_state(list(selected = c(objects[2], objects[3]), keep_na = TRUE)),
@@ -114,7 +114,7 @@ testthat::test_that("set_state needs a named list with selected and keep_na elem
 })
 
 testthat::test_that("set_state sets values of selected and keep_na as provided in the list", {
-  objects <- as.POSIXct(c(1:4), origin = "1900/01/01")
+  objects <- as.POSIXct(c(1:4), origin = "1900/01/01 00:00:00")
   filter_state <- DatetimeFilterState$new(objects, varname = "test")
   filter_state$set_state(list(selected = c(objects[2], objects[3]), keep_na = TRUE))
   testthat::expect_identical(isolate(filter_state$get_selected()), c(objects[2], objects[3]))
@@ -122,7 +122,7 @@ testthat::test_that("set_state sets values of selected and keep_na as provided i
 })
 
 testthat::test_that("set_state overwrites fields included in the input only", {
-  objects <- as.POSIXct(c(1:5), origin = "1900/01/01")
+  objects <- as.POSIXct(c(1:5), origin = "1900/01/01 00:00:00")
   filter_state <- DatetimeFilterState$new(objects, varname = "test")
   filter_state$set_state(list(selected = c(objects[2], objects[3]), keep_na = TRUE))
   testthat::expect_error(filter_state$set_state(list(selected = c(objects[3], objects[4]))), NA)
@@ -131,7 +131,7 @@ testthat::test_that("set_state overwrites fields included in the input only", {
 })
 
 testthat::test_that("set_state_reactive needs a named list with selected and keep_na elements", {
-  objects <- as.POSIXct(c(1:5), origin = "1900/01/01")
+  objects <- as.POSIXct(c(1:5), origin = "1900/01/01 00:00:00")
   filter_state <- DatetimeFilterState$new(objects, varname = "test")
   testthat::expect_error(
     filter_state$set_state_reactive(list(selected = c(objects[2], objects[3]), keep_na = TRUE)),
@@ -144,7 +144,7 @@ testthat::test_that("set_state_reactive needs a named list with selected and kee
 })
 
 testthat::test_that("set_selected_reactive warns when selection not within allowed range", {
-  objects <- as.POSIXct(c(1:5), origin = "1900/01/01")
+  objects <- as.POSIXct(c(1:5), origin = "1900/01/01 00:00:00")
   objects2 <- as.POSIXct(c(1), origin = "1899/01/01")
   filter_state <- DatetimeFilterState$new(objects, varname = "test")
   testthat::expect_warning(
@@ -154,7 +154,7 @@ testthat::test_that("set_selected_reactive warns when selection not within allow
 })
 
 testthat::test_that("set_selected_reactive throws error when one argument is given only", {
-  objects <- as.POSIXct(c(1:5), origin = "1900/01/01")
+  objects <- as.POSIXct(c(1:5), origin = "1900/01/01 00:00:00")
   filter_state <- DatetimeFilterState$new(objects, varname = "test")
   testthat::expect_error(
     filter_state$set_selected_reactive(c(objects[3])),
@@ -163,13 +163,13 @@ testthat::test_that("set_selected_reactive throws error when one argument is giv
 })
 
 testthat::test_that("set_keep_na_reactive accepts logical input", {
-  objects <- as.POSIXct(c(1:5), origin = "1900/01/01")
+  objects <- as.POSIXct(c(1:5), origin = "1900/01/01 00:00:00")
   filter_state <- DatetimeFilterState$new(objects, varname = "test")
   testthat::expect_error(filter_state$set_keep_na_reactive(TRUE), NA)
 })
 
 testthat::test_that("set_keep_na_reactive throws error if input is not logical", {
-  objects <- as.POSIXct(c(1:5), origin = "1900/01/01")
+  objects <- as.POSIXct(c(1:5), origin = "1900/01/01 00:00:00")
   filter_state <- DatetimeFilterState$new(objects, varname = "test")
   testthat::expect_error(filter_state$set_keep_na_reactive("TRUE"))
   testthat::expect_error(filter_state$set_keep_na_reactive(1))
@@ -214,13 +214,13 @@ testthat::test_that(
 
 # Format
 testthat::test_that("$format() is a FilterStates's method that accepts indent", {
-  object <- as.POSIXct(8, origin = "1900/01/01", tz = "GMT")
+  object <- as.POSIXct(8, origin = "1900/01/01 00:00:00", tz = "GMT")
   filter_state <- DatetimeFilterState$new(object, varname = "test")
   testthat::expect_error(shiny::isolate(filter_state$format(indent = 0)), regexp = NA)
 })
 
 testthat::test_that("$format() asserts that indent is numeric", {
-  object <- as.POSIXct(8, origin = "1900/01/01", tz = "GMT")
+  object <- as.POSIXct(8, origin = "1900/01/01 00:00:00", tz = "GMT")
   filter_state <- DatetimeFilterState$new(object, varname = "test")
   testthat::expect_error(
     filter_state$format(indent = "wrong type"),
@@ -229,7 +229,7 @@ testthat::test_that("$format() asserts that indent is numeric", {
 })
 
 testthat::test_that("$format() returns a string representation the FilterState object", {
-  object <- as.POSIXct(8, origin = "1900/01/01", tz = "GMT")
+  object <- as.POSIXct(8, origin = "1900/01/01 00:00:00", tz = "GMT")
   filter_state <- DatetimeFilterState$new(object, varname = "test")
   filter_state$set_state(list(selected = c(object, object)))
   testthat::expect_equal(
@@ -244,7 +244,7 @@ testthat::test_that("$format() returns a string representation the FilterState o
 })
 
 testthat::test_that("$format() prepends spaces to every line of the returned string", {
-  object <- as.POSIXct(8, origin = "1900/01/01", tz = "GMT")
+  object <- as.POSIXct(8, origin = "1900/01/01 00:00:00", tz = "GMT")
   filter_state <- DatetimeFilterState$new(object, varname = "test")
   filter_state$set_state(list(selected = c(object, object)))
   for (i in 1:3) {
