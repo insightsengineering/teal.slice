@@ -234,7 +234,7 @@ testthat::test_that("$format() returns a string representation the FilterState o
   # the state set in `filter_state` is incorrect and the test fails.
   testthat::skip_if(
     utils::compareVersion(sprintf("%s.%s", version["major"], version["minor"]), "4.1.0") < 0,
-    message = "Skipped on versions lower than 4.1.0"
+    message = "Skipped on R versions lower than 4.1.0"
   )
   object <- as.POSIXct(8, origin = "1900/01/01 00:00:00", tz = "GMT")
   filter_state <- DatetimeFilterState$new(object, varname = "test")
@@ -256,7 +256,7 @@ testthat::test_that("$format() prepends spaces to every line of the returned str
   # the state set in `filter_state` is incorrect and the test fails.
   testthat::skip_if(
     utils::compareVersion(sprintf("%s.%s", version["major"], version["minor"]), "4.1.0") < 0,
-    message = "Skipped on versions lower than 4.1.0"
+    message = "Skipped on R versions lower than 4.1.0"
   )
   object <- as.POSIXct(8, origin = "1900/01/01 00:00:00", tz = "GMT")
   filter_state <- DatetimeFilterState$new(object, varname = "test")
