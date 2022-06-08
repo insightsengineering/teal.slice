@@ -8,6 +8,9 @@
 * Updated package authors.
 * Added package vignettes.
 
+### Fix
+* Fixed a bug in `FilteredDataset`, where launching a `shiny` application without `FilteredData` would not attach the appropriate CSS files.
+
 # teal.slice 0.1.0
 
 * Initial release of `teal.slice` - a package providing a filter module for `teal` applications.
