@@ -1,4 +1,4 @@
-# teal.slice 0.1.0.9007
+# teal.slice 0.1.1
 
 ### New features
 * Added a formatting function for filter panel classes.
@@ -7,6 +7,9 @@
 * Added a template to the `pkgdown` site.
 * Updated package authors.
 * Added package vignettes.
+
+### Fix
+* Fixed a bug in `FilteredDataset`, where launching a `shiny` application without `FilteredData` would not attach the appropriate CSS files.
 
 # teal.slice 0.1.0
 
