@@ -1,4 +1,4 @@
-# teal.slice 0.1.1
+# teal.slice 0.1.1.9000
 
 ### New features
 * Added a formatting function for filter panel classes.
