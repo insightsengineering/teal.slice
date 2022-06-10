@@ -16,7 +16,7 @@
 
 utils::data(miniACC, package = "MultiAssayExperiment")
 dataset <- teal.slice:::MAEFilteredDataset$new(
-  teal.data::dataset("MAE", miniACC)
+  miniACC, "MAE"
 )
 fs <- list(
   subjects = list(
@@ -41,6 +41,7 @@ shiny::isolate(dataset$get_filter_state())
 \item \href{#method-MAEFilteredDataset-new}{\code{MAEFilteredDataset$new()}}
 \item \href{#method-MAEFilteredDataset-get_call}{\code{MAEFilteredDataset$get_call()}}
 \item \href{#method-MAEFilteredDataset-get_data}{\code{MAEFilteredDataset$get_data()}}
+\item \href{#method-MAEFilteredDataset-get_varlabels}{\code{MAEFilteredDataset$get_varlabels()}}
 \item \href{#method-MAEFilteredDataset-get_filter_overview_info}{\code{MAEFilteredDataset$get_filter_overview_info()}}
 \item \href{#method-MAEFilteredDataset-get_filterable_varnames}{\code{MAEFilteredDataset$get_filterable_varnames()}}
 \item \href{#method-MAEFilteredDataset-set_filter_state}{\code{MAEFilteredDataset$set_filter_state()}}
@@ -65,7 +66,6 @@ shiny::isolate(dataset$get_filter_state())
 <li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilteredDataset" data-id="get_join_keys"><a href='../../teal.slice/html/FilteredDataset.html#method-FilteredDataset-get_join_keys'><code>teal.slice::FilteredDataset$get_join_keys()</code></a></li>
 <li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilteredDataset" data-id="get_keys"><a href='../../teal.slice/html/FilteredDataset.html#method-FilteredDataset-get_keys'><code>teal.slice::FilteredDataset$get_keys()</code></a></li>
 <li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilteredDataset" data-id="get_metadata"><a href='../../teal.slice/html/FilteredDataset.html#method-FilteredDataset-get_metadata'><code>teal.slice::FilteredDataset$get_metadata()</code></a></li>
-<li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilteredDataset" data-id="get_varlabels"><a href='../../teal.slice/html/FilteredDataset.html#method-FilteredDataset-get_varlabels'><code>teal.slice::FilteredDataset$get_varlabels()</code></a></li>
 <li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilteredDataset" data-id="get_varnames"><a href='../../teal.slice/html/FilteredDataset.html#method-FilteredDataset-get_varnames'><code>teal.slice::FilteredDataset$get_varnames()</code></a></li>
 <li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilteredDataset" data-id="queues_empty"><a href='../../teal.slice/html/FilteredDataset.html#method-FilteredDataset-queues_empty'><code>teal.slice::FilteredDataset$queues_empty()</code></a></li>
 <li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilteredDataset" data-id="server"><a href='../../teal.slice/html/FilteredDataset.html#method-FilteredDataset-server'><code>teal.slice::FilteredDataset$server()</code></a></li>
@@ -79,14 +79,33 @@ shiny::isolate(dataset$get_filter_state())
 \subsection{Method \code{new()}}{
 Initialize \code{MAEFilteredDataset} object
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{MAEFilteredDataset$new(dataset)}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{MAEFilteredDataset$new(
+  dataset,
+  dataname,
+  keys = character(0),
+  label = character(0),
+  metadata = NULL
+)}\if{html}{\out{</div>}}
 }
 
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
-\item{\code{dataset}}{(\code{MAETealDataset})\cr
-single dataset for which filters are rendered}
+\item{\code{dataset}}{(\code{MulitiAssayExperiment})\cr
+single MultiAssayExperiment for which filters are rendered}
+
+\item{\code{dataname}}{(\code{character})\cr
+A given name for the dataset it may not contain spaces}
+
+\item{\code{keys}}{optional, (\code{character})\cr
+Vector with primary keys}
+
+\item{\code{label}}{(\code{character})\cr
+Label to describe the dataset}
+
+\item{\code{metadata}}{(named \code{list} or \code{NULL}) \cr
+Field containing metadata about the dataset. Each element of the list
+should be atomic and length one.}
 }
 \if{html}{\out{</div>}}
 }
@@ -134,6 +153,32 @@ whether returned data should be filtered or not}
 }
 \subsection{Returns}{
 \code{MultiAssayExperiment}
+}
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-MAEFilteredDataset-get_varlabels"></a>}}
+\if{latex}{\out{\hypertarget{method-MAEFilteredDataset-get_varlabels}{}}}
+\subsection{Method \code{get_varlabels()}}{
+Gets labels of variables in the data
+
+Variables are the column names of the data.
+Either, all labels must have been provided for all variables
+in \code{set_data} or \code{NULL}.
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{MAEFilteredDataset$get_varlabels(variables = NULL)}\if{html}{\out{</div>}}
+}
+
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{variables}}{(\code{character} vector) variables to get labels for;
+if \code{NULL}, for all variables in data}
+}
+\if{html}{\out{</div>}}
+}
+\subsection{Returns}{
+(\code{character} or \code{NULL}) variable labels, \code{NULL} if \code{column_labels}
+attribute does not exist for the data
 }
 }
 \if{html}{\out{<hr>}}
@@ -191,7 +236,7 @@ to the referred column.}
 \if{html}{\out{<div class="r example copy">}}
 \preformatted{utils::data(miniACC, package = "MultiAssayExperiment")
 dataset <- teal.slice:::MAEFilteredDataset$new(
-  teal.data::dataset("MAE", miniACC)
+  miniACC, "MAE"
 )
 fs <- list(
   subjects = list(

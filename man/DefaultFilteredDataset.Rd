@@ -10,7 +10,7 @@ The \code{DefaultFilteredDataset} R6 class
 }
 \examples{
 library(shiny)
-ds <- teal.slice:::DefaultFilteredDataset$new(teal.data::dataset("iris", iris))
+ds <- DefaultFilteredDataset$new(iris, "iris")
 ds$get_data(filtered = FALSE)
 
 ds$set_filter_state(
@@ -28,7 +28,7 @@ isolate(ds$get_call())
 ## Method `DefaultFilteredDataset$set_filter_state`
 ## ------------------------------------------------
 
-dataset <- teal.slice:::DefaultFilteredDataset$new(teal.data::dataset("iris", iris))
+dataset <- teal.slice:::DefaultFilteredDataset$new(iris, "iris")
 fs <- list(
   Sepal.Length = list(selected = c(5.1, 6.4), keep_na = TRUE, keep_inf = TRUE),
   Species = list(selected = c("setosa", "versicolor"), keep_na = FALSE)
@@ -85,14 +85,33 @@ shiny::isolate(dataset$get_filter_state())
 \subsection{Method \code{new()}}{
 Initializes this \code{DefaultFilteredDataset} object
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{DefaultFilteredDataset$new(dataset)}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{DefaultFilteredDataset$new(
+  dataset,
+  dataname,
+  keys = character(0),
+  label = character(0),
+  metadata = NULL
+)}\if{html}{\out{</div>}}
 }
 
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
-\item{\code{dataset}}{(\code{TealDataset})\cr
-single dataset for which filters are rendered}
+\item{\code{dataset}}{(\code{data.frame})\cr
+single data.frame for which filters are rendered}
+
+\item{\code{dataname}}{(\code{character})\cr
+A given name for the dataset it may not contain spaces}
+
+\item{\code{keys}}{optional, (\code{character})\cr
+Vector with primary keys}
+
+\item{\code{label}}{(\code{character})\cr
+Label to describe the dataset}
+
+\item{\code{metadata}}{(named \code{list} or \code{NULL}) \cr
+Field containing metadata about the dataset. Each element of the list
+should be atomic and length one.}
 }
 \if{html}{\out{</div>}}
 }
@@ -160,7 +179,7 @@ Note that this is ignored for other \code{FilteredDatasets}.}
 }
 \subsection{Examples}{
 \if{html}{\out{<div class="r example copy">}}
-\preformatted{dataset <- teal.slice:::DefaultFilteredDataset$new(teal.data::dataset("iris", iris))
+\preformatted{dataset <- teal.slice:::DefaultFilteredDataset$new(iris, "iris")
 fs <- list(
   Sepal.Length = list(selected = c(5.1, 6.4), keep_na = TRUE, keep_inf = TRUE),
   Species = list(selected = c("setosa", "versicolor"), keep_na = FALSE)

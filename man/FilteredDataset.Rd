@@ -4,11 +4,11 @@
 \alias{FilteredDataset}
 \title{\code{FilterStates} R6 class}
 \description{
-\code{FilteredDataset} is a class which renders/controls \code{FilterStates}(s) for \code{TealDataset}.
+\code{FilteredDataset} is a class which renders/controls \code{FilterStates}(s)
 Each \code{FilteredDataset} contains \code{filter_states} field - a \code{list} which contains one
 (\code{data.frame}) or multiple (\code{MultiAssayExperiment}) \code{FilterStates} objects.
 Each \code{FilterStates} is responsible for one filter/subset expression applied for specific
-components of the \code{TealDataset}.
+components of the dataset.
 }
 \keyword{internal}
 \section{Methods}{
@@ -47,14 +47,33 @@ components of the \code{TealDataset}.
 \subsection{Method \code{new()}}{
 Initializes this \code{FilteredDataset} object
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{FilteredDataset$new(dataset)}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{FilteredDataset$new(
+  dataset,
+  dataname,
+  keys = character(0),
+  label = character(0),
+  metadata = NULL
+)}\if{html}{\out{</div>}}
 }
 
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
-\item{\code{dataset}}{(\code{TealDataset})\cr
+\item{\code{dataset}}{(\code{data.frame} or \code{MultiAssayExperiment})\cr
 single dataset for which filters are rendered}
+
+\item{\code{dataname}}{(\code{character})\cr
+A given name for the dataset it may not contain spaces}
+
+\item{\code{keys}}{optional, (\code{character})\cr
+Vector with primary keys}
+
+\item{\code{label}}{(\code{character})\cr
+Label to describe the dataset}
+
+\item{\code{metadata}}{(named \code{list} or \code{NULL}) \cr
+Field containing metadata about the dataset. Each element of the list
+should be atomic and length one.}
 }
 \if{html}{\out{</div>}}
 }
@@ -128,7 +147,7 @@ filter \code{call} or \code{list} of filter calls
 \if{html}{\out{<a id="method-FilteredDataset-get_data"></a>}}
 \if{latex}{\out{\hypertarget{method-FilteredDataset-get_data}{}}}
 \subsection{Method \code{get_data()}}{
-Gets raw data of this dataset
+Gets data of this dataset
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{FilteredDataset$get_data(filtered)}\if{html}{\out{</div>}}
 }
@@ -142,8 +161,8 @@ whether returned data should be filtered or not}
 \if{html}{\out{</div>}}
 }
 \subsection{Returns}{
-type of returned object depending on a data stored in
-\code{TealDataset}. Currently \code{data.frame} or \code{MultiAssayExperiment}
+type of returned object depending on a data stored:
+currently \code{data.frame} or \code{MultiAssayExperiment}
 }
 }
 \if{html}{\out{<hr>}}
