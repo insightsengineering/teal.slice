@@ -36,18 +36,20 @@
 #'
 #' @examples
 #' library(shiny)
-#' datasets <- teal.slice:::FilteredData$new()
+#' datasets <- teal.slice:::FilteredData$new(
+#'   iris = list(dataset = iris),
+#'   mtcars = list(dataset = mtcars, metadata = list(type = training)),
+#'   keys = NULL, check = FALSE # use wrapper function to avoid having to specify these
+#' )
 #'
-#' # setting the data
-#' datasets$set_dataset(teal.data::dataset("iris", iris, metadata = list(type = "training")))
-#' datasets$set_dataset(teal.data::dataset("mtcars", mtcars))
+#' # get datanames
 #' datasets$datanames()
 #'
 #'
 #' df <- datasets$get_data("iris", filtered = FALSE)
 #' print(df)
 #'
-#' datasets$get_metadata("iris")
+#' datasets$get_metadata("mtcars")
 #'
 #' datasets$set_filter_state(
 #'   list(iris = list(Species = list(selected = "virginica")))
@@ -69,7 +71,22 @@ FilteredData <- R6::R6Class( # nolint
   public = list(
     #' @description
     #' Initialize a `FilteredData` object
-    initialize = function() {
+    initialize = function(..., keys, code = NULL, check = FALSE) {
+      data_objects <- list(...)
+      checkmate::assert_list(data_objects, any.missing = FALSE, min.len = 0, names = "unique")
+      #TODO other checks
+
+      self$set_check(check)
+      if (!is.null(code)) {
+        self$set_code(code)
+      }
+
+      for(dataname in names(data_objects)){
+        self$set_dataset(data_objects[[dataname]], dataname)
+      }
+
+      self$set_join_keys(keys)
+
       invisible(self)
     },
     #' @description
@@ -89,7 +106,7 @@ FilteredData <- R6::R6Class( # nolint
     #' @param dataname (`character`) name of the dataset
     #' @return (`character`) keys of dataset
     get_datalabel = function(dataname) {
-      self$get_data_attr(dataname, "dataset_label")
+      self$get_filtered_dataset(dataname)$get_dataset_label()
     },
 
     #' @description
@@ -142,7 +159,11 @@ FilteredData <- R6::R6Class( # nolint
     #' @param dataname (`character`) name(s) of teal.data::dataset(s)
     #' @return (`character`) deparsed code
     get_code = function(dataname = self$datanames()) {
-      paste0(private$code$get_code(dataname), collapse = "\n")
+      if (!is.null(private$code)) {
+        paste0(private$code$get_code(dataname), collapse = "\n")
+      } else {
+        paste0("# No pre-processing code provided")
+      }
     },
 
     #' @description
@@ -213,24 +234,17 @@ FilteredData <- R6::R6Class( # nolint
     #' @return (`named character`) vector with column names
     get_join_keys = function(dataset_1, dataset_2) {
       res <- if (!missing(dataset_1) && !missing(dataset_2)) {
-        self$get_filtered_dataset(dataset_1)$get_join_keys()[[dataset_2]]
+        private$keys[[dataset_1]][[dataset_2]]
       } else if (!missing(dataset_1)) {
-        self$get_filtered_dataset(dataset_1)$get_join_keys()
+        private$keys[[dataset_2]]
       } else if (!missing(dataset_2)) {
-        self$get_filtered_dataset(dataset_2)$get_join_keys()
+        private$keys[[dataset_1]]
       } else {
-        res_list <- lapply(
-          self$datanames(), function(dat_name) {
-            self$get_filtered_dataset(dat_name)$get_join_keys()
-          }
-        )
-        names(res_list) <- self$datanames()
-        res_list
+        private$keys
       }
       if (length(res) == 0) {
         return(character(0))
       }
-
       return(res)
     },
 
@@ -324,18 +338,29 @@ FilteredData <- R6::R6Class( # nolint
     #' @param dataset (`TealDataset` or `TealDatasetConnector`)\cr
     #'   the object containing data and attributes.
     #' @return (`self`) invisibly this `FilteredTealData`
-    set_dataset = function(dataset) {
-      stopifnot(is(dataset, "TealDataset") || is(dataset, "TealDatasetConnector"))
-      dataname <- teal.data::get_dataname(dataset)
+    set_dataset = function(dataset_args, dataname) {
+      # TODO validation here
       logger::log_trace("FilteredData$set_dataset setting dataset, name; { deparse1(dataname) }")
+
+      dataset <- dataset_args[["dataset"]]
+      dataset_args[["dataset"]] <- NULL
 
       # to include it nicely in the Show R Code; the UI also uses datanames in ids, so no whitespaces allowed
       check_simple_name(dataname)
-      private$filtered_datasets[[dataname]] <- init_filtered_dataset(
-        teal.data::get_dataset(dataset)
+      private$filtered_datasets[[dataname]] <- do.call(
+        what = init_filtered_dataset,
+        args = c(list(dataset), dataset_args, list(dataname = dataname))
       )
 
       invisible(self)
+    },
+
+    #' @description
+    #' TODO
+    #' @return (`self`) invisibly this `FilteredTealData`
+    set_join_keys = function(keys) {
+      #TODO validation
+      private$keys <- keys
     },
 
     #' @description
@@ -855,7 +880,10 @@ FilteredData <- R6::R6Class( # nolint
     .check = FALSE,
 
     # preprocessing code used to generate the unfiltered datasets as a string
-    code = teal.data:::CodeClass$new(),
+    code = NULL,
+
+    # keys used for joining/filtering data
+    keys = NULL,
 
     # we implement these functions as checks rather than returning logicals so they can
     # give informative error messages immediately
@@ -972,4 +1000,15 @@ get_filter_expr <- function(datasets, datanames = datasets$datanames()) {
     )),
     collapse = "\n"
   )
+}
+
+#' TODO documentation
+#' @export
+init_filtered_data <- function(..., keys = NULL, cdisc = FALSE, code = NULL, check = FALSE) {
+  checkmate::check_flag(cdisc)
+  if (cdisc) {
+    CDISCFilteredData$new(..., keys = keys, code = code, check = check)
+  } else {
+    FilteredData$new(..., keys = keys, code = code, check = check)
+  }
 }

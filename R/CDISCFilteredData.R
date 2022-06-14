@@ -169,7 +169,8 @@ CDISCFilteredData <- R6::R6Class( # nolint
     #' @param dataname (`character`) name of the dataset
     #' @return (`character`) name of parent dataset
     get_parentname = function(dataname) {
-      self$get_data_attr(dataname, "parent")
+      #TODO validate dataname
+      private$parent[[dataname]]
     },
 
     #' @description
@@ -182,11 +183,14 @@ CDISCFilteredData <- R6::R6Class( # nolint
     #' @param dataset (`TealDataset`)\cr
     #'   object containing data and attributes.
     #' @return (`self`) object of this class
-    set_dataset = function(dataset) {
-      super$set_dataset(dataset)
+    set_dataset = function(dataset_args, dataname) {
 
-      dataname <- teal.data::get_dataname(dataset)
-      parent_dataname <- self$get_parentname(dataname)
+      parent_dataname <- dataset_args[["parent"]]
+      dataset_args[["parent"]] <- NULL
+
+      #TODO what happens if parent dataset doesn't actually exist...
+      super$set_dataset(dataset)
+      private$parent[[dataname]] <- parent_dataname
 
       if (length(parent_dataname) > 0) {
         parent_dataset <- self$get_filtered_dataset(parent_dataname)
@@ -201,6 +205,10 @@ CDISCFilteredData <- R6::R6Class( # nolint
 
   ## __Private Methods---------------------
   private = list(
+
+    # named list of dataset parents parents[[child_dataset]] = its parent
+    parents = NULL,
+
     # datanames in the order in which they must be evaluated (in case of dependencies)
     # this is a reactive and kept as a field for caching
     ordered_datanames = NULL,

@@ -44,18 +44,20 @@ Common arguments are:
 }
 \examples{
 library(shiny)
-datasets <- teal.slice:::FilteredData$new()
+datasets <- teal.slice:::FilteredData$new(
+  iris = list(dataset = iris),
+  mtcars = list(dataset = mtcars, metadata = list(type = training)),
+  keys = NULL, check = FALSE # use wrapper function to avoid having to specify these
+)
 
-# setting the data
-datasets$set_dataset(teal.data::dataset("iris", iris, metadata = list(type = "training")))
-datasets$set_dataset(teal.data::dataset("mtcars", mtcars))
+# get datanames
 datasets$datanames()
 
 
 df <- datasets$get_data("iris", filtered = FALSE)
 print(df)
 
-datasets$get_metadata("iris")
+datasets$get_metadata("mtcars")
 
 datasets$set_filter_state(
   list(iris = list(Species = list(selected = "virginica")))
@@ -150,6 +152,7 @@ shiny::isolate(datasets$get_filter_state())
 \item \href{#method-FilteredData-get_varnames}{\code{FilteredData$get_varnames()}}
 \item \href{#method-FilteredData-handle_active_datanames}{\code{FilteredData$handle_active_datanames()}}
 \item \href{#method-FilteredData-set_dataset}{\code{FilteredData$set_dataset()}}
+\item \href{#method-FilteredData-set_join_keys}{\code{FilteredData$set_join_keys()}}
 \item \href{#method-FilteredData-set_check}{\code{FilteredData$set_check()}}
 \item \href{#method-FilteredData-set_code}{\code{FilteredData$set_code()}}
 \item \href{#method-FilteredData-get_filter_state}{\code{FilteredData$get_filter_state()}}
@@ -171,7 +174,7 @@ shiny::isolate(datasets$get_filter_state())
 \subsection{Method \code{new()}}{
 Initialize a \code{FilteredData} object
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{FilteredData$new()}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{FilteredData$new(..., keys, code = NULL, check = FALSE)}\if{html}{\out{</div>}}
 }
 
 }
@@ -555,7 +558,7 @@ Adds a dataset and preserve all attributes attached to this object.
 Technically \code{set_dataset} created \code{FilteredDataset} which keeps
 \code{dataset} for filtering purpose.
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{FilteredData$set_dataset(dataset)}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{FilteredData$set_dataset(dataset_args, dataname)}\if{html}{\out{</div>}}
 }
 
 \subsection{Arguments}{
@@ -566,6 +569,19 @@ the object containing data and attributes.}
 }
 \if{html}{\out{</div>}}
 }
+\subsection{Returns}{
+(\code{self}) invisibly this \code{FilteredTealData}
+}
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-FilteredData-set_join_keys"></a>}}
+\if{latex}{\out{\hypertarget{method-FilteredData-set_join_keys}{}}}
+\subsection{Method \code{set_join_keys()}}{
+TODO
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{FilteredData$set_join_keys(keys)}\if{html}{\out{</div>}}
+}
+
 \subsection{Returns}{
 (\code{self}) invisibly this \code{FilteredTealData}
 }

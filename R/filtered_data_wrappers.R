@@ -1,51 +1,3 @@
-#' Create a new `FilteredData` object
-#'
-#' @param x an object that inherits from `TealData`
-#'
-#' @return a (`CDISCTealDataset`, `CDISCTealDatasetConnector`) object
-#' @keywords internal
-#'
-#' @noRd
-filtered_data_new <- function(x) {
-  UseMethod("filtered_data_new")
-}
-
-#' @keywords internal
-#' @export
-filtered_data_new.TealData <- function(x) { # nolintr
-  FilteredData$new()
-}
-
-#' @keywords internal
-#' @export
-filtered_data_new.CDISCTealData <- function(x) { # nolintr
-  CDISCFilteredData$new()
-}
-
-#' Set `FilteredData` with data from `TealData`
-#'
-#' @param data an object that inherits from `TealData`
-#' @param datasets an object that inherits from `FilteredData`
-#'
-#' @return modified `FilteredData` object
-#' @keywords internal
-#'
-#' @noRd
-filtered_data_set <- function(data, datasets) { # nolintr
-  UseMethod("filtered_data_set", data)
-}
-
-#' @keywords internal
-#' @export
-filtered_data_set.TealData <- function(data, datasets) { # nolintr
-  datasets$set_code(data$get_code_class())
-  for (dataset in data$get_datasets()) {
-    datasets$set_dataset(dataset)
-  }
-  datasets$set_check(data$get_check())
-  return(invisible(NULL))
-}
-
 #' Managing `FilteredData` states
 #'
 #' @description `r lifecycle::badge("experimental")`
@@ -125,10 +77,12 @@ filtered_data_set.TealData <- function(data, datasets) { # nolintr
 #' - get returns named `list` of the same structure as described in `filter` argument.
 #'
 #' @examples
-#' datasets <- teal.slice:::FilteredData$new()
-#' datasets$set_dataset(teal.data::dataset("iris", iris))
 #' utils::data(miniACC, package = "MultiAssayExperiment")
-#' datasets$set_dataset(teal.data::dataset("mae", miniACC))
+#'
+#' datasets <- init_filtered_data(
+#'   iris = list(dataset = iris),
+#'   mae = list(dataset = miniACC)
+#' )
 #' fs <- list(
 #'   iris = list(
 #'     Sepal.Length = list(selected = c(5.1, 6.4), keep_na = TRUE, keep_inf = FALSE),

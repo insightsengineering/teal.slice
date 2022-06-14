@@ -302,13 +302,6 @@ FilteredDataset <- R6::R6Class( # nolint
       private$keys
     },
 
-    #' Gets join keys to join the dataset of this `FilteredDataset`
-    #' with other `TealDataset` objects.
-    #' @return `list` of keys
-    get_join_keys = function() {
-      private$dataset$get_join_keys()$get(self$get_dataname())
-    },
-
     #' @description
     #' Gets labels of variables in the data
     #'
@@ -329,6 +322,13 @@ FilteredDataset <- R6::R6Class( # nolint
       }
       if (!is.null(variables)) labels <- labels[intersect(self$get_varnames(), variables)]
       labels
+    },
+
+    #' @description
+    #' Gets the dataset label
+    #' @return (`character`) the dataset label
+    get_dataset_label = function() {
+      private$label
     },
 
     #' @description

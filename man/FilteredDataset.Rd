@@ -29,8 +29,8 @@ components of the dataset.
 \item \href{#method-FilteredDataset-get_filter_overview_info}{\code{FilteredDataset$get_filter_overview_info()}}
 \item \href{#method-FilteredDataset-get_hash}{\code{FilteredDataset$get_hash()}}
 \item \href{#method-FilteredDataset-get_keys}{\code{FilteredDataset$get_keys()}}
-\item \href{#method-FilteredDataset-get_join_keys}{\code{FilteredDataset$get_join_keys()}}
 \item \href{#method-FilteredDataset-get_varlabels}{\code{FilteredDataset$get_varlabels()}}
+\item \href{#method-FilteredDataset-get_dataset_label}{\code{FilteredDataset$get_dataset_label()}}
 \item \href{#method-FilteredDataset-get_varnames}{\code{FilteredDataset$get_varnames()}}
 \item \href{#method-FilteredDataset-get_filtered_dataname}{\code{FilteredDataset$get_filtered_dataname()}}
 \item \href{#method-FilteredDataset-get_filterable_varnames}{\code{FilteredDataset$get_filterable_varnames()}}
@@ -294,20 +294,6 @@ Gets the keys for the dataset of this \code{FilteredDataset}
 
 \subsection{Returns}{
 (\code{character}) the keys of dataset
-Gets join keys to join the dataset of this \code{FilteredDataset}
-with other \code{TealDataset} objects.
-}
-}
-\if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-FilteredDataset-get_join_keys"></a>}}
-\if{latex}{\out{\hypertarget{method-FilteredDataset-get_join_keys}{}}}
-\subsection{Method \code{get_join_keys()}}{
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{FilteredDataset$get_join_keys()}\if{html}{\out{</div>}}
-}
-
-\subsection{Returns}{
-\code{list} of keys
 }
 }
 \if{html}{\out{<hr>}}
@@ -334,6 +320,19 @@ if \code{NULL}, for all variables in data}
 \subsection{Returns}{
 (\code{character} or \code{NULL}) variable labels, \code{NULL} if \code{column_labels}
 attribute does not exist for the data
+}
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-FilteredDataset-get_dataset_label"></a>}}
+\if{latex}{\out{\hypertarget{method-FilteredDataset-get_dataset_label}{}}}
+\subsection{Method \code{get_dataset_label()}}{
+Gets the dataset label
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{FilteredDataset$get_dataset_label()}\if{html}{\out{</div>}}
+}
+
+\subsection{Returns}{
+(\code{character}) the dataset label
 }
 }
 \if{html}{\out{<hr>}}
