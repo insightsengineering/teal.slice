@@ -20,15 +20,16 @@ data (e.g. \code{iris}).
 \examples{
 library(scda)
 library(shiny)
+library(teal.data)
 
 ADSL <- synthetic_cdisc_data("latest")$adsl
 ADTTE <- synthetic_cdisc_data("latest")$adtte
-
-# TODO make this nicer
 datasets <- teal.slice:::CDISCFilteredData$new(
-  ADSL = list(dataset = ADSL, keys = c("STUDYID", "USUBJID")),
-  ADTTE = list(dataset = ADTTE, keys = c("STUDYID", "USUBJID", "PARAMCD"), parent = "ADSL"),
-  check = FALSE, keys = list(ADSL = list(ADTTE = c("STUDYID", "USUBJID"), ADTTE = list(ADSL = c("STUDYID", "USUBJID"))))
+  list(
+    ADSL = list(dataset = ADSL, keys = c("STUDYID", "USUBJID")),
+    ADTTE = list(dataset = ADTTE, keys = c("STUDYID", "USUBJID", "PARAMCD"), parent = "ADSL")
+  ),
+  check = FALSE, keys = join_keys(join_key("ADSL", "ADTTE", c("STUDYID", "USUBJID")))
 )
 
 # to avoid using isolate(), you can provide a default isolate context by calling
