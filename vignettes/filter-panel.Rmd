@@ -276,8 +276,10 @@ The above list structure is applied in `get_filter_state`, `set_filter_state` an
 library(teal.slice)
 
 datasets <- init_filtered_data(
-  iris = list(dataset = iris),
-  mtcars = list(dataset = mtcars)
+  list(
+    iris = list(dataset = iris),
+    mtcars = list(dataset = mtcars)
+  )  
 )
 
 set_filter_state(
@@ -324,8 +326,10 @@ are changed when clicking the buttons in the encoding-panel.
 library(shiny)
 
 datasets <- init_filtered_data(
-  iris = list(dataset = iris),
-  mtcars = list(dataset = mtcars)
+  list(
+    iris = list(dataset = iris),
+    mtcars = list(dataset = mtcars)
+  )
 )
 
 app <- shinyApp(

@@ -37,8 +37,10 @@
 #' @examples
 #' library(shiny)
 #' datasets <- teal.slice:::FilteredData$new(
-#'   iris = list(dataset = iris),
-#'   mtcars = list(dataset = mtcars, metadata = list(type = training)),
+#'   list(
+#'     iris = list(dataset = iris),
+#'     mtcars = list(dataset = mtcars, metadata = list(type = "training"))
+#'   ),
 #'   keys = NULL, check = FALSE # use wrapper function to avoid having to specify these
 #' )
 #'
@@ -71,12 +73,11 @@ FilteredData <- R6::R6Class( # nolint
   public = list(
     #' @description
     #' Initialize a `FilteredData` object
-    #' @param ... TODO
+    #' @param data_objects TODO
     #' @param keys TODO
     #' @param code TODO
     #' @param check TODO
-    initialize = function(..., keys, code = NULL, check = FALSE) {
-      data_objects <- list(...)
+    initialize = function(data_objects, keys, code = NULL, check = FALSE) {
       checkmate::assert_list(data_objects, any.missing = FALSE, min.len = 0, names = "unique")
       #TODO other checks
 
@@ -412,10 +413,14 @@ FilteredData <- R6::R6Class( # nolint
     #'
     #' @return `character` the pre-formatted filter state
     #' @examples
-    #' datasets <- teal.slice:::FilteredData$new()
-    #' datasets$set_dataset(teal.data::dataset("iris", iris))
     #' utils::data(miniACC, package = "MultiAssayExperiment")
     #' datasets$set_dataset(teal.data::dataset("mae", miniACC))
+    #' datasets <- teal.slice:::FilteredData$new(
+    #'   list(iris = list(dataset = iris),
+    #'        mae = list(dataset = miniACC)
+    #'   ),
+    #'   keys = NULL
+    #' )
     #' fs <- list(
     #'   iris = list(
     #'     Sepal.Length = list(selected = c(5.1, 6.4), keep_na = TRUE, keep_inf = FALSE),
@@ -449,9 +454,10 @@ FilteredData <- R6::R6Class( # nolint
     #' utils::data(miniACC, package = "MultiAssayExperiment")
     #'
     #' datasets <- teal.slice:::FilteredData$new(
-    #'   iris = list(dataset = iris),
-    #'   mae = list(dataset = miniACC),
-    #'   keys = NULL, code = NULL # use wrapper function to avoid having to specify these
+    #'   list(iris = list(dataset = iris),
+    #'        mae = list(dataset = miniACC)
+    #'   ),
+    #'   keys = NULL
     #' )
     #' fs <- list(
     #'   iris = list(
@@ -1012,13 +1018,3 @@ get_filter_expr <- function(datasets, datanames = datasets$datanames()) {
   )
 }
 
-#' TODO documentation
-#' @export
-init_filtered_data <- function(..., keys = NULL, cdisc = FALSE, code = NULL, check = FALSE) {
-  checkmate::check_flag(cdisc)
-  if (cdisc) {
-    CDISCFilteredData$new(..., keys = keys, code = code, check = check)
-  } else {
-    FilteredData$new(..., keys = keys, code = code, check = check)
-  }
-}

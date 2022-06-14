@@ -45,8 +45,10 @@ Common arguments are:
 \examples{
 library(shiny)
 datasets <- teal.slice:::FilteredData$new(
-  iris = list(dataset = iris),
-  mtcars = list(dataset = mtcars, metadata = list(type = training)),
+  list(
+    iris = list(dataset = iris),
+    mtcars = list(dataset = mtcars, metadata = list(type = "training"))
+  ),
   keys = NULL, check = FALSE # use wrapper function to avoid having to specify these
 )
 
@@ -78,10 +80,14 @@ isolate(datasets$get_call("mtcars"))
 ## Method `FilteredData$get_formatted_filter_state`
 ## ------------------------------------------------
 
-datasets <- teal.slice:::FilteredData$new()
-datasets$set_dataset(teal.data::dataset("iris", iris))
 utils::data(miniACC, package = "MultiAssayExperiment")
 datasets$set_dataset(teal.data::dataset("mae", miniACC))
+datasets <- teal.slice:::FilteredData$new(
+  list(iris = list(dataset = iris),
+       mae = list(dataset = miniACC)
+  ),
+  keys = NULL
+)
 fs <- list(
   iris = list(
     Sepal.Length = list(selected = c(5.1, 6.4), keep_na = TRUE, keep_inf = FALSE),
@@ -109,9 +115,10 @@ cat(shiny::isolate(datasets$get_formatted_filter_state()))
 utils::data(miniACC, package = "MultiAssayExperiment")
 
 datasets <- teal.slice:::FilteredData$new(
-  iris = list(dataset = iris),
-  mae = list(dataset = miniACC),
-  keys = NULL, code = NULL # use wrapper function to avoid having to specify these
+  list(iris = list(dataset = iris),
+       mae = list(dataset = miniACC)
+  ),
+  keys = NULL
 )
 fs <- list(
   iris = list(
@@ -177,13 +184,13 @@ shiny::isolate(datasets$get_filter_state())
 \subsection{Method \code{new()}}{
 Initialize a \code{FilteredData} object
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{FilteredData$new(..., keys, code = NULL, check = FALSE)}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{FilteredData$new(data_objects, keys, code = NULL, check = FALSE)}\if{html}{\out{</div>}}
 }
 
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
-\item{\code{...}}{TODO}
+\item{\code{data_objects}}{TODO}
 
 \item{\code{keys}}{TODO}
 
@@ -685,10 +692,14 @@ Returns the filter state formatted for printing to an \code{IO} device.
 }
 \subsection{Examples}{
 \if{html}{\out{<div class="r example copy">}}
-\preformatted{datasets <- teal.slice:::FilteredData$new()
-datasets$set_dataset(teal.data::dataset("iris", iris))
-utils::data(miniACC, package = "MultiAssayExperiment")
+\preformatted{utils::data(miniACC, package = "MultiAssayExperiment")
 datasets$set_dataset(teal.data::dataset("mae", miniACC))
+datasets <- teal.slice:::FilteredData$new(
+  list(iris = list(dataset = iris),
+       mae = list(dataset = miniACC)
+  ),
+  keys = NULL
+)
 fs <- list(
   iris = list(
     Sepal.Length = list(selected = c(5.1, 6.4), keep_na = TRUE, keep_inf = FALSE),
@@ -739,9 +750,10 @@ nested list of filter selections applied to datasets.}
 \preformatted{utils::data(miniACC, package = "MultiAssayExperiment")
 
 datasets <- teal.slice:::FilteredData$new(
-  iris = list(dataset = iris),
-  mae = list(dataset = miniACC),
-  keys = NULL, code = NULL # use wrapper function to avoid having to specify these
+  list(iris = list(dataset = iris),
+       mae = list(dataset = miniACC)
+  ),
+  keys = NULL
 )
 fs <- list(
   iris = list(

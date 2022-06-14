@@ -53,8 +53,10 @@ library(shiny)
 
 # create a FilteredData object
 datasets <- init_filtered_data(
-  iris = list(dataset = iris),
-  mtcars = list(dataset = mtcars)
+  list(
+    iris = list(dataset = iris),
+    mtcars = list(dataset = mtcars)
+  )
 )
 
 app <- shinyApp(
