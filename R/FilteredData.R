@@ -446,10 +446,13 @@ FilteredData <- R6::R6Class( # nolint
     #' @param state (`named list`)\cr
     #'  nested list of filter selections applied to datasets.
     #' @examples
-    #' datasets <- teal.slice:::FilteredData$new()
-    #' datasets$set_dataset(teal.data::dataset("iris", iris))
     #' utils::data(miniACC, package = "MultiAssayExperiment")
-    #' datasets$set_dataset(teal.data::dataset("mae", miniACC))
+    #'
+    #' datasets <- teal.slice:::FilteredData$new(
+    #'   iris = list(dataset = iris),
+    #'   mae = list(dataset = miniACC),
+    #'   keys = NULL, code = NULL # use wrapper function to avoid having to specify these
+    #' )
     #' fs <- list(
     #'   iris = list(
     #'     Sepal.Length = list(selected = c(5.1, 6.4), keep_na = TRUE, keep_inf = FALSE),
