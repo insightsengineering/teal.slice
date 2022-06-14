@@ -71,6 +71,10 @@ FilteredData <- R6::R6Class( # nolint
   public = list(
     #' @description
     #' Initialize a `FilteredData` object
+    #' @param ... TODO
+    #' @param keys TODO
+    #' @param code TODO
+    #' @param check TODO
     initialize = function(..., keys, code = NULL, check = FALSE) {
       data_objects <- list(...)
       checkmate::assert_list(data_objects, any.missing = FALSE, min.len = 0, names = "unique")
@@ -329,15 +333,17 @@ FilteredData <- R6::R6Class( # nolint
     },
 
     #' @description
-    #' Adds a `TealDataset` object to this `FilteredData`
+    #' Adds a dataset to this `FilteredData`
     #'
-    #' Adds a dataset and preserve all attributes attached to this object.
     #' Technically `set_dataset` created `FilteredDataset` which keeps
     #' `dataset` for filtering purpose.
     #'
-    #' @param dataset (`TealDataset` or `TealDatasetConnector`)\cr
-    #'   the object containing data and attributes.
-    #' @return (`self`) invisibly this `FilteredTealData`
+    #' @param dataset_args (`list`)\cr
+    #'   containing the arguments except (`dataname`)
+    #'   needed by `init_filtered_dataset`
+    #' @param dataname (`string`)\cr
+    #'   the name of the `dataset` to be added to this object
+    #' @return (`self`) invisibly this `FilteredData`
     set_dataset = function(dataset_args, dataname) {
       # TODO validation here
       logger::log_trace("FilteredData$set_dataset setting dataset, name; { deparse1(dataname) }")
@@ -357,7 +363,8 @@ FilteredData <- R6::R6Class( # nolint
 
     #' @description
     #' TODO
-    #' @return (`self`) invisibly this `FilteredTealData`
+    #' @param keys TODO
+    #' @return (`self`) invisibly this `FilteredData`
     set_join_keys = function(keys) {
       #TODO validation
       private$keys <- keys

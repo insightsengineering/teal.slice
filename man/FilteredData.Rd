@@ -177,6 +177,19 @@ Initialize a \code{FilteredData} object
 \if{html}{\out{<div class="r">}}\preformatted{FilteredData$new(..., keys, code = NULL, check = FALSE)}\if{html}{\out{</div>}}
 }
 
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{...}}{TODO}
+
+\item{\code{keys}}{TODO}
+
+\item{\code{code}}{TODO}
+
+\item{\code{check}}{TODO}
+}
+\if{html}{\out{</div>}}
+}
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-FilteredData-datanames"></a>}}
@@ -552,9 +565,8 @@ the intersection of \code{self$datanames()} and \code{datanames}
 \if{html}{\out{<a id="method-FilteredData-set_dataset"></a>}}
 \if{latex}{\out{\hypertarget{method-FilteredData-set_dataset}{}}}
 \subsection{Method \code{set_dataset()}}{
-Adds a \code{TealDataset} object to this \code{FilteredData}
+Adds a dataset to this \code{FilteredData}
 
-Adds a dataset and preserve all attributes attached to this object.
 Technically \code{set_dataset} created \code{FilteredDataset} which keeps
 \code{dataset} for filtering purpose.
 \subsection{Usage}{
@@ -564,13 +576,17 @@ Technically \code{set_dataset} created \code{FilteredDataset} which keeps
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
-\item{\code{dataset}}{(\code{TealDataset} or \code{TealDatasetConnector})\cr
-the object containing data and attributes.}
+\item{\code{dataset_args}}{(\code{list})\cr
+containing the arguments except (\code{dataname})
+needed by \code{init_filtered_dataset}}
+
+\item{\code{dataname}}{(\code{string})\cr
+the name of the \code{dataset} to be added to this object}
 }
 \if{html}{\out{</div>}}
 }
 \subsection{Returns}{
-(\code{self}) invisibly this \code{FilteredTealData}
+(\code{self}) invisibly this \code{FilteredData}
 }
 }
 \if{html}{\out{<hr>}}
@@ -582,8 +598,15 @@ TODO
 \if{html}{\out{<div class="r">}}\preformatted{FilteredData$set_join_keys(keys)}\if{html}{\out{</div>}}
 }
 
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{keys}}{TODO}
+}
+\if{html}{\out{</div>}}
+}
 \subsection{Returns}{
-(\code{self}) invisibly this \code{FilteredTealData}
+(\code{self}) invisibly this \code{FilteredData}
 }
 }
 \if{html}{\out{<hr>}}

@@ -274,9 +274,11 @@ The above list structure is applied in `get_filter_state`, `set_filter_state` an
 1. Setting the filter state
 ```{r, message=FALSE, warning=FALSE}
 library(teal.slice)
-datasets <- teal.slice:::FilteredData$new()
-datasets$set_dataset(teal.data::dataset(dataname = "iris", x = iris))
-datasets$set_dataset(teal.data::dataset(dataname = "mtcars", x = mtcars))
+
+datasets <- init_filtered_data(
+  iris = list(dataset = iris),
+  mtcars = list(dataset = mtcars)
+)
 
 set_filter_state(
   datasets = datasets,
@@ -320,9 +322,11 @@ are changed when clicking the buttons in the encoding-panel.
 
 ```{r}
 library(shiny)
-datasets <- teal.slice:::FilteredData$new()
-datasets$set_dataset(teal.data::dataset(dataname = "iris", x = iris))
-datasets$set_dataset(teal.data::dataset(dataname = "mtcars", x = mtcars))
+
+datasets <- init_filtered_data(
+  iris = list(dataset = iris),
+  mtcars = list(dataset = mtcars)
+)
 
 app <- shinyApp(
   ui = fluidPage(

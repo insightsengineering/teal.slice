@@ -1,7 +1,7 @@
 ---
 title: "Introduction to teal.slice"
-author: "Nikolas Burkoff"
-date: "01/05/2022"
+author: "NEST Core Dev Team"
+date: "01/07/2022"
 output: rmarkdown::html_vignette
 vignette: >
   %\VignetteIndexEntry{Introduction to teal.slice}
@@ -52,10 +52,10 @@ library(teal.slice)
 library(shiny)
 
 # create a FilteredData object
-datasets <- teal.slice:::FilteredData$new()
-# Add the teal datasets into it
-datasets$set_dataset(teal.data::dataset(dataname = "iris", x = iris))
-datasets$set_dataset(teal.data::dataset(dataname = "mtcars", x = mtcars))
+datasets <- init_filtered_data(
+  iris = list(dataset = iris),
+  mtcars = list(dataset = mtcars)
+)
 
 app <- shinyApp(
   ui = fluidPage(
