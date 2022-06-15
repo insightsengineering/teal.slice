@@ -898,7 +898,7 @@ FilteredData <- R6::R6Class( # nolint
     # preprocessing code used to generate the unfiltered datasets as a string
     code = NULL,
 
-    # keys used for joining/filtering data
+    # keys used for joining/filtering data named nested lists
     keys = NULL,
 
     # we implement these functions as checks rather than returning logicals so they can

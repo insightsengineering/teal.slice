@@ -73,7 +73,7 @@
 init_filtered_dataset <- function(dataset, # nolint
                                   dataname,
                                   keys = character(0),
-                                  label = character(0),
+                                  label = attr(dataset, "label"),
                                   metadata = NULL) {
   UseMethod("init_filtered_dataset")
 }
@@ -83,7 +83,7 @@ init_filtered_dataset <- function(dataset, # nolint
 init_filtered_dataset.data.frame <- function(dataset, # nolint
                                              dataname,
                                              keys = character(0),
-                                             label = character(0),
+                                             label = attr(dataset, "label"),
                                              metadata = NULL) {
   DefaultFilteredDataset$new(dataset, dataname, keys, label, metadata)
 }
@@ -93,7 +93,7 @@ init_filtered_dataset.data.frame <- function(dataset, # nolint
 init_filtered_dataset.MultiAssayExperiment <- function(dataset, # nolint
                                                        dataname,
                                                        keys = character(0),
-                                                       label = character(0),
+                                                       label = attr(dataset, "label"),
                                                        metadata = NULL) {
   if (!requireNamespace("MultiAssayExperiment", quietly = TRUE)) {
     stop("Cannot load MultiAssayExperiment - please install the package or restart your session.")
@@ -128,7 +128,7 @@ FilteredDataset <- R6::R6Class( # nolint
     #' @param metadata (named `list` or `NULL`) \cr
     #'   Field containing metadata about the dataset. Each element of the list
     #'   should be atomic and length one.
-    initialize = function(dataset, dataname, keys = character(0), label = character(0), metadata = NULL) {
+    initialize = function(dataset, dataname, keys = character(0), label = attr(dataset, "label"), metadata = NULL) {
       # TODO assertions except dataset
 
       logger::log_trace("Instantiating { class(self)[1] }, dataname: { deparse1(dataname) }")

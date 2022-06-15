@@ -18,7 +18,7 @@ init_filtered_data.TealData <- function(x, ...) { # nolint
   names(data_objects) <- x$get_datanames()
   FilteredData$new(
     data_objects = data_objects,
-    keys = x$get_join_keys(),
+    keys = x$get_join_keys()$get(),
     code = x$get_code_class(),
     check = x$get_check()
   )
@@ -29,19 +29,28 @@ init_filtered_data.TealData <- function(x, ...) { # nolint
 init_filtered_data.CDISCTealData <- function(x, ...) { # nolint
   data_objects <- lapply(x$get_datanames(), function(dataname) {
     dataset <- x$get_dataset(dataname)
+
+    # CDISCTealData can contain TealDataset and CDISCTealDataset objects
+    # the former to not have a get_parent() call
+    parent <- if (inherits(dataset, "CDISCTealDataset")) {
+      dataset$get_parent()
+    } else {
+      NULL
+    }
+
     list(
       dataset = dataset$get_raw_data(),
       keys = dataset$get_keys(),
       metadata = dataset$get_metadata(),
       label = dataset$get_dataset_label(),
-      parent = dataset$get_parent()
+      parent = parent
     )
   })
   names(data_objects) <- x$get_datanames()
 
   CDISCFilteredData$new(
     data_objects = data_objects,
-    keys = x$get_join_keys(),
+    keys = x$get_join_keys()$get(),
     code = x$get_code_class(),
     check = x$get_check()
   )
