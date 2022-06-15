@@ -1,10 +1,5 @@
 testthat::test_that("The constructor does not throw", {
-  testthat::expect_error(FilteredData$new(), NA)
-})
-
-testthat::test_that("datanames returns an empty array after initialization", {
-  filtered_data <- FilteredData$new()
-  testthat::expect_equal(filtered_data$datanames(), c())
+  testthat::expect_error(FilteredData$new(list(iris = list(dataset = iris)), keys = NULL), NA)
 })
 
 testthat::test_that("set_dataset does not throw when passed a TealDataset object", {
@@ -345,35 +340,49 @@ testthat::test_that(
   }
 )
 
-datasets <- FilteredData$new()
-adsl <- as.data.frame(as.list(setNames(nm = c(teal.data::get_cdisc_keys("ADSL")))))
-adsl$sex <- c("F")
-datasets$set_dataset(teal.data::cdisc_dataset("ADSL", adsl))
-datasets$set_dataset(teal.data::dataset("mock_iris", head(iris)))
-utils::data(miniACC, package = "MultiAssayExperiment")
-datasets$set_dataset(teal.data::dataset("miniACC", miniACC))
+
+get_filtered_data_object <- function() {
+  utils::data(miniACC, package = "MultiAssayExperiment")
+  adsl <- as.data.frame(as.list(setNames(nm = c(teal.data::get_cdisc_keys("ADSL")))))
+  adsl$sex <- c("F")
+
+  CDISCFilteredData$new(
+    list(
+      ADSL = list(dataset = adsl, keys = teal.data::get_cdisc_keys("ADSL"), parent = character(0)),
+      mock_iris = list(dataset = head(iris)),
+      miniACC = list(dataset = miniACC)
+    ),
+    keys = NULL
+  )
+}
+
 
 testthat::test_that("get_filter_overview accepts all datasets argument input", {
+  dataset <- get_filtered_data_object()
   testthat::expect_error(isolate(datasets$get_filter_overview("all")), NA)
 })
 
 testthat::test_that("get_filter_overview accepts single dataset argument input", {
+  dataset <- get_filtered_data_object()
   testthat::expect_error(isolate(datasets$get_filter_overview("ADSL")), NA)
   testthat::expect_error(isolate(datasets$get_filter_overview("mock_iris")), NA)
   testthat::expect_error(isolate(datasets$get_filter_overview("miniACC")), NA)
 })
 
 testthat::test_that("get_filter_overview throws error with empty argument input", {
+  dataset <- get_filtered_data_object()
   testthat::expect_error(isolate(datasets$get_filter_overview()), "argument \"datanames\" is missing, with no default")
 })
 
 testthat::test_that("get_filter_overview throws error with wrong argument input", {
+  dataset <- get_filtered_data_object()
   testthat::expect_error(isolate(datasets$get_filter_overview("AA")), "Some datasets are not available:")
   testthat::expect_error(isolate(datasets$get_filter_overview("")), "Some datasets are not available:")
   testthat::expect_error(isolate(datasets$get_filter_overview(23)), "Some datasets are not available:")
 })
 
 testthat::test_that("get_filter_overview returns overview matrix for non-filtered datasets", {
+  dataset <- get_filtered_data_object()
   testthat::expect_equal(
     isolate(datasets$get_filter_overview(datasets$datanames())),
     matrix(
@@ -395,6 +404,7 @@ testthat::test_that("get_filter_overview returns overview matrix for non-filtere
 })
 
 testthat::test_that("get_filter_overview returns overview matrix for filtered datasets", {
+  dataset <- get_filtered_data_object()
   filter_state_adsl <- ChoicesFilterState$new(c("F", "M"), varname = "sex")
   filter_state_adsl$set_selected("M")
   queue <- datasets$get_filtered_dataset("ADSL")$get_filter_states(1)
@@ -430,15 +440,16 @@ testthat::test_that("get_filter_overview returns overview matrix for filtered da
 
 testthat::test_that("restore_state_from_bookmark is a pure virtual method", {
   testthat::expect_error(
-    FilteredData$new()$restore_state_from_bookmark("test"),
+    FilteredData$new(list(iris = list(dataset = iris)), keys = NULL)$restore_state_from_bookmark("test"),
     regexp = "Pure virtual method"
   )
 })
 
 testthat::test_that("get_filter_expr returns a string with a filtering expression", {
-  datasets <- FilteredData$new()
-  datasets$set_dataset(teal.data::dataset("iris", iris, code = "iris <- iris"))
-  datasets$set_dataset(teal.data::dataset("mtcars", mtcars, code = "mtcars <- mtcars"))
+  datasets <- FilteredData$new(
+    list(iris = list(dataset = iris), mtcars = list(dataset = mtcars)),
+    keys = NULL
+  )
   testthat::expect_equal(
     get_filter_expr(datasets),
     paste("iris_FILTERED <- iris", "mtcars_FILTERED <- mtcars", sep = "\n")
@@ -446,21 +457,25 @@ testthat::test_that("get_filter_expr returns a string with a filtering expressio
 })
 
 testthat::test_that("FilteredData from TealData preserves the check field when check is FALSE", {
-  filtered_data <- FilteredData$new()
-  data <- teal.data::teal_data(
-    teal.data::dataset("df_1", data.frame(x = 1:10), code = "df_1 <- data.frame(x = 1:10)"),
+  code <- teal.data:::CodeClass$new()$set_code("df_1 <- data.frame(x = 1:10)")
+
+  filtered_data <- FilteredData$new(
+    list("df_1" = list(dataset = data.frame(x = 1:10))),
+    keys = NULL,
+    code = code,
     check = FALSE
   )
-  filtered_data_set(data, filtered_data)
   testthat::expect_false(filtered_data$get_check())
 })
 
-testthat::test_that("FilteredData from TealData preserves the check field when check is TRUE", {
-  filtered_data <- FilteredData$new()
-  data <- teal.data::teal_data(
-    teal.data::dataset("df_1", data.frame(x = 1:10), code = "df_1 <- data.frame(x = 1:10)"),
+testthat::test_that("FilteredData preserves the check field when check is TRUE", {
+  code <- teal.data:::CodeClass$new()$set_code("df_1 <- data.frame(x = 1:10)")
+
+  filtered_data <- FilteredData$new(
+    list("df_1" = list(dataset = data.frame(x = 1:10))),
+    keys = NULL,
+    code = code,
     check = TRUE
   )
-  filtered_data_set(data, filtered_data)
   testthat::expect_true(filtered_data$get_check())
 })
