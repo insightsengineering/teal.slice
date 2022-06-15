@@ -5,7 +5,6 @@ init_filtered_data <- function(x, ...) {
 
 #' @keywords internal
 #' @export
-#' TODO make teal.data suggests
 init_filtered_data.TealData <- function(x, ...) { # nolint
   data_objects <- lapply(x$get_datanames(), function(dataname) {
     dataset <- x$get_dataset(dataname)
