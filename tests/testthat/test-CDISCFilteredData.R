@@ -1,9 +1,3 @@
-ds <- CDISCFilteredData$new()
-
-test_that("datanames() returns an empty character array after initialization", {
-  expect_setequal(isolate(ds$datanames()), character(0))
-})
-
 adsl <- as.data.frame(as.list(setNames(nm = teal.data::get_cdisc_keys("ADSL"))))
 adsl$sex <- "F"
 adae <- as.data.frame(as.list(setNames(nm = teal.data::get_cdisc_keys("ADAE"))))
@@ -14,7 +8,7 @@ data <- teal.data::cdisc_data(
   teal.data::cdisc_dataset("ADAE", adae)
 )
 
-filtered_data_set(data, ds)
+ds <- init_filtered_data(data)
 
 test_that("load and set_datasets", {
   expect_silent({

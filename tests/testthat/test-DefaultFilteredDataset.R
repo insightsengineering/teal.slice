@@ -1,12 +1,12 @@
-testthat::test_that("The constructor accepts a TealDataset object and an empty list", {
+testthat::test_that("The constructor accepts a data.frame object with a dataname", {
   testthat::expect_error(DefaultFilteredDataset$new(
-    dataset = teal.data::dataset("iris", head(iris))
+    dataset = head(iris), dataname = "iris"
   ), NA)
 })
 
 testthat::test_that("get_call returns a list of calls", {
   filtered_dataset <- DefaultFilteredDataset$new(
-    dataset = teal.data::dataset("iris", head(iris))
+    dataset = head(iris), dataname = "iris"
   )
   checkmate::expect_list(filtered_dataset$get_call(), types = "<-")
 })
@@ -14,7 +14,7 @@ testthat::test_that("get_call returns a list of calls", {
 testthat::test_that(
   "DefaultFilteredDataset$set_filter_state sets filters specified by list names",
   code = {
-    dataset <- DefaultFilteredDataset$new(teal.data::dataset("iris", iris))
+    dataset <- DefaultFilteredDataset$new(dataset = iris, dataname = "iris")
 
     fs <- list(
       Sepal.Length = c(5.1, 6.4),
@@ -39,7 +39,7 @@ testthat::test_that(
 testthat::test_that(
   "DefaultFilteredDataset$set_filter_state throws error when list is not named",
   code = {
-    dataset <- DefaultFilteredDataset$new(teal.data::dataset("iris", iris))
+    dataset <- DefaultFilteredDataset$new(dataset = iris, dataname = "iris")
     fs <- list(
       c(5.1, 6.4),
       Species = c("setosa", "versicolor")
@@ -51,7 +51,7 @@ testthat::test_that(
 testthat::test_that(
   "DefaultFilteredDataset$remove_filter_state removes desired filter",
   code = {
-    dataset <- DefaultFilteredDataset$new(teal.data::dataset("iris", iris))
+    dataset <- DefaultFilteredDataset$new(dataset = iris, dataname = "iris")
     fs <- list(
       Sepal.Length = c(5.1, 6.4),
       Species = c("setosa", "versicolor")
@@ -76,7 +76,7 @@ testthat::test_that(
 testthat::test_that(
   "DefaultFilteredDataset$get_filter_state returns list identical to input",
   code = {
-    dataset <- DefaultFilteredDataset$new(teal.data::dataset("iris", iris))
+    dataset <- DefaultFilteredDataset$new(dataset = iris, dataname = "iris")
     fs <- list(
       Sepal.Length = list(selected = c(5.1, 6.4), keep_na = TRUE, keep_inf = TRUE),
       Species = list(selected = c("setosa", "versicolor"), keep_na = FALSE)
@@ -89,7 +89,7 @@ testthat::test_that(
 testthat::test_that(
   "DefaultFilteredDataset$remove_filter_state removes more than one filter",
   code = {
-    dataset <- DefaultFilteredDataset$new(teal.data::dataset("iris", iris))
+    dataset <- DefaultFilteredDataset$new(dataset = iris, dataname = "iris")
     fs <- list(
       Sepal.Length = c(5.1, 6.4),
       Species = c("setosa", "versicolor")
@@ -108,13 +108,15 @@ testthat::test_that(
 
 testthat::test_that("get_filter_overview_info returns overview matrix for DefaultFilteredDataset without filtering", {
   testthat::expect_equal(
-    isolate(DefaultFilteredDataset$new(dataset = teal.data::dataset("iris", head(iris)))$get_filter_overview_info()),
+    isolate(DefaultFilteredDataset$new(
+      dataset = utils::head(iris), dataname = "iris")$get_filter_overview_info()
+    ),
     matrix(list("6/6", ""), nrow = 1, dimnames = list(c("iris"), c("Obs", "Subjects")))
   )
 })
 
 testthat::test_that("get_filter_overview_info returns overview matrix for DefaultFilteredDataset with filtering", {
-  dataset_iris <- DefaultFilteredDataset$new(dataset = teal.data::dataset("iris", head(iris)))
+  dataset_iris <- DefaultFilteredDataset$new(dataset = utils::head(iris), dataname = "iris")
   filter_state_iris <- ChoicesFilterState$new(c("setosa", "virginica"), varname = "Species")
   filter_state_iris$set_selected("virginica")
   queue <- dataset_iris$get_filter_states(1)
