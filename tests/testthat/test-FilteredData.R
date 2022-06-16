@@ -346,7 +346,7 @@ get_filtered_data_object <- function() {
   adsl <- as.data.frame(as.list(setNames(nm = c(teal.data::get_cdisc_keys("ADSL")))))
   adsl$sex <- c("F")
 
-  CDISCFilteredData$new(
+  CDISICFilteredData$new(
     list(
       ADSL = list(dataset = adsl, keys = teal.data::get_cdisc_keys("ADSL"), parent = character(0)),
       mock_iris = list(dataset = head(iris)),

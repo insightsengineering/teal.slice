@@ -16,11 +16,8 @@ components of the dataset.
 \itemize{
 \item \href{#method-FilteredDataset-new}{\code{FilteredDataset$new()}}
 \item \href{#method-FilteredDataset-get_formatted_filter_state}{\code{FilteredDataset$get_formatted_filter_state()}}
-\item \href{#method-FilteredDataset-add_to_eval_env}{\code{FilteredDataset$add_to_eval_env()}}
 \item \href{#method-FilteredDataset-queues_empty}{\code{FilteredDataset$queues_empty()}}
 \item \href{#method-FilteredDataset-get_call}{\code{FilteredDataset$get_call()}}
-\item \href{#method-FilteredDataset-get_data}{\code{FilteredDataset$get_data()}}
-\item \href{#method-FilteredDataset-get_data_reactive}{\code{FilteredDataset$get_data_reactive()}}
 \item \href{#method-FilteredDataset-get_filter_state}{\code{FilteredDataset$get_filter_state()}}
 \item \href{#method-FilteredDataset-get_filter_states}{\code{FilteredDataset$get_filter_states()}}
 \item \href{#method-FilteredDataset-get_dataname}{\code{FilteredDataset$get_dataname()}}
@@ -51,7 +48,7 @@ Initializes this \code{FilteredDataset} object
   dataset,
   dataname,
   keys = character(0),
-  label = character(0),
+  label = attr(dataset, "label"),
   metadata = NULL
 )}\if{html}{\out{</div>}}
 }
@@ -92,28 +89,6 @@ Returns a string representation of the filter state in this \code{FilteredDatase
 }
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-FilteredDataset-add_to_eval_env"></a>}}
-\if{latex}{\out{\hypertarget{method-FilteredDataset-add_to_eval_env}{}}}
-\subsection{Method \code{add_to_eval_env()}}{
-Adds objects to the filter call evaluation environment
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{FilteredDataset$add_to_eval_env(name, value)}\if{html}{\out{</div>}}
-}
-
-\subsection{Arguments}{
-\if{html}{\out{<div class="arguments">}}
-\describe{
-\item{\code{name}}{(\code{character}) object name}
-
-\item{\code{value}}{object value}
-}
-\if{html}{\out{</div>}}
-}
-\subsection{Returns}{
-invisibly this \code{FilteredDataset}
-}
-}
-\if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-FilteredDataset-queues_empty"></a>}}
 \if{latex}{\out{\hypertarget{method-FilteredDataset-queues_empty}{}}}
 \subsection{Method \code{queues_empty()}}{
@@ -141,41 +116,6 @@ depends on \code{filter_states} type and order which are set during initializati
 
 \subsection{Returns}{
 filter \code{call} or \code{list} of filter calls
-}
-}
-\if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-FilteredDataset-get_data"></a>}}
-\if{latex}{\out{\hypertarget{method-FilteredDataset-get_data}{}}}
-\subsection{Method \code{get_data()}}{
-Gets data of this dataset
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{FilteredDataset$get_data(filtered)}\if{html}{\out{</div>}}
-}
-
-\subsection{Arguments}{
-\if{html}{\out{<div class="arguments">}}
-\describe{
-\item{\code{filtered}}{(\code{logical(1)})\cr
-whether returned data should be filtered or not}
-}
-\if{html}{\out{</div>}}
-}
-\subsection{Returns}{
-type of returned object depending on a data stored:
-currently \code{data.frame} or \code{MultiAssayExperiment}
-}
-}
-\if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-FilteredDataset-get_data_reactive"></a>}}
-\if{latex}{\out{\hypertarget{method-FilteredDataset-get_data_reactive}{}}}
-\subsection{Method \code{get_data_reactive()}}{
-Gets the reactive object which returns filtered data
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{FilteredDataset$get_data_reactive()}\if{html}{\out{</div>}}
-}
-
-\subsection{Returns}{
-(\code{reactive})
 Gets the reactive values from the active \code{FilterState} objects.
 
 Get all active filters from this dataset in form of the nested list.
@@ -262,8 +202,9 @@ named \code{list} or \code{NULL}
 \if{latex}{\out{\hypertarget{method-FilteredDataset-get_filter_overview_info}{}}}
 \subsection{Method \code{get_filter_overview_info()}}{
 Get filter overview rows of a dataset
+TODO docs
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{FilteredDataset$get_filter_overview_info()}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{FilteredDataset$get_filter_overview_info(filtered_dataset = NULL)}\if{html}{\out{</div>}}
 }
 
 \subsection{Returns}{

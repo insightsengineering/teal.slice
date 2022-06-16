@@ -51,15 +51,13 @@ shiny::isolate(dataset$get_filter_state())
 \item \href{#method-DefaultFilteredDataset-remove_filter_state}{\code{DefaultFilteredDataset$remove_filter_state()}}
 \item \href{#method-DefaultFilteredDataset-ui_add_filter_state}{\code{DefaultFilteredDataset$ui_add_filter_state()}}
 \item \href{#method-DefaultFilteredDataset-srv_add_filter_state}{\code{DefaultFilteredDataset$srv_add_filter_state()}}
+\item \href{#method-DefaultFilteredDataset-get_filter_overview_nsubjs}{\code{DefaultFilteredDataset$get_filter_overview_nsubjs()}}
 \item \href{#method-DefaultFilteredDataset-clone}{\code{DefaultFilteredDataset$clone()}}
 }
 }
 \if{html}{\out{
 <details><summary>Inherited methods</summary>
 <ul>
-<li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilteredDataset" data-id="add_to_eval_env"><a href='../../teal.slice/html/FilteredDataset.html#method-FilteredDataset-add_to_eval_env'><code>teal.slice::FilteredDataset$add_to_eval_env()</code></a></li>
-<li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilteredDataset" data-id="get_data"><a href='../../teal.slice/html/FilteredDataset.html#method-FilteredDataset-get_data'><code>teal.slice::FilteredDataset$get_data()</code></a></li>
-<li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilteredDataset" data-id="get_data_reactive"><a href='../../teal.slice/html/FilteredDataset.html#method-FilteredDataset-get_data_reactive'><code>teal.slice::FilteredDataset$get_data_reactive()</code></a></li>
 <li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilteredDataset" data-id="get_dataname"><a href='../../teal.slice/html/FilteredDataset.html#method-FilteredDataset-get_dataname'><code>teal.slice::FilteredDataset$get_dataname()</code></a></li>
 <li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilteredDataset" data-id="get_dataset"><a href='../../teal.slice/html/FilteredDataset.html#method-FilteredDataset-get_dataset'><code>teal.slice::FilteredDataset$get_dataset()</code></a></li>
 <li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilteredDataset" data-id="get_dataset_label"><a href='../../teal.slice/html/FilteredDataset.html#method-FilteredDataset-get_dataset_label'><code>teal.slice::FilteredDataset$get_dataset_label()</code></a></li>
@@ -263,7 +261,20 @@ an ID string that corresponds with the ID used to call the module's UI function.
 }
 \subsection{Returns}{
 \code{moduleServer} function which returns \code{NULL}
+TODO
 }
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-DefaultFilteredDataset-get_filter_overview_nsubjs"></a>}}
+\if{latex}{\out{\hypertarget{method-DefaultFilteredDataset-get_filter_overview_nsubjs}{}}}
+\subsection{Method \code{get_filter_overview_nsubjs()}}{
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{DefaultFilteredDataset$get_filter_overview_nsubjs(
+  filtered_dataset = NULL,
+  subject_keys = NULL
+)}\if{html}{\out{</div>}}
+}
+
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-DefaultFilteredDataset-clone"></a>}}

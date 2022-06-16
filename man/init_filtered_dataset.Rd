@@ -8,7 +8,7 @@ init_filtered_dataset(
   dataset,
   dataname,
   keys = character(0),
-  label = character(0),
+  label = attr(dataset, "label"),
   metadata = NULL
 )
 }

@@ -51,18 +51,8 @@ isolate({
 })
 
 
-filter_state_adtte <- teal.slice:::init_filter_state(
-  ADTTE$PARAMCD,
-  varname = "PARAMCD",
-  input_dataname = as.name("ADTTE"),
-  extract_type = "list"
-)
-filter_state_adtte$set_selected("OS")
-
-states <- datasets$get_filtered_dataset("ADTTE")$get_filter_states(1)
-states$queue_push(filter_state_adtte, queue_index = 1L, element_id = "PARAMCD")
-
-isolate(datasets$get_call("ADTTE"))
+datasets$set_filter_state(list(ADTTE = list(PARAMCD = "OS")))
+isolate(datasets$get_filter_state())
 }
 \seealso{
 \code{FilteredData} class

@@ -40,7 +40,6 @@ shiny::isolate(dataset$get_filter_state())
 \itemize{
 \item \href{#method-MAEFilteredDataset-new}{\code{MAEFilteredDataset$new()}}
 \item \href{#method-MAEFilteredDataset-get_call}{\code{MAEFilteredDataset$get_call()}}
-\item \href{#method-MAEFilteredDataset-get_data}{\code{MAEFilteredDataset$get_data()}}
 \item \href{#method-MAEFilteredDataset-get_varlabels}{\code{MAEFilteredDataset$get_varlabels()}}
 \item \href{#method-MAEFilteredDataset-get_filter_overview_info}{\code{MAEFilteredDataset$get_filter_overview_info()}}
 \item \href{#method-MAEFilteredDataset-get_filterable_varnames}{\code{MAEFilteredDataset$get_filterable_varnames()}}
@@ -48,14 +47,13 @@ shiny::isolate(dataset$get_filter_state())
 \item \href{#method-MAEFilteredDataset-remove_filter_state}{\code{MAEFilteredDataset$remove_filter_state()}}
 \item \href{#method-MAEFilteredDataset-ui_add_filter_state}{\code{MAEFilteredDataset$ui_add_filter_state()}}
 \item \href{#method-MAEFilteredDataset-srv_add_filter_state}{\code{MAEFilteredDataset$srv_add_filter_state()}}
+\item \href{#method-MAEFilteredDataset-get_filter_overview_nsubjs}{\code{MAEFilteredDataset$get_filter_overview_nsubjs()}}
 \item \href{#method-MAEFilteredDataset-clone}{\code{MAEFilteredDataset$clone()}}
 }
 }
 \if{html}{\out{
 <details><summary>Inherited methods</summary>
 <ul>
-<li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilteredDataset" data-id="add_to_eval_env"><a href='../../teal.slice/html/FilteredDataset.html#method-FilteredDataset-add_to_eval_env'><code>teal.slice::FilteredDataset$add_to_eval_env()</code></a></li>
-<li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilteredDataset" data-id="get_data_reactive"><a href='../../teal.slice/html/FilteredDataset.html#method-FilteredDataset-get_data_reactive'><code>teal.slice::FilteredDataset$get_data_reactive()</code></a></li>
 <li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilteredDataset" data-id="get_dataname"><a href='../../teal.slice/html/FilteredDataset.html#method-FilteredDataset-get_dataname'><code>teal.slice::FilteredDataset$get_dataname()</code></a></li>
 <li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilteredDataset" data-id="get_dataset"><a href='../../teal.slice/html/FilteredDataset.html#method-FilteredDataset-get_dataset'><code>teal.slice::FilteredDataset$get_dataset()</code></a></li>
 <li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilteredDataset" data-id="get_dataset_label"><a href='../../teal.slice/html/FilteredDataset.html#method-FilteredDataset-get_dataset_label'><code>teal.slice::FilteredDataset$get_dataset_label()</code></a></li>
@@ -135,27 +133,6 @@ filter \code{call} or \code{list} of filter calls
 }
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-MAEFilteredDataset-get_data"></a>}}
-\if{latex}{\out{\hypertarget{method-MAEFilteredDataset-get_data}{}}}
-\subsection{Method \code{get_data()}}{
-Gets raw data of this dataset
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{MAEFilteredDataset$get_data(filtered)}\if{html}{\out{</div>}}
-}
-
-\subsection{Arguments}{
-\if{html}{\out{<div class="arguments">}}
-\describe{
-\item{\code{filtered}}{(\code{logical(1)})\cr
-whether returned data should be filtered or not}
-}
-\if{html}{\out{</div>}}
-}
-\subsection{Returns}{
-\code{MultiAssayExperiment}
-}
-}
-\if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-MAEFilteredDataset-get_varlabels"></a>}}
 \if{latex}{\out{\hypertarget{method-MAEFilteredDataset-get_varlabels}{}}}
 \subsection{Method \code{get_varlabels()}}{
@@ -186,8 +163,9 @@ attribute does not exist for the data
 \if{latex}{\out{\hypertarget{method-MAEFilteredDataset-get_filter_overview_info}{}}}
 \subsection{Method \code{get_filter_overview_info()}}{
 Get filter overview rows of a dataset
+TODO docs
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{MAEFilteredDataset$get_filter_overview_info()}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{MAEFilteredDataset$get_filter_overview_info(filtered_dataset = NULL)}\if{html}{\out{</div>}}
 }
 
 \subsection{Returns}{
@@ -328,6 +306,15 @@ an ID string that corresponds with the ID used to call the module's UI function.
 \subsection{Returns}{
 \code{moduleServer} function which returns \code{NULL}
 }
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-MAEFilteredDataset-get_filter_overview_nsubjs"></a>}}
+\if{latex}{\out{\hypertarget{method-MAEFilteredDataset-get_filter_overview_nsubjs}{}}}
+\subsection{Method \code{get_filter_overview_nsubjs()}}{
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{MAEFilteredDataset$get_filter_overview_nsubjs(filtered_dataset, subject_keys)}\if{html}{\out{</div>}}
+}
+
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-MAEFilteredDataset-clone"></a>}}
