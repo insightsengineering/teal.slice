@@ -153,18 +153,6 @@ FilteredDataset <- R6::R6Class( # nolint
       paste(out, collapse = "\n")
     },
 
-    #' #' @description
-    #' #' Adds objects to the filter call evaluation environment
-    #' #' @param name (`character`) object name
-    #' #' @param value object value
-    #' #' @return invisibly this `FilteredDataset`
-    #' add_to_eval_env = function(name, value) {
-    #'   checkmate::assert_string(name)
-    #'   private$eval_env <- c(private$eval_env, setNames(value, name))
-    #'   invisible(self)
-    #' },
-
-
     #' @description
     #' Removes all active filter items applied to this dataset
     #' @return NULL

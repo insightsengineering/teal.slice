@@ -195,7 +195,9 @@ CDISCFilteredData <- R6::R6Class( # nolint
         datanames,
         function(dataname) {
           df <- cbind(
-            self$get_filtered_dataset(dataname)$get_filter_overview_info()[1, 1],
+            self$get_filtered_dataset(dataname)$get_filter_overview_info(
+              filtered_dataset = self$get_data(dataname = dataname, filtered = TRUE)
+            )[1, 1],
             private$get_filter_overview_nsubjs(dataname)
           )
           rownames(df) <- dataname
@@ -214,7 +216,7 @@ CDISCFilteredData <- R6::R6Class( # nolint
     #' @return (`character`) name of parent dataset
     get_parentname = function(dataname) {
       #TODO validate dataname
-      private$parent[[dataname]]
+      private$parents[[dataname]]
     },
 
     #' @description
@@ -237,18 +239,29 @@ CDISCFilteredData <- R6::R6Class( # nolint
       dataset_args[["parent"]] <- NULL
 
       #TODO what happens if parent dataset doesn't actually exist...
-      super$set_dataset(dataset_args, dataname)
       private$parents[[dataname]] <- parent_dataname
+      super$set_dataset(dataset_args, dataname)
 
-      if (length(parent_dataname) > 0) {
-        parent_dataset <- self$get_filtered_dataset(parent_dataname)
-        fdataset <- self$get_filtered_dataset(dataname)
-        fdataset$add_to_eval_env(
-          parent_dataset$get_filtered_dataname(),
-          list(parent_dataset$get_data_reactive())
-        )
-      }
+      #if (length(parent_dataname) > 0) {
+      #  parent_dataset <- self$get_filtered_dataset(parent_dataname)
+      #  fdataset <- self$get_filtered_dataset(dataname)
+      #  fdataset$add_to_eval_env(
+      #    parent_dataset$get_filtered_dataname(),
+      #    list(parent_dataset$get_data_reactive())
+      #  )
+      # }
     }
+
+  #' @description
+  #' Adds objects to the filter call evaluation environment
+  #' @param name (`character`) object name
+  #' @param value object value
+  #' @return invisibly this `FilteredDataset`
+  #add_to_eval_env = function(name, value) {
+  #  checkmate::assert_string(name)
+  #    private$eval_env <- c(private$eval_env, setNames(value, name))
+  #    invisible(self)
+  #  }
   ),
 
   ## __Private Methods---------------------
