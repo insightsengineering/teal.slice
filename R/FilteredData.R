@@ -379,13 +379,6 @@ FilteredData <- R6::R6Class( # nolint
 
       private$reactive_data[[dataname]] <- reactive({
         env <- new.env(parent = parent.env(globalenv()))
-        for (idx in seq_along(private$eval_env)) {
-          env[[names(private$eval_env)[idx]]] <- if (is.reactive(private$eval_env[[idx]])) {
-            private$eval_env[[idx]]()
-          } else {
-            private$eval_env[[idx]]
-          }
-        }
         env[[dataname]] <- self$get_filtered_dataset(dataname)$get_dataset()
         filter_call <- self$get_call(dataname)
         eval_expr_with_msg(filter_call, env)
@@ -936,7 +929,6 @@ FilteredData <- R6::R6Class( # nolint
 
     # reactive i.e. filtered data
     reactive_data = list(),
-    eval_env = list(),
 
     # we implement these functions as checks rather than returning logicals so they can
     # give informative error messages immediately
