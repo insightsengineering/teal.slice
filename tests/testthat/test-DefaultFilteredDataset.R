@@ -115,14 +115,13 @@ testthat::test_that("get_filter_overview_info returns overview matrix for Defaul
   )
 })
 
-testthat::test_that("get_filter_overview_info returns overview matrix for DefaultFilteredDataset with filtering", {
+testthat::test_that(
+  "get_filter_overview_info returns overview matrix for DefaultFilteredDataset if a filtered dataset is passed in", {
   dataset_iris <- DefaultFilteredDataset$new(dataset = utils::head(iris), dataname = "iris")
-  filter_state_iris <- ChoicesFilterState$new(c("setosa", "virginica"), varname = "Species")
-  filter_state_iris$set_selected("virginica")
-  queue <- dataset_iris$get_filter_states(1)
-  queue$queue_push(filter_state_iris, queue_index = 1L, element_id = "Species")
   testthat::expect_equal(
-    isolate(dataset_iris$get_filter_overview_info()),
+    isolate(
+      dataset_iris$get_filter_overview_info(dplyr::filter(utils::head(iris), Species == "virginica"))
+    ),
     matrix(list("0/6", ""), nrow = 1, dimnames = list(c("iris"), c("Obs", "Subjects")))
   )
 })

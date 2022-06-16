@@ -4,55 +4,11 @@ testthat::test_that("The constructor accepts a data.frame object and dataname", 
   ), NA)
 })
 
-testthat::test_that("add_to_eval_env does not throw", {
-  filtered_dataset <- FilteredDataset$new(
-    dataset = head(iris), dataname = "iris"
-  )
-  testthat::expect_error(filtered_dataset$add_to_eval_env("test", 7), NA)
-})
-
 testthat::test_that("queues_empty does not throw after initializing FilteredDataset", {
   filtered_dataset <- FilteredDataset$new(
     dataset = head(iris), dataname = "iris"
   )
   testthat::expect_error(filtered_dataset$queues_empty(), NA)
-})
-
-testthat::test_that("get_data(FALSE) returns the object passed to the constructor", {
-  filtered_dataset <- FilteredDataset$new(
-    dataset = head(iris), dataname = "iris"
-  )
-  testthat::expect_equal(filtered_dataset$get_data(filtered = FALSE), head(iris))
-})
-
-testthat::test_that("get_data(TRUE) throws an error due to Pure virtual method.", {
-  filtered_dataset <- FilteredDataset$new(
-    dataset = head(iris), dataname = "iris"
-  )
-  testthat::expect_error(isolate(filtered_dataset$get_data(filtered = TRUE)), regex = "Pure virtual method.")
-})
-
-testthat::test_that("get_data throws an error when filtered input is not logical.", {
-  filtered_dataset <- FilteredDataset$new(dataset = head(iris), dataname = "iris")
-  testthat::expect_error(
-    isolate(filtered_dataset$get_data(filtered = "TRUE")),
-    "Assertion on 'filtered' failed: Must be of type 'logical', not 'character'."
-  )
-  testthat::expect_error(
-    isolate(filtered_dataset$get_data(filtered = 1)),
-    "Assertion on 'filtered' failed: Must be of type 'logical', not 'double'."
-  )
-  testthat::expect_error(
-    isolate(filtered_dataset$get_data(filtered = list(TRUE))),
-    "Assertion on 'filtered' failed: Must be of type 'logical', not 'list'."
-  )
-})
-
-testthat::test_that("get_data_reactive throws an error due to pure virtual method", {
-  filtered_dataset <- FilteredDataset$new(
-    dataset = head(iris), dataname = "iris"
-  )
-  testthat::expect_error(isolate(filtered_dataset$get_data_reactive()()), regex = "Pure virtual method")
 })
 
 testthat::test_that("get_filter_states returns an empty list after initialization", {

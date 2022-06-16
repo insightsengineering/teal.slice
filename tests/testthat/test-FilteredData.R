@@ -358,31 +358,31 @@ get_filtered_data_object <- function() {
 
 
 testthat::test_that("get_filter_overview accepts all datasets argument input", {
-  dataset <- get_filtered_data_object()
+  datasets <- get_filtered_data_object()
   testthat::expect_error(isolate(datasets$get_filter_overview("all")), NA)
 })
 
 testthat::test_that("get_filter_overview accepts single dataset argument input", {
-  dataset <- get_filtered_data_object()
+  datasets <- get_filtered_data_object()
   testthat::expect_error(isolate(datasets$get_filter_overview("ADSL")), NA)
   testthat::expect_error(isolate(datasets$get_filter_overview("mock_iris")), NA)
   testthat::expect_error(isolate(datasets$get_filter_overview("miniACC")), NA)
 })
 
 testthat::test_that("get_filter_overview throws error with empty argument input", {
-  dataset <- get_filtered_data_object()
+  datasets <- get_filtered_data_object()
   testthat::expect_error(isolate(datasets$get_filter_overview()), "argument \"datanames\" is missing, with no default")
 })
 
 testthat::test_that("get_filter_overview throws error with wrong argument input", {
-  dataset <- get_filtered_data_object()
+  datasets <- get_filtered_data_object()
   testthat::expect_error(isolate(datasets$get_filter_overview("AA")), "Some datasets are not available:")
   testthat::expect_error(isolate(datasets$get_filter_overview("")), "Some datasets are not available:")
   testthat::expect_error(isolate(datasets$get_filter_overview(23)), "Some datasets are not available:")
 })
 
 testthat::test_that("get_filter_overview returns overview matrix for non-filtered datasets", {
-  dataset <- get_filtered_data_object()
+  datasets <- get_filtered_data_object()
   testthat::expect_equal(
     isolate(datasets$get_filter_overview(datasets$datanames())),
     matrix(
@@ -404,7 +404,7 @@ testthat::test_that("get_filter_overview returns overview matrix for non-filtere
 })
 
 testthat::test_that("get_filter_overview returns overview matrix for filtered datasets", {
-  dataset <- get_filtered_data_object()
+  datasets <- get_filtered_data_object()
   filter_state_adsl <- ChoicesFilterState$new(c("F", "M"), varname = "sex")
   filter_state_adsl$set_selected("M")
   queue <- datasets$get_filtered_dataset("ADSL")$get_filter_states(1)
@@ -479,3 +479,97 @@ testthat::test_that("FilteredData preserves the check field when check is TRUE",
   )
   testthat::expect_true(filtered_data$get_check())
 })
+
+
+
+#TODO
+# testthat::test_that("get_data(FALSE) returns the object passed to the constructor", {
+#   filtered_dataset <- FilteredDataset$new(
+#     dataset = head(iris), dataname = "iris"
+#   )
+#   testthat::expect_equal(filtered_dataset$get_data(filtered = FALSE), head(iris))
+# })
+#
+# testthat::test_that("get_data(TRUE) throws an error due to Pure virtual method.", {
+#   filtered_dataset <- FilteredDataset$new(
+#     dataset = head(iris), dataname = "iris"
+#   )
+#   testthat::expect_error(isolate(filtered_dataset$get_data(filtered = TRUE)), regex = "Pure virtual method.")
+# })
+#
+# testthat::test_that("get_data throws an error when filtered input is not logical.", {
+#   filtered_dataset <- FilteredDataset$new(dataset = head(iris), dataname = "iris")
+#   testthat::expect_error(
+#     isolate(filtered_dataset$get_data(filtered = "TRUE")),
+#     "Assertion on 'filtered' failed: Must be of type 'logical', not 'character'."
+#   )
+#   testthat::expect_error(
+#     isolate(filtered_dataset$get_data(filtered = 1)),
+#     "Assertion on 'filtered' failed: Must be of type 'logical', not 'double'."
+#   )
+#   testthat::expect_error(
+#     isolate(filtered_dataset$get_data(filtered = list(TRUE))),
+#     "Assertion on 'filtered' failed: Must be of type 'logical', not 'list'."
+#   )
+# })
+#
+# testthat::test_that("get_data_reactive throws an error due to pure virtual method", {
+#   filtered_dataset <- FilteredDataset$new(
+#     dataset = head(iris), dataname = "iris"
+#   )
+#   testthat::expect_error(isolate(filtered_dataset$get_data_reactive()()), regex = "Pure virtual method")
+# })
+# testthat::test_that("MAEFilteredDataset$get_data throws error without filtered argument given", {
+#   utils::data(miniACC, package = "MultiAssayExperiment")
+#   filtered_dataset <- MAEFilteredDataset$new(dataset = miniACC, dataname = "miniACC")
+#   expect_error(isolate(filtered_dataset$get_data()), "argument \"filtered\" is missing, with no default")
+# })
+#
+# testthat::test_that("MAEFilteredDataset$get_data returns identical filtered and
+#                     non-filtered MAE data when no filter is applied", {
+#                       utils::data(miniACC, package = "MultiAssayExperiment")
+#                       filtered_dataset <- MAEFilteredDataset$new(dataset = miniACC, dataname = "miniACC")
+#                       filtered_mae <- isolate(filtered_dataset$get_data(filtered = TRUE))
+#                       non_filtered_mae <- isolate(filtered_dataset$get_data(filtered = FALSE))
+#                       expect_identical(filtered_mae, non_filtered_mae)
+#                     })
+#
+# testthat::test_that("MAEFilteredDataset get_data returns filtered MAE data when filter is applied", {
+#   utils::data(miniACC, package = "MultiAssayExperiment")
+#   filtered_dataset <- MAEFilteredDataset$new(dataset = miniACC, dataname = "miniACC")
+#   filter_state_mae <- ChoicesFilterState$new(
+#     x = miniACC$race,
+#     varname = as.name("race"),
+#     input_dataname = as.name("miniACC"),
+#     extract_type = "list"
+#   )
+#
+#   filter_state_mae$set_selected("white")
+#   filter_state_mae$set_na_rm(TRUE)
+#
+#   queue <- filtered_dataset$get_filter_states(1)
+#   queue$queue_push(filter_state_mae, queue_index = 1L, element_id = "race")
+#
+#   filtered_mae <- isolate(filtered_dataset$get_data(filtered = TRUE))
+#   non_filtered_mae <- isolate(filtered_dataset$get_data(filtered = FALSE))
+#
+#   testthat::expect_false(identical(filtered_mae, non_filtered_mae))
+#   testthat::expect_identical(unique(filtered_mae$race), "white")
+# })
+#
+# testthat::test_that("MAEFilteredDataset$get_data throws error when filtered input is not logical", {
+#   utils::data(miniACC, package = "MultiAssayExperiment")
+#   filtered_dataset <- MAEFilteredDataset$new(dataset = miniACC, dataname = "miniACC")
+#   testthat::expect_error(
+#     isolate(filtered_dataset$get_data(filtered = "TRUE")),
+#     "Assertion on 'filtered' failed: Must be of type 'logical', not 'character'."
+#   )
+#   testthat::expect_error(
+#     isolate(filtered_dataset$get_data(filtered = 1)),
+#     "Assertion on 'filtered' failed: Must be of type 'logical', not 'double'."
+#   )
+#   testthat::expect_error(
+#     isolate(filtered_dataset$get_data(filtered = list(TRUE))),
+#     "Assertion on 'filtered' failed: Must be of type 'logical', not 'list'."
+#   )
+# })

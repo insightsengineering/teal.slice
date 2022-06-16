@@ -52,61 +52,6 @@ testthat::test_that("MAEFilteredDataset$get_call returns a call with applying fi
   )
 })
 
-testthat::test_that("MAEFilteredDataset$get_data throws error without filtered argument given", {
-  utils::data(miniACC, package = "MultiAssayExperiment")
-  filtered_dataset <- MAEFilteredDataset$new(dataset = miniACC, dataname = "miniACC")
-  expect_error(isolate(filtered_dataset$get_data()), "argument \"filtered\" is missing, with no default")
-})
-
-testthat::test_that("MAEFilteredDataset$get_data returns identical filtered and
-                    non-filtered MAE data when no filter is applied", {
-  utils::data(miniACC, package = "MultiAssayExperiment")
-  filtered_dataset <- MAEFilteredDataset$new(dataset = miniACC, dataname = "miniACC")
-  filtered_mae <- isolate(filtered_dataset$get_data(filtered = TRUE))
-  non_filtered_mae <- isolate(filtered_dataset$get_data(filtered = FALSE))
-  expect_identical(filtered_mae, non_filtered_mae)
-})
-
-testthat::test_that("MAEFilteredDataset get_data returns filtered MAE data when filter is applied", {
-  utils::data(miniACC, package = "MultiAssayExperiment")
-  filtered_dataset <- MAEFilteredDataset$new(dataset = miniACC, dataname = "miniACC")
-  filter_state_mae <- ChoicesFilterState$new(
-    x = miniACC$race,
-    varname = as.name("race"),
-    input_dataname = as.name("miniACC"),
-    extract_type = "list"
-  )
-
-  filter_state_mae$set_selected("white")
-  filter_state_mae$set_na_rm(TRUE)
-
-  queue <- filtered_dataset$get_filter_states(1)
-  queue$queue_push(filter_state_mae, queue_index = 1L, element_id = "race")
-
-  filtered_mae <- isolate(filtered_dataset$get_data(filtered = TRUE))
-  non_filtered_mae <- isolate(filtered_dataset$get_data(filtered = FALSE))
-
-  testthat::expect_false(identical(filtered_mae, non_filtered_mae))
-  testthat::expect_identical(unique(filtered_mae$race), "white")
-})
-
-testthat::test_that("MAEFilteredDataset$get_data throws error when filtered input is not logical", {
-  utils::data(miniACC, package = "MultiAssayExperiment")
-  filtered_dataset <- MAEFilteredDataset$new(dataset = miniACC, dataname = "miniACC")
-  testthat::expect_error(
-    isolate(filtered_dataset$get_data(filtered = "TRUE")),
-    "Assertion on 'filtered' failed: Must be of type 'logical', not 'character'."
-  )
-  testthat::expect_error(
-    isolate(filtered_dataset$get_data(filtered = 1)),
-    "Assertion on 'filtered' failed: Must be of type 'logical', not 'double'."
-  )
-  testthat::expect_error(
-    isolate(filtered_dataset$get_data(filtered = list(TRUE))),
-    "Assertion on 'filtered' failed: Must be of type 'logical', not 'list'."
-  )
-})
-
 testthat::test_that("get_filter_overview_info returns overview matrix for MAEFilteredDataset without filtering", {
   utils::data(miniACC, package = "MultiAssayExperiment")
   filtered_dataset <- MAEFilteredDataset$new(dataset = miniACC, dataname = "miniACC")
@@ -139,7 +84,11 @@ testthat::test_that("get_filter_overview_info returns overview matrix for MAEFil
   queue$queue_push(filter_state_mae, queue_index = 1L, element_id = "race")
 
   testthat::expect_equal(
-    isolate(filtered_dataset$get_filter_overview_info()),
+    isolate(filtered_dataset$get_filter_overview_info(
+      MultiAssayExperiment::subsetByColData(
+        miniACC,
+        y = !is.na(miniACC$race) & miniACC$race == "white")
+    )),
     matrix(
       list("", "78/92", "66/79", "66/79", "76/90", "76/90", "35/46", "35/46", "77/90", "77/90", "67/80", "67/80"),
       nrow = 6,
