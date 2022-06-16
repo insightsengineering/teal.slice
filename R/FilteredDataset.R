@@ -442,8 +442,6 @@ FilteredDataset <- R6::R6Class( # nolint
   ## __Private Fields ====
   private = list(
     dataset = NULL,
-    #reactive_data = NULL, # reactive
-    #eval_env = list(),
     filter_states = list(),
     dataname = character(0),
     keys = character(0),
@@ -702,7 +700,29 @@ DefaultFilteredDataset <- R6::R6Class( # nolint
           NULL
         }
       )
+    },
+
+    #' TODO
+    get_filter_overview_nsubjs = function(filtered_dataset = NULL, subject_keys = NULL) {
+      if(is.null(filtered_dataset)) {
+        filtered_dataset <- self$get_dataset()
+      }
+
+      f_rows <- if (length(subject_keys) == 0) {
+        dplyr::n_distinct(filtered_dataset)
+      } else {
+        dplyr::n_distinct(filtered_dataset[subject_keys])
+      }
+
+      nf_rows <- if (length(subject_keys) == 0) {
+        dplyr::n_distinct(self$get_dataset())
+      } else {
+        dplyr::n_distinct(self$get_dataset()[subject_keys])
+      }
+
+      list(paste0(f_rows, "/", nf_rows))
     }
+
   ),
   private = list(
     # Gets filter overview observations number and returns a
@@ -860,7 +880,7 @@ MAEFilteredDataset <- R6::R6Class( # nolint
 
       df <- cbind(
         private$get_filter_overview_nobs(filtered_dataset),
-        private$get_filter_overview_nsubjs(filtered_dataset)
+        self$get_filter_overview_nsubjs(filtered_dataset)
       )
 
       rownames(df) <- mae_and_exps
@@ -1055,37 +1075,11 @@ MAEFilteredDataset <- R6::R6Class( # nolint
           NULL
         }
       )
-    }
-  ),
-  private = list(
-    # Gets filter overview observations number and returns a
-    # list of the number of observations of filtered/non-filtered datasets
-    get_filter_overview_nobs = function(filtered_dataset) {
-      data_f <- filtered_dataset
-      data_nf <- self$get_dataset()
-      experiment_names <- names(data_nf)
-      mae_total_data_info <- ""
-
-      data_info <- lapply(
-        experiment_names,
-        function(experiment_name) {
-          data_f_rows <- ncol(data_f[[experiment_name]])
-          data_nf_rows <- ncol(data_nf[[experiment_name]])
-
-          data_info <- paste0(data_f_rows, "/", data_nf_rows)
-          data_info
-        }
-      )
-
-      append(
-        list(mae_total_data_info),
-        data_info
-      )
     },
 
     # Gets filter overview subjects number and returns a list
     # of the number of subjects of filtered/non-filtered datasets
-    get_filter_overview_nsubjs = function(filtered_dataset) {
+    get_filter_overview_nsubjs = function(filtered_dataset, subject_keys) {
       data_f <- filtered_dataset
       data_nf <- self$get_dataset()
       experiment_names <- names(data_nf)
@@ -1113,6 +1107,32 @@ MAEFilteredDataset <- R6::R6Class( # nolint
       append(
         list(mae_total_subjects_info),
         subjects_info
+      )
+    }
+  ),
+  private = list(
+    # Gets filter overview observations number and returns a
+    # list of the number of observations of filtered/non-filtered datasets
+    get_filter_overview_nobs = function(filtered_dataset) {
+      data_f <- filtered_dataset
+      data_nf <- self$get_dataset()
+      experiment_names <- names(data_nf)
+      mae_total_data_info <- ""
+
+      data_info <- lapply(
+        experiment_names,
+        function(experiment_name) {
+          data_f_rows <- ncol(data_f[[experiment_name]])
+          data_nf_rows <- ncol(data_nf[[experiment_name]])
+
+          data_info <- paste0(data_f_rows, "/", data_nf_rows)
+          data_info
+        }
+      )
+
+      append(
+        list(mae_total_data_info),
+        data_info
       )
     }
   )

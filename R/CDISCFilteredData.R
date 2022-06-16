@@ -194,13 +194,18 @@ CDISCFilteredData <- R6::R6Class( # nolint
       rows <- lapply(
         datanames,
         function(dataname) {
+
+          obs <- self$get_filtered_dataset(dataname)$get_filter_overview_info(
+            filtered_dataset = self$get_data(dataname = dataname, filtered = TRUE)
+          )[, 1]
+
+          subs <- private$get_filter_overview_nsubjs(dataname)
+
           df <- cbind(
-            self$get_filtered_dataset(dataname)$get_filter_overview_info(
-              filtered_dataset = self$get_data(dataname = dataname, filtered = TRUE)
-            )[1, 1],
-            private$get_filter_overview_nsubjs(dataname)
+            obs, subs
           )
-          rownames(df) <- dataname
+
+          rownames(df) <- if (!is.null(names(obs))) { names(obs) } else dataname
           colnames(df) <- c("Obs", "Subjects")
           df
         }
@@ -299,19 +304,10 @@ CDISCFilteredData <- R6::R6Class( # nolint
         self$get_filtered_dataset(dataname)$get_keys()
       }
 
-      f_rows <- if (length(subject_keys) == 0) {
-        dplyr::n_distinct(self$get_data(dataname = dataname, filtered = TRUE))
-      } else {
-        dplyr::n_distinct(self$get_data(dataname = dataname, filtered = TRUE)[subject_keys])
-      }
-
-      nf_rows <- if (length(subject_keys) == 0) {
-        dplyr::n_distinct(self$get_data(dataname = dataname, filtered = FALSE))
-      } else {
-        dplyr::n_distinct(self$get_data(dataname = dataname, filtered = FALSE)[subject_keys])
-      }
-
-      list(paste0(f_rows, "/", nf_rows))
+      self$get_filtered_dataset(dataname)$get_filter_overview_nsubjs(
+        self$get_data(dataname = dataname, filtered = TRUE),
+        subject_keys
+      )
     }
   )
 )
