@@ -195,7 +195,9 @@ CDISCFilteredData <- R6::R6Class( # nolint
         datanames,
         function(dataname) {
           df <- cbind(
-            self$get_filtered_dataset(dataname)$get_filter_overview_info()[1, 1],
+            self$get_filtered_dataset(dataname)$get_filter_overview_info(
+              filtered_dataset = self$get_data(dataname = dataname, filtered = TRUE)
+            )[1, 1],
             private$get_filter_overview_nsubjs(dataname)
           )
           rownames(df) <- dataname
@@ -214,7 +216,7 @@ CDISCFilteredData <- R6::R6Class( # nolint
     #' @return (`character`) name of parent dataset
     get_parentname = function(dataname) {
       #TODO validate dataname
-      private$parent[[dataname]]
+      private$parents[[dataname]]
     },
 
     #' @description
@@ -232,24 +234,44 @@ CDISCFilteredData <- R6::R6Class( # nolint
     #'   the name of the `dataset` to be added to this object
     #' @return (`self`) object of this class
     set_dataset = function(dataset_args, dataname) {
+      # TODO validation here + what happens if parent dataset doesn't actually exist...
 
       parent_dataname <- dataset_args[["parent"]]
       dataset_args[["parent"]] <- NULL
-
-      #TODO what happens if parent dataset doesn't actually exist...
-      super$set_dataset(dataset_args, dataname)
       private$parents[[dataname]] <- parent_dataname
 
-      if (length(parent_dataname) > 0) {
-        parent_dataset <- self$get_filtered_dataset(parent_dataname)
-        fdataset <- self$get_filtered_dataset(dataname)
-        fdataset$add_to_eval_env(
-          parent_dataset$get_filtered_dataname(),
-          list(parent_dataset$get_data_reactive())
+      logger::log_trace("FilteredData$set_dataset setting dataset, name; { deparse1(dataname) }")
+
+      if (length(parent_dataname) == 0) {
+        super$set_dataset(dataset_args, dataname)
+      } else{
+
+        dataset <- dataset_args[["dataset"]]
+        dataset_args[["dataset"]] <- NULL
+
+        # to include it nicely in the Show R Code; the UI also uses datanames in ids, so no whitespaces allowed
+        check_simple_name(dataname)
+        private$filtered_datasets[[dataname]] <- do.call(
+          what = init_filtered_dataset,
+          args = c(list(dataset), dataset_args, list(dataname = dataname))
         )
+
+        private$reactive_data[[dataname]] <- reactive({
+          env <- new.env(parent = parent.env(globalenv()))
+          env[[dataname]] <- self$get_filtered_dataset(dataname)$get_dataset()
+          env[[paste0(private$parents[[dataname]], "_FILTERED")]] <-
+            private$reactive_data[[private$parents[[dataname]]]]()
+
+          filter_call <- self$get_call(dataname)
+          eval_expr_with_msg(filter_call, env)
+          get(x = self$get_filtered_dataset(dataname)$get_filtered_dataname(), envir = env)
+        })
       }
-    }
-  ),
+
+      invisible(self)
+
+     }
+   ),
 
   ## __Private Methods---------------------
   private = list(

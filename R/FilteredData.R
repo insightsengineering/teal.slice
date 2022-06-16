@@ -196,8 +196,24 @@ FilteredData <- R6::R6Class( # nolint
     get_data = function(dataname, filtered = TRUE) {
       private$check_data_varname_exists(dataname)
       checkmate::assert_flag(filtered)
-
-      self$get_filtered_dataset(dataname)$get_data(filtered = filtered)
+      if(filtered) {
+        # This try is specific for MAEFilteredDataset due to a bug in
+        # S4Vectors causing errors when using the subset function on MAE objects.
+        # The fix was introduced in S4Vectors 0.30.1, but is unavailable for R versions < 4.1
+        # Link to the issue: https://github.com/insightsengineering/teal/issues/210
+        tryCatch(
+          private$reactive_data[[dataname]](),
+          error = function(error) {
+            shiny::validate(paste(
+              "Filtering expression returned error(s). Please change filters.\nThe error message was:",
+              error$message,
+              sep = "\n"
+            ))
+          }
+        )
+      } else {
+        self$get_filtered_dataset(dataname)$get_dataset()
+      }
     },
 
     #' @description
@@ -271,7 +287,9 @@ FilteredData <- R6::R6Class( # nolint
       rows <- lapply(
         datanames,
         function(dataname) {
-          self$get_filtered_dataset(dataname)$get_filter_overview_info()
+          self$get_filtered_dataset(dataname)$get_filter_overview_info(
+            filtered_dataset = self$get_data(dataname = dataname, filtered = TRUE)
+          )
         }
       )
 
@@ -358,6 +376,14 @@ FilteredData <- R6::R6Class( # nolint
         what = init_filtered_dataset,
         args = c(list(dataset), dataset_args, list(dataname = dataname))
       )
+
+      private$reactive_data[[dataname]] <- reactive({
+        env <- new.env(parent = parent.env(globalenv()))
+        env[[dataname]] <- self$get_filtered_dataset(dataname)$get_dataset()
+        filter_call <- self$get_call(dataname)
+        eval_expr_with_msg(filter_call, env)
+        get(x = self$get_filtered_dataset(dataname)$get_filtered_dataname(), envir = env)
+      })
 
       invisible(self)
     },
@@ -900,6 +926,9 @@ FilteredData <- R6::R6Class( # nolint
 
     # keys used for joining/filtering data named nested lists
     keys = NULL,
+
+    # reactive i.e. filtered data
+    reactive_data = list(),
 
     # we implement these functions as checks rather than returning logicals so they can
     # give informative error messages immediately
