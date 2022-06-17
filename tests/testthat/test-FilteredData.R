@@ -2,72 +2,48 @@ testthat::test_that("The constructor does not throw", {
   testthat::expect_error(FilteredData$new(list(iris = list(dataset = iris)), keys = NULL), NA)
 })
 
-testthat::test_that("set_dataset does not throw when passed a TealDataset object", {
-  filtered_data <- FilteredData$new()
-  testthat::expect_error(filtered_data$set_dataset(teal.data::dataset("iris", head(iris))), NA)
-})
+# TODO test set_dataset
 
-testthat::test_that("set_dataset does throw when passed a TealDatasetConnector object before pulling it", {
-  filtered_data <- FilteredData$new()
-  testthat::expect_error(filtered_data$set_dataset(
-    teal.data::dataset_connector("iris", teal.data::callable_function(function() head(iris)))
-  ), regexp = "has not been pulled yet")
-})
-
-testthat::test_that("set_dataset does not throw when passed a pulled TealDatasetConnector object", {
-  filtered_data <- FilteredData$new()
-  connector <- teal.data::dataset_connector("iris", teal.data::callable_function(function() head(iris)))
-  connector$pull()
-  testthat::expect_error(filtered_data$set_dataset(connector, NA))
-})
-
-testthat::test_that("get_keys returns an empty character when a TealDataset has no keys", {
-  filtered_data <- FilteredData$new()
-  filtered_data$set_dataset(teal.data::dataset("iris", head(iris)))
+testthat::test_that("get_keys returns an empty character when data has no keys", {
+  filtered_data <- FilteredData$new(list(iris = list(dataset = head(iris), keys = character(0))), keys = NULL)
   testthat::expect_equal(filtered_data$get_keys("iris"), character(0))
 })
 
 test_that("get_keys returns the same character array if a TealDataset has keys", {
-  filtered_data <- FilteredData$new()
-  filtered_data$set_dataset(teal.data::dataset("iris", head(iris), keys = c("test")))
+  filtered_data <- FilteredData$new(list(iris = list(dataset = head(iris), keys = "test")), keys = NULL)
   testthat::expect_equal(filtered_data$get_keys("iris"), "test")
 })
 
 testthat::test_that("get_varnames returns dataname's column names", {
-  filtered_data <- FilteredData$new()
-  filtered_data$set_dataset(teal.data::dataset("iris", head(iris)))
+  filtered_data <- FilteredData$new(list(iris = list(dataset = head(iris))), keys = NULL)
   testthat::expect_equal(filtered_data$get_varnames("iris"), colnames(iris))
 })
 
-testthat::test_that("get_varlabels returns an array of NAs when a TealDataset has no variable labels", {
-  filtered_data <- FilteredData$new()
-  filtered_data$set_dataset(teal.data::dataset("iris", head(iris)))
+testthat::test_that("get_varlabels returns an array of NAs when dataset has no variable labels", {
+  filtered_data <- FilteredData$new(list(iris = list(dataset = head(iris))), keys = NULL)
   testthat::expect_equal(
     filtered_data$get_varlabels("iris"),
     setNames(object = rep(as.character(NA), ncol(iris)), nm = colnames(iris))
   )
 })
 
-testthat::test_that("get_varlabels returns array's labels when a TealDataset has variable labels", {
+testthat::test_that("get_varlabels returns array's labels when dataset has variable labels", {
   mock_iris <- head(iris)
   formatters::var_labels(mock_iris) <- rep("test", ncol(mock_iris))
-  filtered_data <- FilteredData$new()
-  filtered_data$set_dataset(teal.data::dataset("iris", mock_iris))
+  filtered_data <- FilteredData$new(list(iris = list(dataset = mock_iris)), keys = NULL)
   testthat::expect_equal(
     filtered_data$get_varlabels("iris"),
     setNames(object = rep("test", ncol(mock_iris)), nm = colnames(mock_iris))
   )
 })
 
-testthat::test_that("get_datalabel returns character(0) for a TealDataset with no labels", {
-  filtered_data <- FilteredData$new()
-  filtered_data$set_dataset(teal.data::dataset("iris", head(iris)))
+testthat::test_that("get_datalabel returns character(0) for a dataset with no labels", {
+  filtered_data <- FilteredData$new(list(iris = list(dataset = head(iris))), keys = NULL)
   testthat::expect_equal(filtered_data$get_datalabel("iris"), character(0))
 })
 
-testthat::test_that("get_datalabel returns the label of a passed TealDataset", {
-  filtered_data <- FilteredData$new()
-  filtered_data$set_dataset(teal.data::dataset("iris", head(iris), label = "test"))
+testthat::test_that("get_datalabel returns the label of a passed dataset", {
+  filtered_data <- FilteredData$new(list(iris = list(dataset = head(iris), label = "test")), keys = NULL)
   testthat::expect_equal(filtered_data$get_datalabel("iris"), "test")
 })
 
@@ -346,7 +322,7 @@ get_filtered_data_object <- function() {
   adsl <- as.data.frame(as.list(setNames(nm = c(teal.data::get_cdisc_keys("ADSL")))))
   adsl$sex <- c("F")
 
-  CDISICFilteredData$new(
+  CDISCFilteredData$new(
     list(
       ADSL = list(dataset = adsl, keys = teal.data::get_cdisc_keys("ADSL"), parent = character(0)),
       mock_iris = list(dataset = head(iris)),
@@ -387,7 +363,7 @@ testthat::test_that("get_filter_overview returns overview matrix for non-filtere
     isolate(datasets$get_filter_overview(datasets$datanames())),
     matrix(
       list(
-        "1/1", "1/1", "6/6", "", "", "92/92", "79/79", "79/79", "90/90",
+        "1/1", "1/1", "6/6", "6/6", "", "92/92", "79/79", "79/79", "90/90",
         "90/90", "46/46", "46/46", "90/90", "90/90", "80/80", "80/80"
       ),
       nrow = 8,
@@ -422,7 +398,7 @@ testthat::test_that("get_filter_overview returns overview matrix for filtered da
     isolate(datasets$get_filter_overview(datasets$datanames())),
     matrix(
       list(
-        "0/1", "0/1", "6/6", "", "", "78/92", "66/79", "66/79", "76/90",
+        "0/1", "0/1", "6/6", "6/6", "", "78/92", "66/79", "66/79", "76/90",
         "76/90", "35/46", "35/46", "77/90", "77/90", "67/80", "67/80"
       ),
       nrow = 8,
