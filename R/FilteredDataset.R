@@ -10,8 +10,7 @@
 #'     iris_fd$ui_add_filter_state(id = "add"),
 #'     iris_fd$ui("dataset"),
 #'     verbatimTextOutput("call"),
-#'     verbatimTextOutput("metadata"),
-#'     tableOutput("tbl")
+#'     verbatimTextOutput("metadata")
 #'   ),
 #'   server = function(input, output, session) {
 #'     iris_fd$srv_add_filter_state(id = "add")
@@ -27,8 +26,6 @@
 #'         collapse = "\n"
 #'       )
 #'     })
-#'
-#'     output$tbl <- renderTable(iris_fd$get_data(filtered = TRUE))
 #'   }
 #' )
 #' }
@@ -129,7 +126,16 @@ FilteredDataset <- R6::R6Class( # nolint
     #'   Field containing metadata about the dataset. Each element of the list
     #'   should be atomic and length one.
     initialize = function(dataset, dataname, keys = character(0), label = attr(dataset, "label"), metadata = NULL) {
-      # TODO assertions
+      # dataset assertion in child classes
+
+      checkmate::assert_string(dataname)
+      if (!checkmate::test_string(dataname, pattern = "^\\S+$")) {
+        stop("dataname should not contain spaces")
+      }
+
+      checkmate::assert_character(keys, any.missing = FALSE)
+      checkmate::assert_character(label, null.ok = TRUE)
+      validate_metadata(metadata)
 
       logger::log_trace("Instantiating { class(self)[1] }, dataname: { deparse1(dataname) }")
       private$dataset <- dataset
@@ -214,8 +220,8 @@ FilteredDataset <- R6::R6Class( # nolint
     },
 
     #' @description
-    #' Gets the dataset in this `FilteredDataset`
-    #' @return `TealDataset`
+    #' Gets the dataset object in this `FilteredDataset`
+    #' @return `data.frame` or `MultiAssayExperiment`
     get_dataset = function() {
       private$dataset
     },
@@ -229,9 +235,16 @@ FilteredDataset <- R6::R6Class( # nolint
 
     #' @description
     #' Get filter overview rows of a dataset
-    #' TODO docs
+    #' The output shows the comparison between `filtered_dataset`
+    #' function parameter and the dataset inside self
+    #' @param filtered_dataset comparison object, of the same class
+    #' as `self$get_dataset()`, if `NULL` then `self$get_dataset()`
+    #' is used.
     #' @return (`matrix`) matrix of observations and subjects
     get_filter_overview_info = function(filtered_dataset = NULL) {
+
+      checkmate::assert_class(filtered_dataset, classes = class(self$get_dataset()), null.ok = TRUE)
+
       if (is.null(filtered_dataset)) {
         filtered_dataset <- self$get_dataset()
       }
@@ -242,7 +255,7 @@ FilteredDataset <- R6::R6Class( # nolint
     },
 
     #' @description
-    #' Returns the hash of the unfiltered dataset
+    #' Returns the hash of the dataset
     #' @return (`character(1)`) the hash
     get_hash = function() {
       private$hash
@@ -497,7 +510,7 @@ FilteredDataset <- R6::R6Class( # nolint
 #' @keywords internal
 #' @examples
 #' library(shiny)
-#' ds <- DefaultFilteredDataset$new(iris, "iris")
+#' ds <- teal.slice:::DefaultFilteredDataset$new(iris, "iris")
 #' ds$get_data(filtered = FALSE)
 #'
 #' ds$set_filter_state(
@@ -584,8 +597,7 @@ DefaultFilteredDataset <- R6::R6Class( # nolint
     #' @param state (`named list`)\cr
     #'  containing values of the initial filter. Values should be relevant
     #'  to the referred column.
-    #' @param ... Additional arguments like `include_update` for `CDISCFilteredDataset`.
-    #'  Note that this is ignored for other `FilteredDatasets`.
+    #' @param ... Additional arguments. Note that this is currently not used
     #' @examples
     #' dataset <- teal.slice:::DefaultFilteredDataset$new(iris, "iris")
     #' fs <- list(
@@ -702,8 +714,21 @@ DefaultFilteredDataset <- R6::R6Class( # nolint
       )
     },
 
-    #' TODO
+    #' @description
+    #' Get number of observations based on given keys
+    #' The output shows the comparison between `filtered_dataset`
+    #' function parameter and the dataset inside self
+    #' @param filtered_dataset comparison object, of the same class
+    #' as `self$get_dataset()`, if `NULL` then `self$get_dataset()`
+    #' is used.
+    #' @param `subject_keys` `character` or `NULL` columns to keep when
+    #' calculating the filtering
+    #' @return `list` containing character `#filtered/#not_filtered`
     get_filter_overview_nsubjs = function(filtered_dataset = NULL, subject_keys = NULL) {
+
+      checkmate::assert_class(filtered_dataset, classes = class(self$get_dataset()), null.ok = TRUE)
+      checkmate::assert_character(subject_keys, null.ok = TRUE, any.missing = FALSE)
+
       if (is.null(filtered_dataset)) {
         filtered_dataset <- self$get_dataset()
       }

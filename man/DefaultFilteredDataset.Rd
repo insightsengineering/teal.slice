@@ -10,7 +10,7 @@ The \code{DefaultFilteredDataset} R6 class
 }
 \examples{
 library(shiny)
-ds <- DefaultFilteredDataset$new(iris, "iris")
+ds <- teal.slice:::DefaultFilteredDataset$new(iris, "iris")
 ds$get_data(filtered = FALSE)
 
 ds$set_filter_state(
@@ -167,8 +167,7 @@ Set filter state
 containing values of the initial filter. Values should be relevant
 to the referred column.}
 
-\item{\code{...}}{Additional arguments like \code{include_update} for \code{CDISCFilteredDataset}.
-Note that this is ignored for other \code{FilteredDatasets}.}
+\item{\code{...}}{Additional arguments. Note that this is currently not used}
 }
 \if{html}{\out{</div>}}
 }
@@ -261,13 +260,15 @@ an ID string that corresponds with the ID used to call the module's UI function.
 }
 \subsection{Returns}{
 \code{moduleServer} function which returns \code{NULL}
-TODO
 }
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-DefaultFilteredDataset-get_filter_overview_nsubjs"></a>}}
 \if{latex}{\out{\hypertarget{method-DefaultFilteredDataset-get_filter_overview_nsubjs}{}}}
 \subsection{Method \code{get_filter_overview_nsubjs()}}{
+Get number of observations based on given keys
+The output shows the comparison between \code{filtered_dataset}
+function parameter and the dataset inside self
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{DefaultFilteredDataset$get_filter_overview_nsubjs(
   filtered_dataset = NULL,
@@ -275,6 +276,21 @@ TODO
 )}\if{html}{\out{</div>}}
 }
 
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{filtered_dataset}}{comparison object, of the same class
+as \code{self$get_dataset()}, if \code{NULL} then \code{self$get_dataset()}
+is used.}
+
+\item{\code{`subject_keys`}}{\code{character} or \code{NULL} columns to keep when
+calculating the filtering}
+}
+\if{html}{\out{</div>}}
+}
+\subsection{Returns}{
+\code{list} containing character \verb{#filtered/#not_filtered}
+}
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-DefaultFilteredDataset-clone"></a>}}

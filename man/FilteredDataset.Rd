@@ -175,13 +175,13 @@ Get name of the dataset
 \if{html}{\out{<a id="method-FilteredDataset-get_dataset"></a>}}
 \if{latex}{\out{\hypertarget{method-FilteredDataset-get_dataset}{}}}
 \subsection{Method \code{get_dataset()}}{
-Gets the dataset in this \code{FilteredDataset}
+Gets the dataset object in this \code{FilteredDataset}
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{FilteredDataset$get_dataset()}\if{html}{\out{</div>}}
 }
 
 \subsection{Returns}{
-\code{TealDataset}
+\code{data.frame} or \code{MultiAssayExperiment}
 }
 }
 \if{html}{\out{<hr>}}
@@ -202,11 +202,21 @@ named \code{list} or \code{NULL}
 \if{latex}{\out{\hypertarget{method-FilteredDataset-get_filter_overview_info}{}}}
 \subsection{Method \code{get_filter_overview_info()}}{
 Get filter overview rows of a dataset
-TODO docs
+The output shows the comparison between \code{filtered_dataset}
+function parameter and the dataset inside self
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{FilteredDataset$get_filter_overview_info(filtered_dataset = NULL)}\if{html}{\out{</div>}}
 }
 
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{filtered_dataset}}{comparison object, of the same class
+as \code{self$get_dataset()}, if \code{NULL} then \code{self$get_dataset()}
+is used.}
+}
+\if{html}{\out{</div>}}
+}
 \subsection{Returns}{
 (\code{matrix}) matrix of observations and subjects
 }
@@ -215,7 +225,7 @@ TODO docs
 \if{html}{\out{<a id="method-FilteredDataset-get_hash"></a>}}
 \if{latex}{\out{\hypertarget{method-FilteredDataset-get_hash}{}}}
 \subsection{Method \code{get_hash()}}{
-Returns the hash of the unfiltered dataset
+Returns the hash of the dataset
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{FilteredDataset$get_hash()}\if{html}{\out{</div>}}
 }

@@ -40,8 +40,7 @@ shinyApp(
     iris_fd$ui_add_filter_state(id = "add"),
     iris_fd$ui("dataset"),
     verbatimTextOutput("call"),
-    verbatimTextOutput("metadata"),
-    tableOutput("tbl")
+    verbatimTextOutput("metadata")
   ),
   server = function(input, output, session) {
     iris_fd$srv_add_filter_state(id = "add")
@@ -57,8 +56,6 @@ shinyApp(
         collapse = "\n"
       )
     })
-
-    output$tbl <- renderTable(iris_fd$get_data(filtered = TRUE))
   }
 )
 }
