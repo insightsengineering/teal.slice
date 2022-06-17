@@ -9,6 +9,14 @@ vignette: >
   %\VignetteEncoding{UTF-8}
 ---
 
+NOTE - the text and diagrams in this vignette are slightly out of date and will be updated shortly.
+
+The key changes not yet incorporated:
+1) There is no longer a `CDISCFilteredDataset` object all data.frame are `DefaultFilteredDataset` now.
+2) `FilteredDataset` no longer contains reactive data this is stored inside `FilteredData` instead.
+3) It is also possible to create a `FilteredData` object directly from a list of data.frames without
+create a `TealData` object see `help(init_filtered_data)` for more details.
+
 ## Overview
 
 Filter panel is located in the right side of the teal apps and is responsible for filtering data
