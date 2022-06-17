@@ -492,7 +492,7 @@ testthat::test_that("FilteredData preserves the check field when check is TRUE",
 
 
 
-#TODO
+# TODO
 # testthat::test_that("get_data(FALSE) returns the object passed to the constructor", {
 #   filtered_dataset <- FilteredDataset$new(
 #     dataset = head(iris), dataname = "iris"

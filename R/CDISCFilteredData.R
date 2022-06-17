@@ -87,7 +87,6 @@ CDISCFilteredData <- R6::R6Class( # nolint
       if (length(parent_dataname) == 0) {
         super$get_call(dataname)
       } else {
-
         keys <- self$get_join_keys(parent_dataname, dataname)
         parent_keys <- names(keys)
         dataset_keys <- unname(keys)
@@ -184,7 +183,6 @@ CDISCFilteredData <- R6::R6Class( # nolint
       rows <- lapply(
         datanames,
         function(dataname) {
-
           obs <- self$get_filtered_dataset(dataname)$get_filter_overview_info(
             filtered_dataset = self$get_data(dataname = dataname, filtered = TRUE)
           )[, 1]
@@ -195,7 +193,11 @@ CDISCFilteredData <- R6::R6Class( # nolint
             obs, subs
           )
 
-          rownames(df) <- if (!is.null(names(obs))) { names(obs) } else dataname
+          rownames(df) <- if (!is.null(names(obs))) {
+            names(obs)
+          } else {
+            dataname
+          }
           colnames(df) <- c("Obs", "Subjects")
           df
         }
@@ -210,7 +212,7 @@ CDISCFilteredData <- R6::R6Class( # nolint
     #' @param dataname (`character`) name of the dataset
     #' @return (`character`) name of parent dataset
     get_parentname = function(dataname) {
-      #TODO validate dataname
+      # TODO validate dataname
       private$parents[[dataname]]
     },
 
@@ -239,8 +241,7 @@ CDISCFilteredData <- R6::R6Class( # nolint
 
       if (length(parent_dataname) == 0) {
         super$set_dataset(dataset_args, dataname)
-      } else{
-
+      } else {
         dataset <- dataset_args[["dataset"]]
         dataset_args[["dataset"]] <- NULL
 
@@ -264,9 +265,8 @@ CDISCFilteredData <- R6::R6Class( # nolint
       }
 
       invisible(self)
-
-     }
-   ),
+    }
+  ),
 
   ## __Private Methods---------------------
   private = list(
@@ -277,14 +277,12 @@ CDISCFilteredData <- R6::R6Class( # nolint
     # datanames in the order in which they must be evaluated (in case of dependencies)
     # this is a reactive and kept as a field for caching
     ordered_datanames = NULL,
-
     validate = function() {
       stopifnot(
         setequal(private$ordered_datanames, names(private$dataset_filters)),
       )
       super$validate()
     },
-
     get_filter_overview_nsubjs = function(dataname) {
       # Gets filter overview subjects number and returns a list
       # of the number of subjects of filtered/non-filtered datasets

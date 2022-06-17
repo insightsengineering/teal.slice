@@ -109,19 +109,21 @@ testthat::test_that(
 testthat::test_that("get_filter_overview_info returns overview matrix for DefaultFilteredDataset without filtering", {
   testthat::expect_equal(
     isolate(DefaultFilteredDataset$new(
-      dataset = utils::head(iris), dataname = "iris")$get_filter_overview_info()
-    ),
+      dataset = utils::head(iris), dataname = "iris"
+    )$get_filter_overview_info()),
     matrix(list("6/6", ""), nrow = 1, dimnames = list(c("iris"), c("Obs", "Subjects")))
   )
 })
 
 testthat::test_that(
-  "get_filter_overview_info returns overview matrix for DefaultFilteredDataset if a filtered dataset is passed in", {
-  dataset_iris <- DefaultFilteredDataset$new(dataset = utils::head(iris), dataname = "iris")
-  testthat::expect_equal(
-    isolate(
-      dataset_iris$get_filter_overview_info(dplyr::filter(utils::head(iris), Species == "virginica"))
-    ),
-    matrix(list("0/6", ""), nrow = 1, dimnames = list(c("iris"), c("Obs", "Subjects")))
-  )
-})
+  "get_filter_overview_info returns overview matrix for DefaultFilteredDataset if a filtered dataset is passed in",
+  {
+    dataset_iris <- DefaultFilteredDataset$new(dataset = utils::head(iris), dataname = "iris")
+    testthat::expect_equal(
+      isolate(
+        dataset_iris$get_filter_overview_info(dplyr::filter(utils::head(iris), Species == "virginica"))
+      ),
+      matrix(list("0/6", ""), nrow = 1, dimnames = list(c("iris"), c("Obs", "Subjects")))
+    )
+  }
+)

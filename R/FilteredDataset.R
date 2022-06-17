@@ -704,7 +704,7 @@ DefaultFilteredDataset <- R6::R6Class( # nolint
 
     #' TODO
     get_filter_overview_nsubjs = function(filtered_dataset = NULL, subject_keys = NULL) {
-      if(is.null(filtered_dataset)) {
+      if (is.null(filtered_dataset)) {
         filtered_dataset <- self$get_dataset()
       }
 
@@ -722,19 +722,17 @@ DefaultFilteredDataset <- R6::R6Class( # nolint
 
       list(paste0(f_rows, "/", nf_rows))
     }
-
   ),
   private = list(
     # Gets filter overview observations number and returns a
     # list of the number of observations of filtered/non-filtered datasets
-
-     get_filter_overview_nobs = function(filtered_dataset) {
-       f_rows <- nrow(filtered_dataset)
-       nf_rows <- nrow(self$get_dataset())
-       list(
-         paste0(f_rows, "/", nf_rows)
-       )
-     }
+    get_filter_overview_nobs = function(filtered_dataset) {
+      f_rows <- nrow(filtered_dataset)
+      nf_rows <- nrow(self$get_dataset())
+      list(
+        paste0(f_rows, "/", nf_rows)
+      )
+    }
   )
 )
 

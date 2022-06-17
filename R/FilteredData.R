@@ -79,14 +79,14 @@ FilteredData <- R6::R6Class( # nolint
     #' @param check TODO
     initialize = function(data_objects, keys, code = NULL, check = FALSE) {
       checkmate::assert_list(data_objects, any.missing = FALSE, min.len = 0, names = "unique")
-      #TODO other checks
+      # TODO other checks
 
       self$set_check(check)
       if (!is.null(code)) {
         self$set_code(code)
       }
 
-      for(dataname in names(data_objects)){
+      for (dataname in names(data_objects)) {
         self$set_dataset(data_objects[[dataname]], dataname)
       }
 
@@ -196,7 +196,7 @@ FilteredData <- R6::R6Class( # nolint
     get_data = function(dataname, filtered = TRUE) {
       private$check_data_varname_exists(dataname)
       checkmate::assert_flag(filtered)
-      if(filtered) {
+      if (filtered) {
         # This try is specific for MAEFilteredDataset due to a bug in
         # S4Vectors causing errors when using the subset function on MAE objects.
         # The fix was introduced in S4Vectors 0.30.1, but is unavailable for R versions < 4.1
@@ -393,7 +393,7 @@ FilteredData <- R6::R6Class( # nolint
     #' @param keys TODO
     #' @return (`self`) invisibly this `FilteredData`
     set_join_keys = function(keys) {
-      #TODO validation
+      # TODO validation
       private$keys <- keys
     },
 
@@ -1046,4 +1046,3 @@ get_filter_expr <- function(datasets, datanames = datasets$datanames()) {
     collapse = "\n"
   )
 }
-

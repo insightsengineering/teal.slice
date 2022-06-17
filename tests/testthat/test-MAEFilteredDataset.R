@@ -87,7 +87,8 @@ testthat::test_that("get_filter_overview_info returns overview matrix for MAEFil
     isolate(filtered_dataset$get_filter_overview_info(
       MultiAssayExperiment::subsetByColData(
         miniACC,
-        y = !is.na(miniACC$race) & miniACC$race == "white")
+        y = !is.na(miniACC$race) & miniACC$race == "white"
+      )
     )),
     matrix(
       list("", "78/92", "66/79", "66/79", "76/90", "76/90", "35/46", "35/46", "77/90", "77/90", "67/80", "67/80"),
