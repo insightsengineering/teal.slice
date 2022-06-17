@@ -61,7 +61,7 @@ init_filtered_data.CDISCTealData <- function(x, ...) { # nolint
 init_filtered_data.default <- function(x, join_keys = NULL, code = NULL, cdisc = FALSE) {
   checkmate::check_flag(cdisc)
   datasets <- if (cdisc) {
-    CDISCFilteredData$new(x, join_keys = keys, code = code)
+    CDISCFilteredData$new(x, join_keys = join_keys, code = code)
   } else {
     FilteredData$new(x, join_keys = join_keys, code = code)
   }
