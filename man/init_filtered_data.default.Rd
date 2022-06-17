@@ -4,7 +4,13 @@
 \alias{init_filtered_data.default}
 \title{TODO documentation}
 \usage{
-\method{init_filtered_data}{default}(x, join_keys = NULL, code = NULL, cdisc = FALSE)
+\method{init_filtered_data}{default}(
+  x,
+  join_keys = NULL,
+  code = NULL,
+  cdisc = FALSE,
+  check = FALSE
+)
 }
 \description{
 TODO documentation

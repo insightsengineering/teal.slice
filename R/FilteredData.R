@@ -91,7 +91,9 @@ FilteredData <- R6::R6Class( # nolint
         self$set_dataset(data_objects[[dataname]], dataname)
       }
 
-      self$set_join_keys(join_keys)
+      if (!is.null(join_keys)) {
+        self$set_join_keys(join_keys$get())
+      }
 
       invisible(self)
     },
@@ -397,6 +399,7 @@ FilteredData <- R6::R6Class( # nolint
     set_join_keys = function(join_keys) {
       # TODO validation
       private$keys <- join_keys
+      invisible(self)
     },
 
     #' @description
