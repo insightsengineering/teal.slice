@@ -41,7 +41,7 @@
 #'     iris = list(dataset = iris),
 #'     mtcars = list(dataset = mtcars, metadata = list(type = "training"))
 #'   ),
-#'   keys = NULL, check = FALSE # use wrapper function to avoid having to specify these
+#'   join_keys = NULL, check = FALSE # use wrapper function to avoid having to specify these
 #' )
 #'
 #' # get datanames
@@ -74,10 +74,10 @@ FilteredData <- R6::R6Class( # nolint
     #' @description
     #' Initialize a `FilteredData` object
     #' @param data_objects TODO
-    #' @param keys TODO
+    #' @param join_keys TODO
     #' @param code TODO
     #' @param check TODO
-    initialize = function(data_objects, keys, code = NULL, check = FALSE) {
+    initialize = function(data_objects, join_keys, code = NULL, check = FALSE) {
       checkmate::assert_list(data_objects, any.missing = FALSE, min.len = 0, names = "unique")
       # TODO other checks
 
@@ -90,7 +90,7 @@ FilteredData <- R6::R6Class( # nolint
         self$set_dataset(data_objects[[dataname]], dataname)
       }
 
-      self$set_join_keys(keys)
+      self$set_join_keys(join_keys)
 
       invisible(self)
     },
@@ -390,11 +390,11 @@ FilteredData <- R6::R6Class( # nolint
 
     #' @description
     #' TODO
-    #' @param keys TODO
+    #' @param join_keys TODO
     #' @return (`self`) invisibly this `FilteredData`
-    set_join_keys = function(keys) {
+    set_join_keys = function(join_keys) {
       # TODO validation
-      private$keys <- keys
+      private$keys <- join_keys
     },
 
     #' @description
@@ -445,7 +445,7 @@ FilteredData <- R6::R6Class( # nolint
     #'   list(iris = list(dataset = iris),
     #'        mae = list(dataset = miniACC)
     #'   ),
-    #'   keys = NULL
+    #'   join_keys = NULL
     #' )
     #' fs <- list(
     #'   iris = list(
@@ -483,7 +483,7 @@ FilteredData <- R6::R6Class( # nolint
     #'   list(iris = list(dataset = iris),
     #'        mae = list(dataset = miniACC)
     #'   ),
-    #'   keys = NULL
+    #'   join_keys = NULL
     #' )
     #' fs <- list(
     #'   iris = list(

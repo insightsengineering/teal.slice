@@ -90,7 +90,7 @@ Initialize \code{MAEFilteredDataset} object
 \if{html}{\out{<div class="arguments">}}
 \describe{
 \item{\code{dataset}}{(\code{MulitiAssayExperiment})\cr
-single MultiAssayExperiment for which filters are rendered}
+single \code{MultiAssayExperiment} for which filters are rendered}
 
 \item{\code{dataname}}{(\code{character})\cr
 A given name for the dataset it may not contain spaces}

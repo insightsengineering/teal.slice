@@ -27,7 +27,7 @@
 #'     ADSL = list(dataset = ADSL, keys = c("STUDYID", "USUBJID")),
 #'     ADTTE = list(dataset = ADTTE, keys = c("STUDYID", "USUBJID", "PARAMCD"), parent = "ADSL")
 #'   ),
-#'   check = FALSE, keys = join_keys(join_key("ADSL", "ADTTE", c("STUDYID", "USUBJID")))
+#'   check = FALSE, join_keys = join_keys(join_key("ADSL", "ADTTE", c("STUDYID", "USUBJID")))
 #' )
 #'
 #' # to avoid using isolate(), you can provide a default isolate context by calling

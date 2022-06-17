@@ -749,7 +749,7 @@ MAEFilteredDataset <- R6::R6Class( # nolint
     #' Initialize `MAEFilteredDataset` object
     #'
     #' @param dataset (`MulitiAssayExperiment`)\cr
-    #'  single MultiAssayExperiment for which filters are rendered
+    #'  single `MultiAssayExperiment` for which filters are rendered
     #' @param dataname (`character`)\cr
     #'  A given name for the dataset it may not contain spaces
     #' @param keys optional, (`character`)\cr

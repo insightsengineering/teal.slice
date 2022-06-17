@@ -1,26 +1,26 @@
 testthat::test_that("The constructor does not throw", {
-  testthat::expect_error(FilteredData$new(list(iris = list(dataset = iris)), keys = NULL), NA)
+  testthat::expect_error(FilteredData$new(list(iris = list(dataset = iris)), join_keys = NULL), NA)
 })
 
 # TODO test set_dataset
 
 testthat::test_that("get_keys returns an empty character when data has no keys", {
-  filtered_data <- FilteredData$new(list(iris = list(dataset = head(iris), keys = character(0))), keys = NULL)
+  filtered_data <- FilteredData$new(list(iris = list(dataset = head(iris), keys = character(0))), join_keys = NULL)
   testthat::expect_equal(filtered_data$get_keys("iris"), character(0))
 })
 
 test_that("get_keys returns the same character array if a TealDataset has keys", {
-  filtered_data <- FilteredData$new(list(iris = list(dataset = head(iris), keys = "test")), keys = NULL)
+  filtered_data <- FilteredData$new(list(iris = list(dataset = head(iris), keys = "test")), join_keys = NULL)
   testthat::expect_equal(filtered_data$get_keys("iris"), "test")
 })
 
 testthat::test_that("get_varnames returns dataname's column names", {
-  filtered_data <- FilteredData$new(list(iris = list(dataset = head(iris))), keys = NULL)
+  filtered_data <- FilteredData$new(list(iris = list(dataset = head(iris))), join_keys = NULL)
   testthat::expect_equal(filtered_data$get_varnames("iris"), colnames(iris))
 })
 
 testthat::test_that("get_varlabels returns an array of NAs when dataset has no variable labels", {
-  filtered_data <- FilteredData$new(list(iris = list(dataset = head(iris))), keys = NULL)
+  filtered_data <- FilteredData$new(list(iris = list(dataset = head(iris))), join_keys = NULL)
   testthat::expect_equal(
     filtered_data$get_varlabels("iris"),
     setNames(object = rep(as.character(NA), ncol(iris)), nm = colnames(iris))
@@ -30,7 +30,7 @@ testthat::test_that("get_varlabels returns an array of NAs when dataset has no v
 testthat::test_that("get_varlabels returns array's labels when dataset has variable labels", {
   mock_iris <- head(iris)
   formatters::var_labels(mock_iris) <- rep("test", ncol(mock_iris))
-  filtered_data <- FilteredData$new(list(iris = list(dataset = mock_iris)), keys = NULL)
+  filtered_data <- FilteredData$new(list(iris = list(dataset = mock_iris)), join_keys = NULL)
   testthat::expect_equal(
     filtered_data$get_varlabels("iris"),
     setNames(object = rep("test", ncol(mock_iris)), nm = colnames(mock_iris))
@@ -38,17 +38,17 @@ testthat::test_that("get_varlabels returns array's labels when dataset has varia
 })
 
 testthat::test_that("get_datalabel returns character(0) for a dataset with no labels", {
-  filtered_data <- FilteredData$new(list(iris = list(dataset = head(iris))), keys = NULL)
+  filtered_data <- FilteredData$new(list(iris = list(dataset = head(iris))), join_keys = NULL)
   testthat::expect_equal(filtered_data$get_datalabel("iris"), character(0))
 })
 
 testthat::test_that("get_datalabel returns the label of a passed dataset", {
-  filtered_data <- FilteredData$new(list(iris = list(dataset = head(iris), label = "test")), keys = NULL)
+  filtered_data <- FilteredData$new(list(iris = list(dataset = head(iris), label = "test")), join_keys = NULL)
   testthat::expect_equal(filtered_data$get_datalabel("iris"), "test")
 })
 
 testthat::test_that("get_metadata throws error if dataset does not exist", {
-  filtered_data <- FilteredData$new(list(iris = list(dataset = head(iris))), keys = NULL)
+  filtered_data <- FilteredData$new(list(iris = list(dataset = head(iris))), join_keys = NULL)
   testthat::expect_error(filtered_data$get_metadata("mtcars"), "data mtcars is not available")
 })
 
@@ -58,7 +58,7 @@ testthat::test_that("get_metadata returns metadata if dataset exists", {
       iris = list(dataset = head(iris), metadata = list(E = TRUE)),
       iris2 = list(dataset = head(iris))
     ),
-    keys = NULL
+    join_keys = NULL
   )
   testthat::expect_equal(filtered_data$get_metadata("iris"), list(E = TRUE))
   testthat::expect_null(filtered_data$get_metadata("iris2"))
@@ -69,19 +69,19 @@ testthat::test_that("get_code return the code passed to set_code", {
   code$set_code("'preprocessing code'", "iris")
   filtered_data <- FilteredData$new(
     list(iris = list(dataset = head(iris))),
-    keys = NULL,
+    join_keys = NULL,
     code = code
   )
   testthat::expect_equal(filtered_data$get_code(), "\"preprocessing code\"")
 })
 
 testthat::test_that("get_data does not throw when passed a dataset name", {
-  filtered_data <- FilteredData$new(list(iris = list(dataset = head(iris))), keys = NULL)
+  filtered_data <- FilteredData$new(list(iris = list(dataset = head(iris))), join_keys = NULL)
   testthat::expect_equal(isolate(filtered_data$get_data("iris")), head(iris))
 })
 
 testthat::test_that("get_filtered_dataset returns a list of FilteredDataset", {
-  filtered_data <- FilteredData$new(list(iris = list(dataset = head(iris))), keys = NULL)
+  filtered_data <- FilteredData$new(list(iris = list(dataset = head(iris))), join_keys = NULL)
   checkmate::expect_list(filtered_data$get_filtered_dataset(), "FilteredDataset")
 })
 
@@ -91,19 +91,19 @@ testthat::test_that("get_filtered_dataset returns a list with elements named aft
       iris = list(dataset = head(iris)),
       mtcars = list(dataset = head(mtcars))
     ),
-    keys = NULL
+    join_keys = NULL
   )
   testthat::expect_equal(names(filtered_data$get_filtered_dataset()), c("iris", "mtcars"))
 })
 
 testthat::test_that("get_call returns a list of language objects", {
-  filtered_data <- FilteredData$new(list(iris = list(dataset = head(iris))), keys = NULL)
+  filtered_data <- FilteredData$new(list(iris = list(dataset = head(iris))), join_keys = NULL)
   checkmate::expect_list(filtered_data$get_call("iris"), types = "<-")
 })
 
 testthat::test_that("get call returns a call assigning the filtered object to <name>_FILTERED", {
   mock_iris <- head(iris)
-  filtered_data <- FilteredData$new(list(mock_iris = list(dataset = mock_iris)), keys = NULL)
+  filtered_data <- FilteredData$new(list(mock_iris = list(dataset = mock_iris)), join_keys = NULL)
   eval(filtered_data$get_call("mock_iris")[[1]])
   testthat::expect_equal(mock_iris_FILTERED, mock_iris)
 })
@@ -116,7 +116,7 @@ testthat::test_that(
         iris = list(dataset = iris),
         mtcars = list(dataset = mtcars)
       ),
-      keys = NULL
+      join_keys = NULL
     )
 
     fs <- list(
@@ -165,7 +165,7 @@ testthat::test_that(
         iris = list(dataset = iris),
         mtcars = list(dataset = mtcars)
       ),
-      keys = NULL
+      join_keys = NULL
     )
     fs <- list(
       list(
@@ -189,7 +189,7 @@ testthat::test_that(
         iris = list(dataset = iris),
         mtcars = list(dataset = mtcars)
       ),
-      keys = NULL
+      join_keys = NULL
     )
     fs <- list(
       iris = list(
@@ -214,7 +214,7 @@ testthat::test_that("FilteredData$get_filter_state returns list identical to inp
         mtcars = list(dataset = mtcars),
         mae = list(dataset = miniACC)
       ),
-      keys = NULL
+      join_keys = NULL
     )
 
     fs <- list(
@@ -244,7 +244,7 @@ testthat::test_that("FilteredData$remove_filter_state removes states defined in 
       iris = list(dataset = iris),
       mtcars = list(dataset = mtcars)
     ),
-    keys = NULL
+    join_keys = NULL
   )
   fs <- list(
     iris = list(
@@ -277,7 +277,7 @@ testthat::test_that(
         iris = list(dataset = iris),
         mtcars = list(dataset = mtcars)
       ),
-      keys = NULL
+      join_keys = NULL
     )
     fs <- list(
       iris = list(
@@ -316,7 +316,7 @@ testthat::test_that(
         iris = list(dataset = iris),
         mtcars = list(dataset = mtcars)
       ),
-      keys = NULL
+      join_keys = NULL
     )
     fs <- list(
       iris = list(
@@ -362,7 +362,7 @@ get_filtered_data_object <- function() {
       mock_iris = list(dataset = head(iris)),
       miniACC = list(dataset = miniACC)
     ),
-    keys = NULL
+    join_keys = NULL
   )
 }
 
@@ -450,7 +450,7 @@ testthat::test_that("get_filter_overview returns overview matrix for filtered da
 
 testthat::test_that("restore_state_from_bookmark is a pure virtual method", {
   testthat::expect_error(
-    FilteredData$new(list(iris = list(dataset = iris)), keys = NULL)$restore_state_from_bookmark("test"),
+    FilteredData$new(list(iris = list(dataset = iris)), join_keys = NULL)$restore_state_from_bookmark("test"),
     regexp = "Pure virtual method"
   )
 })
@@ -458,7 +458,7 @@ testthat::test_that("restore_state_from_bookmark is a pure virtual method", {
 testthat::test_that("get_filter_expr returns a string with a filtering expression", {
   datasets <- FilteredData$new(
     list(iris = list(dataset = iris), mtcars = list(dataset = mtcars)),
-    keys = NULL
+    join_keys = NULL
   )
   testthat::expect_equal(
     get_filter_expr(datasets),
@@ -471,7 +471,7 @@ testthat::test_that("FilteredData from TealData preserves the check field when c
 
   filtered_data <- FilteredData$new(
     list("df_1" = list(dataset = data.frame(x = 1:10))),
-    keys = NULL,
+    join_keys = NULL,
     code = code,
     check = FALSE
   )
@@ -483,7 +483,7 @@ testthat::test_that("FilteredData preserves the check field when check is TRUE",
 
   filtered_data <- FilteredData$new(
     list("df_1" = list(dataset = data.frame(x = 1:10))),
-    keys = NULL,
+    join_keys = NULL,
     code = code,
     check = TRUE
   )

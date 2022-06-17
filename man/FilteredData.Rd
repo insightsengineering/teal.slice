@@ -49,7 +49,7 @@ datasets <- teal.slice:::FilteredData$new(
     iris = list(dataset = iris),
     mtcars = list(dataset = mtcars, metadata = list(type = "training"))
   ),
-  keys = NULL, check = FALSE # use wrapper function to avoid having to specify these
+  join_keys = NULL, check = FALSE # use wrapper function to avoid having to specify these
 )
 
 # get datanames
@@ -86,7 +86,7 @@ datasets <- teal.slice:::FilteredData$new(
   list(iris = list(dataset = iris),
        mae = list(dataset = miniACC)
   ),
-  keys = NULL
+  join_keys = NULL
 )
 fs <- list(
   iris = list(
@@ -118,7 +118,7 @@ datasets <- teal.slice:::FilteredData$new(
   list(iris = list(dataset = iris),
        mae = list(dataset = miniACC)
   ),
-  keys = NULL
+  join_keys = NULL
 )
 fs <- list(
   iris = list(
@@ -184,7 +184,7 @@ shiny::isolate(datasets$get_filter_state())
 \subsection{Method \code{new()}}{
 Initialize a \code{FilteredData} object
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{FilteredData$new(data_objects, keys, code = NULL, check = FALSE)}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{FilteredData$new(data_objects, join_keys, code = NULL, check = FALSE)}\if{html}{\out{</div>}}
 }
 
 \subsection{Arguments}{
@@ -192,7 +192,7 @@ Initialize a \code{FilteredData} object
 \describe{
 \item{\code{data_objects}}{TODO}
 
-\item{\code{keys}}{TODO}
+\item{\code{join_keys}}{TODO}
 
 \item{\code{code}}{TODO}
 
@@ -327,7 +327,7 @@ Gets the R preprocessing code string that generates the unfiltered datasets
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
-\item{\code{dataname}}{(\code{character}) name(s) of teal.data::dataset(s)}
+\item{\code{dataname}}{(\code{character}) name(s) of dataset(s)}
 }
 \if{html}{\out{</div>}}
 }
@@ -605,13 +605,13 @@ the name of the \code{dataset} to be added to this object}
 \subsection{Method \code{set_join_keys()}}{
 TODO
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{FilteredData$set_join_keys(keys)}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{FilteredData$set_join_keys(join_keys)}\if{html}{\out{</div>}}
 }
 
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
-\item{\code{keys}}{TODO}
+\item{\code{join_keys}}{TODO}
 }
 \if{html}{\out{</div>}}
 }
@@ -698,7 +698,7 @@ datasets <- teal.slice:::FilteredData$new(
   list(iris = list(dataset = iris),
        mae = list(dataset = miniACC)
   ),
-  keys = NULL
+  join_keys = NULL
 )
 fs <- list(
   iris = list(
@@ -753,7 +753,7 @@ datasets <- teal.slice:::FilteredData$new(
   list(iris = list(dataset = iris),
        mae = list(dataset = miniACC)
   ),
-  keys = NULL
+  join_keys = NULL
 )
 fs <- list(
   iris = list(

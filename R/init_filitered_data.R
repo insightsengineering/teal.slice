@@ -18,7 +18,7 @@ init_filtered_data.TealData <- function(x, ...) { # nolint
   names(data_objects) <- x$get_datanames()
   FilteredData$new(
     data_objects = data_objects,
-    keys = x$get_join_keys()$get(),
+    join_keys = x$get_join_keys()$get(),
     code = x$get_code_class(),
     check = x$get_check()
   )
@@ -50,7 +50,7 @@ init_filtered_data.CDISCTealData <- function(x, ...) { # nolint
 
   CDISCFilteredData$new(
     data_objects = data_objects,
-    keys = x$get_join_keys()$get(),
+    join_keys = x$get_join_keys()$get(),
     code = x$get_code_class(),
     check = x$get_check()
   )
@@ -58,11 +58,11 @@ init_filtered_data.CDISCTealData <- function(x, ...) { # nolint
 
 #' TODO documentation
 #' @export
-init_filtered_data.default <- function(x, keys = NULL, code = NULL, cdisc = FALSE) {
+init_filtered_data.default <- function(x, join_keys = NULL, code = NULL, cdisc = FALSE) {
   checkmate::check_flag(cdisc)
   datasets <- if (cdisc) {
-    CDISCFilteredData$new(x, keys = keys, code = code)
+    CDISCFilteredData$new(x, join_keys = keys, code = code)
   } else {
-    FilteredData$new(x, keys = keys, code = code)
+    FilteredData$new(x, join_keys = join_keys, code = code)
   }
 }
