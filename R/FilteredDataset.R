@@ -128,11 +128,7 @@ FilteredDataset <- R6::R6Class( # nolint
     initialize = function(dataset, dataname, keys = character(0), label = attr(dataset, "label"), metadata = NULL) {
       # dataset assertion in child classes
 
-      checkmate::assert_string(dataname)
-      if (!checkmate::test_string(dataname, pattern = "^\\S+$")) {
-        stop("dataname should not contain spaces")
-      }
-
+      check_simple_name(dataname)
       checkmate::assert_character(keys, any.missing = FALSE)
       checkmate::assert_character(label, null.ok = TRUE)
       teal.data::validate_metadata(metadata)

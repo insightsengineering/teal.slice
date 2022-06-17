@@ -78,8 +78,9 @@ FilteredData <- R6::R6Class( # nolint
     #' @param code TODO
     #' @param check TODO
     initialize = function(data_objects, join_keys, code = NULL, check = FALSE) {
+
       checkmate::assert_list(data_objects, any.missing = FALSE, min.len = 0, names = "unique")
-      # TODO other checks
+      # TODO other checks but internals of data_objects are checked in set_dataset
 
       self$set_check(check)
       if (!is.null(code)) {
@@ -364,8 +365,9 @@ FilteredData <- R6::R6Class( # nolint
     #'   the name of the `dataset` to be added to this object
     #' @return (`self`) invisibly this `FilteredData`
     set_dataset = function(dataset_args, dataname) {
-      # TODO validation here
+
       logger::log_trace("FilteredData$set_dataset setting dataset, name; { deparse1(dataname) }")
+      validate_dataset_args(dataset_args, dataname)
 
       dataset <- dataset_args[["dataset"]]
       dataset_args[["dataset"]] <- NULL

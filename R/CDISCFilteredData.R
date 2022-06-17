@@ -17,7 +17,6 @@
 #'
 #' @examples
 #' library(scda)
-#' library(shiny)
 #' library(teal.data)
 #'
 #' ADSL <- synthetic_cdisc_data("latest")$adsl
@@ -27,7 +26,8 @@
 #'     ADSL = list(dataset = ADSL, keys = c("STUDYID", "USUBJID")),
 #'     ADTTE = list(dataset = ADTTE, keys = c("STUDYID", "USUBJID", "PARAMCD"), parent = "ADSL")
 #'   ),
-#'   check = FALSE, join_keys = join_keys(join_key("ADSL", "ADTTE", c("STUDYID", "USUBJID")))
+#'   check = FALSE,
+#'   join_keys = join_keys(join_key("ADSL", "ADTTE", c("STUDYID", "USUBJID")))
 #' )
 #'
 #' # to avoid using isolate(), you can provide a default isolate context by calling
@@ -65,8 +65,6 @@ CDISCFilteredData <- R6::R6Class( # nolint
     #' @return (`character` vector) of datanames
     datanames = function() {
       datanames <- super$datanames()
-      # get_keys checks dataname is in datanames, not by calling `self$datanames()`,
-      # but `names(private$unfiltered_datasets)` to avoid an infinite recursion
       child_parent <- sapply(datanames, function(i) self$get_parentname(i), USE.NAMES = TRUE, simplify = FALSE)
       ordered_datanames <- topological_sort(child_parent)
       return(as.character(intersect(as.character(ordered_datanames), datanames)))
@@ -82,6 +80,7 @@ CDISCFilteredData <- R6::R6Class( # nolint
     #' @return (`call` or `list` of calls ) to filter dataset
     #'
     get_call = function(dataname) {
+
       parent_dataname <- self$get_parentname(dataname)
 
       if (length(parent_dataname) == 0) {
@@ -212,7 +211,6 @@ CDISCFilteredData <- R6::R6Class( # nolint
     #' @param dataname (`character`) name of the dataset
     #' @return (`character`) name of parent dataset
     get_parentname = function(dataname) {
-      # TODO validate dataname
       private$parents[[dataname]]
     },
 
@@ -231,13 +229,13 @@ CDISCFilteredData <- R6::R6Class( # nolint
     #'   the name of the `dataset` to be added to this object
     #' @return (`self`) object of this class
     set_dataset = function(dataset_args, dataname) {
-      # TODO validation here + what happens if parent dataset doesn't actually exist...
+
+      logger::log_trace("CDISCFilteredData$set_dataset setting dataset, name; { deparse1(dataname) }")
+      validate_dataset_args(dataset_args, dataname, allowed_parent = TRUE)
 
       parent_dataname <- dataset_args[["parent"]]
       dataset_args[["parent"]] <- NULL
       private$parents[[dataname]] <- parent_dataname
-
-      logger::log_trace("FilteredData$set_dataset setting dataset, name; { deparse1(dataname) }")
 
       if (length(parent_dataname) == 0) {
         super$set_dataset(dataset_args, dataname)

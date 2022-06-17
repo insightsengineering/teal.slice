@@ -66,3 +66,9 @@ init_filtered_data.default <- function(x, join_keys = NULL, code = NULL, cdisc =
     FilteredData$new(x, join_keys = join_keys, code = code)
   }
 }
+
+
+#' TODO
+validate_dataset_args <- function(dataset_args, dataname, allowed_parent = FALSE) {
+  return(TRUE)
+}
