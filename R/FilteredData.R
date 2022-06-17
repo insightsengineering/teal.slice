@@ -161,7 +161,7 @@ FilteredData <- R6::R6Class( # nolint
 
     #' @description
     #' Gets the R preprocessing code string that generates the unfiltered datasets
-    #' @param dataname (`character`) name(s) of teal.data::dataset(s)
+    #' @param dataname (`character`) name(s) of dataset(s)
     #' @return (`character`) deparsed code
     get_code = function(dataname = self$datanames()) {
       if (!is.null(private$code)) {

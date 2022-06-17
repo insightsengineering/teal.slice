@@ -47,60 +47,63 @@ testthat::test_that("get_datalabel returns the label of a passed dataset", {
   testthat::expect_equal(filtered_data$get_datalabel("iris"), "test")
 })
 
-testthat::test_that("set_code does not throw when passed a CodeClass", {
-  filtered_data <- FilteredData$new()
-  testthat::expect_error(filtered_data$set_code(teal.data:::CodeClass$new("'preprocessing code'")), NA)
-})
-
 testthat::test_that("get_metadata throws error if dataset does not exist", {
-  filtered_data <- FilteredData$new()
-  filtered_data$set_dataset(teal.data::dataset("iris", head(iris)))
+  filtered_data <- FilteredData$new(list(iris = list(dataset = head(iris))), keys = NULL)
   testthat::expect_error(filtered_data$get_metadata("mtcars"), "data mtcars is not available")
 })
 
 testthat::test_that("get_metadata returns metadata if dataset exists", {
-  filtered_data <- FilteredData$new()
-  filtered_data$set_dataset(teal.data::dataset("iris", head(iris), metadata = list(E = TRUE)))
-  filtered_data$set_dataset(teal.data::dataset("iris2", head(iris)))
+  filtered_data <- FilteredData$new(
+    list(
+      iris = list(dataset = head(iris), metadata = list(E = TRUE)),
+      iris2 = list(dataset = head(iris))
+    ),
+    keys = NULL
+  )
   testthat::expect_equal(filtered_data$get_metadata("iris"), list(E = TRUE))
   testthat::expect_null(filtered_data$get_metadata("iris2"))
 })
 
 testthat::test_that("get_code return the code passed to set_code", {
-  filtered_data <- FilteredData$new()
-  filtered_data$set_code(teal.data:::CodeClass$new("'preprocessing code'"))
+  code <- teal.data:::CodeClass$new()
+  code$set_code("'preprocessing code'", "iris")
+  filtered_data <- FilteredData$new(
+    list(iris = list(dataset = head(iris))),
+    keys = NULL,
+    code = code
+  )
   testthat::expect_equal(filtered_data$get_code(), "\"preprocessing code\"")
 })
 
 testthat::test_that("get_data does not throw when passed a dataset name", {
-  filtered_data <- FilteredData$new()
-  filtered_data$set_dataset(teal.data::dataset("iris", head(iris)))
+  filtered_data <- FilteredData$new(list(iris = list(dataset = head(iris))), keys = NULL)
   testthat::expect_equal(isolate(filtered_data$get_data("iris")), head(iris))
 })
 
 testthat::test_that("get_filtered_dataset returns a list of FilteredDataset", {
-  filtered_data <- FilteredData$new()
-  filtered_data$set_dataset(teal.data::dataset("iris", head(iris)))
+  filtered_data <- FilteredData$new(list(iris = list(dataset = head(iris))), keys = NULL)
   checkmate::expect_list(filtered_data$get_filtered_dataset(), "FilteredDataset")
 })
 
 testthat::test_that("get_filtered_dataset returns a list with elements named after set datasets", {
-  filtered_data <- FilteredData$new()
-  filtered_data$set_dataset(teal.data::dataset("iris", head(iris)))
-  filtered_data$set_dataset(teal.data::dataset("mtcars", head(mtcars)))
+  filtered_data <- FilteredData$new(
+    list(
+      iris = list(dataset = head(iris)),
+      mtcars = list(dataset = head(mtcars))
+    ),
+    keys = NULL
+  )
   testthat::expect_equal(names(filtered_data$get_filtered_dataset()), c("iris", "mtcars"))
 })
 
 testthat::test_that("get_call returns a list of language objects", {
-  filtered_data <- FilteredData$new()
-  filtered_data$set_dataset(teal.data::dataset("iris", head(iris)))
+  filtered_data <- FilteredData$new(list(iris = list(dataset = head(iris))), keys = NULL)
   checkmate::expect_list(filtered_data$get_call("iris"), types = "<-")
 })
 
 testthat::test_that("get call returns a call assigning the filtered object to <name>_FILTERED", {
   mock_iris <- head(iris)
-  filtered_data <- FilteredData$new()
-  filtered_data$set_dataset(teal.data::dataset("mock_iris", mock_iris))
+  filtered_data <- FilteredData$new(list(mock_iris = list(dataset = mock_iris)), keys = NULL)
   eval(filtered_data$get_call("mock_iris")[[1]])
   testthat::expect_equal(mock_iris_FILTERED, mock_iris)
 })
@@ -108,9 +111,14 @@ testthat::test_that("get call returns a call assigning the filtered object to <n
 testthat::test_that(
   "FilteredData$set_filter_state sets filters in FilteredDataset specified by the named list",
   code = {
-    datasets <- FilteredData$new()
-    datasets$set_dataset(teal.data::dataset("iris", iris))
-    datasets$set_dataset(teal.data::dataset("mtcars", mtcars))
+    datasets <- FilteredData$new(
+      list(
+        iris = list(dataset = iris),
+        mtcars = list(dataset = mtcars)
+      ),
+      keys = NULL
+    )
+
     fs <- list(
       iris = list(
         Sepal.Length = list(c(5.1, 6.4)),
@@ -152,9 +160,13 @@ testthat::test_that(
 testthat::test_that(
   "FilteredData$set_filter_state throws error with unnamed datasets list",
   code = {
-    datasets <- FilteredData$new()
-    datasets$set_dataset(teal.data::dataset("iris", iris))
-    datasets$set_dataset(teal.data::dataset("mtcars", mtcars))
+    datasets <- FilteredData$new(
+      list(
+        iris = list(dataset = iris),
+        mtcars = list(dataset = mtcars)
+      ),
+      keys = NULL
+    )
     fs <- list(
       list(
         Sepal.Length = list(c(5.1, 6.4)),
@@ -172,9 +184,13 @@ testthat::test_that(
 testthat::test_that(
   "FilteredData$set_filter_state throws error with unnamed variables list",
   code = {
-    datasets <- FilteredData$new()
-    datasets$set_dataset(teal.data::dataset("iris", iris))
-    datasets$set_dataset(teal.data::dataset("mtcars", mtcars))
+    datasets <- FilteredData$new(
+      list(
+        iris = list(dataset = iris),
+        mtcars = list(dataset = mtcars)
+      ),
+      keys = NULL
+    )
     fs <- list(
       iris = list(
         list(c(5.1, 6.4)),
@@ -191,10 +207,16 @@ testthat::test_that(
 
 testthat::test_that("FilteredData$get_filter_state returns list identical to input",
   code = {
-    datasets <- FilteredData$new()
-    datasets$set_dataset(teal.data::dataset("iris", iris))
     utils::data(miniACC, package = "MultiAssayExperiment")
-    datasets$set_dataset(teal.data::dataset("mae", miniACC))
+    datasets <- FilteredData$new(
+      list(
+        iris = list(dataset = iris),
+        mtcars = list(dataset = mtcars),
+        mae = list(dataset = miniACC)
+      ),
+      keys = NULL
+    )
+
     fs <- list(
       iris = list(
         Sepal.Length = list(selected = c(5.1, 6.4), keep_na = TRUE, keep_inf = FALSE),
@@ -217,9 +239,13 @@ testthat::test_that("FilteredData$get_filter_state returns list identical to inp
 )
 
 testthat::test_that("FilteredData$remove_filter_state removes states defined in list", {
-  datasets <- teal.slice:::FilteredData$new()
-  datasets$set_dataset(teal.data::dataset("iris", iris))
-  datasets$set_dataset(teal.data::dataset("mtcars", mtcars))
+  datasets <- FilteredData$new(
+    list(
+      iris = list(dataset = iris),
+      mtcars = list(dataset = mtcars)
+    ),
+    keys = NULL
+  )
   fs <- list(
     iris = list(
       Sepal.Length = list(c(5.1, 6.4)),
@@ -246,9 +272,13 @@ testthat::test_that("FilteredData$remove_filter_state removes states defined in 
 testthat::test_that(
   "FilteredData$remove_all_filter_states removes all filters of all datasets in FilteredData",
   code = {
-    datasets <- FilteredData$new()
-    datasets$set_dataset(teal.data::dataset("iris", iris))
-    datasets$set_dataset(teal.data::dataset("mtcars", mtcars))
+    datasets <- FilteredData$new(
+      list(
+        iris = list(dataset = iris),
+        mtcars = list(dataset = mtcars)
+      ),
+      keys = NULL
+    )
     fs <- list(
       iris = list(
         Sepal.Length = list(c(5.1, 6.4)),
@@ -281,9 +311,13 @@ testthat::test_that(
 testthat::test_that(
   "FilteredData$remove_all_filter_states remove the filters of the desired dataset only",
   code = {
-    datasets <- FilteredData$new()
-    datasets$set_dataset(teal.data::dataset("iris", iris))
-    datasets$set_dataset(teal.data::dataset("mtcars", mtcars))
+    datasets <- FilteredData$new(
+      list(
+        iris = list(dataset = iris),
+        mtcars = list(dataset = mtcars)
+      ),
+      keys = NULL
+    )
     fs <- list(
       iris = list(
         Sepal.Length = list(c(5.1, 6.4)),

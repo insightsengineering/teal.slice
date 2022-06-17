@@ -135,7 +135,7 @@ FilteredDataset <- R6::R6Class( # nolint
       private$dataset <- dataset
       private$dataname <- dataname
       private$keys <- keys
-      private$label <- label
+      private$label <- if (is.null(label)) character(0) else label
       private$metadata <- metadata
       private$calculate_hash()
       invisible(self)
