@@ -135,7 +135,7 @@ FilteredDataset <- R6::R6Class( # nolint
 
       checkmate::assert_character(keys, any.missing = FALSE)
       checkmate::assert_character(label, null.ok = TRUE)
-      validate_metadata(metadata)
+      teal.data::validate_metadata(metadata)
 
       logger::log_trace("Instantiating { class(self)[1] }, dataname: { deparse1(dataname) }")
       private$dataset <- dataset
