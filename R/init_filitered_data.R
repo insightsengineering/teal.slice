@@ -3,7 +3,7 @@ init_filtered_data <- function(x, ...) {
   UseMethod("init_filtered_data")
 }
 
-#' @keywords internal
+
 #' @export
 init_filtered_data.TealData <- function(x, ...) { # nolint
   data_objects <- lapply(x$get_datanames(), function(dataname) {
@@ -25,7 +25,7 @@ init_filtered_data.TealData <- function(x, ...) { # nolint
   )
 }
 
-#' @keywords internal
+
 #' @export
 init_filtered_data.CDISCTealData <- function(x, ...) { # nolint
   data_objects <- lapply(x$get_datanames(), function(dataname) {

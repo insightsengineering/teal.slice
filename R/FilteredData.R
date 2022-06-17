@@ -9,11 +9,10 @@
 #'
 #' For each dataset, `get_filter_expr` returns the call to filter the dataset according
 #' to the filter state. The data itself can be obtained through `get_data`.
-#' Other classes take care of actually merging together all the datasets.
 #'
 #' The datasets are filtered lazily, i.e. only when requested / needed in a Shiny app.
 #'
-#' By design, any dataname set through `set_data` cannot be removed because
+#' By design, any dataname set through `set_dataset` cannot be removed because
 #' other code may already depend on it. As a workaround, the underlying
 #' data can be set to `NULL`.
 #'
