@@ -101,8 +101,10 @@ Set, get and remove filter states of \code{FilteredData} object
 utils::data(miniACC, package = "MultiAssayExperiment")
 
 datasets <- init_filtered_data(
-  iris = list(dataset = iris),
-  mae = list(dataset = miniACC)
+  x = list(
+    iris = list(dataset = iris),
+    mae = list(dataset = miniACC)
+  )
 )
 fs <- list(
   iris = list(

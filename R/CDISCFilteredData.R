@@ -80,7 +80,6 @@ CDISCFilteredData <- R6::R6Class( # nolint
     #' @return (`call` or `list` of calls ) to filter dataset
     #'
     get_call = function(dataname) {
-
       parent_dataname <- self$get_parentname(dataname)
 
       if (length(parent_dataname) == 0) {
@@ -229,7 +228,6 @@ CDISCFilteredData <- R6::R6Class( # nolint
     #'   the name of the `dataset` to be added to this object
     #' @return (`self`) object of this class
     set_dataset = function(dataset_args, dataname) {
-
       logger::log_trace("CDISCFilteredData$set_dataset setting dataset, name; { deparse1(dataname) }")
       validate_dataset_args(dataset_args, dataname, allowed_parent = TRUE)
 

@@ -15,9 +15,7 @@
 ## ------------------------------------------------
 
 utils::data(miniACC, package = "MultiAssayExperiment")
-dataset <- teal.slice:::MAEFilteredDataset$new(
-  miniACC, "MAE"
-)
+dataset <- teal.slice:::MAEFilteredDataset$new(miniACC, "MAE")
 fs <- list(
   subjects = list(
     years_to_birth = list(selected = c(30, 50), keep_na = TRUE, keep_inf = FALSE),
@@ -163,11 +161,19 @@ attribute does not exist for the data
 \if{latex}{\out{\hypertarget{method-MAEFilteredDataset-get_filter_overview_info}{}}}
 \subsection{Method \code{get_filter_overview_info()}}{
 Get filter overview rows of a dataset
-TODO docs
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{MAEFilteredDataset$get_filter_overview_info(filtered_dataset = NULL)}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{MAEFilteredDataset$get_filter_overview_info(
+  filtered_dataset = self$get_dataset()
+)}\if{html}{\out{</div>}}
 }
 
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{filtered_dataset}}{(\code{MultiAssayExperiment}) object to calculate filter overview statistics on.}
+}
+\if{html}{\out{</div>}}
+}
 \subsection{Returns}{
 (\code{matrix}) matrix of observations and subjects
 }
@@ -213,9 +219,7 @@ to the referred column.}
 \subsection{Examples}{
 \if{html}{\out{<div class="r example copy">}}
 \preformatted{utils::data(miniACC, package = "MultiAssayExperiment")
-dataset <- teal.slice:::MAEFilteredDataset$new(
-  miniACC, "MAE"
-)
+dataset <- teal.slice:::MAEFilteredDataset$new(miniACC, "MAE")
 fs <- list(
   subjects = list(
     years_to_birth = list(selected = c(30, 50), keep_na = TRUE, keep_inf = FALSE),
@@ -311,10 +315,26 @@ an ID string that corresponds with the ID used to call the module's UI function.
 \if{html}{\out{<a id="method-MAEFilteredDataset-get_filter_overview_nsubjs"></a>}}
 \if{latex}{\out{\hypertarget{method-MAEFilteredDataset-get_filter_overview_nsubjs}{}}}
 \subsection{Method \code{get_filter_overview_nsubjs()}}{
+Gets filter overview subjects number
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{MAEFilteredDataset$get_filter_overview_nsubjs(filtered_dataset, subject_keys)}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{MAEFilteredDataset$get_filter_overview_nsubjs(
+  filtered_dataset = self$get_dataset(),
+  subject_keys
+)}\if{html}{\out{</div>}}
 }
 
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{filtered_dataset}}{(\code{MultiAssayExperiment}) object to calculate filter overview statistics on.}
+
+\item{\code{subject_keys}}{(unused) in \code{MultiAssayExperiment} unique subjects are the rows of \code{colData} slot.}
+}
+\if{html}{\out{</div>}}
+}
+\subsection{Returns}{
+\code{list} with the number of subjects of filtered/non-filtered datasets.
+}
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-MAEFilteredDataset-clone"></a>}}

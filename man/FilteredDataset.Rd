@@ -59,13 +59,13 @@ Initializes this \code{FilteredDataset} object
 \item{\code{dataset}}{(\code{data.frame} or \code{MultiAssayExperiment})\cr
 single dataset for which filters are rendered}
 
-\item{\code{dataname}}{(\code{character})\cr
+\item{\code{dataname}}{(\code{character(1)})\cr
 A given name for the dataset it may not contain spaces}
 
 \item{\code{keys}}{optional, (\code{character})\cr
 Vector with primary keys}
 
-\item{\code{label}}{(\code{character})\cr
+\item{\code{label}}{(\code{character(1)})\cr
 Label to describe the dataset}
 
 \item{\code{metadata}}{(named \code{list} or \code{NULL}) \cr
@@ -205,7 +205,7 @@ Get filter overview rows of a dataset
 The output shows the comparison between \code{filtered_dataset}
 function parameter and the dataset inside self
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{FilteredDataset$get_filter_overview_info(filtered_dataset = NULL)}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{FilteredDataset$get_filter_overview_info(filtered_dataset = self$get_dataset())}\if{html}{\out{</div>}}
 }
 
 \subsection{Arguments}{

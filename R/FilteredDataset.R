@@ -3,7 +3,11 @@
 #' @keywords internal
 #' @examples
 #' # DefaultFilteredDataset example
-#' iris_fd <- init_filtered_dataset(iris, dataname = "iris", metadata = list(type = "teal"))
+#' iris_fd <- teal.slice:::init_filtered_dataset(
+#'   iris,
+#'   dataname = "iris",
+#'   metadata = list(type = "teal")
+#' )
 #' \dontrun{
 #' shinyApp(
 #'   ui = fluidPage(
@@ -33,7 +37,7 @@
 #' # MAEFilteredDataset example
 #' library(MultiAssayExperiment)
 #' data(miniACC)
-#' MAE_fd <- init_filtered_dataset(miniACC, "MAE", metadata = list(type = "MAE"))
+#' MAE_fd <- teal.slice:::init_filtered_dataset(miniACC, "MAE", metadata = list(type = "MAE"))
 #' \dontrun{
 #' shinyApp(
 #'   ui = fluidPage(
@@ -106,6 +110,7 @@ init_filtered_dataset.MultiAssayExperiment <- function(dataset, # nolint
 #' (`data.frame`) or multiple (`MultiAssayExperiment`) `FilterStates` objects.
 #' Each `FilterStates` is responsible for one filter/subset expression applied for specific
 #' components of the dataset.
+#' @importFrom digest digest
 #' @keywords internal
 FilteredDataset <- R6::R6Class( # nolint
   "FilteredDataset",
@@ -237,13 +242,8 @@ FilteredDataset <- R6::R6Class( # nolint
     #' as `self$get_dataset()`, if `NULL` then `self$get_dataset()`
     #' is used.
     #' @return (`matrix`) matrix of observations and subjects
-    get_filter_overview_info = function(filtered_dataset = NULL) {
-
-      checkmate::assert_class(filtered_dataset, classes = class(self$get_dataset()), null.ok = TRUE)
-
-      if (is.null(filtered_dataset)) {
-        filtered_dataset <- self$get_dataset()
-      }
+    get_filter_overview_info = function(filtered_dataset = self$get_dataset()) {
+      checkmate::assert_class(filtered_dataset, classes = class(self$get_dataset()))
       df <- cbind(private$get_filter_overview_nobs(filtered_dataset), "")
       rownames(df) <- self$get_dataname()
       colnames(df) <- c("Obs", "Subjects")
@@ -507,17 +507,13 @@ FilteredDataset <- R6::R6Class( # nolint
 #' @examples
 #' library(shiny)
 #' ds <- teal.slice:::DefaultFilteredDataset$new(iris, "iris")
-#' ds$get_data(filtered = FALSE)
-#'
 #' ds$set_filter_state(
 #'   state = list(
 #'     Species = list(selected = "virginica"),
 #'     Petal.Length = list(selected = c(2.0, 5))
 #'   )
 #' )
-#'
 #' isolate(ds$get_filter_state())
-#' isolate(ds$get_filter_overview_info())
 #' isolate(ds$get_call())
 DefaultFilteredDataset <- R6::R6Class( # nolint
   classname = "DefaultFilteredDataset",
@@ -717,17 +713,12 @@ DefaultFilteredDataset <- R6::R6Class( # nolint
     #' @param filtered_dataset comparison object, of the same class
     #' as `self$get_dataset()`, if `NULL` then `self$get_dataset()`
     #' is used.
-    #' @param `subject_keys` `character` or `NULL` columns to keep when
-    #' calculating the filtering
+    #' @param subject_keys (`character` or `NULL`) columns denoting unique subjects when
+    #' calculating the filtering.
     #' @return `list` containing character `#filtered/#not_filtered`
-    get_filter_overview_nsubjs = function(filtered_dataset = NULL, subject_keys = NULL) {
-
-      checkmate::assert_class(filtered_dataset, classes = class(self$get_dataset()), null.ok = TRUE)
+    get_filter_overview_nsubjs = function(filtered_dataset = self$get_dataset(), subject_keys = NULL) {
+      checkmate::assert_class(filtered_dataset, classes = class(self$get_dataset()))
       checkmate::assert_character(subject_keys, null.ok = TRUE, any.missing = FALSE)
-
-      if (is.null(filtered_dataset)) {
-        filtered_dataset <- self$get_dataset()
-      }
 
       f_rows <- if (length(subject_keys) == 0) {
         dplyr::n_distinct(filtered_dataset)
@@ -887,13 +878,9 @@ MAEFilteredDataset <- R6::R6Class( # nolint
 
     #' @description
     #' Get filter overview rows of a dataset
-    #' TODO docs
+    #' @param filtered_dataset (`MultiAssayExperiment`) object to calculate filter overview statistics on.
     #' @return (`matrix`) matrix of observations and subjects
-    get_filter_overview_info = function(filtered_dataset = NULL) {
-      if (is.null(filtered_dataset)) {
-        filtered_dataset <- self$get_dataset()
-      }
-
+    get_filter_overview_info = function(filtered_dataset = self$get_dataset()) {
       names_exps <- paste0("- ", names(self$get_dataset()))
       mae_and_exps <- c(self$get_dataname(), names_exps)
 
@@ -927,9 +914,7 @@ MAEFilteredDataset <- R6::R6Class( # nolint
     #' @param ... ignored.
     #' @examples
     #' utils::data(miniACC, package = "MultiAssayExperiment")
-    #' dataset <- teal.slice:::MAEFilteredDataset$new(
-    #'   miniACC, "MAE"
-    #' )
+    #' dataset <- teal.slice:::MAEFilteredDataset$new(miniACC, "MAE")
     #' fs <- list(
     #'   subjects = list(
     #'     years_to_birth = list(selected = c(30, 50), keep_na = TRUE, keep_inf = FALSE),
@@ -1096,9 +1081,12 @@ MAEFilteredDataset <- R6::R6Class( # nolint
       )
     },
 
-    # Gets filter overview subjects number and returns a list
-    # of the number of subjects of filtered/non-filtered datasets
-    get_filter_overview_nsubjs = function(filtered_dataset, subject_keys) {
+    #' @description
+    #' Gets filter overview subjects number
+    #' @param filtered_dataset (`MultiAssayExperiment`) object to calculate filter overview statistics on.
+    #' @param subject_keys (unused) in `MultiAssayExperiment` unique subjects are the rows of `colData` slot.
+    #' @return `list` with the number of subjects of filtered/non-filtered datasets.
+    get_filter_overview_nsubjs = function(filtered_dataset = self$get_dataset(), subject_keys) {
       data_f <- filtered_dataset
       data_nf <- self$get_dataset()
       experiment_names <- names(data_nf)

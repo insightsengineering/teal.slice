@@ -2,10 +2,24 @@
 % Please edit documentation in R/init_filitered_data.R
 \name{validate_dataset_args}
 \alias{validate_dataset_args}
-\title{TODO}
+\title{Validate dataset arguments}
 \usage{
 validate_dataset_args(dataset_args, dataname, allowed_parent = FALSE)
 }
+\arguments{
+\item{dataset_args}{(\code{list})\cr
+containing the arguments except (\code{dataname})
+needed by \code{init_filtered_dataset}}
+
+\item{dataname}{(\code{character(1)})\cr
+the name of the \code{dataset} to be added to this object}
+
+\item{allowed_parent}{(\code{logical(1)})\cr
+whether \code{FilteredDataset} can have a parent - i.e. if it's a part of \code{CDISCFilteredData}}
+}
+\value{
+(\code{logical(1)})
+}
 \description{
-TODO
+Validate dataset arguments
 }

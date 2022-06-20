@@ -79,7 +79,6 @@ isolate(datasets$get_filter_state())
 <li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilteredData" data-id="get_check"><a href='../../teal.slice/html/FilteredData.html#method-FilteredData-get_check'><code>teal.slice::FilteredData$get_check()</code></a></li>
 <li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilteredData" data-id="get_code"><a href='../../teal.slice/html/FilteredData.html#method-FilteredData-get_code'><code>teal.slice::FilteredData$get_code()</code></a></li>
 <li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilteredData" data-id="get_data"><a href='../../teal.slice/html/FilteredData.html#method-FilteredData-get_data'><code>teal.slice::FilteredData$get_data()</code></a></li>
-<li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilteredData" data-id="get_data_attr"><a href='../../teal.slice/html/FilteredData.html#method-FilteredData-get_data_attr'><code>teal.slice::FilteredData$get_data_attr()</code></a></li>
 <li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilteredData" data-id="get_datalabel"><a href='../../teal.slice/html/FilteredData.html#method-FilteredData-get_datalabel'><code>teal.slice::FilteredData$get_datalabel()</code></a></li>
 <li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilteredData" data-id="get_filter_state"><a href='../../teal.slice/html/FilteredData.html#method-FilteredData-get_filter_state'><code>teal.slice::FilteredData$get_filter_state()</code></a></li>
 <li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilteredData" data-id="get_filtered_dataset"><a href='../../teal.slice/html/FilteredData.html#method-FilteredData-get_filtered_dataset'><code>teal.slice::FilteredData$get_filtered_dataset()</code></a></li>
@@ -135,7 +134,7 @@ on are available.
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
-\item{\code{dataname}}{(\code{character}) name of the dataset}
+\item{\code{dataname}}{(\code{character(1)}) name of the dataset}
 }
 \if{html}{\out{</div>}}
 }
@@ -175,7 +174,7 @@ Gets variable names of a given dataname for the filtering. This excludes parent 
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
-\item{\code{dataname}}{(\code{character}) name of the dataset}
+\item{\code{dataname}}{(\code{character(1)}) name of the dataset}
 }
 \if{html}{\out{</div>}}
 }
@@ -218,7 +217,7 @@ Get parent dataset name
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
-\item{\code{dataname}}{(\code{character}) name of the dataset}
+\item{\code{dataname}}{(\code{character(1)}) name of the dataset}
 }
 \if{html}{\out{</div>}}
 }
@@ -247,7 +246,7 @@ containing the arguments except (\code{dataname})
 needed by \code{init_filtered_dataset} (can also
 include \code{parent} which will be ignored)}
 
-\item{\code{dataname}}{(\code{string})\cr
+\item{\code{dataname}}{(\code{character(1)})\cr
 the name of the \code{dataset} to be added to this object}
 }
 \if{html}{\out{</div>}}

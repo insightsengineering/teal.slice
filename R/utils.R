@@ -208,4 +208,3 @@ set_state <- function(x, value, is_reactive = shiny::isRunning()) {
   }
   invisible(NULL)
 }
-

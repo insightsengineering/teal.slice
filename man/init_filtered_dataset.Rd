@@ -33,7 +33,11 @@ Initializes \code{FilteredDataset}
 }
 \examples{
 # DefaultFilteredDataset example
-iris_fd <- init_filtered_dataset(iris, dataname = "iris", metadata = list(type = "teal"))
+iris_fd <- teal.slice:::init_filtered_dataset(
+  iris,
+  dataname = "iris",
+  metadata = list(type = "teal")
+)
 \dontrun{
 shinyApp(
   ui = fluidPage(
@@ -63,7 +67,7 @@ shinyApp(
 # MAEFilteredDataset example
 library(MultiAssayExperiment)
 data(miniACC)
-MAE_fd <- init_filtered_dataset(miniACC, "MAE", metadata = list(type = "MAE"))
+MAE_fd <- teal.slice:::init_filtered_dataset(miniACC, "MAE", metadata = list(type = "MAE"))
 \dontrun{
 shinyApp(
   ui = fluidPage(

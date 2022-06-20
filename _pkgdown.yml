@@ -9,10 +9,11 @@ navbar:
     - icon: fa-github
       href: https://github.com/insightsengineering/teal.slice
 
-reference:
+reference: 
   - title: Teal filter-panel API
-    desc: Functions used to modify filter-panel states.
+    desc: Functions used initialize filter-panel and to modify its states.
     contents:
+      - init_filtered_data
       - get_filter_state
       - set_filter_state
       - remove_filter_state

@@ -11,17 +11,13 @@ The \code{DefaultFilteredDataset} R6 class
 \examples{
 library(shiny)
 ds <- teal.slice:::DefaultFilteredDataset$new(iris, "iris")
-ds$get_data(filtered = FALSE)
-
 ds$set_filter_state(
   state = list(
     Species = list(selected = "virginica"),
     Petal.Length = list(selected = c(2.0, 5))
   )
 )
-
 isolate(ds$get_filter_state())
-isolate(ds$get_filter_overview_info())
 isolate(ds$get_call())
 
 ## ------------------------------------------------
@@ -271,7 +267,7 @@ The output shows the comparison between \code{filtered_dataset}
 function parameter and the dataset inside self
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{DefaultFilteredDataset$get_filter_overview_nsubjs(
-  filtered_dataset = NULL,
+  filtered_dataset = self$get_dataset(),
   subject_keys = NULL
 )}\if{html}{\out{</div>}}
 }
@@ -283,8 +279,8 @@ function parameter and the dataset inside self
 as \code{self$get_dataset()}, if \code{NULL} then \code{self$get_dataset()}
 is used.}
 
-\item{\code{`subject_keys`}}{\code{character} or \code{NULL} columns to keep when
-calculating the filtering}
+\item{\code{subject_keys}}{(\code{character} or \code{NULL}) columns denoting unique subjects when
+calculating the filtering.}
 }
 \if{html}{\out{</div>}}
 }

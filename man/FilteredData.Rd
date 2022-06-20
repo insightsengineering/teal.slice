@@ -15,11 +15,10 @@ each dataset having a filter state that determines how it is filtered.
 
 For each dataset, \code{get_filter_expr} returns the call to filter the dataset according
 to the filter state. The data itself can be obtained through \code{get_data}.
-Other classes take care of actually merging together all the datasets.
 
 The datasets are filtered lazily, i.e. only when requested / needed in a Shiny app.
 
-By design, any dataname set through \code{set_data} cannot be removed because
+By design, any dataname set through \code{set_dataset} cannot be removed because
 other code may already depend on it. As a workaround, the underlying
 data can be set to \code{NULL}.
 
@@ -81,7 +80,6 @@ isolate(datasets$get_call("mtcars"))
 ## ------------------------------------------------
 
 utils::data(miniACC, package = "MultiAssayExperiment")
-datasets$set_dataset(teal.data::dataset("mae", miniACC))
 datasets <- teal.slice:::FilteredData$new(
   list(iris = list(dataset = iris),
        mae = list(dataset = miniACC)
@@ -153,7 +151,6 @@ shiny::isolate(datasets$get_filter_state())
 \item \href{#method-FilteredData-get_filtered_dataset}{\code{FilteredData$get_filtered_dataset()}}
 \item \href{#method-FilteredData-get_data}{\code{FilteredData$get_data()}}
 \item \href{#method-FilteredData-get_check}{\code{FilteredData$get_check()}}
-\item \href{#method-FilteredData-get_data_attr}{\code{FilteredData$get_data_attr()}}
 \item \href{#method-FilteredData-get_metadata}{\code{FilteredData$get_metadata()}}
 \item \href{#method-FilteredData-get_join_keys}{\code{FilteredData$get_join_keys()}}
 \item \href{#method-FilteredData-get_filter_overview}{\code{FilteredData$get_filter_overview()}}
@@ -190,13 +187,20 @@ Initialize a \code{FilteredData} object
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
-\item{\code{data_objects}}{TODO}
+\item{\code{data_objects}}{(\code{list}) should contain.
+\itemize{
+\item \code{dataset} data object object supported by \link{FilteredDataset}.
+\item \code{metatada} (optional) additional metadata attached to the \code{dataset}.
+\item \code{keys} (optional) primary keys.
+\item \code{datalabel} (optional) label describing the \code{dataset}.
+\item \code{parent} (optional) which \code{dataset} is a parent of this one.
+}}
 
-\item{\code{join_keys}}{TODO}
+\item{\code{join_keys}}{(\code{JoinKeys}) see \code{\link[teal.data:join_keys]{teal.data::join_keys()}}.}
 
-\item{\code{code}}{TODO}
+\item{\code{code}}{(\code{CodeClass}) see \link[teal.data:CodeClass]{teal.data::CodeClass}.}
 
-\item{\code{check}}{TODO}
+\item{\code{check}}{(\code{logical(1)}) whether data has been check against reproducibility.}
 }
 \if{html}{\out{</div>}}
 }
@@ -231,7 +235,7 @@ Useful to display in \verb{Show R Code}.
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
-\item{\code{dataname}}{(\code{character}) name of the dataset}
+\item{\code{dataname}}{(\code{character(1)}) name of the dataset}
 }
 \if{html}{\out{</div>}}
 }
@@ -271,7 +275,7 @@ Gets variable names of a given dataname for the filtering.
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
-\item{\code{dataname}}{(\code{character}) name of the dataset}
+\item{\code{dataname}}{(\code{character(1)}) name of the dataset}
 }
 \if{html}{\out{</div>}}
 }
@@ -306,7 +310,7 @@ This can be used for the \verb{Show R Code} generation.
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
-\item{\code{dataname}}{(\code{character}) name of the dataset}
+\item{\code{dataname}}{(\code{character(1)}) name of the dataset}
 }
 \if{html}{\out{</div>}}
 }
@@ -327,7 +331,7 @@ Gets the R preprocessing code string that generates the unfiltered datasets
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
-\item{\code{dataname}}{(\code{character}) name(s) of dataset(s)}
+\item{\code{dataname}}{(\code{character(1)}) name(s) of dataset(s)}
 }
 \if{html}{\out{</div>}}
 }
@@ -372,7 +376,7 @@ For \code{filtered = FALSE}, the original data set with
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
-\item{\code{dataname}}{(\code{character}) name of the dataset}
+\item{\code{dataname}}{(\code{character(1)}) name of the dataset}
 
 \item{\code{filtered}}{(\code{logical}) whether to return a filtered or unfiltered dataset}
 }
@@ -393,31 +397,6 @@ Returns whether the datasets in the object have had a reproducibility check
 }
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-FilteredData-get_data_attr"></a>}}
-\if{latex}{\out{\hypertarget{method-FilteredData-get_data_attr}{}}}
-\subsection{Method \code{get_data_attr()}}{
-Gets data attributes for a given dataset
-
-Sets and gets the data attribute on unfiltered data as it is never modified
-as attributes.
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{FilteredData$get_data_attr(dataname, attr)}\if{html}{\out{</div>}}
-}
-
-\subsection{Arguments}{
-\if{html}{\out{<div class="arguments">}}
-\describe{
-\item{\code{dataname}}{(\code{character}) name of the dataset}
-
-\item{\code{attr}}{(\code{character}) attribute to get from the data attributes of the dataset}
-}
-\if{html}{\out{</div>}}
-}
-\subsection{Returns}{
-value of attribute, may be \code{NULL} if it does not exist
-}
-}
-\if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-FilteredData-get_metadata"></a>}}
 \if{latex}{\out{\hypertarget{method-FilteredData-get_metadata}{}}}
 \subsection{Method \code{get_metadata()}}{
@@ -429,7 +408,7 @@ Gets metadata for a given dataset
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
-\item{\code{dataname}}{(\code{character}) name of the dataset}
+\item{\code{dataname}}{(\code{character(1)}) name of the dataset}
 }
 \if{html}{\out{</div>}}
 }
@@ -449,9 +428,9 @@ Get join keys between two datasets.
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
-\item{\code{dataset_1}}{(\code{character}) one dataset name}
+\item{\code{dataset_1}}{(\code{character(1)}) one dataset name}
 
-\item{\code{dataset_2}}{(\code{character}) other dataset name}
+\item{\code{dataset_2}}{(\code{character(1)}) other dataset name}
 }
 \if{html}{\out{</div>}}
 }
@@ -494,7 +473,7 @@ Get keys for the dataset
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
-\item{\code{dataname}}{(\code{character}) name of the dataset}
+\item{\code{dataname}}{(\code{character(1)}) name of the dataset}
 }
 \if{html}{\out{</div>}}
 }
@@ -518,9 +497,9 @@ in \code{set_data} or \code{NULL}.
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
-\item{\code{dataname}}{(\code{character}) name of the dataset}
+\item{\code{dataname}}{(\code{character(1)}) name of the dataset}
 
-\item{\code{variables}}{(\code{character} vector) variables to get labels for;
+\item{\code{variables}}{(\code{character}) variables to get labels for;
 if \code{NULL}, for all variables in data}
 }
 \if{html}{\out{</div>}}
@@ -693,7 +672,6 @@ Returns the filter state formatted for printing to an \code{IO} device.
 \subsection{Examples}{
 \if{html}{\out{<div class="r example copy">}}
 \preformatted{utils::data(miniACC, package = "MultiAssayExperiment")
-datasets$set_dataset(teal.data::dataset("mae", miniACC))
 datasets <- teal.slice:::FilteredData$new(
   list(iris = list(dataset = iris),
        mae = list(dataset = miniACC)

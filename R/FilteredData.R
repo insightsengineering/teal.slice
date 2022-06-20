@@ -72,12 +72,16 @@ FilteredData <- R6::R6Class( # nolint
   public = list(
     #' @description
     #' Initialize a `FilteredData` object
-    #' @param data_objects TODO
-    #' @param join_keys TODO
-    #' @param code TODO
-    #' @param check TODO
+    #' @param data_objects (`list`) should contain.
+    #' - `dataset` data object object supported by [FilteredDataset].
+    #' - `metatada` (optional) additional metadata attached to the `dataset`.
+    #' - `keys` (optional) primary keys.
+    #' - `datalabel` (optional) label describing the `dataset`.
+    #' - `parent` (optional) which `dataset` is a parent of this one.
+    #' @param join_keys (`JoinKeys`) see [teal.data::join_keys()].
+    #' @param code (`CodeClass`) see [teal.data::CodeClass].
+    #' @param check (`logical(1)`) whether data has been check against reproducibility.
     initialize = function(data_objects, join_keys, code = NULL, check = FALSE) {
-
       checkmate::assert_list(data_objects, any.missing = FALSE, min.len = 0, names = "unique")
       # TODO other checks but internals of data_objects are checked in set_dataset
 
@@ -351,7 +355,6 @@ FilteredData <- R6::R6Class( # nolint
     #'   the name of the `dataset` to be added to this object
     #' @return (`self`) invisibly this `FilteredData`
     set_dataset = function(dataset_args, dataname) {
-
       logger::log_trace("FilteredData$set_dataset setting dataset, name; { deparse1(dataname) }")
       validate_dataset_args(dataset_args, dataname)
 
@@ -429,7 +432,6 @@ FilteredData <- R6::R6Class( # nolint
     #' @return `character` the pre-formatted filter state
     #' @examples
     #' utils::data(miniACC, package = "MultiAssayExperiment")
-    #' datasets$set_dataset(teal.data::dataset("mae", miniACC))
     #' datasets <- teal.slice:::FilteredData$new(
     #'   list(iris = list(dataset = iris),
     #'        mae = list(dataset = miniACC)
