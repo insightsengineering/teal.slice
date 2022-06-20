@@ -110,7 +110,7 @@ FilteredData <- R6::R6Class( # nolint
     #'
     #' Useful to display in `Show R Code`.
     #'
-    #' @param dataname (`character`) name of the dataset
+    #' @param dataname (`character(1)`) name of the dataset
     #' @return (`character`) keys of dataset
     get_datalabel = function(dataname) {
       self$get_filtered_dataset(dataname)$get_dataset_label()
@@ -128,7 +128,7 @@ FilteredData <- R6::R6Class( # nolint
     #' @description
     #' Gets variable names of a given dataname for the filtering.
     #'
-    #' @param dataname (`character`) name of the dataset
+    #' @param dataname (`character(1)`) name of the dataset
     #' @return (`character` vector) of variable names
     get_filterable_varnames = function(dataname) {
       self$get_filtered_dataset(dataname)$get_filterable_varnames()
@@ -153,7 +153,7 @@ FilteredData <- R6::R6Class( # nolint
     #'
     #' This can be used for the `Show R Code` generation.
     #'
-    #' @param dataname (`character`) name of the dataset
+    #' @param dataname (`character(1)`) name of the dataset
     #' @return (`call` or `list` of calls) to filter dataset
     #'  calls
     get_call = function(dataname) {
@@ -163,7 +163,7 @@ FilteredData <- R6::R6Class( # nolint
 
     #' @description
     #' Gets the R preprocessing code string that generates the unfiltered datasets
-    #' @param dataname (`character`) name(s) of dataset(s)
+    #' @param dataname (`character(1)`) name(s) of dataset(s)
     #' @return (`character`) deparsed code
     get_code = function(dataname = self$datanames()) {
       if (!is.null(private$code)) {
@@ -193,7 +193,7 @@ FilteredData <- R6::R6Class( # nolint
     #' For `filtered = FALSE`, the original data set with
     #' `set_data` is returned including all attributes.
     #'
-    #' @param dataname (`character`) name of the dataset
+    #' @param dataname (`character(1)`) name of the dataset
     #' @param filtered (`logical`) whether to return a filtered or unfiltered dataset
     get_data = function(dataname, filtered = TRUE) {
       private$check_data_varname_exists(dataname)
@@ -226,24 +226,9 @@ FilteredData <- R6::R6Class( # nolint
     },
 
     #' @description
-    #' Gets data attributes for a given dataset
-    #'
-    #' Sets and gets the data attribute on unfiltered data as it is never modified
-    #' as attributes.
-    #'
-    #' @param dataname (`character`) name of the dataset
-    #' @param attr (`character`) attribute to get from the data attributes of the dataset
-    #' @return value of attribute, may be `NULL` if it does not exist
-    get_data_attr = function(dataname, attr) {
-      private$check_data_varname_exists(dataname)
-      checkmate::assert_string(attr)
-      teal.data::get_attrs(self$get_filtered_dataset(dataname)$get_dataset())[[attr]]
-    },
-
-    #' @description
     #' Gets metadata for a given dataset
     #'
-    #' @param dataname (`character`) name of the dataset
+    #' @param dataname (`character(1)`) name of the dataset
     #' @return value of metadata for given data (or `NULL` if it does not exist)
     get_metadata = function(dataname) {
       private$check_data_varname_exists(dataname)
@@ -252,8 +237,8 @@ FilteredData <- R6::R6Class( # nolint
 
     #' @description
     #' Get join keys between two datasets.
-    #' @param dataset_1 (`character`) one dataset name
-    #' @param dataset_2 (`character`) other dataset name
+    #' @param dataset_1 (`character(1)`) one dataset name
+    #' @param dataset_2 (`character(1)`) other dataset name
     #' @return (`named character`) vector with column names
     get_join_keys = function(dataset_1, dataset_2) {
       res <- if (!missing(dataset_1) && !missing(dataset_2)) {
@@ -299,7 +284,7 @@ FilteredData <- R6::R6Class( # nolint
     },
 
     #' Get keys for the dataset
-    #' @param dataname (`character`) name of the dataset
+    #' @param dataname (`character(1)`) name of the dataset
     #' @return (`character`) keys of dataset
     get_keys = function(dataname) {
       self$get_filtered_dataset(dataname)$get_keys()
@@ -311,8 +296,8 @@ FilteredData <- R6::R6Class( # nolint
     #' Either, all labels must have been provided for all variables
     #' in `set_data` or `NULL`.
     #'
-    #' @param dataname (`character`) name of the dataset
-    #' @param variables (`character` vector) variables to get labels for;
+    #' @param dataname (`character(1)`) name of the dataset
+    #' @param variables (`character`) variables to get labels for;
     #'   if `NULL`, for all variables in data
     #' @return (`character` or `NULL`) variable labels, `NULL` if `column_labels`
     #'   attribute does not exist for the data

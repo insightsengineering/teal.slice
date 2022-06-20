@@ -116,11 +116,11 @@ FilteredDataset <- R6::R6Class( # nolint
     #'
     #' @param dataset (`data.frame` or `MultiAssayExperiment`)\cr
     #'  single dataset for which filters are rendered
-    #' @param dataname (`character`)\cr
+    #' @param dataname (`character(1)`)\cr
     #'  A given name for the dataset it may not contain spaces
     #' @param keys optional, (`character`)\cr
     #'   Vector with primary keys
-    #' @param label (`character`)\cr
+    #' @param label (`character(1)`)\cr
     #'   Label to describe the dataset
     #' @param metadata (named `list` or `NULL`) \cr
     #'   Field containing metadata about the dataset. Each element of the list

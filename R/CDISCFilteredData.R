@@ -76,7 +76,7 @@ CDISCFilteredData <- R6::R6Class( # nolint
     #' with its parent dataset. It assumes that the filtered datasets it depends
     #' on are available.
     #'
-    #' @param dataname (`character`) name of the dataset
+    #' @param dataname (`character(1)`) name of the dataset
     #' @return (`call` or `list` of calls ) to filter dataset
     #'
     get_call = function(dataname) {
@@ -153,7 +153,7 @@ CDISCFilteredData <- R6::R6Class( # nolint
     #' @description
     #' Gets variable names of a given dataname for the filtering. This excludes parent dataset variable names.
     #'
-    #' @param dataname (`character`) name of the dataset
+    #' @param dataname (`character(1)`) name of the dataset
     #' @return (`character` vector) of variable names
     get_filterable_varnames = function(dataname) {
       varnames <- self$get_filtered_dataset(dataname)$get_filterable_varnames()
@@ -208,7 +208,7 @@ CDISCFilteredData <- R6::R6Class( # nolint
     #' @description
     #' Get parent dataset name
     #'
-    #' @param dataname (`character`) name of the dataset
+    #' @param dataname (`character(1)`) name of the dataset
     #' @return (`character`) name of parent dataset
     get_parentname = function(dataname) {
       private$parents[[dataname]]
@@ -225,7 +225,7 @@ CDISCFilteredData <- R6::R6Class( # nolint
     #'   containing the arguments except (`dataname`)
     #'   needed by `init_filtered_dataset` (can also
     #'   include `parent` which will be ignored)
-    #' @param dataname (`string`)\cr
+    #' @param dataname (`character(1)`)\cr
     #'   the name of the `dataset` to be added to this object
     #' @return (`self`) object of this class
     set_dataset = function(dataset_args, dataname) {
