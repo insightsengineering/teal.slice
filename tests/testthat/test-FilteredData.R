@@ -2,7 +2,17 @@ testthat::test_that("The constructor does not throw", {
   testthat::expect_error(FilteredData$new(list(iris = list(dataset = iris)), join_keys = NULL), NA)
 })
 
-# TODO test set_dataset
+testthat::test_that("set_dataset accepts a `data.frame` object", {
+  filtered_data <- FilteredData$new(data_objects = list(), join_keys = NULL)
+  dataset_args <- list(dataset = iris)
+  testthat::expect_error(filtered_data$set_dataset(dataset_args = dataset_args, dataname = "iris"), regexp = NA)
+})
+
+testthat::test_that("set_dataset returns self", {
+  filtered_data <- FilteredData$new(data_objects = list(), join_keys = NULL)
+  dataset_args <- list(dataset = iris)
+  testthat::expect_identical(filtered_data$set_dataset(dataset_args = dataset_args, dataname = "iris"), filtered_data)
+})
 
 testthat::test_that("get_keys returns an empty character when data has no keys", {
   filtered_data <- FilteredData$new(list(iris = list(dataset = head(iris), keys = character(0))), join_keys = NULL)
@@ -64,7 +74,7 @@ testthat::test_that("get_metadata returns metadata if dataset exists", {
   testthat::expect_null(filtered_data$get_metadata("iris2"))
 })
 
-testthat::test_that("get_code return the code passed to set_code", {
+testthat::test_that("get_code returns the code passed to set_code", {
   code <- teal.data:::CodeClass$new()
   code$set_code("'preprocessing code'", "iris")
   filtered_data <- FilteredData$new(
@@ -73,6 +83,11 @@ testthat::test_that("get_code return the code passed to set_code", {
     code = code
   )
   testthat::expect_equal(filtered_data$get_code(), "\"preprocessing code\"")
+})
+
+testthat::test_that("get_code returns a string when FilteredData has no code", {
+  filtered_data <- FilteredData$new(data_objects = list(), join_keys = NULL)
+  testthat::expect_equal(filtered_data$get_code(), "# No pre-processing code provided")
 })
 
 testthat::test_that("get_data does not throw when passed a dataset name", {
@@ -490,96 +505,15 @@ testthat::test_that("FilteredData preserves the check field when check is TRUE",
   testthat::expect_true(filtered_data$get_check())
 })
 
+testthat::test_that("get_data returns the object passed to the constructor", {
+  filtered_data <- FilteredData$new(data_objects = list("iris" = list(dataset = iris)), join_keys = NULL)
+  testthat::expect_equal(shiny::isolate(filtered_data$get_data("iris")), iris)
+})
 
-
-# TODO
-# testthat::test_that("get_data(FALSE) returns the object passed to the constructor", {
-#   filtered_dataset <- FilteredDataset$new(
-#     dataset = head(iris), dataname = "iris"
-#   )
-#   testthat::expect_equal(filtered_dataset$get_data(filtered = FALSE), head(iris))
-# })
-#
-# testthat::test_that("get_data(TRUE) throws an error due to Pure virtual method.", {
-#   filtered_dataset <- FilteredDataset$new(
-#     dataset = head(iris), dataname = "iris"
-#   )
-#   testthat::expect_error(isolate(filtered_dataset$get_data(filtered = TRUE)), regex = "Pure virtual method.")
-# })
-#
-# testthat::test_that("get_data throws an error when filtered input is not logical.", {
-#   filtered_dataset <- FilteredDataset$new(dataset = head(iris), dataname = "iris")
-#   testthat::expect_error(
-#     isolate(filtered_dataset$get_data(filtered = "TRUE")),
-#     "Assertion on 'filtered' failed: Must be of type 'logical', not 'character'."
-#   )
-#   testthat::expect_error(
-#     isolate(filtered_dataset$get_data(filtered = 1)),
-#     "Assertion on 'filtered' failed: Must be of type 'logical', not 'double'."
-#   )
-#   testthat::expect_error(
-#     isolate(filtered_dataset$get_data(filtered = list(TRUE))),
-#     "Assertion on 'filtered' failed: Must be of type 'logical', not 'list'."
-#   )
-# })
-#
-# testthat::test_that("get_data_reactive throws an error due to pure virtual method", {
-#   filtered_dataset <- FilteredDataset$new(
-#     dataset = head(iris), dataname = "iris"
-#   )
-#   testthat::expect_error(isolate(filtered_dataset$get_data_reactive()()), regex = "Pure virtual method")
-# })
-# testthat::test_that("MAEFilteredDataset$get_data throws error without filtered argument given", {
-#   utils::data(miniACC, package = "MultiAssayExperiment")
-#   filtered_dataset <- MAEFilteredDataset$new(dataset = miniACC, dataname = "miniACC")
-#   expect_error(isolate(filtered_dataset$get_data()), "argument \"filtered\" is missing, with no default")
-# })
-#
-# testthat::test_that("MAEFilteredDataset$get_data returns identical filtered and
-#                     non-filtered MAE data when no filter is applied", {
-#                       utils::data(miniACC, package = "MultiAssayExperiment")
-#                       filtered_dataset <- MAEFilteredDataset$new(dataset = miniACC, dataname = "miniACC")
-#                       filtered_mae <- isolate(filtered_dataset$get_data(filtered = TRUE))
-#                       non_filtered_mae <- isolate(filtered_dataset$get_data(filtered = FALSE))
-#                       expect_identical(filtered_mae, non_filtered_mae)
-#                     })
-#
-# testthat::test_that("MAEFilteredDataset get_data returns filtered MAE data when filter is applied", {
-#   utils::data(miniACC, package = "MultiAssayExperiment")
-#   filtered_dataset <- MAEFilteredDataset$new(dataset = miniACC, dataname = "miniACC")
-#   filter_state_mae <- ChoicesFilterState$new(
-#     x = miniACC$race,
-#     varname = as.name("race"),
-#     input_dataname = as.name("miniACC"),
-#     extract_type = "list"
-#   )
-#
-#   filter_state_mae$set_selected("white")
-#   filter_state_mae$set_na_rm(TRUE)
-#
-#   queue <- filtered_dataset$get_filter_states(1)
-#   queue$queue_push(filter_state_mae, queue_index = 1L, element_id = "race")
-#
-#   filtered_mae <- isolate(filtered_dataset$get_data(filtered = TRUE))
-#   non_filtered_mae <- isolate(filtered_dataset$get_data(filtered = FALSE))
-#
-#   testthat::expect_false(identical(filtered_mae, non_filtered_mae))
-#   testthat::expect_identical(unique(filtered_mae$race), "white")
-# })
-#
-# testthat::test_that("MAEFilteredDataset$get_data throws error when filtered input is not logical", {
-#   utils::data(miniACC, package = "MultiAssayExperiment")
-#   filtered_dataset <- MAEFilteredDataset$new(dataset = miniACC, dataname = "miniACC")
-#   testthat::expect_error(
-#     isolate(filtered_dataset$get_data(filtered = "TRUE")),
-#     "Assertion on 'filtered' failed: Must be of type 'logical', not 'character'."
-#   )
-#   testthat::expect_error(
-#     isolate(filtered_dataset$get_data(filtered = 1)),
-#     "Assertion on 'filtered' failed: Must be of type 'logical', not 'double'."
-#   )
-#   testthat::expect_error(
-#     isolate(filtered_dataset$get_data(filtered = list(TRUE))),
-#     "Assertion on 'filtered' failed: Must be of type 'logical', not 'list'."
-#   )
-# })
+testthat::test_that("get_data assert the `filtered` argument is logical(1)", {
+  filtered_data <- FilteredData$new(data_objects = list("iris" = list(dataset = iris)), join_keys = NULL)
+  testthat::expect_error(
+    filtered_data$get_data("iris", filtered = "Wrong type"),
+    regexp = "Assertion on 'filtered' failed: Must be of type 'logical flag', not 'character'"
+  )
+})

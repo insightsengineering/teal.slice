@@ -554,9 +554,6 @@ the intersection of \code{self$datanames()} and \code{datanames}
 \if{latex}{\out{\hypertarget{method-FilteredData-set_dataset}{}}}
 \subsection{Method \code{set_dataset()}}{
 Adds a dataset to this \code{FilteredData}
-
-Technically \code{set_dataset} created \code{FilteredDataset} which keeps
-\code{dataset} for filtering purpose.
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{FilteredData$set_dataset(dataset_args, dataname)}\if{html}{\out{</div>}}
 }
@@ -573,6 +570,11 @@ the name of the \code{dataset} to be added to this object}
 }
 \if{html}{\out{</div>}}
 }
+\subsection{Details}{
+\code{set_dataset} creates a \code{FilteredDataset} object which keeps
+\code{dataset} for the filtering purpose.
+}
+
 \subsection{Returns}{
 (\code{self}) invisibly this \code{FilteredData}
 }
