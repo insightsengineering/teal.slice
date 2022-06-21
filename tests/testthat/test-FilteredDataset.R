@@ -98,8 +98,8 @@ testthat::test_that("$get_formatted_filter_state returns a string representation
   dataset$set_filter_state(state = fs)
   states <- dataset$get_filter_states()[[1]]
 
-  testthat::expect_equal(
-    shiny::isolate(dataset$get_formatted_filter_state()),
+  shiny::isolate(testthat::expect_equal(
+    dataset$get_formatted_filter_state(),
     paste("Filters for dataset: iris", shiny::isolate(states$format(indent = 2)), sep = "\n")
-  )
+  ))
 })

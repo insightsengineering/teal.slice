@@ -348,8 +348,9 @@ FilteredData <- R6::R6Class( # nolint
     #' @description
     #' Adds a dataset to this `FilteredData`
     #'
-    #' Technically `set_dataset` created `FilteredDataset` which keeps
-    #' `dataset` for filtering purpose.
+    #' @details
+    #' `set_dataset` creates a `FilteredDataset` object which keeps
+    #' `dataset` for the filtering purpose.
     #'
     #' @param dataset_args (`list`)\cr
     #'   containing the arguments except (`dataname`)
