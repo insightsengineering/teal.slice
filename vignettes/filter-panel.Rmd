@@ -287,7 +287,7 @@ datasets <- init_filtered_data(
   list(
     iris = list(dataset = iris),
     mtcars = list(dataset = mtcars)
-  )  
+  )
 )
 
 set_filter_state(

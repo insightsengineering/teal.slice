@@ -9,7 +9,7 @@ navbar:
     - icon: fa-github
       href: https://github.com/insightsengineering/teal.slice
 
-reference: 
+reference:
   - title: Teal filter-panel API
     desc: Functions used initialize filter-panel and to modify its states.
     contents:
@@ -28,7 +28,6 @@ reference:
     desc: Abstract and concrete classes used to build teal functionality.
     contents:
       - CDISCFilteredData
-      - CDISCFilteredDataset
       - DefaultFilteredDataset
       - FilteredData
       - FilteredDataset

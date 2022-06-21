@@ -189,7 +189,7 @@ Initialize a \code{FilteredData} object
 \describe{
 \item{\code{data_objects}}{(\code{list}) should contain.
 \itemize{
-\item \code{dataset} data object object supported by \link{FilteredDataset}.
+\item \code{dataset} data object object supported by \code{\link{FilteredDataset}}.
 \item \code{metatada} (optional) additional metadata attached to the \code{dataset}.
 \item \code{keys} (optional) primary keys.
 \item \code{datalabel} (optional) label describing the \code{dataset}.
@@ -198,7 +198,7 @@ Initialize a \code{FilteredData} object
 
 \item{\code{join_keys}}{(\code{JoinKeys}) see \code{\link[teal.data:join_keys]{teal.data::join_keys()}}.}
 
-\item{\code{code}}{(\code{CodeClass}) see \link[teal.data:CodeClass]{teal.data::CodeClass}.}
+\item{\code{code}}{(\code{CodeClass}) see \code{\link[teal.data:CodeClass]{teal.data::CodeClass}}.}
 
 \item{\code{check}}{(\code{logical(1)}) whether data has been check against reproducibility.}
 }
@@ -336,7 +336,7 @@ Gets the R preprocessing code string that generates the unfiltered datasets
 \if{html}{\out{</div>}}
 }
 \subsection{Returns}{
-(\code{character}) deparsed code
+(\code{character(1)}) deparsed code
 }
 }
 \if{html}{\out{<hr>}}
@@ -582,7 +582,7 @@ the name of the \code{dataset} to be added to this object}
 \if{html}{\out{<a id="method-FilteredData-set_join_keys"></a>}}
 \if{latex}{\out{\hypertarget{method-FilteredData-set_join_keys}{}}}
 \subsection{Method \code{set_join_keys()}}{
-TODO
+Set the \code{join_keys}
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{FilteredData$set_join_keys(join_keys)}\if{html}{\out{</div>}}
 }
@@ -590,7 +590,7 @@ TODO
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
-\item{\code{join_keys}}{TODO}
+\item{\code{join_keys}}{(\code{JoinKeys}) join_key (converted to a nested list)}
 }
 \if{html}{\out{</div>}}
 }

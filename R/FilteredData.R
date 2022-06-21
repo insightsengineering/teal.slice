@@ -73,17 +73,20 @@ FilteredData <- R6::R6Class( # nolint
     #' @description
     #' Initialize a `FilteredData` object
     #' @param data_objects (`list`) should contain.
-    #' - `dataset` data object object supported by [FilteredDataset].
+    #' - `dataset` data object object supported by [`FilteredDataset`].
     #' - `metatada` (optional) additional metadata attached to the `dataset`.
     #' - `keys` (optional) primary keys.
     #' - `datalabel` (optional) label describing the `dataset`.
     #' - `parent` (optional) which `dataset` is a parent of this one.
     #' @param join_keys (`JoinKeys`) see [teal.data::join_keys()].
-    #' @param code (`CodeClass`) see [teal.data::CodeClass].
+    #' @param code (`CodeClass`) see [`teal.data::CodeClass`].
     #' @param check (`logical(1)`) whether data has been check against reproducibility.
     initialize = function(data_objects, join_keys, code = NULL, check = FALSE) {
       checkmate::assert_list(data_objects, any.missing = FALSE, min.len = 0, names = "unique")
-      # TODO other checks but internals of data_objects are checked in set_dataset
+      # Note the internals of data_objects are checked in set_dataset
+      checkmate::assert_class(join_keys, "JoinKeys", null.ok = TRUE)
+      checkmate::assert_class(code, "CodeClass", null.ok = TRUE)
+      checkmate::assert_flag(check)
 
       self$set_check(check)
       if (!is.null(code)) {
@@ -95,7 +98,7 @@ FilteredData <- R6::R6Class( # nolint
       }
 
       if (!is.null(join_keys)) {
-        self$set_join_keys(join_keys$get())
+        self$set_join_keys(join_keys)
       }
 
       invisible(self)
@@ -168,7 +171,7 @@ FilteredData <- R6::R6Class( # nolint
     #' @description
     #' Gets the R preprocessing code string that generates the unfiltered datasets
     #' @param dataname (`character(1)`) name(s) of dataset(s)
-    #' @return (`character`) deparsed code
+    #' @return (`character(1)`) deparsed code
     get_code = function(dataname = self$datanames()) {
       if (!is.null(private$code)) {
         paste0(private$code$get_code(dataname), collapse = "\n")
@@ -380,12 +383,12 @@ FilteredData <- R6::R6Class( # nolint
     },
 
     #' @description
-    #' TODO
-    #' @param join_keys TODO
+    #' Set the `join_keys`
+    #' @param join_keys (`JoinKeys`) join_key (converted to a nested list)
     #' @return (`self`) invisibly this `FilteredData`
     set_join_keys = function(join_keys) {
-      # TODO validation
-      private$keys <- join_keys
+      checkmate::assert_class(join_keys, "JoinKeys")
+      private$keys <- join_keys$get()
       invisible(self)
     },
 

@@ -167,9 +167,8 @@ CDISCFilteredData <- R6::R6Class( # nolint
     #' Get filter overview table in form of X (filtered) / Y (non-filtered)
     #'
     #' This is intended to be presented in the application.
-    #' The content for each of the data names is defined in `get_filter_overview_info` method.
     #'
-    #' @param datanames (`character` vector) names of the dataset
+    #' @param datanames (`character` vector) names of the dataset (or "all")
     #'
     #' @return (`matrix`) matrix of observations and subjects of all datasets
     get_filter_overview = function(datanames) {

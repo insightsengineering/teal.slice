@@ -18,7 +18,7 @@ the name of the \code{dataset} to be added to this object}
 whether \code{FilteredDataset} can have a parent - i.e. if it's a part of \code{CDISCFilteredData}}
 }
 \value{
-(\code{logical(1)})
+(\code{NULL} or throws an error)
 }
 \description{
 Validate dataset arguments

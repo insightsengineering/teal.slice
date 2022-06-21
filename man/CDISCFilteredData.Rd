@@ -189,7 +189,6 @@ Gets variable names of a given dataname for the filtering. This excludes parent 
 Get filter overview table in form of X (filtered) / Y (non-filtered)
 
 This is intended to be presented in the application.
-The content for each of the data names is defined in \code{get_filter_overview_info} method.
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{CDISCFilteredData$get_filter_overview(datanames)}\if{html}{\out{</div>}}
 }
@@ -197,7 +196,7 @@ The content for each of the data names is defined in \code{get_filter_overview_i
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
-\item{\code{datanames}}{(\code{character} vector) names of the dataset}
+\item{\code{datanames}}{(\code{character} vector) names of the dataset (or "all")}
 }
 \if{html}{\out{</div>}}
 }

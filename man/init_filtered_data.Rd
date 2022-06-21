@@ -10,7 +10,7 @@ init_filtered_data(x, join_keys, code, cdisc, check)
 \item{x}{(named \code{list} or \code{TealData}) In case of \code{TealData} see \code{\link[teal.data:teal_data]{teal.data::teal_data()}}.
 If the list is provided, it should contain \code{list}(s) containing following fields:
 \itemize{
-\item \code{dataset} data object object supported by \link{FilteredDataset}.
+\item \code{dataset} data object object supported by \code{\link{FilteredDataset}}.
 \item \code{metatada} (optional) additional metadata attached to the \code{dataset}.
 \item \code{keys} (optional) primary keys.
 \item \code{datalabel} (optional) label describing the \code{dataset}.
@@ -19,9 +19,9 @@ If the list is provided, it should contain \code{list}(s) containing following f
 
 \item{join_keys}{(\code{JoinKeys}) see \code{\link[teal.data:join_keys]{teal.data::join_keys()}}.}
 
-\item{code}{(\code{CodeClass}) see \link[teal.data:CodeClass]{teal.data::CodeClass}.}
+\item{code}{(\code{CodeClass}) see \code{\link[teal.data:CodeClass]{teal.data::CodeClass}}.}
 
-\item{cdisc}{(\code{logical(1)}) whether data is of \code{cdisc} type (ralational).}
+\item{cdisc}{(\code{logical(1)}) whether data is of \code{cdisc} type (relational).}
 
 \item{check}{(\code{logical(1)}) whether data has been check against reproducibility.}
 }
@@ -34,7 +34,6 @@ datasets <- teal.slice::init_filtered_data(
   x = list(
     iris = list(dataset = iris),
     mtcars = list(dataset = mtcars, metadata = list(type = "training"))
-  ),
-  join_keys = NULL, check = FALSE # use wrapper function to avoid having to specify these
+  )
 )
 }
