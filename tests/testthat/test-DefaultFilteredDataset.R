@@ -117,7 +117,7 @@ testthat::test_that("get_filter_overview_info returns overview matrix for Defaul
 
 testthat::test_that(
   "get_filter_overview_info returns overview matrix for DefaultFilteredDataset if a filtered dataset is passed in",
-  {
+  code = {
     dataset_iris <- DefaultFilteredDataset$new(dataset = utils::head(iris), dataname = "iris")
     testthat::expect_equal(
       isolate(
