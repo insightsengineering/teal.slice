@@ -23,3 +23,4 @@ whether \code{FilteredDataset} can have a parent - i.e. if it's a part of \code{
 \description{
 Validate dataset arguments
 }
+\keyword{internal}

@@ -115,6 +115,7 @@ init_filtered_data.default <- function(x, join_keys = NULL, code = NULL, cdisc =
 #'   the name of the `dataset` to be added to this object
 #' @param allowed_parent (`logical(1)`)\cr
 #'   whether `FilteredDataset` can have a parent - i.e. if it's a part of `CDISCFilteredData`
+#' @keywords internal
 #' @return (`NULL` or throws an error)
 validate_dataset_args <- function(dataset_args, dataname, allowed_parent = FALSE) {
   check_simple_name(dataname)
