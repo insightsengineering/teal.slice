@@ -47,8 +47,7 @@ datasets <- teal.slice:::FilteredData$new(
   list(
     iris = list(dataset = iris),
     mtcars = list(dataset = mtcars, metadata = list(type = "training"))
-  ),
-  join_keys = NULL, check = FALSE # use wrapper function to avoid having to specify these
+  )
 )
 
 # get datanames
@@ -181,7 +180,7 @@ shiny::isolate(datasets$get_filter_state())
 \subsection{Method \code{new()}}{
 Initialize a \code{FilteredData} object
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{FilteredData$new(data_objects, join_keys, code = NULL, check = FALSE)}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{FilteredData$new(data_objects, join_keys = NULL, code = NULL, check = FALSE)}\if{html}{\out{</div>}}
 }
 
 \subsection{Arguments}{
@@ -193,12 +192,12 @@ Initialize a \code{FilteredData} object
 \item \code{metatada} (optional) additional metadata attached to the \code{dataset}.
 \item \code{keys} (optional) primary keys.
 \item \code{datalabel} (optional) label describing the \code{dataset}.
-\item \code{parent} (optional) which \code{dataset} is a parent of this one.
+\item \code{parent} (optional) which \code{NULL} is a parent of this one.
 }}
 
-\item{\code{join_keys}}{(\code{JoinKeys}) see \code{\link[teal.data:join_keys]{teal.data::join_keys()}}.}
+\item{\code{join_keys}}{(\code{JoinKeys} or NULL) see \code{\link[teal.data:join_keys]{teal.data::join_keys()}}.}
 
-\item{\code{code}}{(\code{CodeClass}) see \code{\link[teal.data:CodeClass]{teal.data::CodeClass}}.}
+\item{\code{code}}{(\code{CodeClass} or \code{NULL}) see \code{\link[teal.data:CodeClass]{teal.data::CodeClass}}.}
 
 \item{\code{check}}{(\code{logical(1)}) whether data has been check against reproducibility.}
 }

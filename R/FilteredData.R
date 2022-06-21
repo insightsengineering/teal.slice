@@ -39,8 +39,7 @@
 #'   list(
 #'     iris = list(dataset = iris),
 #'     mtcars = list(dataset = mtcars, metadata = list(type = "training"))
-#'   ),
-#'   join_keys = NULL, check = FALSE # use wrapper function to avoid having to specify these
+#'   )
 #' )
 #'
 #' # get datanames
@@ -77,11 +76,11 @@ FilteredData <- R6::R6Class( # nolint
     #' - `metatada` (optional) additional metadata attached to the `dataset`.
     #' - `keys` (optional) primary keys.
     #' - `datalabel` (optional) label describing the `dataset`.
-    #' - `parent` (optional) which `dataset` is a parent of this one.
-    #' @param join_keys (`JoinKeys`) see [teal.data::join_keys()].
-    #' @param code (`CodeClass`) see [`teal.data::CodeClass`].
+    #' - `parent` (optional) which `NULL` is a parent of this one.
+    #' @param join_keys (`JoinKeys` or NULL) see [`teal.data::join_keys()`].
+    #' @param code (`CodeClass` or `NULL`) see [`teal.data::CodeClass`].
     #' @param check (`logical(1)`) whether data has been check against reproducibility.
-    initialize = function(data_objects, join_keys, code = NULL, check = FALSE) {
+    initialize = function(data_objects, join_keys = NULL, code = NULL, check = FALSE) {
       checkmate::assert_list(data_objects, any.missing = FALSE, min.len = 0, names = "unique")
       # Note the internals of data_objects are checked in set_dataset
       checkmate::assert_class(join_keys, "JoinKeys", null.ok = TRUE)
