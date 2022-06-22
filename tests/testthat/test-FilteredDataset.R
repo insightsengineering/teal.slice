@@ -25,6 +25,20 @@ testthat::test_that("get_dataname returns the dataname passed to the constructor
   testthat::expect_equal(filtered_dataset$get_dataname(), "iris")
 })
 
+testthat::test_that("get_dataset returns the dataset passed to the constructor", {
+  filtered_dataset <- FilteredDataset$new(
+    dataset = head(iris), dataname = "iris"
+  )
+  testthat::expect_equal(filtered_dataset$get_dataset(), head(iris))
+})
+
+testthat::test_that("get_dataset_label retruns the dataset label passed to the constructor", {
+  filtered_dataset <- FilteredDataset$new(
+    dataset = head(iris), dataname = "iris", label = "dataset label"
+  )
+  testthat::expect_equal(filtered_dataset$get_dataset_label(), "dataset label")
+})
+
 testthat::test_that("get_hash returns the hash of the data.frame passed to the constructor", {
   filtered_dataset <- FilteredDataset$new(dataset = head(iris), dataname = "iris")
   testthat::expect_equal(digest::digest(head(iris), algo = "md5"), filtered_dataset$get_hash())
@@ -103,3 +117,22 @@ testthat::test_that("$get_formatted_filter_state returns a string representation
     paste("Filters for dataset: iris", shiny::isolate(states$format(indent = 2)), sep = "\n")
   ))
 })
+
+testthat::test_that("$get_call returns the filter call of the dataset", {
+  dataset <- DefaultFilteredDataset$new(dataset = iris, dataname = "iris")
+  fs <- list(
+    Sepal.Length = list(selected = c(5.1, 6.4), keep_na = TRUE, keep_inf = TRUE),
+    Species = list(selected = c("setosa", "versicolor"), keep_na = FALSE)
+  )
+  dataset$set_filter_state(state = fs)
+  filter_call <- shiny::isolate(dataset$get_call())$filter
+
+  testthat::expect_equal(
+    deparse1(filter_call),
+    paste0(
+      "iris_FILTERED <- dplyr::filter(iris, (is.na(Sepal.Length) | (is.infinite(Sepal.Length) |",
+      " Sepal.Length >= 5.1 & Sepal.Length <= 6.4)) & Species %in% c(\"setosa\", \"versicolor\"))"
+    )
+  )
+})
+
