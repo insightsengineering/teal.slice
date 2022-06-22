@@ -40,9 +40,6 @@
     <loc>https://insightsengineering.github.io/teal.slice/reference/CDISCFilteredData.html</loc>
   </url>
   <url>
-    <loc>https://insightsengineering.github.io/teal.slice/reference/CDISCFilteredDataset.html</loc>
-  </url>
-  <url>
     <loc>https://insightsengineering.github.io/teal.slice/reference/ChoicesFilterState.html</loc>
   </url>
   <url>
@@ -169,6 +166,9 @@
     <loc>https://insightsengineering.github.io/teal.slice/reference/init_filter_states.html</loc>
   </url>
   <url>
+    <loc>https://insightsengineering.github.io/teal.slice/reference/init_filtered_data.html</loc>
+  </url>
+  <url>
     <loc>https://insightsengineering.github.io/teal.slice/reference/init_filtered_dataset.html</loc>
   </url>
   <url>
@@ -182,6 +182,9 @@
   </url>
   <url>
     <loc>https://insightsengineering.github.io/teal.slice/reference/topological_sort.html</loc>
+  </url>
+  <url>
+    <loc>https://insightsengineering.github.io/teal.slice/reference/validate_dataset_args.html</loc>
   </url>
   <url>
     <loc>https://insightsengineering.github.io/teal.slice/reference/variable_types.html</loc>

@@ -10,7 +10,7 @@
     
     <a class="navbar-brand me-2" href="../index.html">teal.slice</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.1.9000</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.1.9001</small>
 
     <div style="width: 140px; margin-left: 0.5rem;"> <small class="nav-text text-muted me-auto">part of</small> <img src="https://github.com/insightsengineering/hex-stickers/blob/main/PNG/nest.png?raw=true" alt="NEST" style="height: 30px;"><a href="https://pharmaverse.org/" class="external-link"><img src="https://github.com/insightsengineering/hex-stickers/blob/main/PNG/pharmaverse.png?raw=true" alt="pharmaverse" style="height: 28px;"></a> </div>
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -66,15 +66,8 @@ dataset by inheriting from <code>FilteredData</code>.
 A dataset can have up to one parent dataset. Rows are identified by the foreign
 key and only those rows that appear in the parent dataset are kept in the filtered
 dataset.</p>
-<p>The relational model is attached to the data. When <code>set_data</code> is called with the
-data, its <code>keys</code> attribute has the following elements:</p><ul><li><p><code>primary</code>: columns based on which unique rows are counted</p></li>
-<li><p><code>parent</code>: parent dataset based on which the dataset is filtered (via <code>inner_join</code>)</p></li>
-<li><p><code>foreign</code>: keys to join on when filtering with parent dataset</p></li>
-</ul><p>The teal UI works with objects of class <code>FilteredData</code> which may mix CDISC and other
+<p>The teal UI works with objects of class <code>FilteredData</code> which may mix CDISC and other
 data (e.g. <code>iris</code>).</p>
-<p>It is not too difficult to make this class generalize to more than one parent dataset,
-provided each dataset then contains information about its parents together with the
-shared keys with each of them.</p>
     </div>
     <div class="section level2">
     <h2 id="see-also">See also<a class="anchor" aria-label="anchor" href="#see-also"></a></h2>
@@ -94,15 +87,14 @@ shared keys with each of them.</p>
 <li><p><a href="#method-CDISCFilteredData-get_call"><code>CDISCFilteredData$get_call()</code></a></p></li>
 <li><p><a href="#method-CDISCFilteredData-get_filterable_datanames"><code>CDISCFilteredData$get_filterable_datanames()</code></a></p></li>
 <li><p><a href="#method-CDISCFilteredData-get_filterable_varnames"><code>CDISCFilteredData$get_filterable_varnames()</code></a></p></li>
+<li><p><a href="#method-CDISCFilteredData-get_filter_overview"><code>CDISCFilteredData$get_filter_overview()</code></a></p></li>
 <li><p><a href="#method-CDISCFilteredData-get_parentname"><code>CDISCFilteredData$get_parentname()</code></a></p></li>
 <li><p><a href="#method-CDISCFilteredData-set_dataset"><code>CDISCFilteredData$set_dataset()</code></a></p></li>
 <li><p><a href="#method-CDISCFilteredData-clone"><code>CDISCFilteredData$clone()</code></a></p></li>
 </ul></div><p><details><summary>Inherited methods</summary><ul><li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilteredData" data-id="get_check"><a href="FilteredData.html#method-get_check"><code>teal.slice::FilteredData$get_check()</code></a></span></li>
 <li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilteredData" data-id="get_code"><a href="FilteredData.html#method-get_code"><code>teal.slice::FilteredData$get_code()</code></a></span></li>
 <li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilteredData" data-id="get_data"><a href="FilteredData.html#method-get_data"><code>teal.slice::FilteredData$get_data()</code></a></span></li>
-<li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilteredData" data-id="get_data_attr"><a href="FilteredData.html#method-get_data_attr"><code>teal.slice::FilteredData$get_data_attr()</code></a></span></li>
 <li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilteredData" data-id="get_datalabel"><a href="FilteredData.html#method-get_datalabel"><code>teal.slice::FilteredData$get_datalabel()</code></a></span></li>
-<li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilteredData" data-id="get_filter_overview"><a href="FilteredData.html#method-get_filter_overview"><code>teal.slice::FilteredData$get_filter_overview()</code></a></span></li>
 <li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilteredData" data-id="get_filter_state"><a href="FilteredData.html#method-get_filter_state"><code>teal.slice::FilteredData$get_filter_state()</code></a></span></li>
 <li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilteredData" data-id="get_filtered_dataset"><a href="FilteredData.html#method-get_filtered_dataset"><code>teal.slice::FilteredData$get_filtered_dataset()</code></a></span></li>
 <li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilteredData" data-id="get_formatted_filter_state"><a href="FilteredData.html#method-get_formatted_filter_state"><code>teal.slice::FilteredData$get_formatted_filter_state()</code></a></span></li>
@@ -119,6 +111,7 @@ shared keys with each of them.</p>
 <li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilteredData" data-id="set_check"><a href="FilteredData.html#method-set_check"><code>teal.slice::FilteredData$set_check()</code></a></span></li>
 <li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilteredData" data-id="set_code"><a href="FilteredData.html#method-set_code"><code>teal.slice::FilteredData$set_code()</code></a></span></li>
 <li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilteredData" data-id="set_filter_state"><a href="FilteredData.html#method-set_filter_state"><code>teal.slice::FilteredData$set_filter_state()</code></a></span></li>
+<li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilteredData" data-id="set_join_keys"><a href="FilteredData.html#method-set_join_keys"><code>teal.slice::FilteredData$set_join_keys()</code></a></span></li>
 <li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilteredData" data-id="srv_filter_overview"><a href="FilteredData.html#method-srv_filter_overview"><code>teal.slice::FilteredData$srv_filter_overview()</code></a></span></li>
 <li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilteredData" data-id="srv_filter_panel"><a href="FilteredData.html#method-srv_filter_panel"><code>teal.slice::FilteredData$srv_filter_panel()</code></a></span></li>
 <li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilteredData" data-id="ui_filter_overview"><a href="FilteredData.html#method-ui_filter_overview"><code>teal.slice::FilteredData$ui_filter_overview()</code></a></span></li>
@@ -149,7 +142,7 @@ on are available.</p><div class="section">
 <div class="section">
 <h4 id="arguments">Arguments<a class="anchor" aria-label="anchor" href="#arguments"></a></h4>
 <p></p><div class="arguments"><dl><dt><code>dataname</code></dt>
-<dd><p>(<code>character</code>) name of the dataset</p></dd>
+<dd><p>(<code>character(1)</code>) name of the dataset</p></dd>
 
 
 </dl><p></p></div>
@@ -189,7 +182,7 @@ on are available.</p><div class="section">
 <div class="section">
 <h4 id="arguments-2">Arguments<a class="anchor" aria-label="anchor" href="#arguments-2"></a></h4>
 <p></p><div class="arguments"><dl><dt><code>dataname</code></dt>
-<dd><p>(<code>character</code>) name of the dataset</p></dd>
+<dd><p>(<code>character(1)</code>) name of the dataset</p></dd>
 
 
 </dl><p></p></div>
@@ -199,23 +192,44 @@ on are available.</p><div class="section">
 <p>(<code>character</code> vector) of variable names</p>
 </div>
 
-</div><p></p><hr><a id="method-CDISCFilteredData-get_parentname"></a><div class="section">
-<h3 id="method-get-parentname-">Method <code>get_parentname()</code><a class="anchor" aria-label="anchor" href="#method-get-parentname-"></a></h3>
-<p>Get parent dataset name</p><div class="section">
+</div><p></p><hr><a id="method-CDISCFilteredData-get_filter_overview"></a><div class="section">
+<h3 id="method-get-filter-overview-">Method <code>get_filter_overview()</code><a class="anchor" aria-label="anchor" href="#method-get-filter-overview-"></a></h3>
+<p>Get filter overview table in form of X (filtered) / Y (non-filtered)</p>
+<p>This is intended to be presented in the application.</p><div class="section">
 <h4 id="usage-4">Usage<a class="anchor" aria-label="anchor" href="#usage-4"></a></h4>
-<p></p><div class="r"><div class="sourceCode"><pre><code><span class="va">CDISCFilteredData</span><span class="op">$</span><span class="fu">get_parentname</span><span class="op">(</span><span class="va">dataname</span><span class="op">)</span></code></pre></div><p></p></div>
+<p></p><div class="r"><div class="sourceCode"><pre><code><span class="va">CDISCFilteredData</span><span class="op">$</span><span class="fu">get_filter_overview</span><span class="op">(</span><span class="va">datanames</span><span class="op">)</span></code></pre></div><p></p></div>
 </div>
 
 <div class="section">
 <h4 id="arguments-3">Arguments<a class="anchor" aria-label="anchor" href="#arguments-3"></a></h4>
-<p></p><div class="arguments"><dl><dt><code>dataname</code></dt>
-<dd><p>(<code>character</code>) name of the dataset</p></dd>
+<p></p><div class="arguments"><dl><dt><code>datanames</code></dt>
+<dd><p>(<code>character</code> vector) names of the dataset (or "all")</p></dd>
 
 
 </dl><p></p></div>
 </div>
 <div class="section">
 <h4 id="returns-4">Returns<a class="anchor" aria-label="anchor" href="#returns-4"></a></h4>
+<p>(<code>matrix</code>) matrix of observations and subjects of all datasets</p>
+</div>
+
+</div><p></p><hr><a id="method-CDISCFilteredData-get_parentname"></a><div class="section">
+<h3 id="method-get-parentname-">Method <code>get_parentname()</code><a class="anchor" aria-label="anchor" href="#method-get-parentname-"></a></h3>
+<p>Get parent dataset name</p><div class="section">
+<h4 id="usage-5">Usage<a class="anchor" aria-label="anchor" href="#usage-5"></a></h4>
+<p></p><div class="r"><div class="sourceCode"><pre><code><span class="va">CDISCFilteredData</span><span class="op">$</span><span class="fu">get_parentname</span><span class="op">(</span><span class="va">dataname</span><span class="op">)</span></code></pre></div><p></p></div>
+</div>
+
+<div class="section">
+<h4 id="arguments-4">Arguments<a class="anchor" aria-label="anchor" href="#arguments-4"></a></h4>
+<p></p><div class="arguments"><dl><dt><code>dataname</code></dt>
+<dd><p>(<code>character(1)</code>) name of the dataset</p></dd>
+
+
+</dl><p></p></div>
+</div>
+<div class="section">
+<h4 id="returns-5">Returns<a class="anchor" aria-label="anchor" href="#returns-5"></a></h4>
 <p>(<code>character</code>) name of parent dataset</p>
 </div>
 
@@ -225,33 +239,40 @@ on are available.</p><div class="section">
 <p>Add dataset and preserve all attributes attached to this object.
 Technically <code>set_dataset</code> created <code>FilteredDataset</code> which keeps
 <code>dataset</code> for filtering purpose.</p><div class="section">
-<h4 id="usage-5">Usage<a class="anchor" aria-label="anchor" href="#usage-5"></a></h4>
-<p></p><div class="r"><div class="sourceCode"><pre><code><span class="va">CDISCFilteredData</span><span class="op">$</span><span class="fu">set_dataset</span><span class="op">(</span><span class="va">dataset</span><span class="op">)</span></code></pre></div><p></p></div>
+<h4 id="usage-6">Usage<a class="anchor" aria-label="anchor" href="#usage-6"></a></h4>
+<p></p><div class="r"><div class="sourceCode"><pre><code><span class="va">CDISCFilteredData</span><span class="op">$</span><span class="fu">set_dataset</span><span class="op">(</span><span class="va">dataset_args</span>, <span class="va">dataname</span><span class="op">)</span></code></pre></div><p></p></div>
 </div>
 
 <div class="section">
-<h4 id="arguments-4">Arguments<a class="anchor" aria-label="anchor" href="#arguments-4"></a></h4>
-<p></p><div class="arguments"><dl><dt><code>dataset</code></dt>
-<dd><p>(<code>TealDataset</code>)<br>
-object containing data and attributes.</p></dd>
+<h4 id="arguments-5">Arguments<a class="anchor" aria-label="anchor" href="#arguments-5"></a></h4>
+<p></p><div class="arguments"><dl><dt><code>dataset_args</code></dt>
+<dd><p>(<code>list</code>)<br>
+containing the arguments except (<code>dataname</code>)
+needed by <code>init_filtered_dataset</code> (can also
+include <code>parent</code> which will be ignored)</p></dd>
+
+
+<dt><code>dataname</code></dt>
+<dd><p>(<code>character(1)</code>)<br>
+the name of the <code>dataset</code> to be added to this object</p></dd>
 
 
 </dl><p></p></div>
 </div>
 <div class="section">
-<h4 id="returns-5">Returns<a class="anchor" aria-label="anchor" href="#returns-5"></a></h4>
+<h4 id="returns-6">Returns<a class="anchor" aria-label="anchor" href="#returns-6"></a></h4>
 <p>(<code>self</code>) object of this class</p>
 </div>
 
 </div><p></p><hr><a id="method-CDISCFilteredData-clone"></a><div class="section">
 <h3 id="method-clone-">Method <code>clone()</code><a class="anchor" aria-label="anchor" href="#method-clone-"></a></h3>
 <p>The objects of this class are cloneable with this method.</p><div class="section">
-<h4 id="usage-6">Usage<a class="anchor" aria-label="anchor" href="#usage-6"></a></h4>
+<h4 id="usage-7">Usage<a class="anchor" aria-label="anchor" href="#usage-7"></a></h4>
 <p></p><div class="r"><div class="sourceCode"><pre><code><span class="va">CDISCFilteredData</span><span class="op">$</span><span class="fu">clone</span><span class="op">(</span>deep <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></code></pre></div><p></p></div>
 </div>
 
 <div class="section">
-<h4 id="arguments-5">Arguments<a class="anchor" aria-label="anchor" href="#arguments-5"></a></h4>
+<h4 id="arguments-6">Arguments<a class="anchor" aria-label="anchor" href="#arguments-6"></a></h4>
 <p></p><div class="arguments"><dl><dt><code>deep</code></dt>
 <dd><p>Whether to make a deep clone.</p></dd>
 
@@ -267,27 +288,23 @@ object containing data and attributes.</p></dd>
     <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>
     <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va">scda</span><span class="op">)</span></span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-in"><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://shiny.rstudio.com/" class="external-link">shiny</a></span><span class="op">)</span></span>
+<span class="r-in"><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va">teal.data</span><span class="op">)</span></span>
 <span class="r-in"></span>
 <span class="r-in"><span class="va">ADSL</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/scda/man/synthetic_cdisc_data.html" class="external-link">synthetic_cdisc_data</a></span><span class="op">(</span><span class="st">"latest"</span><span class="op">)</span><span class="op">$</span><span class="va">adsl</span></span>
 <span class="r-in"><span class="va">ADTTE</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/scda/man/synthetic_cdisc_data.html" class="external-link">synthetic_cdisc_data</a></span><span class="op">(</span><span class="st">"latest"</span><span class="op">)</span><span class="op">$</span><span class="va">adtte</span></span>
-<span class="r-in"></span>
-<span class="r-in"><span class="va">adsl</span> <span class="op">&lt;-</span> <span class="fu">teal.data</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/teal.data/man/cdisc_dataset.html" class="external-link">cdisc_dataset</a></span><span class="op">(</span><span class="st">"ADSL"</span>, <span class="va">ADSL</span><span class="op">)</span></span>
-<span class="r-in"><span class="va">adtte</span> <span class="op">&lt;-</span> <span class="fu">teal.data</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/teal.data/man/cdisc_dataset.html" class="external-link">cdisc_dataset</a></span><span class="op">(</span><span class="st">"ADTTE"</span>, <span class="va">ADTTE</span><span class="op">)</span></span>
-<span class="r-in"><span class="va">data</span> <span class="op">&lt;-</span> <span class="fu">teal.data</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/teal.data/man/cdisc_data.html" class="external-link">cdisc_data</a></span><span class="op">(</span><span class="va">adsl</span>, <span class="va">adtte</span><span class="op">)</span></span>
-<span class="r-in"><span class="va">datasets</span> <span class="op">&lt;-</span> <span class="fu">teal.slice</span><span class="fu">:::</span><span class="va">CDISCFilteredData</span><span class="op">$</span><span class="fu">new</span><span class="op">(</span><span class="op">)</span></span>
+<span class="r-in"><span class="va">datasets</span> <span class="op">&lt;-</span> <span class="fu">teal.slice</span><span class="fu">:::</span><span class="va">CDISCFilteredData</span><span class="op">$</span><span class="fu">new</span><span class="op">(</span></span>
+<span class="r-in">  <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span></span>
+<span class="r-in">    ADSL <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>dataset <span class="op">=</span> <span class="va">ADSL</span>, keys <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"STUDYID"</span>, <span class="st">"USUBJID"</span><span class="op">)</span><span class="op">)</span>,</span>
+<span class="r-in">    ADTTE <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>dataset <span class="op">=</span> <span class="va">ADTTE</span>, keys <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"STUDYID"</span>, <span class="st">"USUBJID"</span>, <span class="st">"PARAMCD"</span><span class="op">)</span>, parent <span class="op">=</span> <span class="st">"ADSL"</span><span class="op">)</span></span>
+<span class="r-in">  <span class="op">)</span>,</span>
+<span class="r-in">  check <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span class="r-in">  join_keys <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/pkg/teal.data/man/join_keys.html" class="external-link">join_keys</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/pkg/teal.data/man/join_key.html" class="external-link">join_key</a></span><span class="op">(</span><span class="st">"ADSL"</span>, <span class="st">"ADTTE"</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"STUDYID"</span>, <span class="st">"USUBJID"</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span>
+<span class="r-in"><span class="op">)</span></span>
 <span class="r-in"></span>
 <span class="r-in"><span class="co"># to avoid using isolate(), you can provide a default isolate context by calling</span></span>
 <span class="r-in"><span class="co"># options(shiny.suppressMissingContextError = TRUE) #nolint</span></span>
 <span class="r-in"><span class="co"># don't forget to deactivate this option at the end</span></span>
 <span class="r-in"><span class="co"># options(shiny.suppressMissingContextError = FALSE) #nolint</span></span>
-<span class="r-in"></span>
-<span class="r-in"><span class="co"># setting the data</span></span>
-<span class="r-in"><span class="fu"><a href="https://rdrr.io/pkg/shiny/man/isolate.html" class="external-link">isolate</a></span><span class="op">(</span><span class="op">{</span></span>
-<span class="r-in">  <span class="va">datasets</span><span class="op">$</span><span class="fu">set_dataset</span><span class="op">(</span><span class="va">adsl</span><span class="op">)</span></span>
-<span class="r-in">  <span class="va">datasets</span><span class="op">$</span><span class="fu">set_dataset</span><span class="op">(</span><span class="va">adtte</span><span class="op">)</span></span>
-<span class="r-in"><span class="op">}</span><span class="op">)</span></span>
-<span class="r-in"></span>
 <span class="r-in"></span>
 <span class="r-in"><span class="fu"><a href="https://rdrr.io/pkg/shiny/man/isolate.html" class="external-link">isolate</a></span><span class="op">(</span><span class="op">{</span></span>
 <span class="r-in">  <span class="va">datasets</span><span class="op">$</span><span class="fu">datanames</span><span class="op">(</span><span class="op">)</span></span>
@@ -334,53 +351,17 @@ object containing data and attributes.</p></dd>
 <span class="r-out co"><span class="r-pr">#&gt;</span> <span style="color: #949494;">#   DTHCAT &lt;fct&gt;, LDDTHELD &lt;int&gt;, LDDTHGR1 &lt;fct&gt;, LSTALVDT &lt;date&gt;, …</span></span>
 <span class="r-in"></span>
 <span class="r-in"></span>
-<span class="r-in"><span class="va">filter_state_adtte</span> <span class="op">&lt;-</span> <span class="fu">teal.slice</span><span class="fu">:::</span><span class="fu"><a href="init_filter_state.html">init_filter_state</a></span><span class="op">(</span></span>
-<span class="r-in">  <span class="va">ADTTE</span><span class="op">$</span><span class="va">PARAMCD</span>,</span>
-<span class="r-in">  varname <span class="op">=</span> <span class="st">"PARAMCD"</span>,</span>
-<span class="r-in">  input_dataname <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/name.html" class="external-link">as.name</a></span><span class="op">(</span><span class="st">"ADTTE"</span><span class="op">)</span>,</span>
-<span class="r-in">  extract_type <span class="op">=</span> <span class="st">"list"</span></span>
-<span class="r-in"><span class="op">)</span></span>
-<span class="r-in"><span class="va">filter_state_adtte</span><span class="op">$</span><span class="fu">set_selected</span><span class="op">(</span><span class="st">"OS"</span><span class="op">)</span></span>
-<span class="r-in"></span>
-<span class="r-in"><span class="va">states</span> <span class="op">&lt;-</span> <span class="va">datasets</span><span class="op">$</span><span class="fu">get_filtered_dataset</span><span class="op">(</span><span class="st">"ADTTE"</span><span class="op">)</span><span class="op">$</span><span class="fu">get_filter_states</span><span class="op">(</span><span class="fl">1</span><span class="op">)</span></span>
-<span class="r-in"><span class="va">states</span><span class="op">$</span><span class="fu">queue_push</span><span class="op">(</span><span class="va">filter_state_adtte</span>, queue_index <span class="op">=</span> <span class="fl">1L</span>, element_id <span class="op">=</span> <span class="st">"PARAMCD"</span><span class="op">)</span></span>
-<span class="r-in"></span>
-<span class="r-in"><span class="fu"><a href="https://rdrr.io/pkg/shiny/man/isolate.html" class="external-link">isolate</a></span><span class="op">(</span><span class="va">datasets</span><span class="op">$</span><span class="fu">get_call</span><span class="op">(</span><span class="st">"ADTTE"</span><span class="op">)</span><span class="op">)</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> $filter</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> ADTTE_FILTERED_ALONE &lt;- dplyr::filter(ADTTE, ADTTE$PARAMCD == </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>     "OS")</span>
+<span class="r-in"><span class="va">datasets</span><span class="op">$</span><span class="fu">set_filter_state</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>ADTTE <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>PARAMCD <span class="op">=</span> <span class="st">"OS"</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span>
+<span class="r-in"><span class="fu"><a href="https://rdrr.io/pkg/shiny/man/isolate.html" class="external-link">isolate</a></span><span class="op">(</span><span class="va">datasets</span><span class="op">$</span><span class="fu">get_filter_state</span><span class="op">(</span><span class="op">)</span><span class="op">)</span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $ADTTE</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $ADTTE$PARAMCD</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $ADTTE$PARAMCD$selected</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "OS"</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [[2]]</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> ADTTE_FILTERED &lt;- dplyr::inner_join(x = ADTTE_FILTERED_ALONE, </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>     y = ADSL_FILTERED[, c("STUDYID", "USUBJID"), drop = FALSE], </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>     by = c("STUDYID", "USUBJID"))</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> $ADTTE$PARAMCD$keep_na</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [1] FALSE</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-in"></span>
-<span class="r-in"></span>
-<span class="r-in"><span class="va">filter_state_adsl</span> <span class="op">&lt;-</span> <span class="fu">teal.slice</span><span class="fu">:::</span><span class="fu"><a href="init_filter_state.html">init_filter_state</a></span><span class="op">(</span></span>
-<span class="r-in">  <span class="va">ADSL</span><span class="op">$</span><span class="va">SEX</span>,</span>
-<span class="r-in">  varname <span class="op">=</span> <span class="st">"SEX"</span>,</span>
-<span class="r-in">  input_dataname <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/name.html" class="external-link">as.name</a></span><span class="op">(</span><span class="st">"SEX"</span><span class="op">)</span>,</span>
-<span class="r-in">  extract_type <span class="op">=</span> <span class="st">"list"</span></span>
-<span class="r-in"><span class="op">)</span></span>
-<span class="r-in"><span class="va">filter_state_adsl</span><span class="op">$</span><span class="fu">set_selected</span><span class="op">(</span><span class="st">"F"</span><span class="op">)</span></span>
-<span class="r-in"></span>
-<span class="r-in"><span class="va">states</span> <span class="op">&lt;-</span> <span class="va">datasets</span><span class="op">$</span><span class="fu">get_filtered_dataset</span><span class="op">(</span><span class="st">"ADSL"</span><span class="op">)</span><span class="op">$</span><span class="fu">get_filter_states</span><span class="op">(</span><span class="st">"filter"</span><span class="op">)</span></span>
-<span class="r-in"><span class="va">states</span><span class="op">$</span><span class="fu">queue_push</span><span class="op">(</span><span class="va">filter_state_adsl</span>, queue_index <span class="op">=</span> <span class="fl">1L</span>, element_id <span class="op">=</span> <span class="st">"SEX"</span><span class="op">)</span></span>
-<span class="r-in"></span>
-<span class="r-in"><span class="fu"><a href="https://rdrr.io/pkg/shiny/man/isolate.html" class="external-link">isolate</a></span><span class="op">(</span><span class="va">datasets</span><span class="op">$</span><span class="fu">get_call</span><span class="op">(</span><span class="st">"ADSL"</span><span class="op">)</span><span class="op">)</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> $filter</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> ADSL_FILTERED &lt;- dplyr::filter(ADSL, SEX$SEX == "F")</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-in"><span class="fu"><a href="https://rdrr.io/pkg/shiny/man/isolate.html" class="external-link">isolate</a></span><span class="op">(</span><span class="va">datasets</span><span class="op">$</span><span class="fu">get_call</span><span class="op">(</span><span class="st">"ADTTE"</span><span class="op">)</span><span class="op">)</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> $filter</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> ADTTE_FILTERED_ALONE &lt;- dplyr::filter(ADTTE, ADTTE$PARAMCD == </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>     "OS")</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [[2]]</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> ADTTE_FILTERED &lt;- dplyr::inner_join(x = ADTTE_FILTERED_ALONE, </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>     y = ADSL_FILTERED[, c("STUDYID", "USUBJID"), drop = FALSE], </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>     by = c("STUDYID", "USUBJID"))</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 </code></pre></div>
     </div>

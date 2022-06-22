@@ -27,7 +27,7 @@
     
     <a class="navbar-brand me-2" href="../index.html">teal.slice</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.1.9000</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.1.9001</small>
 
     <div style="width: 140px; margin-left: 0.5rem;"> <small class="nav-text text-muted me-auto">part of</small> <img src="https://github.com/insightsengineering/hex-stickers/blob/main/PNG/nest.png?raw=true" alt="NEST" style="height: 30px;"><a href="https://pharmaverse.org/" class="external-link"><img src="https://github.com/insightsengineering/hex-stickers/blob/main/PNG/pharmaverse.png?raw=true" alt="pharmaverse" style="height: 28px;"></a> </div>
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -74,7 +74,7 @@
 
 
 <div class="row">
-  <main id="main"><div class="page-header">
+  <main id="main" class="col-md-9"><div class="page-header">
       <img src="" class="logo" alt=""><h1>Filter panel for NEST developers</h1>
                         <h4 data-toc-skip class="author">Dawid
 Kałędkowski</h4>
@@ -87,6 +87,16 @@ Kałędkowski</h4>
 
     
     
+<p>NOTE - the text and diagrams in this vignette are slightly out of
+date and will be updated shortly.</p>
+<p>The key changes not yet incorporated: 1) There is no longer a
+<code>CDISCFilteredDataset</code> object all data.frame are
+<code>DefaultFilteredDataset</code> now. 2) <code>FilteredDataset</code>
+no longer contains reactive data this is stored inside
+<code>FilteredData</code> instead. 3) It is also possible to create a
+<code>FilteredData</code> object directly from a list of data.frames
+without create a <code>TealData</code> object see
+<code><a href="../reference/init_filtered_data.html">help(init_filtered_data)</a></code> for more details.</p>
 <div class="section level2">
 <h2 id="overview">Overview<a class="anchor" aria-label="anchor" href="#overview"></a>
 </h2>
@@ -450,9 +460,13 @@ the example below, we present how these methods can be used.</p>
 </ol>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va">teal.slice</span><span class="op">)</span>
-<span class="va">datasets</span> <span class="op">&lt;-</span> <span class="fu">teal.slice</span><span class="fu">:::</span><span class="va"><a href="../reference/FilteredData.html">FilteredData</a></span><span class="op">$</span><span class="fu">new</span><span class="op">(</span><span class="op">)</span>
-<span class="va">datasets</span><span class="op">$</span><span class="fu">set_dataset</span><span class="op">(</span><span class="fu">teal.data</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/teal.data/man/dataset.html" class="external-link">dataset</a></span><span class="op">(</span>dataname <span class="op">=</span> <span class="st">"iris"</span>, x <span class="op">=</span> <span class="va">iris</span><span class="op">)</span><span class="op">)</span>
-<span class="va">datasets</span><span class="op">$</span><span class="fu">set_dataset</span><span class="op">(</span><span class="fu">teal.data</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/teal.data/man/dataset.html" class="external-link">dataset</a></span><span class="op">(</span>dataname <span class="op">=</span> <span class="st">"mtcars"</span>, x <span class="op">=</span> <span class="va">mtcars</span><span class="op">)</span><span class="op">)</span>
+
+<span class="va">datasets</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/init_filtered_data.html">init_filtered_data</a></span><span class="op">(</span>
+  <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>
+    iris <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>dataset <span class="op">=</span> <span class="va">iris</span><span class="op">)</span>,
+    mtcars <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>dataset <span class="op">=</span> <span class="va">mtcars</span><span class="op">)</span>
+  <span class="op">)</span>
+<span class="op">)</span>
 
 <span class="fu"><a href="../reference/filter_state_api.html">set_filter_state</a></span><span class="op">(</span>
   datasets <span class="op">=</span> <span class="va">datasets</span>,
@@ -515,9 +529,13 @@ filter-panel states are changed when clicking the buttons in the
 encoding-panel.</p>
 <div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://shiny.rstudio.com/" class="external-link">shiny</a></span><span class="op">)</span>
-<span class="va">datasets</span> <span class="op">&lt;-</span> <span class="fu">teal.slice</span><span class="fu">:::</span><span class="va"><a href="../reference/FilteredData.html">FilteredData</a></span><span class="op">$</span><span class="fu">new</span><span class="op">(</span><span class="op">)</span>
-<span class="va">datasets</span><span class="op">$</span><span class="fu">set_dataset</span><span class="op">(</span><span class="fu">teal.data</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/teal.data/man/dataset.html" class="external-link">dataset</a></span><span class="op">(</span>dataname <span class="op">=</span> <span class="st">"iris"</span>, x <span class="op">=</span> <span class="va">iris</span><span class="op">)</span><span class="op">)</span>
-<span class="va">datasets</span><span class="op">$</span><span class="fu">set_dataset</span><span class="op">(</span><span class="fu">teal.data</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/teal.data/man/dataset.html" class="external-link">dataset</a></span><span class="op">(</span>dataname <span class="op">=</span> <span class="st">"mtcars"</span>, x <span class="op">=</span> <span class="va">mtcars</span><span class="op">)</span><span class="op">)</span>
+
+<span class="va">datasets</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/init_filtered_data.html">init_filtered_data</a></span><span class="op">(</span>
+  <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>
+    iris <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>dataset <span class="op">=</span> <span class="va">iris</span><span class="op">)</span>,
+    mtcars <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>dataset <span class="op">=</span> <span class="va">mtcars</span><span class="op">)</span>
+  <span class="op">)</span>
+<span class="op">)</span>
 
 <span class="va">app</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/shiny/man/shinyApp.html" class="external-link">shinyApp</a></span><span class="op">(</span>
   ui <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/pkg/shiny/man/fluidPage.html" class="external-link">fluidPage</a></span><span class="op">(</span>

@@ -12,7 +12,7 @@ FilterState object for POSIXct variable"><!-- mathjax --><script src="https://cd
     
     <a class="navbar-brand me-2" href="../index.html">teal.slice</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.1.9000</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.1.9001</small>
 
     <div style="width: 140px; margin-left: 0.5rem;"> <small class="nav-text text-muted me-auto">part of</small> <img src="https://github.com/insightsengineering/hex-stickers/blob/main/PNG/nest.png?raw=true" alt="NEST" style="height: 30px;"><a href="https://pharmaverse.org/" class="external-link"><img src="https://github.com/insightsengineering/hex-stickers/blob/main/PNG/pharmaverse.png?raw=true" alt="pharmaverse" style="height: 28px;"></a> </div>
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -100,7 +100,7 @@ making it possible to pass any object coercible to <code>POSIXct</code> to this 
 <li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilterState" data-id="set_state"><a href="FilterState.html#method-set_state"><code>teal.slice::FilterState$set_state()</code></a></span></li>
 <li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilterState" data-id="set_state_reactive"><a href="FilterState.html#method-set_state_reactive"><code>teal.slice::FilterState$set_state_reactive()</code></a></span></li>
 </ul></details></p><hr><a id="method-DatetimeFilterState-new"></a><div class="section">
-<h3 id="method-new-">Method <code><a href="https://rdrr.io/r/methods/new.html" class="external-link">new()</a></code><a class="anchor" aria-label="anchor" href="#method-new-"></a></h3>
+<h3 id="method-new-">Method <code>new()</code><a class="anchor" aria-label="anchor" href="#method-new-"></a></h3>
 <p>Initialize a <code>FilterState</code> object. This class
 has an extra field, <code>private$timezone</code>, which is set to <code><a href="https://rdrr.io/r/base/timezones.html" class="external-link">Sys.timezone()</a></code> by
 default. However, in case when using this module in <code>teal</code> app, one needs
@@ -294,13 +294,13 @@ time frame. Must not contain NA values.</p></dd>
 <span class="r-in"><span class="op">)</span></span>
 <span class="r-in"></span>
 <span class="r-in"><span class="fu"><a href="https://rdrr.io/pkg/shiny/man/isolate.html" class="external-link">isolate</a></span><span class="op">(</span><span class="va">filter_state</span><span class="op">$</span><span class="fu">get_call</span><span class="op">(</span><span class="op">)</span><span class="op">)</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> x &gt;= as.POSIXct("2022-06-14 17:48:10", tz = "Etc/UTC") &amp; x &lt; </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>     as.POSIXct("2022-06-15 02:48:11", tz = "Etc/UTC")</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> x &gt;= as.POSIXct("2022-06-22 10:05:09", tz = "Etc/UTC") &amp; x &lt; </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     as.POSIXct("2022-06-22 19:05:10", tz = "Etc/UTC")</span>
 <span class="r-in"><span class="fu"><a href="https://rdrr.io/pkg/shiny/man/isolate.html" class="external-link">isolate</a></span><span class="op">(</span><span class="va">filter_state</span><span class="op">$</span><span class="fu">set_selected</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/Sys.time.html" class="external-link">Sys.time</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span> <span class="fl">3L</span>, <span class="fu"><a href="https://rdrr.io/r/base/Sys.time.html" class="external-link">Sys.time</a></span><span class="op">(</span><span class="op">)</span> <span class="op">+</span> <span class="fl">8L</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span>
 <span class="r-in"><span class="fu"><a href="https://rdrr.io/pkg/shiny/man/isolate.html" class="external-link">isolate</a></span><span class="op">(</span><span class="va">filter_state</span><span class="op">$</span><span class="fu">set_keep_na</span><span class="op">(</span><span class="cn">TRUE</span><span class="op">)</span><span class="op">)</span></span>
 <span class="r-in"><span class="fu"><a href="https://rdrr.io/pkg/shiny/man/isolate.html" class="external-link">isolate</a></span><span class="op">(</span><span class="va">filter_state</span><span class="op">$</span><span class="fu">get_call</span><span class="op">(</span><span class="op">)</span><span class="op">)</span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> is.na(x) | x &gt;= as.POSIXct("2022-06-14 17:48:13", tz = "Etc/UTC") &amp; </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>     x &lt; as.POSIXct("2022-06-14 17:48:19", tz = "Etc/UTC")</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> is.na(x) | x &gt;= as.POSIXct("2022-06-22 10:05:12", tz = "Etc/UTC") &amp; </span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>     x &lt; as.POSIXct("2022-06-22 10:05:18", tz = "Etc/UTC")</span>
 <span class="r-in"></span>
 <span class="r-in"><span class="co">## ------------------------------------------------</span></span>
 <span class="r-in"><span class="co">## Method `DatetimeFilterState$set_selected`</span></span>

@@ -12,7 +12,7 @@ Class to encapsulate filtered datasets"><!-- mathjax --><script src="https://cdn
     
     <a class="navbar-brand me-2" href="../index.html">teal.slice</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.1.9000</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.1.9001</small>
 
     <div style="width: 140px; margin-left: 0.5rem;"> <small class="nav-text text-muted me-auto">part of</small> <img src="https://github.com/insightsengineering/hex-stickers/blob/main/PNG/nest.png?raw=true" alt="NEST" style="height: 30px;"><a href="https://pharmaverse.org/" class="external-link"><img src="https://github.com/insightsengineering/hex-stickers/blob/main/PNG/pharmaverse.png?raw=true" alt="pharmaverse" style="height: 28px;"></a> </div>
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -67,10 +67,9 @@ Class to encapsulate filtered datasets"><!-- mathjax --><script src="https://cdn
     <p>The main purpose of this class is to provide a collection of reactive datasets,
 each dataset having a filter state that determines how it is filtered.</p>
 <p>For each dataset, <code>get_filter_expr</code> returns the call to filter the dataset according
-to the filter state. The data itself can be obtained through <code>get_data</code>.
-Other classes take care of actually merging together all the datasets.</p>
+to the filter state. The data itself can be obtained through <code>get_data</code>.</p>
 <p>The datasets are filtered lazily, i.e. only when requested / needed in a Shiny app.</p>
-<p>By design, any dataname set through <code>set_data</code> cannot be removed because
+<p>By design, any dataname set through <code>set_dataset</code> cannot be removed because
 other code may already depend on it. As a workaround, the underlying
 data can be set to <code>NULL</code>.</p>
 <p>The class currently supports variables of the following types within datasets:</p><ul><li><p><code>choices</code>: variable of type <code>factor</code>, e.g. <code>ADSL$COUNTRY</code>, <code>iris$Species</code>
@@ -101,7 +100,6 @@ Other variables cannot be used for filtering the data in this class.</p></li>
 <li><p><a href="#method-FilteredData-get_filtered_dataset"><code>FilteredData$get_filtered_dataset()</code></a></p></li>
 <li><p><a href="#method-FilteredData-get_data"><code>FilteredData$get_data()</code></a></p></li>
 <li><p><a href="#method-FilteredData-get_check"><code>FilteredData$get_check()</code></a></p></li>
-<li><p><a href="#method-FilteredData-get_data_attr"><code>FilteredData$get_data_attr()</code></a></p></li>
 <li><p><a href="#method-FilteredData-get_metadata"><code>FilteredData$get_metadata()</code></a></p></li>
 <li><p><a href="#method-FilteredData-get_join_keys"><code>FilteredData$get_join_keys()</code></a></p></li>
 <li><p><a href="#method-FilteredData-get_filter_overview"><code>FilteredData$get_filter_overview()</code></a></p></li>
@@ -110,6 +108,7 @@ Other variables cannot be used for filtering the data in this class.</p></li>
 <li><p><a href="#method-FilteredData-get_varnames"><code>FilteredData$get_varnames()</code></a></p></li>
 <li><p><a href="#method-FilteredData-handle_active_datanames"><code>FilteredData$handle_active_datanames()</code></a></p></li>
 <li><p><a href="#method-FilteredData-set_dataset"><code>FilteredData$set_dataset()</code></a></p></li>
+<li><p><a href="#method-FilteredData-set_join_keys"><code>FilteredData$set_join_keys()</code></a></p></li>
 <li><p><a href="#method-FilteredData-set_check"><code>FilteredData$set_check()</code></a></p></li>
 <li><p><a href="#method-FilteredData-set_code"><code>FilteredData$set_code()</code></a></p></li>
 <li><p><a href="#method-FilteredData-get_filter_state"><code>FilteredData$get_filter_state()</code></a></p></li>
@@ -127,9 +126,34 @@ Other variables cannot be used for filtering the data in this class.</p></li>
 <h3 id="method-new-">Method <code><a href="https://rdrr.io/r/methods/new.html" class="external-link">new()</a></code><a class="anchor" aria-label="anchor" href="#method-new-"></a></h3>
 <p>Initialize a <code>FilteredData</code> object</p><div class="section">
 <h4 id="usage">Usage<a class="anchor" aria-label="anchor" href="#usage"></a></h4>
-<p></p><div class="r"><div class="sourceCode"><pre><code><span class="va"><a href="../reference/FilteredData.html">FilteredData</a></span><span class="op">$</span><span class="fu">new</span><span class="op">(</span><span class="op">)</span></code></pre></div><p></p></div>
+<p></p><div class="r"><div class="sourceCode"><pre><code><span class="va"><a href="../reference/FilteredData.html">FilteredData</a></span><span class="op">$</span><span class="fu">new</span><span class="op">(</span><span class="va">data_objects</span>, join_keys <span class="op">=</span> <span class="cn">NULL</span>, code <span class="op">=</span> <span class="cn">NULL</span>, check <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></code></pre></div><p></p></div>
 </div>
 
+<div class="section">
+<h4 id="arguments">Arguments<a class="anchor" aria-label="anchor" href="#arguments"></a></h4>
+<p></p><div class="arguments"><dl><dt><code>data_objects</code></dt>
+<dd><p>(<code>list</code>) should contain.</p><ul><li><p><code>dataset</code> data object object supported by <code><a href="FilteredDataset.html">FilteredDataset</a></code>.</p></li>
+<li><p><code>metatada</code> (optional) additional metadata attached to the <code>dataset</code>.</p></li>
+<li><p><code>keys</code> (optional) primary keys.</p></li>
+<li><p><code>datalabel</code> (optional) label describing the <code>dataset</code>.</p></li>
+<li><p><code>parent</code> (optional) which <code>NULL</code> is a parent of this one.</p></li>
+</ul></dd>
+
+
+<dt><code>join_keys</code></dt>
+<dd><p>(<code>JoinKeys</code> or NULL) see <code><a href="https://rdrr.io/pkg/teal.data/man/join_keys.html" class="external-link">teal.data::join_keys()</a></code>.</p></dd>
+
+
+<dt><code>code</code></dt>
+<dd><p>(<code>CodeClass</code> or <code>NULL</code>) see <code><a href="https://rdrr.io/pkg/teal.data/man/CodeClass.html" class="external-link">teal.data::CodeClass</a></code>.</p></dd>
+
+
+<dt><code>check</code></dt>
+<dd><p>(<code>logical(1)</code>) whether data has been check against reproducibility.</p></dd>
+
+
+</dl><p></p></div>
+</div>
 
 </div><p></p><hr><a id="method-FilteredData-datanames"></a><div class="section">
 <h3 id="method-datanames-">Method <code>datanames()</code><a class="anchor" aria-label="anchor" href="#method-datanames-"></a></h3>
@@ -156,9 +180,9 @@ Gets data label for the dataset</p>
 </div>
 
 <div class="section">
-<h4 id="arguments">Arguments<a class="anchor" aria-label="anchor" href="#arguments"></a></h4>
+<h4 id="arguments-1">Arguments<a class="anchor" aria-label="anchor" href="#arguments-1"></a></h4>
 <p></p><div class="arguments"><dl><dt><code>dataname</code></dt>
-<dd><p>(<code>character</code>) name of the dataset</p></dd>
+<dd><p>(<code>character(1)</code>) name of the dataset</p></dd>
 
 
 </dl><p></p></div>
@@ -176,7 +200,7 @@ Gets data label for the dataset</p>
 </div>
 
 <div class="section">
-<h4 id="arguments-1">Arguments<a class="anchor" aria-label="anchor" href="#arguments-1"></a></h4>
+<h4 id="arguments-2">Arguments<a class="anchor" aria-label="anchor" href="#arguments-2"></a></h4>
 <p></p><div class="arguments"><dl><dt><code>dataname</code></dt>
 <dd><p>(<code>character</code> vector) names of the dataset</p></dd>
 
@@ -196,9 +220,9 @@ Gets data label for the dataset</p>
 </div>
 
 <div class="section">
-<h4 id="arguments-2">Arguments<a class="anchor" aria-label="anchor" href="#arguments-2"></a></h4>
+<h4 id="arguments-3">Arguments<a class="anchor" aria-label="anchor" href="#arguments-3"></a></h4>
 <p></p><div class="arguments"><dl><dt><code>dataname</code></dt>
-<dd><p>(<code>character</code>) name of the dataset</p></dd>
+<dd><p>(<code>character(1)</code>) name of the dataset</p></dd>
 
 
 </dl><p></p></div>
@@ -226,9 +250,9 @@ capturing a function call).</p>
 </div>
 
 <div class="section">
-<h4 id="arguments-3">Arguments<a class="anchor" aria-label="anchor" href="#arguments-3"></a></h4>
+<h4 id="arguments-4">Arguments<a class="anchor" aria-label="anchor" href="#arguments-4"></a></h4>
 <p></p><div class="arguments"><dl><dt><code>dataname</code></dt>
-<dd><p>(<code>character</code>) name of the dataset</p></dd>
+<dd><p>(<code>character(1)</code>) name of the dataset</p></dd>
 
 
 </dl><p></p></div>
@@ -240,23 +264,23 @@ calls</p>
 </div>
 
 </div><p></p><hr><a id="method-FilteredData-get_code"></a><div class="section">
-<h3 id="method-get-code-">Method <code>get_code()</code><a class="anchor" aria-label="anchor" href="#method-get-code-"></a></h3>
+<h3 id="method-get-code-">Method <code><a href="https://rdrr.io/pkg/teal.data/man/get_code.html" class="external-link">get_code()</a></code><a class="anchor" aria-label="anchor" href="#method-get-code-"></a></h3>
 <p>Gets the R preprocessing code string that generates the unfiltered datasets</p><div class="section">
 <h4 id="usage-6">Usage<a class="anchor" aria-label="anchor" href="#usage-6"></a></h4>
 <p></p><div class="r"><div class="sourceCode"><pre><code><span class="va">FilteredData</span><span class="op">$</span><span class="fu">get_code</span><span class="op">(</span>dataname <span class="op">=</span> <span class="va">self</span><span class="op">$</span><span class="fu">datanames</span><span class="op">(</span><span class="op">)</span><span class="op">)</span></code></pre></div><p></p></div>
 </div>
 
 <div class="section">
-<h4 id="arguments-4">Arguments<a class="anchor" aria-label="anchor" href="#arguments-4"></a></h4>
+<h4 id="arguments-5">Arguments<a class="anchor" aria-label="anchor" href="#arguments-5"></a></h4>
 <p></p><div class="arguments"><dl><dt><code>dataname</code></dt>
-<dd><p>(<code>character</code>) name(s) of teal.data::dataset(s)</p></dd>
+<dd><p>(<code>character(1)</code>) name(s) of dataset(s)</p></dd>
 
 
 </dl><p></p></div>
 </div>
 <div class="section">
 <h4 id="returns-5">Returns<a class="anchor" aria-label="anchor" href="#returns-5"></a></h4>
-<p>(<code>character</code>) deparsed code</p>
+<p>(<code>character(1)</code>) deparsed code</p>
 </div>
 
 </div><p></p><hr><a id="method-FilteredData-get_filtered_dataset"></a><div class="section">
@@ -268,7 +292,7 @@ related to specific dataset.</p><div class="section">
 </div>
 
 <div class="section">
-<h4 id="arguments-5">Arguments<a class="anchor" aria-label="anchor" href="#arguments-5"></a></h4>
+<h4 id="arguments-6">Arguments<a class="anchor" aria-label="anchor" href="#arguments-6"></a></h4>
 <p></p><div class="arguments"><dl><dt><code>dataname</code></dt>
 <dd><p>(<code>character(1)</code>)<br>
 name of the dataset.</p></dd>
@@ -291,9 +315,9 @@ name of the dataset.</p></dd>
 </div>
 
 <div class="section">
-<h4 id="arguments-6">Arguments<a class="anchor" aria-label="anchor" href="#arguments-6"></a></h4>
+<h4 id="arguments-7">Arguments<a class="anchor" aria-label="anchor" href="#arguments-7"></a></h4>
 <p></p><div class="arguments"><dl><dt><code>dataname</code></dt>
-<dd><p>(<code>character</code>) name of the dataset</p></dd>
+<dd><p>(<code>character(1)</code>) name of the dataset</p></dd>
 
 
 <dt><code>filtered</code></dt>
@@ -315,73 +339,47 @@ name of the dataset.</p></dd>
 <p><code>logical</code></p>
 </div>
 
-</div><p></p><hr><a id="method-FilteredData-get_data_attr"></a><div class="section">
-<h3 id="method-get-data-attr-">Method <code>get_data_attr()</code><a class="anchor" aria-label="anchor" href="#method-get-data-attr-"></a></h3>
-<p>Gets data attributes for a given dataset</p>
-<p>Sets and gets the data attribute on unfiltered data as it is never modified
-as attributes.</p><div class="section">
-<h4 id="usage-10">Usage<a class="anchor" aria-label="anchor" href="#usage-10"></a></h4>
-<p></p><div class="r"><div class="sourceCode"><pre><code><span class="va">FilteredData</span><span class="op">$</span><span class="fu">get_data_attr</span><span class="op">(</span><span class="va">dataname</span>, <span class="va">attr</span><span class="op">)</span></code></pre></div><p></p></div>
-</div>
-
-<div class="section">
-<h4 id="arguments-7">Arguments<a class="anchor" aria-label="anchor" href="#arguments-7"></a></h4>
-<p></p><div class="arguments"><dl><dt><code>dataname</code></dt>
-<dd><p>(<code>character</code>) name of the dataset</p></dd>
-
-
-<dt><code>attr</code></dt>
-<dd><p>(<code>character</code>) attribute to get from the data attributes of the dataset</p></dd>
-
-
-</dl><p></p></div>
-</div>
-<div class="section">
-<h4 id="returns-8">Returns<a class="anchor" aria-label="anchor" href="#returns-8"></a></h4>
-<p>value of attribute, may be <code>NULL</code> if it does not exist</p>
-</div>
-
 </div><p></p><hr><a id="method-FilteredData-get_metadata"></a><div class="section">
 <h3 id="method-get-metadata-">Method <code>get_metadata()</code><a class="anchor" aria-label="anchor" href="#method-get-metadata-"></a></h3>
 <p>Gets metadata for a given dataset</p><div class="section">
-<h4 id="usage-11">Usage<a class="anchor" aria-label="anchor" href="#usage-11"></a></h4>
+<h4 id="usage-10">Usage<a class="anchor" aria-label="anchor" href="#usage-10"></a></h4>
 <p></p><div class="r"><div class="sourceCode"><pre><code><span class="va">FilteredData</span><span class="op">$</span><span class="fu">get_metadata</span><span class="op">(</span><span class="va">dataname</span><span class="op">)</span></code></pre></div><p></p></div>
 </div>
 
 <div class="section">
 <h4 id="arguments-8">Arguments<a class="anchor" aria-label="anchor" href="#arguments-8"></a></h4>
 <p></p><div class="arguments"><dl><dt><code>dataname</code></dt>
-<dd><p>(<code>character</code>) name of the dataset</p></dd>
+<dd><p>(<code>character(1)</code>) name of the dataset</p></dd>
 
 
 </dl><p></p></div>
 </div>
 <div class="section">
-<h4 id="returns-9">Returns<a class="anchor" aria-label="anchor" href="#returns-9"></a></h4>
+<h4 id="returns-8">Returns<a class="anchor" aria-label="anchor" href="#returns-8"></a></h4>
 <p>value of metadata for given data (or <code>NULL</code> if it does not exist)</p>
 </div>
 
 </div><p></p><hr><a id="method-FilteredData-get_join_keys"></a><div class="section">
 <h3 id="method-get-join-keys-">Method <code>get_join_keys()</code><a class="anchor" aria-label="anchor" href="#method-get-join-keys-"></a></h3>
 <p>Get join keys between two datasets.</p><div class="section">
-<h4 id="usage-12">Usage<a class="anchor" aria-label="anchor" href="#usage-12"></a></h4>
+<h4 id="usage-11">Usage<a class="anchor" aria-label="anchor" href="#usage-11"></a></h4>
 <p></p><div class="r"><div class="sourceCode"><pre><code><span class="va">FilteredData</span><span class="op">$</span><span class="fu">get_join_keys</span><span class="op">(</span><span class="va">dataset_1</span>, <span class="va">dataset_2</span><span class="op">)</span></code></pre></div><p></p></div>
 </div>
 
 <div class="section">
 <h4 id="arguments-9">Arguments<a class="anchor" aria-label="anchor" href="#arguments-9"></a></h4>
 <p></p><div class="arguments"><dl><dt><code>dataset_1</code></dt>
-<dd><p>(<code>character</code>) one dataset name</p></dd>
+<dd><p>(<code>character(1)</code>) one dataset name</p></dd>
 
 
 <dt><code>dataset_2</code></dt>
-<dd><p>(<code>character</code>) other dataset name</p></dd>
+<dd><p>(<code>character(1)</code>) other dataset name</p></dd>
 
 
 </dl><p></p></div>
 </div>
 <div class="section">
-<h4 id="returns-10">Returns<a class="anchor" aria-label="anchor" href="#returns-10"></a></h4>
+<h4 id="returns-9">Returns<a class="anchor" aria-label="anchor" href="#returns-9"></a></h4>
 <p>(<code>named character</code>) vector with column names</p>
 </div>
 
@@ -390,7 +388,7 @@ as attributes.</p><div class="section">
 <p>Get filter overview table in form of X (filtered) / Y (non-filtered)</p>
 <p>This is intended to be presented in the application.
 The content for each of the data names is defined in <code>get_filter_overview_info</code> method.</p><div class="section">
-<h4 id="usage-13">Usage<a class="anchor" aria-label="anchor" href="#usage-13"></a></h4>
+<h4 id="usage-12">Usage<a class="anchor" aria-label="anchor" href="#usage-12"></a></h4>
 <p></p><div class="r"><div class="sourceCode"><pre><code><span class="va">FilteredData</span><span class="op">$</span><span class="fu">get_filter_overview</span><span class="op">(</span><span class="va">datanames</span><span class="op">)</span></code></pre></div><p></p></div>
 </div>
 
@@ -403,29 +401,29 @@ The content for each of the data names is defined in <code>get_filter_overview_i
 </dl><p></p></div>
 </div>
 <div class="section">
-<h4 id="returns-11">Returns<a class="anchor" aria-label="anchor" href="#returns-11"></a></h4>
+<h4 id="returns-10">Returns<a class="anchor" aria-label="anchor" href="#returns-10"></a></h4>
 <p>(<code>matrix</code>) matrix of observations and subjects of all datasets
 Get keys for the dataset</p>
 </div>
 
 </div><p></p><hr><a id="method-FilteredData-get_keys"></a><div class="section">
-<h3 id="method-get-keys-">Method <code>get_keys()</code><a class="anchor" aria-label="anchor" href="#method-get-keys-"></a></h3>
+<h3 id="method-get-keys-">Method <code><a href="https://rdrr.io/pkg/teal.data/man/get_keys.html" class="external-link">get_keys()</a></code><a class="anchor" aria-label="anchor" href="#method-get-keys-"></a></h3>
 
 <div class="section">
-<h4 id="usage-14">Usage<a class="anchor" aria-label="anchor" href="#usage-14"></a></h4>
+<h4 id="usage-13">Usage<a class="anchor" aria-label="anchor" href="#usage-13"></a></h4>
 <p></p><div class="r"><div class="sourceCode"><pre><code><span class="va">FilteredData</span><span class="op">$</span><span class="fu">get_keys</span><span class="op">(</span><span class="va">dataname</span><span class="op">)</span></code></pre></div><p></p></div>
 </div>
 
 <div class="section">
 <h4 id="arguments-11">Arguments<a class="anchor" aria-label="anchor" href="#arguments-11"></a></h4>
 <p></p><div class="arguments"><dl><dt><code>dataname</code></dt>
-<dd><p>(<code>character</code>) name of the dataset</p></dd>
+<dd><p>(<code>character(1)</code>) name of the dataset</p></dd>
 
 
 </dl><p></p></div>
 </div>
 <div class="section">
-<h4 id="returns-12">Returns<a class="anchor" aria-label="anchor" href="#returns-12"></a></h4>
+<h4 id="returns-11">Returns<a class="anchor" aria-label="anchor" href="#returns-11"></a></h4>
 <p>(<code>character</code>) keys of dataset</p>
 </div>
 
@@ -435,25 +433,25 @@ Get keys for the dataset</p>
 <p>Variables are the column names of the data.
 Either, all labels must have been provided for all variables
 in <code>set_data</code> or <code>NULL</code>.</p><div class="section">
-<h4 id="usage-15">Usage<a class="anchor" aria-label="anchor" href="#usage-15"></a></h4>
+<h4 id="usage-14">Usage<a class="anchor" aria-label="anchor" href="#usage-14"></a></h4>
 <p></p><div class="r"><div class="sourceCode"><pre><code><span class="va">FilteredData</span><span class="op">$</span><span class="fu">get_varlabels</span><span class="op">(</span><span class="va">dataname</span>, variables <span class="op">=</span> <span class="cn">NULL</span><span class="op">)</span></code></pre></div><p></p></div>
 </div>
 
 <div class="section">
 <h4 id="arguments-12">Arguments<a class="anchor" aria-label="anchor" href="#arguments-12"></a></h4>
 <p></p><div class="arguments"><dl><dt><code>dataname</code></dt>
-<dd><p>(<code>character</code>) name of the dataset</p></dd>
+<dd><p>(<code>character(1)</code>) name of the dataset</p></dd>
 
 
 <dt><code>variables</code></dt>
-<dd><p>(<code>character</code> vector) variables to get labels for;
+<dd><p>(<code>character</code>) variables to get labels for;
 if <code>NULL</code>, for all variables in data</p></dd>
 
 
 </dl><p></p></div>
 </div>
 <div class="section">
-<h4 id="returns-13">Returns<a class="anchor" aria-label="anchor" href="#returns-13"></a></h4>
+<h4 id="returns-12">Returns<a class="anchor" aria-label="anchor" href="#returns-12"></a></h4>
 <p>(<code>character</code> or <code>NULL</code>) variable labels, <code>NULL</code> if <code>column_labels</code>
 attribute does not exist for the data</p>
 </div>
@@ -461,7 +459,7 @@ attribute does not exist for the data</p>
 </div><p></p><hr><a id="method-FilteredData-get_varnames"></a><div class="section">
 <h3 id="method-get-varnames-">Method <code>get_varnames()</code><a class="anchor" aria-label="anchor" href="#method-get-varnames-"></a></h3>
 <p>Gets variable names</p><div class="section">
-<h4 id="usage-16">Usage<a class="anchor" aria-label="anchor" href="#usage-16"></a></h4>
+<h4 id="usage-15">Usage<a class="anchor" aria-label="anchor" href="#usage-15"></a></h4>
 <p></p><div class="r"><div class="sourceCode"><pre><code><span class="va">FilteredData</span><span class="op">$</span><span class="fu">get_varnames</span><span class="op">(</span><span class="va">dataname</span><span class="op">)</span></code></pre></div><p></p></div>
 </div>
 
@@ -474,7 +472,7 @@ attribute does not exist for the data</p>
 </dl><p></p></div>
 </div>
 <div class="section">
-<h4 id="returns-14">Returns<a class="anchor" aria-label="anchor" href="#returns-14"></a></h4>
+<h4 id="returns-13">Returns<a class="anchor" aria-label="anchor" href="#returns-13"></a></h4>
 <p>(<code>character</code> vector) of variable names
 When active_datanames is "all", sets them to all datanames
 otherwise, it makes sure that it is a subset of the available datanames</p>
@@ -484,7 +482,7 @@ otherwise, it makes sure that it is a subset of the available datanames</p>
 <h3 id="method-handle-active-datanames-">Method <code>handle_active_datanames()</code><a class="anchor" aria-label="anchor" href="#method-handle-active-datanames-"></a></h3>
 
 <div class="section">
-<h4 id="usage-17">Usage<a class="anchor" aria-label="anchor" href="#usage-17"></a></h4>
+<h4 id="usage-16">Usage<a class="anchor" aria-label="anchor" href="#usage-16"></a></h4>
 <p></p><div class="r"><div class="sourceCode"><pre><code><span class="va">FilteredData</span><span class="op">$</span><span class="fu">handle_active_datanames</span><span class="op">(</span><span class="va">datanames</span><span class="op">)</span></code></pre></div><p></p></div>
 </div>
 
@@ -497,32 +495,61 @@ otherwise, it makes sure that it is a subset of the available datanames</p>
 </dl><p></p></div>
 </div>
 <div class="section">
-<h4 id="returns-15">Returns<a class="anchor" aria-label="anchor" href="#returns-15"></a></h4>
+<h4 id="returns-14">Returns<a class="anchor" aria-label="anchor" href="#returns-14"></a></h4>
 <p>the intersection of <code>self$datanames()</code> and <code>datanames</code></p>
 </div>
 
 </div><p></p><hr><a id="method-FilteredData-set_dataset"></a><div class="section">
 <h3 id="method-set-dataset-">Method <code>set_dataset()</code><a class="anchor" aria-label="anchor" href="#method-set-dataset-"></a></h3>
-<p>Adds a <code>TealDataset</code> object to this <code>FilteredData</code></p>
-<p>Adds a dataset and preserve all attributes attached to this object.
-Technically <code>set_dataset</code> created <code>FilteredDataset</code> which keeps
-<code>dataset</code> for filtering purpose.</p><div class="section">
-<h4 id="usage-18">Usage<a class="anchor" aria-label="anchor" href="#usage-18"></a></h4>
-<p></p><div class="r"><div class="sourceCode"><pre><code><span class="va">FilteredData</span><span class="op">$</span><span class="fu">set_dataset</span><span class="op">(</span><span class="va">dataset</span><span class="op">)</span></code></pre></div><p></p></div>
+<p>Adds a dataset to this <code>FilteredData</code></p><div class="section">
+<h4 id="usage-17">Usage<a class="anchor" aria-label="anchor" href="#usage-17"></a></h4>
+<p></p><div class="r"><div class="sourceCode"><pre><code><span class="va">FilteredData</span><span class="op">$</span><span class="fu">set_dataset</span><span class="op">(</span><span class="va">dataset_args</span>, <span class="va">dataname</span><span class="op">)</span></code></pre></div><p></p></div>
 </div>
 
 <div class="section">
 <h4 id="arguments-15">Arguments<a class="anchor" aria-label="anchor" href="#arguments-15"></a></h4>
-<p></p><div class="arguments"><dl><dt><code>dataset</code></dt>
-<dd><p>(<code>TealDataset</code> or <code>TealDatasetConnector</code>)<br>
-the object containing data and attributes.</p></dd>
+<p></p><div class="arguments"><dl><dt><code>dataset_args</code></dt>
+<dd><p>(<code>list</code>)<br>
+containing the arguments except (<code>dataname</code>)
+needed by <code>init_filtered_dataset</code></p></dd>
+
+
+<dt><code>dataname</code></dt>
+<dd><p>(<code>string</code>)<br>
+the name of the <code>dataset</code> to be added to this object</p></dd>
+
+
+</dl><p></p></div>
+</div>
+<div class="section">
+<h4 id="details-1">Details<a class="anchor" aria-label="anchor" href="#details-1"></a></h4>
+<p><code>set_dataset</code> creates a <code>FilteredDataset</code> object which keeps
+<code>dataset</code> for the filtering purpose.</p>
+</div>
+
+<div class="section">
+<h4 id="returns-15">Returns<a class="anchor" aria-label="anchor" href="#returns-15"></a></h4>
+<p>(<code>self</code>) invisibly this <code>FilteredData</code></p>
+</div>
+
+</div><p></p><hr><a id="method-FilteredData-set_join_keys"></a><div class="section">
+<h3 id="method-set-join-keys-">Method <code>set_join_keys()</code><a class="anchor" aria-label="anchor" href="#method-set-join-keys-"></a></h3>
+<p>Set the <code>join_keys</code></p><div class="section">
+<h4 id="usage-18">Usage<a class="anchor" aria-label="anchor" href="#usage-18"></a></h4>
+<p></p><div class="r"><div class="sourceCode"><pre><code><span class="va">FilteredData</span><span class="op">$</span><span class="fu">set_join_keys</span><span class="op">(</span><span class="va">join_keys</span><span class="op">)</span></code></pre></div><p></p></div>
+</div>
+
+<div class="section">
+<h4 id="arguments-16">Arguments<a class="anchor" aria-label="anchor" href="#arguments-16"></a></h4>
+<p></p><div class="arguments"><dl><dt><code>join_keys</code></dt>
+<dd><p>(<code>JoinKeys</code>) join_key (converted to a nested list)</p></dd>
 
 
 </dl><p></p></div>
 </div>
 <div class="section">
 <h4 id="returns-16">Returns<a class="anchor" aria-label="anchor" href="#returns-16"></a></h4>
-<p>(<code>self</code>) invisibly this <code>FilteredTealData</code></p>
+<p>(<code>self</code>) invisibly this <code>FilteredData</code></p>
 </div>
 
 </div><p></p><hr><a id="method-FilteredData-set_check"></a><div class="section">
@@ -533,7 +560,7 @@ the object containing data and attributes.</p></dd>
 </div>
 
 <div class="section">
-<h4 id="arguments-16">Arguments<a class="anchor" aria-label="anchor" href="#arguments-16"></a></h4>
+<h4 id="arguments-17">Arguments<a class="anchor" aria-label="anchor" href="#arguments-17"></a></h4>
 <p></p><div class="arguments"><dl><dt><code>check</code></dt>
 <dd><p>(<code>logical</code>) whether datasets have had reproducibility check</p></dd>
 
@@ -553,7 +580,7 @@ the object containing data and attributes.</p></dd>
 </div>
 
 <div class="section">
-<h4 id="arguments-17">Arguments<a class="anchor" aria-label="anchor" href="#arguments-17"></a></h4>
+<h4 id="arguments-18">Arguments<a class="anchor" aria-label="anchor" href="#arguments-18"></a></h4>
 <p></p><div class="arguments"><dl><dt><code>code</code></dt>
 <dd><p>(<code>CodeClass</code>)<br>
 preprocessing code that can be parsed to generate the
@@ -595,10 +622,13 @@ with active filters.</p>
 </div>
 <div class="section">
 <h4 id="examples">Examples<a class="anchor" aria-label="anchor" href="#examples"></a></h4>
-<p></p><div class="r example copy"><div class="sourceCode"><pre><code><span class="va">datasets</span> <span class="op">&lt;-</span> <span class="fu">teal.slice</span><span class="fu">:::</span><span class="va"><a href="../reference/FilteredData.html">FilteredData</a></span><span class="op">$</span><span class="fu">new</span><span class="op">(</span><span class="op">)</span>
-<span class="va">datasets</span><span class="op">$</span><span class="fu">set_dataset</span><span class="op">(</span><span class="fu">teal.data</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/teal.data/man/dataset.html" class="external-link">dataset</a></span><span class="op">(</span><span class="st">"iris"</span>, <span class="va">iris</span><span class="op">)</span><span class="op">)</span>
-<span class="fu">utils</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">miniACC</span>, package <span class="op">=</span> <span class="st">"MultiAssayExperiment"</span><span class="op">)</span>
-<span class="va">datasets</span><span class="op">$</span><span class="fu">set_dataset</span><span class="op">(</span><span class="fu">teal.data</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/teal.data/man/dataset.html" class="external-link">dataset</a></span><span class="op">(</span><span class="st">"mae"</span>, <span class="va">miniACC</span><span class="op">)</span><span class="op">)</span>
+<p></p><div class="r example copy"><div class="sourceCode"><pre><code><span class="fu">utils</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">miniACC</span>, package <span class="op">=</span> <span class="st">"MultiAssayExperiment"</span><span class="op">)</span>
+<span class="va">datasets</span> <span class="op">&lt;-</span> <span class="fu">teal.slice</span><span class="fu">:::</span><span class="va"><a href="../reference/FilteredData.html">FilteredData</a></span><span class="op">$</span><span class="fu">new</span><span class="op">(</span>
+  <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>iris <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>dataset <span class="op">=</span> <span class="va">iris</span><span class="op">)</span>,
+       mae <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>dataset <span class="op">=</span> <span class="va">miniACC</span><span class="op">)</span>
+  <span class="op">)</span>,
+  join_keys <span class="op">=</span> <span class="cn">NULL</span>
+<span class="op">)</span>
 <span class="va">fs</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>
   iris <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>
     Sepal.Length <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>selected <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">5.1</span>, <span class="fl">6.4</span><span class="op">)</span>, keep_na <span class="op">=</span> <span class="cn">TRUE</span>, keep_inf <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span>,
@@ -628,7 +658,7 @@ with active filters.</p>
 </div>
 
 <div class="section">
-<h4 id="arguments-18">Arguments<a class="anchor" aria-label="anchor" href="#arguments-18"></a></h4>
+<h4 id="arguments-19">Arguments<a class="anchor" aria-label="anchor" href="#arguments-19"></a></h4>
 <p></p><div class="arguments"><dl><dt><code>state</code></dt>
 <dd><p>(<code>named list</code>)<br>
 nested list of filter selections applied to datasets.</p></dd>
@@ -642,10 +672,14 @@ nested list of filter selections applied to datasets.</p></dd>
 </div>
 <div class="section">
 <h4 id="examples-1">Examples<a class="anchor" aria-label="anchor" href="#examples-1"></a></h4>
-<p></p><div class="r example copy"><div class="sourceCode"><pre><code><span class="va">datasets</span> <span class="op">&lt;-</span> <span class="fu">teal.slice</span><span class="fu">:::</span><span class="va"><a href="../reference/FilteredData.html">FilteredData</a></span><span class="op">$</span><span class="fu">new</span><span class="op">(</span><span class="op">)</span>
-<span class="va">datasets</span><span class="op">$</span><span class="fu">set_dataset</span><span class="op">(</span><span class="fu">teal.data</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/teal.data/man/dataset.html" class="external-link">dataset</a></span><span class="op">(</span><span class="st">"iris"</span>, <span class="va">iris</span><span class="op">)</span><span class="op">)</span>
-<span class="fu">utils</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">miniACC</span>, package <span class="op">=</span> <span class="st">"MultiAssayExperiment"</span><span class="op">)</span>
-<span class="va">datasets</span><span class="op">$</span><span class="fu">set_dataset</span><span class="op">(</span><span class="fu">teal.data</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/teal.data/man/dataset.html" class="external-link">dataset</a></span><span class="op">(</span><span class="st">"mae"</span>, <span class="va">miniACC</span><span class="op">)</span><span class="op">)</span>
+<p></p><div class="r example copy"><div class="sourceCode"><pre><code><span class="fu">utils</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">miniACC</span>, package <span class="op">=</span> <span class="st">"MultiAssayExperiment"</span><span class="op">)</span>
+
+<span class="va">datasets</span> <span class="op">&lt;-</span> <span class="fu">teal.slice</span><span class="fu">:::</span><span class="va"><a href="../reference/FilteredData.html">FilteredData</a></span><span class="op">$</span><span class="fu">new</span><span class="op">(</span>
+  <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>iris <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>dataset <span class="op">=</span> <span class="va">iris</span><span class="op">)</span>,
+       mae <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>dataset <span class="op">=</span> <span class="va">miniACC</span><span class="op">)</span>
+  <span class="op">)</span>,
+  join_keys <span class="op">=</span> <span class="cn">NULL</span>
+<span class="op">)</span>
 <span class="va">fs</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>
   iris <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>
     Sepal.Length <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>selected <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">5.1</span>, <span class="fl">6.4</span><span class="op">)</span>, keep_na <span class="op">=</span> <span class="cn">TRUE</span>, keep_inf <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span>,
@@ -675,7 +709,7 @@ nested list of filter selections applied to datasets.</p></dd>
 </div>
 
 <div class="section">
-<h4 id="arguments-19">Arguments<a class="anchor" aria-label="anchor" href="#arguments-19"></a></h4>
+<h4 id="arguments-20">Arguments<a class="anchor" aria-label="anchor" href="#arguments-20"></a></h4>
 <p></p><div class="arguments"><dl><dt><code>state</code></dt>
 <dd><p>(<code>named list</code>)<br>
 nested list of filter selections applied to datasets.</p></dd>
@@ -696,7 +730,7 @@ nested list of filter selections applied to datasets.</p></dd>
 </div>
 
 <div class="section">
-<h4 id="arguments-20">Arguments<a class="anchor" aria-label="anchor" href="#arguments-20"></a></h4>
+<h4 id="arguments-21">Arguments<a class="anchor" aria-label="anchor" href="#arguments-21"></a></h4>
 <p></p><div class="arguments"><dl><dt><code>datanames</code></dt>
 <dd><p>(<code>character</code>)<br>
 datanames to remove their <code>FilterStates</code> or empty which removes all <code>FilterStates</code> in the <code>FilteredData</code> object.</p></dd>
@@ -723,7 +757,7 @@ class may be used outside of a Shiny app.</p><div class="section">
 </div>
 
 <div class="section">
-<h4 id="arguments-21">Arguments<a class="anchor" aria-label="anchor" href="#arguments-21"></a></h4>
+<h4 id="arguments-22">Arguments<a class="anchor" aria-label="anchor" href="#arguments-22"></a></h4>
 <p></p><div class="arguments"><dl><dt><code>state</code></dt>
 <dd><p>(<code>named list</code>)<br>
 containing fields <code>data_hash</code>, <code>filter_states</code>
@@ -751,7 +785,7 @@ the (active) datasets and allows to filter the datasets.</p></dd>
 </div>
 
 <div class="section">
-<h4 id="arguments-22">Arguments<a class="anchor" aria-label="anchor" href="#arguments-22"></a></h4>
+<h4 id="arguments-23">Arguments<a class="anchor" aria-label="anchor" href="#arguments-23"></a></h4>
 <p></p><div class="arguments"><dl><dt><code>id</code></dt>
 <dd><p>(<code>character(1)</code>)<br>
 module id
@@ -770,7 +804,7 @@ Server function for filter panel</p></dd>
 </div>
 
 <div class="section">
-<h4 id="arguments-23">Arguments<a class="anchor" aria-label="anchor" href="#arguments-23"></a></h4>
+<h4 id="arguments-24">Arguments<a class="anchor" aria-label="anchor" href="#arguments-24"></a></h4>
 <p></p><div class="arguments"><dl><dt><code>id</code></dt>
 <dd><p>(<code>character(1)</code>)<br>
 an ID string that corresponds with the ID used to call the module's UI function.</p></dd>
@@ -805,7 +839,7 @@ the number of unique subjects.</p>
 </div>
 
 <div class="section">
-<h4 id="arguments-24">Arguments<a class="anchor" aria-label="anchor" href="#arguments-24"></a></h4>
+<h4 id="arguments-25">Arguments<a class="anchor" aria-label="anchor" href="#arguments-25"></a></h4>
 <p></p><div class="arguments"><dl><dt><code>id</code></dt>
 <dd><p>module id
 Server function to display the number of records in the filtered and unfiltered
@@ -824,7 +858,7 @@ data</p></dd>
 </div>
 
 <div class="section">
-<h4 id="arguments-25">Arguments<a class="anchor" aria-label="anchor" href="#arguments-25"></a></h4>
+<h4 id="arguments-26">Arguments<a class="anchor" aria-label="anchor" href="#arguments-26"></a></h4>
 <p></p><div class="arguments"><dl><dt><code>id</code></dt>
 <dd><p>(<code>character(1)</code>)<br>
 an ID string that corresponds with the ID used to call the module's UI function.</p></dd>
@@ -853,7 +887,7 @@ panel will be hidden.</p></dd>
 </div>
 
 <div class="section">
-<h4 id="arguments-26">Arguments<a class="anchor" aria-label="anchor" href="#arguments-26"></a></h4>
+<h4 id="arguments-27">Arguments<a class="anchor" aria-label="anchor" href="#arguments-27"></a></h4>
 <p></p><div class="arguments"><dl><dt><code>deep</code></dt>
 <dd><p>Whether to make a deep clone.</p></dd>
 
@@ -868,11 +902,14 @@ panel will be hidden.</p></dd>
     <div class="section level2">
     <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>
     <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://shiny.rstudio.com/" class="external-link">shiny</a></span><span class="op">)</span></span>
-<span class="r-in"><span class="va">datasets</span> <span class="op">&lt;-</span> <span class="fu">teal.slice</span><span class="fu">:::</span><span class="va">FilteredData</span><span class="op">$</span><span class="fu">new</span><span class="op">(</span><span class="op">)</span></span>
+<span class="r-in"><span class="va">datasets</span> <span class="op">&lt;-</span> <span class="fu">teal.slice</span><span class="fu">:::</span><span class="va">FilteredData</span><span class="op">$</span><span class="fu">new</span><span class="op">(</span></span>
+<span class="r-in">  <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span></span>
+<span class="r-in">    iris <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>dataset <span class="op">=</span> <span class="va">iris</span><span class="op">)</span>,</span>
+<span class="r-in">    mtcars <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>dataset <span class="op">=</span> <span class="va">mtcars</span>, metadata <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>type <span class="op">=</span> <span class="st">"training"</span><span class="op">)</span><span class="op">)</span></span>
+<span class="r-in">  <span class="op">)</span></span>
+<span class="r-in"><span class="op">)</span></span>
 <span class="r-in"></span>
-<span class="r-in"><span class="co"># setting the data</span></span>
-<span class="r-in"><span class="va">datasets</span><span class="op">$</span><span class="fu">set_dataset</span><span class="op">(</span><span class="fu">teal.data</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/teal.data/man/dataset.html" class="external-link">dataset</a></span><span class="op">(</span><span class="st">"iris"</span>, <span class="va">iris</span>, metadata <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>type <span class="op">=</span> <span class="st">"training"</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span>
-<span class="r-in"><span class="va">datasets</span><span class="op">$</span><span class="fu">set_dataset</span><span class="op">(</span><span class="fu">teal.data</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/teal.data/man/dataset.html" class="external-link">dataset</a></span><span class="op">(</span><span class="st">"mtcars"</span>, <span class="va">mtcars</span><span class="op">)</span><span class="op">)</span></span>
+<span class="r-in"><span class="co"># get datanames</span></span>
 <span class="r-in"><span class="va">datasets</span><span class="op">$</span><span class="fu">datanames</span><span class="op">(</span><span class="op">)</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] "iris"   "mtcars"</span>
 <span class="r-in"></span>
@@ -1031,7 +1068,7 @@ panel will be hidden.</p></dd>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 149          6.2         3.4          5.4         2.3  virginica</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> 150          5.9         3.0          5.1         1.8  virginica</span>
 <span class="r-in"></span>
-<span class="r-in"><span class="va">datasets</span><span class="op">$</span><span class="fu">get_metadata</span><span class="op">(</span><span class="st">"iris"</span><span class="op">)</span></span>
+<span class="r-in"><span class="va">datasets</span><span class="op">$</span><span class="fu">get_metadata</span><span class="op">(</span><span class="st">"mtcars"</span><span class="op">)</span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $type</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] "training"</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> </span>
@@ -1091,10 +1128,13 @@ panel will be hidden.</p></dd>
 <span class="r-in"><span class="co">## Method `FilteredData$get_formatted_filter_state`</span></span>
 <span class="r-in"><span class="co">## ------------------------------------------------</span></span>
 <span class="r-in"></span>
-<span class="r-in"><span class="va">datasets</span> <span class="op">&lt;-</span> <span class="fu">teal.slice</span><span class="fu">:::</span><span class="va">FilteredData</span><span class="op">$</span><span class="fu">new</span><span class="op">(</span><span class="op">)</span></span>
-<span class="r-in"><span class="va">datasets</span><span class="op">$</span><span class="fu">set_dataset</span><span class="op">(</span><span class="fu">teal.data</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/teal.data/man/dataset.html" class="external-link">dataset</a></span><span class="op">(</span><span class="st">"iris"</span>, <span class="va">iris</span><span class="op">)</span><span class="op">)</span></span>
 <span class="r-in"><span class="fu">utils</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">miniACC</span>, package <span class="op">=</span> <span class="st">"MultiAssayExperiment"</span><span class="op">)</span></span>
-<span class="r-in"><span class="va">datasets</span><span class="op">$</span><span class="fu">set_dataset</span><span class="op">(</span><span class="fu">teal.data</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/teal.data/man/dataset.html" class="external-link">dataset</a></span><span class="op">(</span><span class="st">"mae"</span>, <span class="va">miniACC</span><span class="op">)</span><span class="op">)</span></span>
+<span class="r-in"><span class="va">datasets</span> <span class="op">&lt;-</span> <span class="fu">teal.slice</span><span class="fu">:::</span><span class="va">FilteredData</span><span class="op">$</span><span class="fu">new</span><span class="op">(</span></span>
+<span class="r-in">  <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>iris <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>dataset <span class="op">=</span> <span class="va">iris</span><span class="op">)</span>,</span>
+<span class="r-in">       mae <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>dataset <span class="op">=</span> <span class="va">miniACC</span><span class="op">)</span></span>
+<span class="r-in">  <span class="op">)</span>,</span>
+<span class="r-in">  join_keys <span class="op">=</span> <span class="cn">NULL</span></span>
+<span class="r-in"><span class="op">)</span></span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> Loading required package: MultiAssayExperiment</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> Loading required package: SummarizedExperiment</span>
 <span class="r-msg co"><span class="r-pr">#&gt;</span> Loading required package: MatrixGenerics</span>
@@ -1208,10 +1248,14 @@ panel will be hidden.</p></dd>
 <span class="r-in"><span class="co">## Method `FilteredData$set_filter_state`</span></span>
 <span class="r-in"><span class="co">## ------------------------------------------------</span></span>
 <span class="r-in"></span>
-<span class="r-in"><span class="va">datasets</span> <span class="op">&lt;-</span> <span class="fu">teal.slice</span><span class="fu">:::</span><span class="va">FilteredData</span><span class="op">$</span><span class="fu">new</span><span class="op">(</span><span class="op">)</span></span>
-<span class="r-in"><span class="va">datasets</span><span class="op">$</span><span class="fu">set_dataset</span><span class="op">(</span><span class="fu">teal.data</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/teal.data/man/dataset.html" class="external-link">dataset</a></span><span class="op">(</span><span class="st">"iris"</span>, <span class="va">iris</span><span class="op">)</span><span class="op">)</span></span>
 <span class="r-in"><span class="fu">utils</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">miniACC</span>, package <span class="op">=</span> <span class="st">"MultiAssayExperiment"</span><span class="op">)</span></span>
-<span class="r-in"><span class="va">datasets</span><span class="op">$</span><span class="fu">set_dataset</span><span class="op">(</span><span class="fu">teal.data</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/teal.data/man/dataset.html" class="external-link">dataset</a></span><span class="op">(</span><span class="st">"mae"</span>, <span class="va">miniACC</span><span class="op">)</span><span class="op">)</span></span>
+<span class="r-in"></span>
+<span class="r-in"><span class="va">datasets</span> <span class="op">&lt;-</span> <span class="fu">teal.slice</span><span class="fu">:::</span><span class="va">FilteredData</span><span class="op">$</span><span class="fu">new</span><span class="op">(</span></span>
+<span class="r-in">  <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>iris <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>dataset <span class="op">=</span> <span class="va">iris</span><span class="op">)</span>,</span>
+<span class="r-in">       mae <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>dataset <span class="op">=</span> <span class="va">miniACC</span><span class="op">)</span></span>
+<span class="r-in">  <span class="op">)</span>,</span>
+<span class="r-in">  join_keys <span class="op">=</span> <span class="cn">NULL</span></span>
+<span class="r-in"><span class="op">)</span></span>
 <span class="r-in"><span class="va">fs</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span></span>
 <span class="r-in">  iris <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span></span>
 <span class="r-in">    Sepal.Length <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>selected <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">5.1</span>, <span class="fl">6.4</span><span class="op">)</span>, keep_na <span class="op">=</span> <span class="cn">TRUE</span>, keep_inf <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span>,</span>

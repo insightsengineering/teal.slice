@@ -12,7 +12,7 @@ MAEFilteredDataset R6 class"><!-- mathjax --><script src="https://cdnjs.cloudfla
     
     <a class="navbar-brand me-2" href="../index.html">teal.slice</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.1.9000</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.1.9001</small>
 
     <div style="width: 140px; margin-left: 0.5rem;"> <small class="nav-text text-muted me-auto">part of</small> <img src="https://github.com/insightsengineering/hex-stickers/blob/main/PNG/nest.png?raw=true" alt="NEST" style="height: 30px;"><a href="https://pharmaverse.org/" class="external-link"><img src="https://github.com/insightsengineering/hex-stickers/blob/main/PNG/pharmaverse.png?raw=true" alt="pharmaverse" style="height: 28px;"></a> </div>
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -74,27 +74,25 @@ MAEFilteredDataset R6 class"><!-- mathjax --><script src="https://cdnjs.cloudfla
 
 <ul><li><p><a href="#method-MAEFilteredDataset-new"><code>MAEFilteredDataset$new()</code></a></p></li>
 <li><p><a href="#method-MAEFilteredDataset-get_call"><code>MAEFilteredDataset$get_call()</code></a></p></li>
-<li><p><a href="#method-MAEFilteredDataset-get_data"><code>MAEFilteredDataset$get_data()</code></a></p></li>
+<li><p><a href="#method-MAEFilteredDataset-get_varlabels"><code>MAEFilteredDataset$get_varlabels()</code></a></p></li>
 <li><p><a href="#method-MAEFilteredDataset-get_filter_overview_info"><code>MAEFilteredDataset$get_filter_overview_info()</code></a></p></li>
 <li><p><a href="#method-MAEFilteredDataset-get_filterable_varnames"><code>MAEFilteredDataset$get_filterable_varnames()</code></a></p></li>
 <li><p><a href="#method-MAEFilteredDataset-set_filter_state"><code>MAEFilteredDataset$set_filter_state()</code></a></p></li>
 <li><p><a href="#method-MAEFilteredDataset-remove_filter_state"><code>MAEFilteredDataset$remove_filter_state()</code></a></p></li>
 <li><p><a href="#method-MAEFilteredDataset-ui_add_filter_state"><code>MAEFilteredDataset$ui_add_filter_state()</code></a></p></li>
 <li><p><a href="#method-MAEFilteredDataset-srv_add_filter_state"><code>MAEFilteredDataset$srv_add_filter_state()</code></a></p></li>
+<li><p><a href="#method-MAEFilteredDataset-get_filter_overview_nsubjs"><code>MAEFilteredDataset$get_filter_overview_nsubjs()</code></a></p></li>
 <li><p><a href="#method-MAEFilteredDataset-clone"><code>MAEFilteredDataset$clone()</code></a></p></li>
-</ul></div><p><details><summary>Inherited methods</summary><ul><li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilteredDataset" data-id="add_to_eval_env"><a href="FilteredDataset.html#method-add_to_eval_env"><code>teal.slice::FilteredDataset$add_to_eval_env()</code></a></span></li>
-<li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilteredDataset" data-id="get_data_reactive"><a href="FilteredDataset.html#method-get_data_reactive"><code>teal.slice::FilteredDataset$get_data_reactive()</code></a></span></li>
-<li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilteredDataset" data-id="get_dataname"><a href="FilteredDataset.html#method-get_dataname"><code>teal.slice::FilteredDataset$get_dataname()</code></a></span></li>
+</ul></div><p><details><summary>Inherited methods</summary><ul><li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilteredDataset" data-id="get_dataname"><a href="FilteredDataset.html#method-get_dataname"><code>teal.slice::FilteredDataset$get_dataname()</code></a></span></li>
 <li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilteredDataset" data-id="get_dataset"><a href="FilteredDataset.html#method-get_dataset"><code>teal.slice::FilteredDataset$get_dataset()</code></a></span></li>
+<li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilteredDataset" data-id="get_dataset_label"><a href="FilteredDataset.html#method-get_dataset_label"><code>teal.slice::FilteredDataset$get_dataset_label()</code></a></span></li>
 <li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilteredDataset" data-id="get_filter_state"><a href="FilteredDataset.html#method-get_filter_state"><code>teal.slice::FilteredDataset$get_filter_state()</code></a></span></li>
 <li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilteredDataset" data-id="get_filter_states"><a href="FilteredDataset.html#method-get_filter_states"><code>teal.slice::FilteredDataset$get_filter_states()</code></a></span></li>
 <li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilteredDataset" data-id="get_filtered_dataname"><a href="FilteredDataset.html#method-get_filtered_dataname"><code>teal.slice::FilteredDataset$get_filtered_dataname()</code></a></span></li>
 <li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilteredDataset" data-id="get_formatted_filter_state"><a href="FilteredDataset.html#method-get_formatted_filter_state"><code>teal.slice::FilteredDataset$get_formatted_filter_state()</code></a></span></li>
 <li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilteredDataset" data-id="get_hash"><a href="FilteredDataset.html#method-get_hash"><code>teal.slice::FilteredDataset$get_hash()</code></a></span></li>
-<li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilteredDataset" data-id="get_join_keys"><a href="FilteredDataset.html#method-get_join_keys"><code>teal.slice::FilteredDataset$get_join_keys()</code></a></span></li>
 <li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilteredDataset" data-id="get_keys"><a href="FilteredDataset.html#method-get_keys"><code>teal.slice::FilteredDataset$get_keys()</code></a></span></li>
 <li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilteredDataset" data-id="get_metadata"><a href="FilteredDataset.html#method-get_metadata"><code>teal.slice::FilteredDataset$get_metadata()</code></a></span></li>
-<li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilteredDataset" data-id="get_varlabels"><a href="FilteredDataset.html#method-get_varlabels"><code>teal.slice::FilteredDataset$get_varlabels()</code></a></span></li>
 <li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilteredDataset" data-id="get_varnames"><a href="FilteredDataset.html#method-get_varnames"><code>teal.slice::FilteredDataset$get_varnames()</code></a></span></li>
 <li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilteredDataset" data-id="queues_empty"><a href="FilteredDataset.html#method-queues_empty"><code>teal.slice::FilteredDataset$queues_empty()</code></a></span></li>
 <li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilteredDataset" data-id="server"><a href="FilteredDataset.html#method-server"><code>teal.slice::FilteredDataset$server()</code></a></span></li>
@@ -103,14 +101,41 @@ MAEFilteredDataset R6 class"><!-- mathjax --><script src="https://cdnjs.cloudfla
 <h3 id="method-new-">Method <code><a href="https://rdrr.io/r/methods/new.html" class="external-link">new()</a></code><a class="anchor" aria-label="anchor" href="#method-new-"></a></h3>
 <p>Initialize <code>MAEFilteredDataset</code> object</p><div class="section">
 <h4 id="usage">Usage<a class="anchor" aria-label="anchor" href="#usage"></a></h4>
-<p></p><div class="r"><div class="sourceCode"><pre><code><span class="va"><a href="../reference/MAEFilteredDataset.html">MAEFilteredDataset</a></span><span class="op">$</span><span class="fu">new</span><span class="op">(</span><span class="va">dataset</span><span class="op">)</span></code></pre></div><p></p></div>
+<p></p><div class="r"><div class="sourceCode"><pre><code><span class="va"><a href="../reference/MAEFilteredDataset.html">MAEFilteredDataset</a></span><span class="op">$</span><span class="fu">new</span><span class="op">(</span>
+  <span class="va">dataset</span>,
+  <span class="va">dataname</span>,
+  keys <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/character.html" class="external-link">character</a></span><span class="op">(</span><span class="fl">0</span><span class="op">)</span>,
+  label <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/character.html" class="external-link">character</a></span><span class="op">(</span><span class="fl">0</span><span class="op">)</span>,
+  metadata <span class="op">=</span> <span class="cn">NULL</span>
+<span class="op">)</span></code></pre></div><p></p></div>
 </div>
 
 <div class="section">
 <h4 id="arguments">Arguments<a class="anchor" aria-label="anchor" href="#arguments"></a></h4>
 <p></p><div class="arguments"><dl><dt><code>dataset</code></dt>
-<dd><p>(<code>MAETealDataset</code>)<br>
-single dataset for which filters are rendered</p></dd>
+<dd><p>(<code>MulitiAssayExperiment</code>)<br>
+single <code>MultiAssayExperiment</code> for which filters are rendered</p></dd>
+
+
+<dt><code>dataname</code></dt>
+<dd><p>(<code>character</code>)<br>
+A given name for the dataset it may not contain spaces</p></dd>
+
+
+<dt><code>keys</code></dt>
+<dd><p>optional, (<code>character</code>)<br>
+Vector with primary keys</p></dd>
+
+
+<dt><code>label</code></dt>
+<dd><p>(<code>character</code>)<br>
+Label to describe the dataset</p></dd>
+
+
+<dt><code>metadata</code></dt>
+<dd><p>(named <code>list</code> or <code>NULL</code>) <br>
+Field containing metadata about the dataset. Each element of the list
+should be atomic and length one.</p></dd>
 
 
 </dl><p></p></div>
@@ -136,34 +161,48 @@ which returns <code>subsetByColData</code> call</p></li>
 <p>filter <code>call</code> or <code>list</code> of filter calls</p>
 </div>
 
-</div><p></p><hr><a id="method-MAEFilteredDataset-get_data"></a><div class="section">
-<h3 id="method-get-data-">Method <code>get_data()</code><a class="anchor" aria-label="anchor" href="#method-get-data-"></a></h3>
-<p>Gets raw data of this dataset</p><div class="section">
+</div><p></p><hr><a id="method-MAEFilteredDataset-get_varlabels"></a><div class="section">
+<h3 id="method-get-varlabels-">Method <code>get_varlabels()</code><a class="anchor" aria-label="anchor" href="#method-get-varlabels-"></a></h3>
+<p>Gets labels of variables in the data</p>
+<p>Variables are the column names of the data.
+Either, all labels must have been provided for all variables
+in <code>set_data</code> or <code>NULL</code>.</p><div class="section">
 <h4 id="usage-2">Usage<a class="anchor" aria-label="anchor" href="#usage-2"></a></h4>
-<p></p><div class="r"><div class="sourceCode"><pre><code><span class="va">MAEFilteredDataset</span><span class="op">$</span><span class="fu">get_data</span><span class="op">(</span><span class="va">filtered</span><span class="op">)</span></code></pre></div><p></p></div>
+<p></p><div class="r"><div class="sourceCode"><pre><code><span class="va">MAEFilteredDataset</span><span class="op">$</span><span class="fu">get_varlabels</span><span class="op">(</span>variables <span class="op">=</span> <span class="cn">NULL</span><span class="op">)</span></code></pre></div><p></p></div>
 </div>
 
 <div class="section">
 <h4 id="arguments-1">Arguments<a class="anchor" aria-label="anchor" href="#arguments-1"></a></h4>
-<p></p><div class="arguments"><dl><dt><code>filtered</code></dt>
-<dd><p>(<code>logical(1)</code>)<br>
-whether returned data should be filtered or not</p></dd>
+<p></p><div class="arguments"><dl><dt><code>variables</code></dt>
+<dd><p>(<code>character</code> vector) variables to get labels for;
+if <code>NULL</code>, for all variables in data</p></dd>
 
 
 </dl><p></p></div>
 </div>
 <div class="section">
 <h4 id="returns-1">Returns<a class="anchor" aria-label="anchor" href="#returns-1"></a></h4>
-<p><code>MultiAssayExperiment</code></p>
+<p>(<code>character</code> or <code>NULL</code>) variable labels, <code>NULL</code> if <code>column_labels</code>
+attribute does not exist for the data</p>
 </div>
 
 </div><p></p><hr><a id="method-MAEFilteredDataset-get_filter_overview_info"></a><div class="section">
 <h3 id="method-get-filter-overview-info-">Method <code>get_filter_overview_info()</code><a class="anchor" aria-label="anchor" href="#method-get-filter-overview-info-"></a></h3>
 <p>Get filter overview rows of a dataset</p><div class="section">
 <h4 id="usage-3">Usage<a class="anchor" aria-label="anchor" href="#usage-3"></a></h4>
-<p></p><div class="r"><div class="sourceCode"><pre><code><span class="va">MAEFilteredDataset</span><span class="op">$</span><span class="fu">get_filter_overview_info</span><span class="op">(</span><span class="op">)</span></code></pre></div><p></p></div>
+<p></p><div class="r"><div class="sourceCode"><pre><code><span class="va">MAEFilteredDataset</span><span class="op">$</span><span class="fu">get_filter_overview_info</span><span class="op">(</span>
+  filtered_dataset <span class="op">=</span> <span class="va">self</span><span class="op">$</span><span class="fu">get_dataset</span><span class="op">(</span><span class="op">)</span>
+<span class="op">)</span></code></pre></div><p></p></div>
 </div>
 
+<div class="section">
+<h4 id="arguments-2">Arguments<a class="anchor" aria-label="anchor" href="#arguments-2"></a></h4>
+<p></p><div class="arguments"><dl><dt><code>filtered_dataset</code></dt>
+<dd><p>(<code>MultiAssayExperiment</code>) object to calculate filter overview statistics on.</p></dd>
+
+
+</dl><p></p></div>
+</div>
 <div class="section">
 <h4 id="returns-2">Returns<a class="anchor" aria-label="anchor" href="#returns-2"></a></h4>
 <p>(<code>matrix</code>) matrix of observations and subjects</p>
@@ -189,7 +228,7 @@ whether returned data should be filtered or not</p></dd>
 </div>
 
 <div class="section">
-<h4 id="arguments-2">Arguments<a class="anchor" aria-label="anchor" href="#arguments-2"></a></h4>
+<h4 id="arguments-3">Arguments<a class="anchor" aria-label="anchor" href="#arguments-3"></a></h4>
 <p></p><div class="arguments"><dl><dt><code>state</code></dt>
 <dd><p>(<code>named list</code>)<br>
 names of the list should correspond to the names of the initialized <code>FilterStates</code>
@@ -211,9 +250,7 @@ to the referred column.</p></dd>
 <div class="section">
 <h4 id="examples">Examples<a class="anchor" aria-label="anchor" href="#examples"></a></h4>
 <p></p><div class="r example copy"><div class="sourceCode"><pre><code><span class="fu">utils</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">miniACC</span>, package <span class="op">=</span> <span class="st">"MultiAssayExperiment"</span><span class="op">)</span>
-<span class="va">dataset</span> <span class="op">&lt;-</span> <span class="fu">teal.slice</span><span class="fu">:::</span><span class="va"><a href="../reference/MAEFilteredDataset.html">MAEFilteredDataset</a></span><span class="op">$</span><span class="fu">new</span><span class="op">(</span>
-  <span class="fu">teal.data</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/teal.data/man/dataset.html" class="external-link">dataset</a></span><span class="op">(</span><span class="st">"MAE"</span>, <span class="va">miniACC</span><span class="op">)</span>
-<span class="op">)</span>
+<span class="va">dataset</span> <span class="op">&lt;-</span> <span class="fu">teal.slice</span><span class="fu">:::</span><span class="va"><a href="../reference/MAEFilteredDataset.html">MAEFilteredDataset</a></span><span class="op">$</span><span class="fu">new</span><span class="op">(</span><span class="va">miniACC</span>, <span class="st">"MAE"</span><span class="op">)</span>
 <span class="va">fs</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>
   subjects <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>
     years_to_birth <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>selected <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">30</span>, <span class="fl">50</span><span class="op">)</span>, keep_na <span class="op">=</span> <span class="cn">TRUE</span>, keep_inf <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span>,
@@ -237,7 +274,7 @@ to the referred column.</p></dd>
 </div>
 
 <div class="section">
-<h4 id="arguments-3">Arguments<a class="anchor" aria-label="anchor" href="#arguments-3"></a></h4>
+<h4 id="arguments-4">Arguments<a class="anchor" aria-label="anchor" href="#arguments-4"></a></h4>
 <p></p><div class="arguments"><dl><dt><code>element_id</code></dt>
 <dd><p>(<code>list</code>)<br>
 Named list of variables to remove their <code>FilterState</code>.</p></dd>
@@ -259,7 +296,7 @@ Named list of variables to remove their <code>FilterState</code>.</p></dd>
 </div>
 
 <div class="section">
-<h4 id="arguments-4">Arguments<a class="anchor" aria-label="anchor" href="#arguments-4"></a></h4>
+<h4 id="arguments-5">Arguments<a class="anchor" aria-label="anchor" href="#arguments-5"></a></h4>
 <p></p><div class="arguments"><dl><dt><code>id</code></dt>
 <dd><p>(<code>character(1)</code>)<br>
 identifier of the element - preferably containing dataset name</p></dd>
@@ -285,7 +322,7 @@ experiment.</p><div class="section">
 </div>
 
 <div class="section">
-<h4 id="arguments-5">Arguments<a class="anchor" aria-label="anchor" href="#arguments-5"></a></h4>
+<h4 id="arguments-6">Arguments<a class="anchor" aria-label="anchor" href="#arguments-6"></a></h4>
 <p></p><div class="arguments"><dl><dt><code>id</code></dt>
 <dd><p>(<code>character(1)</code>)<br>
 an ID string that corresponds with the ID used to call the module's UI function.</p></dd>
@@ -302,15 +339,42 @@ an ID string that corresponds with the ID used to call the module's UI function.
 <p><code>moduleServer</code> function which returns <code>NULL</code></p>
 </div>
 
+</div><p></p><hr><a id="method-MAEFilteredDataset-get_filter_overview_nsubjs"></a><div class="section">
+<h3 id="method-get-filter-overview-nsubjs-">Method <code>get_filter_overview_nsubjs()</code><a class="anchor" aria-label="anchor" href="#method-get-filter-overview-nsubjs-"></a></h3>
+<p>Gets filter overview subjects number</p><div class="section">
+<h4 id="usage-9">Usage<a class="anchor" aria-label="anchor" href="#usage-9"></a></h4>
+<p></p><div class="r"><div class="sourceCode"><pre><code><span class="va">MAEFilteredDataset</span><span class="op">$</span><span class="fu">get_filter_overview_nsubjs</span><span class="op">(</span>
+  filtered_dataset <span class="op">=</span> <span class="va">self</span><span class="op">$</span><span class="fu">get_dataset</span><span class="op">(</span><span class="op">)</span>,
+  <span class="va">subject_keys</span>
+<span class="op">)</span></code></pre></div><p></p></div>
+</div>
+
+<div class="section">
+<h4 id="arguments-7">Arguments<a class="anchor" aria-label="anchor" href="#arguments-7"></a></h4>
+<p></p><div class="arguments"><dl><dt><code>filtered_dataset</code></dt>
+<dd><p>(<code>MultiAssayExperiment</code>) object to calculate filter overview statistics on.</p></dd>
+
+
+<dt><code>subject_keys</code></dt>
+<dd><p>(unused) in <code>MultiAssayExperiment</code> unique subjects are the rows of <code>colData</code> slot.</p></dd>
+
+
+</dl><p></p></div>
+</div>
+<div class="section">
+<h4 id="returns-8">Returns<a class="anchor" aria-label="anchor" href="#returns-8"></a></h4>
+<p><code>list</code> with the number of subjects of filtered/non-filtered datasets.</p>
+</div>
+
 </div><p></p><hr><a id="method-MAEFilteredDataset-clone"></a><div class="section">
 <h3 id="method-clone-">Method <code>clone()</code><a class="anchor" aria-label="anchor" href="#method-clone-"></a></h3>
 <p>The objects of this class are cloneable with this method.</p><div class="section">
-<h4 id="usage-9">Usage<a class="anchor" aria-label="anchor" href="#usage-9"></a></h4>
+<h4 id="usage-10">Usage<a class="anchor" aria-label="anchor" href="#usage-10"></a></h4>
 <p></p><div class="r"><div class="sourceCode"><pre><code><span class="va">MAEFilteredDataset</span><span class="op">$</span><span class="fu">clone</span><span class="op">(</span>deep <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></code></pre></div><p></p></div>
 </div>
 
 <div class="section">
-<h4 id="arguments-6">Arguments<a class="anchor" aria-label="anchor" href="#arguments-6"></a></h4>
+<h4 id="arguments-8">Arguments<a class="anchor" aria-label="anchor" href="#arguments-8"></a></h4>
 <p></p><div class="arguments"><dl><dt><code>deep</code></dt>
 <dd><p>Whether to make a deep clone.</p></dd>
 
@@ -330,9 +394,7 @@ an ID string that corresponds with the ID used to call the module's UI function.
 <span class="r-in"><span class="co">## ------------------------------------------------</span></span>
 <span class="r-in"></span>
 <span class="r-in"><span class="fu">utils</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">miniACC</span>, package <span class="op">=</span> <span class="st">"MultiAssayExperiment"</span><span class="op">)</span></span>
-<span class="r-in"><span class="va">dataset</span> <span class="op">&lt;-</span> <span class="fu">teal.slice</span><span class="fu">:::</span><span class="va">MAEFilteredDataset</span><span class="op">$</span><span class="fu">new</span><span class="op">(</span></span>
-<span class="r-in">  <span class="fu">teal.data</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/teal.data/man/dataset.html" class="external-link">dataset</a></span><span class="op">(</span><span class="st">"MAE"</span>, <span class="va">miniACC</span><span class="op">)</span></span>
-<span class="r-in"><span class="op">)</span></span>
+<span class="r-in"><span class="va">dataset</span> <span class="op">&lt;-</span> <span class="fu">teal.slice</span><span class="fu">:::</span><span class="va">MAEFilteredDataset</span><span class="op">$</span><span class="fu">new</span><span class="op">(</span><span class="va">miniACC</span>, <span class="st">"MAE"</span><span class="op">)</span></span>
 <span class="r-in"><span class="va">fs</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span></span>
 <span class="r-in">  subjects <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span></span>
 <span class="r-in">    years_to_birth <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>selected <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">30</span>, <span class="fl">50</span><span class="op">)</span>, keep_na <span class="op">=</span> <span class="cn">TRUE</span>, keep_inf <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span>,</span>
