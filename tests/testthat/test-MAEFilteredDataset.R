@@ -279,7 +279,7 @@ testthat::test_that("MAEFilteredDataset$get_varlabels returns column variable la
   attr(SummarizedExperiment::colData(x)$ADS, "label") <- "ADS label"
   filtered_dataset <- MAEFilteredDataset$new(dataset = x, dataname = "miniACC")
   labels <- filtered_dataset$get_varlabels(c("COC", "ADS"))
-  testthat::expect_equal(c("COC"= NA, ADS = "ADS label"), labels)
+  testthat::expect_equal(c("COC" = NA, ADS = "ADS label"), labels)
 })
 
 testthat::test_that("MAEFilteredDataset filters removed using remove_filters", {
