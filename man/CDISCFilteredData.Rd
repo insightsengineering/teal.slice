@@ -14,44 +14,28 @@ A dataset can have up to one parent dataset. Rows are identified by the foreign
 key and only those rows that appear in the parent dataset are kept in the filtered
 dataset.
 
-The relational model is attached to the data. When \code{set_data} is called with the
-data, its \code{keys} attribute has the following elements:
-\itemize{
-\item \code{primary}: columns based on which unique rows are counted
-\item \code{parent}: parent dataset based on which the dataset is filtered (via \code{inner_join})
-\item \code{foreign}: keys to join on when filtering with parent dataset
-}
-
 The teal UI works with objects of class \code{FilteredData} which may mix CDISC and other
 data (e.g. \code{iris}).
-
-It is not too difficult to make this class generalize to more than one parent dataset,
-provided each dataset then contains information about its parents together with the
-shared keys with each of them.
 }
 \examples{
 library(scda)
-library(shiny)
+library(teal.data)
 
 ADSL <- synthetic_cdisc_data("latest")$adsl
 ADTTE <- synthetic_cdisc_data("latest")$adtte
-
-adsl <- teal.data::cdisc_dataset("ADSL", ADSL)
-adtte <- teal.data::cdisc_dataset("ADTTE", ADTTE)
-data <- teal.data::cdisc_data(adsl, adtte)
-datasets <- teal.slice:::CDISCFilteredData$new()
+datasets <- teal.slice:::CDISCFilteredData$new(
+  list(
+    ADSL = list(dataset = ADSL, keys = c("STUDYID", "USUBJID")),
+    ADTTE = list(dataset = ADTTE, keys = c("STUDYID", "USUBJID", "PARAMCD"), parent = "ADSL")
+  ),
+  check = FALSE,
+  join_keys = join_keys(join_key("ADSL", "ADTTE", c("STUDYID", "USUBJID")))
+)
 
 # to avoid using isolate(), you can provide a default isolate context by calling
 # options(shiny.suppressMissingContextError = TRUE) #nolint
 # don't forget to deactivate this option at the end
 # options(shiny.suppressMissingContextError = FALSE) #nolint
-
-# setting the data
-isolate({
-  datasets$set_dataset(adsl)
-  datasets$set_dataset(adtte)
-})
-
 
 isolate({
   datasets$datanames()
@@ -67,33 +51,8 @@ isolate({
 })
 
 
-filter_state_adtte <- teal.slice:::init_filter_state(
-  ADTTE$PARAMCD,
-  varname = "PARAMCD",
-  input_dataname = as.name("ADTTE"),
-  extract_type = "list"
-)
-filter_state_adtte$set_selected("OS")
-
-states <- datasets$get_filtered_dataset("ADTTE")$get_filter_states(1)
-states$queue_push(filter_state_adtte, queue_index = 1L, element_id = "PARAMCD")
-
-isolate(datasets$get_call("ADTTE"))
-
-
-filter_state_adsl <- teal.slice:::init_filter_state(
-  ADSL$SEX,
-  varname = "SEX",
-  input_dataname = as.name("SEX"),
-  extract_type = "list"
-)
-filter_state_adsl$set_selected("F")
-
-states <- datasets$get_filtered_dataset("ADSL")$get_filter_states("filter")
-states$queue_push(filter_state_adsl, queue_index = 1L, element_id = "SEX")
-
-isolate(datasets$get_call("ADSL"))
-isolate(datasets$get_call("ADTTE"))
+datasets$set_filter_state(list(ADTTE = list(PARAMCD = "OS")))
+isolate(datasets$get_filter_state())
 }
 \seealso{
 \code{FilteredData} class
@@ -108,6 +67,7 @@ isolate(datasets$get_call("ADTTE"))
 \item \href{#method-CDISCFilteredData-get_call}{\code{CDISCFilteredData$get_call()}}
 \item \href{#method-CDISCFilteredData-get_filterable_datanames}{\code{CDISCFilteredData$get_filterable_datanames()}}
 \item \href{#method-CDISCFilteredData-get_filterable_varnames}{\code{CDISCFilteredData$get_filterable_varnames()}}
+\item \href{#method-CDISCFilteredData-get_filter_overview}{\code{CDISCFilteredData$get_filter_overview()}}
 \item \href{#method-CDISCFilteredData-get_parentname}{\code{CDISCFilteredData$get_parentname()}}
 \item \href{#method-CDISCFilteredData-set_dataset}{\code{CDISCFilteredData$set_dataset()}}
 \item \href{#method-CDISCFilteredData-clone}{\code{CDISCFilteredData$clone()}}
@@ -119,9 +79,7 @@ isolate(datasets$get_call("ADTTE"))
 <li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilteredData" data-id="get_check"><a href='../../teal.slice/html/FilteredData.html#method-FilteredData-get_check'><code>teal.slice::FilteredData$get_check()</code></a></li>
 <li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilteredData" data-id="get_code"><a href='../../teal.slice/html/FilteredData.html#method-FilteredData-get_code'><code>teal.slice::FilteredData$get_code()</code></a></li>
 <li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilteredData" data-id="get_data"><a href='../../teal.slice/html/FilteredData.html#method-FilteredData-get_data'><code>teal.slice::FilteredData$get_data()</code></a></li>
-<li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilteredData" data-id="get_data_attr"><a href='../../teal.slice/html/FilteredData.html#method-FilteredData-get_data_attr'><code>teal.slice::FilteredData$get_data_attr()</code></a></li>
 <li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilteredData" data-id="get_datalabel"><a href='../../teal.slice/html/FilteredData.html#method-FilteredData-get_datalabel'><code>teal.slice::FilteredData$get_datalabel()</code></a></li>
-<li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilteredData" data-id="get_filter_overview"><a href='../../teal.slice/html/FilteredData.html#method-FilteredData-get_filter_overview'><code>teal.slice::FilteredData$get_filter_overview()</code></a></li>
 <li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilteredData" data-id="get_filter_state"><a href='../../teal.slice/html/FilteredData.html#method-FilteredData-get_filter_state'><code>teal.slice::FilteredData$get_filter_state()</code></a></li>
 <li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilteredData" data-id="get_filtered_dataset"><a href='../../teal.slice/html/FilteredData.html#method-FilteredData-get_filtered_dataset'><code>teal.slice::FilteredData$get_filtered_dataset()</code></a></li>
 <li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilteredData" data-id="get_formatted_filter_state"><a href='../../teal.slice/html/FilteredData.html#method-FilteredData-get_formatted_filter_state'><code>teal.slice::FilteredData$get_formatted_filter_state()</code></a></li>
@@ -138,6 +96,7 @@ isolate(datasets$get_call("ADTTE"))
 <li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilteredData" data-id="set_check"><a href='../../teal.slice/html/FilteredData.html#method-FilteredData-set_check'><code>teal.slice::FilteredData$set_check()</code></a></li>
 <li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilteredData" data-id="set_code"><a href='../../teal.slice/html/FilteredData.html#method-FilteredData-set_code'><code>teal.slice::FilteredData$set_code()</code></a></li>
 <li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilteredData" data-id="set_filter_state"><a href='../../teal.slice/html/FilteredData.html#method-FilteredData-set_filter_state'><code>teal.slice::FilteredData$set_filter_state()</code></a></li>
+<li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilteredData" data-id="set_join_keys"><a href='../../teal.slice/html/FilteredData.html#method-FilteredData-set_join_keys'><code>teal.slice::FilteredData$set_join_keys()</code></a></li>
 <li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilteredData" data-id="srv_filter_overview"><a href='../../teal.slice/html/FilteredData.html#method-FilteredData-srv_filter_overview'><code>teal.slice::FilteredData$srv_filter_overview()</code></a></li>
 <li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilteredData" data-id="srv_filter_panel"><a href='../../teal.slice/html/FilteredData.html#method-FilteredData-srv_filter_panel'><code>teal.slice::FilteredData$srv_filter_panel()</code></a></li>
 <li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilteredData" data-id="ui_filter_overview"><a href='../../teal.slice/html/FilteredData.html#method-FilteredData-ui_filter_overview'><code>teal.slice::FilteredData$ui_filter_overview()</code></a></li>
@@ -175,7 +134,7 @@ on are available.
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
-\item{\code{dataname}}{(\code{character}) name of the dataset}
+\item{\code{dataname}}{(\code{character(1)}) name of the dataset}
 }
 \if{html}{\out{</div>}}
 }
@@ -215,12 +174,34 @@ Gets variable names of a given dataname for the filtering. This excludes parent 
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
-\item{\code{dataname}}{(\code{character}) name of the dataset}
+\item{\code{dataname}}{(\code{character(1)}) name of the dataset}
 }
 \if{html}{\out{</div>}}
 }
 \subsection{Returns}{
 (\code{character} vector) of variable names
+}
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-CDISCFilteredData-get_filter_overview"></a>}}
+\if{latex}{\out{\hypertarget{method-CDISCFilteredData-get_filter_overview}{}}}
+\subsection{Method \code{get_filter_overview()}}{
+Get filter overview table in form of X (filtered) / Y (non-filtered)
+
+This is intended to be presented in the application.
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{CDISCFilteredData$get_filter_overview(datanames)}\if{html}{\out{</div>}}
+}
+
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{datanames}}{(\code{character} vector) names of the dataset (or "all")}
+}
+\if{html}{\out{</div>}}
+}
+\subsection{Returns}{
+(\code{matrix}) matrix of observations and subjects of all datasets
 }
 }
 \if{html}{\out{<hr>}}
@@ -235,7 +216,7 @@ Get parent dataset name
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
-\item{\code{dataname}}{(\code{character}) name of the dataset}
+\item{\code{dataname}}{(\code{character(1)}) name of the dataset}
 }
 \if{html}{\out{</div>}}
 }
@@ -253,14 +234,19 @@ Add dataset and preserve all attributes attached to this object.
 Technically \code{set_dataset} created \code{FilteredDataset} which keeps
 \code{dataset} for filtering purpose.
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{CDISCFilteredData$set_dataset(dataset)}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{CDISCFilteredData$set_dataset(dataset_args, dataname)}\if{html}{\out{</div>}}
 }
 
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
-\item{\code{dataset}}{(\code{TealDataset})\cr
-object containing data and attributes.}
+\item{\code{dataset_args}}{(\code{list})\cr
+containing the arguments except (\code{dataname})
+needed by \code{init_filtered_dataset} (can also
+include \code{parent} which will be ignored)}
+
+\item{\code{dataname}}{(\code{character(1)})\cr
+the name of the \code{dataset} to be added to this object}
 }
 \if{html}{\out{</div>}}
 }

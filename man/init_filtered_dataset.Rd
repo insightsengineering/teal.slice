@@ -4,26 +4,47 @@
 \alias{init_filtered_dataset}
 \title{Initializes \code{FilteredDataset}}
 \usage{
-init_filtered_dataset(dataset)
+init_filtered_dataset(
+  dataset,
+  dataname,
+  keys = character(0),
+  label = attr(dataset, "label"),
+  metadata = NULL
+)
 }
 \arguments{
-\item{dataset}{(\code{TealDataset})\cr}
+\item{dataset}{(\code{data.frame} or \code{MultiAssayExperiment})\cr}
+
+\item{dataname}{(\code{character})\cr
+A given name for the dataset it may not contain spaces}
+
+\item{keys}{optional, (\code{character})\cr
+Vector with primary keys}
+
+\item{label}{(\code{character})\cr
+Label to describe the dataset}
+
+\item{metadata}{(named \code{list} or \code{NULL}) \cr
+Field containing metadata about the dataset. Each element of the list
+should be atomic and length one.}
 }
 \description{
-\code{FilteredDataset} contains \code{TealDataset}
+Initializes \code{FilteredDataset}
 }
 \examples{
 # DefaultFilteredDataset example
-iris_d <- teal.data::dataset("iris", iris, metadata = list(type = "teal"))
-iris_fd <- teal.slice:::init_filtered_dataset(iris_d)
+iris_fd <- teal.slice:::init_filtered_dataset(
+  iris,
+  dataname = "iris",
+  metadata = list(type = "teal")
+)
 \dontrun{
 shinyApp(
   ui = fluidPage(
     iris_fd$ui_add_filter_state(id = "add"),
     iris_fd$ui("dataset"),
     verbatimTextOutput("call"),
-    verbatimTextOutput("metadata"),
-    tableOutput("tbl")
+    verbatimTextOutput("metadata")
   ),
   server = function(input, output, session) {
     iris_fd$srv_add_filter_state(id = "add")
@@ -39,43 +60,6 @@ shinyApp(
         collapse = "\n"
       )
     })
-
-    output$tbl <- renderTable(iris_fd$get_data(filtered = TRUE))
-  }
-)
-}
-
-# CDISCFilteredDataset example
-library(scda)
-adsl_d <- teal.data::cdisc_dataset(
-  "ADSL",
-  synthetic_cdisc_data("latest")$adsl,
-  metadata = list(type = "cdisc")
-)
-adsl_fd <- teal.slice:::init_filtered_dataset(adsl_d)
-\dontrun{
-shinyApp(
-  ui = fluidPage(
-    adsl_fd$ui_add_filter_state(id = "add"),
-    adsl_fd$ui("dataset"),
-    verbatimTextOutput("call"),
-    verbatimTextOutput("metadata"),
-    tableOutput("tbl")
-  ),
-  server = function(input, output, session) {
-    adsl_fd$srv_add_filter_state(id = "add")
-    adsl_fd$server(id = "dataset")
-    output$metadata <- renderText({
-      paste("Type =", adsl_fd$get_metadata()$type)
-    })
-    output$call <- renderText({
-      paste(
-        vapply(adsl_fd$get_call(), deparse1, character(1), collapse = "\n"),
-        collapse = "\n"
-      )
-    })
-
-    output$tbl <- renderTable(adsl_fd$get_data(filtered = TRUE))
   }
 )
 }
@@ -83,8 +67,7 @@ shinyApp(
 # MAEFilteredDataset example
 library(MultiAssayExperiment)
 data(miniACC)
-MAE_d <- teal.data::dataset("MAE", miniACC, metadata = list(type = "MAE"))
-MAE_fd <- teal.slice:::init_filtered_dataset(MAE_d)
+MAE_fd <- teal.slice:::init_filtered_dataset(miniACC, "MAE", metadata = list(type = "MAE"))
 \dontrun{
 shinyApp(
   ui = fluidPage(

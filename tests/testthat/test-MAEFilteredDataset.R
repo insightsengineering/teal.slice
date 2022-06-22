@@ -1,22 +1,22 @@
-testthat::test_that("MAEFilteredDataset accepts a MAETealDataset object", {
+testthat::test_that("MAEFilteredDataset accepts a MultiAssayExperiment object", {
   utils::data(miniACC, package = "MultiAssayExperiment")
   testthat::expect_error(
-    MAEFilteredDataset$new(dataset = teal.data::dataset("miniACC", miniACC)),
+    MAEFilteredDataset$new(dataset = miniACC, dataname = "miniACC"),
     NA
   )
 })
 
-testthat::test_that("MAEFilteredDataset throws error with non-MAETealDataset dataset", {
+testthat::test_that("MAEFilteredDataset throws error with a data.frame passed to constructor", {
   testthat::expect_error(
-    MAEFilteredDataset$new(dataset = teal.data::dataset("iris", head(iris))),
-    "is(dataset, \"MAETealDataset\") is not TRUE",
+    MAEFilteredDataset$new(dataset = head(iris), dataname = "iris"),
+    "Must inherit from class 'MultiAssayExperiment'",
     fixed = TRUE
   )
 })
 
 testthat::test_that("MAEFilteredDataset$get_call returns a call without applying filter", {
   utils::data(miniACC, package = "MultiAssayExperiment")
-  filtered_dataset <- MAEFilteredDataset$new(dataset = teal.data::dataset("miniACC", miniACC))
+  filtered_dataset <- MAEFilteredDataset$new(dataset = miniACC, dataname = "miniACC")
   get_call_output <- filtered_dataset$get_call()
   checkmate::expect_list(get_call_output, types = "<-")
   testthat::expect_identical(deparse(get_call_output$subjects), "miniACC_FILTERED <- miniACC")
@@ -24,7 +24,7 @@ testthat::test_that("MAEFilteredDataset$get_call returns a call without applying
 
 testthat::test_that("MAEFilteredDataset$get_call returns a call with applying filter", {
   utils::data(miniACC, package = "MultiAssayExperiment")
-  filtered_dataset <- MAEFilteredDataset$new(dataset = teal.data::dataset("miniACC", miniACC))
+  filtered_dataset <- MAEFilteredDataset$new(dataset = miniACC, dataname = "miniACC")
   filter_state_mae <- ChoicesFilterState$new(
     x = miniACC$race,
     varname = as.name("race"),
@@ -52,64 +52,9 @@ testthat::test_that("MAEFilteredDataset$get_call returns a call with applying fi
   )
 })
 
-testthat::test_that("MAEFilteredDataset$get_data throws error without filtered argument given", {
-  utils::data(miniACC, package = "MultiAssayExperiment")
-  filtered_dataset <- MAEFilteredDataset$new(dataset = teal.data::dataset("miniACC", miniACC))
-  expect_error(isolate(filtered_dataset$get_data()), "argument \"filtered\" is missing, with no default")
-})
-
-testthat::test_that("MAEFilteredDataset$get_data returns identical filtered and
-                    non-filtered MAE data when no filter is applied", {
-  utils::data(miniACC, package = "MultiAssayExperiment")
-  filtered_dataset <- MAEFilteredDataset$new(dataset = teal.data::dataset("miniACC", miniACC))
-  filtered_mae <- isolate(filtered_dataset$get_data(filtered = TRUE))
-  non_filtered_mae <- isolate(filtered_dataset$get_data(filtered = FALSE))
-  expect_identical(filtered_mae, non_filtered_mae)
-})
-
-testthat::test_that("MAEFilteredDataset get_data returns filtered MAE data when filter is applied", {
-  utils::data(miniACC, package = "MultiAssayExperiment")
-  filtered_dataset <- MAEFilteredDataset$new(dataset = teal.data::dataset("miniACC", miniACC))
-  filter_state_mae <- ChoicesFilterState$new(
-    x = miniACC$race,
-    varname = as.name("race"),
-    input_dataname = as.name("miniACC"),
-    extract_type = "list"
-  )
-
-  filter_state_mae$set_selected("white")
-  filter_state_mae$set_na_rm(TRUE)
-
-  queue <- filtered_dataset$get_filter_states(1)
-  queue$queue_push(filter_state_mae, queue_index = 1L, element_id = "race")
-
-  filtered_mae <- isolate(filtered_dataset$get_data(filtered = TRUE))
-  non_filtered_mae <- isolate(filtered_dataset$get_data(filtered = FALSE))
-
-  testthat::expect_false(identical(filtered_mae, non_filtered_mae))
-  testthat::expect_identical(unique(filtered_mae$race), "white")
-})
-
-testthat::test_that("MAEFilteredDataset$get_data throws error when filtered input is not logical", {
-  utils::data(miniACC, package = "MultiAssayExperiment")
-  filtered_dataset <- MAEFilteredDataset$new(dataset = teal.data::dataset("miniACC", miniACC))
-  testthat::expect_error(
-    isolate(filtered_dataset$get_data(filtered = "TRUE")),
-    "Assertion on 'filtered' failed: Must be of type 'logical', not 'character'."
-  )
-  testthat::expect_error(
-    isolate(filtered_dataset$get_data(filtered = 1)),
-    "Assertion on 'filtered' failed: Must be of type 'logical', not 'double'."
-  )
-  testthat::expect_error(
-    isolate(filtered_dataset$get_data(filtered = list(TRUE))),
-    "Assertion on 'filtered' failed: Must be of type 'logical', not 'list'."
-  )
-})
-
 testthat::test_that("get_filter_overview_info returns overview matrix for MAEFilteredDataset without filtering", {
   utils::data(miniACC, package = "MultiAssayExperiment")
-  filtered_dataset <- MAEFilteredDataset$new(dataset = teal.data::dataset("miniACC", miniACC))
+  filtered_dataset <- MAEFilteredDataset$new(dataset = miniACC, dataname = "miniACC")
   testthat::expect_equal(
     isolate(filtered_dataset$get_filter_overview_info()),
     matrix(
@@ -126,7 +71,7 @@ testthat::test_that("get_filter_overview_info returns overview matrix for MAEFil
 
 testthat::test_that("get_filter_overview_info returns overview matrix for MAEFilteredDataset with filtering", {
   utils::data(miniACC, package = "MultiAssayExperiment")
-  filtered_dataset <- MAEFilteredDataset$new(dataset = teal.data::dataset("miniACC", miniACC))
+  filtered_dataset <- MAEFilteredDataset$new(dataset = miniACC, dataname = "miniACC")
 
   filter_state_mae <- ChoicesFilterState$new(
     x = c("white", NA_character_),
@@ -139,7 +84,12 @@ testthat::test_that("get_filter_overview_info returns overview matrix for MAEFil
   queue$queue_push(filter_state_mae, queue_index = 1L, element_id = "race")
 
   testthat::expect_equal(
-    isolate(filtered_dataset$get_filter_overview_info()),
+    isolate(filtered_dataset$get_filter_overview_info(
+      MultiAssayExperiment::subsetByColData(
+        miniACC,
+        y = !is.na(miniACC$race) & miniACC$race == "white"
+      )
+    )),
     matrix(
       list("", "78/92", "66/79", "66/79", "76/90", "76/90", "35/46", "35/46", "77/90", "77/90", "67/80", "67/80"),
       nrow = 6,
@@ -156,7 +106,7 @@ testthat::test_that(
   "MAEFilteredDataset$set_filter_state sets filters in FilterStates specified by list names",
   code = {
     utils::data(miniACC, package = "MultiAssayExperiment")
-    dataset <- MAEFilteredDataset$new(teal.data::dataset("MAE", miniACC))
+    dataset <- MAEFilteredDataset$new(dataset = miniACC, dataname = "MAE")
     fs <- list(
       subjects = list(
         years_to_birth = c(30, 50),
@@ -194,7 +144,7 @@ testthat::test_that(
   "MAEFilteredDataset$set_filter_state throws error when using unnamed list",
   code = {
     utils::data(miniACC, package = "MultiAssayExperiment")
-    dataset <- MAEFilteredDataset$new(teal.data::dataset("MAE", miniACC))
+    dataset <- MAEFilteredDataset$new(dataset = miniACC, dataname = "miniACC")
     fs <- list(
       list(
         years_to_birth = c(30, 50),
@@ -213,7 +163,7 @@ testthat::test_that(
   "MAEFilteredDataset$set_filter_state throws error when using unnamed variables list",
   code = {
     utils::data(miniACC, package = "MultiAssayExperiment")
-    dataset <- MAEFilteredDataset$new(teal.data::dataset("MAE", miniACC))
+    dataset <- MAEFilteredDataset$new(dataset = miniACC, dataname = "miniACC")
     fs <- list(
       subjects = list(
         c(30, 50),
@@ -230,7 +180,7 @@ testthat::test_that(
 
 testthat::test_that("MAEFilteredDataset$set_filter_state throws error if state argument is not a list ", {
   utils::data(miniACC, package = "MultiAssayExperiment")
-  dataset <- MAEFilteredDataset$new(teal.data::dataset("MAE", miniACC))
+  dataset <- MAEFilteredDataset$new(dataset = miniACC, dataname = "miniACC")
   fs <- c("not_list")
   testthat::expect_error(
     dataset$set_filter_state(state = fs),
@@ -243,7 +193,7 @@ testthat::test_that(
   "MAEFilteredDataset$get_filter_state returns list identical to input",
   code = {
     utils::data(miniACC, package = "MultiAssayExperiment")
-    dataset <- MAEFilteredDataset$new(teal.data::dataset("MAE", miniACC))
+    dataset <- MAEFilteredDataset$new(dataset = miniACC, dataname = "miniACC")
     fs <- list(
       subjects = list(
         years_to_birth = list(selected = c(30, 50), keep_na = TRUE, keep_inf = FALSE),
@@ -263,7 +213,7 @@ testthat::test_that(
   "MAEFilteredDataset$remove_filter_state removes desired filter",
   code = {
     utils::data(miniACC, package = "MultiAssayExperiment")
-    dataset <- MAEFilteredDataset$new(teal.data::dataset("MAE", miniACC))
+    dataset <- MAEFilteredDataset$new(dataset = miniACC, dataname = "MAE")
     fs <- list(
       subjects = list(
         years_to_birth = c(30, 50),
@@ -302,7 +252,7 @@ testthat::test_that(
   "MAEFilteredDataset$remove_filter_state throws error if list in unnamed",
   code = {
     utils::data(miniACC, package = "MultiAssayExperiment")
-    dataset <- MAEFilteredDataset$new(teal.data::dataset("MAE", miniACC))
+    dataset <- MAEFilteredDataset$new(dataset = miniACC, dataname = "miniACC")
     fs <- list(
       subjects = list(
         years_to_birth = c(30, 50),
@@ -319,13 +269,22 @@ testthat::test_that(
 )
 testthat::test_that("MAEFilteredDataset$get_filterable_varnames returns character(0)", {
   utils::data(miniACC, package = "MultiAssayExperiment")
-  filtered_dataset <- MAEFilteredDataset$new(dataset = teal.data::dataset("miniACC", miniACC))
+  filtered_dataset <- MAEFilteredDataset$new(dataset = miniACC, dataname = "miniACC")
   testthat::expect_identical(filtered_dataset$get_filterable_varnames(), character(0))
+})
+
+testthat::test_that("MAEFilteredDataset$get_varlabels returns column variable labels", {
+  utils::data(miniACC, package = "MultiAssayExperiment")
+  x <- miniACC
+  attr(SummarizedExperiment::colData(x)$ADS, "label") <- "ADS label"
+  filtered_dataset <- MAEFilteredDataset$new(dataset = x, dataname = "miniACC")
+  labels <- filtered_dataset$get_varlabels(c("COC", "ADS"))
+  testthat::expect_equal(c("COC" = NA, ADS = "ADS label"), labels)
 })
 
 testthat::test_that("MAEFilteredDataset filters removed using remove_filters", {
   utils::data(miniACC, package = "MultiAssayExperiment")
-  filtered_dataset <- MAEFilteredDataset$new(teal.data::dataset("MAE", miniACC))
+  filtered_dataset <- MAEFilteredDataset$new(dataset = miniACC, dataname = "MAE")
   fs <- list(
     subjects = list(
       years_to_birth = c(30, 50),

@@ -4,11 +4,11 @@
 \alias{FilteredDataset}
 \title{\code{FilterStates} R6 class}
 \description{
-\code{FilteredDataset} is a class which renders/controls \code{FilterStates}(s) for \code{TealDataset}.
+\code{FilteredDataset} is a class which renders/controls \code{FilterStates}(s)
 Each \code{FilteredDataset} contains \code{filter_states} field - a \code{list} which contains one
 (\code{data.frame}) or multiple (\code{MultiAssayExperiment}) \code{FilterStates} objects.
 Each \code{FilterStates} is responsible for one filter/subset expression applied for specific
-components of the \code{TealDataset}.
+components of the dataset.
 }
 \keyword{internal}
 \section{Methods}{
@@ -16,11 +16,8 @@ components of the \code{TealDataset}.
 \itemize{
 \item \href{#method-FilteredDataset-new}{\code{FilteredDataset$new()}}
 \item \href{#method-FilteredDataset-get_formatted_filter_state}{\code{FilteredDataset$get_formatted_filter_state()}}
-\item \href{#method-FilteredDataset-add_to_eval_env}{\code{FilteredDataset$add_to_eval_env()}}
 \item \href{#method-FilteredDataset-queues_empty}{\code{FilteredDataset$queues_empty()}}
 \item \href{#method-FilteredDataset-get_call}{\code{FilteredDataset$get_call()}}
-\item \href{#method-FilteredDataset-get_data}{\code{FilteredDataset$get_data()}}
-\item \href{#method-FilteredDataset-get_data_reactive}{\code{FilteredDataset$get_data_reactive()}}
 \item \href{#method-FilteredDataset-get_filter_state}{\code{FilteredDataset$get_filter_state()}}
 \item \href{#method-FilteredDataset-get_filter_states}{\code{FilteredDataset$get_filter_states()}}
 \item \href{#method-FilteredDataset-get_dataname}{\code{FilteredDataset$get_dataname()}}
@@ -29,8 +26,8 @@ components of the \code{TealDataset}.
 \item \href{#method-FilteredDataset-get_filter_overview_info}{\code{FilteredDataset$get_filter_overview_info()}}
 \item \href{#method-FilteredDataset-get_hash}{\code{FilteredDataset$get_hash()}}
 \item \href{#method-FilteredDataset-get_keys}{\code{FilteredDataset$get_keys()}}
-\item \href{#method-FilteredDataset-get_join_keys}{\code{FilteredDataset$get_join_keys()}}
 \item \href{#method-FilteredDataset-get_varlabels}{\code{FilteredDataset$get_varlabels()}}
+\item \href{#method-FilteredDataset-get_dataset_label}{\code{FilteredDataset$get_dataset_label()}}
 \item \href{#method-FilteredDataset-get_varnames}{\code{FilteredDataset$get_varnames()}}
 \item \href{#method-FilteredDataset-get_filtered_dataname}{\code{FilteredDataset$get_filtered_dataname()}}
 \item \href{#method-FilteredDataset-get_filterable_varnames}{\code{FilteredDataset$get_filterable_varnames()}}
@@ -47,14 +44,33 @@ components of the \code{TealDataset}.
 \subsection{Method \code{new()}}{
 Initializes this \code{FilteredDataset} object
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{FilteredDataset$new(dataset)}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{FilteredDataset$new(
+  dataset,
+  dataname,
+  keys = character(0),
+  label = attr(dataset, "label"),
+  metadata = NULL
+)}\if{html}{\out{</div>}}
 }
 
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
-\item{\code{dataset}}{(\code{TealDataset})\cr
+\item{\code{dataset}}{(\code{data.frame} or \code{MultiAssayExperiment})\cr
 single dataset for which filters are rendered}
+
+\item{\code{dataname}}{(\code{character(1)})\cr
+A given name for the dataset it may not contain spaces}
+
+\item{\code{keys}}{optional, (\code{character})\cr
+Vector with primary keys}
+
+\item{\code{label}}{(\code{character(1)})\cr
+Label to describe the dataset}
+
+\item{\code{metadata}}{(named \code{list} or \code{NULL}) \cr
+Field containing metadata about the dataset. Each element of the list
+should be atomic and length one.}
 }
 \if{html}{\out{</div>}}
 }
@@ -70,28 +86,6 @@ Returns a string representation of the filter state in this \code{FilteredDatase
 
 \subsection{Returns}{
 \code{character(1)} the formatted string representing the filter state
-}
-}
-\if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-FilteredDataset-add_to_eval_env"></a>}}
-\if{latex}{\out{\hypertarget{method-FilteredDataset-add_to_eval_env}{}}}
-\subsection{Method \code{add_to_eval_env()}}{
-Adds objects to the filter call evaluation environment
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{FilteredDataset$add_to_eval_env(name, value)}\if{html}{\out{</div>}}
-}
-
-\subsection{Arguments}{
-\if{html}{\out{<div class="arguments">}}
-\describe{
-\item{\code{name}}{(\code{character}) object name}
-
-\item{\code{value}}{object value}
-}
-\if{html}{\out{</div>}}
-}
-\subsection{Returns}{
-invisibly this \code{FilteredDataset}
 }
 }
 \if{html}{\out{<hr>}}
@@ -122,41 +116,6 @@ depends on \code{filter_states} type and order which are set during initializati
 
 \subsection{Returns}{
 filter \code{call} or \code{list} of filter calls
-}
-}
-\if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-FilteredDataset-get_data"></a>}}
-\if{latex}{\out{\hypertarget{method-FilteredDataset-get_data}{}}}
-\subsection{Method \code{get_data()}}{
-Gets raw data of this dataset
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{FilteredDataset$get_data(filtered)}\if{html}{\out{</div>}}
-}
-
-\subsection{Arguments}{
-\if{html}{\out{<div class="arguments">}}
-\describe{
-\item{\code{filtered}}{(\code{logical(1)})\cr
-whether returned data should be filtered or not}
-}
-\if{html}{\out{</div>}}
-}
-\subsection{Returns}{
-type of returned object depending on a data stored in
-\code{TealDataset}. Currently \code{data.frame} or \code{MultiAssayExperiment}
-}
-}
-\if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-FilteredDataset-get_data_reactive"></a>}}
-\if{latex}{\out{\hypertarget{method-FilteredDataset-get_data_reactive}{}}}
-\subsection{Method \code{get_data_reactive()}}{
-Gets the reactive object which returns filtered data
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{FilteredDataset$get_data_reactive()}\if{html}{\out{</div>}}
-}
-
-\subsection{Returns}{
-(\code{reactive})
 Gets the reactive values from the active \code{FilterState} objects.
 
 Get all active filters from this dataset in form of the nested list.
@@ -216,13 +175,13 @@ Get name of the dataset
 \if{html}{\out{<a id="method-FilteredDataset-get_dataset"></a>}}
 \if{latex}{\out{\hypertarget{method-FilteredDataset-get_dataset}{}}}
 \subsection{Method \code{get_dataset()}}{
-Gets the dataset in this \code{FilteredDataset}
+Gets the dataset object in this \code{FilteredDataset}
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{FilteredDataset$get_dataset()}\if{html}{\out{</div>}}
 }
 
 \subsection{Returns}{
-\code{TealDataset}
+\code{data.frame} or \code{MultiAssayExperiment}
 }
 }
 \if{html}{\out{<hr>}}
@@ -243,10 +202,21 @@ named \code{list} or \code{NULL}
 \if{latex}{\out{\hypertarget{method-FilteredDataset-get_filter_overview_info}{}}}
 \subsection{Method \code{get_filter_overview_info()}}{
 Get filter overview rows of a dataset
+The output shows the comparison between \code{filtered_dataset}
+function parameter and the dataset inside self
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{FilteredDataset$get_filter_overview_info()}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{FilteredDataset$get_filter_overview_info(filtered_dataset = self$get_dataset())}\if{html}{\out{</div>}}
 }
 
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{filtered_dataset}}{comparison object, of the same class
+as \code{self$get_dataset()}, if \code{NULL} then \code{self$get_dataset()}
+is used.}
+}
+\if{html}{\out{</div>}}
+}
 \subsection{Returns}{
 (\code{matrix}) matrix of observations and subjects
 }
@@ -255,7 +225,7 @@ Get filter overview rows of a dataset
 \if{html}{\out{<a id="method-FilteredDataset-get_hash"></a>}}
 \if{latex}{\out{\hypertarget{method-FilteredDataset-get_hash}{}}}
 \subsection{Method \code{get_hash()}}{
-Returns the hash of the unfiltered dataset
+Returns the hash of the dataset
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{FilteredDataset$get_hash()}\if{html}{\out{</div>}}
 }
@@ -275,20 +245,6 @@ Gets the keys for the dataset of this \code{FilteredDataset}
 
 \subsection{Returns}{
 (\code{character}) the keys of dataset
-Gets join keys to join the dataset of this \code{FilteredDataset}
-with other \code{TealDataset} objects.
-}
-}
-\if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-FilteredDataset-get_join_keys"></a>}}
-\if{latex}{\out{\hypertarget{method-FilteredDataset-get_join_keys}{}}}
-\subsection{Method \code{get_join_keys()}}{
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{FilteredDataset$get_join_keys()}\if{html}{\out{</div>}}
-}
-
-\subsection{Returns}{
-\code{list} of keys
 }
 }
 \if{html}{\out{<hr>}}
@@ -315,6 +271,19 @@ if \code{NULL}, for all variables in data}
 \subsection{Returns}{
 (\code{character} or \code{NULL}) variable labels, \code{NULL} if \code{column_labels}
 attribute does not exist for the data
+}
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-FilteredDataset-get_dataset_label"></a>}}
+\if{latex}{\out{\hypertarget{method-FilteredDataset-get_dataset_label}{}}}
+\subsection{Method \code{get_dataset_label()}}{
+Gets the dataset label
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{FilteredDataset$get_dataset_label()}\if{html}{\out{</div>}}
+}
+
+\subsection{Returns}{
+(\code{character}) the dataset label
 }
 }
 \if{html}{\out{<hr>}}
