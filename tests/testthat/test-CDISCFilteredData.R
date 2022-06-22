@@ -136,22 +136,25 @@ testthat::test_that("get_filterable_varnames return all from parent dataset", {
   )
 })
 
-testthat::test_that("set_filter_state returns warning when setting a filter on a column which belongs to parent dataset", {
-  teal.logger::suppress_logs()
-  adsl <- teal.data::cdisc_dataset(
-    dataname = "ADSL",
-    x = data.frame(USUBJID = 1L, STUDYID = 1L, a = 1L, b = 1L)
-  )
-  child <- teal.data::cdisc_dataset(
-    dataname = "ADTTE",
-    parent = "ADSL",
-    x = data.frame(USUBJID = 1L, STUDYID = 1L, PARAMCD = 1L, a = 1L, c = 1L)
-  )
-  data <- teal.data::cdisc_data(adsl, child)
+testthat::test_that(
+  "set_filter_state returns warning when setting a filter on a column which belongs to parent dataset",
+  code = {
+    teal.logger::suppress_logs()
+    adsl <- teal.data::cdisc_dataset(
+      dataname = "ADSL",
+      x = data.frame(USUBJID = 1L, STUDYID = 1L, a = 1L, b = 1L)
+    )
+    child <- teal.data::cdisc_dataset(
+      dataname = "ADTTE",
+      parent = "ADSL",
+      x = data.frame(USUBJID = 1L, STUDYID = 1L, PARAMCD = 1L, a = 1L, c = 1L)
+    )
+    data <- teal.data::cdisc_data(adsl, child)
 
-  fd <- init_filtered_data(data)
-  testthat::expect_warning(
-    fd$set_filter_state(list(ADTTE = list(USUBJID = "1"))),
-    "These columns filters were excluded: USUBJID from dataset ADTTE"
-  )
-})
+    fd <- init_filtered_data(data)
+    testthat::expect_warning(
+      fd$set_filter_state(list(ADTTE = list(USUBJID = "1"))),
+      "These columns filters were excluded: USUBJID from dataset ADTTE"
+    )
+  }
+)
