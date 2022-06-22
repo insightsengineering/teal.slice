@@ -135,4 +135,3 @@ testthat::test_that("$get_call returns the filter call of the dataset", {
     )
   )
 })
-
