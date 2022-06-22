@@ -95,7 +95,6 @@ init_filtered_data.default <- function(x, join_keys = NULL, code = NULL, cdisc =
   mapply(validate_dataset_args, x, names(x), MoreArgs = list(allowed_parent = cdisc))
   checkmate::assert_class(code, "CodeClass", null.ok = TRUE)
   checkmate::assert_class(join_keys, "JoinKeys", null.ok = TRUE)
-  checkmate::check_flag(cdisc)
   checkmate::check_flag(check)
 
   datasets <- if (cdisc) {
