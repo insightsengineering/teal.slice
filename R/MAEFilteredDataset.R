@@ -121,7 +121,7 @@ MAEFilteredDataset <- R6::R6Class( # nolint
       if (is.null(labels)) {
         return(NULL)
       }
-      if (!is.null(variables)) labels <- labels[intersect(self$get_varnames(), variables)]
+      if (!is.null(variables)) labels <- labels[names(labels) %in% variables]
       labels
     },
 

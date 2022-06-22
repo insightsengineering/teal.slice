@@ -273,6 +273,15 @@ testthat::test_that("MAEFilteredDataset$get_filterable_varnames returns characte
   testthat::expect_identical(filtered_dataset$get_filterable_varnames(), character(0))
 })
 
+testthat::test_that("MAEFilteredDataset$get_varlabels returns column variable labels", {
+  utils::data(miniACC, package = "MultiAssayExperiment")
+  x <- miniACC
+  attr(SummarizedExperiment::colData(x)$ADS, "label") <- "ADS label"
+  filtered_dataset <- MAEFilteredDataset$new(dataset = x, dataname = "miniACC")
+  labels <- filtered_dataset$get_varlabels(c("COC", "ADS"))
+  testthat::expect_equal(c("COC"= NA, ADS = "ADS label"), labels)
+})
+
 testthat::test_that("MAEFilteredDataset filters removed using remove_filters", {
   utils::data(miniACC, package = "MultiAssayExperiment")
   filtered_dataset <- MAEFilteredDataset$new(dataset = miniACC, dataname = "MAE")
