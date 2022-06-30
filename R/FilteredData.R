@@ -592,7 +592,7 @@ FilteredData <- R6::R6Class( # nolint
     ui_filter_panel = function(id) {
       ns <- NS(id)
       div(
-        id = ns("filter_panel_whole"), # used for hiding / showing
+        id = ns(NULL), # used for hiding / showing
         include_css_files(pattern = "filter-panel"),
         div(
           id = ns("filters_overview"), # not used, can be used to customize CSS behavior
@@ -763,8 +763,7 @@ FilteredData <- R6::R6Class( # nolint
               )
             }
           )
-
-          private$active_datanames_observer(active_datanames, session$ns("filter_panel_whole"))
+          private$active_datanames_observer(active_datanames, session$ns(NULL))
 
           observeEvent(input$remove_all_filters, {
             logger::log_trace("FilteredData$srv_filter_panel@1 removing all filters")
