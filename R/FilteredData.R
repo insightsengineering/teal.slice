@@ -764,7 +764,7 @@ FilteredData <- R6::R6Class( # nolint
             }
           )
 
-          private$active_datanames_observer(active_datanames)
+          private$active_datanames_observer(active_datanames, session$ns("filter_panel_whole"))
 
           observeEvent(input$remove_all_filters, {
             logger::log_trace("FilteredData$srv_filter_panel@1 removing all filters")
@@ -869,8 +869,9 @@ FilteredData <- R6::R6Class( # nolint
   private = list(
     # Handles changes in `active_datanames`.
     # @param active_datanames (`reactive(1)`) the observed reactive
+    # @param id (`character(1)`) the id of the filter panel
     # @return a `shiny` observer
-    active_datanames_observer = function(active_datanames) {
+    active_datanames_observer = function(active_datanames, id) {
       # rather than regenerating the UI dynamically for the dataset filtering,
       # we instead choose to hide/show the elements
       # the filters for this dataset are just hidden from the UI, but still applied
@@ -885,9 +886,21 @@ FilteredData <- R6::R6Class( # nolint
 
           private$hide_inactive_datasets(active_datanames)
           if (length(active_datanames()) == 0 || is.null(active_datanames())) {
-            # hide the filter panel UI when the active module does not use any datasets from the panel
-            shinyjs::runjs("if (filter_open) toggle_sidebar();")
+            # The filter panel emits an event when there are no active datasets
+            # so the parent modules can hide the filter panel if needed.
+            script <- paste0(
+              "const noDatasetsEvent = new Event('noDatasetsEvent');",
+              "document.getElementById('%s').dispatchEvent(noDatasetsEvent);"
+            )
+          } else {
+            # so the parent modules can hide the filter panel if needed.
+            script <- paste0(
+              "const datasetsActive = new Event('datasetsActiveEvent');",
+              "document.getElementById('%s').dispatchEvent(datasetsActive);"
+            )
           }
+          script <- sprintf(script, id)
+          shinyjs::runjs(script)
         },
         ignoreNULL = FALSE
       )
