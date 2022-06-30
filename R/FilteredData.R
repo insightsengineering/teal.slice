@@ -764,46 +764,7 @@ FilteredData <- R6::R6Class( # nolint
             }
           )
 
-          # rather than regenerating the UI dynamically for the dataset filtering,
-          # we instead choose to hide/show the elements
-          # the filters for this dataset are just hidden from the UI, but still applied
-          # optimization: we set `priority = 1` to execute it before the other
-          # observers (default priority 0), so that they are not computed if they are hidden anyways
-          observeEvent(active_datanames(),
-            priority = 1,
-            {
-              logger::log_trace(
-                "FilteredData$srv_filter_panel@1 active datanames: { paste(active_datanames(), collapse = \" \") }"
-              )
-              if (length(active_datanames()) == 0 || is.null(active_datanames())) {
-                # hide whole module UI when no datasets or when NULL
-                shinyjs::hide("filter_panel_whole")
-                shinyjs::runjs('$("#teal_primary_col").attr("class", "col-sm-12").resize();')
-              } else {
-                shinyjs::show("filter_panel_whole")
-                shinyjs::runjs('if (filter_open) {$("#teal_primary_col").attr("class", "col-sm-9").resize();}')
-
-                # selectively hide / show to only show `active_datanames` out of all datanames
-                lapply(
-                  self$datanames(),
-                  function(dataname) {
-                    id_add_filter <- private$get_ui_add_filter_id(dataname)
-                    id_filter_dataname <- private$get_ui_id(dataname)
-
-                    if (dataname %in% active_datanames()) {
-                      # shinyjs takes care of the namespace around the id
-                      shinyjs::show(id_add_filter)
-                      shinyjs::show(id_filter_dataname)
-                    } else {
-                      shinyjs::hide(id_add_filter)
-                      shinyjs::hide(id_filter_dataname)
-                    }
-                  }
-                )
-              }
-            },
-            ignoreNULL = FALSE
-          )
+          private$active_datanames_observer(active_datanames)
 
           observeEvent(input$remove_all_filters, {
             logger::log_trace("FilteredData$srv_filter_panel@1 removing all filters")
@@ -896,6 +857,7 @@ FilteredData <- R6::R6Class( # nolint
             table_html
           })
 
+          shiny::outputOptions(output, "table", suspendWhenHidden = FALSE)
           logger::log_trace("FilteredData$srv_filter_overview initialized")
           NULL
         }
@@ -905,6 +867,51 @@ FilteredData <- R6::R6Class( # nolint
 
   ## __Private Methods ====
   private = list(
+    # Handles changes in `active_datanames`.
+    # @param active_datanames (`reactive(1)`) the observed reactive
+    # @return a `shiny` observer
+    active_datanames_observer = function(active_datanames) {
+      # rather than regenerating the UI dynamically for the dataset filtering,
+      # we instead choose to hide/show the elements
+      # the filters for this dataset are just hidden from the UI, but still applied
+      # optimization: we set `priority = 1` to execute it before the other
+      # observers (default priority 0), so that they are not computed if they are hidden anyways
+      observeEvent(active_datanames(),
+        priority = 1,
+        {
+          logger::log_trace(
+            "FilteredData$srv_filter_panel@1 active datanames: { paste(active_datanames(), collapse = \" \") }"
+          )
+
+          private$hide_inactive_datasets(active_datanames)
+          if (length(active_datanames()) == 0 || is.null(active_datanames())) {
+            # hide the filter panel UI when the active module does not use any datasets from the panel
+            shinyjs::runjs("if (filter_open) toggle_sidebar();")
+          }
+        },
+        ignoreNULL = FALSE
+      )
+    },
+
+    # selectively hide / show to only show `active_datanames` out of all datanames
+    hide_inactive_datasets = function(active_datanames) {
+      lapply(
+        self$datanames(),
+        function(dataname) {
+          id_add_filter <- private$get_ui_add_filter_id(dataname)
+          id_filter_dataname <- private$get_ui_id(dataname)
+
+          if (dataname %in% active_datanames()) {
+            # shinyjs takes care of the namespace around the id
+            shinyjs::show(id_add_filter)
+            shinyjs::show(id_filter_dataname)
+          } else {
+            shinyjs::hide(id_add_filter)
+            shinyjs::hide(id_filter_dataname)
+          }
+        }
+      )
+    },
 
     # private attributes ----
     filtered_datasets = list(),
