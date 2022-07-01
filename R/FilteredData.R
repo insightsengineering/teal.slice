@@ -898,7 +898,7 @@ FilteredData <- R6::R6Class( # nolint
             logger::log_trace("FilteredData$srv_filter_overview@1 updated counts")
             table_html
           })
-
+          shiny::outputOptions(output, "table", suspendWhenHidden = FALSE)
           logger::log_trace("FilteredData$srv_filter_overview initialized")
           NULL
         }

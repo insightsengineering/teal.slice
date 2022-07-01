@@ -4,6 +4,10 @@
 * Changed constructor of `FilteredData` to not require `TealData` object. See `help(init_filtered_data)` for more details.
 * The filtered data is now stored in `FilteredData` not `FilteredDataset`. 
 
+# Bug fixes
+
+* Fixed a bug when the filter panel overview would not refresh if the panel was hidden during a transition between active modules.
+
 # teal.slice 0.1.1
 
 ### New features
