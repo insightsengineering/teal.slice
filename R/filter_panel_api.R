@@ -32,7 +32,7 @@
 #' # get the actual filter state --> empty named list
 #' isolate(fpa$get_filter_state())
 #'
-FilterPanelAPI <- R6::R6Class( #nolint
+FilterPanelAPI <- R6::R6Class( # nolint
   "FilterPanelAPI",
   ## __Public Methods ====
   public = list(

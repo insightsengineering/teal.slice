@@ -1,4 +1,4 @@
-filtered_data <- FilteredData$new(list(iris = list(dataset = iris), mtcars = list(dataset = mtcars)))
+filtered_data <- teal.slice:::init_filtered_data(list(iris = list(dataset = iris), mtcars = list(dataset = mtcars)))
 
 testthat::test_that("FilterPanelAPI constructor accepts a FilteredData object", {
   testthat::expect_error(FilterPanelAPI$new(filtered_data), NA)
