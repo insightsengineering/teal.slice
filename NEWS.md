@@ -1,4 +1,4 @@
-# teal.slice 0.1.1.9003
+# teal.slice 0.1.1.9005
 
 * Removed `CDISCFilteredDataset` class and functionality moved to `CDISCFilteredData`.
 * Changed constructor of `FilteredData` to not require `TealData` object. See `help(init_filtered_data)` for more details.
