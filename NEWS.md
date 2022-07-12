@@ -1,4 +1,4 @@
-# teal.slice 0.1.1.9002
+# teal.slice 0.1.1.9005
 
 * Removed `CDISCFilteredDataset` class and functionality moved to `CDISCFilteredData`.
 * Changed constructor of `FilteredData` to not require `TealData` object. See `help(init_filtered_data)` for more details.
@@ -11,6 +11,10 @@
 # Miscellaneous
 
 * It is now possible to show the filter panel using the burger button even when there are no active datasets in the panel.
+
+# Bug fixes
+
+* Fixed a bug when the filter panel overview would not refresh if the panel was hidden during a transition between active modules.
 
 # teal.slice 0.1.1
 
