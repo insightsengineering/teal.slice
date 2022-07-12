@@ -10,7 +10,7 @@
 
 # Miscellaneous
 
-* It is now possible to show the filter panel using the burger button even when there are no active datasets in the panel.
+* Enhanced the burger button so it is disabled when the filter panel is not used.
 
 # Bug fixes
 
