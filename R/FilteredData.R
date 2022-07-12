@@ -883,7 +883,6 @@ FilteredData <- R6::R6Class( # nolint
             "FilteredData$srv_filter_panel@1 active datanames: { paste(active_datanames(), collapse = \" \") }"
           )
 
-          private$hide_inactive_datasets(active_datanames)
           if (length(active_datanames()) == 0 || is.null(active_datanames())) {
             # The filter panel emits an event when there are no active datasets
             # so the parent modules can hide the filter panel if needed.
@@ -902,26 +901,6 @@ FilteredData <- R6::R6Class( # nolint
           shinyjs::runjs(script)
         },
         ignoreNULL = FALSE
-      )
-    },
-
-    # selectively hide / show to only show `active_datanames` out of all datanames
-    hide_inactive_datasets = function(active_datanames) {
-      lapply(
-        self$datanames(),
-        function(dataname) {
-          id_add_filter <- private$get_ui_add_filter_id(dataname)
-          id_filter_dataname <- private$get_ui_id(dataname)
-
-          if (dataname %in% active_datanames()) {
-            # shinyjs takes care of the namespace around the id
-            shinyjs::show(id_add_filter)
-            shinyjs::show(id_filter_dataname)
-          } else {
-            shinyjs::hide(id_add_filter)
-            shinyjs::hide(id_filter_dataname)
-          }
-        }
       )
     },
 
