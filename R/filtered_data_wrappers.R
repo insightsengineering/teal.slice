@@ -131,7 +131,7 @@ NULL
 #' @rdname filter_state_api
 #' @export
 set_filter_state <- function(datasets, filter) {
-  checkmate::assert_class(datasets, "FilteredData")
+  checkmate::assert_multi_class(datasets, c("FilteredData", "FilterPanelAPI"))
   checkmate::assert_list(filter, min.len = 0, null.ok = TRUE)
   if (length(filter) > 0) {
     datasets$set_filter_state(filter)
@@ -142,7 +142,7 @@ set_filter_state <- function(datasets, filter) {
 #' @rdname filter_state_api
 #' @export
 get_filter_state <- function(datasets) {
-  checkmate::assert_class(datasets, "FilteredData")
+  checkmate::assert_multi_class(datasets, c("FilteredData", "FilterPanelAPI"))
   if (shiny::isRunning()) {
     datasets$get_filter_state()
   } else {
@@ -153,7 +153,7 @@ get_filter_state <- function(datasets) {
 #' @rdname filter_state_api
 #' @export
 remove_filter_state <- function(datasets, filter) {
-  checkmate::assert_class(datasets, "FilteredData")
+  checkmate::assert_multi_class(datasets, c("FilteredData", "FilterPanelAPI"))
   checkmate::assert_list(filter, min.len = 0, null.ok = TRUE)
   if (length(filter) > 0) {
     datasets$remove_filter_state(filter)
@@ -164,7 +164,7 @@ remove_filter_state <- function(datasets, filter) {
 #' @rdname filter_state_api
 #' @export
 clear_filter_states <- function(datasets) {
-  checkmate::assert_class(datasets, "FilteredData")
+  checkmate::assert_multi_class(datasets, c("FilteredData", "FilterPanelAPI"))
   datasets$remove_all_filter_states()
   invisible(NULL)
 }
