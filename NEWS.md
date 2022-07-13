@@ -8,14 +8,6 @@
 
 * Fixed a bug when the filter panel overview would not refresh if the panel was hidden during a transition between active modules.
 
-# Miscellaneous
-
-* Enhanced the burger button so it is disabled when the filter panel is not used.
-
-# Bug fixes
-
-* Fixed a bug when the filter panel overview would not refresh if the panel was hidden during a transition between active modules.
-
 # teal.slice 0.1.1
 
 ### New features
