@@ -764,8 +764,9 @@ FilteredData <- R6::R6Class( # nolint
             }
           )
 
-          observeEvent(active_datanames(),
-            {
+          observeEvent(
+            eventExpr = active_datanames(),
+            handlerExpr = {
               private$hide_inactive_datasets(active_datanames)
             },
             priority = 1
