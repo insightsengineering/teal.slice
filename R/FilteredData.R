@@ -763,7 +763,13 @@ FilteredData <- R6::R6Class( # nolint
               )
             }
           )
-          private$active_datanames_observer(active_datanames, session$ns(NULL))
+
+          observeEvent(active_datanames(),
+            {
+              private$hide_inactive_datasets(active_datanames)
+            },
+            priority = 1
+          )
 
           observeEvent(input$remove_all_filters, {
             logger::log_trace("FilteredData$srv_filter_panel@1 removing all filters")
@@ -866,45 +872,6 @@ FilteredData <- R6::R6Class( # nolint
 
   ## __Private Methods ====
   private = list(
-    # Handles changes in `active_datanames`.
-    # @param active_datanames (`reactive(1)`) the observed reactive
-    # @param id (`character(1)`) the id of the filter panel
-    # @return a `shiny` observer
-    active_datanames_observer = function(active_datanames, id) {
-      # rather than regenerating the UI dynamically for the dataset filtering,
-      # we instead choose to hide/show the elements
-      # the filters for this dataset are just hidden from the UI, but still applied
-      # optimization: we set `priority = 1` to execute it before the other
-      # observers (default priority 0), so that they are not computed if they are hidden anyways
-      observeEvent(active_datanames(),
-        priority = 1,
-        {
-          logger::log_trace(
-            "FilteredData$srv_filter_panel@1 active datanames: { paste(active_datanames(), collapse = \" \") }"
-          )
-
-          private$hide_inactive_datasets(active_datanames)
-          if (length(active_datanames()) == 0 || is.null(active_datanames())) {
-            # The filter panel emits an event when there are no active datasets
-            # so the parent modules can hide the filter panel if needed.
-            script <- paste0(
-              "const noDatasetsEvent = new Event('noDatasetsEvent');",
-              "document.getElementById('%s').dispatchEvent(noDatasetsEvent);"
-            )
-          } else {
-            # so the parent modules can hide the filter panel if needed.
-            script <- paste0(
-              "const datasetsActive = new Event('datasetsActiveEvent');",
-              "document.getElementById('%s').dispatchEvent(datasetsActive);"
-            )
-          }
-          script <- sprintf(script, id)
-          shinyjs::runjs(script)
-        },
-        ignoreNULL = FALSE
-      )
-    },
-
     # selectively hide / show to only show `active_datanames` out of all datanames
     hide_inactive_datasets = function(active_datanames) {
       lapply(
