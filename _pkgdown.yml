@@ -31,5 +31,6 @@ reference:
       - DefaultFilteredDataset
       - FilteredData
       - FilteredDataset
+      - FilterPanelAPI
       - MAEFilteredDataset
       - Queue
