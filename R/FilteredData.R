@@ -592,7 +592,7 @@ FilteredData <- R6::R6Class( # nolint
     ui_filter_panel = function(id) {
       ns <- NS(id)
       div(
-        id = ns("filter_panel_whole"), # used for hiding / showing
+        id = ns(NULL), # used for hiding / showing
         include_css_files(pattern = "filter-panel"),
         div(
           id = ns("filters_overview"), # not used, can be used to customize CSS behavior
@@ -764,48 +764,12 @@ FilteredData <- R6::R6Class( # nolint
             }
           )
 
-          # rather than regenerating the UI dynamically for the dataset filtering,
-          # we instead choose to hide/show the elements
-          # the filters for this dataset are just hidden from the UI, but still applied
-          # optimization: we set `priority = 1` to execute it before the other
-          # observers (default priority 0), so that they are not computed if they are hidden anyways
-          observeEvent(active_datanames(),
-            priority = 1,
-            {
-              logger::log_trace(
-                "FilteredData$srv_filter_panel@1 active datanames: { paste(active_datanames(), collapse = \" \") }"
-              )
-              if (length(active_datanames()) == 0 || is.null(active_datanames())) {
-                # hide whole module UI when no datasets or when NULL
-                shinyjs::hide("filter_panel_whole")
-                shinyjs::runjs('$("#teal_secondary_col").hide();
-                             $("#teal_primary_col").attr("class", "col-sm-12").resize();')
-              } else {
-                shinyjs::show("filter_panel_whole")
-                shinyjs::runjs('if (filter_open) {
-              $("#teal_primary_col").attr("class", "col-sm-9").resize();
-              $("#teal_secondary_col").show();}')
-
-                # selectively hide / show to only show `active_datanames` out of all datanames
-                lapply(
-                  self$datanames(),
-                  function(dataname) {
-                    id_add_filter <- private$get_ui_add_filter_id(dataname)
-                    id_filter_dataname <- private$get_ui_id(dataname)
-
-                    if (dataname %in% active_datanames()) {
-                      # shinyjs takes care of the namespace around the id
-                      shinyjs::show(id_add_filter)
-                      shinyjs::show(id_filter_dataname)
-                    } else {
-                      shinyjs::hide(id_add_filter)
-                      shinyjs::hide(id_filter_dataname)
-                    }
-                  }
-                )
-              }
+          observeEvent(
+            eventExpr = active_datanames(),
+            handlerExpr = {
+              private$hide_inactive_datasets(active_datanames)
             },
-            ignoreNULL = FALSE
+            priority = 1
           )
 
           observeEvent(input$remove_all_filters, {
@@ -898,6 +862,7 @@ FilteredData <- R6::R6Class( # nolint
             logger::log_trace("FilteredData$srv_filter_overview@1 updated counts")
             table_html
           })
+
           shiny::outputOptions(output, "table", suspendWhenHidden = FALSE)
           logger::log_trace("FilteredData$srv_filter_overview initialized")
           NULL
@@ -908,6 +873,25 @@ FilteredData <- R6::R6Class( # nolint
 
   ## __Private Methods ====
   private = list(
+    # selectively hide / show to only show `active_datanames` out of all datanames
+    hide_inactive_datasets = function(active_datanames) {
+      lapply(
+        self$datanames(),
+        function(dataname) {
+          id_add_filter <- private$get_ui_add_filter_id(dataname)
+          id_filter_dataname <- private$get_ui_id(dataname)
+
+          if (dataname %in% active_datanames()) {
+            # shinyjs takes care of the namespace around the id
+            shinyjs::show(id_add_filter)
+            shinyjs::show(id_filter_dataname)
+          } else {
+            shinyjs::hide(id_add_filter)
+            shinyjs::hide(id_filter_dataname)
+          }
+        }
+      )
+    },
 
     # private attributes ----
     filtered_datasets = list(),
