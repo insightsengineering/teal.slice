@@ -250,7 +250,11 @@ FilteredData <- R6::R6Class( # nolint
       if (is.null(private$keys)) {
         return(character(0))
       }
-      private$keys$get(dataset_1, dataset_2)
+      keys <- private$keys$get(dataset_1, dataset_2)
+      if (length(keys) == 0) {
+        return(character(0))
+      }
+      return(keys)
     },
 
     #' @description
