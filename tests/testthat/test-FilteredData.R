@@ -14,15 +14,53 @@ testthat::test_that("set_dataset returns self", {
   testthat::expect_identical(filtered_data$set_dataset(dataset_args = dataset_args, dataname = "iris"), filtered_data)
 })
 
-testthat::test_that("get_keys returns an empty character when data has no keys", {
+testthat::test_that("get_keys returns an empty character when dataset has no keys", {
   filtered_data <- FilteredData$new(list(iris = list(dataset = head(iris), keys = character(0))), join_keys = NULL)
   testthat::expect_equal(filtered_data$get_keys("iris"), character(0))
 })
 
-test_that("get_keys returns the same character array if a TealDataset has keys", {
+testthat::test_that("get_keys returns the same character array if a dataset has keys", {
   filtered_data <- FilteredData$new(list(iris = list(dataset = head(iris), keys = "test")), join_keys = NULL)
   testthat::expect_equal(filtered_data$get_keys("iris"), "test")
 })
+
+testthat::test_that("get_join_keys returns empty character if no join_keys", {
+  filtered_data <- FilteredData$new(list(iris = list(dataset = head(iris), keys = "test")), join_keys = NULL)
+  testthat::expect_equal(filtered_data$get_join_keys(), character(0))
+})
+
+testthat::test_that("get_join_keys returns empty character if no join_keys for specific datasets", {
+  filtered_data <- FilteredData$new(
+    list(
+      iris = list(dataset = head(iris)),
+      iris2 = list(dataset = head(iris)),
+      iris3 = list(dataset = head(iris))
+    ),
+    join_keys = teal.data::join_keys(
+      teal.data::join_key("iris2", "iris3", c("Species" = "Species"))
+    )
+  )
+  testthat::expect_equal(filtered_data$get_join_keys("iris"), character(0))
+  testthat::expect_equal(filtered_data$get_join_keys("iris", "iris2"), character(0))
+  testthat::expect_equal(filtered_data$get_join_keys("iris2", "iris"), character(0))
+})
+
+testthat::test_that("get_join_keys returns join_keys for specific datasets if they exist", {
+  filtered_data <- FilteredData$new(
+    list(
+      iris = list(dataset = head(iris)),
+      iris2 = list(dataset = head(iris)),
+      iris3 = list(dataset = head(iris))
+    ),
+    join_keys = teal.data::join_keys(
+      teal.data::join_key("iris2", "iris3", c("Species" = "Sepal.Length"))
+    )
+  )
+  testthat::expect_equal(filtered_data$get_join_keys("iris2"), list("iris3" = c("Species" = "Sepal.Length")))
+  testthat::expect_equal(filtered_data$get_join_keys("iris2", "iris3"), c("Species" = "Sepal.Length"))
+  testthat::expect_equal(filtered_data$get_join_keys("iris3", "iris2"), c("Sepal.Length" = "Species"))
+})
+
 
 testthat::test_that("get_varnames returns dataname's column names", {
   filtered_data <- FilteredData$new(list(iris = list(dataset = head(iris))), join_keys = NULL)

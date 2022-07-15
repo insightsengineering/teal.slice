@@ -247,19 +247,14 @@ FilteredData <- R6::R6Class( # nolint
     #' @param dataset_2 (`character(1)`) other dataset name
     #' @return (`named character`) vector with column names
     get_join_keys = function(dataset_1, dataset_2) {
-      res <- if (!missing(dataset_1) && !missing(dataset_2)) {
-        private$keys[[dataset_1]][[dataset_2]]
-      } else if (!missing(dataset_1)) {
-        private$keys[[dataset_2]]
-      } else if (!missing(dataset_2)) {
-        private$keys[[dataset_1]]
-      } else {
-        private$keys
-      }
-      if (length(res) == 0) {
+      if (is.null(private$keys)) {
         return(character(0))
       }
-      return(res)
+      keys <- private$keys$get(dataset_1, dataset_2)
+      if (length(keys) == 0) {
+        return(character(0))
+      }
+      return(keys)
     },
 
     #' @description
@@ -388,7 +383,7 @@ FilteredData <- R6::R6Class( # nolint
     #' @return (`self`) invisibly this `FilteredData`
     set_join_keys = function(join_keys) {
       checkmate::assert_class(join_keys, "JoinKeys")
-      private$keys <- join_keys$get()
+      private$keys <- join_keys
       invisible(self)
     },
 
@@ -902,7 +897,7 @@ FilteredData <- R6::R6Class( # nolint
     # preprocessing code used to generate the unfiltered datasets as a string
     code = NULL,
 
-    # keys used for joining/filtering data named nested lists
+    # keys used for joining/filtering data a JoinKeys object (see teal.data)
     keys = NULL,
 
     # reactive i.e. filtered data

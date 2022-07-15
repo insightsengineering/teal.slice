@@ -16,6 +16,7 @@ The key changes not yet incorporated:
 2) `FilteredDataset` no longer contains reactive data this is stored inside `FilteredData` instead.
 3) It is also possible to create a `FilteredData` object directly from a list of data.frames without
 create a `TealData` object see `help(init_filtered_data)` for more details.
+4) `FilteredData$private$keys` is now a `JoinKeys` object instead of a nested list.  
 
 ## Overview
 

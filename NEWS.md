@@ -3,6 +3,7 @@
 * Removed `CDISCFilteredDataset` class and functionality moved to `CDISCFilteredData`.
 * Changed constructor of `FilteredData` to not require `TealData` object. See `help(init_filtered_data)` for more details.
 * The filtered data is now stored in `FilteredData` not `FilteredDataset`.
+* The join keys stored inside `FilteredData` are now `JoinKeys` objects.
 
 # Bug fixes
 
