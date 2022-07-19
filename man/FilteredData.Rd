@@ -421,20 +421,11 @@ value of metadata for given data (or \code{NULL} if it does not exist)
 \subsection{Method \code{get_join_keys()}}{
 Get join keys between two datasets.
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{FilteredData$get_join_keys(dataset_1, dataset_2)}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{FilteredData$get_join_keys()}\if{html}{\out{</div>}}
 }
 
-\subsection{Arguments}{
-\if{html}{\out{<div class="arguments">}}
-\describe{
-\item{\code{dataset_1}}{(\code{character(1)}) one dataset name}
-
-\item{\code{dataset_2}}{(\code{character(1)}) other dataset name}
-}
-\if{html}{\out{</div>}}
-}
 \subsection{Returns}{
-(\verb{named character}) vector with column names
+(\code{JoinKeys})
 }
 }
 \if{html}{\out{<hr>}}
