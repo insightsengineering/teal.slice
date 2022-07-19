@@ -85,15 +85,11 @@ CDISCFilteredData <- R6::R6Class( # nolint
       if (length(parent_dataname) == 0) {
         super$get_call(dataname)
       } else {
+        keys <- character(0)
         join_keys <- self$get_join_keys()
 
-        if(!is.null(join_keys)) {
+        if(!is.null(join_keys) && !is.null(join_keys$get(parent_dataname, dataname))) {
           keys <- join_keys$get(parent_dataname, dataname)
-          if (is.null(keys)) {
-            keys <- character(0)
-          }
-        } else {
-          keys <- character(0)
         }
 
         parent_keys <- names(keys)
