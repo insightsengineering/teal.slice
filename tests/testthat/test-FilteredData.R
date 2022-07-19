@@ -24,43 +24,28 @@ testthat::test_that("get_keys returns the same character array if a dataset has 
   testthat::expect_equal(filtered_data$get_keys("iris"), "test")
 })
 
-testthat::test_that("get_join_keys returns empty character if no join_keys", {
+testthat::test_that("get_join_keys returns NULL if no join_keys", {
   filtered_data <- FilteredData$new(list(iris = list(dataset = head(iris), keys = "test")), join_keys = NULL)
-  testthat::expect_equal(filtered_data$get_join_keys(), character(0))
+  testthat::expect_null(filtered_data$get_join_keys())
 })
 
-testthat::test_that("get_join_keys returns empty character if no join_keys for specific datasets", {
+testthat::test_that("get_join_keys returns join_keys object if it exists", {
   filtered_data <- FilteredData$new(
     list(
       iris = list(dataset = head(iris)),
-      iris2 = list(dataset = head(iris)),
-      iris3 = list(dataset = head(iris))
+      iris2 = list(dataset = head(iris))
     ),
     join_keys = teal.data::join_keys(
-      teal.data::join_key("iris2", "iris3", c("Species" = "Species"))
+      teal.data::join_key("iris", "iris2", c("Species" = "Species"))
     )
   )
-  testthat::expect_equal(filtered_data$get_join_keys("iris"), character(0))
-  testthat::expect_equal(filtered_data$get_join_keys("iris", "iris2"), character(0))
-  testthat::expect_equal(filtered_data$get_join_keys("iris2", "iris"), character(0))
-})
-
-testthat::test_that("get_join_keys returns join_keys for specific datasets if they exist", {
-  filtered_data <- FilteredData$new(
-    list(
-      iris = list(dataset = head(iris)),
-      iris2 = list(dataset = head(iris)),
-      iris3 = list(dataset = head(iris))
-    ),
-    join_keys = teal.data::join_keys(
-      teal.data::join_key("iris2", "iris3", c("Species" = "Sepal.Length"))
+  testthat::expect_equal(
+    filtered_data$get_join_keys(),
+    teal.data::join_keys(
+      teal.data::join_key("iris", "iris2", c("Species" = "Species"))
     )
   )
-  testthat::expect_equal(filtered_data$get_join_keys("iris2"), list("iris3" = c("Species" = "Sepal.Length")))
-  testthat::expect_equal(filtered_data$get_join_keys("iris2", "iris3"), c("Species" = "Sepal.Length"))
-  testthat::expect_equal(filtered_data$get_join_keys("iris3", "iris2"), c("Sepal.Length" = "Species"))
 })
-
 
 testthat::test_that("get_varnames returns dataname's column names", {
   filtered_data <- FilteredData$new(list(iris = list(dataset = head(iris))), join_keys = NULL)
