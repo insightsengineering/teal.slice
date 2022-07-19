@@ -243,18 +243,9 @@ FilteredData <- R6::R6Class( # nolint
 
     #' @description
     #' Get join keys between two datasets.
-    #' @param dataset_1 (`character(1)`) one dataset name
-    #' @param dataset_2 (`character(1)`) other dataset name
-    #' @return (`named character`) vector with column names
-    get_join_keys = function(dataset_1, dataset_2) {
-      if (is.null(private$keys)) {
-        return(character(0))
-      }
-      keys <- private$keys$get(dataset_1, dataset_2)
-      if (length(keys) == 0) {
-        return(character(0))
-      }
-      return(keys)
+    #' @return (`JoinKeys`)
+    get_join_keys = function() {
+      return(private$keys)
     },
 
     #' @description
