@@ -22,12 +22,12 @@ the last one to be returned from it.
 \if{html}{\out{
 <details><summary>Inherited methods</summary>
 <ul>
-<li><span class="pkg-link" data-pkg="teal.slice" data-topic="Queue" data-id="empty"><a href='../../teal.slice/html/Queue.html#method-Queue-empty'><code>teal.slice::Queue$empty()</code></a></li>
-<li><span class="pkg-link" data-pkg="teal.slice" data-topic="Queue" data-id="pop"><a href='../../teal.slice/html/Queue.html#method-Queue-pop'><code>teal.slice::Queue$pop()</code></a></li>
-<li><span class="pkg-link" data-pkg="teal.slice" data-topic="Queue" data-id="print"><a href='../../teal.slice/html/Queue.html#method-Queue-print'><code>teal.slice::Queue$print()</code></a></li>
-<li><span class="pkg-link" data-pkg="teal.slice" data-topic="Queue" data-id="push"><a href='../../teal.slice/html/Queue.html#method-Queue-push'><code>teal.slice::Queue$push()</code></a></li>
-<li><span class="pkg-link" data-pkg="teal.slice" data-topic="Queue" data-id="remove"><a href='../../teal.slice/html/Queue.html#method-Queue-remove'><code>teal.slice::Queue$remove()</code></a></li>
-<li><span class="pkg-link" data-pkg="teal.slice" data-topic="Queue" data-id="size"><a href='../../teal.slice/html/Queue.html#method-Queue-size'><code>teal.slice::Queue$size()</code></a></li>
+<li><span class="pkg-link" data-pkg="teal.slice" data-topic="Queue" data-id="empty"><a href='../../teal.slice/html/Queue.html#method-Queue-empty'><code>teal.slice::Queue$empty()</code></a></span></li>
+<li><span class="pkg-link" data-pkg="teal.slice" data-topic="Queue" data-id="pop"><a href='../../teal.slice/html/Queue.html#method-Queue-pop'><code>teal.slice::Queue$pop()</code></a></span></li>
+<li><span class="pkg-link" data-pkg="teal.slice" data-topic="Queue" data-id="print"><a href='../../teal.slice/html/Queue.html#method-Queue-print'><code>teal.slice::Queue$print()</code></a></span></li>
+<li><span class="pkg-link" data-pkg="teal.slice" data-topic="Queue" data-id="push"><a href='../../teal.slice/html/Queue.html#method-Queue-push'><code>teal.slice::Queue$push()</code></a></span></li>
+<li><span class="pkg-link" data-pkg="teal.slice" data-topic="Queue" data-id="remove"><a href='../../teal.slice/html/Queue.html#method-Queue-remove'><code>teal.slice::Queue$remove()</code></a></span></li>
+<li><span class="pkg-link" data-pkg="teal.slice" data-topic="Queue" data-id="size"><a href='../../teal.slice/html/Queue.html#method-Queue-size'><code>teal.slice::Queue$size()</code></a></span></li>
 </ul>
 </details>
 }}
