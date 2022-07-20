@@ -417,11 +417,15 @@ FilteredData <- R6::R6Class( # nolint
     #'
     #' Gets all active filters in the form of a nested list.
     #' The output list is a compatible input to `self$set_filter_state`.
+    #' The attribute `formatted` renders the output of `self$get_formatted_filter_state` which
+    #' is a character formatting of the filter state.
     #' @return `list` with named elements corresponding to `FilteredDataset` objects
-    #' with active filters.
+    #' with active filters. Additionally, an attribute `formatted` holds the character format of
+    #' the active filter states.
     get_filter_state = function() {
       states <- lapply(self$get_filtered_dataset(), function(x) x$get_filter_state())
-      Filter(function(x) length(x) > 0, states)
+      filtered_states <- Filter(function(x) length(x) > 0, states)
+      structure(filtered_states, formatted = self$get_formatted_filter_state())
     },
 
     #' @description

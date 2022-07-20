@@ -649,13 +649,16 @@ Gets the reactive values from the active \code{FilterState} objects.
 
 Gets all active filters in the form of a nested list.
 The output list is a compatible input to \code{self$set_filter_state}.
+The attribute \code{formatted} renders the output of \code{self$get_formatted_filter_state} which
+is a character formatting of the filter state.
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{FilteredData$get_filter_state()}\if{html}{\out{</div>}}
 }
 
 \subsection{Returns}{
 \code{list} with named elements corresponding to \code{FilteredDataset} objects
-with active filters.
+with active filters. Additionally, an attribute \code{formatted} holds the character format of
+the active filter states.
 }
 }
 \if{html}{\out{<hr>}}
