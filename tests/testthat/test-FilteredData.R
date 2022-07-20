@@ -258,7 +258,7 @@ testthat::test_that(
   }
 )
 
-testthat::test_that("FilteredData$get_filter_state returns list identical to input",
+testthat::test_that("FilteredData$get_filter_state returns list identical to input with attributes",
   code = {
     utils::data(miniACC, package = "MultiAssayExperiment")
     datasets <- FilteredData$new(
@@ -287,7 +287,47 @@ testthat::test_that("FilteredData$get_filter_state returns list identical to inp
       )
     )
     datasets$set_filter_state(state = fs)
+    attr(fs, "formatted") <- isolate(datasets$get_formatted_filter_state())
     testthat::expect_identical(isolate(datasets$get_filter_state()), fs)
+  }
+)
+
+testthat::test_that("FilteredData$get_filter_state returns list whose attribute is a character form of the list",
+  code = {
+    utils::data(miniACC, package = "MultiAssayExperiment")
+    datasets <- FilteredData$new(
+      list(
+        iris = list(dataset = iris),
+        mtcars = list(dataset = mtcars),
+        mae = list(dataset = miniACC)
+      ),
+      join_keys = NULL
+    )
+
+    fs <- list(
+      iris = list(
+        Sepal.Length = list(selected = c(5.1, 6.4), keep_na = TRUE, keep_inf = FALSE),
+        Species = list(selected = c("setosa", "versicolor"), keep_na = FALSE)
+      ),
+      mae = list(
+        subjects = list(
+          years_to_birth = list(selected = c(30, 50), keep_na = TRUE, keep_inf = FALSE),
+          vital_status = list(selected = "1", keep_na = FALSE),
+          gender = list(selected = "female", keep_na = TRUE)
+        ),
+        RPPAArray = list(
+          subset = list(ARRAY_TYPE = list(selected = "", keep_na = TRUE))
+        )
+      )
+    )
+    datasets$set_filter_state(state = fs)
+    formatted_attr <- isolate(datasets$get_formatted_filter_state())
+
+    testthat::expect_type(formatted_attr, "character")
+    testthat::expect_identical(
+      attr(isolate(datasets$get_filter_state()), "formatted"),
+      formatted_attr
+    )
   }
 )
 
@@ -311,14 +351,16 @@ testthat::test_that("FilteredData$remove_filter_state removes states defined in 
   )
   datasets$set_filter_state(state = fs)
   datasets$remove_filter_state(state = list(iris = "Sepal.Length", mtcars = c("cyl", "disp")))
+  fs_after_remove <- list(
+    iris = list(
+      Species = list(selected = c("setosa", "versicolor"), keep_na = FALSE)
+    )
+  )
+  attr(fs_after_remove, "formatted") <- isolate(datasets$get_formatted_filter_state())
 
   testthat::expect_identical(
     isolate(datasets$get_filter_state()),
-    list(
-      iris = list(
-        Species = list(selected = c("setosa", "versicolor"), keep_na = FALSE)
-      )
-    )
+    fs_after_remove
   )
 })
 
