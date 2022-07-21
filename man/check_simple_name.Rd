@@ -15,10 +15,6 @@ Also, they should not start with a number as R may silently make it valid by cha
 Therefore, we only allow alphanumeric characters with underscores.
 The first character of the \code{name} must be an alphabetic character and can be followed by alphanumeric characters.
 }
-\note{
-The suffix '_FILTERED' is reserved for filtered data and is not
-allowed in the dataset name.
-}
 \examples{
 teal.slice:::check_simple_name("aas2df")
 teal.slice:::check_simple_name("ADSL")
@@ -31,7 +27,6 @@ teal.slice:::check_simple_name("a1")
 teal.slice:::check_simple_name("1a")
 teal.slice:::check_simple_name("ADSL.modified")
 teal.slice:::check_simple_name("a1...")
-teal.slice:::check_simple_name("ADSL_FILTERED")
 }
 }
 \keyword{internal}

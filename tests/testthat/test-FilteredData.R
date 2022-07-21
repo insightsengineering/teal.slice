@@ -136,14 +136,10 @@ testthat::test_that("get_filtered_dataset returns a list with elements named aft
 
 testthat::test_that("get_call returns a list of language objects", {
   filtered_data <- FilteredData$new(list(iris = list(dataset = head(iris))), join_keys = NULL)
-  checkmate::expect_list(filtered_data$get_call("iris"), types = "<-")
-})
+  checkmate::expect_list(filtered_data$get_call("iris"), types = "<-", null.ok = TRUE)
 
-testthat::test_that("get call returns a call assigning the filtered object to <name>_FILTERED", {
-  mock_iris <- head(iris)
-  filtered_data <- FilteredData$new(list(mock_iris = list(dataset = mock_iris)), join_keys = NULL)
-  eval(filtered_data$get_call("mock_iris")[[1]])
-  testthat::expect_equal(mock_iris_FILTERED, mock_iris)
+  #TODO add a test where it's not NULL
+
 })
 
 testthat::test_that(
@@ -172,7 +168,7 @@ testthat::test_that(
       isolate(datasets$get_call("iris")),
       list(
         filter = quote(
-          iris_FILTERED <- dplyr::filter( # nolint
+          iris<- dplyr::filter(
             iris,
             Sepal.Length >= 5.1 & Sepal.Length <= 6.4 &
               Species %in% c("setosa", "versicolor")
@@ -185,7 +181,7 @@ testthat::test_that(
       isolate(datasets$get_call("mtcars")),
       list(
         filter = quote(
-          mtcars_FILTERED <- dplyr::filter( # nolint
+          mtcars <- dplyr::filter(
             mtcars,
             cyl %in% c("4", "6")
           )
@@ -372,18 +368,12 @@ testthat::test_that(
     datasets$set_filter_state(state = fs)
     datasets$remove_all_filter_states()
 
-    testthat::expect_equal(
-      isolate(datasets$get_call("iris")),
-      list(filter = quote(iris_FILTERED <- iris)) # nolint
+    testthat::expect_null(
+      isolate(datasets$get_call("iris"))
     )
 
-    testthat::expect_equal(
-      isolate(datasets$get_call("mtcars")),
-      list(
-        filter = quote(
-          mtcars_FILTERED <- mtcars # nolint
-        )
-      )
+    testthat::expect_null(
+      isolate(datasets$get_call("mtcars"))
     )
   }
 )
@@ -411,16 +401,15 @@ testthat::test_that(
     datasets$set_filter_state(state = fs)
     datasets$remove_all_filter_states(datanames = "iris")
 
-    testthat::expect_equal(
-      isolate(datasets$get_call("iris")),
-      list(filter = quote(iris_FILTERED <- iris)) # nolint
+    testthat::expect_null(
+      isolate(datasets$get_call("iris"))
     )
 
     testthat::expect_equal(
       isolate(datasets$get_call("mtcars")),
       list(
         filter = quote(
-          mtcars_FILTERED <- dplyr::filter( # nolint
+          mtcars <- dplyr::filter(
             mtcars,
             cyl %in% c("4", "6")
           )
@@ -542,7 +531,7 @@ testthat::test_that("get_filter_expr returns a string with a filtering expressio
   )
   testthat::expect_equal(
     get_filter_expr(datasets),
-    paste("iris_FILTERED <- iris", "mtcars_FILTERED <- mtcars", sep = "\n")
+    paste("", sep = "\n")
   )
 })
 

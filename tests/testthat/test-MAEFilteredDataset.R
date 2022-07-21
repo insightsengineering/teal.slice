@@ -18,8 +18,9 @@ testthat::test_that("MAEFilteredDataset$get_call returns a call without applying
   utils::data(miniACC, package = "MultiAssayExperiment")
   filtered_dataset <- MAEFilteredDataset$new(dataset = miniACC, dataname = "miniACC")
   get_call_output <- filtered_dataset$get_call()
-  checkmate::expect_list(get_call_output, types = "<-")
-  testthat::expect_identical(deparse(get_call_output$subjects), "miniACC_FILTERED <- miniACC")
+  checkmate::expect_list(get_call_output, types = "<-", null.ok = TRUE)
+  #TODO add test here
+  #testthat::expect_identical(deparse(get_call_output$subjects), "miniACC <- miniACC")
 })
 
 testthat::test_that("MAEFilteredDataset$get_call returns a call with applying filter", {
@@ -44,7 +45,7 @@ testthat::test_that("MAEFilteredDataset$get_call returns a call with applying fi
   testthat::expect_identical(
     get_call_output$subjects,
     quote(
-      miniACC_FILTERED <- MultiAssayExperiment::subsetByColData( # nolint
+      miniACC <- MultiAssayExperiment::subsetByColData(
         miniACC,
         y = !is.na(miniACC$race) & miniACC$race == "white"
       )
@@ -122,7 +123,7 @@ testthat::test_that(
       isolate(dataset$get_call()),
       list(
         subjects = quote(
-          MAE_FILTERED <- MultiAssayExperiment::subsetByColData( # nolint
+          MAE <- MultiAssayExperiment::subsetByColData( # nolint
             MAE,
             y = MAE$years_to_birth >= 30 & MAE$years_to_birth <= 50 &
               MAE$vital_status == "1" &
@@ -130,8 +131,8 @@ testthat::test_that(
           )
         ),
         RPPAArray = quote(
-          MAE_FILTERED[["RPPAArray"]] <- subset( # nolint
-            MAE_FILTERED[["RPPAArray"]],
+          MAE[["RPPAArray"]] <- subset(
+            MAE[["RPPAArray"]],
             subset = ARRAY_TYPE == ""
           )
         )
@@ -231,15 +232,15 @@ testthat::test_that(
       isolate(dataset$get_call()),
       list(
         subjects = quote(
-          MAE_FILTERED <- MultiAssayExperiment::subsetByColData( # nolint
+          MAE <- MultiAssayExperiment::subsetByColData(
             MAE,
             y = MAE$vital_status == "1" &
               MAE$gender == "female"
           )
         ),
         RPPAArray = quote(
-          MAE_FILTERED[["RPPAArray"]] <- subset( # nolint
-            MAE_FILTERED[["RPPAArray"]],
+          MAE[["RPPAArray"]] <- subset(
+            MAE[["RPPAArray"]],
             subset = ARRAY_TYPE == ""
           )
         )
@@ -302,7 +303,7 @@ testthat::test_that("MAEFilteredDataset filters removed using remove_filters", {
     isolate(filtered_dataset$get_call()),
     list(
       subjects = quote(
-        MAE_FILTERED <- MultiAssayExperiment::subsetByColData( # nolint
+        MAE <- MultiAssayExperiment::subsetByColData(
           MAE,
           y = MAE$years_to_birth >= 30 & MAE$years_to_birth <= 50 &
             MAE$vital_status == "1" &
@@ -310,8 +311,8 @@ testthat::test_that("MAEFilteredDataset filters removed using remove_filters", {
         )
       ),
       RPPAArray = quote(
-        MAE_FILTERED[["RPPAArray"]] <- subset( # nolint
-          MAE_FILTERED[["RPPAArray"]],
+        MAE[["RPPAArray"]] <- subset(
+          MAE[["RPPAArray"]],
           subset = ARRAY_TYPE == ""
         )
       )
@@ -326,5 +327,5 @@ testthat::test_that("MAEFilteredDataset filters removed using remove_filters", {
     }
   )
 
-  testthat::expect_identical(isolate(filtered_dataset$get_call()), list(subjects = quote(MAE_FILTERED <- MAE))) # nolint
+  testthat::expect_null(isolate(filtered_dataset$get_call()))
 })

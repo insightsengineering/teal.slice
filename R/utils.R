@@ -63,10 +63,6 @@ check_ellipsis <- function(..., stop = FALSE, allowed_args = character(0)) {
 #'
 #' @md
 #'
-#' @note
-#'   The suffix '_FILTERED' is reserved for filtered data and is not
-#'   allowed in the dataset name.
-#'
 #' @param name `character, single or vector` name to check
 #' @keywords internal
 #'
@@ -82,7 +78,6 @@ check_ellipsis <- function(..., stop = FALSE, allowed_args = character(0)) {
 #' teal.slice:::check_simple_name("1a")
 #' teal.slice:::check_simple_name("ADSL.modified")
 #' teal.slice:::check_simple_name("a1...")
-#' teal.slice:::check_simple_name("ADSL_FILTERED")
 #' }
 check_simple_name <- function(name) {
   checkmate::assert_character(name, min.len = 1, any.missing = FALSE)
@@ -93,9 +88,6 @@ check_simple_name <- function(name) {
       "' must only contain alphanumeric characters (with underscores)",
       " and the first character must be an alphabetic character"
     )
-  }
-  if (grepl("_FILTERED$", name, perl = TRUE)) {
-    stop("name '", name, "' cannot end with the special string '_FILTERED'")
   }
 }
 
