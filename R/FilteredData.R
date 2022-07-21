@@ -452,7 +452,11 @@ FilteredData <- R6::R6Class( # nolint
     #'
     get_formatted_filter_state = function() {
       out <- c()
-      for (filtered_dataset in self$get_filtered_dataset()) out <- c(out, filtered_dataset$get_formatted_filter_state())
+      for (filtered_dataset in self$get_filtered_dataset()) {
+        if (length(filtered_dataset$get_filter_state()) != 0) {
+          out <- c(out, filtered_dataset$get_formatted_filter_state())
+        }
+      }
       paste(out, collapse = "\n")
     },
 
