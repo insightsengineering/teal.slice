@@ -28,7 +28,7 @@
 #' rf <- teal.slice:::init_filter_states(
 #'   data = df,
 #'   input_dataname = "DF",
-#'   output_dataname = "DF_FILTERED",
+#'   output_dataname = "DF_OUTPUT",
 #'   varlabels = c(
 #'     "character variable", "numeric variable", "date variable", "datetime variable"
 #'   )
@@ -290,7 +290,15 @@ FilterStates <- R6::R6Class( # nolint
         )
       } else {
         # avoid no-op call
-        NULL
+        # TODO change this
+        substitute(
+          env = list(
+            lhs = private$output_dataname,
+            rhs = private$input_dataname
+          ),
+          expr = lhs <- rhs
+        )
+        #NULL
       }
     },
 

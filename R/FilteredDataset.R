@@ -301,17 +301,6 @@ FilteredDataset <- R6::R6Class( # nolint
     },
 
     #' @description
-    #' Gets the suffixed dataname
-    #' Used when filtering the data to get `<dataname>_FILTERED`,
-    #' `<dataname>_FILTERED_ALONE` or any other name.
-    #' @param dataname (`character(1)`) dataname
-    #' @param suffix (`character(1)`) string to be putted after dataname
-    #' @return `character(1)`
-    get_filtered_dataname = function(dataname = self$get_dataname(), suffix = "_FILTERED") {
-      paste0(dataname, suffix)
-    },
-
-    #' @description
     #' Gets variable names for the filtering.
     #'
     #' @return (`character` vector) of variable names
@@ -543,7 +532,7 @@ DefaultFilteredDataset <- R6::R6Class( # nolint
         filter_states = init_filter_states(
           data = self$get_dataset(),
           input_dataname = as.name(dataname),
-          output_dataname = as.name(sprintf("%s_FILTERED", dataname)),
+          output_dataname = as.name(dataname),
           varlabels = self$get_varlabels(),
           keys = self$get_keys()
         ),

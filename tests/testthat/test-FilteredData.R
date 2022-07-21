@@ -139,11 +139,11 @@ testthat::test_that("get_call returns a list of language objects", {
   checkmate::expect_list(filtered_data$get_call("iris"), types = "<-")
 })
 
-testthat::test_that("get call returns a call assigning the filtered object to <name>_FILTERED", {
+testthat::test_that("get call returns a call assigning the filtered object to <name>", {
   mock_iris <- head(iris)
   filtered_data <- FilteredData$new(list(mock_iris = list(dataset = mock_iris)), join_keys = NULL)
   eval(filtered_data$get_call("mock_iris")[[1]])
-  testthat::expect_equal(mock_iris_FILTERED, mock_iris)
+  testthat::expect_equal(mock_iris, head(iris))
 })
 
 testthat::test_that(
@@ -172,7 +172,7 @@ testthat::test_that(
       isolate(datasets$get_call("iris")),
       list(
         filter = quote(
-          iris_FILTERED <- dplyr::filter( # nolint
+          iris<- dplyr::filter(
             iris,
             Sepal.Length >= 5.1 & Sepal.Length <= 6.4 &
               Species %in% c("setosa", "versicolor")
@@ -185,7 +185,7 @@ testthat::test_that(
       isolate(datasets$get_call("mtcars")),
       list(
         filter = quote(
-          mtcars_FILTERED <- dplyr::filter( # nolint
+          mtcars <- dplyr::filter(
             mtcars,
             cyl %in% c("4", "6")
           )
@@ -332,14 +332,14 @@ testthat::test_that(
 
     testthat::expect_equal(
       isolate(datasets$get_call("iris")),
-      list(filter = quote(iris_FILTERED <- iris)) # nolint
+      list(filter = quote(iris <- iris))
     )
 
     testthat::expect_equal(
       isolate(datasets$get_call("mtcars")),
       list(
         filter = quote(
-          mtcars_FILTERED <- mtcars # nolint
+          mtcars <- mtcars
         )
       )
     )
@@ -371,14 +371,14 @@ testthat::test_that(
 
     testthat::expect_equal(
       isolate(datasets$get_call("iris")),
-      list(filter = quote(iris_FILTERED <- iris)) # nolint
+      list(filter = quote(iris <- iris))
     )
 
     testthat::expect_equal(
       isolate(datasets$get_call("mtcars")),
       list(
         filter = quote(
-          mtcars_FILTERED <- dplyr::filter( # nolint
+          mtcars <- dplyr::filter(
             mtcars,
             cyl %in% c("4", "6")
           )
@@ -500,7 +500,7 @@ testthat::test_that("get_filter_expr returns a string with a filtering expressio
   )
   testthat::expect_equal(
     get_filter_expr(datasets),
-    paste("iris_FILTERED <- iris", "mtcars_FILTERED <- mtcars", sep = "\n")
+    paste("iris <- iris", "mtcars <- mtcars", sep = "\n")
   )
 })
 

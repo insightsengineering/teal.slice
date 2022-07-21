@@ -25,7 +25,7 @@ testthat::test_that(
       isolate(dataset$get_call()),
       list(
         filter = quote(
-          iris_FILTERED <- dplyr::filter( # nolint
+          iris <- dplyr::filter(
             iris,
             Sepal.Length >= 5.1 & Sepal.Length <= 6.4 &
               Species %in% c("setosa", "versicolor")
@@ -63,7 +63,7 @@ testthat::test_that(
       isolate(dataset$get_call()),
       list(
         filter = quote(
-          iris_FILTERED <- dplyr::filter( # nolint
+          iris <- dplyr::filter(
             iris,
             Sepal.Length >= 5.1 & Sepal.Length <= 6.4
           )
@@ -100,7 +100,7 @@ testthat::test_that(
     testthat::expect_equal(
       isolate(dataset$get_call()),
       list(
-        filter = quote(iris_FILTERED <- iris) # nolint
+        filter = quote(iris <- iris)
       )
     )
   }
