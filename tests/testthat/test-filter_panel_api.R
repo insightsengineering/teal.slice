@@ -34,7 +34,7 @@ testthat::test_that("FilterPanelAPI$set_filter_state sets filters specified by t
   }
 )
 
-testthat::test_that("FilterPanelAPI$get_filter_state returns list identical to input",
+testthat::test_that("FilterPanelAPI$get_filter_state returns list identical to input without attribute",
   code = {
     datasets <- FilterPanelAPI$new(filtered_data)
 
@@ -48,8 +48,11 @@ testthat::test_that("FilterPanelAPI$get_filter_state returns list identical to i
       )
     )
     datasets$set_filter_state(filter_list)
+    fs_wo_attr <- isolate(datasets$get_filter_state())
+    attr(fs_wo_attr, "formatted") <- NULL
+
     testthat::expect_equal(
-      isolate(datasets$get_filter_state()),
+      fs_wo_attr,
       filter_list
     )
   }
@@ -68,9 +71,11 @@ testthat::test_that("FilterPanelAPI$remove_filter_state removes filter states de
   )
   datasets$set_filter_state(filter_list)
   datasets$remove_filter_state(filter = list(iris = "Sepal.Length"))
+  fs_wo_attr <- isolate(datasets$get_filter_state())
+  attr(fs_wo_attr, "formatted") <- NULL
 
   testthat::expect_identical(
-    isolate(datasets$get_filter_state()),
+    fs_wo_attr,
     list(
       iris = list(Species = list(selected = c("setosa", "versicolor"), keep_na = FALSE)),
       mtcars = list(hp = list(selected = c(52, 65), keep_na = FALSE, keep_inf = FALSE))
@@ -116,9 +121,11 @@ testthat::test_that(
     )
     datasets$set_filter_state(filter_list)
     datasets$remove_all_filter_states(datanames = "iris")
+    fs_wo_attr <- isolate(datasets$get_filter_state())
+    attr(fs_wo_attr, "formatted") <- NULL
 
     testthat::expect_equal(
-      isolate(datasets$get_filter_state()),
+      fs_wo_attr,
       list(mtcars = list(
         hp = list(selected = c(52, 65), keep_na = FALSE, keep_inf = FALSE)
       ))

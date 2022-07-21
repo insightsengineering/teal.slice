@@ -2422,7 +2422,6 @@ DatetimeFilterState <- R6::R6Class( # nolint
     #'
     format = function(indent = 0) {
       checkmate::assert_number(indent, finite = TRUE, lower = 0)
-
       sprintf(
         "%sFiltering on: %s\n%1$s  Selected range: %s - %s\n%1$s  Include missing values: %s",
         format("", width = indent),

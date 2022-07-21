@@ -4,6 +4,7 @@
 * Changed constructor of `FilteredData` to not require `TealData` object. See `help(init_filtered_data)` for more details.
 * The filtered data is now stored in `FilteredData` not `FilteredDataset`.
 * The join keys stored inside `FilteredData` are now `JoinKeys` objects.
+* Updated `get_filter_state` to return a list of active filter states and an attribute with the character form of the filter states.
 
 # Bug fixes
 
