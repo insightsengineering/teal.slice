@@ -85,7 +85,13 @@ CDISCFilteredData <- R6::R6Class( # nolint
       if (length(parent_dataname) == 0) {
         super$get_call(dataname)
       } else {
-        keys <- self$get_join_keys(parent_dataname, dataname)
+        join_keys <- self$get_join_keys()
+        if (!is.null(join_keys)) {
+          keys <- join_keys$get(parent_dataname, dataname)
+        } else {
+          keys <- character(0)
+        }
+
         parent_keys <- names(keys)
         dataset_keys <- unname(keys)
 
