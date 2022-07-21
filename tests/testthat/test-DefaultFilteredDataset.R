@@ -8,7 +8,8 @@ testthat::test_that("get_call returns a list of calls", {
   filtered_dataset <- DefaultFilteredDataset$new(
     dataset = head(iris), dataname = "iris"
   )
-  checkmate::expect_list(filtered_dataset$get_call(), types = "<-")
+  checkmate::expect_list(filtered_dataset$get_call(), types = "<-", null.ok = TRUE)
+  #TODO add a test where not NULL
 })
 
 testthat::test_that(
@@ -97,11 +98,8 @@ testthat::test_that(
     dataset$set_filter_state(state = fs)
     dataset$remove_filter_state(c("Species", "Sepal.Length"))
 
-    testthat::expect_equal(
-      isolate(dataset$get_call()),
-      list(
-        filter = quote(iris <- iris)
-      )
+    testthat::expect_null(
+      isolate(dataset$get_call())
     )
   }
 )

@@ -82,13 +82,17 @@ MAEFilteredDataset <- R6::R6Class( # nolint
     #' }
     #' @return filter `call` or `list` of filter calls
     get_call = function() {
-      Filter(
+      filter_call <- Filter(
         f = Negate(is.null),
         x = lapply(
           self$get_filter_states(),
           function(x) x$get_call()
         )
       )
+      if (length(filter_call) == 0) {
+        return(NULL)
+      }
+      filter_call
     },
 
     #' @description

@@ -290,15 +290,7 @@ FilterStates <- R6::R6Class( # nolint
         )
       } else {
         # avoid no-op call
-        # TODO change this
-        substitute(
-          env = list(
-            lhs = private$output_dataname,
-            rhs = private$input_dataname
-          ),
-          expr = lhs <- rhs
-        )
-        #NULL
+        NULL
       }
     },
 

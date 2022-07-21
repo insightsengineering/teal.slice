@@ -136,14 +136,10 @@ testthat::test_that("get_filtered_dataset returns a list with elements named aft
 
 testthat::test_that("get_call returns a list of language objects", {
   filtered_data <- FilteredData$new(list(iris = list(dataset = head(iris))), join_keys = NULL)
-  checkmate::expect_list(filtered_data$get_call("iris"), types = "<-")
-})
+  checkmate::expect_list(filtered_data$get_call("iris"), types = "<-", null.ok = TRUE)
 
-testthat::test_that("get call returns a call assigning the filtered object to <name>", {
-  mock_iris <- head(iris)
-  filtered_data <- FilteredData$new(list(mock_iris = list(dataset = mock_iris)), join_keys = NULL)
-  eval(filtered_data$get_call("mock_iris")[[1]])
-  testthat::expect_equal(mock_iris, head(iris))
+  #TODO add a test where it's not NULL
+
 })
 
 testthat::test_that(
@@ -330,18 +326,12 @@ testthat::test_that(
     datasets$set_filter_state(state = fs)
     datasets$remove_all_filter_states()
 
-    testthat::expect_equal(
-      isolate(datasets$get_call("iris")),
-      list(filter = quote(iris <- iris))
+    testthat::expect_null(
+      isolate(datasets$get_call("iris"))
     )
 
-    testthat::expect_equal(
-      isolate(datasets$get_call("mtcars")),
-      list(
-        filter = quote(
-          mtcars <- mtcars
-        )
-      )
+    testthat::expect_null(
+      isolate(datasets$get_call("mtcars"))
     )
   }
 )
@@ -369,9 +359,8 @@ testthat::test_that(
     datasets$set_filter_state(state = fs)
     datasets$remove_all_filter_states(datanames = "iris")
 
-    testthat::expect_equal(
-      isolate(datasets$get_call("iris")),
-      list(filter = quote(iris <- iris))
+    testthat::expect_null(
+      isolate(datasets$get_call("iris"))
     )
 
     testthat::expect_equal(
@@ -500,7 +489,7 @@ testthat::test_that("get_filter_expr returns a string with a filtering expressio
   )
   testthat::expect_equal(
     get_filter_expr(datasets),
-    paste("iris <- iris", "mtcars <- mtcars", sep = "\n")
+    paste("", sep = "\n")
   )
 })
 

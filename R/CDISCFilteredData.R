@@ -98,7 +98,6 @@ CDISCFilteredData <- R6::R6Class( # nolint
         dataset <- self$get_filtered_dataset(dataname)
 
         filtered_dataname <- dataname
-        filtered_dataname_alone <- paste0(dataname, "_ALONE")
         filtered_parentname <- parent_dataname
 
         premerge_call <- Filter(
@@ -108,13 +107,13 @@ CDISCFilteredData <- R6::R6Class( # nolint
             function(x) x$get_call()
           )
         )
-        premerge_call[[1]][[2]] <- as.name(filtered_dataname_alone)
+
         merge_call <- call(
           "<-",
           as.name(filtered_dataname),
           call_with_colon(
             "dplyr::inner_join",
-            x = as.name(filtered_dataname_alone),
+            x = as.name(filtered_dataname),
             y = if (length(parent_keys) == 0) {
               as.name(filtered_parentname)
             } else {
