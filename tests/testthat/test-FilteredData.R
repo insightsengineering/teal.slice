@@ -138,8 +138,7 @@ testthat::test_that("get_call returns a list of language objects", {
   filtered_data <- FilteredData$new(list(iris = list(dataset = head(iris))), join_keys = NULL)
   checkmate::expect_list(filtered_data$get_call("iris"), types = "<-", null.ok = TRUE)
 
-  #TODO add a test where it's not NULL
-
+  # TODO add a test where it's not NULL
 })
 
 testthat::test_that(
@@ -168,7 +167,7 @@ testthat::test_that(
       isolate(datasets$get_call("iris")),
       list(
         filter = quote(
-          iris<- dplyr::filter(
+          iris <- dplyr::filter(
             iris,
             Sepal.Length >= 5.1 & Sepal.Length <= 6.4 &
               Species %in% c("setosa", "versicolor")

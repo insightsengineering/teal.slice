@@ -9,7 +9,7 @@ testthat::test_that("get_call returns a list of calls", {
     dataset = head(iris), dataname = "iris"
   )
   checkmate::expect_list(filtered_dataset$get_call(), types = "<-", null.ok = TRUE)
-  #TODO add a test where not NULL
+  # TODO add a test where not NULL
 })
 
 testthat::test_that(

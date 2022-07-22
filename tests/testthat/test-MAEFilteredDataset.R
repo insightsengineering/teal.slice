@@ -19,8 +19,8 @@ testthat::test_that("MAEFilteredDataset$get_call returns a call without applying
   filtered_dataset <- MAEFilteredDataset$new(dataset = miniACC, dataname = "miniACC")
   get_call_output <- filtered_dataset$get_call()
   checkmate::expect_list(get_call_output, types = "<-", null.ok = TRUE)
-  #TODO add test here
-  #testthat::expect_identical(deparse(get_call_output$subjects), "miniACC <- miniACC")
+  # TODO add test here
+  # testthat::expect_identical(deparse(get_call_output$subjects), "miniACC <- miniACC")
 })
 
 testthat::test_that("MAEFilteredDataset$get_call returns a call with applying filter", {
