@@ -134,11 +134,17 @@ testthat::test_that("get_filtered_dataset returns a list with elements named aft
   testthat::expect_equal(names(filtered_data$get_filtered_dataset()), c("iris", "mtcars"))
 })
 
-testthat::test_that("get_call returns a list of language objects", {
-  filtered_data <- FilteredData$new(list(iris = list(dataset = head(iris))), join_keys = NULL)
-  checkmate::expect_list(filtered_data$get_call("iris"), types = "<-", null.ok = TRUE)
-
-  # TODO add a test where it's not NULL
+testthat::test_that("get_call returns a list of language objects or NULL", {
+  filtered_data <- FilteredData$new(list(iris = list(dataset = iris)), join_keys = NULL)
+  testthat::expect_null(filtered_data$get_call("iris"))
+  fs <- list(
+    iris = list(
+      Sepal.Length = list(c(5.1, 6.4)),
+      Species = c("setosa", "versicolor")
+    )
+  )
+  filtered_data$set_filter_state(state = fs)
+  checkmate::expect_list(isolate(filtered_data$get_call("iris")), types = "<-")
 })
 
 testthat::test_that(
