@@ -2172,7 +2172,7 @@ DateFilterState <- R6::R6Class( # nolint
             icon = icon("fas fa-undo")
           ),
           div(
-            class = "m-auto w-4/5",
+            class = "m-auto w-80",
             dateRangeInput(
               inputId = ns("selection"),
               label = NULL,
@@ -2490,7 +2490,7 @@ DatetimeFilterState <- R6::R6Class( # nolint
             icon = icon("fas fa-undo")
           ),
           div(
-            class = "input-daterange input-group m-auto w-4/5",
+            class = "input-daterange input-group m-auto w-80",
             div(class = "float-left w-full", {
               x <- shinyWidgets::airDatepickerInput(
                 inputId = ns("selection_start"),
