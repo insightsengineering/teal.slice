@@ -902,7 +902,6 @@ EmptyFilterState <- R6::R6Class( # nolint
     ui = function(id) {
       ns <- NS(id)
       fluidRow(
-        include_css_files(pattern = "filter-panel"),
         div(
           class = "relative",
           div(
@@ -1068,7 +1067,6 @@ LogicalFilterState <- R6::R6Class( # nolint
     ui = function(id) {
       ns <- NS(id)
       fluidRow(
-        include_css_files(pattern = "filter-panel"),
         div(
           class = "relative",
           # same overlay as for choices with no more than (default: 5) elements
@@ -1831,7 +1829,6 @@ ChoicesFilterState <- R6::R6Class( # nolint
     ui = function(id) {
       ns <- NS(id)
       fluidRow(
-        include_css_files(pattern = "filter-panel"),
         if (length(private$choices) <= getOption("teal.threshold_slider_vs_checkboxgroup")) {
           div(
             class = "relative",
@@ -2157,7 +2154,6 @@ DateFilterState <- R6::R6Class( # nolint
     ui = function(id) {
       ns <- NS(id)
       fluidRow(
-        include_css_files(pattern = "filter-panel"),
         div(
           actionButton(
             class = "action_button_filter_l",
@@ -2475,7 +2471,6 @@ DatetimeFilterState <- R6::R6Class( # nolint
     ui = function(id) {
       ns <- NS(id)
       fluidRow(
-        include_css_files(pattern = "filter-panel"),
         div(
           actionButton(
             class = "action_button_filter_l",

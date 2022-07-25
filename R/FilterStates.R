@@ -431,10 +431,13 @@ FilterStates <- R6::R6Class( # nolint
     ui = function(id) {
       ns <- NS(id)
       private$cards_container_id <- ns("cards")
-      tags$div(
-        id = private$cards_container_id,
-        class = "list-group hideable-list-group",
-        `data-label` = ifelse(private$datalabel == "", "", (paste0("> ", private$datalabel)))
+      tagList(
+        include_css_files(pattern = "filter-panel"),
+        tags$div(
+          id = private$cards_container_id,
+          class = "list-group hideable-list-group",
+          `data-label` = ifelse(private$datalabel == "", "", (paste0("> ", private$datalabel)))
+        )
       )
     },
 
