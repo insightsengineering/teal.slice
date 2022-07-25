@@ -451,7 +451,7 @@ FilteredData <- R6::R6Class( # nolint
     #' cat(shiny::isolate(datasets$get_formatted_filter_state()))
     #'
     get_formatted_filter_state = function() {
-      Filter(
+      out <- Filter(
         length,
         sapply(
           self$get_filtered_dataset(),
@@ -460,6 +460,7 @@ FilteredData <- R6::R6Class( # nolint
           }
         )
       )
+      paste(out, collapse = "\n")
     },
 
     #' @description
