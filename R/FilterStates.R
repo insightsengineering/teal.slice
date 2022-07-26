@@ -36,7 +36,7 @@
 #' \dontrun{
 #' shinyApp(
 #'   ui = fluidPage(
-#'     actionButton("clear", span(icon("times"), "Remove all filters")),
+#'     actionButton("clear", span(icon("xmark"), "Remove all filters")),
 #'     rf$ui_add_filter_state(id = "add", data = df),
 #'     rf$ui("states"),
 #'     verbatimTextOutput("expr"),
@@ -577,7 +577,7 @@ FilterStates <- R6::R6Class( # nolint
                       actionLink(
                         session$ns("remove"),
                         label = "",
-                        icon = icon("times-circle", lib = "font-awesome"),
+                        icon = icon("circle-xmark", lib = "font-awesome"),
                         class = "remove pull-right"
                       )
                     )
