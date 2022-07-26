@@ -42,7 +42,7 @@ df <- data.frame(
 rf <- teal.slice:::init_filter_states(
   data = df,
   input_dataname = "DF",
-  output_dataname = "DF_FILTERED",
+  output_dataname = "DF_OUTPUT",
   varlabels = c(
     "character variable", "numeric variable", "date variable", "datetime variable"
   )
