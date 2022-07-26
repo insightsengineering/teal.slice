@@ -632,7 +632,7 @@ FilteredData <- R6::R6Class( # nolint
               actionLink(
                 ns("remove_all_filters"),
                 "",
-                icon("times-circle", lib = "font-awesome"),
+                icon("circle-xmark", lib = "font-awesome"),
                 title = "Remove active filters",
                 class = "remove_all pull-right"
               ),
