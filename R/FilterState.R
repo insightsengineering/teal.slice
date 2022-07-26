@@ -2156,13 +2156,13 @@ DateFilterState <- R6::R6Class( # nolint
       fluidRow(
         div(
           actionButton(
-            class = "action_button_filter_l",
+            class = "start_date_rest_button",
             inputId = ns("start_date_reset"),
             label = NULL,
             icon = icon("fas fa-undo")
           ),
           actionButton(
-            class = "action_button_filter_r",
+            class = "end_date_rest_button",
             inputId = ns("end_date_reset"),
             label = NULL,
             icon = icon("fas fa-undo")
@@ -2473,13 +2473,13 @@ DatetimeFilterState <- R6::R6Class( # nolint
       fluidRow(
         div(
           actionButton(
-            class = "action_button_filter_l",
+            class = "start_date_rest_button",
             inputId = ns("start_date_reset"),
             label = NULL,
             icon = icon("fas fa-undo")
           ),
           actionButton(
-            class = "action_button_filter_r",
+            class = "end_date_rest_button",
             inputId = ns("end_date_reset"),
             label = NULL,
             icon = icon("fas fa-undo")

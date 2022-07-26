@@ -27,7 +27,7 @@
   margin-bottom: 1rem;
 }
 
-.action_button_filter_l {
+.start_date_rest_button {
   float: left;
   padding: 0;
   padding-top: 4px;
@@ -35,7 +35,7 @@
   width: 10%;
 }
 
-.action_button_filter_r {
+.end_date_rest_button {
   float: right;
   padding: 0;
   padding-top: 4px;
