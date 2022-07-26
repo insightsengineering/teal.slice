@@ -603,7 +603,7 @@ FilteredData <- R6::R6Class( # nolint
                   ns("filters_overview_contents")
                 ),
                 title = "Minimise panel",
-                tags$span(icon("minus-circle", lib = "font-awesome"))
+                tags$span(icon("circle-minus", lib = "font-awesome"))
               )
             )
           ),
@@ -627,7 +627,7 @@ FilteredData <- R6::R6Class( # nolint
               actionLink(
                 ns("remove_all_filters"),
                 "",
-                icon("times-circle", lib = "font-awesome"),
+                icon("circle-xmark", lib = "font-awesome"),
                 title = "Remove active filters",
                 class = "remove_all pull-right"
               ),
@@ -639,7 +639,7 @@ FilteredData <- R6::R6Class( # nolint
                   ns("filter_active_vars_contents")
                 ),
                 title = "Minimise panel",
-                tags$span(icon("minus-circle", lib = "font-awesome"))
+                tags$span(icon("circle-minus", lib = "font-awesome"))
               )
             )
           ),
@@ -672,7 +672,7 @@ FilteredData <- R6::R6Class( # nolint
                 class = "remove pull-right",
                 onclick = sprintf("$('#%s').toggle();", ns("filter_add_vars_contents")),
                 title = "Minimise panel",
-                tags$span(icon("minus-circle", lib = "font-awesome"))
+                tags$span(icon("circle-minus", lib = "font-awesome"))
               )
             )
           ),

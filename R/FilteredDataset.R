@@ -339,7 +339,7 @@ FilteredDataset <- R6::R6Class( # nolint
               actionLink(
                 ns("remove_filters"),
                 label = "",
-                icon = icon("times-circle", lib = "font-awesome"),
+                icon = icon("circle-xmark", lib = "font-awesome"),
                 class = "remove pull-right"
               )
             )

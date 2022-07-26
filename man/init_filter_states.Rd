@@ -50,7 +50,7 @@ rf <- teal.slice:::init_filter_states(
 \dontrun{
 shinyApp(
   ui = fluidPage(
-    actionButton("clear", span(icon("times"), "Remove all filters")),
+    actionButton("clear", span(icon("xmark"), "Remove all filters")),
     rf$ui_add_filter_state(id = "add", data = df),
     rf$ui("states"),
     verbatimTextOutput("expr"),
