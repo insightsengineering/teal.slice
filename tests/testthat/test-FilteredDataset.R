@@ -76,13 +76,6 @@ testthat::test_that("get_varnames returns the names of the variables in the data
   testthat::expect_equal(filtered_dataset$get_varnames(), names(iris))
 })
 
-testthat::test_that("get_filtered_dataname returns <dataname>_FILTERED as default", {
-  filtered_dataset <- FilteredDataset$new(
-    dataset = head(iris), dataname = "iris"
-  )
-  testthat::expect_equal(filtered_dataset$get_filtered_dataname(), "iris_FILTERED")
-})
-
 testthat::test_that("ui_add_filter_state is pure virtual", {
   filtered_dataset <- FilteredDataset$new(
     dataset = head(iris), dataname = "iris"
@@ -130,7 +123,7 @@ testthat::test_that("$get_call returns the filter call of the dataset", {
   testthat::expect_equal(
     deparse1(filter_call),
     paste0(
-      "iris_FILTERED <- dplyr::filter(iris, (is.na(Sepal.Length) | (is.infinite(Sepal.Length) |",
+      "iris <- dplyr::filter(iris, (is.na(Sepal.Length) | (is.infinite(Sepal.Length) |",
       " Sepal.Length >= 5.1 & Sepal.Length <= 6.4)) & Species %in% c(\"setosa\", \"versicolor\"))"
     )
   )

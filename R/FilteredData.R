@@ -362,7 +362,7 @@ FilteredData <- R6::R6Class( # nolint
         env[[dataname]] <- self$get_filtered_dataset(dataname)$get_dataset()
         filter_call <- self$get_call(dataname)
         eval_expr_with_msg(filter_call, env)
-        get(x = self$get_filtered_dataset(dataname)$get_filtered_dataname(), envir = env)
+        get(x = dataname, envir = env)
       })
 
       invisible(self)
@@ -980,10 +980,6 @@ FilteredData <- R6::R6Class( # nolint
       })
 
       return(invisible(NULL))
-    },
-    filtered_dataname = function(dataname) {
-      checkmate::assert_string(dataname)
-      sprintf("%s_FILTERED", dataname)
     }
   )
 )

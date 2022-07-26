@@ -97,10 +97,6 @@ CDISCFilteredData <- R6::R6Class( # nolint
 
         dataset <- self$get_filtered_dataset(dataname)
 
-        filtered_dataname <- dataset$get_filtered_dataname()
-        filtered_dataname_alone <- dataset$get_filtered_dataname(suffix = "_FILTERED_ALONE")
-        filtered_parentname <- dataset$get_filtered_dataname(dataname = parent_dataname)
-
         premerge_call <- Filter(
           f = Negate(is.null),
           x = lapply(
@@ -108,18 +104,18 @@ CDISCFilteredData <- R6::R6Class( # nolint
             function(x) x$get_call()
           )
         )
-        premerge_call[[1]][[2]] <- as.name(filtered_dataname_alone)
+
         merge_call <- call(
           "<-",
-          as.name(filtered_dataname),
+          as.name(dataname),
           call_with_colon(
             "dplyr::inner_join",
-            x = as.name(filtered_dataname_alone),
+            x = as.name(dataname),
             y = if (length(parent_keys) == 0) {
-              as.name(filtered_parentname)
+              as.name(parent_dataname)
             } else {
               call_extract_array(
-                dataname = filtered_parentname,
+                dataname = parent_dataname,
                 column = parent_keys,
                 aisle = call("=", as.name("drop"), FALSE)
               )
@@ -256,12 +252,12 @@ CDISCFilteredData <- R6::R6Class( # nolint
         private$reactive_data[[dataname]] <- reactive({
           env <- new.env(parent = parent.env(globalenv()))
           env[[dataname]] <- self$get_filtered_dataset(dataname)$get_dataset()
-          env[[paste0(private$parents[[dataname]], "_FILTERED")]] <-
+          env[[private$parents[[dataname]]]] <-
             private$reactive_data[[private$parents[[dataname]]]]()
 
           filter_call <- self$get_call(dataname)
           eval_expr_with_msg(filter_call, env)
-          get(x = self$get_filtered_dataset(dataname)$get_filtered_dataname(), envir = env)
+          get(x = dataname, envir = env)
         })
       }
 

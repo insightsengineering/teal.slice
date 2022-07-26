@@ -33,9 +33,8 @@ testthat::test_that("set filter state", {
   queue <- ds$get_filtered_dataset("ADSL")$get_filter_states(1)
   queue$queue_push(filter_state_adsl, queue_index = 1L, element_id = "sex")
 
-  testthat::expect_identical(
+  testthat::expect_null(
     isolate(queue$get_call()),
-    quote(ADSL_FILTERED <- ADSL) # nolint
   )
 })
 
@@ -57,13 +56,9 @@ testthat::test_that("get_call for child dataset includes filter call for parent 
 
   # no filtering as AESEQ filter does not filter any calls
   testthat::expect_equal(
-    deparse1(adae_call[[1]]), "ADAE_FILTERED_ALONE <- ADAE"
-  )
-
-  testthat::expect_equal(
-    deparse1(adae_call[[2]]),
+    deparse1(adae_call[[1]]),
     paste0(
-      "ADAE_FILTERED <- dplyr::inner_join(x = ADAE_FILTERED_ALONE, y = ADSL_FILTERED[, ",
+      "ADAE <- dplyr::inner_join(x = ADAE, y = ADSL[, ",
       "c(\"STUDYID\", \"USUBJID\"), drop = FALSE], by = c(\"STUDYID\", ",
       "\"USUBJID\"))"
     )
