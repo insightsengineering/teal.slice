@@ -152,7 +152,8 @@ FilteredDataset <- R6::R6Class( # nolint
     #' @description
     #' Returns a string representation of the filter state in this `FilteredDataset`.
     #'
-    #' @return `character(1)` the formatted string representing the filter state
+    #' @return `character(1)` the formatted string representing the filter state or
+    #' `NULL` if no filter state is present.
     #'
     get_formatted_filter_state = function() {
       out <- Filter(
