@@ -84,7 +84,8 @@ Returns a string representation of the filter state in this \code{FilteredDatase
 }
 
 \subsection{Returns}{
-\code{character(1)} the formatted string representing the filter state
+\code{character(1)} the formatted string representing the filter state or
+\code{NULL} if no filter state is present.
 }
 }
 \if{html}{\out{<hr>}}

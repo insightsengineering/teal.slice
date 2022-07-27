@@ -451,8 +451,13 @@ FilteredData <- R6::R6Class( # nolint
     #' cat(shiny::isolate(datasets$get_formatted_filter_state()))
     #'
     get_formatted_filter_state = function() {
-      out <- c()
-      for (filtered_dataset in self$get_filtered_dataset()) out <- c(out, filtered_dataset$get_formatted_filter_state())
+      out <-
+        unlist(sapply(
+          self$get_filtered_dataset(),
+          function(filtered_dataset) {
+            filtered_dataset$get_formatted_filter_state()
+          }
+        ))
       paste(out, collapse = "\n")
     },
 
