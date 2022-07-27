@@ -18,7 +18,7 @@ components of the dataset."><!-- mathjax --><script src="https://cdnjs.cloudflar
     
     <a class="navbar-brand me-2" href="../index.html">teal.slice</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.1.9009</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.1.9011</small>
 
     <div style="width: 140px; margin-left: 0.5rem;"> <small class="nav-text text-muted me-auto">part of</small> <img src="https://github.com/insightsengineering/hex-stickers/blob/main/PNG/nest.png?raw=true" alt="NEST" style="height: 30px;"><a href="https://pharmaverse.org/" class="external-link"><img src="https://github.com/insightsengineering/hex-stickers/blob/main/PNG/pharmaverse.png?raw=true" alt="pharmaverse" style="height: 28px;"></a> </div>
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -41,12 +41,6 @@ components of the dataset."><!-- mathjax --><script src="https://cdnjs.cloudflar
 <li class="nav-item">
   <a class="nav-link" href="../news/index.html">Changelog</a>
 </li>
-<!-- start dropdown for versions --> <li class="nav-item dropdown">
-        <a href="#" class="nav-link dropdown-toggle"
-          data-bs-toggle="dropdown" role="button"
-          aria-expanded="false" aria-haspopup="true"
-          id="dropdown-versions">Versions</a> <div class="dropdown-menu" aria-labelledby="dropdown-versions"> <a class="dropdown-item" href="https://insightsengineering.github.io/teal.slice/main">main</a> </div></li>
-<!-- end dropdown for versions -->
       </ul><form class="form-inline my-2 my-lg-0" role="search">
         <input type="search" class="form-control me-sm-2" aria-label="Toggle navigation" name="search-input" data-search-index="../search.json" id="search-input" placeholder="Search for" autocomplete="off"></form>
 
@@ -98,7 +92,6 @@ components of the dataset.</p>
 <li><p><a href="#method-FilteredDataset-get_varlabels"><code>FilteredDataset$get_varlabels()</code></a></p></li>
 <li><p><a href="#method-FilteredDataset-get_dataset_label"><code>FilteredDataset$get_dataset_label()</code></a></p></li>
 <li><p><a href="#method-FilteredDataset-get_varnames"><code>FilteredDataset$get_varnames()</code></a></p></li>
-<li><p><a href="#method-FilteredDataset-get_filtered_dataname"><code>FilteredDataset$get_filtered_dataname()</code></a></p></li>
 <li><p><a href="#method-FilteredDataset-get_filterable_varnames"><code>FilteredDataset$get_filterable_varnames()</code></a></p></li>
 <li><p><a href="#method-FilteredDataset-ui"><code>FilteredDataset$ui()</code></a></p></li>
 <li><p><a href="#method-FilteredDataset-server"><code>FilteredDataset$server()</code></a></p></li>
@@ -158,7 +151,8 @@ should be atomic and length one.</p></dd>
 
 <div class="section">
 <h4 id="returns">Returns<a class="anchor" aria-label="anchor" href="#returns"></a></h4>
-<p><code>character(1)</code> the formatted string representing the filter state</p>
+<p><code>character(1)</code> the formatted string representing the filter state or
+<code>NULL</code> if no filter state is present.</p>
 </div>
 
 </div><p></p><hr><a id="method-FilteredDataset-queues_empty"></a><div class="section">
@@ -360,44 +354,15 @@ attribute does not exist for the data</p>
 <p><code>character</code> the variable names</p>
 </div>
 
-</div><p></p><hr><a id="method-FilteredDataset-get_filtered_dataname"></a><div class="section">
-<h3 id="method-get-filtered-dataname-">Method <code>get_filtered_dataname()</code><a class="anchor" aria-label="anchor" href="#method-get-filtered-dataname-"></a></h3>
-<p>Gets the suffixed dataname
-Used when filtering the data to get <code>&lt;dataname&gt;_FILTERED</code>,
-<code>&lt;dataname&gt;_FILTERED_ALONE</code> or any other name.</p><div class="section">
-<h4 id="usage-15">Usage<a class="anchor" aria-label="anchor" href="#usage-15"></a></h4>
-<p></p><div class="r"><div class="sourceCode"><pre><code><span><span class="va">FilteredDataset</span><span class="op">$</span><span class="fu">get_filtered_dataname</span><span class="op">(</span></span>
-<span>  dataname <span class="op">=</span> <span class="va">self</span><span class="op">$</span><span class="fu">get_dataname</span><span class="op">(</span><span class="op">)</span>,</span>
-<span>  suffix <span class="op">=</span> <span class="st">"_FILTERED"</span></span>
-<span><span class="op">)</span></span></code></pre></div><p></p></div>
-</div>
-
-<div class="section">
-<h4 id="arguments-4">Arguments<a class="anchor" aria-label="anchor" href="#arguments-4"></a></h4>
-<p></p><div class="arguments"><dl><dt><code>dataname</code></dt>
-<dd><p>(<code>character(1)</code>) dataname</p></dd>
-
-
-<dt><code>suffix</code></dt>
-<dd><p>(<code>character(1)</code>) string to be putted after dataname</p></dd>
-
-
-</dl><p></p></div>
-</div>
-<div class="section">
-<h4 id="returns-14">Returns<a class="anchor" aria-label="anchor" href="#returns-14"></a></h4>
-<p><code>character(1)</code></p>
-</div>
-
 </div><p></p><hr><a id="method-FilteredDataset-get_filterable_varnames"></a><div class="section">
 <h3 id="method-get-filterable-varnames-">Method <code><a href="get_filterable_varnames.html">get_filterable_varnames()</a></code><a class="anchor" aria-label="anchor" href="#method-get-filterable-varnames-"></a></h3>
 <p>Gets variable names for the filtering.</p><div class="section">
-<h4 id="usage-16">Usage<a class="anchor" aria-label="anchor" href="#usage-16"></a></h4>
+<h4 id="usage-15">Usage<a class="anchor" aria-label="anchor" href="#usage-15"></a></h4>
 <p></p><div class="r"><div class="sourceCode"><pre><code><span><span class="va">FilteredDataset</span><span class="op">$</span><span class="fu">get_filterable_varnames</span><span class="op">(</span><span class="op">)</span></span></code></pre></div><p></p></div>
 </div>
 
 <div class="section">
-<h4 id="returns-15">Returns<a class="anchor" aria-label="anchor" href="#returns-15"></a></h4>
+<h4 id="returns-14">Returns<a class="anchor" aria-label="anchor" href="#returns-14"></a></h4>
 <p>(<code>character</code> vector) of variable names</p>
 </div>
 
@@ -406,12 +371,12 @@ Used when filtering the data to get <code>&lt;dataname&gt;_FILTERED</code>,
 <p>UI module for dataset active filters</p>
 <p>UI module containing dataset active filters along with
 title and remove button.</p><div class="section">
-<h4 id="usage-17">Usage<a class="anchor" aria-label="anchor" href="#usage-17"></a></h4>
+<h4 id="usage-16">Usage<a class="anchor" aria-label="anchor" href="#usage-16"></a></h4>
 <p></p><div class="r"><div class="sourceCode"><pre><code><span><span class="va">FilteredDataset</span><span class="op">$</span><span class="fu">ui</span><span class="op">(</span><span class="va">id</span><span class="op">)</span></span></code></pre></div><p></p></div>
 </div>
 
 <div class="section">
-<h4 id="arguments-5">Arguments<a class="anchor" aria-label="anchor" href="#arguments-5"></a></h4>
+<h4 id="arguments-4">Arguments<a class="anchor" aria-label="anchor" href="#arguments-4"></a></h4>
 <p></p><div class="arguments"><dl><dt><code>id</code></dt>
 <dd><p>(<code>character(1)</code>)<br>
 identifier of the element - preferably containing dataset name</p></dd>
@@ -420,7 +385,7 @@ identifier of the element - preferably containing dataset name</p></dd>
 </dl><p></p></div>
 </div>
 <div class="section">
-<h4 id="returns-16">Returns<a class="anchor" aria-label="anchor" href="#returns-16"></a></h4>
+<h4 id="returns-15">Returns<a class="anchor" aria-label="anchor" href="#returns-15"></a></h4>
 <p>function - shiny UI module</p>
 </div>
 
@@ -428,12 +393,12 @@ identifier of the element - preferably containing dataset name</p></dd>
 <h3 id="method-server-">Method <code>server()</code><a class="anchor" aria-label="anchor" href="#method-server-"></a></h3>
 <p>Server module for a dataset active filters</p>
 <p>Server module managing a  active filters.</p><div class="section">
-<h4 id="usage-18">Usage<a class="anchor" aria-label="anchor" href="#usage-18"></a></h4>
+<h4 id="usage-17">Usage<a class="anchor" aria-label="anchor" href="#usage-17"></a></h4>
 <p></p><div class="r"><div class="sourceCode"><pre><code><span><span class="va">FilteredDataset</span><span class="op">$</span><span class="fu">server</span><span class="op">(</span><span class="va">id</span><span class="op">)</span></span></code></pre></div><p></p></div>
 </div>
 
 <div class="section">
-<h4 id="arguments-6">Arguments<a class="anchor" aria-label="anchor" href="#arguments-6"></a></h4>
+<h4 id="arguments-5">Arguments<a class="anchor" aria-label="anchor" href="#arguments-5"></a></h4>
 <p></p><div class="arguments"><dl><dt><code>id</code></dt>
 <dd><p>(<code>character(1)</code>)<br>
 an ID string that corresponds with the ID used to call the module's UI function.</p></dd>
@@ -442,7 +407,7 @@ an ID string that corresponds with the ID used to call the module's UI function.
 </dl><p></p></div>
 </div>
 <div class="section">
-<h4 id="returns-17">Returns<a class="anchor" aria-label="anchor" href="#returns-17"></a></h4>
+<h4 id="returns-16">Returns<a class="anchor" aria-label="anchor" href="#returns-16"></a></h4>
 <p><code>moduleServer</code> function which returns <code>NULL</code></p>
 </div>
 
@@ -450,12 +415,12 @@ an ID string that corresponds with the ID used to call the module's UI function.
 <h3 id="method-ui-add-filter-state-">Method <code>ui_add_filter_state()</code><a class="anchor" aria-label="anchor" href="#method-ui-add-filter-state-"></a></h3>
 <p>UI module to add filter variable for this dataset</p>
 <p>UI module to add filter variable for this dataset</p><div class="section">
-<h4 id="usage-19">Usage<a class="anchor" aria-label="anchor" href="#usage-19"></a></h4>
+<h4 id="usage-18">Usage<a class="anchor" aria-label="anchor" href="#usage-18"></a></h4>
 <p></p><div class="r"><div class="sourceCode"><pre><code><span><span class="va">FilteredDataset</span><span class="op">$</span><span class="fu">ui_add_filter_state</span><span class="op">(</span><span class="va">id</span><span class="op">)</span></span></code></pre></div><p></p></div>
 </div>
 
 <div class="section">
-<h4 id="arguments-7">Arguments<a class="anchor" aria-label="anchor" href="#arguments-7"></a></h4>
+<h4 id="arguments-6">Arguments<a class="anchor" aria-label="anchor" href="#arguments-6"></a></h4>
 <p></p><div class="arguments"><dl><dt><code>id</code></dt>
 <dd><p>(<code>character(1)</code>)<br>
 identifier of the element - preferably containing dataset name</p></dd>
@@ -464,7 +429,7 @@ identifier of the element - preferably containing dataset name</p></dd>
 </dl><p></p></div>
 </div>
 <div class="section">
-<h4 id="returns-18">Returns<a class="anchor" aria-label="anchor" href="#returns-18"></a></h4>
+<h4 id="returns-17">Returns<a class="anchor" aria-label="anchor" href="#returns-17"></a></h4>
 <p>function - shiny UI module</p>
 </div>
 
@@ -472,12 +437,12 @@ identifier of the element - preferably containing dataset name</p></dd>
 <h3 id="method-srv-add-filter-state-">Method <code>srv_add_filter_state()</code><a class="anchor" aria-label="anchor" href="#method-srv-add-filter-state-"></a></h3>
 <p>Server module to add filter variable for this dataset</p>
 <p>Server module to add filter variable for this dataset</p><div class="section">
-<h4 id="usage-20">Usage<a class="anchor" aria-label="anchor" href="#usage-20"></a></h4>
+<h4 id="usage-19">Usage<a class="anchor" aria-label="anchor" href="#usage-19"></a></h4>
 <p></p><div class="r"><div class="sourceCode"><pre><code><span><span class="va">FilteredDataset</span><span class="op">$</span><span class="fu">srv_add_filter_state</span><span class="op">(</span><span class="va">id</span>, <span class="va">...</span><span class="op">)</span></span></code></pre></div><p></p></div>
 </div>
 
 <div class="section">
-<h4 id="arguments-8">Arguments<a class="anchor" aria-label="anchor" href="#arguments-8"></a></h4>
+<h4 id="arguments-7">Arguments<a class="anchor" aria-label="anchor" href="#arguments-7"></a></h4>
 <p></p><div class="arguments"><dl><dt><code>id</code></dt>
 <dd><p>(<code>character(1)</code>)<br>
 an ID string that corresponds with the ID used to call the module's UI function.</p></dd>
@@ -490,19 +455,19 @@ an ID string that corresponds with the ID used to call the module's UI function.
 </dl><p></p></div>
 </div>
 <div class="section">
-<h4 id="returns-19">Returns<a class="anchor" aria-label="anchor" href="#returns-19"></a></h4>
+<h4 id="returns-18">Returns<a class="anchor" aria-label="anchor" href="#returns-18"></a></h4>
 <p><code>moduleServer</code> function.</p>
 </div>
 
 </div><p></p><hr><a id="method-FilteredDataset-clone"></a><div class="section">
 <h3 id="method-clone-">Method <code>clone()</code><a class="anchor" aria-label="anchor" href="#method-clone-"></a></h3>
 <p>The objects of this class are cloneable with this method.</p><div class="section">
-<h4 id="usage-21">Usage<a class="anchor" aria-label="anchor" href="#usage-21"></a></h4>
+<h4 id="usage-20">Usage<a class="anchor" aria-label="anchor" href="#usage-20"></a></h4>
 <p></p><div class="r"><div class="sourceCode"><pre><code><span><span class="va">FilteredDataset</span><span class="op">$</span><span class="fu">clone</span><span class="op">(</span>deep <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span></code></pre></div><p></p></div>
 </div>
 
 <div class="section">
-<h4 id="arguments-9">Arguments<a class="anchor" aria-label="anchor" href="#arguments-9"></a></h4>
+<h4 id="arguments-8">Arguments<a class="anchor" aria-label="anchor" href="#arguments-8"></a></h4>
 <p></p><div class="arguments"><dl><dt><code>deep</code></dt>
 <dd><p>Whether to make a deep clone.</p></dd>
 
