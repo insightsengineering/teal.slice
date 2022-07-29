@@ -1,3 +1,48 @@
+/* teal.slice filter-panel css */
+
+.relative {
+  position: relative;
+}
+
+.float-right {
+  float: right;
+}
+.float-left {
+  float: left;
+}
+
+.w-full {
+  width: 100%;
+}
+
+.w-80 {
+  width: 80%;
+}
+
+.m-auto {
+  margin: auto;
+}
+
+.mb-4 {
+  margin-bottom: 1rem;
+}
+
+.start_date_reset_button {
+  float: left;
+  padding: 0;
+  padding-top: 4px;
+  padding-bottom: 5px;
+  width: 10%;
+}
+
+.end_date_reset_button {
+  float: right;
+  padding: 0;
+  padding-top: 4px;
+  padding-bottom: 5px;
+  width: 10%;
+}
+
 .no-left-right-padding {
   padding-left: 0 !important;
   padding-right: 0 !important;
@@ -96,9 +141,7 @@ a.remove_all:hover {
   content: attr(data-label);
 }
 
-/*
-  filter summary table
-*/
+/* filter summary table */
 .custom-table td:nth-child(1),
 .custom-table thead {
   font-weight: bold;

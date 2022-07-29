@@ -596,7 +596,7 @@ FilteredData <- R6::R6Class( # nolint
             class = "row",
             tags$div(
               class = "col-sm-9",
-              tags$label("Active Filter Summary", class = "text-primary", style = "margin-bottom: 15px;")
+              tags$label("Active Filter Summary", class = "text-primary mb-4")
             ),
             tags$div(
               class = "col-sm-3",
@@ -625,7 +625,7 @@ FilteredData <- R6::R6Class( # nolint
             class = "row",
             tags$div(
               class = "col-sm-6",
-              tags$label("Active Filter Variables", class = "text-primary", style = "margin-bottom: 15px;")
+              tags$label("Active Filter Variables", class = "text-primary mb-4")
             ),
             tags$div(
               class = "col-sm-6",
@@ -668,7 +668,7 @@ FilteredData <- R6::R6Class( # nolint
             class = "row",
             tags$div(
               class = "col-sm-9",
-              tags$label("Add Filter Variables", class = "text-primary", style = "margin-bottom: 15px;")
+              tags$label("Add Filter Variables", class = "text-primary mb-4")
             ),
             tags$div(
               class = "col-sm-3",

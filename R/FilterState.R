@@ -903,7 +903,7 @@ EmptyFilterState <- R6::R6Class( # nolint
       ns <- NS(id)
       fluidRow(
         div(
-          style = "position: relative;",
+          class = "relative",
           div(
             span("Variable contains missing values only"),
             checkboxInput(
@@ -1068,7 +1068,7 @@ LogicalFilterState <- R6::R6Class( # nolint
       ns <- NS(id)
       fluidRow(
         div(
-          style = "position: relative;",
+          class = "relative",
           # same overlay as for choices with no more than (default: 5) elements
           div(
             class = "filterPlotOverlayBoxes",
@@ -1831,7 +1831,7 @@ ChoicesFilterState <- R6::R6Class( # nolint
       fluidRow(
         if (length(private$choices) <= getOption("teal.threshold_slider_vs_checkboxgroup")) {
           div(
-            style = "position: relative;",
+            class = "relative",
             div(
               class = "filterPlotOverlayBoxes",
               plotOutput(ns("plot"), height = "100%")
@@ -2156,19 +2156,19 @@ DateFilterState <- R6::R6Class( # nolint
       fluidRow(
         div(
           actionButton(
+            class = "start_date_reset_button",
             inputId = ns("start_date_reset"),
             label = NULL,
-            icon = icon("fas fa-undo"),
-            style = "float: left; padding: 0; padding-top: 4px; padding-bottom: 5px; width: 10%;"
+            icon = icon("fas fa-undo")
           ),
           actionButton(
+            class = "end_date_reset_button",
             inputId = ns("end_date_reset"),
             label = NULL,
-            icon = icon("fas fa-undo"),
-            style = "float: right; padding: 0; padding-top: 4px; padding-bottom: 5px; width: 10%;"
+            icon = icon("fas fa-undo")
           ),
           div(
-            style = "margin: auto; width: 80%;",
+            class = "m-auto w-80",
             dateRangeInput(
               inputId = ns("selection"),
               label = NULL,
@@ -2473,21 +2473,20 @@ DatetimeFilterState <- R6::R6Class( # nolint
       fluidRow(
         div(
           actionButton(
+            class = "start_date_reset_button",
             inputId = ns("start_date_reset"),
             label = NULL,
-            icon = icon("fas fa-undo"),
-            style = "float: left; padding: 0; padding-top: 4px; padding-bottom: 5px; width: 10%;"
+            icon = icon("fas fa-undo")
           ),
           actionButton(
+            class = "end_date_reset_button",
             inputId = ns("end_date_reset"),
             label = NULL,
-            icon = icon("fas fa-undo"),
-            style = "float: right; padding: 0; padding-top: 4px; padding-bottom: 5px; width: 10%;"
+            icon = icon("fas fa-undo")
           ),
           div(
-            class = "input-daterange input-group",
-            style = "margin: auto; width: 80%;",
-            div(style = "float: left; width: 100%;", {
+            class = "input-daterange input-group m-auto w-80",
+            div(class = "float-left w-full", {
               x <- shinyWidgets::airDatepickerInput(
                 inputId = ns("selection_start"),
                 value = isolate(self$get_selected())[1],
@@ -2507,7 +2506,7 @@ DatetimeFilterState <- R6::R6Class( # nolint
               "to",
               title = "Times are displayed in the local timezone and are converted to UTC in the analysis"
             ),
-            div(style = "float: right; width: 100%;", {
+            div(class = "float-right w-full", {
               x <- shinyWidgets::airDatepickerInput(
                 inputId = ns("selection_end"),
                 value = isolate(self$get_selected())[2],
