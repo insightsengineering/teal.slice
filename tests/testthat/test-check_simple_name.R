@@ -14,6 +14,5 @@ test_that("check_simple_name behaves as expected", {
   expect_error(check_simple_name("ADSL.modified"))
   expect_error(check_simple_name("a1..."))
   expect_error(check_simple_name("a a"))
-  expect_error(check_simple_name("ADSL_FILTERED"))
   expect_error(check_simple_name("_A_b"))
 })

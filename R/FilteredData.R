@@ -362,7 +362,7 @@ FilteredData <- R6::R6Class( # nolint
         env[[dataname]] <- self$get_filtered_dataset(dataname)$get_dataset()
         filter_call <- self$get_call(dataname)
         eval_expr_with_msg(filter_call, env)
-        get(x = self$get_filtered_dataset(dataname)$get_filtered_dataname(), envir = env)
+        get(x = dataname, envir = env)
       })
 
       invisible(self)
@@ -451,8 +451,13 @@ FilteredData <- R6::R6Class( # nolint
     #' cat(shiny::isolate(datasets$get_formatted_filter_state()))
     #'
     get_formatted_filter_state = function() {
-      out <- c()
-      for (filtered_dataset in self$get_filtered_dataset()) out <- c(out, filtered_dataset$get_formatted_filter_state())
+      out <-
+        unlist(sapply(
+          self$get_filtered_dataset(),
+          function(filtered_dataset) {
+            filtered_dataset$get_formatted_filter_state()
+          }
+        ))
       paste(out, collapse = "\n")
     },
 
@@ -975,10 +980,6 @@ FilteredData <- R6::R6Class( # nolint
       })
 
       return(invisible(NULL))
-    },
-    filtered_dataname = function(dataname) {
-      checkmate::assert_string(dataname)
-      sprintf("%s_FILTERED", dataname)
     }
   )
 )

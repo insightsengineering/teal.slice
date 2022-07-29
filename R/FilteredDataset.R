@@ -152,12 +152,23 @@ FilteredDataset <- R6::R6Class( # nolint
     #' @description
     #' Returns a string representation of the filter state in this `FilteredDataset`.
     #'
-    #' @return `character(1)` the formatted string representing the filter state
+    #' @return `character(1)` the formatted string representing the filter state or
+    #' `NULL` if no filter state is present.
     #'
     get_formatted_filter_state = function() {
-      out <- paste0("Filters for dataset: ", self$get_dataname())
-      for (states in self$get_filter_states()) out <- c(out, states$format(indent = 2))
-      paste(out, collapse = "\n")
+      out <- Filter(
+        function(x) x != "",
+        sapply(
+          self$get_filter_states(),
+          function(states) {
+            states$format(indent = 2)
+          }
+        )
+      )
+      if (length(out) > 0) {
+        header <- paste0("Filters for dataset: ", self$get_dataname())
+        paste(c(header, out), collapse = "\n")
+      }
     },
 
     #' @description
@@ -298,17 +309,6 @@ FilteredDataset <- R6::R6Class( # nolint
     #' @return `character` the variable names
     get_varnames = function() {
       colnames(self$get_dataset())
-    },
-
-    #' @description
-    #' Gets the suffixed dataname
-    #' Used when filtering the data to get `<dataname>_FILTERED`,
-    #' `<dataname>_FILTERED_ALONE` or any other name.
-    #' @param dataname (`character(1)`) dataname
-    #' @param suffix (`character(1)`) string to be putted after dataname
-    #' @return `character(1)`
-    get_filtered_dataname = function(dataname = self$get_dataname(), suffix = "_FILTERED") {
-      paste0(dataname, suffix)
     },
 
     #' @description
@@ -543,7 +543,7 @@ DefaultFilteredDataset <- R6::R6Class( # nolint
         filter_states = init_filter_states(
           data = self$get_dataset(),
           input_dataname = as.name(dataname),
-          output_dataname = as.name(sprintf("%s_FILTERED", dataname)),
+          output_dataname = as.name(dataname),
           varlabels = self$get_varlabels(),
           keys = self$get_keys()
         ),
@@ -563,13 +563,17 @@ DefaultFilteredDataset <- R6::R6Class( # nolint
     #' applies to one argument (`...`) in `dplyr::filter` call.
     #' @return filter `call` or `list` of filter calls
     get_call = function() {
-      Filter(
+      filter_call <- Filter(
         f = Negate(is.null),
         x = lapply(
           self$get_filter_states(),
           function(x) x$get_call()
         )
       )
+      if (length(filter_call) == 0) {
+        return(NULL)
+      }
+      filter_call
     },
 
     #' @description

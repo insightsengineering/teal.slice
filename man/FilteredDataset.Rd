@@ -29,7 +29,6 @@ components of the dataset.
 \item \href{#method-FilteredDataset-get_varlabels}{\code{FilteredDataset$get_varlabels()}}
 \item \href{#method-FilteredDataset-get_dataset_label}{\code{FilteredDataset$get_dataset_label()}}
 \item \href{#method-FilteredDataset-get_varnames}{\code{FilteredDataset$get_varnames()}}
-\item \href{#method-FilteredDataset-get_filtered_dataname}{\code{FilteredDataset$get_filtered_dataname()}}
 \item \href{#method-FilteredDataset-get_filterable_varnames}{\code{FilteredDataset$get_filterable_varnames()}}
 \item \href{#method-FilteredDataset-ui}{\code{FilteredDataset$ui()}}
 \item \href{#method-FilteredDataset-server}{\code{FilteredDataset$server()}}
@@ -85,7 +84,8 @@ Returns a string representation of the filter state in this \code{FilteredDatase
 }
 
 \subsection{Returns}{
-\code{character(1)} the formatted string representing the filter state
+\code{character(1)} the formatted string representing the filter state or
+\code{NULL} if no filter state is present.
 }
 }
 \if{html}{\out{<hr>}}
@@ -297,33 +297,6 @@ Gets variable names from dataset
 
 \subsection{Returns}{
 \code{character} the variable names
-}
-}
-\if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-FilteredDataset-get_filtered_dataname"></a>}}
-\if{latex}{\out{\hypertarget{method-FilteredDataset-get_filtered_dataname}{}}}
-\subsection{Method \code{get_filtered_dataname()}}{
-Gets the suffixed dataname
-Used when filtering the data to get \verb{<dataname>_FILTERED},
-\verb{<dataname>_FILTERED_ALONE} or any other name.
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{FilteredDataset$get_filtered_dataname(
-  dataname = self$get_dataname(),
-  suffix = "_FILTERED"
-)}\if{html}{\out{</div>}}
-}
-
-\subsection{Arguments}{
-\if{html}{\out{<div class="arguments">}}
-\describe{
-\item{\code{dataname}}{(\code{character(1)}) dataname}
-
-\item{\code{suffix}}{(\code{character(1)}) string to be putted after dataname}
-}
-\if{html}{\out{</div>}}
-}
-\subsection{Returns}{
-\code{character(1)}
 }
 }
 \if{html}{\out{<hr>}}

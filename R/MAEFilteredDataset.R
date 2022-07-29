@@ -34,7 +34,7 @@ MAEFilteredDataset <- R6::R6Class( # nolint
         filter_states = init_filter_states(
           data = dataset,
           input_dataname = as.name(dataname),
-          output_dataname = as.name(sprintf("%s_FILTERED", dataname)),
+          output_dataname = as.name(dataname),
           varlabels = self$get_varlabels(),
           datalabel = "subjects",
           keys = self$get_keys()
@@ -49,7 +49,7 @@ MAEFilteredDataset <- R6::R6Class( # nolint
         experiment_names,
         function(experiment_name) {
           input_dataname <- call_extract_list(
-            sprintf("%s_FILTERED", dataname),
+            dataname,
             experiment_name,
             dollar = FALSE
           )
@@ -82,13 +82,17 @@ MAEFilteredDataset <- R6::R6Class( # nolint
     #' }
     #' @return filter `call` or `list` of filter calls
     get_call = function() {
-      Filter(
+      filter_call <- Filter(
         f = Negate(is.null),
         x = lapply(
           self$get_filter_states(),
           function(x) x$get_call()
         )
       )
+      if (length(filter_call) == 0) {
+        return(NULL)
+      }
+      filter_call
     },
 
     #' @description

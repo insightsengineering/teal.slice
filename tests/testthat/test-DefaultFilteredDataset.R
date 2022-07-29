@@ -4,11 +4,18 @@ testthat::test_that("The constructor accepts a data.frame object with a dataname
   ), NA)
 })
 
-testthat::test_that("get_call returns a list of calls", {
+testthat::test_that("get_call returns a list of calls or NULL", {
   filtered_dataset <- DefaultFilteredDataset$new(
-    dataset = head(iris), dataname = "iris"
+    dataset = iris, dataname = "iris"
   )
-  checkmate::expect_list(filtered_dataset$get_call(), types = "<-")
+  testthat::expect_null(filtered_dataset$get_call())
+  fs <- list(
+    Sepal.Length = c(5.1, 6.4),
+    Species = c("setosa", "versicolor")
+  )
+  filtered_dataset$set_filter_state(state = fs)
+
+  checkmate::expect_list(isolate(filtered_dataset$get_call()), types = "<-")
 })
 
 testthat::test_that(
@@ -25,7 +32,7 @@ testthat::test_that(
       isolate(dataset$get_call()),
       list(
         filter = quote(
-          iris_FILTERED <- dplyr::filter( # nolint
+          iris <- dplyr::filter(
             iris,
             Sepal.Length >= 5.1 & Sepal.Length <= 6.4 &
               Species %in% c("setosa", "versicolor")
@@ -63,7 +70,7 @@ testthat::test_that(
       isolate(dataset$get_call()),
       list(
         filter = quote(
-          iris_FILTERED <- dplyr::filter( # nolint
+          iris <- dplyr::filter(
             iris,
             Sepal.Length >= 5.1 & Sepal.Length <= 6.4
           )
@@ -97,11 +104,8 @@ testthat::test_that(
     dataset$set_filter_state(state = fs)
     dataset$remove_filter_state(c("Species", "Sepal.Length"))
 
-    testthat::expect_equal(
-      isolate(dataset$get_call()),
-      list(
-        filter = quote(iris_FILTERED <- iris) # nolint
-      )
+    testthat::expect_null(
+      isolate(dataset$get_call())
     )
   }
 )
