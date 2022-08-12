@@ -311,9 +311,9 @@ optional, vector of column names to be included.}
 description
 Get label of specific variable. In case when variable label is missing
 name of the variable is returned.
-parameter variable (\code{character(1)})\cr
+parameter variable (\code{character})\cr
 name of the variable for which label should be returned
-return \code{character(1)}
+return \code{character}
 }
 }
 \if{html}{\out{<hr>}}
