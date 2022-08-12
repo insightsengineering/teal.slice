@@ -5,7 +5,7 @@
 * The filtered data is now stored in `FilteredData` not `FilteredDataset`.
 * The join keys stored inside `FilteredData` are now `JoinKeys` objects.
 * Updated `get_filter_state` to return a list of active filter states and an attribute with the character form of the filter states.
-* In `FilterStates`, `varlabels` are now described as character vector, also removed usage of `||` to acomodate for vector input.
+* In `FilterStates`, `varlabels` are now described as character vector, also removed usage of `||` to accomodate for vector input.
 
 # Bug fixes
 
