@@ -1072,7 +1072,7 @@ DFFilterStates <- R6::R6Class( # nolint
     #'  name of the variable for which label should be returned
     #' return `character`
     get_varlabels = function(variables = character(0)) {
-      stopifnot(is.character(variables))
+      checkmate::assert_character(variables)
       if (identical(variables, character(0))) {
         private$varlabels
       } else {
@@ -1449,7 +1449,7 @@ MAEFilterStates <- R6::R6Class( # nolint
     #'  name of the variable for which label should be returned
     #' return `character`
     get_varlabels = function(variables = character(0)) {
-      stopifnot(is.character(variables))
+      checkmate::assert_character(variables)
       if (identical(variables, character(0))) {
         private$varlabels
       } else {

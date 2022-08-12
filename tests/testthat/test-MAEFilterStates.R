@@ -3,9 +3,20 @@ testthat::test_that("The constructor does not throw", {
     input_dataname = "test",
     output_dataname = "test",
     datalabel = character(0),
-    varlabels = "varlabel1",
+    varlabels = character(0),
     keys = character(0)
   ), NA)
+})
+
+testthat::test_that("MAEFilterStates accept vector as an input for varlabels", {
+  filter_states <- MAEFilterStates$new(
+    input_dataname = "iris",
+    output_dataname = "iris",
+    datalabel = character(0),
+    varlabels = c("", NA, paste0("varlabel", 1:100)),
+    keys = character(0)
+  )
+  testthat::expect_equal(filter_states$get_fun(), "MultiAssayExperiment::subsetByColData")
 })
 
 testthat::test_that("get_fun returns the MAE specific subset function", {
@@ -36,7 +47,7 @@ testthat::test_that("get_call returns a call filtering an MAE object using Choic
     input_dataname = "test",
     output_dataname = "output",
     datalabel = character(0),
-    varlabels = paste0("varlabel", 1:100),
+    varlabels = character(0),
     keys = character(0)
   )
   filter_state <- ChoicesFilterState$new(
@@ -62,7 +73,7 @@ testthat::test_that("get_call returns a call filtering an MAE object using Range
     input_dataname = "test",
     output_dataname = "output",
     datalabel = character(0),
-    varlabels = c(NA, "", "label1"),
+    varlabels = character(0),
     keys = character(0)
   )
   filter_state <- RangeFilterState$new(
@@ -97,7 +108,7 @@ testthat::test_that(
       input_dataname = "test",
       output_dataname = "test_filtered",
       datalabel = character(0),
-      varlabels = NA,
+      varlabels = character(0),
       keys = character(0)
     )
     fs <- list(
@@ -185,7 +196,7 @@ testthat::test_that(
       input_dataname = "test",
       output_dataname = "test_filtered",
       datalabel = character(0),
-      varlabels = c(NA, "", paste0("label", 1:10)),
+      varlabels = character(0),
       keys = character(0)
     )
     fs <- list(
@@ -301,7 +312,7 @@ testthat::test_that("$format() asserts the indent argument is a number", {
       input_dataname = "iris",
       output_dataname = "iris_filtered",
       datalabel = character(0),
-      varlabels = paste0("varlabel", 1:100),
+      varlabels = character(0),
       keys = character(0)
     )$format(indent = "wrong type"),
     regexp = "Assertion on 'indent' failed: Must be of type 'number'"
@@ -314,7 +325,7 @@ testthat::test_that("$format() concatenates its FilterState elements using \\n a
     input_dataname = "test",
     output_dataname = "test_filtered",
     datalabel = character(0),
-    varlabels = paste0("varlabel", 1:100),
+    varlabels = character(0),
     keys = character(0)
   )
 

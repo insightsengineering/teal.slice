@@ -5,11 +5,11 @@
 * The filtered data is now stored in `FilteredData` not `FilteredDataset`.
 * The join keys stored inside `FilteredData` are now `JoinKeys` objects.
 * Updated `get_filter_state` to return a list of active filter states and an attribute with the character form of the filter states.
+* In `FilterStates`, `varlabels` are now described as character vector, also removed usage of `||` to acomodate for vector input.
 
 # Bug fixes
 
 * Fixed a bug when the filter panel overview would not refresh if the panel was hidden during a transition between active modules.
-* Fixed a bug where `varlabels` were assumed to be a character in `FilterStates` (now it is a character vector) and a `||` was used.
 
 # teal.slice 0.1.1
 
