@@ -255,9 +255,9 @@ object containing \code{colData} which columns are used to choose filter variabl
 description
 Get label of specific variable. In case when variable label is missing
 name of the variable is returned.
-parameter variable (\code{character(1)})\cr
+parameter variable (\code{character})\cr
 name of the variable for which label should be returned
-return \code{character(1)}
+return \code{character}
 }
 }
 \if{html}{\out{<hr>}}
