@@ -1068,18 +1068,17 @@ DFFilterStates <- R6::R6Class( # nolint
     #' description
     #' Get label of specific variable. In case when variable label is missing
     #' name of the variable is returned.
-    #' parameter variable (`character(1)`)\cr
+    #' parameter variable (`character`)\cr
     #'  name of the variable for which label should be returned
-    #' return `character(1)`
+    #' return `character`
     get_varlabels = function(variables = character(0)) {
       stopifnot(is.character(variables))
       if (identical(variables, character(0))) {
         private$varlabels
       } else {
         varlabels <- private$varlabels[variables]
-        varlabels[is.na(varlabels) | varlabels == ""] <- variables[
-          is.na(varlabels) | varlabels == ""
-        ]
+        missing_labels <- is.na(varlabels) | varlabels == ""
+        varlabels[missing_labels] <- variables[missing_labels]
         varlabels
       }
     }
@@ -1446,18 +1445,17 @@ MAEFilterStates <- R6::R6Class( # nolint
     #' description
     #' Get label of specific variable. In case when variable label is missing
     #' name of the variable is returned.
-    #' parameter variable (`character(1)`)\cr
+    #' parameter variable (`character`)\cr
     #'  name of the variable for which label should be returned
-    #' return `character(1)`
+    #' return `character`
     get_varlabels = function(variables = character(0)) {
       stopifnot(is.character(variables))
       if (identical(variables, character(0))) {
         private$varlabels
       } else {
         varlabels <- private$varlabels[variables]
-        varlabels[is.na(varlabels) | varlabels == ""] <- variables[
-          is.na(varlabels) | varlabels == ""
-        ]
+        missing_labels <- is.na(varlabels) | varlabels == ""
+        varlabels[missing_labels] <- variables[missing_labels]
         varlabels
       }
     }
