@@ -9,8 +9,7 @@
 # Bug fixes
 
 * Fixed a bug when the filter panel overview would not refresh if the panel was hidden during a transition between active modules.
-
-* Fixed a bug where varlabels were assumed to be a character (now it is a character vector) and a || was used.
+* Fixed a bug where `varlabels` were assumed to be a character in `FilterStates` (now it is a character vector) and a || was used.
 
 # teal.slice 0.1.1
 

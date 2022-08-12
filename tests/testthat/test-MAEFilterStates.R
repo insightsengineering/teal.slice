@@ -3,7 +3,7 @@ testthat::test_that("The constructor does not throw", {
     input_dataname = "test",
     output_dataname = "test",
     datalabel = character(0),
-    varlabels = "varblabel1",
+    varlabels = "varlabel1",
     keys = character(0)
   ), NA)
 })
