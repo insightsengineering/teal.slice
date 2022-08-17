@@ -8,6 +8,17 @@ testthat::test_that("The constructor does not throw", {
   ), NA)
 })
 
+testthat::test_that("MAEFilterStates accept vector as an input for varlabels", {
+  filter_states <- MAEFilterStates$new(
+    input_dataname = "iris",
+    output_dataname = "iris",
+    datalabel = character(0),
+    varlabels = c("", NA, paste0("varlabel", 1:100)),
+    keys = character(0)
+  )
+  testthat::expect_equal(filter_states$get_fun(), "MultiAssayExperiment::subsetByColData")
+})
+
 testthat::test_that("get_fun returns the MAE specific subset function", {
   filter_states <- MAEFilterStates$new(
     input_dataname = "test",
