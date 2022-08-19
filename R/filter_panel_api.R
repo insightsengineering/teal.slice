@@ -88,7 +88,7 @@ FilterPanelAPI <- R6::R6Class( # nolint
       invisible(NULL)
     },
     turn_off = function() {
-      if (length(self$get_filter_state())) private$filtered_data_cache = filtered_data
+      if (length(self$get_filter_state())) private$filtered_data_cache = private$filtered_data
       self$remove_all_filter_states()
     },
     turn_on = function() {
