@@ -98,7 +98,6 @@ FilterPanelAPI <- R6::R6Class( # nolint
   ## __Private Methods ====
   private = list(
     filtered_data = NULL
-    filtered_data_cache = NULL
-    switch = TRUE
+    , filtered_data_cache = NULL
   )
 )
