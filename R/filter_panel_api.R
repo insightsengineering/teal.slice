@@ -92,7 +92,8 @@ FilterPanelAPI <- R6::R6Class( # nolint
       self$remove_all_filter_states()
     },
     turn_on = function() {
-      if (length(self$get_filter_state()) == 0) self$set_filter_state(private$filtered_data_cache$get_filter_state())
+      cached <- private$filtered_data_cache$get_filter_state()
+      if (length(self$get_filter_state()) == 0 && length(cached) > 0) self$set_filter_state(cached)
     }
   ),
   ## __Private Methods ====
