@@ -590,6 +590,18 @@ FilteredData <- R6::R6Class( # nolint
         id = ns(NULL), # used for hiding / showing
         include_css_files(pattern = "filter-panel"),
         div(
+          id = ns("switch-button"),
+          class = "inline-block",
+          shinyWidgets::switchInput(
+            ns("filter_turn_onoff"),
+            label = "TURN",
+            onLabel = "ON",
+            offLabel = "OFF",
+            value = TRUE,
+            handleWidth = "80px"
+          )
+        ),
+        div(
           id = ns("filters_overview"), # not used, can be used to customize CSS behavior
           class = "well",
           tags$div(
@@ -760,6 +772,23 @@ FilteredData <- R6::R6Class( # nolint
           )
 
           observeEvent(
+            eventExpr = list(input[["filter_turn_onoff"]]),
+            handlerExpr = {
+              if (isFALSE(input[["filter_turn_onoff"]])) {
+                shinyjs::hide("filter_add_vars")
+                shinyjs::hide("filter_active_vars")
+                private$cached_states <- self$get_filter_state()
+                self$remove_all_filter_states()
+              } else {
+                shinyjs::show("filter_add_vars")
+                shinyjs::show("filter_active_vars")
+                if (length(private$cached_states) && (length(self$get_filter_state()) == 0)) {
+                  self$set_filter_state(private$cached_states)
+                }
+              }
+          }, ignoreNULL = TRUE)
+
+          observeEvent(
             eventExpr = active_datanames(),
             handlerExpr = {
               private$hide_inactive_datasets(active_datanames)
@@ -902,6 +931,8 @@ FilteredData <- R6::R6Class( # nolint
 
     # reactive i.e. filtered data
     reactive_data = list(),
+
+    cached_states = NULL,
 
     # we implement these functions as checks rather than returning logicals so they can
     # give informative error messages immediately
