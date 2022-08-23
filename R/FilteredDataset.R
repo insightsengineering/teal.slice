@@ -322,7 +322,7 @@ FilteredDataset <- R6::R6Class( # nolint
     get_filterable_varnames = function() {
       varnames <- get_filterable_varnames(self$get_dataset())
       if (length(private$.filterable_varnames) > 0) {
-        return(intersect(varnames, private$.filterable_varnames ))
+        return(intersect(varnames, private$.filterable_varnames))
       }
       return(varnames)
     },
