@@ -49,6 +49,54 @@ testthat::test_that("get_keys returns the keys passed to the constructor", {
   testthat::expect_equal("Petal.length", filtered_dataset$get_keys())
 })
 
+
+testthat::test_that("set_filterable_varnames restricts which variables can be filtered", {
+  filtered_dataset <- FilteredDataset$new(dataset = head(iris), dataname = "iris")
+  expect_setequal(
+    filtered_dataset$get_filterable_varnames(),
+    c("Sepal.Length", "Sepal.Width", "Petal.Length", "Petal.Width", "Species")
+  )
+
+  filtered_dataset$set_filterable_varnames(c("Species", "Sepal.Length"))
+  expect_setequal(filtered_dataset$get_filterable_varnames(), c("Species", "Sepal.Length"))
+})
+
+testthat::test_that("setting filterable varnames to NULL or character(0) does not affect the filterable variables", {
+  filtered_dataset <- FilteredDataset$new(dataset = head(iris), dataname = "iris")
+  expected <- c("Sepal.Length", "Sepal.Width", "Petal.Length", "Petal.Width", "Species")
+
+  filtered_dataset$set_filterable_varnames(NULL)
+  expect_setequal(filtered_dataset$get_filterable_varnames(), expected)
+
+  filtered_dataset$set_filterable_varnames(character(0))
+  expect_setequal(filtered_dataset$get_filterable_varnames(), expected)
+})
+
+testthat::test_that("setting filterable varnames which include columns that do not existignores these columns", {
+  filtered_dataset <- FilteredDataset$new(dataset = head(iris), dataname = "iris")
+  filtered_dataset$set_filterable_varnames(c("Species", "Invalid"))
+  expect_equal(filtered_dataset$get_filterable_varnames(), "Species")
+})
+
+
+testthat::test_that("setting filterable varnames with varnames not NULL or non-missing character throws error", {
+  filtered_dataset <- FilteredDataset$new(dataset = head(iris), dataname = "iris")
+  expect_error(
+    filtered_dataset$set_filterable_varnames(1:10),
+    "Assertion on 'varnames' failed:"
+  )
+  expect_error(
+    filtered_dataset$set_filterable_varnames(TRUE),
+    "Assertion on 'varnames' failed:"
+  )
+
+  expect_error(
+    filtered_dataset$set_filterable_varnames(c("Species", NA)),
+    "Assertion on 'varnames' failed:"
+  )
+})
+
+
 testthat::test_that("get_varlabels(NULL) returns a named array of NAs if data.frame has no varlabels", {
   filtered_dataset <- FilteredDataset$new(
     dataset = head(iris), dataname = "iris"
