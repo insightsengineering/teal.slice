@@ -72,7 +72,7 @@ testthat::test_that("setting filterable varnames to NULL or character(0) does no
   expect_setequal(filtered_dataset$get_filterable_varnames(), expected)
 })
 
-testthat::test_that("setting filterable varnames which include columns that do not existignores these columns", {
+testthat::test_that("setting filterable varnames which include columns that do not exist ignores these columns", {
   filtered_dataset <- FilteredDataset$new(dataset = head(iris), dataname = "iris")
   filtered_dataset$set_filterable_varnames(c("Species", "Invalid"))
   expect_equal(filtered_dataset$get_filterable_varnames(), "Species")
