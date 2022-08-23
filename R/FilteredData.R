@@ -775,13 +775,13 @@ FilteredData <- R6::R6Class( # nolint
             eventExpr = list(input[["filter_turn_onoff"]]),
             handlerExpr = {
               if (isFALSE(input[["filter_turn_onoff"]])) {
-                shinyjs::hide("filter_add_vars")
-                shinyjs::hide("filter_active_vars")
+                shinyjs::disable("filter_add_vars")
+                shinyjs::disable("filter_active_vars")
                 private$cached_states <- self$get_filter_state()
                 self$remove_all_filter_states()
               } else {
-                shinyjs::show("filter_add_vars")
-                shinyjs::show("filter_active_vars")
+                shinyjs::enable("filter_add_vars")
+                shinyjs::enable("filter_active_vars")
                 if (length(private$cached_states) && (length(self$get_filter_state()) == 0)) {
                   self$set_filter_state(private$cached_states)
                 }
