@@ -1,5 +1,6 @@
 # teal.slice 0.1.1.9015
 
+* Added `set_filterable_varnames` method to `FilteredData` and `FilteredDataset` objects so that there is control over which variables can be filtered.
 * Removed `CDISCFilteredDataset` class and functionality moved to `CDISCFilteredData`.
 * Changed constructor of `FilteredData` to not require `TealData` object. See `help(init_filtered_data)` for more details.
 * The filtered data is now stored in `FilteredData` not `FilteredDataset`.
