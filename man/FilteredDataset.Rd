@@ -329,7 +329,7 @@ Set the allowed filterable variables
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
-\item{\code{varnames}}{(\code{character} or \code{NULL}) The variables which
+\item{\code{varnames}}{(\code{character} or \code{NULL}) The variables which can be filtered
 See \code{self$get_filterable_varnames} for more details}
 }
 \if{html}{\out{</div>}}

@@ -330,7 +330,7 @@ FilteredDataset <- R6::R6Class( # nolint
     # setters ------
     #' @description
     #' Set the allowed filterable variables
-    #' @param varnames (`character` or `NULL`) The variables which
+    #' @param varnames (`character` or `NULL`) The variables which can be filtered
     #' See `self$get_filterable_varnames` for more details
     #' @return invisibly this `FilteredDataset`
     set_filterable_varnames = function(varnames) {
