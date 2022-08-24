@@ -478,7 +478,7 @@ FilteredDataset <- R6::R6Class( # nolint
     metadata = NULL,
     hash = character(0),
 
-    # if this has length > 0 then only varnames in this list
+    # if this has length > 0 then only varnames in this vector
     # can be filtered
     .filterable_varnames = NULL,
 
