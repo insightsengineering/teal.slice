@@ -171,6 +171,8 @@ shiny::isolate(datasets$get_filter_state())
 \item \href{#method-FilteredData-srv_filter_panel}{\code{FilteredData$srv_filter_panel()}}
 \item \href{#method-FilteredData-ui_filter_overview}{\code{FilteredData$ui_filter_overview()}}
 \item \href{#method-FilteredData-srv_filter_overview}{\code{FilteredData$srv_filter_overview()}}
+\item \href{#method-FilteredData-filter_panel_disable}{\code{FilteredData$filter_panel_disable()}}
+\item \href{#method-FilteredData-filter_panel_enable}{\code{FilteredData$filter_panel_enable()}}
 \item \href{#method-FilteredData-clone}{\code{FilteredData$clone()}}
 }
 }
@@ -922,6 +924,24 @@ panel will be hidden.}
 \subsection{Returns}{
 \code{moduleServer} function which returns \code{NULL}
 }
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-FilteredData-filter_panel_disable"></a>}}
+\if{latex}{\out{\hypertarget{method-FilteredData-filter_panel_disable}{}}}
+\subsection{Method \code{filter_panel_disable()}}{
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{FilteredData$filter_panel_disable(input)}\if{html}{\out{</div>}}
+}
+
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-FilteredData-filter_panel_enable"></a>}}
+\if{latex}{\out{\hypertarget{method-FilteredData-filter_panel_enable}{}}}
+\subsection{Method \code{filter_panel_enable()}}{
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{FilteredData$filter_panel_enable(input)}\if{html}{\out{</div>}}
+}
+
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-FilteredData-clone"></a>}}

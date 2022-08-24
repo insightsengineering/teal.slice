@@ -4,9 +4,14 @@
   position: relative;
 }
 
+.inline-block {
+  position: inline-block;
+}
+
 .float-right {
   float: right;
 }
+
 .float-left {
   float: left;
 }

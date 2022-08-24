@@ -45,6 +45,8 @@ isolate(fpa$get_filter_state())
 \item \href{#method-FilterPanelAPI-set_filter_state}{\code{FilterPanelAPI$set_filter_state()}}
 \item \href{#method-FilterPanelAPI-remove_filter_state}{\code{FilterPanelAPI$remove_filter_state()}}
 \item \href{#method-FilterPanelAPI-remove_all_filter_states}{\code{FilterPanelAPI$remove_all_filter_states()}}
+\item \href{#method-FilterPanelAPI-filter_panel_disable}{\code{FilterPanelAPI$filter_panel_disable()}}
+\item \href{#method-FilterPanelAPI-filter_panel_enable}{\code{FilterPanelAPI$filter_panel_enable()}}
 \item \href{#method-FilterPanelAPI-clone}{\code{FilterPanelAPI$clone()}}
 }
 }
@@ -143,6 +145,24 @@ datanames to remove their \code{FilterStates} or empty which removes all \code{F
 \subsection{Returns}{
 \code{NULL}
 }
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-FilterPanelAPI-filter_panel_disable"></a>}}
+\if{latex}{\out{\hypertarget{method-FilterPanelAPI-filter_panel_disable}{}}}
+\subsection{Method \code{filter_panel_disable()}}{
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{FilterPanelAPI$filter_panel_disable(input)}\if{html}{\out{</div>}}
+}
+
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-FilterPanelAPI-filter_panel_enable"></a>}}
+\if{latex}{\out{\hypertarget{method-FilterPanelAPI-filter_panel_enable}{}}}
+\subsection{Method \code{filter_panel_enable()}}{
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{FilterPanelAPI$filter_panel_enable(input)}\if{html}{\out{</div>}}
+}
+
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-FilterPanelAPI-clone"></a>}}
