@@ -577,6 +577,7 @@ FilteredData <- R6::R6Class( # nolint
     restore_state_from_bookmark = function(state, check_data_hash = TRUE) {
       stop("Pure virtual method")
     },
+    #' @description disable the filter panel
     filter_panel_disable = function() {
       private$filter_turn <- FALSE
       shinyjs::disable("filter_add_vars")
@@ -585,6 +586,7 @@ FilteredData <- R6::R6Class( # nolint
       self$remove_all_filter_states()
       invisible(NULL)
     },
+    #' @description enable the filter panel
     filter_panel_enable = function() {
       private$filter_turn <- TRUE
       shinyjs::enable("filter_add_vars")
@@ -594,9 +596,11 @@ FilteredData <- R6::R6Class( # nolint
       }
       invisible(NULL)
     },
+    #' @description get the state of filter panel, if it is activated
     get_filter_turn = function() {
       private$filter_turn
     },
+    #' @description get the id of the filter panel ui
     get_filter_panel_ui_id = function() {
       private$filter_panel_ui_id
     },
