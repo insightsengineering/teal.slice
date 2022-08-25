@@ -2390,7 +2390,7 @@ MatrixFilterStates <- R6::R6Class( # nolint
 #'   d = Sys.time() + 1:3,
 #'   z = complex(3)
 #' )
-#' teal.slice:::get_supported_varnames(df)
+#' teal.slice:::get_supported_filter_varnames(df)
 #' @return `character` the array of the matched element names
 #' @keywords internal
 get_supported_filter_varnames <- function(data) {

@@ -25,6 +25,6 @@ df <- data.frame(
   d = Sys.time() + 1:3,
   z = complex(3)
 )
-teal.slice:::get_supported_varnames(df)
+teal.slice:::get_supported_filter_varnames(df)
 }
 \keyword{internal}
