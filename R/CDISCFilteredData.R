@@ -161,8 +161,8 @@ CDISCFilteredData <- R6::R6Class( # nolint
       parent_dataname <- self$get_parentname(dataname)
       parent_varnames <- if (length(parent_dataname) > 0) {
         # cannot call get_filterable_varnames on the parent filtered_dataset in case
-        # some of its variables are set to be non-filter-able
-        get_filterable_varnames(self$get_filtered_dataset(parent_dataname)$get_dataset())
+        # some of its variables are set to be non-filterable
+        self$get_filtered_dataset(parent_dataname)$get_supported_filter_varnames()
       }
       setdiff(varnames, parent_varnames)
     },

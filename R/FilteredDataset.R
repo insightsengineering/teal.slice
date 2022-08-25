@@ -320,11 +320,20 @@ FilteredDataset <- R6::R6Class( # nolint
     #'
     #' @return (`character` vector) of variable names
     get_filterable_varnames = function() {
-      varnames <- get_filterable_varnames(self$get_dataset())
+      varnames <- self$get_supported_filter_varnames()
       if (length(private$.filterable_varnames) > 0) {
         return(intersect(varnames, private$.filterable_varnames))
       }
       return(varnames)
+    },
+
+    #' Gets the variables which could be filtered
+    #'
+    #' This does not take into account the value
+    #' of `private$.filterable_varnames`
+    #' @return (`character` vector) of variable names
+    get_supported_filter_varnames = function() {
+      get_supported_filter_varnames(self$get_dataset())
     },
 
     # setters ------

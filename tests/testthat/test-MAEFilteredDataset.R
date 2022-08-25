@@ -272,6 +272,12 @@ testthat::test_that("MAEFilteredDataset$get_filterable_varnames returns characte
   testthat::expect_identical(filtered_dataset$get_filterable_varnames(), character(0))
 })
 
+testthat::test_that("MAEFilteredDataset$get_supported_filter_varnames returns character(0)", {
+  utils::data(miniACC, package = "MultiAssayExperiment")
+  filtered_dataset <- MAEFilteredDataset$new(dataset = miniACC, dataname = "miniACC")
+  testthat::expect_identical(filtered_dataset$get_supported_filter_varnames(), character(0))
+})
+
 testthat::test_that("MAEFilteredDataset$get_varlabels returns column variable labels", {
   utils::data(miniACC, package = "MultiAssayExperiment")
   x <- miniACC

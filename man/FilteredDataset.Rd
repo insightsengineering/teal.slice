@@ -30,6 +30,7 @@ components of the dataset.
 \item \href{#method-FilteredDataset-get_dataset_label}{\code{FilteredDataset$get_dataset_label()}}
 \item \href{#method-FilteredDataset-get_varnames}{\code{FilteredDataset$get_varnames()}}
 \item \href{#method-FilteredDataset-get_filterable_varnames}{\code{FilteredDataset$get_filterable_varnames()}}
+\item \href{#method-FilteredDataset-get_supported_filter_varnames}{\code{FilteredDataset$get_supported_filter_varnames()}}
 \item \href{#method-FilteredDataset-set_filterable_varnames}{\code{FilteredDataset$set_filterable_varnames()}}
 \item \href{#method-FilteredDataset-ui}{\code{FilteredDataset$ui()}}
 \item \href{#method-FilteredDataset-server}{\code{FilteredDataset$server()}}
@@ -311,6 +312,22 @@ of the data and \code{private$.filterable_varnames} if
 \code{private$.filterable_varnames} has positive length
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{FilteredDataset$get_filterable_varnames()}\if{html}{\out{</div>}}
+}
+
+\subsection{Returns}{
+(\code{character} vector) of variable names
+Gets the variables which could be filtered
+
+This does not take into account the value
+of \code{private$.filterable_varnames}
+}
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-FilteredDataset-get_supported_filter_varnames"></a>}}
+\if{latex}{\out{\hypertarget{method-FilteredDataset-get_supported_filter_varnames}{}}}
+\subsection{Method \code{get_supported_filter_varnames()}}{
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{FilteredDataset$get_supported_filter_varnames()}\if{html}{\out{</div>}}
 }
 
 \subsection{Returns}{
