@@ -129,7 +129,7 @@ testthat::test_that(
           )
         ),
         RPPAArray = quote(
-          MAE[["RPPAArray"]] <- subset(
+          MAE[["RPPAArray"]] <- subset( # nolint
             MAE[["RPPAArray"]],
             subset = ARRAY_TYPE == ""
           )
@@ -237,7 +237,7 @@ testthat::test_that(
           )
         ),
         RPPAArray = quote(
-          MAE[["RPPAArray"]] <- subset(
+          MAE[["RPPAArray"]] <- subset( # nolint
             MAE[["RPPAArray"]],
             subset = ARRAY_TYPE == ""
           )
@@ -315,7 +315,7 @@ testthat::test_that("MAEFilteredDataset filters removed using remove_filters", {
         )
       ),
       RPPAArray = quote(
-        MAE[["RPPAArray"]] <- subset(
+        MAE[["RPPAArray"]] <- subset( # nolint
           MAE[["RPPAArray"]],
           subset = ARRAY_TYPE == ""
         )
