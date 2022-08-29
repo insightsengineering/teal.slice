@@ -576,3 +576,22 @@ testthat::test_that("get_data assert the `filtered` argument is logical(1)", {
     regexp = "Assertion on 'filtered' failed: Must be of type 'logical flag', not 'character'"
   )
 })
+
+testthat::test_that("filter_panel_disable and filter_panel_enable", {
+  filtered_data <- FilteredData$new(data_objects = list("iris" = list(dataset = iris)), join_keys = NULL)
+  filtered_data$set_filter_state(list(iris = list(Sepal.Width = c(3, 4))))
+  shiny::testServer(
+    filtered_data$srv_filter_panel,
+    expr = {
+      testthat::expect_length(filtered_data$get_filter_state(), 1)
+      testthat::expect_true(filtered_data$get_filter_turn())
+      filtered_data$filter_panel_disable()
+      testthat::expect_length(filtered_data$get_filter_state(), 0)
+      testthat::expect_false(filtered_data$get_filter_turn())
+      filtered_data$filter_panel_enable()
+      testthat::expect_length(filtered_data$get_filter_state(), 1)
+      testthat::expect_true(filtered_data$get_filter_turn())
+    }
+  )
+})
+
