@@ -20,9 +20,17 @@ A stable release of all `NEST` packages from June 2022 is also available [here](
 
 See package vignettes `browseVignettes(package = "teal.slice")` for usage of this package.
 
-[![Stargazers repo roster for @insightsengineering/teal.slice](https://reporoster.com/stars/insightsengineering/teal.slice)](https://github.com/insightsengineering/teal.slice/stargazers)
-[![Forkers repo roster for @insightsengineering/teal.slice](https://reporoster.com/forks/insightsengineering/teal.slice)](https://github.com/insightsengineering/teal.slice/network/members)
+## Stargazers and Forkers
 
-## Stargazers over time
+### Stargazers over time
 
 [![Stargazers over time](https://starchart.cc/insightsengineering/teal.slice.svg)](https://starchart.cc/insightsengineering/teal.slice)
+
+### Stargazers
+
+[![Stargazers repo roster for @insightsengineering/teal.slice](https://reporoster.com/stars/insightsengineering/teal.slice)](https://github.com/insightsengineering/teal.slice/stargazers)
+
+### Forkers
+
+[![Forkers repo roster for @insightsengineering/teal.slice](https://reporoster.com/forks/insightsengineering/teal.slice)](https://github.com/insightsengineering/teal.slice/network/members)
+
