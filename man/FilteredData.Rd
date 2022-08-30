@@ -298,6 +298,7 @@ Set the variable names of a given dataset for the filtering
 \item{\code{dataname}}{(\code{character(1)}) name of the dataset}
 
 \item{\code{varnames}}{(\code{character} or \code{NULL}) The variables which
+users can choose to filter the data
 See \code{self$get_filterable_varnames} for more details}
 }
 \if{html}{\out{</div>}}

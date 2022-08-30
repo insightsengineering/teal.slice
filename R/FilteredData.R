@@ -144,6 +144,7 @@ FilteredData <- R6::R6Class( # nolint
     #' Set the variable names of a given dataset for the filtering
     #' @param dataname (`character(1)`) name of the dataset
     #' @param varnames (`character` or `NULL`) The variables which
+    #' users can choose to filter the data
     #' See `self$get_filterable_varnames` for more details
     #' @return invisibly this `FilteredData` object
     set_filterable_varnames = function(dataname, varnames) {
