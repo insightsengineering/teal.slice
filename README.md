@@ -19,3 +19,10 @@ remotes::install_github("insightsengineering/teal.slice@*remotes")
 A stable release of all `NEST` packages from June 2022 is also available [here](https://github.com/insightsengineering/depository#readme).
 
 See package vignettes `browseVignettes(package = "teal.slice")` for usage of this package.
+
+[![Stargazers repo roster for @insightsengineering/teal.slice](https://reporoster.com/stars/insightsengineering/teal.slice)](https://github.com/insightsengineering/teal.slice/stargazers)
+[![Forkers repo roster for @insightsengineering/teal.slice](https://reporoster.com/forks/insightsengineering/teal.slice)](https://github.com/insightsengineering/teal.slice/network/members)
+
+## Stargazers over time
+
+[![Stargazers over time](https://starchart.cc/insightsengineering/teal.slice.svg)](https://starchart.cc/insightsengineering/teal.slice)
