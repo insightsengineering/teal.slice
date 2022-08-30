@@ -165,7 +165,7 @@ testthat::test_that("filter_panel_api neutral when filter panel is disabled", {
 })
 
 
-testthat::test_that("filter_panel_api disable enable", {
+testthat::test_that("filter_panel_api under disable/enable filter panel", {
   shiny::testServer(
     filtered_data$srv_filter_panel,
     expr = {
