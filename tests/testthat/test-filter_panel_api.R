@@ -132,3 +132,70 @@ testthat::test_that(
     )
   }
 )
+
+
+testthat::test_that("filter_panel_api neutral when filter panel is disabled", {
+  shiny::testServer(
+    filtered_data$srv_filter_panel,
+    expr = {
+      filtered_data <- teal.slice:::init_filtered_data(list(iris = list(dataset = iris), mtcars = list(dataset = mtcars)))
+      filtered_data$filter_panel_disable()
+      fs <- FilterPanelAPI$new(filtered_data)
+      filter_list <- list(
+        iris = list(
+          Sepal.Length = list(c(5.1, 6.4)),
+          Species = c("setosa", "versicolor")
+        ),
+        mtcars = list(
+          hp = list(selected = c(52, 65), keep_na = FALSE, keep_inf = FALSE)
+        )
+      )
+      testthat::expect_warning(fs$set_filter_state(filter_list))
+      testthat::expect_warning(fs$remove_all_filter_states(datanames = "iris"))
+      fs_wo_attr <- isolate(fs$get_filter_state())
+      attr(fs_wo_attr, "formatted") <- NULL
+      names(fs_wo_attr) <- NULL
+
+      testthat::expect_equal(
+        fs_wo_attr,
+        list()
+      )
+    }
+  )
+})
+
+
+testthat::test_that("filter_panel_api disable enable", {
+  shiny::testServer(
+    filtered_data$srv_filter_panel,
+    expr = {
+      filtered_data <- teal.slice:::init_filtered_data(list(iris = list(dataset = iris), mtcars = list(dataset = mtcars)))
+      filtered_data$filter_panel_disable()
+      fs <- FilterPanelAPI$new(filtered_data)
+      filter_list <- list(
+        iris = list(
+          Sepal.Length = list(c(5.1, 6.4)),
+          Species = c("setosa", "versicolor")
+        ),
+        mtcars = list(
+          hp = list(selected = c(52, 65), keep_na = FALSE, keep_inf = FALSE)
+        )
+      )
+      testthat::expect_warning(fs$set_filter_state(filter_list))
+      testthat::expect_warning(fs$remove_all_filter_states(datanames = "iris"))
+      filtered_data$filter_panel_enable()
+      fs$set_filter_state(filter_list)
+      fs$remove_all_filter_states(datanames = "iris")
+      fs_wo_attr <- isolate(fs$get_filter_state())
+      attr(fs_wo_attr, "formatted") <- NULL
+
+      testthat::expect_equal(
+        fs_wo_attr,
+        list(mtcars = list(
+          hp = list(selected = c(52, 65), keep_na = FALSE, keep_inf = FALSE)
+        ))
+      )
+    }
+  )
+})
+

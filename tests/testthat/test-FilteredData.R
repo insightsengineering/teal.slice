@@ -639,3 +639,4 @@ testthat::test_that("get_filter_panel_ui_id - non-empty when in shiny session", 
     }
   )
 })
+
