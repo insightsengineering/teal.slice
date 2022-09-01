@@ -41,7 +41,6 @@ shiny::isolate(dataset$get_filter_state())
 \item \href{#method-MAEFilteredDataset-get_varlabels}{\code{MAEFilteredDataset$get_varlabels()}}
 \item \href{#method-MAEFilteredDataset-get_filter_overview_info}{\code{MAEFilteredDataset$get_filter_overview_info()}}
 \item \href{#method-MAEFilteredDataset-get_filterable_varnames}{\code{MAEFilteredDataset$get_filterable_varnames()}}
-\item \href{#method-MAEFilteredDataset-get_supported_filter_varnames}{\code{MAEFilteredDataset$get_supported_filter_varnames()}}
 \item \href{#method-MAEFilteredDataset-set_filter_state}{\code{MAEFilteredDataset$set_filter_state()}}
 \item \href{#method-MAEFilteredDataset-remove_filter_state}{\code{MAEFilteredDataset$remove_filter_state()}}
 \item \href{#method-MAEFilteredDataset-ui_add_filter_state}{\code{MAEFilteredDataset$ui_add_filter_state()}}
@@ -186,19 +185,6 @@ Get filter overview rows of a dataset
 Gets variable names for the filtering.
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{MAEFilteredDataset$get_filterable_varnames()}\if{html}{\out{</div>}}
-}
-
-\subsection{Returns}{
-(\code{character(0)})
-Gets the variables which could be filtered
-}
-}
-\if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-MAEFilteredDataset-get_supported_filter_varnames"></a>}}
-\if{latex}{\out{\hypertarget{method-MAEFilteredDataset-get_supported_filter_varnames}{}}}
-\subsection{Method \code{get_supported_filter_varnames()}}{
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{MAEFilteredDataset$get_supported_filter_varnames()}\if{html}{\out{</div>}}
 }
 
 \subsection{Returns}{

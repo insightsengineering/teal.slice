@@ -156,13 +156,6 @@ MAEFilteredDataset <- R6::R6Class( # nolint
       character(0)
     },
 
-    #' Gets the variables which could be filtered
-    #'
-    #' @return (`character(0)`)
-    get_supported_filter_varnames = function() {
-      character(0)
-    },
-
     #' @description
     #' Set filter state
     #'

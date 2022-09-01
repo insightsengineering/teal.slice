@@ -2420,6 +2420,19 @@ get_supported_filter_varnames.matrix <- function(data) { # nolint
   }
 }
 
+#' @keywords internal
+#' @export
+get_supported_filter_varnames.FilteredDataset <- function(data) { # nolint
+  get_supported_filter_varnames(data$get_dataset())
+}
+
+#' @keywords internal
+#' @export
+get_supported_filter_varnames.MAEFilteredDataset = function(data) { #nolint
+  character(0)
+}
+
+
 #' @title Returns a `choices_labeled` object
 #'
 #' @param data (`data.frame`, `DFrame`, `list`)\cr
