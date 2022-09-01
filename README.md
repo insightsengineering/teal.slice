@@ -33,4 +33,3 @@ See package vignettes `browseVignettes(package = "teal.slice")` for usage of thi
 ### Forkers
 
 [![Forkers repo roster for @insightsengineering/teal.slice](https://reporoster.com/forks/insightsengineering/teal.slice)](https://github.com/insightsengineering/teal.slice/network/members)
-
