@@ -2428,7 +2428,7 @@ get_supported_filter_varnames.FilteredDataset <- function(data) { # nolint
 
 #' @keywords internal
 #' @export
-get_supported_filter_varnames.MAEFilteredDataset = function(data) { #nolint
+get_supported_filter_varnames.MAEFilteredDataset <- function(data) { # nolint
   character(0)
 }
 
