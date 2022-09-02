@@ -807,8 +807,10 @@ FilteredData <- R6::R6Class( # nolint
             handlerExpr = {
               if (isTRUE(input[["filter_turn_onoff"]])) {
                 self$filter_panel_enable()
+                logger::log_trace("Enable the Filtered Panel with the filter_panel_enable method")
               } else {
                 self$filter_panel_disable()
+                logger::log_trace("Disable the Filtered Panel with the filter_panel_enable method")
               }
             }, ignoreNULL = TRUE
           )
