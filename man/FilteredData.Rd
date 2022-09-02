@@ -145,6 +145,7 @@ shiny::isolate(datasets$get_filter_state())
 \item \href{#method-FilteredData-get_datalabel}{\code{FilteredData$get_datalabel()}}
 \item \href{#method-FilteredData-get_filterable_datanames}{\code{FilteredData$get_filterable_datanames()}}
 \item \href{#method-FilteredData-get_filterable_varnames}{\code{FilteredData$get_filterable_varnames()}}
+\item \href{#method-FilteredData-set_filterable_varnames}{\code{FilteredData$set_filterable_varnames()}}
 \item \href{#method-FilteredData-get_call}{\code{FilteredData$get_call()}}
 \item \href{#method-FilteredData-get_code}{\code{FilteredData$get_code()}}
 \item \href{#method-FilteredData-get_filtered_dataset}{\code{FilteredData$get_filtered_dataset()}}
@@ -284,6 +285,30 @@ Gets variable names of a given dataname for the filtering.
 }
 \subsection{Returns}{
 (\code{character} vector) of variable names
+}
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-FilteredData-set_filterable_varnames"></a>}}
+\if{latex}{\out{\hypertarget{method-FilteredData-set_filterable_varnames}{}}}
+\subsection{Method \code{set_filterable_varnames()}}{
+Set the variable names of a given dataset for the filtering
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{FilteredData$set_filterable_varnames(dataname, varnames)}\if{html}{\out{</div>}}
+}
+
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{dataname}}{(\code{character(1)}) name of the dataset}
+
+\item{\code{varnames}}{(\code{character} or \code{NULL}) The variables which
+users can choose to filter the data
+See \code{self$get_filterable_varnames} for more details}
+}
+\if{html}{\out{</div>}}
+}
+\subsection{Returns}{
+invisibly this \code{FilteredData} object
 }
 }
 \if{html}{\out{<hr>}}

@@ -129,7 +129,7 @@ testthat::test_that(
           )
         ),
         RPPAArray = quote(
-          MAE[["RPPAArray"]] <- subset(
+          MAE[["RPPAArray"]] <- subset( # nolint
             MAE[["RPPAArray"]],
             subset = ARRAY_TYPE == ""
           )
@@ -237,7 +237,7 @@ testthat::test_that(
           )
         ),
         RPPAArray = quote(
-          MAE[["RPPAArray"]] <- subset(
+          MAE[["RPPAArray"]] <- subset( # nolint
             MAE[["RPPAArray"]],
             subset = ARRAY_TYPE == ""
           )
@@ -270,6 +270,12 @@ testthat::test_that("MAEFilteredDataset$get_filterable_varnames returns characte
   utils::data(miniACC, package = "MultiAssayExperiment")
   filtered_dataset <- MAEFilteredDataset$new(dataset = miniACC, dataname = "miniACC")
   testthat::expect_identical(filtered_dataset$get_filterable_varnames(), character(0))
+})
+
+testthat::test_that("get_supported_filter_varnames.MAEFilteredDataset returns character(0)", {
+  utils::data(miniACC, package = "MultiAssayExperiment")
+  filtered_dataset <- MAEFilteredDataset$new(dataset = miniACC, dataname = "miniACC")
+  testthat::expect_identical(get_supported_filter_varnames(filtered_dataset), character(0))
 })
 
 testthat::test_that("MAEFilteredDataset$get_varlabels returns column variable labels", {
@@ -309,7 +315,7 @@ testthat::test_that("MAEFilteredDataset filters removed using remove_filters", {
         )
       ),
       RPPAArray = quote(
-        MAE[["RPPAArray"]] <- subset(
+        MAE[["RPPAArray"]] <- subset( # nolint
           MAE[["RPPAArray"]],
           subset = ARRAY_TYPE == ""
         )
