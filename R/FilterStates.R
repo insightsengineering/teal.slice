@@ -828,7 +828,7 @@ DFFilterStates <- R6::R6Class( # nolint
     #' shiny::isolate(dffs$get_filter_state())
     #'
     #' @return `NULL`
-    set_filter_state = function(data, state, vars_include = get_filterable_varnames(data = data), ...) {
+    set_filter_state = function(data, state, vars_include = get_supported_filter_varnames(data = data), ...) {
       checkmate::assert_data_frame(data)
       checkmate::assert(
         checkmate::check_subset(names(state), names(data)),
@@ -970,7 +970,7 @@ DFFilterStates <- R6::R6Class( # nolint
     #'  optional, vector of column names to be included.
     #' @param ... ignored
     #' @return `moduleServer` function which returns `NULL`
-    srv_add_filter_state = function(id, data, vars_include = get_filterable_varnames(data = data), ...) {
+    srv_add_filter_state = function(id, data, vars_include = get_supported_filter_varnames(data = data), ...) {
       stopifnot(is.data.frame(data))
       check_ellipsis(..., stop = FALSE)
       moduleServer(
@@ -1361,7 +1361,7 @@ MAEFilterStates <- R6::R6Class( # nolint
           # available choices to display
           avail_column_choices <- reactive({
             choices <- setdiff(
-              get_filterable_varnames(data = SummarizedExperiment::colData(data)),
+              get_supported_filter_varnames(data = SummarizedExperiment::colData(data)),
               active_filter_vars()
             )
             data_choices_labeled(
@@ -1888,7 +1888,7 @@ SEFilterStates <- R6::R6Class( # nolint
           # available choices to display
           avail_row_data_choices <- reactive({
             choices <- setdiff(
-              get_filterable_varnames(data = row_data),
+              get_supported_filter_varnames(data = row_data),
               active_filter_row_vars()
             )
 
@@ -1901,7 +1901,7 @@ SEFilterStates <- R6::R6Class( # nolint
           })
           avail_col_data_choices <- reactive({
             choices <- setdiff(
-              get_filterable_varnames(data = col_data),
+              get_supported_filter_varnames(data = col_data),
               active_filter_col_vars()
             )
 
@@ -2294,7 +2294,7 @@ MatrixFilterStates <- R6::R6Class( # nolint
           # available choices to display
           avail_column_choices <- reactive({
             choices <- setdiff(
-              get_filterable_varnames(data = data),
+              get_supported_filter_varnames(data = data),
               active_filter_vars()
             )
             data_choices_labeled(
@@ -2375,7 +2375,7 @@ MatrixFilterStates <- R6::R6Class( # nolint
 # utils -----
 .filterable_class <- c("logical", "integer", "numeric", "factor", "character", "Date", "POSIXct", "POSIXlt")
 
-#' Gets filterable variable names
+#' Gets supported filterable variable names
 #'
 #' Gets filterable variable names from a given object. The names match variables
 #' of classes in an array `teal.slice:::.filterable_class`.
@@ -2390,16 +2390,16 @@ MatrixFilterStates <- R6::R6Class( # nolint
 #'   d = Sys.time() + 1:3,
 #'   z = complex(3)
 #' )
-#' teal.slice:::get_filterable_varnames(df)
+#' teal.slice:::get_supported_filter_varnames(df)
 #' @return `character` the array of the matched element names
 #' @keywords internal
-get_filterable_varnames <- function(data) {
-  UseMethod("get_filterable_varnames")
+get_supported_filter_varnames <- function(data) {
+  UseMethod("get_supported_filter_varnames")
 }
 
 #' @keywords internal
 #' @export
-get_filterable_varnames.default <- function(data) { # nolint
+get_supported_filter_varnames.default <- function(data) { # nolint
   is_expected_class <- vapply(
     X = data,
     FUN = function(x) any(class(x) %in% .filterable_class),
@@ -2410,7 +2410,7 @@ get_filterable_varnames.default <- function(data) { # nolint
 
 #' @keywords internal
 #' @export
-get_filterable_varnames.matrix <- function(data) { # nolint
+get_supported_filter_varnames.matrix <- function(data) { # nolint
   # all columns are the same type in matrix
   is_expected_class <- class(data[, 1]) %in% .filterable_class
   if (is_expected_class && !is.null(names(data))) {
@@ -2419,6 +2419,19 @@ get_filterable_varnames.matrix <- function(data) { # nolint
     character(0)
   }
 }
+
+#' @keywords internal
+#' @export
+get_supported_filter_varnames.FilteredDataset <- function(data) { # nolint
+  get_supported_filter_varnames(data$get_dataset())
+}
+
+#' @keywords internal
+#' @export
+get_supported_filter_varnames.MAEFilteredDataset <- function(data) { # nolint
+  character(0)
+}
+
 
 #' @title Returns a `choices_labeled` object
 #'

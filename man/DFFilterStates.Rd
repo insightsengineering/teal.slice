@@ -180,7 +180,7 @@ Set filter state
 \if{html}{\out{<div class="r">}}\preformatted{DFFilterStates$set_filter_state(
   data,
   state,
-  vars_include = get_filterable_varnames(data = data),
+  vars_include = get_supported_filter_varnames(data = data),
   ...
 )}\if{html}{\out{</div>}}
 }
@@ -285,7 +285,7 @@ Removed filter variable gets back to available choices.
 \if{html}{\out{<div class="r">}}\preformatted{DFFilterStates$srv_add_filter_state(
   id,
   data,
-  vars_include = get_filterable_varnames(data = data),
+  vars_include = get_supported_filter_varnames(data = data),
   ...
 )}\if{html}{\out{</div>}}
 }
