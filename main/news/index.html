@@ -33,12 +33,6 @@
 <li class="active nav-item">
   <a class="nav-link" href="../news/index.html">Changelog</a>
 </li>
-<!-- start dropdown for versions --> <li class="nav-item dropdown">
-        <a href="#" class="nav-link dropdown-toggle"
-          data-bs-toggle="dropdown" role="button"
-          aria-expanded="false" aria-haspopup="true"
-          id="dropdown-versions">Versions</a> <div class="dropdown-menu" aria-labelledby="dropdown-versions"> <a class="dropdown-item" href="https://insightsengineering.github.io/teal.slice/main">main</a> </div></li>
-<!-- end dropdown for versions -->
       </ul><form class="form-inline my-2 my-lg-0" role="search">
         <input type="search" class="form-control me-sm-2" aria-label="Toggle navigation" name="search-input" data-search-index="../search.json" id="search-input" placeholder="Search for" autocomplete="off"></form>
 
@@ -61,13 +55,25 @@
 
     <div class="section level2">
 <h2 class="pkg-version" data-toc-text="0.1.1.9015" id="tealslice-0119015">teal.slice 0.1.1.9015<a class="anchor" aria-label="anchor" href="#tealslice-0119015"></a></h2>
-<ul><li>Removed <code>CDISCFilteredDataset</code> class and functionality moved to <code>CDISCFilteredData</code>.</li>
+<div class="section level4">
+<h4 id="new-features-0-1-1-9015">New features<a class="anchor" aria-label="anchor" href="#new-features-0-1-1-9015"></a></h4>
+<ul><li>Added <code>set_filterable_varnames</code> method to <code>FilteredData</code> and <code>FilteredDataset</code> objects so that there is control over which variables can be filtered.</li>
+<li>Removed <code>CDISCFilteredDataset</code> class and functionality moved to <code>CDISCFilteredData</code>.</li>
 <li>Changed constructor of <code>FilteredData</code> to not require <code>TealData</code> object. See <code><a href="../reference/init_filtered_data.html">help(init_filtered_data)</a></code> for more details.</li>
 <li>The filtered data is now stored in <code>FilteredData</code> not <code>FilteredDataset</code>.</li>
 <li>The join keys stored inside <code>FilteredData</code> are now <code>JoinKeys</code> objects.</li>
 <li>Updated <code>get_filter_state</code> to return a list of active filter states and an attribute with the character form of the filter states.</li>
 <li>Updated <code>get_varlabels</code> method in the <code>FilterStates</code> classes, accepts a vector input.</li>
 </ul></div>
+<div class="section level4">
+<h4 id="breaking-changes-0-1-1-9015">Breaking changes<a class="anchor" aria-label="anchor" href="#breaking-changes-0-1-1-9015"></a></h4>
+<ul><li>Renamed internal S3 method <code>get_filterable_varnames</code> to <code>get_supported_filter_varnames</code>.</li>
+</ul></div>
+<div class="section level4">
+<h4 id="bug-fixes-0-1-1-9015">Bug fixes<a class="anchor" aria-label="anchor" href="#bug-fixes-0-1-1-9015"></a></h4>
+<ul><li>Fixed a bug when the filter panel overview would not refresh if the panel was hidden during a transition between active modules.</li>
+</ul></div>
+</div>
     <div class="section level2">
 <h2 class="pkg-version" data-toc-text="0.1.1" id="tealslice-011">teal.slice 0.1.1<a class="anchor" aria-label="anchor" href="#tealslice-011"></a></h2>
 <div class="section level4">

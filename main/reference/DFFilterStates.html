@@ -33,12 +33,6 @@
 <li class="nav-item">
   <a class="nav-link" href="../news/index.html">Changelog</a>
 </li>
-<!-- start dropdown for versions --> <li class="nav-item dropdown">
-        <a href="#" class="nav-link dropdown-toggle"
-          data-bs-toggle="dropdown" role="button"
-          aria-expanded="false" aria-haspopup="true"
-          id="dropdown-versions">Versions</a> <div class="dropdown-menu" aria-labelledby="dropdown-versions"> <a class="dropdown-item" href="https://insightsengineering.github.io/teal.slice/main">main</a> </div></li>
-<!-- end dropdown for versions -->
       </ul><form class="form-inline my-2 my-lg-0" role="search">
         <input type="search" class="form-control me-sm-2" aria-label="Toggle navigation" name="search-input" data-search-index="../search.json" id="search-input" placeholder="Search for" autocomplete="off"></form>
 
@@ -213,7 +207,7 @@ The output list is a compatible input to <code>self$set_filter_state</code>.</p>
 <p></p><div class="r"><div class="sourceCode"><pre><code><span><span class="va">DFFilterStates</span><span class="op">$</span><span class="fu">set_filter_state</span><span class="op">(</span></span>
 <span>  <span class="va">data</span>,</span>
 <span>  <span class="va">state</span>,</span>
-<span>  vars_include <span class="op">=</span> <span class="fu"><a href="../reference/get_filterable_varnames.html">get_filterable_varnames</a></span><span class="op">(</span>data <span class="op">=</span> <span class="va">data</span><span class="op">)</span>,</span>
+<span>  vars_include <span class="op">=</span> <span class="fu"><a href="../reference/get_supported_filter_varnames.html">get_supported_filter_varnames</a></span><span class="op">(</span>data <span class="op">=</span> <span class="va">data</span><span class="op">)</span>,</span>
 <span>  <span class="va">...</span></span>
 <span><span class="op">)</span></span></code></pre></div><p></p></div>
 </div>
@@ -322,7 +316,7 @@ Removed filter variable gets back to available choices.</p><div class="section">
 <p></p><div class="r"><div class="sourceCode"><pre><code><span><span class="va">DFFilterStates</span><span class="op">$</span><span class="fu">srv_add_filter_state</span><span class="op">(</span></span>
 <span>  <span class="va">id</span>,</span>
 <span>  <span class="va">data</span>,</span>
-<span>  vars_include <span class="op">=</span> <span class="fu"><a href="../reference/get_filterable_varnames.html">get_filterable_varnames</a></span><span class="op">(</span>data <span class="op">=</span> <span class="va">data</span><span class="op">)</span>,</span>
+<span>  vars_include <span class="op">=</span> <span class="fu"><a href="../reference/get_supported_filter_varnames.html">get_supported_filter_varnames</a></span><span class="op">(</span>data <span class="op">=</span> <span class="va">data</span><span class="op">)</span>,</span>
 <span>  <span class="va">...</span></span>
 <span><span class="op">)</span></span></code></pre></div><p></p></div>
 </div>
