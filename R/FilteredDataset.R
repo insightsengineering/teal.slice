@@ -314,9 +314,34 @@ FilteredDataset <- R6::R6Class( # nolint
     #' @description
     #' Gets variable names for the filtering.
     #'
+    #' It takes the intersection of the column names
+    #' of the data and `private$filterable_varnames` if
+    #' `private$filterable_varnames` has positive length
+    #'
     #' @return (`character` vector) of variable names
     get_filterable_varnames = function() {
-      get_filterable_varnames(self$get_dataset())
+      varnames <- get_supported_filter_varnames(self)
+      if (length(private$filterable_varnames) > 0) {
+        return(intersect(private$filterable_varnames, varnames))
+      }
+      return(varnames)
+    },
+
+    # setters ------
+    #' @description
+    #' Set the allowed filterable variables
+    #' @param varnames (`character` or `NULL`) The variables which can be filtered
+    #' See `self$get_filterable_varnames` for more details
+    #'
+    #' @details When retrieving the filtered variables only
+    #' those which have filtering supported (i.e. are of the permitted types)
+    #' are included.
+    #'
+    #' @return invisibly this `FilteredDataset`
+    set_filterable_varnames = function(varnames) {
+      checkmate::assert_character(varnames, any.missing = FALSE, null.ok = TRUE)
+      private$filterable_varnames <- varnames
+      return(invisible(self))
     },
 
     # modules ------
@@ -457,6 +482,10 @@ FilteredDataset <- R6::R6Class( # nolint
     label = character(0),
     metadata = NULL,
     hash = character(0),
+
+    # if this has length > 0 then only varnames in this vector
+    # can be filtered
+    filterable_varnames = NULL,
 
     # Calculates the MD5 hash of the data stored in this object.
     # @return NULL

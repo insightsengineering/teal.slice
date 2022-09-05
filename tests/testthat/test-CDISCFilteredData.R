@@ -112,7 +112,29 @@ testthat::test_that("get_filterable_varnames does not return child duplicates", 
   )
 })
 
-testthat::test_that("get_filterable_varnames return all from parent dataset", {
+
+testthat::test_that("get_filterable_varnames does not return child non-filterable variables", {
+  adsl <- teal.data::cdisc_dataset(
+    dataname = "ADSL",
+    x = data.frame(USUBJID = 1L, STUDYID = 1L, a = 1L, b = 1L)
+  )
+  child <- teal.data::cdisc_dataset(
+    dataname = "ADTTE",
+    parent = "ADSL",
+    x = data.frame(USUBJID = 1L, STUDYID = 1L, PARAMCD = 1L, a = 1L, c = 1L)
+  )
+  data <- teal.data::cdisc_data(adsl, child)
+
+  fd <- init_filtered_data(data)
+
+  fd$set_filterable_varnames("ADTTE", c("PARAMCD", "STUDYID"))
+  testthat::expect_identical(
+    fd$get_filterable_varnames("ADTTE"),
+    "PARAMCD"
+  )
+})
+
+testthat::test_that("get_filterable_varnames return all filterable variables from parent dataset", {
   adsl <- teal.data::cdisc_dataset(
     dataname = "ADSL",
     x = data.frame(USUBJID = 1L, STUDYID = 1L, a = 1L, b = 1L)
@@ -129,7 +151,36 @@ testthat::test_that("get_filterable_varnames return all from parent dataset", {
     fd$get_filterable_varnames("ADSL"),
     c("USUBJID", "STUDYID", "a", "b")
   )
+
+  fd$set_filterable_varnames("ADSL", c("a", "b"))
+  testthat::expect_identical(
+    fd$get_filterable_varnames("ADSL"),
+    c("a", "b")
+  )
 })
+
+
+testthat::test_that("get_filterable_varnames does not return duplicates from parent even if they are not filterable", {
+  adsl <- teal.data::cdisc_dataset(
+    dataname = "ADSL",
+    x = data.frame(USUBJID = 1L, STUDYID = 1L, a = 1L, b = 1L)
+  )
+  child <- teal.data::cdisc_dataset(
+    dataname = "ADTTE",
+    x = data.frame(USUBJID = 1L, STUDYID = 1L, PARAMCD = 1L, a = 1L, c = 1L)
+  )
+  data <- teal.data::cdisc_data(adsl, child)
+
+  fd <- init_filtered_data(data)
+
+  fd$set_filterable_varnames("ADSL", c("a", "b"))
+
+  testthat::expect_identical(
+    fd$get_filterable_varnames("ADTTE"),
+    c("PARAMCD", "c")
+  )
+})
+
 
 testthat::test_that(
   "set_filter_state returns warning when setting a filter on a column which belongs to parent dataset",
