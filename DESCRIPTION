@@ -1,6 +1,6 @@
 Type: Package
 Package: teal.slice
-Title: Filter module for teal applications
+Title: Filter Module for `teal` Applications
 Version: 0.1.1.9016
 Date: 2022-09-02
 Authors@R: c(
