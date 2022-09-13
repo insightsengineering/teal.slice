@@ -93,9 +93,9 @@ a.remove_all:hover {
 .filterPlotOverlayBoxes {
   position: absolute;
   top: -2px;
-  right: 16px;
+  right: 2px;
   bottom: -2px;
-  left: 16px;
+  left: 32px;
   animation: 0.75s ease-out 0s 1 shinyDataFilterEnlargeX,
     0.5s ease-in 0s 1 shinyDataFilterFadeIn;
   transform-origin: left;
