@@ -200,3 +200,17 @@ set_state <- function(x, value, is_reactive = shiny::isRunning()) {
   }
   invisible(NULL)
 }
+
+#' Resolve the expected bootstrap version
+#' @keywords internal
+get_teal_bs_version <- function() {
+  bs_theme <- getOption("teal.bs_theme")
+  if (is.null(bs_theme)) {
+    NULL
+  } else if (!inherits(bs_theme, "bs_theme")) {
+    warning("teal.bs_theme has to be of a bslib::bs_theme class, the default shiny bootstrap is used.")
+    NULL
+  } else {
+    bs_theme
+  }
+}
