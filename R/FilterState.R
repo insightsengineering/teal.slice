@@ -1015,7 +1015,7 @@ LogicalFilterState <- R6::R6Class( # nolint
       tbl <- table(df)
 
       choices <- as.logical(names(tbl))
-      names(choices) <- sprintf("%s (%s)", choices, tbl)
+      names(choices) <- tbl
       private$set_choices(as.list(choices))
       self$set_selected(unname(choices)[1])
       private$histogram_data <- data.frame(
@@ -1066,19 +1066,32 @@ LogicalFilterState <- R6::R6Class( # nolint
     #'  id of shiny element
     ui = function(id) {
       ns <- NS(id)
+      ww <- as.numeric(names(private$choices))
+      labels <- lapply(seq_along(private$choices), function(i) {
+        w <- ww[i]
+        div(
+          class = "choices_state_label",
+          # max 80% to stop overflow
+          style = sprintf("width:%s%%", w / sum(ww) * 80),
+          span(
+            class = "choices_state_label_text",
+            sprintf(
+              "%s (%s)",
+              private$choices[i],
+              w
+            )
+          )
+        )
+      })
+
       fluidRow(
         div(
-          class = "relative",
-          # same overlay as for choices with no more than (default: 5) elements
-          div(
-            class = "filterPlotOverlayBoxes",
-            plotOutput(ns("plot"), height = "100%")
-          ),
+          class = "choices_state",
           radioButtons(
             ns("selection"),
             label = NULL,
-            choices = private$choices,
-            selected = isolate(self$get_selected()),
+            choiceNames = labels,
+            choiceValues = as.character(private$choices),
             width = "100%"
           )
         ),
@@ -1107,28 +1120,6 @@ LogicalFilterState <- R6::R6Class( # nolint
           logger::log_trace("LogicalFilterState$server initializing, dataname: { deparse1(private$input_dataname) }")
 
           shiny::setBookmarkExclude(c("selection", "keep_na"))
-
-          output$plot <- renderPlot(
-            bg = "transparent",
-            expr = {
-              data <- private$histogram_data
-              data$y <- rev(data$y / sum(data$y)) # we have to reverse because the histogram is turned by 90 degrees
-              data$x <- seq_len(nrow(data)) # to prevent ggplot reordering columns using the characters in x column
-              ggplot2::ggplot(data) +
-                # sort factor so that it reflects checkbox order
-                ggplot2::aes_string(x = "x", y = "y") +
-                ggplot2::geom_col(
-                  width = 0.95,
-                  fill = grDevices::rgb(66 / 255, 139 / 255, 202 / 255),
-                  color = NA,
-                  alpha = 0.2
-                ) +
-                ggplot2::coord_flip() +
-                ggplot2::theme_void() +
-                ggplot2::scale_x_discrete(expand = c(0, 0)) +
-                ggplot2::scale_y_continuous(expand = c(0, 0), limits = c(0, 1))
-            }
-          )
 
           private$observers$selection_reactive <- observeEvent(
             private$selected_reactive(),
@@ -1776,8 +1767,9 @@ ChoicesFilterState <- R6::R6Class( # nolint
       }
 
       x <- droplevels(x)
-      choices <- levels(x)
-      names(choices) <- sprintf("%s (%s)", choices, tabulate(x))
+      tbl <- table(x)
+      choices <- names(tbl)
+      names(choices) <- tbl
 
 
       private$set_choices(as.list(choices))
@@ -1830,24 +1822,38 @@ ChoicesFilterState <- R6::R6Class( # nolint
       ns <- NS(id)
       fluidRow(
         if (length(private$choices) <= getOption("teal.threshold_slider_vs_checkboxgroup")) {
-          div(
-            class = "relative",
+          ww <- as.numeric(names(private$choices))
+          labels <- lapply(seq_along(private$choices), function(i) {
+            w <- ww[i]
             div(
-              class = "filterPlotOverlayBoxes",
-              plotOutput(ns("plot"), height = "100%")
-            ),
+              class = "choices_state_label",
+              # max 80% to stop overflow
+              style = sprintf("width:%s%%", w / sum(ww) * 80),
+              span(
+                class = "choices_state_label_text",
+                sprintf(
+                  "%s (%s)",
+                  private$choices[i],
+                  w
+                )
+              )
+            )
+          })
+          div(
+            class = "choices_state",
             checkboxGroupInput(
-              ns("selection"),
+              "ss",
               label = NULL,
-              choices =  private$choices,
               selected = self$get_selected(),
-              width = "100%"
+              width = "100%",
+              choiceNames = labels,
+              choiceValues = as.character(private$choices)
             )
           )
         } else {
           teal.widgets::optionalSelectInput(
             inputId = ns("selection"),
-            choices = private$choices,
+            choices = stats::setNames(private$choices, sprintf("%s (%s)", private$choices, names(private$choices))),
             selected = self$get_selected(),
             multiple = TRUE,
             options = shinyWidgets::pickerOptions(
@@ -1880,30 +1886,6 @@ ChoicesFilterState <- R6::R6Class( # nolint
         function(input, output, session) {
           logger::log_trace("ChoicesFilterState$server initializing, dataname: { deparse1(private$input_dataname) }")
           shiny::setBookmarkExclude(c("selection", "keep_na"))
-          output$plot <- renderPlot(
-            bg = "transparent",
-            expr = {
-              if (length(private$choices) <= getOption("teal.threshold_slider_vs_checkboxgroup")) {
-                # Proportional
-                data <- private$histogram_data
-                data$y <- rev(data$y / sum(data$y)) # we have to reverse because the histogram is turned by 90 degrees
-                data$x <- seq_len(nrow(data)) # to prevent ggplot reordering columns using the characters in x column
-                ggplot2::ggplot(data) +
-                  # sort factor so that it reflects checkbox order
-                  ggplot2::aes_string(x = "x", y = "y") +
-                  ggplot2::geom_col(
-                    width = 0.95,
-                    fill = grDevices::rgb(66 / 255, 139 / 255, 202 / 255),
-                    color = NA,
-                    alpha = 0.2
-                  ) +
-                  ggplot2::coord_flip() +
-                  ggplot2::theme_void() +
-                  ggplot2::scale_x_discrete(expand = c(0, 0)) +
-                  ggplot2::scale_y_continuous(expand = c(0, 0), limits = c(0, 1))
-              }
-            }
-          )
 
           private$observers$selection_reactive <- observeEvent(
             private$selected_reactive(),
