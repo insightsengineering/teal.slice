@@ -1071,8 +1071,7 @@ LogicalFilterState <- R6::R6Class( # nolint
         w <- ww[i]
         div(
           class = "choices_state_label",
-          # max 80% to stop overflow
-          style = sprintf("width:%s%%", w / sum(ww) * 80),
+          style = sprintf("width:%s%%", w / sum(ww) * 100),
           span(
             class = "choices_state_label_text",
             sprintf(
@@ -1084,7 +1083,7 @@ LogicalFilterState <- R6::R6Class( # nolint
         )
       })
 
-      fluidRow(
+      div(
         div(
           class = "choices_state",
           radioButtons(
@@ -1820,15 +1819,14 @@ ChoicesFilterState <- R6::R6Class( # nolint
     #'  id of shiny element
     ui = function(id) {
       ns <- NS(id)
-      fluidRow(
+      div(
         if (length(private$choices) <= getOption("teal.threshold_slider_vs_checkboxgroup")) {
           ww <- as.numeric(names(private$choices))
           labels <- lapply(seq_along(private$choices), function(i) {
             w <- ww[i]
             div(
               class = "choices_state_label",
-              # max 80% to stop overflow
-              style = sprintf("width:%s%%", w / sum(ww) * 80),
+              style = sprintf("width:%s%%", w / sum(ww) * 100),
               span(
                 class = "choices_state_label_text",
                 sprintf(
@@ -1842,12 +1840,12 @@ ChoicesFilterState <- R6::R6Class( # nolint
           div(
             class = "choices_state",
             checkboxGroupInput(
-              "ss",
+              ns("selection"),
               label = NULL,
               selected = self$get_selected(),
               width = "100%",
               choiceNames = labels,
-              choiceValues = as.character(private$choices)
+              choiceValues = as.character(private$choices),
             )
           )
         } else {

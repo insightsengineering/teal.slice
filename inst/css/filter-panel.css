@@ -7,6 +7,7 @@
 .float-right {
   float: right;
 }
+
 .float-left {
   float: left;
 }
@@ -90,9 +91,17 @@ a.remove_all:hover {
   color: #d40000;
 }
 
-
 .choices_state label {
-  width:100%;
+  display: flex;
+  gap: 5px;
+}
+
+.choices_state label > input {
+  flex-grow: 0;
+}
+
+.choices_state label > span {
+  flex-grow: 4;
 }
 
 .choices_state_label_text {
