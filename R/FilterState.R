@@ -1070,18 +1070,22 @@ LogicalFilterState <- R6::R6Class( # nolint
     #'  id of shiny element
     ui = function(id) {
       ns <- NS(id)
-      ww <- as.numeric(names(private$choices))
+      l_counts <- as.numeric(names(private$choices))
+      is_na_l_counts <- is.na(l_counts)
+      if (any(is_na_l_counts)) l_counts[is_na_l_counts] <- 0
       labels <- lapply(seq_along(private$choices), function(i) {
-        w <- ww[i]
+        l_count <- l_counts[i]
+        l_freq <- l_count / sum(l_counts)
+        if (is.na(l_freq) || is.nan(l_freq)) l_freq <- 0
         div(
           class = "choices_state_label",
-          style = sprintf("width:%s%%", w / sum(ww) * 100),
+          style = sprintf("width:%s%%", l_freq * 100),
           span(
             class = "choices_state_label_text",
             sprintf(
               "%s (%s)",
               private$choices[i],
-              w
+              l_count
             )
           )
         )
@@ -1825,18 +1829,22 @@ ChoicesFilterState <- R6::R6Class( # nolint
       ns <- NS(id)
       div(
         if (length(private$choices) <= getOption("teal.threshold_slider_vs_checkboxgroup")) {
-          ww <- as.numeric(names(private$choices))
+          l_counts <- as.numeric(names(private$choices))
+          is_na_l_counts <- is.na(l_counts)
+          if (any(is_na_l_counts)) l_counts[is_na_l_counts] <- 0
           labels <- lapply(seq_along(private$choices), function(i) {
-            w <- ww[i]
+            l_count <- l_counts[i]
+            l_freq <- l_count / sum(l_counts)
+            if (is.na(l_freq) || is.nan(l_freq)) l_freq <- 0
             div(
               class = "choices_state_label",
-              style = sprintf("width:%s%%", w / sum(ww) * 100),
+              style = sprintf("width:%s%%", l_freq * 100),
               span(
                 class = "choices_state_label_text",
                 sprintf(
                   "%s (%s)",
                   private$choices[i],
-                  w
+                  l_count
                 )
               )
             )
