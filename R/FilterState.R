@@ -1664,10 +1664,23 @@ RangeFilterState <- R6::R6Class( # nolint
     # @return numeric(3) with names min, max, step - relevant for sliderInput
     get_pretty_range_inputs = function(values) {
       v_pretty_range <- pretty(values, n = 100)
+      min <- min(v_pretty_range)
+      max <- max(v_pretty_range)
+      range <- max - min
+
+      # ensure number of digits is reasonable
+      # essentially the same as shiny's implementation
+      step <- if (private$is_integer && range > 2) {
+        1L
+      } else {
+        n_steps <- length(v_pretty_range) - 1
+        signif(digits = 10, (max - min) / n_steps)
+      }
+
       c(
-        min = v_pretty_range[1],
-        max = v_pretty_range[length(v_pretty_range)],
-        step = `if`(private$is_integer, 1L, v_pretty_range[2] - v_pretty_range[1])
+        min = min,
+        max = max,
+        step = step
       )
     },
     validate_selection = function(value) {
