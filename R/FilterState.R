@@ -1843,9 +1843,9 @@ ChoicesFilterState <- R6::R6Class( # nolint
               ns("selection"),
               label = NULL,
               selected = self$get_selected(),
-              width = "100%",
               choiceNames = labels,
               choiceValues = as.character(private$choices),
+              width = "100%"
             )
           )
         } else {
