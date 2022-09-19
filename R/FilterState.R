@@ -1019,7 +1019,11 @@ LogicalFilterState <- R6::R6Class( # nolint
       private$set_choices(as.list(choices))
       self$set_selected(unname(choices)[1])
       private$histogram_data <- data.frame(
-        x = names(choices),
+        x = sprintf(
+          "%s (%s)",
+          choices,
+          names(choices)
+        ),
         y = as.vector(tbl)
       )
 
