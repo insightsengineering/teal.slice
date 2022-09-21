@@ -2462,23 +2462,17 @@ DatetimeFilterState <- R6::R6Class( # nolint
     #'  id of shiny element
     ui = function(id) {
       ns <- NS(id)
-      fluidRow(
-        div(
+      div(
+        class = "flex",
           actionButton(
-            class = "start_date_reset_button",
+            class = "date_reset_button",
             inputId = ns("start_date_reset"),
             label = NULL,
             icon = icon("fas fa-undo")
           ),
-          actionButton(
-            class = "end_date_reset_button",
-            inputId = ns("end_date_reset"),
-            label = NULL,
-            icon = icon("fas fa-undo")
-          ),
           div(
-            class = "input-daterange input-group m-auto w-80",
-            div(class = "float-left w-full", {
+            class = "flex w-80 air_datepicker_input",
+            div(class = "w-45", {
               x <- shinyWidgets::airDatepickerInput(
                 inputId = ns("selection_start"),
                 value = isolate(self$get_selected())[1],
@@ -2490,15 +2484,15 @@ DatetimeFilterState <- R6::R6Class( # nolint
                 addon = "none",
                 position = "bottom right"
               )
-              x$children[[2]]$attribs <- c(x$children[[2]]$attribs, list(class = " input-sm"))
+              x$children[[2]]$attribs <- c(x$children[[2]]$attribs, list(class = "input-sm"))
               x
             }),
             span(
-              class = "input-group-addon",
+              class = "w-10 air_datapicker_input_help",
               "to",
               title = "Times are displayed in the local timezone and are converted to UTC in the analysis"
             ),
-            div(class = "float-right w-full", {
+            div(class = "w-45", {
               x <- shinyWidgets::airDatepickerInput(
                 inputId = ns("selection_end"),
                 value = isolate(self$get_selected())[2],
@@ -2513,7 +2507,12 @@ DatetimeFilterState <- R6::R6Class( # nolint
               x$children[[2]]$attribs <- c(x$children[[2]]$attribs, list(class = " input-sm"))
               x
             })
-          )
+          ),
+        actionButton(
+          class = "date_reset_button",
+          inputId = ns("end_date_reset"),
+          label = NULL,
+          icon = icon("fas fa-undo")
         ),
         if (private$na_count > 0) {
           checkboxInput(
