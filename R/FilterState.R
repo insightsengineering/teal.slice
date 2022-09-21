@@ -2463,6 +2463,7 @@ DatetimeFilterState <- R6::R6Class( # nolint
     ui = function(id) {
       ns <- NS(id)
       div(
+      div(
         class = "flex",
         actionButton(
           class = "date_reset_button",
@@ -2513,6 +2514,7 @@ DatetimeFilterState <- R6::R6Class( # nolint
           inputId = ns("end_date_reset"),
           label = NULL,
           icon = icon("fas fa-undo")
+        )
         ),
         if (private$na_count > 0) {
           checkboxInput(
