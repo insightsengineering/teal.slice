@@ -4,9 +4,14 @@
   position: relative;
 }
 
+.flex {
+  display: flex;
+}
+
 .float-right {
   float: right;
 }
+
 .float-left {
   float: left;
 }
@@ -19,6 +24,14 @@
   width: 80%;
 }
 
+.w-45 {
+  width: 45%;
+}
+
+.w-10 {
+  width: 10%;
+}
+
 .m-auto {
   margin: auto;
 }
@@ -27,20 +40,23 @@
   margin-bottom: 1rem;
 }
 
-.start_date_reset_button {
-  float: left;
+.date_reset_button {
   padding: 0;
   padding-top: 4px;
   padding-bottom: 5px;
   width: 10%;
+  height: 3rem;
 }
 
-.end_date_reset_button {
-  float: right;
-  padding: 0;
-  padding-top: 4px;
-  padding-bottom: 5px;
-  width: 10%;
+span.air_datapicker_input_help {
+  text-align: center;
+  background-color: #dee2e6;
+  padding: 0.5rem 0;
+  height: 3rem;
+}
+
+.air_datepicker_input input {
+  height: 3rem;
 }
 
 .no-left-right-padding {
@@ -90,15 +106,29 @@ a.remove_all:hover {
   color: #d40000;
 }
 
-.filterPlotOverlayBoxes {
+.choices_state label {
+  display: flex;
+  gap: 5px;
+}
+
+.choices_state label > input {
+  flex-grow: 0;
+}
+
+.choices_state label > span {
+  flex-grow: 4;
+}
+
+.choices_state_label_text {
   position: absolute;
-  top: -2px;
-  right: 16px;
-  bottom: -2px;
-  left: 16px;
-  animation: 0.75s ease-out 0s 1 shinyDataFilterEnlargeX,
-    0.5s ease-in 0s 1 shinyDataFilterFadeIn;
-  transform-origin: left;
+  padding: 2px;
+}
+
+.choices_state_label {
+  background-color:lightblue;
+  height:2rem;
+  margin-top: -3px;
+  display:inline-block;
 }
 
 .filterPlotOverlayRange {
