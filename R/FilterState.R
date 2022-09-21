@@ -2464,50 +2464,50 @@ DatetimeFilterState <- R6::R6Class( # nolint
       ns <- NS(id)
       div(
         class = "flex",
-          actionButton(
-            class = "date_reset_button",
-            inputId = ns("start_date_reset"),
-            label = NULL,
-            icon = icon("fas fa-undo")
+        actionButton(
+          class = "date_reset_button",
+          inputId = ns("start_date_reset"),
+          label = NULL,
+          icon = icon("fas fa-undo")
+        ),
+        div(
+          class = "flex w-80 air_datepicker_input",
+          div(class = "w-45", {
+            x <- shinyWidgets::airDatepickerInput(
+              inputId = ns("selection_start"),
+              value = isolate(self$get_selected())[1],
+              startView = isolate(self$get_selected())[1],
+              timepicker = TRUE,
+              minDate = private$choices[1],
+              maxDate = private$choices[2],
+              update_on = "close",
+              addon = "none",
+              position = "bottom right"
+            )
+            x$children[[2]]$attribs <- c(x$children[[2]]$attribs, list(class = "input-sm"))
+            x
+          }),
+          span(
+            class = "w-10 air_datapicker_input_help",
+            "to",
+            title = "Times are displayed in the local timezone and are converted to UTC in the analysis"
           ),
-          div(
-            class = "flex w-80 air_datepicker_input",
-            div(class = "w-45", {
-              x <- shinyWidgets::airDatepickerInput(
-                inputId = ns("selection_start"),
-                value = isolate(self$get_selected())[1],
-                startView = isolate(self$get_selected())[1],
-                timepicker = TRUE,
-                minDate = private$choices[1],
-                maxDate = private$choices[2],
-                update_on = "close",
-                addon = "none",
-                position = "bottom right"
-              )
-              x$children[[2]]$attribs <- c(x$children[[2]]$attribs, list(class = "input-sm"))
-              x
-            }),
-            span(
-              class = "w-10 air_datapicker_input_help",
-              "to",
-              title = "Times are displayed in the local timezone and are converted to UTC in the analysis"
-            ),
-            div(class = "w-45", {
-              x <- shinyWidgets::airDatepickerInput(
-                inputId = ns("selection_end"),
-                value = isolate(self$get_selected())[2],
-                startView = isolate(self$get_selected())[2],
-                timepicker = TRUE,
-                minDate = private$choices[1],
-                maxDate = private$choices[2],
-                update_on = "close",
-                addon = "none",
-                position = "bottom right"
-              )
-              x$children[[2]]$attribs <- c(x$children[[2]]$attribs, list(class = " input-sm"))
-              x
-            })
-          ),
+          div(class = "w-45", {
+            x <- shinyWidgets::airDatepickerInput(
+              inputId = ns("selection_end"),
+              value = isolate(self$get_selected())[2],
+              startView = isolate(self$get_selected())[2],
+              timepicker = TRUE,
+              minDate = private$choices[1],
+              maxDate = private$choices[2],
+              update_on = "close",
+              addon = "none",
+              position = "bottom right"
+            )
+            x$children[[2]]$attribs <- c(x$children[[2]]$attribs, list(class = " input-sm"))
+            x
+          })
+        ),
         actionButton(
           class = "date_reset_button",
           inputId = ns("end_date_reset"),
