@@ -17,7 +17,7 @@
 #' @param ... (optional)
 #'   additional arguments for specific classes: keys
 #' @keywords internal
-#'
+#' @export
 #' @examples
 #' df <- data.frame(
 #'   character = letters,
