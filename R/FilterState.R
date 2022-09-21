@@ -2505,7 +2505,7 @@ DatetimeFilterState <- R6::R6Class( # nolint
                 addon = "none",
                 position = "bottom right"
               )
-              x$children[[2]]$attribs <- c(x$children[[2]]$attribs, list(class = " input-sm"))
+              x$children[[2]]$attribs <- c(x$children[[2]]$attribs, list(class = "input-sm"))
               x
             })
           ),
