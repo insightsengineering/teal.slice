@@ -82,7 +82,7 @@ init_filter_states.data.frame <- function(data, # nolint
 init_filter_states.matrix <- function(data, # nolint
                                       input_dataname,
                                       output_dataname = input_dataname,
-                                      datalabel = character,
+                                      datalabel = character(0),
                                       ...) {
   MatrixFilterStates$new(
     input_dataname = input_dataname,
