@@ -201,9 +201,9 @@ set_state <- function(x, value, is_reactive = shiny::isRunning()) {
   invisible(NULL)
 }
 
-#' Resolve the expected bootstrap version
+#' Resolve the expected bootstrap theme
 #' @keywords internal
-get_teal_bs_version <- function() {
+get_teal_bs_theme <- function() {
   bs_theme <- getOption("teal.bs_theme")
   if (is.null(bs_theme)) {
     NULL

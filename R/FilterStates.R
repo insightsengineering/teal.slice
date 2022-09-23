@@ -560,7 +560,7 @@ FilterStates <- R6::R6Class( # nolint
                 id = card_id,
                 class = "list-group-item",
                 fluidPage(
-                  theme = get_teal_bs_version(),
+                  theme = get_teal_bs_theme(),
                   fluidRow(
                     column(
                       width = 10,
