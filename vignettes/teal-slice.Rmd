@@ -45,7 +45,7 @@ subjects data level `(colData(MAE))` and on each experiment level `(MAE[["experi
 
 The example app below shows how to embed the filter panel inside a shiny application.
 
-Note if you are using the `teal` package to create a `teal` application then the `FilteredData` object (`datasets`) does not need to be explicitly created, nor its UI explicitly added and it is automatically available inside `teal` module server functions.
+Note if you are using the `teal` package to create a `teal` application then the `FilteredData` object (`datasets`) does not need to be explicitly created, nor its UI explicitly added and it is automatically available inside `teal` module server functions. Additionally, we are using `shiny::dataTableOutput` and `shiny::renderDataTable` for this example. This can lead to issues with Bootstrap, especially version 4. We recommend using `DT::dataTableOutput` and `DT::renderDataTable` if possible. See the `shiny` and `DT` documentation for more information.
 
 ```{r}
 library(teal.slice)
