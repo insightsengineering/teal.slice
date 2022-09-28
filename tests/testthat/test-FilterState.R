@@ -273,7 +273,6 @@ testthat::test_that("private$get_pretty_range_step returns pretty step size", {
     pretty_mpg
   )
   testthat::expect_identical(step, 0.2)
-
 })
 
 testthat::test_that("private$get_pretty_range_inputs returns nicely rounded values", {
@@ -296,6 +295,4 @@ testthat::test_that("private$get_pretty_range_inputs returns nicely rounded valu
   pretty_vals <- filter_state$test_get_pretty_range_inputs(mtcars$mpg)
   expected_vals <- c(min = 10.4, max = 34, step = 0.2)
   testthat::expect_identical(pretty_vals, expected_vals)
-
 })
-
