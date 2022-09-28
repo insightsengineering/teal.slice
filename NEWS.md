@@ -1,4 +1,4 @@
-# teal.slice 0.1.1.9017
+# teal.slice 0.1.1.9018
 
 ### New features
 
@@ -9,6 +9,7 @@
 * The join keys stored inside `FilteredData` are now `JoinKeys` objects.
 * Updated `get_filter_state` to return a list of active filter states and an attribute with the character form of the filter states.
 * Updated `get_varlabels` method in the `FilterStates` classes, accepts a vector input.
+* Exported `S3` generic function `init_filtered_states` so that it can be used in other packages.
 
 ### Breaking changes
 
