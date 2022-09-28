@@ -18,6 +18,7 @@
 ### Bug fixes
 
 * Fixed a bug when the filter panel overview would not refresh if the panel was hidden during a transition between active modules.
+* Fixed a bug in `FilterState` where `sliderInput` step values were too precise.
 
 # teal.slice 0.1.1
 
