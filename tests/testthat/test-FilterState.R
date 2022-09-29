@@ -240,3 +240,59 @@ testthat::test_that("$format() prepends spaces to every line of the returned str
     )
   }
 })
+
+
+# bug fix #41
+testthat::test_that("private$get_pretty_range_step returns pretty step size", {
+  test_class <- R6::R6Class(
+    classname = "TestClass",
+    inherit = RangeFilterState,
+    public = list(
+      test_get_pretty_range_step = function(min, max, pretty_range) {
+        private$get_pretty_range_step(min, max, pretty_range)
+      }
+    )
+  )
+
+  pretty_sepal_length <- pretty(iris$Sepal.Length, n = 100)
+
+  filter_state <- test_class$new(pretty_sepal_length, varname = "test")
+  step <- filter_state$test_get_pretty_range_step(
+    min(pretty_sepal_length),
+    max(pretty_sepal_length),
+    pretty_sepal_length
+  )
+  testthat::expect_identical(step, 0.05)
+
+  pretty_mpg <- pretty(mtcars$mpg, n = 100)
+
+  filter_state <- test_class$new(pretty_mpg, varname = "test")
+  step <- filter_state$test_get_pretty_range_step(
+    min(pretty_mpg),
+    max(pretty_mpg),
+    pretty_mpg
+  )
+  testthat::expect_identical(step, 0.2)
+})
+
+testthat::test_that("private$get_pretty_range_inputs returns nicely rounded values", {
+  test_class <- R6::R6Class(
+    classname = "TestClass",
+    inherit = RangeFilterState,
+    public = list(
+      test_get_pretty_range_inputs = function(values) {
+        private$get_pretty_range_inputs(values)
+      }
+    )
+  )
+
+  filter_state <- test_class$new(iris$Sepal.Length, varname = "test")
+  pretty_vals <- filter_state$test_get_pretty_range_inputs(iris$Sepal.Length)
+  expected_vals <- c(min = 4.30, max = 7.90, step = 0.05)
+  testthat::expect_equal(pretty_vals, expected_vals, tolerance = 0.01)
+
+  filter_state <- test_class$new(mtcars$mpg, varname = "test")
+  pretty_vals <- filter_state$test_get_pretty_range_inputs(mtcars$mpg)
+  expected_vals <- c(min = 10.4, max = 34, step = 0.2)
+  testthat::expect_identical(pretty_vals, expected_vals)
+})
