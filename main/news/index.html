@@ -10,7 +10,7 @@
     
     <a class="navbar-brand me-2" href="../index.html">teal.slice</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.1.9018</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.1.1.9019</small>
 
     <div style="width: 140px; margin-left: 0.5rem;"> <small class="nav-text text-muted me-auto">part of</small> <img src="https://github.com/insightsengineering/hex-stickers/blob/main/PNG/nest.png?raw=true" alt="NEST" style="height: 30px;"><a href="https://pharmaverse.org/" class="external-link"><img src="https://github.com/insightsengineering/hex-stickers/blob/main/PNG/pharmaverse.png?raw=true" alt="pharmaverse" style="height: 28px;"></a> </div>
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -33,12 +33,6 @@
 <li class="active nav-item">
   <a class="nav-link" href="../news/index.html">Changelog</a>
 </li>
-<!-- start dropdown for versions --> <li class="nav-item dropdown">
-        <a href="#" class="nav-link dropdown-toggle"
-          data-bs-toggle="dropdown" role="button"
-          aria-expanded="false" aria-haspopup="true"
-          id="dropdown-versions">Versions</a> <div class="dropdown-menu" aria-labelledby="dropdown-versions"> <a class="dropdown-item" data-toggle="tooltip" title="" href="https://insightsengineering.github.io/teal.slice/main">main</a> </div></li>
-<!-- end dropdown for versions -->
       </ul><form class="form-inline my-2 my-lg-0" role="search">
         <input type="search" class="form-control me-sm-2" aria-label="Toggle navigation" name="search-input" data-search-index="../search.json" id="search-input" placeholder="Search for" autocomplete="off"></form>
 
@@ -60,24 +54,34 @@
     </div>
 
     <div class="section level2">
-<h2 class="pkg-version" data-toc-text="0.1.1.9018" id="tealslice-0119018">teal.slice 0.1.1.9018<a class="anchor" aria-label="anchor" href="#tealslice-0119018"></a></h2>
+<h2 class="pkg-version" data-toc-text="0.1.1.9019" id="tealslice-0119019">teal.slice 0.1.1.9019<a class="anchor" aria-label="anchor" href="#tealslice-0119019"></a></h2>
 <div class="section level4">
-<h4 id="new-features-0-1-1-9018">New features<a class="anchor" aria-label="anchor" href="#new-features-0-1-1-9018"></a></h4>
+<h4 id="new-features-0-1-1-9019">New features<a class="anchor" aria-label="anchor" href="#new-features-0-1-1-9019"></a></h4>
 <ul><li>Added <code>set_filterable_varnames</code> method to <code>FilteredData</code> and <code>FilteredDataset</code> objects so that there is control over which variables can be filtered.</li>
+<li>Added support for custom <code>bslib</code> bootstrap themes via the <code>teal.bs_theme</code> option. See the <code>teal</code> vignette <code>teal-bs-themses</code> for more information.</li>
 <li>Removed <code>CDISCFilteredDataset</code> class and functionality moved to <code>CDISCFilteredData</code>.</li>
 <li>Changed constructor of <code>FilteredData</code> to not require <code>TealData</code> object. See <code><a href="../reference/init_filtered_data.html">help(init_filtered_data)</a></code> for more details.</li>
 <li>The filtered data is now stored in <code>FilteredData</code> not <code>FilteredDataset</code>.</li>
 <li>The join keys stored inside <code>FilteredData</code> are now <code>JoinKeys</code> objects.</li>
 <li>Updated <code>get_filter_state</code> to return a list of active filter states and an attribute with the character form of the filter states.</li>
-<li>Updated <code>get_varlabels</code> method in the <code>FilterStates</code> classes, accepts a vector input.</li>
-<li>Exported <code>S3</code> generic function <code>init_filtered_states</code> so that it can be used in other packages.</li>
+<li>Updated the <code>get_varlabels</code> method for <code>FilterStates</code> classes. It now accepts a vector input.</li>
+<li>Exported <code>S3</code> generic function <code>init_filter_states</code> so that it can be used in other packages.</li>
+<li>Added a <code>FilterPanelAPI</code> class to encapsulate the API of a filter panel.</li>
 </ul></div>
 <div class="section level4">
-<h4 id="breaking-changes-0-1-1-9018">Breaking changes<a class="anchor" aria-label="anchor" href="#breaking-changes-0-1-1-9018"></a></h4>
+<h4 id="enhancements-0-1-1-9019">Enhancements<a class="anchor" aria-label="anchor" href="#enhancements-0-1-1-9019"></a></h4>
+<ul><li>Redesigned the count bars for filter panel check box inputs.</li>
+<li>Redesigned the filter panel input for dates to use CSS flexbox.</li>
+<li>Update icons to be compatible with Font Awesome 6.</li>
+<li>Updates the <code>FilteredData</code> method <code>get_formatted_filter_state</code> so it no longer appends empty filters.</li>
+<li>Added clearer installation instructions to README.</li>
+</ul></div>
+<div class="section level4">
+<h4 id="breaking-changes-0-1-1-9019">Breaking changes<a class="anchor" aria-label="anchor" href="#breaking-changes-0-1-1-9019"></a></h4>
 <ul><li>Renamed internal S3 method <code>get_filterable_varnames</code> to <code>get_supported_filter_varnames</code>.</li>
 </ul></div>
 <div class="section level4">
-<h4 id="bug-fixes-0-1-1-9018">Bug fixes<a class="anchor" aria-label="anchor" href="#bug-fixes-0-1-1-9018"></a></h4>
+<h4 id="bug-fixes-0-1-1-9019">Bug fixes<a class="anchor" aria-label="anchor" href="#bug-fixes-0-1-1-9019"></a></h4>
 <ul><li>Fixed a bug when the filter panel overview would not refresh if the panel was hidden during a transition between active modules.</li>
 <li>Fixed a bug in <code>FilterState</code> where <code>sliderInput</code> step values were too precise.</li>
 </ul></div>
