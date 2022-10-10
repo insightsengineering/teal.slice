@@ -10,7 +10,7 @@
 * The join keys stored inside `FilteredData` are now `JoinKeys` objects.
 * Updated `get_filter_state` to return a list of active filter states and an attribute with the character form of the filter states.
 * Updated the `get_varlabels` method for `FilterStates` classes. It now accepts a vector input.
-* Exported `S3` generic function `init_filtered_states` so that it can be used in other packages.
+* Exported `S3` generic function `init_filter_states` so that it can be used in other packages.
 * Added a `FilterPanelAPI` class to encapsulate the API of a filter panel.
 
 ### Enhancements
