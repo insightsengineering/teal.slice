@@ -219,7 +219,7 @@ testthat::test_that("$format() returns a string representation the FilterState o
     shiny::isolate(filter_state$format(indent = 0)),
     paste(
       "Filtering on: test",
-      "  Selected values: 7.000 7.000",
+      "  Selected values: 7.000, 7.000",
       "  Include missing values: FALSE",
       sep = "\n"
     )
@@ -234,7 +234,7 @@ testthat::test_that("$format() prepends spaces to every line of the returned str
     testthat::expect_equal(
       shiny::isolate(filter_state$format(indent = !!(i))),
       sprintf(
-        "%sFiltering on: test\n%1$s  Selected values: 7.000 7.000\n%1$s  Include missing values: FALSE",
+        "%sFiltering on: test\n%1$s  Selected values: 7.000, 7.000\n%1$s  Include missing values: FALSE",
         format("", width = i)
       )
     )
