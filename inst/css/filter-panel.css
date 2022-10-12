@@ -40,6 +40,10 @@
   margin-bottom: 1rem;
 }
 
+.justify-content-center {
+  justify-content: center;
+}
+
 .date_reset_button {
   padding: 0;
   padding-top: 4px;

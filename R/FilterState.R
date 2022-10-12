@@ -2514,8 +2514,8 @@ DatetimeFilterState <- R6::R6Class( # nolint
               x
             }),
             span(
-              class = "w-10 input-group-addon",
-              span(class = "input-group-text w-100", "to"),
+              class = "input-group-addon w-10",
+              span(class = "input-group-text w-100 justify-content-center", "to"),
               title = "Times are displayed in the local timezone and are converted to UTC in the analysis"
             ),
             div(class = "w-45", {
