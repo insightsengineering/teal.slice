@@ -2498,7 +2498,7 @@ DatetimeFilterState <- R6::R6Class( # nolint
           ),
           div(
             class = "flex w-80 filter_datelike_input",
-            div(class = "w-45", {
+            div(class = "w-45 text-center", {
               x <- shinyWidgets::airDatepickerInput(
                 inputId = ns("selection_start"),
                 value = isolate(self$get_selected())[1],
@@ -2518,7 +2518,7 @@ DatetimeFilterState <- R6::R6Class( # nolint
               span(class = "input-group-text w-100 justify-content-center", "to"),
               title = "Times are displayed in the local timezone and are converted to UTC in the analysis"
             ),
-            div(class = "w-45", {
+            div(class = "w-45 text-center", {
               x <- shinyWidgets::airDatepickerInput(
                 inputId = ns("selection_end"),
                 value = isolate(self$get_selected())[2],
