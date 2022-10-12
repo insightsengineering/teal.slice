@@ -40,6 +40,10 @@
   margin-bottom: 1rem;
 }
 
+.justify-content-center {
+  justify-content: center;
+}
+
 .date_reset_button {
   padding: 0;
   padding-top: 4px;
@@ -48,15 +52,18 @@
   height: 3rem;
 }
 
-span.air_datapicker_input_help {
-  text-align: center;
-  background-color: #dee2e6;
-  padding: 0.5rem 0;
-  height: 3rem;
+.filter_datelike_input input {
+  height: 3rem !important;
+  text-align: center !important;
+  font-size: 1rem !important;
 }
 
-.air_datepicker_input input {
-  height: 3rem;
+.filter_datelike_input span.input-group-text {
+  height: 3rem !important;
+}
+
+.filter_datelike_input span.input-group-addon {
+  height: 3rem !important;
 }
 
 .no-left-right-padding {

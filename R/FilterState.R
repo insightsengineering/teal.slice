@@ -2168,30 +2168,32 @@ DateFilterState <- R6::R6Class( # nolint
     #'  id of shiny element
     ui = function(id) {
       ns <- NS(id)
-      fluidRow(
+      div(
         div(
+          class = "flex",
           actionButton(
-            class = "start_date_reset_button",
+            class = "date_reset_button",
             inputId = ns("start_date_reset"),
             label = NULL,
             icon = icon("fas fa-undo")
           ),
-          actionButton(
-            class = "end_date_reset_button",
-            inputId = ns("end_date_reset"),
-            label = NULL,
-            icon = icon("fas fa-undo")
-          ),
           div(
-            class = "m-auto w-80",
+            class = "w-80 filter_datelike_input",
             dateRangeInput(
               inputId = ns("selection"),
               label = NULL,
               start = isolate(self$get_selected())[1],
               end = isolate(self$get_selected())[2],
               min = private$choices[1],
-              max = private$choices[2]
+              max = private$choices[2],
+              width = "100%"
             )
+          ),
+          actionButton(
+            class = "date_reset_button",
+            inputId = ns("end_date_reset"),
+            label = NULL,
+            icon = icon("fas fa-undo")
           )
         ),
         if (private$na_count > 0) {
@@ -2495,8 +2497,8 @@ DatetimeFilterState <- R6::R6Class( # nolint
             icon = icon("fas fa-undo")
           ),
           div(
-            class = "flex w-80 air_datepicker_input",
-            div(class = "w-45", {
+            class = "flex w-80 filter_datelike_input",
+            div(class = "w-45 text-center", {
               x <- shinyWidgets::airDatepickerInput(
                 inputId = ns("selection_start"),
                 value = isolate(self$get_selected())[1],
@@ -2512,11 +2514,11 @@ DatetimeFilterState <- R6::R6Class( # nolint
               x
             }),
             span(
-              class = "w-10 air_datapicker_input_help",
-              "to",
+              class = "input-group-addon w-10",
+              span(class = "input-group-text w-100 justify-content-center", "to"),
               title = "Times are displayed in the local timezone and are converted to UTC in the analysis"
             ),
-            div(class = "w-45", {
+            div(class = "w-45 text-center", {
               x <- shinyWidgets::airDatepickerInput(
                 inputId = ns("selection_end"),
                 value = isolate(self$get_selected())[2],
