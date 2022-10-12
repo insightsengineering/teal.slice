@@ -54,7 +54,8 @@
 
 .filter_datelike_input input {
   height: 3rem !important;
-  text-align: center;
+  text-align: center !important;
+  font-size: 1rem !important;
 }
 
 .filter_datelike_input span.input-group-text {
