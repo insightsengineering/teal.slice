@@ -17,7 +17,7 @@
 #' @param ... (optional)
 #'   additional arguments for specific classes: keys
 #' @keywords internal
-#'
+#' @export
 #' @examples
 #' df <- data.frame(
 #'   character = letters,
@@ -66,7 +66,8 @@ init_filter_states.data.frame <- function(data, # nolint
                                           output_dataname = input_dataname,
                                           datalabel = character(0),
                                           varlabels = character(0),
-                                          keys = character(0)) {
+                                          keys = character(0),
+                                          ...) {
   DFFilterStates$new(
     input_dataname = input_dataname,
     output_dataname = output_dataname,
@@ -81,7 +82,8 @@ init_filter_states.data.frame <- function(data, # nolint
 init_filter_states.matrix <- function(data, # nolint
                                       input_dataname,
                                       output_dataname = input_dataname,
-                                      datalabel = character(0)) {
+                                      datalabel = character(0),
+                                      ...) {
   MatrixFilterStates$new(
     input_dataname = input_dataname,
     output_dataname = output_dataname,
@@ -96,7 +98,8 @@ init_filter_states.MultiAssayExperiment <- function(data, # nolint
                                                     output_dataname = input_dataname,
                                                     datalabel = character(0),
                                                     varlabels,
-                                                    keys = character(0)) {
+                                                    keys = character(0),
+                                                    ...) {
   if (!requireNamespace("MultiAssayExperiment", quietly = TRUE)) {
     stop("Cannot load MultiAssayExperiment - please install the package or restart your session.")
   }
@@ -114,7 +117,8 @@ init_filter_states.MultiAssayExperiment <- function(data, # nolint
 init_filter_states.SummarizedExperiment <- function(data, # nolint
                                                     input_dataname,
                                                     output_dataname = input_dataname,
-                                                    datalabel = character(0)) {
+                                                    datalabel = character(0),
+                                                    ...) {
   if (!requireNamespace("SummarizedExperiment", quietly = TRUE)) {
     stop("Cannot load SummarizedExperiment - please install the package or restart your session.")
   }
@@ -560,6 +564,7 @@ FilterStates <- R6::R6Class( # nolint
                 id = card_id,
                 class = "list-group-item",
                 fluidPage(
+                  theme = get_teal_bs_theme(),
                   fluidRow(
                     column(
                       width = 10,

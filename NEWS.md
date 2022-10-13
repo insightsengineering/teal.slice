@@ -1,14 +1,25 @@
-# teal.slice 0.1.1.9016
+# teal.slice 0.1.1.9021
 
 ### New features
 
 * Added `set_filterable_varnames` method to `FilteredData` and `FilteredDataset` objects so that there is control over which variables can be filtered.
+* Added support for custom `bslib` bootstrap themes via the `teal.bs_theme` option. See the `teal` vignette `teal-bs-themses` for more information.
 * Removed `CDISCFilteredDataset` class and functionality moved to `CDISCFilteredData`.
 * Changed constructor of `FilteredData` to not require `TealData` object. See `help(init_filtered_data)` for more details.
 * The filtered data is now stored in `FilteredData` not `FilteredDataset`.
 * The join keys stored inside `FilteredData` are now `JoinKeys` objects.
 * Updated `get_filter_state` to return a list of active filter states and an attribute with the character form of the filter states.
-* Updated `get_varlabels` method in the `FilterStates` classes, accepts a vector input.
+* Updated the `get_varlabels` method for `FilterStates` classes. It now accepts a vector input.
+* Exported `S3` generic function `init_filter_states` so that it can be used in other packages.
+* Added a `FilterPanelAPI` class to encapsulate the API of a filter panel.
+
+### Enhancements
+
+* Redesigned the count bars for filter panel check box inputs.
+* Redesigned the filter panel input for dates to use CSS flexbox.
+* Update icons to be compatible with Font Awesome 6.
+* Updates the `FilteredData` method `get_formatted_filter_state` so it no longer appends empty filters.
+* Added clearer installation instructions to README.
 
 ### Breaking changes
 
@@ -17,6 +28,7 @@
 ### Bug fixes
 
 * Fixed a bug when the filter panel overview would not refresh if the panel was hidden during a transition between active modules.
+* Fixed a bug in `FilterState` where `sliderInput` step values were too precise.
 
 # teal.slice 0.1.1
 

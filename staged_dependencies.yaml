@@ -31,3 +31,6 @@ downstream_repos:
   insightsengineering/teal.modules.general:
     repo: insightsengineering/teal.modules.general
     host: https://github.com
+  insightsengineering/teal.modules.helios:
+    repo: insightsengineering/teal.modules.helios
+    host: https://github.com
