@@ -1,0 +1,11 @@
+pandoc: 2.19.2
+pkgdown: 2.0.6
+pkgdown_sha: ~
+articles:
+  filter-panel: filter-panel.html
+  teal-slice: teal-slice.html
+last_built: 2022-10-14T01:36Z
+urls:
+  reference: https://insightsengineering.github.io/teal.slice/v0.2.0/reference
+  article: https://insightsengineering.github.io/teal.slice/v0.2.0/articles
+
