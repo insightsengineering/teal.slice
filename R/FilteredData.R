@@ -639,15 +639,15 @@ FilteredData <- R6::R6Class( # nolint
           style = "justify-content: right;",
           div(
             title = "Active Filtering",
-          shinyWidgets::prettySwitch(
-            ns("filter_turn_onoff"),
-            label = "",
-            status = "success",
-            fill = TRUE,
-            value = TRUE,
-            inline = FALSE,
-            width = 30
-          )
+            shinyWidgets::prettySwitch(
+              ns("filter_turn_onoff"),
+              label = "",
+              status = "success",
+              fill = TRUE,
+              value = TRUE,
+              inline = FALSE,
+              width = 30
+            )
           )
         ),
         div(
