@@ -364,16 +364,13 @@ FilterState <- R6::R6Class( # nolint
     format = function(indent = 0) {
       checkmate::assert_number(indent, finite = TRUE, lower = 0)
 
+      # List all selected values separated by commas.
+      values <- paste(format(self$get_selected(), nsmall = 3, justify = "none"), collapse = ", ")
       paste(c(
         strwrap(sprintf("Filtering on: %s", self$get_varname(deparse = TRUE)), indent = indent),
-        strwrap(sprintf(
-          "Selected values: %s",
-          paste(format(self$get_selected(), nsmall = 3, justify = "none"),
-            collapse = ", "
-          )
-        ),
-        width = 76, indent = indent + 2, exdent = indent + 4
-        ),
+        # Add wrapping and progressive indent to values enumeration as it is likely to be long.
+        strwrap(sprintf("Selected values: %s", values),
+                width = 76, indent = indent + 2, exdent = indent + 4),
         strwrap(sprintf("Include missing values: %s", self$get_keep_na()), indent = indent + 2)
       ), collapse = "\n")
     },
