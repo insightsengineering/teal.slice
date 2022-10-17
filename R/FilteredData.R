@@ -635,8 +635,7 @@ FilteredData <- R6::R6Class( # nolint
         include_css_files(pattern = "filter-panel"),
         div(
           id = ns("switch-button"),
-          class = "flex",
-          style = "justify-content: right;",
+          class = "flex justify-content-right",
           div(
             title = "Active Filtering",
             shinyWidgets::prettySwitch(

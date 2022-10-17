@@ -52,6 +52,10 @@
   justify-content: center;
 }
 
+.justify-content-right {
+  justify-content: right;
+}
+
 .date_reset_button {
   padding: 0;
   padding-top: 4px;
