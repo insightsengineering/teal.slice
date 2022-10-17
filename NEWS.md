@@ -20,6 +20,7 @@
 * Update icons to be compatible with Font Awesome 6.
 * Updates the `FilteredData` method `get_formatted_filter_state` so it no longer appends empty filters.
 * Added clearer installation instructions to README.
+* Improved filter state presentation in `FilterState$format`.
 
 ### Breaking changes
 
