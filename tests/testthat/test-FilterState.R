@@ -246,7 +246,7 @@ testthat::test_that("$format() returns a properly wrapped string", {
   filter_state$set_state(list(selected = c(7, 7)))
   for (i in 1:10) {
     line_width <- 76L # arbitrary value given in method body
-    manual <- 4L      # manual third order indent given in method body
+    manual <- 4L # manual third order indent given in method body
     output <- shiny::isolate(filter_state$format(indent = i))
     captured <- utils::capture.output(cat(output))
     line_lengths <- vapply(captured, nchar, length(1L))
