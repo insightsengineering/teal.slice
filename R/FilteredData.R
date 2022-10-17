@@ -635,16 +635,19 @@ FilteredData <- R6::R6Class( # nolint
         include_css_files(pattern = "filter-panel"),
         div(
           id = ns("switch-button"),
-          class = "inline-block",
+          class = "flex",
+          style = "justify-content: right;",
+          div(
+            title = "Active Filtering",
           shinyWidgets::prettySwitch(
             ns("filter_turn_onoff"),
-            label = "Active Filtering",
+            label = "",
             status = "success",
             fill = TRUE,
             value = TRUE,
             inline = FALSE,
-            width = 80,
-
+            width = 30
+          )
           )
         ),
         div(
