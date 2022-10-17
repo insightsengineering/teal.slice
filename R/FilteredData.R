@@ -636,12 +636,15 @@ FilteredData <- R6::R6Class( # nolint
         div(
           id = ns("switch-button"),
           class = "inline-block",
-          shinyWidgets::switchInput(
+          shinyWidgets::prettySwitch(
             ns("filter_turn_onoff"),
-            label = "TURN",
+            label = "Active Filtering",
+            status = "success",
+            fill = TRUE,
             value = TRUE,
             inline = FALSE,
-            handleWidth = "80px"
+            width = 80,
+
           )
         ),
         div(
