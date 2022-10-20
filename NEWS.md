@@ -1,3 +1,9 @@
+# teal.slice 0.2.0.9000
+
+### Enhancements
+
+* Updated to 2022 synthetic CDISC data.
+
 # teal.slice 0.2.0
 
 ### New features
