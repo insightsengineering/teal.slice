@@ -213,13 +213,14 @@ testthat::test_that("$format() asserts that indent is numeric", {
 })
 
 testthat::test_that("$format() returns a string representation the FilterState object", {
-  filter_state <- FilterState$new(c(7), varname = "test")
-  filter_state$set_state(list(selected = c(7, 7)))
+  values <- paste("value", 1:3, sep = "_")
+  filter_state <- FilterState$new(values, varname = "test")
+  filter_state$set_state(list(selected = values))
   testthat::expect_equal(
     shiny::isolate(filter_state$format(indent = 0)),
     paste(
       "Filtering on: test",
-      "  Selected values: 7.000, 7.000",
+      "  Selected values: value_1, value_2, value_3",
       "  Include missing values: FALSE",
       sep = "\n"
     )
@@ -227,31 +228,49 @@ testthat::test_that("$format() returns a string representation the FilterState o
 })
 
 testthat::test_that("$format() prepends spaces to every line of the returned string", {
-  filter_state <- FilterState$new(c(7), varname = "test")
-  filter_state$set_state(list(selected = c(7, 7)))
+  values <- paste("value", 1:3, sep = "_")
+  filter_state <- FilterState$new(values, varname = "test")
+  filter_state$set_state(list(selected = values))
   for (i in 1:3) {
     whitespace_indent <- paste0(rep(" ", i), collapse = "")
     testthat::expect_equal(
       shiny::isolate(filter_state$format(indent = !!(i))),
-      sprintf(
-        "%sFiltering on: test\n%1$s  Selected values: 7.000, 7.000\n%1$s  Include missing values: FALSE",
-        format("", width = i)
-      )
+      paste(format("", width = i),
+            c("Filtering on: test",
+              "  Selected values: value_1, value_2, value_3",
+              "  Include missing values: FALSE"),
+            sep = "", collapse = "\n")
+
     )
   }
 })
 
 testthat::test_that("$format() returns a properly wrapped string", {
-  filter_state <- FilterState$new(c(7), varname = "test")
-  filter_state$set_state(list(selected = c(7, 7)))
+  values <- paste("value", 1:3, sep = "_")
+  filter_state <- FilterState$new(values, varname = "test")
+  filter_state$set_state(list(selected = values))
   line_width <- 76L # arbitrary value given in method body
   manual <- 4L # manual third order indent given in method body
-  for (ind in seq_len(10)) {
-    output <- shiny::isolate(filter_state$format(indent = ind))
+  for (i in 1:10) {
+    output <- shiny::isolate(filter_state$format(indent = i))
     captured <- utils::capture.output(cat(output))
     line_lengths <- vapply(captured, nchar, integer(1L))
-    testthat::expect_lte(max(line_lengths), line_width + ind + manual)
+    testthat::expect_lte(max(line_lengths), line_width + i + manual)
   }
+})
+
+testthat::test_that("$format() line wrapping breaks if strings are too long", {
+  values <- c("exceedinglylongvaluenameexample", "exceedingly long value name example with spaces")
+  filter_state <- FilterState$new(values, varname = "test")
+  filter_state$set_state(list(selected = values))
+  manual <- 4L # manual third order indent given in method body
+  linewidth <- 30L
+  output <- shiny::isolate(filter_state$format(indent = 2, wrap_width = linewidth))
+  captured <- utils::capture.output(cat(output))
+  line_lengths <- vapply(captured, nchar, integer(1L))
+  testthat::expect_failure(
+    testthat::expect_lte(max(line_lengths), 2 + manual + linewidth)
+  )
 })
 
 # bug fix #41
