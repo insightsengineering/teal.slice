@@ -12,6 +12,7 @@
 * Updated the `get_varlabels` method for `FilterStates` classes. It now accepts a vector input.
 * Exported `S3` generic function `init_filter_states` so that it can be used in other packages.
 * Added a `FilterPanelAPI` class to encapsulate the API of a filter panel.
+* Improved filter state presentation in `FilterState$format`.
 
 ### Enhancements
 
