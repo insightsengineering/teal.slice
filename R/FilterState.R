@@ -370,7 +370,7 @@ FilterState <- R6::R6Class( # nolint
         strwrap(sprintf("Filtering on: %s", self$get_varname(deparse = TRUE)), indent = indent),
         # Add wrapping and progressive indent to values enumeration as it is likely to be long.
         strwrap(sprintf("Selected values: %s", values),
-                width = 76, indent = indent + 2, exdent = indent + 4
+          width = 76, indent = indent + 2, exdent = indent + 4
         ),
         strwrap(sprintf("Include missing values: %s", self$get_keep_na()), indent = indent + 2)
       ), collapse = "\n")
