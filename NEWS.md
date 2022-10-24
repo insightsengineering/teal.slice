@@ -1,3 +1,9 @@
+# teal.slice 0.2.0.9000
+
+### Enhancements
+
+* Improved filter state presentation in `FilterState$format`.
+
 # teal.slice 0.2.0
 
 ### New features
@@ -12,7 +18,6 @@
 * Updated the `get_varlabels` method for `FilterStates` classes. It now accepts a vector input.
 * Exported `S3` generic function `init_filter_states` so that it can be used in other packages.
 * Added a `FilterPanelAPI` class to encapsulate the API of a filter panel.
-* Improved filter state presentation in `FilterState$format`.
 
 ### Enhancements
 
