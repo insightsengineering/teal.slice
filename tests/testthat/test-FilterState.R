@@ -236,11 +236,13 @@ testthat::test_that("$format() prepends spaces to every line of the returned str
     testthat::expect_equal(
       shiny::isolate(filter_state$format(indent = !!(i))),
       paste(format("", width = i),
-            c("Filtering on: test",
-              "  Selected values: value_1, value_2, value_3",
-              "  Include missing values: FALSE"),
-            sep = "", collapse = "\n")
-
+        c(
+          "Filtering on: test",
+          "  Selected values: value_1, value_2, value_3",
+          "  Include missing values: FALSE"
+        ),
+        sep = "", collapse = "\n"
+      )
     )
   }
 })
