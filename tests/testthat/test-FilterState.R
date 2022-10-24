@@ -219,7 +219,7 @@ testthat::test_that("$format() returns a string representation the FilterState o
     shiny::isolate(filter_state$format(indent = 0)),
     paste(
       "Filtering on: test",
-      "  Selected values: 7.000 7.000",
+      "  Selected values: 7.000, 7.000",
       "  Include missing values: FALSE",
       sep = "\n"
     )
@@ -234,13 +234,25 @@ testthat::test_that("$format() prepends spaces to every line of the returned str
     testthat::expect_equal(
       shiny::isolate(filter_state$format(indent = !!(i))),
       sprintf(
-        "%sFiltering on: test\n%1$s  Selected values: 7.000 7.000\n%1$s  Include missing values: FALSE",
+        "%sFiltering on: test\n%1$s  Selected values: 7.000, 7.000\n%1$s  Include missing values: FALSE",
         format("", width = i)
       )
     )
   }
 })
 
+testthat::test_that("$format() returns a properly wrapped string", {
+  filter_state <- FilterState$new(c(7), varname = "test")
+  filter_state$set_state(list(selected = c(7, 7)))
+  for (i in 1:10) {
+    line_width <- 76L # arbitrary value given in method body
+    manual <- 4L # manual third order indent given in method body
+    output <- shiny::isolate(filter_state$format(indent = i))
+    captured <- utils::capture.output(cat(output))
+    line_lengths <- vapply(captured, nchar, length(1L))
+    testthat::expect_lte(max(line_lengths), line_width + i + manual)
+  }
+})
 
 # bug fix #41
 testthat::test_that("private$get_pretty_range_step returns pretty step size", {
