@@ -357,20 +357,37 @@ FilterState <- R6::R6Class( # nolint
     #' @description
     #' Returns a formatted string representing this `FilterState`.
     #'
-    #' @param indent (`numeric(1)`) the number of spaces before after each new line character of the formatted string.
-    #' Default: 0
+    #' @param indent (`numeric(1)`) number of spaces before after each new line character of the formatted string;
+    #'        default s to 0
+    #' @param wrap_width (`numeric(1)`) number of characters to wrap lines at in the printed output;
+    #'        allowed range is 30 to 120; defaults to 76
     #' @return `character(1)` the formatted string
     #'
-    format = function(indent = 0) {
-      checkmate::assert_number(indent, finite = TRUE, lower = 0)
+    format = function(indent = 0L, wrap_width = 76L) {
+      checkmate::assert_number(indent, finite = TRUE, lower = 0L)
+      checkmate::assert_number(wrap_width, finite = TRUE, lower = 30L, upper = 120L)
 
-      sprintf(
-        "%sFiltering on: %s\n%1$s  Selected values: %s\n%1$s  Include missing values: %s",
-        format("", width = indent),
-        self$get_varname(deparse = TRUE),
-        paste0(format(self$get_selected(), nsmall = 3), collapse = " "),
-        format(self$get_keep_na())
-      )
+      # List all selected values separated by commas.
+      values <- paste(format(self$get_selected(), nsmall = 3L, justify = "none"), collapse = ", ")
+      paste(c(
+        strwrap(
+          sprintf("Filtering on: %s", self$get_varname(deparse = TRUE)),
+          width = wrap_width,
+          indent = indent
+        ),
+        # Add wrapping and progressive indent to values enumeration as it is likely to be long.
+        strwrap(
+          sprintf("Selected values: %s", values),
+          width = wrap_width,
+          indent = indent + 2L,
+          exdent = indent + 4L
+        ),
+        strwrap(
+          sprintf("Include missing values: %s", self$get_keep_na()),
+          width = wrap_width,
+          indent = indent + 2L
+        )
+      ), collapse = "\n")
     },
 
     #' @description

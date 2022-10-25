@@ -1,5 +1,9 @@
 # teal.slice 0.2.0.9000
 
+### Enhancements
+
+* Improved filter state presentation in `FilterState$format`.
+
 # teal.slice 0.2.0
 
 ### New features
