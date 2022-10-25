@@ -1,4 +1,4 @@
-# teal.slice 0.2.0.9001
+# teal.slice 0.2.0.9000
 
 ### Enhancements
 
