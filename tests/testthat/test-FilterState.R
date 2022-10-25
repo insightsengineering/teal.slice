@@ -274,10 +274,8 @@ testthat::test_that("$format() line wrapping breaks if strings are too long", {
   output <- shiny::isolate(filter_state$format(indent = 2, wrap_width = linewidth))
   captured <- utils::capture.output(cat(output))
   line_lengths <- vapply(captured, nchar, integer(1L))
-  testthat::expect_error(
-    testthat::expect_lte(max(line_lengths), 2 + manual + linewidth),
-    "max[(]line_lengths[)] is not less than"
-  )
+  # Failed to be lte
+  testthat::expect_gte(max(line_lengths), 2 + manual + linewidth)
 })
 
 # bug fix #41
