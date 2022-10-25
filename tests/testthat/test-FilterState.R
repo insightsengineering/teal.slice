@@ -265,10 +265,6 @@ testthat::test_that("$format() line wrapping breaks if strings are too long", {
   values <- c("exceedinglylongvaluenameexample", "exceedingly long value name example with spaces")
   filter_state <- FilterState$new(values, varname = "test")
   filter_state$set_state(list(selected = values))
-  expect_error(
-    shiny::isolate(filter_state$format(indent = 2, wrap_width = 10)),
-    "Assertion on 'wrap_width' failed: Element 1 is not >= 30"
-  )
   manual <- 4L # manual third order indent given in method body
   linewidth <- 30L
   output <- shiny::isolate(filter_state$format(indent = 2, wrap_width = linewidth))
@@ -276,6 +272,10 @@ testthat::test_that("$format() line wrapping breaks if strings are too long", {
   line_lengths <- vapply(captured, nchar, integer(1L))
   testthat::expect_failure(
     testthat::expect_lte(max(line_lengths), 2 + manual + linewidth)
+  )
+  expect_error(
+    shiny::isolate(filter_state$format(indent = 2, wrap_width = 10)),
+    "[Aa]ssertion.+failed"
   )
 })
 
