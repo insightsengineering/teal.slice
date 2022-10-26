@@ -35,14 +35,6 @@ Abstract class to encapsulate filter states"><!-- mathjax --><script src="https:
 <li class="nav-item">
   <a class="nav-link" href="../news/index.html">Changelog</a>
 </li>
-<!-- start dropdown for versions --> <li class="nav-item dropdown">
-        <a href="#" class="nav-link dropdown-toggle"
-          data-bs-toggle="dropdown" role="button"
-          aria-expanded="false" aria-haspopup="true"
-          id="dropdown-versions">Versions</a> <div class="dropdown-menu" aria-labelledby="dropdown-versions"> <a class="dropdown-item" data-toggle="tooltip" title="" href="https://insightsengineering.github.io/teal.slice/main">main</a>
-<a class="dropdown-item" data-toggle="tooltip" title="" href="https://insightsengineering.github.io/teal.slice/latest-tag">latest-tag</a>
-<a class="dropdown-item" data-toggle="tooltip" title="" href="https://insightsengineering.github.io/teal.slice/v0.2.0">v0.2.0</a> </div></li>
-<!-- end dropdown for versions -->
       </ul><form class="form-inline my-2 my-lg-0" role="search">
         <input type="search" class="form-control me-sm-2" aria-label="Toggle navigation" name="search-input" data-search-index="../search.json" id="search-input" placeholder="Search for" autocomplete="off"></form>
 
@@ -192,14 +184,19 @@ whether condition calls should be prefixed by dataname. Possible values:</p><ul>
 <h3 id="method-format-">Method <code><a href="https://rdrr.io/r/base/format.html" class="external-link">format()</a></code><a class="anchor" aria-label="anchor" href="#method-format-"></a></h3>
 <p>Returns a formatted string representing this <code>FilterState</code>.</p><div class="section">
 <h4 id="usage-2">Usage<a class="anchor" aria-label="anchor" href="#usage-2"></a></h4>
-<p></p><div class="r"><div class="sourceCode"><pre><code><span><span class="va">FilterState</span><span class="op">$</span><span class="fu">format</span><span class="op">(</span>indent <span class="op">=</span> <span class="fl">0</span><span class="op">)</span></span></code></pre></div><p></p></div>
+<p></p><div class="r"><div class="sourceCode"><pre><code><span><span class="va">FilterState</span><span class="op">$</span><span class="fu">format</span><span class="op">(</span>indent <span class="op">=</span> <span class="fl">0L</span>, wrap_width <span class="op">=</span> <span class="fl">76L</span><span class="op">)</span></span></code></pre></div><p></p></div>
 </div>
 
 <div class="section">
 <h4 id="arguments-1">Arguments<a class="anchor" aria-label="anchor" href="#arguments-1"></a></h4>
 <p></p><div class="arguments"><dl><dt><code>indent</code></dt>
-<dd><p>(<code>numeric(1)</code>) the number of spaces before after each new line character of the formatted string.
-Default: 0</p></dd>
+<dd><p>(<code>numeric(1)</code>) number of spaces before after each new line character of the formatted string;
+default s to 0</p></dd>
+
+
+<dt><code>wrap_width</code></dt>
+<dd><p>(<code>numeric(1)</code>) number of characters to wrap lines at in the printed output;
+allowed range is 30 to 120; defaults to 76</p></dd>
 
 
 </dl><p></p></div>
