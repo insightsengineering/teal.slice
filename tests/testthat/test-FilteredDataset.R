@@ -44,6 +44,12 @@ testthat::test_that("get_hash returns the hash of the data.frame passed to the c
   testthat::expect_equal(digest::digest(head(iris), algo = "md5"), filtered_dataset$get_hash())
 })
 
+testthat::test_that("get_hash_call returns the hash call of the dataset passed to the constructor", {
+  filtered_dataset <- FilteredDataset$new(dataset = head(iris), dataname = "my_data")
+  testthat::expect_equal(deparse1(filtered_dataset$get_hash_call()), 'digest::digest(my_data, algo = "md5")')
+})
+
+
 testthat::test_that("get_keys returns the keys passed to the constructor", {
   filtered_dataset <- FilteredDataset$new(dataset = head(iris), dataname = "iris", keys = c("Petal.length"))
   testthat::expect_equal("Petal.length", filtered_dataset$get_keys())

@@ -269,6 +269,12 @@ FilteredDataset <- R6::R6Class( # nolint
     },
 
     #' @description
+    #' Return the expression of the hash call used to create the dataset
+    get_hash_call = function() {
+      bquote(digest::digest(.(as.name(self$get_dataname())), algo = "md5"))
+    },
+
+    #' @description
     #' Gets the keys for the dataset of this `FilteredDataset`
     #' @return (`character`) the keys of dataset
     get_keys = function() {
