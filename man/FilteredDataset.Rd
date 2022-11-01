@@ -25,6 +25,7 @@ components of the dataset.
 \item \href{#method-FilteredDataset-get_metadata}{\code{FilteredDataset$get_metadata()}}
 \item \href{#method-FilteredDataset-get_filter_overview_info}{\code{FilteredDataset$get_filter_overview_info()}}
 \item \href{#method-FilteredDataset-get_hash}{\code{FilteredDataset$get_hash()}}
+\item \href{#method-FilteredDataset-get_hash_call}{\code{FilteredDataset$get_hash_call()}}
 \item \href{#method-FilteredDataset-get_keys}{\code{FilteredDataset$get_keys()}}
 \item \href{#method-FilteredDataset-get_varlabels}{\code{FilteredDataset$get_varlabels()}}
 \item \href{#method-FilteredDataset-get_dataset_label}{\code{FilteredDataset$get_dataset_label()}}
@@ -234,6 +235,16 @@ Returns the hash of the dataset
 \subsection{Returns}{
 (\code{character(1)}) the hash
 }
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-FilteredDataset-get_hash_call"></a>}}
+\if{latex}{\out{\hypertarget{method-FilteredDataset-get_hash_call}{}}}
+\subsection{Method \code{get_hash_call()}}{
+Return the expression of the hash call used to create the dataset
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{FilteredDataset$get_hash_call()}\if{html}{\out{</div>}}
+}
+
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-FilteredDataset-get_keys"></a>}}
