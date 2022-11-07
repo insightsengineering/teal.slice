@@ -1,5 +1,9 @@
 # teal.slice
 
+<!-- start badges -->
+[![Code Coverage](https://raw.githubusercontent.com/insightsengineering/teal.slice/_xml_coverage_reports/data/main/badge.svg)](https://raw.githubusercontent.com/insightsengineering/teal.slice/_xml_coverage_reports/data/main/coverage.xml)
+<!-- end badges -->
+
 `teal.slice` is an R library used in the development of `teal` `shiny` modules. It provides:
 
 * a class accepting an array of `data.frames` as an input, then supporting basic `dplyr` operations on the data,
