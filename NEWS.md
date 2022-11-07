@@ -1,3 +1,11 @@
+# teal.slice 0.2.0.9001
+
+* Examples now use `scda.2022` instead of `scda.2021`.
+
+### Enhancements
+
+* Improved filter state presentation in `FilterState$format`.
+
 # teal.slice 0.2.0
 
 ### New features

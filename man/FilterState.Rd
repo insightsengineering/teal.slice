@@ -136,14 +136,17 @@ Destroy observers stored in \code{private$observers}.
 \subsection{Method \code{format()}}{
 Returns a formatted string representing this \code{FilterState}.
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{FilterState$format(indent = 0)}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{FilterState$format(indent = 0L, wrap_width = 76L)}\if{html}{\out{</div>}}
 }
 
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
-\item{\code{indent}}{(\code{numeric(1)}) the number of spaces before after each new line character of the formatted string.
-Default: 0}
+\item{\code{indent}}{(\code{numeric(1)}) number of spaces before after each new line character of the formatted string;
+default s to 0}
+
+\item{\code{wrap_width}}{(\code{numeric(1)}) number of characters to wrap lines at in the printed output;
+allowed range is 30 to 120; defaults to 76}
 }
 \if{html}{\out{</div>}}
 }
