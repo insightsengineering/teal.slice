@@ -71,6 +71,7 @@
 #' @param metadata (named `list` or `NULL`) \cr
 #'   Field containing metadata about the dataset. Each element of the list
 #'   should be atomic and length one.
+#' @export
 init_filtered_dataset <- function(dataset, # nolint
                                   dataname,
                                   keys = character(0),
