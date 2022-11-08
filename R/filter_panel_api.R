@@ -62,7 +62,11 @@ FilterPanelAPI <- R6::R6Class( # nolint
     #'
     #' @return `NULL`
     set_filter_state = function(filter) {
-      private$filtered_data$set_filter_state(filter)
+      if (private$filtered_data$get_filter_turn()) {
+        private$filtered_data$set_filter_state(filter)
+      } else {
+        warning("Filter Panel is turn off so the action can not be applied with api.")
+      }
       invisible(NULL)
     },
 
@@ -73,7 +77,11 @@ FilterPanelAPI <- R6::R6Class( # nolint
     #'
     #' @return `NULL`
     remove_filter_state = function(filter) {
-      private$filtered_data$remove_filter_state(filter)
+      if (private$filtered_data$get_filter_turn()) {
+        private$filtered_data$remove_filter_state(filter)
+      } else {
+        warning("Filter Panel is turn off so the action can not be applied with api.")
+      }
       invisible(NULL)
     },
 
@@ -83,8 +91,26 @@ FilterPanelAPI <- R6::R6Class( # nolint
     #'
     #' @return `NULL`
     remove_all_filter_states = function(datanames) {
-      datanames_to_remove <- if (missing(datanames)) private$filtered_data$datanames() else datanames
-      private$filtered_data$remove_all_filter_states(datanames = datanames_to_remove)
+      if (private$filtered_data$get_filter_turn()) {
+        datanames_to_remove <- if (missing(datanames)) private$filtered_data$datanames() else datanames
+        private$filtered_data$remove_all_filter_states(datanames = datanames_to_remove)
+      } else {
+        warning("Filter Panel is turn off so the action can not be applied with api.")
+      }
+      invisible(NULL)
+    },
+    #' @description Toggle the state of the Filter Panel turn on/off button.
+    #' @param id (`character(1)`)\cr
+    #'  `id` to the toggle button.
+    #'
+    #' @return `NULL`
+    filter_panel_toggle = function() {
+      shinyjs::runjs(
+        sprintf(
+          '$("#%s-filter_turn_onoff").click();',
+          private$filtered_data$get_filter_panel_ui_id()
+        )
+      )
       invisible(NULL)
     }
   ),

@@ -519,6 +519,7 @@ FilteredData <- R6::R6Class( # nolint
         )
       }
       logger::log_trace("FilteredData$set_filter_state initialized, dataname: { paste(names(state), collapse = ' ') }")
+
       invisible(NULL)
     },
 
@@ -529,6 +530,8 @@ FilteredData <- R6::R6Class( # nolint
     #'
     #' @return `NULL`
     remove_filter_state = function(state) {
+      checkmate::assert_subset(names(state), self$datanames())
+
       logger::log_trace("FilteredData$remove_filter_state called, dataname: { paste(names(state), collapse = ' ') }")
 
       for (dataname in names(state)) {
@@ -537,6 +540,7 @@ FilteredData <- R6::R6Class( # nolint
       }
 
       logger::log_trace("FilteredData$remove_filter_state done, dataname: { paste(names(state), collapse = ' ') }")
+
       invisible(NULL)
     },
 
@@ -586,6 +590,33 @@ FilteredData <- R6::R6Class( # nolint
     restore_state_from_bookmark = function(state, check_data_hash = TRUE) {
       stop("Pure virtual method")
     },
+    #' @description disable the filter panel
+    filter_panel_disable = function() {
+      private$filter_turn <- FALSE
+      shinyjs::disable("filter_add_vars")
+      shinyjs::disable("filter_active_vars")
+      private$cached_states <- self$get_filter_state()
+      self$remove_all_filter_states()
+      invisible(NULL)
+    },
+    #' @description enable the filter panel
+    filter_panel_enable = function() {
+      private$filter_turn <- TRUE
+      shinyjs::enable("filter_add_vars")
+      shinyjs::enable("filter_active_vars")
+      if (length(private$cached_states) && (length(self$get_filter_state()) == 0)) {
+        self$set_filter_state(private$cached_states)
+      }
+      invisible(NULL)
+    },
+    #' @description get the state of filter panel, if it is activated
+    get_filter_turn = function() {
+      private$filter_turn
+    },
+    #' @description get the id of the filter panel ui
+    get_filter_panel_ui_id = function() {
+      private$filter_panel_ui_id
+    },
 
     # shiny modules -----
 
@@ -602,6 +633,22 @@ FilteredData <- R6::R6Class( # nolint
       div(
         id = ns(NULL), # used for hiding / showing
         include_css_files(pattern = "filter-panel"),
+        div(
+          id = ns("switch-button"),
+          class = "flex justify-content-right",
+          div(
+            title = "Active Filtering",
+            shinyWidgets::prettySwitch(
+              ns("filter_turn_onoff"),
+              label = "",
+              status = "success",
+              fill = TRUE,
+              value = TRUE,
+              inline = FALSE,
+              width = 30
+            )
+          )
+        ),
         div(
           id = ns("filters_overview"), # not used, can be used to customize CSS behavior
           class = "well",
@@ -772,6 +819,20 @@ FilteredData <- R6::R6Class( # nolint
             }
           )
 
+          private$filter_panel_ui_id <- session$ns(NULL)
+          observeEvent(
+            eventExpr = input[["filter_turn_onoff"]],
+            handlerExpr = {
+              if (isTRUE(input[["filter_turn_onoff"]])) {
+                self$filter_panel_enable()
+                logger::log_trace("Enable the Filtered Panel with the filter_panel_enable method")
+              } else {
+                self$filter_panel_disable()
+                logger::log_trace("Disable the Filtered Panel with the filter_panel_enable method")
+              }
+            }, ignoreNULL = TRUE
+          )
+
           observeEvent(
             eventExpr = active_datanames(),
             handlerExpr = {
@@ -904,6 +965,12 @@ FilteredData <- R6::R6Class( # nolint
     # private attributes ----
     filtered_datasets = list(),
 
+    # turn on / off filter panel
+    filter_turn = TRUE,
+
+    # filter panel ui id
+    filter_panel_ui_id = character(0),
+
     # whether the datasets had a reproducibility check
     .check = FALSE,
 
@@ -915,6 +982,7 @@ FilteredData <- R6::R6Class( # nolint
 
     # reactive i.e. filtered data
     reactive_data = list(),
+    cached_states = NULL,
 
     # we implement these functions as checks rather than returning logicals so they can
     # give informative error messages immediately

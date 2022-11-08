@@ -45,6 +45,7 @@ isolate(fpa$get_filter_state())
 \item \href{#method-FilterPanelAPI-set_filter_state}{\code{FilterPanelAPI$set_filter_state()}}
 \item \href{#method-FilterPanelAPI-remove_filter_state}{\code{FilterPanelAPI$remove_filter_state()}}
 \item \href{#method-FilterPanelAPI-remove_all_filter_states}{\code{FilterPanelAPI$remove_all_filter_states()}}
+\item \href{#method-FilterPanelAPI-filter_panel_toggle}{\code{FilterPanelAPI$filter_panel_toggle()}}
 \item \href{#method-FilterPanelAPI-clone}{\code{FilterPanelAPI$clone()}}
 }
 }
@@ -137,6 +138,27 @@ Remove all \code{FilterStates} of the \code{FilteredData} object.
 \describe{
 \item{\code{datanames}}{(\code{character})\cr
 datanames to remove their \code{FilterStates} or empty which removes all \code{FilterStates} in the \code{FilteredData} object.}
+}
+\if{html}{\out{</div>}}
+}
+\subsection{Returns}{
+\code{NULL}
+}
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-FilterPanelAPI-filter_panel_toggle"></a>}}
+\if{latex}{\out{\hypertarget{method-FilterPanelAPI-filter_panel_toggle}{}}}
+\subsection{Method \code{filter_panel_toggle()}}{
+Toggle the state of the Filter Panel turn on/off button.
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{FilterPanelAPI$filter_panel_toggle()}\if{html}{\out{</div>}}
+}
+
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{id}}{(\code{character(1)})\cr
+\code{id} to the toggle button.}
 }
 \if{html}{\out{</div>}}
 }

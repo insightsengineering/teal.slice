@@ -168,6 +168,10 @@ shiny::isolate(datasets$get_filter_state())
 \item \href{#method-FilteredData-remove_filter_state}{\code{FilteredData$remove_filter_state()}}
 \item \href{#method-FilteredData-remove_all_filter_states}{\code{FilteredData$remove_all_filter_states()}}
 \item \href{#method-FilteredData-restore_state_from_bookmark}{\code{FilteredData$restore_state_from_bookmark()}}
+\item \href{#method-FilteredData-filter_panel_disable}{\code{FilteredData$filter_panel_disable()}}
+\item \href{#method-FilteredData-filter_panel_enable}{\code{FilteredData$filter_panel_enable()}}
+\item \href{#method-FilteredData-get_filter_turn}{\code{FilteredData$get_filter_turn()}}
+\item \href{#method-FilteredData-get_filter_panel_ui_id}{\code{FilteredData$get_filter_panel_ui_id()}}
 \item \href{#method-FilteredData-ui_filter_panel}{\code{FilteredData$ui_filter_panel()}}
 \item \href{#method-FilteredData-srv_filter_panel}{\code{FilteredData$srv_filter_panel()}}
 \item \href{#method-FilteredData-ui_filter_overview}{\code{FilteredData$ui_filter_overview()}}
@@ -844,15 +848,55 @@ containing fields \code{data_hash}, \code{filter_states}
 and \code{preproc_code}.}
 
 \item{\code{check_data_hash}}{(\code{logical}) whether to check that \code{md5sums} agree
-for the data; may not make sense with randomly generated data per session
+for the data; may not make sense with randomly generated data per session}
+}
+\if{html}{\out{</div>}}
+}
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-FilteredData-filter_panel_disable"></a>}}
+\if{latex}{\out{\hypertarget{method-FilteredData-filter_panel_disable}{}}}
+\subsection{Method \code{filter_panel_disable()}}{
+disable the filter panel
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{FilteredData$filter_panel_disable()}\if{html}{\out{</div>}}
+}
+
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-FilteredData-filter_panel_enable"></a>}}
+\if{latex}{\out{\hypertarget{method-FilteredData-filter_panel_enable}{}}}
+\subsection{Method \code{filter_panel_enable()}}{
+enable the filter panel
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{FilteredData$filter_panel_enable()}\if{html}{\out{</div>}}
+}
+
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-FilteredData-get_filter_turn"></a>}}
+\if{latex}{\out{\hypertarget{method-FilteredData-get_filter_turn}{}}}
+\subsection{Method \code{get_filter_turn()}}{
+get the state of filter panel, if it is activated
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{FilteredData$get_filter_turn()}\if{html}{\out{</div>}}
+}
+
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-FilteredData-get_filter_panel_ui_id"></a>}}
+\if{latex}{\out{\hypertarget{method-FilteredData-get_filter_panel_ui_id}{}}}
+\subsection{Method \code{get_filter_panel_ui_id()}}{
+get the id of the filter panel ui
 Module for the right filter panel in the teal app
 with a filter overview panel and a filter variable panel.
 
 This panel contains info about the number of observations left in
-the (active) datasets and allows to filter the datasets.}
+the (active) datasets and allows to filter the datasets.
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{FilteredData$get_filter_panel_ui_id()}\if{html}{\out{</div>}}
 }
-\if{html}{\out{</div>}}
-}
+
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-FilteredData-ui_filter_panel"></a>}}
