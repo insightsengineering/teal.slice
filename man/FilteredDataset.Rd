@@ -24,7 +24,6 @@ components of the dataset.
 \item \href{#method-FilteredDataset-get_dataset}{\code{FilteredDataset$get_dataset()}}
 \item \href{#method-FilteredDataset-get_metadata}{\code{FilteredDataset$get_metadata()}}
 \item \href{#method-FilteredDataset-get_filter_overview_info}{\code{FilteredDataset$get_filter_overview_info()}}
-\item \href{#method-FilteredDataset-get_hash}{\code{FilteredDataset$get_hash()}}
 \item \href{#method-FilteredDataset-get_keys}{\code{FilteredDataset$get_keys()}}
 \item \href{#method-FilteredDataset-get_varlabels}{\code{FilteredDataset$get_varlabels()}}
 \item \href{#method-FilteredDataset-get_dataset_label}{\code{FilteredDataset$get_dataset_label()}}
@@ -220,19 +219,6 @@ is used.}
 }
 \subsection{Returns}{
 (\code{matrix}) matrix of observations and subjects
-}
-}
-\if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-FilteredDataset-get_hash"></a>}}
-\if{latex}{\out{\hypertarget{method-FilteredDataset-get_hash}{}}}
-\subsection{Method \code{get_hash()}}{
-Returns the hash of the dataset
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{FilteredDataset$get_hash()}\if{html}{\out{</div>}}
-}
-
-\subsection{Returns}{
-(\code{character(1)}) the hash
 }
 }
 \if{html}{\out{<hr>}}
