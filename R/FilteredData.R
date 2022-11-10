@@ -590,7 +590,10 @@ FilteredData <- R6::R6Class( # nolint
     restore_state_from_bookmark = function(state, check_data_hash = TRUE) {
       stop("Pure virtual method")
     },
-    #' @description disable the filter panel
+    #' @description 
+    #' Disable the filter panel by adding `disable` attribute to `filter_add_vars` and `filter_active_vars ` id in the UI element.
+    #' In addition, it will store the existing filter states in a private field called `cached_states` 
+    #' before removing all filter states from the object.
     filter_panel_disable = function() {
       private$filter_turn <- FALSE
       shinyjs::disable("filter_add_vars")
