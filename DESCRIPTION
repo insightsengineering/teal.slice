@@ -20,7 +20,6 @@ Depends:
     shiny
 Imports:
     checkmate,
-    digest,
     dplyr,
     ggplot2,
     grDevices,

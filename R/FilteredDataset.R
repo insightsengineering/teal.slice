@@ -110,7 +110,6 @@ init_filtered_dataset.MultiAssayExperiment <- function(dataset, # nolint
 #' (`data.frame`) or multiple (`MultiAssayExperiment`) `FilterStates` objects.
 #' Each `FilterStates` is responsible for one filter/subset expression applied for specific
 #' components of the dataset.
-#' @importFrom digest digest
 #' @keywords internal
 FilteredDataset <- R6::R6Class( # nolint
   "FilteredDataset",

@@ -16,7 +16,6 @@ repos:
         name: Regenerate package documentation
         additional_dependencies:
           - checkmate
-          - digest
           - dplyr
           - ggplot2
           - glue
