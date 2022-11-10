@@ -100,8 +100,6 @@ FilterPanelAPI <- R6::R6Class( # nolint
       invisible(NULL)
     },
     #' @description Toggle the state of the Filter Panel turn on/off button.
-    #' @param id (`character(1)`)\cr
-    #'  `id` to the toggle button.
     #'
     #' @return `NULL`
     filter_panel_toggle = function() {
