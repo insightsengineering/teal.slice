@@ -138,7 +138,9 @@ testthat::test_that("filter_panel_api neutral when filter panel is disabled", {
   shiny::testServer(
     filtered_data$srv_filter_panel,
     expr = {
-      filtered_data <- teal.slice:::init_filtered_data(list(iris = list(dataset = iris), mtcars = list(dataset = mtcars)))
+      filtered_data <- teal.slice:::init_filtered_data(
+        list(iris = list(dataset = iris), mtcars = list(dataset = mtcars))
+      )
       filtered_data$filter_panel_disable()
       fs <- FilterPanelAPI$new(filtered_data)
       filter_list <- list(
@@ -169,7 +171,9 @@ testthat::test_that("filter_panel_api under disable/enable filter panel", {
   shiny::testServer(
     filtered_data$srv_filter_panel,
     expr = {
-      filtered_data <- teal.slice:::init_filtered_data(list(iris = list(dataset = iris), mtcars = list(dataset = mtcars)))
+      filtered_data <- teal.slice:::init_filtered_data(
+        list(iris = list(dataset = iris), mtcars = list(dataset = mtcars))
+      )
       filtered_data$filter_panel_disable()
       fs <- FilterPanelAPI$new(filtered_data)
       filter_list <- list(
@@ -198,4 +202,3 @@ testthat::test_that("filter_panel_api under disable/enable filter panel", {
     }
   )
 })
-

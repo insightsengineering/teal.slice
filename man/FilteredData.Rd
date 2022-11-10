@@ -857,7 +857,10 @@ for the data; may not make sense with randomly generated data per session}
 \if{html}{\out{<a id="method-FilteredData-filter_panel_disable"></a>}}
 \if{latex}{\out{\hypertarget{method-FilteredData-filter_panel_disable}{}}}
 \subsection{Method \code{filter_panel_disable()}}{
-disable the filter panel
+Disable the filter panel by adding \code{disable} class to \code{filter_add_vars} and \code{filter_active_vars } tags
+in the User Interface.
+In addition, it will store the existing filter states in a private field called \code{cached_states}
+before removing all filter states from the object.
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{FilteredData$filter_panel_disable()}\if{html}{\out{</div>}}
 }
@@ -868,6 +871,9 @@ disable the filter panel
 \if{latex}{\out{\hypertarget{method-FilteredData-filter_panel_enable}{}}}
 \subsection{Method \code{filter_panel_enable()}}{
 enable the filter panel
+Enable the filter panel by adding \code{enable} class to \code{filter_add_vars} and \code{filter_active_vars } tags
+in the User Interface.
+In addition, it will restore the filter states from a private field called \code{cached_states}.
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{FilteredData$filter_panel_enable()}\if{html}{\out{</div>}}
 }
@@ -887,7 +893,7 @@ get the state of filter panel, if it is activated
 \if{html}{\out{<a id="method-FilteredData-get_filter_panel_ui_id"></a>}}
 \if{latex}{\out{\hypertarget{method-FilteredData-get_filter_panel_ui_id}{}}}
 \subsection{Method \code{get_filter_panel_ui_id()}}{
-get the id of the filter panel ui
+get the id of the filter panel UI
 Module for the right filter panel in the teal app
 with a filter overview panel and a filter variable panel.
 

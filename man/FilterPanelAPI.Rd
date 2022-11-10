@@ -154,14 +154,6 @@ Toggle the state of the Filter Panel turn on/off button.
 \if{html}{\out{<div class="r">}}\preformatted{FilterPanelAPI$filter_panel_toggle()}\if{html}{\out{</div>}}
 }
 
-\subsection{Arguments}{
-\if{html}{\out{<div class="arguments">}}
-\describe{
-\item{\code{id}}{(\code{character(1)})\cr
-\code{id} to the toggle button.}
-}
-\if{html}{\out{</div>}}
-}
 \subsection{Returns}{
 \code{NULL}
 }

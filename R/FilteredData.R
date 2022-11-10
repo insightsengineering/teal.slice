@@ -590,9 +590,10 @@ FilteredData <- R6::R6Class( # nolint
     restore_state_from_bookmark = function(state, check_data_hash = TRUE) {
       stop("Pure virtual method")
     },
-    #' @description 
-    #' Disable the filter panel by adding `disable` class to `filter_add_vars` and `filter_active_vars ` tags in the UI.
-    #' In addition, it will store the existing filter states in a private field called `cached_states` 
+    #' @description
+    #' Disable the filter panel by adding `disable` class to `filter_add_vars` and `filter_active_vars ` tags
+    #' in the User Interface.
+    #' In addition, it will store the existing filter states in a private field called `cached_states`
     #' before removing all filter states from the object.
     filter_panel_disable = function() {
       private$filter_turn <- FALSE
@@ -603,7 +604,8 @@ FilteredData <- R6::R6Class( # nolint
       invisible(NULL)
     },
     #' @description enable the filter panel
-        #' Enable the filter panel by adding `enable` class to `filter_add_vars` and `filter_active_vars ` tags in the UI.
+    #' Enable the filter panel by adding `enable` class to `filter_add_vars` and `filter_active_vars ` tags
+    #' in the User Interface.
     #' In addition, it will restore the filter states from a private field called `cached_states`.
     filter_panel_enable = function() {
       private$filter_turn <- TRUE
@@ -618,7 +620,7 @@ FilteredData <- R6::R6Class( # nolint
     get_filter_turn = function() {
       private$filter_turn
     },
-    #' @description get the id of the filter panel ui
+    #' @description get the id of the filter panel UI
     get_filter_panel_ui_id = function() {
       private$filter_panel_ui_id
     },
