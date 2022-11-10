@@ -591,7 +591,7 @@ FilteredData <- R6::R6Class( # nolint
       stop("Pure virtual method")
     },
     #' @description 
-    #' Disable the filter panel by adding `disable` attribute to `filter_add_vars` and `filter_active_vars ` id in the UI element.
+    #' Disable the filter panel by adding `disable` class to `filter_add_vars` and `filter_active_vars ` tags in the UI.
     #' In addition, it will store the existing filter states in a private field called `cached_states` 
     #' before removing all filter states from the object.
     filter_panel_disable = function() {
@@ -603,6 +603,8 @@ FilteredData <- R6::R6Class( # nolint
       invisible(NULL)
     },
     #' @description enable the filter panel
+        #' Enable the filter panel by adding `enable` class to `filter_add_vars` and `filter_active_vars ` tags in the UI.
+    #' In addition, it will restore the filter states from a private field called `cached_states`.
     filter_panel_enable = function() {
       private$filter_turn <- TRUE
       shinyjs::enable("filter_add_vars")
