@@ -99,7 +99,7 @@ FilterPanelAPI <- R6::R6Class( # nolint
       }
       invisible(NULL)
     },
-    #' @description 
+    #' @description
     #' Toggle the state of the Filter Panel turn on/off button by running javascript code to click the toggle button with id `filter_turn_onoff`.
     #' This button is observed in `srv_filter_panel` method that executes `filter_panel_enable()` or `filter_panel_disable()` method depending on the toggle state.
     #'
