@@ -591,12 +591,12 @@ FilteredData <- R6::R6Class( # nolint
       stop("Pure virtual method")
     },
     #' @description
-    #' Disable the filter panel by adding `disable` class to `filter_add_vars` and `filter_active_vars ` tags
+    #' Disable the filter panel by adding `disable` class to `filter_add_vars` and `filter_panel_active_vars ` tags
     #' in the User Interface.
     #' In addition, it will store the existing filter states in a private field called `cached_states`
     #' before removing all filter states from the object.
     filter_panel_disable = function() {
-      private$filter_turn <- FALSE
+      private$filter_panel_active <- FALSE
       shinyjs::disable("filter_add_vars")
       shinyjs::disable("filter_active_vars")
       private$cached_states <- self$get_filter_state()
@@ -608,7 +608,7 @@ FilteredData <- R6::R6Class( # nolint
     #' in the User Interface.
     #' In addition, it will restore the filter states from a private field called `cached_states`.
     filter_panel_enable = function() {
-      private$filter_turn <- TRUE
+      private$filter_panel_active <- TRUE
       shinyjs::enable("filter_add_vars")
       shinyjs::enable("filter_active_vars")
       if (length(private$cached_states) && (length(self$get_filter_state()) == 0)) {
@@ -617,8 +617,8 @@ FilteredData <- R6::R6Class( # nolint
       invisible(NULL)
     },
     #' @description get the state of filter panel, if it is activated
-    get_filter_turn = function() {
-      private$filter_turn
+    get_filter_panel_active = function() {
+      private$filter_panel_active
     },
     #' @description get the id of the filter panel UI
     get_filter_panel_ui_id = function() {
@@ -646,7 +646,7 @@ FilteredData <- R6::R6Class( # nolint
           div(
             title = "Active Filtering",
             shinyWidgets::prettySwitch(
-              ns("filter_turn_onoff"),
+              ns("filter_panel_active"),
               label = "",
               status = "success",
               fill = TRUE,
@@ -828,9 +828,9 @@ FilteredData <- R6::R6Class( # nolint
 
           private$filter_panel_ui_id <- session$ns(NULL)
           observeEvent(
-            eventExpr = input[["filter_turn_onoff"]],
+            eventExpr = input[["filter_panel_active"]],
             handlerExpr = {
-              if (isTRUE(input[["filter_turn_onoff"]])) {
+              if (isTRUE(input[["filter_panel_active"]])) {
                 self$filter_panel_enable()
                 logger::log_trace("Enable the Filtered Panel with the filter_panel_enable method")
               } else {
@@ -972,8 +972,8 @@ FilteredData <- R6::R6Class( # nolint
     # private attributes ----
     filtered_datasets = list(),
 
-    # turn on / off filter panel
-    filter_turn = TRUE,
+    # activate/deactivate filter panel
+    filter_panel_active = TRUE,
 
     # filter panel ui id
     filter_panel_ui_id = character(0),

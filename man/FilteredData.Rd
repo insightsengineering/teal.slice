@@ -170,7 +170,7 @@ shiny::isolate(datasets$get_filter_state())
 \item \href{#method-FilteredData-restore_state_from_bookmark}{\code{FilteredData$restore_state_from_bookmark()}}
 \item \href{#method-FilteredData-filter_panel_disable}{\code{FilteredData$filter_panel_disable()}}
 \item \href{#method-FilteredData-filter_panel_enable}{\code{FilteredData$filter_panel_enable()}}
-\item \href{#method-FilteredData-get_filter_turn}{\code{FilteredData$get_filter_turn()}}
+\item \href{#method-FilteredData-get_filter_panel_active}{\code{FilteredData$get_filter_panel_active()}}
 \item \href{#method-FilteredData-get_filter_panel_ui_id}{\code{FilteredData$get_filter_panel_ui_id()}}
 \item \href{#method-FilteredData-ui_filter_panel}{\code{FilteredData$ui_filter_panel()}}
 \item \href{#method-FilteredData-srv_filter_panel}{\code{FilteredData$srv_filter_panel()}}
@@ -857,7 +857,7 @@ for the data; may not make sense with randomly generated data per session}
 \if{html}{\out{<a id="method-FilteredData-filter_panel_disable"></a>}}
 \if{latex}{\out{\hypertarget{method-FilteredData-filter_panel_disable}{}}}
 \subsection{Method \code{filter_panel_disable()}}{
-Disable the filter panel by adding \code{disable} class to \code{filter_add_vars} and \code{filter_active_vars } tags
+Disable the filter panel by adding \code{disable} class to \code{filter_add_vars} and \code{filter_panel_active_vars } tags
 in the User Interface.
 In addition, it will store the existing filter states in a private field called \code{cached_states}
 before removing all filter states from the object.
@@ -880,12 +880,12 @@ In addition, it will restore the filter states from a private field called \code
 
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-FilteredData-get_filter_turn"></a>}}
-\if{latex}{\out{\hypertarget{method-FilteredData-get_filter_turn}{}}}
-\subsection{Method \code{get_filter_turn()}}{
+\if{html}{\out{<a id="method-FilteredData-get_filter_panel_active"></a>}}
+\if{latex}{\out{\hypertarget{method-FilteredData-get_filter_panel_active}{}}}
+\subsection{Method \code{get_filter_panel_active()}}{
 get the state of filter panel, if it is activated
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{FilteredData$get_filter_turn()}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{FilteredData$get_filter_panel_active()}\if{html}{\out{</div>}}
 }
 
 }

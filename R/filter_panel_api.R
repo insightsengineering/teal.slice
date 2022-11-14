@@ -62,10 +62,10 @@ FilterPanelAPI <- R6::R6Class( # nolint
     #'
     #' @return `NULL`
     set_filter_state = function(filter) {
-      if (private$filtered_data$get_filter_turn()) {
+      if (private$filtered_data$get_filter_panel_active()) {
         private$filtered_data$set_filter_state(filter)
       } else {
-        warning("Filter Panel is turn off so the action can not be applied with api.")
+        warning(private$deactivated_msg)
       }
       invisible(NULL)
     },
@@ -77,10 +77,10 @@ FilterPanelAPI <- R6::R6Class( # nolint
     #'
     #' @return `NULL`
     remove_filter_state = function(filter) {
-      if (private$filtered_data$get_filter_turn()) {
+      if (private$filtered_data$get_filter_panel_active()) {
         private$filtered_data$remove_filter_state(filter)
       } else {
-        warning("Filter Panel is turn off so the action can not be applied with api.")
+        warning(private$deactivated_msg)
       }
       invisible(NULL)
     },
@@ -91,17 +91,17 @@ FilterPanelAPI <- R6::R6Class( # nolint
     #'
     #' @return `NULL`
     remove_all_filter_states = function(datanames) {
-      if (private$filtered_data$get_filter_turn()) {
+      if (private$filtered_data$get_filter_panel_active()) {
         datanames_to_remove <- if (missing(datanames)) private$filtered_data$datanames() else datanames
         private$filtered_data$remove_all_filter_states(datanames = datanames_to_remove)
       } else {
-        warning("Filter Panel is turn off so the action can not be applied with api.")
+        warning(private$deactivated_msg)
       }
       invisible(NULL)
     },
     #' @description
-    #' Toggle the state of the global turn on/off Filter Panel button by running `javascript` code
-    #' to click the toggle button with the `filter_turn_onoff` id suffix.
+    #' Toggle the state of the global Filter Panel button by running `javascript` code
+    #' to click the toggle button with the `filter_panel_active` id suffix.
     #' The button id is prefixed with the Filter Panel shiny namespace.
     #' This button is observed in `srv_filter_panel` method that executes
     #' `filter_panel_enable()` or `filter_panel_disable()` method depending on the toggle state.
@@ -119,6 +119,7 @@ FilterPanelAPI <- R6::R6Class( # nolint
   ),
   ## __Private Methods ====
   private = list(
-    filtered_data = NULL
+    filtered_data = NULL,
+    deactivated_msg = "Filter Panel is deactivated so the action can not be applied with api."
   )
 )
