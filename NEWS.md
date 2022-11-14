@@ -3,6 +3,10 @@
 * Examples now use `scda.2022` instead of `scda.2021`.
 * Transferred data hashing step in `FilteredDataset` to `teal`.
 
+### New features
+
+* Added a global turn on/off button for the Filter Panel.
+
 ### Enhancements
 
 * Improved filter state presentation in `FilterState$format`.
