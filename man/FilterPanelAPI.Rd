@@ -149,7 +149,8 @@ datanames to remove their \code{FilterStates} or empty which removes all \code{F
 \if{html}{\out{<a id="method-FilterPanelAPI-filter_panel_toggle"></a>}}
 \if{latex}{\out{\hypertarget{method-FilterPanelAPI-filter_panel_toggle}{}}}
 \subsection{Method \code{filter_panel_toggle()}}{
-Toggle the state of the Filter Panel turn on/off button.
+Toggle the state of the Filter Panel turn on/off button by running javascript code to click the toggle button with id \code{filter_turn_onoff}.
+This button is observed in \code{srv_filter_panel} method that executes \code{filter_panel_enable()} or \code{filter_panel_disable()} method depending on the toggle state.
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{FilterPanelAPI$filter_panel_toggle()}\if{html}{\out{</div>}}
 }
