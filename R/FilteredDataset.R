@@ -113,7 +113,6 @@ init_filtered_dataset.MultiAssayExperiment <- function(dataset, # nolint
 #' (`data.frame`) or multiple (`MultiAssayExperiment`) `FilterStates` objects.
 #' Each `FilterStates` is responsible for one filter/subset expression applied for specific
 #' components of the dataset.
-#' @importFrom digest digest
 #' @keywords internal
 FilteredDataset <- R6::R6Class( # nolint
   "FilteredDataset",
@@ -147,7 +146,6 @@ FilteredDataset <- R6::R6Class( # nolint
       private$keys <- keys
       private$label <- if (is.null(label)) character(0) else label
       private$metadata <- metadata
-      private$calculate_hash()
       invisible(self)
     },
 
@@ -262,13 +260,6 @@ FilteredDataset <- R6::R6Class( # nolint
       rownames(df) <- self$get_dataname()
       colnames(df) <- c("Obs", "Subjects")
       df
-    },
-
-    #' @description
-    #' Returns the hash of the dataset
-    #' @return (`character(1)`) the hash
-    get_hash = function() {
-      private$hash
     },
 
     #' @description
@@ -484,18 +475,10 @@ FilteredDataset <- R6::R6Class( # nolint
     keys = character(0),
     label = character(0),
     metadata = NULL,
-    hash = character(0),
 
     # if this has length > 0 then only varnames in this vector
     # can be filtered
     filterable_varnames = NULL,
-
-    # Calculates the MD5 hash of the data stored in this object.
-    # @return NULL
-    calculate_hash = function() {
-      private$hash <- digest::digest(self$get_dataset(), algo = "md5")
-      NULL
-    },
 
     # Adds `FilterStates` to the `private$filter_states`.
     # `FilterStates` is added once for each element of the dataset.
