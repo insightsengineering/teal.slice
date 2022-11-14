@@ -100,8 +100,11 @@ FilterPanelAPI <- R6::R6Class( # nolint
       invisible(NULL)
     },
     #' @description
-    #' Toggle the state of the Filter Panel turn on/off button by running javascript code to click the toggle button with id `filter_turn_onoff`.
-    #' This button is observed in `srv_filter_panel` method that executes `filter_panel_enable()` or `filter_panel_disable()` method depending on the toggle state.
+    #' Toggle the state of the global turn on/off Filter Panel button by running `javascript` code
+    #' to click the toggle button with the `filter_turn_onoff` id suffix.
+    #' The button id is prefixed with the Filter Panel namespace.
+    #' This button is observed in `srv_filter_panel` method that executes
+    #' `filter_panel_enable()` or `filter_panel_disable()` method depending on the toggle state.
     #'
     #' @return `NULL`
     filter_panel_toggle = function() {
