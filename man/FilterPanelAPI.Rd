@@ -151,7 +151,7 @@ datanames to remove their \code{FilterStates} or empty which removes all \code{F
 \subsection{Method \code{filter_panel_toggle()}}{
 Toggle the state of the global turn on/off Filter Panel button by running \code{javascript} code
 to click the toggle button with the \code{filter_turn_onoff} id suffix.
-The button id is prefixed with the Filter Panel namespace.
+The button id is prefixed with the Filter Panel shiny namespace.
 This button is observed in \code{srv_filter_panel} method that executes
 \code{filter_panel_enable()} or \code{filter_panel_disable()} method depending on the toggle state.
 \subsection{Usage}{
