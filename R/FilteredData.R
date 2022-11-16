@@ -644,7 +644,7 @@ FilteredData <- R6::R6Class( # nolint
           id = ns("switch-button"),
           class = "flex justify-content-right",
           div(
-            title = "Active Filtering",
+            title = "Enable/Disable filtering",
             shinyWidgets::prettySwitch(
               ns("filter_panel_active"),
               label = "",
