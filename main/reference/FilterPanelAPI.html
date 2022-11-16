@@ -12,7 +12,7 @@ Class to encapsulate the API of the filter panel of a teal app"><!-- mathjax -->
     
     <a class="navbar-brand me-2" href="../index.html">teal.slice</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.2.0.9004</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.2.0.9005</small>
 
     <div style="width: 140px; margin-left: 0.5rem;"> <small class="nav-text text-muted me-auto">part of</small> <img src="https://github.com/insightsengineering/hex-stickers/blob/main/PNG/nest.png?raw=true" alt="NEST" style="height: 30px;"><a href="https://pharmaverse.org/" class="external-link"><img src="https://github.com/insightsengineering/hex-stickers/blob/main/PNG/pharmaverse.png?raw=true" alt="pharmaverse" style="height: 28px;"></a> </div>
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -35,14 +35,6 @@ Class to encapsulate the API of the filter panel of a teal app"><!-- mathjax -->
 <li class="nav-item">
   <a class="nav-link" href="../news/index.html">Changelog</a>
 </li>
-<!-- start dropdown for versions --> <li class="nav-item dropdown">
-        <a href="#" class="nav-link dropdown-toggle"
-          data-bs-toggle="dropdown" role="button"
-          aria-expanded="false" aria-haspopup="true"
-          id="dropdown-versions">Versions</a> <div class="dropdown-menu" aria-labelledby="dropdown-versions"> <a class="dropdown-item" data-toggle="tooltip" title="" href="https://insightsengineering.github.io/teal.slice/main">main</a>
-<a class="dropdown-item" data-toggle="tooltip" title="" href="https://insightsengineering.github.io/teal.slice/latest-tag">latest-tag</a>
-<a class="dropdown-item" data-toggle="tooltip" title="" href="https://insightsengineering.github.io/teal.slice/v0.2.0">v0.2.0</a> </div></li>
-<!-- end dropdown for versions -->
       </ul><form class="form-inline my-2 my-lg-0" role="search">
         <input type="search" class="form-control me-sm-2" aria-label="Toggle navigation" name="search-input" data-search-index="../search.json" id="search-input" placeholder="Search for" autocomplete="off"></form>
 
@@ -88,6 +80,7 @@ object.</p>
 <li><p><a href="#method-FilterPanelAPI-set_filter_state"><code>FilterPanelAPI$set_filter_state()</code></a></p></li>
 <li><p><a href="#method-FilterPanelAPI-remove_filter_state"><code>FilterPanelAPI$remove_filter_state()</code></a></p></li>
 <li><p><a href="#method-FilterPanelAPI-remove_all_filter_states"><code>FilterPanelAPI$remove_all_filter_states()</code></a></p></li>
+<li><p><a href="#method-FilterPanelAPI-filter_panel_toggle"><code>FilterPanelAPI$filter_panel_toggle()</code></a></p></li>
 <li><p><a href="#method-FilterPanelAPI-clone"><code>FilterPanelAPI$clone()</code></a></p></li>
 </ul></div><p></p><hr><a id="method-FilterPanelAPI-new"></a><div class="section">
 <h3 id="method-new-">Method <code><a href="https://rdrr.io/r/methods/new.html" class="external-link">new()</a></code><a class="anchor" aria-label="anchor" href="#method-new-"></a></h3>
@@ -182,10 +175,26 @@ datanames to remove their <code>FilterStates</code> or empty which removes all <
 <p><code>NULL</code></p>
 </div>
 
+</div><p></p><hr><a id="method-FilterPanelAPI-filter_panel_toggle"></a><div class="section">
+<h3 id="method-filter-panel-toggle-">Method <code>filter_panel_toggle()</code><a class="anchor" aria-label="anchor" href="#method-filter-panel-toggle-"></a></h3>
+<p>Toggle the state of the global Filter Panel button by running <code>javascript</code> code
+to click the toggle button with the <code>filter_panel_active</code> id suffix.
+The button id is prefixed with the Filter Panel shiny namespace.
+This button is observed in <code>srv_filter_panel</code> method that executes
+<code>filter_panel_enable()</code> or <code>filter_panel_disable()</code> method depending on the toggle state.</p><div class="section">
+<h4 id="usage-5">Usage<a class="anchor" aria-label="anchor" href="#usage-5"></a></h4>
+<p></p><div class="r"><div class="sourceCode"><pre><code><span><span class="va">FilterPanelAPI</span><span class="op">$</span><span class="fu">filter_panel_toggle</span><span class="op">(</span><span class="op">)</span></span></code></pre></div><p></p></div>
+</div>
+
+<div class="section">
+<h4 id="returns-4">Returns<a class="anchor" aria-label="anchor" href="#returns-4"></a></h4>
+<p><code>NULL</code></p>
+</div>
+
 </div><p></p><hr><a id="method-FilterPanelAPI-clone"></a><div class="section">
 <h3 id="method-clone-">Method <code>clone()</code><a class="anchor" aria-label="anchor" href="#method-clone-"></a></h3>
 <p>The objects of this class are cloneable with this method.</p><div class="section">
-<h4 id="usage-5">Usage<a class="anchor" aria-label="anchor" href="#usage-5"></a></h4>
+<h4 id="usage-6">Usage<a class="anchor" aria-label="anchor" href="#usage-6"></a></h4>
 <p></p><div class="r"><div class="sourceCode"><pre><code><span><span class="va">FilterPanelAPI</span><span class="op">$</span><span class="fu">clone</span><span class="op">(</span>deep <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span></code></pre></div><p></p></div>
 </div>
 

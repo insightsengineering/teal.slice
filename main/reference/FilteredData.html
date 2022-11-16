@@ -12,7 +12,7 @@ Class to encapsulate filtered datasets"><!-- mathjax --><script src="https://cdn
     
     <a class="navbar-brand me-2" href="../index.html">teal.slice</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.2.0.9004</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.2.0.9005</small>
 
     <div style="width: 140px; margin-left: 0.5rem;"> <small class="nav-text text-muted me-auto">part of</small> <img src="https://github.com/insightsengineering/hex-stickers/blob/main/PNG/nest.png?raw=true" alt="NEST" style="height: 30px;"><a href="https://pharmaverse.org/" class="external-link"><img src="https://github.com/insightsengineering/hex-stickers/blob/main/PNG/pharmaverse.png?raw=true" alt="pharmaverse" style="height: 28px;"></a> </div>
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -35,14 +35,6 @@ Class to encapsulate filtered datasets"><!-- mathjax --><script src="https://cdn
 <li class="nav-item">
   <a class="nav-link" href="../news/index.html">Changelog</a>
 </li>
-<!-- start dropdown for versions --> <li class="nav-item dropdown">
-        <a href="#" class="nav-link dropdown-toggle"
-          data-bs-toggle="dropdown" role="button"
-          aria-expanded="false" aria-haspopup="true"
-          id="dropdown-versions">Versions</a> <div class="dropdown-menu" aria-labelledby="dropdown-versions"> <a class="dropdown-item" data-toggle="tooltip" title="" href="https://insightsengineering.github.io/teal.slice/main">main</a>
-<a class="dropdown-item" data-toggle="tooltip" title="" href="https://insightsengineering.github.io/teal.slice/latest-tag">latest-tag</a>
-<a class="dropdown-item" data-toggle="tooltip" title="" href="https://insightsengineering.github.io/teal.slice/v0.2.0">v0.2.0</a> </div></li>
-<!-- end dropdown for versions -->
       </ul><form class="form-inline my-2 my-lg-0" role="search">
         <input type="search" class="form-control me-sm-2" aria-label="Toggle navigation" name="search-input" data-search-index="../search.json" id="search-input" placeholder="Search for" autocomplete="off"></form>
 
@@ -126,6 +118,10 @@ Other variables cannot be used for filtering the data in this class.</p></li>
 <li><p><a href="#method-FilteredData-remove_filter_state"><code>FilteredData$remove_filter_state()</code></a></p></li>
 <li><p><a href="#method-FilteredData-remove_all_filter_states"><code>FilteredData$remove_all_filter_states()</code></a></p></li>
 <li><p><a href="#method-FilteredData-restore_state_from_bookmark"><code>FilteredData$restore_state_from_bookmark()</code></a></p></li>
+<li><p><a href="#method-FilteredData-filter_panel_disable"><code>FilteredData$filter_panel_disable()</code></a></p></li>
+<li><p><a href="#method-FilteredData-filter_panel_enable"><code>FilteredData$filter_panel_enable()</code></a></p></li>
+<li><p><a href="#method-FilteredData-get_filter_panel_active"><code>FilteredData$get_filter_panel_active()</code></a></p></li>
+<li><p><a href="#method-FilteredData-get_filter_panel_ui_id"><code>FilteredData$get_filter_panel_ui_id()</code></a></p></li>
 <li><p><a href="#method-FilteredData-ui_filter_panel"><code>FilteredData$ui_filter_panel()</code></a></p></li>
 <li><p><a href="#method-FilteredData-srv_filter_panel"><code>FilteredData$srv_filter_panel()</code></a></p></li>
 <li><p><a href="#method-FilteredData-ui_filter_overview"><code>FilteredData$ui_filter_overview()</code></a></p></li>
@@ -793,21 +789,59 @@ and <code>preproc_code</code>.</p></dd>
 
 <dt><code>check_data_hash</code></dt>
 <dd><p>(<code>logical</code>) whether to check that <code>md5sums</code> agree
-for the data; may not make sense with randomly generated data per session
-Module for the right filter panel in the teal app
-with a filter overview panel and a filter variable panel.</p>
-<p>This panel contains info about the number of observations left in
-the (active) datasets and allows to filter the datasets.</p></dd>
+for the data; may not make sense with randomly generated data per session</p></dd>
 
 
 </dl><p></p></div>
 </div>
 
+</div><p></p><hr><a id="method-FilteredData-filter_panel_disable"></a><div class="section">
+<h3 id="method-filter-panel-disable-">Method <code>filter_panel_disable()</code><a class="anchor" aria-label="anchor" href="#method-filter-panel-disable-"></a></h3>
+<p>Disable the filter panel by adding <code>disable</code> class to <code>filter_add_vars</code> and <code>filter_panel_active_vars </code> tags
+in the User Interface.
+In addition, it will store the existing filter states in a private field called <code>cached_states</code>
+before removing all filter states from the object.</p><div class="section">
+<h4 id="usage-28">Usage<a class="anchor" aria-label="anchor" href="#usage-28"></a></h4>
+<p></p><div class="r"><div class="sourceCode"><pre><code><span><span class="va">FilteredData</span><span class="op">$</span><span class="fu">filter_panel_disable</span><span class="op">(</span><span class="op">)</span></span></code></pre></div><p></p></div>
+</div>
+
+
+</div><p></p><hr><a id="method-FilteredData-filter_panel_enable"></a><div class="section">
+<h3 id="method-filter-panel-enable-">Method <code>filter_panel_enable()</code><a class="anchor" aria-label="anchor" href="#method-filter-panel-enable-"></a></h3>
+<p>enable the filter panel
+Enable the filter panel by adding <code>enable</code> class to <code>filter_add_vars</code> and <code>filter_active_vars </code> tags
+in the User Interface.
+In addition, it will restore the filter states from a private field called <code>cached_states</code>.</p><div class="section">
+<h4 id="usage-29">Usage<a class="anchor" aria-label="anchor" href="#usage-29"></a></h4>
+<p></p><div class="r"><div class="sourceCode"><pre><code><span><span class="va">FilteredData</span><span class="op">$</span><span class="fu">filter_panel_enable</span><span class="op">(</span><span class="op">)</span></span></code></pre></div><p></p></div>
+</div>
+
+
+</div><p></p><hr><a id="method-FilteredData-get_filter_panel_active"></a><div class="section">
+<h3 id="method-get-filter-panel-active-">Method <code>get_filter_panel_active()</code><a class="anchor" aria-label="anchor" href="#method-get-filter-panel-active-"></a></h3>
+<p>get the state of filter panel, if it is activated</p><div class="section">
+<h4 id="usage-30">Usage<a class="anchor" aria-label="anchor" href="#usage-30"></a></h4>
+<p></p><div class="r"><div class="sourceCode"><pre><code><span><span class="va">FilteredData</span><span class="op">$</span><span class="fu">get_filter_panel_active</span><span class="op">(</span><span class="op">)</span></span></code></pre></div><p></p></div>
+</div>
+
+
+</div><p></p><hr><a id="method-FilteredData-get_filter_panel_ui_id"></a><div class="section">
+<h3 id="method-get-filter-panel-ui-id-">Method <code>get_filter_panel_ui_id()</code><a class="anchor" aria-label="anchor" href="#method-get-filter-panel-ui-id-"></a></h3>
+<p>get the id of the filter panel UI
+Module for the right filter panel in the teal app
+with a filter overview panel and a filter variable panel.</p>
+<p>This panel contains info about the number of observations left in
+the (active) datasets and allows to filter the datasets.</p><div class="section">
+<h4 id="usage-31">Usage<a class="anchor" aria-label="anchor" href="#usage-31"></a></h4>
+<p></p><div class="r"><div class="sourceCode"><pre><code><span><span class="va">FilteredData</span><span class="op">$</span><span class="fu">get_filter_panel_ui_id</span><span class="op">(</span><span class="op">)</span></span></code></pre></div><p></p></div>
+</div>
+
+
 </div><p></p><hr><a id="method-FilteredData-ui_filter_panel"></a><div class="section">
 <h3 id="method-ui-filter-panel-">Method <code>ui_filter_panel()</code><a class="anchor" aria-label="anchor" href="#method-ui-filter-panel-"></a></h3>
 
 <div class="section">
-<h4 id="usage-28">Usage<a class="anchor" aria-label="anchor" href="#usage-28"></a></h4>
+<h4 id="usage-32">Usage<a class="anchor" aria-label="anchor" href="#usage-32"></a></h4>
 <p></p><div class="r"><div class="sourceCode"><pre><code><span><span class="va">FilteredData</span><span class="op">$</span><span class="fu">ui_filter_panel</span><span class="op">(</span><span class="va">id</span><span class="op">)</span></span></code></pre></div><p></p></div>
 </div>
 
@@ -826,7 +860,7 @@ Server function for filter panel</p></dd>
 <h3 id="method-srv-filter-panel-">Method <code>srv_filter_panel()</code><a class="anchor" aria-label="anchor" href="#method-srv-filter-panel-"></a></h3>
 
 <div class="section">
-<h4 id="usage-29">Usage<a class="anchor" aria-label="anchor" href="#usage-29"></a></h4>
+<h4 id="usage-33">Usage<a class="anchor" aria-label="anchor" href="#usage-33"></a></h4>
 <p></p><div class="r"><div class="sourceCode"><pre><code><span><span class="va">FilteredData</span><span class="op">$</span><span class="fu">srv_filter_panel</span><span class="op">(</span><span class="va">id</span>, active_datanames <span class="op">=</span> <span class="kw">function</span><span class="op">(</span><span class="op">)</span> <span class="st">"all"</span><span class="op">)</span></span></code></pre></div><p></p></div>
 </div>
 
@@ -861,7 +895,7 @@ the number of unique subjects.</p>
 <h3 id="method-ui-filter-overview-">Method <code>ui_filter_overview()</code><a class="anchor" aria-label="anchor" href="#method-ui-filter-overview-"></a></h3>
 
 <div class="section">
-<h4 id="usage-30">Usage<a class="anchor" aria-label="anchor" href="#usage-30"></a></h4>
+<h4 id="usage-34">Usage<a class="anchor" aria-label="anchor" href="#usage-34"></a></h4>
 <p></p><div class="r"><div class="sourceCode"><pre><code><span><span class="va">FilteredData</span><span class="op">$</span><span class="fu">ui_filter_overview</span><span class="op">(</span><span class="va">id</span><span class="op">)</span></span></code></pre></div><p></p></div>
 </div>
 
@@ -880,7 +914,7 @@ data</p></dd>
 <h3 id="method-srv-filter-overview-">Method <code>srv_filter_overview()</code><a class="anchor" aria-label="anchor" href="#method-srv-filter-overview-"></a></h3>
 
 <div class="section">
-<h4 id="usage-31">Usage<a class="anchor" aria-label="anchor" href="#usage-31"></a></h4>
+<h4 id="usage-35">Usage<a class="anchor" aria-label="anchor" href="#usage-35"></a></h4>
 <p></p><div class="r"><div class="sourceCode"><pre><code><span><span class="va">FilteredData</span><span class="op">$</span><span class="fu">srv_filter_overview</span><span class="op">(</span><span class="va">id</span>, active_datanames <span class="op">=</span> <span class="kw">function</span><span class="op">(</span><span class="op">)</span> <span class="st">"all"</span><span class="op">)</span></span></code></pre></div><p></p></div>
 </div>
 
@@ -909,7 +943,7 @@ panel will be hidden.</p></dd>
 </div><p></p><hr><a id="method-FilteredData-clone"></a><div class="section">
 <h3 id="method-clone-">Method <code>clone()</code><a class="anchor" aria-label="anchor" href="#method-clone-"></a></h3>
 <p>The objects of this class are cloneable with this method.</p><div class="section">
-<h4 id="usage-32">Usage<a class="anchor" aria-label="anchor" href="#usage-32"></a></h4>
+<h4 id="usage-36">Usage<a class="anchor" aria-label="anchor" href="#usage-36"></a></h4>
 <p></p><div class="r"><div class="sourceCode"><pre><code><span><span class="va">FilteredData</span><span class="op">$</span><span class="fu">clone</span><span class="op">(</span>deep <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span></code></pre></div><p></p></div>
 </div>
 
