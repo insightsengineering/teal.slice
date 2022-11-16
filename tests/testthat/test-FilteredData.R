@@ -576,3 +576,66 @@ testthat::test_that("get_data assert the `filtered` argument is logical(1)", {
     regexp = "Assertion on 'filtered' failed: Must be of type 'logical flag', not 'character'"
   )
 })
+
+testthat::test_that("filter_panel_disable", {
+  filtered_data <- FilteredData$new(data_objects = list("iris" = list(dataset = iris)), join_keys = NULL)
+  filtered_data$set_filter_state(list(iris = list(Sepal.Width = c(3, 4))))
+  shiny::testServer(
+    filtered_data$srv_filter_panel,
+    expr = {
+      filtered_data$filter_panel_disable()
+      testthat::expect_length(filtered_data$get_filter_state(), 0)
+    }
+  )
+})
+
+testthat::test_that("filter_panel_enable", {
+  filtered_data <- FilteredData$new(data_objects = list("iris" = list(dataset = iris)), join_keys = NULL)
+  filtered_data$set_filter_state(list(iris = list(Sepal.Width = c(3, 4))))
+  shiny::testServer(
+    filtered_data$srv_filter_panel,
+    expr = {
+      filtered_data$filter_panel_enable()
+      testthat::expect_length(filtered_data$get_filter_state(), 1)
+      testthat::expect_equal(filtered_data$get_filter_state()$iris$Sepal.Width$selected, c(3, 4))
+    }
+  )
+})
+
+testthat::test_that("filter_panel_disable and filter_panel_enable", {
+  filtered_data <- FilteredData$new(data_objects = list("iris" = list(dataset = iris)), join_keys = NULL)
+  filtered_data$set_filter_state(list(iris = list(Sepal.Width = c(3, 4))))
+  shiny::testServer(
+    filtered_data$srv_filter_panel,
+    expr = {
+      testthat::expect_length(filtered_data$get_filter_state(), 1)
+      testthat::expect_true(filtered_data$get_filter_panel_active())
+      filtered_data$filter_panel_disable()
+      testthat::expect_length(filtered_data$get_filter_state(), 0)
+      testthat::expect_false(filtered_data$get_filter_panel_active())
+      filtered_data$filter_panel_enable()
+      testthat::expect_length(filtered_data$get_filter_state(), 1)
+      testthat::expect_true(filtered_data$get_filter_panel_active())
+    }
+  )
+})
+
+testthat::test_that("turn filed by default equal to TRUE", {
+  filtered_data <- FilteredData$new(data_objects = list("iris" = list(dataset = iris)), join_keys = NULL)
+  testthat::expect_true(filtered_data$get_filter_panel_active())
+})
+
+testthat::test_that("get_filter_panel_ui_id - empty when no shiny session", {
+  filtered_data <- FilteredData$new(data_objects = list("iris" = list(dataset = iris)), join_keys = NULL)
+  testthat::expect_length(filtered_data$get_filter_panel_ui_id(), 0)
+})
+
+testthat::test_that("get_filter_panel_ui_id - non-empty when in shiny session", {
+  filtered_data <- FilteredData$new(data_objects = list("iris" = list(dataset = iris)), join_keys = NULL)
+  shiny::testServer(
+    filtered_data$srv_filter_panel,
+    expr = {
+      testthat::expect_length(filtered_data$get_filter_panel_ui_id(), 1)
+    }
+  )
+})
