@@ -15,7 +15,6 @@
 
 * Calculation of step in slider for `RangeFilterState` now uses `checkmate::test_integerish` instead of `is.integer`.
 
-
 # teal.slice 0.2.0
 
 ### New features
