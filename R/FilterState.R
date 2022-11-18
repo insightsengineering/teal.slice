@@ -1306,7 +1306,7 @@ RangeFilterState <- R6::R6Class( # nolint
         data.frame(x = NA_real_, y = NA_real_)
       }
       private$inf_count <- sum(is.infinite(x))
-      private$is_integer <- is.integer(x)
+      private$is_integer <- checkmate::test_integerish(x)
       private$keep_inf <- reactiveVal(FALSE)
       private$keep_inf_reactive <- reactiveVal(FALSE)
 
