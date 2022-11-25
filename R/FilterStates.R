@@ -441,7 +441,8 @@ FilterStates <- R6::R6Class( # nolint
           id = private$cards_container_id,
           class = "list-group hideable-list-group",
           `data-label` = ifelse(private$datalabel == "", "", (paste0("> ", private$datalabel)))
-        )
+        ),
+        uiOutput(ns("filter_cards"))
       )
     },
 
@@ -771,26 +772,21 @@ DFFilterStates <- R6::R6Class( # nolint
 
           observeEvent(added_state_name(), ignoreNULL = TRUE, {
             fstates <- self$queue_get(1L)
-            html_ids <- private$map_vars_to_html_ids(names(fstates))
             for (fname in added_state_name()) {
-              private$insert_filter_state_ui(
-                id = html_ids[fname],
-                filter_state = fstates[[fname]],
-                queue_index = 1L,
-                element_id = fname
-              )
+              fs <- fstates[[fname]]
+              private$srv_card_module(fname, fs)
             }
             added_state_name(character(0))
           })
 
-          observeEvent(removed_state_name(), {
-            req(removed_state_name())
-            for (fname in removed_state_name()) {
-              private$remove_filter_state_ui(1L, fname)
-            }
-            removed_state_name(character(0))
+          output$filter_cards <- shiny::renderUI({
+            fstates <- self$queue_get(1L)
+            shiny::tagList(
+              lapply(
+                names(fstates),
+                function(fname) private$ui_card_module(session$ns(fname), fstates[[fname]]))
+            )
           })
-          NULL
         }
       )
     },
@@ -1086,6 +1082,61 @@ DFFilterStates <- R6::R6Class( # nolint
         varlabels[missing_labels] <- variables[missing_labels]
         varlabels
       }
+    },
+    ui_card_module = function(id, fs) {
+      ns <- NS(id)
+      div(
+        id = ns("card"),
+        class = "list-group-item",
+        fluidPage(
+          theme = get_teal_bs_theme(),
+          fluidRow(
+            column(
+              width = 10,
+              class = "no-left-right-padding",
+              tags$div(
+                tags$span(fs$get_varname(), class = "filter_panel_varname"),
+                if (checkmate::test_character(fs$get_varlabel(), min.len = 1) &&
+                  tolower(fs$get_varname()) != tolower(fs$get_varlabel())) {
+                  tags$span(fs$get_varlabel(), class = "filter_panel_varlabel")
+                }
+              )
+            ),
+            column(
+              width = 2,
+              class = "no-left-right-padding",
+              actionLink(
+                ns("remove"),
+                label = "",
+                icon = icon("circle-xmark", lib = "font-awesome"),
+                class = "remove pull-right"
+              )
+            )
+          ),
+          fs$ui(id = ns("content"))
+        )
+      )
+    },
+    srv_card_module = function(id, fs) {
+      moduleServer(id, function(input, output, session) {
+        fs$server(id = "content")
+        private$observers[[id]] <- observeEvent(
+          ignoreInit = TRUE,
+          ignoreNULL = TRUE,
+          eventExpr = input$remove,
+          handlerExpr = {
+            logger::log_trace(paste(
+              "{ class(self)[1] }$insert_filter_state_ui@1 removing FilterState from queue '{ queue_index }',",
+              "dataname: { deparse1(private$input_dataname) }"
+            ))
+            self$queue_remove(queue_index, element_id)
+            logger::log_trace(paste(
+              "{ class(self)[1] }$insert_filter_state_ui@1 removed FilterState from queue '{ queue_index }',",
+              "dataname: { deparse1(private$input_dataname) }"
+            ))
+          }
+        )
+      })
     }
   )
 )

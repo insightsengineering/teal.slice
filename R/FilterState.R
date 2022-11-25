@@ -1935,6 +1935,8 @@ ChoicesFilterState <- R6::R6Class( # nolint
         id = id,
         function(input, output, session) {
           logger::log_trace("ChoicesFilterState$server initializing, dataname: { deparse1(private$input_dataname) }")
+          cat("\n\n\n\n\n\n", session$ns(NULL), "//", session$ns(id))
+
           shiny::setBookmarkExclude(c("selection", "keep_na"))
 
           private$observers$selection_reactive <- observeEvent(

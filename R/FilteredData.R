@@ -790,10 +790,7 @@ FilteredData <- R6::R6Class( # nolint
         function(input, output, session) {
           logger::log_trace("FilteredData$srv_filter_panel initializing")
           shiny::setBookmarkExclude("remove_all_filters")
-          self$srv_filter_overview(
-            id = "teal_filters_info",
-            active_datanames = active_datanames
-          )
+          self$srv_filter_overview(id = "teal_filters_info", active_datanames = active_datanames)
 
           shiny::observeEvent(self$get_filter_state(), {
             if (length(self$get_filter_state()) == 0) {
