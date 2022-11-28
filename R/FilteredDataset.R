@@ -406,7 +406,6 @@ FilteredDataset <- R6::R6Class( # nolint
           dataname <- self$get_dataname()
           logger::log_trace("FilteredDataset$server initializing, dataname: { deparse1(dataname) }")
           checkmate::assert_string(dataname)
-          shiny::setBookmarkExclude("remove_filters")
           lapply(
             names(self$get_filter_states()),
             function(x) {

@@ -347,7 +347,7 @@ FilterStates <- R6::R6Class( # nolint
     #' @return `list` of `FilterState` objects
     queue_get = function(queue_index, element_id = character(0)) {
       private$validate_queue_exists(queue_index)
-      checkmate::assert_character(element_id, max.len = 1, null.ok = TRUE, any.missing = FALSE)
+      checkmate::assert_character(element_id, null.ok = TRUE, any.missing = FALSE)
 
       if (length(element_id) == 0) {
         private$queue[[queue_index]]$get()
@@ -395,11 +395,7 @@ FilterStates <- R6::R6Class( # nolint
     #' @description
     #' Removes a single filter state
     #'
-    #' Removes a single filter state with all shiny elements associated
-    #' with this state. It removes:\cr
-    #' * particular `FilterState` from `private$queue`
-    #' * UI card created for this filter
-    #' * observers listening selection and remove button
+    #' Removes a single `FilterState` from `private$queue`.
     #' @param queue_index (`character(1)`, `logical(1)`)\cr
     #'   index of the `private$queue` list where `ReactiveQueue` are kept.
     #' @param element_id (`character(1)`)\cr
@@ -411,10 +407,6 @@ FilterStates <- R6::R6Class( # nolint
       ))
       private$validate_queue_exists(queue_index)
       checkmate::assert_string(element_id)
-      checkmate::assert(
-        checkmate::check_string(queue_index),
-        checkmate::check_int(queue_index)
-      )
 
       filters <- self$queue_get(queue_index = queue_index, element_id = element_id)
       private$queue[[queue_index]]$remove(filters)
@@ -427,21 +419,21 @@ FilterStates <- R6::R6Class( # nolint
     #' Shiny UI module
     #'
     #' Shiny UI element being a container for `FilterState` elements.
-    #' Content of this container is created using `renderUI` in
-    #' `server` module
+    #' Content of this container is created using `renderUI` in the
+    #' `server` module.
     #' @param id (`character(1)`)\cr
     #'   id of the shiny element
     #' @return shiny.tag
     ui = function(id) {
       ns <- NS(id)
-      private$cards_container_id <- ns("cards")
       tagList(
         include_css_files(pattern = "filter-panel"),
         tags$div(
-          id = private$cards_container_id,
+          id = ns("cards"),
           class = "list-group hideable-list-group",
           `data-label` = ifelse(private$datalabel == "", "", (paste0("> ", private$datalabel)))
-        )
+        ),
+        uiOutput(ns("filter_cards"))
       )
     },
 
@@ -511,135 +503,88 @@ FilterStates <- R6::R6Class( # nolint
     }
   ),
   private = list(
-    cards_container_id = character(0),
-    card_ids = character(0),
     datalabel = character(0),
     input_dataname = NULL, # because it holds object of class name
     output_dataname = NULL, # because it holds object of class name,
     ns = NULL, # shiny ns()
-    observers = list(), # observers
     queue = NULL, # list of ReactiveQueue(s) initialized by self$queue_initialize
 
-    #' Module to insert/remove `FilterState` UI
+
+    #' UI wrapping a single `FilterState`
     #'
-    #' This module adds the shiny UI of the newly added `FilterState` object to queue to the Active Filter
-    #' Variables, calls `FilterState` modules and creates observer to remove state
-    #' parameter filter_state (`FilterState`)
+    #' This module contains a single `FilterState` card and remove (from the `ReactiveQueue`) button.
     #'
     #' parameter queue_index (`character(1)`, `logical(1)`)\cr
     #'   index of the `private$queue` list where `ReactiveQueue` are kept.
     #' parameter element_id (`character(1)`)\cr
     #'   name of `ReactiveQueue` element.
     #' return `moduleServer` function which returns `NULL`
-    insert_filter_state_ui = function(id, filter_state, queue_index, element_id) {
-      checkmate::assert_class(filter_state, "FilterState")
-      checkmate::assert(
-        checkmate::check_int(queue_index),
-        checkmate::check_character(queue_index, len = 1),
-        combine = "or"
-      )
-      checkmate::assert_character(element_id, len = 1)
-      moduleServer(
-        id = id,
-        function(input, output, session) {
-          logger::log_trace(
-            sprintf(
-              "%s$insert_filter_state_ui, adding FilterState UI of variable %s, dataname: %s",
-              class(self)[1],
-              element_id,
-              deparse1(private$input_dataname)
-            )
-          )
-          shiny::setBookmarkExclude("remove")
-          card_id <- session$ns("card")
-          queue_id <- sprintf("%s-%s", queue_index, element_id)
-          private$card_ids[queue_id] <- card_id
-
-          insertUI(
-            selector = sprintf("#%s", private$cards_container_id),
-            where = "beforeEnd",
-            # add span with id to be removable
-            ui = {
-              div(
-                id = card_id,
-                class = "list-group-item",
-                fluidPage(
-                  theme = get_teal_bs_theme(),
-                  fluidRow(
-                    column(
-                      width = 10,
-                      class = "no-left-right-padding",
-                      tags$div(
-                        tags$span(filter_state$get_varname(),
-                          class = "filter_panel_varname"
-                        ),
-                        if (checkmate::test_character(filter_state$get_varlabel(), min.len = 1) &&
-                          tolower(filter_state$get_varname()) != tolower(filter_state$get_varlabel())) {
-                          tags$span(filter_state$get_varlabel(), class = "filter_panel_varlabel")
-                        }
-                      )
-                    ),
-                    column(
-                      width = 2,
-                      class = "no-left-right-padding",
-                      actionLink(
-                        session$ns("remove"),
-                        label = "",
-                        icon = icon("circle-xmark", lib = "font-awesome"),
-                        class = "remove pull-right"
-                      )
-                    )
-                  ),
-                  filter_state$ui(id = session$ns("content"))
-                )
+    ui_card_module = function(queue_index, element_id, fs) {
+      # id needed to distinguish duplicated var names (element_id) from different slots (queue_index)
+      id <- sprintf("%s-%s", queue_index, element_id)
+      ns <- NS(id)
+      div(
+        id = ns("card"),
+        class = "list-group-item",
+        fluidPage(
+          theme = get_teal_bs_theme(),
+          fluidRow(
+            column(
+              width = 10,
+              class = "no-left-right-padding",
+              # todo: should we move render varname and label to the FS?
+              #       We'd have to place remove button nicely
+              tags$div(
+                tags$span(fs$get_varname(), class = "filter_panel_varname"),
+                if (checkmate::test_character(fs$get_varlabel(), min.len = 1) &&
+                  tolower(fs$get_varname()) != tolower(fs$get_varlabel())) {
+                  tags$span(fs$get_varlabel(), class = "filter_panel_varlabel")
+                }
               )
-            }
-          )
-          filter_state$server(id = "content")
-          private$observers[[queue_id]] <- observeEvent(
-            ignoreInit = TRUE,
-            ignoreNULL = TRUE,
-            eventExpr = input$remove,
-            handlerExpr = {
-              logger::log_trace(paste(
-                "{ class(self)[1] }$insert_filter_state_ui@1 removing FilterState from queue '{ queue_index }',",
-                "dataname: { deparse1(private$input_dataname) }"
-              ))
-              self$queue_remove(queue_index, element_id)
-              logger::log_trace(paste(
-                "{ class(self)[1] }$insert_filter_state_ui@1 removed FilterState from queue '{ queue_index }',",
-                "dataname: { deparse1(private$input_dataname) }"
-              ))
-            }
-          )
-
-          logger::log_trace(
-            sprintf(
-              "%s$insert_filter_state_ui, added FilterState UI of variable %s, dataname: %s",
-              class(self)[1],
-              element_id,
-              deparse1(private$input_dataname)
+            ),
+            column(
+              width = 2,
+              class = "no-left-right-padding",
+              actionLink(
+                ns("remove"),
+                label = "",
+                icon = icon("circle-xmark", lib = "font-awesome"),
+                class = "remove pull-right"
+              )
             )
-          )
-          NULL
-        }
+          ),
+          fs$ui(id = ns("content"))
+        )
       )
     },
 
-    # Remove shiny element. Method can be called from reactive session where
-    #' `observeEvent` for remove-filter-state is set and also from `FilteredDataset`
-    #' level, where shiny-session-namespace is different. That is why it's important
-    #' to remove shiny elements from anywhere. In `add_filter_state` `session$ns(NULL)`
-    #' is equivalent to `private$ns(queue_index)`. This means that
+    #' Server module for a single `FilterState`
     #'
-    remove_filter_state_ui = function(queue_index, element_id) {
-      queue_id <- sprintf("%s-%s", queue_index, element_id)
-      removeUI(selector = sprintf("#%s", private$card_ids[queue_id]))
-      private$card_ids <- private$card_ids[names(private$card_ids) != queue_id]
-      if (length(private$observers[[queue_id]]) > 0) {
-        private$observers[[queue_id]]$destroy()
-        private$observers[[queue_id]] <- NULL
-      }
+    #' Calls server from `FilterState` and observes remove (from the `ReactiveQueue`) button
+    srv_card_module = function(queue_index, element_id, fs) {
+      # id needed to distinguish duplicated var names (element_id) from different slots (queue_index)
+      id <- sprintf("%s-%s", queue_index, element_id)
+
+      moduleServer(id, function(input, output, session) {
+        fs$server(id = "content")
+        observeEvent(
+          eventExpr = input$remove,
+          ignoreInit = TRUE,
+          ignoreNULL = TRUE, # observer should be triggered only if input$remove is true
+          once = TRUE, # remove button can be called once, should be destroyed afterwards
+          handlerExpr = {
+            logger::log_trace(paste(
+              "{ class(self)[1] }$insert_filter_state_ui@1 removing FilterState from queue '{ queue_index }',",
+              "dataname: { deparse1(private$input_dataname) }"
+            ))
+            self$queue_remove(queue_index, element_id)
+            logger::log_trace(paste(
+              "{ class(self)[1] }$insert_filter_state_ui@1 removed FilterState from queue '{ queue_index }',",
+              "dataname: { deparse1(private$input_dataname) }"
+            ))
+          }
+        )
+      })
     },
 
     # Checks if the queue of the given index was initialized in this `FilterStates`
@@ -664,19 +609,6 @@ FilterStates <- R6::R6Class( # nolint
           )
         )
       }
-    },
-
-    # Maps the array of strings to sanitized unique HTML ids.
-    # @param keys `character` the array of strings
-    # @param prefix `character(1)` text to prefix id. Needed in case of multiple
-    #  queue objects where keys (variables) might be duplicated across queues
-    # @return `list` the mapping
-    map_vars_to_html_ids = function(keys, prefix = "") {
-      checkmate::assert_character(keys, null.ok = TRUE)
-      checkmate::assert_character(prefix, len = 1)
-      sanitized_values <- make.unique(gsub("[^[:alnum:]]", perl = TRUE, replacement = "", x = keys))
-      sanitized_values <- paste(prefix, "var", sanitized_values, sep = "_")
-      stats::setNames(object = sanitized_values, nm = keys)
     }
   )
 )
@@ -752,6 +684,7 @@ DFFilterStates <- R6::R6Class( # nolint
     #' @description
     #' Server module
     #'
+    #' Module renders
     #' @param id (`character(1)`)\cr
     #'   an ID string that corresponds with the ID used to call the module's UI function.
     #' @return `moduleServer` function which returns `NULL`
@@ -761,36 +694,35 @@ DFFilterStates <- R6::R6Class( # nolint
         function(input, output, session) {
           previous_state <- reactiveVal(isolate(self$queue_get(1L)))
           added_state_name <- reactiveVal(character(0))
-          removed_state_name <- reactiveVal(character(0))
 
           observeEvent(self$queue_get(1L), {
             added_state_name(setdiff(names(self$queue_get(1L)), names(previous_state())))
-            removed_state_name(setdiff(names(previous_state()), names(self$queue_get(1L))))
             previous_state(self$queue_get(1L))
           })
 
-          observeEvent(added_state_name(), ignoreNULL = TRUE, {
+
+          observeEvent(
+            added_state_name(), # we want to call FilterState module only once when it's added
+            ignoreNULL = TRUE, {
             fstates <- self$queue_get(1L)
-            html_ids <- private$map_vars_to_html_ids(names(fstates))
             for (fname in added_state_name()) {
-              private$insert_filter_state_ui(
-                id = html_ids[fname],
-                filter_state = fstates[[fname]],
-                queue_index = 1L,
-                element_id = fname
-              )
+              fs <- fstates[[fname]]
+              private$srv_card_module(queue_index = 1L, fname, fs)
             }
             added_state_name(character(0))
           })
 
-          observeEvent(removed_state_name(), {
-            req(removed_state_name())
-            for (fname in removed_state_name()) {
-              private$remove_filter_state_ui(1L, fname)
-            }
-            removed_state_name(character(0))
+          output$filter_cards <- shiny::renderUI({
+            fstates <- self$queue_get(1L) # rerenders when queue changes / not when the state changes
+            shiny::tagList(
+              lapply(
+                names(fstates),
+                function(fname) {
+                  private$ui_card_module(queue_index = session$ns(1L), element_id = fname, fstates[[fname]])
+                }
+              )
+            )
           })
-          NULL
         }
       )
     },
@@ -984,7 +916,6 @@ DFFilterStates <- R6::R6Class( # nolint
           logger::log_trace(
             "DFFilterStates$srv_add_filter_state initializing, dataname: { deparse1(private$input_dataname) }"
           )
-          shiny::setBookmarkExclude(c("var_to_add"))
           active_filter_vars <- reactive({
             vapply(
               X = self$queue_get(queue_index = 1L),
@@ -1167,35 +1098,31 @@ MAEFilterStates <- R6::R6Class( # nolint
         function(input, output, session) {
           previous_state <- reactiveVal(isolate(self$queue_get("y")))
           added_state_name <- reactiveVal(character(0))
-          removed_state_name <- reactiveVal(character(0))
 
           observeEvent(self$queue_get("y"), {
             added_state_name(setdiff(names(self$queue_get("y")), names(previous_state())))
-            removed_state_name(setdiff(names(previous_state()), names(self$queue_get("y"))))
-
             previous_state(self$queue_get("y"))
           })
 
           observeEvent(added_state_name(), ignoreNULL = TRUE, {
             fstates <- self$queue_get("y")
-            html_ids <- private$map_vars_to_html_ids(names(fstates))
             for (fname in added_state_name()) {
-              private$insert_filter_state_ui(
-                id = html_ids[fname],
-                filter_state = fstates[[fname]],
-                queue_index = "y",
-                element_id = fname
-              )
+              fs <- fstates[[fname]]
+              private$srv_card_module(queue_index = "y", fname, fs)
             }
             added_state_name(character(0))
           })
 
-          observeEvent(removed_state_name(), {
-            req(removed_state_name())
-            for (fname in removed_state_name()) {
-              private$remove_filter_state_ui("y", fname)
-            }
-            removed_state_name(character(0))
+          output$filter_cards <- shiny::renderUI({
+            fstates <- self$queue_get(1L)
+            shiny::tagList(
+              lapply(
+                names(fstates),
+                function(fname) {
+                  private$ui_card_module(queue_index = session$ns("y"), element_id = fname, fstates[[fname]])
+                }
+              )
+            )
           })
           NULL
         }
@@ -1354,7 +1281,6 @@ MAEFilterStates <- R6::R6Class( # nolint
           logger::log_trace(
             "MAEFilterState$srv_add_filter_state initializing, dataname: { deparse1(private$input_dataname) }"
           )
-          shiny::setBookmarkExclude("var_to_add")
           active_filter_vars <- reactive({
             vapply(
               X = self$queue_get(queue_index = "y"),
@@ -1540,78 +1466,69 @@ SEFilterStates <- R6::R6Class( # nolint
         id = id,
         function(input, output, session) {
           previous_state_subset <- reactiveVal(isolate(self$queue_get("subset")))
-          added_state_name_subset <- reactiveVal(character(0))
-          removed_state_name_subset <- reactiveVal(character(0))
+          added_state_subset <- reactiveVal(character(0))
 
           observeEvent(self$queue_get("subset"), {
-            added_state_name_subset(
+            added_state_subset(
               setdiff(names(self$queue_get("subset")), names(previous_state_subset()))
-            )
-            removed_state_name_subset(
-              setdiff(names(previous_state_subset()), names(self$queue_get("subset")))
             )
             previous_state_subset(self$queue_get("subset"))
           })
 
-          observeEvent(added_state_name_subset(), ignoreNULL = TRUE, {
+          observeEvent(added_state_subset(), ignoreNULL = TRUE, {
             fstates <- self$queue_get("subset")
-            html_ids <- private$map_vars_to_html_ids(keys = names(fstates), prefix = "rowData")
-            for (fname in added_state_name_subset()) {
-              private$insert_filter_state_ui(
-                id = html_ids[fname],
-                filter_state = fstates[[fname]],
-                queue_index = "subset",
-                element_id = fname
-              )
+            for (fname in added_state_subset()) {
+              fs <- fstates[[fname]]
+              private$srv_card_module(queue_index = "subset", fname, fs)
             }
-            added_state_name_subset(character(0))
+            added_state_subset(character(0))
           })
 
-          observeEvent(removed_state_name_subset(), {
-            req(removed_state_name_subset())
-            for (fname in removed_state_name_subset()) {
-              private$remove_filter_state_ui("subset", fname)
-            }
-            removed_state_name_subset(character(0))
+          output$filter_cards <- shiny::renderUI({
+            fstates <- self$queue_get("subset")
+            shiny::tagList(
+              lapply(
+                names(fstates),
+                function(fname) {
+                  private$ui_card_module(queue_index = session$ns("subset"), element_id = fname, fstates[[fname]])
+                }
+              )
+            )
           })
 
           # select
           previous_state_select <- reactiveVal(isolate(self$queue_get("select")))
-          added_state_name_select <- reactiveVal(character(0))
-          removed_state_name_select <- reactiveVal(character(0))
+          added_state_select <- reactiveVal(character(0))
 
           observeEvent(self$queue_get("select"), {
             # find what has been added or removed
-            added_state_name_select(
+            added_state_select(
               setdiff(names(self$queue_get("select")), names(previous_state_select()))
-            )
-            removed_state_name_select(
-              setdiff(names(previous_state_select()), names(self$queue_get("select")))
             )
             previous_state_select(self$queue_get("select"))
           })
 
-          observeEvent(added_state_name_select(), ignoreNULL = TRUE, {
+          observeEvent(added_state_select(), ignoreNULL = TRUE, {
             fstates <- self$queue_get("select")
-            html_ids <- private$map_vars_to_html_ids(keys = names(fstates), prefix = "colData")
-            for (fname in added_state_name_select()) {
-              private$insert_filter_state_ui(
-                id = html_ids[fname],
-                filter_state = fstates[[fname]],
-                queue_index = "select",
-                element_id = fname
-              )
+            for (fname in added_state_select()) {
+              fs <- fstates[[fname]]
+              private$srv_card_module(queue_index = "select", fname, fs)
             }
-            added_state_name_select(character(0))
+            added_state_select(character(0))
           })
 
-          observeEvent(removed_state_name_select(), {
-            req(removed_state_name_select())
-            for (fname in removed_state_name_select()) {
-              private$remove_filter_state_ui("select", fname)
-            }
-            removed_state_name_select(character(0))
+          output$filter_cards <- shiny::renderUI({
+            fstates <- self$queue_get("select")
+            shiny::tagList(
+              lapply(
+                names(fstates),
+                function(fname) {
+                  private$ui_card_module(queue_index = session$ns("select"), element_id = fname, fstates[[fname]])
+                }
+              )
+            )
           })
+
           NULL
         }
       )
@@ -1871,7 +1788,6 @@ SEFilterStates <- R6::R6Class( # nolint
           logger::log_trace(
             "SEFilterState$srv_add_filter_state initializing, dataname: { deparse1(private$input_dataname) }"
           )
-          shiny::setBookmarkExclude(c("row_to_add", "col_to_add"))
           active_filter_col_vars <- reactive({
             vapply(
               X = self$queue_get(queue_index = "select"),
@@ -2092,39 +2008,33 @@ MatrixFilterStates <- R6::R6Class( # nolint
         function(input, output, session) {
           previous_state <- reactiveVal(isolate(self$queue_get("subset")))
           added_state_name <- reactiveVal(character(0))
-          removed_state_name <- reactiveVal(character(0))
 
           observeEvent(self$queue_get("subset"), {
             added_state_name(
               setdiff(names(self$queue_get("subset")), names(previous_state()))
-            )
-            removed_state_name(
-              setdiff(names(previous_state()), names(self$queue_get("subset")))
             )
             previous_state(self$queue_get("subset"))
           })
 
           observeEvent(added_state_name(), ignoreNULL = TRUE, {
             fstates <- self$queue_get("subset")
-            html_ids <- private$map_vars_to_html_ids(keys = names(fstates))
             for (fname in added_state_name()) {
-              private$insert_filter_state_ui(
-                id = html_ids[fname],
-                filter_state = fstates[[fname]],
-                queue_index = "subset",
-                element_id = fname
-              )
+              fs <- fstates[[fname]]
+              private$srv_card_module(queue_index = "subset", fname, fs)
             }
             added_state_name(character(0))
           })
 
-          observeEvent(removed_state_name(), {
-            req(removed_state_name())
-
-            for (fname in removed_state_name()) {
-              private$remove_filter_state_ui("subset", fname)
-            }
-            removed_state_name(character(0))
+          output$filter_cards <- shiny::renderUI({
+            fstates <- self$queue_get("subset")
+            shiny::tagList(
+              lapply(
+                names(fstates),
+                function(fname) {
+                  private$ui_card_module(queue_index = session$ns("subset"), element_id = fname, fstates[[fname]])
+                }
+              )
+            )
           })
           NULL
         }
@@ -2287,7 +2197,6 @@ MatrixFilterStates <- R6::R6Class( # nolint
           logger::log_trace(
             "MatrixFilterStates$srv_add_filter_state initializing, dataname: { deparse1(private$input_dataname) }"
           )
-          shiny::setBookmarkExclude("var_to_add")
           active_filter_vars <- reactive({
             vapply(
               X = self$queue_get(queue_index = "subset"),

@@ -942,7 +942,6 @@ EmptyFilterState <- R6::R6Class( # nolint
         id = id,
         function(input, output, session) {
           private$observe_keep_na(input)
-          shiny::setBookmarkExclude("keep_na")
         }
       )
     },
@@ -1142,8 +1141,6 @@ LogicalFilterState <- R6::R6Class( # nolint
         id = id,
         function(input, output, session) {
           logger::log_trace("LogicalFilterState$server initializing, dataname: { deparse1(private$input_dataname) }")
-
-          shiny::setBookmarkExclude(c("selection", "keep_na"))
 
           private$observers$selection_reactive <- observeEvent(
             private$selected_reactive(),
@@ -1448,8 +1445,6 @@ RangeFilterState <- R6::R6Class( # nolint
         id = id,
         function(input, output, session) {
           logger::log_trace("RangeFilterState$server initializing, dataname: { deparse1(private$input_dataname) }")
-
-          shiny::setBookmarkExclude(c("selection", "keep_na", "keep_inf"))
 
           output$plot <- renderPlot(
             bg = "transparent",
@@ -1935,7 +1930,6 @@ ChoicesFilterState <- R6::R6Class( # nolint
         id = id,
         function(input, output, session) {
           logger::log_trace("ChoicesFilterState$server initializing, dataname: { deparse1(private$input_dataname) }")
-          shiny::setBookmarkExclude(c("selection", "keep_na"))
 
           private$observers$selection_reactive <- observeEvent(
             private$selected_reactive(),
@@ -2235,7 +2229,6 @@ DateFilterState <- R6::R6Class( # nolint
         id = id,
         function(input, output, session) {
           logger::log_trace("DateFilterState$server initializing, dataname: { deparse1(private$input_dataname) }")
-          shiny::setBookmarkExclude(c("selection", "keep_na"))
           private$observers$selection_reactive <- observeEvent(
             private$selected_reactive(),
             ignoreNULL = TRUE,
@@ -2580,7 +2573,6 @@ DatetimeFilterState <- R6::R6Class( # nolint
         id = id,
         function(input, output, session) {
           logger::log_trace("DatetimeFilterState$server initializing, dataname: { deparse1(private$input_dataname) }")
-          shiny::setBookmarkExclude(c("selection_start", "selection_end", "keep_na"))
           private$observers$selection_reactive <- observeEvent(
             private$selected_reactive(),
             ignoreNULL = TRUE,

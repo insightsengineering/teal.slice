@@ -70,7 +70,6 @@
 #'     )
 #'   )
 #'   ```
-#'   `filter` is ignored if the app is restored from a bookmarked state.
 #'
 #' @return
 #' - set, remove and clear returns `NULL`
