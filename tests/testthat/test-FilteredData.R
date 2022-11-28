@@ -522,13 +522,6 @@ testthat::test_that("get_filter_overview returns overview matrix for filtered da
   )
 })
 
-testthat::test_that("restore_state_from_bookmark is a pure virtual method", {
-  testthat::expect_error(
-    FilteredData$new(list(iris = list(dataset = iris)), join_keys = NULL)$restore_state_from_bookmark("test"),
-    regexp = "Pure virtual method"
-  )
-})
-
 testthat::test_that("get_filter_expr returns a string with a filtering expression", {
   datasets <- FilteredData$new(
     list(iris = list(dataset = iris), mtcars = list(dataset = mtcars)),

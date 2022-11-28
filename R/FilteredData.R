@@ -572,25 +572,6 @@ FilteredData <- R6::R6Class( # nolint
     },
 
     #' @description
-    #' Sets this object from a bookmarked state
-    #'
-    #' Only sets the filter state, does not set the data
-    #' and the preprocessing code. The data should already have been set.
-    #' Also checks the preprocessing code is identical if provided in the `state`.
-    #'
-    #' Since this function is used from the end-user part, its error messages
-    #' are more verbose. We don't call the Shiny modals from here because this
-    #' class may be used outside of a Shiny app.
-    #'
-    #' @param state (`named list`)\cr
-    #'  containing fields `data_hash`, `filter_states`
-    #'   and `preproc_code`.
-    #' @param check_data_hash (`logical`) whether to check that `md5sums` agree
-    #'   for the data; may not make sense with randomly generated data per session
-    restore_state_from_bookmark = function(state, check_data_hash = TRUE) {
-      stop("Pure virtual method")
-    },
-    #' @description
     #' Disable the filter panel by adding `disable` class to `filter_add_vars` and `filter_panel_active_vars ` tags
     #' in the User Interface.
     #' In addition, it will store the existing filter states in a private field called `cached_states`
@@ -789,7 +770,6 @@ FilteredData <- R6::R6Class( # nolint
         id = id,
         function(input, output, session) {
           logger::log_trace("FilteredData$srv_filter_panel initializing")
-          shiny::setBookmarkExclude("remove_all_filters")
           self$srv_filter_overview(id = "teal_filters_info", active_datanames = active_datanames)
 
           shiny::observeEvent(self$get_filter_state(), {
