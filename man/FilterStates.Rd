@@ -261,13 +261,7 @@ name of the \code{ReactiveQueue} element.}
 \subsection{Method \code{queue_remove()}}{
 Removes a single filter state
 
-Removes a single filter state with all shiny elements associated
-with this state. It removes:\cr
-\itemize{
-\item particular \code{FilterState} from \code{private$queue}
-\item UI card created for this filter
-\item observers listening selection and remove button
-}
+Removes a single \code{FilterState} from \code{private$queue}.
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{FilterStates$queue_remove(queue_index, element_id)}\if{html}{\out{</div>}}
 }
@@ -291,8 +285,8 @@ name of \code{ReactiveQueue} element.}
 Shiny UI module
 
 Shiny UI element being a container for \code{FilterState} elements.
-Content of this container is created using \code{renderUI} in
-\code{server} module
+Content of this container is created using \code{renderUI} in the
+\code{server} module.
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{FilterStates$ui(id)}\if{html}{\out{</div>}}
 }
@@ -420,21 +414,18 @@ object containing columns to be used as filter variables.}
 }
 \subsection{Returns}{
 \code{moduleServer} function which returns \code{NULL}
-Module to insert/remove \code{FilterState} UI
+UI wrapping a single \code{FilterState}
 
-This module adds the shiny UI of the newly added \code{FilterState} object to queue to the Active Filter
-Variables, calls \code{FilterState} modules and creates observer to remove state
-parameter filter_state (\code{FilterState})
+This module contains a single \code{FilterState} card and remove (from the \code{ReactiveQueue}) button.
 
 parameter queue_index (\code{character(1)}, \code{logical(1)})\cr
 index of the \code{private$queue} list where \code{ReactiveQueue} are kept.
 parameter element_id (\code{character(1)})\cr
 name of \code{ReactiveQueue} element.
 return \code{moduleServer} function which returns \code{NULL}
-\code{observeEvent} for remove-filter-state is set and also from \code{FilteredDataset}
-level, where shiny-session-namespace is different. That is why it's important
-to remove shiny elements from anywhere. In \code{add_filter_state} \code{session$ns(NULL)}
-is equivalent to \code{private$ns(queue_index)}. This means that
+Server module for a single \code{FilterState}
+
+Calls server from \code{FilterState} and observes remove (from the \code{ReactiveQueue}) button
 }
 }
 \if{html}{\out{<hr>}}

@@ -167,7 +167,6 @@ shiny::isolate(datasets$get_filter_state())
 \item \href{#method-FilteredData-set_filter_state}{\code{FilteredData$set_filter_state()}}
 \item \href{#method-FilteredData-remove_filter_state}{\code{FilteredData$remove_filter_state()}}
 \item \href{#method-FilteredData-remove_all_filter_states}{\code{FilteredData$remove_all_filter_states()}}
-\item \href{#method-FilteredData-restore_state_from_bookmark}{\code{FilteredData$restore_state_from_bookmark()}}
 \item \href{#method-FilteredData-filter_panel_disable}{\code{FilteredData$filter_panel_disable()}}
 \item \href{#method-FilteredData-filter_panel_enable}{\code{FilteredData$filter_panel_enable()}}
 \item \href{#method-FilteredData-get_filter_panel_active}{\code{FilteredData$get_filter_panel_active()}}
@@ -821,36 +820,6 @@ datanames to remove their \code{FilterStates} or empty which removes all \code{F
 }
 \subsection{Returns}{
 \code{NULL}
-}
-}
-\if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-FilteredData-restore_state_from_bookmark"></a>}}
-\if{latex}{\out{\hypertarget{method-FilteredData-restore_state_from_bookmark}{}}}
-\subsection{Method \code{restore_state_from_bookmark()}}{
-Sets this object from a bookmarked state
-
-Only sets the filter state, does not set the data
-and the preprocessing code. The data should already have been set.
-Also checks the preprocessing code is identical if provided in the \code{state}.
-
-Since this function is used from the end-user part, its error messages
-are more verbose. We don't call the Shiny modals from here because this
-class may be used outside of a Shiny app.
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{FilteredData$restore_state_from_bookmark(state, check_data_hash = TRUE)}\if{html}{\out{</div>}}
-}
-
-\subsection{Arguments}{
-\if{html}{\out{<div class="arguments">}}
-\describe{
-\item{\code{state}}{(\verb{named list})\cr
-containing fields \code{data_hash}, \code{filter_states}
-and \code{preproc_code}.}
-
-\item{\code{check_data_hash}}{(\code{logical}) whether to check that \code{md5sums} agree
-for the data; may not make sense with randomly generated data per session}
-}
-\if{html}{\out{</div>}}
 }
 }
 \if{html}{\out{<hr>}}

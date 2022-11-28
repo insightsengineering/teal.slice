@@ -139,6 +139,8 @@ For \code{DFFilterStates} \code{dplyr::filter} is used
 \if{latex}{\out{\hypertarget{method-DFFilterStates-server}{}}}
 \subsection{Method \code{server()}}{
 Server module
+
+Module renders
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{DFFilterStates$server(id)}\if{html}{\out{</div>}}
 }

@@ -83,9 +83,7 @@ in the following name.
     )
   )
 )
-}\if{html}{\out{</div>}}
-
-\code{filter} is ignored if the app is restored from a bookmarked state.}
+}\if{html}{\out{</div>}}}
 }
 \value{
 \itemize{
