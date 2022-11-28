@@ -703,14 +703,16 @@ DFFilterStates <- R6::R6Class( # nolint
 
           observeEvent(
             added_state_name(), # we want to call FilterState module only once when it's added
-            ignoreNULL = TRUE, {
-            fstates <- self$queue_get(1L)
-            for (fname in added_state_name()) {
-              fs <- fstates[[fname]]
-              private$srv_card_module(queue_index = 1L, fname, fs)
+            ignoreNULL = TRUE,
+            {
+              fstates <- self$queue_get(1L)
+              for (fname in added_state_name()) {
+                fs <- fstates[[fname]]
+                private$srv_card_module(queue_index = 1L, fname, fs)
+              }
+              added_state_name(character(0))
             }
-            added_state_name(character(0))
-          })
+          )
 
           output$filter_cards <- shiny::renderUI({
             fstates <- self$queue_get(1L) # rerenders when queue changes / not when the state changes
