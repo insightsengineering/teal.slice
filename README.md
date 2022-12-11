@@ -19,7 +19,6 @@
 [![Open Issues](https://img.shields.io/github/issues-raw/insightsengineering/teal.slice?color=red\&label=open%20issues)](https://github.com/insightsengineering/teal.slice/issues?q=is%3Aissue+is%3Aopen+sort%3Aupdated-desc)
 <!-- end badges -->
 
-
 `teal.slice` is an R library used in the development of `teal` `shiny` modules. It provides:
 
 * a class accepting an array of `data.frames` as an input, then supporting basic `dplyr` operations on the data,
