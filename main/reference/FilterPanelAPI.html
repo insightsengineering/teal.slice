@@ -12,7 +12,7 @@ Class to encapsulate the API of the filter panel of a teal app"><!-- mathjax -->
     
     <a class="navbar-brand me-2" href="../index.html">teal.slice</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.2.0.9006</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.2.0.9007</small>
 
     <div style="width: 140px; margin-left: 0.5rem;"> <small class="nav-text text-muted me-auto">part of</small> <img src="https://github.com/insightsengineering/hex-stickers/blob/main/PNG/nest.png?raw=true" alt="NEST" style="height: 30px;"><a href="https://pharmaverse.org/" class="external-link"><img src="https://github.com/insightsengineering/hex-stickers/blob/main/PNG/pharmaverse.png?raw=true" alt="pharmaverse" style="height: 28px;"></a> </div>
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -35,14 +35,6 @@ Class to encapsulate the API of the filter panel of a teal app"><!-- mathjax -->
 <li class="nav-item">
   <a class="nav-link" href="../news/index.html">Changelog</a>
 </li>
-<!-- start dropdown for versions --> <li class="nav-item dropdown">
-        <a href="#" class="nav-link dropdown-toggle"
-          data-bs-toggle="dropdown" role="button"
-          aria-expanded="false" aria-haspopup="true"
-          id="dropdown-versions">Versions</a> <div class="dropdown-menu" aria-labelledby="dropdown-versions"> <a class="dropdown-item" data-toggle="tooltip" title="" href="https://insightsengineering.github.io/teal.slice/main">main</a>
-<a class="dropdown-item" data-toggle="tooltip" title="" href="https://insightsengineering.github.io/teal.slice/latest-tag">latest-tag</a>
-<a class="dropdown-item" data-toggle="tooltip" title="" href="https://insightsengineering.github.io/teal.slice/v0.2.0">v0.2.0</a> </div></li>
-<!-- end dropdown for versions -->
       </ul><form class="form-inline my-2 my-lg-0" role="search">
         <input type="search" class="form-control me-sm-2" aria-label="Toggle navigation" name="search-input" data-search-index="../search.json" id="search-input" placeholder="Search for" autocomplete="off"></form>
 
@@ -226,7 +218,7 @@ This button is observed in <code>srv_filter_panel</code> method that executes
 <span class="r-in"><span><span class="va">fpa</span> <span class="op">&lt;-</span> <span class="va">FilterPanelAPI</span><span class="op">$</span><span class="fu">new</span><span class="op">(</span><span class="va">fd</span><span class="op">)</span></span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># get the actual filter state --&gt; empty named list</span></span></span>
-<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/pkg/shiny/man/isolate.html" class="external-link">isolate</a></span><span class="op">(</span><span class="va">fpa</span><span class="op">$</span><span class="fu">get_filter_state</span><span class="op">(</span><span class="op">)</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="fu"><a href="https://shiny.rstudio.com/reference/shiny/latest/isolate.html" class="external-link">isolate</a></span><span class="op">(</span><span class="va">fpa</span><span class="op">$</span><span class="fu">get_filter_state</span><span class="op">(</span><span class="op">)</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> named list()</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> attr(,"formatted")</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] ""</span>
@@ -235,7 +227,7 @@ This button is observed in <code>srv_filter_panel</code> method that executes
 <span class="r-in"><span><span class="fu"><a href="filter_state_api.html">set_filter_state</a></span><span class="op">(</span><span class="va">fpa</span>, <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>iris <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>Species <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>selected <span class="op">=</span> <span class="st">"setosa"</span>, keep_na <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># get the actual filter state --&gt; named list with filters</span></span></span>
-<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/pkg/shiny/man/isolate.html" class="external-link">isolate</a></span><span class="op">(</span><span class="va">fpa</span><span class="op">$</span><span class="fu">get_filter_state</span><span class="op">(</span><span class="op">)</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="fu"><a href="https://shiny.rstudio.com/reference/shiny/latest/isolate.html" class="external-link">isolate</a></span><span class="op">(</span><span class="va">fpa</span><span class="op">$</span><span class="fu">get_filter_state</span><span class="op">(</span><span class="op">)</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $iris</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $iris$Species</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $iris$Species$selected</span>
@@ -253,7 +245,7 @@ This button is observed in <code>srv_filter_panel</code> method that executes
 <span class="r-in"><span><span class="va">fpa</span><span class="op">$</span><span class="fu">remove_all_filter_states</span><span class="op">(</span><span class="op">)</span></span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># get the actual filter state --&gt; empty named list</span></span></span>
-<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/pkg/shiny/man/isolate.html" class="external-link">isolate</a></span><span class="op">(</span><span class="va">fpa</span><span class="op">$</span><span class="fu">get_filter_state</span><span class="op">(</span><span class="op">)</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="fu"><a href="https://shiny.rstudio.com/reference/shiny/latest/isolate.html" class="external-link">isolate</a></span><span class="op">(</span><span class="va">fpa</span><span class="op">$</span><span class="fu">get_filter_state</span><span class="op">(</span><span class="op">)</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> named list()</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> attr(,"formatted")</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> [1] ""</span>
