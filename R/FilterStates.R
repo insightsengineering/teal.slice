@@ -878,7 +878,7 @@ DFFilterStates <- R6::R6Class( # nolint
             varlabel = private$get_varlabels(varname),
             input_dataname = private$input_dataname
           )
-          set_state(x = fstate, value = value, is_reactive = FALSE)
+          set_state(x = fstate, value = value)
           self$queue_push(x = fstate, queue_index = 1L, element_id = varname)
         }
       }
@@ -1246,7 +1246,7 @@ MAEFilterStates <- R6::R6Class( # nolint
             input_dataname = private$input_dataname,
             extract_type = "list"
           )
-          set_state(x = fstate, value = value, is_reactive = FALSE)
+          set_state(x = fstate, value = value)
           fstate$set_na_rm(TRUE)
           self$queue_push(
             x = fstate,
@@ -1689,7 +1689,7 @@ SEFilterStates <- R6::R6Class( # nolint
             varname = as.name(varname),
             input_dataname = private$input_dataname
           )
-          set_state(x = fstate, value = value, is_reactive = FALSE)
+          set_state(x = fstate, value = value)
           self$queue_push(
             x = fstate,
             queue_index = "subset",
@@ -1710,7 +1710,7 @@ SEFilterStates <- R6::R6Class( # nolint
             varname = as.name(varname),
             input_dataname = private$input_dataname
           )
-          set_state(x = fstate, value = value, is_reactive = FALSE)
+          set_state(x = fstate, value = value)
           self$queue_push(
             x = fstate,
             queue_index = "select",
@@ -2182,7 +2182,7 @@ MatrixFilterStates <- R6::R6Class( # nolint
             input_dataname = private$input_dataname,
             extract_type = "matrix"
           )
-          set_state(x = fstate, value = value, is_reactive = FALSE)
+          set_state(x = fstate, value = value)
           self$queue_push(
             x = fstate,
             queue_index = "subset",

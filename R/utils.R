@@ -185,19 +185,12 @@ check_in_subset <- function(subset, choices, pre_msg = "") {
 #'
 #' @inheritParams init_filter_state
 #' @param value (named `list`)\cr see `set_state` method in [`FilterState`].
-#' @param is_reactive (`logical(1)`)\cr
-#'  - `TRUE` to change `reactive` fields which triggers observers in the `FilterState`
-#'  - `FALSE` to change the state directly.
 #' @return invisible `NULL`
 #' @keywords internal
-set_state <- function(x, value, is_reactive = shiny::isRunning()) {
+set_state <- function(x, value) {
   checkmate::assert_class(x, "FilterState")
   checkmate::assert_list(value)
-  if (is_reactive) {
-    x$set_state_reactive(value)
-  } else {
-    x$set_state(value)
-  }
+  x$set_state(value)
   invisible(NULL)
 }
 

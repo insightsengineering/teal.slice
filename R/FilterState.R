@@ -274,8 +274,6 @@ init_filter_state.POSIXlt <- function(x,
 #'   `keep_na` or `keep_inf` using `set_state` method (to update all at once),
 #'   or using `set_selected`, `set_keep_na` or `set_keep_inf`
 #' * In a `teal` application by changing appropriate inputs
-#' * Using methods `set_selected_reactive`, `set_keep_na_reactive`,
-#'  `set_keep_inf_reactive` which serves as a programmatic API.
 #'
 #' @keywords internal
 FilterState <- R6::R6Class( # nolint
@@ -317,6 +315,7 @@ FilterState <- R6::R6Class( # nolint
           length(extract_type) == 1 && !is.null(input_dataname)
       )
       stopifnot(extract_type %in% c("list", "matrix"))
+      private$card_side <- reactiveVal("summary")
       private$input_dataname <- input_dataname
       private$varname <- if (is.character(varname)) {
         as.name(varname)
@@ -331,10 +330,8 @@ FilterState <- R6::R6Class( # nolint
       }
       private$extract_type <- extract_type
       private$selected <- reactiveVal(NULL)
-      private$selected_reactive <- reactiveVal(NULL)
       private$na_count <- sum(is.na(x))
       private$keep_na <- reactiveVal(FALSE)
-      private$keep_na_reactive <- reactiveVal(FALSE)
 
       logger::log_trace(
         sprintf(
@@ -489,24 +486,6 @@ FilterState <- R6::R6Class( # nolint
     },
 
     #' @description
-    #' Set if `NA` should be kept when using `set_filter_state`
-    #' @param value (`logical(1)`)\cr
-    #'  value(s) which come from the filter selection. Value is set in `server`
-    #'  modules when using `set_filter_state` instead of the shiny interface. Values are set to
-    #'  `private$keep_na_reactive` which is reactive.
-    set_keep_na_reactive = function(value) {
-      checkmate::assert_flag(value)
-      private$keep_na_reactive(value)
-      sprintf(
-        "%s$set_keep_na_reactive set for variable %s to %s.",
-        class(self)[1],
-        deparse1(self$get_varname()),
-        value
-      )
-      invisible(NULL)
-    },
-
-    #' @description
     #' Some methods needs additional `!is.na(varame)` condition to not include
     #' missing values. When `private$na_rm = TRUE` is set, `self$get_call` returns
     #' condition extended by `!is.na` condition.
@@ -548,33 +527,6 @@ FilterState <- R6::R6Class( # nolint
     },
 
     #' @description
-    #' Set selection when using `set_filter_state`
-    #' @param value (`vector`)\cr
-    #'  value(s) which come from the filters set by the user. Values are set in `server`
-    #'  modules after setting filters in `set_filter_state`. Values are set to
-    #'  `private$set_selected_reactive` which is reactive. Values type have to be the
-    #'  same as `private$choices`.
-    set_selected_reactive = function(value) {
-      logger::log_trace(
-        sprintf(
-          "%s$set_selected_reactive setting selection of variable %s, dataname: %s.",
-          class(self)[1],
-          deparse1(self$get_varname()),
-          deparse1(private$input_dataname)
-        )
-      )
-
-      value <- private$cast_and_validate(value)
-      value <- private$remove_out_of_bound_values(value)
-      private$validate_selection(value)
-      private$selected_reactive(value)
-      logger::log_trace(
-        "{ class(self)[1] }$set_selected_reactive selection set, dataname: { deparse1(private$input_dataname) }"
-      )
-      invisible(NULL)
-    },
-
-    #' @description
     #' Set state
     #' @param state (`list`)\cr
     #'  contains fields relevant for a specific class
@@ -608,42 +560,6 @@ FilterState <- R6::R6Class( # nolint
       )
       invisible(NULL)
     },
-
-    #' @description
-    #' Set state when using `set_filter_state`
-    #' @param state (`list`)\cr
-    #'  contains fields relevant for a specific class
-    #' \itemize{
-    #' \item{`selected`}{ defines initial selection}
-    #' \item{`keep_na` (`logical`)}{ defines whether to keep or remove `NA` values}
-    #' }
-    set_state_reactive = function(state) {
-      logger::log_trace(
-        sprintf(
-          "%s$set_state_reactive, dataname: %s setting state of variable %s to: selected=%s, keep_na=%s",
-          class(self)[1],
-          deparse1(private$input_dataname),
-          deparse1(self$get_varname()),
-          paste(state$selected, collapse = " "),
-          deparse1(state$keep_na)
-        )
-      )
-      stopifnot(is.list(state) && all(names(state) %in% c("selected", "keep_na")))
-      if (!is.null(state$keep_na)) {
-        self$set_keep_na_reactive(state$keep_na)
-      }
-      if (!is.null(state$selected)) {
-        self$set_selected_reactive(state$selected)
-      }
-      logger::log_trace(sprintf(
-        "%s$set_state_reactive, dataname: %s done setting state for variable %s.",
-        class(self)[1],
-        deparse1(private$input_dataname),
-        deparse1(self$get_varname())
-      ))
-      invisible(NULL)
-    },
-
     #' @description
     #' Server module
     #' @param id (`character(1)`)\cr
@@ -668,15 +584,14 @@ FilterState <- R6::R6Class( # nolint
     }
   ),
   private = list(
+    card_side = NULL, # reactiveVal
     choices = NULL, # because each class has different choices type
     input_dataname = character(0),
     keep_na = NULL, # reactiveVal logical()
-    keep_na_reactive = NULL, # reactiveVal logical()
     na_count = integer(0),
     na_rm = FALSE, # it's logical(1)
     observers = NULL, # here observers are stored
     selected = NULL, # because it holds reactiveVal and each class has different choices type
-    selected_reactive = NULL, # because it holds reactiveVal and each class has different choices type
     varname = character(0),
     varlabel = character(0),
     extract_type = logical(0),
@@ -743,34 +658,6 @@ FilterState <- R6::R6Class( # nolint
               class(self)[1],
               deparse1(self$get_varname()),
               deparse1(input$keep_na),
-              deparse1(private$input_dataname)
-            )
-          )
-        }
-      )
-      invisible(NULL)
-    },
-
-    #' Sets `keep_na` field according to `keep_na` value passed in `set_filter_state`.
-    #' If `keep_na = TRUE` `is.na(varname)` is added to the returned call.
-    #' Otherwise returned call excludes `NA` when executed.
-    observe_keep_na_reactive = function(value) {
-      private$observers$keep_na_reactive <- observeEvent(
-        ignoreNULL = FALSE, # ignoreNULL: we don't want to ignore NULL when nothing is selected in the `selectInput`,
-        ignoreInit = TRUE, # ignoreInit: should not matter because we set the UI with the desired initial state
-        eventExpr = private$keep_na_reactive(),
-        handlerExpr = {
-          updateCheckboxInput(
-            inputId = "keep_na",
-            value = value
-          )
-          private$keep_na_reactive(NULL)
-          logger::log_trace(
-            sprintf(
-              "%s$server keep_na of variable %s set to: %s, dataname: %s",
-              class(self)[1],
-              deparse1(self$get_varname()),
-              deparse1(value),
               deparse1(private$input_dataname)
             )
           )
@@ -1143,27 +1030,6 @@ LogicalFilterState <- R6::R6Class( # nolint
         function(input, output, session) {
           logger::log_trace("LogicalFilterState$server initializing, dataname: { deparse1(private$input_dataname) }")
 
-          shiny::setBookmarkExclude(c("selection", "keep_na"))
-
-          private$observers$selection_reactive <- observeEvent(
-            private$selected_reactive(),
-            ignoreNULL = TRUE,
-            handlerExpr = {
-              updateRadioButtons(
-                session = session,
-                inputId = "selection",
-                selected =  private$selected_reactive()
-              )
-              logger::log_trace(sprintf(
-                "LogicalFilterState$server@1 selection of variable %s changed, dataname: %s",
-                deparse1(self$get_varname()),
-                deparse1(private$input_dataname)
-              ))
-              private$selected_reactive(NULL)
-            }
-          )
-          private$observe_keep_na_reactive(private$keep_na_reactive())
-
           private$observers$selection <- observeEvent(
             ignoreNULL = FALSE,
             ignoreInit = TRUE,
@@ -1308,7 +1174,6 @@ RangeFilterState <- R6::R6Class( # nolint
       private$inf_count <- sum(is.infinite(x))
       private$is_integer <- checkmate::test_integerish(x)
       private$keep_inf <- reactiveVal(FALSE)
-      private$keep_inf_reactive <- reactiveVal(FALSE)
 
       return(invisible(self))
     },
@@ -1388,12 +1253,48 @@ RangeFilterState <- R6::R6Class( # nolint
       )
     },
 
-    #' UI Module for `RangeFilterState`.
+        #' UI Module for `RangeFilterState`.
     #' This UI element contains two values for `min` and `max`
     #' of the range and two checkboxes whether to keep the `NA` or `Inf`  values.
     #' @param id (`character(1)`)\cr
     #'  id of shiny element
     ui = function(id) {
+      ns <- NS(id)
+      uiOutput(ns("filter_card"))
+    },
+
+    #' @description
+    #' Server module
+    #' @param id (`character(1)`)\cr
+    #'   an ID string that corresponds with the ID used to call the module's UI function.
+    #' @return `moduleServer` function which returns `NULL`
+    server = function(id) {
+      moduleServer(
+        id = id,
+        function(input, output, session) {
+          logger::log_trace("RangeFilterState$server initializing, dataname: { deparse1(private$input_dataname) }")
+
+          self$server_inputs("inputs")
+          self$server_summary("summary")
+
+          output$filter_card <- renderUI({
+            if (private$card_side() == "summary") {
+              self$ui_summary(session$ns("summary"))
+            } else {
+              self$ui_inputs(session$ns("inputs"))
+            }
+          })
+
+        }
+      )
+    },
+
+    #' UI Module for `RangeFilterState`.
+    #' This UI element contains two values for `min` and `max`
+    #' of the range and two checkboxes whether to keep the `NA` or `Inf`  values.
+    #' @param id (`character(1)`)\cr
+    #'  id of shiny element
+    ui_inputs = function(id) {
       ns <- NS(id)
       pretty_range_inputs <- private$get_pretty_range_inputs(private$choices)
       fluidRow(
@@ -1434,7 +1335,11 @@ RangeFilterState <- R6::R6Class( # nolint
           )
         } else {
           NULL
-        }
+        },
+        span(
+          actionButton(ns("reset"), "Reset"),
+          actionButton(ns("save"), "Save")
+        )
       )
     },
 
@@ -1443,13 +1348,11 @@ RangeFilterState <- R6::R6Class( # nolint
     #' @param id (`character(1)`)\cr
     #'   an ID string that corresponds with the ID used to call the module's UI function.
     #' @return `moduleServer` function which returns `NULL`
-    server = function(id) {
+    server_inputs = function(id) {
       moduleServer(
         id = id,
         function(input, output, session) {
           logger::log_trace("RangeFilterState$server initializing, dataname: { deparse1(private$input_dataname) }")
-
-          shiny::setBookmarkExclude(c("selection", "keep_na", "keep_inf"))
 
           output$plot <- renderPlot(
             bg = "transparent",
@@ -1468,60 +1371,18 @@ RangeFilterState <- R6::R6Class( # nolint
             }
           )
 
-          private$observers$selection_reactive <- observeEvent(
-            private$selected_reactive(),
-            ignoreNULL = TRUE,
-            handlerExpr = {
-              updateSliderInput(
-                session = session,
-                inputId = "selection",
-                value = private$selected_reactive()
-              )
-              private$selected_reactive(NULL)
-              logger::log_trace(sprintf(
-                "RangeFilterState$server@1 selection of variable %s changed, dataname: %s",
-                deparse1(self$get_varname()),
-                deparse1(private$input_dataname)
-              ))
-            }
-          )
-          private$observe_keep_na_reactive(private$keep_na_reactive())
-
-          private$observers$keep_inf_reactive <- observeEvent(
-            private$keep_inf_reactive(),
-            ignoreNULL = TRUE,
-            handlerExpr = {
-              updateCheckboxInput(
-                session = session,
-                inputId = "keep_inf",
-                value =  private$keep_inf_reactive()
-              )
-              logger::log_trace(sprintf(
-                "RangeFilterState$server@2 keep_inf of variable %s set to: %s, dataname: %s",
-                deparse1(self$get_varname()),
-                private$keep_inf_reactive(),
-                deparse1(private$input_dataname)
-              ))
-              private$keep_inf_reactive(NULL)
-            }
-          )
-
-          private$observers$selection <- observeEvent(
-            ignoreNULL = FALSE, # ignoreNULL: we don't want to ignore NULL when nothing is selected in `selectInput`,
-            ignoreInit = TRUE, # ignoreInit: should not matter because we set the UI with the desired initial state
-            eventExpr = input$selection,
-            handlerExpr = {
-              # because we extended real range into rounded one we need to apply intersect(range_input, range_real)
-              selection_state <- as.numeric(pmax(pmin(input$selection, private$choices[2]), private$choices[1]))
-              if (!setequal(selection_state, self$get_selected())) {
-                validate(
-                  need(
-                    input$selection[1] <= input$selection[2],
-                    "Left range boundary should be lower than right"
-                  )
+          observeEvent(input$save, {
+            # update selection
+            selection_state <- as.numeric(pmax(pmin(input$selection, private$choices[2]), private$choices[1]))
+            if (!setequal(selection_state, self$get_selected())) {
+              validate(
+                need(
+                  input$selection[1] <= input$selection[2],
+                  "Left range boundary should be lower than right"
                 )
-                self$set_selected(selection_state)
-              }
+              )
+              self$set_selected(selection_state)
+
               logger::log_trace(
                 sprintf(
                   "RangeFilterState$server@3 selection of variable %s changed, dataname: %s",
@@ -1530,29 +1391,69 @@ RangeFilterState <- R6::R6Class( # nolint
                 )
               )
             }
-          )
-
-          private$observe_keep_na(input)
-
-          private$observers$keep_inf <- observeEvent(
-            ignoreNULL = FALSE, # ignoreNULL: we don't want to ignore NULL when nothing is selected in the `selectInput`
-            ignoreInit = TRUE, # ignoreInit: should not matter because we set the UI with the desired initial state
-            eventExpr = input$keep_inf,
-            handlerExpr = {
-              keep_inf <- if (is.null(input$keep_inf)) FALSE else input$keep_inf
-              self$set_keep_inf(keep_inf)
-              logger::log_trace(
-                sprintf(
-                  "RangeFilterState$server@4 keep_inf of variable %s set to: %s, dataname: %s",
-                  deparse1(self$get_varname()),
-                  deparse1(input$keep_inf),
-                  deparse1(private$input_dataname)
-                )
+            # update keep inf
+            keep_inf <- if (is.null(input$keep_inf)) FALSE else input$keep_inf
+            self$set_keep_inf(keep_inf)
+            logger::log_trace(
+              sprintf(
+                "RangeFilterState$server@4 keep_inf of variable %s set to: %s, dataname: %s",
+                deparse1(self$get_varname()),
+                deparse1(input$keep_inf),
+                deparse1(private$input_dataname)
               )
+            )
+
+            # update keep na
+            keep_na <- if (is.null(input$keep_na)) {
+              FALSE
+            } else {
+              input$keep_na
             }
-          )
+            self$set_keep_na(keep_na)
+            logger::log_trace(
+              sprintf(
+                "%s$server keep_na of variable %s set to: %s, dataname: %s",
+                class(self)[1],
+                deparse1(self$get_varname()),
+                deparse1(input$keep_na),
+                deparse1(private$input_dataname)
+              )
+            )
+            private$card_side("summary")
+          })
           logger::log_trace("RangeFilterState$server initialized, dataname: { deparse1(private$input_dataname) }")
           NULL
+        }
+      )
+    },
+
+        #' UI Module for `RangeFilterState`.
+    #' This UI element contains two values for `min` and `max`
+    #' of the range and two checkboxes whether to keep the `NA` or `Inf`  values.
+    #' @param id (`character(1)`)\cr
+    #'  id of shiny element
+    ui_summary = function(id) {
+      ns <- NS(id)
+      pretty_range_inputs <- private$get_pretty_range_inputs(private$choices)
+      fluidRow(
+        id = ns("whatever"),
+        verbatimTextOutput(ns("summary"))
+      )
+    },
+
+    #' @description
+    #' Server module
+    #' @param id (`character(1)`)\cr
+    #'   an ID string that corresponds with the ID used to call the module's UI function.
+    #' @return `moduleServer` function which returns `NULL`
+    server_summary = function(id) {
+      moduleServer(
+        id = id,
+        function(input, output, session) {
+          logger::log_trace("RangeFilterState$server initializing, dataname: { deparse1(private$input_dataname) }")
+
+          output$summary <- renderText(self$format())
+          observe(shinyjs::onclick("whatever", private$card_side("inputs")))
         }
       )
     },
@@ -1569,26 +1470,6 @@ RangeFilterState <- R6::R6Class( # nolint
       logger::log_trace(
         sprintf(
           "%s$set_keep_inf of variable %s set to %s, dataname: %s.",
-          class(self)[1],
-          deparse1(self$get_varname()),
-          value,
-          deparse1(private$input_dataname)
-        )
-      )
-    },
-
-    #' @description
-    #' Set if `Inf` should be kept when passing filters using `set_filter_state`
-    #' @param value (`logical(1)`)\cr
-    #'  Value(s) which come from the filter set by the user. Value is set in `server`
-    #'  modules after setting the filters using `set_filter_state`. Values are set to
-    #'  `private$keep_inf_reactive` which is reactive.
-    set_keep_inf_reactive = function(value) {
-      checkmate::assert_flag(value)
-      private$keep_inf_reactive(value)
-      logger::log_trace(
-        sprintf(
-          "%s$set_keep_inf_reactive of variable %s set to %s, dataname: %s.",
           class(self)[1],
           deparse1(self$get_varname()),
           value,
@@ -1616,24 +1497,6 @@ RangeFilterState <- R6::R6Class( # nolint
     },
 
     #' @description
-    #' Set state when using `set_filter_state`
-    #' @param state (`list`)\cr
-    #'  contains fields relevant for a specific class
-    #' \itemize{
-    #' \item{`selected`}{ defines initial selection}
-    #' \item{`keep_na` (`logical`)}{ defines whether to keep or remove `NA` values}
-    #' \item{`keep_inf` (`logical`)}{ defines whether to keep or remove `Inf` values}
-    #' }
-    set_state_reactive = function(state) {
-      stopifnot(is.list(state) && all(names(state) %in% c("selected", "keep_na", "keep_inf")))
-      if (!is.null(state$keep_inf)) {
-        self$set_keep_inf_reactive(state$keep_inf)
-      }
-      super$set_state_reactive(state[names(state) %in% c("selected", "keep_na")])
-      invisible(NULL)
-    },
-
-    #' @description
     #' Sets the selected values of this `RangeFilterState`.
     #'
     #' @param value (`numeric(2)`) the two-elements array of the lower and upper bound
@@ -1655,7 +1518,6 @@ RangeFilterState <- R6::R6Class( # nolint
   private = list(
     histogram_data = data.frame(),
     keep_inf = NULL, # because it holds reactiveVal
-    keep_inf_reactive = NULL, # because it holds reactiveVal
     inf_count = integer(0),
     is_integer = logical(0),
 
@@ -1935,27 +1797,6 @@ ChoicesFilterState <- R6::R6Class( # nolint
         id = id,
         function(input, output, session) {
           logger::log_trace("ChoicesFilterState$server initializing, dataname: { deparse1(private$input_dataname) }")
-          shiny::setBookmarkExclude(c("selection", "keep_na"))
-
-          private$observers$selection_reactive <- observeEvent(
-            private$selected_reactive(),
-            ignoreNULL = TRUE,
-            handlerExpr = {
-              updateCheckboxInput(
-                session = session,
-                inputId = "selection",
-                value =  private$selected_reactive()
-              )
-
-              logger::log_trace(sprintf(
-                "ChoicesFilterState$server@1 selection of variable %s changed, dataname: %s",
-                deparse1(self$get_varname()),
-                deparse1(private$input_dataname)
-              ))
-              private$selected_reactive(NULL)
-            }
-          )
-          private$observe_keep_na_reactive(private$keep_na_reactive())
 
           private$observers$selection <- observeEvent(
             ignoreNULL = FALSE, # ignoreNULL: we don't want to ignore NULL when nothing is selected in `selectInput`
@@ -1992,22 +1833,6 @@ ChoicesFilterState <- R6::R6Class( # nolint
         state$selected <- as.character(state$selected)
       }
       super$set_state(state)
-      invisible(NULL)
-    },
-
-    #' @description
-    #' Set state when using `set_filter_state`
-    #' @param state (`list`)\cr
-    #'  contains fields relevant for a specific class
-    #' \itemize{
-    #' \item{`selected`}{ defines initial selection}
-    #' \item{`keep_na` (`logical`)}{ defines whether to keep or remove `NA` values}
-    #' }
-    set_state_reactive = function(state) {
-      if (!is.null(state$selected)) {
-        state$selected <- as.character(state$selected)
-      }
-      super$set_state_reactive(state)
       invisible(NULL)
     },
 
@@ -2235,26 +2060,6 @@ DateFilterState <- R6::R6Class( # nolint
         id = id,
         function(input, output, session) {
           logger::log_trace("DateFilterState$server initializing, dataname: { deparse1(private$input_dataname) }")
-          shiny::setBookmarkExclude(c("selection", "keep_na"))
-          private$observers$selection_reactive <- observeEvent(
-            private$selected_reactive(),
-            ignoreNULL = TRUE,
-            handlerExpr = {
-              updateDateRangeInput(
-                session = session,
-                inputId = "selection",
-                start = private$selected_reactive()[1],
-                end = private$selected_reactive()[2]
-              )
-              logger::log_trace(sprintf(
-                "DateFilterState$server@1 selection of variable %s changed, dataname: %s",
-                deparse1(self$get_varname()),
-                deparse1(private$input_dataname)
-              ))
-              private$selected_reactive(NULL)
-            }
-          )
-          private$observe_keep_na_reactive(private$keep_na_reactive())
 
           private$observers$selection <- observeEvent(
             ignoreNULL = FALSE, # ignoreNULL: we don't want to ignore NULL when nothing is selected in `selectInput`,
@@ -2580,31 +2385,6 @@ DatetimeFilterState <- R6::R6Class( # nolint
         id = id,
         function(input, output, session) {
           logger::log_trace("DatetimeFilterState$server initializing, dataname: { deparse1(private$input_dataname) }")
-          shiny::setBookmarkExclude(c("selection_start", "selection_end", "keep_na"))
-          private$observers$selection_reactive <- observeEvent(
-            private$selected_reactive(),
-            ignoreNULL = TRUE,
-            handlerExpr = {
-              shinyWidgets::updateAirDateInput(
-                session = session,
-                inputId = "selection_start",
-                value = private$selected_reactive()[1]
-              )
-
-              shinyWidgets::updateAirDateInput(
-                session = session,
-                inputId = "selection_end",
-                value = private$selected_reactive()[2]
-              )
-              logger::log_trace(sprintf(
-                "DatetimeFilterState$server@1 selection of variable %s changed, dataname: %s",
-                deparse1(self$get_varname()),
-                deparse1(private$input_dataname)
-              ))
-              private$selected_reactive(NULL)
-            }
-          )
-          private$observe_keep_na_reactive(private$keep_na_reactive())
 
           private$observers$selection <- observeEvent(
             ignoreNULL = FALSE, # ignoreNULL: we don't want to ignore NULL when nothing is selected in `selectInput`,
