@@ -1298,25 +1298,44 @@ RangeFilterState <- R6::R6Class( # nolint
       ns <- NS(id)
       pretty_range_inputs <- private$get_pretty_range_inputs(private$choices)
       fluidRow(
-        div(
-          class = "filterPlotOverlayRange",
-          plotOutput(ns("plot"), height = "100%")
+        checkboxInput(ns("manual"), "Enter range manually"),
+        conditionalPanel(
+          condition = "input.manual == false",
+          ns = ns,
+          div(
+            class = "filterPlotOverlayRange",
+            plotOutput(ns("plot"), height = "100%")
+          ),
+          teal.widgets::optionalSliderInput(
+            inputId = ns("selection"),
+            label = NULL,
+            min = pretty_range_inputs["min"],
+            max = pretty_range_inputs["max"],
+            # on filter init without predefined value select "pretty" (wider) range
+            value = isolate({
+              if (identical(private$choices, self$get_selected())) {
+                pretty_range_inputs[c("min", "max")]
+              } else {
+                self$get_selected()
+              }
+            }),
+            width = "100%",
+            step = pretty_range_inputs["step"]
+          )
         ),
-        teal.widgets::optionalSliderInput(
-          inputId = ns("selection"),
-          label = NULL,
-          min = pretty_range_inputs["min"],
-          max = pretty_range_inputs["max"],
-          # on filter init without predefined value select "pretty" (wider) range
-          value = isolate({
-            if (identical(private$choices, self$get_selected())) {
-              pretty_range_inputs[c("min", "max")]
-            } else {
-              self$get_selected()
-            }
-          }),
-          width = "100%",
-          step = pretty_range_inputs["step"]
+        conditionalPanel(
+          condition = "input.manual == true",
+          ns = ns,
+          numericInput(
+            ns("manual_min"),
+            label = sprintf("From (%f)", pretty_range_inputs["min"]),
+            value = pretty_range_inputs["min"]
+          ),
+          numericInput(
+            ns("manual_max"),
+            label = sprintf("To (%f)", pretty_range_inputs["max"]),
+            value = pretty_range_inputs["max"]
+          )
         ),
         if (private$inf_count > 0) {
           checkboxInput(
@@ -1338,7 +1357,7 @@ RangeFilterState <- R6::R6Class( # nolint
         },
         span(
           actionButton(ns("reset"), "Reset"),
-          actionButton(ns("save"), "Apply")
+          uiOutput(ns("save_ui"))
         )
       )
     },
@@ -1371,9 +1390,35 @@ RangeFilterState <- R6::R6Class( # nolint
             }
           )
 
+          iv_r <- reactive({
+            iv <- shinyvalidate::InputValidator$new()
+            iv$condition(~ isTRUE(input$manual))
+            iv$add_rule("manual_min", shinyvalidate::sv_required("A 'from' value is required"))
+            iv$add_rule("manual_max", shinyvalidate::sv_required("A 'to' value is required"))
+            iv$add_rule(
+              "manual_max",
+              ~ if (!is.na(input$manual_min) && (.) < input$manual_min) "'from' value must be < 'to' value")
+            iv$add_rule(
+              "manual_min",
+              ~ if (!is.na(input$manual_max) && (.) > input$manual_max) "'from' value must be < 'to' value")
+            iv$enable()
+            iv
+          })
+
+          output$save_ui <- renderUI({
+            if (iv_r()$is_valid()) {
+              actionButton(session$ns("save"), "Apply")
+            }
+          })
+
           observeEvent(input$save, {
+
             # update selection
-            selection_state <- as.numeric(pmax(pmin(input$selection, private$choices[2]), private$choices[1]))
+            if (input$manual) {
+              selection_state <- c(input$manual_min, input$manual_max)
+            } else {
+              selection_state <- as.numeric(pmax(pmin(input$selection, private$choices[2]), private$choices[1]))
+            }
             if (!setequal(selection_state, self$get_selected())) {
               validate(
                 need(
@@ -1382,7 +1427,6 @@ RangeFilterState <- R6::R6Class( # nolint
                 )
               )
               self$set_selected(selection_state)
-
               logger::log_trace(
                 sprintf(
                   "RangeFilterState$server@3 selection of variable %s changed, dataname: %s",
@@ -1391,6 +1435,7 @@ RangeFilterState <- R6::R6Class( # nolint
                 )
               )
             }
+
             # update keep inf
             keep_inf <- if (is.null(input$keep_inf)) FALSE else input$keep_inf
             self$set_keep_inf(keep_inf)
