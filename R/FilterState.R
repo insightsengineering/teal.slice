@@ -1338,7 +1338,7 @@ RangeFilterState <- R6::R6Class( # nolint
         },
         span(
           actionButton(ns("reset"), "Reset"),
-          actionButton(ns("save"), "Save")
+          actionButton(ns("save"), "Apply")
         )
       )
     },
@@ -1437,7 +1437,16 @@ RangeFilterState <- R6::R6Class( # nolint
       pretty_range_inputs <- private$get_pretty_range_inputs(private$choices)
       fluidRow(
         id = ns("whatever"),
-        verbatimTextOutput(ns("summary"))
+        tagList(
+          mapply(
+            name = names(self$get_state()),
+            value = self$get_state(),
+            SIMPLIFY = FALSE,
+            function(name, value) {
+              div(span(strong(paste0(name, ":")), paste(value, collapse = " - ")))
+            }
+          )
+        )
       )
     },
 
@@ -1451,8 +1460,6 @@ RangeFilterState <- R6::R6Class( # nolint
         id = id,
         function(input, output, session) {
           logger::log_trace("RangeFilterState$server initializing, dataname: { deparse1(private$input_dataname) }")
-
-          output$summary <- renderText(self$format())
           observe(shinyjs::onclick("whatever", private$card_side("inputs")))
         }
       )
