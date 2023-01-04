@@ -366,13 +366,31 @@ FilteredDataset <- R6::R6Class( # nolint
             ),
             column(
               width = 4,
-              actionLink(
-                ns("remove_filters"),
-                label = "",
-                icon = icon("circle-xmark", lib = "font-awesome"),
-                class = "remove pull-right"
+              tagList(
+                actionLink(
+                  ns("remove_filters"),
+                  label = "",
+                  icon = icon("circle-xmark", lib = "font-awesome"),
+                  class = "remove pull-right"
+                ),
+                tags$a(
+                  href = "javascript:void(0)",
+                  class = "remove pull-right",
+                  onclick = sprintf(
+                    "$('#%s').toggle(); $('#%s').toggle();",
+                    ns("filters"),
+                    ns("line_break")
+                  ),
+                  title = "Minimise panel",
+                  tags$span(icon("circle-minus", lib = "font-awesome"))
+                )
               )
             )
+          ),
+          div( # used to ensure line break when filters have been hidden
+            id = ns("line_break"),
+            style = "display:none", # initially hidden
+            br()
           ),
           div(
             # id needed to insert and remove UI to filter single variable as needed
@@ -407,6 +425,7 @@ FilteredDataset <- R6::R6Class( # nolint
           logger::log_trace("FilteredDataset$server initializing, dataname: { deparse1(dataname) }")
           checkmate::assert_string(dataname)
           shiny::setBookmarkExclude("remove_filters")
+
           lapply(
             names(self$get_filter_states()),
             function(x) {
