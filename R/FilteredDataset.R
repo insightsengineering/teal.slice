@@ -373,16 +373,11 @@ FilteredDataset <- R6::R6Class( # nolint
                   icon = icon("circle-xmark", lib = "font-awesome"),
                   class = "remove pull-right"
                 ),
-                tags$a(
-                  href = "javascript:void(0)",
-                  class = "remove pull-right",
-                  onclick = sprintf(
-                    "$('#%s').toggle(); $('#%s').toggle();",
-                    ns("filters"),
-                    ns("line_break")
-                  ),
-                  title = "Minimise panel",
-                  tags$span(icon("circle-minus", lib = "font-awesome"))
+                actionLink(
+                  ns("collapse"),
+                  label = "",
+                  icon = icon("circle-minus", lib = "font-awesome"),
+                  class = "remove pull-right"
                 )
               )
             )
@@ -436,10 +431,18 @@ FilteredDataset <- R6::R6Class( # nolint
           shiny::observeEvent(self$get_filter_state(), {
             if (length(self$get_filter_state()) == 0) {
               shinyjs::hide("remove_filters")
+              shinyjs::hide("collapse")
             } else {
               shinyjs::show("remove_filters")
+              shinyjs::show("collapse")
             }
           })
+
+          shiny::observeEvent(input$collapse, {
+            shinyjs::toggle("line_break")
+            shinyjs::toggle("filters")
+          })
+
 
           observeEvent(input$remove_filters, {
             logger::log_trace("FilteredDataset$server@1 removing filters, dataname: { deparse1(dataname) }")
@@ -447,6 +450,8 @@ FilteredDataset <- R6::R6Class( # nolint
               self$get_filter_states(),
               function(x) x$queue_empty()
             )
+            shinyjs::hide("line_break")
+            shinyjs::show("filters")
             logger::log_trace("FilteredDataset$server@1 removed filters, dataname: { deparse1(dataname) }")
           })
 
