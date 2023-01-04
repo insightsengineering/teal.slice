@@ -440,11 +440,11 @@ FilteredDataset <- R6::R6Class( # nolint
           )
 
           shiny::observeEvent(self$get_filter_state(), {
+            shinyjs::hide("filter_count_ui")
+            shinyjs::show("filters")
             if (length(self$get_filter_state()) == 0) {
               shinyjs::hide("remove_filters")
               shinyjs::hide("collapse")
-              shinyjs::hide("filter_count_ui")
-              shinyjs::show("filters")
             } else {
               shinyjs::show("remove_filters")
               shinyjs::show("collapse")
