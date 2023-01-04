@@ -382,8 +382,8 @@ FilteredDataset <- R6::R6Class( # nolint
               )
             )
           ),
-          div( # used to ensure line break when filters have been hidden
-            id = ns("line_break"),
+          div(
+            id = ns("filter_count_ui"),
             style = "display:none", # initially hidden
             tagList(
               textOutput(ns("filter_count")),
@@ -443,6 +443,8 @@ FilteredDataset <- R6::R6Class( # nolint
             if (length(self$get_filter_state()) == 0) {
               shinyjs::hide("remove_filters")
               shinyjs::hide("collapse")
+              shinyjs::hide("filter_count_ui")
+              shinyjs::show("filters")
             } else {
               shinyjs::show("remove_filters")
               shinyjs::show("collapse")
@@ -450,10 +452,9 @@ FilteredDataset <- R6::R6Class( # nolint
           })
 
           shiny::observeEvent(input$collapse, {
-            shinyjs::toggle("line_break")
+            shinyjs::toggle("filter_count_ui")
             shinyjs::toggle("filters")
           })
-
 
           observeEvent(input$remove_filters, {
             logger::log_trace("FilteredDataset$server@1 removing filters, dataname: { deparse1(dataname) }")
@@ -461,8 +462,6 @@ FilteredDataset <- R6::R6Class( # nolint
               self$get_filter_states(),
               function(x) x$queue_empty()
             )
-            shinyjs::hide("line_break")
-            shinyjs::show("filters")
             logger::log_trace("FilteredDataset$server@1 removed filters, dataname: { deparse1(dataname) }")
           })
 
