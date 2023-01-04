@@ -134,3 +134,32 @@ validate_dataset_args <- function(dataset_args, dataname, allowed_parent = FALSE
   checkmate::assert_character(dataset_args[["label"]], null.ok = TRUE, min.len = 0, max.len = 1)
   checkmate::assert_character(dataset_args[["parent"]], null.ok = TRUE, min.len = 0, max.len = 1)
 }
+
+#' Evaluate expression with meaningful message
+#'
+#' Method created for the `FilteredData` to execute filter call with
+#' meaningful message. After evaluation used environment should contain
+#' all necessary bindings.
+#' @param expr (`language`)
+#' @param env (`environment`) where expression is evaluated.
+#' @return invisible `NULL`.
+#' @keywords internal
+eval_expr_with_msg <- function(expr, env) {
+  lapply(
+    expr,
+    function(x) {
+      tryCatch(
+        eval(x, envir = env),
+        error = function(e) {
+          stop(
+            sprintf(
+              "Call execution failed:\n - call:\n   %s\n - message:\n   %s ",
+              deparse1(x, collapse = "\n"), e
+            )
+          )
+        }
+      )
+      return(invisible(NULL))
+    }
+  )
+}
