@@ -385,7 +385,10 @@ FilteredDataset <- R6::R6Class( # nolint
           div( # used to ensure line break when filters have been hidden
             id = ns("line_break"),
             style = "display:none", # initially hidden
-            br()
+            tagList(
+              textOutput(ns("filter_count")),
+              br()
+            )
           ),
           div(
             # id needed to insert and remove UI to filter single variable as needed
@@ -420,6 +423,14 @@ FilteredDataset <- R6::R6Class( # nolint
           logger::log_trace("FilteredDataset$server initializing, dataname: { deparse1(dataname) }")
           checkmate::assert_string(dataname)
           shiny::setBookmarkExclude("remove_filters")
+
+          output$filter_count <- renderText(
+            sprintf(
+              "%d filter%s applied",
+              length(self$get_filter_state()),
+              if (length(self$get_filter_state()) != 1) "s" else ""
+            )
+          )
 
           lapply(
             names(self$get_filter_states()),
