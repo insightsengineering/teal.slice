@@ -1,0 +1,10 @@
+.filter-state-card .btn {
+  font-size: inherit;
+  background: inherit;
+  border: none;
+  background-color: transparent;
+}
+
+.filter-state-card .dropdown .dropdown-toggle .caret {
+  display: none;
+}

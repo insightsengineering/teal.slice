@@ -148,7 +148,19 @@ RangeFilterState <- R6::R6Class( # nolint
     #'  id of shiny element
     ui = function(id) {
       ns <- NS(id)
-      uiOutput(ns("filter_card"))
+      div(
+        class = "filter-state-card",
+        include_css_files(pattern = "filter-state"),
+        shinyWidgets::dropdownButton(
+          circle = FALSE,
+          icon = icon("gear"),
+          inline = TRUE,
+          right = TRUE,
+          no_outline = TRUE,
+          uiOutput(ns("inputs"))
+        ),
+        uiOutput(ns("summary"))
+      )
     },
 
     #' @description
@@ -165,14 +177,8 @@ RangeFilterState <- R6::R6Class( # nolint
           self$server_inputs("inputs")
           self$server_summary("summary")
 
-          output$filter_card <- renderUI({
-            if (private$card_side() == "summary") {
-              self$ui_summary(session$ns("summary"))
-            } else {
-              self$ui_inputs(session$ns("inputs"))
-            }
-          })
-
+          output$summary <- renderUI(self$ui_summary(session$ns("summary")))
+          output$inputs <- renderUI(self$ui_inputs(session$ns("inputs")))
         }
       )
     },
