@@ -241,4 +241,3 @@ data_choices_labeled <- function(data, choices, varlabels = character(0), keys =
     choices
   }
 }
-
