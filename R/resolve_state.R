@@ -1,10 +1,8 @@
 #' Resolve list of filter states
 #'
-#' Resolves the state values for `FilterState$set_state()` or
-#' `FilterState$set_state_reactive()`, which accept only a list with `selected`,
-#' `keep_na` and `keep_inf` fields. In case of the `default_filter` function, it
-#' returns `NULL` as during the initialization of `FilterState` values are set to
-#' default.
+#' Resolves the state values for `FilterState$set_state()` which accept only a list with `selected`,
+#' `keep_na` and `keep_inf` fields. In case of the `default_filter` function, it returns `NULL` as
+#' during the initialization of `FilterState` values are set to default.
 #'
 #' @param x (`list`,`vector`)\cr
 #'  values of the variable used in filter. Depending on the `FilterState` type

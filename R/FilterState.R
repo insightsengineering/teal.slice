@@ -36,8 +36,6 @@
 #'   `keep_na` or `keep_inf` using `set_state` method (to update all at once),
 #'   or using `set_selected`, `set_keep_na` or `set_keep_inf`
 #' * In a `teal` application by changing appropriate inputs
-#' * Using methods `set_selected_reactive`, `set_keep_na_reactive`,
-#'  `set_keep_inf_reactive` which serves as a programmatic API.
 #'
 #' @keywords internal
 FilterState <- R6::R6Class( # nolint
@@ -79,6 +77,7 @@ FilterState <- R6::R6Class( # nolint
           length(extract_type) == 1 && !is.null(input_dataname)
       )
       stopifnot(extract_type %in% c("list", "matrix"))
+      private$card_side <- reactiveVal("summary")
       private$input_dataname <- input_dataname
       private$varname <- if (is.character(varname)) {
         as.name(varname)
@@ -93,10 +92,8 @@ FilterState <- R6::R6Class( # nolint
       }
       private$extract_type <- extract_type
       private$selected <- reactiveVal(NULL)
-      private$selected_reactive <- reactiveVal(NULL)
       private$na_count <- sum(is.na(x))
       private$keep_na <- reactiveVal(FALSE)
-      private$keep_na_reactive <- reactiveVal(FALSE)
 
       logger::log_trace(
         sprintf(
@@ -251,24 +248,6 @@ FilterState <- R6::R6Class( # nolint
     },
 
     #' @description
-    #' Set if `NA` should be kept when using `set_filter_state`
-    #' @param value (`logical(1)`)\cr
-    #'  value(s) which come from the filter selection. Value is set in `server`
-    #'  modules when using `set_filter_state` instead of the shiny interface. Values are set to
-    #'  `private$keep_na_reactive` which is reactive.
-    set_keep_na_reactive = function(value) {
-      checkmate::assert_flag(value)
-      private$keep_na_reactive(value)
-      sprintf(
-        "%s$set_keep_na_reactive set for variable %s to %s.",
-        class(self)[1],
-        deparse1(self$get_varname()),
-        value
-      )
-      invisible(NULL)
-    },
-
-    #' @description
     #' Some methods needs additional `!is.na(varame)` condition to not include
     #' missing values. When `private$na_rm = TRUE` is set, `self$get_call` returns
     #' condition extended by `!is.na` condition.
@@ -310,33 +289,6 @@ FilterState <- R6::R6Class( # nolint
     },
 
     #' @description
-    #' Set selection when using `set_filter_state`
-    #' @param value (`vector`)\cr
-    #'  value(s) which come from the filters set by the user. Values are set in `server`
-    #'  modules after setting filters in `set_filter_state`. Values are set to
-    #'  `private$set_selected_reactive` which is reactive. Values type have to be the
-    #'  same as `private$choices`.
-    set_selected_reactive = function(value) {
-      logger::log_trace(
-        sprintf(
-          "%s$set_selected_reactive setting selection of variable %s, dataname: %s.",
-          class(self)[1],
-          deparse1(self$get_varname()),
-          deparse1(private$input_dataname)
-        )
-      )
-
-      value <- private$cast_and_validate(value)
-      value <- private$remove_out_of_bound_values(value)
-      private$validate_selection(value)
-      private$selected_reactive(value)
-      logger::log_trace(
-        "{ class(self)[1] }$set_selected_reactive selection set, dataname: { deparse1(private$input_dataname) }"
-      )
-      invisible(NULL)
-    },
-
-    #' @description
     #' Set state
     #' @param state (`list`)\cr
     #'  contains fields relevant for a specific class
@@ -370,42 +322,6 @@ FilterState <- R6::R6Class( # nolint
       )
       invisible(NULL)
     },
-
-    #' @description
-    #' Set state when using `set_filter_state`
-    #' @param state (`list`)\cr
-    #'  contains fields relevant for a specific class
-    #' \itemize{
-    #' \item{`selected`}{ defines initial selection}
-    #' \item{`keep_na` (`logical`)}{ defines whether to keep or remove `NA` values}
-    #' }
-    set_state_reactive = function(state) {
-      logger::log_trace(
-        sprintf(
-          "%s$set_state_reactive, dataname: %s setting state of variable %s to: selected=%s, keep_na=%s",
-          class(self)[1],
-          deparse1(private$input_dataname),
-          deparse1(self$get_varname()),
-          paste(state$selected, collapse = " "),
-          deparse1(state$keep_na)
-        )
-      )
-      stopifnot(is.list(state) && all(names(state) %in% c("selected", "keep_na")))
-      if (!is.null(state$keep_na)) {
-        self$set_keep_na_reactive(state$keep_na)
-      }
-      if (!is.null(state$selected)) {
-        self$set_selected_reactive(state$selected)
-      }
-      logger::log_trace(sprintf(
-        "%s$set_state_reactive, dataname: %s done setting state for variable %s.",
-        class(self)[1],
-        deparse1(private$input_dataname),
-        deparse1(self$get_varname())
-      ))
-      invisible(NULL)
-    },
-
     #' @description
     #' Server module
     #' @param id (`character(1)`)\cr
@@ -430,15 +346,14 @@ FilterState <- R6::R6Class( # nolint
     }
   ),
   private = list(
+    card_side = NULL, # reactiveVal
     choices = NULL, # because each class has different choices type
     input_dataname = character(0),
     keep_na = NULL, # reactiveVal logical()
-    keep_na_reactive = NULL, # reactiveVal logical()
     na_count = integer(0),
     na_rm = FALSE, # it's logical(1)
     observers = NULL, # here observers are stored
     selected = NULL, # because it holds reactiveVal and each class has different choices type
-    selected_reactive = NULL, # because it holds reactiveVal and each class has different choices type
     varname = character(0),
     varlabel = character(0),
     extract_type = logical(0),
@@ -505,34 +420,6 @@ FilterState <- R6::R6Class( # nolint
               class(self)[1],
               deparse1(self$get_varname()),
               deparse1(input$keep_na),
-              deparse1(private$input_dataname)
-            )
-          )
-        }
-      )
-      invisible(NULL)
-    },
-
-    #' Sets `keep_na` field according to `keep_na` value passed in `set_filter_state`.
-    #' If `keep_na = TRUE` `is.na(varname)` is added to the returned call.
-    #' Otherwise returned call excludes `NA` when executed.
-    observe_keep_na_reactive = function(value) {
-      private$observers$keep_na_reactive <- observeEvent(
-        ignoreNULL = FALSE, # ignoreNULL: we don't want to ignore NULL when nothing is selected in the `selectInput`,
-        ignoreInit = TRUE, # ignoreInit: should not matter because we set the UI with the desired initial state
-        eventExpr = private$keep_na_reactive(),
-        handlerExpr = {
-          updateCheckboxInput(
-            inputId = "keep_na",
-            value = value
-          )
-          private$keep_na_reactive(NULL)
-          logger::log_trace(
-            sprintf(
-              "%s$server keep_na of variable %s set to: %s, dataname: %s",
-              class(self)[1],
-              deparse1(self$get_varname()),
-              deparse1(value),
               deparse1(private$input_dataname)
             )
           )

@@ -52,10 +52,12 @@ filter$set_selected(c(2, 3))
 \item \href{#method-RangeFilterState-get_state}{\code{RangeFilterState$get_state()}}
 \item \href{#method-RangeFilterState-ui}{\code{RangeFilterState$ui()}}
 \item \href{#method-RangeFilterState-server}{\code{RangeFilterState$server()}}
+\item \href{#method-RangeFilterState-ui_inputs}{\code{RangeFilterState$ui_inputs()}}
+\item \href{#method-RangeFilterState-server_inputs}{\code{RangeFilterState$server_inputs()}}
+\item \href{#method-RangeFilterState-ui_summary}{\code{RangeFilterState$ui_summary()}}
+\item \href{#method-RangeFilterState-server_summary}{\code{RangeFilterState$server_summary()}}
 \item \href{#method-RangeFilterState-set_keep_inf}{\code{RangeFilterState$set_keep_inf()}}
-\item \href{#method-RangeFilterState-set_keep_inf_reactive}{\code{RangeFilterState$set_keep_inf_reactive()}}
 \item \href{#method-RangeFilterState-set_state}{\code{RangeFilterState$set_state()}}
-\item \href{#method-RangeFilterState-set_state_reactive}{\code{RangeFilterState$set_state_reactive()}}
 \item \href{#method-RangeFilterState-set_selected}{\code{RangeFilterState$set_selected()}}
 \item \href{#method-RangeFilterState-clone}{\code{RangeFilterState$clone()}}
 }
@@ -71,9 +73,7 @@ filter$set_selected(c(2, 3))
 <li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilterState" data-id="get_varname"><a href='../../teal.slice/html/FilterState.html#method-FilterState-get_varname'><code>teal.slice::FilterState$get_varname()</code></a></span></li>
 <li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilterState" data-id="print"><a href='../../teal.slice/html/FilterState.html#method-FilterState-print'><code>teal.slice::FilterState$print()</code></a></span></li>
 <li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilterState" data-id="set_keep_na"><a href='../../teal.slice/html/FilterState.html#method-FilterState-set_keep_na'><code>teal.slice::FilterState$set_keep_na()</code></a></span></li>
-<li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilterState" data-id="set_keep_na_reactive"><a href='../../teal.slice/html/FilterState.html#method-FilterState-set_keep_na_reactive'><code>teal.slice::FilterState$set_keep_na_reactive()</code></a></span></li>
 <li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilterState" data-id="set_na_rm"><a href='../../teal.slice/html/FilterState.html#method-FilterState-set_na_rm'><code>teal.slice::FilterState$set_na_rm()</code></a></span></li>
-<li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilterState" data-id="set_selected_reactive"><a href='../../teal.slice/html/FilterState.html#method-FilterState-set_selected_reactive'><code>teal.slice::FilterState$set_selected_reactive()</code></a></span></li>
 </ul>
 </details>
 }}
@@ -238,6 +238,88 @@ an ID string that corresponds with the ID used to call the module's UI function.
 }
 \subsection{Returns}{
 \code{moduleServer} function which returns \code{NULL}
+UI Module for \code{RangeFilterState}.
+This UI element contains two values for \code{min} and \code{max}
+of the range and two checkboxes whether to keep the \code{NA} or \code{Inf}  values.
+}
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-RangeFilterState-ui_inputs"></a>}}
+\if{latex}{\out{\hypertarget{method-RangeFilterState-ui_inputs}{}}}
+\subsection{Method \code{ui_inputs()}}{
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{RangeFilterState$ui_inputs(id)}\if{html}{\out{</div>}}
+}
+
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{id}}{(\code{character(1)})\cr
+id of shiny element}
+}
+\if{html}{\out{</div>}}
+}
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-RangeFilterState-server_inputs"></a>}}
+\if{latex}{\out{\hypertarget{method-RangeFilterState-server_inputs}{}}}
+\subsection{Method \code{server_inputs()}}{
+Server module
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{RangeFilterState$server_inputs(id)}\if{html}{\out{</div>}}
+}
+
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{id}}{(\code{character(1)})\cr
+an ID string that corresponds with the ID used to call the module's UI function.}
+}
+\if{html}{\out{</div>}}
+}
+\subsection{Returns}{
+\code{moduleServer} function which returns \code{NULL}
+UI Module for \code{RangeFilterState}.
+This UI element contains two values for \code{min} and \code{max}
+of the range and two checkboxes whether to keep the \code{NA} or \code{Inf}  values.
+}
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-RangeFilterState-ui_summary"></a>}}
+\if{latex}{\out{\hypertarget{method-RangeFilterState-ui_summary}{}}}
+\subsection{Method \code{ui_summary()}}{
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{RangeFilterState$ui_summary(id)}\if{html}{\out{</div>}}
+}
+
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{id}}{(\code{character(1)})\cr
+id of shiny element}
+}
+\if{html}{\out{</div>}}
+}
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-RangeFilterState-server_summary"></a>}}
+\if{latex}{\out{\hypertarget{method-RangeFilterState-server_summary}{}}}
+\subsection{Method \code{server_summary()}}{
+Server module
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{RangeFilterState$server_summary(id)}\if{html}{\out{</div>}}
+}
+
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{id}}{(\code{character(1)})\cr
+an ID string that corresponds with the ID used to call the module's UI function.}
+}
+\if{html}{\out{</div>}}
+}
+\subsection{Returns}{
+\code{moduleServer} function which returns \code{NULL}
 }
 }
 \if{html}{\out{<hr>}}
@@ -261,55 +343,12 @@ modules after selecting check-box-input in the shiny interface. Values are set t
 }
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-RangeFilterState-set_keep_inf_reactive"></a>}}
-\if{latex}{\out{\hypertarget{method-RangeFilterState-set_keep_inf_reactive}{}}}
-\subsection{Method \code{set_keep_inf_reactive()}}{
-Set if \code{Inf} should be kept when passing filters using \code{set_filter_state}
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{RangeFilterState$set_keep_inf_reactive(value)}\if{html}{\out{</div>}}
-}
-
-\subsection{Arguments}{
-\if{html}{\out{<div class="arguments">}}
-\describe{
-\item{\code{value}}{(\code{logical(1)})\cr
-Value(s) which come from the filter set by the user. Value is set in \code{server}
-modules after setting the filters using \code{set_filter_state}. Values are set to
-\code{private$keep_inf_reactive} which is reactive.}
-}
-\if{html}{\out{</div>}}
-}
-}
-\if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-RangeFilterState-set_state"></a>}}
 \if{latex}{\out{\hypertarget{method-RangeFilterState-set_state}{}}}
 \subsection{Method \code{set_state()}}{
 Set state
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{RangeFilterState$set_state(state)}\if{html}{\out{</div>}}
-}
-
-\subsection{Arguments}{
-\if{html}{\out{<div class="arguments">}}
-\describe{
-\item{\code{state}}{(\code{list})\cr
-contains fields relevant for a specific class
-\itemize{
-\item{\code{selected}}{ defines initial selection}
-\item{\code{keep_na} (\code{logical})}{ defines whether to keep or remove \code{NA} values}
-\item{\code{keep_inf} (\code{logical})}{ defines whether to keep or remove \code{Inf} values}
-}}
-}
-\if{html}{\out{</div>}}
-}
-}
-\if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-RangeFilterState-set_state_reactive"></a>}}
-\if{latex}{\out{\hypertarget{method-RangeFilterState-set_state_reactive}{}}}
-\subsection{Method \code{set_state_reactive()}}{
-Set state when using \code{set_filter_state}
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{RangeFilterState$set_state_reactive(state)}\if{html}{\out{</div>}}
 }
 
 \subsection{Arguments}{
