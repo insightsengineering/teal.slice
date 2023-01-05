@@ -181,7 +181,7 @@ Get function name used to create filter call. By default it's a
 \if{html}{\out{<a id="method-FilterStates-n_active_filter_states"></a>}}
 \if{latex}{\out{\hypertarget{method-FilterStates-n_active_filter_states}{}}}
 \subsection{Method \code{n_active_filter_states()}}{
-Gets the number of active FilterStates
+Gets the number of active \code{FilterStates}
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{FilterStates$n_active_filter_states()}\if{html}{\out{</div>}}
 }
