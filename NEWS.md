@@ -11,6 +11,10 @@
 
 * Improved filter state presentation in `FilterState$format`.
 
+### Bugfixes
+
+* Fixed an error where the `RangeFilterState` overlay histogram was displayed incorrectly and produced a warning.
+
 ### Miscellaneous
 
 * Calculation of step in slider for `RangeFilterState` now uses `checkmate::test_integerish` instead of `is.integer`.

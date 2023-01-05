@@ -156,6 +156,8 @@ a.remove_all:hover {
   animation: 0.75s ease-out 0s 1 shinyDataFilterEnlargeY,
     0.5s ease-in 0s 1 shinyDataFilterFadeIn;
   transform-origin: bottom;
+  width: 100%;
+  max_width: 100%;
 }
 
 .filter_panel_dataname {
