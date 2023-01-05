@@ -50,6 +50,7 @@ isolate(filter_states$get_call())
 \item \href{#method-FilterStates-get_call}{\code{FilterStates$get_call()}}
 \item \href{#method-FilterStates-print}{\code{FilterStates$print()}}
 \item \href{#method-FilterStates-get_fun}{\code{FilterStates$get_fun()}}
+\item \href{#method-FilterStates-n_active_filter_states}{\code{FilterStates$n_active_filter_states()}}
 \item \href{#method-FilterStates-queue_empty}{\code{FilterStates$queue_empty()}}
 \item \href{#method-FilterStates-queue_get}{\code{FilterStates$queue_get()}}
 \item \href{#method-FilterStates-queue_initialize}{\code{FilterStates$queue_initialize()}}
@@ -174,6 +175,19 @@ Get function name used to create filter call. By default it's a
 
 \subsection{Returns}{
 \code{character(1)} the name of the function
+}
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-FilterStates-n_active_filter_states"></a>}}
+\if{latex}{\out{\hypertarget{method-FilterStates-n_active_filter_states}{}}}
+\subsection{Method \code{n_active_filter_states()}}{
+Gets the number of active FilterStates
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{FilterStates$n_active_filter_states()}\if{html}{\out{</div>}}
+}
+
+\subsection{Returns}{
+\code{numeric(1)}
 }
 }
 \if{html}{\out{<hr>}}

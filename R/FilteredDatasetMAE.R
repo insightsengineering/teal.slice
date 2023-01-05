@@ -372,17 +372,6 @@ MAEFilteredDataset <- R6::R6Class( # nolint
   ),
   private = list(
 
-    # how many filters are currently applied
-    n_active_filter_states = function() {
-      sum(vapply(names(self$get_filter_state()), function(state_name) {
-        if (state_name == "subjects") {
-          length(self$get_filter_state()[[state_name]])
-        } else {
-          length(self$get_filter_state()[[state_name]]$subset)
-        }
-      }, FUN.VALUE = numeric(1)))
-    },
-
     # Gets filter overview observations number and returns a
     # list of the number of observations of filtered/non-filtered datasets
     get_filter_overview_nobs = function(filtered_dataset) {

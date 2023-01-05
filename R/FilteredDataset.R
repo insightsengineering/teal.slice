@@ -516,7 +516,7 @@ FilteredDataset <- R6::R6Class( # nolint
 
     # how many filters are currently applied
     n_active_filter_states = function() {
-      return(length(self$get_filter_state()))
+      sum(vapply(private$filter_states, function(state) state$n_active_filter_states(), FUN.VALUE = numeric(1)))
     },
 
     # Adds `FilterStates` to the `private$filter_states`.

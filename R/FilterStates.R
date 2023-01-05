@@ -185,6 +185,15 @@ FilterStates <- R6::R6Class( # nolint
     },
 
     #' @description
+    #' Gets the number of active FilterStates
+    #' @return `numeric(1)`
+    n_active_filter_states = function () {
+      sum(vapply(private$queue, function(queue) {
+        queue$size()
+      }, FUN.VALUE = numeric(1)))
+    },
+
+    #' @description
     #' Remove all `FilterState` objects from all queues in this `FilterStates`.
     #' @return NULL
     queue_empty = function() {
