@@ -11,7 +11,7 @@
 
 * Improved filter state presentation in `FilterState$format`.
 
-### Bugfixes
+### Bug fixes
 
 * Fixed an error where the `RangeFilterState` overlay histogram was displayed incorrectly and produced a warning.
 
