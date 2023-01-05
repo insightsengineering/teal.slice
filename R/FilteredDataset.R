@@ -427,8 +427,8 @@ FilteredDataset <- R6::R6Class( # nolint
           output$filter_count <- renderText(
             sprintf(
               "%d filter%s applied",
-              length(self$get_filter_state()),
-              if (length(self$get_filter_state()) != 1) "s" else ""
+              private$n_active_filter_states(),
+              if (private$n_active_filter_states() != 1) "s" else ""
             )
           )
 
@@ -513,6 +513,11 @@ FilteredDataset <- R6::R6Class( # nolint
     # if this has length > 0 then only varnames in this vector
     # can be filtered
     filterable_varnames = NULL,
+
+    # how many filters are currently applied
+    n_active_filter_states = function() {
+      return(length(self$get_filter_state()))
+    },
 
     # Adds `FilterStates` to the `private$filter_states`.
     # `FilterStates` is added once for each element of the dataset.
