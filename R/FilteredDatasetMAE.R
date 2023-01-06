@@ -371,6 +371,7 @@ MAEFilteredDataset <- R6::R6Class( # nolint
     }
   ),
   private = list(
+
     # Gets filter overview observations number and returns a
     # list of the number of observations of filtered/non-filtered datasets
     get_filter_overview_nobs = function(filtered_dataset) {

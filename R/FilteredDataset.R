@@ -366,12 +366,28 @@ FilteredDataset <- R6::R6Class( # nolint
             ),
             column(
               width = 4,
-              actionLink(
-                ns("remove_filters"),
-                label = "",
-                icon = icon("circle-xmark", lib = "font-awesome"),
-                class = "remove pull-right"
+              tagList(
+                actionLink(
+                  ns("remove_filters"),
+                  label = "",
+                  icon = icon("circle-xmark", lib = "font-awesome"),
+                  class = "remove pull-right"
+                ),
+                actionLink(
+                  ns("collapse"),
+                  label = "",
+                  icon = icon("circle-minus", lib = "font-awesome"),
+                  class = "remove pull-right"
+                )
               )
+            )
+          ),
+          div(
+            id = ns("filter_count_ui"),
+            style = "display:none", # initially hidden
+            tagList(
+              textOutput(ns("filter_count")),
+              br()
             )
           ),
           div(
@@ -407,6 +423,15 @@ FilteredDataset <- R6::R6Class( # nolint
           logger::log_trace("FilteredDataset$server initializing, dataname: { deparse1(dataname) }")
           checkmate::assert_string(dataname)
           shiny::setBookmarkExclude("remove_filters")
+
+          output$filter_count <- renderText(
+            sprintf(
+              "%d filter%s applied",
+              private$n_active_filter_states(),
+              if (private$n_active_filter_states() != 1) "s" else ""
+            )
+          )
+
           lapply(
             names(self$get_filter_states()),
             function(x) {
@@ -415,11 +440,20 @@ FilteredDataset <- R6::R6Class( # nolint
           )
 
           shiny::observeEvent(self$get_filter_state(), {
+            shinyjs::hide("filter_count_ui")
+            shinyjs::show("filters")
             if (length(self$get_filter_state()) == 0) {
               shinyjs::hide("remove_filters")
+              shinyjs::hide("collapse")
             } else {
               shinyjs::show("remove_filters")
+              shinyjs::show("collapse")
             }
+          })
+
+          shiny::observeEvent(input$collapse, {
+            shinyjs::toggle("filter_count_ui")
+            shinyjs::toggle("filters")
           })
 
           observeEvent(input$remove_filters, {
@@ -479,6 +513,11 @@ FilteredDataset <- R6::R6Class( # nolint
     # if this has length > 0 then only varnames in this vector
     # can be filtered
     filterable_varnames = NULL,
+
+    # how many filters are currently applied
+    n_active_filter_states = function() {
+      sum(vapply(private$filter_states, function(state) state$n_active_filter_states(), FUN.VALUE = numeric(1)))
+    },
 
     # Adds `FilterStates` to the `private$filter_states`.
     # `FilterStates` is added once for each element of the dataset.
