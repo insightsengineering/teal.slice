@@ -20,7 +20,7 @@ SummarizedExperiment and matrix are available."><!-- mathjax --><script src="htt
     
     <a class="navbar-brand me-2" href="../index.html">teal.slice</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.2.0.9008</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.2.0.9009</small>
 
     <div style="width: 140px; margin-left: 0.5rem;"> <small class="nav-text text-muted me-auto">part of</small> <img src="https://github.com/insightsengineering/hex-stickers/blob/main/PNG/nest.png?raw=true" alt="NEST" style="height: 30px;"><a href="https://pharmaverse.org/" class="external-link"><img src="https://github.com/insightsengineering/hex-stickers/blob/main/PNG/pharmaverse.png?raw=true" alt="pharmaverse" style="height: 28px;"></a> </div>
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -43,14 +43,6 @@ SummarizedExperiment and matrix are available."><!-- mathjax --><script src="htt
 <li class="nav-item">
   <a class="nav-link" href="../news/index.html">Changelog</a>
 </li>
-<!-- start dropdown for versions --> <li class="nav-item dropdown">
-        <a href="#" class="nav-link dropdown-toggle"
-          data-bs-toggle="dropdown" role="button"
-          aria-expanded="false" aria-haspopup="true"
-          id="dropdown-versions">Versions</a> <div class="dropdown-menu" aria-labelledby="dropdown-versions"> <a class="dropdown-item" data-toggle="tooltip" title="" href="https://insightsengineering.github.io/teal.slice/main">main</a>
-<a class="dropdown-item" data-toggle="tooltip" title="" href="https://insightsengineering.github.io/teal.slice/latest-tag">latest-tag</a>
-<a class="dropdown-item" data-toggle="tooltip" title="" href="https://insightsengineering.github.io/teal.slice/v0.2.0">v0.2.0</a> </div></li>
-<!-- end dropdown for versions -->
       </ul><form class="form-inline my-2 my-lg-0" role="search">
         <input type="search" class="form-control me-sm-2" aria-label="Toggle navigation" name="search-input" data-search-index="../search.json" id="search-input" placeholder="Search for" autocomplete="off"></form>
 
@@ -99,6 +91,7 @@ Currently <code>data.frame</code>, <code>MultiAssayExperiment</code>,
 <li><p><a href="#method-FilterStates-get_call"><code>FilterStates$get_call()</code></a></p></li>
 <li><p><a href="#method-FilterStates-print"><code>FilterStates$print()</code></a></p></li>
 <li><p><a href="#method-FilterStates-get_fun"><code>FilterStates$get_fun()</code></a></p></li>
+<li><p><a href="#method-FilterStates-n_active_filter_states"><code>FilterStates$n_active_filter_states()</code></a></p></li>
 <li><p><a href="#method-FilterStates-queue_empty"><code>FilterStates$queue_empty()</code></a></p></li>
 <li><p><a href="#method-FilterStates-queue_get"><code>FilterStates$queue_get()</code></a></p></li>
 <li><p><a href="#method-FilterStates-queue_initialize"><code>FilterStates$queue_initialize()</code></a></p></li>
@@ -220,22 +213,34 @@ no-op call such as <code>x &lt;- x</code>.</p><div class="section">
 <p><code>character(1)</code> the name of the function</p>
 </div>
 
-</div><p></p><hr><a id="method-FilterStates-queue_empty"></a><div class="section">
-<h3 id="method-queue-empty-">Method <code>queue_empty()</code><a class="anchor" aria-label="anchor" href="#method-queue-empty-"></a></h3>
-<p>Remove all <code>FilterState</code> objects from all queues in this <code>FilterStates</code>.</p><div class="section">
+</div><p></p><hr><a id="method-FilterStates-n_active_filter_states"></a><div class="section">
+<h3 id="method-n-active-filter-states-">Method <code>n_active_filter_states()</code><a class="anchor" aria-label="anchor" href="#method-n-active-filter-states-"></a></h3>
+<p>Gets the number of active <code>FilterState</code> objects in this <code>FilterStates</code>.</p><div class="section">
 <h4 id="usage-6">Usage<a class="anchor" aria-label="anchor" href="#usage-6"></a></h4>
-<p></p><div class="r"><div class="sourceCode"><pre><code><span><span class="va">FilterStates</span><span class="op">$</span><span class="fu">queue_empty</span><span class="op">(</span><span class="op">)</span></span></code></pre></div><p></p></div>
+<p></p><div class="r"><div class="sourceCode"><pre><code><span><span class="va">FilterStates</span><span class="op">$</span><span class="fu">n_active_filter_states</span><span class="op">(</span><span class="op">)</span></span></code></pre></div><p></p></div>
 </div>
 
 <div class="section">
 <h4 id="returns-4">Returns<a class="anchor" aria-label="anchor" href="#returns-4"></a></h4>
+<p><code>numeric(1)</code></p>
+</div>
+
+</div><p></p><hr><a id="method-FilterStates-queue_empty"></a><div class="section">
+<h3 id="method-queue-empty-">Method <code>queue_empty()</code><a class="anchor" aria-label="anchor" href="#method-queue-empty-"></a></h3>
+<p>Remove all <code>FilterState</code> objects from all queues in this <code>FilterStates</code>.</p><div class="section">
+<h4 id="usage-7">Usage<a class="anchor" aria-label="anchor" href="#usage-7"></a></h4>
+<p></p><div class="r"><div class="sourceCode"><pre><code><span><span class="va">FilterStates</span><span class="op">$</span><span class="fu">queue_empty</span><span class="op">(</span><span class="op">)</span></span></code></pre></div><p></p></div>
+</div>
+
+<div class="section">
+<h4 id="returns-5">Returns<a class="anchor" aria-label="anchor" href="#returns-5"></a></h4>
 <p>NULL</p>
 </div>
 
 </div><p></p><hr><a id="method-FilterStates-queue_get"></a><div class="section">
 <h3 id="method-queue-get-">Method <code>queue_get()</code><a class="anchor" aria-label="anchor" href="#method-queue-get-"></a></h3>
 <p>Returns a list of <code>FilterState</code> objects stored in this <code>FilterStates.</code></p><div class="section">
-<h4 id="usage-7">Usage<a class="anchor" aria-label="anchor" href="#usage-7"></a></h4>
+<h4 id="usage-8">Usage<a class="anchor" aria-label="anchor" href="#usage-8"></a></h4>
 <p></p><div class="r"><div class="sourceCode"><pre><code><span><span class="va">FilterStates</span><span class="op">$</span><span class="fu">queue_get</span><span class="op">(</span><span class="va">queue_index</span>, element_id <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/character.html" class="external-link">character</a></span><span class="op">(</span><span class="fl">0</span><span class="op">)</span><span class="op">)</span></span></code></pre></div><p></p></div>
 </div>
 
@@ -254,14 +259,14 @@ name of <code>ReactiveQueue</code> element.</p></dd>
 </dl><p></p></div>
 </div>
 <div class="section">
-<h4 id="returns-5">Returns<a class="anchor" aria-label="anchor" href="#returns-5"></a></h4>
+<h4 id="returns-6">Returns<a class="anchor" aria-label="anchor" href="#returns-6"></a></h4>
 <p><code>list</code> of <code>FilterState</code> objects</p>
 </div>
 
 </div><p></p><hr><a id="method-FilterStates-queue_initialize"></a><div class="section">
 <h3 id="method-queue-initialize-">Method <code>queue_initialize()</code><a class="anchor" aria-label="anchor" href="#method-queue-initialize-"></a></h3>
 <p>Sets <code>ReactiveQueue</code> objects.</p><div class="section">
-<h4 id="usage-8">Usage<a class="anchor" aria-label="anchor" href="#usage-8"></a></h4>
+<h4 id="usage-9">Usage<a class="anchor" aria-label="anchor" href="#usage-9"></a></h4>
 <p></p><div class="r"><div class="sourceCode"><pre><code><span><span class="va">FilterStates</span><span class="op">$</span><span class="fu">queue_initialize</span><span class="op">(</span><span class="va">x</span><span class="op">)</span></span></code></pre></div><p></p></div>
 </div>
 
@@ -278,7 +283,7 @@ must be a list even if single <code>ReactiveQueue</code> is set.</p></dd>
 </div><p></p><hr><a id="method-FilterStates-queue_push"></a><div class="section">
 <h3 id="method-queue-push-">Method <code>queue_push()</code><a class="anchor" aria-label="anchor" href="#method-queue-push-"></a></h3>
 <p>Adds a new <code>FilterState</code> object to this <code>FilterStates</code></p><div class="section">
-<h4 id="usage-9">Usage<a class="anchor" aria-label="anchor" href="#usage-9"></a></h4>
+<h4 id="usage-10">Usage<a class="anchor" aria-label="anchor" href="#usage-10"></a></h4>
 <p></p><div class="r"><div class="sourceCode"><pre><code><span><span class="va">FilterStates</span><span class="op">$</span><span class="fu">queue_push</span><span class="op">(</span><span class="va">x</span>, <span class="va">queue_index</span>, <span class="va">element_id</span><span class="op">)</span></span></code></pre></div><p></p></div>
 </div>
 
@@ -310,7 +315,7 @@ with this state. It removes:<br></p><ul><li><p>particular <code>FilterState</cod
 <li><p>UI card created for this filter</p></li>
 <li><p>observers listening selection and remove button</p></li>
 </ul><div class="section">
-<h4 id="usage-10">Usage<a class="anchor" aria-label="anchor" href="#usage-10"></a></h4>
+<h4 id="usage-11">Usage<a class="anchor" aria-label="anchor" href="#usage-11"></a></h4>
 <p></p><div class="r"><div class="sourceCode"><pre><code><span><span class="va">FilterStates</span><span class="op">$</span><span class="fu">queue_remove</span><span class="op">(</span><span class="va">queue_index</span>, <span class="va">element_id</span><span class="op">)</span></span></code></pre></div><p></p></div>
 </div>
 
@@ -335,7 +340,7 @@ name of <code>ReactiveQueue</code> element.</p></dd>
 <p>Shiny UI element being a container for <code>FilterState</code> elements.
 Content of this container is created using <code>renderUI</code> in
 <code>server</code> module</p><div class="section">
-<h4 id="usage-11">Usage<a class="anchor" aria-label="anchor" href="#usage-11"></a></h4>
+<h4 id="usage-12">Usage<a class="anchor" aria-label="anchor" href="#usage-12"></a></h4>
 <p></p><div class="r"><div class="sourceCode"><pre><code><span><span class="va">FilterStates</span><span class="op">$</span><span class="fu">ui</span><span class="op">(</span><span class="va">id</span><span class="op">)</span></span></code></pre></div><p></p></div>
 </div>
 
@@ -349,7 +354,7 @@ id of the shiny element</p></dd>
 </dl><p></p></div>
 </div>
 <div class="section">
-<h4 id="returns-6">Returns<a class="anchor" aria-label="anchor" href="#returns-6"></a></h4>
+<h4 id="returns-7">Returns<a class="anchor" aria-label="anchor" href="#returns-7"></a></h4>
 <p>shiny.tag</p>
 </div>
 
@@ -358,19 +363,19 @@ id of the shiny element</p></dd>
 <p>Gets the reactive values from the active <code>FilterState</code> objects.</p>
 <p>Get active filter state from the <code>FilterState</code> objects kept in <code>ReactiveQueue</code>(s).
 The output list is a compatible input to <code>self$set_filter_state</code>.</p><div class="section">
-<h4 id="usage-12">Usage<a class="anchor" aria-label="anchor" href="#usage-12"></a></h4>
+<h4 id="usage-13">Usage<a class="anchor" aria-label="anchor" href="#usage-13"></a></h4>
 <p></p><div class="r"><div class="sourceCode"><pre><code><span><span class="va">FilterStates</span><span class="op">$</span><span class="fu">get_filter_state</span><span class="op">(</span><span class="op">)</span></span></code></pre></div><p></p></div>
 </div>
 
 <div class="section">
-<h4 id="returns-7">Returns<a class="anchor" aria-label="anchor" href="#returns-7"></a></h4>
+<h4 id="returns-8">Returns<a class="anchor" aria-label="anchor" href="#returns-8"></a></h4>
 <p><code>list</code> containing <code>list</code> per each <code>FilterState</code> in the <code>ReactiveQueue</code></p>
 </div>
 
 </div><p></p><hr><a id="method-FilterStates-set_filter_state"></a><div class="section">
 <h3 id="method-set-filter-state-">Method <code><a href="filter_state_api.html">set_filter_state()</a></code><a class="anchor" aria-label="anchor" href="#method-set-filter-state-"></a></h3>
 <p>Sets active <code>FilterState</code> objects.</p><div class="section">
-<h4 id="usage-13">Usage<a class="anchor" aria-label="anchor" href="#usage-13"></a></h4>
+<h4 id="usage-14">Usage<a class="anchor" aria-label="anchor" href="#usage-14"></a></h4>
 <p></p><div class="r"><div class="sourceCode"><pre><code><span><span class="va">FilterStates</span><span class="op">$</span><span class="fu">set_filter_state</span><span class="op">(</span><span class="va">data</span>, <span class="va">state</span><span class="op">)</span></span></code></pre></div><p></p></div>
 </div>
 
@@ -391,14 +396,14 @@ column in <code>data</code>.</p></dd>
 </dl><p></p></div>
 </div>
 <div class="section">
-<h4 id="returns-8">Returns<a class="anchor" aria-label="anchor" href="#returns-8"></a></h4>
+<h4 id="returns-9">Returns<a class="anchor" aria-label="anchor" href="#returns-9"></a></h4>
 <p>function which throws an error</p>
 </div>
 
 </div><p></p><hr><a id="method-FilterStates-remove_filter_state"></a><div class="section">
 <h3 id="method-remove-filter-state-">Method <code><a href="filter_state_api.html">remove_filter_state()</a></code><a class="anchor" aria-label="anchor" href="#method-remove-filter-state-"></a></h3>
 <p>Remove a single <code>FilterState</code> from the <code>ReactiveQueue</code>.</p><div class="section">
-<h4 id="usage-14">Usage<a class="anchor" aria-label="anchor" href="#usage-14"></a></h4>
+<h4 id="usage-15">Usage<a class="anchor" aria-label="anchor" href="#usage-15"></a></h4>
 <p></p><div class="r"><div class="sourceCode"><pre><code><span><span class="va">FilterStates</span><span class="op">$</span><span class="fu">remove_filter_state</span><span class="op">(</span><span class="va">element_id</span><span class="op">)</span></span></code></pre></div><p></p></div>
 </div>
 
@@ -412,14 +417,14 @@ Name of variable to remove its <code>FilterState</code>.</p></dd>
 </dl><p></p></div>
 </div>
 <div class="section">
-<h4 id="returns-9">Returns<a class="anchor" aria-label="anchor" href="#returns-9"></a></h4>
+<h4 id="returns-10">Returns<a class="anchor" aria-label="anchor" href="#returns-10"></a></h4>
 <p><code>NULL</code></p>
 </div>
 
 </div><p></p><hr><a id="method-FilterStates-ui_add_filter_state"></a><div class="section">
 <h3 id="method-ui-add-filter-state-">Method <code>ui_add_filter_state()</code><a class="anchor" aria-label="anchor" href="#method-ui-add-filter-state-"></a></h3>
 <p>Shiny UI module to add filter variable.</p><div class="section">
-<h4 id="usage-15">Usage<a class="anchor" aria-label="anchor" href="#usage-15"></a></h4>
+<h4 id="usage-16">Usage<a class="anchor" aria-label="anchor" href="#usage-16"></a></h4>
 <p></p><div class="r"><div class="sourceCode"><pre><code><span><span class="va">FilterStates</span><span class="op">$</span><span class="fu">ui_add_filter_state</span><span class="op">(</span><span class="va">id</span>, <span class="va">data</span><span class="op">)</span></span></code></pre></div><p></p></div>
 </div>
 
@@ -438,14 +443,14 @@ object containing columns to be used as filter variables.</p></dd>
 </dl><p></p></div>
 </div>
 <div class="section">
-<h4 id="returns-10">Returns<a class="anchor" aria-label="anchor" href="#returns-10"></a></h4>
+<h4 id="returns-11">Returns<a class="anchor" aria-label="anchor" href="#returns-11"></a></h4>
 <p>shiny.tag</p>
 </div>
 
 </div><p></p><hr><a id="method-FilterStates-srv_add_filter_state"></a><div class="section">
 <h3 id="method-srv-add-filter-state-">Method <code>srv_add_filter_state()</code><a class="anchor" aria-label="anchor" href="#method-srv-add-filter-state-"></a></h3>
 <p>Shiny server module to add filter variable</p><div class="section">
-<h4 id="usage-16">Usage<a class="anchor" aria-label="anchor" href="#usage-16"></a></h4>
+<h4 id="usage-17">Usage<a class="anchor" aria-label="anchor" href="#usage-17"></a></h4>
 <p></p><div class="r"><div class="sourceCode"><pre><code><span><span class="va">FilterStates</span><span class="op">$</span><span class="fu">srv_add_filter_state</span><span class="op">(</span><span class="va">id</span>, <span class="va">data</span>, <span class="va">...</span><span class="op">)</span></span></code></pre></div><p></p></div>
 </div>
 
@@ -468,7 +473,7 @@ object containing columns to be used as filter variables.</p></dd>
 </dl><p></p></div>
 </div>
 <div class="section">
-<h4 id="returns-11">Returns<a class="anchor" aria-label="anchor" href="#returns-11"></a></h4>
+<h4 id="returns-12">Returns<a class="anchor" aria-label="anchor" href="#returns-12"></a></h4>
 <p><code>moduleServer</code> function which returns <code>NULL</code>
 Module to insert/remove <code>FilterState</code> UI</p>
 <p>This module adds the shiny UI of the newly added <code>FilterState</code> object to queue to the Active Filter
@@ -488,7 +493,7 @@ is equivalent to <code>private$ns(queue_index)</code>. This means that</p>
 </div><p></p><hr><a id="method-FilterStates-clone"></a><div class="section">
 <h3 id="method-clone-">Method <code>clone()</code><a class="anchor" aria-label="anchor" href="#method-clone-"></a></h3>
 <p>The objects of this class are cloneable with this method.</p><div class="section">
-<h4 id="usage-17">Usage<a class="anchor" aria-label="anchor" href="#usage-17"></a></h4>
+<h4 id="usage-18">Usage<a class="anchor" aria-label="anchor" href="#usage-18"></a></h4>
 <p></p><div class="r"><div class="sourceCode"><pre><code><span><span class="va">FilterStates</span><span class="op">$</span><span class="fu">clone</span><span class="op">(</span>deep <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span></code></pre></div><p></p></div>
 </div>
 
