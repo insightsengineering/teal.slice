@@ -1,4 +1,4 @@
-# teal.slice 0.2.0.9009
+# teal.slice 0.2.0.9010
 
 * Examples now use `scda.2022` instead of `scda.2021`.
 * Transferred data hashing step in `FilteredDataset` to `teal`.
@@ -6,6 +6,7 @@
 ### New features
 
 * Added a global turn on/off button for the Filter Panel.
+* Added ability to collapse all filters of an individual dataset.
 
 ### Enhancements
 
