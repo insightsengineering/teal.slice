@@ -8,3 +8,23 @@
 .filter-state-card .dropdown .dropdown-toggle .caret {
   display: none;
 }
+
+.filter-state-card .sw-dropdown .btn .glyphicon-triangle-bottom {
+  display: none;
+}
+
+.dropdown {
+  position: relative;
+}
+
+.dropdown-menu {
+  display: none;
+}
+
+.toggle, .dropdown-menu {
+  width: 100%;
+}
+
+.is-active .dropdown-menu {
+  display: block;
+}

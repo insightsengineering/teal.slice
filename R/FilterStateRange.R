@@ -149,17 +149,21 @@ RangeFilterState <- R6::R6Class( # nolint
     ui = function(id) {
       ns <- NS(id)
       div(
+        id = ns("card"),
         class = "filter-state-card",
-        include_css_files(pattern = "filter-state"),
-        shinyWidgets::dropdownButton(
-          circle = FALSE,
-          icon = icon("gear"),
-          inline = TRUE,
-          right = TRUE,
-          no_outline = TRUE,
-          uiOutput(ns("inputs"))
+        shiny::singleton(
+          shiny::tags$head(shiny::includeScript(system.file("js/filter_card.js", package = "teal.slice")))
         ),
-        uiOutput(ns("summary"))
+        include_css_files(pattern = "filter-state"),
+        uiOutput(ns("summary")),
+        shinyjs::hidden(
+          div(
+            id = ns("inputs_dropdown"),
+            class = "dropdown-menu filter-state-dropdown",
+            `aria-labelledby` = "dropdownMenuButton",
+            uiOutput(ns("inputs"))
+          )
+        )
       )
     },
 
@@ -179,6 +183,8 @@ RangeFilterState <- R6::R6Class( # nolint
 
           output$summary <- renderUI(self$ui_summary(session$ns("summary")))
           output$inputs <- renderUI(self$ui_inputs(session$ns("inputs")))
+
+          observe(shinyjs::onclick("card", shinyjs::show("inputs_dropdown")))
         }
       )
     },
@@ -191,7 +197,7 @@ RangeFilterState <- R6::R6Class( # nolint
     ui_inputs = function(id) {
       ns <- NS(id)
       pretty_range_inputs <- private$get_pretty_range_inputs(private$choices)
-      fluidRow(
+      div(
         checkboxInput(ns("manual"), "Enter range manually"),
         conditionalPanel(
           condition = "input.manual == false",
