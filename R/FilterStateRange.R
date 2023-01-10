@@ -157,7 +157,6 @@ RangeFilterState <- R6::R6Class( # nolint
         ),
         div(
           class = "filterRangeSlider",
-          style = "width:100%", # needed for bs4
           teal.widgets::optionalSliderInput(
             inputId = ns("selection"),
             label = NULL,

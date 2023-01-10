@@ -160,7 +160,13 @@ a.remove_all:hover {
   max-width: 100%;
 }
 
-/* used to enusre the rangew histogram exactly matches the slider */
+/* Needed for bs4 */
+.filterRangeSlider {
+  width: 100%;
+  max-width: 100%;
+}
+
+/* used to enusre the range histogram exactly matches the slider */
 .filterRangeSlider .irs-grid {
   width:100% !important;
   left:0% !important;
