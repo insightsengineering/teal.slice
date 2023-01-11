@@ -614,9 +614,11 @@ FilterState <- R6::R6Class( # nolint
     },
 
     # shiny modules -----
+    #' module with inputs
     ui_inputs = function(id) {
       stop("abstract class")
     },
+    #' module with inputs
     server_inputs = function(id) {
       stop("abstract class")
     }

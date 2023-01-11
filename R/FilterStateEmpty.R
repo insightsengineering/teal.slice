@@ -134,7 +134,7 @@ EmptyFilterState <- R6::R6Class( # nolint
     #' Controls selection of `keep_na` checkbox input
     #' @param id (`character(1)`)\cr
     #'   an ID string that corresponds with the ID used to call the module's UI function.
-    #' @return `moduleServer` function which returns `NULL`
+    #' return `moduleServer` function which returns `NULL`
     server_inputs = function(id) {
       moduleServer(
         id = id,

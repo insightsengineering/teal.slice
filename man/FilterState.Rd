@@ -489,7 +489,9 @@ Set choices is supposed to be executed once in the constructor
 to define set/range which selection is made from.
 parameter choices (\code{vector})\cr
 class of the vector depends on the \code{FilterState} class.
-return a \code{NULL}}
+return a \code{NULL}
+module with inputs
+module with inputs}
 }
 \if{html}{\out{</div>}}
 }

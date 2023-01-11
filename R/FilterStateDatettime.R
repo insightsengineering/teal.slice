@@ -187,12 +187,12 @@ DatetimeFilterState <- R6::R6Class( # nolint
       values
     },
 
-    #' @description
-    #' UI Module for `DatetimeFilterState`.
-    #' This UI element contains two date-time selections for `min` and `max`
-    #' of the range and a checkbox whether to keep the `NA` values.
-    #' @param id (`character(1)`)\cr
-    #'  id of shiny element
+    # @description
+    # UI Module for `DatetimeFilterState`.
+    # This UI element contains two date-time selections for `min` and `max`
+    # of the range and a checkbox whether to keep the `NA` values.
+    # @param id (`character(1)`)\cr
+    #  id of shiny element
     ui_inputs = function(id) {
       ns <- NS(id)
       div(
@@ -261,11 +261,11 @@ DatetimeFilterState <- R6::R6Class( # nolint
       )
     },
 
-    #' @description
-    #' Server module
-    #' @param id (`character(1)`)\cr
-    #'   an ID string that corresponds with the ID used to call the module's UI function.
-    #' @return `moduleServer` function which returns `NULL`
+    # @description
+    # Server module
+    # @param id (`character(1)`)\cr
+    #   an ID string that corresponds with the ID used to call the module's UI function.
+    # @return `moduleServer` function which returns `NULL`
     server_inputs = function(id) {
       moduleServer(
         id = id,
