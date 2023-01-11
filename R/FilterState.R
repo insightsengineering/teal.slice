@@ -410,7 +410,8 @@ FilterState <- R6::R6Class( # nolint
     #' Server module
     #' @param id (`character(1)`)\cr
     #'   an ID string that corresponds with the ID used to call the module's UI function.
-    #' @return `moduleServer` function which returns `NULL`
+    #' @return `moduleServer` function which returns reactive value signaling that remove button
+    #'   has been clicked
     server = function(id) {
       moduleServer(
         id = id,

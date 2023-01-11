@@ -448,6 +448,7 @@ FilterStates <- R6::R6Class( # nolint
               filter_state$ui(session$ns("content"))
             )
           )
+          # signal sent from filter_state when it is marked for removal
           remove_fs <- filter_state$server(id = "content")
 
           private$observers[[queue_id]] <- observeEvent(
