@@ -507,7 +507,7 @@ FilterStates <- R6::R6Class( # nolint
     #' `observeEvent` for remove-filter-state is set and also from `FilteredDataset`
     #' level, where shiny-session-namespace is different. That is why it's important
     #' to remove shiny elements from anywhere. In `add_filter_state` `session$ns(NULL)`
-    #' is equivalent to `private$ns(queue_index)`. This means that
+    #' is equivalent to `private$ns(queue_index)`.
     #'
     remove_filter_state_ui = function(queue_index, element_id) {
       queue_id <- sprintf("%s-%s", queue_index, element_id)
@@ -518,7 +518,26 @@ FilterStates <- R6::R6Class( # nolint
         private$observers[[queue_id]] <- NULL
       }
     },
-
+    #' Remove unused reactive from shiny input. Function removeUI() keeps
+    #' the leftovers in the input. This default behavior of removeUI() may
+    #' change later which can make this method obsolete.
+    #' This method searches input for the unique matches with the filter name
+    #' and then removes objects constructed with current card id + filter name.
+    #' @param fname Filter name that is used as regular expression to search
+    #'  for filter names.
+    #' @param .input Shiny input object.
+    #'
+    remove_shiny_inputs = function(fname, .input) {
+      prefix = paste0(gsub("cards$", "", private$cards_container_id))
+      invisible(
+        lapply(
+          unique(grep(fname, names(.input), value = TRUE)),
+          function(i) {
+            .subset2(.input, "impl")$.values$remove(paste0(prefix, i))
+          }
+        )
+      )
+    },
     # Checks if the queue of the given index was initialized in this `FilterStates`
     # @param queue_index (character or integer)
     validate_queue_exists = function(queue_index) {

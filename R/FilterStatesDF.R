@@ -104,19 +104,7 @@ DFFilterStates <- R6::R6Class( # nolint
             req(removed_state_name())
             for (fname in removed_state_name()) {
               private$remove_filter_state_ui(1L, fname)
-              remove_shiny_inputs <- function(regx, .input, prefix = "") {
-                invisible(
-                  lapply(grep(regx, names(.input), value = TRUE), function(i) {
-                    .subset2(.input, "impl")$.values$remove(paste0(prefix, i))
-                  })
-                )
-              }
-              remove_shiny_inputs(
-                regx = fname,
-                .input = input,
-                prefix = paste0(gsub("cards", "", private$cards_container_id))
-              )
-              # print(input)
+              private$remove_shiny_inputs(fname, .input = input)
             }
             removed_state_name(character(0))
           })
