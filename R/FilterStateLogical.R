@@ -104,12 +104,61 @@ LogicalFilterState <- R6::R6Class( # nolint
     },
 
     #' @description
-    #' UI Module for `EmptyFilterState`.
-    #' This UI element contains available choices selection and
-    #' checkbox whether to keep or not keep the `NA` values.
-    #' @param id (`character(1)`)\cr
-    #'  id of shiny element
-    ui = function(id) {
+    #' Sets the selected values of this `LogicalFilterState`.
+    #'
+    #' @param value (`logical(1)`)\cr
+    #'  the value to set. Must not contain the NA value.
+    #'
+    #' @returns invisibly `NULL`.
+    #'
+    #' @note Casts the passed object to `logical` before validating the input
+    #' making it possible to pass any object coercible to `logical` to this method.
+    #'
+    #' @examples
+    #' filter <- teal.slice:::LogicalFilterState$new(c(TRUE), varname = "name")
+    #' filter$set_selected(TRUE)
+    set_selected = function(value) {
+      super$set_selected(value)
+    }
+  ),
+  private = list(
+    histogram_data = data.frame(),
+    validate_selection = function(value) {
+      if (!(checkmate::test_logical(value, max.len = 1, any.missing = FALSE))) {
+        stop(
+          sprintf(
+            "value of the selection for `%s` in `%s` should be a logical scalar (TRUE or FALSE)",
+            self$get_varname(deparse = TRUE),
+            self$get_dataname(deparse = TRUE)
+          )
+        )
+      }
+
+      pre_msg <- sprintf(
+        "dataset '%s', variable '%s': ",
+        self$get_dataname(deparse = TRUE),
+        self$get_varname(deparse = TRUE)
+      )
+      check_in_subset(value, private$choices, pre_msg = pre_msg)
+    },
+    cast_and_validate = function(values) {
+      tryCatch(
+        expr = {
+          values_logical <- as.logical(values)
+          if (any(is.na(values_logical))) stop()
+        },
+        error = function(cond) stop("The array of set values must contain values coercible to logical.")
+      )
+      values_logical
+    },
+
+    # @description
+    # UI Module for `EmptyFilterState`.
+    # This UI element contains available choices selection and
+    # checkbox whether to keep or not keep the `NA` values.
+    # @param id (`character(1)`)\cr
+    #  id of shiny element
+    ui_inputs = function(id) {
       ns <- NS(id)
       l_counts <- as.numeric(names(private$choices))
       is_na_l_counts <- is.na(l_counts)
@@ -155,13 +204,13 @@ LogicalFilterState <- R6::R6Class( # nolint
       )
     },
 
-    #' @description
-    #' Server module
-    #'
-    #' @param id (`character(1)`)\cr
-    #'   an ID string that corresponds with the ID used to call the module's UI function.
-    #' @return `moduleServer` function which returns `NULL`
-    server = function(id) {
+    # @description
+    # Server module
+    #
+    # @param id (`character(1)`)\cr
+    #   an ID string that corresponds with the ID used to call the module's UI function.
+    # @return `moduleServer` function which returns `NULL`
+    server_inputs = function(id) {
       moduleServer(
         id = id,
         function(input, output, session) {
@@ -214,55 +263,6 @@ LogicalFilterState <- R6::R6Class( # nolint
           NULL
         }
       )
-    },
-
-    #' @description
-    #' Sets the selected values of this `LogicalFilterState`.
-    #'
-    #' @param value (`logical(1)`)\cr
-    #'  the value to set. Must not contain the NA value.
-    #'
-    #' @returns invisibly `NULL`.
-    #'
-    #' @note Casts the passed object to `logical` before validating the input
-    #' making it possible to pass any object coercible to `logical` to this method.
-    #'
-    #' @examples
-    #' filter <- teal.slice:::LogicalFilterState$new(c(TRUE), varname = "name")
-    #' filter$set_selected(TRUE)
-    set_selected = function(value) {
-      super$set_selected(value)
-    }
-  ),
-  private = list(
-    histogram_data = data.frame(),
-    validate_selection = function(value) {
-      if (!(checkmate::test_logical(value, max.len = 1, any.missing = FALSE))) {
-        stop(
-          sprintf(
-            "value of the selection for `%s` in `%s` should be a logical scalar (TRUE or FALSE)",
-            self$get_varname(deparse = TRUE),
-            self$get_dataname(deparse = TRUE)
-          )
-        )
-      }
-
-      pre_msg <- sprintf(
-        "dataset '%s', variable '%s': ",
-        self$get_dataname(deparse = TRUE),
-        self$get_varname(deparse = TRUE)
-      )
-      check_in_subset(value, private$choices, pre_msg = pre_msg)
-    },
-    cast_and_validate = function(values) {
-      tryCatch(
-        expr = {
-          values_logical <- as.logical(values)
-          if (any(is.na(values_logical))) stop()
-        },
-        error = function(cond) stop("The array of set values must contain values coercible to logical.")
-      )
-      values_logical
     }
   )
 )

@@ -446,7 +446,8 @@ an ID string that corresponds with the ID used to call the module's UI function.
 \if{html}{\out{</div>}}
 }
 \subsection{Returns}{
-\code{moduleServer} function which returns \code{NULL}
+\code{moduleServer} function which returns reactive value signaling that remove button
+has been clicked
 }
 }
 \if{html}{\out{<hr>}}
@@ -489,7 +490,9 @@ Set choices is supposed to be executed once in the constructor
 to define set/range which selection is made from.
 parameter choices (\code{vector})\cr
 class of the vector depends on the \code{FilterState} class.
-return a \code{NULL}}
+return a \code{NULL}
+module with inputs
+module with inputs}
 }
 \if{html}{\out{</div>}}
 }
