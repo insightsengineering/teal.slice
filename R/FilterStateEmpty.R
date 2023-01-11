@@ -85,43 +85,6 @@ EmptyFilterState <- R6::R6Class( # nolint
     },
 
     #' @description
-    #' UI Module for `EmptyFilterState`.
-    #' This UI element contains checkbox input to
-    #' filter or keep missing values.
-    #' @param id (`character(1)`)\cr
-    #'  id of shiny element
-    ui = function(id) {
-      ns <- NS(id)
-      fluidRow(
-        div(
-          class = "relative",
-          div(
-            span("Variable contains missing values only"),
-            checkboxInput(
-              ns("keep_na"),
-              label_keep_na_count(private$na_count),
-              value = FALSE
-            )
-          )
-        )
-      )
-    },
-    #' @description
-    #' Controls selection of `keep_na` checkbox input
-    #' @param id (`character(1)`)\cr
-    #'   an ID string that corresponds with the ID used to call the module's UI function.
-    #' @return `moduleServer` function which returns `NULL`
-    server = function(id) {
-      moduleServer(
-        id = id,
-        function(input, output, session) {
-          private$observe_keep_na(input)
-          shiny::setBookmarkExclude("keep_na")
-        }
-      )
-    },
-
-    #' @description
     #' Set state
     #' @param state (`list`)\cr
     #'  contains fields relevant for a specific class
@@ -143,6 +106,43 @@ EmptyFilterState <- R6::R6Class( # nolint
         self$set_keep_na(state$keep_na)
       }
       invisible(NULL)
+    },
+
+    #' @description
+    #' UI Module for `EmptyFilterState`.
+    #' This UI element contains checkbox input to
+    #' filter or keep missing values.
+    #' @param id (`character(1)`)\cr
+    #'  id of shiny element
+    ui_inputs = function(id) {
+      ns <- NS(id)
+      fluidRow(
+        div(
+          class = "relative",
+          div(
+            span("Variable contains missing values only"),
+            checkboxInput(
+              ns("keep_na"),
+              label_keep_na_count(private$na_count),
+              value = FALSE
+            )
+          )
+        )
+      )
+    },
+    #' @description
+    #' Controls selection of `keep_na` checkbox input
+    #' @param id (`character(1)`)\cr
+    #'   an ID string that corresponds with the ID used to call the module's UI function.
+    #' return `moduleServer` function which returns `NULL`
+    server_inputs = function(id) {
+      moduleServer(
+        id = id,
+        function(input, output, session) {
+          private$observe_keep_na(input)
+          shiny::setBookmarkExclude("keep_na")
+        }
+      )
     }
   )
 )

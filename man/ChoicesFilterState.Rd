@@ -42,8 +42,6 @@ filter$set_selected(c("c", "a"))
 \item \href{#method-ChoicesFilterState-new}{\code{ChoicesFilterState$new()}}
 \item \href{#method-ChoicesFilterState-is_any_filtered}{\code{ChoicesFilterState$is_any_filtered()}}
 \item \href{#method-ChoicesFilterState-get_call}{\code{ChoicesFilterState$get_call()}}
-\item \href{#method-ChoicesFilterState-ui}{\code{ChoicesFilterState$ui()}}
-\item \href{#method-ChoicesFilterState-server}{\code{ChoicesFilterState$server()}}
 \item \href{#method-ChoicesFilterState-set_state}{\code{ChoicesFilterState$set_state()}}
 \item \href{#method-ChoicesFilterState-set_state_reactive}{\code{ChoicesFilterState$set_state_reactive()}}
 \item \href{#method-ChoicesFilterState-set_selected}{\code{ChoicesFilterState$set_selected()}}
@@ -62,10 +60,12 @@ filter$set_selected(c("c", "a"))
 <li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilterState" data-id="get_varlabel"><a href='../../teal.slice/html/FilterState.html#method-FilterState-get_varlabel'><code>teal.slice::FilterState$get_varlabel()</code></a></span></li>
 <li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilterState" data-id="get_varname"><a href='../../teal.slice/html/FilterState.html#method-FilterState-get_varname'><code>teal.slice::FilterState$get_varname()</code></a></span></li>
 <li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilterState" data-id="print"><a href='../../teal.slice/html/FilterState.html#method-FilterState-print'><code>teal.slice::FilterState$print()</code></a></span></li>
+<li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilterState" data-id="server"><a href='../../teal.slice/html/FilterState.html#method-FilterState-server'><code>teal.slice::FilterState$server()</code></a></span></li>
 <li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilterState" data-id="set_keep_na"><a href='../../teal.slice/html/FilterState.html#method-FilterState-set_keep_na'><code>teal.slice::FilterState$set_keep_na()</code></a></span></li>
 <li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilterState" data-id="set_keep_na_reactive"><a href='../../teal.slice/html/FilterState.html#method-FilterState-set_keep_na_reactive'><code>teal.slice::FilterState$set_keep_na_reactive()</code></a></span></li>
 <li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilterState" data-id="set_na_rm"><a href='../../teal.slice/html/FilterState.html#method-FilterState-set_na_rm'><code>teal.slice::FilterState$set_na_rm()</code></a></span></li>
 <li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilterState" data-id="set_selected_reactive"><a href='../../teal.slice/html/FilterState.html#method-FilterState-set_selected_reactive'><code>teal.slice::FilterState$set_selected_reactive()</code></a></span></li>
+<li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilterState" data-id="ui"><a href='../../teal.slice/html/FilterState.html#method-FilterState-ui'><code>teal.slice::FilterState$ui()</code></a></span></li>
 </ul>
 </details>
 }}
@@ -137,47 +137,6 @@ optional \verb{is.na(<varname>)}.
 
 \subsection{Returns}{
 (\code{call})
-}
-}
-\if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-ChoicesFilterState-ui"></a>}}
-\if{latex}{\out{\hypertarget{method-ChoicesFilterState-ui}{}}}
-\subsection{Method \code{ui()}}{
-UI Module for \code{ChoicesFilterState}.
-This UI element contains available choices selection and
-checkbox whether to keep or not keep the \code{NA} values.
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{ChoicesFilterState$ui(id)}\if{html}{\out{</div>}}
-}
-
-\subsection{Arguments}{
-\if{html}{\out{<div class="arguments">}}
-\describe{
-\item{\code{id}}{(\code{character(1)})\cr
-id of shiny element}
-}
-\if{html}{\out{</div>}}
-}
-}
-\if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-ChoicesFilterState-server"></a>}}
-\if{latex}{\out{\hypertarget{method-ChoicesFilterState-server}{}}}
-\subsection{Method \code{server()}}{
-Server module
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{ChoicesFilterState$server(id)}\if{html}{\out{</div>}}
-}
-
-\subsection{Arguments}{
-\if{html}{\out{<div class="arguments">}}
-\describe{
-\item{\code{id}}{(\code{character(1)})\cr
-an ID string that corresponds with the ID used to call the module's UI function.}
-}
-\if{html}{\out{</div>}}
-}
-\subsection{Returns}{
-\code{moduleServer} function which returns \code{NULL}
 }
 }
 \if{html}{\out{<hr>}}

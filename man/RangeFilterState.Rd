@@ -50,8 +50,6 @@ filter$set_selected(c(2, 3))
 \item \href{#method-RangeFilterState-get_call}{\code{RangeFilterState$get_call()}}
 \item \href{#method-RangeFilterState-get_keep_inf}{\code{RangeFilterState$get_keep_inf()}}
 \item \href{#method-RangeFilterState-get_state}{\code{RangeFilterState$get_state()}}
-\item \href{#method-RangeFilterState-ui}{\code{RangeFilterState$ui()}}
-\item \href{#method-RangeFilterState-server}{\code{RangeFilterState$server()}}
 \item \href{#method-RangeFilterState-set_keep_inf}{\code{RangeFilterState$set_keep_inf()}}
 \item \href{#method-RangeFilterState-set_keep_inf_reactive}{\code{RangeFilterState$set_keep_inf_reactive()}}
 \item \href{#method-RangeFilterState-set_state}{\code{RangeFilterState$set_state()}}
@@ -70,10 +68,12 @@ filter$set_selected(c(2, 3))
 <li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilterState" data-id="get_varlabel"><a href='../../teal.slice/html/FilterState.html#method-FilterState-get_varlabel'><code>teal.slice::FilterState$get_varlabel()</code></a></span></li>
 <li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilterState" data-id="get_varname"><a href='../../teal.slice/html/FilterState.html#method-FilterState-get_varname'><code>teal.slice::FilterState$get_varname()</code></a></span></li>
 <li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilterState" data-id="print"><a href='../../teal.slice/html/FilterState.html#method-FilterState-print'><code>teal.slice::FilterState$print()</code></a></span></li>
+<li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilterState" data-id="server"><a href='../../teal.slice/html/FilterState.html#method-FilterState-server'><code>teal.slice::FilterState$server()</code></a></span></li>
 <li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilterState" data-id="set_keep_na"><a href='../../teal.slice/html/FilterState.html#method-FilterState-set_keep_na'><code>teal.slice::FilterState$set_keep_na()</code></a></span></li>
 <li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilterState" data-id="set_keep_na_reactive"><a href='../../teal.slice/html/FilterState.html#method-FilterState-set_keep_na_reactive'><code>teal.slice::FilterState$set_keep_na_reactive()</code></a></span></li>
 <li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilterState" data-id="set_na_rm"><a href='../../teal.slice/html/FilterState.html#method-FilterState-set_na_rm'><code>teal.slice::FilterState$set_na_rm()</code></a></span></li>
 <li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilterState" data-id="set_selected_reactive"><a href='../../teal.slice/html/FilterState.html#method-FilterState-set_selected_reactive'><code>teal.slice::FilterState$set_selected_reactive()</code></a></span></li>
+<li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilterState" data-id="ui"><a href='../../teal.slice/html/FilterState.html#method-FilterState-ui'><code>teal.slice::FilterState$ui()</code></a></span></li>
 </ul>
 </details>
 }}
@@ -196,48 +196,7 @@ Returns the filtering state.
 \item \code{selected} (\code{numeric(2)}) range of the filter.
 \item \code{keep_na} (\code{logical(1)}) whether \code{NA} should be kept.
 \item \code{keep_inf} (\code{logical(1)})  whether \code{Inf} should be kept.
-UI Module for \code{RangeFilterState}.
-This UI element contains two values for \code{min} and \code{max}
-of the range and two checkboxes whether to keep the \code{NA} or \code{Inf}  values.
 }
-}
-}
-\if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-RangeFilterState-ui"></a>}}
-\if{latex}{\out{\hypertarget{method-RangeFilterState-ui}{}}}
-\subsection{Method \code{ui()}}{
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{RangeFilterState$ui(id)}\if{html}{\out{</div>}}
-}
-
-\subsection{Arguments}{
-\if{html}{\out{<div class="arguments">}}
-\describe{
-\item{\code{id}}{(\code{character(1)})\cr
-id of shiny element}
-}
-\if{html}{\out{</div>}}
-}
-}
-\if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-RangeFilterState-server"></a>}}
-\if{latex}{\out{\hypertarget{method-RangeFilterState-server}{}}}
-\subsection{Method \code{server()}}{
-Server module
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{RangeFilterState$server(id)}\if{html}{\out{</div>}}
-}
-
-\subsection{Arguments}{
-\if{html}{\out{<div class="arguments">}}
-\describe{
-\item{\code{id}}{(\code{character(1)})\cr
-an ID string that corresponds with the ID used to call the module's UI function.}
-}
-\if{html}{\out{</div>}}
-}
-\subsection{Returns}{
-\code{moduleServer} function which returns \code{NULL}
 }
 }
 \if{html}{\out{<hr>}}

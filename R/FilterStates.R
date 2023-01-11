@@ -427,7 +427,13 @@ FilterStates <- R6::R6Class( # nolint
               deparse1(private$input_dataname)
             )
           )
-          shiny::setBookmarkExclude("remove")
+
+          # card_id of inserted card needs to be saved in private$card_ids as
+          # it might be removed by the several events:
+          #   - remove button in FilterStates module
+          #   - remove button in FilteredDataset module
+          #   - remove button in FilteredData module
+          #   - API call remove_filter_state
           card_id <- session$ns("card")
           queue_id <- sprintf("%s-%s", queue_index, element_id)
           private$card_ids[queue_id] <- card_id
@@ -436,47 +442,19 @@ FilterStates <- R6::R6Class( # nolint
             selector = sprintf("#%s", private$cards_container_id),
             where = "beforeEnd",
             # add span with id to be removable
-            ui = {
-              div(
-                id = card_id,
-                class = "list-group-item",
-                fluidPage(
-                  theme = get_teal_bs_theme(),
-                  fluidRow(
-                    column(
-                      width = 10,
-                      class = "no-left-right-padding",
-                      tags$div(
-                        tags$span(filter_state$get_varname(),
-                          class = "filter_panel_varname"
-                        ),
-                        if (checkmate::test_character(filter_state$get_varlabel(), min.len = 1) &&
-                          tolower(filter_state$get_varname()) != tolower(filter_state$get_varlabel())) {
-                          tags$span(filter_state$get_varlabel(), class = "filter_panel_varlabel")
-                        }
-                      )
-                    ),
-                    column(
-                      width = 2,
-                      class = "no-left-right-padding",
-                      actionLink(
-                        session$ns("remove"),
-                        label = "",
-                        icon = icon("circle-xmark", lib = "font-awesome"),
-                        class = "remove pull-right"
-                      )
-                    )
-                  ),
-                  filter_state$ui(id = session$ns("content"))
-                )
-              )
-            }
+            ui = div(
+              id = card_id,
+              class = "list-group-item",
+              filter_state$ui(session$ns("content"))
+            )
           )
-          filter_state$server(id = "content")
+          # signal sent from filter_state when it is marked for removal
+          remove_fs <- filter_state$server(id = "content")
+
           private$observers[[queue_id]] <- observeEvent(
             ignoreInit = TRUE,
             ignoreNULL = TRUE,
-            eventExpr = input$remove,
+            eventExpr = remove_fs(),
             handlerExpr = {
               logger::log_trace(paste(
                 "{ class(self)[1] }$insert_filter_state_ui@1 removing FilterState from queue '{ queue_index }',",
