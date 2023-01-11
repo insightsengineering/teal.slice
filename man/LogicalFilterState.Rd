@@ -46,8 +46,6 @@ filter$set_selected(TRUE)
 \item \href{#method-LogicalFilterState-new}{\code{LogicalFilterState$new()}}
 \item \href{#method-LogicalFilterState-is_any_filtered}{\code{LogicalFilterState$is_any_filtered()}}
 \item \href{#method-LogicalFilterState-get_call}{\code{LogicalFilterState$get_call()}}
-\item \href{#method-LogicalFilterState-ui}{\code{LogicalFilterState$ui()}}
-\item \href{#method-LogicalFilterState-server}{\code{LogicalFilterState$server()}}
 \item \href{#method-LogicalFilterState-set_selected}{\code{LogicalFilterState$set_selected()}}
 \item \href{#method-LogicalFilterState-clone}{\code{LogicalFilterState$clone()}}
 }
@@ -64,12 +62,14 @@ filter$set_selected(TRUE)
 <li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilterState" data-id="get_varlabel"><a href='../../teal.slice/html/FilterState.html#method-FilterState-get_varlabel'><code>teal.slice::FilterState$get_varlabel()</code></a></span></li>
 <li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilterState" data-id="get_varname"><a href='../../teal.slice/html/FilterState.html#method-FilterState-get_varname'><code>teal.slice::FilterState$get_varname()</code></a></span></li>
 <li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilterState" data-id="print"><a href='../../teal.slice/html/FilterState.html#method-FilterState-print'><code>teal.slice::FilterState$print()</code></a></span></li>
+<li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilterState" data-id="server"><a href='../../teal.slice/html/FilterState.html#method-FilterState-server'><code>teal.slice::FilterState$server()</code></a></span></li>
 <li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilterState" data-id="set_keep_na"><a href='../../teal.slice/html/FilterState.html#method-FilterState-set_keep_na'><code>teal.slice::FilterState$set_keep_na()</code></a></span></li>
 <li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilterState" data-id="set_keep_na_reactive"><a href='../../teal.slice/html/FilterState.html#method-FilterState-set_keep_na_reactive'><code>teal.slice::FilterState$set_keep_na_reactive()</code></a></span></li>
 <li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilterState" data-id="set_na_rm"><a href='../../teal.slice/html/FilterState.html#method-FilterState-set_na_rm'><code>teal.slice::FilterState$set_na_rm()</code></a></span></li>
 <li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilterState" data-id="set_selected_reactive"><a href='../../teal.slice/html/FilterState.html#method-FilterState-set_selected_reactive'><code>teal.slice::FilterState$set_selected_reactive()</code></a></span></li>
 <li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilterState" data-id="set_state"><a href='../../teal.slice/html/FilterState.html#method-FilterState-set_state'><code>teal.slice::FilterState$set_state()</code></a></span></li>
 <li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilterState" data-id="set_state_reactive"><a href='../../teal.slice/html/FilterState.html#method-FilterState-set_state_reactive'><code>teal.slice::FilterState$set_state_reactive()</code></a></span></li>
+<li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilterState" data-id="ui"><a href='../../teal.slice/html/FilterState.html#method-FilterState-ui'><code>teal.slice::FilterState$ui()</code></a></span></li>
 </ul>
 </details>
 }}
@@ -138,47 +138,6 @@ For \code{LogicalFilterState} it's a \verb{!<varname>} or \verb{<varname>} and o
 \if{html}{\out{<div class="r">}}\preformatted{LogicalFilterState$get_call()}\if{html}{\out{</div>}}
 }
 
-}
-\if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-LogicalFilterState-ui"></a>}}
-\if{latex}{\out{\hypertarget{method-LogicalFilterState-ui}{}}}
-\subsection{Method \code{ui()}}{
-UI Module for \code{EmptyFilterState}.
-This UI element contains available choices selection and
-checkbox whether to keep or not keep the \code{NA} values.
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{LogicalFilterState$ui(id)}\if{html}{\out{</div>}}
-}
-
-\subsection{Arguments}{
-\if{html}{\out{<div class="arguments">}}
-\describe{
-\item{\code{id}}{(\code{character(1)})\cr
-id of shiny element}
-}
-\if{html}{\out{</div>}}
-}
-}
-\if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-LogicalFilterState-server"></a>}}
-\if{latex}{\out{\hypertarget{method-LogicalFilterState-server}{}}}
-\subsection{Method \code{server()}}{
-Server module
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{LogicalFilterState$server(id)}\if{html}{\out{</div>}}
-}
-
-\subsection{Arguments}{
-\if{html}{\out{<div class="arguments">}}
-\describe{
-\item{\code{id}}{(\code{character(1)})\cr
-an ID string that corresponds with the ID used to call the module's UI function.}
-}
-\if{html}{\out{</div>}}
-}
-\subsection{Returns}{
-\code{moduleServer} function which returns \code{NULL}
-}
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-LogicalFilterState-set_selected"></a>}}
