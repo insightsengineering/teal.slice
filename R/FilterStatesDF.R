@@ -103,8 +103,8 @@ DFFilterStates <- R6::R6Class( # nolint
           observeEvent(removed_state_name(), {
             req(removed_state_name())
             for (fname in removed_state_name()) {
-              private$remove_filter_state_ui(1L, fname)
-              private$remove_shiny_inputs(fname, .input = input)
+              browser()
+              private$remove_filter_state_ui(1L, fname, .input = input)
             }
             removed_state_name(character(0))
           })

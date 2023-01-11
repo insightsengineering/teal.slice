@@ -508,8 +508,11 @@ FilterStates <- R6::R6Class( # nolint
     #' level, where shiny-session-namespace is different. That is why it's important
     #' to remove shiny elements from anywhere. In `add_filter_state` `session$ns(NULL)`
     #' is equivalent to `private$ns(queue_index)`.
+    #' In addition, an unused reactive is being removed from input:
+    #' method searches input for the unique matches with the filter name
+    #' and then removes objects constructed with current card id + filter name.
     #'
-    remove_filter_state_ui = function(queue_index, element_id) {
+    remove_filter_state_ui = function(queue_index, element_id, .input) {
       queue_id <- sprintf("%s-%s", queue_index, element_id)
       removeUI(selector = sprintf("#%s", private$card_ids[queue_id]))
       private$card_ids <- private$card_ids[names(private$card_ids) != queue_id]
@@ -517,21 +520,13 @@ FilterStates <- R6::R6Class( # nolint
         private$observers[[queue_id]]$destroy()
         private$observers[[queue_id]] <- NULL
       }
-    },
-    #' Remove unused reactive from shiny input. Function removeUI() keeps
-    #' the leftovers in the input. This default behavior of removeUI() may
-    #' change later which can make this method obsolete.
-    #' This method searches input for the unique matches with the filter name
-    #' and then removes objects constructed with current card id + filter name.
-    #' @param fname Filter name that is used as regular expression to search
-    #'  for filter names.
-    #' @param .input Shiny input object.
-    #'
-    remove_shiny_inputs = function(fname, .input) {
+      # Remove unused reactive from shiny input (leftover of removeUI).
+      # This default behavior may change in the future
+      # making this part obsolete.
       prefix = paste0(gsub("cards$", "", private$cards_container_id))
       invisible(
         lapply(
-          unique(grep(fname, names(.input), value = TRUE)),
+          unique(grep(element_id, names(.input), value = TRUE)),
           function(i) {
             .subset2(.input, "impl")$.values$remove(paste0(prefix, i))
           }
