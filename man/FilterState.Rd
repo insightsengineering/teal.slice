@@ -446,7 +446,8 @@ an ID string that corresponds with the ID used to call the module's UI function.
 \if{html}{\out{</div>}}
 }
 \subsection{Returns}{
-\code{moduleServer} function which returns \code{NULL}
+\code{moduleServer} function which returns reactive value signaling that remove button
+has been clicked
 }
 }
 \if{html}{\out{<hr>}}
