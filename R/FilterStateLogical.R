@@ -180,7 +180,6 @@ LogicalFilterState <- R6::R6Class( # nolint
           )
         )
       })
-
       div(
         div(
           class = "choices_state",
@@ -189,6 +188,7 @@ LogicalFilterState <- R6::R6Class( # nolint
             label = NULL,
             choiceNames = labels,
             choiceValues = as.character(private$choices),
+            selected = as.character(self$get_selected()),
             width = "100%"
           )
         ),
