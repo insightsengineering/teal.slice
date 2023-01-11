@@ -31,7 +31,6 @@ isolate(filter_state$get_call())
 
 filter <- teal.slice:::ChoicesFilterState$new(c("a", "b", "c"), varname = "name")
 filter$set_selected(c("c", "a"))
-
 }
 \keyword{internal}
 \section{Super class}{
@@ -208,7 +207,6 @@ invisibly \code{NULL}
 \if{html}{\out{<div class="r example copy">}}
 \preformatted{filter <- teal.slice:::ChoicesFilterState$new(c("a", "b", "c"), varname = "name")
 filter$set_selected(c("c", "a"))
-
 }
 \if{html}{\out{</div>}}
 
