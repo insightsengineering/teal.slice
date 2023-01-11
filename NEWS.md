@@ -14,7 +14,7 @@
 
 ### Bug fixes
 
-* Fixed an error where the `RangeFilterState` overlay histogram was displayed incorrectly and produced a warning.
+* Fixed an error where the `RangeFilterState` produced an error when using `bootstrap 4`.
 
 ### Miscellaneous
 
