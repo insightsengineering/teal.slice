@@ -100,126 +100,6 @@ ChoicesFilterState <- R6::R6Class( # nolint
     },
 
     #' @description
-    #' UI Module for `ChoicesFilterState`.
-    #' This UI element contains available choices selection and
-    #' checkbox whether to keep or not keep the `NA` values.
-    #' @param id (`character(1)`)\cr
-    #'  id of shiny element
-    ui = function(id) {
-      ns <- NS(id)
-      div(
-        if (length(private$choices) <= getOption("teal.threshold_slider_vs_checkboxgroup")) {
-          l_counts <- as.numeric(names(private$choices))
-          is_na_l_counts <- is.na(l_counts)
-          if (any(is_na_l_counts)) l_counts[is_na_l_counts] <- 0
-          labels <- lapply(seq_along(private$choices), function(i) {
-            l_count <- l_counts[i]
-            l_freq <- l_count / sum(l_counts)
-            if (is.na(l_freq) || is.nan(l_freq)) l_freq <- 0
-            div(
-              class = "choices_state_label",
-              style = sprintf("width:%s%%", l_freq * 100),
-              span(
-                class = "choices_state_label_text",
-                sprintf(
-                  "%s (%s)",
-                  private$choices[i],
-                  l_count
-                )
-              )
-            )
-          })
-          div(
-            class = "choices_state",
-            checkboxGroupInput(
-              ns("selection"),
-              label = NULL,
-              selected = self$get_selected(),
-              choiceNames = labels,
-              choiceValues = as.character(private$choices),
-              width = "100%"
-            )
-          )
-        } else {
-          teal.widgets::optionalSelectInput(
-            inputId = ns("selection"),
-            choices = stats::setNames(private$choices, sprintf("%s (%s)", private$choices, names(private$choices))),
-            selected = self$get_selected(),
-            multiple = TRUE,
-            options = shinyWidgets::pickerOptions(
-              actionsBox = TRUE,
-              liveSearch = (length(private$choices) > 10),
-              noneSelectedText = "Select a value"
-            )
-          )
-        },
-        if (private$na_count > 0) {
-          checkboxInput(
-            ns("keep_na"),
-            label = label_keep_na_count(private$na_count),
-            value = isolate(self$get_keep_na())
-          )
-        } else {
-          NULL
-        }
-      )
-    },
-
-    #' @description
-    #' Server module
-    #' @param id (`character(1)`)\cr
-    #'   an ID string that corresponds with the ID used to call the module's UI function.
-    #' @return `moduleServer` function which returns `NULL`
-    server = function(id) {
-      moduleServer(
-        id = id,
-        function(input, output, session) {
-          logger::log_trace("ChoicesFilterState$server initializing, dataname: { deparse1(private$input_dataname) }")
-          shiny::setBookmarkExclude(c("selection", "keep_na"))
-
-          private$observers$selection_reactive <- observeEvent(
-            private$selected_reactive(),
-            ignoreNULL = TRUE,
-            handlerExpr = {
-              updateCheckboxInput(
-                session = session,
-                inputId = "selection",
-                value =  private$selected_reactive()
-              )
-
-              logger::log_trace(sprintf(
-                "ChoicesFilterState$server@1 selection of variable %s changed, dataname: %s",
-                deparse1(self$get_varname()),
-                deparse1(private$input_dataname)
-              ))
-              private$selected_reactive(NULL)
-            }
-          )
-          private$observe_keep_na_reactive(private$keep_na_reactive())
-
-          private$observers$selection <- observeEvent(
-            ignoreNULL = FALSE, # ignoreNULL: we don't want to ignore NULL when nothing is selected in `selectInput`
-            ignoreInit = TRUE, # ignoreInit: should not matter because we set the UI with the desired initial state
-            eventExpr = input$selection,
-            handlerExpr = {
-              selection <- if (is.null(input$selection)) character(0) else input$selection
-              self$set_selected(selection)
-              logger::log_trace(sprintf(
-                "ChoicesFilterState$server@2 selection of variable %s changed, dataname: %s",
-                deparse1(self$get_varname()),
-                deparse1(private$input_dataname)
-              ))
-            }
-          )
-          private$observe_keep_na(input)
-
-          logger::log_trace("ChoicesFilterState$server initialized, dataname: { deparse1(private$input_dataname) }")
-          NULL
-        }
-      )
-    },
-
-    #' @description
     #' Set state
     #' @param state (`list`)\cr
     #'  contains fields relevant for a specific class
@@ -307,6 +187,127 @@ ChoicesFilterState <- R6::R6Class( # nolint
         ))
       }
       values[in_choices_mask]
+    },
+
+
+    #' @description
+    #' UI Module for `ChoicesFilterState`.
+    #' This UI element contains available choices selection and
+    #' checkbox whether to keep or not keep the `NA` values.
+    #' @param id (`character(1)`)\cr
+    #'  id of shiny element
+    ui_inputs = function(id) {
+      ns <- NS(id)
+      div(
+        if (length(private$choices) <= getOption("teal.threshold_slider_vs_checkboxgroup")) {
+          l_counts <- as.numeric(names(private$choices))
+          is_na_l_counts <- is.na(l_counts)
+          if (any(is_na_l_counts)) l_counts[is_na_l_counts] <- 0
+          labels <- lapply(seq_along(private$choices), function(i) {
+            l_count <- l_counts[i]
+            l_freq <- l_count / sum(l_counts)
+            if (is.na(l_freq) || is.nan(l_freq)) l_freq <- 0
+            div(
+              class = "choices_state_label",
+              style = sprintf("width:%s%%", l_freq * 100),
+              span(
+                class = "choices_state_label_text",
+                sprintf(
+                  "%s (%s)",
+                  private$choices[i],
+                  l_count
+                )
+              )
+            )
+          })
+          div(
+            class = "choices_state",
+            checkboxGroupInput(
+              ns("selection"),
+              label = NULL,
+              selected = self$get_selected(),
+              choiceNames = labels,
+              choiceValues = as.character(private$choices),
+              width = "100%"
+            )
+          )
+        } else {
+          teal.widgets::optionalSelectInput(
+            inputId = ns("selection"),
+            choices = stats::setNames(private$choices, sprintf("%s (%s)", private$choices, names(private$choices))),
+            selected = self$get_selected(),
+            multiple = TRUE,
+            options = shinyWidgets::pickerOptions(
+              actionsBox = TRUE,
+              liveSearch = (length(private$choices) > 10),
+              noneSelectedText = "Select a value"
+            )
+          )
+        },
+        if (private$na_count > 0) {
+          checkboxInput(
+            ns("keep_na"),
+            label = label_keep_na_count(private$na_count),
+            value = isolate(self$get_keep_na())
+          )
+        } else {
+          NULL
+        }
+      )
+    },
+
+    #' @description
+    #' Server module
+    #' @param id (`character(1)`)\cr
+    #'   an ID string that corresponds with the ID used to call the module's UI function.
+    #' @return `moduleServer` function which returns `NULL`
+    server_inputs = function(id) {
+      moduleServer(
+        id = id,
+        function(input, output, session) {
+          logger::log_trace("ChoicesFilterState$server initializing, dataname: { deparse1(private$input_dataname) }")
+          shiny::setBookmarkExclude(c("selection", "keep_na"))
+
+          private$observers$selection_reactive <- observeEvent(
+            private$selected_reactive(),
+            ignoreNULL = TRUE,
+            handlerExpr = {
+              updateCheckboxInput(
+                session = session,
+                inputId = "selection",
+                value =  private$selected_reactive()
+              )
+
+              logger::log_trace(sprintf(
+                "ChoicesFilterState$server@1 selection of variable %s changed, dataname: %s",
+                deparse1(self$get_varname()),
+                deparse1(private$input_dataname)
+              ))
+              private$selected_reactive(NULL)
+            }
+          )
+          private$observe_keep_na_reactive(private$keep_na_reactive())
+
+          private$observers$selection <- observeEvent(
+            ignoreNULL = FALSE, # ignoreNULL: we don't want to ignore NULL when nothing is selected in `selectInput`
+            ignoreInit = TRUE, # ignoreInit: should not matter because we set the UI with the desired initial state
+            eventExpr = input$selection,
+            handlerExpr = {
+              selection <- if (is.null(input$selection)) character(0) else input$selection
+              self$set_selected(selection)
+              logger::log_trace(sprintf(
+                "ChoicesFilterState$server@2 selection of variable %s changed, dataname: %s",
+                deparse1(self$get_varname()),
+                deparse1(private$input_dataname)
+              ))
+            }
+          )
+          private$observe_keep_na(input)
+
+          logger::log_trace("ChoicesFilterState$server initialized, dataname: { deparse1(private$input_dataname) }")
+          NULL
+        }
+      )
     }
   )
 )

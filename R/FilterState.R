@@ -415,7 +415,8 @@ FilterState <- R6::R6Class( # nolint
       moduleServer(
         id = id,
         function(input, output, session) {
-          NULL
+          private$server_inputs("inputs")
+          reactive(input$remove) # back to parent to remove self
         }
       )
     },
@@ -426,7 +427,36 @@ FilterState <- R6::R6Class( # nolint
     #'  id of shiny element. UI for this class contains simple message
     #'  informing that it's not supported
     ui = function(id) {
-      span("Variable type is not supported in teal framework. Please remove this filter and continue")
+      ns <- NS(id)
+      fluidPage(
+        theme = get_teal_bs_theme(),
+        fluidRow(
+          column(
+            width = 10,
+            class = "no-left-right-padding",
+            tags$div(
+              tags$span(self$get_varname(),
+                class = "filter_panel_varname"
+              ),
+              if (checkmate::test_character(self$get_varlabel(), min.len = 1) &&
+                tolower(self$get_varname()) != tolower(self$get_varlabel())) {
+                tags$span(self$get_varlabel(), class = "filter_panel_varlabel")
+              }
+            )
+          ),
+          column(
+            width = 2,
+            class = "no-left-right-padding",
+            actionLink(
+              ns("remove"),
+              label = "",
+              icon = icon("circle-xmark", lib = "font-awesome"),
+              class = "remove pull-right"
+            )
+          )
+        ),
+        private$ui_inputs(id = ns("inputs"))
+      )
     }
   ),
   private = list(
@@ -581,6 +611,14 @@ FilterState <- R6::R6Class( # nolint
     # @note throws an error if the casting did not execute successfully.
     cast_and_validate = function(values) {
       values
+    },
+
+    # shiny modules -----
+    ui_inputs = function(id) {
+      stop("abstract class")
+    },
+    server_inputs = function(id) {
+      stop("abstract class")
     }
   )
 )

@@ -142,175 +142,6 @@ RangeFilterState <- R6::R6Class( # nolint
       )
     },
 
-    #' UI Module for `RangeFilterState`.
-    #' This UI element contains two values for `min` and `max`
-    #' of the range and two checkboxes whether to keep the `NA` or `Inf`  values.
-    #' @param id (`character(1)`)\cr
-    #'  id of shiny element
-    ui = function(id) {
-      ns <- NS(id)
-      pretty_range_inputs <- private$get_pretty_range_inputs(private$choices)
-      fluidRow(
-        div(
-          class = "filterPlotOverlayRange",
-          plotOutput(ns("plot"), height = "100%")
-        ),
-        teal.widgets::optionalSliderInput(
-          inputId = ns("selection"),
-          label = NULL,
-          min = pretty_range_inputs["min"],
-          max = pretty_range_inputs["max"],
-          # on filter init without predefined value select "pretty" (wider) range
-          value = isolate({
-            if (identical(private$choices, self$get_selected())) {
-              pretty_range_inputs[c("min", "max")]
-            } else {
-              self$get_selected()
-            }
-          }),
-          width = "100%",
-          step = pretty_range_inputs["step"]
-        ),
-        if (private$inf_count > 0) {
-          checkboxInput(
-            ns("keep_inf"),
-            sprintf("Keep Inf (%s)", private$inf_count),
-            value = isolate(self$get_keep_inf())
-          )
-        } else {
-          NULL
-        },
-        if (private$na_count > 0) {
-          checkboxInput(
-            ns("keep_na"),
-            label_keep_na_count(private$na_count),
-            value = isolate(self$get_keep_inf())
-          )
-        } else {
-          NULL
-        }
-      )
-    },
-
-    #' @description
-    #' Server module
-    #' @param id (`character(1)`)\cr
-    #'   an ID string that corresponds with the ID used to call the module's UI function.
-    #' @return `moduleServer` function which returns `NULL`
-    server = function(id) {
-      moduleServer(
-        id = id,
-        function(input, output, session) {
-          logger::log_trace("RangeFilterState$server initializing, dataname: { deparse1(private$input_dataname) }")
-
-          shiny::setBookmarkExclude(c("selection", "keep_na", "keep_inf"))
-
-          output$plot <- renderPlot(
-            bg = "transparent",
-            height = 25,
-            expr = {
-              ggplot2::ggplot(private$histogram_data) +
-                ggplot2::aes_string(x = "x", y = "y") +
-                ggplot2::geom_area(
-                  fill = grDevices::rgb(66 / 255, 139 / 255, 202 / 255),
-                  color = NA,
-                  alpha = 0.2
-                ) +
-                ggplot2::theme_void() +
-                ggplot2::scale_y_continuous(expand = c(0, 0)) +
-                ggplot2::scale_x_continuous(expand = c(0, 0))
-            }
-          )
-
-          private$observers$selection_reactive <- observeEvent(
-            private$selected_reactive(),
-            ignoreNULL = TRUE,
-            handlerExpr = {
-              updateSliderInput(
-                session = session,
-                inputId = "selection",
-                value = private$selected_reactive()
-              )
-              private$selected_reactive(NULL)
-              logger::log_trace(sprintf(
-                "RangeFilterState$server@1 selection of variable %s changed, dataname: %s",
-                deparse1(self$get_varname()),
-                deparse1(private$input_dataname)
-              ))
-            }
-          )
-          private$observe_keep_na_reactive(private$keep_na_reactive())
-
-          private$observers$keep_inf_reactive <- observeEvent(
-            private$keep_inf_reactive(),
-            ignoreNULL = TRUE,
-            handlerExpr = {
-              updateCheckboxInput(
-                session = session,
-                inputId = "keep_inf",
-                value =  private$keep_inf_reactive()
-              )
-              logger::log_trace(sprintf(
-                "RangeFilterState$server@2 keep_inf of variable %s set to: %s, dataname: %s",
-                deparse1(self$get_varname()),
-                private$keep_inf_reactive(),
-                deparse1(private$input_dataname)
-              ))
-              private$keep_inf_reactive(NULL)
-            }
-          )
-
-          private$observers$selection <- observeEvent(
-            ignoreNULL = FALSE, # ignoreNULL: we don't want to ignore NULL when nothing is selected in `selectInput`,
-            ignoreInit = TRUE, # ignoreInit: should not matter because we set the UI with the desired initial state
-            eventExpr = input$selection,
-            handlerExpr = {
-              # because we extended real range into rounded one we need to apply intersect(range_input, range_real)
-              selection_state <- as.numeric(pmax(pmin(input$selection, private$choices[2]), private$choices[1]))
-              if (!setequal(selection_state, self$get_selected())) {
-                validate(
-                  need(
-                    input$selection[1] <= input$selection[2],
-                    "Left range boundary should be lower than right"
-                  )
-                )
-                self$set_selected(selection_state)
-              }
-              logger::log_trace(
-                sprintf(
-                  "RangeFilterState$server@3 selection of variable %s changed, dataname: %s",
-                  deparse1(self$get_varname()),
-                  deparse1(private$input_dataname)
-                )
-              )
-            }
-          )
-
-          private$observe_keep_na(input)
-
-          private$observers$keep_inf <- observeEvent(
-            ignoreNULL = FALSE, # ignoreNULL: we don't want to ignore NULL when nothing is selected in the `selectInput`
-            ignoreInit = TRUE, # ignoreInit: should not matter because we set the UI with the desired initial state
-            eventExpr = input$keep_inf,
-            handlerExpr = {
-              keep_inf <- if (is.null(input$keep_inf)) FALSE else input$keep_inf
-              self$set_keep_inf(keep_inf)
-              logger::log_trace(
-                sprintf(
-                  "RangeFilterState$server@4 keep_inf of variable %s set to: %s, dataname: %s",
-                  deparse1(self$get_varname()),
-                  deparse1(input$keep_inf),
-                  deparse1(private$input_dataname)
-                )
-              )
-            }
-          )
-          logger::log_trace("RangeFilterState$server initialized, dataname: { deparse1(private$input_dataname) }")
-          NULL
-        }
-      )
-    },
-
     #' @description
     #' Set if `Inf` should be kept
     #' @param value (`logical(1)`)\cr
@@ -507,6 +338,173 @@ RangeFilterState <- R6::R6Class( # nolint
         values[2] <- private$choices[2]
       }
       values
+    },
+
+    #' UI Module for `RangeFilterState`.
+    #' This UI element contains two values for `min` and `max`
+    #' of the range and two checkboxes whether to keep the `NA` or `Inf`  values.
+    #' @param id (`character(1)`)\cr
+    #'  id of shiny element
+    ui_inputs = function(id) {
+      ns <- NS(id)
+      pretty_range_inputs <- private$get_pretty_range_inputs(private$choices)
+      fluidRow(
+        div(
+          class = "filterPlotOverlayRange",
+          plotOutput(ns("plot"), height = "100%")
+        ),
+        teal.widgets::optionalSliderInput(
+          inputId = ns("selection"),
+          label = NULL,
+          min = pretty_range_inputs["min"],
+          max = pretty_range_inputs["max"],
+          # on filter init without predefined value select "pretty" (wider) range
+          value = isolate({
+            if (identical(private$choices, self$get_selected())) {
+              pretty_range_inputs[c("min", "max")]
+            } else {
+              self$get_selected()
+            }
+          }),
+          width = "100%",
+          step = pretty_range_inputs["step"]
+        ),
+        if (private$inf_count > 0) {
+          checkboxInput(
+            ns("keep_inf"),
+            sprintf("Keep Inf (%s)", private$inf_count),
+            value = isolate(self$get_keep_inf())
+          )
+        } else {
+          NULL
+        },
+        if (private$na_count > 0) {
+          checkboxInput(
+            ns("keep_na"),
+            label_keep_na_count(private$na_count),
+            value = isolate(self$get_keep_inf())
+          )
+        } else {
+          NULL
+        }
+      )
+    },
+
+    #' @description
+    #' Server module
+    #' @param id (`character(1)`)\cr
+    #'   an ID string that corresponds with the ID used to call the module's UI function.
+    #' @return `moduleServer` function which returns `NULL`
+    server_inputs = function(id) {
+      moduleServer(
+        id = id,
+        function(input, output, session) {
+          logger::log_trace("RangeFilterState$server initializing, dataname: { deparse1(private$input_dataname) }")
+
+          output$plot <- renderPlot(
+            bg = "transparent",
+            height = 25,
+            expr = {
+              ggplot2::ggplot(private$histogram_data) +
+                ggplot2::aes_string(x = "x", y = "y") +
+                ggplot2::geom_area(
+                  fill = grDevices::rgb(66 / 255, 139 / 255, 202 / 255),
+                  color = NA,
+                  alpha = 0.2
+                ) +
+                ggplot2::theme_void() +
+                ggplot2::scale_y_continuous(expand = c(0, 0)) +
+                ggplot2::scale_x_continuous(expand = c(0, 0))
+            }
+          )
+
+          private$observers$selection_reactive <- observeEvent(
+            private$selected_reactive(),
+            ignoreNULL = TRUE,
+            handlerExpr = {
+              updateSliderInput(
+                session = session,
+                inputId = "selection",
+                value = private$selected_reactive()
+              )
+              private$selected_reactive(NULL)
+              logger::log_trace(sprintf(
+                "RangeFilterState$server@1 selection of variable %s changed, dataname: %s",
+                deparse1(self$get_varname()),
+                deparse1(private$input_dataname)
+              ))
+            }
+          )
+          private$observe_keep_na_reactive(private$keep_na_reactive())
+
+          private$observers$keep_inf_reactive <- observeEvent(
+            private$keep_inf_reactive(),
+            ignoreNULL = TRUE,
+            handlerExpr = {
+              updateCheckboxInput(
+                session = session,
+                inputId = "keep_inf",
+                value =  private$keep_inf_reactive()
+              )
+              logger::log_trace(sprintf(
+                "RangeFilterState$server@2 keep_inf of variable %s set to: %s, dataname: %s",
+                deparse1(self$get_varname()),
+                private$keep_inf_reactive(),
+                deparse1(private$input_dataname)
+              ))
+              private$keep_inf_reactive(NULL)
+            }
+          )
+
+          private$observers$selection <- observeEvent(
+            ignoreNULL = FALSE, # ignoreNULL: we don't want to ignore NULL when nothing is selected in `selectInput`,
+            ignoreInit = TRUE, # ignoreInit: should not matter because we set the UI with the desired initial state
+            eventExpr = input$selection,
+            handlerExpr = {
+              # because we extended real range into rounded one we need to apply intersect(range_input, range_real)
+              selection_state <- as.numeric(pmax(pmin(input$selection, private$choices[2]), private$choices[1]))
+              if (!setequal(selection_state, self$get_selected())) {
+                validate(
+                  need(
+                    input$selection[1] <= input$selection[2],
+                    "Left range boundary should be lower than right"
+                  )
+                )
+                self$set_selected(selection_state)
+              }
+              logger::log_trace(
+                sprintf(
+                  "RangeFilterState$server@3 selection of variable %s changed, dataname: %s",
+                  deparse1(self$get_varname()),
+                  deparse1(private$input_dataname)
+                )
+              )
+            }
+          )
+
+          private$observe_keep_na(input)
+
+          private$observers$keep_inf <- observeEvent(
+            ignoreNULL = FALSE, # ignoreNULL: we don't want to ignore NULL when nothing is selected in the `selectInput`
+            ignoreInit = TRUE, # ignoreInit: should not matter because we set the UI with the desired initial state
+            eventExpr = input$keep_inf,
+            handlerExpr = {
+              keep_inf <- if (is.null(input$keep_inf)) FALSE else input$keep_inf
+              self$set_keep_inf(keep_inf)
+              logger::log_trace(
+                sprintf(
+                  "RangeFilterState$server@4 keep_inf of variable %s set to: %s, dataname: %s",
+                  deparse1(self$get_varname()),
+                  deparse1(input$keep_inf),
+                  deparse1(private$input_dataname)
+                )
+              )
+            }
+          )
+          logger::log_trace("RangeFilterState$server initialized, dataname: { deparse1(private$input_dataname) }")
+          NULL
+        }
+      )
     }
   )
 )

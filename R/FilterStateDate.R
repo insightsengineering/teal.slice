@@ -104,12 +104,82 @@ DateFilterState <- R6::R6Class( # nolint
     },
 
     #' @description
+    #' Sets the selected time frame of this `DateFilterState`.
+    #'
+    #' @param value (`Date(2)`) the lower and the upper bound of the selected
+    #'   time frame. Must not contain NA values.
+    #'
+    #' @return invisibly `NULL`.
+    #'
+    #' @note Casts the passed object to `Date` before validating the input
+    #' making it possible to pass any object coercible to `Date` to this method.
+    #'
+    #' @examples
+    #' date <- as.Date("13/09/2021")
+    #' filter <- teal.slice:::DateFilterState$new(
+    #'   c(date, date + 1, date + 2, date + 3),
+    #'   varname = "name"
+    #' )
+    #' filter$set_selected(c(date + 1, date + 2))
+    set_selected = function(value) {
+      super$set_selected(value)
+    }
+  ),
+  private = list(
+    validate_selection = function(value) {
+      if (!is(value, "Date")) {
+        stop(
+          sprintf(
+            "value of the selection for `%s` in `%s` should be a Date",
+            self$get_varname(deparse = TRUE),
+            self$get_dataname(deparse = TRUE)
+          )
+        )
+      }
+      pre_msg <- sprintf(
+        "dataset '%s', variable '%s': ",
+        self$get_dataname(deparse = TRUE),
+        self$get_varname(deparse = TRUE)
+      )
+      check_in_range(value, private$choices, pre_msg = pre_msg)
+    },
+    cast_and_validate = function(values) {
+      tryCatch(
+        expr = {
+          values <- as.Date(values)
+          if (any(is.na(values))) stop()
+        },
+        error = function(error) stop("The array of set values must contain values coercible to Date.")
+      )
+      if (length(values) != 2) stop("The array of set values must have length two.")
+      values
+    },
+    remove_out_of_bound_values = function(values) {
+      if (values[1] < private$choices[1]) {
+        warning(paste(
+          "Value:", values[1], "is outside of the possible range for column", private$varname,
+          "of dataset", private$input_dataname, "."
+        ))
+        values[1] <- private$choices[1]
+      }
+
+      if (values[2] > private$choices[2]) {
+        warning(paste(
+          "Value:", values[2], "is outside of the possible range for column", private$varname,
+          "of dataset", private$input_dataname, "."
+        ))
+        values[2] <- private$choices[2]
+      }
+      values
+    },
+
+        #' @description
     #' UI Module for `DateFilterState`.
     #' This UI element contains two date selections for `min` and `max`
     #' of the range and a checkbox whether to keep the `NA` values.
     #' @param id (`character(1)`)\cr
     #'  id of shiny element
-    ui = function(id) {
+    ui_inputs = function(id) {
       ns <- NS(id)
       div(
         div(
@@ -156,7 +226,7 @@ DateFilterState <- R6::R6Class( # nolint
     #' @param id (`character(1)`)\cr
     #'   an ID string that corresponds with the ID used to call the module's UI function.
     #' @return `moduleServer` function which returns `NULL`
-    server = function(id) {
+    server_inputs = function(id) {
       moduleServer(
         id = id,
         function(input, output, session) {
@@ -230,76 +300,6 @@ DateFilterState <- R6::R6Class( # nolint
           NULL
         }
       )
-    },
-
-    #' @description
-    #' Sets the selected time frame of this `DateFilterState`.
-    #'
-    #' @param value (`Date(2)`) the lower and the upper bound of the selected
-    #'   time frame. Must not contain NA values.
-    #'
-    #' @return invisibly `NULL`.
-    #'
-    #' @note Casts the passed object to `Date` before validating the input
-    #' making it possible to pass any object coercible to `Date` to this method.
-    #'
-    #' @examples
-    #' date <- as.Date("13/09/2021")
-    #' filter <- teal.slice:::DateFilterState$new(
-    #'   c(date, date + 1, date + 2, date + 3),
-    #'   varname = "name"
-    #' )
-    #' filter$set_selected(c(date + 1, date + 2))
-    set_selected = function(value) {
-      super$set_selected(value)
-    }
-  ),
-  private = list(
-    validate_selection = function(value) {
-      if (!is(value, "Date")) {
-        stop(
-          sprintf(
-            "value of the selection for `%s` in `%s` should be a Date",
-            self$get_varname(deparse = TRUE),
-            self$get_dataname(deparse = TRUE)
-          )
-        )
-      }
-      pre_msg <- sprintf(
-        "dataset '%s', variable '%s': ",
-        self$get_dataname(deparse = TRUE),
-        self$get_varname(deparse = TRUE)
-      )
-      check_in_range(value, private$choices, pre_msg = pre_msg)
-    },
-    cast_and_validate = function(values) {
-      tryCatch(
-        expr = {
-          values <- as.Date(values)
-          if (any(is.na(values))) stop()
-        },
-        error = function(error) stop("The array of set values must contain values coercible to Date.")
-      )
-      if (length(values) != 2) stop("The array of set values must have length two.")
-      values
-    },
-    remove_out_of_bound_values = function(values) {
-      if (values[1] < private$choices[1]) {
-        warning(paste(
-          "Value:", values[1], "is outside of the possible range for column", private$varname,
-          "of dataset", private$input_dataname, "."
-        ))
-        values[1] <- private$choices[1]
-      }
-
-      if (values[2] > private$choices[2]) {
-        warning(paste(
-          "Value:", values[2], "is outside of the possible range for column", private$varname,
-          "of dataset", private$input_dataname, "."
-        ))
-        values[2] <- private$choices[2]
-      }
-      values
     }
   )
 )
