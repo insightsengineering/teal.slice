@@ -209,8 +209,8 @@ DatetimeFilterState <- R6::R6Class( # nolint
             div(class = "w-45 text-center", {
               x <- shinyWidgets::airDatepickerInput(
                 inputId = ns("selection_start"),
-                value = isolate(self$get_selected())[1],
-                startView = isolate(self$get_selected())[1],
+                value = self$get_selected()[1],
+                startView = self$get_selected()[1],
                 timepicker = TRUE,
                 minDate = private$choices[1],
                 maxDate = private$choices[2],
@@ -229,8 +229,8 @@ DatetimeFilterState <- R6::R6Class( # nolint
             div(class = "w-45 text-center", {
               x <- shinyWidgets::airDatepickerInput(
                 inputId = ns("selection_end"),
-                value = isolate(self$get_selected())[2],
-                startView = isolate(self$get_selected())[2],
+                value = self$get_selected()[2],
+                startView = self$get_selected()[2],
                 timepicker = TRUE,
                 minDate = private$choices[1],
                 maxDate = private$choices[2],
@@ -253,7 +253,7 @@ DatetimeFilterState <- R6::R6Class( # nolint
           checkboxInput(
             ns("keep_na"),
             label_keep_na_count(private$na_count),
-            value = isolate(self$get_keep_na())
+            value = self$get_keep_na()
           )
         } else {
           NULL

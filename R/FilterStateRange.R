@@ -319,13 +319,11 @@ RangeFilterState <- R6::R6Class( # nolint
           min = pretty_range_inputs["min"],
           max = pretty_range_inputs["max"],
           # on filter init without predefined value select "pretty" (wider) range
-          value = isolate({
-            if (identical(private$choices, self$get_selected())) {
-              pretty_range_inputs[c("min", "max")]
-            } else {
-              self$get_selected()
-            }
-          }),
+          value =if (identical(private$choices, self$get_selected())) {
+            pretty_range_inputs[c("min", "max")]
+          } else {
+            self$get_selected()
+          },
           width = "100%",
           step = pretty_range_inputs["step"]
         ),
@@ -333,7 +331,7 @@ RangeFilterState <- R6::R6Class( # nolint
           checkboxInput(
             ns("keep_inf"),
             sprintf("Keep Inf (%s)", private$inf_count),
-            value = isolate(self$get_keep_inf())
+            value = self$get_keep_inf()
           )
         } else {
           NULL
@@ -342,7 +340,7 @@ RangeFilterState <- R6::R6Class( # nolint
           checkboxInput(
             ns("keep_na"),
             label_keep_na_count(private$na_count),
-            value = isolate(self$get_keep_inf())
+            value = self$get_keep_inf()
           )
         } else {
           NULL

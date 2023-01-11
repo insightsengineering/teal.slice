@@ -195,8 +195,8 @@ DateFilterState <- R6::R6Class( # nolint
             dateRangeInput(
               inputId = ns("selection"),
               label = NULL,
-              start = isolate(self$get_selected())[1],
-              end = isolate(self$get_selected())[2],
+              start = self$get_selected()[1],
+              end = self$get_selected()[2],
               min = private$choices[1],
               max = private$choices[2],
               width = "100%"
@@ -213,7 +213,7 @@ DateFilterState <- R6::R6Class( # nolint
           checkboxInput(
             ns("keep_na"),
             label_keep_na_count(private$na_count),
-            value = isolate(self$get_keep_na())
+            value = self$get_keep_na()
           )
         } else {
           NULL
