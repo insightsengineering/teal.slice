@@ -319,7 +319,7 @@ RangeFilterState <- R6::R6Class( # nolint
           min = pretty_range_inputs["min"],
           max = pretty_range_inputs["max"],
           # on filter init without predefined value select "pretty" (wider) range
-          value =if (identical(private$choices, self$get_selected())) {
+          value = if (identical(private$choices, self$get_selected())) {
             pretty_range_inputs[c("min", "max")]
           } else {
             self$get_selected()

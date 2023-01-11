@@ -29,13 +29,13 @@
 #' \cr
 #' \cr
 #' @section Modifying state:
-#' Modifying a `FilterState` object is possible in three scenarios depicted below:
-#' \if{html}{\figure{filter_state_reactivity.jpg}{options: width="100\%" alt="Figure: filter_state_reactivity.jpg"}}
-#' \if{latex}{\figure{filter_state_reactivity.jpg}{options: width=7cm}}
+#' Modifying a `FilterState` object is possible in three scenarios:
 #' * In the interactive session by directly specifying values of `selected`,
 #'   `keep_na` or `keep_inf` using `set_state` method (to update all at once),
 #'   or using `set_selected`, `set_keep_na` or `set_keep_inf`
-#' * In a `teal` application by changing appropriate inputs
+#' * In a running application by changing appropriate inputs
+#' * In a running application by using [filter_state_api] which directly uses `set_state` method
+#'  of the `FilterState` object.
 #'
 #' @keywords internal
 FilterState <- R6::R6Class( # nolint

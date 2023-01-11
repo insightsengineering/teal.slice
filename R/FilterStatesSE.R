@@ -213,7 +213,7 @@ SEFilterStates <- R6::R6Class( # nolint
         value <- resolve_state(state$subset[[varname]])
         if (varname %in% names(filter_states)) {
           fstate <- filter_states[[varname]]
-          fstate$set_state(value = value)
+          fstate$set_state(value)
         } else {
           fstate <- init_filter_state(
             SummarizedExperiment::rowData(data)[[varname]],

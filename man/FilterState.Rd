@@ -38,14 +38,14 @@ chain.
 }
 \section{Modifying state}{
 
-Modifying a \code{FilterState} object is possible in three scenarios depicted below:
-\if{html}{\figure{filter_state_reactivity.jpg}{options: width="100\%" alt="Figure: filter_state_reactivity.jpg"}}
-\if{latex}{\figure{filter_state_reactivity.jpg}{options: width=7cm}}
+Modifying a \code{FilterState} object is possible in three scenarios:
 \itemize{
 \item In the interactive session by directly specifying values of \code{selected},
 \code{keep_na} or \code{keep_inf} using \code{set_state} method (to update all at once),
 or using \code{set_selected}, \code{set_keep_na} or \code{set_keep_inf}
-\item In a \code{teal} application by changing appropriate inputs
+\item In a running application by changing appropriate inputs
+\item In a running application by using \link{filter_state_api} which directly uses \code{set_state} method
+of the \code{FilterState} object.
 }
 }
 
