@@ -214,29 +214,6 @@ LogicalFilterState <- R6::R6Class( # nolint
       moduleServer(
         id = id,
         function(input, output, session) {
-          logger::log_trace("LogicalFilterState$server initializing, dataname: { deparse1(private$input_dataname) }")
-
-          shiny::setBookmarkExclude(c("selection", "keep_na"))
-
-          private$observers$selection_reactive <- observeEvent(
-            private$selected_reactive(),
-            ignoreNULL = TRUE,
-            handlerExpr = {
-              updateRadioButtons(
-                session = session,
-                inputId = "selection",
-                selected =  private$selected_reactive()
-              )
-              logger::log_trace(sprintf(
-                "LogicalFilterState$server@1 selection of variable %s changed, dataname: %s",
-                deparse1(self$get_varname()),
-                deparse1(private$input_dataname)
-              ))
-              private$selected_reactive(NULL)
-            }
-          )
-          private$observe_keep_na_reactive(private$keep_na_reactive())
-
           private$observers$selection <- observeEvent(
             ignoreNULL = FALSE,
             ignoreInit = TRUE,

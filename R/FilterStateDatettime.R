@@ -271,31 +271,6 @@ DatetimeFilterState <- R6::R6Class( # nolint
         id = id,
         function(input, output, session) {
           logger::log_trace("DatetimeFilterState$server initializing, dataname: { deparse1(private$input_dataname) }")
-          shiny::setBookmarkExclude(c("selection_start", "selection_end", "keep_na"))
-          private$observers$selection_reactive <- observeEvent(
-            private$selected_reactive(),
-            ignoreNULL = TRUE,
-            handlerExpr = {
-              shinyWidgets::updateAirDateInput(
-                session = session,
-                inputId = "selection_start",
-                value = private$selected_reactive()[1]
-              )
-
-              shinyWidgets::updateAirDateInput(
-                session = session,
-                inputId = "selection_end",
-                value = private$selected_reactive()[2]
-              )
-              logger::log_trace(sprintf(
-                "DatetimeFilterState$server@1 selection of variable %s changed, dataname: %s",
-                deparse1(self$get_varname()),
-                deparse1(private$input_dataname)
-              ))
-              private$selected_reactive(NULL)
-            }
-          )
-          private$observe_keep_na_reactive(private$keep_na_reactive())
 
           private$observers$selection <- observeEvent(
             ignoreNULL = FALSE, # ignoreNULL: we don't want to ignore NULL when nothing is selected in `selectInput`,

@@ -62,7 +62,6 @@ RangeFilterState <- R6::R6Class( # nolint
       private$inf_count <- sum(is.infinite(x))
       private$is_integer <- checkmate::test_integerish(x)
       private$keep_inf <- reactiveVal(FALSE)
-      private$keep_inf_reactive <- reactiveVal(FALSE)
 
       return(invisible(self))
     },
@@ -163,26 +162,6 @@ RangeFilterState <- R6::R6Class( # nolint
     },
 
     #' @description
-    #' Set if `Inf` should be kept when passing filters using `set_filter_state`
-    #' @param value (`logical(1)`)\cr
-    #'  Value(s) which come from the filter set by the user. Value is set in `server`
-    #'  modules after setting the filters using `set_filter_state`. Values are set to
-    #'  `private$keep_inf_reactive` which is reactive.
-    set_keep_inf_reactive = function(value) {
-      checkmate::assert_flag(value)
-      private$keep_inf_reactive(value)
-      logger::log_trace(
-        sprintf(
-          "%s$set_keep_inf_reactive of variable %s set to %s, dataname: %s.",
-          class(self)[1],
-          deparse1(self$get_varname()),
-          value,
-          deparse1(private$input_dataname)
-        )
-      )
-    },
-
-    #' @description
     #' Set state
     #' @param state (`list`)\cr
     #'  contains fields relevant for a specific class
@@ -197,24 +176,6 @@ RangeFilterState <- R6::R6Class( # nolint
         self$set_keep_inf(state$keep_inf)
       }
       super$set_state(state[names(state) %in% c("selected", "keep_na")])
-      invisible(NULL)
-    },
-
-    #' @description
-    #' Set state when using `set_filter_state`
-    #' @param state (`list`)\cr
-    #'  contains fields relevant for a specific class
-    #' \itemize{
-    #' \item{`selected`}{ defines initial selection}
-    #' \item{`keep_na` (`logical`)}{ defines whether to keep or remove `NA` values}
-    #' \item{`keep_inf` (`logical`)}{ defines whether to keep or remove `Inf` values}
-    #' }
-    set_state_reactive = function(state) {
-      stopifnot(is.list(state) && all(names(state) %in% c("selected", "keep_na", "keep_inf")))
-      if (!is.null(state$keep_inf)) {
-        self$set_keep_inf_reactive(state$keep_inf)
-      }
-      super$set_state_reactive(state[names(state) %in% c("selected", "keep_na")])
       invisible(NULL)
     },
 
@@ -240,7 +201,6 @@ RangeFilterState <- R6::R6Class( # nolint
   private = list(
     histogram_data = data.frame(),
     keep_inf = NULL, # because it holds reactiveVal
-    keep_inf_reactive = NULL, # because it holds reactiveVal
     inf_count = integer(0),
     is_integer = logical(0),
 
@@ -417,45 +377,6 @@ RangeFilterState <- R6::R6Class( # nolint
                 ggplot2::scale_x_continuous(expand = c(0, 0))
             }
           )
-
-          private$observers$selection_reactive <- observeEvent(
-            private$selected_reactive(),
-            ignoreNULL = TRUE,
-            handlerExpr = {
-              updateSliderInput(
-                session = session,
-                inputId = "selection",
-                value = private$selected_reactive()
-              )
-              private$selected_reactive(NULL)
-              logger::log_trace(sprintf(
-                "RangeFilterState$server@1 selection of variable %s changed, dataname: %s",
-                deparse1(self$get_varname()),
-                deparse1(private$input_dataname)
-              ))
-            }
-          )
-          private$observe_keep_na_reactive(private$keep_na_reactive())
-
-          private$observers$keep_inf_reactive <- observeEvent(
-            private$keep_inf_reactive(),
-            ignoreNULL = TRUE,
-            handlerExpr = {
-              updateCheckboxInput(
-                session = session,
-                inputId = "keep_inf",
-                value =  private$keep_inf_reactive()
-              )
-              logger::log_trace(sprintf(
-                "RangeFilterState$server@2 keep_inf of variable %s set to: %s, dataname: %s",
-                deparse1(self$get_varname()),
-                private$keep_inf_reactive(),
-                deparse1(private$input_dataname)
-              ))
-              private$keep_inf_reactive(NULL)
-            }
-          )
-
           private$observers$selection <- observeEvent(
             ignoreNULL = FALSE, # ignoreNULL: we don't want to ignore NULL when nothing is selected in `selectInput`,
             ignoreInit = TRUE, # ignoreInit: should not matter because we set the UI with the desired initial state

@@ -43,7 +43,6 @@ filter$set_selected(c("c", "a"))
 \item \href{#method-ChoicesFilterState-is_any_filtered}{\code{ChoicesFilterState$is_any_filtered()}}
 \item \href{#method-ChoicesFilterState-get_call}{\code{ChoicesFilterState$get_call()}}
 \item \href{#method-ChoicesFilterState-set_state}{\code{ChoicesFilterState$set_state()}}
-\item \href{#method-ChoicesFilterState-set_state_reactive}{\code{ChoicesFilterState$set_state_reactive()}}
 \item \href{#method-ChoicesFilterState-set_selected}{\code{ChoicesFilterState$set_selected()}}
 \item \href{#method-ChoicesFilterState-clone}{\code{ChoicesFilterState$clone()}}
 }
@@ -62,9 +61,7 @@ filter$set_selected(c("c", "a"))
 <li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilterState" data-id="print"><a href='../../teal.slice/html/FilterState.html#method-FilterState-print'><code>teal.slice::FilterState$print()</code></a></span></li>
 <li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilterState" data-id="server"><a href='../../teal.slice/html/FilterState.html#method-FilterState-server'><code>teal.slice::FilterState$server()</code></a></span></li>
 <li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilterState" data-id="set_keep_na"><a href='../../teal.slice/html/FilterState.html#method-FilterState-set_keep_na'><code>teal.slice::FilterState$set_keep_na()</code></a></span></li>
-<li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilterState" data-id="set_keep_na_reactive"><a href='../../teal.slice/html/FilterState.html#method-FilterState-set_keep_na_reactive'><code>teal.slice::FilterState$set_keep_na_reactive()</code></a></span></li>
 <li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilterState" data-id="set_na_rm"><a href='../../teal.slice/html/FilterState.html#method-FilterState-set_na_rm'><code>teal.slice::FilterState$set_na_rm()</code></a></span></li>
-<li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilterState" data-id="set_selected_reactive"><a href='../../teal.slice/html/FilterState.html#method-FilterState-set_selected_reactive'><code>teal.slice::FilterState$set_selected_reactive()</code></a></span></li>
 <li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilterState" data-id="ui"><a href='../../teal.slice/html/FilterState.html#method-FilterState-ui'><code>teal.slice::FilterState$ui()</code></a></span></li>
 </ul>
 </details>
@@ -146,28 +143,6 @@ optional \verb{is.na(<varname>)}.
 Set state
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{ChoicesFilterState$set_state(state)}\if{html}{\out{</div>}}
-}
-
-\subsection{Arguments}{
-\if{html}{\out{<div class="arguments">}}
-\describe{
-\item{\code{state}}{(\code{list})\cr
-contains fields relevant for a specific class
-\itemize{
-\item{\code{selected}}{ defines initial selection}
-\item{\code{keep_na} (\code{logical})}{ defines whether to keep or remove \code{NA} values}
-}}
-}
-\if{html}{\out{</div>}}
-}
-}
-\if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-ChoicesFilterState-set_state_reactive"></a>}}
-\if{latex}{\out{\hypertarget{method-ChoicesFilterState-set_state_reactive}{}}}
-\subsection{Method \code{set_state_reactive()}}{
-Set state when using \code{set_filter_state}
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{ChoicesFilterState$set_state_reactive(state)}\if{html}{\out{</div>}}
 }
 
 \subsection{Arguments}{

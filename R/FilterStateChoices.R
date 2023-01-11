@@ -116,22 +116,6 @@ ChoicesFilterState <- R6::R6Class( # nolint
     },
 
     #' @description
-    #' Set state when using `set_filter_state`
-    #' @param state (`list`)\cr
-    #'  contains fields relevant for a specific class
-    #' \itemize{
-    #' \item{`selected`}{ defines initial selection}
-    #' \item{`keep_na` (`logical`)}{ defines whether to keep or remove `NA` values}
-    #' }
-    set_state_reactive = function(state) {
-      if (!is.null(state$selected)) {
-        state$selected <- as.character(state$selected)
-      }
-      super$set_state_reactive(state)
-      invisible(NULL)
-    },
-
-    #' @description
     #' Sets the selected values of this `ChoicesFilterState`.
     #'
     #' @param value (`character`) the array of the selected choices.
@@ -265,27 +249,6 @@ ChoicesFilterState <- R6::R6Class( # nolint
         id = id,
         function(input, output, session) {
           logger::log_trace("ChoicesFilterState$server initializing, dataname: { deparse1(private$input_dataname) }")
-          shiny::setBookmarkExclude(c("selection", "keep_na"))
-
-          private$observers$selection_reactive <- observeEvent(
-            private$selected_reactive(),
-            ignoreNULL = TRUE,
-            handlerExpr = {
-              updateCheckboxInput(
-                session = session,
-                inputId = "selection",
-                value =  private$selected_reactive()
-              )
-
-              logger::log_trace(sprintf(
-                "ChoicesFilterState$server@1 selection of variable %s changed, dataname: %s",
-                deparse1(self$get_varname()),
-                deparse1(private$input_dataname)
-              ))
-              private$selected_reactive(NULL)
-            }
-          )
-          private$observe_keep_na_reactive(private$keep_na_reactive())
 
           private$observers$selection <- observeEvent(
             ignoreNULL = FALSE, # ignoreNULL: we don't want to ignore NULL when nothing is selected in `selectInput`

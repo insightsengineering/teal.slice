@@ -134,7 +134,7 @@ MatrixFilterStates <- R6::R6Class( # nolint
         value <- resolve_state(state[[varname]])
         if (varname %in% names(filter_states)) {
           fstate <- filter_states[[varname]]
-          set_state(x = fstate, value = value)
+          fstate$set_state(value)
         } else {
           fstate <- init_filter_state(
             data[, varname],
@@ -143,7 +143,7 @@ MatrixFilterStates <- R6::R6Class( # nolint
             input_dataname = private$input_dataname,
             extract_type = "matrix"
           )
-          set_state(x = fstate, value = value, is_reactive = FALSE)
+          fstate$set_state(value)
           self$queue_push(
             x = fstate,
             queue_index = "subset",
