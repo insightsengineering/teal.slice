@@ -488,6 +488,11 @@ FilterState <- R6::R6Class( # nolint
       stop("abstract class")
     },
 
+    # @description
+    # module displaying input to keep or remove NA in the FilterState call
+    # @param id `shiny` id parameter
+    #  renders checkbox input only when variable from which FilterState has
+    #  been created has some NA values.
     keep_na_ui = function(id) {
       ns <- NS(id)
       if (private$na_count > 0) {
@@ -500,10 +505,20 @@ FilterState <- R6::R6Class( # nolint
         NULL
       }
     },
+
+    # @description
+    # module to handle NA values in the FilterState
+    # @param shiny `id` parameter passed to moduleServer
+    #  module sets `private$keep_na` according to the selection.
+    #  Module also updates a UI element if the `private$keep_na` has been
+    #  changed through the api
     keep_na_srv = function(id) {
       moduleServer(id, function(input, output, session) {
+        # this observer is needed in the situation when private$keep_inf has been
+        # changed directly by the api - then it's needed to rerender UI element
+        # to show relevant values
         private$observers$keep_na_api <- observeEvent(
-          ignoreNULL = FALSE, # ignoreNULL: we don't want to ignore NULL when nothing is selected in the `selectInput`,
+          ignoreNULL = FALSE, # nothing selected is possible for NA
           ignoreInit = TRUE, # ignoreInit: should not matter because we set the UI with the desired initial state
           eventExpr = self$get_keep_na(),
           handlerExpr = {

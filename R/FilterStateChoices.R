@@ -242,8 +242,31 @@ ChoicesFilterState <- R6::R6Class( # nolint
         function(input, output, session) {
           logger::log_trace("ChoicesFilterState$server initializing, dataname: { deparse1(private$input_dataname) }")
 
+          # this observer is needed in the situation when private$selected has been
+          # changed directly by the api - then it's needed to rerender UI element
+          # to show relevant values
+          private$observers$selection_api <- observeEvent(
+            ignoreNULL = FALSE, # it's possible that nothing is selected
+            ignoreInit = TRUE,
+            eventExpr = self$get_selected(),
+            handlerExpr = {
+              if (!setequal(self$get_selected(), input$selection)) {
+                updateCheckboxInput(
+                  session = session,
+                  inputId = "selection",
+                  value =  self$get_selected()
+                )
+                logger::log_trace(sprintf(
+                  "ChoicesFilterState$server@1 selection of variable %s changed, dataname: %s",
+                  deparse1(self$get_varname()),
+                  deparse1(private$input_dataname)
+                ))
+              }
+            }
+          )
+
           private$observers$selection <- observeEvent(
-            ignoreNULL = FALSE, # ignoreNULL: we don't want to ignore NULL when nothing is selected in `selectInput`
+            ignoreNULL = FALSE, # it's possible that nothing is selected
             ignoreInit = TRUE, # ignoreInit: should not matter because we set the UI with the desired initial state
             eventExpr = input$selection,
             handlerExpr = {

@@ -360,8 +360,10 @@ RangeFilterState <- R6::R6Class( # nolint
             }
           )
 
-          # need to observe private$selected as it might be changed by the API
-          private$observers$seleted <- observeEvent(
+          # this observer is needed in the situation when private$selected has been
+          # changed directly by the api - then it's needed to rerender UI element
+          # to show relevant values
+          private$observers$selection_api <- observeEvent(
             ignoreNULL = FALSE,
             ignoreInit = TRUE,
             eventExpr = self$get_selected(),
@@ -410,6 +412,12 @@ RangeFilterState <- R6::R6Class( # nolint
         }
       )
     },
+
+    # @description
+    # module displaying input to keep or remove Inf in the FilterState call
+    # @param id `shiny` id parameter
+    #  renders checkbox input only when variable from which FilterState has
+    #  been created has some Inf values.
     keep_inf_ui = function(id) {
       ns <- NS(id)
       if (private$inf_count > 0) {
@@ -423,10 +431,19 @@ RangeFilterState <- R6::R6Class( # nolint
       }
     },
 
+    # @description
+    # module to handle Inf values in the FilterState
+    # @param shiny `id` parametr passed to moduleServer
+    #  module sets `private$keep_inf` according to the selection.
+    #  Module also updates a UI element if the `private$keep_inf` has been
+    #  changed through the api
     keep_inf_srv = function(id) {
       moduleServer(id, function(input, output, session) {
+        # this observer is needed in the situation when private$keep_na has been
+        # changed directly by the api - then it's needed to rerender UI element
+        # to show relevant values
         private$observers$keep_inf_api <- observeEvent(
-          ignoreNULL = FALSE, # ignoreNULL: we don't want to ignore NULL when nothing is selected in the `selectInput`,
+          ignoreNULL = TRUE, # its not possible for range that NULL is selected
           ignoreInit = TRUE, # ignoreInit: should not matter because we set the UI with the desired initial state
           eventExpr = self$get_keep_inf(),
           handlerExpr = {
@@ -439,7 +456,7 @@ RangeFilterState <- R6::R6Class( # nolint
           }
         )
         private$observers$keep_inf <- observeEvent(
-          ignoreNULL = FALSE, # ignoreNULL: we don't want to ignore NULL when nothing is selected in the `selectInput`,
+          ignoreNULL = TRUE, # it's not possible for range that NULL is selected
           ignoreInit = TRUE, # ignoreInit: should not matter because we set the UI with the desired initial state
           eventExpr = input$value,
           handlerExpr = {

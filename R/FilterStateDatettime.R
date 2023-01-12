@@ -264,8 +264,38 @@ DatetimeFilterState <- R6::R6Class( # nolint
         function(input, output, session) {
           logger::log_trace("DatetimeFilterState$server initializing, dataname: { deparse1(private$input_dataname) }")
 
+          # this observer is needed in the situation when private$selected has been
+          # changed directly by the api - then it's needed to rerender UI element
+          # to show relevant values
+          private$observers$selection_api <- observeEvent(
+            ignoreNULL = TRUE, # dates needs to be selected
+            ignoreInit = TRUE, # on init selected == default, so no need to trigger
+            eventExpr = self$get_selected(),
+            handlerExpr = {
+              if (!setequal(self$get_selected(), input$selection)) {
+                shinyWidgets::updateAirDateInput(
+                  session = session,
+                  inputId = "selection_start",
+                  value = self$get_selected()[1]
+                )
+
+                shinyWidgets::updateAirDateInput(
+                  session = session,
+                  inputId = "selection_end",
+                  value = self$get_selected()[2]
+                )
+                logger::log_trace(sprintf(
+                  "DatetimeFilterState$server@1 selection of variable %s changed, dataname: %s",
+                  deparse1(self$get_varname()),
+                  deparse1(private$input_dataname)
+                ))
+              }
+            }
+          )
+
+
           private$observers$selection <- observeEvent(
-            ignoreNULL = FALSE, # ignoreNULL: we don't want to ignore NULL when nothing is selected in `selectInput`,
+            ignoreNULL = TRUE, # dates needs to be selected
             ignoreInit = TRUE, # ignoreInit: should not matter because we set the UI with the desired initial state
             eventExpr = {
               input$selection_start
@@ -295,30 +325,40 @@ DatetimeFilterState <- R6::R6Class( # nolint
 
           private$keep_na_srv("keep_na")
 
-          private$observers$reset1 <- observeEvent(input$start_date_reset, {
-            shinyWidgets::updateAirDateInput(
-              session = session,
-              inputId = "selection_start",
-              value = private$choices[1]
-            )
-            logger::log_trace(sprintf(
-              "DatetimeFilterState$server@2 reset start date of variable %s, dataname: %s",
-              deparse1(self$get_varname()),
-              deparse1(private$input_dataname)
-            ))
-          })
-          private$observers$reset2 <- observeEvent(input$end_date_reset, {
-            shinyWidgets::updateAirDateInput(
-              session = session,
-              inputId = "selection_end",
-              value = private$choices[2]
-            )
-            logger::log_trace(sprintf(
-              "DatetimeFilterState$server@3 reset end date of variable %s, dataname: %s",
-              deparse1(self$get_varname()),
-              deparse1(private$input_dataname)
-            ))
-          })
+          private$observers$reset1 <- observeEvent(
+            ignoreInit = TRUE, # reset button shouldn't be trigger on init
+            ignoreNULL = TRUE, # it's impossible and wrong to set default to NULL
+            input$start_date_reset,
+            {
+              shinyWidgets::updateAirDateInput(
+                session = session,
+                inputId = "selection_start",
+                value = private$choices[1]
+              )
+              logger::log_trace(sprintf(
+                "DatetimeFilterState$server@2 reset start date of variable %s, dataname: %s",
+                deparse1(self$get_varname()),
+                deparse1(private$input_dataname)
+              ))
+            }
+          )
+          private$observers$reset2 <- observeEvent(
+            ignoreInit = TRUE, # reset button shouldn't be trigger on init
+            ignoreNULL = TRUE, # it's impossible and wrong to set default to NULL
+            input$end_date_reset,
+            {
+              shinyWidgets::updateAirDateInput(
+                session = session,
+                inputId = "selection_end",
+                value = private$choices[2]
+              )
+              logger::log_trace(sprintf(
+                "DatetimeFilterState$server@3 reset end date of variable %s, dataname: %s",
+                deparse1(self$get_varname()),
+                deparse1(private$input_dataname)
+              ))
+            }
+          )
           logger::log_trace("DatetimeFilterState$server initialized, dataname: { deparse1(private$input_dataname) }")
           NULL
         }

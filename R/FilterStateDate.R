@@ -224,8 +224,32 @@ DateFilterState <- R6::R6Class( # nolint
         function(input, output, session) {
           logger::log_trace("DateFilterState$server initializing, dataname: { deparse1(private$input_dataname) }")
 
+          # this observer is needed in the situation when private$selected has been
+          # changed directly by the api - then it's needed to rerender UI element
+          # to show relevant values
+          private$observers$seletion_api <- observeEvent(
+            ignoreNULL = TRUE, # dates needs to be selected
+            ignoreInit = TRUE,
+            eventExpr = self$get_selected(),
+            handlerExpr = {
+              if (!setequal(self$get_selected(), input$selection)) {
+                updateDateRangeInput(
+                  session = session,
+                  inputId = "selection",
+                  start = self$get_selected()[1],
+                  end = self$get_selected()[2]
+                )
+                logger::log_trace(sprintf(
+                  "DateFilterState$server@1 selection of variable %s changed, dataname: %s",
+                  deparse1(self$get_varname()),
+                  deparse1(private$input_dataname)
+                ))
+              }
+            }
+          )
+
           private$observers$selection <- observeEvent(
-            ignoreNULL = FALSE, # ignoreNULL: we don't want to ignore NULL when nothing is selected in `selectInput`,
+            ignoreNULL = TRUE, # dates needs to be selected
             ignoreInit = TRUE, # ignoreInit: should not matter because we set the UI with the desired initial state
             eventExpr = input$selection,
             handlerExpr = {
@@ -240,6 +264,7 @@ DateFilterState <- R6::R6Class( # nolint
               ))
             }
           )
+
 
           private$keep_na_srv("keep_na")
 

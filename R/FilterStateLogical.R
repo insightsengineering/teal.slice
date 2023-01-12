@@ -206,8 +206,31 @@ LogicalFilterState <- R6::R6Class( # nolint
       moduleServer(
         id = id,
         function(input, output, session) {
+          # this observer is needed in the situation when private$selected has been
+          # changed directly by the api - then it's needed to rerender UI element
+          # to show relevant values
+          private$observers$seleted_api <- observeEvent(
+            ignoreNULL = TRUE, # this is radio button so something have to be selected
+            ignoreInit = TRUE,
+            eventExpr = self$get_selected(),
+            handlerExpr = {
+              if (!setequal(self$get_selected(), input$selection)) {
+                updateRadioButtons(
+                  session = session,
+                  inputId = "selection",
+                  selected =  self$get_selected()
+                )
+                logger::log_trace(sprintf(
+                  "LogicalFilterState$server@1 selection of variable %s changed, dataname: %s",
+                  deparse1(self$get_varname()),
+                  deparse1(private$input_dataname)
+                ))
+              }
+            }
+          )
+
           private$observers$selection <- observeEvent(
-            ignoreNULL = FALSE,
+            ignoreNULL = TRUE, # in radio button something has to be selected to input$selection can't be NULL
             ignoreInit = TRUE,
             eventExpr = input$selection,
             handlerExpr = {
