@@ -272,18 +272,23 @@ DatetimeFilterState <- R6::R6Class( # nolint
             ignoreInit = TRUE, # on init selected == default, so no need to trigger
             eventExpr = self$get_selected(),
             handlerExpr = {
-              if (!setequal(self$get_selected(), input$selection)) {
-                shinyWidgets::updateAirDateInput(
-                  session = session,
-                  inputId = "selection_start",
-                  value = self$get_selected()[1]
-                )
+              if (!all(self$get_selected() == c(input$selection_start, input$selection_end))) {
+                if (self$get_selected()[1] != input$selection_start) {
+                  shinyWidgets::updateAirDateInput(
+                    session = session,
+                    inputId = "selection_start",
+                    value = self$get_selected()[1]
+                  )
+                }
 
-                shinyWidgets::updateAirDateInput(
-                  session = session,
-                  inputId = "selection_end",
-                  value = self$get_selected()[2]
-                )
+                if (self$get_selected()[2] != input$selection_end) {
+                  shinyWidgets::updateAirDateInput(
+                    session = session,
+                    inputId = "selection_end",
+                    value = self$get_selected()[2]
+                  )
+                }
+
                 logger::log_trace(sprintf(
                   "DatetimeFilterState$server@1 selection of variable %s changed, dataname: %s",
                   deparse1(self$get_varname()),
