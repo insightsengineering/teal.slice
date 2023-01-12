@@ -209,15 +209,7 @@ DateFilterState <- R6::R6Class( # nolint
             icon = icon("fas fa-undo")
           )
         ),
-        if (private$na_count > 0) {
-          checkboxInput(
-            ns("keep_na"),
-            label_keep_na_count(private$na_count),
-            value = self$get_keep_na()
-          )
-        } else {
-          NULL
-        }
+        private$keep_na_ui(ns("keep_na"))
       )
     },
 
@@ -249,7 +241,7 @@ DateFilterState <- R6::R6Class( # nolint
             }
           )
 
-          private$observe_keep_na(input)
+          private$keep_na_srv("keep_na")
 
           private$observers$reset1 <- observeEvent(input$start_date_reset, {
             updateDateRangeInput(

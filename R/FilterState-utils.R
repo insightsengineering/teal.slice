@@ -1,8 +1,3 @@
-# label of checkbox to keep / remove NAs
-label_keep_na_count <- function(na_count) {
-  sprintf("Keep NA (%s)", na_count)
-}
-
 #' Initializes `FilterState`
 #'
 #' Initializes `FilterState` depending on a variable class.\cr

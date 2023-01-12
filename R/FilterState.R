@@ -332,7 +332,6 @@ FilterState <- R6::R6Class( # nolint
       moduleServer(
         id = id,
         function(input, output, session) {
-          output$inputs <- renderUI(private$ui_inputs(session$ns("inputs")))
           private$server_inputs("inputs")
           reactive(input$remove) # back to parent to remove self
         }
@@ -373,7 +372,7 @@ FilterState <- R6::R6Class( # nolint
             )
           )
         ),
-        uiOutput(ns("inputs"))
+        private$ui_inputs(ns("inputs"))
       )
     }
   ),
@@ -434,29 +433,7 @@ FilterState <- R6::R6Class( # nolint
     #' If `keep_na = TRUE` `is.na(varname)` is added to the returned call.
     #' Otherwise returned call excludes `NA` when executed.
     observe_keep_na = function(input) {
-      private$observers$keep_na <- observeEvent(
-        ignoreNULL = FALSE, # ignoreNULL: we don't want to ignore NULL when nothing is selected in the `selectInput`,
-        ignoreInit = TRUE, # ignoreInit: should not matter because we set the UI with the desired initial state
-        eventExpr = input$keep_na,
-        handlerExpr = {
-          keep_na <- if (is.null(input$keep_na)) {
-            FALSE
-          } else {
-            input$keep_na
-          }
-          self$set_keep_na(keep_na)
-          logger::log_trace(
-            sprintf(
-              "%s$server keep_na of variable %s set to: %s, dataname: %s",
-              class(self)[1],
-              deparse1(self$get_varname()),
-              deparse1(input$keep_na),
-              deparse1(private$input_dataname)
-            )
-          )
-        }
-      )
-      invisible(NULL)
+
     },
 
     #' Set choices
@@ -509,6 +486,59 @@ FilterState <- R6::R6Class( # nolint
     #' module with inputs
     server_inputs = function(id) {
       stop("abstract class")
+    },
+
+    keep_na_ui = function(id) {
+      ns <- NS(id)
+      if (private$na_count > 0) {
+        checkboxInput(
+          ns("value"),
+          sprintf("Keep NA (%s)", private$na_count),
+          value = self$get_keep_na()
+        )
+      } else {
+        NULL
+      }
+    },
+    keep_na_srv = function(id) {
+      moduleServer(id, function(input, output, session) {
+        private$observers$keep_na_api <- observeEvent(
+          ignoreNULL = FALSE, # ignoreNULL: we don't want to ignore NULL when nothing is selected in the `selectInput`,
+          ignoreInit = TRUE, # ignoreInit: should not matter because we set the UI with the desired initial state
+          eventExpr = self$get_keep_na(),
+          handlerExpr = {
+            if (!setequal(self$get_keep_na(), input$value)) {
+              updateCheckboxInput(
+                inputId = "input",
+                value = self$get_keep_na()
+              )
+            }
+          }
+        )
+        private$observers$keep_na <- observeEvent(
+          ignoreNULL = FALSE, # ignoreNULL: we don't want to ignore NULL when nothing is selected in the `selectInput`,
+          ignoreInit = TRUE, # ignoreInit: should not matter because we set the UI with the desired initial state
+          eventExpr = input$value,
+          handlerExpr = {
+            keep_na <- if (is.null(input$value)) {
+              FALSE
+            } else {
+              input$value
+            }
+            self$set_keep_na(keep_na)
+            logger::log_trace(
+              sprintf(
+                "%s$server keep_na of variable %s set to: %s, dataname: %s",
+                class(self)[1],
+                deparse1(self$get_varname()),
+                deparse1(input$value),
+                deparse1(private$input_dataname)
+              )
+            )
+          }
+        )
+        invisible(NULL)
+      })
     }
   )
 )

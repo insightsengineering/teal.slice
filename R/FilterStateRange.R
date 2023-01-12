@@ -327,24 +327,8 @@ RangeFilterState <- R6::R6Class( # nolint
           width = "100%",
           step = pretty_range_inputs["step"]
         ),
-        if (private$inf_count > 0) {
-          checkboxInput(
-            ns("keep_inf"),
-            sprintf("Keep Inf (%s)", private$inf_count),
-            value = self$get_keep_inf()
-          )
-        } else {
-          NULL
-        },
-        if (private$na_count > 0) {
-          checkboxInput(
-            ns("keep_na"),
-            label_keep_na_count(private$na_count),
-            value = self$get_keep_inf()
-          )
-        } else {
-          NULL
-        }
+        private$keep_inf_ui(ns("keep_inf")),
+        private$keep_na_ui(ns("keep_na"))
       )
     },
 
@@ -375,6 +359,23 @@ RangeFilterState <- R6::R6Class( # nolint
                 ggplot2::scale_x_continuous(expand = c(0, 0))
             }
           )
+
+          # need to observe private$selected as it might be changed by the API
+          private$observers$seleted <- observeEvent(
+            ignoreNULL = FALSE,
+            ignoreInit = TRUE,
+            eventExpr = self$get_selected(),
+            handlerExpr = {
+              if (!setequal(self$get_selected(), input$selection)) {
+                updateSliderInput(
+                  session = session,
+                  inputId = "selection",
+                  value = private$selected()
+                )
+              }
+            }
+          )
+
           private$observers$selection <- observeEvent(
             ignoreNULL = FALSE, # ignoreNULL: we don't want to ignore NULL when nothing is selected in `selectInput`,
             ignoreInit = TRUE, # ignoreInit: should not matter because we set the UI with the desired initial state
@@ -401,29 +402,66 @@ RangeFilterState <- R6::R6Class( # nolint
             }
           )
 
-          private$observe_keep_na(input)
+          private$keep_inf_srv("keep_inf")
+          private$keep_na_srv("keep_na")
 
-          private$observers$keep_inf <- observeEvent(
-            ignoreNULL = FALSE, # ignoreNULL: we don't want to ignore NULL when nothing is selected in the `selectInput`
-            ignoreInit = TRUE, # ignoreInit: should not matter because we set the UI with the desired initial state
-            eventExpr = input$keep_inf,
-            handlerExpr = {
-              keep_inf <- if (is.null(input$keep_inf)) FALSE else input$keep_inf
-              self$set_keep_inf(keep_inf)
-              logger::log_trace(
-                sprintf(
-                  "RangeFilterState$server@4 keep_inf of variable %s set to: %s, dataname: %s",
-                  deparse1(self$get_varname()),
-                  deparse1(input$keep_inf),
-                  deparse1(private$input_dataname)
-                )
-              )
-            }
-          )
           logger::log_trace("RangeFilterState$server initialized, dataname: { deparse1(private$input_dataname) }")
           NULL
         }
       )
+    },
+    keep_inf_ui = function(id) {
+      ns <- NS(id)
+      if (private$inf_count > 0) {
+        checkboxInput(
+          ns("value"),
+          sprintf("Keep Inf (%s)", private$inf_count),
+          value = self$get_keep_inf()
+        )
+      } else {
+        NULL
+      }
+    },
+
+    keep_inf_srv = function(id) {
+      moduleServer(id, function(input, output, session) {
+        private$observers$keep_inf_api <- observeEvent(
+          ignoreNULL = FALSE, # ignoreNULL: we don't want to ignore NULL when nothing is selected in the `selectInput`,
+          ignoreInit = TRUE, # ignoreInit: should not matter because we set the UI with the desired initial state
+          eventExpr = self$get_keep_inf(),
+          handlerExpr = {
+            if (!setequal(self$get_keep_inf(), input$value)) {
+              updateCheckboxInput(
+                inputId = "input",
+                value = self$get_keep_inf()
+              )
+            }
+          }
+        )
+        private$observers$keep_inf <- observeEvent(
+          ignoreNULL = FALSE, # ignoreNULL: we don't want to ignore NULL when nothing is selected in the `selectInput`,
+          ignoreInit = TRUE, # ignoreInit: should not matter because we set the UI with the desired initial state
+          eventExpr = input$value,
+          handlerExpr = {
+            keep_inf <- if (is.null(input$keep_inf)) {
+              FALSE
+            } else {
+              input$value
+            }
+            self$set_keep_inf(keep_inf)
+            logger::log_trace(
+              sprintf(
+                "%s$server keep_inf of variable %s set to: %s, dataname: %s",
+                class(self)[1],
+                deparse1(self$get_varname()),
+                deparse1(input$value),
+                deparse1(private$input_dataname)
+              )
+            )
+          }
+        )
+        invisible(NULL)
+      })
     }
   )
 )

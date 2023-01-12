@@ -192,15 +192,7 @@ LogicalFilterState <- R6::R6Class( # nolint
             width = "100%"
           )
         ),
-        if (private$na_count > 0) {
-          checkboxInput(
-            ns("keep_na"),
-            label_keep_na_count(private$na_count),
-            value = self$get_keep_na()
-          )
-        } else {
-          NULL
-        }
+        private$keep_na_ui(ns("keep_na"))
       )
     },
 
@@ -234,7 +226,7 @@ LogicalFilterState <- R6::R6Class( # nolint
             }
           )
 
-          private$observe_keep_na(input)
+          private$keep_na_srv("keep_na")
 
           logger::log_trace("LogicalFilterState$server initialized, dataname: { deparse1(private$input_dataname) }")
           NULL
