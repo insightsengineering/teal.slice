@@ -106,7 +106,10 @@ EmptyFilterState <- R6::R6Class( # nolint
         self$set_keep_na(state$keep_na)
       }
       invisible(NULL)
-    },
+    }
+  ),
+
+  private = list(
 
     #' @description
     #' UI Module for `EmptyFilterState`.
