@@ -491,7 +491,6 @@ FilterStates <- R6::R6Class( # nolint
     #' and then removes objects constructed with current card id + filter name.
     #'
     remove_filter_state_ui = function(queue_index, element_id, .input) {
-      browser()
       queue_id <- sprintf("%s-%s", queue_index, element_id)
       removeUI(selector = sprintf("#%s", private$card_ids[queue_id]))
       private$card_ids <- private$card_ids[names(private$card_ids) != queue_id]
