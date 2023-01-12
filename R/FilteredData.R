@@ -944,7 +944,26 @@ FilteredData <- R6::R6Class( # nolint
           NULL
         }
       )
+    },
+
+    ui_filters_active_count = function(id) {
+      ns <- NS(id)
+      textOutput(ns("n_filters_active"))
+    },
+
+    srv_filters_active_count = function(id) {
+      moduleServer(id = id, function(input, output, session) {
+        n_filters_active <- reactive({
+          length(unlist(self$get_filter_state(), recursive = FALSE))
+        })
+
+        output$n_filters_active <- renderText({
+          # req(n_filters_active > 0L)
+          sprintf("%s filter%s active", n_filters_active(), ifelse(n_filters_active() == 1, "", "s"))
+        })
+      })
     }
+
   ),
 
   ## __Private Methods ====
