@@ -726,6 +726,10 @@ FilteredData <- R6::R6Class( # nolint
                 }
               )
             )
+          ),
+          div(
+            id = ns("filters_active_count"),
+            self$ui_filters_active_count(ns("teal_filters_count"))
           )
         ),
         div(
@@ -825,6 +829,8 @@ FilteredData <- R6::R6Class( # nolint
               )
             }
           )
+
+          self$srv_filters_active_count("teal_filters_count")
 
           private$filter_panel_ui_id <- session$ns(NULL)
           observeEvent(
