@@ -448,7 +448,10 @@ return \code{moduleServer} function which returns \code{NULL}
 \code{observeEvent} for remove-filter-state is set and also from \code{FilteredDataset}
 level, where shiny-session-namespace is different. That is why it's important
 to remove shiny elements from anywhere. In \code{add_filter_state} \code{session$ns(NULL)}
-is equivalent to \code{private$ns(queue_index)}. This means that
+is equivalent to \code{private$ns(queue_index)}.
+In addition, an unused reactive is being removed from input:
+method searches input for the unique matches with the filter name
+and then removes objects constructed with current card id + filter name.
 }
 }
 \if{html}{\out{<hr>}}
