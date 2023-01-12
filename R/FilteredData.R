@@ -703,15 +703,12 @@ FilteredData <- R6::R6Class( # nolint
                 title = "Remove active filters",
                 class = "remove_all pull-right"
               ),
-              tags$a(
-                href = "javascript:void(0)",
-                class = "remove pull-right",
-                onclick = sprintf(
-                  "$('#%s').toggle();",
-                  ns("filter_active_vars_contents")
-                ),
+              actionLink(
+                ns("minimise_filter_overview"),
+                label = NULL,
+                icon = icon("circle-minus", lib = "font-awesome"),
                 title = "Minimise panel",
-                tags$span(icon("circle-minus", lib = "font-awesome"))
+                class = "remove pull-right"
               )
             )
           ),
