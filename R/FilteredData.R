@@ -726,7 +726,7 @@ FilteredData <- R6::R6Class( # nolint
           ),
           div(
             id = ns("filters_active_count"),
-            self$ui_filters_active_count(ns("teal_filters_count"))
+            textOutput(ns("teal_filters_count"))
           )
         ),
         div(
@@ -827,7 +827,13 @@ FilteredData <- R6::R6Class( # nolint
             }
           )
 
-          self$srv_filters_active_count("teal_filters_count")
+          output$teal_filters_count <- renderText({
+            n_filters_active <- reactive({
+              length(unlist(self$get_filter_state(), recursive = FALSE))
+            })
+            # req(n_filters_active > 0L)
+            sprintf("%s filter%s active", n_filters_active(), ifelse(n_filters_active() == 1, "", "s"))
+          })
 
           observeEvent(input[["minimise_filter_overview"]], {
             shinyjs::toggle("filter_active_vars_contents")
@@ -954,24 +960,6 @@ FilteredData <- R6::R6Class( # nolint
           NULL
         }
       )
-    },
-
-    ui_filters_active_count = function(id) {
-      ns <- NS(id)
-      textOutput(ns("n_filters_active"))
-    },
-
-    srv_filters_active_count = function(id) {
-      moduleServer(id = id, function(input, output, session) {
-        n_filters_active <- reactive({
-          length(unlist(self$get_filter_state(), recursive = FALSE))
-        })
-
-        output$n_filters_active <- renderText({
-          # req(n_filters_active > 0L)
-          sprintf("%s filter%s active", n_filters_active(), ifelse(n_filters_active() == 1, "", "s"))
-        })
-      })
     }
 
   ),
