@@ -33,8 +33,6 @@ isolate(filter_state$get_call())
 \item \href{#method-EmptyFilterState-get_call}{\code{EmptyFilterState$get_call()}}
 \item \href{#method-EmptyFilterState-get_state}{\code{EmptyFilterState$get_state()}}
 \item \href{#method-EmptyFilterState-set_state}{\code{EmptyFilterState$set_state()}}
-\item \href{#method-EmptyFilterState-ui_inputs}{\code{EmptyFilterState$ui_inputs()}}
-\item \href{#method-EmptyFilterState-server_inputs}{\code{EmptyFilterState$server_inputs()}}
 \item \href{#method-EmptyFilterState-clone}{\code{EmptyFilterState$clone()}}
 }
 }
@@ -157,45 +155,6 @@ contains fields relevant for a specific class
 \itemize{
 \item{\code{keep_na} (\code{logical})}{ defines whether to keep or remove \code{NA} values}
 }}
-}
-\if{html}{\out{</div>}}
-}
-}
-\if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-EmptyFilterState-ui_inputs"></a>}}
-\if{latex}{\out{\hypertarget{method-EmptyFilterState-ui_inputs}{}}}
-\subsection{Method \code{ui_inputs()}}{
-UI Module for \code{EmptyFilterState}.
-This UI element contains checkbox input to
-filter or keep missing values.
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{EmptyFilterState$ui_inputs(id)}\if{html}{\out{</div>}}
-}
-
-\subsection{Arguments}{
-\if{html}{\out{<div class="arguments">}}
-\describe{
-\item{\code{id}}{(\code{character(1)})\cr
-id of shiny element}
-}
-\if{html}{\out{</div>}}
-}
-}
-\if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-EmptyFilterState-server_inputs"></a>}}
-\if{latex}{\out{\hypertarget{method-EmptyFilterState-server_inputs}{}}}
-\subsection{Method \code{server_inputs()}}{
-Controls selection of \code{keep_na} checkbox input
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{EmptyFilterState$server_inputs(id)}\if{html}{\out{</div>}}
-}
-
-\subsection{Arguments}{
-\if{html}{\out{<div class="arguments">}}
-\describe{
-\item{\code{id}}{(\code{character(1)})\cr
-an ID string that corresponds with the ID used to call the module's UI function.
-return \code{moduleServer} function which returns \code{NULL}}
 }
 \if{html}{\out{</div>}}
 }
