@@ -279,7 +279,7 @@ ChoicesFilterState <- R6::R6Class( # nolint
               ))
             }
           )
-          private$keep_na_server("keep_na")
+          private$keep_na_srv("keep_na")
 
           logger::log_trace("ChoicesFilterState$server initialized, dataname: { deparse1(private$input_dataname) }")
           NULL
