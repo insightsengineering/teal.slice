@@ -427,7 +427,13 @@ FilterStates <- R6::R6Class( # nolint
               deparse1(private$input_dataname)
             )
           )
-          shiny::setBookmarkExclude("remove")
+
+          # card_id of inserted card needs to be saved in private$card_ids as
+          # it might be removed by the several events:
+          #   - remove button in FilterStates module
+          #   - remove button in FilteredDataset module
+          #   - remove button in FilteredData module
+          #   - API call remove_filter_state
           card_id <- session$ns("card")
           queue_id <- sprintf("%s-%s", queue_index, element_id)
           private$card_ids[queue_id] <- card_id
@@ -436,47 +442,19 @@ FilterStates <- R6::R6Class( # nolint
             selector = sprintf("#%s", private$cards_container_id),
             where = "beforeEnd",
             # add span with id to be removable
-            ui = {
-              div(
-                id = card_id,
-                class = "list-group-item",
-                fluidPage(
-                  theme = get_teal_bs_theme(),
-                  fluidRow(
-                    column(
-                      width = 10,
-                      class = "no-left-right-padding",
-                      tags$div(
-                        tags$span(filter_state$get_varname(),
-                          class = "filter_panel_varname"
-                        ),
-                        if (checkmate::test_character(filter_state$get_varlabel(), min.len = 1) &&
-                          tolower(filter_state$get_varname()) != tolower(filter_state$get_varlabel())) {
-                          tags$span(filter_state$get_varlabel(), class = "filter_panel_varlabel")
-                        }
-                      )
-                    ),
-                    column(
-                      width = 2,
-                      class = "no-left-right-padding",
-                      actionLink(
-                        session$ns("remove"),
-                        label = "",
-                        icon = icon("circle-xmark", lib = "font-awesome"),
-                        class = "remove pull-right"
-                      )
-                    )
-                  ),
-                  filter_state$ui(id = session$ns("content"))
-                )
-              )
-            }
+            ui = div(
+              id = card_id,
+              class = "list-group-item",
+              filter_state$ui(session$ns("content"))
+            )
           )
-          filter_state$server(id = "content")
+          # signal sent from filter_state when it is marked for removal
+          remove_fs <- filter_state$server(id = "content")
+
           private$observers[[queue_id]] <- observeEvent(
             ignoreInit = TRUE,
             ignoreNULL = TRUE,
-            eventExpr = input$remove,
+            eventExpr = remove_fs(),
             handlerExpr = {
               logger::log_trace(paste(
                 "{ class(self)[1] }$insert_filter_state_ui@1 removing FilterState from queue '{ queue_index }',",
@@ -507,9 +485,12 @@ FilterStates <- R6::R6Class( # nolint
     #' `observeEvent` for remove-filter-state is set and also from `FilteredDataset`
     #' level, where shiny-session-namespace is different. That is why it's important
     #' to remove shiny elements from anywhere. In `add_filter_state` `session$ns(NULL)`
-    #' is equivalent to `private$ns(queue_index)`. This means that
+    #' is equivalent to `private$ns(queue_index)`.
+    #' In addition, an unused reactive is being removed from input:
+    #' method searches input for the unique matches with the filter name
+    #' and then removes objects constructed with current card id + filter name.
     #'
-    remove_filter_state_ui = function(queue_index, element_id) {
+    remove_filter_state_ui = function(queue_index, element_id, .input) {
       queue_id <- sprintf("%s-%s", queue_index, element_id)
       removeUI(selector = sprintf("#%s", private$card_ids[queue_id]))
       private$card_ids <- private$card_ids[names(private$card_ids) != queue_id]
@@ -517,8 +498,19 @@ FilterStates <- R6::R6Class( # nolint
         private$observers[[queue_id]]$destroy()
         private$observers[[queue_id]] <- NULL
       }
+      # Remove unused reactive from shiny input (leftover of removeUI).
+      # This default behavior may change in the future
+      # making this part obsolete.
+      prefix <- paste0(gsub("cards$", "", private$cards_container_id))
+      invisible(
+        lapply(
+          unique(grep(element_id, names(.input), value = TRUE)),
+          function(i) {
+            .subset2(.input, "impl")$.values$remove(paste0(prefix, i))
+          }
+        )
+      )
     },
-
     # Checks if the queue of the given index was initialized in this `FilterStates`
     # @param queue_index (character or integer)
     validate_queue_exists = function(queue_index) {

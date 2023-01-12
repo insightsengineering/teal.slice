@@ -48,8 +48,6 @@ filter$set_selected(c(date + 1, date + 2))
 \item \href{#method-DateFilterState-format}{\code{DateFilterState$format()}}
 \item \href{#method-DateFilterState-is_any_filtered}{\code{DateFilterState$is_any_filtered()}}
 \item \href{#method-DateFilterState-get_call}{\code{DateFilterState$get_call()}}
-\item \href{#method-DateFilterState-ui}{\code{DateFilterState$ui()}}
-\item \href{#method-DateFilterState-server}{\code{DateFilterState$server()}}
 \item \href{#method-DateFilterState-set_selected}{\code{DateFilterState$set_selected()}}
 \item \href{#method-DateFilterState-clone}{\code{DateFilterState$clone()}}
 }
@@ -65,12 +63,14 @@ filter$set_selected(c(date + 1, date + 2))
 <li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilterState" data-id="get_varlabel"><a href='../../teal.slice/html/FilterState.html#method-FilterState-get_varlabel'><code>teal.slice::FilterState$get_varlabel()</code></a></span></li>
 <li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilterState" data-id="get_varname"><a href='../../teal.slice/html/FilterState.html#method-FilterState-get_varname'><code>teal.slice::FilterState$get_varname()</code></a></span></li>
 <li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilterState" data-id="print"><a href='../../teal.slice/html/FilterState.html#method-FilterState-print'><code>teal.slice::FilterState$print()</code></a></span></li>
+<li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilterState" data-id="server"><a href='../../teal.slice/html/FilterState.html#method-FilterState-server'><code>teal.slice::FilterState$server()</code></a></span></li>
 <li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilterState" data-id="set_keep_na"><a href='../../teal.slice/html/FilterState.html#method-FilterState-set_keep_na'><code>teal.slice::FilterState$set_keep_na()</code></a></span></li>
 <li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilterState" data-id="set_keep_na_reactive"><a href='../../teal.slice/html/FilterState.html#method-FilterState-set_keep_na_reactive'><code>teal.slice::FilterState$set_keep_na_reactive()</code></a></span></li>
 <li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilterState" data-id="set_na_rm"><a href='../../teal.slice/html/FilterState.html#method-FilterState-set_na_rm'><code>teal.slice::FilterState$set_na_rm()</code></a></span></li>
 <li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilterState" data-id="set_selected_reactive"><a href='../../teal.slice/html/FilterState.html#method-FilterState-set_selected_reactive'><code>teal.slice::FilterState$set_selected_reactive()</code></a></span></li>
 <li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilterState" data-id="set_state"><a href='../../teal.slice/html/FilterState.html#method-FilterState-set_state'><code>teal.slice::FilterState$set_state()</code></a></span></li>
 <li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilterState" data-id="set_state_reactive"><a href='../../teal.slice/html/FilterState.html#method-FilterState-set_state_reactive'><code>teal.slice::FilterState$set_state_reactive()</code></a></span></li>
+<li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilterState" data-id="ui"><a href='../../teal.slice/html/FilterState.html#method-FilterState-ui'><code>teal.slice::FilterState$ui()</code></a></span></li>
 </ul>
 </details>
 }}
@@ -163,47 +163,6 @@ optional \verb{is.na(<varname>)}.
 
 \subsection{Returns}{
 (\code{call})
-}
-}
-\if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-DateFilterState-ui"></a>}}
-\if{latex}{\out{\hypertarget{method-DateFilterState-ui}{}}}
-\subsection{Method \code{ui()}}{
-UI Module for \code{DateFilterState}.
-This UI element contains two date selections for \code{min} and \code{max}
-of the range and a checkbox whether to keep the \code{NA} values.
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{DateFilterState$ui(id)}\if{html}{\out{</div>}}
-}
-
-\subsection{Arguments}{
-\if{html}{\out{<div class="arguments">}}
-\describe{
-\item{\code{id}}{(\code{character(1)})\cr
-id of shiny element}
-}
-\if{html}{\out{</div>}}
-}
-}
-\if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-DateFilterState-server"></a>}}
-\if{latex}{\out{\hypertarget{method-DateFilterState-server}{}}}
-\subsection{Method \code{server()}}{
-Server module
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{DateFilterState$server(id)}\if{html}{\out{</div>}}
-}
-
-\subsection{Arguments}{
-\if{html}{\out{<div class="arguments">}}
-\describe{
-\item{\code{id}}{(\code{character(1)})\cr
-an ID string that corresponds with the ID used to call the module's UI function.}
-}
-\if{html}{\out{</div>}}
-}
-\subsection{Returns}{
-\code{moduleServer} function which returns \code{NULL}
 }
 }
 \if{html}{\out{<hr>}}

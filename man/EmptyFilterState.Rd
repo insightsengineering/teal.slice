@@ -32,9 +32,9 @@ isolate(filter_state$get_call())
 \item \href{#method-EmptyFilterState-is_any_filtered}{\code{EmptyFilterState$is_any_filtered()}}
 \item \href{#method-EmptyFilterState-get_call}{\code{EmptyFilterState$get_call()}}
 \item \href{#method-EmptyFilterState-get_state}{\code{EmptyFilterState$get_state()}}
-\item \href{#method-EmptyFilterState-ui}{\code{EmptyFilterState$ui()}}
-\item \href{#method-EmptyFilterState-server}{\code{EmptyFilterState$server()}}
 \item \href{#method-EmptyFilterState-set_state}{\code{EmptyFilterState$set_state()}}
+\item \href{#method-EmptyFilterState-ui_inputs}{\code{EmptyFilterState$ui_inputs()}}
+\item \href{#method-EmptyFilterState-server_inputs}{\code{EmptyFilterState$server_inputs()}}
 \item \href{#method-EmptyFilterState-clone}{\code{EmptyFilterState$clone()}}
 }
 }
@@ -49,12 +49,14 @@ isolate(filter_state$get_call())
 <li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilterState" data-id="get_varlabel"><a href='../../teal.slice/html/FilterState.html#method-FilterState-get_varlabel'><code>teal.slice::FilterState$get_varlabel()</code></a></span></li>
 <li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilterState" data-id="get_varname"><a href='../../teal.slice/html/FilterState.html#method-FilterState-get_varname'><code>teal.slice::FilterState$get_varname()</code></a></span></li>
 <li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilterState" data-id="print"><a href='../../teal.slice/html/FilterState.html#method-FilterState-print'><code>teal.slice::FilterState$print()</code></a></span></li>
+<li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilterState" data-id="server"><a href='../../teal.slice/html/FilterState.html#method-FilterState-server'><code>teal.slice::FilterState$server()</code></a></span></li>
 <li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilterState" data-id="set_keep_na"><a href='../../teal.slice/html/FilterState.html#method-FilterState-set_keep_na'><code>teal.slice::FilterState$set_keep_na()</code></a></span></li>
 <li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilterState" data-id="set_keep_na_reactive"><a href='../../teal.slice/html/FilterState.html#method-FilterState-set_keep_na_reactive'><code>teal.slice::FilterState$set_keep_na_reactive()</code></a></span></li>
 <li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilterState" data-id="set_na_rm"><a href='../../teal.slice/html/FilterState.html#method-FilterState-set_na_rm'><code>teal.slice::FilterState$set_na_rm()</code></a></span></li>
 <li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilterState" data-id="set_selected"><a href='../../teal.slice/html/FilterState.html#method-FilterState-set_selected'><code>teal.slice::FilterState$set_selected()</code></a></span></li>
 <li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilterState" data-id="set_selected_reactive"><a href='../../teal.slice/html/FilterState.html#method-FilterState-set_selected_reactive'><code>teal.slice::FilterState$set_selected_reactive()</code></a></span></li>
 <li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilterState" data-id="set_state_reactive"><a href='../../teal.slice/html/FilterState.html#method-FilterState-set_state_reactive'><code>teal.slice::FilterState$set_state_reactive()</code></a></span></li>
+<li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilterState" data-id="ui"><a href='../../teal.slice/html/FilterState.html#method-FilterState-ui'><code>teal.slice::FilterState$ui()</code></a></span></li>
 </ul>
 </details>
 }}
@@ -142,47 +144,6 @@ Returns the filtering state.
 }
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-EmptyFilterState-ui"></a>}}
-\if{latex}{\out{\hypertarget{method-EmptyFilterState-ui}{}}}
-\subsection{Method \code{ui()}}{
-UI Module for \code{EmptyFilterState}.
-This UI element contains checkbox input to
-filter or keep missing values.
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{EmptyFilterState$ui(id)}\if{html}{\out{</div>}}
-}
-
-\subsection{Arguments}{
-\if{html}{\out{<div class="arguments">}}
-\describe{
-\item{\code{id}}{(\code{character(1)})\cr
-id of shiny element}
-}
-\if{html}{\out{</div>}}
-}
-}
-\if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-EmptyFilterState-server"></a>}}
-\if{latex}{\out{\hypertarget{method-EmptyFilterState-server}{}}}
-\subsection{Method \code{server()}}{
-Controls selection of \code{keep_na} checkbox input
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{EmptyFilterState$server(id)}\if{html}{\out{</div>}}
-}
-
-\subsection{Arguments}{
-\if{html}{\out{<div class="arguments">}}
-\describe{
-\item{\code{id}}{(\code{character(1)})\cr
-an ID string that corresponds with the ID used to call the module's UI function.}
-}
-\if{html}{\out{</div>}}
-}
-\subsection{Returns}{
-\code{moduleServer} function which returns \code{NULL}
-}
-}
-\if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-EmptyFilterState-set_state"></a>}}
 \if{latex}{\out{\hypertarget{method-EmptyFilterState-set_state}{}}}
 \subsection{Method \code{set_state()}}{
@@ -199,6 +160,45 @@ contains fields relevant for a specific class
 \itemize{
 \item{\code{keep_na} (\code{logical})}{ defines whether to keep or remove \code{NA} values}
 }}
+}
+\if{html}{\out{</div>}}
+}
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-EmptyFilterState-ui_inputs"></a>}}
+\if{latex}{\out{\hypertarget{method-EmptyFilterState-ui_inputs}{}}}
+\subsection{Method \code{ui_inputs()}}{
+UI Module for \code{EmptyFilterState}.
+This UI element contains checkbox input to
+filter or keep missing values.
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{EmptyFilterState$ui_inputs(id)}\if{html}{\out{</div>}}
+}
+
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{id}}{(\code{character(1)})\cr
+id of shiny element}
+}
+\if{html}{\out{</div>}}
+}
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-EmptyFilterState-server_inputs"></a>}}
+\if{latex}{\out{\hypertarget{method-EmptyFilterState-server_inputs}{}}}
+\subsection{Method \code{server_inputs()}}{
+Controls selection of \code{keep_na} checkbox input
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{EmptyFilterState$server_inputs(id)}\if{html}{\out{</div>}}
+}
+
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{id}}{(\code{character(1)})\cr
+an ID string that corresponds with the ID used to call the module's UI function.
+return \code{moduleServer} function which returns \code{NULL}}
 }
 \if{html}{\out{</div>}}
 }
