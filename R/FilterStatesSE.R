@@ -101,7 +101,7 @@ SEFilterStates <- R6::R6Class( # nolint
           observeEvent(removed_state_name_subset(), {
             req(removed_state_name_subset())
             for (fname in removed_state_name_subset()) {
-              private$remove_filter_state_ui("subset", fname)
+              private$remove_filter_state_ui("subset", fname, .input = input)
             }
             removed_state_name_subset(character(0))
           })
