@@ -829,15 +829,22 @@ FilteredData <- R6::R6Class( # nolint
 
           self$srv_filters_active_count("teal_filters_count")
 
+          observeEvent(input[["minimise_filter_overview"]], {
+            shinyjs::toggle("filter_active_vars_contents")
+            shinyjs::toggle("filters_active_count")
+          })
+
           private$filter_panel_ui_id <- session$ns(NULL)
           observeEvent(
             eventExpr = input[["filter_panel_active"]],
             handlerExpr = {
               if (isTRUE(input[["filter_panel_active"]])) {
                 self$filter_panel_enable()
+                shinyjs::show("filters_active_count")
                 logger::log_trace("Enable the Filtered Panel with the filter_panel_enable method")
               } else {
                 self$filter_panel_disable()
+                shinyjs::hide("filters_active_count")
                 logger::log_trace("Disable the Filtered Panel with the filter_panel_enable method")
               }
             }, ignoreNULL = TRUE
