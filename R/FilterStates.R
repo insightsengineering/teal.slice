@@ -499,7 +499,7 @@ FilterStates <- R6::R6Class( # nolint
         private$observers[[queue_id]] <- NULL
       }
       # Remove unused reactive from shiny input (leftover of removeUI).
-      # This default behavior may change in the future
+      # This default behavior may change in the future,
       # making this part obsolete.
       prefix = paste0(gsub("cards$", "", private$cards_container_id))
       invisible(
