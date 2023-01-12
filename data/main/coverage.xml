@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<coverage line-rate="0.589973142345569" branch-rate="0" lines-covered="2636" lines-valid="4468" branches-covered="0" branches-valid="0" complexity="0" version="3.6.1" timestamp="2023-01-11 21:19:26">
+<coverage line-rate="0.5905740451195" branch-rate="0" lines-covered="2644" lines-valid="4477" branches-covered="0" branches-valid="0" complexity="0" version="3.6.1" timestamp="2023-01-12 10:40:10">
   <sources/>
   <packages>
-    <package name="teal.slice" line-rate="0.589973142345569" branch-rate="0" complexity="0">
+    <package name="teal.slice" line-rate="0.5905740451195" branch-rate="0" complexity="0">
       <classes>
         <class name="call_utils.R" filename="R/call_utils.R" line-rate="0.974358974358974" branch-rate="0" complexity="0">
           <methods>
@@ -21679,7 +21679,7 @@
             <line number="241" hits="0" branch="false"/>
           </lines>
         </class>
-        <class name="FilterStates.R" filename="R/FilterStates.R" line-rate="0.639484978540773" branch-rate="0" complexity="0">
+        <class name="FilterStates.R" filename="R/FilterStates.R" line-rate="0.648760330578512" branch-rate="0" complexity="0">
           <methods>
             <method name="initialize" signature="" line-rate="0.97609561752988" branch-rate="0">
               <lines>
@@ -23520,43 +23520,52 @@
                 <line number="481" hits="0" branch="false"/>
               </lines>
             </method>
-            <method name="remove_filter_state_ui" signature="" line-rate="0.666666666666667" branch-rate="0">
+            <method name="remove_filter_state_ui" signature="" line-rate="0.8" branch-rate="0">
               <lines>
-                <line number="491" hits="4" branch="false"/>
-                <line number="492" hits="4" branch="false"/>
-                <line number="493" hits="4" branch="false"/>
                 <line number="494" hits="4" branch="false"/>
-                <line number="495" hits="0" branch="false"/>
-                <line number="496" hits="0" branch="false"/>
+                <line number="495" hits="4" branch="false"/>
+                <line number="496" hits="4" branch="false"/>
+                <line number="497" hits="4" branch="false"/>
+                <line number="498" hits="0" branch="false"/>
+                <line number="499" hits="0" branch="false"/>
+                <line number="504" hits="4" branch="false"/>
+                <line number="505" hits="4" branch="false"/>
+                <line number="506" hits="4" branch="false"/>
+                <line number="507" hits="4" branch="false"/>
+                <line number="508" hits="4" branch="false"/>
+                <line number="509" hits="0" branch="false"/>
+                <line number="510" hits="4" branch="false"/>
+                <line number="511" hits="4" branch="false"/>
+                <line number="512" hits="4" branch="false"/>
               </lines>
             </method>
             <method name="validate_queue_exists" signature="" line-rate="1" branch-rate="0">
               <lines>
-                <line number="503" hits="701" branch="false"/>
-                <line number="504" hits="701" branch="false"/>
-                <line number="505" hits="701" branch="false"/>
-                <line number="506" hits="701" branch="false"/>
-                <line number="508" hits="701" branch="false"/>
-                <line number="509" hits="701" branch="false"/>
-                <line number="510" hits="701" branch="false"/>
-                <line number="511" hits="701" branch="false"/>
-                <line number="513" hits="4" branch="false"/>
-                <line number="514" hits="4" branch="false"/>
-                <line number="515" hits="4" branch="false"/>
-                <line number="516" hits="4" branch="false"/>
-                <line number="517" hits="4" branch="false"/>
-                <line number="518" hits="4" branch="false"/>
-                <line number="519" hits="4" branch="false"/>
-                <line number="520" hits="4" branch="false"/>
+                <line number="517" hits="701" branch="false"/>
+                <line number="518" hits="701" branch="false"/>
+                <line number="519" hits="701" branch="false"/>
+                <line number="520" hits="701" branch="false"/>
+                <line number="522" hits="701" branch="false"/>
+                <line number="523" hits="701" branch="false"/>
+                <line number="524" hits="701" branch="false"/>
+                <line number="525" hits="701" branch="false"/>
+                <line number="527" hits="4" branch="false"/>
+                <line number="528" hits="4" branch="false"/>
+                <line number="529" hits="4" branch="false"/>
+                <line number="530" hits="4" branch="false"/>
+                <line number="531" hits="4" branch="false"/>
+                <line number="532" hits="4" branch="false"/>
+                <line number="533" hits="4" branch="false"/>
+                <line number="534" hits="4" branch="false"/>
               </lines>
             </method>
             <method name="map_vars_to_html_ids" signature="" line-rate="1" branch-rate="0">
               <lines>
-                <line number="530" hits="10" branch="false"/>
-                <line number="531" hits="10" branch="false"/>
-                <line number="532" hits="10" branch="false"/>
-                <line number="533" hits="10" branch="false"/>
-                <line number="534" hits="10" branch="false"/>
+                <line number="544" hits="10" branch="false"/>
+                <line number="545" hits="10" branch="false"/>
+                <line number="546" hits="10" branch="false"/>
+                <line number="547" hits="10" branch="false"/>
+                <line number="548" hits="10" branch="false"/>
               </lines>
             </method>
           </methods>
@@ -23767,33 +23776,42 @@
             <line number="479" hits="0" branch="false"/>
             <line number="480" hits="0" branch="false"/>
             <line number="481" hits="0" branch="false"/>
-            <line number="491" hits="4" branch="false"/>
-            <line number="492" hits="4" branch="false"/>
-            <line number="493" hits="4" branch="false"/>
             <line number="494" hits="4" branch="false"/>
-            <line number="495" hits="0" branch="false"/>
-            <line number="496" hits="0" branch="false"/>
-            <line number="503" hits="701" branch="false"/>
-            <line number="504" hits="701" branch="false"/>
-            <line number="505" hits="701" branch="false"/>
-            <line number="506" hits="701" branch="false"/>
-            <line number="508" hits="701" branch="false"/>
-            <line number="509" hits="701" branch="false"/>
-            <line number="510" hits="701" branch="false"/>
-            <line number="511" hits="701" branch="false"/>
-            <line number="513" hits="4" branch="false"/>
-            <line number="514" hits="4" branch="false"/>
-            <line number="515" hits="4" branch="false"/>
-            <line number="516" hits="4" branch="false"/>
-            <line number="517" hits="4" branch="false"/>
-            <line number="518" hits="4" branch="false"/>
-            <line number="519" hits="4" branch="false"/>
-            <line number="520" hits="4" branch="false"/>
-            <line number="530" hits="10" branch="false"/>
-            <line number="531" hits="10" branch="false"/>
-            <line number="532" hits="10" branch="false"/>
-            <line number="533" hits="10" branch="false"/>
-            <line number="534" hits="10" branch="false"/>
+            <line number="495" hits="4" branch="false"/>
+            <line number="496" hits="4" branch="false"/>
+            <line number="497" hits="4" branch="false"/>
+            <line number="498" hits="0" branch="false"/>
+            <line number="499" hits="0" branch="false"/>
+            <line number="504" hits="4" branch="false"/>
+            <line number="505" hits="4" branch="false"/>
+            <line number="506" hits="4" branch="false"/>
+            <line number="507" hits="4" branch="false"/>
+            <line number="508" hits="4" branch="false"/>
+            <line number="509" hits="0" branch="false"/>
+            <line number="510" hits="4" branch="false"/>
+            <line number="511" hits="4" branch="false"/>
+            <line number="512" hits="4" branch="false"/>
+            <line number="517" hits="701" branch="false"/>
+            <line number="518" hits="701" branch="false"/>
+            <line number="519" hits="701" branch="false"/>
+            <line number="520" hits="701" branch="false"/>
+            <line number="522" hits="701" branch="false"/>
+            <line number="523" hits="701" branch="false"/>
+            <line number="524" hits="701" branch="false"/>
+            <line number="525" hits="701" branch="false"/>
+            <line number="527" hits="4" branch="false"/>
+            <line number="528" hits="4" branch="false"/>
+            <line number="529" hits="4" branch="false"/>
+            <line number="530" hits="4" branch="false"/>
+            <line number="531" hits="4" branch="false"/>
+            <line number="532" hits="4" branch="false"/>
+            <line number="533" hits="4" branch="false"/>
+            <line number="534" hits="4" branch="false"/>
+            <line number="544" hits="10" branch="false"/>
+            <line number="545" hits="10" branch="false"/>
+            <line number="546" hits="10" branch="false"/>
+            <line number="547" hits="10" branch="false"/>
+            <line number="548" hits="10" branch="false"/>
           </lines>
         </class>
         <class name="FilterStatesDF.R" filename="R/FilterStatesDF.R" line-rate="0.875" branch-rate="0" complexity="0">
