@@ -1089,7 +1089,7 @@ FilteredData <- R6::R6Class( # nolint
     # Returns single integer.
     get_filter_count = function() {
       sum(vapply(self$datanames(), function(dataname) {
-        self$get_filtered_dataset(dataname)$n_active_filter_states()
+        self$get_filtered_dataset(dataname)$get_filter_count()
       }, numeric(1L)))
     }
   )

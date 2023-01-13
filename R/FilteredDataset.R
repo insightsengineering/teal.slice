@@ -223,11 +223,13 @@ FilteredDataset <- R6::R6Class( # nolint
       }
     },
 
-    # how many filters are currently applied
-    n_active_filter_states = function() {
+    #' @description
+    #' Gets the number of active `FilterState` objects in all `FilterStates` in this `FilteredDataset`.
+    #' @return `integer(1)`
+    get_filter_count = function() {
       sum(vapply(private$filter_states,
-                 function(state) state$n_active_filter_states(),
-                 FUN.VALUE = numeric(1)))
+                 function(state) state$get_filter_count(),
+                 FUN.VALUE = integer(1)))
     },
 
     #' @description
@@ -434,8 +436,8 @@ FilteredDataset <- R6::R6Class( # nolint
           output$filter_count <- renderText(
             sprintf(
               "%d filter%s applied",
-              self$n_active_filter_states(),
-              if (self$n_active_filter_states() != 1) "s" else ""
+              self$get_filter_count(),
+              if (self$get_filter_count() != 1) "s" else ""
             )
           )
 
