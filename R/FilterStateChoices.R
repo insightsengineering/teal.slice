@@ -190,16 +190,23 @@ ChoicesFilterState <- R6::R6Class( # nolint
           l_count <- l_counts[i]
           f_count <- f_counts[i]
           l_freq <- l_count / sum(l_counts)
+          f_freq <- f_count / sum(l_counts)
+
           if (is.na(l_freq) || is.nan(l_freq)) l_freq <- 0
+          if (is.na(f_freq) || is.nan(f_freq)) f_freq <- 0
           div(
-            class = "choices_state_label",
+            class = "choices_state_label_unfiltered",
             style = sprintf("width:%s%%", l_freq * 100),
-            span(
-              class = "choices_state_label_text",
-              sprintf(
-                "%s (%s/%s)",
-                private$choices[i],
-                f_count, l_count
+            div(
+              class = "choices_state_label",
+              style = sprintf("width:%s%%", f_freq * 100),
+              span(
+                class = "choices_state_label_text",
+                sprintf(
+                  "%s (%s/%s)",
+                  private$choices[i],
+                  f_count, l_count
+                )
               )
             )
           )

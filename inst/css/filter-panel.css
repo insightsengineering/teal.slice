@@ -146,8 +146,16 @@ a.remove_all:hover {
 .choices_state_label {
   background-color:lightblue;
   height:2rem;
+  display:inline-block;
+  position:absolute;
+}
+
+.choices_state_label_unfiltered {
+  background-color:lightgray;
+  height:2rem;
   margin-top: -3px;
   display:inline-block;
+  top:0;
 }
 
 .filterPlotOverlayRange {
