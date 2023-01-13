@@ -1085,8 +1085,10 @@ FilteredData <- R6::R6Class( # nolint
       return(invisible(NULL))
     },
 
-    # Tracks how many filter states exist across all datasets.
-    # Returns single integer.
+    # @description
+    # Gets the number of active `FilterState` objects in all `FilterStates`
+    # in all `FilteredDataset`s in this `FilteredData` object.
+    # @return `integer(1)`
     get_filter_count = function() {
       sum(vapply(self$datanames(), function(dataname) {
         self$get_filtered_dataset(dataname)$get_filter_count()
