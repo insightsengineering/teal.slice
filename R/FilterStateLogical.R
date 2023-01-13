@@ -180,7 +180,6 @@ LogicalFilterState <- R6::R6Class( # nolint
           )
         )
       })
-
       div(
         div(
           class = "choices_state",
@@ -189,18 +188,11 @@ LogicalFilterState <- R6::R6Class( # nolint
             label = NULL,
             choiceNames = labels,
             choiceValues = as.character(private$choices),
+            selected = as.character(self$get_selected()),
             width = "100%"
           )
         ),
-        if (private$na_count > 0) {
-          checkboxInput(
-            ns("keep_na"),
-            label_keep_na_count(private$na_count),
-            value = isolate(self$get_keep_na())
-          )
-        } else {
-          NULL
-        }
+        private$keep_na_ui(ns("keep_na"))
       )
     },
 
@@ -214,31 +206,31 @@ LogicalFilterState <- R6::R6Class( # nolint
       moduleServer(
         id = id,
         function(input, output, session) {
-          logger::log_trace("LogicalFilterState$server initializing, dataname: { deparse1(private$input_dataname) }")
-
-          shiny::setBookmarkExclude(c("selection", "keep_na"))
-
-          private$observers$selection_reactive <- observeEvent(
-            private$selected_reactive(),
-            ignoreNULL = TRUE,
+          # this observer is needed in the situation when private$selected has been
+          # changed directly by the api - then it's needed to rerender UI element
+          # to show relevant values
+          private$observers$seleted_api <- observeEvent(
+            ignoreNULL = TRUE, # this is radio button so something have to be selected
+            ignoreInit = TRUE,
+            eventExpr = self$get_selected(),
             handlerExpr = {
-              updateRadioButtons(
-                session = session,
-                inputId = "selection",
-                selected =  private$selected_reactive()
-              )
-              logger::log_trace(sprintf(
-                "LogicalFilterState$server@1 selection of variable %s changed, dataname: %s",
-                deparse1(self$get_varname()),
-                deparse1(private$input_dataname)
-              ))
-              private$selected_reactive(NULL)
+              if (!setequal(self$get_selected(), input$selection)) {
+                updateRadioButtons(
+                  session = session,
+                  inputId = "selection",
+                  selected =  self$get_selected()
+                )
+                logger::log_trace(sprintf(
+                  "LogicalFilterState$server@1 selection of variable %s changed, dataname: %s",
+                  deparse1(self$get_varname()),
+                  deparse1(private$input_dataname)
+                ))
+              }
             }
           )
-          private$observe_keep_na_reactive(private$keep_na_reactive())
 
           private$observers$selection <- observeEvent(
-            ignoreNULL = FALSE,
+            ignoreNULL = TRUE, # in radio button something has to be selected to input$selection can't be NULL
             ignoreInit = TRUE,
             eventExpr = input$selection,
             handlerExpr = {
@@ -257,7 +249,7 @@ LogicalFilterState <- R6::R6Class( # nolint
             }
           )
 
-          private$observe_keep_na(input)
+          private$keep_na_srv("keep_na")
 
           logger::log_trace("LogicalFilterState$server initialized, dataname: { deparse1(private$input_dataname) }")
           NULL

@@ -38,16 +38,14 @@ chain.
 }
 \section{Modifying state}{
 
-Modifying a \code{FilterState} object is possible in three scenarios depicted below:
-\if{html}{\figure{filter_state_reactivity.jpg}{options: width="100\%" alt="Figure: filter_state_reactivity.jpg"}}
-\if{latex}{\figure{filter_state_reactivity.jpg}{options: width=7cm}}
+Modifying a \code{FilterState} object is possible in three scenarios:
 \itemize{
 \item In the interactive session by directly specifying values of \code{selected},
 \code{keep_na} or \code{keep_inf} using \code{set_state} method (to update all at once),
 or using \code{set_selected}, \code{set_keep_na} or \code{set_keep_inf}
-\item In a \code{teal} application by changing appropriate inputs
-\item Using methods \code{set_selected_reactive}, \code{set_keep_na_reactive},
-\code{set_keep_inf_reactive} which serves as a programmatic API.
+\item In a running application by changing appropriate inputs
+\item In a running application by using \link{filter_state_api} which directly uses \code{set_state} method
+of the \code{FilterState} object.
 }
 }
 
@@ -67,12 +65,9 @@ or using \code{set_selected}, \code{set_keep_na} or \code{set_keep_inf}
 \item \href{#method-FilterState-get_state}{\code{FilterState$get_state()}}
 \item \href{#method-FilterState-print}{\code{FilterState$print()}}
 \item \href{#method-FilterState-set_keep_na}{\code{FilterState$set_keep_na()}}
-\item \href{#method-FilterState-set_keep_na_reactive}{\code{FilterState$set_keep_na_reactive()}}
 \item \href{#method-FilterState-set_na_rm}{\code{FilterState$set_na_rm()}}
 \item \href{#method-FilterState-set_selected}{\code{FilterState$set_selected()}}
-\item \href{#method-FilterState-set_selected_reactive}{\code{FilterState$set_selected_reactive()}}
 \item \href{#method-FilterState-set_state}{\code{FilterState$set_state()}}
-\item \href{#method-FilterState-set_state_reactive}{\code{FilterState$set_state_reactive()}}
 \item \href{#method-FilterState-server}{\code{FilterState$server()}}
 \item \href{#method-FilterState-ui}{\code{FilterState$ui()}}
 \item \href{#method-FilterState-clone}{\code{FilterState$clone()}}
@@ -303,26 +298,6 @@ modules after selecting check-box-input in the shiny interface. Values are set t
 }
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-FilterState-set_keep_na_reactive"></a>}}
-\if{latex}{\out{\hypertarget{method-FilterState-set_keep_na_reactive}{}}}
-\subsection{Method \code{set_keep_na_reactive()}}{
-Set if \code{NA} should be kept when using \code{set_filter_state}
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{FilterState$set_keep_na_reactive(value)}\if{html}{\out{</div>}}
-}
-
-\subsection{Arguments}{
-\if{html}{\out{<div class="arguments">}}
-\describe{
-\item{\code{value}}{(\code{logical(1)})\cr
-value(s) which come from the filter selection. Value is set in \code{server}
-modules when using \code{set_filter_state} instead of the shiny interface. Values are set to
-\code{private$keep_na_reactive} which is reactive.}
-}
-\if{html}{\out{</div>}}
-}
-}
-\if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-FilterState-set_na_rm"></a>}}
 \if{latex}{\out{\hypertarget{method-FilterState-set_na_rm}{}}}
 \subsection{Method \code{set_na_rm()}}{
@@ -364,55 +339,12 @@ same as \code{private$choices}.}
 }
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-FilterState-set_selected_reactive"></a>}}
-\if{latex}{\out{\hypertarget{method-FilterState-set_selected_reactive}{}}}
-\subsection{Method \code{set_selected_reactive()}}{
-Set selection when using \code{set_filter_state}
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{FilterState$set_selected_reactive(value)}\if{html}{\out{</div>}}
-}
-
-\subsection{Arguments}{
-\if{html}{\out{<div class="arguments">}}
-\describe{
-\item{\code{value}}{(\code{vector})\cr
-value(s) which come from the filters set by the user. Values are set in \code{server}
-modules after setting filters in \code{set_filter_state}. Values are set to
-\code{private$set_selected_reactive} which is reactive. Values type have to be the
-same as \code{private$choices}.}
-}
-\if{html}{\out{</div>}}
-}
-}
-\if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-FilterState-set_state"></a>}}
 \if{latex}{\out{\hypertarget{method-FilterState-set_state}{}}}
 \subsection{Method \code{set_state()}}{
 Set state
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{FilterState$set_state(state)}\if{html}{\out{</div>}}
-}
-
-\subsection{Arguments}{
-\if{html}{\out{<div class="arguments">}}
-\describe{
-\item{\code{state}}{(\code{list})\cr
-contains fields relevant for a specific class
-\itemize{
-\item{\code{selected}}{ defines initial selection}
-\item{\code{keep_na} (\code{logical})}{ defines whether to keep or remove \code{NA} values}
-}}
-}
-\if{html}{\out{</div>}}
-}
-}
-\if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-FilterState-set_state_reactive"></a>}}
-\if{latex}{\out{\hypertarget{method-FilterState-set_state_reactive}{}}}
-\subsection{Method \code{set_state_reactive()}}{
-Set state when using \code{set_filter_state}
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{FilterState$set_state_reactive(state)}\if{html}{\out{</div>}}
 }
 
 \subsection{Arguments}{
@@ -479,9 +411,6 @@ dataname to be evaluated as extracted object, for example
 \code{data$var}
 return (\code{name} or \code{call})
 Sets \code{keep_na} field according to observed \code{input$keep_na}
-If \code{keep_na = TRUE} \code{is.na(varname)} is added to the returned call.
-Otherwise returned call excludes \code{NA} when executed.
-Sets \code{keep_na} field according to \code{keep_na} value passed in \code{set_filter_state}.
 If \code{keep_na = TRUE} \code{is.na(varname)} is added to the returned call.
 Otherwise returned call excludes \code{NA} when executed.
 Set choices

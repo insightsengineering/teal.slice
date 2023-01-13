@@ -106,7 +106,10 @@ EmptyFilterState <- R6::R6Class( # nolint
         self$set_keep_na(state$keep_na)
       }
       invisible(NULL)
-    },
+    }
+  ),
+
+  private = list(
 
     #' @description
     #' UI Module for `EmptyFilterState`.
@@ -121,11 +124,7 @@ EmptyFilterState <- R6::R6Class( # nolint
           class = "relative",
           div(
             span("Variable contains missing values only"),
-            checkboxInput(
-              ns("keep_na"),
-              label_keep_na_count(private$na_count),
-              value = FALSE
-            )
+            private$keep_na_ui(ns("keep_na"))
           )
         )
       )
@@ -139,8 +138,7 @@ EmptyFilterState <- R6::R6Class( # nolint
       moduleServer(
         id = id,
         function(input, output, session) {
-          private$observe_keep_na(input)
-          shiny::setBookmarkExclude("keep_na")
+          private$keep_na_srv("keep_na")
         }
       )
     }

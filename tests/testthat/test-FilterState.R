@@ -109,10 +109,6 @@ testthat::test_that("get_state returns a list identical to set_state input", {
   testthat::expect_identical(isolate(filter_state$get_state()), state)
 })
 
-testthat::test_that("label_keep_na_count returns the string with an appended element", {
-  testthat::expect_equal(label_keep_na_count(7), "Keep NA (7)")
-})
-
 testthat::test_that(
   "add_keep_na_call does not add anything by default",
   code = {

@@ -62,7 +62,6 @@ RangeFilterState <- R6::R6Class( # nolint
       private$inf_count <- sum(is.infinite(x))
       private$is_integer <- checkmate::test_integerish(x)
       private$keep_inf <- reactiveVal(FALSE)
-      private$keep_inf_reactive <- reactiveVal(FALSE)
 
       return(invisible(self))
     },
@@ -163,26 +162,6 @@ RangeFilterState <- R6::R6Class( # nolint
     },
 
     #' @description
-    #' Set if `Inf` should be kept when passing filters using `set_filter_state`
-    #' @param value (`logical(1)`)\cr
-    #'  Value(s) which come from the filter set by the user. Value is set in `server`
-    #'  modules after setting the filters using `set_filter_state`. Values are set to
-    #'  `private$keep_inf_reactive` which is reactive.
-    set_keep_inf_reactive = function(value) {
-      checkmate::assert_flag(value)
-      private$keep_inf_reactive(value)
-      logger::log_trace(
-        sprintf(
-          "%s$set_keep_inf_reactive of variable %s set to %s, dataname: %s.",
-          class(self)[1],
-          deparse1(self$get_varname()),
-          value,
-          deparse1(private$input_dataname)
-        )
-      )
-    },
-
-    #' @description
     #' Set state
     #' @param state (`list`)\cr
     #'  contains fields relevant for a specific class
@@ -197,24 +176,6 @@ RangeFilterState <- R6::R6Class( # nolint
         self$set_keep_inf(state$keep_inf)
       }
       super$set_state(state[names(state) %in% c("selected", "keep_na")])
-      invisible(NULL)
-    },
-
-    #' @description
-    #' Set state when using `set_filter_state`
-    #' @param state (`list`)\cr
-    #'  contains fields relevant for a specific class
-    #' \itemize{
-    #' \item{`selected`}{ defines initial selection}
-    #' \item{`keep_na` (`logical`)}{ defines whether to keep or remove `NA` values}
-    #' \item{`keep_inf` (`logical`)}{ defines whether to keep or remove `Inf` values}
-    #' }
-    set_state_reactive = function(state) {
-      stopifnot(is.list(state) && all(names(state) %in% c("selected", "keep_na", "keep_inf")))
-      if (!is.null(state$keep_inf)) {
-        self$set_keep_inf_reactive(state$keep_inf)
-      }
-      super$set_state_reactive(state[names(state) %in% c("selected", "keep_na")])
       invisible(NULL)
     },
 
@@ -240,7 +201,6 @@ RangeFilterState <- R6::R6Class( # nolint
   private = list(
     histogram_data = data.frame(),
     keep_inf = NULL, # because it holds reactiveVal
-    keep_inf_reactive = NULL, # because it holds reactiveVal
     inf_count = integer(0),
     is_integer = logical(0),
 
@@ -372,24 +332,8 @@ RangeFilterState <- R6::R6Class( # nolint
             step = pretty_range_inputs["step"]
           )
         ),
-        if (private$inf_count > 0) {
-          checkboxInput(
-            ns("keep_inf"),
-            sprintf("Keep Inf (%s)", private$inf_count),
-            value = isolate(self$get_keep_inf())
-          )
-        } else {
-          NULL
-        },
-        if (private$na_count > 0) {
-          checkboxInput(
-            ns("keep_na"),
-            label_keep_na_count(private$na_count),
-            value = isolate(self$get_keep_inf())
-          )
-        } else {
-          NULL
-        }
+        private$keep_inf_ui(ns("keep_inf")),
+        private$keep_na_ui(ns("keep_na"))
       )
     },
 
@@ -421,41 +365,21 @@ RangeFilterState <- R6::R6Class( # nolint
             }
           )
 
-          private$observers$selection_reactive <- observeEvent(
-            private$selected_reactive(),
-            ignoreNULL = TRUE,
+          # this observer is needed in the situation when private$selected has been
+          # changed directly by the api - then it's needed to rerender UI element
+          # to show relevant values
+          private$observers$selection_api <- observeEvent(
+            ignoreNULL = FALSE,
+            ignoreInit = TRUE,
+            eventExpr = self$get_selected(),
             handlerExpr = {
-              updateSliderInput(
-                session = session,
-                inputId = "selection",
-                value = private$selected_reactive()
-              )
-              private$selected_reactive(NULL)
-              logger::log_trace(sprintf(
-                "RangeFilterState$server@1 selection of variable %s changed, dataname: %s",
-                deparse1(self$get_varname()),
-                deparse1(private$input_dataname)
-              ))
-            }
-          )
-          private$observe_keep_na_reactive(private$keep_na_reactive())
-
-          private$observers$keep_inf_reactive <- observeEvent(
-            private$keep_inf_reactive(),
-            ignoreNULL = TRUE,
-            handlerExpr = {
-              updateCheckboxInput(
-                session = session,
-                inputId = "keep_inf",
-                value =  private$keep_inf_reactive()
-              )
-              logger::log_trace(sprintf(
-                "RangeFilterState$server@2 keep_inf of variable %s set to: %s, dataname: %s",
-                deparse1(self$get_varname()),
-                private$keep_inf_reactive(),
-                deparse1(private$input_dataname)
-              ))
-              private$keep_inf_reactive(NULL)
+              if (!setequal(self$get_selected(), input$selection)) {
+                updateSliderInput(
+                  session = session,
+                  inputId = "selection",
+                  value = private$selected()
+                )
+              }
             }
           )
 
@@ -485,29 +409,81 @@ RangeFilterState <- R6::R6Class( # nolint
             }
           )
 
-          private$observe_keep_na(input)
+          private$keep_inf_srv("keep_inf")
+          private$keep_na_srv("keep_na")
 
-          private$observers$keep_inf <- observeEvent(
-            ignoreNULL = FALSE, # ignoreNULL: we don't want to ignore NULL when nothing is selected in the `selectInput`
-            ignoreInit = TRUE, # ignoreInit: should not matter because we set the UI with the desired initial state
-            eventExpr = input$keep_inf,
-            handlerExpr = {
-              keep_inf <- if (is.null(input$keep_inf)) FALSE else input$keep_inf
-              self$set_keep_inf(keep_inf)
-              logger::log_trace(
-                sprintf(
-                  "RangeFilterState$server@4 keep_inf of variable %s set to: %s, dataname: %s",
-                  deparse1(self$get_varname()),
-                  deparse1(input$keep_inf),
-                  deparse1(private$input_dataname)
-                )
-              )
-            }
-          )
           logger::log_trace("RangeFilterState$server initialized, dataname: { deparse1(private$input_dataname) }")
           NULL
         }
       )
+    },
+
+    # @description
+    # module displaying input to keep or remove Inf in the FilterState call
+    # @param id `shiny` id parameter
+    #  renders checkbox input only when variable from which FilterState has
+    #  been created has some Inf values.
+    keep_inf_ui = function(id) {
+      ns <- NS(id)
+      if (private$inf_count > 0) {
+        checkboxInput(
+          ns("value"),
+          sprintf("Keep Inf (%s)", private$inf_count),
+          value = self$get_keep_inf()
+        )
+      } else {
+        NULL
+      }
+    },
+
+    # @description
+    # module to handle Inf values in the FilterState
+    # @param shiny `id` parametr passed to moduleServer
+    #  module sets `private$keep_inf` according to the selection.
+    #  Module also updates a UI element if the `private$keep_inf` has been
+    #  changed through the api
+    keep_inf_srv = function(id) {
+      moduleServer(id, function(input, output, session) {
+        # this observer is needed in the situation when private$keep_na has been
+        # changed directly by the api - then it's needed to rerender UI element
+        # to show relevant values
+        private$observers$keep_inf_api <- observeEvent(
+          ignoreNULL = TRUE, # its not possible for range that NULL is selected
+          ignoreInit = TRUE, # ignoreInit: should not matter because we set the UI with the desired initial state
+          eventExpr = self$get_keep_inf(),
+          handlerExpr = {
+            if (!setequal(self$get_keep_inf(), input$value)) {
+              updateCheckboxInput(
+                inputId = "value",
+                value = self$get_keep_inf()
+              )
+            }
+          }
+        )
+        private$observers$keep_inf <- observeEvent(
+          ignoreNULL = TRUE, # it's not possible for range that NULL is selected
+          ignoreInit = TRUE, # ignoreInit: should not matter because we set the UI with the desired initial state
+          eventExpr = input$value,
+          handlerExpr = {
+            keep_inf <- if (is.null(input$keep_inf)) {
+              FALSE
+            } else {
+              input$value
+            }
+            self$set_keep_inf(keep_inf)
+            logger::log_trace(
+              sprintf(
+                "%s$server keep_inf of variable %s set to: %s, dataname: %s",
+                class(self)[1],
+                deparse1(self$get_varname()),
+                deparse1(input$value),
+                deparse1(private$input_dataname)
+              )
+            )
+          }
+        )
+        invisible(NULL)
+      })
     }
   )
 )
