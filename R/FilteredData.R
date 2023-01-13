@@ -803,6 +803,8 @@ FilteredData <- R6::R6Class( # nolint
             } else {
               shinyjs::show("remove_all_filters")
             }
+            shinyjs::show("filter_active_vars_contents")
+            shinyjs::hide("filters_active_count")
           })
 
           # use isolate because we assume that the number of datasets does not change over the course of the teal app
