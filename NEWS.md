@@ -12,6 +12,10 @@
 
 * Improved filter state presentation in `FilterState$format`.
 
+### Bug fixes
+
+* Fixed an error where the `RangeFilterState` produced an error when using `bootstrap 4`.
+
 ### Miscellaneous
 
 * Calculation of step in slider for `RangeFilterState` now uses `checkmate::test_integerish` instead of `is.integer`.
