@@ -1,0 +1,20 @@
+.dropdown .dropdown-toggle {
+  font-weight: normal;
+  float: right;
+  border: 0;
+  background-color: transparent;
+  color: rgba(0, 0, 0, 0.3);
+  font-weight: 100;
+  font-size: 0.9em;
+  padding: 2px 4px;
+  margin-top: 0;
+}
+
+.dropdown .dropdown-toggle .caret {
+  display: none;
+}
+
+
+.dropdown .dropdown-toggle:hover {
+  color: #337ab7;
+}

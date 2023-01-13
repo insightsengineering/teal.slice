@@ -333,6 +333,7 @@ FilterState <- R6::R6Class( # nolint
         id = id,
         function(input, output, session) {
           private$server_inputs("inputs")
+          private$server_summary("summary")
           reactive(input$remove) # back to parent to remove self
         }
       )
@@ -347,9 +348,10 @@ FilterState <- R6::R6Class( # nolint
       ns <- NS(id)
       fluidPage(
         theme = get_teal_bs_theme(),
+        singleton(include_css_files(pattern = "filter-state")),
         fluidRow(
           column(
-            width = 10,
+            width = 9,
             class = "no-left-right-padding",
             tags$div(
               tags$span(self$get_varname(),
@@ -362,17 +364,27 @@ FilterState <- R6::R6Class( # nolint
             )
           ),
           column(
-            width = 2,
-            class = "no-left-right-padding",
+            width = 3,
+            class = "no-left-right-padding filter-card-menu",
             actionLink(
               ns("remove"),
               label = "",
               icon = icon("circle-xmark", lib = "font-awesome"),
               class = "remove pull-right"
+            ),
+            shinyWidgets::dropdownButton(
+              inputId = ns("show_inputs"),
+              status = "",
+              circle = FALSE,
+              icon = icon("ellipsis-vertical", lib = "font-awesome"),
+              inline = TRUE,
+              label = "",
+              margin = "10px",
+              private$ui_inputs(ns("inputs"))
             )
           )
         ),
-        private$ui_inputs(ns("inputs"))
+        private$ui_summary(ns("summary"))
       )
     }
   ),
@@ -554,6 +566,41 @@ FilterState <- R6::R6Class( # nolint
         )
         invisible(NULL)
       })
+    },
+    #' UI Module for `RangeFilterState`.
+    #' This UI element contains two values for `min` and `max`
+    #' of the range and two checkboxes whether to keep the `NA` or `Inf`  values.
+    #' @param id (`character(1)`)\cr
+    #'  id of shiny element
+    ui_summary = function(id) {
+      ns <- NS(id)
+      uiOutput(ns("content"))
+    },
+
+    #' @description
+    #' Server module
+    #' @param id (`character(1)`)\cr
+    #'   an ID string that corresponds with the ID used to call the module's UI function.
+    #' @return `moduleServer` function which returns `NULL`
+    server_summary = function(id) {
+      moduleServer(
+        id = id,
+        function(input, output, session) {
+          logger::log_trace("RangeFilterState$server initializing, dataname: { deparse1(private$input_dataname) }")
+          output$content <- renderUI(
+            tagList(
+              mapply(
+                name = names(self$get_state()),
+                value = self$get_state(),
+                SIMPLIFY = FALSE,
+                function(name, value) {
+                  div(span(strong(paste0(name, ":")), paste(value, collapse = " - ")))
+                }
+              )
+            )
+          )
+        }
+      )
     }
   )
 )
