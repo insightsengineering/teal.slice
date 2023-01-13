@@ -798,7 +798,7 @@ FilteredData <- R6::R6Class( # nolint
           )
 
           shiny::observeEvent(self$get_filter_state(), {
-            if (length(self$get_filter_state()) == 0) {
+            if (private$get_filter_count() == 0) {
               shinyjs::hide("remove_all_filters")
             } else {
               shinyjs::show("remove_all_filters")
