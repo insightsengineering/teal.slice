@@ -706,7 +706,7 @@ FilteredData <- R6::R6Class( # nolint
               actionLink(
                 ns("minimise_filter_overview"),
                 label = NULL,
-                icon = icon("circle-minus", lib = "font-awesome"),
+                icon = icon("angle-down", lib = "font-awesome"),
                 title = "Minimise panel",
                 class = "remove pull-right"
               )
@@ -805,6 +805,15 @@ FilteredData <- R6::R6Class( # nolint
             }
             shinyjs::show("filter_active_vars_contents")
             shinyjs::hide("filters_active_count")
+            toggle_icon(session$ns("minimise_filter_overview"), c("fa-angle-right", "fa-angle-down"), TRUE)
+            toggle_title(session$ns("minimise_filter_overview"), c("Restore panel", "Minimise Panel"), TRUE)
+          })
+
+          shiny::observeEvent(input[["minimise_filter_overview"]], {
+            shinyjs::toggle("filter_active_vars_contents")
+            shinyjs::toggle("filters_active_count")
+            toggle_icon(session$ns("minimise_filter_overview"), c("fa-angle-right", "fa-angle-down"))
+            toggle_title(session$ns("minimise_filter_overview"), c("Restore panel", "Minimise Panel"))
           })
 
           # use isolate because we assume that the number of datasets does not change over the course of the teal app
@@ -830,18 +839,13 @@ FilteredData <- R6::R6Class( # nolint
             }
           )
 
-          output$teal_filters_count <- renderText({
+          output$teal_filters_count <- shiny::renderText({
             n_filters_active <- private$get_filter_count()
-            req(n_filters_active > 0L)
+            shiny::req(n_filters_active > 0L)
             sprintf(
               "%s filter%s applied across datasets",
               n_filters_active,
               ifelse(n_filters_active == 1, "", "s"))
-          })
-
-          observeEvent(input[["minimise_filter_overview"]], {
-            shinyjs::toggle("filter_active_vars_contents")
-            shinyjs::toggle("filters_active_count")
           })
 
           private$filter_panel_ui_id <- session$ns(NULL)
