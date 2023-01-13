@@ -828,11 +828,9 @@ FilteredData <- R6::R6Class( # nolint
           )
 
           output$teal_filters_count <- renderText({
-            n_filters_active <- reactive({
-              length(unlist(self$get_filter_state(), recursive = FALSE))
-            })
+            n_filters_active <- private$get_filter_count()
             # req(n_filters_active > 0L)
-            sprintf("%s filter%s active", n_filters_active(), ifelse(n_filters_active() == 1, "", "s"))
+            sprintf("%s filter%s active", n_filters_active, ifelse(n_filters_active == 1, "", "s"))
           })
 
           observeEvent(input[["minimise_filter_overview"]], {
@@ -1085,6 +1083,11 @@ FilteredData <- R6::R6Class( # nolint
       })
 
       return(invisible(NULL))
+    },
+
+    # tracks how many filter states exist
+    get_filter_count = function() {
+      length(unlist(self$get_filter_state(), recursive = FALSE))
     }
   )
 )
