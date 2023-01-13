@@ -60,6 +60,7 @@ FilterState <- R6::R6Class( # nolint
     #' \item{`"matrix"`}{ `varname` in the condition call will be returned as `<input_dataname>[, <varname>]`}
     #' }
     initialize = function(x,
+                          x_filtered,
                           varname,
                           varlabel = character(0),
                           input_dataname = NULL,
@@ -93,6 +94,8 @@ FilterState <- R6::R6Class( # nolint
       private$selected <- reactiveVal(NULL)
       private$na_count <- sum(is.na(x))
       private$keep_na <- reactiveVal(FALSE)
+
+      private$filtered_values <- x_filtered
 
       logger::log_trace(
         sprintf(
@@ -387,6 +390,7 @@ FilterState <- R6::R6Class( # nolint
     varname = character(0),
     varlabel = character(0),
     extract_type = logical(0),
+    filtered_values = NULL, # reactive containing the filtered variable, used for updating counts and histograms
 
     #' description
     #' Adds `is.na(varname)` before existing condition calls if `keep_na` is selected.

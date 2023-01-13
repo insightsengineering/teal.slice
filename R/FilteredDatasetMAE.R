@@ -297,9 +297,10 @@ MAEFilteredDataset <- R6::R6Class( # nolint
     #'
     #' @param id (`character(1)`)\cr
     #'   an ID string that corresponds with the ID used to call the module's UI function.
+    #' @param filtered_dataset TODO
     #' @param ... ignored.
     #' @return `moduleServer` function which returns `NULL`
-    srv_add_filter_state = function(id, ...) {
+    srv_add_filter_state = function(id, filtered_dataset, ...) {
       moduleServer(
         id = id,
         function(input, output, session) {
@@ -311,6 +312,7 @@ MAEFilteredDataset <- R6::R6Class( # nolint
           self$get_filter_states("subjects")$srv_add_filter_state(
             id = "subjects",
             data = data # MultiAssayExperiment
+            #TODO filtered_dataset
             # ignoring vars_include
           )
 
@@ -321,6 +323,7 @@ MAEFilteredDataset <- R6::R6Class( # nolint
               self$get_filter_states(experiment_name)$srv_add_filter_state(
                 id = experiment_name,
                 data = data[[experiment_name]] # SummarizedExperiment or matrix
+                # TODO filtered_dataset
                 # ignoring vars_include
               )
             }

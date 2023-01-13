@@ -39,12 +39,13 @@ LogicalFilterState <- R6::R6Class( # nolint
     #' \item{`"matrix"`}{ `varname` in the condition call will be returned as `<input_dataname>[, <varname>]`}
     #' }
     initialize = function(x,
+                          x_filtered,
                           varname,
                           varlabel = character(0),
                           input_dataname = NULL,
                           extract_type = character(0)) {
       stopifnot(is.logical(x))
-      super$initialize(x, varname, varlabel, input_dataname, extract_type)
+      super$initialize(x, x_filtered, varname, varlabel, input_dataname, extract_type)
       df <- as.factor(x)
       if (length(levels(df)) != 2) {
         if (levels(df) %in% c(TRUE, FALSE)) {

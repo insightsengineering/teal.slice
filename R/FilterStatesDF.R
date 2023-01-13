@@ -288,11 +288,12 @@ DFFilterStates <- R6::R6Class( # nolint
     #'   an ID string that corresponds with the ID used to call the module's UI function.
     #' @param data (`data.frame`)\cr
     #'  object which columns are used to choose filter variables.
+    #' @param filtered_dataset TODO (also what happens if not given...)
     #' @param vars_include (`character(n)`)\cr
     #'  optional, vector of column names to be included.
     #' @param ... ignored
     #' @return `moduleServer` function which returns `NULL`
-    srv_add_filter_state = function(id, data, vars_include = get_supported_filter_varnames(data = data), ...) {
+    srv_add_filter_state = function(id, data, filtered_dataset, vars_include = get_supported_filter_varnames(data = data), ...) {
       stopifnot(is.data.frame(data))
       check_ellipsis(..., stop = FALSE)
       moduleServer(
@@ -356,15 +357,21 @@ DFFilterStates <- R6::R6Class( # nolint
                   deparse1(private$input_dataname)
                 )
               )
+
+              var_name <- input$var_to_add
+
               self$queue_push(
                 x = init_filter_state(
-                  data[[input$var_to_add]],
-                  varname = as.name(input$var_to_add),
-                  varlabel = private$get_varlabels(input$var_to_add),
+                  x = data[[var_name]],
+                  x_filtered = reactive({
+                    filtered_dataset()[[var_name]]
+                  }),
+                  varname = as.name(var_name),
+                  varlabel = private$get_varlabels(var_name),
                   input_dataname = private$input_dataname
                 ),
                 queue_index = 1L,
-                element_id = input$var_to_add
+                element_id = var_name
               )
               logger::log_trace(
                 sprintf(

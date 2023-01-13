@@ -182,11 +182,12 @@ DefaultFilteredDataset <- R6::R6Class( # nolint
     #'
     #' @param id (`character(1)`)\cr
     #'   an ID string that corresponds with the ID used to call the module's UI function.
+    #' @param filtered_dataset TODO
     #' @param ... other arguments passed on to child `FilterStates` methods.
     #'
     #' @return `moduleServer` function which returns `NULL`
-    srv_add_filter_state = function(id, ...) {
-      check_ellipsis(..., stop = FALSE, allowed_args = "vars_include")
+    srv_add_filter_state = function(id, filtered_dataset, ...) {
+      check_ellipsis(..., stop = FALSE, allowed_args = c("vars_include"))
       moduleServer(
         id = id,
         function(input, output, session) {
@@ -197,6 +198,7 @@ DefaultFilteredDataset <- R6::R6Class( # nolint
           self$get_filter_states(id = "filter")$srv_add_filter_state(
             id = "filter",
             data = data,
+            filtered_dataset = filtered_dataset,
             ...
           )
           logger::log_trace(

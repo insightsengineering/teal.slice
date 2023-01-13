@@ -821,6 +821,7 @@ FilteredData <- R6::R6Class( # nolint
               fdataset <- self$get_filtered_dataset(dataname)
               fdataset$srv_add_filter_state(
                 id = private$get_ui_add_filter_id(dataname),
+                filtered_dataset = private$reactive_data[[dataname]],
                 vars_include = self$get_filterable_varnames(dataname)
               )
             }
