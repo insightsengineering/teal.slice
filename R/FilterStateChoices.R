@@ -199,7 +199,9 @@ ChoicesFilterState <- R6::R6Class( # nolint
             style = sprintf("width:%s%%", l_freq * 100),
             div(
               class = "choices_state_label",
-              style = sprintf("width:%s%%", f_freq * 100),
+              style = sprintf("width:%s%%", f_freq * 100)
+            ),
+            div(
               span(
                 class = "choices_state_label_text",
                 sprintf(
