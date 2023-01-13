@@ -830,7 +830,10 @@ FilteredData <- R6::R6Class( # nolint
           output$teal_filters_count <- renderText({
             n_filters_active <- private$get_filter_count()
             # req(n_filters_active > 0L)
-            sprintf("%s filter%s applied", n_filters_active, ifelse(n_filters_active == 1, "", "s"))
+            sprintf(
+              "%s filter%s applied across datasets",
+              n_filters_active,
+              ifelse(n_filters_active == 1, "", "s"))
           })
 
           observeEvent(input[["minimise_filter_overview"]], {
