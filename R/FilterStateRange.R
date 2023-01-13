@@ -313,19 +313,24 @@ RangeFilterState <- R6::R6Class( # nolint
           class = "filterPlotOverlayRange",
           plotOutput(ns("plot"), height = "100%")
         ),
-        teal.widgets::optionalSliderInput(
-          inputId = ns("selection"),
-          label = NULL,
-          min = pretty_range_inputs["min"],
-          max = pretty_range_inputs["max"],
-          # on filter init without predefined value select "pretty" (wider) range
-          value = if (identical(private$choices, self$get_selected())) {
-            pretty_range_inputs[c("min", "max")]
-          } else {
-            self$get_selected()
-          },
-          width = "100%",
-          step = pretty_range_inputs["step"]
+        div(
+          class = "filterRangeSlider",
+          teal.widgets::optionalSliderInput(
+            inputId = ns("selection"),
+            label = NULL,
+            min = pretty_range_inputs["min"],
+            max = pretty_range_inputs["max"],
+            # on filter init without predefined value select "pretty" (wider) range
+            value = isolate({
+              if (identical(private$choices, self$get_selected())) {
+                pretty_range_inputs[c("min", "max")]
+              } else {
+                self$get_selected()
+              }
+            }),
+            width = "100%",
+            step = pretty_range_inputs["step"]
+          )
         ),
         private$keep_inf_ui(ns("keep_inf")),
         private$keep_na_ui(ns("keep_na"))

@@ -151,12 +151,21 @@ a.remove_all:hover {
 }
 
 .filterPlotOverlayRange {
-  margin: 10px 11px -25px 11px;
+  margin: 10px 0px -25px;
   height: 25px;
   animation: 0.75s ease-out 0s 1 shinyDataFilterEnlargeY,
     0.5s ease-in 0s 1 shinyDataFilterFadeIn;
   transform-origin: bottom;
+  width: 100%;
+  max-width: 100%;
 }
+
+/* Needed for bs4 */
+.filterRangeSlider {
+  width: 100%;
+  max-width: 100%;
+}
+
 
 .filter_panel_dataname {
   font-weight: bold;
