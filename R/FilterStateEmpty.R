@@ -110,13 +110,12 @@ EmptyFilterState <- R6::R6Class( # nolint
   ),
 
   private = list(
-
-    #' @description
-    #' UI Module for `EmptyFilterState`.
-    #' This UI element contains checkbox input to
-    #' filter or keep missing values.
-    #' @param id (`character(1)`)\cr
-    #'  id of shiny element
+    # @description
+    # UI Module for `EmptyFilterState`.
+    # This UI element contains checkbox input to
+    # filter or keep missing values.
+    # @param id (`character(1)`)\cr
+    #  id of shiny element
     ui_inputs = function(id) {
       ns <- NS(id)
       fluidRow(
@@ -129,11 +128,11 @@ EmptyFilterState <- R6::R6Class( # nolint
         )
       )
     },
-    #' @description
-    #' Controls selection of `keep_na` checkbox input
-    #' @param id (`character(1)`)\cr
-    #'   an ID string that corresponds with the ID used to call the module's UI function.
-    #' return `moduleServer` function which returns `NULL`
+    # @description
+    # Controls selection of `keep_na` checkbox input
+    # @param id (`character(1)`)\cr
+    #   an ID string that corresponds with the ID used to call the module's UI function.
+    # return `moduleServer` function which returns `NULL`
     server_inputs = function(id) {
       moduleServer(
         id = id,

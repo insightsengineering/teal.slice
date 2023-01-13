@@ -334,6 +334,18 @@ FilterState <- R6::R6Class( # nolint
         function(input, output, session) {
           private$server_inputs("inputs")
           private$server_summary("summary")
+          state <- reactiveVal(FALSE)
+
+          observeEvent(input$show_menu, {
+            shinyjs::toggle("inputs")
+            shinyjs::toggle("summary")
+            state(!state())
+          })
+          observeEvent(state(), {
+            shinyjs::toggleCssClass("icon", "fa-sliders", condition = !state())
+            shinyjs::toggleCssClass("icon", "fa-list", condition = state())
+          })
+
           reactive(input$remove) # back to parent to remove self
         }
       )
@@ -348,7 +360,6 @@ FilterState <- R6::R6Class( # nolint
       ns <- NS(id)
       fluidPage(
         theme = get_teal_bs_theme(),
-        singleton(include_css_files(pattern = "filter-state")),
         fluidRow(
           column(
             width = 9,
@@ -372,19 +383,17 @@ FilterState <- R6::R6Class( # nolint
               icon = icon("circle-xmark", lib = "font-awesome"),
               class = "remove pull-right"
             ),
-            shinyWidgets::dropdownButton(
-              inputId = ns("show_inputs"),
-              status = "",
-              circle = FALSE,
-              icon = icon("ellipsis-vertical", lib = "font-awesome"),
-              inline = TRUE,
+            actionLink(
+              ns("show_menu"),
               label = "",
-              margin = "10px",
-              private$ui_inputs(ns("inputs"))
+              icon = icon("sliders", lib = "font-awesome", id = ns("icon")),
+              class = "remove pull-right"
             )
+
           )
         ),
-        private$ui_summary(ns("summary"))
+        shinyjs::hidden(div(id = ns("inputs"), private$ui_inputs(ns("inputs")))),
+        div(id = ns("summary"), private$ui_summary(ns("summary")))
       )
     }
   ),
@@ -567,21 +576,21 @@ FilterState <- R6::R6Class( # nolint
         invisible(NULL)
       })
     },
-    #' UI Module for `RangeFilterState`.
-    #' This UI element contains two values for `min` and `max`
-    #' of the range and two checkboxes whether to keep the `NA` or `Inf`  values.
-    #' @param id (`character(1)`)\cr
-    #'  id of shiny element
+    # UI Module for `RangeFilterState`.
+    # This UI element contains two values for `min` and `max`
+    # of the range and two checkboxes whether to keep the `NA` or `Inf`  values.
+    # @param id (`character(1)`)\cr
+    #  id of shiny element
     ui_summary = function(id) {
       ns <- NS(id)
       uiOutput(ns("content"))
     },
 
-    #' @description
-    #' Server module
-    #' @param id (`character(1)`)\cr
-    #'   an ID string that corresponds with the ID used to call the module's UI function.
-    #' @return `moduleServer` function which returns `NULL`
+    # @description
+    # Server module
+    # @param id (`character(1)`)\cr
+    #   an ID string that corresponds with the ID used to call the module's UI function.
+    # @return `moduleServer` function which returns `NULL`
     server_summary = function(id) {
       moduleServer(
         id = id,
