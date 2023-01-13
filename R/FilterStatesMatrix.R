@@ -83,7 +83,7 @@ MatrixFilterStates <- R6::R6Class( # nolint
             req(removed_state_name())
 
             for (fname in removed_state_name()) {
-              private$remove_filter_state_ui("subset", fname)
+              private$remove_filter_state_ui("subset", fname, .input = input)
             }
             removed_state_name(character(0))
           })
