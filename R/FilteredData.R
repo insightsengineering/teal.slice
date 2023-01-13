@@ -726,6 +726,7 @@ FilteredData <- R6::R6Class( # nolint
           ),
           div(
             id = ns("filters_active_count"),
+            style = "display: none;",
             textOutput(ns("teal_filters_count"))
           )
         ),
@@ -829,7 +830,7 @@ FilteredData <- R6::R6Class( # nolint
 
           output$teal_filters_count <- renderText({
             n_filters_active <- private$get_filter_count()
-            # req(n_filters_active > 0L)
+            req(n_filters_active > 0L)
             sprintf(
               "%s filter%s applied across datasets",
               n_filters_active,
@@ -847,11 +848,9 @@ FilteredData <- R6::R6Class( # nolint
             handlerExpr = {
               if (isTRUE(input[["filter_panel_active"]])) {
                 self$filter_panel_enable()
-                shinyjs::show("filters_active_count")
                 logger::log_trace("Enable the Filtered Panel with the filter_panel_enable method")
               } else {
                 self$filter_panel_disable()
-                shinyjs::hide("filters_active_count")
                 logger::log_trace("Disable the Filtered Panel with the filter_panel_enable method")
               }
             }, ignoreNULL = TRUE
