@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<coverage line-rate="0.584361233480176" branch-rate="0" lines-covered="2653" lines-valid="4540" branches-covered="0" branches-valid="0" complexity="0" version="3.6.1" timestamp="2023-01-16 11:12:46">
+<coverage line-rate="0.584489975765587" branch-rate="0" lines-covered="2653" lines-valid="4539" branches-covered="0" branches-valid="0" complexity="0" version="3.6.1" timestamp="2023-01-16 11:59:02">
   <sources/>
   <packages>
-    <package name="teal.slice" line-rate="0.584361233480176" branch-rate="0" complexity="0">
+    <package name="teal.slice" line-rate="0.584489975765587" branch-rate="0" complexity="0">
       <classes>
         <class name="call_utils.R" filename="R/call_utils.R" line-rate="0.974358974358974" branch-rate="0" complexity="0">
           <methods>
@@ -32186,7 +32186,7 @@
             <line number="91" hits="69" branch="false"/>
           </lines>
         </class>
-        <class name="utils.R" filename="R/utils.R" line-rate="0.480519480519481" branch-rate="0" complexity="0">
+        <class name="utils.R" filename="R/utils.R" line-rate="0.486842105263158" branch-rate="0" complexity="0">
           <methods>
             <method name="check_ellipsis" signature="" line-rate="1" branch-rate="0">
               <lines>
@@ -32280,9 +32280,8 @@
                 <line number="226" hits="0" branch="false"/>
                 <line number="227" hits="0" branch="false"/>
                 <line number="228" hits="0" branch="false"/>
-                <line number="229" hits="0" branch="false"/>
-                <line number="231" hits="0" branch="false"/>
-                <line number="233" hits="0" branch="false"/>
+                <line number="230" hits="0" branch="false"/>
+                <line number="232" hits="0" branch="false"/>
               </lines>
             </method>
           </methods>
@@ -32361,9 +32360,8 @@
             <line number="226" hits="0" branch="false"/>
             <line number="227" hits="0" branch="false"/>
             <line number="228" hits="0" branch="false"/>
-            <line number="229" hits="0" branch="false"/>
-            <line number="231" hits="0" branch="false"/>
-            <line number="233" hits="0" branch="false"/>
+            <line number="230" hits="0" branch="false"/>
+            <line number="232" hits="0" branch="false"/>
           </lines>
         </class>
         <class name="variable_types.R" filename="R/variable_types.R" line-rate="0.3125" branch-rate="0" complexity="0">
