@@ -112,6 +112,14 @@ get_teal_bs_theme <- function() {
 #'
 #' Switch between different icons or titles on a button.
 #'
+#' Wrapper functions that use `shinyjs::runjs` to change button properties in response to events,
+#' typically clicking those very buttons.
+#' `shiny`'s `actionButton` and `actionLink` create `<a>` tags,
+#' which may contain a child `<i>` tag that specifies an icon to be displayed.
+#' `toggle_icon` calls the `toggleClass` (when `one_way = FALSE`) or
+#' `removeClass` and `addClass` methods (when `one_way = TRUE`) to change icons.
+#' `toggle_title` calls the `attr` method to modify the `Title` attribute of the button.
+#'
 #' @param input_id `character(1)` (namespaced) id of the button
 #' @param icons,titles `character(2)` vector specifing values between which to toggle
 #' @param one_way `logical(1)` flag specifying whether to keep toggling;
@@ -129,7 +137,7 @@ get_teal_bs_theme <- function() {
 #' toggle_icon("toggle_element", c("fa-angle-right", "fa-angle-down"))
 #'
 #' # switch right- to down-pointing chevron
-#' toggle_icon("toggle_element", c("fa-angle-right", "fa-angle-down"))
+#' toggle_icon("toggle_element", c("fa-angle-right", "fa-angle-down"), one_way = TRUE)
 #' }
 #'
 #' library(shiny)

@@ -25,6 +25,15 @@ Invisible NULL.
 \description{
 Switch between different icons or titles on a button.
 }
+\details{
+Wrapper functions that use \code{shinyjs::runjs} to change button properties in response to events,
+typically clicking those very buttons.
+\code{shiny}'s \code{actionButton} and \code{actionLink} create \verb{<a>} tags,
+which may contain a child \verb{<i>} tag that specifies an icon to be displayed.
+\code{toggle_icon} calls the \code{toggleClass} (when \code{one_way = FALSE}) or
+\code{removeClass} and \code{addClass} methods (when \code{one_way = TRUE}) to change icons.
+\code{toggle_title} calls the \code{attr} method to modify the \code{Title} attribute of the button.
+}
 \examples{
 \dontrun{
 
@@ -32,7 +41,7 @@ Switch between different icons or titles on a button.
 toggle_icon("toggle_element", c("fa-angle-right", "fa-angle-down"))
 
 # switch right- to down-pointing chevron
-toggle_icon("toggle_element", c("fa-angle-right", "fa-angle-down"))
+toggle_icon("toggle_element", c("fa-angle-right", "fa-angle-down"), one_way = TRUE)
 }
 
 library(shiny)
