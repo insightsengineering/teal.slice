@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<coverage line-rate="0.586325177223874" branch-rate="0" lines-covered="2564" lines-valid="4373" branches-covered="0" branches-valid="0" complexity="0" version="3.6.1" timestamp="2023-01-13 10:33:38">
+<coverage line-rate="0.58641975308642" branch-rate="0" lines-covered="2565" lines-valid="4374" branches-covered="0" branches-valid="0" complexity="0" version="3.6.1" timestamp="2023-01-16 14:09:23">
   <sources/>
   <packages>
-    <package name="teal.slice" line-rate="0.586325177223874" branch-rate="0" complexity="0">
+    <package name="teal.slice" line-rate="0.58641975308642" branch-rate="0" complexity="0">
       <classes>
         <class name="call_utils.R" filename="R/call_utils.R" line-rate="0.974358974358974" branch-rate="0" complexity="0">
           <methods>
@@ -472,48 +472,6 @@
             <line number="78" hits="9" branch="false"/>
             <line number="79" hits="9" branch="false"/>
             <line number="81" hits="9" branch="false"/>
-          </lines>
-        </class>
-        <class name="eval_expr_with_msg.R" filename="R/eval_expr_with_msg.R" line-rate="0.625" branch-rate="0" complexity="0">
-          <methods>
-            <method name="eval_expr_with_msg" signature="" line-rate="0.625" branch-rate="0">
-              <lines>
-                <line number="2" hits="14" branch="false"/>
-                <line number="3" hits="14" branch="false"/>
-                <line number="4" hits="14" branch="false"/>
-                <line number="5" hits="2" branch="false"/>
-                <line number="6" hits="2" branch="false"/>
-                <line number="7" hits="2" branch="false"/>
-                <line number="8" hits="0" branch="false"/>
-                <line number="9" hits="0" branch="false"/>
-                <line number="10" hits="0" branch="false"/>
-                <line number="11" hits="0" branch="false"/>
-                <line number="12" hits="0" branch="false"/>
-                <line number="13" hits="0" branch="false"/>
-                <line number="14" hits="2" branch="false"/>
-                <line number="15" hits="2" branch="false"/>
-                <line number="16" hits="14" branch="false"/>
-                <line number="17" hits="14" branch="false"/>
-              </lines>
-            </method>
-          </methods>
-          <lines>
-            <line number="2" hits="14" branch="false"/>
-            <line number="3" hits="14" branch="false"/>
-            <line number="4" hits="14" branch="false"/>
-            <line number="5" hits="2" branch="false"/>
-            <line number="6" hits="2" branch="false"/>
-            <line number="7" hits="2" branch="false"/>
-            <line number="8" hits="0" branch="false"/>
-            <line number="9" hits="0" branch="false"/>
-            <line number="10" hits="0" branch="false"/>
-            <line number="11" hits="0" branch="false"/>
-            <line number="12" hits="0" branch="false"/>
-            <line number="13" hits="0" branch="false"/>
-            <line number="14" hits="2" branch="false"/>
-            <line number="15" hits="2" branch="false"/>
-            <line number="16" hits="14" branch="false"/>
-            <line number="17" hits="14" branch="false"/>
           </lines>
         </class>
         <class name="filter_state_api.R" filename="R/filter_state_api.R" line-rate="0" branch-rate="0" complexity="0">
@@ -1016,7 +974,7 @@
             <line number="169" hits="0" branch="false"/>
           </lines>
         </class>
-        <class name="FilteredData-utils.R" filename="R/FilteredData-utils.R" line-rate="1" branch-rate="0" complexity="0">
+        <class name="FilteredData-utils.R" filename="R/FilteredData-utils.R" line-rate="0.924050632911392" branch-rate="0" complexity="0">
           <methods>
             <method name="init_filtered_data" signature="" line-rate="1" branch-rate="0">
               <lines>
@@ -1100,6 +1058,27 @@
                 <line number="135" hits="168" branch="false"/>
               </lines>
             </method>
+            <method name="eval_expr_with_msg" signature="" line-rate="0.647058823529412" branch-rate="0">
+              <lines>
+                <line number="148" hits="14" branch="false"/>
+                <line number="149" hits="14" branch="false"/>
+                <line number="150" hits="14" branch="false"/>
+                <line number="151" hits="2" branch="false"/>
+                <line number="152" hits="2" branch="false"/>
+                <line number="153" hits="2" branch="false"/>
+                <line number="154" hits="0" branch="false"/>
+                <line number="155" hits="0" branch="false"/>
+                <line number="156" hits="0" branch="false"/>
+                <line number="157" hits="0" branch="false"/>
+                <line number="158" hits="0" branch="false"/>
+                <line number="159" hits="0" branch="false"/>
+                <line number="160" hits="2" branch="false"/>
+                <line number="161" hits="2" branch="false"/>
+                <line number="162" hits="2" branch="false"/>
+                <line number="163" hits="14" branch="false"/>
+                <line number="164" hits="14" branch="false"/>
+              </lines>
+            </method>
           </methods>
           <lines>
             <line number="25" hits="35" branch="false"/>
@@ -1164,6 +1143,23 @@
             <line number="133" hits="168" branch="false"/>
             <line number="134" hits="168" branch="false"/>
             <line number="135" hits="168" branch="false"/>
+            <line number="148" hits="14" branch="false"/>
+            <line number="149" hits="14" branch="false"/>
+            <line number="150" hits="14" branch="false"/>
+            <line number="151" hits="2" branch="false"/>
+            <line number="152" hits="2" branch="false"/>
+            <line number="153" hits="2" branch="false"/>
+            <line number="154" hits="0" branch="false"/>
+            <line number="155" hits="0" branch="false"/>
+            <line number="156" hits="0" branch="false"/>
+            <line number="157" hits="0" branch="false"/>
+            <line number="158" hits="0" branch="false"/>
+            <line number="159" hits="0" branch="false"/>
+            <line number="160" hits="2" branch="false"/>
+            <line number="161" hits="2" branch="false"/>
+            <line number="162" hits="2" branch="false"/>
+            <line number="163" hits="14" branch="false"/>
+            <line number="164" hits="14" branch="false"/>
           </lines>
         </class>
         <class name="FilteredData.R" filename="R/FilteredData.R" line-rate="0.471215351812367" branch-rate="0" complexity="0">
