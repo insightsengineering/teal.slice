@@ -360,8 +360,8 @@ FilteredData <- R6::R6Class( # nolint
       logger::log_trace("FilteredData$set_dataset setting dataset, name; { deparse1(dataname) }")
       validate_dataset_args(dataset_args, dataname)
 
-      dataset <- dataset_args[["dataset"]]
-      dataset_args[["dataset"]] <- NULL
+      dataset <- dataset_args$dataset
+      dataset_args$dataset <- NULL
 
       # to include it nicely in the Show R Code; the UI also uses datanames in ids, so no whitespaces allowed
       check_simple_name(dataname)
@@ -809,7 +809,7 @@ FilteredData <- R6::R6Class( # nolint
             toggle_title(session$ns("minimise_filter_overview"), c("Restore panel", "Minimise Panel"), TRUE)
           })
 
-          shiny::observeEvent(input[["minimise_filter_overview"]], {
+          shiny::observeEvent(input$minimise_filter_overview, {
             shinyjs::toggle("filter_active_vars_contents")
             shinyjs::toggle("filters_active_count")
             toggle_icon(session$ns("minimise_filter_overview"), c("fa-angle-right", "fa-angle-down"))
@@ -850,9 +850,9 @@ FilteredData <- R6::R6Class( # nolint
 
           private$filter_panel_ui_id <- session$ns(NULL)
           observeEvent(
-            eventExpr = input[["filter_panel_active"]],
+            eventExpr = input$filter_panel_active,
             handlerExpr = {
-              if (isTRUE(input[["filter_panel_active"]])) {
+              if (isTRUE(input$filter_panel_active)) {
                 self$filter_panel_enable()
                 logger::log_trace("Enable the Filtered Panel with the filter_panel_enable method")
               } else {

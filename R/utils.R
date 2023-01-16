@@ -156,22 +156,22 @@ get_teal_bs_theme <- function() {
 #'
 #' server <- function(input, output, session) {
 #'
-#'   observeEvent(input[["hide_content"]], {
+#'   observeEvent(input$hide_content, {
 #'     shinyjs::hide("content")
 #'     toggle_icon("toggle_content", c("fa-angle-down", "fa-angle-right"), one_way = TRUE)
 #'   }, ignoreInit = TRUE)
 #'
-#'   observeEvent(input[["show_content"]], {
+#'   observeEvent(input$show_content, {
 #'     shinyjs::show("content")
 #'     toggle_icon("toggle_content", c("fa-angle-right", "fa-angle-down"), one_way = TRUE)
 #'   }, ignoreInit = TRUE)
 #'
-#'   observeEvent(input[["toggle_content"]], {
+#'   observeEvent(input$toggle_content, {
 #'     shinyjs::toggle("content")
 #'     toggle_icon("toggle_content", c("fa-angle-right", "fa-angle-down"))
 #'   }, ignoreInit = TRUE)
 #'
-#'   output[["printout"]] <- renderPrint({
+#'   output$printout <- renderPrint({
 #'     head(faithful, 10)
 #'   })
 #'
