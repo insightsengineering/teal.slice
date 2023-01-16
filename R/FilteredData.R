@@ -695,7 +695,7 @@ FilteredData <- R6::R6Class( # nolint
               class = "col-sm-6",
               actionLink(
                 ns("remove_all_filters"),
-                "",
+                label = "",
                 icon("circle-xmark", lib = "font-awesome"),
                 title = "Remove active filters",
                 class = "remove_all pull-right"
@@ -721,10 +721,11 @@ FilteredData <- R6::R6Class( # nolint
               )
             )
           ),
-          div(
-            id = ns("filters_active_count"),
-            style = "display: none;",
-            textOutput(ns("teal_filters_count"))
+          shinyjs::hidden(
+            div(
+              id = ns("filters_active_count"),
+              textOutput(ns("teal_filters_count"))
+            )
           )
         ),
         div(
@@ -806,11 +807,7 @@ FilteredData <- R6::R6Class( # nolint
           })
 
           shiny::observeEvent(private$get_filter_count(), {
-            if (private$get_filter_count() == 0) {
-              shinyjs::hide("remove_all_filters")
-            } else {
-              shinyjs::show("remove_all_filters")
-            }
+            shinyjs::toggle("remove_all_filters", condition = private$get_filter_count() != 0)
             shinyjs::show("filter_active_vars_contents")
             shinyjs::hide("filters_active_count")
             toggle_icon(session$ns("minimise_filter_active"), c("fa-angle-right", "fa-angle-down"), TRUE)
