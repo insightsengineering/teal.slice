@@ -211,7 +211,7 @@ toggle_title <- function(input_id, titles, one_way = FALSE) {
   expr <-
     if (one_way) {
       sprintf(
-        "$(a#%s).attr('title', '%s');",
+        "$('a#%s').attr('title', '%s');",
         input_id, titles[2]
       )
     } else {
@@ -226,7 +226,6 @@ toggle_title <- function(input_id, titles, one_way = FALSE) {
         input_id, titles[1], titles[2]
       )
     }
-  if (one_way) print(expr)
 
   shinyjs::runjs(expr)
 
