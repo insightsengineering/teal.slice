@@ -309,29 +309,47 @@ RangeFilterState <- R6::R6Class( # nolint
       ns <- NS(id)
       pretty_range_inputs <- private$get_pretty_range_inputs(private$choices)
       fluidRow(
+        checkboxInput(ns("switch_inputs"), "Input manualy"),
         div(
-          class = "filterPlotOverlayRange",
-          plotOutput(ns("plot"), height = "100%")
-        ),
-        div(
-          class = "filterRangeSlider",
-          teal.widgets::optionalSliderInput(
-            inputId = ns("selection"),
-            label = NULL,
-            min = pretty_range_inputs["min"],
-            max = pretty_range_inputs["max"],
-            # on filter init without predefined value select "pretty" (wider) range
-            value = isolate({
-              if (identical(private$choices, self$get_selected())) {
-                pretty_range_inputs[c("min", "max")]
-              } else {
-                self$get_selected()
-              }
-            }),
-            width = "100%",
-            step = pretty_range_inputs["step"]
+          id = ns("slider_selection"),
+          div(
+            class = "filterPlotOverlayRange",
+            plotOutput(ns("plot"), height = "100%")
+          ),
+          div(
+            class = "filterRangeSlider",
+            teal.widgets::optionalSliderInput(
+              inputId = ns("selection"),
+              label = NULL,
+              min = pretty_range_inputs["min"],
+              max = pretty_range_inputs["max"],
+              # on filter init without predefined value select "pretty" (wider) range
+              value = isolate({
+                if (identical(private$choices, self$get_selected())) {
+                  pretty_range_inputs[c("min", "max")]
+                } else {
+                  self$get_selected()
+                }
+              }),
+              width = "100%",
+              step = pretty_range_inputs["step"]
+            )
           )
         ),
+        shinyjs::hidden(shinyWidgets::numericRangeInput(
+          inputId = ns("numeric_selection"),
+          label = NULL,
+          min = pretty_range_inputs["min"],
+          max = pretty_range_inputs["max"],
+          # on filter init without predefined value select "pretty" (wider) range
+          value = isolate({
+            if (identical(private$choices, self$get_selected())) {
+              pretty_range_inputs[c("min", "max")]
+            } else {
+              self$get_selected()
+            }
+          })
+        )),
         private$keep_inf_ui(ns("keep_inf")),
         private$keep_na_ui(ns("keep_na"))
       )
@@ -347,6 +365,11 @@ RangeFilterState <- R6::R6Class( # nolint
         id = id,
         function(input, output, session) {
           logger::log_trace("RangeFilterState$server initializing, dataname: { deparse1(private$input_dataname) }")
+
+          observeEvent(input$switch_inputs, ignoreNULL = TRUE, {
+            shinyjs::toggle("numeric_selection", condition = input$switch_inputs)
+            shinyjs::toggle("slider_selection", condition = !input$switch_inputs)
+          })
 
           output$plot <- renderPlot(
             bg = "transparent",
@@ -380,6 +403,13 @@ RangeFilterState <- R6::R6Class( # nolint
                   value = private$selected()
                 )
               }
+              if (!setequal(self$get_selected(), input$numeric_selection)) {
+                shinyWidgets::updateNumericRangeInput(
+                  session = session,
+                  inputId = "numeric_selection",
+                  value = private$selected()
+                )
+              }
             }
           )
 
@@ -390,6 +420,31 @@ RangeFilterState <- R6::R6Class( # nolint
             handlerExpr = {
               # because we extended real range into rounded one we need to apply intersect(range_input, range_real)
               selection_state <- as.numeric(pmax(pmin(input$selection, private$choices[2]), private$choices[1]))
+              if (!setequal(selection_state, self$get_selected())) {
+                validate(
+                  need(
+                    input$selection[1] <= input$selection[2],
+                    "Left range boundary should be lower than right"
+                  )
+                )
+                self$set_selected(selection_state)
+              }
+              logger::log_trace(
+                sprintf(
+                  "RangeFilterState$server@3 selection of variable %s changed, dataname: %s",
+                  deparse1(self$get_varname()),
+                  deparse1(private$input_dataname)
+                )
+              )
+            }
+          )
+          private$observers$selection <- observeEvent(
+            ignoreNULL = FALSE, # ignoreNULL: we don't want to ignore NULL when nothing is selected in `selectInput`,
+            ignoreInit = TRUE, # ignoreInit: should not matter because we set the UI with the desired initial state
+            eventExpr = input$numeric_selection,
+            handlerExpr = {
+              # because we extended real range into rounded one we need to apply intersect(range_input, range_real)
+              selection_state <- as.numeric(pmax(pmin(input$numeric_selection, private$choices[2]), private$choices[1]))
               if (!setequal(selection_state, self$get_selected())) {
                 validate(
                   need(
