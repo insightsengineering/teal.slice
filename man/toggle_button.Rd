@@ -13,7 +13,7 @@ toggle_title(input_id, titles, one_way = FALSE)
 \arguments{
 \item{input_id}{\code{character(1)} (namespaced) id of the button}
 
-\item{icons, titles}{\code{character(2)} vector specifing values between which to toggle}
+\item{icons, titles}{\code{character(2)} vector specifying values between which to toggle}
 
 \item{one_way}{\code{logical(1)} flag specifying whether to keep toggling;
 if TRUE, the target will be changed
