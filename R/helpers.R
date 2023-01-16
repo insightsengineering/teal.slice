@@ -1,5 +1,5 @@
-toggle_icon <- function(inputId, icons, one_way = FALSE) {
-  checkmate::assert_string(inputId)
+toggle_icon <- function(input_id, icons, one_way = FALSE) {
+  checkmate::assert_string(input_id)
   checkmate::assert_character(icons, len = 2L)
   checkmate::assert_flag(one_way)
 
@@ -7,10 +7,10 @@ toggle_icon <- function(inputId, icons, one_way = FALSE) {
     if (one_way) {
       sprintf(
         "$('#%s i').removeClass('%s').addClass('%s');",
-        inputId, icons[1], icons[2]
+        input_id, icons[1], icons[2]
       )
     } else {
-      sprintf("$('#%s i').toggleClass('%s');", inputId, paste(icons, collapse = " "))
+      sprintf("$('#%s i').toggleClass('%s');", input_id, paste(icons, collapse = " "))
     }
 
   shinyjs::runjs(expr)
@@ -18,8 +18,8 @@ toggle_icon <- function(inputId, icons, one_way = FALSE) {
   invisible(NULL)
 }
 
-toggle_title <- function(inputId, titles, one_way = FALSE) {
-  checkmate::assert_string(inputId)
+toggle_title <- function(input_id, titles, one_way = FALSE) {
+  checkmate::assert_string(input_id)
   checkmate::assert_character(titles, len = 2L)
   checkmate::assert_flag(one_way)
 
@@ -27,7 +27,7 @@ toggle_title <- function(inputId, titles, one_way = FALSE) {
     if (one_way) {
       sprintf(
         "$(a#%s).attr('title', '%s');",
-        inputId, titles[2]
+        input_id, titles[2]
       )
     } else {
       sprintf(
@@ -38,7 +38,7 @@ toggle_title <- function(inputId, titles, one_way = FALSE) {
           "} else { $(button_id).attr('title', '%2$s');",
           "}"
         ),
-        inputId, titles[1], titles[2]
+        input_id, titles[1], titles[2]
       )
     }
 if (one_way) print(expr)
@@ -47,6 +47,3 @@ if (one_way) print(expr)
 
   invisible(NULL)
 }
-
-
-
