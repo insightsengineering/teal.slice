@@ -305,27 +305,27 @@ testthat::test_that("FilterStates' queue is empty after queue_empty", {
   testthat::expect_length(filter_states$queue_get(1), 0)
 })
 
-testthat::test_that("FilterStates n_active_filter_states returns the number of active filter states", {
+testthat::test_that("FilterStates get_filter_count returns the number of active filter states", {
   filter_states <- FilterStates$new(input_dataname = "test", output_dataname = "test", datalabel = "test")
-  testthat::expect_equal(filter_states$n_active_filter_states(), 0)
+  testthat::expect_equal(filter_states$get_filter_count(), 0)
   filter_states$queue_initialize(list(ReactiveQueue$new()))
   filter_state <- FilterState$new("test", varname = "test")
   filter_states$queue_push(x = filter_state, queue_index = 1, element_id = "test")
   filter_states$queue_push(x = filter_state, queue_index = 1, element_id = "test2")
-  testthat::expect_equal(filter_states$n_active_filter_states(), 2)
+  testthat::expect_equal(filter_states$get_filter_count(), 2)
   filter_states$queue_remove(queue_index = 1, element_id = "test2")
-  testthat::expect_equal(filter_states$n_active_filter_states(), 1)
+  testthat::expect_equal(filter_states$get_filter_count(), 1)
 })
 
-testthat::test_that("FilterStates with multiple queues n_active_filter_states returns the number of filter states", {
+testthat::test_that("FilterStates with multiple queues get_filter_count returns the number of filter states", {
   filter_states <- FilterStates$new(input_dataname = "test", output_dataname = "test", datalabel = "test")
   filter_states$queue_initialize(list(a = ReactiveQueue$new(), b = ReactiveQueue$new()))
   filter_state <- FilterState$new("test", varname = "test")
   filter_states$queue_push(x = filter_state, queue_index = "a", element_id = "test")
   filter_states$queue_push(x = filter_state, queue_index = "b", element_id = "test2")
-  testthat::expect_equal(filter_states$n_active_filter_states(), 2)
+  testthat::expect_equal(filter_states$get_filter_count(), 2)
   filter_states$queue_remove(queue_index = "a", element_id = "test")
-  testthat::expect_equal(filter_states$n_active_filter_states(), 1)
+  testthat::expect_equal(filter_states$get_filter_count(), 1)
 })
 
 testthat::test_that("data_choices_labeled returns an empty character array if choices are an empty array", {

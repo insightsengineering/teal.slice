@@ -360,8 +360,8 @@ FilteredData <- R6::R6Class( # nolint
       logger::log_trace("FilteredData$set_dataset setting dataset, name; { deparse1(dataname) }")
       validate_dataset_args(dataset_args, dataname)
 
-      dataset <- dataset_args[["dataset"]]
-      dataset_args[["dataset"]] <- NULL
+      dataset <- dataset_args$dataset
+      dataset_args$dataset <- NULL
 
       # to include it nicely in the Show R Code; the UI also uses datanames in ids, so no whitespaces allowed
       check_simple_name(dataname)
@@ -667,15 +667,12 @@ FilteredData <- R6::R6Class( # nolint
             ),
             tags$div(
               class = "col-sm-3",
-              tags$a(
-                href = "javascript:void(0)",
-                class = "remove pull-right",
-                onclick = sprintf(
-                  "$('#%s').toggle();",
-                  ns("filters_overview_contents")
-                ),
+              actionLink(
+                ns("minimise_filter_overview"),
+                label = NULL,
+                icon = icon("angle-down", lib = "font-awesome"),
                 title = "Minimise panel",
-                tags$span(icon("circle-minus", lib = "font-awesome"))
+                class = "remove pull-right"
               )
             )
           ),
@@ -698,20 +695,17 @@ FilteredData <- R6::R6Class( # nolint
               class = "col-sm-6",
               actionLink(
                 ns("remove_all_filters"),
-                "",
+                label = "",
                 icon("circle-xmark", lib = "font-awesome"),
                 title = "Remove active filters",
                 class = "remove_all pull-right"
               ),
-              tags$a(
-                href = "javascript:void(0)",
-                class = "remove pull-right",
-                onclick = sprintf(
-                  "$('#%s').toggle();",
-                  ns("filter_active_vars_contents")
-                ),
+              actionLink(
+                ns("minimise_filter_active"),
+                label = NULL,
+                icon = icon("angle-down", lib = "font-awesome"),
                 title = "Minimise panel",
-                tags$span(icon("circle-minus", lib = "font-awesome"))
+                class = "remove pull-right"
               )
             )
           ),
@@ -726,6 +720,12 @@ FilteredData <- R6::R6Class( # nolint
                 }
               )
             )
+          ),
+          shinyjs::hidden(
+            div(
+              id = ns("filters_active_count"),
+              textOutput(ns("teal_filters_count"))
+            )
           )
         ),
         div(
@@ -739,12 +739,12 @@ FilteredData <- R6::R6Class( # nolint
             ),
             tags$div(
               class = "col-sm-3",
-              tags$a(
-                href = "javascript:void(0)",
-                class = "remove pull-right",
-                onclick = sprintf("$('#%s').toggle();", ns("filter_add_vars_contents")),
+              actionLink(
+                ns("minimise_filter_add_vars"),
+                label = NULL,
+                icon = icon("angle-down", lib = "font-awesome"),
                 title = "Minimise panel",
-                tags$span(icon("circle-minus", lib = "font-awesome"))
+                class = "remove pull-right"
               )
             )
           ),
@@ -795,12 +795,31 @@ FilteredData <- R6::R6Class( # nolint
             active_datanames = active_datanames
           )
 
-          shiny::observeEvent(self$get_filter_state(), {
-            if (length(self$get_filter_state()) == 0) {
-              shinyjs::hide("remove_all_filters")
-            } else {
-              shinyjs::show("remove_all_filters")
-            }
+          shiny::observeEvent(input$minimise_filter_overview, {
+            shinyjs::toggle("filters_overview_contents")
+            toggle_icon(session$ns("minimise_filter_overview"), c("fa-angle-right", "fa-angle-down"))
+            toggle_title(session$ns("minimise_filter_overview"), c("Restore panel", "Minimise Panel"))
+          })
+
+          shiny::observeEvent(input$minimise_filter_active, {
+            shinyjs::toggle("filter_active_vars_contents")
+            shinyjs::toggle("filters_active_count")
+            toggle_icon(session$ns("minimise_filter_active"), c("fa-angle-right", "fa-angle-down"))
+            toggle_title(session$ns("minimise_filter_active"), c("Restore panel", "Minimise Panel"))
+          })
+
+          shiny::observeEvent(private$get_filter_count(), {
+            shinyjs::toggle("remove_all_filters", condition = private$get_filter_count() != 0)
+            shinyjs::show("filter_active_vars_contents")
+            shinyjs::hide("filters_active_count")
+            toggle_icon(session$ns("minimise_filter_active"), c("fa-angle-right", "fa-angle-down"), TRUE)
+            toggle_title(session$ns("minimise_filter_active"), c("Restore panel", "Minimise Panel"), TRUE)
+          })
+
+          shiny::observeEvent(input$minimise_filter_add_vars, {
+            shinyjs::toggle("filter_add_vars_contents")
+            toggle_icon(session$ns("minimise_filter_add_vars"), c("fa-angle-right", "fa-angle-down"))
+            toggle_title(session$ns("minimise_filter_add_vars"), c("Restore panel", "Minimise Panel"))
           })
 
           # use isolate because we assume that the number of datasets does not change over the course of the teal app
@@ -827,11 +846,20 @@ FilteredData <- R6::R6Class( # nolint
             }
           )
 
+          output$teal_filters_count <- shiny::renderText({
+            n_filters_active <- private$get_filter_count()
+            shiny::req(n_filters_active > 0L)
+            sprintf(
+              "%s filter%s applied across datasets",
+              n_filters_active,
+              ifelse(n_filters_active == 1, "", "s"))
+          })
+
           private$filter_panel_ui_id <- session$ns(NULL)
           observeEvent(
-            eventExpr = input[["filter_panel_active"]],
+            eventExpr = input$filter_panel_active,
             handlerExpr = {
-              if (isTRUE(input[["filter_panel_active"]])) {
+              if (isTRUE(input$filter_panel_active)) {
                 self$filter_panel_enable()
                 logger::log_trace("Enable the Filtered Panel with the filter_panel_enable method")
               } else {
@@ -946,6 +974,7 @@ FilteredData <- R6::R6Class( # nolint
         }
       )
     }
+
   ),
 
   ## __Private Methods ====
@@ -1069,6 +1098,16 @@ FilteredData <- R6::R6Class( # nolint
       })
 
       return(invisible(NULL))
+    },
+
+    # @description
+    # Gets the number of active `FilterState` objects in all `FilterStates`
+    # in all `FilteredDataset`s in this `FilteredData` object.
+    # @return `integer(1)`
+    get_filter_count = function() {
+      sum(vapply(self$datanames(), function(dataname) {
+        self$get_filtered_dataset(dataname)$get_filter_count()
+      }, numeric(1L)))
     }
   )
 )
