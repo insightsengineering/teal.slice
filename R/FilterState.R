@@ -96,6 +96,7 @@ FilterState <- R6::R6Class( # nolint
       private$keep_na <- reactiveVal(FALSE)
 
       private$filtered_values <- x_filtered
+      private$filtered_na_count <- reactive(sum(is.na(x_filtered())))
 
       logger::log_trace(
         sprintf(
@@ -391,6 +392,7 @@ FilterState <- R6::R6Class( # nolint
     varlabel = character(0),
     extract_type = logical(0),
     filtered_values = NULL, # reactive containing the filtered variable, used for updating counts and histograms
+    filtered_na_count = NULL, # reactive containing the count of NA in the filtered dataset
 
     #' description
     #' Adds `is.na(varname)` before existing condition calls if `keep_na` is selected.
@@ -502,7 +504,7 @@ FilterState <- R6::R6Class( # nolint
       if (private$na_count > 0) {
         checkboxInput(
           ns("value"),
-          sprintf("Keep NA (%s)", private$na_count),
+          sprintf("Keep NA (%s/%s)", private$filtered_na_count(), private$na_count),
           value = self$get_keep_na()
         )
       } else {
@@ -518,6 +520,17 @@ FilterState <- R6::R6Class( # nolint
     #  changed through the api
     keep_na_srv = function(id) {
       moduleServer(id, function(input, output, session) {
+
+
+        observeEvent(private$filtered_na_count(), {
+          updateCheckboxInput(
+            session,
+            "value",
+            label = sprintf("Keep NA (%s/%s)", private$filtered_na_count(), private$na_count),
+            value = self$get_keep_na()
+          )
+        })
+
         # this observer is needed in the situation when private$keep_inf has been
         # changed directly by the api - then it's needed to rerender UI element
         # to show relevant values
