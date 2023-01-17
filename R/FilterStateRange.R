@@ -58,15 +58,27 @@ RangeFilterState <- R6::R6Class( # nolint
 
       private$data_count <- length(x)
 
-      private$histogram_data <- private$create_histogram_data(x)
-      private$histogram_reactive_data <- reactive(
-        private$create_histogram_data(x_filtered() , scaling = length(x_filtered())/private$data_count)
-      )
-
-
       private$inf_count <- sum(is.infinite(x))
       private$is_integer <- checkmate::test_integerish(x)
       private$keep_inf <- reactiveVal(FALSE)
+
+      pretty_range_inputs <- private$get_pretty_range_inputs(x)
+
+      private$unfiltered_histogram <-
+        ggplot2::ggplot(data.frame(x = x)) +
+        ggplot2::geom_histogram(
+          ggplot2::aes(x = x),
+          bins = 100,
+          fill = grDevices::rgb(211 / 255, 211 / 255, 211 / 255),
+          color = grDevices::rgb(211 / 255, 211 / 255, 211 / 255)
+        ) +
+        ggplot2::theme_void() +
+        ggplot2::scale_y_continuous(expand = c(0, 0)) +
+        ggplot2::scale_x_continuous(
+          expand = c(0, 0),
+          limits = c(pretty_range_inputs["min"], pretty_range_inputs["max"])
+        )
+
 
       return(invisible(self))
     },
@@ -204,25 +216,12 @@ RangeFilterState <- R6::R6Class( # nolint
     }
   ),
   private = list(
-    histogram_data = data.frame(),
+    unfiltered_histogram = NULL, # ggplot object
     data_count = 0,  # number of values in unfiltered data - needed for scaling histogram
-    histogram_reactive_data = NULL,
     keep_inf = NULL, # because it holds reactiveVal
     inf_count = integer(0),
     inf_filtered_count = NULL,
     is_integer = logical(0),
-
-    create_histogram_data = function(x, scaling = 1) {
-      if (sum(is.finite(x)) >= 2) {
-        ans <- as.data.frame(
-          stats::density(x, na.rm = TRUE, n = 100)[c("x", "y")] # 100 bins only
-        )
-        ans$y <- ans$y * scaling
-        ans
-      } else {
-        data.frame(x = NA_real_, y = NA_real_)
-      }
-    },
 
     # Adds is.infinite(varname) before existing condition calls if keep_inf is selected
     # returns a call
@@ -332,7 +331,6 @@ RangeFilterState <- R6::R6Class( # nolint
         div(
           class = "filterPlotOverlayRange",
           plotOutput(ns("plot"), height = "100%"),
-          plotOutput(ns("filtered_plot"), height = "100%")
         ),
         div(
           class = "filterRangeSlider",
@@ -369,40 +367,19 @@ RangeFilterState <- R6::R6Class( # nolint
         function(input, output, session) {
           logger::log_trace("RangeFilterState$server initializing, dataname: { deparse1(private$input_dataname) }")
 
-          create_plot <- function(var, colour) {
-            pretty_range_inputs <- private$get_pretty_range_inputs(private$choices)
-            ggplot2::ggplot(var) +
-            ggplot2::aes_string(x = "x", y = "y") +
-            ggplot2::geom_area(
-              fill = colour,
-              color = NA,
-              alpha = 0.2
-            ) +
-            ggplot2::theme_void() +
-            ggplot2::scale_y_continuous(expand = c(0, 0)) +
-            ggplot2::scale_x_continuous(
-              expand = c(0, 0),
-              limits = c(pretty_range_inputs["min"], pretty_range_inputs["max"])
-            )
-          }
-
-
-          output$filtered_plot <- renderPlot(
-            bg = "transparent",
-            height = 25,
-            expr = create_plot(
-              private$histogram_data,
-              colour = grDevices::rgb(100 / 255, 100 / 255, 100 / 255)
-            )
-          )
-
           output$plot <- renderPlot(
             bg = "transparent",
             height = 25,
-            expr = create_plot(
-              private$histogram_reactive_data(),
-              colour = grDevices::rgb(0 / 255,  85/ 255, 255 / 255)
-            )
+            expr = {
+              private$unfiltered_histogram +
+              ggplot2::geom_histogram(
+                data = data.frame(x = private$filtered_values()),
+                ggplot2::aes(x = x),
+                bins = 100,
+                fill = grDevices::rgb(173 / 255, 216 / 255, 230 / 255),
+                color = grDevices::rgb(173 / 255, 216 / 255, 230 / 255)
+              )
+            }
           )
 
           # this observer is needed in the situation when private$selected has been
