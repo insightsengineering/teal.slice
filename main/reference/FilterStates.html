@@ -20,7 +20,7 @@ SummarizedExperiment and matrix are available."><!-- mathjax --><script src="htt
     
     <a class="navbar-brand me-2" href="../index.html">teal.slice</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.2.0.9014</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.2.0.9015</small>
 
     <div style="width: 140px; margin-left: 0.5rem;"> <small class="nav-text text-muted me-auto">part of</small> <img src="https://github.com/insightsengineering/hex-stickers/blob/main/PNG/nest.png?raw=true" alt="NEST" style="height: 30px;"><a href="https://pharmaverse.org/" class="external-link"><img src="https://github.com/insightsengineering/hex-stickers/blob/main/PNG/pharmaverse.png?raw=true" alt="pharmaverse" style="height: 28px;"></a> </div>
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -43,14 +43,6 @@ SummarizedExperiment and matrix are available."><!-- mathjax --><script src="htt
 <li class="nav-item">
   <a class="nav-link" href="../news/index.html">Changelog</a>
 </li>
-<!-- start dropdown for versions --> <li class="nav-item dropdown">
-        <a href="#" class="nav-link dropdown-toggle"
-          data-bs-toggle="dropdown" role="button"
-          aria-expanded="false" aria-haspopup="true"
-          id="dropdown-versions">Versions</a> <div class="dropdown-menu" aria-labelledby="dropdown-versions"> <a class="dropdown-item" data-toggle="tooltip" title="" href="https://insightsengineering.github.io/teal.slice/main">main</a>
-<a class="dropdown-item" data-toggle="tooltip" title="" href="https://insightsengineering.github.io/teal.slice/latest-tag">latest-tag</a>
-<a class="dropdown-item" data-toggle="tooltip" title="" href="https://insightsengineering.github.io/teal.slice/v0.2.0">v0.2.0</a> </div></li>
-<!-- end dropdown for versions -->
       </ul><form class="form-inline my-2 my-lg-0" role="search">
         <input type="search" class="form-control me-sm-2" aria-label="Toggle navigation" name="search-input" data-search-index="../search.json" id="search-input" placeholder="Search for" autocomplete="off"></form>
 
@@ -99,7 +91,7 @@ Currently <code>data.frame</code>, <code>MultiAssayExperiment</code>,
 <li><p><a href="#method-FilterStates-get_call"><code>FilterStates$get_call()</code></a></p></li>
 <li><p><a href="#method-FilterStates-print"><code>FilterStates$print()</code></a></p></li>
 <li><p><a href="#method-FilterStates-get_fun"><code>FilterStates$get_fun()</code></a></p></li>
-<li><p><a href="#method-FilterStates-n_active_filter_states"><code>FilterStates$n_active_filter_states()</code></a></p></li>
+<li><p><a href="#method-FilterStates-get_filter_count"><code>FilterStates$get_filter_count()</code></a></p></li>
 <li><p><a href="#method-FilterStates-queue_empty"><code>FilterStates$queue_empty()</code></a></p></li>
 <li><p><a href="#method-FilterStates-queue_get"><code>FilterStates$queue_get()</code></a></p></li>
 <li><p><a href="#method-FilterStates-queue_initialize"><code>FilterStates$queue_initialize()</code></a></p></li>
@@ -221,16 +213,16 @@ no-op call such as <code>x &lt;- x</code>.</p><div class="section">
 <p><code>character(1)</code> the name of the function</p>
 </div>
 
-</div><p></p><hr><a id="method-FilterStates-n_active_filter_states"></a><div class="section">
-<h3 id="method-n-active-filter-states-">Method <code>n_active_filter_states()</code><a class="anchor" aria-label="anchor" href="#method-n-active-filter-states-"></a></h3>
+</div><p></p><hr><a id="method-FilterStates-get_filter_count"></a><div class="section">
+<h3 id="method-get-filter-count-">Method <code>get_filter_count()</code><a class="anchor" aria-label="anchor" href="#method-get-filter-count-"></a></h3>
 <p>Gets the number of active <code>FilterState</code> objects in this <code>FilterStates</code>.</p><div class="section">
 <h4 id="usage-6">Usage<a class="anchor" aria-label="anchor" href="#usage-6"></a></h4>
-<p></p><div class="r"><div class="sourceCode"><pre><code><span><span class="va">FilterStates</span><span class="op">$</span><span class="fu">n_active_filter_states</span><span class="op">(</span><span class="op">)</span></span></code></pre></div><p></p></div>
+<p></p><div class="r"><div class="sourceCode"><pre><code><span><span class="va">FilterStates</span><span class="op">$</span><span class="fu">get_filter_count</span><span class="op">(</span><span class="op">)</span></span></code></pre></div><p></p></div>
 </div>
 
 <div class="section">
 <h4 id="returns-4">Returns<a class="anchor" aria-label="anchor" href="#returns-4"></a></h4>
-<p><code>numeric(1)</code></p>
+<p><code>integer(1)</code></p>
 </div>
 
 </div><p></p><hr><a id="method-FilterStates-queue_empty"></a><div class="section">
