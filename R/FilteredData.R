@@ -797,6 +797,8 @@ FilteredData <- R6::R6Class( # nolint
 
           shiny::observeEvent(input$minimise_filter_overview, {
             shinyjs::toggle("filters_overview_contents")
+            toggle_icon(session$ns("minimise_filter_overview"), c("fa-angle-right", "fa-angle-down"))
+            toggle_title(session$ns("minimise_filter_overview"), c("Restore panel", "Minimise Panel"))
           })
 
           shiny::observeEvent(input$minimise_filter_active, {
@@ -816,6 +818,8 @@ FilteredData <- R6::R6Class( # nolint
 
           shiny::observeEvent(input$minimise_filter_add_vars, {
             shinyjs::toggle("filter_add_vars_contents")
+            toggle_icon(session$ns("minimise_filter_add_vars"), c("fa-angle-right", "fa-angle-down"))
+            toggle_title(session$ns("minimise_filter_add_vars"), c("Restore panel", "Minimise Panel"))
           })
 
           # use isolate because we assume that the number of datasets does not change over the course of the teal app
