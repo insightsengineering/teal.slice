@@ -23,6 +23,7 @@ reference:
     contents:
       - choices_labeled
       - get_filter_expr
+      - toggle_button
   - title: For Developers
     subtitle: R6 Classes
     desc: Abstract and concrete classes used to build teal functionality.

@@ -186,11 +186,11 @@ FilterStates <- R6::R6Class( # nolint
 
     #' @description
     #' Gets the number of active `FilterState` objects in this `FilterStates`.
-    #' @return `numeric(1)`
-    n_active_filter_states = function() {
+    #' @return `integer(1)`
+    get_filter_count = function() {
       sum(vapply(private$queue, function(queue) {
         queue$size()
-      }, FUN.VALUE = numeric(1)))
+      }, FUN.VALUE = integer(1)))
     },
 
     #' @description
