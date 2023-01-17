@@ -144,7 +144,7 @@ MAEFilterStates <- R6::R6Class( # nolint
         value <- resolve_state(state[[varname]])
         if (varname %in% names(filter_states)) {
           fstate <- filter_states[[varname]]
-          set_state(x = fstate, value = value)
+          fstate$set_state(value)
         } else {
           fstate <- init_filter_state(
             SummarizedExperiment::colData(data)[[varname]],
@@ -153,7 +153,7 @@ MAEFilterStates <- R6::R6Class( # nolint
             input_dataname = private$input_dataname,
             extract_type = "list"
           )
-          set_state(x = fstate, value = value, is_reactive = FALSE)
+          fstate$set_state(value)
           fstate$set_na_rm(TRUE)
           self$queue_push(
             x = fstate,

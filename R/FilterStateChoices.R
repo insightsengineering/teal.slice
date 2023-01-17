@@ -116,22 +116,6 @@ ChoicesFilterState <- R6::R6Class( # nolint
     },
 
     #' @description
-    #' Set state when using `set_filter_state`
-    #' @param state (`list`)\cr
-    #'  contains fields relevant for a specific class
-    #' \itemize{
-    #' \item{`selected`}{ defines initial selection}
-    #' \item{`keep_na` (`logical`)}{ defines whether to keep or remove `NA` values}
-    #' }
-    set_state_reactive = function(state) {
-      if (!is.null(state$selected)) {
-        state$selected <- as.character(state$selected)
-      }
-      super$set_state_reactive(state)
-      invisible(NULL)
-    },
-
-    #' @description
     #' Sets the selected values of this `ChoicesFilterState`.
     #'
     #' @param value (`character`) the array of the selected choices.
@@ -243,15 +227,7 @@ ChoicesFilterState <- R6::R6Class( # nolint
             )
           )
         },
-        if (private$na_count > 0) {
-          checkboxInput(
-            ns("keep_na"),
-            label = label_keep_na_count(private$na_count),
-            value = isolate(self$get_keep_na())
-          )
-        } else {
-          NULL
-        }
+        private$keep_na_ui(ns("keep_na"))
       )
     },
 
@@ -265,30 +241,32 @@ ChoicesFilterState <- R6::R6Class( # nolint
         id = id,
         function(input, output, session) {
           logger::log_trace("ChoicesFilterState$server initializing, dataname: { deparse1(private$input_dataname) }")
-          shiny::setBookmarkExclude(c("selection", "keep_na"))
 
-          private$observers$selection_reactive <- observeEvent(
-            private$selected_reactive(),
-            ignoreNULL = TRUE,
+          # this observer is needed in the situation when private$selected has been
+          # changed directly by the api - then it's needed to rerender UI element
+          # to show relevant values
+          private$observers$selection_api <- observeEvent(
+            ignoreNULL = FALSE, # it's possible that nothing is selected
+            ignoreInit = TRUE,
+            eventExpr = self$get_selected(),
             handlerExpr = {
-              updateCheckboxInput(
-                session = session,
-                inputId = "selection",
-                value =  private$selected_reactive()
-              )
-
-              logger::log_trace(sprintf(
-                "ChoicesFilterState$server@1 selection of variable %s changed, dataname: %s",
-                deparse1(self$get_varname()),
-                deparse1(private$input_dataname)
-              ))
-              private$selected_reactive(NULL)
+              if (!setequal(self$get_selected(), input$selection)) {
+                updateCheckboxInput(
+                  session = session,
+                  inputId = "selection",
+                  value =  self$get_selected()
+                )
+                logger::log_trace(sprintf(
+                  "ChoicesFilterState$server@1 selection of variable %s changed, dataname: %s",
+                  deparse1(self$get_varname()),
+                  deparse1(private$input_dataname)
+                ))
+              }
             }
           )
-          private$observe_keep_na_reactive(private$keep_na_reactive())
 
           private$observers$selection <- observeEvent(
-            ignoreNULL = FALSE, # ignoreNULL: we don't want to ignore NULL when nothing is selected in `selectInput`
+            ignoreNULL = FALSE, # it's possible that nothing is selected
             ignoreInit = TRUE, # ignoreInit: should not matter because we set the UI with the desired initial state
             eventExpr = input$selection,
             handlerExpr = {
@@ -301,7 +279,7 @@ ChoicesFilterState <- R6::R6Class( # nolint
               ))
             }
           )
-          private$observe_keep_na(input)
+          private$keep_na_srv("keep_na")
 
           logger::log_trace("ChoicesFilterState$server initialized, dataname: { deparse1(private$input_dataname) }")
           NULL

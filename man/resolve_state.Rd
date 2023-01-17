@@ -31,10 +31,9 @@ adding \code{NA} and \code{Inf} to the selection vector.}
 \code{list} containing \code{selected}, \code{keep_na} and \code{keep_inf}
 }
 \description{
-Resolves the state values for \code{FilterState$set_state()} or
-\code{FilterState$set_state_reactive()}, which accept only a list with \code{selected},
-\code{keep_na} and \code{keep_inf} fields. In case of the \code{default_filter} function, it
-returns \code{NULL} as during the initialization of \code{FilterState} values are set to
+Resolves the state values for \code{FilterState$set_state()}, which accepts only a list
+with \code{selected},\code{keep_na} and \code{keep_inf} fields. In case of the \code{default_filter} function,
+it returns \code{NULL} as during the initialization of \code{FilterState} values are set to
 default.
 }
 \note{
