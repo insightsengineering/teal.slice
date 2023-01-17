@@ -51,16 +51,19 @@ RangeFilterState <- R6::R6Class( # nolint
       super$initialize(x, x_filtered, varname, varlabel, input_dataname, extract_type)
       var_range <- range(x, finite = TRUE)
 
+      private$inf_filtered_count <- reactive(sum(is.infinite(x_filtered())))
+
       private$set_choices(var_range)
       self$set_selected(var_range)
 
-      private$histogram_data <- if (sum(is.finite(x)) >= 2) {
-        as.data.frame(
-          stats::density(x, na.rm = TRUE, n = 100)[c("x", "y")] # 100 bins only
-        )
-      } else {
-        data.frame(x = NA_real_, y = NA_real_)
-      }
+      private$data_count <- length(x)
+
+      private$histogram_data <- private$create_histogram_data(x)
+      private$histogram_reactive_data <- reactive(
+        private$create_histogram_data(x_filtered() , scaling = length(x_filtered())/private$data_count)
+      )
+
+
       private$inf_count <- sum(is.infinite(x))
       private$is_integer <- checkmate::test_integerish(x)
       private$keep_inf <- reactiveVal(FALSE)
@@ -202,9 +205,24 @@ RangeFilterState <- R6::R6Class( # nolint
   ),
   private = list(
     histogram_data = data.frame(),
+    data_count = 0,  # number of values in unfiltered data - needed for scaling histogram
+    histogram_reactive_data = NULL,
     keep_inf = NULL, # because it holds reactiveVal
     inf_count = integer(0),
+    inf_filtered_count = NULL,
     is_integer = logical(0),
+
+    create_histogram_data = function(x, scaling = 1) {
+      if (sum(is.finite(x)) >= 2) {
+        ans <- as.data.frame(
+          stats::density(x, na.rm = TRUE, n = 100)[c("x", "y")] # 100 bins only
+        )
+        ans$y <- ans$y * scaling
+        ans
+      } else {
+        data.frame(x = NA_real_, y = NA_real_)
+      }
+    },
 
     # Adds is.infinite(varname) before existing condition calls if keep_inf is selected
     # returns a call
@@ -313,7 +331,8 @@ RangeFilterState <- R6::R6Class( # nolint
       fluidRow(
         div(
           class = "filterPlotOverlayRange",
-          plotOutput(ns("plot"), height = "100%")
+          plotOutput(ns("plot"), height = "100%"),
+          plotOutput(ns("filtered_plot"), height = "100%")
         ),
         div(
           class = "filterRangeSlider",
@@ -350,21 +369,40 @@ RangeFilterState <- R6::R6Class( # nolint
         function(input, output, session) {
           logger::log_trace("RangeFilterState$server initializing, dataname: { deparse1(private$input_dataname) }")
 
+          create_plot <- function(var, colour) {
+            pretty_range_inputs <- private$get_pretty_range_inputs(private$choices)
+            ggplot2::ggplot(var) +
+            ggplot2::aes_string(x = "x", y = "y") +
+            ggplot2::geom_area(
+              fill = colour,
+              color = NA,
+              alpha = 0.2
+            ) +
+            ggplot2::theme_void() +
+            ggplot2::scale_y_continuous(expand = c(0, 0)) +
+            ggplot2::scale_x_continuous(
+              expand = c(0, 0),
+              limits = c(pretty_range_inputs["min"], pretty_range_inputs["max"])
+            )
+          }
+
+
+          output$filtered_plot <- renderPlot(
+            bg = "transparent",
+            height = 25,
+            expr = create_plot(
+              private$histogram_data,
+              colour = grDevices::rgb(100 / 255, 100 / 255, 100 / 255)
+            )
+          )
+
           output$plot <- renderPlot(
             bg = "transparent",
             height = 25,
-            expr = {
-              ggplot2::ggplot(private$histogram_data) +
-                ggplot2::aes_string(x = "x", y = "y") +
-                ggplot2::geom_area(
-                  fill = grDevices::rgb(66 / 255, 139 / 255, 202 / 255),
-                  color = NA,
-                  alpha = 0.2
-                ) +
-                ggplot2::theme_void() +
-                ggplot2::scale_y_continuous(expand = c(0, 0)) +
-                ggplot2::scale_x_continuous(expand = c(0, 0))
-            }
+            expr = create_plot(
+              private$histogram_reactive_data(),
+              colour = grDevices::rgb(0 / 255,  85/ 255, 255 / 255)
+            )
           )
 
           # this observer is needed in the situation when private$selected has been
@@ -430,7 +468,7 @@ RangeFilterState <- R6::R6Class( # nolint
       if (private$inf_count > 0) {
         checkboxInput(
           ns("value"),
-          sprintf("Keep Inf (%s)", private$inf_count),
+          sprintf("Keep Inf (%s/%s)", private$inf_filtered_count(), private$inf_count),
           value = self$get_keep_inf()
         )
       } else {
@@ -446,6 +484,16 @@ RangeFilterState <- R6::R6Class( # nolint
     #  changed through the api
     keep_inf_srv = function(id) {
       moduleServer(id, function(input, output, session) {
+
+        observeEvent(private$inf_filtered_count(), {
+          updateCheckboxInput(
+            session,
+            "value",
+            label = sprintf("Keep Inf (%s/%s)", private$inf_filtered_count(), private$inf_count),
+            value = self$get_keep_inf()
+          )
+        })
+
         # this observer is needed in the situation when private$keep_na has been
         # changed directly by the api - then it's needed to rerender UI element
         # to show relevant values
