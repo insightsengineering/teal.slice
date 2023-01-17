@@ -385,7 +385,7 @@ FilteredDataset <- R6::R6Class( # nolint
                 actionLink(
                   ns("collapse"),
                   label = "",
-                  icon = icon("circle-minus", lib = "font-awesome"),
+                  icon = icon("angle-down", lib = "font-awesome"),
                   class = "remove pull-right"
                 )
               )
@@ -452,18 +452,14 @@ FilteredDataset <- R6::R6Class( # nolint
           shiny::observeEvent(self$get_filter_state(), {
             shinyjs::hide("filter_count_ui")
             shinyjs::show("filters")
-            if (length(self$get_filter_state()) == 0) {
-              shinyjs::hide("remove_filters")
-              shinyjs::hide("collapse")
-            } else {
-              shinyjs::show("remove_filters")
-              shinyjs::show("collapse")
-            }
+            shinyjs::toggle("remove_filters", condition = length(self$get_filter_state()) != 0)
+            shinyjs::toggle("collapse", condition = length(self$get_filter_state()) != 0)
           })
 
           shiny::observeEvent(input$collapse, {
             shinyjs::toggle("filter_count_ui")
             shinyjs::toggle("filters")
+            toggle_icon(session$ns("collapse"), c("fa-angle-right", "fa-angle-down"))
           })
 
           observeEvent(input$remove_filters, {
