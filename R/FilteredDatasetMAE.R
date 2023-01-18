@@ -198,7 +198,7 @@ MAEFilteredDataset <- R6::R6Class( # nolint
         fs$set_filter_state(
           state = state[[fs_name]],
           data = `if`(fs_name == "subjects", data, data[[fs_name]]),
-          filtered_dataset = `if`(fs_name == "subjects", filtered_dataset, reactive(filtered_dataset[[fs_name]]))
+          filtered_dataset = `if`(fs_name == "subjects", filtered_dataset, reactive(filtered_dataset()[[fs_name]]))
         )
       })
 

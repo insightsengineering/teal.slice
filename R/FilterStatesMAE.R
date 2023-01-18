@@ -148,7 +148,7 @@ MAEFilterStates <- R6::R6Class( # nolint
         } else {
           fstate <- init_filter_state(
             x = SummarizedExperiment::colData(data)[[varname]],
-            x_filtered = reactive(SummarizedExperiment::colData(filtered_dataset)[[varname]]),
+            x_filtered = reactive(SummarizedExperiment::colData(filtered_dataset())[[varname]]),
             varname = as.name(varname),
             varlabel = private$get_varlabels(varname),
             input_dataname = private$input_dataname,
