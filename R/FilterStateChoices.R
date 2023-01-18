@@ -230,8 +230,8 @@ ChoicesFilterState <- R6::R6Class( # nolint
             checkboxGroupInput(
               inputId = ns("selection"),
               label = NULL,
-              selected = self$get_selected(),
-              choiceNames = private$get_choice_labels(),
+              selected = isolate(self$get_selected()),
+              choiceNames = isolate(private$get_choice_labels()),
               choiceValues = as.character(private$choices),
               width = "100%"
             )
@@ -239,8 +239,8 @@ ChoicesFilterState <- R6::R6Class( # nolint
         } else {
           teal.widgets::optionalSelectInput(
             inputId = ns("selection"),
-            choices = stats::setNames(private$choices, private$get_choice_labels()),
-            selected = self$get_selected(),
+            choices = isolate(stats::setNames(private$choices, private$get_choice_labels())),
+            selected = isolate(self$get_selected()),
             multiple = TRUE,
             options = shinyWidgets::pickerOptions(
               actionsBox = TRUE,
