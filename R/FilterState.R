@@ -435,13 +435,6 @@ FilterState <- R6::R6Class( # nolint
       }
     },
 
-    #' Sets `keep_na` field according to observed `input$keep_na`
-    #' If `keep_na = TRUE` `is.na(varname)` is added to the returned call.
-    #' Otherwise returned call excludes `NA` when executed.
-    observe_keep_na = function(input) {
-
-    },
-
     #' Set choices
     #'
     #' Set choices is supposed to be executed once in the constructor
@@ -520,8 +513,6 @@ FilterState <- R6::R6Class( # nolint
     #  changed through the api
     keep_na_srv = function(id) {
       moduleServer(id, function(input, output, session) {
-
-
         observeEvent(private$filtered_na_count(), {
           updateCheckboxInput(
             session,

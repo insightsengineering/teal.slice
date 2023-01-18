@@ -492,7 +492,7 @@ RangeFilterState <- R6::R6Class( # nolint
           ignoreInit = TRUE, # ignoreInit: should not matter because we set the UI with the desired initial state
           eventExpr = input$value,
           handlerExpr = {
-            keep_inf <- if (is.null(input$keep_inf)) {
+            keep_inf <- if (is.null(input$value)) {
               FALSE
             } else {
               input$value
