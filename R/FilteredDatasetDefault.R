@@ -101,7 +101,7 @@ DefaultFilteredDataset <- R6::R6Class( # nolint
     #' shiny::isolate(dataset$get_filter_state())
     #'
     #' @return `NULL`
-    set_filter_state = function(state, ...) {
+    set_filter_state = function(state, filtered_dataset, ...) {
       checkmate::assert_list(state)
       logger::log_trace(
         sprintf(
@@ -113,7 +113,7 @@ DefaultFilteredDataset <- R6::R6Class( # nolint
 
       data <- self$get_dataset()
       fs <- self$get_filter_states()[[1]]
-      fs$set_filter_state(state = state, data = data, ...)
+      fs$set_filter_state(state = state, data = data, filtered_dataset = filtered_dataset, ...)
       logger::log_trace(
         sprintf(
           "DefaultFilteredDataset$set_filter_state done setting up filters of variables %s, dataname: %s",

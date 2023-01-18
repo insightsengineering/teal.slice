@@ -150,7 +150,7 @@ DFFilterStates <- R6::R6Class( # nolint
     #' shiny::isolate(dffs$get_filter_state())
     #'
     #' @return `NULL`
-    set_filter_state = function(data, state, vars_include = get_supported_filter_varnames(data = data), ...) {
+    set_filter_state = function(data, filtered_dataset, state, vars_include = get_supported_filter_varnames(data = data), ...) {
       checkmate::assert_data_frame(data)
       checkmate::assert(
         checkmate::check_subset(names(state), names(data)),
@@ -183,14 +183,15 @@ DFFilterStates <- R6::R6Class( # nolint
 
       filters_to_apply <- state_names[state_names %in% vars_include]
 
-      for (varname in filters_to_apply) {
+      lapply(filters_to_apply, function(varname) {
         value <- resolve_state(state[[varname]])
         if (varname %in% names(filter_states)) {
           fstate <- filter_states[[varname]]
           fstate$set_state(value)
         } else {
           fstate <- init_filter_state(
-            data[[varname]],
+            x = data[[varname]],
+            x_filtered = reactive(filtered_dataset()[[varname]]),
             varname = as.name(varname),
             varlabel = private$get_varlabels(varname),
             input_dataname = private$input_dataname
@@ -198,7 +199,7 @@ DFFilterStates <- R6::R6Class( # nolint
           fstate$set_state(value)
           self$queue_push(x = fstate, queue_index = 1L, element_id = varname)
         }
-      }
+      })
       logger::log_trace(
         "{ class(self)[1] }$set_filter_state initialized, dataname: { deparse1(private$input_dataname) }"
       )
@@ -363,9 +364,7 @@ DFFilterStates <- R6::R6Class( # nolint
               self$queue_push(
                 x = init_filter_state(
                   x = data[[var_name]],
-                  x_filtered = reactive({
-                    filtered_dataset()[[var_name]]
-                  }),
+                  x_filtered = reactive(filtered_dataset()[[var_name]]),
                   varname = as.name(var_name),
                   varlabel = private$get_varlabels(var_name),
                   input_dataname = private$input_dataname

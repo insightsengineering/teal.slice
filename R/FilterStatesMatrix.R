@@ -114,7 +114,7 @@ MatrixFilterStates <- R6::R6Class( # nolint
     #'   column in `data`.
     #' @param ... ignored.
     #' @return `NULL`
-    set_filter_state = function(data, state, ...) {
+    set_filter_state = function(data, state, filtered_dataset, ...) {
       checkmate::assert_class(data, "matrix")
       checkmate::assert(
         checkmate::assert(
@@ -130,14 +130,15 @@ MatrixFilterStates <- R6::R6Class( # nolint
         "dataname: { deparse1(private$input_dataname) }"
       ))
       filter_states <- self$queue_get("subset")
-      for (varname in names(state)) {
+      lapply(names(state), function(varname) {
         value <- resolve_state(state[[varname]])
         if (varname %in% names(filter_states)) {
           fstate <- filter_states[[varname]]
           fstate$set_state(value)
         } else {
           fstate <- init_filter_state(
-            data[, varname],
+            x = data[, varname],
+            x_filtered = reactive(filtered_dataset()[[varname]]),
             varname = as.name(varname),
             varlabel = varname,
             input_dataname = private$input_dataname,
@@ -150,7 +151,7 @@ MatrixFilterStates <- R6::R6Class( # nolint
             element_id = varname
           )
         }
-      }
+      })
       logger::log_trace(paste(
         "MatrixFilterState$set_filter_state initialized,",
         "dataname: { deparse1(private$input_dataname) }"
@@ -239,7 +240,7 @@ MatrixFilterStates <- R6::R6Class( # nolint
     #'  object which columns are used to choose filter variables.
     #' @param ... ignored
     #' @return `moduleServer` function which returns `NULL`
-    srv_add_filter_state = function(id, data, ...) {
+    srv_add_filter_state = function(id, data, filtered_dataset, ...) {
       stopifnot(is.matrix(data))
       check_ellipsis(..., stop = FALSE)
       moduleServer(
@@ -307,22 +308,24 @@ MatrixFilterStates <- R6::R6Class( # nolint
                   deparse1(private$input_dataname)
                 )
               )
+              varname <- input$var_to_add
               self$queue_push(
                 x = init_filter_state(
-                  subset(data, select = input$var_to_add),
-                  varname = as.name(input$var_to_add),
-                  varlabel = private$get_varlabel(input$var_to_add),
+                  x = subset(data, select = varname),
+                  x_filtered = reactive(subset(fitered_dataset(), select = varname)),
+                  varname = as.name(varname),
+                  varlabel = private$get_varlabel(varname),
                   input_dataname = private$input_dataname,
                   extract_type = "matrix"
                 ),
                 queue_index = "subset",
-                element_id = input$var_to_add
+                element_id = varname
               )
               logger::log_trace(
                 sprintf(
                   "MatrixFilterState$srv_add_filter_state@2 added FilterState of variable %s, dataname: %s",
-                  deparse1(input$var_to_add),
-                  deparse1(private$input_dataname)
+                  deparse1(varname),
+                  deparse1(varname)
                 )
               )
             }

@@ -181,7 +181,7 @@ MAEFilteredDataset <- R6::R6Class( # nolint
     #' dataset$set_filter_state(state = fs)
     #' shiny::isolate(dataset$get_filter_state())
     #' @return `NULL`
-    set_filter_state = function(state, ...) {
+    set_filter_state = function(state, filtered_dataset, ...) {
       checkmate::assert_list(state)
       checkmate::assert_subset(names(state), c(names(self$get_filter_states())))
 
@@ -193,13 +193,14 @@ MAEFilteredDataset <- R6::R6Class( # nolint
         )
       )
       data <- self$get_dataset()
-      for (fs_name in names(state)) {
+      lapply(names(state), function(fs_name) {
         fs <- self$get_filter_states()[[fs_name]]
         fs$set_filter_state(
           state = state[[fs_name]],
-          data = `if`(fs_name == "subjects", data, data[[fs_name]])
+          data = `if`(fs_name == "subjects", data, data[[fs_name]]),
+          filtered_dataset = `if`(fs_name == "subjects", filtered_dataset, reactive(filtered_dataset[[fs_name]]))
         )
-      }
+      })
 
       logger::log_trace(
         sprintf(
@@ -311,8 +312,8 @@ MAEFilteredDataset <- R6::R6Class( # nolint
           data <- self$get_dataset()
           self$get_filter_states("subjects")$srv_add_filter_state(
             id = "subjects",
-            data = data # MultiAssayExperiment
-            #TODO filtered_dataset
+            data = data, # MultiAssayExperiment
+            filtered_dataset = filtered_dataset
             # ignoring vars_include
           )
 
@@ -320,10 +321,11 @@ MAEFilteredDataset <- R6::R6Class( # nolint
           lapply(
             experiment_names,
             function(experiment_name) {
+              fd <- filtered_dataset
               self$get_filter_states(experiment_name)$srv_add_filter_state(
                 id = experiment_name,
-                data = data[[experiment_name]] # SummarizedExperiment or matrix
-                # TODO filtered_dataset
+                data = data[[experiment_name]], # SummarizedExperiment or matrix
+                filtered_dataset = reactive(fd()[[experiment_name]])
                 # ignoring vars_include
               )
             }
