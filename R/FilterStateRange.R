@@ -65,7 +65,7 @@ RangeFilterState <- R6::R6Class( # nolint
       pretty_range_inputs <- private$get_pretty_range_inputs(x)
 
       private$unfiltered_histogram <-
-        ggplot2::ggplot(data.frame(x = x)) +
+        ggplot2::ggplot(data.frame(x = Filter(is.finite, private$filtered_values()))) +
         ggplot2::geom_histogram(
           ggplot2::aes(x = x),
           bins = 100,
@@ -73,10 +73,9 @@ RangeFilterState <- R6::R6Class( # nolint
           color = grDevices::rgb(211 / 255, 211 / 255, 211 / 255)
         ) +
         ggplot2::theme_void() +
-        ggplot2::scale_y_continuous(expand = c(0, 0)) +
-        ggplot2::scale_x_continuous(
-          expand = c(0, 0),
-          limits = c(pretty_range_inputs["min"], pretty_range_inputs["max"])
+        ggplot2::coord_cartesian(
+          expand = FALSE,
+          xlim = c(pretty_range_inputs["min"], pretty_range_inputs["max"])
         )
 
 
@@ -373,7 +372,7 @@ RangeFilterState <- R6::R6Class( # nolint
             expr = {
               private$unfiltered_histogram +
               ggplot2::geom_histogram(
-                data = data.frame(x = private$filtered_values()),
+                data = data.frame(x = Filter(is.finite, private$filtered_values())),
                 ggplot2::aes(x = x),
                 bins = 100,
                 fill = grDevices::rgb(173 / 255, 216 / 255, 230 / 255),
