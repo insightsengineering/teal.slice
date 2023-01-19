@@ -97,8 +97,7 @@ MAEFilterStates <- R6::R6Class( # nolint
             added_state_name(character(0))
           })
 
-          observeEvent(removed_state_name(), {
-            req(removed_state_name())
+          observeEvent(removed_state_name(), ignoreNULL = TRUE, {
             for (fname in removed_state_name()) {
               private$remove_filter_state_ui("y", fname, .input = input)
             }

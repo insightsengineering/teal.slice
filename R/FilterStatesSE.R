@@ -98,8 +98,7 @@ SEFilterStates <- R6::R6Class( # nolint
             added_state_name_subset(character(0))
           })
 
-          observeEvent(removed_state_name_subset(), {
-            req(removed_state_name_subset())
+          observeEvent(removed_state_name_subset(), ignoreNULL = TRUE, {
             for (fname in removed_state_name_subset()) {
               private$remove_filter_state_ui("subset", fname, .input = input)
             }
@@ -136,10 +135,9 @@ SEFilterStates <- R6::R6Class( # nolint
             added_state_name_select(character(0))
           })
 
-          observeEvent(removed_state_name_select(), {
-            req(removed_state_name_select())
+          observeEvent(removed_state_name_select(), ignoreNULL = TRUE, {
             for (fname in removed_state_name_select()) {
-              private$remove_filter_state_ui("select", fname)
+              private$remove_filter_state_ui("select", fname, .input = input)
             }
             removed_state_name_select(character(0))
           })
