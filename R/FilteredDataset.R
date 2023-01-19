@@ -497,7 +497,7 @@ FilteredDataset <- R6::R6Class( # nolint
     #'   an ID string that corresponds with the ID used to call the module's UI function.
     #' @param ... ignored
     #' @return `moduleServer` function.
-    srv_add_filter_state = function(id, ...) {
+    srv_add_filter_state = function(id, filtered_dataset, ...) {
       check_ellipsis(..., stop = FALSE)
       moduleServer(
         id = id,

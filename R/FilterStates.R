@@ -343,7 +343,7 @@ FilterStates <- R6::R6Class( # nolint
     #'   Names of the `list` element should correspond to the name of the
     #'   column in `data`.
     #' @return function which throws an error
-    set_filter_state = function(data, state) {
+    set_filter_state = function(data, state, filtered_dataset) {
       stop("Pure virtual method.")
     },
 

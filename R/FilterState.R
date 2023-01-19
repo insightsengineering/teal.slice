@@ -60,6 +60,7 @@ FilterState <- R6::R6Class( # nolint
     #' \item{`"matrix"`}{ `varname` in the condition call will be returned as `<input_dataname>[, <varname>]`}
     #' }
     initialize = function(x,
+                          x_filtered,
                           varname,
                           varlabel = character(0),
                           input_dataname = NULL,
@@ -93,6 +94,9 @@ FilterState <- R6::R6Class( # nolint
       private$selected <- reactiveVal(NULL)
       private$na_count <- sum(is.na(x))
       private$keep_na <- reactiveVal(FALSE)
+
+      private$filtered_values <- x_filtered
+      private$filtered_na_count <- reactive(sum(is.na(x_filtered())))
 
       logger::log_trace(
         sprintf(
@@ -387,6 +391,8 @@ FilterState <- R6::R6Class( # nolint
     varname = character(0),
     varlabel = character(0),
     extract_type = logical(0),
+    filtered_values = NULL, # reactive containing the filtered variable, used for updating counts and histograms
+    filtered_na_count = NULL, # reactive containing the count of NA in the filtered dataset
 
     #' description
     #' Adds `is.na(varname)` before existing condition calls if `keep_na` is selected.
@@ -427,13 +433,6 @@ FilterState <- R6::R6Class( # nolint
       } else {
         private$varname
       }
-    },
-
-    #' Sets `keep_na` field according to observed `input$keep_na`
-    #' If `keep_na = TRUE` `is.na(varname)` is added to the returned call.
-    #' Otherwise returned call excludes `NA` when executed.
-    observe_keep_na = function(input) {
-
     },
 
     #' Set choices
@@ -498,7 +497,7 @@ FilterState <- R6::R6Class( # nolint
       if (private$na_count > 0) {
         checkboxInput(
           ns("value"),
-          sprintf("Keep NA (%s)", private$na_count),
+          sprintf("Keep NA (%s/%s)", private$filtered_na_count(), private$na_count),
           value = self$get_keep_na()
         )
       } else {
@@ -514,6 +513,15 @@ FilterState <- R6::R6Class( # nolint
     #  changed through the api
     keep_na_srv = function(id) {
       moduleServer(id, function(input, output, session) {
+        observeEvent(private$filtered_na_count(), {
+          updateCheckboxInput(
+            session,
+            "value",
+            label = sprintf("Keep NA (%s/%s)", private$filtered_na_count(), private$na_count),
+            value = self$get_keep_na()
+          )
+        })
+
         # this observer is needed in the situation when private$keep_inf has been
         # changed directly by the api - then it's needed to rerender UI element
         # to show relevant values

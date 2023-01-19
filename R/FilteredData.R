@@ -365,10 +365,6 @@ FilteredData <- R6::R6Class( # nolint
 
       # to include it nicely in the Show R Code; the UI also uses datanames in ids, so no whitespaces allowed
       check_simple_name(dataname)
-      private$filtered_datasets[[dataname]] <- do.call(
-        what = init_filtered_dataset,
-        args = c(list(dataset), dataset_args, list(dataname = dataname))
-      )
 
       private$reactive_data[[dataname]] <- reactive({
         env <- new.env(parent = parent.env(globalenv()))
@@ -377,6 +373,12 @@ FilteredData <- R6::R6Class( # nolint
         eval_expr_with_msg(filter_call, env)
         get(x = dataname, envir = env)
       })
+
+      private$filtered_datasets[[dataname]] <- do.call(
+        what = init_filtered_dataset,
+        args = c(list(dataset), dataset_args, list(dataname = dataname))
+      )
+
 
       invisible(self)
     },
@@ -509,15 +511,15 @@ FilteredData <- R6::R6Class( # nolint
     set_filter_state = function(state) {
       checkmate::assert_subset(names(state), self$datanames())
       logger::log_trace("FilteredData$set_filter_state initializing, dataname: { paste(names(state), collapse = ' ') }")
-      for (dataname in names(state)) {
+      lapply(names(state), function(dataname) {
         fdataset <- self$get_filtered_dataset(dataname = dataname)
         dataset_state <- state[[dataname]]
-
         fdataset$set_filter_state(
           state = dataset_state,
+          filtered_dataset = private$reactive_data[[dataname]],
           vars_include = self$get_filterable_varnames(dataname)
         )
-      }
+      })
       logger::log_trace("FilteredData$set_filter_state initialized, dataname: { paste(names(state), collapse = ' ') }")
 
       invisible(NULL)
@@ -840,6 +842,7 @@ FilteredData <- R6::R6Class( # nolint
               fdataset <- self$get_filtered_dataset(dataname)
               fdataset$srv_add_filter_state(
                 id = private$get_ui_add_filter_id(dataname),
+                filtered_dataset = private$reactive_data[[dataname]],
                 vars_include = self$get_filterable_varnames(dataname)
               )
             }

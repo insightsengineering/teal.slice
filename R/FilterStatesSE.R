@@ -98,8 +98,7 @@ SEFilterStates <- R6::R6Class( # nolint
             added_state_name_subset(character(0))
           })
 
-          observeEvent(removed_state_name_subset(), {
-            req(removed_state_name_subset())
+          observeEvent(removed_state_name_subset(), ignoreNULL = TRUE, {
             for (fname in removed_state_name_subset()) {
               private$remove_filter_state_ui("subset", fname, .input = input)
             }
@@ -136,10 +135,9 @@ SEFilterStates <- R6::R6Class( # nolint
             added_state_name_select(character(0))
           })
 
-          observeEvent(removed_state_name_select(), {
-            req(removed_state_name_select())
+          observeEvent(removed_state_name_select(), ignoreNULL = TRUE, {
             for (fname in removed_state_name_select()) {
-              private$remove_filter_state_ui("select", fname)
+              private$remove_filter_state_ui("select", fname, .input = input)
             }
             removed_state_name_select(character(0))
           })
@@ -180,7 +178,7 @@ SEFilterStates <- R6::R6Class( # nolint
     #'   the name of the column in `rowData(data)` and `colData(data)`.
     #' @param ... ignored.
     #' @return `NULL`
-    set_filter_state = function(data, state, ...) {
+    set_filter_state = function(data, filtered_dataset, state, ...) {
       checkmate::assert_class(data, "SummarizedExperiment")
       checkmate::assert_class(state, "list")
 
@@ -209,14 +207,15 @@ SEFilterStates <- R6::R6Class( # nolint
       )
 
       filter_states <- self$queue_get("subset")
-      for (varname in names(state$subset)) {
+      lapply(names(state$subset), function(varname) {
         value <- resolve_state(state$subset[[varname]])
         if (varname %in% names(filter_states)) {
           fstate <- filter_states[[varname]]
           fstate$set_state(value)
         } else {
           fstate <- init_filter_state(
-            SummarizedExperiment::rowData(data)[[varname]],
+            x = SummarizedExperiment::rowData(data)[[varname]],
+            x_filtered = reactive(SummarizedExperiment::rowData(filtered_dataset())[[varname]]),
             varname = as.name(varname),
             input_dataname = private$input_dataname
           )
@@ -227,17 +226,18 @@ SEFilterStates <- R6::R6Class( # nolint
             element_id = varname
           )
         }
-      }
+      })
 
       filter_states <- self$queue_get("select")
-      for (varname in names(state$select)) {
+      lapply(names(state$select), function(varname) {
         value <- resolve_state(state$select[[varname]])
         if (varname %in% names(filter_states)) {
           fstate <- filter_states[[varname]]
           fstate$set_state(value)
         } else {
           fstate <- init_filter_state(
-            SummarizedExperiment::colData(data)[[varname]],
+            x = SummarizedExperiment::colData(data)[[varname]],
+            x_filtered = reactive(SummarizedExperiment::colData(filtered_dataset())[[varname]]),
             varname = as.name(varname),
             input_dataname = private$input_dataname
           )
@@ -248,7 +248,7 @@ SEFilterStates <- R6::R6Class( # nolint
             element_id = varname
           )
         }
-      }
+      })
       logger::log_trace(paste(
         "SEFilterState$set_filter_state initialized,",
         "dataname: { deparse1(private$input_dataname) }"
@@ -393,7 +393,7 @@ SEFilterStates <- R6::R6Class( # nolint
     #'  and `rowData` are separate shiny entities.
     #' @param ... ignored
     #' @return `moduleServer` function which returns `NULL`
-    srv_add_filter_state = function(id, data, ...) {
+    srv_add_filter_state = function(id, data, filtered_dataset, ...) {
       stopifnot(is(data, "SummarizedExperiment"))
       check_ellipsis(..., stop = FALSE)
       moduleServer(
@@ -510,19 +510,21 @@ SEFilterStates <- R6::R6Class( # nolint
                   deparse1(private$input_dataname)
                 )
               )
+              varname <- input$col_to_add
               self$queue_push(
                 x = init_filter_state(
-                  SummarizedExperiment::colData(data)[[input$col_to_add]],
-                  varname = as.name(input$col_to_add),
+                  x = SummarizedExperiment::colData(data)[[varname]],
+                  x_filtered = reactive(SummarizedExperiment::colData(filtered_dataset())[[varname]]),
+                  varname = as.name(varname),
                   input_dataname = private$input_dataname
                 ),
                 queue_index = "select",
-                element_id = input$col_to_add
+                element_id = varname
               )
               logger::log_trace(
                 sprintf(
                   "SEFilterStates$srv_add_filter_state@3 added FilterState of column %s to col data, dataname: %s",
-                  deparse1(input$col_to_add),
+                  deparse1(varname),
                   deparse1(private$input_dataname)
                 )
               )
@@ -539,19 +541,21 @@ SEFilterStates <- R6::R6Class( # nolint
                   deparse1(private$input_dataname)
                 )
               )
+              varname <- input$row_to_add
               self$queue_push(
                 x = init_filter_state(
-                  SummarizedExperiment::rowData(data)[[input$row_to_add]],
-                  varname = as.name(input$row_to_add),
+                  x = SummarizedExperiment::rowData(data)[[varname]],
+                  x_filtered = reactive(SummarizedExperiment::rowData(filtered_dataset())[[varname]]),
+                  varname = as.name(varname),
                   input_dataname = private$input_dataname
                 ),
                 queue_index = "subset",
-                element_id = input$row_to_add
+                element_id = varname
               )
               logger::log_trace(
                 sprintf(
                   "SEFilterStates$srv_add_filter_state@4 added FilterState of variable %s to row data, dataname: %s",
-                  deparse1(input$row_to_add),
+                  deparse1(varname),
                   deparse1(private$input_dataname)
                 )
               )
