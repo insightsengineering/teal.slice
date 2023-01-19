@@ -63,6 +63,7 @@ Initialize \code{EmptyFilterState} object
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{EmptyFilterState$new(
   x,
+  x_filtered,
   varname,
   varlabel = character(0),
   input_dataname = NULL,

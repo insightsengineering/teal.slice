@@ -133,7 +133,7 @@ The output list is a compatible input to \code{self$set_filter_state}.
 \subsection{Method \code{set_filter_state()}}{
 Set filter state
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{SEFilterStates$set_filter_state(data, state, ...)}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{SEFilterStates$set_filter_state(data, filtered_dataset, state, ...)}\if{html}{\out{</div>}}
 }
 
 \subsection{Arguments}{
@@ -215,7 +215,7 @@ This module unlike other \code{FilterStates} classes manages two
 sets of filter variables - one for \code{colData} and another for
 \code{rowData}.
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{SEFilterStates$srv_add_filter_state(id, data, ...)}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{SEFilterStates$srv_add_filter_state(id, data, filtered_dataset, ...)}\if{html}{\out{</div>}}
 }
 
 \subsection{Arguments}{

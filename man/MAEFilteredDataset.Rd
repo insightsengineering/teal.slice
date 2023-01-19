@@ -197,7 +197,7 @@ Gets variable names for the filtering.
 \subsection{Method \code{set_filter_state()}}{
 Set filter state
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{MAEFilteredDataset$set_filter_state(state, ...)}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{MAEFilteredDataset$set_filter_state(state, filtered_dataset, ...)}\if{html}{\out{</div>}}
 }
 
 \subsection{Arguments}{
@@ -294,7 +294,7 @@ of the same name from \code{FilterStates} as \code{MAEFilteredDataset}
 contains one \code{FilterStates} object for \code{colData} and one for each
 experiment.
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{MAEFilteredDataset$srv_add_filter_state(id, ...)}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{MAEFilteredDataset$srv_add_filter_state(id, filtered_dataset, ...)}\if{html}{\out{</div>}}
 }
 
 \subsection{Arguments}{
@@ -302,6 +302,8 @@ experiment.
 \describe{
 \item{\code{id}}{(\code{character(1)})\cr
 an ID string that corresponds with the ID used to call the module's UI function.}
+
+\item{\code{filtered_dataset}}{TODO}
 
 \item{\code{...}}{ignored.}
 }

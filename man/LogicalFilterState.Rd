@@ -78,6 +78,7 @@ Initialize a \code{FilterState} object
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{LogicalFilterState$new(
   x,
+  x_filtered,
   varname,
   varlabel = character(0),
   input_dataname = NULL,

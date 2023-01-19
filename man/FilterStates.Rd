@@ -345,7 +345,7 @@ The output list is a compatible input to \code{self$set_filter_state}.
 \subsection{Method \code{set_filter_state()}}{
 Sets active \code{FilterState} objects.
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{FilterStates$set_filter_state(data, state)}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{FilterStates$set_filter_state(data, state, filtered_dataset)}\if{html}{\out{</div>}}
 }
 
 \subsection{Arguments}{

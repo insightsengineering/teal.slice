@@ -81,6 +81,7 @@ Initialize a \code{FilterState} object
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{FilterState$new(
   x,
+  x_filtered,
   varname,
   varlabel = character(0),
   input_dataname = NULL,
@@ -410,9 +411,6 @@ If \code{isTRUE(private$use_dataset)} variable is prefixed by
 dataname to be evaluated as extracted object, for example
 \code{data$var}
 return (\code{name} or \code{call})
-Sets \code{keep_na} field according to observed \code{input$keep_na}
-If \code{keep_na = TRUE} \code{is.na(varname)} is added to the returned call.
-Otherwise returned call excludes \code{NA} when executed.
 Set choices
 
 Set choices is supposed to be executed once in the constructor

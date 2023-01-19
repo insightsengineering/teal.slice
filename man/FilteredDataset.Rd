@@ -422,7 +422,7 @@ Server module to add filter variable for this dataset
 
 Server module to add filter variable for this dataset
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{FilteredDataset$srv_add_filter_state(id, ...)}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{FilteredDataset$srv_add_filter_state(id, filtered_dataset, ...)}\if{html}{\out{</div>}}
 }
 
 \subsection{Arguments}{

@@ -157,7 +157,7 @@ The output list can be used as input to \code{self$set_filter_state}.
 \subsection{Method \code{set_filter_state()}}{
 Set filter state
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{MAEFilterStates$set_filter_state(data, state, ...)}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{MAEFilterStates$set_filter_state(data, state, filtered_dataset, ...)}\if{html}{\out{</div>}}
 }
 
 \subsection{Arguments}{
@@ -205,7 +205,7 @@ Removes a variable from the \code{ReactiveQueue} and its corresponding UI elemen
 \subsection{Method \code{ui_add_filter_state()}}{
 Shiny UI module to add filter variable
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{MAEFilterStates$ui_add_filter_state(id, data)}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{MAEFilterStates$ui_add_filter_state(id, data, filtered_dataset)}\if{html}{\out{</div>}}
 }
 
 \subsection{Arguments}{
@@ -234,7 +234,7 @@ Module controls available choices to select as a filter variable.
 Selected filter variable is being removed from available choices.
 Removed filter variable gets back to available choices.
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{MAEFilterStates$srv_add_filter_state(id, data, ...)}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{MAEFilterStates$srv_add_filter_state(id, data, filtered_dataset, ...)}\if{html}{\out{</div>}}
 }
 
 \subsection{Arguments}{

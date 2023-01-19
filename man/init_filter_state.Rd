@@ -6,6 +6,7 @@
 \usage{
 init_filter_state(
   x,
+  x_filtered,
   varname,
   varlabel = attr(x, "label"),
   input_dataname = NULL,

@@ -131,7 +131,7 @@ The output list can be used as input to \code{self$set_filter_state}.
 \subsection{Method \code{set_filter_state()}}{
 Sets a filter state
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{MatrixFilterStates$set_filter_state(data, state, ...)}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{MatrixFilterStates$set_filter_state(data, state, filtered_dataset, ...)}\if{html}{\out{</div>}}
 }
 
 \subsection{Arguments}{
@@ -207,7 +207,7 @@ Module controls available choices to select as a filter variable.
 Selected filter variable is being removed from available choices.
 Removed filter variable gets back to available choices.
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{MatrixFilterStates$srv_add_filter_state(id, data, ...)}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{MatrixFilterStates$srv_add_filter_state(id, data, filtered_dataset, ...)}\if{html}{\out{</div>}}
 }
 
 \subsection{Arguments}{

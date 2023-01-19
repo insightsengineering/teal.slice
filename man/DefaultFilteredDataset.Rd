@@ -153,7 +153,7 @@ The output list is a compatible input to \code{self$set_filter_state}.
 \subsection{Method \code{set_filter_state()}}{
 Set filter state
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{DefaultFilteredDataset$set_filter_state(state, ...)}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{DefaultFilteredDataset$set_filter_state(state, filtered_dataset, ...)}\if{html}{\out{</div>}}
 }
 
 \subsection{Arguments}{
@@ -241,7 +241,7 @@ For this class \code{srv_add_filter_state} calls single module
 \code{srv_add_filter_state} from \code{FilterStates} (\code{DefaultFilteredDataset}
 contains single \code{FilterStates})
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{DefaultFilteredDataset$srv_add_filter_state(id, ...)}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{DefaultFilteredDataset$srv_add_filter_state(id, filtered_dataset, ...)}\if{html}{\out{</div>}}
 }
 
 \subsection{Arguments}{
@@ -249,6 +249,8 @@ contains single \code{FilterStates})
 \describe{
 \item{\code{id}}{(\code{character(1)})\cr
 an ID string that corresponds with the ID used to call the module's UI function.}
+
+\item{\code{filtered_dataset}}{TODO}
 
 \item{\code{...}}{other arguments passed on to child \code{FilterStates} methods.}
 }

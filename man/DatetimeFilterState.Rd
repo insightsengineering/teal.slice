@@ -83,6 +83,7 @@ and is set only if object is initialized in \code{shiny}.
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{DatetimeFilterState$new(
   x,
+  x_filtered,
   varname,
   varlabel = character(0),
   input_dataname = NULL,
