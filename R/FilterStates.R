@@ -311,13 +311,13 @@ FilterStates <- R6::R6Class( # nolint
     #' @return shiny.tag
     ui = function(id) {
       ns <- NS(id)
-      private$cards_container_id <- ns("cards")
+      private$cards_container_id <- ns("filter-card-container")
       tagList(
         include_css_files(pattern = "filter-panel"),
-        tags$div(
+        include_js_files(pattern = "filter-panel"),
+        tags$ul(
           id = private$cards_container_id,
-          class = "list-group hideable-list-group",
-          `data-label` = ifelse(private$datalabel == "", "", (paste0("> ", private$datalabel)))
+          class = "filter-card-container"
         )
       )
     },

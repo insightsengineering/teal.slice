@@ -84,7 +84,7 @@
   margin-bottom: 10px;
 }
 
-#teal_filter_panel_whole > div.well div.form-group label {
+#teal_filter_panel_whole>div.well div.form-group label {
   width: 100%;
 }
 
@@ -130,11 +130,11 @@ a.remove_all:hover {
   gap: 5px;
 }
 
-.choices_state label > input {
+.choices_state label>input {
   flex-grow: 0;
 }
 
-.choices_state label > span {
+.choices_state label>span {
   flex-grow: 4;
 }
 
@@ -145,18 +145,18 @@ a.remove_all:hover {
 }
 
 .choices_state_label {
-  background-color:lightblue;
-  height:2rem;
-  display:inline-block;
-  position:absolute;
+  background-color: lightblue;
+  height: 2rem;
+  display: inline-block;
+  position: absolute;
   margin-top: -3px;
 }
 
 .choices_state_label_unfiltered {
-  background-color:lightgray;
-  height:2rem;
+  background-color: lightgray;
+  height: 2rem;
   margin-top: -3px;
-  display:inline-block;
+  display: inline-block;
   position: absolute;
 }
 
@@ -193,7 +193,7 @@ a.remove_all:hover {
   color: rgb(122, 122, 122);
 }
 
-.parent-hideable-list-group > div.hideable-list-group:not(:empty):before {
+.parent-hideable-list-group>div.hideable-list-group:not(:empty):before {
   padding: 2px 4px;
   font-size: 90%;
   color: #c7254e;
@@ -218,3 +218,64 @@ a.remove_all:hover {
 .teal_active_summary_filter_panel {
   overflow-x: auto;
 }
+
+/* 
+below is the css for the new fitler card design
+will need to remove relevant code above
+*/
+
+.filter-card-container {
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+}
+
+.filter-card {
+    width: 100%;
+    display: grid;
+    grid-template-rows: 10% 90%;
+}
+
+.filter-card-header {
+    background-color: var(--bs-secondary);
+}
+
+.filter-card-header:link,
+.filter-card-header:visited,
+.filter-card-header:hover,
+.filter-card-header:active {
+  text-decoration: none;
+}
+
+.filter-card-title {
+    display: flex;
+    border: 1px solid gray;
+    border-bottom: none;
+    transition: all 0.35s;
+}
+
+.filter-card-title-varname {
+    margin-right: auto;
+}
+
+.filter-card-title span:nth-last-child(-n+2) {
+    margin-right: 10px;
+    margin-left: 10px;
+}
+
+.filter-card-summary {
+    display: grid;
+    grid-template-columns: 2fr 1fr 1fr;
+    border: 1px solid gray;
+    border-top: none;
+}
+
+
+.filter-card-body {
+    display: none;
+    width: 100%;
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.2s ease-out;
+}
+

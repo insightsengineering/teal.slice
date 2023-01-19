@@ -349,35 +349,7 @@ FilterState <- R6::R6Class( # nolint
     #'  informing that it's not supported
     ui = function(id) {
       ns <- NS(id)
-      fluidPage(
-        theme = get_teal_bs_theme(),
-        fluidRow(
-          column(
-            width = 10,
-            class = "no-left-right-padding",
-            tags$div(
-              tags$span(self$get_varname(),
-                class = "filter_panel_varname"
-              ),
-              if (checkmate::test_character(self$get_varlabel(), min.len = 1) &&
-                tolower(self$get_varname()) != tolower(self$get_varlabel())) {
-                tags$span(self$get_varlabel(), class = "filter_panel_varlabel")
-              }
-            )
-          ),
-          column(
-            width = 2,
-            class = "no-left-right-padding",
-            actionLink(
-              ns("remove"),
-              label = "",
-              icon = icon("circle-xmark", lib = "font-awesome"),
-              class = "remove pull-right"
-            )
-          )
-        ),
-        private$ui_inputs(ns("inputs"))
-      )
+      private$ui_inputs(ns("inputs"))
     }
   ),
   private = list(

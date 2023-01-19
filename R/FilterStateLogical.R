@@ -120,6 +120,48 @@ LogicalFilterState <- R6::R6Class( # nolint
     #' filter$set_selected(TRUE)
     set_selected = function(value) {
       super$set_selected(value)
+    },
+
+    ui = function(id) {
+      ns <- NS(id)
+      
+      tags$li(
+        tags$div(
+        class = "filter-card",
+        tags$a(
+          class = "filter-card-header",
+          tags$div(
+              class = "filter-card-title",
+              tags$span(
+                class = "filter-card-title-varname",
+                tags$strong(private$varname)
+              ),
+              tags$span(
+                class = "filter-card-toggle-icon fa fa-chevron-right"
+              ),
+              tags$span(
+                class = "fa fa-circle-xmark"
+              )
+            ),
+            tags$div(
+              class = "filter-card-summary",
+              tags$span(
+                tags$strong("Value: "),
+                self$get_selected()
+              ),
+              tags$span(
+                tags$strong("NA: "),
+                self$get_keep_na()
+              )
+            )
+          ),
+          tags$div(
+            class = "filter-card-body",
+            "input goes here",
+            private$ui_inputs(ns("inputs"))
+          )
+        )
+      )
     }
   ),
   private = list(
