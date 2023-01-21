@@ -1,5 +1,6 @@
+console.log("loaded filter panel js")
 function initFilterPanel() {
-let filterHeaders = Array.from(document.getElementsByClassName("filter-card-title"))
+    let filterHeaders = Array.from(document.getElementsByClassName("filter-card-title"))
 // TO DO:
 // - allow insert/removal of cards (though may do this with shiny)
 // - listen on parent element to handle adding/removing cards 

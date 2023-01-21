@@ -128,32 +128,54 @@ LogicalFilterState <- R6::R6Class( # nolint
       tags$li(
         tags$div(
         class = "filter-card",
+        id = id,
         tags$a(
           class = "filter-card-header",
-          tags$div(
-              class = "filter-card-title",
-              tags$span(
+          # tags$div(
+          #     class = "filter-card-title",
+              tags$p(
                 class = "filter-card-title-varname",
-                tags$strong(private$varname)
+                tags$strong(paste0(private$varname, ": ")),
+                paste("(", self$get_selected(), ")")
               ),
-              tags$span(
-                class = "filter-card-toggle-icon fa fa-chevron-right"
-              ),
-              tags$span(
-                class = "fa fa-circle-xmark"
-              )
-            ),
-            tags$div(
-              class = "filter-card-summary",
-              tags$span(
-                tags$strong("Value: "),
-                self$get_selected()
-              ),
-              tags$span(
+              tags$p(
                 tags$strong("NA: "),
-                self$get_keep_na()
+                tags$span(
+                  class = if (self$get_keep_na()) {
+                    "fa fa-check"
+                  } else {
+                    "fa fa-xmark"
+                  }
+                )
+              ),
+              tags$p(),
+              tags$div(
+                class = "filter-card-icons",
+                tags$span(
+                  class = "filter-card-toggle-icon fa fa-chevron-right"
+                ),
+                tags$span(
+                  class = "fa fa-circle-xmark"
+                )
               )
-            )
+            #)
+            # tags$div(
+            #   class = "filter-card-summary",
+              # tags$p(
+              #   tags$strong("Value: "),
+              #   self$get_selected()
+              # ),
+            #   tags$p(
+            #     tags$strong("NA: "),
+            #     tags$span(
+            #       class = if (self$get_keep_na()) {
+            #         "fa fa-check"
+            #       } else {
+            #         "fa fa-xmark text-warning"
+            #       }
+            #     ) 
+            #   )
+            # )p
           ),
           tags$div(
             class = "filter-card-body",

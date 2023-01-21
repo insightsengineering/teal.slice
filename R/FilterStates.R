@@ -442,11 +442,12 @@ FilterStates <- R6::R6Class( # nolint
             selector = sprintf("#%s", private$cards_container_id),
             where = "beforeEnd",
             # add span with id to be removable
-            ui = div(
-              id = card_id,
-              class = "list-group-item",
-              filter_state$ui(session$ns("content"))
-            )
+            # ui = div(
+            #   id = card_id,
+            #   class = "list-group-item",
+            #   filter_state$ui(session$ns("content"))
+            # )
+            ui = filter_state$ui(card_id)
           )
           # signal sent from filter_state when it is marked for removal
           remove_fs <- filter_state$server(id = "content")
