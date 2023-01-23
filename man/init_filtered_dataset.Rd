@@ -8,6 +8,9 @@ init_filtered_dataset(
   dataset,
   dataname,
   keys = character(0),
+  parent_name = character(0),
+  parent = NULL,
+  join_keys = character(0),
   label = attr(dataset, "label"),
   metadata = NULL
 )

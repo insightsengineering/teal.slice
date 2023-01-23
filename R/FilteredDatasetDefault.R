@@ -31,10 +31,11 @@ DefaultFilteredDataset <- R6::R6Class( # nolint
     #' @param metadata (named `list` or `NULL`) \cr
     #'   Field containing metadata about the dataset. Each element of the list
     #'   should be atomic and length one.
-    initialize = function(dataset, dataname, keys = character(0), label = character(0), metadata = NULL) {
+    initialize = function(dataset, dataname, keys = character(0), parent_name = character(0), parent = NULL, join_keys = character(0), label = character(0), metadata = NULL) {
       checkmate::assert_class(dataset, "data.frame")
       super$initialize(dataset, dataname, keys, label, metadata)
-      dataname <- self$get_dataname()
+      private$parent_name <- parent_name
+      private$join_keys <- join_keys
 
       private$add_filter_states(
         filter_states = init_filter_states(
@@ -46,6 +47,17 @@ DefaultFilteredDataset <- R6::R6Class( # nolint
         ),
         id = "filter"
       )
+      if (!is.null(parent)) {
+        private$filtered_dataset <- reactive({
+          env <- new.env(parent = parent.env(globalenv()))
+          env[[dataname]] <- private$dataset
+          env[[parent_name]] <- parent()
+          filter_call <- self$get_call()
+          eval_expr_with_msg(filter_call, env)
+          get(x = dataname, envir = env)
+        })
+      }
+
       invisible(self)
     },
 
@@ -60,15 +72,40 @@ DefaultFilteredDataset <- R6::R6Class( # nolint
     #' applies to one argument (`...`) in `dplyr::filter` call.
     #' @return filter `call` or `list` of filter calls
     get_call = function() {
-      filter_call <- Filter(
-        f = Negate(is.null),
-        x = lapply(
-          self$get_filter_states(),
-          function(x) x$get_call()
+      filter_call <- super$get_call()
+      dataname <- private$dataname
+      parent_name <- private$parent_name
+
+      if (!identical(parent_name, character(0))) {
+        join_keys <- private$join_keys
+        parent_keys <- names(join_keys)
+        dataset_keys <- unname(join_keys)
+
+        merge_call <- call(
+          "<-",
+          as.name(dataname),
+          call_with_colon(
+            "dplyr::inner_join",
+            x = as.name(dataname),
+            y = if (length(parent_keys) == 0) {
+              as.name(parent_name)
+            } else {
+              call_extract_array(
+                dataname = parent_name,
+                column = parent_keys,
+                aisle = call("=", as.name("drop"), FALSE)
+              )
+            },
+            unlist_args = if (length(parent_keys) == 0 || length(dataset_keys) == 0) {
+              list()
+            } else if (identical(parent_keys, dataset_keys)) {
+              list(by = parent_keys)
+            } else {
+              list(by = setNames(parent_keys, nm = dataset_keys))
+            }
+          )
         )
-      )
-      if (length(filter_call) == 0) {
-        return(NULL)
+        filter_call <- c(filter_call, merge_call)
       }
       filter_call
     },
@@ -239,6 +276,8 @@ DefaultFilteredDataset <- R6::R6Class( # nolint
     }
   ),
   private = list(
+    parent_name = character(0),
+    join_keys = character(0),
     # Gets filter overview observations number and returns a
     # list of the number of observations of filtered/non-filtered datasets
     get_filter_overview_nobs = function(filtered_dataset) {

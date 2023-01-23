@@ -83,6 +83,9 @@ Initializes this \code{DefaultFilteredDataset} object
   dataset,
   dataname,
   keys = character(0),
+  parent_name = character(0),
+  parent = NULL,
+  join_keys = character(0),
   label = character(0),
   metadata = NULL
 )}\if{html}{\out{</div>}}

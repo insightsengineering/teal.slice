@@ -77,6 +77,9 @@
 init_filtered_dataset <- function(dataset, # nolint
                                   dataname,
                                   keys = character(0),
+                                  parent_name = character(0),
+                                  parent = NULL,
+                                  join_keys = character(0),
                                   label = attr(dataset, "label"),
                                   metadata = NULL) {
   UseMethod("init_filtered_dataset")
@@ -87,9 +90,21 @@ init_filtered_dataset <- function(dataset, # nolint
 init_filtered_dataset.data.frame <- function(dataset, # nolint
                                              dataname,
                                              keys = character(0),
+                                             parent_name = character(0),
+                                             parent = NULL,
+                                             join_keys = character(0),
                                              label = attr(dataset, "label"),
                                              metadata = NULL) {
-  DefaultFilteredDataset$new(dataset, dataname, keys, label, metadata)
+  DefaultFilteredDataset$new(
+    dataset = dataset,
+    dataname = dataname,
+    keys = keys,
+    parent_name = parent_name,
+    parent = parent,
+    join_keys = join_keys,
+    label = label,
+    metadata = metadata
+  )
 }
 
 #' @keywords internal
@@ -102,7 +117,13 @@ init_filtered_dataset.MultiAssayExperiment <- function(dataset, # nolint
   if (!requireNamespace("MultiAssayExperiment", quietly = TRUE)) {
     stop("Cannot load MultiAssayExperiment - please install the package or restart your session.")
   }
-  MAEFilteredDataset$new(dataset, dataname, keys, label, metadata)
+  MAEFilteredDataset$new(
+    dataset = dataset,
+    dataname = dataname,
+    keys = keys,
+    label = label,
+    metadata = metadata
+  )
 }
 
 # FilteredDataset abstract --------
@@ -146,6 +167,13 @@ FilteredDataset <- R6::R6Class( # nolint
       private$keys <- keys
       private$label <- if (is.null(label)) character(0) else label
       private$metadata <- metadata
+      private$filtered_dataset <- reactive({
+        env <- new.env(parent = parent.env(globalenv()))
+        env[[dataname]] <- private$dataset
+        filter_call <- self$get_call()
+        eval_expr_with_msg(filter_call, env)
+        get(x = dataname, envir = env)
+      })
       invisible(self)
     },
 
@@ -186,7 +214,6 @@ FilteredDataset <- R6::R6Class( # nolint
     },
     # managing filter states -----
 
-
     # getters ----
     #' @description
     #' Gets a filter expression
@@ -196,7 +223,14 @@ FilteredDataset <- R6::R6Class( # nolint
     #' depends on `filter_states` type and order which are set during initialization.
     #' @return filter `call` or `list` of filter calls
     get_call = function() {
-      stop("Pure virtual method.")
+      filter_call <- Filter(
+        f = Negate(is.null),
+        x = lapply(self$get_filter_states(), function(x) x$get_call())
+      )
+      if (length(filter_call) == 0) {
+        return(NULL)
+      }
+      filter_call
     },
 
     #' Gets the reactive values from the active `FilterState` objects.
@@ -244,8 +278,12 @@ FilteredDataset <- R6::R6Class( # nolint
     #' @description
     #' Gets the dataset object in this `FilteredDataset`
     #' @return `data.frame` or `MultiAssayExperiment`
-    get_dataset = function() {
-      private$dataset
+    get_dataset = function(filtered = FALSE) {
+      if (filtered) {
+        private$filtered_dataset
+      } else {
+        private$dataset
+      }
     },
 
     #' @description
@@ -513,8 +551,10 @@ FilteredDataset <- R6::R6Class( # nolint
     filter_states = list(),
     dataname = character(0),
     keys = character(0),
+    parent = NULL, # reactive
     label = character(0),
     metadata = NULL,
+    filtered_dataset = NULL,
 
     # if this has length > 0 then only varnames in this vector
     # can be filtered
@@ -527,7 +567,6 @@ FilteredDataset <- R6::R6Class( # nolint
     add_filter_states = function(filter_states, id) {
       stopifnot(is(filter_states, "FilterStates"))
       checkmate::assert_string(id)
-
       x <- setNames(list(filter_states), id)
       private$filter_states <- c(self$get_filter_states(), x)
     },

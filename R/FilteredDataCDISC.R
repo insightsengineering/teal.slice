@@ -71,69 +71,6 @@ CDISCFilteredData <- R6::R6Class( # nolint
     },
 
     #' @description
-    #'
-    #' Returns the filter `call` to filter a single dataset including the `inner_join`
-    #' with its parent dataset. It assumes that the filtered datasets it depends
-    #' on are available.
-    #'
-    #' @param dataname (`character(1)`) name of the dataset
-    #' @return (`call` or `list` of calls ) to filter dataset
-    #'
-    get_call = function(dataname) {
-      parent_dataname <- self$get_parentname(dataname)
-
-      if (length(parent_dataname) == 0) {
-        super$get_call(dataname)
-      } else {
-        join_keys <- self$get_join_keys()
-        if (!is.null(join_keys)) {
-          keys <- join_keys$get(parent_dataname, dataname)
-        } else {
-          keys <- character(0)
-        }
-
-        parent_keys <- names(keys)
-        dataset_keys <- unname(keys)
-
-        dataset <- self$get_filtered_dataset(dataname)
-
-        premerge_call <- Filter(
-          f = Negate(is.null),
-          x = lapply(
-            dataset$get_filter_states(),
-            function(x) x$get_call()
-          )
-        )
-
-        merge_call <- call(
-          "<-",
-          as.name(dataname),
-          call_with_colon(
-            "dplyr::inner_join",
-            x = as.name(dataname),
-            y = if (length(parent_keys) == 0) {
-              as.name(parent_dataname)
-            } else {
-              call_extract_array(
-                dataname = parent_dataname,
-                column = parent_keys,
-                aisle = call("=", as.name("drop"), FALSE)
-              )
-            },
-            unlist_args = if (length(parent_keys) == 0 || length(dataset_keys) == 0) {
-              list()
-            } else if (identical(parent_keys, dataset_keys)) {
-              list(by = parent_keys)
-            } else {
-              list(by = setNames(parent_keys, nm = dataset_keys))
-            }
-          )
-        )
-        c(premerge_call, merge_call)
-      }
-    },
-
-    #' @description
     #' Get names of datasets available for filtering
     #'
     #' @param dataname (`character` vector) names of the dataset
@@ -190,9 +127,7 @@ CDISCFilteredData <- R6::R6Class( # nolint
 
           subs <- private$get_filter_overview_nsubjs(dataname)
 
-          df <- cbind(
-            obs, subs
-          )
+          df <- cbind(obs, subs)
 
           rownames(df) <- if (!is.null(names(obs))) {
             names(obs)
@@ -241,6 +176,14 @@ CDISCFilteredData <- R6::R6Class( # nolint
       if (length(parent_dataname) == 0) {
         super$set_dataset(dataset_args, dataname)
       } else {
+        parent_reactive <- private$reactive_data[[parent_dataname]]
+        join_keys <- self$get_join_keys()
+        keys <- if (!is.null(join_keys)) {
+          join_keys$get(parent_dataname, dataname)
+        } else {
+          character(0)
+        }
+
         dataset <- dataset_args[["dataset"]]
         dataset_args[["dataset"]] <- NULL
 
@@ -248,19 +191,13 @@ CDISCFilteredData <- R6::R6Class( # nolint
         check_simple_name(dataname)
         private$filtered_datasets[[dataname]] <- do.call(
           what = init_filtered_dataset,
-          args = c(list(dataset), dataset_args, list(dataname = dataname))
+          args = c(
+            list(dataset = dataset),
+            dataset_args,
+            list(dataname = dataname, parent = parent_reactive, join_keys = keys, parent_name = parent_dataname)
+          )
         )
-
-        private$reactive_data[[dataname]] <- reactive({
-          env <- new.env(parent = parent.env(globalenv()))
-          env[[dataname]] <- self$get_filtered_dataset(dataname)$get_dataset()
-          env[[private$parents[[dataname]]]] <-
-            private$reactive_data[[private$parents[[dataname]]]]()
-
-          filter_call <- self$get_call(dataname)
-          eval_expr_with_msg(filter_call, env)
-          get(x = dataname, envir = env)
-        })
+        private$reactive_data[[dataname]] <- self$get_filtered_dataset(dataname)$get_dataset(TRUE)
       }
 
       invisible(self)

@@ -191,7 +191,7 @@ Get name of the dataset
 \subsection{Method \code{get_dataset()}}{
 Gets the dataset object in this \code{FilteredDataset}
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{FilteredDataset$get_dataset()}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{FilteredDataset$get_dataset(filtered = FALSE)}\if{html}{\out{</div>}}
 }
 
 \subsection{Returns}{

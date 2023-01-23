@@ -92,12 +92,12 @@ FilteredData <- R6::R6Class( # nolint
         self$set_code(code)
       }
 
-      for (dataname in names(data_objects)) {
-        self$set_dataset(data_objects[[dataname]], dataname)
-      }
-
       if (!is.null(join_keys)) {
         self$set_join_keys(join_keys)
+      }
+
+      for (dataname in names(data_objects)) {
+        self$set_dataset(data_objects[[dataname]], dataname)
       }
 
       invisible(self)
@@ -366,19 +366,11 @@ FilteredData <- R6::R6Class( # nolint
       # to include it nicely in the Show R Code; the UI also uses datanames in ids, so no whitespaces allowed
       check_simple_name(dataname)
 
-      private$reactive_data[[dataname]] <- reactive({
-        env <- new.env(parent = parent.env(globalenv()))
-        env[[dataname]] <- self$get_filtered_dataset(dataname)$get_dataset()
-        filter_call <- self$get_call(dataname)
-        eval_expr_with_msg(filter_call, env)
-        get(x = dataname, envir = env)
-      })
-
       private$filtered_datasets[[dataname]] <- do.call(
         what = init_filtered_dataset,
         args = c(list(dataset), dataset_args, list(dataname = dataname))
       )
-
+      private$reactive_data[[dataname]] <- self$get_filtered_dataset(dataname)$get_dataset(TRUE)
 
       invisible(self)
     },
