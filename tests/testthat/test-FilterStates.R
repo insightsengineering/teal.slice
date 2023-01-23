@@ -57,10 +57,10 @@ testthat::test_that("get_call returns a call filtering a data.frame based on a R
     output_dataname = "output",
     datalabel = "label"
   )
-  filter_states$queue_initialize(list(ReactiveQueue$new()))
+  filter_states$queue_initialize(list(shiny::reactiveVal()))
   range_filter <- RangeFilterState$new(x = test_dataset$a, varname = "a")
   isolate(range_filter$set_selected(c(1, 3)))
-  filter_states$queue_push(queue_index = 1, x = range_filter, element_id = "test")
+  isolate(filter_states$queue_push(queue_index = 1, x = range_filter, element_id = "test"))
   eval(isolate(filter_states$get_call()))
   testthat::expect_equal(output, test_dataset[2:4, , drop = FALSE])
   testthat::expect_equal(isolate(filter_states$get_call()), quote(output <- subset(test_dataset, a >= 1 & a <= 3)))
@@ -73,10 +73,10 @@ testthat::test_that("get_call returns a call filtering a data.frame based on a C
     output_dataname = "choices_output",
     datalabel = "label"
   )
-  filter_states$queue_initialize(list(ReactiveQueue$new()))
+  filter_states$queue_initialize(list(shiny::reactiveVal()))
   choices_filter <- ChoicesFilterState$new(x = choices_dataset$choices, varname = "choices")
   isolate(choices_filter$set_selected(c("a", "c")))
-  filter_states$queue_push(queue_index = 1, x = choices_filter, element_id = "test")
+  isolate(filter_states$queue_push(queue_index = 1, x = choices_filter, element_id = "test"))
   eval(isolate(filter_states$get_call()))
   testthat::expect_equal(choices_output, choices_dataset[c(1, 3), , drop = FALSE])
 })
@@ -88,10 +88,10 @@ testthat::test_that("get_call returns a call filtering a data.frame based on a L
     output_dataname = "logical_output",
     datalabel = "label"
   )
-  filter_states$queue_initialize(list(ReactiveQueue$new()))
+  filter_states$queue_initialize(list(shiny::reactiveVal()))
   logical_filter <- LogicalFilterState$new(x = logical_dataset$logical, varname = "logical")
   isolate(logical_filter$set_selected(FALSE))
-  filter_states$queue_push(queue_index = 1, x = logical_filter, element_id = "test")
+  isolate(filter_states$queue_push(queue_index = 1, x = logical_filter, element_id = "test"))
   eval(isolate(filter_states$get_call()))
   testthat::expect_equal(logical_output, logical_dataset[c(2, 3), , drop = FALSE])
 })
@@ -103,10 +103,10 @@ testthat::test_that("get_call returns a call filtering a data.frame based on a D
     output_dataname = "date_output",
     datalabel = "label"
   )
-  filter_states$queue_initialize(list(ReactiveQueue$new()))
+  filter_states$queue_initialize(list(shiny::reactiveVal()))
   date_filter <- DateFilterState$new(x = date_dataset$date, varname = "date")
   isolate(date_filter$set_selected(c("2021/08/25", "2021/08/26")))
-  filter_states$queue_push(queue_index = 1, x = date_filter, element_id = "test")
+  isolate(filter_states$queue_push(queue_index = 1, x = date_filter, element_id = "test"))
   eval(isolate(filter_states$get_call()))
   testthat::expect_equal(date_output, date_dataset[c(1, 2), , drop = FALSE])
 })
@@ -121,10 +121,10 @@ testthat::test_that("get_call returns a call filtering a data.frame based on a D
     datalabel = "label"
   )
 
-  filter_states$queue_initialize(list(ReactiveQueue$new()))
+  filter_states$queue_initialize(list(shiny::reactiveVal()))
   datetime_filter <- DatetimeFilterState$new(x = datetime_dataset$datetime, varname = "datetime")
   isolate(datetime_filter$set_selected(rep(ISOdate(2021, 8, 27, tz = Sys.timezone()), 2)))
-  filter_states$queue_push(queue_index = 1, x = datetime_filter, element_id = "test")
+  isolate(filter_states$queue_push(queue_index = 1, x = datetime_filter, element_id = "test"))
   eval(isolate(filter_states$get_call()))
   testthat::expect_equal(datetime_output, datetime_dataset[c(3), , drop = FALSE])
 })
@@ -145,7 +145,7 @@ testthat::test_that("get_call returns a call filtering a data.frame base on a co
     output_dataname = "output",
     datalabel = "label"
   )
-  filter_states$queue_initialize(list(ReactiveQueue$new()))
+  filter_states$queue_initialize(list(shiny::reactiveVal()))
 
   range_filter <- RangeFilterState$new(x = test_dataset$a, varname = "a")
   isolate(range_filter$set_selected(c(1, 3)))
@@ -159,11 +159,11 @@ testthat::test_that("get_call returns a call filtering a data.frame base on a co
   isolate(datetime_filter$set_selected(rep(ISOdate(2021, 8, 25, tz = Sys.timezone()), 2)))
 
 
-  filter_states$queue_push(queue_index = 1, x = range_filter, element_id = "test")
-  filter_states$queue_push(queue_index = 1, x = choices_filter, element_id = "test")
-  filter_states$queue_push(queue_index = 1, x = logical_filter, element_id = "test")
-  filter_states$queue_push(queue_index = 1, x = date_filter, element_id = "test")
-  filter_states$queue_push(queue_index = 1, x = datetime_filter, element_id = "test")
+  isolate(filter_states$queue_push(queue_index = 1, x = range_filter, element_id = "test"))
+  isolate(filter_states$queue_push(queue_index = 1, x = choices_filter, element_id = "test"))
+  isolate(filter_states$queue_push(queue_index = 1, x = logical_filter, element_id = "test"))
+  isolate(filter_states$queue_push(queue_index = 1, x = date_filter, element_id = "test"))
+  isolate(filter_states$queue_push(queue_index = 1, x = datetime_filter, element_id = "test"))
 
   eval(isolate(filter_states$get_call()))
   testthat::expect_equal(output, test_dataset[1, , drop = FALSE])
@@ -186,7 +186,7 @@ testthat::test_that("queue_get throws on a freshly initialized FilterStates obje
 
 testthat::test_that("The error message displays the queue index if datalabel is character(0)", {
   filter_states <- FilterStates$new(input_dataname = "test", output_dataname = "test", datalabel = character(0))
-  filter_states$queue_initialize(list(ReactiveQueue$new()))
+  filter_states$queue_initialize(list(shiny::reactiveVal()))
   testthat::expect_error(
     filter_states$queue_get(7),
     regexp = "ReactiveQueue 7 has not been initialized in FilterStates object belonging to the dataset "
@@ -195,8 +195,8 @@ testthat::test_that("The error message displays the queue index if datalabel is 
 
 testthat::test_that("queue_initialize does not throw when passed a list of ReactiveQueue", {
   filter_states <- FilterStates$new(input_dataname = "test", "test", "test")
-  testthat::expect_error(filter_states$queue_initialize(list(ReactiveQueue$new())), NA)
-  testthat::expect_error(filter_states$queue_initialize(list(x = ReactiveQueue$new())), NA)
+  testthat::expect_error(filter_states$queue_initialize(list(shiny::reactiveVal())), NA)
+  testthat::expect_error(filter_states$queue_initialize(list(x = shiny::reactiveVal())), NA)
 })
 
 testthat::test_that("queue_initialize throws an error when passed an empty list", {
@@ -208,10 +208,10 @@ testthat::test_that("queue_initialize throws an error when passed an empty list"
 })
 
 testthat::test_that("queue_get returns an empty list after queue_initialize with an empty queue", {
-  reactive_queue <- ReactiveQueue$new()
+  reactive_queue <- shiny::reactiveVal()
   filter_states <- FilterStates$new(input_dataname = "test", "test", "test")
   filter_states$queue_initialize(list(reactive_queue))
-  testthat::expect_equal(filter_states$queue_get(1), NULL)
+  testthat::expect_equal(isolate(filter_states$queue_get(1)), NULL)
 })
 
 testthat::test_that("queue_push throws before calling queue_initialize", {
@@ -222,50 +222,50 @@ testthat::test_that("queue_push throws before calling queue_initialize", {
 
 testthat::test_that("queue_push does not throw after the queue was initialized if passed a numeric", {
   filter_states <- FilterStates$new(input_dataname = "test", output_dataname = "test", datalabel = "test")
-  filter_states$queue_initialize(list(ReactiveQueue$new()))
+  filter_states$queue_initialize(list(shiny::reactiveVal()))
   filter_state <- FilterState$new("test", varname = "test")
-  testthat::expect_error(filter_states$queue_push(x = filter_state, queue_index = 1L, element_id = "test"), NA)
-  testthat::expect_error(filter_states$queue_push(x = filter_state, queue_index = 1, element_id = "test"), NA)
+  testthat::expect_error(isolate(filter_states$queue_push(x = filter_state, queue_index = 1L, element_id = "test")), NA)
+  testthat::expect_error(isolate(filter_states$queue_push(x = filter_state, queue_index = 1, element_id = "test")), NA)
 })
 
 testthat::test_that("Passing a FilterState to queue_push is the same as passing it in the list to queue_push", {
   filter_states_no_list <- FilterStates$new(input_dataname = "test", output_dataname = "test", datalabel = "test")
-  filter_states_no_list$queue_initialize(list(ReactiveQueue$new()))
+  filter_states_no_list$queue_initialize(list(shiny::reactiveVal()))
 
   filter_states_list <- FilterStates$new(input_dataname = "test", output_dataname = "test", datalabel = "test")
-  filter_states_list$queue_initialize(list(ReactiveQueue$new()))
+  filter_states_list$queue_initialize(list(shiny::reactiveVal()))
 
   filter_state <- FilterState$new("test", varname = "test")
-  filter_states_no_list$queue_push(x = filter_state, queue_index = 1, element_id = "test")
-  filter_states_list$queue_push(x = filter_state, queue_index = 1, element_id = "test")
+  isolate(filter_states_no_list$queue_push(x = filter_state, queue_index = 1, element_id = "test"))
+  isolate(filter_states_list$queue_push(x = filter_state, queue_index = 1, element_id = "test"))
   testthat::expect_equal(
-    filter_states_no_list$queue_get(queue_index = 1),
-    filter_states_list$queue_get(queue_index = 1)
+    isolate(filter_states_no_list$queue_get(queue_index = 1)),
+    isolate(filter_states_list$queue_get(queue_index = 1))
   )
 })
 
 testthat::test_that("queue_get returns the list of FilterState objects", {
   filter_states <- FilterStates$new(input_dataname = "test", output_dataname = "test", datalabel = "test")
-  filter_states$queue_initialize(list(ReactiveQueue$new()))
+  filter_states$queue_initialize(list(shiny::reactiveVal()))
   filter_state <- FilterState$new("test", varname = "test")
-  filter_states$queue_push(x = filter_state, queue_index = 1, element_id = "test")
-  checkmate::expect_list(filter_states$queue_get(queue_index = 1), types = "FilterState")
+  isolate(filter_states$queue_push(x = filter_state, queue_index = 1, element_id = "test"))
+  checkmate::expect_list(isolate(filter_states$queue_get(queue_index = 1)), types = "FilterState")
 })
 
 testthat::test_that("queue_get returns the list with elements passed to queue_push", {
   filter_states <- FilterStates$new(input_dataname = "test", output_dataname = "test", datalabel = "test")
-  filter_states$queue_initialize(list(ReactiveQueue$new()))
+  filter_states$queue_initialize(list(shiny::reactiveVal()))
   filter_state <- FilterState$new("test", varname = "test")
-  filter_states$queue_push(x = filter_state, queue_index = 1, element_id = "test")
-  testthat::expect_equal(filter_states$queue_get(1)[[1]], filter_state)
+  isolate(filter_states$queue_push(x = filter_state, queue_index = 1, element_id = "test"))
+  testthat::expect_equal(isolate(filter_states$queue_get(1)[[1]]), filter_state)
 })
 
 testthat::test_that("Elements of the list returned by queue_get have names corresponding to varname", {
   filter_states <- FilterStates$new(input_dataname = "test", output_dataname = "test", datalabel = "test")
-  filter_states$queue_initialize(list(ReactiveQueue$new()))
+  filter_states$queue_initialize(list(shiny::reactiveVal()))
   filter_state <- FilterState$new("test", varname = "test")
-  filter_states$queue_push(x = filter_state, queue_index = 1, element_id = "test")
-  testthat::expect_equal(names(filter_states$queue_get(1)), as.character(filter_state$get_varname()))
+  isolate(filter_states$queue_push(x = filter_state, queue_index = 1, element_id = "test"))
+  testthat::expect_equal(names(isolate(filter_states$queue_get(1))), as.character(filter_state$get_varname()))
 })
 
 testthat::test_that("queue_remove does not throw before initializing the queue", {
@@ -275,57 +275,57 @@ testthat::test_that("queue_remove does not throw before initializing the queue",
 
 testthat::test_that("queue_remove does not throw after initializing the queue", {
   filter_states <- FilterStates$new(input_dataname = "test", output_dataname = "test", datalabel = "test")
-  filter_states$queue_initialize(list(ReactiveQueue$new()))
-  testthat::expect_error(filter_states$queue_remove(queue_index = 1, element_id = "test"), NA)
+  filter_states$queue_initialize(list(shiny::reactiveVal()))
+  testthat::expect_error(isolate(filter_states$queue_remove(queue_index = 1, element_id = "test")), NA)
 })
 
 testthat::test_that("queue_remove does not throw after pushing an element to the initialized queue", {
   filter_states <- FilterStates$new(input_dataname = "test", output_dataname = "test", datalabel = "test")
-  filter_states$queue_initialize(list(ReactiveQueue$new()))
+  filter_states$queue_initialize(list(shiny::reactiveVal()))
   filter_state <- FilterState$new("test", varname = "test")
-  filter_states$queue_push(x = filter_state, queue_index = 1, element_id = "test")
-  testthat::expect_error(filter_states$queue_remove(queue_index = 1, element_id = "test"), NA)
+  isolate(filter_states$queue_push(x = filter_state, queue_index = 1, element_id = "test"))
+  testthat::expect_error(isolate(filter_states$queue_remove(queue_index = 1, element_id = "test")), NA)
 })
 
 testthat::test_that("FilterStates' queue is empty after pushing and removing an element from it", {
   filter_states <- FilterStates$new(input_dataname = "test", output_dataname = "test", datalabel = "test")
-  filter_states$queue_initialize(list(ReactiveQueue$new()))
+  filter_states$queue_initialize(list(shiny::reactiveVal()))
   filter_state <- FilterState$new("test", varname = "test")
-  filter_states$queue_push(x = filter_state, queue_index = 1, element_id = "test")
-  filter_states$queue_remove(queue_index = 1, element_id = "test")
-  testthat::expect_length(filter_states$queue_get(1), 0)
+  isolate(filter_states$queue_push(x = filter_state, queue_index = 1, element_id = "test"))
+  isolate(filter_states$queue_remove(queue_index = 1, element_id = "test"))
+  testthat::expect_length(isolate(filter_states$queue_get(1)), 0)
 })
 
 testthat::test_that("FilterStates' queue is empty after queue_empty", {
   filter_states <- FilterStates$new(input_dataname = "test", output_dataname = "test", datalabel = "test")
-  filter_states$queue_initialize(list(ReactiveQueue$new()))
+  filter_states$queue_initialize(list(shiny::reactiveVal()))
   filter_state <- FilterState$new("test", varname = "test")
-  filter_states$queue_push(x = filter_state, queue_index = 1, element_id = "test")
-  filter_states$queue_empty()
-  testthat::expect_length(filter_states$queue_get(1), 0)
+  isolate(filter_states$queue_push(x = filter_state, queue_index = 1, element_id = "test"))
+  isolate(filter_states$queue_empty())
+  testthat::expect_length(isolate(filter_states$queue_get(1)), 0)
 })
 
 testthat::test_that("FilterStates get_filter_count returns the number of active filter states", {
   filter_states <- FilterStates$new(input_dataname = "test", output_dataname = "test", datalabel = "test")
   testthat::expect_equal(filter_states$get_filter_count(), 0)
-  filter_states$queue_initialize(list(ReactiveQueue$new()))
+  filter_states$queue_initialize(list(shiny::reactiveVal()))
   filter_state <- FilterState$new("test", varname = "test")
-  filter_states$queue_push(x = filter_state, queue_index = 1, element_id = "test")
-  filter_states$queue_push(x = filter_state, queue_index = 1, element_id = "test2")
-  testthat::expect_equal(filter_states$get_filter_count(), 2)
-  filter_states$queue_remove(queue_index = 1, element_id = "test2")
-  testthat::expect_equal(filter_states$get_filter_count(), 1)
+  isolate(filter_states$queue_push(x = filter_state, queue_index = 1, element_id = "test"))
+  isolate(filter_states$queue_push(x = filter_state, queue_index = 1, element_id = "test2"))
+  testthat::expect_equal(isolate(filter_states$get_filter_count()), 2)
+  isolate(filter_states$queue_remove(queue_index = 1, element_id = "test2"))
+  testthat::expect_equal(isolate(filter_states$get_filter_count()), 1)
 })
 
 testthat::test_that("FilterStates with multiple queues get_filter_count returns the number of filter states", {
   filter_states <- FilterStates$new(input_dataname = "test", output_dataname = "test", datalabel = "test")
-  filter_states$queue_initialize(list(a = ReactiveQueue$new(), b = ReactiveQueue$new()))
+  filter_states$queue_initialize(list(a = shiny::reactiveVal(), b = shiny::reactiveVal()))
   filter_state <- FilterState$new("test", varname = "test")
-  filter_states$queue_push(x = filter_state, queue_index = "a", element_id = "test")
-  filter_states$queue_push(x = filter_state, queue_index = "b", element_id = "test2")
-  testthat::expect_equal(filter_states$get_filter_count(), 2)
-  filter_states$queue_remove(queue_index = "a", element_id = "test")
-  testthat::expect_equal(filter_states$get_filter_count(), 1)
+  isolate(filter_states$queue_push(x = filter_state, queue_index = "a", element_id = "test"))
+  isolate(filter_states$queue_push(x = filter_state, queue_index = "b", element_id = "test2"))
+  testthat::expect_equal(isolate(filter_states$get_filter_count()), 2)
+  isolate(filter_states$queue_remove(queue_index = "a", element_id = "test"))
+  testthat::expect_equal(isolate(filter_states$get_filter_count()), 1)
 })
 
 testthat::test_that("data_choices_labeled returns an empty character array if choices are an empty array", {

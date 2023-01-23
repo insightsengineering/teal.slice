@@ -17,7 +17,7 @@ testthat::test_that("MAEFilteredDataset throws error with a data.frame passed to
 testthat::test_that("MAEFilteredDataset$get_call returns NULL without applying filter", {
   utils::data(miniACC, package = "MultiAssayExperiment")
   filtered_dataset <- MAEFilteredDataset$new(dataset = miniACC, dataname = "miniACC")
-  get_call_output <- filtered_dataset$get_call()
+  get_call_output <- isolate(filtered_dataset$get_call())
   testthat::expect_null(get_call_output)
 })
 
@@ -35,7 +35,7 @@ testthat::test_that("MAEFilteredDataset$get_call returns a call with applying fi
   filter_state_mae$set_na_rm(TRUE)
 
   queue <- filtered_dataset$get_filter_states(1)
-  queue$queue_push(filter_state_mae, queue_index = 1L, element_id = "race")
+  isolate(queue$queue_push(filter_state_mae, queue_index = 1L, element_id = "race"))
 
   get_call_output <- isolate(filtered_dataset$get_call())
 
@@ -80,7 +80,7 @@ testthat::test_that("get_filter_overview_info returns overview matrix for MAEFil
   )
   filter_state_mae$set_na_rm(TRUE)
   queue <- filtered_dataset$get_filter_states(1)
-  queue$queue_push(filter_state_mae, queue_index = 1L, element_id = "race")
+  isolate(queue$queue_push(filter_state_mae, queue_index = 1L, element_id = "race"))
 
   testthat::expect_equal(
     isolate(filtered_dataset$get_filter_overview_info(
@@ -116,7 +116,7 @@ testthat::test_that(
         subset = list(ARRAY_TYPE = "")
       )
     )
-    dataset$set_filter_state(state = fs)
+    isolate(dataset$set_filter_state(state = fs))
     testthat::expect_equal(
       isolate(dataset$get_call()),
       list(
@@ -203,7 +203,7 @@ testthat::test_that(
         subset = list(ARRAY_TYPE = list(selected = "", keep_na = TRUE))
       )
     )
-    dataset$set_filter_state(state = fs)
+    isolate(dataset$set_filter_state(state = fs))
     testthat::expect_identical(isolate(dataset$get_filter_state()), fs)
   }
 )
@@ -223,8 +223,8 @@ testthat::test_that(
         subset = list(ARRAY_TYPE = "")
       )
     )
-    dataset$set_filter_state(state = fs)
-    dataset$remove_filter_state(element_id = list(subjects = list("years_to_birth")))
+    isolate(dataset$set_filter_state(state = fs))
+    isolate(dataset$remove_filter_state(element_id = list(subjects = list("years_to_birth"))))
 
     testthat::expect_equal(
       isolate(dataset$get_call()),
@@ -262,7 +262,7 @@ testthat::test_that(
         subset = list(ARRAY_TYPE = "")
       )
     )
-    dataset$set_filter_state(state = fs)
+    isolate(dataset$set_filter_state(state = fs))
     testthat::expect_error(dataset$remove_filter_state(element_id = list("years_to_birth")))
   }
 )
@@ -301,7 +301,7 @@ testthat::test_that("MAEFilteredDataset filters removed using remove_filters", {
     )
   )
 
-  filtered_dataset$set_filter_state(state = fs)
+  isolate(filtered_dataset$set_filter_state(state = fs))
 
   testthat::expect_identical(
     isolate(filtered_dataset$get_call()),
