@@ -22,7 +22,7 @@ MatrixFilterStates <- R6::R6Class( # nolint
       super$initialize(input_dataname, output_dataname, datalabel)
       self$queue_initialize(
         list(
-          subset = ReactiveQueue$new()
+          subset = reactiveVal()
         )
       )
     },

@@ -25,8 +25,8 @@ SEFilterStates <- R6::R6Class( # nolint
       super$initialize(input_dataname, output_dataname, datalabel)
       self$queue_initialize(
         list(
-          subset = ReactiveQueue$new(),
-          select = ReactiveQueue$new()
+          subset = reactiveVal(),
+          select = reactiveVal()
         )
       )
     },

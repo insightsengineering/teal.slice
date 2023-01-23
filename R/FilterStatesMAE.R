@@ -34,7 +34,7 @@ MAEFilterStates <- R6::R6Class( # nolint
 
       self$queue_initialize(
         list(
-          y = ReactiveQueue$new()
+          y = reactiveVal()
         )
       )
       return(invisible(self))

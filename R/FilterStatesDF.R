@@ -36,7 +36,7 @@ DFFilterStates <- R6::R6Class( # nolint
 
       self$queue_initialize(
         list(
-          ReactiveQueue$new()
+          shiny::reactiveVal()
         )
       )
     },
