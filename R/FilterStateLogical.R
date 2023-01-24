@@ -152,10 +152,10 @@ LogicalFilterState <- R6::R6Class( # nolint
               tags$div(
                 class = "filter-card-icons",
                 tags$span(
-                  class = "filter-card-toggle-icon fa fa-chevron-right"
+                  class = "filter-card-toggle fa fa-chevron-right"
                 ),
                 tags$span(
-                  class = "fa fa-circle-xmark"
+                  class = "filter-card-remove fa fa-circle-xmark"
                 )
               )
             #)
