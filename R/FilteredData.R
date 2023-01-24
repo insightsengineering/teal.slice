@@ -45,19 +45,22 @@
 #' # get datanames
 #' datasets$datanames()
 #'
-#'
 #' df <- datasets$get_data("iris", filtered = FALSE)
 #' print(df)
 #'
 #' datasets$get_metadata("mtcars")
 #'
-#' datasets$set_filter_state(
-#'   list(iris = list(Species = list(selected = "virginica")))
+#' isolate(
+#'   datasets$set_filter_state(
+#'     list(iris = list(Species = list(selected = "virginica")))
+#'   )
 #' )
 #' isolate(datasets$get_call("iris"))
 #'
-#' datasets$set_filter_state(
-#'   list(mtcars = list(mpg = list(selected = c(15, 20))))
+#' isolate(
+#'   datasets$set_filter_state(
+#'     list(mtcars = list(mpg = list(selected = c(15, 20))))
+#'   )
 #' )
 #'
 #' isolate(datasets$get_filter_state())
@@ -86,7 +89,7 @@ FilteredData <- R6::R6Class( # nolint
       checkmate::assert_class(join_keys, "JoinKeys", null.ok = TRUE)
       checkmate::assert_class(code, "CodeClass", null.ok = TRUE)
       checkmate::assert_flag(check)
-
+# browser()
       self$set_check(check)
       if (!is.null(code)) {
         self$set_code(code)
@@ -460,7 +463,7 @@ FilteredData <- R6::R6Class( # nolint
     #'     )
     #'   )
     #' )
-    #' datasets$set_filter_state(state = fs)
+    #' isolate(datasets$set_filter_state(state = fs))
     #' cat(shiny::isolate(datasets$get_formatted_filter_state()))
     #'
     get_formatted_filter_state = function() {
@@ -503,7 +506,7 @@ FilteredData <- R6::R6Class( # nolint
     #'     )
     #'   )
     #' )
-    #' datasets$set_filter_state(state = fs)
+    #' isolate(datasets$set_filter_state(state = fs))
     #' shiny::isolate(datasets$get_filter_state())
     #' @return `NULL`
     set_filter_state = function(state) {
@@ -536,7 +539,7 @@ FilteredData <- R6::R6Class( # nolint
 
       for (dataname in names(state)) {
         fdataset <- self$get_filtered_dataset(dataname = dataname)
-        fdataset$remove_filter_state(element_id = state[[dataname]])
+        fdataset$remove_filter_state(state_id = state[[dataname]])
       }
 
       logger::log_trace("FilteredData$remove_filter_state done, dataname: { paste(names(state), collapse = ' ') }")
@@ -558,7 +561,7 @@ FilteredData <- R6::R6Class( # nolint
 
       for (dataname in datanames) {
         fdataset <- self$get_filtered_dataset(dataname = dataname)
-        fdataset$queues_empty()
+        fdataset$state_lists_empty()
       }
 
       logger::log_trace(
@@ -880,7 +883,7 @@ FilteredData <- R6::R6Class( # nolint
             logger::log_trace("FilteredData$srv_filter_panel@1 removing all filters")
             lapply(self$datanames(), function(dataname) {
               fdataset <- self$get_filtered_dataset(dataname = dataname)
-              fdataset$queues_empty()
+              fdataset$state_lists_empty()
             })
             logger::log_trace("FilteredData$srv_filter_panel@1 removed all filters")
           })

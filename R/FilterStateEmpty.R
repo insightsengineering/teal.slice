@@ -1,8 +1,13 @@
 #' @name EmptyFilterState
-#' @title `FilterState` object for empty variable
-#' @docType class
-#' @keywords internal
 #'
+#' @title `FilterState` object for empty variable
+#'
+#' @description
+#' `FilterState` subclass representing an empty variable.
+#'
+#' @docType class
+#'
+#' @keywords internal
 #'
 #' @examples
 #' filter_state <- teal.slice:::EmptyFilterState$new(
@@ -18,10 +23,11 @@
 EmptyFilterState <- R6::R6Class( # nolint
   "EmptyFilterState",
   inherit = FilterState,
+  # public methods ----
   public = list(
-
     #' @description
-    #' Initialize `EmptyFilterState` object
+    #' Initialize `EmptyFilterState` object.
+    #'
     #' @param x (`vector`)\cr
     #'   values of the variable used in filter
     #' @param varname (`character`, `name`)\cr
@@ -37,6 +43,7 @@ EmptyFilterState <- R6::R6Class( # nolint
     #' \item{`"list"`}{ `varname` in the condition call will be returned as `<input_dataname>$<varname>`}
     #' \item{`"matrix"`}{ `varname` in the condition call will be returned as `<input_dataname>[, <varname>]`}
     #' }
+    #'
     initialize = function(x,
                           varname,
                           varlabel = character(0),
@@ -50,8 +57,11 @@ EmptyFilterState <- R6::R6Class( # nolint
     },
 
     #' @description
-    #' Answers the question of whether the current settings and values selected actually filters out any values.
-    #' @return logical scalar
+    #' Answers the question of whether the current settings and values selected
+    #' actually filters out any values.
+    #'
+    #' @return `logical(1)`
+    #'
     is_any_filtered = function() {
       if (isTRUE(self$get_keep_na())) {
         FALSE
@@ -109,14 +119,15 @@ EmptyFilterState <- R6::R6Class( # nolint
     }
   ),
 
+  # private members ----
   private = list(
-
-    #' @description
-    #' UI Module for `EmptyFilterState`.
-    #' This UI element contains checkbox input to
-    #' filter or keep missing values.
-    #' @param id (`character(1)`)\cr
-    #'  id of shiny element
+    # @description
+    # UI Module for `EmptyFilterState`.
+    # This UI element contains a checkbox input to filter or keep missing values.
+    #
+    # @param id (`character(1)`)\cr
+    #   shiny element (module instance) id
+    #
     ui_inputs = function(id) {
       ns <- NS(id)
       fluidRow(
@@ -125,15 +136,19 @@ EmptyFilterState <- R6::R6Class( # nolint
           div(
             span("Variable contains missing values only"),
             private$keep_na_ui(ns("keep_na"))
-          )
+         )
         )
       )
     },
-    #' @description
-    #' Controls selection of `keep_na` checkbox input
-    #' @param id (`character(1)`)\cr
-    #'   an ID string that corresponds with the ID used to call the module's UI function.
-    #' return `moduleServer` function which returns `NULL`
+
+    # @description
+    # Controls state of the `keep_na` checkbox input.
+    #
+    # @param id (`character(1)`)\cr
+    #   shiny module instance id
+    #
+    # @return `moduleServer` function which returns `NULL`
+    #
     server_inputs = function(id) {
       moduleServer(
         id = id,

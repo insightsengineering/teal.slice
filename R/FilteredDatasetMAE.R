@@ -178,7 +178,7 @@ MAEFilteredDataset <- R6::R6Class( # nolint
     #'     subset = list(ARRAY_TYPE = list(selected = "", keep_na = TRUE))
     #'   )
     #' )
-    #' dataset$set_filter_state(state = fs)
+    #' shiny::isolate(dataset$set_filter_state(state = fs))
     #' shiny::isolate(dataset$get_filter_state())
     #' @return `NULL`
     set_filter_state = function(state, ...) {
@@ -213,33 +213,33 @@ MAEFilteredDataset <- R6::R6Class( # nolint
 
     #' @description Remove one or more `FilterState` of a `MAEFilteredDataset`
     #'
-    #' @param element_id (`list`)\cr
+    #' @param state_id (`list`)\cr
     #'  Named list of variables to remove their `FilterState`.
     #'
     #' @return `NULL`
     #'
-    remove_filter_state = function(element_id) {
-      checkmate::assert_list(element_id, names = "unique")
-      checkmate::assert_subset(names(element_id), c(names(self$get_filter_states())))
+    remove_filter_state = function(state_id) {
+      checkmate::assert_list(state_id, names = "unique")
+      checkmate::assert_subset(names(state_id), c(names(self$get_filter_states())))
 
       logger::log_trace(
         sprintf(
           "MAEFilteredDataset$remove_filter_state removing filters of variable %s, dataname: %s",
-          element_id,
+          state_id,
           self$get_dataname()
         )
       )
 
-      for (fs_name in names(element_id)) {
+      for (fs_name in names(state_id)) {
         fdata_filter_state <- self$get_filter_states()[[fs_name]]
         fdata_filter_state$remove_filter_state(
-          `if`(fs_name == "subjects", element_id[[fs_name]][[1]], element_id[[fs_name]])
+          `if`(fs_name == "subjects", state_id[[fs_name]][[1]], state_id[[fs_name]])
         )
       }
       logger::log_trace(
         sprintf(
           "MAEFilteredDataset$remove_filter_state done removing filters of variable %s, dataname: %s",
-          element_id,
+          state_id,
           self$get_dataname()
         )
       )
