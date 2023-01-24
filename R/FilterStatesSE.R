@@ -139,7 +139,7 @@ SEFilterStates <- R6::R6Class( # nolint
           observeEvent(removed_state_name_select(), {
             req(removed_state_name_select())
             for (fname in removed_state_name_select()) {
-              private$remove_filter_state_ui("select", fname)
+              private$remove_filter_state_ui("select", fname, .input = input)
             }
             removed_state_name_select(character(0))
           })
