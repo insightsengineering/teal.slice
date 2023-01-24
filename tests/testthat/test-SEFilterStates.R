@@ -42,14 +42,14 @@ testthat::test_that("The constructor does not throw", {
   ), NA)
 })
 
-testthat::test_that("The constructor initializes two queues", {
+testthat::test_that("The constructor initializes two state_lists", {
   filter_states <- SEFilterStates$new(
     input_dataname = "test",
     output_dataname = "test",
     datalabel = "test"
   )
-  testthat::expect_null(isolate(filter_states$queue_get(1)))
-  testthat::expect_null(isolate(filter_states$queue_get(2)))
+  testthat::expect_null(isolate(filter_states$state_list_get(1)))
+  testthat::expect_null(isolate(filter_states$state_list_get(2)))
 })
 
 testthat::test_that("set_filter_state throws error when input is missing", {
@@ -261,7 +261,7 @@ testthat::test_that("SEFilterStates$set_filter_state sets state with neither sub
 })
 
 testthat::test_that(
-  "SEFilterStates$set_filter_state sets filters in ReactiveQueue specified by the named list",
+  "SEFilterStates$set_filter_state sets filters in state_list specified by the named list",
   code = {
     obj <- get_test_data()
     test <- obj
@@ -303,7 +303,7 @@ testthat::test_that("SEFilterStates$get_filter_state returns list identical to i
   testthat::expect_identical(isolate(sefs$get_filter_state()), fs)
 })
 
-testthat::test_that("SEFilterStates$remove_filter_state removes filters in ReactiveQueue", {
+testthat::test_that("SEFilterStates$remove_filter_state removes filters in state_list", {
   obj <- get_test_data()
   test <- obj
   sefs <- SEFilterStates$new(
@@ -327,7 +327,7 @@ testthat::test_that("SEFilterStates$remove_filter_state removes filters in React
   ))
 })
 
-testthat::test_that("SEFilterStates$remove_filter_state removes all filters in ReactiveQueue", {
+testthat::test_that("SEFilterStates$remove_filter_state removes all filters in state_list", {
   obj <- get_test_data()
   test <- obj
   sefs <- SEFilterStates$new(
@@ -450,8 +450,8 @@ testthat::test_that("$format() concatenates its FilterState elements using \\n a
   )
   isolate(sefs$set_filter_state(state = fs, data = test))
 
-  treatment_filter <- isolate(sefs$queue_get("select")[[1]])
-  feature_filter <- isolate(sefs$queue_get("subset")[[1]])
+  treatment_filter <- isolate(sefs$state_list_get("select")[[1]])
+  feature_filter <- isolate(sefs$state_list_get("subset")[[1]])
   shiny::isolate(testthat::expect_equal(
     sefs$format(),
     paste(

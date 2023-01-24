@@ -30,11 +30,11 @@ testthat::test_that("set filter state", {
   filter_state_adsl <- ChoicesFilterState$new(adsl$sex, varname = "sex")
   filter_state_adsl$set_selected("F")
 
-  queue <- ds$get_filtered_dataset("ADSL")$get_filter_states(1)
-  isolate(queue$queue_push(filter_state_adsl, queue_index = 1L, element_id = "sex"))
+  state_list <- ds$get_filtered_dataset("ADSL")$get_filter_states(1)
+  isolate(state_list$state_list_push(filter_state_adsl, state_list_index = 1L, state_id = "sex"))
 
   testthat::expect_null(
-    isolate(queue$get_call()),
+    isolate(state_list$get_call()),
   )
 })
 

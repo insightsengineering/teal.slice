@@ -30,7 +30,7 @@ testthat::test_that("get_fun returns the MAE specific subset function", {
   testthat::expect_equal(filter_states$get_fun(), "MultiAssayExperiment::subsetByColData")
 })
 
-testthat::test_that("The constructor initializes a queue", {
+testthat::test_that("The constructor initializes a state_list", {
   filter_states <- MAEFilterStates$new(
     input_dataname = "test",
     output_dataname = "test",
@@ -38,7 +38,7 @@ testthat::test_that("The constructor initializes a queue", {
     varlabels = character(0),
     keys = character(0)
   )
-  testthat::expect_null(isolate(filter_states$queue_get(1)))
+  testthat::expect_null(isolate(filter_states$state_list_get(1)))
 })
 
 testthat::test_that("get_call returns a call filtering an MAE object using ChoicesFilterState", {
@@ -57,7 +57,7 @@ testthat::test_that("get_call returns a call filtering an MAE object using Choic
     extract_type = "list"
   )
   filter_state$set_na_rm(TRUE)
-  isolate(filter_states$queue_push(x = filter_state, queue_index = 1, element_id = "test"))
+  isolate(filter_states$state_list_push(x = filter_state, state_list_index = 1, state_id = "test"))
 
   test <- miniACC
   eval(isolate(filter_states$get_call()))
@@ -83,7 +83,7 @@ testthat::test_that("get_call returns a call filtering an MAE object using Range
     extract_type = "list"
   )
   filter_state$set_na_rm(TRUE)
-  isolate(filter_states$queue_push(x = filter_state, queue_index = 1, element_id = "test"))
+  isolate(filter_states$state_list_push(x = filter_state, state_list_index = 1, state_id = "test"))
 
   test <- miniACC
   eval(isolate(filter_states$get_call()))
@@ -338,8 +338,8 @@ testthat::test_that("$format() concatenates its FilterState elements using \\n a
     data = miniACC
   ))
 
-  years_to_birth_filter <- isolate(maefs$queue_get(1L)[[1]])
-  vital_status_filter <- isolate(maefs$queue_get(1L)[[2]])
+  years_to_birth_filter <- isolate(maefs$state_list_get(1L)[[1]])
+  vital_status_filter <- isolate(maefs$state_list_get(1L)[[2]])
   shiny::isolate(testthat::expect_equal(
     maefs$format(),
     paste(

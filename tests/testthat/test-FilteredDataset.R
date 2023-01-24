@@ -4,11 +4,11 @@ testthat::test_that("The constructor accepts a data.frame object and dataname", 
   ), NA)
 })
 
-testthat::test_that("queues_empty does not throw after initializing FilteredDataset", {
+testthat::test_that("state_lists_empty does not throw after initializing FilteredDataset", {
   filtered_dataset <- FilteredDataset$new(
     dataset = head(iris), dataname = "iris"
   )
-  testthat::expect_error(filtered_dataset$queues_empty(), NA)
+  testthat::expect_error(filtered_dataset$state_lists_empty(), NA)
 })
 
 testthat::test_that("get_filter_states returns an empty list after initialization", {

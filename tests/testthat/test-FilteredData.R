@@ -217,8 +217,7 @@ testthat::test_that(
       )
     )
     testthat::expect_error(datasets$set_filter_state(state = fs))
-  }
-)
+  })
 
 testthat::test_that(
   "FilteredData$set_filter_state throws error with unnamed variables list",
@@ -241,8 +240,7 @@ testthat::test_that(
       )
     )
     testthat::expect_error(datasets$set_filter_state(state = fs))
-  }
-)
+  })
 
 testthat::test_that(
   "FilteredData$get_filter_state returns list identical to input with attributes",
@@ -276,8 +274,7 @@ testthat::test_that(
     isolate(datasets$set_filter_state(state = fs))
     attr(fs, "formatted") <- isolate(datasets$get_formatted_filter_state())
     testthat::expect_identical(isolate(datasets$get_filter_state()), fs)
-  }
-)
+  })
 
 testthat::test_that(
   "FilteredData$get_filter_state returns list whose attribute is a character form of the list",
@@ -316,8 +313,7 @@ testthat::test_that(
       attr(isolate(datasets$get_filter_state()), "formatted"),
       formatted_attr
     )
-  }
-)
+  })
 
 testthat::test_that("FilteredData$remove_filter_state removes states defined in list", {
   datasets <- FilteredData$new(
@@ -382,8 +378,7 @@ testthat::test_that(
     testthat::expect_null(
       isolate(datasets$get_call("mtcars"))
     )
-  }
-)
+  })
 
 testthat::test_that(
   "FilteredData$remove_all_filter_states remove the filters of the desired dataset only",
@@ -423,8 +418,7 @@ testthat::test_that(
         )
       )
     )
-  }
-)
+  })
 
 
 get_filtered_data_object <- function() {
@@ -493,8 +487,8 @@ testthat::test_that("get_filter_overview returns overview matrix for filtered da
   datasets <- get_filtered_data_object()
   filter_state_adsl <- ChoicesFilterState$new(c("F", "M"), varname = "sex")
   filter_state_adsl$set_selected("M")
-  queue <- datasets$get_filtered_dataset("ADSL")$get_filter_states(1)
-  isolate(queue$queue_push(filter_state_adsl, queue_index = 1L, element_id = "sex"))
+  state_list <- datasets$get_filtered_dataset("ADSL")$get_filter_states(1)
+  isolate(state_list$state_list_push(filter_state_adsl, state_list_index = 1L, state_id = "sex"))
   filter_state_mae <- ChoicesFilterState$new(
     x = c("white", NA),
     varname = as.name("race"),
@@ -502,8 +496,8 @@ testthat::test_that("get_filter_overview returns overview matrix for filtered da
     extract_type = "list"
   )
   filter_state_mae$set_na_rm(TRUE)
-  queue <- datasets$get_filtered_dataset("miniACC")$get_filter_states(1)
-  isolate(queue$queue_push(filter_state_mae, queue_index = 1L, element_id = "race"))
+  state_list <- datasets$get_filtered_dataset("miniACC")$get_filter_states(1)
+  isolate(state_list$state_list_push(filter_state_mae, state_list_index = 1L, state_id = "race"))
   testthat::expect_equal(
     isolate(datasets$get_filter_overview(datasets$datanames())),
     matrix(

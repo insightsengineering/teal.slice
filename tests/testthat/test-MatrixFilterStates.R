@@ -6,13 +6,13 @@ testthat::test_that("The constructor does not throw", {
   ), NA)
 })
 
-testthat::test_that("The constructor initializes one queue", {
+testthat::test_that("The constructor initializes one state_list", {
   filter_states <- MatrixFilterStates$new(
     input_dataname = "test",
     output_dataname = "test",
     datalabel = "test"
   )
-  testthat::expect_null(isolate(filter_states$queue_get(1)))
+  testthat::expect_null(isolate(filter_states$state_list_get(1)))
 })
 
 testthat::test_that("get_call returns a call filtering a matrix with numeric values", {
@@ -31,13 +31,13 @@ testthat::test_that("get_call returns a call filtering a matrix with numeric val
   )
   isolate(filter_state$set_selected(c(1, 3)))
 
-  isolate(filter_states$queue_push(x = filter_state, queue_index = 1, element_id = "test"))
+  isolate(filter_states$state_list_push(x = filter_state, state_list_index = 1, state_id = "test"))
 
   eval(isolate(filter_states$get_call()))
   testthat::expect_equal(output, test[1:3, 1, drop = FALSE])
 })
 
-testthat::test_that("set_filter_state adds filters to reactiveQueue", {
+testthat::test_that("set_filter_state adds filters to state_list", {
   filter_states <- MatrixFilterStates$new(
     input_dataname = "test",
     output_dataname = "output",
@@ -67,7 +67,7 @@ testthat::test_that("set_filter_state throws error when list is unnamed", {
   )
 })
 
-testthat::test_that("remove_filter_state removes filters from reactiveQueue", {
+testthat::test_that("remove_filter_state removes filters from state_list", {
   filter_states <- MatrixFilterStates$new(
     input_dataname = "test",
     output_dataname = "output",
@@ -85,7 +85,7 @@ testthat::test_that("remove_filter_state removes filters from reactiveQueue", {
   testthat::expect_equal(output, test)
 })
 
-testthat::test_that("remove_filter_state throws warning when element_id is not in reactiveQueue", {
+testthat::test_that("remove_filter_state throws warning when state_id is not in state_list", {
   teal.logger::suppress_logs()
   filter_states <- MatrixFilterStates$new(
     input_dataname = "test",

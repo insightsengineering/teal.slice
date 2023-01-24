@@ -142,7 +142,7 @@ testthat::test_that("Selecting a new variable initializes a new filter state", {
     keys = character(0)
   )
   expect_null(
-    isolate(dffs$queue_get(queue_index = 1, element_id = "Sepal.Length"))
+    isolate(dffs$state_list_get(state_list_index = 1, state_id = "Sepal.Length"))
   )
   shiny::testServer(
     dffs$srv_add_filter_state,
@@ -153,15 +153,15 @@ testthat::test_that("Selecting a new variable initializes a new filter state", {
   )
 
   expect_is(
-    isolate(dffs$queue_get(queue_index = 1)),
+    isolate(dffs$state_list_get(state_list_index = 1)),
     "list"
   )
   expect_is(
-    isolate(dffs$queue_get(queue_index = 1, element_id = "Sepal.Length")),
+    isolate(dffs$state_list_get(state_list_index = 1, state_id = "Sepal.Length")),
     "RangeFilterState"
   )
   expect_identical(
-    isolate(dffs$queue_get(queue_index = 1, element_id = "Sepal.Length")$get_varname(deparse = TRUE)),
+    isolate(dffs$state_list_get(state_list_index = 1, state_id = "Sepal.Length")$get_varname(deparse = TRUE)),
     "Sepal.Length"
   )
 })
@@ -295,8 +295,8 @@ testthat::test_that("$format() concatenates its FilterState elements using \\n w
   )
   isolate(dffs$set_filter_state(state = fs, data = iris))
 
-  sepal_filter <- isolate(dffs$queue_get(1L)[[1]])
-  species_filter <- isolate(dffs$queue_get(1L)[[2]])
+  sepal_filter <- isolate(dffs$state_list_get(1L)[[1]])
+  species_filter <- isolate(dffs$state_list_get(1L)[[2]])
   shiny::isolate(testthat::expect_equal(
     dffs$format(),
     paste(sepal_filter$format(indent = 0), species_filter$format(indent = 0), sep = "\n")
