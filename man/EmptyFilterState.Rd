@@ -5,9 +5,7 @@
 \alias{EmptyFilterState}
 \title{\code{FilterState} object for empty variable}
 \description{
-\code{FilterState} object for empty variable
-
-\code{FilterState} object for empty variable
+\code{FilterState} subclass representing an empty variable.
 }
 \examples{
 filter_state <- teal.slice:::EmptyFilterState$new(
@@ -59,7 +57,7 @@ isolate(filter_state$get_call())
 \if{html}{\out{<a id="method-EmptyFilterState-new"></a>}}
 \if{latex}{\out{\hypertarget{method-EmptyFilterState-new}{}}}
 \subsection{Method \code{new()}}{
-Initialize \code{EmptyFilterState} object
+Initialize \code{EmptyFilterState} object.
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{EmptyFilterState$new(
   x,
@@ -100,13 +98,14 @@ whether condition calls should be prefixed by dataname. Possible values:
 \if{html}{\out{<a id="method-EmptyFilterState-is_any_filtered"></a>}}
 \if{latex}{\out{\hypertarget{method-EmptyFilterState-is_any_filtered}{}}}
 \subsection{Method \code{is_any_filtered()}}{
-Answers the question of whether the current settings and values selected actually filters out any values.
+Answers the question of whether the current settings and values selected
+actually filters out any values.
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{EmptyFilterState$is_any_filtered()}\if{html}{\out{</div>}}
 }
 
 \subsection{Returns}{
-logical scalar
+\code{logical(1)}
 }
 }
 \if{html}{\out{<hr>}}

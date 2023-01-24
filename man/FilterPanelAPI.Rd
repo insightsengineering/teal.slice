@@ -25,7 +25,12 @@ fpa <- FilterPanelAPI$new(fd)
 isolate(fpa$get_filter_state())
 
 # set a filter state
-set_filter_state(fpa, list(iris = list(Species = list(selected = "setosa", keep_na = TRUE))))
+isolate(
+  set_filter_state(
+    fpa,
+    list(iris = list(Species = list(selected = "setosa", keep_na = TRUE)))
+  )
+)
 
 # get the actual filter state --> named list with filters
 isolate(fpa$get_filter_state())
@@ -137,7 +142,8 @@ Remove all \code{FilterStates} of the \code{FilteredData} object.
 \if{html}{\out{<div class="arguments">}}
 \describe{
 \item{\code{datanames}}{(\code{character})\cr
-datanames to remove their \code{FilterStates} or empty which removes all \code{FilterStates} in the \code{FilteredData} object.}
+datanames to remove their \code{FilterStates};
+omit to remove all \code{FilterStates} in the \code{FilteredData} object}
 }
 \if{html}{\out{</div>}}
 }

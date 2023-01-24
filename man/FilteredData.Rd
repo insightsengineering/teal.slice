@@ -53,19 +53,22 @@ datasets <- teal.slice:::FilteredData$new(
 # get datanames
 datasets$datanames()
 
-
 df <- datasets$get_data("iris", filtered = FALSE)
 print(df)
 
 datasets$get_metadata("mtcars")
 
-datasets$set_filter_state(
-  list(iris = list(Species = list(selected = "virginica")))
+isolate(
+  datasets$set_filter_state(
+    list(iris = list(Species = list(selected = "virginica")))
+  )
 )
 isolate(datasets$get_call("iris"))
 
-datasets$set_filter_state(
-  list(mtcars = list(mpg = list(selected = c(15, 20))))
+isolate(
+  datasets$set_filter_state(
+    list(mtcars = list(mpg = list(selected = c(15, 20))))
+  )
 )
 
 isolate(datasets$get_filter_state())
@@ -101,7 +104,7 @@ fs <- list(
     )
   )
 )
-datasets$set_filter_state(state = fs)
+isolate(datasets$set_filter_state(state = fs))
 cat(shiny::isolate(datasets$get_formatted_filter_state()))
 
 
@@ -133,7 +136,7 @@ fs <- list(
     )
   )
 )
-datasets$set_filter_state(state = fs)
+isolate(datasets$set_filter_state(state = fs))
 shiny::isolate(datasets$get_filter_state())
 }
 \keyword{internal}
@@ -718,7 +721,7 @@ fs <- list(
     )
   )
 )
-datasets$set_filter_state(state = fs)
+isolate(datasets$set_filter_state(state = fs))
 cat(shiny::isolate(datasets$get_formatted_filter_state()))
 
 }
@@ -773,7 +776,7 @@ fs <- list(
     )
   )
 )
-datasets$set_filter_state(state = fs)
+isolate(datasets$set_filter_state(state = fs))
 shiny::isolate(datasets$get_filter_state())
 }
 \if{html}{\out{</div>}}
