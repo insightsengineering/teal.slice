@@ -119,7 +119,6 @@ FilterStates <- R6::R6Class( # nolint
         USE.NAMES = TRUE,
         simplify = FALSE,
         function(queue) {
-          # items <- queue$get()
           items <- queue()
           filtered_items <- Filter(f = function(x) x$is_any_filtered(), x = items)
           calls <- lapply(
@@ -194,11 +193,6 @@ FilterStates <- R6::R6Class( # nolint
     #' Sets `ReactiveQueue` objects.
     #' @param x (`list` of `ReactiveQueue`)\cr
     #'  must be a list even if single `ReactiveQueue` is set.
-    # queue_initialize = function(x) {
-    #   checkmate::assert_list(x, types = "ReactiveQueue", min.len = 1)
-    #   private$queue <- x
-    #   invisible(NULL)
-    # },
     queue_initialize = function(x) {
       checkmate::assert_list(x, min.len = 1)
       private$queue <- x
@@ -212,16 +206,6 @@ FilterStates <- R6::R6Class( # nolint
     #' @param element_id (`character(1)`)\cr
     #'   name of `ReactiveQueue` element.
     #' @return `list` of `FilterState` objects
-    # queue_get = function(queue_index, element_id = character(0)) {
-    #   private$validate_queue_exists(queue_index)
-    #   checkmate::assert_character(element_id, max.len = 1, null.ok = TRUE, any.missing = FALSE)
-    #
-    #   if (length(element_id) == 0) {
-    #     private$queue[[queue_index]]$get()
-    #   } else {
-    #     private$queue[[queue_index]]$get()[element_id]
-    #   }
-    # },
     queue_get = function(queue_index, element_id = NULL) {
       private$validate_queue_exists(queue_index)
       checkmate::assert_string(element_id, null.ok = TRUE)
@@ -244,21 +228,6 @@ FilterStates <- R6::R6Class( # nolint
     #' @return NULL
     #' @note throws an exception if the length of `x` does not match the length of
     #'   `element_id`
-    # queue_push = function(x, queue_index, element_id) {
-    #   logger::log_trace("{ class(self)[1] } pushing into queue, dataname: { deparse1(private$input_dataname) }")
-    #   private$validate_queue_exists(queue_index)
-    #   checkmate::assert_string(element_id)
-    #
-    #   states <- if (is.list(x)) {
-    #     x
-    #   } else {
-    #     list(x)
-    #   }
-    #   state <- setNames(states, element_id)
-    #   private$queue[[queue_index]]$push(state)
-    #   logger::log_trace("{ class(self)[1] } pushed into queue, dataname: { deparse1(private$input_dataname) }")
-    #   invisible(NULL)
-    # },
     queue_push = function(x, queue_index, element_id) {
       logger::log_trace("{ class(self)[1] } pushing into queue, dataname: { deparse1(private$input_dataname) }")
       private$validate_queue_exists(queue_index)
@@ -291,24 +260,6 @@ FilterStates <- R6::R6Class( # nolint
     #' @param element_id (`character(1)`)\cr
     #'   name of `ReactiveQueue` element.
     #' @return NULL
-    # queue_remove = function(queue_index, element_id) {
-    #   logger::log_trace(paste(
-    #     "{ class(self)[1] } removing a filter from queue { queue_index },",
-    #     "dataname: { deparse1(private$input_dataname) }"
-    #   ))
-    #   private$validate_queue_exists(queue_index)
-    #   checkmate::assert_string(element_id)
-    #   checkmate::assert(
-    #     checkmate::check_string(queue_index),
-    #     checkmate::check_int(queue_index)
-    #   )
-    #
-    #   filters <- self$queue_get(queue_index = queue_index, element_id = element_id)
-    #   private$queue[[queue_index]]$remove(filters)
-    #   logger::log_trace(
-    #     "{ class(self)[1] } removed from queue { queue_index }, dataname: { deparse1(private$input_dataname) }"
-    #   )
-    # },
     queue_remove = function(queue_index, element_id) {
       logger::log_trace(paste(
         "{ class(self)[1] } removing a filter from queue { queue_index },",
@@ -334,24 +285,6 @@ FilterStates <- R6::R6Class( # nolint
     #' @description
     #' Remove all `FilterState` objects from all queues in this `FilterStates`.
     #' @return NULL
-    # queue_empty = function() {
-    #   logger::log_trace("{ class(self)[1] } emptying queue, dataname: { deparse1(private$input_dataname) }")
-    #   queue_indices <- if (is.null(names(private$queue))) {
-    #     seq_along(private$queue)
-    #   } else {
-    #     names(private$queue)
-    #   }
-    #
-    #   lapply(queue_indices, function(queue_index) {
-    #     queue_elements <- names(self$queue_get(queue_index = queue_index))
-    #     lapply(queue_elements, function(element_id) {
-    #       self$queue_remove(queue_index = queue_index, element_id = element_id)
-    #     })
-    #   })
-    #
-    #   logger::log_trace("{ class(self)[1] } emptied queue, dataname: { deparse1(private$input_dataname) }")
-    #   invisible(NULL)
-    # },
     queue_empty = function() {
       logger::log_trace("{ class(self)[1] } emptying queue, dataname: { deparse1(private$input_dataname) }")
 
