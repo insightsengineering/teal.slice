@@ -16,14 +16,10 @@ getHeaders = function (containerId) {
 }
 
 filterCardHeaderListener = function (e, containerId) {
-    e.preventDefault()
-
+    
     let el = e.target.closest('.filter-card-header')
-    // remove is empty for now
-    // just trying to get structure in place
-    if (el.classList.contains('filter-card-remove')) { 
-        removeFilterCard(el, containerId)
-    } else {
+    // if el is null, body was clicked (e.g. an input)
+    if (el !== null) {
         toggleFilterCard(el, containerId)
     }
 }
