@@ -42,23 +42,17 @@ init_filtered_data.TealData <- function(x, # nolint
       NULL
     }
 
-    if (cdisc) {
-      list(
-        dataset = dataset$get_raw_data(),
-        keys = dataset$get_keys(),
-        metadata = dataset$get_metadata(),
-        label = dataset$get_dataset_label(),
-        parent = parent
-      )
-    } else {
-      list(
-        dataset = dataset$get_raw_data(),
-        keys = dataset$get_keys(),
-        metadata = dataset$get_metadata(),
-        label = dataset$get_dataset_label()
-      )
-    }
+    return_list <- list(
+      dataset = dataset$get_raw_data(),
+      keys = dataset$get_keys(),
+      metadata = dataset$get_metadata(),
+      label = dataset$get_dataset_label()
+    )
+
+    if (cdisc) return_list[["parent"]] <- parent
+    return_list
   })
+
   names(data_objects) <- x$get_datanames()
 
   init_filtered_data(
