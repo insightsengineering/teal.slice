@@ -349,7 +349,46 @@ FilterState <- R6::R6Class( # nolint
     #'  informing that it's not supported
     ui = function(id) {
       ns <- NS(id)
-      private$ui_inputs(ns("inputs"))
+      
+      tags$li(
+        tags$div(
+        class = "filter-card",
+        id = id,
+        tags$a(
+          class = "filter-card-header",
+          tags$p(
+            class = "filter-card-title-varname",
+            tags$strong(paste0(private$varname, ": ")),
+            paste("(", self$get_selected(), ")")
+          ),
+          tags$p(
+            tags$strong("NA: "),
+            tags$span(
+              class = if (self$get_keep_na()) {
+                "fa fa-check"
+              } else {
+                "fa fa-xmark"
+              }
+            )
+          ),
+          tags$p(),
+          tags$div(
+            class = "filter-card-icons",
+            tags$span(
+              class = "filter-card-toggle fa fa-chevron-right"
+              ),
+              tags$span(
+                class = "filter-card-remove fa fa-circle-xmark"
+              )
+          )
+        ),
+        tags$div(
+          class = "filter-card-body",
+          "input goes here",
+          private$ui_inputs(ns("inputs"))
+        )
+        )
+      )
     }
   ),
   private = list(
