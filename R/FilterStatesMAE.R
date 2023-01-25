@@ -4,6 +4,8 @@
 MAEFilterStates <- R6::R6Class( # nolint
   classname = "MAEFilterStates",
   inherit = FilterStates,
+
+  # public methods ----
   public = list(
     #' @description Initializes `MAEFilterStates` object
     #'
@@ -208,14 +210,18 @@ MAEFilterStates <- R6::R6Class( # nolint
       }
     },
 
+    # shiny modules ----
+
     #' @description
     #' Shiny UI module to add filter variable
     #' @param id (`character(1)`)\cr
     #'  id of shiny module
     #' @param data (`MultiAssayExperiment`)\cr
     #'  object containing `colData` which columns are used to be used
-    #'  to choose filter variables.
-    #' @return shiny.tag
+    #'  to choose filter variables
+    #'
+    #' @return `shiny.tag`
+    #'
     ui_add_filter_state = function(id, data) {
       checkmate::assert_string(id)
       stopifnot(is(data, "MultiAssayExperiment"))
@@ -251,7 +257,9 @@ MAEFilterStates <- R6::R6Class( # nolint
     #'  object containing `colData` which columns are used to choose filter variables in
     #' [teal.widgets::optionalSelectInput()].
     #' @param ... ignored
+    #'
     #' @return `moduleServer` function which returns `NULL`
+    #'
     srv_add_filter_state = function(id, data, ...) {
       stopifnot(is(data, "MultiAssayExperiment"))
       check_ellipsis(..., stop = FALSE)
@@ -351,6 +359,8 @@ MAEFilterStates <- R6::R6Class( # nolint
       )
     }
   ),
+
+  # private members ----
   private = list(
     varlabels = character(0),
     keys = character(0),

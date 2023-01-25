@@ -4,6 +4,8 @@
 MatrixFilterStates <- R6::R6Class( # nolint
   classname = "MatrixFilterStates",
   inherit = FilterStates,
+
+  # public members ----
   public = list(
     #' @description Initialize `MatrixFilterStates` object
     #'
@@ -198,12 +200,15 @@ MatrixFilterStates <- R6::R6Class( # nolint
     },
 
     #' @description
-    #' Shiny UI module to add filter variable
+    #' Shiny UI module to add filter variable.
+    #'
     #' @param id (`character(1)`)\cr
-    #'  id of shiny module
+    #'   id of shiny module
     #' @param data (`matrix`)\cr
-    #'  object which columns are used to choose filter variables.
-    #' @return shiny.tag
+    #'   data object for which to define a subset
+    #'
+    #' @return `shiny.tag`
+    #'
     ui_add_filter_state = function(id, data) {
       checkmate::assert_string(id)
       stopifnot(is.matrix(data))
@@ -234,11 +239,13 @@ MatrixFilterStates <- R6::R6Class( # nolint
     #' Removed filter variable gets back to available choices.
     #'
     #' @param id (`character(1)`)\cr
-    #'   an ID string that corresponds with the ID used to call the module's UI function.
+    #'   shiny module instance id
     #' @param data (`matrix`)\cr
-    #'  object which columns are used to choose filter variables.
+    #'   data object for which to define a subset
     #' @param ... ignored
+    #'
     #' @return `moduleServer` function which returns `NULL`
+    #'
     srv_add_filter_state = function(id, data, ...) {
       stopifnot(is.matrix(data))
       check_ellipsis(..., stop = FALSE)
@@ -294,8 +301,6 @@ MatrixFilterStates <- R6::R6Class( # nolint
               ))
             }
           )
-
-
 
           observeEvent(
             eventExpr = input$var_to_add,

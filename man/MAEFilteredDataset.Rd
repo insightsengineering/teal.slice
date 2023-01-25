@@ -88,20 +88,20 @@ Initialize \code{MAEFilteredDataset} object
 \if{html}{\out{<div class="arguments">}}
 \describe{
 \item{\code{dataset}}{(\code{MulitiAssayExperiment})\cr
-single \code{MultiAssayExperiment} for which filters are rendered}
+a single \code{MultiAssayExperiment} for which to define a subset}
 
 \item{\code{dataname}}{(\code{character})\cr
-A given name for the dataset it may not contain spaces}
+a given name for the dataset it may not contain spaces}
 
 \item{\code{keys}}{optional, (\code{character})\cr
-Vector with primary keys}
+vector with primary keys}
 
 \item{\code{label}}{(\code{character})\cr
-Label to describe the dataset}
+label to describe the dataset}
 
 \item{\code{metadata}}{(named \code{list} or \code{NULL}) \cr
-Field containing metadata about the dataset. Each element of the list
-should be atomic and length one.}
+field containing metadata about the dataset;
+each element of the list must be atomic and length one}
 }
 \if{html}{\out{</div>}}
 }

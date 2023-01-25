@@ -4,22 +4,25 @@
 MAEFilteredDataset <- R6::R6Class( # nolint
   classname = "MAEFilteredDataset",
   inherit = FilteredDataset,
+
+  # public methods ----
   public = list(
 
     #' @description
     #' Initialize `MAEFilteredDataset` object
     #'
     #' @param dataset (`MulitiAssayExperiment`)\cr
-    #'  single `MultiAssayExperiment` for which filters are rendered
+    #'  a single `MultiAssayExperiment` for which to define a subset
     #' @param dataname (`character`)\cr
-    #'  A given name for the dataset it may not contain spaces
+    #'  a given name for the dataset it may not contain spaces
     #' @param keys optional, (`character`)\cr
-    #'   Vector with primary keys
+    #'   vector with primary keys
     #' @param label (`character`)\cr
-    #'   Label to describe the dataset
+    #'   label to describe the dataset
     #' @param metadata (named `list` or `NULL`) \cr
-    #'   Field containing metadata about the dataset. Each element of the list
-    #'   should be atomic and length one.
+    #'   field containing metadata about the dataset;
+    #'   each element of the list must be atomic and length one
+    #'
     initialize = function(dataset, dataname, keys = character(0), label = character(0), metadata = NULL) {
       if (!requireNamespace("MultiAssayExperiment", quietly = TRUE)) {
         stop("Cannot load MultiAssayExperiment - please install the package or restart your session.")
@@ -370,6 +373,8 @@ MAEFilteredDataset <- R6::R6Class( # nolint
       )
     }
   ),
+
+  # private members ----
   private = list(
 
     # Gets filter overview observations number and returns a

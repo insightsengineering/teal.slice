@@ -216,12 +216,12 @@ id of shiny module}
 
 \item{\code{data}}{(\code{MultiAssayExperiment})\cr
 object containing \code{colData} which columns are used to be used
-to choose filter variables.}
+to choose filter variables}
 }
 \if{html}{\out{</div>}}
 }
 \subsection{Returns}{
-shiny.tag
+\code{shiny.tag}
 }
 }
 \if{html}{\out{<hr>}}
@@ -253,6 +253,7 @@ object containing \code{colData} which columns are used to choose filter variabl
 }
 \subsection{Returns}{
 \code{moduleServer} function which returns \code{NULL}
+
 description
 Get label of specific variable. In case when variable label is missing
 name of the variable is returned.

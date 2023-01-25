@@ -177,7 +177,7 @@ Remove a variable from the \code{state_list} and its corresponding UI element.
 \if{html}{\out{<a id="method-MatrixFilterStates-ui_add_filter_state"></a>}}
 \if{latex}{\out{\hypertarget{method-MatrixFilterStates-ui_add_filter_state}{}}}
 \subsection{Method \code{ui_add_filter_state()}}{
-Shiny UI module to add filter variable
+Shiny UI module to add filter variable.
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{MatrixFilterStates$ui_add_filter_state(id, data)}\if{html}{\out{</div>}}
 }
@@ -189,12 +189,12 @@ Shiny UI module to add filter variable
 id of shiny module}
 
 \item{\code{data}}{(\code{matrix})\cr
-object which columns are used to choose filter variables.}
+data object for which to define a subset}
 }
 \if{html}{\out{</div>}}
 }
 \subsection{Returns}{
-shiny.tag
+\code{shiny.tag}
 }
 }
 \if{html}{\out{<hr>}}
@@ -214,10 +214,10 @@ Removed filter variable gets back to available choices.
 \if{html}{\out{<div class="arguments">}}
 \describe{
 \item{\code{id}}{(\code{character(1)})\cr
-an ID string that corresponds with the ID used to call the module's UI function.}
+shiny module instance id}
 
 \item{\code{data}}{(\code{matrix})\cr
-object which columns are used to choose filter variables.}
+data object for which to define a subset}
 
 \item{\code{...}}{ignored}
 }

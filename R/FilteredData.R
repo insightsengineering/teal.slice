@@ -68,6 +68,7 @@
 #' isolate(datasets$get_filter_overview("mtcars"))
 #' isolate(datasets$get_call("iris"))
 #' isolate(datasets$get_call("mtcars"))
+#'
 FilteredData <- R6::R6Class( # nolint
   "FilteredData",
   ## __Public Methods ====
@@ -83,13 +84,14 @@ FilteredData <- R6::R6Class( # nolint
     #' @param join_keys (`JoinKeys` or NULL) see [`teal.data::join_keys()`].
     #' @param code (`CodeClass` or `NULL`) see [`teal.data::CodeClass`].
     #' @param check (`logical(1)`) whether data has been check against reproducibility.
+    #'
     initialize = function(data_objects, join_keys = NULL, code = NULL, check = FALSE) {
       checkmate::assert_list(data_objects, any.missing = FALSE, min.len = 0, names = "unique")
       # Note the internals of data_objects are checked in set_dataset
       checkmate::assert_class(join_keys, "JoinKeys", null.ok = TRUE)
       checkmate::assert_class(code, "CodeClass", null.ok = TRUE)
       checkmate::assert_flag(check)
-# browser()
+
       self$set_check(check)
       if (!is.null(code)) {
         self$set_code(code)
@@ -129,7 +131,9 @@ FilteredData <- R6::R6Class( # nolint
     #' Gets dataset names of a given dataname for the filtering.
     #'
     #' @param dataname (`character` vector) names of the dataset
+    #'
     #' @return (`character` vector) of dataset names
+    #'
     get_filterable_datanames = function(dataname) {
       dataname
     },
@@ -138,18 +142,23 @@ FilteredData <- R6::R6Class( # nolint
     #' Gets variable names of a given dataname for the filtering.
     #'
     #' @param dataname (`character(1)`) name of the dataset
+    #'
     #' @return (`character` vector) of variable names
+    #'
     get_filterable_varnames = function(dataname) {
       self$get_filtered_dataset(dataname)$get_filterable_varnames()
     },
 
     #' @description
-    #' Set the variable names of a given dataset for the filtering
+    #' Set the variable names of a given dataset for the filtering.
+    #'
     #' @param dataname (`character(1)`) name of the dataset
-    #' @param varnames (`character` or `NULL`) The variables which
-    #' users can choose to filter the data
-    #' See `self$get_filterable_varnames` for more details
-    #' @return invisibly this `FilteredData` object
+    #' @param varnames (`character` or `NULL`)
+    #'   variables which users can choose to filter the data;
+    #'   see `self$get_filterable_varnames` for more details
+    #'
+    #' @return this `FilteredData` object invisibly
+    #'
     set_filterable_varnames = function(dataname, varnames) {
       private$check_data_varname_exists(dataname)
       self$get_filtered_dataset(dataname)$set_filterable_varnames(varnames)
@@ -158,7 +167,7 @@ FilteredData <- R6::R6Class( # nolint
 
     # datasets methods ----
     #' @description
-    #' Gets a `call` to filter the dataset according to the filter state
+    #' Gets a `call` to filter the dataset according to the filter state.
     #'
     #' It returns a `call` to filter the dataset only, assuming the
     #' other (filtered) datasets it depends on are available.
@@ -176,17 +185,21 @@ FilteredData <- R6::R6Class( # nolint
     #' This can be used for the `Show R Code` generation.
     #'
     #' @param dataname (`character(1)`) name of the dataset
-    #' @return (`call` or `list` of calls) to filter dataset
-    #'  calls
+    #'
+    #' @return (`call` or `list` of calls) to filter dataset calls
+    #'
     get_call = function(dataname) {
       private$check_data_varname_exists(dataname)
       self$get_filtered_dataset(dataname)$get_call()
     },
 
     #' @description
-    #' Gets the R preprocessing code string that generates the unfiltered datasets
+    #' Gets the R preprocessing code string that generates the unfiltered datasets.
+    #'
     #' @param dataname (`character(1)`) name(s) of dataset(s)
+    #'
     #' @return (`character(1)`) deparsed code
+    #'
     get_code = function(dataname = self$datanames()) {
       if (!is.null(private$code)) {
         paste0(private$code$get_code(dataname), collapse = "\n")
@@ -196,11 +209,14 @@ FilteredData <- R6::R6Class( # nolint
     },
 
     #' @description
-    #' Gets `FilteredDataset` object which contains all informations
-    #' related to specific dataset.
+    #' Gets `FilteredDataset` object which contains all information
+    #' pertaining to the specified dataset.
+    #'
     #' @param dataname (`character(1)`)\cr
-    #'  name of the dataset.
-    #' @return `FilteredDataset` object or list of `FilteredDataset`
+    #'   name of the dataset
+    #'
+    #' @return `FilteredDataset` object or list of `FilteredDataset`s
+    #'
     get_filtered_dataset = function(dataname = character(0)) {
       if (length(dataname) == 0) {
         private$filtered_datasets
@@ -210,13 +226,14 @@ FilteredData <- R6::R6Class( # nolint
     },
 
     #' @description
-    #' Gets filtered or unfiltered dataset
+    #' Gets filtered or unfiltered dataset.
     #'
     #' For `filtered = FALSE`, the original data set with
     #' `set_data` is returned including all attributes.
     #'
     #' @param dataname (`character(1)`) name of the dataset
     #' @param filtered (`logical`) whether to return a filtered or unfiltered dataset
+    #'
     get_data = function(dataname, filtered = TRUE) {
       private$check_data_varname_exists(dataname)
       checkmate::assert_flag(filtered)
@@ -241,17 +258,21 @@ FilteredData <- R6::R6Class( # nolint
     },
 
     #' @description
-    #' Returns whether the datasets in the object have had a reproducibility check
+    #' Returns whether the datasets in the object has undergone a reproducibility check.
+    #'
     #' @return `logical`
+    #'
     get_check = function() {
       private$.check
     },
 
     #' @description
-    #' Gets metadata for a given dataset
+    #' Gets metadata for a given dataset.
     #'
     #' @param dataname (`character(1)`) name of the dataset
+    #'
     #' @return value of metadata for given data (or `NULL` if it does not exist)
+    #'
     get_metadata = function(dataname) {
       private$check_data_varname_exists(dataname)
       self$get_filtered_dataset(dataname)$get_metadata()
@@ -259,13 +280,15 @@ FilteredData <- R6::R6Class( # nolint
 
     #' @description
     #' Get join keys between two datasets.
+    #'
     #' @return (`JoinKeys`)
+    #'
     get_join_keys = function() {
       return(private$keys)
     },
 
     #' @description
-    #' Get filter overview table in form of X (filtered) / Y (non-filtered)
+    #' Get filter overview table in form of X (filtered) / Y (non-filtered).
     #'
     #' This is intended to be presented in the application.
     #' The content for each of the data names is defined in `get_filter_overview_info` method.
@@ -273,6 +296,7 @@ FilteredData <- R6::R6Class( # nolint
     #' @param datanames (`character` vector) names of the dataset
     #'
     #' @return (`matrix`) matrix of observations and subjects of all datasets
+    #'
     get_filter_overview = function(datanames) {
       if (identical(datanames, "all")) {
         datanames <- self$datanames()
@@ -291,14 +315,19 @@ FilteredData <- R6::R6Class( # nolint
       do.call(rbind, rows)
     },
 
-    #' Get keys for the dataset
+    #' @description
+    #' Get keys for the dataset.
+    #'
     #' @param dataname (`character(1)`) name of the dataset
+    #'
     #' @return (`character`) keys of dataset
+    #'
     get_keys = function(dataname) {
       self$get_filtered_dataset(dataname)$get_keys()
     },
+
     #' @description
-    #' Gets labels of variables in the data
+    #' Gets labels of variables in the data.
     #'
     #' Variables are the column names of the data.
     #' Either, all labels must have been provided for all variables
@@ -307,27 +336,33 @@ FilteredData <- R6::R6Class( # nolint
     #' @param dataname (`character(1)`) name of the dataset
     #' @param variables (`character`) variables to get labels for;
     #'   if `NULL`, for all variables in data
+    #'
     #' @return (`character` or `NULL`) variable labels, `NULL` if `column_labels`
     #'   attribute does not exist for the data
+    #'
     get_varlabels = function(dataname, variables = NULL) {
       self$get_filtered_dataset(dataname)$get_varlabels(variables = variables)
     },
 
     #' @description
-    #' Gets variable names
+    #' Gets variable names.
     #'
     #' @param dataname (`character`) the name of the dataset
+    #'
     #' @return (`character` vector) of variable names
+    #'
     get_varnames = function(dataname) {
       self$get_filtered_dataset(dataname)$get_varnames()
     },
 
-    #' When active_datanames is "all", sets them to all datanames
-    #' otherwise, it makes sure that it is a subset of the available datanames
+    #' @description
+    #' When active_datanames is "all", sets them to all `datanames`,
+    #' otherwise, it makes sure that it is a subset of the available `datanames`.
     #'
     #' @param datanames `character vector` datanames to pick
     #'
     #' @return the intersection of `self$datanames()` and `datanames`
+    #'
     handle_active_datanames = function(datanames) {
       logger::log_trace("FilteredData$handle_active_datanames handling { paste(datanames, collapse = \" \") }")
       if (identical(datanames, "all")) {
@@ -347,7 +382,7 @@ FilteredData <- R6::R6Class( # nolint
     },
 
     #' @description
-    #' Adds a dataset to this `FilteredData`
+    #' Adds a dataset to this `FilteredData`.
     #'
     #' @details
     #' `set_dataset` creates a `FilteredDataset` object which keeps
@@ -358,7 +393,9 @@ FilteredData <- R6::R6Class( # nolint
     #'   needed by `init_filtered_dataset`
     #' @param dataname (`string`)\cr
     #'   the name of the `dataset` to be added to this object
+    #'
     #' @return (`self`) invisibly this `FilteredData`
+    #'
     set_dataset = function(dataset_args, dataname) {
       logger::log_trace("FilteredData$set_dataset setting dataset, name; { deparse1(dataname) }")
       validate_dataset_args(dataset_args, dataname)
@@ -366,7 +403,8 @@ FilteredData <- R6::R6Class( # nolint
       dataset <- dataset_args$dataset
       dataset_args$dataset <- NULL
 
-      # to include it nicely in the Show R Code; the UI also uses datanames in ids, so no whitespaces allowed
+      # to include it nicely in the Show R Code;
+      # the UI also uses datanames in ids, so no whitespaces allowed
       check_simple_name(dataname)
       private$filtered_datasets[[dataname]] <- do.call(
         what = init_filtered_dataset,
@@ -385,9 +423,12 @@ FilteredData <- R6::R6Class( # nolint
     },
 
     #' @description
-    #' Set the `join_keys`
+    #' Set the `join_keys`.
+    #'
     #' @param join_keys (`JoinKeys`) join_key (converted to a nested list)
+    #'
     #' @return (`self`) invisibly this `FilteredData`
+    #'
     set_join_keys = function(join_keys) {
       checkmate::assert_class(join_keys, "JoinKeys")
       private$keys <- join_keys
@@ -395,9 +436,12 @@ FilteredData <- R6::R6Class( # nolint
     },
 
     #' @description
-    #' sets whether the datasets in the object have had a reproducibility check
-    #' @param check (`logical`) whether datasets have had reproducibility check
+    #' Sets whether the datasets in the object have undergone a reproducibility check.
+    #'
+    #' @param check (`logical`) whether datasets have undergone reproducibility check
+    #'
     #' @return (`self`)
+    #'
     set_check = function(check) {
       checkmate::assert_flag(check)
       private$.check <- check
@@ -405,12 +449,13 @@ FilteredData <- R6::R6Class( # nolint
     },
 
     #' @description
-    #' Sets the R preprocessing code for single dataset
+    #' Sets the R preprocessing code for single dataset.
     #'
     #' @param code (`CodeClass`)\cr
-    #' preprocessing code that can be parsed to generate the
-    #'   unfiltered datasets
+    #'   preprocessing code that can be parsed to generate the unfiltered datasets
+    #'
     #' @return (`self`)
+    #'
     set_code = function(code) {
       checkmate::assert_class(code, "CodeClass")
       logger::log_trace("FilteredData$set_code setting code")
@@ -424,11 +469,13 @@ FilteredData <- R6::R6Class( # nolint
     #'
     #' Gets all active filters in the form of a nested list.
     #' The output list is a compatible input to `self$set_filter_state`.
-    #' The attribute `formatted` renders the output of `self$get_formatted_filter_state` which
-    #' is a character formatting of the filter state.
-    #' @return `list` with named elements corresponding to `FilteredDataset` objects
-    #' with active filters. Additionally, an attribute `formatted` holds the character format of
-    #' the active filter states.
+    #' The attribute `formatted` renders the output of `self$get_formatted_filter_state`,
+    #' which is a character formatting of the filter state.
+    #'
+    #' @return `named list` with elements corresponding to `FilteredDataset` objects
+    #' with active filters. In addition, the `formatted` attribute holds
+    #' the character format of the active filter states.
+    #'
     get_filter_state = function() {
       states <- lapply(self$get_filtered_dataset(), function(x) x$get_filter_state())
       filtered_states <- Filter(function(x) length(x) > 0, states)
@@ -439,6 +486,7 @@ FilteredData <- R6::R6Class( # nolint
     #' Returns the filter state formatted for printing to an `IO` device.
     #'
     #' @return `character` the pre-formatted filter state
+    #'
     #' @examples
     #' utils::data(miniACC, package = "MultiAssayExperiment")
     #' datasets <- teal.slice:::FilteredData$new(
@@ -479,8 +527,12 @@ FilteredData <- R6::R6Class( # nolint
 
     #' @description
     #' Sets active filter states.
+    #'
     #' @param state (`named list`)\cr
-    #'  nested list of filter selections applied to datasets.
+    #'  nested list of filter selections applied to datasets
+    #'
+    #' @return `NULL`
+    #'
     #' @examples
     #' utils::data(miniACC, package = "MultiAssayExperiment")
     #'
@@ -506,12 +558,14 @@ FilteredData <- R6::R6Class( # nolint
     #'     )
     #'   )
     #' )
-    #' isolate(datasets$set_filter_state(state = fs))
+    #' shiny::isolate(datasets$set_filter_state(state = fs))
     #' shiny::isolate(datasets$get_filter_state())
-    #' @return `NULL`
+    #'
     set_filter_state = function(state) {
       checkmate::assert_subset(names(state), self$datanames())
-      logger::log_trace("FilteredData$set_filter_state initializing, dataname: { paste(names(state), collapse = ' ') }")
+      logger::log_trace(
+        "FilteredData$set_filter_state initializing, dataname: { paste(names(state), collapse = ' ') }"
+        )
       for (dataname in names(state)) {
         fdataset <- self$get_filtered_dataset(dataname = dataname)
         dataset_state <- state[[dataname]]
@@ -521,38 +575,47 @@ FilteredData <- R6::R6Class( # nolint
           vars_include = self$get_filterable_varnames(dataname)
         )
       }
-      logger::log_trace("FilteredData$set_filter_state initialized, dataname: { paste(names(state), collapse = ' ') }")
+      logger::log_trace(
+        "FilteredData$set_filter_state initialized, dataname: { paste(names(state), collapse = ' ') }"
+        )
 
       invisible(NULL)
     },
 
-    #' @description Remove one or more `FilterState` of a `FilteredDataset` in a `FilteredData` object
+    #' @description
+    #' Removes one or more `FilterState` of a `FilteredDataset` in a `FilteredData` object.
     #'
     #' @param state (`named list`)\cr
-    #'  nested list of filter selections applied to datasets.
+    #'  nested list of filter selections applied to datasets
     #'
-    #' @return `NULL`
+    #' @return `NULL` invisibly
+    #'
     remove_filter_state = function(state) {
       checkmate::assert_subset(names(state), self$datanames())
 
-      logger::log_trace("FilteredData$remove_filter_state called, dataname: { paste(names(state), collapse = ' ') }")
+      logger::log_trace(
+        "FilteredData$remove_filter_state called, dataname: { paste(names(state), collapse = ' ') }")
 
       for (dataname in names(state)) {
         fdataset <- self$get_filtered_dataset(dataname = dataname)
         fdataset$remove_filter_state(state_id = state[[dataname]])
       }
 
-      logger::log_trace("FilteredData$remove_filter_state done, dataname: { paste(names(state), collapse = ' ') }")
+      logger::log_trace(
+        "FilteredData$remove_filter_state done, dataname: { paste(names(state), collapse = ' ') }")
 
       invisible(NULL)
     },
 
-    #' @description Remove all `FilterStates` of a `FilteredDataset` or all `FilterStates` of a `FilteredData` object
+    #' @description
+    #' Remove all `FilterStates` of a `FilteredDataset` or all `FilterStates`
+    #' of a `FilteredData` object.
     #'
     #' @param datanames (`character`)\cr
-    #'  datanames to remove their `FilterStates` or empty which removes all `FilterStates` in the `FilteredData` object.
+    #'   datanames to remove their `FilterStates` or empty which removes
+    #'   all `FilterStates` in the `FilteredData` object
     #'
-    #' @return `NULL`
+    #' @return `NULL` invisibly
     #'
     remove_all_filter_states = function(datanames = self$datanames()) {
       logger::log_trace(
@@ -575,7 +638,7 @@ FilteredData <- R6::R6Class( # nolint
     },
 
     #' @description
-    #' Sets this object from a bookmarked state
+    #' Sets this object from a bookmarked state.
     #'
     #' Only sets the filter state, does not set the data
     #' and the preprocessing code. The data should already have been set.
@@ -586,18 +649,20 @@ FilteredData <- R6::R6Class( # nolint
     #' class may be used outside of a Shiny app.
     #'
     #' @param state (`named list`)\cr
-    #'  containing fields `data_hash`, `filter_states`
-    #'   and `preproc_code`.
+    #'   containing fields `data_hash`, `filter_states` and `preproc_code`
     #' @param check_data_hash (`logical`) whether to check that `md5sums` agree
     #'   for the data; may not make sense with randomly generated data per session
+    #'
     restore_state_from_bookmark = function(state, check_data_hash = TRUE) {
       stop("Pure virtual method")
     },
+
     #' @description
-    #' Disable the filter panel by adding `disable` class to `filter_add_vars` and `filter_panel_active_vars ` tags
-    #' in the User Interface.
+    #' Disable the filter panel by adding `disable` class to `filter_add_vars`
+    #' and `filter_panel_active_vars` tags in the User Interface.
     #' In addition, it will store the existing filter states in a private field called `cached_states`
     #' before removing all filter states from the object.
+    #'
     filter_panel_disable = function() {
       private$filter_panel_active <- FALSE
       shinyjs::disable("filter_add_vars")
@@ -606,10 +671,12 @@ FilteredData <- R6::R6Class( # nolint
       self$remove_all_filter_states()
       invisible(NULL)
     },
+
     #' @description enable the filter panel
-    #' Enable the filter panel by adding `enable` class to `filter_add_vars` and `filter_active_vars ` tags
-    #' in the User Interface.
+    #' Enable the filter panel by adding `enable` class to `filter_add_vars`
+    #' and `filter_active_vars` tags in the User Interface.
     #' In addition, it will restore the filter states from a private field called `cached_states`.
+    #'
     filter_panel_enable = function() {
       private$filter_panel_active <- TRUE
       shinyjs::enable("filter_add_vars")
@@ -619,11 +686,16 @@ FilteredData <- R6::R6Class( # nolint
       }
       invisible(NULL)
     },
-    #' @description get the state of filter panel, if it is activated
+
+    #' @description
+    #' Gets the state of filter panel, if activated.
+    #'
     get_filter_panel_active = function() {
       private$filter_panel_active
     },
-    #' @description get the id of the filter panel UI
+
+    #' @description
+    #' Gets the id of the filter panel UI.
     get_filter_panel_ui_id = function() {
       private$filter_panel_ui_id
     },
@@ -825,10 +897,12 @@ FilteredData <- R6::R6Class( # nolint
             toggle_title(session$ns("minimise_filter_add_vars"), c("Restore panel", "Minimise Panel"))
           })
 
-          # use isolate because we assume that the number of datasets does not change over the course of the teal app
+          # use isolate because we assume that the number of datasets does not change
+          # over the course of the teal app
           # alternatively, one can proceed as in modules_filter_items to dynamically insert, remove UIs
           isol_datanames <- isolate(self$datanames()) # they are already ordered
-          # should not use for-loop as variables are otherwise only bound by reference and last dataname would be used
+          # should not use for-loop as variables are otherwise only bound by reference
+          # and last dataname would be used
           lapply(
             isol_datanames,
             function(dataname) {
