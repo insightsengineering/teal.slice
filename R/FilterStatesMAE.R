@@ -4,8 +4,6 @@
 MAEFilterStates <- R6::R6Class( # nolint
   classname = "MAEFilterStates",
   inherit = FilterStates,
-
-  # public methods ----
   public = list(
     #' @description Initializes `MAEFilterStates` object
     #'
@@ -36,7 +34,7 @@ MAEFilterStates <- R6::R6Class( # nolint
 
       self$state_list_initialize(
         list(
-          y = reactiveVal()
+          y = shiny::reactiveVal()
         )
       )
       return(invisible(self))
@@ -50,11 +48,9 @@ MAEFilterStates <- R6::R6Class( # nolint
     format = function(indent = 0) {
       checkmate::assert_number(indent, finite = TRUE, lower = 0)
 
-      if (length(self$state_list_get(1L)) > 0) {
+      if (length(self$queue_get(1L)) > 0) {
         formatted_states <- sprintf("%sSubject filters:", format("", width = indent))
-        for (state in self$state_list_get(1L)) {
-          formatted_states <- c(formatted_states, state$format(indent = indent + 2))
-        }
+        for (state in self$queue_get(1L)) formatted_states <- c(formatted_states, state$format(indent = indent + 2))
         paste(formatted_states, collapse = "\n")
       }
     },
@@ -76,26 +72,26 @@ MAEFilterStates <- R6::R6Class( # nolint
       moduleServer(
         id = id,
         function(input, output, session) {
-          previous_state <- reactiveVal(isolate(self$state_list_get("y")))
+          previous_state <- reactiveVal(isolate(self$queue_get("y")))
           added_state_name <- reactiveVal(character(0))
           removed_state_name <- reactiveVal(character(0))
 
-          observeEvent(self$state_list_get("y"), {
-            added_state_name(setdiff(names(self$state_list_get("y")), names(previous_state())))
-            removed_state_name(setdiff(names(previous_state()), names(self$state_list_get("y"))))
+          observeEvent(self$queue_get("y"), {
+            added_state_name(setdiff(names(self$queue_get("y")), names(previous_state())))
+            removed_state_name(setdiff(names(previous_state()), names(self$queue_get("y"))))
 
-            previous_state(self$state_list_get("y"))
+            previous_state(self$queue_get("y"))
           })
 
           observeEvent(added_state_name(), ignoreNULL = TRUE, {
-            fstates <- self$state_list_get("y")
+            fstates <- self$queue_get("y")
             html_ids <- private$map_vars_to_html_ids(names(fstates))
             for (fname in added_state_name()) {
               private$insert_filter_state_ui(
                 id = html_ids[fname],
                 filter_state = fstates[[fname]],
-                state_list_index = "y",
-                state_id = fname
+                queue_index = "y",
+                element_id = fname
               )
             }
             added_state_name(character(0))
@@ -120,7 +116,7 @@ MAEFilterStates <- R6::R6Class( # nolint
     #'
     #' @return `list` with elements number equal number of `FilterStates`.
     get_filter_state = function() {
-      lapply(self$state_list_get(state_list_index = "y"), function(x) x$get_state())
+      lapply(self$queue_get(queue_index = "y"), function(x) x$get_state())
     },
 
     #' @description
@@ -143,8 +139,8 @@ MAEFilterStates <- R6::R6Class( # nolint
         combine = "or"
       )
       logger::log_trace("MAEFilterState$set_filter_state initializing, dataname: { deparse1(private$input_dataname) }")
+      filter_states <- self$queue_get("y")
       lapply(names(state), function(varname) {
-      filter_states <- self$state_list_get("y")
         value <- resolve_state(state[[varname]])
         if (varname %in% names(filter_states)) {
           fstate <- filter_states[[varname]]
@@ -160,10 +156,10 @@ MAEFilterStates <- R6::R6Class( # nolint
           )
           fstate$set_state(value)
           fstate$set_na_rm(TRUE)
-          self$state_list_push(
+          self$queue_push(
             x = fstate,
-            state_list_index = "y",
-            state_id = varname
+            queue_index = "y",
+            element_id = varname
           )
         }
       })
@@ -172,54 +168,52 @@ MAEFilterStates <- R6::R6Class( # nolint
     },
 
     #' @description
-    #' Removes a variable from the `state_list` and its corresponding UI element.
+    #' Removes a variable from the `ReactiveQueue` and its corresponding UI element.
     #'
-    #' @param state_id (`character(1)`)\cr name of `state_list` element.
+    #' @param element_id (`character(1)`)\cr name of `ReactiveQueue` element.
     #'
     #' @return `NULL`
     #'
-    remove_filter_state = function(state_id) {
+    remove_filter_state = function(element_id) {
       logger::log_trace(
         sprintf(
           "%s$remove_filter_state for %s called, dataname: %s",
           class(self)[1],
-          state_id,
+          element_id,
           deparse1(private$input_dataname)
         )
       )
 
-      if (!state_id %in% names(self$state_list_get("y"))) {
+      if (!element_id %in% names(self$queue_get("y"))) {
         warning(paste(
-          "Variable:", state_id,
+          "Variable:", element_id,
           "is not present in the actual active filters of dataset: { deparse1(private$input_dataname) }",
           "therefore no changes are applied."
         ))
         logger::log_warn(
           paste(
-            "Variable:", state_id, "is not present in the actual active filters of dataset:",
+            "Variable:", element_id, "is not present in the actual active filters of dataset:",
             "{ deparse1(private$input_dataname) } therefore no changes are applied."
           )
         )
       } else {
-        self$state_list_remove(state_list_index = "y", state_id = state_id)
+        self$queue_remove(queue_index = "y", element_id = element_id)
         logger::log_trace(
           sprintf(
             "%s$remove_filter_state for variable %s done, dataname: %s",
             class(self)[1],
-            state_id,
+            element_id,
             deparse1(private$input_dataname)
           )
         )
       }
     },
 
-    # shiny modules ----
-
     #' @description
     #' Shiny UI module to add filter variable
     #' @param id (`character(1)`)\cr
     #'  id of shiny module
-    #'
+    #' @return shiny.tag
     ui_add_filter_state = function(id) {
       data <- private$data
       checkmate::assert_string(id)
@@ -252,9 +246,7 @@ MAEFilterStates <- R6::R6Class( # nolint
     #' @param id (`character(1)`)\cr
     #'   an ID string that corresponds with the ID used to call the module's UI function.
     #' @param ... ignored
-    #'
     #' @return `moduleServer` function which returns `NULL`
-    #'
     srv_add_filter_state = function(id, ...) {
       data <- private$data
       data_filtered <- private$data_filtered
@@ -268,7 +260,7 @@ MAEFilterStates <- R6::R6Class( # nolint
           shiny::setBookmarkExclude("var_to_add")
           active_filter_vars <- reactive({
             vapply(
-              X = self$state_list_get(state_list_index = "y"),
+              X = self$queue_get(queue_index = "y"),
               FUN.VALUE = character(1),
               FUN = function(x) x$get_varname(deparse = TRUE)
             )
@@ -333,11 +325,8 @@ MAEFilterStates <- R6::R6Class( # nolint
               )
               fstate$set_na_rm(TRUE)
 
-              self$state_list_push(
-                x = fstate,
-                state_list_index = "y",
-                state_id = varname
-              )
+              self$state_list_push(x = fstate, state_list_index = "y", state_id = varname)
+
               logger::log_trace(
                 sprintf(
                   "MAEFilterStates$srv_add_filter_state@2 added FilterState of variable %s, dataname: %s",
@@ -356,8 +345,6 @@ MAEFilterStates <- R6::R6Class( # nolint
       )
     }
   ),
-
-  # private members ----
   private = list(
     varlabels = character(0),
     keys = character(0),

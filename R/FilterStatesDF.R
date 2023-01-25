@@ -28,8 +28,8 @@ DFFilterStates <- R6::R6Class( # nolint
     #' @param keys (`character`)\cr
     #'   key columns names
     #'
-    initialize = function(input_dataname, output_dataname, datalabel, varlabels, keys) {
-      super$initialize(input_dataname, output_dataname, datalabel)
+    initialize = function(data, data_filtered, input_dataname, output_dataname, datalabel, varlabels, keys) {
+      super$initialize(data, data_filtered, input_dataname, output_dataname, datalabel)
       private$varlabels <- varlabels
       private$keys <- keys
 
@@ -130,12 +130,6 @@ DFFilterStates <- R6::R6Class( # nolint
     #' @description
     #' Set filter state.
     #'
-    #' @param data (`data.frame`)\cr
-    #'   data which are supposed to be filtered.
-    #' @param state (`named list`)\cr
-    #'   should contain values which are initial selection in the `FilterState`.
-    #'   Names of the `list` element should correspond to the name of the
-    #'   column in `data`.
     #' @param vars_include (`character(n)`)\cr
     #'  optional, vector of column names to be included.
     #' @param ... ignored.
@@ -155,8 +149,10 @@ DFFilterStates <- R6::R6Class( # nolint
     #' shiny::isolate(dffs$get_filter_state())
     #'
     #' @return `NULL`
-    set_filter_state = function(data, filtered_dataset, state, vars_include = get_supported_filter_varnames(data = data), ...) {
-      checkmate::assert_data_frame(data)
+    set_filter_state = function(state, ...) {
+      data <- private$data
+      data_filtered <- private$data_filtered
+
       checkmate::assert(
         checkmate::check_subset(names(state), names(data)),
         checkmate::check_class(state, "default_filter"),
@@ -291,9 +287,6 @@ DFFilterStates <- R6::R6Class( # nolint
     #'
     #' @param id (`character(1)`)\cr
     #'   an ID string that corresponds with the ID used to call the module's UI function.
-    #' @param data (`data.frame`)\cr
-    #'  object which columns are used to choose filter variables.
-    #' @param filtered_dataset TODO (also what happens if not given...)
     #' @param vars_include (`character(n)`)\cr
     #'  optional, vector of column names to be included
     #' @param ... ignored
@@ -368,26 +361,12 @@ DFFilterStates <- R6::R6Class( # nolint
               varname <- input$var_to_add
               fstate <- init_filter_state(
                 x = data[[varname]],
-                x_filtered = reactive(filtered_dataset()[[varname]]),
+                x_filtered = reactive(data_filtered()[[varname]]),
                 varname = as.name(varname),
                 varlabel = private$get_varlabels(varname),
                 input_dataname = private$input_dataname
               )
               self$state_list_push(x = fstate, state_list_index = 1L, state_id = varname)
-
-              var_name <- input$var_to_add
-
-              self$queue_push(
-                x = init_filter_state(
-                  x = data[[var_name]],
-                  x_filtered = reactive(filtered_dataset()[[var_name]]),
-                  varname = as.name(var_name),
-                  varlabel = private$get_varlabels(var_name),
-                  input_dataname = private$input_dataname
-                ),
-                queue_index = 1L,
-                element_id = var_name
-              )
               logger::log_trace(
                 sprintf(
                   "DFFilterStates$srv_add_filter_state@2 added FilterState of variable %s, dataname: %s",
