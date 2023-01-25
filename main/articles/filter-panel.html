@@ -27,7 +27,7 @@
     
     <a class="navbar-brand me-2" href="../index.html">teal.slice</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.2.0.9015</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.2.0.9016</small>
 
     <div style="width: 140px; margin-left: 0.5rem;"> <small class="nav-text text-muted me-auto">part of</small> <img src="https://github.com/insightsengineering/hex-stickers/blob/main/PNG/nest.png?raw=true" alt="NEST" style="height: 30px;"><a href="https://pharmaverse.org/" class="external-link"><img src="https://github.com/insightsengineering/hex-stickers/blob/main/PNG/pharmaverse.png?raw=true" alt="pharmaverse" style="height: 28px;"></a> </div>
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -51,14 +51,6 @@
 <li class="nav-item">
   <a class="nav-link" href="../news/index.html">Changelog</a>
 </li>
-<!-- start dropdown for versions --> <li class="nav-item dropdown">
-        <a href="#" class="nav-link dropdown-toggle"
-          data-bs-toggle="dropdown" role="button"
-          aria-expanded="false" aria-haspopup="true"
-          id="dropdown-versions">Versions</a> <div class="dropdown-menu" aria-labelledby="dropdown-versions"> <a class="dropdown-item" data-toggle="tooltip" title="" href="https://insightsengineering.github.io/teal.slice/main">main</a>
-<a class="dropdown-item" data-toggle="tooltip" title="" href="https://insightsengineering.github.io/teal.slice/latest-tag">latest-tag</a>
-<a class="dropdown-item" data-toggle="tooltip" title="" href="https://insightsengineering.github.io/teal.slice/v0.2.0">v0.2.0</a> </div></li>
-<!-- end dropdown for versions -->
       </ul>
 <form class="form-inline my-2 my-lg-0" role="search">
         <input type="search" class="form-control me-sm-2" aria-label="Toggle navigation" name="search-input" data-search-index="../search.json" id="search-input" placeholder="Search for" autocomplete="off">
@@ -127,10 +119,11 @@ filter panel, <code>FilteredDataset</code> is responsible for single
 dataset filtering. Depending on a variant of
 <code>FilteredDataset</code> it can contain one or many
 <code>FilterStates</code>. <code>FilterStates</code> class object has
-one or two <code>ReactiveQueue</code> where <code>FilterState</code>
-objects are stored. <code>FilterState</code> is a single filter applied
-to one variable/column while <code>FilterStates</code> is a collection
-of filters combined within single filter call.</p>
+one or two <code>reactiveVal</code> objects where
+<code>FilterState</code> objects are stored. <code>FilterState</code> is
+a single filter applied to one variable/column while
+<code>FilterStates</code> is a collection of filters combined within
+single filter call.</p>
 </div>
 <div class="section level2">
 <h2 id="initialization">Initialization<a class="anchor" aria-label="anchor" href="#initialization"></a>
@@ -158,7 +151,7 @@ patients data in <code>@colData</code> and multiple experiments in
 <code>@ExperimentList</code>. Because <code>MultiAssayExperiment</code>
 contains multiple objects and each must be filtered by a separate call,
 this is why multiple <code>FilterStates</code> objects are required for
-<code>MAEFilteredDataset</code>. <code>ReactiveQueue</code> are created
+<code>MAEFilteredDataset</code>. <code>reactiveVal</code> are created
 within <code>FilterStates</code> and their number also depends on the
 <code>FilterStates</code> type. Described objects are created instantly
 when data is loaded and they remain unchanged, whereas
@@ -283,8 +276,8 @@ uses <code>matrix</code> columns for filtering.</li>
 <code>ui/srv_add_filter_state</code> allow to add
 <code>FilterState</code> for selected variable. Variables included in
 the module are the filterable colnames of the provided dataset. Variable
-selection adds <code>FilterState</code> to <code>ReactiveQueue</code>
-(stored in list <code>private$queue[[queue_id]]</code>).
+selection adds <code>FilterState</code> to <code>reactiveVal</code>
+(stored in list <code>private$state_list[[state_list_id]]</code>).
 <code>FilterState</code> is dispatched automatically on a selected
 column class.</li>
 </ul>
@@ -329,8 +322,8 @@ responsibilities when composing filter calls.</p>
 <code>FilterState$get_call()</code> returns a single condition call
 based on single variable</li>
 <li>
-<code>ReactiveQueue</code> is a container which stores multiple
-condition calls. <code>ReactiveQueue</code> objects are kept in a list
+<code>reactiveVal</code> is a container which stores multiple
+condition calls. <code>reactiveVal</code> objects are kept in a list
 where the names of elements are set after the argument names.</li>
 <li>
 <code>FilterStates$get_call()</code> returns a single filter call by
@@ -362,17 +355,17 @@ executing single <code><a href="https://dplyr.tidyverse.org/reference/filter.htm
 <code>FilterStates</code>)</p></li>
 <li><p><code>FilterStates</code> construct <code><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">dplyr::filter</a></code>
 call is based on the <code>FilterState</code> objects added to the
-<code>ReactiveQueue</code>.</p></li>
-<li><p><code>ReactiveQueue</code> is just a class to manage addition,
-storage and removal of <code>FilterStates</code> objects. This is its
-only responsibility and the class does not generate any code.
-<code>DFFilterState</code> contains only one <code>ReactiveQueue</code>
-which is not named - this tells <code>FilterState</code> that calls from
-each <code>FilterState</code> should go to unnamed argument in
+<code>reactiveVal</code>.</p></li>
+<li><p><code>reactiveVal</code> is used to store
+<code>FilterStates</code> objects. This is its only responsibility and
+the class does not generate any code. <code>DFFilterState</code>
+contains only one <code>reactiveVal</code> which is not named - this
+tells <code>FilterState</code> that calls from each
+<code>FilterState</code> should go to unnamed argument in
 <code><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">dplyr::filter</a></code>.</p></li>
 <li><p>When the end-user chooses some variable in “Add Filter Variable”
 section, then new <code>FilterState</code> is added to the
-<code>ReactiveQueue</code> and this new condition is added to
+<code>reactiveVal</code> and this new condition is added to
 <code>dplyr::filter(ADSL, ...)</code> call. In the example
 <code>SEX</code> and <code>AGE</code> has been added - which are
 automatically dispatched to relevant <code>FilterState</code> class
@@ -405,9 +398,9 @@ data and for this object
 <code>SummarizedExperiment::subsetByColData</code> has two arguments
 <code>x</code> (data) and <code>y</code> (conditions).
 <code>MAEFilterStates</code> similar to <code>DFFilterStates</code> has
-one <code>ReactiveQueue</code> (9) list for <code>y</code> argument in
-the function. Adding new <code>FilterStates</code> triggers returning of
-the code similar to (4) and (5)</p></li>
+one <code>reactiveVal</code> (9) list for <code>y</code> argument in the
+function. Adding new <code>FilterStates</code> triggers returning of the
+code similar to (4) and (5)</p></li>
 <li><p><code>SEFilterStates</code> is initialized per one experiment in
 the MAE data. This class is specific because
 <code>SummarizedExperiment</code> contains <code>colData</code> and
@@ -471,18 +464,22 @@ the example below, we present how these methods can be used.</p>
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va">teal.slice</span><span class="op">)</span></span>
 <span></span>
-<span><span class="va">datasets</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/init_filtered_data.html">init_filtered_data</a></span><span class="op">(</span></span>
-<span>  <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span></span>
-<span>    iris <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>dataset <span class="op">=</span> <span class="va">iris</span><span class="op">)</span>,</span>
-<span>    mtcars <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>dataset <span class="op">=</span> <span class="va">mtcars</span><span class="op">)</span></span>
+<span><span class="va">datasets</span> <span class="op">&lt;-</span> <span class="fu">shiny</span><span class="fu">::</span><span class="fu"><a href="https://shiny.rstudio.com/reference/shiny/latest/isolate.html" class="external-link">isolate</a></span><span class="op">(</span></span>
+<span>  <span class="fu"><a href="../reference/init_filtered_data.html">init_filtered_data</a></span><span class="op">(</span></span>
+<span>    <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span></span>
+<span>      iris <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>dataset <span class="op">=</span> <span class="va">iris</span><span class="op">)</span>,</span>
+<span>      mtcars <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>dataset <span class="op">=</span> <span class="va">mtcars</span><span class="op">)</span></span>
+<span>    <span class="op">)</span></span>
 <span>  <span class="op">)</span></span>
 <span><span class="op">)</span></span>
 <span></span>
-<span><span class="fu"><a href="../reference/filter_state_api.html">set_filter_state</a></span><span class="op">(</span></span>
-<span>  datasets <span class="op">=</span> <span class="va">datasets</span>,</span>
-<span>  filter <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span></span>
-<span>    iris <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>Species <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>selected <span class="op">=</span> <span class="st">"virginica"</span>, keep_na <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span><span class="op">)</span>,</span>
-<span>    mtcars <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>mpg <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>selected <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">20.0</span>, <span class="fl">25.0</span><span class="op">)</span>, keep_na <span class="op">=</span> <span class="cn">FALSE</span>, keep_inf <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span><span class="op">)</span></span>
+<span><span class="fu">shiny</span><span class="fu">::</span><span class="fu"><a href="https://shiny.rstudio.com/reference/shiny/latest/isolate.html" class="external-link">isolate</a></span><span class="op">(</span></span>
+<span>  <span class="fu"><a href="../reference/filter_state_api.html">set_filter_state</a></span><span class="op">(</span></span>
+<span>    datasets <span class="op">=</span> <span class="va">datasets</span>,</span>
+<span>    filter <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span></span>
+<span>      iris <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>Species <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>selected <span class="op">=</span> <span class="st">"virginica"</span>, keep_na <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span><span class="op">)</span>,</span>
+<span>      mtcars <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>mpg <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>selected <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">20.0</span>, <span class="fl">25.0</span><span class="op">)</span>, keep_na <span class="op">=</span> <span class="cn">FALSE</span>, keep_inf <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span><span class="op">)</span></span>
+<span>    <span class="op">)</span></span>
 <span>  <span class="op">)</span></span>
 <span><span class="op">)</span></span></code></pre></div>
 <ol start="2" style="list-style-type: decimal">
@@ -519,19 +516,23 @@ the example below, we present how these methods can be used.</p>
 <li>Removing filter states</li>
 </ol>
 <div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="../reference/filter_state_api.html">remove_filter_state</a></span><span class="op">(</span></span>
-<span>  datasets <span class="op">=</span> <span class="va">datasets</span>,</span>
-<span>  filter <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>iris <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Species"</span><span class="op">)</span><span class="op">)</span></span>
+<code class="sourceCode R"><span><span class="fu">shiny</span><span class="fu">::</span><span class="fu"><a href="https://shiny.rstudio.com/reference/shiny/latest/isolate.html" class="external-link">isolate</a></span><span class="op">(</span></span>
+<span>  <span class="fu"><a href="../reference/filter_state_api.html">remove_filter_state</a></span><span class="op">(</span></span>
+<span>    datasets <span class="op">=</span> <span class="va">datasets</span>,</span>
+<span>    filter <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>iris <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Species"</span><span class="op">)</span><span class="op">)</span></span>
+<span>  <span class="op">)</span></span>
 <span><span class="op">)</span></span></code></pre></div>
 <ol start="4" style="list-style-type: decimal">
 <li>Updating filter states. *Works only in the shiny reactive
 context.</li>
 </ol>
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="../reference/filter_state_api.html">set_filter_state</a></span><span class="op">(</span></span>
-<span>  datasets <span class="op">=</span> <span class="va">datasets</span>,</span>
-<span>  filter <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span></span>
-<span>    mtcars <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>mpg <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>selected <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">22.0</span>, <span class="fl">25.0</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span>
+<code class="sourceCode R"><span><span class="fu">shiny</span><span class="fu">::</span><span class="fu"><a href="https://shiny.rstudio.com/reference/shiny/latest/isolate.html" class="external-link">isolate</a></span><span class="op">(</span></span>
+<span>  <span class="fu"><a href="../reference/filter_state_api.html">set_filter_state</a></span><span class="op">(</span></span>
+<span>    datasets <span class="op">=</span> <span class="va">datasets</span>,</span>
+<span>    filter <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span></span>
+<span>      mtcars <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>mpg <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>selected <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">22.0</span>, <span class="fl">25.0</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span>
+<span>    <span class="op">)</span></span>
 <span>  <span class="op">)</span></span>
 <span><span class="op">)</span></span></code></pre></div>
 <ol start="5" style="list-style-type: decimal">

@@ -10,7 +10,7 @@
     
     <a class="navbar-brand me-2" href="../index.html">teal.slice</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.2.0.9015</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.2.0.9016</small>
 
     <div style="width: 140px; margin-left: 0.5rem;"> <small class="nav-text text-muted me-auto">part of</small> <img src="https://github.com/insightsengineering/hex-stickers/blob/main/PNG/nest.png?raw=true" alt="NEST" style="height: 30px;"><a href="https://pharmaverse.org/" class="external-link"><img src="https://github.com/insightsengineering/hex-stickers/blob/main/PNG/pharmaverse.png?raw=true" alt="pharmaverse" style="height: 28px;"></a> </div>
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -33,14 +33,6 @@
 <li class="nav-item">
   <a class="nav-link" href="../news/index.html">Changelog</a>
 </li>
-<!-- start dropdown for versions --> <li class="nav-item dropdown">
-        <a href="#" class="nav-link dropdown-toggle"
-          data-bs-toggle="dropdown" role="button"
-          aria-expanded="false" aria-haspopup="true"
-          id="dropdown-versions">Versions</a> <div class="dropdown-menu" aria-labelledby="dropdown-versions"> <a class="dropdown-item" data-toggle="tooltip" title="" href="https://insightsengineering.github.io/teal.slice/main">main</a>
-<a class="dropdown-item" data-toggle="tooltip" title="" href="https://insightsengineering.github.io/teal.slice/latest-tag">latest-tag</a>
-<a class="dropdown-item" data-toggle="tooltip" title="" href="https://insightsengineering.github.io/teal.slice/v0.2.0">v0.2.0</a> </div></li>
-<!-- end dropdown for versions -->
       </ul><form class="form-inline my-2 my-lg-0" role="search">
         <input type="search" class="form-control me-sm-2" aria-label="Toggle navigation" name="search-input" data-search-index="../search.json" id="search-input" placeholder="Search for" autocomplete="off"></form>
 
@@ -91,20 +83,20 @@
 <li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilterStates" data-id="get_datalabel"><a href="FilterStates.html#method-get_datalabel"><code>teal.slice::FilterStates$get_datalabel()</code></a></span></li>
 <li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilterStates" data-id="get_filter_count"><a href="FilterStates.html#method-get_filter_count"><code>teal.slice::FilterStates$get_filter_count()</code></a></span></li>
 <li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilterStates" data-id="print"><a href="FilterStates.html#method-print"><code>teal.slice::FilterStates$print()</code></a></span></li>
-<li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilterStates" data-id="queue_empty"><a href="FilterStates.html#method-queue_empty"><code>teal.slice::FilterStates$queue_empty()</code></a></span></li>
-<li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilterStates" data-id="queue_get"><a href="FilterStates.html#method-queue_get"><code>teal.slice::FilterStates$queue_get()</code></a></span></li>
-<li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilterStates" data-id="queue_initialize"><a href="FilterStates.html#method-queue_initialize"><code>teal.slice::FilterStates$queue_initialize()</code></a></span></li>
-<li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilterStates" data-id="queue_push"><a href="FilterStates.html#method-queue_push"><code>teal.slice::FilterStates$queue_push()</code></a></span></li>
-<li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilterStates" data-id="queue_remove"><a href="FilterStates.html#method-queue_remove"><code>teal.slice::FilterStates$queue_remove()</code></a></span></li>
+<li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilterStates" data-id="state_list_empty"><a href="FilterStates.html#method-state_list_empty"><code>teal.slice::FilterStates$state_list_empty()</code></a></span></li>
+<li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilterStates" data-id="state_list_get"><a href="FilterStates.html#method-state_list_get"><code>teal.slice::FilterStates$state_list_get()</code></a></span></li>
+<li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilterStates" data-id="state_list_initialize"><a href="FilterStates.html#method-state_list_initialize"><code>teal.slice::FilterStates$state_list_initialize()</code></a></span></li>
+<li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilterStates" data-id="state_list_push"><a href="FilterStates.html#method-state_list_push"><code>teal.slice::FilterStates$state_list_push()</code></a></span></li>
+<li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilterStates" data-id="state_list_remove"><a href="FilterStates.html#method-state_list_remove"><code>teal.slice::FilterStates$state_list_remove()</code></a></span></li>
 <li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilterStates" data-id="ui"><a href="FilterStates.html#method-ui"><code>teal.slice::FilterStates$ui()</code></a></span></li>
 </ul></details></p><hr><a id="method-DFFilterStates-new"></a><div class="section">
 <h3 id="method-new-">Method <code>new()</code><a class="anchor" aria-label="anchor" href="#method-new-"></a></h3>
-<p>Initializes <code>DFFilterStates</code> object</p>
+<p>Initializes <code>DFFilterStates</code> object.</p>
 <p>Initializes <code>DFFilterStates</code> object by setting <code>input_dataname</code>,
-<code>output_dataname</code> and initializing <code>ReactiveQueue</code>. This class contains a
-single <code>ReactiveQueue</code> with no specified name which means that
-when calling the function associated to this class (<code><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">dplyr::filter</a></code>), a list of
-conditions are passed to unnamed arguments (<code>...</code>).</p><div class="section">
+<code>output_dataname</code> and initializing <code>state_list</code> (<code><a href="https://shiny.rstudio.com/reference/shiny/latest/reactiveVal.html" class="external-link">shiny::reactiveVal</a></code>).
+This class contains a single <code>state_list</code> with no specified name,
+which means that when calling the subset function associated with this class
+(<code><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">dplyr::filter</a></code>), a list of conditions is passed to unnamed arguments (<code>...</code>).</p><div class="section">
 <h4 id="usage">Usage<a class="anchor" aria-label="anchor" href="#usage"></a></h4>
 <p></p><div class="r"><div class="sourceCode"><pre><code><span><span class="va"><a href="../reference/DFFilterStates.html">DFFilterStates</a></span><span class="op">$</span><span class="fu">new</span><span class="op">(</span><span class="va">input_dataname</span>, <span class="va">output_dataname</span>, <span class="va">datalabel</span>, <span class="va">varlabels</span>, <span class="va">keys</span><span class="op">)</span></span></code></pre></div><p></p></div>
 </div>
@@ -113,18 +105,18 @@ conditions are passed to unnamed arguments (<code>...</code>).</p><div class="se
 <h4 id="arguments">Arguments<a class="anchor" aria-label="anchor" href="#arguments"></a></h4>
 <p></p><div class="arguments"><dl><dt><code>input_dataname</code></dt>
 <dd><p>(<code>character(1)</code> or <code>name</code> or <code>call</code>)<br>
-name of the data used on lhs of the expression
-specified to the function argument attached to this <code>FilterStates</code>.</p></dd>
+name of the data used on <code>rhs</code> of the <em>subset expression</em>
+specified to the function argument attached to this <code>FilterStates</code></p></dd>
 
 
 <dt><code>output_dataname</code></dt>
 <dd><p>(<code>character(1)</code> or <code>name</code> or <code>call</code>)<br>
-name of the output data on the lhs of the assignment expression.</p></dd>
+name of the output data on the <code>lhs</code> of the <em>subset expression</em></p></dd>
 
 
 <dt><code>datalabel</code></dt>
 <dd><p>(<code>character(0)</code> or <code>character(1)</code>)<br>
-text label value.</p></dd>
+text label value</p></dd>
 
 
 <dt><code>varlabels</code></dt>
@@ -142,7 +134,7 @@ key columns names</p></dd>
 
 </div><p></p><hr><a id="method-DFFilterStates-format"></a><div class="section">
 <h3 id="method-format-">Method <code><a href="https://rdrr.io/r/base/format.html" class="external-link">format()</a></code><a class="anchor" aria-label="anchor" href="#method-format-"></a></h3>
-<p>Returns the formatted string representing this <code>FilterStates</code> object.</p><div class="section">
+<p>Returns a formatted string representing this <code>FilterStates</code> object.</p><div class="section">
 <h4 id="usage-1">Usage<a class="anchor" aria-label="anchor" href="#usage-1"></a></h4>
 <p></p><div class="r"><div class="sourceCode"><pre><code><span><span class="va">DFFilterStates</span><span class="op">$</span><span class="fu">format</span><span class="op">(</span>indent <span class="op">=</span> <span class="fl">0</span><span class="op">)</span></span></code></pre></div><p></p></div>
 </div>
@@ -150,7 +142,7 @@ key columns names</p></dd>
 <div class="section">
 <h4 id="arguments-1">Arguments<a class="anchor" aria-label="anchor" href="#arguments-1"></a></h4>
 <p></p><div class="arguments"><dl><dt><code>indent</code></dt>
-<dd><p>(<code>numeric(1)</code>) the number of spaces before each line of the representation</p></dd>
+<dd><p>(<code>numeric(1)</code>) the number of spaces prepended to each line of the output</p></dd>
 
 
 </dl><p></p></div>
@@ -162,9 +154,9 @@ key columns names</p></dd>
 
 </div><p></p><hr><a id="method-DFFilterStates-get_fun"></a><div class="section">
 <h3 id="method-get-fun-">Method <code>get_fun()</code><a class="anchor" aria-label="anchor" href="#method-get-fun-"></a></h3>
-<p>Get function name</p>
-<p>Get function name used to create filter call.
-For <code>DFFilterStates</code> <code><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">dplyr::filter</a></code> is used</p><div class="section">
+<p>Gets the name of the function used to filter the data in this <code>FilterStates</code>.</p>
+<p>Get name of  function used to create the <em>subset expression</em>.
+For <code>DFFilterStates</code> this is <code><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">dplyr::filter</a></code>.</p><div class="section">
 <h4 id="usage-2">Usage<a class="anchor" aria-label="anchor" href="#usage-2"></a></h4>
 <p></p><div class="r"><div class="sourceCode"><pre><code><span><span class="va">DFFilterStates</span><span class="op">$</span><span class="fu">get_fun</span><span class="op">(</span><span class="op">)</span></span></code></pre></div><p></p></div>
 </div>
@@ -176,7 +168,7 @@ For <code>DFFilterStates</code> <code><a href="https://dplyr.tidyverse.org/refer
 
 </div><p></p><hr><a id="method-DFFilterStates-server"></a><div class="section">
 <h3 id="method-server-">Method <code>server()</code><a class="anchor" aria-label="anchor" href="#method-server-"></a></h3>
-<p>Server module</p><div class="section">
+<p>Shiny server module.</p><div class="section">
 <h4 id="usage-3">Usage<a class="anchor" aria-label="anchor" href="#usage-3"></a></h4>
 <p></p><div class="r"><div class="sourceCode"><pre><code><span><span class="va">DFFilterStates</span><span class="op">$</span><span class="fu">server</span><span class="op">(</span><span class="va">id</span><span class="op">)</span></span></code></pre></div><p></p></div>
 </div>
@@ -185,7 +177,7 @@ For <code>DFFilterStates</code> <code><a href="https://dplyr.tidyverse.org/refer
 <h4 id="arguments-2">Arguments<a class="anchor" aria-label="anchor" href="#arguments-2"></a></h4>
 <p></p><div class="arguments"><dl><dt><code>id</code></dt>
 <dd><p>(<code>character(1)</code>)<br>
-an ID string that corresponds with the ID used to call the module's UI function.</p></dd>
+shiny module instance id</p></dd>
 
 
 </dl><p></p></div>
@@ -198,7 +190,7 @@ an ID string that corresponds with the ID used to call the module's UI function.
 </div><p></p><hr><a id="method-DFFilterStates-get_filter_state"></a><div class="section">
 <h3 id="method-get-filter-state-">Method <code><a href="filter_state_api.html">get_filter_state()</a></code><a class="anchor" aria-label="anchor" href="#method-get-filter-state-"></a></h3>
 <p>Gets the reactive values from the active <code>FilterState</code> objects.</p>
-<p>Get active filter state from the <code>FilterState</code> objects kept in <code>ReactiveQueue</code>.
+<p>Get active filter state from the <code>FilterState</code> objects kept in <code>state_list</code>.
 The output list is a compatible input to <code>self$set_filter_state</code>.</p><div class="section">
 <h4 id="usage-4">Usage<a class="anchor" aria-label="anchor" href="#usage-4"></a></h4>
 <p></p><div class="r"><div class="sourceCode"><pre><code><span><span class="va">DFFilterStates</span><span class="op">$</span><span class="fu">get_filter_state</span><span class="op">(</span><span class="op">)</span></span></code></pre></div><p></p></div>
@@ -206,12 +198,12 @@ The output list is a compatible input to <code>self$set_filter_state</code>.</p>
 
 <div class="section">
 <h4 id="returns-3">Returns<a class="anchor" aria-label="anchor" href="#returns-3"></a></h4>
-<p><code>list</code> with named elements corresponding to <code>FilterState</code> in the <code>ReactiveQueue</code>.</p>
+<p><code>list</code> with named elements corresponding to <code>FilterState</code> in the <code>state_list</code>.</p>
 </div>
 
 </div><p></p><hr><a id="method-DFFilterStates-set_filter_state"></a><div class="section">
 <h3 id="method-set-filter-state-">Method <code><a href="filter_state_api.html">set_filter_state()</a></code><a class="anchor" aria-label="anchor" href="#method-set-filter-state-"></a></h3>
-<p>Set filter state</p><div class="section">
+<p>Set filter state.</p><div class="section">
 <h4 id="usage-5">Usage<a class="anchor" aria-label="anchor" href="#usage-5"></a></h4>
 <p></p><div class="r"><div class="sourceCode"><pre><code><span><span class="va">DFFilterStates</span><span class="op">$</span><span class="fu">set_filter_state</span><span class="op">(</span></span>
 <span>  <span class="va">data</span>,</span>
@@ -225,23 +217,22 @@ The output list is a compatible input to <code>self$set_filter_state</code>.</p>
 <h4 id="arguments-3">Arguments<a class="anchor" aria-label="anchor" href="#arguments-3"></a></h4>
 <p></p><div class="arguments"><dl><dt><code>data</code></dt>
 <dd><p>(<code>data.frame</code>)<br>
-data which are supposed to be filtered.</p></dd>
+data object for which to define a subset</p></dd>
 
 
 <dt><code>state</code></dt>
 <dd><p>(<code>named list</code>)<br>
-should contain values which are initial selection in the <code>FilterState</code>.
-Names of the <code>list</code> element should correspond to the name of the
-column in <code>data</code>.</p></dd>
+should contain values of initial selections in the <code>FilterState</code>;
+<code>list</code> names must correspond to column names in <code>data</code></p></dd>
 
 
 <dt><code>vars_include</code></dt>
 <dd><p>(<code>character(n)</code>)<br>
-optional, vector of column names to be included.</p></dd>
+optional, vector of column names to be included</p></dd>
 
 
 <dt><code>...</code></dt>
-<dd><p>ignored.</p></dd>
+<dd><p>ignored</p></dd>
 
 
 </dl><p></p></div>
@@ -263,7 +254,7 @@ optional, vector of column names to be included.</p></dd>
 <span>  Sepal.Length <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>selected <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">5.1</span>, <span class="fl">6.4</span><span class="op">)</span>, keep_na <span class="op">=</span> <span class="cn">TRUE</span>, keep_inf <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span>,</span>
 <span>  Species <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>selected <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"setosa"</span>, <span class="st">"versicolor"</span><span class="op">)</span>, keep_na <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span>
 <span><span class="op">)</span></span>
-<span><span class="va">dffs</span><span class="op">$</span><span class="fu">set_filter_state</span><span class="op">(</span>state <span class="op">=</span> <span class="va">fs</span>, data <span class="op">=</span> <span class="va">iris</span><span class="op">)</span></span>
+<span><span class="fu">shiny</span><span class="fu">::</span><span class="fu"><a href="https://shiny.rstudio.com/reference/shiny/latest/isolate.html" class="external-link">isolate</a></span><span class="op">(</span><span class="va">dffs</span><span class="op">$</span><span class="fu">set_filter_state</span><span class="op">(</span>state <span class="op">=</span> <span class="va">fs</span>, data <span class="op">=</span> <span class="va">iris</span><span class="op">)</span><span class="op">)</span></span>
 <span><span class="fu">shiny</span><span class="fu">::</span><span class="fu"><a href="https://shiny.rstudio.com/reference/shiny/latest/isolate.html" class="external-link">isolate</a></span><span class="op">(</span><span class="va">dffs</span><span class="op">$</span><span class="fu">get_filter_state</span><span class="op">(</span><span class="op">)</span><span class="op">)</span></span>
 <span></span></code></pre></div><p></p></div>
 </div>
@@ -271,15 +262,15 @@ optional, vector of column names to be included.</p></dd>
 
 </div><p></p><hr><a id="method-DFFilterStates-remove_filter_state"></a><div class="section">
 <h3 id="method-remove-filter-state-">Method <code><a href="filter_state_api.html">remove_filter_state()</a></code><a class="anchor" aria-label="anchor" href="#method-remove-filter-state-"></a></h3>
-<p>Remove a <code>FilterState</code> from the <code>ReactiveQueue</code>.</p><div class="section">
+<p>Remove a <code>FilterState</code> from the <code>state_list</code>.</p><div class="section">
 <h4 id="usage-6">Usage<a class="anchor" aria-label="anchor" href="#usage-6"></a></h4>
-<p></p><div class="r"><div class="sourceCode"><pre><code><span><span class="va">DFFilterStates</span><span class="op">$</span><span class="fu">remove_filter_state</span><span class="op">(</span><span class="va">element_id</span><span class="op">)</span></span></code></pre></div><p></p></div>
+<p></p><div class="r"><div class="sourceCode"><pre><code><span><span class="va">DFFilterStates</span><span class="op">$</span><span class="fu">remove_filter_state</span><span class="op">(</span><span class="va">state_id</span><span class="op">)</span></span></code></pre></div><p></p></div>
 </div>
 
 <div class="section">
 <h4 id="arguments-4">Arguments<a class="anchor" aria-label="anchor" href="#arguments-4"></a></h4>
-<p></p><div class="arguments"><dl><dt><code>element_id</code></dt>
-<dd><p>(<code>character(1)</code>)<br> name of <code>ReactiveQueue</code> element.</p></dd>
+<p></p><div class="arguments"><dl><dt><code>state_id</code></dt>
+<dd><p>(<code>character(1)</code>)<br> name of <code>state_list</code> element</p></dd>
 
 
 </dl><p></p></div>
@@ -291,7 +282,7 @@ optional, vector of column names to be included.</p></dd>
 
 </div><p></p><hr><a id="method-DFFilterStates-ui_add_filter_state"></a><div class="section">
 <h3 id="method-ui-add-filter-state-">Method <code>ui_add_filter_state()</code><a class="anchor" aria-label="anchor" href="#method-ui-add-filter-state-"></a></h3>
-<p>Shiny UI module to add filter variable</p><div class="section">
+<p>Shiny UI module to add filter variable.</p><div class="section">
 <h4 id="usage-7">Usage<a class="anchor" aria-label="anchor" href="#usage-7"></a></h4>
 <p></p><div class="r"><div class="sourceCode"><pre><code><span><span class="va">DFFilterStates</span><span class="op">$</span><span class="fu">ui_add_filter_state</span><span class="op">(</span><span class="va">id</span>, <span class="va">data</span><span class="op">)</span></span></code></pre></div><p></p></div>
 </div>
@@ -300,27 +291,27 @@ optional, vector of column names to be included.</p></dd>
 <h4 id="arguments-5">Arguments<a class="anchor" aria-label="anchor" href="#arguments-5"></a></h4>
 <p></p><div class="arguments"><dl><dt><code>id</code></dt>
 <dd><p>(<code>character(1)</code>)<br>
-id of shiny module</p></dd>
+shiny element (module instance) id</p></dd>
 
 
 <dt><code>data</code></dt>
 <dd><p>(<code>data.frame</code>)<br>
-object which columns are used to choose filter variables.</p></dd>
+data object for which to define a subset</p></dd>
 
 
 </dl><p></p></div>
 </div>
 <div class="section">
 <h4 id="returns-6">Returns<a class="anchor" aria-label="anchor" href="#returns-6"></a></h4>
-<p>shiny.tag</p>
+<p><code>shiny.tag</code></p>
 </div>
 
 </div><p></p><hr><a id="method-DFFilterStates-srv_add_filter_state"></a><div class="section">
 <h3 id="method-srv-add-filter-state-">Method <code>srv_add_filter_state()</code><a class="anchor" aria-label="anchor" href="#method-srv-add-filter-state-"></a></h3>
-<p>Shiny server module to add filter variable</p>
-<p>Module controls available choices to select as a filter variable.
-Selected filter variable is being removed from available choices.
-Removed filter variable gets back to available choices.</p><div class="section">
+<p>Shiny server module to add filter variable.</p>
+<p>This module controls available choices to select as a filter variable.
+Once selected, a variable is removed from available choices.
+Removing a filter variable adds it back to available choices.</p><div class="section">
 <h4 id="usage-8">Usage<a class="anchor" aria-label="anchor" href="#usage-8"></a></h4>
 <p></p><div class="r"><div class="sourceCode"><pre><code><span><span class="va">DFFilterStates</span><span class="op">$</span><span class="fu">srv_add_filter_state</span><span class="op">(</span></span>
 <span>  <span class="va">id</span>,</span>
@@ -334,17 +325,17 @@ Removed filter variable gets back to available choices.</p><div class="section">
 <h4 id="arguments-6">Arguments<a class="anchor" aria-label="anchor" href="#arguments-6"></a></h4>
 <p></p><div class="arguments"><dl><dt><code>id</code></dt>
 <dd><p>(<code>character(1)</code>)<br>
-an ID string that corresponds with the ID used to call the module's UI function.</p></dd>
+shiny module instance id</p></dd>
 
 
 <dt><code>data</code></dt>
 <dd><p>(<code>data.frame</code>)<br>
-object which columns are used to choose filter variables.</p></dd>
+data object for which to define a subset</p></dd>
 
 
 <dt><code>vars_include</code></dt>
 <dd><p>(<code>character(n)</code>)<br>
-optional, vector of column names to be included.</p></dd>
+optional, vector of column names to be included</p></dd>
 
 
 <dt><code>...</code></dt>
@@ -355,13 +346,7 @@ optional, vector of column names to be included.</p></dd>
 </div>
 <div class="section">
 <h4 id="returns-7">Returns<a class="anchor" aria-label="anchor" href="#returns-7"></a></h4>
-<p><code>moduleServer</code> function which returns <code>NULL</code>
-description
-Get label of specific variable. In case when variable label is missing
-name of the variable is returned.
-parameter variable (<code>character</code>)<br>
-name of the variable for which label should be returned
-return <code>character</code></p>
+<p><code>moduleServer</code> function which returns <code>NULL</code></p>
 </div>
 
 </div><p></p><hr><a id="method-DFFilterStates-clone"></a><div class="section">
@@ -402,7 +387,7 @@ return <code>character</code></p>
 <span class="r-in"><span>  Sepal.Length <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>selected <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">5.1</span>, <span class="fl">6.4</span><span class="op">)</span>, keep_na <span class="op">=</span> <span class="cn">TRUE</span>, keep_inf <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span>,</span></span>
 <span class="r-in"><span>  Species <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>selected <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"setosa"</span>, <span class="st">"versicolor"</span><span class="op">)</span>, keep_na <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="op">)</span></span></span>
-<span class="r-in"><span><span class="va">dffs</span><span class="op">$</span><span class="fu">set_filter_state</span><span class="op">(</span>state <span class="op">=</span> <span class="va">fs</span>, data <span class="op">=</span> <span class="va">iris</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="fu">shiny</span><span class="fu">::</span><span class="fu"><a href="https://shiny.rstudio.com/reference/shiny/latest/isolate.html" class="external-link">isolate</a></span><span class="op">(</span><span class="va">dffs</span><span class="op">$</span><span class="fu">set_filter_state</span><span class="op">(</span>state <span class="op">=</span> <span class="va">fs</span>, data <span class="op">=</span> <span class="va">iris</span><span class="op">)</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> NULL</span>
 <span class="r-in"><span><span class="fu">shiny</span><span class="fu">::</span><span class="fu"><a href="https://shiny.rstudio.com/reference/shiny/latest/isolate.html" class="external-link">isolate</a></span><span class="op">(</span><span class="va">dffs</span><span class="op">$</span><span class="fu">get_filter_state</span><span class="op">(</span><span class="op">)</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> $Sepal.Length</span>
