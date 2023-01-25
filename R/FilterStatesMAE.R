@@ -342,12 +342,12 @@ MAEFilterStates <- R6::R6Class( # nolint
               self$state_list_push(
                 x = fstate,
                 state_list_index = "y",
-                state_id = input$var_to_add
+                state_id = varname
               )
               logger::log_trace(
                 sprintf(
                   "MAEFilterStates$srv_add_filter_state@2 added FilterState of variable %s, dataname: %s",
-                  deparse1(var_name),
+                  deparse1(varname),
                   deparse1(private$input_dataname)
                 )
               )

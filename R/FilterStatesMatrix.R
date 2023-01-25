@@ -129,8 +129,8 @@ MatrixFilterStates <- R6::R6Class( # nolint
         "MatrixFilterState$set_filter_state initializing,",
         "dataname: { deparse1(private$input_dataname) }"
       ))
-      lapply(names(state), function(varname) {
       filter_states <- self$state_list_get("subset")
+      lapply(names(state), function(varname) {
         value <- resolve_state(state[[varname]])
         if (varname %in% names(filter_states)) {
           fstate <- filter_states[[varname]]
@@ -311,6 +311,7 @@ MatrixFilterStates <- R6::R6Class( # nolint
                   deparse1(private$input_dataname)
                 )
               )
+              varname <- input$var_to_add
               self$state_list_push(
                 x = init_filter_state(
                   x = subset(data, select = varname),

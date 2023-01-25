@@ -206,8 +206,8 @@ SEFilterStates <- R6::R6Class( # nolint
         combine = "or"
       )
 
-      lapply(names(state$subset), function(varname) {
       filter_states <- self$state_list_get("subset")
+      lapply(names(state$subset), function(varname) {
         value <- resolve_state(state$subset[[varname]])
         if (varname %in% names(filter_states)) {
           fstate <- filter_states[[varname]]
@@ -510,6 +510,8 @@ SEFilterStates <- R6::R6Class( # nolint
                   deparse1(private$input_dataname)
                 )
               )
+
+              varname <- input$col_to_add
               self$state_list_push(
                 x = init_filter_state(
                   x = SummarizedExperiment::colData(data)[[varname]],
@@ -518,7 +520,7 @@ SEFilterStates <- R6::R6Class( # nolint
                   input_dataname = private$input_dataname
                 ),
                 state_list_index = "select",
-                state_id = input$col_to_add
+                state_id = varname
               )
               logger::log_trace(
                 sprintf(
@@ -530,6 +532,7 @@ SEFilterStates <- R6::R6Class( # nolint
             }
           )
 
+
           observeEvent(
             eventExpr = input$row_to_add,
             handlerExpr = {
@@ -540,6 +543,8 @@ SEFilterStates <- R6::R6Class( # nolint
                   deparse1(private$input_dataname)
                 )
               )
+
+              varname <- input$row_to_add
               self$state_list_push(
                 x = init_filter_state(
                   x = SummarizedExperiment::rowData(data)[[varname]],
@@ -548,7 +553,7 @@ SEFilterStates <- R6::R6Class( # nolint
                   input_dataname = private$input_dataname
                 ),
                 state_list_index = "subset",
-                state_id = input$row_to_add
+                state_id = varname
               )
               logger::log_trace(
                 sprintf(
