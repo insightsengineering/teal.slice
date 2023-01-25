@@ -45,6 +45,8 @@ FilterState <- R6::R6Class( # nolint
     #' Initialize a `FilterState` object
     #' @param x (`vector`)\cr
     #'   values of the variable used in filter
+    #' @param x_filtered (`reactive`)\cr
+    #'   a `reactive` returning a filtered vector.
     #' @param varname (`character`, `name`)\cr
     #'   name of the variable
     #' @param varlabel (`character(1)`)\cr

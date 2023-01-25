@@ -29,6 +29,8 @@ DatetimeFilterState <- R6::R6Class( # nolint
     #' and is set only if object is initialized in `shiny`.
     #' @param x (`POSIXct` or `POSIXlt`)\cr
     #'   values of the variable used in filter
+    #' @param x_filtered (`reactive`)\cr
+    #'   a `reactive` returning a filtered vector.
     #' @param varname (`character`, `name`)\cr
     #'   name of the variable
     #' @param varlabel (`character(1)`)\cr

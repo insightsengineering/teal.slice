@@ -66,6 +66,14 @@
 #'  A given name for the dataset it may not contain spaces
 #' @param keys optional, (`character`)\cr
 #'   Vector with primary keys
+#' @param parent_name (`character(1)`)\cr
+#'   Name of the parent dataset
+#' @param parent (`reactive`)\cr
+#'   a `reactive` returning parent `data.frame`
+#' @param join_keys (`character`)\cr
+#'   Name of the columns in this dataset to join with `parent`
+#'   dataset. If the column names are different if both datasets
+#'   then the names of the vector define the `parent` columns.
 #' @param label (`character`)\cr
 #'   Label to describe the dataset
 #' @param metadata (named `list` or `NULL`) \cr
@@ -78,7 +86,7 @@ init_filtered_dataset <- function(dataset, # nolint
                                   dataname,
                                   keys = character(0),
                                   parent_name = character(0),
-                                  parent = NULL,
+                                  parent = reactive(dataset),
                                   join_keys = character(0),
                                   label = attr(dataset, "label"),
                                   metadata = NULL) {
