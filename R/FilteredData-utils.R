@@ -32,14 +32,32 @@ init_filtered_data.TealData <- function(x, # nolint
                                         code = x$get_code_class(),
                                         cdisc = FALSE,
                                         check = x$get_check()) {
+  cdisc <- if (length(join_keys$get_parents()) > 0) TRUE else FALSE
   data_objects <- lapply(x$get_datanames(), function(dataname) {
     dataset <- x$get_dataset(dataname)
-    list(
-      dataset = dataset$get_raw_data(),
-      keys = dataset$get_keys(),
-      metadata = dataset$get_metadata(),
-      label = dataset$get_dataset_label()
-    )
+
+    parent <- if (inherits(dataset, "CDISCTealDataset")) {
+      dataset$get_parent()
+    } else {
+      NULL
+    }
+
+    if (cdisc) {
+      list(
+        dataset = dataset$get_raw_data(),
+        keys = dataset$get_keys(),
+        metadata = dataset$get_metadata(),
+        label = dataset$get_dataset_label(),
+        parent = parent
+      )
+    } else {
+      list(
+        dataset = dataset$get_raw_data(),
+        keys = dataset$get_keys(),
+        metadata = dataset$get_metadata(),
+        label = dataset$get_dataset_label()
+      )
+    }
   })
   names(data_objects) <- x$get_datanames()
 
@@ -48,7 +66,7 @@ init_filtered_data.TealData <- function(x, # nolint
     join_keys = join_keys,
     code = code,
     check = check,
-    cdisc = if (length(join_keys$get()) > 0) TRUE
+    cdisc = cdisc
   )
 }
 
