@@ -26,7 +26,7 @@ testthat::test_that("FilterPanelAPI$set_filter_state sets filters specified by t
         Species = list(selected = c("setosa", "versicolor"), keep_na = FALSE)
       )
     )
-    datasets$set_filter_state(filter_list)
+    isolate(datasets$set_filter_state(filter_list))
     testthat::expect_equal(
       isolate(datasets$get_filter_state()),
       isolate(filtered_data$get_filter_state())
@@ -47,7 +47,7 @@ testthat::test_that("FilterPanelAPI$get_filter_state returns list identical to i
         hp = list(selected = c(52, 65), keep_na = FALSE, keep_inf = FALSE)
       )
     )
-    datasets$set_filter_state(filter_list)
+    isolate(datasets$set_filter_state(filter_list))
     fs_wo_attr <- isolate(datasets$get_filter_state())
     attr(fs_wo_attr, "formatted") <- NULL
 
@@ -69,8 +69,8 @@ testthat::test_that("FilterPanelAPI$remove_filter_state removes filter states de
       hp = list(selected = c(52, 65), keep_na = FALSE, keep_inf = FALSE)
     )
   )
-  datasets$set_filter_state(filter_list)
-  datasets$remove_filter_state(filter = list(iris = "Sepal.Length"))
+  isolate(datasets$set_filter_state(filter_list))
+  isolate(datasets$remove_filter_state(filter = list(iris = "Sepal.Length")))
   fs_wo_attr <- isolate(datasets$get_filter_state())
   attr(fs_wo_attr, "formatted") <- NULL
 
@@ -96,8 +96,8 @@ testthat::test_that(
         hp = list(selected = c(52, 65), keep_na = FALSE, keep_inf = FALSE)
       )
     )
-    datasets$set_filter_state(filter_list)
-    datasets$remove_all_filter_states()
+    isolate(datasets$set_filter_state(filter_list))
+    isolate(datasets$remove_all_filter_states())
 
     testthat::expect_equal(
       length(isolate(datasets$get_filter_state())),
@@ -119,8 +119,8 @@ testthat::test_that(
         hp = list(selected = c(52, 65), keep_na = FALSE, keep_inf = FALSE)
       )
     )
-    datasets$set_filter_state(filter_list)
-    datasets$remove_all_filter_states(datanames = "iris")
+    isolate(datasets$set_filter_state(filter_list))
+    isolate(datasets$remove_all_filter_states(datanames = "iris"))
     fs_wo_attr <- isolate(datasets$get_filter_state())
     attr(fs_wo_attr, "formatted") <- NULL
 

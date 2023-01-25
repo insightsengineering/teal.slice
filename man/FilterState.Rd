@@ -114,6 +114,9 @@ whether condition calls should be prefixed by dataname. Possible values:
 }
 \if{html}{\out{</div>}}
 }
+\subsection{Returns}{
+self invisibly
+}
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-FilterState-destroy_observers"></a>}}
@@ -124,6 +127,9 @@ Destroy observers stored in \code{private$observers}.
 \if{html}{\out{<div class="r">}}\preformatted{FilterState$destroy_observers()}\if{html}{\out{</div>}}
 }
 
+\subsection{Returns}{
+NULL invisibly
+}
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-FilterState-format"></a>}}
@@ -137,10 +143,12 @@ Returns a formatted string representing this \code{FilterState}.
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
-\item{\code{indent}}{(\code{numeric(1)}) number of spaces before after each new line character of the formatted string;
-default s to 0}
+\item{\code{indent}}{(\code{numeric(1)})
+number of spaces before after each new line character of the formatted string;
+defaults to 0}
 
-\item{\code{wrap_width}}{(\code{numeric(1)}) number of characters to wrap lines at in the printed output;
+\item{\code{wrap_width}}{(\code{numeric(1)})
+number of characters to wrap lines at in the printed output;
 allowed range is 30 to 120; defaults to 76}
 }
 \if{html}{\out{</div>}}
@@ -166,7 +174,7 @@ and must be executed in reactive or isolated context.
 \if{html}{\out{<a id="method-FilterState-get_dataname"></a>}}
 \if{latex}{\out{\hypertarget{method-FilterState-get_dataname}{}}}
 \subsection{Method \code{get_dataname()}}{
-Returns dataname
+Returns dataname.
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{FilterState$get_dataname(deparse = TRUE)}\if{html}{\out{</div>}}
 }
@@ -175,45 +183,45 @@ Returns dataname
 \if{html}{\out{<div class="arguments">}}
 \describe{
 \item{\code{deparse}}{(\code{logical(1)})\cr
-whether dataname should be deparsed. \code{TRUE} by default}
+whether dataname should be deparsed; defaults to \code{TRUE}}
 }
 \if{html}{\out{</div>}}
 }
 \subsection{Returns}{
-(\code{name} or \code{character(1)})
+\code{name} or \code{character(1)}
 }
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-FilterState-get_keep_na"></a>}}
 \if{latex}{\out{\hypertarget{method-FilterState-get_keep_na}{}}}
 \subsection{Method \code{get_keep_na()}}{
-Returns current \code{keep_na} selection
+Returns current \code{keep_na} selection.
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{FilterState$get_keep_na()}\if{html}{\out{</div>}}
 }
 
 \subsection{Returns}{
-(\code{logical(1)})
+\code{logical(1)}
 }
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-FilterState-get_varlabel"></a>}}
 \if{latex}{\out{\hypertarget{method-FilterState-get_varlabel}{}}}
 \subsection{Method \code{get_varlabel()}}{
-Returns variable label
+Returns variable label.
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{FilterState$get_varlabel()}\if{html}{\out{</div>}}
 }
 
 \subsection{Returns}{
-(\code{character(1)})
+\code{character(1)}
 }
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-FilterState-get_varname"></a>}}
 \if{latex}{\out{\hypertarget{method-FilterState-get_varname}{}}}
 \subsection{Method \code{get_varname()}}{
-Get variable name
+Get variable name.
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{FilterState$get_varname(deparse = FALSE)}\if{html}{\out{</div>}}
 }
@@ -222,19 +230,19 @@ Get variable name
 \if{html}{\out{<div class="arguments">}}
 \describe{
 \item{\code{deparse}}{(\code{logical(1)})\cr
-whether variable name should be deparsed. \code{FALSE} by default}
+whether variable name should be deparsed; defaults to \code{FALSE}}
 }
 \if{html}{\out{</div>}}
 }
 \subsection{Returns}{
-(\code{name} or \code{character(1)})
+\code{name} or \code{character(1)}
 }
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-FilterState-get_selected"></a>}}
 \if{latex}{\out{\hypertarget{method-FilterState-get_selected}{}}}
 \subsection{Method \code{get_selected()}}{
-Get selected values from \code{FilterState}
+Get selected values from \code{FilterState}.
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{FilterState$get_selected()}\if{html}{\out{</div>}}
 }
@@ -264,7 +272,7 @@ Returns the filtering state.
 \if{html}{\out{<a id="method-FilterState-print"></a>}}
 \if{latex}{\out{\hypertarget{method-FilterState-print}{}}}
 \subsection{Method \code{print()}}{
-Prints this \code{FilterState} object
+Prints this \code{FilterState} object.
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{FilterState$print(...)}\if{html}{\out{</div>}}
 }
@@ -281,7 +289,7 @@ Prints this \code{FilterState} object
 \if{html}{\out{<a id="method-FilterState-set_keep_na"></a>}}
 \if{latex}{\out{\hypertarget{method-FilterState-set_keep_na}{}}}
 \subsection{Method \code{set_keep_na()}}{
-Set if \code{NA} should be kept
+Set whether to keep NAs.
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{FilterState$set_keep_na(value)}\if{html}{\out{</div>}}
 }
@@ -289,21 +297,24 @@ Set if \code{NA} should be kept
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
-\item{\code{value}}{(\code{logical(1)})\cr
+\item{\code{value}}{\code{logical(1)}\cr
 value(s) which come from the filter selection. Value is set in \code{server}
 modules after selecting check-box-input in the shiny interface. Values are set to
 \code{private$keep_na} which is reactive.}
 }
 \if{html}{\out{</div>}}
 }
+\subsection{Returns}{
+NULL invisibly
+}
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-FilterState-set_na_rm"></a>}}
 \if{latex}{\out{\hypertarget{method-FilterState-set_na_rm}{}}}
 \subsection{Method \code{set_na_rm()}}{
-Some methods needs additional \code{!is.na(varame)} condition to not include
-missing values. When \code{private$na_rm = TRUE} is set, \code{self$get_call} returns
-condition extended by \code{!is.na} condition.
+Some methods need an additional \code{!is.na(varame)} condition to drop
+missing values. When \code{private$na_rm = TRUE}, \code{self$get_call} returns
+condition extended by \code{!is.na}.
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{FilterState$set_na_rm(value)}\if{html}{\out{</div>}}
 }
@@ -311,17 +322,21 @@ condition extended by \code{!is.na} condition.
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
-\item{\code{value}}{(\code{logical(1)}) when \code{TRUE}, \code{FilterState$get_call} appends an expression
+\item{\code{value}}{\code{logical(1)}\cr
+when \code{TRUE}, \code{FilterState$get_call} appends an expression
 removing \code{NA} values to the filter expression returned by \code{get_call}}
 }
 \if{html}{\out{</div>}}
+}
+\subsection{Returns}{
+NULL invisibly
 }
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-FilterState-set_selected"></a>}}
 \if{latex}{\out{\hypertarget{method-FilterState-set_selected}{}}}
 \subsection{Method \code{set_selected()}}{
-Set selection
+Set selection.
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{FilterState$set_selected(value)}\if{html}{\out{</div>}}
 }
@@ -330,19 +345,22 @@ Set selection
 \if{html}{\out{<div class="arguments">}}
 \describe{
 \item{\code{value}}{(\code{vector})\cr
-value(s) which come from the filter selection. Values are set in \code{server}
-module after choosing value in app interface. Values are set to
-\code{private$selected} which is reactive. Values type have to be the
-same as \code{private$choices}.}
+value(s) that come from filter selection; values are set in the
+module server after a selection is made in the app interface;
+values are stored in \code{private$selected}n which is reactive;
+value types have to be the same as \code{private$choices}}
 }
 \if{html}{\out{</div>}}
+}
+\subsection{Returns}{
+NULL invisibly
 }
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-FilterState-set_state"></a>}}
 \if{latex}{\out{\hypertarget{method-FilterState-set_state}{}}}
 \subsection{Method \code{set_state()}}{
-Set state
+Set state.
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{FilterState$set_state(state)}\if{html}{\out{</div>}}
 }
@@ -351,7 +369,7 @@ Set state
 \if{html}{\out{<div class="arguments">}}
 \describe{
 \item{\code{state}}{(\code{list})\cr
-contains fields relevant for a specific class
+contains fields relevant for a specific class:
 \itemize{
 \item{\code{selected}}{ defines initial selection}
 \item{\code{keep_na} (\code{logical})}{ defines whether to keep or remove \code{NA} values}
@@ -359,12 +377,15 @@ contains fields relevant for a specific class
 }
 \if{html}{\out{</div>}}
 }
+\subsection{Returns}{
+NULL invisibly
+}
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-FilterState-server"></a>}}
 \if{latex}{\out{\hypertarget{method-FilterState-server}{}}}
 \subsection{Method \code{server()}}{
-Server module
+Shiny module server.
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{FilterState$server(id)}\if{html}{\out{</div>}}
 }
@@ -373,20 +394,20 @@ Server module
 \if{html}{\out{<div class="arguments">}}
 \describe{
 \item{\code{id}}{(\code{character(1)})\cr
-an ID string that corresponds with the ID used to call the module's UI function.}
+shiny module instance id}
 }
 \if{html}{\out{</div>}}
 }
 \subsection{Returns}{
-\code{moduleServer} function which returns reactive value signaling that remove button
-has been clicked
+\code{moduleServer} function which returns reactive value
+signaling that remove button has been clicked
 }
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-FilterState-ui"></a>}}
 \if{latex}{\out{\hypertarget{method-FilterState-ui}{}}}
 \subsection{Method \code{ui()}}{
-UI Module
+Shiny module UI.
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{FilterState$ui(id)}\if{html}{\out{</div>}}
 }
@@ -395,8 +416,9 @@ UI Module
 \if{html}{\out{<div class="arguments">}}
 \describe{
 \item{\code{id}}{(\code{character(1)})\cr
-id of shiny element. UI for this class contains simple message
-informing that it's not supported
+shiny element (module instance) id;
+the UI for this class contains simple message stating that it is not supported
+
 description
 Adds \code{is.na(varname)} before existing condition calls if \code{keep_na} is selected.
 Otherwise, if missings are found in the variable \code{!is.na} will be added

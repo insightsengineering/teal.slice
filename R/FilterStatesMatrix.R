@@ -4,6 +4,8 @@
 MatrixFilterStates <- R6::R6Class( # nolint
   classname = "MatrixFilterStates",
   inherit = FilterStates,
+
+  # public members ----
   public = list(
     #' @description Initialize `MatrixFilterStates` object
     #'
@@ -20,9 +22,9 @@ MatrixFilterStates <- R6::R6Class( # nolint
     #'   text label value.
     initialize = function(input_dataname, output_dataname, datalabel) {
       super$initialize(input_dataname, output_dataname, datalabel)
-      self$queue_initialize(
+      self$state_list_initialize(
         list(
-          subset = ReactiveQueue$new()
+          subset = reactiveVal()
         )
       )
     },
@@ -36,7 +38,7 @@ MatrixFilterStates <- R6::R6Class( # nolint
       checkmate::assert_number(indent, finite = TRUE, lower = 0)
 
       formatted_states <- c()
-      for (state in self$queue_get(queue_index = "subset")) {
+      for (state in self$state_list_get(state_list_index = "subset")) {
         formatted_states <- c(formatted_states, state$format(indent = indent + 2))
       }
       paste(formatted_states, collapse = "\n")
@@ -51,29 +53,29 @@ MatrixFilterStates <- R6::R6Class( # nolint
       moduleServer(
         id = id,
         function(input, output, session) {
-          previous_state <- reactiveVal(isolate(self$queue_get("subset")))
+          previous_state <- reactiveVal(isolate(self$state_list_get("subset")))
           added_state_name <- reactiveVal(character(0))
           removed_state_name <- reactiveVal(character(0))
 
-          observeEvent(self$queue_get("subset"), {
+          observeEvent(self$state_list_get("subset"), {
             added_state_name(
-              setdiff(names(self$queue_get("subset")), names(previous_state()))
+              setdiff(names(self$state_list_get("subset")), names(previous_state()))
             )
             removed_state_name(
-              setdiff(names(previous_state()), names(self$queue_get("subset")))
+              setdiff(names(previous_state()), names(self$state_list_get("subset")))
             )
-            previous_state(self$queue_get("subset"))
+            previous_state(self$state_list_get("subset"))
           })
 
           observeEvent(added_state_name(), ignoreNULL = TRUE, {
-            fstates <- self$queue_get("subset")
+            fstates <- self$state_list_get("subset")
             html_ids <- private$map_vars_to_html_ids(keys = names(fstates))
             for (fname in added_state_name()) {
               private$insert_filter_state_ui(
                 id = html_ids[fname],
                 filter_state = fstates[[fname]],
-                queue_index = "subset",
-                element_id = fname
+                state_list_index = "subset",
+                state_id = fname
               )
             }
             added_state_name(character(0))
@@ -100,7 +102,7 @@ MatrixFilterStates <- R6::R6Class( # nolint
     #'
     #' @return `list` containing `list` with selected values for each `FilterState`.
     get_filter_state = function() {
-      lapply(self$queue_get(queue_index = "subset"), function(x) x$get_state())
+      lapply(self$state_list_get(state_list_index = "subset"), function(x) x$get_state())
     },
 
     #' @description
@@ -129,7 +131,7 @@ MatrixFilterStates <- R6::R6Class( # nolint
         "MatrixFilterState$set_filter_state initializing,",
         "dataname: { deparse1(private$input_dataname) }"
       ))
-      filter_states <- self$queue_get("subset")
+      filter_states <- self$state_list_get("subset")
       for (varname in names(state)) {
         value <- resolve_state(state[[varname]])
         if (varname %in% names(filter_states)) {
@@ -144,10 +146,10 @@ MatrixFilterStates <- R6::R6Class( # nolint
             extract_type = "matrix"
           )
           fstate$set_state(value)
-          self$queue_push(
+          self$state_list_push(
             x = fstate,
-            queue_index = "subset",
-            element_id = varname
+            state_list_index = "subset",
+            state_id = varname
           )
         }
       }
@@ -158,39 +160,39 @@ MatrixFilterStates <- R6::R6Class( # nolint
       NULL
     },
 
-    #' @description Remove a variable from the `ReactiveQueue` and its corresponding UI element.
+    #' @description Remove a variable from the `state_list` and its corresponding UI element.
     #'
-    #' @param element_id (`character(1)`)\cr name of `ReactiveQueue` element.
+    #' @param state_id (`character(1)`)\cr name of `state_list` element.
     #'
     #' @return `NULL`
-    remove_filter_state = function(element_id) {
+    remove_filter_state = function(state_id) {
       logger::log_trace(
         sprintf(
           "%s$remove_filter_state of variable %s, dataname: %s",
           class(self)[1],
-          element_id,
+          state_id,
           deparse1(private$input_dataname)
         )
       )
 
-      if (!element_id %in% names(self$queue_get("subset"))) {
+      if (!state_id %in% names(self$state_list_get("subset"))) {
         warning(paste(
-          "Variable:", element_id, "is not present in the actual active filters of dataset:",
+          "Variable:", state_id, "is not present in the actual active filters of dataset:",
           "{ deparse1(private$input_dataname) } therefore no changes are applied."
         ))
         logger::log_warn(
           paste(
-            "Variable:", element_id, "is not present in the actual active filters of dataset:",
+            "Variable:", state_id, "is not present in the actual active filters of dataset:",
             "{ deparse1(private$input_dataname) } therefore no changes are applied."
           )
         )
       } else {
-        self$queue_remove(queue_index = "subset", element_id = element_id)
+        self$state_list_remove(state_list_index = "subset", state_id = state_id)
         logger::log_trace(
           sprintf(
             "%s$remove_filter_state of variable %s done, dataname: %s",
             class(self)[1],
-            element_id,
+            state_id,
             deparse1(private$input_dataname)
           )
         )
@@ -198,12 +200,15 @@ MatrixFilterStates <- R6::R6Class( # nolint
     },
 
     #' @description
-    #' Shiny UI module to add filter variable
+    #' Shiny UI module to add filter variable.
+    #'
     #' @param id (`character(1)`)\cr
-    #'  id of shiny module
+    #'   id of shiny module
     #' @param data (`matrix`)\cr
-    #'  object which columns are used to choose filter variables.
-    #' @return shiny.tag
+    #'   data object for which to define a subset
+    #'
+    #' @return `shiny.tag`
+    #'
     ui_add_filter_state = function(id, data) {
       checkmate::assert_string(id)
       stopifnot(is.matrix(data))
@@ -234,11 +239,13 @@ MatrixFilterStates <- R6::R6Class( # nolint
     #' Removed filter variable gets back to available choices.
     #'
     #' @param id (`character(1)`)\cr
-    #'   an ID string that corresponds with the ID used to call the module's UI function.
+    #'   shiny module instance id
     #' @param data (`matrix`)\cr
-    #'  object which columns are used to choose filter variables.
+    #'   data object for which to define a subset
     #' @param ... ignored
+    #'
     #' @return `moduleServer` function which returns `NULL`
+    #'
     srv_add_filter_state = function(id, data, ...) {
       stopifnot(is.matrix(data))
       check_ellipsis(..., stop = FALSE)
@@ -251,7 +258,7 @@ MatrixFilterStates <- R6::R6Class( # nolint
           shiny::setBookmarkExclude("var_to_add")
           active_filter_vars <- reactive({
             vapply(
-              X = self$queue_get(queue_index = "subset"),
+              X = self$state_list_get(state_list_index = "subset"),
               FUN.VALUE = character(1),
               FUN = function(x) x$get_varname(deparse = TRUE)
             )
@@ -295,8 +302,6 @@ MatrixFilterStates <- R6::R6Class( # nolint
             }
           )
 
-
-
           observeEvent(
             eventExpr = input$var_to_add,
             handlerExpr = {
@@ -307,7 +312,7 @@ MatrixFilterStates <- R6::R6Class( # nolint
                   deparse1(private$input_dataname)
                 )
               )
-              self$queue_push(
+              self$state_list_push(
                 x = init_filter_state(
                   subset(data, select = input$var_to_add),
                   varname = as.name(input$var_to_add),
@@ -315,8 +320,8 @@ MatrixFilterStates <- R6::R6Class( # nolint
                   input_dataname = private$input_dataname,
                   extract_type = "matrix"
                 ),
-                queue_index = "subset",
-                element_id = input$var_to_add
+                state_list_index = "subset",
+                state_id = input$var_to_add
               )
               logger::log_trace(
                 sprintf(

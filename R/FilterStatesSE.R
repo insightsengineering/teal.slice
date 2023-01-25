@@ -23,10 +23,10 @@ SEFilterStates <- R6::R6Class( # nolint
         stop("Cannot load SummarizedExperiment - please install the package or restart your session.")
       }
       super$initialize(input_dataname, output_dataname, datalabel)
-      self$queue_initialize(
+      self$state_list_initialize(
         list(
-          subset = ReactiveQueue$new(),
-          select = ReactiveQueue$new()
+          subset = reactiveVal(),
+          select = reactiveVal()
         )
       )
     },
@@ -41,16 +41,16 @@ SEFilterStates <- R6::R6Class( # nolint
 
       whitespace_indent <- format("", width = indent)
       formatted_states <- c()
-      if (!is.null(self$queue_get(queue_index = "subset"))) {
+      if (!is.null(self$state_list_get(state_list_index = "subset"))) {
         formatted_states <- c(formatted_states, paste0(whitespace_indent, "  Subsetting:"))
-        for (state in self$queue_get(queue_index = "subset")) {
+        for (state in self$state_list_get(state_list_index = "subset")) {
           formatted_states <- c(formatted_states, state$format(indent = indent + 4))
         }
       }
 
-      if (!is.null(self$queue_get(queue_index = "select"))) {
+      if (!is.null(self$state_list_get(state_list_index = "select"))) {
         formatted_states <- c(formatted_states, paste0(whitespace_indent, "  Selecting:"))
-        for (state in self$queue_get(queue_index = "select")) {
+        for (state in self$state_list_get(state_list_index = "select")) {
           formatted_states <- c(formatted_states, state$format(indent = indent + 4))
         }
       }
@@ -70,29 +70,29 @@ SEFilterStates <- R6::R6Class( # nolint
       moduleServer(
         id = id,
         function(input, output, session) {
-          previous_state_subset <- reactiveVal(isolate(self$queue_get("subset")))
+          previous_state_subset <- reactiveVal(isolate(self$state_list_get("subset")))
           added_state_name_subset <- reactiveVal(character(0))
           removed_state_name_subset <- reactiveVal(character(0))
 
-          observeEvent(self$queue_get("subset"), {
+          observeEvent(self$state_list_get("subset"), {
             added_state_name_subset(
-              setdiff(names(self$queue_get("subset")), names(previous_state_subset()))
+              setdiff(names(self$state_list_get("subset")), names(previous_state_subset()))
             )
             removed_state_name_subset(
-              setdiff(names(previous_state_subset()), names(self$queue_get("subset")))
+              setdiff(names(previous_state_subset()), names(self$state_list_get("subset")))
             )
-            previous_state_subset(self$queue_get("subset"))
+            previous_state_subset(self$state_list_get("subset"))
           })
 
           observeEvent(added_state_name_subset(), ignoreNULL = TRUE, {
-            fstates <- self$queue_get("subset")
+            fstates <- self$state_list_get("subset")
             html_ids <- private$map_vars_to_html_ids(keys = names(fstates), prefix = "rowData")
             for (fname in added_state_name_subset()) {
               private$insert_filter_state_ui(
                 id = html_ids[fname],
                 filter_state = fstates[[fname]],
-                queue_index = "subset",
-                element_id = fname
+                state_list_index = "subset",
+                state_id = fname
               )
             }
             added_state_name_subset(character(0))
@@ -107,30 +107,30 @@ SEFilterStates <- R6::R6Class( # nolint
           })
 
           # select
-          previous_state_select <- reactiveVal(isolate(self$queue_get("select")))
+          previous_state_select <- reactiveVal(isolate(self$state_list_get("select")))
           added_state_name_select <- reactiveVal(character(0))
           removed_state_name_select <- reactiveVal(character(0))
 
-          observeEvent(self$queue_get("select"), {
+          observeEvent(self$state_list_get("select"), {
             # find what has been added or removed
             added_state_name_select(
-              setdiff(names(self$queue_get("select")), names(previous_state_select()))
+              setdiff(names(self$state_list_get("select")), names(previous_state_select()))
             )
             removed_state_name_select(
-              setdiff(names(previous_state_select()), names(self$queue_get("select")))
+              setdiff(names(previous_state_select()), names(self$state_list_get("select")))
             )
-            previous_state_select(self$queue_get("select"))
+            previous_state_select(self$state_list_get("select"))
           })
 
           observeEvent(added_state_name_select(), ignoreNULL = TRUE, {
-            fstates <- self$queue_get("select")
+            fstates <- self$state_list_get("select")
             html_ids <- private$map_vars_to_html_ids(keys = names(fstates), prefix = "colData")
             for (fname in added_state_name_select()) {
               private$insert_filter_state_ui(
                 id = html_ids[fname],
                 filter_state = fstates[[fname]],
-                queue_index = "select",
-                element_id = fname
+                state_list_index = "select",
+                state_id = fname
               )
             }
             added_state_name_select(character(0))
@@ -139,7 +139,7 @@ SEFilterStates <- R6::R6Class( # nolint
           observeEvent(removed_state_name_select(), {
             req(removed_state_name_select())
             for (fname in removed_state_name_select()) {
-              private$remove_filter_state_ui("select", fname)
+              private$remove_filter_state_ui("select", fname, .input = input)
             }
             removed_state_name_select(character(0))
           })
@@ -155,14 +155,14 @@ SEFilterStates <- R6::R6Class( # nolint
     #' The output list is a compatible input to `self$set_filter_state`.
     #'
     #' @return `list` containing one or two lists  depending on the number of
-    #' `ReactiveQueue` object (I.e. if `rowData` and `colData` exist). Each
+    #' `state_list` object (I.e. if `rowData` and `colData` exist). Each
     #' `list` contains elements number equal to number of active filter variables.
     get_filter_state = function() {
       states <- sapply(
-        X = names(private$queue),
+        X = names(private$state_list),
         simplify = FALSE,
         function(x) {
-          lapply(self$queue_get(queue_index = x), function(xx) xx$get_state())
+          lapply(self$state_list_get(state_list_index = x), function(xx) xx$get_state())
         }
       )
       Filter(function(x) length(x) > 0, states)
@@ -208,7 +208,7 @@ SEFilterStates <- R6::R6Class( # nolint
         combine = "or"
       )
 
-      filter_states <- self$queue_get("subset")
+      filter_states <- self$state_list_get("subset")
       for (varname in names(state$subset)) {
         value <- resolve_state(state$subset[[varname]])
         if (varname %in% names(filter_states)) {
@@ -221,15 +221,15 @@ SEFilterStates <- R6::R6Class( # nolint
             input_dataname = private$input_dataname
           )
           fstate$set_state(value)
-          self$queue_push(
+          self$state_list_push(
             x = fstate,
-            queue_index = "subset",
-            element_id = varname
+            state_list_index = "subset",
+            state_id = varname
           )
         }
       }
 
-      filter_states <- self$queue_get("select")
+      filter_states <- self$state_list_get("select")
       for (varname in names(state$select)) {
         value <- resolve_state(state$select[[varname]])
         if (varname %in% names(filter_states)) {
@@ -242,10 +242,10 @@ SEFilterStates <- R6::R6Class( # nolint
             input_dataname = private$input_dataname
           )
           fstate$set_state(value)
-          self$queue_push(
+          self$state_list_push(
             x = fstate,
-            queue_index = "select",
-            element_id = varname
+            state_list_index = "select",
+            state_id = varname
           )
         }
       }
@@ -256,12 +256,12 @@ SEFilterStates <- R6::R6Class( # nolint
       NULL
     },
 
-    #' @description Remove a variable from the `ReactiveQueue` and its corresponding UI element.
+    #' @description Remove a variable from the `state_list` and its corresponding UI element.
     #'
-    #' @param element_id (`character(1)`)\cr name of `ReactiveQueue` element.
+    #' @param state_id (`character(1)`)\cr name of `state_list` element.
     #'
     #' @return `NULL`
-    remove_filter_state = function(element_id) {
+    remove_filter_state = function(state_id) {
       logger::log_trace(
         sprintf(
           "%s$remove_filter_state called, dataname: %s",
@@ -271,24 +271,24 @@ SEFilterStates <- R6::R6Class( # nolint
       )
 
       checkmate::assert(
-        !checkmate::test_null(names(element_id)),
-        checkmate::check_subset(names(element_id), c("subset", "select")),
+        !checkmate::test_null(names(state_id)),
+        checkmate::check_subset(names(state_id), c("subset", "select")),
         combine = "and"
       )
-      for (varname in element_id$subset) {
-        if (!all(unlist(element_id$subset) %in% names(self$queue_get("subset")))) {
+      for (varname in state_id$subset) {
+        if (!all(unlist(state_id$subset) %in% names(self$state_list_get("subset")))) {
           warning(paste(
-            "Variable:", element_id, "is not present in the actual active subset filters of dataset:",
+            "Variable:", state_id, "is not present in the actual active subset filters of dataset:",
             "{ deparse1(private$input_dataname) } therefore no changes are applied."
           ))
           logger::log_warn(
             paste(
-              "Variable:", element_id, "is not present in the actual active subset filters of dataset:",
+              "Variable:", state_id, "is not present in the actual active subset filters of dataset:",
               "{ deparse1(private$input_dataname) } therefore no changes are applied."
             )
           )
         } else {
-          self$queue_remove(queue_index = "subset", element_id = varname)
+          self$state_list_remove(state_list_index = "subset", state_id = varname)
           logger::log_trace(
             sprintf(
               "%s$remove_filter_state for subset variable %s done, dataname: %s",
@@ -300,20 +300,20 @@ SEFilterStates <- R6::R6Class( # nolint
         }
       }
 
-      for (varname in element_id$select) {
-        if (!all(unlist(element_id$select) %in% names(self$queue_get("select")))) {
+      for (varname in state_id$select) {
+        if (!all(unlist(state_id$select) %in% names(self$state_list_get("select")))) {
           warning(paste(
-            "Variable:", element_id, "is not present in the actual active select filters of dataset:",
+            "Variable:", state_id, "is not present in the actual active select filters of dataset:",
             "{ deparse1(private$input_dataname) } therefore no changes are applied."
           ))
           logger::log_warn(
             paste(
-              "Variable:", element_id, "is not present in the actual active select filters of dataset:",
+              "Variable:", state_id, "is not present in the actual active select filters of dataset:",
               "{ deparse1(private$input_dataname) } therefore no changes are applied."
             )
           )
         } else {
-          self$queue_remove(queue_index = "select", element_id = varname)
+          self$state_list_remove(state_list_index = "select", state_id = varname)
           sprintf(
             "%s$remove_filter_state for select variable %s done, dataname: %s",
             class(self)[1],
@@ -405,14 +405,14 @@ SEFilterStates <- R6::R6Class( # nolint
           shiny::setBookmarkExclude(c("row_to_add", "col_to_add"))
           active_filter_col_vars <- reactive({
             vapply(
-              X = self$queue_get(queue_index = "select"),
+              X = self$state_list_get(state_list_index = "select"),
               FUN.VALUE = character(1),
               FUN = function(x) x$get_varname(deparse = TRUE)
             )
           })
           active_filter_row_vars <- reactive({
             vapply(
-              X = self$queue_get(queue_index = "subset"),
+              X = self$state_list_get(state_list_index = "subset"),
               FUN.VALUE = character(1),
               FUN = function(x) x$get_varname(deparse = TRUE)
             )
@@ -510,14 +510,14 @@ SEFilterStates <- R6::R6Class( # nolint
                   deparse1(private$input_dataname)
                 )
               )
-              self$queue_push(
+              self$state_list_push(
                 x = init_filter_state(
                   SummarizedExperiment::colData(data)[[input$col_to_add]],
                   varname = as.name(input$col_to_add),
                   input_dataname = private$input_dataname
                 ),
-                queue_index = "select",
-                element_id = input$col_to_add
+                state_list_index = "select",
+                state_id = input$col_to_add
               )
               logger::log_trace(
                 sprintf(
@@ -539,14 +539,14 @@ SEFilterStates <- R6::R6Class( # nolint
                   deparse1(private$input_dataname)
                 )
               )
-              self$queue_push(
+              self$state_list_push(
                 x = init_filter_state(
                   SummarizedExperiment::rowData(data)[[input$row_to_add]],
                   varname = as.name(input$row_to_add),
                   input_dataname = private$input_dataname
                 ),
-                queue_index = "subset",
-                element_id = input$row_to_add
+                state_list_index = "subset",
+                state_id = input$row_to_add
               )
               logger::log_trace(
                 sprintf(
