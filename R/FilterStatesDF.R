@@ -33,10 +33,13 @@ DFFilterStates <- R6::R6Class( # nolint
       private$varlabels <- varlabels
       private$keys <- keys
 
-      self$state_list_initialize(
-        list(
-          shiny::reactiveVal()
-        )
+      # self$state_list_initialize(
+      #   list(
+      #     reactiveVal()
+      #   )
+      # )
+      private$state_list <- list(
+        reactiveVal()
       )
     },
 

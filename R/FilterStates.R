@@ -206,18 +206,18 @@ FilterStates <- R6::R6Class( # nolint
       "subset"
     },
 
-    # queue methods ----
+    # state_list methods ----
 
-    #' @description
-    #' Populates the private `state_list` field to store active filter states.
-    #'
-    #' @param x (`list` of `reactiveVal` objects)\cr
-    #'
-    state_list_initialize = function(x) {
-      checkmate::assert_list(x, min.len = 1)
-      private$state_list <- x
-      invisible(NULL)
-    },
+    #' #' @description
+    #' #' Populates the private `state_list` field to store active filter states.
+    #' #'
+    #' #' @param x (`list` of `reactiveVal` objects)\cr
+    #' #'
+    #' state_list_initialize = function(x) {
+    #'   checkmate::assert_list(x, min.len = 1)
+    #'   private$state_list <- x
+    #'   invisible(NULL)
+    #' },
 
     #' @description
     #' Returns a list of `FilterState` objects stored in this `FilterStates`.
