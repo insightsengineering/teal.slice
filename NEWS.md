@@ -2,7 +2,6 @@
 
 * Examples now use `scda.2022` instead of `scda.2021`.
 * Transferred data hashing step in `FilteredDataset` to `teal`.
-* Replaced `ReactiveQueue` objects with `shiny::reactiveVal` objects.
 * Removed constructor of `Queue` class.
 
 ### New features
