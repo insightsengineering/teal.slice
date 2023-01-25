@@ -144,8 +144,8 @@ MAEFilteredDataset <- R6::R6Class( # nolint
       mae_and_exps <- c(self$get_dataname(), names_exps)
 
       df <- cbind(
-        private$get_filter_overview_nobs(dataset_filtered),
-        self$get_filter_overview_nsubjs(dataset_filtered)
+        private$get_filter_overview_nobs(dataset, dataset_filtered),
+        self$get_filter_overview_nsubjs()
       )
 
       rownames(df) <- mae_and_exps
@@ -162,7 +162,7 @@ MAEFilteredDataset <- R6::R6Class( # nolint
     #'  kept in `private$filter_states`. For this object they are `"subjects"` and
     #'  names of the experiments. Values of initial state should be relevant
     #'  to the referred column.
-    #' @param ... ignored.
+    #'
     #' @examples
     #' utils::data(miniACC, package = "MultiAssayExperiment")
     #' dataset <- teal.slice:::MAEFilteredDataset$new(miniACC, "MAE")
@@ -179,7 +179,8 @@ MAEFilteredDataset <- R6::R6Class( # nolint
     #' shiny::isolate(dataset$set_filter_state(state = fs))
     #' shiny::isolate(dataset$get_filter_state())
     #' @return `NULL`
-    set_filter_state = function(state, ...) {
+    #'
+    set_filter_state = function(state) {
       checkmate::assert_list(state)
       checkmate::assert_subset(names(state), c(names(self$get_filter_states())))
 

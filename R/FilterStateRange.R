@@ -391,6 +391,13 @@ RangeFilterState <- R6::R6Class( # nolint
             ignoreInit = TRUE,
             eventExpr = self$get_selected(),
             handlerExpr = {
+              logger::log_trace(
+                sprintf(
+                  "RangeFilterState$server@2 state of %s changed, dataname: %s",
+                  deparse1(self$get_varname()),
+                  deparse1(private$input_dataname)
+                )
+              )
               if (!setequal(self$get_selected(), input$selection)) {
                 updateSliderInput(
                   session = session,

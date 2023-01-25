@@ -336,6 +336,7 @@ FilteredDataset <- R6::R6Class( # nolint
     #' @description
     #' Gets labels of variables in the data
     #'
+    #'
     #' Variables are the column names of the data.
     #' Either, all labels must have been provided for all variables
     #' in `set_data` or `NULL`.
