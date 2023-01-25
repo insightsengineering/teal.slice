@@ -395,39 +395,58 @@ FilterState <- R6::R6Class( # nolint
         function(input, output, session) {
 
           observeEvent(self$get_keep_na(), {
+            
+            if (self$get_keep_na()) {
+                class <- "fa fa-check"
+              } else {
+                class <- "fa fa-xmark"
+              }
+
             output$header_keep_na <- renderUI({
               tagList(
                 tags$strong("NA "),
-                tags$span(
-                  class = if (self$get_keep_na()) {
-                    "fa fa-check"
-                  } else {
-                    "fa fa-xmark"
-                  }
-                )
+                tags$span(class = class)
               )
             })
           })
 
           observeEvent(self$get_keep_inf(), {
-            output$header_keep_inf <- renderUI({
-              if (is.null(self$get_keep_na())) {
-                tags$span()
-              } else {
-                tagList(
-                  tags$strong("Inf "),
-                  tags$span(
-                    class = if (self$get_keep_inf()) {
-                      "fa fa-check"
-                    } else {
-                      "fa fa-xmark"
-                    }
-                  )
+
+            if (is.null(self$get_keep_inf())) {
+              inf_tag <- tags$span()
+            } else {
+              inf_tag <- tagList(
+                tags$strong("Inf "),
+                tags$span(
+                  class = if (self$get_keep_inf()) "fa facheck" else "fa fa-xmark"
                 )
-              }
+              )
+            }
+
+            output$header_keep_inf <- renderUI({
+              inf_tag
             })
           })
 
+          observeEvent(self$get_selected(), {
+            if (length(self$get_selected() > 1)) {
+              value <- paste0(
+                "(",
+                paste(self$get_selected(), collapse = "-"),
+                ")"
+              )
+            } else {
+              value <- self$get_selected()
+            }
+
+            output$header_name_value <- renderUI({
+              tagList(
+                tags$strong(self$get_varname(deparse = TRUE)),
+                tags$span(value)
+              )
+            })
+          })
+          
           private$server_inputs("inputs")
           reactive(input$remove) # back to parent to remove self
         }
@@ -450,11 +469,7 @@ FilterState <- R6::R6Class( # nolint
         id = id,
         tags$a(
           class = "filter-card-header",
-          tags$p(
-            class = "filter-card-title-varname",
-            tags$strong(paste0(private$varname, ": ")),
-            paste("(", self$get_selected(), ")")
-          ),
+          uiOutput(ns("header_name_value"), inline = TRUE),
           uiOutput(ns("header_keep_na"), inline = TRUE),
           uiOutput(ns("header_keep_inf"), inline = TRUE),
           tags$div(
