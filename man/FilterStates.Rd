@@ -391,8 +391,6 @@ data object for which to define a subset}
 \item{\code{state}}{(\verb{named list})\cr
 should contain values of initial selections in the \code{FilterState};
 \code{list} names must correspond to column names in \code{data}}
-
-\item{\code{filtered_dataset}}{data object for which to define a subset(?)}
 }
 \if{html}{\out{</div>}}
 }
@@ -414,6 +412,8 @@ shiny element (module instance) id}
 
 \item{\code{data}}{(\code{data.frame}, \code{MultiAssayExperiment}, \code{SummarizedExperiment}, \code{matrix})\cr
 data object for which to define a subset}
+
+\item{\code{filtered_dataset}}{data object for which to define a subset(?)}
 }
 \if{html}{\out{</div>}}
 }

@@ -215,13 +215,9 @@ Shiny UI module to add filter variable
 id of shiny module}
 
 \item{\code{data}}{(\code{MultiAssayExperiment})\cr
-object containing \code{colData} which columns are used to be used
-to choose filter variables}
+object containing \code{colData} which columns are used to be used}
 }
 \if{html}{\out{</div>}}
-}
-\subsection{Returns}{
-\code{shiny.tag}
 }
 }
 \if{html}{\out{<hr>}}
@@ -252,14 +248,9 @@ object containing \code{colData} which columns are used to choose filter variabl
 \if{html}{\out{</div>}}
 }
 \subsection{Returns}{
-\code{moduleServer} function which returns \code{NULL}
+\code{shiny.tag}
 
-description
-Get label of specific variable. In case when variable label is missing
-name of the variable is returned.
-parameter variable (\code{character})\cr
-name of the variable for which label should be returned
-return \code{character}
+to choose filter variables
 }
 }
 \if{html}{\out{<hr>}}
