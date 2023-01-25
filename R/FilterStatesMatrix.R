@@ -18,8 +18,8 @@ MatrixFilterStates <- R6::R6Class( # nolint
     #'
     #' @param datalabel (`character(0)` or `character(1)`)\cr
     #'   text label value.
-    initialize = function(input_dataname, output_dataname, datalabel) {
-      super$initialize(input_dataname, output_dataname, datalabel)
+    initialize = function(data, data_filtered, input_dataname, output_dataname, datalabel) {
+      super$initialize(data, data_filtered, input_dataname, output_dataname, datalabel)
       self$queue_initialize(
         list(
           subset = ReactiveQueue$new()
@@ -104,15 +104,15 @@ MatrixFilterStates <- R6::R6Class( # nolint
     #' @description
     #' Sets a filter state
     #'
-    #' @param data (`matrix`)\cr
-    #'   data which are supposed to be filtered.
     #' @param state (`named list`)\cr
     #'   should contain values which are initial selection in the `FilterState`.
     #'   Names of the `list` element should correspond to the name of the
     #'   column in `data`.
     #' @param ... ignored.
     #' @return `NULL`
-    set_filter_state = function(data, state, filtered_dataset, ...) {
+    set_filter_state = function(state, ...) {
+      data <- private$data
+      data_filtered <- private$data_filtered
       checkmate::assert_class(data, "matrix")
       checkmate::assert(
         checkmate::assert(
@@ -136,7 +136,7 @@ MatrixFilterStates <- R6::R6Class( # nolint
         } else {
           fstate <- init_filter_state(
             x = data[, varname],
-            x_filtered = reactive(filtered_dataset()[[varname]]),
+            x_filtered = reactive(data_filtered()[[varname]]),
             varname = as.name(varname),
             varlabel = varname,
             input_dataname = private$input_dataname,
@@ -200,12 +200,10 @@ MatrixFilterStates <- R6::R6Class( # nolint
     #' Shiny UI module to add filter variable
     #' @param id (`character(1)`)\cr
     #'  id of shiny module
-    #' @param data (`matrix`)\cr
-    #'  object which columns are used to choose filter variables.
     #' @return shiny.tag
-    ui_add_filter_state = function(id, data) {
+    ui_add_filter_state = function(id) {
+      data <- private$data
       checkmate::assert_string(id)
-      stopifnot(is.matrix(data))
 
       ns <- NS(id)
 
@@ -234,20 +232,18 @@ MatrixFilterStates <- R6::R6Class( # nolint
     #'
     #' @param id (`character(1)`)\cr
     #'   an ID string that corresponds with the ID used to call the module's UI function.
-    #' @param data (`matrix`)\cr
-    #'  object which columns are used to choose filter variables.
     #' @param ... ignored
     #' @return `moduleServer` function which returns `NULL`
-    srv_add_filter_state = function(id, data, filtered_dataset, ...) {
-      stopifnot(is.matrix(data))
+    srv_add_filter_state = function(id, ...) {
       check_ellipsis(..., stop = FALSE)
+      data <- private$data
+      data_filtered <- private$data_filtered
       moduleServer(
         id = id,
         function(input, output, session) {
           logger::log_trace(
             "MatrixFilterStates$srv_add_filter_state initializing, dataname: { deparse1(private$input_dataname) }"
           )
-          shiny::setBookmarkExclude("var_to_add")
           active_filter_vars <- reactive({
             vapply(
               X = self$queue_get(queue_index = "subset"),
@@ -310,7 +306,7 @@ MatrixFilterStates <- R6::R6Class( # nolint
               self$queue_push(
                 x = init_filter_state(
                   x = subset(data, select = varname),
-                  x_filtered = reactive(subset(fitered_dataset(), select = varname)),
+                  x_filtered = reactive(subset(data_filtered(), select = varname)),
                   varname = as.name(varname),
                   varlabel = private$get_varlabel(varname),
                   input_dataname = private$input_dataname,

@@ -50,7 +50,7 @@ FilterStates <- R6::R6Class( # nolint
     #' @param datalabel (`character(0)` or `character(1)`)\cr
     #'   text label value.
     #'
-    initialize = function(input_dataname, output_dataname, datalabel) {
+    initialize = function(data, data_filtered, input_dataname, output_dataname, datalabel) {
       checkmate::assert(
         checkmate::check_class(input_dataname, "call"),
         checkmate::check_class(input_dataname, "name"),
@@ -74,6 +74,9 @@ FilterStates <- R6::R6Class( # nolint
       private$input_dataname <- char_to_name(input_dataname)
       private$output_dataname <- char_to_name(output_dataname)
       private$datalabel <- datalabel
+      private$data <- data
+      private$data_filtered <- data_filtered
+
       logger::log_trace("Instantiated { class(self)[1] }, dataname: { deparse1(private$input_dataname) }")
       invisible(self)
     },
@@ -336,14 +339,12 @@ FilterStates <- R6::R6Class( # nolint
     #' @description
     #' Sets active `FilterState` objects.
     #'
-    #' @param data (`data.frame`)\cr
-    #'   data which are supposed to be filtered
     #' @param state (`named list`)\cr
     #'   should contain values which are initial selection in the `FilterState`.
     #'   Names of the `list` element should correspond to the name of the
     #'   column in `data`.
     #' @return function which throws an error
-    set_filter_state = function(data, state, filtered_dataset) {
+    set_filter_state = function(state) {
       stop("Pure virtual method.")
     },
 
@@ -361,8 +362,6 @@ FilterStates <- R6::R6Class( # nolint
     #' Shiny UI module to add filter variable.
     #' @param id (`character(1)`)\cr
     #'  id of shiny module
-    #' @param data (`data.frame`, `MultiAssayExperiment`, `SummarizedExperiment`, `matrix`)\cr
-    #'  object containing columns to be used as filter variables.
     #' @return shiny.tag
     ui_add_filter_state = function(id, data) {
       div("This object cannot be filtered")
@@ -373,11 +372,9 @@ FilterStates <- R6::R6Class( # nolint
     #'
     #' @param id (`character(1)`)\cr
     #'   an ID string that corresponds with the ID used to call the module's UI function.
-    #' @param data (`data.frame`, `MultiAssayExperiment`, `SummarizedExperiment`, `matrix`)\cr
-    #'  object containing columns to be used as filter variables.
     #' @param ... ignored
     #' @return `moduleServer` function which returns `NULL`
-    srv_add_filter_state = function(id, data, ...) {
+    srv_add_filter_state = function(id, ...) {
       check_ellipsis(..., stop = FALSE)
       moduleServer(
         id = id,
@@ -390,6 +387,8 @@ FilterStates <- R6::R6Class( # nolint
   private = list(
     cards_container_id = character(0),
     card_ids = character(0),
+    data = NULL, # data.frame, MAE, SE or matrix
+    data_filtered = NULL, # reactive
     datalabel = character(0),
     input_dataname = NULL, # because it holds object of class name
     output_dataname = NULL, # because it holds object of class name,

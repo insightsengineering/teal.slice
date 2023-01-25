@@ -51,23 +51,15 @@ DefaultFilteredDataset <- R6::R6Class( # nolint
       checkmate::assert_class(dataset, "data.frame")
       super$initialize(dataset, dataname, keys, label, metadata)
 
-      private$add_filter_states(
-        filter_states = init_filter_states(
-          data = self$get_dataset(),
-          input_dataname = as.name(dataname),
-          output_dataname = as.name(dataname),
-          varlabels = self$get_varlabels(),
-          keys = self$get_keys()
-        ),
-        id = "filter"
-      )
+      # overwrite filtered_data if there is relationship with parent dataset
       if (!is.null(parent)) {
         checkmate::assert_character(parent_name, len = 1)
         checkmate::assert_character(join_keys, min.len = 1)
 
         private$parent_name <- parent_name
         private$join_keys <- join_keys
-        private$filtered_dataset <- reactive({
+
+        private$dataset_filtered <- reactive({
           env <- new.env(parent = parent.env(globalenv()))
           env[[dataname]] <- private$dataset
           env[[parent_name]] <- parent()
@@ -76,6 +68,18 @@ DefaultFilteredDataset <- R6::R6Class( # nolint
           get(x = dataname, envir = env)
         })
       }
+
+      private$add_filter_states(
+        filter_states = init_filter_states(
+          data = self$get_dataset(),
+          data_filtered = self$get_dataset(TRUE),
+          input_dataname = as.name(dataname),
+          output_dataname = as.name(dataname),
+          varlabels = self$get_varlabels(),
+          keys = self$get_keys()
+        ),
+        id = "filter"
+      )
 
       invisible(self)
     },
@@ -157,7 +161,7 @@ DefaultFilteredDataset <- R6::R6Class( # nolint
     #' shiny::isolate(dataset$get_filter_state())
     #'
     #' @return `NULL`
-    set_filter_state = function(state, filtered_dataset, ...) {
+    set_filter_state = function(state, ...) {
       checkmate::assert_list(state)
       logger::log_trace(
         sprintf(
@@ -166,10 +170,8 @@ DefaultFilteredDataset <- R6::R6Class( # nolint
           self$get_dataname()
         )
       )
-
-      data <- self$get_dataset()
       fs <- self$get_filter_states()[[1]]
-      fs$set_filter_state(state = state, data = data, filtered_dataset = filtered_dataset, ...)
+      fs$set_filter_state(state = state, ...)
       logger::log_trace(
         sprintf(
           "DefaultFilteredDataset$set_filter_state done setting up filters of variables %s, dataname: %s",
@@ -221,10 +223,7 @@ DefaultFilteredDataset <- R6::R6Class( # nolint
       ns <- NS(id)
       tagList(
         tags$label("Add", tags$code(self$get_dataname()), "filter"),
-        self$get_filter_states(id = "filter")$ui_add_filter_state(
-          id = ns("filter"),
-          data = self$get_dataset()
-        )
+        self$get_filter_states(id = "filter")$ui_add_filter_state(id = ns("filter"))
       )
     },
 
@@ -238,11 +237,10 @@ DefaultFilteredDataset <- R6::R6Class( # nolint
     #'
     #' @param id (`character(1)`)\cr
     #'   an ID string that corresponds with the ID used to call the module's UI function.
-    #' @param filtered_dataset TODO
     #' @param ... other arguments passed on to child `FilterStates` methods.
     #'
     #' @return `moduleServer` function which returns `NULL`
-    srv_add_filter_state = function(id, filtered_dataset, ...) {
+    srv_add_filter_state = function(id, ...) {
       check_ellipsis(..., stop = FALSE, allowed_args = c("vars_include"))
       moduleServer(
         id = id,
@@ -250,13 +248,7 @@ DefaultFilteredDataset <- R6::R6Class( # nolint
           logger::log_trace(
             "DefaultFilteredDataset$srv_add_filter_state initializing, dataname: { deparse1(self$get_dataname()) }"
           )
-          data <- self$get_dataset()
-          self$get_filter_states(id = "filter")$srv_add_filter_state(
-            id = "filter",
-            data = data,
-            filtered_dataset = filtered_dataset,
-            ...
-          )
+          self$get_filter_states(id = "filter")$srv_add_filter_state(id = "filter", ...)
           logger::log_trace(
             "DefaultFilteredDataset$srv_add_filter_state initialized, dataname: { deparse1(self$get_dataname()) }"
           )
@@ -269,26 +261,29 @@ DefaultFilteredDataset <- R6::R6Class( # nolint
     #' Get number of observations based on given keys
     #' The output shows the comparison between `filtered_dataset`
     #' function parameter and the dataset inside self
-    #' @param filtered_dataset comparison object, of the same class
-    #' as `self$get_dataset()`, if `NULL` then `self$get_dataset()`
-    #' is used.
-    #' @param subject_keys (`character` or `NULL`) columns denoting unique subjects when
-    #' calculating the filtering.
     #' @return `list` containing character `#filtered/#not_filtered`
-    get_filter_overview_nsubjs = function(filtered_dataset = self$get_dataset(), subject_keys = NULL) {
-      checkmate::assert_class(filtered_dataset, classes = class(self$get_dataset()))
-      checkmate::assert_character(subject_keys, null.ok = TRUE, any.missing = FALSE)
+    get_filter_overview_nsubjs = function() {
+      dataset <- self$get_dataset()
+      dataset_filtered <- self$get_dataset(TRUE)
+
+      # Gets filter overview subjects number and returns a list
+      # of the number of subjects of filtered/non-filtered datasets
+      subject_keys <- if (length(private$parent_name) > 0) {
+        private$join_keys
+      } else {
+        self$get_keys()
+      }
 
       f_rows <- if (length(subject_keys) == 0) {
-        dplyr::n_distinct(filtered_dataset)
+        dplyr::n_distinct(dataset_filtered())
       } else {
-        dplyr::n_distinct(filtered_dataset[subject_keys])
+        dplyr::n_distinct(dataset_filtered()[subject_keys])
       }
 
       nf_rows <- if (length(subject_keys) == 0) {
-        dplyr::n_distinct(self$get_dataset())
+        dplyr::n_distinct(dataset)
       } else {
-        dplyr::n_distinct(self$get_dataset()[subject_keys])
+        dplyr::n_distinct(dataset[subject_keys])
       }
 
       list(paste0(f_rows, "/", nf_rows))
@@ -299,9 +294,9 @@ DefaultFilteredDataset <- R6::R6Class( # nolint
     join_keys = character(0),
     # Gets filter overview observations number and returns a
     # list of the number of observations of filtered/non-filtered datasets
-    get_filter_overview_nobs = function(filtered_dataset) {
-      f_rows <- nrow(filtered_dataset)
-      nf_rows <- nrow(self$get_dataset())
+    get_filter_overview_nobs = function(dataset, dataset_filtered) {
+      f_rows <- nrow(dataset_filtered())
+      nf_rows <- nrow(dataset)
       list(
         paste0(f_rows, "/", nf_rows)
       )

@@ -121,10 +121,7 @@ CDISCFilteredData <- R6::R6Class( # nolint
       rows <- lapply(
         datanames,
         function(dataname) {
-          obs <- self$get_filtered_dataset(dataname)$get_filter_overview_info(
-            filtered_dataset = self$get_data(dataname = dataname, filtered = TRUE)
-          )[, 1]
-
+          obs <- self$get_filtered_dataset(dataname)$get_filter_overview_info()[, 1]
           subs <- private$get_filter_overview_nsubjs(dataname)
 
           df <- cbind(obs, subs)
@@ -220,18 +217,7 @@ CDISCFilteredData <- R6::R6Class( # nolint
       super$validate()
     },
     get_filter_overview_nsubjs = function(dataname) {
-      # Gets filter overview subjects number and returns a list
-      # of the number of subjects of filtered/non-filtered datasets
-      subject_keys <- if (length(self$get_parentname(dataname)) > 0) {
-        self$get_keys(self$get_parentname(dataname))
-      } else {
-        self$get_filtered_dataset(dataname)$get_keys()
-      }
-
-      self$get_filtered_dataset(dataname)$get_filter_overview_nsubjs(
-        self$get_data(dataname = dataname, filtered = TRUE),
-        subject_keys
-      )
+      self$get_filtered_dataset(dataname)$get_filter_overview_nsubjs()
     }
   )
 )

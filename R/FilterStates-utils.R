@@ -7,6 +7,9 @@
 #' @param data (`data.frame`, `MultiAssayExperiment`, `SummarizedExperiment`, `matrix`)\cr
 #'   the R object which `subset` function is applied on.
 #'
+#' @param data_filtered (`reactive`)\cr
+#'   should return an object constistent with the `FilterState` class.
+#'
 #' @param input_dataname (`character(1)` or `name` or `call`)\cr
 #'   name of the data used on lhs of the expression
 #'   specified to the function argument attached to this `FilterStates`.
@@ -55,6 +58,7 @@
 #' )
 #' }
 init_filter_states <- function(data,
+                               data_filtered = reactive(data),
                                input_dataname,
                                output_dataname = input_dataname,
                                datalabel = character(0),
@@ -65,6 +69,7 @@ init_filter_states <- function(data,
 #' @keywords internal
 #' @export
 init_filter_states.data.frame <- function(data, # nolint
+                                          data_filtered = reactive(data),
                                           input_dataname,
                                           output_dataname = input_dataname,
                                           datalabel = character(0),
@@ -72,6 +77,8 @@ init_filter_states.data.frame <- function(data, # nolint
                                           keys = character(0),
                                           ...) {
   DFFilterStates$new(
+    data = data,
+    data_filtered = data_filtered,
     input_dataname = input_dataname,
     output_dataname = output_dataname,
     datalabel = datalabel,
@@ -83,11 +90,14 @@ init_filter_states.data.frame <- function(data, # nolint
 #' @keywords internal
 #' @export
 init_filter_states.matrix <- function(data, # nolint
+                                      data_filtered = reactive(data),
                                       input_dataname,
                                       output_dataname = input_dataname,
                                       datalabel = character(0),
                                       ...) {
   MatrixFilterStates$new(
+    data = data,
+    data_filtered = data_filtered,
     input_dataname = input_dataname,
     output_dataname = output_dataname,
     datalabel = datalabel
@@ -97,6 +107,7 @@ init_filter_states.matrix <- function(data, # nolint
 #' @keywords internal
 #' @export
 init_filter_states.MultiAssayExperiment <- function(data, # nolint
+                                                    data_filtered = reactive(data),
                                                     input_dataname,
                                                     output_dataname = input_dataname,
                                                     datalabel = character(0),
@@ -107,6 +118,8 @@ init_filter_states.MultiAssayExperiment <- function(data, # nolint
     stop("Cannot load MultiAssayExperiment - please install the package or restart your session.")
   }
   MAEFilterStates$new(
+    data = data,
+    data_filtered = data_filtered,
     input_dataname = input_dataname,
     output_dataname = output_dataname,
     datalabel = datalabel,
@@ -118,6 +131,7 @@ init_filter_states.MultiAssayExperiment <- function(data, # nolint
 #' @keywords internal
 #' @export
 init_filter_states.SummarizedExperiment <- function(data, # nolint
+                                                    data_filtered = reactive(data),
                                                     input_dataname,
                                                     output_dataname = input_dataname,
                                                     datalabel = character(0),
@@ -126,6 +140,8 @@ init_filter_states.SummarizedExperiment <- function(data, # nolint
     stop("Cannot load SummarizedExperiment - please install the package or restart your session.")
   }
   SEFilterStates$new(
+    data = data,
+    data_filtered = data_filtered,
     input_dataname = input_dataname,
     output_dataname = output_dataname,
     datalabel = datalabel

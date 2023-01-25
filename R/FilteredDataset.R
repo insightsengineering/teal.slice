@@ -89,7 +89,8 @@ init_filtered_dataset <- function(dataset, # nolint
                                   parent = reactive(dataset),
                                   join_keys = character(0),
                                   label = attr(dataset, "label"),
-                                  metadata = NULL) {
+                                  metadata = NULL,
+                                  ...) {
   UseMethod("init_filtered_dataset")
 }
 
@@ -121,6 +122,9 @@ init_filtered_dataset.MultiAssayExperiment <- function(dataset, # nolint
                                                        dataname,
                                                        keys = character(0),
                                                        label = attr(dataset, "label"),
+                                                       parent_name = character(0),
+                                                       parent = NULL,
+                                                       join_keys = character(0),
                                                        metadata = NULL) {
   if (!requireNamespace("MultiAssayExperiment", quietly = TRUE)) {
     stop("Cannot load MultiAssayExperiment - please install the package or restart your session.")
@@ -163,7 +167,6 @@ FilteredDataset <- R6::R6Class( # nolint
     #'   should be atomic and length one.
     initialize = function(dataset, dataname, keys = character(0), label = attr(dataset, "label"), metadata = NULL) {
       # dataset assertion in child classes
-
       check_simple_name(dataname)
       checkmate::assert_character(keys, any.missing = FALSE)
       checkmate::assert_character(label, null.ok = TRUE)
@@ -175,7 +178,7 @@ FilteredDataset <- R6::R6Class( # nolint
       private$keys <- keys
       private$label <- if (is.null(label)) character(0) else label
       private$metadata <- metadata
-      private$filtered_dataset <- reactive({
+      private$dataset_filtered <- reactive({
         env <- new.env(parent = parent.env(globalenv()))
         env[[dataname]] <- private$dataset
         filter_call <- self$get_call()
@@ -285,10 +288,14 @@ FilteredDataset <- R6::R6Class( # nolint
 
     #' @description
     #' Gets the dataset object in this `FilteredDataset`
-    #' @return `data.frame` or `MultiAssayExperiment`
+    #' @param filtered (`logical(1)`)\cr
+    #'
+    #' @return `data.frame` or `MultiAssayExperiment` as a raw data
+    #'  or as a reactive with filter applied
+    #'
     get_dataset = function(filtered = FALSE) {
       if (filtered) {
-        private$filtered_dataset
+        private$dataset_filtered
       } else {
         private$dataset
       }
@@ -309,9 +316,11 @@ FilteredDataset <- R6::R6Class( # nolint
     #' as `self$get_dataset()`, if `NULL` then `self$get_dataset()`
     #' is used.
     #' @return (`matrix`) matrix of observations and subjects
-    get_filter_overview_info = function(filtered_dataset = self$get_dataset()) {
-      checkmate::assert_class(filtered_dataset, classes = class(self$get_dataset()))
-      df <- cbind(private$get_filter_overview_nobs(filtered_dataset), "")
+    get_filter_overview_info = function() {
+      dataset <- self$get_dataset()
+      dataset_filtered <- self$get_dataset(TRUE)
+
+      df <- cbind(private$get_filter_overview_nobs(dataset, dataset_filtered), "")
       rownames(df) <- self$get_dataname()
       colnames(df) <- c("Obs", "Subjects")
       df
@@ -337,8 +346,8 @@ FilteredDataset <- R6::R6Class( # nolint
     #'   attribute does not exist for the data
     get_varlabels = function(variables = NULL) {
       checkmate::assert_character(variables, null.ok = TRUE, any.missing = FALSE)
-
-      labels <- formatters::var_labels(private$dataset, fill = FALSE)
+      dataset <- self$get_dataset()
+      labels <- formatters::var_labels(dataset, fill = FALSE)
       if (is.null(labels)) {
         return(NULL)
       }
@@ -478,8 +487,6 @@ FilteredDataset <- R6::R6Class( # nolint
           dataname <- self$get_dataname()
           logger::log_trace("FilteredDataset$server initializing, dataname: { deparse1(dataname) }")
           checkmate::assert_string(dataname)
-          shiny::setBookmarkExclude("remove_filters")
-
           output$filter_count <- renderText(
             sprintf(
               "%d filter%s applied",
@@ -543,7 +550,7 @@ FilteredDataset <- R6::R6Class( # nolint
     #'   an ID string that corresponds with the ID used to call the module's UI function.
     #' @param ... ignored
     #' @return `moduleServer` function.
-    srv_add_filter_state = function(id, filtered_dataset, ...) {
+    srv_add_filter_state = function(id, ...) {
       check_ellipsis(..., stop = FALSE)
       moduleServer(
         id = id,
@@ -556,13 +563,13 @@ FilteredDataset <- R6::R6Class( # nolint
   ## __Private Fields ====
   private = list(
     dataset = NULL,
+    dataset_filtered = NULL,
     filter_states = list(),
     dataname = character(0),
     keys = character(0),
     parent = NULL, # reactive
     label = character(0),
     metadata = NULL,
-    filtered_dataset = NULL,
 
     # if this has length > 0 then only varnames in this vector
     # can be filtered

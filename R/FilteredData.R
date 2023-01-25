@@ -279,9 +279,7 @@ FilteredData <- R6::R6Class( # nolint
       rows <- lapply(
         datanames,
         function(dataname) {
-          self$get_filtered_dataset(dataname)$get_filter_overview_info(
-            filtered_dataset = self$get_data(dataname = dataname, filtered = TRUE)
-          )
+          self$get_filtered_dataset(dataname)$get_filter_overview_info()
         }
       )
 
@@ -508,7 +506,6 @@ FilteredData <- R6::R6Class( # nolint
         dataset_state <- state[[dataname]]
         fdataset$set_filter_state(
           state = dataset_state,
-          filtered_dataset = private$reactive_data[[dataname]],
           vars_include = self$get_filterable_varnames(dataname)
         )
       })
@@ -834,7 +831,6 @@ FilteredData <- R6::R6Class( # nolint
               fdataset <- self$get_filtered_dataset(dataname)
               fdataset$srv_add_filter_state(
                 id = private$get_ui_add_filter_id(dataname),
-                filtered_dataset = private$reactive_data[[dataname]],
                 vars_include = self$get_filterable_varnames(dataname)
               )
             }
