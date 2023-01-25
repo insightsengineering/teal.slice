@@ -224,11 +224,15 @@ testthat::test_that("state_list_push does not throw after the state list was ini
   filter_states <- FilterStates$new(input_dataname = "test", output_dataname = "test", datalabel = "test")
   filter_states$state_list_initialize(list(shiny::reactiveVal()))
   filter_state <- FilterState$new("test", varname = "test")
-  testthat::expect_error(isolate(filter_states$state_list_push(x = filter_state, state_list_index = 1L, state_id = "test")), NA)
-  testthat::expect_error(isolate(filter_states$state_list_push(x = filter_state, state_list_index = 1, state_id = "test")), NA)
+  testthat::expect_error(isolate(
+    filter_states$state_list_push(x = filter_state, state_list_index = 1L, state_id = "test")), NA)
+  testthat::expect_error(isolate(
+    filter_states$state_list_push(x = filter_state, state_list_index = 1, state_id = "test")), NA)
 })
 
-testthat::test_that("Passing a FilterState to state_list_push is the same as passing it in the list to state_list_push", {
+testthat::test_that(
+  "Passing a FilterState to state_list_push is the same as passing it in the list to state_list_push",
+  code = {
   filter_states_no_list <- FilterStates$new(input_dataname = "test", output_dataname = "test", datalabel = "test")
   filter_states_no_list$state_list_initialize(list(shiny::reactiveVal()))
 
