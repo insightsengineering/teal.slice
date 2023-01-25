@@ -299,7 +299,8 @@ Removing a filter variable adds it back to available choices.
 shiny module instance id}
 
 \item{\code{data}}{(\code{data.frame})\cr
-data object for which to define a subset}
+data object for which to define a subset
+object which columns are used to choose filter variables.}
 
 \item{\code{filtered_dataset}}{TODO (also what happens if not given...)}
 
