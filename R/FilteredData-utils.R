@@ -32,7 +32,7 @@ init_filtered_data.TealData <- function(x, # nolint
                                         code = x$get_code_class(),
                                         cdisc = FALSE,
                                         check = x$get_check()) {
-  cdisc <- length(join_keys$get_parents()) > 0 
+  cdisc <- length(join_keys$get_parents()) > 0
   data_objects <- lapply(x$get_datanames(), function(dataname) {
     dataset <- x$get_dataset(dataname)
 
