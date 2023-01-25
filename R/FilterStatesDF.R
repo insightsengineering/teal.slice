@@ -130,9 +130,7 @@ DFFilterStates <- R6::R6Class( # nolint
     #' @description
     #' Set filter state.
     #'
-    #' @param vars_include (`character(n)`)\cr
-    #'  optional, vector of column names to be included.
-    #' @param ... ignored.
+    #'
     #' @examples
     #' dffs <- teal.slice:::DFFilterStates$new(
     #'   input_dataname = "iris",
@@ -149,7 +147,7 @@ DFFilterStates <- R6::R6Class( # nolint
     #' shiny::isolate(dffs$get_filter_state())
     #'
     #' @return `NULL`
-    set_filter_state = function(state, ...) {
+    set_filter_state = function(state) {
       data <- private$data
       data_filtered <- private$data_filtered
 

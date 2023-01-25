@@ -369,6 +369,22 @@ FilteredDataset <- R6::R6Class( # nolint
       colnames(self$get_dataset())
     },
 
+    #' @description
+    #' Set the allowed filterable variables
+    #' @param varnames (`character` or `NULL`) The variables which can be filtered
+    #' See `self$get_filterable_varnames` for more details
+    #'
+    #' @details When retrieving the filtered variables only
+    #' those which have filtering supported (i.e. are of the permitted types)
+    #' are included.
+    #'
+    #' @return invisibly this `FilteredDataset`
+    set_filterable_varnames = function(varnames) {
+      checkmate::assert_character(varnames, any.missing = FALSE, null.ok = TRUE)
+      private$filterable_varnames <- varnames
+      return(invisible(self))
+    },
+
     # modules ------
     #' @description
     #' UI module for dataset active filters
@@ -532,6 +548,7 @@ FilteredDataset <- R6::R6Class( # nolint
     dataset = NULL,
     dataset_filtered = NULL,
     filter_states = list(),
+    filterable_varnames = character(0),
     dataname = character(0),
     keys = character(0),
     parent = NULL, # reactive

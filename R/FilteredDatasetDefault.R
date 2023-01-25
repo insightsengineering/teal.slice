@@ -153,7 +153,7 @@ DefaultFilteredDataset <- R6::R6Class( # nolint
     #' @param state (`named list`)\cr
     #'  containing values of the initial filter. Values should be relevant
     #'  to the referred column.
-    #' @param ... Additional arguments. Note that this is currently not used
+    #'
     #' @examples
     #' dataset <- teal.slice:::DefaultFilteredDataset$new(iris, "iris")
     #' fs <- list(
@@ -164,7 +164,7 @@ DefaultFilteredDataset <- R6::R6Class( # nolint
     #' shiny::isolate(dataset$get_filter_state())
     #'
     #' @return `NULL`
-    set_filter_state = function(state, ...) {
+    set_filter_state = function(state) {
       checkmate::assert_list(state)
       logger::log_trace(
         sprintf(
@@ -174,7 +174,7 @@ DefaultFilteredDataset <- R6::R6Class( # nolint
         )
       )
       fs <- self$get_filter_states()[[1]]
-      fs$set_filter_state(state = state, ...)
+      fs$set_filter_state(state = state)
       logger::log_trace(
         sprintf(
           "DefaultFilteredDataset$set_filter_state done setting up filters of variables %s, dataname: %s",
@@ -242,7 +242,7 @@ DefaultFilteredDataset <- R6::R6Class( # nolint
     #'   an ID string that corresponds with the ID used to call the module's UI function.
     #'
     #' @return `moduleServer` function which returns `NULL`
-    srv_add_filter_state = function(id, ...) {
+    srv_add_filter_state = function(id) {
       moduleServer(
         id = id,
         function(input, output, session) {
