@@ -369,22 +369,20 @@ DFFilterStates <- R6::R6Class( # nolint
                   deparse1(private$input_dataname)
                 )
               )
-              self$state_list_push(
-              var_name <- input$var_to_add
-                x = init_filter_state(
-                  x = data[[var_name]],
-                  x_filtered = reactive(filtered_dataset()[[var_name]]),
-                  varname = as.name(var_name),
-                  varlabel = private$get_varlabels(var_name),
-                  input_dataname = private$input_dataname
-                ),
-                state_id = input$var_to_add
-                state_list_index = 1L,
+              varname <- input$var_to_add
+              fstate <- init_filter_state(
+                x = data[[varname]],
+                x_filtered = reactive(filtered_dataset()[[varname]]),
+                varname = as.name(varname),
+                varlabel = private$get_varlabels(varname),
+                input_dataname = private$input_dataname
               )
+              self$state_list_push(x = fstate, state_list_index = 1L, state_id = varname)
+
               logger::log_trace(
                 sprintf(
                   "DFFilterStates$srv_add_filter_state@2 added FilterState of variable %s, dataname: %s",
-                  input$var_to_add,
+                  varname,
                   deparse1(private$input_dataname)
                 )
               )
