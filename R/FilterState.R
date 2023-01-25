@@ -95,6 +95,8 @@ FilterState <- R6::R6Class( # nolint
       private$na_count <- sum(is.na(x))
       private$keep_na <- reactiveVal(FALSE)
 
+      private$keep_inf <- reactiveVal(NULL) # for compatability with RangeFilterState
+
       private$filtered_values <- x_filtered
       private$filtered_na_count <- reactive(sum(is.na(x_filtered())))
 
@@ -179,6 +181,16 @@ FilterState <- R6::R6Class( # nolint
     #' @return (`logical(1)`)
     get_keep_na = function() {
       private$keep_na()
+    },
+
+    #' @description
+    #' Returns current `keep_inf` selection
+    #' @details This method was added to the abstract class so filter card headers
+    #'  can have consistent styling and layout. For every FilterState other than
+    #'  RangeFilterState, this will always return `NULL`.
+    #' @return (`logical(1)` for RangeFilterState, otherwise NULL)
+    get_keep_inf = function() {
+      private$keep_inf()
     },
 
     #' @description
@@ -336,6 +348,41 @@ FilterState <- R6::R6Class( # nolint
       moduleServer(
         id = id,
         function(input, output, session) {
+
+          observeEvent(self$get_keep_na(), {
+            output$header_keep_na <- renderUI({
+              tagList(
+                tags$strong("NA "),
+                tags$span(
+                  class = if (self$get_keep_na()) {
+                    "fa fa-check"
+                  } else {
+                    "fa fa-xmark"
+                  }
+                )
+              )
+            })
+          })
+
+          observeEvent(self$get_keep_inf(), {
+            output$header_keep_inf <- renderUI({
+              if (is.null(self$get_keep_na())) {
+                tags$span()
+              } else {
+                tagList(
+                  tags$strong("Inf "),
+                  tags$span(
+                    class = if (self$get_keep_inf()) {
+                      "fa fa-check"
+                    } else {
+                      "fa fa-xmark"
+                    }
+                  )
+                )
+              }
+            })
+          })
+
           private$server_inputs("inputs")
           reactive(input$remove) # back to parent to remove self
         }
@@ -361,17 +408,8 @@ FilterState <- R6::R6Class( # nolint
             tags$strong(paste0(private$varname, ": ")),
             paste("(", self$get_selected(), ")")
           ),
-          tags$p(
-            tags$strong("NA: "),
-            tags$span(
-              class = if (self$get_keep_na()) {
-                "fa fa-check"
-              } else {
-                "fa fa-xmark"
-              }
-            )
-          ),
-          tags$p(),
+          uiOutput(ns("header_keep_na"), inline = TRUE),
+          uiOutput(ns("header_keep_inf"), inline = TRUE),
           tags$div(
             class = "filter-card-icons",
             tags$span(
@@ -396,6 +434,7 @@ FilterState <- R6::R6Class( # nolint
     input_dataname = character(0),
     keep_na = NULL, # reactiveVal logical()
     na_count = integer(0),
+    keep_inf = NULL, # for compatability with RangeFitlerState
     na_rm = FALSE, # it's logical(1)
     observers = NULL, # here observers are stored
     selected = NULL, # because it holds reactiveVal and each class has different choices type

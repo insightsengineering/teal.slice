@@ -43,10 +43,9 @@ RangeFilterState <- R6::R6Class( # nolint
                           varname,
                           varlabel = character(0),
                           input_dataname = NULL,
-                          extract_type = character(0)) {
+                          extract_type = character(0)) {c
       stopifnot(is.numeric(x))
       stopifnot(any(is.finite(x)))
-
       #validation on x_filtered here
       super$initialize(x, x_filtered, varname, varlabel, input_dataname, extract_type)
       var_range <- range(x, finite = TRUE)
@@ -343,6 +342,7 @@ RangeFilterState <- R6::R6Class( # nolint
               if (identical(private$choices, self$get_selected())) {
                 pretty_range_inputs[c("min", "max")]
               } else {
+                print(self$get_selected())
                 self$get_selected()
               }
             }),

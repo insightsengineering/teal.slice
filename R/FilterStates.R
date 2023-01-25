@@ -434,7 +434,7 @@ FilterStates <- R6::R6Class( # nolint
           #   - remove button in FilteredDataset module
           #   - remove button in FilteredData module
           #   - API call remove_filter_state
-          card_id <- session$ns("card")
+          card_id <- session$ns("body")
           queue_id <- sprintf("%s-%s", queue_index, element_id)
           private$card_ids[queue_id] <- card_id
 
@@ -450,7 +450,7 @@ FilterStates <- R6::R6Class( # nolint
           })
           
           # signal sent from filter_state when it is marked for removal
-          remove_fs <- filter_state$server(id = "content")
+          remove_fs <- filter_state$server(id = "body")
 
           private$observers[[queue_id]] <- observeEvent(
             ignoreInit = TRUE,
