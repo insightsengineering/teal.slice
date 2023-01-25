@@ -26,7 +26,7 @@ fs <- list(
     subset = list(ARRAY_TYPE = list(selected = "", keep_na = TRUE))
   )
 )
-dataset$set_filter_state(state = fs)
+shiny::isolate(dataset$set_filter_state(state = fs))
 shiny::isolate(dataset$get_filter_state())
 }
 \keyword{internal}
@@ -62,9 +62,9 @@ shiny::isolate(dataset$get_filter_state())
 <li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilteredDataset" data-id="get_keys"><a href='../../teal.slice/html/FilteredDataset.html#method-FilteredDataset-get_keys'><code>teal.slice::FilteredDataset$get_keys()</code></a></span></li>
 <li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilteredDataset" data-id="get_metadata"><a href='../../teal.slice/html/FilteredDataset.html#method-FilteredDataset-get_metadata'><code>teal.slice::FilteredDataset$get_metadata()</code></a></span></li>
 <li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilteredDataset" data-id="get_varnames"><a href='../../teal.slice/html/FilteredDataset.html#method-FilteredDataset-get_varnames'><code>teal.slice::FilteredDataset$get_varnames()</code></a></span></li>
-<li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilteredDataset" data-id="queues_empty"><a href='../../teal.slice/html/FilteredDataset.html#method-FilteredDataset-queues_empty'><code>teal.slice::FilteredDataset$queues_empty()</code></a></span></li>
 <li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilteredDataset" data-id="server"><a href='../../teal.slice/html/FilteredDataset.html#method-FilteredDataset-server'><code>teal.slice::FilteredDataset$server()</code></a></span></li>
 <li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilteredDataset" data-id="set_filterable_varnames"><a href='../../teal.slice/html/FilteredDataset.html#method-FilteredDataset-set_filterable_varnames'><code>teal.slice::FilteredDataset$set_filterable_varnames()</code></a></span></li>
+<li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilteredDataset" data-id="state_lists_empty"><a href='../../teal.slice/html/FilteredDataset.html#method-FilteredDataset-state_lists_empty'><code>teal.slice::FilteredDataset$state_lists_empty()</code></a></span></li>
 <li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilteredDataset" data-id="ui"><a href='../../teal.slice/html/FilteredDataset.html#method-FilteredDataset-ui'><code>teal.slice::FilteredDataset$ui()</code></a></span></li>
 </ul>
 </details>
@@ -88,20 +88,20 @@ Initialize \code{MAEFilteredDataset} object
 \if{html}{\out{<div class="arguments">}}
 \describe{
 \item{\code{dataset}}{(\code{MulitiAssayExperiment})\cr
-single \code{MultiAssayExperiment} for which filters are rendered}
+a single \code{MultiAssayExperiment} for which to define a subset}
 
 \item{\code{dataname}}{(\code{character})\cr
-A given name for the dataset it may not contain spaces}
+a given name for the dataset it may not contain spaces}
 
 \item{\code{keys}}{optional, (\code{character})\cr
-Vector with primary keys}
+vector with primary keys}
 
 \item{\code{label}}{(\code{character})\cr
-Label to describe the dataset}
+label to describe the dataset}
 
 \item{\code{metadata}}{(named \code{list} or \code{NULL}) \cr
-Field containing metadata about the dataset. Each element of the list
-should be atomic and length one.}
+field containing metadata about the dataset;
+each element of the list must be atomic and length one}
 }
 \if{html}{\out{</div>}}
 }
@@ -230,7 +230,7 @@ fs <- list(
     subset = list(ARRAY_TYPE = list(selected = "", keep_na = TRUE))
   )
 )
-dataset$set_filter_state(state = fs)
+shiny::isolate(dataset$set_filter_state(state = fs))
 shiny::isolate(dataset$get_filter_state())
 }
 \if{html}{\out{</div>}}
@@ -244,13 +244,13 @@ shiny::isolate(dataset$get_filter_state())
 \subsection{Method \code{remove_filter_state()}}{
 Remove one or more \code{FilterState} of a \code{MAEFilteredDataset}
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{MAEFilteredDataset$remove_filter_state(element_id)}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{MAEFilteredDataset$remove_filter_state(state_id)}\if{html}{\out{</div>}}
 }
 
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
-\item{\code{element_id}}{(\code{list})\cr
+\item{\code{state_id}}{(\code{list})\cr
 Named list of variables to remove their \code{FilterState}.}
 }
 \if{html}{\out{</div>}}

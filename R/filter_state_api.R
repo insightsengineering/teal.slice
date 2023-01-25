@@ -103,27 +103,30 @@
 #' )
 #'
 #' # set initial filter state
-#' set_filter_state(datasets, filter = fs)
+#' isolate(set_filter_state(datasets, filter = fs))
 #'
 #' # get filter state
 #' get_filter_state(datasets)
 #'
 #' # modify filter state
-#' set_filter_state(
-#'   datasets,
-#'   filter = list(iris = list(Species = list(selected = "setosa", keep_na = TRUE)))
-#' )
-#'
-#' # remove specific filters
-#' remove_filter_state(datasets,
-#'   filter = list(
-#'     iris = "Species",
-#'     mae = list(
-#'       subjects = c("years_to_birth", "vital_status")
-#'     )
+#' isolate(
+#'   set_filter_state(
+#'     datasets,
+#'     filter = list(iris = list(Species = list(selected = "setosa", keep_na = TRUE)))
 #'   )
 #' )
 #'
+#' # remove specific filters
+#' isolate(
+#'   remove_filter_state(datasets,
+#'     filter = list(
+#'       iris = "Species",
+#'       mae = list(
+#'         subjects = c("years_to_birth", "vital_status")
+#'       )
+#'     )
+#'   )
+#' )
 #' # remove all states
 #' clear_filter_states(datasets)
 NULL

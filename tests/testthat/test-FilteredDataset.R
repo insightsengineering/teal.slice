@@ -4,11 +4,11 @@ testthat::test_that("The constructor accepts a data.frame object and dataname", 
   ), NA)
 })
 
-testthat::test_that("queues_empty does not throw after initializing FilteredDataset", {
+testthat::test_that("state_lists_empty does not throw after initializing FilteredDataset", {
   filtered_dataset <- FilteredDataset$new(
     dataset = head(iris), dataname = "iris"
   )
-  testthat::expect_error(filtered_dataset$queues_empty(), NA)
+  testthat::expect_error(filtered_dataset$state_lists_empty(), NA)
 })
 
 testthat::test_that("get_filter_states returns an empty list after initialization", {
@@ -145,7 +145,7 @@ testthat::test_that("$get_formatted_filter_state returns a string representation
     Sepal.Length = list(selected = c(5.1, 6.4), keep_na = TRUE, keep_inf = TRUE),
     Species = list(selected = c("setosa", "versicolor"), keep_na = FALSE)
   )
-  dataset$set_filter_state(state = fs)
+  shiny::isolate(dataset$set_filter_state(state = fs))
   states <- dataset$get_filter_states()[[1]]
 
   shiny::isolate(testthat::expect_equal(
@@ -160,7 +160,7 @@ testthat::test_that("$get_call returns the filter call of the dataset", {
     Sepal.Length = list(selected = c(5.1, 6.4), keep_na = TRUE, keep_inf = TRUE),
     Species = list(selected = c("setosa", "versicolor"), keep_na = FALSE)
   )
-  dataset$set_filter_state(state = fs)
+  shiny::isolate(dataset$set_filter_state(state = fs))
   filter_call <- shiny::isolate(dataset$get_call())$filter
 
   testthat::expect_equal(

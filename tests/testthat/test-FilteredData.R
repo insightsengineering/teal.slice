@@ -136,14 +136,14 @@ testthat::test_that("get_filtered_dataset returns a list with elements named aft
 
 testthat::test_that("get_call returns a list of language objects or NULL", {
   filtered_data <- FilteredData$new(list(iris = list(dataset = iris)), join_keys = NULL)
-  testthat::expect_null(filtered_data$get_call("iris"))
+  testthat::expect_null(isolate(filtered_data$get_call("iris")))
   fs <- list(
     iris = list(
       Sepal.Length = list(c(5.1, 6.4)),
       Species = c("setosa", "versicolor")
     )
   )
-  filtered_data$set_filter_state(state = fs)
+  isolate(filtered_data$set_filter_state(state = fs))
   checkmate::expect_list(isolate(filtered_data$get_call("iris")), types = "<-")
 })
 
@@ -168,7 +168,7 @@ testthat::test_that(
         disp = list()
       )
     )
-    datasets$set_filter_state(state = fs)
+    isolate(datasets$set_filter_state(state = fs))
     testthat::expect_equal(
       isolate(datasets$get_call("iris")),
       list(
@@ -217,8 +217,7 @@ testthat::test_that(
       )
     )
     testthat::expect_error(datasets$set_filter_state(state = fs))
-  }
-)
+  })
 
 testthat::test_that(
   "FilteredData$set_filter_state throws error with unnamed variables list",
@@ -241,8 +240,7 @@ testthat::test_that(
       )
     )
     testthat::expect_error(datasets$set_filter_state(state = fs))
-  }
-)
+  })
 
 testthat::test_that(
   "FilteredData$get_filter_state returns list identical to input with attributes",
@@ -273,11 +271,10 @@ testthat::test_that(
         )
       )
     )
-    datasets$set_filter_state(state = fs)
+    isolate(datasets$set_filter_state(state = fs))
     attr(fs, "formatted") <- isolate(datasets$get_formatted_filter_state())
     testthat::expect_identical(isolate(datasets$get_filter_state()), fs)
-  }
-)
+  })
 
 testthat::test_that(
   "FilteredData$get_filter_state returns list whose attribute is a character form of the list",
@@ -308,7 +305,7 @@ testthat::test_that(
         )
       )
     )
-    datasets$set_filter_state(state = fs)
+    isolate(datasets$set_filter_state(state = fs))
     formatted_attr <- isolate(datasets$get_formatted_filter_state())
 
     testthat::expect_type(formatted_attr, "character")
@@ -316,8 +313,7 @@ testthat::test_that(
       attr(isolate(datasets$get_filter_state()), "formatted"),
       formatted_attr
     )
-  }
-)
+  })
 
 testthat::test_that("FilteredData$remove_filter_state removes states defined in list", {
   datasets <- FilteredData$new(
@@ -337,8 +333,8 @@ testthat::test_that("FilteredData$remove_filter_state removes states defined in 
       disp = list()
     )
   )
-  datasets$set_filter_state(state = fs)
-  datasets$remove_filter_state(state = list(iris = "Sepal.Length", mtcars = c("cyl", "disp")))
+  isolate(datasets$set_filter_state(state = fs))
+  isolate(datasets$remove_filter_state(state = list(iris = "Sepal.Length", mtcars = c("cyl", "disp"))))
   fs_after_remove <- list(
     iris = list(
       Species = list(selected = c("setosa", "versicolor"), keep_na = FALSE)
@@ -372,8 +368,8 @@ testthat::test_that(
         disp = list()
       )
     )
-    datasets$set_filter_state(state = fs)
-    datasets$remove_all_filter_states()
+    isolate(datasets$set_filter_state(state = fs))
+    isolate(datasets$remove_all_filter_states())
 
     testthat::expect_null(
       isolate(datasets$get_call("iris"))
@@ -382,8 +378,7 @@ testthat::test_that(
     testthat::expect_null(
       isolate(datasets$get_call("mtcars"))
     )
-  }
-)
+  })
 
 testthat::test_that(
   "FilteredData$remove_all_filter_states remove the filters of the desired dataset only",
@@ -405,8 +400,8 @@ testthat::test_that(
         disp = list()
       )
     )
-    datasets$set_filter_state(state = fs)
-    datasets$remove_all_filter_states(datanames = "iris")
+    isolate(datasets$set_filter_state(state = fs))
+    isolate(datasets$remove_all_filter_states(datanames = "iris"))
 
     testthat::expect_null(
       isolate(datasets$get_call("iris"))
@@ -423,8 +418,7 @@ testthat::test_that(
         )
       )
     )
-  }
-)
+  })
 
 
 get_filtered_data_object <- function() {
@@ -493,8 +487,8 @@ testthat::test_that("get_filter_overview returns overview matrix for filtered da
   datasets <- get_filtered_data_object()
   filter_state_adsl <- ChoicesFilterState$new(c("F", "M"), varname = "sex")
   filter_state_adsl$set_selected("M")
-  queue <- datasets$get_filtered_dataset("ADSL")$get_filter_states(1)
-  queue$queue_push(filter_state_adsl, queue_index = 1L, element_id = "sex")
+  state_list <- datasets$get_filtered_dataset("ADSL")$get_filter_states(1)
+  isolate(state_list$state_list_push(filter_state_adsl, state_list_index = 1L, state_id = "sex"))
   filter_state_mae <- ChoicesFilterState$new(
     x = c("white", NA),
     varname = as.name("race"),
@@ -502,8 +496,8 @@ testthat::test_that("get_filter_overview returns overview matrix for filtered da
     extract_type = "list"
   )
   filter_state_mae$set_na_rm(TRUE)
-  queue <- datasets$get_filtered_dataset("miniACC")$get_filter_states(1)
-  queue$queue_push(filter_state_mae, queue_index = 1L, element_id = "race")
+  state_list <- datasets$get_filtered_dataset("miniACC")$get_filter_states(1)
+  isolate(state_list$state_list_push(filter_state_mae, state_list_index = 1L, state_id = "race"))
   testthat::expect_equal(
     isolate(datasets$get_filter_overview(datasets$datanames())),
     matrix(
@@ -537,7 +531,7 @@ testthat::test_that("get_filter_expr returns a string with a filtering expressio
     join_keys = NULL
   )
   testthat::expect_equal(
-    get_filter_expr(datasets),
+    isolate(get_filter_expr(datasets)),
     paste("", sep = "\n")
   )
 })
@@ -581,7 +575,7 @@ testthat::test_that("get_data assert the `filtered` argument is logical(1)", {
 
 testthat::test_that("filter_panel_disable", {
   filtered_data <- FilteredData$new(data_objects = list("iris" = list(dataset = iris)), join_keys = NULL)
-  filtered_data$set_filter_state(list(iris = list(Sepal.Width = c(3, 4))))
+  isolate(filtered_data$set_filter_state(list(iris = list(Sepal.Width = c(3, 4)))))
   shiny::testServer(
     filtered_data$srv_filter_panel,
     expr = {
@@ -593,7 +587,7 @@ testthat::test_that("filter_panel_disable", {
 
 testthat::test_that("filter_panel_enable", {
   filtered_data <- FilteredData$new(data_objects = list("iris" = list(dataset = iris)), join_keys = NULL)
-  filtered_data$set_filter_state(list(iris = list(Sepal.Width = c(3, 4))))
+  isolate(filtered_data$set_filter_state(list(iris = list(Sepal.Width = c(3, 4)))))
   shiny::testServer(
     filtered_data$srv_filter_panel,
     expr = {
@@ -606,7 +600,7 @@ testthat::test_that("filter_panel_enable", {
 
 testthat::test_that("filter_panel_disable and filter_panel_enable", {
   filtered_data <- FilteredData$new(data_objects = list("iris" = list(dataset = iris)), join_keys = NULL)
-  filtered_data$set_filter_state(list(iris = list(Sepal.Width = c(3, 4))))
+  isolate(filtered_data$set_filter_state(list(iris = list(Sepal.Width = c(3, 4)))))
   shiny::testServer(
     filtered_data$srv_filter_panel,
     expr = {
@@ -663,9 +657,9 @@ testthat::test_that(
         disp = list()
       )
     )
-    testthat::expect_equal(datasets$.__enclos_env__$private$get_filter_count(), 0L)
-    datasets$set_filter_state(state = fs)
-    testthat::expect_equal(datasets$.__enclos_env__$private$get_filter_count(), 4L)
+    isolate(testthat::expect_equal(datasets$.__enclos_env__$private$get_filter_count(), 0L))
+    isolate(datasets$set_filter_state(state = fs))
+    isolate(testthat::expect_equal(datasets$.__enclos_env__$private$get_filter_count(), 4L))
   })
 
 testthat::test_that(
@@ -689,7 +683,7 @@ testthat::test_that(
         )
       )
     )
-    testthat::expect_equal(datasets$.__enclos_env__$private$get_filter_count(), 0L)
-    datasets$set_filter_state(state = fs)
-    testthat::expect_equal(datasets$.__enclos_env__$private$get_filter_count(), 4L)
+    isolate(testthat::expect_equal(datasets$.__enclos_env__$private$get_filter_count(), 0L))
+    isolate(datasets$set_filter_state(state = fs))
+    isolate(testthat::expect_equal(datasets$.__enclos_env__$private$get_filter_count(), 4L))
   })

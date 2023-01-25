@@ -40,6 +40,8 @@
 #' @keywords internal
 FilterState <- R6::R6Class( # nolint
   "FilterState",
+
+  # public methods ----
   public = list(
     #' @description
     #' Initialize a `FilterState` object
@@ -59,6 +61,9 @@ FilterState <- R6::R6Class( # nolint
     #' \item{`"list"`}{ `varname` in the condition call will be returned as `<input_dataname>$<varname>`}
     #' \item{`"matrix"`}{ `varname` in the condition call will be returned as `<input_dataname>[, <varname>]`}
     #' }
+    #'
+    #' @return self invisibly
+    #'
     initialize = function(x,
                           x_filtered,
                           varname,
@@ -111,6 +116,9 @@ FilterState <- R6::R6Class( # nolint
 
     #' @description
     #' Destroy observers stored in `private$observers`.
+    #'
+    #' @return NULL invisibly
+    #'
     destroy_observers = function() {
       lapply(private$observers, function(x) x$destroy())
       return(invisible(NULL))
@@ -119,10 +127,13 @@ FilterState <- R6::R6Class( # nolint
     #' @description
     #' Returns a formatted string representing this `FilterState`.
     #'
-    #' @param indent (`numeric(1)`) number of spaces before after each new line character of the formatted string;
-    #'        default s to 0
-    #' @param wrap_width (`numeric(1)`) number of characters to wrap lines at in the printed output;
-    #'        allowed range is 30 to 120; defaults to 76
+    #' @param indent (`numeric(1)`)
+    #'   number of spaces before after each new line character of the formatted string;
+    #'   defaults to 0
+    #' @param wrap_width (`numeric(1)`)
+    #'   number of characters to wrap lines at in the printed output;
+    #'   allowed range is 30 to 120; defaults to 76
+    #'
     #' @return `character(1)` the formatted string
     #'
     format = function(indent = 0L, wrap_width = 76L) {
@@ -157,15 +168,19 @@ FilterState <- R6::R6Class( # nolint
     #' for selected variable type.
     #' Method is using internal reactive values which makes it reactive
     #' and must be executed in reactive or isolated context.
+    #'
     get_call = function() {
       NULL
     },
 
     #' @description
-    #' Returns dataname
+    #' Returns dataname.
+    #'
     #' @param deparse (`logical(1)`)\cr
-    #' whether dataname should be deparsed. `TRUE` by default
-    #' @return (`name` or `character(1)`)
+    #'   whether dataname should be deparsed; defaults to `TRUE`
+    #'
+    #' @return `name` or `character(1)`
+    #'
     get_dataname = function(deparse = TRUE) {
       if (isTRUE(deparse)) {
         deparse1(private$input_dataname)
@@ -175,24 +190,31 @@ FilterState <- R6::R6Class( # nolint
     },
 
     #' @description
-    #' Returns current `keep_na` selection
-    #' @return (`logical(1)`)
+    #' Returns current `keep_na` selection.
+    #'
+    #' @return `logical(1)`
+    #'
     get_keep_na = function() {
       private$keep_na()
     },
 
     #' @description
-    #' Returns variable label
-    #' @return (`character(1)`)
+    #' Returns variable label.
+    #'
+    #' @return `character(1)`
+    #'
     get_varlabel = function() {
       private$varlabel
     },
 
     #' @description
-    #' Get variable name
+    #' Get variable name.
+    #'
     #' @param deparse (`logical(1)`)\cr
-    #' whether variable name should be deparsed. `FALSE` by default
-    #' @return (`name` or `character(1)`)
+    #'   whether variable name should be deparsed; defaults to `FALSE`
+    #'
+    #' @return `name` or `character(1)`
+    #'
     get_varname = function(deparse = FALSE) {
       if (isTRUE(deparse)) {
         deparse1(private$varname)
@@ -202,9 +224,10 @@ FilterState <- R6::R6Class( # nolint
     },
 
     #' @description
-    #' Get selected values from `FilterState`
+    #' Get selected values from `FilterState`.
     #'
     #' @return class of the returned object depends of class of the `FilterState`
+    #'
     get_selected = function() {
       private$selected()
     },
@@ -215,6 +238,7 @@ FilterState <- R6::R6Class( # nolint
     #' @return `list` containing values taken from the reactive fields:
     #' * `selected` (`atomic`) length depends on a `FilterState` variant.
     #' * `keep_na` (`logical(1)`) whether `NA` should be kept.
+    #'
     get_state = function() {
       list(
         selected = self$get_selected(),
@@ -223,19 +247,24 @@ FilterState <- R6::R6Class( # nolint
     },
 
     #' @description
-    #' Prints this `FilterState` object
+    #' Prints this `FilterState` object.
     #'
     #' @param ... additional arguments to this method
+    #'
     print = function(...) {
       cat(shiny::isolate(self$format()), "\n")
     },
 
     #' @description
-    #' Set if `NA` should be kept
-    #' @param value (`logical(1)`)\cr
-    #'  value(s) which come from the filter selection. Value is set in `server`
-    #'  modules after selecting check-box-input in the shiny interface. Values are set to
-    #'  `private$keep_na` which is reactive.
+    #' Set whether to keep NAs.
+    #'
+    #' @param value `logical(1)`\cr
+    #'   value(s) which come from the filter selection. Value is set in `server`
+    #'   modules after selecting check-box-input in the shiny interface. Values are set to
+    #'   `private$keep_na` which is reactive.
+    #'
+    #' @return NULL invisibly
+    #'
     set_keep_na = function(value) {
       checkmate::assert_flag(value)
       private$keep_na(value)
@@ -251,11 +280,16 @@ FilterState <- R6::R6Class( # nolint
     },
 
     #' @description
-    #' Some methods needs additional `!is.na(varame)` condition to not include
-    #' missing values. When `private$na_rm = TRUE` is set, `self$get_call` returns
-    #' condition extended by `!is.na` condition.
-    #' @param value (`logical(1)`) when `TRUE`, `FilterState$get_call` appends an expression
-    #'  removing `NA` values to the filter expression returned by `get_call`
+    #' Some methods need an additional `!is.na(varame)` condition to drop
+    #' missing values. When `private$na_rm = TRUE`, `self$get_call` returns
+    #' condition extended by `!is.na`.
+    #'
+    #' @param value `logical(1)`\cr
+    #'   when `TRUE`, `FilterState$get_call` appends an expression
+    #'   removing `NA` values to the filter expression returned by `get_call`
+    #'
+    #' @return NULL invisibly
+    #'
     set_na_rm = function(value) {
       checkmate::assert_flag(value)
       private$na_rm <- value
@@ -263,12 +297,16 @@ FilterState <- R6::R6Class( # nolint
     },
 
     #' @description
-    #' Set selection
+    #' Set selection.
+    #'
     #' @param value (`vector`)\cr
-    #'  value(s) which come from the filter selection. Values are set in `server`
-    #'  module after choosing value in app interface. Values are set to
-    #'  `private$selected` which is reactive. Values type have to be the
-    #'  same as `private$choices`.
+    #'   value(s) that come from filter selection; values are set in the
+    #'   module server after a selection is made in the app interface;
+    #'   values are stored in `private$selected`n which is reactive;
+    #'   value types have to be the same as `private$choices`
+    #'
+    #' @return NULL invisibly
+    #'
     set_selected = function(value) {
       logger::log_trace(
         sprintf(
@@ -292,13 +330,17 @@ FilterState <- R6::R6Class( # nolint
     },
 
     #' @description
-    #' Set state
+    #' Set state.
+    #'
     #' @param state (`list`)\cr
-    #'  contains fields relevant for a specific class
+    #'  contains fields relevant for a specific class:
     #' \itemize{
     #' \item{`selected`}{ defines initial selection}
     #' \item{`keep_na` (`logical`)}{ defines whether to keep or remove `NA` values}
     #' }
+    #'
+    #' @return NULL invisibly
+    #'
     set_state = function(state) {
       logger::log_trace(sprintf(
         "%s$set_state, dataname: %s setting state of variable %s to: selected=%s, keep_na=%s",
@@ -327,11 +369,14 @@ FilterState <- R6::R6Class( # nolint
     },
 
     #' @description
-    #' Server module
+    #' Shiny module server.
+    #'
     #' @param id (`character(1)`)\cr
-    #'   an ID string that corresponds with the ID used to call the module's UI function.
-    #' @return `moduleServer` function which returns reactive value signaling that remove button
-    #'   has been clicked
+    #'   shiny module instance id
+    #'
+    #' @return `moduleServer` function which returns reactive value
+    #'   signaling that remove button has been clicked
+    #'
     server = function(id) {
       moduleServer(
         id = id,
@@ -343,10 +388,12 @@ FilterState <- R6::R6Class( # nolint
     },
 
     #' @description
-    #' UI Module
+    #' Shiny module UI.
+    #'
     #' @param id (`character(1)`)\cr
-    #'  id of shiny element. UI for this class contains simple message
-    #'  informing that it's not supported
+    #'  shiny element (module instance) id;
+    #'  the UI for this class contains simple message stating that it is not supported
+    #'
     ui = function(id) {
       ns <- NS(id)
       fluidPage(
@@ -380,6 +427,8 @@ FilterState <- R6::R6Class( # nolint
       )
     }
   ),
+
+  # private members ----
   private = list(
     choices = NULL, # because each class has different choices type
     input_dataname = character(0),
