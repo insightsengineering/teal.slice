@@ -1,7 +1,8 @@
-# teal.slice 0.2.0.9016
+# teal.slice 0.2.0.9017
 
 * Examples now use `scda.2022` instead of `scda.2021`.
 * Transferred data hashing step in `FilteredDataset` to `teal`.
+* Removed constructor of `Queue` class.
 
 ### New features
 

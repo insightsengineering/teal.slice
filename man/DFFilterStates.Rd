@@ -23,7 +23,7 @@ fs <- list(
   Sepal.Length = list(selected = c(5.1, 6.4), keep_na = TRUE, keep_inf = TRUE),
   Species = list(selected = c("setosa", "versicolor"), keep_na = FALSE)
 )
-dffs$set_filter_state(state = fs, data = iris)
+shiny::isolate(dffs$set_filter_state(state = fs, data = iris))
 shiny::isolate(dffs$get_filter_state())
 
 }
@@ -53,11 +53,11 @@ shiny::isolate(dffs$get_filter_state())
 <li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilterStates" data-id="get_datalabel"><a href='../../teal.slice/html/FilterStates.html#method-FilterStates-get_datalabel'><code>teal.slice::FilterStates$get_datalabel()</code></a></span></li>
 <li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilterStates" data-id="get_filter_count"><a href='../../teal.slice/html/FilterStates.html#method-FilterStates-get_filter_count'><code>teal.slice::FilterStates$get_filter_count()</code></a></span></li>
 <li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilterStates" data-id="print"><a href='../../teal.slice/html/FilterStates.html#method-FilterStates-print'><code>teal.slice::FilterStates$print()</code></a></span></li>
-<li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilterStates" data-id="queue_empty"><a href='../../teal.slice/html/FilterStates.html#method-FilterStates-queue_empty'><code>teal.slice::FilterStates$queue_empty()</code></a></span></li>
-<li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilterStates" data-id="queue_get"><a href='../../teal.slice/html/FilterStates.html#method-FilterStates-queue_get'><code>teal.slice::FilterStates$queue_get()</code></a></span></li>
-<li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilterStates" data-id="queue_initialize"><a href='../../teal.slice/html/FilterStates.html#method-FilterStates-queue_initialize'><code>teal.slice::FilterStates$queue_initialize()</code></a></span></li>
-<li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilterStates" data-id="queue_push"><a href='../../teal.slice/html/FilterStates.html#method-FilterStates-queue_push'><code>teal.slice::FilterStates$queue_push()</code></a></span></li>
-<li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilterStates" data-id="queue_remove"><a href='../../teal.slice/html/FilterStates.html#method-FilterStates-queue_remove'><code>teal.slice::FilterStates$queue_remove()</code></a></span></li>
+<li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilterStates" data-id="state_list_empty"><a href='../../teal.slice/html/FilterStates.html#method-FilterStates-state_list_empty'><code>teal.slice::FilterStates$state_list_empty()</code></a></span></li>
+<li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilterStates" data-id="state_list_get"><a href='../../teal.slice/html/FilterStates.html#method-FilterStates-state_list_get'><code>teal.slice::FilterStates$state_list_get()</code></a></span></li>
+<li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilterStates" data-id="state_list_initialize"><a href='../../teal.slice/html/FilterStates.html#method-FilterStates-state_list_initialize'><code>teal.slice::FilterStates$state_list_initialize()</code></a></span></li>
+<li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilterStates" data-id="state_list_push"><a href='../../teal.slice/html/FilterStates.html#method-FilterStates-state_list_push'><code>teal.slice::FilterStates$state_list_push()</code></a></span></li>
+<li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilterStates" data-id="state_list_remove"><a href='../../teal.slice/html/FilterStates.html#method-FilterStates-state_list_remove'><code>teal.slice::FilterStates$state_list_remove()</code></a></span></li>
 <li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilterStates" data-id="ui"><a href='../../teal.slice/html/FilterStates.html#method-FilterStates-ui'><code>teal.slice::FilterStates$ui()</code></a></span></li>
 </ul>
 </details>
@@ -66,13 +66,13 @@ shiny::isolate(dffs$get_filter_state())
 \if{html}{\out{<a id="method-DFFilterStates-new"></a>}}
 \if{latex}{\out{\hypertarget{method-DFFilterStates-new}{}}}
 \subsection{Method \code{new()}}{
-Initializes \code{DFFilterStates} object
+Initializes \code{DFFilterStates} object.
 
 Initializes \code{DFFilterStates} object by setting \code{input_dataname},
-\code{output_dataname} and initializing \code{ReactiveQueue}. This class contains a
-single \code{ReactiveQueue} with no specified name which means that
-when calling the function associated to this class (\code{dplyr::filter}), a list of
-conditions are passed to unnamed arguments (\code{...}).
+\code{output_dataname} and initializing \code{state_list} (\code{shiny::reactiveVal}).
+This class contains a single \code{state_list} with no specified name,
+which means that when calling the subset function associated with this class
+(\code{dplyr::filter}), a list of conditions is passed to unnamed arguments (\code{...}).
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{DFFilterStates$new(input_dataname, output_dataname, datalabel, varlabels, keys)}\if{html}{\out{</div>}}
 }
@@ -81,14 +81,14 @@ conditions are passed to unnamed arguments (\code{...}).
 \if{html}{\out{<div class="arguments">}}
 \describe{
 \item{\code{input_dataname}}{(\code{character(1)} or \code{name} or \code{call})\cr
-name of the data used on lhs of the expression
-specified to the function argument attached to this \code{FilterStates}.}
+name of the data used on \code{rhs} of the \emph{subset expression}
+specified to the function argument attached to this \code{FilterStates}}
 
 \item{\code{output_dataname}}{(\code{character(1)} or \code{name} or \code{call})\cr
-name of the output data on the lhs of the assignment expression.}
+name of the output data on the \code{lhs} of the \emph{subset expression}}
 
 \item{\code{datalabel}}{(\code{character(0)} or \code{character(1)})\cr
-text label value.}
+text label value}
 
 \item{\code{varlabels}}{(\code{character})\cr
 labels of the variables used in this object}
@@ -103,7 +103,7 @@ key columns names}
 \if{html}{\out{<a id="method-DFFilterStates-format"></a>}}
 \if{latex}{\out{\hypertarget{method-DFFilterStates-format}{}}}
 \subsection{Method \code{format()}}{
-Returns the formatted string representing this \code{FilterStates} object.
+Returns a formatted string representing this \code{FilterStates} object.
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{DFFilterStates$format(indent = 0)}\if{html}{\out{</div>}}
 }
@@ -111,7 +111,7 @@ Returns the formatted string representing this \code{FilterStates} object.
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
-\item{\code{indent}}{(\code{numeric(1)}) the number of spaces before each line of the representation}
+\item{\code{indent}}{(\code{numeric(1)}) the number of spaces prepended to each line of the output}
 }
 \if{html}{\out{</div>}}
 }
@@ -123,10 +123,10 @@ Returns the formatted string representing this \code{FilterStates} object.
 \if{html}{\out{<a id="method-DFFilterStates-get_fun"></a>}}
 \if{latex}{\out{\hypertarget{method-DFFilterStates-get_fun}{}}}
 \subsection{Method \code{get_fun()}}{
-Get function name
+Gets the name of the function used to filter the data in this \code{FilterStates}.
 
-Get function name used to create filter call.
-For \code{DFFilterStates} \code{dplyr::filter} is used
+Get name of  function used to create the \emph{subset expression}.
+For \code{DFFilterStates} this is \code{dplyr::filter}.
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{DFFilterStates$get_fun()}\if{html}{\out{</div>}}
 }
@@ -139,7 +139,7 @@ For \code{DFFilterStates} \code{dplyr::filter} is used
 \if{html}{\out{<a id="method-DFFilterStates-server"></a>}}
 \if{latex}{\out{\hypertarget{method-DFFilterStates-server}{}}}
 \subsection{Method \code{server()}}{
-Server module
+Shiny server module.
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{DFFilterStates$server(id)}\if{html}{\out{</div>}}
 }
@@ -148,7 +148,7 @@ Server module
 \if{html}{\out{<div class="arguments">}}
 \describe{
 \item{\code{id}}{(\code{character(1)})\cr
-an ID string that corresponds with the ID used to call the module's UI function.}
+shiny module instance id}
 }
 \if{html}{\out{</div>}}
 }
@@ -162,21 +162,21 @@ an ID string that corresponds with the ID used to call the module's UI function.
 \subsection{Method \code{get_filter_state()}}{
 Gets the reactive values from the active \code{FilterState} objects.
 
-Get active filter state from the \code{FilterState} objects kept in \code{ReactiveQueue}.
+Get active filter state from the \code{FilterState} objects kept in \code{state_list}.
 The output list is a compatible input to \code{self$set_filter_state}.
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{DFFilterStates$get_filter_state()}\if{html}{\out{</div>}}
 }
 
 \subsection{Returns}{
-\code{list} with named elements corresponding to \code{FilterState} in the \code{ReactiveQueue}.
+\code{list} with named elements corresponding to \code{FilterState} in the \code{state_list}.
 }
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-DFFilterStates-set_filter_state"></a>}}
 \if{latex}{\out{\hypertarget{method-DFFilterStates-set_filter_state}{}}}
 \subsection{Method \code{set_filter_state()}}{
-Set filter state
+Set filter state.
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{DFFilterStates$set_filter_state(
   data,
@@ -191,17 +191,16 @@ Set filter state
 \if{html}{\out{<div class="arguments">}}
 \describe{
 \item{\code{data}}{(\code{data.frame})\cr
-data which are supposed to be filtered.}
+data object for which to define a subset}
 
 \item{\code{state}}{(\verb{named list})\cr
-should contain values which are initial selection in the \code{FilterState}.
-Names of the \code{list} element should correspond to the name of the
-column in \code{data}.}
+should contain values of initial selections in the \code{FilterState};
+\code{list} names must correspond to column names in \code{data}}
 
 \item{\code{vars_include}}{(\code{character(n)})\cr
-optional, vector of column names to be included.}
+optional, vector of column names to be included}
 
-\item{\code{...}}{ignored.}
+\item{\code{...}}{ignored}
 }
 \if{html}{\out{</div>}}
 }
@@ -221,7 +220,7 @@ fs <- list(
   Sepal.Length = list(selected = c(5.1, 6.4), keep_na = TRUE, keep_inf = TRUE),
   Species = list(selected = c("setosa", "versicolor"), keep_na = FALSE)
 )
-dffs$set_filter_state(state = fs, data = iris)
+shiny::isolate(dffs$set_filter_state(state = fs, data = iris))
 shiny::isolate(dffs$get_filter_state())
 
 }
@@ -234,15 +233,15 @@ shiny::isolate(dffs$get_filter_state())
 \if{html}{\out{<a id="method-DFFilterStates-remove_filter_state"></a>}}
 \if{latex}{\out{\hypertarget{method-DFFilterStates-remove_filter_state}{}}}
 \subsection{Method \code{remove_filter_state()}}{
-Remove a \code{FilterState} from the \code{ReactiveQueue}.
+Remove a \code{FilterState} from the \code{state_list}.
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{DFFilterStates$remove_filter_state(element_id)}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{DFFilterStates$remove_filter_state(state_id)}\if{html}{\out{</div>}}
 }
 
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
-\item{\code{element_id}}{(\code{character(1)})\cr name of \code{ReactiveQueue} element.}
+\item{\code{state_id}}{(\code{character(1)})\cr name of \code{state_list} element}
 }
 \if{html}{\out{</div>}}
 }
@@ -254,7 +253,7 @@ Remove a \code{FilterState} from the \code{ReactiveQueue}.
 \if{html}{\out{<a id="method-DFFilterStates-ui_add_filter_state"></a>}}
 \if{latex}{\out{\hypertarget{method-DFFilterStates-ui_add_filter_state}{}}}
 \subsection{Method \code{ui_add_filter_state()}}{
-Shiny UI module to add filter variable
+Shiny UI module to add filter variable.
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{DFFilterStates$ui_add_filter_state(id, data)}\if{html}{\out{</div>}}
 }
@@ -263,26 +262,26 @@ Shiny UI module to add filter variable
 \if{html}{\out{<div class="arguments">}}
 \describe{
 \item{\code{id}}{(\code{character(1)})\cr
-id of shiny module}
+shiny element (module instance) id}
 
 \item{\code{data}}{(\code{data.frame})\cr
-object which columns are used to choose filter variables.}
+data object for which to define a subset}
 }
 \if{html}{\out{</div>}}
 }
 \subsection{Returns}{
-shiny.tag
+\code{shiny.tag}
 }
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-DFFilterStates-srv_add_filter_state"></a>}}
 \if{latex}{\out{\hypertarget{method-DFFilterStates-srv_add_filter_state}{}}}
 \subsection{Method \code{srv_add_filter_state()}}{
-Shiny server module to add filter variable
+Shiny server module to add filter variable.
 
-Module controls available choices to select as a filter variable.
-Selected filter variable is being removed from available choices.
-Removed filter variable gets back to available choices.
+This module controls available choices to select as a filter variable.
+Once selected, a variable is removed from available choices.
+Removing a filter variable adds it back to available choices.
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{DFFilterStates$srv_add_filter_state(
   id,
@@ -297,15 +296,16 @@ Removed filter variable gets back to available choices.
 \if{html}{\out{<div class="arguments">}}
 \describe{
 \item{\code{id}}{(\code{character(1)})\cr
-an ID string that corresponds with the ID used to call the module's UI function.}
+shiny module instance id}
 
 \item{\code{data}}{(\code{data.frame})\cr
+data object for which to define a subset
 object which columns are used to choose filter variables.}
 
 \item{\code{filtered_dataset}}{TODO (also what happens if not given...)}
 
 \item{\code{vars_include}}{(\code{character(n)})\cr
-optional, vector of column names to be included.}
+optional, vector of column names to be included}
 
 \item{\code{...}}{ignored}
 }
@@ -313,12 +313,6 @@ optional, vector of column names to be included.}
 }
 \subsection{Returns}{
 \code{moduleServer} function which returns \code{NULL}
-description
-Get label of specific variable. In case when variable label is missing
-name of the variable is returned.
-parameter variable (\code{character})\cr
-name of the variable for which label should be returned
-return \code{character}
 }
 }
 \if{html}{\out{<hr>}}

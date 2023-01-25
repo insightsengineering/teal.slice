@@ -8,12 +8,12 @@ testthat::test_that("get_call returns a list of calls or NULL", {
   filtered_dataset <- DefaultFilteredDataset$new(
     dataset = iris, dataname = "iris"
   )
-  testthat::expect_null(filtered_dataset$get_call())
+  testthat::expect_null(isolate(filtered_dataset$get_call()))
   fs <- list(
     Sepal.Length = c(5.1, 6.4),
     Species = c("setosa", "versicolor")
   )
-  filtered_dataset$set_filter_state(state = fs)
+  isolate(filtered_dataset$set_filter_state(state = fs))
 
   checkmate::expect_list(isolate(filtered_dataset$get_call()), types = "<-")
 })
@@ -27,7 +27,7 @@ testthat::test_that(
       Sepal.Length = c(5.1, 6.4),
       Species = c("setosa", "versicolor")
     )
-    dataset$set_filter_state(state = fs)
+    isolate(dataset$set_filter_state(state = fs))
     testthat::expect_equal(
       isolate(dataset$get_call()),
       list(
@@ -63,8 +63,8 @@ testthat::test_that(
       Sepal.Length = c(5.1, 6.4),
       Species = c("setosa", "versicolor")
     )
-    dataset$set_filter_state(state = fs)
-    dataset$remove_filter_state("Species")
+    isolate(dataset$set_filter_state(state = fs))
+    isolate(dataset$remove_filter_state("Species"))
 
     testthat::expect_equal(
       isolate(dataset$get_call()),
@@ -88,7 +88,7 @@ testthat::test_that(
       Sepal.Length = list(selected = c(5.1, 6.4), keep_na = TRUE, keep_inf = TRUE),
       Species = list(selected = c("setosa", "versicolor"), keep_na = FALSE)
     )
-    dataset$set_filter_state(state = fs)
+    isolate(dataset$set_filter_state(state = fs))
     testthat::expect_identical(isolate(dataset$get_filter_state()), fs)
   }
 )
@@ -101,8 +101,8 @@ testthat::test_that(
       Sepal.Length = c(5.1, 6.4),
       Species = c("setosa", "versicolor")
     )
-    dataset$set_filter_state(state = fs)
-    dataset$remove_filter_state(c("Species", "Sepal.Length"))
+    isolate(dataset$set_filter_state(state = fs))
+    isolate(dataset$remove_filter_state(c("Species", "Sepal.Length")))
 
     testthat::expect_null(
       isolate(dataset$get_call())

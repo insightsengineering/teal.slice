@@ -11,10 +11,12 @@ The \code{DefaultFilteredDataset} R6 class
 \examples{
 library(shiny)
 ds <- teal.slice:::DefaultFilteredDataset$new(iris, "iris")
-ds$set_filter_state(
-  state = list(
-    Species = list(selected = "virginica"),
-    Petal.Length = list(selected = c(2.0, 5))
+isolate(
+  ds$set_filter_state(
+    state = list(
+      Species = list(selected = "virginica"),
+      Petal.Length = list(selected = c(2.0, 5))
+    )
   )
 )
 isolate(ds$get_filter_state())
@@ -29,7 +31,7 @@ fs <- list(
   Sepal.Length = list(selected = c(5.1, 6.4), keep_na = TRUE, keep_inf = TRUE),
   Species = list(selected = c("setosa", "versicolor"), keep_na = FALSE)
 )
-dataset$set_filter_state(state = fs)
+shiny::isolate(dataset$set_filter_state(state = fs))
 shiny::isolate(dataset$get_filter_state())
 
 }
@@ -66,9 +68,9 @@ shiny::isolate(dataset$get_filter_state())
 <li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilteredDataset" data-id="get_metadata"><a href='../../teal.slice/html/FilteredDataset.html#method-FilteredDataset-get_metadata'><code>teal.slice::FilteredDataset$get_metadata()</code></a></span></li>
 <li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilteredDataset" data-id="get_varlabels"><a href='../../teal.slice/html/FilteredDataset.html#method-FilteredDataset-get_varlabels'><code>teal.slice::FilteredDataset$get_varlabels()</code></a></span></li>
 <li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilteredDataset" data-id="get_varnames"><a href='../../teal.slice/html/FilteredDataset.html#method-FilteredDataset-get_varnames'><code>teal.slice::FilteredDataset$get_varnames()</code></a></span></li>
-<li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilteredDataset" data-id="queues_empty"><a href='../../teal.slice/html/FilteredDataset.html#method-FilteredDataset-queues_empty'><code>teal.slice::FilteredDataset$queues_empty()</code></a></span></li>
 <li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilteredDataset" data-id="server"><a href='../../teal.slice/html/FilteredDataset.html#method-FilteredDataset-server'><code>teal.slice::FilteredDataset$server()</code></a></span></li>
 <li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilteredDataset" data-id="set_filterable_varnames"><a href='../../teal.slice/html/FilteredDataset.html#method-FilteredDataset-set_filterable_varnames'><code>teal.slice::FilteredDataset$set_filterable_varnames()</code></a></span></li>
+<li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilteredDataset" data-id="state_lists_empty"><a href='../../teal.slice/html/FilteredDataset.html#method-FilteredDataset-state_lists_empty'><code>teal.slice::FilteredDataset$state_lists_empty()</code></a></span></li>
 <li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilteredDataset" data-id="ui"><a href='../../teal.slice/html/FilteredDataset.html#method-FilteredDataset-ui'><code>teal.slice::FilteredDataset$ui()</code></a></span></li>
 </ul>
 </details>
@@ -120,7 +122,7 @@ This functions returns filter calls equivalent to selected items
 within each of \code{filter_states}. Configuration of the calls is constant and
 depends on \code{filter_states} type and order which are set during initialization.
 This class contains single \code{FilterStates}
-which contains single \code{ReactiveQueue} and all \code{FilterState} objects
+which contains single \code{state_list} and all \code{FilterState} objects
 applies to one argument (\code{...}) in \code{dplyr::filter} call.
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{DefaultFilteredDataset$get_call()}\if{html}{\out{</div>}}
@@ -177,7 +179,7 @@ fs <- list(
   Sepal.Length = list(selected = c(5.1, 6.4), keep_na = TRUE, keep_inf = TRUE),
   Species = list(selected = c("setosa", "versicolor"), keep_na = FALSE)
 )
-dataset$set_filter_state(state = fs)
+shiny::isolate(dataset$set_filter_state(state = fs))
 shiny::isolate(dataset$get_filter_state())
 
 }
@@ -192,13 +194,13 @@ shiny::isolate(dataset$get_filter_state())
 \subsection{Method \code{remove_filter_state()}}{
 Remove one or more \code{FilterState} of a \code{FilteredDataset}
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{DefaultFilteredDataset$remove_filter_state(element_id)}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{DefaultFilteredDataset$remove_filter_state(state_id)}\if{html}{\out{</div>}}
 }
 
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
-\item{\code{element_id}}{(\code{character})\cr
+\item{\code{state_id}}{(\code{character})\cr
 Vector of character names of variables to remove their \code{FilterState}.}
 }
 \if{html}{\out{</div>}}

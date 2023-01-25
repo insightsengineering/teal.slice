@@ -34,4 +34,3 @@ reference:
       - FilteredDataset
       - FilterPanelAPI
       - MAEFilteredDataset
-      - Queue

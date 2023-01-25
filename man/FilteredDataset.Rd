@@ -16,7 +16,7 @@ components of the dataset.
 \itemize{
 \item \href{#method-FilteredDataset-new}{\code{FilteredDataset$new()}}
 \item \href{#method-FilteredDataset-get_formatted_filter_state}{\code{FilteredDataset$get_formatted_filter_state()}}
-\item \href{#method-FilteredDataset-queues_empty}{\code{FilteredDataset$queues_empty()}}
+\item \href{#method-FilteredDataset-state_lists_empty}{\code{FilteredDataset$state_lists_empty()}}
 \item \href{#method-FilteredDataset-get_call}{\code{FilteredDataset$get_call()}}
 \item \href{#method-FilteredDataset-get_filter_state}{\code{FilteredDataset$get_filter_state()}}
 \item \href{#method-FilteredDataset-get_filter_states}{\code{FilteredDataset$get_filter_states()}}
@@ -90,12 +90,12 @@ Returns a string representation of the filter state in this \code{FilteredDatase
 }
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-FilteredDataset-queues_empty"></a>}}
-\if{latex}{\out{\hypertarget{method-FilteredDataset-queues_empty}{}}}
-\subsection{Method \code{queues_empty()}}{
+\if{html}{\out{<a id="method-FilteredDataset-state_lists_empty"></a>}}
+\if{latex}{\out{\hypertarget{method-FilteredDataset-state_lists_empty}{}}}
+\subsection{Method \code{state_lists_empty()}}{
 Removes all active filter items applied to this dataset
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{FilteredDataset$queues_empty()}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{FilteredDataset$state_lists_empty()}\if{html}{\out{</div>}}
 }
 
 \subsection{Returns}{
