@@ -1,8 +1,13 @@
 #' @name EmptyFilterState
-#' @title `FilterState` object for empty variable
-#' @docType class
-#' @keywords internal
 #'
+#' @title `FilterState` object for empty variable
+#'
+#' @description
+#' `FilterState` subclass representing an empty variable.
+#'
+#' @docType class
+#'
+#' @keywords internal
 #'
 #' @examples
 #' filter_state <- teal.slice:::EmptyFilterState$new(
@@ -15,13 +20,16 @@
 #' isolate(filter_state$set_selected(TRUE))
 #' isolate(filter_state$set_keep_na(TRUE))
 #' isolate(filter_state$get_call())
+#'
 EmptyFilterState <- R6::R6Class( # nolint
   "EmptyFilterState",
   inherit = FilterState,
-  public = list(
 
+  # public methods ----
+  public = list(
     #' @description
-    #' Initialize `EmptyFilterState` object
+    #' Initialize `EmptyFilterState` object.
+    #'
     #' @param x (`vector`)\cr
     #'   values of the variable used in filter
     #' @param x_filtered (`reactive`)\cr
@@ -33,12 +41,13 @@ EmptyFilterState <- R6::R6Class( # nolint
     #' @param input_dataname (`name` or `call`)\cr
     #'   name of dataset where `x` is taken from
     #' @param extract_type (`character(0)`, `character(1)`)\cr
-    #' whether condition calls should be prefixed by dataname. Possible values:
+    #'   whether condition calls should be prefixed by dataname. Possible values:
     #' \itemize{
     #' \item{`character(0)` (default)}{ `varname` in the condition call will not be prefixed}
     #' \item{`"list"`}{ `varname` in the condition call will be returned as `<input_dataname>$<varname>`}
     #' \item{`"matrix"`}{ `varname` in the condition call will be returned as `<input_dataname>[, <varname>]`}
     #' }
+    #'
     initialize = function(x,
                           x_filtered,
                           varname,
@@ -53,21 +62,22 @@ EmptyFilterState <- R6::R6Class( # nolint
     },
 
     #' @description
-    #' Answers the question of whether the current settings and values selected actually filters out any values.
-    #' @return logical scalar
+    #' Reports whether the current state filters out any values.(?)
+    #'
+    #' @return `logical(1)`
+    #'
     is_any_filtered = function() {
-      if (isTRUE(self$get_keep_na())) {
-        FALSE
-      } else {
-        TRUE
-      }
+      !isTRUE(self$get_keep_na())
     },
 
     #' @description
     #' Returns reproducible condition call for current selection relevant
     #' for selected variable type.
-    #' Method is using internal reactive values which makes it reactive
-    #' and must be executed in reactive or isolated context.
+    #' Uses internal reactive values, hence must be called
+    #' in reactive or isolated context.
+    #'
+    #' @return `logical(1)`
+    #'
     get_call = function() {
       filter_call <- if (isTRUE(self$get_keep_na())) {
         call("is.na", private$get_varname_prefixed())
@@ -81,6 +91,7 @@ EmptyFilterState <- R6::R6Class( # nolint
     #'
     #' @return `list` containing values taken from the reactive fields:
     #' * `keep_na` (`logical(1)`) whether `NA` should be kept.
+    #'
     get_state = function() {
       list(
         keep_na = self$get_keep_na()
@@ -88,12 +99,15 @@ EmptyFilterState <- R6::R6Class( # nolint
     },
 
     #' @description
-    #' Set state
+    #' Set state.
+    #'
     #' @param state (`list`)\cr
-    #'  contains fields relevant for a specific class
+    #'  contains fields relevant for specific class:
     #' \itemize{
     #' \item{`keep_na` (`logical`)}{ defines whether to keep or remove `NA` values}
     #' }
+    #'
+    #' @return NULL invisibly
     set_state = function(state) {
       if (!is.null(state$selected)) {
         stop(
@@ -112,14 +126,15 @@ EmptyFilterState <- R6::R6Class( # nolint
     }
   ),
 
+  # private members ----
   private = list(
-
-    #' @description
-    #' UI Module for `EmptyFilterState`.
-    #' This UI element contains checkbox input to
-    #' filter or keep missing values.
-    #' @param id (`character(1)`)\cr
-    #'  id of shiny element
+    # @description
+    # UI Module for `EmptyFilterState`.
+    # This UI element contains a checkbox input to filter or keep missing values.
+    #
+    # @param id (`character(1)`)\cr
+    #   shiny element (module instance) id
+    #
     ui_inputs = function(id) {
       ns <- NS(id)
       fluidRow(
@@ -128,15 +143,19 @@ EmptyFilterState <- R6::R6Class( # nolint
           div(
             span("Variable contains missing values only"),
             private$keep_na_ui(ns("keep_na"))
-          )
+         )
         )
       )
     },
-    #' @description
-    #' Controls selection of `keep_na` checkbox input
-    #' @param id (`character(1)`)\cr
-    #'   an ID string that corresponds with the ID used to call the module's UI function.
-    #' return `moduleServer` function which returns `NULL`
+
+    # @description
+    # Controls state of the `keep_na` checkbox input.
+    #
+    # @param id (`character(1)`)\cr
+    #   shiny module instance id
+    #
+    # @return `moduleServer` function which returns `NULL`
+    #
     server_inputs = function(id) {
       moduleServer(
         id = id,

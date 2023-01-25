@@ -214,11 +214,11 @@ FilteredDataset <- R6::R6Class( # nolint
     #' @description
     #' Removes all active filter items applied to this dataset
     #' @return NULL
-    queues_empty = function() {
+    state_lists_empty = function() {
       logger::log_trace("Removing all filters from FilteredDataset: { deparse1(self$get_dataname()) }")
       lapply(
         self$get_filter_states(),
-        function(queue) queue$queue_empty()
+        function(state_list) state_list$state_list_empty()
       )
       logger::log_trace("Removed all filters from FilteredDataset: { deparse1(self$get_dataname()) }")
       NULL
@@ -486,7 +486,7 @@ FilteredDataset <- R6::R6Class( # nolint
             logger::log_trace("FilteredDataset$server@1 removing filters, dataname: { deparse1(dataname) }")
             lapply(
               self$get_filter_states(),
-              function(x) x$queue_empty()
+              function(x) x$state_list_empty()
             )
             logger::log_trace("FilteredDataset$server@1 removed filters, dataname: { deparse1(dataname) }")
           })

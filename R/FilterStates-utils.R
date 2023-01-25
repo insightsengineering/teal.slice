@@ -53,7 +53,7 @@
 #'     output$expr <- renderText({
 #'       deparse1(rf$get_call(), collapse = "\n")
 #'     })
-#'     observeEvent(input$clear, rf$queue_empty())
+#'     observeEvent(input$clear, rf$state_list_empty())
 #'   }
 #' )
 #' }

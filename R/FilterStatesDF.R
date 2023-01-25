@@ -1,100 +1,104 @@
 #' @title `DFFFilterStates`
+#'
 #' @description Specialization of `FilterStates` for a base `data.frame`.
 #'
 #' @keywords internal
+#'
 DFFilterStates <- R6::R6Class( # nolint
   classname = "DFFilterStates",
   inherit = FilterStates,
   public = list(
-    #' @description Initializes `DFFilterStates` object
+    #' @description Initializes `DFFilterStates` object.
     #'
     #' Initializes `DFFilterStates` object by setting `input_dataname`,
-    #' `output_dataname` and initializing `ReactiveQueue`. This class contains a
-    #' single `ReactiveQueue` with no specified name which means that
-    #' when calling the function associated to this class (`dplyr::filter`), a list of
-    #' conditions are passed to unnamed arguments (`...`).
+    #' `output_dataname` and initializing `state_list` (`shiny::reactiveVal`).
+    #' This class contains a single `state_list` with no specified name,
+    #' which means that when calling the subset function associated with this class
+    #' (`dplyr::filter`), a list of conditions is passed to unnamed arguments (`...`).
     #'
     #' @param input_dataname (`character(1)` or `name` or `call`)\cr
-    #'   name of the data used on lhs of the expression
-    #'   specified to the function argument attached to this `FilterStates`.
-    #'
+    #'   name of the data used on `rhs` of the \emph{subset expression}
+    #'   specified to the function argument attached to this `FilterStates`
     #' @param output_dataname (`character(1)` or `name` or `call`)\cr
-    #'   name of the output data on the lhs of the assignment expression.
-    #'
+    #'   name of the output data on the `lhs` of the \emph{subset expression}
     #' @param datalabel (`character(0)` or `character(1)`)\cr
-    #'   text label value.
-    #'
+    #'   text label value
     #' @param varlabels (`character`)\cr
     #'   labels of the variables used in this object
-    #'
     #' @param keys (`character`)\cr
     #'   key columns names
-    initialize = function(data, data_filtered, input_dataname, output_dataname, datalabel, varlabels, keys) {
-      super$initialize(data, data_filtered, input_dataname, output_dataname, datalabel)
+    #'
+    initialize = function(input_dataname, output_dataname, datalabel, varlabels, keys) {
+      super$initialize(input_dataname, output_dataname, datalabel)
       private$varlabels <- varlabels
       private$keys <- keys
 
-      self$queue_initialize(
+      self$state_list_initialize(
         list(
-          ReactiveQueue$new()
+          shiny::reactiveVal()
         )
       )
     },
 
     #' @description
-    #' Returns the formatted string representing this `FilterStates` object.
+    #' Returns a formatted string representing this `FilterStates` object.
     #'
-    #' @param indent (`numeric(1)`) the number of spaces before each line of the representation
+    #' @param indent (`numeric(1)`) the number of spaces prepended to each line of the output
+    #'
     #' @return `character(1)` the formatted string
+    #'
     format = function(indent = 0) {
       checkmate::assert_number(indent, finite = TRUE, lower = 0)
 
       formatted_states <- vapply(
-        self$queue_get(1L), function(state) state$format(indent = indent),
+        self$state_list_get(1L), function(state) state$format(indent = indent),
         USE.NAMES = FALSE, FUN.VALUE = character(1)
       )
       paste(formatted_states, collapse = "\n")
     },
 
     #' @description
-    #' Get function name
+    #' Gets the name of the function used to filter the data in this `FilterStates`.
     #'
-    #' Get function name used to create filter call.
-    #' For `DFFilterStates` `dplyr::filter` is used
+    #' Get name of  function used to create the \emph{subset expression}.
+    #' For `DFFilterStates` this is `dplyr::filter`.
+    #'
     #' @return `character(1)`
     get_fun = function() {
       return("dplyr::filter")
     },
 
     #' @description
-    #' Server module
+    #' Shiny server module.
     #'
     #' @param id (`character(1)`)\cr
-    #'   an ID string that corresponds with the ID used to call the module's UI function.
+    #'   shiny module instance id
+    #'
     #' @return `moduleServer` function which returns `NULL`
+    #'
     server = function(id) {
       moduleServer(
         id = id,
         function(input, output, session) {
-          previous_state <- reactiveVal(isolate(self$queue_get(1L)))
+          previous_state <- reactiveVal(isolate(self$state_list_get(1L)))
           added_state_name <- reactiveVal(character(0))
           removed_state_name <- reactiveVal(character(0))
 
-          observeEvent(self$queue_get(1L), {
-            added_state_name(setdiff(names(self$queue_get(1L)), names(previous_state())))
-            removed_state_name(setdiff(names(previous_state()), names(self$queue_get(1L))))
-            previous_state(self$queue_get(1L))
+          observeEvent(self$state_list_get(1L), {
+            added_state_name(setdiff(names(self$state_list_get(1L)), names(previous_state())))
+            removed_state_name(setdiff(names(previous_state()), names(self$state_list_get(1L))))
+            previous_state(self$state_list_get(1L))
           })
 
           observeEvent(added_state_name(), ignoreNULL = TRUE, {
-            fstates <- self$queue_get(1L)
+            fstates <- self$state_list_get(1L)
             html_ids <- private$map_vars_to_html_ids(names(fstates))
             for (fname in added_state_name()) {
               private$insert_filter_state_ui(
                 id = html_ids[fname],
                 filter_state = fstates[[fname]],
-                queue_index = 1L,
-                element_id = fname
+                state_list_index = 1L,
+                state_id = fname
               )
             }
             added_state_name(character(0))
@@ -114,20 +118,26 @@ DFFilterStates <- R6::R6Class( # nolint
     #' @description
     #' Gets the reactive values from the active `FilterState` objects.
     #'
-    #' Get active filter state from the `FilterState` objects kept in `ReactiveQueue`.
+    #' Get active filter state from the `FilterState` objects kept in `state_list`.
     #' The output list is a compatible input to `self$set_filter_state`.
-    #' @return `list` with named elements corresponding to `FilterState` in the `ReactiveQueue`.
+    #'
+    #' @return `list` with named elements corresponding to `FilterState` in the `state_list`.
+    #'
     get_filter_state = function() {
-      lapply(self$queue_get(1L), function(x) x$get_state())
+      lapply(self$state_list_get(1L), function(x) x$get_state())
     },
 
     #' @description
-    #' Set filter state
+    #' Set filter state.
     #'
+    #' @param data (`data.frame`)\cr
+    #'   data which are supposed to be filtered.
     #' @param state (`named list`)\cr
     #'   should contain values which are initial selection in the `FilterState`.
     #'   Names of the `list` element should correspond to the name of the
     #'   column in `data`.
+    #' @param vars_include (`character(n)`)\cr
+    #'  optional, vector of column names to be included.
     #' @param ... ignored.
     #' @examples
     #' dffs <- teal.slice:::DFFilterStates$new(
@@ -141,16 +151,12 @@ DFFilterStates <- R6::R6Class( # nolint
     #'   Sepal.Length = list(selected = c(5.1, 6.4), keep_na = TRUE, keep_inf = TRUE),
     #'   Species = list(selected = c("setosa", "versicolor"), keep_na = FALSE)
     #' )
-    #' dffs$set_filter_state(state = fs, data = iris)
+    #' shiny::isolate(dffs$set_filter_state(state = fs, data = iris))
     #' shiny::isolate(dffs$get_filter_state())
     #'
     #' @return `NULL`
-    set_filter_state = function(state, ...) {
-      logger::log_trace(
-        "{ class(self)[1] }$set_filter_state initializing, dataname: { deparse1(private$input_dataname) }"
-      )
-      data <- private$data
-      data_filtered <- private$data_filtered
+    set_filter_state = function(data, filtered_dataset, state, vars_include = get_supported_filter_varnames(data = data), ...) {
+      checkmate::assert_data_frame(data)
       checkmate::assert(
         checkmate::check_subset(names(state), names(data)),
         checkmate::check_class(state, "default_filter"),
@@ -158,7 +164,7 @@ DFFilterStates <- R6::R6Class( # nolint
       )
       vars_include <- get_supported_filter_varnames(data = data)
 
-      filter_states <- self$queue_get(1L)
+      filter_states <- self$state_list_get(1L)
       state_names <- names(state)
       excluded_vars <- setdiff(state_names, vars_include)
       if (length(excluded_vars) > 0) {
@@ -194,7 +200,7 @@ DFFilterStates <- R6::R6Class( # nolint
             input_dataname = private$input_dataname
           )
           fstate$set_state(value)
-          self$queue_push(x = fstate, queue_index = 1L, element_id = varname)
+          self$state_list_push(x = fstate, state_list_index = 1L, state_id = varname)
         }
       })
       logger::log_trace(
@@ -203,41 +209,41 @@ DFFilterStates <- R6::R6Class( # nolint
       NULL
     },
 
-    #' @description Remove a `FilterState` from the `ReactiveQueue`.
+    #' @description Remove a `FilterState` from the `state_list`.
     #'
-    #' @param element_id (`character(1)`)\cr name of `ReactiveQueue` element.
+    #' @param state_id (`character(1)`)\cr name of `state_list` element
     #'
     #' @return `NULL`
     #'
-    remove_filter_state = function(element_id) {
+    remove_filter_state = function(state_id) {
       logger::log_trace(
         sprintf(
           "%s$remove_filter_state for variable %s called, dataname: %s",
           class(self)[1],
-          element_id,
+          state_id,
           deparse1(private$input_dataname)
         )
       )
 
-      if (!element_id %in% names(self$queue_get(1L))) {
+      if (!state_id %in% names(self$state_list_get(1L))) {
         warning(paste(
-          "Variable:", element_id,
+          "Variable:", state_id,
           "is not present in the actual active filters of dataset: { deparse1(private$input_dataname) }",
           "therefore no changes are applied."
         ))
         logger::log_warn(
           paste(
-            "Variable:", element_id, "is not present in the actual active filters of dataset:",
+            "Variable:", state_id, "is not present in the actual active filters of dataset:",
             "{ deparse1(private$input_dataname) } therefore no changes are applied."
           )
         )
       } else {
-        self$queue_remove(queue_index = 1L, element_id = element_id)
+        self$state_list_remove(state_list_index = 1L, state_id = state_id)
         logger::log_trace(
           sprintf(
             "%s$remove_filter_state for variable %s done, dataname: %s",
             class(self)[1],
-            element_id,
+            state_id,
             deparse1(private$input_dataname)
           )
         )
@@ -245,11 +251,14 @@ DFFilterStates <- R6::R6Class( # nolint
     },
 
     #' @description
-    #' Shiny UI module to add filter variable
+    #' Shiny UI module to add filter variable.
+    #'
     #' @param id (`character(1)`)\cr
     #'  id of shiny module
+    #' @param data (`data.frame`)\cr
+    #'  object which columns are used to choose filter variables.
     #' @return shiny.tag
-    ui_add_filter_state = function(id) {
+    ui_add_filter_state = function(id, data) {
       checkmate::assert_string(id)
       data <- private$data
 
@@ -274,17 +283,21 @@ DFFilterStates <- R6::R6Class( # nolint
     },
 
     #' @description
-    #' Shiny server module to add filter variable
+    #' Shiny server module to add filter variable.
     #'
-    #' Module controls available choices to select as a filter variable.
-    #' Selected filter variable is being removed from available choices.
-    #' Removed filter variable gets back to available choices.
+    #' This module controls available choices to select as a filter variable.
+    #' Once selected, a variable is removed from available choices.
+    #' Removing a filter variable adds it back to available choices.
     #'
     #' @param id (`character(1)`)\cr
     #'   an ID string that corresponds with the ID used to call the module's UI function.
+    #' @param data (`data.frame`)\cr
+    #'  object which columns are used to choose filter variables.
+    #' @param filtered_dataset TODO (also what happens if not given...)
     #' @param vars_include (`character(n)`)\cr
-    #'  optional, vector of column names to be included.
+    #'  optional, vector of column names to be included
     #' @param ... ignored
+    #'
     #' @return `moduleServer` function which returns `NULL`
     srv_add_filter_state = function(id,...) {
       data <- private$data
@@ -300,7 +313,7 @@ DFFilterStates <- R6::R6Class( # nolint
           )
           active_filter_vars <- reactive({
             vapply(
-              X = self$queue_get(queue_index = 1L),
+              X = self$state_list_get(state_list_index = 1L),
               FUN.VALUE = character(1),
               FUN = function(x) x$get_varname(deparse = TRUE)
             )
@@ -352,13 +365,22 @@ DFFilterStates <- R6::R6Class( # nolint
                   deparse1(private$input_dataname)
                 )
               )
+              varname <- input$var_to_add
+              fstate <- init_filter_state(
+                x = data[[varname]],
+                x_filtered = reactive(filtered_dataset()[[varname]]),
+                varname = as.name(varname),
+                varlabel = private$get_varlabels(varname),
+                input_dataname = private$input_dataname
+              )
+              self$state_list_push(x = fstate, state_list_index = 1L, state_id = varname)
 
               var_name <- input$var_to_add
 
               self$queue_push(
                 x = init_filter_state(
                   x = data[[var_name]],
-                  x_filtered = reactive(data_filtered()[[var_name]]),
+                  x_filtered = reactive(filtered_dataset()[[var_name]]),
                   varname = as.name(var_name),
                   varlabel = private$get_varlabels(var_name),
                   input_dataname = private$input_dataname
@@ -369,7 +391,7 @@ DFFilterStates <- R6::R6Class( # nolint
               logger::log_trace(
                 sprintf(
                   "DFFilterStates$srv_add_filter_state@2 added FilterState of variable %s, dataname: %s",
-                  input$var_to_add,
+                  varname,
                   deparse1(private$input_dataname)
                 )
               )
@@ -387,12 +409,13 @@ DFFilterStates <- R6::R6Class( # nolint
   private = list(
     varlabels = character(0),
     keys = character(0),
-    #' description
-    #' Get label of specific variable. In case when variable label is missing
-    #' name of the variable is returned.
-    #' parameter variable (`character`)\cr
-    #'  name of the variable for which label should be returned
-    #' return `character`
+    # @description
+    # Get label of specific variable. If variable label is missing, variable name is returned.
+    #
+    # @para variable (`character`)\cr
+    #   name of variable for which label should be returned
+    #
+    # @return `character`
     get_varlabels = function(variables = character(0)) {
       checkmate::assert_character(variables)
       if (identical(variables, character(0))) {

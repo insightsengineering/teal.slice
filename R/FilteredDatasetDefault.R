@@ -4,10 +4,12 @@
 #' @examples
 #' library(shiny)
 #' ds <- teal.slice:::DefaultFilteredDataset$new(iris, "iris")
-#' ds$set_filter_state(
-#'   state = list(
-#'     Species = list(selected = "virginica"),
-#'     Petal.Length = list(selected = c(2.0, 5))
+#' isolate(
+#'   ds$set_filter_state(
+#'     state = list(
+#'       Species = list(selected = "virginica"),
+#'       Petal.Length = list(selected = c(2.0, 5))
+#'     )
 #'   )
 #' )
 #' isolate(ds$get_filter_state())
@@ -91,7 +93,7 @@ DefaultFilteredDataset <- R6::R6Class( # nolint
     #' within each of `filter_states`. Configuration of the calls is constant and
     #' depends on `filter_states` type and order which are set during initialization.
     #' This class contains single `FilterStates`
-    #' which contains single `ReactiveQueue` and all `FilterState` objects
+    #' which contains single `state_list` and all `FilterState` objects
     #' applies to one argument (`...`) in `dplyr::filter` call.
     #' @return filter `call` or `list` of filter calls
     get_call = function() {
@@ -157,7 +159,7 @@ DefaultFilteredDataset <- R6::R6Class( # nolint
     #'   Sepal.Length = list(selected = c(5.1, 6.4), keep_na = TRUE, keep_inf = TRUE),
     #'   Species = list(selected = c("setosa", "versicolor"), keep_na = FALSE)
     #' )
-    #' dataset$set_filter_state(state = fs)
+    #' shiny::isolate(dataset$set_filter_state(state = fs))
     #' shiny::isolate(dataset$get_filter_state())
     #'
     #' @return `NULL`
@@ -184,27 +186,27 @@ DefaultFilteredDataset <- R6::R6Class( # nolint
 
     #' @description Remove one or more `FilterState` of a `FilteredDataset`
     #'
-    #' @param element_id (`character`)\cr
+    #' @param state_id (`character`)\cr
     #'  Vector of character names of variables to remove their `FilterState`.
     #'
     #' @return `NULL`
-    remove_filter_state = function(element_id) {
+    remove_filter_state = function(state_id) {
       logger::log_trace(
         sprintf(
           "DefaultFilteredDataset$remove_filter_state removing filters of variable %s, dataname: %s",
-          element_id,
+          state_id,
           self$get_dataname()
         )
       )
 
       fdata_filter_state <- self$get_filter_states()[[1]]
-      for (element in element_id) {
+      for (element in state_id) {
         fdata_filter_state$remove_filter_state(element)
       }
       logger::log_trace(
         sprintf(
           "DefaultFilteredDataset$remove_filter_state done removing filters of variable %s, dataname: %s",
-          element_id,
+          state_id,
           self$get_dataname()
         )
       )

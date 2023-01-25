@@ -4,22 +4,25 @@
 MAEFilteredDataset <- R6::R6Class( # nolint
   classname = "MAEFilteredDataset",
   inherit = FilteredDataset,
+
+  # public methods ----
   public = list(
 
     #' @description
     #' Initialize `MAEFilteredDataset` object
     #'
     #' @param dataset (`MulitiAssayExperiment`)\cr
-    #'  single `MultiAssayExperiment` for which filters are rendered
+    #'  a single `MultiAssayExperiment` for which to define a subset
     #' @param dataname (`character`)\cr
-    #'  A given name for the dataset it may not contain spaces
+    #'  a given name for the dataset it may not contain spaces
     #' @param keys optional, (`character`)\cr
-    #'   Vector with primary keys
+    #'   vector with primary keys
     #' @param label (`character`)\cr
-    #'   Label to describe the dataset
+    #'   label to describe the dataset
     #' @param metadata (named `list` or `NULL`) \cr
-    #'   Field containing metadata about the dataset. Each element of the list
-    #'   should be atomic and length one.
+    #'   field containing metadata about the dataset;
+    #'   each element of the list must be atomic and length one
+    #'
     initialize = function(dataset, dataname, keys = character(0), label = character(0), metadata = NULL) {
       if (!requireNamespace("MultiAssayExperiment", quietly = TRUE)) {
         stop("Cannot load MultiAssayExperiment - please install the package or restart your session.")
@@ -173,7 +176,7 @@ MAEFilteredDataset <- R6::R6Class( # nolint
     #'     subset = list(ARRAY_TYPE = list(selected = "", keep_na = TRUE))
     #'   )
     #' )
-    #' dataset$set_filter_state(state = fs)
+    #' shiny::isolate(dataset$set_filter_state(state = fs))
     #' shiny::isolate(dataset$get_filter_state())
     #' @return `NULL`
     set_filter_state = function(state, ...) {
@@ -204,33 +207,33 @@ MAEFilteredDataset <- R6::R6Class( # nolint
 
     #' @description Remove one or more `FilterState` of a `MAEFilteredDataset`
     #'
-    #' @param element_id (`list`)\cr
+    #' @param state_id (`list`)\cr
     #'  Named list of variables to remove their `FilterState`.
     #'
     #' @return `NULL`
     #'
-    remove_filter_state = function(element_id) {
-      checkmate::assert_list(element_id, names = "unique")
-      checkmate::assert_subset(names(element_id), c(names(self$get_filter_states())))
+    remove_filter_state = function(state_id) {
+      checkmate::assert_list(state_id, names = "unique")
+      checkmate::assert_subset(names(state_id), c(names(self$get_filter_states())))
 
       logger::log_trace(
         sprintf(
           "MAEFilteredDataset$remove_filter_state removing filters of variable %s, dataname: %s",
-          element_id,
+          state_id,
           self$get_dataname()
         )
       )
 
-      for (fs_name in names(element_id)) {
+      for (fs_name in names(state_id)) {
         fdata_filter_state <- self$get_filter_states()[[fs_name]]
         fdata_filter_state$remove_filter_state(
-          `if`(fs_name == "subjects", element_id[[fs_name]][[1]], element_id[[fs_name]])
+          `if`(fs_name == "subjects", state_id[[fs_name]][[1]], state_id[[fs_name]])
         )
       }
       logger::log_trace(
         sprintf(
           "MAEFilteredDataset$remove_filter_state done removing filters of variable %s, dataname: %s",
-          element_id,
+          state_id,
           self$get_dataname()
         )
       )
@@ -349,6 +352,8 @@ MAEFilteredDataset <- R6::R6Class( # nolint
       )
     }
   ),
+
+  # private members ----
   private = list(
 
     # Gets filter overview observations number and returns a

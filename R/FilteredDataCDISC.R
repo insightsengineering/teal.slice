@@ -49,7 +49,7 @@
 #' })
 #'
 #'
-#' datasets$set_filter_state(list(ADTTE = list(PARAMCD = "OS")))
+#' isolate(datasets$set_filter_state(list(ADTTE = list(PARAMCD = "OS"))))
 #' isolate(datasets$get_filter_state())
 CDISCFilteredData <- R6::R6Class( # nolint
   "CDISCFilteredData",

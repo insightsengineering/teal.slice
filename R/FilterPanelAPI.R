@@ -21,7 +21,12 @@
 #' isolate(fpa$get_filter_state())
 #'
 #' # set a filter state
-#' set_filter_state(fpa, list(iris = list(Species = list(selected = "setosa", keep_na = TRUE))))
+#' isolate(
+#'   set_filter_state(
+#'     fpa,
+#'     list(iris = list(Species = list(selected = "setosa", keep_na = TRUE)))
+#'   )
+#' )
 #'
 #' # get the actual filter state --> named list with filters
 #' isolate(fpa$get_filter_state())
@@ -86,10 +91,13 @@ FilterPanelAPI <- R6::R6Class( # nolint
     },
 
     #' @description Remove all `FilterStates` of the `FilteredData` object.
+    #'
     #' @param datanames (`character`)\cr
-    #'  datanames to remove their `FilterStates` or empty which removes all `FilterStates` in the `FilteredData` object.
+    #'  datanames to remove their `FilterStates`;
+    #'  omit to remove all `FilterStates` in the `FilteredData` object
     #'
     #' @return `NULL`
+    #'
     remove_all_filter_states = function(datanames) {
       if (private$filtered_data$get_filter_panel_active()) {
         datanames_to_remove <- if (missing(datanames)) private$filtered_data$datanames() else datanames
