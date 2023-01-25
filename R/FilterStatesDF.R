@@ -7,6 +7,8 @@
 DFFilterStates <- R6::R6Class( # nolint
   classname = "DFFilterStates",
   inherit = FilterStates,
+
+  # public methods ----
   public = list(
     #' @description Initializes `DFFilterStates` object.
     #'
@@ -256,6 +258,8 @@ DFFilterStates <- R6::R6Class( # nolint
       }
     },
 
+    # shiny modules ----
+
     #' @description
     #' Shiny UI module to add filter variable.
     #'
@@ -399,6 +403,8 @@ DFFilterStates <- R6::R6Class( # nolint
       )
     }
   ),
+
+  # private membres ----
   private = list(
     varlabels = character(0),
     keys = character(0),

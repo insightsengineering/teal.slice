@@ -4,6 +4,8 @@
 SEFilterStates <- R6::R6Class( # nolint
   classname = "SEFilterStates",
   inherit = FilterStates,
+
+  # public methods ----
   public = list(
     #' @description Initialize `SEFilterStates` object
     #'
@@ -327,6 +329,8 @@ SEFilterStates <- R6::R6Class( # nolint
         }
       }
     },
+
+    # shiny modules ----
 
     #' @description
     #' Shiny UI module to add filter variable

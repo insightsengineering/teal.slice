@@ -5,7 +5,7 @@ MatrixFilterStates <- R6::R6Class( # nolint
   classname = "MatrixFilterStates",
   inherit = FilterStates,
 
-  # public members ----
+  # public methods ----
   public = list(
     #' @description Initialize `MatrixFilterStates` object
     #'
@@ -201,6 +201,8 @@ MatrixFilterStates <- R6::R6Class( # nolint
         )
       }
     },
+
+    # shiny modules ----
 
     #' @description
     #' Shiny UI module to add filter variable.
