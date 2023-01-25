@@ -128,8 +128,6 @@ DFFilterStates <- R6::R6Class( # nolint
     #'   should contain values which are initial selection in the `FilterState`.
     #'   Names of the `list` element should correspond to the name of the
     #'   column in `data`.
-    #' @param vars_include (`character(n)`)\cr
-    #'  optional, vector of column names to be included.
     #' @param ... ignored.
     #' @examples
     #' dffs <- teal.slice:::DFFilterStates$new(

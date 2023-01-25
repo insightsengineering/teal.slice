@@ -89,22 +89,6 @@ CDISCFilteredData <- R6::R6Class( # nolint
     },
 
     #' @description
-    #' Gets variable names of a given dataname for the filtering. This excludes parent dataset variable names.
-    #'
-    #' @param dataname (`character(1)`) name of the dataset
-    #' @return (`character` vector) of variable names
-    get_filterable_varnames = function(dataname) {
-      varnames <- self$get_filtered_dataset(dataname)$get_filterable_varnames()
-      parent_dataname <- self$get_parentname(dataname)
-      parent_varnames <- if (length(parent_dataname) > 0) {
-        # cannot call get_filterable_varnames on the parent filtered_dataset in case
-        # some of its variables are set to be non-filterable
-        get_supported_filter_varnames(self$get_filtered_dataset(parent_dataname))
-      }
-      setdiff(varnames, parent_varnames)
-    },
-
-    #' @description
     #' Get filter overview table in form of X (filtered) / Y (non-filtered)
     #'
     #' This is intended to be presented in the application.

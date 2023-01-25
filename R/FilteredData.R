@@ -131,28 +131,6 @@ FilteredData <- R6::R6Class( # nolint
       dataname
     },
 
-    #' @description
-    #' Gets variable names of a given dataname for the filtering.
-    #'
-    #' @param dataname (`character(1)`) name of the dataset
-    #' @return (`character` vector) of variable names
-    get_filterable_varnames = function(dataname) {
-      self$get_filtered_dataset(dataname)$get_filterable_varnames()
-    },
-
-    #' @description
-    #' Set the variable names of a given dataset for the filtering
-    #' @param dataname (`character(1)`) name of the dataset
-    #' @param varnames (`character` or `NULL`) The variables which
-    #' users can choose to filter the data
-    #' See `self$get_filterable_varnames` for more details
-    #' @return invisibly this `FilteredData` object
-    set_filterable_varnames = function(dataname, varnames) {
-      private$check_data_varname_exists(dataname)
-      self$get_filtered_dataset(dataname)$set_filterable_varnames(varnames)
-      invisible(self)
-    },
-
     # datasets methods ----
     #' @description
     #' Gets a `call` to filter the dataset according to the filter state
@@ -504,10 +482,7 @@ FilteredData <- R6::R6Class( # nolint
       lapply(names(state), function(dataname) {
         fdataset <- self$get_filtered_dataset(dataname = dataname)
         dataset_state <- state[[dataname]]
-        fdataset$set_filter_state(
-          state = dataset_state,
-          vars_include = self$get_filterable_varnames(dataname)
-        )
+        fdataset$set_filter_state(state = dataset_state)
       })
       logger::log_trace("FilteredData$set_filter_state initialized, dataname: { paste(names(state), collapse = ' ') }")
 
@@ -829,10 +804,7 @@ FilteredData <- R6::R6Class( # nolint
             isol_datanames,
             function(dataname) {
               fdataset <- self$get_filtered_dataset(dataname)
-              fdataset$srv_add_filter_state(
-                id = private$get_ui_add_filter_id(dataname),
-                vars_include = self$get_filterable_varnames(dataname)
-              )
+              fdataset$srv_add_filter_state(id = private$get_ui_add_filter_id(dataname))
             }
           )
 
