@@ -115,7 +115,9 @@ testthat::test_that(
     )
 
     obj <- get_test_data()
-    testthat::expect_null(isolate(filter_states$set_filter_state(data = obj, state = list(subset = NULL, select = NULL))))
+    testthat::expect_null(isolate(
+      filter_states$set_filter_state(data = obj, state = list(subset = NULL, select = NULL))
+    ))
   }
 )
 
@@ -422,7 +424,7 @@ testthat::test_that("$format() is a method of SEFilterStates", {
       datalabel = character(0)
     )$format(),
     NA
-  ))
+    ))
 })
 
 testthat::test_that("$format() asserts the indent argument is a number", {
@@ -436,31 +438,33 @@ testthat::test_that("$format() asserts the indent argument is a number", {
   )
 })
 
-testthat::test_that("$format() concatenates its FilterState elements using \\n and indents the FilterState strings", {
-  test <- get_test_data()
-  sefs <- SEFilterStates$new(
-    input_dataname = "test",
-    output_dataname = "test_filtered",
-    datalabel = "Label"
-  )
-
-  fs <- list(
-    select = list(Treatment = "ChIP"),
-    subset = list(feature_id = c("ID001", "ID002"))
-  )
-  isolate(sefs$set_filter_state(state = fs, data = test))
-
-  treatment_filter <- isolate(sefs$state_list_get("select")[[1]])
-  feature_filter <- isolate(sefs$state_list_get("subset")[[1]])
-  shiny::isolate(testthat::expect_equal(
-    sefs$format(),
-    paste(
-      "Assay Label filters:",
-      "  Subsetting:",
-      feature_filter$format(indent = 4),
-      "  Selecting:",
-      treatment_filter$format(indent = 4),
-      sep = "\n"
+testthat::test_that(
+  "$format() concatenates its FilterState elements using \\n and indents the FilterState strings",
+  code = {
+    test <- get_test_data()
+    sefs <- SEFilterStates$new(
+      input_dataname = "test",
+      output_dataname = "test_filtered",
+      datalabel = "Label"
     )
-  ))
-})
+
+    fs <- list(
+      select = list(Treatment = "ChIP"),
+      subset = list(feature_id = c("ID001", "ID002"))
+    )
+    isolate(sefs$set_filter_state(state = fs, data = test))
+
+    treatment_filter <- isolate(sefs$state_list_get("select")[[1]])
+    feature_filter <- isolate(sefs$state_list_get("subset")[[1]])
+    shiny::isolate(testthat::expect_equal(
+      sefs$format(),
+      paste(
+        "Assay Label filters:",
+        "  Subsetting:",
+        feature_filter$format(indent = 4),
+        "  Selecting:",
+        treatment_filter$format(indent = 4),
+        sep = "\n"
+      )
+    ))
+  })
