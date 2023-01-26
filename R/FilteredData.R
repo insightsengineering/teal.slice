@@ -228,24 +228,8 @@ FilteredData <- R6::R6Class( # nolint
     get_data = function(dataname, filtered = TRUE) {
       private$check_data_varname_exists(dataname)
       checkmate::assert_flag(filtered)
-      if (filtered) {
-        # This try is specific for MAEFilteredDataset due to a bug in
-        # S4Vectors causing errors when using the subset function on MAE objects.
-        # The fix was introduced in S4Vectors 0.30.1, but is unavailable for R versions < 4.1
-        # Link to the issue: https://github.com/insightsengineering/teal/issues/210
-        tryCatch(
-          private$reactive_data[[dataname]](),
-          error = function(error) {
-            shiny::validate(paste(
-              "Filtering expression returned error(s). Please change filters.\nThe error message was:",
-              error$message,
-              sep = "\n"
-            ))
-          }
-        )
-      } else {
-        self$get_filtered_dataset(dataname)$get_dataset()
-      }
+      data <- self$get_filtered_dataset(dataname)$get_dataset(filtered)
+      if (filtered) data() else data
     },
 
     #' @description
