@@ -22,11 +22,6 @@ MatrixFilterStates <- R6::R6Class( # nolint
     #'   text label value.
     initialize = function(input_dataname, output_dataname, datalabel) {
       super$initialize(input_dataname, output_dataname, datalabel)
-      # self$state_list_initialize(
-      #   list(
-      #     subset = reactiveVal()
-      #   )
-      # )
       private$state_list <- list(
         subset = reactiveVal()
       )
