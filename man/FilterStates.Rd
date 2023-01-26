@@ -55,7 +55,6 @@ isolate(filter_states$get_call())
 \item \href{#method-FilterStates-get_call}{\code{FilterStates$get_call()}}
 \item \href{#method-FilterStates-print}{\code{FilterStates$print()}}
 \item \href{#method-FilterStates-get_fun}{\code{FilterStates$get_fun()}}
-\item \href{#method-FilterStates-state_list_initialize}{\code{FilterStates$state_list_initialize()}}
 \item \href{#method-FilterStates-state_list_get}{\code{FilterStates$state_list_get()}}
 \item \href{#method-FilterStates-state_list_push}{\code{FilterStates$state_list_push()}}
 \item \href{#method-FilterStates-state_list_remove}{\code{FilterStates$state_list_remove()}}
@@ -186,23 +185,17 @@ Defaults to "subset" but can be overridden by child class method.
 
 \subsection{Returns}{
 \code{character(1)} the name of the function
-}
-}
-\if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-FilterStates-state_list_initialize"></a>}}
-\if{latex}{\out{\hypertarget{method-FilterStates-state_list_initialize}{}}}
-\subsection{Method \code{state_list_initialize()}}{
-Populates the private \code{state_list} field to store active filter states.
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{FilterStates$state_list_initialize(x)}\if{html}{\out{</div>}}
-}
 
-\subsection{Arguments}{
-\if{html}{\out{<div class="arguments">}}
-\describe{
-\item{\code{x}}{(\code{list} of \code{reactiveVal} objects)\cr}
-}
-\if{html}{\out{</div>}}
+#' @description
+#' Populates the private \code{state_list} field to store active filter states.
+#'
+#' @param x (\code{list} of \code{reactiveVal} objects)\cr
+#'
+state_list_initialize = function(x) {
+checkmate::assert_list(x, min.len = 1)
+private$state_list <- x
+invisible(NULL)
+},
 }
 }
 \if{html}{\out{<hr>}}
