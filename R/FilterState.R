@@ -418,7 +418,7 @@ FilterState <- R6::R6Class( # nolint
               inf_tag <- tagList(
                 tags$strong("Inf "),
                 tags$span(
-                  class = if (self$get_keep_inf()) "fa facheck" else "fa fa-xmark"
+                  class = if (self$get_keep_inf()) "fa fa-check" else "fa fa-xmark"
                 )
               )
             }
