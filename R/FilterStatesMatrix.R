@@ -306,18 +306,7 @@ MatrixFilterStates <- R6::R6Class( # nolint
                 )
               )
               varname <- input$var_to_add
-              self$state_list_push(
-                x = init_filter_state(
-                  x = subset(data, select = varname),
-                  x_filtered = reactive(subset(data_filtered(), select = varname)),
-                  varname = as.name(varname),
-                  varlabel = private$get_varlabel(varname),
-                  input_dataname = private$input_dataname,
-                  extract_type = "matrix"
-                ),
-                state_list_index = "subset",
-                state_id = input$var_to_add
-              )
+              self$set_filter_state(setNames(list(list()), varname))
               logger::log_trace(
                 sprintf(
                   "MatrixFilterState$srv_add_filter_state@2 added FilterState of variable %s, dataname: %s",

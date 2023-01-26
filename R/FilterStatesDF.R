@@ -357,14 +357,7 @@ DFFilterStates <- R6::R6Class( # nolint
                 )
               )
               varname <- input$var_to_add
-              fstate <- init_filter_state(
-                x = data[[varname]],
-                x_filtered = reactive(data_filtered()[[varname]]),
-                varname = as.name(varname),
-                varlabel = private$get_varlabels(varname),
-                input_dataname = private$input_dataname
-              )
-              self$state_list_push(x = fstate, state_list_index = 1L, state_id = varname)
+              self$set_filter_state(state = setNames(list(list()), varname))
               logger::log_trace(
                 sprintf(
                   "DFFilterStates$srv_add_filter_state@2 added FilterState of variable %s, dataname: %s",

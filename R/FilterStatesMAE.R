@@ -257,7 +257,6 @@ MAEFilterStates <- R6::R6Class( # nolint
           logger::log_trace(
             "MAEFilterState$srv_add_filter_state initializing, dataname: { deparse1(private$input_dataname) }"
           )
-          shiny::setBookmarkExclude("var_to_add")
           active_filter_vars <- reactive({
             vapply(
               X = self$state_list_get("y"),
@@ -315,18 +314,7 @@ MAEFilterStates <- R6::R6Class( # nolint
                 )
               )
               varname <- input$var_to_add
-              fstate <- init_filter_state(
-                x = SummarizedExperiment::colData(data)[[varname]],
-                x_filtered = reactive(SummarizedExperiment::colData(data)[[varname]]),
-                varname = as.name(varname),
-                varlabel = private$get_varlabels(varname),
-                input_dataname = private$input_dataname,
-                extract_type = "list"
-              )
-              fstate$set_na_rm(TRUE)
-
-              self$state_list_push(x = fstate, state_list_index = "y", state_id = varname)
-
+              self$set_filter_state(setNames(list(list()), varname))
               logger::log_trace(
                 sprintf(
                   "MAEFilterStates$srv_add_filter_state@2 added FilterState of variable %s, dataname: %s",

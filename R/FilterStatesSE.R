@@ -396,7 +396,6 @@ SEFilterStates <- R6::R6Class( # nolint
           logger::log_trace(
             "SEFilterState$srv_add_filter_state initializing, dataname: { deparse1(private$input_dataname) }"
           )
-          shiny::setBookmarkExclude(c("row_to_add", "col_to_add"))
           active_filter_col_vars <- reactive({
             vapply(
               X = self$state_list_get(state_list_index = "select"),
@@ -506,16 +505,7 @@ SEFilterStates <- R6::R6Class( # nolint
               )
 
               varname <- input$col_to_add
-              self$state_list_push(
-                x = init_filter_state(
-                  x = SummarizedExperiment::colData(data)[[varname]],
-                  x_filtered = reactive(SummarizedExperiment::colData(data_filtered())[[varname]]),
-                  varname = as.name(varname),
-                  input_dataname = private$input_dataname
-                ),
-                state_list_index = "select",
-                state_id = varname
-              )
+              self$set_filter_state(list(select = setNames(list(list()), varname)))
               logger::log_trace(
                 sprintf(
                   "SEFilterStates$srv_add_filter_state@3 added FilterState of column %s to col data, dataname: %s",
@@ -539,16 +529,7 @@ SEFilterStates <- R6::R6Class( # nolint
               )
 
               varname <- input$row_to_add
-              self$state_list_push(
-                x = init_filter_state(
-                  x = SummarizedExperiment::rowData(data)[[varname]],
-                  x_filtered = reactive(SummarizedExperiment::rowData(data_filtered())[[varname]]),
-                  varname = as.name(varname),
-                  input_dataname = private$input_dataname
-                ),
-                state_list_index = "subset",
-                state_id = varname
-              )
+              self$set_filter_state(list(subset = setNames(list(list()), varname)))
               logger::log_trace(
                 sprintf(
                   "SEFilterStates$srv_add_filter_state@4 added FilterState of variable %s to row data, dataname: %s",
