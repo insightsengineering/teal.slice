@@ -398,7 +398,7 @@ DFFilterStates <- R6::R6Class( # nolint
     }
   ),
 
-  # private membres ----
+  # private members ----
   private = list(
     varlabels = character(0),
     keys = character(0),
