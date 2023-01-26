@@ -185,17 +185,6 @@ Defaults to "subset" but can be overridden by child class method.
 
 \subsection{Returns}{
 \code{character(1)} the name of the function
-
-#' @description
-#' Populates the private \code{state_list} field to store active filter states.
-#'
-#' @param x (\code{list} of \code{reactiveVal} objects)\cr
-#'
-state_list_initialize = function(x) {
-checkmate::assert_list(x, min.len = 1)
-private$state_list <- x
-invisible(NULL)
-},
 }
 }
 \if{html}{\out{<hr>}}
