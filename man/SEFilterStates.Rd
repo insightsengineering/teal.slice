@@ -32,6 +32,7 @@ Specialization of \code{FilterStates} for \code{SummaryExperiment}.
 <li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilterStates" data-id="get_filter_count"><a href='../../teal.slice/html/FilterStates.html#method-FilterStates-get_filter_count'><code>teal.slice::FilterStates$get_filter_count()</code></a></span></li>
 <li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilterStates" data-id="get_fun"><a href='../../teal.slice/html/FilterStates.html#method-FilterStates-get_fun'><code>teal.slice::FilterStates$get_fun()</code></a></span></li>
 <li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilterStates" data-id="print"><a href='../../teal.slice/html/FilterStates.html#method-FilterStates-print'><code>teal.slice::FilterStates$print()</code></a></span></li>
+<li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilterStates" data-id="set_filterable_varnames"><a href='../../teal.slice/html/FilterStates.html#method-FilterStates-set_filterable_varnames'><code>teal.slice::FilterStates$set_filterable_varnames()</code></a></span></li>
 <li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilterStates" data-id="state_list_empty"><a href='../../teal.slice/html/FilterStates.html#method-FilterStates-state_list_empty'><code>teal.slice::FilterStates$state_list_empty()</code></a></span></li>
 <li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilterStates" data-id="state_list_get"><a href='../../teal.slice/html/FilterStates.html#method-FilterStates-state_list_get'><code>teal.slice::FilterStates$state_list_get()</code></a></span></li>
 <li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilterStates" data-id="state_list_initialize"><a href='../../teal.slice/html/FilterStates.html#method-FilterStates-state_list_initialize'><code>teal.slice::FilterStates$state_list_initialize()</code></a></span></li>
@@ -49,12 +50,24 @@ Initialize \code{SEFilterStates} object
 
 Initialize \code{SEFilterStates} object
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{SEFilterStates$new(input_dataname, output_dataname, datalabel)}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{SEFilterStates$new(
+  data,
+  data_filtered,
+  input_dataname,
+  output_dataname,
+  datalabel
+)}\if{html}{\out{</div>}}
 }
 
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
+\item{\code{data}}{(\code{SummarizedExperiment})\cr
+the R object which \code{subset} function is applied on.}
+
+\item{\code{data_filtered}}{(\code{reactive})\cr
+should return a \code{SummarizedExperiment} object.}
+
 \item{\code{input_dataname}}{(\code{character(1)} or \code{name} or \code{call})\cr
 name of the data used on lhs of the expression
 specified to the function argument attached to this \code{FilterStates}.}
@@ -133,22 +146,17 @@ The output list is a compatible input to \code{self$set_filter_state}.
 \subsection{Method \code{set_filter_state()}}{
 Set filter state
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{SEFilterStates$set_filter_state(data, filtered_dataset, state, ...)}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{SEFilterStates$set_filter_state(state)}\if{html}{\out{</div>}}
 }
 
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
-\item{\code{data}}{(\code{SummarizedExperiment})\cr
-data which are supposed to be filtered.}
-
 \item{\code{state}}{(\verb{named list})\cr
 this list should contain \code{subset} and \code{select} element where
 each should be a named list containing values as a selection in the \code{FilterState}.
 Names of each the \code{list} element in \code{subset} and \code{select} should correspond to
 the name of the column in \code{rowData(data)} and \code{colData(data)}.}
-
-\item{\code{...}}{ignored.}
 }
 \if{html}{\out{</div>}}
 }
@@ -182,7 +190,7 @@ Remove a variable from the \code{state_list} and its corresponding UI element.
 \subsection{Method \code{ui_add_filter_state()}}{
 Shiny UI module to add filter variable
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{SEFilterStates$ui_add_filter_state(id, data)}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{SEFilterStates$ui_add_filter_state(id)}\if{html}{\out{</div>}}
 }
 
 \subsection{Arguments}{
@@ -190,11 +198,6 @@ Shiny UI module to add filter variable
 \describe{
 \item{\code{id}}{(\code{character(1)})\cr
 id of shiny module}
-
-\item{\code{data}}{(\code{SummarizedExperiment})\cr
-object containing \code{colData} and \code{rowData} which columns
-are used to choose filter variables. Column selection from \code{colData}
-and \code{rowData} are separate shiny entities.}
 }
 \if{html}{\out{</div>}}
 }
@@ -215,7 +218,7 @@ This module unlike other \code{FilterStates} classes manages two
 sets of filter variables - one for \code{colData} and another for
 \code{rowData}.
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{SEFilterStates$srv_add_filter_state(id, data, filtered_dataset, ...)}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{SEFilterStates$srv_add_filter_state(id)}\if{html}{\out{</div>}}
 }
 
 \subsection{Arguments}{
@@ -223,13 +226,6 @@ sets of filter variables - one for \code{colData} and another for
 \describe{
 \item{\code{id}}{(\code{character(1)})\cr
 an ID string that corresponds with the ID used to call the module's UI function.}
-
-\item{\code{data}}{(\code{SummarizedExperiment})\cr
-object containing \code{colData} and \code{rowData} which columns
-are used to choose filter variables. Column selection from \code{colData}
-and \code{rowData} are separate shiny entities.}
-
-\item{\code{...}}{ignored}
 }
 \if{html}{\out{</div>}}
 }

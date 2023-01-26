@@ -40,7 +40,6 @@ shiny::isolate(dataset$get_filter_state())
 \item \href{#method-MAEFilteredDataset-get_call}{\code{MAEFilteredDataset$get_call()}}
 \item \href{#method-MAEFilteredDataset-get_varlabels}{\code{MAEFilteredDataset$get_varlabels()}}
 \item \href{#method-MAEFilteredDataset-get_filter_overview_info}{\code{MAEFilteredDataset$get_filter_overview_info()}}
-\item \href{#method-MAEFilteredDataset-get_filterable_varnames}{\code{MAEFilteredDataset$get_filterable_varnames()}}
 \item \href{#method-MAEFilteredDataset-set_filter_state}{\code{MAEFilteredDataset$set_filter_state()}}
 \item \href{#method-MAEFilteredDataset-remove_filter_state}{\code{MAEFilteredDataset$remove_filter_state()}}
 \item \href{#method-MAEFilteredDataset-ui_add_filter_state}{\code{MAEFilteredDataset$ui_add_filter_state()}}
@@ -162,33 +161,11 @@ attribute does not exist for the data
 \subsection{Method \code{get_filter_overview_info()}}{
 Get filter overview rows of a dataset
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{MAEFilteredDataset$get_filter_overview_info(
-  filtered_dataset = self$get_dataset()
-)}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{MAEFilteredDataset$get_filter_overview_info()}\if{html}{\out{</div>}}
 }
 
-\subsection{Arguments}{
-\if{html}{\out{<div class="arguments">}}
-\describe{
-\item{\code{filtered_dataset}}{(\code{MultiAssayExperiment}) object to calculate filter overview statistics on.}
-}
-\if{html}{\out{</div>}}
-}
 \subsection{Returns}{
 (\code{matrix}) matrix of observations and subjects
-}
-}
-\if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-MAEFilteredDataset-get_filterable_varnames"></a>}}
-\if{latex}{\out{\hypertarget{method-MAEFilteredDataset-get_filterable_varnames}{}}}
-\subsection{Method \code{get_filterable_varnames()}}{
-Gets variable names for the filtering.
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{MAEFilteredDataset$get_filterable_varnames()}\if{html}{\out{</div>}}
-}
-
-\subsection{Returns}{
-(\code{character(0)})
 }
 }
 \if{html}{\out{<hr>}}
@@ -197,7 +174,7 @@ Gets variable names for the filtering.
 \subsection{Method \code{set_filter_state()}}{
 Set filter state
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{MAEFilteredDataset$set_filter_state(state, filtered_dataset, ...)}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{MAEFilteredDataset$set_filter_state(state)}\if{html}{\out{</div>}}
 }
 
 \subsection{Arguments}{
@@ -208,8 +185,6 @@ names of the list should correspond to the names of the initialized \code{Filter
 kept in \code{private$filter_states}. For this object they are \code{"subjects"} and
 names of the experiments. Values of initial state should be relevant
 to the referred column.}
-
-\item{\code{...}}{ignored.}
 }
 \if{html}{\out{</div>}}
 }
@@ -294,7 +269,7 @@ of the same name from \code{FilterStates} as \code{MAEFilteredDataset}
 contains one \code{FilterStates} object for \code{colData} and one for each
 experiment.
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{MAEFilteredDataset$srv_add_filter_state(id, filtered_dataset, ...)}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{MAEFilteredDataset$srv_add_filter_state(id)}\if{html}{\out{</div>}}
 }
 
 \subsection{Arguments}{
@@ -302,10 +277,6 @@ experiment.
 \describe{
 \item{\code{id}}{(\code{character(1)})\cr
 an ID string that corresponds with the ID used to call the module's UI function.}
-
-\item{\code{filtered_dataset}}{TODO}
-
-\item{\code{...}}{ignored.}
 }
 \if{html}{\out{</div>}}
 }
@@ -319,21 +290,9 @@ an ID string that corresponds with the ID used to call the module's UI function.
 \subsection{Method \code{get_filter_overview_nsubjs()}}{
 Gets filter overview subjects number
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{MAEFilteredDataset$get_filter_overview_nsubjs(
-  filtered_dataset = self$get_dataset(),
-  subject_keys
-)}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{MAEFilteredDataset$get_filter_overview_nsubjs()}\if{html}{\out{</div>}}
 }
 
-\subsection{Arguments}{
-\if{html}{\out{<div class="arguments">}}
-\describe{
-\item{\code{filtered_dataset}}{(\code{MultiAssayExperiment}) object to calculate filter overview statistics on.}
-
-\item{\code{subject_keys}}{(unused) in \code{MultiAssayExperiment} unique subjects are the rows of \code{colData} slot.}
-}
-\if{html}{\out{</div>}}
-}
 \subsection{Returns}{
 \code{list} with the number of subjects of filtered/non-filtered datasets.
 }

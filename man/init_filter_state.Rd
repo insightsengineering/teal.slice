@@ -43,7 +43,8 @@ Initializes \code{FilterState} depending on a variable class.\cr
 }
 \examples{
 filter_state <- teal.slice:::RangeFilterState$new(
-  c(1:10, NA, Inf),
+  x = c(1:10, NA, Inf),
+  x_filtered = reactive(c(1:10, NA, Inf)),
   varname = "x",
   varlabel = "Pretty name",
   input_dataname = as.name("dataname"),

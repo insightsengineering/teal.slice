@@ -54,6 +54,12 @@ FilterStates <- R6::R6Class( # nolint
     #' Initializes `FilterStates` object by setting `input_dataname`,
     #' `output_dataname` and initializing `state_list` (list of `reactiveVal`s).
     #'
+    #' @param data (`data.frame`, `MultiAssayExperiment`, `SummarizedExperiment`, `matrix`)\cr
+    #'   the R object which `subset` function is applied on.
+    #'
+    #' @param data_filtered (`reactive`)\cr
+    #'   should return an object constistent with the `FilterState` class.
+    #'
     #' @param input_dataname (`character(1)` or `name` or `call`)\cr
     #'   name of the data used on `rhs` of the expression
     #'   specified to the function argument attached to this `FilterStates`
@@ -401,11 +407,27 @@ FilterStates <- R6::R6Class( # nolint
     },
 
     #' @description
+    #' Set the allowed filterable variables
+    #' @param varnames (`character` or `NULL`) The variables which can be filtered
+    #' See `self$get_filterable_varnames` for more details
+    #'
+    #' @details When retrieving the filtered variables only
+    #' those which have filtering supported (i.e. are of the permitted types)
+    #' are included.
+    #'
+    #' @return invisibly this `FilteredDataset`
+    set_filterable_varnames = function(varnames) {
+      return(invisible(self))
+    },
+
+    #' @description
     #' Shiny module UI that adds a filter variable.
     #'
     #' @param id (`character(1)`)\cr
     #'   shiny element (module instance) id
     #'
+    #' @param data (`data.frame`, `MultiAssayExperiment`, `SummarizedExperiment`, `matrix`)
+    #'   object which columns are used to choose filter variables.
     #' @return `shiny.tag`
     #'
     ui_add_filter_state = function(id, data) {
@@ -417,12 +439,10 @@ FilterStates <- R6::R6Class( # nolint
     #'
     #' @param id (`character(1)`)\cr
     #'   shiny module instance id
-    #' @param ... ignored
     #'
     #' @return `moduleServer` function which returns `NULL`
     #'
-    srv_add_filter_state = function(id, ...) {
-      check_ellipsis(..., stop = FALSE)
+    srv_add_filter_state = function(id) {
       moduleServer(
         id = id,
         function(input, output, session) {
@@ -440,6 +460,7 @@ FilterStates <- R6::R6Class( # nolint
     data = NULL, # data.frame, MAE, SE or matrix
     data_filtered = NULL, # reactive
     datalabel = character(0),
+    filterable_varnames = character(0),
     input_dataname = NULL, # because it holds object of class name
     output_dataname = NULL, # because it holds object of class name,
     ns = NULL, # shiny ns()

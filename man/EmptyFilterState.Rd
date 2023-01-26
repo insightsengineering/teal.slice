@@ -76,6 +76,9 @@ Initialize \code{EmptyFilterState} object.
 \item{\code{x}}{(\code{vector})\cr
 values of the variable used in filter}
 
+\item{\code{x_filtered}}{(\code{reactive})\cr
+a \code{reactive} returning a filtered vector.}
+
 \item{\code{varname}}{(\code{character}, \code{name})\cr
 name of the variable}
 

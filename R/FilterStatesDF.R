@@ -16,6 +16,12 @@ DFFilterStates <- R6::R6Class( # nolint
     #' which means that when calling the subset function associated with this class
     #' (`dplyr::filter`), a list of conditions is passed to unnamed arguments (`...`).
     #'
+    #' @param data (`data.frame`)\cr
+    #'   the R object which `dplyr::filter` function is applied on.
+    #'
+    #' @param data_filtered (`reactive`)\cr
+    #'   should a `data.frame` object
+    #'
     #' @param input_dataname (`character(1)` or `name` or `call`)\cr
     #'   name of the data used on `rhs` of the \emph{subset expression}
     #'   specified to the function argument attached to this `FilterStates`
@@ -130,7 +136,9 @@ DFFilterStates <- R6::R6Class( # nolint
     #' @description
     #' Set filter state.
     #'
-    #'
+    #' @param state (`named list`)\cr
+    #'   should contain values which are initial selection in the `FilterState`.
+    #'   Names of the `list` element should correspond to the name of the columns.
     #' @examples
     #' dffs <- teal.slice:::DFFilterStates$new(
     #'   input_dataname = "iris",
@@ -245,6 +253,23 @@ DFFilterStates <- R6::R6Class( # nolint
     },
 
     #' @description
+    #' Set the allowed filterable variables
+    #' @param varnames (`character` or `NULL`) The variables which can be filtered
+    #' See `self$get_filterable_varnames` for more details
+    #'
+    #' @details When retrieving the filtered variables only
+    #' those which have filtering supported (i.e. are of the permitted types)
+    #' are included.
+    #'
+    #' @return invisibly this `FilteredDataset`
+    set_filterable_varnames = function(varnames) {
+      checkmate::assert_character(varnames, any.missing = FALSE, null.ok = TRUE)
+      supported_vars <- get_supported_filter_varnames(private$data)
+      private$filterable_varnames <- intersect(varnames, supported_vars)
+      return(invisible(self))
+    },
+
+    #' @description
     #' Shiny UI module to add filter variable.
     #'
     #' @param id (`character(1)`)\cr
@@ -285,20 +310,15 @@ DFFilterStates <- R6::R6Class( # nolint
     #'
     #' @param id (`character(1)`)\cr
     #'   an ID string that corresponds with the ID used to call the module's UI function.
-    #' @param vars_include (`character(n)`)\cr
-    #'  optional, vector of column names to be included
-    #' @param ... ignored
     #'
     #' @return `moduleServer` function which returns `NULL`
-    srv_add_filter_state = function(id,...) {
-      data <- private$data
-      data_filtered <- private$data_filtered
-      vars_include <- get_supported_filter_varnames(data = data)
-
-      check_ellipsis(..., stop = FALSE)
+    srv_add_filter_state = function(id) {
       moduleServer(
         id = id,
         function(input, output, session) {
+          data <- private$data
+          data_filtered <- private$data_filtered
+          vars_include <- private$filterable_varnames
           logger::log_trace(
             "DFFilterStates$srv_add_filter_state initializing, dataname: { deparse1(private$input_dataname) }"
           )

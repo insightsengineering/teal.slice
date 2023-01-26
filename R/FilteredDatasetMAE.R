@@ -249,6 +249,7 @@ MAEFilteredDataset <- R6::R6Class( # nolint
     #'  identifier of the element - preferably containing dataset name
     #'
     #' @return function - shiny UI module
+    #'
     ui_add_filter_state = function(id) {
       ns <- NS(id)
       data <- self$get_dataset()
@@ -286,9 +287,10 @@ MAEFilteredDataset <- R6::R6Class( # nolint
     #'
     #' @param id (`character(1)`)\cr
     #'   an ID string that corresponds with the ID used to call the module's UI function.
-    #' @param ... ignored.
+    #'
     #' @return `moduleServer` function which returns `NULL`
-    srv_add_filter_state = function(id, ...) {
+    #'
+    srv_add_filter_state = function(id) {
       moduleServer(
         id = id,
         function(input, output, session) {
@@ -296,18 +298,12 @@ MAEFilteredDataset <- R6::R6Class( # nolint
             "MAEFilteredDataset$srv_add_filter_state initializing,",
             "dataname: { deparse1(self$get_dataname()) }"
           ))
-          self$get_filter_states("subjects")$srv_add_filter_state(
-            id = "subjects"
-            # ignoring vars_include
-          )
+          self$get_filter_states("subjects")$srv_add_filter_state(id = "subjects")
           experiment_names <- names(self$get_dataset())
           lapply(
             experiment_names,
             function(experiment_name) {
-              self$get_filter_states(experiment_name)$srv_add_filter_state(
-                id = experiment_name
-                # ignoring vars_include
-              )
+              self$get_filter_states(experiment_name)$srv_add_filter_state(experiment_name)
             }
           )
           logger::log_trace(paste(

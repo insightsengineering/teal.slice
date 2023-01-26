@@ -9,6 +9,12 @@ SEFilterStates <- R6::R6Class( # nolint
     #'
     #' Initialize `SEFilterStates` object
     #'
+    #' @param data (`SummarizedExperiment`)\cr
+    #'   the R object which `subset` function is applied on.
+    #'
+    #' @param data_filtered (`reactive`)\cr
+    #'   should return a `SummarizedExperiment` object.
+    #'
     #' @param input_dataname (`character(1)` or `name` or `call`)\cr
     #'   name of the data used on lhs of the expression
     #'   specified to the function argument attached to this `FilterStates`.
@@ -174,9 +180,8 @@ SEFilterStates <- R6::R6Class( # nolint
     #'   each should be a named list containing values as a selection in the `FilterState`.
     #'   Names of each the `list` element in `subset` and `select` should correspond to
     #'   the name of the column in `rowData(data)` and `colData(data)`.
-    #' @param ... ignored.
     #' @return `NULL`
-    set_filter_state = function(state, ...) {
+    set_filter_state = function(state) {
       data <- private$data
       data_filtered <- private$data_filtered
 
@@ -384,10 +389,8 @@ SEFilterStates <- R6::R6Class( # nolint
     #'
     #' @param id (`character(1)`)\cr
     #'   an ID string that corresponds with the ID used to call the module's UI function.
-    #' @param ... ignored
     #' @return `moduleServer` function which returns `NULL`
-    srv_add_filter_state = function(id, ...) {
-      check_ellipsis(..., stop = FALSE)
+    srv_add_filter_state = function(id) {
       data <- private$data
       data_filtered <- private$data_filtered
       moduleServer(

@@ -93,6 +93,9 @@ Initialize a \code{FilterState} object
 \item{\code{x}}{(\code{Date})\cr
 values of the variable used in filter}
 
+\item{\code{x_filtered}}{(\code{reactive})\cr
+a \code{reactive} returning a filtered vector.}
+
 \item{\code{varname}}{(\code{character}, \code{name})\cr
 name of the variable}
 

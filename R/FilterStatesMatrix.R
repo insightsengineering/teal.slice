@@ -11,6 +11,12 @@ MatrixFilterStates <- R6::R6Class( # nolint
     #'
     #' Initialize `MatrixFilterStates` object
     #'
+    #' @param data (`matrix`)\cr
+    #'   the R object which `subset` function is applied on.
+    #'
+    #' @param data_filtered (`reactive`)\cr
+    #'   should return a `matrix`.
+    #'
     #' @param input_dataname (`character(1)` or `name` or `call`)\cr
     #'   name of the data used on lhs of the expression
     #'   specified to the function argument attached to this `FilterStates`.
@@ -110,9 +116,8 @@ MatrixFilterStates <- R6::R6Class( # nolint
     #'   should contain values which are initial selection in the `FilterState`.
     #'   Names of the `list` element should correspond to the name of the
     #'   column in `data`.
-    #' @param ... ignored.
     #' @return `NULL`
-    set_filter_state = function(state, ...) {
+    set_filter_state = function(state) {
       data <- private$data
       data_filtered <- private$data_filtered
       checkmate::assert_class(data, "matrix")
@@ -236,11 +241,9 @@ MatrixFilterStates <- R6::R6Class( # nolint
     #'
     #' @param id (`character(1)`)\cr
     #'   shiny module instance id
-    #' @param ... ignored
     #'
     #' @return `moduleServer` function which returns `NULL`
-    srv_add_filter_state = function(id, ...) {
-      check_ellipsis(..., stop = FALSE)
+    srv_add_filter_state = function(id) {
       data <- private$data
       data_filtered <- private$data_filtered
       moduleServer(

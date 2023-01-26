@@ -150,7 +150,9 @@ FilteredData <- R6::R6Class( # nolint
     #'
     set_filterable_varnames = function(dataname, varnames) {
       private$check_data_varname_exists(dataname)
-      self$get_filtered_dataset(dataname)$set_filterable_varnames(varnames)
+      if (!is.null(varnames)) {
+        self$get_filtered_dataset(dataname)$set_filterable_varnames(varnames)
+      }
       invisible(self)
     },
 
@@ -612,26 +614,6 @@ FilteredData <- R6::R6Class( # nolint
       )
 
       invisible(NULL)
-    },
-
-    #' @description
-    #' Sets this object from a bookmarked state.
-    #'
-    #' Only sets the filter state, does not set the data
-    #' and the preprocessing code. The data should already have been set.
-    #' Also checks the preprocessing code is identical if provided in the `state`.
-    #'
-    #' Since this function is used from the end-user part, its error messages
-    #' are more verbose. We don't call the Shiny modals from here because this
-    #' class may be used outside of a Shiny app.
-    #'
-    #' @param state (`named list`)\cr
-    #'   containing fields `data_hash`, `filter_states` and `preproc_code`
-    #' @param check_data_hash (`logical`) whether to check that `md5sums` agree
-    #'   for the data; may not make sense with randomly generated data per session
-    #'
-    restore_state_from_bookmark = function(state, check_data_hash = TRUE) {
-      stop("Pure virtual method")
     },
 
     #' @description

@@ -6,6 +6,7 @@
 \usage{
 init_filter_states(
   data,
+  data_filtered = reactive(data),
   input_dataname,
   output_dataname = input_dataname,
   datalabel = character(0),
@@ -15,6 +16,9 @@ init_filter_states(
 \arguments{
 \item{data}{(\code{data.frame}, \code{MultiAssayExperiment}, \code{SummarizedExperiment}, \code{matrix})\cr
 the R object which \code{subset} function is applied on.}
+
+\item{data_filtered}{(\code{reactive})\cr
+should return an object constistent with the \code{FilterState} class.}
 
 \item{input_dataname}{(\code{character(1)} or \code{name} or \code{call})\cr
 name of the data used on lhs of the expression

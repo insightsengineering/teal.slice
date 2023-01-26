@@ -71,10 +71,9 @@ DefaultFilteredDataset <- R6::R6Class( # nolint
         })
       }
 
-      filterable_data <- self$get_dataset()
       private$add_filter_states(
         filter_states = init_filter_states(
-          data = filterable_data,
+          data = dataset,
           data_filtered = self$get_dataset(TRUE),
           input_dataname = as.name(dataname),
           output_dataname = as.name(dataname),
@@ -83,6 +82,12 @@ DefaultFilteredDataset <- R6::R6Class( # nolint
         ),
         id = "filter"
       )
+
+      if (!is.null(parent)) {
+        self$set_filterable_varnames(setdiff(colnames(dataset), colnames(isolate(parent()))))
+      } else {
+        self$set_filterable_varnames(colnames(dataset))
+      }
 
       invisible(self)
     },

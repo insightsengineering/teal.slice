@@ -97,6 +97,9 @@ and is set only if object is initialized in \code{shiny}.
 \item{\code{x}}{(\code{POSIXct} or \code{POSIXlt})\cr
 values of the variable used in filter}
 
+\item{\code{x_filtered}}{(\code{reactive})\cr
+a \code{reactive} returning a filtered vector.}
+
 \item{\code{varname}}{(\code{character}, \code{name})\cr
 name of the variable}
 
