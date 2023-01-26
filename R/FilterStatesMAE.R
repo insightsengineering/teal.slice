@@ -105,6 +105,16 @@ MAEFilterStates <- R6::R6Class( # nolint
             for (fname in removed_state_name()) {
               private$remove_filter_state_ui("y", fname, .input = input)
             }
+
+            if (length(removed_state_name()) != 0) {
+              session$onFlushed(function() {
+                session$sendCustomMessage(
+                  "filter-cards-removed",
+                  private$cards_container_id
+                )
+              })
+            }
+            
             removed_state_name(character(0))
           })
           NULL
