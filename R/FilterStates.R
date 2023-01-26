@@ -51,8 +51,8 @@ FilterStates <- R6::R6Class( # nolint
     #' @description
     #' Initializes `FilterStates` object.
     #'
-    #' Initializes `FilterStates` object by setting `input_dataname`,
-    #' `output_dataname` and initializing `state_list` (list of `reactiveVal`s).
+    #' Initializes `FilterStates` object by setting
+    #' `input_dataname`, `output_dataname`, and `datalabel`.
     #'
     #' @param input_dataname (`character(1)` or `name` or `call`)\cr
     #'   name of the data used on `rhs` of the expression

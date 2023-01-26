@@ -75,8 +75,8 @@ isolate(filter_states$get_call())
 \subsection{Method \code{new()}}{
 Initializes \code{FilterStates} object.
 
-Initializes \code{FilterStates} object by setting \code{input_dataname},
-\code{output_dataname} and initializing \code{state_list} (list of \code{reactiveVal}s).
+Initializes \code{FilterStates} object by setting
+\code{input_dataname}, \code{output_dataname}, and \code{datalabel}.
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{FilterStates$new(input_dataname, output_dataname, datalabel)}\if{html}{\out{</div>}}
 }
