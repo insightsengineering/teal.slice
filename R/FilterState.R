@@ -47,7 +47,7 @@ FilterState <- R6::R6Class( # nolint
     #' Initialize a `FilterState` object
     #' @param x (`vector`)\cr
     #'   values of the variable used in filter
-    #' @param x_filtered (`reactive`)\cr
+    #' @param x_reactive (`reactive`)\cr
     #'   a `reactive` returning a filtered vector. Is used to update
     #'   counts following the change in values of the filtered dataset.
     #' @param varname (`character`, `name`)\cr
@@ -68,7 +68,7 @@ FilterState <- R6::R6Class( # nolint
     #' @return self invisibly
     #'
     initialize = function(x,
-                          x_filtered,
+                          x_reactive,
                           varname,
                           varlabel = character(0),
                           input_dataname = NULL,
@@ -103,8 +103,8 @@ FilterState <- R6::R6Class( # nolint
       private$na_count <- sum(is.na(x))
       private$keep_na <- reactiveVal(FALSE)
 
-      private$filtered_values <- x_filtered
-      private$filtered_na_count <- reactive(sum(is.na(x_filtered())))
+      private$x_reactive <- x_reactive
+      private$filtered_na_count <- reactive(sum(is.na(x_reactive())))
 
       logger::log_trace(
         sprintf(
@@ -443,7 +443,7 @@ FilterState <- R6::R6Class( # nolint
     varname = character(0),
     varlabel = character(0),
     extract_type = logical(0),
-    filtered_values = NULL, # reactive containing the filtered variable, used for updating counts and histograms
+    x_reactive = NULL, # reactive containing the filtered variable, used for updating counts and histograms
     filtered_na_count = NULL, # reactive containing the count of NA in the filtered dataset
 
     #' description

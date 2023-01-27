@@ -14,7 +14,7 @@ MatrixFilterStates <- R6::R6Class( # nolint
     #' @param data (`matrix`)\cr
     #'   the R object which `subset` function is applied on.
     #'
-    #' @param data_filtered (`reactive`)\cr
+    #' @param data_reactive (`reactive`)\cr
     #'   should return a `matrix`.
     #'   This object is needed for the `FilterState` counts being updated
     #'   on a change in filters.
@@ -28,8 +28,8 @@ MatrixFilterStates <- R6::R6Class( # nolint
     #'
     #' @param datalabel (`character(0)` or `character(1)`)\cr
     #'   text label value.
-    initialize = function(data, data_filtered, input_dataname, output_dataname, datalabel) {
-      super$initialize(data, data_filtered, input_dataname, output_dataname, datalabel)
+    initialize = function(data, data_reactive, input_dataname, output_dataname, datalabel) {
+      super$initialize(data, data_reactive, input_dataname, output_dataname, datalabel)
       self$state_list_initialize(
         list(
           subset = reactiveVal()
@@ -121,7 +121,7 @@ MatrixFilterStates <- R6::R6Class( # nolint
     #' @return `NULL`
     set_filter_state = function(state) {
       data <- private$data
-      data_filtered <- private$data_filtered
+      data_reactive <- private$data_reactive
       checkmate::assert_class(data, "matrix")
       checkmate::assert(
         checkmate::assert(
@@ -145,7 +145,7 @@ MatrixFilterStates <- R6::R6Class( # nolint
         } else {
           fstate <- init_filter_state(
             x = data[, varname],
-            x_filtered = reactive(data_filtered()[[varname]]),
+            x_reactive = reactive(data_reactive()[[varname]]),
             varname = as.name(varname),
             varlabel = varname,
             input_dataname = private$input_dataname,
@@ -247,7 +247,7 @@ MatrixFilterStates <- R6::R6Class( # nolint
     #' @return `moduleServer` function which returns `NULL`
     srv_add_filter_state = function(id) {
       data <- private$data
-      data_filtered <- private$data_filtered
+      data_reactive <- private$data_reactive
       moduleServer(
         id = id,
         function(input, output, session) {

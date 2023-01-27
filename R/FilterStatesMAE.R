@@ -12,7 +12,7 @@ MAEFilterStates <- R6::R6Class( # nolint
     #' @param data (`MultiAssayExperiment`)\cr
     #'   the R object which `MultiAssayExperiment::subsetByColData` function is applied on.
     #'
-    #' @param data_filtered (`reactive`)\cr
+    #' @param data_reactive (`reactive`)\cr
     #'   should return `MultiAssayExperiment` object.
     #'   This object is needed for the `FilterState` counts being updated
     #'   on a change in filters.
@@ -32,11 +32,11 @@ MAEFilterStates <- R6::R6Class( # nolint
     #'
     #' @param keys (`character`)\cr
     #'   key columns names
-    initialize = function(data, data_filtered, input_dataname, output_dataname, datalabel, varlabels, keys) {
+    initialize = function(data, data_reactive, input_dataname, output_dataname, datalabel, varlabels, keys) {
       if (!requireNamespace("MultiAssayExperiment", quietly = TRUE)) {
         stop("Cannot load MultiAssayExperiment - please install the package or restart your session.")
       }
-      super$initialize(data, data_filtered, input_dataname, output_dataname, datalabel)
+      super$initialize(data, data_reactive, input_dataname, output_dataname, datalabel)
       private$keys <- keys
       private$varlabels <- varlabels
 
@@ -137,7 +137,7 @@ MAEFilterStates <- R6::R6Class( # nolint
     #' @return `NULL`
     set_filter_state = function(state) {
       data <- private$data
-      data_filtered <- private$data_filtered
+      data_reactive <- private$data_reactive
 
       checkmate::assert_class(data, "MultiAssayExperiment")
       checkmate::assert(
@@ -155,7 +155,7 @@ MAEFilterStates <- R6::R6Class( # nolint
         } else {
           fstate <- init_filter_state(
             x = SummarizedExperiment::colData(data)[[varname]],
-            x_filtered = reactive(SummarizedExperiment::colData(data_filtered())[[varname]]),
+            x_reactive = reactive(SummarizedExperiment::colData(data_reactive())[[varname]]),
             varname = as.name(varname),
             varlabel = private$get_varlabels(varname),
             input_dataname = private$input_dataname,
@@ -255,7 +255,7 @@ MAEFilterStates <- R6::R6Class( # nolint
     #' @return `moduleServer` function which returns `NULL`
     srv_add_filter_state = function(id) {
       data <- private$data
-      data_filtered <- private$data_filtered
+      data_reactive <- private$data_reactive
       moduleServer(
         id = id,
         function(input, output, session) {

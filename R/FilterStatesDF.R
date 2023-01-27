@@ -19,7 +19,7 @@ DFFilterStates <- R6::R6Class( # nolint
     #' @param data (`data.frame`)\cr
     #'   the R object which `dplyr::filter` function is applied on.
     #'
-    #' @param data_filtered (`reactive`)\cr
+    #' @param data_reactive (`reactive`)\cr
     #'   should a `data.frame` object.
     #'   This object is needed for the `FilterState` counts being updated
     #'   on a change in filters.
@@ -36,8 +36,8 @@ DFFilterStates <- R6::R6Class( # nolint
     #' @param keys (`character`)\cr
     #'   key columns names
     #'
-    initialize = function(data, data_filtered, input_dataname, output_dataname, datalabel, varlabels, keys) {
-      super$initialize(data, data_filtered, input_dataname, output_dataname, datalabel)
+    initialize = function(data, data_reactive, input_dataname, output_dataname, datalabel, varlabels, keys) {
+      super$initialize(data, data_reactive, input_dataname, output_dataname, datalabel)
       private$varlabels <- varlabels
       private$keys <- keys
 
@@ -159,7 +159,7 @@ DFFilterStates <- R6::R6Class( # nolint
     #' @return `NULL`
     set_filter_state = function(state) {
       data <- private$data
-      data_filtered <- private$data_filtered
+      data_reactive <- private$data_reactive
 
       checkmate::assert(
         checkmate::check_subset(names(state), names(data)),
@@ -198,7 +198,7 @@ DFFilterStates <- R6::R6Class( # nolint
         } else {
           fstate <- init_filter_state(
             x = data[[varname]],
-            x_filtered = reactive(data_filtered()[[varname]]),
+            x_reactive = reactive(data_reactive()[[varname]]),
             varname = as.name(varname),
             varlabel = private$get_varlabels(varname),
             input_dataname = private$input_dataname
@@ -319,7 +319,7 @@ DFFilterStates <- R6::R6Class( # nolint
         id = id,
         function(input, output, session) {
           data <- private$data
-          data_filtered <- private$data_filtered
+          data_reactive <- private$data_reactive
           vars_include <- private$filterable_varnames
           logger::log_trace(
             "DFFilterStates$srv_add_filter_state initializing, dataname: { deparse1(private$input_dataname) }"

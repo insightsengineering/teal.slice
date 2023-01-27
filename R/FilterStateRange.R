@@ -25,7 +25,7 @@ RangeFilterState <- R6::R6Class( # nolint
     #' Initialize a `FilterState` object
     #' @param x (`numeric`)\cr
     #'   values of the variable used in filter
-    #' @param x_filtered (`reactive`)\cr
+    #' @param x_reactive (`reactive`)\cr
     #'   a `reactive` returning a filtered vector. Is used to update
     #'   counts following the change in values of the filtered dataset.
     #' @param varname (`character`, `name`)\cr
@@ -42,7 +42,7 @@ RangeFilterState <- R6::R6Class( # nolint
     #' \item{`"matrix"`}{ `varname` in the condition call will be returned as `<input_dataname>[, <varname>]`}
     #' }
     initialize = function(x,
-                          x_filtered,
+                          x_reactive,
                           varname,
                           varlabel = character(0),
                           input_dataname = NULL,
@@ -50,11 +50,11 @@ RangeFilterState <- R6::R6Class( # nolint
       stopifnot(is.numeric(x))
       stopifnot(any(is.finite(x)))
 
-      #validation on x_filtered here
-      super$initialize(x, x_filtered, varname, varlabel, input_dataname, extract_type)
+      #validation on x_reactive here
+      super$initialize(x, x_reactive, varname, varlabel, input_dataname, extract_type)
       var_range <- range(x, finite = TRUE)
 
-      private$inf_filtered_count <- reactive(sum(is.infinite(x_filtered())))
+      private$inf_filtered_count <- reactive(sum(is.infinite(x_reactive())))
 
       private$set_choices(var_range)
       self$set_selected(var_range)
@@ -374,7 +374,7 @@ RangeFilterState <- R6::R6Class( # nolint
             expr = {
               private$unfiltered_histogram +
               ggplot2::geom_histogram(
-                data = data.frame(x = Filter(is.finite, private$filtered_values())),
+                data = data.frame(x = Filter(is.finite, private$x_reactive())),
                 ggplot2::aes(x = x),
                 bins = 100,
                 fill = grDevices::rgb(173 / 255, 216 / 255, 230 / 255),

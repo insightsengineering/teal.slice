@@ -12,7 +12,7 @@ SEFilterStates <- R6::R6Class( # nolint
     #' @param data (`SummarizedExperiment`)\cr
     #'   the R object which `subset` function is applied on.
     #'
-    #' @param data_filtered (`reactive`)\cr
+    #' @param data_reactive (`reactive`)\cr
     #'   should return a `SummarizedExperiment` object.
     #'   This object is needed for the `FilterState` counts being updated
     #'   on a change in filters.
@@ -26,11 +26,11 @@ SEFilterStates <- R6::R6Class( # nolint
     #'
     #' @param datalabel (`character(0)` or `character(1)`)\cr
     #'   text label value.
-    initialize = function(data, data_filtered, input_dataname, output_dataname, datalabel) {
+    initialize = function(data, data_reactive, input_dataname, output_dataname, datalabel) {
       if (!requireNamespace("SummarizedExperiment", quietly = TRUE)) {
         stop("Cannot load SummarizedExperiment - please install the package or restart your session.")
       }
-      super$initialize(data, data_filtered, input_dataname, output_dataname, datalabel)
+      super$initialize(data, data_reactive, input_dataname, output_dataname, datalabel)
       self$state_list_initialize(
         list(
           subset = reactiveVal(),
@@ -185,7 +185,7 @@ SEFilterStates <- R6::R6Class( # nolint
     #' @return `NULL`
     set_filter_state = function(state) {
       data <- private$data
-      data_filtered <- private$data_filtered
+      data_reactive <- private$data_reactive
 
       checkmate::assert_class(data, "SummarizedExperiment")
       checkmate::assert_class(state, "list")
@@ -223,7 +223,7 @@ SEFilterStates <- R6::R6Class( # nolint
         } else {
           fstate <- init_filter_state(
             x = SummarizedExperiment::rowData(data)[[varname]],
-            x_filtered = reactive(SummarizedExperiment::rowData(data_filtered())[[varname]]),
+            x_reactive = reactive(SummarizedExperiment::rowData(data_reactive())[[varname]]),
             varname = as.name(varname),
             input_dataname = private$input_dataname
           )
@@ -245,7 +245,7 @@ SEFilterStates <- R6::R6Class( # nolint
         } else {
           fstate <- init_filter_state(
             x = SummarizedExperiment::colData(data)[[varname]],
-            x_filtered = reactive(SummarizedExperiment::colData(data_filtered())[[varname]]),
+            x_reactive = reactive(SummarizedExperiment::colData(data_reactive())[[varname]]),
             varname = as.name(varname),
             input_dataname = private$input_dataname
           )
@@ -394,7 +394,7 @@ SEFilterStates <- R6::R6Class( # nolint
     #' @return `moduleServer` function which returns `NULL`
     srv_add_filter_state = function(id) {
       data <- private$data
-      data_filtered <- private$data_filtered
+      data_reactive <- private$data_reactive
       moduleServer(
         id = id,
         function(input, output, session) {

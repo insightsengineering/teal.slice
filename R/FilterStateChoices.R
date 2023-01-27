@@ -24,7 +24,7 @@ ChoicesFilterState <- R6::R6Class( # nolint
     #' Initialize a `FilterState` object
     #' @param x (`character` or `factor`)\cr
     #'   values of the variable used in filter
-    #' @param x_filtered (`reactive`)\cr
+    #' @param x_reactive (`reactive`)\cr
     #'   a `reactive` returning a filtered vector. Is used to update
     #'   counts following the change in values of the filtered dataset.
     #' @param varname (`character`, `name`)\cr
@@ -41,7 +41,7 @@ ChoicesFilterState <- R6::R6Class( # nolint
     #' \item{`"matrix"`}{ `varname` in the condition call will be returned as `<input_dataname>[, <varname>]`}
     #' }
     initialize = function(x,
-                          x_filtered,
+                          x_reactive,
                           varname,
                           varlabel = character(0),
                           input_dataname = NULL,
@@ -52,8 +52,8 @@ ChoicesFilterState <- R6::R6Class( # nolint
           (length(unique(x[!is.na(x)])) < getOption("teal.threshold_slider_vs_checkboxgroup"))
       )
 
-      #validation on x_filtered here
-      super$initialize(x, x_filtered, varname, varlabel, input_dataname, extract_type)
+      #validation on x_reactive here
+      super$initialize(x, x_reactive, varname, varlabel, input_dataname, extract_type)
 
       if (!is(x, "factor")) {
         x <- factor(x, levels = as.character(sort(unique(x))))
@@ -187,7 +187,7 @@ ChoicesFilterState <- R6::R6Class( # nolint
         l_counts <- as.numeric(names(private$choices))
         is_na_l_counts <- is.na(l_counts)
         if (any(is_na_l_counts)) l_counts[is_na_l_counts] <- 0
-        f_counts <- unname(table(factor(private$filtered_values(), levels = private$choices)))
+        f_counts <- unname(table(factor(private$x_reactive(), levels = private$choices)))
         f_counts[is.na(f_counts)] <- 0
         labels <- lapply(seq_along(private$choices), function(i) {
           l_count <- l_counts[i]
@@ -213,7 +213,7 @@ ChoicesFilterState <- R6::R6Class( # nolint
           )
         })
       } else {
-        x <- factor(private$filtered_values(), levels = private$choices)
+        x <- factor(private$x_reactive(), levels = private$choices)
         sprintf("%s (%s/%s)", private$choices, table(x), names(private$choices))
       }
     },
@@ -314,7 +314,7 @@ ChoicesFilterState <- R6::R6Class( # nolint
           )
           private$keep_na_srv("keep_na")
 
-          observeEvent(private$filtered_values(), {
+          observeEvent(private$x_reactive(), {
             if (private$is_checkboxgroup()) {
               updateCheckboxGroupInput(
                 session,

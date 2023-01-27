@@ -57,7 +57,7 @@ FilterStates <- R6::R6Class( # nolint
     #' @param data (`data.frame`, `MultiAssayExperiment`, `SummarizedExperiment`, `matrix`)\cr
     #'   the R object which `subset` function is applied on.
     #'
-    #' @param data_filtered (`reactive`)\cr
+    #' @param data_reactive (`reactive`)\cr
     #'   should return an object constistent with the `FilterState` class.
     #'   This object is needed for the `FilterState` counts being updated
     #'   on a change in filters.
@@ -73,7 +73,7 @@ FilterStates <- R6::R6Class( # nolint
     #' @return
     #' self invisibly
     #'
-    initialize = function(data, data_filtered, input_dataname, output_dataname, datalabel) {
+    initialize = function(data, data_reactive, input_dataname, output_dataname, datalabel) {
       checkmate::assert(
         checkmate::check_class(input_dataname, "call"),
         checkmate::check_class(input_dataname, "name"),
@@ -98,7 +98,7 @@ FilterStates <- R6::R6Class( # nolint
       private$output_dataname <- char_to_name(output_dataname)
       private$datalabel <- datalabel
       private$data <- data
-      private$data_filtered <- data_filtered
+      private$data_reactive <- data_reactive
 
       logger::log_trace("Instantiated { class(self)[1] }, dataname: { deparse1(private$input_dataname) }")
       invisible(self)
@@ -460,7 +460,7 @@ FilterStates <- R6::R6Class( # nolint
     cards_container_id = character(0),
     card_ids = character(0),
     data = NULL, # data.frame, MAE, SE or matrix
-    data_filtered = NULL, # reactive
+    data_reactive = NULL, # reactive
     datalabel = character(0),
     filterable_varnames = character(0),
     input_dataname = NULL, # because it holds object of class name

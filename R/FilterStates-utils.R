@@ -7,7 +7,7 @@
 #' @param data (`data.frame`, `MultiAssayExperiment`, `SummarizedExperiment`, `matrix`)\cr
 #'   the R object which `subset` function is applied on.
 #'
-#' @param data_filtered (`reactive`)\cr
+#' @param data_reactive (`reactive`)\cr
 #'   should return an object constistent with the `FilterState` class.
 #'   This object is needed for the `FilterState` counts being updated
 #'   on a change in filters.
@@ -60,7 +60,7 @@
 #' )
 #' }
 init_filter_states <- function(data,
-                               data_filtered = reactive(data),
+                               data_reactive = reactive(data),
                                input_dataname,
                                output_dataname = input_dataname,
                                datalabel = character(0),
@@ -71,7 +71,7 @@ init_filter_states <- function(data,
 #' @keywords internal
 #' @export
 init_filter_states.data.frame <- function(data, # nolint
-                                          data_filtered = reactive(data),
+                                          data_reactive = reactive(data),
                                           input_dataname,
                                           output_dataname = input_dataname,
                                           datalabel = character(0),
@@ -80,7 +80,7 @@ init_filter_states.data.frame <- function(data, # nolint
                                           ...) {
   DFFilterStates$new(
     data = data,
-    data_filtered = data_filtered,
+    data_reactive = data_reactive,
     input_dataname = input_dataname,
     output_dataname = output_dataname,
     datalabel = datalabel,
@@ -92,14 +92,14 @@ init_filter_states.data.frame <- function(data, # nolint
 #' @keywords internal
 #' @export
 init_filter_states.matrix <- function(data, # nolint
-                                      data_filtered = reactive(data),
+                                      data_reactive = reactive(data),
                                       input_dataname,
                                       output_dataname = input_dataname,
                                       datalabel = character(0),
                                       ...) {
   MatrixFilterStates$new(
     data = data,
-    data_filtered = data_filtered,
+    data_reactive = data_reactive,
     input_dataname = input_dataname,
     output_dataname = output_dataname,
     datalabel = datalabel
@@ -109,7 +109,7 @@ init_filter_states.matrix <- function(data, # nolint
 #' @keywords internal
 #' @export
 init_filter_states.MultiAssayExperiment <- function(data, # nolint
-                                                    data_filtered = reactive(data),
+                                                    data_reactive = reactive(data),
                                                     input_dataname,
                                                     output_dataname = input_dataname,
                                                     datalabel = character(0),
@@ -121,7 +121,7 @@ init_filter_states.MultiAssayExperiment <- function(data, # nolint
   }
   MAEFilterStates$new(
     data = data,
-    data_filtered = data_filtered,
+    data_reactive = data_reactive,
     input_dataname = input_dataname,
     output_dataname = output_dataname,
     datalabel = datalabel,
@@ -133,7 +133,7 @@ init_filter_states.MultiAssayExperiment <- function(data, # nolint
 #' @keywords internal
 #' @export
 init_filter_states.SummarizedExperiment <- function(data, # nolint
-                                                    data_filtered = reactive(data),
+                                                    data_reactive = reactive(data),
                                                     input_dataname,
                                                     output_dataname = input_dataname,
                                                     datalabel = character(0),
@@ -143,7 +143,7 @@ init_filter_states.SummarizedExperiment <- function(data, # nolint
   }
   SEFilterStates$new(
     data = data,
-    data_filtered = data_filtered,
+    data_reactive = data_reactive,
     input_dataname = input_dataname,
     output_dataname = output_dataname,
     datalabel = datalabel
