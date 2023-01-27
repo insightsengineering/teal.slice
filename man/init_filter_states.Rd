@@ -18,7 +18,9 @@ init_filter_states(
 the R object which \code{subset} function is applied on.}
 
 \item{data_filtered}{(\code{reactive})\cr
-should return an object constistent with the \code{FilterState} class.}
+should return an object constistent with the \code{FilterState} class.
+This object is needed for the \code{FilterState} counts being updated
+on a change in filters.}
 
 \item{input_dataname}{(\code{character(1)} or \code{name} or \code{call})\cr
 name of the data used on lhs of the expression

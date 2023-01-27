@@ -66,7 +66,9 @@ Initialize \code{SEFilterStates} object
 the R object which \code{subset} function is applied on.}
 
 \item{\code{data_filtered}}{(\code{reactive})\cr
-should return a \code{SummarizedExperiment} object.}
+should return a \code{SummarizedExperiment} object.
+This object is needed for the \code{FilterState} counts being updated
+on a change in filters.}
 
 \item{\code{input_dataname}}{(\code{character(1)} or \code{name} or \code{call})\cr
 name of the data used on lhs of the expression

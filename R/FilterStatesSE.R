@@ -14,6 +14,8 @@ SEFilterStates <- R6::R6Class( # nolint
     #'
     #' @param data_filtered (`reactive`)\cr
     #'   should return a `SummarizedExperiment` object.
+    #'   This object is needed for the `FilterState` counts being updated
+    #'   on a change in filters.
     #'
     #' @param input_dataname (`character(1)` or `name` or `call`)\cr
     #'   name of the data used on lhs of the expression

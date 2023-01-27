@@ -26,7 +26,8 @@ LogicalFilterState <- R6::R6Class( # nolint
     #' @param x (`logical`)\cr
     #'   values of the variable used in filter
     #' @param x_filtered (`reactive`)\cr
-    #'   a `reactive` returning a filtered vector.
+    #'   a `reactive` returning a filtered vector. Is used to update
+    #'   counts following the change in values of the filtered dataset.
     #' @param varname (`character`, `name`)\cr
     #'   label of the variable (optional).
     #' @param varlabel (`character(1)`)\cr

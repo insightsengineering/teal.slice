@@ -77,7 +77,8 @@ Initialize \code{EmptyFilterState} object.
 values of the variable used in filter}
 
 \item{\code{x_filtered}}{(\code{reactive})\cr
-a \code{reactive} returning a filtered vector.}
+a \code{reactive} returning a filtered vector. Is used to update
+counts following the change in values of the filtered dataset.}
 
 \item{\code{varname}}{(\code{character}, \code{name})\cr
 name of the variable}

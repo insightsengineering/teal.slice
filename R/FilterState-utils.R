@@ -4,6 +4,10 @@
 #' @param x (`vector`)\cr
 #'   values of the variable used in filter
 #'
+#' @param x_filtered (`reactive`)\cr
+#'   returning vector of the same type as `x`. Is used to update
+#'   counts following the change in values of the filtered dataset.
+#'
 #' @param varname (`character(1)`, `name`)\cr
 #'   name of the variable
 #'

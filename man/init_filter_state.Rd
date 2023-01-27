@@ -17,6 +17,10 @@ init_filter_state(
 \item{x}{(\code{vector})\cr
 values of the variable used in filter}
 
+\item{x_filtered}{(\code{reactive})\cr
+returning vector of the same type as \code{x}. Is used to update
+counts following the change in values of the filtered dataset.}
+
 \item{varname}{(\code{character(1)}, \code{name})\cr
 name of the variable}
 
