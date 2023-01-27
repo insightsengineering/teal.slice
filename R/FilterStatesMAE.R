@@ -11,12 +11,9 @@ MAEFilterStates <- R6::R6Class( # nolint
     #'
     #' Initialize `MAEFilterStates` object
     #'
-    #' @param input_dataname (`character(1)` or `name` or `call`)\cr
-    #'   name of the data used on lhs of the expression
+    #' @param dataname (`character(1)` or `name` or `call`)\cr
+    #'   name of the data used in the expression
     #'   specified to the function argument attached to this `FilterStates`.
-    #'
-    #' @param output_dataname (`character(1)` or `name` or `call`)\cr
-    #'   name of the output data on the lhs of the assignment expression.
     #'
     #' @param datalabel (`character(0)` or `character(1)`)\cr
     #'   text label value.
@@ -26,11 +23,11 @@ MAEFilterStates <- R6::R6Class( # nolint
     #'
     #' @param keys (`character`)\cr
     #'   key columns names
-    initialize = function(input_dataname, output_dataname, datalabel, varlabels, keys) {
+    initialize = function(dataname, datalabel, varlabels, keys) {
       if (!requireNamespace("MultiAssayExperiment", quietly = TRUE)) {
         stop("Cannot load MultiAssayExperiment - please install the package or restart your session.")
       }
-      super$initialize(input_dataname, output_dataname, datalabel)
+      super$initialize(dataname, datalabel)
       private$keys <- keys
       private$varlabels <- varlabels
 
@@ -142,7 +139,7 @@ MAEFilterStates <- R6::R6Class( # nolint
         checkmate::check_class(state, "default_filter"),
         combine = "or"
       )
-      logger::log_trace("MAEFilterState$set_filter_state initializing, dataname: { deparse1(private$input_dataname) }")
+      logger::log_trace("MAEFilterState$set_filter_state initializing, dataname: { deparse1(private$dataname) }")
       filter_states <- self$state_list_get("y")
       for (varname in names(state)) {
         value <- resolve_state(state[[varname]])
@@ -154,7 +151,7 @@ MAEFilterStates <- R6::R6Class( # nolint
             SummarizedExperiment::colData(data)[[varname]],
             varname = as.name(varname),
             varlabel = private$get_varlabels(varname),
-            input_dataname = private$input_dataname,
+            dataname = private$dataname,
             extract_type = "list"
           )
           fstate$set_state(value)
@@ -166,7 +163,7 @@ MAEFilterStates <- R6::R6Class( # nolint
           )
         }
       }
-      logger::log_trace("MAEFilterState$set_filter_state initialized, dataname: { deparse1(private$input_dataname) }")
+      logger::log_trace("MAEFilterState$set_filter_state initialized, dataname: { deparse1(private$dataname) }")
       NULL
     },
 
@@ -183,20 +180,20 @@ MAEFilterStates <- R6::R6Class( # nolint
           "%s$remove_filter_state for %s called, dataname: %s",
           class(self)[1],
           state_id,
-          deparse1(private$input_dataname)
+          deparse1(private$dataname)
         )
       )
 
       if (!state_id %in% names(self$state_list_get("y"))) {
         warning(paste(
           "Variable:", state_id,
-          "is not present in the actual active filters of dataset: { deparse1(private$input_dataname) }",
+          "is not present in the actual active filters of dataset: { deparse1(private$dataname) }",
           "therefore no changes are applied."
         ))
         logger::log_warn(
           paste(
             "Variable:", state_id, "is not present in the actual active filters of dataset:",
-            "{ deparse1(private$input_dataname) } therefore no changes are applied."
+            "{ deparse1(private$dataname) } therefore no changes are applied."
           )
         )
       } else {
@@ -206,7 +203,7 @@ MAEFilterStates <- R6::R6Class( # nolint
             "%s$remove_filter_state for variable %s done, dataname: %s",
             class(self)[1],
             state_id,
-            deparse1(private$input_dataname)
+            deparse1(private$dataname)
           )
         )
       }
@@ -269,7 +266,7 @@ MAEFilterStates <- R6::R6Class( # nolint
         id = id,
         function(input, output, session) {
           logger::log_trace(
-            "MAEFilterState$srv_add_filter_state initializing, dataname: { deparse1(private$input_dataname) }"
+            "MAEFilterState$srv_add_filter_state initializing, dataname: { deparse1(private$dataname) }"
           )
           shiny::setBookmarkExclude("var_to_add")
           active_filter_vars <- reactive({
@@ -299,7 +296,7 @@ MAEFilterStates <- R6::R6Class( # nolint
             handlerExpr = {
               logger::log_trace(paste(
                 "MAEFilterStates$srv_add_filter_state@1 updating available column choices,",
-                "dataname: { deparse1(private$input_dataname) }"
+                "dataname: { deparse1(private$dataname) }"
               ))
               if (is.null(avail_column_choices())) {
                 shinyjs::hide("var_to_add")
@@ -313,7 +310,7 @@ MAEFilterStates <- R6::R6Class( # nolint
               )
               logger::log_trace(paste(
                 "MAEFilterStates$srv_add_filter_state@1 updated available column choices,",
-                "dataname: { deparse1(private$input_dataname) }"
+                "dataname: { deparse1(private$dataname) }"
               ))
             }
           )
@@ -325,7 +322,7 @@ MAEFilterStates <- R6::R6Class( # nolint
                 sprintf(
                   "MAEFilterStates$srv_add_filter_state@2 adding FilterState of variable %s, dataname: %s",
                   deparse1(input$var_to_add),
-                  deparse1(private$input_dataname)
+                  deparse1(private$dataname)
                 )
               )
 
@@ -333,7 +330,7 @@ MAEFilterStates <- R6::R6Class( # nolint
                 SummarizedExperiment::colData(data)[[input$var_to_add]],
                 varname = as.name(input$var_to_add),
                 varlabel = private$get_varlabels(input$var_to_add),
-                input_dataname = private$input_dataname,
+                dataname = private$dataname,
                 extract_type = "list"
               )
               fstate$set_na_rm(TRUE)
@@ -347,14 +344,14 @@ MAEFilterStates <- R6::R6Class( # nolint
                 sprintf(
                   "MAEFilterStates$srv_add_filter_state@2 added FilterState of variable %s, dataname: %s",
                   deparse1(input$var_to_add),
-                  deparse1(private$input_dataname)
+                  deparse1(private$dataname)
                 )
               )
             }
           )
 
           logger::log_trace(
-            "MAEFilterState$srv_add_filter_state initialized, dataname: { deparse1(private$input_dataname) }"
+            "MAEFilterState$srv_add_filter_state initialized, dataname: { deparse1(private$dataname) }"
           )
           NULL
         }
