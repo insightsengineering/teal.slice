@@ -1,9 +1,6 @@
 testthat::test_that("MAEFilteredDataset accepts a MultiAssayExperiment object", {
   utils::data(miniACC, package = "MultiAssayExperiment")
-  testthat::expect_error(
-    MAEFilteredDataset$new(dataset = miniACC, dataname = "miniACC"),
-    NA
-  )
+  testthat::expect_no_error(MAEFilteredDataset$new(dataset = miniACC, dataname = "miniACC"))
 })
 
 testthat::test_that("MAEFilteredDataset throws error with a data.frame passed to constructor", {

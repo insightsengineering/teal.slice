@@ -1,9 +1,9 @@
 testthat::test_that("The constructor accepts numerical values", {
-  testthat::expect_error(RangeFilterState$new(c(1), varname = "test"), NA)
+  testthat::expect_no_error(RangeFilterState$new(c(1), varname = "test"))
 })
 
 testthat::test_that("The constructor accepts infinite values but not infinite only", {
-  testthat::expect_error(RangeFilterState$new(c(1, Inf, -Inf), varname = "test"), NA)
+  testthat::expect_no_error(RangeFilterState$new(c(1, Inf, -Inf), varname = "test"))
   testthat::expect_error(RangeFilterState$new(Inf, varname = "test"), "any\\(is.finite\\(x")
   testthat::expect_error(RangeFilterState$new(c(Inf, NA), varname = "test"), "any\\(is.finite\\(x")
 })
@@ -69,7 +69,7 @@ testthat::test_that("set_selected throws when the passed values are not coercibl
 
 testthat::test_that("set_selected accepts an array with two numerical elements", {
   filter_state <- RangeFilterState$new(7, varname = "test")
-  testthat::expect_error(filter_state$set_selected(c(7, 7)), NA)
+  testthat::expect_no_error(filter_state$set_selected(c(7, 7)))
 })
 
 testthat::test_that("get_call returns a valid call after an unsuccessfull set_selected", {
@@ -139,10 +139,7 @@ testthat::test_that("get_state returns a list identical to set_state input", {
 
 testthat::test_that("set_state needs a named list with selected, keep_na and keep_inf elements", {
   filter_state <- RangeFilterState$new(c(1, 8, NA_real_, Inf), varname = "test")
-  testthat::expect_error(
-    filter_state$set_state(list(selected = c(1, 2), keep_na = TRUE, keep_inf = TRUE)),
-    NA
-  )
+  testthat::expect_no_error(filter_state$set_state(list(selected = c(1, 2), keep_na = TRUE, keep_inf = TRUE)))
   testthat::expect_error(filter_state$set_state(list(selected = c(1, 2), unknown = TRUE)), "all\\(names\\(state\\)")
 })
 
@@ -157,7 +154,7 @@ testthat::test_that("set_state sets values of selected and keep_na as provided i
 testthat::test_that("set_state overwrites fields included in the input only", {
   filter_state <- RangeFilterState$new(c(1, 8, NA_real_, Inf), varname = "test")
   filter_state$set_state(list(selected = c(1, 2), keep_na = TRUE, keep_inf = TRUE))
-  testthat::expect_error(filter_state$set_state(list(selected = c(5, 6), keep_na = TRUE, keep_inf = TRUE)), NA)
+  testthat::expect_no_error(filter_state$set_state(list(selected = c(5, 6), keep_na = TRUE, keep_inf = TRUE)))
   testthat::expect_identical(isolate(filter_state$get_selected()), c(5, 6))
   testthat::expect_true(isolate(filter_state$get_keep_na()))
   testthat::expect_true(isolate(filter_state$get_keep_inf()))
@@ -224,7 +221,7 @@ testthat::test_that(
 # Format
 testthat::test_that("$format() is a FilterStates's method that accepts indent", {
   filter_state <- RangeFilterState$new(7, varname = "test")
-  testthat::expect_error(shiny::isolate(filter_state$format(indent = 0)), regexp = NA)
+  testthat::expect_no_error(shiny::isolate(filter_state$format(indent = 0)))
 })
 
 testthat::test_that("$format() asserts that indent is numeric", {

@@ -1,11 +1,13 @@
 testthat::test_that("The constructor does not throw", {
-  testthat::expect_error(MAEFilterStates$new(
-    input_dataname = "test",
-    output_dataname = "test",
-    datalabel = character(0),
-    varlabels = character(0),
-    keys = character(0)
-  ), NA)
+  testthat::expect_no_error(
+    MAEFilterStates$new(
+      input_dataname = "test",
+      output_dataname = "test",
+      datalabel = character(0),
+      varlabels = character(0),
+      keys = character(0)
+    )
+  )
 })
 
 testthat::test_that("MAEFilterStates accept vector as an input for varlabels", {
@@ -295,16 +297,17 @@ testthat::test_that(
   }
 )
 
-# Format
+# Format ----
 testthat::test_that("$format() is a method of DFFilterStates", {
-  testthat::expect_error(isolate(
-    MAEFilterStates$new(
+  testthat::expect_no_error(
+    isolate(MAEFilterStates$new(
       input_dataname = "iris",
       output_dataname = "iris_filtered",
       datalabel = character(0),
       varlabels = character(0),
       keys = character(0)
-    )$format(), NA))
+    )$format())
+  )
 })
 
 testthat::test_that("$format() asserts the indent argument is a number", {

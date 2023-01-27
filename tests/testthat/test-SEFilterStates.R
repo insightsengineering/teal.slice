@@ -35,11 +35,11 @@ get_test_data <- function(no_data = FALSE) {
 }
 
 testthat::test_that("The constructor does not throw", {
-  testthat::expect_error(SEFilterStates$new(
+  testthat::expect_no_error(SEFilterStates$new(
     input_dataname = "test",
     output_dataname = "test",
     datalabel = "test"
-  ), NA)
+  ))
 })
 
 testthat::test_that("The constructor initializes two state_lists", {
@@ -77,9 +77,7 @@ testthat::test_that("set_filter_state throws error when data argument is not of 
     datalabel = "test"
   )
   data <- data.frame(a = "test")
-  testthat::expect_error(
-    filter_states$set_filter_state(data = data, state = list(subset = NULL, select = NULL))
-  )
+  testthat::expect_error(filter_states$set_filter_state(data = data, state = list(subset = NULL, select = NULL)))
 })
 
 testthat::test_that("set_filter_state throws error when state argument contains extra elements", {
@@ -417,13 +415,12 @@ testthat::test_that(
 
 # Format
 testthat::test_that("$format() is a method of SEFilterStates", {
-  testthat::expect_error(
+  testthat::expect_no_error(
     isolate(SEFilterStates$new(
       input_dataname = "test",
       output_dataname = "test_filtered",
       datalabel = character(0)
-    )$format(),
-    NA
+    )$format()
     ))
 })
 

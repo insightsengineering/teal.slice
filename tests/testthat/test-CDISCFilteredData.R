@@ -81,7 +81,6 @@ testthat::test_that("get_varlabels returns the column labels of the passed datas
   ds <- setup_objects$ds
   adsl <- setup_objects$adsl
 
-
   testthat::expect_equal(
     ds$get_varlabels("ADSL"),
     formatters::var_labels(adsl, fill = FALSE)

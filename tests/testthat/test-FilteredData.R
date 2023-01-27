@@ -1,11 +1,11 @@
 testthat::test_that("The constructor does not throw", {
-  testthat::expect_error(FilteredData$new(list(iris = list(dataset = iris)), join_keys = NULL), NA)
+  testthat::expect_no_error(FilteredData$new(list(iris = list(dataset = iris)), join_keys = NULL))
 })
 
 testthat::test_that("set_dataset accepts a `data.frame` object", {
   filtered_data <- FilteredData$new(data_objects = list(), join_keys = NULL)
   dataset_args <- list(dataset = iris)
-  testthat::expect_error(filtered_data$set_dataset(dataset_args = dataset_args, dataname = "iris"), regexp = NA)
+  testthat::expect_no_error(filtered_data$set_dataset(dataset_args = dataset_args, dataname = "iris"))
 })
 
 testthat::test_that("set_dataset returns self", {
@@ -439,14 +439,14 @@ get_filtered_data_object <- function() {
 
 testthat::test_that("get_filter_overview accepts all datasets argument input", {
   datasets <- get_filtered_data_object()
-  testthat::expect_error(isolate(datasets$get_filter_overview("all")), NA)
+  testthat::expect_no_error(isolate(datasets$get_filter_overview("all")))
 })
 
 testthat::test_that("get_filter_overview accepts single dataset argument input", {
   datasets <- get_filtered_data_object()
-  testthat::expect_error(isolate(datasets$get_filter_overview("ADSL")), NA)
-  testthat::expect_error(isolate(datasets$get_filter_overview("mock_iris")), NA)
-  testthat::expect_error(isolate(datasets$get_filter_overview("miniACC")), NA)
+  testthat::expect_no_error(isolate(datasets$get_filter_overview("ADSL")))
+  testthat::expect_no_error(isolate(datasets$get_filter_overview("mock_iris")))
+  testthat::expect_no_error(isolate(datasets$get_filter_overview("miniACC")))
 })
 
 testthat::test_that("get_filter_overview throws error with empty argument input", {

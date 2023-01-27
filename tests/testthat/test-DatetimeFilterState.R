@@ -1,6 +1,6 @@
 testthat::test_that("The constructor accepts a POSIXct or POSIXlt object", {
-  testthat::expect_error(DatetimeFilterState$new(as.POSIXct(8, origin = "1900/01/01 00:00:00"), varname = "test"), NA)
-  testthat::expect_error(DatetimeFilterState$new(as.POSIXlt(8, origin = "1900/01/01 00:00:00"), varname = "test"), NA)
+  testthat::expect_no_error(DatetimeFilterState$new(as.POSIXct(8, origin = "1900/01/01 00:00:00"), varname = "test"))
+  testthat::expect_no_error(DatetimeFilterState$new(as.POSIXlt(8, origin = "1900/01/01 00:00:00"), varname = "test"))
 })
 
 testthat::test_that("get_call returns a condition true for the object supplied in the constructor", {
@@ -12,7 +12,7 @@ testthat::test_that("get_call returns a condition true for the object supplied i
 testthat::test_that("get_call set selected accepts an array of two POSIXct objects", {
   object <- as.POSIXct(8, origin = "1900/01/01 00:00:00")
   filter_state <- DatetimeFilterState$new(object, varname = "object")
-  testthat::expect_error(filter_state$set_selected(c(object, object)), NA)
+  testthat::expect_no_error(filter_state$set_selected(c(object, object)))
 })
 
 testthat::test_that("get_call returns a condition true for the object in the selected range", {
@@ -101,14 +101,9 @@ testthat::test_that("set_selected throws when the value type cannot be interpret
 testthat::test_that("set_state needs a named list with selected and keep_na elements", {
   objects <- as.POSIXct(c(1:4), origin = "1900/01/01 00:00:00")
   filter_state <- DatetimeFilterState$new(objects, varname = "test")
+  testthat::expect_no_error(filter_state$set_state(list(selected = c(objects[2], objects[3]), keep_na = TRUE)))
   testthat::expect_error(
-    filter_state$set_state(list(selected = c(objects[2], objects[3]), keep_na = TRUE)),
-    NA
-  )
-  testthat::expect_error(
-    filter_state$set_state(
-      list(selected = c(objects[3], objects[4]), unknown = TRUE)
-    ),
+    filter_state$set_state(list(selected = c(objects[3], objects[4]), unknown = TRUE)),
     "all\\(names\\(state\\)"
   )
 })
@@ -125,7 +120,7 @@ testthat::test_that("set_state overwrites fields included in the input only", {
   objects <- as.POSIXct(c(1:5), origin = "1900/01/01 00:00:00")
   filter_state <- DatetimeFilterState$new(objects, varname = "test")
   filter_state$set_state(list(selected = c(objects[2], objects[3]), keep_na = TRUE))
-  testthat::expect_error(filter_state$set_state(list(selected = c(objects[3], objects[4]))), NA)
+  testthat::expect_no_error(filter_state$set_state(list(selected = c(objects[3], objects[4]))))
   testthat::expect_identical(isolate(filter_state$get_selected()), c(objects[3], objects[4]))
   testthat::expect_true(isolate(filter_state$get_keep_na()))
 })
@@ -171,7 +166,7 @@ testthat::test_that(
 testthat::test_that("$format() is a FilterStates's method that accepts indent", {
   object <- as.POSIXct(8, origin = "1900/01/01 00:00:00", tz = "GMT")
   filter_state <- DatetimeFilterState$new(object, varname = "test")
-  testthat::expect_error(shiny::isolate(filter_state$format(indent = 0)), regexp = NA)
+  testthat::expect_no_error(shiny::isolate(filter_state$format(indent = 0)))
 })
 
 testthat::test_that("$format() asserts that indent is numeric", {

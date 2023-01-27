@@ -1,9 +1,7 @@
-testthat::test_that("The constructor does not throw", {
-  testthat::expect_error(MatrixFilterStates$new(
-    input_dataname = "test",
-    output_dataname = "test",
-    datalabel = "test"
-  ), NA)
+testthat::test_that("The constructor does not raise errors", {
+  testthat::expect_no_error(
+    MatrixFilterStates$new(input_dataname = "test", output_dataname = "test", datalabel = "test")
+  )
 })
 
 testthat::test_that("The constructor initializes one state_list", {

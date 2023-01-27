@@ -1,9 +1,9 @@
 testthat::test_that("The constructor accepts logical values", {
-  testthat::expect_error(LogicalFilterState$new(c(TRUE), varname = "test"), NA)
+  testthat::expect_no_error(LogicalFilterState$new(c(TRUE), varname = "test"))
 })
 
 testthat::test_that("The constructor accepts NA values", {
-  testthat::expect_error(LogicalFilterState$new(c(TRUE, NA), varname = "test"), NA)
+  testthat::expect_no_error(LogicalFilterState$new(c(TRUE, NA), varname = "test"))
 })
 
 testthat::test_that("get_call returns a condition true for TRUE passed in the constructor", {
@@ -22,8 +22,8 @@ testthat::test_that("get_call returns a condition TRUE for a value FALSE
 
 testthat::test_that("set_selected does not throw when passed a scalar logical value", {
   filter_state <- LogicalFilterState$new(c(TRUE, FALSE), varname = "test")
-  testthat::expect_error(filter_state$set_selected(TRUE), NA)
-  testthat::expect_error(filter_state$set_selected(FALSE), NA)
+  testthat::expect_no_error(filter_state$set_selected(TRUE))
+  testthat::expect_no_error(filter_state$set_selected(FALSE))
 })
 
 testthat::test_that("set_selected throws when the passed values are not coercible to logical", {
@@ -45,7 +45,7 @@ testthat::test_that("get_call returns a condition true for the values passed in 
 
 testthat::test_that("set_state needs a named list with selected and keep_na elements", {
   filter_state <- LogicalFilterState$new(x = c(TRUE, FALSE, NA), varname = "test")
-  testthat::expect_error(filter_state$set_state(list(selected = FALSE, keep_na = TRUE)), NA)
+  testthat::expect_no_error(filter_state$set_state(list(selected = FALSE, keep_na = TRUE)))
   testthat::expect_error(filter_state$set_state(list(selected = TRUE, unknown = TRUE)), "all\\(names\\(state\\)")
 })
 
@@ -59,7 +59,7 @@ testthat::test_that("set_state sets values of selected and keep_na as provided i
 testthat::test_that("set_state overwrites fields included in the input only", {
   filter_state <- LogicalFilterState$new(x = c(TRUE, FALSE, NA), varname = "test")
   filter_state$set_state(list(selected = FALSE, keep_na = TRUE))
-  testthat::expect_error(filter_state$set_state(list(selected = TRUE)), NA)
+  testthat::expect_no_error(filter_state$set_state(list(selected = TRUE)))
   testthat::expect_true(isolate(filter_state$get_selected()))
   testthat::expect_true(isolate(filter_state$get_keep_na()))
 })

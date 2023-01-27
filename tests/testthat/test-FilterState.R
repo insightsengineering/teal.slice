@@ -1,7 +1,7 @@
 testthat::test_that("The constructor accepts character, name or call as varname", {
-  testthat::expect_error(FilterState$new(c(7), varname = "test"), NA)
-  testthat::expect_error(FilterState$new(c(7), varname = quote(pi)), NA)
-  testthat::expect_error(FilterState$new(c(7), varname = call("test")), NA)
+  testthat::expect_no_error(FilterState$new(c(7), varname = "test"))
+  testthat::expect_no_error(FilterState$new(c(7), varname = quote(pi)))
+  testthat::expect_no_error(FilterState$new(c(7), varname = call("test")))
 })
 
 testthat::test_that("The constructor requires a varname", {
@@ -9,7 +9,7 @@ testthat::test_that("The constructor requires a varname", {
 })
 
 testthat::test_that("The constructor accepts a string as varlabel", {
-  testthat::expect_error(FilterState$new(c(7), varname = "test", varlabel = "test"), NA)
+  testthat::expect_no_error(FilterState$new(c(7), varname = "test", varlabel = "test"))
 })
 
 testthat::test_that("get_call returns NULL", {
@@ -198,7 +198,7 @@ testthat::test_that(
 
 # Format
 testthat::test_that("$format() is a FilterStates's method that accepts indent", {
-  testthat::expect_error(shiny::isolate(FilterState$new(c(7), varname = "test")$format(indent = 0)), regexp = NA)
+  testthat::expect_no_error(shiny::isolate(FilterState$new(c(7), varname = "test")$format(indent = 0)))
 })
 
 testthat::test_that("$format() asserts that indent is numeric", {

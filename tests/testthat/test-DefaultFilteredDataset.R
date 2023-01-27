@@ -1,7 +1,5 @@
 testthat::test_that("The constructor accepts a data.frame object with a dataname", {
-  testthat::expect_error(DefaultFilteredDataset$new(
-    dataset = head(iris), dataname = "iris"
-  ), NA)
+  testthat::expect_no_error(DefaultFilteredDataset$new(dataset = head(iris), dataname = "iris"))
 })
 
 testthat::test_that("get_call returns a list of calls or NULL", {
