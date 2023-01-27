@@ -549,8 +549,8 @@ FilterState <- R6::R6Class( # nolint
       if (private$na_count > 0) {
         checkboxInput(
           ns("value"),
-          sprintf("Keep NA (%s/%s)", private$filtered_na_count(), private$na_count),
-          value = self$get_keep_na()
+          isolate(sprintf("Keep NA (%s/%s)", private$filtered_na_count(), private$na_count)),
+          value = isolate(self$get_keep_na())
         )
       } else {
         NULL
