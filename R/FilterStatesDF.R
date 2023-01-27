@@ -40,7 +40,7 @@ DFFilterStates <- R6::R6Class( # nolint
       super$initialize(data, data_reactive, input_dataname, output_dataname, datalabel)
       private$varlabels <- varlabels
       private$keys <- keys
-
+      self$set_filterable_varnames(colnames(data))
       self$state_list_initialize(
         list(
           shiny::reactiveVal()
