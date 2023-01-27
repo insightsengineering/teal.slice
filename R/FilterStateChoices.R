@@ -8,7 +8,7 @@
 #' filter_state <- teal.slice:::ChoicesFilterState$new(
 #'   c(LETTERS, NA),
 #'   varname = "x",
-#'   input_dataname = as.name("data"),
+#'   dataname = as.name("data"),
 #'   extract_type = character(0)
 #' )
 #' isolate(filter_state$get_call())
@@ -28,26 +28,26 @@ ChoicesFilterState <- R6::R6Class( # nolint
     #'   name of the variable
     #' @param varlabel (`character(1)`)\cr
     #'   label of the variable (optional).
-    #' @param input_dataname (`name` or `call`)\cr
+    #' @param dataname (`name` or `call`)\cr
     #'   name of dataset where `x` is taken from
     #' @param extract_type (`character(0)`, `character(1)`)\cr
     #' whether condition calls should be prefixed by dataname. Possible values:
     #' \itemize{
     #' \item{`character(0)` (default)}{ `varname` in the condition call will not be prefixed}
-    #' \item{`"list"`}{ `varname` in the condition call will be returned as `<input_dataname>$<varname>`}
-    #' \item{`"matrix"`}{ `varname` in the condition call will be returned as `<input_dataname>[, <varname>]`}
+    #' \item{`"list"`}{ `varname` in the condition call will be returned as `<dataname>$<varname>`}
+    #' \item{`"matrix"`}{ `varname` in the condition call will be returned as `<dataname>[, <varname>]`}
     #' }
     initialize = function(x,
                           varname,
                           varlabel = character(0),
-                          input_dataname = NULL,
+                          dataname = NULL,
                           extract_type = character(0)) {
       stopifnot(
         is.character(x) ||
           is.factor(x) ||
           (length(unique(x[!is.na(x)])) < getOption("teal.threshold_slider_vs_checkboxgroup"))
       )
-      super$initialize(x, varname, varlabel, input_dataname, extract_type)
+      super$initialize(x, varname, varlabel, dataname, extract_type)
 
       if (!is(x, "factor")) {
         x <- factor(x, levels = as.character(sort(unique(x))))
@@ -167,7 +167,7 @@ ChoicesFilterState <- R6::R6Class( # nolint
       if (length(values[!in_choices_mask]) > 0) {
         warning(paste(
           "Values:", strtrim(paste(values[!in_choices_mask], collapse = ", "), 360),
-          "are not in choices of column", private$varname, "in dataset", private$input_dataname, "."
+          "are not in choices of column", private$varname, "in dataset", private$dataname, "."
         ))
       }
       values[in_choices_mask]
@@ -240,7 +240,7 @@ ChoicesFilterState <- R6::R6Class( # nolint
       moduleServer(
         id = id,
         function(input, output, session) {
-          logger::log_trace("ChoicesFilterState$server initializing, dataname: { deparse1(private$input_dataname) }")
+          logger::log_trace("ChoicesFilterState$server initializing, dataname: { deparse1(private$dataname) }")
 
           # this observer is needed in the situation when private$selected has been
           # changed directly by the api - then it's needed to rerender UI element
@@ -259,7 +259,7 @@ ChoicesFilterState <- R6::R6Class( # nolint
                 logger::log_trace(sprintf(
                   "ChoicesFilterState$server@1 selection of variable %s changed, dataname: %s",
                   deparse1(self$get_varname()),
-                  deparse1(private$input_dataname)
+                  deparse1(private$dataname)
                 ))
               }
             }
@@ -275,13 +275,13 @@ ChoicesFilterState <- R6::R6Class( # nolint
               logger::log_trace(sprintf(
                 "ChoicesFilterState$server@2 selection of variable %s changed, dataname: %s",
                 deparse1(self$get_varname()),
-                deparse1(private$input_dataname)
+                deparse1(private$dataname)
               ))
             }
           )
           private$keep_na_srv("keep_na")
 
-          logger::log_trace("ChoicesFilterState$server initialized, dataname: { deparse1(private$input_dataname) }")
+          logger::log_trace("ChoicesFilterState$server initialized, dataname: { deparse1(private$dataname) }")
           NULL
         }
       )

@@ -83,7 +83,7 @@ Initialize a \code{FilterState} object
   x,
   varname,
   varlabel = character(0),
-  input_dataname = NULL,
+  dataname = NULL,
   extract_type = character(0)
 )}\if{html}{\out{</div>}}
 }
@@ -100,7 +100,7 @@ name of the variable}
 \item{\code{varlabel}}{(\code{character(1)})\cr
 label of the variable (optional).}
 
-\item{\code{input_dataname}}{(\code{name} or \code{call})\cr
+\item{\code{dataname}}{(\code{name} or \code{call})\cr
 name of dataset where \code{x} is taken from. Must be specified if \code{extract_type} argument
 is not empty.}
 
@@ -108,8 +108,8 @@ is not empty.}
 whether condition calls should be prefixed by dataname. Possible values:
 \itemize{
 \item{\code{character(0)} (default)}{ \code{varname} in the condition call will not be prefixed}
-\item{\code{"list"}}{ \code{varname} in the condition call will be returned as \verb{<input_dataname>$<varname>}}
-\item{\code{"matrix"}}{ \code{varname} in the condition call will be returned as \verb{<input_dataname>[, <varname>]}}
+\item{\code{"list"}}{ \code{varname} in the condition call will be returned as \verb{<dataname>$<varname>}}
+\item{\code{"matrix"}}{ \code{varname} in the condition call will be returned as \verb{<dataname>[, <varname>]}}
 }}
 }
 \if{html}{\out{</div>}}

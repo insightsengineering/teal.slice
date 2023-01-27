@@ -7,12 +7,9 @@
 #' @param data (`data.frame`, `MultiAssayExperiment`, `SummarizedExperiment`, `matrix`)\cr
 #'   the R object which `subset` function is applied on.
 #'
-#' @param input_dataname (`character(1)` or `name` or `call`)\cr
-#'   name of the data used on lhs of the expression
+#' @param dataname (`character(1)` or `name` or `call`)\cr
+#'   name of the data used in the expression
 #'   specified to the function argument attached to this `FilterStates`.
-#'
-#' @param output_dataname (`character(1)` or `name` or `call`)\cr
-#'   name of the output data on the lhs of the assignment expression.
 #'
 #' @param datalabel (`character(0)` or `character(1)`)\cr
 #'   text label value.
@@ -30,8 +27,7 @@
 #' )
 #' rf <- teal.slice:::init_filter_states(
 #'   data = df,
-#'   input_dataname = "DF",
-#'   output_dataname = "DF_OUTPUT",
+#'   dataname = "DF",
 #'   varlabels = c(
 #'     "character variable", "numeric variable", "date variable", "datetime variable"
 #'   )
@@ -55,8 +51,7 @@
 #' )
 #' }
 init_filter_states <- function(data,
-                               input_dataname,
-                               output_dataname = input_dataname,
+                               dataname,
                                datalabel = character(0),
                                ...) {
   UseMethod("init_filter_states")
@@ -65,15 +60,13 @@ init_filter_states <- function(data,
 #' @keywords internal
 #' @export
 init_filter_states.data.frame <- function(data, # nolint
-                                          input_dataname,
-                                          output_dataname = input_dataname,
+                                          dataname,
                                           datalabel = character(0),
                                           varlabels = character(0),
                                           keys = character(0),
                                           ...) {
   DFFilterStates$new(
-    input_dataname = input_dataname,
-    output_dataname = output_dataname,
+    dataname = dataname,
     datalabel = datalabel,
     varlabels = varlabels,
     keys = keys
@@ -83,13 +76,11 @@ init_filter_states.data.frame <- function(data, # nolint
 #' @keywords internal
 #' @export
 init_filter_states.matrix <- function(data, # nolint
-                                      input_dataname,
-                                      output_dataname = input_dataname,
+                                      dataname,
                                       datalabel = character(0),
                                       ...) {
   MatrixFilterStates$new(
-    input_dataname = input_dataname,
-    output_dataname = output_dataname,
+    dataname = dataname,
     datalabel = datalabel
   )
 }
@@ -97,8 +88,7 @@ init_filter_states.matrix <- function(data, # nolint
 #' @keywords internal
 #' @export
 init_filter_states.MultiAssayExperiment <- function(data, # nolint
-                                                    input_dataname,
-                                                    output_dataname = input_dataname,
+                                                    dataname,
                                                     datalabel = character(0),
                                                     varlabels,
                                                     keys = character(0),
@@ -107,8 +97,7 @@ init_filter_states.MultiAssayExperiment <- function(data, # nolint
     stop("Cannot load MultiAssayExperiment - please install the package or restart your session.")
   }
   MAEFilterStates$new(
-    input_dataname = input_dataname,
-    output_dataname = output_dataname,
+    dataname = dataname,
     datalabel = datalabel,
     varlabels = varlabels,
     keys = keys
@@ -118,16 +107,14 @@ init_filter_states.MultiAssayExperiment <- function(data, # nolint
 #' @keywords internal
 #' @export
 init_filter_states.SummarizedExperiment <- function(data, # nolint
-                                                    input_dataname,
-                                                    output_dataname = input_dataname,
+                                                    dataname,
                                                     datalabel = character(0),
                                                     ...) {
   if (!requireNamespace("SummarizedExperiment", quietly = TRUE)) {
     stop("Cannot load SummarizedExperiment - please install the package or restart your session.")
   }
   SEFilterStates$new(
-    input_dataname = input_dataname,
-    output_dataname = output_dataname,
+    dataname = dataname,
     datalabel = datalabel
   )
 }

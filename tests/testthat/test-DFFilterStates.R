@@ -1,7 +1,6 @@
 testthat::test_that("The contructor accepts a string as varlabels and keys", {
   testthat::expect_error(DFFilterStates$new(
-    input_dataname = "test",
-    output_dataname = "test",
+    dataname = "test",
     datalabel = character(0),
     varlabels = "test",
     keys = "test"
@@ -10,8 +9,7 @@ testthat::test_that("The contructor accepts a string as varlabels and keys", {
 
 testthat::test_that("get_fun returns dplyr::filter", {
   filter_states <- DFFilterStates$new(
-    input_dataname = "test",
-    output_dataname = "test",
+    dataname = "test",
     datalabel = character(0),
     varlabels = "test",
     keys = "test"
@@ -23,8 +21,7 @@ testthat::test_that(
   "DFFilterStates$set_filter_state sets filters in FilterState(s) specified by the named list",
   code = {
     dffs <- DFFilterStates$new(
-      input_dataname = "iris",
-      output_dataname = "iris_filtered",
+      dataname = "iris",
       datalabel = character(0),
       varlabels = character(0),
       keys = character(0)
@@ -37,7 +34,7 @@ testthat::test_that(
     testthat::expect_equal(
       isolate(dffs$get_call()),
       quote(
-        iris_filtered <- dplyr::filter(
+        iris <- dplyr::filter(
           iris,
           Sepal.Length >= 5.1 & Sepal.Length <= 6.4 &
             Species %in% c("setosa", "versicolor")
@@ -49,8 +46,7 @@ testthat::test_that(
 
 testthat::test_that("DFFilterStates$set_filter_state sets filters as a named/unnamed selected list", {
   dffs <- DFFilterStates$new(
-    input_dataname = "iris",
-    output_dataname = "iris_filtered",
+    dataname = "iris",
     datalabel = character(0),
     varlabels = character(0),
     keys = character(0)
@@ -63,7 +59,7 @@ testthat::test_that("DFFilterStates$set_filter_state sets filters as a named/unn
   testthat::expect_equal(
     isolate(dffs$get_call()),
     quote(
-      iris_filtered <- dplyr::filter(
+      iris <- dplyr::filter(
         iris,
         Sepal.Length >= 5.1 & Sepal.Length <= 6.4 &
           Species %in% c("setosa", "versicolor")
@@ -74,8 +70,7 @@ testthat::test_that("DFFilterStates$set_filter_state sets filters as a named/unn
 
 testthat::test_that("DFFilterStates$set_filter_state updates filter state which was set already", {
   dffs <- DFFilterStates$new(
-    input_dataname = "iris",
-    output_dataname = "iris_filtered",
+    dataname = "iris",
     datalabel = character(0),
     varlabels = character(0),
     keys = character(0)
@@ -101,8 +96,7 @@ testthat::test_that("DFFilterStates$set_filter_state updates filter state which 
 testthat::test_that("DFFilterStates$set_filter_state throws error when using an unnamed list",
   code = {
     dffs <- DFFilterStates$new(
-      input_dataname = "iris",
-      output_dataname = "iris_filtered",
+      dataname = "iris",
       datalabel = character(0),
       varlabels = character(0),
       keys = character(0)
@@ -118,8 +112,7 @@ testthat::test_that("DFFilterStates$set_filter_state throws error when using an 
 testthat::test_that("DFFilterStates$get_filter_state returns list identical to input",
   code = {
     dffs <- DFFilterStates$new(
-      input_dataname = "iris",
-      output_dataname = "iris_filtered",
+      dataname = "iris",
       datalabel = character(0),
       varlabels = character(0),
       keys = character(0)
@@ -135,8 +128,7 @@ testthat::test_that("DFFilterStates$get_filter_state returns list identical to i
 
 testthat::test_that("Selecting a new variable initializes a new filter state", {
   dffs <- DFFilterStates$new(
-    input_dataname = "iris",
-    output_dataname = "iris_filtered",
+    dataname = "iris",
     datalabel = character(0),
     varlabels = character(0),
     keys = character(0)
@@ -168,12 +160,18 @@ testthat::test_that("Selecting a new variable initializes a new filter state", {
 
 testthat::test_that("Adding 'var_to_add' adds another filter state", {
   dffs <- DFFilterStates$new(
-    input_dataname = "iris",
-    output_dataname = "iris_filtered",
+    dataname = "iris",
     datalabel = character(0),
     varlabels = character(0),
     keys = character(0)
   )
+
+  fs <- list(
+    Sepal.Length = list(selected = c(5.1, 6.4))
+  )
+
+  isolate(dffs$set_filter_state(state = fs, data = iris))
+
   shiny::testServer(
     dffs$srv_add_filter_state,
     args = list(data = iris),
@@ -191,7 +189,7 @@ testthat::test_that("Adding 'var_to_add' adds another filter state", {
 
   testthat::expect_identical(
     isolate(dffs$get_call()),
-    quote(iris_filtered <- iris)
+    quote(iris <- dplyr::filter(iris, Sepal.Length >= 5.1 & Sepal.Length <= 6.4))
   )
 })
 
@@ -199,8 +197,7 @@ testthat::test_that(
   "DFFilterStates$remove_filter_state removes specified filter in FilterState(s)",
   code = {
     dffs <- DFFilterStates$new(
-      input_dataname = "iris",
-      output_dataname = "iris_filtered",
+      dataname = "iris",
       datalabel = character(0),
       varlabels = character(0),
       keys = character(0)
@@ -215,7 +212,7 @@ testthat::test_that(
 
     testthat::expect_equal(
       isolate(dffs$get_call()),
-      quote(iris_filtered <- dplyr::filter(iris, Sepal.Length >= 5.1 & Sepal.Length <= 6.4))
+      quote(iris <- dplyr::filter(iris, Sepal.Length >= 5.1 & Sepal.Length <= 6.4))
     )
   }
 )
@@ -225,8 +222,7 @@ testthat::test_that(
   code = {
     teal.logger::suppress_logs()
     dffs <- DFFilterStates$new(
-      input_dataname = "iris",
-      output_dataname = "iris_filtered",
+      dataname = "iris",
       datalabel = character(0),
       varlabels = character(0),
       keys = character(0)
@@ -245,8 +241,7 @@ testthat::test_that(
   "DFFilterStates$ui_add_filter_state returns a message inside a div when data has no rows or no columns",
   code = {
     dffs <- DFFilterStates$new(
-      input_dataname = "iris",
-      output_dataname = "iris_filtered",
+      dataname = "iris",
       datalabel = character(0),
       varlabels = character(0),
       keys = character(0)
@@ -260,8 +255,7 @@ testthat::test_that(
 testthat::test_that("$format() is a method of DFFilterStates", {
   testthat::expect_error(isolate(
     DFFilterStates$new(
-    input_dataname = "test",
-    output_dataname = "test",
+    dataname = "test",
     datalabel = character(0),
     varlabels = "test",
     keys = "test"
@@ -271,8 +265,7 @@ testthat::test_that("$format() is a method of DFFilterStates", {
 testthat::test_that("$format() asserts the indent argument is a number", {
   testthat::expect_error(
     DFFilterStates$new(
-      input_dataname = "test",
-      output_dataname = "test",
+      dataname = "test",
       datalabel = character(0),
       varlabels = "test",
       keys = "test"
@@ -283,8 +276,7 @@ testthat::test_that("$format() asserts the indent argument is a number", {
 
 testthat::test_that("$format() concatenates its FilterState elements using \\n without additional indent", {
   dffs <- DFFilterStates$new(
-    input_dataname = "iris",
-    output_dataname = "iris_filtered",
+    dataname = "iris",
     datalabel = character(0),
     varlabels = character(0),
     keys = character(0)

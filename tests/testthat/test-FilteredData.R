@@ -492,7 +492,7 @@ testthat::test_that("get_filter_overview returns overview matrix for filtered da
   filter_state_mae <- ChoicesFilterState$new(
     x = c("white", NA),
     varname = as.name("race"),
-    input_dataname = as.name("miniACC"),
+    dataname = as.name("miniACC"),
     extract_type = "list"
   )
   filter_state_mae$set_na_rm(TRUE)

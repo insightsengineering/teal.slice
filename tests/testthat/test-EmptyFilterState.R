@@ -41,7 +41,7 @@ testthat::test_that(
     filter_state <- teal.slice:::EmptyFilterState$new(
       rep(NA, 10),
       varname = "x",
-      input_dataname = as.name("data"),
+      dataname = as.name("data"),
       extract_type = character(0)
     )
     isolate(filter_state$set_keep_na(TRUE))

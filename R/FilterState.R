@@ -51,15 +51,15 @@ FilterState <- R6::R6Class( # nolint
     #'   name of the variable
     #' @param varlabel (`character(1)`)\cr
     #'   label of the variable (optional).
-    #' @param input_dataname (`name` or `call`)\cr
+    #' @param dataname (`name` or `call`)\cr
     #'   name of dataset where `x` is taken from. Must be specified if `extract_type` argument
     #'   is not empty.
     #' @param extract_type (`character(0)`, `character(1)`)\cr
     #' whether condition calls should be prefixed by dataname. Possible values:
     #' \itemize{
     #' \item{`character(0)` (default)}{ `varname` in the condition call will not be prefixed}
-    #' \item{`"list"`}{ `varname` in the condition call will be returned as `<input_dataname>$<varname>`}
-    #' \item{`"matrix"`}{ `varname` in the condition call will be returned as `<input_dataname>[, <varname>]`}
+    #' \item{`"list"`}{ `varname` in the condition call will be returned as `<dataname>$<varname>`}
+    #' \item{`"matrix"`}{ `varname` in the condition call will be returned as `<dataname>[, <varname>]`}
     #' }
     #'
     #' @return self invisibly
@@ -67,7 +67,7 @@ FilterState <- R6::R6Class( # nolint
     initialize = function(x,
                           varname,
                           varlabel = character(0),
-                          input_dataname = NULL,
+                          dataname = NULL,
                           extract_type = character(0)) {
       checkmate::assert(
         checkmate::check_class(varname, "name"),
@@ -75,14 +75,14 @@ FilterState <- R6::R6Class( # nolint
         checkmate::check_string(varname)
       )
       checkmate::assert_character(varlabel, max.len = 1, any.missing = FALSE)
-      stopifnot(is.null(input_dataname) || is.name(input_dataname) || is.call(input_dataname))
+      stopifnot(is.null(dataname) || is.name(dataname) || is.call(dataname))
       checkmate::assert_character(extract_type, max.len = 1, any.missing = FALSE)
       stopifnot(
         length(extract_type) == 0 ||
-          length(extract_type) == 1 && !is.null(input_dataname)
+          length(extract_type) == 1 && !is.null(dataname)
       )
       stopifnot(extract_type %in% c("list", "matrix"))
-      private$input_dataname <- input_dataname
+      private$dataname <- dataname
       private$varname <- if (is.character(varname)) {
         as.name(varname)
       } else {
@@ -104,7 +104,7 @@ FilterState <- R6::R6Class( # nolint
           "Instantiated %s with variable %s, dataname: %s",
           class(self)[1],
           deparse1(varname),
-          deparse1(private$input_dataname)
+          deparse1(private$dataname)
         )
       )
       invisible(self)
@@ -179,9 +179,9 @@ FilterState <- R6::R6Class( # nolint
     #'
     get_dataname = function(deparse = TRUE) {
       if (isTRUE(deparse)) {
-        deparse1(private$input_dataname)
+        deparse1(private$dataname)
       } else {
-        private$input_dataname
+        private$dataname
       }
     },
 
@@ -309,7 +309,7 @@ FilterState <- R6::R6Class( # nolint
           "%s$set_selected setting selection of variable %s, dataname: %s.",
           class(self)[1],
           deparse1(self$get_varname()),
-          deparse1(private$input_dataname)
+          deparse1(private$dataname)
         )
       )
       value <- private$cast_and_validate(value)
@@ -320,7 +320,7 @@ FilterState <- R6::R6Class( # nolint
         "%s$set_selected selection of variable %s set, dataname: %s",
         class(self)[1],
         deparse1(self$get_varname()),
-        deparse1(private$input_dataname)
+        deparse1(private$dataname)
       ))
       invisible(NULL)
     },
@@ -341,7 +341,7 @@ FilterState <- R6::R6Class( # nolint
       logger::log_trace(sprintf(
         "%s$set_state, dataname: %s setting state of variable %s to: selected=%s, keep_na=%s",
         class(self)[1],
-        deparse1(private$input_dataname),
+        deparse1(private$dataname),
         deparse1(self$get_varname()),
         paste(state$selected, collapse = " "),
         state$keep_na
@@ -357,7 +357,7 @@ FilterState <- R6::R6Class( # nolint
         sprintf(
           "%s$set_state, dataname: %s done setting state for variable %s",
           class(self)[1],
-          deparse1(private$input_dataname),
+          deparse1(private$dataname),
           deparse1(self$get_varname())
         )
       )
@@ -427,7 +427,7 @@ FilterState <- R6::R6Class( # nolint
   # private members ----
   private = list(
     choices = NULL, # because each class has different choices type
-    input_dataname = character(0),
+    dataname = character(0),
     keep_na = NULL, # reactiveVal logical()
     na_count = integer(0),
     na_rm = FALSE, # it's logical(1)
@@ -470,9 +470,9 @@ FilterState <- R6::R6Class( # nolint
     #' return (`name` or `call`)
     get_varname_prefixed = function() {
       if (isTRUE(private$extract_type == "list")) {
-        call_extract_list(private$input_dataname, private$varname)
+        call_extract_list(private$dataname, private$varname)
       } else if (isTRUE(private$extract_type == "matrix")) {
-        call_extract_matrix(dataname = private$input_dataname, column = as.character(private$varname))
+        call_extract_matrix(dataname = private$dataname, column = as.character(private$varname))
       } else {
         private$varname
       }
@@ -596,7 +596,7 @@ FilterState <- R6::R6Class( # nolint
                 class(self)[1],
                 deparse1(self$get_varname()),
                 deparse1(input$value),
-                deparse1(private$input_dataname)
+                deparse1(private$dataname)
               )
             )
           }

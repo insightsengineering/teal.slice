@@ -17,36 +17,36 @@ testthat::test_that("get_call returns NULL", {
   testthat::expect_null(filter_state$get_call())
 })
 
-test_that("'extract_type' must be specified with 'input_dataname'", {
+test_that("'extract_type' must be specified with 'dataname'", {
   testthat::expect_error(
     FilterState$new(
       c("F", "M"),
       varname = "SEX",
-      input_dataname = NULL,
+      dataname = NULL,
       extract_type = "matrix"
     )
   )
 })
 
-testthat::test_that("get_dataname returns a string when input_dataname is NULL", {
-  filter_state <- FilterState$new(7, varname = "7", input_dataname = NULL)
+testthat::test_that("get_dataname returns a string when dataname is NULL", {
+  filter_state <- FilterState$new(7, varname = "7", dataname = NULL)
   testthat::expect_equal(filter_state$get_dataname(deparse = FALSE), quote(NULL))
   testthat::expect_equal(filter_state$get_dataname(deparse = TRUE), "NULL")
 })
 
-testthat::test_that("get_dataname returns a string when input_dataname is name", {
-  filter_state <- FilterState$new(7, varname = "7", input_dataname = quote(test))
+testthat::test_that("get_dataname returns a string when dataname is name", {
+  filter_state <- FilterState$new(7, varname = "7", dataname = quote(test))
   testthat::expect_equal(filter_state$get_dataname(deparse = FALSE), quote(test))
   testthat::expect_equal(filter_state$get_dataname(deparse = TRUE), "test")
 })
 
-testthat::test_that("get_dataname(deparse = TRUE) returns a string when input_dataname is call", {
-  filter_state <- FilterState$new(7, varname = "7", input_dataname = call("test_function"))
+testthat::test_that("get_dataname(deparse = TRUE) returns a string when dataname is call", {
+  filter_state <- FilterState$new(7, varname = "7", dataname = call("test_function"))
   testthat::expect_equal(filter_state$get_dataname(deparse = TRUE), "test_function()")
 })
 
-testthat::test_that("get_dataname(deparse = FALSE) returns a call when input_dataname is call", {
-  filter_state <- FilterState$new(7, varname = "7", input_dataname = call("test_function"))
+testthat::test_that("get_dataname(deparse = FALSE) returns a call when dataname is call", {
+  filter_state <- FilterState$new(7, varname = "7", dataname = call("test_function"))
   testthat::expect_equal(filter_state$get_dataname(deparse = FALSE), call("test_function"))
 })
 

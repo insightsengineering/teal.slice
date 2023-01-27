@@ -8,29 +8,29 @@ testthat::test_that("init_filter_state accepts a character vector of length 0 or
   testthat::expect_error(init_filter_state(7, varname = "test", varlabel = character(0)), NA)
 })
 
-test_that("'extract_type' must be specified with 'input_dataname'", {
+test_that("'extract_type' must be specified with 'dataname'", {
   testthat::expect_error(
     teal.slice:::init_filter_state(
       ADSL$SEX,
       varname = "SEX",
-      input_dataname = NULL,
+      dataname = NULL,
       extract_type = "matrix"
     )
   )
 })
 
-testthat::test_that("init_filter_state accepts, name or call as input_dataname", {
+testthat::test_that("init_filter_state accepts, name or call as dataname", {
   testthat::expect_error(
-    init_filter_state(7, varname = "test", input_dataname = NULL),
+    init_filter_state(7, varname = "test", dataname = NULL),
     NA
   )
 
   testthat::expect_error(
-    init_filter_state(7, varname = "test", input_dataname = quote(test)),
+    init_filter_state(7, varname = "test", dataname = quote(test)),
     NA
   )
   testthat::expect_error(
-    init_filter_state(7, varname = "test", input_dataname = call("test")),
+    init_filter_state(7, varname = "test", dataname = call("test")),
     NA
   )
 })
@@ -42,16 +42,16 @@ testthat::test_that("init_filter_state accepts character as extract_type", {
   )
 
   testthat::expect_error(
-    init_filter_state(7, varname = "test", input_dataname = as.name("test"), extract_type = "list"),
+    init_filter_state(7, varname = "test", dataname = as.name("test"), extract_type = "list"),
     NA
   )
   testthat::expect_error(
-    init_filter_state(7, varname = "test", input_dataname = as.name("test"), extract_type = "matrix"),
+    init_filter_state(7, varname = "test", dataname = as.name("test"), extract_type = "matrix"),
     NA
   )
 })
 
-testthat::test_that("init_filter_state provides default values for varlabel, input_dataname, use_datname", {
+testthat::test_that("init_filter_state provides default values for varlabel, dataname, use_datname", {
   filter_state <- init_filter_state(7, varname = "test")
   testthat::expect_equal(filter_state$get_varlabel(), character(0))
   testthat::expect_equal(filter_state$get_dataname(deparse = TRUE), "NULL")
