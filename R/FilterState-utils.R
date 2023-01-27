@@ -94,7 +94,7 @@ init_filter_state <- function(x,
 #' @keywords internal
 #' @export
 init_filter_state.default <- function(x,
-                                      x_reactive,
+                                      x_reactive = reactive(x),
                                       varname,
                                       varlabel = attr(x, "label"),
                                       input_dataname = NULL,
@@ -113,7 +113,7 @@ init_filter_state.default <- function(x,
 #' @keywords internal
 #' @export
 init_filter_state.logical <- function(x,
-                                      x_reactive,
+                                      x_reactive = reactive(x),
                                       varname,
                                       varlabel = attr(x, "label"),
                                       input_dataname = NULL,
@@ -132,7 +132,7 @@ init_filter_state.logical <- function(x,
 #' @keywords internal
 #' @export
 init_filter_state.numeric <- function(x,
-                                      x_reactive,
+                                      x_reactive = reactive(x),
                                       varname,
                                       varlabel = attr(x, "label"),
                                       input_dataname = NULL,
@@ -162,7 +162,7 @@ init_filter_state.numeric <- function(x,
 #' @keywords internal
 #' @export
 init_filter_state.factor <- function(x,
-                                     x_reactive,
+                                     x_reactive = reactive(x),
                                      varname,
                                      varlabel = attr(x, "label"),
                                      input_dataname = NULL,
@@ -181,7 +181,7 @@ init_filter_state.factor <- function(x,
 #' @keywords internal
 #' @export
 init_filter_state.character <- function(x,
-                                        x_reactive,
+                                        x_reactive = reactive(x),
                                         varname,
                                         varlabel = attr(x, "label"),
                                         input_dataname = NULL,
@@ -200,7 +200,7 @@ init_filter_state.character <- function(x,
 #' @keywords internal
 #' @export
 init_filter_state.Date <- function(x,
-                                   x_reactive,
+                                   x_reactive = reactive(x),
                                    varname,
                                    varlabel = attr(x, "label"),
                                    input_dataname = NULL,
@@ -219,7 +219,7 @@ init_filter_state.Date <- function(x,
 #' @keywords internal
 #' @export
 init_filter_state.POSIXct <- function(x,
-                                      x_reactive,
+                                      x_reactive = reactive(x),
                                       varname,
                                       varlabel = attr(x, "label"),
                                       input_dataname = NULL,
@@ -238,7 +238,7 @@ init_filter_state.POSIXct <- function(x,
 #' @keywords internal
 #' @export
 init_filter_state.POSIXlt <- function(x,
-                                      x_reactive,
+                                      x_reactive = reactive(x),
                                       varname,
                                       varlabel = attr(x, "label"),
                                       input_dataname = NULL,
