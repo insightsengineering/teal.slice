@@ -41,6 +41,97 @@ DFFilterStates <- R6::R6Class( # nolint
     },
 
     #' @description
+    #' Returns a formatted string representing this `FilterStates` object.
+    #'
+    #' @param indent (`numeric(1)`) the number of spaces prepended to each line of the output
+    #'
+    #' @return `character(1)` the formatted string
+    #'
+    format = function(indent = 0) {
+      checkmate::assert_number(indent, finite = TRUE, lower = 0)
+
+      formatted_states <- vapply(
+        self$state_list_get(1L), function(state) state$format(indent = indent),
+        USE.NAMES = FALSE, FUN.VALUE = character(1)
+      )
+      paste(formatted_states, collapse = "\n")
+    },
+
+    #' @description
+    #' Gets the name of the function used to filter the data in this `FilterStates`.
+    #'
+    #' Get name of  function used to create the \emph{subset expression}.
+    #' For `DFFilterStates` this is `dplyr::filter`.
+    #'
+    #' @return `character(1)`
+    get_fun = function() {
+      return("dplyr::filter")
+    },
+
+    #' @description
+    #' Shiny server module.
+    #'
+    #' @param id (`character(1)`)\cr
+    #'   shiny module instance id
+    #'
+    #' @return `moduleServer` function which returns `NULL`
+    #'
+    server = function(id) {
+      moduleServer(
+        id = id,
+        function(input, output, session) {
+          previous_state <- reactiveVal(isolate(self$state_list_get(1L)))
+          added_state_name <- reactiveVal(character(0))
+          removed_state_name <- reactiveVal(character(0))
+
+          observeEvent(self$state_list_get(1L), {
+            added_state_name(setdiff(names(self$state_list_get(1L)), names(previous_state())))
+            removed_state_name(setdiff(names(previous_state()), names(self$state_list_get(1L))))
+            previous_state(self$state_list_get(1L))
+          })
+
+          observeEvent(added_state_name(), ignoreNULL = TRUE, {
+            fstates <- self$state_list_get(1L)
+            html_ids <- private$map_vars_to_html_ids(names(fstates))
+            for (fname in added_state_name()) {
+              private$insert_filter_state_ui(
+                id = html_ids[fname],
+                filter_state = fstates[[fname]],
+                state_list_index = 1L,
+                state_id = fname
+              )
+            }
+            added_state_name(character(0))
+          })
+
+          observeEvent(removed_state_name(), ignoreNULL = TRUE, ignoreInit = TRUE, {
+            for (fname in removed_state_name()) {
+              private$remove_filter_state_ui(1L, fname, .input = input)
+            }
+            # wait for UI to be removed
+            # may not be strictly necessary but aligns with inserting the UI
+            # length check b/c this event gets called on any change
+            # e.g. if a variable is added, we're in this event but
+            #  removed_state_name() = character(0)
+            if (length(removed_state_name()) != 0) {
+              session$onFlushed(function() {
+                session$sendCustomMessage(
+                  "filter-cards-removed",
+                  private$cards_container_id
+                )
+              })
+            }
+                        
+            removed_state_name(character(0))
+          })
+
+
+          NULL
+        }
+      )
+    },
+
+    #' @description
     #' Gets the reactive values from the active `FilterState` objects.
     #'
     #' Get active filter state from the `FilterState` objects kept in `state_list`.
