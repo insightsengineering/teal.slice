@@ -57,7 +57,7 @@
 #' }
 #' @return `FilterState` object
 init_filter_state <- function(x,
-                              x_reactive, # = reactive(x) ?
+                              x_reactive = reactive(x),
                               varname,
                               varlabel = attr(x, "label"),
                               input_dataname = NULL,
