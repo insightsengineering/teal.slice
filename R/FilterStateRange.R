@@ -67,8 +67,7 @@ RangeFilterState <- R6::R6Class( # nolint
 
       pretty_range_inputs <- private$get_pretty_range_inputs(x)
 
-      private$unfiltered_histogram <-
-        ggplot2::ggplot(data.frame(x = Filter(is.finite, private$filtered_values()))) +
+      private$unfiltered_histogram <- ggplot2::ggplot(data.frame(x = Filter(is.finite, x))) +
         ggplot2::geom_histogram(
           ggplot2::aes(x = x),
           bins = 100,
