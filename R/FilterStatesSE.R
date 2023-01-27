@@ -62,6 +62,31 @@ SEFilterStates <- R6::R6Class( # nolint
     },
 
     #' @description
+    #' Shiny module UI
+    #'
+    #' Shiny UI element that stores `FilterState` UI elements.
+    #' Populated with elements created with `renderUI` in the module server.
+    #'
+    #' @param id (`character(1)`)\cr
+    #'   shiny element (module instance) id
+    #'
+    #' @return `shiny.tag`
+    #'
+    ui = function(id) {
+      ns <- NS(id)
+      private$cards_container_id <- ns("filter_card_container")
+      tagList(
+        include_css_files(pattern = "filter-panel"),
+        include_js_files(pattern = "filter-panel"),
+        tags$ul(
+          id = private$cards_container_id,
+          class = "filter-card-container",
+          `data-label` = ifelse(private$datalabel == "", "", (paste0("> ", private$datalabel)))
+        )
+      )
+    },
+
+    #' @description
     #' Server module
     #' @param id (`character(1)`)\cr
     #'   an ID string that corresponds with the ID used to call the module's UI function.
@@ -103,9 +128,14 @@ SEFilterStates <- R6::R6Class( # nolint
               private$remove_filter_state_ui("subset", fname, .input = input)
             }
             
-            session$onFlushed(function() {
-              browser()
-            })
+            if (length(removed_state_name_subset()) != 0) {
+              session$onFlushed(function() {
+                session$sendCustomMessage(
+                  "filter-cards-removed",
+                  private$cards_container_id
+                )
+              })
+            }
 
             removed_state_name_subset(character(0))
           })
@@ -145,9 +175,15 @@ SEFilterStates <- R6::R6Class( # nolint
               private$remove_filter_state_ui("select", fname, .input = input)
             }
 
-            session$onFlushed(function() {
-              browser()
-            })
+            if (length(removed_state_name_select()) != 0) {
+              session$onFlushed(function() {
+                session$sendCustomMessage(
+                  "filter-cards-removed",
+                  private$cards_container_id
+                )
+              })
+            }
+            
             removed_state_name_select(character(0))
           })
           NULL

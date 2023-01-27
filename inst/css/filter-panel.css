@@ -232,6 +232,24 @@ will need to remove relevant code above
   border-radius: 5px;
 }
 
+/* label for MAE data sets*/
+.filter-card-container:not(:empty):before {
+  padding: 2px 4px;
+  font-size: 90%;
+  color: #c7254e;
+  background-color: #f9f2f4;
+  border-radius: 4px;
+  font-family: Menlo, Monaco, Consolas, "Courier New", monospace;
+
+  display: inline-block;
+  max-width: 100%;
+  margin-top: 10px;
+  margin-bottom: 10px;
+  font-weight: 700;
+
+  content: attr(data-label);
+}
+
 .filter-card {
     width: 100%;
     display: grid;
