@@ -111,7 +111,10 @@ FilterStates <- R6::R6Class( # nolint
     #' @return `character(1)` the formatted string
     #'
     format = function(indent) {
-      stop("Pure virtual method")
+      sprintf(paste(
+        "%sThis is an instance of an abstract class.",
+        "Use child class constructors to instantiate objects."),
+        paste(rep(" ", indent), collapse = ""))
     },
 
     #' @description
