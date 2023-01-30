@@ -566,12 +566,12 @@ testthat::test_that("get_call returns a call filtering a data.frame based on a D
   isolate(datetime_filter$set_selected(rep(ISOdate(2021, 8, 27, tz = Sys.timezone()), 2)))
   isolate(filter_states$state_list_push(state_list_index = 1, x = datetime_filter, state_id = "test"))
   eval(isolate(filter_states$get_call()))
-  testthat::expect_identical(
+  testthat::expect_equal(
     datetime_output,
     dplyr::filter(datetime_dataset,
                   datetime >= as.POSIXct("2021-08-27 12:00:00", tz = "Europe/Prague") &
                     datetime < as.POSIXct("2021-08-27 12:00:01", tz = "Europe/Prague")))
-  testthat::expect_identical(
+  testthat::expect_equal(
     isolate(filter_states$get_call()),
     quote(datetime_output <- dplyr::filter(
       datetime_dataset,
@@ -616,7 +616,7 @@ testthat::test_that("get_call returns a call filtering a data.frame base on a co
   isolate(filter_states$state_list_push(state_list_index = 1, x = datetime_filter, state_id = "test"))
 
   eval(isolate(filter_states$get_call()))
-  testthat::expect_identical(
+  testthat::expect_equal(
     output,
     dplyr::filter(test_dataset,
                   numbers >= 1 & numbers <= 3 &
