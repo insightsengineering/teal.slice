@@ -17,14 +17,15 @@ testthat::test_that("get_call returns NULL", {
   testthat::expect_null(filter_state$get_call())
 })
 
-test_that("'extract_type' must be specified with 'input_dataname'", {
+test_that("input_dataname must be specified if extract_type is specified", {
   testthat::expect_error(
     FilterState$new(
       c("F", "M"),
       varname = "SEX",
       input_dataname = NULL,
       extract_type = "matrix"
-    )
+    ),
+    regexp = "if extract_type is specified, input_dataname must also be specified"
   )
 })
 

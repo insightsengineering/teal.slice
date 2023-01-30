@@ -17,7 +17,7 @@ test_that("input_dataname must be specified if extract_type is specified", {
       input_dataname = NULL,
       extract_type = "matrix"
     ),
-    regexp = "length(extract_type) == 0 || length(extract_type) == 1 && !is.null(input_dataname) is not TRUE"
+    regexp = "if extract_type is specified, input_dataname must also be specified"
   )
 })
 
