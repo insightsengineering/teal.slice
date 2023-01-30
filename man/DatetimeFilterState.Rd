@@ -83,7 +83,7 @@ and is set only if object is initialized in \code{shiny}.
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{DatetimeFilterState$new(
   x,
-  x_filtered,
+  x_reactive,
   varname,
   varlabel = character(0),
   input_dataname = NULL,
@@ -97,7 +97,7 @@ and is set only if object is initialized in \code{shiny}.
 \item{\code{x}}{(\code{POSIXct} or \code{POSIXlt})\cr
 values of the variable used in filter}
 
-\item{\code{x_filtered}}{(\code{reactive})\cr
+\item{\code{x_reactive}}{(\code{reactive})\cr
 a \code{reactive} returning a filtered vector. Is used to update
 counts following the change in values of the filtered dataset.}
 

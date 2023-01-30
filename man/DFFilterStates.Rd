@@ -12,19 +12,23 @@ Specialization of \code{FilterStates} for a base \code{data.frame}.
 ## Method `DFFilterStates$set_filter_state`
 ## ------------------------------------------------
 
-dffs <- teal.slice:::DFFilterStates$new(
-  input_dataname = "iris",
-  output_dataname = "iris_filtered",
+df <- data.frame(
+  character = letters,
+  numeric = seq_along(letters),
+  date = seq(Sys.Date(), length.out = length(letters), by = "1 day"),
+  datetime = seq(Sys.time(), length.out = length(letters), by = "33.33 hours")
+)
+filter_states <- teal.slice:::DFFilterStates$new(
+  data = df,
+  data_reactive = reactive(data),
+  input_dataname = "data",
+  output_dataname = "data_filtered",
+  varlabels = c(x = "x variable", SEX = "Sex"),
   datalabel = character(0),
-  varlabels = character(0),
   keys = character(0)
 )
-fs <- list(
-  Sepal.Length = list(selected = c(5.1, 6.4), keep_na = TRUE, keep_inf = TRUE),
-  Species = list(selected = c("setosa", "versicolor"), keep_na = FALSE)
-)
-shiny::isolate(dffs$set_filter_state(state = fs, data = iris))
-shiny::isolate(dffs$get_filter_state())
+isolate(filter_states$set_filter_state(list(character = list("a"))))
+isolate(filter_states$get_call())
 
 }
 \keyword{internal}
@@ -77,7 +81,7 @@ which means that when calling the subset function associated with this class
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{DFFilterStates$new(
   data,
-  data_filtered,
+  data_reactive,
   input_dataname,
   output_dataname,
   datalabel,
@@ -92,7 +96,7 @@ which means that when calling the subset function associated with this class
 \item{\code{data}}{(\code{data.frame})\cr
 the R object which \code{dplyr::filter} function is applied on.}
 
-\item{\code{data_filtered}}{(\code{reactive})\cr
+\item{\code{data_reactive}}{(\code{reactive})\cr
 should a \code{data.frame} object.
 This object is needed for the \code{FilterState} counts being updated
 on a change in filters.}
@@ -212,19 +216,23 @@ Names of the \code{list} element should correspond to the name of the columns.}
 }
 \subsection{Examples}{
 \if{html}{\out{<div class="r example copy">}}
-\preformatted{dffs <- teal.slice:::DFFilterStates$new(
-  input_dataname = "iris",
-  output_dataname = "iris_filtered",
+\preformatted{df <- data.frame(
+  character = letters,
+  numeric = seq_along(letters),
+  date = seq(Sys.Date(), length.out = length(letters), by = "1 day"),
+  datetime = seq(Sys.time(), length.out = length(letters), by = "33.33 hours")
+)
+filter_states <- teal.slice:::DFFilterStates$new(
+  data = df,
+  data_reactive = reactive(data),
+  input_dataname = "data",
+  output_dataname = "data_filtered",
+  varlabels = c(x = "x variable", SEX = "Sex"),
   datalabel = character(0),
-  varlabels = character(0),
   keys = character(0)
 )
-fs <- list(
-  Sepal.Length = list(selected = c(5.1, 6.4), keep_na = TRUE, keep_inf = TRUE),
-  Species = list(selected = c("setosa", "versicolor"), keep_na = FALSE)
-)
-shiny::isolate(dffs$set_filter_state(state = fs, data = iris))
-shiny::isolate(dffs$get_filter_state())
+isolate(filter_states$set_filter_state(list(character = list("a"))))
+isolate(filter_states$get_call())
 
 }
 \if{html}{\out{</div>}}

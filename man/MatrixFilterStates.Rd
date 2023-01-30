@@ -52,7 +52,7 @@ Initialize \code{MatrixFilterStates} object
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{MatrixFilterStates$new(
   data,
-  data_filtered,
+  data_reactive,
   input_dataname,
   output_dataname,
   datalabel
@@ -65,7 +65,7 @@ Initialize \code{MatrixFilterStates} object
 \item{\code{data}}{(\code{matrix})\cr
 the R object which \code{subset} function is applied on.}
 
-\item{\code{data_filtered}}{(\code{reactive})\cr
+\item{\code{data_reactive}}{(\code{reactive})\cr
 should return a \code{matrix}.
 This object is needed for the \code{FilterState} counts being updated
 on a change in filters.}

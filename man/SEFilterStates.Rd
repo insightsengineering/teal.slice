@@ -52,7 +52,7 @@ Initialize \code{SEFilterStates} object
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{SEFilterStates$new(
   data,
-  data_filtered,
+  data_reactive,
   input_dataname,
   output_dataname,
   datalabel
@@ -65,7 +65,7 @@ Initialize \code{SEFilterStates} object
 \item{\code{data}}{(\code{SummarizedExperiment})\cr
 the R object which \code{subset} function is applied on.}
 
-\item{\code{data_filtered}}{(\code{reactive})\cr
+\item{\code{data_reactive}}{(\code{reactive})\cr
 should return a \code{SummarizedExperiment} object.
 This object is needed for the \code{FilterState} counts being updated
 on a change in filters.}

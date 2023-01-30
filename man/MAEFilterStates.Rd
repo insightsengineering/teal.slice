@@ -52,7 +52,7 @@ Initialize \code{MAEFilterStates} object
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{MAEFilterStates$new(
   data,
-  data_filtered,
+  data_reactive,
   input_dataname,
   output_dataname,
   datalabel,
@@ -67,7 +67,7 @@ Initialize \code{MAEFilterStates} object
 \item{\code{data}}{(\code{MultiAssayExperiment})\cr
 the R object which \code{MultiAssayExperiment::subsetByColData} function is applied on.}
 
-\item{\code{data_filtered}}{(\code{reactive})\cr
+\item{\code{data_reactive}}{(\code{reactive})\cr
 should return \code{MultiAssayExperiment} object.
 This object is needed for the \code{FilterState} counts being updated
 on a change in filters.}

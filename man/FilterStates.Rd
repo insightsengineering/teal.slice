@@ -82,7 +82,7 @@ Initializes \code{FilterStates} object by setting \code{input_dataname},
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{FilterStates$new(
   data,
-  data_filtered,
+  data_reactive,
   input_dataname,
   output_dataname,
   datalabel
@@ -95,8 +95,10 @@ Initializes \code{FilterStates} object by setting \code{input_dataname},
 \item{\code{data}}{(\code{data.frame}, \code{MultiAssayExperiment}, \code{SummarizedExperiment}, \code{matrix})\cr
 the R object which \code{subset} function is applied on.}
 
-\item{\code{data_filtered}}{(\code{reactive})\cr
-should return an object constistent with the \code{FilterState} class.}
+\item{\code{data_reactive}}{(\code{reactive})\cr
+should return an object constistent with the \code{FilterState} class.
+This object is needed for the \code{FilterState} counts being updated
+on a change in filters.}
 
 \item{\code{input_dataname}}{(\code{character(1)} or \code{name} or \code{call})\cr
 name of the data used on \code{rhs} of the expression

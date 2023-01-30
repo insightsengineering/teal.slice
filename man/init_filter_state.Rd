@@ -6,7 +6,7 @@
 \usage{
 init_filter_state(
   x,
-  x_filtered,
+  x_reactive = reactive(x),
   varname,
   varlabel = attr(x, "label"),
   input_dataname = NULL,
@@ -17,7 +17,7 @@ init_filter_state(
 \item{x}{(\code{vector})\cr
 values of the variable used in filter}
 
-\item{x_filtered}{(\code{reactive})\cr
+\item{x_reactive}{(\code{reactive})\cr
 returning vector of the same type as \code{x}. Is used to update
 counts following the change in values of the filtered dataset.}
 
@@ -48,7 +48,7 @@ Initializes \code{FilterState} depending on a variable class.\cr
 \examples{
 filter_state <- teal.slice:::RangeFilterState$new(
   x = c(1:10, NA, Inf),
-  x_filtered = reactive(c(1:10, NA, Inf)),
+  x_reactive = reactive(c(1:10, NA, Inf)),
   varname = "x",
   varlabel = "Pretty name",
   input_dataname = as.name("dataname"),
