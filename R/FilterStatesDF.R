@@ -142,19 +142,23 @@ DFFilterStates <- R6::R6Class( # nolint
     #'   should contain values which are initial selection in the `FilterState`.
     #'   Names of the `list` element should correspond to the name of the columns.
     #' @examples
-    #' dffs <- teal.slice:::DFFilterStates$new(
-    #'   input_dataname = "iris",
-    #'   output_dataname = "iris_filtered",
+    #' df <- data.frame(
+    #'   character = letters,
+    #'   numeric = seq_along(letters),
+    #'   date = seq(Sys.Date(), length.out = length(letters), by = "1 day"),
+    #'   datetime = seq(Sys.time(), length.out = length(letters), by = "33.33 hours")
+    #' )
+    #' filter_states <- teal.slice:::DFFilterStates$new(
+    #'   data = df,
+    #'   data_reactive = reactive(data),
+    #'   input_dataname = "data",
+    #'   output_dataname = "data_filtered",
+    #'   varlabels = c(x = "x variable", SEX = "Sex"),
     #'   datalabel = character(0),
-    #'   varlabels = character(0),
     #'   keys = character(0)
     #' )
-    #' fs <- list(
-    #'   Sepal.Length = list(selected = c(5.1, 6.4), keep_na = TRUE, keep_inf = TRUE),
-    #'   Species = list(selected = c("setosa", "versicolor"), keep_na = FALSE)
-    #' )
-    #' shiny::isolate(dffs$set_filter_state(state = fs, data = iris))
-    #' shiny::isolate(dffs$get_filter_state())
+    #' isolate(filter_states$set_filter_state(list(character = list("a"))))
+    #' isolate(filter_states$get_call())
     #'
     #' @return `NULL`
     set_filter_state = function(state) {

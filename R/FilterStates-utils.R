@@ -27,6 +27,7 @@
 #' @keywords internal
 #' @export
 #' @examples
+#' library(shiny)
 #' df <- data.frame(
 #'   character = letters,
 #'   numeric = seq_along(letters),
@@ -45,12 +46,12 @@
 #' shinyApp(
 #'   ui = fluidPage(
 #'     actionButton("clear", span(icon("xmark"), "Remove all filters")),
-#'     rf$ui_add_filter_state(id = "add", data = df),
+#'     rf$ui_add_filter_state(id = "add"),
 #'     rf$ui("states"),
 #'     verbatimTextOutput("expr"),
 #'   ),
 #'   server = function(input, output, session) {
-#'     rf$srv_add_filter_state(id = "add", data = df)
+#'     rf$srv_add_filter_state(id = "add")
 #'     rf$server(id = "states")
 #'     output$expr <- renderText({
 #'       deparse1(rf$get_call(), collapse = "\n")
