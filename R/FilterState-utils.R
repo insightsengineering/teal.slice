@@ -7,7 +7,7 @@
 #' @param varname (`character(1)`, `name`)\cr
 #'   name of the variable
 #'
-#' @param varlabel (`character(1)`)\cr
+#' @param varlabel (`character(0)`, `character(1)`)\cr
 #'   label of the variable (optional).
 #'
 #' @param input_dataname (`name` or `call`)\cr
