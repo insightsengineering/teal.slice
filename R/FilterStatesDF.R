@@ -88,7 +88,7 @@ DFFilterStates <- R6::R6Class( # nolint
       moduleServer(
         id = id,
         function(input, output, session) {
-          previous_state <- reactiveVal(isolate(self$state_list_get(1L)))
+          previous_state <- reactiveVal(character(0))
           added_state_name <- reactiveVal(character(0))
           removed_state_name <- reactiveVal(character(0))
 
