@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<coverage line-rate="0.582687927107062" branch-rate="0" lines-covered="2558" lines-valid="4390" branches-covered="0" branches-valid="0" complexity="0" version="3.6.1" timestamp="2023-01-25 14:06:41">
+<coverage line-rate="0.583219334245326" branch-rate="0" lines-covered="2558" lines-valid="4386" branches-covered="0" branches-valid="0" complexity="0" version="3.6.1" timestamp="2023-01-30 13:15:26">
   <sources/>
   <packages>
-    <package name="teal.slice" line-rate="0.582687927107062" branch-rate="0" complexity="0">
+    <package name="teal.slice" line-rate="0.583219334245326" branch-rate="0" complexity="0">
       <classes>
         <class name="call_utils.R" filename="R/call_utils.R" line-rate="0.974358974358974" branch-rate="0" complexity="0">
           <methods>
@@ -19085,7 +19085,7 @@
             <line number="257" hits="0" branch="false"/>
           </lines>
         </class>
-        <class name="FilterStateRange.R" filename="R/FilterStateRange.R" line-rate="0.430769230769231" branch-rate="0" complexity="0">
+        <class name="FilterStateRange.R" filename="R/FilterStateRange.R" line-rate="0.4375" branch-rate="0" complexity="0">
           <methods>
             <method name="initialize" signature="" line-rate="0.975708502024291" branch-rate="0">
               <lines>
@@ -20522,10 +20522,6 @@
                 <line number="480" hits="0" branch="false"/>
                 <line number="481" hits="0" branch="false"/>
                 <line number="482" hits="0" branch="false"/>
-                <line number="483" hits="0" branch="false"/>
-                <line number="484" hits="0" branch="false"/>
-                <line number="485" hits="0" branch="false"/>
-                <line number="486" hits="0" branch="false"/>
               </lines>
             </method>
           </methods>
@@ -20786,10 +20782,6 @@
             <line number="480" hits="0" branch="false"/>
             <line number="481" hits="0" branch="false"/>
             <line number="482" hits="0" branch="false"/>
-            <line number="483" hits="0" branch="false"/>
-            <line number="484" hits="0" branch="false"/>
-            <line number="485" hits="0" branch="false"/>
-            <line number="486" hits="0" branch="false"/>
           </lines>
         </class>
         <class name="FilterStates-utils.R" filename="R/FilterStates-utils.R" line-rate="0.930555555555556" branch-rate="0" complexity="0">
