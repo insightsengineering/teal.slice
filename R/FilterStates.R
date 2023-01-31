@@ -371,12 +371,13 @@ FilterStates <- R6::R6Class( # nolint
     #'
     ui = function(id) {
       ns <- NS(id)
-      private$cards_container_id <- ns("cards")
+      private$cards_container_id <- ns("filter-card-container")
       tagList(
         include_css_files(pattern = "filter-panel"),
-        tags$div(
+        include_js_files(pattern = "filter-panel"),
+        tags$ul(
           id = private$cards_container_id,
-          class = "list-group hideable-list-group",
+          class = "filter-card-container",
           `data-label` = ifelse(private$datalabel == "", "", (paste0("> ", private$datalabel)))
         )
       )
@@ -521,15 +522,16 @@ FilterStates <- R6::R6Class( # nolint
           insertUI(
             selector = sprintf("#%s", private$cards_container_id),
             where = "beforeEnd",
-            # add span with id to be removable
-            ui = div(
-              id = card_id,
-              class = "list-group-item",
-              filter_state$ui(session$ns("content"))
-            )
+            ui = filter_state$ui(card_id)
           )
+          # need to wait for UI to be inserted
+          # so tell shiny to send message after next reactivity flush
+          # TODO: insertUI might have an argument for this?
+          session$onFlushed(function() {
+            session$sendCustomMessage("filter-card-add", private$cards_container_id)
+          })
           # signal sent from filter_state when it is marked for removal
-          remove_fs <- filter_state$server(id = "content")
+          remove_fs <- filter_state$server(id = "card")
 
           private$observers[[state_list_id]] <- observeEvent(
             ignoreInit = TRUE,

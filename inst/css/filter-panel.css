@@ -218,3 +218,78 @@ a.remove_all:hover {
 .teal_active_summary_filter_panel {
   overflow-x: auto;
 }
+
+/* 
+below is the css for the new fitler card design
+will need to remove relevant code above
+*/
+
+.filter-card-container {
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+  border-radius: 5px;
+}
+
+/* label for MAE data sets*/
+.filter-card-container[data-label]:not([data-label=""]) {
+  padding: 2px 4px;
+  font-size: 90%;
+  color: #c7254e;
+  background-color: #f9f2f4;
+  border-radius: 4px;
+  font-family: Menlo, Monaco, Consolas, "Courier New", monospace;
+
+  display: inline-block;
+  max-width: 100%;
+  margin-top: 10px;
+  margin-bottom: 10px;
+  font-weight: 700;
+
+  content: attr(data-label);
+}
+
+.filter-card {
+  width: 100%;
+  display: grid;
+  grid-template-rows: 10% 90%;
+}
+
+
+.filter-card-header {
+  display: grid;
+  grid-template-columns: 2fr 1fr 1fr 1fr;
+  color: var(--bs-body-color, #333333);
+  border: 1px solid var(--bs-gray-200, rgba(0, 0, 0, 0.03))
+}
+
+.filter-card-header:hover {
+  background-color: var(--bs-gray-200, rgba(0, 0, 0, 0.03))
+}
+
+.filter-card-icons {
+  justify-self: end;
+  margin-right: 10px;
+  grid-column-start: 4;
+}
+
+.filter-card-remove>i {
+  color: var(--bs-body-color, #333333);
+}
+
+.fa-check {
+  color: var(--bs-success, #3c763d);
+}
+
+.fa-xmark {
+  color: var(--bs-danger, #a94442);
+}
+
+.filter-card-body {
+  display: none;
+  width: 100%;
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.2s ease-out;
+  margin-top: 1rem;
+}

@@ -15,3 +15,17 @@ include_css_files <- function(pattern = "*") {
   )
   return(shiny::singleton(shiny::tags$head(lapply(css_files, shiny::includeCSS))))
 }
+
+#' Include `JS` files from `/inst/js/` package directory to application header
+#'
+#' @param pattern (`character`) pattern of files to be included, passed to `system.file`
+#' @param except (`character`) vector of basename filenames to be excluded
+#'
+#' @return HTML code that includes `JS` files
+#' @keywords internal
+include_js_files <- function(pattern = NULL, except = NULL) {
+  checkmate::assert_character(except, min.len = 1, any.missing = FALSE, null.ok = TRUE)
+  js_files <- list.files(system.file("js", package = "teal.slice", mustWork = TRUE), pattern = pattern, full.names = TRUE)
+  js_files <- js_files[!(basename(js_files) %in% except)] # no-op if except is NULL
+  return(singleton(lapply(js_files, shiny::includeScript)))
+}
