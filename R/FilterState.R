@@ -485,7 +485,6 @@ FilterState <- R6::R6Class( # nolint
         ),
         tags$div(
           class = "filter-card-body",
-          "input goes here",
           private$ui_inputs(ns("inputs"))
         )
         )
