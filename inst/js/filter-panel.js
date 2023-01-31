@@ -1,11 +1,27 @@
-filterCardListener = function(e) {
+filterCardListener = function (e) {
+
+    let target = e.target;
     // e.currentTarget takes into account bubbling
     // i.e. it's the element the listener is actually attached to
-    let containerId = e.currentTarget.id
-    let el = e.target.closest('.filter-card-header')
-    // if el is null, body was clicked (e.g. an input)
-    if (el !== null) {
-        toggleFilterCard(el, containerId)
+    let container = e.currentTarget
+    let containerId = container.id
+
+    if (target.classList.contains('filter-card-remove')) {
+
+        let id = target.id;
+        Shiny.setInputValue(id, 1, { priority: 'event' })
+
+        let numCardsInContainer = getHeaders(containerId).length
+
+        if (numCardsInContainer === 0) {
+            container.removeEventListener('click', filterCardListener)
+        }
+    }
+
+    let header = target.closest('.filter-card-header')
+    // if header is null, body was clicked (e.g. an input)
+    if (header !== null) {
+        toggleFilterCard(header, containerId)
     }
 }
 
@@ -75,7 +91,9 @@ Shiny.addCustomMessageHandler('filter-card-add', function (id) {
         .addEventListener('click', filterCardListener)
 })
 
-Shiny.addCustomMessageHandler('filter-cards-removed', function (id) {
+/*
+Shiny.addCustomMessageHandler('filter-card-remove', function (id) {
     document.getElementById(id)
         .removeEventListener('click', filterCardListener)
 })
+*/

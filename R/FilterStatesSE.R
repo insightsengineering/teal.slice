@@ -127,16 +127,6 @@ SEFilterStates <- R6::R6Class( # nolint
             for (fname in removed_state_name_subset()) {
               private$remove_filter_state_ui("subset", fname, .input = input)
             }
-            
-            if (length(removed_state_name_subset()) != 0) {
-              session$onFlushed(function() {
-                session$sendCustomMessage(
-                  "filter-cards-removed",
-                  private$cards_container_id
-                )
-              })
-            }
-
             removed_state_name_subset(character(0))
           })
 
@@ -174,16 +164,6 @@ SEFilterStates <- R6::R6Class( # nolint
             for (fname in removed_state_name_select()) {
               private$remove_filter_state_ui("select", fname, .input = input)
             }
-
-            if (length(removed_state_name_select()) != 0) {
-              session$onFlushed(function() {
-                session$sendCustomMessage(
-                  "filter-cards-removed",
-                  private$cards_container_id
-                )
-              })
-            }
-            
             removed_state_name_select(character(0))
           })
           NULL

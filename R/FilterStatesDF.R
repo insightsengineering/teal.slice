@@ -107,21 +107,7 @@ DFFilterStates <- R6::R6Class( # nolint
           observeEvent(removed_state_name(), ignoreNULL = TRUE, {
             for (fname in removed_state_name()) {
               private$remove_filter_state_ui(1L, fname, .input = input)
-            }
-            # wait for UI to be removed
-            # may not be strictly necessary but aligns with inserting the UI
-            # length check b/c this event gets called on any change
-            # e.g. if a variable is added, we're in this event but
-            #  removed_state_name() = character(0)
-            if (length(removed_state_name()) != 0) {
-              session$onFlushed(function() {
-                session$sendCustomMessage(
-                  "filter-cards-removed",
-                  private$cards_container_id
-                )
-              })
-            }
-                        
+            }           
             removed_state_name(character(0))
           })
 
