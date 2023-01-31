@@ -569,14 +569,16 @@ testthat::test_that("get_call returns a call filtering a data.frame based on a D
   testthat::expect_equal(
     datetime_output,
     dplyr::filter(datetime_dataset,
-                  datetime >= as.POSIXct("2021-08-27 12:00:00", tz = "Europe/Prague") &
-                    datetime < as.POSIXct("2021-08-27 12:00:01", tz = "Europe/Prague")))
+                  datetime >= as.POSIXct("2021-08-27 12:00:00") &
+                    datetime < as.POSIXct("2021-08-27 12:00:01")))
   testthat::expect_equal(
     isolate(filter_states$get_call()),
-    quote(datetime_output <- dplyr::filter(
+    bquote(datetime_output <- dplyr::filter(
       datetime_dataset,
-      datetime >= as.POSIXct("2021-08-27 12:00:00", tz = "Europe/Prague") &
-        datetime < as.POSIXct("2021-08-27 12:00:01", tz = "Europe/Prague"))))
+      datetime >= as.POSIXct("2021-08-27 12:00:00", tz = .(Sys.timezone())) &
+        datetime < as.POSIXct("2021-08-27 12:00:01", tz = .(Sys.timezone()))
+    ))
+  )
 })
 
 testthat::test_that("get_call returns a call filtering a data.frame base on a combination of FilterState objects", {
@@ -622,17 +624,17 @@ testthat::test_that("get_call returns a call filtering a data.frame base on a co
                     choices %in% c("a", "c") &
                     !logical &
                     date >= as.Date("2021-08-25") & date <= as.Date("2021-08-26") &
-                    datetime >= as.POSIXct("2021-08-25 12:00:00", tz = "Europe/Prague") &
-                    datetime < as.POSIXct("2021-08-25 12:00:01", tz = "Europe/Prague")))
+                    datetime >= as.POSIXct("2021-08-25 12:00:00") &
+                    datetime < as.POSIXct("2021-08-25 12:00:01")))
   testthat::expect_equal(
     isolate(filter_states$get_call()),
-    quote(output <- dplyr::filter(test_dataset,
+    bquote(output <- dplyr::filter(test_dataset,
                                   numbers >= 1 & numbers <= 3 &
                                     choices %in% c("a", "c") &
                                     !logical &
                                     (date >= as.Date("2021-08-25") & date <= as.Date("2021-08-26")) &
-                                    (datetime >= as.POSIXct("2021-08-25 12:00:00", tz = "Europe/Prague") &
-                                       datetime < as.POSIXct("2021-08-25 12:00:01", tz = "Europe/Prague"))))
+                                    (datetime >= as.POSIXct("2021-08-25 12:00:00", tz = .(Sys.timezone())) &
+                                       datetime < as.POSIXct("2021-08-25 12:00:01", tz = .(Sys.timezone())))))
   )
 })
 
