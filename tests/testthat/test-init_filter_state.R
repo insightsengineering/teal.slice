@@ -9,10 +9,10 @@ testthat::test_that("init_filter_state accepts a character vector of length 0 or
 })
 
 test_that("input_dataname must be specified if extract_type is specified", {
-  ADSL <- scda::synthetic_cdisc_data("latest")$adsl
+  adsl <- scda::synthetic_cdisc_data("latest")$adsl
   testthat::expect_error(
     teal.slice:::init_filter_state(
-      ADSL$SEX,
+      adsl$SEX,
       varname = "SEX",
       input_dataname = NULL,
       extract_type = "matrix"
