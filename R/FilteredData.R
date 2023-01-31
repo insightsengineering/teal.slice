@@ -97,12 +97,12 @@ FilteredData <- R6::R6Class( # nolint
         self$set_code(code)
       }
 
-      for (dataname in names(data_objects)) {
-        self$set_dataset(data_objects[[dataname]], dataname)
-      }
-
       if (!is.null(join_keys)) {
         self$set_join_keys(join_keys)
+      }
+
+      for (dataname in names(data_objects)) {
+        self$set_dataset(data_objects[[dataname]], dataname)
       }
 
       invisible(self)
@@ -139,17 +139,6 @@ FilteredData <- R6::R6Class( # nolint
     },
 
     #' @description
-    #' Gets variable names of a given dataname for the filtering.
-    #'
-    #' @param dataname (`character(1)`) name of the dataset
-    #'
-    #' @return (`character` vector) of variable names
-    #'
-    get_filterable_varnames = function(dataname) {
-      self$get_filtered_dataset(dataname)$get_filterable_varnames()
-    },
-
-    #' @description
     #' Set the variable names of a given dataset for the filtering.
     #'
     #' @param dataname (`character(1)`) name of the dataset
@@ -161,7 +150,9 @@ FilteredData <- R6::R6Class( # nolint
     #'
     set_filterable_varnames = function(dataname, varnames) {
       private$check_data_varname_exists(dataname)
-      self$get_filtered_dataset(dataname)$set_filterable_varnames(varnames)
+      if (!is.null(varnames)) {
+        self$get_filtered_dataset(dataname)$set_filterable_varnames(varnames)
+      }
       invisible(self)
     },
 
@@ -237,24 +228,8 @@ FilteredData <- R6::R6Class( # nolint
     get_data = function(dataname, filtered = TRUE) {
       private$check_data_varname_exists(dataname)
       checkmate::assert_flag(filtered)
-      if (filtered) {
-        # This try is specific for MAEFilteredDataset due to a bug in
-        # S4Vectors causing errors when using the subset function on MAE objects.
-        # The fix was introduced in S4Vectors 0.30.1, but is unavailable for R versions < 4.1
-        # Link to the issue: https://github.com/insightsengineering/teal/issues/210
-        tryCatch(
-          private$reactive_data[[dataname]](),
-          error = function(error) {
-            shiny::validate(paste(
-              "Filtering expression returned error(s). Please change filters.\nThe error message was:",
-              error$message,
-              sep = "\n"
-            ))
-          }
-        )
-      } else {
-        self$get_filtered_dataset(dataname)$get_dataset()
-      }
+      data <- self$get_filtered_dataset(dataname)$get_dataset(filtered)
+      if (filtered) data() else data
     },
 
     #' @description
@@ -306,9 +281,7 @@ FilteredData <- R6::R6Class( # nolint
       rows <- lapply(
         datanames,
         function(dataname) {
-          self$get_filtered_dataset(dataname)$get_filter_overview_info(
-            filtered_dataset = self$get_data(dataname = dataname, filtered = TRUE)
-          )
+          self$get_filtered_dataset(dataname)$get_filter_overview_info()
         }
       )
 
@@ -407,19 +380,11 @@ FilteredData <- R6::R6Class( # nolint
       # the UI also uses datanames in ids, so no whitespaces allowed
       check_simple_name(dataname)
 
-      private$reactive_data[[dataname]] <- reactive({
-        env <- new.env(parent = parent.env(globalenv()))
-        env[[dataname]] <- self$get_filtered_dataset(dataname)$get_dataset()
-        filter_call <- self$get_call(dataname)
-        eval_expr_with_msg(filter_call, env)
-        get(x = dataname, envir = env)
-      })
-
       private$filtered_datasets[[dataname]] <- do.call(
         what = init_filtered_dataset,
         args = c(list(dataset), dataset_args, list(dataname = dataname))
       )
-
+      private$reactive_data[[dataname]] <- self$get_filtered_dataset(dataname)$get_dataset(TRUE)
 
       invisible(self)
     },
@@ -571,11 +536,7 @@ FilteredData <- R6::R6Class( # nolint
         )
         fdataset <- self$get_filtered_dataset(dataname = dataname)
         dataset_state <- state[[dataname]]
-        fdataset$set_filter_state(
-          state = dataset_state,
-          filtered_dataset = private$reactive_data[[dataname]],
-          vars_include = self$get_filterable_varnames(dataname)
-        )
+        fdataset$set_filter_state(state = dataset_state)
       })
       logger::log_trace(
         "FilteredData$set_filter_state initialized, dataname: { paste(names(state), collapse = ' ') }"
@@ -637,26 +598,6 @@ FilteredData <- R6::R6Class( # nolint
       )
 
       invisible(NULL)
-    },
-
-    #' @description
-    #' Sets this object from a bookmarked state.
-    #'
-    #' Only sets the filter state, does not set the data
-    #' and the preprocessing code. The data should already have been set.
-    #' Also checks the preprocessing code is identical if provided in the `state`.
-    #'
-    #' Since this function is used from the end-user part, its error messages
-    #' are more verbose. We don't call the Shiny modals from here because this
-    #' class may be used outside of a Shiny app.
-    #'
-    #' @param state (`named list`)\cr
-    #'   containing fields `data_hash`, `filter_states` and `preproc_code`
-    #' @param check_data_hash (`logical`) whether to check that `md5sums` agree
-    #'   for the data; may not make sense with randomly generated data per session
-    #'
-    restore_state_from_bookmark = function(state, check_data_hash = TRUE) {
-      stop("Pure virtual method")
     },
 
     #' @description
@@ -866,7 +807,6 @@ FilteredData <- R6::R6Class( # nolint
         id = id,
         function(input, output, session) {
           logger::log_trace("FilteredData$srv_filter_panel initializing")
-          shiny::setBookmarkExclude("remove_all_filters")
           self$srv_filter_overview(
             id = "teal_filters_info",
             active_datanames = active_datanames
@@ -917,11 +857,7 @@ FilteredData <- R6::R6Class( # nolint
             isol_datanames,
             function(dataname) {
               fdataset <- self$get_filtered_dataset(dataname)
-              fdataset$srv_add_filter_state(
-                id = private$get_ui_add_filter_id(dataname),
-                filtered_dataset = private$reactive_data[[dataname]],
-                vars_include = self$get_filterable_varnames(dataname)
-              )
+              fdataset$srv_add_filter_state(id = private$get_ui_add_filter_id(dataname))
             }
           )
 

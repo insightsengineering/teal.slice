@@ -12,19 +12,23 @@ Specialization of \code{FilterStates} for a base \code{data.frame}.
 ## Method `DFFilterStates$set_filter_state`
 ## ------------------------------------------------
 
-dffs <- teal.slice:::DFFilterStates$new(
-  input_dataname = "iris",
-  output_dataname = "iris_filtered",
+df <- data.frame(
+  character = letters,
+  numeric = seq_along(letters),
+  date = seq(Sys.Date(), length.out = length(letters), by = "1 day"),
+  datetime = seq(Sys.time(), length.out = length(letters), by = "33.33 hours")
+)
+filter_states <- teal.slice:::DFFilterStates$new(
+  data = df,
+  data_reactive = reactive(data),
+  input_dataname = "data",
+  output_dataname = "data_filtered",
+  varlabels = c(x = "x variable", SEX = "Sex"),
   datalabel = character(0),
-  varlabels = character(0),
   keys = character(0)
 )
-fs <- list(
-  Sepal.Length = list(selected = c(5.1, 6.4), keep_na = TRUE, keep_inf = TRUE),
-  Species = list(selected = c("setosa", "versicolor"), keep_na = FALSE)
-)
-shiny::isolate(dffs$set_filter_state(state = fs, data = iris))
-shiny::isolate(dffs$get_filter_state())
+isolate(filter_states$set_filter_state(list(character = list("a"))))
+isolate(filter_states$get_call())
 
 }
 \keyword{internal}
@@ -41,6 +45,7 @@ shiny::isolate(dffs$get_filter_state())
 \item \href{#method-DFFilterStates-get_filter_state}{\code{DFFilterStates$get_filter_state()}}
 \item \href{#method-DFFilterStates-set_filter_state}{\code{DFFilterStates$set_filter_state()}}
 \item \href{#method-DFFilterStates-remove_filter_state}{\code{DFFilterStates$remove_filter_state()}}
+\item \href{#method-DFFilterStates-set_filterable_varnames}{\code{DFFilterStates$set_filterable_varnames()}}
 \item \href{#method-DFFilterStates-ui_add_filter_state}{\code{DFFilterStates$ui_add_filter_state()}}
 \item \href{#method-DFFilterStates-srv_add_filter_state}{\code{DFFilterStates$srv_add_filter_state()}}
 \item \href{#method-DFFilterStates-clone}{\code{DFFilterStates$clone()}}
@@ -74,12 +79,28 @@ This class contains a single \code{state_list} with no specified name,
 which means that when calling the subset function associated with this class
 (\code{dplyr::filter}), a list of conditions is passed to unnamed arguments (\code{...}).
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{DFFilterStates$new(input_dataname, output_dataname, datalabel, varlabels, keys)}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{DFFilterStates$new(
+  data,
+  data_reactive,
+  input_dataname,
+  output_dataname,
+  datalabel,
+  varlabels,
+  keys
+)}\if{html}{\out{</div>}}
 }
 
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
+\item{\code{data}}{(\code{data.frame})\cr
+the R object which \code{dplyr::filter} function is applied on.}
+
+\item{\code{data_reactive}}{(\code{reactive})\cr
+should a \code{data.frame} object.
+This object is needed for the \code{FilterState} counts being updated
+on a change in filters.}
+
 \item{\code{input_dataname}}{(\code{character(1)} or \code{name} or \code{call})\cr
 name of the data used on \code{rhs} of the \emph{subset expression}
 specified to the function argument attached to this \code{FilterStates}}
@@ -178,29 +199,15 @@ The output list is a compatible input to \code{self$set_filter_state}.
 \subsection{Method \code{set_filter_state()}}{
 Set filter state.
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{DFFilterStates$set_filter_state(
-  data,
-  filtered_dataset,
-  state,
-  vars_include = get_supported_filter_varnames(data = data),
-  ...
-)}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{DFFilterStates$set_filter_state(state)}\if{html}{\out{</div>}}
 }
 
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
-\item{\code{data}}{(\code{data.frame})\cr
-data object for which to define a subset}
-
 \item{\code{state}}{(\verb{named list})\cr
-should contain values of initial selections in the \code{FilterState};
-\code{list} names must correspond to column names in \code{data}}
-
-\item{\code{vars_include}}{(\code{character(n)})\cr
-optional, vector of column names to be included}
-
-\item{\code{...}}{ignored}
+should contain values which are initial selection in the \code{FilterState}.
+Names of the \code{list} element should correspond to the name of the columns.}
 }
 \if{html}{\out{</div>}}
 }
@@ -209,19 +216,23 @@ optional, vector of column names to be included}
 }
 \subsection{Examples}{
 \if{html}{\out{<div class="r example copy">}}
-\preformatted{dffs <- teal.slice:::DFFilterStates$new(
-  input_dataname = "iris",
-  output_dataname = "iris_filtered",
+\preformatted{df <- data.frame(
+  character = letters,
+  numeric = seq_along(letters),
+  date = seq(Sys.Date(), length.out = length(letters), by = "1 day"),
+  datetime = seq(Sys.time(), length.out = length(letters), by = "33.33 hours")
+)
+filter_states <- teal.slice:::DFFilterStates$new(
+  data = df,
+  data_reactive = reactive(data),
+  input_dataname = "data",
+  output_dataname = "data_filtered",
+  varlabels = c(x = "x variable", SEX = "Sex"),
   datalabel = character(0),
-  varlabels = character(0),
   keys = character(0)
 )
-fs <- list(
-  Sepal.Length = list(selected = c(5.1, 6.4), keep_na = TRUE, keep_inf = TRUE),
-  Species = list(selected = c("setosa", "versicolor"), keep_na = FALSE)
-)
-shiny::isolate(dffs$set_filter_state(state = fs, data = iris))
-shiny::isolate(dffs$get_filter_state())
+isolate(filter_states$set_filter_state(list(character = list("a"))))
+isolate(filter_states$get_call())
 
 }
 \if{html}{\out{</div>}}
@@ -250,6 +261,33 @@ Remove a \code{FilterState} from the \code{state_list}.
 }
 }
 \if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-DFFilterStates-set_filterable_varnames"></a>}}
+\if{latex}{\out{\hypertarget{method-DFFilterStates-set_filterable_varnames}{}}}
+\subsection{Method \code{set_filterable_varnames()}}{
+Set the allowed filterable variables
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{DFFilterStates$set_filterable_varnames(varnames)}\if{html}{\out{</div>}}
+}
+
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{varnames}}{(\code{character} or \code{NULL}) The variables which can be filtered
+See \code{self$get_filterable_varnames} for more details}
+}
+\if{html}{\out{</div>}}
+}
+\subsection{Details}{
+When retrieving the filtered variables only
+those which have filtering supported (i.e. are of the permitted types)
+are included.
+}
+
+\subsection{Returns}{
+invisibly this \code{FilteredDataset}
+}
+}
+\if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-DFFilterStates-ui_add_filter_state"></a>}}
 \if{latex}{\out{\hypertarget{method-DFFilterStates-ui_add_filter_state}{}}}
 \subsection{Method \code{ui_add_filter_state()}}{
@@ -262,15 +300,15 @@ Shiny UI module to add filter variable.
 \if{html}{\out{<div class="arguments">}}
 \describe{
 \item{\code{id}}{(\code{character(1)})\cr
-shiny element (module instance) id}
+id of shiny module}
 
 \item{\code{data}}{(\code{data.frame})\cr
-data object for which to define a subset}
+object which columns are used to choose filter variables.}
 }
 \if{html}{\out{</div>}}
 }
 \subsection{Returns}{
-\code{shiny.tag}
+shiny.tag
 }
 }
 \if{html}{\out{<hr>}}
@@ -283,31 +321,14 @@ This module controls available choices to select as a filter variable.
 Once selected, a variable is removed from available choices.
 Removing a filter variable adds it back to available choices.
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{DFFilterStates$srv_add_filter_state(
-  id,
-  data,
-  filtered_dataset,
-  vars_include = get_supported_filter_varnames(data = data),
-  ...
-)}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{DFFilterStates$srv_add_filter_state(id)}\if{html}{\out{</div>}}
 }
 
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
 \item{\code{id}}{(\code{character(1)})\cr
-shiny module instance id}
-
-\item{\code{data}}{(\code{data.frame})\cr
-data object for which to define a subset
-object which columns are used to choose filter variables.}
-
-\item{\code{filtered_dataset}}{TODO (also what happens if not given...)}
-
-\item{\code{vars_include}}{(\code{character(n)})\cr
-optional, vector of column names to be included}
-
-\item{\code{...}}{ignored}
+an ID string that corresponds with the ID used to call the module's UI function.}
 }
 \if{html}{\out{</div>}}
 }

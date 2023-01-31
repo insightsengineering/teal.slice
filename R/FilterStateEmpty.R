@@ -32,6 +32,9 @@ EmptyFilterState <- R6::R6Class( # nolint
     #'
     #' @param x (`vector`)\cr
     #'   values of the variable used in filter
+    #' @param x_reactive (`reactive`)\cr
+    #'   a `reactive` returning a filtered vector. Is used to update
+    #'   counts following the change in values of the filtered dataset.
     #' @param varname (`character`, `name`)\cr
     #'   name of the variable
     #' @param varlabel (`character(1)`)\cr
@@ -47,12 +50,12 @@ EmptyFilterState <- R6::R6Class( # nolint
     #' }
     #'
     initialize = function(x,
-                          x_filtered,
+                          x_reactive,
                           varname,
                           varlabel = character(0),
                           input_dataname = NULL,
                           extract_type = character(0)) {
-      super$initialize(x, x_filtered, varname, varlabel, input_dataname, extract_type)
+      super$initialize(x, x_reactive, varname, varlabel, input_dataname, extract_type)
       private$set_choices(list())
       self$set_selected(list())
 

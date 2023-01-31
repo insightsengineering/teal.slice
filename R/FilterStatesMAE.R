@@ -4,12 +4,18 @@
 MAEFilterStates <- R6::R6Class( # nolint
   classname = "MAEFilterStates",
   inherit = FilterStates,
-
-  # public methods ----
   public = list(
     #' @description Initializes `MAEFilterStates` object
     #'
     #' Initialize `MAEFilterStates` object
+    #'
+    #' @param data (`MultiAssayExperiment`)\cr
+    #'   the R object which `MultiAssayExperiment::subsetByColData` function is applied on.
+    #'
+    #' @param data_reactive (`reactive`)\cr
+    #'   should return `MultiAssayExperiment` object.
+    #'   This object is needed for the `FilterState` counts being updated
+    #'   on a change in filters.
     #'
     #' @param input_dataname (`character(1)` or `name` or `call`)\cr
     #'   name of the data used on lhs of the expression
@@ -26,17 +32,17 @@ MAEFilterStates <- R6::R6Class( # nolint
     #'
     #' @param keys (`character`)\cr
     #'   key columns names
-    initialize = function(input_dataname, output_dataname, datalabel, varlabels, keys) {
+    initialize = function(data, data_reactive, input_dataname, output_dataname, datalabel, varlabels, keys) {
       if (!requireNamespace("MultiAssayExperiment", quietly = TRUE)) {
         stop("Cannot load MultiAssayExperiment - please install the package or restart your session.")
       }
-      super$initialize(input_dataname, output_dataname, datalabel)
+      super$initialize(data, data_reactive, input_dataname, output_dataname, datalabel)
       private$keys <- keys
       private$varlabels <- varlabels
 
       self$state_list_initialize(
         list(
-          y = reactiveVal()
+          y = shiny::reactiveVal()
         )
       )
       return(invisible(self))
@@ -52,9 +58,7 @@ MAEFilterStates <- R6::R6Class( # nolint
 
       if (length(self$state_list_get(1L)) > 0) {
         formatted_states <- sprintf("%sSubject filters:", format("", width = indent))
-        for (state in self$state_list_get(1L)) {
-          formatted_states <- c(formatted_states, state$format(indent = indent + 2))
-        }
+        for (state in self$state_list_get(1L)) formatted_states <- c(formatted_states, state$format(indent = indent + 2))
         paste(formatted_states, collapse = "\n")
       }
     },
@@ -94,7 +98,7 @@ MAEFilterStates <- R6::R6Class( # nolint
               private$insert_filter_state_ui(
                 id = html_ids[fname],
                 filter_state = fstates[[fname]],
-                state_list_index = "y",
+                "y",
                 state_id = fname
               )
             }
@@ -120,21 +124,21 @@ MAEFilterStates <- R6::R6Class( # nolint
     #'
     #' @return `list` with elements number equal number of `FilterStates`.
     get_filter_state = function() {
-      lapply(self$state_list_get(state_list_index = "y"), function(x) x$get_state())
+      lapply(self$state_list_get("y"), function(x) x$get_state())
     },
 
     #' @description
     #' Set filter state
     #'
-    #' @param data (`MultiAssayExperiment`)\cr
-    #'   data which are supposed to be filtered.
     #' @param state (`named list`)\cr
     #'   should contain values which are initial selection in the `FilterState`.
     #'   Names of the `list` element should correspond to the name of the
     #'   column in `colData(data)`.
-    #' @param ... ignored.
     #' @return `NULL`
-    set_filter_state = function(data, state, filtered_dataset, ...) {
+    set_filter_state = function(state) {
+      data <- private$data
+      data_reactive <- private$data_reactive
+
       checkmate::assert_class(data, "MultiAssayExperiment")
       checkmate::assert(
         checkmate::check_subset(names(state), names(SummarizedExperiment::colData(data))),
@@ -142,8 +146,8 @@ MAEFilterStates <- R6::R6Class( # nolint
         combine = "or"
       )
       logger::log_trace("MAEFilterState$set_filter_state initializing, dataname: { deparse1(private$input_dataname) }")
-      lapply(names(state), function(varname) {
       filter_states <- self$state_list_get("y")
+      lapply(names(state), function(varname) {
         value <- resolve_state(state[[varname]])
         if (varname %in% names(filter_states)) {
           fstate <- filter_states[[varname]]
@@ -151,7 +155,7 @@ MAEFilterStates <- R6::R6Class( # nolint
         } else {
           fstate <- init_filter_state(
             x = SummarizedExperiment::colData(data)[[varname]],
-            x_filtered = reactive(SummarizedExperiment::colData(filtered_dataset())[[varname]]),
+            x_reactive = reactive(SummarizedExperiment::colData(data_reactive())[[varname]]),
             varname = as.name(varname),
             varlabel = private$get_varlabels(varname),
             input_dataname = private$input_dataname,
@@ -161,7 +165,7 @@ MAEFilterStates <- R6::R6Class( # nolint
           fstate$set_na_rm(TRUE)
           self$state_list_push(
             x = fstate,
-            state_list_index = "y",
+            "y",
             state_id = varname
           )
         }
@@ -171,9 +175,9 @@ MAEFilterStates <- R6::R6Class( # nolint
     },
 
     #' @description
-    #' Removes a variable from the `state_list` and its corresponding UI element.
+    #' Removes a variable from the `ReactiveQueue` and its corresponding UI element.
     #'
-    #' @param state_id (`character(1)`)\cr name of `state_list` element.
+    #' @param state_id (`character(1)`)\cr name of `ReactiveQueue` element.
     #'
     #' @return `NULL`
     #'
@@ -200,7 +204,7 @@ MAEFilterStates <- R6::R6Class( # nolint
           )
         )
       } else {
-        self$state_list_remove(state_list_index = "y", state_id = state_id)
+        self$state_list_remove("y", state_id = state_id)
         logger::log_trace(
           sprintf(
             "%s$remove_filter_state for variable %s done, dataname: %s",
@@ -212,21 +216,14 @@ MAEFilterStates <- R6::R6Class( # nolint
       }
     },
 
-    # shiny modules ----
-
     #' @description
     #' Shiny UI module to add filter variable
     #' @param id (`character(1)`)\cr
     #'  id of shiny module
-    #' @param data (`MultiAssayExperiment`)\cr
-    #'  object containing `colData` which columns are used to be used
-    ui_add_filter_state = function(id, data, filtered_dataset) {
-    #'
-    #' @return `shiny.tag`
-    #'
-    #'  to choose filter variables
+    #' @return shiny.tag
+    ui_add_filter_state = function(id) {
+      data <- private$data
       checkmate::assert_string(id)
-      stopifnot(is(data, "MultiAssayExperiment"))
 
       ns <- NS(id)
 
@@ -255,26 +252,19 @@ MAEFilterStates <- R6::R6Class( # nolint
     #'
     #' @param id (`character(1)`)\cr
     #'   an ID string that corresponds with the ID used to call the module's UI function.
-    #' @param data (`MultiAssayExperiment`)\cr
-    #'  object containing `colData` which columns are used to choose filter variables in
-    #' [teal.widgets::optionalSelectInput()].
-    #' @param ... ignored
-    #'
     #' @return `moduleServer` function which returns `NULL`
-    #'
-    srv_add_filter_state = function(id, data, filtered_dataset, ...) {
-      stopifnot(is(data, "MultiAssayExperiment"))
-      check_ellipsis(..., stop = FALSE)
+    srv_add_filter_state = function(id) {
+      data <- private$data
+      data_reactive <- private$data_reactive
       moduleServer(
         id = id,
         function(input, output, session) {
           logger::log_trace(
             "MAEFilterState$srv_add_filter_state initializing, dataname: { deparse1(private$input_dataname) }"
           )
-          shiny::setBookmarkExclude("var_to_add")
           active_filter_vars <- reactive({
             vapply(
-              X = self$state_list_get(state_list_index = "y"),
+              X = self$state_list_get("y"),
               FUN.VALUE = character(1),
               FUN = function(x) x$get_varname(deparse = TRUE)
             )
@@ -329,21 +319,7 @@ MAEFilterStates <- R6::R6Class( # nolint
                 )
               )
               varname <- input$var_to_add
-              fstate <- init_filter_state(
-                x = SummarizedExperiment::colData(data)[[varname]],
-                x_filtered = reactive(filtered_dataset()[[varname]]),
-                varname = as.name(varname),
-                varlabel = private$get_varlabels(varname),
-                input_dataname = private$input_dataname,
-                extract_type = "list"
-              )
-              fstate$set_na_rm(TRUE)
-
-              self$state_list_push(
-                x = fstate,
-                state_list_index = "y",
-                state_id = varname
-              )
+              self$set_filter_state(setNames(list(list()), varname))
               logger::log_trace(
                 sprintf(
                   "MAEFilterStates$srv_add_filter_state@2 added FilterState of variable %s, dataname: %s",
@@ -362,8 +338,6 @@ MAEFilterStates <- R6::R6Class( # nolint
       )
     }
   ),
-
-  # private members ----
   private = list(
     varlabels = character(0),
     keys = character(0),

@@ -9,6 +9,14 @@ SEFilterStates <- R6::R6Class( # nolint
     #'
     #' Initialize `SEFilterStates` object
     #'
+    #' @param data (`SummarizedExperiment`)\cr
+    #'   the R object which `subset` function is applied on.
+    #'
+    #' @param data_reactive (`reactive`)\cr
+    #'   should return a `SummarizedExperiment` object.
+    #'   This object is needed for the `FilterState` counts being updated
+    #'   on a change in filters.
+    #'
     #' @param input_dataname (`character(1)` or `name` or `call`)\cr
     #'   name of the data used on lhs of the expression
     #'   specified to the function argument attached to this `FilterStates`.
@@ -18,11 +26,11 @@ SEFilterStates <- R6::R6Class( # nolint
     #'
     #' @param datalabel (`character(0)` or `character(1)`)\cr
     #'   text label value.
-    initialize = function(input_dataname, output_dataname, datalabel) {
+    initialize = function(data, data_reactive, input_dataname, output_dataname, datalabel) {
       if (!requireNamespace("SummarizedExperiment", quietly = TRUE)) {
         stop("Cannot load SummarizedExperiment - please install the package or restart your session.")
       }
-      super$initialize(input_dataname, output_dataname, datalabel)
+      super$initialize(data, data_reactive, input_dataname, output_dataname, datalabel)
       self$state_list_initialize(
         list(
           subset = reactiveVal(),
@@ -169,16 +177,16 @@ SEFilterStates <- R6::R6Class( # nolint
     #' @description
     #' Set filter state
     #'
-    #' @param data (`SummarizedExperiment`)\cr
-    #'   data which are supposed to be filtered.
     #' @param state (`named list`)\cr
     #'   this list should contain `subset` and `select` element where
     #'   each should be a named list containing values as a selection in the `FilterState`.
     #'   Names of each the `list` element in `subset` and `select` should correspond to
     #'   the name of the column in `rowData(data)` and `colData(data)`.
-    #' @param ... ignored.
     #' @return `NULL`
-    set_filter_state = function(data, filtered_dataset, state, ...) {
+    set_filter_state = function(state) {
+      data <- private$data
+      data_reactive <- private$data_reactive
+
       checkmate::assert_class(data, "SummarizedExperiment")
       checkmate::assert_class(state, "list")
 
@@ -215,7 +223,7 @@ SEFilterStates <- R6::R6Class( # nolint
         } else {
           fstate <- init_filter_state(
             x = SummarizedExperiment::rowData(data)[[varname]],
-            x_filtered = reactive(SummarizedExperiment::rowData(filtered_dataset())[[varname]]),
+            x_reactive = reactive(SummarizedExperiment::rowData(data_reactive())[[varname]]),
             varname = as.name(varname),
             input_dataname = private$input_dataname
           )
@@ -237,7 +245,7 @@ SEFilterStates <- R6::R6Class( # nolint
         } else {
           fstate <- init_filter_state(
             x = SummarizedExperiment::colData(data)[[varname]],
-            x_filtered = reactive(SummarizedExperiment::colData(filtered_dataset())[[varname]]),
+            x_reactive = reactive(SummarizedExperiment::colData(data_reactive())[[varname]]),
             varname = as.name(varname),
             input_dataname = private$input_dataname
           )
@@ -328,14 +336,10 @@ SEFilterStates <- R6::R6Class( # nolint
     #' Shiny UI module to add filter variable
     #' @param id (`character(1)`)\cr
     #'  id of shiny module
-    #' @param data (`SummarizedExperiment`)\cr
-    #'  object containing `colData` and `rowData` which columns
-    #'  are used to choose filter variables. Column selection from `colData`
-    #'  and `rowData` are separate shiny entities.
     #' @return shiny.tag
-    ui_add_filter_state = function(id, data) {
+    ui_add_filter_state = function(id) {
+      data <- private$data
       checkmate::assert_string(id)
-      stopifnot(is(data, "SummarizedExperiment"))
 
       ns <- NS(id)
 
@@ -387,22 +391,16 @@ SEFilterStates <- R6::R6Class( # nolint
     #'
     #' @param id (`character(1)`)\cr
     #'   an ID string that corresponds with the ID used to call the module's UI function.
-    #' @param data (`SummarizedExperiment`)\cr
-    #'  object containing `colData` and `rowData` which columns
-    #'  are used to choose filter variables. Column selection from `colData`
-    #'  and `rowData` are separate shiny entities.
-    #' @param ... ignored
     #' @return `moduleServer` function which returns `NULL`
-    srv_add_filter_state = function(id, data, filtered_dataset, ...) {
-      stopifnot(is(data, "SummarizedExperiment"))
-      check_ellipsis(..., stop = FALSE)
+    srv_add_filter_state = function(id) {
+      data <- private$data
+      data_reactive <- private$data_reactive
       moduleServer(
         id = id,
         function(input, output, session) {
           logger::log_trace(
             "SEFilterState$srv_add_filter_state initializing, dataname: { deparse1(private$input_dataname) }"
           )
-          shiny::setBookmarkExclude(c("row_to_add", "col_to_add"))
           active_filter_col_vars <- reactive({
             vapply(
               X = self$state_list_get(state_list_index = "select"),
@@ -512,16 +510,7 @@ SEFilterStates <- R6::R6Class( # nolint
               )
 
               varname <- input$col_to_add
-              self$state_list_push(
-                x = init_filter_state(
-                  x = SummarizedExperiment::colData(data)[[varname]],
-                  x_filtered = reactive(SummarizedExperiment::colData(filtered_dataset())[[varname]]),
-                  varname = as.name(varname),
-                  input_dataname = private$input_dataname
-                ),
-                state_list_index = "select",
-                state_id = varname
-              )
+              self$set_filter_state(list(select = setNames(list(list()), varname)))
               logger::log_trace(
                 sprintf(
                   "SEFilterStates$srv_add_filter_state@3 added FilterState of column %s to col data, dataname: %s",
@@ -545,16 +534,7 @@ SEFilterStates <- R6::R6Class( # nolint
               )
 
               varname <- input$row_to_add
-              self$state_list_push(
-                x = init_filter_state(
-                  x = SummarizedExperiment::rowData(data)[[varname]],
-                  x_filtered = reactive(SummarizedExperiment::rowData(filtered_dataset())[[varname]]),
-                  varname = as.name(varname),
-                  input_dataname = private$input_dataname
-                ),
-                state_list_index = "subset",
-                state_id = varname
-              )
+              self$set_filter_state(list(subset = setNames(list(list()), varname)))
               logger::log_trace(
                 sprintf(
                   "SEFilterStates$srv_add_filter_state@4 added FilterState of variable %s to row data, dataname: %s",

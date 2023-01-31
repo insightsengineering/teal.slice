@@ -4,6 +4,10 @@
 #' @param x (`vector`)\cr
 #'   values of the variable used in filter
 #'
+#' @param x_reactive (`reactive`)\cr
+#'   returning vector of the same type as `x`. Is used to update
+#'   counts following the change in values of the filtered dataset.
+#'
 #' @param varname (`character(1)`, `name`)\cr
 #'   name of the variable
 #'
@@ -25,7 +29,8 @@
 #'
 #' @examples
 #' filter_state <- teal.slice:::RangeFilterState$new(
-#'   c(1:10, NA, Inf),
+#'   x = c(1:10, NA, Inf),
+#'   x_reactive = reactive(c(1:10, NA, Inf)),
 #'   varname = "x",
 #'   varlabel = "Pretty name",
 #'   input_dataname = as.name("dataname"),
@@ -52,7 +57,7 @@
 #' }
 #' @return `FilterState` object
 init_filter_state <- function(x,
-                              x_filtered, # = reactive(x) ?
+                              x_reactive = reactive(x),
                               varname,
                               varlabel = attr(x, "label"),
                               input_dataname = NULL,
@@ -75,7 +80,7 @@ init_filter_state <- function(x,
     return(
       EmptyFilterState$new(
         x = x,
-        x_filtered = x_filtered,
+        x_reactive = x_reactive,
         varname = varname,
         varlabel = varlabel,
         input_dataname = input_dataname,
@@ -89,7 +94,7 @@ init_filter_state <- function(x,
 #' @keywords internal
 #' @export
 init_filter_state.default <- function(x,
-                                      x_filtered,
+                                      x_reactive = reactive(x),
                                       varname,
                                       varlabel = attr(x, "label"),
                                       input_dataname = NULL,
@@ -97,7 +102,7 @@ init_filter_state.default <- function(x,
   if (is.null(varlabel)) varlabel <- character(0)
   FilterState$new(
     x = x,
-    x_filtered = x_filtered,
+    x_reactive = x_reactive,
     varname = varname,
     varlabel = varlabel,
     input_dataname = input_dataname,
@@ -108,7 +113,7 @@ init_filter_state.default <- function(x,
 #' @keywords internal
 #' @export
 init_filter_state.logical <- function(x,
-                                      x_filtered,
+                                      x_reactive = reactive(x),
                                       varname,
                                       varlabel = attr(x, "label"),
                                       input_dataname = NULL,
@@ -116,7 +121,7 @@ init_filter_state.logical <- function(x,
   if (is.null(varlabel)) varlabel <- character(0)
   LogicalFilterState$new(
     x = x,
-    x_filtered = x_filtered,
+    x_reactive = x_reactive,
     varname = varname,
     varlabel = varlabel,
     input_dataname = input_dataname,
@@ -127,7 +132,7 @@ init_filter_state.logical <- function(x,
 #' @keywords internal
 #' @export
 init_filter_state.numeric <- function(x,
-                                      x_filtered,
+                                      x_reactive = reactive(x),
                                       varname,
                                       varlabel = attr(x, "label"),
                                       input_dataname = NULL,
@@ -136,7 +141,7 @@ init_filter_state.numeric <- function(x,
   if (length(unique(x[!is.na(x)])) < getOption("teal.threshold_slider_vs_checkboxgroup")) {
     ChoicesFilterState$new(
       x = x,
-      x_filtered = x_filtered,
+      x_reactive = x_reactive,
       varname = varname,
       varlabel = varlabel,
       input_dataname = input_dataname,
@@ -145,7 +150,7 @@ init_filter_state.numeric <- function(x,
   } else {
     RangeFilterState$new(
       x = x,
-      x_filtered = x_filtered,
+      x_reactive = x_reactive,
       varname = varname,
       varlabel = varlabel,
       input_dataname = input_dataname,
@@ -157,7 +162,7 @@ init_filter_state.numeric <- function(x,
 #' @keywords internal
 #' @export
 init_filter_state.factor <- function(x,
-                                     x_filtered,
+                                     x_reactive = reactive(x),
                                      varname,
                                      varlabel = attr(x, "label"),
                                      input_dataname = NULL,
@@ -165,7 +170,7 @@ init_filter_state.factor <- function(x,
   if (is.null(varlabel)) varlabel <- character(0)
   ChoicesFilterState$new(
     x = x,
-    x_filtered = x_filtered,
+    x_reactive = x_reactive,
     varname = varname,
     varlabel = varlabel,
     input_dataname = input_dataname,
@@ -176,7 +181,7 @@ init_filter_state.factor <- function(x,
 #' @keywords internal
 #' @export
 init_filter_state.character <- function(x,
-                                        x_filtered,
+                                        x_reactive = reactive(x),
                                         varname,
                                         varlabel = attr(x, "label"),
                                         input_dataname = NULL,
@@ -184,7 +189,7 @@ init_filter_state.character <- function(x,
   if (is.null(varlabel)) varlabel <- character(0)
   ChoicesFilterState$new(
     x = x,
-    x_filtered = x_filtered,
+    x_reactive = x_reactive,
     varname = varname,
     varlabel = varlabel,
     input_dataname = input_dataname,
@@ -195,7 +200,7 @@ init_filter_state.character <- function(x,
 #' @keywords internal
 #' @export
 init_filter_state.Date <- function(x,
-                                   x_filtered,
+                                   x_reactive = reactive(x),
                                    varname,
                                    varlabel = attr(x, "label"),
                                    input_dataname = NULL,
@@ -203,7 +208,7 @@ init_filter_state.Date <- function(x,
   if (is.null(varlabel)) varlabel <- character(0)
   DateFilterState$new(
     x = x,
-    x_filtered = x_filtered,
+    x_reactive = x_reactive,
     varname = varname,
     varlabel = varlabel,
     input_dataname = input_dataname,
@@ -214,7 +219,7 @@ init_filter_state.Date <- function(x,
 #' @keywords internal
 #' @export
 init_filter_state.POSIXct <- function(x,
-                                      x_filtered,
+                                      x_reactive = reactive(x),
                                       varname,
                                       varlabel = attr(x, "label"),
                                       input_dataname = NULL,
@@ -222,7 +227,7 @@ init_filter_state.POSIXct <- function(x,
   if (is.null(varlabel)) varlabel <- character(0)
   DatetimeFilterState$new(
     x = x,
-    x_filtered = x_filtered,
+    x_reactive = x_reactive,
     varname = varname,
     varlabel = varlabel,
     input_dataname = input_dataname,
@@ -233,7 +238,7 @@ init_filter_state.POSIXct <- function(x,
 #' @keywords internal
 #' @export
 init_filter_state.POSIXlt <- function(x,
-                                      x_filtered,
+                                      x_reactive = reactive(x),
                                       varname,
                                       varlabel = attr(x, "label"),
                                       input_dataname = NULL,
@@ -241,7 +246,7 @@ init_filter_state.POSIXlt <- function(x,
   if (is.null(varlabel)) varlabel <- character(0)
   DatetimeFilterState$new(
     x = x,
-    x_filtered = x_filtered,
+    x_reactive = x_reactive,
     varname = varname,
     varlabel = varlabel,
     input_dataname = input_dataname,
