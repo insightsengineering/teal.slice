@@ -1,27 +1,28 @@
 filterCardListener = function (e) {
-
     let target = e.target;
     // e.currentTarget takes into account bubbling
     // i.e. it's the element the listener is actually attached to
     let container = e.currentTarget
     let containerId = container.id
+    
+    // remove icon is nested with 'a' tag so need to check both 'a' tag
+    //  and 'i' tag
+    let removeCard = target.classList.contains("filter-card-remove") ||
+        target.parentElement.classList.contains("filter-card-remove")
 
-    if (target.classList.contains('filter-card-remove')) {
-
-        let id = target.id;
-        Shiny.setInputValue(id, 1, { priority: 'event' })
-
+    if (removeCard) {
+        // only remove listener if container is empty
         let numCardsInContainer = getHeaders(containerId).length
-
         if (numCardsInContainer === 0) {
             container.removeEventListener('click', filterCardListener)
         }
-    }
 
-    let header = target.closest('.filter-card-header')
-    // if header is null, body was clicked (e.g. an input)
-    if (header !== null) {
-        toggleFilterCard(header, containerId)
+    } else {
+        let header = target.closest('.filter-card-header')
+        // if header is null, body was clicked (e.g. an input)
+        if (header !== null) {
+            toggleFilterCard(header, containerId)
+        }
     }
 }
 

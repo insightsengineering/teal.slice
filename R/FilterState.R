@@ -446,10 +446,7 @@ FilterState <- R6::R6Class( # nolint
               )
             })
           })
-          
           private$server_inputs("inputs")
-          # note: html doesn't allow nested 'a' tags. so we have to set
-          #  'remove' from the JS side
           reactive(input$remove) # back to parent to remove self
         }
       )
@@ -469,7 +466,7 @@ FilterState <- R6::R6Class( # nolint
         id = id,
         tags$div(
         class = "filter-card",
-        tags$a(
+        tags$div(
           class = "filter-card-header",
           uiOutput(ns("header_name_value"), inline = TRUE),
           uiOutput(ns("header_keep_na"), inline = TRUE),
@@ -478,13 +475,12 @@ FilterState <- R6::R6Class( # nolint
             class = "filter-card-icons",
             tags$span(
               class = "filter-card-toggle fa fa-chevron-right"
-              ),
-              # note: html doesn't allow nested 'a' tags. so we have to set
-              #  'remove' from the JS side
-              tags$span(
-                id = ns("remove"),
-                class = "filter-card-remove fa fa-circle-xmark"
-              )
+            ),
+            actionLink(
+              inputId = ns("remove"),
+              label = icon("circle-xmark", lib = "font-awesome"),
+              class = "filter-card-remove"
+            )
           )
         ),
         tags$div(
