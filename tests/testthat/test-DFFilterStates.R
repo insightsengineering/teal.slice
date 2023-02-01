@@ -98,39 +98,41 @@ testthat::test_that("DFFilterStates$set_filter_state updates filter state which 
   )
 })
 
-testthat::test_that("DFFilterStates$set_filter_state throws error when using an unnamed list",
-                    code = {
-                      dffs <- DFFilterStates$new(
-                        input_dataname = "iris",
-                        output_dataname = "iris_filtered",
-                        datalabel = character(0),
-                        varlabels = character(0),
-                        keys = character(0)
-                      )
-                      fs <- list(
-                        c(5.1, 6.4),
-                        Species = c("setosa", "versicolor")
-                      )
-                      testthat::expect_error(dffs$set_filter_state(state = fs, data = iris))
-                    }
+testthat::test_that(
+  "DFFilterStates$set_filter_state throws error when using an unnamed list",
+  code = {
+    dffs <- DFFilterStates$new(
+      input_dataname = "iris",
+      output_dataname = "iris_filtered",
+      datalabel = character(0),
+      varlabels = character(0),
+      keys = character(0)
+    )
+    fs <- list(
+      c(5.1, 6.4),
+      Species = c("setosa", "versicolor")
+    )
+    testthat::expect_error(dffs$set_filter_state(state = fs, data = iris))
+  }
 )
 
-testthat::test_that("DFFilterStates$get_filter_state returns list identical to input",
-                    code = {
-                      dffs <- DFFilterStates$new(
-                        input_dataname = "iris",
-                        output_dataname = "iris_filtered",
-                        datalabel = character(0),
-                        varlabels = character(0),
-                        keys = character(0)
-                      )
-                      fs <- list(
-                        Sepal.Length = list(selected = c(5.1, 6.4), keep_na = TRUE, keep_inf = TRUE),
-                        Species = list(selected = c("setosa", "versicolor"), keep_na = FALSE)
-                      )
-                      isolate(dffs$set_filter_state(state = fs, data = iris))
-                      testthat::expect_identical(isolate(dffs$get_filter_state()), fs)
-                    }
+testthat::test_that(
+  "DFFilterStates$get_filter_state returns list identical to input",
+  code = {
+    dffs <- DFFilterStates$new(
+      input_dataname = "iris",
+      output_dataname = "iris_filtered",
+      datalabel = character(0),
+      varlabels = character(0),
+      keys = character(0)
+    )
+    fs <- list(
+      Sepal.Length = list(selected = c(5.1, 6.4), keep_na = TRUE, keep_inf = TRUE),
+      Species = list(selected = c("setosa", "versicolor"), keep_na = FALSE)
+    )
+    isolate(dffs$set_filter_state(state = fs, data = iris))
+    testthat::expect_identical(isolate(dffs$get_filter_state()), fs)
+  }
 )
 
 testthat::test_that("Selecting a new variable initializes a new filter state", {
@@ -305,7 +307,7 @@ testthat::test_that("$format() concatenates its FilterState elements using \\n w
   species_filter <- isolate(dffs$state_list_get(1L)[[2]])
   shiny::isolate(
     testthat::expect_equal(
-    dffs$format(),
-    paste(sepal_filter$format(indent = 0), species_filter$format(indent = 0), sep = "\n")
-  ))
+      dffs$format(),
+      paste(sepal_filter$format(indent = 0), species_filter$format(indent = 0), sep = "\n")
+    ))
 })
