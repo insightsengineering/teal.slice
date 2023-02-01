@@ -17,11 +17,11 @@ test_that("dataname must be specified if extract_type is specified", {
       dataname = NULL,
       extract_type = "matrix"
     ),
-    regexp = "if extract_type is specified, input_dataname must also be specified"
+    regexp = "if extract_type is specified, dataname must also be specified"
   )
 })
 
-testthat::test_that("init_filter_state accepts, name or call as input_dataname", {
+testthat::test_that("init_filter_state accepts, name or call as dataname", {
   testthat::expect_no_error(
     init_filter_state(7, varname = "test", dataname = NULL)
   )

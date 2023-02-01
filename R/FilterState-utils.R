@@ -65,8 +65,8 @@ init_filter_state <- function(x,
   checkmate::assert_character(extract_type, max.len = 1L, any.missing = FALSE)
   if (length(extract_type) == 1)
     checkmate::assert_choice(extract_type, choices = c("list", "matrix"))
-  if (length(extract_type) == 1 && is.null(input_dataname))
-    stop("if extract_type is specified, input_dataname must also be specified")
+  if (length(extract_type) == 1 && is.null(dataname))
+    stop("if extract_type is specified, dataname must also be specified")
 
   if (is.null(varlabel)) varlabel <- character(0L)
 

@@ -25,7 +25,7 @@ test_that("dataname must be specified if extract_type is specified", {
       dataname = NULL,
       extract_type = "matrix"
     ),
-    regexp = "if extract_type is specified, input_dataname must also be specified"
+    regexp = "if extract_type is specified, dataname must also be specified"
   )
 })
 
