@@ -63,7 +63,6 @@ init_filter_state <- function(x,
   )
   checkmate::assert_character(varlabel, max.len = 1, any.missing = FALSE)
   stopifnot(is.null(dataname) || is.name(dataname) || is.call(dataname) || is.character(dataname))
-  # stopifnot(is.null(dataname) || is.character(dataname))
   checkmate::assert_character(extract_type, max.len = 1, any.missing = FALSE)
   stopifnot(
     length(extract_type) == 0 ||

@@ -27,7 +27,10 @@ testthat::test_that("get_call returns a call filtering a data.frame based on a R
   isolate(filter_states$state_list_push(state_list_index = 1, x = range_filter, state_id = "test"))
   eval(isolate(filter_states$get_call()))
   testthat::expect_equal(test_dataset, as.data.frame(list(a = seq.int(0, 4, by = 1)))[2:4, , drop = FALSE])
-  testthat::expect_equal(isolate(filter_states$get_call()), quote(test_dataset <- subset(test_dataset, a >= 1 & a <= 3)))
+  testthat::expect_equal(
+    isolate(filter_states$get_call()),
+    quote(test_dataset <- subset(test_dataset, a >= 1 & a <= 3))
+  )
 })
 
 testthat::test_that("get_call returns a call filtering a data.frame based on a ChoicesFilterState", {
@@ -41,7 +44,10 @@ testthat::test_that("get_call returns a call filtering a data.frame based on a C
   isolate(choices_filter$set_selected(c("a", "c")))
   isolate(filter_states$state_list_push(state_list_index = 1, x = choices_filter, state_id = "test"))
   eval(isolate(filter_states$get_call()))
-  testthat::expect_equal(choices_dataset, as.data.frame(list(choices = c("a", "b", "c")))[c(1, 3), , drop = FALSE])
+  testthat::expect_equal(
+    choices_dataset,
+    as.data.frame(list(choices = c("a", "b", "c")))[c(1, 3), , drop = FALSE]
+  )
 })
 
 testthat::test_that("get_call returns a call filtering a data.frame based on a LogicalFilterState", {
