@@ -19,7 +19,7 @@ values of the variable used in filter}
 \item{varname}{(\code{character(1)}, \code{name})\cr
 name of the variable}
 
-\item{varlabel}{(\code{character(0)}, \code{character(1)})\cr
+\item{varlabel}{(\code{character(0)}, \code{character(1)} or \code{NULL})\cr
 label of the variable (optional).}
 
 \item{input_dataname}{(\code{name} or \code{call})\cr
