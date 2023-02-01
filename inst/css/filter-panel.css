@@ -141,13 +141,23 @@ a.remove_all:hover {
 .choices_state_label_text {
   position: absolute;
   padding: 2px;
+  margin-top: -3px;
 }
 
 .choices_state_label {
   background-color:lightblue;
   height:2rem;
+  display:inline-block;
+  position:absolute;
+  margin-top: -3px;
+}
+
+.choices_state_label_unfiltered {
+  background-color:lightgray;
+  height:2rem;
   margin-top: -3px;
   display:inline-block;
+  position: absolute;
 }
 
 .filterPlotOverlayRange {

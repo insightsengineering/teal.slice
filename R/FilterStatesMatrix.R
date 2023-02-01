@@ -11,6 +11,14 @@ MatrixFilterStates <- R6::R6Class( # nolint
     #'
     #' Initialize `MatrixFilterStates` object
     #'
+    #' @param data (`matrix`)\cr
+    #'   the R object which `subset` function is applied on.
+    #'
+    #' @param data_reactive (`reactive`)\cr
+    #'   should return a `matrix`.
+    #'   This object is needed for the `FilterState` counts being updated
+    #'   on a change in filters.
+    #'
     #' @param input_dataname (`character(1)` or `name` or `call`)\cr
     #'   name of the data used on lhs of the expression
     #'   specified to the function argument attached to this `FilterStates`.
@@ -20,8 +28,8 @@ MatrixFilterStates <- R6::R6Class( # nolint
     #'
     #' @param datalabel (`character(0)` or `character(1)`)\cr
     #'   text label value.
-    initialize = function(input_dataname, output_dataname, datalabel) {
-      super$initialize(input_dataname, output_dataname, datalabel)
+    initialize = function(data, data_reactive, input_dataname, output_dataname, datalabel) {
+      super$initialize(data, data_reactive, input_dataname, output_dataname, datalabel)
       private$state_list <- list(
         subset = reactiveVal()
       )
@@ -79,9 +87,7 @@ MatrixFilterStates <- R6::R6Class( # nolint
             added_state_name(character(0))
           })
 
-          observeEvent(removed_state_name(), {
-            req(removed_state_name())
-
+          observeEvent(removed_state_name(), ignoreNULL = TRUE, {
             for (fname in removed_state_name()) {
               private$remove_filter_state_ui("subset", fname, .input = input)
             }
@@ -106,15 +112,14 @@ MatrixFilterStates <- R6::R6Class( # nolint
     #' @description
     #' Sets a filter state
     #'
-    #' @param data (`matrix`)\cr
-    #'   data which are supposed to be filtered.
     #' @param state (`named list`)\cr
     #'   should contain values which are initial selection in the `FilterState`.
     #'   Names of the `list` element should correspond to the name of the
     #'   column in `data`.
-    #' @param ... ignored.
     #' @return `NULL`
-    set_filter_state = function(data, state, ...) {
+    set_filter_state = function(state) {
+      data <- private$data
+      data_reactive <- private$data_reactive
       checkmate::assert_class(data, "matrix")
       checkmate::assert(
         checkmate::assert(
@@ -130,14 +135,15 @@ MatrixFilterStates <- R6::R6Class( # nolint
         "dataname: { deparse1(private$input_dataname) }"
       ))
       filter_states <- self$state_list_get("subset")
-      for (varname in names(state)) {
+      lapply(names(state), function(varname) {
         value <- resolve_state(state[[varname]])
         if (varname %in% names(filter_states)) {
           fstate <- filter_states[[varname]]
           fstate$set_state(value)
         } else {
           fstate <- init_filter_state(
-            data[, varname],
+            x = data[, varname],
+            x_reactive = reactive(data_reactive()[[varname]]),
             varname = as.name(varname),
             varlabel = varname,
             input_dataname = private$input_dataname,
@@ -150,7 +156,7 @@ MatrixFilterStates <- R6::R6Class( # nolint
             state_id = varname
           )
         }
-      }
+      })
       logger::log_trace(paste(
         "MatrixFilterState$set_filter_state initialized,",
         "dataname: { deparse1(private$input_dataname) }"
@@ -203,15 +209,12 @@ MatrixFilterStates <- R6::R6Class( # nolint
     #' Shiny UI module to add filter variable.
     #'
     #' @param id (`character(1)`)\cr
-    #'   id of shiny module
-    #' @param data (`matrix`)\cr
-    #'   data object for which to define a subset
+    #'  id of shiny module
+    #' @return shiny.tag
     #'
-    #' @return `shiny.tag`
-    #'
-    ui_add_filter_state = function(id, data) {
+    ui_add_filter_state = function(id) {
+      data <- private$data
       checkmate::assert_string(id)
-      stopifnot(is.matrix(data))
 
       ns <- NS(id)
 
@@ -240,22 +243,17 @@ MatrixFilterStates <- R6::R6Class( # nolint
     #'
     #' @param id (`character(1)`)\cr
     #'   shiny module instance id
-    #' @param data (`matrix`)\cr
-    #'   data object for which to define a subset
-    #' @param ... ignored
     #'
     #' @return `moduleServer` function which returns `NULL`
-    #'
-    srv_add_filter_state = function(id, data, ...) {
-      stopifnot(is.matrix(data))
-      check_ellipsis(..., stop = FALSE)
+    srv_add_filter_state = function(id) {
+      data <- private$data
+      data_reactive <- private$data_reactive
       moduleServer(
         id = id,
         function(input, output, session) {
           logger::log_trace(
             "MatrixFilterStates$srv_add_filter_state initializing, dataname: { deparse1(private$input_dataname) }"
           )
-          shiny::setBookmarkExclude("var_to_add")
           active_filter_vars <- reactive({
             vapply(
               X = self$state_list_get(state_list_index = "subset"),
@@ -312,22 +310,13 @@ MatrixFilterStates <- R6::R6Class( # nolint
                   deparse1(private$input_dataname)
                 )
               )
-              self$state_list_push(
-                x = init_filter_state(
-                  subset(data, select = input$var_to_add),
-                  varname = as.name(input$var_to_add),
-                  varlabel = private$get_varlabel(input$var_to_add),
-                  input_dataname = private$input_dataname,
-                  extract_type = "matrix"
-                ),
-                state_list_index = "subset",
-                state_id = input$var_to_add
-              )
+              varname <- input$var_to_add
+              self$set_filter_state(setNames(list(list()), varname))
               logger::log_trace(
                 sprintf(
                   "MatrixFilterState$srv_add_filter_state@2 added FilterState of variable %s, dataname: %s",
-                  deparse1(input$var_to_add),
-                  deparse1(private$input_dataname)
+                  deparse1(varname),
+                  deparse1(varname)
                 )
               )
             }

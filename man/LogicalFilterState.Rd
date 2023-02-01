@@ -78,6 +78,7 @@ Initialize a \code{FilterState} object
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{LogicalFilterState$new(
   x,
+  x_reactive,
   varname,
   varlabel = character(0),
   input_dataname = NULL,
@@ -90,6 +91,10 @@ Initialize a \code{FilterState} object
 \describe{
 \item{\code{x}}{(\code{logical})\cr
 values of the variable used in filter}
+
+\item{\code{x_reactive}}{(\code{reactive})\cr
+a \code{reactive} returning a filtered vector. Is used to update
+counts following the change in values of the filtered dataset.}
 
 \item{\code{varname}}{(\code{character}, \code{name})\cr
 label of the variable (optional).}

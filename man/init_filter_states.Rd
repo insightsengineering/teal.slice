@@ -6,6 +6,7 @@
 \usage{
 init_filter_states(
   data,
+  data_reactive = reactive(data),
   input_dataname,
   output_dataname = input_dataname,
   datalabel = character(0),
@@ -15,6 +16,11 @@ init_filter_states(
 \arguments{
 \item{data}{(\code{data.frame}, \code{MultiAssayExperiment}, \code{SummarizedExperiment}, \code{matrix})\cr
 the R object which \code{subset} function is applied on.}
+
+\item{data_reactive}{(\code{reactive})\cr
+should return an object constistent with the \code{FilterState} class.
+This object is needed for the \code{FilterState} counts being updated
+on a change in filters.}
 
 \item{input_dataname}{(\code{character(1)} or \code{name} or \code{call})\cr
 name of the data used on lhs of the expression
@@ -33,6 +39,7 @@ additional arguments for specific classes: keys}
 Initialize \code{FilterStates} object
 }
 \examples{
+library(shiny)
 df <- data.frame(
   character = letters,
   numeric = seq_along(letters),
@@ -51,12 +58,12 @@ rf <- teal.slice:::init_filter_states(
 shinyApp(
   ui = fluidPage(
     actionButton("clear", span(icon("xmark"), "Remove all filters")),
-    rf$ui_add_filter_state(id = "add", data = df),
+    rf$ui_add_filter_state(id = "add"),
     rf$ui("states"),
     verbatimTextOutput("expr"),
   ),
   server = function(input, output, session) {
-    rf$srv_add_filter_state(id = "add", data = df)
+    rf$srv_add_filter_state(id = "add")
     rf$server(id = "states")
     output$expr <- renderText({
       deparse1(rf$get_call(), collapse = "\n")

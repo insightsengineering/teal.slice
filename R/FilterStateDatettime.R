@@ -29,6 +29,9 @@ DatetimeFilterState <- R6::R6Class( # nolint
     #' and is set only if object is initialized in `shiny`.
     #' @param x (`POSIXct` or `POSIXlt`)\cr
     #'   values of the variable used in filter
+    #' @param x_reactive (`reactive`)\cr
+    #'   a `reactive` returning a filtered vector. Is used to update
+    #'   counts following the change in values of the filtered dataset.
     #' @param varname (`character`, `name`)\cr
     #'   name of the variable
     #' @param varlabel (`character(1)`)\cr
@@ -43,12 +46,15 @@ DatetimeFilterState <- R6::R6Class( # nolint
     #' \item{`"matrix"`}{ `varname` in the condition call will be returned as `<input_dataname>[, <varname>]`}
     #' }
     initialize = function(x,
+                          x_reactive,
                           varname,
                           varlabel = character(0),
                           input_dataname = NULL,
                           extract_type = character(0)) {
       stopifnot(is(x, "POSIXct") || is(x, "POSIXlt"))
-      super$initialize(x, varname, varlabel, input_dataname, extract_type)
+
+      # validation on x_reactive here
+      super$initialize(x, x_reactive, varname, varlabel, input_dataname, extract_type)
 
       var_range <- range(x, na.rm = TRUE)
       private$set_choices(var_range)

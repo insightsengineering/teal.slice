@@ -25,6 +25,9 @@ LogicalFilterState <- R6::R6Class( # nolint
     #' Initialize a `FilterState` object
     #' @param x (`logical`)\cr
     #'   values of the variable used in filter
+    #' @param x_reactive (`reactive`)\cr
+    #'   a `reactive` returning a filtered vector. Is used to update
+    #'   counts following the change in values of the filtered dataset.
     #' @param varname (`character`, `name`)\cr
     #'   label of the variable (optional).
     #' @param varlabel (`character(1)`)\cr
@@ -39,12 +42,13 @@ LogicalFilterState <- R6::R6Class( # nolint
     #' \item{`"matrix"`}{ `varname` in the condition call will be returned as `<input_dataname>[, <varname>]`}
     #' }
     initialize = function(x,
+                          x_reactive,
                           varname,
                           varlabel = character(0),
                           input_dataname = NULL,
                           extract_type = character(0)) {
       stopifnot(is.logical(x))
-      super$initialize(x, varname, varlabel, input_dataname, extract_type)
+      super$initialize(x, x_reactive, varname, varlabel, input_dataname, extract_type)
       df <- as.factor(x)
       if (length(levels(df)) != 2) {
         if (levels(df) %in% c(TRUE, FALSE)) {
@@ -152,6 +156,37 @@ LogicalFilterState <- R6::R6Class( # nolint
       values_logical
     },
 
+    get_choice_labels = function() {
+      l_counts <- as.numeric(names(private$choices))
+      is_na_l_counts <- is.na(l_counts)
+      if (any(is_na_l_counts)) l_counts[is_na_l_counts] <- 0
+      f_counts <- unname(table(factor(private$x_reactive(), levels = private$choices)))
+      f_counts[is.na(f_counts)] <- 0
+      labels <- lapply(seq_along(private$choices), function(i) {
+        l_count <- l_counts[i]
+        f_count <- f_counts[i]
+        l_freq <- l_count / sum(l_counts)
+        f_freq <- f_count / sum(l_counts)
+
+        if (is.na(l_freq) || is.nan(l_freq)) l_freq <- 0
+        if (is.na(f_freq) || is.nan(f_freq)) f_freq <- 0
+        tagList(
+          div(
+            class = "choices_state_label_unfiltered",
+            style = sprintf("width:%s%%", l_freq * 100)
+          ),
+          div(
+            class = "choices_state_label",
+            style = sprintf("width:%s%%", f_freq * 100)
+          ),
+          div(
+            class = "choices_state_label_text",
+              sprintf("%s (%s/%s)", private$choices[i], f_count, l_count)
+          )
+        )
+      })
+    },
+
     # @description
     # UI Module for `EmptyFilterState`.
     # This UI element contains available choices selection and
@@ -160,35 +195,15 @@ LogicalFilterState <- R6::R6Class( # nolint
     #  id of shiny element
     ui_inputs = function(id) {
       ns <- NS(id)
-      l_counts <- as.numeric(names(private$choices))
-      is_na_l_counts <- is.na(l_counts)
-      if (any(is_na_l_counts)) l_counts[is_na_l_counts] <- 0
-      labels <- lapply(seq_along(private$choices), function(i) {
-        l_count <- l_counts[i]
-        l_freq <- l_count / sum(l_counts)
-        if (is.na(l_freq) || is.nan(l_freq)) l_freq <- 0
-        div(
-          class = "choices_state_label",
-          style = sprintf("width:%s%%", l_freq * 100),
-          span(
-            class = "choices_state_label_text",
-            sprintf(
-              "%s (%s)",
-              private$choices[i],
-              l_count
-            )
-          )
-        )
-      })
       div(
         div(
           class = "choices_state",
           radioButtons(
             ns("selection"),
             label = NULL,
-            choiceNames = labels,
+            choiceNames = isolate(private$get_choice_labels()),
             choiceValues = as.character(private$choices),
-            selected = as.character(self$get_selected()),
+            selected = isolate(as.character(self$get_selected())),
             width = "100%"
           )
         ),
@@ -250,6 +265,16 @@ LogicalFilterState <- R6::R6Class( # nolint
           )
 
           private$keep_na_srv("keep_na")
+
+
+          observeEvent(private$x_reactive(), {
+            updateRadioButtons(
+              inputId = "selection",
+              choiceNames = private$get_choice_labels(),
+              choiceValues = as.character(private$choices),
+              selected = self$get_selected()
+            )
+          })
 
           logger::log_trace("LogicalFilterState$server initialized, dataname: { deparse1(private$input_dataname) }")
           NULL
