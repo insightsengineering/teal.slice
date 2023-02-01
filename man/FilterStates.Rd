@@ -75,7 +75,7 @@ isolate(filter_states$get_call())
 Initializes \code{FilterStates} object.
 
 Initializes \code{FilterStates} object by setting
-\code{dataname} and \code{datalabel}.
+\code{dataname}, and \code{datalabel}.
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{FilterStates$new(dataname, datalabel)}\if{html}{\out{</div>}}
 }
