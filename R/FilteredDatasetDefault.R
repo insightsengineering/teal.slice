@@ -41,7 +41,7 @@ DefaultFilteredDataset <- R6::R6Class( # nolint
       private$add_filter_states(
         filter_states = init_filter_states(
           data = self$get_dataset(),
-          dataname = as.name(dataname),
+          dataname = dataname,
           varlabels = self$get_varlabels(),
           keys = self$get_keys()
         ),

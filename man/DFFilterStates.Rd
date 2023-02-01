@@ -79,7 +79,7 @@ which means that when calling the subset function associated with this class
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
-\item{\code{dataname}}{(\code{character(1)} or \code{name} or \code{call})\cr
+\item{\code{dataname}}{(\code{character(1)})\cr
 name of the data used in the \emph{subset expression}
 specified to the function argument attached to this \code{FilterStates}}
 

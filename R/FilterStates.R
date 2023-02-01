@@ -53,7 +53,7 @@ FilterStates <- R6::R6Class( # nolint
     #' Initializes `FilterStates` object by setting `dataname`,
     #' and initializing `state_list` (list of `reactiveVal`s).
     #'
-    #' @param dataname (`character(1)` or `name` or `call`)\cr
+    #' @param dataname (`character(1)`)\cr
     #'   name of the data used in the expression
     #'   specified to the function argument attached to this `FilterStates`
     #' @param datalabel (`character(0)` or `character(1)`)\cr
@@ -63,25 +63,13 @@ FilterStates <- R6::R6Class( # nolint
     #' self invisibly
     #'
     initialize = function(dataname, datalabel) {
-      checkmate::assert(
-        checkmate::check_class(dataname, "call"),
-        checkmate::check_class(dataname, "name"),
-        checkmate::check_string(dataname)
-      )
+      checkmate::check_character(dataname)
       checkmate::assert_character(datalabel, max.len = 1, any.missing = FALSE)
 
-      char_to_name <- function(x) {
-        if (is.character(x)) {
-          as.name(x)
-        } else {
-          x
-        }
-      }
-
-      private$dataname <- char_to_name(dataname)
+      private$dataname <- dataname
       private$datalabel <- datalabel
 
-      logger::log_trace("Instantiated { class(self)[1] }, dataname: { deparse1(private$dataname) }")
+      logger::log_trace("Instantiated { class(self)[1] }, dataname: { private$dataname }")
       invisible(self)
     },
 
@@ -152,13 +140,12 @@ FilterStates <- R6::R6Class( # nolint
         # below code translates to call by the names of filter_items
         rhs <- call_with_colon(
           self$get_fun(),
-          private$dataname,
+          `if`(is.call(private$dataname), private$dataname, as.name(private$dataname)),
           unlist_args = filter_items
         )
-
         substitute(
           env = list(
-            lhs = private$dataname,
+            lhs = `if`(is.call(private$dataname), private$dataname, as.name(private$dataname)),
             rhs = rhs
           ),
           expr = lhs <- rhs
@@ -237,7 +224,7 @@ FilterStates <- R6::R6Class( # nolint
     #' @return NULL
     #'
     state_list_push = function(x, state_list_index, state_id) {
-      logger::log_trace("{ class(self)[1] } pushing into queue, dataname: { deparse1(private$dataname) }")
+      logger::log_trace("{ class(self)[1] } pushing into queue, dataname: { private$dataname }")
       private$validate_state_list_exists(state_list_index)
       checkmate::assert_string(state_id)
 
@@ -251,7 +238,7 @@ FilterStates <- R6::R6Class( # nolint
       new_queue <- c(private$state_list[[state_list_index]](), state)
       private$state_list[[state_list_index]](new_queue)
 
-      logger::log_trace("{ class(self)[1] } pushed into queue, dataname: { deparse1(private$dataname) }")
+      logger::log_trace("{ class(self)[1] } pushed into queue, dataname: { private$dataname }")
       invisible(NULL)
     },
 
@@ -271,7 +258,7 @@ FilterStates <- R6::R6Class( # nolint
     state_list_remove = function(state_list_index, state_id) {
       logger::log_trace(paste(
         "{ class(self)[1] } removing a filter from queue { state_list_index },",
-        "dataname: { deparse1(private$dataname) }"
+        "dataname: { private$dataname }"
       ))
       private$validate_state_list_exists(state_list_index)
       checkmate::assert_string(state_id)
@@ -286,7 +273,7 @@ FilterStates <- R6::R6Class( # nolint
 
       logger::log_trace(paste(
         "{ class(self)[1] } removed from queue { state_list_index },",
-        "dataname: { deparse1(private$dataname) }"
+        "dataname: { private$dataname }"
       ))
       invisible(NULL)
     },
@@ -297,13 +284,13 @@ FilterStates <- R6::R6Class( # nolint
     #' @return NULL
     #'
     state_list_empty = function() {
-      logger::log_trace("{ class(self)[1] } emptying queue, dataname: { deparse1(private$dataname) }")
+      logger::log_trace("{ class(self)[1] } emptying queue, dataname: { private$dataname }")
 
       for (i in seq_along(private$state_list)) {
         private$state_list[[i]](list())
       }
 
-      logger::log_trace("{ class(self)[1] } emptied queue, dataname: { deparse1(private$dataname) }")
+      logger::log_trace("{ class(self)[1] } emptied queue, dataname: { private$dataname }")
       invisible(NULL)
     },
 
@@ -464,7 +451,7 @@ FilterStates <- R6::R6Class( # nolint
               "%s$insert_filter_state_ui, adding FilterState UI of variable %s, dataname: %s",
               class(self)[1],
               state_id,
-              deparse1(private$dataname)
+              private$dataname
             )
           )
 
@@ -499,13 +486,13 @@ FilterStates <- R6::R6Class( # nolint
               logger::log_trace(paste(
                 "{ class(self)[1] }$insert_filter_state_ui@1",
                 "removing FilterState from queue '{ state_list_index }',",
-                "dataname: { deparse1(private$dataname) }"
+                "dataname: { private$dataname }"
               ))
               self$state_list_remove(state_list_index, state_id)
               logger::log_trace(paste(
                 "{ class(self)[1] }$insert_filter_state_ui@1",
                 "removed FilterState from queue '{ state_list_index }',",
-                "dataname: { deparse1(private$dataname) }"
+                "dataname: { private$dataname }"
               ))
             }
           )
@@ -515,7 +502,7 @@ FilterStates <- R6::R6Class( # nolint
               "%s$insert_filter_state_ui, added FilterState UI of variable %s, dataname: %s",
               class(self)[1],
               state_id,
-              deparse1(private$dataname)
+              private$dataname
             )
           )
           NULL

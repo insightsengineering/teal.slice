@@ -84,7 +84,7 @@ and initializing \code{state_list} (list of \code{reactiveVal}s).
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
-\item{\code{dataname}}{(\code{character(1)} or \code{name} or \code{call})\cr
+\item{\code{dataname}}{(\code{character(1)})\cr
 name of the data used in the expression
 specified to the function argument attached to this \code{FilterStates}}
 

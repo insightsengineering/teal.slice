@@ -16,7 +16,7 @@ DFFilterStates <- R6::R6Class( # nolint
     #' which means that when calling the subset function associated with this class
     #' (`dplyr::filter`), a list of conditions is passed to unnamed arguments (`...`).
     #'
-    #' @param dataname (`character(1)` or `name` or `call`)\cr
+    #' @param dataname (`character(1)`)\cr
     #'   name of the data used in the \emph{subset expression}
     #'   specified to the function argument attached to this `FilterStates`
     #' @param datalabel (`character(0)` or `character(1)`)\cr
@@ -162,7 +162,7 @@ DFFilterStates <- R6::R6Class( # nolint
         combine = "or"
       )
       logger::log_trace(
-        "{ class(self)[1] }$set_filter_state initializing, dataname: { deparse1(private$dataname) }"
+        "{ class(self)[1] }$set_filter_state initializing, dataname: { private$dataname }"
       )
 
       filter_states <- self$state_list_get(1L)
@@ -180,7 +180,7 @@ DFFilterStates <- R6::R6Class( # nolint
         logger::log_warn(
           paste(
             "Columns filters { paste(excluded_vars, collapse = ', ') } were excluded",
-            "from { deparse1(private$dataname) }"
+            "from { private$dataname }"
           )
         )
       }
@@ -197,14 +197,14 @@ DFFilterStates <- R6::R6Class( # nolint
             data[[varname]],
             varname = as.name(varname),
             varlabel = private$get_varlabels(varname),
-            dataname = private$dataname
+            dataname = as.name(private$dataname)
           )
           fstate$set_state(value)
           self$state_list_push(x = fstate, state_list_index = 1L, state_id = varname)
         }
       }
       logger::log_trace(
-        "{ class(self)[1] }$set_filter_state initialized, dataname: { deparse1(private$dataname) }"
+        "{ class(self)[1] }$set_filter_state initialized, dataname: { private$dataname }"
       )
       NULL
     },
@@ -221,20 +221,20 @@ DFFilterStates <- R6::R6Class( # nolint
           "%s$remove_filter_state for variable %s called, dataname: %s",
           class(self)[1],
           state_id,
-          deparse1(private$dataname)
+          private$dataname
         )
       )
 
       if (!state_id %in% names(self$state_list_get(1L))) {
         warning(paste(
           "Variable:", state_id,
-          "is not present in the actual active filters of dataset: { deparse1(private$dataname) }",
+          "is not present in the actual active filters of dataset: { private$dataname }",
           "therefore no changes are applied."
         ))
         logger::log_warn(
           paste(
             "Variable:", state_id, "is not present in the actual active filters of dataset:",
-            "{ deparse1(private$dataname) } therefore no changes are applied."
+            "{ private$dataname } therefore no changes are applied."
           )
         )
       } else {
@@ -244,7 +244,7 @@ DFFilterStates <- R6::R6Class( # nolint
             "%s$remove_filter_state for variable %s done, dataname: %s",
             class(self)[1],
             state_id,
-            deparse1(private$dataname)
+            private$dataname
           )
         )
       }
@@ -308,7 +308,7 @@ DFFilterStates <- R6::R6Class( # nolint
         id = id,
         function(input, output, session) {
           logger::log_trace(
-            "DFFilterStates$srv_add_filter_state initializing, dataname: { deparse1(private$dataname) }"
+            "DFFilterStates$srv_add_filter_state initializing, dataname: { private$dataname }"
           )
           shiny::setBookmarkExclude(c("var_to_add"))
           active_filter_vars <- reactive({
@@ -336,7 +336,7 @@ DFFilterStates <- R6::R6Class( # nolint
             handlerExpr = {
               logger::log_trace(paste(
                 "DFFilterStates$srv_add_filter_state@1 updating available column choices,",
-                "dataname: { deparse1(private$dataname) }"
+                "dataname: { private$dataname }"
               ))
               if (is.null(avail_column_choices())) {
                 shinyjs::hide("var_to_add")
@@ -350,7 +350,7 @@ DFFilterStates <- R6::R6Class( # nolint
               )
               logger::log_trace(paste(
                 "DFFilterStates$srv_add_filter_state@1 updated available column choices,",
-                "dataname: { deparse1(private$dataname) }"
+                "dataname: { private$dataname }"
               ))
             }
           )
@@ -362,7 +362,7 @@ DFFilterStates <- R6::R6Class( # nolint
                 sprintf(
                   "DFFilterStates$srv_add_filter_state@2 adding FilterState of variable %s, dataname: %s",
                   input$var_to_add,
-                  deparse1(private$dataname)
+                  private$dataname
                 )
               )
               self$state_list_push(
@@ -370,7 +370,7 @@ DFFilterStates <- R6::R6Class( # nolint
                   data[[input$var_to_add]],
                   varname = as.name(input$var_to_add),
                   varlabel = private$get_varlabels(input$var_to_add),
-                  dataname = private$dataname
+                  dataname = as.name(private$dataname)
                 ),
                 state_list_index = 1L,
                 state_id = input$var_to_add
@@ -379,14 +379,14 @@ DFFilterStates <- R6::R6Class( # nolint
                 sprintf(
                   "DFFilterStates$srv_add_filter_state@2 added FilterState of variable %s, dataname: %s",
                   input$var_to_add,
-                  deparse1(private$dataname)
+                  private$dataname
                 )
               )
             }
           )
 
           logger::log_trace(
-            "DFFilterStates$srv_add_filter_state initialized, dataname: { deparse1(private$dataname) }"
+            "DFFilterStates$srv_add_filter_state initialized, dataname: { private$dataname }"
           )
           NULL
         }

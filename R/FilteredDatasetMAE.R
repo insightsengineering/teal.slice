@@ -36,14 +36,13 @@ MAEFilteredDataset <- R6::R6Class( # nolint
       private$add_filter_states(
         filter_states = init_filter_states(
           data = dataset,
-          dataname = as.name(dataname),
+          dataname = dataname,
           varlabels = self$get_varlabels(),
           datalabel = "subjects",
           keys = self$get_keys()
         ),
         id = "subjects"
       )
-
       # elements of the list (experiments) are unknown
       # dispatch needed because we can't hardcode methods otherwise:
       #  if (matrix) else if (SummarizedExperiment) else if ...
@@ -55,7 +54,6 @@ MAEFilteredDataset <- R6::R6Class( # nolint
             experiment_name,
             dollar = FALSE
           )
-
           private$add_filter_states(
             filter_states = init_filter_states(
               data = dataset[[experiment_name]],
