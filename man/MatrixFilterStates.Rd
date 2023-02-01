@@ -66,9 +66,9 @@ Initialize \code{MatrixFilterStates} object
 the R object which \code{subset} function is applied on.}
 
 \item{\code{data_reactive}}{(\code{reactive})\cr
-should return a \code{matrix}.
+should return a \code{matrix} or \code{NULL}.
 This object is needed for the \code{FilterState} counts being updated
-on a change in filters.}
+on a change in filters. If \code{reactive(NULL)} then filtered counts are not shown.}
 
 \item{\code{input_dataname}}{(\code{character(1)} or \code{name} or \code{call})\cr
 name of the data used on lhs of the expression

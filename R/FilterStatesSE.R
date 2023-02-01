@@ -13,9 +13,9 @@ SEFilterStates <- R6::R6Class( # nolint
     #'   the R object which `subset` function is applied on.
     #'
     #' @param data_reactive (`reactive`)\cr
-    #'   should return a `SummarizedExperiment` object.
+    #'   should return a `SummarizedExperiment` object or `NULL`.
     #'   This object is needed for the `FilterState` counts being updated
-    #'   on a change in filters.
+    #'   on a change in filters. If `reactive(NULL)` then filtered counts are not shown.
     #'
     #' @param input_dataname (`character(1)` or `name` or `call`)\cr
     #'   name of the data used on lhs of the expression
@@ -223,7 +223,9 @@ SEFilterStates <- R6::R6Class( # nolint
         } else {
           fstate <- init_filter_state(
             x = SummarizedExperiment::rowData(data)[[varname]],
-            x_reactive = reactive(SummarizedExperiment::rowData(data_reactive())[[varname]]),
+            x_reactive = reactive(
+              if (!is.null(data_reactive())) SummarizedExperiment::rowData(data_reactive())[[varname]]
+            ),
             varname = as.name(varname),
             input_dataname = private$input_dataname
           )

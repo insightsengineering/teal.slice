@@ -20,9 +20,9 @@ DFFilterStates <- R6::R6Class( # nolint
     #'   the R object which `dplyr::filter` function is applied on.
     #'
     #' @param data_reactive (`reactive`)\cr
-    #'   should a `data.frame` object.
+    #'   should a `data.frame` object or `NULL`.
     #'   This object is needed for the `FilterState` counts being updated
-    #'   on a change in filters.
+    #'   on a change in filters. If `reactive(NULL)` then filtered counts are not shown.
     #'
     #' @param input_dataname (`character(1)` or `name` or `call`)\cr
     #'   name of the data used on `rhs` of the \emph{subset expression}

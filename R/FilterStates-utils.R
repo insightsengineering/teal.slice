@@ -8,9 +8,9 @@
 #'   the R object which `subset` function is applied on.
 #'
 #' @param data_reactive (`reactive`)\cr
-#'   should return an object constistent with the `FilterState` class.
+#'   should return an object constistent with the `FilterState` class or `NULL`.
 #'   This object is needed for the `FilterState` counts being updated
-#'   on a change in filters.
+#'   on a change in filters. If `reactive(NULL)` then filtered counts are not shown.
 #'
 #' @param input_dataname (`character(1)` or `name` or `call`)\cr
 #'   name of the data used on lhs of the expression
@@ -61,7 +61,7 @@
 #' )
 #' }
 init_filter_states <- function(data,
-                               data_reactive = reactive(data),
+                               data_reactive = reactive(NULL),
                                input_dataname,
                                output_dataname = input_dataname,
                                datalabel = character(0),
@@ -72,7 +72,7 @@ init_filter_states <- function(data,
 #' @keywords internal
 #' @export
 init_filter_states.data.frame <- function(data, # nolint
-                                          data_reactive = reactive(data),
+                                          data_reactive = reactive(NULL),
                                           input_dataname,
                                           output_dataname = input_dataname,
                                           datalabel = character(0),
@@ -93,7 +93,7 @@ init_filter_states.data.frame <- function(data, # nolint
 #' @keywords internal
 #' @export
 init_filter_states.matrix <- function(data, # nolint
-                                      data_reactive = reactive(data),
+                                      data_reactive = reactive(NULL),
                                       input_dataname,
                                       output_dataname = input_dataname,
                                       datalabel = character(0),
@@ -110,7 +110,7 @@ init_filter_states.matrix <- function(data, # nolint
 #' @keywords internal
 #' @export
 init_filter_states.MultiAssayExperiment <- function(data, # nolint
-                                                    data_reactive = reactive(data),
+                                                    data_reactive = reactive(NULL),
                                                     input_dataname,
                                                     output_dataname = input_dataname,
                                                     datalabel = character(0),
@@ -134,7 +134,7 @@ init_filter_states.MultiAssayExperiment <- function(data, # nolint
 #' @keywords internal
 #' @export
 init_filter_states.SummarizedExperiment <- function(data, # nolint
-                                                    data_reactive = reactive(data),
+                                                    data_reactive = reactive(NULL),
                                                     input_dataname,
                                                     output_dataname = input_dataname,
                                                     datalabel = character(0),

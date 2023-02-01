@@ -6,7 +6,7 @@
 \usage{
 init_filter_states(
   data,
-  data_reactive = reactive(data),
+  data_reactive = reactive(NULL),
   input_dataname,
   output_dataname = input_dataname,
   datalabel = character(0),
@@ -18,9 +18,9 @@ init_filter_states(
 the R object which \code{subset} function is applied on.}
 
 \item{data_reactive}{(\code{reactive})\cr
-should return an object constistent with the \code{FilterState} class.
+should return an object constistent with the \code{FilterState} class or \code{NULL}.
 This object is needed for the \code{FilterState} counts being updated
-on a change in filters.}
+on a change in filters. If \code{reactive(NULL)} then filtered counts are not shown.}
 
 \item{input_dataname}{(\code{character(1)} or \code{name} or \code{call})\cr
 name of the data used on lhs of the expression
