@@ -10,7 +10,7 @@ testthat::test_that("The constructor initializes one state_list", {
     output_dataname = "test",
     datalabel = "test"
   )
-  testthat::expect_null(isolate(filter_states$state_list_get(1)))
+  testthat::expect_null(shiny::isolate(filter_states$state_list_get(1)))
 })
 
 testthat::test_that("get_call returns a call filtering a matrix with numeric values", {
@@ -27,11 +27,11 @@ testthat::test_that("get_call returns a call filtering a matrix with numeric val
     input_dataname = as.name("test"),
     extract_type = "matrix"
   )
-  isolate(filter_state$set_selected(c(1, 3)))
+  shiny::isolate(filter_state$set_selected(c(1, 3)))
 
-  isolate(filter_states$state_list_push(x = filter_state, state_list_index = 1, state_id = "test"))
+  shiny::isolate(filter_states$state_list_push(x = filter_state, state_list_index = 1, state_id = "test"))
 
-  eval(isolate(filter_states$get_call()))
+  eval(shiny::isolate(filter_states$get_call()))
   testthat::expect_equal(output, test[1:3, 1, drop = FALSE])
 })
 
@@ -43,9 +43,9 @@ testthat::test_that("set_filter_state adds filters to state_list", {
   )
   test <- matrix(c(1, 2, 3, 4), nrow = 4, ncol = 1, dimnames = list(c(), c("a")))
   fs <- list(a = c(1, 2))
-  isolate(filter_states$set_filter_state(state = fs, data = test))
+  shiny::isolate(filter_states$set_filter_state(state = fs, data = test))
 
-  eval(isolate(filter_states$get_call()))
+  eval(shiny::isolate(filter_states$get_call()))
   testthat::expect_equal(output, test[1:2, 1, drop = FALSE])
 })
 
@@ -73,13 +73,13 @@ testthat::test_that("remove_filter_state removes filters from state_list", {
   )
   test <- matrix(c(1, 2, 3, 4), nrow = 4, ncol = 1, dimnames = list(c(), c("a")))
   fs <- list(a = c(1, 2))
-  isolate(filter_states$set_filter_state(state = fs, data = test))
+  shiny::isolate(filter_states$set_filter_state(state = fs, data = test))
 
-  eval(isolate(filter_states$get_call()))
+  eval(shiny::isolate(filter_states$get_call()))
   testthat::expect_equal(output, test[1:2, 1, drop = FALSE])
 
-  isolate(filter_states$remove_filter_state("a"))
-  eval(isolate(filter_states$get_call()))
+  shiny::isolate(filter_states$remove_filter_state("a"))
+  eval(shiny::isolate(filter_states$get_call()))
   testthat::expect_equal(output, test)
 })
 
@@ -92,12 +92,12 @@ testthat::test_that("remove_filter_state throws warning when state_id is not in 
   )
   test <- matrix(c(1, 2, 3, 4), nrow = 4, ncol = 1, dimnames = list(c(), c("a")))
   fs <- list(a = c(1, 2))
-  isolate(filter_states$set_filter_state(state = fs, data = test))
+  shiny::isolate(filter_states$set_filter_state(state = fs, data = test))
 
-  eval(isolate(filter_states$get_call()))
+  eval(shiny::isolate(filter_states$get_call()))
   testthat::expect_equal(output, test[1:2, 1, drop = FALSE])
 
-  isolate(testthat::expect_warning(filter_states$remove_filter_state("B")))
+  testthat::expect_warning(shiny::isolate(filter_states$remove_filter_state("B")))
 })
 
 testthat::test_that(

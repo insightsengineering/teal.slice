@@ -74,18 +74,18 @@ testthat::test_that("get_varname returns a call if call is passed to the constru
 
 testthat::test_that("get_selected returns NULL after initialization", {
   filter_state <- FilterState$new(7, varname = "7")
-  testthat::expect_null(isolate(filter_state$get_selected()))
+  testthat::expect_null(shiny::isolate(filter_state$get_selected()))
 })
 
 testthat::test_that("set_selected sets value, get_selected returns the same", {
   filter_state <- FilterState$new(7L, varname = "7")
   filter_state$set_selected(7L)
-  testthat::expect_identical(isolate(filter_state$get_selected()), 7L)
+  testthat::expect_identical(shiny::isolate(filter_state$get_selected()), 7L)
 })
 
 testthat::test_that("get_keep_na returns FALSE after initialization", {
   filter_state <- FilterState$new(7, varname = "7")
-  testthat::expect_false(isolate(filter_state$get_keep_na()))
+  testthat::expect_false(shiny::isolate(filter_state$get_keep_na()))
 })
 
 testthat::test_that("set_state sets selected and keep_na", {
@@ -94,12 +94,10 @@ testthat::test_that("set_state sets selected and keep_na", {
   filter_state$set_state(state)
   testthat::expect_identical(
     state,
-    isolate(
       list(
-        selected = filter_state$get_selected(),
-        keep_na = filter_state$get_keep_na()
+        selected = shiny::isolate(filter_state$get_selected()),
+        keep_na = shiny::isolate(filter_state$get_keep_na())
       )
-    )
   )
 })
 
@@ -107,7 +105,7 @@ testthat::test_that("get_state returns a list identical to set_state input", {
   filter_state <- FilterState$new(c("a", NA_character_), varname = "var")
   state <- list(selected = "a", keep_na = TRUE)
   filter_state$set_state(state)
-  testthat::expect_identical(isolate(filter_state$get_state()), state)
+  testthat::expect_identical(shiny::isolate(filter_state$get_state()), state)
 })
 
 testthat::test_that(
@@ -124,7 +122,7 @@ testthat::test_that(
     )
     filter_state <- test_class$new(c(1, NA), varname = "test")
     testthat::expect_identical(
-      isolate(filter_state$test_add_keep_na_call()),
+      shiny::isolate(filter_state$test_add_keep_na_call()),
       quote(TRUE)
     )
   }
@@ -143,10 +141,10 @@ testthat::test_that(
       )
     )
     filter_state <- test_class$new(c(1, NA), varname = "test")
-    isolate(filter_state$set_keep_na(TRUE))
+    shiny::isolate(filter_state$set_keep_na(TRUE))
 
     testthat::expect_identical(
-      isolate(filter_state$test_add_keep_na_call()),
+      shiny::isolate(filter_state$test_add_keep_na_call()),
       quote(is.na(test) | TRUE)
     )
   }
@@ -168,7 +166,7 @@ testthat::test_that(
     filter_state$set_na_rm(TRUE)
 
     testthat::expect_identical(
-      isolate(filter_state$test_add_keep_na_call()),
+      shiny::isolate(filter_state$test_add_keep_na_call()),
       quote(!is.na(test) & TRUE)
     )
   }
@@ -191,7 +189,7 @@ testthat::test_that(
     filter_state$set_na_rm(TRUE)
 
     testthat::expect_identical(
-      isolate(filter_state$test_add_keep_na_call()),
+      shiny::isolate(filter_state$test_add_keep_na_call()),
       quote(TRUE)
     )
   }
