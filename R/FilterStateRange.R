@@ -383,29 +383,42 @@ RangeFilterState <- R6::R6Class( # nolint
             }
           )
 
+          # in the observer below we create selection_state from input$selection
+          # and if it's different to input$selection we call self$set_selected(selection_state)
+          # which would trigger the observer again and in certain cases can rmove the slider
+          # position - this reactiveVal stops that from happening
+          update_trigger <- reactiveVal(FALSE)
+
           private$observers$selection <- observeEvent(
             ignoreNULL = FALSE, # ignoreNULL: we don't want to ignore NULL when nothing is selected in `selectInput`,
             ignoreInit = TRUE, # ignoreInit: should not matter because we set the UI with the desired initial state
             eventExpr = input$selection,
             handlerExpr = {
-              # because we extended real range into rounded one we need to apply intersect(range_input, range_real)
-              selection_state <- as.numeric(pmax(pmin(input$selection, private$choices[2]), private$choices[1]))
-              if (!setequal(selection_state, self$get_selected())) {
-                validate(
-                  need(
-                    input$selection[1] <= input$selection[2],
-                    "Left range boundary should be lower than right"
+
+              if (update_trigger()) {
+                # because we extended real range into rounded one we need to apply intersect(range_input, range_real)
+                selection_state <- as.numeric(pmax(pmin(input$selection, private$choices[2]), private$choices[1]))
+                if (!setequal(selection_state, self$get_selected())) {
+                  validate(
+                    need(
+                      input$selection[1] <= input$selection[2],
+                      "Left range boundary should be lower than right"
+                    )
+                  )
+                  update_trigger(TRUE)
+                  self$set_selected(selection_state)
+                }
+                logger::log_trace(
+                  sprintf(
+                    "RangeFilterState$server@3 selection of variable %s changed, dataname: %s",
+                    deparse1(self$get_varname()),
+                    deparse1(private$input_dataname)
                   )
                 )
-                self$set_selected(selection_state)
+              } else {
+                update_trigger(FALSE)
               }
-              logger::log_trace(
-                sprintf(
-                  "RangeFilterState$server@3 selection of variable %s changed, dataname: %s",
-                  deparse1(self$get_varname()),
-                  deparse1(private$input_dataname)
-                )
-              )
+
             }
           )
 
