@@ -270,7 +270,7 @@ ChoicesFilterState <- R6::R6Class( # nolint
       values[in_choices_mask]
     },
 
-    is_checkboxgroup = function () {
+    is_checkboxgroup = function() {
       length(private$choices) <= getOption("teal.threshold_slider_vs_checkboxgroup")
     },
 
