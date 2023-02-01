@@ -1,6 +1,6 @@
 testthat::test_that("init_filtered_data accepts a TealData object", {
   teal_data <- teal.data::teal_data(teal.data::dataset(dataname = "iris", x = iris))
-  testthat::expect_error(init_filtered_data(teal_data), regexp = NA)
+  testthat::expect_no_error(init_filtered_data(teal_data))
 })
 
 testthat::test_that("init_filtered_data accepts a CDISCTealData with mixed CDISC and Dataset", {
@@ -9,11 +9,11 @@ testthat::test_that("init_filtered_data accepts a CDISCTealData with mixed CDISC
     teal.data::dataset(dataname = "iris", x = iris),
     teal.data::cdisc_dataset("ADSL", adsl)
   )
-  testthat::expect_error(init_filtered_data(teal_data), regexp = NA)
+  testthat::expect_no_error(init_filtered_data(teal_data))
 })
 
 testthat::test_that("init_filtered_data accepts a list of `data.frame` objects", {
-  testthat::expect_error(init_filtered_data(list("iris" = list(dataset = iris))), regexp = NA)
+  testthat::expect_no_error(init_filtered_data(list("iris" = list(dataset = iris))))
 })
 
 
@@ -32,7 +32,7 @@ testthat::test_that("init_filtered_data.default asserts code is `CodeClass`", {
 })
 
 testthat::test_that("init_filtered_data.default accepts NULL passed to code", {
-  testthat::expect_error(init_filtered_data(list("iris" = list(dataset = iris)), code = NULL), regexp = NA)
+  testthat::expect_no_error(init_filtered_data(list("iris" = list(dataset = iris)), code = NULL))
 })
 
 testthat::test_that("init_filtered_data.default asserts join_keys is `JoinKeys`", {
@@ -43,7 +43,7 @@ testthat::test_that("init_filtered_data.default asserts join_keys is `JoinKeys`"
 })
 
 testthat::test_that("init_filtered_data.default accepts NULL passed to join_keys", {
-  testthat::expect_error(init_filtered_data(list("iris" = list(dataset = iris)), join_keys = NULL), regexp = NA)
+  testthat::expect_no_error(init_filtered_data(list("iris" = list(dataset = iris)), join_keys = NULL))
 })
 
 testthat::test_that("init_filtered_data.default asserts cdisc is logical(1)", {

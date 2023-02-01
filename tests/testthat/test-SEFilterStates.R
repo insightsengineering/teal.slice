@@ -35,10 +35,10 @@ get_test_data <- function(no_data = FALSE) {
 }
 
 testthat::test_that("The constructor does not throw", {
-  testthat::expect_error(SEFilterStates$new(
+  testthat::expect_no_error(SEFilterStates$new(
     dataname = "test",
     datalabel = "test"
-  ), NA)
+  ))
 })
 
 testthat::test_that("The constructor initializes two state_lists", {
@@ -46,8 +46,8 @@ testthat::test_that("The constructor initializes two state_lists", {
     dataname = "test",
     datalabel = "test"
   )
-  testthat::expect_null(isolate(filter_states$state_list_get(1)))
-  testthat::expect_null(isolate(filter_states$state_list_get(2)))
+  testthat::expect_null(shiny::isolate(filter_states$state_list_get(1)))
+  testthat::expect_null(shiny::isolate(filter_states$state_list_get(2)))
 })
 
 testthat::test_that("set_filter_state throws error when input is missing", {
@@ -72,9 +72,7 @@ testthat::test_that("set_filter_state throws error when data argument is not of 
     datalabel = "test"
   )
   data <- data.frame(a = "test")
-  testthat::expect_error(
-    filter_states$set_filter_state(data = data, state = list(subset = NULL, select = NULL))
-  )
+  testthat::expect_error(filter_states$set_filter_state(data = data, state = list(subset = NULL, select = NULL)))
 })
 
 testthat::test_that("set_filter_state throws error when state argument contains extra elements", {
@@ -107,7 +105,7 @@ testthat::test_that(
     )
 
     obj <- get_test_data()
-    testthat::expect_null(isolate(
+    testthat::expect_null(shiny::isolate(
       filter_states$set_filter_state(data = obj, state = list(subset = NULL, select = NULL))
     ))
   }
@@ -119,7 +117,7 @@ testthat::test_that("set_filter_state returns NULL when state argument is an emp
     datalabel = "test"
   )
   obj <- get_test_data()
-  testthat::expect_null(isolate(filter_states$set_filter_state(data = obj, state = list())))
+  testthat::expect_null(shiny::isolate(filter_states$set_filter_state(data = obj, state = list())))
 })
 
 testthat::test_that("clone method returns object with the same state", {
@@ -135,7 +133,7 @@ testthat::test_that("get_call method returns NULL", {
     dataname = "test",
     datalabel = "test"
   )
-  testthat::expect_null(isolate(se$get_call()))
+  testthat::expect_null(shiny::isolate(se$get_call()))
 })
 
 testthat::test_that("get_fun method returns subset", {
@@ -158,9 +156,9 @@ testthat::test_that("SEFilterStates$set_filter_state sets state with only subset
   fs <- list(
     subset = list(feature_id = c("ID001", "ID002"))
   )
-  isolate(sefs$set_filter_state(state = fs, data = obj))
+  shiny::isolate(sefs$set_filter_state(state = fs, data = obj))
   testthat::expect_equal(
-    isolate(sefs$get_call()),
+    shiny::isolate(sefs$get_call()),
     quote(
       test <- subset(
         test,
@@ -176,10 +174,10 @@ testthat::test_that("SEFilterStates$set_filter_state updates select state which 
     dataname = "test",
     datalabel = character(0)
   )
-  isolate(sefs$set_filter_state(state = list(select = list(Treatment = c("ChIP", "Input"))), data = obj))
-  isolate(sefs$set_filter_state(state = list(select = list(Treatment = "ChIP")), data = obj))
+  shiny::isolate(sefs$set_filter_state(state = list(select = list(Treatment = c("ChIP", "Input"))), data = obj))
+  shiny::isolate(sefs$set_filter_state(state = list(select = list(Treatment = "ChIP")), data = obj))
   testthat::expect_equal(
-    isolate(sefs$get_filter_state()),
+    shiny::isolate(sefs$get_filter_state()),
     list(select = list(Treatment = list(selected = "ChIP", keep_na = FALSE)))
   )
 })
@@ -190,10 +188,10 @@ testthat::test_that("SEFilterStates$set_filter_state updates subset state which 
     dataname = "test",
     datalabel = character(0)
   )
-  isolate(sefs$set_filter_state(state = list(subset = list(feature_id = c("ID001", "ID002"))), data = obj))
-  isolate(sefs$set_filter_state(state = list(subset = list(feature_id = "ID001")), data = obj))
+  shiny::isolate(sefs$set_filter_state(state = list(subset = list(feature_id = c("ID001", "ID002"))), data = obj))
+  shiny::isolate(sefs$set_filter_state(state = list(subset = list(feature_id = "ID001")), data = obj))
   testthat::expect_equal(
-    isolate(sefs$get_filter_state()),
+    shiny::isolate(sefs$get_filter_state()),
     list(subset = list(feature_id = list(selected = "ID001", keep_na = FALSE)))
   )
 })
@@ -207,10 +205,10 @@ testthat::test_that("SEFilterStates$set_filter_state updates subset state which 
     datalabel = character(0)
   )
 
-  isolate(sefs$set_filter_state(state = list(subset = list(feature_id = c("ID001", "ID002"))), data = obj))
-  isolate(sefs$set_filter_state(state = list(subset = list(feature_id = "ID001")), data = obj))
+  shiny::isolate(sefs$set_filter_state(state = list(subset = list(feature_id = c("ID001", "ID002"))), data = obj))
+  shiny::isolate(sefs$set_filter_state(state = list(subset = list(feature_id = "ID001")), data = obj))
   testthat::expect_equal(
-    isolate(sefs$get_filter_state()),
+    shiny::isolate(sefs$get_filter_state()),
     list(subset = list(feature_id = list(selected = "ID001", keep_na = FALSE)))
   )
 })
@@ -224,9 +222,9 @@ testthat::test_that("SEFilterStates$set_filter_state sets state with neither sub
     datalabel = character(0)
   )
 
-  isolate(sefs$set_filter_state(state = list(), data = obj))
+  shiny::isolate(sefs$set_filter_state(state = list(), data = obj))
 
-  eval(isolate(sefs$get_call()))
+  eval(shiny::isolate(sefs$get_call()))
   testthat::expect_equal(obj, test)
 })
 
@@ -244,9 +242,9 @@ testthat::test_that(
       select = list(Treatment = "ChIP"),
       subset = list(feature_id = c("ID001", "ID002"))
     )
-    isolate(sefs$set_filter_state(state = fs, data = obj))
+    shiny::isolate(sefs$set_filter_state(state = fs, data = obj))
 
-    eval(isolate(sefs$get_call()))
+    eval(shiny::isolate(sefs$get_call()))
     testthat::expect_equal(test, subset(
       obj,
       subset = feature_id %in% c("ID001", "ID002"),
@@ -267,8 +265,8 @@ testthat::test_that("SEFilterStates$get_filter_state returns list identical to i
     subset = list(feature_id = list(selected = c("ID001", "ID002"), keep_na = TRUE)),
     select = list(Treatment = list(selected = "ChIP", keep_na = FALSE))
   )
-  isolate(sefs$set_filter_state(state = fs, data = obj))
-  testthat::expect_identical(isolate(sefs$get_filter_state()), fs)
+  shiny::isolate(sefs$set_filter_state(state = fs, data = obj))
+  testthat::expect_identical(shiny::isolate(sefs$get_filter_state()), fs)
 })
 
 testthat::test_that("SEFilterStates$remove_filter_state removes filters in state_list", {
@@ -284,10 +282,10 @@ testthat::test_that("SEFilterStates$remove_filter_state removes filters in state
     subset = list(feature_id = c("ID001", "ID002"))
   )
 
-  isolate(sefs$set_filter_state(state = fs, data = obj))
-  isolate(sefs$remove_filter_state(list(subset = "feature_id")))
+  shiny::isolate(sefs$set_filter_state(state = fs, data = obj))
+  shiny::isolate(sefs$remove_filter_state(list(subset = "feature_id")))
 
-  eval(isolate(sefs$get_call()))
+  eval(shiny::isolate(sefs$get_call()))
   testthat::expect_equal(test, subset(
     obj,
     select = Treatment == "ChIP"
@@ -307,10 +305,10 @@ testthat::test_that("SEFilterStates$remove_filter_state removes all filters in s
     subset = list(feature_id = c("ID001", "ID002"))
   )
 
-  isolate(sefs$set_filter_state(state = fs, data = obj))
-  isolate(sefs$remove_filter_state(list(subset = "feature_id", select = "Treatment")))
+  shiny::isolate(sefs$set_filter_state(state = fs, data = obj))
+  shiny::isolate(sefs$remove_filter_state(list(subset = "feature_id", select = "Treatment")))
 
-  eval(isolate(sefs$get_call()))
+  eval(shiny::isolate(sefs$get_call()))
   testthat::expect_equal(obj, test)
 })
 
@@ -327,7 +325,7 @@ testthat::test_that("SEFilterStates$remove_filter_state throws error when list i
     subset = list(feature_id = c("ID001", "ID002"))
   )
 
-  isolate(sefs$set_filter_state(state = fs, data = obj))
+  shiny::isolate(sefs$set_filter_state(state = fs, data = obj))
   testthat::expect_error(sefs$remove_filter_state(list("feature_id")))
 })
 
@@ -347,8 +345,8 @@ testthat::test_that(
       subset = list(feature_id = c("ID001", "ID002"))
     )
 
-    isolate(sefs$set_filter_state(state = fs, data = obj))
-    testthat::expect_warning(isolate(sefs$remove_filter_state(list(subset = list("feature_id2")))))
+    shiny::isolate(sefs$set_filter_state(state = fs, data = obj))
+    testthat::expect_warning(shiny::isolate(sefs$remove_filter_state(list(subset = list("feature_id2")))))
   }
 )
 
@@ -378,12 +376,12 @@ testthat::test_that(
 
 # Format
 testthat::test_that("$format() is a method of SEFilterStates", {
-  testthat::expect_error(
-    isolate(SEFilterStates$new(
-      dataname = "test",
-      datalabel = character(0)
-    )$format(),
-    NA
+  sefs <- SEFilterStates$new(
+    dataname = "test",
+    datalabel = character(0)
+  )
+  testthat::expect_no_error(
+    shiny::isolate(sefs$format()
     ))
 })
 
@@ -410,19 +408,19 @@ testthat::test_that(
       select = list(Treatment = "ChIP"),
       subset = list(feature_id = c("ID001", "ID002"))
     )
-    isolate(sefs$set_filter_state(state = fs, data = test))
+    shiny::isolate(sefs$set_filter_state(state = fs, data = test))
 
-    treatment_filter <- isolate(sefs$state_list_get("select")[[1]])
-    feature_filter <- isolate(sefs$state_list_get("subset")[[1]])
-    shiny::isolate(testthat::expect_equal(
-      sefs$format(),
+    treatment_filter <- shiny::isolate(sefs$state_list_get("select")[[1]])
+    feature_filter <- shiny::isolate(sefs$state_list_get("subset")[[1]])
+    testthat::expect_equal(
+      shiny::isolate(sefs$format()),
       paste(
         "Assay Label filters:",
         "  Subsetting:",
-        feature_filter$format(indent = 4),
+        shiny::isolate(feature_filter$format(indent = 4)),
         "  Selecting:",
-        treatment_filter$format(indent = 4),
+        shiny::isolate(treatment_filter$format(indent = 4)),
         sep = "\n"
       )
-    ))
+    )
   })

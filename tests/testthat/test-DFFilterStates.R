@@ -1,10 +1,10 @@
 testthat::test_that("The contructor accepts a string as varlabels and keys", {
-  testthat::expect_error(DFFilterStates$new(
+  testthat::expect_no_error(DFFilterStates$new(
     dataname = "test",
     datalabel = character(0),
     varlabels = "test",
     keys = "test"
-  ), NA)
+  ))
 })
 
 testthat::test_that("get_fun returns dplyr::filter", {
@@ -30,9 +30,9 @@ testthat::test_that(
       Sepal.Length = c(5.1, 6.4),
       Species = c("setosa", "versicolor")
     )
-    isolate(dffs$set_filter_state(state = fs, data = iris))
+    shiny::isolate(dffs$set_filter_state(state = fs, data = iris))
     testthat::expect_equal(
-      isolate(dffs$get_call()),
+      shiny::isolate(dffs$get_call()),
       quote(
         iris <- dplyr::filter(
           iris,
@@ -55,9 +55,9 @@ testthat::test_that("DFFilterStates$set_filter_state sets filters as a named/unn
     Sepal.Length = list(c(5.1, 6.4)),
     Species = list(selected = c("setosa", "versicolor"))
   )
-  isolate(dffs$set_filter_state(state = fs, data = iris))
+  shiny::isolate(dffs$set_filter_state(state = fs, data = iris))
   testthat::expect_equal(
-    isolate(dffs$get_call()),
+    shiny::isolate(dffs$get_call()),
     quote(
       iris <- dplyr::filter(
         iris,
@@ -75,16 +75,16 @@ testthat::test_that("DFFilterStates$set_filter_state updates filter state which 
     varlabels = character(0),
     keys = character(0)
   )
-  isolate(dffs$set_filter_state(
+  shiny::isolate(dffs$set_filter_state(
     state = list(Sepal.Length = c(5.1, 6.4), Species = c("setosa", "versicolor")),
     data = iris
   ))
-  isolate(dffs$set_filter_state(
+  shiny::isolate(dffs$set_filter_state(
     state = list(Species = "setosa", Petal.Length = c(2.0, 5.0)),
     data = iris
   ))
-  expect_identical(
-    isolate(dffs$get_filter_state()),
+  testthat::expect_identical(
+    shiny::isolate(dffs$get_filter_state()),
     list(
       Sepal.Length = list(selected = c(5.1, 6.4), keep_na = FALSE, keep_inf = FALSE),
       Species = list(selected = "setosa", keep_na = FALSE),
@@ -93,7 +93,8 @@ testthat::test_that("DFFilterStates$set_filter_state updates filter state which 
   )
 })
 
-testthat::test_that("DFFilterStates$set_filter_state throws error when using an unnamed list",
+testthat::test_that(
+  "DFFilterStates$set_filter_state throws error when using an unnamed list",
   code = {
     dffs <- DFFilterStates$new(
       dataname = "iris",
@@ -109,7 +110,8 @@ testthat::test_that("DFFilterStates$set_filter_state throws error when using an 
   }
 )
 
-testthat::test_that("DFFilterStates$get_filter_state returns list identical to input",
+testthat::test_that(
+  "DFFilterStates$get_filter_state returns list identical to input",
   code = {
     dffs <- DFFilterStates$new(
       dataname = "iris",
@@ -121,8 +123,8 @@ testthat::test_that("DFFilterStates$get_filter_state returns list identical to i
       Sepal.Length = list(selected = c(5.1, 6.4), keep_na = TRUE, keep_inf = TRUE),
       Species = list(selected = c("setosa", "versicolor"), keep_na = FALSE)
     )
-    isolate(dffs$set_filter_state(state = fs, data = iris))
-    testthat::expect_identical(isolate(dffs$get_filter_state()), fs)
+    shiny::isolate(dffs$set_filter_state(state = fs, data = iris))
+    testthat::expect_identical(shiny::isolate(dffs$get_filter_state()), fs)
   }
 )
 
@@ -134,7 +136,7 @@ testthat::test_that("Selecting a new variable initializes a new filter state", {
     keys = character(0)
   )
   expect_null(
-    isolate(dffs$state_list_get(state_list_index = 1, state_id = "Sepal.Length"))
+    shiny::isolate(dffs$state_list_get(state_list_index = 1, state_id = "Sepal.Length"))
   )
   shiny::testServer(
     dffs$srv_add_filter_state,
@@ -144,16 +146,16 @@ testthat::test_that("Selecting a new variable initializes a new filter state", {
     }
   )
 
-  expect_is(
-    isolate(dffs$state_list_get(state_list_index = 1)),
+  testthat::expect_is(
+    shiny::isolate(dffs$state_list_get(state_list_index = 1)),
     "list"
   )
-  expect_is(
-    isolate(dffs$state_list_get(state_list_index = 1, state_id = "Sepal.Length")),
+  testthat::expect_is(
+    shiny::isolate(dffs$state_list_get(state_list_index = 1, state_id = "Sepal.Length")),
     "RangeFilterState"
   )
-  expect_identical(
-    isolate(dffs$state_list_get(state_list_index = 1, state_id = "Sepal.Length")$get_varname(deparse = TRUE)),
+  testthat::expect_identical(
+    shiny::isolate(dffs$state_list_get(state_list_index = 1, state_id = "Sepal.Length"))$get_varname(deparse = TRUE),
     "Sepal.Length"
   )
 })
@@ -188,7 +190,7 @@ testthat::test_that("Adding 'var_to_add' adds another filter state", {
   )
 
   testthat::expect_identical(
-    isolate(dffs$get_call()),
+    shiny::isolate(dffs$get_call()),
     quote(iris <- dplyr::filter(iris, Sepal.Length >= 5.1 & Sepal.Length <= 6.4))
   )
 })
@@ -207,11 +209,11 @@ testthat::test_that(
       Species = list(selected = c("setosa", "versicolor"))
     )
 
-    isolate(dffs$set_filter_state(state = fs, data = iris))
-    isolate(dffs$remove_filter_state("Species"))
+    shiny::isolate(dffs$set_filter_state(state = fs, data = iris))
+    shiny::isolate(dffs$remove_filter_state("Species"))
 
     testthat::expect_equal(
-      isolate(dffs$get_call()),
+      shiny::isolate(dffs$get_call()),
       quote(iris <- dplyr::filter(iris, Sepal.Length >= 5.1 & Sepal.Length <= 6.4))
     )
   }
@@ -232,8 +234,8 @@ testthat::test_that(
       Species = list(selected = c("setosa", "versicolor"))
     )
 
-    isolate(dffs$set_filter_state(state = fs, data = iris))
-    testthat::expect_warning(isolate(dffs$remove_filter_state("Species2")))
+    shiny::isolate(dffs$set_filter_state(state = fs, data = iris))
+    testthat::expect_warning(shiny::isolate(dffs$remove_filter_state("Species2")))
   }
 )
 
@@ -246,30 +248,38 @@ testthat::test_that(
       varlabels = character(0),
       keys = character(0)
     )
-    testthat::expect_identical(dffs$ui_add_filter_state("id", data.frame()), div("no sample variables available"))
-    testthat::expect_identical(dffs$ui_add_filter_state("id", data.frame(A = numeric(0))), div("no samples available"))
+    testthat::expect_identical(
+      dffs$ui_add_filter_state("id", data.frame()),
+      div("no sample variables available")
+    )
+    testthat::expect_identical(
+      dffs$ui_add_filter_state("id", data.frame(A = numeric(0))),
+      div("no samples available")
+    )
   }
 )
 
 # Format
 testthat::test_that("$format() is a method of DFFilterStates", {
-  testthat::expect_error(isolate(
-    DFFilterStates$new(
+  dffs <- DFFilterStates$new(
     dataname = "test",
     datalabel = character(0),
     varlabels = "test",
     keys = "test"
-  )$format(), NA))
+  )
+  testthat::expect_no_error(shiny::isolate(
+    dffs$format()))
 })
 
 testthat::test_that("$format() asserts the indent argument is a number", {
+  dffs <- DFFilterStates$new(
+    dataname = "test",
+    datalabel = character(0),
+    varlabels = "test",
+    keys = "test"
+  )
   testthat::expect_error(
-    DFFilterStates$new(
-      dataname = "test",
-      datalabel = character(0),
-      varlabels = "test",
-      keys = "test"
-    )$format(indent = "wrong type"),
+    dffs$format(indent = "wrong type"),
     regexp = "Assertion on 'indent' failed: Must be of type 'number'"
   )
 })
@@ -285,12 +295,13 @@ testthat::test_that("$format() concatenates its FilterState elements using \\n w
     Sepal.Length = list(selected = c(5.1, 6.4), keep_na = TRUE, keep_inf = TRUE),
     Species = list(selected = c("setosa", "versicolor"), keep_na = FALSE)
   )
-  isolate(dffs$set_filter_state(state = fs, data = iris))
+  shiny::isolate(dffs$set_filter_state(state = fs, data = iris))
 
-  sepal_filter <- isolate(dffs$state_list_get(1L)[[1]])
-  species_filter <- isolate(dffs$state_list_get(1L)[[2]])
-  shiny::isolate(testthat::expect_equal(
-    dffs$format(),
-    paste(sepal_filter$format(indent = 0), species_filter$format(indent = 0), sep = "\n")
-  ))
+  sepal_filter <- shiny::isolate(dffs$state_list_get(1L)[[1]])
+  species_filter <- shiny::isolate(dffs$state_list_get(1L)[[2]])
+  shiny::isolate(
+    testthat::expect_equal(
+      dffs$format(),
+      paste(sepal_filter$format(indent = 0), species_filter$format(indent = 0), sep = "\n")
+    ))
 })

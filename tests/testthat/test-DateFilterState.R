@@ -1,17 +1,17 @@
 testthat::test_that("The constructor accepts a Date object", {
-  testthat::expect_error(DateFilterState$new(as.Date("2013-07-13"), varname = "test"), NA)
+  testthat::expect_no_error(DateFilterState$new(as.Date("2013-07-13"), varname = "test"))
 })
 
 testthat::test_that("get_call returns a condition true for the object passed in the constructor", {
   test_date <- as.Date("2013-07-13")
   filter_state <- DateFilterState$new(test_date, varname = "test_date")
-  testthat::expect_true(eval(isolate(filter_state$get_call())))
+  testthat::expect_true(eval(shiny::isolate(filter_state$get_call())))
 })
 
 testthat::test_that("set_selected accepts an array of two Date objects", {
   test_date <- as.Date("2013-07-13")
   filter_state <- DateFilterState$new(test_date, varname = "test_date")
-  testthat::expect_error(filter_state$set_selected(c(test_date, test_date)), NA)
+  testthat::expect_no_error(filter_state$set_selected(c(test_date, test_date)))
 })
 
 testthat::test_that("set_selected warns when selection is not within the possible range", {
@@ -35,13 +35,13 @@ testthat::test_that("set_selected limits the selected range to the lower and the
   test_date <- as.Date(c("13/07/2013", "14/07/2013"))
   filter_state <- DateFilterState$new(test_date, varname = "test_date")
   suppressWarnings(filter_state$set_selected(c(test_date[1] - 1, test_date[1])))
-  testthat::expect_equal(isolate(filter_state$get_selected()), c(test_date[1], test_date[1]))
+  testthat::expect_equal(shiny::isolate(filter_state$get_selected()), c(test_date[1], test_date[1]))
 
   suppressWarnings(filter_state$set_selected(c(test_date[2], test_date[2] + 1)))
-  testthat::expect_equal(isolate(filter_state$get_selected()), c(test_date[2], test_date[2]))
+  testthat::expect_equal(shiny::isolate(filter_state$get_selected()), c(test_date[2], test_date[2]))
 
   suppressWarnings(filter_state$set_selected(c(test_date[1] - 1, test_date[2] + 1)))
-  testthat::expect_equal(isolate(filter_state$get_selected()), c(test_date[1], test_date[2]))
+  testthat::expect_equal(shiny::isolate(filter_state$get_selected()), c(test_date[1], test_date[2]))
 })
 
 testthat::test_that("set_selected throws when selection is completely outside of the possible range", {
@@ -66,9 +66,9 @@ testthat::test_that("get_call returns a condition true for the objects in the se
   test_date <- as.Date(c("2013-07-13", "2013-07-14", "2013-07-15"))
   filter_state <- DateFilterState$new(test_date, varname = "test_date")
   filter_state$set_selected(c(test_date[2], test_date[2]))
-  testthat::expect_equal(eval(isolate(filter_state$get_call())), c(FALSE, TRUE, FALSE))
+  testthat::expect_equal(eval(shiny::isolate(filter_state$get_call())), c(FALSE, TRUE, FALSE))
   testthat::expect_equal(
-    isolate(filter_state$get_call()),
+    shiny::isolate(filter_state$get_call()),
     quote(test_date >= as.Date("2013-07-14") & test_date <= as.Date("2013-07-14"))
   )
 })
@@ -76,27 +76,22 @@ testthat::test_that("get_call returns a condition true for the objects in the se
 testthat::test_that("get_call returns a condition evaluating to NA for NA values", {
   test_date <- as.Date(c("2013-07-13", NA))
   filter_state <- DateFilterState$new(test_date, varname = "test_date")
-  testthat::expect_equal(eval(isolate(filter_state$get_call()))[2], NA)
+  testthat::expect_equal(eval(shiny::isolate(filter_state$get_call()))[2], NA)
 })
 
 testthat::test_that("get_call reutrns a condition evaluating to TRUE for NA values after set_keep_na(TRUE)", {
   test_date <- as.Date(c("2013-07-13", NA))
   filter_state <- DateFilterState$new(test_date, varname = "test_date")
   filter_state$set_keep_na(TRUE)
-  testthat::expect_true(eval(isolate(filter_state$get_call()))[2])
+  testthat::expect_true(eval(shiny::isolate(filter_state$get_call()))[2])
 })
 
 testthat::test_that("set_state accepts a named list with selected and keep_na elements", {
   test_date <- as.Date(c("2013/07/13", "2013/07/14", "2013/07/15", "2013/08/16"))
   filter_state <- DateFilterState$new(test_date, varname = "test")
+  testthat::expect_no_error(filter_state$set_state(list(selected = c(test_date[2], test_date[3]), keep_na = TRUE)))
   testthat::expect_error(
-    filter_state$set_state(list(selected = c(test_date[2], test_date[3]), keep_na = TRUE)),
-    NA
-  )
-  testthat::expect_error(
-    filter_state$set_state(
-      list(selected = c(test_date[2], test_date[3]), unknown = TRUE)
-    ),
+    filter_state$set_state(list(selected = c(test_date[2], test_date[3]), unknown = TRUE)),
     "all\\(names\\(state\\)"
   )
 })
@@ -105,8 +100,8 @@ testthat::test_that("set_state sets values of selected and keep_na as provided i
   test_date <- as.Date(c("2013/07/13", "2013/07/14", "2013/07/15", "2013/08/16"))
   filter_state <- DateFilterState$new(test_date, varname = "test")
   filter_state$set_state(list(selected = c(test_date[2], test_date[3]), keep_na = TRUE))
-  testthat::expect_identical(isolate(filter_state$get_selected()), c(test_date[2], test_date[3]))
-  testthat::expect_true(isolate(filter_state$get_keep_na()))
+  testthat::expect_identical(shiny::isolate(filter_state$get_selected()), c(test_date[2], test_date[3]))
+  testthat::expect_true(shiny::isolate(filter_state$get_keep_na()))
 })
 
 
@@ -114,9 +109,9 @@ testthat::test_that("set_state overwrites fields included in the input only", {
   test_date <- as.Date(c("2013/07/13", "2013/07/14", "2013/07/15", "2013/08/16", "2013/08/17"))
   filter_state <- DateFilterState$new(test_date, varname = "test")
   filter_state$set_state(list(selected = c(test_date[2], test_date[3]), keep_na = TRUE))
-  testthat::expect_error(filter_state$set_state(list(selected = c(test_date[3], test_date[4]))), NA)
-  testthat::expect_identical(isolate(filter_state$get_selected()), c(test_date[3], test_date[4]))
-  testthat::expect_true(isolate(filter_state$get_keep_na()))
+  testthat::expect_no_error(filter_state$set_state(list(selected = c(test_date[3], test_date[4]))))
+  testthat::expect_identical(shiny::isolate(filter_state$get_selected()), c(test_date[3], test_date[4]))
+  testthat::expect_true(shiny::isolate(filter_state$get_keep_na()))
 })
 
 testthat::test_that(
@@ -130,28 +125,28 @@ testthat::test_that(
       extract_type = character(0)
     )
 
-    isolate(filter_state$set_keep_na(FALSE))
-    isolate(filter_state$set_selected(c(dates[1], dates[10])))
+    shiny::isolate(filter_state$set_keep_na(FALSE))
+    shiny::isolate(filter_state$set_selected(c(dates[1], dates[10])))
     testthat::expect_true(
-      isolate(filter_state$is_any_filtered())
+      shiny::isolate(filter_state$is_any_filtered())
     )
 
-    isolate(filter_state$set_keep_na(TRUE))
-    isolate(filter_state$set_selected(c(dates[1], dates[10])))
+    shiny::isolate(filter_state$set_keep_na(TRUE))
+    shiny::isolate(filter_state$set_selected(c(dates[1], dates[10])))
     testthat::expect_false(
-      isolate(filter_state$is_any_filtered())
+      shiny::isolate(filter_state$is_any_filtered())
     )
 
-    isolate(filter_state$set_keep_na(TRUE))
-    isolate(filter_state$set_selected(c(dates[2], dates[10])))
+    shiny::isolate(filter_state$set_keep_na(TRUE))
+    shiny::isolate(filter_state$set_selected(c(dates[2], dates[10])))
     testthat::expect_true(
-      isolate(filter_state$is_any_filtered())
+      shiny::isolate(filter_state$is_any_filtered())
     )
 
-    isolate(filter_state$set_keep_na(TRUE))
-    isolate(filter_state$set_selected(c(dates[1], dates[9])))
+    shiny::isolate(filter_state$set_keep_na(TRUE))
+    shiny::isolate(filter_state$set_selected(c(dates[1], dates[9])))
     testthat::expect_true(
-      isolate(filter_state$is_any_filtered())
+      shiny::isolate(filter_state$is_any_filtered())
     )
   }
 )
@@ -160,7 +155,7 @@ testthat::test_that(
 testthat::test_that("$format() is a FilterStates's method that accepts indent", {
   test_date <- as.Date("13/07/2013", format = "%d/%m/%y")
   filter_state <- DateFilterState$new(test_date, varname = "test_date")
-  testthat::expect_error(shiny::isolate(filter_state$format(indent = 0)), regexp = NA)
+  testthat::expect_no_error(shiny::isolate(filter_state$format(indent = 0)))
 })
 
 testthat::test_that("$format() asserts that indent is numeric", {

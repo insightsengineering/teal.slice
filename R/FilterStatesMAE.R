@@ -30,11 +30,8 @@ MAEFilterStates <- R6::R6Class( # nolint
       super$initialize(dataname, datalabel)
       private$keys <- keys
       private$varlabels <- varlabels
-
-      self$state_list_initialize(
-        list(
-          y = reactiveVal()
-        )
+      private$state_list <- list(
+        y = reactiveVal()
       )
       return(invisible(self))
     },
