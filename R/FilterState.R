@@ -403,7 +403,6 @@ FilterState <- R6::R6Class( # nolint
       fluidPage(
         include_css_files(pattern = "filter-panel"),
         theme = get_teal_bs_theme(),
-        include_css_files(pattern = "filter-panel"),
         fluidRow(
           column(
             width = 10,
