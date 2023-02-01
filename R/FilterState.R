@@ -75,13 +75,13 @@ FilterState <- R6::R6Class( # nolint
         checkmate::check_string(varname)
       )
       checkmate::assert_character(varlabel, max.len = 1, any.missing = FALSE)
-      stopifnot(is.null(input_dataname) || is.name(input_dataname) || is.call(input_dataname))
+      checkmate::assert_multi_class(input_dataname, c("name", "call"), null.ok = TRUE)
       checkmate::assert_character(extract_type, max.len = 1, any.missing = FALSE)
-      stopifnot(
-        length(extract_type) == 0 ||
-          length(extract_type) == 1 && !is.null(input_dataname)
-      )
-      stopifnot(extract_type %in% c("list", "matrix"))
+      if (length(extract_type) == 1)
+        checkmate::assert_choice(extract_type, choices = c("list", "matrix"))
+      if (length(extract_type) == 1 && is.null(input_dataname))
+        stop("if extract_type is specified, input_dataname must also be specified")
+
       private$input_dataname <- input_dataname
       private$varname <- if (is.character(varname)) {
         as.name(varname)

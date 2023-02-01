@@ -55,7 +55,6 @@ isolate(filter_states$get_call())
 \item \href{#method-FilterStates-get_call}{\code{FilterStates$get_call()}}
 \item \href{#method-FilterStates-print}{\code{FilterStates$print()}}
 \item \href{#method-FilterStates-get_fun}{\code{FilterStates$get_fun()}}
-\item \href{#method-FilterStates-state_list_initialize}{\code{FilterStates$state_list_initialize()}}
 \item \href{#method-FilterStates-state_list_get}{\code{FilterStates$state_list_get()}}
 \item \href{#method-FilterStates-state_list_push}{\code{FilterStates$state_list_push()}}
 \item \href{#method-FilterStates-state_list_remove}{\code{FilterStates$state_list_remove()}}
@@ -76,8 +75,8 @@ isolate(filter_states$get_call())
 \subsection{Method \code{new()}}{
 Initializes \code{FilterStates} object.
 
-Initializes \code{FilterStates} object by setting \code{input_dataname},
-\code{output_dataname} and initializing \code{state_list} (list of \code{reactiveVal}s).
+Initializes \code{FilterStates} object by setting
+\code{input_dataname}, \code{output_dataname}, and \code{datalabel}.
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{FilterStates$new(input_dataname, output_dataname, datalabel)}\if{html}{\out{</div>}}
 }
@@ -186,23 +185,6 @@ Defaults to "subset" but can be overridden by child class method.
 
 \subsection{Returns}{
 \code{character(1)} the name of the function
-}
-}
-\if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-FilterStates-state_list_initialize"></a>}}
-\if{latex}{\out{\hypertarget{method-FilterStates-state_list_initialize}{}}}
-\subsection{Method \code{state_list_initialize()}}{
-Populates the private \code{state_list} field to store active filter states.
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{FilterStates$state_list_initialize(x)}\if{html}{\out{</div>}}
-}
-
-\subsection{Arguments}{
-\if{html}{\out{<div class="arguments">}}
-\describe{
-\item{\code{x}}{(\code{list} of \code{reactiveVal} objects)\cr}
-}
-\if{html}{\out{</div>}}
 }
 }
 \if{html}{\out{<hr>}}
