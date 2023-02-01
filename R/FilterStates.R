@@ -51,8 +51,8 @@ FilterStates <- R6::R6Class( # nolint
     #' @description
     #' Initializes `FilterStates` object.
     #'
-    #' Initializes `FilterStates` object by setting `input_dataname`,
-    #' `output_dataname` and initializing `state_list` (list of `reactiveVal`s).
+    #' Initializes `FilterStates` object by setting
+    #' `input_dataname`, `output_dataname`, and `datalabel`.
     #'
     #' @param data (`data.frame`, `MultiAssayExperiment`, `SummarizedExperiment`, `matrix`)\cr
     #'   the R object which `subset` function is applied on.
@@ -121,7 +121,10 @@ FilterStates <- R6::R6Class( # nolint
     #' @return `character(1)` the formatted string
     #'
     format = function(indent) {
-      stop("Pure virtual method")
+      sprintf(paste(
+        "%sThis is an instance of an abstract class.",
+        "Use child class constructors to instantiate objects."),
+        paste(rep(" ", indent), collapse = ""))
     },
 
     #' @description
@@ -145,8 +148,8 @@ FilterStates <- R6::R6Class( # nolint
         X = states_list,
         USE.NAMES = TRUE,
         simplify = FALSE,
-        function(queue) {
-          items <- queue()
+        function(state_list) {
+          items <- state_list()
           filtered_items <- Filter(f = function(x) x$is_any_filtered(), x = items)
           calls <- lapply(
             filtered_items,
@@ -216,18 +219,7 @@ FilterStates <- R6::R6Class( # nolint
       "subset"
     },
 
-    # queue methods ----
-
-    #' @description
-    #' Populates the private `state_list` field to store active filter states.
-    #'
-    #' @param x (`list` of `reactiveVal` objects)\cr
-    #'
-    state_list_initialize = function(x) {
-      checkmate::assert_list(x, min.len = 1)
-      private$state_list <- x
-      invisible(NULL)
-    },
+    # state_list methods ----
 
     #' @description
     #' Returns a list of `FilterState` objects stored in this `FilterStates`.
@@ -264,7 +256,8 @@ FilterStates <- R6::R6Class( # nolint
     #' @return NULL
     #'
     state_list_push = function(x, state_list_index, state_id) {
-      logger::log_trace("{ class(self)[1] } pushing into queue, dataname: { deparse1(private$input_dataname) }")
+      logger::log_trace(
+        "{ class(self)[1] } pushing into state_list, dataname: { deparse1(private$input_dataname) }")
       private$validate_state_list_exists(state_list_index)
       checkmate::assert_string(state_id)
 
@@ -275,10 +268,11 @@ FilterStates <- R6::R6Class( # nolint
       }
 
       state <- stats::setNames(states, state_id)
-      new_queue <- c(private$state_list[[state_list_index]](), state)
-      private$state_list[[state_list_index]](new_queue)
+      new_state_list <- c(private$state_list[[state_list_index]](), state)
+      private$state_list[[state_list_index]](new_state_list)
 
-      logger::log_trace("{ class(self)[1] } pushed into queue, dataname: { deparse1(private$input_dataname) }")
+      logger::log_trace(
+        "{ class(self)[1] } pushed into state_list, dataname: { deparse1(private$input_dataname) }")
       invisible(NULL)
     },
 
@@ -297,7 +291,7 @@ FilterStates <- R6::R6Class( # nolint
     #'
     state_list_remove = function(state_list_index, state_id) {
       logger::log_trace(paste(
-        "{ class(self)[1] } removing a filter from queue { state_list_index },",
+        "{ class(self)[1] } removing a filter from state_list { state_list_index },",
         "dataname: { deparse1(private$input_dataname) }"
       ))
       private$validate_state_list_exists(state_list_index)
@@ -307,12 +301,12 @@ FilterStates <- R6::R6Class( # nolint
         checkmate::check_int(state_list_index)
       )
 
-      new_queue <- private$state_list[[state_list_index]]()
-      new_queue[[state_id]] <- NULL
-      private$state_list[[state_list_index]](new_queue)
+      new_state_list <- private$state_list[[state_list_index]]()
+      new_state_list[[state_id]] <- NULL
+      private$state_list[[state_list_index]](new_state_list)
 
       logger::log_trace(paste(
-        "{ class(self)[1] } removed from queue { state_list_index },",
+        "{ class(self)[1] } removed from state_list { state_list_index },",
         "dataname: { deparse1(private$input_dataname) }"
       ))
       invisible(NULL)
@@ -324,13 +318,15 @@ FilterStates <- R6::R6Class( # nolint
     #' @return NULL
     #'
     state_list_empty = function() {
-      logger::log_trace("{ class(self)[1] } emptying queue, dataname: { deparse1(private$input_dataname) }")
+      logger::log_trace(
+        "{ class(self)[1] } emptying state_list, dataname: { deparse1(private$input_dataname) }")
 
       for (i in seq_along(private$state_list)) {
         private$state_list[[i]](list())
       }
 
-      logger::log_trace("{ class(self)[1] } emptied queue, dataname: { deparse1(private$input_dataname) }")
+      logger::log_trace(
+        "{ class(self)[1] } emptied state_list, dataname: { deparse1(private$input_dataname) }")
       invisible(NULL)
     },
 
@@ -340,8 +336,8 @@ FilterStates <- R6::R6Class( # nolint
     #' @return `integer(1)`
     #'
     get_filter_count = function() {
-      sum(vapply(private$state_list, function(queue) {
-        length(queue())
+      sum(vapply(private$state_list, function(state_list) {
+        length(state_list())
       }, FUN.VALUE = integer(1)))
     },
 
@@ -455,9 +451,8 @@ FilterStates <- R6::R6Class( # nolint
     }
   ),
 
-  #private members ----
-
   private = list(
+    # private fields ----
     cards_container_id = character(0),
     card_ids = character(0),
     data = NULL, # data.frame, MAE, SE or matrix
@@ -468,12 +463,14 @@ FilterStates <- R6::R6Class( # nolint
     output_dataname = NULL, # because it holds object of class name,
     ns = NULL, # shiny ns()
     observers = list(), # observers
-    state_list = NULL, # list of `reactiveVal`s initialized by self$state_list_initialize
+    state_list = NULL, # list of `reactiveVal`s initialized by init methods of child classes
+
+    # private methods ----
 
     # Module to insert/remove `FilterState` UI
     #
     # This module adds the shiny UI of the `FilterState` object newly added
-    # to queue to the Active Filter Variables,
+    # to state_list to the Active Filter Variables,
     # calls `FilterState` modules and creates an observer to remove state
     # parameter filter_state (`FilterState`).
     #
@@ -540,13 +537,13 @@ FilterStates <- R6::R6Class( # nolint
             handlerExpr = {
               logger::log_trace(paste(
                 "{ class(self)[1] }$insert_filter_state_ui@1",
-                "removing FilterState from queue '{ state_list_index }',",
+                "removing FilterState from state_list '{ state_list_index }',",
                 "dataname: { deparse1(private$input_dataname) }"
               ))
               self$state_list_remove(state_list_index, state_id)
               logger::log_trace(paste(
                 "{ class(self)[1] }$insert_filter_state_ui@1",
-                "removed FilterState from queue '{ state_list_index }',",
+                "removed FilterState from state_list '{ state_list_index }',",
                 "dataname: { deparse1(private$input_dataname) }"
               ))
             }
@@ -594,7 +591,7 @@ FilterStates <- R6::R6Class( # nolint
         )
       )
     },
-    # Checks if the queue of the given index was initialized in this `FilterStates`
+    # Checks if the state_list of the given index was initialized in this `FilterStates`
     # @param state_list_index (character or integer)
     validate_state_list_exists = function(state_list_index) {
       checkmate::assert(
@@ -622,7 +619,7 @@ FilterStates <- R6::R6Class( # nolint
     # Maps the array of strings to sanitized unique HTML ids.
     # @param keys `character` the array of strings
     # @param prefix `character(1)` text to prefix id. Needed in case of multiple
-    #  queue objects where keys (variables) might be duplicated across queues
+    #  state_list objects where keys (variables) might be duplicated across state_lists
     # @return `list` the mapping
     map_vars_to_html_ids = function(keys, prefix = "") {
       checkmate::assert_character(keys, null.ok = TRUE)

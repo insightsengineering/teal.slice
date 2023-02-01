@@ -7,6 +7,8 @@
 DFFilterStates <- R6::R6Class( # nolint
   classname = "DFFilterStates",
   inherit = FilterStates,
+
+  # public methods ----
   public = list(
     #' @description Initializes `DFFilterStates` object.
     #'
@@ -41,10 +43,8 @@ DFFilterStates <- R6::R6Class( # nolint
       private$varlabels <- varlabels
       private$keys <- keys
       self$set_filterable_varnames(colnames(data))
-      self$state_list_initialize(
-        list(
-          shiny::reactiveVal()
-        )
+      private$state_list <- list(
+        reactiveVal()
       )
     },
 
@@ -258,6 +258,8 @@ DFFilterStates <- R6::R6Class( # nolint
       }
     },
 
+    # shiny modules ----
+
     #' @description
     #' Set the allowed filterable variables
     #' @param varnames (`character` or `NULL`) The variables which can be filtered
@@ -402,6 +404,8 @@ DFFilterStates <- R6::R6Class( # nolint
       )
     }
   ),
+
+  # private members ----
   private = list(
     varlabels = character(0),
     keys = character(0),

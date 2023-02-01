@@ -1,41 +1,29 @@
 testthat::test_that("The constructor accepts a data.frame object and dataname", {
-  testthat::expect_error(FilteredDataset$new(
-    dataset = head(iris), dataname = "iris"
-  ), NA)
+  testthat::expect_no_error(FilteredDataset$new(dataset = head(iris), dataname = "iris"))
 })
 
 testthat::test_that("state_lists_empty does not throw after initializing FilteredDataset", {
-  filtered_dataset <- FilteredDataset$new(
-    dataset = head(iris), dataname = "iris"
-  )
-  testthat::expect_error(filtered_dataset$state_lists_empty(), NA)
+  filtered_dataset <- FilteredDataset$new(dataset = head(iris), dataname = "iris")
+  testthat::expect_no_error(filtered_dataset$state_lists_empty())
 })
 
 testthat::test_that("get_filter_states returns an empty list after initialization", {
-  filtered_dataset <- FilteredDataset$new(
-    dataset = head(iris), dataname = "iris"
-  )
+  filtered_dataset <- FilteredDataset$new(dataset = head(iris), dataname = "iris")
   testthat::expect_equal(filtered_dataset$get_filter_states(), list())
 })
 
 testthat::test_that("get_dataname returns the dataname passed to the constructor", {
-  filtered_dataset <- FilteredDataset$new(
-    dataset = head(iris), dataname = "iris"
-  )
+  filtered_dataset <- FilteredDataset$new(dataset = head(iris), dataname = "iris")
   testthat::expect_equal(filtered_dataset$get_dataname(), "iris")
 })
 
 testthat::test_that("get_dataset returns the dataset passed to the constructor", {
-  filtered_dataset <- FilteredDataset$new(
-    dataset = head(iris), dataname = "iris"
-  )
+  filtered_dataset <- FilteredDataset$new(dataset = head(iris), dataname = "iris")
   testthat::expect_equal(filtered_dataset$get_dataset(), head(iris))
 })
 
 testthat::test_that("get_dataset_label retruns the dataset label passed to the constructor", {
-  filtered_dataset <- FilteredDataset$new(
-    dataset = head(iris), dataname = "iris", label = "dataset label"
-  )
+  filtered_dataset <- FilteredDataset$new(dataset = head(iris), dataname = "iris", label = "dataset label")
   testthat::expect_equal(filtered_dataset$get_dataset_label(), "dataset label")
 })
 
@@ -148,10 +136,10 @@ testthat::test_that("$get_formatted_filter_state returns a string representation
   shiny::isolate(dataset$set_filter_state(state = fs))
   states <- dataset$get_filter_states()[[1]]
 
-  shiny::isolate(testthat::expect_equal(
-    dataset$get_formatted_filter_state(),
+  testthat::expect_equal(
+    shiny::isolate(dataset$get_formatted_filter_state()),
     paste("Filters for dataset: iris", shiny::isolate(states$format(indent = 2)), sep = "\n")
-  ))
+  )
 })
 
 testthat::test_that("$get_call returns the filter call of the dataset", {
