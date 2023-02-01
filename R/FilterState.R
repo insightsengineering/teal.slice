@@ -400,6 +400,7 @@ FilterState <- R6::R6Class( # nolint
     ui = function(id) {
       ns <- NS(id)
       fluidPage(
+        include_css_files(pattern = "filter-panel"),
         theme = get_teal_bs_theme(),
         fluidRow(
           column(
