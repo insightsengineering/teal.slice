@@ -29,7 +29,6 @@ MAEFilteredDataset <- R6::R6Class( # nolint
       }
       checkmate::assert_class(dataset, "MultiAssayExperiment")
       super$initialize(dataset, dataname, keys, label, metadata)
-
       experiment_names <- names(dataset)
 
       # subsetting by subjects means subsetting by colData(MAE)

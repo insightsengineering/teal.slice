@@ -248,7 +248,7 @@ SEFilterStates <- R6::R6Class( # nolint
       }
       logger::log_trace(paste(
         "SEFilterState$set_filter_state initialized,",
-        "dataname: { private$dataname }"
+        "dataname: { deparse1(private$dataname) }"
       ))
       NULL
     },

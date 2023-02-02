@@ -98,13 +98,12 @@ FilterState <- R6::R6Class( # nolint
       private$selected <- reactiveVal(NULL)
       private$na_count <- sum(is.na(x))
       private$keep_na <- reactiveVal(FALSE)
-
       logger::log_trace(
         sprintf(
           "Instantiated %s with variable %s, dataname: %s",
           class(self)[1],
           deparse1(varname),
-          private$dataname
+          deparse1(private$dataname)
         )
       )
       invisible(self)
@@ -309,7 +308,7 @@ FilterState <- R6::R6Class( # nolint
           "%s$set_selected setting selection of variable %s, dataname: %s.",
           class(self)[1],
           deparse1(self$get_varname()),
-          private$dataname
+          deparse1(private$dataname)
         )
       )
       value <- private$cast_and_validate(value)
@@ -320,7 +319,7 @@ FilterState <- R6::R6Class( # nolint
         "%s$set_selected selection of variable %s set, dataname: %s",
         class(self)[1],
         deparse1(self$get_varname()),
-        private$dataname
+        deparse1(private$dataname)
       ))
       invisible(NULL)
     },
@@ -341,7 +340,7 @@ FilterState <- R6::R6Class( # nolint
       logger::log_trace(sprintf(
         "%s$set_state, dataname: %s setting state of variable %s to: selected=%s, keep_na=%s",
         class(self)[1],
-        private$dataname,
+        deparse1(private$dataname),
         deparse1(self$get_varname()),
         paste(state$selected, collapse = " "),
         state$keep_na
@@ -357,7 +356,7 @@ FilterState <- R6::R6Class( # nolint
         sprintf(
           "%s$set_state, dataname: %s done setting state for variable %s",
           class(self)[1],
-          private$dataname,
+          deparse1(private$dataname),
           deparse1(self$get_varname())
         )
       )
@@ -596,7 +595,7 @@ FilterState <- R6::R6Class( # nolint
                 class(self)[1],
                 deparse1(self$get_varname()),
                 deparse1(input$value),
-                private$dataname
+                deparse1(private$dataname)
               )
             )
           }
