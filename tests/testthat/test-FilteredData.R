@@ -451,7 +451,11 @@ testthat::test_that("get_filter_overview accepts single dataset argument input",
 
 testthat::test_that("get_filter_overview throws error with empty argument input", {
   datasets <- get_filtered_data_object()
-  testthat::expect_error(shiny::isolate(datasets$get_filter_overview()), "argument \"datanames\" is missing, with no default")
+  testthat::expect_error(
+    shiny::isolate(
+      datasets$get_filter_overview()),
+    "argument \"datanames\" is missing, with no default"
+  )
 })
 
 testthat::test_that("get_filter_overview throws error with wrong argument input", {
