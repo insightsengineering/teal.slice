@@ -48,29 +48,6 @@ DFFilterStates <- R6::R6Class( # nolint
       )
     },
 
-    get_keys = function() {
-      private$keys
-    },
-
-    #' @description
-    #' Get label of specific variable. If variable label is missing, variable name is returned.
-    #'
-    #' @para variable (`character`)\cr
-    #'   name of variable for which label should be returned
-    #'
-    #' @return `character`
-    get_varlabels = function(variables = character(0)) {
-      checkmate::assert_character(variables)
-      if (identical(variables, character(0))) {
-        private$varlabels
-      } else {
-        varlabels <- private$varlabels[variables]
-        missing_labels <- is.na(varlabels) | varlabels == ""
-        varlabels[missing_labels] <- variables[missing_labels]
-        varlabels
-      }
-    },
-
     #' @description
     #' Returns a formatted string representing this `FilterStates` object.
     #'
@@ -97,6 +74,53 @@ DFFilterStates <- R6::R6Class( # nolint
     #' @return `character(1)`
     get_fun = function() {
       return("dplyr::filter")
+    },
+
+    #' @description
+    #' Shiny server module.
+    #'
+    #' @param id (`character(1)`)\cr
+    #'   shiny module instance id
+    #'
+    #' @return `moduleServer` function which returns `NULL`
+    #'
+    server = function(id) {
+      moduleServer(
+        id = id,
+        function(input, output, session) {
+          previous_state <- reactiveVal(character(0))
+          added_state_name <- reactiveVal(character(0))
+          removed_state_name <- reactiveVal(character(0))
+
+          observeEvent(self$state_list_get(1L), {
+            added_state_name(setdiff(names(self$state_list_get(1L)), names(previous_state())))
+            removed_state_name(setdiff(names(previous_state()), names(self$state_list_get(1L))))
+            previous_state(self$state_list_get(1L))
+          })
+
+          observeEvent(added_state_name(), ignoreNULL = TRUE, {
+            fstates <- self$state_list_get(1L)
+            html_ids <- private$map_vars_to_html_ids(names(fstates))
+            for (fname in added_state_name()) {
+              private$insert_filter_state_ui(
+                id = html_ids[fname],
+                filter_state = fstates[[fname]],
+                state_list_index = 1L,
+                state_id = fname
+              )
+            }
+            added_state_name(character(0))
+          })
+
+          observeEvent(removed_state_name(), ignoreNULL = TRUE, {
+            for (fname in removed_state_name()) {
+              private$remove_filter_state_ui(1L, fname, .input = input)
+            }
+            removed_state_name(character(0))
+          })
+          NULL
+        }
+      )
     },
 
     #' @description
@@ -180,7 +204,7 @@ DFFilterStates <- R6::R6Class( # nolint
             x = data[[varname]],
             x_reactive = reactive(data_reactive()[[varname]]),
             varname = as.name(varname),
-            varlabel = self$get_varlabels(varname),
+            varlabel = private$get_varlabels(varname),
             input_dataname = private$input_dataname
           )
           fstate$set_state(value)
@@ -251,12 +275,157 @@ DFFilterStates <- R6::R6Class( # nolint
       supported_vars <- get_supported_filter_varnames(private$data)
       private$filterable_varnames <- intersect(varnames, supported_vars)
       return(invisible(self))
+    },
+
+    #' @description
+    #' Shiny UI module to add filter variable.
+    #'
+    #' @param id (`character(1)`)\cr
+    #'  id of shiny module
+    #' @param data (`data.frame`)\cr
+    #'  object which columns are used to choose filter variables.
+    #' @return shiny.tag
+    ui_add_filter_state = function(id, data) {
+      checkmate::assert_string(id)
+      data <- private$data
+
+      ns <- NS(id)
+
+      if (ncol(data) == 0) {
+        div("no sample variables available")
+      } else if (nrow(data) == 0) {
+        div("no samples available")
+      } else {
+        div(
+          teal.widgets::optionalSelectInput(
+            ns("var_to_add"),
+            choices = NULL,
+            options = shinyWidgets::pickerOptions(
+              liveSearch = TRUE,
+              noneSelectedText = "Select variable to filter"
+            )
+          )
+        )
+      }
+    },
+
+    #' @description
+    #' Shiny server module to add filter variable.
+    #'
+    #' This module controls available choices to select as a filter variable.
+    #' Once selected, a variable is removed from available choices.
+    #' Removing a filter variable adds it back to available choices.
+    #'
+    #' @param id (`character(1)`)\cr
+    #'   an ID string that corresponds with the ID used to call the module's UI function.
+    #'
+    #' @return `moduleServer` function which returns `NULL`
+    srv_add_filter_state = function(id) {
+      moduleServer(
+        id = id,
+        function(input, output, session) {
+          data <- private$data
+          data_reactive <- private$data_reactive
+          vars_include <- private$filterable_varnames
+          logger::log_trace(
+            "DFFilterStates$srv_add_filter_state initializing, dataname: { deparse1(private$input_dataname) }"
+          )
+          active_filter_vars <- reactive({
+            vapply(
+              X = self$state_list_get(state_list_index = 1L),
+              FUN.VALUE = character(1),
+              FUN = function(x) x$get_varname(deparse = TRUE)
+            )
+          })
+
+          # available choices to display
+          avail_column_choices <- reactive({
+            choices <- setdiff(vars_include, active_filter_vars())
+
+            data_choices_labeled(
+              data = data,
+              choices = choices,
+              varlabels = private$get_varlabels(choices),
+              keys = private$keys
+            )
+          })
+          observeEvent(
+            avail_column_choices(),
+            ignoreNULL = TRUE,
+            handlerExpr = {
+              logger::log_trace(paste(
+                "DFFilterStates$srv_add_filter_state@1 updating available column choices,",
+                "dataname: { deparse1(private$input_dataname) }"
+              ))
+              if (is.null(avail_column_choices())) {
+                shinyjs::hide("var_to_add")
+              } else {
+                shinyjs::show("var_to_add")
+              }
+              teal.widgets::updateOptionalSelectInput(
+                session,
+                "var_to_add",
+                choices = avail_column_choices()
+              )
+              logger::log_trace(paste(
+                "DFFilterStates$srv_add_filter_state@1 updated available column choices,",
+                "dataname: { deparse1(private$input_dataname) }"
+              ))
+            }
+          )
+
+          observeEvent(
+            eventExpr = input$var_to_add,
+            handlerExpr = {
+              logger::log_trace(
+                sprintf(
+                  "DFFilterStates$srv_add_filter_state@2 adding FilterState of variable %s, dataname: %s",
+                  input$var_to_add,
+                  deparse1(private$input_dataname)
+                )
+              )
+              varname <- input$var_to_add
+              self$set_filter_state(state = setNames(list(list()), varname))
+              logger::log_trace(
+                sprintf(
+                  "DFFilterStates$srv_add_filter_state@2 added FilterState of variable %s, dataname: %s",
+                  varname,
+                  deparse1(private$input_dataname)
+                )
+              )
+            }
+          )
+
+          logger::log_trace(
+            "DFFilterStates$srv_add_filter_state initialized, dataname: { deparse1(private$input_dataname) }"
+          )
+          NULL
+        }
+      )
     }
   ),
 
   # private members ----
   private = list(
     varlabels = character(0),
-    keys = character(0)
+    keys = character(0),
+    # @description
+    # Get label of specific variable. If variable label is missing, variable name is returned.
+    #
+    # @para variable (`character`)\cr
+    #   name of variable for which label should be returned
+    #
+    # @return `character`
+    get_varlabels = function(variables = character(0)) {
+      checkmate::assert_character(variables)
+      if (identical(variables, character(0))) {
+        private$varlabels
+      } else {
+        varlabels <- private$varlabels[variables]
+        missing_labels <- is.na(varlabels) | varlabels == ""
+        varlabels[missing_labels] <- variables[missing_labels]
+        varlabels
+      }
+    }
   )
 )

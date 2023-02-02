@@ -106,6 +106,23 @@ FilterPanelAPI <- R6::R6Class( # nolint
         warning(private$deactivated_msg)
       }
       invisible(NULL)
+    },
+    #' @description
+    #' Toggle the state of the global Filter Panel button by running `javascript` code
+    #' to click the toggle button with the `filter_panel_active` id suffix.
+    #' The button id is prefixed with the Filter Panel shiny namespace.
+    #' This button is observed in `srv_filter_panel` method that executes
+    #' `filter_panel_enable()` or `filter_panel_disable()` method depending on the toggle state.
+    #'
+    #' @return `NULL`
+    filter_panel_toggle = function() {
+      shinyjs::runjs(
+        sprintf(
+          '$("#%s-filter_turn_onoff").click();',
+          private$filtered_data$get_filter_panel_ui_id()
+        )
+      )
+      invisible(NULL)
     }
   ),
   ## __Private Methods ====

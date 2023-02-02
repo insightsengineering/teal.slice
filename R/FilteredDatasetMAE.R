@@ -242,6 +242,80 @@ MAEFilteredDataset <- R6::R6Class( # nolint
     },
 
     #' @description
+    #' UI module to add filter variable for this dataset
+    #'
+    #' UI module to add filter variable for this dataset
+    #' @param id (`character(1)`)\cr
+    #'  identifier of the element - preferably containing dataset name
+    #'
+    #' @return function - shiny UI module
+    #'
+    ui_add_filter_state = function(id) {
+      ns <- NS(id)
+      data <- self$get_dataset()
+      experiment_names <- names(data)
+
+      div(
+        tags$label("Add", tags$code(self$get_dataname()), "filter"),
+        br(),
+        HTML("&#9658;"),
+        tags$label("Add subjects filter"),
+        self$get_filter_states("subjects")$ui_add_filter_state(id = ns("subjects")),
+        tagList(
+          lapply(
+            experiment_names,
+            function(experiment_name) {
+              tagList(
+                HTML("&#9658;"),
+                tags$label("Add", tags$code(experiment_name), "filter"),
+                self$get_filter_states(experiment_name)$ui_add_filter_state(id = ns(experiment_name))
+              )
+            }
+          )
+        )
+      )
+    },
+
+    #' @description
+    #' Server module to add filter variable for this dataset
+    #'
+    #' Server module to add filter variable for this dataset.
+    #' For this class `srv_add_filter_state` calls multiple modules
+    #' of the same name from `FilterStates` as `MAEFilteredDataset`
+    #' contains one `FilterStates` object for `colData` and one for each
+    #' experiment.
+    #'
+    #' @param id (`character(1)`)\cr
+    #'   an ID string that corresponds with the ID used to call the module's UI function.
+    #'
+    #' @return `moduleServer` function which returns `NULL`
+    #'
+    srv_add_filter_state = function(id) {
+      moduleServer(
+        id = id,
+        function(input, output, session) {
+          logger::log_trace(paste(
+            "MAEFilteredDataset$srv_add_filter_state initializing,",
+            "dataname: { deparse1(self$get_dataname()) }"
+          ))
+          self$get_filter_states("subjects")$srv_add_filter_state(id = "subjects")
+          experiment_names <- names(self$get_dataset())
+          lapply(
+            experiment_names,
+            function(experiment_name) {
+              self$get_filter_states(experiment_name)$srv_add_filter_state(experiment_name)
+            }
+          )
+          logger::log_trace(paste(
+            "MAEFilteredDataset$srv_add_filter_state initialized,",
+            "dataname: { deparse1(self$get_dataname()) }"
+          ))
+          NULL
+        }
+      )
+    },
+
+    #' @description
     #' Gets filter overview subjects number
     #' @return `list` with the number of subjects of filtered/non-filtered datasets.
     get_filter_overview_nsubjs = function() {

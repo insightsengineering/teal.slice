@@ -69,6 +69,51 @@ MAEFilterStates <- R6::R6Class( # nolint
     },
 
     #' @description
+    #' Server module
+    #' @param id (`character(1)`)\cr
+    #'   an ID string that corresponds with the ID used to call the module's UI function.
+    #' @return `moduleServer` function which returns `NULL`
+    server = function(id) {
+      moduleServer(
+        id = id,
+        function(input, output, session) {
+          previous_state <- reactiveVal(isolate(self$state_list_get("y")))
+          added_state_name <- reactiveVal(character(0))
+          removed_state_name <- reactiveVal(character(0))
+
+          observeEvent(self$state_list_get("y"), {
+            added_state_name(setdiff(names(self$state_list_get("y")), names(previous_state())))
+            removed_state_name(setdiff(names(previous_state()), names(self$state_list_get("y"))))
+
+            previous_state(self$state_list_get("y"))
+          })
+
+          observeEvent(added_state_name(), ignoreNULL = TRUE, {
+            fstates <- self$state_list_get("y")
+            html_ids <- private$map_vars_to_html_ids(names(fstates))
+            for (fname in added_state_name()) {
+              private$insert_filter_state_ui(
+                id = html_ids[fname],
+                filter_state = fstates[[fname]],
+                "y",
+                state_id = fname
+              )
+            }
+            added_state_name(character(0))
+          })
+
+          observeEvent(removed_state_name(), ignoreNULL = TRUE, {
+            for (fname in removed_state_name()) {
+              private$remove_filter_state_ui("y", fname, .input = input)
+            }
+            removed_state_name(character(0))
+          })
+          NULL
+        }
+      )
+    },
+
+    #' @description
     #' Returns active `FilterState` objects.
     #'
     #' Gets all active filters from this dataset in form of the nested list.
@@ -109,7 +154,7 @@ MAEFilterStates <- R6::R6Class( # nolint
             x = SummarizedExperiment::colData(data)[[varname]],
             x_reactive = reactive(SummarizedExperiment::colData(data_reactive())[[varname]]),
             varname = as.name(varname),
-            varlabel = self$get_varlabels(varname),
+            varlabel = private$get_varlabels(varname),
             input_dataname = private$input_dataname,
             extract_type = "list"
           )
@@ -167,7 +212,133 @@ MAEFilterStates <- R6::R6Class( # nolint
         )
       }
     },
-        #' description
+
+    #' @description
+    #' Shiny UI module to add filter variable
+    #' @param id (`character(1)`)\cr
+    #'  id of shiny module
+    #' @return shiny.tag
+    ui_add_filter_state = function(id) {
+      data <- private$data
+      checkmate::assert_string(id)
+
+      ns <- NS(id)
+
+      if (ncol(SummarizedExperiment::colData(data)) == 0) {
+        div("no sample variables available")
+      } else if (nrow(SummarizedExperiment::colData(data)) == 0) {
+        div("no samples available")
+      } else {
+        teal.widgets::optionalSelectInput(
+          ns("var_to_add"),
+          choices = NULL,
+          options = shinyWidgets::pickerOptions(
+            liveSearch = TRUE,
+            noneSelectedText = "Select subject variable"
+          )
+        )
+      }
+    },
+
+    #' @description
+    #' Shiny server module to add filter variable.
+    #'
+    #' Module controls available choices to select as a filter variable.
+    #' Selected filter variable is being removed from available choices.
+    #' Removed filter variable gets back to available choices.
+    #'
+    #' @param id (`character(1)`)\cr
+    #'   an ID string that corresponds with the ID used to call the module's UI function.
+    #' @return `moduleServer` function which returns `NULL`
+    srv_add_filter_state = function(id) {
+      data <- private$data
+      data_reactive <- private$data_reactive
+      moduleServer(
+        id = id,
+        function(input, output, session) {
+          logger::log_trace(
+            "MAEFilterState$srv_add_filter_state initializing, dataname: { deparse1(private$input_dataname) }"
+          )
+          active_filter_vars <- reactive({
+            vapply(
+              X = self$state_list_get("y"),
+              FUN.VALUE = character(1),
+              FUN = function(x) x$get_varname(deparse = TRUE)
+            )
+          })
+
+          # available choices to display
+          avail_column_choices <- reactive({
+            choices <- setdiff(
+              get_supported_filter_varnames(data = SummarizedExperiment::colData(data)),
+              active_filter_vars()
+            )
+            data_choices_labeled(
+              data = SummarizedExperiment::colData(data),
+              choices = choices,
+              varlabels = private$get_varlabels(choices),
+              keys = private$keys
+            )
+          })
+          observeEvent(
+            avail_column_choices(),
+            ignoreNULL = TRUE,
+            handlerExpr = {
+              logger::log_trace(paste(
+                "MAEFilterStates$srv_add_filter_state@1 updating available column choices,",
+                "dataname: { deparse1(private$input_dataname) }"
+              ))
+              if (is.null(avail_column_choices())) {
+                shinyjs::hide("var_to_add")
+              } else {
+                shinyjs::show("var_to_add")
+              }
+              teal.widgets::updateOptionalSelectInput(
+                session,
+                "var_to_add",
+                choices = avail_column_choices()
+              )
+              logger::log_trace(paste(
+                "MAEFilterStates$srv_add_filter_state@1 updated available column choices,",
+                "dataname: { deparse1(private$input_dataname) }"
+              ))
+            }
+          )
+
+          observeEvent(
+            eventExpr = input$var_to_add,
+            handlerExpr = {
+              logger::log_trace(
+                sprintf(
+                  "MAEFilterStates$srv_add_filter_state@2 adding FilterState of variable %s, dataname: %s",
+                  deparse1(input$var_to_add),
+                  deparse1(private$input_dataname)
+                )
+              )
+              varname <- input$var_to_add
+              self$set_filter_state(setNames(list(list()), varname))
+              logger::log_trace(
+                sprintf(
+                  "MAEFilterStates$srv_add_filter_state@2 added FilterState of variable %s, dataname: %s",
+                  deparse1(varname),
+                  deparse1(private$input_dataname)
+                )
+              )
+            }
+          )
+
+          logger::log_trace(
+            "MAEFilterState$srv_add_filter_state initialized, dataname: { deparse1(private$input_dataname) }"
+          )
+          NULL
+        }
+      )
+    }
+  ),
+  private = list(
+    varlabels = character(0),
+    keys = character(0),
+    #' description
     #' Get label of specific variable. In case when variable label is missing
     #' name of the variable is returned.
     #' parameter variable (`character`)\cr
@@ -184,9 +355,5 @@ MAEFilterStates <- R6::R6Class( # nolint
         varlabels
       }
     }
-  ),
-  private = list(
-    varlabels = character(0),
-    keys = character(0)
   )
 )
