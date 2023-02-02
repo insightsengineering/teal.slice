@@ -621,21 +621,6 @@ testthat::test_that("turn filed by default equal to TRUE", {
   testthat::expect_true(filtered_data$get_filter_panel_active())
 })
 
-testthat::test_that("get_filter_panel_ui_id - empty when no shiny session", {
-  filtered_data <- FilteredData$new(data_objects = list("iris" = list(dataset = iris)), join_keys = NULL)
-  testthat::expect_length(filtered_data$get_filter_panel_ui_id(), 0)
-})
-
-testthat::test_that("get_filter_panel_ui_id - non-empty when in shiny session", {
-  filtered_data <- FilteredData$new(data_objects = list("iris" = list(dataset = iris)), join_keys = NULL)
-  shiny::testServer(
-    filtered_data$srv_filter_panel,
-    expr = {
-      testthat::expect_length(filtered_data$get_filter_panel_ui_id(), 1)
-    }
-  )
-})
-
 testthat::test_that(
   "FilteredData$get_active_filters properly tallies active filter states",
   code = {

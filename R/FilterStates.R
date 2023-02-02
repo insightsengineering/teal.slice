@@ -199,6 +199,18 @@ FilterStates <- R6::R6Class( # nolint
       }
     },
 
+    get_dataname = function() {
+      private$input_dataname
+    },
+
+    get_data = function(reactive = FALSE) {
+      if (reactive) {
+        private$data_reactive
+      } else {
+        private$data
+      }
+    },
+
     #' @description
     #' Prints this `FilterStates` object.
     #'
@@ -352,32 +364,6 @@ FilterStates <- R6::R6Class( # nolint
       stop("This variable can not be removed from the filter.")
     },
 
-    # shiny modules ----
-
-    #' @description
-    #' Shiny module UI
-    #'
-    #' Shiny UI element that stores `FilterState` UI elements.
-    #' Populated with elements created with `renderUI` in the module server.
-    #'
-    #' @param id (`character(1)`)\cr
-    #'   shiny element (module instance) id
-    #'
-    #' @return `shiny.tag`
-    #'
-    ui = function(id) {
-      ns <- NS(id)
-      private$cards_container_id <- ns("cards")
-      tagList(
-        include_css_files(pattern = "filter-panel"),
-        tags$div(
-          id = private$cards_container_id,
-          class = "list-group hideable-list-group",
-          `data-label` = ifelse(private$datalabel == "", "", (paste0("> ", private$datalabel)))
-        )
-      )
-    },
-
     #' @description
     #' Gets reactive values from active `FilterState` objects.
     #'
@@ -418,42 +404,13 @@ FilterStates <- R6::R6Class( # nolint
       return(invisible(self))
     },
 
-    #' @description
-    #' Shiny module UI that adds a filter variable.
-    #'
-    #' @param id (`character(1)`)\cr
-    #'   shiny element (module instance) id
-    #'
-    #' @param data (`data.frame`, `MultiAssayExperiment`, `SummarizedExperiment`, `matrix`)
-    #'   object which columns are used to choose filter variables.
-    #' @return `shiny.tag`
-    #'
-    ui_add_filter_state = function(id, data) {
-      div("This object cannot be filtered")
-    },
-
-    #' @description
-    #' Shiny module server that adds a filter variable.
-    #'
-    #' @param id (`character(1)`)\cr
-    #'   shiny module instance id
-    #'
-    #' @return `moduleServer` function which returns `NULL`
-    #'
-    srv_add_filter_state = function(id) {
-      moduleServer(
-        id = id,
-        function(input, output, session) {
-          NULL
-        }
-      )
+    get_filterable_varnames = function() {
+      private$filterable_varnames
     }
   ),
 
   private = list(
     # private fields ----
-    cards_container_id = character(0),
-    card_ids = character(0),
     data = NULL, # data.frame, MAE, SE or matrix
     data_reactive = NULL, # reactive
     datalabel = character(0),
@@ -466,129 +423,6 @@ FilterStates <- R6::R6Class( # nolint
 
     # private methods ----
 
-    # Module to insert/remove `FilterState` UI
-    #
-    # This module adds the shiny UI of the `FilterState` object newly added
-    # to state_list to the Active Filter Variables,
-    # calls `FilterState` modules and creates an observer to remove state
-    # parameter filter_state (`FilterState`).
-    #
-    # @param id (`character(1)`)\cr
-    #   shiny module instance id
-    # @param filter_state (`named list`)\cr
-    #   should contain values of initial selections in the `FilterState`;
-    #   `list` names must correspond to column names in `data`
-    # @param state_list_index (`character(1)`, `integer(1)`)\cr
-    #   index on the list in `private$state_list` where filter states are kept
-    # @param state_id (`character(1)`)\cr
-    #   name of element in a filter state (which is a `reactiveVal` containing a list)
-    #
-    # @return `moduleServer` function which returns `NULL`
-    #
-    insert_filter_state_ui = function(id, filter_state, state_list_index, state_id) {
-      checkmate::assert_class(filter_state, "FilterState")
-      checkmate::assert(
-        checkmate::check_int(state_list_index),
-        checkmate::check_character(state_list_index, len = 1),
-        combine = "or"
-      )
-      checkmate::assert_character(state_id, len = 1)
-      moduleServer(
-        id = id,
-        function(input, output, session) {
-          logger::log_trace(
-            sprintf(
-              "%s$insert_filter_state_ui, adding FilterState UI of variable %s, dataname: %s",
-              class(self)[1],
-              state_id,
-              deparse1(private$input_dataname)
-            )
-          )
-
-          # card_id of inserted card must be saved in private$card_ids as
-          # it might be removed by the several events:
-          #   - remove button in FilterStates module
-          #   - remove button in FilteredDataset module
-          #   - remove button in FilteredData module
-          #   - API call remove_filter_state
-          card_id <- session$ns("card")
-          state_list_id <- sprintf("%s-%s", state_list_index, state_id)
-          private$card_ids[state_list_id] <- card_id
-
-          insertUI(
-            selector = sprintf("#%s", private$cards_container_id),
-            where = "beforeEnd",
-            # add span with id to be removable
-            ui = div(
-              id = card_id,
-              class = "list-group-item",
-              filter_state$ui(session$ns("content"))
-            )
-          )
-          # signal sent from filter_state when it is marked for removal
-          remove_fs <- filter_state$server(id = "content")
-
-          private$observers[[state_list_id]] <- observeEvent(
-            ignoreInit = TRUE,
-            ignoreNULL = TRUE,
-            eventExpr = remove_fs(),
-            handlerExpr = {
-              logger::log_trace(paste(
-                "{ class(self)[1] }$insert_filter_state_ui@1",
-                "removing FilterState from state_list '{ state_list_index }',",
-                "dataname: { deparse1(private$input_dataname) }"
-              ))
-              self$state_list_remove(state_list_index, state_id)
-              logger::log_trace(paste(
-                "{ class(self)[1] }$insert_filter_state_ui@1",
-                "removed FilterState from state_list '{ state_list_index }',",
-                "dataname: { deparse1(private$input_dataname) }"
-              ))
-            }
-          )
-
-          logger::log_trace(
-            sprintf(
-              "%s$insert_filter_state_ui, added FilterState UI of variable %s, dataname: %s",
-              class(self)[1],
-              state_id,
-              deparse1(private$input_dataname)
-            )
-          )
-          NULL
-        }
-      )
-    },
-
-    # Remove shiny element. Method can be called from reactive session where
-    # `observeEvent` for remove-filter-state is set and also from `FilteredDataset`
-    # level, where shiny-session-namespace is different. That is why it's important
-    # to remove shiny elements from anywhere. In `add_filter_state` `session$ns(NULL)`
-    # is equivalent to `private$ns(state_list_index)`.
-    # In addition, an unused reactive is being removed from input:
-    # method searches input for the unique matches with the filter name
-    # and then removes objects constructed with current card id + filter name.
-    #
-    remove_filter_state_ui = function(state_list_index, state_id, .input) {
-      state_list_id <- sprintf("%s-%s", state_list_index, state_id)
-      removeUI(selector = sprintf("#%s", private$card_ids[state_list_id]))
-      private$card_ids <- private$card_ids[names(private$card_ids) != state_list_id]
-      if (length(private$observers[[state_list_id]]) > 0) {
-        private$observers[[state_list_id]]$destroy()
-        private$observers[[state_list_id]] <- NULL
-      }
-      # Remove unused reactive from shiny input (leftover of removeUI).
-      # This default behavior may change in the future, making this part obsolete.
-      prefix <- paste0(gsub("cards$", "", private$cards_container_id))
-      invisible(
-        lapply(
-          unique(grep(state_id, names(.input), value = TRUE)),
-          function(i) {
-            .subset2(.input, "impl")$.values$remove(paste0(prefix, i))
-          }
-        )
-      )
-    },
     # Checks if the state_list of the given index was initialized in this `FilterStates`
     # @param state_list_index (character or integer)
     validate_state_list_exists = function(state_list_index) {
@@ -612,19 +446,6 @@ FilterStates <- R6::R6Class( # nolint
           )
         )
       }
-    },
-
-    # Maps the array of strings to sanitized unique HTML ids.
-    # @param keys `character` the array of strings
-    # @param prefix `character(1)` text to prefix id. Needed in case of multiple
-    #  state_list objects where keys (variables) might be duplicated across state_lists
-    # @return `list` the mapping
-    map_vars_to_html_ids = function(keys, prefix = "") {
-      checkmate::assert_character(keys, null.ok = TRUE)
-      checkmate::assert_character(prefix, len = 1)
-      sanitized_values <- make.unique(gsub("[^[:alnum:]]", perl = TRUE, replacement = "", x = keys))
-      sanitized_values <- paste(prefix, "var", sanitized_values, sep = "_")
-      stats::setNames(object = sanitized_values, nm = keys)
     }
   )
 )
