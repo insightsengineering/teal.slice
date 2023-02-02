@@ -223,7 +223,7 @@ LogicalFilterState <- R6::R6Class( # nolint
                 logger::log_trace(sprintf(
                   "LogicalFilterState$server@1 selection of variable %s changed, dataname: %s",
                   deparse1(self$get_varname()),
-                  deparse1(private$dataname)
+                  private$dataname
                 ))
               }
             }
@@ -243,7 +243,7 @@ LogicalFilterState <- R6::R6Class( # nolint
                 sprintf(
                   "LogicalFilterState$server@2 selection of variable %s changed, dataname: %s",
                   deparse1(self$get_varname()),
-                  deparse1(private$dataname)
+                  private$dataname
                 )
               )
             }
@@ -251,7 +251,7 @@ LogicalFilterState <- R6::R6Class( # nolint
 
           private$keep_na_srv("keep_na")
 
-          logger::log_trace("LogicalFilterState$server initialized, dataname: { deparse1(private$dataname) }")
+          logger::log_trace("LogicalFilterState$server initialized, dataname: { private$dataname }")
           NULL
         }
       )

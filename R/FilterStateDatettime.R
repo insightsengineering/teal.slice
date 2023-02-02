@@ -262,7 +262,7 @@ DatetimeFilterState <- R6::R6Class( # nolint
       moduleServer(
         id = id,
         function(input, output, session) {
-          logger::log_trace("DatetimeFilterState$server initializing, dataname: { deparse1(private$dataname) }")
+          logger::log_trace("DatetimeFilterState$server initializing, dataname: { private$dataname }")
 
           # this observer is needed in the situation when private$selected has been
           # changed directly by the api - then it's needed to rerender UI element
@@ -292,7 +292,7 @@ DatetimeFilterState <- R6::R6Class( # nolint
                 logger::log_trace(sprintf(
                   "DatetimeFilterState$server@1 selection of variable %s changed, dataname: %s",
                   deparse1(self$get_varname()),
-                  deparse1(private$dataname)
+                  private$dataname
                 ))
               }
             }
@@ -323,7 +323,7 @@ DatetimeFilterState <- R6::R6Class( # nolint
               logger::log_trace(sprintf(
                 "DatetimeFilterState$server@2 selection of variable %s changed, dataname: %s",
                 deparse1(self$get_varname()),
-                deparse1(private$dataname)
+                private$dataname
               ))
             }
           )
@@ -343,7 +343,7 @@ DatetimeFilterState <- R6::R6Class( # nolint
               logger::log_trace(sprintf(
                 "DatetimeFilterState$server@2 reset start date of variable %s, dataname: %s",
                 deparse1(self$get_varname()),
-                deparse1(private$dataname)
+                private$dataname
               ))
             }
           )
@@ -360,11 +360,11 @@ DatetimeFilterState <- R6::R6Class( # nolint
               logger::log_trace(sprintf(
                 "DatetimeFilterState$server@3 reset end date of variable %s, dataname: %s",
                 deparse1(self$get_varname()),
-                deparse1(private$dataname)
+                private$dataname
               ))
             }
           )
-          logger::log_trace("DatetimeFilterState$server initialized, dataname: { deparse1(private$dataname) }")
+          logger::log_trace("DatetimeFilterState$server initialized, dataname: { private$dataname }")
           NULL
         }
       )

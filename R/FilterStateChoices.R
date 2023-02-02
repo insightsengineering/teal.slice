@@ -259,7 +259,7 @@ ChoicesFilterState <- R6::R6Class( # nolint
                 logger::log_trace(sprintf(
                   "ChoicesFilterState$server@1 selection of variable %s changed, dataname: %s",
                   deparse1(self$get_varname()),
-                  deparse1(private$dataname)
+                  private$dataname
                 ))
               }
             }
@@ -275,13 +275,13 @@ ChoicesFilterState <- R6::R6Class( # nolint
               logger::log_trace(sprintf(
                 "ChoicesFilterState$server@2 selection of variable %s changed, dataname: %s",
                 deparse1(self$get_varname()),
-                deparse1(private$dataname)
+                private$dataname
               ))
             }
           )
           private$keep_na_srv("keep_na")
 
-          logger::log_trace("ChoicesFilterState$server initialized, dataname: { deparse1(private$dataname) }")
+          logger::log_trace("ChoicesFilterState$server initialized, dataname: { private$dataname }")
           NULL
         }
       )

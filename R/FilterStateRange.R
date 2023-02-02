@@ -156,7 +156,7 @@ RangeFilterState <- R6::R6Class( # nolint
           class(self)[1],
           deparse1(self$get_varname()),
           value,
-          deparse1(private$dataname)
+          private$dataname
         )
       )
     },
@@ -346,7 +346,7 @@ RangeFilterState <- R6::R6Class( # nolint
       moduleServer(
         id = id,
         function(input, output, session) {
-          logger::log_trace("RangeFilterState$server initializing, dataname: { deparse1(private$dataname) }")
+          logger::log_trace("RangeFilterState$server initializing, dataname: { private$dataname }")
 
           output$plot <- renderPlot(
             bg = "transparent",
@@ -403,7 +403,7 @@ RangeFilterState <- R6::R6Class( # nolint
                 sprintf(
                   "RangeFilterState$server@3 selection of variable %s changed, dataname: %s",
                   deparse1(self$get_varname()),
-                  deparse1(private$dataname)
+                  private$dataname
                 )
               )
             }
@@ -412,7 +412,7 @@ RangeFilterState <- R6::R6Class( # nolint
           private$keep_inf_srv("keep_inf")
           private$keep_na_srv("keep_na")
 
-          logger::log_trace("RangeFilterState$server initialized, dataname: { deparse1(private$dataname) }")
+          logger::log_trace("RangeFilterState$server initialized, dataname: { private$dataname }")
           NULL
         }
       )
@@ -473,7 +473,7 @@ RangeFilterState <- R6::R6Class( # nolint
                 class(self)[1],
                 deparse1(self$get_varname()),
                 deparse1(input$value),
-                deparse1(private$dataname)
+                private$dataname
               )
             )
           }
