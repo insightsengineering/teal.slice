@@ -100,7 +100,7 @@ name of the variable}
 \item{\code{varlabel}}{(\code{character(1)})\cr
 label of the variable (optional).}
 
-\item{\code{dataname}}{(\code{name} or \code{call})\cr
+\item{\code{dataname}}{(\code{character(1)})\cr
 name of dataset where \code{x} is taken from. Must be specified if \code{extract_type} argument
 is not empty.}
 

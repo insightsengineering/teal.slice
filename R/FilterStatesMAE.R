@@ -11,7 +11,7 @@ MAEFilterStates <- R6::R6Class( # nolint
     #'
     #' Initialize `MAEFilterStates` object
     #'
-    #' @param dataname (`character(1)`)\cr
+    #' @param dataname (`name` or `call`)\cr
     #'   name of the data used in the expression
     #'   specified to the function argument attached to this `FilterStates`.
     #'

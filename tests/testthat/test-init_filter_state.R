@@ -40,10 +40,10 @@ testthat::test_that("init_filter_state accepts character as extract_type", {
   )
 
   testthat::expect_no_error(
-    init_filter_state(7, varname = "test", dataname = as.name("test"), extract_type = "list")
+    init_filter_state(7, varname = "test", dataname = "test", extract_type = "list")
   )
   testthat::expect_no_error(
-    init_filter_state(7, varname = "test", dataname = as.name("test"), extract_type = "matrix")
+    init_filter_state(7, varname = "test", dataname = "test", extract_type = "matrix")
   )
 })
 

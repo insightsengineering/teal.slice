@@ -30,7 +30,7 @@ filter_state <- teal.slice:::RangeFilterState$new(
   c(NA, Inf, seq(1:10)),
   varname = "x",
   varlabel = "x variable",
-  dataname = as.name("data"),
+  dataname = "data",
   extract_type = "list"
 )
 isolate(filter_state$set_selected(c(3L, 8L)))

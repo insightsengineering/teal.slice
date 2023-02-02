@@ -22,7 +22,7 @@ testthat::test_that("get_call returns a call filtering a matrix with numeric val
   filter_state <- RangeFilterState$new(
     x = test,
     varname = "a",
-    dataname = as.name("test"),
+    dataname = "test",
     extract_type = "matrix"
   )
   shiny::isolate(filter_state$set_selected(c(1, 3)))

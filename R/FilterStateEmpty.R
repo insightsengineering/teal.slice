@@ -13,7 +13,7 @@
 #' filter_state <- teal.slice:::EmptyFilterState$new(
 #'   NA,
 #'   varname = "x",
-#'   dataname = as.name("data"),
+#'   dataname = "data",
 #'   extract_type = character(0)
 #' )
 #' isolate(filter_state$get_call())
@@ -36,8 +36,8 @@ EmptyFilterState <- R6::R6Class( # nolint
     #'   name of the variable
     #' @param varlabel (`character(1)`)\cr
     #'   label of the variable (optional).
-    #' @param dataname (`name` or `call`)\cr
-    #'   name of dataset where `x` is taken from
+    #' @param dataname (`character(1)`)\cr
+    #'   optional name of dataset where `x` is taken from
     #' @param extract_type (`character(0)`, `character(1)`)\cr
     #'   whether condition calls should be prefixed by dataname. Possible values:
     #' \itemize{

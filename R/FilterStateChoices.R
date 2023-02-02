@@ -8,7 +8,7 @@
 #' filter_state <- teal.slice:::ChoicesFilterState$new(
 #'   c(LETTERS, NA),
 #'   varname = "x",
-#'   dataname = as.name("data"),
+#'   dataname = "data",
 #'   extract_type = character(0)
 #' )
 #' isolate(filter_state$get_call())
@@ -28,8 +28,8 @@ ChoicesFilterState <- R6::R6Class( # nolint
     #'   name of the variable
     #' @param varlabel (`character(1)`)\cr
     #'   label of the variable (optional).
-    #' @param dataname (`name` or `call`)\cr
-    #'   name of dataset where `x` is taken from
+    #' @param dataname (`character(1)`)\cr
+    #'   optional name of dataset where `x` is taken from
     #' @param extract_type (`character(0)`, `character(1)`)\cr
     #' whether condition calls should be prefixed by dataname. Possible values:
     #' \itemize{
@@ -240,7 +240,7 @@ ChoicesFilterState <- R6::R6Class( # nolint
       moduleServer(
         id = id,
         function(input, output, session) {
-          logger::log_trace("ChoicesFilterState$server initializing, dataname: { deparse1(private$dataname) }")
+          logger::log_trace("ChoicesFilterState$server initializing, dataname: { private$dataname }")
 
           # this observer is needed in the situation when private$selected has been
           # changed directly by the api - then it's needed to rerender UI element

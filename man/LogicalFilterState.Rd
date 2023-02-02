@@ -20,7 +20,7 @@ making it possible to pass any object coercible to \code{logical} to this method
 filter_state <- teal.slice:::LogicalFilterState$new(
   sample(c(TRUE, FALSE, NA), 10, replace = TRUE),
   varname = "x",
-  dataname = as.name("data"),
+  dataname = "data",
   extract_type = character(0)
 )
 isolate(filter_state$get_call())
@@ -97,8 +97,8 @@ label of the variable (optional).}
 \item{\code{varlabel}}{(\code{character(1)})\cr
 label of the variable (optional).}
 
-\item{\code{dataname}}{(\code{name} or \code{call})\cr
-name of dataset where \code{x} is taken from}
+\item{\code{dataname}}{(\code{character(1)})\cr
+optional name of dataset where \code{x} is taken from}
 
 \item{\code{extract_type}}{(\code{character(0)}, \code{character(1)})\cr
 whether condition calls should be prefixed by dataname. Possible values:

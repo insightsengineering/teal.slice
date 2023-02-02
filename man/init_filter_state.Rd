@@ -22,9 +22,9 @@ name of the variable}
 \item{varlabel}{(\code{character(0)}, \code{character(1)} or \code{NULL})\cr
 label of the variable (optional).}
 
-\item{dataname}{(\code{name} or \code{call})\cr
-name of dataset where \code{x} is taken from. Must be specified if \code{extract_type} argument
-is not empty.}
+\item{dataname}{(\code{character(1)})\cr
+optional name of dataset where \code{x} is taken from. Must be specified
+if \code{extract_type} argument is not empty.}
 
 \item{extract_type}{(\code{character(0)}, \code{character(1)})\cr
 whether condition calls should be prefixed by dataname. Possible values:
@@ -45,7 +45,7 @@ filter_state <- teal.slice:::RangeFilterState$new(
   c(1:10, NA, Inf),
   varname = "x",
   varlabel = "Pretty name",
-  dataname = as.name("dataname"),
+  dataname = "dataname",
   extract_type = "matrix"
 )
 

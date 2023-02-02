@@ -24,7 +24,7 @@ testthat::test_that("MAEFilteredDataset$get_call returns a call with applying fi
   filter_state_mae <- ChoicesFilterState$new(
     x = miniACC$race,
     varname = as.name("race"),
-    dataname = as.name("miniACC"),
+    dataname = "miniACC",
     extract_type = "list"
   )
 
@@ -72,7 +72,7 @@ testthat::test_that("get_filter_overview_info returns overview matrix for MAEFil
   filter_state_mae <- ChoicesFilterState$new(
     x = c("white", NA_character_),
     varname = as.name("race"),
-    dataname = as.name("miniACC"),
+    dataname = "miniACC",
     extract_type = "list"
   )
   filter_state_mae$set_na_rm(TRUE)

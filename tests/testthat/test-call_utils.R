@@ -362,7 +362,7 @@ testthat::test_that("call_extract_array - dataname type", {
     quote(data[, , ])
   )
   testthat::expect_identical(
-    call_extract_array(dataname = as.name("data")),
+    call_extract_array(dataname = "data"),
     quote(data[, , ])
   )
   testthat::expect_identical(
@@ -491,7 +491,7 @@ testthat::test_that("call_extract_matrix - dataname type", {
     quote(data[, ])
   )
   testthat::expect_identical(
-    call_extract_matrix(dataname = as.name("data")),
+    call_extract_matrix(dataname = "data"),
     quote(data[, ])
   )
   testthat::expect_identical(

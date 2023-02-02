@@ -51,7 +51,7 @@ FilterState <- R6::R6Class( # nolint
     #'   name of the variable
     #' @param varlabel (`character(1)`)\cr
     #'   label of the variable (optional).
-    #' @param dataname (`name` or `call`)\cr
+    #' @param dataname (`character(1)`)\cr
     #'   name of dataset where `x` is taken from. Must be specified if `extract_type` argument
     #'   is not empty.
     #' @param extract_type (`character(0)`, `character(1)`)\cr

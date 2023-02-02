@@ -50,7 +50,7 @@ testthat::test_that("get_call returns a call filtering an MAE object using Choic
   filter_state <- ChoicesFilterState$new(
     x = c("white", NA_character_),
     varname = as.name("race"),
-    dataname = as.name("test"),
+    dataname = "test",
     extract_type = "list"
   )
   filter_state$set_na_rm(TRUE)
@@ -75,7 +75,7 @@ testthat::test_that("get_call returns a call filtering an MAE object using Range
   filter_state <- RangeFilterState$new(
     x = miniACC$purity,
     varname = as.name("purity"),
-    dataname = as.name("test"),
+    dataname = "test",
     extract_type = "list"
   )
   filter_state$set_na_rm(TRUE)

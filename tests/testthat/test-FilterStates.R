@@ -569,13 +569,16 @@ testthat::test_that("get_call returns a call filtering a data.frame base on a co
                     datetime < as.POSIXct("2021-08-25 12:00:01")))
   testthat::expect_equal(
     shiny::isolate(filter_states$get_call()),
-    bquote(test_dataset <- dplyr::filter(test_dataset,
-                                  numbers >= 1 & numbers <= 3 &
-                                    choices %in% c("a", "c") &
-                                    !logical &
-                                    (date >= as.Date("2021-08-25") & date <= as.Date("2021-08-26")) &
-                                    (datetime >= as.POSIXct("2021-08-25 12:00:00", tz = .(Sys.timezone())) &
-                                       datetime < as.POSIXct("2021-08-25 12:00:01", tz = .(Sys.timezone())))))
+    bquote(test_dataset <- dplyr::filter(
+      test_dataset,
+      numbers >= 1 & numbers <= 3 &
+        choices %in% c("a", "c") &
+        !logical &
+        (date >= as.Date("2021-08-25") & date <= as.Date("2021-08-26")) &
+        (datetime >= as.POSIXct("2021-08-25 12:00:00", tz = .(Sys.timezone())) &
+           datetime < as.POSIXct("2021-08-25 12:00:01", tz = .(Sys.timezone())))
+      )
+    )
   )
 })
 

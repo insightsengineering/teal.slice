@@ -10,9 +10,9 @@
 #' @param varlabel (`character(0)`, `character(1)` or `NULL`)\cr
 #'   label of the variable (optional).
 #'
-#' @param dataname (`name` or `call`)\cr
-#'   name of dataset where `x` is taken from. Must be specified if `extract_type` argument
-#'   is not empty.
+#' @param dataname (`character(1)`)\cr
+#'   optional name of dataset where `x` is taken from. Must be specified
+#'   if `extract_type` argument is not empty.
 #'
 #' @param extract_type (`character(0)`, `character(1)`)\cr
 #' whether condition calls should be prefixed by dataname. Possible values:
@@ -28,7 +28,7 @@
 #'   c(1:10, NA, Inf),
 #'   varname = "x",
 #'   varlabel = "Pretty name",
-#'   dataname = as.name("dataname"),
+#'   dataname = "dataname",
 #'   extract_type = "matrix"
 #' )
 #'

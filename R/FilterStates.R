@@ -29,7 +29,7 @@
 #'   c(NA, Inf, seq(1:10)),
 #'   varname = "x",
 #'   varlabel = "x variable",
-#'   dataname = as.name("data"),
+#'   dataname = "data",
 #'   extract_type = "list"
 #' )
 #' isolate(filter_state$set_selected(c(3L, 8L)))
@@ -63,7 +63,7 @@ FilterStates <- R6::R6Class( # nolint
     #' self invisibly
     #'
     initialize = function(dataname, datalabel) {
-      checkmate::check_character(dataname)
+      checkmate::check_string(dataname)
       checkmate::assert_character(datalabel, max.len = 1, any.missing = FALSE)
 
       private$dataname <- dataname
