@@ -19,6 +19,8 @@
 RangeFilterState <- R6::R6Class( # nolint
   "RangeFilterState",
   inherit = FilterState,
+
+  # public methods ----
   public = list(
 
     #' @description
@@ -43,8 +45,8 @@ RangeFilterState <- R6::R6Class( # nolint
                           varlabel = character(0),
                           input_dataname = NULL,
                           extract_type = character(0)) {
-      stopifnot(is.numeric(x))
-      stopifnot(any(is.finite(x)))
+      checkmate::assert_numeric(x, all.missing = FALSE)
+      if (!any(is.finite(x))) stop("\"x\" contains no finite values")
 
       super$initialize(x, varname, varlabel, input_dataname, extract_type)
       var_range <- range(x, finite = TRUE)
@@ -69,8 +71,9 @@ RangeFilterState <- R6::R6Class( # nolint
     #' @description
     #' Returns a formatted string representing this `LogicalFilterState`.
     #'
-    #' @param indent (`numeric(1)`) the number of spaces before after each new line character of the formatted string.
-    #' Default: 0
+    #' @param indent (`numeric(1)`)
+    #'        the number of spaces before after each new line character of the formatted string.
+    #'        Default: 0
     #' @return `character(1)` the formatted string
     #'
     format = function(indent = 0) {
@@ -198,12 +201,15 @@ RangeFilterState <- R6::R6Class( # nolint
       super$set_selected(value)
     }
   ),
+
+  # private fields----
   private = list(
     histogram_data = data.frame(),
     keep_inf = NULL, # because it holds reactiveVal
     inf_count = integer(0),
     is_integer = logical(0),
 
+  # private methods ----
     # Adds is.infinite(varname) before existing condition calls if keep_inf is selected
     # returns a call
     add_keep_inf_call = function(filter_call) {
@@ -271,13 +277,8 @@ RangeFilterState <- R6::R6Class( # nolint
       check_in_range(value, private$choices, pre_msg = pre_msg)
     },
     cast_and_validate = function(values) {
-      tryCatch(
-        expr = {
-          values <- as.numeric(values)
-          if (any(is.na(values))) stop()
-        },
-        error = function(error) stop("The array of set values must contain values coercible to numeric.")
-      )
+      values <- as.numeric(values)
+      if (any(is.na(values))) stop("The array of set values must contain values coercible to numeric.")
       if (length(values) != 2) stop("The array of set values must have length two.")
       values
     },
@@ -299,6 +300,8 @@ RangeFilterState <- R6::R6Class( # nolint
       }
       values
     },
+
+    # shiny modules ----
 
     # UI Module for `RangeFilterState`.
     # This UI element contains two values for `min` and `max`
