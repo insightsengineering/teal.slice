@@ -382,7 +382,7 @@ RangeFilterState <- R6::R6Class( # nolint
             height = 25,
             expr = {
               private$unfiltered_histogram +
-              if(!is.null(private$x_reactive())) {
+              if (!is.null(private$x_reactive())) {
                 ggplot2::geom_histogram(
                   data = data.frame(x = Filter(is.finite, private$x_reactive())),
                   ggplot2::aes(x = x),
@@ -503,6 +503,7 @@ RangeFilterState <- R6::R6Class( # nolint
             if (!setequal(self$get_keep_inf(), input$value)) {
               updateCheckboxInput(
                 inputId = "value",
+                label = private$get_inf_label(),
                 value = self$get_keep_inf()
               )
             }

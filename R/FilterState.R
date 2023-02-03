@@ -531,6 +531,9 @@ FilterState <- R6::R6Class( # nolint
       values
     },
 
+    # Calculates NA counts
+    #
+    # NA counts are based on unfiltered and filtered (optional) `x`.
     get_na_label = function() {
       sprintf(
         "Keep NA (%s%s)",
