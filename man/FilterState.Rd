@@ -176,17 +176,9 @@ and must be executed in reactive or isolated context.
 \subsection{Method \code{get_dataname()}}{
 Returns dataname.
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{FilterState$get_dataname(deparse = TRUE)}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{FilterState$get_dataname()}\if{html}{\out{</div>}}
 }
 
-\subsection{Arguments}{
-\if{html}{\out{<div class="arguments">}}
-\describe{
-\item{\code{deparse}}{(\code{logical(1)})\cr
-whether dataname should be deparsed; defaults to \code{TRUE}}
-}
-\if{html}{\out{</div>}}
-}
 \subsection{Returns}{
 \code{name} or \code{character(1)}
 }
