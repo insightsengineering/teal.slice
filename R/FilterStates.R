@@ -142,14 +142,12 @@ FilterStates <- R6::R6Class( # nolint
         # below code translates to call by the names of filter_items
         rhs <- call_with_colon(
           self$get_fun(),
-          # in case of MAE, private$dataname might still be a call
-          # when used on a single experiments dataframes
-          `if`(is.call(private$dataname), private$dataname, as.name(private$dataname)),
+          str2lang(private$dataname),
           unlist_args = filter_items
         )
         substitute(
           env = list(
-            lhs = `if`(is.call(private$dataname), private$dataname, as.name(private$dataname)),
+            lhs = str2lang(private$dataname),
             rhs = rhs
           ),
           expr = lhs <- rhs
@@ -218,7 +216,7 @@ FilterStates <- R6::R6Class( # nolint
     #'
     state_list_push = function(x, state_list_index, state_id) {
       logger::log_trace(
-        "{ class(self)[1] } pushing into state_list, dataname: { deparse1(private$dataname) }")
+        "{ class(self)[1] } pushing into state_list, dataname: { private$dataname }")
       private$validate_state_list_exists(state_list_index)
       checkmate::assert_string(state_id)
 

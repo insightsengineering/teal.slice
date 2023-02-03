@@ -48,15 +48,10 @@ MAEFilteredDataset <- R6::R6Class( # nolint
       lapply(
         experiment_names,
         function(experiment_name) {
-          dataname <- call_extract_list(
-            dataname,
-            experiment_name,
-            dollar = FALSE
-          )
           private$add_filter_states(
             filter_states = init_filter_states(
               data = dataset[[experiment_name]],
-              dataname = dataname,
+              dataname = sprintf('%s[["%s"]]', dataname, experiment_name),
               datalabel = experiment_name
             ),
             id = experiment_name
