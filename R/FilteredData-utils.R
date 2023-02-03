@@ -37,7 +37,7 @@ init_filtered_data.TealData <- function(x, # nolint
     dataset <- x$get_dataset(dataname)
 
     parent <- if (inherits(dataset, "CDISCTealDataset")) {
-      dataset$get_parent()
+      join_keys$get_parent(dataset$get_dataname())
     } else {
       NULL
     }
