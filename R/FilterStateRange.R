@@ -69,7 +69,7 @@ RangeFilterState <- R6::R6Class( # nolint
     },
 
     #' @description
-    #' Returns a formatted string representing this `LogicalFilterState`.
+    #' Returns a formatted string representing this `RangeFilterState`.
     #'
     #' @param indent (`numeric(1)`)
     #'        the number of spaces before after each new line character of the formatted string.
@@ -79,7 +79,9 @@ RangeFilterState <- R6::R6Class( # nolint
     format = function(indent = 0) {
       checkmate::assert_number(indent, finite = TRUE, lower = 0)
 
-      vals <- pmax(pmin(self$get_selected(), private$choices[2]), private$choices[1])
+      # vals <- pmax(pmin(self$get_selected(), private$choices[2]), private$choices[1])
+      vals <- self$get_selected()
+      vals <- private$remove_out_of_bound_values(vals)
       sprintf(
         "%sFiltering on: %s\n%1$s  Selected range: %s - %s\n%1$s  Include missing values: %s",
         format("", width = indent),
