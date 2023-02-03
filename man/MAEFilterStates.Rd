@@ -32,11 +32,10 @@ Specialization of \code{FilterStates} for \code{MultiAssayExperiment}.
 <li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilterStates" data-id="get_datalabel"><a href='../../teal.slice/html/FilterStates.html#method-FilterStates-get_datalabel'><code>teal.slice::FilterStates$get_datalabel()</code></a></span></li>
 <li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilterStates" data-id="get_filter_count"><a href='../../teal.slice/html/FilterStates.html#method-FilterStates-get_filter_count'><code>teal.slice::FilterStates$get_filter_count()</code></a></span></li>
 <li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilterStates" data-id="print"><a href='../../teal.slice/html/FilterStates.html#method-FilterStates-print'><code>teal.slice::FilterStates$print()</code></a></span></li>
-<li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilterStates" data-id="queue_empty"><a href='../../teal.slice/html/FilterStates.html#method-FilterStates-queue_empty'><code>teal.slice::FilterStates$queue_empty()</code></a></span></li>
-<li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilterStates" data-id="queue_get"><a href='../../teal.slice/html/FilterStates.html#method-FilterStates-queue_get'><code>teal.slice::FilterStates$queue_get()</code></a></span></li>
-<li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilterStates" data-id="queue_initialize"><a href='../../teal.slice/html/FilterStates.html#method-FilterStates-queue_initialize'><code>teal.slice::FilterStates$queue_initialize()</code></a></span></li>
-<li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilterStates" data-id="queue_push"><a href='../../teal.slice/html/FilterStates.html#method-FilterStates-queue_push'><code>teal.slice::FilterStates$queue_push()</code></a></span></li>
-<li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilterStates" data-id="queue_remove"><a href='../../teal.slice/html/FilterStates.html#method-FilterStates-queue_remove'><code>teal.slice::FilterStates$queue_remove()</code></a></span></li>
+<li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilterStates" data-id="state_list_empty"><a href='../../teal.slice/html/FilterStates.html#method-FilterStates-state_list_empty'><code>teal.slice::FilterStates$state_list_empty()</code></a></span></li>
+<li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilterStates" data-id="state_list_get"><a href='../../teal.slice/html/FilterStates.html#method-FilterStates-state_list_get'><code>teal.slice::FilterStates$state_list_get()</code></a></span></li>
+<li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilterStates" data-id="state_list_push"><a href='../../teal.slice/html/FilterStates.html#method-FilterStates-state_list_push'><code>teal.slice::FilterStates$state_list_push()</code></a></span></li>
+<li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilterStates" data-id="state_list_remove"><a href='../../teal.slice/html/FilterStates.html#method-FilterStates-state_list_remove'><code>teal.slice::FilterStates$state_list_remove()</code></a></span></li>
 <li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilterStates" data-id="ui"><a href='../../teal.slice/html/FilterStates.html#method-FilterStates-ui'><code>teal.slice::FilterStates$ui()</code></a></span></li>
 </ul>
 </details>
@@ -183,15 +182,15 @@ column in \code{colData(data)}.}
 \if{html}{\out{<a id="method-MAEFilterStates-remove_filter_state"></a>}}
 \if{latex}{\out{\hypertarget{method-MAEFilterStates-remove_filter_state}{}}}
 \subsection{Method \code{remove_filter_state()}}{
-Removes a variable from the \code{ReactiveQueue} and its corresponding UI element.
+Removes a variable from the \code{state_list} and its corresponding UI element.
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{MAEFilterStates$remove_filter_state(element_id)}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{MAEFilterStates$remove_filter_state(state_id)}\if{html}{\out{</div>}}
 }
 
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
-\item{\code{element_id}}{(\code{character(1)})\cr name of \code{ReactiveQueue} element.}
+\item{\code{state_id}}{(\code{character(1)})\cr name of \code{state_list} element.}
 }
 \if{html}{\out{</div>}}
 }
@@ -216,12 +215,12 @@ id of shiny module}
 
 \item{\code{data}}{(\code{MultiAssayExperiment})\cr
 object containing \code{colData} which columns are used to be used
-to choose filter variables.}
+to choose filter variables}
 }
 \if{html}{\out{</div>}}
 }
 \subsection{Returns}{
-shiny.tag
+\code{shiny.tag}
 }
 }
 \if{html}{\out{<hr>}}
@@ -253,6 +252,7 @@ object containing \code{colData} which columns are used to choose filter variabl
 }
 \subsection{Returns}{
 \code{moduleServer} function which returns \code{NULL}
+
 description
 Get label of specific variable. In case when variable label is missing
 name of the variable is returned.

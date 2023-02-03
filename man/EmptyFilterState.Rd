@@ -5,9 +5,7 @@
 \alias{EmptyFilterState}
 \title{\code{FilterState} object for empty variable}
 \description{
-\code{FilterState} object for empty variable
-
-\code{FilterState} object for empty variable
+\code{FilterState} subclass representing an empty variable.
 }
 \examples{
 filter_state <- teal.slice:::EmptyFilterState$new(
@@ -20,6 +18,7 @@ isolate(filter_state$get_call())
 isolate(filter_state$set_selected(TRUE))
 isolate(filter_state$set_keep_na(TRUE))
 isolate(filter_state$get_call())
+
 }
 \keyword{internal}
 \section{Super class}{
@@ -59,7 +58,7 @@ isolate(filter_state$get_call())
 \if{html}{\out{<a id="method-EmptyFilterState-new"></a>}}
 \if{latex}{\out{\hypertarget{method-EmptyFilterState-new}{}}}
 \subsection{Method \code{new()}}{
-Initialize \code{EmptyFilterState} object
+Initialize \code{EmptyFilterState} object.
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{EmptyFilterState$new(
   x,
@@ -100,13 +99,13 @@ whether condition calls should be prefixed by dataname. Possible values:
 \if{html}{\out{<a id="method-EmptyFilterState-is_any_filtered"></a>}}
 \if{latex}{\out{\hypertarget{method-EmptyFilterState-is_any_filtered}{}}}
 \subsection{Method \code{is_any_filtered()}}{
-Answers the question of whether the current settings and values selected actually filters out any values.
+Reports whether the current state filters out any values.(?)
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{EmptyFilterState$is_any_filtered()}\if{html}{\out{</div>}}
 }
 
 \subsection{Returns}{
-logical scalar
+\code{logical(1)}
 }
 }
 \if{html}{\out{<hr>}}
@@ -115,12 +114,15 @@ logical scalar
 \subsection{Method \code{get_call()}}{
 Returns reproducible condition call for current selection relevant
 for selected variable type.
-Method is using internal reactive values which makes it reactive
-and must be executed in reactive or isolated context.
+Uses internal reactive values, hence must be called
+in reactive or isolated context.
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{EmptyFilterState$get_call()}\if{html}{\out{</div>}}
 }
 
+\subsection{Returns}{
+\code{logical(1)}
+}
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-EmptyFilterState-get_state"></a>}}
@@ -142,7 +144,7 @@ Returns the filtering state.
 \if{html}{\out{<a id="method-EmptyFilterState-set_state"></a>}}
 \if{latex}{\out{\hypertarget{method-EmptyFilterState-set_state}{}}}
 \subsection{Method \code{set_state()}}{
-Set state
+Set state.
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{EmptyFilterState$set_state(state)}\if{html}{\out{</div>}}
 }
@@ -151,12 +153,15 @@ Set state
 \if{html}{\out{<div class="arguments">}}
 \describe{
 \item{\code{state}}{(\code{list})\cr
-contains fields relevant for a specific class
+contains fields relevant for specific class:
 \itemize{
 \item{\code{keep_na} (\code{logical})}{ defines whether to keep or remove \code{NA} values}
 }}
 }
 \if{html}{\out{</div>}}
+}
+\subsection{Returns}{
+NULL invisibly
 }
 }
 \if{html}{\out{<hr>}}

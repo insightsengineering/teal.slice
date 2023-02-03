@@ -30,11 +30,11 @@ testthat::test_that("set filter state", {
   filter_state_adsl <- ChoicesFilterState$new(adsl$sex, varname = "sex")
   filter_state_adsl$set_selected("F")
 
-  queue <- ds$get_filtered_dataset("ADSL")$get_filter_states(1)
-  queue$queue_push(filter_state_adsl, queue_index = 1L, element_id = "sex")
+  state_list <- ds$get_filtered_dataset("ADSL")$get_filter_states(1)
+  shiny::isolate(state_list$state_list_push(filter_state_adsl, state_list_index = 1L, state_id = "sex"))
 
   testthat::expect_null(
-    isolate(queue$get_call()),
+    shiny::isolate(state_list$get_call()),
   )
 })
 
@@ -51,8 +51,8 @@ testthat::test_that("get_call for child dataset includes filter call for parent 
     )
   )
 
-  ds$set_filter_state(fs)
-  adae_call <- isolate(ds$get_call("ADAE"))
+  shiny::isolate(ds$set_filter_state(fs))
+  adae_call <- shiny::isolate(ds$get_call("ADAE"))
 
   # no filtering as AESEQ filter does not filter any calls
   testthat::expect_equal(
@@ -80,7 +80,6 @@ testthat::test_that("get_varlabels returns the column labels of the passed datas
   setup_objects <- get_cdisc_filtered_data()
   ds <- setup_objects$ds
   adsl <- setup_objects$adsl
-
 
   testthat::expect_equal(
     ds$get_varlabels("ADSL"),
@@ -199,7 +198,7 @@ testthat::test_that(
 
     fd <- init_filtered_data(data)
     testthat::expect_warning(
-      fd$set_filter_state(list(ADTTE = list(USUBJID = "1"))),
+      shiny::isolate(fd$set_filter_state(list(ADTTE = list(USUBJID = "1")))),
       "These columns filters were excluded: USUBJID from dataset ADTTE"
     )
   }

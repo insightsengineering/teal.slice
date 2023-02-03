@@ -4,16 +4,19 @@
 \alias{FilterStates}
 \title{\code{FilterStates} R6 class}
 \description{
-Implements \link{ReactiveQueue} to the \code{teal} filters.
-Class manages adding and removing \code{FilterState} to the reactive
-queue and returns reproducible R expression relevant to specific
-\code{FilterStates} subclass.
-Currently \code{data.frame}, \code{MultiAssayExperiment},
-\code{SummarizedExperiment} and \code{matrix} are available.
-}
-\note{
-throws an exception if the length of \code{x} does not match the length of
-\code{element_id}
+Abstract class that manages adding and removing \code{FilterState} objects
+and builds a \emph{subset expression}.
+
+A \code{FilterStates} object tracks all subsetting expressions
+(logical predicates that limit observations) associated with a given dataset
+and composes them into a single reproducible R expression
+that will assign a subset of the original data to a new variable.
+This expression is hereafter referred to as \emph{subset expression}.
+
+The \emph{subset expression} is constructed differently for different
+classes of the underlying data object and \code{FilterStates} subclasses.
+Currently implemented for \code{data.frame}, \code{matrix},
+\code{SummarizedExperiment}, and \code{MultiAssayExperiment}.
 }
 \examples{
 library(shiny)
@@ -33,12 +36,14 @@ filter_state <- teal.slice:::RangeFilterState$new(
 )
 isolate(filter_state$set_selected(c(3L, 8L)))
 
-filter_states$queue_push(
-  x = filter_state,
-  queue_index = 1L,
-  element_id = "x"
-)
+isolate(
+  filter_states$state_list_push(
+    x = filter_state,
+    state_list_index = 1L,
+    state_id = "x"
+  ))
 isolate(filter_states$get_call())
+
 }
 \keyword{internal}
 \section{Methods}{
@@ -50,16 +55,15 @@ isolate(filter_states$get_call())
 \item \href{#method-FilterStates-get_call}{\code{FilterStates$get_call()}}
 \item \href{#method-FilterStates-print}{\code{FilterStates$print()}}
 \item \href{#method-FilterStates-get_fun}{\code{FilterStates$get_fun()}}
+\item \href{#method-FilterStates-state_list_get}{\code{FilterStates$state_list_get()}}
+\item \href{#method-FilterStates-state_list_push}{\code{FilterStates$state_list_push()}}
+\item \href{#method-FilterStates-state_list_remove}{\code{FilterStates$state_list_remove()}}
+\item \href{#method-FilterStates-state_list_empty}{\code{FilterStates$state_list_empty()}}
 \item \href{#method-FilterStates-get_filter_count}{\code{FilterStates$get_filter_count()}}
-\item \href{#method-FilterStates-queue_empty}{\code{FilterStates$queue_empty()}}
-\item \href{#method-FilterStates-queue_get}{\code{FilterStates$queue_get()}}
-\item \href{#method-FilterStates-queue_initialize}{\code{FilterStates$queue_initialize()}}
-\item \href{#method-FilterStates-queue_push}{\code{FilterStates$queue_push()}}
-\item \href{#method-FilterStates-queue_remove}{\code{FilterStates$queue_remove()}}
+\item \href{#method-FilterStates-remove_filter_state}{\code{FilterStates$remove_filter_state()}}
 \item \href{#method-FilterStates-ui}{\code{FilterStates$ui()}}
 \item \href{#method-FilterStates-get_filter_state}{\code{FilterStates$get_filter_state()}}
 \item \href{#method-FilterStates-set_filter_state}{\code{FilterStates$set_filter_state()}}
-\item \href{#method-FilterStates-remove_filter_state}{\code{FilterStates$remove_filter_state()}}
 \item \href{#method-FilterStates-ui_add_filter_state}{\code{FilterStates$ui_add_filter_state()}}
 \item \href{#method-FilterStates-srv_add_filter_state}{\code{FilterStates$srv_add_filter_state()}}
 \item \href{#method-FilterStates-clone}{\code{FilterStates$clone()}}
@@ -69,7 +73,10 @@ isolate(filter_states$get_call())
 \if{html}{\out{<a id="method-FilterStates-new"></a>}}
 \if{latex}{\out{\hypertarget{method-FilterStates-new}{}}}
 \subsection{Method \code{new()}}{
-Initializes this \code{FilterStates} object.
+Initializes \code{FilterStates} object.
+
+Initializes \code{FilterStates} object by setting
+\code{input_dataname}, \code{output_dataname}, and \code{datalabel}.
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{FilterStates$new(input_dataname, output_dataname, datalabel)}\if{html}{\out{</div>}}
 }
@@ -78,36 +85,39 @@ Initializes this \code{FilterStates} object.
 \if{html}{\out{<div class="arguments">}}
 \describe{
 \item{\code{input_dataname}}{(\code{character(1)} or \code{name} or \code{call})\cr
-name of the data used on lhs of the expression
-specified to the function argument attached to this \code{FilterStates}.}
+name of the data used on \code{rhs} of the expression
+specified to the function argument attached to this \code{FilterStates}}
 
 \item{\code{output_dataname}}{(\code{character(1)} or \code{name} or \code{call})\cr
-name of the output data on the lhs of the assignment expression.}
+name of the output data on the \code{lhs} of the \emph{subset expression}}
 
 \item{\code{datalabel}}{(\code{character(0)} or \code{character(1)})\cr
-text label value.}
+text label value}
 }
 \if{html}{\out{</div>}}
+}
+\subsection{Returns}{
+self invisibly
 }
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-FilterStates-get_datalabel"></a>}}
 \if{latex}{\out{\hypertarget{method-FilterStates-get_datalabel}{}}}
 \subsection{Method \code{get_datalabel()}}{
-Returns the label of the dataset
+Returns the label of the dataset.
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{FilterStates$get_datalabel()}\if{html}{\out{</div>}}
 }
 
 \subsection{Returns}{
-(\code{character(1)}) the label
+\code{character(1)} the data label
 }
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-FilterStates-format"></a>}}
 \if{latex}{\out{\hypertarget{method-FilterStates-format}{}}}
 \subsection{Method \code{format()}}{
-Returns the formatted string representing this \code{FilterStates} object.
+Returns a formatted string representing this \code{FilterStates} object.
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{FilterStates$format(indent)}\if{html}{\out{</div>}}
 }
@@ -115,7 +125,7 @@ Returns the formatted string representing this \code{FilterStates} object.
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
-\item{\code{indent}}{(\code{numeric(1)}) the number of spaces before each line of the representation}
+\item{\code{indent}}{(\code{numeric(1)}) the number of spaces prepended to each line of the output}
 }
 \if{html}{\out{</div>}}
 }
@@ -129,13 +139,13 @@ Returns the formatted string representing this \code{FilterStates} object.
 \subsection{Method \code{get_call()}}{
 Filter call
 
-Makes a subset function call based on condition calls from \code{FilterState}
-objects selection.
-\code{lhs} of the call is \code{private$output_dataname} and in \code{rhs}
-\code{self$get_fun()} with \code{private$input_dataname} as argument and list of
-condition calls from \code{FilterState}. If input and output data-names
-are the same and no filters applied, method returns \code{NULL} to avoid
-no-op call such as \code{x <- x}.
+Builds \emph{subset expression} from condition calls stored in \code{FilterState}
+objects selection. The \code{lhs} of the expression is \code{private$output_dataname}.
+The \code{rhs} is a call to \code{self$get_fun()} with \code{private$input_dataname}
+as argument and a list of condition calls from \code{FilterState} objects
+stored in \code{private$state_list}.
+If \code{input_dataname} is the same as \code{output_dataname} and no filters are applied,
+\code{NULL} is returned to avoid no-op calls such as \code{x <- x}.
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{FilterStates$get_call()}\if{html}{\out{</div>}}
 }
@@ -148,7 +158,7 @@ no-op call such as \code{x <- x}.
 \if{html}{\out{<a id="method-FilterStates-print"></a>}}
 \if{latex}{\out{\hypertarget{method-FilterStates-print}{}}}
 \subsection{Method \code{print()}}{
-Prints this \code{FilterStates} object
+Prints this \code{FilterStates} object.
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{FilterStates$print(...)}\if{html}{\out{</div>}}
 }
@@ -167,8 +177,8 @@ Prints this \code{FilterStates} object
 \subsection{Method \code{get_fun()}}{
 Gets the name of the function used to filter the data in this \code{FilterStates}.
 
-Get function name used to create filter call. By default it's a
-"subset" but can be overridden by child class method.
+Get name of function used to create the \emph{subset expression}.
+Defaults to "subset" but can be overridden by child class method.
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{FilterStates$get_fun()}\if{html}{\out{</div>}}
 }
@@ -178,10 +188,104 @@ Get function name used to create filter call. By default it's a
 }
 }
 \if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-FilterStates-state_list_get"></a>}}
+\if{latex}{\out{\hypertarget{method-FilterStates-state_list_get}{}}}
+\subsection{Method \code{state_list_get()}}{
+Returns a list of \code{FilterState} objects stored in this \code{FilterStates}.
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{FilterStates$state_list_get(state_list_index, state_id = NULL)}\if{html}{\out{</div>}}
+}
+
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{state_list_index}}{(\code{character(1)}, \code{integer(1)})\cr
+index on the list in \code{private$state_list} where filter states are kept}
+
+\item{\code{state_id}}{(\code{character(1)})\cr
+name of element in a filter state (which is a \code{reactiveVal} containing a list)}
+}
+\if{html}{\out{</div>}}
+}
+\subsection{Returns}{
+\code{list} of \code{FilterState} objects
+}
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-FilterStates-state_list_push"></a>}}
+\if{latex}{\out{\hypertarget{method-FilterStates-state_list_push}{}}}
+\subsection{Method \code{state_list_push()}}{
+Adds a new \code{FilterState} object to this \code{FilterStates}.\cr
+Raises error if the length of \code{x} does not match the length of \code{state_id}.
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{FilterStates$state_list_push(x, state_list_index, state_id)}\if{html}{\out{</div>}}
+}
+
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{x}}{(\code{FilterState})\cr
+object to be added to filter state list}
+
+\item{\code{state_list_index}}{(\code{character(1)}, \code{integer(1)})\cr
+index on the list in \code{private$state_list} where filter states are kept}
+
+\item{\code{state_id}}{(\code{character(1)})\cr
+name of element in a filter state (which is a \code{reactiveVal} containing a list)}
+}
+\if{html}{\out{</div>}}
+}
+\subsection{Returns}{
+NULL
+}
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-FilterStates-state_list_remove"></a>}}
+\if{latex}{\out{\hypertarget{method-FilterStates-state_list_remove}{}}}
+\subsection{Method \code{state_list_remove()}}{
+Removes a single filter state with all associated shiny elements:\cr
+\itemize{
+\item specified \code{FilterState} from \code{private$state_list}
+\item UI card created for this filter
+\item observers tracking the selection and remove button
+}
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{FilterStates$state_list_remove(state_list_index, state_id)}\if{html}{\out{</div>}}
+}
+
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{state_list_index}}{(\code{character(1)}, \code{integer(1)})\cr
+index on the list in \code{private$state_list} where filter states are kept}
+
+\item{\code{state_id}}{(\code{character(1)})\cr
+name of element in a filter state (which is a \code{reactiveVal} containing a list)}
+}
+\if{html}{\out{</div>}}
+}
+\subsection{Returns}{
+NULL
+}
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-FilterStates-state_list_empty"></a>}}
+\if{latex}{\out{\hypertarget{method-FilterStates-state_list_empty}{}}}
+\subsection{Method \code{state_list_empty()}}{
+Remove all \code{FilterState} objects from this \code{FilterStates} object.
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{FilterStates$state_list_empty()}\if{html}{\out{</div>}}
+}
+
+\subsection{Returns}{
+NULL
+}
+}
+\if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-FilterStates-get_filter_count"></a>}}
 \if{latex}{\out{\hypertarget{method-FilterStates-get_filter_count}{}}}
 \subsection{Method \code{get_filter_count()}}{
-Gets the number of active \code{FilterState} objects in this \code{FilterStates}.
+Gets the number of active \code{FilterState} objects in this \code{FilterStates} object.
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{FilterStates$get_filter_count()}\if{html}{\out{</div>}}
 }
@@ -191,194 +295,19 @@ Gets the number of active \code{FilterState} objects in this \code{FilterStates}
 }
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-FilterStates-queue_empty"></a>}}
-\if{latex}{\out{\hypertarget{method-FilterStates-queue_empty}{}}}
-\subsection{Method \code{queue_empty()}}{
-Remove all \code{FilterState} objects from all queues in this \code{FilterStates}.
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{FilterStates$queue_empty()}\if{html}{\out{</div>}}
-}
-
-\subsection{Returns}{
-NULL
-}
-}
-\if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-FilterStates-queue_get"></a>}}
-\if{latex}{\out{\hypertarget{method-FilterStates-queue_get}{}}}
-\subsection{Method \code{queue_get()}}{
-Returns a list of \code{FilterState} objects stored in this \code{FilterStates.}
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{FilterStates$queue_get(queue_index, element_id = character(0))}\if{html}{\out{</div>}}
-}
-
-\subsection{Arguments}{
-\if{html}{\out{<div class="arguments">}}
-\describe{
-\item{\code{queue_index}}{(\code{character(1)}, \code{integer(1)})\cr
-index of the \code{private$queue} list where \code{ReactiveQueue} are kept.}
-
-\item{\code{element_id}}{(\code{character(1)})\cr
-name of \code{ReactiveQueue} element.}
-}
-\if{html}{\out{</div>}}
-}
-\subsection{Returns}{
-\code{list} of \code{FilterState} objects
-}
-}
-\if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-FilterStates-queue_initialize"></a>}}
-\if{latex}{\out{\hypertarget{method-FilterStates-queue_initialize}{}}}
-\subsection{Method \code{queue_initialize()}}{
-Sets \code{ReactiveQueue} objects.
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{FilterStates$queue_initialize(x)}\if{html}{\out{</div>}}
-}
-
-\subsection{Arguments}{
-\if{html}{\out{<div class="arguments">}}
-\describe{
-\item{\code{x}}{(\code{list} of \code{ReactiveQueue})\cr
-must be a list even if single \code{ReactiveQueue} is set.}
-}
-\if{html}{\out{</div>}}
-}
-}
-\if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-FilterStates-queue_push"></a>}}
-\if{latex}{\out{\hypertarget{method-FilterStates-queue_push}{}}}
-\subsection{Method \code{queue_push()}}{
-Adds a new \code{FilterState} object to this \code{FilterStates}
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{FilterStates$queue_push(x, queue_index, element_id)}\if{html}{\out{</div>}}
-}
-
-\subsection{Arguments}{
-\if{html}{\out{<div class="arguments">}}
-\describe{
-\item{\code{x}}{(\code{FilterState})\cr
-object to be added to the queue}
-
-\item{\code{queue_index}}{(\code{character(1)}, \code{integer(1)})\cr
-index of the \code{private$queue} list where \code{ReactiveQueue} are kept.}
-
-\item{\code{element_id}}{(\code{character(1)})\cr
-name of the \code{ReactiveQueue} element.}
-}
-\if{html}{\out{</div>}}
-}
-}
-\if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-FilterStates-queue_remove"></a>}}
-\if{latex}{\out{\hypertarget{method-FilterStates-queue_remove}{}}}
-\subsection{Method \code{queue_remove()}}{
-Removes a single filter state
-
-Removes a single filter state with all shiny elements associated
-with this state. It removes:\cr
-\itemize{
-\item particular \code{FilterState} from \code{private$queue}
-\item UI card created for this filter
-\item observers listening selection and remove button
-}
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{FilterStates$queue_remove(queue_index, element_id)}\if{html}{\out{</div>}}
-}
-
-\subsection{Arguments}{
-\if{html}{\out{<div class="arguments">}}
-\describe{
-\item{\code{queue_index}}{(\code{character(1)}, \code{logical(1)})\cr
-index of the \code{private$queue} list where \code{ReactiveQueue} are kept.}
-
-\item{\code{element_id}}{(\code{character(1)})\cr
-name of \code{ReactiveQueue} element.}
-}
-\if{html}{\out{</div>}}
-}
-}
-\if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-FilterStates-ui"></a>}}
-\if{latex}{\out{\hypertarget{method-FilterStates-ui}{}}}
-\subsection{Method \code{ui()}}{
-Shiny UI module
-
-Shiny UI element being a container for \code{FilterState} elements.
-Content of this container is created using \code{renderUI} in
-\code{server} module
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{FilterStates$ui(id)}\if{html}{\out{</div>}}
-}
-
-\subsection{Arguments}{
-\if{html}{\out{<div class="arguments">}}
-\describe{
-\item{\code{id}}{(\code{character(1)})\cr
-id of the shiny element}
-}
-\if{html}{\out{</div>}}
-}
-\subsection{Returns}{
-shiny.tag
-}
-}
-\if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-FilterStates-get_filter_state"></a>}}
-\if{latex}{\out{\hypertarget{method-FilterStates-get_filter_state}{}}}
-\subsection{Method \code{get_filter_state()}}{
-Gets the reactive values from the active \code{FilterState} objects.
-
-Get active filter state from the \code{FilterState} objects kept in \code{ReactiveQueue}(s).
-The output list is a compatible input to \code{self$set_filter_state}.
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{FilterStates$get_filter_state()}\if{html}{\out{</div>}}
-}
-
-\subsection{Returns}{
-\code{list} containing \code{list} per each \code{FilterState} in the \code{ReactiveQueue}
-}
-}
-\if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-FilterStates-set_filter_state"></a>}}
-\if{latex}{\out{\hypertarget{method-FilterStates-set_filter_state}{}}}
-\subsection{Method \code{set_filter_state()}}{
-Sets active \code{FilterState} objects.
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{FilterStates$set_filter_state(data, state)}\if{html}{\out{</div>}}
-}
-
-\subsection{Arguments}{
-\if{html}{\out{<div class="arguments">}}
-\describe{
-\item{\code{data}}{(\code{data.frame})\cr
-data which are supposed to be filtered}
-
-\item{\code{state}}{(\verb{named list})\cr
-should contain values which are initial selection in the \code{FilterState}.
-Names of the \code{list} element should correspond to the name of the
-column in \code{data}.}
-}
-\if{html}{\out{</div>}}
-}
-\subsection{Returns}{
-function which throws an error
-}
-}
-\if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-FilterStates-remove_filter_state"></a>}}
 \if{latex}{\out{\hypertarget{method-FilterStates-remove_filter_state}{}}}
 \subsection{Method \code{remove_filter_state()}}{
-Remove a single \code{FilterState} from the \code{ReactiveQueue}.
+Remove a single \code{FilterState} from \code{state_list}.
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{FilterStates$remove_filter_state(element_id)}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{FilterStates$remove_filter_state(state_id)}\if{html}{\out{</div>}}
 }
 
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
-\item{\code{element_id}}{(\code{character})\cr
-Name of variable to remove its \code{FilterState}.}
+\item{\code{state_id}}{(\code{character})\cr
+name of variable for which to remove \code{FilterState}}
 }
 \if{html}{\out{</div>}}
 }
@@ -387,10 +316,74 @@ Name of variable to remove its \code{FilterState}.}
 }
 }
 \if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-FilterStates-ui"></a>}}
+\if{latex}{\out{\hypertarget{method-FilterStates-ui}{}}}
+\subsection{Method \code{ui()}}{
+Shiny module UI
+
+Shiny UI element that stores \code{FilterState} UI elements.
+Populated with elements created with \code{renderUI} in the module server.
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{FilterStates$ui(id)}\if{html}{\out{</div>}}
+}
+
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{id}}{(\code{character(1)})\cr
+shiny element (module instance) id}
+}
+\if{html}{\out{</div>}}
+}
+\subsection{Returns}{
+\code{shiny.tag}
+}
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-FilterStates-get_filter_state"></a>}}
+\if{latex}{\out{\hypertarget{method-FilterStates-get_filter_state}{}}}
+\subsection{Method \code{get_filter_state()}}{
+Gets reactive values from active \code{FilterState} objects.
+
+Get active filter state from \code{FilterState} objects stored in \code{state_list}(s).
+The output is a list compatible with input to \code{self$set_filter_state}.
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{FilterStates$get_filter_state()}\if{html}{\out{</div>}}
+}
+
+\subsection{Returns}{
+\code{list} containing \code{list} per \code{FilterState} in the \code{state_list}
+}
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-FilterStates-set_filter_state"></a>}}
+\if{latex}{\out{\hypertarget{method-FilterStates-set_filter_state}{}}}
+\subsection{Method \code{set_filter_state()}}{
+Sets active \code{FilterState} objects.
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{FilterStates$set_filter_state(data, state, filtered_dataset)}\if{html}{\out{</div>}}
+}
+
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{data}}{(\code{data.frame})\cr
+data object for which to define a subset}
+
+\item{\code{state}}{(\verb{named list})\cr
+should contain values of initial selections in the \code{FilterState};
+\code{list} names must correspond to column names in \code{data}}
+
+\item{\code{filtered_dataset}}{data object for which to define a subset(?)}
+}
+\if{html}{\out{</div>}}
+}
+}
+\if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-FilterStates-ui_add_filter_state"></a>}}
 \if{latex}{\out{\hypertarget{method-FilterStates-ui_add_filter_state}{}}}
 \subsection{Method \code{ui_add_filter_state()}}{
-Shiny UI module to add filter variable.
+Shiny module UI that adds a filter variable.
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{FilterStates$ui_add_filter_state(id, data)}\if{html}{\out{</div>}}
 }
@@ -399,22 +392,22 @@ Shiny UI module to add filter variable.
 \if{html}{\out{<div class="arguments">}}
 \describe{
 \item{\code{id}}{(\code{character(1)})\cr
-id of shiny module}
+shiny element (module instance) id}
 
 \item{\code{data}}{(\code{data.frame}, \code{MultiAssayExperiment}, \code{SummarizedExperiment}, \code{matrix})\cr
-object containing columns to be used as filter variables.}
+data object for which to define a subset}
 }
 \if{html}{\out{</div>}}
 }
 \subsection{Returns}{
-shiny.tag
+\code{shiny.tag}
 }
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-FilterStates-srv_add_filter_state"></a>}}
 \if{latex}{\out{\hypertarget{method-FilterStates-srv_add_filter_state}{}}}
 \subsection{Method \code{srv_add_filter_state()}}{
-Shiny server module to add filter variable
+Shiny module server that adds a filter variable.
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{FilterStates$srv_add_filter_state(id, data, ...)}\if{html}{\out{</div>}}
 }
@@ -423,10 +416,10 @@ Shiny server module to add filter variable
 \if{html}{\out{<div class="arguments">}}
 \describe{
 \item{\code{id}}{(\code{character(1)})\cr
-an ID string that corresponds with the ID used to call the module's UI function.}
+shiny module instance id}
 
 \item{\code{data}}{(\code{data.frame}, \code{MultiAssayExperiment}, \code{SummarizedExperiment}, \code{matrix})\cr
-object containing columns to be used as filter variables.}
+data object for which to define a subset}
 
 \item{\code{...}}{ignored}
 }
@@ -434,24 +427,6 @@ object containing columns to be used as filter variables.}
 }
 \subsection{Returns}{
 \code{moduleServer} function which returns \code{NULL}
-Module to insert/remove \code{FilterState} UI
-
-This module adds the shiny UI of the newly added \code{FilterState} object to queue to the Active Filter
-Variables, calls \code{FilterState} modules and creates observer to remove state
-parameter filter_state (\code{FilterState})
-
-parameter queue_index (\code{character(1)}, \code{logical(1)})\cr
-index of the \code{private$queue} list where \code{ReactiveQueue} are kept.
-parameter element_id (\code{character(1)})\cr
-name of \code{ReactiveQueue} element.
-return \code{moduleServer} function which returns \code{NULL}
-\code{observeEvent} for remove-filter-state is set and also from \code{FilteredDataset}
-level, where shiny-session-namespace is different. That is why it's important
-to remove shiny elements from anywhere. In \code{add_filter_state} \code{session$ns(NULL)}
-is equivalent to \code{private$ns(queue_index)}.
-In addition, an unused reactive is being removed from input:
-method searches input for the unique matches with the filter name
-and then removes objects constructed with current card id + filter name.
 }
 }
 \if{html}{\out{<hr>}}

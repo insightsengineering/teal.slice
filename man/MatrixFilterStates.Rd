@@ -32,11 +32,10 @@ Specialization of \code{FilterStates} for a base matrix.
 <li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilterStates" data-id="get_filter_count"><a href='../../teal.slice/html/FilterStates.html#method-FilterStates-get_filter_count'><code>teal.slice::FilterStates$get_filter_count()</code></a></span></li>
 <li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilterStates" data-id="get_fun"><a href='../../teal.slice/html/FilterStates.html#method-FilterStates-get_fun'><code>teal.slice::FilterStates$get_fun()</code></a></span></li>
 <li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilterStates" data-id="print"><a href='../../teal.slice/html/FilterStates.html#method-FilterStates-print'><code>teal.slice::FilterStates$print()</code></a></span></li>
-<li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilterStates" data-id="queue_empty"><a href='../../teal.slice/html/FilterStates.html#method-FilterStates-queue_empty'><code>teal.slice::FilterStates$queue_empty()</code></a></span></li>
-<li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilterStates" data-id="queue_get"><a href='../../teal.slice/html/FilterStates.html#method-FilterStates-queue_get'><code>teal.slice::FilterStates$queue_get()</code></a></span></li>
-<li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilterStates" data-id="queue_initialize"><a href='../../teal.slice/html/FilterStates.html#method-FilterStates-queue_initialize'><code>teal.slice::FilterStates$queue_initialize()</code></a></span></li>
-<li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilterStates" data-id="queue_push"><a href='../../teal.slice/html/FilterStates.html#method-FilterStates-queue_push'><code>teal.slice::FilterStates$queue_push()</code></a></span></li>
-<li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilterStates" data-id="queue_remove"><a href='../../teal.slice/html/FilterStates.html#method-FilterStates-queue_remove'><code>teal.slice::FilterStates$queue_remove()</code></a></span></li>
+<li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilterStates" data-id="state_list_empty"><a href='../../teal.slice/html/FilterStates.html#method-FilterStates-state_list_empty'><code>teal.slice::FilterStates$state_list_empty()</code></a></span></li>
+<li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilterStates" data-id="state_list_get"><a href='../../teal.slice/html/FilterStates.html#method-FilterStates-state_list_get'><code>teal.slice::FilterStates$state_list_get()</code></a></span></li>
+<li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilterStates" data-id="state_list_push"><a href='../../teal.slice/html/FilterStates.html#method-FilterStates-state_list_push'><code>teal.slice::FilterStates$state_list_push()</code></a></span></li>
+<li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilterStates" data-id="state_list_remove"><a href='../../teal.slice/html/FilterStates.html#method-FilterStates-state_list_remove'><code>teal.slice::FilterStates$state_list_remove()</code></a></span></li>
 <li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilterStates" data-id="ui"><a href='../../teal.slice/html/FilterStates.html#method-FilterStates-ui'><code>teal.slice::FilterStates$ui()</code></a></span></li>
 </ul>
 </details>
@@ -157,15 +156,15 @@ column in \code{data}.}
 \if{html}{\out{<a id="method-MatrixFilterStates-remove_filter_state"></a>}}
 \if{latex}{\out{\hypertarget{method-MatrixFilterStates-remove_filter_state}{}}}
 \subsection{Method \code{remove_filter_state()}}{
-Remove a variable from the \code{ReactiveQueue} and its corresponding UI element.
+Remove a variable from the \code{state_list} and its corresponding UI element.
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{MatrixFilterStates$remove_filter_state(element_id)}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{MatrixFilterStates$remove_filter_state(state_id)}\if{html}{\out{</div>}}
 }
 
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
-\item{\code{element_id}}{(\code{character(1)})\cr name of \code{ReactiveQueue} element.}
+\item{\code{state_id}}{(\code{character(1)})\cr name of \code{state_list} element.}
 }
 \if{html}{\out{</div>}}
 }
@@ -177,7 +176,7 @@ Remove a variable from the \code{ReactiveQueue} and its corresponding UI element
 \if{html}{\out{<a id="method-MatrixFilterStates-ui_add_filter_state"></a>}}
 \if{latex}{\out{\hypertarget{method-MatrixFilterStates-ui_add_filter_state}{}}}
 \subsection{Method \code{ui_add_filter_state()}}{
-Shiny UI module to add filter variable
+Shiny UI module to add filter variable.
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{MatrixFilterStates$ui_add_filter_state(id, data)}\if{html}{\out{</div>}}
 }
@@ -189,12 +188,12 @@ Shiny UI module to add filter variable
 id of shiny module}
 
 \item{\code{data}}{(\code{matrix})\cr
-object which columns are used to choose filter variables.}
+data object for which to define a subset}
 }
 \if{html}{\out{</div>}}
 }
 \subsection{Returns}{
-shiny.tag
+\code{shiny.tag}
 }
 }
 \if{html}{\out{<hr>}}
@@ -214,10 +213,10 @@ Removed filter variable gets back to available choices.
 \if{html}{\out{<div class="arguments">}}
 \describe{
 \item{\code{id}}{(\code{character(1)})\cr
-an ID string that corresponds with the ID used to call the module's UI function.}
+shiny module instance id}
 
 \item{\code{data}}{(\code{matrix})\cr
-object which columns are used to choose filter variables.}
+data object for which to define a subset}
 
 \item{\code{...}}{ignored}
 }
