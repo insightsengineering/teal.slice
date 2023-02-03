@@ -375,7 +375,7 @@ FilterStates <- R6::R6Class( # nolint
       )
     },
 
-        #' @description
+    #' @description
     #' Shiny server module.
     #'
     #' @param id (`character(1)`)\cr
@@ -409,10 +409,10 @@ FilterStates <- R6::R6Class( # nolint
             ignoreNULL = TRUE,
             {
               fstates <- self$state_list_get(1L)
-              for (fname in added_state_name()) {
+              lapply(added_state_name(), function(fname) {
                 id <- sprintf("1L-%s", fname)
                 private$srv_card_module(id = id, state_list_index = 1L, element_id = fname, fs = fstates[[fname]])
-              }
+              })
               added_state_name(character(0))
             }
           )
@@ -515,7 +515,6 @@ FilterStates <- R6::R6Class( # nolint
     #' return `moduleServer` function which returns `NULL`
     #' @keywords internal
     ui_card_module = function(id, fs) {
-      # id needed to distinguish duplicated var names (element_id) from different slots (queue_index)
       ns <- NS(id)
       div(
         id = ns("card"),
@@ -538,7 +537,7 @@ FilterStates <- R6::R6Class( # nolint
           once = TRUE, # remove button can be called once, should be destroyed afterwards
           handlerExpr = {
             self$state_list_remove(state_list_index, element_id)
-            # remove remainings
+            # remove remainings: destroy fs observers, inputs etc.
           }
         )
       })

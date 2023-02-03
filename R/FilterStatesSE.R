@@ -295,9 +295,10 @@ SEFilterStates <- R6::R6Class( # nolint
             ignoreNULL = TRUE,
             {
               fstates <- self$state_list_get(1L)
-              for (fname in genes_added_state_name()) {
-                private$srv_card_module(state_list_index = 1L, element_id = fname, fs = fstates[[fname]])
-              }
+              lapply(genes_added_state_name(), function(fname) {
+                id <- sprintf("genes-%s", fname)
+                private$srv_card_module(id = id, state_list_index = 1L, element_id = fname, fs = fstates[[fname]])
+              })
               genes_added_state_name(character(0))
             }
           )
@@ -305,7 +306,8 @@ SEFilterStates <- R6::R6Class( # nolint
           output[["genes"]] <- shiny::renderUI({
             fstates <- self$state_list_get(1L) # rerenders when queue changes / not when the state changes
             lapply(names(fstates), function(fname) {
-              private$ui_card_module(state_list_index = session$ns(1L), element_id = fname, fstates[[fname]])
+              id <- sprintf("genes-%s", fname)
+              private$ui_card_module(id = session$ns(id), fstates[[fname]])
             })
           })
 
@@ -323,10 +325,10 @@ SEFilterStates <- R6::R6Class( # nolint
             ignoreNULL = TRUE,
             {
               fstates <- self$state_list_get(2L)
-              for (fname in samples_added_state_name()) {
-                id <- sprintf("2L-%s", fname)
-                private$srv_card_module(id = session$ns(id), state_list_index = 2L, element_id = fname, fs = fstates[[fname]])
-              }
+              lapply(samples_added_state_name(), function(fname) {
+                id <- sprintf("samples-%s", fname)
+                private$srv_card_module(id = id, state_list_index = 2L, element_id = fname, fs = fstates[[fname]])
+              })
               samples_added_state_name(character(0))
             }
           )
@@ -334,8 +336,8 @@ SEFilterStates <- R6::R6Class( # nolint
           output[["samples"]] <- shiny::renderUI({
             fstates <- self$state_list_get(2L) # rerenders when queue changes / not when the state changes
             lapply(names(fstates), function(fname) {
-              id <- sprintf("2L-%s", fname)
-              private$ui_card_module(id = session$ns(2L), fstates[[fname]])
+              id <- sprintf("samples-%s", fname)
+              private$ui_card_module(id = session$ns(id), fstates[[fname]])
             })
           })
 
