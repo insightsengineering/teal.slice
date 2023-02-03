@@ -315,8 +315,8 @@ FilterState <- R6::R6Class( # nolint
         )
       )
       value <- private$cast_and_validate(value)
-      value <- private$remove_out_of_bound_values(value)
-      private$validate_selection(value)
+      # value <- private$remove_out_of_bound_values(value)
+      # private$validate_selection(value)
       private$selected(value)
       logger::log_trace(sprintf(
         "%s$set_selected selection of variable %s set, dataname: %s",
