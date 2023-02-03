@@ -801,17 +801,17 @@ FilteredData <- R6::R6Class( # nolint
     #'   panel will be hidden
     #' @return `moduleServer` function which returns `NULL`
     srv_filter_panel = function(id, active_datanames = function() "all") {
-      stopifnot(
-        is.function(active_datanames) || is.reactive(active_datanames)
-      )
+      stopifnot(is.function(active_datanames))
       moduleServer(
         id = id,
         function(input, output, session) {
           logger::log_trace("FilteredData$srv_filter_panel initializing")
-          self$srv_filter_overview(
-            id = "teal_filters_info",
-            active_datanames = active_datanames
-          )
+
+          datanames <- eventReactive(req(active_datanames()), {
+            self$handle_active_datanames(active_datanames())
+          })
+
+          self$srv_filter_overview(id = "teal_filters_info", active_datanames = datanames)
 
           shiny::observeEvent(input$minimise_filter_overview, {
             shinyjs::toggle("filters_overview_contents")
@@ -886,9 +886,9 @@ FilteredData <- R6::R6Class( # nolint
           )
 
           observeEvent(
-            eventExpr = active_datanames(),
+            eventExpr = datanames(),
             handlerExpr = {
-              private$hide_inactive_datasets(active_datanames)
+              private$hide_inactive_datasets(datanames)
             },
             priority = 1
           )
@@ -936,10 +936,8 @@ FilteredData <- R6::R6Class( # nolint
     #'   if the function returns `NULL` (as opposed to `character(0)`), the filter
     #'   panel will be hidden.
     #' @return `moduleServer` function which returns `NULL`
-    srv_filter_overview = function(id, active_datanames = function() "all") {
-      stopifnot(
-        is.function(active_datanames) || is.reactive(active_datanames)
-      )
+    srv_filter_overview = function(id, active_datanames = reactive(self$datanames())) {
+      stopifnot(is.function(active_datanames))
       moduleServer(
         id = id,
         function(input, output, session) {
@@ -987,6 +985,132 @@ FilteredData <- R6::R6Class( # nolint
           shiny::outputOptions(output, "table", suspendWhenHidden = FALSE)
           logger::log_trace("FilteredData$srv_filter_overview initialized")
           NULL
+        }
+      )
+    },
+    #' Active filter states module
+    #'
+    #' Active filter states module
+    #' @rdname module_active
+    #'
+    #' @param id (`character(1)`)\cr
+    #'  identifier of the element - preferably containing dataset name
+    #'
+    #' @param x (`FilteredData`, `FilteredDataset`, `FilterStates`)
+    #'
+    #' @keywords internal
+    #'
+    #' @return shiny `ui` or `serverModule`
+    ui_active = function(id, datanames) {
+      ns <- NS(id)
+      div(
+        id = id, # not used, can be used to customize CSS behavior
+        class = "well",
+        tags$div(
+          class = "row",
+          tags$div(
+            class = "col-sm-6",
+            tags$label("Active Filter Variables", class = "text-primary mb-4")
+          ),
+          tags$div(
+            class = "col-sm-6",
+            actionLink(
+              ns("remove_all_filters"),
+              label = "",
+              icon("circle-xmark", lib = "font-awesome"),
+              title = "Remove active filters",
+              class = "remove_all pull-right"
+            ),
+            actionLink(
+              ns("minimise_filter_active"),
+              label = NULL,
+              icon = icon("angle-down", lib = "font-awesome"),
+              title = "Minimise panel",
+              class = "remove pull-right"
+            )
+          )
+        ),
+        div(
+          id = ns("filter_active_vars_contents"),
+          tagList(
+            lapply(
+              datanames,
+              function(dataname) {
+                ui_active_FilteredDataset(id = ns(dataname), dataname = dataname)
+              }
+            )
+          )
+        ),
+        shinyjs::hidden(
+          div(
+            id = ns("filters_active_count"),
+            textOutput(ns("teal_filters_count"))
+          )
+        )
+      )
+    },
+
+    #' @rdname module_active
+    srv_active = function(id, active_datanames = reactive(self$datanames())) {
+      stopifnot(is.reactive(active_datanames))
+      moduleServer(id = id, function(input, output, session) {
+          shiny::observeEvent(input$minimise_filter_active, {
+            shinyjs::toggle("filter_active_vars_contents")
+            shinyjs::toggle("filters_active_count")
+            toggle_icon(session$ns("minimise_filter_active"), c("fa-angle-right", "fa-angle-down"))
+            toggle_title(session$ns("minimise_filter_active"), c("Restore panel", "Minimise Panel"))
+          })
+
+          observeEvent(input$remove_all_filters, {
+            logger::log_trace("FilteredData$srv_filter_panel@1 removing all filters")
+            lapply(self$datanames(), function(dataname) {
+              fdataset <- self$get_filtered_dataset(dataname = dataname)
+              fdataset$state_lists_empty()
+            })
+            logger::log_trace("FilteredData$srv_filter_panel@1 removed all filters")
+          })
+
+          # use isolate because we assume that the number of datasets does not change
+          # over the course of the teal app
+          # alternatively, one can proceed as in modules_filter_items to dynamically insert, remove UIs
+          isol_datanames <- isolate(self$datanames()) # they are already ordered
+          # should not use for-loop as variables are otherwise only bound by reference
+          # and last dataname would be used
+          lapply(
+            isol_datanames,
+            function(dataname) {
+              fdataset <- self$get_filtered_dataset(dataname)
+              srv_active_FilteredDataset(id = dataname, fdataset)
+            }
+          )
+
+          # hide and show datanames cards
+          observeEvent(active_datanames(), {
+            lapply(isol_datanames, function(dataname) {
+              if (dataname %in% active_datanames()) {
+                shinyjs::show(dataname)
+              } else {
+                shinyjs::hide(dataname)
+              }
+            })
+          })
+
+          output$teal_filters_count <- shiny::renderText({
+            n_filters_active <- self$get_filter_count()
+            shiny::req(n_filters_active > 0L)
+            sprintf(
+              "%s filter%s applied across datasets",
+              n_filters_active,
+              ifelse(n_filters_active == 1, "", "s"))
+          })
+
+          shiny::observeEvent(self$get_filter_count(), {
+            shinyjs::toggle("remove_all_filters", condition = self$get_filter_count() != 0)
+            shinyjs::show("filter_active_vars_contents")
+            shinyjs::hide("filters_active_count")
+            toggle_icon(session$ns("minimise_filter_active"), c("fa-angle-right", "fa-angle-down"), TRUE)
+            toggle_title(session$ns("minimise_filter_active"), c("Restore panel", "Minimise Panel"), TRUE)
+          })
         }
       )
     }

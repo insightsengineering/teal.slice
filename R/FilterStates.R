@@ -517,7 +517,6 @@ FilterStates <- R6::R6Class( # nolint
     ui_card_module = function(id, fs) {
       # id needed to distinguish duplicated var names (element_id) from different slots (queue_index)
       ns <- NS(id)
-      print(id)
       div(
         id = ns("card"),
         class = "list-group-item",
@@ -531,7 +530,6 @@ FilterStates <- R6::R6Class( # nolint
     #' @keywords internal
     srv_card_module = function(id, state_list_index, element_id, fs) {
       moduleServer(id, function(input, output, session) {
-        print(id)
         fs_callback <- fs$server(id = "content")
         observeEvent(
           eventExpr = fs_callback(), # when remove button is clicked in the FilterState ui
