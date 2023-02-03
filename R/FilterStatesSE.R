@@ -247,7 +247,9 @@ SEFilterStates <- R6::R6Class( # nolint
         } else {
           fstate <- init_filter_state(
             x = SummarizedExperiment::colData(data)[[varname]],
-            x_reactive = reactive(SummarizedExperiment::colData(data_reactive())[[varname]]),
+            x_reactive = reactive(
+              if (!is.null(data_reactive())) SummarizedExperiment::colData(data_reactive())[[varname]]
+            ),
             varname = as.name(varname),
             input_dataname = private$input_dataname
           )
