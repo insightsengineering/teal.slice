@@ -396,12 +396,6 @@ RangeFilterState <- R6::R6Class( # nolint
               # selection_state <- as.numeric(pmax(pmin(input$selection, private$choices[2]), private$choices[1]))
               selection_state <- input$selection
               if (!setequal(selection_state, self$get_selected())) {
-                validate(
-                  need(
-                    input$selection[1] <= input$selection[2],
-                    "Left range boundary should be lower than right"
-                  )
-                )
                 self$set_selected(selection_state)
               }
               logger::log_trace(
