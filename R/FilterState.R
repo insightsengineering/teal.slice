@@ -48,8 +48,9 @@ FilterState <- R6::R6Class( # nolint
     #' @param x (`vector`)\cr
     #'   values of the variable used in filter
     #' @param x_reactive (`reactive`)\cr
-    #'   a `reactive` returning a filtered vector. Is used to update
-    #'   counts following the change in values of the filtered dataset.
+    #'   a `reactive` returning a filtered vector or returning `NULL`. It is used to update
+    #'   counts following the change in values of the filtered dataset. If the `reactive`
+    #'   is `NULL` counts based on filtered dataset are not shown.
     #' @param varname (`character`, `name`)\cr
     #'   name of the variable
     #' @param varlabel (`character(1)`)\cr
@@ -530,6 +531,17 @@ FilterState <- R6::R6Class( # nolint
       values
     },
 
+    # Calculates NA counts
+    #
+    # NA counts are based on unfiltered and filtered (optional) `x`.
+    get_na_label = function() {
+      sprintf(
+        "Keep NA (%s%s)",
+        if (is.null(private$x_reactive())) "" else sprintf("%s/", private$filtered_na_count()),
+        private$na_count
+      )
+    },
+
     # shiny modules -----
     #' module with inputs
     ui_inputs = function(id) {
@@ -550,7 +562,7 @@ FilterState <- R6::R6Class( # nolint
       if (private$na_count > 0) {
         checkboxInput(
           ns("value"),
-          isolate(sprintf("Keep NA (%s/%s)", private$filtered_na_count(), private$na_count)),
+          isolate(private$get_na_label()),
           value = isolate(self$get_keep_na())
         )
       } else {
@@ -570,7 +582,7 @@ FilterState <- R6::R6Class( # nolint
           updateCheckboxInput(
             session,
             "value",
-            label = sprintf("Keep NA (%s/%s)", private$filtered_na_count(), private$na_count),
+            label = private$get_na_label(),
             value = self$get_keep_na()
           )
         })

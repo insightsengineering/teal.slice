@@ -7,6 +7,8 @@
 #' @param x_reactive (`reactive`)\cr
 #'   returning vector of the same type as `x`. Is used to update
 #'   counts following the change in values of the filtered dataset.
+#'   If it is set to `reactive(NULL)` then counts based on filtered
+#'   dataset are not shown.
 #'
 #' @param varname (`character(1)`, `name`)\cr
 #'   name of the variable
@@ -57,7 +59,7 @@
 #' }
 #' @return `FilterState` object
 init_filter_state <- function(x,
-                              x_reactive = reactive(x),
+                              x_reactive = reactive(NULL),
                               varname,
                               varlabel = attr(x, "label"),
                               input_dataname = NULL,
@@ -94,7 +96,7 @@ init_filter_state <- function(x,
 #' @keywords internal
 #' @export
 init_filter_state.default <- function(x,
-                                      x_reactive = reactive(x),
+                                      x_reactive = reactive(NULL),
                                       varname,
                                       varlabel = attr(x, "label"),
                                       input_dataname = NULL,
@@ -113,7 +115,7 @@ init_filter_state.default <- function(x,
 #' @keywords internal
 #' @export
 init_filter_state.logical <- function(x,
-                                      x_reactive = reactive(x),
+                                      x_reactive = reactive(NULL),
                                       varname,
                                       varlabel = attr(x, "label"),
                                       input_dataname = NULL,
@@ -132,7 +134,7 @@ init_filter_state.logical <- function(x,
 #' @keywords internal
 #' @export
 init_filter_state.numeric <- function(x,
-                                      x_reactive = reactive(x),
+                                      x_reactive = reactive(NULL),
                                       varname,
                                       varlabel = attr(x, "label"),
                                       input_dataname = NULL,
@@ -162,7 +164,7 @@ init_filter_state.numeric <- function(x,
 #' @keywords internal
 #' @export
 init_filter_state.factor <- function(x,
-                                     x_reactive = reactive(x),
+                                     x_reactive = reactive(NULL),
                                      varname,
                                      varlabel = attr(x, "label"),
                                      input_dataname = NULL,
@@ -181,7 +183,7 @@ init_filter_state.factor <- function(x,
 #' @keywords internal
 #' @export
 init_filter_state.character <- function(x,
-                                        x_reactive = reactive(x),
+                                        x_reactive = reactive(NULL),
                                         varname,
                                         varlabel = attr(x, "label"),
                                         input_dataname = NULL,
@@ -200,7 +202,7 @@ init_filter_state.character <- function(x,
 #' @keywords internal
 #' @export
 init_filter_state.Date <- function(x,
-                                   x_reactive = reactive(x),
+                                   x_reactive = reactive(NULL),
                                    varname,
                                    varlabel = attr(x, "label"),
                                    input_dataname = NULL,
@@ -219,7 +221,7 @@ init_filter_state.Date <- function(x,
 #' @keywords internal
 #' @export
 init_filter_state.POSIXct <- function(x,
-                                      x_reactive = reactive(x),
+                                      x_reactive = reactive(NULL),
                                       varname,
                                       varlabel = attr(x, "label"),
                                       input_dataname = NULL,
@@ -238,7 +240,7 @@ init_filter_state.POSIXct <- function(x,
 #' @keywords internal
 #' @export
 init_filter_state.POSIXlt <- function(x,
-                                      x_reactive = reactive(x),
+                                      x_reactive = reactive(NULL),
                                       varname,
                                       varlabel = attr(x, "label"),
                                       input_dataname = NULL,

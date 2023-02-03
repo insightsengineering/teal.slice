@@ -26,8 +26,9 @@ RangeFilterState <- R6::R6Class( # nolint
     #' @param x (`numeric`)\cr
     #'   values of the variable used in filter
     #' @param x_reactive (`reactive`)\cr
-    #'   a `reactive` returning a filtered vector. Is used to update
-    #'   counts following the change in values of the filtered dataset.
+    #'   a `reactive` returning a filtered vector or returning `NULL`. Is used to update
+    #'   counts following the change in values of the filtered dataset. If the `reactive`
+    #'   is `NULL` counts based on filtered dataset are not shown.
     #' @param varname (`character`, `name`)\cr
     #'   name of the variable
     #' @param varlabel (`character(1)`)\cr
@@ -320,6 +321,14 @@ RangeFilterState <- R6::R6Class( # nolint
       values
     },
 
+    get_inf_label = function() {
+      sprintf(
+        "Keep Inf (%s%s)",
+        if (is.null(private$x_reactive())) "" else sprintf("%s/", private$inf_filtered_count()),
+        private$inf_count
+      )
+    },
+
     # UI Module for `RangeFilterState`.
     # This UI element contains two values for `min` and `max`
     # of the range and two checkboxes whether to keep the `NA` or `Inf`  values.
@@ -373,13 +382,17 @@ RangeFilterState <- R6::R6Class( # nolint
             height = 25,
             expr = {
               private$unfiltered_histogram +
-              ggplot2::geom_histogram(
-                data = data.frame(x = Filter(is.finite, private$x_reactive())),
-                ggplot2::aes(x = x),
-                bins = 100,
-                fill = grDevices::rgb(173 / 255, 216 / 255, 230 / 255),
-                color = grDevices::rgb(173 / 255, 216 / 255, 230 / 255)
-              )
+              if (!is.null(private$x_reactive())) {
+                ggplot2::geom_histogram(
+                  data = data.frame(x = Filter(is.finite, private$x_reactive())),
+                  ggplot2::aes(x = x),
+                  bins = 100,
+                  fill = grDevices::rgb(173 / 255, 216 / 255, 230 / 255),
+                  color = grDevices::rgb(173 / 255, 216 / 255, 230 / 255)
+                )
+              } else {
+                NULL
+              }
             }
           )
 
@@ -453,7 +466,7 @@ RangeFilterState <- R6::R6Class( # nolint
       if (private$inf_count > 0) {
         checkboxInput(
           ns("value"),
-          isolate(sprintf("Keep Inf (%s/%s)", private$inf_filtered_count(), private$inf_count)),
+          isolate(private$get_inf_label()),
           value = isolate(self$get_keep_inf())
         )
       } else {
@@ -474,7 +487,7 @@ RangeFilterState <- R6::R6Class( # nolint
           updateCheckboxInput(
             session,
             "value",
-            label = sprintf("Keep Inf (%s/%s)", private$inf_filtered_count(), private$inf_count),
+            label = private$get_inf_label(),
             value = self$get_keep_inf()
           )
         })
@@ -490,6 +503,7 @@ RangeFilterState <- R6::R6Class( # nolint
             if (!setequal(self$get_keep_inf(), input$value)) {
               updateCheckboxInput(
                 inputId = "value",
+                label = private$get_inf_label(),
                 value = self$get_keep_inf()
               )
             }
