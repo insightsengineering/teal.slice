@@ -259,13 +259,13 @@ RangeFilterState <- R6::R6Class( # nolint
           sprintf(
             "value of the selection for `%s` in `%s` should be a numeric",
             self$get_varname(deparse = TRUE),
-            self$get_dataname(deparse = TRUE)
+            self$get_dataname()
           )
         )
       }
       pre_msg <- sprintf(
         "data '%s', variable '%s': ",
-        self$get_dataname(deparse = TRUE),
+        self$get_dataname(),
         self$get_varname(deparse = TRUE)
       )
       check_in_range(value, private$choices, pre_msg = pre_msg)

@@ -31,7 +31,7 @@ test_that("dataname must be specified if extract_type is specified", {
 
 testthat::test_that("get_dataname returns a string when dataname is NULL", {
   filter_state <- FilterState$new(7, varname = "7", dataname = NULL)
-  testthat::expect_equal(filter_state$get_dataname(deparse = TRUE), "NULL")
+  testthat::expect_equal(filter_state$get_dataname(), "NULL")
 })
 
 testthat::test_that("get_varlabel returns a string passed to the constructor", {

@@ -171,12 +171,9 @@ FilterState <- R6::R6Class( # nolint
     #' @description
     #' Returns dataname.
     #'
-    #' @param deparse (`logical(1)`)\cr
-    #'   whether dataname should be deparsed; defaults to `TRUE`
-    #'
     #' @return `name` or `character(1)`
     #'
-    get_dataname = function(deparse = TRUE) {
+    get_dataname = function() {
       if (!is.null(private$dataname)) {
         private$dataname
       } else {

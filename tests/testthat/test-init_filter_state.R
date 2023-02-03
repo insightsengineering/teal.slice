@@ -37,7 +37,7 @@ testthat::test_that("init_filter_state accepts character as extract_type", {
 testthat::test_that("init_filter_state provides default values for varlabel, dataname, use_datname", {
   filter_state <- init_filter_state(7, varname = "test")
   testthat::expect_equal(filter_state$get_varlabel(), character(0))
-  testthat::expect_equal(filter_state$get_dataname(deparse = TRUE), "NULL")
+  testthat::expect_equal(filter_state$get_dataname(), "NULL")
 })
 
 testthat::test_that("init_filter_state returns an EmptyFilterState if all values provided are NA", {

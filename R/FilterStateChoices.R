@@ -141,7 +141,7 @@ ChoicesFilterState <- R6::R6Class( # nolint
           sprintf(
             "Values of the selection for `%s` in `%s` should be an array of character.",
             self$get_varname(deparse = TRUE),
-            self$get_dataname(deparse = TRUE)
+            self$get_dataname()
           )
         )
       }
