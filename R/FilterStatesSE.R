@@ -4,6 +4,8 @@
 SEFilterStates <- R6::R6Class( # nolint
   classname = "SEFilterStates",
   inherit = FilterStates,
+
+  # public methods ----
   public = list(
     #' @description Initialize `SEFilterStates` object
     #'
@@ -31,11 +33,9 @@ SEFilterStates <- R6::R6Class( # nolint
         stop("Cannot load SummarizedExperiment - please install the package or restart your session.")
       }
       super$initialize(data, data_reactive, input_dataname, output_dataname, datalabel)
-      self$state_list_initialize(
-        list(
-          subset = reactiveVal(),
-          select = reactiveVal()
-        )
+      private$state_list <- list(
+        subset = reactiveVal(),
+        select = reactiveVal()
       )
     },
 
@@ -333,6 +333,8 @@ SEFilterStates <- R6::R6Class( # nolint
         }
       }
     },
+
+    # shiny modules ----
 
     #' @description
     #' Shiny UI module to add filter variable

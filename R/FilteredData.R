@@ -107,6 +107,7 @@ FilteredData <- R6::R6Class( # nolint
 
       invisible(self)
     },
+
     #' @description
     #' Gets datanames
     #'

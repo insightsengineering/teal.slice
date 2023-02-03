@@ -13,7 +13,7 @@
 #' @param varname (`character(1)`, `name`)\cr
 #'   name of the variable
 #'
-#' @param varlabel (`character(1)`)\cr
+#' @param varlabel (`character(0)`, `character(1)` or `NULL`)\cr
 #'   label of the variable (optional).
 #'
 #' @param input_dataname (`name` or `call`)\cr
@@ -64,19 +64,19 @@ init_filter_state <- function(x,
                               varlabel = attr(x, "label"),
                               input_dataname = NULL,
                               extract_type = character(0)) {
-  if (is.null(varlabel)) varlabel <- character(0)
   checkmate::assert(
     checkmate::check_string(varname),
     checkmate::check_class(varname, "name")
   )
-  checkmate::assert_character(varlabel, max.len = 1, any.missing = FALSE)
-  stopifnot(is.null(input_dataname) || is.name(input_dataname) || is.call(input_dataname))
-  checkmate::assert_character(extract_type, max.len = 1, any.missing = FALSE)
-  stopifnot(
-    length(extract_type) == 0 ||
-      length(extract_type) == 1 && !is.null(input_dataname)
-  )
-  stopifnot(extract_type %in% c("list", "matrix"))
+  checkmate::assert_character(varlabel, max.len = 1L, any.missing = FALSE, null.ok = TRUE)
+  checkmate::assert_multi_class(input_dataname, c("name", "call"), null.ok = TRUE)
+  checkmate::assert_character(extract_type, max.len = 1L, any.missing = FALSE)
+  if (length(extract_type) == 1)
+    checkmate::assert_choice(extract_type, choices = c("list", "matrix"))
+  if (length(extract_type) == 1 && is.null(input_dataname))
+    stop("if extract_type is specified, input_dataname must also be specified")
+
+  if (is.null(varlabel)) varlabel <- character(0L)
 
   if (all(is.na(x))) {
     return(
