@@ -2,12 +2,12 @@
 # the calls, but only whether they evaluate to the expected value.
 
 # constructor ----
-testthat::test_that("The constructor accepts a call, name or string as dataname", {
+testthat::test_that("The constructor accepts only a string as dataname", {
   testthat::expect_no_error(
     FilterStates$new(dataname = "string", datalabel = "test"))
-  testthat::expect_no_error(
+  testthat::expect_error(
     FilterStates$new(dataname = quote(name), datalabel = "test"))
-  testthat::expect_no_error(
+  testthat::expect_error(
     FilterStates$new(dataname = call("call"), datalabel = "test"))
 })
 

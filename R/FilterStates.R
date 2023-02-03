@@ -63,7 +63,7 @@ FilterStates <- R6::R6Class( # nolint
     #' self invisibly
     #'
     initialize = function(dataname, datalabel) {
-      checkmate::check_string(dataname)
+      checkmate::assert_string(dataname)
       checkmate::assert_character(datalabel, max.len = 1, any.missing = FALSE)
 
       private$dataname <- dataname

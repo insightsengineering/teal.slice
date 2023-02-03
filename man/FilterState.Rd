@@ -174,13 +174,13 @@ and must be executed in reactive or isolated context.
 \if{html}{\out{<a id="method-FilterState-get_dataname"></a>}}
 \if{latex}{\out{\hypertarget{method-FilterState-get_dataname}{}}}
 \subsection{Method \code{get_dataname()}}{
-Returns dataname.
+Returns dataname or "NULL" if dataname is NULL.
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{FilterState$get_dataname()}\if{html}{\out{</div>}}
 }
 
 \subsection{Returns}{
-\code{name} or \code{character(1)}
+\code{character(1)}
 }
 }
 \if{html}{\out{<hr>}}
