@@ -15,7 +15,6 @@ Specialization of \code{FilterStates} for a base matrix.
 \itemize{
 \item \href{#method-MatrixFilterStates-new}{\code{MatrixFilterStates$new()}}
 \item \href{#method-MatrixFilterStates-format}{\code{MatrixFilterStates$format()}}
-\item \href{#method-MatrixFilterStates-server}{\code{MatrixFilterStates$server()}}
 \item \href{#method-MatrixFilterStates-get_filter_state}{\code{MatrixFilterStates$get_filter_state()}}
 \item \href{#method-MatrixFilterStates-set_filter_state}{\code{MatrixFilterStates$set_filter_state()}}
 \item \href{#method-MatrixFilterStates-remove_filter_state}{\code{MatrixFilterStates$remove_filter_state()}}
@@ -32,6 +31,7 @@ Specialization of \code{FilterStates} for a base matrix.
 <li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilterStates" data-id="get_filter_count"><a href='../../teal.slice/html/FilterStates.html#method-FilterStates-get_filter_count'><code>teal.slice::FilterStates$get_filter_count()</code></a></span></li>
 <li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilterStates" data-id="get_fun"><a href='../../teal.slice/html/FilterStates.html#method-FilterStates-get_fun'><code>teal.slice::FilterStates$get_fun()</code></a></span></li>
 <li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilterStates" data-id="print"><a href='../../teal.slice/html/FilterStates.html#method-FilterStates-print'><code>teal.slice::FilterStates$print()</code></a></span></li>
+<li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilterStates" data-id="server"><a href='../../teal.slice/html/FilterStates.html#method-FilterStates-server'><code>teal.slice::FilterStates$server()</code></a></span></li>
 <li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilterStates" data-id="set_filterable_varnames"><a href='../../teal.slice/html/FilterStates.html#method-FilterStates-set_filterable_varnames'><code>teal.slice::FilterStates$set_filterable_varnames()</code></a></span></li>
 <li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilterStates" data-id="state_list_empty"><a href='../../teal.slice/html/FilterStates.html#method-FilterStates-state_list_empty'><code>teal.slice::FilterStates$state_list_empty()</code></a></span></li>
 <li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilterStates" data-id="state_list_get"><a href='../../teal.slice/html/FilterStates.html#method-FilterStates-state_list_get'><code>teal.slice::FilterStates$state_list_get()</code></a></span></li>
@@ -100,27 +100,6 @@ Returns the formatted string representing this \code{MatrixFilterStates} object.
 }
 \subsection{Returns}{
 \code{character(1)} the formatted string
-}
-}
-\if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-MatrixFilterStates-server"></a>}}
-\if{latex}{\out{\hypertarget{method-MatrixFilterStates-server}{}}}
-\subsection{Method \code{server()}}{
-Server module
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{MatrixFilterStates$server(id)}\if{html}{\out{</div>}}
-}
-
-\subsection{Arguments}{
-\if{html}{\out{<div class="arguments">}}
-\describe{
-\item{\code{id}}{(\code{character(1)})\cr
-an ID string that corresponds with the ID used to call the module's UI function.}
-}
-\if{html}{\out{</div>}}
-}
-\subsection{Returns}{
-\code{moduleServer} function which returns \code{NULL}
 }
 }
 \if{html}{\out{<hr>}}

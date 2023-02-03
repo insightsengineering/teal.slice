@@ -16,7 +16,6 @@ Specialization of \code{FilterStates} for \code{MultiAssayExperiment}.
 \item \href{#method-MAEFilterStates-new}{\code{MAEFilterStates$new()}}
 \item \href{#method-MAEFilterStates-format}{\code{MAEFilterStates$format()}}
 \item \href{#method-MAEFilterStates-get_fun}{\code{MAEFilterStates$get_fun()}}
-\item \href{#method-MAEFilterStates-server}{\code{MAEFilterStates$server()}}
 \item \href{#method-MAEFilterStates-get_filter_state}{\code{MAEFilterStates$get_filter_state()}}
 \item \href{#method-MAEFilterStates-set_filter_state}{\code{MAEFilterStates$set_filter_state()}}
 \item \href{#method-MAEFilterStates-remove_filter_state}{\code{MAEFilterStates$remove_filter_state()}}
@@ -32,6 +31,7 @@ Specialization of \code{FilterStates} for \code{MultiAssayExperiment}.
 <li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilterStates" data-id="get_datalabel"><a href='../../teal.slice/html/FilterStates.html#method-FilterStates-get_datalabel'><code>teal.slice::FilterStates$get_datalabel()</code></a></span></li>
 <li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilterStates" data-id="get_filter_count"><a href='../../teal.slice/html/FilterStates.html#method-FilterStates-get_filter_count'><code>teal.slice::FilterStates$get_filter_count()</code></a></span></li>
 <li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilterStates" data-id="print"><a href='../../teal.slice/html/FilterStates.html#method-FilterStates-print'><code>teal.slice::FilterStates$print()</code></a></span></li>
+<li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilterStates" data-id="server"><a href='../../teal.slice/html/FilterStates.html#method-FilterStates-server'><code>teal.slice::FilterStates$server()</code></a></span></li>
 <li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilterStates" data-id="set_filterable_varnames"><a href='../../teal.slice/html/FilterStates.html#method-FilterStates-set_filterable_varnames'><code>teal.slice::FilterStates$set_filterable_varnames()</code></a></span></li>
 <li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilterStates" data-id="state_list_empty"><a href='../../teal.slice/html/FilterStates.html#method-FilterStates-state_list_empty'><code>teal.slice::FilterStates$state_list_empty()</code></a></span></li>
 <li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilterStates" data-id="state_list_get"><a href='../../teal.slice/html/FilterStates.html#method-FilterStates-state_list_get'><code>teal.slice::FilterStates$state_list_get()</code></a></span></li>
@@ -122,27 +122,6 @@ For \code{MAEFilterStates} \code{MultiAssayExperiment::subsetByColData} is used.
 
 \subsection{Returns}{
 \code{character(1)}
-}
-}
-\if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-MAEFilterStates-server"></a>}}
-\if{latex}{\out{\hypertarget{method-MAEFilterStates-server}{}}}
-\subsection{Method \code{server()}}{
-Server module
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{MAEFilterStates$server(id)}\if{html}{\out{</div>}}
-}
-
-\subsection{Arguments}{
-\if{html}{\out{<div class="arguments">}}
-\describe{
-\item{\code{id}}{(\code{character(1)})\cr
-an ID string that corresponds with the ID used to call the module's UI function.}
-}
-\if{html}{\out{</div>}}
-}
-\subsection{Returns}{
-\code{moduleServer} function which returns \code{NULL}
 }
 }
 \if{html}{\out{<hr>}}

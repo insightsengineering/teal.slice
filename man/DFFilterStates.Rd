@@ -41,7 +41,6 @@ isolate(filter_states$get_call())
 \item \href{#method-DFFilterStates-new}{\code{DFFilterStates$new()}}
 \item \href{#method-DFFilterStates-format}{\code{DFFilterStates$format()}}
 \item \href{#method-DFFilterStates-get_fun}{\code{DFFilterStates$get_fun()}}
-\item \href{#method-DFFilterStates-server}{\code{DFFilterStates$server()}}
 \item \href{#method-DFFilterStates-get_filter_state}{\code{DFFilterStates$get_filter_state()}}
 \item \href{#method-DFFilterStates-set_filter_state}{\code{DFFilterStates$set_filter_state()}}
 \item \href{#method-DFFilterStates-remove_filter_state}{\code{DFFilterStates$remove_filter_state()}}
@@ -58,6 +57,7 @@ isolate(filter_states$get_call())
 <li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilterStates" data-id="get_datalabel"><a href='../../teal.slice/html/FilterStates.html#method-FilterStates-get_datalabel'><code>teal.slice::FilterStates$get_datalabel()</code></a></span></li>
 <li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilterStates" data-id="get_filter_count"><a href='../../teal.slice/html/FilterStates.html#method-FilterStates-get_filter_count'><code>teal.slice::FilterStates$get_filter_count()</code></a></span></li>
 <li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilterStates" data-id="print"><a href='../../teal.slice/html/FilterStates.html#method-FilterStates-print'><code>teal.slice::FilterStates$print()</code></a></span></li>
+<li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilterStates" data-id="server"><a href='../../teal.slice/html/FilterStates.html#method-FilterStates-server'><code>teal.slice::FilterStates$server()</code></a></span></li>
 <li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilterStates" data-id="state_list_empty"><a href='../../teal.slice/html/FilterStates.html#method-FilterStates-state_list_empty'><code>teal.slice::FilterStates$state_list_empty()</code></a></span></li>
 <li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilterStates" data-id="state_list_get"><a href='../../teal.slice/html/FilterStates.html#method-FilterStates-state_list_get'><code>teal.slice::FilterStates$state_list_get()</code></a></span></li>
 <li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilterStates" data-id="state_list_push"><a href='../../teal.slice/html/FilterStates.html#method-FilterStates-state_list_push'><code>teal.slice::FilterStates$state_list_push()</code></a></span></li>
@@ -153,27 +153,6 @@ For \code{DFFilterStates} this is \code{dplyr::filter}.
 
 \subsection{Returns}{
 \code{character(1)}
-}
-}
-\if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-DFFilterStates-server"></a>}}
-\if{latex}{\out{\hypertarget{method-DFFilterStates-server}{}}}
-\subsection{Method \code{server()}}{
-Shiny server module.
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{DFFilterStates$server(id)}\if{html}{\out{</div>}}
-}
-
-\subsection{Arguments}{
-\if{html}{\out{<div class="arguments">}}
-\describe{
-\item{\code{id}}{(\code{character(1)})\cr
-shiny module instance id}
-}
-\if{html}{\out{</div>}}
-}
-\subsection{Returns}{
-\code{moduleServer} function which returns \code{NULL}
 }
 }
 \if{html}{\out{<hr>}}

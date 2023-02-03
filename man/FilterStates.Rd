@@ -45,7 +45,23 @@ isolate(
 isolate(filter_states$get_call())
 
 }
+\keyword{(from}
+\keyword{Calls}
+\keyword{Server}
+\keyword{`FilterState`}
+\keyword{`ReactiveQueue`)}
+\keyword{a}
+\keyword{and}
+\keyword{button}
+\keyword{for}
+\keyword{from}
 \keyword{internal}
+\keyword{module}
+\keyword{observes}
+\keyword{remove}
+\keyword{server}
+\keyword{single}
+\keyword{the}
 \section{Methods}{
 \subsection{Public methods}{
 \itemize{
@@ -62,6 +78,7 @@ isolate(filter_states$get_call())
 \item \href{#method-FilterStates-get_filter_count}{\code{FilterStates$get_filter_count()}}
 \item \href{#method-FilterStates-remove_filter_state}{\code{FilterStates$remove_filter_state()}}
 \item \href{#method-FilterStates-ui}{\code{FilterStates$ui()}}
+\item \href{#method-FilterStates-server}{\code{FilterStates$server()}}
 \item \href{#method-FilterStates-get_filter_state}{\code{FilterStates$get_filter_state()}}
 \item \href{#method-FilterStates-set_filter_state}{\code{FilterStates$set_filter_state()}}
 \item \href{#method-FilterStates-set_filterable_varnames}{\code{FilterStates$set_filterable_varnames()}}
@@ -355,6 +372,27 @@ shiny element (module instance) id}
 }
 }
 \if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-FilterStates-server"></a>}}
+\if{latex}{\out{\hypertarget{method-FilterStates-server}{}}}
+\subsection{Method \code{server()}}{
+Shiny server module.
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{FilterStates$server(id)}\if{html}{\out{</div>}}
+}
+
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{id}}{(\code{character(1)})\cr
+shiny module instance id}
+}
+\if{html}{\out{</div>}}
+}
+\subsection{Returns}{
+\code{moduleServer} function which returns \code{NULL}
+}
+}
+\if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-FilterStates-get_filter_state"></a>}}
 \if{latex}{\out{\hypertarget{method-FilterStates-get_filter_state}{}}}
 \subsection{Method \code{get_filter_state()}}{
@@ -466,6 +504,12 @@ shiny module instance id}
 }
 \subsection{Returns}{
 \code{moduleServer} function which returns \code{NULL}
+
+UI wrapping a single \code{FilterState}
+
+This module contains a single \code{FilterState} card and remove (from the \code{ReactiveQueue}) button.
+
+return \code{moduleServer} function which returns \code{NULL}
 }
 }
 \if{html}{\out{<hr>}}

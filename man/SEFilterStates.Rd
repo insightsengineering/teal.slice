@@ -15,10 +15,11 @@ Specialization of \code{FilterStates} for \code{SummaryExperiment}.
 \itemize{
 \item \href{#method-SEFilterStates-new}{\code{SEFilterStates$new()}}
 \item \href{#method-SEFilterStates-format}{\code{SEFilterStates$format()}}
-\item \href{#method-SEFilterStates-server}{\code{SEFilterStates$server()}}
 \item \href{#method-SEFilterStates-get_filter_state}{\code{SEFilterStates$get_filter_state()}}
 \item \href{#method-SEFilterStates-set_filter_state}{\code{SEFilterStates$set_filter_state()}}
 \item \href{#method-SEFilterStates-remove_filter_state}{\code{SEFilterStates$remove_filter_state()}}
+\item \href{#method-SEFilterStates-ui}{\code{SEFilterStates$ui()}}
+\item \href{#method-SEFilterStates-server}{\code{SEFilterStates$server()}}
 \item \href{#method-SEFilterStates-ui_add_filter_state}{\code{SEFilterStates$ui_add_filter_state()}}
 \item \href{#method-SEFilterStates-srv_add_filter_state}{\code{SEFilterStates$srv_add_filter_state()}}
 \item \href{#method-SEFilterStates-clone}{\code{SEFilterStates$clone()}}
@@ -37,7 +38,6 @@ Specialization of \code{FilterStates} for \code{SummaryExperiment}.
 <li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilterStates" data-id="state_list_get"><a href='../../teal.slice/html/FilterStates.html#method-FilterStates-state_list_get'><code>teal.slice::FilterStates$state_list_get()</code></a></span></li>
 <li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilterStates" data-id="state_list_push"><a href='../../teal.slice/html/FilterStates.html#method-FilterStates-state_list_push'><code>teal.slice::FilterStates$state_list_push()</code></a></span></li>
 <li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilterStates" data-id="state_list_remove"><a href='../../teal.slice/html/FilterStates.html#method-FilterStates-state_list_remove'><code>teal.slice::FilterStates$state_list_remove()</code></a></span></li>
-<li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilterStates" data-id="ui"><a href='../../teal.slice/html/FilterStates.html#method-FilterStates-ui'><code>teal.slice::FilterStates$ui()</code></a></span></li>
 </ul>
 </details>
 }}
@@ -103,27 +103,6 @@ Returns the formatted string representing this \code{MAEFilterStates} object.
 }
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-SEFilterStates-server"></a>}}
-\if{latex}{\out{\hypertarget{method-SEFilterStates-server}{}}}
-\subsection{Method \code{server()}}{
-Server module
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{SEFilterStates$server(id)}\if{html}{\out{</div>}}
-}
-
-\subsection{Arguments}{
-\if{html}{\out{<div class="arguments">}}
-\describe{
-\item{\code{id}}{(\code{character(1)})\cr
-an ID string that corresponds with the ID used to call the module's UI function.}
-}
-\if{html}{\out{</div>}}
-}
-\subsection{Returns}{
-\code{moduleServer} function which returns \code{NULL}
-}
-}
-\if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-SEFilterStates-get_filter_state"></a>}}
 \if{latex}{\out{\hypertarget{method-SEFilterStates-get_filter_state}{}}}
 \subsection{Method \code{get_filter_state()}}{
@@ -183,6 +162,51 @@ Remove a variable from the \code{state_list} and its corresponding UI element.
 }
 \subsection{Returns}{
 \code{NULL}
+}
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-SEFilterStates-ui"></a>}}
+\if{latex}{\out{\hypertarget{method-SEFilterStates-ui}{}}}
+\subsection{Method \code{ui()}}{
+Shiny module UI
+
+Shiny UI element that stores \code{FilterState} UI elements.
+Populated with elements created with \code{renderUI} in the module server.
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{SEFilterStates$ui(id)}\if{html}{\out{</div>}}
+}
+
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{id}}{(\code{character(1)})\cr
+shiny element (module instance) id}
+}
+\if{html}{\out{</div>}}
+}
+\subsection{Returns}{
+\code{shiny.tag}
+}
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-SEFilterStates-server"></a>}}
+\if{latex}{\out{\hypertarget{method-SEFilterStates-server}{}}}
+\subsection{Method \code{server()}}{
+Shiny server module.
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{SEFilterStates$server(id)}\if{html}{\out{</div>}}
+}
+
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{id}}{(\code{character(1)})\cr
+shiny module instance id}
+}
+\if{html}{\out{</div>}}
+}
+\subsection{Returns}{
+\code{moduleServer} function which returns \code{NULL}
 }
 }
 \if{html}{\out{<hr>}}
