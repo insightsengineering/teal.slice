@@ -84,7 +84,7 @@
   margin-bottom: 10px;
 }
 
-#teal_filter_panel_whole > div.well div.form-group label {
+#teal_filter_panel_whole>div.well div.form-group label {
   width: 100%;
 }
 
@@ -130,11 +130,11 @@ a.remove_all:hover {
   gap: 5px;
 }
 
-.choices_state label > input {
+.choices_state label>input {
   flex-grow: 0;
 }
 
-.choices_state label > span {
+.choices_state label>span {
   flex-grow: 4;
 }
 
@@ -145,18 +145,18 @@ a.remove_all:hover {
 }
 
 .choices_state_label {
-  background-color:lightblue;
-  height:2rem;
-  display:inline-block;
-  position:absolute;
+  background-color: lightblue;
+  height: 2rem;
+  display: inline-block;
+  position: absolute;
   margin-top: -3px;
 }
 
 .choices_state_label_unfiltered {
-  background-color:lightgray;
-  height:2rem;
+  background-color: lightgray;
+  height: 2rem;
   margin-top: -3px;
-  display:inline-block;
+  display: inline-block;
   position: absolute;
 }
 
@@ -228,7 +228,8 @@ will need to remove relevant code above
   list-style-type: none;
   margin: 0;
   padding: 0;
-  border-radius: 5px;
+  margin-top: 1rem;
+  margin-bottom: 1rem;
 }
 
 /* label for MAE data sets*/
@@ -260,11 +261,18 @@ will need to remove relevant code above
   display: grid;
   grid-template-columns: 2fr 1fr 1fr 1fr;
   color: var(--bs-body-color, #333333);
-  border: 1px solid var(--bs-gray-200, rgba(0, 0, 0, 0.03))
+  border: 1px solid var(--bs-gray-200, rgba(0, 0, 0, 0.03));
+  padding: 5px 10px;
+  border-radius: 0.25rem;;
 }
 
 .filter-card-header:hover {
-  background-color: var(--bs-gray-200, rgba(0, 0, 0, 0.03))
+  background-color: var(--bs-gray-200, rgba(0, 0, 0, 0.03));
+}
+
+.filter-card-header.active {
+  border-bottom-left-radius: 0;
+  border-bottom-right-radius: 0;
 }
 
 .filter-card-icons {
@@ -291,5 +299,7 @@ will need to remove relevant code above
   max-height: 0;
   overflow: hidden;
   transition: max-height 0.2s ease-out;
-  margin-top: 1rem;
+  border: 1px solid var(--bs-gray-200, rgba(0, 0, 0, 0.03));
+  border-top: none;
+  padding: 15px 20px;
 }

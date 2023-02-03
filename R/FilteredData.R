@@ -703,7 +703,7 @@ FilteredData <- R6::R6Class( # nolint
         ),
         div(
           id = ns("filter_active_vars"), # not used, can be used to customize CSS behavior
-          class = "well",
+          #class = "well",
           tags$div(
             class = "row",
             tags$div(

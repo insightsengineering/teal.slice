@@ -240,7 +240,7 @@ RangeFilterState <- R6::R6Class( # nolint
 
             output$header_keep_na <- renderUI({
               tagList(
-                tags$strong("NA "),
+                tags$span("NA "),
                 tags$span(class = class)
               )
             })
@@ -252,7 +252,7 @@ RangeFilterState <- R6::R6Class( # nolint
               inf_tag <- tags$span()
             } else {
               inf_tag <- tagList(
-                tags$strong("Inf "),
+                tags$span("Inf "),
                 tags$span(
                   class = if (self$get_keep_inf()) "fa fa-check" else "fa fa-xmark"
                 )
@@ -277,8 +277,8 @@ RangeFilterState <- R6::R6Class( # nolint
 
             output$header_name_value <- renderUI({
               tagList(
-                tags$strong(self$get_varname(deparse = TRUE)),
-                tags$span(value)
+                tags$span(self$get_varname(deparse = TRUE))#,
+                #tags$span(value)
               )
             })
           })

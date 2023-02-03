@@ -156,18 +156,16 @@ DatetimeFilterState <- R6::R6Class( # nolint
       moduleServer(
         id = id,
         function(input, output, session) {
-
           observeEvent(self$get_keep_na(), {
-            
             if (self$get_keep_na()) {
-                class <- "fa fa-check"
-              } else {
-                class <- "fa fa-xmark"
-              }
+              class <- "fa fa-check"
+            } else {
+              class <- "fa fa-xmark"
+            }
 
             output$header_keep_na <- renderUI({
               tagList(
-                tags$strong("NA "),
+                tags$span("NA "),
                 tags$span(class = class)
               )
             })
@@ -186,8 +184,8 @@ DatetimeFilterState <- R6::R6Class( # nolint
 
             output$header_name_value <- renderUI({
               tagList(
-                tags$strong(self$get_varname(deparse = TRUE)),
-                tags$span(value)
+                tags$span(self$get_varname(deparse = TRUE)) # ,
+                # tags$span(value)
               )
             })
           })
@@ -206,31 +204,31 @@ DatetimeFilterState <- R6::R6Class( # nolint
     #'
     ui = function(id) {
       ns <- NS(id)
-      
+
       tags$li(
         id = id,
         tags$div(
-        class = "filter-card filter-card-range",
-        tags$div(
-          class = "filter-card-header",
-          uiOutput(ns("header_name_value"), inline = TRUE),
-          uiOutput(ns("header_keep_na"), inline = TRUE),
+          class = "filter-card",
           tags$div(
-            class = "filter-card-icons",
-            tags$span(
-              class = "filter-card-toggle fa fa-chevron-right"
-            ),
-            actionLink(
-              inputId = ns("remove"),
-              label = icon("circle-xmark", lib = "font-awesome"),
-              class = "filter-card-remove"
+            class = "filter-card-header",
+            uiOutput(ns("header_name_value"), inline = TRUE),
+            uiOutput(ns("header_keep_na"), inline = TRUE),
+            tags$div(
+              class = "filter-card-icons",
+              tags$span(
+                class = "filter-card-toggle fa fa-chevron-right"
+              ),
+              actionLink(
+                inputId = ns("remove"),
+                label = icon("circle-xmark", lib = "font-awesome"),
+                class = "filter-card-remove"
+              )
             )
+          ),
+          tags$div(
+            class = "filter-card-body",
+            private$ui_inputs(ns("inputs"))
           )
-        ),
-        tags$div(
-          class = "filter-card-body",
-          private$ui_inputs(ns("inputs"))
-        )
         )
       )
     }

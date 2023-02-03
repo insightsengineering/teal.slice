@@ -149,7 +149,7 @@ LogicalFilterState <- R6::R6Class( # nolint
 
             output$header_keep_na <- renderUI({
               tagList(
-                tags$strong("NA "),
+                tags$span("NA "),
                 tags$span(class = class)
               )
             })
@@ -168,8 +168,8 @@ LogicalFilterState <- R6::R6Class( # nolint
 
             output$header_name_value <- renderUI({
               tagList(
-                tags$strong(self$get_varname(deparse = TRUE)),
-                tags$span(value)
+                tags$span(self$get_varname(deparse = TRUE))#,
+                #tags$span(value)
               )
             })
           })
@@ -192,7 +192,7 @@ LogicalFilterState <- R6::R6Class( # nolint
       tags$li(
         id = id,
         tags$div(
-        class = "filter-card filter-card-range",
+        class = "filter-card",
         tags$div(
           class = "filter-card-header",
           uiOutput(ns("header_name_value"), inline = TRUE),
