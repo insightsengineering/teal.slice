@@ -52,7 +52,7 @@ RangeFilterState <- R6::R6Class( # nolint
       var_range <- range(x, finite = TRUE)
 
       private$set_choices(var_range)
-      self$set_selected(var_range)
+      self$set_selected(range(pretty(var_range, 100L)))
 
       private$histogram_data <- if (sum(is.finite(x)) >= 2) {
         as.data.frame(
