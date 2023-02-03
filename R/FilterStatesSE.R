@@ -236,7 +236,7 @@ SEFilterStates <- R6::R6Class( # nolint
           fstate <- init_filter_state(
             SummarizedExperiment::colData(data)[[varname]],
             varname = as.name(varname),
-            dataname = as.name(private$dataname)
+            dataname = private$dataname
           )
           fstate$set_state(value)
           self$state_list_push(
@@ -248,7 +248,7 @@ SEFilterStates <- R6::R6Class( # nolint
       }
       logger::log_trace(paste(
         "SEFilterState$set_filter_state initialized,",
-        "dataname: { deparse1(private$dataname) }"
+        "dataname: { private$dataname }"
       ))
       NULL
     },
@@ -513,7 +513,7 @@ SEFilterStates <- R6::R6Class( # nolint
                 x = init_filter_state(
                   SummarizedExperiment::colData(data)[[input$col_to_add]],
                   varname = as.name(input$col_to_add),
-                  dataname = as.name(private$dataname)
+                  dataname = private$dataname
                 ),
                 state_list_index = "select",
                 state_id = input$col_to_add
@@ -542,7 +542,7 @@ SEFilterStates <- R6::R6Class( # nolint
                 x = init_filter_state(
                   SummarizedExperiment::rowData(data)[[input$row_to_add]],
                   varname = as.name(input$row_to_add),
-                  dataname = as.name(private$dataname)
+                  dataname = private$dataname
                 ),
                 state_list_index = "subset",
                 state_id = input$row_to_add

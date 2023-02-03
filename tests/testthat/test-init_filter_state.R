@@ -21,19 +21,6 @@ test_that("dataname must be specified if extract_type is specified", {
   )
 })
 
-testthat::test_that("init_filter_state accepts, name or call as dataname", {
-  testthat::expect_no_error(
-    init_filter_state(7, varname = "test", dataname = NULL)
-  )
-
-  testthat::expect_no_error(
-    init_filter_state(7, varname = "test", dataname = quote(test))
-  )
-  testthat::expect_no_error(
-    init_filter_state(7, varname = "test", dataname = call("test"))
-  )
-})
-
 testthat::test_that("init_filter_state accepts character as extract_type", {
   testthat::expect_no_error(
     init_filter_state(7, varname = "test", extract_type = character(0))
@@ -51,7 +38,6 @@ testthat::test_that("init_filter_state provides default values for varlabel, dat
   filter_state <- init_filter_state(7, varname = "test")
   testthat::expect_equal(filter_state$get_varlabel(), character(0))
   testthat::expect_equal(filter_state$get_dataname(deparse = TRUE), "NULL")
-  testthat::expect_equal(filter_state$get_dataname(deparse = FALSE), NULL)
 })
 
 testthat::test_that("init_filter_state returns an EmptyFilterState if all values provided are NA", {

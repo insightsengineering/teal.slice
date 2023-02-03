@@ -147,7 +147,7 @@ ChoicesFilterState <- R6::R6Class( # nolint
       }
       pre_msg <- sprintf(
         "data '%s', variable '%s': ",
-        self$get_dataname(deparse = TRUE),
+        self$get_dataname(),
         self$get_varname(deparse = TRUE)
       )
       check_in_subset(value, private$choices, pre_msg = pre_msg)

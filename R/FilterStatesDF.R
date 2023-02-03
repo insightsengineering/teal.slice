@@ -196,7 +196,7 @@ DFFilterStates <- R6::R6Class( # nolint
             data[[varname]],
             varname = as.name(varname),
             varlabel = private$get_varlabels(varname),
-            dataname = as.name(private$dataname)
+            dataname = private$dataname
           )
           fstate$set_state(value)
           self$state_list_push(x = fstate, state_list_index = 1L, state_id = varname)
@@ -371,7 +371,7 @@ DFFilterStates <- R6::R6Class( # nolint
                   data[[input$var_to_add]],
                   varname = as.name(input$var_to_add),
                   varlabel = private$get_varlabels(input$var_to_add),
-                  dataname = as.name(private$dataname)
+                  dataname = private$dataname
                 ),
                 state_list_index = 1L,
                 state_id = input$var_to_add

@@ -69,7 +69,7 @@ FilterStates <- R6::R6Class( # nolint
       private$dataname <- dataname
       private$datalabel <- datalabel
 
-      logger::log_trace("Instantiated { class(self)[1] }, dataname: { deparse1(private$dataname) }")
+      logger::log_trace("Instantiated { class(self)[1] }, dataname: { private$dataname }")
       invisible(self)
     },
 
@@ -231,7 +231,7 @@ FilterStates <- R6::R6Class( # nolint
       private$state_list[[state_list_index]](new_state_list)
 
       logger::log_trace(
-        "{ class(self)[1] } pushed into queue, dataname: { deparse1(private$dataname) }"
+        "{ class(self)[1] } pushed into queue, dataname: { private$dataname }"
       )
       invisible(NULL)
     },
@@ -267,7 +267,7 @@ FilterStates <- R6::R6Class( # nolint
 
       logger::log_trace(paste(
         "{ class(self)[1] } removed from state_list { state_list_index },",
-        "dataname: { deparse1(private$dataname) }"
+        "dataname: { private$dataname }"
       ))
       invisible(NULL)
     },
@@ -279,14 +279,14 @@ FilterStates <- R6::R6Class( # nolint
     #'
     state_list_empty = function() {
       logger::log_trace(
-        "{ class(self)[1] } emptying state_list, dataname: { deparse1(private$dataname) }")
+        "{ class(self)[1] } emptying state_list, dataname: { private$dataname }")
 
       for (i in seq_along(private$state_list)) {
         private$state_list[[i]](list())
       }
 
       logger::log_trace(
-        "{ class(self)[1] } emptied state_list, dataname: { deparse1(private$dataname) }")
+        "{ class(self)[1] } emptied state_list, dataname: { private$dataname }")
       invisible(NULL)
     },
 

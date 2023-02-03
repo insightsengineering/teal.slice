@@ -11,7 +11,7 @@ MAEFilterStates <- R6::R6Class( # nolint
     #'
     #' Initialize `MAEFilterStates` object
     #'
-    #' @param dataname (`name` or `call`)\cr
+    #' @param dataname (`character(1)`)\cr
     #'   name of the data used in the expression
     #'   specified to the function argument attached to this `FilterStates`.
     #'
@@ -148,7 +148,7 @@ MAEFilterStates <- R6::R6Class( # nolint
             SummarizedExperiment::colData(data)[[varname]],
             varname = as.name(varname),
             varlabel = private$get_varlabels(varname),
-            dataname = as.name(private$dataname),
+            dataname = private$dataname,
             extract_type = "list"
           )
           fstate$set_state(value)
@@ -326,7 +326,7 @@ MAEFilterStates <- R6::R6Class( # nolint
                 SummarizedExperiment::colData(data)[[input$var_to_add]],
                 varname = as.name(input$var_to_add),
                 varlabel = private$get_varlabels(input$var_to_add),
-                dataname = as.name(private$dataname),
+                dataname = private$dataname,
                 extract_type = "list"
               )
               fstate$set_na_rm(TRUE)
