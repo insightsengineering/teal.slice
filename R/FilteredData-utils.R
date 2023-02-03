@@ -36,11 +36,7 @@ init_filtered_data.TealData <- function(x, # nolint
   data_objects <- lapply(x$get_datanames(), function(dataname) {
     dataset <- x$get_dataset(dataname)
 
-    parent <- if (inherits(dataset, "CDISCTealDataset")) {
-      join_keys$get_parent(dataset$get_dataname())
-    } else {
-      NULL
-    }
+    parent <- if (cdisc) join_keys$get_parent(dataname) else NULL
 
     return_list <- list(
       dataset = dataset$get_raw_data(),
