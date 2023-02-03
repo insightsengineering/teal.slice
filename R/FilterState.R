@@ -169,9 +169,9 @@ FilterState <- R6::R6Class( # nolint
     },
 
     #' @description
-    #' Returns dataname.
+    #' Returns dataname or "NULL" if dataname is NULL.
     #'
-    #' @return `name` or `character(1)`
+    #' @return `character(1)`
     #'
     get_dataname = function() {
       if (!is.null(private$dataname)) {
