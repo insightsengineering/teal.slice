@@ -229,11 +229,9 @@ EmptyFilterState <- R6::R6Class( # nolint
     ui_inputs = function(id) {
       ns <- NS(id)
       div(
-        class = "relative",
-        div(
-          span("Variable contains missing values only"),
-          private$keep_na_ui(ns("keep_na"))
-        )
+        class = "filter-card-body-empty",
+        span("Variable contains missing values only"),
+        private$keep_na_ui(ns("keep_na"))
       )
     },
 
