@@ -79,12 +79,13 @@ RangeFilterState <- R6::R6Class( # nolint
     format = function(indent = 0) {
       checkmate::assert_number(indent, finite = TRUE, lower = 0)
 
+      vals <- pmax(pmin(self$get_selected(), private$choices[2]), private$choices[1])
       sprintf(
         "%sFiltering on: %s\n%1$s  Selected range: %s - %s\n%1$s  Include missing values: %s",
         format("", width = indent),
         self$get_varname(deparse = TRUE),
-        format(self$get_selected(), nsmall = 3)[1],
-        format(self$get_selected(), nsmall = 3)[2],
+        format(vals[1], nsmall = 3),
+        format(vals[2], nsmall = 3),
         format(self$get_keep_na())
       )
     },
@@ -387,12 +388,13 @@ RangeFilterState <- R6::R6Class( # nolint
           )
 
           private$observers$selection <- observeEvent(
-            ignoreNULL = FALSE, # ignoreNULL: we don't want to ignore NULL when nothing is selected in `selectInput`,
+            ignoreNULL = FALSE, # ignoreNULL: we don't want to ignore NULL when nothing is selected in `selectInput`
             ignoreInit = TRUE, # ignoreInit: should not matter because we set the UI with the desired initial state
             eventExpr = input$selection,
             handlerExpr = {
               # because we extended real range into rounded one we need to apply intersect(range_input, range_real)
-              selection_state <- as.numeric(pmax(pmin(input$selection, private$choices[2]), private$choices[1]))
+              # selection_state <- as.numeric(pmax(pmin(input$selection, private$choices[2]), private$choices[1]))
+              selection_state <- input$selection
               if (!setequal(selection_state, self$get_selected())) {
                 validate(
                   need(
