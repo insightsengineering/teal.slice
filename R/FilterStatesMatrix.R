@@ -51,54 +51,6 @@ MatrixFilterStates <- R6::R6Class( # nolint
     },
 
     #' @description
-    #' Server module
-    #' @param id (`character(1)`)\cr
-    #'   an ID string that corresponds with the ID used to call the module's UI function.
-    #' @return `moduleServer` function which returns `NULL`
-    server = function(id) {
-      moduleServer(
-        id = id,
-        function(input, output, session) {
-          previous_state <- reactiveVal(isolate(self$state_list_get("subset")))
-          added_state_name <- reactiveVal(character(0))
-          removed_state_name <- reactiveVal(character(0))
-
-          observeEvent(self$state_list_get("subset"), {
-            added_state_name(
-              setdiff(names(self$state_list_get("subset")), names(previous_state()))
-            )
-            removed_state_name(
-              setdiff(names(previous_state()), names(self$state_list_get("subset")))
-            )
-            previous_state(self$state_list_get("subset"))
-          })
-
-          observeEvent(added_state_name(), ignoreNULL = TRUE, {
-            fstates <- self$state_list_get("subset")
-            html_ids <- private$map_vars_to_html_ids(keys = names(fstates))
-            for (fname in added_state_name()) {
-              private$insert_filter_state_ui(
-                id = html_ids[fname],
-                filter_state = fstates[[fname]],
-                state_list_index = "subset",
-                state_id = fname
-              )
-            }
-            added_state_name(character(0))
-          })
-
-          observeEvent(removed_state_name(), ignoreNULL = TRUE, {
-            for (fname in removed_state_name()) {
-              private$remove_filter_state_ui("subset", fname, .input = input)
-            }
-            removed_state_name(character(0))
-          })
-          NULL
-        }
-      )
-    },
-
-    #' @description
     #' Returns active `FilterState` objects.
     #'
     #' Gets all active filters from this dataset in form of the nested list.

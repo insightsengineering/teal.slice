@@ -77,53 +77,6 @@ DFFilterStates <- R6::R6Class( # nolint
     },
 
     #' @description
-    #' Shiny server module.
-    #'
-    #' @param id (`character(1)`)\cr
-    #'   shiny module instance id
-    #'
-    #' @return `moduleServer` function which returns `NULL`
-    #'
-    server = function(id) {
-      moduleServer(
-        id = id,
-        function(input, output, session) {
-          previous_state <- reactiveVal(character(0))
-          added_state_name <- reactiveVal(character(0))
-          removed_state_name <- reactiveVal(character(0))
-
-          observeEvent(self$state_list_get(1L), {
-            added_state_name(setdiff(names(self$state_list_get(1L)), names(previous_state())))
-            removed_state_name(setdiff(names(previous_state()), names(self$state_list_get(1L))))
-            previous_state(self$state_list_get(1L))
-          })
-
-          observeEvent(added_state_name(), ignoreNULL = TRUE, {
-            fstates <- self$state_list_get(1L)
-            html_ids <- private$map_vars_to_html_ids(names(fstates))
-            for (fname in added_state_name()) {
-              private$insert_filter_state_ui(
-                id = html_ids[fname],
-                filter_state = fstates[[fname]],
-                state_list_index = 1L,
-                state_id = fname
-              )
-            }
-            added_state_name(character(0))
-          })
-
-          observeEvent(removed_state_name(), ignoreNULL = TRUE, {
-            for (fname in removed_state_name()) {
-              private$remove_filter_state_ui(1L, fname, .input = input)
-            }
-            removed_state_name(character(0))
-          })
-          NULL
-        }
-      )
-    },
-
-    #' @description
     #' Gets the reactive values from the active `FilterState` objects.
     #'
     #' Get active filter state from the `FilterState` objects kept in `state_list`.
