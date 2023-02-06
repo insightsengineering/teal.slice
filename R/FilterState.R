@@ -81,10 +81,12 @@ FilterState <- R6::R6Class( # nolint
       checkmate::assert_character(varlabel, max.len = 1, any.missing = FALSE)
       checkmate::assert_multi_class(input_dataname, c("name", "call"), null.ok = TRUE)
       checkmate::assert_character(extract_type, max.len = 1, any.missing = FALSE)
-      if (length(extract_type) == 1)
+      if (length(extract_type) == 1) {
         checkmate::assert_choice(extract_type, choices = c("list", "matrix"))
-      if (length(extract_type) == 1 && is.null(input_dataname))
+      }
+      if (length(extract_type) == 1 && is.null(input_dataname)) {
         stop("if extract_type is specified, input_dataname must also be specified")
+      }
 
       private$input_dataname <- input_dataname
       private$varname <- if (is.character(varname)) {
@@ -381,7 +383,39 @@ FilterState <- R6::R6Class( # nolint
     #'   signaling that remove button has been clicked
     #'
     server = function(id) {
-      stop("abstract class")
+      moduleServer(
+        id = id,
+        function(input, output, session) {
+          ns <- session$ns
+
+          output$header <- renderUI({
+            if (self$get_keep_na()) {
+              na_class <- "fa fa-check"
+            } else {
+              na_class <- "fa fa-xmark"
+            }
+
+            tagList(
+              tags$span(self$get_varname(deparse = TRUE)),
+              tags$span("NA "),
+              tags$span(class = na_class),
+              tags$div(
+                class = "filter-card-icons",
+                tags$span(
+                  class = "filter-card-toggle fa fa-chevron-right"
+                ),
+                actionLink(
+                  inputId = ns("remove"),
+                  label = icon("circle-xmark", lib = "font-awesome"),
+                  class = "filter-card-remove"
+                )
+              )
+            )
+          })
+          private$server_inputs("inputs")
+          reactive(input$remove) # back to parent to remove self
+        }
+      )
     },
 
     #' @description
@@ -392,7 +426,19 @@ FilterState <- R6::R6Class( # nolint
     #'  the UI for this class contains simple message stating that it is not supported
     #'
     ui = function(id) {
-      stop("abstract class")
+      ns <- NS(id)
+
+      tags$li(
+        id = id,
+        tags$div(
+          class = "filter-card",
+          uiOutput(ns("header"), class = "filter-card-header"),
+          tags$div(
+            class = "filter-card-body",
+            private$ui_inputs(ns("inputs"))
+          )
+        )
+      )
     }
   ),
 

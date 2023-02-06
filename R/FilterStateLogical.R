@@ -123,98 +123,6 @@ LogicalFilterState <- R6::R6Class( # nolint
     #' filter$set_selected(TRUE)
     set_selected = function(value) {
       super$set_selected(value)
-    },
-
-    #' @description
-    #' Shiny module server.
-    #'
-    #' @param id (`character(1)`)\cr
-    #'   shiny module instance id
-    #'
-    #' @return `moduleServer` function which returns reactive value
-    #'   signaling that remove button has been clicked
-    #'
-    server = function(id) {
-      moduleServer(
-        id = id,
-        function(input, output, session) {
-
-          observeEvent(self$get_keep_na(), {
-            
-            if (self$get_keep_na()) {
-                class <- "fa fa-check"
-              } else {
-                class <- "fa fa-xmark"
-              }
-
-            output$header_keep_na <- renderUI({
-              tagList(
-                tags$span("NA "),
-                tags$span(class = class)
-              )
-            })
-          })
-
-          observeEvent(self$get_selected(), {
-            if (length(self$get_selected() > 1)) {
-              value <- paste0(
-                "(",
-                paste(self$get_selected(), collapse = "-"),
-                ")"
-              )
-            } else {
-              value <- self$get_selected()
-            }
-
-            output$header_name_value <- renderUI({
-              tagList(
-                tags$span(self$get_varname(deparse = TRUE))#,
-                #tags$span(value)
-              )
-            })
-          })
-          private$server_inputs("inputs")
-          reactive(input$remove) # back to parent to remove self
-        }
-      )
-    },
-
-    #' @description
-    #' Shiny module UI.
-    #'
-    #' @param id (`character(1)`)\cr
-    #'  shiny element (module instance) id;
-    #'  the UI for this class contains simple message stating that it is not supported
-    #'
-    ui = function(id) {
-      ns <- NS(id)
-      
-      tags$li(
-        id = id,
-        tags$div(
-        class = "filter-card",
-        tags$div(
-          class = "filter-card-header",
-          uiOutput(ns("header_name_value"), inline = TRUE),
-          uiOutput(ns("header_keep_na"), inline = TRUE),
-          tags$div(
-            class = "filter-card-icons",
-            tags$span(
-              class = "filter-card-toggle fa fa-chevron-right"
-            ),
-            actionLink(
-              inputId = ns("remove"),
-              label = icon("circle-xmark", lib = "font-awesome"),
-              class = "filter-card-remove"
-            )
-          )
-        ),
-        tags$div(
-          class = "filter-card-body",
-          private$ui_inputs(ns("inputs"))
-        )
-        )
-      )
     }
   ),
   private = list(
@@ -247,7 +155,6 @@ LogicalFilterState <- R6::R6Class( # nolint
       )
       values_logical
     },
-
     get_choice_labels = function() {
       l_counts <- as.numeric(names(private$choices))
       is_na_l_counts <- is.na(l_counts)
@@ -273,7 +180,7 @@ LogicalFilterState <- R6::R6Class( # nolint
           ),
           div(
             class = "choices_state_label_text",
-              sprintf("%s (%s/%s)", private$choices[i], f_count, l_count)
+            sprintf("%s (%s/%s)", private$choices[i], f_count, l_count)
           )
         )
       })
