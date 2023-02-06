@@ -214,112 +214,6 @@ RangeFilterState <- R6::R6Class( # nolint
     #'
     set_selected = function(value) {
       super$set_selected(value)
-    },
-
-    #' @description
-    #' Shiny module server.
-    #'
-    #' @param id (`character(1)`)\cr
-    #'   shiny module instance id
-    #'
-    #' @return `moduleServer` function which returns reactive value
-    #'   signaling that remove button has been clicked
-    #'
-    server = function(id) {
-      moduleServer(
-        id = id,
-        function(input, output, session) {
-          ns <- session$ns
-
-          output$header <- renderUI({
-            if (self$get_keep_na()) {
-              na_class <- "fa fa-check"
-            } else {
-              na_class <- "fa fa-xmark"
-            }
-
-            if (self$get_keep_inf()) {
-              inf_class <- "fa fa-check"
-            } else {
-              inf_class <- "fa fa-xmark"
-            }
-
-            tagList(
-              tags$span(self$get_varname(deparse = TRUE)),
-              tags$span("NA "),
-              tags$span(class = na_class),
-              tags$span("Inf "),
-              tags$span(class = inf_class),
-              tags$div(
-                class = "filter-card-icons",
-                tags$span(
-                  class = "filter-card-toggle fa fa-chevron-right"
-                ),
-                actionLink(
-                  inputId = ns("remove"),
-                  label = icon("circle-xmark", lib = "font-awesome"),
-                  class = "filter-card-remove"
-                )
-              )
-            )
-          })
-
-          # observeEvent(self$get_keep_na(), {
-
-          #   if (self$get_keep_na()) {
-          #       class <- "fa fa-check"
-          #     } else {
-          #       class <- "fa fa-xmark"
-          #     }
-
-          #   output$header_keep_na <- renderUI({
-          #     tagList(
-          #       tags$span("NA "),
-          #       tags$span(class = class)
-          #     )
-          #   })
-          # })
-
-          # # observeEvent(self$get_keep_inf(), {
-
-          #   if (is.null(self$get_keep_inf())) {
-          #     inf_tag <- tags$span()
-          #   } else {
-          #     inf_tag <- tagList(
-          #       tags$span("Inf "),
-          #       tags$span(
-          #         class = if (self$get_keep_inf()) "fa fa-check" else "fa fa-xmark"
-          #       )
-          #     )
-          #   }
-
-          #   output$header_keep_inf <- renderUI({
-          #     inf_tag
-          #   })
-          # })
-
-          # observeEvent(self$get_selected(), {
-          #   if (length(self$get_selected() > 1)) {
-          #     value <- paste0(
-          #       "(",
-          #       paste(self$get_selected(), collapse = "-"),
-          #       ")"
-          #     )
-          #   } else {
-          #     value <- self$get_selected()
-          #   }
-
-          #   output$header_name_value <- renderUI({
-          #     tagList(
-          #       tags$span(self$get_varname(deparse = TRUE))#,
-          #       #tags$span(value)
-          #     )
-          #   })
-          # })
-          private$server_inputs("inputs")
-          reactive(input$remove) # back to parent to remove self
-        }
-      )
     }
   ),
   private = list(
@@ -620,6 +514,27 @@ RangeFilterState <- R6::R6Class( # nolint
         )
         invisible(NULL)
       })
+    },
+    ui_summary = function(id) {
+      ns <- NS(id)
+      uiOutput(ns("summary"), class = "filter-card-summary")
+    },
+    server_summary = function(id) {
+      moduleServer(
+        id = id,
+        function(input, output, session) {
+          output$summary <- renderUI({
+            selected <- self$get_selected()
+            min <- selected[1]
+            max <- selected[2]
+            tagList(
+              tags$span(paste0(min, " - ", max)),
+              if (self$get_keep_na()) tags$span("NA") else NULL,
+              if (self$get_keep_inf()) tags$span("Inf") else NULL
+            )
+          })
+        }
+      )
     }
   )
 )

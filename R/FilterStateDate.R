@@ -303,6 +303,26 @@ DateFilterState <- R6::R6Class( # nolint
           NULL
         }
       )
+    },
+    ui_summary = function(id) {
+      ns <- NS(id)
+      uiOutput(ns("summary"), class = "filter-card-summary")
+    },
+    server_summary = function(id) {
+      moduleServer(
+        id = id,
+        function(input, output, session) {
+          output$summary <- renderUI({
+            selected <- self$get_selected()
+            start <- selected[1]
+            end <- selected[2]
+            tagList(
+              tags$span(paste0(start, " - ", end)),
+              if (self$get_keep_na()) tags$span("NA") else NULL
+            )
+          })
+        }
+      )
     }
   )
 )

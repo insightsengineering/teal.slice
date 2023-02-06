@@ -334,6 +334,27 @@ ChoicesFilterState <- R6::R6Class( # nolint
           NULL
         }
       )
+    },
+    ui_summary = function(id) {
+      ns <- NS(id)
+      uiOutput(ns("summary"), class = "filter-card-summary")
+    },
+    server_summary = function(id) {
+      moduleServer(
+        id = id,
+        function(input, output, session) {
+          output$summary <- renderUI({
+            n_levels <- paste0(
+              length(unique(self$get_selected())),
+              " levels selected"
+            )
+            tagList(
+              tags$span(n_levels),
+              if (self$get_keep_na()) tags$span("NA") else NULL
+            )
+          })
+        }
+      )
     }
   )
 )

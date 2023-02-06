@@ -386,32 +386,7 @@ FilterState <- R6::R6Class( # nolint
       moduleServer(
         id = id,
         function(input, output, session) {
-          ns <- session$ns
-
-          output$header <- renderUI({
-            if (self$get_keep_na()) {
-              na_class <- "fa fa-check"
-            } else {
-              na_class <- "fa fa-xmark"
-            }
-
-            tagList(
-              tags$span(self$get_varname(deparse = TRUE)),
-              tags$span("NA "),
-              tags$span(class = na_class),
-              tags$div(
-                class = "filter-card-icons",
-                tags$span(
-                  class = "filter-card-toggle fa fa-chevron-right"
-                ),
-                actionLink(
-                  inputId = ns("remove"),
-                  label = icon("circle-xmark", lib = "font-awesome"),
-                  class = "filter-card-remove"
-                )
-              )
-            )
-          })
+          private$server_summary("summary")
           private$server_inputs("inputs")
           reactive(input$remove) # back to parent to remove self
         }
@@ -432,7 +407,24 @@ FilterState <- R6::R6Class( # nolint
         id = id,
         tags$div(
           class = "filter-card",
-          uiOutput(ns("header"), class = "filter-card-header"),
+          tags$div(
+            class = "filter-card-header",
+            tags$div(
+              class = "filter-card-title",
+              tags$span(self$get_varname(deparse = TRUE)),
+              if (length(self$get_varlabel())) {
+                tags$span(self$get_varlabel())
+              } else {
+                NULL
+              },
+              actionLink(
+                inputId = ns("remove"),
+                label = icon("circle-xmark", lib = "font-awesome"),
+                class = "filter-card-remove"
+              )
+            ),
+            private$ui_summary(ns("summary"))
+          ),
           tags$div(
             class = "filter-card-body",
             private$ui_inputs(ns("inputs"))
@@ -541,6 +533,12 @@ FilterState <- R6::R6Class( # nolint
     },
 
     # shiny modules -----
+    ui_summary = function(id) {
+      stop("abstract class")
+    },
+    server_summary = function(id) {
+      stop("abstract class")
+    },
     #' module with inputs
     ui_inputs = function(id) {
       stop("abstract class")

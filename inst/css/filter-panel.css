@@ -256,7 +256,7 @@ will need to remove relevant code above
   grid-template-rows: 10% 90%;
 }
 
-
+/*
 .filter-card-header {
   display: grid;
   grid-template-columns: 2fr 1fr 1fr 1fr;
@@ -291,6 +291,22 @@ will need to remove relevant code above
 
 .fa-xmark {
   color: var(--bs-danger, #a94442);
+}
+*/
+
+.filter-card-header {
+  display: grid;
+  grid-template-rows: 1fr 1fr;
+}
+
+.filter-card-title {
+  display: flex;
+  justify-content: space-between;
+}
+
+.filter-card-summary {
+  display: flex;
+  justify-content: space-between;
 }
 
 .filter-card-body {
