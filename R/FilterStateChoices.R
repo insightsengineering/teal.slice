@@ -25,8 +25,9 @@ ChoicesFilterState <- R6::R6Class( # nolint
     #' @param x (`character` or `factor`)\cr
     #'   values of the variable used in filter
     #' @param x_reactive (`reactive`)\cr
-    #'   a `reactive` returning a filtered vector. Is used to update
-    #'   counts following the change in values of the filtered dataset.
+    #'   a `reactive` returning a filtered vector or returning `NULL`. Is used to update
+    #'   counts following the change in values of the filtered dataset. If the `reactive`
+    #'   is `NULL` counts based on filtered dataset are not shown.
     #' @param varname (`character`, `name`)\cr
     #'   name of the variable
     #' @param varlabel (`character(1)`)\cr
@@ -187,8 +188,10 @@ ChoicesFilterState <- R6::R6Class( # nolint
         l_counts <- as.numeric(names(private$choices))
         is_na_l_counts <- is.na(l_counts)
         if (any(is_na_l_counts)) l_counts[is_na_l_counts] <- 0
+
         f_counts <- unname(table(factor(private$x_reactive(), levels = private$choices)))
         f_counts[is.na(f_counts)] <- 0
+
         labels <- lapply(seq_along(private$choices), function(i) {
           l_count <- l_counts[i]
           f_count <- f_counts[i]
@@ -202,19 +205,28 @@ ChoicesFilterState <- R6::R6Class( # nolint
               class = "choices_state_label_unfiltered",
               style = sprintf("width:%s%%", l_freq * 100)
             ),
-            div(
-              class = "choices_state_label",
-              style = sprintf("width:%s%%", f_freq * 100)
-            ),
+            if (!is.null(private$x_reactive())) {
+              div(
+                class = "choices_state_label",
+                style = sprintf("width:%s%%", f_freq * 100)
+              )
+            },
             div(
               class = "choices_state_label_text",
-                sprintf("%s (%s/%s)", private$choices[i], f_count, l_count)
+              sprintf("%s (%s%s)", private$choices[i],
+                if (is.null(private$x_reactive())) "" else sprintf("%s/", f_count),
+                l_count
+              )
             )
           )
         })
       } else {
-        x <- factor(private$x_reactive(), levels = private$choices)
-        sprintf("%s (%s/%s)", private$choices, table(x), names(private$choices))
+        x <- if (is.null(private$x_reactive())) {
+          ""
+        } else{
+          sprintf("%s/",table(factor(private$x_reactive(), levels = private$choices)))
+        }
+        sprintf("%s (%s%s)", private$choices, x, names(private$choices))
       }
     },
 

@@ -98,8 +98,9 @@ and is set only if object is initialized in \code{shiny}.
 values of the variable used in filter}
 
 \item{\code{x_reactive}}{(\code{reactive})\cr
-a \code{reactive} returning a filtered vector. Is used to update
-counts following the change in values of the filtered dataset.}
+a \code{reactive} returning a filtered vector or returning \code{NULL}. Is used to update
+counts following the change in values of the filtered dataset. If the \code{reactive}
+is \code{NULL} counts based on filtered dataset are not shown.}
 
 \item{\code{varname}}{(\code{character}, \code{name})\cr
 name of the variable}

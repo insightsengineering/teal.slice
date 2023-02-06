@@ -6,7 +6,7 @@
 \usage{
 init_filter_state(
   x,
-  x_reactive = reactive(x),
+  x_reactive = reactive(NULL),
   varname,
   varlabel = attr(x, "label"),
   input_dataname = NULL,
@@ -19,7 +19,9 @@ values of the variable used in filter}
 
 \item{x_reactive}{(\code{reactive})\cr
 returning vector of the same type as \code{x}. Is used to update
-counts following the change in values of the filtered dataset.}
+counts following the change in values of the filtered dataset.
+If it is set to \code{reactive(NULL)} then counts based on filtered
+dataset are not shown.}
 
 \item{varname}{(\code{character(1)}, \code{name})\cr
 name of the variable}
