@@ -336,13 +336,13 @@ ChoicesFilterState <- R6::R6Class( # nolint
                 inputId = "selection",
                 choiceNames = private$get_choice_labels(),
                 choiceValues = as.character(private$choices),
-                selected = input$selection
+                selected = self$get_selected()
                )
             } else {
               teal.widgets::updateOptionalSelectInput(
                 session, "selection",
                 choices = stats::setNames(private$choices, private$get_choice_labels()),
-                selected = input$selection
+                selected = self$get_selected()
               )
             }
           })
