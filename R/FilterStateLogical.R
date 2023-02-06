@@ -234,6 +234,8 @@ LogicalFilterState <- R6::R6Class( # nolint
                 updateRadioButtons(
                   session = session,
                   inputId = "selection",
+                  choiceNames = private$get_choice_labels(),
+                  choiceValues = as.character(private$choices),
                   selected =  self$get_selected()
                 )
                 logger::log_trace(sprintf(

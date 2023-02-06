@@ -292,12 +292,15 @@ ChoicesFilterState <- R6::R6Class( # nolint
                   updateCheckboxGroupInput(
                     session = session,
                     inputId = "selection",
+                    choiceNames = private$get_choice_labels(),
+                    choiceValues = as.character(private$choices),
                     selected = self$get_selected()
                   )
                 } else {
                   teal.widgets::updateOptionalSelectInput(
                     session = session,
                     inputId = "selection",
+                    choices = stats::setNames(private$choices, private$get_choice_labels()),
                     selected =  self$get_selected()
                   )
                 }
