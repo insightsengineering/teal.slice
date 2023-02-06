@@ -5,8 +5,9 @@ filterCardListener = function (e) {
     let container = e.currentTarget
     let containerId = container.id
     
-    // remove icon is nested with 'a' tag so need to check both 'a' tag
-    //  and 'i' tag
+
+    // remove icon is nested with 'a' tag (actionLink) so need to check both 
+    // 'a' tag and 'i' tag
     let removeCard = target.classList.contains("filter-card-remove") ||
         target.parentElement.classList.contains("filter-card-remove")
 
@@ -46,12 +47,9 @@ toggleFilterCard = function (el, containerId) {
 
         let activeHeader = activeHeaders[0]
         let activeBody = activeHeader.nextElementSibling;
-        let activeIcon = activeHeader.querySelector(".filter-card-toggle")
 
         activeHeader.classList.remove("active")
         activeBody.style.display = "none"
-        activeIcon.classList.remove("fa-chevron-down")
-        activeIcon.classList.add("fa-chevron-right")
         activeBody.style.maxHeight = null; //animation
 
     }
@@ -60,12 +58,9 @@ toggleFilterCard = function (el, containerId) {
 
         let cardHeader = el
         let cardBody = cardHeader.nextElementSibling;
-        let cardIcon = cardHeader.querySelector(".filter-card-toggle")
 
         cardHeader.classList.add("active")
         cardBody.style.display = "block"
-        cardIcon.classList.remove("fa-chevron-right")
-        cardIcon.classList.add("fa-chevron-down")
 
         // animation
         if (cardBody.style.maxHeight) {
