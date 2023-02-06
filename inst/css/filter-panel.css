@@ -233,7 +233,7 @@ will need to remove relevant code above
 }
 
 /* label for MAE data sets*/
-.filter-card-container[data-label]:not([data-label=""]) {
+.filter-card-container[data-label]:not([data-label=""]):before {
   padding: 2px 4px;
   font-size: 90%;
   color: #c7254e;
