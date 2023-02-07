@@ -266,7 +266,8 @@ will need to remove relevant code above
 }
 
 
-.filter-card-header:hover {
+.filter-card-header:hover,
+.filter-card-body:hover {
   background-color: var(--bs-gray-200, #e9ecef);
 }
 
