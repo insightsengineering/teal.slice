@@ -524,7 +524,7 @@ RangeFilterState <- R6::R6Class( # nolint
         id = id,
         function(input, output, session) {
           output$summary <- renderUI({
-            selected <- self$get_selected()
+            selected <- sprintf("%.4g", self$get_selected())
             min <- selected[1]
             max <- selected[2]
             tagList(
