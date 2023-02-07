@@ -79,7 +79,6 @@ RangeFilterState <- R6::R6Class( # nolint
     format = function(indent = 0) {
       checkmate::assert_number(indent, finite = TRUE, lower = 0)
 
-      # vals <- pmax(pmin(self$get_selected(), private$choices[2]), private$choices[1])
       vals <- self$get_selected()
       vals <- private$remove_out_of_bound_values(vals)
       sprintf(
@@ -387,8 +386,6 @@ RangeFilterState <- R6::R6Class( # nolint
             ignoreInit = TRUE, # ignoreInit: should not matter because we set the UI with the desired initial state
             eventExpr = input$selection,
             handlerExpr = {
-              # because we extended real range into rounded one we need to apply intersect(range_input, range_real)
-              # selection_state <- as.numeric(pmax(pmin(input$selection, private$choices[2]), private$choices[1]))
               selection_state <- input$selection
               if (!setequal(selection_state, self$get_selected())) {
                 self$set_selected(selection_state)
