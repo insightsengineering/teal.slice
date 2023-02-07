@@ -38,7 +38,7 @@ filterCardListener = function (e) {
 // if 2., we need to set the active card, which was clicked, to inactive
 //  this is handled in the second 'if' block
 toggleFilterCard = function (el, containerId) {
-
+    
     let activeHeaders = getHeaders(containerId)
                         .filter((el) => el.classList.contains("active"))
     let clickedCardIsActive = el.classList.contains("active")
@@ -46,20 +46,24 @@ toggleFilterCard = function (el, containerId) {
     if (activeHeaders.length > 0) {
 
         let activeHeader = activeHeaders[0]
+        let activeSummary = activeHeader.querySelector(".filter-card-summary")
         let activeBody = activeHeader.nextElementSibling;
 
         activeHeader.classList.remove("active")
-        activeBody.style.display = "none"
+        activeSummary.style.display = "block";
+        activeBody.style.display = "none";
         activeBody.style.maxHeight = null; //animation
 
     }
     
     if (!clickedCardIsActive) {
 
-        let cardHeader = el
+        let cardHeader = el;
+        let cardSummary = el.querySelector(".filter-card-summary");
         let cardBody = cardHeader.nextElementSibling;
 
         cardHeader.classList.add("active")
+        cardSummary.style.display = "none"
         cardBody.style.display = "block"
 
         // animation
