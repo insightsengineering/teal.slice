@@ -532,13 +532,8 @@ FilterStates <- R6::R6Class( # nolint
         fs_callback <- fs$server(id = "content")
         observeEvent(
           eventExpr = fs_callback(), # when remove button is clicked in the FilterState ui
-          ignoreInit = TRUE,
-          ignoreNULL = TRUE, # observer should be triggered only if input$remove is true
           once = TRUE, # remove button can be called once, should be destroyed afterwards
-          handlerExpr = {
-            self$state_list_remove(state_list_index, element_id)
-            # remove remainings: destroy fs observers, inputs etc.
-          }
+          handlerExpr = self$state_list_remove(state_list_index, element_id)
         )
       })
     },
