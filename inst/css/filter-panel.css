@@ -260,14 +260,16 @@ will need to remove relevant code above
   display: grid;
   grid-template-rows: 1fr 1fr;
   color: var(--bs-body-color, #333333);
-  border: 1px solid var(--bs-gray-200, rgba(0, 0, 0, 0.03));
+  border: 1px solid var(--bs-gray-300, #dee2e6);
   padding: 5px 10px;
   border-radius: 0.25rem;
 }
 
+
 .filter-card-header:hover {
-  background-color: var(--bs-gray-200, rgba(0, 0, 0, 0.03));
+  background-color: var(--bs-gray-200, #e9ecef);
 }
+
 
 .filter-card-header.active {
   border-bottom-left-radius: 0;
@@ -294,10 +296,13 @@ will need to remove relevant code above
   max-height: 0;
   overflow: hidden;
   transition: max-height 0.2s ease-out;
-  border: 1px solid var(--bs-gray-200, rgba(0, 0, 0, 0.03));
+  border: 1px solid var(--bs-gray-300, #dee2e6);
   border-top: none;
+  border-bottom-left-radius: 0.25rem;
+  border-bottom-right-radius: 0.25rem;
   padding: 5px 10px;
 }
+
 
 .filter-card-body-empty {
   height: 100%;
