@@ -262,8 +262,10 @@ FilterStates <- R6::R6Class( # nolint
       checkmate::assert_string(state_id)
 
       states <- if (is.list(x)) {
+        checkmate::assert_list(x, classes = "FilterState")
         x
       } else {
+        checkmate::assert_class(x, "FilterState")
         list(x)
       }
 
@@ -323,9 +325,9 @@ FilterStates <- R6::R6Class( # nolint
         "{ class(self)[1] } emptying state_list, dataname: { deparse1(private$input_dataname) }")
 
       for (state_list_index in seq_along(private$state_list)) {
-        state_list <- private$state_list[[state_list_index]]
+        state_list <- private$state_list[[state_list_index]]()
         for (state_id in names(state_list)) {
-          state_list[[j]]$destroy_shiny()
+          state_list[[state_id]]$destroy_shiny()
         }
         private$state_list[[state_list_index]](list())
       }
@@ -397,7 +399,6 @@ FilterStates <- R6::R6Class( # nolint
           removed_state_name <- reactiveVal(character(0))
 
           observeEvent(self$state_list_get(1L), {
-            print(names(reactiveValuesToList(input)))
             added_state_name(setdiff(names(self$state_list_get(1L)), names(previous_state())))
             previous_state(self$state_list_get(1L))
           })
