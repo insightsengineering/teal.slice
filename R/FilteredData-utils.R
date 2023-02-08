@@ -32,51 +32,23 @@ init_filtered_data.TealData <- function(x, # nolint
                                         code = x$get_code_class(),
                                         cdisc = FALSE,
                                         check = x$get_check()) {
+  cdisc <- length(join_keys$get_parents()) > 0
   data_objects <- lapply(x$get_datanames(), function(dataname) {
     dataset <- x$get_dataset(dataname)
-    list(
+
+    parent <- if (cdisc) join_keys$get_parent(dataname) else NULL
+
+    return_list <- list(
       dataset = dataset$get_raw_data(),
       keys = dataset$get_keys(),
       metadata = dataset$get_metadata(),
       label = dataset$get_dataset_label()
     )
+
+    if (cdisc) return_list[["parent"]] <- parent
+    return_list
   })
-  names(data_objects) <- x$get_datanames()
 
-  init_filtered_data(
-    x = data_objects,
-    join_keys = join_keys,
-    code = code,
-    check = check
-  )
-}
-
-#' @keywords internal
-#' @export
-init_filtered_data.CDISCTealData <- function(x, # nolint
-                                             join_keys = x$get_join_keys(),
-                                             code = x$get_code_class(),
-                                             cdisc = TRUE,
-                                             check = x$get_check()) {
-  data_objects <- lapply(x$get_datanames(), function(dataname) {
-    dataset <- x$get_dataset(dataname)
-
-    # CDISCTealData can contain TealDataset and CDISCTealDataset objects
-    # the former do not have a get_parent() call
-    parent <- if (inherits(dataset, "CDISCTealDataset")) {
-      dataset$get_parent()
-    } else {
-      NULL
-    }
-
-    list(
-      dataset = dataset$get_raw_data(),
-      keys = dataset$get_keys(),
-      metadata = dataset$get_metadata(),
-      label = dataset$get_dataset_label(),
-      parent = parent
-    )
-  })
   names(data_objects) <- x$get_datanames()
 
   init_filtered_data(
