@@ -21,6 +21,7 @@
 ### Miscellaneous
 
 * Calculation of step in slider for `RangeFilterState` now uses `checkmate::test_integerish` instead of `is.integer`.
+* Updated `init_filtered_data` to take into account the removal of `CDISCTealData` from `teal.data` package.
 
 # teal.slice 0.2.0
 
