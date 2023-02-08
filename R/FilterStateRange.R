@@ -304,7 +304,6 @@ RangeFilterState <- R6::R6Class( # nolint
     #  id of shiny element
     ui_inputs = function(id) {
       ns <- NS(id)
-      pretty_range_inputs <- private$get_pretty_range_inputs(private$choices)
       fluidRow(
         div(
           class = "filterPlotOverlayRange",
@@ -315,10 +314,10 @@ RangeFilterState <- R6::R6Class( # nolint
           teal.widgets::optionalSliderInput(
             inputId = ns("selection"),
             label = NULL,
-            min = pretty_range_inputs["min"],
-            max = pretty_range_inputs["max"],
-            value = pretty_range_inputs[c("min", "max")],
-            step = pretty_range_inputs["step"],
+            min = private$choices[1],
+            max = private$choices[2],
+            value = private$choices,
+            step = private$slider_step,
             width = "100%"
           )
         ),
