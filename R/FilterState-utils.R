@@ -60,10 +60,12 @@ init_filter_state <- function(x,
   checkmate::assert_character(varlabel, max.len = 1L, any.missing = FALSE, null.ok = TRUE)
   checkmate::assert_multi_class(dataname, c("name", "call", "character"), null.ok = TRUE)
   checkmate::assert_character(extract_type, max.len = 1L, any.missing = FALSE)
-  if (length(extract_type) == 1)
+  if (length(extract_type) == 1) {
     checkmate::assert_choice(extract_type, choices = c("list", "matrix"))
-  if (length(extract_type) == 1 && is.null(dataname))
+  }
+  if (length(extract_type) == 1 && is.null(dataname)) {
     stop("if extract_type is specified, dataname must also be specified")
+  }
 
   if (is.null(varlabel)) varlabel <- character(0L)
 

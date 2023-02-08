@@ -71,10 +71,10 @@ testthat::test_that("set_state sets selected and keep_na", {
   filter_state$set_state(state)
   testthat::expect_identical(
     state,
-      list(
-        selected = shiny::isolate(filter_state$get_selected()),
-        keep_na = shiny::isolate(filter_state$get_keep_na())
-      )
+    list(
+      selected = shiny::isolate(filter_state$get_selected()),
+      keep_na = shiny::isolate(filter_state$get_keep_na())
+    )
   )
 })
 

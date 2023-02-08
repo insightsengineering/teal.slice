@@ -228,8 +228,9 @@ FilteredDataset <- R6::R6Class( # nolint
     #' @return `integer(1)`
     get_filter_count = function() {
       sum(vapply(private$filter_states,
-                 function(state) state$get_filter_count(),
-                 FUN.VALUE = integer(1)))
+        function(state) state$get_filter_count(),
+        FUN.VALUE = integer(1)
+      ))
     },
 
     #' @description

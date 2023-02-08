@@ -268,7 +268,8 @@ testthat::test_that("$format() is a method of DFFilterStates", {
     keys = "test"
   )
   testthat::expect_no_error(shiny::isolate(
-    dffs$format()))
+    dffs$format()
+  ))
 })
 
 testthat::test_that("$format() asserts the indent argument is a number", {
@@ -303,5 +304,6 @@ testthat::test_that("$format() concatenates its FilterState elements using \\n w
     testthat::expect_equal(
       dffs$format(),
       paste(sepal_filter$format(indent = 0), species_filter$format(indent = 0), sep = "\n")
-    ))
+    )
+  )
 })
