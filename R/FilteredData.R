@@ -398,7 +398,7 @@ FilteredData <- R6::R6Class( # nolint
     #' @return (`self`) invisibly this `FilteredData`
     #'
     set_dataset = function(dataset_args, dataname) {
-      logger::log_trace("FilteredData$set_dataset setting dataset, name; { deparse1(dataname) }")
+      logger::log_trace("FilteredData$set_dataset setting dataset, name: { dataname }")
       validate_dataset_args(dataset_args, dataname)
 
       dataset <- dataset_args$dataset

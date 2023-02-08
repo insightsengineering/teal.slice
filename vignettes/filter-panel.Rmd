@@ -159,7 +159,7 @@ The constructor of `FilterState` has `extract_type` argument which impacts retur
 can be unspecified, `"matrix"` or `"list"` and its value corresponds to the type of the variable prefix
 in the returned condition call. For example if `FilterState` is initialized with
 `extract_type = "matrix"` then the variable in the condition call looks like
-`<input_dataname>[, "<varname>"]`.
+`<dataname>[, "<varname>"]`.
 
 ## Making reproducible filter call
 

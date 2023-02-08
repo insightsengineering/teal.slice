@@ -21,8 +21,7 @@ Currently implemented for \code{data.frame}, \code{matrix},
 \examples{
 library(shiny)
 filter_states <- teal.slice:::DFFilterStates$new(
-  input_dataname = "data",
-  output_dataname = "data_filtered",
+  dataname = "data",
   varlabels = c(x = "x variable", SEX = "Sex"),
   datalabel = character(0),
   keys = character(0)
@@ -31,7 +30,7 @@ filter_state <- teal.slice:::RangeFilterState$new(
   c(NA, Inf, seq(1:10)),
   varname = "x",
   varlabel = "x variable",
-  input_dataname = as.name("data"),
+  dataname = "data",
   extract_type = "list"
 )
 isolate(filter_state$set_selected(c(3L, 8L)))
@@ -76,20 +75,17 @@ isolate(filter_states$get_call())
 Initializes \code{FilterStates} object.
 
 Initializes \code{FilterStates} object by setting
-\code{input_dataname}, \code{output_dataname}, and \code{datalabel}.
+\code{dataname}, and \code{datalabel}.
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{FilterStates$new(input_dataname, output_dataname, datalabel)}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{FilterStates$new(dataname, datalabel)}\if{html}{\out{</div>}}
 }
 
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
-\item{\code{input_dataname}}{(\code{character(1)} or \code{name} or \code{call})\cr
-name of the data used on \code{rhs} of the expression
+\item{\code{dataname}}{(\code{character(1)})\cr
+name of the data used in the expression
 specified to the function argument attached to this \code{FilterStates}}
-
-\item{\code{output_dataname}}{(\code{character(1)} or \code{name} or \code{call})\cr
-name of the output data on the \code{lhs} of the \emph{subset expression}}
 
 \item{\code{datalabel}}{(\code{character(0)} or \code{character(1)})\cr
 text label value}
@@ -140,11 +136,11 @@ Returns a formatted string representing this \code{FilterStates} object.
 Filter call
 
 Builds \emph{subset expression} from condition calls stored in \code{FilterState}
-objects selection. The \code{lhs} of the expression is \code{private$output_dataname}.
-The \code{rhs} is a call to \code{self$get_fun()} with \code{private$input_dataname}
+objects selection. The \code{lhs} of the expression is \code{private$dataname}.
+The \code{rhs} is a call to \code{self$get_fun()} with \code{private$dataname}
 as argument and a list of condition calls from \code{FilterState} objects
 stored in \code{private$state_list}.
-If \code{input_dataname} is the same as \code{output_dataname} and no filters are applied,
+If no filters are applied,
 \code{NULL} is returned to avoid no-op calls such as \code{x <- x}.
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{FilterStates$get_call()}\if{html}{\out{</div>}}

@@ -451,7 +451,11 @@ testthat::test_that("get_filter_overview accepts single dataset argument input",
 
 testthat::test_that("get_filter_overview throws error with empty argument input", {
   datasets <- get_filtered_data_object()
-  testthat::expect_error(shiny::isolate(datasets$get_filter_overview()), "argument \"datanames\" is missing, with no default")
+  testthat::expect_error(
+    shiny::isolate(
+      datasets$get_filter_overview()),
+    "argument \"datanames\" is missing, with no default"
+  )
 })
 
 testthat::test_that("get_filter_overview throws error with wrong argument input", {
@@ -491,8 +495,8 @@ testthat::test_that("get_filter_overview returns overview matrix for filtered da
   shiny::isolate(state_list$state_list_push(filter_state_adsl, state_list_index = 1L, state_id = "sex"))
   filter_state_mae <- ChoicesFilterState$new(
     x = c("white", NA),
-    varname = as.name("race"),
-    input_dataname = as.name("miniACC"),
+    varname = "race",
+    dataname = "miniACC",
     extract_type = "list"
   )
   filter_state_mae$set_na_rm(TRUE)

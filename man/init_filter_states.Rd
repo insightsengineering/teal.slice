@@ -4,24 +4,15 @@
 \alias{init_filter_states}
 \title{Initialize \code{FilterStates} object}
 \usage{
-init_filter_states(
-  data,
-  input_dataname,
-  output_dataname = input_dataname,
-  datalabel = character(0),
-  ...
-)
+init_filter_states(data, dataname, datalabel = character(0), ...)
 }
 \arguments{
 \item{data}{(\code{data.frame}, \code{MultiAssayExperiment}, \code{SummarizedExperiment}, \code{matrix})\cr
 the R object which \code{subset} function is applied on.}
 
-\item{input_dataname}{(\code{character(1)} or \code{name} or \code{call})\cr
-name of the data used on lhs of the expression
+\item{dataname}{(\code{character(1)} or \code{name} or \code{call})\cr
+name of the data used in the expression
 specified to the function argument attached to this \code{FilterStates}.}
-
-\item{output_dataname}{(\code{character(1)} or \code{name} or \code{call})\cr
-name of the output data on the lhs of the assignment expression.}
 
 \item{datalabel}{(\code{character(0)} or \code{character(1)})\cr
 text label value.}
@@ -41,8 +32,7 @@ df <- data.frame(
 )
 rf <- teal.slice:::init_filter_states(
   data = df,
-  input_dataname = "DF",
-  output_dataname = "DF_OUTPUT",
+  dataname = "DF",
   varlabels = c(
     "character variable", "numeric variable", "date variable", "datetime variable"
   )
