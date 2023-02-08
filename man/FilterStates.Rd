@@ -40,7 +40,8 @@ isolate(
     x = filter_state,
     state_list_index = 1L,
     state_id = "x"
-  ))
+  )
+)
 isolate(filter_states$get_call())
 
 }

@@ -17,7 +17,7 @@ init_filter_state(
 values of the variable used in filter}
 
 \item{varname}{(\code{character(1)})\cr
-name of the variable}
+name of the variable.}
 
 \item{varlabel}{(\code{character(0)}, \code{character(1)} or \code{NULL})\cr
 label of the variable (optional).}
