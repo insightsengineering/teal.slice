@@ -128,7 +128,7 @@ LogicalFilterState <- R6::R6Class( # nolint
         stop(
           sprintf(
             "value of the selection for `%s` in `%s` should be a logical scalar (TRUE or FALSE)",
-            self$get_varname(deparse = TRUE),
+            self$get_varname(),
             self$get_dataname()
           )
         )
@@ -137,7 +137,7 @@ LogicalFilterState <- R6::R6Class( # nolint
       pre_msg <- sprintf(
         "dataset '%s', variable '%s': ",
         self$get_dataname(),
-        self$get_varname(deparse = TRUE)
+        self$get_varname()
       )
       check_in_subset(value, private$choices, pre_msg = pre_msg)
     },
@@ -222,7 +222,7 @@ LogicalFilterState <- R6::R6Class( # nolint
                 )
                 logger::log_trace(sprintf(
                   "LogicalFilterState$server@1 selection of variable %s changed, dataname: %s",
-                  deparse1(self$get_varname()),
+                  self$get_varname(),
                   private$dataname
                 ))
               }
@@ -242,7 +242,7 @@ LogicalFilterState <- R6::R6Class( # nolint
               logger::log_trace(
                 sprintf(
                   "LogicalFilterState$server@2 selection of variable %s changed, dataname: %s",
-                  deparse1(self$get_varname()),
+                  self$get_varname(),
                   private$dataname
                 )
               )

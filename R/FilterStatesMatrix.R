@@ -135,7 +135,7 @@ MatrixFilterStates <- R6::R6Class( # nolint
         } else {
           fstate <- init_filter_state(
             data[, varname],
-            varname = as.name(varname),
+            varname = varname,
             varlabel = varname,
             dataname = private$dataname,
             extract_type = "matrix"
@@ -257,7 +257,7 @@ MatrixFilterStates <- R6::R6Class( # nolint
             vapply(
               X = self$state_list_get(state_list_index = "subset"),
               FUN.VALUE = character(1),
-              FUN = function(x) x$get_varname(deparse = TRUE)
+              FUN = function(x) x$get_varname()
             )
           })
 
@@ -312,7 +312,7 @@ MatrixFilterStates <- R6::R6Class( # nolint
               self$state_list_push(
                 x = init_filter_state(
                   subset(data, select = input$var_to_add),
-                  varname = as.name(input$var_to_add),
+                  varname = input$var_to_add,
                   varlabel = private$get_varlabel(input$var_to_add),
                   dataname = private$dataname,
                   extract_type = "matrix"

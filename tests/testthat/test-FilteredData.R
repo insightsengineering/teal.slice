@@ -495,7 +495,7 @@ testthat::test_that("get_filter_overview returns overview matrix for filtered da
   shiny::isolate(state_list$state_list_push(filter_state_adsl, state_list_index = 1L, state_id = "sex"))
   filter_state_mae <- ChoicesFilterState$new(
     x = c("white", NA),
-    varname = as.name("race"),
+    varname = "race",
     dataname = "miniACC",
     extract_type = "list"
   )

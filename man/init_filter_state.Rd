@@ -16,7 +16,7 @@ init_filter_state(
 \item{x}{(\code{vector})\cr
 values of the variable used in filter}
 
-\item{varname}{(\code{character(1)}, \code{name})\cr
+\item{varname}{(\code{character(1)})\cr
 name of the variable}
 
 \item{varlabel}{(\code{character(0)}, \code{character(1)} or \code{NULL})\cr

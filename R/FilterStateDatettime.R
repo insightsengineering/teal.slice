@@ -78,7 +78,7 @@ DatetimeFilterState <- R6::R6Class( # nolint
       sprintf(
         "%sFiltering on: %s\n%1$s  Selected range: %s - %s\n%1$s  Include missing values: %s",
         format("", width = indent),
-        self$get_varname(deparse = TRUE),
+        self$get_varname(),
         format(self$get_selected(), nsmall = 3)[1],
         format(self$get_selected(), nsmall = 3)[2],
         format(self$get_keep_na())
@@ -144,7 +144,7 @@ DatetimeFilterState <- R6::R6Class( # nolint
         stop(
           sprintf(
             "value of the selection for `%s` in `%s` should be a POSIXct or POSIXlt",
-            self$get_varname(deparse = TRUE),
+            self$get_varname(),
             self$get_dataname()
           )
         )
@@ -153,7 +153,7 @@ DatetimeFilterState <- R6::R6Class( # nolint
       pre_msg <- sprintf(
         "dataset '%s', variable '%s': ",
         self$get_dataname(),
-        self$get_varname(deparse = TRUE)
+        self$get_varname()
       )
       check_in_range(value, private$choices, pre_msg = pre_msg)
     },
@@ -291,7 +291,7 @@ DatetimeFilterState <- R6::R6Class( # nolint
 
                 logger::log_trace(sprintf(
                   "DatetimeFilterState$server@1 selection of variable %s changed, dataname: %s",
-                  deparse1(self$get_varname()),
+                  self$get_varname(),
                   private$dataname
                 ))
               }
@@ -322,7 +322,7 @@ DatetimeFilterState <- R6::R6Class( # nolint
               self$set_selected(c(start_date, end_date))
               logger::log_trace(sprintf(
                 "DatetimeFilterState$server@2 selection of variable %s changed, dataname: %s",
-                deparse1(self$get_varname()),
+                self$get_varname(),
                 private$dataname
               ))
             }
@@ -342,7 +342,7 @@ DatetimeFilterState <- R6::R6Class( # nolint
               )
               logger::log_trace(sprintf(
                 "DatetimeFilterState$server@2 reset start date of variable %s, dataname: %s",
-                deparse1(self$get_varname()),
+                self$get_varname(),
                 private$dataname
               ))
             }
@@ -359,7 +359,7 @@ DatetimeFilterState <- R6::R6Class( # nolint
               )
               logger::log_trace(sprintf(
                 "DatetimeFilterState$server@3 reset end date of variable %s, dataname: %s",
-                deparse1(self$get_varname()),
+                self$get_varname(),
                 private$dataname
               ))
             }

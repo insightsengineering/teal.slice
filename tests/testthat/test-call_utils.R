@@ -262,7 +262,7 @@ testthat::test_that("call_condition_posixct works with POXIXct range only", {
   datetime <- as.POSIXct("2021-09-01 12:00:00", tz = "UTC")
   testthat::expect_identical(
     call_condition_range_posixct(
-      varname = as.name("var"),
+      varname = "var",
       range = datetime + c(0, 1),
       timezone = "UTC"
     ),
@@ -275,21 +275,21 @@ testthat::test_that("call_condition_posixct works with POXIXct range only", {
 
   testthat::expect_error(
     call_condition_range_posixct(
-      varname = as.name("var"),
+      varname = "var",
       range = datetime + c(1, 0),
       timezone = "UTC"
     )
   )
   testthat::expect_error(
     call_condition_range_posixct(
-      varname = as.name("var"),
+      varname = "var",
       range = Sys.Date() + c(0, 1),
       timezone = "UTC"
     )
   )
   testthat::expect_error(
     call_condition_range_posixct(
-      varname = as.name("var"),
+      varname = "var",
       range = Sys.time(),
       timezone = "UTC"
     )
@@ -300,7 +300,7 @@ testthat::test_that("call_condition_posixct returns expected timezone", {
   datetime <- as.POSIXct("2021-09-01 12:00:00", tz = "Europe/Stockholm")
   testthat::expect_identical(
     call_condition_range_posixct(
-      varname = as.name("var"),
+      varname = "var",
       range = datetime + c(0, 1),
       timezone = "Europe/Stockholm"
     ),
@@ -313,7 +313,7 @@ testthat::test_that("call_condition_posixct returns expected timezone", {
   datetime <- as.POSIXct("2021-09-01 12:00:00")
   testthat::expect_identical(
     call_condition_range_posixct(
-      varname = as.name("var"),
+      varname = "var",
       range = datetime + c(0, 1)
     ),
     bquote(

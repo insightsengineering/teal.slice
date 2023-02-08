@@ -23,7 +23,7 @@ testthat::test_that("MAEFilteredDataset$get_call returns a call with applying fi
   filtered_dataset <- MAEFilteredDataset$new(dataset = miniACC, dataname = "miniACC")
   filter_state_mae <- ChoicesFilterState$new(
     x = miniACC$race,
-    varname = as.name("race"),
+    varname = "race",
     dataname = "miniACC",
     extract_type = "list"
   )
@@ -37,7 +37,7 @@ testthat::test_that("MAEFilteredDataset$get_call returns a call with applying fi
   get_call_output <- shiny::isolate(filtered_dataset$get_call())
 
   checkmate::expect_list(get_call_output, types = "<-")
-  testthat::expect_identical(
+  testthat::expect_equal(
     get_call_output$subjects,
     quote(
       miniACC <- MultiAssayExperiment::subsetByColData( # nolint
@@ -71,7 +71,7 @@ testthat::test_that("get_filter_overview_info returns overview matrix for MAEFil
 
   filter_state_mae <- ChoicesFilterState$new(
     x = c("white", NA_character_),
-    varname = as.name("race"),
+    varname = "race",
     dataname = "miniACC",
     extract_type = "list"
   )
@@ -300,7 +300,7 @@ testthat::test_that("MAEFilteredDataset filters removed using remove_filters", {
 
   shiny::isolate(filtered_dataset$set_filter_state(state = fs))
 
-  testthat::expect_identical(
+  testthat::expect_equal(
     shiny::isolate(filtered_dataset$get_call()),
     list(
       subjects = quote(

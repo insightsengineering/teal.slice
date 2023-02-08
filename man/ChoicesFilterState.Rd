@@ -87,7 +87,7 @@ Initialize a \code{FilterState} object
 \item{\code{x}}{(\code{character} or \code{factor})\cr
 values of the variable used in filter}
 
-\item{\code{varname}}{(\code{character}, \code{name})\cr
+\item{\code{varname}}{(\code{character})\cr
 name of the variable}
 
 \item{\code{varlabel}}{(\code{character(1)})\cr

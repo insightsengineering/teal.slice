@@ -79,7 +79,7 @@ RangeFilterState <- R6::R6Class( # nolint
       sprintf(
         "%sFiltering on: %s\n%1$s  Selected range: %s - %s\n%1$s  Include missing values: %s",
         format("", width = indent),
-        self$get_varname(deparse = TRUE),
+        self$get_varname(),
         format(self$get_selected(), nsmall = 3)[1],
         format(self$get_selected(), nsmall = 3)[2],
         format(self$get_keep_na())
@@ -154,7 +154,7 @@ RangeFilterState <- R6::R6Class( # nolint
         sprintf(
           "%s$set_keep_inf of variable %s set to %s, dataname: %s.",
           class(self)[1],
-          deparse1(self$get_varname()),
+          self$get_varname(),
           value,
           private$dataname
         )
@@ -258,7 +258,7 @@ RangeFilterState <- R6::R6Class( # nolint
         stop(
           sprintf(
             "value of the selection for `%s` in `%s` should be a numeric",
-            self$get_varname(deparse = TRUE),
+            self$get_varname(),
             self$get_dataname()
           )
         )
@@ -266,7 +266,7 @@ RangeFilterState <- R6::R6Class( # nolint
       pre_msg <- sprintf(
         "data '%s', variable '%s': ",
         self$get_dataname(),
-        self$get_varname(deparse = TRUE)
+        self$get_varname()
       )
       check_in_range(value, private$choices, pre_msg = pre_msg)
     },
@@ -402,7 +402,7 @@ RangeFilterState <- R6::R6Class( # nolint
               logger::log_trace(
                 sprintf(
                   "RangeFilterState$server@3 selection of variable %s changed, dataname: %s",
-                  deparse1(self$get_varname()),
+                  self$get_varname(),
                   private$dataname
                 )
               )
@@ -471,7 +471,7 @@ RangeFilterState <- R6::R6Class( # nolint
               sprintf(
                 "%s$server keep_inf of variable %s set to: %s, dataname: %s",
                 class(self)[1],
-                deparse1(self$get_varname()),
+                self$get_varname(),
                 deparse1(input$value),
                 private$dataname
               )

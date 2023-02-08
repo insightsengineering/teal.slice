@@ -110,7 +110,7 @@ EmptyFilterState <- R6::R6Class( # nolint
         stop(
           sprintf(
             "All values in variable '%s' are `NA`. Unable to apply filter values \n  %s",
-            self$get_varname(deparse = TRUE),
+            self$get_varname(),
             paste(state$selected, collapse = ", ")
           )
         )

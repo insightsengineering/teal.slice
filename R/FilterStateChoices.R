@@ -24,7 +24,7 @@ ChoicesFilterState <- R6::R6Class( # nolint
     #' Initialize a `FilterState` object
     #' @param x (`character` or `factor`)\cr
     #'   values of the variable used in filter
-    #' @param varname (`character`, `name`)\cr
+    #' @param varname (`character`)\cr
     #'   name of the variable
     #' @param varlabel (`character(1)`)\cr
     #'   label of the variable (optional).
@@ -135,12 +135,13 @@ ChoicesFilterState <- R6::R6Class( # nolint
   ),
   private = list(
     histogram_data = data.frame(),
+
     validate_selection = function(value) {
       if (!is.character(value)) {
         stop(
           sprintf(
             "Values of the selection for `%s` in `%s` should be an array of character.",
-            self$get_varname(deparse = TRUE),
+            self$get_varname(),
             self$get_dataname()
           )
         )
@@ -148,7 +149,7 @@ ChoicesFilterState <- R6::R6Class( # nolint
       pre_msg <- sprintf(
         "data '%s', variable '%s': ",
         self$get_dataname(),
-        self$get_varname(deparse = TRUE)
+        self$get_varname()
       )
       check_in_subset(value, private$choices, pre_msg = pre_msg)
     },
@@ -258,7 +259,7 @@ ChoicesFilterState <- R6::R6Class( # nolint
                 )
                 logger::log_trace(sprintf(
                   "ChoicesFilterState$server@1 selection of variable %s changed, dataname: %s",
-                  deparse1(self$get_varname()),
+                  self$get_varname(),
                   private$dataname
                 ))
               }
@@ -274,7 +275,7 @@ ChoicesFilterState <- R6::R6Class( # nolint
               self$set_selected(selection)
               logger::log_trace(sprintf(
                 "ChoicesFilterState$server@2 selection of variable %s changed, dataname: %s",
-                deparse1(self$get_varname()),
+                self$get_varname(),
                 private$dataname
               ))
             }

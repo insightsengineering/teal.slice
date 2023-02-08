@@ -155,7 +155,7 @@ testthat::test_that("Selecting a new variable initializes a new filter state", {
     "RangeFilterState"
   )
   testthat::expect_identical(
-    shiny::isolate(dffs$state_list_get(state_list_index = 1, state_id = "Sepal.Length"))$get_varname(deparse = TRUE),
+    shiny::isolate(dffs$state_list_get(state_list_index = 1, state_id = "Sepal.Length"))$get_varname(),
     "Sepal.Length"
   )
 })

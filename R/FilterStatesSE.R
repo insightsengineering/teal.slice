@@ -214,7 +214,7 @@ SEFilterStates <- R6::R6Class( # nolint
         } else {
           fstate <- init_filter_state(
             SummarizedExperiment::rowData(data)[[varname]],
-            varname = as.name(varname),
+            varname = varname,
             dataname = private$dataname
           )
           fstate$set_state(value)
@@ -235,7 +235,7 @@ SEFilterStates <- R6::R6Class( # nolint
         } else {
           fstate <- init_filter_state(
             SummarizedExperiment::colData(data)[[varname]],
-            varname = as.name(varname),
+            varname = varname,
             dataname = private$dataname
           )
           fstate$set_state(value)
@@ -406,14 +406,14 @@ SEFilterStates <- R6::R6Class( # nolint
             vapply(
               X = self$state_list_get(state_list_index = "select"),
               FUN.VALUE = character(1),
-              FUN = function(x) x$get_varname(deparse = TRUE)
+              FUN = function(x) x$get_varname()
             )
           })
           active_filter_row_vars <- reactive({
             vapply(
               X = self$state_list_get(state_list_index = "subset"),
               FUN.VALUE = character(1),
-              FUN = function(x) x$get_varname(deparse = TRUE)
+              FUN = function(x) x$get_varname()
             )
           })
 
@@ -512,7 +512,7 @@ SEFilterStates <- R6::R6Class( # nolint
               self$state_list_push(
                 x = init_filter_state(
                   SummarizedExperiment::colData(data)[[input$col_to_add]],
-                  varname = as.name(input$col_to_add),
+                  varname = input$col_to_add,
                   dataname = private$dataname
                 ),
                 state_list_index = "select",
@@ -541,7 +541,7 @@ SEFilterStates <- R6::R6Class( # nolint
               self$state_list_push(
                 x = init_filter_state(
                   SummarizedExperiment::rowData(data)[[input$row_to_add]],
-                  varname = as.name(input$row_to_add),
+                  varname = input$row_to_add,
                   dataname = private$dataname
                 ),
                 state_list_index = "subset",

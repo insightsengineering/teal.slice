@@ -94,7 +94,7 @@ Initialize a \code{FilterState} object
 \item{\code{x}}{(\code{vector})\cr
 values of the variable used in filter}
 
-\item{\code{varname}}{(\code{character}, \code{name})\cr
+\item{\code{varname}}{(\code{character})\cr
 name of the variable}
 
 \item{\code{varlabel}}{(\code{character(1)})\cr
@@ -215,7 +215,7 @@ Returns variable label.
 \subsection{Method \code{get_varname()}}{
 Get variable name.
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{FilterState$get_varname(deparse = FALSE)}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{FilterState$get_varname()}\if{html}{\out{</div>}}
 }
 
 \subsection{Arguments}{

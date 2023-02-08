@@ -1,6 +1,6 @@
-testthat::test_that("init_filter_state accepts a string or name as varname", {
+testthat::test_that("init_filter_state accepts a string, not name as varname", {
   testthat::expect_no_error(init_filter_state(7, varname = "test"))
-  testthat::expect_no_error(init_filter_state(7, varname = quote(test)))
+  testthat::expect_error(init_filter_state(7, varname = quote(test)))
 })
 
 testthat::test_that("init_filter_state accepts a character vector of length 0 or 1 as varlabel", {

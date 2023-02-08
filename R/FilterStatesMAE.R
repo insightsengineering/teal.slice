@@ -146,7 +146,7 @@ MAEFilterStates <- R6::R6Class( # nolint
         } else {
           fstate <- init_filter_state(
             SummarizedExperiment::colData(data)[[varname]],
-            varname = as.name(varname),
+            varname = varname,
             varlabel = private$get_varlabels(varname),
             dataname = private$dataname,
             extract_type = "list"
@@ -270,7 +270,7 @@ MAEFilterStates <- R6::R6Class( # nolint
             vapply(
               X = self$state_list_get(state_list_index = "y"),
               FUN.VALUE = character(1),
-              FUN = function(x) x$get_varname(deparse = TRUE)
+              FUN = function(x) x$get_varname()
             )
           })
 
@@ -324,7 +324,7 @@ MAEFilterStates <- R6::R6Class( # nolint
               )
               fstate <- init_filter_state(
                 SummarizedExperiment::colData(data)[[input$var_to_add]],
-                varname = as.name(input$var_to_add),
+                varname = input$var_to_add,
                 varlabel = private$get_varlabels(input$var_to_add),
                 dataname = private$dataname,
                 extract_type = "list"

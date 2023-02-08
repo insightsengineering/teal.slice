@@ -4,7 +4,7 @@
 #' @param x (`vector`)\cr
 #'   values of the variable used in filter
 #'
-#' @param varname (`character(1)`, `name`)\cr
+#' @param varname (`character(1)`)\cr
 #'   name of the variable
 #'
 #' @param varlabel (`character(0)`, `character(1)` or `NULL`)\cr
@@ -56,10 +56,7 @@ init_filter_state <- function(x,
                               varlabel = attr(x, "label"),
                               dataname = NULL,
                               extract_type = character(0)) {
-  checkmate::assert(
-    checkmate::check_string(varname),
-    checkmate::check_class(varname, "name")
-  )
+  checkmate::assert_string(varname)
   checkmate::assert_character(varlabel, max.len = 1L, any.missing = FALSE, null.ok = TRUE)
   checkmate::assert_multi_class(dataname, c("name", "call", "character"), null.ok = TRUE)
   checkmate::assert_character(extract_type, max.len = 1L, any.missing = FALSE)

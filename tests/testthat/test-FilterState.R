@@ -1,7 +1,7 @@
-testthat::test_that("The constructor accepts character, name or call as varname", {
+testthat::test_that("The constructor accepts character as varname", {
   testthat::expect_no_error(FilterState$new(c(7), varname = "test"))
-  testthat::expect_no_error(FilterState$new(c(7), varname = quote(pi)))
-  testthat::expect_no_error(FilterState$new(c(7), varname = call("test")))
+  testthat::expect_error(FilterState$new(c(7), varname = quote(pi)))
+  testthat::expect_error(FilterState$new(c(7), varname = call("test")))
 })
 
 testthat::test_that("The constructor requires a varname", {
@@ -41,18 +41,12 @@ testthat::test_that("get_varlabel returns a string passed to the constructor", {
 
 testthat::test_that("get_varname(deparse = FALSE) returns a name if varname passed to the constructor is a string", {
   filter_state <- FilterState$new(7, varname = "7")
-  testthat::expect_equal(filter_state$get_varname(deparse = FALSE), quote(`7`))
+  testthat::expect_equal(filter_state$get_varname(), "7")
 })
 
 testthat::test_that("get_varname(deparse = TRUE) returns a string if varname passed to the constructor is a string", {
   filter_state <- FilterState$new(7, varname = "7")
-  testthat::expect_equal(filter_state$get_varname(deparse = TRUE), "7")
-})
-
-testthat::test_that("get_varname returns a call if call is passed to the constructor", {
-  filter_state <- FilterState$new(7, varname = call("test"))
-  testthat::expect_equal(filter_state$get_varname(deparse = FALSE), call("test"))
-  testthat::expect_equal(filter_state$get_varname(deparse = TRUE), "test()")
+  testthat::expect_equal(filter_state$get_varname(), "7")
 })
 
 testthat::test_that("get_selected returns NULL after initialization", {
