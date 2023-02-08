@@ -49,10 +49,22 @@ RangeFilterState <- R6::R6Class( # nolint
       if (!any(is.finite(x))) stop("\"x\" contains no finite values")
 
       super$initialize(x, varname, varlabel, input_dataname, extract_type)
-      var_range <- range(x, finite = TRUE)
+      private$inf_count <- sum(is.infinite(x))
+      private$is_integer <- checkmate::test_integerish(x)
+      private$keep_inf <- reactiveVal(FALSE)
 
-      private$set_choices(var_range)
-      self$set_selected(range(pretty(var_range, 100L)))
+      x_range <- range(x, finite = TRUE)
+      x_pretty <- pretty(x_range, 100L)
+
+      if (identical(diff(x_range), 0)) {
+        private$set_choices(x_range)
+        private$slider_step <- 1
+        self$set_selected(x_range)
+      } else {
+        private$set_choices(range(x_pretty))
+        private$slider_step <- private$get_pretty_range_step(x_pretty)
+        self$set_selected(range(x_pretty))
+      }
 
       private$histogram_data <- if (sum(is.finite(x)) >= 2) {
         as.data.frame(
@@ -61,9 +73,6 @@ RangeFilterState <- R6::R6Class( # nolint
       } else {
         data.frame(x = NA_real_, y = NA_real_)
       }
-      private$inf_count <- sum(is.infinite(x))
-      private$is_integer <- checkmate::test_integerish(x)
-      private$keep_inf <- reactiveVal(FALSE)
 
       return(invisible(self))
     },
@@ -210,6 +219,7 @@ RangeFilterState <- R6::R6Class( # nolint
     keep_inf = NULL, # because it holds reactiveVal
     inf_count = integer(0),
     is_integer = logical(0),
+    slider_step = numeric(0),
 
   # private methods ----
     # Adds is.infinite(varname) before existing condition calls if keep_inf is selected
@@ -226,38 +236,18 @@ RangeFilterState <- R6::R6Class( # nolint
       }
     },
 
-    # @description
-    # formats range to pretty numbers to reduce decimal precision
-    # @param values (numeric) initial range to be formatted
-    # @return numeric(3) with names min, max, step - relevant for sliderInput
-    get_pretty_range_inputs = function(values) {
-      v_pretty_range <- pretty(values, n = 100)
-      min <- min(v_pretty_range)
-      max <- max(v_pretty_range)
-
-      step <- private$get_pretty_range_step(min, max, v_pretty_range)
-
-      c(
-        min = min,
-        max = max,
-        step = step
-      )
-    },
     # @description gets pretty step size for range slider
     #  adaptation of shiny's method (see shiny/R/input-slider.R function findStepSize)
-    # @param min (numeric) minimum of pretty values
-    # @param max (numeric) maximum of pretty values
     # @param pretty_range (numeric(n)) vector of pretty values
     # @return numeric(1) pretty step size for the sliderInput
-    get_pretty_range_step = function(min, max, pretty_range) {
-      range <- max - min
+    get_pretty_range_step = function(pretty_range) {
 
-      if (private$is_integer && range > 2) {
+      if (private$is_integer && diff(range(pretty_range) > 2)) {
         return(1L)
       } else {
         n_steps <- length(pretty_range) - 1
         return(
-          signif(digits = 10, (max - min) / n_steps)
+          signif(digits = 10, (max(pretty_range) - min(pretty_range)) / n_steps)
         )
       }
     },
