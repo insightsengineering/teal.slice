@@ -89,7 +89,6 @@ RangeFilterState <- R6::R6Class( # nolint
       checkmate::assert_number(indent, finite = TRUE, lower = 0)
 
       vals <- self$get_selected()
-      vals <- private$remove_out_of_bound_values(vals)
       sprintf(
         "%sFiltering on: %s\n%1$s  Selected range: %s - %s\n%1$s  Include missing values: %s",
         format("", width = indent),
