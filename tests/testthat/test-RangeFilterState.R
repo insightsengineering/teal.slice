@@ -1,3 +1,5 @@
+
+# initialize ----
 testthat::test_that("The constructor accepts numerical values", {
   testthat::expect_no_error(RangeFilterState$new(c(1), varname = "test"))
 })
@@ -8,6 +10,7 @@ testthat::test_that("The constructor accepts infinite values but not infinite on
   testthat::expect_error(RangeFilterState$new(c(Inf, NA), varname = "test"), "\"x\" contains no finite values")
 })
 
+# get_selected ----
 testthat::test_that("get_selected returns range computed on a vector containing c(1, Inf, -Inf, NA)", {
   test <- c(1, Inf, -Inf, NA)
   filter_state <- RangeFilterState$new(test, varname = "test")
@@ -17,20 +20,7 @@ testthat::test_that("get_selected returns range computed on a vector containing 
   )
 })
 
-testthat::test_that("get_call returns a condition TRUE for all values passed to the constructor", {
-  filter_state <- RangeFilterState$new(c(1, 2, 3), varname = "test")
-  testthat::expect_equal(shiny::isolate(filter_state$get_call()), quote(test >= 1 & test <= 3))
-  test <- c(1, 2, 3)
-  testthat::expect_true(all(eval(shiny::isolate(filter_state$get_call()))))
-})
-
-testthat::test_that("get_call returns a condition TRUE for all values passed to the constructor", {
-  filter_state <- RangeFilterState$new(7, varname = "test")
-  testthat::expect_equal(shiny::isolate(filter_state$get_call()), quote(test >= 7 & test <= 7))
-  test <- 7
-  testthat::expect_true(all(eval(shiny::isolate(filter_state$get_call()))))
-})
-
+# set_selected ----
 # testthat::test_that("set_selected warns when the selected range intersects the possible range
 #   but is not fully included in it", {
 #   filter_state <- RangeFilterState$new(7, varname = "test")
@@ -47,10 +37,24 @@ testthat::test_that("set_selected raises error when the passed values are not co
   )
 })
 
-
 testthat::test_that("set_selected accepts an array with two numerical elements", {
   filter_state <- RangeFilterState$new(7, varname = "test")
   testthat::expect_no_error(filter_state$set_selected(c(7, 7)))
+})
+
+# get_call ----
+testthat::test_that("get_call returns a condition TRUE for all values passed to the constructor", {
+  filter_state <- RangeFilterState$new(c(1, 2, 3), varname = "test")
+  testthat::expect_equal(shiny::isolate(filter_state$get_call()), quote(test >= 1 & test <= 3))
+  test <- c(1, 2, 3)
+  testthat::expect_true(all(eval(shiny::isolate(filter_state$get_call()))))
+})
+
+testthat::test_that("get_call returns a condition TRUE for all values passed to the constructor", {
+  filter_state <- RangeFilterState$new(7, varname = "test")
+  testthat::expect_equal(shiny::isolate(filter_state$get_call()), quote(test >= 7 & test <= 7))
+  test <- 7
+  testthat::expect_true(all(eval(shiny::isolate(filter_state$get_call()))))
 })
 
 testthat::test_that("get_call returns a valid call after an unsuccessfull set_selected", {
@@ -111,6 +115,7 @@ testthat::test_that("get_call returns a condition true for NAs and Inf values af
   testthat::expect_true(all(eval(shiny::isolate(filter_state$get_call()))))
 })
 
+# get_state ----
 testthat::test_that("get_state returns a list identical to set_state input", {
   filter_state <- RangeFilterState$new(c(1.0, 8.0, NA_real_, Inf), varname = "test")
   state <- list(selected = c(2.0, 7.0), keep_na = TRUE, keep_inf = TRUE)
@@ -118,6 +123,7 @@ testthat::test_that("get_state returns a list identical to set_state input", {
   testthat::expect_identical(shiny::isolate(filter_state$get_state()), state)
 })
 
+# set_state ----
 testthat::test_that("set_state needs a named list with selected, keep_na and keep_inf elements", {
   filter_state <- RangeFilterState$new(c(1, 8, NA_real_, Inf), varname = "test")
   testthat::expect_no_error(filter_state$set_state(list(selected = c(1, 2), keep_na = TRUE, keep_inf = TRUE)))
@@ -141,6 +147,7 @@ testthat::test_that("set_state overwrites fields included in the input only", {
   testthat::expect_true(shiny::isolate(filter_state$get_keep_inf()))
 })
 
+# is_any_filtered ----
 testthat::test_that(
   "RangeFilterState$is_any_filtered works properly when NA and Inf are present in data",
   code = {
@@ -199,7 +206,7 @@ testthat::test_that(
 )
 
 
-# Format
+# format ----
 testthat::test_that("$format() is a FilterStates's method that accepts indent", {
   filter_state <- RangeFilterState$new(7, varname = "test")
   testthat::expect_no_error(shiny::isolate(filter_state$format(indent = 0)))
@@ -238,4 +245,29 @@ testthat::test_that("$format() prepends spaces to every line of the returned str
       )
     )
   }
+})
+
+
+# get_pretty_range_step ----
+testthat::test_that("private$get_pretty_range_step returns pretty step size", {
+  test_class <- R6::R6Class(
+    classname = "TestClass",
+    inherit = RangeFilterState,
+    public = list(
+      test_get_pretty_range_step = function(pretty_range) {
+        private$get_pretty_range_step(pretty_range)
+      }
+    )
+  )
+
+  pretty_sepal_length <- pretty(iris$Sepal.Length, n = 100)
+  filter_state <- test_class$new(pretty_sepal_length, varname = "test")
+  step <- filter_state$test_get_pretty_range_step(pretty_sepal_length)
+  testthat::expect_identical(step, 0.05)
+
+  pretty_mpg <- pretty(mtcars$mpg, n = 100)
+
+  filter_state <- test_class$new(pretty_mpg, varname = "test")
+  step <- filter_state$test_get_pretty_range_step(pretty_mpg)
+  testthat::expect_identical(step, 0.2)
 })
