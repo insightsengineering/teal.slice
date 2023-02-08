@@ -19,6 +19,9 @@
 DatetimeFilterState <- R6::R6Class( # nolint
   "DatetimeFilterState",
   inherit = FilterState,
+
+  # public methods ----
+
   public = list(
 
     #' @description
@@ -75,12 +78,15 @@ DatetimeFilterState <- R6::R6Class( # nolint
     #'
     format = function(indent = 0) {
       checkmate::assert_number(indent, finite = TRUE, lower = 0)
+
+
+      vals <- self$get_selected()
       sprintf(
         "%sFiltering on: %s\n%1$s  Selected range: %s - %s\n%1$s  Include missing values: %s",
         format("", width = indent),
         self$get_varname(deparse = TRUE),
-        format(self$get_selected(), nsmall = 3)[1],
-        format(self$get_selected(), nsmall = 3)[2],
+        format(vals[1], nsmall = 3),
+        format(vals[2], nsmall = 3),
         format(self$get_keep_na())
       )
     },
@@ -137,8 +143,14 @@ DatetimeFilterState <- R6::R6Class( # nolint
       super$set_selected(value)
     }
   ),
+
+  # private fields ----
+
   private = list(
     timezone = Sys.timezone(),
+
+    # private methods ----
+
     validate_selection = function(value) {
       if (!(is(value, "POSIXct") || is(value, "POSIXlt"))) {
         stop(
@@ -186,6 +198,8 @@ DatetimeFilterState <- R6::R6Class( # nolint
       }
       values
     },
+
+    # shiny modules ----
 
     # @description
     # UI Module for `DatetimeFilterState`.
