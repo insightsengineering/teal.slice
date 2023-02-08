@@ -302,6 +302,7 @@ FilterStates <- R6::R6Class( # nolint
       )
 
       new_state_list <- private$state_list[[state_list_index]]()
+      new_state_list[[state_id]]$destroy_shiny()
       new_state_list[[state_id]] <- NULL
       private$state_list[[state_list_index]](new_state_list)
 
@@ -321,8 +322,12 @@ FilterStates <- R6::R6Class( # nolint
       logger::log_trace(
         "{ class(self)[1] } emptying state_list, dataname: { deparse1(private$input_dataname) }")
 
-      for (i in seq_along(private$state_list)) {
-        private$state_list[[i]](list())
+      for (state_list_index in seq_along(private$state_list)) {
+        state_list <- private$state_list[[state_list_index]]
+        for (state_id in names(state_list)) {
+          state_list[[j]]$destroy_shiny()
+        }
+        private$state_list[[state_list_index]](list())
       }
 
       logger::log_trace(
@@ -392,6 +397,7 @@ FilterStates <- R6::R6Class( # nolint
           removed_state_name <- reactiveVal(character(0))
 
           observeEvent(self$state_list_get(1L), {
+            print(names(reactiveValuesToList(input)))
             added_state_name(setdiff(names(self$state_list_get(1L)), names(previous_state())))
             previous_state(self$state_list_get(1L))
           })

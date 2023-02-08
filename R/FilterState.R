@@ -119,6 +119,18 @@ FilterState <- R6::R6Class( # nolint
     },
 
     #' @description
+    #' Destroying shiny observers and inputs registered in the session.
+    #' If observers are not removed they will still react to the changes
+    #' in the reactive data to change the filtered labels count.
+    #' `destroy_shiny` executes function created in the `server`, so it has access
+    #' to the `input` and `session`.
+    destroy_shiny = function() {
+      if (!is.null(private$destroy_shiny_impl)) {
+        private$destroy_shiny_impl()
+      }
+    },
+
+    #' @description
     #' Returns a formatted string representing this `FilterState`.
     #'
     #' @param indent (`numeric(1)`)
@@ -376,20 +388,26 @@ FilterState <- R6::R6Class( # nolint
         id = id,
         function(input, output, session) {
           private$server_inputs("inputs")
-          eventReactive(input$remove, {
-            logger::log_trace("Removing FilterState inputs and observers; variable: { deparse1(private$varname) }")
-            private$destroy_observers()
+
+          # function removes observers and inputs related with this filter
+          private$destroy_shiny_impl <- function() {
+            logger::log_trace("Destroying FilterState inputs and observers; variable: { deparse1(private$varname) }")
             # remove values from the input list
             lapply(session$ns(names(input)), .subset2(input, "impl")$.values$remove)
+
+            # remove observers
+            lapply(private$observers, function(x) x$destroy())
+
             logger::log_trace(
               sprintf(
-                "Removed FilterState inputs and observers; variable %s; %s inputs remained.",
+                "Destroyed FilterState inputs and observers; variable %s; %s inputs remained.",
                 deparse1(private$varname),
                 length(reactiveValuesToList(input))
               )
             )
-            TRUE
-          })
+          }
+
+          reactive(input$remove)
         }
       )
     },
@@ -439,6 +457,7 @@ FilterState <- R6::R6Class( # nolint
   # private members ----
   private = list(
     choices = NULL, # because each class has different choices type
+    destroy_shiny_impl = NULL, # function created in self$server
     input_dataname = character(0),
     keep_na = NULL, # reactiveVal logical()
     na_count = integer(0),
@@ -546,16 +565,6 @@ FilterState <- R6::R6Class( # nolint
     },
 
     # shiny private modules ----
-
-    #' @description
-    #' Destroy observers stored in `private$observers`.
-    #'
-    #' @return NULL invisibly
-    #'
-    destroy_observers = function() {
-      lapply(private$observers, function(x) x$destroy())
-      return(invisible(NULL))
-    },
 
     # shiny modules -----
     #' module with inputs
