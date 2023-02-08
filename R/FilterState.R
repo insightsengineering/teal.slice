@@ -472,7 +472,7 @@ FilterState <- R6::R6Class( # nolint
     },
 
     #' Sets `keep_na` field according to observed `input$keep_na`
-    #' If `keep_na = TRUE` `is.na(varname)` is added to the returned call.
+    #' If `keep_na = TRUE`, `is.na(varname)` is added to the returned call.
     #' Otherwise returned call excludes `NA` when executed.
     observe_keep_na = function(input) {
 
