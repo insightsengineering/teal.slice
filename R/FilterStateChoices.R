@@ -135,7 +135,6 @@ ChoicesFilterState <- R6::R6Class( # nolint
   ),
   private = list(
     histogram_data = data.frame(),
-
     validate_selection = function(value) {
       if (!is.character(value)) {
         stop(

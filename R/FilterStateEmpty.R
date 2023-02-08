@@ -140,7 +140,7 @@ EmptyFilterState <- R6::R6Class( # nolint
           div(
             span("Variable contains missing values only"),
             private$keep_na_ui(ns("keep_na"))
-         )
+          )
         )
       )
     },

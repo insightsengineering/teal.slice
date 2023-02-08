@@ -55,9 +55,9 @@ testthat::test_that("init_filter_state returns a DateFilterState object if passe
 
 testthat::test_that("init_filter_state returns a DatetimeFilterState object if passed
   a POSIXct or POSIXlt object", {
-    testthat::expect_true(is(init_filter_state(as.POSIXct("1900/01/01"), varname = "test"), "DatetimeFilterState"))
-    testthat::expect_true(is(init_filter_state(as.POSIXlt("1900/01/01"), varname = "test"), "DatetimeFilterState"))
-  })
+  testthat::expect_true(is(init_filter_state(as.POSIXct("1900/01/01"), varname = "test"), "DatetimeFilterState"))
+  testthat::expect_true(is(init_filter_state(as.POSIXlt("1900/01/01"), varname = "test"), "DatetimeFilterState"))
+})
 
 testthat::test_that("init_filter_state returns a RangeFilterState if passed a numeric array containing Inf", {
   testthat::expect_no_error(fs <- init_filter_state(c(1, 2, 3, 4, Inf), varname = "test"))

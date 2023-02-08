@@ -39,7 +39,8 @@
 #'     x = filter_state,
 #'     state_list_index = 1L,
 #'     state_id = "x"
-#'   ))
+#'   )
+#' )
 #' isolate(filter_states$get_call())
 #'
 FilterStates <- R6::R6Class( # nolint
@@ -90,10 +91,13 @@ FilterStates <- R6::R6Class( # nolint
     #' @return `character(1)` the formatted string
     #'
     format = function(indent) {
-      sprintf(paste(
-        "%sThis is an instance of an abstract class.",
-        "Use child class constructors to instantiate objects."),
-        paste(rep(" ", indent), collapse = ""))
+      sprintf(
+        paste(
+          "%sThis is an instance of an abstract class.",
+          "Use child class constructors to instantiate objects."
+        ),
+        paste(rep(" ", indent), collapse = "")
+      )
     },
 
     #' @description
@@ -216,7 +220,8 @@ FilterStates <- R6::R6Class( # nolint
     #'
     state_list_push = function(x, state_list_index, state_id) {
       logger::log_trace(
-        "{ class(self)[1] } pushing into state_list, dataname: { private$dataname }")
+        "{ class(self)[1] } pushing into state_list, dataname: { private$dataname }"
+      )
       private$validate_state_list_exists(state_list_index)
       checkmate::assert_string(state_id)
 
@@ -279,14 +284,16 @@ FilterStates <- R6::R6Class( # nolint
     #'
     state_list_empty = function() {
       logger::log_trace(
-        "{ class(self)[1] } emptying state_list, dataname: { private$dataname }")
+        "{ class(self)[1] } emptying state_list, dataname: { private$dataname }"
+      )
 
       for (i in seq_along(private$state_list)) {
         private$state_list[[i]](list())
       }
 
       logger::log_trace(
-        "{ class(self)[1] } emptied state_list, dataname: { private$dataname }")
+        "{ class(self)[1] } emptied state_list, dataname: { private$dataname }"
+      )
       invisible(NULL)
     },
 
@@ -400,7 +407,6 @@ FilterStates <- R6::R6Class( # nolint
       )
     }
   ),
-
   private = list(
     # private fields ----
     cards_container_id = character(0),
@@ -546,8 +552,8 @@ FilterStates <- R6::R6Class( # nolint
       if (
         !(
           is.numeric(state_list_index) &&
-          all(state_list_index <= length(private$state_list) && state_list_index > 0) ||
-          is.character(state_list_index) && all(state_list_index %in% names(private$state_list))
+            all(state_list_index <= length(private$state_list) && state_list_index > 0) ||
+            is.character(state_list_index) && all(state_list_index %in% names(private$state_list))
         )
       ) {
         stop(

@@ -217,7 +217,8 @@ testthat::test_that(
       )
     )
     testthat::expect_error(datasets$set_filter_state(state = fs))
-  })
+  }
+)
 
 testthat::test_that(
   "FilteredData$set_filter_state throws error with unnamed variables list",
@@ -240,7 +241,8 @@ testthat::test_that(
       )
     )
     testthat::expect_error(datasets$set_filter_state(state = fs))
-  })
+  }
+)
 
 testthat::test_that(
   "FilteredData$get_filter_state returns list identical to input with attributes",
@@ -274,7 +276,8 @@ testthat::test_that(
     shiny::isolate(datasets$set_filter_state(state = fs))
     attr(fs, "formatted") <- shiny::isolate(datasets$get_formatted_filter_state())
     testthat::expect_identical(shiny::isolate(datasets$get_filter_state()), fs)
-  })
+  }
+)
 
 testthat::test_that(
   "FilteredData$get_filter_state returns list whose attribute is a character form of the list",
@@ -313,7 +316,8 @@ testthat::test_that(
       attr(shiny::isolate(datasets$get_filter_state()), "formatted"),
       formatted_attr
     )
-  })
+  }
+)
 
 testthat::test_that("FilteredData$remove_filter_state removes states defined in list", {
   datasets <- FilteredData$new(
@@ -378,7 +382,8 @@ testthat::test_that(
     testthat::expect_null(
       shiny::isolate(datasets$get_call("mtcars"))
     )
-  })
+  }
+)
 
 testthat::test_that(
   "FilteredData$remove_all_filter_states remove the filters of the desired dataset only",
@@ -418,7 +423,8 @@ testthat::test_that(
         )
       )
     )
-  })
+  }
+)
 
 
 get_filtered_data_object <- function() {
@@ -453,7 +459,8 @@ testthat::test_that("get_filter_overview throws error with empty argument input"
   datasets <- get_filtered_data_object()
   testthat::expect_error(
     shiny::isolate(
-      datasets$get_filter_overview()),
+      datasets$get_filter_overview()
+    ),
     "argument \"datanames\" is missing, with no default"
   )
 })
@@ -664,7 +671,8 @@ testthat::test_that(
     shiny::isolate(testthat::expect_equal(datasets$.__enclos_env__$private$get_filter_count(), 0L))
     shiny::isolate(datasets$set_filter_state(state = fs))
     shiny::isolate(testthat::expect_equal(datasets$.__enclos_env__$private$get_filter_count(), 4L))
-  })
+  }
+)
 
 testthat::test_that(
   "FilteredData$get_active_filters properly tallies active filter states for MAE objects",
@@ -690,4 +698,5 @@ testthat::test_that(
     shiny::isolate(testthat::expect_equal(datasets$.__enclos_env__$private$get_filter_count(), 0L))
     shiny::isolate(datasets$set_filter_state(state = fs))
     shiny::isolate(testthat::expect_equal(datasets$.__enclos_env__$private$get_filter_count(), 4L))
-  })
+  }
+)

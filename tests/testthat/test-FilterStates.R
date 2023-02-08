@@ -4,11 +4,14 @@
 # constructor ----
 testthat::test_that("The constructor accepts only a string as dataname", {
   testthat::expect_no_error(
-    FilterStates$new(dataname = "string", datalabel = "test"))
+    FilterStates$new(dataname = "string", datalabel = "test")
+  )
   testthat::expect_error(
-    FilterStates$new(dataname = quote(name), datalabel = "test"))
+    FilterStates$new(dataname = quote(name), datalabel = "test")
+  )
   testthat::expect_error(
-    FilterStates$new(dataname = call("call"), datalabel = "test"))
+    FilterStates$new(dataname = call("call"), datalabel = "test")
+  )
 })
 
 # validate_state_list_exists ----
@@ -17,13 +20,16 @@ testthat::test_that("validate_state_list_exists raises errors if no filters were
   filter_state <- FilterState$new("test", varname = "test")
   testthat::expect_error(
     shiny::isolate(filter_states$state_list_get(1, 1)),
-    regexp = "Filter state list 1 has not been initialized in FilterStates object belonging to the dataset test")
+    regexp = "Filter state list 1 has not been initialized in FilterStates object belonging to the dataset test"
+  )
   testthat::expect_error(
     shiny::isolate(filter_states$state_list_push(filter_state, 1, 1)),
-    regexp = "Filter state list 1 has not been initialized in FilterStates object belonging to the dataset test")
+    regexp = "Filter state list 1 has not been initialized in FilterStates object belonging to the dataset test"
+  )
   testthat::expect_error(
     shiny::isolate(filter_states$state_list_remove(1, 1)),
-    regexp = "Filter state list 1 has not been initialized in FilterStates object belonging to the dataset test")
+    regexp = "Filter state list 1 has not been initialized in FilterStates object belonging to the dataset test"
+  )
 })
 
 testthat::test_that("Emptying empty FilterStates does not raise errors", {
@@ -46,28 +52,34 @@ testthat::test_that("state_list_push does not raise errors - DFFilterStates", {
     dataname = "test",
     datalabel = "test",
     varlabels = NULL,
-    keys = NULL)
+    keys = NULL
+  )
   filter_state <- FilterState$new("test", varname = "test")
   testthat::expect_no_error(
-    shiny::isolate(filter_states$state_list_push(x = filter_state, state_list_index = 1, state_id = "test")))
+    shiny::isolate(filter_states$state_list_push(x = filter_state, state_list_index = 1, state_id = "test"))
+  )
 })
 
 testthat::test_that("state_list_push does not raise errors - MatrixFilterStates", {
   filter_states <- MatrixFilterStates$new(
     dataname = "test",
-    datalabel = "test")
+    datalabel = "test"
+  )
   filter_state <- FilterState$new("test", varname = "test")
   testthat::expect_no_error(
-    shiny::isolate(filter_states$state_list_push(x = filter_state, state_list_index = 1, state_id = "test")))
+    shiny::isolate(filter_states$state_list_push(x = filter_state, state_list_index = 1, state_id = "test"))
+  )
 })
 
 testthat::test_that("state_list_push does not raise errors - SEFilterStates", {
   filter_states <- SEFilterStates$new(
     dataname = "test",
-    datalabel = "test")
+    datalabel = "test"
+  )
   filter_state <- FilterState$new("test", varname = "test")
   testthat::expect_no_error(
-    shiny::isolate(filter_states$state_list_push(x = filter_state, state_list_index = 1, state_id = "test")))
+    shiny::isolate(filter_states$state_list_push(x = filter_state, state_list_index = 1, state_id = "test"))
+  )
 })
 
 testthat::test_that("state_list_push does not raise errors - MAEFilterStates", {
@@ -75,10 +87,12 @@ testthat::test_that("state_list_push does not raise errors - MAEFilterStates", {
     dataname = "test",
     datalabel = "test",
     varlabels = NULL,
-    keys = NULL)
+    keys = NULL
+  )
   filter_state <- FilterState$new("test", varname = "test")
   testthat::expect_no_error(
-    shiny::isolate(filter_states$state_list_push(x = filter_state, state_list_index = 1, state_id = "test")))
+    shiny::isolate(filter_states$state_list_push(x = filter_state, state_list_index = 1, state_id = "test"))
+  )
 })
 
 
@@ -90,12 +104,14 @@ testthat::test_that(
       dataname = "test",
       datalabel = "test",
       varlabels = NULL,
-      keys = NULL)
+      keys = NULL
+    )
     filter_states_list <- DFFilterStates$new(
       dataname = "test",
       datalabel = "test",
       varlabels = NULL,
-      keys = NULL)
+      keys = NULL
+    )
 
     filter_state <- FilterState$new("test", varname = "test")
     shiny::isolate(filter_states_no_list$state_list_push(x = filter_state, state_list_index = 1, state_id = "test"))
@@ -104,17 +120,20 @@ testthat::test_that(
       shiny::isolate(filter_states_no_list$state_list_get(state_list_index = 1)),
       shiny::isolate(filter_states_list$state_list_get(state_list_index = 1))
     )
-  })
+  }
+)
 
 testthat::test_that(
   "Passing a FilterState to state_list_push is the same as passing it in a list - MatrixFilterStates",
   code = {
     filter_states_no_list <- MatrixFilterStates$new(
       dataname = "test",
-      datalabel = "test")
+      datalabel = "test"
+    )
     filter_states_list <- MatrixFilterStates$new(
       dataname = "test",
-      datalabel = "test")
+      datalabel = "test"
+    )
 
     filter_state <- FilterState$new("test", varname = "test")
     shiny::isolate(filter_states_no_list$state_list_push(x = filter_state, state_list_index = 1, state_id = "test"))
@@ -123,17 +142,20 @@ testthat::test_that(
       shiny::isolate(filter_states_no_list$state_list_get(state_list_index = 1)),
       shiny::isolate(filter_states_list$state_list_get(state_list_index = 1))
     )
-  })
+  }
+)
 
 testthat::test_that(
   "Passing a FilterState to state_list_push is the same as passing it in a list - SEFilterStates",
   code = {
     filter_states_no_list <- SEFilterStates$new(
       dataname = "test",
-      datalabel = "test")
+      datalabel = "test"
+    )
     filter_states_list <- SEFilterStates$new(
       dataname = "test",
-      datalabel = "test")
+      datalabel = "test"
+    )
 
     filter_state <- FilterState$new("test", varname = "test")
     shiny::isolate(filter_states_no_list$state_list_push(x = filter_state, state_list_index = 1, state_id = "test"))
@@ -142,7 +164,8 @@ testthat::test_that(
       shiny::isolate(filter_states_no_list$state_list_get(state_list_index = 1)),
       shiny::isolate(filter_states_list$state_list_get(state_list_index = 1))
     )
-  })
+  }
+)
 
 testthat::test_that(
   "Passing a FilterState to state_list_push is the same as passing it in a list - MAEFilterStates",
@@ -151,12 +174,14 @@ testthat::test_that(
       dataname = "test",
       datalabel = "test",
       varlabels = NULL,
-      keys = NULL)
+      keys = NULL
+    )
     filter_states_list <- MAEFilterStates$new(
       dataname = "test",
       datalabel = "test",
       varlabels = NULL,
-      keys = NULL)
+      keys = NULL
+    )
 
     filter_state <- FilterState$new("test", varname = "test")
     shiny::isolate(filter_states_no_list$state_list_push(x = filter_state, state_list_index = 1, state_id = "test"))
@@ -165,7 +190,8 @@ testthat::test_that(
       shiny::isolate(filter_states_no_list$state_list_get(state_list_index = 1)),
       shiny::isolate(filter_states_list$state_list_get(state_list_index = 1))
     )
-  })
+  }
+)
 
 
 # state_list_get ----
@@ -174,7 +200,8 @@ testthat::test_that("state_list_get returns the list of FilterState objects push
     dataname = "test",
     datalabel = "test",
     varlabels = NULL,
-    keys = NULL)
+    keys = NULL
+  )
   filter_state <- FilterState$new("test", varname = "test")
   shiny::isolate(filter_states$state_list_push(x = filter_state, state_list_index = 1, state_id = "test"))
   checkmate::expect_list(shiny::isolate(filter_states$state_list_get(state_list_index = 1)), types = "FilterState")
@@ -183,7 +210,8 @@ testthat::test_that("state_list_get returns the list of FilterState objects push
 testthat::test_that("state_list_get returns the list of FilterState objects pushed - MatrixFilterStates", {
   filter_states <- MatrixFilterStates$new(
     dataname = "test",
-    datalabel = "test")
+    datalabel = "test"
+  )
   filter_state <- FilterState$new("test", varname = "test")
   shiny::isolate(filter_states$state_list_push(x = filter_state, state_list_index = 1, state_id = "test"))
   checkmate::expect_list(shiny::isolate(filter_states$state_list_get(state_list_index = 1)), types = "FilterState")
@@ -192,7 +220,8 @@ testthat::test_that("state_list_get returns the list of FilterState objects push
 testthat::test_that("state_list_get returns the list of FilterState objects pushed - SEFilterStates", {
   filter_states <- SEFilterStates$new(
     dataname = "test",
-    datalabel = "test")
+    datalabel = "test"
+  )
   filter_state <- FilterState$new("test", varname = "test")
   shiny::isolate(filter_states$state_list_push(x = filter_state, state_list_index = 1, state_id = "test"))
   checkmate::expect_list(shiny::isolate(filter_states$state_list_get(state_list_index = 1)), types = "FilterState")
@@ -203,7 +232,8 @@ testthat::test_that("state_list_get returns the list of FilterState objects push
     dataname = "test",
     datalabel = "test",
     varlabels = NULL,
-    keys = NULL)
+    keys = NULL
+  )
   filter_state <- FilterState$new("test", varname = "test")
   shiny::isolate(filter_states$state_list_push(x = filter_state, state_list_index = 1, state_id = "test"))
   checkmate::expect_list(shiny::isolate(filter_states$state_list_get(state_list_index = 1)), types = "FilterState")
@@ -218,42 +248,48 @@ testthat::test_that(
       dataname = "test",
       datalabel = "test",
       varlabels = NULL,
-      keys = NULL)
+      keys = NULL
+    )
     filter_state <- FilterState$new("test", varname = "test")
     shiny::isolate(filter_states$state_list_push(x = filter_state, state_list_index = 1, state_id = "test"))
     testthat::expect_equal(
       names(shiny::isolate(filter_states$state_list_get(1))),
       as.character(filter_state$get_varname())
     )
-  })
+  }
+)
 
 testthat::test_that(
   "Elements of the list returned by state_list_get have names corresponding to varname - MatrixFilterStates",
   code = {
     filter_states <- MatrixFilterStates$new(
       dataname = "test",
-      datalabel = "test")
+      datalabel = "test"
+    )
     filter_state <- FilterState$new("test", varname = "test")
     shiny::isolate(filter_states$state_list_push(x = filter_state, state_list_index = 1, state_id = "test"))
     testthat::expect_equal(
       names(shiny::isolate(filter_states$state_list_get(1))),
       as.character(filter_state$get_varname())
     )
-  })
+  }
+)
 
 testthat::test_that(
   "Elements of the list returned by state_list_get have names corresponding to varname - SEFilterStates",
   code = {
     filter_states <- SEFilterStates$new(
       dataname = "test",
-      datalabel = "test")
+      datalabel = "test"
+    )
     filter_state <- FilterState$new("test", varname = "test")
     shiny::isolate(filter_states$state_list_push(x = filter_state, state_list_index = 1, state_id = "test"))
     testthat::expect_equal(
       names(shiny::isolate(filter_states$state_list_get(1))),
       as.character(filter_state$get_varname())
     )
-  })
+  }
+)
 
 testthat::test_that(
   "Elements of the list returned by state_list_get have names corresponding to varname - MAEFilterStates",
@@ -262,14 +298,16 @@ testthat::test_that(
       dataname = "test",
       datalabel = "test",
       varlabels = NULL,
-      keys = NULL)
+      keys = NULL
+    )
     filter_state <- FilterState$new("test", varname = "test")
     shiny::isolate(filter_states$state_list_push(x = filter_state, state_list_index = 1, state_id = "test"))
     testthat::expect_equal(
       names(shiny::isolate(filter_states$state_list_get(1))),
       as.character(filter_state$get_varname())
     )
-  })
+  }
+)
 
 
 # state_list_remove ----
@@ -278,7 +316,8 @@ testthat::test_that("state_list_remove removes filter state without error - DFFi
     dataname = "test",
     datalabel = "test",
     varlabels = NULL,
-    keys = NULL)
+    keys = NULL
+  )
   filter_state <- FilterState$new("test", varname = "test")
   shiny::isolate(filter_states$state_list_push(x = filter_state, state_list_index = 1, state_id = "test"))
   testthat::expect_no_error(
@@ -289,7 +328,8 @@ testthat::test_that("state_list_remove removes filter state without error - DFFi
 testthat::test_that("state_list_remove removes filter state without error - MatrixFilterStates", {
   filter_states <- MatrixFilterStates$new(
     dataname = "test",
-    datalabel = "test")
+    datalabel = "test"
+  )
   filter_state <- FilterState$new("test", varname = "test")
   shiny::isolate(filter_states$state_list_push(x = filter_state, state_list_index = 1, state_id = "test"))
   testthat::expect_no_error(
@@ -300,7 +340,8 @@ testthat::test_that("state_list_remove removes filter state without error - Matr
 testthat::test_that("state_list_remove removes filter state without error - SEFilterStates", {
   filter_states <- SEFilterStates$new(
     dataname = "test",
-    datalabel = "test")
+    datalabel = "test"
+  )
   filter_state <- FilterState$new("test", varname = "test")
   shiny::isolate(filter_states$state_list_push(x = filter_state, state_list_index = 1, state_id = "test"))
   testthat::expect_no_error(
@@ -313,7 +354,8 @@ testthat::test_that("state_list_remove removes filter state without error - MAEF
     dataname = "test",
     datalabel = "test",
     varlabels = NULL,
-    keys = NULL)
+    keys = NULL
+  )
   filter_state <- FilterState$new("test", varname = "test")
   shiny::isolate(filter_states$state_list_push(x = filter_state, state_list_index = 1, state_id = "test"))
   testthat::expect_no_error(
@@ -328,7 +370,8 @@ testthat::test_that("state_list is empty after pushing and removing an element f
     dataname = "test",
     datalabel = "test",
     varlabels = NULL,
-    keys = NULL)
+    keys = NULL
+  )
   filter_state <- FilterState$new("test", varname = "test")
   shiny::isolate(filter_states$state_list_push(x = filter_state, state_list_index = 1, state_id = "test"))
   shiny::isolate(filter_states$state_list_remove(state_list_index = 1, state_id = "test"))
@@ -336,20 +379,24 @@ testthat::test_that("state_list is empty after pushing and removing an element f
 })
 
 testthat::test_that(
-  "state_list is empty after pushing and removing an element from it - MatrixFilterStates", {
-  filter_states <- MatrixFilterStates$new(
-    dataname = "test",
-    datalabel = "test")
-  filter_state <- FilterState$new("test", varname = "test")
-  shiny::isolate(filter_states$state_list_push(x = filter_state, state_list_index = 1, state_id = "test"))
-  shiny::isolate(filter_states$state_list_remove(state_list_index = 1, state_id = "test"))
-  testthat::expect_length(shiny::isolate(filter_states$state_list_get(1)), 0)
-})
+  "state_list is empty after pushing and removing an element from it - MatrixFilterStates",
+  {
+    filter_states <- MatrixFilterStates$new(
+      dataname = "test",
+      datalabel = "test"
+    )
+    filter_state <- FilterState$new("test", varname = "test")
+    shiny::isolate(filter_states$state_list_push(x = filter_state, state_list_index = 1, state_id = "test"))
+    shiny::isolate(filter_states$state_list_remove(state_list_index = 1, state_id = "test"))
+    testthat::expect_length(shiny::isolate(filter_states$state_list_get(1)), 0)
+  }
+)
 
 testthat::test_that("state_list is empty after pushing and removing an element from it - SEFilterStates", {
   filter_states <- SEFilterStates$new(
     dataname = "test",
-    datalabel = "test")
+    datalabel = "test"
+  )
   filter_state <- FilterState$new("test", varname = "test")
   shiny::isolate(filter_states$state_list_push(x = filter_state, state_list_index = 1, state_id = "test"))
   shiny::isolate(filter_states$state_list_remove(state_list_index = 1, state_id = "test"))
@@ -361,7 +408,8 @@ testthat::test_that("state_list is empty after pushing and removing an element f
     dataname = "test",
     datalabel = "test",
     varlabels = NULL,
-    keys = NULL)
+    keys = NULL
+  )
   filter_state <- FilterState$new("test", varname = "test")
   shiny::isolate(filter_states$state_list_push(x = filter_state, state_list_index = 1, state_id = "test"))
   shiny::isolate(filter_states$state_list_remove(state_list_index = 1, state_id = "test"))
@@ -375,7 +423,8 @@ testthat::test_that("state_list is empty after state_list_empty - DFFilterStates
     dataname = "test",
     datalabel = "test",
     varlabels = NULL,
-    keys = NULL)
+    keys = NULL
+  )
   filter_state <- FilterState$new("test", varname = "test")
   shiny::isolate(filter_states$state_list_push(x = filter_state, state_list_index = 1, state_id = "test"))
   shiny::isolate(filter_states$state_list_empty())
@@ -385,7 +434,8 @@ testthat::test_that("state_list is empty after state_list_empty - DFFilterStates
 testthat::test_that("state_list is empty after state_list_empty - MatrixFilterStates", {
   filter_states <- MatrixFilterStates$new(
     dataname = "test",
-    datalabel = "test")
+    datalabel = "test"
+  )
   filter_state <- FilterState$new("test", varname = "test")
   shiny::isolate(filter_states$state_list_push(x = filter_state, state_list_index = 1, state_id = "test"))
   shiny::isolate(filter_states$state_list_empty())
@@ -395,7 +445,8 @@ testthat::test_that("state_list is empty after state_list_empty - MatrixFilterSt
 testthat::test_that("state_list is empty after state_list_empty - SEFilterStates", {
   filter_states <- SEFilterStates$new(
     dataname = "test",
-    datalabel = "test")
+    datalabel = "test"
+  )
   filter_state <- FilterState$new("test", varname = "test")
   shiny::isolate(filter_states$state_list_push(x = filter_state, state_list_index = 1, state_id = "test"))
   shiny::isolate(filter_states$state_list_empty())
@@ -407,7 +458,8 @@ testthat::test_that("state_list is empty after state_list_empty - MAEFilterState
     dataname = "test",
     datalabel = "test",
     varlabels = NULL,
-    keys = NULL)
+    keys = NULL
+  )
   filter_state <- FilterState$new("test", varname = "test")
   shiny::isolate(filter_states$state_list_push(x = filter_state, state_list_index = 1, state_id = "test"))
   shiny::isolate(filter_states$state_list_empty())
@@ -447,10 +499,12 @@ testthat::test_that("get_call returns a call filtering a data.frame based on a R
   eval(shiny::isolate(filter_states$get_call()))
   testthat::expect_identical(
     range_dataset,
-    dplyr::filter(compare, numbers >= 1 & numbers <= 3))
+    dplyr::filter(compare, numbers >= 1 & numbers <= 3)
+  )
   testthat::expect_identical(
     shiny::isolate(filter_states$get_call()),
-    quote(range_dataset <- dplyr::filter(range_dataset, numbers >= 1 & numbers <= 3)))
+    quote(range_dataset <- dplyr::filter(range_dataset, numbers >= 1 & numbers <= 3))
+  )
 })
 
 testthat::test_that("get_call returns a call filtering a data.frame based on a ChoicesFilterState", {
@@ -467,10 +521,12 @@ testthat::test_that("get_call returns a call filtering a data.frame based on a C
   eval(shiny::isolate(filter_states$get_call()))
   testthat::expect_identical(
     choices_dataset,
-    dplyr::filter(choices_dataset, choices %in% c("a", "c")))
+    dplyr::filter(choices_dataset, choices %in% c("a", "c"))
+  )
   testthat::expect_identical(
     shiny::isolate(filter_states$get_call()),
-    quote(choices_dataset <- dplyr::filter(choices_dataset, choices %in% c("a", "c"))))
+    quote(choices_dataset <- dplyr::filter(choices_dataset, choices %in% c("a", "c")))
+  )
 })
 
 testthat::test_that("get_call returns a call filtering a data.frame based on a LogicalFilterState", {
@@ -487,10 +543,12 @@ testthat::test_that("get_call returns a call filtering a data.frame based on a L
   eval(shiny::isolate(filter_states$get_call()))
   testthat::expect_identical(
     logical_dataset,
-    dplyr::filter(logical_dataset, !logical))
+    dplyr::filter(logical_dataset, !logical)
+  )
   testthat::expect_identical(
     shiny::isolate(filter_states$get_call()),
-    quote(logical_dataset <- dplyr::filter(logical_dataset, !logical)))
+    quote(logical_dataset <- dplyr::filter(logical_dataset, !logical))
+  )
 })
 
 testthat::test_that("get_call returns a call filtering a data.frame based on a DateFilterState", {
@@ -507,12 +565,14 @@ testthat::test_that("get_call returns a call filtering a data.frame based on a D
   eval(shiny::isolate(filter_states$get_call()))
   testthat::expect_identical(
     date_dataset,
-    dplyr::filter(date_dataset, date >= as.Date("2021-08-25") & date <= as.Date("2021-08-26")))
+    dplyr::filter(date_dataset, date >= as.Date("2021-08-25") & date <= as.Date("2021-08-26"))
+  )
   testthat::expect_identical(
     shiny::isolate(filter_states$get_call()),
     quote(
       date_dataset <- dplyr::filter(
-        date_dataset, date >= as.Date("2021-08-25") & date <= as.Date("2021-08-26"))
+        date_dataset, date >= as.Date("2021-08-25") & date <= as.Date("2021-08-26")
+      )
     )
   )
 })
@@ -534,9 +594,12 @@ testthat::test_that("get_call returns a call filtering a data.frame based on a D
   eval(shiny::isolate(filter_states$get_call()))
   testthat::expect_equal(
     datetime_dataset,
-    dplyr::filter(compare,
-                  datetime >= as.POSIXct("2021-08-27 12:00:00") &
-                    datetime < as.POSIXct("2021-08-27 12:00:01")))
+    dplyr::filter(
+      compare,
+      datetime >= as.POSIXct("2021-08-27 12:00:00") &
+        datetime < as.POSIXct("2021-08-27 12:00:01")
+    )
+  )
   testthat::expect_equal(
     shiny::isolate(filter_states$get_call()),
     bquote(datetime_dataset <- dplyr::filter(
@@ -548,65 +611,69 @@ testthat::test_that("get_call returns a call filtering a data.frame based on a D
 })
 
 testthat::test_that(
-  "get_call returns a call filtering a data.frame base on a combination of FilterState objects", {
-  # setting up the test dataset
-  test_dataset <- data.frame(
-    numbers = 1:5,
-    choices = letters[1:5],
-    logical = c(FALSE, FALSE, FALSE, TRUE, FALSE),
-    date = seq(as.Date("2021/08/25"), by = "day", length.out = 5),
-    datetime = seq(ISOdate(2021, 8, 25, tz = Sys.timezone()), by = "day", length.out = 5)
-  )
-  compare <- test_dataset
-  # setting up filters
-  filter_states <- DFFilterStates$new(
-    dataname = "test_dataset",
-    datalabel = "label",
-    varlabels = NULL,
-    keys = NULL
-  )
+  "get_call returns a call filtering a data.frame base on a combination of FilterState objects",
+  {
+    # setting up the test dataset
+    test_dataset <- data.frame(
+      numbers = 1:5,
+      choices = letters[1:5],
+      logical = c(FALSE, FALSE, FALSE, TRUE, FALSE),
+      date = seq(as.Date("2021/08/25"), by = "day", length.out = 5),
+      datetime = seq(ISOdate(2021, 8, 25, tz = Sys.timezone()), by = "day", length.out = 5)
+    )
+    compare <- test_dataset
+    # setting up filters
+    filter_states <- DFFilterStates$new(
+      dataname = "test_dataset",
+      datalabel = "label",
+      varlabels = NULL,
+      keys = NULL
+    )
 
-  range_filter <- RangeFilterState$new(x = test_dataset$numbers, varname = "numbers")
-  shiny::isolate(range_filter$set_selected(c(1, 3)))
-  choices_filter <- ChoicesFilterState$new(x = test_dataset$choices, varname = "choices")
-  shiny::isolate(choices_filter$set_selected(c("a", "c")))
-  logical_filter <- LogicalFilterState$new(x = test_dataset$logical, varname = "logical")
-  shiny::isolate(logical_filter$set_selected(FALSE))
-  date_filter <- DateFilterState$new(x = test_dataset$date, varname = "date")
-  shiny::isolate(date_filter$set_selected(c("2021/08/25", "2021/08/26")))
-  datetime_filter <- DatetimeFilterState$new(x = test_dataset$datetime, varname = "datetime")
-  shiny::isolate(datetime_filter$set_selected(rep(ISOdate(2021, 8, 25, tz = Sys.timezone()), 2)))
+    range_filter <- RangeFilterState$new(x = test_dataset$numbers, varname = "numbers")
+    shiny::isolate(range_filter$set_selected(c(1, 3)))
+    choices_filter <- ChoicesFilterState$new(x = test_dataset$choices, varname = "choices")
+    shiny::isolate(choices_filter$set_selected(c("a", "c")))
+    logical_filter <- LogicalFilterState$new(x = test_dataset$logical, varname = "logical")
+    shiny::isolate(logical_filter$set_selected(FALSE))
+    date_filter <- DateFilterState$new(x = test_dataset$date, varname = "date")
+    shiny::isolate(date_filter$set_selected(c("2021/08/25", "2021/08/26")))
+    datetime_filter <- DatetimeFilterState$new(x = test_dataset$datetime, varname = "datetime")
+    shiny::isolate(datetime_filter$set_selected(rep(ISOdate(2021, 8, 25, tz = Sys.timezone()), 2)))
 
-  shiny::isolate(filter_states$state_list_push(state_list_index = 1, x = range_filter, state_id = "test"))
-  shiny::isolate(filter_states$state_list_push(state_list_index = 1, x = choices_filter, state_id = "test"))
-  shiny::isolate(filter_states$state_list_push(state_list_index = 1, x = logical_filter, state_id = "test"))
-  shiny::isolate(filter_states$state_list_push(state_list_index = 1, x = date_filter, state_id = "test"))
-  shiny::isolate(filter_states$state_list_push(state_list_index = 1, x = datetime_filter, state_id = "test"))
+    shiny::isolate(filter_states$state_list_push(state_list_index = 1, x = range_filter, state_id = "test"))
+    shiny::isolate(filter_states$state_list_push(state_list_index = 1, x = choices_filter, state_id = "test"))
+    shiny::isolate(filter_states$state_list_push(state_list_index = 1, x = logical_filter, state_id = "test"))
+    shiny::isolate(filter_states$state_list_push(state_list_index = 1, x = date_filter, state_id = "test"))
+    shiny::isolate(filter_states$state_list_push(state_list_index = 1, x = datetime_filter, state_id = "test"))
 
-  eval(shiny::isolate(filter_states$get_call()))
-  testthat::expect_equal(
-    test_dataset,
-    dplyr::filter(compare,
-                  numbers >= 1 & numbers <= 3 &
-                    choices %in% c("a", "c") &
-                    !logical &
-                    date >= as.Date("2021-08-25") & date <= as.Date("2021-08-26") &
-                    datetime >= as.POSIXct("2021-08-25 12:00:00") &
-                    datetime < as.POSIXct("2021-08-25 12:00:01")))
-  testthat::expect_equal(
-    shiny::isolate(filter_states$get_call()),
-    bquote(test_dataset <- dplyr::filter(
+    eval(shiny::isolate(filter_states$get_call()))
+    testthat::expect_equal(
       test_dataset,
-      numbers >= 1 & numbers <= 3 &
-        choices %in% c("a", "c") &
-        !logical &
-        (date >= as.Date("2021-08-25") & date <= as.Date("2021-08-26")) &
-        (datetime >= as.POSIXct("2021-08-25 12:00:00", tz = .(Sys.timezone())) &
-           datetime < as.POSIXct("2021-08-25 12:00:01", tz = .(Sys.timezone())))
+      dplyr::filter(
+        compare,
+        numbers >= 1 & numbers <= 3 &
+          choices %in% c("a", "c") &
+          !logical &
+          date >= as.Date("2021-08-25") & date <= as.Date("2021-08-26") &
+          datetime >= as.POSIXct("2021-08-25 12:00:00") &
+          datetime < as.POSIXct("2021-08-25 12:00:01")
       )
     )
-  )
-})
+    testthat::expect_equal(
+      shiny::isolate(filter_states$get_call()),
+      bquote(test_dataset <- dplyr::filter(
+        test_dataset,
+        numbers >= 1 & numbers <= 3 &
+          choices %in% c("a", "c") &
+          !logical &
+          (date >= as.Date("2021-08-25") & date <= as.Date("2021-08-26")) &
+          (datetime >= as.POSIXct("2021-08-25 12:00:00", tz = .(Sys.timezone())) &
+            datetime < as.POSIXct("2021-08-25 12:00:01", tz = .(Sys.timezone())))
+      ))
+    )
+  }
+)
 
 
 # data_choices_labeled ----
@@ -624,9 +691,9 @@ testthat::test_that("data_choices_labeled returns names of the elements matching
 
 testthat::test_that("data_choices_labeled returns labels of the elements matching the choices
   if the varlabels are provided for the elements", {
-    result <- unname(data_choices_labeled(list(a = 1, b = 2), choices = c("a"), varlabels = c(a = "labelA"))[1])
-    testthat::expect_equal(result, "a")
-  })
+  result <- unname(data_choices_labeled(list(a = 1, b = 2), choices = c("a"), varlabels = c(a = "labelA"))[1])
+  testthat::expect_equal(result, "a")
+})
 
 
 # get_filter_count ----
@@ -635,7 +702,8 @@ testthat::test_that("get_filter_count returns the number of active filter states
     dataname = "test",
     datalabel = "test",
     varlabels = NULL,
-    keys = NULL)
+    keys = NULL
+  )
   testthat::expect_equal(shiny::isolate(filter_states$get_filter_count()), 0)
   filter_state <- FilterState$new("test", varname = "test")
   shiny::isolate(filter_states$state_list_push(x = filter_state, state_list_index = 1, state_id = "test"))
@@ -648,7 +716,8 @@ testthat::test_that("get_filter_count returns the number of active filter states
 testthat::test_that("get_filter_count returns the number of active filter states - MartixFilterStates", {
   filter_states <- MatrixFilterStates$new(
     dataname = "test",
-    datalabel = "test")
+    datalabel = "test"
+  )
   testthat::expect_equal(shiny::isolate(filter_states$get_filter_count()), 0)
   filter_state <- FilterState$new("test", varname = "test")
   shiny::isolate(filter_states$state_list_push(x = filter_state, state_list_index = 1, state_id = "test"))
@@ -661,7 +730,8 @@ testthat::test_that("get_filter_count returns the number of active filter states
 testthat::test_that("get_filter_count returns the number of active filter states - SEFilterStates", {
   filter_states <- SEFilterStates$new(
     dataname = "test",
-    datalabel = "test")
+    datalabel = "test"
+  )
   testthat::expect_equal(shiny::isolate(filter_states$get_filter_count()), 0)
   filter_state <- FilterState$new("test", varname = "test")
   shiny::isolate(filter_states$state_list_push(x = filter_state, state_list_index = 1, state_id = "test"))
@@ -676,7 +746,8 @@ testthat::test_that("get_filter_count returns the number of active filter states
     dataname = "test",
     datalabel = "test",
     varlabels = NULL,
-    keys = NULL)
+    keys = NULL
+  )
   testthat::expect_equal(shiny::isolate(filter_states$get_filter_count()), 0)
   filter_state <- FilterState$new("test", varname = "test")
   shiny::isolate(filter_states$state_list_push(x = filter_state, state_list_index = 1, state_id = "test"))
@@ -689,7 +760,8 @@ testthat::test_that("get_filter_count returns the number of active filter states
 testthat::test_that("get_filter_count properly tallies multiple state lists - SEFilterStates", {
   filter_states <- SEFilterStates$new(
     dataname = "test",
-    datalabel = "test")
+    datalabel = "test"
+  )
   filter_state <- FilterState$new("test", varname = "test")
   shiny::isolate(
     filter_states$state_list_push(x = filter_state, state_list_index = "subset", state_id = "test")

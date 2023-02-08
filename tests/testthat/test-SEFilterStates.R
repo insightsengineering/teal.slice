@@ -381,8 +381,8 @@ testthat::test_that("$format() is a method of SEFilterStates", {
     datalabel = character(0)
   )
   testthat::expect_no_error(
-    shiny::isolate(sefs$format()
-    ))
+    shiny::isolate(sefs$format())
+  )
 })
 
 testthat::test_that("$format() asserts the indent argument is a number", {
@@ -423,4 +423,5 @@ testthat::test_that(
         sep = "\n"
       )
     )
-  })
+  }
+)

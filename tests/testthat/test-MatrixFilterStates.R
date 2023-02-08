@@ -45,7 +45,8 @@ testthat::test_that("set_filter_state adds filters to state_list", {
   eval(shiny::isolate(filter_states$get_call()))
   testthat::expect_equal(
     test,
-    matrix(c(1, 2, 3, 4), nrow = 4, ncol = 1, dimnames = list(c(), c("a")))[1:2, 1, drop = FALSE])
+    matrix(c(1, 2, 3, 4), nrow = 4, ncol = 1, dimnames = list(c(), c("a")))[1:2, 1, drop = FALSE]
+  )
 })
 
 testthat::test_that("set_filter_state throws error when list is unnamed", {
