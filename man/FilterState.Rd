@@ -425,7 +425,7 @@ dataname to be evaluated as extracted object, for example
 \code{data$var}
 return (\code{name} or \code{call})
 Sets \code{keep_na} field according to observed \code{input$keep_na}
-If \code{keep_na = TRUE} \code{is.na(varname)} is added to the returned call.
+If \code{keep_na = TRUE}, \code{is.na(varname)} is added to the returned call.
 Otherwise returned call excludes \code{NA} when executed.
 Set choices
 
