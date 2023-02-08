@@ -240,7 +240,7 @@ testthat::test_that(
 )
 
 testthat::test_that(
-  "DFFilterStates$ui_add_filter_state returns a message inside a div when data has no rows or no columns",
+  "DFFilterStates$ui_add_filter_state returns a message inside a div when data has no columns or no rows",
   code = {
     dffs <- DFFilterStates$new(
       dataname = "iris",
