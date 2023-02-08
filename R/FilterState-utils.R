@@ -5,7 +5,7 @@
 #'   values of the variable used in filter
 #'
 #' @param varname (`character(1)`)\cr
-#'   name of the variable
+#'   name of the variable.
 #'
 #' @param varlabel (`character(0)`, `character(1)` or `NULL`)\cr
 #'   label of the variable (optional).
