@@ -265,30 +265,33 @@ RangeFilterState <- R6::R6Class( # nolint
         self$get_dataname(deparse = TRUE),
         self$get_varname(deparse = TRUE)
       )
-      check_in_range(value, private$choices, pre_msg = pre_msg)
+      # check_in_range(value, private$choices, pre_msg = pre_msg)
+      invisible(NULL)
     },
     cast_and_validate = function(values) {
+      if (!is.atomic(values)) stop("Values to set must be an atomic vector.")
       values <- as.numeric(values)
       if (any(is.na(values))) stop("The array of set values must contain values coercible to numeric.")
       if (length(values) != 2) stop("The array of set values must have length two.")
       values
     },
+    # for numeric ranges selecting out of bound values is allowed
     remove_out_of_bound_values = function(values) {
-      if (values[1] < private$choices[1]) {
-        warning(paste(
-          "Value:", values[1], "is outside of the possible range for column", private$varname,
-          "of dataset", private$input_dataname, "."
-        ))
-        values[1] <- private$choices[1]
-      }
-
-      if (values[2] > private$choices[2]) {
-        warning(paste(
-          "Value:", values[2], "is outside of the possible range for column", private$varname,
-          "of dataset", private$input_dataname, "."
-        ))
-        values[2] <- private$choices[2]
-      }
+      # if (values[1] < private$choices[1]) {
+      #   warning(paste(
+      #     "Value:", values[1], "is outside of the possible range for column", private$varname,
+      #     "of dataset", private$input_dataname, "."
+      #   ))
+      #   values[1] <- private$choices[1]
+      # }
+      #
+      # if (values[2] > private$choices[2]) {
+      #   warning(paste(
+      #     "Value:", values[2], "is outside of the possible range for column", private$varname,
+      #     "of dataset", private$input_dataname, "."
+      #   ))
+      #   values[2] <- private$choices[2]
+      # }
       values
     },
 
