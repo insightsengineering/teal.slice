@@ -218,3 +218,13 @@ a.remove_all:hover {
 .teal_active_summary_filter_panel {
   overflow-x: auto;
 }
+
+.panel-title {
+  display: flex;
+  justify-content: space-between;
+}
+
+.filter-card-summary {
+  display: flex;
+  justify-content: space-between;
+}

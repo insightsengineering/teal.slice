@@ -82,10 +82,12 @@ FilterState <- R6::R6Class( # nolint
       checkmate::assert_character(varlabel, max.len = 1, any.missing = FALSE)
       checkmate::assert_multi_class(input_dataname, c("name", "call"), null.ok = TRUE)
       checkmate::assert_character(extract_type, max.len = 1, any.missing = FALSE)
-      if (length(extract_type) == 1)
+      if (length(extract_type) == 1) {
         checkmate::assert_choice(extract_type, choices = c("list", "matrix"))
-      if (length(extract_type) == 1 && is.null(input_dataname))
+      }
+      if (length(extract_type) == 1 && is.null(input_dataname)) {
         stop("if extract_type is specified, input_dataname must also be specified")
+      }
 
       private$input_dataname <- input_dataname
       private$varname <- if (is.character(varname)) {
@@ -385,6 +387,7 @@ FilterState <- R6::R6Class( # nolint
       moduleServer(
         id = id,
         function(input, output, session) {
+          private$server_summary("summary")
           private$server_inputs("inputs")
           reactive(input$remove) # back to parent to remove self
         }
@@ -398,37 +401,42 @@ FilterState <- R6::R6Class( # nolint
     #'  shiny element (module instance) id;
     #'  the UI for this class contains simple message stating that it is not supported
     #'
-    ui = function(id) {
+    ui = function(id, parent_id) {
       ns <- NS(id)
-      fluidPage(
-        include_css_files(pattern = "filter-panel"),
-        theme = get_teal_bs_theme(),
-        fluidRow(
-          column(
-            width = 10,
-            class = "no-left-right-padding",
-            tags$div(
-              tags$span(self$get_varname(),
-                class = "filter_panel_varname"
-              ),
-              if (checkmate::test_character(self$get_varlabel(), min.len = 1) &&
-                tolower(self$get_varname()) != tolower(self$get_varlabel())) {
-                tags$span(self$get_varlabel(), class = "filter_panel_varlabel")
+      tags$div(
+        id = id,
+        class = "panel panel-default",
+        tags$div(
+          class = "panel-heading",
+          tags$div(
+            class = "panel-title",
+            tags$a(
+              class = "accordion-toggle",
+              `data-toggle` = "collapse",
+              `data-parent` = paste0("#", parent_id),
+              href = paste0("#", ns("body")),
+              tags$span(self$get_varname(deparse = TRUE)),
+              if (length(self$get_varlabel())) {
+                tags$span(self$get_varlabel())
+              } else {
+                NULL
               }
+            ),
+            actionLink(
+              inputId = ns("remove"),
+              label = icon("circle-xmark", lib = "font-awesome")
             )
           ),
-          column(
-            width = 2,
-            class = "no-left-right-padding",
-            actionLink(
-              ns("remove"),
-              label = "",
-              icon = icon("circle-xmark", lib = "font-awesome"),
-              class = "remove pull-right"
-            )
-          )
+          private$ui_summary(ns("summary"))
         ),
-        private$ui_inputs(ns("inputs"))
+        tags$div(
+          id = ns("body"),
+          class = "panel-collapse collapse out",
+          tags$div(
+            class = "panel-body",
+            private$ui_inputs(ns("inputs"))
+          )
+        )
       )
     }
   ),
@@ -543,6 +551,12 @@ FilterState <- R6::R6Class( # nolint
     },
 
     # shiny modules -----
+    ui_summary = function(id) {
+      stop("abstract class")
+    },
+    server_summary = function(id) {
+      stop("abstract class")
+    },
     #' module with inputs
     ui_inputs = function(id) {
       stop("abstract class")

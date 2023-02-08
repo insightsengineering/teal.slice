@@ -156,7 +156,6 @@ LogicalFilterState <- R6::R6Class( # nolint
       )
       values_logical
     },
-
     get_choice_labels = function() {
       l_counts <- as.numeric(names(private$choices))
       is_na_l_counts <- is.na(l_counts)
@@ -182,7 +181,7 @@ LogicalFilterState <- R6::R6Class( # nolint
           ),
           div(
             class = "choices_state_label_text",
-              sprintf("%s (%s/%s)", private$choices[i], f_count, l_count)
+            sprintf("%s (%s/%s)", private$choices[i], f_count, l_count)
           )
         )
       })
@@ -279,6 +278,23 @@ LogicalFilterState <- R6::R6Class( # nolint
 
           logger::log_trace("LogicalFilterState$server initialized, dataname: { deparse1(private$input_dataname) }")
           NULL
+        }
+      )
+    },
+    ui_summary = function(id) {
+      ns <- NS(id)
+      uiOutput(ns("summary"), class = "filter-card-summary")
+    },
+    server_summary = function(id) {
+      moduleServer(
+        id = id,
+        function(input, output, session) {
+          output$summary <- renderUI({
+            tagList(
+              tags$span(self$get_selected()),
+              if (self$get_keep_na()) tags$span("NA") else NULL
+            )
+          })
         }
       )
     }

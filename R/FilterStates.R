@@ -40,7 +40,8 @@
 #'     x = filter_state,
 #'     state_list_index = 1L,
 #'     state_id = "x"
-#'   ))
+#'   )
+#' )
 #' isolate(filter_states$get_call())
 #'
 FilterStates <- R6::R6Class( # nolint
@@ -121,10 +122,13 @@ FilterStates <- R6::R6Class( # nolint
     #' @return `character(1)` the formatted string
     #'
     format = function(indent) {
-      sprintf(paste(
-        "%sThis is an instance of an abstract class.",
-        "Use child class constructors to instantiate objects."),
-        paste(rep(" ", indent), collapse = ""))
+      sprintf(
+        paste(
+          "%sThis is an instance of an abstract class.",
+          "Use child class constructors to instantiate objects."
+        ),
+        paste(rep(" ", indent), collapse = "")
+      )
     },
 
     #' @description
@@ -257,7 +261,8 @@ FilterStates <- R6::R6Class( # nolint
     #'
     state_list_push = function(x, state_list_index, state_id) {
       logger::log_trace(
-        "{ class(self)[1] } pushing into state_list, dataname: { deparse1(private$input_dataname) }")
+        "{ class(self)[1] } pushing into state_list, dataname: { deparse1(private$input_dataname) }"
+      )
       private$validate_state_list_exists(state_list_index)
       checkmate::assert_string(state_id)
 
@@ -272,7 +277,8 @@ FilterStates <- R6::R6Class( # nolint
       private$state_list[[state_list_index]](new_state_list)
 
       logger::log_trace(
-        "{ class(self)[1] } pushed into state_list, dataname: { deparse1(private$input_dataname) }")
+        "{ class(self)[1] } pushed into state_list, dataname: { deparse1(private$input_dataname) }"
+      )
       invisible(NULL)
     },
 
@@ -319,14 +325,16 @@ FilterStates <- R6::R6Class( # nolint
     #'
     state_list_empty = function() {
       logger::log_trace(
-        "{ class(self)[1] } emptying state_list, dataname: { deparse1(private$input_dataname) }")
+        "{ class(self)[1] } emptying state_list, dataname: { deparse1(private$input_dataname) }"
+      )
 
       for (i in seq_along(private$state_list)) {
         private$state_list[[i]](list())
       }
 
       logger::log_trace(
-        "{ class(self)[1] } emptied state_list, dataname: { deparse1(private$input_dataname) }")
+        "{ class(self)[1] } emptied state_list, dataname: { deparse1(private$input_dataname) }"
+      )
       invisible(NULL)
     },
 
@@ -372,7 +380,7 @@ FilterStates <- R6::R6Class( # nolint
         include_css_files(pattern = "filter-panel"),
         tags$div(
           id = private$cards_container_id,
-          class = "list-group hideable-list-group",
+          class = "panel-group accordion",
           `data-label` = ifelse(private$datalabel == "", "", (paste0("> ", private$datalabel)))
         )
       )
@@ -449,7 +457,6 @@ FilterStates <- R6::R6Class( # nolint
       )
     }
   ),
-
   private = list(
     # private fields ----
     cards_container_id = character(0),
@@ -518,15 +525,10 @@ FilterStates <- R6::R6Class( # nolint
           insertUI(
             selector = sprintf("#%s", private$cards_container_id),
             where = "beforeEnd",
-            # add span with id to be removable
-            ui = div(
-              id = card_id,
-              class = "list-group-item",
-              filter_state$ui(session$ns("content"))
-            )
+            ui = filter_state$ui(card_id, private$cards_container_id)
           )
           # signal sent from filter_state when it is marked for removal
-          remove_fs <- filter_state$server(id = "content")
+          remove_fs <- filter_state$server(id = "card")
 
           private$observers[[state_list_id]] <- observeEvent(
             ignoreInit = TRUE,
@@ -599,8 +601,8 @@ FilterStates <- R6::R6Class( # nolint
       if (
         !(
           is.numeric(state_list_index) &&
-          all(state_list_index <= length(private$state_list) && state_list_index > 0) ||
-          is.character(state_list_index) && all(state_list_index %in% names(private$state_list))
+            all(state_list_index <= length(private$state_list) && state_list_index > 0) ||
+            is.character(state_list_index) && all(state_list_index %in% names(private$state_list))
         )
       ) {
         stop(
