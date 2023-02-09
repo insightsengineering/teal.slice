@@ -472,7 +472,7 @@ FilteredDataset <- R6::R6Class( # nolint
             logger::log_trace("FilteredDataset$server@1 removed filters, dataname: { dataname }")
           })
 
-          logger::log_trace("FilteredDataset$initialized, dataname: { (dataname }")
+          logger::log_trace("FilteredDataset$initialized, dataname: { dataname }")
           NULL
         }
       )
