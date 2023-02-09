@@ -208,6 +208,7 @@ RangeFilterState <- R6::R6Class( # nolint
     #' filter$set_selected(c(2, 3))
     #'
     set_selected = function(value) {
+      #
       super$set_selected(value)
     }
   ),
@@ -218,7 +219,7 @@ RangeFilterState <- R6::R6Class( # nolint
     keep_inf = NULL, # because it holds reactiveVal
     inf_count = integer(0),
     is_integer = logical(0),
-    slider_step = numeric(0),
+    slider_step = numeric(0), # step for the slider input widget, calculated from input data (x)
 
   # private methods ----
     # Adds is.infinite(varname) before existing condition calls if keep_inf is selected
@@ -260,12 +261,6 @@ RangeFilterState <- R6::R6Class( # nolint
           )
         )
       }
-      pre_msg <- sprintf(
-        "data '%s', variable '%s': ",
-        self$get_dataname(),
-        self$get_varname()
-      )
-      # check_in_range(value, private$choices, pre_msg = pre_msg)
       invisible(NULL)
     },
     cast_and_validate = function(values) {
