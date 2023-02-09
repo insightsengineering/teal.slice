@@ -47,7 +47,7 @@ DatetimeFilterState <- R6::R6Class( # nolint
                           varlabel = character(0),
                           dataname = NULL,
                           extract_type = character(0)) {
-      stopifnot(is(x, "POSIXct") || is(x, "POSIXlt"))
+      checkmate::assert_multi_class(x, c("POSIXct", "POSIXlt"))
       super$initialize(x, varname, varlabel, dataname, extract_type)
 
       var_range <- range(x, na.rm = TRUE)
