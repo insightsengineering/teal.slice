@@ -380,44 +380,17 @@ FilterState <- R6::R6Class( # nolint
     #' @param id (`character(1)`)\cr
     #'  shiny element (module instance) id;
     #'  the UI for this class contains simple message stating that it is not supported
-    #'
+    #' @param parent_id (`character(1)`) id of the FilterStates card container
     ui = function(id, parent_id) {
       ns <- NS(id)
-      tags$div(
-        id = id,
-        class = "panel panel-default",
-        tags$div(
-          class = "panel-heading",
-          tags$div(
-            class = "panel-title",
-            tags$a(
-              class = "accordion-toggle",
-              `data-toggle` = "collapse",
-              `data-parent` = paste0("#", parent_id),
-              href = paste0("#", ns("body")),
-              tags$span(self$get_varname()),
-              if (length(self$get_varlabel())) {
-                tags$span(self$get_varlabel())
-              } else {
-                NULL
-              }
-            ),
-            actionLink(
-              inputId = ns("remove"),
-              label = icon("circle-xmark", lib = "font-awesome")
-            )
-          ),
-          private$ui_summary(ns("summary"))
-        ),
-        tags$div(
-          id = ns("body"),
-          class = "panel-collapse collapse out",
-          tags$div(
-            class = "panel-body",
-            private$ui_inputs(ns("inputs"))
-          )
-        )
-      )
+
+      theme <- getOption("teal.bs_theme")
+
+      if (is.null(theme)) {
+        private$ui_bs3(id, parent_id)
+      } else {
+        private$ui_bs45(id, parent_id)
+      }
     }
   ),
 
@@ -624,6 +597,100 @@ FilterState <- R6::R6Class( # nolint
         )
         invisible(NULL)
       })
+    },
+    #' @description
+    #' Shiny module UI for bootstrap version 3
+    #'
+    #' @param id (`character(1)`)\cr
+    #'  shiny element (module instance) id;
+    #'  the UI for this class contains simple message stating that it is not supported
+    #' @param parent_id (`character(1)`) id of the FilterStates card container
+    ui_bs3 = function(id, parent_id) {
+      ns <- NS(id)
+
+      tags$div(
+        id = id,
+        class = "panel panel-default",
+        tags$div(
+          class = "panel-heading",
+          tags$div(
+            class = "panel-title",
+            tags$a(
+              class = "accordion-toggle",
+              `data-toggle` = "collapse",
+              `data-parent` = paste0("#", parent_id),
+              href = paste0("#", ns("body")),
+              tags$span(self$get_varname()),
+              if (length(self$get_varlabel())) {
+                tags$span(self$get_varlabel())
+              } else {
+                NULL
+              }
+            ),
+            actionLink(
+              inputId = ns("remove"),
+              label = icon("circle-xmark", lib = "font-awesome")
+            )
+          ),
+          private$ui_summary(ns("summary"))
+        ),
+        tags$div(
+          id = ns("body"),
+          class = "panel-collapse collapse out",
+          tags$div(
+            class = "panel-body",
+            private$ui_inputs(ns("inputs"))
+          )
+        )
+      )
+    },
+    #' @description
+    #' Shiny module UI for bootstrap versions 4 and 5
+    #'
+    #' @param id (`character(1)`)\cr
+    #'  shiny element (module instance) id;
+    #'  the UI for this class contains simple message stating that it is not supported
+    #' @param parent_id (`character(1)`) id of the FilterStates card container
+    ui_bs45 = function(id, parent_id) {
+      ns <- NS(id)
+
+      tags$div(
+        id = id,
+        class = "card",
+        tags$div(
+          class = "card-header",
+          tags$div(
+            class = "card-title",
+            tags$a(
+              class = "accordion-toggle",
+              `data-toggle` = "collapse",
+              `data-bs-toggle` = "collapse",
+              href = paste0("#", ns("body")),
+              tags$span(self$get_varname()),
+              if (length(self$get_varlabel())) {
+                tags$span(self$get_varlabel())
+              } else {
+                NULL
+              }
+            ),
+            actionLink(
+              inputId = ns("remove"),
+              label = icon("circle-xmark", lib = "font-awesome")
+            )
+          ),
+          private$ui_summary(ns("summary"))
+        ),
+        tags$div(
+          id = ns("body"),
+          class = "collapse out",
+          `data-parent` = paste0("#", parent_id),
+          `data-bs-parent` = paste0("#", parent_id),
+          tags$div(
+            class = "card-body",
+            private$ui_inputs(ns("inputs"))
+          )
+        )
+      )
     }
   )
 )
