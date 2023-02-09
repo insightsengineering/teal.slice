@@ -13,7 +13,7 @@
 #' filter_state <- teal.slice:::EmptyFilterState$new(
 #'   NA,
 #'   varname = "x",
-#'   input_dataname = as.name("data"),
+#'   dataname = "data",
 #'   extract_type = character(0)
 #' )
 #' isolate(filter_state$get_call())
@@ -40,23 +40,23 @@ EmptyFilterState <- R6::R6Class( # nolint
     #'   name of the variable
     #' @param varlabel (`character(1)`)\cr
     #'   label of the variable (optional).
-    #' @param input_dataname (`name` or `call`)\cr
-    #'   name of dataset where `x` is taken from
+    #' @param dataname (`character(1)`)\cr
+    #'   optional name of dataset where `x` is taken from
     #' @param extract_type (`character(0)`, `character(1)`)\cr
     #'   whether condition calls should be prefixed by dataname. Possible values:
     #' \itemize{
     #' \item{`character(0)` (default)}{ `varname` in the condition call will not be prefixed}
-    #' \item{`"list"`}{ `varname` in the condition call will be returned as `<input_dataname>$<varname>`}
-    #' \item{`"matrix"`}{ `varname` in the condition call will be returned as `<input_dataname>[, <varname>]`}
+    #' \item{`"list"`}{ `varname` in the condition call will be returned as `<dataname>$<varname>`}
+    #' \item{`"matrix"`}{ `varname` in the condition call will be returned as `<dataname>[, <varname>]`}
     #' }
     #'
     initialize = function(x,
                           x_reactive,
                           varname,
                           varlabel = character(0),
-                          input_dataname = NULL,
+                          dataname = NULL,
                           extract_type = character(0)) {
-      super$initialize(x, x_reactive, varname, varlabel, input_dataname, extract_type)
+      super$initialize(x, x_reactive, varname, varlabel, dataname, extract_type)
       private$set_choices(list())
       self$set_selected(list())
 
@@ -115,7 +115,7 @@ EmptyFilterState <- R6::R6Class( # nolint
         stop(
           sprintf(
             "All values in variable '%s' are `NA`. Unable to apply filter values \n  %s",
-            self$get_varname(deparse = TRUE),
+            private$varname,
             paste(state$selected, collapse = ", ")
           )
         )
@@ -145,7 +145,7 @@ EmptyFilterState <- R6::R6Class( # nolint
           div(
             span("Variable contains missing values only"),
             private$keep_na_ui(ns("keep_na"))
-         )
+          )
         )
       )
     },

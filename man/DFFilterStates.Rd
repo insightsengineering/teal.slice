@@ -21,7 +21,7 @@ df <- data.frame(
 filter_states <- teal.slice:::DFFilterStates$new(
   data = df,
   data_reactive = reactive(data),
-  input_dataname = "data",
+  dataname = "data",
   output_dataname = "data_filtered",
   varlabels = c(x = "x variable", SEX = "Sex"),
   datalabel = character(0),
@@ -72,21 +72,13 @@ isolate(filter_states$get_call())
 \subsection{Method \code{new()}}{
 Initializes \code{DFFilterStates} object.
 
-Initializes \code{DFFilterStates} object by setting \code{input_dataname},
-\code{output_dataname} and initializing \code{state_list} (\code{shiny::reactiveVal}).
+Initializes \code{DFFilterStates} object by setting \code{dataname}
+and initializing \code{state_list} (\code{shiny::reactiveVal}).
 This class contains a single \code{state_list} with no specified name,
 which means that when calling the subset function associated with this class
 (\code{dplyr::filter}), a list of conditions is passed to unnamed arguments (\code{...}).
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{DFFilterStates$new(
-  data,
-  data_reactive,
-  input_dataname,
-  output_dataname,
-  datalabel,
-  varlabels,
-  keys
-)}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{DFFilterStates$new(data, data_reactive, dataname, datalabel, varlabels, keys)}\if{html}{\out{</div>}}
 }
 
 \subsection{Arguments}{
@@ -100,12 +92,9 @@ should a \code{data.frame} object or \code{NULL}.
 This object is needed for the \code{FilterState} counts being updated
 on a change in filters. If \code{reactive(NULL)} then filtered counts are not shown.}
 
-\item{\code{input_dataname}}{(\code{character(1)} or \code{name} or \code{call})\cr
-name of the data used on \code{rhs} of the \emph{subset expression}
+\item{\code{dataname}}{(\code{character(1)})\cr
+name of the data used in the \emph{subset expression}
 specified to the function argument attached to this \code{FilterStates}}
-
-\item{\code{output_dataname}}{(\code{character(1)} or \code{name} or \code{call})\cr
-name of the output data on the \code{lhs} of the \emph{subset expression}}
 
 \item{\code{datalabel}}{(\code{character(0)} or \code{character(1)})\cr
 text label value}
@@ -224,7 +213,7 @@ Names of the \code{list} element should correspond to the name of the columns.}
 filter_states <- teal.slice:::DFFilterStates$new(
   data = df,
   data_reactive = reactive(data),
-  input_dataname = "data",
+  dataname = "data",
   output_dataname = "data_filtered",
   varlabels = c(x = "x variable", SEX = "Sex"),
   datalabel = character(0),

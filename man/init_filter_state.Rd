@@ -9,7 +9,7 @@ init_filter_state(
   x_reactive = reactive(NULL),
   varname,
   varlabel = attr(x, "label"),
-  input_dataname = NULL,
+  dataname = NULL,
   extract_type = character(0)
 )
 }
@@ -23,22 +23,22 @@ counts following the change in values of the filtered dataset.
 If it is set to \code{reactive(NULL)} then counts based on filtered
 dataset are not shown.}
 
-\item{varname}{(\code{character(1)}, \code{name})\cr
-name of the variable}
+\item{varname}{(\code{character(1)})\cr
+name of the variable.}
 
 \item{varlabel}{(\code{character(0)}, \code{character(1)} or \code{NULL})\cr
 label of the variable (optional).}
 
-\item{input_dataname}{(\code{name} or \code{call})\cr
-name of dataset where \code{x} is taken from. Must be specified if \code{extract_type} argument
-is not empty.}
+\item{dataname}{(\code{character(1)})\cr
+optional name of dataset where \code{x} is taken from. Must be specified
+if \code{extract_type} argument is not empty.}
 
 \item{extract_type}{(\code{character(0)}, \code{character(1)})\cr
 whether condition calls should be prefixed by dataname. Possible values:
 \itemize{
 \item{\code{character(0)} (default)}{ \code{varname} in the condition call will not be prefixed}
-\item{\code{"list"}}{ \code{varname} in the condition call will be returned as \verb{<input_dataname>$<varname>}}
-\item{\code{"matrix"}}{ \code{varname} in the condition call will be returned as \verb{<input_dataname>[, <varname>]}}
+\item{\code{"list"}}{ \code{varname} in the condition call will be returned as \verb{<dataname>$<varname>}}
+\item{\code{"matrix"}}{ \code{varname} in the condition call will be returned as \verb{<dataname>[, <varname>]}}
 }}
 }
 \value{
@@ -53,7 +53,7 @@ filter_state <- teal.slice:::RangeFilterState$new(
   x_reactive = reactive(c(1:10, NA, Inf)),
   varname = "x",
   varlabel = "Pretty name",
-  input_dataname = as.name("dataname"),
+  dataname = "dataname",
   extract_type = "matrix"
 )
 
