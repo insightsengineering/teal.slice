@@ -11,17 +11,14 @@ MatrixFilterStates <- R6::R6Class( # nolint
     #'
     #' Initialize `MatrixFilterStates` object
     #'
-    #' @param input_dataname (`character(1)` or `name` or `call`)\cr
-    #'   name of the data used on lhs of the expression
+    #' @param dataname (`character(1)`)\cr
+    #'   name of the data used in the expression
     #'   specified to the function argument attached to this `FilterStates`.
-    #'
-    #' @param output_dataname (`character(1)` or `name` or `call`)\cr
-    #'   name of the output data on the lhs of the assignment expression.
     #'
     #' @param datalabel (`character(0)` or `character(1)`)\cr
     #'   text label value.
-    initialize = function(input_dataname, output_dataname, datalabel) {
-      super$initialize(input_dataname, output_dataname, datalabel)
+    initialize = function(dataname, datalabel) {
+      super$initialize(dataname, datalabel)
       private$state_list <- list(
         subset = reactiveVal()
       )
@@ -127,7 +124,7 @@ MatrixFilterStates <- R6::R6Class( # nolint
       )
       logger::log_trace(paste(
         "MatrixFilterState$set_filter_state initializing,",
-        "dataname: { deparse1(private$input_dataname) }"
+        "dataname: { private$dataname }"
       ))
       filter_states <- self$state_list_get("subset")
       for (varname in names(state)) {
@@ -138,9 +135,9 @@ MatrixFilterStates <- R6::R6Class( # nolint
         } else {
           fstate <- init_filter_state(
             data[, varname],
-            varname = as.name(varname),
+            varname = varname,
             varlabel = varname,
-            input_dataname = private$input_dataname,
+            dataname = private$dataname,
             extract_type = "matrix"
           )
           fstate$set_state(value)
@@ -153,7 +150,7 @@ MatrixFilterStates <- R6::R6Class( # nolint
       }
       logger::log_trace(paste(
         "MatrixFilterState$set_filter_state initialized,",
-        "dataname: { deparse1(private$input_dataname) }"
+        "dataname: { private$dataname }"
       ))
       NULL
     },
@@ -169,19 +166,19 @@ MatrixFilterStates <- R6::R6Class( # nolint
           "%s$remove_filter_state of variable %s, dataname: %s",
           class(self)[1],
           state_id,
-          deparse1(private$input_dataname)
+          private$dataname
         )
       )
 
       if (!state_id %in% names(self$state_list_get("subset"))) {
         warning(paste(
           "Variable:", state_id, "is not present in the actual active filters of dataset:",
-          "{ deparse1(private$input_dataname) } therefore no changes are applied."
+          "{ private$dataname } therefore no changes are applied."
         ))
         logger::log_warn(
           paste(
             "Variable:", state_id, "is not present in the actual active filters of dataset:",
-            "{ deparse1(private$input_dataname) } therefore no changes are applied."
+            "{ private$dataname } therefore no changes are applied."
           )
         )
       } else {
@@ -191,7 +188,7 @@ MatrixFilterStates <- R6::R6Class( # nolint
             "%s$remove_filter_state of variable %s done, dataname: %s",
             class(self)[1],
             state_id,
-            deparse1(private$input_dataname)
+            private$dataname
           )
         )
       }
@@ -253,14 +250,14 @@ MatrixFilterStates <- R6::R6Class( # nolint
         id = id,
         function(input, output, session) {
           logger::log_trace(
-            "MatrixFilterStates$srv_add_filter_state initializing, dataname: { deparse1(private$input_dataname) }"
+            "MatrixFilterStates$srv_add_filter_state initializing, dataname: { private$dataname }"
           )
           shiny::setBookmarkExclude("var_to_add")
           active_filter_vars <- reactive({
             vapply(
               X = self$state_list_get(state_list_index = "subset"),
               FUN.VALUE = character(1),
-              FUN = function(x) x$get_varname(deparse = TRUE)
+              FUN = function(x) x$get_varname()
             )
           })
 
@@ -283,7 +280,7 @@ MatrixFilterStates <- R6::R6Class( # nolint
             handlerExpr = {
               logger::log_trace(paste(
                 "MatrixFilterStates$srv_add_filter_state@1 updating column choices,",
-                "dataname: { deparse1(private$input_dataname) }"
+                "dataname: { private$dataname }"
               ))
               if (length(avail_column_choices()) < 0) {
                 shinyjs::hide("var_to_add")
@@ -297,7 +294,7 @@ MatrixFilterStates <- R6::R6Class( # nolint
               )
               logger::log_trace(paste(
                 "MatrixFilterStates$srv_add_filter_state@1 updated column choices,",
-                "dataname: { deparse1(private$input_dataname) }"
+                "dataname: { private$dataname }"
               ))
             }
           )
@@ -309,15 +306,15 @@ MatrixFilterStates <- R6::R6Class( # nolint
                 sprintf(
                   "MatrixFilterState$srv_add_filter_state@2 adding FilterState of variable %s, dataname: %s",
                   deparse1(input$var_to_add),
-                  deparse1(private$input_dataname)
+                  private$dataname
                 )
               )
               self$state_list_push(
                 x = init_filter_state(
                   subset(data, select = input$var_to_add),
-                  varname = as.name(input$var_to_add),
+                  varname = input$var_to_add,
                   varlabel = private$get_varlabel(input$var_to_add),
-                  input_dataname = private$input_dataname,
+                  dataname = private$dataname,
                   extract_type = "matrix"
                 ),
                 state_list_index = "subset",
@@ -327,14 +324,14 @@ MatrixFilterStates <- R6::R6Class( # nolint
                 sprintf(
                   "MatrixFilterState$srv_add_filter_state@2 added FilterState of variable %s, dataname: %s",
                   deparse1(input$var_to_add),
-                  deparse1(private$input_dataname)
+                  private$dataname
                 )
               )
             }
           )
 
           logger::log_trace(
-            "MatrixFilterStates$srv_add_filter_state initialized, dataname: { deparse1(private$input_dataname) }"
+            "MatrixFilterStates$srv_add_filter_state initialized, dataname: { private$dataname }"
           )
           NULL
         }

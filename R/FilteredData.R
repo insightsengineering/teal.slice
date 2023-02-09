@@ -398,7 +398,7 @@ FilteredData <- R6::R6Class( # nolint
     #' @return (`self`) invisibly this `FilteredData`
     #'
     set_dataset = function(dataset_args, dataname) {
-      logger::log_trace("FilteredData$set_dataset setting dataset, name; { deparse1(dataname) }")
+      logger::log_trace("FilteredData$set_dataset setting dataset, name: { dataname }")
       validate_dataset_args(dataset_args, dataname)
 
       dataset <- dataset_args$dataset
@@ -566,7 +566,7 @@ FilteredData <- R6::R6Class( # nolint
       checkmate::assert_subset(names(state), self$datanames())
       logger::log_trace(
         "FilteredData$set_filter_state initializing, dataname: { paste(names(state), collapse = ' ') }"
-        )
+      )
       for (dataname in names(state)) {
         fdataset <- self$get_filtered_dataset(dataname = dataname)
         dataset_state <- state[[dataname]]
@@ -578,7 +578,7 @@ FilteredData <- R6::R6Class( # nolint
       }
       logger::log_trace(
         "FilteredData$set_filter_state initialized, dataname: { paste(names(state), collapse = ' ') }"
-        )
+      )
 
       invisible(NULL)
     },
@@ -595,7 +595,8 @@ FilteredData <- R6::R6Class( # nolint
       checkmate::assert_subset(names(state), self$datanames())
 
       logger::log_trace(
-        "FilteredData$remove_filter_state called, dataname: { paste(names(state), collapse = ' ') }")
+        "FilteredData$remove_filter_state called, dataname: { paste(names(state), collapse = ' ') }"
+      )
 
       for (dataname in names(state)) {
         fdataset <- self$get_filtered_dataset(dataname = dataname)
@@ -603,7 +604,8 @@ FilteredData <- R6::R6Class( # nolint
       }
 
       logger::log_trace(
-        "FilteredData$remove_filter_state done, dataname: { paste(names(state), collapse = ' ') }")
+        "FilteredData$remove_filter_state done, dataname: { paste(names(state), collapse = ' ') }"
+      )
 
       invisible(NULL)
     },
@@ -929,7 +931,8 @@ FilteredData <- R6::R6Class( # nolint
             sprintf(
               "%s filter%s applied across datasets",
               n_filters_active,
-              ifelse(n_filters_active == 1, "", "s"))
+              ifelse(n_filters_active == 1, "", "s")
+            )
           })
 
           private$filter_panel_ui_id <- session$ns(NULL)
@@ -1051,7 +1054,6 @@ FilteredData <- R6::R6Class( # nolint
         }
       )
     }
-
   ),
 
   ## __Private Methods ====

@@ -8,7 +8,7 @@
 #' filter_state <- teal.slice:::DatetimeFilterState$new(
 #'   c(Sys.time() + seq(0, by = 3600, length.out = 10), NA),
 #'   varname = "x",
-#'   input_dataname = as.name("data"),
+#'   dataname = "data",
 #'   extract_type = character(0)
 #' )
 #'
@@ -33,22 +33,22 @@ DatetimeFilterState <- R6::R6Class( # nolint
     #'   name of the variable
     #' @param varlabel (`character(1)`)\cr
     #'   label of the variable (optional).
-    #' @param input_dataname (`name` or `call`)\cr
-    #'   name of dataset where `x` is taken from
+    #' @param dataname (`character(1)`)\cr
+    #'   optional name of dataset where `x` is taken from
     #' @param extract_type (`character(0)`, `character(1)`)\cr
     #' whether condition calls should be prefixed by dataname. Possible values:
     #' \itemize{
     #' \item{`character(0)` (default)}{ `varname` in the condition call will not be prefixed}
-    #' \item{`"list"`}{ `varname` in the condition call will be returned as `<input_dataname>$<varname>`}
-    #' \item{`"matrix"`}{ `varname` in the condition call will be returned as `<input_dataname>[, <varname>]`}
+    #' \item{`"list"`}{ `varname` in the condition call will be returned as `<dataname>$<varname>`}
+    #' \item{`"matrix"`}{ `varname` in the condition call will be returned as `<dataname>[, <varname>]`}
     #' }
     initialize = function(x,
                           varname,
                           varlabel = character(0),
-                          input_dataname = NULL,
+                          dataname = NULL,
                           extract_type = character(0)) {
-      stopifnot(is(x, "POSIXct") || is(x, "POSIXlt"))
-      super$initialize(x, varname, varlabel, input_dataname, extract_type)
+      checkmate::assert_multi_class(x, c("POSIXct", "POSIXlt"))
+      super$initialize(x, varname, varlabel, dataname, extract_type)
 
       var_range <- range(x, na.rm = TRUE)
       private$set_choices(var_range)
@@ -78,7 +78,7 @@ DatetimeFilterState <- R6::R6Class( # nolint
       sprintf(
         "%sFiltering on: %s\n%1$s  Selected range: %s - %s\n%1$s  Include missing values: %s",
         format("", width = indent),
-        self$get_varname(deparse = TRUE),
+        private$varname,
         format(self$get_selected(), nsmall = 3)[1],
         format(self$get_selected(), nsmall = 3)[2],
         format(self$get_keep_na())
@@ -144,16 +144,16 @@ DatetimeFilterState <- R6::R6Class( # nolint
         stop(
           sprintf(
             "value of the selection for `%s` in `%s` should be a POSIXct or POSIXlt",
-            self$get_varname(deparse = TRUE),
-            self$get_dataname(deparse = TRUE)
+            self$get_varname(),
+            self$get_dataname()
           )
         )
       }
 
       pre_msg <- sprintf(
         "dataset '%s', variable '%s': ",
-        self$get_dataname(deparse = TRUE),
-        self$get_varname(deparse = TRUE)
+        self$get_dataname(),
+        self$get_varname()
       )
       check_in_range(value, private$choices, pre_msg = pre_msg)
     },
@@ -172,7 +172,7 @@ DatetimeFilterState <- R6::R6Class( # nolint
       if (values[1] < private$choices[1]) {
         warning(paste(
           "Value:", values[1], "is outside of the possible range for column", private$varname,
-          "of dataset", private$input_dataname, "."
+          "of dataset", private$dataname, "."
         ))
         values[1] <- private$choices[1]
       }
@@ -180,7 +180,7 @@ DatetimeFilterState <- R6::R6Class( # nolint
       if (values[2] > private$choices[2]) {
         warning(paste(
           "Value:", values[2], "is outside of the possible range for column", private$varname,
-          "of dataset", private$input_dataname, "."
+          "of dataset", private$dataname, "."
         ))
         values[2] <- private$choices[2]
       }
@@ -262,7 +262,7 @@ DatetimeFilterState <- R6::R6Class( # nolint
       moduleServer(
         id = id,
         function(input, output, session) {
-          logger::log_trace("DatetimeFilterState$server initializing, dataname: { deparse1(private$input_dataname) }")
+          logger::log_trace("DatetimeFilterState$server initializing, dataname: { private$dataname }")
 
           # this observer is needed in the situation when private$selected has been
           # changed directly by the api - then it's needed to rerender UI element
@@ -291,8 +291,8 @@ DatetimeFilterState <- R6::R6Class( # nolint
 
                 logger::log_trace(sprintf(
                   "DatetimeFilterState$server@1 selection of variable %s changed, dataname: %s",
-                  deparse1(self$get_varname()),
-                  deparse1(private$input_dataname)
+                  private$varname,
+                  private$dataname
                 ))
               }
             }
@@ -322,8 +322,8 @@ DatetimeFilterState <- R6::R6Class( # nolint
               self$set_selected(c(start_date, end_date))
               logger::log_trace(sprintf(
                 "DatetimeFilterState$server@2 selection of variable %s changed, dataname: %s",
-                deparse1(self$get_varname()),
-                deparse1(private$input_dataname)
+                private$varname,
+                private$dataname
               ))
             }
           )
@@ -342,8 +342,8 @@ DatetimeFilterState <- R6::R6Class( # nolint
               )
               logger::log_trace(sprintf(
                 "DatetimeFilterState$server@2 reset start date of variable %s, dataname: %s",
-                deparse1(self$get_varname()),
-                deparse1(private$input_dataname)
+                private$varname,
+                private$dataname
               ))
             }
           )
@@ -359,12 +359,12 @@ DatetimeFilterState <- R6::R6Class( # nolint
               )
               logger::log_trace(sprintf(
                 "DatetimeFilterState$server@3 reset end date of variable %s, dataname: %s",
-                deparse1(self$get_varname()),
-                deparse1(private$input_dataname)
+                private$varname,
+                private$dataname
               ))
             }
           )
-          logger::log_trace("DatetimeFilterState$server initialized, dataname: { deparse1(private$input_dataname) }")
+          logger::log_trace("DatetimeFilterState$server initialized, dataname: { private$dataname }")
           NULL
         }
       )
