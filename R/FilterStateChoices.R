@@ -46,7 +46,8 @@ ChoicesFilterState <- R6::R6Class( # nolint
         is.character(x),
         is.factor(x),
         length(unique(x[!is.na(x)])) < getOption("teal.threshold_slider_vs_checkboxgroup"),
-        combine = "or")
+        combine = "or"
+      )
       super$initialize(x, varname, varlabel, dataname, extract_type)
 
       if (!is.factor(x)) {
