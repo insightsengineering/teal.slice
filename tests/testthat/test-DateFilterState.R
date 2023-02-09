@@ -121,7 +121,7 @@ testthat::test_that(
     filter_state <- teal.slice:::DateFilterState$new(
       c(dates, NA),
       varname = "x",
-      input_dataname = as.name("data"),
+      dataname = "data",
       extract_type = character(0)
     )
 

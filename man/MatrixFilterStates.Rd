@@ -48,18 +48,15 @@ Initialize \code{MatrixFilterStates} object
 
 Initialize \code{MatrixFilterStates} object
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{MatrixFilterStates$new(input_dataname, output_dataname, datalabel)}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{MatrixFilterStates$new(dataname, datalabel)}\if{html}{\out{</div>}}
 }
 
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
-\item{\code{input_dataname}}{(\code{character(1)} or \code{name} or \code{call})\cr
-name of the data used on lhs of the expression
+\item{\code{dataname}}{(\code{character(1)})\cr
+name of the data used in the expression
 specified to the function argument attached to this \code{FilterStates}.}
-
-\item{\code{output_dataname}}{(\code{character(1)} or \code{name} or \code{call})\cr
-name of the output data on the lhs of the assignment expression.}
 
 \item{\code{datalabel}}{(\code{character(0)} or \code{character(1)})\cr
 text label value.}

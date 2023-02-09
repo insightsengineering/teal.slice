@@ -166,7 +166,7 @@ testthat::test_that(
     filter_state <- teal.slice:::RangeFilterState$new(
       c(NA, Inf, seq(1:10)),
       varname = "x",
-      input_dataname = as.name("data"),
+      dataname = "data",
       extract_type = character(0)
     )
 

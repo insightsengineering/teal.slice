@@ -8,7 +8,7 @@
 #' filter_state <- teal.slice:::ChoicesFilterState$new(
 #'   c(LETTERS, NA),
 #'   varname = "x",
-#'   input_dataname = as.name("data"),
+#'   dataname = "data",
 #'   extract_type = character(0)
 #' )
 #' isolate(filter_state$get_call())
@@ -24,32 +24,32 @@ ChoicesFilterState <- R6::R6Class( # nolint
     #' Initialize a `FilterState` object
     #' @param x (`character` or `factor`)\cr
     #'   values of the variable used in filter
-    #' @param varname (`character`, `name`)\cr
+    #' @param varname (`character`)\cr
     #'   name of the variable
     #' @param varlabel (`character(1)`)\cr
     #'   label of the variable (optional).
-    #' @param input_dataname (`name` or `call`)\cr
-    #'   name of dataset where `x` is taken from
+    #' @param dataname (`character(1)`)\cr
+    #'   optional name of dataset where `x` is taken from
     #' @param extract_type (`character(0)`, `character(1)`)\cr
     #' whether condition calls should be prefixed by dataname. Possible values:
     #' \itemize{
     #' \item{`character(0)` (default)}{ `varname` in the condition call will not be prefixed}
-    #' \item{`"list"`}{ `varname` in the condition call will be returned as `<input_dataname>$<varname>`}
-    #' \item{`"matrix"`}{ `varname` in the condition call will be returned as `<input_dataname>[, <varname>]`}
+    #' \item{`"list"`}{ `varname` in the condition call will be returned as `<dataname>$<varname>`}
+    #' \item{`"matrix"`}{ `varname` in the condition call will be returned as `<dataname>[, <varname>]`}
     #' }
     initialize = function(x,
                           varname,
                           varlabel = character(0),
-                          input_dataname = NULL,
+                          dataname = NULL,
                           extract_type = character(0)) {
-      stopifnot(
-        is.character(x) ||
-          is.factor(x) ||
-          (length(unique(x[!is.na(x)])) < getOption("teal.threshold_slider_vs_checkboxgroup"))
-      )
-      super$initialize(x, varname, varlabel, input_dataname, extract_type)
+      checkmate::assert(
+        is.character(x),
+        is.factor(x),
+        length(unique(x[!is.na(x)])) < getOption("teal.threshold_slider_vs_checkboxgroup"),
+        combine = "or")
+      super$initialize(x, varname, varlabel, dataname, extract_type)
 
-      if (!is(x, "factor")) {
+      if (!is.factor(x)) {
         x <- factor(x, levels = as.character(sort(unique(x))))
       }
 
@@ -140,15 +140,15 @@ ChoicesFilterState <- R6::R6Class( # nolint
         stop(
           sprintf(
             "Values of the selection for `%s` in `%s` should be an array of character.",
-            self$get_varname(deparse = TRUE),
-            self$get_dataname(deparse = TRUE)
+            self$get_varname(),
+            self$get_dataname()
           )
         )
       }
       pre_msg <- sprintf(
         "data '%s', variable '%s': ",
-        self$get_dataname(deparse = TRUE),
-        self$get_varname(deparse = TRUE)
+        self$get_dataname(),
+        self$get_varname()
       )
       check_in_subset(value, private$choices, pre_msg = pre_msg)
     },
@@ -167,7 +167,7 @@ ChoicesFilterState <- R6::R6Class( # nolint
       if (length(values[!in_choices_mask]) > 0) {
         warning(paste(
           "Values:", strtrim(paste(values[!in_choices_mask], collapse = ", "), 360),
-          "are not in choices of column", private$varname, "in dataset", private$input_dataname, "."
+          "are not in choices of column", private$varname, "in dataset", private$dataname, "."
         ))
       }
       values[in_choices_mask]
@@ -240,7 +240,7 @@ ChoicesFilterState <- R6::R6Class( # nolint
       moduleServer(
         id = id,
         function(input, output, session) {
-          logger::log_trace("ChoicesFilterState$server initializing, dataname: { deparse1(private$input_dataname) }")
+          logger::log_trace("ChoicesFilterState$server initializing, dataname: { private$dataname }")
 
           # this observer is needed in the situation when private$selected has been
           # changed directly by the api - then it's needed to rerender UI element
@@ -258,8 +258,8 @@ ChoicesFilterState <- R6::R6Class( # nolint
                 )
                 logger::log_trace(sprintf(
                   "ChoicesFilterState$server@1 selection of variable %s changed, dataname: %s",
-                  deparse1(self$get_varname()),
-                  deparse1(private$input_dataname)
+                  self$get_varname(),
+                  private$dataname
                 ))
               }
             }
@@ -274,14 +274,14 @@ ChoicesFilterState <- R6::R6Class( # nolint
               self$set_selected(selection)
               logger::log_trace(sprintf(
                 "ChoicesFilterState$server@2 selection of variable %s changed, dataname: %s",
-                deparse1(self$get_varname()),
-                deparse1(private$input_dataname)
+                self$get_varname(),
+                private$dataname
               ))
             }
           )
           private$keep_na_srv("keep_na")
 
-          logger::log_trace("ChoicesFilterState$server initialized, dataname: { deparse1(private$input_dataname) }")
+          logger::log_trace("ChoicesFilterState$server initialized, dataname: { private$dataname }")
           NULL
         }
       )

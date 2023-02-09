@@ -1,8 +1,7 @@
 testthat::test_that("The constructor does not throw", {
   testthat::expect_no_error(
     MAEFilterStates$new(
-      input_dataname = "test",
-      output_dataname = "test",
+      dataname = "test",
       datalabel = character(0),
       varlabels = character(0),
       keys = character(0)
@@ -12,8 +11,7 @@ testthat::test_that("The constructor does not throw", {
 
 testthat::test_that("MAEFilterStates accept vector as an input for varlabels", {
   filter_states <- MAEFilterStates$new(
-    input_dataname = "iris",
-    output_dataname = "iris",
+    dataname = "iris",
     datalabel = character(0),
     varlabels = c("", NA, paste0("varlabel", 1:100)),
     keys = character(0)
@@ -23,8 +21,7 @@ testthat::test_that("MAEFilterStates accept vector as an input for varlabels", {
 
 testthat::test_that("get_fun returns the MAE specific subset function", {
   filter_states <- MAEFilterStates$new(
-    input_dataname = "test",
-    output_dataname = "test",
+    dataname = "test",
     datalabel = character(0),
     varlabels = character(0),
     keys = character(0)
@@ -34,8 +31,7 @@ testthat::test_that("get_fun returns the MAE specific subset function", {
 
 testthat::test_that("The constructor initializes a state_list", {
   filter_states <- MAEFilterStates$new(
-    input_dataname = "test",
-    output_dataname = "test",
+    dataname = "test",
     datalabel = character(0),
     varlabels = character(0),
     keys = character(0)
@@ -46,16 +42,15 @@ testthat::test_that("The constructor initializes a state_list", {
 testthat::test_that("get_call returns a call filtering an MAE object using ChoicesFilterState", {
   utils::data(miniACC, package = "MultiAssayExperiment")
   filter_states <- MAEFilterStates$new(
-    input_dataname = "test",
-    output_dataname = "output",
+    dataname = "test",
     datalabel = character(0),
     varlabels = character(0),
     keys = character(0)
   )
   filter_state <- ChoicesFilterState$new(
     x = c("white", NA_character_),
-    varname = as.name("race"),
-    input_dataname = as.name("test"),
+    varname = "race",
+    dataname = "test",
     extract_type = "list"
   )
   filter_state$set_na_rm(TRUE)
@@ -64,7 +59,7 @@ testthat::test_that("get_call returns a call filtering an MAE object using Choic
   test <- miniACC
   eval(shiny::isolate(filter_states$get_call()))
   testthat::expect_equal(
-    output,
+    test,
     MultiAssayExperiment::subsetByColData(test, !is.na(test$race) & test$race == "white")
   )
 })
@@ -72,16 +67,15 @@ testthat::test_that("get_call returns a call filtering an MAE object using Choic
 testthat::test_that("get_call returns a call filtering an MAE object using RangeFilterState", {
   utils::data(miniACC, package = "MultiAssayExperiment")
   filter_states <- MAEFilterStates$new(
-    input_dataname = "test",
-    output_dataname = "output",
+    dataname = "test",
     datalabel = character(0),
     varlabels = character(0),
     keys = character(0)
   )
   filter_state <- RangeFilterState$new(
     x = miniACC$purity,
-    varname = as.name("purity"),
-    input_dataname = as.name("test"),
+    varname = "purity",
+    dataname = "test",
     extract_type = "list"
   )
   filter_state$set_na_rm(TRUE)
@@ -94,9 +88,9 @@ testthat::test_that("get_call returns a call filtering an MAE object using Range
   max_purity <- max(miniACC$purity, na.rm = TRUE)
 
   testthat::expect_equal(
-    output,
+    test,
     MultiAssayExperiment::subsetByColData(
-      test,
+      miniACC,
       !is.na(miniACC$purity) & (miniACC$purity >= min_purity & miniACC$purity <= max_purity)
     )
   )
@@ -107,8 +101,7 @@ testthat::test_that(
   code = {
     utils::data(miniACC, package = "MultiAssayExperiment")
     maefs <- MAEFilterStates$new(
-      input_dataname = "test",
-      output_dataname = "test_filtered",
+      dataname = "test",
       datalabel = character(0),
       varlabels = character(0),
       keys = character(0)
@@ -123,7 +116,7 @@ testthat::test_that(
     testthat::expect_equal(
       shiny::isolate(maefs$get_call()),
       quote(
-        test_filtered <- MultiAssayExperiment::subsetByColData(
+        test <- MultiAssayExperiment::subsetByColData(
           test,
           y = test$years_to_birth >= 30 & test$years_to_birth <= 50 &
             test$vital_status == "1" &
@@ -137,8 +130,7 @@ testthat::test_that(
 testthat::test_that("MAEFilterStates$set_filter_state updates filter state which was set already", {
   utils::data(miniACC, package = "MultiAssayExperiment")
   maefs <- MAEFilterStates$new(
-    input_dataname = "test",
-    output_dataname = "test_filtered",
+    dataname = "test",
     datalabel = character(0),
     varlabels = character(0),
     keys = character(0)
@@ -175,8 +167,7 @@ testthat::test_that(
   code = {
     utils::data(miniACC, package = "MultiAssayExperiment")
     maefs <- MAEFilterStates$new(
-      input_dataname = "test",
-      output_dataname = "test_filtered",
+      dataname = "test",
       datalabel = character(0),
       varlabels = character(0),
       keys = character(0)
@@ -195,8 +186,7 @@ testthat::test_that(
   code = {
     utils::data(miniACC, package = "MultiAssayExperiment")
     maefs <- MAEFilterStates$new(
-      input_dataname = "test",
-      output_dataname = "test_filtered",
+      dataname = "test",
       datalabel = character(0),
       varlabels = character(0),
       keys = character(0)
@@ -216,8 +206,7 @@ testthat::test_that(
   code = {
     utils::data(miniACC, package = "MultiAssayExperiment")
     maefs <- MAEFilterStates$new(
-      input_dataname = "test",
-      output_dataname = "test_filtered",
+      dataname = "test",
       datalabel = character(0),
       varlabels = character(0),
       keys = character(0)
@@ -235,7 +224,7 @@ testthat::test_that(
     testthat::expect_equal(
       shiny::isolate(maefs$get_call()),
       quote(
-        test_filtered <- MultiAssayExperiment::subsetByColData(
+        test <- MultiAssayExperiment::subsetByColData(
           test,
           y = test$vital_status == "1" &
             test$gender == "female"
@@ -251,8 +240,7 @@ testthat::test_that(
     teal.logger::suppress_logs()
     utils::data(miniACC, package = "MultiAssayExperiment")
     maefs <- MAEFilterStates$new(
-      input_dataname = "test",
-      output_dataname = "test_filtered",
+      dataname = "test",
       datalabel = character(0),
       varlabels = character(0),
       keys = character(0)
@@ -273,8 +261,7 @@ testthat::test_that(
   "MAEFilterStates$ui_add_filter_state returns a message inside a div when data has no rows or no columns",
   code = {
     maefs <- MAEFilterStates$new(
-      input_dataname = "iris",
-      output_dataname = "iris_filtered",
+      dataname = "iris",
       datalabel = character(0),
       varlabels = character(0),
       keys = character(0)
@@ -300,8 +287,7 @@ testthat::test_that(
 # Format ----
 testthat::test_that("$format() is a method of MAEFilterStates", {
   maefs <- MAEFilterStates$new(
-    input_dataname = "iris",
-    output_dataname = "iris_filtered",
+    dataname = "iris",
     datalabel = character(0),
     varlabels = character(0),
     keys = character(0)
@@ -313,8 +299,7 @@ testthat::test_that("$format() is a method of MAEFilterStates", {
 
 testthat::test_that("$format() asserts the indent argument is a number", {
   maefs <- MAEFilterStates$new(
-    input_dataname = "iris",
-    output_dataname = "iris_filtered",
+    dataname = "iris",
     datalabel = character(0),
     varlabels = character(0),
     keys = character(0)
@@ -328,8 +313,7 @@ testthat::test_that("$format() asserts the indent argument is a number", {
 testthat::test_that("$format() concatenates its FilterState elements using \\n and indents the FilterState objects", {
   utils::data(miniACC, package = "MultiAssayExperiment")
   maefs <- MAEFilterStates$new(
-    input_dataname = "test",
-    output_dataname = "test_filtered",
+    dataname = "test",
     datalabel = character(0),
     varlabels = character(0),
     keys = character(0)

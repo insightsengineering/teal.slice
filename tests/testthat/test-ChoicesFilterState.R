@@ -71,7 +71,7 @@ testthat::test_that(
     filter_state <- teal.slice:::ChoicesFilterState$new(
       c(LETTERS[1:2], NA),
       varname = "x",
-      input_dataname = as.name("data"),
+      dataname = "data",
       extract_type = character(0)
     )
     shiny::isolate(filter_state$set_keep_na(FALSE))

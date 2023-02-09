@@ -140,7 +140,7 @@ FilteredDataset <- R6::R6Class( # nolint
       checkmate::assert_character(label, null.ok = TRUE)
       teal.data::validate_metadata(metadata)
 
-      logger::log_trace("Instantiating { class(self)[1] }, dataname: { deparse1(dataname) }")
+      logger::log_trace("Instantiating { class(self)[1] }, dataname: { dataname }")
       private$dataset <- dataset
       private$dataname <- dataname
       private$keys <- keys
@@ -228,8 +228,9 @@ FilteredDataset <- R6::R6Class( # nolint
     #' @return `integer(1)`
     get_filter_count = function() {
       sum(vapply(private$filter_states,
-                 function(state) state$get_filter_count(),
-                 FUN.VALUE = integer(1)))
+        function(state) state$get_filter_count(),
+        FUN.VALUE = integer(1)
+      ))
     },
 
     #' @description
@@ -430,7 +431,7 @@ FilteredDataset <- R6::R6Class( # nolint
         id = id,
         function(input, output, session) {
           dataname <- self$get_dataname()
-          logger::log_trace("FilteredDataset$server initializing, dataname: { deparse1(dataname) }")
+          logger::log_trace("FilteredDataset$server initializing, dataname: { dataname }")
           checkmate::assert_string(dataname)
           shiny::setBookmarkExclude("remove_filters")
 
@@ -463,15 +464,15 @@ FilteredDataset <- R6::R6Class( # nolint
           })
 
           observeEvent(input$remove_filters, {
-            logger::log_trace("FilteredDataset$server@1 removing filters, dataname: { deparse1(dataname) }")
+            logger::log_trace("FilteredDataset$server@1 removing filters, dataname: { dataname }")
             lapply(
               self$get_filter_states(),
               function(x) x$state_list_empty()
             )
-            logger::log_trace("FilteredDataset$server@1 removed filters, dataname: { deparse1(dataname) }")
+            logger::log_trace("FilteredDataset$server@1 removed filters, dataname: { dataname }")
           })
 
-          logger::log_trace("FilteredDataset$initialized, dataname: { deparse1(dataname) }")
+          logger::log_trace("FilteredDataset$initialized, dataname: { (dataname }")
           NULL
         }
       )
