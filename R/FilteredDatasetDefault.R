@@ -306,6 +306,5 @@ DefaultFilteredDataset <- R6::R6Class( # nolint
         paste0(f_rows, "/", nf_rows)
       )
     }
-
   )
 )

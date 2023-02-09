@@ -54,7 +54,7 @@ ChoicesFilterState <- R6::R6Class( # nolint
         combine = "or"
       )
 
-      #validation on x_reactive here
+      # validation on x_reactive here
       super$initialize(x, x_reactive, varname, varlabel, dataname, extract_type)
       if (!is.factor(x)) {
         x <- factor(x, levels = as.character(sort(unique(x))))
@@ -178,11 +178,9 @@ ChoicesFilterState <- R6::R6Class( # nolint
       }
       values[in_choices_mask]
     },
-
-    is_checkboxgroup = function () {
+    is_checkboxgroup = function() {
       length(private$choices) <= getOption("teal.threshold_slider_vs_checkboxgroup")
     },
-
     get_choice_labels = function() {
       if (private$is_checkboxgroup()) {
         l_counts <- as.numeric(names(private$choices))
@@ -213,7 +211,8 @@ ChoicesFilterState <- R6::R6Class( # nolint
             },
             div(
               class = "choices_state_label_text",
-              sprintf("%s (%s%s)", private$choices[i],
+              sprintf(
+                "%s (%s%s)", private$choices[i],
                 if (is.null(private$x_reactive())) "" else sprintf("%s/", f_count),
                 l_count
               )
@@ -223,8 +222,8 @@ ChoicesFilterState <- R6::R6Class( # nolint
       } else {
         x <- if (is.null(private$x_reactive())) {
           ""
-        } else{
-          sprintf("%s/",table(factor(private$x_reactive(), levels = private$choices)))
+        } else {
+          sprintf("%s/", table(factor(private$x_reactive(), levels = private$choices)))
         }
         sprintf("%s (%s%s)", private$choices, x, names(private$choices))
       }
@@ -334,7 +333,7 @@ ChoicesFilterState <- R6::R6Class( # nolint
                 choiceNames = private$get_choice_labels(),
                 choiceValues = as.character(private$choices),
                 selected = input$selection
-               )
+              )
             } else {
               teal.widgets::updateOptionalSelectInput(
                 session, "selection",

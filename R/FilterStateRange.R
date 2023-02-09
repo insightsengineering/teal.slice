@@ -51,7 +51,7 @@ RangeFilterState <- R6::R6Class( # nolint
       stopifnot(is.numeric(x))
       stopifnot(any(is.finite(x)))
 
-      #validation on x_reactive here
+      # validation on x_reactive here
       super$initialize(x, x_reactive, varname, varlabel, dataname, extract_type)
       var_range <- range(x, finite = TRUE)
 
@@ -219,7 +219,7 @@ RangeFilterState <- R6::R6Class( # nolint
   ),
   private = list(
     unfiltered_histogram = NULL, # ggplot object
-    data_count = 0,  # number of values in unfiltered data - needed for scaling histogram
+    data_count = 0, # number of values in unfiltered data - needed for scaling histogram
     keep_inf = NULL, # because it holds reactiveVal
     inf_count = integer(0),
     inf_filtered_count = NULL,
@@ -320,7 +320,6 @@ RangeFilterState <- R6::R6Class( # nolint
       }
       values
     },
-
     get_inf_label = function() {
       sprintf(
         "Keep Inf (%s%s)",
@@ -382,17 +381,17 @@ RangeFilterState <- R6::R6Class( # nolint
             height = 25,
             expr = {
               private$unfiltered_histogram +
-              if (!is.null(private$x_reactive())) {
-                ggplot2::geom_histogram(
-                  data = data.frame(x = Filter(is.finite, private$x_reactive())),
-                  ggplot2::aes(x = x),
-                  bins = 100,
-                  fill = grDevices::rgb(173 / 255, 216 / 255, 230 / 255),
-                  color = grDevices::rgb(173 / 255, 216 / 255, 230 / 255)
-                )
-              } else {
-                NULL
-              }
+                if (!is.null(private$x_reactive())) {
+                  ggplot2::geom_histogram(
+                    data = data.frame(x = Filter(is.finite, private$x_reactive())),
+                    ggplot2::aes(x = x),
+                    bins = 100,
+                    fill = grDevices::rgb(173 / 255, 216 / 255, 230 / 255),
+                    color = grDevices::rgb(173 / 255, 216 / 255, 230 / 255)
+                  )
+                } else {
+                  NULL
+                }
             }
           )
 
@@ -482,7 +481,6 @@ RangeFilterState <- R6::R6Class( # nolint
     #  changed through the api
     keep_inf_srv = function(id) {
       moduleServer(id, function(input, output, session) {
-
         observeEvent(private$inf_filtered_count(), {
           updateCheckboxInput(
             session,
