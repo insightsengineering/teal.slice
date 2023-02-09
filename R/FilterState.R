@@ -457,7 +457,7 @@ FilterState <- R6::R6Class( # nolint
       } else if (isTRUE(private$extract_type == "matrix")) {
         call_extract_matrix(
           dataname = private$dataname,
-          column = as.character(private$varname)
+          column = private$varname
         )
       } else {
         str2lang(private$varname)
