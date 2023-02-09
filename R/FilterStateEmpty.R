@@ -165,6 +165,28 @@ EmptyFilterState <- R6::R6Class( # nolint
           private$keep_na_srv("keep_na")
         }
       )
+    },
+
+    # @description
+    # UI module to display filter summary.
+    # EmptyFilterState contains only missing
+    # values.
+    # @param id `shiny` id parameter
+    ui_summary = function(id) {
+      tagList(tags$span("All empty"))
+    },
+
+    # @description
+    # Server module to display filter summary
+    # @param shiny `id` parametr passed to moduleServer
+    # Doesn't render anything
+    server_summary = function(id) {
+      moduleServer(
+        id = id,
+        function(input, output, session) {
+          NULL
+        }
+      )
     }
   )
 )

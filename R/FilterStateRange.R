@@ -528,10 +528,22 @@ RangeFilterState <- R6::R6Class( # nolint
         invisible(NULL)
       })
     },
+
+    # @description
+    # UI module to display filter summary
+    # @param id `shiny` id parameter
+    #  renders text describing selected range and
+    #  if NA or Inf are included also
     ui_summary = function(id) {
       ns <- NS(id)
       uiOutput(ns("summary"), class = "filter-card-summary")
     },
+
+    # @description
+    # Server module to display filter summary
+    # @param shiny `id` parametr passed to moduleServer
+    #  renders text describing selected range and
+    #  if NA or Inf are included also
     server_summary = function(id) {
       moduleServer(
         id = id,
