@@ -218,16 +218,8 @@ Get variable name.
 \if{html}{\out{<div class="r">}}\preformatted{FilterState$get_varname()}\if{html}{\out{</div>}}
 }
 
-\subsection{Arguments}{
-\if{html}{\out{<div class="arguments">}}
-\describe{
-\item{\code{deparse}}{(\code{logical(1)})\cr
-whether variable name should be deparsed; defaults to \code{FALSE}}
-}
-\if{html}{\out{</div>}}
-}
 \subsection{Returns}{
-\code{name} or \code{character(1)}
+\code{character(1)}
 }
 }
 \if{html}{\out{<hr>}}
