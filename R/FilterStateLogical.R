@@ -222,7 +222,7 @@ LogicalFilterState <- R6::R6Class( # nolint
                 )
                 logger::log_trace(sprintf(
                   "LogicalFilterState$server@1 selection of variable %s changed, dataname: %s",
-                  self$get_varname(),
+                  private$varname,
                   private$dataname
                 ))
               }
@@ -242,7 +242,7 @@ LogicalFilterState <- R6::R6Class( # nolint
               logger::log_trace(
                 sprintf(
                   "LogicalFilterState$server@2 selection of variable %s changed, dataname: %s",
-                  self$get_varname(),
+                  private$varname,
                   private$dataname
                 )
               )

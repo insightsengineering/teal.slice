@@ -66,7 +66,7 @@ DateFilterState <- R6::R6Class( # nolint
       sprintf(
         "%sFiltering on: %s\n%1$s  Selected range: %s - %s\n%1$s  Include missing values: %s",
         format("", width = indent),
-        self$get_varname(),
+        private$varname,
         format(self$get_selected()[1], nsmall = 3),
         format(self$get_selected()[2], nsmall = 3),
         format(self$get_keep_na())
@@ -241,7 +241,7 @@ DateFilterState <- R6::R6Class( # nolint
                 )
                 logger::log_trace(sprintf(
                   "DateFilterState$server@1 selection of variable %s changed, dataname: %s",
-                  self$get_varname(),
+                  private$varname,
                   private$dataname
                 ))
               }
@@ -259,7 +259,7 @@ DateFilterState <- R6::R6Class( # nolint
               self$set_selected(c(start_date, end_date))
               logger::log_trace(sprintf(
                 "DateFilterState$server@2 selection of variable %s changed, dataname: %s",
-                self$get_varname(),
+                private$varname,
                 private$dataname
               ))
             }
@@ -276,7 +276,7 @@ DateFilterState <- R6::R6Class( # nolint
             )
             logger::log_trace(sprintf(
               "DateFilterState$server@3 reset start date of variable %s, dataname: %s",
-              self$get_varname(),
+              private$varname,
               private$dataname
             ))
           })
@@ -289,7 +289,7 @@ DateFilterState <- R6::R6Class( # nolint
             )
             logger::log_trace(sprintf(
               "DateFilterState$server@4 reset end date of variable %s, dataname: %s",
-              self$get_varname(),
+              private$varname,
               private$dataname
             ))
           })

@@ -133,7 +133,7 @@ FilterState <- R6::R6Class( # nolint
       values <- paste(format(self$get_selected(), nsmall = 3L, justify = "none"), collapse = ", ")
       paste(c(
         strwrap(
-          sprintf("Filtering on: %s", self$get_varname()),
+          sprintf("Filtering on: %s", private$varname),
           width = wrap_width,
           indent = indent
         ),
@@ -251,7 +251,7 @@ FilterState <- R6::R6Class( # nolint
         sprintf(
           "%s$set_keep_na set for variable %s to %s.",
           class(self)[1],
-          self$get_varname(),
+          private$varname,
           value
         )
       )
@@ -291,7 +291,7 @@ FilterState <- R6::R6Class( # nolint
         sprintf(
           "%s$set_selected setting selection of variable %s, dataname: %s.",
           class(self)[1],
-          self$get_varname(),
+          private$varname,
           private$dataname
         )
       )
@@ -302,7 +302,7 @@ FilterState <- R6::R6Class( # nolint
       logger::log_trace(sprintf(
         "%s$set_selected selection of variable %s set, dataname: %s",
         class(self)[1],
-        self$get_varname(),
+        private$varname,
         private$dataname
       ))
       invisible(NULL)
@@ -325,7 +325,7 @@ FilterState <- R6::R6Class( # nolint
         "%s$set_state, dataname: %s setting state of variable %s to: selected=%s, keep_na=%s",
         class(self)[1],
         private$dataname,
-        self$get_varname(),
+        private$varname,
         paste(state$selected, collapse = " "),
         state$keep_na
       ))
@@ -341,7 +341,7 @@ FilterState <- R6::R6Class( # nolint
           "%s$set_state, dataname: %s done setting state for variable %s",
           class(self)[1],
           private$dataname,
-          self$get_varname()
+          private$varname
         )
       )
       invisible(NULL)
@@ -382,11 +382,11 @@ FilterState <- R6::R6Class( # nolint
             width = 10,
             class = "no-left-right-padding",
             tags$div(
-              tags$span(self$get_varname(),
+              tags$span(private$varname,
                 class = "filter_panel_varname"
               ),
               if (checkmate::test_character(self$get_varlabel(), min.len = 1) &&
-                tolower(self$get_varname()) != tolower(self$get_varlabel())) {
+                tolower(private$varname) != tolower(self$get_varlabel())) {
                 tags$span(self$get_varlabel(), class = "filter_panel_varlabel")
               }
             )
@@ -580,7 +580,7 @@ FilterState <- R6::R6Class( # nolint
               sprintf(
                 "%s$server keep_na of variable %s set to: %s, dataname: %s",
                 class(self)[1],
-                self$get_varname(),
+                private$varname,
                 deparse1(input$value),
                 private$dataname
               )

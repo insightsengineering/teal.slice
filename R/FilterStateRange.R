@@ -79,7 +79,7 @@ RangeFilterState <- R6::R6Class( # nolint
       sprintf(
         "%sFiltering on: %s\n%1$s  Selected range: %s - %s\n%1$s  Include missing values: %s",
         format("", width = indent),
-        self$get_varname(),
+        private$varname,
         format(self$get_selected(), nsmall = 3)[1],
         format(self$get_selected(), nsmall = 3)[2],
         format(self$get_keep_na())
@@ -154,7 +154,7 @@ RangeFilterState <- R6::R6Class( # nolint
         sprintf(
           "%s$set_keep_inf of variable %s set to %s, dataname: %s.",
           class(self)[1],
-          self$get_varname(),
+          private$varname,
           value,
           private$dataname
         )
@@ -402,7 +402,7 @@ RangeFilterState <- R6::R6Class( # nolint
               logger::log_trace(
                 sprintf(
                   "RangeFilterState$server@3 selection of variable %s changed, dataname: %s",
-                  self$get_varname(),
+                  private$varname,
                   private$dataname
                 )
               )
@@ -471,7 +471,7 @@ RangeFilterState <- R6::R6Class( # nolint
               sprintf(
                 "%s$server keep_inf of variable %s set to: %s, dataname: %s",
                 class(self)[1],
-                self$get_varname(),
+                private$varname,
                 deparse1(input$value),
                 private$dataname
               )
