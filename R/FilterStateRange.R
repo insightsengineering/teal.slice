@@ -315,7 +315,7 @@ RangeFilterState <- R6::R6Class( # nolint
             label = NULL,
             min = private$choices[1],
             max = private$choices[2],
-            value = private$choices,
+            value = isolate(private$selected()),
             step = private$slider_step,
             width = "100%"
           )
