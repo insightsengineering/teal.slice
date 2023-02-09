@@ -24,6 +24,10 @@ ChoicesFilterState <- R6::R6Class( # nolint
     #' Initialize a `FilterState` object
     #' @param x (`character` or `factor`)\cr
     #'   values of the variable used in filter
+    #' @param x_reactive (`reactive`)\cr
+    #'   a `reactive` returning a filtered vector or returning `NULL`. Is used to update
+    #'   counts following the change in values of the filtered dataset. If the `reactive`
+    #'   is `NULL` counts based on filtered dataset are not shown.
     #' @param varname (`character`)\cr
     #'   name of the variable
     #' @param varlabel (`character(1)`)\cr
@@ -38,6 +42,7 @@ ChoicesFilterState <- R6::R6Class( # nolint
     #' \item{`"matrix"`}{ `varname` in the condition call will be returned as `<dataname>[, <varname>]`}
     #' }
     initialize = function(x,
+                          x_reactive,
                           varname,
                           varlabel = character(0),
                           dataname = NULL,
@@ -48,8 +53,9 @@ ChoicesFilterState <- R6::R6Class( # nolint
         length(unique(x[!is.na(x)])) < getOption("teal.threshold_slider_vs_checkboxgroup"),
         combine = "or"
       )
-      super$initialize(x, varname, varlabel, dataname, extract_type)
 
+      #validation on x_reactive here
+      super$initialize(x, x_reactive, varname, varlabel, dataname, extract_type)
       if (!is.factor(x)) {
         x <- factor(x, levels = as.character(sort(unique(x))))
       }
@@ -58,7 +64,6 @@ ChoicesFilterState <- R6::R6Class( # nolint
       tbl <- table(x)
       choices <- names(tbl)
       names(choices) <- tbl
-
 
       private$set_choices(as.list(choices))
       self$set_selected(unname(choices))
@@ -174,6 +179,57 @@ ChoicesFilterState <- R6::R6Class( # nolint
       values[in_choices_mask]
     },
 
+    is_checkboxgroup = function () {
+      length(private$choices) <= getOption("teal.threshold_slider_vs_checkboxgroup")
+    },
+
+    get_choice_labels = function() {
+      if (private$is_checkboxgroup()) {
+        l_counts <- as.numeric(names(private$choices))
+        is_na_l_counts <- is.na(l_counts)
+        if (any(is_na_l_counts)) l_counts[is_na_l_counts] <- 0
+
+        f_counts <- unname(table(factor(private$x_reactive(), levels = private$choices)))
+        f_counts[is.na(f_counts)] <- 0
+
+        labels <- lapply(seq_along(private$choices), function(i) {
+          l_count <- l_counts[i]
+          f_count <- f_counts[i]
+          l_freq <- l_count / sum(l_counts)
+          f_freq <- f_count / sum(l_counts)
+
+          if (is.na(l_freq) || is.nan(l_freq)) l_freq <- 0
+          if (is.na(f_freq) || is.nan(f_freq)) f_freq <- 0
+          tagList(
+            div(
+              class = "choices_state_label_unfiltered",
+              style = sprintf("width:%s%%", l_freq * 100)
+            ),
+            if (!is.null(private$x_reactive())) {
+              div(
+                class = "choices_state_label",
+                style = sprintf("width:%s%%", f_freq * 100)
+              )
+            },
+            div(
+              class = "choices_state_label_text",
+              sprintf("%s (%s%s)", private$choices[i],
+                if (is.null(private$x_reactive())) "" else sprintf("%s/", f_count),
+                l_count
+              )
+            )
+          )
+        })
+      } else {
+        x <- if (is.null(private$x_reactive())) {
+          ""
+        } else{
+          sprintf("%s/",table(factor(private$x_reactive(), levels = private$choices)))
+        }
+        sprintf("%s (%s%s)", private$choices, x, names(private$choices))
+      }
+    },
+
     # @description
     # UI Module for `ChoicesFilterState`.
     # This UI element contains available choices selection and
@@ -183,34 +239,14 @@ ChoicesFilterState <- R6::R6Class( # nolint
     ui_inputs = function(id) {
       ns <- NS(id)
       div(
-        if (length(private$choices) <= getOption("teal.threshold_slider_vs_checkboxgroup")) {
-          l_counts <- as.numeric(names(private$choices))
-          is_na_l_counts <- is.na(l_counts)
-          if (any(is_na_l_counts)) l_counts[is_na_l_counts] <- 0
-          labels <- lapply(seq_along(private$choices), function(i) {
-            l_count <- l_counts[i]
-            l_freq <- l_count / sum(l_counts)
-            if (is.na(l_freq) || is.nan(l_freq)) l_freq <- 0
-            div(
-              class = "choices_state_label",
-              style = sprintf("width:%s%%", l_freq * 100),
-              span(
-                class = "choices_state_label_text",
-                sprintf(
-                  "%s (%s)",
-                  private$choices[i],
-                  l_count
-                )
-              )
-            )
-          })
+        if (private$is_checkboxgroup()) {
           div(
             class = "choices_state",
             checkboxGroupInput(
-              ns("selection"),
+              inputId = ns("selection"),
               label = NULL,
-              selected = self$get_selected(),
-              choiceNames = labels,
+              selected = isolate(self$get_selected()),
+              choiceNames = isolate(private$get_choice_labels()),
               choiceValues = as.character(private$choices),
               width = "100%"
             )
@@ -218,8 +254,8 @@ ChoicesFilterState <- R6::R6Class( # nolint
         } else {
           teal.widgets::optionalSelectInput(
             inputId = ns("selection"),
-            choices = stats::setNames(private$choices, sprintf("%s (%s)", private$choices, names(private$choices))),
-            selected = self$get_selected(),
+            choices = isolate(stats::setNames(private$choices, private$get_choice_labels())),
+            selected = isolate(self$get_selected()),
             multiple = TRUE,
             options = shinyWidgets::pickerOptions(
               actionsBox = TRUE,
@@ -252,11 +288,19 @@ ChoicesFilterState <- R6::R6Class( # nolint
             eventExpr = self$get_selected(),
             handlerExpr = {
               if (!setequal(self$get_selected(), input$selection)) {
-                updateCheckboxInput(
-                  session = session,
-                  inputId = "selection",
-                  value =  self$get_selected()
-                )
+                if (private$is_checkboxgroup()) {
+                  updateCheckboxGroupInput(
+                    session = session,
+                    inputId = "selection",
+                    selected = self$get_selected()
+                  )
+                } else {
+                  teal.widgets::updateOptionalSelectInput(
+                    session = session,
+                    inputId = "selection",
+                    selected =  self$get_selected()
+                  )
+                }
                 logger::log_trace(sprintf(
                   "ChoicesFilterState$server@1 selection of variable %s changed, dataname: %s",
                   private$varname,
@@ -281,6 +325,24 @@ ChoicesFilterState <- R6::R6Class( # nolint
             }
           )
           private$keep_na_srv("keep_na")
+
+          observeEvent(private$x_reactive(), {
+            if (private$is_checkboxgroup()) {
+              updateCheckboxGroupInput(
+                session,
+                inputId = "selection",
+                choiceNames = private$get_choice_labels(),
+                choiceValues = as.character(private$choices),
+                selected = input$selection
+               )
+            } else {
+              teal.widgets::updateOptionalSelectInput(
+                session, "selection",
+                choices = stats::setNames(private$choices, private$get_choice_labels()),
+                selected = input$selection
+              )
+            }
+          })
 
           logger::log_trace("ChoicesFilterState$server initialized, dataname: { private$dataname }")
           NULL

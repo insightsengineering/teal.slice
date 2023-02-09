@@ -81,6 +81,7 @@ Initialize a \code{FilterState} object
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{FilterState$new(
   x,
+  x_reactive,
   varname,
   varlabel = character(0),
   dataname = NULL,
@@ -93,6 +94,11 @@ Initialize a \code{FilterState} object
 \describe{
 \item{\code{x}}{(\code{vector})\cr
 values of the variable used in filter}
+
+\item{\code{x_reactive}}{(\code{reactive})\cr
+a \code{reactive} returning a filtered vector or returning \code{NULL}. It is used to update
+counts following the change in values of the filtered dataset. If the \code{reactive}
+is \code{NULL} counts based on filtered dataset are not shown.}
 
 \item{\code{varname}}{(\code{character})\cr
 name of the variable}
@@ -416,9 +422,6 @@ If \code{isTRUE(private$use_dataset)} variable is prefixed by
 dataname to be evaluated as extracted object, for example
 \code{data$var}
 return (\code{name} or \code{call})
-Sets \code{keep_na} field according to observed \code{input$keep_na}
-If \code{keep_na = TRUE}, \code{is.na(varname)} is added to the returned call.
-Otherwise returned call excludes \code{NA} when executed.
 Set choices
 
 Set choices is supposed to be executed once in the constructor

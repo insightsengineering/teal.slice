@@ -25,6 +25,10 @@ DateFilterState <- R6::R6Class( # nolint
     #' Initialize a `FilterState` object
     #' @param x (`Date`)\cr
     #'   values of the variable used in filter
+    #' @param x_reactive (`reactive`)\cr
+    #'   a `reactive` returning a filtered vector or returning `NULL`. Is used to update
+    #'   counts following the change in values of the filtered dataset. If the `reactive`
+    #'   is `NULL` counts based on filtered dataset are not shown.
     #' @param varname (`character`, `name`)\cr
     #'   name of the variable
     #' @param varlabel (`character(1)`)\cr
@@ -39,12 +43,15 @@ DateFilterState <- R6::R6Class( # nolint
     #' \item{`"matrix"`}{ `varname` in the condition call will be returned as `<dataname>[, <varname>]`}
     #' }
     initialize = function(x,
+                          x_reactive,
                           varname,
                           varlabel = character(0),
                           dataname = NULL,
                           extract_type = character(0)) {
       stopifnot(is(x, "Date"))
-      super$initialize(x, varname, varlabel, dataname, extract_type)
+
+      #validation on x_reactive here
+      super$initialize(x, x_reactive, varname, varlabel, dataname, extract_type)
 
       var_range <- range(x, na.rm = TRUE)
       private$set_choices(var_range)

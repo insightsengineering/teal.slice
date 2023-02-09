@@ -47,6 +47,10 @@ FilterState <- R6::R6Class( # nolint
     #' Initialize a `FilterState` object
     #' @param x (`vector`)\cr
     #'   values of the variable used in filter
+    #' @param x_reactive (`reactive`)\cr
+    #'   a `reactive` returning a filtered vector or returning `NULL`. It is used to update
+    #'   counts following the change in values of the filtered dataset. If the `reactive`
+    #'   is `NULL` counts based on filtered dataset are not shown.
     #' @param varname (`character`)\cr
     #'   name of the variable
     #' @param varlabel (`character(1)`)\cr
@@ -65,6 +69,7 @@ FilterState <- R6::R6Class( # nolint
     #' @return self invisibly
     #'
     initialize = function(x,
+                          x_reactive,
                           varname,
                           varlabel = character(0),
                           dataname = NULL,
@@ -92,6 +97,8 @@ FilterState <- R6::R6Class( # nolint
       private$selected <- reactiveVal(NULL)
       private$na_count <- sum(is.na(x))
       private$keep_na <- reactiveVal(FALSE)
+      private$x_reactive <- x_reactive
+      private$filtered_na_count <- reactive(sum(is.na(x_reactive())))
       logger::log_trace(
         sprintf(
           "Instantiated %s with variable %s, dataname: %s",
@@ -376,6 +383,7 @@ FilterState <- R6::R6Class( # nolint
     ui = function(id) {
       ns <- NS(id)
       fluidPage(
+        include_css_files(pattern = "filter-panel"),
         theme = get_teal_bs_theme(),
         fluidRow(
           column(
@@ -419,6 +427,8 @@ FilterState <- R6::R6Class( # nolint
     varname = character(0),
     varlabel = character(0),
     extract_type = logical(0),
+    x_reactive = NULL, # reactive containing the filtered variable, used for updating counts and histograms
+    filtered_na_count = NULL, # reactive containing the count of NA in the filtered dataset
 
     #' description
     #' Adds `is.na(varname)` before existing condition calls if `keep_na` is selected.
@@ -464,13 +474,6 @@ FilterState <- R6::R6Class( # nolint
       }
     },
 
-    #' Sets `keep_na` field according to observed `input$keep_na`
-    #' If `keep_na = TRUE`, `is.na(varname)` is added to the returned call.
-    #' Otherwise returned call excludes `NA` when executed.
-    observe_keep_na = function(input) {
-
-    },
-
     #' Set choices
     #'
     #' Set choices is supposed to be executed once in the constructor
@@ -513,6 +516,17 @@ FilterState <- R6::R6Class( # nolint
       values
     },
 
+    # Calculates NA counts
+    #
+    # NA counts are based on unfiltered and filtered (optional) `x`.
+    get_na_label = function() {
+      sprintf(
+        "Keep NA (%s%s)",
+        if (is.null(private$x_reactive())) "" else sprintf("%s/", private$filtered_na_count()),
+        private$na_count
+      )
+    },
+
     # shiny modules -----
     #' module with inputs
     ui_inputs = function(id) {
@@ -533,8 +547,8 @@ FilterState <- R6::R6Class( # nolint
       if (private$na_count > 0) {
         checkboxInput(
           ns("value"),
-          sprintf("Keep NA (%s)", private$na_count),
-          value = self$get_keep_na()
+          isolate(private$get_na_label()),
+          value = isolate(self$get_keep_na())
         )
       } else {
         NULL
@@ -549,6 +563,15 @@ FilterState <- R6::R6Class( # nolint
     #  changed through the api
     keep_na_srv = function(id) {
       moduleServer(id, function(input, output, session) {
+        observeEvent(private$filtered_na_count(), {
+          updateCheckboxInput(
+            session,
+            "value",
+            label = private$get_na_label(),
+            value = self$get_keep_na()
+          )
+        })
+
         # this observer is needed in the situation when private$keep_inf has been
         # changed directly by the api - then it's needed to rerender UI element
         # to show relevant values
@@ -581,7 +604,7 @@ FilterState <- R6::R6Class( # nolint
                 "%s$server keep_na of variable %s set to: %s, dataname: %s",
                 class(self)[1],
                 private$varname,
-                deparse1(input$value),
+                input$value,
                 private$dataname
               )
             )

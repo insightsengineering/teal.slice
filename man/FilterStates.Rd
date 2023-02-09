@@ -64,6 +64,7 @@ isolate(filter_states$get_call())
 \item \href{#method-FilterStates-ui}{\code{FilterStates$ui()}}
 \item \href{#method-FilterStates-get_filter_state}{\code{FilterStates$get_filter_state()}}
 \item \href{#method-FilterStates-set_filter_state}{\code{FilterStates$set_filter_state()}}
+\item \href{#method-FilterStates-set_filterable_varnames}{\code{FilterStates$set_filterable_varnames()}}
 \item \href{#method-FilterStates-ui_add_filter_state}{\code{FilterStates$ui_add_filter_state()}}
 \item \href{#method-FilterStates-srv_add_filter_state}{\code{FilterStates$srv_add_filter_state()}}
 \item \href{#method-FilterStates-clone}{\code{FilterStates$clone()}}
@@ -78,12 +79,20 @@ Initializes \code{FilterStates} object.
 Initializes \code{FilterStates} object by setting
 \code{dataname}, and \code{datalabel}.
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{FilterStates$new(dataname, datalabel)}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{FilterStates$new(data, data_reactive, dataname, datalabel)}\if{html}{\out{</div>}}
 }
 
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
+\item{\code{data}}{(\code{data.frame}, \code{MultiAssayExperiment}, \code{SummarizedExperiment}, \code{matrix})\cr
+the R object which \code{subset} function is applied on.}
+
+\item{\code{data_reactive}}{(\code{reactive})\cr
+should return an object constistent with the \code{FilterState} class or \code{NULL}.
+This object is needed for the \code{FilterState} counts being updated
+on a change in filters. If \code{reactive(NULL)} then filtered counts are not shown.}
+
 \item{\code{dataname}}{(\code{character(1)})\cr
 name of the data used in the expression
 specified to the function argument attached to this \code{FilterStates}}
@@ -358,22 +367,51 @@ The output is a list compatible with input to \code{self$set_filter_state}.
 \subsection{Method \code{set_filter_state()}}{
 Sets active \code{FilterState} objects.
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{FilterStates$set_filter_state(data, state, filtered_dataset)}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{FilterStates$set_filter_state(state)}\if{html}{\out{</div>}}
 }
 
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
-\item{\code{data}}{(\code{data.frame})\cr
-data object for which to define a subset}
-
 \item{\code{state}}{(\verb{named list})\cr
-should contain values of initial selections in the \code{FilterState};
-\code{list} names must correspond to column names in \code{data}}
+should contain values which are initial selection in the \code{FilterState}.
+Names of the \code{list} element should correspond to the name of the
+column in \code{data}.}
 
-\item{\code{filtered_dataset}}{data object for which to define a subset(?)}
+\item{\code{data}}{(\code{data.frame})\cr
+data which are supposed to be filtered}
 }
 \if{html}{\out{</div>}}
+}
+\subsection{Returns}{
+function which throws an error
+}
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-FilterStates-set_filterable_varnames"></a>}}
+\if{latex}{\out{\hypertarget{method-FilterStates-set_filterable_varnames}{}}}
+\subsection{Method \code{set_filterable_varnames()}}{
+Set the allowed filterable variables
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{FilterStates$set_filterable_varnames(varnames)}\if{html}{\out{</div>}}
+}
+
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{varnames}}{(\code{character} or \code{NULL}) The variables which can be filtered
+See \code{self$get_filterable_varnames} for more details}
+}
+\if{html}{\out{</div>}}
+}
+\subsection{Details}{
+When retrieving the filtered variables only
+those which have filtering supported (i.e. are of the permitted types)
+are included.
+}
+
+\subsection{Returns}{
+invisibly this \code{FilteredDataset}
 }
 }
 \if{html}{\out{<hr>}}
@@ -391,8 +429,8 @@ Shiny module UI that adds a filter variable.
 \item{\code{id}}{(\code{character(1)})\cr
 shiny element (module instance) id}
 
-\item{\code{data}}{(\code{data.frame}, \code{MultiAssayExperiment}, \code{SummarizedExperiment}, \code{matrix})\cr
-data object for which to define a subset}
+\item{\code{data}}{(\code{data.frame}, \code{MultiAssayExperiment}, \code{SummarizedExperiment}, \code{matrix})
+object which columns are used to choose filter variables.}
 }
 \if{html}{\out{</div>}}
 }
@@ -406,7 +444,7 @@ data object for which to define a subset}
 \subsection{Method \code{srv_add_filter_state()}}{
 Shiny module server that adds a filter variable.
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{FilterStates$srv_add_filter_state(id, data, ...)}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{FilterStates$srv_add_filter_state(id)}\if{html}{\out{</div>}}
 }
 
 \subsection{Arguments}{
@@ -414,11 +452,6 @@ Shiny module server that adds a filter variable.
 \describe{
 \item{\code{id}}{(\code{character(1)})\cr
 shiny module instance id}
-
-\item{\code{data}}{(\code{data.frame}, \code{MultiAssayExperiment}, \code{SummarizedExperiment}, \code{matrix})\cr
-data object for which to define a subset}
-
-\item{\code{...}}{ignored}
 }
 \if{html}{\out{</div>}}
 }

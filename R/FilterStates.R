@@ -54,6 +54,14 @@ FilterStates <- R6::R6Class( # nolint
     #' Initializes `FilterStates` object by setting
     #' `dataname`, and `datalabel`.
     #'
+    #' @param data (`data.frame`, `MultiAssayExperiment`, `SummarizedExperiment`, `matrix`)\cr
+    #'   the R object which `subset` function is applied on.
+    #'
+    #' @param data_reactive (`reactive`)\cr
+    #'   should return an object constistent with the `FilterState` class or `NULL`.
+    #'   This object is needed for the `FilterState` counts being updated
+    #'   on a change in filters. If `reactive(NULL)` then filtered counts are not shown.
+    #'
     #' @param dataname (`character(1)`)\cr
     #'   name of the data used in the expression
     #'   specified to the function argument attached to this `FilterStates`
@@ -63,12 +71,14 @@ FilterStates <- R6::R6Class( # nolint
     #' @return
     #' self invisibly
     #'
-    initialize = function(dataname, datalabel) {
+    initialize = function(data, data_reactive, dataname, datalabel) {
       checkmate::assert_string(dataname)
       checkmate::assert_character(datalabel, max.len = 1, any.missing = FALSE)
 
       private$dataname <- dataname
       private$datalabel <- datalabel
+      private$data <- data
+      private$data_reactive <- data_reactive
 
       logger::log_trace("Instantiated { class(self)[1] }, dataname: { private$dataname }")
       invisible(self)
@@ -361,15 +371,28 @@ FilterStates <- R6::R6Class( # nolint
     #' Sets active `FilterState` objects.
     #'
     #' @param data (`data.frame`)\cr
-    #'   data object for which to define a subset
+    #'   data which are supposed to be filtered
     #' @param state (`named list`)\cr
-    #'   should contain values of initial selections in the `FilterState`;
-    #'   `list` names must correspond to column names in `data`
-    #' @param filtered_dataset
-    #'   data object for which to define a subset(?)
-    #'
-    set_filter_state = function(data, state, filtered_dataset) {
+    #'   should contain values which are initial selection in the `FilterState`.
+    #'   Names of the `list` element should correspond to the name of the
+    #'   column in `data`.
+    #' @return function which throws an error
+    set_filter_state = function(state) {
       stop("Pure virtual method.")
+    },
+
+    #' @description
+    #' Set the allowed filterable variables
+    #' @param varnames (`character` or `NULL`) The variables which can be filtered
+    #' See `self$get_filterable_varnames` for more details
+    #'
+    #' @details When retrieving the filtered variables only
+    #' those which have filtering supported (i.e. are of the permitted types)
+    #' are included.
+    #'
+    #' @return invisibly this `FilteredDataset`
+    set_filterable_varnames = function(varnames) {
+      return(invisible(self))
     },
 
     #' @description
@@ -377,9 +400,9 @@ FilterStates <- R6::R6Class( # nolint
     #'
     #' @param id (`character(1)`)\cr
     #'   shiny element (module instance) id
-    #' @param data (`data.frame`, `MultiAssayExperiment`, `SummarizedExperiment`, `matrix`)\cr
-    #'   data object for which to define a subset
     #'
+    #' @param data (`data.frame`, `MultiAssayExperiment`, `SummarizedExperiment`, `matrix`)
+    #'   object which columns are used to choose filter variables.
     #' @return `shiny.tag`
     #'
     ui_add_filter_state = function(id, data) {
@@ -391,14 +414,10 @@ FilterStates <- R6::R6Class( # nolint
     #'
     #' @param id (`character(1)`)\cr
     #'   shiny module instance id
-    #' @param data (`data.frame`, `MultiAssayExperiment`, `SummarizedExperiment`, `matrix`)\cr
-    #'   data object for which to define a subset
-    #' @param ... ignored
     #'
     #' @return `moduleServer` function which returns `NULL`
     #'
-    srv_add_filter_state = function(id, data, ...) {
-      check_ellipsis(..., stop = FALSE)
+    srv_add_filter_state = function(id) {
       moduleServer(
         id = id,
         function(input, output, session) {
@@ -411,8 +430,11 @@ FilterStates <- R6::R6Class( # nolint
     # private fields ----
     cards_container_id = character(0),
     card_ids = character(0),
+    data = NULL, # data.frame, MAE, SE or matrix
+    data_reactive = NULL, # reactive
     datalabel = character(0),
     dataname = NULL, # because it holds object of class name
+    filterable_varnames = character(0),
     ns = NULL, # shiny ns()
     observers = list(), # observers
     state_list = NULL, # list of `reactiveVal`s initialized by init methods of child classes
