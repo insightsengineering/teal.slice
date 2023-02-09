@@ -20,8 +20,7 @@
 #' @examples
 #' library(shiny)
 #' filter_states <- teal.slice:::DFFilterStates$new(
-#'   input_dataname = "data",
-#'   output_dataname = "data_filtered",
+#'   dataname = "data",
 #'   varlabels = c(x = "x variable", SEX = "Sex"),
 #'   datalabel = character(0),
 #'   keys = character(0)
@@ -30,7 +29,7 @@
 #'   c(NA, Inf, seq(1:10)),
 #'   varname = "x",
 #'   varlabel = "x variable",
-#'   input_dataname = as.name("data"),
+#'   dataname = "data",
 #'   extract_type = "list"
 #' )
 #' isolate(filter_state$set_selected(c(3L, 8L)))
@@ -40,7 +39,8 @@
 #'     x = filter_state,
 #'     state_list_index = 1L,
 #'     state_id = "x"
-#'   ))
+#'   )
+#' )
 #' isolate(filter_states$get_call())
 #'
 FilterStates <- R6::R6Class( # nolint
@@ -52,7 +52,7 @@ FilterStates <- R6::R6Class( # nolint
     #' Initializes `FilterStates` object.
     #'
     #' Initializes `FilterStates` object by setting
-    #' `input_dataname`, `output_dataname`, and `datalabel`.
+    #' `dataname`, and `datalabel`.
     #'
     #' @param data (`data.frame`, `MultiAssayExperiment`, `SummarizedExperiment`, `matrix`)\cr
     #'   the R object which `subset` function is applied on.
@@ -62,45 +62,25 @@ FilterStates <- R6::R6Class( # nolint
     #'   This object is needed for the `FilterState` counts being updated
     #'   on a change in filters. If `reactive(NULL)` then filtered counts are not shown.
     #'
-    #' @param input_dataname (`character(1)` or `name` or `call`)\cr
-    #'   name of the data used on `rhs` of the expression
+    #' @param dataname (`character(1)`)\cr
+    #'   name of the data used in the expression
     #'   specified to the function argument attached to this `FilterStates`
-    #' @param output_dataname (`character(1)` or `name` or `call`)\cr
-    #'   name of the output data on the `lhs` of the \emph{subset expression}
     #' @param datalabel (`character(0)` or `character(1)`)\cr
     #'   text label value
     #'
     #' @return
     #' self invisibly
     #'
-    initialize = function(data, data_reactive, input_dataname, output_dataname, datalabel) {
-      checkmate::assert(
-        checkmate::check_class(input_dataname, "call"),
-        checkmate::check_class(input_dataname, "name"),
-        checkmate::check_string(input_dataname)
-      )
-      checkmate::assert(
-        checkmate::check_class(output_dataname, "call"),
-        checkmate::check_class(output_dataname, "name"),
-        checkmate::check_string(output_dataname)
-      )
+    initialize = function(data, data_reactive, dataname, datalabel) {
+      checkmate::assert_string(dataname)
       checkmate::assert_character(datalabel, max.len = 1, any.missing = FALSE)
 
-      char_to_name <- function(x) {
-        if (is.character(x)) {
-          as.name(x)
-        } else {
-          x
-        }
-      }
-
-      private$input_dataname <- char_to_name(input_dataname)
-      private$output_dataname <- char_to_name(output_dataname)
+      private$dataname <- dataname
       private$datalabel <- datalabel
       private$data <- data
       private$data_reactive <- data_reactive
 
-      logger::log_trace("Instantiated { class(self)[1] }, dataname: { deparse1(private$input_dataname) }")
+      logger::log_trace("Instantiated { class(self)[1] }, dataname: { private$dataname }")
       invisible(self)
     },
 
@@ -121,21 +101,24 @@ FilterStates <- R6::R6Class( # nolint
     #' @return `character(1)` the formatted string
     #'
     format = function(indent) {
-      sprintf(paste(
-        "%sThis is an instance of an abstract class.",
-        "Use child class constructors to instantiate objects."),
-        paste(rep(" ", indent), collapse = ""))
+      sprintf(
+        paste(
+          "%sThis is an instance of an abstract class.",
+          "Use child class constructors to instantiate objects."
+        ),
+        paste(rep(" ", indent), collapse = "")
+      )
     },
 
     #' @description
     #' Filter call
     #'
     #' Builds \emph{subset expression} from condition calls stored in `FilterState`
-    #' objects selection. The `lhs` of the expression is `private$output_dataname`.
-    #' The `rhs` is a call to `self$get_fun()` with `private$input_dataname`
+    #' objects selection. The `lhs` of the expression is `private$dataname`.
+    #' The `rhs` is a call to `self$get_fun()` with `private$dataname`
     #' as argument and a list of condition calls from `FilterState` objects
     #' stored in `private$state_list`.
-    #' If `input_dataname` is the same as `output_dataname` and no filters are applied,
+    #' If no filters are applied,
     #' `NULL` is returned to avoid no-op calls such as `x <- x`.
     #'
     #' @return `call` or `NULL`
@@ -169,27 +152,17 @@ FilterStates <- R6::R6Class( # nolint
         x = filter_items,
         f = Negate(is.null)
       )
-
       if (length(filter_items) > 0) {
         # below code translates to call by the names of filter_items
         rhs <- call_with_colon(
           self$get_fun(),
-          private$input_dataname,
+          str2lang(private$dataname),
           unlist_args = filter_items
         )
-
         substitute(
           env = list(
-            lhs = private$output_dataname,
+            lhs = str2lang(private$dataname),
             rhs = rhs
-          ),
-          expr = lhs <- rhs
-        )
-      } else if (!identical(private$output_dataname, private$input_dataname)) {
-        substitute(
-          env = list(
-            lhs = private$output_dataname,
-            rhs = private$input_dataname
           ),
           expr = lhs <- rhs
         )
@@ -257,7 +230,8 @@ FilterStates <- R6::R6Class( # nolint
     #'
     state_list_push = function(x, state_list_index, state_id) {
       logger::log_trace(
-        "{ class(self)[1] } pushing into state_list, dataname: { deparse1(private$input_dataname) }")
+        "{ class(self)[1] } pushing into state_list, dataname: { private$dataname }"
+      )
       private$validate_state_list_exists(state_list_index)
       checkmate::assert_string(state_id)
 
@@ -272,7 +246,8 @@ FilterStates <- R6::R6Class( # nolint
       private$state_list[[state_list_index]](new_state_list)
 
       logger::log_trace(
-        "{ class(self)[1] } pushed into state_list, dataname: { deparse1(private$input_dataname) }")
+        "{ class(self)[1] } pushed into queue, dataname: { private$dataname }"
+      )
       invisible(NULL)
     },
 
@@ -292,7 +267,7 @@ FilterStates <- R6::R6Class( # nolint
     state_list_remove = function(state_list_index, state_id) {
       logger::log_trace(paste(
         "{ class(self)[1] } removing a filter from state_list { state_list_index },",
-        "dataname: { deparse1(private$input_dataname) }"
+        "dataname: { private$dataname }"
       ))
       private$validate_state_list_exists(state_list_index)
       checkmate::assert_string(state_id)
@@ -307,7 +282,7 @@ FilterStates <- R6::R6Class( # nolint
 
       logger::log_trace(paste(
         "{ class(self)[1] } removed from state_list { state_list_index },",
-        "dataname: { deparse1(private$input_dataname) }"
+        "dataname: { private$dataname }"
       ))
       invisible(NULL)
     },
@@ -319,14 +294,16 @@ FilterStates <- R6::R6Class( # nolint
     #'
     state_list_empty = function() {
       logger::log_trace(
-        "{ class(self)[1] } emptying state_list, dataname: { deparse1(private$input_dataname) }")
+        "{ class(self)[1] } emptying state_list, dataname: { private$dataname }"
+      )
 
       for (i in seq_along(private$state_list)) {
         private$state_list[[i]](list())
       }
 
       logger::log_trace(
-        "{ class(self)[1] } emptied state_list, dataname: { deparse1(private$input_dataname) }")
+        "{ class(self)[1] } emptied state_list, dataname: { private$dataname }"
+      )
       invisible(NULL)
     },
 
@@ -449,7 +426,6 @@ FilterStates <- R6::R6Class( # nolint
       )
     }
   ),
-
   private = list(
     # private fields ----
     cards_container_id = character(0),
@@ -457,9 +433,8 @@ FilterStates <- R6::R6Class( # nolint
     data = NULL, # data.frame, MAE, SE or matrix
     data_reactive = NULL, # reactive
     datalabel = character(0),
+    dataname = NULL, # because it holds object of class name
     filterable_varnames = character(0),
-    input_dataname = NULL, # because it holds object of class name
-    output_dataname = NULL, # because it holds object of class name,
     ns = NULL, # shiny ns()
     observers = list(), # observers
     state_list = NULL, # list of `reactiveVal`s initialized by init methods of child classes
@@ -501,7 +476,7 @@ FilterStates <- R6::R6Class( # nolint
               "%s$insert_filter_state_ui, adding FilterState UI of variable %s, dataname: %s",
               class(self)[1],
               state_id,
-              deparse1(private$input_dataname)
+              private$dataname
             )
           )
 
@@ -536,13 +511,13 @@ FilterStates <- R6::R6Class( # nolint
               logger::log_trace(paste(
                 "{ class(self)[1] }$insert_filter_state_ui@1",
                 "removing FilterState from state_list '{ state_list_index }',",
-                "dataname: { deparse1(private$input_dataname) }"
+                "dataname: { private$dataname }"
               ))
               self$state_list_remove(state_list_index, state_id)
               logger::log_trace(paste(
                 "{ class(self)[1] }$insert_filter_state_ui@1",
                 "removed FilterState from state_list '{ state_list_index }',",
-                "dataname: { deparse1(private$input_dataname) }"
+                "dataname: { private$dataname }"
               ))
             }
           )
@@ -552,7 +527,7 @@ FilterStates <- R6::R6Class( # nolint
               "%s$insert_filter_state_ui, added FilterState UI of variable %s, dataname: %s",
               class(self)[1],
               state_id,
-              deparse1(private$input_dataname)
+              private$dataname
             )
           )
           NULL
@@ -599,8 +574,8 @@ FilterStates <- R6::R6Class( # nolint
       if (
         !(
           is.numeric(state_list_index) &&
-          all(state_list_index <= length(private$state_list) && state_list_index > 0) ||
-          is.character(state_list_index) && all(state_list_index %in% names(private$state_list))
+            all(state_list_index <= length(private$state_list) && state_list_index > 0) ||
+            is.character(state_list_index) && all(state_list_index %in% names(private$state_list))
         )
       ) {
         stop(

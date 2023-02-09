@@ -8,7 +8,7 @@
 #' filter_state <- teal.slice:::LogicalFilterState$new(
 #'   sample(c(TRUE, FALSE, NA), 10, replace = TRUE),
 #'   varname = "x",
-#'   input_dataname = as.name("data"),
+#'   dataname = "data",
 #'   extract_type = character(0)
 #' )
 #' isolate(filter_state$get_call())
@@ -33,23 +33,23 @@ LogicalFilterState <- R6::R6Class( # nolint
     #'   label of the variable (optional).
     #' @param varlabel (`character(1)`)\cr
     #'   label of the variable (optional).
-    #' @param input_dataname (`name` or `call`)\cr
-    #'   name of dataset where `x` is taken from
+    #' @param dataname (`character(1)`)\cr
+    #'   optional name of dataset where `x` is taken from
     #' @param extract_type (`character(0)`, `character(1)`)\cr
     #' whether condition calls should be prefixed by dataname. Possible values:
     #' \itemize{
     #' \item{`character(0)` (default)}{ `varname` in the condition call will not be prefixed}
-    #' \item{`"list"`}{ `varname` in the condition call will be returned as `<input_dataname>$<varname>`}
-    #' \item{`"matrix"`}{ `varname` in the condition call will be returned as `<input_dataname>[, <varname>]`}
+    #' \item{`"list"`}{ `varname` in the condition call will be returned as `<dataname>$<varname>`}
+    #' \item{`"matrix"`}{ `varname` in the condition call will be returned as `<dataname>[, <varname>]`}
     #' }
     initialize = function(x,
                           x_reactive,
                           varname,
                           varlabel = character(0),
-                          input_dataname = NULL,
+                          dataname = NULL,
                           extract_type = character(0)) {
       stopifnot(is.logical(x))
-      super$initialize(x, x_reactive, varname, varlabel, input_dataname, extract_type)
+      super$initialize(x, x_reactive, varname, varlabel, dataname, extract_type)
       df <- as.factor(x)
       if (length(levels(df)) != 2) {
         if (levels(df) %in% c(TRUE, FALSE)) {
@@ -133,16 +133,16 @@ LogicalFilterState <- R6::R6Class( # nolint
         stop(
           sprintf(
             "value of the selection for `%s` in `%s` should be a logical scalar (TRUE or FALSE)",
-            self$get_varname(deparse = TRUE),
-            self$get_dataname(deparse = TRUE)
+            self$get_varname(),
+            self$get_dataname()
           )
         )
       }
 
       pre_msg <- sprintf(
         "dataset '%s', variable '%s': ",
-        self$get_dataname(deparse = TRUE),
-        self$get_varname(deparse = TRUE)
+        self$get_dataname(),
+        self$get_varname()
       )
       check_in_subset(value, private$choices, pre_msg = pre_msg)
     },
@@ -238,8 +238,8 @@ LogicalFilterState <- R6::R6Class( # nolint
                 )
                 logger::log_trace(sprintf(
                   "LogicalFilterState$server@1 selection of variable %s changed, dataname: %s",
-                  deparse1(self$get_varname()),
-                  deparse1(private$input_dataname)
+                  private$varname,
+                  private$dataname
                 ))
               }
             }
@@ -258,8 +258,8 @@ LogicalFilterState <- R6::R6Class( # nolint
               logger::log_trace(
                 sprintf(
                   "LogicalFilterState$server@2 selection of variable %s changed, dataname: %s",
-                  deparse1(self$get_varname()),
-                  deparse1(private$input_dataname)
+                  private$varname,
+                  private$dataname
                 )
               )
             }
@@ -277,7 +277,7 @@ LogicalFilterState <- R6::R6Class( # nolint
             )
           })
 
-          logger::log_trace("LogicalFilterState$server initialized, dataname: { deparse1(private$input_dataname) }")
+          logger::log_trace("LogicalFilterState$server initialized, dataname: { private$dataname }")
           NULL
         }
       )

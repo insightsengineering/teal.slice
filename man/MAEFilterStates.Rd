@@ -49,15 +49,7 @@ Initializes \code{MAEFilterStates} object
 
 Initialize \code{MAEFilterStates} object
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{MAEFilterStates$new(
-  data,
-  data_reactive,
-  input_dataname,
-  output_dataname,
-  datalabel,
-  varlabels,
-  keys
-)}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{MAEFilterStates$new(data, data_reactive, dataname, datalabel, varlabels, keys)}\if{html}{\out{</div>}}
 }
 
 \subsection{Arguments}{
@@ -71,12 +63,9 @@ should return \code{MultiAssayExperiment} or \code{NULL} object.
 This object is needed for the \code{FilterState} counts being updated
 on a change in filters. If \code{reactive(NULL)} then filtered counts are not shown.}
 
-\item{\code{input_dataname}}{(\code{character(1)} or \code{name} or \code{call})\cr
-name of the data used on lhs of the expression
+\item{\code{dataname}}{(\code{character(1)})\cr
+name of the data used in the expression
 specified to the function argument attached to this \code{FilterStates}.}
-
-\item{\code{output_dataname}}{(\code{character(1)} or \code{name} or \code{call})\cr
-name of the output data on the lhs of the assignment expression.}
 
 \item{\code{datalabel}}{(\code{character(0)} or \code{character(1)})\cr
 text label value.}
