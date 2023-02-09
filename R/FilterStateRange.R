@@ -58,10 +58,12 @@ RangeFilterState <- R6::R6Class( # nolint
 
       if (identical(diff(x_range), 0)) {
         private$set_choices(x_range)
-        private$slider_step <- 1
+        private$slider_ticks <- x_range
+        private$slider_step <- NULL
         self$set_selected(x_range)
       } else {
         private$set_choices(range(x_pretty))
+        private$slider_ticks <- x_pretty
         private$slider_step <- private$get_pretty_range_step(x_pretty)
         self$set_selected(range(x_pretty))
       }
@@ -208,7 +210,6 @@ RangeFilterState <- R6::R6Class( # nolint
     #' filter$set_selected(c(2, 3))
     #'
     set_selected = function(value) {
-      #
       super$set_selected(value)
     }
   ),
@@ -220,6 +221,7 @@ RangeFilterState <- R6::R6Class( # nolint
     inf_count = integer(0),
     is_integer = logical(0),
     slider_step = numeric(0), # step for the slider input widget, calculated from input data (x)
+    slider_ticks = numeric(0), # allowed values for the slider input widget, calculated from input data (x)
 
   # private methods ----
     # Adds is.infinite(varname) before existing condition calls if keep_inf is selected
@@ -251,6 +253,8 @@ RangeFilterState <- R6::R6Class( # nolint
         )
       }
     },
+
+    # overwrites superclass method
     validate_selection = function(value) {
       if (!is.numeric(value)) {
         stop(
@@ -263,12 +267,27 @@ RangeFilterState <- R6::R6Class( # nolint
       }
       invisible(NULL)
     },
+
+    # overwrites superclass method
+    # additionally adjusts progtammatic selection to existing slider ticks
     cast_and_validate = function(values) {
       if (!is.atomic(values)) stop("Values to set must be an atomic vector.")
       values <- as.numeric(values)
       if (any(is.na(values))) stop("The array of set values must contain values coercible to numeric.")
       if (length(values) != 2) stop("The array of set values must have length two.")
-      values
+
+      inds <- findInterval(values, private$slider_ticks)
+      values_adjusted <- private$slider_ticks[inds]
+      if (!identical(values, values_adjusted)) {
+        logger::log_warn(sprintf(
+          paste(
+            "Programmatic range specification on %s was adjusted to existing slider ticks.",
+            "It is now broader in order to encompass the specified values."),
+          private$varname
+        ))
+      }
+      values_adjusted
+
     },
     # for numeric ranges selecting out of bound values is allowed
     remove_out_of_bound_values = function(values) {
