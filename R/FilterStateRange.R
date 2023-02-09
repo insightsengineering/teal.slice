@@ -51,7 +51,7 @@ RangeFilterState <- R6::R6Class( # nolint
       stopifnot(is.numeric(x))
       stopifnot(any(is.finite(x)))
 
-      #validation on x_reactive here
+      # validation on x_reactive here
       super$initialize(x, x_reactive, varname, varlabel, dataname, extract_type)
       var_range <- range(x, finite = TRUE)
 

@@ -149,9 +149,9 @@ MAEFilterStates <- R6::R6Class( # nolint
         } else {
           fstate <- init_filter_state(
             x = SummarizedExperiment::colData(data)[[varname]],
-            x_reactive = reactive( if (!is.null(data_reactive()))
+            x_reactive = reactive(if (!is.null(data_reactive())) {
               SummarizedExperiment::colData(data_reactive())[[varname]]
-            ),
+            }),
             varname = varname,
             varlabel = private$get_varlabels(varname),
             dataname = private$dataname,
@@ -165,7 +165,7 @@ MAEFilterStates <- R6::R6Class( # nolint
             state_id = varname
           )
         }
-      logger::log_trace("MAEFilterState$set_filter_state initialized, dataname: { private$dataname }")
+        logger::log_trace("MAEFilterState$set_filter_state initialized, dataname: { private$dataname }")
       })
       NULL
     },
