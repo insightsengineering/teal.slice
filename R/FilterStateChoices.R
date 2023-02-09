@@ -42,11 +42,11 @@ ChoicesFilterState <- R6::R6Class( # nolint
                           varlabel = character(0),
                           dataname = NULL,
                           extract_type = character(0)) {
-      stopifnot(
-        is.character(x) ||
-          is.factor(x) ||
-          (length(unique(x[!is.na(x)])) < getOption("teal.threshold_slider_vs_checkboxgroup"))
-      )
+      checkmate::assert(
+        is.character(x),
+        is.factor(x),
+        length(unique(x[!is.na(x)])) < getOption("teal.threshold_slider_vs_checkboxgroup"),
+        combine = "or")
       super$initialize(x, varname, varlabel, dataname, extract_type)
 
       if (!is.factor(x)) {

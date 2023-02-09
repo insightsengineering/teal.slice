@@ -171,7 +171,7 @@ FilterState <- R6::R6Class( # nolint
       if (!is.null(private$dataname)) {
         private$dataname
       } else {
-        "NULL"
+        character(1)
       }
     },
 
@@ -202,11 +202,7 @@ FilterState <- R6::R6Class( # nolint
     #' @return `name` or `character(1)`
     #'
     get_varname = function() {
-      if (!is.null(private$varname)) {
-        private$varname
-      } else {
-        "NULL"
-      }
+      private$varname
     },
 
     #' @description
