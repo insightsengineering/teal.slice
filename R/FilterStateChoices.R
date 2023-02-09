@@ -49,7 +49,7 @@ ChoicesFilterState <- R6::R6Class( # nolint
       )
       super$initialize(x, varname, varlabel, dataname, extract_type)
 
-      if (!is(x, "factor")) {
+      if (!is.factor(x)) {
         x <- factor(x, levels = as.character(sort(unique(x))))
       }
 
