@@ -336,7 +336,8 @@ RangeFilterState <- R6::R6Class( # nolint
     ui_inputs = function(id) {
       ns <- NS(id)
       pretty_range_inputs <- private$get_pretty_range_inputs(private$choices)
-      fluidRow(
+      div(
+        class = "choices_state",
         div(
           class = "filterPlotOverlayRange",
           plotOutput(ns("plot"), height = "100%"),
