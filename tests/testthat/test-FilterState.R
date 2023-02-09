@@ -1,8 +1,8 @@
 # initialize ----
-testthat::test_that("The constructor accepts character, name or call as varname", {
+testthat::test_that("The constructor accepts character as varname", {
   testthat::expect_no_error(FilterState$new(c(7), varname = "test"))
-  testthat::expect_no_error(FilterState$new(c(7), varname = quote(pi)))
-  testthat::expect_no_error(FilterState$new(c(7), varname = call("test")))
+  testthat::expect_error(FilterState$new(c(7), varname = quote(pi)))
+  testthat::expect_error(FilterState$new(c(7), varname = call("test")))
 })
 
 testthat::test_that("The constructor requires a varname", {
@@ -13,15 +13,15 @@ testthat::test_that("The constructor accepts a string as varlabel", {
   testthat::expect_no_error(FilterState$new(c(7), varname = "test", varlabel = "test"))
 })
 
-test_that("input_dataname must be specified if extract_type is specified", {
+test_that("dataname must be specified if extract_type is specified", {
   testthat::expect_error(
     FilterState$new(
       c("F", "M"),
       varname = "SEX",
-      input_dataname = NULL,
+      dataname = NULL,
       extract_type = "matrix"
     ),
-    regexp = "if extract_type is specified, input_dataname must also be specified"
+    regexp = "if extract_type is specified, dataname must also be specified"
   )
 })
 
@@ -32,26 +32,9 @@ testthat::test_that("get_call returns NULL", {
 })
 
 # get_dataname ----
-testthat::test_that("get_dataname returns a string when input_dataname is NULL", {
-  filter_state <- FilterState$new(7, varname = "7", input_dataname = NULL)
-  testthat::expect_equal(filter_state$get_dataname(deparse = FALSE), quote(NULL))
-  testthat::expect_equal(filter_state$get_dataname(deparse = TRUE), "NULL")
-})
-
-testthat::test_that("get_dataname returns a string when input_dataname is name", {
-  filter_state <- FilterState$new(7, varname = "7", input_dataname = quote(test))
-  testthat::expect_equal(filter_state$get_dataname(deparse = FALSE), quote(test))
-  testthat::expect_equal(filter_state$get_dataname(deparse = TRUE), "test")
-})
-
-testthat::test_that("get_dataname(deparse = TRUE) returns a string when input_dataname is call", {
-  filter_state <- FilterState$new(7, varname = "7", input_dataname = call("test_function"))
-  testthat::expect_equal(filter_state$get_dataname(deparse = TRUE), "test_function()")
-})
-
-testthat::test_that("get_dataname(deparse = FALSE) returns a call when input_dataname is call", {
-  filter_state <- FilterState$new(7, varname = "7", input_dataname = call("test_function"))
-  testthat::expect_equal(filter_state$get_dataname(deparse = FALSE), call("test_function"))
+testthat::test_that("get_dataname returns a string when dataname is NULL", {
+  filter_state <- FilterState$new(7, varname = "7", dataname = NULL)
+  testthat::expect_equal(filter_state$get_dataname(), character(1))
 })
 
 # get_varlabel ----
@@ -61,20 +44,14 @@ testthat::test_that("get_varlabel returns a string passed to the constructor", {
 })
 
 # get_varname ----
-testthat::test_that("get_varname(deparse = FALSE) returns a name if varname passed to the constructor is a string", {
+testthat::test_that("get_varname() returns a name if varname passed to the constructor is a string", {
   filter_state <- FilterState$new(7, varname = "7")
-  testthat::expect_equal(filter_state$get_varname(deparse = FALSE), quote(`7`))
+  testthat::expect_equal(filter_state$get_varname(), "7")
 })
 
-testthat::test_that("get_varname(deparse = TRUE) returns a string if varname passed to the constructor is a string", {
+testthat::test_that("get_varname() returns a string if varname passed to the constructor is a string", {
   filter_state <- FilterState$new(7, varname = "7")
-  testthat::expect_equal(filter_state$get_varname(deparse = TRUE), "7")
-})
-
-testthat::test_that("get_varname returns a call if call is passed to the constructor", {
-  filter_state <- FilterState$new(7, varname = call("test"))
-  testthat::expect_equal(filter_state$get_varname(deparse = FALSE), call("test"))
-  testthat::expect_equal(filter_state$get_varname(deparse = TRUE), "test()")
+  testthat::expect_equal(filter_state$get_varname(), "7")
 })
 
 # get_get_selected ----
@@ -103,10 +80,10 @@ testthat::test_that("set_state sets selected and keep_na", {
   filter_state$set_state(state)
   testthat::expect_identical(
     state,
-      list(
-        selected = shiny::isolate(filter_state$get_selected()),
-        keep_na = shiny::isolate(filter_state$get_keep_na())
-      )
+    list(
+      selected = shiny::isolate(filter_state$get_selected()),
+      keep_na = shiny::isolate(filter_state$get_keep_na())
+    )
   )
 })
 

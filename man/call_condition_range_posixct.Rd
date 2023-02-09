@@ -27,7 +27,7 @@ Compose \code{POSIXct} range condition call from inputs.
 }
 \examples{
 teal.slice:::call_condition_range_posixct(
-  varname = as.name("datetime"),
+  varname = "datetime",
   range = c(Sys.time(), Sys.time() + 1),
   timezone = "UTC"
 )

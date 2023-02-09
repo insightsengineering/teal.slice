@@ -4,22 +4,22 @@
 #' @param x (`vector`)\cr
 #'   values of the variable used in filter
 #'
-#' @param varname (`character(1)`, `name`)\cr
-#'   name of the variable
+#' @param varname (`character(1)`)\cr
+#'   name of the variable.
 #'
 #' @param varlabel (`character(0)`, `character(1)` or `NULL`)\cr
 #'   label of the variable (optional).
 #'
-#' @param input_dataname (`name` or `call`)\cr
-#'   name of dataset where `x` is taken from. Must be specified if `extract_type` argument
-#'   is not empty.
+#' @param dataname (`character(1)`)\cr
+#'   optional name of dataset where `x` is taken from. Must be specified
+#'   if `extract_type` argument is not empty.
 #'
 #' @param extract_type (`character(0)`, `character(1)`)\cr
 #' whether condition calls should be prefixed by dataname. Possible values:
 #' \itemize{
 #' \item{`character(0)` (default)}{ `varname` in the condition call will not be prefixed}
-#' \item{`"list"`}{ `varname` in the condition call will be returned as `<input_dataname>$<varname>`}
-#' \item{`"matrix"`}{ `varname` in the condition call will be returned as `<input_dataname>[, <varname>]`}
+#' \item{`"list"`}{ `varname` in the condition call will be returned as `<dataname>$<varname>`}
+#' \item{`"matrix"`}{ `varname` in the condition call will be returned as `<dataname>[, <varname>]`}
 #' }
 #' @keywords internal
 #'
@@ -28,7 +28,7 @@
 #'   c(1:10, NA, Inf),
 #'   varname = "x",
 #'   varlabel = "Pretty name",
-#'   input_dataname = as.name("dataname"),
+#'   dataname = "dataname",
 #'   extract_type = "matrix"
 #' )
 #'
@@ -54,19 +54,18 @@
 init_filter_state <- function(x,
                               varname,
                               varlabel = attr(x, "label"),
-                              input_dataname = NULL,
+                              dataname = NULL,
                               extract_type = character(0)) {
-  checkmate::assert(
-    checkmate::check_string(varname),
-    checkmate::check_class(varname, "name")
-  )
+  checkmate::assert_string(varname)
   checkmate::assert_character(varlabel, max.len = 1L, any.missing = FALSE, null.ok = TRUE)
-  checkmate::assert_multi_class(input_dataname, c("name", "call"), null.ok = TRUE)
+  checkmate::assert_string(dataname, null.ok = TRUE)
   checkmate::assert_character(extract_type, max.len = 1L, any.missing = FALSE)
-  if (length(extract_type) == 1)
+  if (length(extract_type) == 1) {
     checkmate::assert_choice(extract_type, choices = c("list", "matrix"))
-  if (length(extract_type) == 1 && is.null(input_dataname))
-    stop("if extract_type is specified, input_dataname must also be specified")
+  }
+  if (length(extract_type) == 1 && is.null(dataname)) {
+    stop("if extract_type is specified, dataname must also be specified")
+  }
 
   if (is.null(varlabel)) varlabel <- character(0L)
 
@@ -76,7 +75,7 @@ init_filter_state <- function(x,
         x = x,
         varname = varname,
         varlabel = varlabel,
-        input_dataname = input_dataname,
+        dataname = dataname,
         extract_type = extract_type
       )
     )
@@ -89,14 +88,14 @@ init_filter_state <- function(x,
 init_filter_state.default <- function(x,
                                       varname,
                                       varlabel = attr(x, "label"),
-                                      input_dataname = NULL,
+                                      dataname = NULL,
                                       extract_type = character(0)) {
   if (is.null(varlabel)) varlabel <- character(0)
   FilterState$new(
     x = x,
     varname = varname,
     varlabel = varlabel,
-    input_dataname = input_dataname,
+    dataname = dataname,
     extract_type = extract_type
   )
 }
@@ -106,14 +105,14 @@ init_filter_state.default <- function(x,
 init_filter_state.logical <- function(x,
                                       varname,
                                       varlabel = attr(x, "label"),
-                                      input_dataname = NULL,
+                                      dataname = NULL,
                                       extract_type = character(0)) {
   if (is.null(varlabel)) varlabel <- character(0)
   LogicalFilterState$new(
     x = x,
     varname = varname,
     varlabel = varlabel,
-    input_dataname = input_dataname,
+    dataname = dataname,
     extract_type = extract_type
   )
 }
@@ -123,7 +122,7 @@ init_filter_state.logical <- function(x,
 init_filter_state.numeric <- function(x,
                                       varname,
                                       varlabel = attr(x, "label"),
-                                      input_dataname = NULL,
+                                      dataname = NULL,
                                       extract_type = character(0)) {
   if (is.null(varlabel)) varlabel <- character(0)
   if (length(unique(x[!is.na(x)])) < getOption("teal.threshold_slider_vs_checkboxgroup")) {
@@ -131,7 +130,7 @@ init_filter_state.numeric <- function(x,
       x = x,
       varname = varname,
       varlabel = varlabel,
-      input_dataname = input_dataname,
+      dataname = dataname,
       extract_type = extract_type
     )
   } else {
@@ -139,7 +138,7 @@ init_filter_state.numeric <- function(x,
       x = x,
       varname = varname,
       varlabel = varlabel,
-      input_dataname = input_dataname,
+      dataname = dataname,
       extract_type = extract_type
     )
   }
@@ -150,14 +149,14 @@ init_filter_state.numeric <- function(x,
 init_filter_state.factor <- function(x,
                                      varname,
                                      varlabel = attr(x, "label"),
-                                     input_dataname = NULL,
+                                     dataname = NULL,
                                      extract_type = character(0)) {
   if (is.null(varlabel)) varlabel <- character(0)
   ChoicesFilterState$new(
     x = x,
     varname = varname,
     varlabel = varlabel,
-    input_dataname = input_dataname,
+    dataname = dataname,
     extract_type = extract_type
   )
 }
@@ -167,14 +166,14 @@ init_filter_state.factor <- function(x,
 init_filter_state.character <- function(x,
                                         varname,
                                         varlabel = attr(x, "label"),
-                                        input_dataname = NULL,
+                                        dataname = NULL,
                                         extract_type = character(0)) {
   if (is.null(varlabel)) varlabel <- character(0)
   ChoicesFilterState$new(
     x = x,
     varname = varname,
     varlabel = varlabel,
-    input_dataname = input_dataname,
+    dataname = dataname,
     extract_type = extract_type
   )
 }
@@ -184,14 +183,14 @@ init_filter_state.character <- function(x,
 init_filter_state.Date <- function(x,
                                    varname,
                                    varlabel = attr(x, "label"),
-                                   input_dataname = NULL,
+                                   dataname = NULL,
                                    extract_type = character(0)) {
   if (is.null(varlabel)) varlabel <- character(0)
   DateFilterState$new(
     x = x,
     varname = varname,
     varlabel = varlabel,
-    input_dataname = input_dataname,
+    dataname = dataname,
     extract_type = extract_type
   )
 }
@@ -201,14 +200,14 @@ init_filter_state.Date <- function(x,
 init_filter_state.POSIXct <- function(x,
                                       varname,
                                       varlabel = attr(x, "label"),
-                                      input_dataname = NULL,
+                                      dataname = NULL,
                                       extract_type = character(0)) {
   if (is.null(varlabel)) varlabel <- character(0)
   DatetimeFilterState$new(
     x = x,
     varname = varname,
     varlabel = varlabel,
-    input_dataname = input_dataname,
+    dataname = dataname,
     extract_type = extract_type
   )
 }
@@ -218,14 +217,14 @@ init_filter_state.POSIXct <- function(x,
 init_filter_state.POSIXlt <- function(x,
                                       varname,
                                       varlabel = attr(x, "label"),
-                                      input_dataname = NULL,
+                                      dataname = NULL,
                                       extract_type = character(0)) {
   if (is.null(varlabel)) varlabel <- character(0)
   DatetimeFilterState$new(
     x = x,
     varname = varname,
     varlabel = varlabel,
-    input_dataname = input_dataname,
+    dataname = dataname,
     extract_type = extract_type
   )
 }
