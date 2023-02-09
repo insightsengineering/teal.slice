@@ -629,7 +629,8 @@ FilterState <- R6::R6Class( # nolint
             ),
             actionLink(
               inputId = ns("remove"),
-              label = icon("circle-xmark", lib = "font-awesome")
+              label = icon("circle-xmark", lib = "font-awesome"),
+              class = "filter-card-remove"
             )
           ),
           private$ui_summary(ns("summary"))
@@ -675,7 +676,8 @@ FilterState <- R6::R6Class( # nolint
             ),
             actionLink(
               inputId = ns("remove"),
-              label = icon("circle-xmark", lib = "font-awesome")
+              label = icon("circle-xmark", lib = "font-awesome"),
+              class = "filter-card-remove"
             )
           ),
           private$ui_summary(ns("summary"))
