@@ -10,7 +10,7 @@ init_filter_states(data, dataname, datalabel = character(0), ...)
 \item{data}{(\code{data.frame}, \code{MultiAssayExperiment}, \code{SummarizedExperiment}, \code{matrix})\cr
 the R object which \code{subset} function is applied on.}
 
-\item{dataname}{(\code{character(1)} or \code{name} or \code{call})\cr
+\item{dataname}{(\code{character(1)})\cr
 name of the data used in the expression
 specified to the function argument attached to this \code{FilterStates}.}
 
