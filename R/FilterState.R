@@ -196,10 +196,7 @@ FilterState <- R6::R6Class( # nolint
     #' @description
     #' Get variable name.
     #'
-    #' @param deparse (`logical(1)`)\cr
-    #'   whether variable name should be deparsed; defaults to `FALSE`
-    #'
-    #' @return `name` or `character(1)`
+    #' @return `character(1)`
     #'
     get_varname = function() {
       private$varname
