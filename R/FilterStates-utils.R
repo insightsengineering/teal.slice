@@ -6,7 +6,7 @@
 #' @param data (`data.frame`, `MultiAssayExperiment`, `SummarizedExperiment`, `matrix`)\cr
 #'   the R object which `subset` function is applied on.
 #'
-#' @param dataname (`character(1)` or `name` or `call`)\cr
+#' @param dataname (`character(1)`)\cr
 #'   name of the data used in the expression
 #'   specified to the function argument attached to this `FilterStates`.
 #'
