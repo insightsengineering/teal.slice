@@ -12,7 +12,7 @@ Abstract class to encapsulate filter states"><!-- mathjax --><script src="https:
     
     <a class="navbar-brand me-2" href="../index.html">teal.slice</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.2.0.9019</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.2.0.9020</small>
 
     <div style="width: 140px; margin-left: 0.5rem;"> <small class="nav-text text-muted me-auto">part of</small> <img src="https://github.com/insightsengineering/hex-stickers/blob/main/PNG/nest.png?raw=true" alt="NEST" style="height: 30px;"><a href="https://pharmaverse.org/" class="external-link"><img src="https://github.com/insightsengineering/hex-stickers/blob/main/PNG/pharmaverse.png?raw=true" alt="pharmaverse" style="height: 28px;"></a> </div>
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -35,14 +35,6 @@ Abstract class to encapsulate filter states"><!-- mathjax --><script src="https:
 <li class="nav-item">
   <a class="nav-link" href="../news/index.html">Changelog</a>
 </li>
-<!-- start dropdown for versions --> <li class="nav-item dropdown">
-        <a href="#" class="nav-link dropdown-toggle"
-          data-bs-toggle="dropdown" role="button"
-          aria-expanded="false" aria-haspopup="true"
-          id="dropdown-versions">Versions</a> <div class="dropdown-menu" aria-labelledby="dropdown-versions"> <a class="dropdown-item" data-toggle="tooltip" title="" href="https://insightsengineering.github.io/teal.slice/main">main</a>
-<a class="dropdown-item" data-toggle="tooltip" title="" href="https://insightsengineering.github.io/teal.slice/latest-tag">latest-tag</a>
-<a class="dropdown-item" data-toggle="tooltip" title="" href="https://insightsengineering.github.io/teal.slice/v0.2.0">v0.2.0</a> </div></li>
-<!-- end dropdown for versions -->
       </ul><form class="form-inline my-2 my-lg-0" role="search">
         <input type="search" class="form-control me-sm-2" aria-label="Toggle navigation" name="search-input" data-search-index="../search.json" id="search-input" placeholder="Search for" autocomplete="off"></form>
 
@@ -137,7 +129,7 @@ of the <code>FilterState</code> object.</p></li>
 <span>  <span class="va">x</span>,</span>
 <span>  <span class="va">varname</span>,</span>
 <span>  varlabel <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/character.html" class="external-link">character</a></span><span class="op">(</span><span class="fl">0</span><span class="op">)</span>,</span>
-<span>  input_dataname <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  dataname <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  extract_type <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/character.html" class="external-link">character</a></span><span class="op">(</span><span class="fl">0</span><span class="op">)</span></span>
 <span><span class="op">)</span></span></code></pre></div><p></p></div>
 </div>
@@ -150,7 +142,7 @@ values of the variable used in filter</p></dd>
 
 
 <dt><code>varname</code></dt>
-<dd><p>(<code>character</code>, <code>name</code>)<br>
+<dd><p>(<code>character</code>)<br>
 name of the variable</p></dd>
 
 
@@ -159,8 +151,8 @@ name of the variable</p></dd>
 label of the variable (optional).</p></dd>
 
 
-<dt><code>input_dataname</code></dt>
-<dd><p>(<code>name</code> or <code>call</code>)<br>
+<dt><code>dataname</code></dt>
+<dd><p>(<code>character(1)</code>)<br>
 name of dataset where <code>x</code> is taken from. Must be specified if <code>extract_type</code> argument
 is not empty.</p></dd>
 
@@ -168,8 +160,8 @@ is not empty.</p></dd>
 <dt><code>extract_type</code></dt>
 <dd><p>(<code>character(0)</code>, <code>character(1)</code>)<br>
 whether condition calls should be prefixed by dataname. Possible values:</p><ul><li><p><code>character(0)</code> (default) <code>varname</code> in the condition call will not be prefixed</p></li>
-<li><p><code>"list"</code> <code>varname</code> in the condition call will be returned as <code>&lt;input_dataname&gt;$&lt;varname&gt;</code></p></li>
-<li><p><code>"matrix"</code> <code>varname</code> in the condition call will be returned as <code>&lt;input_dataname&gt;[, &lt;varname&gt;]</code></p></li>
+<li><p><code>"list"</code> <code>varname</code> in the condition call will be returned as <code>&lt;dataname&gt;$&lt;varname&gt;</code></p></li>
+<li><p><code>"matrix"</code> <code>varname</code> in the condition call will be returned as <code>&lt;dataname&gt;[, &lt;varname&gt;]</code></p></li>
 </ul></dd>
 
 
@@ -233,23 +225,14 @@ and must be executed in reactive or isolated context.</p><div class="section">
 
 </div><p></p><hr><a id="method-FilterState-get_dataname"></a><div class="section">
 <h3 id="method-get-dataname-">Method <code><a href="https://rdrr.io/pkg/teal.data/man/get_dataname.html" class="external-link">get_dataname()</a></code><a class="anchor" aria-label="anchor" href="#method-get-dataname-"></a></h3>
-<p>Returns dataname.</p><div class="section">
+<p>Returns dataname or "NULL" if dataname is NULL.</p><div class="section">
 <h4 id="usage-4">Usage<a class="anchor" aria-label="anchor" href="#usage-4"></a></h4>
-<p></p><div class="r"><div class="sourceCode"><pre><code><span><span class="va">FilterState</span><span class="op">$</span><span class="fu">get_dataname</span><span class="op">(</span>deparse <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></code></pre></div><p></p></div>
+<p></p><div class="r"><div class="sourceCode"><pre><code><span><span class="va">FilterState</span><span class="op">$</span><span class="fu">get_dataname</span><span class="op">(</span><span class="op">)</span></span></code></pre></div><p></p></div>
 </div>
 
-<div class="section">
-<h4 id="arguments-2">Arguments<a class="anchor" aria-label="anchor" href="#arguments-2"></a></h4>
-<p></p><div class="arguments"><dl><dt><code>deparse</code></dt>
-<dd><p>(<code>logical(1)</code>)<br>
-whether dataname should be deparsed; defaults to <code>TRUE</code></p></dd>
-
-
-</dl><p></p></div>
-</div>
 <div class="section">
 <h4 id="returns-3">Returns<a class="anchor" aria-label="anchor" href="#returns-3"></a></h4>
-<p><code>name</code> or <code>character(1)</code></p>
+<p><code>character(1)</code></p>
 </div>
 
 </div><p></p><hr><a id="method-FilterState-get_keep_na"></a><div class="section">
@@ -280,21 +263,12 @@ whether dataname should be deparsed; defaults to <code>TRUE</code></p></dd>
 <h3 id="method-get-varname-">Method <code>get_varname()</code><a class="anchor" aria-label="anchor" href="#method-get-varname-"></a></h3>
 <p>Get variable name.</p><div class="section">
 <h4 id="usage-7">Usage<a class="anchor" aria-label="anchor" href="#usage-7"></a></h4>
-<p></p><div class="r"><div class="sourceCode"><pre><code><span><span class="va">FilterState</span><span class="op">$</span><span class="fu">get_varname</span><span class="op">(</span>deparse <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span></code></pre></div><p></p></div>
+<p></p><div class="r"><div class="sourceCode"><pre><code><span><span class="va">FilterState</span><span class="op">$</span><span class="fu">get_varname</span><span class="op">(</span><span class="op">)</span></span></code></pre></div><p></p></div>
 </div>
 
-<div class="section">
-<h4 id="arguments-3">Arguments<a class="anchor" aria-label="anchor" href="#arguments-3"></a></h4>
-<p></p><div class="arguments"><dl><dt><code>deparse</code></dt>
-<dd><p>(<code>logical(1)</code>)<br>
-whether variable name should be deparsed; defaults to <code>FALSE</code></p></dd>
-
-
-</dl><p></p></div>
-</div>
 <div class="section">
 <h4 id="returns-6">Returns<a class="anchor" aria-label="anchor" href="#returns-6"></a></h4>
-<p><code>name</code> or <code>character(1)</code></p>
+<p><code>character(1)</code></p>
 </div>
 
 </div><p></p><hr><a id="method-FilterState-get_selected"></a><div class="section">
@@ -330,7 +304,7 @@ whether variable name should be deparsed; defaults to <code>FALSE</code></p></dd
 </div>
 
 <div class="section">
-<h4 id="arguments-4">Arguments<a class="anchor" aria-label="anchor" href="#arguments-4"></a></h4>
+<h4 id="arguments-2">Arguments<a class="anchor" aria-label="anchor" href="#arguments-2"></a></h4>
 <p></p><div class="arguments"><dl><dt><code>...</code></dt>
 <dd><p>additional arguments to this method</p></dd>
 
@@ -346,7 +320,7 @@ whether variable name should be deparsed; defaults to <code>FALSE</code></p></dd
 </div>
 
 <div class="section">
-<h4 id="arguments-5">Arguments<a class="anchor" aria-label="anchor" href="#arguments-5"></a></h4>
+<h4 id="arguments-3">Arguments<a class="anchor" aria-label="anchor" href="#arguments-3"></a></h4>
 <p></p><div class="arguments"><dl><dt><code>value</code></dt>
 <dd><p><code>logical(1)</code><br>
 value(s) which come from the filter selection. Value is set in <code>server</code>
@@ -371,7 +345,7 @@ condition extended by <code>!is.na</code>.</p><div class="section">
 </div>
 
 <div class="section">
-<h4 id="arguments-6">Arguments<a class="anchor" aria-label="anchor" href="#arguments-6"></a></h4>
+<h4 id="arguments-4">Arguments<a class="anchor" aria-label="anchor" href="#arguments-4"></a></h4>
 <p></p><div class="arguments"><dl><dt><code>value</code></dt>
 <dd><p><code>logical(1)</code><br>
 when <code>TRUE</code>, <code>FilterState$get_call</code> appends an expression
@@ -393,7 +367,7 @@ removing <code>NA</code> values to the filter expression returned by <code>get_c
 </div>
 
 <div class="section">
-<h4 id="arguments-7">Arguments<a class="anchor" aria-label="anchor" href="#arguments-7"></a></h4>
+<h4 id="arguments-5">Arguments<a class="anchor" aria-label="anchor" href="#arguments-5"></a></h4>
 <p></p><div class="arguments"><dl><dt><code>value</code></dt>
 <dd><p>(<code>vector</code>)<br>
 value(s) that come from filter selection; values are set in the
@@ -417,7 +391,7 @@ value types have to be the same as <code>private$choices</code></p></dd>
 </div>
 
 <div class="section">
-<h4 id="arguments-8">Arguments<a class="anchor" aria-label="anchor" href="#arguments-8"></a></h4>
+<h4 id="arguments-6">Arguments<a class="anchor" aria-label="anchor" href="#arguments-6"></a></h4>
 <p></p><div class="arguments"><dl><dt><code>state</code></dt>
 <dd><p>(<code>list</code>)<br>
 contains fields relevant for a specific class:</p><ul><li><p><code>selected</code> defines initial selection</p></li>
@@ -440,7 +414,7 @@ contains fields relevant for a specific class:</p><ul><li><p><code>selected</cod
 </div>
 
 <div class="section">
-<h4 id="arguments-9">Arguments<a class="anchor" aria-label="anchor" href="#arguments-9"></a></h4>
+<h4 id="arguments-7">Arguments<a class="anchor" aria-label="anchor" href="#arguments-7"></a></h4>
 <p></p><div class="arguments"><dl><dt><code>id</code></dt>
 <dd><p>(<code>character(1)</code>)<br>
 shiny module instance id</p></dd>
@@ -462,7 +436,7 @@ signaling that remove button has been clicked</p>
 </div>
 
 <div class="section">
-<h4 id="arguments-10">Arguments<a class="anchor" aria-label="anchor" href="#arguments-10"></a></h4>
+<h4 id="arguments-8">Arguments<a class="anchor" aria-label="anchor" href="#arguments-8"></a></h4>
 <p></p><div class="arguments"><dl><dt><code>id</code></dt>
 <dd><p>(<code>character(1)</code>)<br>
 shiny element (module instance) id;
@@ -480,7 +454,7 @@ dataname to be evaluated as extracted object, for example
 <code>data$var</code>
 return (<code>name</code> or <code>call</code>)
 Sets <code>keep_na</code> field according to observed <code>input$keep_na</code>
-If <code>keep_na = TRUE</code> <code>is.na(varname)</code> is added to the returned call.
+If <code>keep_na = TRUE</code>, <code>is.na(varname)</code> is added to the returned call.
 Otherwise returned call excludes <code>NA</code> when executed.
 Set choices</p>
 <p>Set choices is supposed to be executed once in the constructor
@@ -503,7 +477,7 @@ module with inputs</p></dd>
 </div>
 
 <div class="section">
-<h4 id="arguments-11">Arguments<a class="anchor" aria-label="anchor" href="#arguments-11"></a></h4>
+<h4 id="arguments-9">Arguments<a class="anchor" aria-label="anchor" href="#arguments-9"></a></h4>
 <p></p><div class="arguments"><dl><dt><code>deep</code></dt>
 <dd><p>Whether to make a deep clone.</p></dd>
 

@@ -30,7 +30,7 @@ SummarizedExperiment, and MultiAssayExperiment."><!-- mathjax --><script src="ht
     
     <a class="navbar-brand me-2" href="../index.html">teal.slice</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.2.0.9019</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.2.0.9020</small>
 
     <div style="width: 140px; margin-left: 0.5rem;"> <small class="nav-text text-muted me-auto">part of</small> <img src="https://github.com/insightsengineering/hex-stickers/blob/main/PNG/nest.png?raw=true" alt="NEST" style="height: 30px;"><a href="https://pharmaverse.org/" class="external-link"><img src="https://github.com/insightsengineering/hex-stickers/blob/main/PNG/pharmaverse.png?raw=true" alt="pharmaverse" style="height: 28px;"></a> </div>
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -53,14 +53,6 @@ SummarizedExperiment, and MultiAssayExperiment."><!-- mathjax --><script src="ht
 <li class="nav-item">
   <a class="nav-link" href="../news/index.html">Changelog</a>
 </li>
-<!-- start dropdown for versions --> <li class="nav-item dropdown">
-        <a href="#" class="nav-link dropdown-toggle"
-          data-bs-toggle="dropdown" role="button"
-          aria-expanded="false" aria-haspopup="true"
-          id="dropdown-versions">Versions</a> <div class="dropdown-menu" aria-labelledby="dropdown-versions"> <a class="dropdown-item" data-toggle="tooltip" title="" href="https://insightsengineering.github.io/teal.slice/main">main</a>
-<a class="dropdown-item" data-toggle="tooltip" title="" href="https://insightsengineering.github.io/teal.slice/latest-tag">latest-tag</a>
-<a class="dropdown-item" data-toggle="tooltip" title="" href="https://insightsengineering.github.io/teal.slice/v0.2.0">v0.2.0</a> </div></li>
-<!-- end dropdown for versions -->
       </ul><form class="form-inline my-2 my-lg-0" role="search">
         <input type="search" class="form-control me-sm-2" aria-label="Toggle navigation" name="search-input" data-search-index="../search.json" id="search-input" placeholder="Search for" autocomplete="off"></form>
 
@@ -125,22 +117,17 @@ Currently implemented for <code>data.frame</code>, <code>matrix</code>,
 <h3 id="method-new-">Method <code><a href="https://rdrr.io/r/methods/new.html" class="external-link">new()</a></code><a class="anchor" aria-label="anchor" href="#method-new-"></a></h3>
 <p>Initializes <code>FilterStates</code> object.</p>
 <p>Initializes <code>FilterStates</code> object by setting
-<code>input_dataname</code>, <code>output_dataname</code>, and <code>datalabel</code>.</p><div class="section">
+<code>dataname</code>, and <code>datalabel</code>.</p><div class="section">
 <h4 id="usage">Usage<a class="anchor" aria-label="anchor" href="#usage"></a></h4>
-<p></p><div class="r"><div class="sourceCode"><pre><code><span><span class="va"><a href="../reference/FilterStates.html">FilterStates</a></span><span class="op">$</span><span class="fu">new</span><span class="op">(</span><span class="va">input_dataname</span>, <span class="va">output_dataname</span>, <span class="va">datalabel</span><span class="op">)</span></span></code></pre></div><p></p></div>
+<p></p><div class="r"><div class="sourceCode"><pre><code><span><span class="va"><a href="../reference/FilterStates.html">FilterStates</a></span><span class="op">$</span><span class="fu">new</span><span class="op">(</span><span class="va">dataname</span>, <span class="va">datalabel</span><span class="op">)</span></span></code></pre></div><p></p></div>
 </div>
 
 <div class="section">
 <h4 id="arguments">Arguments<a class="anchor" aria-label="anchor" href="#arguments"></a></h4>
-<p></p><div class="arguments"><dl><dt><code>input_dataname</code></dt>
-<dd><p>(<code>character(1)</code> or <code>name</code> or <code>call</code>)<br>
-name of the data used on <code>rhs</code> of the expression
+<p></p><div class="arguments"><dl><dt><code>dataname</code></dt>
+<dd><p>(<code>character(1)</code>)<br>
+name of the data used in the expression
 specified to the function argument attached to this <code>FilterStates</code></p></dd>
-
-
-<dt><code>output_dataname</code></dt>
-<dd><p>(<code>character(1)</code> or <code>name</code> or <code>call</code>)<br>
-name of the output data on the <code>lhs</code> of the <em>subset expression</em></p></dd>
 
 
 <dt><code>datalabel</code></dt>
@@ -191,11 +178,11 @@ text label value</p></dd>
 <h3 id="method-get-call-">Method <code>get_call()</code><a class="anchor" aria-label="anchor" href="#method-get-call-"></a></h3>
 <p>Filter call</p>
 <p>Builds <em>subset expression</em> from condition calls stored in <code>FilterState</code>
-objects selection. The <code>lhs</code> of the expression is <code>private$output_dataname</code>.
-The <code>rhs</code> is a call to <code>self$get_fun()</code> with <code>private$input_dataname</code>
+objects selection. The <code>lhs</code> of the expression is <code>private$dataname</code>.
+The <code>rhs</code> is a call to <code>self$get_fun()</code> with <code>private$dataname</code>
 as argument and a list of condition calls from <code>FilterState</code> objects
 stored in <code>private$state_list</code>.
-If <code>input_dataname</code> is the same as <code>output_dataname</code> and no filters are applied,
+If no filters are applied,
 <code>NULL</code> is returned to avoid no-op calls such as <code>x &lt;- x</code>.</p><div class="section">
 <h4 id="usage-3">Usage<a class="anchor" aria-label="anchor" href="#usage-3"></a></h4>
 <p></p><div class="r"><div class="sourceCode"><pre><code><span><span class="va">FilterStates</span><span class="op">$</span><span class="fu">get_call</span><span class="op">(</span><span class="op">)</span></span></code></pre></div><p></p></div>
@@ -512,8 +499,7 @@ data object for which to define a subset</p></dd>
     <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>
     <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://shiny.rstudio.com/" class="external-link">shiny</a></span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="va">filter_states</span> <span class="op">&lt;-</span> <span class="fu">teal.slice</span><span class="fu">:::</span><span class="va"><a href="DFFilterStates.html">DFFilterStates</a></span><span class="op">$</span><span class="fu">new</span><span class="op">(</span></span></span>
-<span class="r-in"><span>  input_dataname <span class="op">=</span> <span class="st">"data"</span>,</span></span>
-<span class="r-in"><span>  output_dataname <span class="op">=</span> <span class="st">"data_filtered"</span>,</span></span>
+<span class="r-in"><span>  dataname <span class="op">=</span> <span class="st">"data"</span>,</span></span>
 <span class="r-in"><span>  varlabels <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span>x <span class="op">=</span> <span class="st">"x variable"</span>, SEX <span class="op">=</span> <span class="st">"Sex"</span><span class="op">)</span>,</span></span>
 <span class="r-in"><span>  datalabel <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/character.html" class="external-link">character</a></span><span class="op">(</span><span class="fl">0</span><span class="op">)</span>,</span></span>
 <span class="r-in"><span>  keys <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/character.html" class="external-link">character</a></span><span class="op">(</span><span class="fl">0</span><span class="op">)</span></span></span>
@@ -522,7 +508,7 @@ data object for which to define a subset</p></dd>
 <span class="r-in"><span>  <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="cn">NA</span>, <span class="cn">Inf</span>, <span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq</a></span><span class="op">(</span><span class="fl">1</span><span class="op">:</span><span class="fl">10</span><span class="op">)</span><span class="op">)</span>,</span></span>
 <span class="r-in"><span>  varname <span class="op">=</span> <span class="st">"x"</span>,</span></span>
 <span class="r-in"><span>  varlabel <span class="op">=</span> <span class="st">"x variable"</span>,</span></span>
-<span class="r-in"><span>  input_dataname <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/name.html" class="external-link">as.name</a></span><span class="op">(</span><span class="st">"data"</span><span class="op">)</span>,</span></span>
+<span class="r-in"><span>  dataname <span class="op">=</span> <span class="st">"data"</span>,</span></span>
 <span class="r-in"><span>  extract_type <span class="op">=</span> <span class="st">"list"</span></span></span>
 <span class="r-in"><span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="fu"><a href="https://shiny.rstudio.com/reference/shiny/latest/isolate.html" class="external-link">isolate</a></span><span class="op">(</span><span class="va">filter_state</span><span class="op">$</span><span class="fu">set_selected</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">3L</span>, <span class="fl">8L</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span></span>
@@ -532,10 +518,10 @@ data object for which to define a subset</p></dd>
 <span class="r-in"><span>    x <span class="op">=</span> <span class="va">filter_state</span>,</span></span>
 <span class="r-in"><span>    state_list_index <span class="op">=</span> <span class="fl">1L</span>,</span></span>
 <span class="r-in"><span>    state_id <span class="op">=</span> <span class="st">"x"</span></span></span>
-<span class="r-in"><span>  <span class="op">)</span><span class="op">)</span></span></span>
+<span class="r-in"><span>  <span class="op">)</span></span></span>
+<span class="r-in"><span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="fu"><a href="https://shiny.rstudio.com/reference/shiny/latest/isolate.html" class="external-link">isolate</a></span><span class="op">(</span><span class="va">filter_states</span><span class="op">$</span><span class="fu">get_call</span><span class="op">(</span><span class="op">)</span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> data_filtered &lt;- dplyr::filter(data, data$x &gt;= 3 &amp; data$x &lt;= </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>     8)</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> data &lt;- dplyr::filter(data, data$x &gt;= 3 &amp; data$x &lt;= 8)</span>
 <span class="r-in"><span></span></span>
 </code></pre></div>
     </div>

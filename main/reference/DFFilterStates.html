@@ -10,7 +10,7 @@
     
     <a class="navbar-brand me-2" href="../index.html">teal.slice</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.2.0.9019</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.2.0.9020</small>
 
     <div style="width: 140px; margin-left: 0.5rem;"> <small class="nav-text text-muted me-auto">part of</small> <img src="https://github.com/insightsengineering/hex-stickers/blob/main/PNG/nest.png?raw=true" alt="NEST" style="height: 30px;"><a href="https://pharmaverse.org/" class="external-link"><img src="https://github.com/insightsengineering/hex-stickers/blob/main/PNG/pharmaverse.png?raw=true" alt="pharmaverse" style="height: 28px;"></a> </div>
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -33,14 +33,6 @@
 <li class="nav-item">
   <a class="nav-link" href="../news/index.html">Changelog</a>
 </li>
-<!-- start dropdown for versions --> <li class="nav-item dropdown">
-        <a href="#" class="nav-link dropdown-toggle"
-          data-bs-toggle="dropdown" role="button"
-          aria-expanded="false" aria-haspopup="true"
-          id="dropdown-versions">Versions</a> <div class="dropdown-menu" aria-labelledby="dropdown-versions"> <a class="dropdown-item" data-toggle="tooltip" title="" href="https://insightsengineering.github.io/teal.slice/main">main</a>
-<a class="dropdown-item" data-toggle="tooltip" title="" href="https://insightsengineering.github.io/teal.slice/latest-tag">latest-tag</a>
-<a class="dropdown-item" data-toggle="tooltip" title="" href="https://insightsengineering.github.io/teal.slice/v0.2.0">v0.2.0</a> </div></li>
-<!-- end dropdown for versions -->
       </ul><form class="form-inline my-2 my-lg-0" role="search">
         <input type="search" class="form-control me-sm-2" aria-label="Toggle navigation" name="search-input" data-search-index="../search.json" id="search-input" placeholder="Search for" autocomplete="off"></form>
 
@@ -99,26 +91,21 @@
 </ul></details></p><hr><a id="method-DFFilterStates-new"></a><div class="section">
 <h3 id="method-new-">Method <code>new()</code><a class="anchor" aria-label="anchor" href="#method-new-"></a></h3>
 <p>Initializes <code>DFFilterStates</code> object.</p>
-<p>Initializes <code>DFFilterStates</code> object by setting <code>input_dataname</code>,
-<code>output_dataname</code> and initializing <code>state_list</code> (<code><a href="https://shiny.rstudio.com/reference/shiny/latest/reactiveVal.html" class="external-link">shiny::reactiveVal</a></code>).
+<p>Initializes <code>DFFilterStates</code> object by setting <code>dataname</code>
+and initializing <code>state_list</code> (<code><a href="https://shiny.rstudio.com/reference/shiny/latest/reactiveVal.html" class="external-link">shiny::reactiveVal</a></code>).
 This class contains a single <code>state_list</code> with no specified name,
 which means that when calling the subset function associated with this class
 (<code><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">dplyr::filter</a></code>), a list of conditions is passed to unnamed arguments (<code>...</code>).</p><div class="section">
 <h4 id="usage">Usage<a class="anchor" aria-label="anchor" href="#usage"></a></h4>
-<p></p><div class="r"><div class="sourceCode"><pre><code><span><span class="va"><a href="../reference/DFFilterStates.html">DFFilterStates</a></span><span class="op">$</span><span class="fu">new</span><span class="op">(</span><span class="va">input_dataname</span>, <span class="va">output_dataname</span>, <span class="va">datalabel</span>, <span class="va">varlabels</span>, <span class="va">keys</span><span class="op">)</span></span></code></pre></div><p></p></div>
+<p></p><div class="r"><div class="sourceCode"><pre><code><span><span class="va"><a href="../reference/DFFilterStates.html">DFFilterStates</a></span><span class="op">$</span><span class="fu">new</span><span class="op">(</span><span class="va">dataname</span>, <span class="va">datalabel</span>, <span class="va">varlabels</span>, <span class="va">keys</span><span class="op">)</span></span></code></pre></div><p></p></div>
 </div>
 
 <div class="section">
 <h4 id="arguments">Arguments<a class="anchor" aria-label="anchor" href="#arguments"></a></h4>
-<p></p><div class="arguments"><dl><dt><code>input_dataname</code></dt>
-<dd><p>(<code>character(1)</code> or <code>name</code> or <code>call</code>)<br>
-name of the data used on <code>rhs</code> of the <em>subset expression</em>
+<p></p><div class="arguments"><dl><dt><code>dataname</code></dt>
+<dd><p>(<code>character(1)</code>)<br>
+name of the data used in the <em>subset expression</em>
 specified to the function argument attached to this <code>FilterStates</code></p></dd>
-
-
-<dt><code>output_dataname</code></dt>
-<dd><p>(<code>character(1)</code> or <code>name</code> or <code>call</code>)<br>
-name of the output data on the <code>lhs</code> of the <em>subset expression</em></p></dd>
 
 
 <dt><code>datalabel</code></dt>
@@ -251,8 +238,7 @@ optional, vector of column names to be included</p></dd>
 <div class="section">
 <h4 id="examples">Examples<a class="anchor" aria-label="anchor" href="#examples"></a></h4>
 <p></p><div class="r example copy"><div class="sourceCode"><pre><code><span><span class="va">dffs</span> <span class="op">&lt;-</span> <span class="fu">teal.slice</span><span class="fu">:::</span><span class="va"><a href="../reference/DFFilterStates.html">DFFilterStates</a></span><span class="op">$</span><span class="fu">new</span><span class="op">(</span></span>
-<span>  input_dataname <span class="op">=</span> <span class="st">"iris"</span>,</span>
-<span>  output_dataname <span class="op">=</span> <span class="st">"iris_filtered"</span>,</span>
+<span>  dataname <span class="op">=</span> <span class="st">"iris"</span>,</span>
 <span>  datalabel <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/character.html" class="external-link">character</a></span><span class="op">(</span><span class="fl">0</span><span class="op">)</span>,</span>
 <span>  varlabels <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/character.html" class="external-link">character</a></span><span class="op">(</span><span class="fl">0</span><span class="op">)</span>,</span>
 <span>  keys <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/character.html" class="external-link">character</a></span><span class="op">(</span><span class="fl">0</span><span class="op">)</span></span>
@@ -384,8 +370,7 @@ optional, vector of column names to be included</p></dd>
 <span class="r-in"><span><span class="co">## ------------------------------------------------</span></span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="va">dffs</span> <span class="op">&lt;-</span> <span class="fu">teal.slice</span><span class="fu">:::</span><span class="va">DFFilterStates</span><span class="op">$</span><span class="fu">new</span><span class="op">(</span></span></span>
-<span class="r-in"><span>  input_dataname <span class="op">=</span> <span class="st">"iris"</span>,</span></span>
-<span class="r-in"><span>  output_dataname <span class="op">=</span> <span class="st">"iris_filtered"</span>,</span></span>
+<span class="r-in"><span>  dataname <span class="op">=</span> <span class="st">"iris"</span>,</span></span>
 <span class="r-in"><span>  datalabel <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/character.html" class="external-link">character</a></span><span class="op">(</span><span class="fl">0</span><span class="op">)</span>,</span></span>
 <span class="r-in"><span>  varlabels <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/character.html" class="external-link">character</a></span><span class="op">(</span><span class="fl">0</span><span class="op">)</span>,</span></span>
 <span class="r-in"><span>  keys <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/character.html" class="external-link">character</a></span><span class="op">(</span><span class="fl">0</span><span class="op">)</span></span></span>
