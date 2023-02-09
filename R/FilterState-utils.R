@@ -58,7 +58,7 @@ init_filter_state <- function(x,
                               extract_type = character(0)) {
   checkmate::assert_string(varname)
   checkmate::assert_character(varlabel, max.len = 1L, any.missing = FALSE, null.ok = TRUE)
-  checkmate::assert_multi_class(dataname, c("name", "call", "character"), null.ok = TRUE)
+  checkmate::assert_string(dataname, null.ok = TRUE)
   checkmate::assert_character(extract_type, max.len = 1L, any.missing = FALSE)
   if (length(extract_type) == 1) {
     checkmate::assert_choice(extract_type, choices = c("list", "matrix"))
