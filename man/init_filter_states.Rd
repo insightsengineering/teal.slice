@@ -7,8 +7,7 @@
 init_filter_states(
   data,
   data_reactive = reactive(NULL),
-  input_dataname,
-  output_dataname = input_dataname,
+  dataname,
   datalabel = character(0),
   ...
 )
@@ -22,12 +21,9 @@ should return an object constistent with the \code{FilterState} class or \code{N
 This object is needed for the \code{FilterState} counts being updated
 on a change in filters. If \code{reactive(NULL)} then filtered counts are not shown.}
 
-\item{input_dataname}{(\code{character(1)} or \code{name} or \code{call})\cr
-name of the data used on lhs of the expression
+\item{dataname}{(\code{character(1)})\cr
+name of the data used in the expression
 specified to the function argument attached to this \code{FilterStates}.}
-
-\item{output_dataname}{(\code{character(1)} or \code{name} or \code{call})\cr
-name of the output data on the lhs of the assignment expression.}
 
 \item{datalabel}{(\code{character(0)} or \code{character(1)})\cr
 text label value.}
@@ -48,8 +44,7 @@ df <- data.frame(
 )
 rf <- teal.slice:::init_filter_states(
   data = df,
-  input_dataname = "DF",
-  output_dataname = "DF_OUTPUT",
+  dataname = "DF",
   varlabels = c(
     "character variable", "numeric variable", "date variable", "datetime variable"
   )

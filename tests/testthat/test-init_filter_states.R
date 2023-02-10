@@ -1,6 +1,6 @@
 testthat::test_that("init_filter_states returns a DFFilterStates object if passed an empty data.frame", {
   testthat::expect_no_error(
-    filter_states <- init_filter_states(data.frame(), input_dataname = "test", output_dataname = "test")
+    filter_states <- init_filter_states(data.frame(), dataname = "test")
   )
   testthat::expect_true(
     is(filter_states, "DFFilterStates")
@@ -9,7 +9,7 @@ testthat::test_that("init_filter_states returns a DFFilterStates object if passe
 
 testthat::test_that("init_filter_states returns a MatrixFilterStates object if passed an empty matrix", {
   testthat::expect_no_error(
-    filter_states <- init_filter_states(matrix(), input_dataname = "test", output_dataname = "test")
+    filter_states <- init_filter_states(matrix(), dataname = "test")
   )
   testthat::expect_true(
     is(filter_states, "MatrixFilterStates")
@@ -21,8 +21,7 @@ testthat::test_that("init_filter_states returns an MAEFilterStates object if pas
   testthat::expect_no_error(
     filter_states <- init_filter_states(
       mock_mae,
-      input_dataname = "test",
-      output_dataname = "test",
+      dataname = "test",
       varlabels = "test"
     )
   )
@@ -34,8 +33,7 @@ testthat::test_that("init_filter_states returns an SEFilterStates object if pass
   testthat::expect_no_error(
     filter_states <- init_filter_states(
       mock_se,
-      input_dataname = "test",
-      output_dataname = "test"
+      dataname = "test"
     )
   )
   testthat::expect_true(is(filter_states, "SEFilterStates"))

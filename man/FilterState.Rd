@@ -84,7 +84,7 @@ Initialize a \code{FilterState} object
   x_reactive,
   varname,
   varlabel = character(0),
-  input_dataname = NULL,
+  dataname = NULL,
   extract_type = character(0)
 )}\if{html}{\out{</div>}}
 }
@@ -100,13 +100,13 @@ a \code{reactive} returning a filtered vector or returning \code{NULL}. It is us
 counts following the change in values of the filtered dataset. If the \code{reactive}
 is \code{NULL} counts based on filtered dataset are not shown.}
 
-\item{\code{varname}}{(\code{character}, \code{name})\cr
+\item{\code{varname}}{(\code{character})\cr
 name of the variable}
 
 \item{\code{varlabel}}{(\code{character(1)})\cr
 label of the variable (optional).}
 
-\item{\code{input_dataname}}{(\code{name} or \code{call})\cr
+\item{\code{dataname}}{(\code{character(1)})\cr
 name of dataset where \code{x} is taken from. Must be specified if \code{extract_type} argument
 is not empty.}
 
@@ -114,8 +114,8 @@ is not empty.}
 whether condition calls should be prefixed by dataname. Possible values:
 \itemize{
 \item{\code{character(0)} (default)}{ \code{varname} in the condition call will not be prefixed}
-\item{\code{"list"}}{ \code{varname} in the condition call will be returned as \verb{<input_dataname>$<varname>}}
-\item{\code{"matrix"}}{ \code{varname} in the condition call will be returned as \verb{<input_dataname>[, <varname>]}}
+\item{\code{"list"}}{ \code{varname} in the condition call will be returned as \verb{<dataname>$<varname>}}
+\item{\code{"matrix"}}{ \code{varname} in the condition call will be returned as \verb{<dataname>[, <varname>]}}
 }}
 }
 \if{html}{\out{</div>}}
@@ -180,21 +180,13 @@ and must be executed in reactive or isolated context.
 \if{html}{\out{<a id="method-FilterState-get_dataname"></a>}}
 \if{latex}{\out{\hypertarget{method-FilterState-get_dataname}{}}}
 \subsection{Method \code{get_dataname()}}{
-Returns dataname.
+Returns dataname or "NULL" if dataname is NULL.
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{FilterState$get_dataname(deparse = TRUE)}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{FilterState$get_dataname()}\if{html}{\out{</div>}}
 }
 
-\subsection{Arguments}{
-\if{html}{\out{<div class="arguments">}}
-\describe{
-\item{\code{deparse}}{(\code{logical(1)})\cr
-whether dataname should be deparsed; defaults to \code{TRUE}}
-}
-\if{html}{\out{</div>}}
-}
 \subsection{Returns}{
-\code{name} or \code{character(1)}
+\code{character(1)}
 }
 }
 \if{html}{\out{<hr>}}
@@ -229,19 +221,11 @@ Returns variable label.
 \subsection{Method \code{get_varname()}}{
 Get variable name.
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{FilterState$get_varname(deparse = FALSE)}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{FilterState$get_varname()}\if{html}{\out{</div>}}
 }
 
-\subsection{Arguments}{
-\if{html}{\out{<div class="arguments">}}
-\describe{
-\item{\code{deparse}}{(\code{logical(1)})\cr
-whether variable name should be deparsed; defaults to \code{FALSE}}
-}
-\if{html}{\out{</div>}}
-}
 \subsection{Returns}{
-\code{name} or \code{character(1)}
+\code{character(1)}
 }
 }
 \if{html}{\out{<hr>}}

@@ -105,7 +105,6 @@ call_condition_choice <- function(varname, choices) {
 #' @keywords internal
 call_condition_range <- function(varname, range) {
   checkmate::assert_numeric(range, len = 2, sorted = TRUE)
-
   varname <- call_check_parse_varname(varname)
   call(
     "&",
@@ -165,7 +164,7 @@ call_condition_logical <- function(varname, choice) {
 #'
 #' @examples
 #' teal.slice:::call_condition_range_posixct(
-#'   varname = as.name("datetime"),
+#'   varname = "datetime",
 #'   range = c(Sys.time(), Sys.time() + 1),
 #'   timezone = "UTC"
 #' )

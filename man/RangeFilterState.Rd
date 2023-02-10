@@ -20,7 +20,7 @@ making it possible to pass any object coercible to \code{numeric} to this method
 filter_state <- teal.slice:::RangeFilterState$new(
   c(NA, Inf, seq(1:10)),
   varname = "x",
-  input_dataname = as.name("data"),
+  dataname = "data",
   extract_type = character(0)
 )
 isolate(filter_state$get_call())
@@ -84,7 +84,7 @@ Initialize a \code{FilterState} object
   x_reactive,
   varname,
   varlabel = character(0),
-  input_dataname = NULL,
+  dataname = NULL,
   extract_type = character(0)
 )}\if{html}{\out{</div>}}
 }
@@ -106,15 +106,15 @@ name of the variable}
 \item{\code{varlabel}}{(\code{character(1)})\cr
 label of the variable (optional).}
 
-\item{\code{input_dataname}}{(\code{name} or \code{call})\cr
-name of dataset where \code{x} is taken from}
+\item{\code{dataname}}{(\code{character(1)})\cr
+optional name of dataset where \code{x} is taken from}
 
 \item{\code{extract_type}}{(\code{character(0)}, \code{character(1)})\cr
 whether condition calls should be prefixed by dataname. Possible values:
 \itemize{
 \item{\code{character(0)} (default)}{ \code{varname} in the condition call will not be prefixed}
-\item{\code{"list"}}{ \code{varname} in the condition call will be returned as \verb{<input_dataname>$<varname>}}
-\item{\code{"matrix"}}{ \code{varname} in the condition call will be returned as \verb{<input_dataname>[, <varname>]}}
+\item{\code{"list"}}{ \code{varname} in the condition call will be returned as \verb{<dataname>$<varname>}}
+\item{\code{"matrix"}}{ \code{varname} in the condition call will be returned as \verb{<dataname>[, <varname>]}}
 }}
 }
 \if{html}{\out{</div>}}

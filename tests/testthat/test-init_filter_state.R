@@ -1,6 +1,6 @@
-testthat::test_that("init_filter_state accepts a string or name as varname", {
+testthat::test_that("init_filter_state accepts a string, not name as varname", {
   testthat::expect_no_error(init_filter_state(7, varname = "test"))
-  testthat::expect_no_error(init_filter_state(7, varname = quote(test)))
+  testthat::expect_error(init_filter_state(7, varname = quote(test)))
 })
 
 testthat::test_that("init_filter_state accepts a character vector of length 0 or 1 as varlabel", {
@@ -8,29 +8,16 @@ testthat::test_that("init_filter_state accepts a character vector of length 0 or
   testthat::expect_no_error(init_filter_state(7, varname = "test", varlabel = character(0)))
 })
 
-test_that("input_dataname must be specified if extract_type is specified", {
+test_that("dataname must be specified if extract_type is specified", {
   adsl <- scda::synthetic_cdisc_data("latest")$adsl
   testthat::expect_error(
     init_filter_state(
       adsl$SEX,
       varname = "SEX",
-      input_dataname = NULL,
+      dataname = NULL,
       extract_type = "matrix"
     ),
-    regexp = "if extract_type is specified, input_dataname must also be specified"
-  )
-})
-
-testthat::test_that("init_filter_state accepts, name or call as input_dataname", {
-  testthat::expect_no_error(
-    init_filter_state(7, varname = "test", input_dataname = NULL)
-  )
-
-  testthat::expect_no_error(
-    init_filter_state(7, varname = "test", input_dataname = quote(test))
-  )
-  testthat::expect_no_error(
-    init_filter_state(7, varname = "test", input_dataname = call("test"))
+    regexp = "if extract_type is specified, dataname must also be specified"
   )
 })
 
@@ -40,18 +27,17 @@ testthat::test_that("init_filter_state accepts character as extract_type", {
   )
 
   testthat::expect_no_error(
-    init_filter_state(7, varname = "test", input_dataname = as.name("test"), extract_type = "list")
+    init_filter_state(7, varname = "test", dataname = "test", extract_type = "list")
   )
   testthat::expect_no_error(
-    init_filter_state(7, varname = "test", input_dataname = as.name("test"), extract_type = "matrix")
+    init_filter_state(7, varname = "test", dataname = "test", extract_type = "matrix")
   )
 })
 
-testthat::test_that("init_filter_state provides default values for varlabel, input_dataname, use_datname", {
+testthat::test_that("init_filter_state provides default values for varlabel and dataname", {
   filter_state <- init_filter_state(7, varname = "test")
   testthat::expect_equal(filter_state$get_varlabel(), character(0))
-  testthat::expect_equal(filter_state$get_dataname(deparse = TRUE), "NULL")
-  testthat::expect_equal(filter_state$get_dataname(deparse = FALSE), NULL)
+  testthat::expect_equal(filter_state$get_dataname(), character(1))
 })
 
 testthat::test_that("init_filter_state returns an EmptyFilterState if all values provided are NA", {
@@ -69,9 +55,9 @@ testthat::test_that("init_filter_state returns a DateFilterState object if passe
 
 testthat::test_that("init_filter_state returns a DatetimeFilterState object if passed
   a POSIXct or POSIXlt object", {
-    testthat::expect_true(is(init_filter_state(as.POSIXct("1900/01/01"), varname = "test"), "DatetimeFilterState"))
-    testthat::expect_true(is(init_filter_state(as.POSIXlt("1900/01/01"), varname = "test"), "DatetimeFilterState"))
-  })
+  testthat::expect_true(is(init_filter_state(as.POSIXct("1900/01/01"), varname = "test"), "DatetimeFilterState"))
+  testthat::expect_true(is(init_filter_state(as.POSIXlt("1900/01/01"), varname = "test"), "DatetimeFilterState"))
+})
 
 testthat::test_that("init_filter_state returns a RangeFilterState if passed a numeric array containing Inf", {
   testthat::expect_no_error(fs <- init_filter_state(c(1, 2, 3, 4, Inf), varname = "test"))
