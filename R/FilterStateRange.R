@@ -360,7 +360,7 @@ RangeFilterState <- R6::R6Class( # nolint
             ignoreInit = TRUE,
             eventExpr = self$get_selected(),
             handlerExpr = {
-              if (!setequal(self$get_selected(), input$selection)) {
+              if (!isTRUE(all.equal(input$selection, self$get_selected()))) {
                 updateSliderInput(
                   session = session,
                   inputId = "selection",
@@ -375,9 +375,8 @@ RangeFilterState <- R6::R6Class( # nolint
             ignoreInit = TRUE, # ignoreInit: should not matter because we set the UI with the desired initial state
             eventExpr = input$selection,
             handlerExpr = {
-              selection_state <- input$selection
-              if (!setequal(selection_state, self$get_selected())) {
-                self$set_selected(selection_state)
+              if (!isTRUE(all.equal(input$selection, self$get_selected()))) {
+                self$set_selected(input$selection)
               }
               logger::log_trace(
                 sprintf(
