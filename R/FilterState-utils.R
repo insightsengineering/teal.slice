@@ -239,7 +239,7 @@ init_filter_state.POSIXlt <- function(x,
 #' @keywords internal
 #'
 #' @examples
-#' \dontrun{
+#' \donttest{
 #' check_in_range(c(3, 1), c(1, 3))
 #' check_in_range(c(0, 3), c(1, 3))
 #' check_in_range(
@@ -287,12 +287,14 @@ check_in_range <- function(subinterval, range, pre_msg = "") {
 #' @keywords internal
 #'
 #' @examples
-#' check_in_subset <- teal.slice:::check_in_subset
+#' \donttest{
+#' check_in_subset <- check_in_subset
 #' check_in_subset(c("a", "b"), c("a", "b", "c"))
 #' \dontrun{
 #' check_in_subset(c("a", "b"), c("b", "c"), pre_msg = "Error: ")
 #' # truncated because too long
 #' check_in_subset("a", LETTERS, pre_msg = "Error: ")
+#' }
 #' }
 check_in_subset <- function(subset, choices, pre_msg = "") {
   checkmate::assert_string(pre_msg)
@@ -336,7 +338,7 @@ check_in_subset <- function(subset, choices, pre_msg = "") {
 #' @keywords internal
 #'
 #' @examples
-#' contain_interval <- teal.slice:::contain_interval
+#' \donttest{
 #' ticks <- 1:10
 #' values1 <- c(3, 5)
 #' contain_interval(values1, ticks)
@@ -344,7 +346,7 @@ check_in_subset <- function(subset, choices, pre_msg = "") {
 #' contain_interval(values2, ticks)
 #' values3 <- c(0, 20)
 #' contain_interval(values3, ticks)
-#'
+#'}
 contain_interval <- function(x, range) {
   checkmate::assert_numeric(x, len = 2L, any.missing = FALSE, sorted = TRUE)
   checkmate::assert_numeric(range, min.len = 2L, any.missing = FALSE, sorted = TRUE)
