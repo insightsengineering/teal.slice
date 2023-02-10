@@ -276,13 +276,12 @@ RangeFilterState <- R6::R6Class( # nolint
       if (any(is.na(values))) stop("The array of set values must contain values coercible to numeric.")
       if (length(values) != 2) stop("The array of set values must have length two.")
 
-      inds <- findInterval(values, private$slider_ticks)
-      values_adjusted <- private$slider_ticks[inds]
+      values_adjusted <- contain_interval(values, private$slider_ticks)
       if (!identical(values, values_adjusted)) {
         logger::log_warn(sprintf(
           paste(
             "Programmatic range specification on %s was adjusted to existing slider ticks.",
-            "It is now broader in order to encompass the specified values."),
+            "It is now broader in order to contain the specified values."),
           private$varname
         ))
       }
