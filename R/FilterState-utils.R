@@ -346,9 +346,6 @@ check_in_subset <- function(subset, choices, pre_msg = "") {
 contain_interval <- function(x, range) {
   checkmate::assert_numeric(x, len = 2L, any.missing = FALSE, sorted = TRUE)
   checkmate::assert_numeric(range, min.len = 2L, any.missing = FALSE, sorted = TRUE)
-  checkmate::assert_logical(closed, any.missing = FALSE, min.len = 1L, max.len = 2L)
-
-  if (length(closed) == 1L) closed <- rep(closed, 2)
 
   x[1] <- Find(function(i) i <= x[1], range, nomatch = min(range), right = TRUE)
   x[2] <- Find(function(i) i >= x[2], range, nomatch = max(range))
