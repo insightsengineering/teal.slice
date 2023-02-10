@@ -58,13 +58,13 @@ RangeFilterState <- R6::R6Class( # nolint
 
       if (identical(diff(x_range), 0)) {
         private$set_choices(x_range)
-        private$slider_ticks <- x_range
+        private$slider_ticks <- signif(x_range, digits = 10)
         private$slider_step <- NULL
         self$set_selected(x_range)
       } else {
         private$set_choices(range(x_pretty))
-        private$slider_ticks <- x_pretty
-        private$slider_step <- private$get_pretty_range_step(x_pretty)
+        private$slider_ticks <- signif(x_pretty, digits = 10)
+        private$slider_step <- signif(private$get_pretty_range_step(x_pretty), digits = 10)
         self$set_selected(range(x_pretty))
       }
 
