@@ -2,7 +2,9 @@
 #' @docType class
 #'
 #'
-#' @title Abstract class to encapsulate filter states
+#' @title FilterState Abstract Class
+#'
+#' @description Abstract class to encapsulate filter states
 #'
 #' @details
 #' This class is responsible for managing single filter item within
@@ -281,7 +283,7 @@ FilterState <- R6::R6Class( # nolint
     #' @param value (`vector`)\cr
     #'   value(s) that come from filter selection; values are set in the
     #'   module server after a selection is made in the app interface;
-    #'   values are stored in `private$selected`n which is reactive;
+    #'   values are stored in `private$selected` which is reactive;
     #'   value types have to be the same as `private$choices`
     #'
     #' @return NULL invisibly
@@ -407,7 +409,7 @@ FilterState <- R6::R6Class( # nolint
     }
   ),
 
-  # private members ----
+    # private members ----
   private = list(
     choices = NULL, # because each class has different choices type
     dataname = character(0),
@@ -420,11 +422,12 @@ FilterState <- R6::R6Class( # nolint
     varlabel = character(0),
     extract_type = logical(0),
 
-    #' description
-    #' Adds `is.na(varname)` before existing condition calls if `keep_na` is selected.
-    #' Otherwise, if missings are found in the variable `!is.na` will be added
-    #' only if `private$na_rm = TRUE`
-    #' return (`call`)
+    # private methods ----
+    # @description
+    # Adds `is.na(varname)` before existing condition calls if `keep_na` is selected.
+    # Otherwise, if missings are found in the variable `!is.na` will be added
+    # only if `private$na_rm = TRUE`
+    # @return (`call`)
     add_keep_na_call = function(filter_call) {
       if (isTRUE(self$get_keep_na())) {
         call(
@@ -443,14 +446,14 @@ FilterState <- R6::R6Class( # nolint
       }
     },
 
-    #' description
-    #' Prefixed (or not) variable
-    #'
-    #' Return variable name needed to condition call.
-    #' If `isTRUE(private$use_dataset)` variable is prefixed by
-    #' dataname to be evaluated as extracted object, for example
-    #' `data$var`
-    #' return (`name` or `call`)
+    # @description
+    # Prefixed (or not) variable
+    #
+    # Return variable name needed to condition call.
+    # If `isTRUE(private$use_dataset)` variable is prefixed by
+    # dataname to be evaluated as extracted object, for example
+    # `data$var`
+    # @return (`name` or `call`)
     get_varname_prefixed = function() {
       if (isTRUE(private$extract_type == "list")) {
         call_extract_list(private$dataname, private$varname)
@@ -464,20 +467,19 @@ FilterState <- R6::R6Class( # nolint
       }
     },
 
-    #' Sets `keep_na` field according to observed `input$keep_na`
-    #' If `keep_na = TRUE`, `is.na(varname)` is added to the returned call.
-    #' Otherwise returned call excludes `NA` when executed.
+    # Sets `keep_na` field according to observed `input$keep_na`
+    # If `keep_na = TRUE` `is.na(varname)` is added to the returned call.
+    # Otherwise returned call excludes `NA` when executed.
     observe_keep_na = function(input) {
 
     },
 
-    #' Set choices
-    #'
-    #' Set choices is supposed to be executed once in the constructor
-    #' to define set/range which selection is made from.
-    #' parameter choices (`vector`)\cr
-    #'  class of the vector depends on the `FilterState` class.
-    #' return a `NULL`
+    # @description
+    # Set choices is supposed to be executed once in the constructor
+    # to define set/range which selection is made from.
+    # parameter choices (`vector`)\cr
+    #  class of the vector depends on the `FilterState` class.
+    # @return `NULL`
     set_choices = function(choices) {
       private$choices <- choices
       invisible(NULL)
@@ -514,11 +516,11 @@ FilterState <- R6::R6Class( # nolint
     },
 
     # shiny modules -----
-    #' module with inputs
+    # module with inputs
     ui_inputs = function(id) {
       stop("abstract class")
     },
-    #' module with inputs
+    # module with inputs
     server_inputs = function(id) {
       stop("abstract class")
     },
@@ -566,7 +568,7 @@ FilterState <- R6::R6Class( # nolint
           }
         )
         private$observers$keep_na <- observeEvent(
-          ignoreNULL = FALSE, # ignoreNULL: we don't want to ignore NULL when nothing is selected in the `selectInput`,
+          ignoreNULL = FALSE, # ignoreNULL: we don't want to ignore NULL when nothing is selected in the `selectInput`
           ignoreInit = TRUE, # ignoreInit: should not matter because we set the UI with the desired initial state
           eventExpr = input$value,
           handlerExpr = {

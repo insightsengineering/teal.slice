@@ -18,6 +18,9 @@
 ChoicesFilterState <- R6::R6Class( # nolint
   "ChoicesFilterState",
   inherit = FilterState,
+
+  # public methods ----
+
   public = list(
 
     #' @description
@@ -134,8 +137,13 @@ ChoicesFilterState <- R6::R6Class( # nolint
       super$set_selected(value)
     }
   ),
+
+  # private members ----
+
   private = list(
     histogram_data = data.frame(),
+
+  # private methods ----
     validate_selection = function(value) {
       if (!is.character(value)) {
         stop(
@@ -174,6 +182,8 @@ ChoicesFilterState <- R6::R6Class( # nolint
       values[in_choices_mask]
     },
 
+    # shiny modules ----
+
     # @description
     # UI Module for `ChoicesFilterState`.
     # This UI element contains available choices selection and
@@ -185,21 +195,18 @@ ChoicesFilterState <- R6::R6Class( # nolint
       div(
         if (length(private$choices) <= getOption("teal.threshold_slider_vs_checkboxgroup")) {
           l_counts <- as.numeric(names(private$choices))
-          is_na_l_counts <- is.na(l_counts)
-          if (any(is_na_l_counts)) l_counts[is_na_l_counts] <- 0
+          l_counts[is.na(l_counts)] <- 0
+          l_freqs <- l_counts / sum(l_counts)
           labels <- lapply(seq_along(private$choices), function(i) {
-            l_count <- l_counts[i]
-            l_freq <- l_count / sum(l_counts)
-            if (is.na(l_freq) || is.nan(l_freq)) l_freq <- 0
             div(
               class = "choices_state_label",
-              style = sprintf("width:%s%%", l_freq * 100),
+              style = sprintf("width:%s%%", l_freqs[i] * 100),
               span(
                 class = "choices_state_label_text",
                 sprintf(
                   "%s (%s)",
                   private$choices[i],
-                  l_count
+                  l_counts[i]
                 )
               )
             )
