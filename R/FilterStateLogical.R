@@ -129,7 +129,7 @@ LogicalFilterState <- R6::R6Class( # nolint
   private = list(
     histogram_data = data.frame(),
 
-  # private methods ----
+    # private methods ----
 
     validate_selection = function(value) {
       if (!(checkmate::test_logical(value, max.len = 1, any.missing = FALSE))) {

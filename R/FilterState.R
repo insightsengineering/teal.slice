@@ -409,7 +409,7 @@ FilterState <- R6::R6Class( # nolint
     }
   ),
 
-    # private members ----
+  # private members ----
   private = list(
     choices = NULL, # because each class has different choices type
     dataname = character(0),

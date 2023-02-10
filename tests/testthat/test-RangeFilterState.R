@@ -1,4 +1,3 @@
-
 # initialize ----
 testthat::test_that("The constructor accepts numerical values", {
   testthat::expect_no_error(RangeFilterState$new(c(1), varname = "test"))

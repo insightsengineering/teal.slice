@@ -223,7 +223,7 @@ RangeFilterState <- R6::R6Class( # nolint
     slider_step = numeric(0), # step for the slider input widget, calculated from input data (x)
     slider_ticks = numeric(0), # allowed values for the slider input widget, calculated from input data (x)
 
-  # private methods ----
+    # private methods ----
     # Adds is.infinite(varname) before existing condition calls if keep_inf is selected
     # returns a call
     add_keep_inf_call = function(filter_call) {
@@ -243,7 +243,6 @@ RangeFilterState <- R6::R6Class( # nolint
     # @param pretty_range (numeric(n)) vector of pretty values
     # @return numeric(1) pretty step size for the sliderInput
     get_pretty_range_step = function(pretty_range) {
-
       if (private$is_integer && diff(range(pretty_range) > 2)) {
         return(1L)
       } else {
@@ -281,12 +280,12 @@ RangeFilterState <- R6::R6Class( # nolint
         logger::log_warn(sprintf(
           paste(
             "Programmatic range specification on %s was adjusted to existing slider ticks.",
-            "It is now broader in order to contain the specified values."),
+            "It is now broader in order to contain the specified values."
+          ),
           private$varname
         ))
       }
       values_adjusted
-
     },
     # for numeric ranges selecting out of bound values is allowed
     remove_out_of_bound_values = function(values) {

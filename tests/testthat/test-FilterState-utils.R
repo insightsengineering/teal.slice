@@ -1,4 +1,3 @@
-
 testthat::test_that("contain_interval accepts proper arguments", {
   testthat::expect_no_error(contain_interval(c(3, 5), 1:10))
   testthat::expect_error(contain_interval(c("1", "2"), 1:10), "Assertion on 'x' failed")
@@ -23,4 +22,3 @@ testthat::test_that("contain_interval returns 'x' if interval matches ticks", {
 testthat::test_that("contain_interval returns 'range' if 'x' is x is out of bounds", {
   testthat::expect_equal(contain_interval(c(0, 11), 1:10), c(1, 10))
 })
-
