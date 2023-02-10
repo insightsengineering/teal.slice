@@ -1,53 +1,4 @@
-testthat::test_that("call_condition_choice varname as character", {
-  testthat::expect_identical(
-    call_check_parse_varname("var"),
-    quote(var)
-  )
-  testthat::expect_identical(
-    call_check_parse_varname("x$var"),
-    quote(x$var)
-  )
-  testthat::expect_identical(
-    call_check_parse_varname("x$var;"),
-    quote(x$var)
-  )
-  testthat::expect_identical(
-    call_check_parse_varname('trunc(x$var, units = "secs")'),
-    quote(trunc(x$var, units = "secs"))
-  )
-  testthat::expect_identical(
-    call_check_parse_varname('c(trunc(x$var, units = "secs"))'),
-    quote(c(trunc(x$var, units = "secs")))
-  )
-  testthat::expect_error(
-    call_check_parse_varname("x$var; x"),
-    "Problem with parsing"
-  )
-})
-
-testthat::test_that("call_condition_choice varname as name or call", {
-  testthat::expect_identical(
-    call_check_parse_varname(quote(var)),
-    quote(var)
-  )
-  testthat::expect_identical(
-    call_check_parse_varname(quote(x$var)),
-    quote(x$var)
-  )
-  testthat::expect_identical(
-    call_check_parse_varname(quote(trunc(x$var, units = "secs"))),
-    quote(trunc(x$var, units = "secs"))
-  )
-  testthat::expect_identical(
-    call_check_parse_varname(quote(c(trunc(x$var, units = "secs")))),
-    quote(c(trunc(x$var, units = "secs")))
-  )
-  testthat::expect_error(
-    call_check_parse_varname(parse(text = "x$var; x")),
-    "Assertion failed.+varname"
-  )
-})
-
+# call_condition_choice ----
 testthat::test_that("call_condition_choice varname inputs - character", {
   testthat::expect_identical(
     call_condition_choice("var", choices = character(0)),
@@ -202,33 +153,31 @@ testthat::test_that("call_codition_choice accept all type of choices - integer",
   )
 })
 
+# call_condition_range ----
 testthat::test_that("call_condition_range works only with numeric(2)", {
   testthat::expect_identical(
     call_condition_range("var", range = c(1, 2)),
     quote(var >= 1 & var <= 2)
   )
-
   testthat::expect_equal(
     call_condition_range("var", range = c(-1.2, 2.1)),
     quote(var >= -1.2 & var <= 2.1)
   )
-
   testthat::expect_error(
     call_condition_range("var", range = c(2.1, -1.2)),
     "Assertion on 'range' failed.+sorted"
   )
-
   testthat::expect_error(
     call_condition_range("var", range = c("a", "b")),
     "Assertion on 'range' failed.+type"
   )
-
   testthat::expect_error(
     call_condition_range("var", range = 1),
     "Assertion on 'range' failed.+length"
   )
 })
 
+# call_condition_logical ----
 testthat::test_that("call_condition_logical works only with logical(1)", {
   testthat::expect_identical(
     call_condition_logical("var", choice = TRUE),
@@ -242,12 +191,10 @@ testthat::test_that("call_condition_logical works only with logical(1)", {
     call_condition_logical("var == 2", choice = FALSE),
     quote(!var == 2)
   )
-
   testthat::expect_error(
     call_condition_logical("var", choice = c(TRUE, FALSE)),
     "Assertion on 'choice'"
   )
-
   testthat::expect_error(
     call_condition_logical("var", choice = 1),
     "Assertion on 'choice'"
@@ -258,6 +205,7 @@ testthat::test_that("call_condition_logical works only with logical(1)", {
   )
 })
 
+# call_condition_posixct ----
 testthat::test_that("call_condition_posixct works with POXIXct range only", {
   datetime <- as.POSIXct("2021-09-01 12:00:00", tz = "UTC")
   testthat::expect_identical(
@@ -271,8 +219,6 @@ testthat::test_that("call_condition_posixct works with POXIXct range only", {
         var < as.POSIXct("2021-09-01 12:00:02", tz = "UTC")
     )
   )
-
-
   testthat::expect_error(
     call_condition_range_posixct(
       varname = "var",
@@ -309,7 +255,6 @@ testthat::test_that("call_condition_posixct returns expected timezone", {
         var < as.POSIXct("2021-09-01 12:00:02", tz = "Europe/Stockholm")
     )
   )
-
   datetime <- as.POSIXct("2021-09-01 12:00:00")
   testthat::expect_identical(
     call_condition_range_posixct(
@@ -323,35 +268,37 @@ testthat::test_that("call_condition_posixct returns expected timezone", {
   )
 })
 
+# call_condition_date ----
 testthat::test_that("call_condition_date works with date range only", {
   date <- as.Date("2021-09-01")
   testthat::expect_identical(
     call_condition_range_date(
-      as.name("date"),
+      "date",
       range = date + c(0, 1)
     ),
     quote(date >= as.Date("2021-09-01") & date <= as.Date("2021-09-02"))
   )
   testthat::expect_error(
     call_condition_range_date(
-      as.name("date"),
+      "date",
       range = date + c(1, 0)
     )
   )
   testthat::expect_error(
     call_condition_range_date(
-      as.name("date"),
+      "date",
       range = date
     )
   )
   testthat::expect_error(
     call_condition_range_date(
-      as.name("date"),
+      "date",
       range = 1
     )
   )
 })
 
+# call_extract_array ----
 testthat::test_that("call_extract_array - dataname type", {
   testthat::expect_identical(
     call_extract_array(),
@@ -365,7 +312,7 @@ testthat::test_that("call_extract_array - dataname type", {
     call_extract_array(dataname = "data"),
     quote(data[, , ])
   )
-  testthat::expect_identical(
+  testthat ::expect_identical(
     call_extract_array(dataname = quote(data$element$element@slot)),
     quote(data$element$element@slot[, , ])
   )
@@ -481,6 +428,7 @@ testthat::test_that("call_extract_array - aisle type", {
   )
 })
 
+# call_extract_matrix ----
 testthat::test_that("call_extract_matrix - dataname type", {
   testthat::expect_identical(
     call_extract_matrix(),
@@ -576,6 +524,13 @@ testthat::test_that("call_extract_matrix - col type", {
   )
 })
 
+testthat::test_that("call_extract_matrix does not throw when passed a long >500 chars call", {
+  long_char <- paste("test %in% c(", paste(rep("test_val", 100), collapse = ", "), ")")
+  test_call <- str2lang(long_char)
+  testthat::expect_no_error(call_extract_matrix("iris", row = test_call))
+})
+
+# call_extract_list ----
 testthat::test_that("call_extract_list - dataname argument", {
   testthat::expect_identical(
     call_extract_list("ADSL", "SEX"),
@@ -605,10 +560,11 @@ testthat::test_that("call_extract_list - varname argument", {
   )
   testthat::expect_error(
     call_extract_list("data", quote(data$var)),
-    "Assertion on 'dollar'"
+    "\"dollar\" must be FALSE if \"varname\" is of type \"call\""
   )
 })
 
+# calls_combine_by ----
 testthat::test_that("calls_combine_by - operator", {
   testthat::expect_identical(
     calls_combine_by(operator = "&", calls = list(quote(a), quote(b))),
@@ -648,6 +604,7 @@ testthat::test_that("calls_combine_by - calls", {
   )
 })
 
+# call_with_colon ----
 testthat::test_that("call_with_colon works", {
   a_call_without_colon <- call("base::sum", 1:10)
   a_call_with_colon <- call_with_colon("base::sum", 1:10)
@@ -655,10 +612,4 @@ testthat::test_that("call_with_colon works", {
   # evaluate these calls
   testthat::expect_error(eval(a_call_without_colon))
   testthat::expect_equal(eval(a_call_with_colon), 55)
-})
-
-testthat::test_that("call_extract_matrix does not throw when passed a long >500 chars call", {
-  long_char <- paste("test %in% c(", paste(rep("test_val", 100), collapse = ", "), ")")
-  test_call <- str2lang(long_char)
-  testthat::expect_no_error(call_extract_matrix("iris", row = test_call))
 })
