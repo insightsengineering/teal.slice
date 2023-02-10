@@ -19,15 +19,6 @@ testthat::test_that("get_selected returns range computed on a vector containing 
   )
 })
 
-# set_selected ----
-# testthat::test_that("set_selected warns when the selected range intersects the possible range
-#   but is not fully included in it", {
-#   filter_state <- RangeFilterState$new(7, varname = "test")
-#   testthat::expect_warning(filter_state$set_selected(c(1, 7)), "outside of the possible range")
-#   testthat::expect_warning(filter_state$set_selected(c(7, 13)), "outside of the possible range")
-#   testthat::expect_warning(filter_state$set_selected(c(1, 13)), "outside of the possible range")
-# })
-
 testthat::test_that("set_selected raises error when the passed values are not coercible to numeric", {
   filter_state <- RangeFilterState$new(7, varname = "test")
   testthat::expect_error(
