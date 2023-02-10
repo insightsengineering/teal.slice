@@ -620,9 +620,9 @@ FilterState <- R6::R6Class( # nolint
               `data-toggle` = "collapse",
               `data-parent` = paste0("#", parent_id),
               href = paste0("#", ns("body")),
-              tags$span(self$get_varname()),
+              tags$span(tags$strong(self$get_varname())),
               if (length(self$get_varlabel())) {
-                tags$span(self$get_varlabel())
+                tags$span(self$get_varlabel(), class = "filter-card-varlabel")
               } else {
                 NULL
               }
@@ -667,9 +667,9 @@ FilterState <- R6::R6Class( # nolint
               `data-toggle` = "collapse",
               `data-bs-toggle` = "collapse",
               href = paste0("#", ns("body")),
-              tags$span(self$get_varname()),
+              tags$span(tags$strong(self$get_varname())),
               if (length(self$get_varlabel())) {
-                tags$span(self$get_varlabel())
+                tags$span(self$get_varlabel(), class = "filter-card-varlabel")
               } else {
                 NULL
               }

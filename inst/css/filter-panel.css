@@ -230,12 +230,16 @@ a.remove_all:hover {
   text-decoration: none;
 }
 
-.card-title a span {
+.card-title a {
   color: var(--bs-body-color, var(--dark, #333333));
 }
 
 .accordion-toggle {
   width: 100%
+}
+
+.filter-card-varlabel {
+ color: var(--bs-gray-500, var(--gray, darkgray));
 }
 
 .filter-card-remove,
