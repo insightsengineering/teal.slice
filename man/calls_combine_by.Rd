@@ -7,8 +7,8 @@
 calls_combine_by(operator, calls)
 }
 \arguments{
-\item{operator}{(\code{character(1)} or \code{name})\cr
-name/symbol of the operator.}
+\item{operator}{(\code{character(1)})\cr
+name/symbol of the operator passed as character string}
 
 \item{calls}{(\code{list} of calls)\cr
 list containing calls to be combined by \code{operator}}
@@ -22,14 +22,16 @@ a combined \code{call}
 Combine list of calls by specific operator
 }
 \examples{
-teal.slice:::calls_combine_by(
+\donttest{
+calls_combine_by(
   "&",
   calls = list(
-    teal.slice:::call_condition_choice("SEX", "F"),
-    teal.slice:::call_condition_range("AGE", c(20, 50)),
-    teal.slice:::call_condition_choice("ARM", "ARM: A"),
+    call_condition_choice("SEX", "F"),
+    call_condition_range("AGE", c(20, 50)),
+    call_condition_choice("ARM", "ARM: A"),
     TRUE
   )
 )
+}
 }
 \keyword{internal}

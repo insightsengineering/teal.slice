@@ -7,7 +7,7 @@
 call_extract_matrix(dataname = ".", row = NULL, column = NULL)
 }
 \arguments{
-\item{dataname}{(\code{character(1)} or \code{name})\cr}
+\item{dataname}{(\code{character(1)}, \code{name} or \code{call})\cr}
 
 \item{row}{(\code{name}, \code{call}, \code{logical}, \code{integer}, \code{character})\cr
 optional, name of the \code{row} or condition}
@@ -24,14 +24,16 @@ specific \code{\link[base]{Extract}} \code{call} for matrix
 Get call to subset and select matrix
 }
 \examples{
-teal.slice:::call_extract_matrix(
+\donttest{
+call_extract_matrix(
   dataname = "my_array",
-  row = teal.slice:::call_condition_choice("my_array$SEX", "M"),
+  row = call_condition_choice("my_array$SEX", "M"),
   column = call("c", "SEX", "AGE")
 )
-teal.slice:::call_extract_matrix(
+call_extract_matrix(
   "mae_object",
-  column = teal.slice:::call_condition_choice("SEX", "M")
+  column = call_condition_choice("SEX", "M")
 )
+}
 }
 \keyword{internal}

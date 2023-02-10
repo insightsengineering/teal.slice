@@ -7,7 +7,7 @@
 call_extract_array(dataname = ".", row = NULL, column = NULL, aisle = NULL)
 }
 \arguments{
-\item{dataname}{(\code{character(1)} or \code{name})\cr}
+\item{dataname}{(\code{character(1)}, \code{name} or \code{call})\cr}
 
 \item{row}{(\code{name}, \code{call}, \code{logical}, \code{integer}, \code{character})\cr
 optional, name of the \code{row} or condition}
@@ -27,15 +27,17 @@ specific \code{\link[base]{Extract}} \code{call} for 3-dimensional array
 Get call to subset and select array
 }
 \examples{
-teal.slice:::call_extract_array(
+\donttest{
+call_extract_array(
   dataname = "my_array",
-  row = teal.slice:::call_condition_choice("my_array$SEX", "M"),
+  row = call_condition_choice("my_array$SEX", "M"),
   column = call("c", "SEX", "AGE"),
   aisle = "RNAseq_rnaaccess"
 )
-teal.slice:::call_extract_array(
+call_extract_array(
   "mae_object",
-  column = teal.slice:::call_condition_choice("SEX", "M")
+  column = call_condition_choice("SEX", "M")
 )
+}
 }
 \keyword{internal}

@@ -1,36 +1,9 @@
-#' Checks `varname` argument and convert to call
-#'
-#' Checks `varname` type and parse if it's a `character`
-#' @param varname (`name`, `call` or `character(1)`)\cr
-#'   name of the variable
-#' @keywords internal
-call_check_parse_varname <- function(varname) {
-  checkmate::assert(
-    checkmate::check_string(varname),
-    checkmate::check_class(varname, "call"),
-    checkmate::check_class(varname, "name")
-  )
-  if (is.character(varname)) {
-    parsed <- parse(text = varname, keep.source = FALSE)
-    if (length(parsed) == 1) {
-      varname <- parsed[[1]]
-    } else {
-      stop(
-        sprintf(
-          "Problem with parsing '%s'. Not able to process multiple calls",
-          varname
-        )
-      )
-    }
-  }
-  varname
-}
 
 #' Choices condition call
 #'
 #' Compose choices condition call from inputs.
 #'
-#' @param varname (`name`, `call` or `character(1)`)\cr
+#' @param varname (`character(1)`)\cr
 #'   name of the variable
 #'
 #' @param choices (`vector`)\cr
@@ -49,16 +22,24 @@ call_check_parse_varname <- function(varname) {
 #'   }
 #'
 #' @examples
-#' teal.slice:::call_condition_choice("SEX", choices = c(1, 2))
-#' teal.slice:::call_condition_choice(as.name("SEX"), choices = "F")
-#' teal.slice:::call_condition_choice("SEX", choices = c("F", "M"))
-#' teal.slice:::call_condition_choice("SEX", choices = factor(c("F", "M")))
-#' teal.slice:::call_condition_choice("x$SEX", choices = Sys.Date())
-#' teal.slice:::call_condition_choice("trunc(x$SEX)", choices = Sys.time())
+#' \donttest{
+#' call_condition_choice("SEX", choices = c(1, 2))
+#' call_condition_choice(as.name("SEX"), choices = "F")
+#' call_condition_choice("SEX", choices = c("F", "M"))
+#' call_condition_choice("SEX", choices = factor(c("F", "M")))
+#' call_condition_choice("x$SEX", choices = Sys.Date())
+#' call_condition_choice("trunc(x$SEX)", choices = Sys.time())
+#' }
 #' @return a `call`
 #' @keywords internal
 call_condition_choice <- function(varname, choices) {
-  varname <- call_check_parse_varname(varname)
+  checkmate::assert_string(varname)
+  checkmate::assert_multi_class(
+    choices,
+    c("integer", "numeric", "character", "factor", "Date", "POSIXct", "POSIXlt")
+  )
+
+  varname <- str2lang(varname)
 
   if (is.factor(choices)) {
     choices <- as.character(choices)
@@ -67,7 +48,6 @@ call_condition_choice <- function(varname, choices) {
   } else if (inherits(choices, c("POSIXct", "POSIXlt"))) {
     choices <- format(choices)
   }
-
 
   if (length(choices) == 1) {
     call("==", varname, choices)
@@ -87,7 +67,7 @@ call_condition_choice <- function(varname, choices) {
 #'
 #' Compose `numeric` range condition call from inputs
 #'
-#' @param varname (`name` or `character(1)`)\cr
+#' @param varname (`character(1)`)\cr
 #'   name of the variable
 #'
 #' @param range (`numeric(2)`)\cr
@@ -95,17 +75,21 @@ call_condition_choice <- function(varname, choices) {
 #'
 #' @return call
 #' @examples
-#' teal.slice:::call_condition_range("AGE", range = c(1, 2))
-#' teal.slice:::call_condition_range(as.name("AGE"), range = c(-1.2, 2.1))
-#' teal.slice:::call_condition_range(
-#'   teal.slice:::call_extract_list("ADSL", "AGE"),
+#' \donttest{
+#' call_condition_range("AGE", range = c(1, 2))
+#' call_condition_range(as.name("AGE"), range = c(-1.2, 2.1))
+#' call_condition_range(
+#'   call_extract_list("ADSL", "AGE"),
 #'   range = c(-1.2, 2.1)
 #' )
+#' }
 #' @return a `call`
 #' @keywords internal
 call_condition_range <- function(varname, range) {
+  checkmate::assert_string(varname)
   checkmate::assert_numeric(range, len = 2, sorted = TRUE)
-  varname <- call_check_parse_varname(varname)
+
+  varname <- str2lang(varname)
   call(
     "&",
     call(">=", varname, range[1]),
@@ -117,7 +101,7 @@ call_condition_range <- function(varname, range) {
 #'
 #' Compose `logical` variable condition call from inputs
 #'
-#' @param varname (`name` or `character(1)`)\cr
+#' @param varname (`character(1)`)\cr
 #'   name of the variable
 #'
 #' @param choice (`logical(1)`)\cr
@@ -125,22 +109,24 @@ call_condition_range <- function(varname, range) {
 #'
 #' @return call
 #' @examples
-#' teal.slice:::call_condition_logical("event", choice = TRUE)
-#' teal.slice:::call_condition_logical("event", choice = FALSE)
+#' \donttest{
+#' call_condition_logical("event", choice = TRUE)
+#' call_condition_logical("event", choice = FALSE)
+#' }
 #' @return a `call`
 #' @keywords internal
 call_condition_logical <- function(varname, choice) {
+  checkmate::assert_string(varname)
   checkmate::assert_flag(choice)
-  varname <- call_check_parse_varname(varname)
 
   if (choice) {
-    varname
+    str2lang(varname)
   } else if (!choice) {
-    call("!", varname)
+    call("!", str2lang(varname))
   } else {
     stop(
       "Unknown filter state", toString(choice),
-      " for logical var ", as.character(varname)
+      " for logical var ", varname
     )
   }
 }
@@ -150,7 +136,7 @@ call_condition_logical <- function(varname, choice) {
 #'
 #' Compose `POSIXct` range condition call from inputs.
 #'
-#' @param varname (`name` or `character(1)`)\cr
+#' @param varname (`character(1)`)\cr
 #'   name of the variable
 #'
 #' @param range (`POSIXct`)\cr
@@ -163,17 +149,21 @@ call_condition_logical <- function(varname, choice) {
 #'   By default `Sys.timezone()` is used.
 #'
 #' @examples
-#' teal.slice:::call_condition_range_posixct(
+#' \donttest{
+#' call_condition_range_posixct(
 #'   varname = "datetime",
 #'   range = c(Sys.time(), Sys.time() + 1),
 #'   timezone = "UTC"
 #' )
+#' }
 #' @return a `call`
 #' @keywords internal
 call_condition_range_posixct <- function(varname, range, timezone = Sys.timezone()) {
+  checkmate::assert_string(varname)
   checkmate::assert_posixct(range, len = 2, sorted = TRUE)
   checkmate::assert_string(timezone)
-  varname <- call_check_parse_varname(varname)
+
+  varname <- str2lang(varname)
 
   range[1] <- trunc(range[1], units = c("secs"))
   range[2] <- trunc(range[2] + 1, units = c("secs"))
@@ -195,23 +185,27 @@ call_condition_range_posixct <- function(varname, range, timezone = Sys.timezone
 #'
 #' Compose `Date` range condition call from inputs
 #'
-#' @param varname (`name` or `character(1)`)\cr
+#' @param varname (`character(1)`)\cr
 #'   name of the variable
 #'
 #' @param range (`Date`)\cr
 #'   range of the variable
 #'
 #' @examples
-#' teal.slice:::call_condition_range_date(
+#' \donttest{
+#' call_condition_range_date(
 #'   as.name("date"),
 #'   range = c(Sys.Date(), Sys.Date() + 1)
 #' )
+#' }
 #' @return a `call`
 #' @keywords internal
 call_condition_range_date <- function(varname, range) {
+  checkmate::assert_string(varname)
   checkmate::assert_date(range, len = 2)
   checkmate::assert_true(range[2] >= range[1])
-  varname <- call_check_parse_varname(varname)
+
+  varname <- str2lang(varname)
 
   call(
     "&",
@@ -223,7 +217,7 @@ call_condition_range_date <- function(varname, range) {
 #' Get call to subset and select array
 #'
 #' Get call to subset and select array
-#' @param dataname (`character(1)` or `name`)\cr
+#' @param dataname (`character(1)`, `name` or `call`)\cr
 #' @param row (`name`, `call`, `logical`, `integer`, `character`)\cr
 #'   optional, name of the `row` or condition
 #' @param column (`name`, `call`, `logical`, `integer`, `character`)\cr
@@ -232,16 +226,18 @@ call_condition_range_date <- function(varname, range) {
 #'   optional, name of the `row` or condition
 #' @return `[` call with all conditions included
 #' @examples
-#' teal.slice:::call_extract_array(
+#' \donttest{
+#' call_extract_array(
 #'   dataname = "my_array",
-#'   row = teal.slice:::call_condition_choice("my_array$SEX", "M"),
+#'   row = call_condition_choice("my_array$SEX", "M"),
 #'   column = call("c", "SEX", "AGE"),
 #'   aisle = "RNAseq_rnaaccess"
 #' )
-#' teal.slice:::call_extract_array(
+#' call_extract_array(
 #'   "mae_object",
-#'   column = teal.slice:::call_condition_choice("SEX", "M")
+#'   column = call_condition_choice("SEX", "M")
 #' )
+#' }
 #' @return specific \code{\link[base]{Extract}} `call` for 3-dimensional array
 #' @keywords internal
 call_extract_array <- function(dataname = ".", row = NULL, column = NULL, aisle = NULL) {
@@ -250,14 +246,13 @@ call_extract_array <- function(dataname = ".", row = NULL, column = NULL, aisle 
     checkmate::check_class(dataname, "call"),
     checkmate::check_class(dataname, "name")
   )
-  stopifnot(is.null(row) || is.call(row) || is.character(row) || is.logical(row) || is.integer(row) || is.name(row))
-  stopifnot(is.null(column) || is.call(column) || is.vector(column) || is.name(column))
-  stopifnot(is.null(aisle) || is.call(aisle) || is.vector(aisle) || is.name(aisle))
+  checkmate::assert_multi_class(row, c("name", "call", "character", "logical", "integer"), null.ok = TRUE)
+  checkmate::assert_multi_class(column, c("name", "call", "character", "logical", "integer"), null.ok = TRUE)
+  checkmate::assert_multi_class(aisle, c("name", "call", "character", "logical", "integer"), null.ok = TRUE)
 
   if (is.language(dataname)) {
     dataname <- paste(trimws(deparse(dataname, width.cutoff = 500L)), collapse = "\n")
   }
-
   row <- if (is.null(row)) {
     ""
   } else {
@@ -283,22 +278,24 @@ call_extract_array <- function(dataname = ".", row = NULL, column = NULL, aisle 
 #' Get call to subset and select matrix
 #'
 #' Get call to subset and select matrix
-#' @param dataname (`character(1)` or `name`)\cr
+#' @param dataname (`character(1)`, `name` or `call`)\cr
 #' @param row (`name`, `call`, `logical`, `integer`, `character`)\cr
 #'   optional, name of the `row` or condition
 #' @param column (`name`, `call`, `logical`, `integer`, `character`)\cr
 #'   optional, name of the `column` or condition
 #' @return `[` call with all conditions included
 #' @examples
-#' teal.slice:::call_extract_matrix(
+#' \donttest{
+#' call_extract_matrix(
 #'   dataname = "my_array",
-#'   row = teal.slice:::call_condition_choice("my_array$SEX", "M"),
+#'   row = call_condition_choice("my_array$SEX", "M"),
 #'   column = call("c", "SEX", "AGE")
 #' )
-#' teal.slice:::call_extract_matrix(
+#' call_extract_matrix(
 #'   "mae_object",
-#'   column = teal.slice:::call_condition_choice("SEX", "M")
+#'   column = call_condition_choice("SEX", "M")
 #' )
+#' }
 #' @return specific \code{\link[base]{Extract}} `call` for matrix
 #' @keywords internal
 call_extract_matrix <- function(dataname = ".", row = NULL, column = NULL) {
@@ -307,13 +304,12 @@ call_extract_matrix <- function(dataname = ".", row = NULL, column = NULL) {
     checkmate::check_class(dataname, "call"),
     checkmate::check_class(dataname, "name")
   )
-  stopifnot(is.null(row) || is.call(row) || is.character(row) || is.logical(row) || is.integer(row) || is.name(row))
-  stopifnot(is.null(column) || is.call(column) || is.vector(column) || is.name(column))
+  checkmate::assert_multi_class(row, c("name", "call", "character", "logical", "integer"), null.ok = TRUE)
+  checkmate::assert_multi_class(column, c("name", "call", "character", "logical", "integer"), null.ok = TRUE)
 
   if (is.language(dataname)) {
     dataname <- paste(trimws(deparse(dataname, width.cutoff = 500L)), collapse = "\n")
   }
-
   row <- if (is.null(row)) {
     ""
   } else {
@@ -336,36 +332,41 @@ call_extract_matrix <- function(dataname = ".", row = NULL, column = NULL) {
 #'
 #' Compose extract call with `$` operator
 #'
-#' @param dataname (`character(1)` or `name`)\cr
+#' @param dataname (`character(1)`, `name` or `call`)\cr
 #'   name of the object
-#'
-#' @param varname (`character(1)` or `name`)\cr
+#' @param varname (`character(1)`, `name` or `call`)\cr
 #'   name of the slot in data
-#'
 #' @param dollar (`logical(1)`)\cr
 #'   whether returned call should use `$` or `[[` operator
 #'
 #' @return `$` or `[[` call
 #' @examples
-#' teal.slice:::call_extract_list("ADSL", "SEX")
-#' teal.slice:::call_extract_list("ADSL", "named element")
-#' teal.slice:::call_extract_list(as.name("ADSL"), as.name("AGE"))
-#' teal.slice:::call_extract_list(as.name("weird name"), as.name("AGE"))
-#' teal.slice:::call_extract_list(as.name("ADSL"), "AGE", dollar = FALSE)
+#' \donttest{
+#' call_extract_list("ADSL", "SEX")
+#' call_extract_list("ADSL", "named element")
+#' call_extract_list("ADSL", "AGE", dollar = FALSE)
+#' }
 #' @keywords internal
 call_extract_list <- function(dataname, varname, dollar = TRUE) {
-  checkmate::assert_flag(dollar)
+  checkmate::assert(
+    checkmate::check_string(dataname),
+    checkmate::check_class(dataname, "name"),
+    checkmate::check_class(dataname, "call")
+  )
   checkmate::assert(
     checkmate::check_string(varname),
     checkmate::check_class(varname, "name"),
-    checkmate::assert(
-      combine = "and",
-      checkmate::check_class(varname, "call"),
-      checkmate::check_false(dollar)
-    )
+    checkmate::check_class(varname, "call")
   )
+  checkmate::assert_flag(dollar)
 
-  dataname <- call_check_parse_varname(dataname)
+  if (is.call(varname) && isTRUE(dollar)) {
+    stop("\"dollar\" must be FALSE if \"varname\" is of type \"call\"")
+  }
+
+  if (is.character(dataname)) {
+    dataname <- str2lang(dataname)
+  }
 
   if (dollar) {
     call("$", dataname, varname)
@@ -379,29 +380,33 @@ call_extract_list <- function(dataname, varname, dollar = TRUE) {
 #' The arguments in ... need to be quoted because they will be evaluated otherwise
 #'
 #' @md
-#' @param name `character` function name, possibly using namespace colon `::`, also
+#' @param name `character`
+#'   function name, possibly using namespace colon `::`, also
 #'   works with `:::` (sometimes needed, but strongly discouraged)
-#' @param ... arguments to pass to function with name `name`
-#' @param unlist_args `list` extra arguments passed in a single list,
+#' @param ...
+#'   arguments to pass to function with name `name`
+#' @param unlist_args `list`
+#'   additional arguments passed in a single list,
 #'   avoids the use of `do.call` with this function
-#' @examples
 #'
+#' @examples
+#' \donttest{
 #' print_call_and_eval <- function(x) {
 #'   eval(print(x))
 #' }
 #'
 #' print_call_and_eval(
-#'   teal.slice:::call_with_colon("base::print", x = 10)
+#'   call_with_colon("base::print", x = 10)
 #' )
 #' \dontrun{
 #' # mtcars$cyl evaluated
 #' print_call_and_eval(
-#'   teal.slice:::call_with_colon("dplyr::filter", as.name("mtcars"), mtcars$cyl == 6)
+#'   call_with_colon("dplyr::filter", as.name("mtcars"), mtcars$cyl == 6)
 #' )
 #'
 #' # mtcars$cyl argument not evaluated immediately (in call expression)
 #' print_call_and_eval(
-#'   teal.slice:::call_with_colon("dplyr::filter", as.name("mtcars"), quote(cyl == 6))
+#'   call_with_colon("dplyr::filter", as.name("mtcars"), quote(cyl == 6))
 #' )
 #'
 #' # does not work because argument is evaluated and the
@@ -413,12 +418,13 @@ call_extract_list <- function(dataname, varname, dollar = TRUE) {
 #'
 #' nb_args <- function(...) nargs()
 #' print_call_and_eval(
-#'   teal.slice:::call_with_colon("nb_args", arg1 = 1, unlist_args = list(arg2 = 2, args3 = 3))
+#'   call_with_colon("nb_args", arg1 = 1, unlist_args = list(arg2 = 2, args3 = 3))
 #' )
 #' # duplicate arguments
 #' print_call_and_eval(
-#'   teal.slice:::call_with_colon("nb_args", arg1 = 1, unlist_args = list(arg2 = 2, args2 = 2))
+#'   call_with_colon("nb_args", arg1 = 1, unlist_args = list(arg2 = 2, args2 = 2))
 #' )
+#' }
 #' }
 #' @keywords internal
 call_with_colon <- function(name, ..., unlist_args = list()) {
@@ -430,32 +436,35 @@ call_with_colon <- function(name, ..., unlist_args = list()) {
   ))
 }
 
-
 #' Combine calls by operator
 #'
 #' Combine list of calls by specific operator
 #'
-#' @param operator (`character(1)` or `name`)\cr
-#'   name/symbol of the operator.
+#' @param operator (`character(1)`)\cr
+#'   name/symbol of the operator passed as character string
 #'
 #' @param calls (`list` of calls)\cr
 #'   list containing calls to be combined by `operator`
 #'
 #' @return call
 #' @examples
-#' teal.slice:::calls_combine_by(
+#' \donttest{
+#' calls_combine_by(
 #'   "&",
 #'   calls = list(
-#'     teal.slice:::call_condition_choice("SEX", "F"),
-#'     teal.slice:::call_condition_range("AGE", c(20, 50)),
-#'     teal.slice:::call_condition_choice("ARM", "ARM: A"),
+#'     call_condition_choice("SEX", "F"),
+#'     call_condition_range("AGE", c(20, 50)),
+#'     call_condition_choice("ARM", "ARM: A"),
 #'     TRUE
 #'   )
 #' )
+#' }
 #' @return a combined `call`
 #' @keywords internal
 calls_combine_by <- function(operator, calls) {
   checkmate::assert_string(operator)
+  # checkmate::assert_list(calls, types = "call")
+
   stopifnot(
     all(
       vapply(

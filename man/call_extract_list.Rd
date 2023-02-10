@@ -7,10 +7,10 @@
 call_extract_list(dataname, varname, dollar = TRUE)
 }
 \arguments{
-\item{dataname}{(\code{character(1)} or \code{name})\cr
+\item{dataname}{(\code{character(1)}, \code{name} or \code{call})\cr
 name of the object}
 
-\item{varname}{(\code{character(1)} or \code{name})\cr
+\item{varname}{(\code{character(1)}, \code{name} or \code{call})\cr
 name of the slot in data}
 
 \item{dollar}{(\code{logical(1)})\cr
@@ -23,10 +23,10 @@ whether returned call should use \code{$} or \code{[[} operator}
 Compose extract call with \code{$} operator
 }
 \examples{
-teal.slice:::call_extract_list("ADSL", "SEX")
-teal.slice:::call_extract_list("ADSL", "named element")
-teal.slice:::call_extract_list(as.name("ADSL"), as.name("AGE"))
-teal.slice:::call_extract_list(as.name("weird name"), as.name("AGE"))
-teal.slice:::call_extract_list(as.name("ADSL"), "AGE", dollar = FALSE)
+\donttest{
+call_extract_list("ADSL", "SEX")
+call_extract_list("ADSL", "named element")
+call_extract_list("ADSL", "AGE", dollar = FALSE)
+}
 }
 \keyword{internal}
