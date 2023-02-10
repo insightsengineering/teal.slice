@@ -17,6 +17,7 @@
 ### Bug fixes
 
 * Fixed an error where the `RangeFilterState` produced an error when using `bootstrap 4`.
+* Fixed a bug that caused the range slider to omit values selected programmatically through the filter API.
 
 ### Miscellaneous
 
