@@ -336,6 +336,7 @@ check_in_subset <- function(subset, choices, pre_msg = "") {
 #' @keywords internal
 #'
 #' @examples
+#' contain_interval <- teal.slice:::contain_interval
 #' ticks <- 1:10
 #' values1 <- c(3, 5)
 #' contain_interval(values1, ticks)
@@ -343,6 +344,7 @@ check_in_subset <- function(subset, choices, pre_msg = "") {
 #' contain_interval(values2, ticks)
 #' values3 <- c(0, 20)
 #' contain_interval(values3, ticks)
+#'
 contain_interval <- function(x, range) {
   checkmate::assert_numeric(x, len = 2L, any.missing = FALSE, sorted = TRUE)
   checkmate::assert_numeric(range, min.len = 2L, any.missing = FALSE, sorted = TRUE)
