@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<coverage line-rate="0.576610090676587" branch-rate="0" lines-covered="2480" lines-valid="4301" branches-covered="0" branches-valid="0" complexity="0" version="3.6.1" timestamp="2023-02-10 13:52:33">
+<coverage line-rate="0.576610090676587" branch-rate="0" lines-covered="2480" lines-valid="4301" branches-covered="0" branches-valid="0" complexity="0" version="3.6.1" timestamp="2023-02-10 14:15:49">
   <sources/>
   <packages>
     <package name="teal.slice" line-rate="0.576610090676587" branch-rate="0" complexity="0">
@@ -9979,26 +9979,26 @@
             </method>
             <method name="check_in_subset" signature="" line-rate="1" branch-rate="0">
               <lines>
-                <line number="298" hits="282" branch="false"/>
                 <line number="300" hits="282" branch="false"/>
-                <line number="301" hits="282" branch="false"/>
+                <line number="302" hits="282" branch="false"/>
                 <line number="303" hits="282" branch="false"/>
-                <line number="304" hits="3" branch="false"/>
-                <line number="305" hits="3" branch="false"/>
+                <line number="305" hits="282" branch="false"/>
                 <line number="306" hits="3" branch="false"/>
                 <line number="307" hits="3" branch="false"/>
                 <line number="308" hits="3" branch="false"/>
                 <line number="309" hits="3" branch="false"/>
-                <line number="311" hits="279" branch="false"/>
+                <line number="310" hits="3" branch="false"/>
+                <line number="311" hits="3" branch="false"/>
+                <line number="313" hits="279" branch="false"/>
               </lines>
             </method>
             <method name="contain_interval" signature="" line-rate="1" branch-rate="0">
               <lines>
-                <line number="347" hits="170" branch="false"/>
-                <line number="348" hits="166" branch="false"/>
-                <line number="350" hits="162" branch="false"/>
-                <line number="351" hits="162" branch="false"/>
-                <line number="352" hits="162" branch="false"/>
+                <line number="351" hits="170" branch="false"/>
+                <line number="352" hits="166" branch="false"/>
+                <line number="354" hits="162" branch="false"/>
+                <line number="355" hits="162" branch="false"/>
+                <line number="356" hits="162" branch="false"/>
               </lines>
             </method>
           </methods>
@@ -10118,22 +10118,22 @@
             <line number="274" hits="0" branch="false"/>
             <line number="275" hits="0" branch="false"/>
             <line number="276" hits="0" branch="false"/>
-            <line number="298" hits="282" branch="false"/>
             <line number="300" hits="282" branch="false"/>
-            <line number="301" hits="282" branch="false"/>
+            <line number="302" hits="282" branch="false"/>
             <line number="303" hits="282" branch="false"/>
-            <line number="304" hits="3" branch="false"/>
-            <line number="305" hits="3" branch="false"/>
+            <line number="305" hits="282" branch="false"/>
             <line number="306" hits="3" branch="false"/>
             <line number="307" hits="3" branch="false"/>
             <line number="308" hits="3" branch="false"/>
             <line number="309" hits="3" branch="false"/>
-            <line number="311" hits="279" branch="false"/>
-            <line number="347" hits="170" branch="false"/>
-            <line number="348" hits="166" branch="false"/>
-            <line number="350" hits="162" branch="false"/>
-            <line number="351" hits="162" branch="false"/>
-            <line number="352" hits="162" branch="false"/>
+            <line number="310" hits="3" branch="false"/>
+            <line number="311" hits="3" branch="false"/>
+            <line number="313" hits="279" branch="false"/>
+            <line number="351" hits="170" branch="false"/>
+            <line number="352" hits="166" branch="false"/>
+            <line number="354" hits="162" branch="false"/>
+            <line number="355" hits="162" branch="false"/>
+            <line number="356" hits="162" branch="false"/>
           </lines>
         </class>
         <class name="FilterState.R" filename="R/FilterState.R" line-rate="0.617391304347826" branch-rate="0" complexity="0">
