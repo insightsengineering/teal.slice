@@ -248,7 +248,15 @@ call_extract_array <- function(dataname = ".", row = NULL, column = NULL, aisle 
   )
   checkmate::assert_multi_class(row, c("name", "call", "character", "logical", "integer"), null.ok = TRUE)
   checkmate::assert_multi_class(column, c("name", "call", "character", "logical", "integer"), null.ok = TRUE)
-  checkmate::assert_multi_class(aisle, c("name", "call", "character", "logical", "integer"), null.ok = TRUE)
+  checkmate::assert(
+    checkmate::check_true(is.null(aisle)),
+    checkmate::check_true(is.name(aisle)),
+    checkmate::check_true(is.call(aisle)),
+    checkmate::check_true(is.language(aisle)),
+    checkmate::check_character(aisle, null.ok = TRUE),
+    checkmate::check_logical(aisle, null.ok = TRUE),
+    checkmate::check_integerish(aisle, null.ok = TRUE)
+  )
 
   if (is.language(dataname)) {
     dataname <- paste(trimws(deparse(dataname, width.cutoff = 500L)), collapse = "\n")
