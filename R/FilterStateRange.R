@@ -19,6 +19,8 @@
 RangeFilterState <- R6::R6Class( # nolint
   "RangeFilterState",
   inherit = FilterState,
+
+  # public methods ----
   public = list(
 
     #' @description
@@ -43,14 +45,28 @@ RangeFilterState <- R6::R6Class( # nolint
                           varlabel = character(0),
                           dataname = NULL,
                           extract_type = character(0)) {
-      stopifnot(is.numeric(x))
-      stopifnot(any(is.finite(x)))
+      checkmate::assert_numeric(x, all.missing = FALSE)
+      if (!any(is.finite(x))) stop("\"x\" contains no finite values")
 
       super$initialize(x, varname, varlabel, dataname, extract_type)
-      var_range <- range(x, finite = TRUE)
+      private$inf_count <- sum(is.infinite(x))
+      private$is_integer <- checkmate::test_integerish(x)
+      private$keep_inf <- reactiveVal(FALSE)
 
-      private$set_choices(var_range)
-      self$set_selected(var_range)
+      x_range <- range(x, finite = TRUE)
+      x_pretty <- pretty(x_range, 100L)
+
+      if (identical(diff(x_range), 0)) {
+        private$set_choices(x_range)
+        private$slider_ticks <- signif(x_range, digits = 10)
+        private$slider_step <- NULL
+        self$set_selected(x_range)
+      } else {
+        private$set_choices(range(x_pretty))
+        private$slider_ticks <- signif(x_pretty, digits = 10)
+        private$slider_step <- signif(private$get_pretty_range_step(x_pretty), digits = 10)
+        self$set_selected(range(x_pretty))
+      }
 
       private$histogram_data <- if (sum(is.finite(x)) >= 2) {
         as.data.frame(
@@ -59,29 +75,28 @@ RangeFilterState <- R6::R6Class( # nolint
       } else {
         data.frame(x = NA_real_, y = NA_real_)
       }
-      private$inf_count <- sum(is.infinite(x))
-      private$is_integer <- checkmate::test_integerish(x)
-      private$keep_inf <- reactiveVal(FALSE)
 
       return(invisible(self))
     },
 
     #' @description
-    #' Returns a formatted string representing this `LogicalFilterState`.
+    #' Returns a formatted string representing this `RangeFilterState`.
     #'
-    #' @param indent (`numeric(1)`) the number of spaces before after each new line character of the formatted string.
-    #' Default: 0
+    #' @param indent (`numeric(1)`)
+    #'        the number of spaces before after each new line character of the formatted string.
+    #'        Default: 0
     #' @return `character(1)` the formatted string
     #'
     format = function(indent = 0) {
       checkmate::assert_number(indent, finite = TRUE, lower = 0)
 
+      vals <- self$get_selected()
       sprintf(
         "%sFiltering on: %s\n%1$s  Selected range: %s - %s\n%1$s  Include missing values: %s",
         format("", width = indent),
         private$varname,
-        format(self$get_selected(), nsmall = 3)[1],
-        format(self$get_selected(), nsmall = 3)[2],
+        format(vals[1], nsmall = 3),
+        format(vals[2], nsmall = 3),
         format(self$get_keep_na())
       )
     },
@@ -198,12 +213,17 @@ RangeFilterState <- R6::R6Class( # nolint
       super$set_selected(value)
     }
   ),
+
+  # private fields----
   private = list(
     histogram_data = data.frame(),
     keep_inf = NULL, # because it holds reactiveVal
     inf_count = integer(0),
     is_integer = logical(0),
+    slider_step = numeric(0), # step for the slider input widget, calculated from input data (x)
+    slider_ticks = numeric(0), # allowed values for the slider input widget, calculated from input data (x)
 
+    # private methods ----
     # Adds is.infinite(varname) before existing condition calls if keep_inf is selected
     # returns a call
     add_keep_inf_call = function(filter_call) {
@@ -218,41 +238,22 @@ RangeFilterState <- R6::R6Class( # nolint
       }
     },
 
-    # @description
-    # formats range to pretty numbers to reduce decimal precision
-    # @param values (numeric) initial range to be formatted
-    # @return numeric(3) with names min, max, step - relevant for sliderInput
-    get_pretty_range_inputs = function(values) {
-      v_pretty_range <- pretty(values, n = 100)
-      min <- min(v_pretty_range)
-      max <- max(v_pretty_range)
-
-      step <- private$get_pretty_range_step(min, max, v_pretty_range)
-
-      c(
-        min = min,
-        max = max,
-        step = step
-      )
-    },
     # @description gets pretty step size for range slider
     #  adaptation of shiny's method (see shiny/R/input-slider.R function findStepSize)
-    # @param min (numeric) minimum of pretty values
-    # @param max (numeric) maximum of pretty values
     # @param pretty_range (numeric(n)) vector of pretty values
     # @return numeric(1) pretty step size for the sliderInput
-    get_pretty_range_step = function(min, max, pretty_range) {
-      range <- max - min
-
-      if (private$is_integer && range > 2) {
+    get_pretty_range_step = function(pretty_range) {
+      if (private$is_integer && diff(range(pretty_range) > 2)) {
         return(1L)
       } else {
         n_steps <- length(pretty_range) - 1
         return(
-          signif(digits = 10, (max - min) / n_steps)
+          signif(digits = 10, (max(pretty_range) - min(pretty_range)) / n_steps)
         )
       }
     },
+
+    # overwrites superclass method
     validate_selection = function(value) {
       if (!is.numeric(value)) {
         stop(
@@ -263,42 +264,35 @@ RangeFilterState <- R6::R6Class( # nolint
           )
         )
       }
-      pre_msg <- sprintf(
-        "data '%s', variable '%s': ",
-        self$get_dataname(),
-        self$get_varname()
-      )
-      check_in_range(value, private$choices, pre_msg = pre_msg)
+      invisible(NULL)
     },
-    cast_and_validate = function(values) {
-      tryCatch(
-        expr = {
-          values <- as.numeric(values)
-          if (any(is.na(values))) stop()
-        },
-        error = function(error) stop("The array of set values must contain values coercible to numeric.")
-      )
-      if (length(values) != 2) stop("The array of set values must have length two.")
-      values
-    },
-    remove_out_of_bound_values = function(values) {
-      if (values[1] < private$choices[1]) {
-        warning(paste(
-          "Value:", values[1], "is outside of the possible range for column", private$varname,
-          "of dataset", private$dataname, "."
-        ))
-        values[1] <- private$choices[1]
-      }
 
-      if (values[2] > private$choices[2]) {
-        warning(paste(
-          "Value:", values[2], "is outside of the possible range for column", private$varname,
-          "of dataset", private$dataname, "."
+    # overwrites superclass method
+    # additionally adjusts progtammatic selection to existing slider ticks
+    cast_and_validate = function(values) {
+      if (!is.atomic(values)) stop("Values to set must be an atomic vector.")
+      values <- as.numeric(values)
+      if (any(is.na(values))) stop("The array of set values must contain values coercible to numeric.")
+      if (length(values) != 2) stop("The array of set values must have length two.")
+
+      values_adjusted <- contain_interval(values, private$slider_ticks)
+      if (!identical(values, values_adjusted)) {
+        logger::log_warn(sprintf(
+          paste(
+            "Programmatic range specification on %s was adjusted to existing slider ticks.",
+            "It is now broader in order to contain the specified values."
+          ),
+          private$varname
         ))
-        values[2] <- private$choices[2]
       }
+      values_adjusted
+    },
+    # for numeric ranges selecting out of bound values is allowed
+    remove_out_of_bound_values = function(values) {
       values
     },
+
+    # shiny modules ----
 
     # UI Module for `RangeFilterState`.
     # This UI element contains two values for `min` and `max`
@@ -307,7 +301,6 @@ RangeFilterState <- R6::R6Class( # nolint
     #  id of shiny element
     ui_inputs = function(id) {
       ns <- NS(id)
-      pretty_range_inputs <- private$get_pretty_range_inputs(private$choices)
       fluidRow(
         div(
           class = "filterPlotOverlayRange",
@@ -318,18 +311,11 @@ RangeFilterState <- R6::R6Class( # nolint
           teal.widgets::optionalSliderInput(
             inputId = ns("selection"),
             label = NULL,
-            min = pretty_range_inputs["min"],
-            max = pretty_range_inputs["max"],
-            # on filter init without predefined value select "pretty" (wider) range
-            value = isolate({
-              if (identical(private$choices, self$get_selected())) {
-                pretty_range_inputs[c("min", "max")]
-              } else {
-                self$get_selected()
-              }
-            }),
-            width = "100%",
-            step = pretty_range_inputs["step"]
+            min = private$choices[1],
+            max = private$choices[2],
+            value = isolate(private$selected()),
+            step = private$slider_step,
+            width = "100%"
           )
         ),
         private$keep_inf_ui(ns("keep_inf")),
@@ -373,7 +359,7 @@ RangeFilterState <- R6::R6Class( # nolint
             ignoreInit = TRUE,
             eventExpr = self$get_selected(),
             handlerExpr = {
-              if (!setequal(self$get_selected(), input$selection)) {
+              if (!isTRUE(all.equal(input$selection, self$get_selected()))) {
                 updateSliderInput(
                   session = session,
                   inputId = "selection",
@@ -384,20 +370,12 @@ RangeFilterState <- R6::R6Class( # nolint
           )
 
           private$observers$selection <- observeEvent(
-            ignoreNULL = FALSE, # ignoreNULL: we don't want to ignore NULL when nothing is selected in `selectInput`,
+            ignoreNULL = FALSE, # ignoreNULL: we don't want to ignore NULL when nothing is selected in `selectInput`
             ignoreInit = TRUE, # ignoreInit: should not matter because we set the UI with the desired initial state
             eventExpr = input$selection,
             handlerExpr = {
-              # because we extended real range into rounded one we need to apply intersect(range_input, range_real)
-              selection_state <- as.numeric(pmax(pmin(input$selection, private$choices[2]), private$choices[1]))
-              if (!setequal(selection_state, self$get_selected())) {
-                validate(
-                  need(
-                    input$selection[1] <= input$selection[2],
-                    "Left range boundary should be lower than right"
-                  )
-                )
-                self$set_selected(selection_state)
+              if (!isTRUE(all.equal(input$selection, self$get_selected()))) {
+                self$set_selected(input$selection)
               }
               logger::log_trace(
                 sprintf(

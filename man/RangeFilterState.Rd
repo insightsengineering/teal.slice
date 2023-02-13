@@ -118,7 +118,7 @@ whether condition calls should be prefixed by dataname. Possible values:
 \if{html}{\out{<a id="method-RangeFilterState-format"></a>}}
 \if{latex}{\out{\hypertarget{method-RangeFilterState-format}{}}}
 \subsection{Method \code{format()}}{
-Returns a formatted string representing this \code{LogicalFilterState}.
+Returns a formatted string representing this \code{RangeFilterState}.
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{RangeFilterState$format(indent = 0)}\if{html}{\out{</div>}}
 }
@@ -126,7 +126,8 @@ Returns a formatted string representing this \code{LogicalFilterState}.
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
-\item{\code{indent}}{(\code{numeric(1)}) the number of spaces before after each new line character of the formatted string.
+\item{\code{indent}}{(\code{numeric(1)})
+the number of spaces before after each new line character of the formatted string.
 Default: 0}
 }
 \if{html}{\out{</div>}}

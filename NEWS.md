@@ -1,4 +1,4 @@
-# teal.slice 0.2.0.9021
+# teal.slice 0.2.0.9022
 
 * Examples now use `scda.2022` instead of `scda.2021`.
 * Transferred data hashing step in `FilteredDataset` to `teal`.
@@ -17,6 +17,7 @@
 ### Bug fixes
 
 * Fixed an error where the `RangeFilterState` produced an error when using `bootstrap 4`.
+* Fixed a bug that caused the range slider to omit values selected programmatically through the filter API.
 
 ### Miscellaneous
 

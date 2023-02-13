@@ -19,6 +19,8 @@
 LogicalFilterState <- R6::R6Class( # nolint
   "LogicalFilterState",
   inherit = FilterState,
+
+  # public methods ----
   public = list(
 
     #' @description
@@ -121,8 +123,14 @@ LogicalFilterState <- R6::R6Class( # nolint
       super$set_selected(value)
     }
   ),
+
+  # private fields ----
+
   private = list(
     histogram_data = data.frame(),
+
+    # private methods ----
+
     validate_selection = function(value) {
       if (!(checkmate::test_logical(value, max.len = 1, any.missing = FALSE))) {
         stop(
@@ -152,6 +160,8 @@ LogicalFilterState <- R6::R6Class( # nolint
       values_logical
     },
 
+    # shiny modules ----
+
     # @description
     # UI Module for `EmptyFilterState`.
     # This UI element contains available choices selection and
@@ -161,21 +171,18 @@ LogicalFilterState <- R6::R6Class( # nolint
     ui_inputs = function(id) {
       ns <- NS(id)
       l_counts <- as.numeric(names(private$choices))
-      is_na_l_counts <- is.na(l_counts)
-      if (any(is_na_l_counts)) l_counts[is_na_l_counts] <- 0
+      l_counts[is.na(l_counts)] <- 0
+      l_freqs <- l_counts / sum(l_counts)
       labels <- lapply(seq_along(private$choices), function(i) {
-        l_count <- l_counts[i]
-        l_freq <- l_count / sum(l_counts)
-        if (is.na(l_freq) || is.nan(l_freq)) l_freq <- 0
         div(
           class = "choices_state_label",
-          style = sprintf("width:%s%%", l_freq * 100),
+          style = sprintf("width:%s%%", l_freqs[i] * 100),
           span(
             class = "choices_state_label_text",
             sprintf(
               "%s (%s)",
               private$choices[i],
-              l_count
+              l_counts[i]
             )
           )
         )
