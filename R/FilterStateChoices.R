@@ -42,7 +42,7 @@ ChoicesFilterState <- R6::R6Class( # nolint
     #' \item{`"matrix"`}{ `varname` in the condition call will be returned as `<dataname>[, <varname>]`}
     #' }
     initialize = function(x,
-                          x_reactive,
+                          x_reactive = NULL,
                           varname,
                           varlabel = character(0),
                           dataname = NULL,
@@ -65,8 +65,9 @@ ChoicesFilterState <- R6::R6Class( # nolint
       private$set_choices(names(choices))
       self$set_selected(names(choices))
       private$set_choices_counts(unname(choices))
-
-      private$filtered_count <- reactive(private$get_filtered_counts(isolate(x_reactive())))
+      # browser()
+      # private$filtered_count <- reactive(private$get_filtered_counts(x_reactive()))
+      # isolate(private$get_choice_labels())
 
       return(invisible(self))
     },
@@ -187,11 +188,10 @@ ChoicesFilterState <- R6::R6Class( # nolint
     },
     get_choice_labels = function() {
       if (private$is_checkboxgroup()) {
-        print("ping1")
         l_counts <- private$choices_counts
         l_counts[is.na(l_counts)] <- 0
 
-        f_counts <- unname(table(factor(private$x_reactive(), levels = private$choices)))
+        f_counts <- private$get_filtered_counts(private$x_reactive())
         f_counts[is.na(f_counts)] <- 0
 
         l_freqs <- l_counts / sum(l_counts)
@@ -226,7 +226,7 @@ ChoicesFilterState <- R6::R6Class( # nolint
         xslash <- if (is.null(private$x_reactive())) {
           ""
         } else {
-          sprintf("%s/", table(factor(private$x_reactive(), levels = private$choices)))
+          sprintf("%s/", private$get_filtered_counts(private$x_reactive()))
         }
         sprintf("%s (%s%s)", private$choices, xslash, private$choices_counts)
       }
