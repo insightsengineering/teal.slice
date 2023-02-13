@@ -56,21 +56,17 @@ ChoicesFilterState <- R6::R6Class( # nolint
 
       # validation on x_reactive here
       super$initialize(x, x_reactive, varname, varlabel, dataname, extract_type)
+
       if (!is.factor(x)) {
         x <- factor(x, levels = as.character(sort(unique(x))))
       }
-
       x <- droplevels(x)
-      tbl <- table(x)
-      choices <- names(tbl)
-      names(choices) <- tbl
+      choices <- table(x)
+      private$set_choices(names(choices))
+      self$set_selected(names(choices))
+      private$set_choices_counts(unname(choices))
 
-      private$set_choices(as.list(choices))
-      self$set_selected(unname(choices))
-      private$histogram_data <- data.frame(
-        x = levels(x),
-        y = tabulate(x)
-      )
+      private$filtered_count <- reactive(private$get_filtered_counts(isolate(x_reactive())))
 
       return(invisible(self))
     },
@@ -140,7 +136,15 @@ ChoicesFilterState <- R6::R6Class( # nolint
     }
   ),
   private = list(
-    histogram_data = data.frame(),
+    choices_counts = NULL,
+    filtered_count = NULL,
+    set_choices_counts = function(choices_counts) {
+      private$choices_counts <- choices_counts
+      invisible(NULL)
+    },
+    get_filtered_counts = function(filtered) {
+      table(factor(filtered, levels = private$choices))
+    },
     validate_selection = function(value) {
       if (!is.character(value)) {
         stop(
@@ -183,49 +187,48 @@ ChoicesFilterState <- R6::R6Class( # nolint
     },
     get_choice_labels = function() {
       if (private$is_checkboxgroup()) {
-        l_counts <- as.numeric(names(private$choices))
-        is_na_l_counts <- is.na(l_counts)
-        if (any(is_na_l_counts)) l_counts[is_na_l_counts] <- 0
+        print("ping1")
+        l_counts <- private$choices_counts
+        l_counts[is.na(l_counts)] <- 0
 
         f_counts <- unname(table(factor(private$x_reactive(), levels = private$choices)))
         f_counts[is.na(f_counts)] <- 0
 
-        labels <- lapply(seq_along(private$choices), function(i) {
-          l_count <- l_counts[i]
-          f_count <- f_counts[i]
-          l_freq <- l_count / sum(l_counts)
-          f_freq <- f_count / sum(l_counts)
+        l_freqs <- l_counts / sum(l_counts)
+        f_freqs <- f_counts / sum(l_counts)
 
-          if (is.na(l_freq) || is.nan(l_freq)) l_freq <- 0
-          if (is.na(f_freq) || is.nan(f_freq)) f_freq <- 0
+        l_freqs[is.na(l_freqs) | is.nan(l_freqs)] <- 0
+        f_freqs[is.na(f_freqs) | is.nan(f_freqs)] <- 0
+
+        labels <- lapply(seq_along(private$choices), function(i) {
           tagList(
             div(
               class = "choices_state_label_unfiltered",
-              style = sprintf("width:%s%%", l_freq * 100)
+              style = sprintf("width:%s%%", l_freqs[i] * 100)
             ),
             if (!is.null(private$x_reactive())) {
               div(
                 class = "choices_state_label",
-                style = sprintf("width:%s%%", f_freq * 100)
+                style = sprintf("width:%s%%", f_freqs[i] * 100)
               )
             },
             div(
               class = "choices_state_label_text",
               sprintf(
                 "%s (%s%s)", private$choices[i],
-                if (is.null(private$x_reactive())) "" else sprintf("%s/", f_count),
-                l_count
+                if (is.null(private$x_reactive())) "" else sprintf("%s/", f_counts[i]),
+                l_counts[i]
               )
             )
           )
         })
       } else {
-        x <- if (is.null(private$x_reactive())) {
+        xslash <- if (is.null(private$x_reactive())) {
           ""
         } else {
           sprintf("%s/", table(factor(private$x_reactive(), levels = private$choices)))
         }
-        sprintf("%s (%s%s)", private$choices, x, names(private$choices))
+        sprintf("%s (%s%s)", private$choices, xslash, private$choices_counts)
       }
     },
 
