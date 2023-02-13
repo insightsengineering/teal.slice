@@ -65,9 +65,6 @@ ChoicesFilterState <- R6::R6Class( # nolint
       private$set_choices(names(choices))
       self$set_selected(names(choices))
       private$set_choices_counts(unname(choices))
-      # browser()
-      # private$filtered_count <- reactive(private$get_filtered_counts(x_reactive()))
-      # isolate(private$get_choice_labels())
 
       return(invisible(self))
     },
