@@ -53,8 +53,8 @@ ChoicesFilterState <- R6::R6Class( # nolint
         length(unique(x[!is.na(x)])) < getOption("teal.threshold_slider_vs_checkboxgroup"),
         combine = "or"
       )
+      checkmate::assert_class(x_reactive, "reactive", null.ok = TRUE)
 
-      # validation on x_reactive here
       super$initialize(x, x_reactive, varname, varlabel, dataname, extract_type)
 
       if (!is.factor(x)) {
@@ -135,13 +135,17 @@ ChoicesFilterState <- R6::R6Class( # nolint
   ),
   private = list(
     choices_counts = NULL,
-    filtered_count = NULL,
+    filtered_counts = NULL,
     set_choices_counts = function(choices_counts) {
       private$choices_counts <- choices_counts
       invisible(NULL)
     },
-    get_filtered_counts = function(filtered) {
-      table(factor(filtered, levels = private$choices))
+    get_filtered_counts = function() {
+      if (!is.null(private$x_reactive)) {
+        table(factor(private$x_reactive(), levels = private$choices))
+      } else {
+        NULL
+      }
     },
     validate_selection = function(value) {
       if (!is.character(value)) {
@@ -188,7 +192,7 @@ ChoicesFilterState <- R6::R6Class( # nolint
         l_counts <- private$choices_counts
         l_counts[is.na(l_counts)] <- 0
 
-        f_counts <- private$get_filtered_counts(private$x_reactive())
+        f_counts <- private$get_filtered_counts()
         f_counts[is.na(f_counts)] <- 0
 
         l_freqs <- l_counts / sum(l_counts)
