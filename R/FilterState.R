@@ -598,13 +598,11 @@ FilterState <- R6::R6Class( # nolint
         invisible(NULL)
       })
     },
-    #' @description
-    #' Shiny module UI for bootstrap version 3
-    #'
-    #' @param id (`character(1)`)\cr
-    #'  shiny element (module instance) id;
-    #'  the UI for this class contains simple message stating that it is not supported
-    #' @param parent_id (`character(1)`) id of the FilterStates card container
+    # @description
+    # Filter card UI for Bootstrap 3.
+    #
+    # @param id (`character(1)`) Id for the containing HTML element.
+    # @param parent_id (`character(1)`) id of the FilterStates card container
     ui_bs3 = function(id, parent_id) {
       ns <- NS(id)
 
@@ -645,13 +643,11 @@ FilterState <- R6::R6Class( # nolint
         )
       )
     },
-    #' @description
-    #' Shiny module UI for bootstrap versions 4 and 5
-    #'
-    #' @param id (`character(1)`)\cr
-    #'  shiny element (module instance) id;
-    #'  the UI for this class contains simple message stating that it is not supported
-    #' @param parent_id (`character(1)`) id of the FilterStates card container
+    # @description
+    # Filter card ui for Bootstrap 4 and 5.
+    #
+    # @param id (`character(1)`) Id for the containing HTML element.
+    # @param parent_id (`character(1)`) id of the FilterStates card container
     ui_bs45 = function(id, parent_id) {
       ns <- NS(id)
 
