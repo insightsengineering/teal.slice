@@ -142,24 +142,19 @@ FilterStates <- R6::R6Class( # nolint
         x = filter_items,
         f = Negate(is.null)
       )
-      if (length(filter_items) > 0) {
-        # below code translates to call by the names of filter_items
-        rhs <- call_with_colon(
-          self$get_fun(),
-          str2lang(private$dataname),
-          unlist_args = filter_items
-        )
+
+      if (length(filter_items) >= 0L) {
+        filter_function <- self$get_fun()
+        data_name <- str2lang(private$dataname)
         substitute(
           env = list(
-            lhs = str2lang(private$dataname),
-            rhs = rhs
+            lhs = data_name,
+            rhs = as.call(c(filter_function, c(list(data_name), filter_items)))
           ),
           expr = lhs <- rhs
         )
-      } else {
-        # avoid no-op call
-        NULL
       }
+      # otherwise NULL is returned
     },
 
     #' @description
@@ -179,7 +174,7 @@ FilterStates <- R6::R6Class( # nolint
     #' @return `character(1)` the name of the function
     #'
     get_fun = function() {
-      "subset"
+      quote(subset)
     },
 
     # state_list methods ----
