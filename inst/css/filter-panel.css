@@ -251,3 +251,17 @@ a.remove_all:hover {
   display: flex;
   justify-content: space-between;
 }
+
+.state-count-container {
+  width: 90%;
+  position: absolute;
+}
+
+.state-count-bar {
+  background-color: lightblue !important;
+}
+
+.state-count-text {
+  position: absolute;
+  width: 100%;
+}

@@ -206,13 +206,27 @@ LogicalFilterState <- R6::R6Class( # nolint
     #  id of shiny element
     ui_inputs = function(id) {
       ns <- NS(id)
+
+      countsmax <- as.numeric(names(private$choices))
+      countsmin <- rep(0, length(private$choices))
+      countsnow <- isolate(unname(table(factor(private$x_reactive(), levels = private$choices))))
+
+      labels <- countBarLabels(
+        inputId = ns("labels"),
+        choices = as.character(private$choices),
+        countsmin = countsmin,
+        countsnow = countsnow,
+        countsmax = countsmax
+      )
+
       div(
         div(
           class = "choices_state",
+          uiOutput(ns("empty"), inline = TRUE),
           radioButtons(
             ns("selection"),
             label = NULL,
-            choiceNames = isolate(private$get_choice_labels()),
+            choiceNames = labels,
             choiceValues = as.character(private$choices),
             selected = isolate(as.character(self$get_selected())),
             width = "100%"
@@ -235,36 +249,27 @@ LogicalFilterState <- R6::R6Class( # nolint
           # this observer is needed in the situation when private$selected has been
           # changed directly by the api - then it's needed to rerender UI element
           # to show relevant values
-          private$observers$seleted_api <- observeEvent(
-            ignoreNULL = TRUE, # this is radio button so something have to be selected
-            ignoreInit = TRUE,
-            eventExpr = self$get_selected(),
-            handlerExpr = {
-              if (!setequal(self$get_selected(), input$selection)) {
-                updateRadioButtons(
-                  session = session,
-                  inputId = "selection",
-                  selected =  self$get_selected()
-                )
-                logger::log_trace(sprintf(
-                  "LogicalFilterState$server@1 selection of variable %s changed, dataname: %s",
-                  private$varname,
-                  private$dataname
-                ))
-              }
-            }
-          )
+          output$empty <- renderUI({
+            logger::log_trace(sprintf(
+              "LogicalFilterState$server@1 selection of variable %s changed, dataname: %s",
+              private$varname,
+              private$dataname
+            ))
+            updateCountBarLabels(
+              inputId = "labels",
+              choices = as.character(private$choices),
+              countsmin = rep(0, length(private$choices)),
+              countsmax = as.numeric(names(private$choices)),
+              countsnow = unname(table(factor(private$x_reactive(), levels = private$choices)))
+            )
+            NULL
+          })
 
           private$observers$selection <- observeEvent(
             ignoreNULL = TRUE, # in radio button something has to be selected to input$selection can't be NULL
             ignoreInit = TRUE,
             eventExpr = input$selection,
             handlerExpr = {
-              selection_state <- as.logical(input$selection)
-              if (is.null(selection_state)) {
-                selection_state <- logical(0)
-              }
-              self$set_selected(selection_state)
               logger::log_trace(
                 sprintf(
                   "LogicalFilterState$server@2 selection of variable %s changed, dataname: %s",
@@ -272,6 +277,11 @@ LogicalFilterState <- R6::R6Class( # nolint
                   private$dataname
                 )
               )
+              selection_state <- as.logical(input$selection)
+              if (is.null(selection_state)) {
+                selection_state <- logical(0)
+              }
+              self$set_selected(selection_state)
             }
           )
 
@@ -279,10 +289,15 @@ LogicalFilterState <- R6::R6Class( # nolint
 
 
           observeEvent(private$x_reactive(), {
+            logger::log_trace(
+              sprintf(
+                "LogicalFilterState$server@2 state of variable %s changed, dataname: %s",
+                private$varname,
+                private$dataname
+              )
+            )
             updateRadioButtons(
               inputId = "selection",
-              choiceNames = private$get_choice_labels(),
-              choiceValues = as.character(private$choices),
               selected = self$get_selected()
             )
           })
