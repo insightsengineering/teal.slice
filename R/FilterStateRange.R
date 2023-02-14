@@ -54,7 +54,7 @@ RangeFilterState <- R6::R6Class( # nolint
       if (!any(is.finite(x))) stop("\"x\" contains no finite values")
 
       # validation on x_reactive here
-      super$initialize(x, varname, varlabel, dataname, extract_type)
+      super$initialize(x, x_reactive, varname, varlabel, dataname, extract_type)
 
       private$is_integer <- checkmate::test_integerish(x)
       private$data_count <- length(x)
