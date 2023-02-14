@@ -9,7 +9,7 @@ Shiny.addCustomMessageHandler("updateCountBar",
   }
 );
 
-Shiny.addCustomMessageHandler("updatecountLabel",
+Shiny.addCustomMessageHandler("updateCountLabel",
   function(message) {
     /* updates Text */
     let e1 = document.getElementById(message.id + "-count_text");

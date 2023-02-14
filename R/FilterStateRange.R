@@ -461,7 +461,7 @@ RangeFilterState <- R6::R6Class( # nolint
         #  and if the reactive changes - reactive triggers only if the output is visible.
         # 2. We want to trigger change of the labels only if reactive count changes (not underlying data)
         output$empty <- renderUI({
-          updatecountLabel(
+          updateCountLabel(
             inputId = "count_label",
             label = "Keep Inf",
             countmax = private$inf_count,

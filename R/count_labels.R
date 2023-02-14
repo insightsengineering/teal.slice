@@ -136,7 +136,7 @@ updateCountBarLabels <-  function(session = getDefaultReactiveDomain(), inputId,
       countmin <- countsmin[i]
       countmax <- countsmax[i]
       countnow <- if (is.null(countsnow)) countmax else countsnow[i]
-      updatecountLabel(
+      updateCountLabel(
         inputId = ns(i),
         label = choice,
         countmax = countmax,
@@ -160,16 +160,16 @@ updateCountBarLabel <- function(session = getDefaultReactiveDomain(), inputId, l
   label <- make_count_label(label, countmax = countmax, countnow = countnow)
   if (is.null(countnow)) countnow <- countmax
 
-  updatecountLabel(inputId = inputId, label = label, countmax = countmax, countnow = countnow)
+  updateCountLabel(inputId = inputId, label = label, countmax = countmax, countnow = countnow)
   updateCountBar(inputId = inputId, countmin = countmin, countmax = countmax, countnow = countnow)
 
   invisible(NULL)
 }
 
-updatecountLabel <- function(session = getDefaultReactiveDomain(), inputId, label, countmax, countnow) {
+updateCountLabel <- function(session = getDefaultReactiveDomain(), inputId, label, countmax, countnow) {
   label <- make_count_text(label = label, countmax = countmax, countnow = countnow)
   session$sendCustomMessage(
-    type = "updatecountLabel",
+    type = "updateCountLabel",
     message = list(
       id = session$ns(inputId),
       label = label

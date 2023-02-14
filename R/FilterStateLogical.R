@@ -164,37 +164,6 @@ LogicalFilterState <- R6::R6Class( # nolint
       )
       values_logical
     },
-    get_choice_labels = function() {
-      l_counts <- as.numeric(names(private$choices))
-      is_na_l_counts <- is.na(l_counts)
-      if (any(is_na_l_counts)) l_counts[is_na_l_counts] <- 0
-      f_counts <- unname(table(factor(private$x_reactive(), levels = private$choices)))
-      f_counts[is.na(f_counts)] <- 0
-      labels <- lapply(seq_along(private$choices), function(i) {
-        l_count <- l_counts[i]
-        f_count <- f_counts[i]
-        l_freq <- l_count / sum(l_counts)
-        f_freq <- f_count / sum(l_counts)
-
-        if (is.na(l_freq) || is.nan(l_freq)) l_freq <- 0
-        if (is.na(f_freq) || is.nan(f_freq)) f_freq <- 0
-        tagList(
-          div(
-            class = "choices_state_label_unfiltered",
-            style = sprintf("width:%s%%", l_freq * 100)
-          ),
-          div(
-            class = "choices_state_label",
-            style = sprintf("width:%s%%", f_freq * 100)
-          ),
-          div(
-            class = "choices_state_label_text",
-            sprintf("%s (%s/%s)", private$choices[i], f_count, l_count)
-          )
-        )
-      })
-    },
-
 
     # shiny modules ----
 
