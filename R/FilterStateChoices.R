@@ -321,7 +321,7 @@ ChoicesFilterState <- R6::R6Class( # nolint
             ignoreInit = TRUE, # ignoreInit: should not matter because we set the UI with the desired initial state
             eventExpr = input$selection_open,
             handlerExpr = {
-              if (!isTRUE(input$ID_open)) {
+              if (!isTRUE(input$selection_open)) {
                 selection <- if (is.null(input$selection)) character(0) else input$selection
                 self$set_selected(selection)
                 logger::log_trace(sprintf(
