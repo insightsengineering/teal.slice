@@ -140,8 +140,8 @@ ChoicesFilterState <- R6::R6Class( # nolint
   # private members ----
 
   private = list(
-    choices_counts = NULL,
-    filtered_counts = NULL,
+    choices_counts = integer(0),
+    filtered_counts = NULL, # reactive
     # private methods ----
     set_choices_counts = function(choices_counts) {
       private$choices_counts <- choices_counts
