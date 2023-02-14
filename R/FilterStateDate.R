@@ -19,6 +19,9 @@
 DateFilterState <- R6::R6Class( # nolint
   "DateFilterState",
   inherit = FilterState,
+
+  # public methods ----
+
   public = list(
 
     #' @description
@@ -70,12 +73,13 @@ DateFilterState <- R6::R6Class( # nolint
     format = function(indent = 0) {
       checkmate::assert_number(indent, finite = TRUE, lower = 0)
 
+      vals <- self$get_selected()
       sprintf(
         "%sFiltering on: %s\n%1$s  Selected range: %s - %s\n%1$s  Include missing values: %s",
         format("", width = indent),
         private$varname,
-        format(self$get_selected()[1], nsmall = 3),
-        format(self$get_selected()[2], nsmall = 3),
+        format(vals[1], nsmall = 3),
+        format(vals[2], nsmall = 3),
         format(self$get_keep_na())
       )
     },
@@ -132,6 +136,9 @@ DateFilterState <- R6::R6Class( # nolint
       super$set_selected(value)
     }
   ),
+
+  # private methods ----
+
   private = list(
     validate_selection = function(value) {
       if (!is(value, "Date")) {
@@ -179,6 +186,8 @@ DateFilterState <- R6::R6Class( # nolint
       }
       values
     },
+
+    # shiny modules ----
 
     # @description
     # UI Module for `DateFilterState`.
@@ -302,6 +311,36 @@ DateFilterState <- R6::R6Class( # nolint
           })
           logger::log_trace("DateFilterState$server initialized, dataname: { private$dataname }")
           NULL
+        }
+      )
+    },
+
+    # @description
+    # UI module to display filter summary
+    # @param id `shiny` id parameter
+    ui_summary = function(id) {
+      ns <- NS(id)
+      uiOutput(ns("summary"), class = "filter-card-summary")
+    },
+
+    # @description
+    # Server module to display filter summary
+    # @param shiny `id` parametr passed to moduleServer
+    #  renders text describing selected date range and
+    #  if NA are included also
+    server_summary = function(id) {
+      moduleServer(
+        id = id,
+        function(input, output, session) {
+          output$summary <- renderUI({
+            selected <- as.character(self$get_selected())
+            min <- selected[1]
+            max <- selected[2]
+            tagList(
+              tags$span(paste0(min, " - ", max)),
+              if (self$get_keep_na()) tags$span("NA") else NULL
+            )
+          })
         }
       )
     }

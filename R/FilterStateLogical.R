@@ -19,6 +19,8 @@
 LogicalFilterState <- R6::R6Class( # nolint
   "LogicalFilterState",
   inherit = FilterState,
+
+  # public methods ----
   public = list(
 
     #' @description
@@ -126,8 +128,14 @@ LogicalFilterState <- R6::R6Class( # nolint
       super$set_selected(value)
     }
   ),
+
+  # private fields ----
+
   private = list(
     histogram_data = data.frame(),
+
+    # private methods ----
+
     validate_selection = function(value) {
       if (!(checkmate::test_logical(value, max.len = 1, any.missing = FALSE))) {
         stop(
@@ -186,6 +194,9 @@ LogicalFilterState <- R6::R6Class( # nolint
         )
       })
     },
+
+
+    # shiny modules ----
 
     # @description
     # UI Module for `EmptyFilterState`.
@@ -278,6 +289,33 @@ LogicalFilterState <- R6::R6Class( # nolint
 
           logger::log_trace("LogicalFilterState$server initialized, dataname: { private$dataname }")
           NULL
+        }
+      )
+    },
+
+    # @description
+    # UI module to display filter summary
+    # @param id `shiny` id parameter
+    ui_summary = function(id) {
+      ns <- NS(id)
+      uiOutput(ns("summary"), class = "filter-card-summary")
+    },
+
+    # @description
+    # Server module to display filter summary
+    # @param shiny `id` parametr passed to moduleServer
+    #  renders text describing whether TRUE or FALSE is selected
+    #  and if NA are included also
+    server_summary = function(id) {
+      moduleServer(
+        id = id,
+        function(input, output, session) {
+          output$summary <- renderUI({
+            tagList(
+              tags$span(self$get_selected()),
+              if (self$get_keep_na()) tags$span("NA") else NULL
+            )
+          })
         }
       )
     }

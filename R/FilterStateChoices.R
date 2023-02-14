@@ -18,6 +18,9 @@
 ChoicesFilterState <- R6::R6Class( # nolint
   "ChoicesFilterState",
   inherit = FilterState,
+
+  # public methods ----
+
   public = list(
 
     #' @description
@@ -133,9 +136,13 @@ ChoicesFilterState <- R6::R6Class( # nolint
       super$set_selected(value)
     }
   ),
+
+  # private members ----
+
   private = list(
     choices_counts = NULL,
     filtered_counts = NULL,
+    # private methods ----
     set_choices_counts = function(choices_counts) {
       private$choices_counts <- choices_counts
       invisible(NULL)
@@ -232,6 +239,8 @@ ChoicesFilterState <- R6::R6Class( # nolint
         sprintf("%s (%s%s)", private$choices, xslash, private$choices_counts)
       }
     },
+
+    # shiny modules ----
 
     # @description
     # UI Module for `ChoicesFilterState`.
@@ -349,6 +358,34 @@ ChoicesFilterState <- R6::R6Class( # nolint
 
           logger::log_trace("ChoicesFilterState$server initialized, dataname: { private$dataname }")
           NULL
+        }
+      )
+    },
+
+    # @description
+    # Server module to display filter summary
+    # @param id `shiny` id parameter
+    ui_summary = function(id) {
+      ns <- NS(id)
+      uiOutput(ns("summary"), class = "filter-card-summary")
+    },
+
+    # @description
+    # UI module to display filter summary
+    # @param shiny `id` parametr passed to moduleServer
+    #  renders text describing number of selected levels
+    #  and if NA are included also
+    server_summary = function(id) {
+      moduleServer(
+        id = id,
+        function(input, output, session) {
+          output$summary <- renderUI({
+            n_selected <- length(self$get_selected())
+            tagList(
+              tags$span(sprintf("%s levels selected", n_selected)),
+              if (self$get_keep_na()) tags$span("NA") else NULL
+            )
+          })
         }
       )
     }

@@ -3,10 +3,8 @@
 \docType{class}
 \name{FilterState}
 \alias{FilterState}
-\title{Abstract class to encapsulate filter states}
+\title{FilterState Abstract Class}
 \description{
-Abstract class to encapsulate filter states
-
 Abstract class to encapsulate filter states
 }
 \details{
@@ -337,7 +335,7 @@ Set selection.
 \item{\code{value}}{(\code{vector})\cr
 value(s) that come from filter selection; values are set in the
 module server after a selection is made in the app interface;
-values are stored in \code{private$selected}n which is reactive;
+values are stored in \code{private$selected} which is reactive;
 value types have to be the same as \code{private$choices}}
 }
 \if{html}{\out{</div>}}
@@ -399,7 +397,7 @@ signaling that remove button has been clicked
 \subsection{Method \code{ui()}}{
 Shiny module UI.
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{FilterState$ui(id)}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{FilterState$ui(id, parent_id)}\if{html}{\out{</div>}}
 }
 
 \subsection{Arguments}{
@@ -407,29 +405,9 @@ Shiny module UI.
 \describe{
 \item{\code{id}}{(\code{character(1)})\cr
 shiny element (module instance) id;
-the UI for this class contains simple message stating that it is not supported
+the UI for this class contains simple message stating that it is not supported}
 
-description
-Adds \code{is.na(varname)} before existing condition calls if \code{keep_na} is selected.
-Otherwise, if missings are found in the variable \code{!is.na} will be added
-only if \code{private$na_rm = TRUE}
-return (\code{call})
-description
-Prefixed (or not) variable
-
-Return variable name needed to condition call.
-If \code{isTRUE(private$use_dataset)} variable is prefixed by
-dataname to be evaluated as extracted object, for example
-\code{data$var}
-return (\code{name} or \code{call})
-Set choices
-
-Set choices is supposed to be executed once in the constructor
-to define set/range which selection is made from.
-parameter choices (\code{vector})\cr
-class of the vector depends on the \code{FilterState} class.
-return a \code{NULL}
-module with inputs
+\item{\code{parent_id}}{(\code{character(1)}) id of the FilterStates card container
 module with inputs}
 }
 \if{html}{\out{</div>}}

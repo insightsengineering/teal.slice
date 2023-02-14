@@ -349,7 +349,7 @@ FilterStates <- R6::R6Class( # nolint
         include_css_files(pattern = "filter-panel"),
         tags$div(
           id = private$cards_container_id,
-          class = "list-group hideable-list-group",
+          class = "panel-group accordion",
           `data-label` = ifelse(private$datalabel == "", "", (paste0("> ", private$datalabel)))
         )
       )
@@ -493,15 +493,10 @@ FilterStates <- R6::R6Class( # nolint
           insertUI(
             selector = sprintf("#%s", private$cards_container_id),
             where = "beforeEnd",
-            # add span with id to be removable
-            ui = div(
-              id = card_id,
-              class = "list-group-item",
-              filter_state$ui(session$ns("content"))
-            )
+            ui = filter_state$ui(card_id, private$cards_container_id)
           )
           # signal sent from filter_state when it is marked for removal
-          remove_fs <- filter_state$server(id = "content")
+          remove_fs <- filter_state$server(id = "card")
 
           private$observers[[state_list_id]] <- observeEvent(
             ignoreInit = TRUE,

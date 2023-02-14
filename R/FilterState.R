@@ -2,7 +2,9 @@
 #' @docType class
 #'
 #'
-#' @title Abstract class to encapsulate filter states
+#' @title FilterState Abstract Class
+#'
+#' @description Abstract class to encapsulate filter states
 #'
 #' @details
 #' This class is responsible for managing single filter item within
@@ -288,7 +290,7 @@ FilterState <- R6::R6Class( # nolint
     #' @param value (`vector`)\cr
     #'   value(s) that come from filter selection; values are set in the
     #'   module server after a selection is made in the app interface;
-    #'   values are stored in `private$selected`n which is reactive;
+    #'   values are stored in `private$selected` which is reactive;
     #'   value types have to be the same as `private$choices`
     #'
     #' @return NULL invisibly
@@ -369,6 +371,7 @@ FilterState <- R6::R6Class( # nolint
       moduleServer(
         id = id,
         function(input, output, session) {
+          private$server_summary("summary")
           private$server_inputs("inputs")
           reactive(input$remove) # back to parent to remove self
         }
@@ -381,39 +384,17 @@ FilterState <- R6::R6Class( # nolint
     #' @param id (`character(1)`)\cr
     #'  shiny element (module instance) id;
     #'  the UI for this class contains simple message stating that it is not supported
-    #'
-    ui = function(id) {
+    #' @param parent_id (`character(1)`) id of the FilterStates card container
+    ui = function(id, parent_id) {
       ns <- NS(id)
-      fluidPage(
-        include_css_files(pattern = "filter-panel"),
-        theme = get_teal_bs_theme(),
-        fluidRow(
-          column(
-            width = 10,
-            class = "no-left-right-padding",
-            tags$div(
-              tags$span(private$varname,
-                class = "filter_panel_varname"
-              ),
-              if (checkmate::test_character(self$get_varlabel(), min.len = 1) &&
-                tolower(private$varname) != tolower(self$get_varlabel())) {
-                tags$span(self$get_varlabel(), class = "filter_panel_varlabel")
-              }
-            )
-          ),
-          column(
-            width = 2,
-            class = "no-left-right-padding",
-            actionLink(
-              ns("remove"),
-              label = "",
-              icon = icon("circle-xmark", lib = "font-awesome"),
-              class = "remove pull-right"
-            )
-          )
-        ),
-        private$ui_inputs(ns("inputs"))
-      )
+
+      theme <- getOption("teal.bs_theme")
+
+      if (is.null(theme)) {
+        private$ui_bs3(id, parent_id)
+      } else {
+        private$ui_bs45(id, parent_id)
+      }
     }
   ),
 
@@ -432,11 +413,12 @@ FilterState <- R6::R6Class( # nolint
     x_reactive = NULL, # reactive containing the filtered variable, used for updating counts and histograms
     filtered_na_count = NULL, # reactive containing the count of NA in the filtered dataset
 
-    #' description
-    #' Adds `is.na(varname)` before existing condition calls if `keep_na` is selected.
-    #' Otherwise, if missings are found in the variable `!is.na` will be added
-    #' only if `private$na_rm = TRUE`
-    #' return (`call`)
+    # private methods ----
+    # @description
+    # Adds `is.na(varname)` before existing condition calls if `keep_na` is selected.
+    # Otherwise, if missings are found in the variable `!is.na` will be added
+    # only if `private$na_rm = TRUE`
+    # @return (`call`)
     add_keep_na_call = function(filter_call) {
       if (isTRUE(self$get_keep_na())) {
         call(
@@ -455,14 +437,14 @@ FilterState <- R6::R6Class( # nolint
       }
     },
 
-    #' description
-    #' Prefixed (or not) variable
-    #'
-    #' Return variable name needed to condition call.
-    #' If `isTRUE(private$use_dataset)` variable is prefixed by
-    #' dataname to be evaluated as extracted object, for example
-    #' `data$var`
-    #' return (`name` or `call`)
+    # @description
+    # Prefixed (or not) variable
+    #
+    # Return variable name needed to condition call.
+    # If `isTRUE(private$use_dataset)` variable is prefixed by
+    # dataname to be evaluated as extracted object, for example
+    # `data$var`
+    # @return (`name` or `call`)
     get_varname_prefixed = function() {
       if (isTRUE(private$extract_type == "list")) {
         call_extract_list(private$dataname, private$varname)
@@ -476,13 +458,20 @@ FilterState <- R6::R6Class( # nolint
       }
     },
 
-    #' Set choices
-    #'
-    #' Set choices is supposed to be executed once in the constructor
-    #' to define set/range which selection is made from.
-    #' parameter choices (`vector`)\cr
-    #'  class of the vector depends on the `FilterState` class.
-    #' return a `NULL`
+
+    # Sets `keep_na` field according to observed `input$keep_na`
+    # If `keep_na = TRUE` `is.na(varname)` is added to the returned call.
+    # Otherwise returned call excludes `NA` when executed.
+    observe_keep_na = function(input) {
+
+    },
+
+    # @description
+    # Set choices is supposed to be executed once in the constructor
+    # to define set/range which selection is made from.
+    # parameter choices (`vector`)\cr
+    #  class of the vector depends on the `FilterState` class.
+    # @return `NULL`
     set_choices = function(choices) {
       private$choices <- choices
       invisible(NULL)
@@ -530,11 +519,17 @@ FilterState <- R6::R6Class( # nolint
     },
 
     # shiny modules -----
+    ui_summary = function(id) {
+      stop("abstract class")
+    },
+    server_summary = function(id) {
+      stop("abstract class")
+    },
     #' module with inputs
     ui_inputs = function(id) {
       stop("abstract class")
     },
-    #' module with inputs
+    # module with inputs
     server_inputs = function(id) {
       stop("abstract class")
     },
@@ -591,7 +586,7 @@ FilterState <- R6::R6Class( # nolint
           }
         )
         private$observers$keep_na <- observeEvent(
-          ignoreNULL = FALSE, # ignoreNULL: we don't want to ignore NULL when nothing is selected in the `selectInput`,
+          ignoreNULL = FALSE, # ignoreNULL: we don't want to ignore NULL when nothing is selected in the `selectInput`
           ignoreInit = TRUE, # ignoreInit: should not matter because we set the UI with the desired initial state
           eventExpr = input$value,
           handlerExpr = {
@@ -614,6 +609,98 @@ FilterState <- R6::R6Class( # nolint
         )
         invisible(NULL)
       })
+    },
+    # @description
+    # Filter card UI for Bootstrap 3.
+    #
+    # @param id (`character(1)`) Id for the containing HTML element.
+    # @param parent_id (`character(1)`) id of the FilterStates card container
+    ui_bs3 = function(id, parent_id) {
+      ns <- NS(id)
+
+      tags$div(
+        id = id,
+        class = "panel panel-default",
+        tags$div(
+          class = "panel-heading",
+          tags$div(
+            class = "panel-title",
+            tags$a(
+              class = "accordion-toggle",
+              `data-toggle` = "collapse",
+              `data-parent` = paste0("#", parent_id),
+              href = paste0("#", ns("body")),
+              tags$span(tags$strong(self$get_varname())),
+              if (length(self$get_varlabel())) {
+                tags$span(self$get_varlabel(), class = "filter-card-varlabel")
+              } else {
+                NULL
+              }
+            ),
+            actionLink(
+              inputId = ns("remove"),
+              label = icon("circle-xmark", lib = "font-awesome"),
+              class = "filter-card-remove"
+            )
+          ),
+          private$ui_summary(ns("summary"))
+        ),
+        tags$div(
+          id = ns("body"),
+          class = "panel-collapse collapse out",
+          tags$div(
+            class = "panel-body",
+            private$ui_inputs(ns("inputs"))
+          )
+        )
+      )
+    },
+    # @description
+    # Filter card ui for Bootstrap 4 and 5.
+    #
+    # @param id (`character(1)`) Id for the containing HTML element.
+    # @param parent_id (`character(1)`) id of the FilterStates card container
+    ui_bs45 = function(id, parent_id) {
+      ns <- NS(id)
+
+      tags$div(
+        id = id,
+        class = "card",
+        tags$div(
+          class = "card-header",
+          tags$div(
+            class = "card-title",
+            tags$a(
+              class = "accordion-toggle",
+              `data-toggle` = "collapse",
+              `data-bs-toggle` = "collapse",
+              href = paste0("#", ns("body")),
+              tags$span(tags$strong(self$get_varname())),
+              if (length(self$get_varlabel())) {
+                tags$span(self$get_varlabel(), class = "filter-card-varlabel")
+              } else {
+                NULL
+              }
+            ),
+            actionLink(
+              inputId = ns("remove"),
+              label = icon("circle-xmark", lib = "font-awesome"),
+              class = "filter-card-remove"
+            )
+          ),
+          private$ui_summary(ns("summary"))
+        ),
+        tags$div(
+          id = ns("body"),
+          class = "collapse out",
+          `data-parent` = paste0("#", parent_id),
+          `data-bs-parent` = paste0("#", parent_id),
+          tags$div(
+            class = "card-body",
+            private$ui_inputs(ns("inputs"))
+          )
+        )
+      )
     }
   )
 )

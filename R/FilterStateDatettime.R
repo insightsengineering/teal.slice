@@ -19,6 +19,9 @@
 DatetimeFilterState <- R6::R6Class( # nolint
   "DatetimeFilterState",
   inherit = FilterState,
+
+  # public methods ----
+
   public = list(
 
     #' @description
@@ -82,12 +85,15 @@ DatetimeFilterState <- R6::R6Class( # nolint
     #'
     format = function(indent = 0) {
       checkmate::assert_number(indent, finite = TRUE, lower = 0)
+
+
+      vals <- self$get_selected()
       sprintf(
         "%sFiltering on: %s\n%1$s  Selected range: %s - %s\n%1$s  Include missing values: %s",
         format("", width = indent),
         private$varname,
-        format(self$get_selected(), nsmall = 3)[1],
-        format(self$get_selected(), nsmall = 3)[2],
+        format(vals[1], nsmall = 3),
+        format(vals[2], nsmall = 3),
         format(self$get_keep_na())
       )
     },
@@ -144,8 +150,14 @@ DatetimeFilterState <- R6::R6Class( # nolint
       super$set_selected(value)
     }
   ),
+
+  # private fields ----
+
   private = list(
     timezone = Sys.timezone(),
+
+    # private methods ----
+
     validate_selection = function(value) {
       if (!(is(value, "POSIXct") || is(value, "POSIXlt"))) {
         stop(
@@ -193,6 +205,8 @@ DatetimeFilterState <- R6::R6Class( # nolint
       }
       values
     },
+
+    # shiny modules ----
 
     # @description
     # UI Module for `DatetimeFilterState`.
@@ -373,6 +387,36 @@ DatetimeFilterState <- R6::R6Class( # nolint
           )
           logger::log_trace("DatetimeFilterState$server initialized, dataname: { private$dataname }")
           NULL
+        }
+      )
+    },
+
+    # @description
+    # UI module to display filter summary
+    # @param id `shiny` id parameter
+    ui_summary = function(id) {
+      ns <- NS(id)
+      uiOutput(ns("summary"), class = "filter-card-summary")
+    },
+
+    # @description
+    # UI module to display filter summary
+    # @param shiny `id` parametr passed to moduleServer
+    #  renders text describing selected date range and
+    #  if NA are included also
+    server_summary = function(id) {
+      moduleServer(
+        id = id,
+        function(input, output, session) {
+          output$summary <- renderUI({
+            selected <- format(self$get_selected(), "%Y-%m-%d %H:%M:%S")
+            min <- selected[1]
+            max <- selected[2]
+            tagList(
+              tags$span(paste0(min, " - ", max)),
+              if (self$get_keep_na()) tags$span("NA") else NULL
+            )
+          })
         }
       )
     }
