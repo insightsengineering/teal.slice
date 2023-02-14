@@ -249,23 +249,6 @@ ChoicesFilterState <- R6::R6Class( # nolint
       ns <- NS(id)
       div(
         if (private$is_checkboxgroup()) {
-          l_counts <- as.numeric(names(private$choices))
-          l_counts[is.na(l_counts)] <- 0
-          l_freqs <- l_counts / sum(l_counts)
-          labels <- lapply(seq_along(private$choices), function(i) {
-            div(
-              class = "choices_state_label",
-              style = sprintf("width:%s%%", l_freqs[i] * 100),
-              span(
-                class = "choices_state_label_text",
-                sprintf(
-                  "%s (%s)",
-                  private$choices[i],
-                  l_counts[i]
-                )
-              )
-            )
-          })
           div(
             class = "choices_state",
             checkboxGroupInput(
