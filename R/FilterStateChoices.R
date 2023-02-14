@@ -18,6 +18,9 @@
 ChoicesFilterState <- R6::R6Class( # nolint
   "ChoicesFilterState",
   inherit = FilterState,
+
+  # public methods ----
+
   public = list(
 
     #' @description
@@ -139,8 +142,13 @@ ChoicesFilterState <- R6::R6Class( # nolint
       super$set_selected(value)
     }
   ),
+
+  # private members ----
+
   private = list(
     histogram_data = data.frame(),
+
+    # private methods ----
     validate_selection = function(value) {
       if (!is.character(value)) {
         stop(
@@ -228,6 +236,8 @@ ChoicesFilterState <- R6::R6Class( # nolint
         sprintf("%s (%s%s)", private$choices, x, names(private$choices))
       }
     },
+
+    # shiny modules ----
 
     # @description
     # UI Module for `ChoicesFilterState`.

@@ -19,6 +19,8 @@
 LogicalFilterState <- R6::R6Class( # nolint
   "LogicalFilterState",
   inherit = FilterState,
+
+  # public methods ----
   public = list(
 
     #' @description
@@ -126,8 +128,14 @@ LogicalFilterState <- R6::R6Class( # nolint
       super$set_selected(value)
     }
   ),
+
+  # private fields ----
+
   private = list(
     histogram_data = data.frame(),
+
+    # private methods ----
+
     validate_selection = function(value) {
       if (!(checkmate::test_logical(value, max.len = 1, any.missing = FALSE))) {
         stop(
@@ -186,6 +194,9 @@ LogicalFilterState <- R6::R6Class( # nolint
         )
       })
     },
+
+
+    # shiny modules ----
 
     # @description
     # UI Module for `EmptyFilterState`.
