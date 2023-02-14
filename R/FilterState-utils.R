@@ -239,7 +239,7 @@ init_filter_state.POSIXlt <- function(x,
 #' @keywords internal
 #'
 #' @examples
-#' \donttest{
+#' \dontrun{
 #' check_in_range(c(3, 1), c(1, 3))
 #' check_in_range(c(0, 3), c(1, 3))
 #' check_in_range(
@@ -287,7 +287,7 @@ check_in_range <- function(subinterval, range, pre_msg = "") {
 #' @keywords internal
 #'
 #' @examples
-#' \donttest{
+#' \dontrun{
 #' check_in_subset <- check_in_subset
 #' check_in_subset(c("a", "b"), c("a", "b", "c"))
 #' \dontrun{
@@ -338,7 +338,7 @@ check_in_subset <- function(subset, choices, pre_msg = "") {
 #' @keywords internal
 #'
 #' @examples
-#' \donttest{
+#' \dontrun{
 #' ticks <- 1:10
 #' values1 <- c(3, 5)
 #' contain_interval(values1, ticks)
