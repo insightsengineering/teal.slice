@@ -55,9 +55,7 @@ RangeFilterState <- R6::R6Class( # nolint
 
       # validation on x_reactive here
       super$initialize(x, x_reactive, varname, varlabel, dataname, extract_type)
-
       private$is_integer <- checkmate::test_integerish(x)
-      private$data_count <- length(x)
       private$keep_inf <- reactiveVal(FALSE)
       private$inf_filtered_count <- reactive(sum(is.infinite(x_reactive())))
       private$inf_count <- sum(is.infinite(x))
@@ -76,8 +74,6 @@ RangeFilterState <- R6::R6Class( # nolint
         private$slider_step <- signif(private$get_pretty_range_step(x_pretty), digits = 10)
         self$set_selected(range(x_pretty))
       }
-
-      pretty_range_inputs <- private$get_pretty_range_inputs(x)
 
       private$unfiltered_histogram <- ggplot2::ggplot(data.frame(x = Filter(is.finite, x))) +
         ggplot2::geom_histogram(
@@ -234,7 +230,6 @@ RangeFilterState <- R6::R6Class( # nolint
   # private fields----
   private = list(
     unfiltered_histogram = NULL, # ggplot object
-    data_count = 0, # number of values in unfiltered data - needed for scaling histogram
     keep_inf = NULL, # because it holds reactiveVal
     inf_count = integer(0),
     inf_filtered_count = NULL,
@@ -409,9 +404,6 @@ RangeFilterState <- R6::R6Class( # nolint
             ignoreInit = TRUE, # ignoreInit: should not matter because we set the UI with the desired initial state
             eventExpr = input$selection,
             handlerExpr = {
-              if (!isTRUE(all.equal(input$selection, self$get_selected()))) {
-                self$set_selected(input$selection)
-              }
               logger::log_trace(
                 sprintf(
                   "RangeFilterState$server@3 selection of variable %s changed, dataname: %s",
@@ -419,6 +411,9 @@ RangeFilterState <- R6::R6Class( # nolint
                   private$dataname
                 )
               )
+              if (!isTRUE(all.equal(input$selection, self$get_selected()))) {
+                self$set_selected(input$selection)
+              }
             }
           )
 
