@@ -234,7 +234,7 @@ ChoicesFilterState <- R6::R6Class( # nolint
         xslash <- if (is.null(private$x_reactive())) {
           ""
         } else {
-          sprintf("%s/", private$get_filtered_counts(private$x_reactive()))
+          sprintf("%s/", private$get_filtered_counts())
         }
         sprintf("%s (%s%s)", private$choices, xslash, private$choices_counts)
       }
