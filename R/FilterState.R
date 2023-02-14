@@ -424,44 +424,29 @@ FilterState <- R6::R6Class( # nolint
     #' Adds `is.na(varname)` before existing condition calls if `keep_na` is selected.
     #' Otherwise, if missings are found in the variable `!is.na` will be added
     #' only if `private$na_rm = TRUE`
-    #' return (`call`)
+    #' return (`character(1)`)
     add_keep_na_call = function(filter_call) {
       if (isTRUE(self$get_keep_na())) {
-        call(
-          "|",
-          call("is.na", private$get_varname_prefixed()),
-          filter_call
-        )
+        sprintf("is.na(%s) | %s", private$get_varname_prefixed(), filter_call)
       } else if (isTRUE(private$na_rm) && private$na_count > 0) {
-        call(
-          "&",
-          substitute(!is.na(var), list(var = private$get_varname_prefixed())),
-          filter_call
-        )
+        sprintf("!is.na(%s) & %s", private$get_varname_prefixed(), filter_call)
       } else {
         filter_call
       }
     },
 
-    #' description
-    #' Prefixed (or not) variable
-    #'
-    #' Return variable name needed to condition call.
-    #' If `isTRUE(private$use_dataset)` variable is prefixed by
-    #' dataname to be evaluated as extracted object, for example
-    #' `data$var`
-    #' return (`name` or `call`)
+    # description
+    # Return variable name prefixed by dataname to be evaluated as extracted object,
+    # for example `data$var`
+    # @return character string
     get_varname_prefixed = function() {
-      if (isTRUE(private$extract_type == "list")) {
-        call_extract_list(private$dataname, private$varname)
-      } else if (isTRUE(private$extract_type == "matrix")) {
-        call_extract_matrix(
-          dataname = private$dataname,
-          column = private$varname
-        )
-      } else {
-        str2lang(private$varname)
-      }
+        if (isTRUE(private$extract_type == "list")) {
+          sprintf("%S$%S", private$dataname, private$varname)
+        } else if (isTRUE(private$extract_type == "matrix")) {
+          sprintf("%s[, %s]", private$dataname, private$varname)
+        } else {
+          private$varname
+        }
     },
 
     #' Sets `keep_na` field according to observed `input$keep_na`
