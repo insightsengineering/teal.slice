@@ -357,6 +357,34 @@ ChoicesFilterState <- R6::R6Class( # nolint
           NULL
         }
       )
+    },
+
+    # @description
+    # Server module to display filter summary
+    # @param id `shiny` id parameter
+    ui_summary = function(id) {
+      ns <- NS(id)
+      uiOutput(ns("summary"), class = "filter-card-summary")
+    },
+
+    # @description
+    # UI module to display filter summary
+    # @param shiny `id` parametr passed to moduleServer
+    #  renders text describing number of selected levels
+    #  and if NA are included also
+    server_summary = function(id) {
+      moduleServer(
+        id = id,
+        function(input, output, session) {
+          output$summary <- renderUI({
+            n_selected <- length(self$get_selected())
+            tagList(
+              tags$span(sprintf("%s levels selected", n_selected)),
+              if (self$get_keep_na()) tags$span("NA") else NULL
+            )
+          })
+        }
+      )
     }
   )
 )

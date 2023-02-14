@@ -397,7 +397,7 @@ signaling that remove button has been clicked
 \subsection{Method \code{ui()}}{
 Shiny module UI.
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{FilterState$ui(id)}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{FilterState$ui(id, parent_id)}\if{html}{\out{</div>}}
 }
 
 \subsection{Arguments}{
@@ -406,6 +406,9 @@ Shiny module UI.
 \item{\code{id}}{(\code{character(1)})\cr
 shiny element (module instance) id;
 the UI for this class contains simple message stating that it is not supported}
+
+\item{\code{parent_id}}{(\code{character(1)}) id of the FilterStates card container
+module with inputs}
 }
 \if{html}{\out{</div>}}
 }

@@ -322,7 +322,8 @@ RangeFilterState <- R6::R6Class( # nolint
     #  id of shiny element
     ui_inputs = function(id) {
       ns <- NS(id)
-      fluidRow(
+      div(
+        class = "choices_state",
         div(
           class = "filterPlotOverlayRange",
           plotOutput(ns("plot"), height = "100%"),
@@ -498,6 +499,39 @@ RangeFilterState <- R6::R6Class( # nolint
         )
         invisible(NULL)
       })
+    },
+
+    # @description
+    # UI module to display filter summary
+    # @param id `shiny` id parameter
+    #  renders text describing selected range and
+    #  if NA or Inf are included also
+    ui_summary = function(id) {
+      ns <- NS(id)
+      uiOutput(ns("summary"), class = "filter-card-summary")
+    },
+
+    # @description
+    # Server module to display filter summary
+    # @param shiny `id` parametr passed to moduleServer
+    #  renders text describing selected range and
+    #  if NA or Inf are included also
+    server_summary = function(id) {
+      moduleServer(
+        id = id,
+        function(input, output, session) {
+          output$summary <- renderUI({
+            selected <- sprintf("%.4g", self$get_selected())
+            min <- selected[1]
+            max <- selected[2]
+            tagList(
+              tags$span(paste0(min, " - ", max)),
+              if (self$get_keep_na()) tags$span("NA") else NULL,
+              if (self$get_keep_inf()) tags$span("Inf") else NULL
+            )
+          })
+        }
+      )
     }
   )
 )

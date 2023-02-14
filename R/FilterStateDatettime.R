@@ -389,6 +389,36 @@ DatetimeFilterState <- R6::R6Class( # nolint
           NULL
         }
       )
+    },
+
+    # @description
+    # UI module to display filter summary
+    # @param id `shiny` id parameter
+    ui_summary = function(id) {
+      ns <- NS(id)
+      uiOutput(ns("summary"), class = "filter-card-summary")
+    },
+
+    # @description
+    # UI module to display filter summary
+    # @param shiny `id` parametr passed to moduleServer
+    #  renders text describing selected date range and
+    #  if NA are included also
+    server_summary = function(id) {
+      moduleServer(
+        id = id,
+        function(input, output, session) {
+          output$summary <- renderUI({
+            selected <- format(self$get_selected(), "%Y-%m-%d %H:%M:%S")
+            min <- selected[1]
+            max <- selected[2]
+            tagList(
+              tags$span(paste0(min, " - ", max)),
+              if (self$get_keep_na()) tags$span("NA") else NULL
+            )
+          })
+        }
+      )
     }
   )
 )
