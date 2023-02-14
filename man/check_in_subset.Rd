@@ -17,7 +17,7 @@ check_in_subset(subset, choices, pre_msg = "")
 Raises an error message if not and says which elements are not in the allowed \code{choices}.
 }
 \examples{
-\donttest{
+\dontrun{
 check_in_subset <- check_in_subset
 check_in_subset(c("a", "b"), c("a", "b", "c"))
 \dontrun{
