@@ -244,18 +244,19 @@ ChoicesFilterState <- R6::R6Class( # nolint
     ui_inputs = function(id) {
       ns <- NS(id)
 
-      ui_input <- if (private$is_checkboxgroup()) {
-        countsmax <- as.numeric(names(private$choices))
-        countsmin <- rep(0, length(private$choices))
-        countsnow <- isolate(unname(table(factor(private$x_reactive(), levels = private$choices))))
+      countsmax <- as.numeric(names(private$choices))
+      countsmin <- rep(0, length(private$choices))
+      countsnow <- isolate(unname(table(factor(private$x_reactive(), levels = private$choices))))
 
-        labels <- countBarLabels(
-          inputId = ns("labels"),
-          choices = as.character(private$choices),
-          countsmin = countsmin,
-          countsnow = countsnow,
-          countsmax = countsmax
-        )
+      labels <- countBarLabels(
+        inputId = ns("labels"),
+        choices = as.character(private$choices),
+        countsmin = countsmin,
+        countsnow = countsnow,
+        countsmax = countsmax
+      )
+
+      ui_input <- if (private$is_checkboxgroup()) {
 
         div(
           class = "choices_state",
@@ -269,13 +270,6 @@ ChoicesFilterState <- R6::R6Class( # nolint
           )
         )
       } else {
-
-        x <- if (is.null(private$x_reactive())) {
-          ""
-        } else {
-          sprintf("%s/", table(factor(private$x_reactive(), levels = private$choices)))
-        }
-        sprintf("%s (%s%s)", private$choices, x, names(private$choices))
 
         teal.widgets::optionalSelectInput(
           inputId = ns("selection"),
@@ -322,34 +316,46 @@ ChoicesFilterState <- R6::R6Class( # nolint
             NULL
           })
 
-          # this observer is needed in the situation when private$selected has been
-          # changed directly by the api - then it's needed to rerender UI element
-          # to show relevant values
           private$observers$selection <- observeEvent(
             ignoreNULL = FALSE, # it's possible that nothing is selected
             ignoreInit = TRUE, # ignoreInit: should not matter because we set the UI with the desired initial state
-            eventExpr = input$selection,
+            eventExpr = input$selection_open,
             handlerExpr = {
-              selection <- if (is.null(input$selection)) character(0) else input$selection
-              self$set_selected(selection)
-              logger::log_trace(sprintf(
-                "ChoicesFilterState$server@2 selection of variable %s changed, dataname: %s",
-                private$varname,
-                private$dataname
-              ))
+              if (!isTRUE(input$ID_open)) {
+                selection <- if (is.null(input$selection)) character(0) else input$selection
+                self$set_selected(selection)
+                logger::log_trace(sprintf(
+                  "ChoicesFilterState$server@2 selection of variable %s changed, dataname: %s",
+                  private$varname,
+                  private$dataname
+                ))
+              }
             }
           )
           private$keep_na_srv("keep_na")
 
-          observeEvent(private$x_reactive(), {
-            if (private$is_checkboxgroup()) {
-              NULL
-            } else {
-              teal.widgets::updateOptionalSelectInput(
-                session, "selection",
-                choices = stats::setNames(private$choices, private$get_choice_labels(ns = session$ns)),
-                selected = input$selection
-              )
+          # this observer is needed in the situation when private$selected has been
+          # changed directly by the api - then it's needed to rerender UI element
+          # to show relevant values
+          private$observers$selection_api <- observeEvent(private$selected(), {
+            if (!isTRUE(all.equal(input$selection, self$get_selected()))) {
+              logger::log_trace(sprintf(
+                "ChoicesFilterState$server@2 state of variable %s changed, dataname: %s",
+                private$varname,
+                  private$dataname
+              ))
+
+              if (private$is_checkboxgroup()) {
+                updateCheckboxGroupInput(
+                  inputId = "selection",
+                  selected = private$selected()
+                )
+              } else {
+                teal.widgets::updateOptionalSelectInput(
+                  session, "selection",
+                  selected = private$selected()
+                )
+              }
             }
           })
 
