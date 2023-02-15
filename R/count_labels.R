@@ -109,8 +109,7 @@ countBarLabel <- function(inputId, label, countmin, countmax, countnow = NULL, c
   checkmate::assert_number(counttotal)
 
   label_html <- countLabel(inputId = inputId, label = label, countmax = countmax, countnow = countnow)
-  progress_html <- countBar(inputId = inputId, countmin = countmin, countmax = countmax,
-                            countnow = countnow, counttotal = counttotal)
+  progress_html <- countBar(inputId = inputId, countmax = countmax, countnow = countnow, counttotal = counttotal)
   tags$div(progress_html, label_html)
 }
 
