@@ -110,3 +110,43 @@ testthat::test_that(
 
 
 
+
+testthat::test_that(
+  "ChoicesFilterState",
+  code = {
+    test <- R6::R6Class(
+      inherit = ChoicesFilterState,
+      public = list(
+        test_get_filter_counts = function() private$get_filtered_counts(),
+        test_get_choice_labels = function() private$get_choice_labels(),
+        test_choices_counts = function() private$choices_counts
+      )
+    )
+
+    x <- rep(c("A", "B", "C", "D", "E", "F"), times = 5)
+    xr <- c(rep(c("F", "A", "D"), times = 2), "D")
+
+    filter_state <- test$new(
+      x = x,
+      x_reactive = reactive(xr),
+      varname = "x",
+      dataname = "data",
+      extract_type = character(0)
+    )
+
+    testthat::expect_identical(
+      shiny::isolate(filter_state$test_get_filter_counts()),
+      table(factor(xr, levels = unique(x)))
+    )
+
+    testthat::expect_identical(
+      shiny::isolate(filter_state$test_get_choice_labels()),
+     c("A (2/5)", "B (0/5)", "C (0/5)", "D (3/5)", "E (0/5)", "F (2/5)")
+    )
+
+    testthat::expect_identical(
+      shiny::isolate(filter_state$test_choices_counts()),
+      unname(table(x))
+    )
+  }
+)
