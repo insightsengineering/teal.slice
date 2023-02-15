@@ -3,10 +3,8 @@
 \docType{class}
 \name{FilterState}
 \alias{FilterState}
-\title{Abstract class to encapsulate filter states}
+\title{FilterState Abstract Class}
 \description{
-Abstract class to encapsulate filter states
-
 Abstract class to encapsulate filter states
 }
 \details{
@@ -331,7 +329,7 @@ Set selection.
 \item{\code{value}}{(\code{vector})\cr
 value(s) that come from filter selection; values are set in the
 module server after a selection is made in the app interface;
-values are stored in \code{private$selected}n which is reactive;
+values are stored in \code{private$selected} which is reactive;
 value types have to be the same as \code{private$choices}}
 }
 \if{html}{\out{</div>}}
@@ -401,20 +399,7 @@ Shiny module UI.
 \describe{
 \item{\code{id}}{(\code{character(1)})\cr
 shiny element (module instance) id;
-the UI for this class contains simple message stating that it is not supported
-
-Sets \code{keep_na} field according to observed \code{input$keep_na}
-If \code{keep_na = TRUE}, \code{is.na(varname)} is added to the returned call.
-Otherwise returned call excludes \code{NA} when executed.
-Set choices
-
-Set choices is supposed to be executed once in the constructor
-to define set/range which selection is made from.
-parameter choices (\code{vector})\cr
-class of the vector depends on the \code{FilterState} class.
-return a \code{NULL}
-module with inputs
-module with inputs}
+the UI for this class contains simple message stating that it is not supported}
 }
 \if{html}{\out{</div>}}
 }
