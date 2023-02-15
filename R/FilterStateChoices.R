@@ -276,6 +276,19 @@ ChoicesFilterState <- R6::R6Class( # nolint
                 countsmax = as.numeric(names(private$choices)),
                 countsnow = unname(table(factor(private$x_reactive(), levels = private$choices)))
               )
+            } else {
+              labels <- mapply(
+                FUN = make_count_text,
+                label = as.character(private$choices),
+                countmax = as.numeric(names(private$choices)),
+                countnow = unname(table(factor(private$x_reactive(), levels = private$choices)))
+              )
+              teal.widgets::updateOptionalSelectInput(
+                session = session,
+                inputId = "selection",
+                choices = stats::setNames(private$choices, labels),
+                selected = self$get_selected()
+              )
             }
             NULL
           })
@@ -323,7 +336,7 @@ ChoicesFilterState <- R6::R6Class( # nolint
               logger::log_trace(sprintf(
                 "ChoicesFilterState$server@2 state of variable %s changed, dataname: %s",
                 private$varname,
-                  private$dataname
+                private$dataname
               ))
 
               if (private$is_checkboxgroup()) {

@@ -237,6 +237,7 @@ updateCountBar <- function(session = getDefaultReactiveDomain(), inputId, countm
   )
 }
 
+
 #' Make a count text
 #'
 #' Returns a text describing filtered counts. Text is composed in following way:
@@ -257,8 +258,4 @@ make_count_text <- function(label = "", countmax, countnow = NULL) {
     if (is.null(countnow)) "" else sprintf("%s/", countnow),
     countmax
   )
-}
-
-updatePickerInputLabels <- function(session = getDefaultReactiveDomain(), inputId, labels, countsmax, countsnow) {
-
 }
