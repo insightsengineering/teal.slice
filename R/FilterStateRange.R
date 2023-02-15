@@ -208,7 +208,7 @@ RangeFilterState <- R6::R6Class( # nolint
     # returns a call
     add_keep_inf_call = function(filter_call) {
       if (isTRUE(self$get_keep_inf())) {
-        sprintf("is.infinite(%s) | %s", private$get_varname_prefixed(), filter_call)
+        sprintf("(is.infinite(%s) | %s)", private$get_varname_prefixed(), filter_call)
       } else {
         filter_call
       }
