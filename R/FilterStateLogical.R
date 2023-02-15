@@ -220,7 +220,7 @@ LogicalFilterState <- R6::R6Class( # nolint
           # to show relevant values
           output$empty <- renderUI({
             logger::log_trace(sprintf(
-              "LogicalFilterState$server@1 selection of variable %s changed, dataname: %s",
+              "LogicalFilterState$server@1 updating count labels in variable: %s , dataname: %s",
               private$varname,
               private$dataname
             ))
@@ -233,6 +233,26 @@ LogicalFilterState <- R6::R6Class( # nolint
             )
             NULL
           })
+
+          private$observers$seleted_api <- observeEvent(
+            ignoreNULL = TRUE, # this is radio button so something have to be selected
+            ignoreInit = TRUE,
+            eventExpr = self$get_selected(),
+            handlerExpr = {
+              if (!setequal(self$get_selected(), input$selection)) {
+                updateRadioButtons(
+                  session = session,
+                  inputId = "selection",
+                  selected =  self$get_selected()
+                )
+                logger::log_trace(sprintf(
+                  "LogicalFilterState$server@1 state of variable %s changed, dataname: %s",
+                  private$varname,
+                  private$dataname
+                ))
+              }
+            }
+          )
 
           private$observers$selection <- observeEvent(
             ignoreNULL = TRUE, # in radio button something has to be selected to input$selection can't be NULL
@@ -255,21 +275,6 @@ LogicalFilterState <- R6::R6Class( # nolint
           )
 
           private$keep_na_srv("keep_na")
-
-
-          observeEvent(private$x_reactive(), {
-            logger::log_trace(
-              sprintf(
-                "LogicalFilterState$server@2 state of variable %s changed, dataname: %s",
-                private$varname,
-                private$dataname
-              )
-            )
-            updateRadioButtons(
-              inputId = "selection",
-              selected = self$get_selected()
-            )
-          })
 
           logger::log_trace("LogicalFilterState$server initialized, dataname: { private$dataname }")
           NULL

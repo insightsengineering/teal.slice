@@ -268,6 +268,11 @@ ChoicesFilterState <- R6::R6Class( # nolint
           #  and if the reactive changes - reactive triggers only if the output is visible.
           # 2. We want to trigger change of the labels only if reactive count changes (not underlying data)
           output$empty <- renderUI({
+            logger::log_trace(sprintf(
+              "ChoicesFilterState$server@1 updating count labels in variable: %s , dataname: %s",
+              private$varname,
+              private$dataname
+            ))
             if (private$is_checkboxgroup()) {
               updateCountBarLabels(
                 inputId = "labels",
@@ -299,13 +304,13 @@ ChoicesFilterState <- R6::R6Class( # nolint
               ignoreInit = TRUE, # ignoreInit: should not matter because we set the UI with the desired initial state
               eventExpr = input$selection,
               handlerExpr = {
-                selection <- if (is.null(input$selection)) character(0) else input$selection
-                self$set_selected(selection)
                 logger::log_trace(sprintf(
                   "ChoicesFilterState$server@2 selection of variable %s changed, dataname: %s",
                   private$varname,
                   private$dataname
                 ))
+                selection <- if (is.null(input$selection)) character(0) else input$selection
+                self$set_selected(selection)
               }
             )
           } else {
@@ -315,13 +320,13 @@ ChoicesFilterState <- R6::R6Class( # nolint
               eventExpr = input$selection_open,
               handlerExpr = {
                 if (!isTRUE(input$selection_open)) {
-                  selection <- if (is.null(input$selection)) character(0) else input$selection
-                  self$set_selected(selection)
                   logger::log_trace(sprintf(
                     "ChoicesFilterState$server@2 selection of variable %s changed, dataname: %s",
                     private$varname,
                     private$dataname
                   ))
+                  selection <- if (is.null(input$selection)) character(0) else input$selection
+                  self$set_selected(selection)
                 }
               }
             )
@@ -338,7 +343,6 @@ ChoicesFilterState <- R6::R6Class( # nolint
                 private$varname,
                 private$dataname
               ))
-
               if (private$is_checkboxgroup()) {
                 updateCheckboxGroupInput(
                   inputId = "selection",
