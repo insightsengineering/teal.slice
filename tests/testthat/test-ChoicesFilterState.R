@@ -3,7 +3,7 @@ testthat::test_that("The constructor accepts character or factor", {
   testthat::expect_no_error(ChoicesFilterState$new(as.factor("test"), reactive(NULL), varname = "test"))
 })
 
-testthat::test_that("The constructor reactive as x_reactive", {
+testthat::test_that("The constructor accepts only reactive input for x_reactive", {
   testthat::expect_no_error(ChoicesFilterState$new("test", x_reactive = reactive(NULL), varname = "test"))
   testthat::expect_error(ChoicesFilterState$new("test", x_reactive = "test", varname = "test"))
   testthat::expect_error(ChoicesFilterState$new(as.factor("test"), NULL, varname = "test"))
@@ -108,11 +108,8 @@ testthat::test_that(
   }
 )
 
-
-
-
 testthat::test_that(
-  "ChoicesFilterState",
+  "ChoicesFilterState private methods return proper filtered counts and choice labels",
   code = {
     test <- R6::R6Class(
       inherit = ChoicesFilterState,
