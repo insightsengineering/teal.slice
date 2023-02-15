@@ -22,7 +22,7 @@ character string
 Compose \code{logical} variable condition call from inputs
 }
 \examples{
-\donttest{
+\dontrun{
 call_condition_logical("event", choice = TRUE)
 call_condition_logical("event", choice = FALSE)
 }

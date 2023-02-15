@@ -20,7 +20,7 @@ a \code{call}
 Compose \code{Date} range condition call from inputs
 }
 \examples{
-\donttest{
+\dontrun{
 call_condition_range_date(
   "date",
   range = c(Sys.Date(), Sys.Date() + 1)

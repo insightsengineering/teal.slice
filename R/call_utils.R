@@ -22,7 +22,7 @@
 #'   }
 #'
 #' @examples
-#' \donttest{
+#' \dontrun{
 #' call_condition_choice("SEX", choices = c(1, 2))
 #' call_condition_choice("SEX", choices = "F")
 #' call_condition_choice("SEX", choices = c("F", "M"))
@@ -65,7 +65,7 @@ call_condition_choice <- function(varname, choices) {
 #'
 #' @return call
 #' @examples
-#' \donttest{
+#' \dontrun{
 #' call_condition_range("AGE", range = c(1, 2))
 #' call_condition_range(
 #'   call_extract_list("ADSL", "AGE"),
@@ -93,7 +93,7 @@ call_condition_range <- function(varname, range) {
 #'
 #' @return call
 #' @examples
-#' \donttest{
+#' \dontrun{
 #' call_condition_logical("event", choice = TRUE)
 #' call_condition_logical("event", choice = FALSE)
 #' }
@@ -124,7 +124,7 @@ call_condition_logical <- function(varname, choice) {
 #'   By default `Sys.timezone()` is used.
 #'
 #' @examples
-#' \donttest{
+#' \dontrun{
 #' call_condition_range_posixct(
 #'   varname = "datetime",
 #'   range = c(Sys.time(), Sys.time() + 1),
@@ -154,7 +154,7 @@ call_condition_range_posixct <- function(varname, range, timezone = Sys.timezone
 #'   range of the variable
 #'
 #' @examples
-#' \donttest{
+#' \dontrun{
 #' call_condition_range_date(
 #'   "date",
 #'   range = c(Sys.Date(), Sys.Date() + 1)

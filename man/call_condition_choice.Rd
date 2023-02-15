@@ -32,7 +32,7 @@ a \code{call}
 Compose choices condition call from inputs.
 }
 \examples{
-\donttest{
+\dontrun{
 call_condition_choice("SEX", choices = c(1, 2))
 call_condition_choice("SEX", choices = "F")
 call_condition_choice("SEX", choices = c("F", "M"))

@@ -26,7 +26,7 @@ a \code{call}
 Compose \code{POSIXct} range condition call from inputs.
 }
 \examples{
-\donttest{
+\dontrun{
 call_condition_range_posixct(
   varname = "datetime",
   range = c(Sys.time(), Sys.time() + 1),

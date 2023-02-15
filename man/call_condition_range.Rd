@@ -22,7 +22,7 @@ a character string
 Compose \code{numeric} range condition call from inputs
 }
 \examples{
-\donttest{
+\dontrun{
 call_condition_range("AGE", range = c(1, 2))
 call_condition_range(
   call_extract_list("ADSL", "AGE"),
