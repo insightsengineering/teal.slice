@@ -266,41 +266,39 @@ testthat::test_that("call_condition_date works with date range only", {
 
 
 # calls_combine_by ----
-testthat::test_that("calls_combine_by - operator", {
+testthat::test_that("calls_combine_by - different operators", {
   testthat::expect_identical(
-    calls_combine_by(operator = "&", calls = list(quote(a), quote(b))),
+    calls_combine_by(calls = list(quote(a), quote(b)), operator = "&"),
     quote(a & b)
   )
   testthat::expect_identical(
-    calls_combine_by(operator = "||", calls = list(quote(a), quote(b))),
+    calls_combine_by(calls = list(quote(a), quote(b)), operator = "||"),
     quote(a || b)
   )
   testthat::expect_identical(
-    calls_combine_by(operator = "%>%", calls = list(quote(a), quote(b()), quote(c()))),
+    calls_combine_by(calls = list(quote(a), quote(b()), quote(c())), operator = "%>%"),
     quote(a %>% b() %>% c())
   )
   testthat::expect_error(
-    calls_combine_by(operator = as.symbol("&"), calls = list(quote(a), quote(b), quote(c)))
+    calls_combine_by(calls = list(quote(a), quote(b), quote(c)), operator = as.symbol("&"))
   )
   testthat::expect_error(
-    calls_combine_by(operator = c("&", "|"), calls = list(quote(a), quote(b), quote(c)))
+    calls_combine_by(calls = list(quote(a), quote(b), quote(c)), operator = c("&", "|"))
   )
   testthat::expect_identical(
-    calls_combine_by(operator = "whatever", calls = list(quote(a), quote(b), quote(c))),
+    calls_combine_by(calls = list(quote(a), quote(b), quote(c)), operator = "whatever"),
     quote(whatever(whatever(a, b), c))
   )
 })
 
-testthat::test_that("calls_combine_by - calls", {
+testthat::test_that("calls_combine_by - different forms of calls", {
+  testthat::expect_null(calls_combine_by(calls = list(), operator = "&"))
   testthat::expect_identical(
-    calls_combine_by(operator = "&", calls = as.expression(list(quote(a), quote(b)))),
-    quote(a & b)
-  )
-  testthat::expect_identical(
-    calls_combine_by(operator = "||", calls = list(as.name("a"), quote(b$b))),
+    calls_combine_by(calls = list(as.name("a"), quote(b$b)), operator = "||"),
     quote(a || b$b)
   )
   testthat::expect_error(
-    calls_combine_by(operator = "%>%", calls = list("a", quote(a)))
+    calls_combine_by(calls = list("a", quote(a)), operator = "%>%"),
+    "Assertion.+ failed"
   )
 })
