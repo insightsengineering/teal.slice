@@ -130,21 +130,15 @@ FilterStates <- R6::R6Class( # nolint
               state$get_call()
             }
           )
-          if (length(calls) > 0) {
-            calls_combine_by(
-              operator = "&",
-              calls = calls
-            )
-          }
+          calls_combine_by(calls, operator = "&")
         }
       )
       filter_items <- Filter(
         x = filter_items,
         f = Negate(is.null)
       )
-
-      if (length(filter_items) >= 0L) {
-        filter_function <- self$get_fun()
+      if (length(filter_items) > 0L) {
+        filter_function <- str2lang(self$get_fun())
         data_name <- str2lang(private$dataname)
         substitute(
           env = list(
@@ -153,8 +147,10 @@ FilterStates <- R6::R6Class( # nolint
           ),
           expr = lhs <- rhs
         )
+      } else {
+        # return NULL to avoid no-op call
+        NULL
       }
-      # otherwise NULL is returned
     },
 
     #' @description
