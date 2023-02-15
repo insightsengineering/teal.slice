@@ -189,49 +189,6 @@ ChoicesFilterState <- R6::R6Class( # nolint
     is_checkboxgroup = function() {
       length(private$choices) <= getOption("teal.threshold_slider_vs_checkboxgroup")
     },
-    get_choice_labels = function(ns) {
-      if (private$is_checkboxgroup()) {
-        l_counts <- as.numeric(names(private$choices))
-        f_counts <- unname(table(factor(private$x_reactive(), levels = private$choices), useNA = "no"))
-
-        labels <- lapply(seq_along(private$choices), function(i) {
-          l_count <- l_counts[i]
-          f_count <- f_counts[i]
-          l_freq <- l_count / sum(l_counts)
-          f_freq <- f_count / sum(l_counts)
-
-          if (is.na(l_freq) || is.nan(l_freq)) l_freq <- 0
-          if (is.na(f_freq) || is.nan(f_freq)) f_freq <- 0
-          tagList(
-            div(
-              class = "choices_state_label_unfiltered",
-              style = sprintf("width:%s%%", l_freq * 100)
-            ),
-            if (!is.null(private$x_reactive())) {
-              div(
-                class = "choices_state_label",
-                style = sprintf("width:%s%%", f_freq * 100)
-              )
-            },
-            div(
-              class = "choices_state_label_text",
-              sprintf(
-                "%s (%s%s)", private$choices[i],
-                if (is.null(private$x_reactive())) "" else sprintf("%s/", f_count),
-                l_count
-              )
-            )
-          )
-        })
-      } else {
-        x <- if (is.null(private$x_reactive())) {
-          ""
-        } else {
-          sprintf("%s/", table(factor(private$x_reactive(), levels = private$choices)))
-        }
-        sprintf("%s (%s%s)", private$choices, x, names(private$choices))
-      }
-    },
 
     # shiny modules ----
 
@@ -248,16 +205,15 @@ ChoicesFilterState <- R6::R6Class( # nolint
       countsmin <- rep(0, length(private$choices))
       countsnow <- isolate(unname(table(factor(private$x_reactive(), levels = private$choices))))
 
-      labels <- countBarLabels(
-        inputId = ns("labels"),
-        choices = as.character(private$choices),
-        countsmin = countsmin,
-        countsnow = countsnow,
-        countsmax = countsmax
-      )
 
       ui_input <- if (private$is_checkboxgroup()) {
-
+        labels <- countBarLabels(
+          inputId = ns("labels"),
+          choices = as.character(private$choices),
+          countsmin = countsmin,
+          countsnow = countsnow,
+          countsmax = countsmax
+        )
         div(
           class = "choices_state",
           checkboxGroupInput(
@@ -270,10 +226,16 @@ ChoicesFilterState <- R6::R6Class( # nolint
           )
         )
       } else {
+        labels <- mapply(
+          FUN = make_count_text,
+          label = as.character(private$choices),
+          countnow = countsnow,
+          countmax = countsmax
+        )
 
         teal.widgets::optionalSelectInput(
           inputId = ns("selection"),
-          choices = isolate(stats::setNames(private$choices, private$get_choice_labels())),
+          choices = stats::setNames(private$choices, labels),
           selected = isolate(self$get_selected()),
           multiple = TRUE,
           options = shinyWidgets::pickerOptions(

@@ -258,3 +258,7 @@ make_count_text <- function(label = "", countmax, countnow = NULL) {
     countmax
   )
 }
+
+updatePickerInputLabels <- function(session = getDefaultReactiveDomain(), inputId, labels, countsmax, countsnow) {
+
+}
