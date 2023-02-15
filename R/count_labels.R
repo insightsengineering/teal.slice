@@ -253,3 +253,16 @@ make_count_text <- function(label, countmax, countnow = NULL) {
     countmax
   )
 }
+
+updateCountText <- function(session = getDefaultReactiveDomain(), inputId, label, countmax, countnow) {
+
+  label <- make_count_text(label, countmax = countmax, countnow = countnow)
+  
+  session$sendCustomMessage(
+  type = "updateCountText",
+  message = list(
+    id = session$ns(inputId),
+    label = label
+    )
+  )
+}

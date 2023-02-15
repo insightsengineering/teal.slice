@@ -16,3 +16,11 @@ Shiny.addCustomMessageHandler("updateCountLabel",
     e1.textContent = message.label;
   }
 );
+
+Shiny.addCustomMessageHandler("updateCountText",
+  function(message) {
+    debugger
+    let el = document.getElementById(message.id)
+    el.textContent = message.label
+  }
+);
