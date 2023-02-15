@@ -218,17 +218,6 @@ testthat::test_that("call_condition_posixct returns expected timezone", {
       sep = " & "
     )
   )
-  # datetime <- as.POSIXct("2021-09-01 12:00:00")
-  # testthat::expect_identical(
-  #   call_condition_range_posixct(
-  #     varname = "var",
-  #     range = datetime + c(0, 1)
-  #   ),
-  #   bquote(
-  #     var >= as.POSIXct("2021-09-01 12:00:00", tz = .(Sys.timezone())) &
-  #       var < as.POSIXct("2021-09-01 12:00:02", tz = .(Sys.timezone()))
-  #   )
-  # )
 })
 
 # call_condition_date ----

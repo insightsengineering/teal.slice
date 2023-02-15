@@ -140,7 +140,7 @@ call_condition_range_posixct <- function(varname, range, timezone = Sys.timezone
 
   sprintf("%s >= as.POSIXct(\"%s\", tz = \"%s\") & %s < as.POSIXct(\"%s\", tz = \"%s\")",
           varname, format(range[1], tz = timezone), timezone,
-          varname, format(range[2]+1, tz = timezone), timezone)
+          varname, format(range[2] + 1, tz = timezone), timezone)
 }
 
 #' `Date` range condition call
