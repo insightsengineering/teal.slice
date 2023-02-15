@@ -7,7 +7,7 @@
 call_condition_choice(varname, choices)
 }
 \arguments{
-\item{varname}{(\code{name}, \code{call} or \code{character(1)})\cr
+\item{varname}{(\code{character(1)})\cr
 name of the variable}
 
 \item{choices}{(\code{vector})\cr
@@ -32,11 +32,12 @@ a \code{call}
 Compose choices condition call from inputs.
 }
 \examples{
-teal.slice:::call_condition_choice("SEX", choices = c(1, 2))
-teal.slice:::call_condition_choice(as.name("SEX"), choices = "F")
-teal.slice:::call_condition_choice("SEX", choices = c("F", "M"))
-teal.slice:::call_condition_choice("SEX", choices = factor(c("F", "M")))
-teal.slice:::call_condition_choice("x$SEX", choices = Sys.Date())
-teal.slice:::call_condition_choice("trunc(x$SEX)", choices = Sys.time())
+\donttest{
+call_condition_choice("SEX", choices = c(1, 2))
+call_condition_choice("SEX", choices = "F")
+call_condition_choice("SEX", choices = c("F", "M"))
+call_condition_choice("x$SEX", choices = Sys.Date())
+call_condition_choice("x$SEX", choices = Sys.time())
+}
 }
 \keyword{internal}
