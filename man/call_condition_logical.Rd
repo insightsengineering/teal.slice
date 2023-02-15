@@ -16,7 +16,7 @@ chosen value}
 \value{
 call
 
-a \code{call}
+character string
 }
 \description{
 Compose \code{logical} variable condition call from inputs

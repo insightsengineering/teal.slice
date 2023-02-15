@@ -4,17 +4,18 @@
 \alias{calls_combine_by}
 \title{Combine calls by operator}
 \usage{
-calls_combine_by(operator, calls)
+calls_combine_by(calls, operator)
 }
 \arguments{
+\item{calls}{(\code{list} of calls)\cr
+list containing calls to be combined by \code{operator};
+if empty, NULL is returned}
+
 \item{operator}{(\code{character(1)})\cr
 name/symbol of the operator passed as character string}
-
-\item{calls}{(\code{list} of calls)\cr
-list containing calls to be combined by \code{operator}}
 }
 \value{
-call
+call or NULL, if \code{calls} is an empty list
 
 a combined \code{call}
 }
@@ -23,15 +24,14 @@ Combine list of calls by specific operator
 }
 \examples{
 \donttest{
-calls_combine_by(
-  "&",
-  calls = list(
-    call_condition_choice("SEX", "F"),
-    call_condition_range("AGE", c(20, 50)),
-    call_condition_choice("ARM", "ARM: A"),
-    TRUE
-  )
+calls <- list(
+  call_condition_choice("SEX", "F"),
+  call_condition_range("AGE", c(20, 50)),
+  call_condition_choice("ARM", "ARM: A"),
+  call_condition_logical("SURV", TRUE)
 )
+calls <- lapply(calls, str2lang)
+calls_combine_by(calls,  "&")
 }
 }
 \keyword{internal}

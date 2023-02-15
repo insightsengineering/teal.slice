@@ -407,15 +407,7 @@ description
 Adds \code{is.na(varname)} before existing condition calls if \code{keep_na} is selected.
 Otherwise, if missings are found in the variable \code{!is.na} will be added
 only if \code{private$na_rm = TRUE}
-return (\code{call})
-description
-Prefixed (or not) variable
-
-Return variable name needed to condition call.
-If \code{isTRUE(private$use_dataset)} variable is prefixed by
-dataname to be evaluated as extracted object, for example
-\code{data$var}
-return (\code{name} or \code{call})
+return (\code{character(1)})
 Sets \code{keep_na} field according to observed \code{input$keep_na}
 If \code{keep_na = TRUE}, \code{is.na(varname)} is added to the returned call.
 Otherwise returned call excludes \code{NA} when executed.

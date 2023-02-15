@@ -16,7 +16,7 @@ range of the variable}
 \value{
 call
 
-a \code{call}
+a character string
 }
 \description{
 Compose \code{numeric} range condition call from inputs
@@ -24,7 +24,6 @@ Compose \code{numeric} range condition call from inputs
 \examples{
 \donttest{
 call_condition_range("AGE", range = c(1, 2))
-call_condition_range(as.name("AGE"), range = c(-1.2, 2.1))
 call_condition_range(
   call_extract_list("ADSL", "AGE"),
   range = c(-1.2, 2.1)

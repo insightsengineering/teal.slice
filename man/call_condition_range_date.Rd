@@ -22,7 +22,7 @@ Compose \code{Date} range condition call from inputs
 \examples{
 \donttest{
 call_condition_range_date(
-  as.name("date"),
+  "date",
   range = c(Sys.Date(), Sys.Date() + 1)
 )
 }

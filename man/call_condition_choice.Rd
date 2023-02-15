@@ -34,11 +34,10 @@ Compose choices condition call from inputs.
 \examples{
 \donttest{
 call_condition_choice("SEX", choices = c(1, 2))
-call_condition_choice(as.name("SEX"), choices = "F")
+call_condition_choice("SEX", choices = "F")
 call_condition_choice("SEX", choices = c("F", "M"))
-call_condition_choice("SEX", choices = factor(c("F", "M")))
 call_condition_choice("x$SEX", choices = Sys.Date())
-call_condition_choice("trunc(x$SEX)", choices = Sys.time())
+call_condition_choice("x$SEX", choices = Sys.time())
 }
 }
 \keyword{internal}
