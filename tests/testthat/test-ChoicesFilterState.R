@@ -138,7 +138,7 @@ testthat::test_that(
 
     testthat::expect_identical(
       shiny::isolate(filter_state$test_get_choice_labels()),
-     c("A (2/5)", "B (0/5)", "C (0/5)", "D (3/5)", "E (0/5)", "F (2/5)")
+      c("A (2/5)", "B (0/5)", "C (0/5)", "D (3/5)", "E (0/5)", "F (2/5)")
     )
 
     testthat::expect_identical(
