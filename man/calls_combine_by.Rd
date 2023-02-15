@@ -31,7 +31,7 @@ calls <- list(
   call_condition_logical("SURV", TRUE)
 )
 calls <- lapply(calls, str2lang)
-calls_combine_by(calls,  "&")
+calls_combine_by(calls, "&")
 }
 }
 \keyword{internal}
