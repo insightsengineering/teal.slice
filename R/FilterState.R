@@ -443,7 +443,7 @@ FilterState <- R6::R6Class( # nolint
         if (isTRUE(private$extract_type == "list")) {
           sprintf("%s$%s", private$dataname, private$varname)
         } else if (isTRUE(private$extract_type == "matrix")) {
-          sprintf("%s[, %s]", private$dataname, private$varname)
+          sprintf("%s[, \"%s\"]", private$dataname, private$varname)
         } else {
           private$varname
         }
