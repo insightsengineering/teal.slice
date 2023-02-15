@@ -403,11 +403,6 @@ Shiny module UI.
 shiny element (module instance) id;
 the UI for this class contains simple message stating that it is not supported
 
-description
-Adds \code{is.na(varname)} before existing condition calls if \code{keep_na} is selected.
-Otherwise, if missings are found in the variable \code{!is.na} will be added
-only if \code{private$na_rm = TRUE}
-return (\code{character(1)})
 Sets \code{keep_na} field according to observed \code{input$keep_na}
 If \code{keep_na = TRUE}, \code{is.na(varname)} is added to the returned call.
 Otherwise returned call excludes \code{NA} when executed.
