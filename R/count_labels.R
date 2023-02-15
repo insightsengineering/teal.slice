@@ -70,7 +70,7 @@ countBarLabels <- function(inputId, choices, countsmin, countsmax, countsnow = N
   ns <- NS(inputId)
 
   lapply(seq_along(choices), function(i) {
-    choice <- choices[i]
+    choice <- as.character(choices[i])
     countmin <- countsmin[i]
     countmax <- countsmax[i]
     countnow <- if (is.null(countsnow)) countmax else countsnow[i]
@@ -100,7 +100,7 @@ countBarLabels <- function(inputId, choices, countsmin, countsmax, countsnow = N
 #'  determines `<style="width: <countmax / counttotal>%""`.
 #' @return `shiny.tag` object with a progress bar and a label.
 #' @keywords internal
-countBarLabel <- function(inputId, label = "", countmin, countmax, countnow = NULL, counttotal = countmax) {
+countBarLabel <- function(inputId, label, countmin, countmax, countnow = NULL, counttotal = countmax) {
   checkmate::assert_string(inputId)
   checkmate::assert_string(label)
   checkmate::assert_number(countmin)
@@ -116,9 +116,8 @@ countBarLabel <- function(inputId, label = "", countmin, countmax, countnow = NU
 
 
 #' @rdname countBarLabel
-countBar <- function(inputId, countmin, countmax, countnow, counttotal) {
+countBar <- function(inputId, countmax, countnow = NULL, counttotal) {
   checkmate::assert_string(inputId)
-  checkmate::assert_number(countmin)
   checkmate::assert_number(countmax)
   checkmate::assert_number(countnow, null.ok = TRUE)
   checkmate::assert_number(counttotal)
@@ -143,7 +142,7 @@ countBar <- function(inputId, countmin, countmax, countnow, counttotal) {
 }
 
 #' @rdname countBarLabel
-countLabel <- function(inputId, label, countmax, countnow) {
+countLabel <- function(inputId, label, countmax, countnow = NULL) {
   checkmate::assert_string(inputId)
   checkmate::assert_string(label)
   checkmate::assert_number(countmax)
@@ -188,7 +187,7 @@ updateCountBarLabels <-  function(session = getDefaultReactiveDomain(), inputId,
 }
 
 #' @rdname countBarLabel
-updateCountBarLabel <- function(session = getDefaultReactiveDomain(), inputId, label = "",
+updateCountBarLabel <- function(session = getDefaultReactiveDomain(), inputId, label,
                                 countmin, countmax, countnow = NULL, counttotal) {
   checkmate::assert_string(inputId)
   checkmate::assert_string(label)
@@ -255,13 +254,13 @@ updateCountBar <- function(session = getDefaultReactiveDomain(), inputId, countm
 #' @param countmax (`numeric(1)`) unfiltered counts
 #' @return `character(1)`
 #' @keywords internal
-make_count_text <- function(label = "", countmax, countnow = NULL) {
+make_count_text <- function(label, countmax, countnow = NULL) {
   checkmate::assert_string(label)
   checkmate::assert_number(countmax)
   checkmate::assert_number(countnow, null.ok = TRUE)
   sprintf(
-    "%s(%s%s)",
-    if (label == "") "" else sprintf("%s ",label),
+    "%s (%s%s)",
+    label,
     if (is.null(countnow)) "" else sprintf("%s/", countnow),
     countmax
   )
