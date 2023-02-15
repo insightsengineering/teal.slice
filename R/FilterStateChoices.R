@@ -306,22 +306,24 @@ ChoicesFilterState <- R6::R6Class( # nolint
           #  and if the reactive changes - reactive triggers only if the output is visible.
           # 2. We want to trigger change of the labels only if reactive count changes (not underlying data)
           output$empty <- renderUI({
-            updateCountBarLabels(
-              inputId = "labels",
-              choices = as.character(private$choices),
-              countsmin = rep(0, length(private$choices)),
-              countsmax = as.numeric(names(private$choices)),
-              countsnow = unname(table(factor(private$x_reactive(), levels = private$choices)))
-            )
+            if (private$is_checkboxgroup()) {
+              updateCountBarLabels(
+                inputId = "labels",
+                choices = as.character(private$choices),
+                countsmin = rep(0, length(private$choices)),
+                countsmax = as.numeric(names(private$choices)),
+                countsnow = unname(table(factor(private$x_reactive(), levels = private$choices)))
+              )
+            }
             NULL
           })
 
-          private$observers$selection <- observeEvent(
-            ignoreNULL = FALSE, # it's possible that nothing is selected
-            ignoreInit = TRUE, # ignoreInit: should not matter because we set the UI with the desired initial state
-            eventExpr = input$selection_open,
-            handlerExpr = {
-              if (!isTRUE(input$selection_open)) {
+          if (private$is_checkboxgroup()) {
+            private$observers$selection <- observeEvent(
+              ignoreNULL = FALSE, # it's possible that nothing is selected
+              ignoreInit = TRUE, # ignoreInit: should not matter because we set the UI with the desired initial state
+              eventExpr = input$selection,
+              handlerExpr = {
                 selection <- if (is.null(input$selection)) character(0) else input$selection
                 self$set_selected(selection)
                 logger::log_trace(sprintf(
@@ -330,8 +332,25 @@ ChoicesFilterState <- R6::R6Class( # nolint
                   private$dataname
                 ))
               }
-            }
-          )
+            )
+          } else {
+            private$observers$selection <- observeEvent(
+              ignoreNULL = FALSE, # it's possible that nothing is selected
+              ignoreInit = TRUE, # ignoreInit: should not matter because we set the UI with the desired initial state
+              eventExpr = input$selection_open,
+              handlerExpr = {
+                if (!isTRUE(input$selection_open)) {
+                  selection <- if (is.null(input$selection)) character(0) else input$selection
+                  self$set_selected(selection)
+                  logger::log_trace(sprintf(
+                    "ChoicesFilterState$server@2 selection of variable %s changed, dataname: %s",
+                    private$varname,
+                    private$dataname
+                  ))
+                }
+              }
+            )
+          }
           private$keep_na_srv("keep_na")
 
           # this observer is needed in the situation when private$selected has been
