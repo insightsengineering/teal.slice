@@ -271,3 +271,8 @@ a.remove_all:hover {
   position: absolute;
   width: 100%;
 }
+
+.progress-bar.state-count-bar-unfiltered {
+  color: var(--bs-body-color, var(--dark, #333333));
+  overflow: visible;
+}

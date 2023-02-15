@@ -103,15 +103,13 @@ countBarLabel <- function(inputId, label, countmax, countnow = NULL, counttotal 
   checkmate::assert_number(countnow, null.ok = TRUE, upper = countmax)
   checkmate::assert_number(counttotal, lower = countmax)
 
-
-  label_html <- countLabel(inputId = inputId, label = label, countmax = countmax, countnow = countnow)
-  progress_html <- countBar(inputId = inputId, countmax = countmax, countnow = countnow, counttotal = counttotal)
-  tags$div(progress_html, label_html)
+  label <- make_count_text(label, countmax = countmax, countnow = countnow)
+  countBar(inputId = inputId, countmax = countmax, countnow = countnow, counttotal = counttotal, label)
 }
 
 
 #' @rdname countBarLabel
-countBar <- function(inputId, countmax, countnow = NULL, counttotal) {
+countBar <- function(inputId, countmax, countnow = NULL, counttotal, label) {
   checkmate::assert_string(inputId)
   checkmate::assert_number(countmax)
   checkmate::assert_number(countnow, null.ok = TRUE)
@@ -131,7 +129,8 @@ countBar <- function(inputId, countmax, countnow = NULL, counttotal) {
       id = ns("count_bar_unfiltered"),
       class = "progress-bar state-count-bar-unfiltered",
       style = sprintf("width: %s%%", (countmax - countnow) / counttotal * 100),
-      role = "progressbar"
+      role = "progressbar",
+      label
     )
   )
 }
