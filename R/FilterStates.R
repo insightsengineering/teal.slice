@@ -174,7 +174,7 @@ FilterStates <- R6::R6Class( # nolint
     #' @return `character(1)` the name of the function
     #'
     get_fun = function() {
-      quote(subset)
+      "subset"
     },
 
     # state_list methods ----

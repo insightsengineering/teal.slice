@@ -58,7 +58,7 @@ MAEFilterStates <- R6::R6Class( # nolint
     #' For `MAEFilterStates` `MultiAssayExperiment::subsetByColData` is used.
     #' @return `character(1)`
     get_fun = function() {
-      quote(MultiAssayExperiment::subsetByColData)
+      "MultiAssayExperiment::subsetByColData"
     },
 
     #' @description
