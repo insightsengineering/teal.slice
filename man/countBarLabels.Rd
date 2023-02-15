@@ -52,7 +52,6 @@ counts <- table(choices)
 labels <- countBarLabels(
   inputId = "counts",
   choices = c("a", "b", "c"),
-  countsmin = c(0, 0, 0),
   countsmax = c(20, 20, 20),
   countsnow = unname(counts)
 )
@@ -80,7 +79,6 @@ shinyApp(
       updateCountBarLabels(
         inputId = "counts",
         choices = levels(choices),
-        countsmin = c(0, 0, 0),
         countsmax = c(20, 20, 20),
         countsnow = unname(new_counts)
       )

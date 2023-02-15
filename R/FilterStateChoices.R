@@ -202,15 +202,12 @@ ChoicesFilterState <- R6::R6Class( # nolint
       ns <- NS(id)
 
       countsmax <- as.numeric(names(private$choices))
-      countsmin <- rep(0, length(private$choices))
       countsnow <- isolate(unname(table(factor(private$x_reactive(), levels = private$choices))))
-
 
       ui_input <- if (private$is_checkboxgroup()) {
         labels <- countBarLabels(
           inputId = ns("labels"),
           choices = as.character(private$choices),
-          countsmin = countsmin,
           countsnow = countsnow,
           countsmax = countsmax
         )
@@ -277,7 +274,6 @@ ChoicesFilterState <- R6::R6Class( # nolint
               updateCountBarLabels(
                 inputId = "labels",
                 choices = as.character(private$choices),
-                countsmin = rep(0, length(private$choices)),
                 countsmax = as.numeric(names(private$choices)),
                 countsnow = unname(table(factor(private$x_reactive(), levels = private$choices)))
               )

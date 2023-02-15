@@ -7,8 +7,6 @@
 #' @param session (`session`) object passed to function given to `shinyServer`.
 #' @param inputId (`character(1)`) `shiny` id
 #' @param choices (`vector`) determines label text.
-#' @param countsmin (`numeric`) determining minimal count of each element.
-#'  Length should be the same as `choices`
 #' @param countsmax (`numeric`) determining maximal count of each element.
 #'  Length should be the same as `choices`.
 #' @param countsnow (`numeric`) actual counts of each element.
@@ -24,7 +22,6 @@
 #' labels <- countBarLabels(
 #'   inputId = "counts",
 #'   choices = c("a", "b", "c"),
-#'   countsmin = c(0, 0, 0),
 #'   countsmax = c(20, 20, 20),
 #'   countsnow = unname(counts)
 #' )
@@ -52,7 +49,6 @@
 #'       updateCountBarLabels(
 #'         inputId = "counts",
 #'         choices = levels(choices),
-#'         countsmin = c(0, 0, 0),
 #'         countsmax = c(20, 20, 20),
 #'         countsnow = unname(new_counts)
 #'       )
@@ -60,28 +56,29 @@
 #'   }
 #' )
 #' @keywords internal
-countBarLabels <- function(inputId, choices, countsmin, countsmax, countsnow = NULL) {
+countBarLabels <- function(inputId, choices, countsmax, countsnow = NULL) {
   checkmate::assert_string(inputId)
   checkmate::assert_vector(choices)
-  checkmate::assert_numeric(countsmin, len = length(choices))
   checkmate::assert_numeric(countsmax, len = length(choices))
   checkmate::assert_numeric(countsnow, len = length(choices), null.ok = TRUE)
+  if (!is.null(countsnow)) {
+    checkmate::assert_true(all(countsnow <= countsmax))
+  }
 
   ns <- NS(inputId)
+  counttotal <- sum(countsmax)
 
   lapply(seq_along(choices), function(i) {
     choice <- as.character(choices[i])
-    countmin <- countsmin[i]
     countmax <- countsmax[i]
-    countnow <- if (is.null(countsnow)) countmax else countsnow[i]
+    countnow <- if (is.null(countsnow)) 0 else countsnow[i]
 
     countBarLabel(
       inputId = ns(i),
       label = choice,
-      countmin = countmin,
       countmax = countmax,
       countnow = countnow,
-      counttotal = sum(countsmax)
+      counttotal = counttotal
     )
   })
 }
@@ -92,7 +89,6 @@ countBarLabels <- function(inputId, choices, countsmin, countsmax, countsnow = N
 #' @param session (`session`) object passed to function given to `shinyServer`.
 #' @param inputId (`character(1)`) `shiny` id
 #' @param label (`character(1)`) Text to display followed by counts
-#' @param countmin (`numeric(1)`) minimal possible count for a single item.
 #' @param countmax (`numeric(1)`) maximal possible count for a single item.
 #' @param countnow (`numeric(1)`) current count of a single item.
 #' @param counttotal (`numeric(1)`) total count to make whole progress bar
@@ -100,13 +96,13 @@ countBarLabels <- function(inputId, choices, countsmin, countsmax, countsnow = N
 #'  determines `<style="width: <countmax / counttotal>%""`.
 #' @return `shiny.tag` object with a progress bar and a label.
 #' @keywords internal
-countBarLabel <- function(inputId, label, countmin, countmax, countnow = NULL, counttotal = countmax) {
+countBarLabel <- function(inputId, label, countmax, countnow = NULL, counttotal = countmax) {
   checkmate::assert_string(inputId)
   checkmate::assert_string(label)
-  checkmate::assert_number(countmin)
   checkmate::assert_number(countmax)
-  checkmate::assert_number(countnow, null.ok = TRUE)
-  checkmate::assert_number(counttotal)
+  checkmate::assert_number(countnow, null.ok = TRUE, upper = countmax)
+  checkmate::assert_number(counttotal, lower = countmax)
+
 
   label_html <- countLabel(inputId = inputId, label = label, countmax = countmax, countnow = countnow)
   progress_html <- countBar(inputId = inputId, countmax = countmax, countnow = countnow, counttotal = counttotal)
@@ -154,10 +150,9 @@ countLabel <- function(inputId, label, countmax, countnow = NULL) {
 
 #' @rdname countBarLabels
 updateCountBarLabels <-  function(session = getDefaultReactiveDomain(), inputId, choices,
-                                  countsmin, countsmax, countsnow = NULL) {
+                                  countsmax, countsnow = NULL) {
     checkmate::assert_string(inputId)
     checkmate::assert_vector(choices)
-    checkmate::assert_numeric(countsmin, len = length(choices))
     checkmate::assert_numeric(countsmax, len = length(choices))
     checkmate::assert_numeric(countsnow, len = length(choices), null.ok = TRUE)
 
@@ -165,7 +160,6 @@ updateCountBarLabels <-  function(session = getDefaultReactiveDomain(), inputId,
     counttotal <- sum(countsmax)
     lapply(seq_along(choices), function(i) {
       choice <- choices[i]
-      countmin <- countsmin[i]
       countmax <- countsmax[i]
       countnow <- if (is.null(countsnow)) countmax else countsnow[i]
       updateCountLabel(
@@ -176,7 +170,6 @@ updateCountBarLabels <-  function(session = getDefaultReactiveDomain(), inputId,
       )
       updateCountBar(
         inputId = ns(i),
-        countmin = countmin,
         countmax = countmax,
         countnow = countnow,
         counttotal = counttotal
@@ -187,10 +180,9 @@ updateCountBarLabels <-  function(session = getDefaultReactiveDomain(), inputId,
 
 #' @rdname countBarLabel
 updateCountBarLabel <- function(session = getDefaultReactiveDomain(), inputId, label,
-                                countmin, countmax, countnow = NULL, counttotal) {
+                                countmax, countnow = NULL, counttotal) {
   checkmate::assert_string(inputId)
   checkmate::assert_string(label)
-  checkmate::assert_number(countmin)
   checkmate::assert_number(countmax)
   checkmate::assert_number(countnow, null.ok = TRUE)
   checkmate::assert_number(counttotal)
@@ -199,7 +191,7 @@ updateCountBarLabel <- function(session = getDefaultReactiveDomain(), inputId, l
   if (is.null(countnow)) countnow <- countmax
 
   updateCountLabel(inputId = inputId, label = label, countmax = countmax, countnow = countnow)
-  updateCountBar(inputId = inputId, countmin = countmin, countmax = countmax, countnow = countnow, counttotal = counttotal)
+  updateCountBar(inputId = inputId, countmax = countmax, countnow = countnow, counttotal = counttotal)
 
   invisible(NULL)
 }
@@ -223,9 +215,8 @@ updateCountLabel <- function(session = getDefaultReactiveDomain(), inputId, labe
 }
 
 #' @rdname countBarLabel
-updateCountBar <- function(session = getDefaultReactiveDomain(), inputId, countmin, countmax, countnow, counttotal) {
+updateCountBar <- function(session = getDefaultReactiveDomain(), inputId, countmax, countnow, counttotal) {
   checkmate::assert_string(inputId)
-  checkmate::assert_number(countmin)
   checkmate::assert_number(countmax)
   checkmate::assert_number(countnow, null.ok = TRUE)
   checkmate::assert_number(counttotal)
@@ -234,7 +225,6 @@ updateCountBar <- function(session = getDefaultReactiveDomain(), inputId, countm
     type = "updateCountBar",
     message = list(
       id = session$ns(inputId),
-      countmin = countmin,
       countmax = countmax,
       countnow = countnow,
       counttotal = counttotal
