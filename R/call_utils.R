@@ -1,4 +1,3 @@
-
 #' Choices condition call
 #'
 #' Compose choices condition call from inputs.
@@ -138,9 +137,11 @@ call_condition_range_posixct <- function(varname, range, timezone = Sys.timezone
   checkmate::assert_posixct(range, len = 2, sorted = TRUE)
   checkmate::assert_string(timezone)
 
-  sprintf("%s >= as.POSIXct(\"%s\", tz = \"%s\") & %s < as.POSIXct(\"%s\", tz = \"%s\")",
-          varname, format(range[1], tz = timezone), timezone,
-          varname, format(range[2]+1, tz = timezone), timezone)
+  sprintf(
+    "%s >= as.POSIXct(\"%s\", tz = \"%s\") & %s < as.POSIXct(\"%s\", tz = \"%s\")",
+    varname, format(range[1], tz = timezone), timezone,
+    varname, format(range[2] + 1, tz = timezone), timezone
+  )
 }
 
 #' `Date` range condition call
@@ -167,8 +168,10 @@ call_condition_range_date <- function(varname, range) {
   checkmate::assert_date(range, len = 2)
   if (range[1] > range[2]) stop("\"range\" must be sorted")
 
-  sprintf("%s >= as.Date(\"%s\") & %s <= as.Date(\"%s\")",
-          varname, as.character(range[1]), varname, as.character(range[2]))
+  sprintf(
+    "%s >= as.Date(\"%s\") & %s <= as.Date(\"%s\")",
+    varname, as.character(range[1]), varname, as.character(range[2])
+  )
 }
 
 #' Combine calls by operator
@@ -192,7 +195,7 @@ call_condition_range_date <- function(varname, range) {
 #'   call_condition_logical("SURV", TRUE)
 #' )
 #' calls <- lapply(calls, str2lang)
-#' calls_combine_by(calls,  "&")
+#' calls_combine_by(calls, "&")
 #' }
 #' @return a combined `call`
 #' @keywords internal
