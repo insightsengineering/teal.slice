@@ -184,7 +184,7 @@ call_condition_range_date <- function(varname, range) {
 #' @return call or NULL, if `calls` is an empty list
 #'
 #' @examples
-#' \donttest{
+#' \dontrun{
 #' calls <- list(
 #'   call_condition_choice("SEX", "F"),
 #'   call_condition_range("AGE", c(20, 50)),

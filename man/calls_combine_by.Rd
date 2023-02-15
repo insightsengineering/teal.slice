@@ -23,7 +23,7 @@ a combined \code{call}
 Combine list of calls by specific operator
 }
 \examples{
-\donttest{
+\dontrun{
 calls <- list(
   call_condition_choice("SEX", "F"),
   call_condition_range("AGE", c(20, 50)),
