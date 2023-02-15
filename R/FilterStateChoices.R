@@ -45,7 +45,7 @@ ChoicesFilterState <- R6::R6Class( # nolint
     #' \item{`"matrix"`}{ `varname` in the condition call will be returned as `<dataname>[, <varname>]`}
     #' }
     initialize = function(x,
-                          x_reactive = NULL,
+                          x_reactive,
                           varname,
                           varlabel = character(0),
                           dataname = NULL,
@@ -56,7 +56,7 @@ ChoicesFilterState <- R6::R6Class( # nolint
         length(unique(x[!is.na(x)])) < getOption("teal.threshold_slider_vs_checkboxgroup"),
         combine = "or"
       )
-      checkmate::assert_class(x_reactive, "reactive", null.ok = TRUE)
+      checkmate::assert_class(x_reactive, "reactive")
 
       super$initialize(x, x_reactive, varname, varlabel, dataname, extract_type)
 
