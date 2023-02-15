@@ -253,12 +253,18 @@ a.remove_all:hover {
 }
 
 .state-count-container {
+  height: 1.75em;
   width: 90%;
   position: absolute;
+  background-color: white;
 }
 
-.state-count-bar {
+.state-count-bar-filtered {
   background-color: lightblue !important;
+}
+
+.state-count-bar-unfiltered {
+  background-color: rgba(173, 216, 230, 0.439) !important;
 }
 
 .state-count-text {

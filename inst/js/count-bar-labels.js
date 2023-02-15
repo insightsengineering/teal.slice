@@ -1,11 +1,11 @@
 Shiny.addCustomMessageHandler("updateCountBar",
   function(message) {
     /* update bar values and size*/
-    let e2 = document.getElementById(message.id + "-count_bar");
-    e2.setAttribute("aria-valuemin", message.countmin);
-    e2.setAttribute("aria-valuemax", message.countmax);
-    e2.setAttribute("aria-valuenow", message.countnow);
-    e2.style.width = message.countnow / message.countmax * 100 + "%";
+    let bar1 = document.getElementById(message.id + "-count_bar_filtered");
+    let bar2 = document.getElementById(message.id + "-count_bar_unfiltered");
+
+    bar1.style.width = message.countnow / message.counttotal * 100 + "%";
+    bar2.style.width = (message.countmax - message.countnow) / message.counttotal * 100 + "%";
   }
 );
 
