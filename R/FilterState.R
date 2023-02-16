@@ -637,6 +637,15 @@ FilterState <- R6::R6Class( # nolint
                 NULL
               }
             ),
+            shinyWidgets::prettySwitch(
+              ns("enable"),
+              label = "",
+              status = "success",
+              slim = TRUE,
+              value = TRUE,
+              inline = TRUE,
+              width = 30
+            ),
             actionLink(
               inputId = ns("remove"),
               label = icon("circle-xmark", lib = "font-awesome"),
@@ -681,6 +690,15 @@ FilterState <- R6::R6Class( # nolint
               } else {
                 NULL
               }
+            ),
+            shinyWidgets::prettySwitch(
+              ns("enable"),
+              label = "",
+              status = "success",
+              slim = TRUE,
+              value = TRUE,
+              inline = TRUE,
+              width = 30
             ),
             actionLink(
               inputId = ns("remove"),
