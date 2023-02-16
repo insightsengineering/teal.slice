@@ -252,29 +252,21 @@ a.remove_all:hover {
   justify-content: space-between;
 }
 
-.state-count-container {
+.progress.state-count-container {
   height: 1.75em;
   width: 90%;
   background-color: white;
   margin: 0px;
 }
 
-.state-count-bar-filtered {
-  background-color: lightblue !important;
-}
-
-.state-count-bar-unfiltered {
-  background-color: rgba(173, 216, 230, 0.439) !important;
-}
-
-.state-count-text {
-  position: absolute;
-  width: 100%;
-}
-
 .progress-bar.state-count-bar-filtered {
+  background-color: lightblue !important;
   color: var(--bs-body-color, var(--dark, #333333));
   overflow: visible;
   text-align: left;
   white-space: nowrap;
+}
+
+.progress-bar.state-count-bar-unfiltered {
+  background-color: rgba(173, 216, 230, 0.439) !important;
 }
