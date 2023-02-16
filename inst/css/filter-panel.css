@@ -255,8 +255,8 @@ a.remove_all:hover {
 .state-count-container {
   height: 1.75em;
   width: 90%;
-  position: absolute;
   background-color: white;
+  margin: 0px;
 }
 
 .state-count-bar-filtered {
@@ -270,4 +270,11 @@ a.remove_all:hover {
 .state-count-text {
   position: absolute;
   width: 100%;
+}
+
+.progress-bar.state-count-bar-filtered {
+  color: var(--bs-body-color, var(--dark, #333333));
+  overflow: visible;
+  text-align: left;
+  white-space: nowrap;
 }

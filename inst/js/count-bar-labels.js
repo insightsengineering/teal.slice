@@ -6,13 +6,13 @@ Shiny.addCustomMessageHandler("updateCountBar",
 
     bar1.style.width = message.countnow / message.counttotal * 100 + "%";
     bar2.style.width = (message.countmax - message.countnow) / message.counttotal * 100 + "%";
+    bar1.textContent = message.label;
   }
 );
 
-Shiny.addCustomMessageHandler("updateCountLabel",
+Shiny.addCustomMessageHandler("updateCountText",
   function(message) {
-    /* updates Text */
-    let e1 = document.getElementById(message.id + "-count_text");
-    e1.textContent = message.label;
+    let el = document.getElementById(message.id)
+    el.textContent = message.label
   }
 );
