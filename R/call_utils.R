@@ -39,13 +39,13 @@ call_condition_choice <- function(varname, choices) {
 
   if (is.numeric(choices)) {
     if (length(choices) == 1) {
-      sprintf("%s == %s", varname, sprintf("%s", choices))
+      sprintf("%s == %s", varname, choices)
     } else {
-      sprintf("%s %%in%% c(%s)", varname, toString(sprintf("%s", choices)))
+      sprintf("%s %%in%% c(%s)", varname, toString(choices))
     }
   } else {
     if (length(choices) == 1) {
-      sprintf("%s == %s", varname, sprintf("\"%s\"", choices))
+      sprintf("%s == \"%s\"", varname, choices)
     } else {
       sprintf("%s %%in%% c(%s)", varname, toString(sprintf("\"%s\"", choices)))
     }
@@ -77,7 +77,7 @@ call_condition_range <- function(varname, range) {
   checkmate::assert_string(varname)
   checkmate::assert_numeric(range, len = 2, sorted = TRUE)
 
-  sprintf("%s >= %.4f & %s <= %.4f", varname, range[1], varname, range[2])
+  sprintf("%1$s >= %2$.4f & %1$s <= %3$.4f", varname, range[1], range[2])
 }
 
 #' `logical` variable condition call
@@ -138,9 +138,8 @@ call_condition_range_posixct <- function(varname, range, timezone = Sys.timezone
   checkmate::assert_string(timezone)
 
   sprintf(
-    "%s >= as.POSIXct(\"%s\", tz = \"%s\") & %s < as.POSIXct(\"%s\", tz = \"%s\")",
-    varname, format(range[1], tz = timezone), timezone,
-    varname, format(range[2] + 1, tz = timezone), timezone
+    "%1$s >= as.POSIXct(\"%2$s\", tz = \"%4$s\") & %1$s < as.POSIXct(\"%3$s\", tz = \"%4$s\")",
+    varname, format(range[1], tz = timezone), format(range[2] + 1, tz = timezone), timezone
   )
 }
 

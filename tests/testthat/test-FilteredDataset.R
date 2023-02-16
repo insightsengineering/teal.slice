@@ -153,9 +153,13 @@ testthat::test_that("$get_call returns the filter call of the dataset", {
 
   testthat::expect_equal(
     filter_call,
-    str2lang(paste(
-      "iris <- dplyr::filter(iris, (is.na(Sepal.Length) | (is.infinite(Sepal.Length) |",
-      "Sepal.Length >= 5.1 & Sepal.Length <= 6.4)) & Species %in% c(\"setosa\", \"versicolor\"))"
-    ))
+    quote(
+      iris <- dplyr::filter(
+        iris,
+        (is.na(Sepal.Length) |
+           (is.infinite(Sepal.Length) | Sepal.Length >= 5.1 & Sepal.Length <= 6.4)) &
+          Species %in% c("setosa", "versicolor")
+      )
+    )
   )
 })
