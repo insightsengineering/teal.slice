@@ -27,7 +27,6 @@ isolate(filter_state$get_call())
 \dontrun{
 # working filter in an app
 library(shiny)
-library(teal.slice)
 library(shinyjs)
 
 # create vector to filter

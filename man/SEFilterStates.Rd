@@ -2,9 +2,9 @@
 % Please edit documentation in R/FilterStatesSE.R
 \name{SEFilterStates}
 \alias{SEFilterStates}
-\title{\code{SEFilterStates}}
+\title{\code{FilterStates} subclass for SummarizedExperiments}
 \description{
-Specialization of \code{FilterStates} for \code{SummaryExperiment}.
+Handles filter states in a \code{SummaryExperiment}
 }
 \keyword{internal}
 \section{Super class}{
