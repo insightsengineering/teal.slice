@@ -5,9 +5,7 @@
 \alias{ChoicesFilterState}
 \title{\code{FilterState} object for factor or character variable}
 \description{
-\code{FilterState} object for factor or character variable
-
-\code{FilterState} object for factor or character variable
+Manages choosing elements from a set
 }
 \note{
 Casts the passed object to \code{character} before validating the input

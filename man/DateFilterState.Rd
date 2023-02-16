@@ -5,9 +5,7 @@
 \alias{DateFilterState}
 \title{\code{FilterState} object for Date variable}
 \description{
-\code{FilterState} object for Date variable
-
-\code{FilterState} object for Date variable
+Manages choosing a range of Dates
 }
 \note{
 Casts the passed object to \code{Date} before validating the input
