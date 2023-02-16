@@ -174,6 +174,7 @@ updateCountBar <- function(session = getDefaultReactiveDomain(), inputId, label,
   invisible(NULL)
 }
 
+#' @rdname countBar
 updateCountText <- function(session = getDefaultReactiveDomain(), inputId, label, countmax, countnow) {
   checkmate::assert_string(inputId)
   checkmate::assert_string(label)
