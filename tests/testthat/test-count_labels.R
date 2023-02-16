@@ -37,82 +37,46 @@ testthat::test_that("make_count_text returns label + (countmax) when countnow is
   )
 })
 
-# countLabel -------
-testthat::test_that("countLabel requires InputId to be a character(1)", {
-  testthat::expect_no_error(countLabel(inputId = "a", label = "a", countmax = 50))
-  testthat::expect_error(countLabel(label = "a", countmax = 50), "inputId")
-  testthat::expect_error(countLabel(inputId = NULL, label = "a", countmax = 50), "inputId")
-  testthat::expect_error(countLabel(inputId = character(0), label = "a", countmax = 50), "inputId")
-  testthat::expect_error(countLabel(inputId = 1L, label = "a", countmax = 50), "inputId")
-})
-
-testthat::test_that("countLabel requires label to be a character(1)", {
-  testthat::expect_no_error(countLabel(inputId = "a", label = "a", countmax = 50))
-  testthat::expect_error(countLabel(inputId = "a", label = character(0), countmax = 50), "label")
-  testthat::expect_error(countLabel(inputId = "a", label = 1, countmax = 50), "label")
-})
-
-testthat::test_that("countLabel requires countmax to be a numeric(1)", {
-  testthat::expect_no_error(countLabel(inputId = "a", label = "a", countmax = 100))
-  testthat::expect_error(countLabel(inputId = "a", label = "a", countmax = "100"), "countmax")
-  testthat::expect_error(countLabel(inputId = "a", label = "a", countmax = numeric(0)), "countmax")
-})
-
-
-testthat::test_that("countLabel requires countnow to be a numeric(1), NULL or missing", {
-  testthat::expect_no_error(countLabel(inputId = "a", label = "a", countmax = 100, countnow = 1))
-  testthat::expect_no_error(countLabel(inputId = "a", label = "a", countmax = 100, countnow = NULL))
-  testthat::expect_no_error(countLabel(inputId = "a", label = "a", countmax = 100))
-  testthat::expect_error(countLabel(inputId = "a", label = "a", countmax = 100, countnow = "50"), "countnow")
-  testthat::expect_error(countLabel(inputId = "a", label = "a", countmax = 100, countnow = numeric(0)), "countnow")
-})
-
-testthat::test_that("countLabel returns a div with id, class and label text", {
-  label <- "a"
-  countmax <- 100
-  countnow <- 50
-
-  expected <- list(
-    name = "div",
-    attribs = list(
-      id = "a-count_text",
-      class = "state-count-text"
-    ),
-    children = list(
-      make_count_text(label = label, countmax = countmax, countnow = countnow)
-    )
-  )
-  out <- countLabel(inputId = "a", label = label, countmax = countmax, countnow = countnow)
-})
-
 # countBar -------
 testthat::test_that("countBar requires InputId to be a character(1)", {
-  testthat::expect_no_error(countBar(inputId = "a", countmax = 50, counttotal = 200))
-  testthat::expect_error(countBar(countmax = 50, counttotal = 200), "inputId")
-  testthat::expect_error(countBar(inputId = NULL, countmax = 50, counttotal = 200), "inputId")
-  testthat::expect_error(countBar(inputId = character(0), countmax = 50, counttotal = 200), "inputId")
-  testthat::expect_error(countBar(inputId = 1L, countmax = 50, counttotal = 200), "inputId")
+  testthat::expect_no_error(countBar(inputId = "a", label = "a", countmax = 50, counttotal = 200))
+  testthat::expect_error(countBar(label = "a", countmax = 50, counttotal = 200), "inputId")
+  testthat::expect_error(countBar(inputId = NULL, label = "a", countmax = 50, counttotal = 200), "inputId")
+  testthat::expect_error(countBar(inputId = character(0), label = "a", countmax = 50, counttotal = 200), "inputId")
+  testthat::expect_error(countBar(inputId = 1L, label = "a", countmax = 50, counttotal = 200), "inputId")
 })
 
+testthat::test_that("countBar requires label to be a character(1)", {
+  testthat::expect_no_error(countBar(inputId = "a", label = "a", countmax = 50, counttotal = 200))
+  testthat::expect_error(countBar(inputId = "a", label = NULL, countmax = 50, counttotal = 200), "label")
+  testthat::expect_error(countBar(inputId = "a", label = character(0), countmax = 50, counttotal = 200), "label")
+  testthat::expect_error(countBar(inputId = "a", label = 1L, label = "a", countmax = 50, counttotal = 200), "label")
+})
 
 testthat::test_that("countBar requires countmax to be a numeric(1)", {
-  testthat::expect_no_error(countBar(inputId = "a", countmax = 100, counttotal = 200))
-  testthat::expect_error(countBar(inputId = "a", countmax = "100", counttotal = 200), "countmax")
-  testthat::expect_error(countBar(inputId = "a", countmax = numeric(0), counttotal = 200), "countmax")
+  testthat::expect_no_error(countBar(inputId = "a", label = "a", countmax = 100, counttotal = 200))
+  testthat::expect_error(countBar(inputId = "a", label = "a", countmax = "100", counttotal = 200), "countmax")
+  testthat::expect_error(countBar(inputId = "a", label = "a", countmax = numeric(0), counttotal = 200), "countmax")
 })
 
 testthat::test_that("countBar requires counttotal to be a numeric(1)", {
-  testthat::expect_no_error(countBar(inputId = "a", countmax = 100, counttotal = 200))
-  testthat::expect_error(countBar(inputId = "a", countmax = 100, counttotal = "200"), "counttotal")
-  testthat::expect_error(countBar(inputId = "a", countmax = 100, counttotal = numeric(0)), "counttotal")
+  testthat::expect_no_error(countBar(inputId = "a", label = "a", countmax = 100, counttotal = 200))
+  testthat::expect_error(countBar(inputId = "a", label = "a", countmax = 100, counttotal = "200"), "counttotal")
+  testthat::expect_error(countBar(inputId = "a", label = "a", countmax = 100, counttotal = numeric(0)), "counttotal")
 })
 
 testthat::test_that("countBar requires countnow to be a numeric(1), NULL or missing", {
-  testthat::expect_no_error(countBar(inputId = "a", countmax = 100, countnow = 1, counttotal = 200))
-  testthat::expect_no_error(countBar(inputId = "a", countmax = 100, countnow = NULL, counttotal = 200))
-  testthat::expect_no_error(countBar(inputId = "a", countmax = 100, counttotal = 200))
-  testthat::expect_error(countBar(inputId = "a", countmax = 100, countnow = "50", counttotal = 200), "countnow")
-  testthat::expect_error(countBar(inputId = "a", countmax = 100, countnow = numeric(0), counttotal = 200), "countnow")
+  testthat::expect_no_error(countBar(inputId = "a", label = "a", countmax = 100, countnow = 1, counttotal = 200))
+  testthat::expect_no_error(countBar(inputId = "a", label = "a", countmax = 100, countnow = NULL, counttotal = 200))
+  testthat::expect_no_error(countBar(inputId = "a", label = "a", countmax = 100, counttotal = 200))
+  testthat::expect_error(
+    countBar(inputId = "a", label = "a", countmax = 100, countnow = "50", counttotal = 200),
+    "countnow"
+  )
+  testthat::expect_error(
+    countBar(inputId = "a", label = "a", countmax = 100, countnow = numeric(0), counttotal = 200),
+    "countnow"
+  )
 })
 
 testthat::test_that("countBar returns a div with class and two progressbars", {
@@ -132,7 +96,7 @@ testthat::test_that("countBar returns a div with class and two progressbars", {
           style = "width: 25%",
           role = "progressbar"
         ),
-        children = list()
+        children = list("a (50/150)")
       ),
       list(
         name = "div",
@@ -146,68 +110,10 @@ testthat::test_that("countBar returns a div with class and two progressbars", {
       )
     )
   )
-  out <- rapply(countBar(inputId = "a", countmax = countmax, countnow = countnow, counttotal), unclass, how = "list")
-  testthat::expect_identical(out, expected)
-})
-
-# countBar ------------
-testthat::test_that("countBar requires InputId to be a character(1)", {
-  testthat::expect_no_error(countBar(inputId = "a", label = "a", countmax = 50))
-  testthat::expect_error(countBar(label = "a", countmax = 50), "inputId")
-  testthat::expect_error(countBar(inputId = NULL, label = "a", countmax = 50), "inputId")
-  testthat::expect_error(countBar(inputId = character(0), label = "a", countmax = 50), "inputId")
-  testthat::expect_error(countBar(inputId = 1L, label = "a", countmax = 50), "inputId")
-})
-
-testthat::test_that("countBar requires label to be a character(1)", {
-  testthat::expect_no_error(countBar(inputId = "a", label = "a", countmax = 50))
-  testthat::expect_error(countBar(inputId = "a", label = character(0), countmax = 50), "label")
-  testthat::expect_error(countBar(inputId = "a", label = 1, countmax = 50), "label")
-})
-
-testthat::test_that("countBar requires countmax to be a numeric(1)", {
-  testthat::expect_no_error(countBar(inputId = "a", label = "a", countmax = 100))
-  testthat::expect_error(countBar(inputId = "a", label = "a", countmax = "100"), "countmax")
-  testthat::expect_error(countBar(inputId = "a", label = "a", countmax = numeric(0)), "countmax")
-})
-
-testthat::test_that("countBar requires countnow to be a numeric(1), NULL or missing", {
-  testthat::expect_no_error(countBar(inputId = "a", label = "a", countmax = 100, countnow = 1))
-  testthat::expect_no_error(countBar(inputId = "a", label = "a", countmax = 100, countnow = NULL))
-  testthat::expect_no_error(countBar(inputId = "a", label = "a", countmax = 100))
-  testthat::expect_error(countBar(inputId = "a", label = "a", countmax = 100, countnow = "50"), "countnow")
-  testthat::expect_error(countBar(inputId = "a", label = "a", countmax = 100, countnow = numeric(0)), "countnow")
-})
-
-testthat::test_that("countBar requires counttotal to be a numeric(1) or missing", {
-  testthat::expect_no_error(countBar(inputId = "a", label = "a", countmax = 100, counttotal = 200))
-    testthat::expect_no_error(countBar(inputId = "a", label = "a", countmax = 100))
-  testthat::expect_error(countBar(inputId = "a", label = "a", countmax = 100, counttotal = "200"), "counttotal")
-  testthat::expect_error(
-    countBar(inputId = "a", label = "a", countmax = 100, counttotal = numeric(0)), "counttotal"
-  )
-})
-
-testthat::test_that("countBar returns a div containing a progress bar and a label", {
-  label <- "a"
-  countmax <- 150
-  countnow <- 50
-  counttotal <- 200
-
-  out <- countBar(inputId = "a", label = label, countmax = countmax, countnow = countnow, counttotal = counttotal)
-
-  expected <- tags$div(
-    countBar(inputId = "a", countmax = countmax, countnow = countnow, counttotal = counttotal),
-    countLabel(inputId = "a", label = label, countmax = countmax, countnow = countnow)
-  )
-  testthat::expect_identical(out, expected)
-})
-
-testthat::test_that("countBar sets counttotal to countmax when missing", {
-  out <- countBar(inputId = "a", label = "a", countmax = 100, countnow = 50)
-  expected <- tags$div(
-    countBar(inputId = "a", countmax = 100, countnow = 50, counttotal = 100),
-    countLabel(inputId = "a", label = label, countmax = 100, countnow = 50)
+  out <- rapply(
+    countBar(inputId = "a", label = "a", countmax = countmax, countnow = countnow, counttotal),
+    unclass,
+    how = "list"
   )
   testthat::expect_identical(out, expected)
 })
@@ -244,16 +150,12 @@ testthat::test_that("countBars requires choices to be a vector", {
     countBars(inputId = "a", choices = choices, countsmax = countsmax, countsnow = countsnow)
   )
   testthat::expect_no_error(
-    countBars(inputId = "a", choices = c(1, 2, 3), countsmax = countsmax, countsnow = countsnow),
+    countBars(inputId = "a", choices = c(1, 2, 3), countsmax = countsmax, countsnow = countsnow)
   )
   testthat::expect_error(
     countBars(inputId = "a", countsmax = countsmax, countsnow = countsnow),
     "choices"
   )
-
-  testthat::expect_no_error(countBars(inputId = "a", label = "a", countmax = 100))
-  testthat::expect_error(countBars(inputId = "a", label = "a", countmax = "100"), "countmax")
-  testthat::expect_error(countBars(inputId = "a", label = "a", countmax = numeric(0)), "countmax")
 })
 
 testthat::test_that("countBars requires countsmax to be a numeric of the same length as choices", {
@@ -282,15 +184,15 @@ testthat::test_that("countBars requires counstnow to be a numeric lower than cou
   testthat::expect_no_error(countBars(inputId = "a", choices = choices, countsmax = countsmax))
   testthat::expect_error(
     countBars(inputId = "a", choices = choices, countsmax = countsmax, countsnow = c(0, 0)),
-    "countsmax"
+    "countsnow"
   )
   testthat::expect_error(
     countBars(inputId = "a", choices = choices, countsmax = countsmax, countsnow = c(1, 20, 2)),
-    "countsmax"
+    "countsnow"
   )
   testthat::expect_error(
     countBars(inputId = "a", choices = choices, countsmax = countsmax, countsnow = as.character(countsnow)),
-    "countsmax"
+    "countsnow"
   )
 })
 
