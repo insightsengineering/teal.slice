@@ -56,24 +56,18 @@ ChoicesFilterState <- R6::R6Class( # nolint
         length(unique(x[!is.na(x)])) < getOption("teal.threshold_slider_vs_checkboxgroup"),
         combine = "or"
       )
+      checkmate::assert_class(x_reactive, "reactive")
 
-      # validation on x_reactive here
       super$initialize(x, x_reactive, varname, varlabel, dataname, extract_type)
+
       if (!is.factor(x)) {
         x <- factor(x, levels = as.character(sort(unique(x))))
       }
-
       x <- droplevels(x)
-      tbl <- table(x, useNA = "no")
-      choices <- names(tbl)
-      names(choices) <- tbl
-
-      private$set_choices(as.list(choices))
-      self$set_selected(unname(choices))
-      private$histogram_data <- data.frame(
-        x = levels(x),
-        y = tabulate(x)
-      )
+      choices <- table(x)
+      private$set_choices(names(choices))
+      self$set_selected(names(choices))
+      private$set_choices_counts(unname(choices))
 
       return(invisible(self))
     },
@@ -146,9 +140,19 @@ ChoicesFilterState <- R6::R6Class( # nolint
   # private members ----
 
   private = list(
-    histogram_data = data.frame(),
-
+    choices_counts = integer(0),
     # private methods ----
+    set_choices_counts = function(choices_counts) {
+      private$choices_counts <- choices_counts
+      invisible(NULL)
+    },
+    get_filtered_counts = function() {
+      if (!is.null(private$x_reactive)) {
+        table(factor(private$x_reactive(), levels = private$choices))
+      } else {
+        NULL
+      }
+    },
     validate_selection = function(value) {
       if (!is.character(value)) {
         stop(
@@ -201,13 +205,13 @@ ChoicesFilterState <- R6::R6Class( # nolint
     ui_inputs = function(id) {
       ns <- NS(id)
 
-      countsmax <- as.numeric(names(private$choices))
+      countsmax <- private$choices_counts
       countsnow <- isolate(unname(table(factor(private$x_reactive(), levels = private$choices))))
 
       ui_input <- if (private$is_checkboxgroup()) {
         labels <- countBars(
           inputId = ns("labels"),
-          choices = as.character(private$choices),
+          choices = private$choices,
           countsnow = countsnow,
           countsmax = countsmax
         )
@@ -218,14 +222,14 @@ ChoicesFilterState <- R6::R6Class( # nolint
             label = NULL,
             selected = private$selected(),
             choiceNames = labels,
-            choiceValues = as.character(private$choices),
+            choiceValues = private$choices,
             width = "100%"
           )
         )
       } else {
         labels <- mapply(
           FUN = make_count_text,
-          label = as.character(private$choices),
+          label = private$choices,
           countnow = countsnow,
           countmax = countsmax
         )
@@ -273,15 +277,15 @@ ChoicesFilterState <- R6::R6Class( # nolint
             if (private$is_checkboxgroup()) {
               updateCountBars(
                 inputId = "labels",
-                choices = as.character(private$choices),
-                countsmax = as.numeric(names(private$choices)),
+                choices = private$choices,
+                countsmax = private$choices_counts,
                 countsnow = unname(table(factor(private$x_reactive(), levels = private$choices)))
               )
             } else {
               labels <- mapply(
                 FUN = make_count_text,
-                label = as.character(private$choices),
-                countmax = as.numeric(names(private$choices)),
+                label = private$choices,
+                countmax = private$choices_counts,
                 countnow = unname(table(factor(private$x_reactive(), levels = private$choices)))
               )
               teal.widgets::updateOptionalSelectInput(
