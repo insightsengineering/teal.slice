@@ -64,10 +64,6 @@ DatetimeFilterState <- R6::R6Class( # nolint
       private$set_choices(var_range)
       self$set_selected(var_range)
 
-      if (var_range[1] > var_range[2]) {
-        stop("fubar")
-      }
-
       if (shiny::isRunning()) {
         session <- getDefaultReactiveDomain()
         if (!is.null(session$userData$timezone)) {
