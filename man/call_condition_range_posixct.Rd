@@ -7,7 +7,7 @@
 call_condition_range_posixct(varname, range, timezone = Sys.timezone())
 }
 \arguments{
-\item{varname}{(\code{name} or \code{character(1)})\cr
+\item{varname}{(\code{character(1)})\cr
 name of the variable}
 
 \item{range}{(\code{POSIXct})\cr
@@ -26,10 +26,12 @@ a \code{call}
 Compose \code{POSIXct} range condition call from inputs.
 }
 \examples{
-teal.slice:::call_condition_range_posixct(
+\dontrun{
+call_condition_range_posixct(
   varname = "datetime",
   range = c(Sys.time(), Sys.time() + 1),
   timezone = "UTC"
 )
+}
 }
 \keyword{internal}

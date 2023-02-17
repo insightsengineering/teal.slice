@@ -118,7 +118,7 @@ DatetimeFilterState <- R6::R6Class( # nolint
 
       filter_call <- private$add_keep_na_call(filter_call)
 
-      filter_call
+      str2lang(filter_call)
     },
 
     #' @description

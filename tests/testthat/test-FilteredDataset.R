@@ -152,10 +152,14 @@ testthat::test_that("$get_call returns the filter call of the dataset", {
   filter_call <- shiny::isolate(dataset$get_call())$filter
 
   testthat::expect_equal(
-    deparse1(filter_call),
-    paste0(
-      "iris <- dplyr::filter(iris, (is.na(Sepal.Length) | (is.infinite(Sepal.Length) |",
-      " Sepal.Length >= 5.1 & Sepal.Length <= 6.4)) & Species %in% c(\"setosa\", \"versicolor\"))"
+    filter_call,
+    quote(
+      iris <- dplyr::filter(
+        iris,
+        (is.na(Sepal.Length) |
+           (is.infinite(Sepal.Length) | Sepal.Length >= 5.1 & Sepal.Length <= 6.4)) &
+          Species %in% c("setosa", "versicolor")
+      )
     )
   )
 })
