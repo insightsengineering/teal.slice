@@ -189,7 +189,7 @@ LogicalFilterState <- R6::R6Class( # nolint
       div(
         div(
           class = "choices_state",
-          uiOutput(ns("empty"), inline = TRUE),
+          uiOutput(ns("trigger_visible"), inline = TRUE),
           radioButtons(
             ns("selection"),
             label = NULL,
@@ -216,7 +216,7 @@ LogicalFilterState <- R6::R6Class( # nolint
           # this observer is needed in the situation when private$selected has been
           # changed directly by the api - then it's needed to rerender UI element
           # to show relevant values
-          output$empty <- renderUI({
+          output$trigger_visible <- renderUI({
             logger::log_trace(sprintf(
               "LogicalFilterState$server@1 updating count labels in variable: %s , dataname: %s",
               private$varname,

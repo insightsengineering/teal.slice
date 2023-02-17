@@ -431,7 +431,7 @@ RangeFilterState <- R6::R6Class( # nolint
         countmax <- private$na_count
         countnow <- isolate(private$filtered_na_count())
         div(
-          uiOutput(ns("empty"), inline = TRUE),
+          uiOutput(ns("trigger_visible"), inline = TRUE),
           checkboxInput(
             inputId = ns("value"),
             label = tags$span(
@@ -462,7 +462,7 @@ RangeFilterState <- R6::R6Class( # nolint
         # 1. renderUI is used here as an observer which triggers only if output is visible
         #  and if the reactive changes - reactive triggers only if the output is visible.
         # 2. We want to trigger change of the labels only if reactive count changes (not underlying data)
-        output$empty <- renderUI({
+        output$trigger_visible <- renderUI({
           updateCountText(
             inputId = "count_label",
             label = "Keep Inf",

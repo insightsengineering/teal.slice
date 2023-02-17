@@ -248,7 +248,7 @@ ChoicesFilterState <- R6::R6Class( # nolint
       }
 
       div(
-        uiOutput(ns("empty")),
+        uiOutput(ns("trigger_visible")),
         ui_input,
         private$keep_na_ui(ns("keep_na"))
       )
@@ -268,7 +268,7 @@ ChoicesFilterState <- R6::R6Class( # nolint
           # 1. renderUI is used here as an observer which triggers only if output is visible
           #  and if the reactive changes - reactive triggers only if the output is visible.
           # 2. We want to trigger change of the labels only if reactive count changes (not underlying data)
-          output$empty <- renderUI({
+          output$trigger_visible <- renderUI({
             logger::log_trace(sprintf(
               "ChoicesFilterState$server@1 updating count labels in variable: %s , dataname: %s",
               private$varname,
