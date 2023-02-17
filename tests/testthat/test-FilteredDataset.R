@@ -157,7 +157,7 @@ testthat::test_that("$get_call returns the filter call of the dataset", {
       iris <- dplyr::filter(
         iris,
         (is.na(Sepal.Length) |
-           (is.infinite(Sepal.Length) | Sepal.Length >= 5.1 & Sepal.Length <= 6.4)) &
+          (is.infinite(Sepal.Length) | Sepal.Length >= 5.1 & Sepal.Length <= 6.4)) &
           Species %in% c("setosa", "versicolor")
       )
     )
