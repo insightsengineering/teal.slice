@@ -8,9 +8,7 @@
 invisibly \code{NULL}
 }
 \description{
-\code{FilterState} object for numeric variable
-
-\code{FilterState} object for numeric variable
+Manages choosing a numeric range
 }
 \note{
 Casts the passed object to \code{numeric} before validating the input

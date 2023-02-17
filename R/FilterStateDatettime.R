@@ -1,5 +1,6 @@
 #' @rdname DatetimeFilterState
 #' @title `FilterState` object for `POSIXct` variable
+#' @description  Manages choosing a range of date-times
 #' @docType class
 #' @keywords internal
 #'

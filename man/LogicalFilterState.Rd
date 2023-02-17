@@ -8,9 +8,7 @@
 invisibly \code{NULL}.
 }
 \description{
-\code{FilterState} object for logical variable
-
-\code{FilterState} object for logical variable
+Manages choosing a logical state
 }
 \note{
 Casts the passed object to \code{logical} before validating the input

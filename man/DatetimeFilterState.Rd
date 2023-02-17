@@ -5,9 +5,7 @@
 \alias{DatetimeFilterState}
 \title{\code{FilterState} object for \code{POSIXct} variable}
 \description{
-\code{FilterState} object for \code{POSIXct} variable
-
-\code{FilterState} object for \code{POSIXct} variable
+Manages choosing a range of date-times
 }
 \note{
 Casts the passed object to \code{POSIXct} before validating the input

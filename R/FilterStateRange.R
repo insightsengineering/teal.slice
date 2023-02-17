@@ -1,5 +1,6 @@
 #' @name RangeFilterState
 #' @title `FilterState` object for numeric variable
+#' @description Manages choosing a numeric range
 #' @docType class
 #' @keywords internal
 #'
