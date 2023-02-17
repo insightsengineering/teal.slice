@@ -64,6 +64,10 @@ DatetimeFilterState <- R6::R6Class( # nolint
       private$set_choices(var_range)
       self$set_selected(var_range)
 
+      if (var_range[1] > var_range[2]) {
+        stop("fubar")
+      }
+
       if (shiny::isRunning()) {
         session <- getDefaultReactiveDomain()
         if (!is.null(session$userData$timezone)) {
@@ -85,7 +89,6 @@ DatetimeFilterState <- R6::R6Class( # nolint
     #'
     format = function(indent = 0) {
       checkmate::assert_number(indent, finite = TRUE, lower = 0)
-
 
       vals <- self$get_selected()
       sprintf(
@@ -284,7 +287,6 @@ DatetimeFilterState <- R6::R6Class( # nolint
         id = id,
         function(input, output, session) {
           logger::log_trace("DatetimeFilterState$server initializing, dataname: { private$dataname }")
-
           # this observer is needed in the situation when private$selected has been
           # changed directly by the api - then it's needed to rerender UI element
           # to show relevant values
@@ -339,6 +341,15 @@ DatetimeFilterState <- R6::R6Class( # nolint
                 end_date <- private$choices[2]
               }
 
+              iv <- shinyvalidate::InputValidator$new()
+              iv$add_rule("selection_start", ~ if (
+                input$selection_start > input$selection_end
+              ) "Start date must not be greater...")
+              iv$add_rule("selection_end", ~ if (
+                input$selection_start > input$selection_end
+              ) "...than the end date!")
+              iv$enable()
+              teal::validate_inputs(iv)
 
               self$set_selected(c(start_date, end_date))
               logger::log_trace(sprintf(
