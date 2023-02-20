@@ -11,9 +11,6 @@
 #'  Length should be the same as `choices`.
 #' @param countsnow (`numeric`) actual counts of each element.
 #'  Length should be the same as `choices`.
-#' @param counttotal (`numeric(1)`) Determines the size of the whole progress bar.
-#'  For example, in case there are three choices with some counts, one might like
-#'  to display each progress bar with the relative size to the `totalcount`.
 #' @return list of `shiny.tag`
 #' @examples
 #'

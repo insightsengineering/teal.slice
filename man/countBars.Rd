@@ -27,10 +27,6 @@ Length should be the same as \code{choices}.}
 Length should be the same as \code{choices}.}
 
 \item{session}{(\code{session}) object passed to function given to \code{shinyServer}.}
-
-\item{counttotal}{(\code{numeric(1)}) Determines the size of the whole progress bar.
-For example, in case there are three choices with some counts, one might like
-to display each progress bar with the relative size to the \code{totalcount}.}
 }
 \value{
 list of \code{shiny.tag}
