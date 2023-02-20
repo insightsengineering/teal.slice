@@ -14,7 +14,7 @@ name of the variable}
 range of the variable}
 }
 \value{
-a \code{call}
+a character string
 }
 \description{
 Compose \code{Date} range condition call from inputs

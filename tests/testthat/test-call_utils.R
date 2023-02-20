@@ -95,7 +95,7 @@ testthat::test_that("call_condition_choice accept all type of choices - Date", {
   )
 })
 
-testthat::test_that("call_condition_choice accept all type of choices - datetime", {
+testthat::test_that("call_condition_choice accept all type of choices - POSIXct", {
   Sys.setenv("TZ" = "PST")
   testthat::expect_identical(
     call_condition_choice("var", choices = as.POSIXct(integer(0), origin = "1900-01-01")),
@@ -113,6 +113,28 @@ testthat::test_that("call_condition_choice accept all type of choices - datetime
   testthat::expect_identical(
     call_condition_choice("var", choices = date + c(1L, 2L, NA_integer_)),
     "var %in% as.POSIXct(c(\"2021-09-01 12:00:01\", \"2021-09-01 12:00:02\", \"NA\"), tz = \"GMT\")"
+  )
+  Sys.unsetenv("TZ")
+})
+
+testthat::test_that("call_condition_choice accept all type of choices - POSIXlt", {
+  Sys.setenv("TZ" = "PST")
+  testthat::expect_identical(
+    call_condition_choice("var", choices = as.POSIXlt(integer(0), origin = "1900-01-01")),
+    "var %in% as.POSIXlt(c(), tz = \"PST\")"
+  )
+  date <- as.POSIXct("2021-09-01 12:00:00", tz = "GMT")
+  testthat::expect_identical(
+    call_condition_choice("var", choices = as.POSIXlt(date + 1L)),
+    "var == as.POSIXlt(\"2021-09-01 12:00:01\", tz = \"GMT\")"
+  )
+  testthat::expect_identical(
+    call_condition_choice("var", choices = as.POSIXlt(date + c(1L, 2L))),
+    "var %in% as.POSIXlt(c(\"2021-09-01 12:00:01\", \"2021-09-01 12:00:02\"), tz = \"GMT\")"
+  )
+  testthat::expect_identical(
+    call_condition_choice("var", choices = as.POSIXlt(date + c(1L, 2L, NA_integer_))),
+    "var %in% as.POSIXlt(c(\"2021-09-01 12:00:01\", \"2021-09-01 12:00:02\", \"NA\"), tz = \"GMT\")"
   )
   Sys.unsetenv("TZ")
 })
@@ -165,11 +187,11 @@ testthat::test_that("call_condition_logical works only with logical(1)", {
   )
 })
 
-# call_condition_range_posixct ----
-testthat::test_that("call_condition_range_posixct works with POXIXct range only", {
+# call_condition_range_posix ----
+testthat::test_that("call_condition_range_posix works with POXIXt range only", {
   datetime <- as.POSIXct("2021-09-01 12:00:00", tz = "GMT")
   testthat::expect_identical(
-    call_condition_range_posixct(
+    call_condition_range_posix(
       varname = "var",
       range = datetime + c(0, 1)
     ),
@@ -179,22 +201,37 @@ testthat::test_that("call_condition_range_posixct works with POXIXct range only"
       sep = " & "
     )
   )
+  testthat::expect_identical(
+    call_condition_range_posix(
+      varname = "var",
+      range = as.POSIXlt(datetime + c(0, 1))
+    ),
+    paste(
+      "var >= as.POSIXlt(\"2021-09-01 12:00:00\", tz = \"GMT\")",
+      "var < as.POSIXlt(\"2021-09-01 12:00:02\", tz = \"GMT\")",
+      sep = " & "
+    )
+  )
+})
+
+testthat::test_that("call_condition_range_posix works with POXIXt range only", {
+  datetime <- as.POSIXct("2021-09-01 12:00:00", tz = "GMT")
   testthat::expect_error(
-    call_condition_range_posixct(
+    call_condition_range_posix(
       varname = "var",
       range = datetime + c(1, 0)
     ),
     "Assertion.+failed"
   )
   testthat::expect_error(
-    call_condition_range_posixct(
+    call_condition_range_posix(
       varname = "var",
       range = Sys.Date() + c(0, 1)
     ),
     "Assertion.+failed"
   )
   testthat::expect_error(
-    call_condition_range_posixct(
+    call_condition_range_posix(
       varname = "var",
       range = Sys.time()
     ),
@@ -202,23 +239,8 @@ testthat::test_that("call_condition_range_posixct works with POXIXct range only"
   )
 })
 
-testthat::test_that("call_condition_range_posixct returns expected timezone", {
-  datetime <- as.POSIXct("2021-09-01 12:00:00", tz = "GMT")
-  testthat::expect_identical(
-    call_condition_range_posixct(
-      varname = "var",
-      range = datetime + c(0, 1)
-    ),
-    paste(
-      "var >= as.POSIXct(\"2021-09-01 12:00:00\", tz = \"GMT\")",
-      "var < as.POSIXct(\"2021-09-01 12:00:02\", tz = \"GMT\")",
-      sep = " & "
-    )
-  )
-})
-
 # call_condition_range_date ----
-testthat::test_that("call_condition_range_date works with date range only", {
+testthat::test_that("call_condition_range_date returns appropriate string", {
   date <- as.Date("2021-09-01")
   testthat::expect_identical(
     call_condition_range_date(

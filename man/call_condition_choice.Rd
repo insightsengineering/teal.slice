@@ -4,7 +4,7 @@
 \alias{call_condition_choice}
 \title{Choices condition call}
 \usage{
-call_condition_choice(varname, choices)
+call_condition_choice(varname, choices, ...)
 }
 \arguments{
 \item{varname}{(\code{character(1)})\cr
@@ -16,7 +16,7 @@ name of the variable}
 but for some output might be converted:
 \itemize{
 \item{\code{factor}}{ call is composed on choices converted to \code{character}}
-\item{\code{Date}}{ call is composed on choices converted to \code{character} using \code{format(choices)}}
+\item{\code{Date}}{ call is composed on choices converted to \code{character} using \code{as.character(choices)}}
 \item{\code{POSIXct}, \code{POSIXlt}}{ Call is composed on choices converted to \code{character} using
 \code{format(choices)}. One has to be careful here as formatted date-time variable might loose
 some precision (see \code{format} argument in \code{\link{format.POSIXlt}}) and output call
@@ -26,7 +26,7 @@ could be insufficient for exact comparison. In this case one should specify
 }}
 }
 \value{
-a \code{call}
+a character string
 }
 \description{
 Compose choices condition call from inputs.

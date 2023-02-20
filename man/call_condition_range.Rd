@@ -24,10 +24,7 @@ Compose \code{numeric} range condition call from inputs
 \examples{
 \dontrun{
 call_condition_range("AGE", range = c(1, 2))
-call_condition_range(
-  call_extract_list("ADSL", "AGE"),
-  range = c(-1.2, 2.1)
-)
+call_condition_range("ADSL$AGE", range = c(-1.2, 2.1))
 }
 }
 \keyword{internal}
