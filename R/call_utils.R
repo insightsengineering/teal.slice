@@ -39,9 +39,9 @@ call_condition_choice <- function(varname, choices) {
 
   if (is.numeric(choices)) {
     if (length(choices) == 1) {
-      sprintf("%s == %s", varname, choices)
+      sprintf("%s == %s", varname, round(choices, 10))
     } else {
-      sprintf("%s %%in%% c(%s)", varname, toString(choices))
+      sprintf("%s %%in%% c(%s)", varname, toString(round(choices, 10)))
     }
   } else {
     if (length(choices) == 1) {
@@ -77,7 +77,7 @@ call_condition_range <- function(varname, range) {
   checkmate::assert_string(varname)
   checkmate::assert_numeric(range, len = 2, sorted = TRUE)
 
-  sprintf("%1$s >= %2$.4f & %1$s <= %3$.4f", varname, range[1], range[2])
+  sprintf("%1$s >= %2$.10f & %1$s <= %3$.10f", varname, range[1], range[2])
 }
 
 #' `logical` variable condition call
@@ -168,8 +168,8 @@ call_condition_range_date <- function(varname, range) {
   if (range[1] > range[2]) stop("\"range\" must be sorted")
 
   sprintf(
-    "%s >= as.Date(\"%s\") & %s <= as.Date(\"%s\")",
-    varname, as.character(range[1]), varname, as.character(range[2])
+    "%1$s >= as.Date(\"%2$s\") & %1$s <= as.Date(\"%3$s\")",
+    varname, as.character(range[1]), as.character(range[2])
   )
 }
 

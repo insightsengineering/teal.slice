@@ -119,11 +119,11 @@ testthat::test_that("call_codition_choice accept all type of choices - datetime"
 testthat::test_that("call_condition_range works only with sorted numeric of length 2", {
   testthat::expect_identical(
     call_condition_range("var", range = c(1, 2)),
-    "var >= 1.0000 & var <= 2.0000"
+    "var >= 1.0000000000 & var <= 2.0000000000"
   )
   testthat::expect_equal(
     call_condition_range("var", range = c(-1.2, 2.1)),
-    "var >= -1.2000 & var <= 2.1000"
+    "var >= -1.2000000000 & var <= 2.1000000000"
   )
   testthat::expect_error(
     call_condition_range("var", range = c(2.1, -1.2)),
