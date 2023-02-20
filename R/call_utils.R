@@ -154,7 +154,7 @@ call_condition_logical <- function(varname, choice) {
 #' )
 #' }
 #' @return A character string ready to be converted to a call
-#'         filtering on the same class of datetime as the one in `range`.
+#'         filtering on the same class of date-time as the one in `range`.
 #' @keywords internal
 call_condition_range_posix <- function(varname, range) {
   checkmate::assert_string(varname)

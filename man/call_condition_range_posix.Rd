@@ -15,7 +15,7 @@ range of the variable}
 }
 \value{
 A character string ready to be converted to a call
-filtering on the same class of datetime as the one in \code{range}.
+filtering on the same class of date-time as the one in \code{range}.
 }
 \description{
 Compose \code{POSIXct}/\code{POSIXlt} range condition call from inputs.
