@@ -51,7 +51,6 @@ call_condition_choice <- function(varname, choices, ...) {
       sprintf("%s %%in%% as.Date(c(%s))", varname, toString(sprintf("\"%s\"", as.character(choices))))
     }
   } else if (inherits(choices, "POSIXct")) {
-
     tzone <- Find(function(x) x != "", attr(as.POSIXlt(choices), "tzone"))
 
     if (length(choices) == 1L) {
