@@ -192,7 +192,8 @@ DatetimeFilterState <- R6::R6Class( # nolint
           sprintf(
             "Value: %s is outside of the possible range for column %s of dataset %s, setting minimum possible value.",
             values[1], private$varname, private$dataname
-        ))
+          )
+        )
         values[1] <- private$choices[1]
       }
 
