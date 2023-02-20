@@ -7,7 +7,7 @@
 call_condition_range(varname, range)
 }
 \arguments{
-\item{varname}{(\code{name} or \code{character(1)})\cr
+\item{varname}{(\code{character(1)})\cr
 name of the variable}
 
 \item{range}{(\code{numeric(2)})\cr
@@ -16,17 +16,18 @@ range of the variable}
 \value{
 call
 
-a \code{call}
+a character string
 }
 \description{
 Compose \code{numeric} range condition call from inputs
 }
 \examples{
-teal.slice:::call_condition_range("AGE", range = c(1, 2))
-teal.slice:::call_condition_range(as.name("AGE"), range = c(-1.2, 2.1))
-teal.slice:::call_condition_range(
-  teal.slice:::call_extract_list("ADSL", "AGE"),
+\dontrun{
+call_condition_range("AGE", range = c(1, 2))
+call_condition_range(
+  call_extract_list("ADSL", "AGE"),
   range = c(-1.2, 2.1)
 )
+}
 }
 \keyword{internal}

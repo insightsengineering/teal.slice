@@ -129,9 +129,8 @@ evaluated (in case of dependencies).
 \if{html}{\out{<a id="method-CDISCFilteredData-get_call"></a>}}
 \if{latex}{\out{\hypertarget{method-CDISCFilteredData-get_call}{}}}
 \subsection{Method \code{get_call()}}{
-Returns the filter \code{call} to filter a single dataset including the \code{inner_join}
-with its parent dataset. It assumes that the filtered datasets it depends
-on are available.
+Produces language required to filter a single dataset and merge it with its parent.
+The datasets in question are assumed to be available.
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{CDISCFilteredData$get_call(dataname)}\if{html}{\out{</div>}}
 }

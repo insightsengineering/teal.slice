@@ -547,7 +547,7 @@ testthat::test_that("get_call returns a call filtering a data.frame based on a L
   )
   testthat::expect_identical(
     shiny::isolate(filter_states$get_call()),
-    quote(logical_dataset <- dplyr::filter(logical_dataset, !logical))
+    quote(logical_dataset <- dplyr::filter(logical_dataset, logical == FALSE))
   )
 })
 
@@ -666,7 +666,7 @@ testthat::test_that(
         test_dataset,
         numbers >= 1 & numbers <= 3 &
           choices %in% c("a", "c") &
-          !logical &
+          logical == FALSE &
           (date >= as.Date("2021-08-25") & date <= as.Date("2021-08-26")) &
           (datetime >= as.POSIXct("2021-08-25 12:00:00", tz = .(Sys.timezone())) &
             datetime < as.POSIXct("2021-08-25 12:00:01", tz = .(Sys.timezone())))
