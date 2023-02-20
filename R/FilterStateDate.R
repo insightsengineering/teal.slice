@@ -169,20 +169,32 @@ DateFilterState <- R6::R6Class( # nolint
       values
     },
     remove_out_of_bound_values = function(values) {
-      if (values[1] < private$choices[1]) {
-        warning(paste(
-          "Value:", values[1], "is outside of the possible range for column", private$varname,
-          "of dataset", private$dataname, "."
-        ))
+      if (values[1] < private$choices[1] | values[1] > private$choices[2]) {
+        warning(
+          sprintf(
+            "Value: %s is outside of the possible range for column %s of dataset %s, setting minimum possible value.",
+            values[1], private$varname, private$dataname
+          ))
         values[1] <- private$choices[1]
       }
 
-      if (values[2] > private$choices[2]) {
-        warning(paste(
-          "Value:", values[2], "is outside of the possible range for column", private$varname,
-          "of dataset", private$dataname, "."
-        ))
+      if (values[2] > private$choices[2] | values[2] < private$choices[1]) {
+        warning(
+          sprintf(
+            "Value: %s is outside of the possible range for column %s of dataset %s, setting maximum possible value.",
+            values[2], private$varname, private$dataname
+          )
+        )
         values[2] <- private$choices[2]
+      }
+
+      if (values[1] > values[2]) {
+        warning(
+          sprintf(
+            "Start date %s is set after the end date %s, the values will be replaced.",
+            values[1], values[2])
+        )
+        values <- c(min(values), max(values))
       }
       values
     },
@@ -275,7 +287,7 @@ DateFilterState <- R6::R6Class( # nolint
               iv <- shinyvalidate::InputValidator$new()
               iv$add_rule("selection", ~ if (
                 start_date > end_date
-              ) "Start date must not be greater than the end date!")
+              ) "Start date must not be greater than the end date.")
               iv$enable()
               teal::validate_inputs(iv)
 
