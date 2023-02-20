@@ -165,8 +165,8 @@ testthat::test_that("call_condition_logical works only with logical(1)", {
   )
 })
 
-# call_condition_posixct ----
-testthat::test_that("call_condition_posixct works with POXIXct range only", {
+# call_condition_range_posixct ----
+testthat::test_that("call_condition_range_posixct works with POXIXct range only", {
   datetime <- as.POSIXct("2021-09-01 12:00:00", tz = "GMT")
   testthat::expect_identical(
     call_condition_range_posixct(
@@ -202,7 +202,7 @@ testthat::test_that("call_condition_posixct works with POXIXct range only", {
   )
 })
 
-testthat::test_that("call_condition_posixct returns expected timezone", {
+testthat::test_that("call_condition_range_posixct returns expected timezone", {
   datetime <- as.POSIXct("2021-09-01 12:00:00", tz = "GMT")
   testthat::expect_identical(
     call_condition_range_posixct(
@@ -217,8 +217,8 @@ testthat::test_that("call_condition_posixct returns expected timezone", {
   )
 })
 
-# call_condition_date ----
-testthat::test_that("call_condition_date works with date range only", {
+# call_condition_range_date ----
+testthat::test_that("call_condition_range_date works with date range only", {
   date <- as.Date("2021-09-01")
   testthat::expect_identical(
     call_condition_range_date(
