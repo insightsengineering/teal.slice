@@ -57,15 +57,6 @@ DatetimeFilterState <- R6::R6Class( # nolint
       private$set_choices(var_range)
       self$set_selected(var_range)
 
-      if (shiny::isRunning()) {
-        session <- getDefaultReactiveDomain()
-        if (!is.null(session$userData$timezone)) {
-          private$timezone <- session$userData$timezone
-        }
-      } else if (isTRUE(attr(x, "tz") != "")) {
-        private$timezone <- attr(x, "tz")
-      }
-
       return(invisible(self))
     },
 
@@ -107,18 +98,17 @@ DatetimeFilterState <- R6::R6Class( # nolint
     #' @description
     #' Returns reproducible condition call for current selection.
     #' For this class returned call looks like
-    #' `<varname> >= as.POSIXct(<min>, tz = <timezone>) & <varname> <= <max>, tz = <timezone>)`
+    #' `<varname> >= as.POSIXct(<min>) & <varname> <= <max>)`
     #' with optional `is.na(<varname>)`.
     get_call = function() {
-      filter_call <- call_condition_range_posixct(
+      filter_call <- call_condition_range_posix(
         varname = private$get_varname_prefixed(),
-        range = self$get_selected(),
-        timezone = private$timezone
+        range = self$get_selected()
       )
 
       filter_call <- private$add_keep_na_call(filter_call)
 
-      filter_call
+      str2lang(filter_call)
     },
 
     #' @description
@@ -144,11 +134,9 @@ DatetimeFilterState <- R6::R6Class( # nolint
     }
   ),
 
-  # private fields ----
+  # private members ----
 
   private = list(
-    timezone = Sys.timezone(),
-
     # private methods ----
 
     validate_selection = function(value) {

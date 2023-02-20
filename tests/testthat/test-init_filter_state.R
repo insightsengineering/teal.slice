@@ -44,20 +44,39 @@ testthat::test_that("init_filter_state returns an EmptyFilterState if all values
   testthat::expect_true(is(init_filter_state(NA, varname = "test"), "EmptyFilterState"))
 })
 
-testthat::test_that("init_filter_state returns a ChoicesFilterState if passed a numeric array of length < 5", {
-  testthat::expect_true(is(init_filter_state(c(1, 2, 3, 4), varname = "test"), "ChoicesFilterState"))
-  testthat::expect_true(is(init_filter_state(c(1, 2, 3, 4, 5), varname = "test"), "RangeFilterState"))
+testthat::test_that("init_filter_state returns a ChoicesFilterState if passed a longer numeric", {
+  numbers <- 1
+  testthat::expect_s3_class(init_filter_state(numbers, varname = "test"), "ChoicesFilterState")
 })
 
-testthat::test_that("init_filter_state returns a DateFilterState object if passed a Date object", {
-  testthat::expect_true(is(init_filter_state(as.Date("1990/01/01"), varname = "test"), "DateFilterState"))
+testthat::test_that("init_filter_state returns a ChoicesFilterState if passed a longer numeric", {
+  numbers <- 1: getOption("teal.threshold_slider_vs_checkboxgroup") + 1
+  testthat::expect_s3_class(init_filter_state(numbers, varname = "test"), "RangeFilterState")
+})
+
+testthat::test_that("init_filter_state returns a ChoicesFilterState object if passed a Date object of length 1", {
+  dates <- seq(as.Date("1990/01/01"), by = 1, length.out = 1)
+  testthat::expect_s3_class(init_filter_state(dates, varname = "test"), "ChoicesFilterState")
+})
+
+testthat::test_that("init_filter_state returns a DateFilterState object if passed longer a Date object", {
+  dates <- seq(as.Date("1990/01/01"), by = 1, length.out = getOption("teal.threshold_slider_vs_checkboxgroup") + 1)
+  testthat::expect_s3_class(init_filter_state(dates, varname = "test"), "DateFilterState")
 })
 
 testthat::test_that("init_filter_state returns a DatetimeFilterState object if passed
-  a POSIXct or POSIXlt object", {
-  testthat::expect_true(is(init_filter_state(as.POSIXct("1900/01/01"), varname = "test"), "DatetimeFilterState"))
-  testthat::expect_true(is(init_filter_state(as.POSIXlt("1900/01/01"), varname = "test"), "DatetimeFilterState"))
-})
+  a POSIXct or POSIXlt of length 1", {
+    dates <- seq(as.Date("1990/01/01"), by = 1, length.out = 1)
+    testthat::expect_s3_class(init_filter_state(as.POSIXct(dates), varname = "test"), "ChoicesFilterState")
+    testthat::expect_s3_class(init_filter_state(as.POSIXlt(dates), varname = "test"), "ChoicesFilterState")
+  })
+
+testthat::test_that("init_filter_state returns a DatetimeFilterState object if passed
+  a longer POSIXct or POSIXlt", {
+    dates <- seq(as.Date("1990/01/01"), by = 1, length.out = getOption("teal.threshold_slider_vs_checkboxgroup") + 1)
+    testthat::expect_s3_class(init_filter_state(as.POSIXct(dates), varname = "test"), "DatetimeFilterState")
+    testthat::expect_s3_class(init_filter_state(as.POSIXlt(dates), varname = "test"), "DatetimeFilterState")
+  })
 
 testthat::test_that("init_filter_state returns a RangeFilterState if passed a numeric array containing Inf", {
   testthat::expect_no_error(fs <- init_filter_state(c(1, 2, 3, 4, Inf), varname = "test"))

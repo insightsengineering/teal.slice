@@ -7,22 +7,24 @@
 call_condition_range_date(varname, range)
 }
 \arguments{
-\item{varname}{(\code{name} or \code{character(1)})\cr
+\item{varname}{(\code{character(1)})\cr
 name of the variable}
 
 \item{range}{(\code{Date})\cr
 range of the variable}
 }
 \value{
-a \code{call}
+a character string
 }
 \description{
 Compose \code{Date} range condition call from inputs
 }
 \examples{
-teal.slice:::call_condition_range_date(
-  as.name("date"),
+\dontrun{
+call_condition_range_date(
+  "date",
   range = c(Sys.Date(), Sys.Date() + 1)
 )
+}
 }
 \keyword{internal}

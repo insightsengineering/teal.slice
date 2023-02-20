@@ -156,7 +156,7 @@ logical scalar
 \subsection{Method \code{get_call()}}{
 Returns reproducible condition call for current selection.
 For this class returned call looks like
-\verb{<varname> >= as.POSIXct(<min>, tz = <timezone>) & <varname> <= <max>, tz = <timezone>)}
+\verb{<varname> >= as.POSIXct(<min>) & <varname> <= <max>)}
 with optional \verb{is.na(<varname>)}.
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{DatetimeFilterState$get_call()}\if{html}{\out{</div>}}

@@ -72,9 +72,8 @@ CDISCFilteredData <- R6::R6Class( # nolint
 
     #' @description
     #'
-    #' Returns the filter `call` to filter a single dataset including the `inner_join`
-    #' with its parent dataset. It assumes that the filtered datasets it depends
-    #' on are available.
+    #' Produces language required to filter a single dataset and merge it with its parent.
+    #' The datasets in question are assumed to be available.
     #'
     #' @param dataname (`character(1)`) name of the dataset
     #' @return (`call` or `list` of calls ) to filter dataset
@@ -85,18 +84,7 @@ CDISCFilteredData <- R6::R6Class( # nolint
       if (length(parent_dataname) == 0) {
         super$get_call(dataname)
       } else {
-        join_keys <- self$get_join_keys()
-        if (!is.null(join_keys)) {
-          keys <- join_keys$get(parent_dataname, dataname)
-        } else {
-          keys <- character(0)
-        }
-
-        parent_keys <- names(keys)
-        dataset_keys <- unname(keys)
-
         dataset <- self$get_filtered_dataset(dataname)
-
         premerge_call <- Filter(
           f = Negate(is.null),
           x = lapply(
@@ -105,30 +93,44 @@ CDISCFilteredData <- R6::R6Class( # nolint
           )
         )
 
+        join_keys <- self$get_join_keys()
+        keys <-
+          if (!is.null(join_keys)) {
+            join_keys$get(parent_dataname, dataname)
+          } else {
+            character(0)
+          }
+        parent_keys <- names(keys)
+        dataset_keys <- unname(keys)
+
+        y_arg <-
+          if (length(parent_keys) == 0L) {
+            parent_dataname
+          } else {
+            sprintf("%s[, c(%s), drop = FALSE]", parent_dataname, toString(sprintf("\"%s\"", parent_keys)))
+          }
+        more_args <-
+          if (length(parent_keys) == 0 || length(dataset_keys) == 0) {
+            list()
+          } else if (identical(parent_keys, dataset_keys)) {
+            list(by = parent_keys)
+          } else {
+            list(by = stats::setNames(parent_keys, dataset_keys))
+          }
+
         merge_call <- call(
           "<-",
           as.name(dataname),
-          call_with_colon(
-            "dplyr::inner_join",
-            x = as.name(dataname),
-            y = if (length(parent_keys) == 0) {
-              as.name(parent_dataname)
-            } else {
-              call_extract_array(
-                dataname = parent_dataname,
-                column = parent_keys,
-                aisle = call("=", as.name("drop"), FALSE)
-              )
-            },
-            unlist_args = if (length(parent_keys) == 0 || length(dataset_keys) == 0) {
-              list()
-            } else if (identical(parent_keys, dataset_keys)) {
-              list(by = parent_keys)
-            } else {
-              list(by = setNames(parent_keys, nm = dataset_keys))
-            }
+          as.call(
+            c(
+              str2lang("dplyr::inner_join"),
+              x = as.name(dataname),
+              y = str2lang(y_arg),
+              more_args
+            )
           )
         )
+
         c(premerge_call, merge_call)
       }
     },
@@ -310,9 +312,11 @@ CDISCFilteredData <- R6::R6Class( # nolint
 #' @keywords internal
 #'
 #' @examples
-#' teal.slice:::topological_sort(list(A = c(), B = c("A"), C = c("B"), D = c("A")))
-#' teal.slice:::topological_sort(list(D = c("A"), A = c(), B = c("A"), C = c("B")))
-#' teal.slice:::topological_sort(list(D = c("A"), B = c("A"), C = c("B"), A = c()))
+#' \dontrun{
+#' topological_sort(list(A = c(), B = c("A"), C = c("B"), D = c("A")))
+#' topological_sort(list(D = c("A"), A = c(), B = c("A"), C = c("B")))
+#' topological_sort(list(D = c("A"), B = c("A"), C = c("B"), A = c()))
+#' }
 topological_sort <- function(graph) {
   # compute in-degrees
   in_degrees <- list()

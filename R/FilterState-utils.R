@@ -186,13 +186,23 @@ init_filter_state.Date <- function(x,
                                    dataname = NULL,
                                    extract_type = character(0)) {
   if (is.null(varlabel)) varlabel <- character(0)
-  DateFilterState$new(
-    x = x,
-    varname = varname,
-    varlabel = varlabel,
-    dataname = dataname,
-    extract_type = extract_type
-  )
+  if (length(unique(x[!is.na(x)])) < getOption("teal.threshold_slider_vs_checkboxgroup")) {
+    ChoicesFilterState$new(
+      x = x,
+      varname = varname,
+      varlabel = varlabel,
+      dataname = dataname,
+      extract_type = extract_type
+    )
+  } else {
+    DateFilterState$new(
+      x = x,
+      varname = varname,
+      varlabel = varlabel,
+      dataname = dataname,
+      extract_type = extract_type
+    )
+  }
 }
 
 #' @keywords internal
@@ -203,13 +213,23 @@ init_filter_state.POSIXct <- function(x,
                                       dataname = NULL,
                                       extract_type = character(0)) {
   if (is.null(varlabel)) varlabel <- character(0)
-  DatetimeFilterState$new(
-    x = x,
-    varname = varname,
-    varlabel = varlabel,
-    dataname = dataname,
-    extract_type = extract_type
-  )
+  if (length(unique(x[!is.na(x)])) < getOption("teal.threshold_slider_vs_checkboxgroup")) {
+    ChoicesFilterState$new(
+      x = x,
+      varname = varname,
+      varlabel = varlabel,
+      dataname = dataname,
+      extract_type = extract_type
+    )
+  } else {
+    DatetimeFilterState$new(
+      x = x,
+      varname = varname,
+      varlabel = varlabel,
+      dataname = dataname,
+      extract_type = extract_type
+    )
+  }
 }
 
 #' @keywords internal
@@ -220,13 +240,23 @@ init_filter_state.POSIXlt <- function(x,
                                       dataname = NULL,
                                       extract_type = character(0)) {
   if (is.null(varlabel)) varlabel <- character(0)
-  DatetimeFilterState$new(
-    x = x,
-    varname = varname,
-    varlabel = varlabel,
-    dataname = dataname,
-    extract_type = extract_type
-  )
+  if (length(unique(x[!is.na(x)])) < getOption("teal.threshold_slider_vs_checkboxgroup")) {
+    ChoicesFilterState$new(
+      x = x,
+      varname = varname,
+      varlabel = varlabel,
+      dataname = dataname,
+      extract_type = extract_type
+    )
+  } else {
+    DatetimeFilterState$new(
+      x = x,
+      varname = varname,
+      varlabel = varlabel,
+      dataname = dataname,
+      extract_type = extract_type
+    )
+  }
 }
 
 #' Check that a given range is valid

@@ -7,7 +7,7 @@
 call_condition_logical(varname, choice)
 }
 \arguments{
-\item{varname}{(\code{name} or \code{character(1)})\cr
+\item{varname}{(\code{character(1)})\cr
 name of the variable}
 
 \item{choice}{(\code{logical(1)})\cr
@@ -16,13 +16,15 @@ chosen value}
 \value{
 call
 
-a \code{call}
+character string
 }
 \description{
 Compose \code{logical} variable condition call from inputs
 }
 \examples{
-teal.slice:::call_condition_logical("event", choice = TRUE)
-teal.slice:::call_condition_logical("event", choice = FALSE)
+\dontrun{
+call_condition_logical("event", choice = TRUE)
+call_condition_logical("event", choice = FALSE)
+}
 }
 \keyword{internal}
