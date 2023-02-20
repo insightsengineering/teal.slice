@@ -5,13 +5,12 @@
 \alias{updateCountBars}
 \title{Progress bars with labels}
 \usage{
-countBars(inputId, choices, countsmin, countsmax, countsnow = NULL)
+countBars(inputId, choices, countsmax, countsnow = NULL)
 
 updateCountBars(
   session = getDefaultReactiveDomain(),
   inputId,
   choices,
-  countsmin,
   countsmax,
   countsnow = NULL
 )
@@ -20,9 +19,6 @@ updateCountBars(
 \item{inputId}{(\code{character(1)}) \code{shiny} id}
 
 \item{choices}{(\code{vector}) determines label text.}
-
-\item{countsmin}{(\code{numeric}) determining minimal count of each element.
-Length should be the same as \code{choices}}
 
 \item{countsmax}{(\code{numeric}) determining maximal count of each element.
 Length should be the same as \code{choices}.}
@@ -40,7 +36,7 @@ to display each progress bar with the relative size to the \code{totalcount}.}
 list of \code{shiny.tag}
 }
 \description{
-\code{shiny} element showing progressbar counts. Each element can has
+\code{shiny} element showing progressbar counts. Each element can have an
 unique \code{id} attribute so each can be used independently.
 Progress bar size is dependent on the ratio \code{choicesnow[i] / countsmax[i]}.
 Label is \code{choices[i] (countsnow[i]/countsmax)}
@@ -52,38 +48,39 @@ counts <- table(choices)
 labels <- countBars(
   inputId = "counts",
   choices = c("a", "b", "c"),
-  countsmax = c(20, 20, 20),
+  countsmax = counts,
   countsnow = unname(counts)
 )
 
-
+\donttest{
 shinyApp(
   ui = fluidPage(
     div(
       class = "choices_state",
       teal.slice:::include_js_files("count-bar-labels.js"),
+      teal.slice:::include_css_files(pattern = "filter-panel"),
       checkboxGroupInput(
         inputId = "choices",
-        choices = levels(choices),
         selected = levels(choices),
+        choiceNames = labels,
+        choiceValues = levels(choices),
         label = NULL
-      ),
-      labels
+      )
     )
   ),
   server = function(input, output, session) {
     observeEvent(input$choices, {
       new_counts <- counts
       new_counts[!names(new_counts) \%in\% input$choices] <- 0
-
       updateCountBars(
         inputId = "counts",
         choices = levels(choices),
-        countsmax = c(20, 20, 20),
+        countsmax = counts,
         countsnow = unname(new_counts)
       )
     })
   }
 )
+}
 }
 \keyword{internal}

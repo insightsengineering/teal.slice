@@ -1,6 +1,6 @@
 #' Progress bars with labels
 #'
-#' `shiny` element showing progressbar counts. Each element can has
+#' `shiny` element showing progressbar counts. Each element can have an
 #' unique `id` attribute so each can be used independently.
 #' Progress bar size is dependent on the ratio `choicesnow[i] / countsmax[i]`.
 #' Label is `choices[i] (countsnow[i]/countsmax)`
@@ -22,39 +22,40 @@
 #' labels <- countBars(
 #'   inputId = "counts",
 #'   choices = c("a", "b", "c"),
-#'   countsmax = c(20, 20, 20),
+#'   countsmax = counts,
 #'   countsnow = unname(counts)
 #' )
 #'
-#'
+#' \donttest{
 #' shinyApp(
 #'   ui = fluidPage(
 #'     div(
 #'       class = "choices_state",
 #'       teal.slice:::include_js_files("count-bar-labels.js"),
+#'       teal.slice:::include_css_files(pattern = "filter-panel"),
 #'       checkboxGroupInput(
 #'         inputId = "choices",
-#'         choices = levels(choices),
 #'         selected = levels(choices),
+#'         choiceNames = labels,
+#'         choiceValues = levels(choices),
 #'         label = NULL
-#'       ),
-#'       labels
+#'       )
 #'     )
 #'   ),
 #'   server = function(input, output, session) {
 #'     observeEvent(input$choices, {
 #'       new_counts <- counts
 #'       new_counts[!names(new_counts) %in% input$choices] <- 0
-#'
 #'       updateCountBars(
 #'         inputId = "counts",
 #'         choices = levels(choices),
-#'         countsmax = c(20, 20, 20),
+#'         countsmax = counts,
 #'         countsnow = unname(new_counts)
 #'       )
 #'     })
 #'   }
 #' )
+#' }
 #' @keywords internal
 countBars <- function(inputId, choices, countsmax, countsnow = NULL) {
   checkmate::assert_string(inputId)
@@ -192,7 +193,7 @@ updateCountText <- function(session = getDefaultReactiveDomain(), inputId, label
 
 #' Make a count text
 #'
-#' Returns a text describing filtered counts. Text is composed in following way:
+#' Returns a text describing filtered counts. The text is composed in the following way:
 #' - when `countnow` is not `NULL`: `<label> (<countnow>/<countmax>)`
 #' - when `countnow` is `NULL`: `<label> (<countmax>)`
 #' @param label (`character(1)`) Text displayed before counts

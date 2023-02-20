@@ -2,49 +2,25 @@
 % Please edit documentation in R/count_labels.R
 \name{countBar}
 \alias{countBar}
-\alias{countBar}
-\alias{countLabel}
 \alias{updateCountBar}
-\alias{updateCountLabel}
-\alias{updateCountBar}
+\alias{updateCountText}
 \title{Progressbar with label}
 \usage{
-countBar(
-  inputId,
-  label = "",
-  countmin,
-  countmax,
-  countnow = NULL,
-  counttotal = countmax
-)
-
-countBar(inputId, countmin, countmax, countnow, counttotal)
-
-countLabel(inputId, label, countmax, countnow)
+countBar(inputId, label, countmax, countnow = NULL, counttotal = countmax)
 
 updateCountBar(
-  session = getDefaultReactiveDomain(),
-  inputId,
-  label = "",
-  countmin,
-  countmax,
-  countnow = NULL,
-  counttotal = sum(countmax),
-  value
-)
-
-updateCountLabel(
   session = getDefaultReactiveDomain(),
   inputId,
   label,
   countmax,
-  countnow
+  countnow = NULL,
+  counttotal
 )
 
-updateCountBar(
+updateCountText(
   session = getDefaultReactiveDomain(),
   inputId,
-  countmin,
+  label,
   countmax,
   countnow
 )
@@ -53,8 +29,6 @@ updateCountBar(
 \item{inputId}{(\code{character(1)}) \code{shiny} id}
 
 \item{label}{(\code{character(1)}) Text to display followed by counts}
-
-\item{countmin}{(\code{numeric(1)}) minimal possible count for a single item.}
 
 \item{countmax}{(\code{numeric(1)}) maximal possible count for a single item.}
 

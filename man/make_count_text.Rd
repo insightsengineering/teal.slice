@@ -4,7 +4,7 @@
 \alias{make_count_text}
 \title{Make a count text}
 \usage{
-make_count_text(label = "", countmax, countnow = NULL)
+make_count_text(label, countmax, countnow = NULL)
 }
 \arguments{
 \item{label}{(\code{character(1)}) Text displayed before counts}
@@ -17,7 +17,7 @@ make_count_text(label = "", countmax, countnow = NULL)
 \code{character(1)}
 }
 \description{
-Returns a text describing filtered counts. Text is composed in following way:
+Returns a text describing filtered counts. The text is composed in the following way:
 \itemize{
 \item when \code{countnow} is not \code{NULL}: \verb{<label> (<countnow>/<countmax>)}
 \item when \code{countnow} is \code{NULL}: \verb{<label> (<countmax>)}
