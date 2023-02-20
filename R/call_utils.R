@@ -18,8 +18,6 @@
 #'       `varname = trunc(<varname>)` and possibly convert `choices` to `character`)
 #'     }
 #'   }
-#' @param timezone (`character(1)`)\cr
-#'   timezone to use for datetime objects
 #'
 #' @examples
 #' \dontrun{
@@ -29,7 +27,7 @@
 #' call_condition_choice("x$SEX", choices = Sys.Date())
 #' call_condition_choice("x$SEX", choices = Sys.time())
 #' }
-#' @return a `call`
+#' @return a character string
 #' @keywords internal
 call_condition_choice <- function(varname, choices, ...) {
   checkmate::assert_string(varname)
@@ -50,20 +48,23 @@ call_condition_choice <- function(varname, choices, ...) {
     } else {
       sprintf("%s %%in%% as.Date(c(%s))", varname, toString(sprintf("\"%s\"", as.character(choices))))
     }
-  } else if (inherits(choices, "POSIXct")) {
+  } else if (inherits(choices, c("POSIXct", "POSIXlt"))) {
+    class <- class(choices)[1L]
     tzone <- Find(function(x) x != "", attr(as.POSIXlt(choices), "tzone"))
 
     if (length(choices) == 1L) {
       sprintf(
-        "%s == as.POSIXct(\"%s\", tz = \"%s\")",
+        "%s == %s(\"%s\", tz = \"%s\")",
         varname,
+        switch(class, "POSIXct" = "as.POSIXct", "POSIXlt" = "as.POSIXlt"),
         as.character(choices),
         tzone
       )
     } else {
       sprintf(
-        "%s %%in%% as.POSIXct(c(%s), tz = \"%s\")",
+        "%s %%in%% %s(c(%s), tz = \"%s\")",
         varname,
+        switch(class, "POSIXct" = "as.POSIXct", "POSIXlt" = "as.POSIXlt"),
         toString(sprintf("\"%s\"", as.character(choices))),
         tzone
       )
@@ -83,7 +84,6 @@ call_condition_choice <- function(varname, choices, ...) {
 #'
 #' @param varname (`character(1)`)\cr
 #'   name of the variable
-#'
 #' @param range (`numeric(2)`)\cr
 #'   range of the variable
 #'
@@ -91,10 +91,7 @@ call_condition_choice <- function(varname, choices, ...) {
 #' @examples
 #' \dontrun{
 #' call_condition_range("AGE", range = c(1, 2))
-#' call_condition_range(
-#'   call_extract_list("ADSL", "AGE"),
-#'   range = c(-1.2, 2.1)
-#' )
+#' call_condition_range("ADSL$AGE", range = c(-1.2, 2.1))
 #' }
 #' @return a character string
 #' @keywords internal
@@ -111,7 +108,6 @@ call_condition_range <- function(varname, range) {
 #'
 #' @param varname (`character(1)`)\cr
 #'   name of the variable
-#'
 #' @param choice (`logical(1)`)\cr
 #'   chosen value
 #'
@@ -131,36 +127,45 @@ call_condition_logical <- function(varname, choice) {
 }
 
 
-#' `POSIXct` range condition call
+#' `POSIXct` or `POSIXlt` range condition call
 #'
-#' Compose `POSIXct` range condition call from inputs.
+#' Compose `POSIXct`/`POSIXlt` range condition call from inputs.
 #'
 #' @param varname (`character(1)`)\cr
 #'   name of the variable
-#'
-#' @param range (`POSIXct`)\cr
-#'   range of the variable. Be aware that output
-#'   uses truncated range format `"%Y-%m-%d %H:%M:%S"`, which means that
-#'   some precision might be lost.
+#' @param range (`POSIXct` or `POSIXlt`)\cr
+#'   range of the variable
 #'
 #' @examples
 #' \dontrun{
-#' call_condition_range_posixct(
+#' call_condition_range_posix(
 #'   varname = "datetime",
 #'   range = c(Sys.time(), Sys.time() + 1)
 #' )
+#' call_condition_range_posix(
+#'   varname = "datetime",
+#'   range = as.POSIXlt(c(Sys.time(), Sys.time() + 1))
+#' )
 #' }
-#' @return a `call`
+#' @return A character string ready to be converted to a call
+#'         filtering on the same class of datetime as the one in `range`.
 #' @keywords internal
-call_condition_range_posixct <- function(varname, range) {
+call_condition_range_posix <- function(varname, range) {
   checkmate::assert_string(varname)
-  checkmate::assert_posixct(range, len = 2, sorted = TRUE)
+  checkmate::assert_multi_class(range, c("POSIXct", "POSIXlt"))
+  checkmate::assert(
+    checkmate::check_true(length(range) == 2L),
+    checkmate::check_true(range[1L] <= range[2L]),
+    combine = "and"
+  )
 
+  class <- class(range)[1L]
   tzone <- Find(function(x) x != "", attr(as.POSIXlt(range), "tzone"))
 
   sprintf(
-    "%1$s >= as.POSIXct(\"%2$s\", tz = \"%4$s\") & %1$s < as.POSIXct(\"%3$s\", tz = \"%4$s\")",
+    "%1$s >= %2$s(\"%3$s\", tz = \"%5$s\") & %1$s < %2$s(\"%4$s\", tz = \"%5$s\")",
     varname,
+    switch(class, "POSIXct" = "as.POSIXct", "POSIXlt" = "as.POSIXlt"),
     as.character(range[1]),
     as.character(range[2] + 1),
     tzone
@@ -184,7 +189,7 @@ call_condition_range_posixct <- function(varname, range) {
 #'   range = c(Sys.Date(), Sys.Date() + 1)
 #' )
 #' }
-#' @return a `call`
+#' @return a character string
 #' @keywords internal
 call_condition_range_date <- function(varname, range) {
   checkmate::assert_string(varname)
