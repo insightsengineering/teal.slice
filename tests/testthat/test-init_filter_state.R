@@ -50,7 +50,7 @@ testthat::test_that("init_filter_state returns a ChoicesFilterState if passed a 
 })
 
 testthat::test_that("init_filter_state returns a ChoicesFilterState if passed a longer numeric", {
-  numbers <- 1: getOption("teal.threshold_slider_vs_checkboxgroup") + 1
+  numbers <- 1:getOption("teal.threshold_slider_vs_checkboxgroup") + 1
   testthat::expect_s3_class(init_filter_state(numbers, varname = "test"), "RangeFilterState")
 })
 
@@ -66,17 +66,17 @@ testthat::test_that("init_filter_state returns a DateFilterState object if passe
 
 testthat::test_that("init_filter_state returns a DatetimeFilterState object if passed
   a POSIXct or POSIXlt of length 1", {
-    dates <- seq(as.Date("1990/01/01"), by = 1, length.out = 1)
-    testthat::expect_s3_class(init_filter_state(as.POSIXct(dates), varname = "test"), "ChoicesFilterState")
-    testthat::expect_s3_class(init_filter_state(as.POSIXlt(dates), varname = "test"), "ChoicesFilterState")
-  })
+  dates <- seq(as.Date("1990/01/01"), by = 1, length.out = 1)
+  testthat::expect_s3_class(init_filter_state(as.POSIXct(dates), varname = "test"), "ChoicesFilterState")
+  testthat::expect_s3_class(init_filter_state(as.POSIXlt(dates), varname = "test"), "ChoicesFilterState")
+})
 
 testthat::test_that("init_filter_state returns a DatetimeFilterState object if passed
   a longer POSIXct or POSIXlt", {
-    dates <- seq(as.Date("1990/01/01"), by = 1, length.out = getOption("teal.threshold_slider_vs_checkboxgroup") + 1)
-    testthat::expect_s3_class(init_filter_state(as.POSIXct(dates), varname = "test"), "DatetimeFilterState")
-    testthat::expect_s3_class(init_filter_state(as.POSIXlt(dates), varname = "test"), "DatetimeFilterState")
-  })
+  dates <- seq(as.Date("1990/01/01"), by = 1, length.out = getOption("teal.threshold_slider_vs_checkboxgroup") + 1)
+  testthat::expect_s3_class(init_filter_state(as.POSIXct(dates), varname = "test"), "DatetimeFilterState")
+  testthat::expect_s3_class(init_filter_state(as.POSIXlt(dates), varname = "test"), "DatetimeFilterState")
+})
 
 testthat::test_that("init_filter_state returns a RangeFilterState if passed a numeric array containing Inf", {
   testthat::expect_no_error(fs <- init_filter_state(c(1, 2, 3, 4, Inf), varname = "test"))

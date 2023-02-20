@@ -138,7 +138,6 @@ DatetimeFilterState <- R6::R6Class( # nolint
 
   private = list(
     # private methods ----
-
     validate_selection = function(value) {
       if (!(is(value, "POSIXct") || is(value, "POSIXlt"))) {
         stop(

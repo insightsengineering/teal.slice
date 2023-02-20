@@ -56,7 +56,10 @@ call_condition_choice <- function(varname, choices, ...) {
       sprintf(
         "%s == %s(\"%s\", tz = \"%s\")",
         varname,
-        switch(class, "POSIXct" = "as.POSIXct", "POSIXlt" = "as.POSIXlt"),
+        switch(class,
+          "POSIXct" = "as.POSIXct",
+          "POSIXlt" = "as.POSIXlt"
+        ),
         as.character(choices),
         tzone
       )
@@ -64,7 +67,10 @@ call_condition_choice <- function(varname, choices, ...) {
       sprintf(
         "%s %%in%% %s(c(%s), tz = \"%s\")",
         varname,
-        switch(class, "POSIXct" = "as.POSIXct", "POSIXlt" = "as.POSIXlt"),
+        switch(class,
+          "POSIXct" = "as.POSIXct",
+          "POSIXlt" = "as.POSIXlt"
+        ),
         toString(sprintf("\"%s\"", as.character(choices))),
         tzone
       )
@@ -165,7 +171,10 @@ call_condition_range_posix <- function(varname, range) {
   sprintf(
     "%1$s >= %2$s(\"%3$s\", tz = \"%5$s\") & %1$s < %2$s(\"%4$s\", tz = \"%5$s\")",
     varname,
-    switch(class, "POSIXct" = "as.POSIXct", "POSIXlt" = "as.POSIXlt"),
+    switch(class,
+      "POSIXct" = "as.POSIXct",
+      "POSIXlt" = "as.POSIXlt"
+    ),
     as.character(range[1]),
     as.character(range[2] + 1),
     tzone
