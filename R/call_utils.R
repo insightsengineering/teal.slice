@@ -4,14 +4,13 @@
 #'
 #' @param varname (`character(1)`)\cr
 #'   name of the variable
-#'
 #' @param choices (`vector`)\cr
 #'   `varname` values to match using the `==` (single value) or
 #'   `%in%` (vector) condition. `choices` can be vector of any type
 #'   but for some output might be converted:
 #'   \itemize{
 #'     \item{`factor`}{ call is composed on choices converted to `character`}
-#'     \item{`Date`}{ call is composed on choices converted to `character` using `format(choices)`}
+#'     \item{`Date`}{ call is composed on choices converted to `character` using `as.character(choices)`}
 #'     \item{`POSIXct`, `POSIXlt`}{ Call is composed on choices converted to `character` using
 #'       `format(choices)`. One has to be careful here as formatted date-time variable might loose
 #'       some precision (see `format` argument in \code{\link{format.POSIXlt}}) and output call
@@ -19,6 +18,8 @@
 #'       `varname = trunc(<varname>)` and possibly convert `choices` to `character`)
 #'     }
 #'   }
+#' @param timezone (`character(1)`)\cr
+#'   timezone to use for datetime objects
 #'
 #' @examples
 #' \dontrun{
@@ -30,7 +31,7 @@
 #' }
 #' @return a `call`
 #' @keywords internal
-call_condition_choice <- function(varname, choices) {
+call_condition_choice <- function(varname, choices, ...) {
   checkmate::assert_string(varname)
   checkmate::assert_multi_class(
     choices,
@@ -38,13 +39,38 @@ call_condition_choice <- function(varname, choices) {
   )
 
   if (is.numeric(choices)) {
-    if (length(choices) == 1) {
+    if (length(choices) == 1L) {
       sprintf("%s == %s", varname, round(choices, 10))
     } else {
       sprintf("%s %%in%% c(%s)", varname, toString(round(choices, 10)))
     }
+  } else if (inherits(choices, "Date")) {
+    if (length(choices) == 1L) {
+      sprintf("%s == as.Date(\"%s\")", varname, as.character(choices))
+    } else {
+      sprintf("%s %%in%% as.Date(c(%s))", varname, toString(sprintf("\"%s\"", as.character(choices))))
+    }
+  } else if (inherits(choices, "POSIXct")) {
+
+    tzone <- Find(function(x) x != "", attr(as.POSIXlt(choices), "tzone"))
+
+    if (length(choices) == 1L) {
+      sprintf(
+        "%s == as.POSIXct(\"%s\", tz = \"%s\")",
+        varname,
+        as.character(choices),
+        tzone
+      )
+    } else {
+      sprintf(
+        "%s %%in%% as.POSIXct(c(%s), tz = \"%s\")",
+        varname,
+        toString(sprintf("\"%s\"", as.character(choices))),
+        tzone
+      )
+    }
   } else {
-    if (length(choices) == 1) {
+    if (length(choices) == 1L) {
       sprintf("%s == \"%s\"", varname, choices)
     } else {
       sprintf("%s %%in%% c(%s)", varname, toString(sprintf("\"%s\"", choices)))
@@ -118,28 +144,27 @@ call_condition_logical <- function(varname, choice) {
 #'   uses truncated range format `"%Y-%m-%d %H:%M:%S"`, which means that
 #'   some precision might be lost.
 #'
-#' @param timezone (`character(1)`)\cr
-#'   specifies the time zone to be used for the conversion.
-#'   By default `Sys.timezone()` is used.
-#'
 #' @examples
 #' \dontrun{
 #' call_condition_range_posixct(
 #'   varname = "datetime",
-#'   range = c(Sys.time(), Sys.time() + 1),
-#'   timezone = "UTC"
+#'   range = c(Sys.time(), Sys.time() + 1)
 #' )
 #' }
 #' @return a `call`
 #' @keywords internal
-call_condition_range_posixct <- function(varname, range, timezone = Sys.timezone()) {
+call_condition_range_posixct <- function(varname, range) {
   checkmate::assert_string(varname)
   checkmate::assert_posixct(range, len = 2, sorted = TRUE)
-  checkmate::assert_string(timezone)
+
+  tzone <- Find(function(x) x != "", attr(as.POSIXlt(range), "tzone"))
 
   sprintf(
     "%1$s >= as.POSIXct(\"%2$s\", tz = \"%4$s\") & %1$s < as.POSIXct(\"%3$s\", tz = \"%4$s\")",
-    varname, format(range[1], tz = timezone), format(range[2] + 1, tz = timezone), timezone
+    varname,
+    as.character(range[1]),
+    as.character(range[2] + 1),
+    tzone
   )
 }
 

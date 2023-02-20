@@ -18,7 +18,7 @@ testthat::test_that("call_condition_choice accept all type of choices - characte
   )
 })
 
-testthat::test_that("call_codition_choice accept all type of choices - integer", {
+testthat::test_that("call_condition_choice accept all type of choices - integer", {
   testthat::expect_identical(
     call_condition_choice("var", choices = integer(0)),
     "var %in% c()"
@@ -37,7 +37,7 @@ testthat::test_that("call_codition_choice accept all type of choices - integer",
   )
 })
 
-testthat::test_that("call_codition_choice accept all type of choices - numeric", {
+testthat::test_that("call_condition_choice accept all type of choices - numeric", {
   testthat::expect_identical(
     call_condition_choice("var", choices = numeric(0)),
     "var %in% c()"
@@ -75,44 +75,46 @@ testthat::test_that("call_condition_choice accept all type of choices - factor",
   )
 })
 
-testthat::test_that("call_codition_choice accept all type of choices - Date", {
+testthat::test_that("call_condition_choice accept all type of choices - Date", {
   date <- as.Date("2021-09-01")
   testthat::expect_identical(
     call_condition_choice("var", choices = as.Date(integer(0), origin = "1900-01-01")),
-    "var %in% c()"
+    "var %in% as.Date(c())"
   )
   testthat::expect_identical(
     call_condition_choice("var", choices = date + 1L),
-    "var == \"2021-09-02\""
+    "var == as.Date(\"2021-09-02\")"
   )
   testthat::expect_identical(
     call_condition_choice("var", choices = date + c(1L, 2L)),
-    "var %in% c(\"2021-09-02\", \"2021-09-03\")"
+    "var %in% as.Date(c(\"2021-09-02\", \"2021-09-03\"))"
   )
   testthat::expect_identical(
     call_condition_choice("var", choices = date + c(1L, 2L, NA_integer_)),
-    "var %in% c(\"2021-09-02\", \"2021-09-03\", \"NA\")"
+    "var %in% as.Date(c(\"2021-09-02\", \"2021-09-03\", \"NA\"))"
   )
 })
 
-testthat::test_that("call_codition_choice accept all type of choices - datetime", {
-  date <- as.POSIXct("2021-09-01 12:00:00", tz = "UTC")
+testthat::test_that("call_condition_choice accept all type of choices - datetime", {
+  Sys.setenv("TZ" = "PST")
   testthat::expect_identical(
     call_condition_choice("var", choices = as.POSIXct(integer(0), origin = "1900-01-01")),
-    "var %in% c()"
+    "var %in% as.POSIXct(c(), tz = \"PST\")"
   )
+  date <- as.POSIXct("2021-09-01 12:00:00", tz = "GMT")
   testthat::expect_identical(
     call_condition_choice("var", choices = date + 1L),
-    "var == \"2021-09-01 12:00:01\""
+    "var == as.POSIXct(\"2021-09-01 12:00:01\", tz = \"GMT\")"
   )
   testthat::expect_identical(
     call_condition_choice("var", choices = date + c(1L, 2L)),
-    "var %in% c(\"2021-09-01 12:00:01\", \"2021-09-01 12:00:02\")"
+    "var %in% as.POSIXct(c(\"2021-09-01 12:00:01\", \"2021-09-01 12:00:02\"), tz = \"GMT\")"
   )
   testthat::expect_identical(
     call_condition_choice("var", choices = date + c(1L, 2L, NA_integer_)),
-    "var %in% c(\"2021-09-01 12:00:01\", \"2021-09-01 12:00:02\", \"NA\")"
+    "var %in% as.POSIXct(c(\"2021-09-01 12:00:01\", \"2021-09-01 12:00:02\", \"NA\"), tz = \"GMT\")"
   )
+  Sys.unsetenv("TZ")
 })
 
 # call_condition_range ----
@@ -165,40 +167,36 @@ testthat::test_that("call_condition_logical works only with logical(1)", {
 
 # call_condition_posixct ----
 testthat::test_that("call_condition_posixct works with POXIXct range only", {
-  datetime <- as.POSIXct("2021-09-01 12:00:00", tz = "UTC")
+  datetime <- as.POSIXct("2021-09-01 12:00:00", tz = "GMT")
   testthat::expect_identical(
     call_condition_range_posixct(
       varname = "var",
-      range = datetime + c(0, 1),
-      timezone = "UTC"
+      range = datetime + c(0, 1)
     ),
     paste(
-      "var >= as.POSIXct(\"2021-09-01 12:00:00\", tz = \"UTC\")",
-      "var < as.POSIXct(\"2021-09-01 12:00:02\", tz = \"UTC\")",
+      "var >= as.POSIXct(\"2021-09-01 12:00:00\", tz = \"GMT\")",
+      "var < as.POSIXct(\"2021-09-01 12:00:02\", tz = \"GMT\")",
       sep = " & "
     )
   )
   testthat::expect_error(
     call_condition_range_posixct(
       varname = "var",
-      range = datetime + c(1, 0),
-      timezone = "UTC"
+      range = datetime + c(1, 0)
     ),
     "Assertion.+failed"
   )
   testthat::expect_error(
     call_condition_range_posixct(
       varname = "var",
-      range = Sys.Date() + c(0, 1),
-      timezone = "UTC"
+      range = Sys.Date() + c(0, 1)
     ),
     "Assertion.+failed"
   )
   testthat::expect_error(
     call_condition_range_posixct(
       varname = "var",
-      range = Sys.time(),
-      timezone = "UTC"
+      range = Sys.time()
     ),
     "Assertion.+failed"
   )
@@ -209,8 +207,7 @@ testthat::test_that("call_condition_posixct returns expected timezone", {
   testthat::expect_identical(
     call_condition_range_posixct(
       varname = "var",
-      range = datetime + c(0, 1),
-      timezone = "GMT"
+      range = datetime + c(0, 1)
     ),
     paste(
       "var >= as.POSIXct(\"2021-09-01 12:00:00\", tz = \"GMT\")",
