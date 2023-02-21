@@ -354,7 +354,9 @@ DatetimeFilterState <- R6::R6Class( # nolint
               iv <- shinyvalidate::InputValidator$new()
               iv$add_rule("selection_start", ~ if (
                 input$selection_start > input$selection_end
-              ) "Start date must not be greater than the end date.")
+              ) {
+                "Start date must not be greater than the end date."
+              })
               iv$enable()
               teal::validate_inputs(iv)
 

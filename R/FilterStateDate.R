@@ -193,7 +193,8 @@ DateFilterState <- R6::R6Class( # nolint
         warning(
           sprintf(
             "Start date %s is set after the end date %s, the values will be replaced with a default date range.",
-            values[1], values[2])
+            values[1], values[2]
+          )
         )
         values <- c(private$choices[1], private$choices[2])
       }
@@ -288,7 +289,9 @@ DateFilterState <- R6::R6Class( # nolint
               iv <- shinyvalidate::InputValidator$new()
               iv$add_rule("selection", ~ if (
                 start_date > end_date
-              ) "Start date must not be greater than the end date.")
+              ) {
+                "Start date must not be greater than the end date."
+              })
               iv$enable()
               teal::validate_inputs(iv)
 
