@@ -86,7 +86,6 @@ DatetimeFilterState <- R6::R6Class( # nolint
     format = function(indent = 0) {
       checkmate::assert_number(indent, finite = TRUE, lower = 0)
 
-
       vals <- self$get_selected()
       sprintf(
         "%sFiltering on: %s\n%1$s  Selected range: %s - %s\n%1$s  Include missing values: %s",
@@ -188,20 +187,34 @@ DatetimeFilterState <- R6::R6Class( # nolint
       values
     },
     remove_out_of_bound_values = function(values) {
-      if (values[1] < private$choices[1]) {
-        warning(paste(
-          "Value:", values[1], "is outside of the possible range for column", private$varname,
-          "of dataset", private$dataname, "."
-        ))
+      if (values[1] < private$choices[1] | values[1] > private$choices[2]) {
+        warning(
+          sprintf(
+            "Value: %s is outside of the possible range for column %s of dataset %s, setting minimum possible value.",
+            values[1], private$varname, private$dataname
+          )
+        )
         values[1] <- private$choices[1]
       }
 
-      if (values[2] > private$choices[2]) {
-        warning(paste(
-          "Value:", values[2], "is outside of the possible range for column", private$varname,
-          "of dataset", private$dataname, "."
-        ))
+      if (values[2] > private$choices[2] | values[2] < private$choices[1]) {
+        warning(
+          sprintf(
+            "Value: %s is outside of the possible range for column %s of dataset %s, setting maximum possible value.",
+            values[2], private$varname, private$dataname
+          )
+        )
         values[2] <- private$choices[2]
+      }
+
+      if (values[1] > values[2]) {
+        warning(
+          sprintf(
+            "Start date %s is set after the end date %s, the values will be replaced with a default datetime range.",
+            values[1], values[2]
+          )
+        )
+        values <- c(private$choices[1], private$choices[2])
       }
       values
     },
@@ -284,7 +297,6 @@ DatetimeFilterState <- R6::R6Class( # nolint
         id = id,
         function(input, output, session) {
           logger::log_trace("DatetimeFilterState$server initializing, dataname: { private$dataname }")
-
           # this observer is needed in the situation when private$selected has been
           # changed directly by the api - then it's needed to rerender UI element
           # to show relevant values
@@ -339,6 +351,14 @@ DatetimeFilterState <- R6::R6Class( # nolint
                 end_date <- private$choices[2]
               }
 
+              iv <- shinyvalidate::InputValidator$new()
+              iv$add_rule("selection_start", ~ if (
+                input$selection_start > input$selection_end
+              ) {
+                "Start date must not be greater than the end date."
+              })
+              iv$enable()
+              teal::validate_inputs(iv)
 
               self$set_selected(c(start_date, end_date))
               logger::log_trace(sprintf(
