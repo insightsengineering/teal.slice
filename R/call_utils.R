@@ -461,11 +461,11 @@ calls_combine_by <- function(operator, calls) {
       vapply(
         X = calls,
         FUN.VALUE = logical(1),
-        FUN = function(x) is.language(x) || is.logical(x)
+        FUN = function(x) is.language(x) || is.logical(x) || is.null(x)
       )
     )
   )
-
+  calls <- Filter(x = calls, f = Negate(is.null)) # disabled filters
   Reduce(
     x = calls,
     f = function(x, y) call(operator, x, y)

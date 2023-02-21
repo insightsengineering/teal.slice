@@ -81,6 +81,9 @@ EmptyFilterState <- R6::R6Class( # nolint
     #' @return `logical(1)`
     #'
     get_call = function() {
+
+      if (private$is_disabled()) return(NULL)
+      
       filter_call <- if (isTRUE(self$get_keep_na())) {
         call("is.na", private$get_varname_prefixed())
       } else {

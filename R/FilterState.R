@@ -101,6 +101,7 @@ FilterState <- R6::R6Class( # nolint
       private$keep_na <- reactiveVal(FALSE)
       private$x_reactive <- x_reactive
       private$filtered_na_count <- reactive(sum(is.na(x_reactive())))
+      private$disabled <- reactiveVal(FALSE)
       logger::log_trace(
         sprintf(
           "Instantiated %s with variable %s, dataname: %s",
@@ -254,7 +255,7 @@ FilterState <- R6::R6Class( # nolint
     #' @return NULL invisibly
     #'
     set_keep_na = function(value) {
-      checkmate::assert_flag(value)
+      checkmate::assert_flag(value, null.ok = TRUE)
       private$keep_na(value)
       logger::log_trace(
         sprintf(
@@ -304,10 +305,15 @@ FilterState <- R6::R6Class( # nolint
           private$dataname
         )
       )
-      value <- private$cast_and_validate(value)
-      value <- private$remove_out_of_bound_values(value)
-      private$validate_selection(value)
-      private$selected(value)
+      if (private$is_disabled()) {
+        private$selected(value)
+      } else {
+        value <- private$cast_and_validate(value)
+        value <- private$remove_out_of_bound_values(value)
+        private$validate_selection(value)
+        private$selected(value)
+      }
+
       logger::log_trace(
         sprintf(
           "%s$set_selected selection of variable %s set, dataname: %s",
@@ -341,10 +347,10 @@ FilterState <- R6::R6Class( # nolint
         state$keep_na
       ))
       stopifnot(is.list(state) && all(names(state) %in% c("selected", "keep_na")))
-      if (!is.null(state$keep_na)) {
+      if (!is.null(state$keep_na) || private$is_disabled()) {
         self$set_keep_na(state$keep_na)
       }
-      if (!is.null(state$selected)) {
+      if (!is.null(state$selected) || private$is_disabled()) {
         self$set_selected(state$selected)
       }
       logger::log_trace(
@@ -373,6 +379,15 @@ FilterState <- R6::R6Class( # nolint
         function(input, output, session) {
           private$server_summary("summary")
           private$server_inputs("inputs")
+          observeEvent(input$enable, {
+            if (isTRUE(input$enable)) {
+              private$set_disabled(FALSE)
+              private$restore_state()
+            } else {
+              private$set_disabled(TRUE)
+              private$cache_state()
+            }
+          }, ignoreInit = TRUE)
           reactive(input$remove) # back to parent to remove self
         }
       )
@@ -389,11 +404,16 @@ FilterState <- R6::R6Class( # nolint
       ns <- NS(id)
 
       theme <- getOption("teal.bs_theme")
+      enable <- if (private$is_disabled()) {
+        FALSE
+      } else {
+        TRUE
+      }
 
       if (is.null(theme)) {
-        private$ui_bs3(id, parent_id)
+        private$ui_bs3(id, parent_id, enable)
       } else {
-        private$ui_bs45(id, parent_id)
+        private$ui_bs45(id, parent_id, enable)
       }
     }
   ),
@@ -412,6 +432,8 @@ FilterState <- R6::R6Class( # nolint
     extract_type = logical(0),
     x_reactive = NULL, # reactive containing the filtered variable, used for updating counts and histograms
     filtered_na_count = NULL, # reactive containing the count of NA in the filtered dataset
+    disabled = FALSE, # is this filter disabled?
+    cache = list(), # cache state when filter disabled so we can later restore
 
     # private methods ----
     # @description
@@ -518,6 +540,32 @@ FilterState <- R6::R6Class( # nolint
       )
     },
 
+    set_disabled = function(val) {
+      private$disabled(val)
+    },
+
+    is_disabled = function() {
+      private$disabled()
+    },
+
+    # --- cache/restore state when filter disabled/enabled ---
+    cache_state = function() {
+      private$cache <- self$get_state()
+      self$set_state(
+        list(
+          selected = NULL,
+          keep_na = NULL
+        )
+      )
+    },
+
+    restore_state = function() {
+      if (!is.null(private$cache)) {
+        self$set_state(private$cache)
+        private$cache <- NULL
+      }
+    },
+
     # shiny modules -----
     ui_summary = function(id) {
       stop("abstract class")
@@ -533,6 +581,14 @@ FilterState <- R6::R6Class( # nolint
     server_inputs = function(id) {
       stop("abstract class")
     },
+
+    # disable_inputs = function() {
+    #   stop("abstract class")
+    # },
+
+    # enable_inputs = function() {
+    #   stop("abstract class")
+    # },
 
     # @description
     # module displaying input to keep or remove NA in the FilterState call
@@ -615,7 +671,7 @@ FilterState <- R6::R6Class( # nolint
     #
     # @param id (`character(1)`) Id for the containing HTML element.
     # @param parent_id (`character(1)`) id of the FilterStates card container
-    ui_bs3 = function(id, parent_id) {
+    ui_bs3 = function(id, parent_id, enable) {
       ns <- NS(id)
 
       tags$div(
@@ -642,7 +698,7 @@ FilterState <- R6::R6Class( # nolint
               label = "",
               status = "success",
               slim = TRUE,
-              value = TRUE,
+              value = enable,
               inline = TRUE,
               width = 30
             ),
@@ -669,7 +725,7 @@ FilterState <- R6::R6Class( # nolint
     #
     # @param id (`character(1)`) Id for the containing HTML element.
     # @param parent_id (`character(1)`) id of the FilterStates card container
-    ui_bs45 = function(id, parent_id) {
+    ui_bs45 = function(id, parent_id, enable) {
       ns <- NS(id)
 
       tags$div(
@@ -696,7 +752,7 @@ FilterState <- R6::R6Class( # nolint
               label = "",
               status = "success",
               slim = TRUE,
-              value = TRUE,
+              value = enable,
               inline = TRUE,
               width = 30
             ),

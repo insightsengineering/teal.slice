@@ -82,7 +82,9 @@ LogicalFilterState <- R6::R6Class( # nolint
     #' Answers the question of whether the current settings and values selected actually filters out any values.
     #' @return logical scalar
     is_any_filtered = function() {
-      if (!isTRUE(self$get_keep_na()) && private$na_count > 0) {
+      if (private$is_disabled()) {
+        FALSE
+      } else if (!isTRUE(self$get_keep_na()) && private$na_count > 0) {
         TRUE
       } else if (all(private$histogram_data$y > 0)) {
         TRUE
@@ -100,6 +102,8 @@ LogicalFilterState <- R6::R6Class( # nolint
     #' For `LogicalFilterState` it's a `!<varname>` or `<varname>` and optionally
     #' `is.na(<varname>)`
     get_call = function() {
+      if (private$is_disabled()) return(NULL)
+      
       filter_call <- call_condition_logical(
         varname = private$get_varname_prefixed(),
         choice = self$get_selected()
@@ -287,6 +291,22 @@ LogicalFilterState <- R6::R6Class( # nolint
             )
           })
 
+          observeEvent(private$is_disabled(), {
+            # shinyjs::toggleState(
+            #   condition = !private$is_disabled(),
+            #   selector = paste0("#", session$ns("selection"), " input[type='radio']"),
+            # )
+            #browser()
+            shinyjs::toggleState(
+              id = "selection",
+              condition = !private$is_disabled()
+            )
+            shinyjs::toggleState(
+              id = "keep_na-value",
+              condition = !private$is_disabled()
+            )
+          })
+
           logger::log_trace("LogicalFilterState$server initialized, dataname: { private$dataname }")
           NULL
         }
@@ -311,10 +331,14 @@ LogicalFilterState <- R6::R6Class( # nolint
         id = id,
         function(input, output, session) {
           output$summary <- renderUI({
-            tagList(
-              tags$span(self$get_selected()),
-              if (self$get_keep_na()) tags$span("NA") else NULL
-            )
+            if (private$is_disabled()) {
+              tags$span("Disabled")
+            } else {
+              tagList(
+                tags$span(self$get_selected()),
+                if (self$get_keep_na()) tags$span("NA") else NULL
+              )
+            }
           })
         }
       )

@@ -92,6 +92,9 @@ ChoicesFilterState <- R6::R6Class( # nolint
     #' optional `is.na(<varname>)`.
     #' @return (`call`)
     get_call = function() {
+
+      if (private$is_disabled()) return(NULL)
+      
       filter_call <- call_condition_choice(
         varname = private$get_varname_prefixed(),
         choice = self$get_selected()
