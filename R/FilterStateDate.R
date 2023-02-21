@@ -195,7 +195,7 @@ DateFilterState <- R6::R6Class( # nolint
             "Start date %s is set after the end date %s, the values will be replaced with a default date range.",
             values[1], values[2])
         )
-        values <- c(min(values), max(values))
+        values <- c(private$choices[1], private$choices[2])
       }
       values
     },

@@ -214,7 +214,7 @@ DatetimeFilterState <- R6::R6Class( # nolint
             values[1], values[2]
           )
         )
-        values <- c(min(values), max(values))
+        values <- c(private$choices[1], private$choices[2])
       }
       values
     },
