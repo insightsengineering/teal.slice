@@ -66,19 +66,17 @@ countBars <- function(inputId, choices, countsmax, countsnow = NULL) {
   ns <- NS(inputId)
   counttotal <- sum(countsmax)
 
-  lapply(seq_along(choices), function(i) {
-    choice <- as.character(choices[i])
-    countmax <- countsmax[i]
-    countnow <- if (is.null(countsnow)) 0 else countsnow[i]
-
-    countBar(
-      inputId = ns(i),
-      label = choice,
-      countmax = countmax,
-      countnow = countnow,
-      counttotal = counttotal
-    )
-  })
+  mapply(
+    countBar,
+    inputId = ns(seq_along(choices)),
+    label = as.character(choices),
+    countmax = countsmax,
+    countnow = countsnow,
+    MoreArgs = list(
+      counttotal = sum(countsmax)
+    ),
+    SIMPLIFY = FALSE, USE.NAMES = FALSE
+  )
 }
 
 #' Progressbar with label
@@ -131,19 +129,16 @@ updateCountBars <-  function(session = getDefaultReactiveDomain(), inputId, choi
     checkmate::assert_numeric(countsnow, len = length(choices), null.ok = TRUE)
 
     ns <- NS(inputId)
-    counttotal <- sum(countsmax)
-    lapply(seq_along(choices), function(i) {
-      choice <- choices[i]
-      countmax <- countsmax[i]
-      countnow <- if (is.null(countsnow)) countmax else countsnow[i]
-      updateCountBar(
-        inputId = ns(i),
-        label = choice,
-        countmax = countmax,
-        countnow = countnow,
-        counttotal = counttotal
+    mapply(
+      updateCountBar,
+      inputId = ns(seq_along(choices)),
+      label = choices,
+      countmax = countsmax,
+      countnow = countsnow,
+      MoreArgs = list(
+        counttotal = sum(countsmax)
       )
-    })
+    )
   invisible(NULL)
 }
 
