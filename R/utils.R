@@ -116,10 +116,8 @@ get_teal_bs_theme <- function() {
 #'
 #' @return HTML code that includes `JS` files
 #' @keywords internal
-include_js_files <- function(pattern = NULL, except = NULL) {
-  checkmate::assert_character(except, min.len = 1, any.missing = FALSE, null.ok = TRUE)
+include_js_files <- function(pattern) {
+  checkmate::assert_character(pattern, min.len = 1, null.ok = TRUE)
   js_files <- list.files(system.file("js", package = "teal.slice", mustWork = TRUE), pattern = pattern, full.names = TRUE)
-  js_files <- js_files[!(basename(js_files) %in% except)] # no-op if except is NULL
-
   return(singleton(lapply(js_files, includeScript)))
 }
