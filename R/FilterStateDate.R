@@ -192,7 +192,7 @@ DateFilterState <- R6::R6Class( # nolint
       if (values[1] > values[2]) {
         warning(
           sprintf(
-            "Start date %s is set after the end date %s, the values will be replaced.",
+            "Start date %s is set after the end date %s, the values will be replaced with a default date range.",
             values[1], values[2])
         )
         values <- c(min(values), max(values))
