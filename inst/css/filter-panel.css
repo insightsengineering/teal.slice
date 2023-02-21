@@ -141,13 +141,23 @@ a.remove_all:hover {
 .choices_state_label_text {
   position: absolute;
   padding: 2px;
+  margin-top: -3px;
 }
 
 .choices_state_label {
   background-color:lightblue;
   height:2rem;
+  display:inline-block;
+  position:absolute;
+  margin-top: -3px;
+}
+
+.choices_state_label_unfiltered {
+  background-color:lightgray;
+  height:2rem;
   margin-top: -3px;
   display:inline-block;
+  position: absolute;
 }
 
 .filterPlotOverlayRange {
@@ -183,7 +193,7 @@ a.remove_all:hover {
   color: rgb(122, 122, 122);
 }
 
-.parent-hideable-list-group > div.hideable-list-group:not(:empty):before {
+.parent-hideable-list-group > div.hideable-list-group:not([data-label=""]):before {
   padding: 2px 4px;
   font-size: 90%;
   color: #c7254e;
@@ -207,4 +217,37 @@ a.remove_all:hover {
 
 .teal_active_summary_filter_panel {
   overflow-x: auto;
+}
+
+.panel-title,
+.card-title {
+  display: flex;
+  justify-content: space-between;
+}
+
+.panel-title a,
+.card-title a {
+  text-decoration: none;
+}
+
+.card-title a {
+  color: var(--bs-body-color, var(--dark, #333333));
+}
+
+.accordion-toggle {
+  width: 100%
+}
+
+.filter-card-varlabel {
+ color: var(--bs-gray-500, var(--gray, darkgray));
+}
+
+.filter-card-remove,
+.filter-card-remove:hover {
+  color: var(--bs-body-color, var(--dark, #333333));
+}
+
+.filter-card-summary {
+  display: flex;
+  justify-content: space-between;
 }

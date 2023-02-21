@@ -6,6 +6,11 @@
 #' @param data (`data.frame`, `MultiAssayExperiment`, `SummarizedExperiment`, `matrix`)\cr
 #'   the R object which `subset` function is applied on.
 #'
+#' @param data_reactive (`reactive`)\cr
+#'   should return an object constistent with the `FilterState` class or `NULL`.
+#'   This object is needed for the `FilterState` counts being updated
+#'   on a change in filters. If `reactive(NULL)` then filtered counts are not shown.
+#'
 #' @param dataname (`character(1)`)\cr
 #'   name of the data used in the expression
 #'   specified to the function argument attached to this `FilterStates`.
@@ -18,6 +23,7 @@
 #' @keywords internal
 #' @export
 #' @examples
+#' library(shiny)
 #' df <- data.frame(
 #'   character = letters,
 #'   numeric = seq_along(letters),
@@ -35,12 +41,12 @@
 #' shinyApp(
 #'   ui = fluidPage(
 #'     actionButton("clear", span(icon("xmark"), "Remove all filters")),
-#'     rf$ui_add_filter_state(id = "add", data = df),
+#'     rf$ui_add_filter_state(id = "add"),
 #'     rf$ui("states"),
 #'     verbatimTextOutput("expr"),
 #'   ),
 #'   server = function(input, output, session) {
-#'     rf$srv_add_filter_state(id = "add", data = df)
+#'     rf$srv_add_filter_state(id = "add")
 #'     rf$server(id = "states")
 #'     output$expr <- renderText({
 #'       deparse1(rf$get_call(), collapse = "\n")
@@ -50,6 +56,7 @@
 #' )
 #' }
 init_filter_states <- function(data,
+                               data_reactive = reactive(NULL),
                                dataname,
                                datalabel = character(0),
                                ...) {
@@ -59,12 +66,15 @@ init_filter_states <- function(data,
 #' @keywords internal
 #' @export
 init_filter_states.data.frame <- function(data, # nolint
+                                          data_reactive = reactive(NULL),
                                           dataname,
                                           datalabel = character(0),
                                           varlabels = character(0),
                                           keys = character(0),
                                           ...) {
   DFFilterStates$new(
+    data = data,
+    data_reactive = data_reactive,
     dataname = dataname,
     datalabel = datalabel,
     varlabels = varlabels,
@@ -75,10 +85,13 @@ init_filter_states.data.frame <- function(data, # nolint
 #' @keywords internal
 #' @export
 init_filter_states.matrix <- function(data, # nolint
+                                      data_reactive = reactive(NULL),
                                       dataname,
                                       datalabel = character(0),
                                       ...) {
   MatrixFilterStates$new(
+    data = data,
+    data_reactive = data_reactive,
     dataname = dataname,
     datalabel = datalabel
   )
@@ -87,6 +100,7 @@ init_filter_states.matrix <- function(data, # nolint
 #' @keywords internal
 #' @export
 init_filter_states.MultiAssayExperiment <- function(data, # nolint
+                                                    data_reactive = reactive(NULL),
                                                     dataname,
                                                     datalabel = character(0),
                                                     varlabels,
@@ -96,6 +110,8 @@ init_filter_states.MultiAssayExperiment <- function(data, # nolint
     stop("Cannot load MultiAssayExperiment - please install the package or restart your session.")
   }
   MAEFilterStates$new(
+    data = data,
+    data_reactive = data_reactive,
     dataname = dataname,
     datalabel = datalabel,
     varlabels = varlabels,
@@ -106,6 +122,7 @@ init_filter_states.MultiAssayExperiment <- function(data, # nolint
 #' @keywords internal
 #' @export
 init_filter_states.SummarizedExperiment <- function(data, # nolint
+                                                    data_reactive = reactive(NULL),
                                                     dataname,
                                                     datalabel = character(0),
                                                     ...) {
@@ -113,6 +130,8 @@ init_filter_states.SummarizedExperiment <- function(data, # nolint
     stop("Cannot load SummarizedExperiment - please install the package or restart your session.")
   }
   SEFilterStates$new(
+    data = data,
+    data_reactive = data_reactive,
     dataname = dataname,
     datalabel = datalabel
   )
