@@ -73,6 +73,7 @@ DefaultFilteredDataset <- R6::R6Class( # nolint
       }
 
       data_filtered_fun <- function(sid = integer(0)) {
+        logger::log_trace("filtering data dataname: { dataname }, sid: { sid }")
         env <- new.env(parent = parent.env(globalenv()))
         env[[dataname]] <- private$dataset
         if (!is.null(parent)) env[[parent_name]] <- parent()
