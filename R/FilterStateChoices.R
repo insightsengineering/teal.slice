@@ -358,6 +358,17 @@ ChoicesFilterState <- R6::R6Class( # nolint
             }
           })
 
+          observeEvent(private$disabled(), {
+            shinyjs::toggleState(
+              id = "selection",
+              condition = !private$disabled()
+            )
+            shinyjs::toggleState(
+              id = "keep_na-value",
+              condition = !private$is_disabled()
+            )
+          })
+
           logger::log_trace("ChoicesFilterState$server initialized, dataname: { private$dataname }")
           NULL
         }
@@ -382,11 +393,15 @@ ChoicesFilterState <- R6::R6Class( # nolint
         id = id,
         function(input, output, session) {
           output$summary <- renderUI({
-            n_selected <- length(self$get_selected())
-            tagList(
-              tags$span(sprintf("%s levels selected", n_selected)),
-              if (self$get_keep_na()) tags$span("NA") else NULL
-            )
+            if (private$is_disabled()) {
+              tags$span("Disabled")
+            } else {
+              n_selected <- length(self$get_selected())
+              tagList(
+                tags$span(sprintf("%s levels selected", n_selected)),
+                if (self$get_keep_na()) tags$span("NA") else NULL
+              )
+            }
           })
         }
       )
