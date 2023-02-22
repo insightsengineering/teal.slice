@@ -292,11 +292,6 @@ LogicalFilterState <- R6::R6Class( # nolint
           })
 
           observeEvent(private$is_disabled(), {
-            # shinyjs::toggleState(
-            #   condition = !private$is_disabled(),
-            #   selector = paste0("#", session$ns("selection"), " input[type='radio']"),
-            # )
-            #browser()
             shinyjs::toggleState(
               id = "selection",
               condition = !private$is_disabled()

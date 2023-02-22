@@ -118,7 +118,9 @@ RangeFilterState <- R6::R6Class( # nolint
     #' Answers the question of whether the current settings and values selected actually filters out any values.
     #' @return logical scalar
     is_any_filtered = function() {
-      if (!setequal(self$get_selected(), private$choices)) {
+      if (private$is_disabled()) {
+        FALSE
+      } else if (!setequal(self$get_selected(), private$choices)) {
         TRUE
       } else if (!isTRUE(self$get_keep_inf()) && private$inf_count > 0) {
         TRUE
@@ -179,7 +181,7 @@ RangeFilterState <- R6::R6Class( # nolint
     #'  modules after selecting check-box-input in the shiny interface. Values are set to
     #'  `private$keep_inf` which is reactive.
     set_keep_inf = function(value) {
-      checkmate::assert_flag(value)
+      checkmate::assert_flag(value, null.ok = TRUE)
       private$keep_inf(value)
       logger::log_trace(
         sprintf(
@@ -203,7 +205,7 @@ RangeFilterState <- R6::R6Class( # nolint
     #' }
     set_state = function(state) {
       stopifnot(is.list(state) && all(names(state) %in% c("selected", "keep_na", "keep_inf")))
-      if (!is.null(state$keep_inf)) {
+      if (!is.null(state$keep_inf) || private$is_disabled()) {
         self$set_keep_inf(state$keep_inf)
       }
       super$set_state(state[names(state) %in% c("selected", "keep_na")])
@@ -315,6 +317,17 @@ RangeFilterState <- R6::R6Class( # nolint
         private$inf_count
       )
     },
+    
+    cache_state = function() {
+      private$cache <- self$get_state()
+      self$set_state(
+        list(
+          selected = NULL,
+          keep_na = NULL,
+          keep_inf = NULL
+        )
+      )
+    },
 
     # shiny modules ----
 
@@ -424,6 +437,21 @@ RangeFilterState <- R6::R6Class( # nolint
           private$keep_inf_srv("keep_inf")
           private$keep_na_srv("keep_na")
 
+          observeEvent(private$is_disabled(), {
+            shinyjs::toggleState(
+              id = "selection",
+              condition = !private$is_disabled()
+            )
+            shinyjs::toggleState(
+              id = "keep_na-value",
+              condition = !private$is_disabled()
+            )
+            shinyjs::toggleState(
+              id = "keep_inf-value",
+              condition = !private$is_disabled()
+            )
+          })
+
           logger::log_trace("RangeFilterState$server initialized, dataname: { private$dataname }")
           NULL
         }
@@ -524,14 +552,18 @@ RangeFilterState <- R6::R6Class( # nolint
         id = id,
         function(input, output, session) {
           output$summary <- renderUI({
-            selected <- sprintf("%.4g", self$get_selected())
-            min <- selected[1]
-            max <- selected[2]
-            tagList(
-              tags$span(paste0(min, " - ", max)),
-              if (self$get_keep_na()) tags$span("NA") else NULL,
-              if (self$get_keep_inf()) tags$span("Inf") else NULL
-            )
+            if (private$is_disabled()) {
+              tags$span("Disabled")
+            } else {
+              selected <- sprintf("%.4g", self$get_selected())
+              min <- selected[1]
+              max <- selected[2]
+              tagList(
+                tags$span(paste0(min, " - ", max)),
+                if (self$get_keep_na()) tags$span("NA") else NULL,
+                if (self$get_keep_inf()) tags$span("Inf") else NULL
+              )
+            }
           })
         }
       )
