@@ -133,6 +133,14 @@ EmptyFilterState <- R6::R6Class( # nolint
 
   # private members ----
   private = list(
+    cache_state = function() {
+      private$cache <- self$get_state()
+      self$set_state(
+        list(
+          keep_na = NULL
+        )
+      )
+    },
     # @description
     # UI Module for `EmptyFilterState`.
     # This UI element contains a checkbox input to filter or keep missing values.
@@ -166,6 +174,13 @@ EmptyFilterState <- R6::R6Class( # nolint
         id = id,
         function(input, output, session) {
           private$keep_na_srv("keep_na")
+          
+          observeEvent(private$is_disabled(), {
+            shinyjs::toggleState(
+              id = "keep_na-value",
+              condition = !private$is_disabled()
+            )
+          })
         }
       )
     },
@@ -176,7 +191,8 @@ EmptyFilterState <- R6::R6Class( # nolint
     # values.
     # @param id `shiny` id parameter
     ui_summary = function(id) {
-      tagList(tags$span("All empty"))
+      ns <- NS(id)
+      uiOutput(ns("summary"), class = "filter-card-summary")
     },
 
     # @description
@@ -187,6 +203,13 @@ EmptyFilterState <- R6::R6Class( # nolint
       moduleServer(
         id = id,
         function(input, output, session) {
+          output$summary <- renderUI({
+            if (private$is_disabled()) {
+              tags$span("Disabled")
+            } else {
+              tags$span("All empty")
+            }
+          })
           NULL
         }
       )
