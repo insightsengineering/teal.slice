@@ -62,6 +62,7 @@ DefaultFilteredDataset <- R6::R6Class( # nolint
         private$join_keys <- join_keys
 
         private$dataset_filtered <- reactive({
+          logger::log_trace("filtering data dataname: { dataname }")
           env <- new.env(parent = parent.env(globalenv()))
           env[[dataname]] <- private$dataset
           env[[parent_name]] <- parent()
@@ -71,10 +72,19 @@ DefaultFilteredDataset <- R6::R6Class( # nolint
         })
       }
 
+      dataset_filtered_fun <- function(sid = integer(0)) {
+        env <- new.env(parent = parent.env(globalenv()))
+        env[[dataname]] <- private$dataset
+        if (!is.null(parent)) env[[parent_name]] <- parent()
+        filter_call <- self$get_call(sid)
+        eval_expr_with_msg(filter_call, env)
+        get(x = dataname, envir = env)
+      }
+
       private$add_filter_states(
         filter_states = init_filter_states(
           data = dataset,
-          data_reactive = self$get_dataset(TRUE),
+          data_reactive = dataset_filtered_fun,
           dataname = dataname,
           varlabels = self$get_varlabels(),
           keys = self$get_keys()
@@ -101,8 +111,8 @@ DefaultFilteredDataset <- R6::R6Class( # nolint
     #' which contains single `state_list` and all `FilterState` objects
     #' applies to one argument (`...`) in `dplyr::filter` call.
     #' @return filter `call` or `list` of filter calls
-    get_call = function() {
-      filter_call <- super$get_call()
+    get_call = function(sid = integer(0)) {
+      filter_call <- super$get_call(sid)
       dataname <- private$dataname
       parent_name <- private$parent_name
 

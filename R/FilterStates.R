@@ -123,7 +123,7 @@ FilterStates <- R6::R6Class( # nolint
     #'
     #' @return `call` or `NULL`
     #'
-    get_call = function() {
+    get_call = function(sid = integer(0)) {
       # state_list (list) names must be the same as argument of the function
       # for ... list should be unnamed
       states_list <- private$state_list
@@ -133,7 +133,10 @@ FilterStates <- R6::R6Class( # nolint
         simplify = FALSE,
         function(state_list) {
           items <- state_list()
-          filtered_items <- Filter(f = function(x) x$is_any_filtered(), x = items)
+          filtered_items <- Filter(
+            f = function(x) x$is_any_filtered() && !identical(x$get_id(), sid),
+            x = items
+          )
           calls <- lapply(
             filtered_items,
             function(state) {
@@ -152,6 +155,7 @@ FilterStates <- R6::R6Class( # nolint
         x = filter_items,
         f = Negate(is.null)
       )
+
       if (length(filter_items) > 0) {
         # below code translates to call by the names of filter_items
         rhs <- call_with_colon(
@@ -276,7 +280,9 @@ FilterStates <- R6::R6Class( # nolint
         checkmate::check_int(state_list_index)
       )
 
+
       new_state_list <- private$state_list[[state_list_index]]()
+      new_state_list[[state_id]]$destroy_observers()
       new_state_list[[state_id]] <- NULL
       private$state_list[[state_list_index]](new_state_list)
 
@@ -298,7 +304,10 @@ FilterStates <- R6::R6Class( # nolint
       )
 
       for (i in seq_along(private$state_list)) {
-        private$state_list[[i]](list())
+        state_list_i <- private$state_list[[i]]
+        for(j in seq_along(state_list_i)) {
+          self$state_list_remove(i, j)
+        }
       }
 
       logger::log_trace(

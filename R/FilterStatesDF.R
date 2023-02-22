@@ -203,7 +203,7 @@ DFFilterStates <- R6::R6Class( # nolint
         } else {
           fstate <- init_filter_state(
             x = data[[varname]],
-            x_reactive = reactive(data_reactive()[[varname]]),
+            x_reactive = function(sid = integer(0)) data_reactive(sid)[[varname]],
             varname = varname,
             varlabel = private$get_varlabels(varname),
             dataname = private$dataname
@@ -326,7 +326,6 @@ DFFilterStates <- R6::R6Class( # nolint
         id = id,
         function(input, output, session) {
           data <- private$data
-          data_reactive <- private$data_reactive
           vars_include <- private$filterable_varnames
           logger::log_trace(
             "DFFilterStates$srv_add_filter_state initializing, dataname: { private$dataname }"

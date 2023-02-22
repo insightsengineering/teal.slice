@@ -56,7 +56,6 @@ ChoicesFilterState <- R6::R6Class( # nolint
         length(unique(x[!is.na(x)])) < getOption("teal.threshold_slider_vs_checkboxgroup"),
         combine = "or"
       )
-      checkmate::assert_class(x_reactive, "reactive")
 
       super$initialize(x, x_reactive, varname, varlabel, dataname, extract_type)
 
@@ -268,6 +267,7 @@ ChoicesFilterState <- R6::R6Class( # nolint
           # 1. renderUI is used here as an observer which triggers only if output is visible
           #  and if the reactive changes - reactive triggers only if the output is visible.
           # 2. We want to trigger change of the labels only if reactive count changes (not underlying data)
+          finite_values <- reactive(Filter(Negate(is.na), private$x_reactive()))
           output$trigger_visible <- renderUI({
             logger::log_trace(sprintf(
               "ChoicesFilterState$server@1 updating count labels in variable: %s , dataname: %s",
@@ -279,14 +279,14 @@ ChoicesFilterState <- R6::R6Class( # nolint
                 inputId = "labels",
                 choices = private$choices,
                 countsmax = private$choices_counts,
-                countsnow = unname(table(factor(private$x_reactive(), levels = private$choices)))
+                countsnow = unname(table(factor(finite_values(), levels = private$choices)))
               )
             } else {
               labels <- mapply(
                 FUN = make_count_text,
                 label = private$choices,
                 countmax = private$choices_counts,
-                countnow = unname(table(factor(private$x_reactive(), levels = private$choices)))
+                countnow = unname(table(factor(finite_values(), levels = private$choices)))
               )
               teal.widgets::updateOptionalSelectInput(
                 session = session,

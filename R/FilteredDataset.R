@@ -93,10 +93,10 @@ FilteredDataset <- R6::R6Class( # nolint
     #' within each of `filter_states`. Configuration of the calls is constant and
     #' depends on `filter_states` type and order which are set during initialization.
     #' @return filter `call` or `list` of filter calls
-    get_call = function() {
+    get_call = function(sid = integer(0)) {
       filter_call <- Filter(
         f = Negate(is.null),
-        x = lapply(self$get_filter_states(), function(x) x$get_call())
+        x = lapply(self$get_filter_states(), function(x) x$get_call(sid))
       )
       if (length(filter_call) == 0) {
         return(NULL)

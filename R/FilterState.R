@@ -76,6 +76,7 @@ FilterState <- R6::R6Class( # nolint
                           varlabel = character(0),
                           dataname = NULL,
                           extract_type = character(0)) {
+      checkmate::assert_class(x_reactive, "function")
       checkmate::assert_string(varname)
       checkmate::assert_character(varlabel, max.len = 1, any.missing = FALSE)
       checkmate::assert_string(dataname, null.ok = TRUE)
@@ -86,7 +87,7 @@ FilterState <- R6::R6Class( # nolint
       if (length(extract_type) == 1 && is.null(dataname)) {
         stop("if extract_type is specified, dataname must also be specified")
       }
-
+      private$id <- sample.int(.Machine$integer.max, 1)
       private$dataname <- dataname
       private$varname <- varname
       private$varlabel <- if (identical(varlabel, as.character(varname))) {
@@ -99,8 +100,8 @@ FilterState <- R6::R6Class( # nolint
       private$selected <- reactiveVal(NULL)
       private$na_count <- sum(is.na(x))
       private$keep_na <- reactiveVal(FALSE)
-      private$x_reactive <- x_reactive
-      private$filtered_na_count <- reactive(sum(is.na(x_reactive())))
+      private$x_reactive <- reactive(x_reactive(private$id))
+      private$filtered_na_count <- reactive(sum(is.na(private$x_reactive())))
       logger::log_trace(
         sprintf(
           "Instantiated %s with variable %s, dataname: %s",
@@ -110,6 +111,10 @@ FilterState <- R6::R6Class( # nolint
         )
       )
       invisible(self)
+    },
+    finalize = function() {
+      print("finalize")
+      self$destroy_observers()
     },
 
     #' @description
@@ -182,6 +187,10 @@ FilterState <- R6::R6Class( # nolint
       } else {
         character(1)
       }
+    },
+
+    get_id = function() {
+      private$id
     },
 
     #' @description
@@ -400,6 +409,7 @@ FilterState <- R6::R6Class( # nolint
 
   # private members ----
   private = list(
+    id = integer(0),
     choices = NULL, # because each class has different choices type
     dataname = character(0),
     keep_na = NULL, # reactiveVal logical()
@@ -578,13 +588,14 @@ FilterState <- R6::R6Class( # nolint
         # changed directly by the api - then it's needed to rerender UI element
         # to show relevant values
         private$observers$keep_na_api <- observeEvent(
+          eventExpr = self$get_keep_na(),
           ignoreNULL = FALSE, # nothing selected is possible for NA
           ignoreInit = TRUE, # ignoreInit: should not matter because we set the UI with the desired initial state
-          eventExpr = self$get_keep_na(),
           handlerExpr = {
             if (!setequal(self$get_keep_na(), input$value)) {
               updateCheckboxInput(
                 inputId = "value",
+                label = sprintf("Keep NA (%s/%s)", private$filtered_na_count(), private$na_count),
                 value = self$get_keep_na()
               )
             }
