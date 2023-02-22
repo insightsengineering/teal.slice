@@ -257,6 +257,7 @@ a.remove_all:hover {
   width: 90%;
   background-color: white;
   margin: 0px;
+  border-radius: 0px;
 }
 
 .progress-bar.state-count-bar-filtered {
