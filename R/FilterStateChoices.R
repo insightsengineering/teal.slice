@@ -196,51 +196,6 @@ ChoicesFilterState <- R6::R6Class( # nolint
     is_checkboxgroup = function() {
       length(private$choices) <= getOption("teal.threshold_slider_vs_checkboxgroup")
     },
-    get_choice_labels = function() {
-      if (private$is_checkboxgroup()) {
-        l_counts <- private$choices_counts
-        l_counts[is.na(l_counts)] <- 0
-
-        f_counts <- private$get_filtered_counts()
-        f_counts[is.na(f_counts)] <- 0
-
-        l_freqs <- l_counts / sum(l_counts)
-        f_freqs <- f_counts / sum(l_counts)
-
-        l_freqs[is.na(l_freqs) | is.nan(l_freqs)] <- 0
-        f_freqs[is.na(f_freqs) | is.nan(f_freqs)] <- 0
-
-        labels <- lapply(seq_along(private$choices), function(i) {
-          tagList(
-            div(
-              class = "choices_state_label_unfiltered",
-              style = sprintf("width:%s%%", l_freqs[i] * 100)
-            ),
-            if (!is.null(private$x_reactive())) {
-              div(
-                class = "choices_state_label",
-                style = sprintf("width:%s%%", f_freqs[i] * 100)
-              )
-            },
-            div(
-              class = "choices_state_label_text",
-              sprintf(
-                "%s (%s%s)", private$choices[i],
-                if (is.null(private$x_reactive())) "" else sprintf("%s/", f_counts[i]),
-                l_counts[i]
-              )
-            )
-          )
-        })
-      } else {
-        xslash <- if (is.null(private$x_reactive())) {
-          ""
-        } else {
-          sprintf("%s/", private$get_filtered_counts())
-        }
-        sprintf("%s (%s%s)", private$choices, xslash, private$choices_counts)
-      }
-    },
 
     # shiny modules ----
 
@@ -252,32 +207,52 @@ ChoicesFilterState <- R6::R6Class( # nolint
     #  id of shiny element
     ui_inputs = function(id) {
       ns <- NS(id)
-      div(
-        if (private$is_checkboxgroup()) {
-          div(
-            class = "choices_state",
-            checkboxGroupInput(
-              inputId = ns("selection"),
-              label = NULL,
-              selected = isolate(self$get_selected()),
-              choiceNames = isolate(private$get_choice_labels()),
-              choiceValues = as.character(private$choices),
-              width = "100%"
-            )
-          )
-        } else {
-          teal.widgets::optionalSelectInput(
+
+      countsmax <- private$choices_counts
+      countsnow <- isolate(unname(table(factor(private$x_reactive(), levels = private$choices))))
+
+      ui_input <- if (private$is_checkboxgroup()) {
+        labels <- countBars(
+          inputId = ns("labels"),
+          choices = private$choices,
+          countsnow = countsnow,
+          countsmax = countsmax
+        )
+        div(
+          class = "choices_state",
+          checkboxGroupInput(
             inputId = ns("selection"),
-            choices = isolate(stats::setNames(private$choices, private$get_choice_labels())),
-            selected = isolate(self$get_selected()),
-            multiple = TRUE,
-            options = shinyWidgets::pickerOptions(
-              actionsBox = TRUE,
-              liveSearch = (length(private$choices) > 10),
-              noneSelectedText = "Select a value"
-            )
+            label = NULL,
+            selected = private$selected(),
+            choiceNames = labels,
+            choiceValues = private$choices,
+            width = "100%"
           )
-        },
+        )
+      } else {
+        labels <- mapply(
+          FUN = make_count_text,
+          label = private$choices,
+          countnow = countsnow,
+          countmax = countsmax
+        )
+
+        teal.widgets::optionalSelectInput(
+          inputId = ns("selection"),
+          choices = stats::setNames(private$choices, labels),
+          selected = isolate(self$get_selected()),
+          multiple = TRUE,
+          options = shinyWidgets::pickerOptions(
+            actionsBox = TRUE,
+            liveSearch = (length(private$choices) > 10),
+            noneSelectedText = "Select a value"
+          )
+        )
+      }
+
+      div(
+        uiOutput(ns("trigger_visible")),
+        ui_input,
         private$keep_na_ui(ns("keep_na"))
       )
     },
@@ -293,68 +268,95 @@ ChoicesFilterState <- R6::R6Class( # nolint
         function(input, output, session) {
           logger::log_trace("ChoicesFilterState$server initializing, dataname: { private$dataname }")
 
-          # this observer is needed in the situation when private$selected has been
-          # changed directly by the api - then it's needed to rerender UI element
-          # to show relevant values
-          private$observers$selection_api <- observeEvent(
-            ignoreNULL = FALSE, # it's possible that nothing is selected
-            ignoreInit = TRUE,
-            eventExpr = self$get_selected(),
-            handlerExpr = {
-              if (!setequal(self$get_selected(), input$selection)) {
-                if (private$is_checkboxgroup()) {
-                  updateCheckboxGroupInput(
-                    session = session,
-                    inputId = "selection",
-                    selected = self$get_selected()
-                  )
-                } else {
-                  teal.widgets::updateOptionalSelectInput(
-                    session = session,
-                    inputId = "selection",
-                    selected =  self$get_selected()
-                  )
-                }
+          # 1. renderUI is used here as an observer which triggers only if output is visible
+          #  and if the reactive changes - reactive triggers only if the output is visible.
+          # 2. We want to trigger change of the labels only if reactive count changes (not underlying data)
+          output$trigger_visible <- renderUI({
+            logger::log_trace(sprintf(
+              "ChoicesFilterState$server@1 updating count labels in variable: %s , dataname: %s",
+              private$varname,
+              private$dataname
+            ))
+            if (private$is_checkboxgroup()) {
+              updateCountBars(
+                inputId = "labels",
+                choices = private$choices,
+                countsmax = private$choices_counts,
+                countsnow = unname(table(factor(private$x_reactive(), levels = private$choices)))
+              )
+            } else {
+              labels <- mapply(
+                FUN = make_count_text,
+                label = private$choices,
+                countmax = private$choices_counts,
+                countnow = unname(table(factor(private$x_reactive(), levels = private$choices)))
+              )
+              teal.widgets::updateOptionalSelectInput(
+                session = session,
+                inputId = "selection",
+                choices = stats::setNames(private$choices, labels),
+                selected = self$get_selected()
+              )
+            }
+            NULL
+          })
+
+          if (private$is_checkboxgroup()) {
+            private$observers$selection <- observeEvent(
+              ignoreNULL = FALSE, # it's possible that nothing is selected
+              ignoreInit = TRUE, # ignoreInit: should not matter because we set the UI with the desired initial state
+              eventExpr = input$selection,
+              handlerExpr = {
                 logger::log_trace(sprintf(
-                  "ChoicesFilterState$server@1 selection of variable %s changed, dataname: %s",
+                  "ChoicesFilterState$server@2 selection of variable %s changed, dataname: %s",
                   private$varname,
                   private$dataname
                 ))
+                selection <- if (is.null(input$selection)) character(0) else input$selection
+                self$set_selected(selection)
               }
-            }
-          )
+            )
+          } else {
+            private$observers$selection <- observeEvent(
+              ignoreNULL = FALSE, # it's possible that nothing is selected
+              ignoreInit = TRUE, # ignoreInit: should not matter because we set the UI with the desired initial state
+              eventExpr = input$selection_open,
+              handlerExpr = {
+                if (!isTRUE(input$selection_open)) {
+                  logger::log_trace(sprintf(
+                    "ChoicesFilterState$server@2 selection of variable %s changed, dataname: %s",
+                    private$varname,
+                    private$dataname
+                  ))
+                  selection <- if (is.null(input$selection)) character(0) else input$selection
+                  self$set_selected(selection)
+                }
+              }
+            )
+          }
+          private$keep_na_srv("keep_na")
 
-          private$observers$selection <- observeEvent(
-            ignoreNULL = FALSE, # it's possible that nothing is selected
-            ignoreInit = TRUE, # ignoreInit: should not matter because we set the UI with the desired initial state
-            eventExpr = input$selection,
-            handlerExpr = {
-              selection <- if (is.null(input$selection)) character(0) else input$selection
-              self$set_selected(selection)
+          # this observer is needed in the situation when private$selected has been
+          # changed directly by the api - then it's needed to rerender UI element
+          # to show relevant values
+          private$observers$selection_api <- observeEvent(private$selected(), {
+            if (!isTRUE(all.equal(input$selection, self$get_selected()))) {
               logger::log_trace(sprintf(
-                "ChoicesFilterState$server@2 selection of variable %s changed, dataname: %s",
+                "ChoicesFilterState$server@2 state of variable %s changed, dataname: %s",
                 private$varname,
                 private$dataname
               ))
-            }
-          )
-          private$keep_na_srv("keep_na")
-
-          observeEvent(private$x_reactive(), {
-            if (private$is_checkboxgroup()) {
-              updateCheckboxGroupInput(
-                session,
-                inputId = "selection",
-                choiceNames = private$get_choice_labels(),
-                choiceValues = as.character(private$choices),
-                selected = input$selection
-              )
-            } else {
-              teal.widgets::updateOptionalSelectInput(
-                session, "selection",
-                choices = stats::setNames(private$choices, private$get_choice_labels()),
-                selected = input$selection
-              )
+              if (private$is_checkboxgroup()) {
+                updateCheckboxGroupInput(
+                  inputId = "selection",
+                  selected = private$selected()
+                )
+              } else {
+                teal.widgets::updateOptionalSelectInput(
+                  session, "selection",
+                  selected = private$selected()
+                )
+              }
             }
           })
 

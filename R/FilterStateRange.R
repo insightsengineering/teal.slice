@@ -310,14 +310,6 @@ RangeFilterState <- R6::R6Class( # nolint
     remove_out_of_bound_values = function(values) {
       values
     },
-    get_inf_label = function() {
-      sprintf(
-        "Keep Inf (%s%s)",
-        if (is.null(private$x_reactive())) "" else sprintf("%s/", private$inf_filtered_count()),
-        private$inf_count
-      )
-    },
-    
     cache_state = function() {
       private$cache <- self$get_state()
       self$set_state(
@@ -466,10 +458,22 @@ RangeFilterState <- R6::R6Class( # nolint
     keep_inf_ui = function(id) {
       ns <- NS(id)
       if (private$inf_count > 0) {
-        checkboxInput(
-          ns("value"),
-          isolate(private$get_inf_label()),
-          value = isolate(self$get_keep_inf())
+        countmax <- private$na_count
+        countnow <- isolate(private$filtered_na_count())
+        div(
+          uiOutput(ns("trigger_visible"), inline = TRUE),
+          checkboxInput(
+            inputId = ns("value"),
+            label = tags$span(
+              id = ns("count_label"),
+              make_count_text(
+                label = "Keep Inf",
+                countmax = countmax,
+                countnow = countnow
+              )
+            ),
+            value = isolate(self$get_keep_inf())
+          )
         )
       } else {
         NULL
@@ -484,13 +488,17 @@ RangeFilterState <- R6::R6Class( # nolint
     #  changed through the api
     keep_inf_srv = function(id) {
       moduleServer(id, function(input, output, session) {
-        observeEvent(private$inf_filtered_count(), {
-          updateCheckboxInput(
-            session,
-            "value",
-            label = private$get_inf_label(),
-            value = self$get_keep_inf()
+        # 1. renderUI is used here as an observer which triggers only if output is visible
+        #  and if the reactive changes - reactive triggers only if the output is visible.
+        # 2. We want to trigger change of the labels only if reactive count changes (not underlying data)
+        output$trigger_visible <- renderUI({
+          updateCountText(
+            inputId = "count_label",
+            label = "Keep Inf",
+            countmax = private$inf_count,
+            countnow = private$inf_filtered_count()
           )
+          NULL
         })
 
         # this observer is needed in the situation when private$keep_na has been
@@ -502,14 +510,14 @@ RangeFilterState <- R6::R6Class( # nolint
           eventExpr = self$get_keep_inf(),
           handlerExpr = {
             if (!setequal(self$get_keep_inf(), input$value)) {
-              updateCheckboxInput(
+              updateLabelCount(
                 inputId = "value",
-                label = private$get_inf_label(),
-                value = self$get_keep_inf()
+                value = self$get_keep_na()
               )
             }
           }
         )
+
         private$observers$keep_inf <- observeEvent(
           ignoreNULL = TRUE, # it's not possible for range that NULL is selected
           ignoreInit = TRUE, # ignoreInit: should not matter because we set the UI with the desired initial state

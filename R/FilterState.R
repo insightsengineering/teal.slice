@@ -582,14 +582,6 @@ FilterState <- R6::R6Class( # nolint
       stop("abstract class")
     },
 
-    # disable_inputs = function() {
-    #   stop("abstract class")
-    # },
-
-    # enable_inputs = function() {
-    #   stop("abstract class")
-    # },
-
     # @description
     # module displaying input to keep or remove NA in the FilterState call
     # @param id `shiny` id parameter
@@ -598,10 +590,22 @@ FilterState <- R6::R6Class( # nolint
     keep_na_ui = function(id) {
       ns <- NS(id)
       if (private$na_count > 0) {
-        checkboxInput(
-          ns("value"),
-          isolate(private$get_na_label()),
-          value = isolate(self$get_keep_na())
+        countmax <- private$na_count
+        countnow <- isolate(private$filtered_na_count())
+        div(
+          uiOutput(ns("trigger_visible"), inline = TRUE),
+          checkboxInput(
+            inputId = ns("value"),
+            label = tags$span(
+              id = ns("count_label"),
+              make_count_text(
+                label = "Keep NA",
+                countmax = countmax,
+                countnow = countnow
+              )
+            ),
+            value = isolate(self$get_keep_na())
+          )
         )
       } else {
         NULL
@@ -616,13 +620,17 @@ FilterState <- R6::R6Class( # nolint
     #  changed through the api
     keep_na_srv = function(id) {
       moduleServer(id, function(input, output, session) {
-        observeEvent(private$filtered_na_count(), {
-          updateCheckboxInput(
-            session,
-            "value",
-            label = private$get_na_label(),
-            value = self$get_keep_na()
+        # 1. renderUI is used here as an observer which triggers only if output is visible
+        #  and if the reactive changes - reactive triggers only if the output is visible.
+        # 2. We want to trigger change of the labels only if reactive count changes (not underlying data)
+        output$trigger_visible <- renderUI({
+          updateCountText(
+            inputId = "count_label",
+            label = "Keep NA",
+            countmax = private$na_count,
+            countnow = private$filtered_na_count()
           )
+          NULL
         })
 
         # this observer is needed in the situation when private$keep_inf has been
@@ -677,6 +685,7 @@ FilterState <- R6::R6Class( # nolint
       tags$div(
         id = id,
         class = "panel panel-default",
+        include_js_files("count-bar-labels.js"),
         tags$div(
           class = "panel-heading",
           tags$div(
@@ -731,6 +740,7 @@ FilterState <- R6::R6Class( # nolint
       tags$div(
         id = id,
         class = "card",
+        include_js_files("count-bar-labels.js"),
         tags$div(
           class = "card-header",
           tags$div(

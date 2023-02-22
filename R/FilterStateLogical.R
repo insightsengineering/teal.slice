@@ -168,37 +168,6 @@ LogicalFilterState <- R6::R6Class( # nolint
       )
       values_logical
     },
-    get_choice_labels = function() {
-      l_counts <- as.numeric(names(private$choices))
-      is_na_l_counts <- is.na(l_counts)
-      if (any(is_na_l_counts)) l_counts[is_na_l_counts] <- 0
-      f_counts <- unname(table(factor(private$x_reactive(), levels = private$choices)))
-      f_counts[is.na(f_counts)] <- 0
-      labels <- lapply(seq_along(private$choices), function(i) {
-        l_count <- l_counts[i]
-        f_count <- f_counts[i]
-        l_freq <- l_count / sum(l_counts)
-        f_freq <- f_count / sum(l_counts)
-
-        if (is.na(l_freq) || is.nan(l_freq)) l_freq <- 0
-        if (is.na(f_freq) || is.nan(f_freq)) f_freq <- 0
-        tagList(
-          div(
-            class = "choices_state_label_unfiltered",
-            style = sprintf("width:%s%%", l_freq * 100)
-          ),
-          div(
-            class = "choices_state_label",
-            style = sprintf("width:%s%%", f_freq * 100)
-          ),
-          div(
-            class = "choices_state_label_text",
-            sprintf("%s (%s/%s)", private$choices[i], f_count, l_count)
-          )
-        )
-      })
-    },
-
 
     # shiny modules ----
 
@@ -210,13 +179,25 @@ LogicalFilterState <- R6::R6Class( # nolint
     #  id of shiny element
     ui_inputs = function(id) {
       ns <- NS(id)
+
+      countsmax <- as.numeric(names(private$choices))
+      countsnow <- isolate(unname(table(factor(private$x_reactive(), levels = private$choices))))
+
+      labels <- countBars(
+        inputId = ns("labels"),
+        choices = as.character(private$choices),
+        countsnow = countsnow,
+        countsmax = countsmax
+      )
+
       div(
         div(
           class = "choices_state",
+          uiOutput(ns("trigger_visible"), inline = TRUE),
           radioButtons(
             ns("selection"),
             label = NULL,
-            choiceNames = isolate(private$get_choice_labels()),
+            choiceNames = labels,
             choiceValues = as.character(private$choices),
             selected = isolate(as.character(self$get_selected())),
             width = "100%"
@@ -239,6 +220,21 @@ LogicalFilterState <- R6::R6Class( # nolint
           # this observer is needed in the situation when private$selected has been
           # changed directly by the api - then it's needed to rerender UI element
           # to show relevant values
+          output$trigger_visible <- renderUI({
+            logger::log_trace(sprintf(
+              "LogicalFilterState$server@1 updating count labels in variable: %s , dataname: %s",
+              private$varname,
+              private$dataname
+            ))
+            updateCountBars(
+              inputId = "labels",
+              choices = as.character(private$choices),
+              countsmax = as.numeric(names(private$choices)),
+              countsnow = unname(table(factor(private$x_reactive(), levels = private$choices)))
+            )
+            NULL
+          })
+
           private$observers$seleted_api <- observeEvent(
             ignoreNULL = TRUE, # this is radio button so something have to be selected
             ignoreInit = TRUE,
@@ -251,7 +247,7 @@ LogicalFilterState <- R6::R6Class( # nolint
                   selected =  self$get_selected()
                 )
                 logger::log_trace(sprintf(
-                  "LogicalFilterState$server@1 selection of variable %s changed, dataname: %s",
+                  "LogicalFilterState$server@1 state of variable %s changed, dataname: %s",
                   private$varname,
                   private$dataname
                 ))
@@ -264,11 +260,6 @@ LogicalFilterState <- R6::R6Class( # nolint
             ignoreInit = TRUE,
             eventExpr = input$selection,
             handlerExpr = {
-              selection_state <- as.logical(input$selection)
-              if (is.null(selection_state)) {
-                selection_state <- logical(0)
-              }
-              self$set_selected(selection_state)
               logger::log_trace(
                 sprintf(
                   "LogicalFilterState$server@2 selection of variable %s changed, dataname: %s",
@@ -276,20 +267,15 @@ LogicalFilterState <- R6::R6Class( # nolint
                   private$dataname
                 )
               )
+              selection_state <- as.logical(input$selection)
+              if (is.null(selection_state)) {
+                selection_state <- logical(0)
+              }
+              self$set_selected(selection_state)
             }
           )
 
           private$keep_na_srv("keep_na")
-
-
-          observeEvent(private$x_reactive(), {
-            updateRadioButtons(
-              inputId = "selection",
-              choiceNames = private$get_choice_labels(),
-              choiceValues = as.character(private$choices),
-              selected = self$get_selected()
-            )
-          })
 
           observeEvent(private$is_disabled(), {
             shinyjs::toggleState(
