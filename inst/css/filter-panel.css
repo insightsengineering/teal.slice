@@ -251,3 +251,23 @@ a.remove_all:hover {
   display: flex;
   justify-content: space-between;
 }
+
+.progress.state-count-container {
+  height: 1.75em;
+  width: 90%;
+  background-color: white;
+  margin: 0px;
+  border-radius: 0px;
+}
+
+.progress-bar.state-count-bar-filtered {
+  background-color: lightblue !important;
+  color: var(--bs-body-color, var(--dark, #333333));
+  overflow: visible;
+  text-align: left;
+  white-space: nowrap;
+}
+
+.progress-bar.state-count-bar-unfiltered {
+  background-color: rgba(173, 216, 230, 0.439) !important;
+}
