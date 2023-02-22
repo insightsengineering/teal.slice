@@ -388,6 +388,22 @@ DatetimeFilterState <- R6::R6Class( # nolint
               ))
             }
           )
+
+          observeEvent(private$is_disabled(), {
+            shinyjs::toggleState(
+              id = "selection_start",
+              condition = !private$is_disabled()
+            )
+            shinyjs::toggleState(
+              id = "selection_end",
+              condition = !private$is_disabled()
+            )
+            shinyjs::toggleState(
+              id = "keep_na-value",
+              condition = !private$is_disabled()
+            )
+          })
+
           logger::log_trace("DatetimeFilterState$server initialized, dataname: { private$dataname }")
           NULL
         }
@@ -412,13 +428,17 @@ DatetimeFilterState <- R6::R6Class( # nolint
         id = id,
         function(input, output, session) {
           output$summary <- renderUI({
-            selected <- format(self$get_selected(), "%Y-%m-%d %H:%M:%S")
-            min <- selected[1]
-            max <- selected[2]
-            tagList(
-              tags$span(paste0(min, " - ", max)),
-              if (self$get_keep_na()) tags$span("NA") else NULL
-            )
+            if (private$is_disabled()) {
+              tags$span("Disabled")
+            } else {
+              selected <- format(self$get_selected(), "%Y-%m-%d %H:%M:%S")
+              min <- selected[1]
+              max <- selected[2]
+              tagList(
+                tags$span(paste0(min, " - ", max)),
+                if (self$get_keep_na()) tags$span("NA") else NULL
+              )
+            }
           })
         }
       )
