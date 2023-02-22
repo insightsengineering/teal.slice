@@ -38,7 +38,7 @@ FilteredDataset <- R6::R6Class( # nolint
       private$keys <- keys
       private$label <- if (is.null(label)) character(0) else label
       private$metadata <- metadata
-      private$dataset_filtered <- reactive({
+      private$data_filtered <- reactive({
         env <- new.env(parent = parent.env(globalenv()))
         env[[dataname]] <- private$dataset
         filter_call <- self$get_call()
@@ -156,7 +156,7 @@ FilteredDataset <- R6::R6Class( # nolint
     #'
     get_dataset = function(filtered = FALSE) {
       if (filtered) {
-        private$dataset_filtered
+        private$data_filtered
       } else {
         private$dataset
       }
@@ -179,9 +179,9 @@ FilteredDataset <- R6::R6Class( # nolint
     #' @return (`matrix`) matrix of observations and subjects
     get_filter_overview_info = function() {
       dataset <- self$get_dataset()
-      dataset_filtered <- self$get_dataset(TRUE)
+      data_filtered <- self$get_dataset(TRUE)
 
-      df <- cbind(private$get_filter_overview_nobs(dataset, dataset_filtered), "")
+      df <- cbind(private$get_filter_overview_nobs(dataset, data_filtered), "")
       rownames(df) <- self$get_dataname()
       colnames(df) <- c("Obs", "Subjects")
       df
@@ -409,7 +409,7 @@ FilteredDataset <- R6::R6Class( # nolint
   ## __Private Fields ====
   private = list(
     dataset = NULL,
-    dataset_filtered = NULL,
+    data_filtered = NULL,
     filter_states = list(),
     filterable_varnames = character(0),
     dataname = character(0),

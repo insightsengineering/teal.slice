@@ -130,12 +130,12 @@ MAEFilteredDataset <- R6::R6Class( # nolint
     #' @return (`matrix`) matrix of observations and subjects
     get_filter_overview_info = function() {
       dataset <- self$get_dataset()
-      dataset_filtered <- self$get_dataset(TRUE)
+      data_filtered <- self$get_dataset(TRUE)
       names_exps <- paste0("- ", names(dataset))
       mae_and_exps <- c(self$get_dataname(), names_exps)
 
       df <- cbind(
-        private$get_filter_overview_nobs(dataset, dataset_filtered),
+        private$get_filter_overview_nobs(dataset, data_filtered),
         self$get_filter_overview_nsubjs()
       )
 
@@ -346,14 +346,14 @@ MAEFilteredDataset <- R6::R6Class( # nolint
 
     # Gets filter overview observations number and returns a
     # list of the number of observations of filtered/non-filtered datasets
-    get_filter_overview_nobs = function(dataset, dataset_filtered) {
+    get_filter_overview_nobs = function(dataset, data_filtered) {
       experiment_names <- names(dataset)
       mae_total_data_info <- ""
 
       data_info <- lapply(
         experiment_names,
         function(experiment_name) {
-          data_f_rows <- ncol(dataset_filtered()[[experiment_name]])
+          data_f_rows <- ncol(data_filtered()[[experiment_name]])
           data_nf_rows <- ncol(dataset[[experiment_name]])
 
           data_info <- paste0(data_f_rows, "/", data_nf_rows)

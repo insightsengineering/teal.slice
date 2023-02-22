@@ -61,7 +61,7 @@ DefaultFilteredDataset <- R6::R6Class( # nolint
         private$parent_name <- parent_name
         private$join_keys <- join_keys
 
-        private$dataset_filtered <- reactive({
+        private$data_filtered <- reactive({
           logger::log_trace("filtering data dataname: { dataname }")
           env <- new.env(parent = parent.env(globalenv()))
           env[[dataname]] <- private$dataset
@@ -72,7 +72,7 @@ DefaultFilteredDataset <- R6::R6Class( # nolint
         })
       }
 
-      dataset_filtered_fun <- function(sid = integer(0)) {
+      data_filtered_fun <- function(sid = integer(0)) {
         env <- new.env(parent = parent.env(globalenv()))
         env[[dataname]] <- private$dataset
         if (!is.null(parent)) env[[parent_name]] <- parent()
@@ -84,7 +84,7 @@ DefaultFilteredDataset <- R6::R6Class( # nolint
       private$add_filter_states(
         filter_states = init_filter_states(
           data = dataset,
-          data_reactive = dataset_filtered_fun,
+          data_reactive = data_filtered_fun,
           dataname = dataname,
           varlabels = self$get_varlabels(),
           keys = self$get_keys()
@@ -279,7 +279,7 @@ DefaultFilteredDataset <- R6::R6Class( # nolint
     #' @return `list` containing character `#filtered/#not_filtered`
     get_filter_overview_nsubjs = function() {
       dataset <- self$get_dataset()
-      dataset_filtered <- self$get_dataset(TRUE)
+      data_filtered <- self$get_dataset(TRUE)
 
       # Gets filter overview subjects number and returns a list
       # of the number of subjects of filtered/non-filtered datasets
@@ -290,9 +290,9 @@ DefaultFilteredDataset <- R6::R6Class( # nolint
       }
 
       f_rows <- if (length(subject_keys) == 0) {
-        dplyr::n_distinct(dataset_filtered())
+        dplyr::n_distinct(data_filtered())
       } else {
-        dplyr::n_distinct(dataset_filtered()[subject_keys])
+        dplyr::n_distinct(data_filtered()[subject_keys])
       }
 
       nf_rows <- if (length(subject_keys) == 0) {
@@ -309,8 +309,8 @@ DefaultFilteredDataset <- R6::R6Class( # nolint
     join_keys = character(0),
     # Gets filter overview observations number and returns a
     # list of the number of observations of filtered/non-filtered datasets
-    get_filter_overview_nobs = function(dataset, dataset_filtered) {
-      f_rows <- nrow(dataset_filtered())
+    get_filter_overview_nobs = function(dataset, data_filtered) {
+      f_rows <- nrow(data_filtered())
       nf_rows <- nrow(dataset)
       list(
         paste0(f_rows, "/", nf_rows)
