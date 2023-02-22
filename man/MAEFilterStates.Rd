@@ -32,6 +32,7 @@ Specialization of \code{FilterStates} for \code{MultiAssayExperiment}.
 <li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilterStates" data-id="get_datalabel"><a href='../../teal.slice/html/FilterStates.html#method-FilterStates-get_datalabel'><code>teal.slice::FilterStates$get_datalabel()</code></a></span></li>
 <li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilterStates" data-id="get_filter_count"><a href='../../teal.slice/html/FilterStates.html#method-FilterStates-get_filter_count'><code>teal.slice::FilterStates$get_filter_count()</code></a></span></li>
 <li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilterStates" data-id="print"><a href='../../teal.slice/html/FilterStates.html#method-FilterStates-print'><code>teal.slice::FilterStates$print()</code></a></span></li>
+<li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilterStates" data-id="set_filterable_varnames"><a href='../../teal.slice/html/FilterStates.html#method-FilterStates-set_filterable_varnames'><code>teal.slice::FilterStates$set_filterable_varnames()</code></a></span></li>
 <li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilterStates" data-id="state_list_empty"><a href='../../teal.slice/html/FilterStates.html#method-FilterStates-state_list_empty'><code>teal.slice::FilterStates$state_list_empty()</code></a></span></li>
 <li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilterStates" data-id="state_list_get"><a href='../../teal.slice/html/FilterStates.html#method-FilterStates-state_list_get'><code>teal.slice::FilterStates$state_list_get()</code></a></span></li>
 <li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilterStates" data-id="state_list_push"><a href='../../teal.slice/html/FilterStates.html#method-FilterStates-state_list_push'><code>teal.slice::FilterStates$state_list_push()</code></a></span></li>
@@ -48,12 +49,20 @@ Initializes \code{MAEFilterStates} object
 
 Initialize \code{MAEFilterStates} object
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{MAEFilterStates$new(dataname, datalabel, varlabels, keys)}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{MAEFilterStates$new(data, data_reactive, dataname, datalabel, varlabels, keys)}\if{html}{\out{</div>}}
 }
 
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
+\item{\code{data}}{(\code{MultiAssayExperiment})\cr
+the R object which \code{MultiAssayExperiment::subsetByColData} function is applied on.}
+
+\item{\code{data_reactive}}{(\code{reactive})\cr
+should return \code{MultiAssayExperiment} or \code{NULL} object.
+This object is needed for the \code{FilterState} counts being updated
+on a change in filters. If \code{reactive(NULL)} then filtered counts are not shown.}
+
 \item{\code{dataname}}{(\code{character(1)})\cr
 name of the data used in the expression
 specified to the function argument attached to this \code{FilterStates}.}
@@ -147,21 +156,16 @@ The output list can be used as input to \code{self$set_filter_state}.
 \subsection{Method \code{set_filter_state()}}{
 Set filter state
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{MAEFilterStates$set_filter_state(data, state, ...)}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{MAEFilterStates$set_filter_state(state)}\if{html}{\out{</div>}}
 }
 
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
-\item{\code{data}}{(\code{MultiAssayExperiment})\cr
-data which are supposed to be filtered.}
-
 \item{\code{state}}{(\verb{named list})\cr
 should contain values which are initial selection in the \code{FilterState}.
 Names of the \code{list} element should correspond to the name of the
 column in \code{colData(data)}.}
-
-\item{\code{...}}{ignored.}
 }
 \if{html}{\out{</div>}}
 }
@@ -173,7 +177,7 @@ column in \code{colData(data)}.}
 \if{html}{\out{<a id="method-MAEFilterStates-remove_filter_state"></a>}}
 \if{latex}{\out{\hypertarget{method-MAEFilterStates-remove_filter_state}{}}}
 \subsection{Method \code{remove_filter_state()}}{
-Removes a variable from the \code{state_list} and its corresponding UI element.
+Removes a variable from the \code{ReactiveQueue} and its corresponding UI element.
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{MAEFilterStates$remove_filter_state(state_id)}\if{html}{\out{</div>}}
 }
@@ -181,7 +185,7 @@ Removes a variable from the \code{state_list} and its corresponding UI element.
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
-\item{\code{state_id}}{(\code{character(1)})\cr name of \code{state_list} element.}
+\item{\code{state_id}}{(\code{character(1)})\cr name of \code{ReactiveQueue} element.}
 }
 \if{html}{\out{</div>}}
 }
@@ -195,7 +199,7 @@ Removes a variable from the \code{state_list} and its corresponding UI element.
 \subsection{Method \code{ui_add_filter_state()}}{
 Shiny UI module to add filter variable
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{MAEFilterStates$ui_add_filter_state(id, data)}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{MAEFilterStates$ui_add_filter_state(id)}\if{html}{\out{</div>}}
 }
 
 \subsection{Arguments}{
@@ -203,15 +207,11 @@ Shiny UI module to add filter variable
 \describe{
 \item{\code{id}}{(\code{character(1)})\cr
 id of shiny module}
-
-\item{\code{data}}{(\code{MultiAssayExperiment})\cr
-object containing \code{colData} which columns are used to be used
-to choose filter variables}
 }
 \if{html}{\out{</div>}}
 }
 \subsection{Returns}{
-\code{shiny.tag}
+shiny.tag
 }
 }
 \if{html}{\out{<hr>}}
@@ -224,7 +224,7 @@ Module controls available choices to select as a filter variable.
 Selected filter variable is being removed from available choices.
 Removed filter variable gets back to available choices.
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{MAEFilterStates$srv_add_filter_state(id, data, ...)}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{MAEFilterStates$srv_add_filter_state(id)}\if{html}{\out{</div>}}
 }
 
 \subsection{Arguments}{
@@ -232,18 +232,11 @@ Removed filter variable gets back to available choices.
 \describe{
 \item{\code{id}}{(\code{character(1)})\cr
 an ID string that corresponds with the ID used to call the module's UI function.}
-
-\item{\code{data}}{(\code{MultiAssayExperiment})\cr
-object containing \code{colData} which columns are used to choose filter variables in
-\code{\link[teal.widgets:optionalSelectInput]{teal.widgets::optionalSelectInput()}}.}
-
-\item{\code{...}}{ignored}
 }
 \if{html}{\out{</div>}}
 }
 \subsection{Returns}{
 \code{moduleServer} function which returns \code{NULL}
-
 description
 Get label of specific variable. In case when variable label is missing
 name of the variable is returned.

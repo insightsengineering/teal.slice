@@ -32,6 +32,10 @@ DatetimeFilterState <- R6::R6Class( # nolint
     #' and is set only if object is initialized in `shiny`.
     #' @param x (`POSIXct` or `POSIXlt`)\cr
     #'   values of the variable used in filter
+    #' @param x_reactive (`reactive`)\cr
+    #'   a `reactive` returning a filtered vector or returning `NULL`. Is used to update
+    #'   counts following the change in values of the filtered dataset. If the `reactive`
+    #'   is `NULL` counts based on filtered dataset are not shown.
     #' @param varname (`character`, `name`)\cr
     #'   name of the variable
     #' @param varlabel (`character(1)`)\cr
@@ -46,12 +50,15 @@ DatetimeFilterState <- R6::R6Class( # nolint
     #' \item{`"matrix"`}{ `varname` in the condition call will be returned as `<dataname>[, <varname>]`}
     #' }
     initialize = function(x,
+                          x_reactive,
                           varname,
                           varlabel = character(0),
                           dataname = NULL,
                           extract_type = character(0)) {
       checkmate::assert_multi_class(x, c("POSIXct", "POSIXlt"))
-      super$initialize(x, varname, varlabel, dataname, extract_type)
+
+      # validation on x_reactive here
+      super$initialize(x, x_reactive, varname, varlabel, dataname, extract_type)
 
       var_range <- range(x, na.rm = TRUE)
       private$set_choices(var_range)
@@ -78,7 +85,6 @@ DatetimeFilterState <- R6::R6Class( # nolint
     #'
     format = function(indent = 0) {
       checkmate::assert_number(indent, finite = TRUE, lower = 0)
-
 
       vals <- self$get_selected()
       sprintf(
@@ -181,20 +187,34 @@ DatetimeFilterState <- R6::R6Class( # nolint
       values
     },
     remove_out_of_bound_values = function(values) {
-      if (values[1] < private$choices[1]) {
-        warning(paste(
-          "Value:", values[1], "is outside of the possible range for column", private$varname,
-          "of dataset", private$dataname, "."
-        ))
+      if (values[1] < private$choices[1] | values[1] > private$choices[2]) {
+        warning(
+          sprintf(
+            "Value: %s is outside of the possible range for column %s of dataset %s, setting minimum possible value.",
+            values[1], private$varname, private$dataname
+          )
+        )
         values[1] <- private$choices[1]
       }
 
-      if (values[2] > private$choices[2]) {
-        warning(paste(
-          "Value:", values[2], "is outside of the possible range for column", private$varname,
-          "of dataset", private$dataname, "."
-        ))
+      if (values[2] > private$choices[2] | values[2] < private$choices[1]) {
+        warning(
+          sprintf(
+            "Value: %s is outside of the possible range for column %s of dataset %s, setting maximum possible value.",
+            values[2], private$varname, private$dataname
+          )
+        )
         values[2] <- private$choices[2]
+      }
+
+      if (values[1] > values[2]) {
+        warning(
+          sprintf(
+            "Start date %s is set after the end date %s, the values will be replaced with a default datetime range.",
+            values[1], values[2]
+          )
+        )
+        values <- c(private$choices[1], private$choices[2])
       }
       values
     },
@@ -277,7 +297,6 @@ DatetimeFilterState <- R6::R6Class( # nolint
         id = id,
         function(input, output, session) {
           logger::log_trace("DatetimeFilterState$server initializing, dataname: { private$dataname }")
-
           # this observer is needed in the situation when private$selected has been
           # changed directly by the api - then it's needed to rerender UI element
           # to show relevant values
@@ -332,6 +351,14 @@ DatetimeFilterState <- R6::R6Class( # nolint
                 end_date <- private$choices[2]
               }
 
+              iv <- shinyvalidate::InputValidator$new()
+              iv$add_rule("selection_start", ~ if (
+                input$selection_start > input$selection_end
+              ) {
+                "Start date must not be greater than the end date."
+              })
+              iv$enable()
+              teal::validate_inputs(iv)
 
               self$set_selected(c(start_date, end_date))
               logger::log_trace(sprintf(
@@ -380,6 +407,36 @@ DatetimeFilterState <- R6::R6Class( # nolint
           )
           logger::log_trace("DatetimeFilterState$server initialized, dataname: { private$dataname }")
           NULL
+        }
+      )
+    },
+
+    # @description
+    # UI module to display filter summary
+    # @param id `shiny` id parameter
+    ui_summary = function(id) {
+      ns <- NS(id)
+      uiOutput(ns("summary"), class = "filter-card-summary")
+    },
+
+    # @description
+    # UI module to display filter summary
+    # @param shiny `id` parametr passed to moduleServer
+    #  renders text describing selected date range and
+    #  if NA are included also
+    server_summary = function(id) {
+      moduleServer(
+        id = id,
+        function(input, output, session) {
+          output$summary <- renderUI({
+            selected <- format(self$get_selected(), "%Y-%m-%d %H:%M:%S")
+            min <- selected[1]
+            max <- selected[2]
+            tagList(
+              tags$span(paste0(min, " - ", max)),
+              if (self$get_keep_na()) tags$span("NA") else NULL
+            )
+          })
         }
       )
     }

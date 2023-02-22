@@ -62,6 +62,7 @@ Initialize \code{EmptyFilterState} object.
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{EmptyFilterState$new(
   x,
+  x_reactive,
   varname,
   varlabel = character(0),
   dataname = NULL,
@@ -74,6 +75,11 @@ Initialize \code{EmptyFilterState} object.
 \describe{
 \item{\code{x}}{(\code{vector})\cr
 values of the variable used in filter}
+
+\item{\code{x_reactive}}{(\code{reactive})\cr
+a \code{reactive} returning a filtered vector or returning \code{NULL}. Is used to update
+counts following the change in values of the filtered dataset. If the \code{reactive}
+is \code{NULL} counts based on filtered dataset are not shown.}
 
 \item{\code{varname}}{(\code{character}, \code{name})\cr
 name of the variable}

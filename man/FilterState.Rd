@@ -79,6 +79,7 @@ Initialize a \code{FilterState} object
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{FilterState$new(
   x,
+  x_reactive,
   varname,
   varlabel = character(0),
   dataname = NULL,
@@ -91,6 +92,11 @@ Initialize a \code{FilterState} object
 \describe{
 \item{\code{x}}{(\code{vector})\cr
 values of the variable used in filter}
+
+\item{\code{x_reactive}}{(\code{reactive})\cr
+a \code{reactive} returning a filtered vector or returning \code{NULL}. It is used to update
+counts following the change in values of the filtered dataset. If the \code{reactive}
+is \code{NULL} counts based on filtered dataset are not shown.}
 
 \item{\code{varname}}{(\code{character})\cr
 name of the variable}
@@ -391,7 +397,7 @@ signaling that remove button has been clicked
 \subsection{Method \code{ui()}}{
 Shiny module UI.
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{FilterState$ui(id)}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{FilterState$ui(id, parent_id)}\if{html}{\out{</div>}}
 }
 
 \subsection{Arguments}{
@@ -400,6 +406,9 @@ Shiny module UI.
 \item{\code{id}}{(\code{character(1)})\cr
 shiny element (module instance) id;
 the UI for this class contains simple message stating that it is not supported}
+
+\item{\code{parent_id}}{(\code{character(1)}) id of the FilterStates card container
+module with inputs}
 }
 \if{html}{\out{</div>}}
 }
