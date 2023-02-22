@@ -31,7 +31,7 @@ testthat::test_that("make_count_text returns label + (countmax) when countnow is
     make_count_text(label = "a", countmax = 100, countnow = NULL),
     "a (100)"
   )
- testthat::expect_identical(
+  testthat::expect_identical(
     make_count_text(label = "a", countmax = 100),
     "a (100)"
   )

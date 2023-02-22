@@ -121,30 +121,30 @@ countBar <- function(inputId, label, countmax, countnow = NULL, counttotal = cou
 }
 
 #' @rdname countBars
-updateCountBars <-  function(session = getDefaultReactiveDomain(), inputId, choices,
-                                  countsmax, countsnow = NULL) {
-    checkmate::assert_string(inputId)
-    checkmate::assert_vector(choices)
-    checkmate::assert_numeric(countsmax, len = length(choices))
-    checkmate::assert_numeric(countsnow, len = length(choices), null.ok = TRUE)
+updateCountBars <- function(session = getDefaultReactiveDomain(), inputId, choices,
+                            countsmax, countsnow = NULL) {
+  checkmate::assert_string(inputId)
+  checkmate::assert_vector(choices)
+  checkmate::assert_numeric(countsmax, len = length(choices))
+  checkmate::assert_numeric(countsnow, len = length(choices), null.ok = TRUE)
 
-    ns <- NS(inputId)
-    mapply(
-      updateCountBar,
-      inputId = ns(seq_along(choices)),
-      label = choices,
-      countmax = countsmax,
-      countnow = countsnow,
-      MoreArgs = list(
-        counttotal = sum(countsmax)
-      )
+  ns <- NS(inputId)
+  mapply(
+    updateCountBar,
+    inputId = ns(seq_along(choices)),
+    label = choices,
+    countmax = countsmax,
+    countnow = countsnow,
+    MoreArgs = list(
+      counttotal = sum(countsmax)
     )
+  )
   invisible(NULL)
 }
 
 #' @rdname countBar
 updateCountBar <- function(session = getDefaultReactiveDomain(), inputId, label,
-                                countmax, countnow = NULL, counttotal) {
+                           countmax, countnow = NULL, counttotal) {
   checkmate::assert_string(inputId)
   checkmate::assert_string(label)
   checkmate::assert_number(countmax)
@@ -179,8 +179,8 @@ updateCountText <- function(session = getDefaultReactiveDomain(), inputId, label
     message = list(
       id = session$ns(inputId),
       label = label
-      )
     )
+  )
 }
 
 #' Make a count text

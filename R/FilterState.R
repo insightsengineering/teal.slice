@@ -711,5 +711,3 @@ FilterState <- R6::R6Class( # nolint
     }
   )
 )
-
-
