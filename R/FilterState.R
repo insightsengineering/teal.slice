@@ -404,11 +404,7 @@ FilterState <- R6::R6Class( # nolint
       ns <- NS(id)
 
       theme <- getOption("teal.bs_theme")
-      enable <- if (private$is_disabled()) {
-        FALSE
-      } else {
-        TRUE
-      }
+      enable <- !private$is_disabled()
 
       if (is.null(theme)) {
         private$ui_bs3(id, parent_id, enable)
@@ -432,7 +428,7 @@ FilterState <- R6::R6Class( # nolint
     extract_type = logical(0),
     x_reactive = NULL, # reactive containing the filtered variable, used for updating counts and histograms
     filtered_na_count = NULL, # reactive containing the count of NA in the filtered dataset
-    disabled = FALSE, # is this filter disabled?
+    disabled = NULL, # reactiveVal returning logical
     cache = list(), # cache state when filter disabled so we can later restore
 
     # private methods ----
