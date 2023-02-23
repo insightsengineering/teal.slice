@@ -164,7 +164,7 @@ RangeFilterState <- R6::R6Class( # nolint
     #' Answers the question of whether the current settings and values selected actually filters out any values.
     #' @return logical scalar
     is_any_filtered = function() {
-      if (!setequal(self$get_selected(), private$choices)) {
+      if (!isTRUE(all.equal(self$get_selected(), private$choices))) {
         TRUE
       } else if (!isTRUE(self$get_keep_inf()) && private$inf_count > 0) {
         TRUE
@@ -335,7 +335,7 @@ RangeFilterState <- R6::R6Class( # nolint
       if (length(values) != 2) stop("The array of set values must have length two.")
 
       values_adjusted <- contain_interval(values, private$slider_ticks)
-      if (!identical(values, values_adjusted)) {
+      if (!all.equal(values, values_adjusted)) {
         logger::log_warn(sprintf(
           paste(
             "Programmatic range specification on %s was adjusted to existing slider ticks.",
