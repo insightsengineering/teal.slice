@@ -59,10 +59,14 @@
 #'   output$formatted_choices <- renderText(filter_state_choices$format())
 #'   output$unformatted_choices <- renderPrint(filter_state_choices$get_state())
 #'   # modify filter state programmatically
-#'   observeEvent(input$button1_choices,
-#'     filter_state_choices$set_selected(unique(data_choices[c(2, 3)])))
-#'   observeEvent(input$button2_choices,
-#'     filter_state_choices$set_state(list(selected = unique(data_choices[c(1, 3)]), keep_na = TRUE)))
+#'   observeEvent(
+#'     input$button1_choices,
+#'     filter_state_choices$set_selected(unique(data_choices[c(2, 3)]))
+#'   )
+#'   observeEvent(
+#'     input$button2_choices,
+#'     filter_state_choices$set_state(list(selected = unique(data_choices[c(1, 3)]), keep_na = TRUE))
+#'   )
 #'   observeEvent(input$button3_choices, filter_state_choices$set_keep_na(TRUE))
 #'   observeEvent(input$button4_choices, filter_state_choices$set_keep_na(FALSE))
 #'   observeEvent(input$button5_choices, filter_state_choices$set_selected(c()))

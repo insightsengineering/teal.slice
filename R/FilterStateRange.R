@@ -62,8 +62,10 @@
 #'   output$unformatted_range <- renderPrint(filter_state_range$get_state())
 #'   # modify filter state programmatically
 #'   observeEvent(input$button1_range, filter_state_range$set_selected(c(0.2, 0.74)))
-#'   observeEvent(input$button2_range,
-#'     filter_state_range$set_state(list(selected = c(0.15, 0.93), keep_na = TRUE)))
+#'   observeEvent(
+#'     input$button2_range,
+#'     filter_state_range$set_state(list(selected = c(0.15, 0.93), keep_na = TRUE))
+#'   )
 #'   observeEvent(input$button3_range, filter_state_range$set_keep_na(TRUE))
 #'   observeEvent(input$button4_range, filter_state_range$set_keep_na(FALSE))
 #'   observeEvent(input$button5_range, filter_state_range$set_selected(c(0, 1)))

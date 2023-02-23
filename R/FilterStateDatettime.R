@@ -62,10 +62,14 @@
 #'   output$formatted_datetime <- renderText(filter_state_datetime$format())
 #'   output$unformatted_datetime <- renderPrint(filter_state_datetime$get_state())
 #'   # modify filter state programmatically
-#'   observeEvent(input$button1_datetime,
-#'     filter_state_datetime$set_selected(data_datetime[c(34, 56)]))
-#'   observeEvent(input$button2_datetime,
-#'     filter_state_datetime$set_state(list(selected = data_datetime[c(47, 98)])))
+#'   observeEvent(
+#'     input$button1_datetime,
+#'     filter_state_datetime$set_selected(data_datetime[c(34, 56)])
+#'   )
+#'   observeEvent(
+#'     input$button2_datetime,
+#'     filter_state_datetime$set_state(list(selected = data_datetime[c(47, 98)]))
+#'   )
 #'   observeEvent(input$button3_datetime, filter_state_datetime$set_keep_na(TRUE))
 #'   observeEvent(input$button4_datetime, filter_state_datetime$set_keep_na(FALSE))
 #'   observeEvent(input$button5_datetime, filter_state_datetime$set_selected(datetimes))
