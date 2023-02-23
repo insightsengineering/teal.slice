@@ -1,13 +1,9 @@
 #' @name EmptyFilterState
-#'
 #' @title `FilterState` object for empty variable
-#'
-#' @description
-#' `FilterState` subclass representing an empty variable.
-#'
+#' @description `FilterState` subclass representing an empty variable
 #' @docType class
-#'
 #' @keywords internal
+#'
 #'
 #' @examples
 #' filter_state <- teal.slice:::EmptyFilterState$new(
