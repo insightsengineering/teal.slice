@@ -22,13 +22,13 @@
 #' # working filter in an app
 #' library(shiny)
 #'
-#' data_range <- c(runif(100, 0, 1), NA)
+#' data_range <- c(runif(100, 0, 1), NA, Inf)
 #' filter_state_range <- RangeFilterState$new(
 #'   x = data_range,
 #'   varname = "variable",
 #'   varlabel = "label"
 #' )
-#' filter_state_range$set_state(list(selected = c(0.15, 0.93), keep_na = TRUE))
+#' filter_state_range$set_state(list(selected = c(0.15, 0.93), keep_na = TRUE, keep_inf = TRUE))
 #'
 #' ui <- fluidPage(
 #'   column(4, div(
@@ -46,11 +46,13 @@
 #'   )),
 #'   column(4, div(
 #'     h4("Programmatic filter control"),
-#'     actionButton("button1_range", "set drop NA", width = "100%"), br(),
-#'     actionButton("button2_range", "set keep NA", width = "100%"), br(),
-#'     actionButton("button3_range", "set a range", width = "100%"), br(),
-#'     actionButton("button4_range", "set full range", width = "100%"), br(),
-#'     actionButton("button5_range", "set initial state", width = "100%"), br()
+#'         actionButton("button1_range", "set drop NA", width = "100%"), br(),
+#'         actionButton("button2_range", "set keep NA", width = "100%"), br(),
+#'         actionButton("button3_range", "set drop Inf", width = "100%"), br(),
+#'         actionButton("button4_range", "set keep Inf", width = "100%"), br(),
+#'         actionButton("button5_range", "set a range", width = "100%"), br(),
+#'         actionButton("button6_range", "set full range", width = "100%"), br(),
+#'         actionButton("button0_range", "set initial state", width = "100%"), br()
 #'   ))
 #' )
 #'
@@ -62,11 +64,13 @@
 #'   # modify filter state programmatically
 #'   observeEvent(input$button1_range, filter_state_range$set_keep_na(FALSE))
 #'   observeEvent(input$button2_range, filter_state_range$set_keep_na(TRUE))
-#'   observeEvent(input$button3_range, filter_state_range$set_selected(c(0.2, 0.74)))
-#'   observeEvent(input$button4_range, filter_state_range$set_selected(c(0, 1)))
+#'   observeEvent(input$button3_range, filter_state_range$set_keep_inf(FALSE))
+#'   observeEvent(input$button4_range, filter_state_range$set_keep_inf(TRUE))
+#'   observeEvent(input$button5_range, filter_state_range$set_selected(c(0.2, 0.74)))
+#'   observeEvent(input$button6_range, filter_state_range$set_selected(c(0, 1)))
 #'   observeEvent(
-#'     input$button5_range,
-#'     filter_state_range$set_state(list(selected = c(0.15, 0.93), keep_na = TRUE))
+#'     input$button0_range,
+#'     filter_state_range$set_state(list(selected = c(0.15, 0.93), keep_na = TRUE, keep_inf = TRUE))
 #'   )
 #' }
 #'
