@@ -61,8 +61,10 @@
 #'   output$unformatted_logical <- renderPrint(filter_state_logical$get_state())
 #'   # modify filter state programmatically
 #'   observeEvent(input$button1_logical, filter_state_logical$set_selected(TRUE))
-#'   observeEvent(input$button2_logical,
-#'     filter_state_logical$set_state(list(selected = FALSE, keep_na = TRUE)))
+#'   observeEvent(
+#'     input$button2_logical,
+#'     filter_state_logical$set_state(list(selected = FALSE, keep_na = TRUE))
+#'   )
 #'   observeEvent(input$button3_logical, filter_state_logical$set_keep_na(TRUE))
 #'   observeEvent(input$button4_logical, filter_state_logical$set_keep_na(FALSE))
 #' }
