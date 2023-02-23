@@ -21,7 +21,6 @@
 #' \dontrun{
 #' # working filter in an app
 #' library(shiny)
-#' library(shinyjs)
 #'
 #' dates <- c(Sys.Date() - 100, Sys.Date())
 #' data_date <- c(seq(from = dates[1], to = dates[2], length.out = 100), NA)
@@ -30,9 +29,9 @@
 #'   varname = "variable",
 #'   varlabel = "label"
 #' )
+#' filter_state_date$set_state(list(selected = data_date[c(47, 98)], keep_na = TRUE))
 #'
 #' ui <- fluidPage(
-#'   useShinyjs(),
 #'   column(4, div(
 #'     h4("DateFilterState"),
 #'     isolate(filter_state_date$ui("fs"))
@@ -48,11 +47,11 @@
 #'   )),
 #'   column(4, div(
 #'     h4("Programmatic filter control"),
-#'     actionButton("button1_date", "set selected", width = "100%"), br(),
-#'     actionButton("button2_date", "set filter state", width = "100%"), br(),
-#'     actionButton("button3_date", "set keep NA", width = "100%"), br(),
 #'     actionButton("button4_date", "set drop NA", width = "100%"), br(),
-#'     actionButton("button5_date", "select full range", width = "100%"), br()
+#'     actionButton("button3_date", "set keep NA", width = "100%"), br(),
+#'     actionButton("button1_date", "set a range", width = "100%"), br(),
+#'     actionButton("button5_date", "set full range", width = "100%"), br(),
+#'     actionButton("button2_date", "set initial state", width = "100%"), br()
 #'   ))
 #' )
 #'
@@ -62,18 +61,17 @@
 #'   output$formatted_date <- renderText(filter_state_date$format())
 #'   output$unformatted_date <- renderPrint(filter_state_date$get_state())
 #'   # modify filter state programmatically
+#'   observeEvent(input$button1_date, filter_state_date$set_keep_na(FALSE))
+#'   observeEvent(input$button2_date, filter_state_date$set_keep_na(TRUE))
 #'   observeEvent(
-#'     input$button1_date,
+#'     input$button3_date,
 #'     filter_state_date$set_selected(data_date[c(34, 56)])
 #'   )
+#'   observeEvent(input$button4_date, filter_state_date$set_selected(dates))
 #'   observeEvent(
-#'     input$button2_date,
-#'     filter_state_date$set_state(list(selected = data_date[c(47, 98)]))
-#'   )
-#'   observeEvent(input$button3_date, filter_state_date$set_keep_na(TRUE))
-#'   observeEvent(input$button4_date, filter_state_date$set_keep_na(FALSE))
-#'   observeEvent(input$button5_date, filter_state_date$set_selected(dates))
-#' }
+#'     input$button5_date,
+#'     filter_state_date$set_state(list(selected = data_date[c(47, 98)], keep_na = TRUE))
+#'   )}
 #'
 #' if (interactive()) {
 #'   shinyApp(ui, server)

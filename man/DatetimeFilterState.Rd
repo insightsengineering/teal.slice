@@ -27,7 +27,6 @@ isolate(filter_state$get_call())
 \dontrun{
 # working filter in an app
 library(shiny)
-library(shinyjs)
 
 datetimes <- as.POSIXct(c("2012-01-01 12:00:00", "2020-01-01 12:00:00"))
 data_datetime <- c(seq(from = datetimes[1], to = datetimes[2], length.out = 100), NA)
@@ -36,9 +35,9 @@ filter_state_datetime <- DatetimeFilterState$new(
   varname = "variable",
   varlabel = "label"
 )
+filter_state_datetime$set_state(list(selected = data_datetime[c(47, 98)], keep_na = TRUE))
 
 ui <- fluidPage(
-  useShinyjs(),
   column(4, div(
     h4("DatetimeFilterState"),
     isolate(filter_state_datetime$ui("fs"))
@@ -54,11 +53,11 @@ ui <- fluidPage(
   )),
   column(4, div(
     h4("Programmatic filter control"),
-    actionButton("button1_datetime", "set selected", width = "100\%"), br(),
-    actionButton("button2_datetime", "set filter state", width = "100\%"), br(),
-    actionButton("button3_datetime", "set keep NA", width = "100\%"), br(),
-    actionButton("button4_datetime", "set drop NA", width = "100\%"), br(),
-    actionButton("button5_datetime", "select full range", width = "100\%"), br()
+    actionButton("button1_datetime", "set drop NA", width = "100\%"), br(),
+    actionButton("button2_datetime", "set keep NA", width = "100\%"), br(),
+    actionButton("button3_datetime", "set a range", width = "100\%"), br(),
+    actionButton("button4_datetime", "set full range", width = "100\%"), br(),
+    actionButton("button5_datetime", "set initial state", width = "100\%"), br()
   ))
 )
 
@@ -68,13 +67,17 @@ server <- function(input, output, session) {
   output$formatted_datetime <- renderText(filter_state_datetime$format())
   output$unformatted_datetime <- renderPrint(filter_state_datetime$get_state())
   # modify filter state programmatically
-  observeEvent(input$button1_datetime,
-    filter_state_datetime$set_selected(data_datetime[c(34, 56)]))
-  observeEvent(input$button2_datetime,
-    filter_state_datetime$set_state(list(selected = data_datetime[c(47, 98)])))
-  observeEvent(input$button3_datetime, filter_state_datetime$set_keep_na(TRUE))
-  observeEvent(input$button4_datetime, filter_state_datetime$set_keep_na(FALSE))
-  observeEvent(input$button5_datetime, filter_state_datetime$set_selected(datetimes))
+  observeEvent(input$button1_datetime, filter_state_datetime$set_keep_na(FALSE))
+  observeEvent(input$button2_datetime, filter_state_datetime$set_keep_na(TRUE))
+  observeEvent(
+    input$button3_datetime,
+    filter_state_datetime$set_selected(data_datetime[c(34, 56)])
+  )
+  observeEvent(input$button4_datetime, filter_state_datetime$set_selected(datetimes))
+  observeEvent(
+    input$button5_datetime,
+    filter_state_datetime$set_state(list(selected = data_datetime[c(47, 98)], keep_na = TRUE))
+  )
 }
 
 if (interactive()) {

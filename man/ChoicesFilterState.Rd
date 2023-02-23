@@ -26,7 +26,6 @@ isolate(filter_state$get_call())
 \dontrun{
 # working filter in an app
 library(shiny)
-library(shinyjs)
 
 data_choices <- c(letters[1:4], NA)
 filter_state_choices <- ChoicesFilterState$new(
@@ -34,9 +33,9 @@ filter_state_choices <- ChoicesFilterState$new(
   varname = "variable",
   varlabel = "label"
 )
+filter_state_choices$set_state(list(selected = data_choices[c(1, 3)], keep_na = TRUE))
 
 ui <- fluidPage(
-  useShinyjs(),
   column(4, div(
     h4("ChoicesFilterState"),
     isolate(filter_state_choices$ui("fs"))
@@ -51,11 +50,11 @@ ui <- fluidPage(
   )),
   column(4, div(
     h4("Programmatic filter control"),
-    actionButton("button1_choices", "set selected", width = "100\%"), br(),
-    actionButton("button2_choices", "set filter state", width = "100\%"), br(),
-    actionButton("button3_choices", "set keep NA", width = "100\%"), br(),
-    actionButton("button4_choices", "set drop NA", width = "100\%"), br(),
-    actionButton("button5_choices", "deselect all", width = "100\%"), br()
+    actionButton("button1_choices", "set drop NA", width = "100\%"), br(),
+    actionButton("button2_choices", "set keep NA", width = "100\%"), br(),
+    actionButton("button3_choices", "set a selection", width = "100\%"), br(),
+    actionButton("button4_choices", "deselect all", width = "100\%"), br(),
+    actionButton("button5_choices", "set initial state", width = "100\%"), br()
   ))
 )
 
@@ -65,13 +64,17 @@ server <- function(input, output, session) {
   output$formatted_choices <- renderText(filter_state_choices$format())
   output$unformatted_choices <- renderPrint(filter_state_choices$get_state())
   # modify filter state programmatically
-  observeEvent(input$button1_choices,
-    filter_state_choices$set_selected(unique(data_choices[c(2, 3)])))
-  observeEvent(input$button2_choices,
-    filter_state_choices$set_state(list(selected = unique(data_choices[c(1, 3)]), keep_na = TRUE)))
-  observeEvent(input$button3_choices, filter_state_choices$set_keep_na(TRUE))
-  observeEvent(input$button4_choices, filter_state_choices$set_keep_na(FALSE))
-  observeEvent(input$button5_choices, filter_state_choices$set_selected(c()))
+  observeEvent(input$button1_choices, filter_state_choices$set_keep_na(FALSE))
+  observeEvent(input$button2_choices, filter_state_choices$set_keep_na(TRUE))
+  observeEvent(
+    input$button3_choices,
+    filter_state_choices$set_selected(data_choices[c(2, 3)])
+  )
+  observeEvent(input$button4_choices, filter_state_choices$set_selected(c()))
+  observeEvent(
+    input$button5_choices,
+    filter_state_choices$set_state(list(selected = data_choices[c(1, 3)], keep_na = TRUE))
+  )
 }
 
 if (interactive()) {

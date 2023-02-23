@@ -25,12 +25,11 @@ isolate(filter_state$get_call())
 
 isolate(filter_state$set_selected(TRUE))
 isolate(filter_state$set_keep_na(TRUE))
-isolate(filter_state$get_call())c
+isolate(filter_state$get_call())
 
 \dontrun{
 # working filter in an app
 library(shiny)
-library(shinyjs)
 
 data_logical <- c(sample(c(TRUE, FALSE), 10, replace = TRUE), NA)
 filter_state_logical <- LogicalFilterState$new(
@@ -38,9 +37,9 @@ filter_state_logical <- LogicalFilterState$new(
   varname = "variable",
   varlabel = "label"
 )
+filter_state_logical$set_state(list(selected = FALSE, keep_na = TRUE))
 
 ui <- fluidPage(
-  useShinyjs(),
   column(4, div(
     h4("LogicalFilterState"),
     isolate(filter_state_logical$ui("fs"))
@@ -56,10 +55,10 @@ ui <- fluidPage(
   )),
   column(4, div(
     h4("Programmatic filter control"),
-    actionButton("button1_logical", "set selected", width = "100\%"), br(),
-    actionButton("button2_logical", "set filter state", width = "100\%"), br(),
-    actionButton("button3_logical", "set keep NA", width = "100\%"), br(),
-    actionButton("button4_logical", "set drop NA", width = "100\%"), br()
+    actionButton("button1_logical", "set drop NA", width = "100\%"), br(),
+    actionButton("button2_logical", "set keep NA", width = "100\%"), br(),
+    actionButton("button3_logical", "set a selection", width = "100\%"), br(),
+    actionButton("button4_logical", "set initial state", width = "100\%"), br()
   ))
 )
 
@@ -69,11 +68,13 @@ server <- function(input, output, session) {
   output$formatted_logical <- renderText(filter_state_logical$format())
   output$unformatted_logical <- renderPrint(filter_state_logical$get_state())
   # modify filter state programmatically
-  observeEvent(input$button1_logical, filter_state_logical$set_selected(TRUE))
-  observeEvent(input$button2_logical,
-    filter_state_logical$set_state(list(selected = FALSE, keep_na = TRUE)))
-  observeEvent(input$button3_logical, filter_state_logical$set_keep_na(TRUE))
-  observeEvent(input$button4_logical, filter_state_logical$set_keep_na(FALSE))
+  observeEvent(input$button1_logical, filter_state_logical$set_keep_na(FALSE))
+  observeEvent(input$button2_logical, filter_state_logical$set_keep_na(TRUE))
+  observeEvent(input$button3_logical, filter_state_logical$set_selected(TRUE))
+  observeEvent(
+    input$button4_logical,
+    filter_state_logical$set_state(list(selected = FALSE, keep_na = TRUE))
+  )
 }
 
 if (interactive()) {
