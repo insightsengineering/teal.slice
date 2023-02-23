@@ -69,7 +69,11 @@ EmptyFilterState <- R6::R6Class( # nolint
     #' @return `logical(1)`
     #'
     is_any_filtered = function() {
-      !isTRUE(self$get_keep_na())
+      if (private$is_disabled()) {
+        FALSE
+      } else {
+        !isTRUE(self$get_keep_na())
+      }
     },
 
     #' @description
