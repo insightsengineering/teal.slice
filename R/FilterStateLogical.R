@@ -16,7 +16,7 @@
 #'
 #' isolate(filter_state$set_selected(TRUE))
 #' isolate(filter_state$set_keep_na(TRUE))
-#' isolate(filter_state$get_call())c
+#' isolate(filter_state$get_call())
 #'
 #' \dontrun{
 #' # working filter in an app
