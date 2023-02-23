@@ -2,9 +2,9 @@
 % Please edit documentation in R/FilterStatesMAE.R
 \name{MAEFilterStates}
 \alias{MAEFilterStates}
-\title{\code{MAEFilterStates}}
+\title{\code{FilterStates} subclass for MultiAssayExperiments}
 \description{
-Specialization of \code{FilterStates} for \code{MultiAssayExperiment}.
+Handles filter states in a \code{MultiAssayExperiment}
 }
 \keyword{internal}
 \section{Super class}{
