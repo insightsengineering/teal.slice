@@ -58,7 +58,7 @@ ui <- fluidPage(
     actionButton("button1_logical", "set drop NA", width = "100\%"), br(),
     actionButton("button2_logical", "set keep NA", width = "100\%"), br(),
     actionButton("button3_logical", "set a selection", width = "100\%"), br(),
-    actionButton("button4_logical", "set initial state", width = "100\%"), br()
+    actionButton("button0_logical", "set initial state", width = "100\%"), br()
   ))
 )
 
@@ -72,7 +72,7 @@ server <- function(input, output, session) {
   observeEvent(input$button2_logical, filter_state_logical$set_keep_na(TRUE))
   observeEvent(input$button3_logical, filter_state_logical$set_selected(TRUE))
   observeEvent(
-    input$button4_logical,
+    input$button0_logical,
     filter_state_logical$set_state(list(selected = FALSE, keep_na = TRUE))
   )
 }

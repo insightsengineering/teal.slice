@@ -57,7 +57,7 @@ ui <- fluidPage(
     actionButton("button2_datetime", "set keep NA", width = "100\%"), br(),
     actionButton("button3_datetime", "set a range", width = "100\%"), br(),
     actionButton("button4_datetime", "set full range", width = "100\%"), br(),
-    actionButton("button5_datetime", "set initial state", width = "100\%"), br()
+    actionButton("button0_datetime", "set initial state", width = "100\%"), br()
   ))
 )
 
@@ -75,7 +75,7 @@ server <- function(input, output, session) {
   )
   observeEvent(input$button4_datetime, filter_state_datetime$set_selected(datetimes))
   observeEvent(
-    input$button5_datetime,
+    input$button0_datetime,
     filter_state_datetime$set_state(list(selected = data_datetime[c(47, 98)], keep_na = TRUE))
   )
 }

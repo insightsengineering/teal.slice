@@ -47,11 +47,11 @@
 #'   )),
 #'   column(4, div(
 #'     h4("Programmatic filter control"),
-#'     actionButton("button4_date", "set drop NA", width = "100%"), br(),
-#'     actionButton("button3_date", "set keep NA", width = "100%"), br(),
-#'     actionButton("button1_date", "set a range", width = "100%"), br(),
-#'     actionButton("button5_date", "set full range", width = "100%"), br(),
-#'     actionButton("button2_date", "set initial state", width = "100%"), br()
+#'     actionButton("button1_date", "set drop NA", width = "100%"), br(),
+#'     actionButton("button2_date", "set keep NA", width = "100%"), br(),
+#'     actionButton("button3_date", "set a range", width = "100%"), br(),
+#'     actionButton("button4_date", "set full range", width = "100%"), br(),
+#'     actionButton("button0_date", "set initial state", width = "100%"), br()
 #'   ))
 #' )
 #'
@@ -69,7 +69,7 @@
 #'   )
 #'   observeEvent(input$button4_date, filter_state_date$set_selected(dates))
 #'   observeEvent(
-#'     input$button5_date,
+#'     input$button0_date,
 #'     filter_state_date$set_state(list(selected = data_date[c(47, 98)], keep_na = TRUE))
 #'   )
 #' }
