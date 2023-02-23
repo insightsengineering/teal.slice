@@ -4,7 +4,7 @@ testthat::test_that("The constructor accepts a POSIXct or POSIXlt object", {
 })
 
 testthat::test_that("get_call returns a condition true for the object supplied in the constructor", {
-  object <- as.POSIXct(8, origin = "1900/01/01 00:00:00")
+  object <- as.POSIXct(8, origin = "1900/01/01 00:00:00", tz = "GMT")
   filter_state <- DatetimeFilterState$new(object, varname = "object")
   testthat::expect_true(eval(shiny::isolate(filter_state$get_call())))
 })
