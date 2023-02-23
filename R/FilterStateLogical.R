@@ -102,7 +102,6 @@ LogicalFilterState <- R6::R6Class( # nolint
     #' For `LogicalFilterState` it's a `!<varname>` or `<varname>` and optionally
     #' `is.na(<varname>)`
     get_call = function() {
-      if (private$is_disabled()) return(NULL)
       
       filter_call <- call_condition_logical(
         varname = private$get_varname_prefixed(),

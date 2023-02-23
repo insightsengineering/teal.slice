@@ -138,8 +138,6 @@ RangeFilterState <- R6::R6Class( # nolint
     #' optional `is.na(<varname>)` and `is.finite(<varname>)`.
     #' @return (`call`)
     get_call = function() {
-
-      if (private$is_disabled()) return(NULL)
       
       filter_call <- call_condition_range(
         varname = private$get_varname_prefixed(),

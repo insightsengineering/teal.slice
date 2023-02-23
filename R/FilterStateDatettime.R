@@ -116,8 +116,6 @@ DatetimeFilterState <- R6::R6Class( # nolint
     #' `<varname> >= as.POSIXct(<min>, tz = <timezone>) & <varname> <= <max>, tz = <timezone>)`
     #' with optional `is.na(<varname>)`.
     get_call = function() {
-
-      if (private$is_disabled()) return(NULL)
       
       filter_call <- call_condition_range_posixct(
         varname = private$get_varname_prefixed(),
