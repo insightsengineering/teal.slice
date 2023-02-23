@@ -71,7 +71,8 @@
 #'   observeEvent(
 #'     input$button5_date,
 #'     filter_state_date$set_state(list(selected = data_date[c(47, 98)], keep_na = TRUE))
-#'   )}
+#'   )
+#' }
 #'
 #' if (interactive()) {
 #'   shinyApp(ui, server)
