@@ -55,13 +55,13 @@ ui <- fluidPage(
   )),
   column(4, div(
     h4("Programmatic filter control"),
-        actionButton("button1_range", "set drop NA", width = "100\%"), br(),
-        actionButton("button2_range", "set keep NA", width = "100\%"), br(),
-        actionButton("button3_range", "set drop Inf", width = "100\%"), br(),
-        actionButton("button4_range", "set keep Inf", width = "100\%"), br(),
-        actionButton("button5_range", "set a range", width = "100\%"), br(),
-        actionButton("button6_range", "set full range", width = "100\%"), br(),
-        actionButton("button0_range", "set initial state", width = "100\%"), br()
+    actionButton("button1_range", "set drop NA", width = "100\%"), br(),
+    actionButton("button2_range", "set keep NA", width = "100\%"), br(),
+    actionButton("button3_range", "set drop Inf", width = "100\%"), br(),
+    actionButton("button4_range", "set keep Inf", width = "100\%"), br(),
+    actionButton("button5_range", "set a range", width = "100\%"), br(),
+    actionButton("button6_range", "set full range", width = "100\%"), br(),
+    actionButton("button0_range", "set initial state", width = "100\%"), br()
   ))
 )
 
