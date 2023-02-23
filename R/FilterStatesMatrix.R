@@ -1,6 +1,8 @@
-#' @title `MatrixFilterStates`
-#' @description Specialization of `FilterStates` for a base matrix.
+#' @title `FilterStates` subclass for matrices
+#' @description Handles filter states in a `matrix`
 #' @keywords internal
+#'
+#'
 MatrixFilterStates <- R6::R6Class( # nolint
   classname = "MatrixFilterStates",
   inherit = FilterStates,
