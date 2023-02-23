@@ -126,7 +126,7 @@ EmptyFilterState <- R6::R6Class( # nolint
         )
       }
       stopifnot(is.list(state) && all(names(state) == "keep_na"))
-      if (!is.null(state$keep_na)) {
+      if (!is.null(state$keep_na) || private$is_disabled()) {
         self$set_keep_na(state$keep_na)
       }
       invisible(NULL)
