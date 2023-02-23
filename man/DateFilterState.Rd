@@ -18,11 +18,11 @@ filter_state <- teal.slice:::DateFilterState$new(
   dataname = "data",
   extract_type = character(0)
 )
-isolate(filter_state_date$get_call())
+isolate(filter_state$get_call())
 
-isolate(filter_state_date$set_selected(c(Sys.Date() + 3L, Sys.Date() + 8L)))
-isolate(filter_state_date$set_keep_na(TRUE))
-isolate(filter_state_date$get_call())
+isolate(filter_state$set_selected(c(Sys.Date() + 3L, Sys.Date() + 8L)))
+isolate(filter_state$set_keep_na(TRUE))
+isolate(filter_state$get_call())
 
 \dontrun{
 # working filter in an app
@@ -77,7 +77,8 @@ server <- function(input, output, session) {
   observeEvent(
     input$button5_date,
     filter_state_date$set_state(list(selected = data_date[c(47, 98)], keep_na = TRUE))
-  )}
+  )
+}
 
 if (interactive()) {
   shinyApp(ui, server)

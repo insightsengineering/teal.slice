@@ -12,11 +12,11 @@
 #'   dataname = "data",
 #'   extract_type = character(0)
 #' )
-#' isolate(filter_state_date$get_call())
+#' isolate(filter_state$get_call())
 #'
-#' isolate(filter_state_date$set_selected(c(Sys.Date() + 3L, Sys.Date() + 8L)))
-#' isolate(filter_state_date$set_keep_na(TRUE))
-#' isolate(filter_state_date$get_call())
+#' isolate(filter_state$set_selected(c(Sys.Date() + 3L, Sys.Date() + 8L)))
+#' isolate(filter_state$set_keep_na(TRUE))
+#' isolate(filter_state$get_call())
 #'
 #' \dontrun{
 #' # working filter in an app
