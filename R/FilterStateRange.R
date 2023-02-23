@@ -508,9 +508,9 @@ RangeFilterState <- R6::R6Class( # nolint
           eventExpr = self$get_keep_inf(),
           handlerExpr = {
             if (!setequal(self$get_keep_inf(), input$value)) {
-              updateLabelCount(
+              updateCheckboxInput(
                 inputId = "value",
-                value = self$get_keep_na()
+                value = self$get_keep_inf()
               )
             }
           }
