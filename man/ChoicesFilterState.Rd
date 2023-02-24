@@ -27,7 +27,7 @@ isolate(filter_state$get_call())
 # working filter in an app
 library(shiny)
 
-data_choices <- c(letters[1:4], NA)
+data_choices <- c(sample(letters[1:4], 100, replace = TRUE), NA)
 filter_state_choices <- ChoicesFilterState$new(
   x = data_choices,
   varname = "variable",
