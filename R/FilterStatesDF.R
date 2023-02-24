@@ -98,7 +98,7 @@
 #'     filter_states_df$set_filter_state(data = data_df, state = filter_state)
 #'   })
 #'   observeEvent(input$button6_df, {
-#'     filter_state <- list(DATE = list(selected = as.POSIXct(c("2020-01-01", "2020-02-02"))))
+#'     filter_state <- list(DATETIME = list(selected = as.POSIXct(c("2020-01-01", "2020-02-02"))))
 #'     filter_states_df$set_filter_state(data = data_df, state = filter_state)
 #'   })
 #'   observeEvent(input$button7_df, filter_states_df$state_list_remove(1, state_id = "NUM1"))
