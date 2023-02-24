@@ -98,13 +98,11 @@ ChoicesFilterState <- R6::R6Class( # nolint
       fun_compare <- if (length(choices) == 1L) "==" else "%in%"
       filter_call <-
         if (inherits(choices, "Date")) {
-          choices <- as.character(choices)
           call(fun_compare, varname, call("as.Date", choices))
         } else if (inherits(choices, c("POSIXct", "POSIXlt"))) {
-          class <- class(choices)[1L]
+          class <- class(choices)[1L] # class is lost in checkboxInput!
           tzone <- Find(function(x) x != "", attr(as.POSIXlt(choices), "tzone"))
           date_fun <- as.name(switch(class, "POSIXct" = "as.POSIXct", "POSIXlt" = "as.POSIXlt"))
-          choices <- as.character(choices)
           call(fun_compare, varname, as.call(list(date_fun, choices, tz = tzone)))
         } else if (is.factor(choices)) {
           choices <- as.character(choices)
