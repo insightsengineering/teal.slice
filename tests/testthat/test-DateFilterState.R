@@ -197,3 +197,50 @@ testthat::test_that("$format() prepends spaces to every line of the returned str
     )
   }
 })
+
+testthat::test_that("disabling/enabling", {
+  shiny::reactiveConsole(TRUE)
+  on.exit(shiny::reactiveConsole(FALSE))
+
+  TestFs = R6::R6Class(
+    classname = "TestFs",
+    inherit = DateFilterState,
+    public = list(
+      cache_state = function() {private$cache_state()},
+      restore_state = function() {private$restore_state()},
+      set_disabled = function(val) {private$set_disabled(val)},
+      is_disabled = function() {private$is_disabled()}
+    )
+  )
+  date_seq <- seq(Sys.Date() - 2, Sys.Date(), 1)
+  fs <- TestFs$new(date_seq, reactive(date_seq), 'x')
+
+  testthat::expect_false(fs$is_disabled())
+  # want to ensure there is some filtering to check correctness of
+  #  is_any_filtered() when disabled/enabled
+  fs$set_selected(date_seq[1:2])
+  testthat::expect_true(fs$is_any_filtered())
+
+  fs$set_disabled(TRUE)
+  testthat::expect_true(fs$is_disabled())
+  testthat::expect_false(fs$is_any_filtered())
+
+  fs$cache_state()
+  testthat::expect_equal(
+    fs$get_state(),
+    list(selected = NULL, keep_na = NULL)
+  )
+
+  fs$set_disabled(FALSE)
+  fs$restore_state()
+  testthat::expect_false(fs$is_disabled())
+  testthat::expect_true(fs$is_any_filtered())
+  testthat::expect_equal(
+    fs$get_state(),
+    list(
+      selected = date_seq[1:2],
+      keep_na = FALSE
+    )
+  )
+
+})

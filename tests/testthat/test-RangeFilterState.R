@@ -261,3 +261,50 @@ testthat::test_that("private$get_pretty_range_step returns pretty step size", {
   step <- filter_state$test_get_pretty_range_step(pretty_mpg)
   testthat::expect_identical(step, 0.2)
 })
+
+testthat::test_that("disabling/enabling", {
+  shiny::reactiveConsole(TRUE)
+  on.exit(shiny::reactiveConsole(FALSE))
+
+  TestFs = R6::R6Class(
+    classname = "TestFs",
+    inherit = RangeFilterState,
+    public = list(
+      cache_state = function() {private$cache_state()},
+      restore_state = function() {private$restore_state()},
+      set_disabled = function(val) {private$set_disabled(val)},
+      is_disabled = function() {private$is_disabled()}
+    )
+  )
+  fs <- TestFs$new(1:10, reactive(1:10), 'x')
+
+  testthat::expect_false(fs$is_disabled())
+  # want to ensure there is some filtering to check correctness of
+  #  is_any_filtered() when disabled/enabled
+  fs$set_selected(c(1, 5))
+  testthat::expect_true(fs$is_any_filtered())
+
+  fs$set_disabled(TRUE)
+  testthat::expect_true(fs$is_disabled())
+  testthat::expect_false(fs$is_any_filtered())
+
+  fs$cache_state()
+  testthat::expect_equal(
+    fs$get_state(),
+    list(selected = NULL, keep_na = NULL, keep_inf = NULL)
+  )
+
+  fs$set_disabled(FALSE)
+  fs$restore_state()
+  testthat::expect_false(fs$is_disabled())
+  testthat::expect_true(fs$is_any_filtered())
+  testthat::expect_equal(
+    fs$get_state(),
+    list(
+      selected = c(1, 5),
+      keep_na = FALSE,
+      keep_inf = FALSE
+    )
+  )
+
+})
