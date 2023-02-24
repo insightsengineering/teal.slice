@@ -164,7 +164,10 @@ ChoicesFilterState <- R6::R6Class( # nolint
         } else if (inherits(choices, c("POSIXct", "POSIXlt"))) {
           class <- class(choices)[1L]
           tzone <- Find(function(x) x != "", attr(as.POSIXlt(choices), "tzone"))
-          date_fun <- as.name(switch(class, "POSIXct" = "as.POSIXct", "POSIXlt" = "as.POSIXlt"))
+          date_fun <- as.name(switch(class,
+            "POSIXct" = "as.POSIXct",
+            "POSIXlt" = "as.POSIXlt"
+          ))
           choices <- as.character(choices)
           call(fun_compare, varname, as.call(list(date_fun, choices, tz = tzone)))
         } else if (is.factor(choices)) {

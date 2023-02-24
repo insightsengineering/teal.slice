@@ -166,7 +166,10 @@ DatetimeFilterState <- R6::R6Class( # nolint
     get_call = function() {
       tzone <- Find(function(x) x != "", attr(as.POSIXlt(self$get_selected()), "tzone"))
       class <- class(self$get_selected())[1L]
-      date_fun <- as.name(switch(class, "POSIXct" = "as.POSIXct", "POSIXlt" = "as.POSIXlt"))
+      date_fun <- as.name(switch(class,
+        "POSIXct" = "as.POSIXct",
+        "POSIXlt" = "as.POSIXlt"
+      ))
       choices <- as.character(self$get_selected() + c(0, 1))
       filter_call <-
         call(
