@@ -2,9 +2,9 @@
 % Please edit documentation in R/FilterStatesMatrix.R
 \name{MatrixFilterStates}
 \alias{MatrixFilterStates}
-\title{\code{MatrixFilterStates}}
+\title{\code{FilterStates} subclass for matrices}
 \description{
-Specialization of \code{FilterStates} for a base matrix.
+Handles filter states in a \code{matrix}
 }
 \keyword{internal}
 \section{Super class}{

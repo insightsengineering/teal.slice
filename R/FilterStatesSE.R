@@ -1,6 +1,8 @@
-#' @title `SEFilterStates`
-#' @description Specialization of `FilterStates` for `SummaryExperiment`.
+#' @title `FilterStates` subclass for SummarizedExperiments
+#' @description Handles filter states in a `SummaryExperiment`
 #' @keywords internal
+#'
+#'
 SEFilterStates <- R6::R6Class( # nolint
   classname = "SEFilterStates",
   inherit = FilterStates,
