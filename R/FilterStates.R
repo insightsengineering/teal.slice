@@ -134,9 +134,15 @@ FilterStates <- R6::R6Class( # nolint
         function(state_list) {
           items <- state_list()
           filtered_items <- Filter(
-            f = function(x) x$is_any_filtered() && !identical(x$get_id(), sid),
+            f = function(x) x$is_any_filtered() && !identical(attr(x, "sid"), sid),
             x = items
           )
+          # hierarchical
+          #filtered_items <- Filter(
+          #  f = function(x) x$is_any_filtered() && attr(x, "sid") < sid,
+          #  x = items
+          #)
+
           calls <- lapply(
             filtered_items,
             function(state) {
@@ -238,14 +244,9 @@ FilterStates <- R6::R6Class( # nolint
       )
       private$validate_state_list_exists(state_list_index)
       checkmate::assert_string(state_id)
+      checkmate::assert_class(x, "FilterState")
 
-      states <- if (is.list(x)) {
-        x
-      } else {
-        list(x)
-      }
-
-      state <- stats::setNames(states, state_id)
+      state <- stats::setNames(list(x), state_id)
       new_state_list <- c(private$state_list[[state_list_index]](), state)
       private$state_list[[state_list_index]](new_state_list)
 
@@ -274,7 +275,7 @@ FilterStates <- R6::R6Class( # nolint
         "dataname: { private$dataname }"
       ))
       private$validate_state_list_exists(state_list_index)
-      checkmate::assert_string(state_id)
+      checkmate::assert_vector(state_id, len = 1)
       checkmate::assert(
         checkmate::check_string(state_list_index),
         checkmate::check_int(state_list_index)
@@ -314,6 +315,19 @@ FilterStates <- R6::R6Class( # nolint
         "{ class(self)[1] } emptied state_list, dataname: { private$dataname }"
       )
       invisible(NULL)
+    },
+
+    #' @description
+    #'
+    #' Get attribute from each `FilterState` kept in `private$state_list`.
+    #' @param (`character(1)`) name of the attribute attached to the elements of
+    #'   `private$state_list`
+    #' @return list of the same length as `private$state_list` where each
+    #'   elements contain respective attribute values
+    #'
+    state_list_get_attr = function(state_list_index, which) {
+      checkmate::assert_string(which)
+      lapply(private$state_list[[state_list_index]](), attr, which = which)
     },
 
     #' @description

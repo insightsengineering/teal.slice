@@ -87,7 +87,6 @@ FilterState <- R6::R6Class( # nolint
       if (length(extract_type) == 1 && is.null(dataname)) {
         stop("if extract_type is specified, dataname must also be specified")
       }
-      private$id <- sample.int(.Machine$integer.max, 1)
       private$dataname <- dataname
       private$varname <- varname
       private$varlabel <- if (identical(varlabel, as.character(varname))) {
@@ -100,7 +99,7 @@ FilterState <- R6::R6Class( # nolint
       private$selected <- reactiveVal(NULL)
       private$na_count <- sum(is.na(x))
       private$keep_na <- reactiveVal(FALSE)
-      private$x_reactive <- reactive(x_reactive(private$id))
+      private$x_reactive <- x_reactive
       private$filtered_na_count <- reactive(sum(is.na(private$x_reactive())))
       logger::log_trace(
         sprintf(
@@ -187,10 +186,6 @@ FilterState <- R6::R6Class( # nolint
       } else {
         character(1)
       }
-    },
-
-    get_id = function() {
-      private$id
     },
 
     #' @description
@@ -409,7 +404,6 @@ FilterState <- R6::R6Class( # nolint
 
   # private members ----
   private = list(
-    id = integer(0),
     choices = NULL, # because each class has different choices type
     dataname = character(0),
     keep_na = NULL, # reactiveVal logical()
