@@ -28,13 +28,12 @@ init_filtered_data <- function(x, join_keys, code, cdisc, check) {
 #' @keywords internal
 #' @export
 init_filtered_data.tdata <- function(x, # nolint
-                                        join_keys = attr(x, "join_keys"),
-                                        code = attr(x, "code"),
-                                        cdisc = FALSE,
-                                        check = attr(x, "check")) {
+                                     join_keys = attr(x, "join_keys"),
+                                     code = attr(x, "code"),
+                                     cdisc = FALSE,
+                                     check = attr(x, "check")) {
   cdisc <- length(join_keys$get_parents()) > 0
   data_objects <- lapply(names(x), function(dataname) {
-
     dataset <- x[[dataname]]()
 
     parent <- if (cdisc) join_keys$get_parent(dataname) else NULL
@@ -184,26 +183,33 @@ eval_expr_with_msg <- function(expr, env) {
 #' )
 #'
 #' server <- function(input, output, session) {
+#'   observeEvent(input$hide_content,
+#'     {
+#'       shinyjs::hide("content")
+#'       toggle_icon("toggle_content", c("fa-angle-down", "fa-angle-right"), one_way = TRUE)
+#'     },
+#'     ignoreInit = TRUE
+#'   )
 #'
-#'   observeEvent(input$hide_content, {
-#'     shinyjs::hide("content")
-#'     toggle_icon("toggle_content", c("fa-angle-down", "fa-angle-right"), one_way = TRUE)
-#'   }, ignoreInit = TRUE)
+#'   observeEvent(input$show_content,
+#'     {
+#'       shinyjs::show("content")
+#'       toggle_icon("toggle_content", c("fa-angle-right", "fa-angle-down"), one_way = TRUE)
+#'     },
+#'     ignoreInit = TRUE
+#'   )
 #'
-#'   observeEvent(input$show_content, {
-#'     shinyjs::show("content")
-#'     toggle_icon("toggle_content", c("fa-angle-right", "fa-angle-down"), one_way = TRUE)
-#'   }, ignoreInit = TRUE)
-#'
-#'   observeEvent(input$toggle_content, {
-#'     shinyjs::toggle("content")
-#'     toggle_icon("toggle_content", c("fa-angle-right", "fa-angle-down"))
-#'   }, ignoreInit = TRUE)
+#'   observeEvent(input$toggle_content,
+#'     {
+#'       shinyjs::toggle("content")
+#'       toggle_icon("toggle_content", c("fa-angle-right", "fa-angle-down"))
+#'     },
+#'     ignoreInit = TRUE
+#'   )
 #'
 #'   output$printout <- renderPrint({
 #'     head(faithful, 10)
 #'   })
-#'
 #' }
 #'
 #' if (interactive()) {
