@@ -13,7 +13,8 @@ making it possible to pass any object coercible to \code{character} to this meth
 }
 \examples{
 filter_state <- teal.slice:::ChoicesFilterState$new(
-  c(LETTERS, NA),
+  x = c(LETTERS, NA),
+  x_reactive = reactive(NULL),
   varname = "x",
   dataname = "data",
   extract_type = character(0)
@@ -26,16 +27,21 @@ isolate(filter_state$get_call())
 \dontrun{
 # working filter in an app
 library(shiny)
+library(shinyjs)
 
 data_choices <- c(sample(letters[1:4], 100, replace = TRUE), NA)
 filter_state_choices <- ChoicesFilterState$new(
   x = data_choices,
+  x_reactive = reactive(NULL),
   varname = "variable",
   varlabel = "label"
 )
 filter_state_choices$set_state(list(selected = c("a", "c"), keep_na = TRUE))
 
 ui <- fluidPage(
+  useShinyjs(),
+  include_css_files(pattern = "filter-panel"),
+  include_js_files(pattern = "count-bar-labels"),
   column(4, div(
     h4("ChoicesFilterState"),
     isolate(filter_state_choices$ui("fs"))

@@ -13,12 +13,12 @@ making it possible to pass any object coercible to \code{POSIXct} to this method
 }
 \examples{
 filter_state <- teal.slice:::DatetimeFilterState$new(
-  c(Sys.time() + seq(0, by = 3600, length.out = 10), NA),
+  x = c(Sys.time() + seq(0, by = 3600, length.out = 10), NA),
+  x_reactive = reactive(NULL),
   varname = "x",
   dataname = "data",
   extract_type = character(0)
 )
-
 isolate(filter_state$get_call())
 isolate(filter_state$set_selected(c(Sys.time() + 3L, Sys.time() + 8L)))
 isolate(filter_state$set_keep_na(TRUE))
@@ -27,17 +27,22 @@ isolate(filter_state$get_call())
 \dontrun{
 # working filter in an app
 library(shiny)
+library(shinyjs)
 
 datetimes <- as.POSIXct(c("2012-01-01 12:00:00", "2020-01-01 12:00:00"))
 data_datetime <- c(seq(from = datetimes[1], to = datetimes[2], length.out = 100), NA)
 filter_state_datetime <- DatetimeFilterState$new(
   x = data_datetime,
+  x_reactive = reactive(NULL),
   varname = "variable",
   varlabel = "label"
 )
 filter_state_datetime$set_state(list(selected = data_datetime[c(47, 98)], keep_na = TRUE))
 
 ui <- fluidPage(
+  useShinyjs(),
+  include_css_files(pattern = "filter-panel"),
+  include_js_files(pattern = "count-bar-labels"),
   column(4, div(
     h4("DatetimeFilterState"),
     isolate(filter_state_datetime$ui("fs"))

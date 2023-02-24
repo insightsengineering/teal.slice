@@ -16,7 +16,8 @@ making it possible to pass any object coercible to \code{numeric} to this method
 }
 \examples{
 filter_state <- teal.slice:::RangeFilterState$new(
-  c(NA, Inf, seq(1:10)),
+  x = c(NA, Inf, seq(1:10)),
+  x_reactive = reactive(NULL),
   varname = "x",
   dataname = "data",
   extract_type = character(0)
@@ -30,16 +31,21 @@ isolate(filter_state$get_call())
 \dontrun{
 # working filter in an app
 library(shiny)
+library(shinyjs)
 
 data_range <- c(runif(100, 0, 1), NA, Inf)
 filter_state_range <- RangeFilterState$new(
   x = data_range,
+  x_reactive = reactive(NULL),
   varname = "variable",
   varlabel = "label"
 )
 filter_state_range$set_state(list(selected = c(0.15, 0.93), keep_na = TRUE, keep_inf = TRUE))
 
 ui <- fluidPage(
+  useShinyjs(),
+  include_css_files(pattern = "filter-panel"),
+  include_js_files(pattern = "count-bar-labels"),
   column(4, div(
     h4("RangeFilterState"),
     isolate(filter_state_range$ui("fs"))

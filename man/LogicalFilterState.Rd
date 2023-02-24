@@ -16,13 +16,13 @@ making it possible to pass any object coercible to \code{logical} to this method
 }
 \examples{
 filter_state <- teal.slice:::LogicalFilterState$new(
-  sample(c(TRUE, FALSE, NA), 10, replace = TRUE),
+  x = sample(c(TRUE, FALSE, NA), 10, replace = TRUE),
+  x_reactive = reactive(NULL),
   varname = "x",
   dataname = "data",
   extract_type = character(0)
 )
 isolate(filter_state$get_call())
-
 isolate(filter_state$set_selected(TRUE))
 isolate(filter_state$set_keep_na(TRUE))
 isolate(filter_state$get_call())
@@ -30,16 +30,21 @@ isolate(filter_state$get_call())
 \dontrun{
 # working filter in an app
 library(shiny)
+library(shinyjs)
 
 data_logical <- c(sample(c(TRUE, FALSE), 10, replace = TRUE), NA)
 filter_state_logical <- LogicalFilterState$new(
   x = data_logical,
+  x_reactive = reactive(NULL),
   varname = "variable",
   varlabel = "label"
 )
 filter_state_logical$set_state(list(selected = FALSE, keep_na = TRUE))
 
 ui <- fluidPage(
+  useShinyjs(),
+  include_css_files(pattern = "filter-panel"),
+  include_js_files(pattern = "count-bar-labels"),
   column(4, div(
     h4("LogicalFilterState"),
     isolate(filter_state_logical$ui("fs"))

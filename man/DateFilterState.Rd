@@ -13,13 +13,13 @@ making it possible to pass any object coercible to \code{Date} to this method.
 }
 \examples{
 filter_state <- teal.slice:::DateFilterState$new(
-  c(Sys.Date() + seq(1:10), NA),
+  x = c(Sys.Date() + seq(1:10), NA),
+  x_reactive = reactive(NULL),
   varname = "x",
   dataname = "data",
   extract_type = character(0)
 )
 isolate(filter_state$get_call())
-
 isolate(filter_state$set_selected(c(Sys.Date() + 3L, Sys.Date() + 8L)))
 isolate(filter_state$set_keep_na(TRUE))
 isolate(filter_state$get_call())
@@ -27,17 +27,22 @@ isolate(filter_state$get_call())
 \dontrun{
 # working filter in an app
 library(shiny)
+library(shinyjs)
 
 dates <- c(Sys.Date() - 100, Sys.Date())
 data_date <- c(seq(from = dates[1], to = dates[2], length.out = 100), NA)
 filter_state_date <- DateFilterState$new(
   x = data_date,
+  x_reactive = reactive(NULL),
   varname = "variable",
   varlabel = "label"
 )
 filter_state_date$set_state(list(selected = data_date[c(47, 98)], keep_na = TRUE))
 
 ui <- fluidPage(
+  useShinyjs(),
+  include_css_files(pattern = "filter-panel"),
+  include_js_files(pattern = "count-bar-labels"),
   column(4, div(
     h4("DateFilterState"),
     isolate(filter_state_date$ui("fs"))
