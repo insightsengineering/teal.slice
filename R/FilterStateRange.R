@@ -551,7 +551,7 @@ RangeFilterState <- R6::R6Class( # nolint
             if (!setequal(self$get_keep_inf(), input$value)) {
               updateCheckboxInput(
                 inputId = "value",
-                value = self$get_keep_na()
+                value = self$get_keep_inf()
               )
             }
           }
