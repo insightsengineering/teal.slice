@@ -71,12 +71,12 @@ FilterState <- R6::R6Class( # nolint
     #' @return self invisibly
     #'
     initialize = function(x,
-                          x_reactive,
+                          x_reactive = reactive(NULL),
                           varname,
                           varlabel = character(0),
                           dataname = NULL,
                           extract_type = character(0)) {
-      checkmate::assert_class(x_reactive, "function")
+      checkmate::assert_class(x_reactive, "reactive")
       checkmate::assert_string(varname)
       checkmate::assert_character(varlabel, max.len = 1, any.missing = FALSE)
       checkmate::assert_string(dataname, null.ok = TRUE)

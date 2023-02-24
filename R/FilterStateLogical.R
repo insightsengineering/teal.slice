@@ -8,7 +8,6 @@
 #' @examples
 #' filter_state <- teal.slice:::LogicalFilterState$new(
 #'   x = sample(c(TRUE, FALSE, NA), 10, replace = TRUE),
-#'   x_reactive = reactive(NULL),
 #'   varname = "x",
 #'   dataname = "data",
 #'   extract_type = character(0)
@@ -26,7 +25,6 @@
 #' data_logical <- c(sample(c(TRUE, FALSE), 10, replace = TRUE), NA)
 #' filter_state_logical <- LogicalFilterState$new(
 #'   x = data_logical,
-#'   x_reactive = reactive(NULL),
 #'   varname = "variable",
 #'   varlabel = "label"
 #' )
@@ -107,7 +105,7 @@ LogicalFilterState <- R6::R6Class( # nolint
     #' \item{`"matrix"`}{ `varname` in the condition call will be returned as `<dataname>[, <varname>]`}
     #' }
     initialize = function(x,
-                          x_reactive,
+                          x_reactive = reactive(NULL),
                           varname,
                           varlabel = character(0),
                           dataname = NULL,

@@ -8,7 +8,6 @@
 #' @examples
 #' filter_state <- teal.slice:::RangeFilterState$new(
 #'   x = c(NA, Inf, seq(1:10)),
-#'   x_reactive = reactive(NULL),
 #'   varname = "x",
 #'   dataname = "data",
 #'   extract_type = character(0)
@@ -27,7 +26,6 @@
 #' data_range <- c(runif(100, 0, 1), NA, Inf)
 #' filter_state_range <- RangeFilterState$new(
 #'   x = data_range,
-#'   x_reactive = reactive(NULL),
 #'   varname = "variable",
 #'   varlabel = "label"
 #' )
@@ -114,7 +112,7 @@ RangeFilterState <- R6::R6Class( # nolint
     #' \item{`"matrix"`}{ `varname` in the condition call will be returned as `<dataname>[, <varname>]`}
     #' }
     initialize = function(x,
-                          x_reactive,
+                          x_reactive = reactive(NULL),
                           varname,
                           varlabel = character(0),
                           dataname = NULL,
