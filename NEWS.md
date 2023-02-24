@@ -1,4 +1,4 @@
-# teal.slice 0.2.0.9024
+# teal.slice 0.2.0.9025
 
 * Examples now use `scda.2022` instead of `scda.2021`.
 * Transferred data hashing step in `FilteredDataset` to `teal`.
@@ -23,6 +23,7 @@
 
 * Calculation of step in slider for `RangeFilterState` now uses `checkmate::test_integerish` instead of `is.integer`.
 * Updated `init_filtered_data` to take into account the removal of `CDISCTealData` from `teal.data` package.
+* Added examples apps for `ChoicesFilterState` and `DFFilterStates`.
 
 # teal.slice 0.2.0
 
