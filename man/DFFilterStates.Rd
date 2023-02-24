@@ -11,6 +11,7 @@ Handles filter states in a \code{data.frame}
 # working filters in an app
 
 library(shiny)
+library(shinyjs)
 
 # create data frame to filter
 data_df <- data.frame(
@@ -35,12 +36,16 @@ data_df <- rbind(data_df, data_na)
 # initiate FilterStates object
 filter_states_df <- init_filter_states(
   data = data_df,
+  data_reactive = reactive(NULL),
   dataname = "dataset",
   datalabel = ("label"),
   varlabels = c("long", "short", "long", "short", "long", "long")
 )
 
 ui <- fluidPage(
+  useShinyjs(),
+  include_css_files(pattern = "filter-panel"),
+  include_js_files(pattern = "count-bar-labels"),
   column(4, div(
     h4("Active filters"),
     filter_states_df$ui("fsdf")
@@ -74,7 +79,7 @@ ui <- fluidPage(
 )
 
 server <- function(input, output, session) {
-  filter_states_df$srv_add_filter_state("add_filters", data_df)
+  filter_states_df$srv_add_filter_state("add_filters")
   filter_states_df$server("fsdf")
 
   output$call_df <- renderPrint(filter_states_df$get_call())
@@ -82,27 +87,27 @@ server <- function(input, output, session) {
 
   observeEvent(input$button1_df, {
     filter_state <- list(NUM1 = list(selected = c(0, 30)))
-    filter_states_df$set_filter_state(data = data_df, state = filter_state)
+    filter_states_df$set_filter_state(state = filter_state)
   })
   observeEvent(input$button2_df, {
     filter_state <- list(NUM2 = list(selected = c(20, 21)))
-    filter_states_df$set_filter_state(data = data_df, state = filter_state)
+    filter_states_df$set_filter_state(state = filter_state)
   })
   observeEvent(input$button3_df, {
     filter_state <- list(CHAR1 = list(selected = c("B", "C", "D")))
-    filter_states_df$set_filter_state(data = data_df, state = filter_state)
+    filter_states_df$set_filter_state(state = filter_state)
   })
   observeEvent(input$button4_df, {
     filter_state <- list(CHAR2 = list(selected = "F"))
-    filter_states_df$set_filter_state(data = data_df, state = filter_state)
+    filter_states_df$set_filter_state(state = filter_state)
   })
   observeEvent(input$button5_df, {
     filter_state <- list(DATE = list(selected = c("2020-01-01", "2020-02-02")))
-    filter_states_df$set_filter_state(data = data_df, state = filter_state)
+    filter_states_df$set_filter_state(state = filter_state)
   })
   observeEvent(input$button6_df, {
     filter_state <- list(DATETIME = list(selected = as.POSIXct(c("2020-01-01", "2020-02-02"))))
-    filter_states_df$set_filter_state(data = data_df, state = filter_state)
+    filter_states_df$set_filter_state(state = filter_state)
   })
   observeEvent(input$button7_df, filter_states_df$state_list_remove(1, state_id = "NUM1"))
   observeEvent(input$button8_df, filter_states_df$state_list_remove(1, state_id = "NUM2"))
