@@ -62,7 +62,6 @@ shiny::isolate(dataset$get_filter_state())
 <li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilteredDataset" data-id="get_filter_count"><a href='../../teal.slice/html/FilteredDataset.html#method-FilteredDataset-get_filter_count'><code>teal.slice::FilteredDataset$get_filter_count()</code></a></span></li>
 <li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilteredDataset" data-id="get_filter_overview_info"><a href='../../teal.slice/html/FilteredDataset.html#method-FilteredDataset-get_filter_overview_info'><code>teal.slice::FilteredDataset$get_filter_overview_info()</code></a></span></li>
 <li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilteredDataset" data-id="get_filter_states"><a href='../../teal.slice/html/FilteredDataset.html#method-FilteredDataset-get_filter_states'><code>teal.slice::FilteredDataset$get_filter_states()</code></a></span></li>
-<li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilteredDataset" data-id="get_filterable_varnames"><a href='../../teal.slice/html/FilteredDataset.html#method-FilteredDataset-get_filterable_varnames'><code>teal.slice::FilteredDataset$get_filterable_varnames()</code></a></span></li>
 <li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilteredDataset" data-id="get_formatted_filter_state"><a href='../../teal.slice/html/FilteredDataset.html#method-FilteredDataset-get_formatted_filter_state'><code>teal.slice::FilteredDataset$get_formatted_filter_state()</code></a></span></li>
 <li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilteredDataset" data-id="get_keys"><a href='../../teal.slice/html/FilteredDataset.html#method-FilteredDataset-get_keys'><code>teal.slice::FilteredDataset$get_keys()</code></a></span></li>
 <li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilteredDataset" data-id="get_metadata"><a href='../../teal.slice/html/FilteredDataset.html#method-FilteredDataset-get_metadata'><code>teal.slice::FilteredDataset$get_metadata()</code></a></span></li>
@@ -85,6 +84,9 @@ Initializes this \code{DefaultFilteredDataset} object
   dataset,
   dataname,
   keys = character(0),
+  parent_name = character(0),
+  parent = NULL,
+  join_keys = character(0),
   label = character(0),
   metadata = NULL
 )}\if{html}{\out{</div>}}
@@ -101,6 +103,17 @@ A given name for the dataset it may not contain spaces}
 
 \item{\code{keys}}{optional, (\code{character})\cr
 Vector with primary keys}
+
+\item{\code{parent_name}}{(\code{character(1)})\cr
+Name of the parent dataset}
+
+\item{\code{parent}}{(\code{reactive})\cr
+a \code{reactive} returning parent \code{data.frame}}
+
+\item{\code{join_keys}}{(\code{character})\cr
+Name of the columns in this dataset to join with \code{parent}
+dataset. If the column names are different if both datasets
+then the names of the vector define the \code{parent} columns.}
 
 \item{\code{label}}{(\code{character})\cr
 Label to describe the dataset}
@@ -155,7 +168,7 @@ The output list is a compatible input to \code{self$set_filter_state}.
 \subsection{Method \code{set_filter_state()}}{
 Set filter state
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{DefaultFilteredDataset$set_filter_state(state, ...)}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{DefaultFilteredDataset$set_filter_state(state)}\if{html}{\out{</div>}}
 }
 
 \subsection{Arguments}{
@@ -164,8 +177,6 @@ Set filter state
 \item{\code{state}}{(\verb{named list})\cr
 containing values of the initial filter. Values should be relevant
 to the referred column.}
-
-\item{\code{...}}{Additional arguments. Note that this is currently not used}
 }
 \if{html}{\out{</div>}}
 }
@@ -243,7 +254,7 @@ For this class \code{srv_add_filter_state} calls single module
 \code{srv_add_filter_state} from \code{FilterStates} (\code{DefaultFilteredDataset}
 contains single \code{FilterStates})
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{DefaultFilteredDataset$srv_add_filter_state(id, ...)}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{DefaultFilteredDataset$srv_add_filter_state(id)}\if{html}{\out{</div>}}
 }
 
 \subsection{Arguments}{
@@ -251,8 +262,6 @@ contains single \code{FilterStates})
 \describe{
 \item{\code{id}}{(\code{character(1)})\cr
 an ID string that corresponds with the ID used to call the module's UI function.}
-
-\item{\code{...}}{other arguments passed on to child \code{FilterStates} methods.}
 }
 \if{html}{\out{</div>}}
 }
@@ -268,24 +277,9 @@ Get number of observations based on given keys
 The output shows the comparison between \code{filtered_dataset}
 function parameter and the dataset inside self
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{DefaultFilteredDataset$get_filter_overview_nsubjs(
-  filtered_dataset = self$get_dataset(),
-  subject_keys = NULL
-)}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{DefaultFilteredDataset$get_filter_overview_nsubjs()}\if{html}{\out{</div>}}
 }
 
-\subsection{Arguments}{
-\if{html}{\out{<div class="arguments">}}
-\describe{
-\item{\code{filtered_dataset}}{comparison object, of the same class
-as \code{self$get_dataset()}, if \code{NULL} then \code{self$get_dataset()}
-is used.}
-
-\item{\code{subject_keys}}{(\code{character} or \code{NULL}) columns denoting unique subjects when
-calculating the filtering.}
-}
-\if{html}{\out{</div>}}
-}
 \subsection{Returns}{
 \code{list} containing character \verb{#filtered/#not_filtered}
 }
