@@ -339,7 +339,7 @@ RangeFilterState <- R6::R6Class( # nolint
       if (length(values) != 2) stop("The array of set values must have length two.")
 
       values_adjusted <- contain_interval(values, private$slider_ticks)
-      if (!all.equal(values, values_adjusted)) {
+      if (!isTRUE(all.equal(values, values_adjusted))) {
         logger::log_warn(sprintf(
           paste(
             "Programmatic range specification on %s was adjusted to existing slider ticks.",
