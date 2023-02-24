@@ -4,7 +4,7 @@ testthat::test_that("The constructor accepts a POSIXct or POSIXlt object", {
 })
 
 testthat::test_that("get_call returns a condition true for the object supplied in the constructor", {
-  object <- as.POSIXct(8, origin = "1900/01/01 00:00:00")
+  object <- as.POSIXct(8, origin = "1900/01/01 00:00:00", tz = "GMT")
   filter_state <- DatetimeFilterState$new(object, varname = "object")
   testthat::expect_true(eval(shiny::isolate(filter_state$get_call())))
 })
@@ -16,16 +16,16 @@ testthat::test_that("get_call set selected accepts an array of two POSIXct objec
 })
 
 testthat::test_that("get_call returns a condition true for the object in the selected range", {
-  objects <- as.POSIXct(c(1:5), origin = "1900/01/01 00:00:00")
+  objects <- as.POSIXct(c(1:5), origin = "1900/01/01 00:00:00", tz = "GMT")
   filter_state <- DatetimeFilterState$new(objects, varname = "test")
   filter_state$set_selected(c(objects[2], objects[3]))
-  test <- as.POSIXct(c(1:4), origin = "1900/01/01 00:00:00")
+  test <- as.POSIXct(c(1:4), origin = "1900/01/01 00:00:00", tz = "GMT")
   testthat::expect_equal(eval(shiny::isolate(filter_state$get_call())), c(FALSE, TRUE, TRUE, FALSE))
   testthat::expect_equal(
     shiny::isolate(filter_state$get_call()),
-    bquote(
-      test >= as.POSIXct(.(as.character(test[2])), tz = .(Sys.timezone())) &
-        test < as.POSIXct(.(as.character(test[4])), tz = .(Sys.timezone()))
+    quote(
+      test >= as.POSIXct("1900-01-01 00:00:02", tz = "GMT") & test <
+        as.POSIXct("1900-01-01 00:00:04", tz = "GMT")
     )
   )
 })

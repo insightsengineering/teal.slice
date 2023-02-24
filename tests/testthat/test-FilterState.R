@@ -133,7 +133,7 @@ testthat::test_that(
 
     testthat::expect_identical(
       shiny::isolate(filter_state$test_add_keep_na_call()),
-      quote(is.na(test) | TRUE)
+      "is.na(test) | TRUE"
     )
   }
 )
@@ -155,7 +155,7 @@ testthat::test_that(
 
     testthat::expect_identical(
       shiny::isolate(filter_state$test_add_keep_na_call()),
-      quote(!is.na(test) & TRUE)
+      "!is.na(test) & TRUE"
     )
   }
 )
