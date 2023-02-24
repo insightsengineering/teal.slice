@@ -397,7 +397,7 @@ signaling that remove button has been clicked
 \subsection{Method \code{ui()}}{
 Shiny module UI.
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{FilterState$ui(id, parent_id)}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{FilterState$ui(id, parent_id = "cards")}\if{html}{\out{</div>}}
 }
 
 \subsection{Arguments}{

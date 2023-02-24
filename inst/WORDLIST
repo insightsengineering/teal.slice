@@ -14,6 +14,7 @@ funder
 Github
 Hoffmann
 Kahn
+MultiAssayExperiment
 namespaced
 pre
 programmatically
@@ -22,4 +23,5 @@ repo
 Repo
 reproducibility
 subclasses
+SummarizedExperiment
 UI
