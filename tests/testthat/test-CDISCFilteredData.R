@@ -7,9 +7,9 @@ get_cdisc_filtered_data <- function() {
   data <- teal.data::cdisc_data(
     teal.data::cdisc_dataset("ADSL", adsl),
     teal.data::cdisc_dataset("ADAE", adae)
-  )
+  )$get_tdata()
 
-  list(ds = init_filtered_data(data), adsl = adsl, adae = adae)
+  list(ds = isolate(init_filtered_data(data)), adsl = adsl, adae = adae)
 }
 
 testthat::test_that("load and set_datasets", {
@@ -104,7 +104,7 @@ testthat::test_that("get_filterable_varnames does not return child duplicates", 
   )
   data <- teal.data::cdisc_data(adsl, child)
 
-  fd <- init_filtered_data(data)
+  fd <- isolate(init_filtered_data(data$get_tdata()))
   testthat::expect_identical(
     fd$get_filterable_varnames("ADTTE"),
     c("PARAMCD", "c")
@@ -124,7 +124,7 @@ testthat::test_that("get_filterable_varnames does not return child non-filterabl
   )
   data <- teal.data::cdisc_data(adsl, child)
 
-  fd <- init_filtered_data(data)
+  fd <- isolate(init_filtered_data(data$get_tdata()))
 
   fd$set_filterable_varnames("ADTTE", c("PARAMCD", "STUDYID"))
   testthat::expect_identical(
@@ -144,7 +144,7 @@ testthat::test_that("get_filterable_varnames return all filterable variables fro
   )
   data <- teal.data::cdisc_data(adsl, child)
 
-  fd <- init_filtered_data(data)
+  fd <- isolate(init_filtered_data(data$get_tdata()))
 
   testthat::expect_identical(
     fd$get_filterable_varnames("ADSL"),
@@ -170,7 +170,7 @@ testthat::test_that("get_filterable_varnames does not return duplicates from par
   )
   data <- teal.data::cdisc_data(adsl, child)
 
-  fd <- init_filtered_data(data)
+  fd <- isolate(init_filtered_data(data$get_tdata()))
 
   fd$set_filterable_varnames("ADSL", c("a", "b"))
 
@@ -196,7 +196,7 @@ testthat::test_that(
     )
     data <- teal.data::cdisc_data(adsl, child)
 
-    fd <- init_filtered_data(data)
+    fd <- isolate(init_filtered_data(data$get_tdata()))
     testthat::expect_warning(
       shiny::isolate(fd$set_filter_state(list(ADTTE = list(USUBJID = "1")))),
       "These columns filters were excluded: USUBJID from dataset ADTTE"

@@ -1,6 +1,6 @@
-testthat::test_that("init_filtered_data accepts a TealData object", {
+testthat::test_that("init_filtered_data accepts a tdata object of a tealData object", {
   teal_data <- teal.data::teal_data(teal.data::dataset(dataname = "iris", x = iris))
-  testthat::expect_no_error(init_filtered_data(teal_data))
+  testthat::expect_no_error(isolate(init_filtered_data(teal_data$get_tdata())))
 })
 
 testthat::test_that("init_filtered_data accepts a CDISCTealData with mixed CDISC and Dataset", {
@@ -9,7 +9,7 @@ testthat::test_that("init_filtered_data accepts a CDISCTealData with mixed CDISC
     teal.data::dataset(dataname = "iris", x = iris),
     teal.data::cdisc_dataset("ADSL", adsl)
   )
-  testthat::expect_no_error(init_filtered_data(teal_data))
+  testthat::expect_no_error(isolate(init_filtered_data(teal_data$get_tdata())))
 })
 
 testthat::test_that("init_filtered_data accepts a list of `data.frame` objects", {

@@ -27,29 +27,30 @@ init_filtered_data <- function(x, join_keys, code, cdisc, check) {
 
 #' @keywords internal
 #' @export
-init_filtered_data.TealData <- function(x, # nolint
-                                        join_keys = x$get_join_keys(),
-                                        code = x$get_code_class(),
+init_filtered_data.tdata <- function(x, # nolint
+                                        join_keys = attr(x, "join_keys"),
+                                        code = attr(x, "code"),
                                         cdisc = FALSE,
-                                        check = x$get_check()) {
+                                        check = attr(x, "check")) {
   cdisc <- length(join_keys$get_parents()) > 0
-  data_objects <- lapply(x$get_datanames(), function(dataname) {
-    dataset <- x$get_dataset(dataname)
+  data_objects <- lapply(names(x), function(dataname) {
+
+    dataset <- x[[dataname]]()
 
     parent <- if (cdisc) join_keys$get_parent(dataname) else NULL
 
     return_list <- list(
-      dataset = dataset$get_raw_data(),
-      keys = dataset$get_keys(),
-      metadata = dataset$get_metadata(),
-      label = dataset$get_dataset_label()
+      dataset = dataset,
+      keys = join_keys$get(dataname, dataname),
+      metadata = teal.data::get_metadata(x, dataname),
+      label = attr(x, "label")[["dataname"]]
     )
 
     if (cdisc) return_list[["parent"]] <- parent
     return_list
   })
 
-  names(data_objects) <- x$get_datanames()
+  names(data_objects) <- names(x)
 
   init_filtered_data(
     x = data_objects,
@@ -68,7 +69,6 @@ init_filtered_data.default <- function(x, join_keys = NULL, code = NULL, cdisc =
   checkmate::assert_class(code, "CodeClass", null.ok = TRUE)
   checkmate::assert_class(join_keys, "JoinKeys", null.ok = TRUE)
   checkmate::assert_flag(check)
-
   datasets <- if (cdisc) {
     CDISCFilteredData$new(x, join_keys = join_keys, code = code, check = check)
   } else {
