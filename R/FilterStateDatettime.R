@@ -101,24 +101,25 @@ DatetimeFilterState <- R6::R6Class( # nolint
     #' `<varname> >= as.POSIXct(<min>) & <varname> <= <max>)`
     #' with optional `is.na(<varname>)`.
     get_call = function() {
-      class <- class(self$get_selected())[1L]
       tzone <- Find(function(x) x != "", attr(as.POSIXlt(self$get_selected()), "tzone"))
-
-      filter_call <- sprintf(
-        "%1$s >= %2$s(\"%3$s\", tz = \"%5$s\") & %1$s < %2$s(\"%4$s\", tz = \"%5$s\")",
-        private$get_varname_prefixed(),
-        switch(class,
-               "POSIXct" = "as.POSIXct",
-               "POSIXlt" = "as.POSIXlt"
-        ),
-        as.character(self$get_selected()[1]),
-        as.character(self$get_selected()[2] + 1),
-        tzone
-      )
-
-      filter_call <- private$add_keep_na_call(filter_call)
-
-      str2lang(filter_call)
+      class <- class(self$get_selected())[1L]
+      date_fun <- as.name(switch(class, "POSIXct" = "as.POSIXct", "POSIXlt" = "as.POSIXlt"))
+      choices <- as.character(self$get_selected() + c(0, 1))
+      filter_call <-
+        call(
+          "&",
+          call(
+            ">=",
+            private$get_varname_prefixed(),
+            as.call(list(date_fun, choices[1L], tz = tzone))
+          ),
+          call(
+            "<",
+            private$get_varname_prefixed(),
+            as.call(list(date_fun, choices[2L], tz = tzone))
+          )
+        )
+      private$add_keep_na_call(filter_call)
     },
 
     #' @description

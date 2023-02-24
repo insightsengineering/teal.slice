@@ -77,11 +77,10 @@ EmptyFilterState <- R6::R6Class( # nolint
     #'
     get_call = function() {
       filter_call <- if (isTRUE(self$get_keep_na())) {
-        sprintf("is.na(%s)", private$get_varname_prefixed())
+        call("is.na", private$get_varname_prefixed())
       } else {
-        "FALSE"
+        FALSE
       }
-      str2lang(filter_call)
     },
 
     #' @description

@@ -95,58 +95,23 @@ ChoicesFilterState <- R6::R6Class( # nolint
     get_call = function() {
       varname <- private$get_varname_prefixed()
       choices <- self$get_selected()
-
+      fun_compare <- if (length(choices) == 1L) "==" else "%in%"
       filter_call <-
-        if (is.numeric(choices)) {
-          if (length(choices) == 1L) {
-            sprintf("%s == %s", varname, round(choices, 10))
-          } else {
-            sprintf("%s %%in%% c(%s)", varname, toString(round(choices, 10)))
-          }
-        } else if (inherits(choices, "Date")) {
-          if (length(choices) == 1L) {
-            sprintf("%s == as.Date(\"%s\")", varname, as.character(choices))
-          } else {
-            sprintf("%s %%in%% as.Date(c(%s))", varname, toString(sprintf("\"%s\"", as.character(choices))))
-          }
+        if (inherits(choices, "Date")) {
+          choices <- as.character(choices)
+          call(fun_compare, varname, call("as.Date", choices))
         } else if (inherits(choices, c("POSIXct", "POSIXlt"))) {
           class <- class(choices)[1L]
           tzone <- Find(function(x) x != "", attr(as.POSIXlt(choices), "tzone"))
-
-          if (length(choices) == 1L) {
-            sprintf(
-              "%s == %s(\"%s\", tz = \"%s\")",
-              varname,
-              switch(class,
-                     "POSIXct" = "as.POSIXct",
-                     "POSIXlt" = "as.POSIXlt"
-              ),
-              as.character(choices),
-              tzone
-            )
-          } else {
-            sprintf(
-              "%s %%in%% %s(c(%s), tz = \"%s\")",
-              varname,
-              switch(class,
-                     "POSIXct" = "as.POSIXct",
-                     "POSIXlt" = "as.POSIXlt"
-              ),
-              toString(sprintf("\"%s\"", as.character(choices))),
-              tzone
-            )
-          }
+          date_fun <- as.name(switch(class, "POSIXct" = "as.POSIXct", "POSIXlt" = "as.POSIXlt"))
+          choices <- as.character(choices)
+          call(fun_compare, varname, as.call(list(date_fun, choices, tz = tzone)))
+        } else if (is.numeric(choices)) {
+          call(fun_compare, varname, choices)
         } else {
-          if (length(choices) == 1L) {
-            sprintf("%s == \"%s\"", varname, choices)
-          } else {
-            sprintf("%s %%in%% c(%s)", varname, toString(sprintf("\"%s\"", choices)))
-          }
+          call(fun_compare, varname, choices)
         }
-
-      filter_call <- private$add_keep_na_call(filter_call)
-
-      str2lang(filter_call)
+      private$add_keep_na_call(filter_call)
     },
 
     #' @description
