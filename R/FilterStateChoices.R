@@ -167,14 +167,9 @@ ChoicesFilterState <- R6::R6Class( # nolint
             "POSIXct" = "as.POSIXct",
             "POSIXlt" = "as.POSIXlt"
           ))
-          choices <- as.character(choices)
           call(fun_compare, varname, as.call(list(date_fun, choices, tz = tzone)))
-        } else if (is.factor(choices)) {
-          choices <- as.character(choices)
-          call(fun_compare, varname, choices)
-        } else if (is.numeric(choices)) {
-          call(fun_compare, varname, choices)
         } else {
+          # This handles numerics, characters, and factors.
           call(fun_compare, varname, choices)
         }
       private$add_keep_na_call(filter_call)
