@@ -27,7 +27,7 @@
 #'   varname = "variable",
 #'   varlabel = "label"
 #' )
-#' filter_state_choices$set_state(list(selected = data_choices[c(1, 3)], keep_na = TRUE))
+#' filter_state_choices$set_state(list(selected = c("a", "c"), keep_na = TRUE))
 #'
 #' ui <- fluidPage(
 #'   column(4, div(
@@ -62,12 +62,12 @@
 #'   observeEvent(input$button2_choices, filter_state_choices$set_keep_na(TRUE))
 #'   observeEvent(
 #'     input$button3_choices,
-#'     filter_state_choices$set_selected(data_choices[c(2, 3)])
+#'     filter_state_choices$set_selected(c("b", "c"))
 #'   )
 #'   observeEvent(input$button4_choices, filter_state_choices$set_selected(c()))
 #'   observeEvent(
 #'     input$button0_choices,
-#'     filter_state_choices$set_state(list(selected = data_choices[c(1, 3)], keep_na = TRUE))
+#'     filter_state_choices$set_state(list(selected = c("a", "c"), keep_na = TRUE))
 #'   )
 #' }
 #'
