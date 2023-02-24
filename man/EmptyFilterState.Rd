@@ -5,7 +5,7 @@
 \alias{EmptyFilterState}
 \title{\code{FilterState} object for empty variable}
 \description{
-\code{FilterState} subclass representing an empty variable.
+\code{FilterState} subclass representing an empty variable
 }
 \examples{
 filter_state <- teal.slice:::EmptyFilterState$new(
