@@ -13,7 +13,6 @@
 #'   dataname = "data",
 #'   extract_type = character(0)
 #' )
-#'
 #' isolate(filter_state$get_call())
 #' isolate(filter_state$set_selected(c(Sys.time() + 3L, Sys.time() + 8L)))
 #' isolate(filter_state$set_keep_na(TRUE))

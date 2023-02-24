@@ -23,7 +23,6 @@ filter_state <- teal.slice:::LogicalFilterState$new(
   extract_type = character(0)
 )
 isolate(filter_state$get_call())
-
 isolate(filter_state$set_selected(TRUE))
 isolate(filter_state$set_keep_na(TRUE))
 isolate(filter_state$get_call())
