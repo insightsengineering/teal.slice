@@ -399,14 +399,11 @@ DFFilterStates <- R6::R6Class( # nolint
     #'
     #' @param id (`character(1)`)\cr
     #'  shiny element (module instance) id
-    #' @param data (`data.frame`)\cr
-    #'  data object for which to define a subset
     #'
     #' @return `shiny.tag`
     #'
-    ui_add_filter_state = function(id, data) {
+    ui_add_filter_state = function(id) {
       checkmate::assert_string(id)
-      checkmate::assert_data_frame(data)
       data <- private$data
 
       ns <- NS(id)
