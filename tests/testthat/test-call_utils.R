@@ -167,11 +167,11 @@ testthat::test_that("call_condition_range works only with sorted numeric of leng
 testthat::test_that("call_condition_logical works only with logical(1)", {
   testthat::expect_identical(
     call_condition_logical("var", choice = TRUE),
-    "var == TRUE"
+    "var"
   )
   testthat::expect_identical(
     call_condition_logical("var", choice = FALSE),
-    "var == FALSE"
+    "!var"
   )
   testthat::expect_error(
     call_condition_logical("var", choice = c(TRUE, FALSE)),

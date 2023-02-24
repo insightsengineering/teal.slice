@@ -129,7 +129,7 @@ call_condition_logical <- function(varname, choice) {
   checkmate::assert_string(varname)
   checkmate::assert_flag(choice)
 
-  sprintf("%s == %s", varname, choice)
+  sprintf("%s%s", if (choice) "" else "!", varname)
 }
 
 
