@@ -20,7 +20,7 @@ check_in_range(subinterval, range, pre_msg = "")
 Check that a given range is valid
 }
 \examples{
-\dontrun{
+\donttest{
 check_in_range(c(3, 1), c(1, 3))
 check_in_range(c(0, 3), c(1, 3))
 check_in_range(
