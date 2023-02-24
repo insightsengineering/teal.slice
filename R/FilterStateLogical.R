@@ -95,9 +95,10 @@ LogicalFilterState <- R6::R6Class( # nolint
     #' For `LogicalFilterState` it's a `!<varname>` or `<varname>` and optionally
     #' `is.na(<varname>)`
     get_call = function() {
-      filter_call <- call_condition_logical(
-        varname = private$get_varname_prefixed(),
-        choice = self$get_selected()
+      filter_call <- sprintf(
+        "%s%s",
+        if (self$get_selected()) "" else "!",
+        private$get_varname_prefixed()
       )
 
       filter_call <- private$add_keep_na_call(filter_call)

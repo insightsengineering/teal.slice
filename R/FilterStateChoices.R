@@ -93,10 +93,56 @@ ChoicesFilterState <- R6::R6Class( # nolint
     #' optional `is.na(<varname>)`.
     #' @return (`call`)
     get_call = function() {
-      filter_call <- call_condition_choice(
-        varname = private$get_varname_prefixed(),
-        choice = self$get_selected()
-      )
+      varname <- private$get_varname_prefixed()
+      choices <- self$get_selected()
+
+      filter_call <-
+        if (is.numeric(choices)) {
+          if (length(choices) == 1L) {
+            sprintf("%s == %s", varname, round(choices, 10))
+          } else {
+            sprintf("%s %%in%% c(%s)", varname, toString(round(choices, 10)))
+          }
+        } else if (inherits(choices, "Date")) {
+          if (length(choices) == 1L) {
+            sprintf("%s == as.Date(\"%s\")", varname, as.character(choices))
+          } else {
+            sprintf("%s %%in%% as.Date(c(%s))", varname, toString(sprintf("\"%s\"", as.character(choices))))
+          }
+        } else if (inherits(choices, c("POSIXct", "POSIXlt"))) {
+          class <- class(choices)[1L]
+          tzone <- Find(function(x) x != "", attr(as.POSIXlt(choices), "tzone"))
+
+          if (length(choices) == 1L) {
+            sprintf(
+              "%s == %s(\"%s\", tz = \"%s\")",
+              varname,
+              switch(class,
+                     "POSIXct" = "as.POSIXct",
+                     "POSIXlt" = "as.POSIXlt"
+              ),
+              as.character(choices),
+              tzone
+            )
+          } else {
+            sprintf(
+              "%s %%in%% %s(c(%s), tz = \"%s\")",
+              varname,
+              switch(class,
+                     "POSIXct" = "as.POSIXct",
+                     "POSIXlt" = "as.POSIXlt"
+              ),
+              toString(sprintf("\"%s\"", as.character(choices))),
+              tzone
+            )
+          }
+        } else {
+          if (length(choices) == 1L) {
+            sprintf("%s == \"%s\"", varname, choices)
+          } else {
+            sprintf("%s %%in%% c(%s)", varname, toString(sprintf("\"%s\"", choices)))
+          }
+        }
 
       filter_call <- private$add_keep_na_call(filter_call)
 

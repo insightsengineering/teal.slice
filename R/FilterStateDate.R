@@ -97,9 +97,11 @@ DateFilterState <- R6::R6Class( # nolint
     #' optional `is.na(<varname>)`.
     #' @return (`call`)
     get_call = function() {
-      filter_call <- call_condition_range_date(
-        varname = private$get_varname_prefixed(),
-        range = self$get_selected()
+      filter_call <- sprintf(
+        "%1$s >= as.Date(\"%2$s\") & %1$s <= as.Date(\"%3$s\")",
+        private$get_varname_prefixed(),
+        as.character(self$get_selected()[1]),
+        as.character(self$get_selected()[2])
       )
 
       filter_call <- private$add_keep_na_call(filter_call)

@@ -123,9 +123,11 @@ RangeFilterState <- R6::R6Class( # nolint
     #' optional `is.na(<varname>)` and `is.finite(<varname>)`.
     #' @return (`call`)
     get_call = function() {
-      filter_call <- call_condition_range(
-        varname = private$get_varname_prefixed(),
-        range = self$get_selected()
+      filter_call <- sprintf(
+        "%1$s >= %2$.10f & %1$s <= %3$.10f",
+        private$get_varname_prefixed(),
+        self$get_selected()[1],
+        self$get_selected()[2]
       )
 
       filter_call <- private$add_keep_inf_call(filter_call)
