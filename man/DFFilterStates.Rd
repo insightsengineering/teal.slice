@@ -397,7 +397,7 @@ invisibly this \code{FilteredDataset}
 \subsection{Method \code{ui_add_filter_state()}}{
 Shiny UI module to add filter variable.
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{DFFilterStates$ui_add_filter_state(id, data)}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{DFFilterStates$ui_add_filter_state(id)}\if{html}{\out{</div>}}
 }
 
 \subsection{Arguments}{
@@ -405,9 +405,6 @@ Shiny UI module to add filter variable.
 \describe{
 \item{\code{id}}{(\code{character(1)})\cr
 shiny element (module instance) id}
-
-\item{\code{data}}{(\code{data.frame})\cr
-data object for which to define a subset}
 }
 \if{html}{\out{</div>}}
 }
