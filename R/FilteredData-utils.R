@@ -29,7 +29,7 @@ init_filtered_data <- function(x, join_keys, code, cdisc, check) {
 #' @export
 init_filtered_data.tdata <- function(x, # nolint
                                      join_keys = attr(x, "join_keys"),
-                                     code = attr(x, "code"),
+                                     code = attr(x, "code")(),
                                      cdisc = FALSE,
                                      check = attr(x, "check")) {
   cdisc <- length(join_keys$get_parents()) > 0
