@@ -184,35 +184,11 @@ SEFilterStates <- R6::R6Class( # nolint
     #' @return `NULL`
     set_filter_state = function(state) {
       logger::log_trace("SEFilterState$set_filter_state initializing, dataname: { private$dataname }")
+      checkmate::assert_class(state, "list")
+      checkmate::assert_subset(names(state), c("subset", "select"))
+
       data <- private$data
       data_reactive <- private$data_reactive
-
-      checkmate::assert_class(data, "SummarizedExperiment")
-      checkmate::assert_class(state, "list")
-
-      checkmate::assert(
-        checkmate::check_subset(names(state), c("subset", "select")),
-        checkmate::check_class(state, "default_filter"),
-        combine = "or"
-      )
-      checkmate::assert(
-        checkmate::test_null(state$subset),
-        checkmate::assert(
-          checkmate::check_class(state$subset, "list"),
-          checkmate::check_subset(names(state$subset), names(SummarizedExperiment::rowData(data))),
-          combine = "and"
-        ),
-        combine = "or"
-      )
-      checkmate::assert(
-        checkmate::test_null(state$select),
-        checkmate::assert(
-          checkmate::check_class(state$select, "list"),
-          checkmate::check_subset(names(state$select), names(SummarizedExperiment::colData(data))),
-          combine = "and"
-        ),
-        combine = "or"
-      )
 
       private$set_filter_state_impl(
         state = state$subset,
@@ -227,7 +203,6 @@ SEFilterStates <- R6::R6Class( # nolint
         data = SummarizedExperiment::colData(data),
         data_reactive = function(sid) SummarizedExperiment::colData(data_reactive(sid))
       )
-
 
       logger::log_trace("SEFilterState$set_filter_state initialized, dataname: { private$dataname }")
       NULL

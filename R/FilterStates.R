@@ -72,6 +72,7 @@ FilterStates <- R6::R6Class( # nolint
     #' self invisibly
     #'
     initialize = function(data, data_reactive, dataname, datalabel) {
+      checkmate::assert_function(data_reactive, args = "sid")
       checkmate::assert_string(dataname)
       checkmate::assert_character(datalabel, max.len = 1, any.missing = FALSE)
 
@@ -583,7 +584,29 @@ FilterStates <- R6::R6Class( # nolint
       )
     },
 
+    # @description
+    # Set filter state
+    #
+    # Utility method for `set_filter_state` to create or modify `FilterState` from a single
+    #  `state_list_index`.
+    # @param state (`list`)
+    #   should contain values which are initial selection in the `FilterState`.
+    #   Names of the `list` element should correspond to the name of the columns.
+    # @param state_list_index (`vector(1)`)
+    #  index of the `state_list`
+    # @param data (`data.frame`, `matrix` or `DataFrame`)
+    # @param data_reactive (`function`)
+    #  function having `sid` as argument
+    # @param extract_type (`character(0)` or `chracter(1)`)
     set_filter_state_impl = function(state, state_list_index, data, data_reactive, extract_type = character(0)) {
+      checkmate::assert_scalar(state_list_index)
+      checkmate::assert_multi_class(data, c("data.frame", "matrix", "DataFrame"))
+      checkmate::assert_function(data_reactive, args = "sid")
+      checkmate::assert(
+        checkmate::check_subset(names(state), names(data)),
+        checkmate::check_class(state, "default_filter"),
+        combine = "or"
+      )
       # add new states and modify existing:
       # - modify existing states
       states_now <- self$state_list_get(state_list_index)

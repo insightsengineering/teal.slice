@@ -276,15 +276,9 @@ DFFilterStates <- R6::R6Class( # nolint
     #'
     #' @return `NULL`
     set_filter_state = function(state) {
+      logger::log_trace("{ class(self)[1] }$set_filter_state initializing, dataname: { private$dataname }")
       data <- private$data
       data_reactive <- private$data_reactive
-
-      checkmate::assert(
-        checkmate::check_subset(names(state), names(data)),
-        checkmate::check_class(state, "default_filter"),
-        combine = "or"
-      )
-      logger::log_trace("{ class(self)[1] }$set_filter_state initializing, dataname: { private$dataname }")
 
       # excluding not supported variables
       state_varnames <- names(state)

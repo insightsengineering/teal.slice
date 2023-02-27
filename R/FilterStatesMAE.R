@@ -134,15 +134,7 @@ MAEFilterStates <- R6::R6Class( # nolint
     set_filter_state = function(state) {
       data <- private$data
       data_reactive <- private$data_reactive
-
-      checkmate::assert_class(data, "MultiAssayExperiment")
-      checkmate::assert(
-        checkmate::check_subset(names(state), names(SummarizedExperiment::colData(data))),
-        checkmate::check_class(state, "default_filter"),
-        combine = "or"
-      )
       logger::log_trace("MAEFilterState$set_filter_state initializing, dataname: { private$dataname }")
-      filter_states <- self$state_list_get("y")
 
       private$set_filter_state_impl(
         state = state,
@@ -151,7 +143,6 @@ MAEFilterStates <- R6::R6Class( # nolint
         data_reactive = function(sid) SummarizedExperiment::colData(data_reactive(sid)),
         extract_type = "list"
       )
-
 
       logger::log_trace("{ class(self)[1] }$set_filter_state initialized, dataname: { private$dataname }")
       NULL
