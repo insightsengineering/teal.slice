@@ -64,34 +64,6 @@ MAEFilteredDataset <- R6::R6Class( # nolint
     },
 
     #' @description
-    #' Get filter expression
-    #'
-    #' This functions returns filter calls equivalent to selected items
-    #' within each of `filter_states`. Configuration of the calls is constant and
-    #' depends on `filter_states` type and order which are set during initialization.
-    #' This class contains multiple `FilterStates`:
-    #' \itemize{
-    #'   \item{`colData(dataset)`}{for this object single `MAEFilterStates`
-    #'   which returns `subsetByColData` call}
-    #'   \item{experiments}{for each experiment single `SEFilterStates` and
-    #'   `FilterStates_matrix`, both returns `subset` call}
-    #' }
-    #' @return filter `call` or `list` of filter calls
-    get_call = function(sid) {
-      filter_call <- Filter(
-        f = Negate(is.null),
-        x = lapply(
-          self$get_filter_states(),
-          function(x) x$get_call(sid)
-        )
-      )
-      if (length(filter_call) == 0) {
-        return(NULL)
-      }
-      filter_call
-    },
-
-    #' @description
     #' Gets labels of variables in the data
     #'
     #' Variables are the column names of the data.
