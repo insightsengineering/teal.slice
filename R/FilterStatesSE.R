@@ -183,6 +183,7 @@ SEFilterStates <- R6::R6Class( # nolint
     #'   the name of the column in `rowData(data)` and `colData(data)`.
     #' @return `NULL`
     set_filter_state = function(state) {
+      logger::log_trace("SEFilterState$set_filter_state initializing, dataname: { private$dataname }")
       data <- private$data
       data_reactive <- private$data_reactive
 
@@ -213,57 +214,22 @@ SEFilterStates <- R6::R6Class( # nolint
         combine = "or"
       )
 
-      filter_states <- self$state_list_get("subset")
-      lapply(names(state$subset), function(varname) {
-        value <- resolve_state(state$subset[[varname]])
-        if (varname %in% names(filter_states)) {
-          fstate <- filter_states[[varname]]
-          fstate$set_state(value)
-        } else {
-          fstate <- init_filter_state(
-            x = SummarizedExperiment::rowData(data)[[varname]],
-            x_reactive = reactive(
-              if (!is.null(data_reactive())) SummarizedExperiment::rowData(data_reactive())[[varname]]
-            ),
-            varname = varname,
-            dataname = private$dataname
-          )
-          fstate$set_state(value)
-          self$state_list_push(
-            x = fstate,
-            state_list_index = "subset",
-            state_id = varname
-          )
-        }
-      })
+      private$set_filter_state_impl(
+        state = state$subset,
+        state_list_index = "subset",
+        data = SummarizedExperiment::rowData(data),
+        data_reactive = function(sid) SummarizedExperiment::rowData(data_reactive(sid))
+      )
 
-      filter_states <- self$state_list_get("select")
-      lapply(names(state$select), function(varname) {
-        value <- resolve_state(state$select[[varname]])
-        if (varname %in% names(filter_states)) {
-          fstate <- filter_states[[varname]]
-          fstate$set_state(value)
-        } else {
-          fstate <- init_filter_state(
-            x = SummarizedExperiment::colData(data)[[varname]],
-            x_reactive = reactive(
-              if (!is.null(data_reactive())) SummarizedExperiment::colData(data_reactive())[[varname]]
-            ),
-            varname = varname,
-            dataname = private$dataname
-          )
-          fstate$set_state(value)
-          self$state_list_push(
-            x = fstate,
-            state_list_index = "select",
-            state_id = varname
-          )
-        }
-      })
-      logger::log_trace(paste(
-        "SEFilterState$set_filter_state initialized,",
-        "dataname: { private$dataname }"
-      ))
+      private$set_filter_state_impl(
+        state = state$select,
+        state_list_index = "select",
+        data = SummarizedExperiment::colData(data),
+        data_reactive = function(sid) SummarizedExperiment::colData(data_reactive(sid))
+      )
+
+
+      logger::log_trace("SEFilterState$set_filter_state initialized, dataname: { private$dataname }")
       NULL
     },
 

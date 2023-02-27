@@ -582,6 +582,40 @@ FilterStates <- R6::R6Class( # nolint
         )
       )
     },
+
+    set_filter_state_impl = function(state, state_list_index, data, data_reactive, extract_type = character(0)) {
+      # add new states and modify existing:
+      # - modify existing states
+      states_now <- self$state_list_get(state_list_index)
+      state_names_existing <- intersect(names(states_now), names(state))
+      mapply(
+        fstate = states_now[state_names_existing],
+        value = state[state_names_existing],
+        function(fstate, value) fstate$set_state(resolve_state(value))
+      )
+
+      # - add new states
+      max_id <- max(0, unlist(lapply(states_now, attr, "sid")))
+      state_names_new <- setdiff(names(state), names(states_now))
+      mapply(
+        varname = state_names_new,
+        value = state[state_names_new],
+        sid = seq_along(state_names_new) + max_id,
+        function(varname, value, sid) {
+          fstate <- init_filter_state(
+            x = data[[varname]],
+            x_reactive = reactive(data_reactive(sid)[[varname]]),
+            varname = varname,
+            dataname = private$dataname,
+            extract_type = extract_type
+          )
+          attr(fstate, "sid") <- sid
+          fstate$set_state(resolve_state(value))
+          self$state_list_push(x = fstate, state_list_index = state_list_index, state_id = varname)
+        }
+      )
+    },
+
     # Checks if the state_list of the given index was initialized in this `FilterStates`
     # @param state_list_index (character or integer)
     validate_state_list_exists = function(state_list_index) {

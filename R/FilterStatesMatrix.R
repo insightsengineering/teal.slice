@@ -133,29 +133,37 @@ MatrixFilterStates <- R6::R6Class( # nolint
         "MatrixFilterState$set_filter_state initializing,",
         "dataname: { private$dataname }"
       ))
-      filter_states <- self$state_list_get("subset")
-      lapply(names(state), function(varname) {
-        value <- resolve_state(state[[varname]])
-        if (varname %in% names(filter_states)) {
-          fstate <- filter_states[[varname]]
-          fstate$set_state(value)
-        } else {
+
+      # - modifying existing states
+      states_now <- self$state_list_get("subset")
+      state_names_existing <- intersect(names(states_now), names(state))
+      mapply(
+        fstate = states_now[state_names_existing],
+        value = state[state_names_existing],
+        function(fstate, value) fstate$set_state(resolve_state(value))
+      )
+
+      # - add new states
+      max_id <- max(0, unlist(lapply(states_now, attr, "sid")))
+      state_names_new <- setdiff(names(state), names(states_now))
+      mapply(
+        varname = state_names_new,
+        value = state[state_names_new],
+        sid = seq_along(state_names_new) + max_id,
+        function(varname, value, sid) {
           fstate <- init_filter_state(
-            x = data[, varname],
-            x_reactive = reactive(data_reactive()[[varname]]),
+            x = data[[varname]],
+            x_reactive = reactive(data_reactive(sid)[[varname]]),
             varname = varname,
-            varlabel = varname,
-            dataname = private$dataname,
-            extract_type = "matrix"
+            varlabel = private$get_varlabels(varname),
+            dataname = private$dataname
           )
-          fstate$set_state(value)
-          self$state_list_push(
-            x = fstate,
-            state_list_index = "subset",
-            state_id = varname
-          )
+          attr(fstate, "sid") <- sid
+          fstate$set_state(resolve_state(value))
+          self$state_list_push(x = fstate, state_list_index = "subset", state_id = varname)
         }
-      })
+      )
+
       logger::log_trace(paste(
         "MatrixFilterState$set_filter_state initialized,",
         "dataname: { private$dataname }"

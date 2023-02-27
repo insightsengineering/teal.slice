@@ -70,22 +70,22 @@ DefaultFilteredDataset <- R6::R6Class( # nolint
           eval_expr_with_msg(filter_call, env)
           get(x = dataname, envir = env)
         })
-      }
 
-      data_filtered_fun <- function(sid = integer(0)) {
-        logger::log_trace("filtering data dataname: { dataname }, sid: { sid }")
-        env <- new.env(parent = parent.env(globalenv()))
-        env[[dataname]] <- private$dataset
-        if (!is.null(parent)) env[[parent_name]] <- parent()
-        filter_call <- self$get_call(sid)
-        eval_expr_with_msg(filter_call, env)
-        get(x = dataname, envir = env)
+        private$data_filtered_fun <- function(sid = integer(0)) {
+          logger::log_trace("filtering data dataname: { dataname }, sid: { sid }")
+          env <- new.env(parent = parent.env(globalenv()))
+          env[[dataname]] <- private$dataset
+          env[[parent_name]] <- parent()
+          filter_call <- self$get_call(sid)
+          eval_expr_with_msg(filter_call, env)
+          get(x = dataname, envir = env)
+        }
       }
 
       private$add_filter_states(
         filter_states = init_filter_states(
           data = dataset,
-          data_reactive = data_filtered_fun,
+          data_reactive = private$data_filtered_fun,
           dataname = dataname,
           varlabels = self$get_varlabels(),
           keys = self$get_keys()

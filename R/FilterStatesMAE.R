@@ -143,32 +143,17 @@ MAEFilterStates <- R6::R6Class( # nolint
       )
       logger::log_trace("MAEFilterState$set_filter_state initializing, dataname: { private$dataname }")
       filter_states <- self$state_list_get("y")
-      lapply(names(state), function(varname) {
-        value <- resolve_state(state[[varname]])
-        if (varname %in% names(filter_states)) {
-          fstate <- filter_states[[varname]]
-          fstate$set_state(value)
-        } else {
-          fstate <- init_filter_state(
-            x = SummarizedExperiment::colData(data)[[varname]],
-            x_reactive = reactive(if (!is.null(data_reactive())) {
-              SummarizedExperiment::colData(data_reactive())[[varname]]
-            }),
-            varname = varname,
-            varlabel = private$get_varlabels(varname),
-            dataname = private$dataname,
-            extract_type = "list"
-          )
-          fstate$set_state(value)
-          fstate$set_na_rm(TRUE)
-          self$state_list_push(
-            x = fstate,
-            "y",
-            state_id = varname
-          )
-        }
-        logger::log_trace("MAEFilterState$set_filter_state initialized, dataname: { private$dataname }")
-      })
+
+      private$set_filter_state_impl(
+        state = state,
+        state_list_index = "y",
+        data = SummarizedExperiment::colData(data),
+        data_reactive = function(sid) SummarizedExperiment::colData(data_reactive(sid)),
+        extract_type = "list"
+      )
+
+
+      logger::log_trace("{ class(self)[1] }$set_filter_state initialized, dataname: { private$dataname }")
       NULL
     },
 

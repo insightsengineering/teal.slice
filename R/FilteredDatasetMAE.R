@@ -35,7 +35,7 @@ MAEFilteredDataset <- R6::R6Class( # nolint
       private$add_filter_states(
         filter_states = init_filter_states(
           data = dataset,
-          data_reactive = self$get_dataset(filtered = TRUE),
+          data_reactive = private$data_filtered_fun,
           dataname = dataname,
           varlabels = self$get_varlabels(),
           datalabel = "subjects",
@@ -49,11 +49,11 @@ MAEFilteredDataset <- R6::R6Class( # nolint
       lapply(
         experiment_names,
         function(experiment_name) {
-          fd <- self$get_dataset(filtered = TRUE)
+          data_reactive <- function(sid = integer(0)) private$data_filtered_fun(sid)[[experiment_name]]
           private$add_filter_states(
             filter_states = init_filter_states(
               data = dataset[[experiment_name]],
-              data_reactive = reactive(fd()[[experiment_name]]),
+              data_reactive = data_reactive,
               dataname = sprintf('%s[["%s"]]', dataname, experiment_name),
               datalabel = experiment_name
             ),

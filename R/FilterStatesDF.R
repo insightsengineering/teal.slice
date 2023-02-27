@@ -302,36 +302,11 @@ DFFilterStates <- R6::R6Class( # nolint
         state <- state[state_varnames %in% supported_varnames]
       }
 
-
-      # add new states and modify existing:
-      # - modify existing states
-      states_now <- self$state_list_get(1L)
-      state_names_existing <- intersect(names(states_now), names(state))
-      mapply(
-        fstate = states_now[state_names_existing],
-        value = state[state_names_existing],
-        function(fstate, value) fstate$set_state(resolve_state(value))
-      )
-
-      # - add new states
-      max_id <- max(0, unlist(lapply(states_now, attr, "sid")))
-      state_names_new <- setdiff(names(state), names(states_now))
-      mapply(
-        varname = state_names_new,
-        value = state[state_names_new],
-        sid = seq_along(state_names_new) + max_id,
-        function(varname, value, sid) {
-          fstate <- init_filter_state(
-            x = data[[varname]],
-            x_reactive = reactive(data_reactive(sid)[[varname]]),
-            varname = varname,
-            varlabel = private$get_varlabels(varname),
-            dataname = private$dataname
-          )
-          attr(fstate, "sid") <- sid
-          fstate$set_state(resolve_state(value))
-          self$state_list_push(x = fstate, state_list_index = 1L, state_id = varname)
-        }
+      private$set_filter_state_impl(
+        state = state,
+        state_list_index = 1L,
+        data = data,
+        data_reactive = private$data_reactive
       )
 
       logger::log_trace("{ class(self)[1] }$set_filter_state initialized, dataname: { private$dataname }")
