@@ -111,10 +111,6 @@ FilterState <- R6::R6Class( # nolint
       )
       invisible(self)
     },
-    finalize = function() {
-      print("finalize")
-      self$destroy_observers()
-    },
 
     #' @description
     #' Destroy observers stored in `private$observers`.
