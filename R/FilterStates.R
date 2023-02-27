@@ -319,19 +319,6 @@ FilterStates <- R6::R6Class( # nolint
     },
 
     #' @description
-    #'
-    #' Get attribute from each `FilterState` kept in `private$state_list`.
-    #' @param (`character(1)`) name of the attribute attached to the elements of
-    #'   `private$state_list`
-    #' @return list of the same length as `private$state_list` where each
-    #'   elements contain respective attribute values
-    #'
-    state_list_get_attr = function(state_list_index, which) {
-      checkmate::assert_string(which)
-      lapply(private$state_list[[state_list_index]](), attr, which = which)
-    },
-
-    #' @description
     #' Gets the number of active `FilterState` objects in this `FilterStates` object.
     #'
     #' @return `integer(1)`
