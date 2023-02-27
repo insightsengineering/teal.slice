@@ -61,18 +61,13 @@ DefaultFilteredDataset <- R6::R6Class( # nolint
         private$parent_name <- parent_name
         private$join_keys <- join_keys
 
-        private$data_filtered <- reactive({
-          logger::log_trace("filtering data dataname: { dataname }")
-          env <- new.env(parent = parent.env(globalenv()))
-          env[[dataname]] <- private$dataset
-          env[[parent_name]] <- parent()
-          filter_call <- self$get_call()
-          eval_expr_with_msg(filter_call, env)
-          get(x = dataname, envir = env)
-        })
-
         private$data_filtered_fun <- function(sid = integer(0)) {
-          logger::log_trace("filtering data dataname: { dataname }, sid: { sid }")
+          checkmate::assert_integer(sid, max.len = 1)
+          if (identical(sid, integer(0))) {
+            logger::log_trace("filtering data dataname: { private$dataname }")
+          } else {
+            logger::log_trace("filtering data dataname: { dataname }, sid: { sid }")
+          }
           env <- new.env(parent = parent.env(globalenv()))
           env[[dataname]] <- private$dataset
           env[[parent_name]] <- parent()

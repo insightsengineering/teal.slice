@@ -605,7 +605,7 @@ FilterStates <- R6::R6Class( # nolint
       )
 
       # - add new states
-      max_id <- max(0, unlist(lapply(states_now, attr, "sid")))
+      max_id <- max(0L, unlist(lapply(states_now, attr, "sid")))
       state_names_new <- setdiff(names(state), names(states_now))
       mapply(
         varname = state_names_new,

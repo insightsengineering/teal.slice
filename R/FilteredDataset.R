@@ -39,18 +39,14 @@ FilteredDataset <- R6::R6Class( # nolint
       private$label <- if (is.null(label)) character(0) else label
       private$metadata <- metadata
 
-      # reactive executing reactive call and returning data
-      private$data_filtered <- reactive({
-        logger::log_trace("filtering data dataname: { dataname }")
-        env <- new.env(parent = parent.env(globalenv()))
-        env[[dataname]] <- private$dataset
-        filter_call <- self$get_call()
-        eval_expr_with_msg(filter_call, env)
-        get(x = dataname, envir = env)
-      })
-
+      # function executing reactive call and returning data
       private$data_filtered_fun <- function(sid = integer(0)) {
-        logger::log_trace("filtering data dataname: { dataname }, sid: { sid }")
+        checkmate::assert_integer(sid, max.len = 1)
+        if (identical(sid, integer(0))) {
+          logger::log_trace("filtering data dataname: { private$dataname }")
+        } else {
+          logger::log_trace("filtering data dataname: { dataname }, sid: { sid }")
+        }
         env <- new.env(parent = parent.env(globalenv()))
         env[[dataname]] <- private$dataset
         filter_call <- self$get_call(sid)
@@ -58,6 +54,7 @@ FilteredDataset <- R6::R6Class( # nolint
         get(x = dataname, envir = env)
       }
 
+      private$data_filtered <- reactive(private$data_filtered_fun())
       invisible(self)
     },
 
@@ -422,7 +419,7 @@ FilteredDataset <- R6::R6Class( # nolint
   ## __Private Fields ====
   private = list(
     dataset = NULL, # data.frame or MultiAssayExperiment
-    data_filtered = NULL, # reactive
+    data_filtered = NULL,
     data_filtered_fun = NULL, # function
     filter_states = list(),
     filterable_varnames = character(0),

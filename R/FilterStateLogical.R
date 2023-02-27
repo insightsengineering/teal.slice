@@ -276,7 +276,7 @@ LogicalFilterState <- R6::R6Class( # nolint
           # this observer is needed in the situation when private$selected has been
           # changed directly by the api - then it's needed to rerender UI element
           # to show relevant values
-          finite_values <- reactive(Filter(Negate(is.na), private$x_reactive()))
+          non_missing_values <- reactive(Filter(Negate(is.na), private$x_reactive()))
           output$trigger_visible <- renderUI({
             logger::log_trace(sprintf(
               "LogicalFilterState$server@1 updating count labels in variable: %s , dataname: %s",
@@ -287,7 +287,7 @@ LogicalFilterState <- R6::R6Class( # nolint
               inputId = "labels",
               choices = as.character(private$choices),
               countsmax = as.numeric(names(private$choices)),
-              countsnow = unname(table(factor(finite_values(), levels = private$choices)))
+              countsnow = unname(table(factor(non_missing_values(), levels = private$choices)))
             )
             NULL
           })
@@ -335,7 +335,7 @@ LogicalFilterState <- R6::R6Class( # nolint
           private$keep_na_srv("keep_na")
 
           logger::log_trace("LogicalFilterState$server initialized, dataname: { private$dataname }")
-          finite_values <- reactive(Filter(is.finite, private$x_reactive()))
+          non_missing_values <- reactive(Filter(is.finite, private$x_reactive()))
           NULL
         }
       )
