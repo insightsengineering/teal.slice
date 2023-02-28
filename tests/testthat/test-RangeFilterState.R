@@ -33,76 +33,58 @@ testthat::test_that("set_selected accepts an array with two numerical elements",
 })
 
 # get_call ----
-testthat::test_that("get_call returns a condition TRUE for all values passed to the constructor", {
-  filter_state <- RangeFilterState$new(c(1, 2, 3), varname = "test")
-  testthat::expect_equal(shiny::isolate(filter_state$get_call()), quote(test >= 1 & test <= 3))
-  test <- c(1, 2, 3)
-  testthat::expect_true(all(eval(shiny::isolate(filter_state$get_call()))))
-})
-
-testthat::test_that("get_call returns a condition TRUE for all values passed to the constructor", {
+testthat::test_that("get_call returns call encompassing all values passed to constructor", {
   filter_state <- RangeFilterState$new(7, varname = "test")
   testthat::expect_equal(shiny::isolate(filter_state$get_call()), quote(test >= 7 & test <= 7))
-  test <- 7
-  testthat::expect_true(all(eval(shiny::isolate(filter_state$get_call()))))
+  filter_state <- RangeFilterState$new(c(1, 2, 3), varname = "test")
+  testthat::expect_equal(shiny::isolate(filter_state$get_call()), quote(test >= 1 & test <= 3))
 })
 
-testthat::test_that("get_call returns a valid call after an unsuccessfull set_selected", {
+testthat::test_that("get_call returns valid call after unsuccessfull set_selected", {
   filter_state <- RangeFilterState$new(7, varname = "test")
-  testthat::expect_error(suppressWarnings(
-    filter_state$set_selected(c(1, 3)),
-    regexp = "the upper bound of the range lower than the lower bound"
-  ))
-  test <- 7
-  testthat::expect_true(all(eval(shiny::isolate(filter_state$get_call()))))
+  testthat::expect_no_error(filter_state$set_selected(c(1, 3)))
+  testthat::expect_equal(shiny::isolate(filter_state$get_call()), quote(test >= 7 & test <= 7))
 })
 
-testthat::test_that("get_call returns the call with values passed in set_selected", {
+testthat::test_that("get_call returns call with values passed in set_selected", {
   filter_state <- RangeFilterState$new(c(1, 8), varname = "test")
   filter_state$set_selected(c(3, 4))
   testthat::expect_equal(shiny::isolate(filter_state$get_call()), quote(test >= 3 & test <= 4))
 })
 
-testthat::test_that("get_call returns a condition true for the values from the range passed to set_selected", {
-  filter_state <- RangeFilterState$new(c(3, 5), varname = "test")
-  filter_state$set_selected(c(3, 5))
-  test <- c(2:6)
-  eval(shiny::isolate(filter_state$get_call()))
-  testthat::expect_equal(eval(shiny::isolate(filter_state$get_call())), c(FALSE, TRUE, TRUE, TRUE, FALSE))
-})
+testthat::test_that(
+  "get_call returns call that evaluates to TRUE for values within range passed to set_selected",
+  code = {
+    filter_state <- RangeFilterState$new(c(3, 5), varname = "test")
+    filter_state$set_selected(c(3, 5))
+    test <- c(2:6)
+    eval(shiny::isolate(filter_state$get_call()))
+    testthat::expect_equal(eval(shiny::isolate(filter_state$get_call())), c(FALSE, TRUE, TRUE, TRUE, FALSE))
+  })
 
-testthat::test_that("get_call returns the call with a condition false for infinite values", {
+testthat::test_that("set_keep_inf switches get_call returning call that allows infinite values", {
   filter_state <- RangeFilterState$new(c(1, 8), varname = "test")
   test <- Inf
   testthat::expect_false(eval(shiny::isolate(filter_state$get_call())))
-})
-
-testthat::test_that("get_call returns a condition true for infinite values after set_keep_inf(TRUE)", {
-  filter_state <- RangeFilterState$new(c(1, 8), varname = "test")
   filter_state$set_keep_inf(TRUE)
-  test <- Inf
   testthat::expect_true(eval(shiny::isolate(filter_state$get_call())))
 })
 
-testthat::test_that("get_call returns a condition returning NA for NA values", {
+testthat::test_that("set_keep_na switches get_call returning call that allows NAs", {
   filter_state <- RangeFilterState$new(c(1, 8), varname = "test")
   test <- NA
-  testthat::expect_equal(eval(shiny::isolate(filter_state$get_call())), NA)
-})
-
-testthat::test_that("get_call returns a condition true for NAs after set_keep_na(TRUE)", {
-  filter_state <- RangeFilterState$new(c(1, 8), varname = "test")
+  testthat::expect_identical(eval(shiny::isolate(filter_state$get_call())), NA)
   filter_state$set_keep_na(TRUE)
-  test <- NA
   testthat::expect_true(eval(shiny::isolate(filter_state$get_call())))
 })
 
-testthat::test_that("get_call returns a condition true for NAs and Inf values after setting NA and Inf flag", {
+testthat::test_that("NA and Inf can bothe be included by call returned by get_call", {
   filter_state <- RangeFilterState$new(c(1, 8), varname = "test")
-  filter_state$set_keep_na(TRUE)
-  filter_state$set_keep_inf(TRUE)
   test <- c(NA, Inf)
-  testthat::expect_true(all(eval(shiny::isolate(filter_state$get_call()))))
+  testthat::expect_identical(eval(shiny::isolate(filter_state$get_call())), c(NA, FALSE))
+  filter_state$set_keep_na(TRUE)
+  filter_state$set_keep_inf(TRUE)
+  testthat::expect_identical(eval(shiny::isolate(filter_state$get_call())), c(TRUE, TRUE))
 })
 
 # get_state ----
