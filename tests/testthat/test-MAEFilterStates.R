@@ -119,7 +119,7 @@ testthat::test_that(
         test <- MultiAssayExperiment::subsetByColData(
           test,
           y = test$years_to_birth >= 30 & test$years_to_birth <= 50 &
-            test$vital_status == "1" &
+            test$vital_status == 1L &
             test$gender == "female"
         )
       )
@@ -226,7 +226,7 @@ testthat::test_that(
       quote(
         test <- MultiAssayExperiment::subsetByColData(
           test,
-          y = test$vital_status == "1" &
+          y = test$vital_status == 1L &
             test$gender == "female"
         )
       )

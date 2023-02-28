@@ -157,14 +157,9 @@ testthat::test_that("SEFilterStates$set_filter_state sets state with only subset
     subset = list(feature_id = c("ID001", "ID002"))
   )
   shiny::isolate(sefs$set_filter_state(state = fs, data = obj))
-  testthat::expect_equal(
-    shiny::isolate(sefs$get_call()),
-    quote(
-      test <- subset(
-        test,
-        subset = feature_id %in% c("ID001", "ID002")
-      )
-    )
+  testthat::expect_identical(
+  deparse1(shiny::isolate(sefs$get_call())),
+  "test <- subset(test, subset = feature_id %in% c(\"ID001\", \"ID002\"))"
   )
 })
 
