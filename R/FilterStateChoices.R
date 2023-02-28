@@ -84,7 +84,7 @@
 #'
 ChoicesFilterState <- R6::R6Class( # nolint
   "ChoicesFilterState",
-  inherit = FilterState,
+  inherit = InteractiveFilterState,
 
   # public methods ----
 

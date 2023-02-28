@@ -87,7 +87,7 @@
 #'
 RangeFilterState <- R6::R6Class( # nolint
   "RangeFilterState",
-  inherit = FilterState,
+  inherit = InteractiveFilterState,
 
   # public methods ----
   public = list(

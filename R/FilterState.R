@@ -40,7 +40,7 @@
 #'  of the `FilterState` object.
 #'
 #' @keywords internal
-FilterState <- R6::R6Class( # nolint
+InteractiveFilterState <- R6::R6Class( # nolint
   "FilterState",
 
   # public methods ----
