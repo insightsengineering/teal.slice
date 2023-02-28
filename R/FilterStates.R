@@ -130,34 +130,25 @@ FilterStates <- R6::R6Class( # nolint
               state$get_call()
             }
           )
-          if (length(calls) > 0) {
-            calls_combine_by(
-              operator = "&",
-              calls = calls
-            )
-          }
+          calls_combine_by(calls, operator = "&")
         }
       )
       filter_items <- Filter(
         x = filter_items,
         f = Negate(is.null)
       )
-      if (length(filter_items) > 0) {
-        # below code translates to call by the names of filter_items
-        rhs <- call_with_colon(
-          self$get_fun(),
-          str2lang(private$dataname),
-          unlist_args = filter_items
-        )
+      if (length(filter_items) > 0L) {
+        filter_function <- str2lang(self$get_fun())
+        data_name <- str2lang(private$dataname)
         substitute(
           env = list(
-            lhs = str2lang(private$dataname),
-            rhs = rhs
+            lhs = data_name,
+            rhs = as.call(c(filter_function, c(list(data_name), filter_items)))
           ),
           expr = lhs <- rhs
         )
       } else {
-        # avoid no-op call
+        # return NULL to avoid no-op call
         NULL
       }
     },

@@ -523,7 +523,7 @@ testthat::test_that("get_call returns a call filtering a data.frame based on a C
     choices_dataset,
     dplyr::filter(choices_dataset, choices %in% c("a", "c"))
   )
-  testthat::expect_identical(
+  testthat::expect_equal(
     shiny::isolate(filter_states$get_call()),
     quote(choices_dataset <- dplyr::filter(choices_dataset, choices %in% c("a", "c")))
   )

@@ -1,3 +1,5 @@
+logs <- as.logical(c(rbinom(10, 1, 0.5), NA))
+
 testthat::test_that("The constructor accepts logical values", {
   testthat::expect_no_error(LogicalFilterState$new(c(TRUE), varname = "test"))
 })
@@ -6,41 +8,44 @@ testthat::test_that("The constructor accepts NA values", {
   testthat::expect_no_error(LogicalFilterState$new(c(TRUE, NA), varname = "test"))
 })
 
-testthat::test_that("get_call returns a condition true for TRUE passed in the constructor", {
-  test <- c(TRUE)
-  filter_state <- LogicalFilterState$new(test, varname = "test")
-  testthat::expect_true(all(eval(shiny::isolate(filter_state$get_call()))))
-})
-
-testthat::test_that("get_call returns a condition TRUE for a value FALSE
-  for an array (TRUE, FALSE) passed to constructor", {
-  test <- c(TRUE, FALSE)
-  filter_state <- LogicalFilterState$new(test, varname = "test")
-  test <- FALSE
-  testthat::expect_true(eval(shiny::isolate(filter_state$get_call())))
-})
-
-testthat::test_that("set_selected does not throw when passed a scalar logical value", {
-  filter_state <- LogicalFilterState$new(c(TRUE, FALSE), varname = "test")
-  testthat::expect_no_error(filter_state$set_selected(TRUE))
-  testthat::expect_no_error(filter_state$set_selected(FALSE))
-})
-
-testthat::test_that("set_selected throws when the passed values are not coercible to logical", {
-  filter_state <- LogicalFilterState$new(c(TRUE, FALSE), varname = "test")
-  testthat::expect_error(
-    filter_state$set_selected(c(print)),
-    "The array of set values must contain values coercible to logical."
+testthat::test_that("get_call returns FALSE values from data passed to selector", {
+  filter_state <- LogicalFilterState$new(logs, varname = "logs")
+  expect_identical(
+    eval(shiny::isolate(filter_state$get_call())),
+    !logs
   )
 })
 
-testthat::test_that("get_call returns a condition true for the values passed in set_selected", {
-  filter_state <- LogicalFilterState$new(c(TRUE, FALSE), varname = "test")
+testthat::test_that("set_selected accepts a logical of length 1", {
+  filter_state <- LogicalFilterState$new(logs, varname = "logs")
+  testthat::expect_no_error(filter_state$set_selected(TRUE))
+  testthat::expect_no_error(filter_state$set_selected(FALSE))
+  testthat::expect_error(filter_state$set_selected(c(TRUE, TRUE)), "should be a logical scalar")
+})
+
+testthat::test_that("set_selected accepts a non-logical coercible to logical of length 1", {
+  filter_state <- LogicalFilterState$new(logs, varname = "logs")
+  testthat::expect_no_error(filter_state$set_selected("TRUE"))
+  testthat::expect_no_error(filter_state$set_selected("FALSE"))
+  testthat::expect_error(filter_state$set_selected(c("TRUE", "TRUE")), "should be a logical scalar")
+})
+
+testthat::test_that("get_call returns appropriate call depending on selection state", {
+  filter_state <- LogicalFilterState$new(logs, varname = "logs")
+  expect_identical(
+    shiny::isolate(filter_state$get_call()),
+    quote(!logs)
+  )
   filter_state$set_selected(TRUE)
-  test <- c(TRUE, FALSE, FALSE, TRUE)
-  testthat::expect_equal(eval(shiny::isolate(filter_state$get_call())), c(TRUE, FALSE, FALSE, TRUE))
-  filter_state$set_selected(FALSE)
-  testthat::expect_equal(eval(shiny::isolate(filter_state$get_call())), c(FALSE, TRUE, TRUE, FALSE))
+  expect_identical(
+    shiny::isolate(filter_state$get_call()),
+    quote(logs)
+  )
+  filter_state$set_keep_na(TRUE)
+  expect_identical(
+    shiny::isolate(filter_state$get_call()),
+    quote(is.na(logs) | logs)
+  )
 })
 
 testthat::test_that("set_state needs a named list with selected and keep_na elements", {
