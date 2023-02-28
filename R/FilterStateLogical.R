@@ -75,7 +75,7 @@
 #'
 LogicalFilterState <- R6::R6Class( # nolint
   "LogicalFilterState",
-  inherit = FilterState,
+  inherit = InteractiveFilterState,
 
   # public methods ----
   public = list(

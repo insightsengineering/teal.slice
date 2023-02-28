@@ -81,7 +81,7 @@
 #'
 DatetimeFilterState <- R6::R6Class( # nolint
   "DatetimeFilterState",
-  inherit = FilterState,
+  inherit = InteractiveFilterState,
 
   # public methods ----
 

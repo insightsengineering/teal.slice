@@ -54,7 +54,7 @@ testthat::test_that("state_list_push does not raise errors - DFFilterStates", {
     varlabels = NULL,
     keys = NULL
   )
-  filter_state <- FilterState$new("test", varname = "test")
+  filter_state <- InteractiveFilterState$new("test", varname = "test")
   testthat::expect_no_error(
     shiny::isolate(filter_states$state_list_push(x = filter_state, state_list_index = 1, state_id = "test"))
   )
@@ -65,7 +65,7 @@ testthat::test_that("state_list_push does not raise errors - MatrixFilterStates"
     dataname = "test",
     datalabel = "test"
   )
-  filter_state <- FilterState$new("test", varname = "test")
+  filter_state <- InteractiveFilterState$new("test", varname = "test")
   testthat::expect_no_error(
     shiny::isolate(filter_states$state_list_push(x = filter_state, state_list_index = 1, state_id = "test"))
   )
@@ -76,7 +76,7 @@ testthat::test_that("state_list_push does not raise errors - SEFilterStates", {
     dataname = "test",
     datalabel = "test"
   )
-  filter_state <- FilterState$new("test", varname = "test")
+  filter_state <- InteractiveFilterState$new("test", varname = "test")
   testthat::expect_no_error(
     shiny::isolate(filter_states$state_list_push(x = filter_state, state_list_index = 1, state_id = "test"))
   )
@@ -89,7 +89,7 @@ testthat::test_that("state_list_push does not raise errors - MAEFilterStates", {
     varlabels = NULL,
     keys = NULL
   )
-  filter_state <- FilterState$new("test", varname = "test")
+  filter_state <- InteractiveFilterState$new("test", varname = "test")
   testthat::expect_no_error(
     shiny::isolate(filter_states$state_list_push(x = filter_state, state_list_index = 1, state_id = "test"))
   )
@@ -250,7 +250,7 @@ testthat::test_that(
       varlabels = NULL,
       keys = NULL
     )
-    filter_state <- FilterState$new("test", varname = "test")
+    filter_state <- InteractiveFilterState$new("test", varname = "test")
     shiny::isolate(filter_states$state_list_push(x = filter_state, state_list_index = 1, state_id = "test"))
     testthat::expect_equal(
       names(shiny::isolate(filter_states$state_list_get(1))),
@@ -266,7 +266,7 @@ testthat::test_that(
       dataname = "test",
       datalabel = "test"
     )
-    filter_state <- FilterState$new("test", varname = "test")
+    filter_state <- InteractiveFilterState$new("test", varname = "test")
     shiny::isolate(filter_states$state_list_push(x = filter_state, state_list_index = 1, state_id = "test"))
     testthat::expect_equal(
       names(shiny::isolate(filter_states$state_list_get(1))),
@@ -282,7 +282,7 @@ testthat::test_that(
       dataname = "test",
       datalabel = "test"
     )
-    filter_state <- FilterState$new("test", varname = "test")
+    filter_state <- InteractiveFilterState$new("test", varname = "test")
     shiny::isolate(filter_states$state_list_push(x = filter_state, state_list_index = 1, state_id = "test"))
     testthat::expect_equal(
       names(shiny::isolate(filter_states$state_list_get(1))),
@@ -300,7 +300,7 @@ testthat::test_that(
       varlabels = NULL,
       keys = NULL
     )
-    filter_state <- FilterState$new("test", varname = "test")
+    filter_state <- InteractiveFilterState$new("test", varname = "test")
     shiny::isolate(filter_states$state_list_push(x = filter_state, state_list_index = 1, state_id = "test"))
     testthat::expect_equal(
       names(shiny::isolate(filter_states$state_list_get(1))),

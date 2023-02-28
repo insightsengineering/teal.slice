@@ -19,7 +19,7 @@
 #'
 EmptyFilterState <- R6::R6Class( # nolint
   "EmptyFilterState",
-  inherit = FilterState,
+  inherit = InteractiveFilterState,
 
   # public methods ----
   public = list(

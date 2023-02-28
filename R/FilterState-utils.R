@@ -91,7 +91,7 @@ init_filter_state.default <- function(x,
                                       dataname = NULL,
                                       extract_type = character(0)) {
   if (is.null(varlabel)) varlabel <- character(0)
-  FilterState$new(
+  InteractiveFilterState$new(
     x = x,
     varname = varname,
     varlabel = varlabel,
