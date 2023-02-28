@@ -129,8 +129,7 @@ testthat::test_that("get_call returns condition that specifies values passed to 
     deparse1(shiny::isolate(filter_state$get_call())),
     deparse1(
       quote(is.na(variable) |
-              variable %in% as.POSIXct(c("2000-01-01 12:00:00", "2000-01-01 12:00:01"), tz = "GMT")
-      )
+        variable %in% as.POSIXct(c("2000-01-01 12:00:00", "2000-01-01 12:00:01"), tz = "GMT"))
     )
   )
 
@@ -150,8 +149,7 @@ testthat::test_that("get_call returns condition that specifies values passed to 
     deparse1(shiny::isolate(filter_state$get_call())),
     deparse1(
       quote(is.na(variable) |
-              variable %in% as.POSIXlt(c("2000-01-01 12:00:00", "2000-01-01 12:00:01"), tz = "GMT")
-      )
+        variable %in% as.POSIXlt(c("2000-01-01 12:00:00", "2000-01-01 12:00:01"), tz = "GMT"))
     )
   )
 })
@@ -265,4 +263,3 @@ testthat::test_that(
     )
   }
 )
-

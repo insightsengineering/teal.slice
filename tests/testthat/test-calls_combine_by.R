@@ -1,4 +1,3 @@
-
 testthat::test_that("calls_combine_by - different operators", {
   testthat::expect_identical(
     calls_combine_by(calls = list(quote(a), quote(b)), operator = "&"),

@@ -60,7 +60,8 @@ testthat::test_that(
     test <- c(2:6)
     eval(shiny::isolate(filter_state$get_call()))
     testthat::expect_equal(eval(shiny::isolate(filter_state$get_call())), c(FALSE, TRUE, TRUE, TRUE, FALSE))
-  })
+  }
+)
 
 testthat::test_that("set_keep_inf switches get_call returning call that allows infinite values", {
   filter_state <- RangeFilterState$new(c(1, 8), varname = "test")

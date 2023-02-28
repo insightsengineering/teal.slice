@@ -147,7 +147,8 @@ testthat::test_that(
     testthat::expect_false(
       shiny::isolate(filter_state$is_any_filtered())
     )
-  })
+  }
+)
 
 # Format
 testthat::test_that("$format() is a FilterStates's method that accepts indent", {
