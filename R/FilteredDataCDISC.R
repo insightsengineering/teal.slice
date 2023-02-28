@@ -107,7 +107,7 @@ CDISCFilteredData <- R6::R6Class( # nolint
           if (length(parent_keys) == 0L) {
             parent_dataname
           } else {
-            sprintf("%s[, c(%s), drop = FALSE]", parent_dataname, toString(dQuote(parent_keys)))
+            sprintf("%s[, c(%s), drop = FALSE]", parent_dataname, toString(dQuote(parent_keys, q = FALSE)))
           }
         more_args <-
           if (length(parent_keys) == 0 || length(dataset_keys) == 0) {
