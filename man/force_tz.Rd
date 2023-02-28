@@ -25,6 +25,7 @@ Thus, objectively a different time stamp is returned.
 \dontrun{
 dt <- as.POSIXct("2000-01-01 12:00:00", tz = "GMT")
 force_tz(dt, tz = "CET")
+force_tz(dt, tz = "PST")
 force_tz(dt, tz = "America/Los Angeles")
 }
 }
