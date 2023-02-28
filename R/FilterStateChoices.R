@@ -114,6 +114,7 @@ ChoicesFilterState <- R6::R6Class( # nolint
       )
       super$initialize(x, varname, varlabel, dataname, extract_type)
 
+      private$data_class <- class(x)[1L]
       if (!is.factor(x)) {
         x <- factor(x, levels = as.character(sort(unique(x))))
       }
@@ -156,18 +157,21 @@ ChoicesFilterState <- R6::R6Class( # nolint
     get_call = function() {
       varname <- private$get_varname_prefixed()
       choices <- self$get_selected()
+      if (private$data_class != "factor") {
+        choices <- do.call(sprintf("as.%s", private$data_class), list(x = choices))
+      }
       fun_compare <- if (length(choices) == 1L) "==" else "%in%"
       filter_call <-
         if (inherits(choices, "Date")) {
-          call(fun_compare, varname, call("as.Date", choices))
+          call(fun_compare, varname, call("as.Date", as.character(choices)))
         } else if (inherits(choices, c("POSIXct", "POSIXlt"))) {
-          class <- class(choices)[1L] # class is lost in checkboxInput!
+          class <- class(choices)[1L]
           tzone <- Find(function(x) x != "", attr(as.POSIXlt(choices), "tzone"))
           date_fun <- as.name(switch(class,
             "POSIXct" = "as.POSIXct",
             "POSIXlt" = "as.POSIXlt"
           ))
-          call(fun_compare, varname, as.call(list(date_fun, choices, tz = tzone)))
+          call(fun_compare, varname, as.call(list(date_fun, as.character(choices), tz = tzone)))
         } else {
           # This handles numerics, characters, and factors.
           call(fun_compare, varname, choices)
@@ -214,6 +218,7 @@ ChoicesFilterState <- R6::R6Class( # nolint
 
   private = list(
     histogram_data = data.frame(),
+    data_class = character(0), # stores class of filtered variable so that it can be restored in $get_call
 
     # private methods ----
     validate_selection = function(value) {
