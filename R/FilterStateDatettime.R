@@ -116,7 +116,7 @@ DatetimeFilterState <- R6::R6Class( # nolint
       checkmate::assert_multi_class(x, c("POSIXct", "POSIXlt"))
       super$initialize(x, varname, varlabel, dataname, extract_type)
 
-      var_range <- range(x, na.rm = TRUE)
+      var_range <- as.POSIXct(round(range(x, na.rm = TRUE), units = "secs"))
       private$set_choices(var_range)
       self$set_selected(var_range)
 
@@ -387,6 +387,10 @@ DatetimeFilterState <- R6::R6Class( # nolint
             handlerExpr = {
               start_date <- input$selection_start
               end_date <- input$selection_end
+              attr(start_date, "tzone") <- "UTC"
+              attr(end_date, "tzone") <- "UTC"
+              start_date <- force_tz(start_date, attr(private$choices, "tzone"))
+              end_date <- force_tz(end_date, attr(private$choices, "tzone"))
 
               if (start_date < private$choices[1]) {
                 start_date <- private$choices[1]
@@ -395,7 +399,6 @@ DatetimeFilterState <- R6::R6Class( # nolint
               if (end_date > private$choices[2]) {
                 end_date <- private$choices[2]
               }
-
 
               self$set_selected(c(start_date, end_date))
               logger::log_trace(sprintf(
