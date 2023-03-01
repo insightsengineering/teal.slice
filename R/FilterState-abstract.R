@@ -7,38 +7,7 @@
 #' @description Abstract class to encapsulate filter states
 #'
 #' @details
-#' This class is responsible for managing single filter item within
-#' `FilteredData` class. Filter states depend on the variable type:
-#' (`logical`, `integer`, `numeric`, `factor`, `character`, `Date`, `POSIXct`, `POSIXlt`)
-#' and returns `FilterState` object with class corresponding to input variable.
-#' Class controls single filter entry in `module_single_filter_item` and returns
-#' code relevant to selected values.
-#' - `factor`, `character`: `class = ChoicesFilterState`
-#' - `numeric`: `class = RangeFilterState`
-#' - `logical`: `class = LogicalFilterState`
-#' - `Date`: `class = DateFilterState`
-#' - `POSIXct`, `POSIXlt`: `class = DatetimeFilterState`
-#' - all `NA` entries: `class: FilterState`, cannot be filtered
-#' - default: `FilterState`, cannot be filtered
-#' \cr
-#' Each variable's filter state is an `R6` object which contains `choices`,
-#' `selected`, `varname`, `dataname`, `labels`, `na_count`, `keep_na` and other
-#' variable type specific fields (`keep_inf`, `inf_count`, `timezone`).
-#' Object contains also shiny module (`ui` and `server`) which manages
-#' state of the filter through reactive values `selected`, `keep_na`, `keep_inf`
-#' which trigger `get_call()` and every R function call up in reactive
-#' chain.
-#' \cr
-#' \cr
-#' @section Modifying state:
-#' Modifying a `FilterState` object is possible in three scenarios:
-#' * In the interactive session by directly specifying values of `selected`,
-#'   `keep_na` or `keep_inf` using `set_state` method (to update all at once),
-#'   or using `set_selected`, `set_keep_na` or `set_keep_inf`
-#' * In a running application by changing appropriate inputs
-#' * In a running application by using [filter_state_api] which directly uses `set_state` method
-#'  of the `FilterState` object.
-#'
+#' This abstract class to encapsulate [InteractiveFilterState]
 #' @keywords internal
 FilterState <- R6::R6Class( # nolint
   "FilterState",
