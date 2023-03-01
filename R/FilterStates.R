@@ -1,4 +1,4 @@
-#' @title `InteractiveFilterStates` R6 class
+#' @title `FilterStates` R6 class
 #'
 #' @description
 #' Abstract class that manages adding and removing `FilterState` objects
