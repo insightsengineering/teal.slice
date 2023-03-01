@@ -47,10 +47,7 @@ FilterState <- R6::R6Class( # nolint
     },
 
     #' @description
-    #' Returns reproducible condition call for current selection relevant
-    #' for selected variable type.
-    #' Method is using internal reactive values which makes it reactive
-    #' and must be executed in reactive or isolated context.
+    #' Returns reproducible condition call
     #'
     get_call = function() {
       NULL
