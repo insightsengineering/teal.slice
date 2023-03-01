@@ -28,7 +28,7 @@ isolate(filter_state$get_call())
 # working filter in an app
 library(shiny)
 
-datetimes <- as.POSIXct(c("2012-01-01 12:00:00", "2020-01-01 12:00:00"), tz = "MSK")
+datetimes <- as.POSIXct(c("2012-01-01 12:00:00", "2020-01-01 12:00:00"))
 data_datetime <- c(seq(from = datetimes[1], to = datetimes[2], length.out = 100), NA)
 filter_state_datetime <- DatetimeFilterState$new(
   x = data_datetime,
