@@ -104,34 +104,3 @@ get_teal_bs_theme <- function() {
     bs_theme
   }
 }
-
-#' Change timezone in a date-time object.
-#'
-#' Sets a new `tzone` attribute in a `POSIXct` object without changing the clock time.
-#'
-#' To be absolutely clear, the clock remains the same but the timezone changes.
-#' Thus, objectively a different time stamp is returned.
-#'
-#' @param dt a `POSIXct` vector
-#' @param tz `character` string specifying time zone
-#'
-#' @return A `POSIXct` vector showing the same time but with a different time zone.
-#'
-#' @examples
-#' \dontrun{
-#' dt <- as.POSIXct("2000-01-01 12:00:00", tz = "GMT")
-#' force_tz(dt, tz = "CET")
-#' force_tz(dt, tz = "PST")
-#' force_tz(dt, tz = "America/Los Angeles")
-#' }
-#' @keywords internal
-#'
-force_tz <- function(dt, tz = Sys.timezone()) {
-  checkmate::assert_posixct(dt)
-  checkmate::assert_string(tz)
-
-  dt <- as.POSIXlt(dt)
-  attr(dt, "tzone") <- tz
-  dt <- as.POSIXct(dt)
-  dt
-}

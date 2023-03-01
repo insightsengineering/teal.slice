@@ -350,8 +350,10 @@ DatetimeFilterState <- R6::R6Class( # nolint
             ignoreInit = TRUE, # on init selected == default, so no need to trigger
             eventExpr = self$get_selected(),
             handlerExpr = {
-              if (!all(self$get_selected() == c(input$selection_start, input$selection_end))) {
-                if (self$get_selected()[1] != input$selection_start) {
+              start_date <- input$selection_start
+              end_date <- input$selection_end
+              if (!all(self$get_selected() == c(start_date, end_date))) {
+                if (self$get_selected()[1] != start_date) {
                   shinyWidgets::updateAirDateInput(
                     session = session,
                     inputId = "selection_start",
@@ -359,7 +361,7 @@ DatetimeFilterState <- R6::R6Class( # nolint
                   )
                 }
 
-                if (self$get_selected()[2] != input$selection_end) {
+                if (self$get_selected()[2] != end_date) {
                   shinyWidgets::updateAirDateInput(
                     session = session,
                     inputId = "selection_end",
@@ -387,10 +389,9 @@ DatetimeFilterState <- R6::R6Class( # nolint
             handlerExpr = {
               start_date <- input$selection_start
               end_date <- input$selection_end
-              attr(start_date, "tzone") <- "UTC"
-              attr(end_date, "tzone") <- "UTC"
-              start_date <- force_tz(start_date, attr(private$choices, "tzone"))
-              end_date <- force_tz(end_date, attr(private$choices, "tzone"))
+              tzone <- Find(function(x) x != "", attr(as.POSIXlt(private$choices), "tzone"))
+              attr(start_date, "tzone") <- tzone
+              attr(end_date, "tzone") <- tzone
 
               if (start_date < private$choices[1]) {
                 start_date <- private$choices[1]
