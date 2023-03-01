@@ -1,7 +1,7 @@
-#' @title `FilterStates` R6 class
+#' @title `InteractiveFilterStates` R6 class
 #'
 #' @description
-#' Abstract class that manages adding and removing `FilterState` objects
+#' Abstract class that manages adding and removing `InteractiveFilterState` objects
 #' and builds a \emph{subset expression}.
 #'
 #' A `FilterStates` object tracks all subsetting expressions
@@ -11,7 +11,7 @@
 #' This expression is hereafter referred to as \emph{subset expression}.
 #'
 #' The \emph{subset expression} is constructed differently for different
-#' classes of the underlying data object and `FilterStates` subclasses.
+#' classes of the underlying data object and `InteractiveFilterStates` subclasses.
 #' Currently implemented for `data.frame`, `matrix`,
 #' `SummarizedExperiment`, and `MultiAssayExperiment`.
 #'
@@ -461,7 +461,7 @@ FilterStates <- R6::R6Class( # nolint
     # @return `moduleServer` function which returns `NULL`
     #
     insert_filter_state_ui = function(id, filter_state, state_list_index, state_id) {
-      checkmate::assert_class(filter_state, "FilterState")
+      checkmate::assert_class(filter_state, "InteractiveFilterState")
       checkmate::assert(
         checkmate::check_int(state_list_index),
         checkmate::check_character(state_list_index, len = 1),
@@ -505,13 +505,13 @@ FilterStates <- R6::R6Class( # nolint
             handlerExpr = {
               logger::log_trace(paste(
                 "{ class(self)[1] }$insert_filter_state_ui@1",
-                "removing FilterState from state_list '{ state_list_index }',",
+                "removing InteractiveFilterState from state_list '{ state_list_index }',",
                 "dataname: { private$dataname }"
               ))
               self$state_list_remove(state_list_index, state_id)
               logger::log_trace(paste(
                 "{ class(self)[1] }$insert_filter_state_ui@1",
-                "removed FilterState from state_list '{ state_list_index }',",
+                "removed InteractiveFilterState from state_list '{ state_list_index }',",
                 "dataname: { private$dataname }"
               ))
             }

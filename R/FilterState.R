@@ -4,7 +4,7 @@
 #'
 #' @title FilterState Abstract Class
 #'
-#' @description Abstract class to encapsulate filter states
+#' @description Abstract class to encapsulate single filter state
 #'
 #' @details
 #' This class is responsible for managing single filter item within
@@ -42,6 +42,7 @@
 #' @keywords internal
 InteractiveFilterState <- R6::R6Class( # nolint
   "FilterState",
+  inherit = FilterState,
 
   # public methods ----
   public = list(

@@ -1,6 +1,6 @@
-#' Initializes `FilterState`
+#' Initializes `InteractiveFilterState`
 #'
-#' Initializes `FilterState` depending on a variable class.\cr
+#' Initializes `InteractiveFilterState` depending on a variable class.\cr
 #' @param x (`vector`)\cr
 #'   values of the variable used in filter
 #'

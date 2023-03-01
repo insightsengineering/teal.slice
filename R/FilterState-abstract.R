@@ -54,8 +54,7 @@ FilterState <- R6::R6Class( # nolint
     #' @param varlabel (`character(1)`)\cr
     #'   label of the variable (optional).
     #' @param dataname (`character(1)`)\cr
-    #'   name of dataset where `x` is taken from. Must be specified if `extract_type` argument
-    #'   is not empty.
+    #'   name of dataset where `x` is taken from.
     #' @return self invisibly
     #'
     initialize = function(x,

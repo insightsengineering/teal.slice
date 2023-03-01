@@ -1,5 +1,5 @@
 #' @name RangeFilterState
-#' @title `FilterState` object for numeric variable
+#' @title `InteractiveFilterState` object for numeric variable
 #' @description Manages choosing a numeric range
 #' @docType class
 #' @keywords internal
@@ -93,7 +93,7 @@ RangeFilterState <- R6::R6Class( # nolint
   public = list(
 
     #' @description
-    #' Initialize a `FilterState` object
+    #' Initialize a `InteractiveFilterState` object for range selection
     #' @param x (`numeric`)\cr
     #'   values of the variable used in filter
     #' @param x_reactive (`reactive`)\cr

@@ -1,6 +1,6 @@
 #' @name EmptyFilterState
-#' @title `FilterState` object for empty variable
-#' @description `FilterState` subclass representing an empty variable
+#' @title `InteractiveFilterState` object for empty variable
+#' @description `InteractiveFilterState` subclass representing an empty variable
 #' @docType class
 #' @keywords internal
 #'
