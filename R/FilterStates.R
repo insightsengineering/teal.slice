@@ -11,7 +11,7 @@
 #' This expression is hereafter referred to as \emph{subset expression}.
 #'
 #' The \emph{subset expression} is constructed differently for different
-#' classes of the underlying data object and `InteractiveFilterStates` subclasses.
+#' classes of the underlying data object and `FilterStates` subclasses.
 #' Currently implemented for `data.frame`, `matrix`,
 #' `SummarizedExperiment`, and `MultiAssayExperiment`.
 #'
