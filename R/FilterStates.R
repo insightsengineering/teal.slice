@@ -1,7 +1,7 @@
 #' @title `InteractiveFilterStates` R6 class
 #'
 #' @description
-#' Abstract class that manages adding and removing `InteractiveFilterState` objects
+#' Abstract class that manages adding and removing `FilterState` objects
 #' and builds a \emph{subset expression}.
 #'
 #' A `FilterStates` object tracks all subsetting expressions
