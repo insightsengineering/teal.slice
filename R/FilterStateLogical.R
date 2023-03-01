@@ -1,5 +1,5 @@
 #' @name LogicalFilterState
-#' @title `FilterState` object for logical variable
+#' @title `InteractiveFilterState` object for logical variable
 #' @description Manages choosing a logical state
 #' @docType class
 #' @keywords internal
@@ -80,7 +80,7 @@
 #'
 LogicalFilterState <- R6::R6Class( # nolint
   "LogicalFilterState",
-  inherit = FilterState,
+  inherit = InteractiveFilterState,
 
   # public methods ----
   public = list(

@@ -1,5 +1,5 @@
 #' @name ChoicesFilterState
-#' @title `FilterState` object for factor or character variable
+#' @title `InteractiveFilterState` object for factor or character variable
 #' @description Manages choosing elements from a set
 #' @docType class
 #' @keywords internal
@@ -84,7 +84,7 @@
 #'
 ChoicesFilterState <- R6::R6Class( # nolint
   "ChoicesFilterState",
-  inherit = FilterState,
+  inherit = InteractiveFilterState,
 
   # public methods ----
 

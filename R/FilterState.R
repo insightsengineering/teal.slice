@@ -1,16 +1,16 @@
-#' @name FilterState
+#' @name InteractiveFilterState
 #' @docType class
 #'
 #'
-#' @title FilterState Abstract Class
+#' @title InteractiveFilterState Abstract Class
 #'
-#' @description Abstract class to encapsulate filter states
+#' @description Abstract class to encapsulate single filter state
 #'
 #' @details
 #' This class is responsible for managing single filter item within
 #' `FilteredData` class. Filter states depend on the variable type:
 #' (`logical`, `integer`, `numeric`, `factor`, `character`, `Date`, `POSIXct`, `POSIXlt`)
-#' and returns `FilterState` object with class corresponding to input variable.
+#' and returns `InteractiveFilterState` object with class corresponding to input variable.
 #' Class controls single filter entry in `module_single_filter_item` and returns
 #' code relevant to selected values.
 #' - `factor`, `character`: `class = ChoicesFilterState`
@@ -31,22 +31,23 @@
 #' \cr
 #' \cr
 #' @section Modifying state:
-#' Modifying a `FilterState` object is possible in three scenarios:
+#' Modifying a `InteractiveFilterState` object is possible in three scenarios:
 #' * In the interactive session by directly specifying values of `selected`,
 #'   `keep_na` or `keep_inf` using `set_state` method (to update all at once),
 #'   or using `set_selected`, `set_keep_na` or `set_keep_inf`
 #' * In a running application by changing appropriate inputs
 #' * In a running application by using [filter_state_api] which directly uses `set_state` method
-#'  of the `FilterState` object.
+#'  of the `InteractiveFilterState` object.
 #'
 #' @keywords internal
-FilterState <- R6::R6Class( # nolint
-  "FilterState",
+InteractiveFilterState <- R6::R6Class( # nolint
+  "InteractiveFilterState",
+  inherit = FilterState,
 
   # public methods ----
   public = list(
     #' @description
-    #' Initialize a `FilterState` object
+    #' Initialize a `InteractiveFilterState` object
     #' @param x (`vector`)\cr
     #'   values of the variable used in filter
     #' @param x_reactive (`reactive`)\cr
