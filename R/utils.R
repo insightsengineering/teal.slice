@@ -105,7 +105,7 @@ get_teal_bs_theme <- function() {
   }
 }
 
-#' Change timezone in a datetime object.
+#' Change timezone in a date-time object.
 #'
 #' Sets a new `tzone` attribute in a `POSIXct` object without changing the clock time.
 #'

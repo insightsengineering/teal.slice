@@ -2,7 +2,7 @@
 % Please edit documentation in R/utils.R
 \name{force_tz}
 \alias{force_tz}
-\title{Change timezone in a datetime object.}
+\title{Change timezone in a date-time object.}
 \usage{
 force_tz(dt, tz = Sys.timezone())
 }
