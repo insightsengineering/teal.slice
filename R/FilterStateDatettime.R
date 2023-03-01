@@ -116,7 +116,7 @@ DatetimeFilterState <- R6::R6Class( # nolint
       checkmate::assert_multi_class(x, c("POSIXct", "POSIXlt"))
       super$initialize(x, varname, varlabel, dataname, extract_type)
 
-      var_range <- as.POSIXct(round(range(x, na.rm = TRUE), units = "secs"))
+      var_range <- as.POSIXct(trunc(range(x, na.rm = TRUE), units = "secs"))
       private$set_choices(var_range)
       self$set_selected(var_range)
 
@@ -164,13 +164,14 @@ DatetimeFilterState <- R6::R6Class( # nolint
     #' `<varname> >= as.POSIXct(<min>) & <varname> <= <max>)`
     #' with optional `is.na(<varname>)`.
     get_call = function() {
-      tzone <- Find(function(x) x != "", attr(as.POSIXlt(self$get_selected()), "tzone"))
-      class <- class(self$get_selected())[1L]
+      choices <- self$get_selected()
+      tzone <- Find(function(x) x != "", attr(as.POSIXlt(choices), "tzone"))
+      class <- class(choices)[1L]
       date_fun <- as.name(switch(class,
         "POSIXct" = "as.POSIXct",
         "POSIXlt" = "as.POSIXlt"
       ))
-      choices <- as.character(self$get_selected() + c(0, 1))
+      choices <- as.character(choices + c(0 , 1))
       filter_call <-
         call(
           "&",
