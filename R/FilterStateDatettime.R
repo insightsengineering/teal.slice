@@ -116,18 +116,9 @@ DatetimeFilterState <- R6::R6Class( # nolint
       checkmate::assert_multi_class(x, c("POSIXct", "POSIXlt"))
       super$initialize(x, varname, varlabel, dataname, extract_type)
 
-      var_range <- range(x, na.rm = TRUE)
+      var_range <- as.POSIXct(trunc(range(x, na.rm = TRUE), units = "secs"))
       private$set_choices(var_range)
       self$set_selected(var_range)
-
-      if (shiny::isRunning()) {
-        session <- getDefaultReactiveDomain()
-        if (!is.null(session$userData$timezone)) {
-          private$timezone <- session$userData$timezone
-        }
-      } else if (isTRUE(attr(x, "tz") != "")) {
-        private$timezone <- attr(x, "tz")
-      }
 
       return(invisible(self))
     },
@@ -170,18 +161,32 @@ DatetimeFilterState <- R6::R6Class( # nolint
     #' @description
     #' Returns reproducible condition call for current selection.
     #' For this class returned call looks like
-    #' `<varname> >= as.POSIXct(<min>, tz = <timezone>) & <varname> <= <max>, tz = <timezone>)`
+    #' `<varname> >= as.POSIXct(<min>) & <varname> <= <max>)`
     #' with optional `is.na(<varname>)`.
     get_call = function() {
-      filter_call <- call_condition_range_posixct(
-        varname = private$get_varname_prefixed(),
-        range = self$get_selected(),
-        timezone = private$timezone
-      )
-
-      filter_call <- private$add_keep_na_call(filter_call)
-
-      filter_call
+      choices <- self$get_selected()
+      tzone <- Find(function(x) x != "", attr(as.POSIXlt(choices), "tzone"))
+      class <- class(choices)[1L]
+      date_fun <- as.name(switch(class,
+        "POSIXct" = "as.POSIXct",
+        "POSIXlt" = "as.POSIXlt"
+      ))
+      choices <- as.character(choices + c(0 , 1))
+      filter_call <-
+        call(
+          "&",
+          call(
+            ">=",
+            private$get_varname_prefixed(),
+            as.call(list(date_fun, choices[1L], tz = tzone))
+          ),
+          call(
+            "<",
+            private$get_varname_prefixed(),
+            as.call(list(date_fun, choices[2L], tz = tzone))
+          )
+        )
+      private$add_keep_na_call(filter_call)
     },
 
     #' @description
@@ -207,13 +212,10 @@ DatetimeFilterState <- R6::R6Class( # nolint
     }
   ),
 
-  # private fields ----
+  # private members ----
 
   private = list(
-    timezone = Sys.timezone(),
-
     # private methods ----
-
     validate_selection = function(value) {
       if (!(is(value, "POSIXct") || is(value, "POSIXlt"))) {
         stop(
@@ -349,8 +351,10 @@ DatetimeFilterState <- R6::R6Class( # nolint
             ignoreInit = TRUE, # on init selected == default, so no need to trigger
             eventExpr = self$get_selected(),
             handlerExpr = {
-              if (!all(self$get_selected() == c(input$selection_start, input$selection_end))) {
-                if (self$get_selected()[1] != input$selection_start) {
+              start_date <- input$selection_start
+              end_date <- input$selection_end
+              if (!all(self$get_selected() == c(start_date, end_date))) {
+                if (self$get_selected()[1] != start_date) {
                   shinyWidgets::updateAirDateInput(
                     session = session,
                     inputId = "selection_start",
@@ -358,7 +362,7 @@ DatetimeFilterState <- R6::R6Class( # nolint
                   )
                 }
 
-                if (self$get_selected()[2] != input$selection_end) {
+                if (self$get_selected()[2] != end_date) {
                   shinyWidgets::updateAirDateInput(
                     session = session,
                     inputId = "selection_end",
@@ -386,6 +390,9 @@ DatetimeFilterState <- R6::R6Class( # nolint
             handlerExpr = {
               start_date <- input$selection_start
               end_date <- input$selection_end
+              tzone <- Find(function(x) x != "", attr(as.POSIXlt(private$choices), "tzone"))
+              attr(start_date, "tzone") <- tzone
+              attr(end_date, "tzone") <- tzone
 
               if (start_date < private$choices[1]) {
                 start_date <- private$choices[1]
@@ -394,7 +401,6 @@ DatetimeFilterState <- R6::R6Class( # nolint
               if (end_date > private$choices[2]) {
                 end_date <- private$choices[2]
               }
-
 
               self$set_selected(c(start_date, end_date))
               logger::log_trace(sprintf(
