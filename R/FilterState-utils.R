@@ -1,6 +1,6 @@
-#' Initializes `FilterState`
+#' Initializes `InteractiveFilterState`
 #'
-#' Initializes `FilterState` depending on a variable class.\cr
+#' Initializes `InteractiveFilterState` depending on a variable class.\cr
 #' @param x (`vector`)\cr
 #'   values of the variable used in filter
 #'
@@ -101,7 +101,7 @@ init_filter_state.default <- function(x,
                                       dataname = NULL,
                                       extract_type = character(0)) {
   if (is.null(varlabel)) varlabel <- character(0)
-  FilterState$new(
+  InteractiveFilterState$new(
     x = x,
     x_reactive = x_reactive,
     varname = varname,

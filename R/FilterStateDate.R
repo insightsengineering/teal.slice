@@ -1,5 +1,5 @@
 #' @name DateFilterState
-#' @title `FilterState` object for Date variable
+#' @title `InteractiveFilterState` object for Date variable
 #' @description Manages choosing a range of Dates
 #' @docType class
 #' @keywords internal
@@ -84,7 +84,7 @@
 #'
 DateFilterState <- R6::R6Class( # nolint
   "DateFilterState",
-  inherit = FilterState,
+  inherit = InteractiveFilterState,
 
   # public methods ----
 

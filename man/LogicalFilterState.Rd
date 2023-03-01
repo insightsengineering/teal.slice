@@ -3,7 +3,7 @@
 \docType{class}
 \name{LogicalFilterState}
 \alias{LogicalFilterState}
-\title{\code{FilterState} object for logical variable}
+\title{\code{InteractiveFilterState} object for logical variable}
 \value{
 invisibly \code{NULL}.
 }
@@ -96,8 +96,8 @@ filter <- teal.slice:::LogicalFilterState$new(c(TRUE), varname = "name")
 filter$set_selected(TRUE)
 }
 \keyword{internal}
-\section{Super class}{
-\code{\link[teal.slice:FilterState]{teal.slice::FilterState}} -> \code{LogicalFilterState}
+\section{Super classes}{
+\code{\link[teal.slice:FilterState]{teal.slice::FilterState}} -> \code{teal.slice::InteractiveFilterState} -> \code{LogicalFilterState}
 }
 \section{Methods}{
 \subsection{Public methods}{
@@ -112,20 +112,20 @@ filter$set_selected(TRUE)
 \if{html}{\out{
 <details><summary>Inherited methods</summary>
 <ul>
-<li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilterState" data-id="destroy_observers"><a href='../../teal.slice/html/FilterState.html#method-FilterState-destroy_observers'><code>teal.slice::FilterState$destroy_observers()</code></a></span></li>
-<li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilterState" data-id="format"><a href='../../teal.slice/html/FilterState.html#method-FilterState-format'><code>teal.slice::FilterState$format()</code></a></span></li>
-<li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilterState" data-id="get_dataname"><a href='../../teal.slice/html/FilterState.html#method-FilterState-get_dataname'><code>teal.slice::FilterState$get_dataname()</code></a></span></li>
-<li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilterState" data-id="get_keep_na"><a href='../../teal.slice/html/FilterState.html#method-FilterState-get_keep_na'><code>teal.slice::FilterState$get_keep_na()</code></a></span></li>
-<li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilterState" data-id="get_selected"><a href='../../teal.slice/html/FilterState.html#method-FilterState-get_selected'><code>teal.slice::FilterState$get_selected()</code></a></span></li>
-<li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilterState" data-id="get_state"><a href='../../teal.slice/html/FilterState.html#method-FilterState-get_state'><code>teal.slice::FilterState$get_state()</code></a></span></li>
-<li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilterState" data-id="get_varlabel"><a href='../../teal.slice/html/FilterState.html#method-FilterState-get_varlabel'><code>teal.slice::FilterState$get_varlabel()</code></a></span></li>
-<li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilterState" data-id="get_varname"><a href='../../teal.slice/html/FilterState.html#method-FilterState-get_varname'><code>teal.slice::FilterState$get_varname()</code></a></span></li>
-<li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilterState" data-id="print"><a href='../../teal.slice/html/FilterState.html#method-FilterState-print'><code>teal.slice::FilterState$print()</code></a></span></li>
-<li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilterState" data-id="server"><a href='../../teal.slice/html/FilterState.html#method-FilterState-server'><code>teal.slice::FilterState$server()</code></a></span></li>
-<li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilterState" data-id="set_keep_na"><a href='../../teal.slice/html/FilterState.html#method-FilterState-set_keep_na'><code>teal.slice::FilterState$set_keep_na()</code></a></span></li>
-<li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilterState" data-id="set_na_rm"><a href='../../teal.slice/html/FilterState.html#method-FilterState-set_na_rm'><code>teal.slice::FilterState$set_na_rm()</code></a></span></li>
-<li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilterState" data-id="set_state"><a href='../../teal.slice/html/FilterState.html#method-FilterState-set_state'><code>teal.slice::FilterState$set_state()</code></a></span></li>
-<li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilterState" data-id="ui"><a href='../../teal.slice/html/FilterState.html#method-FilterState-ui'><code>teal.slice::FilterState$ui()</code></a></span></li>
+<li><span class="pkg-link" data-pkg="teal.slice" data-topic="InteractiveFilterState" data-id="destroy_observers"><a href='../../teal.slice/html/InteractiveFilterState.html#method-InteractiveFilterState-destroy_observers'><code>teal.slice::InteractiveFilterState$destroy_observers()</code></a></span></li>
+<li><span class="pkg-link" data-pkg="teal.slice" data-topic="InteractiveFilterState" data-id="format"><a href='../../teal.slice/html/InteractiveFilterState.html#method-InteractiveFilterState-format'><code>teal.slice::InteractiveFilterState$format()</code></a></span></li>
+<li><span class="pkg-link" data-pkg="teal.slice" data-topic="InteractiveFilterState" data-id="get_dataname"><a href='../../teal.slice/html/InteractiveFilterState.html#method-InteractiveFilterState-get_dataname'><code>teal.slice::InteractiveFilterState$get_dataname()</code></a></span></li>
+<li><span class="pkg-link" data-pkg="teal.slice" data-topic="InteractiveFilterState" data-id="get_keep_na"><a href='../../teal.slice/html/InteractiveFilterState.html#method-InteractiveFilterState-get_keep_na'><code>teal.slice::InteractiveFilterState$get_keep_na()</code></a></span></li>
+<li><span class="pkg-link" data-pkg="teal.slice" data-topic="InteractiveFilterState" data-id="get_selected"><a href='../../teal.slice/html/InteractiveFilterState.html#method-InteractiveFilterState-get_selected'><code>teal.slice::InteractiveFilterState$get_selected()</code></a></span></li>
+<li><span class="pkg-link" data-pkg="teal.slice" data-topic="InteractiveFilterState" data-id="get_state"><a href='../../teal.slice/html/InteractiveFilterState.html#method-InteractiveFilterState-get_state'><code>teal.slice::InteractiveFilterState$get_state()</code></a></span></li>
+<li><span class="pkg-link" data-pkg="teal.slice" data-topic="InteractiveFilterState" data-id="get_varlabel"><a href='../../teal.slice/html/InteractiveFilterState.html#method-InteractiveFilterState-get_varlabel'><code>teal.slice::InteractiveFilterState$get_varlabel()</code></a></span></li>
+<li><span class="pkg-link" data-pkg="teal.slice" data-topic="InteractiveFilterState" data-id="get_varname"><a href='../../teal.slice/html/InteractiveFilterState.html#method-InteractiveFilterState-get_varname'><code>teal.slice::InteractiveFilterState$get_varname()</code></a></span></li>
+<li><span class="pkg-link" data-pkg="teal.slice" data-topic="InteractiveFilterState" data-id="print"><a href='../../teal.slice/html/InteractiveFilterState.html#method-InteractiveFilterState-print'><code>teal.slice::InteractiveFilterState$print()</code></a></span></li>
+<li><span class="pkg-link" data-pkg="teal.slice" data-topic="InteractiveFilterState" data-id="server"><a href='../../teal.slice/html/InteractiveFilterState.html#method-InteractiveFilterState-server'><code>teal.slice::InteractiveFilterState$server()</code></a></span></li>
+<li><span class="pkg-link" data-pkg="teal.slice" data-topic="InteractiveFilterState" data-id="set_keep_na"><a href='../../teal.slice/html/InteractiveFilterState.html#method-InteractiveFilterState-set_keep_na'><code>teal.slice::InteractiveFilterState$set_keep_na()</code></a></span></li>
+<li><span class="pkg-link" data-pkg="teal.slice" data-topic="InteractiveFilterState" data-id="set_na_rm"><a href='../../teal.slice/html/InteractiveFilterState.html#method-InteractiveFilterState-set_na_rm'><code>teal.slice::InteractiveFilterState$set_na_rm()</code></a></span></li>
+<li><span class="pkg-link" data-pkg="teal.slice" data-topic="InteractiveFilterState" data-id="set_state"><a href='../../teal.slice/html/InteractiveFilterState.html#method-InteractiveFilterState-set_state'><code>teal.slice::InteractiveFilterState$set_state()</code></a></span></li>
+<li><span class="pkg-link" data-pkg="teal.slice" data-topic="InteractiveFilterState" data-id="ui"><a href='../../teal.slice/html/InteractiveFilterState.html#method-InteractiveFilterState-ui'><code>teal.slice::InteractiveFilterState$ui()</code></a></span></li>
 </ul>
 </details>
 }}
