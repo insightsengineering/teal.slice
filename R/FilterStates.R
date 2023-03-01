@@ -461,7 +461,7 @@ FilterStates <- R6::R6Class( # nolint
     # @return `moduleServer` function which returns `NULL`
     #
     insert_filter_state_ui = function(id, filter_state, state_list_index, state_id) {
-      checkmate::assert_class(filter_state, "InteractiveFilterState")
+      checkmate::assert_class(filter_state, "FilterState")
       checkmate::assert(
         checkmate::check_int(state_list_index),
         checkmate::check_character(state_list_index, len = 1),
