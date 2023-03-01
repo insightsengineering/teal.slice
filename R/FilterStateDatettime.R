@@ -171,7 +171,7 @@ DatetimeFilterState <- R6::R6Class( # nolint
         "POSIXct" = "as.POSIXct",
         "POSIXlt" = "as.POSIXlt"
       ))
-      choices <- as.character(choices + c(0 , 1))
+      choices <- as.character(choices + c(0, 1))
       filter_call <-
         call(
           "&",
