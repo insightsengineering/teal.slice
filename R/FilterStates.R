@@ -511,7 +511,7 @@ FilterStates <- R6::R6Class( # nolint
               self$state_list_remove(state_list_index, state_id)
               logger::log_trace(paste(
                 "{ class(self)[1] }$insert_filter_state_ui@1",
-                "removed InteractiveFilterState from state_list '{ state_list_index }',",
+                "removed FilterState from state_list '{ state_list_index }',",
                 "dataname: { private$dataname }"
               ))
             }
