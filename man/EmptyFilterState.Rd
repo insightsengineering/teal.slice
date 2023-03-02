@@ -22,7 +22,7 @@ isolate(filter_state$get_call())
 }
 \keyword{internal}
 \section{Super classes}{
-\code{\link[teal.slice:FilterState]{teal.slice::FilterState}} -> \code{teal.slice::InteractiveFilterState} -> \code{EmptyFilterState}
+\code{\link[teal.slice:FilterState]{teal.slice::FilterState}} -> \code{\link[teal.slice:InteractiveFilterState]{teal.slice::InteractiveFilterState}} -> \code{EmptyFilterState}
 }
 \section{Methods}{
 \subsection{Public methods}{

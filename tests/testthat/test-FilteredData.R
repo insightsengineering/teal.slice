@@ -188,7 +188,7 @@ testthat::test_that(
         filter = quote(
           mtcars <- dplyr::filter(
             mtcars,
-            cyl %in% c("4", "6")
+            cyl %in% c(4, 6)
           )
         )
       )
@@ -418,7 +418,7 @@ testthat::test_that(
         filter = quote(
           mtcars <- dplyr::filter(
             mtcars,
-            cyl %in% c("4", "6")
+            cyl %in% c(4, 6)
           )
         )
       )

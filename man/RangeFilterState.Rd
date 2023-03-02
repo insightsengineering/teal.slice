@@ -105,7 +105,7 @@ filter$set_selected(c(2, 3))
 }
 \keyword{internal}
 \section{Super classes}{
-\code{\link[teal.slice:FilterState]{teal.slice::FilterState}} -> \code{teal.slice::InteractiveFilterState} -> \code{RangeFilterState}
+\code{\link[teal.slice:FilterState]{teal.slice::FilterState}} -> \code{\link[teal.slice:InteractiveFilterState]{teal.slice::InteractiveFilterState}} -> \code{RangeFilterState}
 }
 \section{Methods}{
 \subsection{Public methods}{

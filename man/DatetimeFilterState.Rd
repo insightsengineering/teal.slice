@@ -104,7 +104,7 @@ filter$set_selected(c(date + 1, date + 2))
 }
 \keyword{internal}
 \section{Super classes}{
-\code{\link[teal.slice:FilterState]{teal.slice::FilterState}} -> \code{teal.slice::InteractiveFilterState} -> \code{DatetimeFilterState}
+\code{\link[teal.slice:FilterState]{teal.slice::FilterState}} -> \code{\link[teal.slice:InteractiveFilterState]{teal.slice::InteractiveFilterState}} -> \code{DatetimeFilterState}
 }
 \section{Methods}{
 \subsection{Public methods}{
@@ -227,7 +227,7 @@ logical scalar
 \subsection{Method \code{get_call()}}{
 Returns reproducible condition call for current selection.
 For this class returned call looks like
-\verb{<varname> >= as.POSIXct(<min>, tz = <timezone>) & <varname> <= <max>, tz = <timezone>)}
+\verb{<varname> >= as.POSIXct(<min>) & <varname> <= <max>)}
 with optional \verb{is.na(<varname>)}.
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{DatetimeFilterState$get_call()}\if{html}{\out{</div>}}

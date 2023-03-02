@@ -104,7 +104,7 @@ filter$set_selected(c(date + 1, date + 2))
 }
 \keyword{internal}
 \section{Super classes}{
-\code{\link[teal.slice:FilterState]{teal.slice::FilterState}} -> \code{teal.slice::InteractiveFilterState} -> \code{DateFilterState}
+\code{\link[teal.slice:FilterState]{teal.slice::FilterState}} -> \code{\link[teal.slice:InteractiveFilterState]{teal.slice::InteractiveFilterState}} -> \code{DateFilterState}
 }
 \section{Methods}{
 \subsection{Public methods}{

@@ -98,7 +98,7 @@ filter$set_selected(c("c", "a"))
 }
 \keyword{internal}
 \section{Super classes}{
-\code{\link[teal.slice:FilterState]{teal.slice::FilterState}} -> \code{teal.slice::InteractiveFilterState} -> \code{ChoicesFilterState}
+\code{\link[teal.slice:FilterState]{teal.slice::FilterState}} -> \code{\link[teal.slice:InteractiveFilterState]{teal.slice::InteractiveFilterState}} -> \code{ChoicesFilterState}
 }
 \section{Methods}{
 \subsection{Public methods}{
