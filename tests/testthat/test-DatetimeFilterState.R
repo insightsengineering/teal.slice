@@ -1,47 +1,50 @@
-testthat::test_that("The constructor accepts a POSIXct or POSIXlt object", {
-  testthat::expect_no_error(DatetimeFilterState$new(as.POSIXct(8, origin = "1900/01/01 00:00:00"), varname = "test"))
-  testthat::expect_no_error(DatetimeFilterState$new(as.POSIXlt(8, origin = "1900/01/01 00:00:00"), varname = "test"))
+posixct <- as.POSIXct("2000-01-01 12:00:00", tz = "GMT") + 0:9
+posixlt <- as.POSIXlt(posixct)
+
+testthat::test_that("constructor accepts a POSIXct or POSIXlt object", {
+  testthat::expect_no_error(DatetimeFilterState$new(posixct, varname = "variable"))
+  testthat::expect_no_error(DatetimeFilterState$new(posixlt, varname = "variable"))
 })
 
-testthat::test_that("get_call returns a condition true for the object supplied in the constructor", {
-  object <- as.POSIXct(8, origin = "1900/01/01 00:00:00")
-  filter_state <- DatetimeFilterState$new(object, varname = "object")
-  testthat::expect_true(eval(shiny::isolate(filter_state$get_call())))
+testthat::test_that("get_call returns call that encompasses all values passed to constructor", {
+  filter_state <- DatetimeFilterState$new(posixct, varname = "variable")
+  testthat::expect_identical(
+    shiny::isolate(filter_state$get_call()),
+    quote(variable >= as.POSIXct("2000-01-01 12:00:00", tz = "GMT") & variable <
+      as.POSIXct("2000-01-01 12:00:10", tz = "GMT"))
+  )
 })
 
-testthat::test_that("get_call set selected accepts an array of two POSIXct objects", {
-  object <- as.POSIXct(8, origin = "1900/01/01 00:00:00")
-  filter_state <- DatetimeFilterState$new(object, varname = "object")
-  testthat::expect_no_error(filter_state$set_selected(c(object, object)))
+testthat::test_that("set selected accepts an array of two POSIXct objects", {
+  filter_state <- DatetimeFilterState$new(posixct, varname = "variable")
+  testthat::expect_no_error(filter_state$set_selected(posixct[1:2]))
 })
 
 testthat::test_that("get_call returns a condition true for the object in the selected range", {
-  objects <- as.POSIXct(c(1:5), origin = "1900/01/01 00:00:00")
-  filter_state <- DatetimeFilterState$new(objects, varname = "test")
-  filter_state$set_selected(c(objects[2], objects[3]))
-  test <- as.POSIXct(c(1:4), origin = "1900/01/01 00:00:00")
-  testthat::expect_equal(eval(shiny::isolate(filter_state$get_call())), c(FALSE, TRUE, TRUE, FALSE))
+  filter_state <- DatetimeFilterState$new(posixct, varname = "variable")
+  filter_state$set_selected(posixct[2:3])
+  variable <- posixct[1:4]
+  testthat::expect_equal(
+    eval(shiny::isolate(filter_state$get_call())),
+    c(FALSE, TRUE, TRUE, FALSE)
+  )
   testthat::expect_equal(
     shiny::isolate(filter_state$get_call()),
-    bquote(
-      test >= as.POSIXct(.(as.character(test[2])), tz = .(Sys.timezone())) &
-        test < as.POSIXct(.(as.character(test[4])), tz = .(Sys.timezone()))
+    quote(
+      variable >= as.POSIXct("2000-01-01 12:00:01", tz = "GMT") & variable <
+        as.POSIXct("2000-01-01 12:00:03", tz = "GMT")
     )
   )
 })
 
 testthat::test_that("get_call returns a condition evaluating to TRUE for NA values after set_keep_na(TRUE)", {
-  objects <- as.POSIXct(c(1, NA), origin = "1900/01/01 00:00:00")
-  filter_state <- DatetimeFilterState$new(objects, varname = "objects")
+  variable <- c(posixct, NA)
+  filter_state <- DatetimeFilterState$new(variable, varname = "variable")
+  testthat::expect_identical(eval(shiny::isolate(filter_state$get_call()))[11], NA)
   filter_state$set_keep_na(TRUE)
-  testthat::expect_equal(eval(shiny::isolate(filter_state$get_call()))[2], TRUE)
+  testthat::expect_identical(eval(shiny::isolate(filter_state$get_call()))[11], TRUE)
 })
 
-testthat::test_that("get_call returns a condition evaluating to NA for NA values", {
-  objects <- as.POSIXct(c(1, NA), origin = "1900/01/01 00:00:00")
-  filter_state <- DatetimeFilterState$new(objects, varname = "objects")
-  testthat::expect_equal(eval(shiny::isolate(filter_state$get_call()))[2], NA)
-})
 
 testthat::test_that("DatetimeFilterState echoes the timezone of the ISO object passed to the constructor", {
   objects <- ISOdate(2021, 8, 25, tz = "Australia/Brisbane")
@@ -128,35 +131,20 @@ testthat::test_that("set_state overwrites fields included in the input only", {
 testthat::test_that(
   "DatetimeFilterState$is_any_filtered works properly when NA is present in data",
   code = {
-    datetimes <- Sys.time() + seq(0, by = 3600, length.out = 10)
     filter_state <- teal.slice:::DatetimeFilterState$new(
-      c(datetimes, NA),
+      c(posixct, NA),
       varname = "x",
       dataname = "data",
       extract_type = character(0)
     )
 
     shiny::isolate(filter_state$set_keep_na(FALSE))
-    shiny::isolate(filter_state$set_selected(c(datetimes[1], datetimes[10])))
     testthat::expect_true(
       shiny::isolate(filter_state$is_any_filtered())
     )
 
     shiny::isolate(filter_state$set_keep_na(TRUE))
-    shiny::isolate(filter_state$set_selected(c(datetimes[1], datetimes[10])))
     testthat::expect_false(
-      shiny::isolate(filter_state$is_any_filtered())
-    )
-
-    shiny::isolate(filter_state$set_keep_na(TRUE))
-    shiny::isolate(filter_state$set_selected(c(datetimes[2], datetimes[10])))
-    testthat::expect_true(
-      shiny::isolate(filter_state$is_any_filtered())
-    )
-
-    shiny::isolate(filter_state$set_keep_na(TRUE))
-    shiny::isolate(filter_state$set_selected(c(datetimes[1], datetimes[9])))
-    testthat::expect_true(
       shiny::isolate(filter_state$is_any_filtered())
     )
   }

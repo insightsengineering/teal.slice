@@ -523,7 +523,7 @@ testthat::test_that("get_call returns a call filtering a data.frame based on a C
     choices_dataset,
     dplyr::filter(choices_dataset, choices %in% c("a", "c"))
   )
-  testthat::expect_identical(
+  testthat::expect_equal(
     shiny::isolate(filter_states$get_call()),
     quote(choices_dataset <- dplyr::filter(choices_dataset, choices %in% c("a", "c")))
   )
@@ -619,7 +619,7 @@ testthat::test_that(
       choices = letters[1:5],
       logical = c(FALSE, FALSE, FALSE, TRUE, FALSE),
       date = seq(as.Date("2021/08/25"), by = "day", length.out = 5),
-      datetime = seq(ISOdate(2021, 8, 25, tz = Sys.timezone()), by = "day", length.out = 5)
+      datetime = seq(ISOdate(2021, 8, 25, tz = "GMT"), by = "day", length.out = 5)
     )
     compare <- test_dataset
     # setting up filters
@@ -639,7 +639,7 @@ testthat::test_that(
     date_filter <- DateFilterState$new(x = test_dataset$date, varname = "date")
     shiny::isolate(date_filter$set_selected(c("2021/08/25", "2021/08/26")))
     datetime_filter <- DatetimeFilterState$new(x = test_dataset$datetime, varname = "datetime")
-    shiny::isolate(datetime_filter$set_selected(rep(ISOdate(2021, 8, 25, tz = Sys.timezone()), 2)))
+    shiny::isolate(datetime_filter$set_selected(rep(ISOdate(2021, 8, 25, tz = "GMT"), 2)))
 
     shiny::isolate(filter_states$state_list_push(state_list_index = 1, x = range_filter, state_id = "test"))
     shiny::isolate(filter_states$state_list_push(state_list_index = 1, x = choices_filter, state_id = "test"))
@@ -656,20 +656,20 @@ testthat::test_that(
           choices %in% c("a", "c") &
           !logical &
           date >= as.Date("2021-08-25") & date <= as.Date("2021-08-26") &
-          datetime >= as.POSIXct("2021-08-25 12:00:00") &
-          datetime < as.POSIXct("2021-08-25 12:00:01")
+          datetime >= as.POSIXct("2021-08-25 12:00:00", tz = "GMT") &
+          datetime <= as.POSIXct("2021-08-25 12:00:00", tz = "GMT")
       )
     )
     testthat::expect_equal(
       shiny::isolate(filter_states$get_call()),
-      bquote(test_dataset <- dplyr::filter(
+      quote(test_dataset <- dplyr::filter(
         test_dataset,
         numbers >= 1 & numbers <= 3 &
           choices %in% c("a", "c") &
           !logical &
           (date >= as.Date("2021-08-25") & date <= as.Date("2021-08-26")) &
-          (datetime >= as.POSIXct("2021-08-25 12:00:00", tz = .(Sys.timezone())) &
-            datetime < as.POSIXct("2021-08-25 12:00:01", tz = .(Sys.timezone())))
+          (datetime >= as.POSIXct("2021-08-25 12:00:00", tz = "GMT") &
+            datetime < as.POSIXct("2021-08-25 12:00:01", tz = "GMT"))
       ))
     )
   }

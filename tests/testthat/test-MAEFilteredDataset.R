@@ -121,7 +121,7 @@ testthat::test_that(
           MAE <- MultiAssayExperiment::subsetByColData( # nolint
             MAE,
             y = MAE$years_to_birth >= 30 & MAE$years_to_birth <= 50 &
-              MAE$vital_status == "1" &
+              MAE$vital_status == 1L &
               MAE$gender == "female"
           )
         ),
@@ -229,7 +229,7 @@ testthat::test_that(
         subjects = quote(
           MAE <- MultiAssayExperiment::subsetByColData( # nolint
             MAE,
-            y = MAE$vital_status == "1" &
+            y = MAE$vital_status == 1L &
               MAE$gender == "female"
           )
         ),
@@ -307,7 +307,7 @@ testthat::test_that("MAEFilteredDataset filters removed using remove_filters", {
         MAE <- MultiAssayExperiment::subsetByColData( # nolint
           MAE,
           y = MAE$years_to_birth >= 30 & MAE$years_to_birth <= 50 &
-            MAE$vital_status == "1" &
+            MAE$vital_status == 1L &
             MAE$gender == "female"
         )
       ),
