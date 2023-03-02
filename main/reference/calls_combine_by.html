@@ -10,7 +10,7 @@
     
     <a class="navbar-brand me-2" href="../index.html">teal.slice</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.2.0.9024</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.2.0.9025</small>
 
     <div style="width: 140px; margin-left: 0.5rem;"> <small class="nav-text text-muted me-auto">part of</small> <img src="https://github.com/insightsengineering/hex-stickers/blob/main/PNG/nest.png?raw=true" alt="NEST" style="height: 30px;"><a href="https://pharmaverse.org/" class="external-link"><img src="https://github.com/insightsengineering/hex-stickers/blob/main/PNG/pharmaverse.png?raw=true" alt="pharmaverse" style="height: 28px;"></a> </div>
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -33,14 +33,6 @@
 <li class="nav-item">
   <a class="nav-link" href="../news/index.html">Changelog</a>
 </li>
-<!-- start dropdown for versions --> <li class="nav-item dropdown">
-        <a href="#" class="nav-link dropdown-toggle"
-          data-bs-toggle="dropdown" role="button"
-          aria-expanded="false" aria-haspopup="true"
-          id="dropdown-versions">Versions</a> <div class="dropdown-menu" aria-labelledby="dropdown-versions"> <a class="dropdown-item" data-toggle="tooltip" title="" href="https://insightsengineering.github.io/teal.slice/main">main</a>
-<a class="dropdown-item" data-toggle="tooltip" title="" href="https://insightsengineering.github.io/teal.slice/latest-tag">latest-tag</a>
-<a class="dropdown-item" data-toggle="tooltip" title="" href="https://insightsengineering.github.io/teal.slice/v0.2.0">v0.2.0</a> </div></li>
-<!-- end dropdown for versions -->
       </ul><form class="form-inline my-2 my-lg-0" role="search">
         <input type="search" class="form-control me-sm-2" aria-label="Toggle navigation" name="search-input" data-search-index="../search.json" id="search-input" placeholder="Search for" autocomplete="off"></form>
 
@@ -68,26 +60,27 @@
 
     <div class="section level2">
     <h2 id="ref-usage">Usage<a class="anchor" aria-label="anchor" href="#ref-usage"></a></h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">calls_combine_by</span><span class="op">(</span><span class="va">operator</span>, <span class="va">calls</span><span class="op">)</span></span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">calls_combine_by</span><span class="op">(</span><span class="va">calls</span>, <span class="va">operator</span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div class="section level2">
     <h2 id="arguments">Arguments<a class="anchor" aria-label="anchor" href="#arguments"></a></h2>
-    <dl><dt>operator</dt>
-<dd><p>(<code>character(1)</code> or <code>name</code>)<br>
-name/symbol of the operator.</p></dd>
-
-
-<dt>calls</dt>
+    <dl><dt>calls</dt>
 <dd><p>(<code>list</code> of calls)<br>
-list containing calls to be combined by <code>operator</code></p></dd>
+list containing calls to be combined by <code>operator</code>;
+if empty, NULL is returned</p></dd>
+
+
+<dt>operator</dt>
+<dd><p>(<code>character(1)</code>)<br>
+name/symbol of the operator passed as character string</p></dd>
 
 </dl></div>
     <div class="section level2">
     <h2 id="value">Value<a class="anchor" aria-label="anchor" href="#value"></a></h2>
     
 
-<p>call</p>
+<p>call or NULL, if <code>calls</code> is an empty list</p>
 
 
 <p>a combined <code>call</code></p>
@@ -97,16 +90,16 @@ list containing calls to be combined by <code>operator</code></p></dd>
 
     <div class="section level2">
     <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="fu">teal.slice</span><span class="fu">:::</span><span class="fu">calls_combine_by</span><span class="op">(</span></span></span>
-<span class="r-in"><span>  <span class="st">"&amp;"</span>,</span></span>
-<span class="r-in"><span>  calls <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span></span></span>
-<span class="r-in"><span>    <span class="fu">teal.slice</span><span class="fu">:::</span><span class="fu"><a href="call_condition_choice.html">call_condition_choice</a></span><span class="op">(</span><span class="st">"SEX"</span>, <span class="st">"F"</span><span class="op">)</span>,</span></span>
-<span class="r-in"><span>    <span class="fu">teal.slice</span><span class="fu">:::</span><span class="fu"><a href="call_condition_range.html">call_condition_range</a></span><span class="op">(</span><span class="st">"AGE"</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">20</span>, <span class="fl">50</span><span class="op">)</span><span class="op">)</span>,</span></span>
-<span class="r-in"><span>    <span class="fu">teal.slice</span><span class="fu">:::</span><span class="fu"><a href="call_condition_choice.html">call_condition_choice</a></span><span class="op">(</span><span class="st">"ARM"</span>, <span class="st">"ARM: A"</span><span class="op">)</span>,</span></span>
-<span class="r-in"><span>    <span class="cn">TRUE</span></span></span>
-<span class="r-in"><span>  <span class="op">)</span></span></span>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="kw">if</span> <span class="op">(</span><span class="cn">FALSE</span><span class="op">)</span> <span class="op">{</span></span></span>
+<span class="r-in"><span><span class="va">calls</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span></span></span>
+<span class="r-in"><span>  <span class="fu">call_condition_choice</span><span class="op">(</span><span class="st">"SEX"</span>, <span class="st">"F"</span><span class="op">)</span>,</span></span>
+<span class="r-in"><span>  <span class="fu">call_condition_range</span><span class="op">(</span><span class="st">"AGE"</span>, <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">20</span>, <span class="fl">50</span><span class="op">)</span><span class="op">)</span>,</span></span>
+<span class="r-in"><span>  <span class="fu">call_condition_choice</span><span class="op">(</span><span class="st">"ARM"</span>, <span class="st">"ARM: A"</span><span class="op">)</span>,</span></span>
+<span class="r-in"><span>  <span class="fu">call_condition_logical</span><span class="op">(</span><span class="st">"SURV"</span>, <span class="cn">TRUE</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> SEX == "F" &amp; (AGE &gt;= 20 &amp; AGE &lt;= 50) &amp; ARM == "ARM: A" &amp; TRUE</span>
+<span class="r-in"><span><span class="va">calls</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/lapply.html" class="external-link">lapply</a></span><span class="op">(</span><span class="va">calls</span>, <span class="va">str2lang</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="fu">calls_combine_by</span><span class="op">(</span><span class="va">calls</span>, <span class="st">"&amp;"</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="op">}</span></span></span>
 </code></pre></div>
     </div>
   </main><aside class="col-md-3"><nav id="toc"><h2>On this page</h2>
