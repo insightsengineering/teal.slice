@@ -14,10 +14,10 @@ MAEFilterStates <- R6::R6Class( # nolint
     #' @param data (`MultiAssayExperiment`)\cr
     #'   the R object which `MultiAssayExperiment::subsetByColData` function is applied on.
     #'
-    #' @param data_reactive (`reactive`)\cr
+    #' @param data_reactive (`function`)\cr
     #'   should return `MultiAssayExperiment` or `NULL` object.
     #'   This object is needed for the `FilterState` counts being updated
-    #'   on a change in filters. If `reactive(NULL)` then filtered counts are not shown.
+    #'   on a change in filters. If `function(NULL)` then filtered counts are not shown.
     #'
     #' @param dataname (`character(1)`)\cr
     #'   name of the data used in the expression
@@ -31,10 +31,16 @@ MAEFilterStates <- R6::R6Class( # nolint
     #'
     #' @param keys (`character`)\cr
     #'   key columns names
-    initialize = function(data, data_reactive, dataname, datalabel, varlabels, keys) {
+    initialize = function(data,
+                          data_reactive = function(sid = integer(0)) NULL,
+                          dataname,
+                          datalabel = "subjects",
+                          varlabels = character(0),
+                          keys = character(0)) {
       if (!requireNamespace("MultiAssayExperiment", quietly = TRUE)) {
         stop("Cannot load MultiAssayExperiment - please install the package or restart your session.")
       }
+      checkmate::assert_class(data, "MultiAssayExperiment")
       super$initialize(data, data_reactive, dataname, datalabel)
       private$keys <- keys
       private$varlabels <- varlabels
@@ -165,18 +171,14 @@ MAEFilterStates <- R6::R6Class( # nolint
         )
       )
 
-      if (!state_id %in% names(self$state_list_get("y"))) {
-        warning(paste(
-          "Variable:", state_id,
-          "is not present in the actual active filters of dataset: { private$dataname }",
-          "therefore no changes are applied."
-        ))
-        logger::log_warn(
-          paste(
-            "Variable:", state_id, "is not present in the actual active filters of dataset:",
-            "{ private$dataname } therefore no changes are applied."
-          )
+      if (!state_id %in% names(isolate(self$state_list_get("y")))) {
+        msg <- sprintf(
+          "%s is not an active 'patient' filter of dataset: %s and can't be removed.",
+          state_id,
+          private$dataname
         )
+        warning(msg)
+        logger::log_warn(msg)
       } else {
         self$state_list_remove("y", state_id = state_id)
         logger::log_trace(

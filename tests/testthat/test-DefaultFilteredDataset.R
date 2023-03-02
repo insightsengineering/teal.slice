@@ -129,3 +129,39 @@ testthat::test_that(
     )
   }
 )
+
+testthat::test_that("get_call returns a call without a condition identified by sid", {
+  filtered_dataset <- DefaultFilteredDataset$new(dataset = iris, dataname = "iris")
+  fs <- list(
+    Sepal.Length = c(5.1, 6.4),
+    Species = c("setosa", "versicolor")
+  )
+  filtered_dataset$set_filter_state(state = fs)
+  testthat::expect_identical(
+    shiny::isolate(filtered_dataset$get_call(sid = 1L)),
+    list(
+      filter = quote(iris <- dplyr::filter(iris, Species %in% c("setosa", "versicolor")))
+    )
+  )
+})
+
+testthat::test_that("data_filtered_fun returns a data filtered by everything but FS identified by sid", {
+  TestFd <- R6::R6Class(
+    classname = "TestFd",
+    inherit = DefaultFilteredDataset,
+    public = list(
+      get_data_filtered = function(sid) private$data_filtered_fun(sid)
+    )
+  )
+  filtered_dataset <- TestFd$new(dataset = iris, dataname = "iris")
+  fs <- list(
+    Sepal.Length = c(5.1, 6.4),
+    Petal.Length = c(1.5, 6.9),
+    Species = c("setosa", "versicolor")
+  )
+  filtered_dataset$set_filter_state(state = fs)
+  testthat::expect_identical(
+    shiny::isolate(filtered_dataset$get_data_filtered(sid = 2L)),
+    dplyr::filter(iris, Sepal.Length >= 5.1 & Sepal.Length <= 6.4 & Species %in% c("setosa", "versicolor"))
+  )
+})

@@ -244,7 +244,6 @@ FilteredDataset <- R6::R6Class( # nolint
     #' @description
     #' Set the allowed filterable variables
     #' @param varnames (`character` or `NULL`) The variables which can be filtered
-    #' See `self$get_filterable_varnames` for more details
     #'
     #' @details When retrieving the filtered variables only
     #' those which have filtering supported (i.e. are of the permitted types)
@@ -434,7 +433,7 @@ FilteredDataset <- R6::R6Class( # nolint
     # @param filter_states (`FilterStates`)
     # @param id (`character(1)`)
     add_filter_states = function(filter_states, id) {
-      stopifnot(is(filter_states, "FilterStates"))
+      checkmate::assert_class(filter_states, "FilterStates")
       checkmate::assert_string(id)
       x <- setNames(list(filter_states), id)
       private$filter_states <- c(self$get_filter_states(), x)

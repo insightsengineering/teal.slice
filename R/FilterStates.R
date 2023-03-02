@@ -57,21 +57,22 @@ FilterStates <- R6::R6Class( # nolint
     #' @param data (`data.frame`, `MultiAssayExperiment`, `SummarizedExperiment`, `matrix`)\cr
     #'   the R object which `subset` function is applied on.
     #'
-    #' @param data_reactive (`reactive`)\cr
+    #' @param data_reactive (`function`)\cr
     #'   should return an object constistent with the `FilterState` class or `NULL`.
     #'   This object is needed for the `FilterState` counts being updated
-    #'   on a change in filters. If `reactive(NULL)` then filtered counts are not shown.
+    #'   on a change in filters. If `function(NULL)` then filtered counts are not shown.
     #'
     #' @param dataname (`character(1)`)\cr
     #'   name of the data used in the expression
     #'   specified to the function argument attached to this `FilterStates`
+    #'
     #' @param datalabel (`character(0)` or `character(1)`)\cr
     #'   text label value
     #'
     #' @return
     #' self invisibly
     #'
-    initialize = function(data, data_reactive, dataname, datalabel) {
+    initialize = function(data, data_reactive = function(sid = integer(0)) NULL, dataname, datalabel = characster(0)) {
       checkmate::assert_function(data_reactive, args = "sid")
       checkmate::assert_string(dataname)
       checkmate::assert_character(datalabel, max.len = 1, any.missing = FALSE)
@@ -240,20 +241,19 @@ FilterStates <- R6::R6Class( # nolint
     #' @return NULL
     #'
     state_list_push = function(x, state_list_index, state_id) {
-      logger::log_trace(
-        "{ class(self)[1] } pushing into state_list, dataname: { private$dataname }"
-      )
+      logger::log_trace("{ class(self)[1] } pushing into state_list, dataname: { private$dataname }")
       private$validate_state_list_exists(state_list_index)
       checkmate::assert_string(state_id)
       checkmate::assert_class(x, "FilterState")
 
       state <- stats::setNames(list(x), state_id)
-      new_state_list <- c(private$state_list[[state_list_index]](), state)
-      private$state_list[[state_list_index]](new_state_list)
-
-      logger::log_trace(
-        "{ class(self)[1] } pushed into queue, dataname: { private$dataname }"
+      new_state_list <- c(
+        shiny::isolate(private$state_list[[state_list_index]]()),
+        state
       )
+      shiny::isolate(private$state_list[[state_list_index]](new_state_list))
+
+      logger::log_trace("{ class(self)[1] } pushed into queue, dataname: { private$dataname }")
       invisible(NULL)
     },
 
@@ -265,16 +265,15 @@ FilterStates <- R6::R6Class( # nolint
     #'
     #' @param state_list_index (`character(1)`, `integer(1)`)\cr
     #'   index on the list in `private$state_list` where filter states are kept
-    #' @param state_id (`character(1)`)\cr
-    #'   name of element in a filter state (which is a `reactiveVal` containing a list)
+    #' @param state_id (`character`)\cr
+    #'   names of element in a filter state (which is a `reactiveVal` containing a list)
     #'
     #' @return NULL
     #'
     state_list_remove = function(state_list_index, state_id) {
-      logger::log_trace(paste(
-        "{ class(self)[1] } removing a filter from state_list { state_list_index },",
-        "dataname: { private$dataname }"
-      ))
+      logger::log_trace(
+        "{ class(self)[1] } removing a filter from state_list: { state_list_index }; dataname: { private$dataname }"
+      )
       private$validate_state_list_exists(state_list_index)
       checkmate::assert_vector(state_id, len = 1)
       checkmate::assert(
@@ -282,16 +281,14 @@ FilterStates <- R6::R6Class( # nolint
         checkmate::check_int(state_list_index)
       )
 
-
-      new_state_list <- private$state_list[[state_list_index]]()
+      new_state_list <- shiny::isolate(private$state_list[[state_list_index]]())
       new_state_list[[state_id]]$destroy_observers()
       new_state_list[[state_id]] <- NULL
-      private$state_list[[state_list_index]](new_state_list)
+      shiny::isolate(private$state_list[[state_list_index]](new_state_list))
 
-      logger::log_trace(paste(
-        "{ class(self)[1] } removed from state_list { state_list_index },",
-        "dataname: { private$dataname }"
-      ))
+      logger::log_trace(
+        "{ class(self)[1] } removed from state_list: { state_list_index }; dataname: { private$dataname }"
+      )
       invisible(NULL)
     },
 
@@ -301,20 +298,16 @@ FilterStates <- R6::R6Class( # nolint
     #' @return NULL
     #'
     state_list_empty = function() {
-      logger::log_trace(
-        "{ class(self)[1] } emptying state_list, dataname: { private$dataname }"
-      )
+      logger::log_trace("{ class(self)[1] }$state_list_empty initializing for dataname: { private$dataname }")
 
-      for (i in seq_along(private$state_list)) {
-        state_list_i <- private$state_list[[i]]
-        for(j in seq_along(state_list_i)) {
-          self$state_list_remove(i, j)
+      for (state_list_index in seq_along(private$state_list)) {
+        state_list_i <- shiny::isolate(private$state_list[[state_list_index]]())
+        for (state_id in names(state_list_i)) {
+          self$state_list_remove(state_list_index, state_id)
         }
       }
 
-      logger::log_trace(
-        "{ class(self)[1] } emptied state_list, dataname: { private$dataname }"
-      )
+      logger::log_trace("{ class(self)[1] }$state_list_empty done for dataname: { private$dataname }")
       invisible(NULL)
     },
 
@@ -395,7 +388,6 @@ FilterStates <- R6::R6Class( # nolint
     #' @description
     #' Set the allowed filterable variables
     #' @param varnames (`character` or `NULL`) The variables which can be filtered
-    #' See `self$get_filterable_varnames` for more details
     #'
     #' @details When retrieving the filtered variables only
     #' those which have filtering supported (i.e. are of the permitted types)
@@ -586,6 +578,7 @@ FilterStates <- R6::R6Class( # nolint
     #  function having `sid` as argument
     # @param extract_type (`character(0)` or `chracter(1)`)
     set_filter_state_impl = function(state, state_list_index, data, data_reactive, extract_type = character(0)) {
+      checkmate::assert_list(state, null.ok = TRUE, names = "named")
       checkmate::assert_scalar(state_list_index)
       checkmate::assert_multi_class(data, c("data.frame", "matrix", "DataFrame"))
       checkmate::assert_function(data_reactive, args = "sid")
@@ -596,7 +589,7 @@ FilterStates <- R6::R6Class( # nolint
       )
       # add new states and modify existing:
       # - modify existing states
-      states_now <- self$state_list_get(state_list_index)
+      states_now <- shiny::isolate(self$state_list_get(state_list_index))
       state_names_existing <- intersect(names(states_now), names(state))
       mapply(
         fstate = states_now[state_names_existing],

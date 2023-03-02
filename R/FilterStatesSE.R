@@ -16,10 +16,10 @@ SEFilterStates <- R6::R6Class( # nolint
     #' @param data (`SummarizedExperiment`)\cr
     #'   the R object which `subset` function is applied on.
     #'
-    #' @param data_reactive (`reactive`)\cr
+    #' @param data_reactive (`function`)\cr
     #'   should return a `SummarizedExperiment` object or `NULL`.
     #'   This object is needed for the `FilterState` counts being updated
-    #'   on a change in filters. If `reactive(NULL)` then filtered counts are not shown.
+    #'   on a change in filters. If `function(NULL)` then filtered counts are not shown.
     #'
     #' @param dataname (`character(1)`)\cr
     #'   name of the data used in the expression
@@ -27,10 +27,14 @@ SEFilterStates <- R6::R6Class( # nolint
     #'
     #' @param datalabel (`character(0)` or `character(1)`)\cr
     #'   text label value.
-    initialize = function(data, data_reactive, dataname, datalabel) {
+    initialize = function(data,
+                          data_reactive = function(sid = integer(0)) NULL,
+                          dataname,
+                          datalabel = character(0)) {
       if (!requireNamespace("SummarizedExperiment", quietly = TRUE)) {
         stop("Cannot load SummarizedExperiment - please install the package or restart your session.")
       }
+      checkmate::assert_class(data, "SummarizedExperiment")
       super$initialize(data, data_reactive, dataname, datalabel)
       private$state_list <- list(
         subset = reactiveVal(),
@@ -228,17 +232,14 @@ SEFilterStates <- R6::R6Class( # nolint
         combine = "and"
       )
       for (varname in state_id$subset) {
-        if (!all(unlist(state_id$subset) %in% names(self$state_list_get("subset")))) {
-          warning(paste(
-            "Variable:", state_id, "is not present in the actual active subset filters of dataset:",
-            "{ private$dataname } therefore no changes are applied."
-          ))
-          logger::log_warn(
-            paste(
-              "Variable:", state_id, "is not present in the actual active subset filters of dataset:",
-              "{ private$dataname } therefore no changes are applied."
-            )
+        if (!all(unlist(state_id$subset) %in% names(shiny::isolate(self$state_list_get("subset"))))) {
+          msg <- sprintf(
+            "%s is not an active 'subset' filter of dataset: %s and can't be removed.",
+            state_id,
+            private$dataname
           )
+          warning(msg)
+          logger::log_warn(msg)
         } else {
           self$state_list_remove(state_list_index = "subset", state_id = varname)
           logger::log_trace(
@@ -253,17 +254,14 @@ SEFilterStates <- R6::R6Class( # nolint
       }
 
       for (varname in state_id$select) {
-        if (!all(unlist(state_id$select) %in% names(self$state_list_get("select")))) {
-          warning(paste(
-            "Variable:", state_id, "is not present in the actual active select filters of dataset:",
-            "{ private$dataname } therefore no changes are applied."
-          ))
-          logger::log_warn(
-            paste(
-              "Variable:", state_id, "is not present in the actual active select filters of dataset:",
-              "{ private$dataname } therefore no changes are applied."
-            )
+        if (!all(unlist(state_id$select) %in% names(shiny::isolate(self$state_list_get("select"))))) {
+          msg <- sprintf(
+            "%s is not an active 'select' filter of dataset: %s and can't be removed.",
+            state_id,
+            private$dataname
           )
+          warning(msg)
+          logger::log_warn(msg)
         } else {
           self$state_list_remove(state_list_index = "select", state_id = varname)
           sprintf(

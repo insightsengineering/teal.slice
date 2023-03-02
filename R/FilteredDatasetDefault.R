@@ -50,7 +50,7 @@ DefaultFilteredDataset <- R6::R6Class( # nolint
                           join_keys = character(0),
                           label = character(0),
                           metadata = NULL) {
-      checkmate::assert_class(dataset, "data.frame")
+      checkmate::assert_data_frame(dataset)
       super$initialize(dataset, dataname, keys, label, metadata)
 
       # overwrite filtered_data if there is relationship with parent dataset
@@ -204,20 +204,20 @@ DefaultFilteredDataset <- R6::R6Class( # nolint
     remove_filter_state = function(state_id) {
       logger::log_trace(
         sprintf(
-          "DefaultFilteredDataset$remove_filter_state removing filters of variable %s, dataname: %s",
-          state_id,
+          "DefaultFilteredDataset$remove_filter_state removing filters of variable: %s; dataname: %s",
+          toString(state_id),
           self$get_dataname()
         )
       )
 
-      fdata_filter_state <- self$get_filter_states()[[1]]
+      fdata_filter_state <- shiny::isolate(self$get_filter_states())[[1]]
       for (element in state_id) {
         fdata_filter_state$remove_filter_state(element)
       }
       logger::log_trace(
         sprintf(
-          "DefaultFilteredDataset$remove_filter_state done removing filters of variable %s, dataname: %s",
-          state_id,
+          "DefaultFilteredDataset$remove_filter_state done removing filters of variable: %s; dataname: %s",
+          toString(state_id),
           self$get_dataname()
         )
       )

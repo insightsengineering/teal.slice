@@ -140,7 +140,7 @@ DFFilterStates <- R6::R6Class( # nolint
     #' @param data_reactive (`reactive`)\cr
     #'   should a `data.frame` object or `NULL`.
     #'   This object is needed for the `FilterState` counts being updated
-    #'   on a change in filters. If `reactive(NULL)` then filtered counts are not shown.
+    #'   on a change in filters. If `function(NULL)` then filtered counts are not shown.
     #'
     #' @param dataname (`character(1)`)\cr
     #'   name of the data used in the \emph{subset expression}
@@ -152,7 +152,13 @@ DFFilterStates <- R6::R6Class( # nolint
     #' @param keys (`character`)\cr
     #'   key columns names
     #'
-    initialize = function(data, data_reactive, dataname, datalabel, varlabels, keys) {
+    initialize = function(data,
+                          data_reactive = function(sid = integer(0)) NULL,
+                          dataname,
+                          datalabel = character(0),
+                          varlabels = character(0),
+                          keys = character(0)) {
+      checkmate::assert_data_frame(data)
       super$initialize(data, data_reactive, dataname, datalabel)
       private$varlabels <- varlabels
       private$keys <- keys
@@ -277,15 +283,17 @@ DFFilterStates <- R6::R6Class( # nolint
     #' @return `NULL`
     set_filter_state = function(state) {
       logger::log_trace("{ class(self)[1] }$set_filter_state initializing, dataname: { private$dataname }")
+      checkmate::assert_list(state, null.ok = TRUE, names = "named")
+
       data <- private$data
       data_reactive <- private$data_reactive
 
       # excluding not supported variables
       state_varnames <- names(state)
-      supported_varnames <- get_supported_filter_varnames(data = data)
-      excluded_varnames <- setdiff(state_varnames, supported_varnames)
+      filterable_varnames <- private$filterable_varnames
+      excluded_varnames <- setdiff(state_varnames, filterable_varnames)
       if (length(excluded_varnames) > 0) {
-        excluded_varnames_str <- paste(excluded_varnames, collapse = ", ")
+        excluded_varnames_str <- toString(excluded_varnames)
         warning(
           "These columns filters were excluded: ",
           excluded_varnames_str,
@@ -293,7 +301,7 @@ DFFilterStates <- R6::R6Class( # nolint
           private$dataname
         )
         logger::log_warn("Columns filters { excluded_varnames_str } were excluded from { private$dataname }")
-        state <- state[state_varnames %in% supported_varnames]
+        state <- state[state_varnames %in% filterable_varnames]
       }
 
       private$set_filter_state_impl(
@@ -323,18 +331,15 @@ DFFilterStates <- R6::R6Class( # nolint
         )
       )
 
-      if (!state_id %in% names(self$state_list_get(1L))) {
-        warning(paste(
-          "Variable:", state_id,
-          "is not present in the actual active filters of dataset: { private$dataname }",
-          "therefore no changes are applied."
-        ))
-        logger::log_warn(
-          paste(
-            "Variable:", state_id, "is not present in the actual active filters of dataset:",
-            "{ private$dataname } therefore no changes are applied."
-          )
+      current_state_names <- names(shiny::isolate(self$state_list_get(1L)))
+      if (!state_id %in% current_state_names) {
+        msg <- sprintf(
+          "%s is not an active filter of dataset: %s and can't be removed.",
+          state_id,
+          private$dataname
         )
+        warning(msg)
+        logger::log_warn(msg)
       } else {
         self$state_list_remove(state_list_index = 1L, state_id = state_id)
         logger::log_trace(
@@ -353,7 +358,6 @@ DFFilterStates <- R6::R6Class( # nolint
     #' @description
     #' Set the allowed filterable variables
     #' @param varnames (`character` or `NULL`) The variables which can be filtered
-    #' See `self$get_filterable_varnames` for more details
     #'
     #' @details When retrieving the filtered variables only
     #' those which have filtering supported (i.e. are of the permitted types)

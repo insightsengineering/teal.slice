@@ -145,7 +145,6 @@ FilteredData <- R6::R6Class( # nolint
     #' @param dataname (`character(1)`) name of the dataset
     #' @param varnames (`character` or `NULL`)
     #'   variables which users can choose to filter the data;
-    #'   see `self$get_filterable_varnames` for more details
     #'
     #' @return this `FilteredData` object invisibly
     #'
@@ -586,7 +585,7 @@ FilteredData <- R6::R6Class( # nolint
     #'
     remove_all_filter_states = function(datanames = self$datanames()) {
       logger::log_trace(
-        "FilteredData$remove_all_filter_states called, datanames: { paste(datanames, collapse = ', ') }"
+        "FilteredData$remove_all_filter_states called, datanames: { toString(datanames) }"
       )
 
       for (dataname in datanames) {
@@ -597,7 +596,7 @@ FilteredData <- R6::R6Class( # nolint
       logger::log_trace(
         paste(
           "FilteredData$remove_all_filter_states removed all FilterStates,",
-          "datanames: { paste(datanames, collapse = ', ') }"
+          "datanames: { toString(datanames) }"
         )
       )
 

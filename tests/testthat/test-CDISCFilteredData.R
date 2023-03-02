@@ -22,22 +22,6 @@ testthat::test_that("load and set_datasets", {
   testthat::expect_setequal(ds$datanames(), c("ADSL", "ADAE"))
 })
 
-testthat::test_that("set filter state", {
-  setup_objects <- get_cdisc_filtered_data()
-  ds <- setup_objects$ds
-  adsl <- setup_objects$adsl
-
-  filter_state_adsl <- ChoicesFilterState$new(adsl$sex, varname = "sex")
-  filter_state_adsl$set_selected("F")
-
-  state_list <- ds$get_filtered_dataset("ADSL")$get_filter_states(1)
-  shiny::isolate(state_list$state_list_push(filter_state_adsl, state_list_index = 1L, state_id = "sex"))
-
-  testthat::expect_null(
-    shiny::isolate(state_list$get_call()),
-  )
-})
-
 testthat::test_that("get_call for child dataset includes filter call for parent dataset", {
   setup_objects <- get_cdisc_filtered_data()
   ds <- setup_objects$ds
@@ -185,21 +169,11 @@ testthat::test_that(
   "set_filter_state returns warning when setting a filter on a column which belongs to parent dataset",
   code = {
     teal.logger::suppress_logs()
-    adsl <- teal.data::cdisc_dataset(
-      dataname = "ADSL",
-      x = data.frame(USUBJID = 1L, STUDYID = 1L, a = 1L, b = 1L)
-    )
-    child <- teal.data::cdisc_dataset(
-      dataname = "ADTTE",
-      parent = "ADSL",
-      x = data.frame(USUBJID = 1L, STUDYID = 1L, PARAMCD = 1L, a = 1L, c = 1L)
-    )
-    data <- teal.data::cdisc_data(adsl, child)
-
-    fd <- init_filtered_data(data)
+    setup_objects <- get_cdisc_filtered_data()
+    ds <- setup_objects$ds
     testthat::expect_warning(
-      shiny::isolate(fd$set_filter_state(list(ADTTE = list(USUBJID = "1")))),
-      "These columns filters were excluded: USUBJID from dataset ADTTE"
+      ds$set_filter_state(list(ADAE = list(USUBJID = "1"))),
+      "These columns filters were excluded: USUBJID from dataset ADAE"
     )
   }
 )
