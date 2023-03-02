@@ -691,9 +691,8 @@ FilterState <- R6::R6Class( # nolint
               ns("enable"),
               label = "",
               status = "success",
-              slim = TRUE,
+              fill = TRUE,
               value = enable,
-              inline = TRUE,
               width = 30
             ),
             actionLink(
@@ -746,9 +745,8 @@ FilterState <- R6::R6Class( # nolint
               ns("enable"),
               label = "",
               status = "success",
-              slim = TRUE,
+              fill = TRUE,
               value = enable,
-              inline = TRUE,
               width = 30
             ),
             actionLink(
