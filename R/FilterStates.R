@@ -72,7 +72,10 @@ FilterStates <- R6::R6Class( # nolint
     #' @return
     #' self invisibly
     #'
-    initialize = function(data, data_reactive = function(sid = integer(0)) NULL, dataname, datalabel = characster(0)) {
+    initialize = function(data,
+                          data_reactive = function(sid = integer(0)) NULL,
+                          dataname,
+                          datalabel = character(0)) {
       checkmate::assert_function(data_reactive, args = "sid")
       checkmate::assert_string(dataname)
       checkmate::assert_character(datalabel, max.len = 1, any.missing = FALSE)
@@ -140,10 +143,10 @@ FilterStates <- R6::R6Class( # nolint
             x = items
           )
           # hierarchical
-          #filtered_items <- Filter(
-          #  f = function(x) x$is_any_filtered() && attr(x, "sid") < sid,
-          #  x = items
-          #)
+          # filtered_items <- Filter(
+          #   f = function(x) x$is_any_filtered() && attr(x, "sid") < sid,
+          #   x = items
+          # )
 
           calls <- lapply(
             filtered_items,
@@ -583,7 +586,7 @@ FilterStates <- R6::R6Class( # nolint
       checkmate::assert_multi_class(data, c("data.frame", "matrix", "DataFrame"))
       checkmate::assert_function(data_reactive, args = "sid")
       checkmate::assert(
-        checkmate::check_subset(names(state), names(data)),
+        checkmate::check_subset(names(state), colnames(data)),
         checkmate::check_class(state, "default_filter"),
         combine = "or"
       )
@@ -606,8 +609,16 @@ FilterStates <- R6::R6Class( # nolint
         sid = seq_along(state_names_new) + max_id,
         function(varname, value, sid) {
           fstate <- init_filter_state(
-            x = data[[varname]],
-            x_reactive = reactive(data_reactive(sid)[[varname]]),
+            x = if (!is.array(data)) {
+              data[[varname]]
+            } else {
+              data[, varname]
+            },
+            x_reactive = if (!is.array(data)) {
+              reactive(data_reactive(sid)[[varname]])
+            } else {
+              reactive(data_reactive(sid)[, varname])
+            },
             varname = varname,
             dataname = private$dataname,
             extract_type = extract_type
