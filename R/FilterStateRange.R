@@ -249,16 +249,21 @@ RangeFilterState <- R6::R6Class( # nolint
     #'  `private$keep_inf` which is reactive.
     set_keep_inf = function(value) {
       checkmate::assert_flag(value, null.ok = TRUE)
-      private$keep_inf(value)
-      logger::log_trace(
-        sprintf(
-          "%s$set_keep_inf of variable %s set to %s, dataname: %s.",
-          class(self)[1],
-          private$varname,
-          value,
-          private$dataname
+
+      if (private$is_disabled()) {
+        warning("This filter state is disabled. Can not change keep Inf.")
+      } else {
+        private$keep_inf(value)
+        logger::log_trace(
+          sprintf(
+            "%s$set_keep_inf of variable %s set to %s, dataname: %s.",
+            class(self)[1],
+            private$varname,
+            value,
+            private$dataname
+          )
         )
-      )
+      }
     },
 
     #' @description
@@ -272,9 +277,7 @@ RangeFilterState <- R6::R6Class( # nolint
     #' }
     set_state = function(state) {
       stopifnot(is.list(state) && all(names(state) %in% c("selected", "keep_na", "keep_inf")))
-      if (!is.null(state$keep_inf) || private$is_disabled()) {
-        self$set_keep_inf(state$keep_inf)
-      }
+      self$set_keep_inf(state$keep_inf)
       super$set_state(state[names(state) %in% c("selected", "keep_na")])
       invisible(NULL)
     },
@@ -377,7 +380,8 @@ RangeFilterState <- R6::R6Class( # nolint
     remove_out_of_bound_values = function(values) {
       values
     },
-    cache_state = function() {
+    
+    disable = function() {
       private$cache <- self$get_state()
       self$set_state(
         list(
@@ -386,6 +390,7 @@ RangeFilterState <- R6::R6Class( # nolint
           keep_inf = NULL
         )
       )
+      private$disabled(TRUE)
     },
 
     # shiny modules ----

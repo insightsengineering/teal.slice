@@ -256,15 +256,20 @@ FilterState <- R6::R6Class( # nolint
     #'
     set_keep_na = function(value) {
       checkmate::assert_flag(value, null.ok = TRUE)
-      private$keep_na(value)
-      logger::log_trace(
-        sprintf(
-          "%s$set_keep_na set for variable %s to %s.",
-          class(self)[1],
-          private$varname,
-          value
+
+      if (private$is_disabled()) {
+        warning("This filter state is disabled. Can not change keep NA.")
+      } else {
+        private$keep_na(value)
+        logger::log_trace(
+          sprintf(
+            "%s$set_keep_na set for variable %s to %s.",
+            class(self)[1],
+            private$varname,
+            value
+          )
         )
-      )
+      }
       invisible(NULL)
     },
 
@@ -305,23 +310,28 @@ FilterState <- R6::R6Class( # nolint
           private$dataname
         )
       )
+
       if (private$is_disabled()) {
+        warning("This filter state is disabled. Can not change selected.")
+      } else if (!is.null(private$cache) && is.null(value)) {
+        # in this block we're setting state to NULL b/c we're disabling
+        # we don't want it to hit the next block b/c we don't want any coercion
         private$selected(value)
       } else {
         value <- private$cast_and_validate(value)
         value <- private$remove_out_of_bound_values(value)
         private$validate_selection(value)
         private$selected(value)
-      }
-
-      logger::log_trace(
-        sprintf(
+        logger::log_trace(
+          sprintf(
           "%s$set_selected selection of variable %s set, dataname: %s",
           class(self)[1],
           private$varname,
           private$dataname
+          )
         )
-      )
+      }
+
       invisible(NULL)
     },
 
@@ -347,20 +357,22 @@ FilterState <- R6::R6Class( # nolint
         state$keep_na
       ))
       stopifnot(is.list(state) && all(names(state) %in% c("selected", "keep_na")))
-      if (!is.null(state$keep_na) || private$is_disabled()) {
+
+      if (private$is_disabled()) {
+        warning("This filter state is disabled. Can not change state.")
+      } else {
         self$set_keep_na(state$keep_na)
-      }
-      if (!is.null(state$selected) || private$is_disabled()) {
         self$set_selected(state$selected)
-      }
-      logger::log_trace(
-        sprintf(
+
+        logger::log_trace(
+          sprintf(
           "%s$set_state, dataname: %s done setting state for variable %s",
           class(self)[1],
           private$dataname,
           private$varname
+          )
         )
-      )
+      }
       invisible(NULL)
     },
 
@@ -381,11 +393,9 @@ FilterState <- R6::R6Class( # nolint
           private$server_inputs("inputs")
           observeEvent(input$enable, {
             if (isTRUE(input$enable)) {
-              private$set_disabled(FALSE)
-              private$restore_state()
+              private$enable()
             } else {
-              private$set_disabled(TRUE)
-              private$cache_state()
+              private$disable()
             }
           }, ignoreInit = TRUE)
           reactive(input$remove) # back to parent to remove self
@@ -429,7 +439,7 @@ FilterState <- R6::R6Class( # nolint
     x_reactive = NULL, # reactive containing the filtered variable, used for updating counts and histograms
     filtered_na_count = NULL, # reactive containing the count of NA in the filtered dataset
     disabled = NULL, # reactiveVal returning logical
-    cache = list(), # cache state when filter disabled so we can later restore
+    cache = NULL, # cache state when filter disabled so we can later restore
 
     # private methods ----
     # @description
@@ -525,16 +535,7 @@ FilterState <- R6::R6Class( # nolint
       values
     },
 
-    set_disabled = function(val) {
-      private$disabled(val)
-    },
-
-    is_disabled = function() {
-      private$disabled()
-    },
-
-    # --- cache/restore state when filter disabled/enabled ---
-    cache_state = function() {
+    disable = function() {
       private$cache <- self$get_state()
       self$set_state(
         list(
@@ -542,13 +543,19 @@ FilterState <- R6::R6Class( # nolint
           keep_na = NULL
         )
       )
+      private$disabled(TRUE)
     },
 
-    restore_state = function() {
+    enable = function() {
       if (!is.null(private$cache)) {
+        private$disabled(FALSE)
         self$set_state(private$cache)
         private$cache <- NULL
       }
+    },
+
+    is_disabled = function() {
+      private$disabled()
     },
 
     # shiny modules -----
