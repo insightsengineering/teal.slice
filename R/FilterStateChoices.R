@@ -226,7 +226,6 @@ ChoicesFilterState <- R6::R6Class( # nolint
 
   private = list(
     choices_counts = integer(0),
-    histogram_data = data.frame(),
     data_class = character(0), # stores class of filtered variable so that it can be restored in $get_call
     tzone = character(0), # if x is a datetime, stores time zone so that it can be restored in $get_call
 

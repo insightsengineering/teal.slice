@@ -104,37 +104,44 @@ DefaultFilteredDataset <- R6::R6Class( # nolint
     get_call = function() {
       filter_call <- super$get_call()
       dataname <- private$dataname
-      parent_name <- private$parent_name
+      parent_dataname <- private$parent_name
 
-      if (!identical(parent_name, character(0))) {
+      if (!identical(parent_dataname, character(0))) {
         join_keys <- private$join_keys
         parent_keys <- names(join_keys)
         dataset_keys <- unname(join_keys)
 
+        y_arg <- if (length(parent_keys) == 0L) {
+          parent_dataname
+        } else {
+          sprintf(
+            "%s[, c(%s), drop = FALSE]",
+            parent_dataname,
+            toString(dQuote(parent_keys, q = FALSE))
+          )
+        }
+
+        more_args <- if (length(parent_keys) == 0 || length(dataset_keys) == 0) {
+          list()
+        } else if (identical(parent_keys, dataset_keys)) {
+          list(by = parent_keys)
+        } else {
+          list(by = stats::setNames(parent_keys, dataset_keys))
+        }
+
         merge_call <- call(
           "<-",
           as.name(dataname),
-          call_with_colon(
-            "dplyr::inner_join",
-            x = as.name(dataname),
-            y = if (length(parent_keys) == 0) {
-              as.name(parent_name)
-            } else {
-              call_extract_array(
-                dataname = parent_name,
-                column = parent_keys,
-                aisle = call("=", as.name("drop"), FALSE)
-              )
-            },
-            unlist_args = if (length(parent_keys) == 0 || length(dataset_keys) == 0) {
-              list()
-            } else if (identical(parent_keys, dataset_keys)) {
-              list(by = parent_keys)
-            } else {
-              list(by = setNames(parent_keys, nm = dataset_keys))
-            }
+          as.call(
+            c(
+              str2lang("dplyr::inner_join"),
+              x = as.name(dataname),
+              y = str2lang(y_arg),
+              more_args
+            )
           )
         )
+
         filter_call <- c(filter_call, merge_call)
       }
       filter_call

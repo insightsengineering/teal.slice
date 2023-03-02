@@ -210,6 +210,7 @@ init_filter_state.Date <- function(x,
   if (length(unique(x[!is.na(x)])) < getOption("teal.threshold_slider_vs_checkboxgroup")) {
     ChoicesFilterState$new(
       x = x,
+      x_reactive = x_reactive,
       varname = varname,
       varlabel = varlabel,
       dataname = dataname,
@@ -218,6 +219,7 @@ init_filter_state.Date <- function(x,
   } else {
     DateFilterState$new(
       x = x,
+      x_reactive = x_reactive,
       varname = varname,
       varlabel = varlabel,
       dataname = dataname,
@@ -238,6 +240,7 @@ init_filter_state.POSIXct <- function(x,
   if (length(unique(x[!is.na(x)])) < getOption("teal.threshold_slider_vs_checkboxgroup")) {
     ChoicesFilterState$new(
       x = x,
+      x_reactive = x_reactive,
       varname = varname,
       varlabel = varlabel,
       dataname = dataname,
@@ -246,6 +249,7 @@ init_filter_state.POSIXct <- function(x,
   } else {
     DatetimeFilterState$new(
       x = x,
+      x_reactive = x_reactive,
       varname = varname,
       varlabel = varlabel,
       dataname = dataname,
@@ -266,6 +270,7 @@ init_filter_state.POSIXlt <- function(x,
   if (length(unique(x[!is.na(x)])) < getOption("teal.threshold_slider_vs_checkboxgroup")) {
     ChoicesFilterState$new(
       x = x,
+      x_reactive = x_reactive,
       varname = varname,
       varlabel = varlabel,
       dataname = dataname,
@@ -274,6 +279,7 @@ init_filter_state.POSIXlt <- function(x,
   } else {
     DatetimeFilterState$new(
       x = x,
+      x_reactive = x_reactive,
       varname = varname,
       varlabel = varlabel,
       dataname = dataname,
