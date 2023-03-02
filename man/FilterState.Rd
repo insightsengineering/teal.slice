@@ -48,14 +48,6 @@ label of the variable (optional).}
 
 \item{\code{dataname}}{(\code{character(1)})\cr
 name of dataset where \code{x} is taken from.}
-
-\item{\code{extract_type}}{(\code{character(0)}, \code{character(1)})\cr
-whether condition calls should be prefixed by dataname. Possible values:
-\itemize{
-\item{\code{character(0)} (default)}{ \code{varname} in the condition call will not be prefixed}
-\item{\code{"list"}}{ \code{varname} in the condition call will be returned as \verb{<dataname>$<varname>}}
-\item{\code{"matrix"}}{ \code{varname} in the condition call will be returned as \verb{<dataname>[, <varname>]}}
-}}
 }
 \if{html}{\out{</div>}}
 }
