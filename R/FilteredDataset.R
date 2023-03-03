@@ -1,110 +1,3 @@
-#' Initializes `FilteredDataset`
-#'
-#' @keywords internal
-#' @examples
-#' # DefaultFilteredDataset example
-#' iris_fd <- teal.slice:::init_filtered_dataset(
-#'   iris,
-#'   dataname = "iris",
-#'   metadata = list(type = "teal")
-#' )
-#' \dontrun{
-#' shinyApp(
-#'   ui = fluidPage(
-#'     iris_fd$ui_add_filter_state(id = "add"),
-#'     iris_fd$ui("dataset"),
-#'     verbatimTextOutput("call"),
-#'     verbatimTextOutput("metadata")
-#'   ),
-#'   server = function(input, output, session) {
-#'     iris_fd$srv_add_filter_state(id = "add")
-#'     iris_fd$server(id = "dataset")
-#'
-#'     output$metadata <- renderText({
-#'       paste("Type =", iris_fd$get_metadata()$type)
-#'     })
-#'
-#'     output$call <- renderText({
-#'       paste(
-#'         vapply(iris_fd$get_call(), deparse1, character(1), collapse = "\n"),
-#'         collapse = "\n"
-#'       )
-#'     })
-#'   }
-#' )
-#' }
-#'
-#' # MAEFilteredDataset example
-#' library(MultiAssayExperiment)
-#' data(miniACC)
-#' MAE_fd <- teal.slice:::init_filtered_dataset(miniACC, "MAE", metadata = list(type = "MAE"))
-#' \dontrun{
-#' shinyApp(
-#'   ui = fluidPage(
-#'     MAE_fd$ui_add_filter_state(id = "add"),
-#'     MAE_fd$ui("dataset"),
-#'     verbatimTextOutput("call"),
-#'     verbatimTextOutput("metadata")
-#'   ),
-#'   server = function(input, output, session) {
-#'     MAE_fd$srv_add_filter_state(id = "add")
-#'     MAE_fd$server(id = "dataset")
-#'     output$metadata <- renderText({
-#'       paste("Type =", MAE_fd$get_metadata()$type)
-#'     })
-#'     output$call <- renderText({
-#'       paste(
-#'         vapply(MAE_fd$get_call(), deparse1, character(1), collapse = "\n"),
-#'         collapse = "\n"
-#'       )
-#'     })
-#'   }
-#' )
-#' }
-#' @param dataset (`data.frame` or `MultiAssayExperiment`)\cr
-#' @param dataname (`character`)\cr
-#'  A given name for the dataset it may not contain spaces
-#' @param keys optional, (`character`)\cr
-#'   Vector with primary keys
-#' @param label (`character`)\cr
-#'   Label to describe the dataset
-#' @param metadata (named `list` or `NULL`) \cr
-#'   Field containing metadata about the dataset. Each element of the list
-#'   should be atomic and length one.
-#' @export
-#' @note Although this function is exported for use in other packages, it may be changed or removed in a future release
-#'   at which point any code which relies on this exported function will need to be changed.
-init_filtered_dataset <- function(dataset, # nolint
-                                  dataname,
-                                  keys = character(0),
-                                  label = attr(dataset, "label"),
-                                  metadata = NULL) {
-  UseMethod("init_filtered_dataset")
-}
-
-#' @keywords internal
-#' @export
-init_filtered_dataset.data.frame <- function(dataset, # nolint
-                                             dataname,
-                                             keys = character(0),
-                                             label = attr(dataset, "label"),
-                                             metadata = NULL) {
-  DefaultFilteredDataset$new(dataset, dataname, keys, label, metadata)
-}
-
-#' @keywords internal
-#' @export
-init_filtered_dataset.MultiAssayExperiment <- function(dataset, # nolint
-                                                       dataname,
-                                                       keys = character(0),
-                                                       label = attr(dataset, "label"),
-                                                       metadata = NULL) {
-  if (!requireNamespace("MultiAssayExperiment", quietly = TRUE)) {
-    stop("Cannot load MultiAssayExperiment - please install the package or restart your session.")
-  }
-  MAEFilteredDataset$new(dataset, dataname, keys, label, metadata)
-}
-
 # FilteredDataset abstract --------
 #' @title `FilterStates` R6 class
 #' @description
@@ -134,7 +27,6 @@ FilteredDataset <- R6::R6Class( # nolint
     #'   should be atomic and length one.
     initialize = function(dataset, dataname, keys = character(0), label = attr(dataset, "label"), metadata = NULL) {
       # dataset assertion in child classes
-
       check_simple_name(dataname)
       checkmate::assert_character(keys, any.missing = FALSE)
       checkmate::assert_character(label, null.ok = TRUE)
@@ -146,6 +38,23 @@ FilteredDataset <- R6::R6Class( # nolint
       private$keys <- keys
       private$label <- if (is.null(label)) character(0) else label
       private$metadata <- metadata
+
+      # function executing reactive call and returning data
+      private$data_filtered_fun <- function(sid = "") {
+        checkmate::assert_character(sid)
+        if (identical(sid, integer(0))) {
+          logger::log_trace("filtering data dataname: { private$dataname }")
+        } else {
+          logger::log_trace("filtering data dataname: { dataname }, sid: { sid }")
+        }
+        env <- new.env(parent = parent.env(globalenv()))
+        env[[dataname]] <- private$dataset
+        filter_call <- self$get_call(sid)
+        eval_expr_with_msg(filter_call, env)
+        get(x = dataname, envir = env)
+      }
+
+      private$data_filtered <- reactive(private$data_filtered_fun())
       invisible(self)
     },
 
@@ -186,7 +95,6 @@ FilteredDataset <- R6::R6Class( # nolint
     },
     # managing filter states -----
 
-
     # getters ----
     #' @description
     #' Gets a filter expression
@@ -194,9 +102,21 @@ FilteredDataset <- R6::R6Class( # nolint
     #' This functions returns filter calls equivalent to selected items
     #' within each of `filter_states`. Configuration of the calls is constant and
     #' depends on `filter_states` type and order which are set during initialization.
+    #'
+    #' @param sid (`character`)\cr
+    #'  when specified then method returns code containing filter conditions of
+    #'  `FilterState` objects which `"sid"` attribute is different than this `sid` argument.
+    #'
     #' @return filter `call` or `list` of filter calls
-    get_call = function() {
-      stop("Pure virtual method.")
+    get_call = function(sid = "") {
+      filter_call <- Filter(
+        f = Negate(is.null),
+        x = lapply(self$get_filter_states(), function(x) x$get_call(sid))
+      )
+      if (length(filter_call) == 0) {
+        return(NULL)
+      }
+      filter_call
     },
 
     #' Gets the reactive values from the active `FilterState` objects.
@@ -244,9 +164,17 @@ FilteredDataset <- R6::R6Class( # nolint
 
     #' @description
     #' Gets the dataset object in this `FilteredDataset`
-    #' @return `data.frame` or `MultiAssayExperiment`
-    get_dataset = function() {
-      private$dataset
+    #' @param filtered (`logical(1)`)\cr
+    #'
+    #' @return `data.frame` or `MultiAssayExperiment` as a raw data
+    #'  or as a reactive with filter applied
+    #'
+    get_dataset = function(filtered = FALSE) {
+      if (filtered) {
+        private$data_filtered
+      } else {
+        private$dataset
+      }
     },
 
     #' @description
@@ -264,9 +192,11 @@ FilteredDataset <- R6::R6Class( # nolint
     #' as `self$get_dataset()`, if `NULL` then `self$get_dataset()`
     #' is used.
     #' @return (`matrix`) matrix of observations and subjects
-    get_filter_overview_info = function(filtered_dataset = self$get_dataset()) {
-      checkmate::assert_class(filtered_dataset, classes = class(self$get_dataset()))
-      df <- cbind(private$get_filter_overview_nobs(filtered_dataset), "")
+    get_filter_overview_info = function() {
+      dataset <- self$get_dataset()
+      data_filtered <- self$get_dataset(TRUE)
+
+      df <- cbind(private$get_filter_overview_nobs(dataset, data_filtered), "")
       rownames(df) <- self$get_dataname()
       colnames(df) <- c("Obs", "Subjects")
       df
@@ -282,6 +212,7 @@ FilteredDataset <- R6::R6Class( # nolint
     #' @description
     #' Gets labels of variables in the data
     #'
+    #'
     #' Variables are the column names of the data.
     #' Either, all labels must have been provided for all variables
     #' in `set_data` or `NULL`.
@@ -292,8 +223,8 @@ FilteredDataset <- R6::R6Class( # nolint
     #'   attribute does not exist for the data
     get_varlabels = function(variables = NULL) {
       checkmate::assert_character(variables, null.ok = TRUE, any.missing = FALSE)
-
-      labels <- formatters::var_labels(private$dataset, fill = FALSE)
+      dataset <- self$get_dataset()
+      labels <- formatters::var_labels(dataset, fill = FALSE)
       if (is.null(labels)) {
         return(NULL)
       }
@@ -316,26 +247,8 @@ FilteredDataset <- R6::R6Class( # nolint
     },
 
     #' @description
-    #' Gets variable names for the filtering.
-    #'
-    #' It takes the intersection of the column names
-    #' of the data and `private$filterable_varnames` if
-    #' `private$filterable_varnames` has positive length
-    #'
-    #' @return (`character` vector) of variable names
-    get_filterable_varnames = function() {
-      varnames <- get_supported_filter_varnames(self)
-      if (length(private$filterable_varnames) > 0) {
-        return(intersect(private$filterable_varnames, varnames))
-      }
-      return(varnames)
-    },
-
-    # setters ------
-    #' @description
     #' Set the allowed filterable variables
     #' @param varnames (`character` or `NULL`) The variables which can be filtered
-    #' See `self$get_filterable_varnames` for more details
     #'
     #' @details When retrieving the filtered variables only
     #' those which have filtering supported (i.e. are of the permitted types)
@@ -344,7 +257,10 @@ FilteredDataset <- R6::R6Class( # nolint
     #' @return invisibly this `FilteredDataset`
     set_filterable_varnames = function(varnames) {
       checkmate::assert_character(varnames, any.missing = FALSE, null.ok = TRUE)
-      private$filterable_varnames <- varnames
+      lapply(
+        self$get_filter_states(),
+        function(x) x$set_filterable_varnames(varnames)
+      )
       return(invisible(self))
     },
 
@@ -433,8 +349,6 @@ FilteredDataset <- R6::R6Class( # nolint
           dataname <- self$get_dataname()
           logger::log_trace("FilteredDataset$server initializing, dataname: { dataname }")
           checkmate::assert_string(dataname)
-          shiny::setBookmarkExclude("remove_filters")
-
           output$filter_count <- renderText(
             sprintf(
               "%d filter%s applied",
@@ -496,10 +410,8 @@ FilteredDataset <- R6::R6Class( # nolint
     #' Server module to add filter variable for this dataset
     #' @param id (`character(1)`)\cr
     #'   an ID string that corresponds with the ID used to call the module's UI function.
-    #' @param ... ignored
     #' @return `moduleServer` function.
-    srv_add_filter_state = function(id, ...) {
-      check_ellipsis(..., stop = FALSE)
+    srv_add_filter_state = function(id) {
       moduleServer(
         id = id,
         function(input, output, session) {
@@ -510,25 +422,24 @@ FilteredDataset <- R6::R6Class( # nolint
   ),
   ## __Private Fields ====
   private = list(
-    dataset = NULL,
+    dataset = NULL, # data.frame or MultiAssayExperiment
+    data_filtered = NULL,
+    data_filtered_fun = NULL, # function
     filter_states = list(),
+    filterable_varnames = character(0),
     dataname = character(0),
     keys = character(0),
+    parent = NULL, # reactive
     label = character(0),
     metadata = NULL,
-
-    # if this has length > 0 then only varnames in this vector
-    # can be filtered
-    filterable_varnames = NULL,
 
     # Adds `FilterStates` to the `private$filter_states`.
     # `FilterStates` is added once for each element of the dataset.
     # @param filter_states (`FilterStates`)
     # @param id (`character(1)`)
     add_filter_states = function(filter_states, id) {
-      stopifnot(is(filter_states, "FilterStates"))
+      checkmate::assert_class(filter_states, "FilterStates")
       checkmate::assert_string(id)
-
       x <- setNames(list(filter_states), id)
       private$filter_states <- c(self$get_filter_states(), x)
     },

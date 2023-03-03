@@ -3,7 +3,7 @@
 \docType{class}
 \name{DatetimeFilterState}
 \alias{DatetimeFilterState}
-\title{\code{FilterState} object for \code{POSIXct} variable}
+\title{\code{InteractiveFilterState} object for \code{POSIXct} variable}
 \description{
 Manages choosing a range of date-times
 }
@@ -13,12 +13,12 @@ making it possible to pass any object coercible to \code{POSIXct} to this method
 }
 \examples{
 filter_state <- teal.slice:::DatetimeFilterState$new(
-  c(Sys.time() + seq(0, by = 3600, length.out = 10), NA),
+  x = c(Sys.time() + seq(0, by = 3600, length.out = 10), NA),
+  x_reactive = reactive(NULL),
   varname = "x",
   dataname = "data",
   extract_type = character(0)
 )
-
 isolate(filter_state$get_call())
 isolate(filter_state$set_selected(c(Sys.time() + 3L, Sys.time() + 8L)))
 isolate(filter_state$set_keep_na(TRUE))
@@ -27,17 +27,22 @@ isolate(filter_state$get_call())
 \dontrun{
 # working filter in an app
 library(shiny)
+library(shinyjs)
 
 datetimes <- as.POSIXct(c("2012-01-01 12:00:00", "2020-01-01 12:00:00"))
 data_datetime <- c(seq(from = datetimes[1], to = datetimes[2], length.out = 100), NA)
 filter_state_datetime <- DatetimeFilterState$new(
   x = data_datetime,
+  x_reactive = reactive(NULL),
   varname = "variable",
   varlabel = "label"
 )
 filter_state_datetime$set_state(list(selected = data_datetime[c(47, 98)], keep_na = TRUE))
 
 ui <- fluidPage(
+  useShinyjs(),
+  include_css_files(pattern = "filter-panel"),
+  include_js_files(pattern = "count-bar-labels"),
   column(4, div(
     h4("DatetimeFilterState"),
     isolate(filter_state_datetime$ui("fs"))
@@ -98,8 +103,8 @@ filter <- teal.slice:::DatetimeFilterState$new(
 filter$set_selected(c(date + 1, date + 2))
 }
 \keyword{internal}
-\section{Super class}{
-\code{\link[teal.slice:FilterState]{teal.slice::FilterState}} -> \code{DatetimeFilterState}
+\section{Super classes}{
+\code{\link[teal.slice:FilterState]{teal.slice::FilterState}} -> \code{\link[teal.slice:InteractiveFilterState]{teal.slice::InteractiveFilterState}} -> \code{DatetimeFilterState}
 }
 \section{Methods}{
 \subsection{Public methods}{
@@ -115,19 +120,19 @@ filter$set_selected(c(date + 1, date + 2))
 \if{html}{\out{
 <details><summary>Inherited methods</summary>
 <ul>
-<li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilterState" data-id="destroy_observers"><a href='../../teal.slice/html/FilterState.html#method-FilterState-destroy_observers'><code>teal.slice::FilterState$destroy_observers()</code></a></span></li>
-<li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilterState" data-id="get_dataname"><a href='../../teal.slice/html/FilterState.html#method-FilterState-get_dataname'><code>teal.slice::FilterState$get_dataname()</code></a></span></li>
-<li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilterState" data-id="get_keep_na"><a href='../../teal.slice/html/FilterState.html#method-FilterState-get_keep_na'><code>teal.slice::FilterState$get_keep_na()</code></a></span></li>
-<li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilterState" data-id="get_selected"><a href='../../teal.slice/html/FilterState.html#method-FilterState-get_selected'><code>teal.slice::FilterState$get_selected()</code></a></span></li>
-<li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilterState" data-id="get_state"><a href='../../teal.slice/html/FilterState.html#method-FilterState-get_state'><code>teal.slice::FilterState$get_state()</code></a></span></li>
-<li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilterState" data-id="get_varlabel"><a href='../../teal.slice/html/FilterState.html#method-FilterState-get_varlabel'><code>teal.slice::FilterState$get_varlabel()</code></a></span></li>
-<li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilterState" data-id="get_varname"><a href='../../teal.slice/html/FilterState.html#method-FilterState-get_varname'><code>teal.slice::FilterState$get_varname()</code></a></span></li>
-<li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilterState" data-id="print"><a href='../../teal.slice/html/FilterState.html#method-FilterState-print'><code>teal.slice::FilterState$print()</code></a></span></li>
-<li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilterState" data-id="server"><a href='../../teal.slice/html/FilterState.html#method-FilterState-server'><code>teal.slice::FilterState$server()</code></a></span></li>
-<li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilterState" data-id="set_keep_na"><a href='../../teal.slice/html/FilterState.html#method-FilterState-set_keep_na'><code>teal.slice::FilterState$set_keep_na()</code></a></span></li>
-<li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilterState" data-id="set_na_rm"><a href='../../teal.slice/html/FilterState.html#method-FilterState-set_na_rm'><code>teal.slice::FilterState$set_na_rm()</code></a></span></li>
-<li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilterState" data-id="set_state"><a href='../../teal.slice/html/FilterState.html#method-FilterState-set_state'><code>teal.slice::FilterState$set_state()</code></a></span></li>
-<li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilterState" data-id="ui"><a href='../../teal.slice/html/FilterState.html#method-FilterState-ui'><code>teal.slice::FilterState$ui()</code></a></span></li>
+<li><span class="pkg-link" data-pkg="teal.slice" data-topic="InteractiveFilterState" data-id="destroy_observers"><a href='../../teal.slice/html/InteractiveFilterState.html#method-InteractiveFilterState-destroy_observers'><code>teal.slice::InteractiveFilterState$destroy_observers()</code></a></span></li>
+<li><span class="pkg-link" data-pkg="teal.slice" data-topic="InteractiveFilterState" data-id="get_dataname"><a href='../../teal.slice/html/InteractiveFilterState.html#method-InteractiveFilterState-get_dataname'><code>teal.slice::InteractiveFilterState$get_dataname()</code></a></span></li>
+<li><span class="pkg-link" data-pkg="teal.slice" data-topic="InteractiveFilterState" data-id="get_keep_na"><a href='../../teal.slice/html/InteractiveFilterState.html#method-InteractiveFilterState-get_keep_na'><code>teal.slice::InteractiveFilterState$get_keep_na()</code></a></span></li>
+<li><span class="pkg-link" data-pkg="teal.slice" data-topic="InteractiveFilterState" data-id="get_selected"><a href='../../teal.slice/html/InteractiveFilterState.html#method-InteractiveFilterState-get_selected'><code>teal.slice::InteractiveFilterState$get_selected()</code></a></span></li>
+<li><span class="pkg-link" data-pkg="teal.slice" data-topic="InteractiveFilterState" data-id="get_state"><a href='../../teal.slice/html/InteractiveFilterState.html#method-InteractiveFilterState-get_state'><code>teal.slice::InteractiveFilterState$get_state()</code></a></span></li>
+<li><span class="pkg-link" data-pkg="teal.slice" data-topic="InteractiveFilterState" data-id="get_varlabel"><a href='../../teal.slice/html/InteractiveFilterState.html#method-InteractiveFilterState-get_varlabel'><code>teal.slice::InteractiveFilterState$get_varlabel()</code></a></span></li>
+<li><span class="pkg-link" data-pkg="teal.slice" data-topic="InteractiveFilterState" data-id="get_varname"><a href='../../teal.slice/html/InteractiveFilterState.html#method-InteractiveFilterState-get_varname'><code>teal.slice::InteractiveFilterState$get_varname()</code></a></span></li>
+<li><span class="pkg-link" data-pkg="teal.slice" data-topic="InteractiveFilterState" data-id="print"><a href='../../teal.slice/html/InteractiveFilterState.html#method-InteractiveFilterState-print'><code>teal.slice::InteractiveFilterState$print()</code></a></span></li>
+<li><span class="pkg-link" data-pkg="teal.slice" data-topic="InteractiveFilterState" data-id="server"><a href='../../teal.slice/html/InteractiveFilterState.html#method-InteractiveFilterState-server'><code>teal.slice::InteractiveFilterState$server()</code></a></span></li>
+<li><span class="pkg-link" data-pkg="teal.slice" data-topic="InteractiveFilterState" data-id="set_keep_na"><a href='../../teal.slice/html/InteractiveFilterState.html#method-InteractiveFilterState-set_keep_na'><code>teal.slice::InteractiveFilterState$set_keep_na()</code></a></span></li>
+<li><span class="pkg-link" data-pkg="teal.slice" data-topic="InteractiveFilterState" data-id="set_na_rm"><a href='../../teal.slice/html/InteractiveFilterState.html#method-InteractiveFilterState-set_na_rm'><code>teal.slice::InteractiveFilterState$set_na_rm()</code></a></span></li>
+<li><span class="pkg-link" data-pkg="teal.slice" data-topic="InteractiveFilterState" data-id="set_state"><a href='../../teal.slice/html/InteractiveFilterState.html#method-InteractiveFilterState-set_state'><code>teal.slice::InteractiveFilterState$set_state()</code></a></span></li>
+<li><span class="pkg-link" data-pkg="teal.slice" data-topic="InteractiveFilterState" data-id="ui"><a href='../../teal.slice/html/InteractiveFilterState.html#method-InteractiveFilterState-ui'><code>teal.slice::InteractiveFilterState$ui()</code></a></span></li>
 </ul>
 </details>
 }}
@@ -143,6 +148,7 @@ and is set only if object is initialized in \code{shiny}.
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{DatetimeFilterState$new(
   x,
+  x_reactive,
   varname,
   varlabel = character(0),
   dataname = NULL,
@@ -155,6 +161,11 @@ and is set only if object is initialized in \code{shiny}.
 \describe{
 \item{\code{x}}{(\code{POSIXct} or \code{POSIXlt})\cr
 values of the variable used in filter}
+
+\item{\code{x_reactive}}{(\code{reactive})\cr
+a \code{reactive} returning a filtered vector or returning \code{NULL}. Is used to update
+counts following the change in values of the filtered dataset. If the \code{reactive}
+is \code{NULL} counts based on filtered dataset are not shown.}
 
 \item{\code{varname}}{(\code{character}, \code{name})\cr
 name of the variable}

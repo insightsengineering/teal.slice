@@ -307,3 +307,89 @@ testthat::test_that("$format() concatenates its FilterState elements using \\n w
     )
   )
 })
+
+testthat::test_that(
+  "DFFilterStates$set_filter_state sets sid after state_list_index and varname",
+  code = {
+    testFS <- R6::R6Class(
+      "testFS",
+      inherit = DFFilterStates,
+      public = list(
+        get_filter_states_sid = function() {
+          vapply(
+            private$state_list[[1L]](),
+            FUN = attr,
+            which = "sid",
+            FUN.VALUE = character(1)
+          )
+        }
+      )
+    )
+    filter_states <- testFS$new(
+      data = iris,
+      dataname = "iris"
+    )
+    filter_states$set_filter_state(
+      list(
+        Sepal.Length = c(5.1, 6.4),
+        Petal.Length = c(1.5, 6.9)
+      )
+    )
+    testthat::expect_true(
+      all(grepl(
+        "1-(Sepal.Length|Petal.Length)-[0-9]+$",
+        shiny::isolate(filter_states$get_filter_states_sid())
+      ))
+    )
+})
+
+testthat::test_that(
+  "DFFilterState$get_call skips conditions form FilterState which are identified by sid",
+  code = {
+    testFS <- R6::R6Class(
+      "testFS",
+      inherit = DFFilterStates,
+      public = list(
+        get_filter_states_sid = function() {
+          vapply(
+            private$state_list[[1L]](),
+            FUN = attr,
+            which = "sid",
+            FUN.VALUE = character(1)
+          )
+        }
+      )
+    )
+    filter_states <- testFS$new(data = iris, dataname = "iris")
+    filter_states$set_filter_state(
+      list(
+        Sepal.Length = c(5.1, 6.4),
+        Petal.Length = c(1.5, 6.9),
+        Species = "setosa"
+      )
+    )
+    sid_attrs <- unname(shiny::isolate(filter_states$get_filter_states_sid()))
+    testthat::expect_identical(
+      shiny::isolate(filter_states$get_call(sid = sid_attrs[1])),
+      quote(
+        iris <- dplyr::filter(iris, Petal.Length >= 1.5 & Petal.Length <= 6.9 & Species == "setosa")
+      )
+    )
+    testthat::expect_identical(
+      shiny::isolate(filter_states$get_call(sid = sid_attrs[2])),
+      quote(
+        iris <- dplyr::filter(iris, Sepal.Length >= 5.1 & Sepal.Length <= 6.4 & Species == "setosa")
+      )
+    )
+    testthat::expect_identical(
+      shiny::isolate(filter_states$get_call(sid = sid_attrs[3])),
+      quote(
+        iris <- dplyr::filter(iris, Sepal.Length >= 5.1 & Sepal.Length <= 6.4 & (Petal.Length >= 1.5 & Petal.Length <= 6.9))
+      )
+    )
+    testthat::expect_null(
+      shiny::isolate(filter_states$get_call(sid = sid_attrs))
+    )
+
+  }
+)

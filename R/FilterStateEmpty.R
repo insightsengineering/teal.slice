@@ -1,6 +1,6 @@
 #' @name EmptyFilterState
-#' @title `FilterState` object for empty variable
-#' @description `FilterState` subclass representing an empty variable
+#' @title `InteractiveFilterState` object for empty variable
+#' @description `InteractiveFilterState` subclass representing an empty variable
 #' @docType class
 #' @keywords internal
 #'
@@ -19,7 +19,7 @@
 #'
 EmptyFilterState <- R6::R6Class( # nolint
   "EmptyFilterState",
-  inherit = FilterState,
+  inherit = InteractiveFilterState,
 
   # public methods ----
   public = list(
@@ -28,6 +28,10 @@ EmptyFilterState <- R6::R6Class( # nolint
     #'
     #' @param x (`vector`)\cr
     #'   values of the variable used in filter
+    #' @param x_reactive (`reactive`)\cr
+    #'   a `reactive` returning a filtered vector or returning `NULL`. Is used to update
+    #'   counts following the change in values of the filtered dataset. If the `reactive`
+    #'   is `NULL` counts based on filtered dataset are not shown.
     #' @param varname (`character`, `name`)\cr
     #'   name of the variable
     #' @param varlabel (`character(1)`)\cr
@@ -43,11 +47,12 @@ EmptyFilterState <- R6::R6Class( # nolint
     #' }
     #'
     initialize = function(x,
+                          x_reactive = reactive(NULL),
                           varname,
                           varlabel = character(0),
                           dataname = NULL,
                           extract_type = character(0)) {
-      super$initialize(x, varname, varlabel, dataname, extract_type)
+      super$initialize(x, x_reactive, varname, varlabel, dataname, extract_type)
       private$set_choices(list())
       self$set_selected(list())
 
@@ -154,6 +159,28 @@ EmptyFilterState <- R6::R6Class( # nolint
         id = id,
         function(input, output, session) {
           private$keep_na_srv("keep_na")
+        }
+      )
+    },
+
+    # @description
+    # UI module to display filter summary.
+    # EmptyFilterState contains only missing
+    # values.
+    # @param id `shiny` id parameter
+    ui_summary = function(id) {
+      tagList(tags$span("All empty"))
+    },
+
+    # @description
+    # Server module to display filter summary
+    # @param shiny `id` parametr passed to moduleServer
+    # Doesn't render anything
+    server_summary = function(id) {
+      moduleServer(
+        id = id,
+        function(input, output, session) {
+          NULL
         }
       )
     }
