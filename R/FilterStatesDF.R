@@ -257,24 +257,6 @@ DFFilterStates <- R6::R6Class( # nolint
     #' @return `list` with named elements corresponding to `FilterState` in the `state_list`.
     #'
     get_filter_state = function() {
-
-      lapply(
-        private$state_list(),
-        function(x) {
-          do.call(
-            "filter_var",
-            c(
-              c(
-                list()
-                x$get_state()
-              ),
-              attr(x, "metadata")
-            )
-          )
-
-        }
-      )
-
       lapply(self$state_list_get(1L), function(x) x$get_state())
     },
 
