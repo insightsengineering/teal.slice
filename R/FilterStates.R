@@ -58,7 +58,7 @@ FilterStates <- R6::R6Class( # nolint
     #'   the R object which `subset` function is applied on.
     #'
     #' @param data_reactive (`function(sid)`)\cr
-    #'   should return a `SummarizedExperiment` object or `NULL`.
+    #'   should return an object of the same type as `data` object or `NULL`.
     #'   This object is needed for the `FilterState` counts being updated
     #'   on a change in filters. If function returns `NULL` then filtered counts are not shown.
     #'   Function has to have `sid` argument being a character.
@@ -611,6 +611,13 @@ FilterStates <- R6::R6Class( # nolint
             } else {
               data[, varname]
             },
+
+            # data_reactive is a function which eventually calls get_call(sid).
+            # This chain of calls returns column from the data filtered by everything
+            # but filter identified by the sid argument. FilterState then get x_reactive
+            # and this no longer needs to be a function to pass sid. reactive in the FilterState
+            # is also beneficial as it can be cached and retriger filter counts only if
+            # returned vector is different.
             x_reactive = if (!is.array(data)) {
               reactive(data_reactive(sid)[[varname]])
             } else {

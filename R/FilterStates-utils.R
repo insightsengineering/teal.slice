@@ -8,9 +8,11 @@
 #'
 #' @param data_reactive (`function(sid)`)\cr
 #'   should return an object of the same type as `data` or `NULL`.
-#'   This object is needed for the `FilterState` counts being updated
-#'   on a change in filters. If function returns `NULL` then filtered counts are not shown.
-#'   Function has to have `sid` argument being a character.
+#'   This object is needed for the `FilterState` shiny module to update
+#'   counts if filtered data changes.
+#'   If function returns `NULL` then filtered counts
+#'   are not shown. Function has to have `sid` argument being a character which
+#'   is related to `sid` argument in the `get_call` method.
 #'
 #' @param dataname (`character(1)`)\cr
 #'   name of the data used in the expression
