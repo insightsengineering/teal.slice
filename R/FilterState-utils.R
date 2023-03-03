@@ -1,6 +1,6 @@
-#' Initializes `FilterState`
+#' Initializes `InteractiveFilterState`
 #'
-#' Initializes `FilterState` depending on a variable class.\cr
+#' Initializes `InteractiveFilterState` depending on a variable class.\cr
 #' @param x (`vector`)\cr
 #'   values of the variable used in filter
 #'
@@ -101,7 +101,7 @@ init_filter_state.default <- function(x,
                                       dataname = NULL,
                                       extract_type = character(0)) {
   if (is.null(varlabel)) varlabel <- character(0)
-  FilterState$new(
+  InteractiveFilterState$new(
     x = x,
     x_reactive = x_reactive,
     varname = varname,
@@ -207,14 +207,25 @@ init_filter_state.Date <- function(x,
                                    dataname = NULL,
                                    extract_type = character(0)) {
   if (is.null(varlabel)) varlabel <- character(0)
-  DateFilterState$new(
-    x = x,
-    x_reactive = x_reactive,
-    varname = varname,
-    varlabel = varlabel,
-    dataname = dataname,
-    extract_type = extract_type
-  )
+  if (length(unique(x[!is.na(x)])) < getOption("teal.threshold_slider_vs_checkboxgroup")) {
+    ChoicesFilterState$new(
+      x = x,
+      x_reactive = x_reactive,
+      varname = varname,
+      varlabel = varlabel,
+      dataname = dataname,
+      extract_type = extract_type
+    )
+  } else {
+    DateFilterState$new(
+      x = x,
+      x_reactive = x_reactive,
+      varname = varname,
+      varlabel = varlabel,
+      dataname = dataname,
+      extract_type = extract_type
+    )
+  }
 }
 
 #' @keywords internal
@@ -226,14 +237,25 @@ init_filter_state.POSIXct <- function(x,
                                       dataname = NULL,
                                       extract_type = character(0)) {
   if (is.null(varlabel)) varlabel <- character(0)
-  DatetimeFilterState$new(
-    x = x,
-    x_reactive = x_reactive,
-    varname = varname,
-    varlabel = varlabel,
-    dataname = dataname,
-    extract_type = extract_type
-  )
+  if (length(unique(x[!is.na(x)])) < getOption("teal.threshold_slider_vs_checkboxgroup")) {
+    ChoicesFilterState$new(
+      x = x,
+      x_reactive = x_reactive,
+      varname = varname,
+      varlabel = varlabel,
+      dataname = dataname,
+      extract_type = extract_type
+    )
+  } else {
+    DatetimeFilterState$new(
+      x = x,
+      x_reactive = x_reactive,
+      varname = varname,
+      varlabel = varlabel,
+      dataname = dataname,
+      extract_type = extract_type
+    )
+  }
 }
 
 #' @keywords internal
@@ -245,14 +267,25 @@ init_filter_state.POSIXlt <- function(x,
                                       dataname = NULL,
                                       extract_type = character(0)) {
   if (is.null(varlabel)) varlabel <- character(0)
-  DatetimeFilterState$new(
-    x = x,
-    x_reactive = x_reactive,
-    varname = varname,
-    varlabel = varlabel,
-    dataname = dataname,
-    extract_type = extract_type
-  )
+  if (length(unique(x[!is.na(x)])) < getOption("teal.threshold_slider_vs_checkboxgroup")) {
+    ChoicesFilterState$new(
+      x = x,
+      x_reactive = x_reactive,
+      varname = varname,
+      varlabel = varlabel,
+      dataname = dataname,
+      extract_type = extract_type
+    )
+  } else {
+    DatetimeFilterState$new(
+      x = x,
+      x_reactive = x_reactive,
+      varname = varname,
+      varlabel = varlabel,
+      dataname = dataname,
+      extract_type = extract_type
+    )
+  }
 }
 
 #' Check that a given range is valid

@@ -1,5 +1,5 @@
 #' @name LogicalFilterState
-#' @title `FilterState` object for logical variable
+#' @title `InteractiveFilterState` object for logical variable
 #' @description Manages choosing a logical state
 #' @docType class
 #' @keywords internal
@@ -80,7 +80,7 @@
 #'
 LogicalFilterState <- R6::R6Class( # nolint
   "LogicalFilterState",
-  inherit = FilterState,
+  inherit = InteractiveFilterState,
 
   # public methods ----
   public = list(
@@ -164,15 +164,13 @@ LogicalFilterState <- R6::R6Class( # nolint
     #' For `LogicalFilterState` it's a `!<varname>` or `<varname>` and optionally
     #' `is.na(<varname>)`
     get_call = function() {
-      
-      filter_call <- call_condition_logical(
-        varname = private$get_varname_prefixed(),
-        choice = self$get_selected()
-      )
-
-      filter_call <- private$add_keep_na_call(filter_call)
-
-      filter_call
+      filter_call <-
+        if (self$get_selected()) {
+          private$get_varname_prefixed()
+        } else {
+          call("!", private$get_varname_prefixed())
+        }
+      private$add_keep_na_call(filter_call)
     },
 
     #' @description

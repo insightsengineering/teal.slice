@@ -1,5 +1,5 @@
 #' @name DateFilterState
-#' @title `FilterState` object for Date variable
+#' @title `InteractiveFilterState` object for Date variable
 #' @description Manages choosing a range of Dates
 #' @docType class
 #' @keywords internal
@@ -86,7 +86,7 @@
 #'
 DateFilterState <- R6::R6Class( # nolint
   "DateFilterState",
-  inherit = FilterState,
+  inherit = InteractiveFilterState,
 
   # public methods ----
 
@@ -174,14 +174,14 @@ DateFilterState <- R6::R6Class( # nolint
     #' optional `is.na(<varname>)`.
     #' @return (`call`)
     get_call = function() {
-      filter_call <- call_condition_range_date(
-        varname = private$get_varname_prefixed(),
-        range = self$get_selected()
-      )
-
-      filter_call <- private$add_keep_na_call(filter_call)
-
-      filter_call
+      choices <- as.character(self$get_selected())
+      filter_call <-
+        call(
+          "&",
+          call(">=", private$get_varname_prefixed(), call("as.Date", choices[1L])),
+          call("<=", private$get_varname_prefixed(), call("as.Date", choices[2L]))
+        )
+      private$add_keep_na_call(filter_call)
     },
 
     #' @description

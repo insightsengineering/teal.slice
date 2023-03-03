@@ -1,16 +1,16 @@
-#' @name FilterState
+#' @name InteractiveFilterState
 #' @docType class
 #'
 #'
-#' @title FilterState Abstract Class
+#' @title InteractiveFilterState Abstract Class
 #'
-#' @description Abstract class to encapsulate filter states
+#' @description Abstract class to encapsulate single filter state
 #'
 #' @details
 #' This class is responsible for managing single filter item within
 #' `FilteredData` class. Filter states depend on the variable type:
 #' (`logical`, `integer`, `numeric`, `factor`, `character`, `Date`, `POSIXct`, `POSIXlt`)
-#' and returns `FilterState` object with class corresponding to input variable.
+#' and returns `InteractiveFilterState` object with class corresponding to input variable.
 #' Class controls single filter entry in `module_single_filter_item` and returns
 #' code relevant to selected values.
 #' - `factor`, `character`: `class = ChoicesFilterState`
@@ -31,22 +31,23 @@
 #' \cr
 #' \cr
 #' @section Modifying state:
-#' Modifying a `FilterState` object is possible in three scenarios:
+#' Modifying a `InteractiveFilterState` object is possible in three scenarios:
 #' * In the interactive session by directly specifying values of `selected`,
 #'   `keep_na` or `keep_inf` using `set_state` method (to update all at once),
 #'   or using `set_selected`, `set_keep_na` or `set_keep_inf`
 #' * In a running application by changing appropriate inputs
 #' * In a running application by using [filter_state_api] which directly uses `set_state` method
-#'  of the `FilterState` object.
+#'  of the `InteractiveFilterState` object.
 #'
 #' @keywords internal
-FilterState <- R6::R6Class( # nolint
-  "FilterState",
+InteractiveFilterState <- R6::R6Class( # nolint
+  "InteractiveFilterState",
+  inherit = FilterState,
 
   # public methods ----
   public = list(
     #' @description
-    #' Initialize a `FilterState` object
+    #' Initialize a `InteractiveFilterState` object
     #' @param x (`vector`)\cr
     #'   values of the variable used in filter
     #' @param x_reactive (`reactive`)\cr
@@ -442,50 +443,42 @@ FilterState <- R6::R6Class( # nolint
     cache = NULL, # cache state when filter disabled so we can later restore
 
     # private methods ----
+
+    # @description
+    # Return variable name prefixed by dataname to be evaluated as extracted object,
+    # for example `data$var`
+    # @return a character string representation of a subset call
+    #         that extracts the variable from the dataset
+    get_varname_prefixed = function() {
+      ans <-
+        if (isTRUE(private$extract_type == "list")) {
+          sprintf("%s$%s", private$dataname, private$varname)
+        } else if (isTRUE(private$extract_type == "matrix")) {
+          sprintf("%s[, \"%s\"]", private$dataname, private$varname)
+        } else {
+          private$varname
+        }
+      str2lang(ans)
+    },
+
     # @description
     # Adds `is.na(varname)` before existing condition calls if `keep_na` is selected.
     # Otherwise, if missings are found in the variable `!is.na` will be added
     # only if `private$na_rm = TRUE`
-    # @return (`call`)
+    # @return a `call`
     add_keep_na_call = function(filter_call) {
       if (isTRUE(self$get_keep_na())) {
-        call(
-          "|",
-          call("is.na", private$get_varname_prefixed()),
-          filter_call
-        )
-      } else if (isTRUE(private$na_rm) && private$na_count > 0) {
+        call("|", call("is.na", private$get_varname_prefixed()), filter_call)
+      } else if (isTRUE(private$na_rm) && private$na_count > 0L) {
         call(
           "&",
-          substitute(!is.na(var), list(var = private$get_varname_prefixed())),
+          call("!", call("is.na", private$get_varname_prefixed())),
           filter_call
         )
       } else {
         filter_call
       }
     },
-
-    # @description
-    # Prefixed (or not) variable
-    #
-    # Return variable name needed to condition call.
-    # If `isTRUE(private$use_dataset)` variable is prefixed by
-    # dataname to be evaluated as extracted object, for example
-    # `data$var`
-    # @return (`name` or `call`)
-    get_varname_prefixed = function() {
-      if (isTRUE(private$extract_type == "list")) {
-        call_extract_list(private$dataname, private$varname)
-      } else if (isTRUE(private$extract_type == "matrix")) {
-        call_extract_matrix(
-          dataname = private$dataname,
-          column = private$varname
-        )
-      } else {
-        str2lang(private$varname)
-      }
-    },
-
 
     # Sets `keep_na` field according to observed `input$keep_na`
     # If `keep_na = TRUE` `is.na(varname)` is added to the returned call.

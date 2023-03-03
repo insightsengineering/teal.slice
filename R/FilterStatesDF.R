@@ -187,7 +187,7 @@ DFFilterStates <- R6::R6Class( # nolint
     #'
     #' @return `character(1)`
     get_fun = function() {
-      return("dplyr::filter")
+      "dplyr::filter"
     },
 
     #' @description

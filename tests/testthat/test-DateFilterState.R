@@ -1,125 +1,113 @@
+dates <- as.Date("2000-01-01") + 0:9
+
 testthat::test_that("The constructor accepts a Date object", {
-  testthat::expect_no_error(DateFilterState$new(as.Date("2013-07-13"), varname = "test"))
+  testthat::expect_no_error(DateFilterState$new(dates, x_reactive = reactive(NULL), varname = "variable"))
 })
 
 testthat::test_that("get_call returns a condition true for the object passed in the constructor", {
-  test_date <- as.Date("2013-07-13")
-  filter_state <- DateFilterState$new(test_date, varname = "test_date")
-  testthat::expect_true(eval(shiny::isolate(filter_state$get_call())))
+  filter_state <- DateFilterState$new(dates, x_reactive = reactive(NULL), varname = "dates")
+  testthat::expect_true(all(eval(shiny::isolate(filter_state$get_call()))))
 })
 
 testthat::test_that("set_selected accepts an array of two Date objects", {
-  test_date <- as.Date("2013-07-13")
-  filter_state <- DateFilterState$new(test_date, varname = "test_date")
-  testthat::expect_no_error(filter_state$set_selected(c(test_date, test_date)))
+  filter_state <- DateFilterState$new(dates, x_reactive = reactive(NULL), varname = "variable")
+  testthat::expect_no_error(filter_state$set_selected(dates[c(1, 10)]))
 })
 
 testthat::test_that("set_selected warns when selection is not within the possible range", {
-  test_date <- as.Date("13/07/2013")
-  filter_state <- DateFilterState$new(test_date, varname = "test_date")
+  filter_state <- DateFilterState$new(dates, x_reactive = reactive(NULL), varname = "variable")
   testthat::expect_warning(
-    filter_state$set_selected(c(test_date - 1, test_date)),
+    filter_state$set_selected(c(dates[1] - 1, dates[10])),
     regexp = "outside of the possible range"
   )
   testthat::expect_warning(
-    filter_state$set_selected(c(test_date, test_date + 1)),
+    filter_state$set_selected(c(dates[1], dates[10] + 1)),
     regexp = "outside of the possible range"
   )
   testthat::expect_warning(
-    filter_state$set_selected(c(test_date - 1, test_date + 1)),
+    filter_state$set_selected(c(dates[1] - 1, dates[10] + 1)),
     regexp = "outside of the possible range"
   )
 })
 
 testthat::test_that("set_selected limits the selected range to the lower and the upper bound of the possible range", {
-  test_date <- as.Date(c("13/07/2013", "14/07/2013"))
-  filter_state <- DateFilterState$new(test_date, varname = "test_date")
-  suppressWarnings(filter_state$set_selected(c(test_date[1] - 1, test_date[1])))
-  testthat::expect_equal(shiny::isolate(filter_state$get_selected()), c(test_date[1], test_date[1]))
-
-  suppressWarnings(filter_state$set_selected(c(test_date[2], test_date[2] + 1)))
-  testthat::expect_equal(shiny::isolate(filter_state$get_selected()), c(test_date[2], test_date[2]))
-
-  suppressWarnings(filter_state$set_selected(c(test_date[1] - 1, test_date[2] + 1)))
-  testthat::expect_equal(shiny::isolate(filter_state$get_selected()), c(test_date[1], test_date[2]))
+  filter_state <- DateFilterState$new(dates, x_reactive = reactive(NULL), varname = "variable")
+  suppressWarnings(filter_state$set_selected(c(dates[1] - 1, dates[10])))
+  testthat::expect_equal(shiny::isolate(filter_state$get_selected()), c(dates[1], dates[10]))
+  suppressWarnings(filter_state$set_selected(c(dates[1], dates[10] + 1)))
+  testthat::expect_equal(shiny::isolate(filter_state$get_selected()), c(dates[1], dates[10]))
+  suppressWarnings(filter_state$set_selected(c(dates[1] - 1, dates[10] + 1)))
+  testthat::expect_equal(shiny::isolate(filter_state$get_selected()), c(dates[1], dates[10]))
 })
 
-testthat::test_that("set_selected throws when selection is completely outside of the possible range", {
-  test_date <- as.Date("13/07/2013")
-  filter_state <- DateFilterState$new(test_date, varname = "test_date")
+testthat::test_that("set_selected raises error when selection is not sorted", {
+  filter_state <- DateFilterState$new(dates, x_reactive = reactive(NULL), varname = "variable")
   testthat::expect_error(
-    suppressWarnings(filter_state$set_selected(c(test_date - 2, test_date - 1))),
+    suppressWarnings(filter_state$set_selected(dates[c(10, 1)])),
     regexp = "the upper bound of the range lower than the lower bound"
   )
 })
 
-testthat::test_that("set_selected throws when selection is not Date", {
-  test_date <- as.Date(c("2013/07/13", "2013/07/14", "2013/07/15"))
-  filter_state <- DateFilterState$new(test_date, varname = "test_date")
+testthat::test_that("set_selected raises error when selection is not Date", {
+  filter_state <- DateFilterState$new(dates, x_reactive = reactive(NULL), varname = "variable")
   testthat::expect_error(
     filter_state$set_selected(c("a", "b")),
     "The array of set values must contain values coercible to Date."
   )
 })
 
-testthat::test_that("get_call returns a condition true for the objects in the selected range", {
-  test_date <- as.Date(c("2013-07-13", "2013-07-14", "2013-07-15"))
-  filter_state <- DateFilterState$new(test_date, varname = "test_date")
-  filter_state$set_selected(c(test_date[2], test_date[2]))
-  testthat::expect_equal(eval(shiny::isolate(filter_state$get_call())), c(FALSE, TRUE, FALSE))
+testthat::test_that("get_call returns call with limits imposed by constructor and selection", {
+  filter_state <- DateFilterState$new(dates, x_reactive = reactive(NULL), varname = "variable")
   testthat::expect_equal(
     shiny::isolate(filter_state$get_call()),
-    quote(test_date >= as.Date("2013-07-14") & test_date <= as.Date("2013-07-14"))
+    quote(variable >= as.Date("2000-01-01") & variable <= as.Date("2000-01-10"))
+  )
+  filter_state$set_selected(dates[3:4])
+  testthat::expect_equal(
+    shiny::isolate(filter_state$get_call()),
+    quote(variable >= as.Date("2000-01-03") & variable <= as.Date("2000-01-04"))
   )
 })
 
-testthat::test_that("get_call returns a condition evaluating to NA for NA values", {
-  test_date <- as.Date(c("2013-07-13", NA))
-  filter_state <- DateFilterState$new(test_date, varname = "test_date")
-  testthat::expect_equal(eval(shiny::isolate(filter_state$get_call()))[2], NA)
-})
-
-testthat::test_that("get_call reutrns a condition evaluating to TRUE for NA values after set_keep_na(TRUE)", {
-  test_date <- as.Date(c("2013-07-13", NA))
-  filter_state <- DateFilterState$new(test_date, varname = "test_date")
+testthat::test_that("set_keep_na changes whether call returned by get_call allows NA values", {
+  variable <- c(dates, NA)
+  filter_state <- DateFilterState$new(variable, x_reactive = reactive(NULL), varname = "variable")
+  testthat::expect_identical(eval(shiny::isolate(filter_state$get_call()))[11], NA)
   filter_state$set_keep_na(TRUE)
-  testthat::expect_true(eval(shiny::isolate(filter_state$get_call()))[2])
+  testthat::expect_identical(eval(shiny::isolate(filter_state$get_call()))[11], TRUE)
 })
 
 testthat::test_that("set_state accepts a named list with selected and keep_na elements", {
-  test_date <- as.Date(c("2013/07/13", "2013/07/14", "2013/07/15", "2013/08/16"))
-  filter_state <- DateFilterState$new(test_date, varname = "test")
-  testthat::expect_no_error(filter_state$set_state(list(selected = c(test_date[2], test_date[3]), keep_na = TRUE)))
+  filter_state <- DateFilterState$new(dates, x_reactive = reactive(NULL), varname = "variable")
+  testthat::expect_no_error(filter_state$set_state(list(selected = c(dates[2], dates[3]), keep_na = TRUE)))
   testthat::expect_error(
-    filter_state$set_state(list(selected = c(test_date[2], test_date[3]), unknown = TRUE)),
+    filter_state$set_state(list(selected = c(dates[2], dates[3]), unknown = TRUE)),
     "all\\(names\\(state\\)"
   )
 })
 
 testthat::test_that("set_state sets values of selected and keep_na as provided in the list", {
-  test_date <- as.Date(c("2013/07/13", "2013/07/14", "2013/07/15", "2013/08/16"))
-  filter_state <- DateFilterState$new(test_date, varname = "test")
-  filter_state$set_state(list(selected = c(test_date[2], test_date[3]), keep_na = TRUE))
-  testthat::expect_identical(shiny::isolate(filter_state$get_selected()), c(test_date[2], test_date[3]))
+  filter_state <- DateFilterState$new(dates, x_reactive = reactive(NULL), varname = "variable")
+  filter_state$set_state(list(selected = c(dates[2], dates[3]), keep_na = TRUE))
+  testthat::expect_identical(shiny::isolate(filter_state$get_selected()), c(dates[2], dates[3]))
   testthat::expect_true(shiny::isolate(filter_state$get_keep_na()))
 })
 
 
 testthat::test_that("set_state overwrites fields included in the input only", {
-  test_date <- as.Date(c("2013/07/13", "2013/07/14", "2013/07/15", "2013/08/16", "2013/08/17"))
-  filter_state <- DateFilterState$new(test_date, varname = "test")
-  filter_state$set_state(list(selected = c(test_date[2], test_date[3]), keep_na = TRUE))
-  testthat::expect_no_error(filter_state$set_state(list(selected = c(test_date[3], test_date[4]))))
-  testthat::expect_identical(shiny::isolate(filter_state$get_selected()), c(test_date[3], test_date[4]))
+  filter_state <- DateFilterState$new(dates, x_reactive = reactive(NULL), varname = "variable")
+  filter_state$set_state(list(selected = c(dates[2], dates[3]), keep_na = TRUE))
+  testthat::expect_no_error(filter_state$set_state(list(selected = c(dates[3], dates[4]))))
+  testthat::expect_identical(shiny::isolate(filter_state$get_selected()), c(dates[3], dates[4]))
   testthat::expect_true(shiny::isolate(filter_state$get_keep_na()))
 })
 
 testthat::test_that(
   "DateFilterState$is_any_filtered works properly when NA is present in data",
   code = {
-    dates <- Sys.Date() + seq(1:10)
     filter_state <- teal.slice:::DateFilterState$new(
-      c(dates, NA),
+      x = c(dates, NA),
+      x_reactive = reactive(NULL),
       varname = "x",
       dataname = "data",
       extract_type = character(0)
@@ -153,14 +141,12 @@ testthat::test_that(
 
 # Format
 testthat::test_that("$format() is a FilterStates's method that accepts indent", {
-  test_date <- as.Date("13/07/2013", format = "%d/%m/%y")
-  filter_state <- DateFilterState$new(test_date, varname = "test_date")
+  filter_state <- DateFilterState$new(dates, x_reactive = reactive(NULL), varname = "variable")
   testthat::expect_no_error(shiny::isolate(filter_state$format(indent = 0)))
 })
 
 testthat::test_that("$format() asserts that indent is numeric", {
-  test_date <- as.Date("13/07/2013", format = "%d/%m/%y")
-  filter_state <- DateFilterState$new(test_date, varname = "test_date")
+  filter_state <- DateFilterState$new(dates, x_reactive = reactive(NULL), varname = "variable")
   testthat::expect_error(
     filter_state$format(indent = "wrong type"),
     regexp = "Assertion on 'indent' failed: Must be of type 'number'"
@@ -168,14 +154,13 @@ testthat::test_that("$format() asserts that indent is numeric", {
 })
 
 testthat::test_that("$format() returns a string representation the FilterState object", {
-  test_date <- as.Date("13/07/2013", format = "%d/%m/%y")
-  filter_state <- DateFilterState$new(test_date, varname = "test")
-  filter_state$set_state(list(selected = c(test_date, test_date)))
+  filter_state <- DateFilterState$new(dates, x_reactive = reactive(NULL), varname = "variable")
+  filter_state$set_state(list(selected = range(dates)))
   testthat::expect_equal(
     shiny::isolate(filter_state$format(indent = 0)),
     paste(
-      "Filtering on: test",
-      "  Selected range: 2020-07-13 - 2020-07-13",
+      "Filtering on: variable",
+      "  Selected range: 2000-01-01 - 2000-01-10",
       "  Include missing values: FALSE",
       sep = "\n"
     )
@@ -183,15 +168,14 @@ testthat::test_that("$format() returns a string representation the FilterState o
 })
 
 testthat::test_that("$format() prepends spaces to every line of the returned string", {
-  test_date <- as.Date("13/07/2013", format = "%d/%m/%y")
-  filter_state <- DateFilterState$new(test_date, varname = "test")
-  filter_state$set_state(list(selected = c(test_date, test_date)))
+  filter_state <- DateFilterState$new(dates, x_reactive = reactive(NULL), varname = "variable")
+  filter_state$set_state(list(selected = range(dates)))
   for (i in 1:3) {
     whitespace_indent <- paste0(rep(" ", i), collapse = "")
     testthat::expect_equal(
       shiny::isolate(filter_state$format(indent = !!(i))),
       sprintf(
-        "%sFiltering on: test\n%1$s  Selected range: 2020-07-13 - 2020-07-13\n%1$s  Include missing values: FALSE",
+        "%sFiltering on: variable\n%1$s  Selected range: 2000-01-01 - 2000-01-10\n%1$s  Include missing values: FALSE",
         format("", width = i)
       )
     )
