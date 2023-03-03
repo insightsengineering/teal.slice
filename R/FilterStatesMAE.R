@@ -167,7 +167,8 @@ MAEFilterStates <- R6::R6Class( # nolint
         state_list_index = "y",
         data = SummarizedExperiment::colData(data),
         data_reactive = function(sid) SummarizedExperiment::colData(data_reactive(sid)),
-        extract_type = "list"
+        extract_type = "list",
+        na_rm = TRUE
       )
 
       logger::log_trace("{ class(self)[1] }$set_filter_state initialized, dataname: { private$dataname }")

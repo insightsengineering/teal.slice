@@ -28,9 +28,6 @@ testthat::test_that("MAEFilteredDataset$get_call returns a call with applying fi
     extract_type = "list"
   )
 
-  filter_state_mae$set_selected("white")
-  filter_state_mae$set_na_rm(TRUE)
-
   state_list <- filtered_dataset$get_filter_states(1)
   shiny::isolate(state_list$state_list_push(filter_state_mae, state_list_index = 1L, state_id = "race"))
 

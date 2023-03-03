@@ -570,7 +570,12 @@ FilterStates <- R6::R6Class( # nolint
     # @param data_reactive (`function`)
     #  function having `sid` as argument
     # @param extract_type (`character(0)` or `chracter(1)`)
-    set_filter_state_impl = function(state, state_list_index, data, data_reactive, extract_type = character(0)) {
+    set_filter_state_impl = function(state,
+                                     state_list_index,
+                                     data,
+                                     data_reactive,
+                                     extract_type = character(0),
+                                     na_rm = FALSE) {
       checkmate::assert_list(state, null.ok = TRUE, names = "named")
       checkmate::assert_scalar(state_list_index)
       checkmate::assert_multi_class(data, c("data.frame", "matrix", "DataFrame"))
@@ -617,6 +622,7 @@ FilterStates <- R6::R6Class( # nolint
           )
           attr(fstate, "sid") <- sid
           fstate$set_state(resolve_state(value))
+          if (na_rm) fstate$set_na_rm(na_rm)
           self$state_list_push(x = fstate, state_list_index = state_list_index, state_id = varname)
         }
       )
