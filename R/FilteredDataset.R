@@ -38,13 +38,23 @@ FilteredDataset <- R6::R6Class( # nolint
       private$keys <- keys
       private$label <- if (is.null(label)) character(0) else label
       private$metadata <- metadata
-      private$dataset_filtered <- reactive({
+
+      # function executing reactive call and returning data
+      private$data_filtered_fun <- function(sid = "") {
+        checkmate::assert_character(sid)
+        if (identical(sid, integer(0))) {
+          logger::log_trace("filtering data dataname: { private$dataname }")
+        } else {
+          logger::log_trace("filtering data dataname: { dataname }, sid: { sid }")
+        }
         env <- new.env(parent = parent.env(globalenv()))
         env[[dataname]] <- private$dataset
-        filter_call <- self$get_call()
+        filter_call <- self$get_call(sid)
         eval_expr_with_msg(filter_call, env)
         get(x = dataname, envir = env)
-      })
+      }
+
+      private$data_filtered <- reactive(private$data_filtered_fun())
       invisible(self)
     },
 
@@ -92,11 +102,16 @@ FilteredDataset <- R6::R6Class( # nolint
     #' This functions returns filter calls equivalent to selected items
     #' within each of `filter_states`. Configuration of the calls is constant and
     #' depends on `filter_states` type and order which are set during initialization.
+    #'
+    #' @param sid (`character`)\cr
+    #'  when specified then method returns code containing filter conditions of
+    #'  `FilterState` objects which `"sid"` attribute is different than this `sid` argument.
+    #'
     #' @return filter `call` or `list` of filter calls
-    get_call = function() {
+    get_call = function(sid = "") {
       filter_call <- Filter(
         f = Negate(is.null),
-        x = lapply(self$get_filter_states(), function(x) x$get_call())
+        x = lapply(self$get_filter_states(), function(x) x$get_call(sid))
       )
       if (length(filter_call) == 0) {
         return(NULL)
@@ -156,7 +171,7 @@ FilteredDataset <- R6::R6Class( # nolint
     #'
     get_dataset = function(filtered = FALSE) {
       if (filtered) {
-        private$dataset_filtered
+        private$data_filtered
       } else {
         private$dataset
       }
@@ -179,9 +194,9 @@ FilteredDataset <- R6::R6Class( # nolint
     #' @return (`matrix`) matrix of observations and subjects
     get_filter_overview_info = function() {
       dataset <- self$get_dataset()
-      dataset_filtered <- self$get_dataset(TRUE)
+      data_filtered <- self$get_dataset(TRUE)
 
-      df <- cbind(private$get_filter_overview_nobs(dataset, dataset_filtered), "")
+      df <- cbind(private$get_filter_overview_nobs(dataset, data_filtered), "")
       rownames(df) <- self$get_dataname()
       colnames(df) <- c("Obs", "Subjects")
       df
@@ -234,7 +249,6 @@ FilteredDataset <- R6::R6Class( # nolint
     #' @description
     #' Set the allowed filterable variables
     #' @param varnames (`character` or `NULL`) The variables which can be filtered
-    #' See `self$get_filterable_varnames` for more details
     #'
     #' @details When retrieving the filtered variables only
     #' those which have filtering supported (i.e. are of the permitted types)
@@ -408,8 +422,9 @@ FilteredDataset <- R6::R6Class( # nolint
   ),
   ## __Private Fields ====
   private = list(
-    dataset = NULL,
-    dataset_filtered = NULL,
+    dataset = NULL, # data.frame or MultiAssayExperiment
+    data_filtered = NULL,
+    data_filtered_fun = NULL, # function
     filter_states = list(),
     filterable_varnames = character(0),
     dataname = character(0),
@@ -423,7 +438,7 @@ FilteredDataset <- R6::R6Class( # nolint
     # @param filter_states (`FilterStates`)
     # @param id (`character(1)`)
     add_filter_states = function(filter_states, id) {
-      stopifnot(is(filter_states, "FilterStates"))
+      checkmate::assert_class(filter_states, "FilterStates")
       checkmate::assert_string(id)
       x <- setNames(list(filter_states), id)
       private$filter_states <- c(self$get_filter_states(), x)

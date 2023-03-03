@@ -47,7 +47,7 @@ EmptyFilterState <- R6::R6Class( # nolint
     #' }
     #'
     initialize = function(x,
-                          x_reactive,
+                          x_reactive = reactive(NULL),
                           varname,
                           varlabel = character(0),
                           dataname = NULL,

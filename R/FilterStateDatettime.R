@@ -8,7 +8,6 @@
 #' @examples
 #' filter_state <- teal.slice:::DatetimeFilterState$new(
 #'   x = c(Sys.time() + seq(0, by = 3600, length.out = 10), NA),
-#'   x_reactive = reactive(NULL),
 #'   varname = "x",
 #'   dataname = "data",
 #'   extract_type = character(0)
@@ -27,7 +26,6 @@
 #' data_datetime <- c(seq(from = datetimes[1], to = datetimes[2], length.out = 100), NA)
 #' filter_state_datetime <- DatetimeFilterState$new(
 #'   x = data_datetime,
-#'   x_reactive = reactive(NULL),
 #'   varname = "variable",
 #'   varlabel = "label"
 #' )
@@ -118,7 +116,7 @@ DatetimeFilterState <- R6::R6Class( # nolint
     #' \item{`"matrix"`}{ `varname` in the condition call will be returned as `<dataname>[, <varname>]`}
     #' }
     initialize = function(x,
-                          x_reactive,
+                          x_reactive = reactive(NULL),
                           varname,
                           varlabel = character(0),
                           dataname = NULL,

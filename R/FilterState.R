@@ -72,11 +72,12 @@ InteractiveFilterState <- R6::R6Class( # nolint
     #' @return self invisibly
     #'
     initialize = function(x,
-                          x_reactive,
+                          x_reactive = reactive(NULL),
                           varname,
                           varlabel = character(0),
                           dataname = NULL,
                           extract_type = character(0)) {
+      checkmate::assert_class(x_reactive, "reactive")
       checkmate::assert_string(varname)
       checkmate::assert_character(varlabel, max.len = 1, any.missing = FALSE)
       checkmate::assert_string(dataname, null.ok = TRUE)
@@ -87,7 +88,6 @@ InteractiveFilterState <- R6::R6Class( # nolint
       if (length(extract_type) == 1 && is.null(dataname)) {
         stop("if extract_type is specified, dataname must also be specified")
       }
-
       private$dataname <- dataname
       private$varname <- varname
       private$varlabel <- if (identical(varlabel, as.character(varname))) {
@@ -101,7 +101,11 @@ InteractiveFilterState <- R6::R6Class( # nolint
       private$na_count <- sum(is.na(x))
       private$keep_na <- reactiveVal(FALSE)
       private$x_reactive <- x_reactive
-      private$filtered_na_count <- reactive(sum(is.na(x_reactive())))
+      private$filtered_na_count <- reactive(
+        if (!is.null(private$x_reactive())) {
+          sum(is.na(private$x_reactive()))
+        }
+      )
       logger::log_trace(
         sprintf(
           "Instantiated %s with variable %s, dataname: %s",
@@ -538,7 +542,7 @@ InteractiveFilterState <- R6::R6Class( # nolint
                 countnow = countnow
               )
             ),
-            value = isolate(self$get_keep_na())
+            value = shiny::isolate(self$get_keep_na())
           )
         )
       } else {
@@ -571,13 +575,14 @@ InteractiveFilterState <- R6::R6Class( # nolint
         # changed directly by the api - then it's needed to rerender UI element
         # to show relevant values
         private$observers$keep_na_api <- observeEvent(
+          eventExpr = self$get_keep_na(),
           ignoreNULL = FALSE, # nothing selected is possible for NA
           ignoreInit = TRUE, # ignoreInit: should not matter because we set the UI with the desired initial state
-          eventExpr = self$get_keep_na(),
           handlerExpr = {
             if (!setequal(self$get_keep_na(), input$value)) {
               updateCheckboxInput(
                 inputId = "value",
+                label = sprintf("Keep NA (%s/%s)", private$filtered_na_count(), private$na_count),
                 value = self$get_keep_na()
               )
             }

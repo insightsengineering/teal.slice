@@ -16,10 +16,11 @@ MatrixFilterStates <- R6::R6Class( # nolint
     #' @param data (`matrix`)\cr
     #'   the R object which `subset` function is applied on.
     #'
-    #' @param data_reactive (`reactive`)\cr
-    #'   should return a `matrix` or `NULL`.
+    #' @param data_reactive (`function(sid)`)\cr
+    #'   should return a `matrix` object or `NULL`.
     #'   This object is needed for the `FilterState` counts being updated
-    #'   on a change in filters. If `reactive(NULL)` then filtered counts are not shown.
+    #'   on a change in filters. If function returns `NULL` then filtered counts are not shown.
+    #'   Function has to have `sid` argument being a character.
     #'
     #' @param dataname (`character(1)`)\cr
     #'   name of the data used in the expression
@@ -27,7 +28,12 @@ MatrixFilterStates <- R6::R6Class( # nolint
     #'
     #' @param datalabel (`character(0)` or `character(1)`)\cr
     #'   text label value.
-    initialize = function(data, data_reactive, dataname, datalabel) {
+    initialize = function(data,
+                          data_reactive = function(sid = "") NULL,
+                          dataname,
+                          datalabel = character(0)) {
+      checkmate::assert_function(data_reactive, args = "sid")
+      checkmate::assert_matrix(data)
       super$initialize(data, data_reactive, dataname, datalabel)
       private$state_list <- list(
         subset = reactiveVal()
@@ -117,49 +123,20 @@ MatrixFilterStates <- R6::R6Class( # nolint
     #'   column in `data`.
     #' @return `NULL`
     set_filter_state = function(state) {
+      logger::log_trace("MatrixFilterState$set_filter_state initializing, dataname: { private$dataname }")
+      checkmate::assert_list(state, null.ok = TRUE, names = "named")
+
       data <- private$data
       data_reactive <- private$data_reactive
-      checkmate::assert_class(data, "matrix")
-      checkmate::assert(
-        checkmate::assert(
-          !checkmate::test_null(names(state)),
-          checkmate::check_subset(names(state), colnames(data)),
-          combine = "and"
-        ),
-        checkmate::check_class(state, "default_filter"),
-        combine = "or"
+
+      private$set_filter_state_impl(
+        state = state,
+        state_list_index = "subset",
+        data = data,
+        data_reactive = data_reactive
       )
-      logger::log_trace(paste(
-        "MatrixFilterState$set_filter_state initializing,",
-        "dataname: { private$dataname }"
-      ))
-      filter_states <- self$state_list_get("subset")
-      lapply(names(state), function(varname) {
-        value <- resolve_state(state[[varname]])
-        if (varname %in% names(filter_states)) {
-          fstate <- filter_states[[varname]]
-          fstate$set_state(value)
-        } else {
-          fstate <- init_filter_state(
-            x = data[, varname],
-            x_reactive = reactive(data_reactive()[[varname]]),
-            varname = varname,
-            varlabel = varname,
-            dataname = private$dataname,
-            extract_type = "matrix"
-          )
-          fstate$set_state(value)
-          self$state_list_push(
-            x = fstate,
-            state_list_index = "subset",
-            state_id = varname
-          )
-        }
-      })
-      logger::log_trace(paste(
-        "MatrixFilterState$set_filter_state initialized,",
-        "dataname: { private$dataname }"
-      ))
+
+      logger::log_trace("MatrixFilterState$set_filter_state initialized, dataname: { private$dataname }")
       NULL
     },
 
@@ -178,17 +155,14 @@ MatrixFilterStates <- R6::R6Class( # nolint
         )
       )
 
-      if (!state_id %in% names(self$state_list_get("subset"))) {
-        warning(paste(
-          "Variable:", state_id, "is not present in the actual active filters of dataset:",
-          "{ private$dataname } therefore no changes are applied."
-        ))
-        logger::log_warn(
-          paste(
-            "Variable:", state_id, "is not present in the actual active filters of dataset:",
-            "{ private$dataname } therefore no changes are applied."
-          )
+      if (!state_id %in% names(shiny::isolate(self$state_list_get("subset")))) {
+        msg <- sprintf(
+          "%s is not an active filter of dataset: %s and can't be removed.",
+          state_id,
+          private$dataname
         )
+        warning(msg)
+        logger::log_warn(msg)
       } else {
         self$state_list_remove(state_list_index = "subset", state_id = state_id)
         logger::log_trace(

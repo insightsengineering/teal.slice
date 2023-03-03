@@ -8,7 +8,6 @@
 #' @examples
 #' filter_state <- teal.slice:::RangeFilterState$new(
 #'   x = c(NA, Inf, seq(1:10)),
-#'   x_reactive = reactive(NULL),
 #'   varname = "x",
 #'   dataname = "data",
 #'   extract_type = character(0)
@@ -27,7 +26,6 @@
 #' data_range <- c(runif(100, 0, 1), NA, Inf)
 #' filter_state_range <- RangeFilterState$new(
 #'   x = data_range,
-#'   x_reactive = reactive(NULL),
 #'   varname = "variable",
 #'   varlabel = "label"
 #' )
@@ -114,7 +112,7 @@ RangeFilterState <- R6::R6Class( # nolint
     #' \item{`"matrix"`}{ `varname` in the condition call will be returned as `<dataname>[, <varname>]`}
     #' }
     initialize = function(x,
-                          x_reactive,
+                          x_reactive = reactive(NULL),
                           varname,
                           varlabel = character(0),
                           dataname = NULL,
@@ -126,7 +124,9 @@ RangeFilterState <- R6::R6Class( # nolint
       super$initialize(x, x_reactive, varname, varlabel, dataname, extract_type)
       private$is_integer <- checkmate::test_integerish(x)
       private$keep_inf <- reactiveVal(FALSE)
-      private$inf_filtered_count <- reactive(sum(is.infinite(x_reactive())))
+      private$inf_filtered_count <- reactive(
+        if (!is.null(private$x_reactive())) sum(is.infinite(private$x_reactive()))
+      )
       private$inf_count <- sum(is.infinite(x))
 
       x_range <- range(x, finite = TRUE)
@@ -412,12 +412,16 @@ RangeFilterState <- R6::R6Class( # nolint
         function(input, output, session) {
           logger::log_trace("RangeFilterState$server initializing, dataname: { private$dataname }")
 
-          output$plot <- renderPlot(
-            bg = "transparent",
-            height = 25,
-            expr = {
-              private$unfiltered_histogram +
-                if (!is.null(private$x_reactive())) {
+          finite_values <- reactive(Filter(is.finite, private$x_reactive()))
+          output$plot <- bindCache(
+            finite_values(),
+            cache = "session",
+            x = renderPlot(
+              bg = "transparent",
+              height = 25,
+              expr = {
+                private$unfiltered_histogram +
+                if (!is.null(finite_values())) {
                   ggplot2::geom_histogram(
                     data = data.frame(x = Filter(is.finite, private$x_reactive())),
                     ggplot2::aes(x = x),
@@ -428,7 +432,8 @@ RangeFilterState <- R6::R6Class( # nolint
                 } else {
                   NULL
                 }
-            }
+              }
+            )
           )
 
           # this observer is needed in the situation when private$selected has been

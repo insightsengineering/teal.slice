@@ -16,10 +16,11 @@ SEFilterStates <- R6::R6Class( # nolint
     #' @param data (`SummarizedExperiment`)\cr
     #'   the R object which `subset` function is applied on.
     #'
-    #' @param data_reactive (`reactive`)\cr
+    #' @param data_reactive (`function(sid)`)\cr
     #'   should return a `SummarizedExperiment` object or `NULL`.
     #'   This object is needed for the `FilterState` counts being updated
-    #'   on a change in filters. If `reactive(NULL)` then filtered counts are not shown.
+    #'   on a change in filters. If function returns `NULL` then filtered counts are not shown.
+    #'   Function has to have `sid` argument being a character.
     #'
     #' @param dataname (`character(1)`)\cr
     #'   name of the data used in the expression
@@ -27,10 +28,15 @@ SEFilterStates <- R6::R6Class( # nolint
     #'
     #' @param datalabel (`character(0)` or `character(1)`)\cr
     #'   text label value.
-    initialize = function(data, data_reactive, dataname, datalabel) {
+    initialize = function(data,
+                          data_reactive = function(sid = "") NULL,
+                          dataname,
+                          datalabel = character(0)) {
       if (!requireNamespace("SummarizedExperiment", quietly = TRUE)) {
         stop("Cannot load SummarizedExperiment - please install the package or restart your session.")
       }
+      checkmate::assert_function(data_reactive, args = "sid")
+      checkmate::assert_class(data, "SummarizedExperiment")
       super$initialize(data, data_reactive, dataname, datalabel)
       private$state_list <- list(
         subset = reactiveVal(),
@@ -183,87 +189,28 @@ SEFilterStates <- R6::R6Class( # nolint
     #'   the name of the column in `rowData(data)` and `colData(data)`.
     #' @return `NULL`
     set_filter_state = function(state) {
+      logger::log_trace("SEFilterState$set_filter_state initializing, dataname: { private$dataname }")
+      checkmate::assert_class(state, "list")
+      checkmate::assert_subset(names(state), c("subset", "select"))
+
       data <- private$data
       data_reactive <- private$data_reactive
 
-      checkmate::assert_class(data, "SummarizedExperiment")
-      checkmate::assert_class(state, "list")
-
-      checkmate::assert(
-        checkmate::check_subset(names(state), c("subset", "select")),
-        checkmate::check_class(state, "default_filter"),
-        combine = "or"
-      )
-      checkmate::assert(
-        checkmate::test_null(state$subset),
-        checkmate::assert(
-          checkmate::check_class(state$subset, "list"),
-          checkmate::check_subset(names(state$subset), names(SummarizedExperiment::rowData(data))),
-          combine = "and"
-        ),
-        combine = "or"
-      )
-      checkmate::assert(
-        checkmate::test_null(state$select),
-        checkmate::assert(
-          checkmate::check_class(state$select, "list"),
-          checkmate::check_subset(names(state$select), names(SummarizedExperiment::colData(data))),
-          combine = "and"
-        ),
-        combine = "or"
+      private$set_filter_state_impl(
+        state = state$subset,
+        state_list_index = "subset",
+        data = SummarizedExperiment::rowData(data),
+        data_reactive = function(sid) SummarizedExperiment::rowData(data_reactive(sid))
       )
 
-      filter_states <- self$state_list_get("subset")
-      lapply(names(state$subset), function(varname) {
-        value <- resolve_state(state$subset[[varname]])
-        if (varname %in% names(filter_states)) {
-          fstate <- filter_states[[varname]]
-          fstate$set_state(value)
-        } else {
-          fstate <- init_filter_state(
-            x = SummarizedExperiment::rowData(data)[[varname]],
-            x_reactive = reactive(
-              if (!is.null(data_reactive())) SummarizedExperiment::rowData(data_reactive())[[varname]]
-            ),
-            varname = varname,
-            dataname = private$dataname
-          )
-          fstate$set_state(value)
-          self$state_list_push(
-            x = fstate,
-            state_list_index = "subset",
-            state_id = varname
-          )
-        }
-      })
+      private$set_filter_state_impl(
+        state = state$select,
+        state_list_index = "select",
+        data = SummarizedExperiment::colData(data),
+        data_reactive = function(sid) SummarizedExperiment::colData(data_reactive(sid))
+      )
 
-      filter_states <- self$state_list_get("select")
-      lapply(names(state$select), function(varname) {
-        value <- resolve_state(state$select[[varname]])
-        if (varname %in% names(filter_states)) {
-          fstate <- filter_states[[varname]]
-          fstate$set_state(value)
-        } else {
-          fstate <- init_filter_state(
-            x = SummarizedExperiment::colData(data)[[varname]],
-            x_reactive = reactive(
-              if (!is.null(data_reactive())) SummarizedExperiment::colData(data_reactive())[[varname]]
-            ),
-            varname = varname,
-            dataname = private$dataname
-          )
-          fstate$set_state(value)
-          self$state_list_push(
-            x = fstate,
-            state_list_index = "select",
-            state_id = varname
-          )
-        }
-      })
-      logger::log_trace(paste(
-        "SEFilterState$set_filter_state initialized,",
-        "dataname: { private$dataname }"
-      ))
+      logger::log_trace("SEFilterState$set_filter_state initialized, dataname: { private$dataname }")
       NULL
     },
 
@@ -287,17 +234,14 @@ SEFilterStates <- R6::R6Class( # nolint
         combine = "and"
       )
       for (varname in state_id$subset) {
-        if (!all(unlist(state_id$subset) %in% names(self$state_list_get("subset")))) {
-          warning(paste(
-            "Variable:", state_id, "is not present in the actual active subset filters of dataset:",
-            "{ private$dataname } therefore no changes are applied."
-          ))
-          logger::log_warn(
-            paste(
-              "Variable:", state_id, "is not present in the actual active subset filters of dataset:",
-              "{ private$dataname } therefore no changes are applied."
-            )
+        if (!all(unlist(state_id$subset) %in% names(shiny::isolate(self$state_list_get("subset"))))) {
+          msg <- sprintf(
+            "%s is not an active 'subset' filter of dataset: %s and can't be removed.",
+            state_id,
+            private$dataname
           )
+          warning(msg)
+          logger::log_warn(msg)
         } else {
           self$state_list_remove(state_list_index = "subset", state_id = varname)
           logger::log_trace(
@@ -312,17 +256,14 @@ SEFilterStates <- R6::R6Class( # nolint
       }
 
       for (varname in state_id$select) {
-        if (!all(unlist(state_id$select) %in% names(self$state_list_get("select")))) {
-          warning(paste(
-            "Variable:", state_id, "is not present in the actual active select filters of dataset:",
-            "{ private$dataname } therefore no changes are applied."
-          ))
-          logger::log_warn(
-            paste(
-              "Variable:", state_id, "is not present in the actual active select filters of dataset:",
-              "{ private$dataname } therefore no changes are applied."
-            )
+        if (!all(unlist(state_id$select) %in% names(shiny::isolate(self$state_list_get("select"))))) {
+          msg <- sprintf(
+            "%s is not an active 'select' filter of dataset: %s and can't be removed.",
+            state_id,
+            private$dataname
           )
+          warning(msg)
+          logger::log_warn(msg)
         } else {
           self$state_list_remove(state_list_index = "select", state_id = varname)
           sprintf(
