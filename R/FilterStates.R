@@ -57,10 +57,11 @@ FilterStates <- R6::R6Class( # nolint
     #' @param data (`data.frame`, `MultiAssayExperiment`, `SummarizedExperiment`, `matrix`)\cr
     #'   the R object which `subset` function is applied on.
     #'
-    #' @param data_reactive (`function`)\cr
-    #'   should return an object constistent with the `FilterState` class or `NULL`.
+    #' @param data_reactive (`function(sid)`)\cr
+    #'   should return a `SummarizedExperiment` object or `NULL`.
     #'   This object is needed for the `FilterState` counts being updated
-    #'   on a change in filters. If `function(NULL)` then filtered counts are not shown.
+    #'   on a change in filters. If function returns `NULL` then filtered counts are not shown.
+    #'   Function has to have `sid` argument being a character.
     #'
     #' @param dataname (`character(1)`)\cr
     #'   name of the data used in the expression
@@ -73,7 +74,7 @@ FilterStates <- R6::R6Class( # nolint
     #' self invisibly
     #'
     initialize = function(data,
-                          data_reactive = function(sid = integer(0)) NULL,
+                          data_reactive = function(sid = "") NULL,
                           dataname,
                           datalabel = character(0)) {
       checkmate::assert_function(data_reactive, args = "sid")
@@ -123,12 +124,15 @@ FilterStates <- R6::R6Class( # nolint
     #' The `rhs` is a call to `self$get_fun()` with `private$dataname`
     #' as argument and a list of condition calls from `FilterState` objects
     #' stored in `private$state_list`.
-    #' If no filters are applied,
-    #' `NULL` is returned to avoid no-op calls such as `x <- x`.
+    #' If no filters are applied, `NULL` is returned to avoid no-op calls such as `x <- x`.
+    #'
+    #' @param sid (`character`)\cr
+    #'  when specified then method returns code containing filter conditions of
+    #'  `FilterState` objects which `"sid"` attribute is different than this `sid` argument.
     #'
     #' @return `call` or `NULL`
     #'
-    get_call = function(sid = integer(0)) {
+    get_call = function(sid = "") {
       # state_list (list) names must be the same as argument of the function
       # for ... list should be unnamed
       states_list <- private$state_list
@@ -138,15 +142,11 @@ FilterStates <- R6::R6Class( # nolint
         simplify = FALSE,
         function(state_list) {
           items <- state_list()
-          filtered_items <- Filter(
-            f = function(x) x$is_any_filtered() && !identical(attr(x, "sid"), sid),
-            x = items
-          )
-          # hierarchical
-          # filtered_items <- Filter(
-          #   f = function(x) x$is_any_filtered() && attr(x, "sid") < sid,
-          #   x = items
-          # )
+
+          # removing empty filters and filters identified by sid
+          nonempty_filter_idx <- vapply(items, function(x) x$is_any_filtered(), logical(1L))
+          other_filter_idx <- vapply(items, function(x) !attr(x, "sid") %in% sid, logical(1L))
+          filtered_items <- items[nonempty_filter_idx & other_filter_idx]
 
           calls <- lapply(
             filtered_items,
@@ -606,8 +606,10 @@ FilterStates <- R6::R6Class( # nolint
       mapply(
         varname = state_names_new,
         value = state[state_names_new],
-        sid = seq_along(state_names_new) + max_id,
-        function(varname, value, sid) {
+        function(varname, value) {
+          # objects has random and unique sid attribute
+          #  which allows a reactive from below to find a right object in the state_list
+          sid <- sprintf("%s-%s-%s", state_list_index, varname, sample.int(size = 1L, n = .Machine$integer.max))
           fstate <- init_filter_state(
             x = if (!is.array(data)) {
               data[[varname]]

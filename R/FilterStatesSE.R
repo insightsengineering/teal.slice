@@ -16,10 +16,11 @@ SEFilterStates <- R6::R6Class( # nolint
     #' @param data (`SummarizedExperiment`)\cr
     #'   the R object which `subset` function is applied on.
     #'
-    #' @param data_reactive (`function`)\cr
+    #' @param data_reactive (`function(sid)`)\cr
     #'   should return a `SummarizedExperiment` object or `NULL`.
     #'   This object is needed for the `FilterState` counts being updated
-    #'   on a change in filters. If `function(NULL)` then filtered counts are not shown.
+    #'   on a change in filters. If function returns `NULL` then filtered counts are not shown.
+    #'   Function has to have `sid` argument being a character.
     #'
     #' @param dataname (`character(1)`)\cr
     #'   name of the data used in the expression
@@ -28,12 +29,13 @@ SEFilterStates <- R6::R6Class( # nolint
     #' @param datalabel (`character(0)` or `character(1)`)\cr
     #'   text label value.
     initialize = function(data,
-                          data_reactive = function(sid = integer(0)) NULL,
+                          data_reactive = function(sid = "") NULL,
                           dataname,
                           datalabel = character(0)) {
       if (!requireNamespace("SummarizedExperiment", quietly = TRUE)) {
         stop("Cannot load SummarizedExperiment - please install the package or restart your session.")
       }
+      checkmate::assert_function(data_reactive, args = "sid")
       checkmate::assert_class(data, "SummarizedExperiment")
       super$initialize(data, data_reactive, dataname, datalabel)
       private$state_list <- list(

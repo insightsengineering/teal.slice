@@ -40,8 +40,8 @@ FilteredDataset <- R6::R6Class( # nolint
       private$metadata <- metadata
 
       # function executing reactive call and returning data
-      private$data_filtered_fun <- function(sid = integer(0)) {
-        checkmate::assert_integer(sid, max.len = 1)
+      private$data_filtered_fun <- function(sid = "") {
+        checkmate::assert_character(sid)
         if (identical(sid, integer(0))) {
           logger::log_trace("filtering data dataname: { private$dataname }")
         } else {
@@ -102,8 +102,13 @@ FilteredDataset <- R6::R6Class( # nolint
     #' This functions returns filter calls equivalent to selected items
     #' within each of `filter_states`. Configuration of the calls is constant and
     #' depends on `filter_states` type and order which are set during initialization.
+    #'
+    #' @param sid (`character`)\cr
+    #'  when specified then method returns code containing filter conditions of
+    #'  `FilterState` objects which `"sid"` attribute is different than this `sid` argument.
+    #'
     #' @return filter `call` or `list` of filter calls
-    get_call = function(sid = integer(0)) {
+    get_call = function(sid = "") {
       filter_call <- Filter(
         f = Negate(is.null),
         x = lapply(self$get_filter_states(), function(x) x$get_call(sid))

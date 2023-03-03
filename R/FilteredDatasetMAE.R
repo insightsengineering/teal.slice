@@ -49,7 +49,7 @@ MAEFilteredDataset <- R6::R6Class( # nolint
       lapply(
         experiment_names,
         function(experiment_name) {
-          data_reactive <- function(sid = integer(0)) private$data_filtered_fun(sid)[[experiment_name]]
+          data_reactive <- function(sid = "") private$data_filtered_fun(sid)[[experiment_name]]
           private$add_filter_states(
             filter_states = init_filter_states(
               data = dataset[[experiment_name]],

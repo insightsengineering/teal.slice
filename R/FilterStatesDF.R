@@ -137,27 +137,32 @@ DFFilterStates <- R6::R6Class( # nolint
     #' @param data (`data.frame`)\cr
     #'   the R object which `dplyr::filter` function is applied on.
     #'
-    #' @param data_reactive (`reactive`)\cr
-    #'   should a `data.frame` object or `NULL`.
+    #' @param data_reactive (`function(sid)`)\cr
+    #'   should return a `SummarizedExperiment` object or `NULL`.
     #'   This object is needed for the `FilterState` counts being updated
-    #'   on a change in filters. If `function(NULL)` then filtered counts are not shown.
+    #'   on a change in filters. If function returns `NULL` then filtered counts are not shown.
+    #'   Function has to have `sid` argument being a character.
     #'
-    #' @param dataname (`character(1)`)\cr
+    #' @param dataname (`character`)\cr
     #'   name of the data used in the \emph{subset expression}
     #'   specified to the function argument attached to this `FilterStates`
+    #'
     #' @param datalabel (`character(0)` or `character(1)`)\cr
     #'   text label value
+    #'
     #' @param varlabels (`character`)\cr
     #'   labels of the variables used in this object
+    #'
     #' @param keys (`character`)\cr
     #'   key columns names
     #'
     initialize = function(data,
-                          data_reactive = function(sid = integer(0)) NULL,
+                          data_reactive = function(sid = "") NULL,
                           dataname,
                           datalabel = character(0),
                           varlabels = character(0),
                           keys = character(0)) {
+      checkmate::assert_function(data_reactive, args = "sid")
       checkmate::assert_data_frame(data)
       super$initialize(data, data_reactive, dataname, datalabel)
       private$varlabels <- varlabels

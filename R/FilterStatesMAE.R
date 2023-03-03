@@ -14,10 +14,11 @@ MAEFilterStates <- R6::R6Class( # nolint
     #' @param data (`MultiAssayExperiment`)\cr
     #'   the R object which `MultiAssayExperiment::subsetByColData` function is applied on.
     #'
-    #' @param data_reactive (`function`)\cr
-    #'   should return `MultiAssayExperiment` or `NULL` object.
+    #' @param data_reactive (`function(sid)`)\cr
+    #'   should return a `MultiAssayExperiment` object or `NULL`.
     #'   This object is needed for the `FilterState` counts being updated
-    #'   on a change in filters. If `function(NULL)` then filtered counts are not shown.
+    #'   on a change in filters. If function returns `NULL` then filtered counts are not shown.
+    #'   Function has to have `sid` argument being a character.
     #'
     #' @param dataname (`character(1)`)\cr
     #'   name of the data used in the expression
@@ -32,7 +33,7 @@ MAEFilterStates <- R6::R6Class( # nolint
     #' @param keys (`character`)\cr
     #'   key columns names
     initialize = function(data,
-                          data_reactive = function(sid = integer(0)) NULL,
+                          data_reactive = function(sid = "") NULL,
                           dataname,
                           datalabel = "subjects",
                           varlabels = character(0),
@@ -40,6 +41,7 @@ MAEFilterStates <- R6::R6Class( # nolint
       if (!requireNamespace("MultiAssayExperiment", quietly = TRUE)) {
         stop("Cannot load MultiAssayExperiment - please install the package or restart your session.")
       }
+      checkmate::assert_function(data_reactive, args = "sid")
       checkmate::assert_class(data, "MultiAssayExperiment")
       super$initialize(data, data_reactive, dataname, datalabel)
       private$keys <- keys

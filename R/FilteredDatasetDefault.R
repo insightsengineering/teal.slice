@@ -61,8 +61,8 @@ DefaultFilteredDataset <- R6::R6Class( # nolint
         private$parent_name <- parent_name
         private$join_keys <- join_keys
 
-        private$data_filtered_fun <- function(sid = integer(0)) {
-          checkmate::assert_integer(sid, max.len = 1)
+        private$data_filtered_fun <- function(sid = "") {
+          checkmate::assert_character(sid)
           if (identical(sid, integer(0))) {
             logger::log_trace("filtering data dataname: { private$dataname }")
           } else {
@@ -106,8 +106,13 @@ DefaultFilteredDataset <- R6::R6Class( # nolint
     #' This class contains single `FilterStates`
     #' which contains single `state_list` and all `FilterState` objects
     #' applies to one argument (`...`) in `dplyr::filter` call.
+    #'
+    #' @param sid (`character`)\cr
+    #'  when specified then method returns code containing filter conditions of
+    #'  `FilterState` objects which `"sid"` attribute is different than this `sid` argument.
+    #'
     #' @return filter `call` or `list` of filter calls
-    get_call = function(sid = integer(0)) {
+    get_call = function(sid = "") {
       filter_call <- super$get_call(sid)
       dataname <- private$dataname
       parent_name <- private$parent_name
