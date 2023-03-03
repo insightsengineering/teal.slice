@@ -32,7 +32,7 @@ Length should be the same as \code{choices}.}
 list of \code{shiny.tag}
 }
 \description{
-\code{shiny} element showing progressbar counts. Each element can have an
+\code{shiny} element showing progress bar counts. Each element can have an
 unique \code{id} attribute so each can be used independently.
 Progress bar size is dependent on the ratio \code{choicesnow[i] / countsmax[i]}.
 Label is \code{choices[i] (countsnow[i]/countsmax)}

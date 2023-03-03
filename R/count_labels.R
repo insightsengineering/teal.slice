@@ -1,6 +1,6 @@
 #' Progress bars with labels
 #'
-#' `shiny` element showing progressbar counts. Each element can have an
+#' `shiny` element showing progress bar counts. Each element can have an
 #' unique `id` attribute so each can be used independently.
 #' Progress bar size is dependent on the ratio `choicesnow[i] / countsmax[i]`.
 #' Label is `choices[i] (countsnow[i]/countsmax)`
@@ -79,7 +79,7 @@ countBars <- function(inputId, choices, countsmax, countsnow = NULL) { # nolint
   )
 }
 
-#' Progressbar with label
+#' Progress bar with label
 #'
 #' Progress bar with label
 #' @param session (`session`) object passed to function given to `shinyServer`.

@@ -2,7 +2,7 @@
 #' @docType class
 #'
 #'
-#' @title InteractiveFilterState Abstract Class
+#' @title `InteractiveFilterState` Abstract Class
 #'
 #' @description Abstract class to encapsulate single filter state
 #'

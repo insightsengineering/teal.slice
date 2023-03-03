@@ -18,13 +18,13 @@
 
 * Fixed an error where the `RangeFilterState` produced an error when using `bootstrap 4`.
 * Fixed a bug that caused the range slider to omit values selected programmatically through the filter API.
-* Fixed a bug where setting incorrect values for Date / Datetime ranges caused the app to crash.
+* Fixed a bug where setting incorrect values for Date and Date time ranges caused the app to crash.
 
 ### Miscellaneous
 
 * Calculation of step in slider for `RangeFilterState` now uses `checkmate::test_integerish` instead of `is.integer`.
 * Updated `init_filtered_data` to take into account the removal of `CDISCTealData` from `teal.data` package.
-* Added `shinyvalidate` validation for Date / Datetime ranges.
+* Added `shinyvalidate` validation for Date and Date time ranges.
 * Added examples apps for `FilterState` child classes and `DFFilterStates`.
 
 # teal.slice 0.2.0

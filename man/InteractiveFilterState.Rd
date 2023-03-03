@@ -3,7 +3,7 @@
 \docType{class}
 \name{InteractiveFilterState}
 \alias{InteractiveFilterState}
-\title{InteractiveFilterState Abstract Class}
+\title{\code{InteractiveFilterState} Abstract Class}
 \description{
 Abstract class to encapsulate single filter state
 }
