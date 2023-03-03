@@ -205,15 +205,13 @@ RangeFilterState <- R6::R6Class( # nolint
     #' optional `is.na(<varname>)` and `is.finite(<varname>)`.
     #' @return (`call`)
     get_call = function() {
-      filter_call <- call_condition_range(
-        varname = private$get_varname_prefixed(),
-        range = self$get_selected()
-      )
-
-      filter_call <- private$add_keep_inf_call(filter_call)
-      filter_call <- private$add_keep_na_call(filter_call)
-
-      filter_call
+      filter_call <-
+        call(
+          "&",
+          call(">=", private$get_varname_prefixed(), self$get_selected()[1L]),
+          call("<=", private$get_varname_prefixed(), self$get_selected()[2L])
+        )
+      private$add_keep_na_call(private$add_keep_inf_call(filter_call))
     },
 
     #' @description
@@ -311,11 +309,7 @@ RangeFilterState <- R6::R6Class( # nolint
     # returns a call
     add_keep_inf_call = function(filter_call) {
       if (isTRUE(self$get_keep_inf())) {
-        call(
-          "|",
-          call("is.infinite", private$get_varname_prefixed()),
-          filter_call
-        )
+        call("|", call("is.infinite", private$get_varname_prefixed()), filter_call)
       } else {
         filter_call
       }

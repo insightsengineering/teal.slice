@@ -97,7 +97,7 @@ filter$set_selected(TRUE)
 }
 \keyword{internal}
 \section{Super classes}{
-\code{\link[teal.slice:FilterState]{teal.slice::FilterState}} -> \code{teal.slice::InteractiveFilterState} -> \code{LogicalFilterState}
+\code{\link[teal.slice:FilterState]{teal.slice::FilterState}} -> \code{\link[teal.slice:InteractiveFilterState]{teal.slice::InteractiveFilterState}} -> \code{LogicalFilterState}
 }
 \section{Methods}{
 \subsection{Public methods}{

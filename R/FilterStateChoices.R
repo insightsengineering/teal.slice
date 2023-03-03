@@ -124,8 +124,13 @@ ChoicesFilterState <- R6::R6Class( # nolint
 
       super$initialize(x, x_reactive, varname, varlabel, dataname, extract_type)
 
+      private$data_class <- class(x)[1L]
+      if (inherits(x, "POSIXt")) {
+        private$tzone <- Find(function(x) x != "", attr(as.POSIXlt(x), "tzone"))
+      }
+
       if (!is.factor(x)) {
-        x <- factor(x, levels = as.character(sort(unique(x))))
+        x <- factor(as.character(x), levels = as.character(sort(unique(x))))
       }
       x <- droplevels(x)
       choices <- table(x)
@@ -156,14 +161,27 @@ ChoicesFilterState <- R6::R6Class( # nolint
     #' optional `is.na(<varname>)`.
     #' @return (`call`)
     get_call = function() {
-      filter_call <- call_condition_choice(
-        varname = private$get_varname_prefixed(),
-        choice = self$get_selected()
-      )
-
-      filter_call <- private$add_keep_na_call(filter_call)
-
-      filter_call
+      varname <- private$get_varname_prefixed()
+      choices <- self$get_selected()
+      if (private$data_class != "factor") {
+        choices <- do.call(sprintf("as.%s", private$data_class), list(x = choices))
+      }
+      fun_compare <- if (length(choices) == 1L) "==" else "%in%"
+      filter_call <-
+        if (inherits(choices, "Date")) {
+          call(fun_compare, varname, call("as.Date", as.character(choices)))
+        } else if (inherits(choices, c("POSIXct", "POSIXlt"))) {
+          class <- class(choices)[1L]
+          date_fun <- as.name(switch(class,
+            "POSIXct" = "as.POSIXct",
+            "POSIXlt" = "as.POSIXlt"
+          ))
+          call(fun_compare, varname, as.call(list(date_fun, as.character(choices), tz = private$tzone)))
+        } else {
+          # This handles numerics, characters, and factors.
+          call(fun_compare, varname, choices)
+        }
+      private$add_keep_na_call(filter_call)
     },
 
     #' @description
@@ -205,6 +223,9 @@ ChoicesFilterState <- R6::R6Class( # nolint
 
   private = list(
     choices_counts = integer(0),
+    data_class = character(0), # stores class of filtered variable so that it can be restored in $get_call
+    tzone = character(0), # if x is a datetime, stores time zone so that it can be restored in $get_call
+
     # private methods ----
     set_choices_counts = function(choices_counts) {
       private$choices_counts <- choices_counts
