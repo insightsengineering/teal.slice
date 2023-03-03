@@ -101,7 +101,11 @@ InteractiveFilterState <- R6::R6Class( # nolint
       private$na_count <- sum(is.na(x))
       private$keep_na <- reactiveVal(FALSE)
       private$x_reactive <- x_reactive
-      private$filtered_na_count <- reactive(sum(is.na(private$x_reactive())))
+      private$filtered_na_count <- reactive(
+        if (!is.null(private$x_reactive())) {
+          sum(is.na(private$x_reactive()))
+        }
+      )
       logger::log_trace(
         sprintf(
           "Instantiated %s with variable %s, dataname: %s",
@@ -538,7 +542,7 @@ InteractiveFilterState <- R6::R6Class( # nolint
                 countnow = countnow
               )
             ),
-            value = isolate(self$get_keep_na())
+            value = shiny::isolate(self$get_keep_na())
           )
         )
       } else {
