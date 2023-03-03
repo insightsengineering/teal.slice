@@ -139,7 +139,7 @@ MAEFilteredDataset <- R6::R6Class( # nolint
     #'     subset = list(ARRAY_TYPE = list(selected = "", keep_na = TRUE))
     #'   )
     #' )
-    #' shiny::isolate(dataset$set_filter_state(state = fs))
+    #' dataset$set_filter_state(state = fs)
     #' shiny::isolate(dataset$get_filter_state())
     #' @return `NULL`
     #'

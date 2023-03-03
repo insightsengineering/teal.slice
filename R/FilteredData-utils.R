@@ -162,13 +162,6 @@ eval_expr_with_msg <- function(expr, env) {
 #' @examples
 #' \dontrun{
 #'
-#' # continuously switch between right- and down-pointing chevrons
-#' toggle_icon("toggle_element", c("fa-angle-right", "fa-angle-down"))
-#'
-#' # switch right- to down-pointing chevron
-#' toggle_icon("toggle_element", c("fa-angle-right", "fa-angle-down"), one_way = TRUE)
-#' }
-#'
 #' library(shiny)
 #'
 #' ui <- fluidPage(
@@ -205,9 +198,9 @@ eval_expr_with_msg <- function(expr, env) {
 #'   })
 #'
 #' }
-#'
 #' if (interactive()) {
 #'   shinyApp(ui, server)
+#' }
 #' }
 #'
 #' @rdname toggle_button

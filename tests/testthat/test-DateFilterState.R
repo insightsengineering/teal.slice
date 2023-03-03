@@ -15,7 +15,7 @@ testthat::test_that("set_selected accepts an array of two Date objects", {
 })
 
 testthat::test_that("set_selected warns when selection is not within the possible range", {
-  filter_state <- DateFilterState$new(dates, x_reactive = reactive(NULL), varname = "variable")
+  filter_state <- DateFilterState$new(dates, x_reactive = reactive(NULL), varname = "variable", dataname = "dates")
   testthat::expect_warning(
     filter_state$set_selected(c(dates[1] - 1, dates[10])),
     regexp = "outside of the possible range"
@@ -40,11 +40,11 @@ testthat::test_that("set_selected limits the selected range to the lower and the
   testthat::expect_equal(shiny::isolate(filter_state$get_selected()), c(dates[1], dates[10]))
 })
 
-testthat::test_that("set_selected raises error when selection is not sorted", {
+testthat::test_that("set_selected warns when selection is not sorted", {
   filter_state <- DateFilterState$new(dates, x_reactive = reactive(NULL), varname = "variable")
-  testthat::expect_error(
-    suppressWarnings(filter_state$set_selected(dates[c(10, 1)])),
-    regexp = "the upper bound of the range lower than the lower bound"
+  testthat::expect_warning(
+    filter_state$set_selected(dates[c(10, 1)]),
+    regexp = "Start date 2000-01-10 is set after"
   )
 })
 

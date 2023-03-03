@@ -58,17 +58,13 @@ print(df)
 
 datasets$get_metadata("mtcars")
 
-isolate(
-  datasets$set_filter_state(
-    list(iris = list(Species = list(selected = "virginica")))
-  )
+datasets$set_filter_state(
+  list(iris = list(Species = list(selected = "virginica")))
 )
 isolate(datasets$get_call("iris"))
 
-isolate(
-  datasets$set_filter_state(
-    list(mtcars = list(mpg = list(selected = c(15, 20))))
-  )
+datasets$set_filter_state(
+  list(mtcars = list(mpg = list(selected = c(15, 20))))
 )
 
 isolate(datasets$get_filter_state())
@@ -171,6 +167,7 @@ shiny::isolate(datasets$get_filter_state())
 \item \href{#method-FilteredData-set_filter_state}{\code{FilteredData$set_filter_state()}}
 \item \href{#method-FilteredData-remove_filter_state}{\code{FilteredData$remove_filter_state()}}
 \item \href{#method-FilteredData-remove_all_filter_states}{\code{FilteredData$remove_all_filter_states()}}
+\item \href{#method-FilteredData-clear_filter_states}{\code{FilteredData$clear_filter_states()}}
 \item \href{#method-FilteredData-filter_panel_disable}{\code{FilteredData$filter_panel_disable()}}
 \item \href{#method-FilteredData-filter_panel_enable}{\code{FilteredData$filter_panel_enable()}}
 \item \href{#method-FilteredData-get_filter_panel_active}{\code{FilteredData$get_filter_panel_active()}}
@@ -285,8 +282,7 @@ Set the variable names of a given dataset for the filtering.
 \item{\code{dataname}}{(\code{character(1)}) name of the dataset}
 
 \item{\code{varnames}}{(\code{character} or \code{NULL})
-variables which users can choose to filter the data;
-see \code{self$get_filterable_varnames} for more details}
+variables which users can choose to filter the data;}
 }
 \if{html}{\out{</div>}}
 }
@@ -788,10 +784,30 @@ nested list of filter selections applied to datasets}
 \if{html}{\out{<a id="method-FilteredData-remove_all_filter_states"></a>}}
 \if{latex}{\out{\hypertarget{method-FilteredData-remove_all_filter_states}{}}}
 \subsection{Method \code{remove_all_filter_states()}}{
+Deprecated - please use \code{clear_filter_states} method.
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{FilteredData$remove_all_filter_states(datanames)}\if{html}{\out{</div>}}
+}
+
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{datanames}}{(\code{character})}
+}
+\if{html}{\out{</div>}}
+}
+\subsection{Returns}{
+\code{NULL} invisibly
+}
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-FilteredData-clear_filter_states"></a>}}
+\if{latex}{\out{\hypertarget{method-FilteredData-clear_filter_states}{}}}
+\subsection{Method \code{clear_filter_states()}}{
 Remove all \code{FilterStates} of a \code{FilteredDataset} or all \code{FilterStates}
 of a \code{FilteredData} object.
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{FilteredData$remove_all_filter_states(datanames = self$datanames())}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{FilteredData$clear_filter_states(datanames = self$datanames())}\if{html}{\out{</div>}}
 }
 
 \subsection{Arguments}{

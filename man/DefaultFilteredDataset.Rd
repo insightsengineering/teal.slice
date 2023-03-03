@@ -56,6 +56,7 @@ shiny::isolate(dataset$get_filter_state())
 \if{html}{\out{
 <details><summary>Inherited methods</summary>
 <ul>
+<li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilteredDataset" data-id="clear_filter_states"><a href='../../teal.slice/html/FilteredDataset.html#method-FilteredDataset-clear_filter_states'><code>teal.slice::FilteredDataset$clear_filter_states()</code></a></span></li>
 <li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilteredDataset" data-id="get_dataname"><a href='../../teal.slice/html/FilteredDataset.html#method-FilteredDataset-get_dataname'><code>teal.slice::FilteredDataset$get_dataname()</code></a></span></li>
 <li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilteredDataset" data-id="get_dataset"><a href='../../teal.slice/html/FilteredDataset.html#method-FilteredDataset-get_dataset'><code>teal.slice::FilteredDataset$get_dataset()</code></a></span></li>
 <li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilteredDataset" data-id="get_dataset_label"><a href='../../teal.slice/html/FilteredDataset.html#method-FilteredDataset-get_dataset_label'><code>teal.slice::FilteredDataset$get_dataset_label()</code></a></span></li>
@@ -69,7 +70,6 @@ shiny::isolate(dataset$get_filter_state())
 <li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilteredDataset" data-id="get_varnames"><a href='../../teal.slice/html/FilteredDataset.html#method-FilteredDataset-get_varnames'><code>teal.slice::FilteredDataset$get_varnames()</code></a></span></li>
 <li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilteredDataset" data-id="server"><a href='../../teal.slice/html/FilteredDataset.html#method-FilteredDataset-server'><code>teal.slice::FilteredDataset$server()</code></a></span></li>
 <li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilteredDataset" data-id="set_filterable_varnames"><a href='../../teal.slice/html/FilteredDataset.html#method-FilteredDataset-set_filterable_varnames'><code>teal.slice::FilteredDataset$set_filterable_varnames()</code></a></span></li>
-<li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilteredDataset" data-id="state_lists_empty"><a href='../../teal.slice/html/FilteredDataset.html#method-FilteredDataset-state_lists_empty'><code>teal.slice::FilteredDataset$state_lists_empty()</code></a></span></li>
 <li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilteredDataset" data-id="ui"><a href='../../teal.slice/html/FilteredDataset.html#method-FilteredDataset-ui'><code>teal.slice::FilteredDataset$ui()</code></a></span></li>
 </ul>
 </details>
@@ -138,9 +138,18 @@ This class contains single \code{FilterStates}
 which contains single \code{state_list} and all \code{FilterState} objects
 applies to one argument (\code{...}) in \code{dplyr::filter} call.
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{DefaultFilteredDataset$get_call()}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{DefaultFilteredDataset$get_call(sid = "")}\if{html}{\out{</div>}}
 }
 
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{sid}}{(\code{character})\cr
+when specified then method returns code containing filter conditions of
+\code{FilterState} objects which \code{"sid"} attribute is different than this \code{sid} argument.}
+}
+\if{html}{\out{</div>}}
+}
 \subsection{Returns}{
 filter \code{call} or \code{list} of filter calls
 }

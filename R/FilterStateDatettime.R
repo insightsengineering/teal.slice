@@ -255,11 +255,11 @@ DatetimeFilterState <- R6::R6Class( # nolint
       values
     },
     remove_out_of_bound_values = function(values) {
-      if (values[1] < private$choices[1] | values[1] > private$choices[2]) {
+      if (values[1] < private$choices[1] || values[1] > private$choices[2]) {
         warning(
           sprintf(
-            "Value: %s is outside of the possible range for column %s of dataset %s, setting minimum possible value.",
-            values[1], private$varname, private$dataname
+            "Value: %s is outside of the range for the column '%s' in dataset '%s', setting minimum possible value.",
+            values[1], private$varname, toString(private$dataname)
           )
         )
         values[1] <- private$choices[1]
@@ -268,8 +268,8 @@ DatetimeFilterState <- R6::R6Class( # nolint
       if (values[2] > private$choices[2] | values[2] < private$choices[1]) {
         warning(
           sprintf(
-            "Value: %s is outside of the possible range for column %s of dataset %s, setting maximum possible value.",
-            values[2], private$varname, private$dataname
+            "Value: '%s' is outside of the range for the column '%s' in dataset '%s', setting maximum possible value.",
+            values[2], private$varname, toString(private$dataname)
           )
         )
         values[2] <- private$choices[2]
@@ -278,7 +278,7 @@ DatetimeFilterState <- R6::R6Class( # nolint
       if (values[1] > values[2]) {
         warning(
           sprintf(
-            "Start date %s is set after the end date %s, the values will be replaced with a default datetime range.",
+            "Start date '%s' is set after the end date '%s', the values will be replaced by a default datetime range.",
             values[1], values[2]
           )
         )

@@ -82,7 +82,7 @@ Initialize a \code{InteractiveFilterState} object
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{InteractiveFilterState$new(
   x,
-  x_reactive,
+  x_reactive = reactive(NULL),
   varname,
   varlabel = character(0),
   dataname = NULL,

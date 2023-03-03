@@ -41,14 +41,14 @@ Label is \code{choices[i] (countsnow[i]/countsmax)}
 
 choices <- sample(as.factor(c("a", "b", "c")), size = 20, replace = TRUE)
 counts <- table(choices)
-labels <- countBars(
+labels <- teal.slice:::countBars(
   inputId = "counts",
   choices = c("a", "b", "c"),
   countsmax = counts,
   countsnow = unname(counts)
 )
 
-\donttest{
+\dontrun{
 shinyApp(
   ui = fluidPage(
     div(
@@ -68,7 +68,7 @@ shinyApp(
     observeEvent(input$choices, {
       new_counts <- counts
       new_counts[!names(new_counts) \%in\% input$choices] <- 0
-      updateCountBars(
+      teal.slice:::updateCountBars(
         inputId = "counts",
         choices = levels(choices),
         countsmax = counts,

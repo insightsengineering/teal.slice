@@ -60,9 +60,11 @@ MAEFilterStates <- R6::R6Class( # nolint
     format = function(indent = 0) {
       checkmate::assert_number(indent, finite = TRUE, lower = 0)
 
-      if (length(self$state_list_get(1L)) > 0) {
+      if (length(private$state_list_get(1L)) > 0) {
         formatted_states <- sprintf("%sSubject filters:", format("", width = indent))
-        for (state in self$state_list_get(1L)) formatted_states <- c(formatted_states, state$format(indent = indent + 2))
+        for (state in private$state_list_get(1L)) {
+          formatted_states <- c(formatted_states, state$format(indent = indent + 2))
+        }
         paste(formatted_states, collapse = "\n")
       }
     },
@@ -84,19 +86,19 @@ MAEFilterStates <- R6::R6Class( # nolint
       moduleServer(
         id = id,
         function(input, output, session) {
-          previous_state <- reactiveVal(isolate(self$state_list_get("y")))
+          previous_state <- reactiveVal(isolate(private$state_list_get("y")))
           added_state_name <- reactiveVal(character(0))
           removed_state_name <- reactiveVal(character(0))
 
-          observeEvent(self$state_list_get("y"), {
-            added_state_name(setdiff(names(self$state_list_get("y")), names(previous_state())))
-            removed_state_name(setdiff(names(previous_state()), names(self$state_list_get("y"))))
+          observeEvent(private$state_list_get("y"), {
+            added_state_name(setdiff(names(private$state_list_get("y")), names(previous_state())))
+            removed_state_name(setdiff(names(previous_state()), names(private$state_list_get("y"))))
 
-            previous_state(self$state_list_get("y"))
+            previous_state(private$state_list_get("y"))
           })
 
           observeEvent(added_state_name(), ignoreNULL = TRUE, {
-            fstates <- self$state_list_get("y")
+            fstates <- private$state_list_get("y")
             html_ids <- private$map_vars_to_html_ids(names(fstates))
             for (fname in added_state_name()) {
               private$insert_filter_state_ui(
@@ -128,7 +130,7 @@ MAEFilterStates <- R6::R6Class( # nolint
     #'
     #' @return `list` with elements number equal number of `FilterStates`.
     get_filter_state = function() {
-      lapply(self$state_list_get("y"), function(x) x$get_state())
+      lapply(private$state_list_get("y"), function(x) x$get_state())
     },
 
     #' @description
@@ -148,7 +150,7 @@ MAEFilterStates <- R6::R6Class( # nolint
 
       # excluding not supported variables
       state_varnames <- names(state)
-      filterable_varnames <- get_supported_filter_varnames(colData(data))
+      filterable_varnames <- get_supported_filter_varnames(SummarizedExperiment::colData(data))
       excluded_varnames <- setdiff(state_varnames, filterable_varnames)
       if (length(excluded_varnames) > 0) {
         excluded_varnames_str <- toString(excluded_varnames)
@@ -192,7 +194,7 @@ MAEFilterStates <- R6::R6Class( # nolint
         )
       )
 
-      if (!state_id %in% names(isolate(self$state_list_get("y")))) {
+      if (!state_id %in% names(isolate(private$state_list_get("y")))) {
         msg <- sprintf(
           "%s is not an active 'patient' filter of dataset: %s and can't be removed.",
           state_id,
@@ -201,7 +203,7 @@ MAEFilterStates <- R6::R6Class( # nolint
         warning(msg)
         logger::log_warn(msg)
       } else {
-        self$state_list_remove("y", state_id = state_id)
+        private$state_list_remove("y", state_id = state_id)
         logger::log_trace(
           sprintf(
             "%s$remove_filter_state for variable %s done, dataname: %s",
@@ -261,7 +263,7 @@ MAEFilterStates <- R6::R6Class( # nolint
           )
           active_filter_vars <- reactive({
             vapply(
-              X = self$state_list_get("y"),
+              X = private$state_list_get("y"),
               FUN.VALUE = character(1),
               FUN = function(x) x$get_varname()
             )

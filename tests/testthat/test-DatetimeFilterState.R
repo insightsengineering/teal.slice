@@ -58,24 +58,23 @@ testthat::test_that("DatetimeFilterState echoes the timezone of the ISO object p
   )
 })
 
-testthat::test_that("set_selected warns when the selected range intersects the possible range
-  but is not fully included in it", {
+testthat::test_that("set_selected warns when the selected range intersects the range but is not fully included in it", {
   objects <- as.POSIXct(c(2, 3), origin = "1900/01/01 00:00:00")
-  filter_state <- DatetimeFilterState$new(objects, x_reactive = reactive(NULL), varname = "objects")
-  testthat::expect_warning(filter_state$set_selected(c(objects[1] - 1, objects[1])), "outside of the possible range")
-  testthat::expect_warning(filter_state$set_selected(c(objects[2], objects[2] + 1)), "outside of the possible range")
+  filter_state <- DatetimeFilterState$new(objects, varname = "objects")
+  testthat::expect_warning(filter_state$set_selected(c(objects[1] - 1, objects[1])), "outside of the range")
+  testthat::expect_warning(filter_state$set_selected(c(objects[2], objects[2] + 1)), "outside of the range")
   testthat::expect_warning(
     filter_state$set_selected(c(objects[1] - 1, objects[2] + 1)),
-    "outside of the possible range"
+    "outside of the range"
   )
 })
 
 testthat::test_that("set_selected throws when the selected range is completely outside of the possible range", {
   objects <- as.POSIXct(c(2, 3), origin = "1900/01/01 00:00:00")
   filter_state <- DatetimeFilterState$new(objects, x_reactive = reactive(NULL), varname = "objects")
-  testthat::expect_error(
-    suppressWarnings(filter_state$set_selected(c(objects[2] + 1, objects[2] + 2))),
-    "the upper bound of the range lower than the lower bound"
+  testthat::expect_warning(
+    filter_state$set_selected(c(objects[2] + 1, objects[2] + 2)),
+    "is outside of the range"
   )
 })
 

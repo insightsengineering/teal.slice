@@ -118,6 +118,10 @@ get_teal_bs_theme <- function() {
 #' @keywords internal
 include_js_files <- function(pattern) {
   checkmate::assert_character(pattern, min.len = 1, null.ok = TRUE)
-  js_files <- list.files(system.file("js", package = "teal.slice", mustWork = TRUE), pattern = pattern, full.names = TRUE)
+  js_files <- list.files(
+    system.file("js", package = "teal.slice", mustWork = TRUE),
+    pattern = pattern,
+    full.names = TRUE
+  )
   return(singleton(lapply(js_files, includeScript)))
 }

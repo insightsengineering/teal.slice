@@ -50,17 +50,13 @@
 #'
 #' datasets$get_metadata("mtcars")
 #'
-#' isolate(
-#'   datasets$set_filter_state(
-#'     list(iris = list(Species = list(selected = "virginica")))
-#'   )
+#' datasets$set_filter_state(
+#'   list(iris = list(Species = list(selected = "virginica")))
 #' )
 #' isolate(datasets$get_call("iris"))
 #'
-#' isolate(
-#'   datasets$set_filter_state(
-#'     list(mtcars = list(mpg = list(selected = c(15, 20))))
-#'   )
+#' datasets$set_filter_state(
+#'   list(mtcars = list(mpg = list(selected = c(15, 20))))
 #' )
 #'
 #' isolate(datasets$get_filter_state())
@@ -574,6 +570,18 @@ FilteredData <- R6::R6Class( # nolint
     },
 
     #' @description
+    #' Deprecated - please use `clear_filter_states` method.
+    #'
+    #' @param datanames (`character`)
+    #'
+    #' @return `NULL` invisibly
+    #'
+    remove_all_filter_states = function(datanames) {
+      warning("FilteredData$remove_all_filter_states is deprecated, please use FilteredData$clear_filter_states.")
+      self$clear_filter_states(dataname)
+    },
+
+    #' @description
     #' Remove all `FilterStates` of a `FilteredDataset` or all `FilterStates`
     #' of a `FilteredData` object.
     #'
@@ -583,19 +591,19 @@ FilteredData <- R6::R6Class( # nolint
     #'
     #' @return `NULL` invisibly
     #'
-    remove_all_filter_states = function(datanames = self$datanames()) {
+    clear_filter_states = function(datanames = self$datanames()) {
       logger::log_trace(
-        "FilteredData$remove_all_filter_states called, datanames: { toString(datanames) }"
+        "FilteredData$clear_filter_states called, datanames: { toString(datanames) }"
       )
 
       for (dataname in datanames) {
         fdataset <- self$get_filtered_dataset(dataname = dataname)
-        fdataset$state_lists_empty()
+        fdataset$clear_filter_states()
       }
 
       logger::log_trace(
         paste(
-          "FilteredData$remove_all_filter_states removed all FilterStates,",
+          "FilteredData$clear_filter_states removed all FilterStates,",
           "datanames: { toString(datanames) }"
         )
       )
@@ -614,7 +622,7 @@ FilteredData <- R6::R6Class( # nolint
       shinyjs::disable("filter_add_vars")
       shinyjs::disable("filter_active_vars")
       private$cached_states <- self$get_filter_state()
-      self$remove_all_filter_states()
+      self$clear_filter_states()
       invisible(NULL)
     },
 
@@ -898,10 +906,7 @@ FilteredData <- R6::R6Class( # nolint
 
           observeEvent(input$remove_all_filters, {
             logger::log_trace("FilteredData$srv_filter_panel@1 removing all filters")
-            lapply(self$datanames(), function(dataname) {
-              fdataset <- self$get_filtered_dataset(dataname = dataname)
-              fdataset$state_lists_empty()
-            })
+            self$clear_filter_states()
             logger::log_trace("FilteredData$srv_filter_panel@1 removed all filters")
           })
 

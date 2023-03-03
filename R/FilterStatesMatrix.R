@@ -49,7 +49,7 @@ MatrixFilterStates <- R6::R6Class( # nolint
       checkmate::assert_number(indent, finite = TRUE, lower = 0)
 
       formatted_states <- c()
-      for (state in self$state_list_get(state_list_index = "subset")) {
+      for (state in private$state_list_get(state_list_index = "subset")) {
         formatted_states <- c(formatted_states, state$format(indent = indent + 2))
       }
       paste(formatted_states, collapse = "\n")
@@ -64,22 +64,22 @@ MatrixFilterStates <- R6::R6Class( # nolint
       moduleServer(
         id = id,
         function(input, output, session) {
-          previous_state <- reactiveVal(isolate(self$state_list_get("subset")))
+          previous_state <- reactiveVal(isolate(private$state_list_get("subset")))
           added_state_name <- reactiveVal(character(0))
           removed_state_name <- reactiveVal(character(0))
 
-          observeEvent(self$state_list_get("subset"), {
+          observeEvent(private$state_list_get("subset"), {
             added_state_name(
-              setdiff(names(self$state_list_get("subset")), names(previous_state()))
+              setdiff(names(private$state_list_get("subset")), names(previous_state()))
             )
             removed_state_name(
-              setdiff(names(previous_state()), names(self$state_list_get("subset")))
+              setdiff(names(previous_state()), names(private$state_list_get("subset")))
             )
-            previous_state(self$state_list_get("subset"))
+            previous_state(private$state_list_get("subset"))
           })
 
           observeEvent(added_state_name(), ignoreNULL = TRUE, {
-            fstates <- self$state_list_get("subset")
+            fstates <- private$state_list_get("subset")
             html_ids <- private$map_vars_to_html_ids(keys = names(fstates))
             for (fname in added_state_name()) {
               private$insert_filter_state_ui(
@@ -111,7 +111,7 @@ MatrixFilterStates <- R6::R6Class( # nolint
     #'
     #' @return `list` containing `list` with selected values for each `FilterState`.
     get_filter_state = function() {
-      lapply(self$state_list_get(state_list_index = "subset"), function(x) x$get_state())
+      lapply(private$state_list_get(state_list_index = "subset"), function(x) x$get_state())
     },
 
     #' @description
@@ -133,7 +133,8 @@ MatrixFilterStates <- R6::R6Class( # nolint
         state = state,
         state_list_index = "subset",
         data = data,
-        data_reactive = data_reactive
+        data_reactive = data_reactive,
+        extract_type = "matrix"
       )
 
       logger::log_trace("MatrixFilterState$set_filter_state initialized, dataname: { private$dataname }")
@@ -155,7 +156,7 @@ MatrixFilterStates <- R6::R6Class( # nolint
         )
       )
 
-      if (!state_id %in% names(shiny::isolate(self$state_list_get("subset")))) {
+      if (!state_id %in% names(shiny::isolate(private$state_list_get("subset")))) {
         msg <- sprintf(
           "%s is not an active filter of dataset: %s and can't be removed.",
           state_id,
@@ -164,7 +165,7 @@ MatrixFilterStates <- R6::R6Class( # nolint
         warning(msg)
         logger::log_warn(msg)
       } else {
-        self$state_list_remove(state_list_index = "subset", state_id = state_id)
+        private$state_list_remove(state_list_index = "subset", state_id = state_id)
         logger::log_trace(
           sprintf(
             "%s$remove_filter_state of variable %s done, dataname: %s",
@@ -229,7 +230,7 @@ MatrixFilterStates <- R6::R6Class( # nolint
           )
           active_filter_vars <- reactive({
             vapply(
-              X = self$state_list_get(state_list_index = "subset"),
+              X = private$state_list_get(state_list_index = "subset"),
               FUN.VALUE = character(1),
               FUN = function(x) x$get_varname()
             )

@@ -16,7 +16,7 @@ components of the dataset.
 \itemize{
 \item \href{#method-FilteredDataset-new}{\code{FilteredDataset$new()}}
 \item \href{#method-FilteredDataset-get_formatted_filter_state}{\code{FilteredDataset$get_formatted_filter_state()}}
-\item \href{#method-FilteredDataset-state_lists_empty}{\code{FilteredDataset$state_lists_empty()}}
+\item \href{#method-FilteredDataset-clear_filter_states}{\code{FilteredDataset$clear_filter_states()}}
 \item \href{#method-FilteredDataset-get_call}{\code{FilteredDataset$get_call()}}
 \item \href{#method-FilteredDataset-get_filter_state}{\code{FilteredDataset$get_filter_state()}}
 \item \href{#method-FilteredDataset-get_filter_states}{\code{FilteredDataset$get_filter_states()}}
@@ -89,12 +89,12 @@ Returns a string representation of the filter state in this \code{FilteredDatase
 }
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-FilteredDataset-state_lists_empty"></a>}}
-\if{latex}{\out{\hypertarget{method-FilteredDataset-state_lists_empty}{}}}
-\subsection{Method \code{state_lists_empty()}}{
+\if{html}{\out{<a id="method-FilteredDataset-clear_filter_states"></a>}}
+\if{latex}{\out{\hypertarget{method-FilteredDataset-clear_filter_states}{}}}
+\subsection{Method \code{clear_filter_states()}}{
 Removes all active filter items applied to this dataset
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{FilteredDataset$state_lists_empty()}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{FilteredDataset$clear_filter_states()}\if{html}{\out{</div>}}
 }
 
 \subsection{Returns}{
@@ -111,9 +111,18 @@ This functions returns filter calls equivalent to selected items
 within each of \code{filter_states}. Configuration of the calls is constant and
 depends on \code{filter_states} type and order which are set during initialization.
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{FilteredDataset$get_call()}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{FilteredDataset$get_call(sid = "")}\if{html}{\out{</div>}}
 }
 
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{sid}}{(\code{character})\cr
+when specified then method returns code containing filter conditions of
+\code{FilterState} objects which \code{"sid"} attribute is different than this \code{sid} argument.}
+}
+\if{html}{\out{</div>}}
+}
 \subsection{Returns}{
 filter \code{call} or \code{list} of filter calls
 Gets the reactive values from the active \code{FilterState} objects.
@@ -319,8 +328,7 @@ Set the allowed filterable variables
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
-\item{\code{varnames}}{(\code{character} or \code{NULL}) The variables which can be filtered
-See \code{self$get_filterable_varnames} for more details}
+\item{\code{varnames}}{(\code{character} or \code{NULL}) The variables which can be filtered}
 }
 \if{html}{\out{</div>}}
 }
