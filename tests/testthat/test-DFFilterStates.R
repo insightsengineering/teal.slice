@@ -341,7 +341,8 @@ testthat::test_that(
         shiny::isolate(filter_states$get_filter_states_sid())
       ))
     )
-})
+  }
+)
 
 testthat::test_that(
   "DFFilterState$get_call skips conditions form FilterState which are identified by sid",
@@ -390,6 +391,5 @@ testthat::test_that(
     testthat::expect_null(
       shiny::isolate(filter_states$get_call(sid = sid_attrs))
     )
-
   }
 )
