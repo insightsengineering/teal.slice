@@ -27,15 +27,13 @@ Handles filter states in a \code{matrix}
 \if{html}{\out{
 <details><summary>Inherited methods</summary>
 <ul>
+<li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilterStates" data-id="clear_filter_states"><a href='../../teal.slice/html/FilterStates.html#method-FilterStates-clear_filter_states'><code>teal.slice::FilterStates$clear_filter_states()</code></a></span></li>
 <li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilterStates" data-id="get_call"><a href='../../teal.slice/html/FilterStates.html#method-FilterStates-get_call'><code>teal.slice::FilterStates$get_call()</code></a></span></li>
 <li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilterStates" data-id="get_datalabel"><a href='../../teal.slice/html/FilterStates.html#method-FilterStates-get_datalabel'><code>teal.slice::FilterStates$get_datalabel()</code></a></span></li>
 <li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilterStates" data-id="get_filter_count"><a href='../../teal.slice/html/FilterStates.html#method-FilterStates-get_filter_count'><code>teal.slice::FilterStates$get_filter_count()</code></a></span></li>
 <li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilterStates" data-id="get_fun"><a href='../../teal.slice/html/FilterStates.html#method-FilterStates-get_fun'><code>teal.slice::FilterStates$get_fun()</code></a></span></li>
 <li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilterStates" data-id="print"><a href='../../teal.slice/html/FilterStates.html#method-FilterStates-print'><code>teal.slice::FilterStates$print()</code></a></span></li>
-<li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilterStates" data-id="state_list_empty"><a href='../../teal.slice/html/FilterStates.html#method-FilterStates-state_list_empty'><code>teal.slice::FilterStates$state_list_empty()</code></a></span></li>
-<li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilterStates" data-id="state_list_get"><a href='../../teal.slice/html/FilterStates.html#method-FilterStates-state_list_get'><code>teal.slice::FilterStates$state_list_get()</code></a></span></li>
-<li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilterStates" data-id="state_list_push"><a href='../../teal.slice/html/FilterStates.html#method-FilterStates-state_list_push'><code>teal.slice::FilterStates$state_list_push()</code></a></span></li>
-<li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilterStates" data-id="state_list_remove"><a href='../../teal.slice/html/FilterStates.html#method-FilterStates-state_list_remove'><code>teal.slice::FilterStates$state_list_remove()</code></a></span></li>
+<li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilterStates" data-id="set_filterable_varnames"><a href='../../teal.slice/html/FilterStates.html#method-FilterStates-set_filterable_varnames'><code>teal.slice::FilterStates$set_filterable_varnames()</code></a></span></li>
 <li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilterStates" data-id="ui"><a href='../../teal.slice/html/FilterStates.html#method-FilterStates-ui'><code>teal.slice::FilterStates$ui()</code></a></span></li>
 </ul>
 </details>
@@ -48,12 +46,26 @@ Initialize \code{MatrixFilterStates} object
 
 Initialize \code{MatrixFilterStates} object
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{MatrixFilterStates$new(dataname, datalabel)}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{MatrixFilterStates$new(
+  data,
+  data_reactive = function(sid = "") NULL,
+  dataname,
+  datalabel = character(0)
+)}\if{html}{\out{</div>}}
 }
 
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
+\item{\code{data}}{(\code{matrix})\cr
+the R object which \code{subset} function is applied on.}
+
+\item{\code{data_reactive}}{(\verb{function(sid)})\cr
+should return a \code{matrix} object or \code{NULL}.
+This object is needed for the \code{FilterState} counts being updated
+on a change in filters. If function returns \code{NULL} then filtered counts are not shown.
+Function has to have \code{sid} argument being a character.}
+
 \item{\code{dataname}}{(\code{character(1)})\cr
 name of the data used in the expression
 specified to the function argument attached to this \code{FilterStates}.}
@@ -127,21 +139,16 @@ The output list can be used as input to \code{self$set_filter_state}.
 \subsection{Method \code{set_filter_state()}}{
 Sets a filter state
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{MatrixFilterStates$set_filter_state(data, state, ...)}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{MatrixFilterStates$set_filter_state(state)}\if{html}{\out{</div>}}
 }
 
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
-\item{\code{data}}{(\code{matrix})\cr
-data which are supposed to be filtered.}
-
 \item{\code{state}}{(\verb{named list})\cr
 should contain values which are initial selection in the \code{FilterState}.
 Names of the \code{list} element should correspond to the name of the
 column in \code{data}.}
-
-\item{\code{...}}{ignored.}
 }
 \if{html}{\out{</div>}}
 }
@@ -175,7 +182,7 @@ Remove a variable from the \code{state_list} and its corresponding UI element.
 \subsection{Method \code{ui_add_filter_state()}}{
 Shiny UI module to add filter variable.
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{MatrixFilterStates$ui_add_filter_state(id, data)}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{MatrixFilterStates$ui_add_filter_state(id)}\if{html}{\out{</div>}}
 }
 
 \subsection{Arguments}{
@@ -183,14 +190,11 @@ Shiny UI module to add filter variable.
 \describe{
 \item{\code{id}}{(\code{character(1)})\cr
 id of shiny module}
-
-\item{\code{data}}{(\code{matrix})\cr
-data object for which to define a subset}
 }
 \if{html}{\out{</div>}}
 }
 \subsection{Returns}{
-\code{shiny.tag}
+shiny.tag
 }
 }
 \if{html}{\out{<hr>}}
@@ -203,7 +207,7 @@ Module controls available choices to select as a filter variable.
 Selected filter variable is being removed from available choices.
 Removed filter variable gets back to available choices.
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{MatrixFilterStates$srv_add_filter_state(id, data, ...)}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{MatrixFilterStates$srv_add_filter_state(id)}\if{html}{\out{</div>}}
 }
 
 \subsection{Arguments}{
@@ -211,11 +215,6 @@ Removed filter variable gets back to available choices.
 \describe{
 \item{\code{id}}{(\code{character(1)})\cr
 shiny module instance id}
-
-\item{\code{data}}{(\code{matrix})\cr
-data object for which to define a subset}
-
-\item{\code{...}}{ignored}
 }
 \if{html}{\out{</div>}}
 }

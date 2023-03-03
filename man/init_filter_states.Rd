@@ -4,11 +4,25 @@
 \alias{init_filter_states}
 \title{Initialize \code{FilterStates} object}
 \usage{
-init_filter_states(data, dataname, datalabel = character(0), ...)
+init_filter_states(
+  data,
+  data_reactive = reactive(NULL),
+  dataname,
+  datalabel = character(0),
+  ...
+)
 }
 \arguments{
 \item{data}{(\code{data.frame}, \code{MultiAssayExperiment}, \code{SummarizedExperiment}, \code{matrix})\cr
 the R object which \code{subset} function is applied on.}
+
+\item{data_reactive}{(\verb{function(sid)})\cr
+should return an object of the same type as \code{data} or \code{NULL}.
+This object is needed for the \code{FilterState} shiny module to update
+counts if filtered data changes.
+If function returns \code{NULL} then filtered counts
+are not shown. Function has to have \code{sid} argument being a character which
+is related to \code{sid} argument in the \code{get_call} method.}
 
 \item{dataname}{(\code{character(1)})\cr
 name of the data used in the expression
@@ -24,6 +38,7 @@ additional arguments for specific classes: keys}
 Initialize \code{FilterStates} object
 }
 \examples{
+library(shiny)
 df <- data.frame(
   character = letters,
   numeric = seq_along(letters),
@@ -41,12 +56,12 @@ rf <- teal.slice:::init_filter_states(
 shinyApp(
   ui = fluidPage(
     actionButton("clear", span(icon("xmark"), "Remove all filters")),
-    rf$ui_add_filter_state(id = "add", data = df),
+    rf$ui_add_filter_state(id = "add"),
     rf$ui("states"),
     verbatimTextOutput("expr"),
   ),
   server = function(input, output, session) {
-    rf$srv_add_filter_state(id = "add", data = df)
+    rf$srv_add_filter_state(id = "add")
     rf$server(id = "states")
     output$expr <- renderText({
       deparse1(rf$get_call(), collapse = "\n")

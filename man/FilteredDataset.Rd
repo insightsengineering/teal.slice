@@ -16,7 +16,7 @@ components of the dataset.
 \itemize{
 \item \href{#method-FilteredDataset-new}{\code{FilteredDataset$new()}}
 \item \href{#method-FilteredDataset-get_formatted_filter_state}{\code{FilteredDataset$get_formatted_filter_state()}}
-\item \href{#method-FilteredDataset-state_lists_empty}{\code{FilteredDataset$state_lists_empty()}}
+\item \href{#method-FilteredDataset-clear_filter_states}{\code{FilteredDataset$clear_filter_states()}}
 \item \href{#method-FilteredDataset-get_call}{\code{FilteredDataset$get_call()}}
 \item \href{#method-FilteredDataset-get_filter_state}{\code{FilteredDataset$get_filter_state()}}
 \item \href{#method-FilteredDataset-get_filter_states}{\code{FilteredDataset$get_filter_states()}}
@@ -29,7 +29,6 @@ components of the dataset.
 \item \href{#method-FilteredDataset-get_varlabels}{\code{FilteredDataset$get_varlabels()}}
 \item \href{#method-FilteredDataset-get_dataset_label}{\code{FilteredDataset$get_dataset_label()}}
 \item \href{#method-FilteredDataset-get_varnames}{\code{FilteredDataset$get_varnames()}}
-\item \href{#method-FilteredDataset-get_filterable_varnames}{\code{FilteredDataset$get_filterable_varnames()}}
 \item \href{#method-FilteredDataset-set_filterable_varnames}{\code{FilteredDataset$set_filterable_varnames()}}
 \item \href{#method-FilteredDataset-ui}{\code{FilteredDataset$ui()}}
 \item \href{#method-FilteredDataset-server}{\code{FilteredDataset$server()}}
@@ -90,12 +89,12 @@ Returns a string representation of the filter state in this \code{FilteredDatase
 }
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-FilteredDataset-state_lists_empty"></a>}}
-\if{latex}{\out{\hypertarget{method-FilteredDataset-state_lists_empty}{}}}
-\subsection{Method \code{state_lists_empty()}}{
+\if{html}{\out{<a id="method-FilteredDataset-clear_filter_states"></a>}}
+\if{latex}{\out{\hypertarget{method-FilteredDataset-clear_filter_states}{}}}
+\subsection{Method \code{clear_filter_states()}}{
 Removes all active filter items applied to this dataset
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{FilteredDataset$state_lists_empty()}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{FilteredDataset$clear_filter_states()}\if{html}{\out{</div>}}
 }
 
 \subsection{Returns}{
@@ -112,9 +111,18 @@ This functions returns filter calls equivalent to selected items
 within each of \code{filter_states}. Configuration of the calls is constant and
 depends on \code{filter_states} type and order which are set during initialization.
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{FilteredDataset$get_call()}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{FilteredDataset$get_call(sid = "")}\if{html}{\out{</div>}}
 }
 
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{sid}}{(\code{character})\cr
+when specified then method returns code containing filter conditions of
+\code{FilterState} objects which \code{"sid"} attribute is different than this \code{sid} argument.}
+}
+\if{html}{\out{</div>}}
+}
 \subsection{Returns}{
 filter \code{call} or \code{list} of filter calls
 Gets the reactive values from the active \code{FilterState} objects.
@@ -191,11 +199,19 @@ Get name of the dataset
 \subsection{Method \code{get_dataset()}}{
 Gets the dataset object in this \code{FilteredDataset}
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{FilteredDataset$get_dataset()}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{FilteredDataset$get_dataset(filtered = FALSE)}\if{html}{\out{</div>}}
 }
 
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{filtered}}{(\code{logical(1)})\cr}
+}
+\if{html}{\out{</div>}}
+}
 \subsection{Returns}{
-\code{data.frame} or \code{MultiAssayExperiment}
+\code{data.frame} or \code{MultiAssayExperiment} as a raw data
+or as a reactive with filter applied
 }
 }
 \if{html}{\out{<hr>}}
@@ -219,7 +235,7 @@ Get filter overview rows of a dataset
 The output shows the comparison between \code{filtered_dataset}
 function parameter and the dataset inside self
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{FilteredDataset$get_filter_overview_info(filtered_dataset = self$get_dataset())}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{FilteredDataset$get_filter_overview_info()}\if{html}{\out{</div>}}
 }
 
 \subsection{Arguments}{
@@ -301,23 +317,6 @@ Gets variable names from dataset
 }
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-FilteredDataset-get_filterable_varnames"></a>}}
-\if{latex}{\out{\hypertarget{method-FilteredDataset-get_filterable_varnames}{}}}
-\subsection{Method \code{get_filterable_varnames()}}{
-Gets variable names for the filtering.
-
-It takes the intersection of the column names
-of the data and \code{private$filterable_varnames} if
-\code{private$filterable_varnames} has positive length
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{FilteredDataset$get_filterable_varnames()}\if{html}{\out{</div>}}
-}
-
-\subsection{Returns}{
-(\code{character} vector) of variable names
-}
-}
-\if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-FilteredDataset-set_filterable_varnames"></a>}}
 \if{latex}{\out{\hypertarget{method-FilteredDataset-set_filterable_varnames}{}}}
 \subsection{Method \code{set_filterable_varnames()}}{
@@ -329,8 +328,7 @@ Set the allowed filterable variables
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
-\item{\code{varnames}}{(\code{character} or \code{NULL}) The variables which can be filtered
-See \code{self$get_filterable_varnames} for more details}
+\item{\code{varnames}}{(\code{character} or \code{NULL}) The variables which can be filtered}
 }
 \if{html}{\out{</div>}}
 }
@@ -422,7 +420,7 @@ Server module to add filter variable for this dataset
 
 Server module to add filter variable for this dataset
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{FilteredDataset$srv_add_filter_state(id, ...)}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{FilteredDataset$srv_add_filter_state(id)}\if{html}{\out{</div>}}
 }
 
 \subsection{Arguments}{
@@ -430,8 +428,6 @@ Server module to add filter variable for this dataset
 \describe{
 \item{\code{id}}{(\code{character(1)})\cr
 an ID string that corresponds with the ID used to call the module's UI function.}
-
-\item{\code{...}}{ignored}
 }
 \if{html}{\out{</div>}}
 }

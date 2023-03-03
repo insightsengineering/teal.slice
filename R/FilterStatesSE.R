@@ -13,17 +13,31 @@ SEFilterStates <- R6::R6Class( # nolint
     #'
     #' Initialize `SEFilterStates` object
     #'
+    #' @param data (`SummarizedExperiment`)\cr
+    #'   the R object which `subset` function is applied on.
+    #'
+    #' @param data_reactive (`function(sid)`)\cr
+    #'   should return a `SummarizedExperiment` object or `NULL`.
+    #'   This object is needed for the `FilterState` counts being updated
+    #'   on a change in filters. If function returns `NULL` then filtered counts are not shown.
+    #'   Function has to have `sid` argument being a character.
+    #'
     #' @param dataname (`character(1)`)\cr
     #'   name of the data used in the expression
     #'   specified to the function argument attached to this `FilterStates`.
     #'
     #' @param datalabel (`character(0)` or `character(1)`)\cr
     #'   text label value.
-    initialize = function(dataname, datalabel) {
+    initialize = function(data,
+                          data_reactive = function(sid = "") NULL,
+                          dataname,
+                          datalabel = character(0)) {
       if (!requireNamespace("SummarizedExperiment", quietly = TRUE)) {
         stop("Cannot load SummarizedExperiment - please install the package or restart your session.")
       }
-      super$initialize(dataname, datalabel)
+      checkmate::assert_function(data_reactive, args = "sid")
+      checkmate::assert_class(data, "SummarizedExperiment")
+      super$initialize(data, data_reactive, dataname, datalabel)
       private$state_list <- list(
         subset = reactiveVal(),
         select = reactiveVal()
@@ -40,16 +54,16 @@ SEFilterStates <- R6::R6Class( # nolint
 
       whitespace_indent <- format("", width = indent)
       formatted_states <- c()
-      if (!is.null(self$state_list_get(state_list_index = "subset"))) {
+      if (!is.null(private$state_list_get(state_list_index = "subset"))) {
         formatted_states <- c(formatted_states, paste0(whitespace_indent, "  Subsetting:"))
-        for (state in self$state_list_get(state_list_index = "subset")) {
+        for (state in private$state_list_get(state_list_index = "subset")) {
           formatted_states <- c(formatted_states, state$format(indent = indent + 4))
         }
       }
 
-      if (!is.null(self$state_list_get(state_list_index = "select"))) {
+      if (!is.null(private$state_list_get(state_list_index = "select"))) {
         formatted_states <- c(formatted_states, paste0(whitespace_indent, "  Selecting:"))
-        for (state in self$state_list_get(state_list_index = "select")) {
+        for (state in private$state_list_get(state_list_index = "select")) {
           formatted_states <- c(formatted_states, state$format(indent = indent + 4))
         }
       }
@@ -69,22 +83,22 @@ SEFilterStates <- R6::R6Class( # nolint
       moduleServer(
         id = id,
         function(input, output, session) {
-          previous_state_subset <- reactiveVal(isolate(self$state_list_get("subset")))
+          previous_state_subset <- reactiveVal(isolate(private$state_list_get("subset")))
           added_state_name_subset <- reactiveVal(character(0))
           removed_state_name_subset <- reactiveVal(character(0))
 
-          observeEvent(self$state_list_get("subset"), {
+          observeEvent(private$state_list_get("subset"), {
             added_state_name_subset(
-              setdiff(names(self$state_list_get("subset")), names(previous_state_subset()))
+              setdiff(names(private$state_list_get("subset")), names(previous_state_subset()))
             )
             removed_state_name_subset(
-              setdiff(names(previous_state_subset()), names(self$state_list_get("subset")))
+              setdiff(names(previous_state_subset()), names(private$state_list_get("subset")))
             )
-            previous_state_subset(self$state_list_get("subset"))
+            previous_state_subset(private$state_list_get("subset"))
           })
 
           observeEvent(added_state_name_subset(), ignoreNULL = TRUE, {
-            fstates <- self$state_list_get("subset")
+            fstates <- private$state_list_get("subset")
             html_ids <- private$map_vars_to_html_ids(keys = names(fstates), prefix = "rowData")
             for (fname in added_state_name_subset()) {
               private$insert_filter_state_ui(
@@ -97,8 +111,7 @@ SEFilterStates <- R6::R6Class( # nolint
             added_state_name_subset(character(0))
           })
 
-          observeEvent(removed_state_name_subset(), {
-            req(removed_state_name_subset())
+          observeEvent(removed_state_name_subset(), ignoreNULL = TRUE, {
             for (fname in removed_state_name_subset()) {
               private$remove_filter_state_ui("subset", fname, .input = input)
             }
@@ -106,23 +119,23 @@ SEFilterStates <- R6::R6Class( # nolint
           })
 
           # select
-          previous_state_select <- reactiveVal(isolate(self$state_list_get("select")))
+          previous_state_select <- reactiveVal(isolate(private$state_list_get("select")))
           added_state_name_select <- reactiveVal(character(0))
           removed_state_name_select <- reactiveVal(character(0))
 
-          observeEvent(self$state_list_get("select"), {
+          observeEvent(private$state_list_get("select"), {
             # find what has been added or removed
             added_state_name_select(
-              setdiff(names(self$state_list_get("select")), names(previous_state_select()))
+              setdiff(names(private$state_list_get("select")), names(previous_state_select()))
             )
             removed_state_name_select(
-              setdiff(names(previous_state_select()), names(self$state_list_get("select")))
+              setdiff(names(previous_state_select()), names(private$state_list_get("select")))
             )
-            previous_state_select(self$state_list_get("select"))
+            previous_state_select(private$state_list_get("select"))
           })
 
           observeEvent(added_state_name_select(), ignoreNULL = TRUE, {
-            fstates <- self$state_list_get("select")
+            fstates <- private$state_list_get("select")
             html_ids <- private$map_vars_to_html_ids(keys = names(fstates), prefix = "colData")
             for (fname in added_state_name_select()) {
               private$insert_filter_state_ui(
@@ -135,8 +148,7 @@ SEFilterStates <- R6::R6Class( # nolint
             added_state_name_select(character(0))
           })
 
-          observeEvent(removed_state_name_select(), {
-            req(removed_state_name_select())
+          observeEvent(removed_state_name_select(), ignoreNULL = TRUE, {
             for (fname in removed_state_name_select()) {
               private$remove_filter_state_ui("select", fname, .input = input)
             }
@@ -161,7 +173,7 @@ SEFilterStates <- R6::R6Class( # nolint
         X = names(private$state_list),
         simplify = FALSE,
         function(x) {
-          lapply(self$state_list_get(state_list_index = x), function(xx) xx$get_state())
+          lapply(private$state_list_get(state_list_index = x), function(xx) xx$get_state())
         }
       )
       Filter(function(x) length(x) > 0, states)
@@ -170,88 +182,35 @@ SEFilterStates <- R6::R6Class( # nolint
     #' @description
     #' Set filter state
     #'
-    #' @param data (`SummarizedExperiment`)\cr
-    #'   data which are supposed to be filtered.
     #' @param state (`named list`)\cr
     #'   this list should contain `subset` and `select` element where
     #'   each should be a named list containing values as a selection in the `FilterState`.
     #'   Names of each the `list` element in `subset` and `select` should correspond to
     #'   the name of the column in `rowData(data)` and `colData(data)`.
-    #' @param ... ignored.
     #' @return `NULL`
-    set_filter_state = function(data, state, ...) {
-      checkmate::assert_class(data, "SummarizedExperiment")
+    set_filter_state = function(state) {
+      logger::log_trace("SEFilterState$set_filter_state initializing, dataname: { private$dataname }")
       checkmate::assert_class(state, "list")
+      checkmate::assert_subset(names(state), c("subset", "select"))
 
-      checkmate::assert(
-        checkmate::check_subset(names(state), c("subset", "select")),
-        checkmate::check_class(state, "default_filter"),
-        combine = "or"
-      )
-      checkmate::assert(
-        checkmate::test_null(state$subset),
-        checkmate::assert(
-          checkmate::check_class(state$subset, "list"),
-          checkmate::check_subset(names(state$subset), names(SummarizedExperiment::rowData(data))),
-          combine = "and"
-        ),
-        combine = "or"
-      )
-      checkmate::assert(
-        checkmate::test_null(state$select),
-        checkmate::assert(
-          checkmate::check_class(state$select, "list"),
-          checkmate::check_subset(names(state$select), names(SummarizedExperiment::colData(data))),
-          combine = "and"
-        ),
-        combine = "or"
+      data <- private$data
+      data_reactive <- private$data_reactive
+
+      private$set_filter_state_impl(
+        state = state$subset,
+        state_list_index = "subset",
+        data = SummarizedExperiment::rowData(data),
+        data_reactive = function(sid) SummarizedExperiment::rowData(data_reactive(sid))
       )
 
-      filter_states <- self$state_list_get("subset")
-      for (varname in names(state$subset)) {
-        value <- resolve_state(state$subset[[varname]])
-        if (varname %in% names(filter_states)) {
-          fstate <- filter_states[[varname]]
-          fstate$set_state(value)
-        } else {
-          fstate <- init_filter_state(
-            SummarizedExperiment::rowData(data)[[varname]],
-            varname = varname,
-            dataname = private$dataname
-          )
-          fstate$set_state(value)
-          self$state_list_push(
-            x = fstate,
-            state_list_index = "subset",
-            state_id = varname
-          )
-        }
-      }
+      private$set_filter_state_impl(
+        state = state$select,
+        state_list_index = "select",
+        data = SummarizedExperiment::colData(data),
+        data_reactive = function(sid) SummarizedExperiment::colData(data_reactive(sid))
+      )
 
-      filter_states <- self$state_list_get("select")
-      for (varname in names(state$select)) {
-        value <- resolve_state(state$select[[varname]])
-        if (varname %in% names(filter_states)) {
-          fstate <- filter_states[[varname]]
-          fstate$set_state(value)
-        } else {
-          fstate <- init_filter_state(
-            SummarizedExperiment::colData(data)[[varname]],
-            varname = varname,
-            dataname = private$dataname
-          )
-          fstate$set_state(value)
-          self$state_list_push(
-            x = fstate,
-            state_list_index = "select",
-            state_id = varname
-          )
-        }
-      }
-      logger::log_trace(paste(
-        "SEFilterState$set_filter_state initialized,",
-        "dataname: { private$dataname }"
-      ))
+      logger::log_trace("SEFilterState$set_filter_state initialized, dataname: { private$dataname }")
       NULL
     },
 
@@ -275,19 +234,16 @@ SEFilterStates <- R6::R6Class( # nolint
         combine = "and"
       )
       for (varname in state_id$subset) {
-        if (!all(unlist(state_id$subset) %in% names(self$state_list_get("subset")))) {
-          warning(paste(
-            "Variable:", state_id, "is not present in the actual active subset filters of dataset:",
-            "{ private$dataname } therefore no changes are applied."
-          ))
-          logger::log_warn(
-            paste(
-              "Variable:", state_id, "is not present in the actual active subset filters of dataset:",
-              "{ private$dataname } therefore no changes are applied."
-            )
+        if (!all(unlist(state_id$subset) %in% names(shiny::isolate(private$state_list_get("subset"))))) {
+          msg <- sprintf(
+            "%s is not an active 'subset' filter of dataset: %s and can't be removed.",
+            state_id,
+            private$dataname
           )
+          warning(msg)
+          logger::log_warn(msg)
         } else {
-          self$state_list_remove(state_list_index = "subset", state_id = varname)
+          private$state_list_remove(state_list_index = "subset", state_id = varname)
           logger::log_trace(
             sprintf(
               "%s$remove_filter_state for subset variable %s done, dataname: %s",
@@ -300,19 +256,16 @@ SEFilterStates <- R6::R6Class( # nolint
       }
 
       for (varname in state_id$select) {
-        if (!all(unlist(state_id$select) %in% names(self$state_list_get("select")))) {
-          warning(paste(
-            "Variable:", state_id, "is not present in the actual active select filters of dataset:",
-            "{ private$dataname } therefore no changes are applied."
-          ))
-          logger::log_warn(
-            paste(
-              "Variable:", state_id, "is not present in the actual active select filters of dataset:",
-              "{ private$dataname } therefore no changes are applied."
-            )
+        if (!all(unlist(state_id$select) %in% names(shiny::isolate(private$state_list_get("select"))))) {
+          msg <- sprintf(
+            "%s is not an active 'select' filter of dataset: %s and can't be removed.",
+            state_id,
+            private$dataname
           )
+          warning(msg)
+          logger::log_warn(msg)
         } else {
-          self$state_list_remove(state_list_index = "select", state_id = varname)
+          private$state_list_remove(state_list_index = "select", state_id = varname)
           sprintf(
             "%s$remove_filter_state for select variable %s done, dataname: %s",
             class(self)[1],
@@ -329,14 +282,10 @@ SEFilterStates <- R6::R6Class( # nolint
     #' Shiny UI module to add filter variable
     #' @param id (`character(1)`)\cr
     #'  id of shiny module
-    #' @param data (`SummarizedExperiment`)\cr
-    #'  object containing `colData` and `rowData` which columns
-    #'  are used to choose filter variables. Column selection from `colData`
-    #'  and `rowData` are separate shiny entities.
     #' @return shiny.tag
-    ui_add_filter_state = function(id, data) {
+    ui_add_filter_state = function(id) {
+      data <- private$data
       checkmate::assert_string(id)
-      stopifnot(is(data, "SummarizedExperiment"))
 
       ns <- NS(id)
 
@@ -388,32 +337,26 @@ SEFilterStates <- R6::R6Class( # nolint
     #'
     #' @param id (`character(1)`)\cr
     #'   an ID string that corresponds with the ID used to call the module's UI function.
-    #' @param data (`SummarizedExperiment`)\cr
-    #'  object containing `colData` and `rowData` which columns
-    #'  are used to choose filter variables. Column selection from `colData`
-    #'  and `rowData` are separate shiny entities.
-    #' @param ... ignored
     #' @return `moduleServer` function which returns `NULL`
-    srv_add_filter_state = function(id, data, ...) {
-      stopifnot(is(data, "SummarizedExperiment"))
-      check_ellipsis(..., stop = FALSE)
+    srv_add_filter_state = function(id) {
+      data <- private$data
+      data_reactive <- private$data_reactive
       moduleServer(
         id = id,
         function(input, output, session) {
           logger::log_trace(
             "SEFilterState$srv_add_filter_state initializing, dataname: { private$dataname }"
           )
-          shiny::setBookmarkExclude(c("row_to_add", "col_to_add"))
           active_filter_col_vars <- reactive({
             vapply(
-              X = self$state_list_get(state_list_index = "select"),
+              X = private$state_list_get(state_list_index = "select"),
               FUN.VALUE = character(1),
               FUN = function(x) x$get_varname()
             )
           })
           active_filter_row_vars <- reactive({
             vapply(
-              X = self$state_list_get(state_list_index = "subset"),
+              X = private$state_list_get(state_list_index = "subset"),
               FUN.VALUE = character(1),
               FUN = function(x) x$get_varname()
             )
@@ -511,24 +454,18 @@ SEFilterStates <- R6::R6Class( # nolint
                   private$dataname
                 )
               )
-              self$state_list_push(
-                x = init_filter_state(
-                  SummarizedExperiment::colData(data)[[input$col_to_add]],
-                  varname = input$col_to_add,
-                  dataname = private$dataname
-                ),
-                state_list_index = "select",
-                state_id = input$col_to_add
-              )
+              varname <- input$col_to_add
+              self$set_filter_state(list(select = setNames(list(list()), varname)))
               logger::log_trace(
                 sprintf(
                   "SEFilterStates$srv_add_filter_state@3 added FilterState of column %s to col data, dataname: %s",
-                  deparse1(input$col_to_add),
+                  deparse1(varname),
                   private$dataname
                 )
               )
             }
           )
+
 
           observeEvent(
             eventExpr = input$row_to_add,
@@ -540,19 +477,12 @@ SEFilterStates <- R6::R6Class( # nolint
                   private$dataname
                 )
               )
-              self$state_list_push(
-                x = init_filter_state(
-                  SummarizedExperiment::rowData(data)[[input$row_to_add]],
-                  varname = input$row_to_add,
-                  dataname = private$dataname
-                ),
-                state_list_index = "subset",
-                state_id = input$row_to_add
-              )
+              varname <- input$row_to_add
+              self$set_filter_state(list(subset = setNames(list(list()), varname)))
               logger::log_trace(
                 sprintf(
                   "SEFilterStates$srv_add_filter_state@4 added FilterState of variable %s to row data, dataname: %s",
-                  deparse1(input$row_to_add),
+                  deparse1(varname),
                   private$dataname
                 )
               )

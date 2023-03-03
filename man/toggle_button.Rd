@@ -37,13 +37,6 @@ which may contain a child \verb{<i>} tag that specifies an icon to be displayed.
 \examples{
 \dontrun{
 
-# continuously switch between right- and down-pointing chevrons
-toggle_icon("toggle_element", c("fa-angle-right", "fa-angle-down"))
-
-# switch right- to down-pointing chevron
-toggle_icon("toggle_element", c("fa-angle-right", "fa-angle-down"), one_way = TRUE)
-}
-
 library(shiny)
 
 ui <- fluidPage(
@@ -80,9 +73,9 @@ server <- function(input, output, session) {
   })
 
 }
-
 if (interactive()) {
   shinyApp(ui, server)
+}
 }
 
 }
