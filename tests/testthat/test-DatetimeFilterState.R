@@ -215,3 +215,22 @@ testthat::test_that("$format() prepends spaces to every line of the returned str
     )
   }
 })
+
+testthat::test_that("is_any_filtered returns TRUE when enabled", {
+  shiny::reactiveConsole(TRUE)
+  on.exit(shiny::reactiveConsole(FALSE))
+  testfs <- R6::R6Class(
+    classname = "testfs",
+    inherit = DatetimeFilterState,
+    public = list(
+      disable = function() private$disable(),
+      enable = function() private$enable()
+    )
+  )
+  datetime_seq <- seq(Sys.time() - 120, Sys.time(), 60)
+  fs <- testfs$new(datetime_seq, varname = "x")
+  fs$set_state(list(selected = datetime_seq[1:2], keep_na = TRUE))
+  fs$disable()
+  fs$enable()
+  testthat::expect_true(fs$is_any_filtered())
+})
