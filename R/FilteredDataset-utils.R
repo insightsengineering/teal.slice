@@ -11,14 +11,14 @@
 #' \dontrun{
 #' shinyApp(
 #'   ui = fluidPage(
-#'     iris_fd$ui_add_filter_state(id = "add"),
-#'     iris_fd$ui("dataset"),
+#'     iris_fd$ui_add(id = "add"),
+#'     iris_fd$ui_active("dataset"),
 #'     verbatimTextOutput("call"),
 #'     verbatimTextOutput("metadata")
 #'   ),
 #'   server = function(input, output, session) {
-#'     iris_fd$srv_add_filter_state(id = "add")
-#'     iris_fd$server(id = "dataset")
+#'     iris_fd$srv_add(id = "add")
+#'     iris_fd$srv_active(id = "dataset")
 #'
 #'     output$metadata <- renderText({
 #'       paste("Type =", iris_fd$get_metadata()$type)
@@ -41,14 +41,14 @@
 #' \dontrun{
 #' shinyApp(
 #'   ui = fluidPage(
-#'     MAE_fd$ui_add_filter_state(id = "add"),
-#'     MAE_fd$ui("dataset"),
+#'     MAE_fd$ui_add(id = "add"),
+#'     MAE_fd$ui_active("dataset"),
 #'     verbatimTextOutput("call"),
 #'     verbatimTextOutput("metadata")
 #'   ),
 #'   server = function(input, output, session) {
-#'     MAE_fd$srv_add_filter_state(id = "add")
-#'     MAE_fd$server(id = "dataset")
+#'     MAE_fd$srv_add(id = "add")
+#'     MAE_fd$srv_active(id = "dataset")
 #'     output$metadata <- renderText({
 #'       paste("Type =", MAE_fd$get_metadata()$type)
 #'     })

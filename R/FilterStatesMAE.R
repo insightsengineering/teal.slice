@@ -82,7 +82,7 @@ MAEFilterStates <- R6::R6Class( # nolint
     #' @param id (`character(1)`)\cr
     #'   an ID string that corresponds with the ID used to call the module's UI function.
     #' @return `moduleServer` function which returns `NULL`
-    server = function(id) {
+    srv_active = function(id) {
       moduleServer(
         id = id,
         function(input, output, session) {
@@ -220,7 +220,7 @@ MAEFilterStates <- R6::R6Class( # nolint
     #' @param id (`character(1)`)\cr
     #'  id of shiny module
     #' @return shiny.tag
-    ui_add_filter_state = function(id) {
+    ui_add = function(id) {
       data <- private$data
       checkmate::assert_string(id)
 
@@ -252,15 +252,13 @@ MAEFilterStates <- R6::R6Class( # nolint
     #' @param id (`character(1)`)\cr
     #'   an ID string that corresponds with the ID used to call the module's UI function.
     #' @return `moduleServer` function which returns `NULL`
-    srv_add_filter_state = function(id) {
-      data <- private$data
-      data_reactive <- private$data_reactive
+    srv_add = function(id) {
+      data <- SummarizedExperiment::colData(private$data)
+
       moduleServer(
         id = id,
         function(input, output, session) {
-          logger::log_trace(
-            "MAEFilterState$srv_add_filter_state initializing, dataname: { private$dataname }"
-          )
+          logger::log_trace("MAEFilterState$srv_add initializing, dataname: { private$dataname }")
           active_filter_vars <- reactive({
             vapply(
               X = private$state_list_get("y"),
@@ -271,14 +269,23 @@ MAEFilterStates <- R6::R6Class( # nolint
 
           # available choices to display
           avail_column_choices <- reactive({
-            choices <- setdiff(
-              get_supported_filter_varnames(data = SummarizedExperiment::colData(data)),
-              active_filter_vars()
+            choices <- setdiff(get_supported_filter_varnames(data = data), active_filter_vars())
+            varlabels <- vapply(
+              colnames(data),
+              FUN = function(x) {
+                label <- attr(data[[x]], "label")
+                if (is.null(label)) {
+                  x
+                } else {
+                  label
+                }
+              },
+              FUN.VALUE = character(1)
             )
             data_choices_labeled(
-              data = SummarizedExperiment::colData(data),
+              data = data,
               choices = choices,
-              varlabels = private$get_varlabels(choices),
+              varlabels = varlabels,
               keys = private$keys
             )
           })
@@ -287,7 +294,7 @@ MAEFilterStates <- R6::R6Class( # nolint
             ignoreNULL = TRUE,
             handlerExpr = {
               logger::log_trace(paste(
-                "MAEFilterStates$srv_add_filter_state@1 updating available column choices,",
+                "MAEFilterStates$srv_add@1 updating available column choices,",
                 "dataname: { private$dataname }"
               ))
               if (is.null(avail_column_choices())) {
@@ -301,7 +308,7 @@ MAEFilterStates <- R6::R6Class( # nolint
                 choices = avail_column_choices()
               )
               logger::log_trace(paste(
-                "MAEFilterStates$srv_add_filter_state@1 updated available column choices,",
+                "MAEFilterStates$srv_add@1 updated available column choices,",
                 "dataname: { private$dataname }"
               ))
             }
@@ -312,7 +319,7 @@ MAEFilterStates <- R6::R6Class( # nolint
             handlerExpr = {
               logger::log_trace(
                 sprintf(
-                  "MAEFilterStates$srv_add_filter_state@2 adding FilterState of variable %s, dataname: %s",
+                  "MAEFilterStates$srv_add@2 adding FilterState of variable %s, dataname: %s",
                   deparse1(input$var_to_add),
                   private$dataname
                 )
@@ -321,7 +328,7 @@ MAEFilterStates <- R6::R6Class( # nolint
               self$set_filter_state(setNames(list(list()), varname))
               logger::log_trace(
                 sprintf(
-                  "MAEFilterStates$srv_add_filter_state@2 added FilterState of variable %s, dataname: %s",
+                  "MAEFilterStates$srv_add@2 added FilterState of variable %s, dataname: %s",
                   deparse1(varname),
                   private$dataname
                 )
@@ -330,7 +337,7 @@ MAEFilterStates <- R6::R6Class( # nolint
           )
 
           logger::log_trace(
-            "MAEFilterState$srv_add_filter_state initialized, dataname: { private$dataname }"
+            "MAEFilterState$srv_add initialized, dataname: { private$dataname }"
           )
           NULL
         }
@@ -339,23 +346,6 @@ MAEFilterStates <- R6::R6Class( # nolint
   ),
   private = list(
     varlabels = character(0),
-    keys = character(0),
-    #' description
-    #' Get label of specific variable. In case when variable label is missing
-    #' name of the variable is returned.
-    #' parameter variable (`character`)\cr
-    #'  name of the variable for which label should be returned
-    #' return `character`
-    get_varlabels = function(variables = character(0)) {
-      checkmate::assert_character(variables)
-      if (identical(variables, character(0))) {
-        private$varlabels
-      } else {
-        varlabels <- private$varlabels[variables]
-        missing_labels <- is.na(varlabels) | varlabels == ""
-        varlabels[missing_labels] <- variables[missing_labels]
-        varlabels
-      }
-    }
+    keys = character(0)
   )
 )

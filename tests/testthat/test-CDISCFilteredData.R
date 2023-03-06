@@ -62,22 +62,6 @@ testthat::test_that("get_parentname returns the parent name of the datasets", {
   )
 })
 
-testthat::test_that("get_varlabels returns the column labels of the passed dataset", {
-  setup_objects <- get_cdisc_filtered_data()
-  ds <- setup_objects$ds
-  adsl <- setup_objects$adsl
-
-  testthat::expect_equal(
-    ds$get_varlabels("ADSL"),
-    formatters::var_labels(adsl, fill = FALSE)
-  )
-  # only some variables
-  testthat::expect_equal(
-    ds$get_varlabels("ADSL", variables = c("sex")),
-    formatters::var_labels(adsl, fill = FALSE)[c("sex")]
-  )
-})
-
 testthat::test_that(
   "set_filter_state sets don't throw if column exists and isn't duplicated with parent",
   code = {

@@ -15,12 +15,12 @@ Handles filter states in a \code{matrix}
 \itemize{
 \item \href{#method-MatrixFilterStates-new}{\code{MatrixFilterStates$new()}}
 \item \href{#method-MatrixFilterStates-format}{\code{MatrixFilterStates$format()}}
-\item \href{#method-MatrixFilterStates-server}{\code{MatrixFilterStates$server()}}
+\item \href{#method-MatrixFilterStates-srv_active}{\code{MatrixFilterStates$srv_active()}}
 \item \href{#method-MatrixFilterStates-get_filter_state}{\code{MatrixFilterStates$get_filter_state()}}
 \item \href{#method-MatrixFilterStates-set_filter_state}{\code{MatrixFilterStates$set_filter_state()}}
 \item \href{#method-MatrixFilterStates-remove_filter_state}{\code{MatrixFilterStates$remove_filter_state()}}
-\item \href{#method-MatrixFilterStates-ui_add_filter_state}{\code{MatrixFilterStates$ui_add_filter_state()}}
-\item \href{#method-MatrixFilterStates-srv_add_filter_state}{\code{MatrixFilterStates$srv_add_filter_state()}}
+\item \href{#method-MatrixFilterStates-ui_add}{\code{MatrixFilterStates$ui_add()}}
+\item \href{#method-MatrixFilterStates-srv_add}{\code{MatrixFilterStates$srv_add()}}
 \item \href{#method-MatrixFilterStates-clone}{\code{MatrixFilterStates$clone()}}
 }
 }
@@ -34,7 +34,7 @@ Handles filter states in a \code{matrix}
 <li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilterStates" data-id="get_fun"><a href='../../teal.slice/html/FilterStates.html#method-FilterStates-get_fun'><code>teal.slice::FilterStates$get_fun()</code></a></span></li>
 <li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilterStates" data-id="print"><a href='../../teal.slice/html/FilterStates.html#method-FilterStates-print'><code>teal.slice::FilterStates$print()</code></a></span></li>
 <li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilterStates" data-id="set_filterable_varnames"><a href='../../teal.slice/html/FilterStates.html#method-FilterStates-set_filterable_varnames'><code>teal.slice::FilterStates$set_filterable_varnames()</code></a></span></li>
-<li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilterStates" data-id="ui"><a href='../../teal.slice/html/FilterStates.html#method-FilterStates-ui'><code>teal.slice::FilterStates$ui()</code></a></span></li>
+<li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilterStates" data-id="ui_active"><a href='../../teal.slice/html/FilterStates.html#method-FilterStates-ui_active'><code>teal.slice::FilterStates$ui_active()</code></a></span></li>
 </ul>
 </details>
 }}
@@ -97,12 +97,12 @@ Returns the formatted string representing this \code{MatrixFilterStates} object.
 }
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-MatrixFilterStates-server"></a>}}
-\if{latex}{\out{\hypertarget{method-MatrixFilterStates-server}{}}}
-\subsection{Method \code{server()}}{
+\if{html}{\out{<a id="method-MatrixFilterStates-srv_active"></a>}}
+\if{latex}{\out{\hypertarget{method-MatrixFilterStates-srv_active}{}}}
+\subsection{Method \code{srv_active()}}{
 Server module
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{MatrixFilterStates$server(id)}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{MatrixFilterStates$srv_active(id)}\if{html}{\out{</div>}}
 }
 
 \subsection{Arguments}{
@@ -177,12 +177,12 @@ Remove a variable from the \code{state_list} and its corresponding UI element.
 }
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-MatrixFilterStates-ui_add_filter_state"></a>}}
-\if{latex}{\out{\hypertarget{method-MatrixFilterStates-ui_add_filter_state}{}}}
-\subsection{Method \code{ui_add_filter_state()}}{
+\if{html}{\out{<a id="method-MatrixFilterStates-ui_add"></a>}}
+\if{latex}{\out{\hypertarget{method-MatrixFilterStates-ui_add}{}}}
+\subsection{Method \code{ui_add()}}{
 Shiny UI module to add filter variable.
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{MatrixFilterStates$ui_add_filter_state(id)}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{MatrixFilterStates$ui_add(id)}\if{html}{\out{</div>}}
 }
 
 \subsection{Arguments}{
@@ -198,16 +198,16 @@ shiny.tag
 }
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-MatrixFilterStates-srv_add_filter_state"></a>}}
-\if{latex}{\out{\hypertarget{method-MatrixFilterStates-srv_add_filter_state}{}}}
-\subsection{Method \code{srv_add_filter_state()}}{
+\if{html}{\out{<a id="method-MatrixFilterStates-srv_add"></a>}}
+\if{latex}{\out{\hypertarget{method-MatrixFilterStates-srv_add}{}}}
+\subsection{Method \code{srv_add()}}{
 Shiny server module to add filter variable
 
 Module controls available choices to select as a filter variable.
 Selected filter variable is being removed from available choices.
 Removed filter variable gets back to available choices.
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{MatrixFilterStates$srv_add_filter_state(id)}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{MatrixFilterStates$srv_add(id)}\if{html}{\out{</div>}}
 }
 
 \subsection{Arguments}{
