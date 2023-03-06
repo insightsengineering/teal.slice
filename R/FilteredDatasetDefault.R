@@ -82,7 +82,6 @@ DefaultFilteredDataset <- R6::R6Class( # nolint
           data = dataset,
           data_reactive = private$data_filtered_fun,
           dataname = dataname,
-          varlabels = self$get_varlabels(),
           keys = self$get_keys()
         ),
         id = "filter"
@@ -244,11 +243,11 @@ DefaultFilteredDataset <- R6::R6Class( # nolint
     #'  identifier of the element - preferably containing dataset name
     #'
     #' @return function - shiny UI module
-    ui_add_filter_state = function(id) {
+    ui_add = function(id) {
       ns <- NS(id)
       tagList(
         tags$label("Add", tags$code(self$get_dataname()), "filter"),
-        self$get_filter_states(id = "filter")$ui_add_filter_state(id = ns("filter"))
+        self$get_filter_states(id = "filter")$ui_add(id = ns("filter"))
       )
     },
 
@@ -256,24 +255,24 @@ DefaultFilteredDataset <- R6::R6Class( # nolint
     #' Server module to add filter variable for this dataset
     #'
     #' Server module to add filter variable for this dataset.
-    #' For this class `srv_add_filter_state` calls single module
-    #' `srv_add_filter_state` from `FilterStates` (`DefaultFilteredDataset`
+    #' For this class `srv_add` calls single module
+    #' `srv_add` from `FilterStates` (`DefaultFilteredDataset`
     #' contains single `FilterStates`)
     #'
     #' @param id (`character(1)`)\cr
     #'   an ID string that corresponds with the ID used to call the module's UI function.
     #'
     #' @return `moduleServer` function which returns `NULL`
-    srv_add_filter_state = function(id) {
+    srv_add = function(id) {
       moduleServer(
         id = id,
         function(input, output, session) {
           logger::log_trace(
-            "DefaultFilteredDataset$srv_add_filter_state initializing, dataname: { deparse1(self$get_dataname()) }"
+            "DefaultFilteredDataset$srv_add initializing, dataname: { deparse1(self$get_dataname()) }"
           )
-          self$get_filter_states(id = "filter")$srv_add_filter_state(id = "filter")
+          self$get_filter_states(id = "filter")$srv_add(id = "filter")
           logger::log_trace(
-            "DefaultFilteredDataset$srv_add_filter_state initialized, dataname: { deparse1(self$get_dataname()) }"
+            "DefaultFilteredDataset$srv_add initialized, dataname: { deparse1(self$get_dataname()) }"
           )
           NULL
         }

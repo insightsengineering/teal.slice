@@ -15,12 +15,12 @@ Handles filter states in a \code{SummaryExperiment}
 \itemize{
 \item \href{#method-SEFilterStates-new}{\code{SEFilterStates$new()}}
 \item \href{#method-SEFilterStates-format}{\code{SEFilterStates$format()}}
-\item \href{#method-SEFilterStates-server}{\code{SEFilterStates$server()}}
+\item \href{#method-SEFilterStates-srv_active}{\code{SEFilterStates$srv_active()}}
 \item \href{#method-SEFilterStates-get_filter_state}{\code{SEFilterStates$get_filter_state()}}
 \item \href{#method-SEFilterStates-set_filter_state}{\code{SEFilterStates$set_filter_state()}}
 \item \href{#method-SEFilterStates-remove_filter_state}{\code{SEFilterStates$remove_filter_state()}}
-\item \href{#method-SEFilterStates-ui_add_filter_state}{\code{SEFilterStates$ui_add_filter_state()}}
-\item \href{#method-SEFilterStates-srv_add_filter_state}{\code{SEFilterStates$srv_add_filter_state()}}
+\item \href{#method-SEFilterStates-ui_add}{\code{SEFilterStates$ui_add()}}
+\item \href{#method-SEFilterStates-srv_add}{\code{SEFilterStates$srv_add()}}
 \item \href{#method-SEFilterStates-clone}{\code{SEFilterStates$clone()}}
 }
 }
@@ -34,7 +34,7 @@ Handles filter states in a \code{SummaryExperiment}
 <li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilterStates" data-id="get_fun"><a href='../../teal.slice/html/FilterStates.html#method-FilterStates-get_fun'><code>teal.slice::FilterStates$get_fun()</code></a></span></li>
 <li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilterStates" data-id="print"><a href='../../teal.slice/html/FilterStates.html#method-FilterStates-print'><code>teal.slice::FilterStates$print()</code></a></span></li>
 <li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilterStates" data-id="set_filterable_varnames"><a href='../../teal.slice/html/FilterStates.html#method-FilterStates-set_filterable_varnames'><code>teal.slice::FilterStates$set_filterable_varnames()</code></a></span></li>
-<li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilterStates" data-id="ui"><a href='../../teal.slice/html/FilterStates.html#method-FilterStates-ui'><code>teal.slice::FilterStates$ui()</code></a></span></li>
+<li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilterStates" data-id="ui_active"><a href='../../teal.slice/html/FilterStates.html#method-FilterStates-ui_active'><code>teal.slice::FilterStates$ui_active()</code></a></span></li>
 </ul>
 </details>
 }}
@@ -97,12 +97,12 @@ Returns the formatted string representing this \code{MAEFilterStates} object.
 }
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-SEFilterStates-server"></a>}}
-\if{latex}{\out{\hypertarget{method-SEFilterStates-server}{}}}
-\subsection{Method \code{server()}}{
+\if{html}{\out{<a id="method-SEFilterStates-srv_active"></a>}}
+\if{latex}{\out{\hypertarget{method-SEFilterStates-srv_active}{}}}
+\subsection{Method \code{srv_active()}}{
 Server module
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{SEFilterStates$server(id)}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{SEFilterStates$srv_active(id)}\if{html}{\out{</div>}}
 }
 
 \subsection{Arguments}{
@@ -180,12 +180,12 @@ Remove a variable from the \code{state_list} and its corresponding UI element.
 }
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-SEFilterStates-ui_add_filter_state"></a>}}
-\if{latex}{\out{\hypertarget{method-SEFilterStates-ui_add_filter_state}{}}}
-\subsection{Method \code{ui_add_filter_state()}}{
+\if{html}{\out{<a id="method-SEFilterStates-ui_add"></a>}}
+\if{latex}{\out{\hypertarget{method-SEFilterStates-ui_add}{}}}
+\subsection{Method \code{ui_add()}}{
 Shiny UI module to add filter variable
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{SEFilterStates$ui_add_filter_state(id)}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{SEFilterStates$ui_add(id)}\if{html}{\out{</div>}}
 }
 
 \subsection{Arguments}{
@@ -201,9 +201,9 @@ shiny.tag
 }
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-SEFilterStates-srv_add_filter_state"></a>}}
-\if{latex}{\out{\hypertarget{method-SEFilterStates-srv_add_filter_state}{}}}
-\subsection{Method \code{srv_add_filter_state()}}{
+\if{html}{\out{<a id="method-SEFilterStates-srv_add"></a>}}
+\if{latex}{\out{\hypertarget{method-SEFilterStates-srv_add}{}}}
+\subsection{Method \code{srv_add()}}{
 Shiny server module to add filter variable
 
 Module controls available choices to select as a filter variable.
@@ -213,7 +213,7 @@ This module unlike other \code{FilterStates} classes manages two
 sets of filter variables - one for \code{colData} and another for
 \code{rowData}.
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{SEFilterStates$srv_add_filter_state(id)}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{SEFilterStates$srv_add(id)}\if{html}{\out{</div>}}
 }
 
 \subsection{Arguments}{

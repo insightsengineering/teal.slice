@@ -56,13 +56,13 @@ rf <- teal.slice:::init_filter_states(
 shinyApp(
   ui = fluidPage(
     actionButton("clear", span(icon("xmark"), "Remove all filters")),
-    rf$ui_add_filter_state(id = "add"),
-    rf$ui("states"),
+    rf$ui_add(id = "add"),
+    rf$ui_active("states"),
     verbatimTextOutput("expr"),
   ),
   server = function(input, output, session) {
-    rf$srv_add_filter_state(id = "add")
-    rf$server(id = "states")
+    rf$srv_add(id = "add")
+    rf$srv_active(id = "states")
     output$expr <- renderText({
       deparse1(rf$get_call(), collapse = "\n")
     })

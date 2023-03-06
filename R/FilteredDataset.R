@@ -211,40 +211,10 @@ FilteredDataset <- R6::R6Class( # nolint
     },
 
     #' @description
-    #' Gets labels of variables in the data
-    #'
-    #'
-    #' Variables are the column names of the data.
-    #' Either, all labels must have been provided for all variables
-    #' in `set_data` or `NULL`.
-    #'
-    #' @param variables (`character` vector) variables to get labels for;
-    #'   if `NULL`, for all variables in data
-    #' @return (`character` or `NULL`) variable labels, `NULL` if `column_labels`
-    #'   attribute does not exist for the data
-    get_varlabels = function(variables = NULL) {
-      checkmate::assert_character(variables, null.ok = TRUE, any.missing = FALSE)
-      dataset <- self$get_dataset()
-      labels <- formatters::var_labels(dataset, fill = FALSE)
-      if (is.null(labels)) {
-        return(NULL)
-      }
-      if (!is.null(variables)) labels <- labels[intersect(self$get_varnames(), variables)]
-      labels
-    },
-
-    #' @description
     #' Gets the dataset label
     #' @return (`character`) the dataset label
     get_dataset_label = function() {
       private$label
-    },
-
-    #' @description
-    #' Gets variable names from dataset
-    #' @return `character` the variable names
-    get_varnames = function() {
-      colnames(self$get_dataset())
     },
 
     #' @description
@@ -275,7 +245,7 @@ FilteredDataset <- R6::R6Class( # nolint
     #'  identifier of the element - preferably containing dataset name
     #'
     #' @return function - shiny UI module
-    ui = function(id) {
+    ui_active = function(id) {
       dataname <- self$get_dataname()
       checkmate::assert_string(dataname)
 
@@ -327,7 +297,7 @@ FilteredDataset <- R6::R6Class( # nolint
               lapply(
                 names(self$get_filter_states()),
                 function(x) {
-                  tagList(self$get_filter_states(id = x)$ui(id = ns(x)))
+                  tagList(self$get_filter_states(id = x)$ui_active(id = ns(x)))
                 }
               )
             )
@@ -343,12 +313,12 @@ FilteredDataset <- R6::R6Class( # nolint
     #' @param id (`character(1)`)\cr
     #'   an ID string that corresponds with the ID used to call the module's UI function.
     #' @return `moduleServer` function which returns `NULL`
-    server = function(id) {
+    srv_active = function(id) {
       moduleServer(
         id = id,
         function(input, output, session) {
           dataname <- self$get_dataname()
-          logger::log_trace("FilteredDataset$server initializing, dataname: { dataname }")
+          logger::log_trace("FilteredDataset$srv_active initializing, dataname: { dataname }")
           checkmate::assert_string(dataname)
           output$filter_count <- renderText(
             sprintf(
@@ -361,7 +331,7 @@ FilteredDataset <- R6::R6Class( # nolint
           lapply(
             names(self$get_filter_states()),
             function(x) {
-              self$get_filter_states(id = x)$server(id = x)
+              self$get_filter_states(id = x)$srv_active(id = x)
             }
           )
 
@@ -379,9 +349,9 @@ FilteredDataset <- R6::R6Class( # nolint
           })
 
           observeEvent(input$remove_filters, {
-            logger::log_trace("FilteredDataset$server@1 removing filters, dataname: { dataname }")
+            logger::log_trace("FilteredDataset$srv_active@1 removing filters, dataname: { dataname }")
             self$clear_filter_states()
-            logger::log_trace("FilteredDataset$server@1 removed filters, dataname: { dataname }")
+            logger::log_trace("FilteredDataset$srv_active@1 removed filters, dataname: { dataname }")
           })
 
           logger::log_trace("FilteredDataset$initialized, dataname: { dataname }")
@@ -398,7 +368,7 @@ FilteredDataset <- R6::R6Class( # nolint
     #'  identifier of the element - preferably containing dataset name
     #'
     #' @return function - shiny UI module
-    ui_add_filter_state = function(id) {
+    ui_add = function(id) {
       stop("Pure virtual method")
     },
 
@@ -409,7 +379,7 @@ FilteredDataset <- R6::R6Class( # nolint
     #' @param id (`character(1)`)\cr
     #'   an ID string that corresponds with the ID used to call the module's UI function.
     #' @return `moduleServer` function.
-    srv_add_filter_state = function(id) {
+    srv_add = function(id) {
       moduleServer(
         id = id,
         function(input, output, session) {
@@ -440,28 +410,6 @@ FilteredDataset <- R6::R6Class( # nolint
       checkmate::assert_string(id)
       x <- setNames(list(filter_states), id)
       private$filter_states <- c(self$get_filter_states(), x)
-    },
-
-    # @description
-    # Checks if the dataname exists and
-    # (if provided) that varname is a valid column in the dataset
-    #
-    # Stops when this is not the case.
-    #
-    # @param varname (`character`) column within the dataset;
-    #   if `NULL`, this check is not performed
-    check_data_varname_exists = function(varname = NULL) {
-      checkmate::assert_string(varname, null.ok = TRUE)
-
-      isolate({
-        if (!is.null(varname) && !(varname %in% self$get_varnames())) {
-          stop(
-            sprintf("variable '%s' does not exist in data '%s'", varname, dataname)
-          )
-        }
-      })
-
-      return(invisible(NULL))
     }
   )
 )
