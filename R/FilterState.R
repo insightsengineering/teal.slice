@@ -626,21 +626,18 @@ InteractiveFilterState <- R6::R6Class( # nolint
         class = "panel panel-default",
         include_js_files("count-bar-labels.js"),
         tags$div(
-          class = "panel-heading",
+          class = "panel-heading accordion-toggle",
+          `data-toggle` = "collapse",
+          `data-parent` = paste0("#", parent_id),
+          href = paste0("#", ns("body")),
           tags$div(
             class = "panel-title",
-            tags$a(
-              class = "accordion-toggle",
-              `data-toggle` = "collapse",
-              `data-parent` = paste0("#", parent_id),
-              href = paste0("#", ns("body")),
               tags$span(tags$strong(self$get_varname())),
               if (length(self$get_varlabel())) {
                 tags$span(self$get_varlabel(), class = "filter-card-varlabel")
               } else {
                 NULL
-              }
-            ),
+              },
             actionLink(
               inputId = ns("remove"),
               label = icon("circle-xmark", lib = "font-awesome"),
@@ -672,21 +669,18 @@ InteractiveFilterState <- R6::R6Class( # nolint
         class = "card",
         include_js_files("count-bar-labels.js"),
         tags$div(
-          class = "card-header",
+          class = "card-header accordion-toggle",
+          `data-toggle` = "collapse",
+          `data-bs-toggle` = "collapse",
+          href = paste0("#", ns("body")),
           tags$div(
             class = "card-title",
-            tags$a(
-              class = "accordion-toggle",
-              `data-toggle` = "collapse",
-              `data-bs-toggle` = "collapse",
-              href = paste0("#", ns("body")),
               tags$span(tags$strong(self$get_varname())),
               if (length(self$get_varlabel())) {
                 tags$span(self$get_varlabel(), class = "filter-card-varlabel")
               } else {
                 NULL
-              }
-            ),
+              },
             actionLink(
               inputId = ns("remove"),
               label = icon("circle-xmark", lib = "font-awesome"),
