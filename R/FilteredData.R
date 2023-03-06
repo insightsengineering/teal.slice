@@ -760,9 +760,7 @@ FilteredData <- R6::R6Class( # nolint
           )
         )
       )
-
     },
-
     srv_active = function(id, active_datanames = reactive(self$datanames())) {
       checkmate::assert_class(active_datanames, "reactive")
       shiny::moduleServer(id, function(input, output, session) {
@@ -835,7 +833,6 @@ FilteredData <- R6::R6Class( # nolint
         NULL
       })
     },
-
     ui_add = function(id) {
       ns <- NS(id)
       div(
@@ -872,9 +869,8 @@ FilteredData <- R6::R6Class( # nolint
         )
       )
     },
-
     srv_add = function(id, active_datanames = reactive(self$datanames())) {
-      checkmate::assert_class(active_datanames,"reactive")
+      checkmate::assert_class(active_datanames, "reactive")
       moduleServer(id, function(input, output, session) {
         logger::log_trace("FilteredData$srv_add initializing")
         shiny::observeEvent(input$minimise_filter_add_vars, {
@@ -960,7 +956,7 @@ FilteredData <- R6::R6Class( # nolint
     #'   panel will be hidden.
     #' @return `moduleServer` function which returns `NULL`
     srv_overview = function(id, active_datanames = reactive(self$datanames())) {
-      checkmate::assert_class(active_datanames,"reactive")
+      checkmate::assert_class(active_datanames, "reactive")
       moduleServer(
         id = id,
         function(input, output, session) {
