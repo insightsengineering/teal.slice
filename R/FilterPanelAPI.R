@@ -32,7 +32,7 @@
 #' isolate(fpa$get_filter_state())
 #'
 #' # remove all_filter_states
-#' fpa$remove_all_filter_states()
+#' fpa$clear_filter_states()
 #'
 #' # get the actual filter state --> empty named list
 #' isolate(fpa$get_filter_state())
@@ -98,10 +98,10 @@ FilterPanelAPI <- R6::R6Class( # nolint
     #'
     #' @return `NULL`
     #'
-    remove_all_filter_states = function(datanames) {
+    clear_filter_states = function(datanames) {
       if (private$filtered_data$get_filter_panel_active()) {
         datanames_to_remove <- if (missing(datanames)) private$filtered_data$datanames() else datanames
-        private$filtered_data$remove_all_filter_states(datanames = datanames_to_remove)
+        private$filtered_data$clear_filter_states(datanames = datanames_to_remove)
       } else {
         warning(private$deactivated_msg)
       }

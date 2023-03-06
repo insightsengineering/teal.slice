@@ -2,10 +2,11 @@
 % Please edit documentation in R/FilterState-utils.R
 \name{init_filter_state}
 \alias{init_filter_state}
-\title{Initializes \code{FilterState}}
+\title{Initializes \code{InteractiveFilterState}}
 \usage{
 init_filter_state(
   x,
+  x_reactive = reactive(NULL),
   varname,
   varlabel = attr(x, "label"),
   dataname = NULL,
@@ -15,6 +16,12 @@ init_filter_state(
 \arguments{
 \item{x}{(\code{vector})\cr
 values of the variable used in filter}
+
+\item{x_reactive}{(\code{reactive})\cr
+returning vector of the same type as \code{x}. Is used to update
+counts following the change in values of the filtered dataset.
+If it is set to \code{reactive(NULL)} then counts based on filtered
+dataset are not shown.}
 
 \item{varname}{(\code{character(1)})\cr
 name of the variable.}
@@ -38,11 +45,12 @@ whether condition calls should be prefixed by dataname. Possible values:
 \code{FilterState} object
 }
 \description{
-Initializes \code{FilterState} depending on a variable class.\cr
+Initializes \code{InteractiveFilterState} depending on a variable class.\cr
 }
 \examples{
 filter_state <- teal.slice:::RangeFilterState$new(
-  c(1:10, NA, Inf),
+  x = c(1:10, NA, Inf),
+  x_reactive = reactive(c(1:10, NA, Inf)),
   varname = "x",
   varlabel = "Pretty name",
   dataname = "dataname",
