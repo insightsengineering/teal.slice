@@ -14,7 +14,6 @@ making it possible to pass any object coercible to \code{Date} to this method.
 \examples{
 filter_state <- teal.slice:::DateFilterState$new(
   x = c(Sys.Date() + seq(1:10), NA),
-  x_reactive = reactive(NULL),
   varname = "x",
   dataname = "data",
   extract_type = character(0)
@@ -33,7 +32,6 @@ dates <- c(Sys.Date() - 100, Sys.Date())
 data_date <- c(seq(from = dates[1], to = dates[2], length.out = 100), NA)
 filter_state_date <- DateFilterState$new(
   x = data_date,
-  x_reactive = reactive(NULL),
   varname = "variable",
   varlabel = "label"
 )
@@ -144,7 +142,7 @@ Initialize a \code{FilterState} object
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{DateFilterState$new(
   x,
-  x_reactive,
+  x_reactive = reactive(NULL),
   varname,
   varlabel = character(0),
   dataname = NULL,

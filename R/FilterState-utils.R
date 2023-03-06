@@ -298,10 +298,10 @@ init_filter_state.POSIXlt <- function(x,
 #' @keywords internal
 #'
 #' @examples
-#' \donttest{
-#' check_in_range(c(3, 1), c(1, 3))
-#' check_in_range(c(0, 3), c(1, 3))
-#' check_in_range(
+#' \dontrun{
+#' teal.slice:::check_in_range(c(3, 1), c(1, 3))
+#' teal.slice:::check_in_range(c(0, 3), c(1, 3))
+#' teal.slice:::check_in_range(
 #'   c(as.Date("2020-01-01"), as.Date("2020-01-20")),
 #'   c(as.Date("2020-01-01"), as.Date("2020-01-02"))
 #' )
@@ -347,12 +347,11 @@ check_in_range <- function(subinterval, range, pre_msg = "") {
 #'
 #' @examples
 #' \donttest{
-#' check_in_subset <- check_in_subset
-#' check_in_subset(c("a", "b"), c("a", "b", "c"))
+#' teal.slice:::check_in_subset(c("a", "b"), c("a", "b", "c"))
 #' \dontrun{
-#' check_in_subset(c("a", "b"), c("b", "c"), pre_msg = "Error: ")
+#' teal.slice:::check_in_subset(c("a", "b"), c("b", "c"), pre_msg = "Error: ")
 #' # truncated because too long
-#' check_in_subset("a", LETTERS, pre_msg = "Error: ")
+#' teal.slice:::check_in_subset("a", LETTERS, pre_msg = "Error: ")
 #' }
 #' }
 check_in_subset <- function(subset, choices, pre_msg = "") {
@@ -400,11 +399,11 @@ check_in_subset <- function(subset, choices, pre_msg = "") {
 #' \donttest{
 #' ticks <- 1:10
 #' values1 <- c(3, 5)
-#' contain_interval(values1, ticks)
+#' teal.slice:::contain_interval(values1, ticks)
 #' values2 <- c(3.1, 5.7)
-#' contain_interval(values2, ticks)
+#' teal.slice:::contain_interval(values2, ticks)
 #' values3 <- c(0, 20)
-#' contain_interval(values3, ticks)
+#' teal.slice:::contain_interval(values3, ticks)
 #'}
 contain_interval <- function(x, range) {
   checkmate::assert_numeric(x, len = 2L, any.missing = FALSE, sorted = TRUE)

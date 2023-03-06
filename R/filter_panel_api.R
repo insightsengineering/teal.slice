@@ -168,6 +168,6 @@ remove_filter_state <- function(datasets, filter) {
 #' @export
 clear_filter_states <- function(datasets) {
   checkmate::assert_multi_class(datasets, c("FilteredData", "FilterPanelAPI"))
-  datasets$remove_all_filter_states()
+  datasets$clear_filter_states()
   invisible(NULL)
 }

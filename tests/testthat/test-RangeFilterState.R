@@ -5,8 +5,14 @@ testthat::test_that("The constructor accepts numerical values", {
 
 testthat::test_that("The constructor accepts infinite values but not infinite only", {
   testthat::expect_no_error(RangeFilterState$new(c(1, Inf, -Inf), x_reactive = reactive(NULL), varname = "test"))
-  testthat::expect_error(RangeFilterState$new(Inf, x_reactive = reactive(NULL), varname = "test"), "\"x\" contains no finite values")
-  testthat::expect_error(RangeFilterState$new(c(Inf, NA), x_reactive = reactive(NULL), varname = "test"), "\"x\" contains no finite values")
+  testthat::expect_error(
+    RangeFilterState$new(Inf, x_reactive = reactive(NULL), varname = "test"),
+    "\"x\" contains no finite values"
+  )
+  testthat::expect_error(
+    RangeFilterState$new(c(Inf, NA), x_reactive = reactive(NULL), varname = "test"),
+    "\"x\" contains no finite values"
+  )
 })
 
 # get_selected ----

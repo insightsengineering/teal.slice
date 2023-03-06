@@ -14,7 +14,6 @@ making it possible to pass any object coercible to \code{character} to this meth
 \examples{
 filter_state <- teal.slice:::ChoicesFilterState$new(
   x = c(LETTERS, NA),
-  x_reactive = reactive(NULL),
   varname = "x",
   dataname = "data",
   extract_type = character(0)
@@ -32,7 +31,6 @@ library(shinyjs)
 data_choices <- c(sample(letters[1:4], 100, replace = TRUE), NA)
 filter_state_choices <- ChoicesFilterState$new(
   x = data_choices,
-  x_reactive = reactive(NULL),
   varname = "variable",
   varlabel = "label"
 )
@@ -138,7 +136,7 @@ Initialize a \code{FilterState} object
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{ChoicesFilterState$new(
   x,
-  x_reactive,
+  x_reactive = reactive(NULL),
   varname,
   varlabel = character(0),
   dataname = NULL,

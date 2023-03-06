@@ -162,13 +162,6 @@ eval_expr_with_msg <- function(expr, env) {
 #' @examples
 #' \dontrun{
 #'
-#' # continuously switch between right- and down-pointing chevrons
-#' toggle_icon("toggle_element", c("fa-angle-right", "fa-angle-down"))
-#'
-#' # switch right- to down-pointing chevron
-#' toggle_icon("toggle_element", c("fa-angle-right", "fa-angle-down"), one_way = TRUE)
-#' }
-#'
 #' library(shiny)
 #'
 #' ui <- fluidPage(
@@ -184,30 +177,37 @@ eval_expr_with_msg <- function(expr, env) {
 #' )
 #'
 #' server <- function(input, output, session) {
+#'   observeEvent(input$hide_content,
+#'     {
+#'       shinyjs::hide("content")
+#'       toggle_icon("toggle_content", c("fa-angle-down", "fa-angle-right"), one_way = TRUE)
+#'     },
+#'     ignoreInit = TRUE
+#'   )
 #'
-#'   observeEvent(input$hide_content, {
-#'     shinyjs::hide("content")
-#'     toggle_icon("toggle_content", c("fa-angle-down", "fa-angle-right"), one_way = TRUE)
-#'   }, ignoreInit = TRUE)
+#'   observeEvent(input$show_content,
+#'     {
+#'       shinyjs::show("content")
+#'       toggle_icon("toggle_content", c("fa-angle-right", "fa-angle-down"), one_way = TRUE)
+#'     },
+#'     ignoreInit = TRUE
+#'   )
 #'
-#'   observeEvent(input$show_content, {
-#'     shinyjs::show("content")
-#'     toggle_icon("toggle_content", c("fa-angle-right", "fa-angle-down"), one_way = TRUE)
-#'   }, ignoreInit = TRUE)
-#'
-#'   observeEvent(input$toggle_content, {
-#'     shinyjs::toggle("content")
-#'     toggle_icon("toggle_content", c("fa-angle-right", "fa-angle-down"))
-#'   }, ignoreInit = TRUE)
+#'   observeEvent(input$toggle_content,
+#'     {
+#'       shinyjs::toggle("content")
+#'       toggle_icon("toggle_content", c("fa-angle-right", "fa-angle-down"))
+#'     },
+#'     ignoreInit = TRUE
+#'   )
 #'
 #'   output$printout <- renderPrint({
 #'     head(faithful, 10)
 #'   })
-#'
 #' }
-#'
 #' if (interactive()) {
 #'   shinyApp(ui, server)
+#' }
 #' }
 #'
 #' @rdname toggle_button

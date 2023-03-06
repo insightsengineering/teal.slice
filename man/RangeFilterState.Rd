@@ -17,7 +17,6 @@ making it possible to pass any object coercible to \code{numeric} to this method
 \examples{
 filter_state <- teal.slice:::RangeFilterState$new(
   x = c(NA, Inf, seq(1:10)),
-  x_reactive = reactive(NULL),
   varname = "x",
   dataname = "data",
   extract_type = character(0)
@@ -36,7 +35,6 @@ library(shinyjs)
 data_range <- c(runif(100, 0, 1), NA, Inf)
 filter_state_range <- RangeFilterState$new(
   x = data_range,
-  x_reactive = reactive(NULL),
   varname = "variable",
   varlabel = "label"
 )
@@ -147,7 +145,7 @@ Initialize a \code{InteractiveFilterState} object for range selection
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{RangeFilterState$new(
   x,
-  x_reactive,
+  x_reactive = reactive(NULL),
   varname,
   varlabel = character(0),
   dataname = NULL,

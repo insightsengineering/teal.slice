@@ -209,20 +209,26 @@ testthat::test_that("set_selected sets the intersection of choices and the passe
 
 # set_state ----
 testthat::test_that("set_state needs a named list with selected and keep_na elements", {
-  filter_state <- ChoicesFilterState$new(x = c("a", "b", NA_character_), x_reactive = reactive(NULL), varname = "variable")
+  filter_state <- ChoicesFilterState$new(
+    x = c("a", "b", NA_character_), x_reactive = reactive(NULL), varname = "variable"
+  )
   testthat::expect_no_error(filter_state$set_state(list(selected = "a", keep_na = TRUE)))
   testthat::expect_error(filter_state$set_state(list(selected = "a", unknown = TRUE)), "all\\(names\\(state\\)")
 })
 
 testthat::test_that("set_state sets values of selected and keep_na as provided in the list", {
-  filter_state <- ChoicesFilterState$new(x = c("a", "b", NA_character_), x_reactive = reactive(NULL), varname = "variable")
+  filter_state <- ChoicesFilterState$new(
+    x = c("a", "b", NA_character_), x_reactive = reactive(NULL), varname = "variable"
+  )
   filter_state$set_state(list(selected = "a", keep_na = TRUE))
   testthat::expect_identical(shiny::isolate(filter_state$get_selected()), "a")
   testthat::expect_true(shiny::isolate(filter_state$get_keep_na()))
 })
 
 testthat::test_that("set_state overwrites fields included in the input only", {
-  filter_state <- ChoicesFilterState$new(x = c("a", "b", NA_character_), x_reactive = reactive(NULL), varname = "variable")
+  filter_state <- ChoicesFilterState$new(
+    x = c("a", "b", NA_character_), x_reactive = reactive(NULL), varname = "variable"
+  )
   filter_state$set_state(list(selected = "a", keep_na = TRUE))
   testthat::expect_no_error(filter_state$set_state(list(selected = "b")))
   testthat::expect_identical(shiny::isolate(filter_state$get_selected()), "b")
@@ -266,13 +272,12 @@ testthat::test_that(
 )
 
 testthat::test_that(
-  "ChoicesFilterState private methods return proper filtered counts and choice labels",
+  "ChoicesFilterState private methods return proper filtered counts",
   code = {
     test <- R6::R6Class(
       inherit = ChoicesFilterState,
       public = list(
         test_get_filter_counts = function() private$get_filtered_counts(),
-        test_get_choice_labels = function() private$get_choice_labels(),
         test_choices_counts = function() private$choices_counts
       )
     )
@@ -293,10 +298,6 @@ testthat::test_that(
       table(factor(xr, levels = unique(x)))
     )
 
-    testthat::expect_identical(
-      shiny::isolate(filter_state$test_get_choice_labels()),
-      c("A (2/5)", "B (0/5)", "C (0/5)", "D (3/5)", "E (0/5)", "F (2/5)")
-    )
 
     testthat::expect_identical(
       shiny::isolate(filter_state$test_choices_counts()),

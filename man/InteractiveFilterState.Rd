@@ -3,7 +3,7 @@
 \docType{class}
 \name{InteractiveFilterState}
 \alias{InteractiveFilterState}
-\title{InteractiveFilterState Abstract Class}
+\title{\code{InteractiveFilterState} Abstract Class}
 \description{
 Abstract class to encapsulate single filter state
 }
@@ -82,7 +82,7 @@ Initialize a \code{InteractiveFilterState} object
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{InteractiveFilterState$new(
   x,
-  x_reactive,
+  x_reactive = reactive(NULL),
   varname,
   varlabel = character(0),
   dataname = NULL,

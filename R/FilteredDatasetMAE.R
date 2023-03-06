@@ -35,7 +35,7 @@ MAEFilteredDataset <- R6::R6Class( # nolint
       private$add_filter_states(
         filter_states = init_filter_states(
           data = dataset,
-          data_reactive = self$get_dataset(filtered = TRUE),
+          data_reactive = private$data_filtered_fun,
           dataname = dataname,
           varlabels = self$get_varlabels(),
           datalabel = "subjects",
@@ -49,11 +49,11 @@ MAEFilteredDataset <- R6::R6Class( # nolint
       lapply(
         experiment_names,
         function(experiment_name) {
-          fd <- self$get_dataset(filtered = TRUE)
+          data_reactive <- function(sid = "") private$data_filtered_fun(sid)[[experiment_name]]
           private$add_filter_states(
             filter_states = init_filter_states(
               data = dataset[[experiment_name]],
-              data_reactive = reactive(fd()[[experiment_name]]),
+              data_reactive = data_reactive,
               dataname = sprintf('%s[["%s"]]', dataname, experiment_name),
               datalabel = experiment_name
             ),
@@ -61,34 +61,6 @@ MAEFilteredDataset <- R6::R6Class( # nolint
           )
         }
       )
-    },
-
-    #' @description
-    #' Get filter expression
-    #'
-    #' This functions returns filter calls equivalent to selected items
-    #' within each of `filter_states`. Configuration of the calls is constant and
-    #' depends on `filter_states` type and order which are set during initialization.
-    #' This class contains multiple `FilterStates`:
-    #' \itemize{
-    #'   \item{`colData(dataset)`}{for this object single `MAEFilterStates`
-    #'   which returns `subsetByColData` call}
-    #'   \item{experiments}{for each experiment single `SEFilterStates` and
-    #'   `FilterStates_matrix`, both returns `subset` call}
-    #' }
-    #' @return filter `call` or `list` of filter calls
-    get_call = function() {
-      filter_call <- Filter(
-        f = Negate(is.null),
-        x = lapply(
-          self$get_filter_states(),
-          function(x) x$get_call()
-        )
-      )
-      if (length(filter_call) == 0) {
-        return(NULL)
-      }
-      filter_call
     },
 
     #' @description
@@ -130,12 +102,12 @@ MAEFilteredDataset <- R6::R6Class( # nolint
     #' @return (`matrix`) matrix of observations and subjects
     get_filter_overview_info = function() {
       dataset <- self$get_dataset()
-      dataset_filtered <- self$get_dataset(TRUE)
+      data_filtered <- self$get_dataset(TRUE)
       names_exps <- paste0("- ", names(dataset))
       mae_and_exps <- c(self$get_dataname(), names_exps)
 
       df <- cbind(
-        private$get_filter_overview_nobs(dataset, dataset_filtered),
+        private$get_filter_overview_nobs(dataset, data_filtered),
         self$get_filter_overview_nsubjs()
       )
 
@@ -167,7 +139,7 @@ MAEFilteredDataset <- R6::R6Class( # nolint
     #'     subset = list(ARRAY_TYPE = list(selected = "", keep_na = TRUE))
     #'   )
     #' )
-    #' shiny::isolate(dataset$set_filter_state(state = fs))
+    #' dataset$set_filter_state(state = fs)
     #' shiny::isolate(dataset$get_filter_state())
     #' @return `NULL`
     #'
@@ -346,14 +318,14 @@ MAEFilteredDataset <- R6::R6Class( # nolint
 
     # Gets filter overview observations number and returns a
     # list of the number of observations of filtered/non-filtered datasets
-    get_filter_overview_nobs = function(dataset, dataset_filtered) {
+    get_filter_overview_nobs = function(dataset, data_filtered) {
       experiment_names <- names(dataset)
       mae_total_data_info <- ""
 
       data_info <- lapply(
         experiment_names,
         function(experiment_name) {
-          data_f_rows <- ncol(dataset_filtered()[[experiment_name]])
+          data_f_rows <- ncol(data_filtered()[[experiment_name]])
           data_nf_rows <- ncol(dataset[[experiment_name]])
 
           data_info <- paste0(data_f_rows, "/", data_nf_rows)

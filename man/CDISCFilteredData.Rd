@@ -74,6 +74,7 @@ isolate(datasets$get_filter_state())
 \if{html}{\out{
 <details><summary>Inherited methods</summary>
 <ul>
+<li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilteredData" data-id="clear_filter_states"><a href='../../teal.slice/html/FilteredData.html#method-FilteredData-clear_filter_states'><code>teal.slice::FilteredData$clear_filter_states()</code></a></span></li>
 <li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilteredData" data-id="filter_panel_disable"><a href='../../teal.slice/html/FilteredData.html#method-FilteredData-filter_panel_disable'><code>teal.slice::FilteredData$filter_panel_disable()</code></a></span></li>
 <li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilteredData" data-id="filter_panel_enable"><a href='../../teal.slice/html/FilteredData.html#method-FilteredData-filter_panel_enable'><code>teal.slice::FilteredData$filter_panel_enable()</code></a></span></li>
 <li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilteredData" data-id="get_call"><a href='../../teal.slice/html/FilteredData.html#method-FilteredData-get_call'><code>teal.slice::FilteredData$get_call()</code></a></span></li>

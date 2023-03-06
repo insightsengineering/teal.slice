@@ -4,7 +4,7 @@
 \alias{countBar}
 \alias{updateCountBar}
 \alias{updateCountText}
-\title{Progressbar with label}
+\title{Progress bar with label}
 \usage{
 countBar(inputId, label, countmax, countnow = NULL, counttotal = countmax)
 

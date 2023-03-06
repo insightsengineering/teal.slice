@@ -6,10 +6,13 @@
 #' @param data (`data.frame`, `MultiAssayExperiment`, `SummarizedExperiment`, `matrix`)\cr
 #'   the R object which `subset` function is applied on.
 #'
-#' @param data_reactive (`reactive`)\cr
-#'   should return an object constistent with the `FilterState` class or `NULL`.
-#'   This object is needed for the `FilterState` counts being updated
-#'   on a change in filters. If `reactive(NULL)` then filtered counts are not shown.
+#' @param data_reactive (`function(sid)`)\cr
+#'   should return an object of the same type as `data` or `NULL`.
+#'   This object is needed for the `FilterState` shiny module to update
+#'   counts if filtered data changes.
+#'   If function returns `NULL` then filtered counts
+#'   are not shown. Function has to have `sid` argument being a character which
+#'   is related to `sid` argument in the `get_call` method.
 #'
 #' @param dataname (`character(1)`)\cr
 #'   name of the data used in the expression
@@ -66,7 +69,7 @@ init_filter_states <- function(data,
 #' @keywords internal
 #' @export
 init_filter_states.data.frame <- function(data, # nolint
-                                          data_reactive = reactive(NULL),
+                                          data_reactive = function(sid = "") NULL,
                                           dataname,
                                           datalabel = character(0),
                                           varlabels = character(0),
@@ -85,7 +88,7 @@ init_filter_states.data.frame <- function(data, # nolint
 #' @keywords internal
 #' @export
 init_filter_states.matrix <- function(data, # nolint
-                                      data_reactive = reactive(NULL),
+                                      data_reactive = function(sid = "") NULL,
                                       dataname,
                                       datalabel = character(0),
                                       ...) {
@@ -100,10 +103,10 @@ init_filter_states.matrix <- function(data, # nolint
 #' @keywords internal
 #' @export
 init_filter_states.MultiAssayExperiment <- function(data, # nolint
-                                                    data_reactive = reactive(NULL),
+                                                    data_reactive = function(sid = "") NULL,
                                                     dataname,
-                                                    datalabel = character(0),
-                                                    varlabels,
+                                                    datalabel = "patients",
+                                                    varlabels = character(0),
                                                     keys = character(0),
                                                     ...) {
   if (!requireNamespace("MultiAssayExperiment", quietly = TRUE)) {
@@ -122,7 +125,7 @@ init_filter_states.MultiAssayExperiment <- function(data, # nolint
 #' @keywords internal
 #' @export
 init_filter_states.SummarizedExperiment <- function(data, # nolint
-                                                    data_reactive = reactive(NULL),
+                                                    data_reactive = function(sid = "") NULL,
                                                     dataname,
                                                     datalabel = character(0),
                                                     ...) {

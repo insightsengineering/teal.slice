@@ -1,7 +1,9 @@
 get_cdisc_filtered_data <- function() {
   adsl <- as.data.frame(as.list(setNames(nm = teal.data::get_cdisc_keys("ADSL"))))
-  adsl$sex <- "F"
   adae <- as.data.frame(as.list(setNames(nm = teal.data::get_cdisc_keys("ADAE"))))
+  adsl$sex <- "F"
+  adae$sex <- "F"
+  adae$aval <- 1L
   formatters::var_labels(adsl) <- colnames(adsl)
 
   data <- teal.data::cdisc_data(
@@ -20,22 +22,6 @@ testthat::test_that("load and set_datasets", {
     testthat::expect_equal(ds$get_data("ADAE", filtered = FALSE), setup_objects$adae)
   })
   testthat::expect_setequal(ds$datanames(), c("ADSL", "ADAE"))
-})
-
-testthat::test_that("set filter state", {
-  setup_objects <- get_cdisc_filtered_data()
-  ds <- setup_objects$ds
-  adsl <- setup_objects$adsl
-
-  filter_state_adsl <- ChoicesFilterState$new(adsl$sex, varname = "sex")
-  filter_state_adsl$set_selected("F")
-
-  state_list <- ds$get_filtered_dataset("ADSL")$get_filter_states(1)
-  shiny::isolate(state_list$state_list_push(filter_state_adsl, state_list_index = 1L, state_id = "sex"))
-
-  testthat::expect_null(
-    shiny::isolate(state_list$get_call()),
-  )
 })
 
 testthat::test_that("get_call for child dataset includes filter call for parent dataset", {
@@ -92,114 +78,39 @@ testthat::test_that("get_varlabels returns the column labels of the passed datas
   )
 })
 
-testthat::test_that("get_filterable_varnames does not return child duplicates", {
-  adsl <- teal.data::cdisc_dataset(
-    dataname = "ADSL",
-    x = data.frame(USUBJID = 1L, STUDYID = 1L, a = 1L, b = 1L)
-  )
-  child <- teal.data::cdisc_dataset(
-    dataname = "ADTTE",
-    parent = "ADSL",
-    x = data.frame(USUBJID = 1L, STUDYID = 1L, PARAMCD = 1L, a = 1L, c = 1L)
-  )
-  data <- teal.data::cdisc_data(adsl, child)
-
-  fd <- init_filtered_data(data)
-  testthat::expect_identical(
-    fd$get_filterable_varnames("ADTTE"),
-    c("PARAMCD", "c")
-  )
-})
-
-
-testthat::test_that("get_filterable_varnames does not return child non-filterable variables", {
-  adsl <- teal.data::cdisc_dataset(
-    dataname = "ADSL",
-    x = data.frame(USUBJID = 1L, STUDYID = 1L, a = 1L, b = 1L)
-  )
-  child <- teal.data::cdisc_dataset(
-    dataname = "ADTTE",
-    parent = "ADSL",
-    x = data.frame(USUBJID = 1L, STUDYID = 1L, PARAMCD = 1L, a = 1L, c = 1L)
-  )
-  data <- teal.data::cdisc_data(adsl, child)
-
-  fd <- init_filtered_data(data)
-
-  fd$set_filterable_varnames("ADTTE", c("PARAMCD", "STUDYID"))
-  testthat::expect_identical(
-    fd$get_filterable_varnames("ADTTE"),
-    "PARAMCD"
-  )
-})
-
-testthat::test_that("get_filterable_varnames return all filterable variables from parent dataset", {
-  adsl <- teal.data::cdisc_dataset(
-    dataname = "ADSL",
-    x = data.frame(USUBJID = 1L, STUDYID = 1L, a = 1L, b = 1L)
-  )
-  child <- teal.data::cdisc_dataset(
-    dataname = "ADTTE",
-    x = data.frame(USUBJID = 1L, STUDYID = 1L, PARAMCD = 1L, a = 1L, c = 1L)
-  )
-  data <- teal.data::cdisc_data(adsl, child)
-
-  fd <- init_filtered_data(data)
-
-  testthat::expect_identical(
-    fd$get_filterable_varnames("ADSL"),
-    c("USUBJID", "STUDYID", "a", "b")
-  )
-
-  fd$set_filterable_varnames("ADSL", c("a", "b"))
-  testthat::expect_identical(
-    fd$get_filterable_varnames("ADSL"),
-    c("a", "b")
-  )
-})
-
-
-testthat::test_that("get_filterable_varnames does not return duplicates from parent even if they are not filterable", {
-  adsl <- teal.data::cdisc_dataset(
-    dataname = "ADSL",
-    x = data.frame(USUBJID = 1L, STUDYID = 1L, a = 1L, b = 1L)
-  )
-  child <- teal.data::cdisc_dataset(
-    dataname = "ADTTE",
-    x = data.frame(USUBJID = 1L, STUDYID = 1L, PARAMCD = 1L, a = 1L, c = 1L)
-  )
-  data <- teal.data::cdisc_data(adsl, child)
-
-  fd <- init_filtered_data(data)
-
-  fd$set_filterable_varnames("ADSL", c("a", "b"))
-
-  testthat::expect_identical(
-    fd$get_filterable_varnames("ADTTE"),
-    c("PARAMCD", "c")
-  )
-})
-
+testthat::test_that(
+  "set_filter_state sets don't throw if column exists and isn't duplicated with parent",
+  code = {
+    setup_objects <- get_cdisc_filtered_data()
+    ds <- setup_objects$ds
+    testthat::expect_no_error(
+      ds$set_filter_state(list(ADAE = list(aval = 1L)))
+    )
+  }
+)
 
 testthat::test_that(
   "set_filter_state returns warning when setting a filter on a column which belongs to parent dataset",
   code = {
     teal.logger::suppress_logs()
-    adsl <- teal.data::cdisc_dataset(
-      dataname = "ADSL",
-      x = data.frame(USUBJID = 1L, STUDYID = 1L, a = 1L, b = 1L)
-    )
-    child <- teal.data::cdisc_dataset(
-      dataname = "ADTTE",
-      parent = "ADSL",
-      x = data.frame(USUBJID = 1L, STUDYID = 1L, PARAMCD = 1L, a = 1L, c = 1L)
-    )
-    data <- teal.data::cdisc_data(adsl, child)
-
-    fd <- init_filtered_data(data)
+    setup_objects <- get_cdisc_filtered_data()
+    ds <- setup_objects$ds
     testthat::expect_warning(
-      shiny::isolate(fd$set_filter_state(list(ADTTE = list(USUBJID = "1")))),
-      "These columns filters were excluded: USUBJID from dataset ADTTE"
+      ds$set_filter_state(list(ADAE = list(USUBJID = "USUBJID"))),
+      "These columns filters were excluded: USUBJID from dataset ADAE"
+    )
+  }
+)
+
+testthat::test_that(
+  "set_filter_state returns warning when setting a filter on a column which doesn't exist",
+  code = {
+    teal.logger::suppress_logs()
+    setup_objects <- get_cdisc_filtered_data()
+    ds <- setup_objects$ds
+    testthat::expect_warning(
+      ds$set_filter_state(list(ADAE = list(idontexist = "1"))),
+      "These columns filters were excluded: idontexist from dataset ADAE"
     )
   }
 )

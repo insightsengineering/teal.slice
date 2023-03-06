@@ -17,7 +17,6 @@ making it possible to pass any object coercible to \code{logical} to this method
 \examples{
 filter_state <- teal.slice:::LogicalFilterState$new(
   x = sample(c(TRUE, FALSE, NA), 10, replace = TRUE),
-  x_reactive = reactive(NULL),
   varname = "x",
   dataname = "data",
   extract_type = character(0)
@@ -35,7 +34,6 @@ library(shinyjs)
 data_logical <- c(sample(c(TRUE, FALSE), 10, replace = TRUE), NA)
 filter_state_logical <- LogicalFilterState$new(
   x = data_logical,
-  x_reactive = reactive(NULL),
   varname = "variable",
   varlabel = "label"
 )
@@ -137,7 +135,7 @@ Initialize a \code{FilterState} object
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{LogicalFilterState$new(
   x,
-  x_reactive,
+  x_reactive = reactive(NULL),
   varname,
   varlabel = character(0),
   dataname = NULL,

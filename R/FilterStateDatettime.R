@@ -8,7 +8,6 @@
 #' @examples
 #' filter_state <- teal.slice:::DatetimeFilterState$new(
 #'   x = c(Sys.time() + seq(0, by = 3600, length.out = 10), NA),
-#'   x_reactive = reactive(NULL),
 #'   varname = "x",
 #'   dataname = "data",
 #'   extract_type = character(0)
@@ -27,7 +26,6 @@
 #' data_datetime <- c(seq(from = datetimes[1], to = datetimes[2], length.out = 100), NA)
 #' filter_state_datetime <- DatetimeFilterState$new(
 #'   x = data_datetime,
-#'   x_reactive = reactive(NULL),
 #'   varname = "variable",
 #'   varlabel = "label"
 #' )
@@ -118,7 +116,7 @@ DatetimeFilterState <- R6::R6Class( # nolint
     #' \item{`"matrix"`}{ `varname` in the condition call will be returned as `<dataname>[, <varname>]`}
     #' }
     initialize = function(x,
-                          x_reactive,
+                          x_reactive = reactive(NULL),
                           varname,
                           varlabel = character(0),
                           dataname = NULL,
@@ -260,11 +258,11 @@ DatetimeFilterState <- R6::R6Class( # nolint
       values
     },
     remove_out_of_bound_values = function(values) {
-      if (values[1] < private$choices[1] | values[1] > private$choices[2]) {
+      if (values[1] < private$choices[1] || values[1] > private$choices[2]) {
         warning(
           sprintf(
-            "Value: %s is outside of the possible range for column %s of dataset %s, setting minimum possible value.",
-            values[1], private$varname, private$dataname
+            "Value: %s is outside of the range for the column '%s' in dataset '%s', setting minimum possible value.",
+            values[1], private$varname, toString(private$dataname)
           )
         )
         values[1] <- private$choices[1]
@@ -273,8 +271,8 @@ DatetimeFilterState <- R6::R6Class( # nolint
       if (values[2] > private$choices[2] | values[2] < private$choices[1]) {
         warning(
           sprintf(
-            "Value: %s is outside of the possible range for column %s of dataset %s, setting maximum possible value.",
-            values[2], private$varname, private$dataname
+            "Value: '%s' is outside of the range for the column '%s' in dataset '%s', setting maximum possible value.",
+            values[2], private$varname, toString(private$dataname)
           )
         )
         values[2] <- private$choices[2]
@@ -283,7 +281,7 @@ DatetimeFilterState <- R6::R6Class( # nolint
       if (values[1] > values[2]) {
         warning(
           sprintf(
-            "Start date %s is set after the end date %s, the values will be replaced with a default datetime range.",
+            "Start date '%s' is set after the end date '%s', the values will be replaced by a default datetime range.",
             values[1], values[2]
           )
         )
