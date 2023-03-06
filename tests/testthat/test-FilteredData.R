@@ -47,29 +47,6 @@ testthat::test_that("get_join_keys returns join_keys object if it exists", {
   )
 })
 
-testthat::test_that("get_varnames returns dataname's column names", {
-  filtered_data <- FilteredData$new(list(iris = list(dataset = head(iris))), join_keys = NULL)
-  testthat::expect_equal(filtered_data$get_varnames("iris"), colnames(iris))
-})
-
-testthat::test_that("get_varlabels returns an array of NAs when dataset has no variable labels", {
-  filtered_data <- FilteredData$new(list(iris = list(dataset = head(iris))), join_keys = NULL)
-  testthat::expect_equal(
-    filtered_data$get_varlabels("iris"),
-    setNames(object = rep(as.character(NA), ncol(iris)), nm = colnames(iris))
-  )
-})
-
-testthat::test_that("get_varlabels returns array's labels when dataset has variable labels", {
-  mock_iris <- head(iris)
-  formatters::var_labels(mock_iris) <- rep("test", ncol(mock_iris))
-  filtered_data <- FilteredData$new(list(iris = list(dataset = mock_iris)), join_keys = NULL)
-  testthat::expect_equal(
-    filtered_data$get_varlabels("iris"),
-    setNames(object = rep("test", ncol(mock_iris)), nm = colnames(mock_iris))
-  )
-})
-
 testthat::test_that("get_datalabel returns character(0) for a dataset with no labels", {
   filtered_data <- FilteredData$new(list(iris = list(dataset = head(iris))), join_keys = NULL)
   testthat::expect_equal(filtered_data$get_datalabel("iris"), character(0))
@@ -82,7 +59,7 @@ testthat::test_that("get_datalabel returns the label of a passed dataset", {
 
 testthat::test_that("get_metadata throws error if dataset does not exist", {
   filtered_data <- FilteredData$new(list(iris = list(dataset = head(iris))), join_keys = NULL)
-  testthat::expect_error(filtered_data$get_metadata("mtcars"), "data mtcars is not available")
+  testthat::expect_error(filtered_data$get_metadata("mtcars"), "Assertion on 'dataname'")
 })
 
 testthat::test_that("get_metadata returns metadata if dataset exists", {

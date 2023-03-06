@@ -32,38 +32,11 @@ testthat::test_that("get_keys returns the keys passed to the constructor", {
   testthat::expect_equal("Petal.length", filtered_dataset$get_keys())
 })
 
-testthat::test_that("get_varlabels(NULL) returns a named array of NAs if data.frame has no varlabels", {
+testthat::test_that("ui_add is pure virtual", {
   filtered_dataset <- FilteredDataset$new(
     dataset = head(iris), dataname = "iris"
   )
-  testthat::expect_equal(
-    filtered_dataset$get_varlabels(),
-    setNames(as.character(rep(NA, ncol(head(iris)))), nm = names(iris))
-  )
-})
-
-testthat::test_that("get_varlabels returns labels for the part of the variables only", {
-  filtered_dataset <- FilteredDataset$new(
-    dataset = head(iris), dataname = "iris"
-  )
-  testthat::expect_equal(
-    filtered_dataset$get_varlabels(variables = c("Petal.Length")),
-    setNames(object = as.character(NA), nm = "Petal.Length")
-  )
-})
-
-testthat::test_that("get_varnames returns the names of the variables in the data passed to the constructor", {
-  filtered_dataset <- FilteredDataset$new(
-    dataset = head(iris), dataname = "iris"
-  )
-  testthat::expect_equal(filtered_dataset$get_varnames(), names(iris))
-})
-
-testthat::test_that("ui_add_filter_state is pure virtual", {
-  filtered_dataset <- FilteredDataset$new(
-    dataset = head(iris), dataname = "iris"
-  )
-  testthat::expect_error(filtered_dataset$ui_add_filter_state(), regex = "Pure virtual")
+  testthat::expect_error(filtered_dataset$ui_add(), regex = "Pure virtual")
 })
 
 testthat::test_that("get_metadata returns the metadata of the data passed to the constructor", {

@@ -124,7 +124,7 @@ testthat::test_that(
 testthat::test_that("Selecting a new variable initializes a new filter state", {
   dffs <- DFFilterStates$new(data = iris, dataname = "iris")
   shiny::testServer(
-    dffs$srv_add_filter_state,
+    dffs$srv_add,
     expr = {
       session$setInputs(var_to_add = "Sepal.Length")
     }
@@ -145,13 +145,13 @@ testthat::test_that("Adding 'var_to_add' adds another filter state", {
   )
   shiny::isolate(dffs$set_filter_state(state = fs))
   shiny::testServer(
-    dffs$srv_add_filter_state,
+    dffs$srv_add,
     expr = {
       session$setInputs(var_to_add = "Petal.Length")
     }
   )
   shiny::testServer(
-    dffs$srv_add_filter_state,
+    dffs$srv_add,
     expr = {
       session$setInputs(var_to_add = "Species")
     }
@@ -204,11 +204,11 @@ testthat::test_that(
 )
 
 testthat::test_that(
-  "DFFilterStates$ui_add_filter_state returns a message inside a div when data has no columns or no rows",
+  "DFFilterStates$ui_add returns a message inside a div when data has no columns or no rows",
   code = {
     dffs <- DFFilterStates$new(data = data.frame(), dataname = "iris")
     testthat::expect_identical(
-      dffs$ui_add_filter_state("id"),
+      dffs$ui_add("id"),
       div("no sample variables available")
     )
   }

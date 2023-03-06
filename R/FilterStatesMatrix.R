@@ -60,7 +60,7 @@ MatrixFilterStates <- R6::R6Class( # nolint
     #' @param id (`character(1)`)\cr
     #'   an ID string that corresponds with the ID used to call the module's UI function.
     #' @return `moduleServer` function which returns `NULL`
-    server = function(id) {
+    srv_active = function(id) {
       moduleServer(
         id = id,
         function(input, output, session) {
@@ -186,7 +186,7 @@ MatrixFilterStates <- R6::R6Class( # nolint
     #'  id of shiny module
     #' @return shiny.tag
     #'
-    ui_add_filter_state = function(id) {
+    ui_add = function(id) {
       data <- private$data
       checkmate::assert_string(id)
 
@@ -219,14 +219,14 @@ MatrixFilterStates <- R6::R6Class( # nolint
     #'   shiny module instance id
     #'
     #' @return `moduleServer` function which returns `NULL`
-    srv_add_filter_state = function(id) {
+    srv_add = function(id) {
       data <- private$data
       data_reactive <- private$data_reactive
       moduleServer(
         id = id,
         function(input, output, session) {
           logger::log_trace(
-            "MatrixFilterStates$srv_add_filter_state initializing, dataname: { private$dataname }"
+            "MatrixFilterStates$srv_add initializing, dataname: { private$dataname }"
           )
           active_filter_vars <- reactive({
             vapply(
@@ -254,7 +254,7 @@ MatrixFilterStates <- R6::R6Class( # nolint
             ignoreNULL = TRUE,
             handlerExpr = {
               logger::log_trace(paste(
-                "MatrixFilterStates$srv_add_filter_state@1 updating column choices,",
+                "MatrixFilterStates$srv_add@1 updating column choices,",
                 "dataname: { private$dataname }"
               ))
               if (length(avail_column_choices()) < 0) {
@@ -268,7 +268,7 @@ MatrixFilterStates <- R6::R6Class( # nolint
                 choices = avail_column_choices()
               )
               logger::log_trace(paste(
-                "MatrixFilterStates$srv_add_filter_state@1 updated column choices,",
+                "MatrixFilterStates$srv_add@1 updated column choices,",
                 "dataname: { private$dataname }"
               ))
             }
@@ -279,7 +279,7 @@ MatrixFilterStates <- R6::R6Class( # nolint
             handlerExpr = {
               logger::log_trace(
                 sprintf(
-                  "MatrixFilterState$srv_add_filter_state@2 adding FilterState of variable %s, dataname: %s",
+                  "MatrixFilterState$srv_add@2 adding FilterState of variable %s, dataname: %s",
                   deparse1(input$var_to_add),
                   private$dataname
                 )
@@ -288,7 +288,7 @@ MatrixFilterStates <- R6::R6Class( # nolint
               self$set_filter_state(setNames(list(list()), varname))
               logger::log_trace(
                 sprintf(
-                  "MatrixFilterState$srv_add_filter_state@2 added FilterState of variable %s, dataname: %s",
+                  "MatrixFilterState$srv_add@2 added FilterState of variable %s, dataname: %s",
                   deparse1(varname),
                   private$dataname
                 )
@@ -297,7 +297,7 @@ MatrixFilterStates <- R6::R6Class( # nolint
           )
 
           logger::log_trace(
-            "MatrixFilterStates$srv_add_filter_state initialized, dataname: { private$dataname }"
+            "MatrixFilterStates$srv_add initialized, dataname: { private$dataname }"
           )
           NULL
         }

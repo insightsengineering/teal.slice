@@ -26,14 +26,12 @@ components of the dataset.
 \item \href{#method-FilteredDataset-get_metadata}{\code{FilteredDataset$get_metadata()}}
 \item \href{#method-FilteredDataset-get_filter_overview_info}{\code{FilteredDataset$get_filter_overview_info()}}
 \item \href{#method-FilteredDataset-get_keys}{\code{FilteredDataset$get_keys()}}
-\item \href{#method-FilteredDataset-get_varlabels}{\code{FilteredDataset$get_varlabels()}}
 \item \href{#method-FilteredDataset-get_dataset_label}{\code{FilteredDataset$get_dataset_label()}}
-\item \href{#method-FilteredDataset-get_varnames}{\code{FilteredDataset$get_varnames()}}
 \item \href{#method-FilteredDataset-set_filterable_varnames}{\code{FilteredDataset$set_filterable_varnames()}}
-\item \href{#method-FilteredDataset-ui}{\code{FilteredDataset$ui()}}
-\item \href{#method-FilteredDataset-server}{\code{FilteredDataset$server()}}
-\item \href{#method-FilteredDataset-ui_add_filter_state}{\code{FilteredDataset$ui_add_filter_state()}}
-\item \href{#method-FilteredDataset-srv_add_filter_state}{\code{FilteredDataset$srv_add_filter_state()}}
+\item \href{#method-FilteredDataset-ui_active}{\code{FilteredDataset$ui_active()}}
+\item \href{#method-FilteredDataset-srv_active}{\code{FilteredDataset$srv_active()}}
+\item \href{#method-FilteredDataset-ui_add}{\code{FilteredDataset$ui_add()}}
+\item \href{#method-FilteredDataset-srv_add}{\code{FilteredDataset$srv_add()}}
 \item \href{#method-FilteredDataset-clone}{\code{FilteredDataset$clone()}}
 }
 }
@@ -265,32 +263,6 @@ Gets the keys for the dataset of this \code{FilteredDataset}
 }
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-FilteredDataset-get_varlabels"></a>}}
-\if{latex}{\out{\hypertarget{method-FilteredDataset-get_varlabels}{}}}
-\subsection{Method \code{get_varlabels()}}{
-Gets labels of variables in the data
-
-Variables are the column names of the data.
-Either, all labels must have been provided for all variables
-in \code{set_data} or \code{NULL}.
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{FilteredDataset$get_varlabels(variables = NULL)}\if{html}{\out{</div>}}
-}
-
-\subsection{Arguments}{
-\if{html}{\out{<div class="arguments">}}
-\describe{
-\item{\code{variables}}{(\code{character} vector) variables to get labels for;
-if \code{NULL}, for all variables in data}
-}
-\if{html}{\out{</div>}}
-}
-\subsection{Returns}{
-(\code{character} or \code{NULL}) variable labels, \code{NULL} if \code{column_labels}
-attribute does not exist for the data
-}
-}
-\if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-FilteredDataset-get_dataset_label"></a>}}
 \if{latex}{\out{\hypertarget{method-FilteredDataset-get_dataset_label}{}}}
 \subsection{Method \code{get_dataset_label()}}{
@@ -301,19 +273,6 @@ Gets the dataset label
 
 \subsection{Returns}{
 (\code{character}) the dataset label
-}
-}
-\if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-FilteredDataset-get_varnames"></a>}}
-\if{latex}{\out{\hypertarget{method-FilteredDataset-get_varnames}{}}}
-\subsection{Method \code{get_varnames()}}{
-Gets variable names from dataset
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{FilteredDataset$get_varnames()}\if{html}{\out{</div>}}
-}
-
-\subsection{Returns}{
-\code{character} the variable names
 }
 }
 \if{html}{\out{<hr>}}
@@ -343,15 +302,15 @@ invisibly this \code{FilteredDataset}
 }
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-FilteredDataset-ui"></a>}}
-\if{latex}{\out{\hypertarget{method-FilteredDataset-ui}{}}}
-\subsection{Method \code{ui()}}{
+\if{html}{\out{<a id="method-FilteredDataset-ui_active"></a>}}
+\if{latex}{\out{\hypertarget{method-FilteredDataset-ui_active}{}}}
+\subsection{Method \code{ui_active()}}{
 UI module for dataset active filters
 
 UI module containing dataset active filters along with
 title and remove button.
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{FilteredDataset$ui(id)}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{FilteredDataset$ui_active(id)}\if{html}{\out{</div>}}
 }
 
 \subsection{Arguments}{
@@ -367,14 +326,14 @@ function - shiny UI module
 }
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-FilteredDataset-server"></a>}}
-\if{latex}{\out{\hypertarget{method-FilteredDataset-server}{}}}
-\subsection{Method \code{server()}}{
+\if{html}{\out{<a id="method-FilteredDataset-srv_active"></a>}}
+\if{latex}{\out{\hypertarget{method-FilteredDataset-srv_active}{}}}
+\subsection{Method \code{srv_active()}}{
 Server module for a dataset active filters
 
 Server module managing a  active filters.
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{FilteredDataset$server(id)}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{FilteredDataset$srv_active(id)}\if{html}{\out{</div>}}
 }
 
 \subsection{Arguments}{
@@ -390,14 +349,14 @@ an ID string that corresponds with the ID used to call the module's UI function.
 }
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-FilteredDataset-ui_add_filter_state"></a>}}
-\if{latex}{\out{\hypertarget{method-FilteredDataset-ui_add_filter_state}{}}}
-\subsection{Method \code{ui_add_filter_state()}}{
+\if{html}{\out{<a id="method-FilteredDataset-ui_add"></a>}}
+\if{latex}{\out{\hypertarget{method-FilteredDataset-ui_add}{}}}
+\subsection{Method \code{ui_add()}}{
 UI module to add filter variable for this dataset
 
 UI module to add filter variable for this dataset
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{FilteredDataset$ui_add_filter_state(id)}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{FilteredDataset$ui_add(id)}\if{html}{\out{</div>}}
 }
 
 \subsection{Arguments}{
@@ -413,14 +372,14 @@ function - shiny UI module
 }
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-FilteredDataset-srv_add_filter_state"></a>}}
-\if{latex}{\out{\hypertarget{method-FilteredDataset-srv_add_filter_state}{}}}
-\subsection{Method \code{srv_add_filter_state()}}{
+\if{html}{\out{<a id="method-FilteredDataset-srv_add"></a>}}
+\if{latex}{\out{\hypertarget{method-FilteredDataset-srv_add}{}}}
+\subsection{Method \code{srv_add()}}{
 Server module to add filter variable for this dataset
 
 Server module to add filter variable for this dataset
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{FilteredDataset$srv_add_filter_state(id)}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{FilteredDataset$srv_add(id)}\if{html}{\out{</div>}}
 }
 
 \subsection{Arguments}{

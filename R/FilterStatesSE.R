@@ -79,7 +79,7 @@ SEFilterStates <- R6::R6Class( # nolint
     #' @param id (`character(1)`)\cr
     #'   an ID string that corresponds with the ID used to call the module's UI function.
     #' @return `moduleServer` function which returns `NULL`
-    server = function(id) {
+    srv_active = function(id) {
       moduleServer(
         id = id,
         function(input, output, session) {
@@ -283,7 +283,7 @@ SEFilterStates <- R6::R6Class( # nolint
     #' @param id (`character(1)`)\cr
     #'  id of shiny module
     #' @return shiny.tag
-    ui_add_filter_state = function(id) {
+    ui_add = function(id) {
       data <- private$data
       checkmate::assert_string(id)
 
@@ -338,14 +338,14 @@ SEFilterStates <- R6::R6Class( # nolint
     #' @param id (`character(1)`)\cr
     #'   an ID string that corresponds with the ID used to call the module's UI function.
     #' @return `moduleServer` function which returns `NULL`
-    srv_add_filter_state = function(id) {
+    srv_add = function(id) {
       data <- private$data
       data_reactive <- private$data_reactive
       moduleServer(
         id = id,
         function(input, output, session) {
           logger::log_trace(
-            "SEFilterState$srv_add_filter_state initializing, dataname: { private$dataname }"
+            "SEFilterState$srv_add initializing, dataname: { private$dataname }"
           )
           active_filter_col_vars <- reactive({
             vapply(
@@ -399,7 +399,7 @@ SEFilterStates <- R6::R6Class( # nolint
             ignoreNULL = TRUE,
             handlerExpr = {
               logger::log_trace(paste(
-                "SEFilterStates$srv_add_filter_state@1 updating available row data choices,",
+                "SEFilterStates$srv_add@1 updating available row data choices,",
                 "dataname: { private$dataname }"
               ))
               if (is.null(avail_row_data_choices())) {
@@ -413,7 +413,7 @@ SEFilterStates <- R6::R6Class( # nolint
                 choices = avail_row_data_choices()
               )
               logger::log_trace(paste(
-                "SEFilterStates$srv_add_filter_state@1 updated available row data choices,",
+                "SEFilterStates$srv_add@1 updated available row data choices,",
                 "dataname: { private$dataname }"
               ))
             }
@@ -424,7 +424,7 @@ SEFilterStates <- R6::R6Class( # nolint
             ignoreNULL = TRUE,
             handlerExpr = {
               logger::log_trace(paste(
-                "SEFilterStates$srv_add_filter_state@2 updating available col data choices,",
+                "SEFilterStates$srv_add@2 updating available col data choices,",
                 "dataname: { private$dataname }"
               ))
               if (is.null(avail_col_data_choices())) {
@@ -438,7 +438,7 @@ SEFilterStates <- R6::R6Class( # nolint
                 choices = avail_col_data_choices()
               )
               logger::log_trace(paste(
-                "SEFilterStates$srv_add_filter_state@2 updated available col data choices,",
+                "SEFilterStates$srv_add@2 updated available col data choices,",
                 "dataname: { private$dataname }"
               ))
             }
@@ -449,7 +449,7 @@ SEFilterStates <- R6::R6Class( # nolint
             handlerExpr = {
               logger::log_trace(
                 sprintf(
-                  "SEFilterStates$srv_add_filter_state@3 adding FilterState of column %s to col data, dataname: %s",
+                  "SEFilterStates$srv_add@3 adding FilterState of column %s to col data, dataname: %s",
                   deparse1(input$col_to_add),
                   private$dataname
                 )
@@ -458,7 +458,7 @@ SEFilterStates <- R6::R6Class( # nolint
               self$set_filter_state(list(select = setNames(list(list()), varname)))
               logger::log_trace(
                 sprintf(
-                  "SEFilterStates$srv_add_filter_state@3 added FilterState of column %s to col data, dataname: %s",
+                  "SEFilterStates$srv_add@3 added FilterState of column %s to col data, dataname: %s",
                   deparse1(varname),
                   private$dataname
                 )
@@ -472,7 +472,7 @@ SEFilterStates <- R6::R6Class( # nolint
             handlerExpr = {
               logger::log_trace(
                 sprintf(
-                  "SEFilterStates$srv_add_filter_state@4 adding FilterState of variable %s to row data, dataname: %s",
+                  "SEFilterStates$srv_add@4 adding FilterState of variable %s to row data, dataname: %s",
                   deparse1(input$row_to_add),
                   private$dataname
                 )
@@ -481,7 +481,7 @@ SEFilterStates <- R6::R6Class( # nolint
               self$set_filter_state(list(subset = setNames(list(list()), varname)))
               logger::log_trace(
                 sprintf(
-                  "SEFilterStates$srv_add_filter_state@4 added FilterState of variable %s to row data, dataname: %s",
+                  "SEFilterStates$srv_add@4 added FilterState of variable %s to row data, dataname: %s",
                   deparse1(varname),
                   private$dataname
                 )
@@ -490,7 +490,7 @@ SEFilterStates <- R6::R6Class( # nolint
           )
 
           logger::log_trace(
-            "SEFilterState$srv_add_filter_state initialized, dataname: { private$dataname }"
+            "SEFilterState$srv_add initialized, dataname: { private$dataname }"
           )
           NULL
         }

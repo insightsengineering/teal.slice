@@ -229,7 +229,7 @@ FilterStates <- R6::R6Class( # nolint
     #'
     #' @return `shiny.tag`
     #'
-    ui = function(id) {
+    ui_active = function(id) {
       ns <- NS(id)
       private$cards_container_id <- ns("cards")
       tagList(
@@ -291,7 +291,7 @@ FilterStates <- R6::R6Class( # nolint
     #'   object which columns are used to choose filter variables.
     #' @return `shiny.tag`
     #'
-    ui_add_filter_state = function(id, data) {
+    ui_add = function(id, data) {
       div("This object cannot be filtered")
     },
 
@@ -303,7 +303,7 @@ FilterStates <- R6::R6Class( # nolint
     #'
     #' @return `moduleServer` function which returns `NULL`
     #'
-    srv_add_filter_state = function(id) {
+    srv_add = function(id) {
       moduleServer(
         id = id,
         function(input, output, session) {

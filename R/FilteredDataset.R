@@ -245,7 +245,7 @@ FilteredDataset <- R6::R6Class( # nolint
     #'  identifier of the element - preferably containing dataset name
     #'
     #' @return function - shiny UI module
-    ui = function(id) {
+    ui_active = function(id) {
       dataname <- self$get_dataname()
       checkmate::assert_string(dataname)
 
@@ -297,7 +297,7 @@ FilteredDataset <- R6::R6Class( # nolint
               lapply(
                 names(self$get_filter_states()),
                 function(x) {
-                  tagList(self$get_filter_states(id = x)$ui(id = ns(x)))
+                  tagList(self$get_filter_states(id = x)$ui_active(id = ns(x)))
                 }
               )
             )
@@ -313,12 +313,12 @@ FilteredDataset <- R6::R6Class( # nolint
     #' @param id (`character(1)`)\cr
     #'   an ID string that corresponds with the ID used to call the module's UI function.
     #' @return `moduleServer` function which returns `NULL`
-    server = function(id) {
+    srv_active = function(id) {
       moduleServer(
         id = id,
         function(input, output, session) {
           dataname <- self$get_dataname()
-          logger::log_trace("FilteredDataset$server initializing, dataname: { dataname }")
+          logger::log_trace("FilteredDataset$srv_active initializing, dataname: { dataname }")
           checkmate::assert_string(dataname)
           output$filter_count <- renderText(
             sprintf(
@@ -331,7 +331,7 @@ FilteredDataset <- R6::R6Class( # nolint
           lapply(
             names(self$get_filter_states()),
             function(x) {
-              self$get_filter_states(id = x)$server(id = x)
+              self$get_filter_states(id = x)$srv_active(id = x)
             }
           )
 
@@ -349,9 +349,9 @@ FilteredDataset <- R6::R6Class( # nolint
           })
 
           observeEvent(input$remove_filters, {
-            logger::log_trace("FilteredDataset$server@1 removing filters, dataname: { dataname }")
+            logger::log_trace("FilteredDataset$srv_active@1 removing filters, dataname: { dataname }")
             self$clear_filter_states()
-            logger::log_trace("FilteredDataset$server@1 removed filters, dataname: { dataname }")
+            logger::log_trace("FilteredDataset$srv_active@1 removed filters, dataname: { dataname }")
           })
 
           logger::log_trace("FilteredDataset$initialized, dataname: { dataname }")
@@ -368,7 +368,7 @@ FilteredDataset <- R6::R6Class( # nolint
     #'  identifier of the element - preferably containing dataset name
     #'
     #' @return function - shiny UI module
-    ui_add_filter_state = function(id) {
+    ui_add = function(id) {
       stop("Pure virtual method")
     },
 
@@ -379,7 +379,7 @@ FilteredDataset <- R6::R6Class( # nolint
     #' @param id (`character(1)`)\cr
     #'   an ID string that corresponds with the ID used to call the module's UI function.
     #' @return `moduleServer` function.
-    srv_add_filter_state = function(id) {
+    srv_add = function(id) {
       moduleServer(
         id = id,
         function(input, output, session) {

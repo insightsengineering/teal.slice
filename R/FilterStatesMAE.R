@@ -82,7 +82,7 @@ MAEFilterStates <- R6::R6Class( # nolint
     #' @param id (`character(1)`)\cr
     #'   an ID string that corresponds with the ID used to call the module's UI function.
     #' @return `moduleServer` function which returns `NULL`
-    server = function(id) {
+    srv_active = function(id) {
       moduleServer(
         id = id,
         function(input, output, session) {
@@ -220,7 +220,7 @@ MAEFilterStates <- R6::R6Class( # nolint
     #' @param id (`character(1)`)\cr
     #'  id of shiny module
     #' @return shiny.tag
-    ui_add_filter_state = function(id) {
+    ui_add = function(id) {
       data <- private$data
       checkmate::assert_string(id)
 
@@ -252,13 +252,13 @@ MAEFilterStates <- R6::R6Class( # nolint
     #' @param id (`character(1)`)\cr
     #'   an ID string that corresponds with the ID used to call the module's UI function.
     #' @return `moduleServer` function which returns `NULL`
-    srv_add_filter_state = function(id) {
+    srv_add = function(id) {
       data <- SummarizedExperiment::colData(private$data)
 
       moduleServer(
         id = id,
         function(input, output, session) {
-          logger::log_trace("MAEFilterState$srv_add_filter_state initializing, dataname: { private$dataname }")
+          logger::log_trace("MAEFilterState$srv_add initializing, dataname: { private$dataname }")
           active_filter_vars <- reactive({
             vapply(
               X = private$state_list_get("y"),
@@ -294,7 +294,7 @@ MAEFilterStates <- R6::R6Class( # nolint
             ignoreNULL = TRUE,
             handlerExpr = {
               logger::log_trace(paste(
-                "MAEFilterStates$srv_add_filter_state@1 updating available column choices,",
+                "MAEFilterStates$srv_add@1 updating available column choices,",
                 "dataname: { private$dataname }"
               ))
               if (is.null(avail_column_choices())) {
@@ -308,7 +308,7 @@ MAEFilterStates <- R6::R6Class( # nolint
                 choices = avail_column_choices()
               )
               logger::log_trace(paste(
-                "MAEFilterStates$srv_add_filter_state@1 updated available column choices,",
+                "MAEFilterStates$srv_add@1 updated available column choices,",
                 "dataname: { private$dataname }"
               ))
             }
@@ -319,7 +319,7 @@ MAEFilterStates <- R6::R6Class( # nolint
             handlerExpr = {
               logger::log_trace(
                 sprintf(
-                  "MAEFilterStates$srv_add_filter_state@2 adding FilterState of variable %s, dataname: %s",
+                  "MAEFilterStates$srv_add@2 adding FilterState of variable %s, dataname: %s",
                   deparse1(input$var_to_add),
                   private$dataname
                 )
@@ -328,7 +328,7 @@ MAEFilterStates <- R6::R6Class( # nolint
               self$set_filter_state(setNames(list(list()), varname))
               logger::log_trace(
                 sprintf(
-                  "MAEFilterStates$srv_add_filter_state@2 added FilterState of variable %s, dataname: %s",
+                  "MAEFilterStates$srv_add@2 added FilterState of variable %s, dataname: %s",
                   deparse1(varname),
                   private$dataname
                 )
@@ -337,7 +337,7 @@ MAEFilterStates <- R6::R6Class( # nolint
           )
 
           logger::log_trace(
-            "MAEFilterState$srv_add_filter_state initialized, dataname: { private$dataname }"
+            "MAEFilterState$srv_add initialized, dataname: { private$dataname }"
           )
           NULL
         }
