@@ -417,38 +417,17 @@ DateFilterState <- R6::R6Class( # nolint
         }
       )
     },
-
-    # @description
-    # UI module to display filter summary
-    # @param id `shiny` id parameter
-    ui_summary = function(id) {
-      ns <- NS(id)
-      uiOutput(ns("summary"), class = "filter-card-summary")
-    },
-
     # @description
     # Server module to display filter summary
-    # @param shiny `id` parametr passed to moduleServer
     #  renders text describing selected date range and
     #  if NA are included also
-    server_summary = function(id) {
-      moduleServer(
-        id = id,
-        function(input, output, session) {
-          output$summary <- renderUI({
-            if (private$is_disabled()) {
-              tags$span("Disabled")
-            } else {
-              selected <- as.character(self$get_selected())
-              min <- selected[1]
-              max <- selected[2]
-              tagList(
-                tags$span(paste0(min, " - ", max)),
-                if (self$get_keep_na()) tags$span("NA") else NULL
-              )
-            }
-          })
-        }
+    content_summary = function(id) {
+      selected <- as.character(self$get_selected())
+      min <- selected[1]
+      max <- selected[2]
+      tagList(
+        tags$span(paste0(min, " - ", max)),
+        if (self$get_keep_na()) tags$span("NA") else NULL
       )
     }
   )

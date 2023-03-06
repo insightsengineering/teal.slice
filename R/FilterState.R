@@ -260,9 +260,8 @@ InteractiveFilterState <- R6::R6Class( # nolint
     #' @return NULL invisibly
     #'
     set_keep_na = function(value) {
-      checkmate::assert_flag(value, null.ok = TRUE)
-
-      if (private$is_disabled()) {
+      checkmate::assert_flag(value)
+      if (shiny::isolate(private$is_disabled())) {
         warning("This filter state is disabled. Can not change keep NA.")
       } else {
         private$keep_na(value)
@@ -316,12 +315,8 @@ InteractiveFilterState <- R6::R6Class( # nolint
         )
       )
 
-      if (private$is_disabled()) {
+      if (shiny::isolate(private$is_disabled())) {
         warning("This filter state is disabled. Can not change selected.")
-      } else if (!is.null(private$cache) && is.null(value)) {
-        # in this block we're setting state to NULL b/c we're disabling
-        # we don't want it to hit the next block b/c we don't want any coercion
-        private$selected(value)
       } else {
         value <- private$cast_and_validate(value)
         value <- private$remove_out_of_bound_values(value)
@@ -363,21 +358,20 @@ InteractiveFilterState <- R6::R6Class( # nolint
       ))
       stopifnot(is.list(state) && all(names(state) %in% c("selected", "keep_na")))
 
-      if (private$is_disabled()) {
-        warning("This filter state is disabled. Can not change state.")
-      } else {
+      if (!is.null(state$keep_na)) {
         self$set_keep_na(state$keep_na)
-        self$set_selected(state$selected)
-
-        logger::log_trace(
-          sprintf(
-          "%s$set_state, dataname: %s done setting state for variable %s",
-          class(self)[1],
-          private$dataname,
-          private$varname
-          )
-        )
       }
+      if (!is.null(state$selected)) {
+        self$set_selected(state$selected)
+      }
+      logger::log_trace(
+        sprintf(
+        "%s$set_state, dataname: %s done setting state for variable %s",
+        class(self)[1],
+        private$dataname,
+        private$varname
+        )
+      )
       invisible(NULL)
     },
 
@@ -484,13 +478,6 @@ InteractiveFilterState <- R6::R6Class( # nolint
       }
     },
 
-    # Sets `keep_na` field according to observed `input$keep_na`
-    # If `keep_na = TRUE` `is.na(varname)` is added to the returned call.
-    # Otherwise returned call excludes `NA` when executed.
-    observe_keep_na = function(input) {
-
-    },
-
     # @description
     # Set choices is supposed to be executed once in the constructor
     # to define set/range which selection is made from.
@@ -532,36 +519,64 @@ InteractiveFilterState <- R6::R6Class( # nolint
       values
     },
 
+    # Disables `FilterState`
+    # `state` is moved to cache and set to `NULL`
+    # @return `NULL` invisibly
     disable = function() {
       private$cache <- self$get_state()
-      self$set_state(
-        list(
-          selected = NULL,
-          keep_na = NULL
-        )
-      )
+      private$selected(NULL)
+      private$keep_na(NULL)
       private$disabled(TRUE)
+      invisible(NULL)
     },
 
+    # Enables `FilterState`
+    # Cached `state` is reset again and cache is cleared.
+    # @return `NULL` invisibly
     enable = function() {
       if (!is.null(private$cache)) {
         private$disabled(FALSE)
         self$set_state(private$cache)
         private$cache <- NULL
       }
+      invisible(NULL)
     },
 
+    # Check whether filter is disabled
+    # @return `logical(1)`
     is_disabled = function() {
       private$disabled()
     },
 
     # shiny modules -----
+
+    # @description
+    # Server module to display filter summary
+    # @param id `shiny` id parameter
     ui_summary = function(id) {
-      stop("abstract class")
+      ns <- NS(id)
+      uiOutput(ns("summary"), class = "filter-card-summary")
     },
+
+    # @description
+    # UI module to display filter summary
+    # @param shiny `id` parametr passed to moduleServer
+    #  renders text describing current state
     server_summary = function(id) {
-      stop("abstract class")
+      moduleServer(
+        id = id,
+        function(input, output, session) {
+          output$summary <- renderUI({
+            if (private$is_disabled()) {
+              tags$span("Disabled")
+            } else {
+              private$content_summary()
+            }
+          })
+        }
+      )
     },
+
     #' module with inputs
     ui_inputs = function(id) {
       stop("abstract class")

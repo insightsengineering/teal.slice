@@ -252,52 +252,111 @@ testthat::test_that("private$get_pretty_range_step returns pretty step size", {
   testthat::expect_identical(step, 0.2)
 })
 
-testthat::test_that("disabling/enabling", {
+testthat::test_that("disable sets all state elements to NULL", {
   shiny::reactiveConsole(TRUE)
   on.exit(shiny::reactiveConsole(FALSE))
-
-  TestFs = R6::R6Class(
-    classname = "TestFs",
+  testfs <- R6::R6Class(
+    classname = "testfs",
     inherit = RangeFilterState,
     public = list(
-      disable = function() {private$disable()},
-      enable = function() {private$enable()},
-      is_disabled = function() {private$is_disabled()}
+      disable = function() private$disable()
     )
   )
-  fs <- TestFs$new(1:10, reactive(1:10), 'x')
-
-  testthat::expect_false(fs$is_disabled())
-  # want to ensure there is some filtering to check correctness of
-  #  is_any_filtered() when disabled/enabled
-  fs$set_selected(c(1, 5))
-  testthat::expect_true(fs$is_any_filtered())
-
+  fs <- testfs$new(c(1:10, Inf), varname = "x")
   fs$disable()
-  testthat::expect_true(fs$is_disabled())
   testthat::expect_false(fs$is_any_filtered())
   testthat::expect_equal(
     fs$get_state(),
     list(selected = NULL, keep_na = NULL, keep_inf = NULL)
   )
+})
 
-  testthat::expect_warning(
-    fs$set_state(list(selected = c(1, 2), keep_na = TRUE, keep_inf = TRUE))
-  )
-  testthat::expect_warning(fs$set_selected(c(1, 2)))
-  testthat::expect_warning(fs$set_keep_na(TRUE))
-  testthat::expect_warning(fs$set_keep_inf(TRUE))
-
-  fs$enable()
-  testthat::expect_false(fs$is_disabled())
-  testthat::expect_true(fs$is_any_filtered())
-  testthat::expect_equal(
-    fs$get_state(),
-    list(
-      selected = c(1, 5),
-      keep_na = FALSE,
-      keep_inf = FALSE
+testthat::test_that("disable copies last state to the cache", {
+  shiny::reactiveConsole(TRUE)
+  on.exit(shiny::reactiveConsole(FALSE))
+  testfs <- R6::R6Class(
+    classname = "testfs",
+    inherit = RangeFilterState,
+    public = list(
+      disable = function() private$disable(),
+      get_cache = function() private$cache
     )
   )
+  fs <- testfs$new(c(1:10, Inf), varname = "x")
+  fs$set_state(list(keep_inf = TRUE))
+  last_state <- fs$get_state()
+  fs$disable()
+  testthat::expect_identical(fs$get_cache(), last_state)
+})
 
+testthat::test_that("is_any_filtered returns FALSE when disabled", {
+  shiny::reactiveConsole(TRUE)
+  on.exit(shiny::reactiveConsole(FALSE))
+  testfs <- R6::R6Class(
+    classname = "testfs",
+    inherit = RangeFilterState,
+    public = list(
+      disable = function() private$disable()
+    )
+  )
+  fs <- testfs$new(c(1:10, Inf), varname = "x")
+  fs$set_state(list(selected = c(4, 5), keep_inf = TRUE))
+  fs$disable()
+  testthat::expect_false(fs$is_any_filtered())
+})
+
+testthat::test_that("enable sets state back to the last state", {
+  shiny::reactiveConsole(TRUE)
+  on.exit(shiny::reactiveConsole(FALSE))
+  testfs <- R6::R6Class(
+    classname = "testfs",
+    inherit = RangeFilterState,
+    public = list(
+      disable = function() private$disable(),
+      enable = function() private$enable()
+    )
+  )
+  fs <- testfs$new(c(1:10, Inf), varname = "x")
+  fs$set_state(list(selected = c(4, 5), keep_inf = TRUE))
+  last_state <- fs$get_state()
+  fs$disable()
+  fs$enable()
+  testthat::expect_equal(fs$get_state(), last_state)
+})
+
+testthat::test_that("enable clears cache", {
+  shiny::reactiveConsole(TRUE)
+  on.exit(shiny::reactiveConsole(FALSE))
+  testfs <- R6::R6Class(
+    classname = "testfs",
+    inherit = RangeFilterState,
+    public = list(
+      disable = function() private$disable(),
+      enable = function() private$enable(),
+      get_cache = function() private$cache
+    )
+  )
+  fs <- testfs$new(c(1:10, Inf), varname = "x")
+  fs$set_state(list(selected = c(4, 5), keep_inf = TRUE))
+  fs$disable()
+  fs$enable()
+  testthat::expect_null(fs$get_cache())
+})
+
+testthat::test_that("is_any_filtered returns TRUE when enabled", {
+  shiny::reactiveConsole(TRUE)
+  on.exit(shiny::reactiveConsole(FALSE))
+  testfs <- R6::R6Class(
+    classname = "testfs",
+    inherit = RangeFilterState,
+    public = list(
+      disable = function() private$disable(),
+      enable = function() private$enable()
+    )
+  )
+  fs <- testfs$new(c(1:10, Inf), varname = "x")
+  fs$set_state(list(selected = c(4, 5), keep_inf = TRUE))
+  fs$disable()
+  fs$enable()
+  testthat::expect_true(fs$is_any_filtered())
 })

@@ -245,11 +245,11 @@ RangeFilterState <- R6::R6Class( # nolint
     #'  modules after selecting check-box-input in the shiny interface. Values are set to
     #'  `private$keep_inf` which is reactive.
     set_keep_inf = function(value) {
-      checkmate::assert_flag(value, null.ok = TRUE)
 
-      if (private$is_disabled()) {
+      if (shiny::isolate(private$is_disabled())) {
         warning("This filter state is disabled. Can not change keep Inf.")
       } else {
+        checkmate::assert_flag(value)
         private$keep_inf(value)
         logger::log_trace(
           sprintf(
@@ -274,7 +274,9 @@ RangeFilterState <- R6::R6Class( # nolint
     #' }
     set_state = function(state) {
       stopifnot(is.list(state) && all(names(state) %in% c("selected", "keep_na", "keep_inf")))
-      self$set_keep_inf(state$keep_inf)
+      if (!is.null(state$keep_inf)) {
+        self$set_keep_inf(state$keep_inf)
+      }
       super$set_state(state[names(state) %in% c("selected", "keep_na")])
       invisible(NULL)
     },
@@ -373,16 +375,12 @@ RangeFilterState <- R6::R6Class( # nolint
     remove_out_of_bound_values = function(values) {
       values
     },
-    
+
     disable = function() {
       private$cache <- self$get_state()
-      self$set_state(
-        list(
-          selected = NULL,
-          keep_na = NULL,
-          keep_inf = NULL
-        )
-      )
+      private$selected(NULL)
+      private$keep_na(NULL)
+      private$keep_inf(NULL)
       private$disabled(TRUE)
     },
 
@@ -408,7 +406,7 @@ RangeFilterState <- R6::R6Class( # nolint
             label = NULL,
             min = private$choices[1],
             max = private$choices[2],
-            value = isolate(private$selected()),
+            value = shiny::isolate(private$selected()),
             step = private$slider_step,
             width = "100%"
           )
@@ -611,39 +609,18 @@ RangeFilterState <- R6::R6Class( # nolint
     },
 
     # @description
-    # UI module to display filter summary
-    # @param id `shiny` id parameter
-    #  renders text describing selected range and
-    #  if NA or Inf are included also
-    ui_summary = function(id) {
-      ns <- NS(id)
-      uiOutput(ns("summary"), class = "filter-card-summary")
-    },
-
-    # @description
     # Server module to display filter summary
-    # @param shiny `id` parametr passed to moduleServer
     #  renders text describing selected range and
     #  if NA or Inf are included also
-    server_summary = function(id) {
-      moduleServer(
-        id = id,
-        function(input, output, session) {
-          output$summary <- renderUI({
-            if (private$is_disabled()) {
-              tags$span("Disabled")
-            } else {
-              selected <- sprintf("%.4g", self$get_selected())
-              min <- selected[1]
-              max <- selected[2]
-              tagList(
-                tags$span(paste0(min, " - ", max)),
-                if (self$get_keep_na()) tags$span("NA") else NULL,
-                if (self$get_keep_inf()) tags$span("Inf") else NULL
-              )
-            }
-          })
-        }
+    # @return `shiny.tag` to include in the `ui_summary`
+    content_summary = function() {
+      selected <- sprintf("%.4g", self$get_selected())
+      min <- selected[1]
+      max <- selected[2]
+      tagList(
+        tags$span(paste0(min, " - ", max)),
+        if (isTRUE(self$get_keep_na())) tags$span("NA") else NULL,
+        if (isTRUE(self$get_keep_inf())) tags$span("Inf") else NULL
       )
     }
   )

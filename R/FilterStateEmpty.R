@@ -81,7 +81,7 @@ EmptyFilterState <- R6::R6Class( # nolint
     #' @return `logical(1)`
     #'
     get_call = function() {
-      
+
       filter_call <- if (isTRUE(self$get_keep_na())) {
         call("is.na", private$get_varname_prefixed())
       } else {
@@ -172,7 +172,7 @@ EmptyFilterState <- R6::R6Class( # nolint
         id = id,
         function(input, output, session) {
           private$keep_na_srv("keep_na")
-          
+
           observeEvent(private$is_disabled(), {
             shinyjs::toggleState(
               id = "keep_na-value",
@@ -184,33 +184,10 @@ EmptyFilterState <- R6::R6Class( # nolint
     },
 
     # @description
-    # UI module to display filter summary.
-    # EmptyFilterState contains only missing
-    # values.
-    # @param id `shiny` id parameter
-    ui_summary = function(id) {
-      ns <- NS(id)
-      uiOutput(ns("summary"), class = "filter-card-summary")
-    },
-
-    # @description
     # Server module to display filter summary
-    # @param shiny `id` parametr passed to moduleServer
     # Doesn't render anything
-    server_summary = function(id) {
-      moduleServer(
-        id = id,
-        function(input, output, session) {
-          output$summary <- renderUI({
-            if (private$is_disabled()) {
-              tags$span("Disabled")
-            } else {
-              tags$span("All empty")
-            }
-          })
-          NULL
-        }
-      )
+    content_summary = function(id) {
+      tags$span("All empty")
     }
   )
 )
