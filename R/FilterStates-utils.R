@@ -211,41 +211,19 @@ get_supported_filter_varnames.MAEFilteredDataset <- function(data) { # nolint
 #'  the names of the key columns in data
 #' @return `character(0)` if choices are empty; a `choices_labeled` object otherwise
 #' @keywords internal
-data_choices_labeled <- function(data, choices, varlabels = character(0), keys = character(0)) {
+data_choices_labeled <- function(data,
+                                 choices,
+                                 varlabels = formatters::var_labels(data, fill = TRUE),
+                                 keys = character(0)) {
   if (length(choices) == 0) {
     return(character(0))
   }
+  choice_types <- setNames(variable_types(data = data, columns = choices), choices)
+  choice_types[keys] <- "primary_key"
 
-  choice_labels <- if (identical(varlabels, character(0))) {
-    vapply(
-      X = data,
-      FUN.VALUE = character(1),
-      FUN = function(x) {
-        label <- attr(x, "label")
-        if (length(label) != 1) {
-          ""
-        } else {
-          label
-        }
-      }
-    )[choices]
-  } else {
-    varlabels
-  }
-
-  if (!identical(choice_labels, character(0))) {
-    choice_labels[is.na(choice_labels) | choice_labels == ""] <- names(
-      choice_labels[is.na(choice_labels) | choice_labels == ""]
-    )
-    choice_types <- setNames(variable_types(data = data, columns = choices), choices)
-    choice_types[keys] <- "primary_key"
-
-    choices_labeled(
-      choices = choices,
-      labels = unname(choice_labels[choices]),
-      types = choice_types[choices]
-    )
-  } else {
-    choices
-  }
+  choices_labeled(
+    choices = choices,
+    labels = unname(varlabels[choices]),
+    types = choice_types[choices]
+  )
 }

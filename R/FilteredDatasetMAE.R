@@ -37,7 +37,6 @@ MAEFilteredDataset <- R6::R6Class( # nolint
           data = dataset,
           data_reactive = private$data_filtered_fun,
           dataname = dataname,
-          varlabels = self$get_varlabels(),
           datalabel = "subjects",
           keys = self$get_keys()
         ),
@@ -61,40 +60,6 @@ MAEFilteredDataset <- R6::R6Class( # nolint
           )
         }
       )
-    },
-
-    #' @description
-    #' Gets labels of variables in the data
-    #'
-    #' Variables are the column names of the data.
-    #' Either, all labels must have been provided for all variables
-    #' in `set_data` or `NULL`.
-    #'
-    #' @param variables (`character` vector) variables to get labels for;
-    #'   if `NULL`, for all variables in data
-    #' @return (`character` or `NULL`) variable labels, `NULL` if `column_labels`
-    #'   attribute does not exist for the data
-    get_varlabels = function(variables = NULL) {
-      checkmate::assert_character(variables, null.ok = TRUE, any.missing = FALSE)
-
-      labels <- vapply(
-        X = SummarizedExperiment::colData(self$get_dataset()),
-        FUN.VALUE = character(1),
-        FUN = function(x) {
-          label <- attr(x, "label")
-          if (length(label) != 1) {
-            NA_character_
-          } else {
-            label
-          }
-        }
-      )
-
-      if (is.null(labels)) {
-        return(NULL)
-      }
-      if (!is.null(variables)) labels <- labels[names(labels) %in% variables]
-      labels
     },
 
     #' @description

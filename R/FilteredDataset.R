@@ -211,40 +211,10 @@ FilteredDataset <- R6::R6Class( # nolint
     },
 
     #' @description
-    #' Gets labels of variables in the data
-    #'
-    #'
-    #' Variables are the column names of the data.
-    #' Either, all labels must have been provided for all variables
-    #' in `set_data` or `NULL`.
-    #'
-    #' @param variables (`character` vector) variables to get labels for;
-    #'   if `NULL`, for all variables in data
-    #' @return (`character` or `NULL`) variable labels, `NULL` if `column_labels`
-    #'   attribute does not exist for the data
-    get_varlabels = function(variables = NULL) {
-      checkmate::assert_character(variables, null.ok = TRUE, any.missing = FALSE)
-      dataset <- self$get_dataset()
-      labels <- formatters::var_labels(dataset, fill = FALSE)
-      if (is.null(labels)) {
-        return(NULL)
-      }
-      if (!is.null(variables)) labels <- labels[intersect(self$get_varnames(), variables)]
-      labels
-    },
-
-    #' @description
     #' Gets the dataset label
     #' @return (`character`) the dataset label
     get_dataset_label = function() {
       private$label
-    },
-
-    #' @description
-    #' Gets variable names from dataset
-    #' @return `character` the variable names
-    get_varnames = function() {
-      colnames(self$get_dataset())
     },
 
     #' @description
@@ -440,28 +410,6 @@ FilteredDataset <- R6::R6Class( # nolint
       checkmate::assert_string(id)
       x <- setNames(list(filter_states), id)
       private$filter_states <- c(self$get_filter_states(), x)
-    },
-
-    # @description
-    # Checks if the dataname exists and
-    # (if provided) that varname is a valid column in the dataset
-    #
-    # Stops when this is not the case.
-    #
-    # @param varname (`character`) column within the dataset;
-    #   if `NULL`, this check is not performed
-    check_data_varname_exists = function(varname = NULL) {
-      checkmate::assert_string(varname, null.ok = TRUE)
-
-      isolate({
-        if (!is.null(varname) && !(varname %in% self$get_varnames())) {
-          stop(
-            sprintf("variable '%s' does not exist in data '%s'", varname, dataname)
-          )
-        }
-      })
-
-      return(invisible(NULL))
     }
   )
 )

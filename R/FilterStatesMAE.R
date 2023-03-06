@@ -253,14 +253,12 @@ MAEFilterStates <- R6::R6Class( # nolint
     #'   an ID string that corresponds with the ID used to call the module's UI function.
     #' @return `moduleServer` function which returns `NULL`
     srv_add_filter_state = function(id) {
-      data <- private$data
-      data_reactive <- private$data_reactive
+      data <- SummarizedExperiment::colData(private$data)
+
       moduleServer(
         id = id,
         function(input, output, session) {
-          logger::log_trace(
-            "MAEFilterState$srv_add_filter_state initializing, dataname: { private$dataname }"
-          )
+          logger::log_trace("MAEFilterState$srv_add_filter_state initializing, dataname: { private$dataname }")
           active_filter_vars <- reactive({
             vapply(
               X = private$state_list_get("y"),
@@ -271,14 +269,23 @@ MAEFilterStates <- R6::R6Class( # nolint
 
           # available choices to display
           avail_column_choices <- reactive({
-            choices <- setdiff(
-              get_supported_filter_varnames(data = SummarizedExperiment::colData(data)),
-              active_filter_vars()
+            choices <- setdiff(get_supported_filter_varnames(data = data), active_filter_vars())
+            varlabels <- vapply(
+              colnames(data),
+              FUN = function(x) {
+                label <- attr(data[[x]], "label")
+                if (is.null(label)) {
+                  x
+                } else {
+                  label
+                }
+              },
+              FUN.VALUE = character(1)
             )
             data_choices_labeled(
-              data = SummarizedExperiment::colData(data),
+              data = data,
               choices = choices,
-              varlabels = private$get_varlabels(choices),
+              varlabels = varlabels,
               keys = private$keys
             )
           })
@@ -339,23 +346,6 @@ MAEFilterStates <- R6::R6Class( # nolint
   ),
   private = list(
     varlabels = character(0),
-    keys = character(0),
-    #' description
-    #' Get label of specific variable. In case when variable label is missing
-    #' name of the variable is returned.
-    #' parameter variable (`character`)\cr
-    #'  name of the variable for which label should be returned
-    #' return `character`
-    get_varlabels = function(variables = character(0)) {
-      checkmate::assert_character(variables)
-      if (identical(variables, character(0))) {
-        private$varlabels
-      } else {
-        varlabels <- private$varlabels[variables]
-        missing_labels <- is.na(varlabels) | varlabels == ""
-        varlabels[missing_labels] <- variables[missing_labels]
-        varlabels
-      }
-    }
+    keys = character(0)
   )
 )

@@ -278,7 +278,7 @@ FilterStates <- R6::R6Class( # nolint
     #'
     #' @return invisibly this `FilteredDataset`
     set_filterable_varnames = function(varnames) {
-      return(invisible(self))
+      colnames(private$data)
     },
 
     #' @description

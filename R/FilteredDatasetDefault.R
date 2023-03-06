@@ -82,7 +82,6 @@ DefaultFilteredDataset <- R6::R6Class( # nolint
           data = dataset,
           data_reactive = private$data_filtered_fun,
           dataname = dataname,
-          varlabels = self$get_varlabels(),
           keys = self$get_keys()
         ),
         id = "filter"

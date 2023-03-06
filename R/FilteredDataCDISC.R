@@ -105,7 +105,7 @@ CDISCFilteredData <- R6::R6Class( # nolint
       rows <- lapply(
         datanames,
         function(dataname) {
-          obs <- self$get_filtered_dataset(dataname)$get_filter_overview_info()[, 1]
+          obs <- private$get_filtered_dataset(dataname)$get_filter_overview_info()[, 1]
           subs <- private$get_filter_overview_nsubjs(dataname)
 
           df <- cbind(obs, subs)
@@ -178,7 +178,7 @@ CDISCFilteredData <- R6::R6Class( # nolint
             list(dataname = dataname, parent = parent_reactive, join_keys = keys, parent_name = parent_dataname)
           )
         )
-        private$reactive_data[[dataname]] <- self$get_filtered_dataset(dataname)$get_dataset(TRUE)
+        private$reactive_data[[dataname]] <- private$get_filtered_dataset(dataname)$get_dataset(TRUE)
       }
 
       invisible(self)
@@ -201,7 +201,7 @@ CDISCFilteredData <- R6::R6Class( # nolint
       super$validate()
     },
     get_filter_overview_nsubjs = function(dataname) {
-      self$get_filtered_dataset(dataname)$get_filter_overview_nsubjs()
+      private$get_filtered_dataset(dataname)$get_filter_overview_nsubjs()
     }
   )
 )

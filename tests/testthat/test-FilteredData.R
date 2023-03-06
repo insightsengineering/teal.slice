@@ -1,5 +1,5 @@
-testthat::test_that("The constructor does not throw", {
-  testthat::expect_no_error(FilteredData$new(list(iris = list(dataset = iris)), join_keys = NULL))
+testthat::test_that("The constructor does not throw with argument dataset specified only", {
+  testthat::expect_no_error(FilteredData$new(list(iris = list(dataset = iris))))
 })
 
 testthat::test_that("set_dataset accepts a `data.frame` object", {
@@ -116,22 +116,6 @@ testthat::test_that("get_code returns a string when FilteredData has no code", {
 testthat::test_that("get_data does not throw when passed a dataset name", {
   filtered_data <- FilteredData$new(list(iris = list(dataset = head(iris))), join_keys = NULL)
   testthat::expect_equal(shiny::isolate(filtered_data$get_data("iris")), head(iris))
-})
-
-testthat::test_that("get_filtered_dataset returns a list of FilteredDataset", {
-  filtered_data <- FilteredData$new(list(iris = list(dataset = head(iris))), join_keys = NULL)
-  checkmate::expect_list(filtered_data$get_filtered_dataset(), "FilteredDataset")
-})
-
-testthat::test_that("get_filtered_dataset returns a list with elements named after set datasets", {
-  filtered_data <- FilteredData$new(
-    list(
-      iris = list(dataset = head(iris)),
-      mtcars = list(dataset = head(mtcars))
-    ),
-    join_keys = NULL
-  )
-  testthat::expect_equal(names(filtered_data$get_filtered_dataset()), c("iris", "mtcars"))
 })
 
 testthat::test_that("get_call returns a list of language objects or NULL", {

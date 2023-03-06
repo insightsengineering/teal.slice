@@ -418,11 +418,9 @@ DFFilterStates <- R6::R6Class( # nolint
       moduleServer(
         id = id,
         function(input, output, session) {
+          logger::log_trace("DFFilterStates$srv_add_filter_state initializing, dataname: { private$dataname }")
           data <- private$data
           vars_include <- private$filterable_varnames
-          logger::log_trace(
-            "DFFilterStates$srv_add_filter_state initializing, dataname: { private$dataname }"
-          )
           active_filter_vars <- reactive({
             vapply(
               X = private$state_list_get(state_list_index = 1L),
@@ -438,7 +436,7 @@ DFFilterStates <- R6::R6Class( # nolint
             data_choices_labeled(
               data = data,
               choices = choices,
-              varlabels = private$get_varlabels(choices),
+              varlabels = formatters::var_labels(data, fill = TRUE),
               keys = private$keys
             )
           })
@@ -501,24 +499,6 @@ DFFilterStates <- R6::R6Class( # nolint
   # private members ----
   private = list(
     varlabels = character(0),
-    keys = character(0),
-    # @description
-    # Get label of specific variable. If variable label is missing, variable name is returned.
-    #
-    # @para variable (`character`)\cr
-    #   name of variable for which label should be returned
-    #
-    # @return `character`
-    get_varlabels = function(variables = character(0)) {
-      checkmate::assert_character(variables)
-      if (identical(variables, character(0))) {
-        private$varlabels
-      } else {
-        varlabels <- private$varlabels[variables]
-        missing_labels <- is.na(varlabels) | varlabels == ""
-        varlabels[missing_labels] <- variables[missing_labels]
-        varlabels
-      }
-    }
+    keys = character(0)
   )
 )
