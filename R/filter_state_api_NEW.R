@@ -21,7 +21,7 @@
 #' @examples
 #' filter_one <- filter_var("dataname1", "varname1", letters, "b", "characters", FALSE)
 #' filter_two <- filter_var("dataname1", "varname2", 1:10, 2, "integers", TRUE, FALSE)
-#' filter_three <- filter_var("dataname1", "varname3", 1:10/10, 0.2, "doubles", TRUE, FALSE)
+#' filter_three <- filter_var("dataname2", "varname3", 1:10/10, 0.2, "doubles", TRUE, FALSE)
 #'
 #' @export
 #' @rdname new_api
@@ -52,9 +52,15 @@ filter_var <- function(
   ans
 }
 
-# filter_one <- filter_var("dataname1", "varname1", letters, "b", "characters", FALSE, FALSE)
-# filter_two <- filter_var("dataname1", "varname2", 1:10, 2, "integers", TRUE, FALSE)
-# filter_three <- filter_var("dataname1", "varname3", 1:10/10, 0.2, "doubles", TRUE, FALSE)
+c.teal_slice <- function(...) {
+  ans <- unlist(list(...), recursive = FALSE)
+  class(ans) <- "teal_slice"
+  ans
+}
+print.teal_slice <- function(x) {
+  str(x)
+}
+
 
 
 #' complete filter settings
@@ -64,62 +70,89 @@ filter_var <- function(
 #' @param ... any number of `teal_slice` objects
 #' @filterable `named list` of `character` vectors, specifying which variables
 #'              (list elements) can be filtered in which data sets (list names)
-#' @count_type `character(1)` string specifiying how observations are tallied by these filter states
+#' @count_type `character(1)` string specifying how observations are tallied by these filter states
 #'
 #' @return
 #' Object of class `teal_slices`, which is an unnamed list of `teal_slice` objects.
 #'
 #' @examples
-#' all_filters <- filter_settings(filter_one, filter_two, filter_three)
+#' all_filters <- filter_settings(
+#'   filter_one,
+#'   filter_two,
+#'   filter_three,
+#'   filterable = list(
+#'     "dataname1" = c("varname1", "varname2"),
+#'     "dataname2" = "varname3"
+#'   )
+#' )
 #'
 #' @export
 #' @rdname new_api
 #'
-# filter_settings <- function(
-#     ...,
-#     filterable = list(),
-#     count_type = c("none", "all", "hierarchical")
-# ) {
-#   checkmate::assert_list(filterable, names = "named", types = "character")
-#   args <- list(...)
-#   checkmate::assert_list(args, types = "teal_slice", any.missing = FALSE)
-#   class(args) <- "teal_slices"
-#   count_type <- match_arg(count_type)
-#   args <- append(
-#     args,
-#     list(
-#       filterable = filterable,
-#       count_type = count_type
-#     )
-#   )
-#   args
-# }
+filter_settings <- function(
+    ...,
+    filterable = list(),
+    count_type = c("none", "all", "hierarchical")
+) {
+  checkmate::assert_list(filterable, names = "named", types = "character")
+  args <- list(...)
+  checkmate::assert_list(args, types = "teal_slice", any.missing = FALSE)
+  count_type <- match.arg(count_type)
 
-# all_filters <- filter_settings(filter_one, filter_two, filter_three)
-#
-# print.teal_slice <- function(x) str(x)
-# print.teal_slices <- function(x) lapply(x, str)
+  attr(args, "filterable") <- filterable
+  attr(args, "count_type") <- count_type
+  class(args) <- "teal_slices"
+  args
+}
+
+`[.teal_slices` <- function(x, i) {
+  y <- NextMethod("[")
+  attributes(y) <- attributes(x)
+  filterables <- unique(unlist(vapply(y, function(ts) ts[["dataname"]], character(1L))))
+  attr(y, "filterable") <- attr(x, "filterable")[filterables]
+  y
+}
+
+print.teal_slices <- function(x) {
+  f <- attr(x, "filterable")
+  ct <- attr(x, "count_type")
+  x <- lapply(x, unclass)
+  lapply(x, str)
+  cat("\nfilterable variables:\n")
+  for (i in seq_along(f)) {
+    cat(sprintf(" $ %s: %s", names(f)[i], toString(f[[i]])), "\n")
+  }
+  cat(sprintf("\ncount type: %s", ct), "\n")
+}
 
 
-# get get contents of extra fields in all slices
-# find_extras <- function(tss) {
-#   checkmate::assert_class(tss, "teal_slice")
-#   ans <- tss[!is.element(names(tss), formalArgs(filter_var))]
-#   class(ans) <- "teal_slice"
-#   ans
-# }
-# lapply(all_filters, find_extras)
-#
-# # get slices that where freature is value
-# extract_by_feat <- function(tss, feature, value) {
-#   checkmate::assert_class(tss, "teal_slices")
-#   Filter(function(x) x[[feature]] == value, tss)
-# }
-# extract_by_feat(all_filters, "dataname", "dataname1")
-#
-# # get feature from all slices
-# extract_feat <- function(tss, feature) {
-#   checkmate::assert_class(tss, "teal_slices")
-#   lapply(tss, function(x) x[[feature]])
-# }
-# extract_feat(all_filters, "dataname")
+
+filter_one <- filter_var("dataname1", "varname1", letters, "b", "characters", FALSE)
+filter_two <- filter_var("dataname1", "varname2", 1:10, 2, "integers", TRUE, FALSE)
+filter_three <- filter_var("dataname2", "varname3", 1:10/10, 0.2, "doubles", TRUE, FALSE)
+
+all_filters <- filter_settings(
+  filter_one,
+  filter_two,
+  filter_three,
+  filterable = list(
+    "dataname1" = c("varname1", "varname2"),
+    "dataname2" = "varname3"
+  )
+)
+all_filters
+
+
+# get slices where feature is value
+extract_by_feat <- function(tss, feature, value) {
+  checkmate::assert_class(tss, "teal_slices")
+  Filter(function(x) x[[feature]] == value, tss)
+}
+extract_by_feat(all_filters, "dataname", "dataname1")
+
+# get feature from all slices
+extract_feat <- function(tss, feature) {
+  checkmate::assert_class(tss, "teal_slices")
+  lapply(tss, function(x) x[[feature]])
+}
+extract_feat(all_filters, "dataname")
