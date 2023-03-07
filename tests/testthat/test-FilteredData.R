@@ -2,30 +2,100 @@ testthat::test_that("The constructor does not throw with argument dataset specif
   testthat::expect_no_error(FilteredData$new(list(iris = list(dataset = iris))))
 })
 
+testthat::test_that("The constructor accepts datasets as list containing data.frame and MAE objects only", {
+  utils::data(miniACC, package = "MultiAssayExperiment")
+  df_dataset <- list(dataset = iris)
+  mae_dataset <- list(dataset = miniACC)
+  testthat::expect_no_error(FilteredData$new(list(iris = df_dataset, mae = mae_dataset)))
+
+  dataset <- list(dataset = structure(list(), class = "customclass"))
+  testthat::expect_error(FilteredData$new(list(iris = dataset)), "Must inherit")
+})
+
+testthat::test_that("The constructor accepts join_keys to be JoinKeys or NULL", {
+  testthat::expect_no_error(
+    FilteredData$new(list(iris = list(dataset = iris)), join_keys = teal.data::join_keys())
+  )
+  testthat::expect_no_error(
+    FilteredData$new(list(iris = list(dataset = iris)))
+  )
+  testthat::expect_error(
+    FilteredData$new(list(iris = list(dataset = iris)), join_keys = list())
+  )
+})
+
+testthat::test_that("The constructor accepts code to be CodeClass or NULL", {
+  mockcodeclass <- R6::R6Class(classname = "CodeClass")
+  testthat::expect_no_error(
+    FilteredData$new(list(iris = list(dataset = iris)), code = mockcodeclass$new())
+  )
+  testthat::expect_no_error(
+    FilteredData$new(list(iris = list(dataset = iris)), code = NULL)
+  )
+  testthat::expect_error(
+    FilteredData$new(list(iris = list(dataset = iris)), code = list())
+  )
+})
+
+testthat::test_that("The constructor accepts check to be a flag", {
+  testthat::expect_no_error(
+    FilteredData$new(list(iris = list(dataset = iris)), check = TRUE)
+  )
+  testthat::expect_error(
+    FilteredData$new(list(iris = list(dataset = iris)), check = NULL)
+  )
+  testthat::expect_error(
+    FilteredData$new(list(iris = list(dataset = iris)), check = logical(0))
+  )
+})
+
+testthat::test_that("datanames returns character vector reflecting names of set datasets", {
+  dataset <- list(dataset = iris)
+  filtered_data <- FilteredData$new(list(df1 = dataset, df2 = dataset))
+  testthat::expect_identical(filtered_data$datanames(), c("df1", "df2"))
+})
+
 testthat::test_that("set_dataset accepts a `data.frame` object", {
-  filtered_data <- FilteredData$new(data_objects = list(), join_keys = NULL)
+  filtered_data <- FilteredData$new(data_objects = list())
   dataset_args <- list(dataset = iris)
   testthat::expect_no_error(filtered_data$set_dataset(dataset_args = dataset_args, dataname = "iris"))
 })
 
 testthat::test_that("set_dataset returns self", {
-  filtered_data <- FilteredData$new(data_objects = list(), join_keys = NULL)
+  filtered_data <- FilteredData$new(data_objects = list())
   dataset_args <- list(dataset = iris)
   testthat::expect_identical(filtered_data$set_dataset(dataset_args = dataset_args, dataname = "iris"), filtered_data)
 })
 
+testthat::test_that("set_dataset creates FilteredDataset object", {
+  testfd <- R6::R6Class(
+    classname = "testfd",
+    inherit = FilteredData,
+    public = list(
+      get_filtered_datasets = function() private$filtered_datasets
+    )
+  )
+  filtered_data <- testfd$new(data_objects = list())
+  dataset_args <- list(dataset = iris)
+  filtered_data$set_dataset(dataset_args = dataset_args, dataname = "iris")
+  checkmate::expect_list(
+    filtered_data$get_filtered_datasets(),
+    types = "DefaultFilteredDataset"
+  )
+})
+
 testthat::test_that("get_keys returns an empty character when dataset has no keys", {
-  filtered_data <- FilteredData$new(list(iris = list(dataset = head(iris), keys = character(0))), join_keys = NULL)
+  filtered_data <- FilteredData$new(list(iris = list(dataset = head(iris), keys = character(0))))
   testthat::expect_equal(filtered_data$get_keys("iris"), character(0))
 })
 
 testthat::test_that("get_keys returns the same character array if a dataset has keys", {
-  filtered_data <- FilteredData$new(list(iris = list(dataset = head(iris), keys = "test")), join_keys = NULL)
+  filtered_data <- FilteredData$new(list(iris = list(dataset = head(iris), keys = "test")))
   testthat::expect_equal(filtered_data$get_keys("iris"), "test")
 })
 
 testthat::test_that("get_join_keys returns NULL if no join_keys", {
-  filtered_data <- FilteredData$new(list(iris = list(dataset = head(iris), keys = "test")), join_keys = NULL)
+  filtered_data <- FilteredData$new(list(iris = list(dataset = head(iris), keys = "test")))
   testthat::expect_null(filtered_data$get_join_keys())
 })
 
@@ -48,17 +118,17 @@ testthat::test_that("get_join_keys returns join_keys object if it exists", {
 })
 
 testthat::test_that("get_datalabel returns character(0) for a dataset with no labels", {
-  filtered_data <- FilteredData$new(list(iris = list(dataset = head(iris))), join_keys = NULL)
+  filtered_data <- FilteredData$new(list(iris = list(dataset = head(iris))))
   testthat::expect_equal(filtered_data$get_datalabel("iris"), character(0))
 })
 
 testthat::test_that("get_datalabel returns the label of a passed dataset", {
-  filtered_data <- FilteredData$new(list(iris = list(dataset = head(iris), label = "test")), join_keys = NULL)
+  filtered_data <- FilteredData$new(list(iris = list(dataset = head(iris), label = "test")))
   testthat::expect_equal(filtered_data$get_datalabel("iris"), "test")
 })
 
 testthat::test_that("get_metadata throws error if dataset does not exist", {
-  filtered_data <- FilteredData$new(list(iris = list(dataset = head(iris))), join_keys = NULL)
+  filtered_data <- FilteredData$new(list(iris = list(dataset = head(iris))))
   testthat::expect_error(filtered_data$get_metadata("mtcars"), "Assertion on 'dataname'")
 })
 
@@ -67,8 +137,7 @@ testthat::test_that("get_metadata returns metadata if dataset exists", {
     list(
       iris = list(dataset = head(iris), metadata = list(E = TRUE)),
       iris2 = list(dataset = head(iris))
-    ),
-    join_keys = NULL
+    )
   )
   testthat::expect_equal(filtered_data$get_metadata("iris"), list(E = TRUE))
   testthat::expect_null(filtered_data$get_metadata("iris2"))
@@ -79,81 +148,199 @@ testthat::test_that("get_code returns the code passed to set_code", {
   code$set_code("'preprocessing code'", "iris")
   filtered_data <- FilteredData$new(
     list(iris = list(dataset = head(iris))),
-    join_keys = NULL,
     code = code
   )
   testthat::expect_equal(filtered_data$get_code(), "\"preprocessing code\"")
 })
 
 testthat::test_that("get_code returns a string when FilteredData has no code", {
-  filtered_data <- FilteredData$new(data_objects = list(), join_keys = NULL)
+  filtered_data <- FilteredData$new(data_objects = list())
   testthat::expect_equal(filtered_data$get_code(), "# No pre-processing code provided")
 })
 
-testthat::test_that("get_data does not throw when passed a dataset name", {
-  filtered_data <- FilteredData$new(list(iris = list(dataset = head(iris))), join_keys = NULL)
-  testthat::expect_equal(shiny::isolate(filtered_data$get_data("iris")), head(iris))
-})
-
-testthat::test_that("get_call returns a list of language objects or NULL", {
-  filtered_data <- FilteredData$new(list(iris = list(dataset = iris)), join_keys = NULL)
-  testthat::expect_null(shiny::isolate(filtered_data$get_call("iris")))
-  fs <- list(
-    iris = list(
-      Sepal.Length = list(c(5.1, 6.4)),
-      Species = c("setosa", "versicolor")
-    )
-  )
-  filtered_data$set_filter_state(state = fs)
-  checkmate::expect_list(shiny::isolate(filtered_data$get_call("iris")), types = "<-")
-})
-
 testthat::test_that(
-  "FilteredData$set_filter_state sets filters in FilteredDataset specified by the named list",
+  "FilteredData$get_call throws if dataname doesn't match available datasets",
   code = {
     datasets <- FilteredData$new(
       list(
         iris = list(dataset = iris),
         mtcars = list(dataset = mtcars)
-      ),
-      join_keys = NULL
+      )
+    )
+
+    testthat::expect_error(shiny::isolate(datasets$get_call(dataname = "idontexist")))
+  }
+)
+
+testthat::test_that(
+  "FilteredData$get_call returns a NULL if no filters applied",
+  code = {
+    shiny::reactiveConsole(TRUE)
+    on.exit(shiny::reactiveConsole(FALSE))
+    datasets <- FilteredData$new(
+      list(
+        iris = list(dataset = iris),
+        mtcars = list(dataset = mtcars)
+      )
+    )
+    testthat::expect_null(datasets$get_call("iris"))
+    testthat::expect_null(datasets$get_call("mtcars"))
+  }
+)
+
+testthat::test_that(
+  "FilteredData$get_call return a list of calls when filter applied",
+  code = {
+    shiny::reactiveConsole(TRUE)
+    on.exit(shiny::reactiveConsole(FALSE))
+    datasets <- FilteredData$new(
+      list(
+        iris = list(dataset = iris),
+        mtcars = list(dataset = mtcars)
+      )
+    )
+    fs <- list(
+      iris = list(Sepal.Length = list(c(5.1, 6.4))),
+      mtcars = list(cyl = c(4, 6))
+    )
+    datasets$set_filter_state(state = fs)
+    testthat::expect_identical(
+      datasets$get_call("iris"),
+      list(
+        filter = quote(iris <- dplyr::filter(iris, Sepal.Length >= 5.1 & Sepal.Length <= 6.4))
+      )
+    )
+    testthat::expect_identical(
+      datasets$get_call("mtcars"),
+      list(
+        filter = quote(mtcars <- dplyr::filter(mtcars, cyl %in% c(4, 6)))
+      )
+    )
+  }
+)
+
+testthat::test_that("get_filter_expr returns empty string when no filters applied", {
+  datasets <- FilteredData$new(list(iris = list(dataset = iris), mtcars = list(dataset = mtcars)))
+  testthat::expect_identical(shiny::isolate(get_filter_expr(datasets)), "")
+})
+
+testthat::test_that(
+  "get_filter_expr returns all filter calls as character",
+  code = {
+    shiny::reactiveConsole(TRUE)
+    on.exit(shiny::reactiveConsole(FALSE))
+    datasets <- FilteredData$new(
+      list(
+        iris = list(dataset = iris),
+        mtcars = list(dataset = mtcars)
+      )
+    )
+    fs <- list(
+      iris = list(Sepal.Length = list(c(5.1, 6.4))),
+      mtcars = list(cyl = c(4, 6))
+    )
+    datasets$set_filter_state(state = fs)
+    testthat::expect_identical(
+      shiny::isolate(get_filter_expr(datasets)),
+      paste(
+        "iris <- dplyr::filter(iris, Sepal.Length >= 5.1 & Sepal.Length <= 6.4)",
+        "mtcars <- dplyr::filter(mtcars, cyl %in% c(4, 6))",
+        sep = "\n"
+      )
+    )
+  }
+)
+
+testthat::test_that("get_data assert the `filtered` argument is logical(1)", {
+  filtered_data <- FilteredData$new(data_objects = list("iris" = list(dataset = iris)))
+  testthat::expect_error(
+    filtered_data$get_data("iris", filtered = "Wrong type"),
+    regexp = "Assertion on 'filtered' failed: Must be of type 'logical flag', not 'character'"
+  )
+})
+
+testthat::test_that("get_data requires dataname being a subset of datanames", {
+  filtered_data <- FilteredData$new(list(iris = list(dataset = head(iris))))
+  testthat::expect_no_error(filtered_data$get_data("iris", filtered = FALSE))
+  testthat::expect_error(filtered_data$get_data("mtcars", filtered = FALSE), "Must be a subset")
+})
+
+testthat::test_that("get_data filtered = FALSE returns the same object as passed to the constructor", {
+  filtered_data <- FilteredData$new(data_objects = list("iris" = list(dataset = iris)))
+  testthat::expect_equal(filtered_data$get_data("iris", filtered = FALSE), iris)
+})
+
+testthat::test_that("get_data returns the same object as passed to the constructor if no filter applied", {
+  shiny::reactiveConsole(TRUE)
+  on.exit(shiny::reactiveConsole(FALSE))
+  filtered_data <- FilteredData$new(data_objects = list("iris" = list(dataset = iris)))
+  testthat::expect_equal(filtered_data$get_data("iris"), iris)
+})
+
+testthat::test_that(
+  "FilteredData$get_data returns an object filtered by set filters",
+  code = {
+    datasets <- FilteredData$new(
+      list(
+        iris = list(dataset = iris)
+      )
+    )
+    fs <- list(
+      iris = list(
+        Sepal.Length = list(selected = c(5.1, 6.4))
+      )
+    )
+    datasets$set_filter_state(state = fs)
+    testthat::expect_identical(
+      shiny::isolate(datasets$get_data("iris")),
+      dplyr::filter(iris, Sepal.Length >= 5.1 & Sepal.Length <= 6.4)
+    )
+  }
+)
+
+testthat::test_that(
+  "FilteredData$get_filter_state returns list identical to input with attribute format",
+  code = {
+    datasets <- FilteredData$new(
+      list(
+        iris = list(dataset = iris),
+        mtcars = list(dataset = mtcars)
+      )
     )
 
     fs <- list(
       iris = list(
-        Sepal.Length = list(c(5.1, 6.4)),
-        Species = c("setosa", "versicolor")
+        Sepal.Length = list(selected = c(5.1, 6.4), keep_na = FALSE, keep_inf = FALSE),
+        Species = list(selected = c("setosa", "versicolor"), keep_na = FALSE)
       ),
       mtcars = list(
-        cyl = c(4, 6),
-        disp = list()
+        cyl = list(selected = c("4", "6"), keep_na = FALSE)
       )
     )
     datasets$set_filter_state(state = fs)
     testthat::expect_equal(
-      shiny::isolate(datasets$get_call("iris")),
-      list(
-        filter = quote(
-          iris <- dplyr::filter(
-            iris,
-            Sepal.Length >= 5.1 & Sepal.Length <= 6.4 &
-              Species %in% c("setosa", "versicolor")
-          )
+      shiny::isolate(datasets$get_filter_state()),
+      structure(
+        fs,
+        formatted = paste0(
+          c(
+            "Filters for dataset: iris",
+            "  Filtering on: Sepal.Length",
+            "    Selected range: 5.100 - 6.400",
+            "    Include missing values: FALSE",
+            "  Filtering on: Species",
+            "    Selected values: setosa, versicolor",
+            "    Include missing values: FALSE",
+            "Filters for dataset: mtcars",
+            "  Filtering on: cyl",
+            "    Selected values: 4, 6",
+            "    Include missing values: FALSE"
+          ),
+          collapse = "\n"
         )
       )
     )
 
-    testthat::expect_equal(
-      shiny::isolate(datasets$get_call("mtcars")),
-      list(
-        filter = quote(
-          mtcars <- dplyr::filter(
-            mtcars,
-            cyl %in% c(4, 6)
-          )
-        )
-      )
-    )
   }
 )
 
@@ -164,8 +351,7 @@ testthat::test_that(
       list(
         iris = list(dataset = iris),
         mtcars = list(dataset = mtcars)
-      ),
-      join_keys = NULL
+      )
     )
     fs <- list(
       list(
@@ -188,8 +374,7 @@ testthat::test_that(
       list(
         iris = list(dataset = iris),
         mtcars = list(dataset = mtcars)
-      ),
-      join_keys = NULL
+      )
     )
     fs <- list(
       iris = list(
@@ -206,41 +391,6 @@ testthat::test_that(
 )
 
 testthat::test_that(
-  "FilteredData$get_filter_state returns list identical to input with attributes",
-  code = {
-    utils::data(miniACC, package = "MultiAssayExperiment")
-    datasets <- FilteredData$new(
-      list(
-        iris = list(dataset = iris),
-        mtcars = list(dataset = mtcars),
-        mae = list(dataset = miniACC)
-      ),
-      join_keys = NULL
-    )
-
-    fs <- list(
-      iris = list(
-        Sepal.Length = list(selected = c(5.1, 6.4), keep_na = TRUE, keep_inf = FALSE),
-        Species = list(selected = c("setosa", "versicolor"), keep_na = FALSE)
-      ),
-      mae = list(
-        subjects = list(
-          years_to_birth = list(selected = c(30, 50), keep_na = TRUE, keep_inf = FALSE),
-          vital_status = list(selected = "1", keep_na = FALSE),
-          gender = list(selected = "female", keep_na = TRUE)
-        ),
-        RPPAArray = list(
-          subset = list(ARRAY_TYPE = list(selected = "", keep_na = TRUE))
-        )
-      )
-    )
-    datasets$set_filter_state(state = fs)
-    attr(fs, "formatted") <- shiny::isolate(datasets$get_formatted_filter_state())
-    testthat::expect_identical(shiny::isolate(datasets$get_filter_state()), fs)
-  }
-)
-
-testthat::test_that(
   "FilteredData$get_filter_state returns list whose attribute is a character form of the list",
   code = {
     utils::data(miniACC, package = "MultiAssayExperiment")
@@ -249,8 +399,7 @@ testthat::test_that(
         iris = list(dataset = iris),
         mtcars = list(dataset = mtcars),
         mae = list(dataset = miniACC)
-      ),
-      join_keys = NULL
+      )
     )
 
     fs <- list(
@@ -285,8 +434,7 @@ testthat::test_that("FilteredData$remove_filter_state removes states defined in 
     list(
       iris = list(dataset = iris),
       mtcars = list(dataset = mtcars)
-    ),
-    join_keys = NULL
+    )
   )
   fs <- list(
     iris = list(
@@ -299,18 +447,9 @@ testthat::test_that("FilteredData$remove_filter_state removes states defined in 
     )
   )
   datasets$set_filter_state(state = fs)
-  shiny::isolate(datasets$remove_filter_state(state = list(iris = "Sepal.Length", mtcars = c("cyl", "disp"))))
-  fs_after_remove <- list(
-    iris = list(
-      Species = list(selected = c("setosa", "versicolor"), keep_na = FALSE)
-    )
-  )
-  attr(fs_after_remove, "formatted") <- shiny::isolate(datasets$get_formatted_filter_state())
-
-  testthat::expect_identical(
-    shiny::isolate(datasets$get_filter_state()),
-    fs_after_remove
-  )
+  datasets$remove_filter_state(state = list(iris = "Sepal.Length", mtcars = c("cyl", "disp")))
+  testthat::expect_identical(names(shiny::isolate(datasets$get_filter_state())[["iris"]]), "Species")
+  testthat::expect_null(names(shiny::isolate(datasets$get_filter_state())[["mtcars"]]))
 })
 
 testthat::test_that(
@@ -320,8 +459,7 @@ testthat::test_that(
       list(
         iris = list(dataset = iris),
         mtcars = list(dataset = mtcars)
-      ),
-      join_keys = NULL
+      )
     )
     fs <- list(
       iris = list(
@@ -354,8 +492,7 @@ testthat::test_that(
       list(
         iris = list(dataset = iris),
         mtcars = list(dataset = mtcars)
-      ),
-      join_keys = NULL
+      )
     )
     fs <- list(
       iris = list(
@@ -368,23 +505,11 @@ testthat::test_that(
       )
     )
     datasets$set_filter_state(state = fs)
+    mtcars_filters <- shiny::isolate(datasets$get_filter_state())[["mtcars"]]
     datasets$clear_filter_states(datanames = "iris")
 
-    testthat::expect_null(
-      shiny::isolate(datasets$get_call("iris"))
-    )
-
-    testthat::expect_equal(
-      shiny::isolate(datasets$get_call("mtcars")),
-      list(
-        filter = quote(
-          mtcars <- dplyr::filter(
-            mtcars,
-            cyl %in% c(4, 6)
-          )
-        )
-      )
-    )
+    testthat::expect_null(shiny::isolate(datasets$get_filter_state()[["iris"]]))
+    testthat::expect_identical(shiny::isolate(datasets$get_filter_state())[["mtcars"]], mtcars_filters)
   }
 )
 
@@ -399,11 +524,9 @@ get_filtered_data_object <- function() {
       ADSL = list(dataset = adsl, keys = teal.data::get_cdisc_keys("ADSL"), parent = character(0)),
       mock_iris = list(dataset = head(iris)),
       miniACC = list(dataset = miniACC)
-    ),
-    join_keys = NULL
+    )
   )
 }
-
 
 testthat::test_that("get_filter_overview accepts all datasets argument input", {
   datasets <- get_filtered_data_object()
@@ -485,23 +608,11 @@ testthat::test_that("get_filter_overview returns overview matrix for filtered da
   )
 })
 
-testthat::test_that("get_filter_expr returns a string with a filtering expression", {
-  datasets <- FilteredData$new(
-    list(iris = list(dataset = iris), mtcars = list(dataset = mtcars)),
-    join_keys = NULL
-  )
-  testthat::expect_equal(
-    shiny::isolate(get_filter_expr(datasets)),
-    paste("", sep = "\n")
-  )
-})
-
 testthat::test_that("FilteredData from TealData preserves the check field when check is FALSE", {
   code <- teal.data:::CodeClass$new()$set_code("df_1 <- data.frame(x = 1:10)")
 
   filtered_data <- FilteredData$new(
     list("df_1" = list(dataset = data.frame(x = 1:10))),
-    join_keys = NULL,
     code = code,
     check = FALSE
   )
@@ -513,28 +624,15 @@ testthat::test_that("FilteredData preserves the check field when check is TRUE",
 
   filtered_data <- FilteredData$new(
     list("df_1" = list(dataset = data.frame(x = 1:10))),
-    join_keys = NULL,
     code = code,
     check = TRUE
   )
   testthat::expect_true(filtered_data$get_check())
 })
 
-testthat::test_that("get_data returns the object passed to the constructor", {
-  filtered_data <- FilteredData$new(data_objects = list("iris" = list(dataset = iris)), join_keys = NULL)
-  testthat::expect_equal(shiny::isolate(filtered_data$get_data("iris")), iris)
-})
-
-testthat::test_that("get_data assert the `filtered` argument is logical(1)", {
-  filtered_data <- FilteredData$new(data_objects = list("iris" = list(dataset = iris)), join_keys = NULL)
-  testthat::expect_error(
-    filtered_data$get_data("iris", filtered = "Wrong type"),
-    regexp = "Assertion on 'filtered' failed: Must be of type 'logical flag', not 'character'"
-  )
-})
 
 testthat::test_that("filter_panel_disable", {
-  filtered_data <- FilteredData$new(data_objects = list("iris" = list(dataset = iris)), join_keys = NULL)
+  filtered_data <- FilteredData$new(data_objects = list("iris" = list(dataset = iris)))
   filtered_data$set_filter_state(list(iris = list(Sepal.Width = c(3, 4))))
   shiny::testServer(
     filtered_data$srv_filter_panel,
@@ -546,7 +644,7 @@ testthat::test_that("filter_panel_disable", {
 })
 
 testthat::test_that("filter_panel_enable", {
-  filtered_data <- FilteredData$new(data_objects = list("iris" = list(dataset = iris)), join_keys = NULL)
+  filtered_data <- FilteredData$new(data_objects = list("iris" = list(dataset = iris)))
   filtered_data$set_filter_state(list(iris = list(Sepal.Width = c(3, 4))))
   shiny::testServer(
     filtered_data$srv_filter_panel,
@@ -559,7 +657,7 @@ testthat::test_that("filter_panel_enable", {
 })
 
 testthat::test_that("filter_panel_disable and filter_panel_enable", {
-  filtered_data <- FilteredData$new(data_objects = list("iris" = list(dataset = iris)), join_keys = NULL)
+  filtered_data <- FilteredData$new(data_objects = list("iris" = list(dataset = iris)))
   filtered_data$set_filter_state(list(iris = list(Sepal.Width = c(3, 4))))
   shiny::testServer(
     filtered_data$srv_filter_panel,
@@ -577,17 +675,17 @@ testthat::test_that("filter_panel_disable and filter_panel_enable", {
 })
 
 testthat::test_that("turn filed by default equal to TRUE", {
-  filtered_data <- FilteredData$new(data_objects = list("iris" = list(dataset = iris)), join_keys = NULL)
+  filtered_data <- FilteredData$new(data_objects = list("iris" = list(dataset = iris)))
   testthat::expect_true(filtered_data$get_filter_panel_active())
 })
 
 testthat::test_that("get_filter_panel_ui_id - empty when no shiny session", {
-  filtered_data <- FilteredData$new(data_objects = list("iris" = list(dataset = iris)), join_keys = NULL)
+  filtered_data <- FilteredData$new(data_objects = list("iris" = list(dataset = iris)))
   testthat::expect_length(filtered_data$get_filter_panel_ui_id(), 0)
 })
 
 testthat::test_that("get_filter_panel_ui_id - non-empty when in shiny session", {
-  filtered_data <- FilteredData$new(data_objects = list("iris" = list(dataset = iris)), join_keys = NULL)
+  filtered_data <- FilteredData$new(data_objects = list("iris" = list(dataset = iris)))
   shiny::testServer(
     filtered_data$srv_filter_panel,
     expr = {
@@ -604,8 +702,7 @@ testthat::test_that(
         iris = list(dataset = iris),
         mtcars = list(dataset = mtcars),
         mae = list(dataset = miniACC)
-      ),
-      join_keys = NULL
+      )
     )
     fs <- list(
       iris = list(
@@ -629,8 +726,7 @@ testthat::test_that(
     datasets <- FilteredData$new(
       list(
         mae = list(dataset = miniACC)
-      ),
-      join_keys = NULL
+      )
     )
     fs <- list(
       mae = list(
