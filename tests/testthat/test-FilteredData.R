@@ -340,7 +340,6 @@ testthat::test_that(
         )
       )
     )
-
   }
 )
 
