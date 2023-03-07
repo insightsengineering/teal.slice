@@ -647,6 +647,7 @@ FilteredData <- R6::R6Class( # nolint
     #'
     #' @param id (`character(1)`)\cr
     #'   module id
+    #' @return `shiny.tag`
     ui_filter_panel = function(id) {
       ns <- NS(id)
       div(
@@ -709,9 +710,11 @@ FilteredData <- R6::R6Class( # nolint
       )
     },
 
-    #'  Module displaying active filters
-    #'
-    #'
+    #' @description
+    #' Server module responsible for displaying active filters.
+    #' @param id (`character(1)`)\cr
+    #'   an ID string that corresponds with the ID used to call the module's UI function.
+    #' @return `shiny.tag`
     ui_active = function(id) {
       ns <- NS(id)
       div(
@@ -761,6 +764,14 @@ FilteredData <- R6::R6Class( # nolint
         )
       )
     },
+
+    #' @description
+    #' Server module responsible for displaying active filters.
+    #' @param id (`character(1)`)\cr
+    #'   an ID string that corresponds with the ID used to call the module's UI function.
+    #' @param active_datanames (`reactive`)\cr
+    #'   defining subset of `self$datanames()` to be displayed.
+    #' @return `moduleServer` returning `NULL`
     srv_active = function(id, active_datanames = reactive(self$datanames())) {
       checkmate::assert_class(active_datanames, "reactive")
       shiny::moduleServer(id, function(input, output, session) {
@@ -833,6 +844,12 @@ FilteredData <- R6::R6Class( # nolint
         NULL
       })
     },
+
+    #' @description
+    #' Server module responsible for displaying dropdowns with variables to add a filter.
+    #' @param id (`character(1)`)\cr
+    #'   an ID string that corresponds with the ID used to call the module's UI function.
+    #' @return `shiny.tag`
     ui_add = function(id) {
       ns <- NS(id)
       div(
@@ -869,6 +886,14 @@ FilteredData <- R6::R6Class( # nolint
         )
       )
     },
+
+    #' @description
+    #' Server module responsible for displaying dropdowns with variables to add a filter.
+    #' @param id (`character(1)`)\cr
+    #'   an ID string that corresponds with the ID used to call the module's UI function.
+    #' @param active_datanames (`reactive`)\cr
+    #'   defining subset of `self$datanames()` to be displayed.
+    #' @return `moduleServer` returning `NULL`
     srv_add = function(id, active_datanames = reactive(self$datanames())) {
       checkmate::assert_class(active_datanames, "reactive")
       moduleServer(id, function(input, output, session) {
@@ -949,7 +974,7 @@ FilteredData <- R6::R6Class( # nolint
     #'
     #' @param id (`character(1)`)\cr
     #'   an ID string that corresponds with the ID used to call the module's UI function.
-    #' @param active_datanames (`function`, `reactive`)\cr
+    #' @param active_datanames (`reactive`)\cr
     #'   returning datanames that should be shown on the filter panel,
     #'   must be a subset of the `datanames` argument provided to `ui_filter_panel`;
     #'   if the function returns `NULL` (as opposed to `character(0)`), the filter
@@ -1042,15 +1067,15 @@ FilteredData <- R6::R6Class( # nolint
     reactive_data = list(),
     cached_states = NULL,
 
-    #' @description
-    #' Gets `FilteredDataset` object which contains all information
-    #' pertaining to the specified dataset.
-    #'
-    #' @param dataname (`character(1)`)\cr
-    #'   name of the dataset
-    #'
-    #' @return `FilteredDataset` object or list of `FilteredDataset`s
-    #'
+    # @description
+    # Gets `FilteredDataset` object which contains all information
+    # pertaining to the specified dataset.
+    #
+    # @param dataname (`character(1)`)\cr
+    #   name of the dataset
+    #
+    # @return `FilteredDataset` object or list of `FilteredDataset`s
+    #
     get_filtered_dataset = function(dataname = character(0)) {
       if (length(dataname) == 0) {
         private$filtered_datasets

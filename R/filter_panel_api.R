@@ -149,7 +149,7 @@ get_filter_state <- function(datasets) {
   if (shiny::isRunning()) {
     datasets$get_filter_state()
   } else {
-    isolate(datasets$get_filter_state())
+    shiny::isolate(datasets$get_filter_state())
   }
 }
 

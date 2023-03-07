@@ -205,3 +205,21 @@ testthat::test_that(
     )
   }
 )
+
+testthat::test_that("is_any_filtered returns TRUE when enabled", {
+  shiny::reactiveConsole(TRUE)
+  on.exit(shiny::reactiveConsole(FALSE))
+  testfs <- R6::R6Class(
+    classname = "testfs",
+    inherit = LogicalFilterState,
+    public = list(
+      disable = function() private$disable(),
+      enable = function() private$enable()
+    )
+  )
+  fs <- testfs$new(c(TRUE, FALSE), varname = "x")
+  fs$set_state(list(selected = TRUE, keep_na = TRUE))
+  fs$disable()
+  fs$enable()
+  testthat::expect_true(fs$is_any_filtered())
+})

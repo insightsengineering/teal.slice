@@ -65,7 +65,11 @@ EmptyFilterState <- R6::R6Class( # nolint
     #' @return `logical(1)`
     #'
     is_any_filtered = function() {
-      !isTRUE(self$get_keep_na())
+      if (private$is_disabled()) {
+        FALSE
+      } else {
+        !isTRUE(self$get_keep_na())
+      }
     },
 
     #' @description
@@ -77,10 +81,11 @@ EmptyFilterState <- R6::R6Class( # nolint
     #' @return `logical(1)`
     #'
     get_call = function() {
+
       filter_call <- if (isTRUE(self$get_keep_na())) {
         call("is.na", private$get_varname_prefixed())
       } else {
-        FALSE
+       substitute(!is.na(varname), list(varname = private$get_varname_prefixed()))
       }
     },
 
@@ -117,7 +122,7 @@ EmptyFilterState <- R6::R6Class( # nolint
         )
       }
       stopifnot(is.list(state) && all(names(state) == "keep_na"))
-      if (!is.null(state$keep_na)) {
+      if (!is.null(state$keep_na) || private$is_disabled()) {
         self$set_keep_na(state$keep_na)
       }
       invisible(NULL)
@@ -126,6 +131,14 @@ EmptyFilterState <- R6::R6Class( # nolint
 
   # private members ----
   private = list(
+    cache_state = function() {
+      private$cache <- self$get_state()
+      self$set_state(
+        list(
+          keep_na = NULL
+        )
+      )
+    },
     # @description
     # UI Module for `EmptyFilterState`.
     # This UI element contains a checkbox input to filter or keep missing values.
@@ -159,30 +172,22 @@ EmptyFilterState <- R6::R6Class( # nolint
         id = id,
         function(input, output, session) {
           private$keep_na_srv("keep_na")
+
+          observeEvent(private$is_disabled(), {
+            shinyjs::toggleState(
+              id = "keep_na-value",
+              condition = !private$is_disabled()
+            )
+          })
         }
       )
-    },
-
-    # @description
-    # UI module to display filter summary.
-    # EmptyFilterState contains only missing
-    # values.
-    # @param id `shiny` id parameter
-    ui_summary = function(id) {
-      tagList(tags$span("All empty"))
     },
 
     # @description
     # Server module to display filter summary
-    # @param shiny `id` parametr passed to moduleServer
     # Doesn't render anything
-    server_summary = function(id) {
-      moduleServer(
-        id = id,
-        function(input, output, session) {
-          NULL
-        }
-      )
+    content_summary = function(id) {
+      tags$span("All empty")
     }
   )
 )

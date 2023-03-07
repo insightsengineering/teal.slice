@@ -142,7 +142,9 @@ LogicalFilterState <- R6::R6Class( # nolint
     #' Answers the question of whether the current settings and values selected actually filters out any values.
     #' @return logical scalar
     is_any_filtered = function() {
-      if (!isTRUE(self$get_keep_na()) && private$na_count > 0) {
+      if (private$is_disabled()) {
+        FALSE
+      } else if (!isTRUE(self$get_keep_na()) && private$na_count > 0) {
         TRUE
       } else if (all(private$histogram_data$y > 0)) {
         TRUE
@@ -333,6 +335,17 @@ LogicalFilterState <- R6::R6Class( # nolint
 
           private$keep_na_srv("keep_na")
 
+          observeEvent(private$is_disabled(), {
+            shinyjs::toggleState(
+              id = "selection",
+              condition = !private$is_disabled()
+            )
+            shinyjs::toggleState(
+              id = "keep_na-value",
+              condition = !private$is_disabled()
+            )
+          })
+
           logger::log_trace("LogicalFilterState$server initialized, dataname: { private$dataname }")
           NULL
         }
@@ -340,29 +353,13 @@ LogicalFilterState <- R6::R6Class( # nolint
     },
 
     # @description
-    # UI module to display filter summary
-    # @param id `shiny` id parameter
-    ui_summary = function(id) {
-      ns <- NS(id)
-      uiOutput(ns("summary"), class = "filter-card-summary")
-    },
-
-    # @description
     # Server module to display filter summary
-    # @param shiny `id` parametr passed to moduleServer
     #  renders text describing whether TRUE or FALSE is selected
     #  and if NA are included also
-    server_summary = function(id) {
-      moduleServer(
-        id = id,
-        function(input, output, session) {
-          output$summary <- renderUI({
-            tagList(
-              tags$span(self$get_selected()),
-              if (self$get_keep_na()) tags$span("NA") else NULL
-            )
-          })
-        }
+    content_summary = function(id) {
+      tagList(
+        tags$span(self$get_selected()),
+        if (self$get_keep_na()) tags$span("NA") else NULL
       )
     }
   )
