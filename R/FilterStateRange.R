@@ -116,11 +116,12 @@ RangeFilterState <- R6::R6Class( # nolint
                           varname,
                           varlabel = character(0),
                           dataname = NULL,
-                          extract_type = character(0)) {
+                          extract_type = character(0),
+                          choices = NULL) {
       checkmate::assert_numeric(x, all.missing = FALSE)
       if (!any(is.finite(x))) stop("\"x\" contains no finite values")
 
-      # validation on x_reactive here
+      checkmate::assert_class(x_reactive, 'reactive')
       super$initialize(
         x = x, x_reactive = x_reactive, dataname = dataname, varname = varname,
         varlabel = varlabel, extract_type = extract_type
@@ -192,6 +193,8 @@ RangeFilterState <- R6::R6Class( # nolint
     is_any_filtered = function() {
       if (private$is_disabled()) {
         FALSE
+      } else if (private$choices_limited) {
+        TRUE
       } else if (!isTRUE(all.equal(self$get_selected(), private$choices))) {
         TRUE
       } else if (!isTRUE(self$get_keep_inf()) && private$inf_count > 0) {

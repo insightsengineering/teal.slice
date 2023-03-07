@@ -109,8 +109,10 @@ LogicalFilterState <- R6::R6Class( # nolint
                           varname,
                           varlabel = character(0),
                           dataname = NULL,
-                          extract_type = character(0)) {
+                          extract_type = character(0),
+                          choices = NULL) {
       stopifnot(is.logical(x))
+      checkmate::assert_class(x_reactive, 'reactive')
       super$initialize(
         x = x, x_reactive = x_reactive, dataname = dataname, varname = varname,
         varlabel = varlabel, extract_type = extract_type

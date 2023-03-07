@@ -122,14 +122,14 @@ ChoicesFilterState <- R6::R6Class( # nolint
         length(unique(x[!is.na(x)])) < getOption("teal.threshold_slider_vs_checkboxgroup"),
         combine = "or"
       )
+      checkmate::assert_class(x_reactive, 'reactive')
 
       super$initialize(
         x = x, x_reactive = x_reactive, dataname = dataname, varname = varname,
         varlabel = varlabel, extract_type = extract_type
       )
 
-      if (!is.null(choices)) private$choices_limited <- length(unique(choices)) < length(unique(x))
-
+      private$set_choices_limited(x, choices)
       private$data_class <- class(x)[1L]
       if (inherits(x, "POSIXt")) {
         private$tzone <- Find(function(x) x != "", attr(as.POSIXlt(x), "tzone"))
@@ -139,10 +139,10 @@ ChoicesFilterState <- R6::R6Class( # nolint
         x <- factor(as.character(x), levels = as.character(sort(unique(x))))
       }
       x <- droplevels(x)
-      choices <- table(x)
-      private$set_choices(names(choices))
-      self$set_selected(names(choices))
-      private$set_choices_counts(unname(choices))
+      choices_table <- table(x)
+      private$set_choices(names(choices_table))
+      self$set_selected(names(choices_table))
+      private$set_choices_counts(unname(choices_table))
 
       return(invisible(self))
     },
@@ -251,6 +251,15 @@ ChoicesFilterState <- R6::R6Class( # nolint
     tzone = character(0), # if x is a datetime, stores time zone so that it can be restored in $get_call
 
     # private methods ----
+    #' @description
+    #' Check whether the initial choices filter out some values of x and set the flag in case.
+    #'
+    set_choices_limited = function(x, choices) {
+      if (!is.null(choices)) {
+        private$choices_limited <- length(unique(choices[choices %in% x])) < length(unique(x))
+      }
+      invisible(NULL)
+    },
     set_choices_counts = function(choices_counts) {
       private$choices_counts <- choices_counts
       invisible(NULL)

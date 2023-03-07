@@ -334,4 +334,35 @@ testthat::test_that("is_any_filtered is changed by choices parameter", {
     chars, x_reactive = reactive(NULL), varname = "variable", choices = chars[c(1, 2, 3)]
   )
   testthat::expect_false(isolate(filter_state$is_any_filtered()))
+
+  filter_state <- ChoicesFilterState$new(
+    1:4, x_reactive = reactive(NULL), varname = "variable", choices = 4:20
+  )
+  testthat::expect_true(isolate(filter_state$is_any_filtered()))
 })
+
+testthat::test_that(
+  "ChoicesFilterState choices_limited is set properly",
+  code = {
+    test <- R6::R6Class(
+      inherit = ChoicesFilterState,
+      public = list(
+        test_choices_limited = function() private$choices_limited
+      )
+    )
+
+    x <- rep(c("A", "B", "C", "D", "E", "F"), times = 5)
+    xr <- c(rep(c("F", "A", "D"), times = 2), "D")
+
+    filter_state <- test$new(
+      x = x,
+      x_reactive = reactive(xr),
+      varname = "x",
+      dataname = "data",
+      extract_type = character(0),
+      choices = c("B", "C", "D", "E", "F", "Z", "X", "Y")
+    )
+    testthat::expect_true(shiny::isolate(filter_state$is_any_filtered()))
+    testthat::expect_true(shiny::isolate(filter_state$test_choices_limited()))
+  }
+)

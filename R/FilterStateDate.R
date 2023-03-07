@@ -116,13 +116,16 @@ DateFilterState <- R6::R6Class( # nolint
                           varname,
                           varlabel = character(0),
                           dataname = NULL,
-                          extract_type = character(0)) {
+                          extract_type = character(0),
+                          choices = NULL) {
       stopifnot(is(x, "Date"))
+      checkmate::assert_class(x_reactive, 'reactive')
 
       super$initialize(
         x = x, x_reactive = x_reactive, dataname = dataname, varname = varname,
         varlabel = varlabel, extract_type = extract_type
       )
+      private$set_choices_limited(x, choices)
 
       var_range <- range(x, na.rm = TRUE)
       private$set_choices(var_range)
@@ -158,6 +161,8 @@ DateFilterState <- R6::R6Class( # nolint
     is_any_filtered = function() {
       if (private$is_disabled()) {
         FALSE
+      } else if (private$choices_limited) {
+        TRUE
       } else if (!setequal(self$get_selected(), private$choices)) {
         TRUE
       } else if (!isTRUE(self$get_keep_na()) && private$na_count > 0) {
@@ -210,6 +215,12 @@ DateFilterState <- R6::R6Class( # nolint
   # private methods ----
 
   private = list(
+    set_choices_limited = function(x, choices) {
+      if (!is.null(choices)) {
+        private$choices_limited <- (choices[1] > min(x)) | (choices[2] < max(x))
+      }
+      invisible(NULL)
+    },
     validate_selection = function(value) {
       if (!is(value, "Date")) {
         stop(

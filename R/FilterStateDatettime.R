@@ -120,8 +120,10 @@ DatetimeFilterState <- R6::R6Class( # nolint
                           varname,
                           varlabel = character(0),
                           dataname = NULL,
-                          extract_type = character(0)) {
+                          extract_type = character(0),
+                          choices = NULL) {
       checkmate::assert_multi_class(x, c("POSIXct", "POSIXlt"))
+      checkmate::assert_class(x_reactive, 'reactive')
 
       super$initialize(
         x = x, x_reactive = x_reactive, dataname = dataname, varname = varname,
@@ -162,6 +164,8 @@ DatetimeFilterState <- R6::R6Class( # nolint
     is_any_filtered = function() {
       if (private$is_disabled()) {
         FALSE
+      } else if (private$choices_limited) {
+        TRUE
       } else if (!setequal(self$get_selected(), private$choices)) {
         TRUE
       } else if (!isTRUE(self$get_keep_na()) && private$na_count > 0) {

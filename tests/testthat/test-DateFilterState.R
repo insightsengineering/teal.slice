@@ -200,3 +200,23 @@ testthat::test_that("is_any_filtered returns TRUE when enabled", {
   fs$enable()
   testthat::expect_true(fs$is_any_filtered())
 })
+
+
+testthat::test_that("is_any_filtered returns TRUE when enabled", {
+  shiny::reactiveConsole(TRUE)
+  on.exit(shiny::reactiveConsole(FALSE))
+  testfs <- R6::R6Class(
+    classname = "testfs",
+    inherit = DateFilterState,
+    public = list(
+      disable = function() private$disable(),
+      enable = function() private$enable()
+    )
+  )
+  date_seq <- seq(Sys.Date() - 4, Sys.Date(), 1)
+  fs <- testfs$new(date_seq, varname = "x", choices = date_seq[c(1, 5)])
+  testthat::expect_false(fs$is_any_filtered())
+  fs <- testfs$new(date_seq, varname = "x", choices = date_seq[c(3, 1)])
+  testthat::expect_true(fs$is_any_filtered())
+})
+
