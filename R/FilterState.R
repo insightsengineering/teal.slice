@@ -73,7 +73,7 @@ InteractiveFilterState <- R6::R6Class( # nolint
     #'
     initialize = function(x,
                           x_reactive = reactive(NULL),
-                          dataname,
+                          dataname = NULL,
                           varname,
                           choices = NULL,
                           selected = NULL,
@@ -82,7 +82,7 @@ InteractiveFilterState <- R6::R6Class( # nolint
                           fixed = FALSE,
                           extract_type = character(0)) {
       checkmate::assert_class(x_reactive, "reactive")
-      checkmate::assert_string(dataname)
+      checkmate::assert_string(dataname, null.ok = TRUE)
       checkmate::assert_string(varname)
       checkmate::assert_character(varlabel, max.len = 1, any.missing = FALSE)
       checkmate::assert_character(extract_type, max.len = 1, any.missing = FALSE)

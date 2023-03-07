@@ -111,7 +111,10 @@ LogicalFilterState <- R6::R6Class( # nolint
                           dataname = NULL,
                           extract_type = character(0)) {
       stopifnot(is.logical(x))
-      super$initialize(x, x_reactive, varname, varlabel, dataname, extract_type)
+      super$initialize(
+        x = x, x_reactive = x_reactive, dataname = dataname, varname = varname,
+        varlabel = varlabel, extract_type = extract_type
+      )
       df <- as.factor(x)
       if (length(levels(df)) != 2) {
         if (levels(df) %in% c(TRUE, FALSE)) {

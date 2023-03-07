@@ -122,7 +122,10 @@ ChoicesFilterState <- R6::R6Class( # nolint
         combine = "or"
       )
 
-      super$initialize(x, x_reactive, varname, varlabel, dataname, extract_type)
+      super$initialize(
+        x = x, x_reactive = x_reactive, dataname = dataname, varname = varname,
+        varlabel = varlabel, extract_type = extract_type
+      )
 
       private$data_class <- class(x)[1L]
       if (inherits(x, "POSIXt")) {

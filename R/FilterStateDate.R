@@ -119,8 +119,10 @@ DateFilterState <- R6::R6Class( # nolint
                           extract_type = character(0)) {
       stopifnot(is(x, "Date"))
 
-      # validation on x_reactive here
-      super$initialize(x, x_reactive, varname, varlabel, dataname, extract_type)
+      super$initialize(
+        x = x, x_reactive = x_reactive, dataname = dataname, varname = varname,
+        varlabel = varlabel, extract_type = extract_type
+      )
 
       var_range <- range(x, na.rm = TRUE)
       private$set_choices(var_range)

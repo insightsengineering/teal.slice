@@ -52,7 +52,10 @@ EmptyFilterState <- R6::R6Class( # nolint
                           varlabel = character(0),
                           dataname = NULL,
                           extract_type = character(0)) {
-      super$initialize(x, x_reactive, varname, varlabel, dataname, extract_type)
+      super$initialize(
+        x = x, x_reactive = x_reactive, dataname = dataname, varname = varname,
+        varlabel = varlabel, extract_type = extract_type
+      )
       private$set_choices(list())
       self$set_selected(list())
 
