@@ -85,7 +85,7 @@ EmptyFilterState <- R6::R6Class( # nolint
       filter_call <- if (isTRUE(self$get_keep_na())) {
         call("is.na", private$get_varname_prefixed())
       } else {
-        FALSE
+       substitute(!is.na(varname), list(varname = private$get_varname_prefixed()))
       }
     },
 

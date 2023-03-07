@@ -461,10 +461,10 @@ ChoicesFilterState <- R6::R6Class( # nolint
             }
           })
 
-          observeEvent(private$disabled(), {
+          observeEvent(private$is_disabled(), {
             shinyjs::toggleState(
               id = "selection",
-              condition = !private$disabled()
+              condition = !private$is_disabled()
             )
             shinyjs::toggleState(
               id = "keep_na-value",

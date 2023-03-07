@@ -413,12 +413,11 @@ InteractiveFilterState <- R6::R6Class( # nolint
       ns <- NS(id)
 
       theme <- getOption("teal.bs_theme")
-      enable <- !private$is_disabled()
 
       if (is.null(theme)) {
-        private$ui_bs3(id, parent_id, enable)
+        private$ui_bs3(id, parent_id)
       } else {
-        private$ui_bs45(id, parent_id, enable)
+        private$ui_bs45(id, parent_id)
       }
     }
   ),
@@ -684,8 +683,10 @@ InteractiveFilterState <- R6::R6Class( # nolint
     #
     # @param id (`character(1)`) Id for the containing HTML element.
     # @param parent_id (`character(1)`) id of the FilterStates card container
-    ui_bs3 = function(id, parent_id, enable) {
+    ui_bs3 = function(id, parent_id) {
       ns <- NS(id)
+
+      enable <- !private$is_disabled()
 
       tags$div(
         id = id,
@@ -738,8 +739,9 @@ InteractiveFilterState <- R6::R6Class( # nolint
     #
     # @param id (`character(1)`) Id for the containing HTML element.
     # @param parent_id (`character(1)`) id of the FilterStates card container
-    ui_bs45 = function(id, parent_id, enable) {
+    ui_bs45 = function(id, parent_id) {
       ns <- NS(id)
+      enable <- !private$is_disabled()
 
       tags$div(
         id = id,
