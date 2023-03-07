@@ -44,12 +44,12 @@ isolate(filter_states$get_call())
 \item \href{#method-FilterStates-get_filter_count}{\code{FilterStates$get_filter_count()}}
 \item \href{#method-FilterStates-remove_filter_state}{\code{FilterStates$remove_filter_state()}}
 \item \href{#method-FilterStates-clear_filter_states}{\code{FilterStates$clear_filter_states()}}
-\item \href{#method-FilterStates-ui}{\code{FilterStates$ui()}}
+\item \href{#method-FilterStates-ui_active}{\code{FilterStates$ui_active()}}
 \item \href{#method-FilterStates-get_filter_state}{\code{FilterStates$get_filter_state()}}
 \item \href{#method-FilterStates-set_filter_state}{\code{FilterStates$set_filter_state()}}
 \item \href{#method-FilterStates-set_filterable_varnames}{\code{FilterStates$set_filterable_varnames()}}
-\item \href{#method-FilterStates-ui_add_filter_state}{\code{FilterStates$ui_add_filter_state()}}
-\item \href{#method-FilterStates-srv_add_filter_state}{\code{FilterStates$srv_add_filter_state()}}
+\item \href{#method-FilterStates-ui_add}{\code{FilterStates$ui_add()}}
+\item \href{#method-FilterStates-srv_add}{\code{FilterStates$srv_add()}}
 \item \href{#method-FilterStates-clone}{\code{FilterStates$clone()}}
 }
 }
@@ -238,15 +238,15 @@ NULL
 }
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-FilterStates-ui"></a>}}
-\if{latex}{\out{\hypertarget{method-FilterStates-ui}{}}}
-\subsection{Method \code{ui()}}{
+\if{html}{\out{<a id="method-FilterStates-ui_active"></a>}}
+\if{latex}{\out{\hypertarget{method-FilterStates-ui_active}{}}}
+\subsection{Method \code{ui_active()}}{
 Shiny module UI
 
 Shiny UI element that stores \code{FilterState} UI elements.
 Populated with elements created with \code{renderUI} in the module server.
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{FilterStates$ui(id)}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{FilterStates$ui_active(id)}\if{html}{\out{</div>}}
 }
 
 \subsection{Arguments}{
@@ -330,12 +330,12 @@ invisibly this \code{FilteredDataset}
 }
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-FilterStates-ui_add_filter_state"></a>}}
-\if{latex}{\out{\hypertarget{method-FilterStates-ui_add_filter_state}{}}}
-\subsection{Method \code{ui_add_filter_state()}}{
+\if{html}{\out{<a id="method-FilterStates-ui_add"></a>}}
+\if{latex}{\out{\hypertarget{method-FilterStates-ui_add}{}}}
+\subsection{Method \code{ui_add()}}{
 Shiny module UI that adds a filter variable.
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{FilterStates$ui_add_filter_state(id, data)}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{FilterStates$ui_add(id, data)}\if{html}{\out{</div>}}
 }
 
 \subsection{Arguments}{
@@ -354,12 +354,12 @@ object which columns are used to choose filter variables.}
 }
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-FilterStates-srv_add_filter_state"></a>}}
-\if{latex}{\out{\hypertarget{method-FilterStates-srv_add_filter_state}{}}}
-\subsection{Method \code{srv_add_filter_state()}}{
+\if{html}{\out{<a id="method-FilterStates-srv_add"></a>}}
+\if{latex}{\out{\hypertarget{method-FilterStates-srv_add}{}}}
+\subsection{Method \code{srv_add()}}{
 Shiny module server that adds a filter variable.
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{FilterStates$srv_add_filter_state(id)}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{FilterStates$srv_add(id)}\if{html}{\out{</div>}}
 }
 
 \subsection{Arguments}{

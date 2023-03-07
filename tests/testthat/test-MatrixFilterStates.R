@@ -73,11 +73,11 @@ testthat::test_that("remove_filter_state throws warning when state_id is not in 
 })
 
 testthat::test_that(
-  "MatrixFilterStates$ui_add_filter_state returns a message inside a div when data has no rows or no columns",
+  "MatrixFilterStates$ui_add returns a message inside a div when data has no rows or no columns",
   code = {
     mfs <- MatrixFilterStates$new(data = as.matrix(data.frame()), dataname = "iris")
     testthat::expect_identical(
-      mfs$ui_add_filter_state("id"),
+      mfs$ui_add("id"),
       div("no sample variables available")
     )
   }

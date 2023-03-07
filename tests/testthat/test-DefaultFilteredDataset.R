@@ -2,6 +2,18 @@ testthat::test_that("The constructor accepts a data.frame object with a dataname
   testthat::expect_no_error(DefaultFilteredDataset$new(dataset = head(iris), dataname = "iris"))
 })
 
+testthat::test_that("filter_states list is initialized with single FilterStates element named as filter", {
+  testfd <- R6::R6Class(
+    "testfd",
+    inherit = DefaultFilteredDataset,
+    public = list(
+      get_filter_states = function() private$filter_states
+    )
+  )
+  filtered_dataset <- testfd$new(dataset = iris, dataname = "mae")
+  testthat::expect_identical(names(filtered_dataset$get_filter_states()), "filter")
+})
+
 testthat::test_that("get_call returns a list of calls or NULL", {
   filtered_dataset <- DefaultFilteredDataset$new(
     dataset = iris, dataname = "iris"

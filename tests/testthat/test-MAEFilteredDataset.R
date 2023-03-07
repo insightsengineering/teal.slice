@@ -11,6 +11,22 @@ testthat::test_that("MAEFilteredDataset throws error with a data.frame passed to
   )
 })
 
+testthat::test_that("filter_states list is initialized with names of experiments", {
+  testfd <- R6::R6Class(
+    "testfd",
+    inherit = MAEFilteredDataset,
+    public = list(
+      get_filter_states = function() private$filter_states
+    )
+  )
+  utils::data(miniACC, package = "MultiAssayExperiment")
+  filtered_dataset <- testfd$new(dataset = miniACC, dataname = "mae")
+  testthat::expect_identical(
+    names(filtered_dataset$get_filter_states()),
+    c("subjects", "RNASeq2GeneNorm", "gistict", "RPPAArray", "Mutations", "miRNASeqGene")
+  )
+})
+
 testthat::test_that("MAEFilteredDataset$get_call returns NULL without applying filter", {
   utils::data(miniACC, package = "MultiAssayExperiment")
   filtered_dataset <- MAEFilteredDataset$new(dataset = miniACC, dataname = "miniACC")
@@ -270,15 +286,6 @@ testthat::test_that("get_supported_filter_varnames.MAEFilteredDataset returns ch
   testthat::expect_identical(get_supported_filter_varnames(filtered_dataset), character(0))
 })
 
-testthat::test_that("MAEFilteredDataset$get_varlabels returns column variable labels", {
-  utils::data(miniACC, package = "MultiAssayExperiment")
-  x <- miniACC
-  attr(SummarizedExperiment::colData(x)$ADS, "label") <- "ADS label"
-  filtered_dataset <- MAEFilteredDataset$new(dataset = x, dataname = "miniACC")
-  labels <- filtered_dataset$get_varlabels(c("COC", "ADS"))
-  testthat::expect_equal(c("COC" = NA, ADS = "ADS label"), labels)
-})
-
 testthat::test_that("MAEFilteredDataset filters removed using remove_filters", {
   utils::data(miniACC, package = "MultiAssayExperiment")
   filtered_dataset <- MAEFilteredDataset$new(dataset = miniACC, dataname = "MAE")
@@ -316,7 +323,7 @@ testthat::test_that("MAEFilteredDataset filters removed using remove_filters", {
   )
 
   shiny::testServer(
-    filtered_dataset$server,
+    filtered_dataset$srv_active,
     expr = {
       session$setInputs(remove_filters = TRUE)
       testthat::expect_true(input$remove_filters)

@@ -263,3 +263,77 @@ testthat::test_that("$format() line wrapping breaks if strings are too long", {
     "[Aa]ssertion.+failed"
   )
 })
+
+testthat::test_that("disable sets all state elements to NULL", {
+  shiny::reactiveConsole(TRUE)
+  on.exit(shiny::reactiveConsole(FALSE))
+  testfs <- R6::R6Class(
+    classname = "testfs",
+    inherit = InteractiveFilterState,
+    public = list(
+      disable = function() private$disable()
+    )
+  )
+  fs <- testfs$new(c(1:10, NA), varname = "x")
+  fs$disable()
+  testthat::expect_equal(
+    fs$get_state(),
+    list(selected = NULL, keep_na = NULL)
+  )
+})
+
+testthat::test_that("disable copies last state to the cache", {
+  shiny::reactiveConsole(TRUE)
+  on.exit(shiny::reactiveConsole(FALSE))
+  testfs <- R6::R6Class(
+    classname = "testfs",
+    inherit = InteractiveFilterState,
+    public = list(
+      disable = function() private$disable(),
+      get_cache = function() private$cache
+    )
+  )
+  fs <- testfs$new(c(1:10, NA), varname = "x")
+  fs$set_state(list(selected = c(4, 5), keep_na = TRUE))
+  last_state <- fs$get_state()
+  fs$disable()
+  testthat::expect_identical(fs$get_cache(), last_state)
+})
+
+testthat::test_that("enable sets state back to the last state", {
+  shiny::reactiveConsole(TRUE)
+  on.exit(shiny::reactiveConsole(FALSE))
+  testfs <- R6::R6Class(
+    classname = "testfs",
+    inherit = InteractiveFilterState,
+    public = list(
+      disable = function() private$disable(),
+      enable = function() private$enable()
+    )
+  )
+  fs <- testfs$new(c(1:10, NA), varname = "x")
+  fs$set_state(list(selected = c(4, 5), keep_na = TRUE))
+  last_state <- fs$get_state()
+  fs$disable()
+  fs$enable()
+  testthat::expect_equal(fs$get_state(), last_state)
+})
+
+testthat::test_that("enable clears cache", {
+  shiny::reactiveConsole(TRUE)
+  on.exit(shiny::reactiveConsole(FALSE))
+  testfs <- R6::R6Class(
+    classname = "testfs",
+    inherit = InteractiveFilterState,
+    public = list(
+      disable = function() private$disable(),
+      enable = function() private$enable(),
+      get_cache = function() private$cache
+    )
+  )
+  fs <- testfs$new(c(1:10, NA), varname = "x")
+  fs$set_state(list(selected = c(4, 5), keep_na = TRUE))
+  fs$disable()
+  fs$enable()
+  testthat::expect_null(fs$get_cache())
+})

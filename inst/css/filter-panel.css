@@ -234,6 +234,11 @@ a.remove_all:hover {
   color: var(--bs-body-color, var(--dark, #333333));
 }
 
+.panel-title > *:last-child,
+.card-title > *:last-child {
+  margin-left: 1em;
+}
+
 .accordion-toggle {
   width: 100%
 }

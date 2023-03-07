@@ -251,3 +251,112 @@ testthat::test_that("private$get_pretty_range_step returns pretty step size", {
   step <- filter_state$test_get_pretty_range_step(pretty_mpg)
   testthat::expect_identical(step, 0.2)
 })
+
+testthat::test_that("disable sets all state elements to NULL", {
+  shiny::reactiveConsole(TRUE)
+  on.exit(shiny::reactiveConsole(FALSE))
+  testfs <- R6::R6Class(
+    classname = "testfs",
+    inherit = RangeFilterState,
+    public = list(
+      disable = function() private$disable()
+    )
+  )
+  fs <- testfs$new(c(1:10, Inf), varname = "x")
+  fs$disable()
+  testthat::expect_false(fs$is_any_filtered())
+  testthat::expect_equal(
+    fs$get_state(),
+    list(selected = NULL, keep_na = NULL, keep_inf = NULL)
+  )
+})
+
+testthat::test_that("disable copies last state to the cache", {
+  shiny::reactiveConsole(TRUE)
+  on.exit(shiny::reactiveConsole(FALSE))
+  testfs <- R6::R6Class(
+    classname = "testfs",
+    inherit = RangeFilterState,
+    public = list(
+      disable = function() private$disable(),
+      get_cache = function() private$cache
+    )
+  )
+  fs <- testfs$new(c(1:10, Inf), varname = "x")
+  fs$set_state(list(keep_inf = TRUE))
+  last_state <- fs$get_state()
+  fs$disable()
+  testthat::expect_identical(fs$get_cache(), last_state)
+})
+
+testthat::test_that("is_any_filtered returns FALSE when disabled", {
+  shiny::reactiveConsole(TRUE)
+  on.exit(shiny::reactiveConsole(FALSE))
+  testfs <- R6::R6Class(
+    classname = "testfs",
+    inherit = RangeFilterState,
+    public = list(
+      disable = function() private$disable()
+    )
+  )
+  fs <- testfs$new(c(1:10, Inf), varname = "x")
+  fs$set_state(list(selected = c(4, 5), keep_inf = TRUE))
+  fs$disable()
+  testthat::expect_false(fs$is_any_filtered())
+})
+
+testthat::test_that("enable sets state back to the last state", {
+  shiny::reactiveConsole(TRUE)
+  on.exit(shiny::reactiveConsole(FALSE))
+  testfs <- R6::R6Class(
+    classname = "testfs",
+    inherit = RangeFilterState,
+    public = list(
+      disable = function() private$disable(),
+      enable = function() private$enable()
+    )
+  )
+  fs <- testfs$new(c(1:10, Inf), varname = "x")
+  fs$set_state(list(selected = c(4, 5), keep_inf = TRUE))
+  last_state <- fs$get_state()
+  fs$disable()
+  fs$enable()
+  testthat::expect_equal(fs$get_state(), last_state)
+})
+
+testthat::test_that("enable clears cache", {
+  shiny::reactiveConsole(TRUE)
+  on.exit(shiny::reactiveConsole(FALSE))
+  testfs <- R6::R6Class(
+    classname = "testfs",
+    inherit = RangeFilterState,
+    public = list(
+      disable = function() private$disable(),
+      enable = function() private$enable(),
+      get_cache = function() private$cache
+    )
+  )
+  fs <- testfs$new(c(1:10, Inf), varname = "x")
+  fs$set_state(list(selected = c(4, 5), keep_inf = TRUE))
+  fs$disable()
+  fs$enable()
+  testthat::expect_null(fs$get_cache())
+})
+
+testthat::test_that("is_any_filtered returns TRUE when enabled", {
+  shiny::reactiveConsole(TRUE)
+  on.exit(shiny::reactiveConsole(FALSE))
+  testfs <- R6::R6Class(
+    classname = "testfs",
+    inherit = RangeFilterState,
+    public = list(
+      disable = function() private$disable(),
+      enable = function() private$enable()
+    )
+  )
+  fs <- testfs$new(c(1:10, Inf), varname = "x")
+  fs$set_state(list(selected = c(4, 5), keep_inf = TRUE))
+  fs$disable()
+  fs$enable()
+  testthat::expect_true(fs$is_any_filtered())
+})
