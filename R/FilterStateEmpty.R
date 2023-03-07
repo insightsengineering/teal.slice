@@ -48,11 +48,25 @@ EmptyFilterState <- R6::R6Class( # nolint
     #'
     initialize = function(x,
                           x_reactive = reactive(NULL),
+                          dataname,
                           varname,
+                          choices = NULL,
+                          selected = NULL,
                           varlabel = character(0),
-                          dataname = NULL,
+                          keep_na = NULL,
+                          fixed = FALSE,
                           extract_type = character(0)) {
-      super$initialize(x, x_reactive, varname, varlabel, dataname, extract_type)
+      super$initialize(
+        x = x,
+        x_reactive = x_reactive,
+        dataname = dataname,
+        varname = varname,
+        choices = choices,
+        selected = selected,
+        varlabel = varlabel,
+        keep_na = keep_na,
+        fixed = fixed,
+        extract_type = extract_type)
       private$set_choices(list())
       self$set_selected(list())
 

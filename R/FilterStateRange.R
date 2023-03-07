@@ -113,15 +113,31 @@ RangeFilterState <- R6::R6Class( # nolint
     #' }
     initialize = function(x,
                           x_reactive = reactive(NULL),
+                          dataname,
                           varname,
+                          choices = NULL,
+                          selected = NULL,
                           varlabel = character(0),
-                          dataname = NULL,
+                          keep_na = NULL,
+                          fixed = FALSE,
                           extract_type = character(0)) {
       checkmate::assert_numeric(x, all.missing = FALSE)
       if (!any(is.finite(x))) stop("\"x\" contains no finite values")
 
       # validation on x_reactive here
-      super$initialize(x, x_reactive, varname, varlabel, dataname, extract_type)
+
+      super$initialize(
+        x = x,
+        x_reactive = x_reactive,
+        dataname = dataname,
+        varname = varname,
+        choices = choices,
+        selected = selected,
+        varlabel = varlabel,
+        keep_na = keep_na,
+        fixed = fixed,
+        extract_type = extract_type)
+
       private$is_integer <- checkmate::test_integerish(x)
       private$keep_inf <- reactiveVal(FALSE)
       private$inf_filtered_count <- reactive(
