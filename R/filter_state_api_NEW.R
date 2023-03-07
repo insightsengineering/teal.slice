@@ -70,13 +70,21 @@ print.teal_slice <- function(x) {
 #' @param ... any number of `teal_slice` objects
 #' @filterable `named list` of `character` vectors, specifying which variables
 #'              (list elements) can be filtered in which data sets (list names)
-#' @count_type `character(1)` string specifiying how observations are tallied by these filter states
+#' @count_type `character(1)` string specifying how observations are tallied by these filter states
 #'
 #' @return
 #' Object of class `teal_slices`, which is an unnamed list of `teal_slice` objects.
 #'
 #' @examples
-#' all_filters <- filter_settings(filter_one, filter_two, filter_three)
+#' all_filters <- filter_settings(
+#'   filter_one,
+#'   filter_two,
+#'   filter_three,
+#'   filterable = list(
+#'     "dataname1" = c("varname1", "varname2"),
+#'     "dataname2" = "varname3"
+#'   )
+#' )
 #'
 #' @export
 #' @rdname new_api
@@ -100,6 +108,8 @@ filter_settings <- function(
 `[.teal_slices` <- function(x, i) {
   y <- NextMethod("[")
   attributes(y) <- attributes(x)
+  filterables <- unique(unlist(vapply(y, function(ts) ts[["dataname"]], character(1L))))
+  attr(y, "filterable") <- attr(x, "filterable")[filterables]
   y
 }
 
@@ -120,10 +130,15 @@ filter_one <- filter_var("dataname1", "varname1", letters, "b", "characters", FA
 filter_two <- filter_var("dataname1", "varname2", 1:10, 2, "integers", TRUE, FALSE)
 filter_three <- filter_var("dataname2", "varname3", 1:10/10, 0.2, "doubles", TRUE, FALSE)
 
-all_filters <- filter_settings(filter_one, filter_two, filter_three,
-                               filterable = list("dataname1" = c("varname1", "varname2", "varname3"),
-                                                 "dataname2" = c("varname1", "varname2", "varname3"),
-                                                 "dataname3" = c("varname1", "varname2", "varname3")))
+all_filters <- filter_settings(
+  filter_one,
+  filter_two,
+  filter_three,
+  filterable = list(
+    "dataname1" = c("varname1", "varname2"),
+    "dataname2" = "varname3"
+  )
+)
 
 
 
