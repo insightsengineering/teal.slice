@@ -353,16 +353,12 @@ DateFilterState <- R6::R6Class( # nolint
             handlerExpr = {
               start_date <- input$selection[1]
               end_date <- input$selection[2]
-
-              iv <- shinyvalidate::InputValidator$new()
-              iv$add_rule("selection", ~ if (
-                start_date > end_date
-              ) {
-                "Start date must not be greater than the end date."
-              })
-              iv$enable()
-              teal::validate_inputs(iv)
-
+              if (start_date > end_date) {
+                showNotification(
+                  "Start date must not be greater than the end date. Setting back to default values.",
+                  type = "warning"
+                )
+              }
               self$set_selected(c(start_date, end_date))
               logger::log_trace(sprintf(
                 "DateFilterState$server@2 selection of variable %s changed, dataname: %s",
