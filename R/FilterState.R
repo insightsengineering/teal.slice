@@ -66,21 +66,25 @@ InteractiveFilterState <- R6::R6Class( # nolint
     #' \itemize{
     #' \item{`character(0)` (default)}{ `varname` in the condition call will not be prefixed}
     #' \item{`"list"`}{ `varname` in the condition call will be returned as `<dataname>$<varname>`}
-    #' \item{`"matrix"`}{ `varname` in the condition call will be returned as `<dataname>[, <varname>]`}
+    #' \item{`"matrix"`}{ `varname` in the condition call will be returned as `<dataname>[, "<varname>"]`}
     #' }
     #'
     #' @return self invisibly
     #'
     initialize = function(x,
                           x_reactive = reactive(NULL),
+                          dataname,
                           varname,
+                          choices = NULL,
+                          selected = NULL,
                           varlabel = character(0),
-                          dataname = NULL,
+                          keep_na = NULL,
+                          fixed = FALSE,
                           extract_type = character(0)) {
       checkmate::assert_class(x_reactive, "reactive")
+      checkmate::assert_string(dataname)
       checkmate::assert_string(varname)
       checkmate::assert_character(varlabel, max.len = 1, any.missing = FALSE)
-      checkmate::assert_string(dataname, null.ok = TRUE)
       checkmate::assert_character(extract_type, max.len = 1, any.missing = FALSE)
       if (length(extract_type) == 1) {
         checkmate::assert_choice(extract_type, choices = c("list", "matrix"))
@@ -234,6 +238,18 @@ InteractiveFilterState <- R6::R6Class( # nolint
     #' * `keep_na` (`logical(1)`) whether `NA` should be kept.
     #'
     get_state = function() {
+      # args <- list(
+      #   dataname = private$dataname,
+      #   varname = private$varname,
+      #   choices = private$choices,
+      #   selected = private$selected,
+      #   varlabel = private$varlabel,
+      #   keep_na = private$keep_na,
+      #   keep_inf = private$keep_inf,
+      #   fixed = private$fixed
+      # )
+      # do.call(filter_var, args)
+
       list(
         selected = self$get_selected(),
         keep_na = self$get_keep_na()
@@ -427,20 +443,20 @@ InteractiveFilterState <- R6::R6Class( # nolint
 
   # private members ----
   private = list(
-    choices = NULL, # because each class has different choices type
     dataname = character(0),
-    keep_na = NULL, # reactiveVal logical()
-    na_count = integer(0),
-    na_rm = FALSE, # it's logical(1)
-    observers = NULL, # here observers are stored
-    selected = NULL, # because it holds reactiveVal and each class has different choices type
     varname = character(0),
+    choices = NULL, # because each class has different choices type
+    selected = NULL, # because it holds reactiveVal and each class has different choices type
     varlabel = character(0),
-    extract_type = logical(0),
-    x_reactive = NULL, # reactive containing the filtered variable, used for updating counts and histograms
+    keep_na = NULL, # reactiveVal logical()
+    na_rm = FALSE, # it's logical(1)
+    na_count = integer(0),
     filtered_na_count = NULL, # reactive containing the count of NA in the filtered dataset
+    observers = NULL, # here observers are stored
+    x_reactive = NULL, # reactive containing the filtered variable, used for updating counts and histograms
     disabled = NULL, # reactiveVal returning logical
     cache = NULL, # cache state when filter disabled so we can later restore
+    extract_type = logical(0),
 
     # private methods ----
 
