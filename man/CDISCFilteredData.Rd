@@ -64,9 +64,7 @@ isolate(datasets$get_filter_state())
 \subsection{Public methods}{
 \itemize{
 \item \href{#method-CDISCFilteredData-datanames}{\code{CDISCFilteredData$datanames()}}
-\item \href{#method-CDISCFilteredData-get_call}{\code{CDISCFilteredData$get_call()}}
 \item \href{#method-CDISCFilteredData-get_filterable_datanames}{\code{CDISCFilteredData$get_filterable_datanames()}}
-\item \href{#method-CDISCFilteredData-get_filterable_varnames}{\code{CDISCFilteredData$get_filterable_varnames()}}
 \item \href{#method-CDISCFilteredData-get_filter_overview}{\code{CDISCFilteredData$get_filter_overview()}}
 \item \href{#method-CDISCFilteredData-get_parentname}{\code{CDISCFilteredData$get_parentname()}}
 \item \href{#method-CDISCFilteredData-set_dataset}{\code{CDISCFilteredData$set_dataset()}}
@@ -76,8 +74,10 @@ isolate(datasets$get_filter_state())
 \if{html}{\out{
 <details><summary>Inherited methods</summary>
 <ul>
+<li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilteredData" data-id="clear_filter_states"><a href='../../teal.slice/html/FilteredData.html#method-FilteredData-clear_filter_states'><code>teal.slice::FilteredData$clear_filter_states()</code></a></span></li>
 <li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilteredData" data-id="filter_panel_disable"><a href='../../teal.slice/html/FilteredData.html#method-FilteredData-filter_panel_disable'><code>teal.slice::FilteredData$filter_panel_disable()</code></a></span></li>
 <li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilteredData" data-id="filter_panel_enable"><a href='../../teal.slice/html/FilteredData.html#method-FilteredData-filter_panel_enable'><code>teal.slice::FilteredData$filter_panel_enable()</code></a></span></li>
+<li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilteredData" data-id="get_call"><a href='../../teal.slice/html/FilteredData.html#method-FilteredData-get_call'><code>teal.slice::FilteredData$get_call()</code></a></span></li>
 <li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilteredData" data-id="get_check"><a href='../../teal.slice/html/FilteredData.html#method-FilteredData-get_check'><code>teal.slice::FilteredData$get_check()</code></a></span></li>
 <li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilteredData" data-id="get_code"><a href='../../teal.slice/html/FilteredData.html#method-FilteredData-get_code'><code>teal.slice::FilteredData$get_code()</code></a></span></li>
 <li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilteredData" data-id="get_data"><a href='../../teal.slice/html/FilteredData.html#method-FilteredData-get_data'><code>teal.slice::FilteredData$get_data()</code></a></span></li>
@@ -85,7 +85,6 @@ isolate(datasets$get_filter_state())
 <li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilteredData" data-id="get_filter_panel_active"><a href='../../teal.slice/html/FilteredData.html#method-FilteredData-get_filter_panel_active'><code>teal.slice::FilteredData$get_filter_panel_active()</code></a></span></li>
 <li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilteredData" data-id="get_filter_panel_ui_id"><a href='../../teal.slice/html/FilteredData.html#method-FilteredData-get_filter_panel_ui_id'><code>teal.slice::FilteredData$get_filter_panel_ui_id()</code></a></span></li>
 <li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilteredData" data-id="get_filter_state"><a href='../../teal.slice/html/FilteredData.html#method-FilteredData-get_filter_state'><code>teal.slice::FilteredData$get_filter_state()</code></a></span></li>
-<li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilteredData" data-id="get_filtered_dataset"><a href='../../teal.slice/html/FilteredData.html#method-FilteredData-get_filtered_dataset'><code>teal.slice::FilteredData$get_filtered_dataset()</code></a></span></li>
 <li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilteredData" data-id="get_formatted_filter_state"><a href='../../teal.slice/html/FilteredData.html#method-FilteredData-get_formatted_filter_state'><code>teal.slice::FilteredData$get_formatted_filter_state()</code></a></span></li>
 <li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilteredData" data-id="get_join_keys"><a href='../../teal.slice/html/FilteredData.html#method-FilteredData-get_join_keys'><code>teal.slice::FilteredData$get_join_keys()</code></a></span></li>
 <li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilteredData" data-id="get_keys"><a href='../../teal.slice/html/FilteredData.html#method-FilteredData-get_keys'><code>teal.slice::FilteredData$get_keys()</code></a></span></li>
@@ -96,16 +95,19 @@ isolate(datasets$get_filter_state())
 <li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilteredData" data-id="initialize"><a href='../../teal.slice/html/FilteredData.html#method-FilteredData-initialize'><code>teal.slice::FilteredData$initialize()</code></a></span></li>
 <li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilteredData" data-id="remove_all_filter_states"><a href='../../teal.slice/html/FilteredData.html#method-FilteredData-remove_all_filter_states'><code>teal.slice::FilteredData$remove_all_filter_states()</code></a></span></li>
 <li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilteredData" data-id="remove_filter_state"><a href='../../teal.slice/html/FilteredData.html#method-FilteredData-remove_filter_state'><code>teal.slice::FilteredData$remove_filter_state()</code></a></span></li>
-<li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilteredData" data-id="restore_state_from_bookmark"><a href='../../teal.slice/html/FilteredData.html#method-FilteredData-restore_state_from_bookmark'><code>teal.slice::FilteredData$restore_state_from_bookmark()</code></a></span></li>
 <li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilteredData" data-id="set_check"><a href='../../teal.slice/html/FilteredData.html#method-FilteredData-set_check'><code>teal.slice::FilteredData$set_check()</code></a></span></li>
 <li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilteredData" data-id="set_code"><a href='../../teal.slice/html/FilteredData.html#method-FilteredData-set_code'><code>teal.slice::FilteredData$set_code()</code></a></span></li>
 <li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilteredData" data-id="set_filter_state"><a href='../../teal.slice/html/FilteredData.html#method-FilteredData-set_filter_state'><code>teal.slice::FilteredData$set_filter_state()</code></a></span></li>
 <li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilteredData" data-id="set_filterable_varnames"><a href='../../teal.slice/html/FilteredData.html#method-FilteredData-set_filterable_varnames'><code>teal.slice::FilteredData$set_filterable_varnames()</code></a></span></li>
 <li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilteredData" data-id="set_join_keys"><a href='../../teal.slice/html/FilteredData.html#method-FilteredData-set_join_keys'><code>teal.slice::FilteredData$set_join_keys()</code></a></span></li>
-<li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilteredData" data-id="srv_filter_overview"><a href='../../teal.slice/html/FilteredData.html#method-FilteredData-srv_filter_overview'><code>teal.slice::FilteredData$srv_filter_overview()</code></a></span></li>
+<li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilteredData" data-id="srv_active"><a href='../../teal.slice/html/FilteredData.html#method-FilteredData-srv_active'><code>teal.slice::FilteredData$srv_active()</code></a></span></li>
+<li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilteredData" data-id="srv_add"><a href='../../teal.slice/html/FilteredData.html#method-FilteredData-srv_add'><code>teal.slice::FilteredData$srv_add()</code></a></span></li>
 <li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilteredData" data-id="srv_filter_panel"><a href='../../teal.slice/html/FilteredData.html#method-FilteredData-srv_filter_panel'><code>teal.slice::FilteredData$srv_filter_panel()</code></a></span></li>
-<li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilteredData" data-id="ui_filter_overview"><a href='../../teal.slice/html/FilteredData.html#method-FilteredData-ui_filter_overview'><code>teal.slice::FilteredData$ui_filter_overview()</code></a></span></li>
+<li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilteredData" data-id="srv_overview"><a href='../../teal.slice/html/FilteredData.html#method-FilteredData-srv_overview'><code>teal.slice::FilteredData$srv_overview()</code></a></span></li>
+<li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilteredData" data-id="ui_active"><a href='../../teal.slice/html/FilteredData.html#method-FilteredData-ui_active'><code>teal.slice::FilteredData$ui_active()</code></a></span></li>
+<li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilteredData" data-id="ui_add"><a href='../../teal.slice/html/FilteredData.html#method-FilteredData-ui_add'><code>teal.slice::FilteredData$ui_add()</code></a></span></li>
 <li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilteredData" data-id="ui_filter_panel"><a href='../../teal.slice/html/FilteredData.html#method-FilteredData-ui_filter_panel'><code>teal.slice::FilteredData$ui_filter_panel()</code></a></span></li>
+<li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilteredData" data-id="ui_overview"><a href='../../teal.slice/html/FilteredData.html#method-FilteredData-ui_overview'><code>teal.slice::FilteredData$ui_overview()</code></a></span></li>
 </ul>
 </details>
 }}
@@ -126,27 +128,6 @@ evaluated (in case of dependencies).
 }
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-CDISCFilteredData-get_call"></a>}}
-\if{latex}{\out{\hypertarget{method-CDISCFilteredData-get_call}{}}}
-\subsection{Method \code{get_call()}}{
-Produces language required to filter a single dataset and merge it with its parent.
-The datasets in question are assumed to be available.
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{CDISCFilteredData$get_call(dataname)}\if{html}{\out{</div>}}
-}
-
-\subsection{Arguments}{
-\if{html}{\out{<div class="arguments">}}
-\describe{
-\item{\code{dataname}}{(\code{character(1)}) name of the dataset}
-}
-\if{html}{\out{</div>}}
-}
-\subsection{Returns}{
-(\code{call} or \code{list} of calls ) to filter dataset
-}
-}
-\if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-CDISCFilteredData-get_filterable_datanames"></a>}}
 \if{latex}{\out{\hypertarget{method-CDISCFilteredData-get_filterable_datanames}{}}}
 \subsection{Method \code{get_filterable_datanames()}}{
@@ -164,26 +145,6 @@ Get names of datasets available for filtering
 }
 \subsection{Returns}{
 (\code{character} vector) of dataset names
-}
-}
-\if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-CDISCFilteredData-get_filterable_varnames"></a>}}
-\if{latex}{\out{\hypertarget{method-CDISCFilteredData-get_filterable_varnames}{}}}
-\subsection{Method \code{get_filterable_varnames()}}{
-Gets variable names of a given dataname for the filtering. This excludes parent dataset variable names.
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{CDISCFilteredData$get_filterable_varnames(dataname)}\if{html}{\out{</div>}}
-}
-
-\subsection{Arguments}{
-\if{html}{\out{<div class="arguments">}}
-\describe{
-\item{\code{dataname}}{(\code{character(1)}) name of the dataset}
-}
-\if{html}{\out{</div>}}
-}
-\subsection{Returns}{
-(\code{character} vector) of variable names
 }
 }
 \if{html}{\out{<hr>}}
