@@ -328,10 +328,10 @@ testthat::test_that("is_any_filtered is changed by choices parameter", {
   filter_state <- ChoicesFilterState$new(
     chars, x_reactive = reactive(NULL), varname = "variable", choices = chars[c(1, 2)]
   )
-  testthat::expect_true(filter_state$is_any_filtered())
+  testthat::expect_true(isolate(filter_state$is_any_filtered()))
 
   filter_state <- ChoicesFilterState$new(
     chars, x_reactive = reactive(NULL), varname = "variable", choices = chars[c(1, 2, 3)]
   )
-  testthat::expect_false(filter_state$is_any_filtered())
+  testthat::expect_false(isolate(filter_state$is_any_filtered()))
 })
