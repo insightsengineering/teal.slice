@@ -100,10 +100,11 @@ InteractiveFilterState <- R6::R6Class( # nolint
       } else {
         varlabel
       }
-      private$extract_type <- extract_type
       private$selected <- reactiveVal(NULL)
-      private$na_count <- sum(is.na(x))
       private$keep_na <- reactiveVal(FALSE)
+      private$extract_type <- extract_type
+      private$fixed <- fixed
+      private$na_count <- sum(is.na(x))
       private$x_reactive <- x_reactive
       private$filtered_na_count <- reactive(
         if (!is.null(private$x_reactive())) {
@@ -448,7 +449,8 @@ InteractiveFilterState <- R6::R6Class( # nolint
     choices = NULL, # because each class has different choices type
     selected = NULL, # because it holds reactiveVal and each class has different choices type
     varlabel = character(0),
-    keep_na = NULL, # reactiveVal logical()
+    keep_na = NULL, # reactiveVal logical(),
+    fixed = logical(0), # whether this filter state is fixed/locked
     na_rm = FALSE, # it's logical(1)
     na_count = integer(0),
     filtered_na_count = NULL, # reactive containing the count of NA in the filtered dataset
