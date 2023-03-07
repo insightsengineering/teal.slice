@@ -446,6 +446,7 @@ InteractiveFilterState <- R6::R6Class( # nolint
     dataname = character(0),
     varname = character(0),
     choices = NULL, # because each class has different choices type
+    choices_limited = FALSE, # flag whether number of possible choices was limited when specifying filter
     selected = NULL, # because it holds reactiveVal and each class has different choices type
     varlabel = character(0),
     keep_na = NULL, # reactiveVal logical()

@@ -114,7 +114,9 @@ ChoicesFilterState <- R6::R6Class( # nolint
                           varname,
                           varlabel = character(0),
                           dataname = NULL,
-                          extract_type = character(0)) {
+                          extract_type = character(0),
+                          choices = NULL) {
+      # browser()
       checkmate::assert(
         is.character(x),
         is.factor(x),
@@ -126,6 +128,8 @@ ChoicesFilterState <- R6::R6Class( # nolint
         x = x, x_reactive = x_reactive, dataname = dataname, varname = varname,
         varlabel = varlabel, extract_type = extract_type
       )
+
+      if (!is.null(choices)) private$choices_limited <- length(unique(choices)) < length(unique(x))
 
       private$data_class <- class(x)[1L]
       if (inherits(x, "POSIXt")) {
@@ -150,6 +154,8 @@ ChoicesFilterState <- R6::R6Class( # nolint
     is_any_filtered = function() {
       if (private$is_disabled()) {
         FALSE
+      } else if (private$choices_limited) {
+        TRUE
       } else if (!setequal(self$get_selected(), private$choices)) {
         TRUE
       } else if (!isTRUE(self$get_keep_na()) && private$na_count > 0) {
