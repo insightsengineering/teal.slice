@@ -173,12 +173,10 @@ ChoicesFilterState <- R6::R6Class( # nolint
       # to return `c` call instead of a vector
       make_c_call <- function(choices) {
         if (length(choices) > 1) {
-          choices <- do.call(
-            "call",
-            append(list("c"), choices)
-          )
+          do.call("call", append(list("c"), choices))
+        } else {
+          choices
         }
-        choices
       }
 
       filter_call <-
