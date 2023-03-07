@@ -26,7 +26,7 @@ fs <- list(
     subset = list(ARRAY_TYPE = list(selected = "", keep_na = TRUE))
   )
 )
-shiny::isolate(dataset$set_filter_state(state = fs))
+dataset$set_filter_state(state = fs)
 shiny::isolate(dataset$get_filter_state())
 }
 \keyword{internal}
@@ -37,14 +37,11 @@ shiny::isolate(dataset$get_filter_state())
 \subsection{Public methods}{
 \itemize{
 \item \href{#method-MAEFilteredDataset-new}{\code{MAEFilteredDataset$new()}}
-\item \href{#method-MAEFilteredDataset-get_call}{\code{MAEFilteredDataset$get_call()}}
-\item \href{#method-MAEFilteredDataset-get_varlabels}{\code{MAEFilteredDataset$get_varlabels()}}
 \item \href{#method-MAEFilteredDataset-get_filter_overview_info}{\code{MAEFilteredDataset$get_filter_overview_info()}}
-\item \href{#method-MAEFilteredDataset-get_filterable_varnames}{\code{MAEFilteredDataset$get_filterable_varnames()}}
 \item \href{#method-MAEFilteredDataset-set_filter_state}{\code{MAEFilteredDataset$set_filter_state()}}
 \item \href{#method-MAEFilteredDataset-remove_filter_state}{\code{MAEFilteredDataset$remove_filter_state()}}
-\item \href{#method-MAEFilteredDataset-ui_add_filter_state}{\code{MAEFilteredDataset$ui_add_filter_state()}}
-\item \href{#method-MAEFilteredDataset-srv_add_filter_state}{\code{MAEFilteredDataset$srv_add_filter_state()}}
+\item \href{#method-MAEFilteredDataset-ui_add}{\code{MAEFilteredDataset$ui_add()}}
+\item \href{#method-MAEFilteredDataset-srv_add}{\code{MAEFilteredDataset$srv_add()}}
 \item \href{#method-MAEFilteredDataset-get_filter_overview_nsubjs}{\code{MAEFilteredDataset$get_filter_overview_nsubjs()}}
 \item \href{#method-MAEFilteredDataset-clone}{\code{MAEFilteredDataset$clone()}}
 }
@@ -52,6 +49,8 @@ shiny::isolate(dataset$get_filter_state())
 \if{html}{\out{
 <details><summary>Inherited methods</summary>
 <ul>
+<li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilteredDataset" data-id="clear_filter_states"><a href='../../teal.slice/html/FilteredDataset.html#method-FilteredDataset-clear_filter_states'><code>teal.slice::FilteredDataset$clear_filter_states()</code></a></span></li>
+<li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilteredDataset" data-id="get_call"><a href='../../teal.slice/html/FilteredDataset.html#method-FilteredDataset-get_call'><code>teal.slice::FilteredDataset$get_call()</code></a></span></li>
 <li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilteredDataset" data-id="get_dataname"><a href='../../teal.slice/html/FilteredDataset.html#method-FilteredDataset-get_dataname'><code>teal.slice::FilteredDataset$get_dataname()</code></a></span></li>
 <li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilteredDataset" data-id="get_dataset"><a href='../../teal.slice/html/FilteredDataset.html#method-FilteredDataset-get_dataset'><code>teal.slice::FilteredDataset$get_dataset()</code></a></span></li>
 <li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilteredDataset" data-id="get_dataset_label"><a href='../../teal.slice/html/FilteredDataset.html#method-FilteredDataset-get_dataset_label'><code>teal.slice::FilteredDataset$get_dataset_label()</code></a></span></li>
@@ -61,11 +60,9 @@ shiny::isolate(dataset$get_filter_state())
 <li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilteredDataset" data-id="get_formatted_filter_state"><a href='../../teal.slice/html/FilteredDataset.html#method-FilteredDataset-get_formatted_filter_state'><code>teal.slice::FilteredDataset$get_formatted_filter_state()</code></a></span></li>
 <li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilteredDataset" data-id="get_keys"><a href='../../teal.slice/html/FilteredDataset.html#method-FilteredDataset-get_keys'><code>teal.slice::FilteredDataset$get_keys()</code></a></span></li>
 <li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilteredDataset" data-id="get_metadata"><a href='../../teal.slice/html/FilteredDataset.html#method-FilteredDataset-get_metadata'><code>teal.slice::FilteredDataset$get_metadata()</code></a></span></li>
-<li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilteredDataset" data-id="get_varnames"><a href='../../teal.slice/html/FilteredDataset.html#method-FilteredDataset-get_varnames'><code>teal.slice::FilteredDataset$get_varnames()</code></a></span></li>
-<li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilteredDataset" data-id="server"><a href='../../teal.slice/html/FilteredDataset.html#method-FilteredDataset-server'><code>teal.slice::FilteredDataset$server()</code></a></span></li>
 <li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilteredDataset" data-id="set_filterable_varnames"><a href='../../teal.slice/html/FilteredDataset.html#method-FilteredDataset-set_filterable_varnames'><code>teal.slice::FilteredDataset$set_filterable_varnames()</code></a></span></li>
-<li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilteredDataset" data-id="state_lists_empty"><a href='../../teal.slice/html/FilteredDataset.html#method-FilteredDataset-state_lists_empty'><code>teal.slice::FilteredDataset$state_lists_empty()</code></a></span></li>
-<li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilteredDataset" data-id="ui"><a href='../../teal.slice/html/FilteredDataset.html#method-FilteredDataset-ui'><code>teal.slice::FilteredDataset$ui()</code></a></span></li>
+<li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilteredDataset" data-id="srv_active"><a href='../../teal.slice/html/FilteredDataset.html#method-FilteredDataset-srv_active'><code>teal.slice::FilteredDataset$srv_active()</code></a></span></li>
+<li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilteredDataset" data-id="ui_active"><a href='../../teal.slice/html/FilteredDataset.html#method-FilteredDataset-ui_active'><code>teal.slice::FilteredDataset$ui_active()</code></a></span></li>
 </ul>
 </details>
 }}
@@ -107,88 +104,16 @@ each element of the list must be atomic and length one}
 }
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-MAEFilteredDataset-get_call"></a>}}
-\if{latex}{\out{\hypertarget{method-MAEFilteredDataset-get_call}{}}}
-\subsection{Method \code{get_call()}}{
-Get filter expression
-
-This functions returns filter calls equivalent to selected items
-within each of \code{filter_states}. Configuration of the calls is constant and
-depends on \code{filter_states} type and order which are set during initialization.
-This class contains multiple \code{FilterStates}:
-\itemize{
-\item{\code{colData(dataset)}}{for this object single \code{MAEFilterStates}
-which returns \code{subsetByColData} call}
-\item{experiments}{for each experiment single \code{SEFilterStates} and
-\code{FilterStates_matrix}, both returns \code{subset} call}
-}
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{MAEFilteredDataset$get_call()}\if{html}{\out{</div>}}
-}
-
-\subsection{Returns}{
-filter \code{call} or \code{list} of filter calls
-}
-}
-\if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-MAEFilteredDataset-get_varlabels"></a>}}
-\if{latex}{\out{\hypertarget{method-MAEFilteredDataset-get_varlabels}{}}}
-\subsection{Method \code{get_varlabels()}}{
-Gets labels of variables in the data
-
-Variables are the column names of the data.
-Either, all labels must have been provided for all variables
-in \code{set_data} or \code{NULL}.
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{MAEFilteredDataset$get_varlabels(variables = NULL)}\if{html}{\out{</div>}}
-}
-
-\subsection{Arguments}{
-\if{html}{\out{<div class="arguments">}}
-\describe{
-\item{\code{variables}}{(\code{character} vector) variables to get labels for;
-if \code{NULL}, for all variables in data}
-}
-\if{html}{\out{</div>}}
-}
-\subsection{Returns}{
-(\code{character} or \code{NULL}) variable labels, \code{NULL} if \code{column_labels}
-attribute does not exist for the data
-}
-}
-\if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-MAEFilteredDataset-get_filter_overview_info"></a>}}
 \if{latex}{\out{\hypertarget{method-MAEFilteredDataset-get_filter_overview_info}{}}}
 \subsection{Method \code{get_filter_overview_info()}}{
 Get filter overview rows of a dataset
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{MAEFilteredDataset$get_filter_overview_info(
-  filtered_dataset = self$get_dataset()
-)}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{MAEFilteredDataset$get_filter_overview_info()}\if{html}{\out{</div>}}
 }
 
-\subsection{Arguments}{
-\if{html}{\out{<div class="arguments">}}
-\describe{
-\item{\code{filtered_dataset}}{(\code{MultiAssayExperiment}) object to calculate filter overview statistics on.}
-}
-\if{html}{\out{</div>}}
-}
 \subsection{Returns}{
 (\code{matrix}) matrix of observations and subjects
-}
-}
-\if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-MAEFilteredDataset-get_filterable_varnames"></a>}}
-\if{latex}{\out{\hypertarget{method-MAEFilteredDataset-get_filterable_varnames}{}}}
-\subsection{Method \code{get_filterable_varnames()}}{
-Gets variable names for the filtering.
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{MAEFilteredDataset$get_filterable_varnames()}\if{html}{\out{</div>}}
-}
-
-\subsection{Returns}{
-(\code{character(0)})
 }
 }
 \if{html}{\out{<hr>}}
@@ -197,7 +122,7 @@ Gets variable names for the filtering.
 \subsection{Method \code{set_filter_state()}}{
 Set filter state
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{MAEFilteredDataset$set_filter_state(state, ...)}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{MAEFilteredDataset$set_filter_state(state)}\if{html}{\out{</div>}}
 }
 
 \subsection{Arguments}{
@@ -208,8 +133,6 @@ names of the list should correspond to the names of the initialized \code{Filter
 kept in \code{private$filter_states}. For this object they are \code{"subjects"} and
 names of the experiments. Values of initial state should be relevant
 to the referred column.}
-
-\item{\code{...}}{ignored.}
 }
 \if{html}{\out{</div>}}
 }
@@ -230,7 +153,7 @@ fs <- list(
     subset = list(ARRAY_TYPE = list(selected = "", keep_na = TRUE))
   )
 )
-shiny::isolate(dataset$set_filter_state(state = fs))
+dataset$set_filter_state(state = fs)
 shiny::isolate(dataset$get_filter_state())
 }
 \if{html}{\out{</div>}}
@@ -260,14 +183,14 @@ Named list of variables to remove their \code{FilterState}.}
 }
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-MAEFilteredDataset-ui_add_filter_state"></a>}}
-\if{latex}{\out{\hypertarget{method-MAEFilteredDataset-ui_add_filter_state}{}}}
-\subsection{Method \code{ui_add_filter_state()}}{
+\if{html}{\out{<a id="method-MAEFilteredDataset-ui_add"></a>}}
+\if{latex}{\out{\hypertarget{method-MAEFilteredDataset-ui_add}{}}}
+\subsection{Method \code{ui_add()}}{
 UI module to add filter variable for this dataset
 
 UI module to add filter variable for this dataset
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{MAEFilteredDataset$ui_add_filter_state(id)}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{MAEFilteredDataset$ui_add(id)}\if{html}{\out{</div>}}
 }
 
 \subsection{Arguments}{
@@ -283,18 +206,18 @@ function - shiny UI module
 }
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-MAEFilteredDataset-srv_add_filter_state"></a>}}
-\if{latex}{\out{\hypertarget{method-MAEFilteredDataset-srv_add_filter_state}{}}}
-\subsection{Method \code{srv_add_filter_state()}}{
+\if{html}{\out{<a id="method-MAEFilteredDataset-srv_add"></a>}}
+\if{latex}{\out{\hypertarget{method-MAEFilteredDataset-srv_add}{}}}
+\subsection{Method \code{srv_add()}}{
 Server module to add filter variable for this dataset
 
 Server module to add filter variable for this dataset.
-For this class \code{srv_add_filter_state} calls multiple modules
+For this class \code{srv_add} calls multiple modules
 of the same name from \code{FilterStates} as \code{MAEFilteredDataset}
 contains one \code{FilterStates} object for \code{colData} and one for each
 experiment.
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{MAEFilteredDataset$srv_add_filter_state(id, ...)}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{MAEFilteredDataset$srv_add(id)}\if{html}{\out{</div>}}
 }
 
 \subsection{Arguments}{
@@ -302,8 +225,6 @@ experiment.
 \describe{
 \item{\code{id}}{(\code{character(1)})\cr
 an ID string that corresponds with the ID used to call the module's UI function.}
-
-\item{\code{...}}{ignored.}
 }
 \if{html}{\out{</div>}}
 }
@@ -317,21 +238,9 @@ an ID string that corresponds with the ID used to call the module's UI function.
 \subsection{Method \code{get_filter_overview_nsubjs()}}{
 Gets filter overview subjects number
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{MAEFilteredDataset$get_filter_overview_nsubjs(
-  filtered_dataset = self$get_dataset(),
-  subject_keys
-)}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{MAEFilteredDataset$get_filter_overview_nsubjs()}\if{html}{\out{</div>}}
 }
 
-\subsection{Arguments}{
-\if{html}{\out{<div class="arguments">}}
-\describe{
-\item{\code{filtered_dataset}}{(\code{MultiAssayExperiment}) object to calculate filter overview statistics on.}
-
-\item{\code{subject_keys}}{(unused) in \code{MultiAssayExperiment} unique subjects are the rows of \code{colData} slot.}
-}
-\if{html}{\out{</div>}}
-}
 \subsection{Returns}{
 \code{list} with the number of subjects of filtered/non-filtered datasets.
 }

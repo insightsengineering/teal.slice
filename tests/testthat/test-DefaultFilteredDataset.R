@@ -11,7 +11,7 @@ testthat::test_that("get_call returns a list of calls or NULL", {
     Sepal.Length = c(5.1, 6.4),
     Species = c("setosa", "versicolor")
   )
-  shiny::isolate(filtered_dataset$set_filter_state(state = fs))
+  filtered_dataset$set_filter_state(state = fs)
 
   checkmate::expect_list(shiny::isolate(filtered_dataset$get_call()), types = "<-")
 })
@@ -25,7 +25,7 @@ testthat::test_that(
       Sepal.Length = c(5.1, 6.4),
       Species = c("setosa", "versicolor")
     )
-    shiny::isolate(dataset$set_filter_state(state = fs))
+    dataset$set_filter_state(state = fs)
     testthat::expect_equal(
       shiny::isolate(dataset$get_call()),
       list(
@@ -46,8 +46,7 @@ testthat::test_that(
   code = {
     dataset <- DefaultFilteredDataset$new(dataset = iris, dataname = "iris")
     fs <- list(
-      c(5.1, 6.4),
-      Species = c("setosa", "versicolor")
+      c(5.1, 6.4)
     )
     testthat::expect_error(dataset$set_filter_state(state = fs))
   }
@@ -61,8 +60,8 @@ testthat::test_that(
       Sepal.Length = c(5.1, 6.4),
       Species = c("setosa", "versicolor")
     )
-    shiny::isolate(dataset$set_filter_state(state = fs))
-    shiny::isolate(dataset$remove_filter_state("Species"))
+    dataset$set_filter_state(state = fs)
+    dataset$remove_filter_state("Species")
 
     testthat::expect_equal(
       shiny::isolate(dataset$get_call()),
@@ -86,7 +85,7 @@ testthat::test_that(
       Sepal.Length = list(selected = c(5.1, 6.4), keep_na = TRUE, keep_inf = TRUE),
       Species = list(selected = c("setosa", "versicolor"), keep_na = FALSE)
     )
-    shiny::isolate(dataset$set_filter_state(state = fs))
+    dataset$set_filter_state(state = fs)
     testthat::expect_identical(shiny::isolate(dataset$get_filter_state()), fs)
   }
 )
@@ -99,8 +98,8 @@ testthat::test_that(
       Sepal.Length = c(5.1, 6.4),
       Species = c("setosa", "versicolor")
     )
-    shiny::isolate(dataset$set_filter_state(state = fs))
-    shiny::isolate(dataset$remove_filter_state(c("Species", "Sepal.Length")))
+    dataset$set_filter_state(state = fs)
+    dataset$remove_filter_state(c("Species", "Sepal.Length"))
 
     testthat::expect_null(
       shiny::isolate(dataset$get_call())
@@ -109,10 +108,9 @@ testthat::test_that(
 )
 
 testthat::test_that("get_filter_overview_info returns overview matrix for DefaultFilteredDataset without filtering", {
+  dataset_iris <- DefaultFilteredDataset$new(dataset = head(iris), dataname = "iris")
   testthat::expect_equal(
-    shiny::isolate(DefaultFilteredDataset$new(
-      dataset = utils::head(iris), dataname = "iris"
-    )$get_filter_overview_info()),
+    shiny::isolate(dataset_iris$get_filter_overview_info()),
     matrix(list("6/6", ""), nrow = 1, dimnames = list(c("iris"), c("Obs", "Subjects")))
   )
 })
@@ -120,12 +118,13 @@ testthat::test_that("get_filter_overview_info returns overview matrix for Defaul
 testthat::test_that(
   "get_filter_overview_info returns overview matrix for DefaultFilteredDataset if a filtered dataset is passed in",
   code = {
-    dataset_iris <- DefaultFilteredDataset$new(dataset = utils::head(iris), dataname = "iris")
+    dataset_iris <- DefaultFilteredDataset$new(dataset = iris, dataname = "iris")
+    dataset_iris$set_filter_state(list(Species = "virginica"))
     testthat::expect_equal(
       shiny::isolate(
-        dataset_iris$get_filter_overview_info(dplyr::filter(utils::head(iris), Species == "virginica"))
+        dataset_iris$get_filter_overview_info()
       ),
-      matrix(list("0/6", ""), nrow = 1, dimnames = list(c("iris"), c("Obs", "Subjects")))
+      matrix(list("50/150", ""), nrow = 1, dimnames = list(c("iris"), c("Obs", "Subjects")))
     )
   }
 )

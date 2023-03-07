@@ -58,17 +58,13 @@ print(df)
 
 datasets$get_metadata("mtcars")
 
-isolate(
-  datasets$set_filter_state(
-    list(iris = list(Species = list(selected = "virginica")))
-  )
+datasets$set_filter_state(
+  list(iris = list(Species = list(selected = "virginica")))
 )
 isolate(datasets$get_call("iris"))
 
-isolate(
-  datasets$set_filter_state(
-    list(mtcars = list(mpg = list(selected = c(15, 20))))
-  )
+datasets$set_filter_state(
+  list(mtcars = list(mpg = list(selected = c(15, 20))))
 )
 
 isolate(datasets$get_filter_state())
@@ -149,11 +145,9 @@ shiny::isolate(datasets$get_filter_state())
 \item \href{#method-FilteredData-datanames}{\code{FilteredData$datanames()}}
 \item \href{#method-FilteredData-get_datalabel}{\code{FilteredData$get_datalabel()}}
 \item \href{#method-FilteredData-get_filterable_datanames}{\code{FilteredData$get_filterable_datanames()}}
-\item \href{#method-FilteredData-get_filterable_varnames}{\code{FilteredData$get_filterable_varnames()}}
 \item \href{#method-FilteredData-set_filterable_varnames}{\code{FilteredData$set_filterable_varnames()}}
 \item \href{#method-FilteredData-get_call}{\code{FilteredData$get_call()}}
 \item \href{#method-FilteredData-get_code}{\code{FilteredData$get_code()}}
-\item \href{#method-FilteredData-get_filtered_dataset}{\code{FilteredData$get_filtered_dataset()}}
 \item \href{#method-FilteredData-get_data}{\code{FilteredData$get_data()}}
 \item \href{#method-FilteredData-get_check}{\code{FilteredData$get_check()}}
 \item \href{#method-FilteredData-get_metadata}{\code{FilteredData$get_metadata()}}
@@ -172,15 +166,19 @@ shiny::isolate(datasets$get_filter_state())
 \item \href{#method-FilteredData-set_filter_state}{\code{FilteredData$set_filter_state()}}
 \item \href{#method-FilteredData-remove_filter_state}{\code{FilteredData$remove_filter_state()}}
 \item \href{#method-FilteredData-remove_all_filter_states}{\code{FilteredData$remove_all_filter_states()}}
-\item \href{#method-FilteredData-restore_state_from_bookmark}{\code{FilteredData$restore_state_from_bookmark()}}
+\item \href{#method-FilteredData-clear_filter_states}{\code{FilteredData$clear_filter_states()}}
 \item \href{#method-FilteredData-filter_panel_disable}{\code{FilteredData$filter_panel_disable()}}
 \item \href{#method-FilteredData-filter_panel_enable}{\code{FilteredData$filter_panel_enable()}}
 \item \href{#method-FilteredData-get_filter_panel_active}{\code{FilteredData$get_filter_panel_active()}}
 \item \href{#method-FilteredData-get_filter_panel_ui_id}{\code{FilteredData$get_filter_panel_ui_id()}}
 \item \href{#method-FilteredData-ui_filter_panel}{\code{FilteredData$ui_filter_panel()}}
 \item \href{#method-FilteredData-srv_filter_panel}{\code{FilteredData$srv_filter_panel()}}
-\item \href{#method-FilteredData-ui_filter_overview}{\code{FilteredData$ui_filter_overview()}}
-\item \href{#method-FilteredData-srv_filter_overview}{\code{FilteredData$srv_filter_overview()}}
+\item \href{#method-FilteredData-ui_active}{\code{FilteredData$ui_active()}}
+\item \href{#method-FilteredData-srv_active}{\code{FilteredData$srv_active()}}
+\item \href{#method-FilteredData-ui_add}{\code{FilteredData$ui_add()}}
+\item \href{#method-FilteredData-srv_add}{\code{FilteredData$srv_add()}}
+\item \href{#method-FilteredData-ui_overview}{\code{FilteredData$ui_overview()}}
+\item \href{#method-FilteredData-srv_overview}{\code{FilteredData$srv_overview()}}
 \item \href{#method-FilteredData-clone}{\code{FilteredData$clone()}}
 }
 }
@@ -273,26 +271,6 @@ Gets dataset names of a given dataname for the filtering.
 }
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-FilteredData-get_filterable_varnames"></a>}}
-\if{latex}{\out{\hypertarget{method-FilteredData-get_filterable_varnames}{}}}
-\subsection{Method \code{get_filterable_varnames()}}{
-Gets variable names of a given dataname for the filtering.
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{FilteredData$get_filterable_varnames(dataname)}\if{html}{\out{</div>}}
-}
-
-\subsection{Arguments}{
-\if{html}{\out{<div class="arguments">}}
-\describe{
-\item{\code{dataname}}{(\code{character(1)}) name of the dataset}
-}
-\if{html}{\out{</div>}}
-}
-\subsection{Returns}{
-(\code{character} vector) of variable names
-}
-}
-\if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-FilteredData-set_filterable_varnames"></a>}}
 \if{latex}{\out{\hypertarget{method-FilteredData-set_filterable_varnames}{}}}
 \subsection{Method \code{set_filterable_varnames()}}{
@@ -307,8 +285,7 @@ Set the variable names of a given dataset for the filtering.
 \item{\code{dataname}}{(\code{character(1)}) name of the dataset}
 
 \item{\code{varnames}}{(\code{character} or \code{NULL})
-variables which users can choose to filter the data;
-see \code{self$get_filterable_varnames} for more details}
+variables which users can choose to filter the data;}
 }
 \if{html}{\out{</div>}}
 }
@@ -369,28 +346,6 @@ Gets the R preprocessing code string that generates the unfiltered datasets.
 }
 \subsection{Returns}{
 (\code{character(1)}) deparsed code
-}
-}
-\if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-FilteredData-get_filtered_dataset"></a>}}
-\if{latex}{\out{\hypertarget{method-FilteredData-get_filtered_dataset}{}}}
-\subsection{Method \code{get_filtered_dataset()}}{
-Gets \code{FilteredDataset} object which contains all information
-pertaining to the specified dataset.
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{FilteredData$get_filtered_dataset(dataname = character(0))}\if{html}{\out{</div>}}
-}
-
-\subsection{Arguments}{
-\if{html}{\out{<div class="arguments">}}
-\describe{
-\item{\code{dataname}}{(\code{character(1)})\cr
-name of the dataset}
-}
-\if{html}{\out{</div>}}
-}
-\subsection{Returns}{
-\code{FilteredDataset} object or list of \code{FilteredDataset}s
 }
 }
 \if{html}{\out{<hr>}}
@@ -810,10 +765,30 @@ nested list of filter selections applied to datasets}
 \if{html}{\out{<a id="method-FilteredData-remove_all_filter_states"></a>}}
 \if{latex}{\out{\hypertarget{method-FilteredData-remove_all_filter_states}{}}}
 \subsection{Method \code{remove_all_filter_states()}}{
+Deprecated - please use \code{clear_filter_states} method.
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{FilteredData$remove_all_filter_states(datanames)}\if{html}{\out{</div>}}
+}
+
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{datanames}}{(\code{character})}
+}
+\if{html}{\out{</div>}}
+}
+\subsection{Returns}{
+\code{NULL} invisibly
+}
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-FilteredData-clear_filter_states"></a>}}
+\if{latex}{\out{\hypertarget{method-FilteredData-clear_filter_states}{}}}
+\subsection{Method \code{clear_filter_states()}}{
 Remove all \code{FilterStates} of a \code{FilteredDataset} or all \code{FilterStates}
 of a \code{FilteredData} object.
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{FilteredData$remove_all_filter_states(datanames = self$datanames())}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{FilteredData$clear_filter_states(datanames = self$datanames())}\if{html}{\out{</div>}}
 }
 
 \subsection{Arguments}{
@@ -827,35 +802,6 @@ all \code{FilterStates} in the \code{FilteredData} object}
 }
 \subsection{Returns}{
 \code{NULL} invisibly
-}
-}
-\if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-FilteredData-restore_state_from_bookmark"></a>}}
-\if{latex}{\out{\hypertarget{method-FilteredData-restore_state_from_bookmark}{}}}
-\subsection{Method \code{restore_state_from_bookmark()}}{
-Sets this object from a bookmarked state.
-
-Only sets the filter state, does not set the data
-and the preprocessing code. The data should already have been set.
-Also checks the preprocessing code is identical if provided in the \code{state}.
-
-Since this function is used from the end-user part, its error messages
-are more verbose. We don't call the Shiny modals from here because this
-class may be used outside of a Shiny app.
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{FilteredData$restore_state_from_bookmark(state, check_data_hash = TRUE)}\if{html}{\out{</div>}}
-}
-
-\subsection{Arguments}{
-\if{html}{\out{<div class="arguments">}}
-\describe{
-\item{\code{state}}{(\verb{named list})\cr
-containing fields \code{data_hash}, \code{filter_states} and \code{preproc_code}}
-
-\item{\code{check_data_hash}}{(\code{logical}) whether to check that \code{md5sums} agree
-for the data; may not make sense with randomly generated data per session}
-}
-\if{html}{\out{</div>}}
 }
 }
 \if{html}{\out{<hr>}}
@@ -921,10 +867,13 @@ the (active) datasets and allows to filter the datasets.
 \if{html}{\out{<div class="arguments">}}
 \describe{
 \item{\code{id}}{(\code{character(1)})\cr
-module id
-Server function for filter panel}
+module id}
 }
 \if{html}{\out{</div>}}
+}
+\subsection{Returns}{
+\code{shiny.tag}
+Server function for filter panel
 }
 }
 \if{html}{\out{<hr>}}
@@ -951,6 +900,96 @@ panel will be hidden}
 }
 \subsection{Returns}{
 \code{moduleServer} function which returns \code{NULL}
+}
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-FilteredData-ui_active"></a>}}
+\if{latex}{\out{\hypertarget{method-FilteredData-ui_active}{}}}
+\subsection{Method \code{ui_active()}}{
+Server module responsible for displaying active filters.
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{FilteredData$ui_active(id)}\if{html}{\out{</div>}}
+}
+
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{id}}{(\code{character(1)})\cr
+an ID string that corresponds with the ID used to call the module's UI function.}
+}
+\if{html}{\out{</div>}}
+}
+\subsection{Returns}{
+\code{shiny.tag}
+}
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-FilteredData-srv_active"></a>}}
+\if{latex}{\out{\hypertarget{method-FilteredData-srv_active}{}}}
+\subsection{Method \code{srv_active()}}{
+Server module responsible for displaying active filters.
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{FilteredData$srv_active(id, active_datanames = reactive(self$datanames()))}\if{html}{\out{</div>}}
+}
+
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{id}}{(\code{character(1)})\cr
+an ID string that corresponds with the ID used to call the module's UI function.}
+
+\item{\code{active_datanames}}{(\code{reactive})\cr
+defining subset of \code{self$datanames()} to be displayed.}
+}
+\if{html}{\out{</div>}}
+}
+\subsection{Returns}{
+\code{moduleServer} returning \code{NULL}
+}
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-FilteredData-ui_add"></a>}}
+\if{latex}{\out{\hypertarget{method-FilteredData-ui_add}{}}}
+\subsection{Method \code{ui_add()}}{
+Server module responsible for displaying dropdowns with variables to add a filter.
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{FilteredData$ui_add(id)}\if{html}{\out{</div>}}
+}
+
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{id}}{(\code{character(1)})\cr
+an ID string that corresponds with the ID used to call the module's UI function.}
+}
+\if{html}{\out{</div>}}
+}
+\subsection{Returns}{
+\code{shiny.tag}
+}
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-FilteredData-srv_add"></a>}}
+\if{latex}{\out{\hypertarget{method-FilteredData-srv_add}{}}}
+\subsection{Method \code{srv_add()}}{
+Server module responsible for displaying dropdowns with variables to add a filter.
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{FilteredData$srv_add(id, active_datanames = reactive(self$datanames()))}\if{html}{\out{</div>}}
+}
+
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{id}}{(\code{character(1)})\cr
+an ID string that corresponds with the ID used to call the module's UI function.}
+
+\item{\code{active_datanames}}{(\code{reactive})\cr
+defining subset of \code{self$datanames()} to be displayed.}
+}
+\if{html}{\out{</div>}}
+}
+\subsection{Returns}{
+\code{moduleServer} returning \code{NULL}
 Creates the UI for the module showing counts for each dataset
 contrasting the filtered to the full unfiltered dataset
 
@@ -960,11 +999,11 @@ the number of unique subjects.
 }
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-FilteredData-ui_filter_overview"></a>}}
-\if{latex}{\out{\hypertarget{method-FilteredData-ui_filter_overview}{}}}
-\subsection{Method \code{ui_filter_overview()}}{
+\if{html}{\out{<a id="method-FilteredData-ui_overview"></a>}}
+\if{latex}{\out{\hypertarget{method-FilteredData-ui_overview}{}}}
+\subsection{Method \code{ui_overview()}}{
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{FilteredData$ui_filter_overview(id)}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{FilteredData$ui_overview(id)}\if{html}{\out{</div>}}
 }
 
 \subsection{Arguments}{
@@ -978,11 +1017,11 @@ data}
 }
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-FilteredData-srv_filter_overview"></a>}}
-\if{latex}{\out{\hypertarget{method-FilteredData-srv_filter_overview}{}}}
-\subsection{Method \code{srv_filter_overview()}}{
+\if{html}{\out{<a id="method-FilteredData-srv_overview"></a>}}
+\if{latex}{\out{\hypertarget{method-FilteredData-srv_overview}{}}}
+\subsection{Method \code{srv_overview()}}{
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{FilteredData$srv_filter_overview(id, active_datanames = function() "all")}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{FilteredData$srv_overview(id, active_datanames = reactive(self$datanames()))}\if{html}{\out{</div>}}
 }
 
 \subsection{Arguments}{
@@ -991,7 +1030,7 @@ data}
 \item{\code{id}}{(\code{character(1)})\cr
 an ID string that corresponds with the ID used to call the module's UI function.}
 
-\item{\code{active_datanames}}{(\code{function}, \code{reactive})\cr
+\item{\code{active_datanames}}{(\code{reactive})\cr
 returning datanames that should be shown on the filter panel,
 must be a subset of the \code{datanames} argument provided to \code{ui_filter_panel};
 if the function returns \code{NULL} (as opposed to \code{character(0)}), the filter

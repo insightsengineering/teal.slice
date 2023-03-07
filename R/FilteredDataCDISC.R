@@ -71,71 +71,6 @@ CDISCFilteredData <- R6::R6Class( # nolint
     },
 
     #' @description
-    #'
-    #' Produces language required to filter a single dataset and merge it with its parent.
-    #' The datasets in question are assumed to be available.
-    #'
-    #' @param dataname (`character(1)`) name of the dataset
-    #' @return (`call` or `list` of calls ) to filter dataset
-    #'
-    get_call = function(dataname) {
-      parent_dataname <- self$get_parentname(dataname)
-
-      if (length(parent_dataname) == 0) {
-        super$get_call(dataname)
-      } else {
-        dataset <- self$get_filtered_dataset(dataname)
-        premerge_call <- Filter(
-          f = Negate(is.null),
-          x = lapply(
-            dataset$get_filter_states(),
-            function(x) x$get_call()
-          )
-        )
-
-        join_keys <- self$get_join_keys()
-        keys <-
-          if (!is.null(join_keys)) {
-            join_keys$get(parent_dataname, dataname)
-          } else {
-            character(0)
-          }
-        parent_keys <- names(keys)
-        dataset_keys <- unname(keys)
-
-        y_arg <-
-          if (length(parent_keys) == 0L) {
-            parent_dataname
-          } else {
-            sprintf("%s[, c(%s), drop = FALSE]", parent_dataname, toString(dQuote(parent_keys, q = FALSE)))
-          }
-        more_args <-
-          if (length(parent_keys) == 0 || length(dataset_keys) == 0) {
-            list()
-          } else if (identical(parent_keys, dataset_keys)) {
-            list(by = parent_keys)
-          } else {
-            list(by = stats::setNames(parent_keys, dataset_keys))
-          }
-
-        merge_call <- call(
-          "<-",
-          as.name(dataname),
-          as.call(
-            c(
-              str2lang("dplyr::inner_join"),
-              x = as.name(dataname),
-              y = str2lang(y_arg),
-              more_args
-            )
-          )
-        )
-
-        c(premerge_call, merge_call)
-      }
-    },
-
-    #' @description
     #' Get names of datasets available for filtering
     #'
     #' @param dataname (`character` vector) names of the dataset
@@ -151,22 +86,6 @@ CDISCFilteredData <- R6::R6Class( # nolint
       }
 
       return(unique(c(parents, dataname)))
-    },
-
-    #' @description
-    #' Gets variable names of a given dataname for the filtering. This excludes parent dataset variable names.
-    #'
-    #' @param dataname (`character(1)`) name of the dataset
-    #' @return (`character` vector) of variable names
-    get_filterable_varnames = function(dataname) {
-      varnames <- self$get_filtered_dataset(dataname)$get_filterable_varnames()
-      parent_dataname <- self$get_parentname(dataname)
-      parent_varnames <- if (length(parent_dataname) > 0) {
-        # cannot call get_filterable_varnames on the parent filtered_dataset in case
-        # some of its variables are set to be non-filterable
-        get_supported_filter_varnames(self$get_filtered_dataset(parent_dataname))
-      }
-      setdiff(varnames, parent_varnames)
     },
 
     #' @description
@@ -186,15 +105,10 @@ CDISCFilteredData <- R6::R6Class( # nolint
       rows <- lapply(
         datanames,
         function(dataname) {
-          obs <- self$get_filtered_dataset(dataname)$get_filter_overview_info(
-            filtered_dataset = self$get_data(dataname = dataname, filtered = TRUE)
-          )[, 1]
-
+          obs <- private$get_filtered_dataset(dataname)$get_filter_overview_info()[, 1]
           subs <- private$get_filter_overview_nsubjs(dataname)
 
-          df <- cbind(
-            obs, subs
-          )
+          df <- cbind(obs, subs)
 
           rownames(df) <- if (!is.null(names(obs))) {
             names(obs)
@@ -243,6 +157,14 @@ CDISCFilteredData <- R6::R6Class( # nolint
       if (length(parent_dataname) == 0) {
         super$set_dataset(dataset_args, dataname)
       } else {
+        parent_reactive <- private$reactive_data[[parent_dataname]]
+        join_keys <- self$get_join_keys()
+        keys <- if (!is.null(join_keys)) {
+          join_keys$get(parent_dataname, dataname)
+        } else {
+          character(0)
+        }
+
         dataset <- dataset_args[["dataset"]]
         dataset_args[["dataset"]] <- NULL
 
@@ -250,19 +172,13 @@ CDISCFilteredData <- R6::R6Class( # nolint
         check_simple_name(dataname)
         private$filtered_datasets[[dataname]] <- do.call(
           what = init_filtered_dataset,
-          args = c(list(dataset), dataset_args, list(dataname = dataname))
+          args = c(
+            list(dataset = dataset),
+            dataset_args,
+            list(dataname = dataname, parent = parent_reactive, join_keys = keys, parent_name = parent_dataname)
+          )
         )
-
-        private$reactive_data[[dataname]] <- reactive({
-          env <- new.env(parent = parent.env(globalenv()))
-          env[[dataname]] <- self$get_filtered_dataset(dataname)$get_dataset()
-          env[[private$parents[[dataname]]]] <-
-            private$reactive_data[[private$parents[[dataname]]]]()
-
-          filter_call <- self$get_call(dataname)
-          eval_expr_with_msg(filter_call, env)
-          get(x = dataname, envir = env)
-        })
+        private$reactive_data[[dataname]] <- private$get_filtered_dataset(dataname)$get_dataset(TRUE)
       }
 
       invisible(self)
@@ -285,18 +201,7 @@ CDISCFilteredData <- R6::R6Class( # nolint
       super$validate()
     },
     get_filter_overview_nsubjs = function(dataname) {
-      # Gets filter overview subjects number and returns a list
-      # of the number of subjects of filtered/non-filtered datasets
-      subject_keys <- if (length(self$get_parentname(dataname)) > 0) {
-        self$get_keys(self$get_parentname(dataname))
-      } else {
-        self$get_filtered_dataset(dataname)$get_keys()
-      }
-
-      self$get_filtered_dataset(dataname)$get_filter_overview_nsubjs(
-        self$get_data(dataname = dataname, filtered = TRUE),
-        subject_keys
-      )
+      private$get_filtered_dataset(dataname)$get_filter_overview_nsubjs()
     }
   )
 )

@@ -1,5 +1,5 @@
 #' @name ChoicesFilterState
-#' @title `FilterState` object for factor or character variable
+#' @title `InteractiveFilterState` object for factor or character variable
 #' @description Manages choosing elements from a set
 #' @docType class
 #' @keywords internal
@@ -7,7 +7,7 @@
 #'
 #' @examples
 #' filter_state <- teal.slice:::ChoicesFilterState$new(
-#'   c(LETTERS, NA),
+#'   x = c(LETTERS, NA),
 #'   varname = "x",
 #'   dataname = "data",
 #'   extract_type = character(0)
@@ -20,6 +20,7 @@
 #' \dontrun{
 #' # working filter in an app
 #' library(shiny)
+#' library(shinyjs)
 #'
 #' data_choices <- c(sample(letters[1:4], 100, replace = TRUE), NA)
 #' filter_state_choices <- ChoicesFilterState$new(
@@ -30,6 +31,9 @@
 #' filter_state_choices$set_state(list(selected = c("a", "c"), keep_na = TRUE))
 #'
 #' ui <- fluidPage(
+#'   useShinyjs(),
+#'   include_css_files(pattern = "filter-panel"),
+#'   include_js_files(pattern = "count-bar-labels"),
 #'   column(4, div(
 #'     h4("ChoicesFilterState"),
 #'     isolate(filter_state_choices$ui("fs"))
@@ -78,7 +82,7 @@
 #'
 ChoicesFilterState <- R6::R6Class( # nolint
   "ChoicesFilterState",
-  inherit = FilterState,
+  inherit = InteractiveFilterState,
 
   # public methods ----
 
@@ -88,6 +92,10 @@ ChoicesFilterState <- R6::R6Class( # nolint
     #' Initialize a `FilterState` object
     #' @param x (`character` or `factor`)\cr
     #'   values of the variable used in filter
+    #' @param x_reactive (`reactive`)\cr
+    #'   a `reactive` returning a filtered vector or returning `NULL`. Is used to update
+    #'   counts following the change in values of the filtered dataset. If the `reactive`
+    #'   is `NULL` counts based on filtered dataset are not shown.
     #' @param varname (`character`)\cr
     #'   name of the variable
     #' @param varlabel (`character(1)`)\cr
@@ -102,6 +110,7 @@ ChoicesFilterState <- R6::R6Class( # nolint
     #' \item{`"matrix"`}{ `varname` in the condition call will be returned as `<dataname>[, <varname>]`}
     #' }
     initialize = function(x,
+                          x_reactive = reactive(NULL),
                           varname,
                           varlabel = character(0),
                           dataname = NULL,
@@ -112,7 +121,8 @@ ChoicesFilterState <- R6::R6Class( # nolint
         length(unique(x[!is.na(x)])) < getOption("teal.threshold_slider_vs_checkboxgroup"),
         combine = "or"
       )
-      super$initialize(x, varname, varlabel, dataname, extract_type)
+
+      super$initialize(x, x_reactive, varname, varlabel, dataname, extract_type)
 
       private$data_class <- class(x)[1L]
       if (inherits(x, "POSIXt")) {
@@ -123,17 +133,10 @@ ChoicesFilterState <- R6::R6Class( # nolint
         x <- factor(as.character(x), levels = as.character(sort(unique(x))))
       }
       x <- droplevels(x)
-      tbl <- table(x)
-      choices <- names(tbl)
-      names(choices) <- tbl
-
-
-      private$set_choices(as.list(choices))
-      self$set_selected(unname(choices))
-      private$histogram_data <- data.frame(
-        x = levels(x),
-        y = tabulate(x)
-      )
+      choices <- table(x)
+      private$set_choices(names(choices))
+      self$set_selected(names(choices))
+      private$set_choices_counts(unname(choices))
 
       return(invisible(self))
     },
@@ -142,7 +145,9 @@ ChoicesFilterState <- R6::R6Class( # nolint
     #' Answers the question of whether the current settings and values selected actually filters out any values.
     #' @return logical scalar
     is_any_filtered = function() {
-      if (!setequal(self$get_selected(), private$choices)) {
+      if (private$is_disabled()) {
+        FALSE
+      } else if (!setequal(self$get_selected(), private$choices)) {
         TRUE
       } else if (!isTRUE(self$get_keep_na()) && private$na_count > 0) {
         TRUE
@@ -164,19 +169,35 @@ ChoicesFilterState <- R6::R6Class( # nolint
         choices <- do.call(sprintf("as.%s", private$data_class), list(x = choices))
       }
       fun_compare <- if (length(choices) == 1L) "==" else "%in%"
+
+      # to return `c` call instead of a vector
+      make_c_call <- function(choices) {
+        if (length(choices) > 1) {
+          choices <- do.call(
+            "call",
+            append(list("c"), choices)
+          )
+        }
+        choices
+      }
+
       filter_call <-
         if (inherits(choices, "Date")) {
-          call(fun_compare, varname, call("as.Date", as.character(choices)))
+          call(fun_compare, varname, call("as.Date", make_c_call(as.character(choices))))
         } else if (inherits(choices, c("POSIXct", "POSIXlt"))) {
           class <- class(choices)[1L]
           date_fun <- as.name(switch(class,
             "POSIXct" = "as.POSIXct",
             "POSIXlt" = "as.POSIXlt"
           ))
-          call(fun_compare, varname, as.call(list(date_fun, as.character(choices), tz = private$tzone)))
+          call(
+            fun_compare,
+            varname,
+            as.call(list(date_fun, make_c_call(as.character(choices)), tz = private$tzone))
+          )
         } else {
           # This handles numerics, characters, and factors.
-          call(fun_compare, varname, choices)
+          call(fun_compare, varname, make_c_call(choices))
         }
       private$add_keep_na_call(filter_call)
     },
@@ -219,11 +240,22 @@ ChoicesFilterState <- R6::R6Class( # nolint
   # private members ----
 
   private = list(
-    histogram_data = data.frame(),
+    choices_counts = integer(0),
     data_class = character(0), # stores class of filtered variable so that it can be restored in $get_call
     tzone = character(0), # if x is a datetime, stores time zone so that it can be restored in $get_call
 
     # private methods ----
+    set_choices_counts = function(choices_counts) {
+      private$choices_counts <- choices_counts
+      invisible(NULL)
+    },
+    get_filtered_counts = function() {
+      if (!is.null(private$x_reactive)) {
+        table(factor(private$x_reactive(), levels = private$choices))
+      } else {
+        NULL
+      }
+    },
     validate_selection = function(value) {
       if (!is.character(value)) {
         stop(
@@ -261,6 +293,9 @@ ChoicesFilterState <- R6::R6Class( # nolint
       }
       values[in_choices_mask]
     },
+    is_checkboxgroup = function() {
+      length(private$choices) <= getOption("teal.threshold_slider_vs_checkboxgroup")
+    },
 
     # shiny modules ----
 
@@ -272,49 +307,52 @@ ChoicesFilterState <- R6::R6Class( # nolint
     #  id of shiny element
     ui_inputs = function(id) {
       ns <- NS(id)
-      div(
-        if (length(private$choices) <= getOption("teal.threshold_slider_vs_checkboxgroup")) {
-          l_counts <- as.numeric(names(private$choices))
-          l_counts[is.na(l_counts)] <- 0
-          l_freqs <- l_counts / sum(l_counts)
-          labels <- lapply(seq_along(private$choices), function(i) {
-            div(
-              class = "choices_state_label",
-              style = sprintf("width:%s%%", l_freqs[i] * 100),
-              span(
-                class = "choices_state_label_text",
-                sprintf(
-                  "%s (%s)",
-                  private$choices[i],
-                  l_counts[i]
-                )
-              )
-            )
-          })
-          div(
-            class = "choices_state",
-            checkboxGroupInput(
-              ns("selection"),
-              label = NULL,
-              selected = self$get_selected(),
-              choiceNames = labels,
-              choiceValues = as.character(private$choices),
-              width = "100%"
-            )
-          )
-        } else {
-          teal.widgets::optionalSelectInput(
+
+      countsmax <- private$choices_counts
+      countsnow <- isolate(unname(table(factor(private$x_reactive(), levels = private$choices))))
+
+      ui_input <- if (private$is_checkboxgroup()) {
+        labels <- countBars(
+          inputId = ns("labels"),
+          choices = private$choices,
+          countsnow = countsnow,
+          countsmax = countsmax
+        )
+        div(
+          class = "choices_state",
+          checkboxGroupInput(
             inputId = ns("selection"),
-            choices = stats::setNames(private$choices, sprintf("%s (%s)", private$choices, names(private$choices))),
-            selected = self$get_selected(),
-            multiple = TRUE,
-            options = shinyWidgets::pickerOptions(
-              actionsBox = TRUE,
-              liveSearch = (length(private$choices) > 10),
-              noneSelectedText = "Select a value"
-            )
+            label = NULL,
+            selected = private$selected(),
+            choiceNames = labels,
+            choiceValues = private$choices,
+            width = "100%"
           )
-        },
+        )
+      } else {
+        labels <- mapply(
+          FUN = make_count_text,
+          label = private$choices,
+          countnow = countsnow,
+          countmax = countsmax
+        )
+
+        teal.widgets::optionalSelectInput(
+          inputId = ns("selection"),
+          choices = stats::setNames(private$choices, labels),
+          selected = isolate(self$get_selected()),
+          multiple = TRUE,
+          options = shinyWidgets::pickerOptions(
+            actionsBox = TRUE,
+            liveSearch = (length(private$choices) > 10),
+            noneSelectedText = "Select a value"
+          )
+        )
+      }
+
+      div(
+        uiOutput(ns("trigger_visible")),
+        ui_input,
         private$keep_na_ui(ns("keep_na"))
       )
     },
@@ -330,48 +368,125 @@ ChoicesFilterState <- R6::R6Class( # nolint
         function(input, output, session) {
           logger::log_trace("ChoicesFilterState$server initializing, dataname: { private$dataname }")
 
-          # this observer is needed in the situation when private$selected has been
-          # changed directly by the api - then it's needed to rerender UI element
-          # to show relevant values
-          private$observers$selection_api <- observeEvent(
-            ignoreNULL = FALSE, # it's possible that nothing is selected
-            ignoreInit = TRUE,
-            eventExpr = self$get_selected(),
-            handlerExpr = {
-              if (!setequal(self$get_selected(), input$selection)) {
-                updateCheckboxInput(
-                  session = session,
-                  inputId = "selection",
-                  value =  self$get_selected()
-                )
+          # 1. renderUI is used here as an observer which triggers only if output is visible
+          #  and if the reactive changes - reactive triggers only if the output is visible.
+          # 2. We want to trigger change of the labels only if reactive count changes (not underlying data)
+          non_missing_values <- reactive(Filter(Negate(is.na), private$x_reactive()))
+          output$trigger_visible <- renderUI({
+            logger::log_trace(sprintf(
+              "ChoicesFilterState$server@1 updating count labels in variable: %s , dataname: %s",
+              private$varname,
+              private$dataname
+            ))
+            if (private$is_checkboxgroup()) {
+              updateCountBars(
+                inputId = "labels",
+                choices = private$choices,
+                countsmax = private$choices_counts,
+                countsnow = unname(table(factor(non_missing_values(), levels = private$choices)))
+              )
+            } else {
+              labels <- mapply(
+                FUN = make_count_text,
+                label = private$choices,
+                countmax = private$choices_counts,
+                countnow = unname(table(factor(non_missing_values(), levels = private$choices)))
+              )
+              teal.widgets::updateOptionalSelectInput(
+                session = session,
+                inputId = "selection",
+                choices = stats::setNames(private$choices, labels),
+                selected = self$get_selected()
+              )
+            }
+            NULL
+          })
+
+          if (private$is_checkboxgroup()) {
+            private$observers$selection <- observeEvent(
+              ignoreNULL = FALSE, # it's possible that nothing is selected
+              ignoreInit = TRUE, # ignoreInit: should not matter because we set the UI with the desired initial state
+              eventExpr = input$selection,
+              handlerExpr = {
                 logger::log_trace(sprintf(
-                  "ChoicesFilterState$server@1 selection of variable %s changed, dataname: %s",
+                  "ChoicesFilterState$server@2 selection of variable %s changed, dataname: %s",
                   private$varname,
                   private$dataname
                 ))
+                selection <- if (is.null(input$selection)) character(0) else input$selection
+                self$set_selected(selection)
               }
-            }
-          )
+            )
+          } else {
+            private$observers$selection <- observeEvent(
+              ignoreNULL = FALSE, # it's possible that nothing is selected
+              ignoreInit = TRUE, # ignoreInit: should not matter because we set the UI with the desired initial state
+              eventExpr = input$selection_open,
+              handlerExpr = {
+                if (!isTRUE(input$selection_open)) {
+                  logger::log_trace(sprintf(
+                    "ChoicesFilterState$server@2 selection of variable %s changed, dataname: %s",
+                    private$varname,
+                    private$dataname
+                  ))
+                  selection <- if (is.null(input$selection)) character(0) else input$selection
+                  self$set_selected(selection)
+                }
+              }
+            )
+          }
+          private$keep_na_srv("keep_na")
 
-          private$observers$selection <- observeEvent(
-            ignoreNULL = FALSE, # it's possible that nothing is selected
-            ignoreInit = TRUE, # ignoreInit: should not matter because we set the UI with the desired initial state
-            eventExpr = input$selection,
-            handlerExpr = {
-              selection <- if (is.null(input$selection)) character(0) else input$selection
-              self$set_selected(selection)
+          # this observer is needed in the situation when private$selected has been
+          # changed directly by the api - then it's needed to rerender UI element
+          # to show relevant values
+          private$observers$selection_api <- observeEvent(private$selected(), {
+            if (!isTRUE(all.equal(input$selection, self$get_selected()))) {
               logger::log_trace(sprintf(
-                "ChoicesFilterState$server@2 selection of variable %s changed, dataname: %s",
+                "ChoicesFilterState$server@2 state of variable %s changed, dataname: %s",
                 private$varname,
                 private$dataname
               ))
+              if (private$is_checkboxgroup()) {
+                updateCheckboxGroupInput(
+                  inputId = "selection",
+                  selected = private$selected()
+                )
+              } else {
+                teal.widgets::updateOptionalSelectInput(
+                  session, "selection",
+                  selected = private$selected()
+                )
+              }
             }
-          )
-          private$keep_na_srv("keep_na")
+          })
+
+          observeEvent(private$is_disabled(), {
+            shinyjs::toggleState(
+              id = "selection",
+              condition = !private$is_disabled()
+            )
+            shinyjs::toggleState(
+              id = "keep_na-value",
+              condition = !private$is_disabled()
+            )
+          })
 
           logger::log_trace("ChoicesFilterState$server initialized, dataname: { private$dataname }")
           NULL
         }
+      )
+    },
+
+    # @description
+    # UI module to display filter summary
+    #  renders text describing number of selected levels
+    #  and if NA are included also
+    content_summary = function(id) {
+      n_selected <- length(self$get_selected())
+      tagList(
+        tags$span(sprintf("%s levels selected", n_selected)),
+        if (self$get_keep_na()) tags$span("NA") else NULL
       )
     }
   )
