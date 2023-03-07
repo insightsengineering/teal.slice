@@ -68,6 +68,7 @@ print.teal_slice <- function(x) {
 #' Collate single variable filter states into a complete filter specification.
 #'
 #' @param ... any number of `teal_slice` objects
+#' @param slices `list` of `teal_slice` objects
 #' @filterable `named list` of `character` vectors, specifying which variables
 #'              (list elements) can be filtered in which data sets (list names)
 #' @count_type `character(1)` string specifying how observations are tallied by these filter states
@@ -91,18 +92,33 @@ print.teal_slice <- function(x) {
 #'
 filter_settings <- function(
     ...,
+    slices,
     filterable = list(),
     count_type = c("none", "all", "hierarchical")
 ) {
+  if (!missing(slices)) {
+    slices <- c(list(...), slices)
+  }
+  checkmate::assert_list(slices, types = "teal_slice", any.missing = FALSE)
   checkmate::assert_list(filterable, names = "named", types = "character")
-  args <- list(...)
-  checkmate::assert_list(args, types = "teal_slice", any.missing = FALSE)
   count_type <- match.arg(count_type)
 
-  attr(args, "filterable") <- filterable
-  attr(args, "count_type") <- count_type
-  class(args) <- "teal_slices"
-  args
+  attr(slices, "filterable") <- filterable
+  attr(slices, "count_type") <- count_type
+  class(slices) <- "teal_slices"
+  slices
+}
+
+c.teal_slices <- function(...) {
+  x <- list(...)
+  filterables <- lapply(x, attr, "filterable")
+  filterables <- unlist(filterables, recursive = FALSE)
+  filterables <- filterables[!duplicated(names(filterables))]
+  count_types <- lapply(x, attr, "count_type")
+  count_types <- unique(unlist(count_types))
+  checkmate::assert_string(count_types)
+
+  filter_settings(slices = unlist(x, recursive = FALSE), filterable = filterables, count_type = count_types)
 }
 
 `[.teal_slices` <- function(x, i) {
@@ -118,9 +134,14 @@ print.teal_slices <- function(x) {
   ct <- attr(x, "count_type")
   x <- lapply(x, unclass)
   lapply(x, str)
-  cat("\nfilterable variables:\n")
-  for (i in seq_along(f)) {
-    cat(sprintf(" $ %s: %s", names(f)[i], toString(f[[i]])), "\n")
+  cat("\nfilterable variables:")
+  if (identical(f, list())) {
+    cat(" none\n")
+  } else {
+    cat("\n")
+    for (i in seq_along(f)) {
+      cat(sprintf(" $ %s: %s", names(f)[i], toString(f[[i]])), "\n")
+    }
   }
   cat(sprintf("\ncount type: %s", ct), "\n")
 }
@@ -140,7 +161,8 @@ all_filters <- filter_settings(
     "dataname2" = "varname3"
   )
 )
-all_filters
+# all_filters
+# c(all_filters[1], all_filters[2])
 
 
 # get slices where feature is value
