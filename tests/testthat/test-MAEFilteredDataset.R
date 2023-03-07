@@ -11,6 +11,22 @@ testthat::test_that("MAEFilteredDataset throws error with a data.frame passed to
   )
 })
 
+testthat::test_that("filter_states list is initialized with names of experiments", {
+  testfd <- R6::R6Class(
+    "testfd",
+    inherit = MAEFilteredDataset,
+    public = list(
+      get_filter_states = function() private$filter_states
+    )
+  )
+  utils::data(miniACC, package = "MultiAssayExperiment")
+  filtered_dataset <- testfd$new(dataset = miniACC, dataname = "mae")
+  testthat::expect_identical(
+    names(filtered_dataset$get_filter_states()),
+    c("subjects", "RNASeq2GeneNorm", "gistict", "RPPAArray", "Mutations", "miRNASeqGene")
+  )
+})
+
 testthat::test_that("MAEFilteredDataset$get_call returns NULL without applying filter", {
   utils::data(miniACC, package = "MultiAssayExperiment")
   filtered_dataset <- MAEFilteredDataset$new(dataset = miniACC, dataname = "miniACC")

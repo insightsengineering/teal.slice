@@ -110,7 +110,7 @@ MAEFilteredDataset <- R6::R6Class( # nolint
     #'
     set_filter_state = function(state) {
       checkmate::assert_list(state)
-      checkmate::assert_subset(names(state), c(names(self$get_filter_states())))
+      checkmate::assert_subset(names(state), c(names(private$get_filter_states())))
 
       logger::log_trace(
         sprintf(
@@ -120,7 +120,7 @@ MAEFilteredDataset <- R6::R6Class( # nolint
         )
       )
       lapply(names(state), function(fs_name) {
-        fs <- self$get_filter_states()[[fs_name]]
+        fs <- private$get_filter_states()[[fs_name]]
         fs$set_filter_state(state = state[[fs_name]])
       })
 
@@ -143,7 +143,7 @@ MAEFilteredDataset <- R6::R6Class( # nolint
     #'
     remove_filter_state = function(state_id) {
       checkmate::assert_list(state_id, names = "unique")
-      checkmate::assert_subset(names(state_id), c(names(self$get_filter_states())))
+      checkmate::assert_subset(names(state_id), c(names(private$get_filter_states())))
 
       logger::log_trace(
         sprintf(
@@ -154,7 +154,7 @@ MAEFilteredDataset <- R6::R6Class( # nolint
       )
 
       for (fs_name in names(state_id)) {
-        fdata_filter_state <- self$get_filter_states()[[fs_name]]
+        fdata_filter_state <- private$get_filter_states()[[fs_name]]
         fdata_filter_state$remove_filter_state(
           `if`(fs_name == "subjects", state_id[[fs_name]][[1]], state_id[[fs_name]])
         )
@@ -188,7 +188,7 @@ MAEFilteredDataset <- R6::R6Class( # nolint
         br(),
         HTML("&#9658;"),
         tags$label("Add subjects filter"),
-        self$get_filter_states("subjects")$ui_add(id = ns("subjects")),
+        private$get_filter_states("subjects")$ui_add(id = ns("subjects")),
         tagList(
           lapply(
             experiment_names,
@@ -196,7 +196,7 @@ MAEFilteredDataset <- R6::R6Class( # nolint
               tagList(
                 HTML("&#9658;"),
                 tags$label("Add", tags$code(experiment_name), "filter"),
-                self$get_filter_states(experiment_name)$ui_add(id = ns(experiment_name))
+                private$get_filter_states(experiment_name)$ui_add(id = ns(experiment_name))
               )
             }
           )
@@ -226,12 +226,12 @@ MAEFilteredDataset <- R6::R6Class( # nolint
             "MAEFilteredDataset$srv_add initializing,",
             "dataname: { deparse1(self$get_dataname()) }"
           ))
-          self$get_filter_states("subjects")$srv_add(id = "subjects")
+          private$get_filter_states("subjects")$srv_add(id = "subjects")
           experiment_names <- names(self$get_dataset())
           lapply(
             experiment_names,
             function(experiment_name) {
-              self$get_filter_states(experiment_name)$srv_add(experiment_name)
+              private$get_filter_states(experiment_name)$srv_add(experiment_name)
             }
           )
           logger::log_trace(paste(

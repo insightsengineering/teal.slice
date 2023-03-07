@@ -704,6 +704,20 @@ FilteredData <- R6::R6Class( # nolint
           self$srv_active("active", active_datanames_resolved)
           self$srv_add("add", active_datanames_resolved)
 
+          private$filter_panel_ui_id <- session$ns(NULL)
+          observeEvent(
+            eventExpr = input$filter_panel_active,
+            handlerExpr = {
+              if (isTRUE(input$filter_panel_active)) {
+                self$filter_panel_enable()
+                logger::log_trace("Enable the Filtered Panel with the filter_panel_enable method")
+              } else {
+                self$filter_panel_disable()
+                logger::log_trace("Disable the Filtered Panel with the filter_panel_enable method")
+              }
+            }, ignoreNULL = TRUE
+          )
+
           logger::log_trace("FilteredData$srv_filter_panel initialized")
           NULL
         }
@@ -820,20 +834,6 @@ FilteredData <- R6::R6Class( # nolint
             ifelse(n_filters_active == 1, "", "s")
           )
         })
-
-        private$filter_panel_ui_id <- session$ns(NULL)
-        observeEvent(
-          eventExpr = input$filter_panel_active,
-          handlerExpr = {
-            if (isTRUE(input$filter_panel_active)) {
-              self$filter_panel_enable()
-              logger::log_trace("Enable the Filtered Panel with the filter_panel_enable method")
-            } else {
-              self$filter_panel_disable()
-              logger::log_trace("Disable the Filtered Panel with the filter_panel_enable method")
-            }
-          }, ignoreNULL = TRUE
-        )
 
         observeEvent(input$remove_all_filters, {
           logger::log_trace("FilteredData$srv_filter_panel@1 removing all filters")

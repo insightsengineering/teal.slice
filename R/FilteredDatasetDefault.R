@@ -165,7 +165,7 @@ DefaultFilteredDataset <- R6::R6Class( # nolint
     #' @return `list` with named elements corresponding to `FilterState` objects
     #' (active filters).
     get_filter_state = function() {
-      self$get_filter_states("filter")$get_filter_state()
+      private$get_filter_states("filter")$get_filter_state()
     },
 
     #' @description
@@ -194,7 +194,7 @@ DefaultFilteredDataset <- R6::R6Class( # nolint
           self$get_dataname()
         )
       )
-      fs <- self$get_filter_states()[[1]]
+      fs <- private$get_filter_states()[[1]]
       fs$set_filter_state(state = state)
       logger::log_trace(
         sprintf(
@@ -221,7 +221,7 @@ DefaultFilteredDataset <- R6::R6Class( # nolint
         )
       )
 
-      fdata_filter_state <- shiny::isolate(self$get_filter_states())[[1]]
+      fdata_filter_state <- shiny::isolate(private$get_filter_states())[[1]]
       for (element in state_id) {
         fdata_filter_state$remove_filter_state(element)
       }
@@ -247,7 +247,7 @@ DefaultFilteredDataset <- R6::R6Class( # nolint
       ns <- NS(id)
       tagList(
         tags$label("Add", tags$code(self$get_dataname()), "filter"),
-        self$get_filter_states(id = "filter")$ui_add(id = ns("filter"))
+        private$get_filter_states(id = "filter")$ui_add(id = ns("filter"))
       )
     },
 
@@ -270,7 +270,7 @@ DefaultFilteredDataset <- R6::R6Class( # nolint
           logger::log_trace(
             "DefaultFilteredDataset$srv_add initializing, dataname: { deparse1(self$get_dataname()) }"
           )
-          self$get_filter_states(id = "filter")$srv_add(id = "filter")
+          private$get_filter_states(id = "filter")$srv_add(id = "filter")
           logger::log_trace(
             "DefaultFilteredDataset$srv_add initialized, dataname: { deparse1(self$get_dataname()) }"
           )
