@@ -176,6 +176,10 @@ a.remove_all:hover {
   max-width: 100%;
 }
 
+.keep_na_inf {
+  display: flex;
+  justify-content: space-evenly;
+}
 
 .filter_panel_dataname {
   font-weight: bold;

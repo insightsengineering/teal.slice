@@ -391,16 +391,36 @@ RangeFilterState <- R6::R6Class( # nolint
     #  id of shiny element
     ui_inputs = function(id) {
       ns <- NS(id)
-      div(
-        class = "choices_state",
-        div(
-          class = "filterPlotOverlayRange",
-          plotOutput(ns("plot"), height = "100%"),
+      tagList(
+        checkboxInput(ns("manual"), "Enter range manully"),
+        conditionalPanel(
+          ns = ns,
+          condition = "input.manual == false",
+          div(
+            class = "choices_state",
+            div(
+              class = "filterPlotOverlayRange",
+              plotOutput(ns("plot"), height = "100%"),
+            ),
+            div(
+              class = "filterRangeSlider",
+              teal.widgets::optionalSliderInput(
+                inputId = ns("selection"),
+                label = NULL,
+                min = private$choices[1],
+                max = private$choices[2],
+                value = shiny::isolate(private$selected()),
+                step = private$slider_step,
+                width = "100%"
+              )
+            )
+          )
         ),
-        div(
-          class = "filterRangeSlider",
-          teal.widgets::optionalSliderInput(
-            inputId = ns("selection"),
+        conditionalPanel(
+          ns = ns,
+          condition = "input.manual == true",
+          shinyWidgets::numericRangeInput(
+            inputId = ns("selection_manual"),
             label = NULL,
             min = private$choices[1],
             max = private$choices[2],
@@ -409,8 +429,11 @@ RangeFilterState <- R6::R6Class( # nolint
             width = "100%"
           )
         ),
-        private$keep_inf_ui(ns("keep_inf")),
-        private$keep_na_ui(ns("keep_na"))
+        div(
+          class = "keep_na_inf",
+          private$keep_inf_ui(ns("keep_inf")),
+          private$keep_na_ui(ns("keep_na"))
+        )
       )
     },
 
@@ -509,6 +532,22 @@ RangeFilterState <- R6::R6Class( # nolint
               condition = !private$is_disabled()
             )
           })
+
+          observeEvent(input$manual, {
+            if (input$manual) {
+              shinyWidgets::updateNumericRangeInput(
+                session = session,
+                inputId = "selection_manual",
+                value = input$selection
+              )
+            } else {
+              updateSliderInput(
+                session = session,
+                inputId = "selection",
+                value = input$selection_manual
+              )
+            }
+          }, ignoreInit = TRUE)
 
           logger::log_trace("RangeFilterState$server initialized, dataname: { private$dataname }")
           NULL
