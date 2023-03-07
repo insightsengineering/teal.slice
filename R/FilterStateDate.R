@@ -113,7 +113,7 @@ DateFilterState <- R6::R6Class( # nolint
     #' }
     initialize = function(x,
                           x_reactive = reactive(NULL),
-                          dataname,
+                          dataname = NULL,
                           varname,
                           choices = NULL,
                           selected = NULL,
@@ -123,7 +123,7 @@ DateFilterState <- R6::R6Class( # nolint
                           extract_type = character(0)) {
       stopifnot(is(x, "Date"))
       checkmate::assert_class(x_reactive, 'reactive')
-      
+
       super$initialize(
         x = x,
         x_reactive = x_reactive,
@@ -135,7 +135,7 @@ DateFilterState <- R6::R6Class( # nolint
         keep_na = keep_na,
         fixed = fixed,
         extract_type = extract_type)
-        
+
       private$set_choices_limited(x, choices)
       var_range <- range(x, na.rm = TRUE)
       private$set_choices(var_range)

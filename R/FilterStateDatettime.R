@@ -117,7 +117,7 @@ DatetimeFilterState <- R6::R6Class( # nolint
     #' }
     initialize = function(x,
                           x_reactive = reactive(NULL),
-                          dataname,
+                          dataname = NULL,
                           varname,
                           choices = NULL,
                           selected = NULL,
