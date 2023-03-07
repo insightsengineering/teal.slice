@@ -116,7 +116,6 @@ ChoicesFilterState <- R6::R6Class( # nolint
                           dataname = NULL,
                           extract_type = character(0),
                           choices = NULL) {
-      # browser()
       checkmate::assert(
         is.character(x),
         is.factor(x),
