@@ -81,11 +81,10 @@ EmptyFilterState <- R6::R6Class( # nolint
     #' @return `logical(1)`
     #'
     get_call = function() {
-
       filter_call <- if (isTRUE(self$get_keep_na())) {
         call("is.na", private$get_varname_prefixed())
       } else {
-       substitute(!is.na(varname), list(varname = private$get_varname_prefixed()))
+        substitute(!is.na(varname), list(varname = private$get_varname_prefixed()))
       }
     },
 

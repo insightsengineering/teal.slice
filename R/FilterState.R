@@ -324,10 +324,10 @@ InteractiveFilterState <- R6::R6Class( # nolint
         private$selected(value)
         logger::log_trace(
           sprintf(
-          "%s$set_selected selection of variable %s set, dataname: %s",
-          class(self)[1],
-          private$varname,
-          private$dataname
+            "%s$set_selected selection of variable %s set, dataname: %s",
+            class(self)[1],
+            private$varname,
+            private$dataname
           )
         )
       }
@@ -366,10 +366,10 @@ InteractiveFilterState <- R6::R6Class( # nolint
       }
       logger::log_trace(
         sprintf(
-        "%s$set_state, dataname: %s done setting state for variable %s",
-        class(self)[1],
-        private$dataname,
-        private$varname
+          "%s$set_state, dataname: %s done setting state for variable %s",
+          class(self)[1],
+          private$dataname,
+          private$varname
         )
       )
       invisible(NULL)
@@ -390,13 +390,16 @@ InteractiveFilterState <- R6::R6Class( # nolint
         function(input, output, session) {
           private$server_summary("summary")
           private$server_inputs("inputs")
-          observeEvent(input$enable, {
-            if (isTRUE(input$enable)) {
-              private$enable()
-            } else {
-              private$disable()
-            }
-          }, ignoreInit = TRUE)
+          observeEvent(input$enable,
+            {
+              if (isTRUE(input$enable)) {
+                private$enable()
+              } else {
+                private$disable()
+              }
+            },
+            ignoreInit = TRUE
+          )
           reactive(input$remove) # back to parent to remove self
         }
       )

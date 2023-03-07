@@ -245,7 +245,6 @@ RangeFilterState <- R6::R6Class( # nolint
     #'  modules after selecting check-box-input in the shiny interface. Values are set to
     #'  `private$keep_inf` which is reactive.
     set_keep_inf = function(value) {
-
       if (shiny::isolate(private$is_disabled())) {
         warning("This filter state is disabled. Can not change keep Inf.")
       } else {
@@ -375,7 +374,6 @@ RangeFilterState <- R6::R6Class( # nolint
     remove_out_of_bound_values = function(values) {
       values
     },
-
     disable = function() {
       private$cache <- self$get_state()
       private$selected(NULL)

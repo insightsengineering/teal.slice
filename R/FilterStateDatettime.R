@@ -175,7 +175,6 @@ DatetimeFilterState <- R6::R6Class( # nolint
     #' `<varname> >= as.POSIXct(<min>) & <varname> <= <max>)`
     #' with optional `is.na(<varname>)`.
     get_call = function() {
-
       choices <- self$get_selected()
       tzone <- Find(function(x) x != "", attr(as.POSIXlt(choices), "tzone"))
       class <- class(choices)[1L]
