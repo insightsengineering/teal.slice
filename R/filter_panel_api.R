@@ -135,9 +135,22 @@ NULL
 #' @export
 set_filter_state <- function(datasets, filter) {
   checkmate::assert_multi_class(datasets, c("FilteredData", "FilterPanelAPI"))
-  checkmate::assert_list(filter, min.len = 0, null.ok = TRUE)
-  if (length(filter) > 0) {
-    datasets$set_filter_state(filter)
+  checkmate::assert(
+    checkmate::check_list(filter, min.len = 0, null.ok = TRUE),
+    checkmate::assert_class(filter, "teal_slices")
+  )
+  if (inherits(filter, "teal_slices")) {
+    # identify datasets
+    # send appropriate teal_slice objects
+  } else {
+    warning(paste(
+      "From init_filter_state:",
+      "Specifying filters as lists is obsolete and will be deprecated in the next release.",
+      "Please see ?set_filter_state and ?filter_settings for details."
+    ))
+    if (length(filter) > 0) {
+      datasets$set_filter_state(filter)
+    }
   }
   invisible(NULL)
 }
