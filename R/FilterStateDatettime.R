@@ -117,18 +117,28 @@ DatetimeFilterState <- R6::R6Class( # nolint
     #' }
     initialize = function(x,
                           x_reactive = reactive(NULL),
+                          dataname,
                           varname,
+                          choices = NULL,
+                          selected = NULL,
                           varlabel = character(0),
-                          dataname = NULL,
-                          extract_type = character(0),
-                          choices = NULL) {
+                          keep_na = NULL,
+                          fixed = FALSE,
+                          extract_type = character(0)) {
       checkmate::assert_multi_class(x, c("POSIXct", "POSIXlt"))
       checkmate::assert_class(x_reactive, 'reactive')
 
       super$initialize(
-        x = x, x_reactive = x_reactive, dataname = dataname, varname = varname,
-        varlabel = varlabel, extract_type = extract_type
-      )
+        x = x,
+        x_reactive = x_reactive,
+        dataname = dataname,
+        varname = varname,
+        choices = choices,
+        selected = selected,
+        varlabel = varlabel,
+        keep_na = keep_na,
+        fixed = fixed,
+        extract_type = extract_type)
 
       var_range <- as.POSIXct(trunc(range(x, na.rm = TRUE), units = "secs"))
       private$set_choices(var_range)
