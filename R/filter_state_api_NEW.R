@@ -99,10 +99,10 @@ filter_settings <- function(
   checkmate::assert_list(args, types = "teal_slice", any.missing = FALSE)
   count_type <- match.arg(count_type)
 
-  ans <- lapply(args, function(x) c(x, count_type = count_type))
-  attr(ans, "filterable") <- filterable
-  class(ans) <- "teal_slices"
-  ans
+  attr(args, "filterable") <- filterable
+  attr(args, "count_type") <- count_type
+  class(args) <- "teal_slices"
+  args
 }
 
 `[.teal_slices` <- function(x, i) {
@@ -115,13 +115,14 @@ filter_settings <- function(
 
 print.teal_slices <- function(x) {
   f <- attr(x, "filterable")
+  ct <- attr(x, "count_type")
   x <- lapply(x, unclass)
   lapply(x, str)
   cat("\nfilterable variables:\n")
   for (i in seq_along(f)) {
-    cat(sprintf("$%s", names(f)[i]), "\n")
-    cat("  ", toString(f[[i]]), "\n")
+    cat(sprintf(" $ %s: %s", names(f)[i], toString(f[[i]])), "\n")
   }
+  cat(sprintf("\ncount type: %s", ct), "\n")
 }
 
 
@@ -139,7 +140,7 @@ all_filters <- filter_settings(
     "dataname2" = "varname3"
   )
 )
-
+all_filters
 
 
 # get slices where feature is value
