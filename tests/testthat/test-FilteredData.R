@@ -49,10 +49,50 @@ testthat::test_that("The constructor accepts check to be a flag", {
   )
 })
 
+testthat::test_that("FilteredData from TealData preserves the check field when check is FALSE", {
+  code <- teal.data:::CodeClass$new()$set_code("df_1 <- data.frame(x = 1:10)")
+
+  filtered_data <- FilteredData$new(
+    list("df_1" = list(dataset = data.frame(x = 1:10))),
+    code = code,
+    check = FALSE
+  )
+  testthat::expect_false(filtered_data$get_check())
+})
+
+testthat::test_that("FilteredData preserves the check field when check is TRUE", {
+  code <- teal.data:::CodeClass$new()$set_code("df_1 <- data.frame(x = 1:10)")
+
+  filtered_data <- FilteredData$new(
+    list("df_1" = list(dataset = data.frame(x = 1:10))),
+    code = code,
+    check = TRUE
+  )
+  testthat::expect_true(filtered_data$get_check())
+})
+
 testthat::test_that("datanames returns character vector reflecting names of set datasets", {
   dataset <- list(dataset = iris)
   filtered_data <- FilteredData$new(list(df1 = dataset, df2 = dataset))
   testthat::expect_identical(filtered_data$datanames(), c("df1", "df2"))
+})
+
+testthat::test_that("get_filterable_dataname throws when dataname is not a subset of current datanames", {
+  dataset <- list(dataset = iris)
+  filtered_data <- FilteredData$new(list(iris = dataset))
+  testthat::expect_error(filtered_data$get_filterable_datanames("idontexist"))
+})
+
+testthat::test_that("get_filterable_dataname returns dataname same as input", {
+  dataset <- list(dataset = iris)
+  filtered_data <- FilteredData$new(list(iris = dataset))
+  testthat::expect_identical(filtered_data$get_filterable_datanames("iris"), "iris")
+})
+
+testthat::test_that("set_dataset accepts a `data.frame` object", {
+  filtered_data <- FilteredData$new(data_objects = list())
+  dataset_args <- list(dataset = iris)
+  testthat::expect_no_error(filtered_data$set_dataset(dataset_args = dataset_args, dataname = "iris"))
 })
 
 testthat::test_that("set_dataset accepts a `data.frame` object", {
@@ -607,28 +647,6 @@ testthat::test_that("get_filter_overview returns overview matrix for filtered da
   )
 })
 
-testthat::test_that("FilteredData from TealData preserves the check field when check is FALSE", {
-  code <- teal.data:::CodeClass$new()$set_code("df_1 <- data.frame(x = 1:10)")
-
-  filtered_data <- FilteredData$new(
-    list("df_1" = list(dataset = data.frame(x = 1:10))),
-    code = code,
-    check = FALSE
-  )
-  testthat::expect_false(filtered_data$get_check())
-})
-
-testthat::test_that("FilteredData preserves the check field when check is TRUE", {
-  code <- teal.data:::CodeClass$new()$set_code("df_1 <- data.frame(x = 1:10)")
-
-  filtered_data <- FilteredData$new(
-    list("df_1" = list(dataset = data.frame(x = 1:10))),
-    code = code,
-    check = TRUE
-  )
-  testthat::expect_true(filtered_data$get_check())
-})
-
 
 testthat::test_that("filter_panel_disable", {
   filtered_data <- FilteredData$new(data_objects = list("iris" = list(dataset = iris)))
@@ -655,21 +673,121 @@ testthat::test_that("filter_panel_enable", {
   )
 })
 
-testthat::test_that("filter_panel_disable and filter_panel_enable", {
-  filtered_data <- FilteredData$new(data_objects = list("iris" = list(dataset = iris)))
-  filtered_data$set_filter_state(list(iris = list(Sepal.Width = c(3, 4))))
+testthat::test_that("disable/enable_filter_panel caches and restores state", {
+  filtered_data <- FilteredData$new(
+    list(
+      iris = list(dataset = iris),
+      mtcars = list(dataset = mtcars)
+    )
+  )
+  fs <- list(
+    iris = list(
+      Sepal.Length = list(c(5.1, 6.4)),
+      Species = c("setosa", "versicolor")
+    ),
+    mtcars = list(
+      cyl = c(4, 6),
+      disp = list()
+    )
+  )
+  filtered_data$set_filter_state(fs)
   shiny::testServer(
     filtered_data$srv_filter_panel,
     expr = {
-      testthat::expect_length(filtered_data$get_filter_state(), 1)
+      cached <- filtered_data$get_filter_state()
       testthat::expect_true(filtered_data$get_filter_panel_active())
       filtered_data$filter_panel_disable()
-      testthat::expect_length(filtered_data$get_filter_state(), 0)
+      testthat::expect_identical(filtered_data$get_filter_state(), structure(list(a = NULL)[0], formatted = ""))
       testthat::expect_false(filtered_data$get_filter_panel_active())
       filtered_data$filter_panel_enable()
-      testthat::expect_length(filtered_data$get_filter_state(), 1)
+      testthat::expect_identical(filtered_data$get_filter_state(), cached)
       testthat::expect_true(filtered_data$get_filter_panel_active())
     }
+  )
+})
+
+testthat::test_that("switching disable/enable button caches and restores state", {
+  filtered_data <- FilteredData$new(
+    list(
+      iris = list(dataset = iris),
+      mtcars = list(dataset = mtcars)
+    )
+  )
+  fs <- list(
+    iris = list(
+      Sepal.Length = list(c(5.1, 6.4)),
+      Species = c("setosa", "versicolor")
+    ),
+    mtcars = list(
+      cyl = c(4, 6),
+      disp = list()
+    )
+  )
+  filtered_data$set_filter_state(fs)
+  shiny::testServer(
+    filtered_data$srv_filter_panel,
+    expr = {
+      cached <- filtered_data$get_filter_state()
+      testthat::expect_true(filtered_data$get_filter_panel_active())
+      session$setInputs(filter_panel_active = FALSE)
+      testthat::expect_identical(filtered_data$get_filter_state(), structure(list(a = NULL)[0], formatted = ""))
+      testthat::expect_false(filtered_data$get_filter_panel_active())
+      session$setInputs(filter_panel_active = TRUE)
+      testthat::expect_identical(filtered_data$get_filter_state(), cached)
+      testthat::expect_true(filtered_data$get_filter_panel_active())
+    }
+  )
+})
+
+testthat::test_that("active_datanames in srv_filter_panel gets resolved to valid datanames", {
+  filtered_data <- FilteredData$new(
+    list(
+      iris = list(dataset = iris),
+      mtcars = list(dataset = mtcars)
+    )
+  )
+  shiny::testServer(
+    filtered_data$srv_filter_panel,
+    args = list(active_datanames = function() "all"),
+    expr = {
+      testthat::expect_identical(active_datanames_resolved(), c("iris", "mtcars"))
+    }
+  )
+  shiny::testServer(
+    filtered_data$srv_filter_panel,
+    args = list(active_datanames = function() "iris"),
+    expr = {
+      testthat::expect_identical(active_datanames_resolved(), c("iris"))
+    }
+  )
+})
+
+testthat::test_that("active_datanames fails if returns dataname which isn't a subset of available datanames", {
+  filtered_data <- FilteredData$new(
+    list(
+      iris = list(dataset = iris),
+      mtcars = list(dataset = mtcars)
+    )
+  )
+  shiny::testServer(
+    filtered_data$srv_filter_panel,
+    args = list(active_datanames = function() c("iris", "idontexist")),
+    expr = {
+      testthat::expect_error(active_datanames_resolved())
+    }
+  )
+})
+
+testthat::test_that("srv_active - dataset modules are called and return NULL", {
+  filtered_data <- FilteredData$new(
+    list(
+      iris = list(dataset = iris),
+      mtcars = list(dataset = mtcars)
+    )
+  )
+  shiny::testServer(
+    filtered_data$srv_active,
+    expr = testthat::expect_identical(modules_out, list(NULL, NULL))
   )
 })
 
@@ -694,7 +812,7 @@ testthat::test_that("get_filter_panel_ui_id - non-empty when in shiny session", 
 })
 
 testthat::test_that(
-  "FilteredData$get_active_filters properly tallies active filter states",
+  "FilteredData$get_filter_count properly tallies active filter states",
   code = {
     datasets <- FilteredData$new(
       list(
@@ -720,7 +838,7 @@ testthat::test_that(
 )
 
 testthat::test_that(
-  "FilteredData$get_active_filters properly tallies active filter states for MAE objects",
+  "FilteredData$get_filter_count properly tallies active filter states for MAE objects",
   code = {
     datasets <- FilteredData$new(
       list(

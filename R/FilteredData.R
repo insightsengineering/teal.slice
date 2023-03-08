@@ -132,6 +132,7 @@ FilteredData <- R6::R6Class( # nolint
     #' @return (`character` vector) of dataset names
     #'
     get_filterable_datanames = function(dataname) {
+      checkmate::assert_subset(dataname, self$datanames())
       dataname
     },
 
@@ -602,8 +603,8 @@ FilteredData <- R6::R6Class( # nolint
     #'
     filter_panel_disable = function() {
       private$filter_panel_active <- FALSE
-      shinyjs::disable("filter_add_vars")
-      shinyjs::disable("filter_active_vars")
+      shinyjs::disable("add")
+      shinyjs::disable("active")
       private$cached_states <- self$get_filter_state()
       self$clear_filter_states()
       invisible(NULL)
@@ -616,8 +617,8 @@ FilteredData <- R6::R6Class( # nolint
     #'
     filter_panel_enable = function() {
       private$filter_panel_active <- TRUE
-      shinyjs::enable("filter_add_vars")
-      shinyjs::enable("filter_active_vars")
+      shinyjs::enable("add")
+      shinyjs::enable("active")
       if (length(private$cached_states) && (length(self$get_filter_state()) == 0)) {
         self$set_filter_state(private$cached_states)
       }
@@ -696,7 +697,7 @@ FilteredData <- R6::R6Class( # nolint
             if (identical(active_datanames(), "all")) {
               self$datanames()
             } else {
-              active_datanames()
+              self$get_filterable_datanames(active_datanames())
             }
           )
 

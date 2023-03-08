@@ -315,7 +315,7 @@ FilteredDataset <- R6::R6Class( # nolint
             )
           )
 
-          lapply(
+          modules_out <- lapply(
             names(private$get_filter_states()),
             function(x) {
               private$get_filter_states(id = x)$srv_active(id = x)
@@ -342,6 +342,7 @@ FilteredDataset <- R6::R6Class( # nolint
           })
 
           logger::log_trace("FilteredDataset$initialized, dataname: { dataname }")
+
           NULL
         }
       )
