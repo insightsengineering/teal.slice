@@ -136,10 +136,15 @@ DateFilterState <- R6::R6Class( # nolint
         fixed = fixed,
         extract_type = extract_type)
 
-      var_range <- range(x, na.rm = TRUE)
-      private$set_choices(var_range)
-      self$set_selected(var_range)
-      private$set_choices_limited(x, private$choices)
+      if (!is.null(choices)) {
+        private$set_choices(choices)
+        self$set_selected(choices)
+        private$set_choices_limited(x, private$choices)
+      } else {
+        var_range <- range(x, na.rm = TRUE)
+        private$set_choices(var_range)
+        self$set_selected(var_range)
+      }
 
       return(invisible(self))
     },
@@ -225,6 +230,9 @@ DateFilterState <- R6::R6Class( # nolint
   # private methods ----
 
   private = list(
+    #' @description
+    #' Check whether the initial choices filter out some values of x and set the flag in case.
+    #'
     set_choices_limited = function(x, choices) {
       if (!is.null(choices)) {
         private$choices_limited <- (choices[1] > min(x)) | (choices[2] < max(x))
