@@ -96,7 +96,7 @@ if (interactive()) {
 date <- as.POSIXct(1, origin = "01/01/1970")
 filter <- teal.slice:::DatetimeFilterState$new(
   c(date, date + 1, date + 2, date + 3),
-  varname = "name"
+  varname = "name", dataname = "data"
 )
 filter$set_selected(c(date + 1, date + 2))
 }
@@ -261,7 +261,7 @@ invisibly \code{NULL}.
 \preformatted{date <- as.POSIXct(1, origin = "01/01/1970")
 filter <- teal.slice:::DatetimeFilterState$new(
   c(date, date + 1, date + 2, date + 3),
-  varname = "name"
+  varname = "name", dataname = "data"
 )
 filter$set_selected(c(date + 1, date + 2))
 }

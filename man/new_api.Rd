@@ -13,11 +13,13 @@ filter_var(
   varlabel = NULL,
   keep_na = NULL,
   keep_inf = NULL,
-  fixed = FALSE
+  fixed = FALSE,
+  ...
 )
 
 filter_settings(
   ...,
+  slices,
   filterable = list(),
   count_type = c("none", "all", "hierarchical")
 )
@@ -43,6 +45,8 @@ type and size depends on variable type}
 \item{fixed}{\code{logical(1)} logical flag specifying whether to fix this filter state (i.e. forbid setting state)}
 
 \item{...}{any number of \code{teal_slice} objects}
+
+\item{slices}{optional \code{list} of \code{teal_slice} objects}
 }
 \value{
 Object of class \code{teal_slice}, which is a named list.
@@ -55,9 +59,9 @@ Specifies a filter state.
 Collate single variable filter states into a complete filter specification.
 }
 \examples{
-filter_one <- filter_var("dataname1", "varname1", letters, "b", "characters", FALSE)
-filter_two <- filter_var("dataname1", "varname2", 1:10, 2, "integers", TRUE, FALSE)
-filter_three <- filter_var("dataname2", "varname3", 1:10/10, 0.2, "doubles", TRUE, FALSE)
+filter_one <- filter_var("dataname1", "varname1", letters, "b", "characters", FALSE, extra1 = "extraone")
+filter_two <- filter_var("dataname1", "varname2", 1:10, 2, "integers", TRUE, FALSE, extra2 = "extratwo")
+filter_three <- filter_var("dataname2", "varname3", 1:10/10, 0.2, "doubles", TRUE, FALSE, extra1 = "extraone", extra2 = "extratwo")
 
 all_filters <- filter_settings(
   filter_one,

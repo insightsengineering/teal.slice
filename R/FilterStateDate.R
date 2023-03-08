@@ -214,7 +214,7 @@ DateFilterState <- R6::R6Class( # nolint
     #' date <- as.Date("13/09/2021")
     #' filter <- teal.slice:::DateFilterState$new(
     #'   c(date, date + 1, date + 2, date + 3),
-    #'   varname = "name"
+    #'   varname = "name", dataname = "data"
     #' )
     #' filter$set_selected(c(date + 1, date + 2))
     set_selected = function(value) {

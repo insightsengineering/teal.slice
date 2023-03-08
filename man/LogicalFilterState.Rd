@@ -90,7 +90,7 @@ if (interactive()) {
 ## Method `LogicalFilterState$set_selected`
 ## ------------------------------------------------
 
-filter <- teal.slice:::LogicalFilterState$new(c(TRUE), varname = "name")
+filter <- teal.slice:::LogicalFilterState$new(c(TRUE), varname = "name", dataname = "data")
 filter$set_selected(TRUE)
 }
 \keyword{internal}
@@ -222,7 +222,7 @@ the value to set. Must not contain the NA value.}
 }
 \subsection{Examples}{
 \if{html}{\out{<div class="r example copy">}}
-\preformatted{filter <- teal.slice:::LogicalFilterState$new(c(TRUE), varname = "name")
+\preformatted{filter <- teal.slice:::LogicalFilterState$new(c(TRUE), varname = "name", dataname = "data")
 filter$set_selected(TRUE)
 }
 \if{html}{\out{</div>}}

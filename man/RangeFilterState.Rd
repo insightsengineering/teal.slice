@@ -97,7 +97,7 @@ if (interactive()) {
 ## Method `RangeFilterState$set_selected`
 ## ------------------------------------------------
 
-filter <- teal.slice:::RangeFilterState$new(c(1, 2, 3, 4), varname = "name")
+filter <- teal.slice:::RangeFilterState$new(c(1, 2, 3, 4), varname = "name", dataname = "data")
 filter$set_selected(c(2, 3))
 
 }
@@ -332,7 +332,7 @@ of the selected range. Must not contain NA values.}
 }
 \subsection{Examples}{
 \if{html}{\out{<div class="r example copy">}}
-\preformatted{filter <- teal.slice:::RangeFilterState$new(c(1, 2, 3, 4), varname = "name")
+\preformatted{filter <- teal.slice:::RangeFilterState$new(c(1, 2, 3, 4), varname = "name", dataname = "data")
 filter$set_selected(c(2, 3))
 
 }

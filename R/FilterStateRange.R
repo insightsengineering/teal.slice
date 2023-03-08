@@ -308,7 +308,7 @@ RangeFilterState <- R6::R6Class( # nolint
     #' making it possible to pass any object coercible to `numeric` to this method.
     #'
     #' @examples
-    #' filter <- teal.slice:::RangeFilterState$new(c(1, 2, 3, 4), varname = "name")
+    #' filter <- teal.slice:::RangeFilterState$new(c(1, 2, 3, 4), varname = "name", dataname = "data")
     #' filter$set_selected(c(2, 3))
     #'
     set_selected = function(value) {

@@ -26,7 +26,8 @@
 #' filter_state_choices <- ChoicesFilterState$new(
 #'   x = data_choices,
 #'   varname = "variable",
-#'   varlabel = "label"
+#'   varlabel = "label",
+#'   dataname = "data
 #' )
 #' filter_state_choices$set_state(list(selected = c("a", "c"), keep_na = TRUE))
 #'
@@ -246,7 +247,7 @@ ChoicesFilterState <- R6::R6Class( # nolint
     #' making it possible to pass any object coercible to `character` to this method.
     #'
     #' @examples
-    #' filter <- teal.slice:::ChoicesFilterState$new(c("a", "b", "c"), varname = "name")
+    #' filter <- teal.slice:::ChoicesFilterState$new(c("a", "b", "c"), varname = "name", dataname = "data")
     #' filter$set_selected(c("c", "a"))
     set_selected = function(value) {
       super$set_selected(value)

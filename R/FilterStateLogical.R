@@ -198,7 +198,7 @@ LogicalFilterState <- R6::R6Class( # nolint
     #' making it possible to pass any object coercible to `logical` to this method.
     #'
     #' @examples
-    #' filter <- teal.slice:::LogicalFilterState$new(c(TRUE), varname = "name")
+    #' filter <- teal.slice:::LogicalFilterState$new(c(TRUE), varname = "name", dataname = "data")
     #' filter$set_selected(TRUE)
     set_selected = function(value) {
       super$set_selected(value)
