@@ -1,5 +1,5 @@
 #' @rdname DatetimeFilterState
-#' @title `InteractiveFilterState` object for `POSIXct` variable
+#' @title `FilterState` object for `POSIXct` variable
 #' @description  Manages choosing a range of date-times
 #' @docType class
 #' @keywords internal
@@ -84,7 +84,7 @@
 #'
 DatetimeFilterState <- R6::R6Class( # nolint
   "DatetimeFilterState",
-  inherit = InteractiveFilterState,
+  inherit = FilterState,
 
   # public methods ----
 
@@ -117,7 +117,7 @@ DatetimeFilterState <- R6::R6Class( # nolint
     #' }
     initialize = function(x,
                           x_reactive = reactive(NULL),
-                          dataname = NULL,
+                          dataname,
                           varname,
                           choices = NULL,
                           selected = NULL,

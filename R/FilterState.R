@@ -1,8 +1,8 @@
-#' @name InteractiveFilterState
+#' @name FilterState
 #' @docType class
 #'
 #'
-#' @title `InteractiveFilterState` Abstract Class
+#' @title `FilterState` Abstract Class
 #'
 #' @description Abstract class to encapsulate single filter state
 #'
@@ -10,7 +10,7 @@
 #' This class is responsible for managing single filter item within
 #' `FilteredData` class. Filter states depend on the variable type:
 #' (`logical`, `integer`, `numeric`, `factor`, `character`, `Date`, `POSIXct`, `POSIXlt`)
-#' and returns `InteractiveFilterState` object with class corresponding to input variable.
+#' and returns `FilterState` object with class corresponding to input variable.
 #' Class controls single filter entry in `module_single_filter_item` and returns
 #' code relevant to selected values.
 #' - `factor`, `character`: `class = ChoicesFilterState`
@@ -31,23 +31,22 @@
 #' \cr
 #' \cr
 #' @section Modifying state:
-#' Modifying a `InteractiveFilterState` object is possible in three scenarios:
+#' Modifying a `FilterState` object is possible in three scenarios:
 #' * In the interactive session by directly specifying values of `selected`,
 #'   `keep_na` or `keep_inf` using `set_state` method (to update all at once),
 #'   or using `set_selected`, `set_keep_na` or `set_keep_inf`
 #' * In a running application by changing appropriate inputs
 #' * In a running application by using [filter_state_api] which directly uses `set_state` method
-#'  of the `InteractiveFilterState` object.
+#'  of the `FilterState` object.
 #'
 #' @keywords internal
-InteractiveFilterState <- R6::R6Class( # nolint
-  "InteractiveFilterState",
-  inherit = FilterState,
+FilterState <- R6::R6Class( # nolint
+  "FilterState",
 
   # public methods ----
   public = list(
     #' @description
-    #' Initialize a `InteractiveFilterState` object
+    #' Initialize a `FilterState` object
     #' @param x (`vector`)\cr
     #'   values of the variable used in filter
     #' @param x_reactive (`reactive`)\cr
@@ -73,7 +72,7 @@ InteractiveFilterState <- R6::R6Class( # nolint
     #'
     initialize = function(x,
                           x_reactive = reactive(NULL),
-                          dataname = NULL,
+                          dataname,
                           varname,
                           choices = NULL,
                           selected = NULL,
@@ -82,7 +81,7 @@ InteractiveFilterState <- R6::R6Class( # nolint
                           fixed = FALSE,
                           extract_type = character(0)) {
       checkmate::assert_class(x_reactive, "reactive")
-      checkmate::assert_string(dataname, null.ok = TRUE)
+      checkmate::assert_string(dataname)
       checkmate::assert_string(varname)
       checkmate::assert_character(varlabel, max.len = 1, any.missing = FALSE)
       checkmate::assert_character(extract_type, max.len = 1, any.missing = FALSE)

@@ -1,6 +1,6 @@
 #' @name EmptyFilterState
-#' @title `InteractiveFilterState` object for empty variable
-#' @description `InteractiveFilterState` subclass representing an empty variable
+#' @title `FilterState` object for empty variable
+#' @description `FilterState` subclass representing an empty variable
 #' @docType class
 #' @keywords internal
 #'
@@ -19,7 +19,7 @@
 #'
 EmptyFilterState <- R6::R6Class( # nolint
   "EmptyFilterState",
-  inherit = InteractiveFilterState,
+  inherit = FilterState,
 
   # public methods ----
   public = list(
@@ -48,7 +48,7 @@ EmptyFilterState <- R6::R6Class( # nolint
     #'
     initialize = function(x,
                           x_reactive = reactive(NULL),
-                          dataname = NULL,
+                          dataname,
                           varname,
                           choices = NULL,
                           selected = NULL,

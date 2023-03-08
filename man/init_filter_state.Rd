@@ -2,14 +2,18 @@
 % Please edit documentation in R/FilterState-utils.R
 \name{init_filter_state}
 \alias{init_filter_state}
-\title{Initializes \code{InteractiveFilterState}}
+\title{Initializes \code{FilterState}}
 \usage{
 init_filter_state(
   x,
   x_reactive = reactive(NULL),
-  varname,
-  varlabel = attr(x, "label"),
-  dataname = NULL,
+  dataname,
+  varname = attr(x, "label"),
+  choices = NULL,
+  selected = NULL,
+  varlabel = character(0),
+  keep_na = NULL,
+  fixed = FALSE,
   extract_type = character(0)
 )
 }
@@ -23,15 +27,15 @@ counts following the change in values of the filtered dataset.
 If it is set to \code{reactive(NULL)} then counts based on filtered
 dataset are not shown.}
 
+\item{dataname}{(\code{character(1)})\cr
+optional name of dataset where \code{x} is taken from. Must be specified
+if \code{extract_type} argument is not empty.}
+
 \item{varname}{(\code{character(1)})\cr
 name of the variable.}
 
 \item{varlabel}{(\code{character(0)}, \code{character(1)} or \code{NULL})\cr
 label of the variable (optional).}
-
-\item{dataname}{(\code{character(1)})\cr
-optional name of dataset where \code{x} is taken from. Must be specified
-if \code{extract_type} argument is not empty.}
 
 \item{extract_type}{(\code{character(0)}, \code{character(1)})\cr
 whether condition calls should be prefixed by dataname. Possible values:
@@ -45,7 +49,7 @@ whether condition calls should be prefixed by dataname. Possible values:
 \code{FilterState} object
 }
 \description{
-Initializes \code{InteractiveFilterState} depending on a variable class.\cr
+Initializes \code{FilterState} depending on a variable class.\cr
 }
 \examples{
 filter_state <- teal.slice:::RangeFilterState$new(

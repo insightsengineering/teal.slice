@@ -1,5 +1,5 @@
 #' @name RangeFilterState
-#' @title `InteractiveFilterState` object for numeric variable
+#' @title `FilterState` object for numeric variable
 #' @description Manages choosing a numeric range
 #' @docType class
 #' @keywords internal
@@ -85,13 +85,13 @@
 #'
 RangeFilterState <- R6::R6Class( # nolint
   "RangeFilterState",
-  inherit = InteractiveFilterState,
+  inherit = FilterState,
 
   # public methods ----
   public = list(
 
     #' @description
-    #' Initialize a `InteractiveFilterState` object for range selection
+    #' Initialize a `FilterState` object for range selection
     #' @param x (`numeric`)\cr
     #'   values of the variable used in filter
     #' @param x_reactive (`reactive`)\cr
@@ -113,7 +113,7 @@ RangeFilterState <- R6::R6Class( # nolint
     #' }
     initialize = function(x,
                           x_reactive = reactive(NULL),
-                          dataname = NULL,
+                          dataname,
                           varname,
                           choices = NULL,
                           selected = NULL,

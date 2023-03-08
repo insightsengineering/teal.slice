@@ -1,6 +1,6 @@
-#' Initializes `InteractiveFilterState`
+#' Initializes `FilterState`
 #'
-#' Initializes `InteractiveFilterState` depending on a variable class.\cr
+#' Initializes `FilterState` depending on a variable class.\cr
 #' @param x (`vector`)\cr
 #'   values of the variable used in filter
 #'
@@ -60,7 +60,7 @@
 #' @return `FilterState` object
 init_filter_state <- function(x,
                               x_reactive = reactive(NULL),
-                              dataname = NULL,
+                              dataname,
                               varname = attr(x, "label"),
                               choices = NULL,
                               selected = NULL,
@@ -104,7 +104,7 @@ init_filter_state <- function(x,
 #' @export
 init_filter_state.default <- function(x,
                                       x_reactive = reactive(NULL),
-                                      dataname = NULL,
+                                      dataname,
                                       varname = attr(x, "label"),
                                       choices = NULL,
                                       selected = NULL,
@@ -127,14 +127,14 @@ init_filter_state.default <- function(x,
     extract_type = extract_type
   )
 
-  do.call(InteractiveFilterState$new, args)
+  do.call(FilterState$new, args)
 }
 
 #' @keywords internal
 #' @export
 init_filter_state.logical <- function(x,
                                       x_reactive = reactive(NULL),
-                                      dataname = NULL,
+                                      dataname,
                                       varname = attr(x, "label"),
                                       choices = NULL,
                                       selected = NULL,
@@ -164,7 +164,7 @@ init_filter_state.logical <- function(x,
 #' @export
 init_filter_state.numeric <- function(x,
                                       x_reactive = reactive(NULL),
-                                      dataname = NULL,
+                                      dataname,
                                       varname = attr(x, "label"),
                                       choices = NULL,
                                       selected = NULL,
@@ -198,7 +198,7 @@ init_filter_state.numeric <- function(x,
 #' @export
 init_filter_state.factor <- function(x,
                                      x_reactive = reactive(NULL),
-                                     dataname = NULL,
+                                     dataname,
                                      varname = attr(x, "label"),
                                      choices = NULL,
                                      selected = NULL,
@@ -228,7 +228,7 @@ init_filter_state.factor <- function(x,
 #' @export
 init_filter_state.character <- function(x,
                                         x_reactive = reactive(NULL),
-                                        dataname = NULL,
+                                        dataname,
                                         varname = attr(x, "label"),
                                         choices = NULL,
                                         selected = NULL,
@@ -258,7 +258,7 @@ init_filter_state.character <- function(x,
 #' @export
 init_filter_state.Date <- function(x,
                                    x_reactive = reactive(NULL),
-                                   dataname = NULL,
+                                   dataname,
                                    varname = attr(x, "label"),
                                    choices = NULL,
                                    selected = NULL,
@@ -292,7 +292,7 @@ init_filter_state.Date <- function(x,
 #' @export
 init_filter_state.POSIXct <- function(x,
                                       x_reactive = reactive(NULL),
-                                      dataname = NULL,
+                                      dataname,
                                       varname = attr(x, "label"),
                                       choices = NULL,
                                       selected = NULL,
@@ -326,7 +326,7 @@ init_filter_state.POSIXct <- function(x,
 #' @export
 init_filter_state.POSIXlt <- function(x,
                                       x_reactive = reactive(NULL),
-                                      dataname = NULL,
+                                      dataname,
                                       varname = attr(x, "label"),
                                       choices = NULL,
                                       selected = NULL,
