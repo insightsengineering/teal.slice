@@ -240,21 +240,6 @@ RangeFilterState <- R6::R6Class( # nolint
     },
 
     #' @description
-    #' Returns the filtering state.
-    #'
-    #' @return `list` containing values taken from the reactive fields:
-    #' * `selected` (`numeric(2)`) range of the filter.
-    #' * `keep_na` (`logical(1)`) whether `NA` should be kept.
-    #' * `keep_inf` (`logical(1)`)  whether `Inf` should be kept.
-    get_state = function() {
-      list(
-        selected = self$get_selected(),
-        keep_na = self$get_keep_na(),
-        keep_inf = self$get_keep_inf()
-      )
-    },
-
-    #' @description
     #' Set if `Inf` should be kept
     #' @param value (`logical(1)`)\cr
     #'  Value(s) which come from the filter selection. Value is set in `server`
@@ -276,24 +261,6 @@ RangeFilterState <- R6::R6Class( # nolint
           )
         )
       }
-    },
-
-    #' @description
-    #' Set state
-    #' @param state (`list`)\cr
-    #'  contains fields relevant for a specific class
-    #' \itemize{
-    #' \item{`selected`}{ defines initial selection}
-    #' \item{`keep_na` (`logical`)}{ defines whether to keep or remove `NA` values}
-    #' \item{`keep_inf` (`logical`)}{ defines whether to keep or remove `Inf` values}
-    #' }
-    set_state = function(state) {
-      stopifnot(is.list(state) && all(names(state) %in% c("selected", "keep_na", "keep_inf")))
-      if (!is.null(state$keep_inf)) {
-        self$set_keep_inf(state$keep_inf)
-      }
-      super$set_state(state[names(state) %in% c("selected", "keep_na")])
-      invisible(NULL)
     },
 
     #' @description
