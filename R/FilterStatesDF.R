@@ -255,7 +255,12 @@ DFFilterStates <- R6::R6Class( # nolint
     #' @return `list` with named elements corresponding to `FilterState` in the `state_list`.
     #'
     get_filter_state = function() {
-      lapply(private$state_list_get(1L), function(x) x$get_state())
+      slices <- lapply(private$state_list_get(1L), function(x) x$get_state())
+      filter_settings(
+        slices = slices,
+        filterable = structure(list(private$filterable_varnames), names = private$dataname),
+        count_type = private$count_type
+      )
     },
 
     #' @description
