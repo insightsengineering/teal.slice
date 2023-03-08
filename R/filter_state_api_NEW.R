@@ -42,7 +42,20 @@ filter_var <- function(
   checkmate::assert_string(varname)
   checkmate::assert_atomic(choices)
   checkmate::assert_atomic(selected)
-  if (!is.null(choices)) checkmate::assert_subset(selected, choices)
+  if (!is.null(choices) && !is.null(selected)) {
+    if (inherits(choices, c("integer", "numeric", "Date", "POSIXt"))) {
+      rc <- range(choices, na.rm = TRUE)
+      rs <- range(selected, na.rm = TRUE)
+      checkmate::assert_true(
+        rs[1L] >= rc[1L] && rs[2L] <= rc[2L],
+        .var.name = "range of \"selected\" is within range of \"choices\""
+      )
+    } else if (inherits(choices, c("logical", "character", "factor"))) {
+      checkmate::assert_subset(selected, choices)
+    } else {
+      stop("filter_var cannot handle \"choices\" of type: ", toString(class(choices)))
+    }
+  }
   checkmate::assert_character(varlabel, max.len = 1L)
   checkmate::assert_flag(keep_na, null.ok = TRUE)
   checkmate::assert_flag(keep_inf, null.ok = TRUE)
