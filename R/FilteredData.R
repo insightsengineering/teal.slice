@@ -719,18 +719,18 @@ FilteredData <- R6::R6Class( # nolint
             width = 30
           ),
           actionLink(
-            ns("remove_all_filters"),
-            label = "",
-            icon("circle-xmark", lib = "font-awesome"),
-            title = "Remove active filters",
-            class = "remove_all pull-right"
-          ),
-          actionLink(
             ns("minimise_filter_active"),
             label = NULL,
             icon = icon("angle-down", lib = "font-awesome"),
             title = "Minimise panel",
             class = "remove pull-right"
+          ),
+          actionLink(
+            ns("remove_all_filters"),
+            label = "",
+            icon("circle-xmark", lib = "font-awesome"),
+            title = "Remove active filters",
+            class = "remove_all pull-right"
           )
         ),
         div(
