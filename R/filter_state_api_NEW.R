@@ -145,6 +145,10 @@ c.teal_slices <- function(...) {
   filter_settings(slices = unlist(x, recursive = FALSE), filterable = filterables, count_type = count_types)
 }
 
+is.teal_slice <- function(x) {
+  inherits(x, "teal_slice")
+}
+
 `[.teal_slices` <- function(x, i) {
   y <- NextMethod("[")
   attributes(y) <- attributes(x)
@@ -170,6 +174,9 @@ print.teal_slices <- function(x) {
   cat(sprintf("\ncount type: %s", ct), "\n")
 }
 
+is.teal_slices <- function(x) {
+  inherits(x, "teal_slices")
+}
 
 
 filter_one <- filter_var("dataname1", "varname1", letters, "b", "characters", FALSE, extra1 = "extraone")
