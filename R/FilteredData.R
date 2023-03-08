@@ -253,11 +253,7 @@ FilteredData <- R6::R6Class( # nolint
     #' @return (`matrix`) matrix of observations and subjects of all datasets
     #'
     get_filter_overview = function(datanames) {
-      if (identical(datanames, "all")) {
-        datanames <- self$datanames()
-      }
       check_in_subset(datanames, self$datanames(), "Some datasets are not available: ")
-
       rows <- lapply(
         datanames,
         function(dataname) {
@@ -317,21 +313,11 @@ FilteredData <- R6::R6Class( # nolint
     #' @return the intersection of `self$datanames()` and `datanames`
     #'
     handle_active_datanames = function(datanames) {
-      logger::log_trace("FilteredData$handle_active_datanames handling { paste(datanames, collapse = \" \") }")
+      logger::log_trace("FilteredData$handle_active_datanames handling { toString(datanames) }")
       if (identical(datanames, "all")) {
         datanames <- self$datanames()
-      } else {
-        for (dataname in datanames) {
-          tryCatch(
-            check_in_subset(datanames, self$datanames(), "Some datasets are not available: "),
-            error = function(e) {
-              message(e$message)
-            }
-          )
-        }
       }
-      datanames <- self$get_filterable_datanames(datanames)
-      intersect(self$datanames(), datanames)
+      self$get_filterable_datanames(datanames)
     },
 
     #' @description
@@ -693,13 +679,9 @@ FilteredData <- R6::R6Class( # nolint
         function(input, output, session) {
           logger::log_trace("FilteredData$srv_filter_panel initializing")
 
-          active_datanames_resolved <- reactive(
-            if (identical(active_datanames(), "all")) {
-              self$datanames()
-            } else {
-              self$get_filterable_datanames(active_datanames())
-            }
-          )
+          active_datanames_resolved <- eventReactive(req(active_datanames()), {
+            self$handle_active_datanames(active_datanames())
+          })
 
           self$srv_overview("overview", active_datanames_resolved)
           self$srv_active("active", active_datanames_resolved)
@@ -1087,38 +1069,6 @@ FilteredData <- R6::R6Class( # nolint
 
     # we implement these functions as checks rather than returning logicals so they can
     # give informative error messages immediately
-
-    # @details
-    # Validates the state of this FilteredData.
-    # The call to this function should be isolated to avoid a reactive dependency.
-    # Getting the names of a reactivevalues also needs a reactive context.
-    validate = function() {
-      # Note: Here, we directly refer to the private attributes because the goal of this
-      # function is to check the underlying attributes and the get / set functions might be corrupted
-
-      has_same_names <- function(x, y) setequal(names(x), names(y))
-      # check `filter_states` are all valid
-      lapply(
-        names(private$filter_states),
-        function(dataname) {
-          stopifnot(is.list(private$filter_states)) # non-NULL, possibly empty list
-          lapply(
-            names(private$filter_states[[dataname]]),
-            function(varname) {
-              var_state <- private$filter_states[[dataname]][[varname]]
-              stopifnot(!is.null(var_state)) # should not be NULL, see doc of this attribute
-              check_valid_filter_state(
-                filter_state = var_state,
-                dataname = dataname,
-                varname = varname
-              )
-            }
-          )
-        }
-      )
-
-      return(invisible(NULL))
-    },
 
     # @description
     # Gets the number of active `FilterState` objects in all `FilterStates`

@@ -194,12 +194,7 @@ CDISCFilteredData <- R6::R6Class( # nolint
     # datanames in the order in which they must be evaluated (in case of dependencies)
     # this is a reactive and kept as a field for caching
     ordered_datanames = NULL,
-    validate = function() {
-      stopifnot(
-        setequal(private$ordered_datanames, names(private$dataset_filters)),
-      )
-      super$validate()
-    },
+
     get_filter_overview_nsubjs = function(dataname) {
       private$get_filtered_dataset(dataname)$get_filter_overview_nsubjs()
     }

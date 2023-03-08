@@ -315,7 +315,7 @@ FilteredDataset <- R6::R6Class( # nolint
             )
           )
 
-          modules_out <- lapply(
+          lapply(
             names(private$get_filter_states()),
             function(x) {
               private$get_filter_states(id = x)$srv_active(id = x)

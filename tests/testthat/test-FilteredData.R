@@ -739,6 +739,38 @@ testthat::test_that("switching disable/enable button caches and restores state",
   )
 })
 
+testthat::test_that("handle_active_datanames replaces 'all' with vector of available datanames", {
+  filtered_data <- FilteredData$new(
+    list(
+      iris = list(dataset = iris),
+      mtcars = list(dataset = mtcars)
+    )
+  )
+  testthat::expect_identical(filtered_data$handle_active_datanames("all"), c("iris", "mtcars"))
+})
+
+testthat::test_that("handle_active_datanames returns input datanames if they are subset of active datanames", {
+  filtered_data <- FilteredData$new(
+    list(
+      iris = list(dataset = iris),
+      mtcars = list(dataset = mtcars)
+    )
+  )
+  testthat::expect_identical(filtered_data$handle_active_datanames("iris"), "iris")
+  testthat::expect_identical(filtered_data$handle_active_datanames(c("iris", "mtcars")), c("iris", "mtcars"))
+})
+
+testthat::test_that("handle_active_datanames throws when input dataname is not subset of active datanames", {
+  filtered_data <- FilteredData$new(
+    list(
+      iris = list(dataset = iris),
+      mtcars = list(dataset = mtcars)
+    )
+  )
+  testthat::expect_error(filtered_data$handle_active_datanames("idontexist"))
+})
+
+
 testthat::test_that("active_datanames in srv_filter_panel gets resolved to valid datanames", {
   filtered_data <- FilteredData$new(
     list(
@@ -778,16 +810,59 @@ testthat::test_that("active_datanames fails if returns dataname which isn't a su
   )
 })
 
-testthat::test_that("srv_active - dataset modules are called and return NULL", {
+testthat::test_that("srv_active - output$teal_filters_count returns (reactive) number of current filters applied", {
   filtered_data <- FilteredData$new(
     list(
       iris = list(dataset = iris),
       mtcars = list(dataset = mtcars)
     )
   )
+  fs <- list(
+    iris = list(
+      Sepal.Length = list(c(5.1, 6.4)),
+      Species = c("setosa", "versicolor")
+    ),
+    mtcars = list(
+      cyl = c(4, 6),
+      disp = list()
+    )
+  )
+  filtered_data$set_filter_state(fs)
   shiny::testServer(
     filtered_data$srv_active,
-    expr = testthat::expect_identical(modules_out, list(NULL, NULL))
+    expr = {
+      testthat::expect_identical(output$teal_filters_count, "4 filters applied across datasets")
+    }
+  )
+})
+
+testthat::test_that("srv_active - clicking remove_all button clears filters", {
+  filtered_data <- FilteredData$new(
+    list(
+      iris = list(dataset = iris),
+      mtcars = list(dataset = mtcars)
+    )
+  )
+  fs <- list(
+    iris = list(
+      Sepal.Length = list(c(5.1, 6.4)),
+      Species = c("setosa", "versicolor")
+    ),
+    mtcars = list(
+      cyl = c(4, 6),
+      disp = list()
+    )
+  )
+  filtered_data$set_filter_state(fs)
+  shiny::testServer(
+    filtered_data$srv_active,
+    expr = {
+      session$setInputs(remove_all_filters = TRUE)
+      testthat::expect_identical(
+        filtered_data$get_filter_state(),
+        structure(list(a = NULL)[0], formatted = "")
+      )
+    }
   )
 })
 
