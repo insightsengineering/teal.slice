@@ -140,7 +140,6 @@ ChoicesFilterState <- R6::R6Class( # nolint
         fixed = fixed,
         extract_type = extract_type)
 
-      private$set_choices_limited(x, choices)
       private$data_class <- class(x)[1L]
       if (inherits(x, "POSIXt")) {
         private$tzone <- Find(function(x) x != "", attr(as.POSIXlt(x), "tzone"))
@@ -154,6 +153,7 @@ ChoicesFilterState <- R6::R6Class( # nolint
       private$set_choices(names(choices_table))
       self$set_selected(names(choices_table))
       private$set_choices_counts(unname(choices_table))
+      private$set_choices_limited(x, private$choices)
 
       return(invisible(self))
     },

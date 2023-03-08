@@ -136,10 +136,10 @@ DateFilterState <- R6::R6Class( # nolint
         fixed = fixed,
         extract_type = extract_type)
 
-      private$set_choices_limited(x, choices)
       var_range <- range(x, na.rm = TRUE)
       private$set_choices(var_range)
       self$set_selected(var_range)
+      private$set_choices_limited(x, private$choices)
 
       return(invisible(self))
     },

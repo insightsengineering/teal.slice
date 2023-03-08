@@ -219,6 +219,6 @@ testthat::test_that("is_any_filtered returns TRUE when enabled", {
   fs <- testfs$new(date_seq, varname = "x", dataname = "data", choices = date_seq[c(1, 5)])
   testthat::expect_false(isolate(fs$is_any_filtered()))
   fs <- testfs$new(date_seq, varname = "x", dataname = "data", choices = date_seq[c(3, 1)])
-  testthat::expect_true(isolate(fs$is_any_filtered()))
+  testthat::expect_false(isolate(fs$is_any_filtered()))
 })
 
