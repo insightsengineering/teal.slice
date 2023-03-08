@@ -32,7 +32,7 @@ filter_var <- function(
     varname,
     choices = NULL,
     selected = NULL,
-    varlabel = NULL,
+    varlabel = character(0),
     keep_na = NULL,
     keep_inf = NULL,
     fixed = FALSE,
@@ -42,8 +42,8 @@ filter_var <- function(
   checkmate::assert_string(varname)
   checkmate::assert_atomic(choices)
   checkmate::assert_atomic(selected)
-  checkmate::assert_subset(selected, choices)
-  checkmate::assert_string(varlabel, null.ok = TRUE)
+  if (!is.null(choices)) checkmate::assert_subset(selected, choices)
+  checkmate::assert_character(varlabel, max.len = 1L)
   checkmate::assert_flag(keep_na, null.ok = TRUE)
   checkmate::assert_flag(keep_inf, null.ok = TRUE)
   checkmate::assert_flag(fixed)
@@ -53,7 +53,8 @@ filter_var <- function(
 
   ind <- which(names(args) %in% names(formals(filter_var)))
   ans <- args[ind]
-  ans$extras <- args[-ind]
+  extras <- args[-ind]
+  if (length(extras) != 0L) ans$extras <- extras
 
   class(ans) <- c("teal_slice", class(ans))
   ans
