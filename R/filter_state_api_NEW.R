@@ -14,14 +14,15 @@
 #' @param keep_na `logical(0-1)` optional logical flag specifying whether to keep missing values
 #' @param keep_inf `logical(0-1)` optional logical flag specifying whether to keep infinite values
 #' @param fixed `logical(1)` logical flag specifying whether to fix this filter state (i.e. forbid setting state)
+#' @param ... any number of additional features given as `name:value` pairs
 #'
 #' @return
 #' Object of class `teal_slice`, which is a named list.
 #'
 #' @examples
-#' filter_one <- filter_var("dataname1", "varname1", letters, "b", "characters", FALSE)
-#' filter_two <- filter_var("dataname1", "varname2", 1:10, 2, "integers", TRUE, FALSE)
-#' filter_three <- filter_var("dataname2", "varname3", 1:10/10, 0.2, "doubles", TRUE, FALSE)
+#' filter_one <- filter_var("dataname1", "varname1", letters, "b", "characters", FALSE, extra1 = "extraone")
+#' filter_two <- filter_var("dataname1", "varname2", 1:10, 2, "integers", TRUE, FALSE, extra2 = "extratwo")
+#' filter_three <- filter_var("dataname2", "varname3", 1:10/10, 0.2, "doubles", TRUE, FALSE, extra1 = "extraone", extra2 = "extratwo")
 #'
 #' @export
 #' @rdname new_api
@@ -34,7 +35,8 @@ filter_var <- function(
     varlabel = NULL,
     keep_na = NULL,
     keep_inf = NULL,
-    fixed = FALSE
+    fixed = FALSE,
+    ...
 ) {
   checkmate::assert_string(dataname)
   checkmate::assert_string(varname)
@@ -46,9 +48,14 @@ filter_var <- function(
   checkmate::assert_flag(keep_inf, null.ok = TRUE)
   checkmate::assert_flag(fixed)
 
-  ans <- as.list(match.call())[-1]
-  ans <- lapply(ans, eval)
-  class(ans) <- "teal_slice"
+  args <- as.list(match.call())[-1]
+  args <- lapply(args, eval)
+
+  ind <- which(names(args) %in% names(formals(filter_var)))
+  ans <- args[ind]
+  ans$extras <- args[-ind]
+
+  class(ans) <- c("teal_slice", class(ans))
   ans
 }
 
@@ -68,7 +75,7 @@ print.teal_slice <- function(x) {
 #' Collate single variable filter states into a complete filter specification.
 #'
 #' @param ... any number of `teal_slice` objects
-#' @param slices `list` of `teal_slice` objects
+#' @param slices optional `list` of `teal_slice` objects
 #' @filterable `named list` of `character` vectors, specifying which variables
 #'              (list elements) can be filtered in which data sets (list names)
 #' @count_type `character(1)` string specifying how observations are tallied by these filter states
@@ -96,16 +103,19 @@ filter_settings <- function(
     filterable = list(),
     count_type = c("none", "all", "hierarchical")
 ) {
-  if (!missing(slices)) {
-    slices <- c(list(...), slices)
-  }
+  slices <-
+    if (missing(slices)) {
+      list(...)
+    } else {
+      slices <- c(list(...), slices)
+    }
   checkmate::assert_list(slices, types = "teal_slice", any.missing = FALSE)
   checkmate::assert_list(filterable, names = "named", types = "character")
   count_type <- match.arg(count_type)
 
   attr(slices, "filterable") <- filterable
   attr(slices, "count_type") <- count_type
-  class(slices) <- "teal_slices"
+  class(slices) <- c("teal_slices", class(slices))
   slices
 }
 
@@ -148,9 +158,9 @@ print.teal_slices <- function(x) {
 
 
 
-filter_one <- filter_var("dataname1", "varname1", letters, "b", "characters", FALSE)
-filter_two <- filter_var("dataname1", "varname2", 1:10, 2, "integers", TRUE, FALSE)
-filter_three <- filter_var("dataname2", "varname3", 1:10/10, 0.2, "doubles", TRUE, FALSE)
+filter_one <- filter_var("dataname1", "varname1", letters, "b", "characters", FALSE, extra1 = "extraone")
+filter_two <- filter_var("dataname1", "varname2", 1:10, 2, "integers", TRUE, FALSE, extra2 = "extratwo")
+filter_three <- filter_var("dataname2", "varname3", 1:10/10, 0.2, "doubles", TRUE, FALSE, extra1 = "extraone", extra2 = "extratwo")
 
 all_filters <- filter_settings(
   filter_one,
