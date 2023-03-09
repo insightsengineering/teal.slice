@@ -71,12 +71,9 @@ FilteredData <- R6::R6Class( # nolint
   public = list(
     #' @description
     #' Initialize a `FilteredData` object
-    #' @param data_objects (`list`) should contain.
-    #' - `dataset` data object object supported by [`FilteredDataset`].
-    #' - `metatada` (optional) additional metadata attached to the `dataset`.
-    #' - `keys` (optional) primary keys.
-    #' - `datalabel` (optional) label describing the `dataset`.
-    #' - `parent` (optional) which `NULL` is a parent of this one.
+    #' @param data_objects (`list`)
+    #'   should named elements containing `data.frame` or `MultiAssayExperiment`.
+    #'   Names of the list will serve as dataname.
     #' @param join_keys (`JoinKeys` or NULL) see [`teal.data::join_keys()`].
     #' @param code (`CodeClass` or `NULL`) see [`teal.data::CodeClass`].
     #' @param check (`logical(1)`) whether data has been check against reproducibility.
@@ -84,7 +81,7 @@ FilteredData <- R6::R6Class( # nolint
     initialize = function(data_objects, join_keys = teal.data::join_keys(), code = NULL, check = FALSE) {
       checkmate::assert_list(data_objects, any.missing = FALSE, min.len = 0, names = "unique")
       # Note the internals of data_objects are checked in set_dataset
-      checkmate::assert_class(join_keys, "JoinKeys", null.ok = TRUE)
+      checkmate::assert_class(join_keys, "JoinKeys")
       checkmate::assert_class(code, "CodeClass", null.ok = TRUE)
       checkmate::assert_flag(check)
 
@@ -93,9 +90,7 @@ FilteredData <- R6::R6Class( # nolint
         self$set_code(code)
       }
 
-      if (!is.null(join_keys)) {
-        self$set_join_keys(join_keys)
-      }
+      self$set_join_keys(join_keys)
 
       child_parent <- sapply(
         names(data_objects),
@@ -108,13 +103,22 @@ FilteredData <- R6::R6Class( # nolint
       for (dataname in ordered_datanames) {
         ds_object <- data_objects[[dataname]]
         validate_dataset_args(ds_object, dataname)
-        # todo: support setting datasets with x = list(iris = iris, mtcars = mtcars)
-        self$set_dataset(
-          data = ds_object$dataset,
-          dataname = dataname,
-          metadata = ds_object$metadata,
-          label = ds_object$label
-        )
+        if (inherits(ds_object, c("data.frame", "MultiAssayExperiment"))) {
+          self$set_dataset(
+            data = ds_object,
+            dataname = dataname
+          )
+        } else {
+          # custom support for TealData object which pass metadata and label also
+          # see init_filtered_data.TealData
+          self$set_dataset(
+            data = ds_object$dataset,
+            dataname = dataname,
+            metadata = ds_object$metadata,
+            label = ds_object$label
+          )
+        }
+
       }
 
       invisible(self)
@@ -146,9 +150,16 @@ FilteredData <- R6::R6Class( # nolint
     #' If input `dataname` has parent, then parent dataname will be also
     #' returned in the output vector.
     #'
-    #' @param dataname (`character` vector) names of the dataset
-    #' @return (`character` vector) of dataset names
-    get_filterable_datanames = function(dataname) {
+    #' @param dataname (`character`) names of the dataset. Default `"all"`
+    #'   returns all datanames set in `FilteredData`
+    #'
+    #' @return (`character`) of dataset names
+    get_filterable_datanames = function(dataname = "all") {
+      if (identical(dataname, "all")) {
+        dataname <- self$datanames()
+      }
+      checkmate::assert_subset(dataname, self$datanames())
+
       parents <- character(0)
       for (i in dataname) {
         while (length(i) > 0) {
@@ -278,9 +289,8 @@ FilteredData <- R6::R6Class( # nolint
     #' @return (`matrix`) matrix of observations and subjects of all datasets
     #'
     get_filter_overview = function(datanames) {
-      check_in_subset(datanames, self$datanames(), "Some datasets are not available: ")
       rows <- lapply(
-        datanames,
+        self$get_filterable_datanames(datanames),
         function(dataname) {
           private$get_filtered_dataset(dataname)$get_filter_overview()
         }
@@ -326,22 +336,6 @@ FilteredData <- R6::R6Class( # nolint
     #'
     get_varnames = function(dataname) {
       stop("Please extract varnames directly from the data")
-    },
-
-    #' @description
-    #' When active_datanames is "all", sets them to all `datanames`,
-    #' otherwise, it makes sure that it is a subset of the available `datanames`.
-    #'
-    #' @param datanames `character vector` datanames to pick
-    #'
-    #' @return the intersection of `self$datanames()` and `datanames`
-    #'
-    handle_active_datanames = function(datanames) {
-      logger::log_trace("FilteredData$handle_active_datanames handling { toString(datanames) }")
-      if (identical(datanames, "all")) {
-        datanames <- self$datanames()
-      }
-      self$get_filterable_datanames(datanames)
     },
 
     #' @description
@@ -719,7 +713,7 @@ FilteredData <- R6::R6Class( # nolint
           logger::log_trace("FilteredData$srv_filter_panel initializing")
 
           active_datanames_resolved <- eventReactive(req(active_datanames()), {
-            self$handle_active_datanames(active_datanames())
+            self$get_filterable_datanames(active_datanames())
           })
 
           self$srv_overview("overview", active_datanames_resolved)

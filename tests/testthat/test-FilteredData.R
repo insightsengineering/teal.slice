@@ -78,8 +78,9 @@ testthat::test_that("datanames returns character vector reflecting names of set 
 })
 
 testthat::test_that("datanames are ordered topologically from parent to child", {
-  jk <- teal.data::join_keys(teal.data::join_key("parent", "child", c("Species" = "Species")))
+  jk <- teal.data::join_keys(teal.data::join_key("parent", "child", c("id" = "id")))
   jk$set_parents(list(child = "parent"))
+  iris2 <- transform(iris, id = 1:nrow(iris))
   filtered_data <- FilteredData$new(
     list(
       child = list(dataset = head(iris2)),
@@ -92,29 +93,43 @@ testthat::test_that("datanames are ordered topologically from parent to child", 
 
 testthat::test_that("FilteredData forbids cyclic graphs of datasets relationship", {
   jk <- teal.data::join_keys(
-    teal.data::join_key("child", "parent", c("Species" = "Species")),
-    teal.data::join_key("grandchild", "child", c("Species" = "Species")),
-    teal.data::join_key("grandchild", "parent", c("Species" = "Species"))
+    teal.data::join_key("child", "parent", c("id" = "id")),
+    teal.data::join_key("grandchild", "child", c("id" = "id")),
+    teal.data::join_key("grandchild", "parent", c("id" = "id"))
   )
   jk$set_parents(list(child = "parent"))
   jk$set_parents(list(grandchild = "child"))
   jk$set_parents(list(parent = "grandchild"))
-
-  filtered_data <- FilteredData$new(
-    list(
-      grandchild = list(dataset = head(iris2)),
-      child = list(dataset = head(iris2)),
-      parent = list(dataset = head(iris2))
+  iris2 <- transform(iris, id = 1:nrow(iris))
+  testthat::expect_error(
+    FilteredData$new(
+      list(
+        grandchild = list(dataset = head(iris2)),
+        child = list(dataset = head(iris2)),
+        parent = list(dataset = head(iris2))
+      ),
+      join_keys = jk
     ),
-    join_keys = jk
+    "Graph is not a directed acyclic graph"
   )
-  testthat::expect_error(filtered_data$datanames(), "Graphs is not a directed acyclic graph")
 })
 
 testthat::test_that("get_filterable_dataname throws when dataname is not a subset of current datanames", {
   dataset <- list(dataset = iris)
   filtered_data <- FilteredData$new(list(iris = dataset))
   testthat::expect_error(filtered_data$get_filterable_datanames("idontexist"))
+})
+
+testthat::test_that("get_filterable_dataname returns all datasets by default", {
+  dataset <- list(dataset = iris)
+  filtered_data <- FilteredData$new(list(iris = dataset, iris2 = dataset))
+  testthat::expect_identical(filtered_data$get_filterable_datanames(), c("iris", "iris2"))
+})
+
+testthat::test_that("get_filterable_dataname('all') returns all datasets", {
+  dataset <- list(dataset = iris)
+  filtered_data <- FilteredData$new(list(iris = dataset, iris2 = dataset))
+  testthat::expect_identical(filtered_data$get_filterable_datanames("all"), c("iris", "iris2"))
 })
 
 testthat::test_that("get_filterable_dataname returns dataname same as input", {
@@ -130,7 +145,7 @@ testthat::test_that("get_filterable_datanames returns all ancestors if parents a
   )
   jk$set_parents(list(child = "parent"))
   jk$set_parents(list(grandchild = "child"))
-
+  iris2 <- transform(iris, id = 1:nrow(iris))
   filtered_data <- FilteredData$new(
     list(
       grandchild = list(dataset = head(iris2)),
@@ -193,11 +208,6 @@ testthat::test_that("set_datasets creates FilteredDataset object linked with par
     shiny::isolate(filtered_data$get_call("child"))[[1]],
     quote(child <- dplyr::inner_join(x = child, y = parent[, c("id"), drop = FALSE], by = "id"))
   )
-})
-
-testthat::test_that("get_keys returns an empty character when dataset has no keys", {
-  filtered_data <- FilteredData$new(list(iris = list(dataset = head(iris), keys = character(0))))
-  testthat::expect_equal(filtered_data$get_keys("iris"), character(0))
 })
 
 testthat::test_that("get_keys returns keys of the dataset specified via join_keys", {
@@ -644,97 +654,89 @@ testthat::test_that(
   }
 )
 
-
-get_filtered_data_object <- function() {
-  utils::data(miniACC, package = "MultiAssayExperiment")
-  adsl <- as.data.frame(as.list(setNames(nm = c(teal.data::get_cdisc_keys("ADSL")))))
-  adsl$sex <- c("F")
-
-  CDISCFilteredData$new(
+testthat::test_that("get_filter_overview accepts all datasets argument input", {
+  datasets <- FilteredData$new(
     list(
-      ADSL = list(dataset = adsl, keys = teal.data::get_cdisc_keys("ADSL"), parent = character(0)),
-      mock_iris = list(dataset = head(iris)),
-      miniACC = list(dataset = miniACC)
+      iris = list(dataset = iris),
+      mtcars = list(dataset = mtcars)
     )
   )
-}
-
-testthat::test_that("get_filter_overview accepts all datasets argument input", {
-  datasets <- get_filtered_data_object()
   testthat::expect_no_error(shiny::isolate(datasets$get_filter_overview("all")))
 })
 
 testthat::test_that("get_filter_overview accepts single dataset argument input", {
-  datasets <- get_filtered_data_object()
-  testthat::expect_no_error(shiny::isolate(datasets$get_filter_overview("ADSL")))
-  testthat::expect_no_error(shiny::isolate(datasets$get_filter_overview("mock_iris")))
-  testthat::expect_no_error(shiny::isolate(datasets$get_filter_overview("miniACC")))
+  datasets <- FilteredData$new(
+    list(
+      iris = list(dataset = iris),
+      mtcars = list(dataset = mtcars)
+    )
+  )
+  testthat::expect_no_error(shiny::isolate(datasets$get_filter_overview("iris")))
+  testthat::expect_no_error(shiny::isolate(datasets$get_filter_overview("mtcars")))
 })
 
 testthat::test_that("get_filter_overview throws error with empty argument input", {
-  datasets <- get_filtered_data_object()
+  datasets <- FilteredData$new(
+    list(
+      iris = list(dataset = iris),
+      mtcars = list(dataset = mtcars)
+    )
+  )
   testthat::expect_error(
-    shiny::isolate(
-      datasets$get_filter_overview()
-    ),
+    shiny::isolate(datasets$get_filter_overview()),
     "argument \"datanames\" is missing, with no default"
   )
 })
 
 testthat::test_that("get_filter_overview throws error with wrong argument input", {
-  datasets <- get_filtered_data_object()
-  testthat::expect_error(shiny::isolate(datasets$get_filter_overview("AA")), "Some datasets are not available:")
-  testthat::expect_error(shiny::isolate(datasets$get_filter_overview("")), "Some datasets are not available:")
-  testthat::expect_error(shiny::isolate(datasets$get_filter_overview(23)), "Some datasets are not available:")
+  datasets <- FilteredData$new(
+    list(
+      iris = list(dataset = iris),
+      mtcars = list(dataset = mtcars)
+    )
+  )
+  testthat::expect_error(shiny::isolate(datasets$get_filter_overview("AA")), "Must be a subset of")
+  testthat::expect_error(shiny::isolate(datasets$get_filter_overview("")), "Must be a subset of")
+  testthat::expect_error(shiny::isolate(datasets$get_filter_overview(23)), "Must be a subset of")
 })
 
-testthat::test_that("get_filter_overview returns overview matrix for non-filtered datasets", {
-  datasets <- get_filtered_data_object()
+testthat::test_that("get_filter_overview returns overview data.frame with obs counts if the keys are not specified", {
+  datasets <- FilteredData$new(
+    list(
+      iris = list(dataset = iris),
+      mtcars = list(dataset = mtcars)
+    )
+  )
   testthat::expect_equal(
     shiny::isolate(datasets$get_filter_overview(datasets$datanames())),
-    matrix(
-      list(
-        "1/1", "1/1", "6/6", "6/6", "", "92/92", "79/79", "79/79", "90/90",
-        "90/90", "46/46", "46/46", "90/90", "90/90", "80/80", "80/80"
-      ),
-      nrow = 8,
-      byrow = TRUE,
-      dimnames = list(
-        c(
-          "ADSL", "mock_iris", "miniACC", "- RNASeq2GeneNorm", "- gistict",
-          "- RPPAArray", "- Mutations", "- miRNASeqGene"
-        ),
-        c("Obs", "Subjects")
-      )
+    data.frame(
+      dataname = c("iris", "mtcars"),
+      obs = c(150, 32),
+      obs_filtered = c(150, 32)
     )
   )
 })
 
-testthat::test_that("get_filter_overview returns overview matrix for filtered datasets", {
-  datasets <- get_filtered_data_object()
+testthat::test_that("get_filter_overview returns overview data.frame with filtered counts", {
+  datasets <- FilteredData$new(
+    list(
+      iris = list(dataset = iris),
+      mtcars = list(dataset = mtcars)
+    )
+  )
   datasets$set_filter_state(
     list(
-      mock_iris = list(Sepal.Length = c(5.1, 5.1)),
-      miniACC = list(subjects = list(race = "white"))
+      iris = list(Sepal.Length = c(5.1, 5.1)),
+      mtcars = list(cyl = 6)
     )
   )
 
   testthat::expect_equal(
     shiny::isolate(datasets$get_filter_overview(datasets$datanames())),
-    matrix(
-      list(
-        "1/1", "1/1", "1/6", "1/6", "", "78/92", "66/79", "66/79", "76/90",
-        "76/90", "35/46", "35/46", "77/90", "77/90", "67/80", "67/80"
-      ),
-      nrow = 8,
-      byrow = TRUE,
-      dimnames = list(
-        c(
-          "ADSL", "mock_iris", "miniACC", "- RNASeq2GeneNorm", "- gistict",
-          "- RPPAArray", "- Mutations", "- miRNASeqGene"
-        ),
-        c("Obs", "Subjects")
-      )
+    data.frame(
+      dataname = c("iris", "mtcars"),
+      obs = c(150, 32),
+      obs_filtered = c(9, 7)
     )
   )
 })
@@ -759,11 +761,11 @@ testthat::test_that("get_filter_overview return counts based on reactive filteri
   testthat::expect_equal(
     shiny::isolate(filtered_data$get_filter_overview(c("child", "parent"))),
     data.frame(
-      dataname = c("child", "parent"),
+      dataname = c("parent", "child"),
       obs = c(6, 6),
       obs_filtered = c(2, 2),
-      subjects = c(6, NA),
-      subjects_filtered = c(2, NA)
+      subjects = c(NA, 6),
+      subjects_filtered = c(NA, 2)
     )
   )
 })
@@ -858,38 +860,6 @@ testthat::test_that("switching disable/enable button caches and restores state",
     }
   )
 })
-
-testthat::test_that("handle_active_datanames replaces 'all' with vector of available datanames", {
-  filtered_data <- FilteredData$new(
-    list(
-      iris = list(dataset = iris),
-      mtcars = list(dataset = mtcars)
-    )
-  )
-  testthat::expect_identical(filtered_data$handle_active_datanames("all"), c("iris", "mtcars"))
-})
-
-testthat::test_that("handle_active_datanames returns input datanames if they are subset of active datanames", {
-  filtered_data <- FilteredData$new(
-    list(
-      iris = list(dataset = iris),
-      mtcars = list(dataset = mtcars)
-    )
-  )
-  testthat::expect_identical(filtered_data$handle_active_datanames("iris"), "iris")
-  testthat::expect_identical(filtered_data$handle_active_datanames(c("iris", "mtcars")), c("iris", "mtcars"))
-})
-
-testthat::test_that("handle_active_datanames throws when input dataname is not subset of active datanames", {
-  filtered_data <- FilteredData$new(
-    list(
-      iris = list(dataset = iris),
-      mtcars = list(dataset = mtcars)
-    )
-  )
-  testthat::expect_error(filtered_data$handle_active_datanames("idontexist"))
-})
-
 
 testthat::test_that("active_datanames in srv_filter_panel gets resolved to valid datanames", {
   filtered_data <- FilteredData$new(
