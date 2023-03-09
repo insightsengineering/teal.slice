@@ -158,17 +158,6 @@ DefaultFilteredDataset <- R6::R6Class( # nolint
     },
 
     #' @description
-    #' Gets the reactive values from the active `FilterState` objects.
-    #'
-    #' Get all active filters from this dataset in form of the nested list.
-    #' The output list is a compatible input to `self$set_filter_state`.
-    #' @return `list` with named elements corresponding to `FilterState` objects
-    #' (active filters).
-    get_filter_state = function() {
-      private$get_filter_states("filter")$get_filter_state()
-    },
-
-    #' @description
     #' Set filter state
     #'
     #' @param state (`named list`)\cr
