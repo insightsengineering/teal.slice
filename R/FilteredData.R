@@ -501,19 +501,33 @@ FilteredData <- R6::R6Class( # nolint
     #' shiny::isolate(datasets$get_filter_state())
     #'
     set_filter_state = function(state) {
-      checkmate::assert_subset(names(state), self$datanames())
-      lapply(names(state), function(dataname) {
-        logger::log_trace(
-          "FilteredData$set_filter_state initializing, dataname: { paste(names(state), collapse = ' ') }"
-        )
+      if (is.teal_slices(state)) {
+        checkmate::assert_class(state, "teal_slices")
+        lapply(self$datanames(), function(x) {
+          relevant_slices <- extract_by_feat(state, "dataname", x)
+          private$get_filtered_dataset(x)$set_filter_state(relevant_slices)
+        })
+      } else {
+        warning(paste(
+          "From FilteredData:",
+          "Specifying filters as lists is obsolete and will be deprecated in the next release.",
+          "Please see ?set_filter_state and ?filter_settings for details."
+        ),
+        call. = FALSE)
+        checkmate::assert_subset(names(state), self$datanames())
+        lapply(names(state), function(dataname) {
+          logger::log_trace(
+            "FilteredData$set_filter_state initializing, dataname: { paste(names(state), collapse = ' ') }"
+          )
 
-        fdataset <- private$get_filtered_dataset(dataname = dataname)
-        dataset_state <- state[[dataname]]
-        fdataset$set_filter_state(state = dataset_state)
-      })
-      logger::log_trace(
-        "FilteredData$set_filter_state initialized, dataname: { paste(names(state), collapse = ' ') }"
-      )
+          fdataset <- private$get_filtered_dataset(dataname = dataname)
+          dataset_state <- state[[dataname]]
+          fdataset$set_filter_state(state = dataset_state)
+        })
+        logger::log_trace(
+          "FilteredData$set_filter_state initialized, dataname: { paste(names(state), collapse = ' ') }"
+        )
+      }
 
       invisible(NULL)
     },
