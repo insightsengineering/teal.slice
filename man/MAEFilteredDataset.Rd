@@ -37,12 +37,11 @@ shiny::isolate(dataset$get_filter_state())
 \subsection{Public methods}{
 \itemize{
 \item \href{#method-MAEFilteredDataset-new}{\code{MAEFilteredDataset$new()}}
-\item \href{#method-MAEFilteredDataset-get_filter_overview_info}{\code{MAEFilteredDataset$get_filter_overview_info()}}
 \item \href{#method-MAEFilteredDataset-set_filter_state}{\code{MAEFilteredDataset$set_filter_state()}}
 \item \href{#method-MAEFilteredDataset-remove_filter_state}{\code{MAEFilteredDataset$remove_filter_state()}}
 \item \href{#method-MAEFilteredDataset-ui_add}{\code{MAEFilteredDataset$ui_add()}}
 \item \href{#method-MAEFilteredDataset-srv_add}{\code{MAEFilteredDataset$srv_add()}}
-\item \href{#method-MAEFilteredDataset-get_filter_overview_nsubjs}{\code{MAEFilteredDataset$get_filter_overview_nsubjs()}}
+\item \href{#method-MAEFilteredDataset-get_filter_overview}{\code{MAEFilteredDataset$get_filter_overview()}}
 \item \href{#method-MAEFilteredDataset-clone}{\code{MAEFilteredDataset$clone()}}
 }
 }
@@ -56,7 +55,6 @@ shiny::isolate(dataset$get_filter_state())
 <li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilteredDataset" data-id="get_dataset_label"><a href='../../teal.slice/html/FilteredDataset.html#method-FilteredDataset-get_dataset_label'><code>teal.slice::FilteredDataset$get_dataset_label()</code></a></span></li>
 <li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilteredDataset" data-id="get_filter_count"><a href='../../teal.slice/html/FilteredDataset.html#method-FilteredDataset-get_filter_count'><code>teal.slice::FilteredDataset$get_filter_count()</code></a></span></li>
 <li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilteredDataset" data-id="get_filter_state"><a href='../../teal.slice/html/FilteredDataset.html#method-FilteredDataset-get_filter_state'><code>teal.slice::FilteredDataset$get_filter_state()</code></a></span></li>
-<li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilteredDataset" data-id="get_filter_states"><a href='../../teal.slice/html/FilteredDataset.html#method-FilteredDataset-get_filter_states'><code>teal.slice::FilteredDataset$get_filter_states()</code></a></span></li>
 <li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilteredDataset" data-id="get_formatted_filter_state"><a href='../../teal.slice/html/FilteredDataset.html#method-FilteredDataset-get_formatted_filter_state'><code>teal.slice::FilteredDataset$get_formatted_filter_state()</code></a></span></li>
 <li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilteredDataset" data-id="get_keys"><a href='../../teal.slice/html/FilteredDataset.html#method-FilteredDataset-get_keys'><code>teal.slice::FilteredDataset$get_keys()</code></a></span></li>
 <li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilteredDataset" data-id="get_metadata"><a href='../../teal.slice/html/FilteredDataset.html#method-FilteredDataset-get_metadata'><code>teal.slice::FilteredDataset$get_metadata()</code></a></span></li>
@@ -101,19 +99,6 @@ field containing metadata about the dataset;
 each element of the list must be atomic and length one}
 }
 \if{html}{\out{</div>}}
-}
-}
-\if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-MAEFilteredDataset-get_filter_overview_info"></a>}}
-\if{latex}{\out{\hypertarget{method-MAEFilteredDataset-get_filter_overview_info}{}}}
-\subsection{Method \code{get_filter_overview_info()}}{
-Get filter overview rows of a dataset
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{MAEFilteredDataset$get_filter_overview_info()}\if{html}{\out{</div>}}
-}
-
-\subsection{Returns}{
-(\code{matrix}) matrix of observations and subjects
 }
 }
 \if{html}{\out{<hr>}}
@@ -233,16 +218,16 @@ an ID string that corresponds with the ID used to call the module's UI function.
 }
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-MAEFilteredDataset-get_filter_overview_nsubjs"></a>}}
-\if{latex}{\out{\hypertarget{method-MAEFilteredDataset-get_filter_overview_nsubjs}{}}}
-\subsection{Method \code{get_filter_overview_nsubjs()}}{
-Gets filter overview subjects number
+\if{html}{\out{<a id="method-MAEFilteredDataset-get_filter_overview"></a>}}
+\if{latex}{\out{\hypertarget{method-MAEFilteredDataset-get_filter_overview}{}}}
+\subsection{Method \code{get_filter_overview()}}{
+Get filter overview rows of a dataset
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{MAEFilteredDataset$get_filter_overview_nsubjs()}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{MAEFilteredDataset$get_filter_overview()}\if{html}{\out{</div>}}
 }
 
 \subsection{Returns}{
-\code{list} with the number of subjects of filtered/non-filtered datasets.
+(\code{matrix}) matrix of observations and subjects
 }
 }
 \if{html}{\out{<hr>}}

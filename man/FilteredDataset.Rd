@@ -19,12 +19,11 @@ components of the dataset.
 \item \href{#method-FilteredDataset-clear_filter_states}{\code{FilteredDataset$clear_filter_states()}}
 \item \href{#method-FilteredDataset-get_call}{\code{FilteredDataset$get_call()}}
 \item \href{#method-FilteredDataset-get_filter_state}{\code{FilteredDataset$get_filter_state()}}
-\item \href{#method-FilteredDataset-get_filter_states}{\code{FilteredDataset$get_filter_states()}}
 \item \href{#method-FilteredDataset-get_filter_count}{\code{FilteredDataset$get_filter_count()}}
 \item \href{#method-FilteredDataset-get_dataname}{\code{FilteredDataset$get_dataname()}}
 \item \href{#method-FilteredDataset-get_dataset}{\code{FilteredDataset$get_dataset()}}
 \item \href{#method-FilteredDataset-get_metadata}{\code{FilteredDataset$get_metadata()}}
-\item \href{#method-FilteredDataset-get_filter_overview_info}{\code{FilteredDataset$get_filter_overview_info()}}
+\item \href{#method-FilteredDataset-get_filter_overview}{\code{FilteredDataset$get_filter_overview()}}
 \item \href{#method-FilteredDataset-get_keys}{\code{FilteredDataset$get_keys()}}
 \item \href{#method-FilteredDataset-get_dataset_label}{\code{FilteredDataset$get_dataset_label()}}
 \item \href{#method-FilteredDataset-set_filterable_varnames}{\code{FilteredDataset$set_filterable_varnames()}}
@@ -143,27 +142,6 @@ with active filters.
 }
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-FilteredDataset-get_filter_states"></a>}}
-\if{latex}{\out{\hypertarget{method-FilteredDataset-get_filter_states}{}}}
-\subsection{Method \code{get_filter_states()}}{
-Gets the active \code{FilterStates} objects.
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{FilteredDataset$get_filter_states(id = character(0))}\if{html}{\out{</div>}}
-}
-
-\subsection{Arguments}{
-\if{html}{\out{<div class="arguments">}}
-\describe{
-\item{\code{id}}{(\code{character(1)}, \code{character(0)})\cr
-the id of the \code{private$filter_states} list element where \code{FilterStates} is kept.}
-}
-\if{html}{\out{</div>}}
-}
-\subsection{Returns}{
-\code{FilterStates} or \code{list} of \code{FilterStates} objects.
-}
-}
-\if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-FilteredDataset-get_filter_count"></a>}}
 \if{latex}{\out{\hypertarget{method-FilteredDataset-get_filter_count}{}}}
 \subsection{Method \code{get_filter_count()}}{
@@ -226,14 +204,14 @@ named \code{list} or \code{NULL}
 }
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-FilteredDataset-get_filter_overview_info"></a>}}
-\if{latex}{\out{\hypertarget{method-FilteredDataset-get_filter_overview_info}{}}}
-\subsection{Method \code{get_filter_overview_info()}}{
+\if{html}{\out{<a id="method-FilteredDataset-get_filter_overview"></a>}}
+\if{latex}{\out{\hypertarget{method-FilteredDataset-get_filter_overview}{}}}
+\subsection{Method \code{get_filter_overview()}}{
 Get filter overview rows of a dataset
 The output shows the comparison between \code{filtered_dataset}
 function parameter and the dataset inside self
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{FilteredDataset$get_filter_overview_info()}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{FilteredDataset$get_filter_overview()}\if{html}{\out{</div>}}
 }
 
 \subsection{Arguments}{
@@ -246,7 +224,7 @@ is used.}
 \if{html}{\out{</div>}}
 }
 \subsection{Returns}{
-(\code{matrix}) matrix of observations and subjects
+(\code{data.frame}) matrix of observations and subjects
 }
 }
 \if{html}{\out{<hr>}}

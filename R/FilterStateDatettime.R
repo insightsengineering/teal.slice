@@ -158,7 +158,9 @@ DatetimeFilterState <- R6::R6Class( # nolint
     #' Answers the question of whether the current settings and values selected actually filters out any values.
     #' @return logical scalar
     is_any_filtered = function() {
-      if (!setequal(self$get_selected(), private$choices)) {
+      if (private$is_disabled()) {
+        FALSE
+      } else if (!setequal(self$get_selected(), private$choices)) {
         TRUE
       } else if (!isTRUE(self$get_keep_na()) && private$na_count > 0) {
         TRUE
@@ -402,36 +404,60 @@ DatetimeFilterState <- R6::R6Class( # nolint
           )
 
 
-          private$observers$selection <- observeEvent(
+          private$observers$selection_start <- observeEvent(
             ignoreNULL = TRUE, # dates needs to be selected
             ignoreInit = TRUE, # ignoreInit: should not matter because we set the UI with the desired initial state
-            eventExpr = {
-              input$selection_start
-              input$selection_end
-            },
+            eventExpr = input$selection_start,
             handlerExpr = {
               start_date <- input$selection_start
-              end_date <- input$selection_end
+              end_date <- self$get_selected()[[2]]
               tzone <- Find(function(x) x != "", attr(as.POSIXlt(private$choices), "tzone"))
               attr(start_date, "tzone") <- tzone
+
+              if (start_date > end_date) {
+                showNotification(
+                  "Start date must not be greater than the end date. Ignoring selection.",
+                  type = "warning"
+                )
+                shinyWidgets::updateAirDateInput(
+                  session = session,
+                  inputId = "selection_start",
+                  value = self$get_selected()[1] # sets back to latest selected value
+                )
+                return(NULL)
+              }
+
+              self$set_selected(c(start_date, end_date))
+              logger::log_trace(sprintf(
+                "DatetimeFilterState$server@2 selection of variable %s changed, dataname: %s",
+                private$varname,
+                private$dataname
+              ))
+            }
+          )
+
+          private$observers$selection_end <- observeEvent(
+            ignoreNULL = TRUE, # dates needs to be selected
+            ignoreInit = TRUE, # ignoreInit: should not matter because we set the UI with the desired initial state
+            eventExpr = input$selection_end,
+            handlerExpr = {
+              start_date <- self$get_selected()[1]
+              end_date <- input$selection_end
+              tzone <- Find(function(x) x != "", attr(as.POSIXlt(private$choices), "tzone"))
               attr(end_date, "tzone") <- tzone
 
-              if (start_date < private$choices[1]) {
-                start_date <- private$choices[1]
+              if (start_date > end_date) {
+                showNotification(
+                  "End date must not be lower than the start date. Ignoring selection.",
+                  type = "warning"
+                )
+                shinyWidgets::updateAirDateInput(
+                  session = session,
+                  inputId = "selection_end",
+                  value = self$get_selected()[2] # sets back to latest selected value
+                )
+                return(NULL)
               }
-
-              if (end_date > private$choices[2]) {
-                end_date <- private$choices[2]
-              }
-
-              iv <- shinyvalidate::InputValidator$new()
-              iv$add_rule("selection_start", ~ if (
-                input$selection_start > input$selection_end
-              ) {
-                "Start date must not be greater than the end date."
-              })
-              iv$enable()
-              teal::validate_inputs(iv)
 
               self$set_selected(c(start_date, end_date))
               logger::log_trace(sprintf(
@@ -478,6 +504,22 @@ DatetimeFilterState <- R6::R6Class( # nolint
               ))
             }
           )
+
+          observeEvent(private$is_disabled(), {
+            shinyjs::toggleState(
+              id = "selection_start",
+              condition = !private$is_disabled()
+            )
+            shinyjs::toggleState(
+              id = "selection_end",
+              condition = !private$is_disabled()
+            )
+            shinyjs::toggleState(
+              id = "keep_na-value",
+              condition = !private$is_disabled()
+            )
+          })
+
           logger::log_trace("DatetimeFilterState$server initialized, dataname: { private$dataname }")
           NULL
         }
@@ -486,31 +528,15 @@ DatetimeFilterState <- R6::R6Class( # nolint
 
     # @description
     # UI module to display filter summary
-    # @param id `shiny` id parameter
-    ui_summary = function(id) {
-      ns <- NS(id)
-      uiOutput(ns("summary"), class = "filter-card-summary")
-    },
-
-    # @description
-    # UI module to display filter summary
-    # @param shiny `id` parametr passed to moduleServer
     #  renders text describing selected date range and
     #  if NA are included also
-    server_summary = function(id) {
-      moduleServer(
-        id = id,
-        function(input, output, session) {
-          output$summary <- renderUI({
-            selected <- format(self$get_selected(), "%Y-%m-%d %H:%M:%S")
-            min <- selected[1]
-            max <- selected[2]
-            tagList(
-              tags$span(paste0(min, " - ", max)),
-              if (self$get_keep_na()) tags$span("NA") else NULL
-            )
-          })
-        }
+    content_summary = function(id) {
+      selected <- format(self$get_selected(), "%Y-%m-%d %H:%M:%S")
+      min <- selected[1]
+      max <- selected[2]
+      tagList(
+        tags$span(paste0(min, " - ", max)),
+        if (self$get_keep_na()) tags$span("NA") else NULL
       )
     }
   )

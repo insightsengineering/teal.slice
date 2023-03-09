@@ -69,7 +69,7 @@ FilteredDataset <- R6::R6Class( # nolint
       out <- Filter(
         function(x) x != "",
         sapply(
-          self$get_filter_states(),
+          private$get_filter_states(),
           function(states) {
             states$format(indent = 2)
           }
@@ -87,7 +87,7 @@ FilteredDataset <- R6::R6Class( # nolint
     clear_filter_states = function() {
       logger::log_trace("Removing all filters from FilteredDataset: { deparse1(self$get_dataname()) }")
       lapply(
-        self$get_filter_states(),
+        private$get_filter_states(),
         function(filter_states) filter_states$clear_filter_states()
       )
       logger::log_trace("Removed all filters from FilteredDataset: { deparse1(self$get_dataname()) }")
@@ -112,7 +112,7 @@ FilteredDataset <- R6::R6Class( # nolint
     get_call = function(sid = "") {
       filter_call <- Filter(
         f = Negate(is.null),
-        x = lapply(self$get_filter_states(), function(x) x$get_call(sid))
+        x = lapply(private$get_filter_states(), function(x) x$get_call(sid))
       )
       if (length(filter_call) == 0) {
         return(NULL)
@@ -127,21 +127,8 @@ FilteredDataset <- R6::R6Class( # nolint
     #' @return `list` with named elements corresponding to `FilterStates` objects
     #' with active filters.
     get_filter_state = function() {
-      states <- lapply(self$get_filter_states(), function(x) x$get_filter_state())
+      states <- lapply(private$get_filter_states(), function(x) x$get_filter_state())
       Filter(function(x) length(x) > 0, states)
-    },
-
-    #' @description
-    #' Gets the active `FilterStates` objects.
-    #' @param id (`character(1)`, `character(0)`)\cr
-    #'   the id of the `private$filter_states` list element where `FilterStates` is kept.
-    #' @return `FilterStates` or `list` of `FilterStates` objects.
-    get_filter_states = function(id = character(0)) {
-      if (length(id) == 0) {
-        private$filter_states
-      } else {
-        private$filter_states[[id]]
-      }
     },
 
     #' @description
@@ -192,15 +179,15 @@ FilteredDataset <- R6::R6Class( # nolint
     #' @param filtered_dataset comparison object, of the same class
     #' as `self$get_dataset()`, if `NULL` then `self$get_dataset()`
     #' is used.
-    #' @return (`matrix`) matrix of observations and subjects
-    get_filter_overview_info = function() {
+    #' @return (`data.frame`) matrix of observations and subjects
+    get_filter_overview = function() {
       dataset <- self$get_dataset()
       data_filtered <- self$get_dataset(TRUE)
-
-      df <- cbind(private$get_filter_overview_nobs(dataset, data_filtered), "")
-      rownames(df) <- self$get_dataname()
-      colnames(df) <- c("Obs", "Subjects")
-      df
+      data.frame(
+        dataname = private$dataname,
+        obs = nrow(dataset),
+        obs_filtered = nrow(data_filtered)
+      )
     },
 
     #' @description
@@ -229,7 +216,7 @@ FilteredDataset <- R6::R6Class( # nolint
     set_filterable_varnames = function(varnames) {
       checkmate::assert_character(varnames, any.missing = FALSE, null.ok = TRUE)
       lapply(
-        self$get_filter_states(),
+        private$get_filter_states(),
         function(x) x$set_filterable_varnames(varnames)
       )
       return(invisible(self))
@@ -250,7 +237,7 @@ FilteredDataset <- R6::R6Class( # nolint
       checkmate::assert_string(dataname)
 
       ns <- NS(id)
-      if_multiple_filter_states <- length(self$get_filter_states()) > 1
+      if_multiple_filter_states <- length(private$get_filter_states()) > 1
       span(
         id = id,
         include_css_files("filter-panel"),
@@ -295,9 +282,9 @@ FilteredDataset <- R6::R6Class( # nolint
             class = "parent-hideable-list-group",
             tagList(
               lapply(
-                names(self$get_filter_states()),
+                names(private$get_filter_states()),
                 function(x) {
-                  tagList(self$get_filter_states(id = x)$ui_active(id = ns(x)))
+                  tagList(private$get_filter_states(id = x)$ui_active(id = ns(x)))
                 }
               )
             )
@@ -329,9 +316,9 @@ FilteredDataset <- R6::R6Class( # nolint
           )
 
           lapply(
-            names(self$get_filter_states()),
+            names(private$get_filter_states()),
             function(x) {
-              self$get_filter_states(id = x)$srv_active(id = x)
+              private$get_filter_states(id = x)$srv_active(id = x)
             }
           )
 
@@ -355,6 +342,7 @@ FilteredDataset <- R6::R6Class( # nolint
           })
 
           logger::log_trace("FilteredDataset$initialized, dataname: { dataname }")
+
           NULL
         }
       )
@@ -394,10 +382,8 @@ FilteredDataset <- R6::R6Class( # nolint
     data_filtered = NULL,
     data_filtered_fun = NULL, # function
     filter_states = list(),
-    filterable_varnames = character(0),
     dataname = character(0),
     keys = character(0),
-    parent = NULL, # reactive
     label = character(0),
     metadata = NULL,
 
@@ -409,7 +395,20 @@ FilteredDataset <- R6::R6Class( # nolint
       checkmate::assert_class(filter_states, "FilterStates")
       checkmate::assert_string(id)
       x <- setNames(list(filter_states), id)
-      private$filter_states <- c(self$get_filter_states(), x)
+      private$filter_states <- c(private$get_filter_states(), x)
+    },
+
+    # @description
+    # Gets the active `FilterStates` objects.
+    # @param id (`character(1)`, `character(0)`)\cr
+    #   the id of the `private$filter_states` list element where `FilterStates` is kept.
+    # @return `FilterStates` or `list` of `FilterStates` objects.
+    get_filter_states = function(id = character(0)) {
+      if (length(id) == 0) {
+        private$filter_states
+      } else {
+        private$filter_states[[id]]
+      }
     }
   )
 )

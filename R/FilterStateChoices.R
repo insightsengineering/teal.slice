@@ -145,7 +145,9 @@ ChoicesFilterState <- R6::R6Class( # nolint
     #' Answers the question of whether the current settings and values selected actually filters out any values.
     #' @return logical scalar
     is_any_filtered = function() {
-      if (!setequal(self$get_selected(), private$choices)) {
+      if (private$is_disabled()) {
+        FALSE
+      } else if (!setequal(self$get_selected(), private$choices)) {
         TRUE
       } else if (!isTRUE(self$get_keep_na()) && private$na_count > 0) {
         TRUE
@@ -459,6 +461,17 @@ ChoicesFilterState <- R6::R6Class( # nolint
             }
           })
 
+          observeEvent(private$is_disabled(), {
+            shinyjs::toggleState(
+              id = "selection",
+              condition = !private$is_disabled()
+            )
+            shinyjs::toggleState(
+              id = "keep_na-value",
+              condition = !private$is_disabled()
+            )
+          })
+
           logger::log_trace("ChoicesFilterState$server initialized, dataname: { private$dataname }")
           NULL
         }
@@ -466,30 +479,14 @@ ChoicesFilterState <- R6::R6Class( # nolint
     },
 
     # @description
-    # Server module to display filter summary
-    # @param id `shiny` id parameter
-    ui_summary = function(id) {
-      ns <- NS(id)
-      uiOutput(ns("summary"), class = "filter-card-summary")
-    },
-
-    # @description
     # UI module to display filter summary
-    # @param shiny `id` parametr passed to moduleServer
     #  renders text describing number of selected levels
     #  and if NA are included also
-    server_summary = function(id) {
-      moduleServer(
-        id = id,
-        function(input, output, session) {
-          output$summary <- renderUI({
-            n_selected <- length(self$get_selected())
-            tagList(
-              tags$span(sprintf("%s levels selected", n_selected)),
-              if (self$get_keep_na()) tags$span("NA") else NULL
-            )
-          })
-        }
+    content_summary = function(id) {
+      n_selected <- length(self$get_selected())
+      tagList(
+        tags$span(sprintf("%s levels selected", n_selected)),
+        if (self$get_keep_na()) tags$span("NA") else NULL
       )
     }
   )

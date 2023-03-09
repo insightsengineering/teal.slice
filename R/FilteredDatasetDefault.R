@@ -31,7 +31,9 @@ DefaultFilteredDataset <- R6::R6Class( # nolint
     #' @param parent_name (`character(1)`)\cr
     #'   Name of the parent dataset
     #' @param parent (`reactive`)\cr
-    #'   a `reactive` returning parent `data.frame`
+    #'   object returned by this reactive is a filtered `data.frame` from other `FilteredDataset`
+    #'   named `parent_name`. Consequence of passing `parent` is a `reactive` link which causes
+    #'   causing refiltering of this `dataset` based on the changes in `parent`.
     #' @param join_keys (`character`)\cr
     #'   Name of the columns in this dataset to join with `parent`
     #'   dataset. If the column names are different if both datasets
@@ -165,7 +167,7 @@ DefaultFilteredDataset <- R6::R6Class( # nolint
     #' @return `list` with named elements corresponding to `FilterState` objects
     #' (active filters).
     get_filter_state = function() {
-      self$get_filter_states("filter")$get_filter_state()
+      private$get_filter_states("filter")$get_filter_state()
     },
 
     #' @description
@@ -194,7 +196,7 @@ DefaultFilteredDataset <- R6::R6Class( # nolint
           self$get_dataname()
         )
       )
-      fs <- self$get_filter_states()[[1]]
+      fs <- private$get_filter_states()[[1]]
       fs$set_filter_state(state = state)
       logger::log_trace(
         sprintf(
@@ -221,7 +223,7 @@ DefaultFilteredDataset <- R6::R6Class( # nolint
         )
       )
 
-      fdata_filter_state <- shiny::isolate(self$get_filter_states())[[1]]
+      fdata_filter_state <- shiny::isolate(private$get_filter_states())[[1]]
       for (element in state_id) {
         fdata_filter_state$remove_filter_state(element)
       }
@@ -247,7 +249,7 @@ DefaultFilteredDataset <- R6::R6Class( # nolint
       ns <- NS(id)
       tagList(
         tags$label("Add", tags$code(self$get_dataname()), "filter"),
-        self$get_filter_states(id = "filter")$ui_add(id = ns("filter"))
+        private$get_filter_states(id = "filter")$ui_add(id = ns("filter"))
       )
     },
 
@@ -270,7 +272,7 @@ DefaultFilteredDataset <- R6::R6Class( # nolint
           logger::log_trace(
             "DefaultFilteredDataset$srv_add initializing, dataname: { deparse1(self$get_dataname()) }"
           )
-          self$get_filter_states(id = "filter")$srv_add(id = "filter")
+          private$get_filter_states(id = "filter")$srv_add(id = "filter")
           logger::log_trace(
             "DefaultFilteredDataset$srv_add initialized, dataname: { deparse1(self$get_dataname()) }"
           )
@@ -284,10 +286,7 @@ DefaultFilteredDataset <- R6::R6Class( # nolint
     #' The output shows the comparison between `filtered_dataset`
     #' function parameter and the dataset inside self
     #' @return `list` containing character `#filtered/#not_filtered`
-    get_filter_overview_nsubjs = function() {
-      dataset <- self$get_dataset()
-      data_filtered <- self$get_dataset(TRUE)
-
+    get_filter_overview = function() {
       # Gets filter overview subjects number and returns a list
       # of the number of subjects of filtered/non-filtered datasets
       subject_keys <- if (length(private$parent_name) > 0) {
@@ -296,32 +295,27 @@ DefaultFilteredDataset <- R6::R6Class( # nolint
         self$get_keys()
       }
 
-      f_rows <- if (length(subject_keys) == 0) {
-        dplyr::n_distinct(data_filtered())
+      dataset <- self$get_dataset()
+      data_filtered <- self$get_dataset(TRUE)
+      if (length(subject_keys) == 0) {
+        data.frame(
+          dataname = private$dataname,
+          obs = nrow(dataset),
+          obs_filtered = nrow(data_filtered())
+        )
       } else {
-        dplyr::n_distinct(data_filtered()[subject_keys])
+        data.frame(
+          dataname = private$dataname,
+          obs = nrow(dataset),
+          obs_filtered = nrow(data_filtered()),
+          subjects = nrow(unique(dataset[subject_keys])),
+          subjects_filtered = nrow(unique(data_filtered()[subject_keys]))
+        )
       }
-
-      nf_rows <- if (length(subject_keys) == 0) {
-        dplyr::n_distinct(dataset)
-      } else {
-        dplyr::n_distinct(dataset[subject_keys])
-      }
-
-      list(paste0(f_rows, "/", nf_rows))
     }
   ),
   private = list(
     parent_name = character(0),
-    join_keys = character(0),
-    # Gets filter overview observations number and returns a
-    # list of the number of observations of filtered/non-filtered datasets
-    get_filter_overview_nobs = function(dataset, data_filtered) {
-      f_rows <- nrow(data_filtered())
-      nf_rows <- nrow(dataset)
-      list(
-        paste0(f_rows, "/", nf_rows)
-      )
-    }
+    join_keys = character(0)
   )
 )

@@ -7,9 +7,16 @@ testthat::test_that("state_lists_empty does not throw after initializing Filtere
   testthat::expect_no_error(filtered_dataset$clear_filter_states())
 })
 
-testthat::test_that("get_filter_states returns an empty list after initialization", {
-  filtered_dataset <- FilteredDataset$new(dataset = head(iris), dataname = "iris")
-  testthat::expect_equal(filtered_dataset$get_filter_states(), list())
+testthat::test_that("filter_states is empty when not initialized", {
+  testfd <- R6::R6Class(
+    "testfd",
+    inherit = FilteredDataset,
+    public = list(
+      get_filter_states = function() private$filter_states
+    )
+  )
+  filtered_dataset <- testfd$new(dataset = head(iris), dataname = "iris")
+  testthat::expect_identical(filtered_dataset$get_filter_states(), list())
 })
 
 testthat::test_that("get_dataname returns the dataname passed to the constructor", {
@@ -59,11 +66,20 @@ testthat::test_that("$get_formatted_filter_state returns a string representation
     Species = list(selected = c("setosa", "versicolor"), keep_na = FALSE)
   )
   shiny::isolate(dataset$set_filter_state(state = fs))
-  states <- dataset$get_filter_states()[[1]]
 
   testthat::expect_equal(
     shiny::isolate(dataset$get_formatted_filter_state()),
-    paste("Filters for dataset: iris", shiny::isolate(states$format(indent = 2)), sep = "\n")
+    paste(
+      c(
+        "Filters for dataset: iris", "  Filtering on: Sepal.Length",
+        "    Selected range: 5.100 - 6.400",
+        "    Include missing values: TRUE",
+        "  Filtering on: Species",
+        "    Selected values: setosa, versicolor",
+        "    Include missing values: FALSE"
+      ),
+      collapse = "\n"
+    )
   )
 })
 

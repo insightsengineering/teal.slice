@@ -106,6 +106,7 @@ InteractiveFilterState <- R6::R6Class( # nolint
           sum(is.na(private$x_reactive()))
         }
       )
+      private$disabled <- reactiveVal(FALSE)
       logger::log_trace(
         sprintf(
           "Instantiated %s with variable %s, dataname: %s",
@@ -260,15 +261,19 @@ InteractiveFilterState <- R6::R6Class( # nolint
     #'
     set_keep_na = function(value) {
       checkmate::assert_flag(value)
-      private$keep_na(value)
-      logger::log_trace(
-        sprintf(
-          "%s$set_keep_na set for variable %s to %s.",
-          class(self)[1],
-          private$varname,
-          value
+      if (shiny::isolate(private$is_disabled())) {
+        warning("This filter state is disabled. Can not change keep NA.")
+      } else {
+        private$keep_na(value)
+        logger::log_trace(
+          sprintf(
+            "%s$set_keep_na set for variable %s to %s.",
+            class(self)[1],
+            private$varname,
+            value
+          )
         )
-      )
+      }
       invisible(NULL)
     },
 
@@ -309,18 +314,24 @@ InteractiveFilterState <- R6::R6Class( # nolint
           private$dataname
         )
       )
-      value <- private$cast_and_validate(value)
-      value <- private$remove_out_of_bound_values(value)
-      private$validate_selection(value)
-      private$selected(value)
-      logger::log_trace(
-        sprintf(
-          "%s$set_selected selection of variable %s set, dataname: %s",
-          class(self)[1],
-          private$varname,
-          private$dataname
+
+      if (shiny::isolate(private$is_disabled())) {
+        warning("This filter state is disabled. Can not change selected.")
+      } else {
+        value <- private$cast_and_validate(value)
+        value <- private$remove_out_of_bound_values(value)
+        private$validate_selection(value)
+        private$selected(value)
+        logger::log_trace(
+          sprintf(
+            "%s$set_selected selection of variable %s set, dataname: %s",
+            class(self)[1],
+            private$varname,
+            private$dataname
+          )
         )
-      )
+      }
+
       invisible(NULL)
     },
 
@@ -346,6 +357,7 @@ InteractiveFilterState <- R6::R6Class( # nolint
         state$keep_na
       ))
       stopifnot(is.list(state) && all(names(state) %in% c("selected", "keep_na")))
+
       if (!is.null(state$keep_na)) {
         self$set_keep_na(state$keep_na)
       }
@@ -378,6 +390,16 @@ InteractiveFilterState <- R6::R6Class( # nolint
         function(input, output, session) {
           private$server_summary("summary")
           private$server_inputs("inputs")
+          observeEvent(input$enable,
+            {
+              if (isTRUE(input$enable)) {
+                private$enable()
+              } else {
+                private$disable()
+              }
+            },
+            ignoreInit = TRUE
+          )
           reactive(input$remove) # back to parent to remove self
         }
       )
@@ -417,6 +439,8 @@ InteractiveFilterState <- R6::R6Class( # nolint
     extract_type = logical(0),
     x_reactive = NULL, # reactive containing the filtered variable, used for updating counts and histograms
     filtered_na_count = NULL, # reactive containing the count of NA in the filtered dataset
+    disabled = NULL, # reactiveVal returning logical
+    cache = NULL, # cache state when filter disabled so we can later restore
 
     # private methods ----
 
@@ -454,13 +478,6 @@ InteractiveFilterState <- R6::R6Class( # nolint
       } else {
         filter_call
       }
-    },
-
-    # Sets `keep_na` field according to observed `input$keep_na`
-    # If `keep_na = TRUE` `is.na(varname)` is added to the returned call.
-    # Otherwise returned call excludes `NA` when executed.
-    observe_keep_na = function(input) {
-
     },
 
     # @description
@@ -504,13 +521,64 @@ InteractiveFilterState <- R6::R6Class( # nolint
       values
     },
 
+    # Disables `FilterState`
+    # `state` is moved to cache and set to `NULL`
+    # @return `NULL` invisibly
+    disable = function() {
+      private$cache <- self$get_state()
+      private$selected(NULL)
+      private$keep_na(NULL)
+      private$disabled(TRUE)
+      invisible(NULL)
+    },
+
+    # Enables `FilterState`
+    # Cached `state` is reset again and cache is cleared.
+    # @return `NULL` invisibly
+    enable = function() {
+      if (!is.null(private$cache)) {
+        private$disabled(FALSE)
+        self$set_state(private$cache)
+        private$cache <- NULL
+      }
+      invisible(NULL)
+    },
+
+    # Check whether filter is disabled
+    # @return `logical(1)`
+    is_disabled = function() {
+      private$disabled()
+    },
+
     # shiny modules -----
+
+    # @description
+    # Server module to display filter summary
+    # @param id `shiny` id parameter
     ui_summary = function(id) {
-      stop("abstract class")
+      ns <- NS(id)
+      uiOutput(ns("summary"), class = "filter-card-summary")
     },
+
+    # @description
+    # UI module to display filter summary
+    # @param shiny `id` parametr passed to moduleServer
+    #  renders text describing current state
     server_summary = function(id) {
-      stop("abstract class")
+      moduleServer(
+        id = id,
+        function(input, output, session) {
+          output$summary <- renderUI({
+            if (private$is_disabled()) {
+              tags$span("Disabled")
+            } else {
+              private$content_summary()
+            }
+          })
+        }
+      )
     },
+
     #' module with inputs
     ui_inputs = function(id) {
       stop("abstract class")
@@ -621,6 +689,8 @@ InteractiveFilterState <- R6::R6Class( # nolint
     ui_bs3 = function(id, parent_id) {
       ns <- NS(id)
 
+      enable <- !private$is_disabled()
+
       tags$div(
         id = id,
         class = "panel panel-default",
@@ -638,14 +708,22 @@ InteractiveFilterState <- R6::R6Class( # nolint
               } else {
                 NULL
               },
-            actionLink(
-              inputId = ns("remove"),
-              label = icon("circle-xmark", lib = "font-awesome"),
-              class = "filter-card-remove"
-            )
+              shinyWidgets::prettySwitch(
+                ns("enable"),
+                label = "",
+                status = "success",
+                fill = TRUE,
+                value = enable,
+                width = 30
+              ),
+              actionLink(
+                inputId = ns("remove"),
+                label = icon("circle-xmark", lib = "font-awesome"),
+                class = "filter-card-remove"
+              )
+            ),
+            private$ui_summary(ns("summary"))
           ),
-          private$ui_summary(ns("summary"))
-        ),
         tags$div(
           id = ns("body"),
           class = "panel-collapse collapse out",
@@ -663,6 +741,7 @@ InteractiveFilterState <- R6::R6Class( # nolint
     # @param parent_id (`character(1)`) id of the FilterStates card container
     ui_bs45 = function(id, parent_id) {
       ns <- NS(id)
+      enable <- !private$is_disabled()
 
       tags$div(
         id = id,
@@ -681,14 +760,22 @@ InteractiveFilterState <- R6::R6Class( # nolint
               } else {
                 NULL
               },
-            actionLink(
-              inputId = ns("remove"),
-              label = icon("circle-xmark", lib = "font-awesome"),
-              class = "filter-card-remove"
-            )
+              shinyWidgets::prettySwitch(
+                ns("enable"),
+                label = "",
+                status = "success",
+                fill = TRUE,
+                value = enable,
+                width = 30
+              ),
+              actionLink(
+                inputId = ns("remove"),
+                label = icon("circle-xmark", lib = "font-awesome"),
+                class = "filter-card-remove"
+              )
+            ),
+            private$ui_summary(ns("summary"))
           ),
-          private$ui_summary(ns("summary"))
-        ),
         tags$div(
           id = ns("body"),
           class = "collapse out",

@@ -2,6 +2,18 @@ testthat::test_that("The constructor accepts a data.frame object with a dataname
   testthat::expect_no_error(DefaultFilteredDataset$new(dataset = head(iris), dataname = "iris"))
 })
 
+testthat::test_that("filter_states list is initialized with single FilterStates element named as filter", {
+  testfd <- R6::R6Class(
+    "testfd",
+    inherit = DefaultFilteredDataset,
+    public = list(
+      get_filter_states = function() private$filter_states
+    )
+  )
+  filtered_dataset <- testfd$new(dataset = iris, dataname = "mae")
+  testthat::expect_identical(names(filtered_dataset$get_filter_states()), "filter")
+})
+
 testthat::test_that("get_call returns a list of calls or NULL", {
   filtered_dataset <- DefaultFilteredDataset$new(
     dataset = iris, dataname = "iris"
@@ -107,24 +119,28 @@ testthat::test_that(
   }
 )
 
-testthat::test_that("get_filter_overview_info returns overview matrix for DefaultFilteredDataset without filtering", {
+testthat::test_that("get_filter_overview returns overview data.frame with obs filter counts", {
   dataset_iris <- DefaultFilteredDataset$new(dataset = head(iris), dataname = "iris")
   testthat::expect_equal(
-    shiny::isolate(dataset_iris$get_filter_overview_info()),
-    matrix(list("6/6", ""), nrow = 1, dimnames = list(c("iris"), c("Obs", "Subjects")))
+    shiny::isolate(dataset_iris$get_filter_overview()),
+    data.frame(dataname = "iris", obs = 6, obs_filtered = 6)
   )
 })
 
-testthat::test_that(
-  "get_filter_overview_info returns overview matrix for DefaultFilteredDataset if a filtered dataset is passed in",
-  code = {
-    dataset_iris <- DefaultFilteredDataset$new(dataset = iris, dataname = "iris")
-    dataset_iris$set_filter_state(list(Species = "virginica"))
-    testthat::expect_equal(
-      shiny::isolate(
-        dataset_iris$get_filter_overview_info()
-      ),
-      matrix(list("50/150", ""), nrow = 1, dimnames = list(c("iris"), c("Obs", "Subjects")))
-    )
-  }
-)
+testthat::test_that("get_filter_overview returns overview data.frame with obs filter counts", {
+  dataset_iris <- DefaultFilteredDataset$new(dataset = head(iris), dataname = "iris")
+  dataset_iris$set_filter_state(list(Sepal.Length = c(5.1, 5.1)))
+  testthat::expect_equal(
+    shiny::isolate(dataset_iris$get_filter_overview()),
+    data.frame(dataname = "iris", obs = 6, obs_filtered = 1)
+  )
+})
+
+testthat::test_that("get_filter_overview returns overview data.frame with obs and subject filter counts  ", {
+  dataset_iris <- DefaultFilteredDataset$new(dataset = head(iris), dataname = "iris", keys = "Species")
+  dataset_iris$set_filter_state(list(Sepal.Length = c(5.1, 5.1)))
+  testthat::expect_equal(
+    shiny::isolate(dataset_iris$get_filter_overview()),
+    data.frame(dataname = "iris", obs = 6, obs_filtered = 1, subjects = 1, subjects_filtered = 1)
+  )
+})
