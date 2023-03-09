@@ -410,22 +410,15 @@ FilteredData <- R6::R6Class( # nolint
     },
 
     # Functions useful for restoring from another dataset ----
+
     #' @description
-    #' Gets the reactive values from the active `FilterState` objects.
+    #' Gets states of all active `FilterState` objects.
     #'
-    #' Gets all active filters in the form of a nested list.
-    #' The output list is a compatible input to `self$set_filter_state`.
-    #' The attribute `formatted` renders the output of `self$get_formatted_filter_state`,
-    #' which is a character formatting of the filter state.
-    #'
-    #' @return `named list` with elements corresponding to `FilteredDataset` objects
-    #' with active filters. In addition, the `formatted` attribute holds
-    #' the character format of the active filter states.
+    #' @return A `teal_slices` object.
     #'
     get_filter_state = function() {
-      states <- lapply(private$get_filtered_dataset(), function(x) x$get_filter_state())
-      filtered_states <- Filter(function(x) length(x) > 0, states)
-      structure(filtered_states, formatted = self$get_formatted_filter_state())
+      states <- lapply(private$filtered_datasets, function(x) x$get_filter_state())
+      do.call(c, states)
     },
 
     #' @description
