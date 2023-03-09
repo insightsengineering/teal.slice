@@ -71,20 +71,17 @@ FilteredData <- R6::R6Class( # nolint
   public = list(
     #' @description
     #' Initialize a `FilteredData` object
-    #' @param data_objects (`list`) should contain.
-    #' - `dataset` data object object supported by [`FilteredDataset`].
-    #' - `metatada` (optional) additional metadata attached to the `dataset`.
-    #' - `keys` (optional) primary keys.
-    #' - `datalabel` (optional) label describing the `dataset`.
-    #' - `parent` (optional) which `NULL` is a parent of this one.
+    #' @param data_objects (`list`)
+    #'   should named elements containing `data.frame` or `MultiAssayExperiment`.
+    #'   Names of the list will serve as dataname.
     #' @param join_keys (`JoinKeys` or NULL) see [`teal.data::join_keys()`].
     #' @param code (`CodeClass` or `NULL`) see [`teal.data::CodeClass`].
     #' @param check (`logical(1)`) whether data has been check against reproducibility.
     #'
-    initialize = function(data_objects, join_keys = NULL, code = NULL, check = FALSE) {
+    initialize = function(data_objects, join_keys = teal.data::join_keys(), code = NULL, check = FALSE) {
       checkmate::assert_list(data_objects, any.missing = FALSE, min.len = 0, names = "unique")
       # Note the internals of data_objects are checked in set_dataset
-      checkmate::assert_class(join_keys, "JoinKeys", null.ok = TRUE)
+      checkmate::assert_class(join_keys, "JoinKeys")
       checkmate::assert_class(code, "CodeClass", null.ok = TRUE)
       checkmate::assert_flag(check)
 
@@ -93,12 +90,35 @@ FilteredData <- R6::R6Class( # nolint
         self$set_code(code)
       }
 
-      if (!is.null(join_keys)) {
-        self$set_join_keys(join_keys)
-      }
+      self$set_join_keys(join_keys)
 
-      for (dataname in names(data_objects)) {
-        self$set_dataset(data_objects[[dataname]], dataname)
+      child_parent <- sapply(
+        names(data_objects),
+        function(i) join_keys$get_parent(i),
+        USE.NAMES = TRUE,
+        simplify = FALSE
+      )
+      ordered_datanames <- topological_sort(child_parent)
+
+      for (dataname in ordered_datanames) {
+        ds_object <- data_objects[[dataname]]
+        validate_dataset_args(ds_object, dataname)
+        if (inherits(ds_object, c("data.frame", "MultiAssayExperiment"))) {
+          self$set_dataset(
+            data = ds_object,
+            dataname = dataname
+          )
+        } else {
+          # custom support for TealData object which pass metadata and label also
+          # see init_filtered_data.TealData
+          self$set_dataset(
+            data = ds_object$dataset,
+            dataname = dataname,
+            metadata = ds_object$metadata,
+            label = ds_object$label
+          )
+        }
+
       }
 
       invisible(self)
@@ -125,14 +145,31 @@ FilteredData <- R6::R6Class( # nolint
     },
 
     #' @description
-    #' Gets dataset names of a given dataname for the filtering.
+    #' Get names of datasets available for filtering.
+    #' Returned datanames depending on the relationship type.
+    #' If input `dataname` has parent, then parent dataname will be also
+    #' returned in the output vector.
     #'
-    #' @param dataname (`character` vector) names of the dataset
+    #' @param dataname (`character`) names of the dataset. Default `"all"`
+    #'   returns all datanames set in `FilteredData`
     #'
-    #' @return (`character` vector) of dataset names
-    #'
-    get_filterable_datanames = function(dataname) {
-      dataname
+    #' @return (`character`) of dataset names
+    get_filterable_datanames = function(dataname = "all") {
+      if (identical(dataname, "all")) {
+        dataname <- self$datanames()
+      }
+      checkmate::assert_subset(dataname, self$datanames())
+
+      parents <- character(0)
+      for (i in dataname) {
+        while (length(i) > 0) {
+          parent_i <- self$get_join_keys()$get_parent(i)
+          parents <- c(parent_i, parents)
+          i <- parent_i
+        }
+      }
+
+      return(unique(c(parents, dataname)))
     },
 
     #' @description
@@ -238,7 +275,7 @@ FilteredData <- R6::R6Class( # nolint
     #' @return (`JoinKeys`)
     #'
     get_join_keys = function() {
-      return(private$keys)
+      return(private$join_keys)
     },
 
     #' @description
@@ -252,19 +289,13 @@ FilteredData <- R6::R6Class( # nolint
     #' @return (`matrix`) matrix of observations and subjects of all datasets
     #'
     get_filter_overview = function(datanames) {
-      if (identical(datanames, "all")) {
-        datanames <- self$datanames()
-      }
-      check_in_subset(datanames, self$datanames(), "Some datasets are not available: ")
-
       rows <- lapply(
-        datanames,
+        self$get_filterable_datanames(datanames),
         function(dataname) {
-          private$get_filtered_dataset(dataname)$get_filter_overview_info()
+          private$get_filtered_dataset(dataname)$get_filter_overview()
         }
       )
-
-      do.call(rbind, rows)
+      dplyr::bind_rows(rows)
     },
 
     #' @description
@@ -308,62 +339,57 @@ FilteredData <- R6::R6Class( # nolint
     },
 
     #' @description
-    #' When active_datanames is "all", sets them to all `datanames`,
-    #' otherwise, it makes sure that it is a subset of the available `datanames`.
-    #'
-    #' @param datanames `character vector` datanames to pick
-    #'
-    #' @return the intersection of `self$datanames()` and `datanames`
-    #'
-    handle_active_datanames = function(datanames) {
-      logger::log_trace("FilteredData$handle_active_datanames handling { paste(datanames, collapse = \" \") }")
-      if (identical(datanames, "all")) {
-        datanames <- self$datanames()
-      } else {
-        for (dataname in datanames) {
-          tryCatch(
-            check_in_subset(datanames, self$datanames(), "Some datasets are not available: "),
-            error = function(e) {
-              message(e$message)
-            }
-          )
-        }
-      }
-      datanames <- self$get_filterable_datanames(datanames)
-      intersect(self$datanames(), datanames)
-    },
-
-    #' @description
     #' Adds a dataset to this `FilteredData`.
     #'
     #' @details
-    #' `set_dataset` creates a `FilteredDataset` object which keeps
-    #' `dataset` for the filtering purpose.
+    #' `set_dataset` creates a `FilteredDataset` object which keeps `dataset` for the filtering purpose.
+    #' If this data has a parent specified in the `JoinKeys` object stored in `private$join_keys`
+    #' then created `FilteredDataset` (child) gets linked with other `FilteredDataset` (parent).
+    #' "Child" dataset return filtered data then dependent on the reactive filtered data of the
+    #' "parent". See more in documentation of `parent` argument in `FilteredDatasetDefault` constructor.
     #'
-    #' @param dataset_args (`list`)\cr
-    #'   containing the arguments except (`dataname`)
-    #'   needed by `init_filtered_dataset`
+    #' @param data (`data.frame`, `MultiAssayExperiment`)\cr
+    #'   data to be filtered.
+    #'
     #' @param dataname (`string`)\cr
     #'   the name of the `dataset` to be added to this object
     #'
+    #' @param metadata (named `list` or `NULL`) \cr
+    #'   Field containing metadata about the dataset. Each element of the list
+    #'   should be atomic and length one.
+    #'
+    #' @param label (`character(1)`)\cr
+    #'   Label to describe the dataset
     #' @return (`self`) invisibly this `FilteredData`
     #'
-    set_dataset = function(dataset_args, dataname) {
+    set_dataset = function(data, dataname, metadata, label) {
       logger::log_trace("FilteredData$set_dataset setting dataset, name: { dataname }")
-      validate_dataset_args(dataset_args, dataname)
-
-      dataset <- dataset_args$dataset
-      dataset_args$dataset <- NULL
-
       # to include it nicely in the Show R Code;
       # the UI also uses datanames in ids, so no whitespaces allowed
       check_simple_name(dataname)
 
-      private$filtered_datasets[[dataname]] <- do.call(
-        what = init_filtered_dataset,
-        args = c(list(dataset), dataset_args, list(dataname = dataname))
-      )
-      private$reactive_data[[dataname]] <- private$get_filtered_dataset(dataname)$get_dataset(TRUE)
+      join_keys <- self$get_join_keys()
+      parent_dataname <- join_keys$get_parent(dataname)
+      if (length(parent_dataname) == 0) {
+        private$filtered_datasets[[dataname]] <- init_filtered_dataset(
+          dataset = data,
+          dataname = dataname,
+          metadata = metadata,
+          label = label,
+          keys = self$get_join_keys()$get(dataname, dataname)
+        )
+      } else {
+        private$filtered_datasets[[dataname]] <- init_filtered_dataset(
+          dataset = data,
+          dataname = dataname,
+          keys = join_keys$get(dataname, dataname),
+          parent_name = parent_dataname,
+          parent = reactive(self$get_data(parent_dataname, filtered = TRUE)),
+          join_keys = self$get_join_keys()$get(dataname, parent_dataname),
+          label = label,
+          metadata = metadata
+        )
+      }
 
       invisible(self)
     },
@@ -377,7 +403,7 @@ FilteredData <- R6::R6Class( # nolint
     #'
     set_join_keys = function(join_keys) {
       checkmate::assert_class(join_keys, "JoinKeys")
-      private$keys <- join_keys
+      private$join_keys <- join_keys
       invisible(self)
     },
 
@@ -438,8 +464,7 @@ FilteredData <- R6::R6Class( # nolint
     #' datasets <- teal.slice:::FilteredData$new(
     #'   list(iris = list(dataset = iris),
     #'        mae = list(dataset = miniACC)
-    #'   ),
-    #'   join_keys = NULL
+    #'   )
     #' )
     #' fs <- list(
     #'   iris = list(
@@ -485,8 +510,7 @@ FilteredData <- R6::R6Class( # nolint
     #' datasets <- teal.slice:::FilteredData$new(
     #'   list(iris = list(dataset = iris),
     #'        mae = list(dataset = miniACC)
-    #'   ),
-    #'   join_keys = NULL
+    #'   )
     #' )
     #' fs <- list(
     #'   iris = list(
@@ -602,8 +626,8 @@ FilteredData <- R6::R6Class( # nolint
     #'
     filter_panel_disable = function() {
       private$filter_panel_active <- FALSE
-      shinyjs::disable("filter_add_vars")
-      shinyjs::disable("filter_active_vars")
+      shinyjs::disable("add")
+      shinyjs::disable("active")
       private$cached_states <- self$get_filter_state()
       self$clear_filter_states()
       invisible(NULL)
@@ -616,8 +640,8 @@ FilteredData <- R6::R6Class( # nolint
     #'
     filter_panel_enable = function() {
       private$filter_panel_active <- TRUE
-      shinyjs::enable("filter_add_vars")
-      shinyjs::enable("filter_active_vars")
+      shinyjs::enable("add")
+      shinyjs::enable("active")
       if (length(private$cached_states) && (length(self$get_filter_state()) == 0)) {
         self$set_filter_state(private$cached_states)
       }
@@ -692,13 +716,9 @@ FilteredData <- R6::R6Class( # nolint
         function(input, output, session) {
           logger::log_trace("FilteredData$srv_filter_panel initializing")
 
-          active_datanames_resolved <- reactive(
-            if (identical(active_datanames(), "all")) {
-              self$datanames()
-            } else {
-              active_datanames()
-            }
-          )
+          active_datanames_resolved <- eventReactive(req(active_datanames()), {
+            self$get_filterable_datanames(active_datanames())
+          })
 
           self$srv_overview("overview", active_datanames_resolved)
           self$srv_active("active", active_datanames_resolved)
@@ -1006,22 +1026,36 @@ FilteredData <- R6::R6Class( # nolint
             }
 
             datasets_df <- self$get_filter_overview(datanames = datanames)
+            datasets_df <- transform(
+              datasets_df,
+              Obs = ifelse(
+                !is.na(obs),
+                sprintf("%s/%s", obs_filtered, obs),
+                ""
+              ),
+              Subjects = ifelse(
+                !is.na(subjects),
+                sprintf("%s/%s", subjects_filtered, subjects),
+                ""
+              )
+            )
 
-            body_html <- lapply(
-              seq_len(nrow(datasets_df)),
+            body_html <- apply(
+              datasets_df,
+              1,
               function(x) {
                 tags$tr(
-                  tags$td(rownames(datasets_df)[x]),
-                  tags$td(datasets_df[x, 1]),
-                  tags$td(datasets_df[x, 2])
+                  tags$td(x["dataname"]),
+                  tags$td(x["Obs"]),
+                  tags$td(x["Subjects"])
                 )
               }
             )
 
             header_html <- tags$tr(
               tags$td(""),
-              tags$td(colnames(datasets_df)[1]),
-              tags$td(colnames(datasets_df)[2])
+              tags$td("Obs"),
+              tags$td("Subjects")
             )
 
             table_html <- tags$table(
@@ -1061,7 +1095,7 @@ FilteredData <- R6::R6Class( # nolint
     code = NULL,
 
     # keys used for joining/filtering data a JoinKeys object (see teal.data)
-    keys = NULL,
+    join_keys = NULL,
 
     # reactive i.e. filtered data
     reactive_data = list(),
@@ -1086,38 +1120,6 @@ FilteredData <- R6::R6Class( # nolint
 
     # we implement these functions as checks rather than returning logicals so they can
     # give informative error messages immediately
-
-    # @details
-    # Validates the state of this FilteredData.
-    # The call to this function should be isolated to avoid a reactive dependency.
-    # Getting the names of a reactivevalues also needs a reactive context.
-    validate = function() {
-      # Note: Here, we directly refer to the private attributes because the goal of this
-      # function is to check the underlying attributes and the get / set functions might be corrupted
-
-      has_same_names <- function(x, y) setequal(names(x), names(y))
-      # check `filter_states` are all valid
-      lapply(
-        names(private$filter_states),
-        function(dataname) {
-          stopifnot(is.list(private$filter_states)) # non-NULL, possibly empty list
-          lapply(
-            names(private$filter_states[[dataname]]),
-            function(varname) {
-              var_state <- private$filter_states[[dataname]][[varname]]
-              stopifnot(!is.null(var_state)) # should not be NULL, see doc of this attribute
-              check_valid_filter_state(
-                filter_state = var_state,
-                dataname = dataname,
-                varname = varname
-              )
-            }
-          )
-        }
-      )
-
-      return(invisible(NULL))
-    },
 
     # @description
     # Gets the number of active `FilterState` objects in all `FilterStates`
