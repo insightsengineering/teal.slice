@@ -61,12 +61,17 @@ filter_var <- function(
   checkmate::assert_flag(keep_inf, null.ok = TRUE)
   checkmate::assert_flag(fixed)
 
-  args <- as.list(match.call())[-1]
-  args <- lapply(args, eval)
-
-  ind <- which(names(args) %in% names(formals(filter_var)))
-  ans <- args[ind]
-  extras <- args[-ind]
+  ans <- list(
+    dataname = dataname,
+    varname = varname,
+    choices = choices,
+    selected = selected,
+    varlabel = varlabel,
+    keep_na = keep_na,
+    keep_inf = keep_inf,
+    fixed = fixed
+  )
+  extras <- list(...)
   if (length(extras) != 0L) ans$extras <- extras
 
   class(ans) <- c("teal_slice", class(ans))
