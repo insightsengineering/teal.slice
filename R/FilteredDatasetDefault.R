@@ -175,7 +175,21 @@ DefaultFilteredDataset <- R6::R6Class( # nolint
     #'
     #' @return `NULL`
     set_filter_state = function(state) {
-      checkmate::assert_list(state)
+      checkmate::assert(
+        checkmate::check_list(state),
+        checkmate::check_class(state, "teal_slices")
+      )
+      if (is.teal_slices(state)) {
+        fs <- private$get_filter_states()[[1]]
+        fs$set_filter_state(state = state)
+        NULL
+      } else {
+        warning(paste(
+          "From FilteredDatasetDefault:",
+          "Specifying filters as lists is obsolete and will be deprecated in the next release.",
+          "Please see ?set_filter_state and ?filter_settings for details."
+        ),
+        call. = FALSE)
       logger::log_trace(
         sprintf(
           "DefaultFilteredDataset$set_filter_state setting up filters of variables %s, dataname: %s",
@@ -193,6 +207,7 @@ DefaultFilteredDataset <- R6::R6Class( # nolint
         )
       )
       NULL
+      }
     },
 
     #' @description Remove one or more `FilterState` of a `FilteredDataset`
