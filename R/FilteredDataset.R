@@ -217,7 +217,7 @@ FilteredDataset <- R6::R6Class( # nolint
         private$get_filter_states(),
         function(x) x$set_filterable_varnames(varnames)
       )
-      return(invisible(self))
+      invisible(self)
     },
 
     # modules ------

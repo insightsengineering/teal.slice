@@ -385,12 +385,12 @@ DFFilterStates <- R6::R6Class( # nolint
     #' those which have filtering supported (i.e. are of the permitted types)
     #' are included.
     #'
-    #' @return invisibly this `FilteredDataset`
+    #' @return NULL invisibly
     set_filterable_varnames = function(varnames) {
       checkmate::assert_character(varnames, any.missing = FALSE, null.ok = TRUE)
       supported_vars <- get_supported_filter_varnames(private$data)
       private$filterable_varnames <- intersect(varnames, supported_vars)
-      return(invisible(self))
+      invisible(NULL)
     },
 
     # shiny modules ----
