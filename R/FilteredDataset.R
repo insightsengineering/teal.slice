@@ -120,15 +120,14 @@ FilteredDataset <- R6::R6Class( # nolint
       filter_call
     },
 
-    #' Gets the reactive values from the active `FilterState` objects.
+    #' @description
+    #' Gets states of all active `FilterState` objects.
     #'
-    #' Get all active filters from this dataset in form of the nested list.
-    #' The output list is a compatible input to `self$set_filter_state`.
-    #' @return `list` with named elements corresponding to `FilterStates` objects
-    #' with active filters.
+    #' @return A `teal_slices` object.
+    #'
     get_filter_state = function() {
       states <- lapply(private$get_filter_states(), function(x) x$get_filter_state())
-      Filter(function(x) length(x) > 0, states)
+      do.call(c, states)
     },
 
     #' @description
