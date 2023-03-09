@@ -31,6 +31,8 @@ SEFilterStates <- R6::R6Class( # nolint
     initialize = function(data,
                           data_reactive = function(sid = "") NULL,
                           dataname,
+                          filterable_varnames = character(0),
+                          count_type = character(0),
                           datalabel = character(0)) {
       if (!requireNamespace("SummarizedExperiment", quietly = TRUE)) {
         stop("Cannot load SummarizedExperiment - please install the package or restart your session.")

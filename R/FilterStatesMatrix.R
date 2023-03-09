@@ -31,6 +31,8 @@ MatrixFilterStates <- R6::R6Class( # nolint
     initialize = function(data,
                           data_reactive = function(sid = "") NULL,
                           dataname,
+                          filterable_varnames = character(0),
+                          count_type = character(0),
                           datalabel = character(0)) {
       checkmate::assert_function(data_reactive, args = "sid")
       checkmate::assert_matrix(data)
