@@ -348,12 +348,18 @@ FilteredData <- R6::R6Class( # nolint
     #' "Child" dataset return filtered data then dependent on the reactive filtered data of the
     #' "parent". See more in documentation of `parent` argument in `FilteredDatasetDefault` constructor.
     #'
-    #' @param dataset_args (`list`)\cr
-    #'   containing the arguments except (`dataname`)
-    #'   needed by `init_filtered_dataset`
+    #' @param data (`data.frame`, `MultiAssayExperiment`)\cr
+    #'   data to be filtered.
+    #'
     #' @param dataname (`string`)\cr
     #'   the name of the `dataset` to be added to this object
     #'
+    #' @param metadata (named `list` or `NULL`) \cr
+    #'   Field containing metadata about the dataset. Each element of the list
+    #'   should be atomic and length one.
+    #'
+    #' @param label (`character(1)`)\cr
+    #'   Label to describe the dataset
     #' @return (`self`) invisibly this `FilteredData`
     #'
     set_dataset = function(data, dataname, metadata, label) {
@@ -458,8 +464,7 @@ FilteredData <- R6::R6Class( # nolint
     #' datasets <- teal.slice:::FilteredData$new(
     #'   list(iris = list(dataset = iris),
     #'        mae = list(dataset = miniACC)
-    #'   ),
-    #'   join_keys = NULL
+    #'   )
     #' )
     #' fs <- list(
     #'   iris = list(
@@ -505,8 +510,7 @@ FilteredData <- R6::R6Class( # nolint
     #' datasets <- teal.slice:::FilteredData$new(
     #'   list(iris = list(dataset = iris),
     #'        mae = list(dataset = miniACC)
-    #'   ),
-    #'   join_keys = NULL
+    #'   )
     #' )
     #' fs <- list(
     #'   iris = list(
