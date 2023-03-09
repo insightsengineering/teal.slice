@@ -465,6 +465,16 @@ FilterState <- R6::R6Class( # nolint
 
     # private methods ----
 
+    # private methods ----
+    #' @description
+    #' Check whether the initial choices filter out some values of x and set the flag in case.
+    #'
+    set_choices_limited = function(x, choices = NULL) {
+      if (!is.null(choices)) {
+        private$choices_limited <- length(unique(choices[choices %in% x])) < length(unique(x))
+      }
+      invisible(NULL)
+    },
     # @description
     # Return variable name prefixed by dataname to be evaluated as extracted object,
     # for example `data$var`

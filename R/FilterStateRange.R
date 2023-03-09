@@ -293,6 +293,14 @@ RangeFilterState <- R6::R6Class( # nolint
     slider_ticks = numeric(0), # allowed values for the slider input widget, calculated from input data (x)
 
     # private methods ----
+    #' @description
+    #' Check whether the initial choices filter out some values of x and set the flag in case.
+    #'
+    set_choices_limited = function(x, range) {
+      private$choices_limited <- (range[1] > min(x)) | (range[2] < max(x))
+      invisible(NULL)
+    },
+
     # Adds is.infinite(varname) before existing condition calls if keep_inf is selected
     # returns a call
     add_keep_inf_call = function(filter_call) {

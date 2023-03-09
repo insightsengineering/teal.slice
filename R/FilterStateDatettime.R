@@ -141,15 +141,13 @@ DatetimeFilterState <- R6::R6Class( # nolint
         extract_type = extract_type)
 
       var_range <- as.POSIXct(trunc(range(x, na.rm = TRUE), units = "secs"))
-
+      private$set_choices(var_range)
+      self$set_selected(var_range)
       if (!is.null(choices)) {
-        choices <- as.POSIXct(trunc(choices, units = "secs"))
-        private$set_choices(choices)
-        self$set_selected(choices)
-        private$set_choices_limited(var_range, private$choices)
-      } else {
-        private$set_choices(var_range)
-        self$set_selected(var_range)
+        private$set_choices_limited(
+          as.POSIXct(trunc(x, units = "secs")),
+          as.POSIXct(trunc(choices, units = "secs"))
+        )
       }
 
       return(invisible(self))
@@ -251,13 +249,6 @@ DatetimeFilterState <- R6::R6Class( # nolint
 
   private = list(
     # private methods ----
-    #' @description
-    #' Check whether the initial choices filter out some values of x and set the flag in case.
-    #'
-    set_choices_limited = function(x, choices) {
-      private$choices_limited <- (choices[1] > min(x)) | (choices[2] < max(x))
-      invisible(NULL)
-    },
     validate_selection = function(value) {
       if (!(is(value, "POSIXct") || is(value, "POSIXlt"))) {
         stop(

@@ -253,6 +253,6 @@ testthat::test_that("is_any_filtered reacts to choices", {
   datetime_seq <- seq(Sys.time() - 120, Sys.time(), 60)
   fs <- testfs$new(datetime_seq, varname = "x", dataname = "data", choices = datetime_seq[c(1, 2)])
   testthat::expect_true(fs$is_any_filtered())
-  fs <- testfs$new(datetime_seq, varname = "x", dataname = "data", choices = datetime_seq[c(1, 3)])
+  fs <- testfs$new(datetime_seq, varname = "x", dataname = "data", choices = datetime_seq)
   testthat::expect_false(fs$is_any_filtered())
 })
