@@ -593,7 +593,7 @@ FilterStates <- R6::R6Class( # nolint
         checkmate::check_list(state, null.ok = TRUE, names = "named"),
         checkmate::check_class(state, "teal_slices")
       )
-      if (inherits(state, "teal_slices")) {
+      if (is.teal_slices(state)) {
         checkmate::assert_scalar(state_list_index)
         checkmate::assert_multi_class(data, c("data.frame", "matrix", "DataFrame"))
         checkmate::assert_function(data_reactive, args = "sid")
