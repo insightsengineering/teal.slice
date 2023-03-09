@@ -65,7 +65,7 @@ MAEFilteredDataset <- R6::R6Class( # nolint
     #' @description
     #' Get filter overview rows of a dataset
     #' @return (`matrix`) matrix of observations and subjects
-    get_filter_overview_info = function() {
+    get_filter_overview = function() {
       dataset <- self$get_dataset()
       data_filtered <- self$get_dataset(TRUE)
       names_exps <- paste0("- ", names(dataset))
@@ -77,7 +77,6 @@ MAEFilteredDataset <- R6::R6Class( # nolint
       )
 
       rownames(df) <- mae_and_exps
-      colnames(df) <- c("Obs", "Subjects")
 
       df
     },
@@ -251,9 +250,11 @@ MAEFilteredDataset <- R6::R6Class( # nolint
       data_nf <- self$get_dataset()
       experiment_names <- names(data_nf)
 
-      data_f_subjects_info <- nrow(SummarizedExperiment::colData(data_f()))
-      data_nf_subjects_info <- nrow(SummarizedExperiment::colData(data_nf))
-      mae_total_subjects_info <- paste0(data_f_subjects_info, "/", data_nf_subjects_info)
+      mae_total_subjects_info <- data.frame(
+        dataname = private$dataname,
+        subjects = nrow(SummarizedExperiment::colData(data_nf)),
+        subjects_filtered = nrow(SummarizedExperiment::colData(data_f()))
+      )
 
       get_experiment_rows <- function(mae, experiment) {
         sample_subset <- subset(MultiAssayExperiment::sampleMap(mae), colname %in% colnames(experiment))
@@ -263,18 +264,16 @@ MAEFilteredDataset <- R6::R6Class( # nolint
       subjects_info <- lapply(
         experiment_names,
         function(experiment_name) {
-          subjects_f_rows <- get_experiment_rows(data_f(), data_f()[[experiment_name]])
-          subjects_nf_rows <- get_experiment_rows(data_nf, data_nf[[experiment_name]])
+          data.frame(
+            dataname = sprintf("- %s", experiment_name),
+            subjects = get_experiment_rows(data_nf, data_nf[[experiment_name]]),
+            subjects_filtered <- get_experiment_rows(data_f(), data_f()[[experiment_name]])
 
-          subjects_info <- paste0(subjects_f_rows, "/", subjects_nf_rows)
-          subjects_info
+          )
         }
       )
 
-      append(
-        list(mae_total_subjects_info),
-        subjects_info
-      )
+      do.call("rbind", c(list(mae_total_subjects_info), subjects_info))
     }
   ),
 
@@ -287,21 +286,17 @@ MAEFilteredDataset <- R6::R6Class( # nolint
       experiment_names <- names(dataset)
       mae_total_data_info <- ""
 
-      data_info <- lapply(
+      data_info <- lpply(
         experiment_names,
         function(experiment_name) {
-          data_f_rows <- ncol(data_filtered()[[experiment_name]])
-          data_nf_rows <- ncol(dataset[[experiment_name]])
-
-          data_info <- paste0(data_f_rows, "/", data_nf_rows)
-          data_info
+          data.frame(
+            obs <- ncol(dataset[[experiment_name]]),
+            obs_filtered <- ncol(data_filtered()[[experiment_name]])
+          )
         }
       )
 
-      append(
-        list(mae_total_data_info),
-        data_info
-      )
+      do.call("rbind", list(mae_total_data_info))
     }
   )
 )

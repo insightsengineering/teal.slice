@@ -77,6 +77,40 @@ testthat::test_that("datanames returns character vector reflecting names of set 
   testthat::expect_identical(filtered_data$datanames(), c("df1", "df2"))
 })
 
+testthat::test_that("datanames are ordered topologically from parent to child", {
+  jk <- teal.data::join_keys(teal.data::join_key("parent", "child", c("Species" = "Species")))
+  jk$set_parents(list(child = "parent"))
+  filtered_data <- FilteredData$new(
+    list(
+      child = list(dataset = head(iris2)),
+      parent = list(dataset = head(iris2))
+    ),
+    join_keys = jk
+  )
+  testthat::expect_identical(filtered_data$datanames(), c("parent", "child"))
+})
+
+testthat::test_that("FilteredData forbids cyclic graphs of datasets relationship", {
+  jk <- teal.data::join_keys(
+    teal.data::join_key("child", "parent", c("Species" = "Species")),
+    teal.data::join_key("grandchild", "child", c("Species" = "Species")),
+    teal.data::join_key("grandchild", "parent", c("Species" = "Species"))
+  )
+  jk$set_parents(list(child = "parent"))
+  jk$set_parents(list(grandchild = "child"))
+  jk$set_parents(list(parent = "grandchild"))
+
+  filtered_data <- FilteredData$new(
+    list(
+      grandchild = list(dataset = head(iris2)),
+      child = list(dataset = head(iris2)),
+      parent = list(dataset = head(iris2))
+    ),
+    join_keys = jk
+  )
+  testthat::expect_error(filtered_data$datanames(), "Graphs is not a directed acyclic graph")
+})
+
 testthat::test_that("get_filterable_dataname throws when dataname is not a subset of current datanames", {
   dataset <- list(dataset = iris)
   filtered_data <- FilteredData$new(list(iris = dataset))
@@ -89,22 +123,40 @@ testthat::test_that("get_filterable_dataname returns dataname same as input", {
   testthat::expect_identical(filtered_data$get_filterable_datanames("iris"), "iris")
 })
 
-testthat::test_that("set_dataset accepts a `data.frame` object", {
-  filtered_data <- FilteredData$new(data_objects = list())
-  dataset_args <- list(dataset = iris)
-  testthat::expect_no_error(filtered_data$set_dataset(dataset_args = dataset_args, dataname = "iris"))
+testthat::test_that("get_filterable_datanames returns all ancestors if parents are specified in join_keys", {
+  jk <- teal.data::join_keys(
+    teal.data::join_key("child", "parent", c("Species" = "Species")),
+    teal.data::join_key("grandchild", "child", c("Species" = "Species"))
+  )
+  jk$set_parents(list(child = "parent"))
+  jk$set_parents(list(grandchild = "child"))
+
+  filtered_data <- FilteredData$new(
+    list(
+      grandchild = list(dataset = head(iris2)),
+      child = list(dataset = head(iris2)),
+      parent = list(dataset = head(iris2))
+    ),
+    join_keys = jk
+  )
+
+  testthat::expect_identical(filtered_data$get_filterable_datanames("parent"), "parent")
+  testthat::expect_identical(filtered_data$get_filterable_datanames("child"), c("parent", "child"))
+  testthat::expect_identical(filtered_data$get_filterable_datanames("grandchild"), c("parent", "child", "grandchild"))
 })
 
-testthat::test_that("set_dataset accepts a `data.frame` object", {
+testthat::test_that("set_dataset accepts data being `data.frame`", {
   filtered_data <- FilteredData$new(data_objects = list())
-  dataset_args <- list(dataset = iris)
-  testthat::expect_no_error(filtered_data$set_dataset(dataset_args = dataset_args, dataname = "iris"))
+  testthat::expect_no_error(filtered_data$set_dataset(data = iris, dataname = "iris", label = NULL, metadata = NULL))
 })
+
 
 testthat::test_that("set_dataset returns self", {
   filtered_data <- FilteredData$new(data_objects = list())
-  dataset_args <- list(dataset = iris)
-  testthat::expect_identical(filtered_data$set_dataset(dataset_args = dataset_args, dataname = "iris"), filtered_data)
+  testthat::expect_identical(
+    filtered_data$set_dataset(data = iris, dataname = "iris", label = NULL, metadata = NULL),
+    filtered_data
+  )
 })
 
 testthat::test_that("set_dataset creates FilteredDataset object", {
@@ -116,11 +168,30 @@ testthat::test_that("set_dataset creates FilteredDataset object", {
     )
   )
   filtered_data <- testfd$new(data_objects = list())
-  dataset_args <- list(dataset = iris)
-  filtered_data$set_dataset(dataset_args = dataset_args, dataname = "iris")
+  filtered_data$set_dataset(data = iris, dataname = "iris", label = NULL, metadata = NULL)
   checkmate::expect_list(
     filtered_data$get_filtered_datasets(),
     types = "DefaultFilteredDataset"
+  )
+})
+
+testthat::test_that("set_datasets creates FilteredDataset object linked with parent", {
+  testfd <- R6::R6Class(
+    classname = "testfd",
+    inherit = FilteredData,
+    public = list(
+      get_filtered_datasets = function() private$filtered_datasets
+    )
+  )
+  jk <- teal.data::join_keys(teal.data::join_key("parent", "child", c("id" = "id")))
+  jk$set_parents(list(child = "parent"))
+  iris2 <- transform(iris, id = seq_len(nrow(iris)))
+  filtered_data <- testfd$new(data_objects = list(), join_keys = jk)
+  filtered_data$set_dataset(data = head(iris), dataname = "parent", label = NULL, metadata = NULL)
+  filtered_data$set_dataset(data = head(iris), dataname = "child", label = NULL, metadata = NULL)
+  testthat::expect_identical(
+    shiny::isolate(filtered_data$get_call("child"))[[1]],
+    quote(child <- dplyr::inner_join(x = child, y = parent[, c("id"), drop = FALSE], by = "id"))
   )
 })
 
@@ -129,14 +200,15 @@ testthat::test_that("get_keys returns an empty character when dataset has no key
   testthat::expect_equal(filtered_data$get_keys("iris"), character(0))
 })
 
-testthat::test_that("get_keys returns the same character array if a dataset has keys", {
-  filtered_data <- FilteredData$new(list(iris = list(dataset = head(iris), keys = "test")))
-  testthat::expect_equal(filtered_data$get_keys("iris"), "test")
+testthat::test_that("get_keys returns keys of the dataset specified via join_keys", {
+  jk <- teal.data::join_keys(teal.data::join_key("iris", "iris", "test"))
+  filtered_data <- FilteredData$new(list(iris = list(dataset = head(iris))), join_keys = jk)
+  testthat::expect_identical(filtered_data$get_keys("iris"), setNames("test", "test"))
 })
 
-testthat::test_that("get_join_keys returns NULL if no join_keys", {
-  filtered_data <- FilteredData$new(list(iris = list(dataset = head(iris), keys = "test")))
-  testthat::expect_null(filtered_data$get_join_keys())
+testthat::test_that("get_join_keys returns empty JoinKeys object", {
+  filtered_data <- FilteredData$new(list(iris = list(dataset = head(iris))))
+  testthat::expect_s3_class(filtered_data$get_join_keys(), "JoinKeys")
 })
 
 testthat::test_that("get_join_keys returns join_keys object if it exists", {
@@ -317,26 +389,46 @@ testthat::test_that("get_data returns the same object as passed to the construct
   testthat::expect_equal(filtered_data$get_data("iris"), iris)
 })
 
-testthat::test_that(
-  "FilteredData$get_data returns an object filtered by set filters",
-  code = {
-    datasets <- FilteredData$new(
-      list(
-        iris = list(dataset = iris)
-      )
+testthat::test_that( "FilteredData$get_data returns an object filtered by set filters", {
+  datasets <- FilteredData$new(
+    list(
+      iris = list(dataset = iris)
     )
-    fs <- list(
-      iris = list(
-        Sepal.Length = list(selected = c(5.1, 6.4))
-      )
+  )
+  fs <- list(
+    iris = list(
+      Sepal.Length = list(selected = c(5.1, 6.4))
     )
-    datasets$set_filter_state(state = fs)
-    testthat::expect_identical(
-      shiny::isolate(datasets$get_data("iris")),
-      dplyr::filter(iris, Sepal.Length >= 5.1 & Sepal.Length <= 6.4)
-    )
-  }
-)
+  )
+  datasets$set_filter_state(state = fs)
+  testthat::expect_identical(
+    shiny::isolate(datasets$get_data("iris")),
+    dplyr::filter(iris, Sepal.Length >= 5.1 & Sepal.Length <= 6.4)
+  )
+})
+
+testthat::test_that("FilteredData$get_data of the child is dependent on the ancestor filter", {
+  jk <- teal.data::join_keys(
+    teal.data::join_key("child", "parent", c("id" = "id")),
+    teal.data::join_key("grandchild", "child", c("id" = "id"))
+  )
+  jk$set_parents(list(child = "parent"))
+  jk$set_parents(list(grandchild = "child"))
+  iris2 <- transform(iris, id = seq_len(nrow(iris)))
+  filtered_data <- FilteredData$new(
+    list(
+      grandchild = list(dataset = head(iris2)),
+      child = list(dataset = head(iris2)),
+      parent = list(dataset = head(iris2))
+    ),
+    join_keys = jk
+  )
+  filtered_data$set_filter_state(state = list(parent = list(id = c(1, 1))))
+  testthat::expect_identical(
+    shiny::isolate(filtered_data$get_data("grandchild", filtered = TRUE)),
+    dplyr::filter(iris2, id == 1)
+  )
+})
 
 testthat::test_that(
   "FilteredData$get_filter_state returns list identical to input with attribute format",
@@ -647,6 +739,34 @@ testthat::test_that("get_filter_overview returns overview matrix for filtered da
   )
 })
 
+testthat::test_that("get_filter_overview return counts based on reactive filtering by ancestors", {
+  jk <- teal.data::join_keys(
+    teal.data::join_key("child", "parent", c("id" = "id")),
+    teal.data::join_key("grandchild", "child", c("id" = "id"))
+  )
+  jk$set_parents(list(child = "parent"))
+  jk$set_parents(list(grandchild = "child"))
+  iris2 <- transform(iris, id = 1:nrow(iris))
+  filtered_data <- FilteredData$new(
+    list(
+      grandchild = list(dataset = head(iris2)),
+      child = list(dataset = head(iris2)),
+      parent = list(dataset = head(iris2))
+    ),
+    join_keys = jk
+  )
+  filtered_data$set_filter_state(list(parent = list(id = c(1, 2))))
+  testthat::expect_equal(
+    shiny::isolate(filtered_data$get_filter_overview(c("child", "parent"))),
+    data.frame(
+      dataname = c("child", "parent"),
+      obs = c(6, 6),
+      obs_filtered = c(2, 2),
+      subjects = c(6, NA),
+      subjects_filtered = c(2, NA)
+    )
+  )
+})
 
 testthat::test_that("filter_panel_disable", {
   filtered_data <- FilteredData$new(data_objects = list("iris" = list(dataset = iris)))

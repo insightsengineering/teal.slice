@@ -32,20 +32,16 @@ init_filtered_data.TealData <- function(x, # nolint
                                         code = x$get_code_class(),
                                         cdisc = FALSE,
                                         check = x$get_check()) {
-  cdisc <- length(join_keys$get_parents()) > 0
   data_objects <- lapply(x$get_datanames(), function(dataname) {
     dataset <- x$get_dataset(dataname)
-
-    parent <- if (cdisc) join_keys$get_parent(dataname) else NULL
+    parent <- join_keys$get_parent(dataname)
 
     return_list <- list(
       dataset = dataset$get_raw_data(),
-      keys = dataset$get_keys(),
       metadata = dataset$get_metadata(),
       label = dataset$get_dataset_label()
     )
 
-    if (cdisc) return_list[["parent"]] <- parent
     return_list
   })
 
@@ -261,4 +257,67 @@ toggle_title <- function(input_id, titles, one_way = FALSE) {
   shinyjs::runjs(expr)
 
   invisible(NULL)
+}
+
+#' Topological graph sort
+#'
+#' Graph is a list which for each node contains a vector of child nodes
+#' in the returned list, parents appear before their children.
+#'
+#' Implementation of Kahn algorithm with a modification to maintain the order of input elements.
+#'
+#' @param graph (named `list`) list with node vector elements
+#' @keywords internal
+#'
+#' @examples
+#' \dontrun{
+#' topological_sort(list(A = c(), B = c("A"), C = c("B"), D = c("A")))
+#' topological_sort(list(D = c("A"), A = c(), B = c("A"), C = c("B")))
+#' topological_sort(list(D = c("A"), B = c("A"), C = c("B"), A = c()))
+#' }
+topological_sort <- function(graph) {
+  # compute in-degrees
+  in_degrees <- list()
+  for (node in names(graph)) {
+    in_degrees[[node]] <- 0
+    for (to_edge in graph[[node]]) {
+      in_degrees[[to_edge]] <- 0
+    }
+  }
+
+  for (node in graph) {
+    for (to_edge in node) {
+      in_degrees[[to_edge]] <- in_degrees[[to_edge]] + 1
+    }
+  }
+
+  # sort
+  visited <- 0
+  sorted <- list()
+  zero_in <- list()
+  for (node in names(in_degrees)) {
+    if (in_degrees[[node]] == 0) zero_in <- append(zero_in, node)
+  }
+  zero_in <- rev(zero_in)
+
+  while (length(zero_in) != 0) {
+    visited <- visited + 1
+    sorted <- c(zero_in[[1]], sorted)
+    for (edge_to in graph[[zero_in[[1]]]]) {
+      in_degrees[[edge_to]] <- in_degrees[[edge_to]] - 1
+      if (in_degrees[[edge_to]] == 0) {
+        zero_in <- append(zero_in, edge_to, 1)
+      }
+    }
+    zero_in[[1]] <- NULL
+  }
+
+  if (visited != length(in_degrees)) {
+    stop(
+      "Graph is not a directed acyclic graph. Cycles involving nodes: ",
+      paste0(setdiff(names(in_degrees), sorted), collapse = " ")
+    )
+  } else {
+    return(sorted)
+  }
 }

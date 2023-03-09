@@ -179,15 +179,15 @@ FilteredDataset <- R6::R6Class( # nolint
     #' @param filtered_dataset comparison object, of the same class
     #' as `self$get_dataset()`, if `NULL` then `self$get_dataset()`
     #' is used.
-    #' @return (`matrix`) matrix of observations and subjects
-    get_filter_overview_info = function() {
+    #' @return (`data.frame`) matrix of observations and subjects
+    get_filter_overview = function() {
       dataset <- self$get_dataset()
       data_filtered <- self$get_dataset(TRUE)
-
-      df <- cbind(private$get_filter_overview_nobs(dataset, data_filtered), "")
-      rownames(df) <- self$get_dataname()
-      colnames(df) <- c("Obs", "Subjects")
-      df
+      data.frame(
+        dataname = private$dataname,
+        obs = nrow(dataset),
+        obs_filtered = nrow(data_filtered)
+      )
     },
 
     #' @description
@@ -382,10 +382,8 @@ FilteredDataset <- R6::R6Class( # nolint
     data_filtered = NULL,
     data_filtered_fun = NULL, # function
     filter_states = list(),
-    filterable_varnames = character(0),
     dataname = character(0),
     keys = character(0),
-    parent = NULL, # reactive
     label = character(0),
     metadata = NULL,
 
