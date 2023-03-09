@@ -238,3 +238,21 @@ testthat::test_that("is_any_filtered returns TRUE when enabled", {
   fs$enable()
   testthat::expect_true(fs$is_any_filtered())
 })
+
+testthat::test_that("is_any_filtered reacts to choices", {
+  shiny::reactiveConsole(TRUE)
+  on.exit(shiny::reactiveConsole(FALSE))
+  testfs <- R6::R6Class(
+    classname = "testfs",
+    inherit = DatetimeFilterState,
+    public = list(
+      disable = function() private$disable(),
+      enable = function() private$enable()
+    )
+  )
+  datetime_seq <- seq(Sys.time() - 120, Sys.time(), 60)
+  fs <- testfs$new(datetime_seq, varname = "x", dataname = "data", choices = datetime_seq[c(1, 2)])
+  testthat::expect_true(fs$is_any_filtered())
+  fs <- testfs$new(datetime_seq, varname = "x", dataname = "data", choices = datetime_seq[c(1, 3)])
+  testthat::expect_false(fs$is_any_filtered())
+})

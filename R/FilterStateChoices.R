@@ -149,11 +149,20 @@ ChoicesFilterState <- R6::R6Class( # nolint
         x <- factor(as.character(x), levels = as.character(sort(unique(x))))
       }
       x <- droplevels(x)
-      choices_table <- table(x)
-      private$set_choices(names(choices_table))
+
+      if (!is.null(choices)) {
+        x_ch <- x[x %in% choices]
+        x_ch <- droplevels(x_ch)
+        choices_table <- table(x_ch)
+        private$set_choices(choices)
+        private$set_choices_limited(x, private$choices)
+      } else {
+        choices_table <- table(x)
+        private$set_choices(names(choices_table))
+      }
+
       self$set_selected(names(choices_table))
       private$set_choices_counts(unname(choices_table))
-      private$set_choices_limited(x, private$choices)
 
       return(invisible(self))
     },
@@ -266,9 +275,7 @@ ChoicesFilterState <- R6::R6Class( # nolint
     #' Check whether the initial choices filter out some values of x and set the flag in case.
     #'
     set_choices_limited = function(x, choices) {
-      if (!is.null(choices)) {
-        private$choices_limited <- length(unique(choices[choices %in% x])) < length(unique(x))
-      }
+      private$choices_limited <- length(unique(choices[choices %in% x])) < length(unique(x))
       invisible(NULL)
     },
     set_choices_counts = function(choices_counts) {
