@@ -493,6 +493,11 @@ RangeFilterState <- R6::R6Class( # nolint
                   inputId = "selection",
                   value = private$selected()
                 )
+                shinyWidgets::updateNumericRangeInput(
+                  session = session,
+                  inputId = "selection_manual",
+                  value = private$selected()
+                )
               }
             }
           )
@@ -511,6 +516,24 @@ RangeFilterState <- R6::R6Class( # nolint
               )
               if (!isTRUE(all.equal(input$selection, self$get_selected()))) {
                 self$set_selected(input$selection)
+              }
+            }
+          )
+
+          private$observers$selection_manual <- observeEvent(
+            ignoreNULL = FALSE, # ignoreNULL: we don't want to ignore NULL when nothing is selected in `selectInput`
+            ignoreInit = TRUE, # ignoreInit: should not matter because we set the UI with the desired initial state
+            eventExpr = input$selection_manual,
+            handlerExpr = {
+              logger::log_trace(
+                sprintf(
+                  "RangeFilterState$server@3 selection of variable %s changed, dataname: %s",
+                  private$varname,
+                  private$dataname
+                )
+              )
+              if (!isTRUE(all.equal(input$selection_manual, self$get_selected()))) {
+                self$set_selected(input$selection_manual)
               }
             }
           )
@@ -535,12 +558,14 @@ RangeFilterState <- R6::R6Class( # nolint
 
           observeEvent(input$manual, {
             if (input$manual) {
+              self$set_selected(input$selection)
               shinyWidgets::updateNumericRangeInput(
                 session = session,
                 inputId = "selection_manual",
                 value = input$selection
               )
             } else {
+              self$set_selected(input$selection_manual)
               updateSliderInput(
                 session = session,
                 inputId = "selection",
