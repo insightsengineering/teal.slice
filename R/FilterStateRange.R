@@ -160,6 +160,10 @@ RangeFilterState <- R6::R6Class( # nolint
         self$set_selected(range(x_pretty))
       }
 
+      if (!is.null(selected)) {
+        self$set_selected(selected)
+      }
+
       private$unfiltered_histogram <- ggplot2::ggplot(data.frame(x = Filter(is.finite, x))) +
         ggplot2::geom_histogram(
           ggplot2::aes(x = x),
