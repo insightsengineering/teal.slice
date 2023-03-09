@@ -81,27 +81,45 @@
 #'   output$formatted_df <- renderText(filter_states_df$format())
 #'
 #'   observeEvent(input$button1_df, {
-#'     filter_state <- list(NUM1 = list(selected = c(0, 30)))
+#'     filter_state <- filter_settings(
+#'       filter_var("dataset", "NUM1", selected = c(0, 30)),
+#'       filterable = list(dataset = c("NUM1", "NUM2", "CHAR1", "CHAR2", "DATE", "DATETIME"))
+#'     )
 #'     filter_states_df$set_filter_state(state = filter_state)
 #'   })
 #'   observeEvent(input$button2_df, {
-#'     filter_state <- list(NUM2 = list(selected = c(20, 21)))
+#'     filter_state <- filter_settings(
+#'       filter_var("dataset", "NUM2", selected = c(20, 21)),
+#'       filterable = list(dataset = c("NUM1", "NUM2", "CHAR1", "CHAR2", "DATE", "DATETIME"))
+#'     )
 #'     filter_states_df$set_filter_state(state = filter_state)
 #'   })
 #'   observeEvent(input$button3_df, {
-#'     filter_state <- list(CHAR1 = list(selected = c("B", "C", "D")))
+#'     filter_state <- filter_settings(
+#'       filter_var("dataset", "CHAR1", selected = c("B", "C", "D")),
+#'       filterable = list(dataset = c("NUM1", "NUM2", "CHAR1", "CHAR2", "DATE", "DATETIME"))
+#'     )
 #'     filter_states_df$set_filter_state(state = filter_state)
 #'   })
 #'   observeEvent(input$button4_df, {
-#'     filter_state <- list(CHAR2 = list(selected = "F"))
+#'     filter_state <- filter_settings(
+#'       filter_var("dataset", "CHAR2", selected = c("F")),
+#'       filterable = list(dataset = c("NUM1", "NUM2", "CHAR1", "CHAR2", "DATE", "DATETIME"))
+#'     )
 #'     filter_states_df$set_filter_state(state = filter_state)
 #'   })
 #'   observeEvent(input$button5_df, {
-#'     filter_state <- list(DATE = list(selected = c("2020-01-01", "2020-02-02")))
+#'     filter_state <- filter_settings(
+#'       filter_var("dataset", "DATE", selected = c("2020-01-01", "2020-02-02")),
+#'       filterable = list(dataset = c("NUM1", "NUM2", "CHAR1", "CHAR2", "DATE", "DATETIME"))
+#'     )
 #'     filter_states_df$set_filter_state(state = filter_state)
 #'   })
 #'   observeEvent(input$button6_df, {
-#'     filter_state <- list(DATETIME = list(selected = as.POSIXct(c("2020-01-01", "2020-02-02"))))
+#'     filter_state <- filter_settings(
+#'       filter_var("dataset", "DATETIME", selected = as.POSIXct(c("2020-01-01", "2020-02-02"))),
+#'       filterable = list(dataset = c("NUM1", "NUM2", "CHAR1", "CHAR2", "DATE", "DATETIME"))
+#'     )
 #'     filter_states_df$set_filter_state(state = filter_state)
 #'   })
 #'   observeEvent(input$button7_df, filter_states_df$remove_filter_state(state_id = "NUM1"))
@@ -151,6 +169,12 @@ DFFilterStates <- R6::R6Class( # nolint
     #' @param varlabels (`character`)\cr
     #'   labels of the variables used in this object
     #'
+    #' @param filterable_varnames `named list` containing one character vector
+    #'   of names of variables that can be filtered;
+    #'   names of the list must match `dataname`
+    #'
+    #' @param count_type `character(0-1)` specifying how observations are tallied
+    #'
     #' @param keys (`character`)\cr
     #'   key columns names
     #'
@@ -164,7 +188,7 @@ DFFilterStates <- R6::R6Class( # nolint
                           keys = character(0)) {
       checkmate::assert_function(data_reactive, args = "sid")
       checkmate::assert_data_frame(data)
-      super$initialize(data, data_reactive, dataname, datalabel)
+      super$initialize(data, data_reactive, dataname, datalabel, filterable_varnames, count_type)
       private$varlabels <- varlabels
       private$keys <- keys
       if (identical(filterable_varnames, character(0))) {

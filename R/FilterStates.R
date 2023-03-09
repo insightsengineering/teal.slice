@@ -26,7 +26,14 @@
 #'   datalabel = character(0),
 #'   keys = character(0)
 #' )
-#' filter_states$set_filter_state(list(sex = "F", x = 1))
+#' filter_states$set_filter_state(
+#'   filter_settings(
+#'     filter_var(dataname = "data", varname = "x", selected = 1),
+#'     filter_var(dataname = "data", varname = "sex", selected = "F"),
+#'     filterable = list("data" = c("x", "sex"))
+#'   )
+#' )
+#' isolate(filter_states$get_filter_state())
 #' isolate(filter_states$get_call())
 #'
 FilterStates <- R6::R6Class( # nolint
@@ -56,15 +63,21 @@ FilterStates <- R6::R6Class( # nolint
     #' @param datalabel (`character(0)` or `character(1)`)\cr
     #'   text label value
     #'
+    #' @param filterable_varnames `named list` containing one character vector
+    #'   of names of variables that can be filtered;
+    #'   names of the list must match `dataname`
+    #'
+    #' @param count_type `character(0-1)` specifying how observations are tallied
+    #'
     #' @return
     #' self invisibly
     #'
     initialize = function(data,
                           data_reactive = function(sid = "") NULL,
                           dataname,
+                          datalabel = character(0),
                           filterable_varnames = character(0),
-                          count_type = character(0),
-                          datalabel = character(0)) {
+                          count_type = character(0)) {
       checkmate::assert_function(data_reactive, args = "sid")
       checkmate::assert_string(dataname)
       checkmate::assert_character(datalabel, max.len = 1, any.missing = FALSE)

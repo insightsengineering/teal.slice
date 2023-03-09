@@ -21,6 +21,12 @@
 #' @param datalabel (`character(0)` or `character(1)`)\cr
 #'   text label value.
 #'
+#' @param filterable_varnames `named list` containing one character vector
+#'   of names of variables that can be filtered;
+#'   names of the list must match `dataname`
+#'
+#' @param count_type `character(0-1)` specifying how observations are tallied
+#'
 #' @param ... (optional)
 #'   additional arguments for specific classes: keys
 #' @keywords internal
@@ -62,6 +68,8 @@ init_filter_states <- function(data,
                                data_reactive = reactive(NULL),
                                dataname,
                                datalabel = character(0),
+                               filterable_varnames = character(0),
+                               count_type = character(0),
                                ...) {
   UseMethod("init_filter_states")
 }
@@ -71,20 +79,20 @@ init_filter_states <- function(data,
 init_filter_states.data.frame <- function(data, # nolint
                                           data_reactive = function(sid = "") NULL,
                                           dataname,
-                                          filterable_varnames = character(0),
-                                          count_type = character(0),
                                           datalabel = character(0),
                                           varlabels = character(0),
+                                          filterable_varnames = character(0),
+                                          count_type = character(0),
                                           keys = character(0),
                                           ...) {
   DFFilterStates$new(
     data = data,
     data_reactive = data_reactive,
     dataname = dataname,
-    filterable_varnames = character(0),
-    count_type = character(0),
     datalabel = datalabel,
     varlabels = varlabels,
+    filterable_varnames = filterable_varnames,
+    count_type = count_type,
     keys = keys
   )
 }
@@ -94,17 +102,17 @@ init_filter_states.data.frame <- function(data, # nolint
 init_filter_states.matrix <- function(data, # nolint
                                       data_reactive = function(sid = "") NULL,
                                       dataname,
+                                      datalabel = character(0),
                                       filterable_varnames = character(0),
                                       count_type = character(0),
-                                      datalabel = character(0),
                                       ...) {
   MatrixFilterStates$new(
     data = data,
     data_reactive = data_reactive,
     dataname = dataname,
-    filterable_varnames = character(0),
-    count_type = character(0),
-    datalabel = datalabel
+    datalabel = datalabel,
+    filterable_varnames = filterable_varnames,
+    count_type = count_type
   )
 }
 
@@ -113,10 +121,10 @@ init_filter_states.matrix <- function(data, # nolint
 init_filter_states.MultiAssayExperiment <- function(data, # nolint
                                                     data_reactive = function(sid = "") NULL,
                                                     dataname,
-                                                    filterable_varnames = character(0),
-                                                    count_type = character(0),
                                                     datalabel = "patients",
                                                     varlabels = character(0),
+                                                    filterable_varnames = character(0),
+                                                    count_type = character(0),
                                                     keys = character(0),
                                                     ...) {
   if (!requireNamespace("MultiAssayExperiment", quietly = TRUE)) {
@@ -126,10 +134,10 @@ init_filter_states.MultiAssayExperiment <- function(data, # nolint
     data = data,
     data_reactive = data_reactive,
     dataname = dataname,
-    filterable_varnames = character(0),
-    count_type = character(0),
     datalabel = datalabel,
     varlabels = varlabels,
+    filterable_varnames = filterable_varnames,
+    count_type = count_type,
     keys = keys
   )
 }
@@ -139,9 +147,9 @@ init_filter_states.MultiAssayExperiment <- function(data, # nolint
 init_filter_states.SummarizedExperiment <- function(data, # nolint
                                                     data_reactive = function(sid = "") NULL,
                                                     dataname,
+                                                    datalabel = character(0),
                                                     filterable_varnames = character(0),
                                                     count_type = character(0),
-                                                    datalabel = character(0),
                                                     ...) {
   if (!requireNamespace("SummarizedExperiment", quietly = TRUE)) {
     stop("Cannot load SummarizedExperiment - please install the package or restart your session.")
@@ -150,9 +158,9 @@ init_filter_states.SummarizedExperiment <- function(data, # nolint
     data = data,
     data_reactive = data_reactive,
     dataname = dataname,
-    filterable_varnames = character(0),
-    count_type = character(0),
-    datalabel = datalabel
+    datalabel = datalabel,
+    filterable_varnames = filterable_varnames,
+    count_type = count_type
   )
 }
 

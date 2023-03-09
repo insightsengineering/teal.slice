@@ -28,18 +28,25 @@ SEFilterStates <- R6::R6Class( # nolint
     #'
     #' @param datalabel (`character(0)` or `character(1)`)\cr
     #'   text label value.
+    #'
+    #' @param filterable_varnames `named list` containing one character vector
+    #'   of names of variables that can be filtered;
+    #'   names of the list must match `dataname`
+    #'
+    #' @param count_type `character(0-1)` specifying how observations are tallied
+    #'
     initialize = function(data,
                           data_reactive = function(sid = "") NULL,
                           dataname,
+                          datalabel = character(0),
                           filterable_varnames = character(0),
-                          count_type = character(0),
-                          datalabel = character(0)) {
+                          count_type = character(0)) {
       if (!requireNamespace("SummarizedExperiment", quietly = TRUE)) {
         stop("Cannot load SummarizedExperiment - please install the package or restart your session.")
       }
       checkmate::assert_function(data_reactive, args = "sid")
       checkmate::assert_class(data, "SummarizedExperiment")
-      super$initialize(data, data_reactive, dataname, datalabel)
+      super$initialize(data, data_reactive, dataname, datalabel, filterable_varnames, count_type)
       private$state_list <- list(
         subset = reactiveVal(),
         select = reactiveVal()

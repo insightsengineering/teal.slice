@@ -30,22 +30,28 @@ MAEFilterStates <- R6::R6Class( # nolint
     #' @param varlabels (`character`)\cr
     #'   labels of the variables used in this object
     #'
+    #' @param filterable_varnames `named list` containing one character vector
+    #'   of names of variables that can be filtered;
+    #'   names of the list must match `dataname`
+    #'
+    #' @param count_type `character(0-1)` specifying how observations are tallied
+    #'
     #' @param keys (`character`)\cr
     #'   key columns names
     initialize = function(data,
                           data_reactive = function(sid = "") NULL,
                           dataname,
-                          filterable_varnames = character(0),
-                          count_type = character(0),
                           datalabel = "subjects",
                           varlabels = character(0),
+                          filterable_varnames = character(0),
+                          count_type = character(0),
                           keys = character(0)) {
       if (!requireNamespace("MultiAssayExperiment", quietly = TRUE)) {
         stop("Cannot load MultiAssayExperiment - please install the package or restart your session.")
       }
       checkmate::assert_function(data_reactive, args = "sid")
       checkmate::assert_class(data, "MultiAssayExperiment")
-      super$initialize(data, data_reactive, dataname, datalabel)
+      super$initialize(data, data_reactive, dataname, datalabel, filterable_varnames, count_type)
       private$keys <- keys
       private$varlabels <- varlabels
       private$state_list <- list(

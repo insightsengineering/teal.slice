@@ -3,23 +3,28 @@
 #' Initializes `InteractiveFilterState` depending on a variable class.\cr
 #' @param x (`vector`)\cr
 #'   values of the variable used in filter
-#'
 #' @param x_reactive (`reactive`)\cr
 #'   returning vector of the same type as `x`. Is used to update
 #'   counts following the change in values of the filtered dataset.
 #'   If it is set to `reactive(NULL)` then counts based on filtered
 #'   dataset are not shown.
-#'
-#' @param varname (`character(1)`)\cr
-#'   name of the variable.
-#'
-#' @param varlabel (`character(0)`, `character(1)` or `NULL`)\cr
-#'   label of the variable (optional).
-#'
 #' @param dataname (`character(1)`)\cr
 #'   optional name of dataset where `x` is taken from. Must be specified
 #'   if `extract_type` argument is not empty.
-#'
+#' @param varname (`character(1)`)\cr
+#'   name of the variable.
+#' @param choices (`atomic`, `NULL`)\cr
+#'   vector specifying allowed selection values
+#' @param selected (`atomic`, `NULL`)\cr
+#'   vector specifying selection
+#' @param varlabel (`character(0)`, `character(1)`)\cr
+#'   label of the variable (optional)
+#' @param keep_na (`logical(1)`, `NULL`)\cr
+#'   flag specifying whether to keep missing values
+#' @param keep_inf (`logical(1)`, `NULL`)\cr
+#'   flag specifying whether to keep infinite values
+#' @param fixed (`logical(1)`)\cr
+#'   flag specifying whether the `FilterState` is initiated fixed
 #' @param extract_type (`character(0)`, `character(1)`)\cr
 #' whether condition calls should be prefixed by dataname. Possible values:
 #' \itemize{
@@ -66,6 +71,7 @@ init_filter_state <- function(x,
                               selected = NULL,
                               varlabel = character(0),
                               keep_na = NULL,
+                              keep_inf = NULL,
                               fixed = FALSE,
                               extract_type = character(0)) {
   checkmate::assert_string(varname)
@@ -91,6 +97,7 @@ init_filter_state <- function(x,
       selected = selected,
       varlabel = varlabel,
       keep_na = keep_na,
+      keep_inf = keep_inf,
       fixed = fixed,
       extract_type = extract_type
     )
@@ -110,6 +117,7 @@ init_filter_state.default <- function(x,
                                       selected = NULL,
                                       varlabel = character(0),
                                       keep_na = NULL,
+                                      keep_inf = NULL,
                                       fixed = FALSE,
                                       extract_type = character(0)) {
   if (is.null(varlabel)) varlabel <- character(0)
@@ -123,6 +131,7 @@ init_filter_state.default <- function(x,
     selected = selected,
     varlabel = varlabel,
     keep_na = keep_na,
+    keep_inf = keep_inf,
     fixed = fixed,
     extract_type = extract_type
   )
@@ -140,6 +149,7 @@ init_filter_state.logical <- function(x,
                                       selected = NULL,
                                       varlabel = character(0),
                                       keep_na = NULL,
+                                      keep_inf = NULL,
                                       fixed = FALSE,
                                       extract_type = character(0)) {
   if (is.null(varlabel)) varlabel <- character(0)
@@ -153,6 +163,7 @@ init_filter_state.logical <- function(x,
     selected = selected,
     varlabel = varlabel,
     keep_na = keep_na,
+    keep_inf = keep_inf,
     fixed = fixed,
     extract_type = extract_type
   )
@@ -170,6 +181,7 @@ init_filter_state.numeric <- function(x,
                                       selected = NULL,
                                       varlabel = character(0),
                                       keep_na = NULL,
+                                      keep_inf = NULL,
                                       fixed = FALSE,
                                       extract_type = character(0)) {
   if (is.null(varlabel)) varlabel <- character(0)
@@ -183,6 +195,7 @@ init_filter_state.numeric <- function(x,
     selected = selected,
     varlabel = varlabel,
     keep_na = keep_na,
+    keep_inf = keep_inf,
     fixed = fixed,
     extract_type = extract_type
   )
@@ -204,6 +217,7 @@ init_filter_state.factor <- function(x,
                                      selected = NULL,
                                      varlabel = character(0),
                                      keep_na = NULL,
+                                     keep_inf = NULL,
                                      fixed = FALSE,
                                      extract_type = character(0)) {
   if (is.null(varlabel)) varlabel <- character(0)
@@ -217,6 +231,7 @@ init_filter_state.factor <- function(x,
     selected = selected,
     varlabel = varlabel,
     keep_na = keep_na,
+    keep_inf = keep_inf,
     fixed = fixed,
     extract_type = extract_type
   )
@@ -234,6 +249,7 @@ init_filter_state.character <- function(x,
                                         selected = NULL,
                                         varlabel = character(0),
                                         keep_na = NULL,
+                                        keep_inf = NULL,
                                         fixed = FALSE,
                                         extract_type = character(0)) {
   if (is.null(varlabel)) varlabel <- character(0)
@@ -247,6 +263,7 @@ init_filter_state.character <- function(x,
     selected = selected,
     varlabel = varlabel,
     keep_na = keep_na,
+    keep_inf = keep_inf,
     fixed = fixed,
     extract_type = extract_type
   )
@@ -264,6 +281,7 @@ init_filter_state.Date <- function(x,
                                    selected = NULL,
                                    varlabel = character(0),
                                    keep_na = NULL,
+                                   keep_inf = NULL,
                                    fixed = FALSE,
                                    extract_type = character(0)) {
   if (is.null(varlabel)) varlabel <- character(0)
@@ -277,6 +295,7 @@ init_filter_state.Date <- function(x,
     selected = selected,
     varlabel = varlabel,
     keep_na = keep_na,
+    keep_inf = keep_inf,
     fixed = fixed,
     extract_type = extract_type
   )
@@ -298,6 +317,7 @@ init_filter_state.POSIXct <- function(x,
                                       selected = NULL,
                                       varlabel = character(0),
                                       keep_na = NULL,
+                                      keep_inf = NULL,
                                       fixed = FALSE,
                                       extract_type = character(0)) {
   if (is.null(varlabel)) varlabel <- character(0)
@@ -311,6 +331,7 @@ init_filter_state.POSIXct <- function(x,
     selected = selected,
     varlabel = varlabel,
     keep_na = keep_na,
+    keep_inf = keep_inf,
     fixed = fixed,
     extract_type = extract_type
   )
@@ -332,6 +353,7 @@ init_filter_state.POSIXlt <- function(x,
                                       selected = NULL,
                                       varlabel = character(0),
                                       keep_na = NULL,
+                                      keep_inf = NULL,
                                       fixed = FALSE,
                                       extract_type = character(0)) {
   if (is.null(varlabel)) varlabel <- character(0)
@@ -345,6 +367,7 @@ init_filter_state.POSIXlt <- function(x,
     selected = selected,
     varlabel = varlabel,
     keep_na = keep_na,
+    keep_inf = keep_inf,
     fixed = fixed,
     extract_type = extract_type
   )
