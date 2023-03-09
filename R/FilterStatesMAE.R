@@ -35,6 +35,8 @@ MAEFilterStates <- R6::R6Class( # nolint
     initialize = function(data,
                           data_reactive = function(sid = "") NULL,
                           dataname,
+                          filterable_varnames = character(0),
+                          count_type = character(0),
                           datalabel = "subjects",
                           varlabels = character(0),
                           keys = character(0)) {

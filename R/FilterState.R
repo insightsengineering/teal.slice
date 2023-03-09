@@ -231,29 +231,24 @@ FilterState <- R6::R6Class( # nolint
     },
 
     #' @description
-    #' Returns the filtering state.
+    #' Returns filtering state.
     #'
-    #' @return `list` containing values taken from the reactive fields:
-    #' * `selected` (`atomic`) length depends on a `FilterState` variant.
-    #' * `keep_na` (`logical(1)`) whether `NA` should be kept.
+    #' @return A `teal_slice` object.
     #'
     get_state = function() {
-      # args <- list(
-      #   dataname = private$dataname,
-      #   varname = private$varname,
-      #   choices = private$choices,
-      #   selected = private$selected,
-      #   varlabel = private$varlabel,
-      #   keep_na = private$keep_na,
-      #   keep_inf = private$keep_inf,
-      #   fixed = private$fixed
-      # )
-      # do.call(filter_var, args)
-
-      list(
-        selected = self$get_selected(),
-        keep_na = self$get_keep_na()
+      args <- list(
+        dataname = private$dataname,
+        varname = private$varname,
+        choices = unlist(private$choices, use.names = FALSE),
+        selected = private$selected(),
+        varlabel = private$varlabel,
+        keep_na = if (!is.null(private$keep_na)) private$keep_na() else NULL,
+        keep_inf = if (!is.null(private$keep_inf)) private$keep_inf() else NULL,
+        fixed = private$fixed
       )
+      args <- append(args, private$extras)
+      args <- Filter(Negate(is.null), args)
+      do.call(filter_var, args)
     },
 
     #' @description
@@ -352,42 +347,49 @@ FilterState <- R6::R6Class( # nolint
     },
 
     #' @description
-    #' Set state.
+    #' Sets filtering state.
     #'
-    #' @param state (`list`)\cr
-    #'  contains fields relevant for a specific class:
-    #' \itemize{
-    #' \item{`selected`}{ defines initial selection}
-    #' \item{`keep_na` (`logical`)}{ defines whether to keep or remove `NA` values}
-    #' }
+    #' @param state a (`teal_slice`) object; see `Filter state specification`
     #'
     #' @return NULL invisibly
     #'
     set_state = function(state) {
-      logger::log_trace(sprintf(
-        "%s$set_state, dataname: %s setting state of variable %s to: selected=%s, keep_na=%s",
-        class(self)[1],
-        private$dataname,
-        private$varname,
-        paste(state$selected, collapse = " "),
-        state$keep_na
-      ))
-      stopifnot(is.list(state) && all(names(state) %in% c("selected", "keep_na")))
-
-      if (!is.null(state$keep_na)) {
-        self$set_keep_na(state$keep_na)
-      }
-      if (!is.null(state$selected)) {
-        self$set_selected(state$selected)
-      }
-      logger::log_trace(
-        sprintf(
-          "%s$set_state, dataname: %s done setting state for variable %s",
+      if (inherits(state, "teal_slice")) {
+        if (!is.null(state$selected)) {
+          self$set_selected(state$selected)
+        }
+        if (!is.null(state$keep_na)) {
+          self$set_keep_na(state$keep_na)
+        }
+        if (!is.null(state$keep_inf)) {
+          self$set_keep_inf(state$keep_inf)
+        }
+      } else {
+        logger::log_trace(sprintf(
+          "%s$set_state, dataname: %s setting state of variable %s to: selected=%s, keep_na=%s",
           class(self)[1],
           private$dataname,
-          private$varname
+          private$varname,
+          paste(state$selected, collapse = " "),
+          state$keep_na
+        ))
+        stopifnot(is.list(state) && all(names(state) %in% c("selected", "keep_na")))
+
+        if (!is.null(state$keep_na)) {
+          self$set_keep_na(state$keep_na)
+        }
+        if (!is.null(state$selected)) {
+          self$set_selected(state$selected)
+        }
+        logger::log_trace(
+          sprintf(
+            "%s$set_state, dataname: %s done setting state for variable %s",
+            class(self)[1],
+            private$dataname,
+            private$varname
+          )
         )
-      )
+      }
       invisible(NULL)
     },
 
@@ -451,6 +453,7 @@ FilterState <- R6::R6Class( # nolint
     varlabel = character(0),
     keep_na = NULL, # reactiveVal logical(),
     fixed = logical(0), # whether this filter state is fixed/locked
+    extras = list(), # additional information passed in teal_slice (product of filter_var)
     na_rm = FALSE, # it's logical(1)
     na_count = integer(0),
     filtered_na_count = NULL, # reactive containing the count of NA in the filtered dataset

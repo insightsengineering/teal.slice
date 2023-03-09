@@ -159,13 +159,24 @@ DFFilterStates <- R6::R6Class( # nolint
                           dataname,
                           datalabel = character(0),
                           varlabels = character(0),
+                          filterable_varnames = character(0),
+                          count_type = character(0),
                           keys = character(0)) {
       checkmate::assert_function(data_reactive, args = "sid")
       checkmate::assert_data_frame(data)
       super$initialize(data, data_reactive, dataname, datalabel)
       private$varlabels <- varlabels
       private$keys <- keys
-      self$set_filterable_varnames(colnames(data))
+      if (identical(filterable_varnames, character(0))) {
+        self$set_filterable_varnames(colnames(data))
+      } else {
+        self$set_filterable_varnames(filterable_varnames)
+      }
+      if (identical(filterable_varnames, character(0))) {
+        private$count_type <- "none"
+      } else {
+        private$count_type <- count_type
+      }
       private$state_list <- list(
         reactiveVal()
       )
@@ -255,7 +266,12 @@ DFFilterStates <- R6::R6Class( # nolint
     #' @return `list` with named elements corresponding to `FilterState` in the `state_list`.
     #'
     get_filter_state = function() {
-      lapply(private$state_list_get(1L), function(x) x$get_state())
+      slices <- lapply(private$state_list_get(1L), function(x) x$get_state())
+      filter_settings(
+        slices = slices,
+        filterable = structure(list(private$filterable_varnames), names = private$dataname),
+        count_type = private$count_type
+      )
     },
 
     #' @description
@@ -282,37 +298,47 @@ DFFilterStates <- R6::R6Class( # nolint
     #'
     #' @return `NULL`
     set_filter_state = function(state) {
-      logger::log_trace("{ class(self)[1] }$set_filter_state initializing, dataname: { private$dataname }")
-      checkmate::assert_list(state, null.ok = TRUE, names = "named")
-
-      data <- private$data
-      data_reactive <- private$data_reactive
-
-      # excluding not supported variables
-      state_varnames <- names(state)
-      filterable_varnames <- private$filterable_varnames
-      excluded_varnames <- setdiff(state_varnames, filterable_varnames)
-      if (length(excluded_varnames) > 0) {
-        excluded_varnames_str <- toString(excluded_varnames)
-        warning(
-          "These columns filters were excluded: ",
-          excluded_varnames_str,
-          " from dataset ",
-          private$dataname
+      if (is.teal_slices(state)) {
+        private$set_filter_state_impl(
+          state = state,
+          state_list_index = 1L,
+          data = private$data,
+          data_reactive = private$data_reactive
         )
-        logger::log_warn("Columns filters { excluded_varnames_str } were excluded from { private$dataname }")
-        state <- state[state_varnames %in% filterable_varnames]
+        NULL
+      } else {
+        logger::log_trace("{ class(self)[1] }$set_filter_state initializing, dataname: { private$dataname }")
+        checkmate::assert_list(state, null.ok = TRUE, names = "named")
+
+        data <- private$data
+        data_reactive <- private$data_reactive
+
+        # excluding not supported variables
+        state_varnames <- names(state)
+        filterable_varnames <- private$filterable_varnames
+        excluded_varnames <- setdiff(state_varnames, filterable_varnames)
+        if (length(excluded_varnames) > 0) {
+          excluded_varnames_str <- toString(excluded_varnames)
+          warning(
+            "These columns filters were excluded: ",
+            excluded_varnames_str,
+            " from dataset ",
+            private$dataname
+          )
+          logger::log_warn("Columns filters { excluded_varnames_str } were excluded from { private$dataname }")
+          state <- state[state_varnames %in% filterable_varnames]
+        }
+
+        private$set_filter_state_impl(
+          state = state,
+          state_list_index = 1L,
+          data = data,
+          data_reactive = private$data_reactive
+        )
+
+        logger::log_trace("{ class(self)[1] }$set_filter_state initialized, dataname: { private$dataname }")
+        NULL
       }
-
-      private$set_filter_state_impl(
-        state = state,
-        state_list_index = 1L,
-        data = data,
-        data_reactive = private$data_reactive
-      )
-
-      logger::log_trace("{ class(self)[1] }$set_filter_state initialized, dataname: { private$dataname }")
-      NULL
     },
 
     #' @description Remove a `FilterState` from the `state_list`.

@@ -8,14 +8,16 @@
 #' @examples
 #' filter_state <- teal.slice:::ChoicesFilterState$new(
 #'   x = c(LETTERS, NA),
-#'   varname = "x",
 #'   dataname = "data",
+#'   varname = "x",
+#'   varlabel = "label",
 #'   extract_type = character(0)
 #' )
 #' isolate(filter_state$get_call())
 #' isolate(filter_state$set_selected("B"))
 #' isolate(filter_state$set_keep_na(TRUE))
 #' isolate(filter_state$get_call())
+#' isolate(filter_state$get_state())
 #'
 #' \dontrun{
 #' # working filter in an app

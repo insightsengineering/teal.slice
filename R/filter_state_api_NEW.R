@@ -61,12 +61,17 @@ filter_var <- function(
   checkmate::assert_flag(keep_inf, null.ok = TRUE)
   checkmate::assert_flag(fixed)
 
-  args <- as.list(match.call())[-1]
-  args <- lapply(args, eval)
-
-  ind <- which(names(args) %in% names(formals(filter_var)))
-  ans <- args[ind]
-  extras <- args[-ind]
+  ans <- list(
+    dataname = dataname,
+    varname = varname,
+    choices = choices,
+    selected = selected,
+    varlabel = varlabel,
+    keep_na = keep_na,
+    keep_inf = keep_inf,
+    fixed = fixed
+  )
+  extras <- list(...)
   if (length(extras) != 0L) ans$extras <- extras
 
   class(ans) <- c("teal_slice", class(ans))
@@ -136,6 +141,7 @@ filter_settings <- function(
 c.teal_slices <- function(...) {
   x <- list(...)
   filterables <- lapply(x, attr, "filterable")
+  names(filterables) <- NULL
   filterables <- unlist(filterables, recursive = FALSE)
   filterables <- filterables[!duplicated(names(filterables))]
   count_types <- lapply(x, attr, "count_type")
@@ -143,6 +149,10 @@ c.teal_slices <- function(...) {
   checkmate::assert_string(count_types)
 
   filter_settings(slices = unlist(x, recursive = FALSE), filterable = filterables, count_type = count_types)
+}
+
+is.teal_slice <- function(x) {
+  inherits(x, "teal_slice")
 }
 
 `[.teal_slices` <- function(x, i) {
@@ -170,6 +180,9 @@ print.teal_slices <- function(x) {
   cat(sprintf("\ncount type: %s", ct), "\n")
 }
 
+is.teal_slices <- function(x) {
+  inherits(x, "teal_slices")
+}
 
 
 filter_one <- filter_var("dataname1", "varname1", letters, "b", "characters", FALSE, extra1 = "extraone")
