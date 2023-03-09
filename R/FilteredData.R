@@ -51,18 +51,12 @@
 #' datasets$get_metadata("mtcars")
 #'
 #' datasets$set_filter_state(
-#'   filter_settings(
-#'     filter_var(dataname = "iris", varname = "Species", selected = "virginica"),
-#'     filterable = list("iris" = c("Sepal.Length", "Sepal.Width", "Petal.Length", "Petal.Width", "Species"))
-#'   )
+#'   filter_settings(filter_var(dataname = "iris", varname = "Species", selected = "virginica"))
 #' )
 #' isolate(datasets$get_call("iris"))
 #'
 #' datasets$set_filter_state(
-#'   filter_settings(
-#'     filter_var(dataname = "mtcars", varname = "mpg", selected = c(15, 20)),
-#'     filterable = list("mtcars" = c("mpg", "cyl", "disp", "hp", "drat", "wt", "qsec", "vs", "am", "gear", "carb"))
-#'   )
+#'   filter_settings(filter_var(dataname = "mtcars", varname = "mpg", selected = c(15, 20)))
 #' )
 #'
 #' isolate(datasets$get_filter_state())
@@ -494,11 +488,7 @@ FilteredData <- R6::R6Class( # nolint
     #'     filter_var(dataname = "mae", varname = "years_to_birth", selected = c(30, 50), keep_na = TRUE, keep_inf = FALSE, target = "subjects"),
     #'     filter_var(dataname = "mae", varname = "vital_status", selected = "1", keep_na = FALSE, target = "subjects"),
     #'     filter_var(dataname = "mae", varname = "gender", selected = "female", keep_na = TRUE, target = "subjects"),
-    #'     filter_var(dataname = "mae", varname = "ARRAY_TYPE", selected = "", keep_na = TRUE, experiment = "RPPAArray", target = "subset"),
-    #'     filterable = list(
-    #'       "iris" = c("Sepal.Length", "Sepal.Width", "Petal.Length", "Petal.Width", "Species"),
-    #'       "mae" = c("years_to_birth", "vital_status", "gender", "ARRAY_TYPE")
-    #'     )
+    #'     filter_var(dataname = "mae", varname = "ARRAY_TYPE", selected = "", keep_na = TRUE, experiment = "RPPAArray", target = "subset")
     #'   )
     #' shiny::isolate(datasets$set_filter_state(state = fs))
     #' shiny::isolate(datasets$get_filter_state())

@@ -13,37 +13,32 @@ MAEFilterStates <- R6::R6Class( # nolint
     #'
     #' @param data (`MultiAssayExperiment`)\cr
     #'   the R object which `MultiAssayExperiment::subsetByColData` function is applied on.
-    #'
     #' @param data_reactive (`function(sid)`)\cr
     #'   should return a `MultiAssayExperiment` object or `NULL`.
     #'   This object is needed for the `FilterState` counts being updated
     #'   on a change in filters. If function returns `NULL` then filtered counts are not shown.
     #'   Function has to have `sid` argument being a character.
-    #'
     #' @param dataname (`character(1)`)\cr
     #'   name of the data used in the expression
     #'   specified to the function argument attached to this `FilterStates`.
-    #'
     #' @param datalabel (`character(0)` or `character(1)`)\cr
     #'   text label value.
-    #'
     #' @param varlabels (`character`)\cr
     #'   labels of the variables used in this object
-    #'
-    #' @param filterable_varnames `named list` containing one character vector
+    #' @param exclude_varnames `named list` containing one character vector
     #'   of names of variables that can be filtered;
     #'   names of the list must match `dataname`
-    #'
-    #' @param count_type `character(0-1)` specifying how observations are tallied
-    #'
+    #' @param count_type `character(0-1)`\cr
+    #'   specifying how observations are tallied
     #' @param keys (`character`)\cr
     #'   key columns names
+    #'
     initialize = function(data,
                           data_reactive = function(sid = "") NULL,
                           dataname,
                           datalabel = "subjects",
                           varlabels = character(0),
-                          filterable_varnames = character(0),
+                          exclude_varnames = character(0),
                           count_type = character(0),
                           keys = character(0)) {
       if (!requireNamespace("MultiAssayExperiment", quietly = TRUE)) {
@@ -51,7 +46,7 @@ MAEFilterStates <- R6::R6Class( # nolint
       }
       checkmate::assert_function(data_reactive, args = "sid")
       checkmate::assert_class(data, "MultiAssayExperiment")
-      super$initialize(data, data_reactive, dataname, datalabel, filterable_varnames, count_type)
+      super$initialize(data, data_reactive, dataname, datalabel, exclude_varnames, count_type)
       private$keys <- keys
       private$varlabels <- varlabels
       private$state_list <- list(

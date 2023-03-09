@@ -29,8 +29,7 @@
 #' filter_states$set_filter_state(
 #'   filter_settings(
 #'     filter_var(dataname = "data", varname = "x", selected = 1),
-#'     filter_var(dataname = "data", varname = "sex", selected = "F"),
-#'     filterable = list("data" = c("x", "sex"))
+#'     filter_var(dataname = "data", varname = "sex", selected = "F")
 #'   )
 #' )
 #' isolate(filter_states$get_filter_state())
@@ -49,25 +48,20 @@ FilterStates <- R6::R6Class( # nolint
     #'
     #' @param data (`data.frame`, `MultiAssayExperiment`, `SummarizedExperiment`, `matrix`)\cr
     #'   the R object which `subset` function is applied on.
-    #'
     #' @param data_reactive (`function(sid)`)\cr
     #'   should return an object of the same type as `data` object or `NULL`.
     #'   This object is needed for the `FilterState` counts being updated
     #'   on a change in filters. If function returns `NULL` then filtered counts are not shown.
     #'   Function has to have `sid` argument being a character.
-    #'
     #' @param dataname (`character(1)`)\cr
     #'   name of the data used in the expression
     #'   specified to the function argument attached to this `FilterStates`
-    #'
     #' @param datalabel (`character(0)` or `character(1)`)\cr
     #'   text label value
-    #'
-    #' @param filterable_varnames `named list` containing one character vector
-    #'   of names of variables that can be filtered;
-    #'   names of the list must match `dataname`
-    #'
-    #' @param count_type `character(0-1)` specifying how observations are tallied
+    #' @param excluded_varnames (`character`)\cr
+    #'   names of variables that can \strong{not} be filtered on.
+    #' @param count_type `character(0-1)`\cr
+    #'   specifying how observations are tallied
     #'
     #' @return
     #' self invisibly
@@ -76,7 +70,7 @@ FilterStates <- R6::R6Class( # nolint
                           data_reactive = function(sid = "") NULL,
                           dataname,
                           datalabel = character(0),
-                          filterable_varnames = character(0),
+                          excluded_varnames = character(0),
                           count_type = character(0)) {
       checkmate::assert_function(data_reactive, args = "sid")
       checkmate::assert_string(dataname)
@@ -86,6 +80,8 @@ FilterStates <- R6::R6Class( # nolint
       private$datalabel <- datalabel
       private$data <- data
       private$data_reactive <- data_reactive
+      private$filterable_varnames <- setdiff(colnames(data), excluded_varnames)
+      private$count_type <- count_type
 
       logger::log_trace("Instantiated { class(self)[1] }, dataname: { private$dataname }")
       invisible(self)
@@ -281,19 +277,6 @@ FilterStates <- R6::R6Class( # nolint
     #' @return function which throws an error
     set_filter_state = function(state) {
       stop("Pure virtual method.")
-    },
-
-    #' @description
-    #' Set the allowed filterable variables
-    #' @param varnames (`character` or `NULL`) The variables which can be filtered
-    #'
-    #' @details When retrieving the filtered variables only
-    #' those which have filtering supported (i.e. are of the permitted types)
-    #' are included.
-    #'
-    #' @return invisibly this `FilteredDataset`
-    set_filterable_varnames = function(varnames) {
-      colnames(private$data)
     },
 
     #' @description

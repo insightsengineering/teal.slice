@@ -95,8 +95,9 @@ print.teal_slice <- function(x) {
 #'
 #' @param ... any number of `teal_slice` objects
 #' @param slices optional `list` of `teal_slice` objects
-#' @filterable `named list` of `character` vectors, specifying which variables
-#'              (list elements) can be filtered in which data sets (list names)
+#' @exclude `named list` of `character` vectors where list names match names of data sets
+#'          and vectors elements match variable names in respective data sets;
+#'          specifies which variables are not allowed to be filtered
 #' @count_type `character(1)` string specifying how observations are tallied by these filter states
 #'
 #' @return
@@ -107,9 +108,8 @@ print.teal_slice <- function(x) {
 #'   filter_one,
 #'   filter_two,
 #'   filter_three,
-#'   filterable = list(
-#'     "dataname1" = c("varname1", "varname2"),
-#'     "dataname2" = "varname3"
+#'   exclude = list(
+#'     "dataname1" = "varname2"
 #'   )
 #' )
 #'
@@ -119,7 +119,7 @@ print.teal_slice <- function(x) {
 filter_settings <- function(
     ...,
     slices,
-    filterable = list(),
+    exclude = list(),
     count_type = c("none", "all", "hierarchical")
 ) {
   slices <-
@@ -129,10 +129,10 @@ filter_settings <- function(
       slices <- c(list(...), slices)
     }
   checkmate::assert_list(slices, types = "teal_slice", any.missing = FALSE)
-  checkmate::assert_list(filterable, names = "named", types = "character")
+  checkmate::assert_list(exclude, names = "named", types = "character")
   count_type <- match.arg(count_type)
 
-  attr(slices, "filterable") <- filterable
+  attr(slices, "exclude") <- exclude
   attr(slices, "count_type") <- count_type
   class(slices) <- c("teal_slices", class(slices))
   slices
@@ -140,15 +140,15 @@ filter_settings <- function(
 
 c.teal_slices <- function(...) {
   x <- list(...)
-  filterables <- lapply(x, attr, "filterable")
-  names(filterables) <- NULL
-  filterables <- unlist(filterables, recursive = FALSE)
-  filterables <- filterables[!duplicated(names(filterables))]
+  excludes <- lapply(x, attr, "exclude")
+  names(excludes) <- NULL
+  excludes <- unlist(excludes, recursive = FALSE)
+  excludes <- excludes[!duplicated(names(excludes))]
   count_types <- lapply(x, attr, "count_type")
   count_types <- unique(unlist(count_types))
   checkmate::assert_string(count_types)
 
-  filter_settings(slices = unlist(x, recursive = FALSE), filterable = filterables, count_type = count_types)
+  filter_settings(slices = unlist(x, recursive = FALSE), exclude = excludes, count_type = count_types)
 }
 
 is.teal_slice <- function(x) {
@@ -158,17 +158,17 @@ is.teal_slice <- function(x) {
 `[.teal_slices` <- function(x, i) {
   y <- NextMethod("[")
   attributes(y) <- attributes(x)
-  filterables <- unique(unlist(vapply(y, function(ts) ts[["dataname"]], character(1L))))
-  attr(y, "filterable") <- attr(x, "filterable")[filterables]
+  excludes <- unique(unlist(vapply(y, function(ts) ts[["dataname"]], character(1L))))
+  attr(y, "exclude") <- attr(x, "exclude")[excludes]
   y
 }
 
 print.teal_slices <- function(x) {
-  f <- attr(x, "filterable")
+  f <- attr(x, "exclude")
   ct <- attr(x, "count_type")
   x <- lapply(x, unclass)
   lapply(x, str)
-  cat("\nfilterable variables:")
+  cat("\nnon-filterable variables:")
   if (identical(f, list())) {
     cat(" none\n")
   } else {
@@ -193,9 +193,8 @@ all_filters <- filter_settings(
   filter_one,
   filter_two,
   filter_three,
-  filterable = list(
-    "dataname1" = c("varname1", "varname2"),
-    "dataname2" = "varname3"
+  exclude = list(
+    "dataname1" = "varname2"
   )
 )
 # all_filters
