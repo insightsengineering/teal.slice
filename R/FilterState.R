@@ -372,7 +372,7 @@ InteractiveFilterState <- R6::R6Class( # nolint
           self$set_selected(state$selected)
         }
         if (!is.null(state$varlabel)) {
-          self$varlabel <- state$varlabel
+          private$varlabel <- state$varlabel
         }
         if (!is.null(state$keep_na)) {
           self$set_keep_na(state$keep_na)

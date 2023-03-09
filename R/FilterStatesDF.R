@@ -152,7 +152,7 @@ DFFilterStates <- R6::R6Class( # nolint
     #'   labels of the variables used in this object.
     #' @param excluded_varnames (`character`)\cr
     #'   names of variables that can \strong{not} be filtered on.
-    #' @param count_type `character(0-1)`\cr
+    #' @param count_type `character(1)`\cr
     #'   specifying how observations are tallied.
     #' @param keys (`character`)\cr
     #'   key columns names
@@ -163,13 +163,14 @@ DFFilterStates <- R6::R6Class( # nolint
                           datalabel = character(0),
                           varlabels = character(0),
                           excluded_varnames = character(0),
-                          count_type = character(0),
+                          count_type = c("none", "all", "hierarchical"),
                           keys = character(0)) {
       checkmate::assert_function(data_reactive, args = "sid")
       checkmate::assert_data_frame(data)
       super$initialize(data, data_reactive, dataname, datalabel, excluded_varnames, count_type)
       private$varlabels <- varlabels
       private$keys <- keys
+      self$set_filterable_varnames(colnames(data))
       private$state_list <- list(
         reactiveVal()
       )
@@ -260,11 +261,13 @@ DFFilterStates <- R6::R6Class( # nolint
     #'
     get_filter_state = function() {
       slices <- lapply(private$state_list_get(1L), function(x) x$get_state())
+      excluded_varnames <- structure(
+        list(setdiff(colnames(private$data), private$filterable_varnames)),
+        names = private$dataname)
+      excluded_varnames <- Filter(function(x) !identical(x, character(0)), excluded_varnames)
       filter_settings(
         slices = slices,
-        exclude = structure(
-          list(setdiff(colnames(private$data), private$filterable_varnames)),
-          names = private$dataname),
+        exclude = excluded_varnames,
         count_type = private$count_type
       )
     },
@@ -372,6 +375,22 @@ DFFilterStates <- R6::R6Class( # nolint
           )
         )
       }
+    },
+
+    #' @description
+    #' Set the allowed filterable variables
+    #' @param varnames (`character` or `NULL`) The variables which can be filtered
+    #'
+    #' @details When retrieving the filtered variables only
+    #' those which have filtering supported (i.e. are of the permitted types)
+    #' are included.
+    #'
+    #' @return invisibly this `FilteredDataset`
+    set_filterable_varnames = function(varnames) {
+      checkmate::assert_character(varnames, any.missing = FALSE, null.ok = TRUE)
+      supported_vars <- get_supported_filter_varnames(private$data)
+      private$filterable_varnames <- intersect(varnames, supported_vars)
+      return(invisible(self))
     },
 
     # shiny modules ----

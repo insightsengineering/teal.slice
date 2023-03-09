@@ -169,7 +169,7 @@ print.teal_slices <- function(x) {
   x <- lapply(x, unclass)
   lapply(x, str)
   cat("\nnon-filterable variables:")
-  if (identical(f, list())) {
+  if (is.list(f) & length(f) == 0L) {
     cat(" none\n")
   } else {
     cat("\n")

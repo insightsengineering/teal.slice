@@ -227,6 +227,19 @@ FilterStates <- R6::R6Class( # nolint
       private$state_list_empty()
     },
 
+    #' @description
+    #' Set the allowed filterable variables
+    #' @param varnames (`character` or `NULL`) The variables which can be filtered
+    #'
+    #' @details When retrieving the filtered variables only
+    #' those which have filtering supported (i.e. are of the permitted types)
+    #' are included.
+    #'
+    #' @return invisibly this `FilteredDataset`
+    set_filterable_varnames = function(varnames) {
+      colnames(private$data)
+    },
+
     # shiny modules ----
 
     #' @description
