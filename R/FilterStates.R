@@ -62,6 +62,8 @@ FilterStates <- R6::R6Class( # nolint
     initialize = function(data,
                           data_reactive = function(sid = "") NULL,
                           dataname,
+                          filterable_varnames = character(0),
+                          count_type = character(0),
                           datalabel = character(0)) {
       checkmate::assert_function(data_reactive, args = "sid")
       checkmate::assert_string(dataname)
@@ -323,7 +325,8 @@ FilterStates <- R6::R6Class( # nolint
     filterable_varnames = character(0),
     ns = NULL, # shiny ns()
     observers = list(), # observers
-    state_list = NULL, # list of `reactiveVal`s initialized by init methods of child classes
+    state_list = NULL, # list of `reactiveVal`s initialized by init methods of child classes,
+    count_type = character(0), # specifies how observation numbers are displayed in filter cards
 
     # private methods ----
 
