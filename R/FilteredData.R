@@ -118,7 +118,6 @@ FilteredData <- R6::R6Class( # nolint
             label = ds_object$label
           )
         }
-
       }
 
       invisible(self)

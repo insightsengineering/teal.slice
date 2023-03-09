@@ -399,7 +399,7 @@ testthat::test_that("get_data returns the same object as passed to the construct
   testthat::expect_equal(filtered_data$get_data("iris"), iris)
 })
 
-testthat::test_that( "FilteredData$get_data returns an object filtered by set filters", {
+testthat::test_that("FilteredData$get_data returns an object filtered by set filters", {
   datasets <- FilteredData$new(
     list(
       iris = list(dataset = iris)
