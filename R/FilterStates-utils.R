@@ -19,7 +19,7 @@
 #'   text label value.
 #' @param excluded_varnames (`character`)\cr
 #'   names of variables that can \strong{not} be filtered on.
-#' @param count_type `character(0-1)`\cr
+#' @param count_type `character(1)`\cr
 #'   specifying how observations are tallied.
 #' @param ... (optional)
 #'   additional arguments for specific classes: keys.
@@ -63,7 +63,7 @@ init_filter_states <- function(data,
                                dataname,
                                datalabel = character(0),
                                excluded_varnames = character(0),
-                               count_type = character(0),
+                               count_type = c("none", "all", "hierarchical"),
                                ...) {
   UseMethod("init_filter_states")
 }
@@ -76,7 +76,7 @@ init_filter_states.data.frame <- function(data, # nolint
                                           datalabel = character(0),
                                           varlabels = character(0),
                                           excluded_varnames = character(0),
-                                          count_type = character(0),
+                                          count_type = c("none", "all", "hierarchical"),
                                           keys = character(0),
                                           ...) {
   DFFilterStates$new(
@@ -98,7 +98,7 @@ init_filter_states.matrix <- function(data, # nolint
                                       dataname,
                                       datalabel = character(0),
                                       excluded_varnames = character(0),
-                                      count_type = character(0),
+                                      count_type = c("none", "all", "hierarchical"),
                                       ...) {
   MatrixFilterStates$new(
     data = data,
@@ -118,7 +118,7 @@ init_filter_states.MultiAssayExperiment <- function(data, # nolint
                                                     datalabel = "patients",
                                                     varlabels = character(0),
                                                     excluded_varnames = character(0),
-                                                    count_type = character(0),
+                                                    count_type = c("none", "all", "hierarchical"),
                                                     keys = character(0),
                                                     ...) {
   if (!requireNamespace("MultiAssayExperiment", quietly = TRUE)) {
@@ -143,7 +143,7 @@ init_filter_states.SummarizedExperiment <- function(data, # nolint
                                                     dataname,
                                                     datalabel = character(0),
                                                     excluded_varnames = character(0),
-                                                    count_type = character(0),
+                                                    count_type = c("none", "all", "hierarchical"),
                                                     ...) {
   if (!requireNamespace("SummarizedExperiment", quietly = TRUE)) {
     stop("Cannot load SummarizedExperiment - please install the package or restart your session.")

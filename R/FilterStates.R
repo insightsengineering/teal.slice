@@ -60,7 +60,7 @@ FilterStates <- R6::R6Class( # nolint
     #'   text label value
     #' @param excluded_varnames (`character`)\cr
     #'   names of variables that can \strong{not} be filtered on.
-    #' @param count_type `character(0-1)`\cr
+    #' @param count_type `character(1)`\cr
     #'   specifying how observations are tallied
     #'
     #' @return
@@ -71,7 +71,7 @@ FilterStates <- R6::R6Class( # nolint
                           dataname,
                           datalabel = character(0),
                           excluded_varnames = character(0),
-                          count_type = character(0)) {
+                          count_type = c("none", "all", "hierarchical")) {
       checkmate::assert_function(data_reactive, args = "sid")
       checkmate::assert_string(dataname)
       checkmate::assert_character(datalabel, max.len = 1, any.missing = FALSE)
@@ -81,7 +81,7 @@ FilterStates <- R6::R6Class( # nolint
       private$data <- data
       private$data_reactive <- data_reactive
       private$filterable_varnames <- setdiff(colnames(data), excluded_varnames)
-      private$count_type <- count_type
+      private$count_type <- match.arg(count_type)
 
       logger::log_trace("Instantiated { class(self)[1] }, dataname: { private$dataname }")
       invisible(self)

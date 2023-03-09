@@ -28,7 +28,7 @@ MAEFilterStates <- R6::R6Class( # nolint
     #' @param exclude_varnames `named list` containing one character vector
     #'   of names of variables that can be filtered;
     #'   names of the list must match `dataname`
-    #' @param count_type `character(0-1)`\cr
+    #' @param count_type `character(1)`\cr
     #'   specifying how observations are tallied
     #' @param keys (`character`)\cr
     #'   key columns names
@@ -39,7 +39,7 @@ MAEFilterStates <- R6::R6Class( # nolint
                           datalabel = "subjects",
                           varlabels = character(0),
                           exclude_varnames = character(0),
-                          count_type = character(0),
+                          count_type = c("none", "all", "hierarchical"),
                           keys = character(0)) {
       if (!requireNamespace("MultiAssayExperiment", quietly = TRUE)) {
         stop("Cannot load MultiAssayExperiment - please install the package or restart your session.")

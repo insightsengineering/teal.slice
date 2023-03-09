@@ -27,7 +27,7 @@ MatrixFilterStates <- R6::R6Class( # nolint
     #'   text label value.
     #' @param excluded_varnames (`character`)\cr
     #'   names of variables that can \strong{not} be filtered on.
-    #' @param count_type `character(0-1)`\cr
+    #' @param count_type `character(1)`\cr
     #'   specifying how observations are tallied.
     #'
     initialize = function(data,
@@ -35,7 +35,7 @@ MatrixFilterStates <- R6::R6Class( # nolint
                           dataname,
                           datalabel = character(0),
                           exclude_varnames = character(0),
-                          count_type = character(0)) {
+                          count_type = c("none", "all", "hierarchical")) {
       checkmate::assert_function(data_reactive, args = "sid")
       checkmate::assert_matrix(data)
       super$initialize(data, data_reactive, dataname, datalabel, exclude_varnames, count_type)
