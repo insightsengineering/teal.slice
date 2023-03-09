@@ -141,6 +141,7 @@ filter_settings <- function(
 c.teal_slices <- function(...) {
   x <- list(...)
   filterables <- lapply(x, attr, "filterable")
+  names(filterables) <- NULL
   filterables <- unlist(filterables, recursive = FALSE)
   filterables <- filterables[!duplicated(names(filterables))]
   count_types <- lapply(x, attr, "count_type")
