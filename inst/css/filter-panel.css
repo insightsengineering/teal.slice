@@ -227,7 +227,6 @@ a.remove_all:hover {
 .panel-title a,
 .card-title a {
   text-decoration: none;
-  margin-left: auto;
 }
 
 .card-title a {
@@ -246,6 +245,7 @@ a.remove_all:hover {
 .filter-card-varlabel {
  color: var(--bs-gray-500, var(--gray, darkgray));
  margin-left: 0.5em;
+ margin-right: auto;
 }
 
 .filter-card-remove,
