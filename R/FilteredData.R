@@ -108,6 +108,7 @@ FilteredData <- R6::R6Class( # nolint
       for (dataname in ordered_datanames) {
         ds_object <- data_objects[[dataname]]
         validate_dataset_args(ds_object, dataname)
+        # todo: support setting datasets with x = list(iris = iris, mtcars = mtcars)
         self$set_dataset(
           data = ds_object$dataset,
           dataname = dataname,
@@ -1029,8 +1030,16 @@ FilteredData <- R6::R6Class( # nolint
             datasets_df <- self$get_filter_overview(datanames = datanames)
             datasets_df <- transform(
               datasets_df,
-              Obs = sprintf("%s/%s", obs_filtered, obs),
-              Subjects = sprintf("%s/%s", subjects_filtered, subjects)
+              Obs = ifelse(
+                !is.na(obs),
+                sprintf("%s/%s", obs_filtered, obs),
+                ""
+              ),
+              Subjects = ifelse(
+                !is.na(subjects),
+                sprintf("%s/%s", subjects_filtered, subjects),
+                ""
+              )
             )
 
             body_html <- apply(
