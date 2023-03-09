@@ -574,7 +574,8 @@ FilterStates <- R6::R6Class( # nolint
                                      state_list_index,
                                      data,
                                      data_reactive,
-                                     extract_type = character(0)) {
+                                     extract_type = character(0),
+                                     na_rm = FALSE) {
       checkmate::assert(
         checkmate::check_list(state, null.ok = TRUE, names = "named"),
         checkmate::check_class(state, "teal_slices")
