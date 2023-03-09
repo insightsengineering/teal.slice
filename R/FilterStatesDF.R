@@ -159,13 +159,24 @@ DFFilterStates <- R6::R6Class( # nolint
                           dataname,
                           datalabel = character(0),
                           varlabels = character(0),
+                          filterable_varnames = character(0),
+                          count_type = character(0),
                           keys = character(0)) {
       checkmate::assert_function(data_reactive, args = "sid")
       checkmate::assert_data_frame(data)
       super$initialize(data, data_reactive, dataname, datalabel)
       private$varlabels <- varlabels
       private$keys <- keys
-      self$set_filterable_varnames(colnames(data))
+      if (identical(filterable_varnames, character(0))) {
+        self$set_filterable_varnames(colnames(data))
+      } else {
+        self$set_filterable_varnames(filterable_varnames)
+      }
+      if (identical(filterable_varnames, character(0))) {
+        private$count_type <- "none"
+      } else {
+        private$count_type <- count_type
+      }
       private$state_list <- list(
         reactiveVal()
       )
