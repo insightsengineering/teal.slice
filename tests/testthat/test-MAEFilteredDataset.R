@@ -11,6 +11,22 @@ testthat::test_that("MAEFilteredDataset throws error with a data.frame passed to
   )
 })
 
+testthat::test_that("filter_states list is initialized with names of experiments", {
+  testfd <- R6::R6Class(
+    "testfd",
+    inherit = MAEFilteredDataset,
+    public = list(
+      get_filter_states = function() private$filter_states
+    )
+  )
+  utils::data(miniACC, package = "MultiAssayExperiment")
+  filtered_dataset <- testfd$new(dataset = miniACC, dataname = "mae")
+  testthat::expect_identical(
+    names(filtered_dataset$get_filter_states()),
+    c("subjects", "RNASeq2GeneNorm", "gistict", "RPPAArray", "Mutations", "miRNASeqGene")
+  )
+})
+
 testthat::test_that("MAEFilteredDataset$get_call returns NULL without applying filter", {
   utils::data(miniACC, package = "MultiAssayExperiment")
   filtered_dataset <- MAEFilteredDataset$new(dataset = miniACC, dataname = "miniACC")
@@ -20,29 +36,33 @@ testthat::test_that("MAEFilteredDataset$get_call returns NULL without applying f
 
 testthat::test_that("MAEFilteredDataset$get_call returns a call with applying filter", {
   utils::data(miniACC, package = "MultiAssayExperiment")
-  filtered_dataset <- MAEFilteredDataset$new(dataset = miniACC, dataname = "miniACC")
-  filter_state_mae <- ChoicesFilterState$new(
-    x = miniACC$race,
-    varname = "race",
-    dataname = "miniACC",
-    extract_type = "list"
+  filtered_dataset <- MAEFilteredDataset$new(dataset = miniACC, dataname = "miniacc")
+  fs <- list(
+    subjects = list(
+      years_to_birth = list(selected = c(30, 50), keep_na = TRUE, keep_inf = FALSE),
+      vital_status = list(selected = "1", keep_na = FALSE),
+      gender = list(selected = "female", keep_na = TRUE)
+    ),
+    RPPAArray = list(
+      subset = list(ARRAY_TYPE = list(selected = "", keep_na = TRUE))
+    )
   )
-
-  filter_state_mae$set_selected("white")
-  filter_state_mae$set_na_rm(TRUE)
-
-  state_list <- filtered_dataset$get_filter_states(1)
-  shiny::isolate(state_list$state_list_push(filter_state_mae, state_list_index = 1L, state_id = "race"))
-
+  filtered_dataset$set_filter_state(fs)
   get_call_output <- shiny::isolate(filtered_dataset$get_call())
 
-  checkmate::expect_list(get_call_output, types = "<-")
   testthat::expect_equal(
-    get_call_output$subjects,
-    quote(
-      miniACC <- MultiAssayExperiment::subsetByColData( # nolint
-        miniACC,
-        y = !is.na(miniACC$race) & miniACC$race == "white"
+    get_call_output,
+    list(
+      subjects = quote(
+        miniacc <- MultiAssayExperiment::subsetByColData(
+          miniacc,
+          y = (is.na(miniacc$years_to_birth) | miniacc$years_to_birth >= 30 & miniacc$years_to_birth <= 50) &
+            miniacc$vital_status == 1L &
+            (is.na(miniacc$gender) | miniacc$gender == "female")
+        )
+      ),
+      RPPAArray = quote(
+        miniacc[["RPPAArray"]] <- subset(miniacc[["RPPAArray"]], subset = is.na(ARRAY_TYPE) | ARRAY_TYPE == "")
       )
     )
   )
@@ -52,15 +72,13 @@ testthat::test_that("get_filter_overview_info returns overview matrix for MAEFil
   utils::data(miniACC, package = "MultiAssayExperiment")
   filtered_dataset <- MAEFilteredDataset$new(dataset = miniACC, dataname = "miniACC")
   testthat::expect_equal(
-    shiny::isolate(filtered_dataset$get_filter_overview_info()),
-    matrix(
-      list("", "92/92", "79/79", "79/79", "90/90", "90/90", "46/46", "46/46", "90/90", "90/90", "80/80", "80/80"),
-      nrow = 6,
-      byrow = TRUE,
-      dimnames = list(
-        c("miniACC", "- RNASeq2GeneNorm", "- gistict", "- RPPAArray", "- Mutations", "- miRNASeqGene"),
-        c("Obs", "Subjects")
-      )
+    shiny::isolate(filtered_dataset$get_filter_overview()),
+    data.frame(
+      dataname = c("miniACC", sprintf("- %s", names(miniACC))),
+      subjects = c(92, 79, 90, 46, 90, 80),
+      subjects_filtered = c(92, 79, 90, 46, 90, 80),
+      obs = c(NA_real_, 79, 90, 46, 90, 80),
+      obs_filtered = c(NA_real_, 79, 90, 46, 90, 80)
     )
   )
 })
@@ -68,32 +86,26 @@ testthat::test_that("get_filter_overview_info returns overview matrix for MAEFil
 testthat::test_that("get_filter_overview_info returns overview matrix for MAEFilteredDataset with filtering", {
   utils::data(miniACC, package = "MultiAssayExperiment")
   filtered_dataset <- MAEFilteredDataset$new(dataset = miniACC, dataname = "miniACC")
-
-  filter_state_mae <- ChoicesFilterState$new(
-    x = c("white", NA_character_),
-    varname = "race",
-    dataname = "miniACC",
-    extract_type = "list"
+  fs <- list(
+    subjects = list(
+      years_to_birth = list(selected = c(30, 50), keep_na = TRUE, keep_inf = FALSE),
+      vital_status = list(selected = "1", keep_na = FALSE),
+      gender = list(selected = "female", keep_na = TRUE)
+    ),
+    RPPAArray = list(
+      subset = list(ARRAY_TYPE = list(selected = "", keep_na = TRUE))
+    )
   )
-  filter_state_mae$set_na_rm(TRUE)
-  state_list <- filtered_dataset$get_filter_states(1)
-  shiny::isolate(state_list$state_list_push(filter_state_mae, state_list_index = 1L, state_id = "race"))
+  filtered_dataset$set_filter_state(fs)
 
   testthat::expect_equal(
-    shiny::isolate(filtered_dataset$get_filter_overview_info(
-      MultiAssayExperiment::subsetByColData(
-        miniACC,
-        y = !is.na(miniACC$race) & miniACC$race == "white"
-      )
-    )),
-    matrix(
-      list("", "78/92", "66/79", "66/79", "76/90", "76/90", "35/46", "35/46", "77/90", "77/90", "67/80", "67/80"),
-      nrow = 6,
-      byrow = TRUE,
-      dimnames = list(
-        c("miniACC", "- RNASeq2GeneNorm", "- gistict", "- RPPAArray", "- Mutations", "- miRNASeqGene"),
-        c("Obs", "Subjects")
-      )
+    shiny::isolate(filtered_dataset$get_filter_overview()),
+    data.frame(
+      dataname = c("miniACC", sprintf("- %s", names(miniACC))),
+      subjects = c(92, 79, 90, 46, 90, 80),
+      subjects_filtered = c(6, 5, 6, 4, 5, 5),
+      obs = c(NA_real_, 79, 90, 46, 90, 80),
+      obs_filtered = c(NA_real_, 5, 6, 4, 5, 5)
     )
   )
 })
@@ -113,7 +125,7 @@ testthat::test_that(
         subset = list(ARRAY_TYPE = "")
       )
     )
-    shiny::isolate(dataset$set_filter_state(state = fs))
+    dataset$set_filter_state(state = fs)
     testthat::expect_equal(
       shiny::isolate(dataset$get_call()),
       list(
@@ -200,7 +212,7 @@ testthat::test_that(
         subset = list(ARRAY_TYPE = list(selected = "", keep_na = TRUE))
       )
     )
-    shiny::isolate(dataset$set_filter_state(state = fs))
+    dataset$set_filter_state(state = fs)
     testthat::expect_identical(shiny::isolate(dataset$get_filter_state()), fs)
   }
 )
@@ -220,8 +232,8 @@ testthat::test_that(
         subset = list(ARRAY_TYPE = "")
       )
     )
-    shiny::isolate(dataset$set_filter_state(state = fs))
-    shiny::isolate(dataset$remove_filter_state(state_id = list(subjects = list("years_to_birth"))))
+    dataset$set_filter_state(state = fs)
+    dataset$remove_filter_state(state_id = list(subjects = list("years_to_birth")))
 
     testthat::expect_equal(
       shiny::isolate(dataset$get_call()),
@@ -259,29 +271,15 @@ testthat::test_that(
         subset = list(ARRAY_TYPE = "")
       )
     )
-    shiny::isolate(dataset$set_filter_state(state = fs))
+    dataset$set_filter_state(state = fs)
     testthat::expect_error(dataset$remove_filter_state(state_id = list("years_to_birth")))
   }
 )
-testthat::test_that("MAEFilteredDataset$get_filterable_varnames returns character(0)", {
-  utils::data(miniACC, package = "MultiAssayExperiment")
-  filtered_dataset <- MAEFilteredDataset$new(dataset = miniACC, dataname = "miniACC")
-  testthat::expect_identical(filtered_dataset$get_filterable_varnames(), character(0))
-})
 
 testthat::test_that("get_supported_filter_varnames.MAEFilteredDataset returns character(0)", {
   utils::data(miniACC, package = "MultiAssayExperiment")
   filtered_dataset <- MAEFilteredDataset$new(dataset = miniACC, dataname = "miniACC")
   testthat::expect_identical(get_supported_filter_varnames(filtered_dataset), character(0))
-})
-
-testthat::test_that("MAEFilteredDataset$get_varlabels returns column variable labels", {
-  utils::data(miniACC, package = "MultiAssayExperiment")
-  x <- miniACC
-  attr(SummarizedExperiment::colData(x)$ADS, "label") <- "ADS label"
-  filtered_dataset <- MAEFilteredDataset$new(dataset = x, dataname = "miniACC")
-  labels <- filtered_dataset$get_varlabels(c("COC", "ADS"))
-  testthat::expect_equal(c("COC" = NA, ADS = "ADS label"), labels)
 })
 
 testthat::test_that("MAEFilteredDataset filters removed using remove_filters", {
@@ -321,7 +319,7 @@ testthat::test_that("MAEFilteredDataset filters removed using remove_filters", {
   )
 
   shiny::testServer(
-    filtered_dataset$server,
+    filtered_dataset$srv_active,
     expr = {
       session$setInputs(remove_filters = TRUE)
       testthat::expect_true(input$remove_filters)

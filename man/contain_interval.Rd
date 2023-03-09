@@ -32,14 +32,14 @@ This function purposely shifts the selection to the closest ticks whose values f
 that will contain the interval defined by the filter API call.
 }
 \examples{
-\dontrun{
+\donttest{
 ticks <- 1:10
 values1 <- c(3, 5)
-contain_interval(values1, ticks)
+teal.slice:::contain_interval(values1, ticks)
 values2 <- c(3.1, 5.7)
-contain_interval(values2, ticks)
+teal.slice:::contain_interval(values2, ticks)
 values3 <- c(0, 20)
-contain_interval(values3, ticks)
+teal.slice:::contain_interval(values3, ticks)
 }
 }
 \keyword{internal}

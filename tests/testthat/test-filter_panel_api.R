@@ -97,7 +97,7 @@ testthat::test_that("FilterPanelAPI$remove_filter_state removes filter states de
 })
 
 testthat::test_that(
-  "FilterPanelAPI$remove_all_filter_states removes all filters of datasets in FilterPanelAPI",
+  "FilterPanelAPI$clear_filter_states removes all filters of datasets in FilterPanelAPI",
   code = {
     datasets <- FilterPanelAPI$new(filtered_data)
     filter_list <- list(
@@ -110,7 +110,7 @@ testthat::test_that(
       )
     )
     shiny::isolate(datasets$set_filter_state(filter_list))
-    shiny::isolate(datasets$remove_all_filter_states())
+    shiny::isolate(datasets$clear_filter_states())
 
     testthat::expect_equal(
       length(shiny::isolate(datasets$get_filter_state())),
@@ -120,7 +120,7 @@ testthat::test_that(
 )
 
 testthat::test_that(
-  "FilterPanelAPI$remove_all_filter_states remove the filters of the desired dataset only",
+  "FilterPanelAPI$clear_filter_states remove the filters of the desired dataset only",
   code = {
     datasets <- FilterPanelAPI$new(filtered_data)
     filter_list <- list(
@@ -133,7 +133,7 @@ testthat::test_that(
       )
     )
     shiny::isolate(datasets$set_filter_state(filter_list))
-    shiny::isolate(datasets$remove_all_filter_states(datanames = "df1"))
+    shiny::isolate(datasets$clear_filter_states(datanames = "df1"))
     fs_wo_attr <- shiny::isolate(datasets$get_filter_state())
     attr(fs_wo_attr, "formatted") <- NULL
 
@@ -166,7 +166,7 @@ testthat::test_that("filter_panel_api neutral when filter panel is disabled", {
         )
       )
       testthat::expect_warning(fs$set_filter_state(filter_list))
-      testthat::expect_warning(fs$remove_all_filter_states(datanames = "df1"))
+      testthat::expect_warning(fs$clear_filter_states(datanames = "df1"))
       fs_wo_attr <- shiny::isolate(fs$get_filter_state())
       attr(fs_wo_attr, "formatted") <- NULL
       names(fs_wo_attr) <- NULL
@@ -199,10 +199,10 @@ testthat::test_that("filter_panel_api under disable/enable filter panel", {
         )
       )
       testthat::expect_warning(fs$set_filter_state(filter_list))
-      testthat::expect_warning(fs$remove_all_filter_states(datanames = "df1"))
+      testthat::expect_warning(fs$clear_filter_states(datanames = "df1"))
       filtered_data$filter_panel_enable()
       fs$set_filter_state(filter_list)
-      fs$remove_all_filter_states(datanames = "df1")
+      fs$clear_filter_states(datanames = "df1")
       fs_wo_attr <- shiny::isolate(fs$get_filter_state())
       attr(fs_wo_attr, "formatted") <- NULL
 
