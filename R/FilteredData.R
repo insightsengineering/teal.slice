@@ -1025,36 +1025,50 @@ FilteredData <- R6::R6Class( # nolint
             }
 
             datasets_df <- self$get_filter_overview(datanames = datanames)
-            datasets_df <- transform(
-              datasets_df,
-              Obs = ifelse(
-                !is.na(obs),
-                sprintf("%s/%s", obs_filtered, obs),
-                ""
-              ),
-              Subjects = ifelse(
-                !is.na(subjects),
-                sprintf("%s/%s", subjects_filtered, subjects),
-                ""
+
+
+            if (!is.null(datasets_df$obs)) {
+              # some datasets (MAE colData) doesn't return obs column
+              datasets_df <- transform(
+                datasets_df,
+                Obs = ifelse(
+                  !is.na(obs),
+                  sprintf("%s/%s", obs_filtered, obs),
+                  ""
+                )
               )
-            )
+            }
+
+
+            if (!is.null(datasets_df$subjects)) {
+              # some datasets (without keys) doesn't return subjects
+              datasets_df <- transform(
+                datasets_df,
+                Subjects = ifelse(
+                  !is.na(subjects),
+                  sprintf("%s/%s", subjects_filtered, subjects),
+                  ""
+                )
+              )
+            }
+            datasets_df <- datasets_df[, colnames(datasets_df) %in% c("dataname", "Obs", "Subjects")]
 
             body_html <- apply(
               datasets_df,
               1,
               function(x) {
                 tags$tr(
-                  tags$td(x["dataname"]),
-                  tags$td(x["Obs"]),
-                  tags$td(x["Subjects"])
+                  tagList(
+                    lapply(x, tags$td)
+                  )
                 )
               }
             )
 
             header_html <- tags$tr(
-              tags$td(""),
-              tags$td("Obs"),
-              tags$td("Subjects")
+              tagList(
+                lapply(colnames(datasets_df), tags$td)
+              )
             )
 
             table_html <- tags$table(

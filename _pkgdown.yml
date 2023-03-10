@@ -28,7 +28,6 @@ reference:
     subtitle: R6 Classes
     desc: Abstract and concrete classes used to build teal functionality.
     contents:
-      - CDISCFilteredData
       - DefaultFilteredDataset
       - FilteredData
       - FilteredDataset
