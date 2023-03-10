@@ -80,7 +80,7 @@ testthat::test_that("datanames returns character vector reflecting names of set 
 testthat::test_that("datanames are ordered topologically from parent to child", {
   jk <- teal.data::join_keys(teal.data::join_key("parent", "child", c("id" = "id")))
   jk$set_parents(list(child = "parent"))
-  iris2 <- transform(iris, id = 1:nrow(iris))
+  iris2 <- transform(iris, id = seq_len(nrow(iris)))
   filtered_data <- FilteredData$new(
     list(
       child = list(dataset = head(iris2)),
@@ -100,7 +100,7 @@ testthat::test_that("FilteredData forbids cyclic graphs of datasets relationship
   jk$set_parents(list(child = "parent"))
   jk$set_parents(list(grandchild = "child"))
   jk$set_parents(list(parent = "grandchild"))
-  iris2 <- transform(iris, id = 1:nrow(iris))
+  iris2 <- transform(iris, id = seq_len(nrow(iris)))
   testthat::expect_error(
     FilteredData$new(
       list(
@@ -145,7 +145,7 @@ testthat::test_that("get_filterable_datanames returns all ancestors if parents a
   )
   jk$set_parents(list(child = "parent"))
   jk$set_parents(list(grandchild = "child"))
-  iris2 <- transform(iris, id = 1:nrow(iris))
+  iris2 <- transform(iris, id = seq_len(nrow(iris)))
   filtered_data <- FilteredData$new(
     list(
       grandchild = list(dataset = head(iris2)),
@@ -748,7 +748,7 @@ testthat::test_that("get_filter_overview return counts based on reactive filteri
   )
   jk$set_parents(list(child = "parent"))
   jk$set_parents(list(grandchild = "child"))
-  iris2 <- transform(iris, id = 1:nrow(iris))
+  iris2 <- transform(iris, id = seq_len(nrow(iris)))
   filtered_data <- FilteredData$new(
     list(
       grandchild = list(dataset = head(iris2)),
