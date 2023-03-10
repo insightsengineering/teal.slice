@@ -102,7 +102,7 @@ LogicalFilterState <- R6::R6Class( # nolint
     #'   if `extract_type` argument is not empty.
     #' @param varname (`character(1)`)\cr
     #'   name of the variable.
-    #' @param choices (`atomic`, `NULL`)\cr
+    #' @param choices (`vector`, unique(na.omit(x)))\cr
     #'   vector specifying allowed selection values
     #' @param selected (`atomic`, `NULL`)\cr
     #'   vector specifying selection
@@ -125,7 +125,7 @@ LogicalFilterState <- R6::R6Class( # nolint
                           x_reactive = reactive(NULL),
                           dataname,
                           varname,
-                          choices = NULL,
+                          choices = unique(na.omit(x)),
                           selected = NULL,
                           varlabel = character(0),
                           keep_na = NULL,
@@ -146,6 +146,10 @@ LogicalFilterState <- R6::R6Class( # nolint
         keep_inf = keep_inf,
         fixed = fixed,
         extract_type = extract_type)
+
+      private$set_is_choice_limited(x, choices)
+      x <- x[x %in% choices]
+
       df <- as.factor(x)
       if (length(levels(df)) != 2) {
         if (levels(df) %in% c(TRUE, FALSE)) {
@@ -230,7 +234,13 @@ LogicalFilterState <- R6::R6Class( # nolint
     histogram_data = data.frame(),
 
     # private methods ----
-
+    #' @description
+    #' Check whether the initial choices filter out some values of x and set the flag in case.
+    #'
+    set_is_choice_limited = function(x, choices = NULL) {
+      private$is_choice_limited <- length(unique(choices[choices %in% x])) < length(unique(x))
+      invisible(NULL)
+    },
     validate_selection = function(value) {
       if (!(checkmate::test_logical(value, max.len = 1, any.missing = FALSE))) {
         stop(

@@ -59,7 +59,7 @@ FilterState <- R6::R6Class( # nolint
     #'   if `extract_type` argument is not empty.
     #' @param varname (`character(1)`)\cr
     #'   name of the variable.
-    #' @param choices (`atomic`, `NULL`)\cr
+    #' @param choices (`vector`, unique(na.omit(x)))\cr
     #'   vector specifying allowed selection values
     #' @param selected (`atomic`, `NULL`)\cr
     #'   vector specifying selection
@@ -85,7 +85,7 @@ FilterState <- R6::R6Class( # nolint
                           x_reactive = reactive(NULL),
                           dataname,
                           varname,
-                          choices = NULL,
+                          choices = unique(na.omit(x)),
                           selected = NULL,
                           varlabel = character(0),
                           keep_na = NULL,
@@ -480,16 +480,6 @@ FilterState <- R6::R6Class( # nolint
 
     # private methods ----
 
-    # private methods ----
-    #' @description
-    #' Check whether the initial choices filter out some values of x and set the flag in case.
-    #'
-    set_is_choice_limited = function(x, choices = NULL) {
-      if (!is.null(choices)) {
-        private$is_choice_limited <- length(unique(choices[choices %in% x])) < length(unique(x))
-      }
-      invisible(NULL)
-    },
     # @description
     # Return variable name prefixed by dataname to be evaluated as extracted object,
     # for example `data$var`

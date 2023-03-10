@@ -108,7 +108,7 @@ ChoicesFilterState <- R6::R6Class( # nolint
     #'   if `extract_type` argument is not empty.
     #' @param varname (`character(1)`)\cr
     #'   name of the variable.
-    #' @param choices (`atomic`, `NULL`)\cr
+    #' @param choices (`vector`, unique(na.omit(x)))\cr
     #'   vector specifying allowed selection values
     #' @param selected (`atomic`, `NULL`)\cr
     #'   vector specifying selection
@@ -131,7 +131,7 @@ ChoicesFilterState <- R6::R6Class( # nolint
                           x_reactive = reactive(NULL),
                           dataname,
                           varname,
-                          choices = NULL,
+                          choices = unique(na.omit(x)),
                           selected = NULL,
                           varlabel = character(0),
                           keep_na = NULL,
@@ -163,6 +163,9 @@ ChoicesFilterState <- R6::R6Class( # nolint
       if (inherits(x, "POSIXt")) {
         private$tzone <- Find(function(x) x != "", attr(as.POSIXlt(x), "tzone"))
       }
+      private$set_is_choice_limited(x, choices)
+      x <- x[x %in% choices]
+      selected <- selected[selected %in% choices]
 
       if (!is.factor(x)) {
         x <- factor(as.character(x), levels = as.character(sort(unique(x))))
@@ -170,9 +173,8 @@ ChoicesFilterState <- R6::R6Class( # nolint
       x <- droplevels(x)
       choices_table <- table(x)
       private$set_choices(names(choices_table))
-      self$set_selected(names(choices_table))
+      self$set_selected(selected)
       private$set_choices_counts(unname(choices_table))
-      private$set_is_choice_limited(x, choices)
 
       return(invisible(self))
     },
@@ -281,6 +283,14 @@ ChoicesFilterState <- R6::R6Class( # nolint
     tzone = character(0), # if x is a datetime, stores time zone so that it can be restored in $get_call
 
     # private methods ----
+
+    #' @description
+    #' Check whether the initial choices filter out some values of x and set the flag in case.
+    #'
+    set_is_choice_limited = function(x, choices = NULL) {
+      private$is_choice_limited <- length(unique(choices[choices %in% x])) < length(unique(x))
+      invisible(NULL)
+    },
     #' @description
     #' Check whether the initial choices filter out some values of x and set the flag in case.
     #'

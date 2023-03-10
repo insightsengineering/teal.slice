@@ -113,7 +113,7 @@ DatetimeFilterState <- R6::R6Class( # nolint
     #'   if `extract_type` argument is not empty.
     #' @param varname (`character(1)`)\cr
     #'   name of the variable.
-    #' @param choices (`atomic`, `NULL`)\cr
+    #' @param choices (`vector`, c(min(x, na.rm = TRUE), max(x, na.rm = TRUE)))\cr
     #'   vector specifying allowed selection values
     #' @param selected (`atomic`, `NULL`)\cr
     #'   vector specifying selection
@@ -136,7 +136,7 @@ DatetimeFilterState <- R6::R6Class( # nolint
                           x_reactive = reactive(NULL),
                           dataname,
                           varname,
-                          choices = NULL,
+                          choices = c(min(x, na.rm = TRUE), max(x, na.rm = TRUE)),
                           selected = NULL,
                           varlabel = character(0),
                           keep_na = NULL,
@@ -159,15 +159,15 @@ DatetimeFilterState <- R6::R6Class( # nolint
         fixed = fixed,
         extract_type = extract_type)
 
+      private$set_is_choice_limited(
+        as.POSIXct(trunc(x, units = "secs")),
+        as.POSIXct(trunc(choices, units = "secs"))
+      )
+      x <- x[as.POSIXct(trunc(x, units = "secs")) %in% as.POSIXct(trunc(choices, units = "secs"))]
+
       var_range <- as.POSIXct(trunc(range(x, na.rm = TRUE), units = "secs"))
       private$set_choices(var_range)
       self$set_selected(var_range)
-      if (!is.null(choices)) {
-        private$set_is_choice_limited(
-          as.POSIXct(trunc(x, units = "secs")),
-          as.POSIXct(trunc(choices, units = "secs"))
-        )
-      }
 
       return(invisible(self))
     },
@@ -268,6 +268,14 @@ DatetimeFilterState <- R6::R6Class( # nolint
 
   private = list(
     # private methods ----
+
+    #' @description
+    #' Check whether the initial choices filter out some values of x and set the flag in case.
+    #'
+    set_is_choice_limited = function(x, choices = NULL) {
+      private$is_choice_limited <- (any(x < choices[1]) | any(x > choices[2]))
+      invisible(NULL)
+    },
     validate_selection = function(value) {
       if (!(is(value, "POSIXct") || is(value, "POSIXlt"))) {
         stop(
