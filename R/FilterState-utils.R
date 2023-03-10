@@ -433,8 +433,7 @@ check_in_range <- function(subinterval, range, pre_msg = "") {
 #'
 #' Raises an error message if not and says which elements are not in the allowed `choices`.
 #'
-#' @param subset `collection-like` should be a subset of the second argument `choices`
-#' @param choices `collection-like` superset
+#' @param subset,choices atomic vectors
 #' @param pre_msg `character` message to print before error should there be any errors
 #' @keywords internal
 #'
@@ -448,6 +447,8 @@ check_in_range <- function(subinterval, range, pre_msg = "") {
 #' }
 #' }
 check_in_subset <- function(subset, choices, pre_msg = "") {
+  checkmate::assert_atomic(subset)
+  checkmate::assert_atomic(choices)
   checkmate::assert_string(pre_msg)
 
   subset <- unique(subset)
