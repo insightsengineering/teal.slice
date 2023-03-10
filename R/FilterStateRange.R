@@ -293,11 +293,15 @@ RangeFilterState <- R6::R6Class( # nolint
     #' \item{`keep_inf` (`logical`)}{ defines whether to keep or remove `Inf` values}
     #' }
     set_state = function(state) {
-      stopifnot(is.list(state) && all(names(state) %in% c("selected", "keep_na", "keep_inf")))
-      if (!is.null(state$keep_inf)) {
-        self$set_keep_inf(state$keep_inf)
+      if (inherits(state, "teal_slice")) {
+        super$set_state(state)
+      } else {
+        stopifnot(is.list(state) && all(names(state) %in% c("selected", "keep_na", "keep_inf")))
+        if (!is.null(state$keep_inf)) {
+          self$set_keep_inf(state$keep_inf)
+        }
+        super$set_state(state[names(state) %in% c("selected", "keep_na")])
       }
-      super$set_state(state[names(state) %in% c("selected", "keep_na")])
       invisible(NULL)
     },
 
