@@ -387,7 +387,7 @@ InteractiveFilterState <- R6::R6Class( # nolint
           paste(state$selected, collapse = " "),
           state$keep_na
         ))
-        stopifnot(is.list(state) && all(names(state) %in% c("selected", "keep_na", "keep_inf")))
+        stopifnot(is.list(state) && all(names(state) %in% c("selected", "keep_na")))
 
         if (!is.null(state$keep_na)) {
           self$set_keep_na(state$keep_na)
