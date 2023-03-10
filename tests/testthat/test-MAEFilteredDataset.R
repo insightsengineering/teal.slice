@@ -72,15 +72,13 @@ testthat::test_that("get_filter_overview_info returns overview matrix for MAEFil
   utils::data(miniACC, package = "MultiAssayExperiment")
   filtered_dataset <- MAEFilteredDataset$new(dataset = miniACC, dataname = "miniACC")
   testthat::expect_equal(
-    shiny::isolate(filtered_dataset$get_filter_overview_info()),
-    matrix(
-      list("", "92/92", "79/79", "79/79", "90/90", "90/90", "46/46", "46/46", "90/90", "90/90", "80/80", "80/80"),
-      nrow = 6,
-      byrow = TRUE,
-      dimnames = list(
-        c("miniACC", "- RNASeq2GeneNorm", "- gistict", "- RPPAArray", "- Mutations", "- miRNASeqGene"),
-        c("Obs", "Subjects")
-      )
+    shiny::isolate(filtered_dataset$get_filter_overview()),
+    data.frame(
+      dataname = c("miniACC", sprintf("- %s", names(miniACC))),
+      subjects = c(92, 79, 90, 46, 90, 80),
+      subjects_filtered = c(92, 79, 90, 46, 90, 80),
+      obs = c(NA_real_, 79, 90, 46, 90, 80),
+      obs_filtered = c(NA_real_, 79, 90, 46, 90, 80)
     )
   )
 })
@@ -101,15 +99,13 @@ testthat::test_that("get_filter_overview_info returns overview matrix for MAEFil
   filtered_dataset$set_filter_state(fs)
 
   testthat::expect_equal(
-    shiny::isolate(filtered_dataset$get_filter_overview_info()),
-    matrix(
-      list("", "6/92", "5/79", "5/79", "6/90", "6/90", "4/46", "4/46", "5/90", "5/90", "5/80", "5/80"),
-      nrow = 6,
-      byrow = TRUE,
-      dimnames = list(
-        c("miniACC", "- RNASeq2GeneNorm", "- gistict", "- RPPAArray", "- Mutations", "- miRNASeqGene"),
-        c("Obs", "Subjects")
-      )
+    shiny::isolate(filtered_dataset$get_filter_overview()),
+    data.frame(
+      dataname = c("miniACC", sprintf("- %s", names(miniACC))),
+      subjects = c(92, 79, 90, 46, 90, 80),
+      subjects_filtered = c(6, 5, 6, 4, 5, 5),
+      obs = c(NA_real_, 79, 90, 46, 90, 80),
+      obs_filtered = c(NA_real_, 5, 6, 4, 5, 5)
     )
   )
 })

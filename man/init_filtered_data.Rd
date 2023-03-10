@@ -4,7 +4,7 @@
 \alias{init_filtered_data}
 \title{Initialize \code{FilteredData}}
 \usage{
-init_filtered_data(x, join_keys, code, cdisc, check)
+init_filtered_data(x, join_keys, code, check)
 }
 \arguments{
 \item{x}{(named \code{list} or \code{TealData}) In case of \code{TealData} see \code{\link[teal.data:teal_data]{teal.data::teal_data()}}.
@@ -20,8 +20,6 @@ If the list is provided, it should contain \code{list}(s) containing following f
 \item{join_keys}{(\code{JoinKeys}) see \code{\link[teal.data:join_keys]{teal.data::join_keys()}}.}
 
 \item{code}{(\code{CodeClass}) see \code{\link[teal.data:CodeClass]{teal.data::CodeClass}}.}
-
-\item{cdisc}{(\code{logical(1)}) whether data is of \code{cdisc} type (relational).}
 
 \item{check}{(\code{logical(1)}) whether data has been check against reproducibility.}
 }
