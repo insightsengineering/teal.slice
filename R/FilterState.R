@@ -254,7 +254,7 @@ InteractiveFilterState <- R6::R6Class( # nolint
       args <- list(
         dataname = private$dataname,
         varname = private$varname,
-        choices = unlist(private$choices, use.names = FALSE),
+        choices = private$choices,
         selected = private$selected(),
         keep_na = if (!is.null(private$keep_na)) private$keep_na() else NULL,
         keep_inf = if (!is.null(private$keep_inf)) private$keep_inf() else NULL,
@@ -387,7 +387,7 @@ InteractiveFilterState <- R6::R6Class( # nolint
           paste(state$selected, collapse = " "),
           state$keep_na
         ))
-        stopifnot(is.list(state) && all(names(state) %in% c("selected", "keep_na")))
+        stopifnot(is.list(state) && all(names(state) %in% c("selected", "keep_na", "keep_inf")))
 
         if (!is.null(state$keep_na)) {
           self$set_keep_na(state$keep_na)
