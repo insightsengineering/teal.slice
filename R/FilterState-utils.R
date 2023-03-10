@@ -1,8 +1,14 @@
-#' Initializes `FilterState`
+#' Initializes `InteractiveFilterState`
 #'
-#' Initializes `FilterState` depending on a variable class.\cr
+#' Initializes `InteractiveFilterState` depending on a variable class.\cr
 #' @param x (`vector`)\cr
 #'   values of the variable used in filter
+#'
+#' @param x_reactive (`reactive`)\cr
+#'   returning vector of the same type as `x`. Is used to update
+#'   counts following the change in values of the filtered dataset.
+#'   If it is set to `reactive(NULL)` then counts based on filtered
+#'   dataset are not shown.
 #'
 #' @param varname (`character(1)`)\cr
 #'   name of the variable.
@@ -25,7 +31,8 @@
 #'
 #' @examples
 #' filter_state <- teal.slice:::RangeFilterState$new(
-#'   c(1:10, NA, Inf),
+#'   x = c(1:10, NA, Inf),
+#'   x_reactive = reactive(c(1:10, NA, Inf)),
 #'   varname = "x",
 #'   varlabel = "Pretty name",
 #'   dataname = "dataname",
@@ -52,6 +59,7 @@
 #' }
 #' @return `FilterState` object
 init_filter_state <- function(x,
+                              x_reactive = reactive(NULL),
                               varname,
                               varlabel = attr(x, "label"),
                               dataname = NULL,
@@ -73,6 +81,7 @@ init_filter_state <- function(x,
     return(
       EmptyFilterState$new(
         x = x,
+        x_reactive = x_reactive,
         varname = varname,
         varlabel = varlabel,
         dataname = dataname,
@@ -86,13 +95,15 @@ init_filter_state <- function(x,
 #' @keywords internal
 #' @export
 init_filter_state.default <- function(x,
+                                      x_reactive = reactive(NULL),
                                       varname,
                                       varlabel = attr(x, "label"),
                                       dataname = NULL,
                                       extract_type = character(0)) {
   if (is.null(varlabel)) varlabel <- character(0)
-  FilterState$new(
+  InteractiveFilterState$new(
     x = x,
+    x_reactive = x_reactive,
     varname = varname,
     varlabel = varlabel,
     dataname = dataname,
@@ -103,6 +114,7 @@ init_filter_state.default <- function(x,
 #' @keywords internal
 #' @export
 init_filter_state.logical <- function(x,
+                                      x_reactive = reactive(NULL),
                                       varname,
                                       varlabel = attr(x, "label"),
                                       dataname = NULL,
@@ -110,6 +122,7 @@ init_filter_state.logical <- function(x,
   if (is.null(varlabel)) varlabel <- character(0)
   LogicalFilterState$new(
     x = x,
+    x_reactive = x_reactive,
     varname = varname,
     varlabel = varlabel,
     dataname = dataname,
@@ -120,6 +133,7 @@ init_filter_state.logical <- function(x,
 #' @keywords internal
 #' @export
 init_filter_state.numeric <- function(x,
+                                      x_reactive = reactive(NULL),
                                       varname,
                                       varlabel = attr(x, "label"),
                                       dataname = NULL,
@@ -128,6 +142,7 @@ init_filter_state.numeric <- function(x,
   if (length(unique(x[!is.na(x)])) < getOption("teal.threshold_slider_vs_checkboxgroup")) {
     ChoicesFilterState$new(
       x = x,
+      x_reactive = x_reactive,
       varname = varname,
       varlabel = varlabel,
       dataname = dataname,
@@ -136,6 +151,7 @@ init_filter_state.numeric <- function(x,
   } else {
     RangeFilterState$new(
       x = x,
+      x_reactive = x_reactive,
       varname = varname,
       varlabel = varlabel,
       dataname = dataname,
@@ -147,6 +163,7 @@ init_filter_state.numeric <- function(x,
 #' @keywords internal
 #' @export
 init_filter_state.factor <- function(x,
+                                     x_reactive = reactive(NULL),
                                      varname,
                                      varlabel = attr(x, "label"),
                                      dataname = NULL,
@@ -154,6 +171,7 @@ init_filter_state.factor <- function(x,
   if (is.null(varlabel)) varlabel <- character(0)
   ChoicesFilterState$new(
     x = x,
+    x_reactive = x_reactive,
     varname = varname,
     varlabel = varlabel,
     dataname = dataname,
@@ -164,6 +182,7 @@ init_filter_state.factor <- function(x,
 #' @keywords internal
 #' @export
 init_filter_state.character <- function(x,
+                                        x_reactive = reactive(NULL),
                                         varname,
                                         varlabel = attr(x, "label"),
                                         dataname = NULL,
@@ -171,6 +190,7 @@ init_filter_state.character <- function(x,
   if (is.null(varlabel)) varlabel <- character(0)
   ChoicesFilterState$new(
     x = x,
+    x_reactive = x_reactive,
     varname = varname,
     varlabel = varlabel,
     dataname = dataname,
@@ -181,6 +201,7 @@ init_filter_state.character <- function(x,
 #' @keywords internal
 #' @export
 init_filter_state.Date <- function(x,
+                                   x_reactive = reactive(NULL),
                                    varname,
                                    varlabel = attr(x, "label"),
                                    dataname = NULL,
@@ -189,6 +210,7 @@ init_filter_state.Date <- function(x,
   if (length(unique(x[!is.na(x)])) < getOption("teal.threshold_slider_vs_checkboxgroup")) {
     ChoicesFilterState$new(
       x = x,
+      x_reactive = x_reactive,
       varname = varname,
       varlabel = varlabel,
       dataname = dataname,
@@ -197,6 +219,7 @@ init_filter_state.Date <- function(x,
   } else {
     DateFilterState$new(
       x = x,
+      x_reactive = x_reactive,
       varname = varname,
       varlabel = varlabel,
       dataname = dataname,
@@ -208,6 +231,7 @@ init_filter_state.Date <- function(x,
 #' @keywords internal
 #' @export
 init_filter_state.POSIXct <- function(x,
+                                      x_reactive = reactive(NULL),
                                       varname,
                                       varlabel = attr(x, "label"),
                                       dataname = NULL,
@@ -216,6 +240,7 @@ init_filter_state.POSIXct <- function(x,
   if (length(unique(x[!is.na(x)])) < getOption("teal.threshold_slider_vs_checkboxgroup")) {
     ChoicesFilterState$new(
       x = x,
+      x_reactive = x_reactive,
       varname = varname,
       varlabel = varlabel,
       dataname = dataname,
@@ -224,6 +249,7 @@ init_filter_state.POSIXct <- function(x,
   } else {
     DatetimeFilterState$new(
       x = x,
+      x_reactive = x_reactive,
       varname = varname,
       varlabel = varlabel,
       dataname = dataname,
@@ -235,6 +261,7 @@ init_filter_state.POSIXct <- function(x,
 #' @keywords internal
 #' @export
 init_filter_state.POSIXlt <- function(x,
+                                      x_reactive = reactive(NULL),
                                       varname,
                                       varlabel = attr(x, "label"),
                                       dataname = NULL,
@@ -243,6 +270,7 @@ init_filter_state.POSIXlt <- function(x,
   if (length(unique(x[!is.na(x)])) < getOption("teal.threshold_slider_vs_checkboxgroup")) {
     ChoicesFilterState$new(
       x = x,
+      x_reactive = x_reactive,
       varname = varname,
       varlabel = varlabel,
       dataname = dataname,
@@ -251,6 +279,7 @@ init_filter_state.POSIXlt <- function(x,
   } else {
     DatetimeFilterState$new(
       x = x,
+      x_reactive = x_reactive,
       varname = varname,
       varlabel = varlabel,
       dataname = dataname,
@@ -270,9 +299,9 @@ init_filter_state.POSIXlt <- function(x,
 #'
 #' @examples
 #' \dontrun{
-#' check_in_range(c(3, 1), c(1, 3))
-#' check_in_range(c(0, 3), c(1, 3))
-#' check_in_range(
+#' teal.slice:::check_in_range(c(3, 1), c(1, 3))
+#' teal.slice:::check_in_range(c(0, 3), c(1, 3))
+#' teal.slice:::check_in_range(
 #'   c(as.Date("2020-01-01"), as.Date("2020-01-20")),
 #'   c(as.Date("2020-01-01"), as.Date("2020-01-02"))
 #' )
@@ -317,13 +346,12 @@ check_in_range <- function(subinterval, range, pre_msg = "") {
 #' @keywords internal
 #'
 #' @examples
+#' \donttest{
+#' teal.slice:::check_in_subset(c("a", "b"), c("a", "b", "c"))
 #' \dontrun{
-#' check_in_subset <- check_in_subset
-#' check_in_subset(c("a", "b"), c("a", "b", "c"))
-#' \dontrun{
-#' check_in_subset(c("a", "b"), c("b", "c"), pre_msg = "Error: ")
+#' teal.slice:::check_in_subset(c("a", "b"), c("b", "c"), pre_msg = "Error: ")
 #' # truncated because too long
-#' check_in_subset("a", LETTERS, pre_msg = "Error: ")
+#' teal.slice:::check_in_subset("a", LETTERS, pre_msg = "Error: ")
 #' }
 #' }
 check_in_subset <- function(subset, choices, pre_msg = "") {
@@ -368,14 +396,14 @@ check_in_subset <- function(subset, choices, pre_msg = "") {
 #' @keywords internal
 #'
 #' @examples
-#' \dontrun{
+#' \donttest{
 #' ticks <- 1:10
 #' values1 <- c(3, 5)
-#' contain_interval(values1, ticks)
+#' teal.slice:::contain_interval(values1, ticks)
 #' values2 <- c(3.1, 5.7)
-#' contain_interval(values2, ticks)
+#' teal.slice:::contain_interval(values2, ticks)
 #' values3 <- c(0, 20)
-#' contain_interval(values3, ticks)
+#' teal.slice:::contain_interval(values3, ticks)
 #'}
 contain_interval <- function(x, range) {
   checkmate::assert_numeric(x, len = 2L, any.missing = FALSE, sorted = TRUE)

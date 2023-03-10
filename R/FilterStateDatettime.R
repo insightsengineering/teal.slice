@@ -1,5 +1,5 @@
 #' @rdname DatetimeFilterState
-#' @title `FilterState` object for `POSIXct` variable
+#' @title `InteractiveFilterState` object for `POSIXct` variable
 #' @description  Manages choosing a range of date-times
 #' @docType class
 #' @keywords internal
@@ -7,12 +7,11 @@
 #'
 #' @examples
 #' filter_state <- teal.slice:::DatetimeFilterState$new(
-#'   c(Sys.time() + seq(0, by = 3600, length.out = 10), NA),
+#'   x = c(Sys.time() + seq(0, by = 3600, length.out = 10), NA),
 #'   varname = "x",
 #'   dataname = "data",
 #'   extract_type = character(0)
 #' )
-#'
 #' isolate(filter_state$get_call())
 #' isolate(filter_state$set_selected(c(Sys.time() + 3L, Sys.time() + 8L)))
 #' isolate(filter_state$set_keep_na(TRUE))
@@ -21,6 +20,7 @@
 #' \dontrun{
 #' # working filter in an app
 #' library(shiny)
+#' library(shinyjs)
 #'
 #' datetimes <- as.POSIXct(c("2012-01-01 12:00:00", "2020-01-01 12:00:00"))
 #' data_datetime <- c(seq(from = datetimes[1], to = datetimes[2], length.out = 100), NA)
@@ -32,6 +32,9 @@
 #' filter_state_datetime$set_state(list(selected = data_datetime[c(47, 98)], keep_na = TRUE))
 #'
 #' ui <- fluidPage(
+#'   useShinyjs(),
+#'   include_css_files(pattern = "filter-panel"),
+#'   include_js_files(pattern = "count-bar-labels"),
 #'   column(4, div(
 #'     h4("DatetimeFilterState"),
 #'     isolate(filter_state_datetime$ui("fs"))
@@ -81,7 +84,7 @@
 #'
 DatetimeFilterState <- R6::R6Class( # nolint
   "DatetimeFilterState",
-  inherit = FilterState,
+  inherit = InteractiveFilterState,
 
   # public methods ----
 
@@ -95,6 +98,10 @@ DatetimeFilterState <- R6::R6Class( # nolint
     #' and is set only if object is initialized in `shiny`.
     #' @param x (`POSIXct` or `POSIXlt`)\cr
     #'   values of the variable used in filter
+    #' @param x_reactive (`reactive`)\cr
+    #'   a `reactive` returning a filtered vector or returning `NULL`. Is used to update
+    #'   counts following the change in values of the filtered dataset. If the `reactive`
+    #'   is `NULL` counts based on filtered dataset are not shown.
     #' @param varname (`character`, `name`)\cr
     #'   name of the variable
     #' @param varlabel (`character(1)`)\cr
@@ -109,12 +116,15 @@ DatetimeFilterState <- R6::R6Class( # nolint
     #' \item{`"matrix"`}{ `varname` in the condition call will be returned as `<dataname>[, <varname>]`}
     #' }
     initialize = function(x,
+                          x_reactive = reactive(NULL),
                           varname,
                           varlabel = character(0),
                           dataname = NULL,
                           extract_type = character(0)) {
       checkmate::assert_multi_class(x, c("POSIXct", "POSIXlt"))
-      super$initialize(x, varname, varlabel, dataname, extract_type)
+
+      # validation on x_reactive here
+      super$initialize(x, x_reactive, varname, varlabel, dataname, extract_type)
 
       var_range <- as.POSIXct(trunc(range(x, na.rm = TRUE), units = "secs"))
       private$set_choices(var_range)
@@ -133,7 +143,6 @@ DatetimeFilterState <- R6::R6Class( # nolint
     format = function(indent = 0) {
       checkmate::assert_number(indent, finite = TRUE, lower = 0)
 
-
       vals <- self$get_selected()
       sprintf(
         "%sFiltering on: %s\n%1$s  Selected range: %s - %s\n%1$s  Include missing values: %s",
@@ -149,7 +158,9 @@ DatetimeFilterState <- R6::R6Class( # nolint
     #' Answers the question of whether the current settings and values selected actually filters out any values.
     #' @return logical scalar
     is_any_filtered = function() {
-      if (!setequal(self$get_selected(), private$choices)) {
+      if (private$is_disabled()) {
+        FALSE
+      } else if (!setequal(self$get_selected(), private$choices)) {
         TRUE
       } else if (!isTRUE(self$get_keep_na()) && private$na_count > 0) {
         TRUE
@@ -246,20 +257,34 @@ DatetimeFilterState <- R6::R6Class( # nolint
       values
     },
     remove_out_of_bound_values = function(values) {
-      if (values[1] < private$choices[1]) {
-        warning(paste(
-          "Value:", values[1], "is outside of the possible range for column", private$varname,
-          "of dataset", private$dataname, "."
-        ))
+      if (values[1] < private$choices[1] || values[1] > private$choices[2]) {
+        warning(
+          sprintf(
+            "Value: %s is outside of the range for the column '%s' in dataset '%s', setting minimum possible value.",
+            values[1], private$varname, toString(private$dataname)
+          )
+        )
         values[1] <- private$choices[1]
       }
 
-      if (values[2] > private$choices[2]) {
-        warning(paste(
-          "Value:", values[2], "is outside of the possible range for column", private$varname,
-          "of dataset", private$dataname, "."
-        ))
+      if (values[2] > private$choices[2] | values[2] < private$choices[1]) {
+        warning(
+          sprintf(
+            "Value: '%s' is outside of the range for the column '%s' in dataset '%s', setting maximum possible value.",
+            values[2], private$varname, toString(private$dataname)
+          )
+        )
         values[2] <- private$choices[2]
+      }
+
+      if (values[1] > values[2]) {
+        warning(
+          sprintf(
+            "Start date '%s' is set after the end date '%s', the values will be replaced by a default datetime range.",
+            values[1], values[2]
+          )
+        )
+        values <- c(private$choices[1], private$choices[2])
       }
       values
     },
@@ -342,7 +367,6 @@ DatetimeFilterState <- R6::R6Class( # nolint
         id = id,
         function(input, output, session) {
           logger::log_trace("DatetimeFilterState$server initializing, dataname: { private$dataname }")
-
           # this observer is needed in the situation when private$selected has been
           # changed directly by the api - then it's needed to rerender UI element
           # to show relevant values
@@ -380,26 +404,59 @@ DatetimeFilterState <- R6::R6Class( # nolint
           )
 
 
-          private$observers$selection <- observeEvent(
+          private$observers$selection_start <- observeEvent(
             ignoreNULL = TRUE, # dates needs to be selected
             ignoreInit = TRUE, # ignoreInit: should not matter because we set the UI with the desired initial state
-            eventExpr = {
-              input$selection_start
-              input$selection_end
-            },
+            eventExpr = input$selection_start,
             handlerExpr = {
               start_date <- input$selection_start
-              end_date <- input$selection_end
+              end_date <- self$get_selected()[[2]]
               tzone <- Find(function(x) x != "", attr(as.POSIXlt(private$choices), "tzone"))
               attr(start_date, "tzone") <- tzone
-              attr(end_date, "tzone") <- tzone
 
-              if (start_date < private$choices[1]) {
-                start_date <- private$choices[1]
+              if (start_date > end_date) {
+                showNotification(
+                  "Start date must not be greater than the end date. Ignoring selection.",
+                  type = "warning"
+                )
+                shinyWidgets::updateAirDateInput(
+                  session = session,
+                  inputId = "selection_start",
+                  value = self$get_selected()[1] # sets back to latest selected value
+                )
+                return(NULL)
               }
 
-              if (end_date > private$choices[2]) {
-                end_date <- private$choices[2]
+              self$set_selected(c(start_date, end_date))
+              logger::log_trace(sprintf(
+                "DatetimeFilterState$server@2 selection of variable %s changed, dataname: %s",
+                private$varname,
+                private$dataname
+              ))
+            }
+          )
+
+          private$observers$selection_end <- observeEvent(
+            ignoreNULL = TRUE, # dates needs to be selected
+            ignoreInit = TRUE, # ignoreInit: should not matter because we set the UI with the desired initial state
+            eventExpr = input$selection_end,
+            handlerExpr = {
+              start_date <- self$get_selected()[1]
+              end_date <- input$selection_end
+              tzone <- Find(function(x) x != "", attr(as.POSIXlt(private$choices), "tzone"))
+              attr(end_date, "tzone") <- tzone
+
+              if (start_date > end_date) {
+                showNotification(
+                  "End date must not be lower than the start date. Ignoring selection.",
+                  type = "warning"
+                )
+                shinyWidgets::updateAirDateInput(
+                  session = session,
+                  inputId = "selection_end",
+                  value = self$get_selected()[2] # sets back to latest selected value
+                )
+                return(NULL)
               }
 
               self$set_selected(c(start_date, end_date))
@@ -447,9 +504,39 @@ DatetimeFilterState <- R6::R6Class( # nolint
               ))
             }
           )
+
+          observeEvent(private$is_disabled(), {
+            shinyjs::toggleState(
+              id = "selection_start",
+              condition = !private$is_disabled()
+            )
+            shinyjs::toggleState(
+              id = "selection_end",
+              condition = !private$is_disabled()
+            )
+            shinyjs::toggleState(
+              id = "keep_na-value",
+              condition = !private$is_disabled()
+            )
+          })
+
           logger::log_trace("DatetimeFilterState$server initialized, dataname: { private$dataname }")
           NULL
         }
+      )
+    },
+
+    # @description
+    # UI module to display filter summary
+    #  renders text describing selected date range and
+    #  if NA are included also
+    content_summary = function(id) {
+      selected <- format(self$get_selected(), "%Y-%m-%d %H:%M:%S")
+      min <- selected[1]
+      max <- selected[2]
+      tagList(
+        tags$span(paste0(min, " - ", max)),
+        if (self$get_keep_na()) tags$span("NA") else NULL
       )
     }
   )

@@ -12,7 +12,10 @@ testthat::test_that("check_ellipsis with extra unamed arguments", {
 })
 
 testthat::test_that("check_ellipsis with extra named arguments", {
-  testthat::expect_error(method(a = 1, b = 2, c = 5, d = 6), "2 total unused argument\\(s\\)\\. 2 with name\\(s\\): c, d\\.")
+  testthat::expect_error(
+    method(a = 1, b = 2, c = 5, d = 6),
+    "2 total unused argument\\(s\\)\\. 2 with name\\(s\\): c, d\\."
+  )
   testthat::expect_warning(
     method(a = 1, b = 2, c = 5, d = 6, stop = FALSE),
     "2 total unused argument\\(s\\)\\. 2 with name\\(s\\): c, d\\."
@@ -58,4 +61,3 @@ testthat::test_that("check_ellipsis with allowed args", {
   testthat::expect_silent(method(a = 1, b = 2, 3, z = 5, y = 4, allowed_args = c("", "z", "y")))
   testthat::expect_silent(method(a = 1, b = 2, allowed_args = c("", "z", "y")))
 })
-

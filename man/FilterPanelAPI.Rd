@@ -36,7 +36,7 @@ isolate(
 isolate(fpa$get_filter_state())
 
 # remove all_filter_states
-fpa$remove_all_filter_states()
+fpa$clear_filter_states()
 
 # get the actual filter state --> empty named list
 isolate(fpa$get_filter_state())
@@ -49,7 +49,7 @@ isolate(fpa$get_filter_state())
 \item \href{#method-FilterPanelAPI-get_filter_state}{\code{FilterPanelAPI$get_filter_state()}}
 \item \href{#method-FilterPanelAPI-set_filter_state}{\code{FilterPanelAPI$set_filter_state()}}
 \item \href{#method-FilterPanelAPI-remove_filter_state}{\code{FilterPanelAPI$remove_filter_state()}}
-\item \href{#method-FilterPanelAPI-remove_all_filter_states}{\code{FilterPanelAPI$remove_all_filter_states()}}
+\item \href{#method-FilterPanelAPI-clear_filter_states}{\code{FilterPanelAPI$clear_filter_states()}}
 \item \href{#method-FilterPanelAPI-filter_panel_toggle}{\code{FilterPanelAPI$filter_panel_toggle()}}
 \item \href{#method-FilterPanelAPI-clone}{\code{FilterPanelAPI$clone()}}
 }
@@ -130,12 +130,12 @@ nested list of filter selections applied to datasets.}
 }
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-FilterPanelAPI-remove_all_filter_states"></a>}}
-\if{latex}{\out{\hypertarget{method-FilterPanelAPI-remove_all_filter_states}{}}}
-\subsection{Method \code{remove_all_filter_states()}}{
+\if{html}{\out{<a id="method-FilterPanelAPI-clear_filter_states"></a>}}
+\if{latex}{\out{\hypertarget{method-FilterPanelAPI-clear_filter_states}{}}}
+\subsection{Method \code{clear_filter_states()}}{
 Remove all \code{FilterStates} of the \code{FilteredData} object.
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{FilterPanelAPI$remove_all_filter_states(datanames)}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{FilterPanelAPI$clear_filter_states(datanames)}\if{html}{\out{</div>}}
 }
 
 \subsection{Arguments}{
