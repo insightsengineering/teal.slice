@@ -118,16 +118,10 @@ print.teal_slice <- function(x) {
 #'
 filter_settings <- function(
     ...,
-    slices,
     exclude = list(),
     count_type = c("none", "all", "hierarchical")
 ) {
-  slices <-
-    if (missing(slices)) {
-      list(...)
-    } else {
-      slices <- c(list(...), slices)
-    }
+  slices <- list(...)
   checkmate::assert_list(slices, types = "teal_slice", any.missing = FALSE)
   checkmate::assert_list(exclude, names = "named", types = "character")
   count_type <- match.arg(count_type)
@@ -148,7 +142,7 @@ c.teal_slices <- function(...) {
   count_types <- unique(unlist(count_types))
   checkmate::assert_string(count_types)
 
-  filter_settings(slices = unlist(x, recursive = FALSE), exclude = excludes, count_type = count_types)
+  do.call(filter_settings, c(unlist(x, recursive = FALSE), list(exclude = excludes, count_type = count_types)))
 }
 
 is.teal_slice <- function(x) {
