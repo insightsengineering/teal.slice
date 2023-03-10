@@ -19,9 +19,9 @@
 #' Object of class `teal_slice`, which is a named list.
 #'
 #' @examples
-#' filter_one <- filter_var("dataname1", "varname1", letters, "b", "characters", FALSE, extra1 = "extraone")
-#' filter_two <- filter_var("dataname1", "varname2", 1:10, 2, "integers", TRUE, FALSE, extra2 = "extratwo")
-#' filter_three <- filter_var("dataname2", "varname3", 1:10/10, 0.2, "doubles", TRUE, FALSE, extra1 = "extraone", extra2 = "extratwo")
+#' filter_one <- filter_var("dataname1", "varname1", letters, "b", FALSE, extra1 = "extraone")
+#' filter_two <- filter_var("dataname1", "varname2", 1:10, 2, TRUE, FALSE, extra2 = "extratwo")
+#' filter_three <- filter_var("dataname2", "varname3", 1:10/10, 0.2, TRUE, FALSE, extra1 = "extraone", extra2 = "extratwo")
 #'
 #' @export
 #' @rdname new_api
@@ -175,9 +175,9 @@ is.teal_slices <- function(x) {
 }
 
 
-filter_one <- filter_var("dataname1", "varname1", letters, "b", "characters", FALSE, extra1 = "extraone")
-filter_two <- filter_var("dataname1", "varname2", 1:10, 2, "integers", TRUE, FALSE, extra2 = "extratwo")
-filter_three <- filter_var("dataname2", "varname3", 1:10/10, 0.2, "doubles", TRUE, FALSE, extra1 = "extraone", extra2 = "extratwo")
+filter_one <- filter_var("dataname1", "varname1", letters, "b", FALSE, extra1 = "extraone")
+filter_two <- filter_var("dataname1", "varname2", 1:10, 2, TRUE, FALSE, extra2 = "extratwo")
+filter_three <- filter_var("dataname2", "varname3", 1:10/10, 0.2, TRUE, FALSE, extra1 = "extraone", extra2 = "extratwo")
 
 all_filters <- filter_settings(
   filter_one,
