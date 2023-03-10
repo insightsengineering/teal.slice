@@ -256,7 +256,6 @@ InteractiveFilterState <- R6::R6Class( # nolint
         varname = private$varname,
         choices = unlist(private$choices, use.names = FALSE),
         selected = private$selected(),
-        varlabel = private$varlabel,
         keep_na = if (!is.null(private$keep_na)) private$keep_na() else NULL,
         keep_inf = if (!is.null(private$keep_inf)) private$keep_inf() else NULL,
         fixed = private$fixed
