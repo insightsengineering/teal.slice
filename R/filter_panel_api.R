@@ -139,7 +139,7 @@ set_filter_state <- function(datasets, filter) {
     checkmate::check_list(filter, min.len = 0, null.ok = TRUE),
     checkmate::assert_class(filter, "teal_slices")
   )
-  if (inherits(filter, "teal_slices")) {
+  if (is.teal_slices(filter)) {
     # identify datasets
     # send appropriate teal_slice objects
   } else {

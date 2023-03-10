@@ -121,7 +121,7 @@ FilteredDataset <- R6::R6Class( # nolint
     },
 
     #' @description
-    #' Gets states of all active `FilterState` objects.
+    #' Gets states of all active `FilterState` objects
     #'
     #' @return A `teal_slices` object.
     #'
@@ -141,9 +141,8 @@ FilteredDataset <- R6::R6Class( # nolint
     },
 
     #' @description
-    #' Get name of the dataset
+    #' Gets the name of the dataset
     #'
-    #' Get name of the dataset
     #' @return `character(1)` as a name of this dataset
     get_dataname = function() {
       private$dataname
@@ -153,8 +152,8 @@ FilteredDataset <- R6::R6Class( # nolint
     #' Gets the dataset object in this `FilteredDataset`
     #' @param filtered (`logical(1)`)\cr
     #'
-    #' @return `data.frame` or `MultiAssayExperiment` as a raw data
-    #'  or as a reactive with filter applied
+    #' @return `data.frame` or `MultiAssayExperiment`, either raw
+    #'  or as a reactive with current filters applied
     #'
     get_dataset = function(filtered = FALSE) {
       if (filtered) {
@@ -218,7 +217,7 @@ FilteredDataset <- R6::R6Class( # nolint
         private$get_filter_states(),
         function(x) x$set_filterable_varnames(varnames)
       )
-      return(invisible(self))
+      invisible(self)
     },
 
     # modules ------

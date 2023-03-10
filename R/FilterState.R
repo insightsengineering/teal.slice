@@ -50,22 +50,33 @@ FilterState <- R6::R6Class( # nolint
     #' @param x (`vector`)\cr
     #'   values of the variable used in filter
     #' @param x_reactive (`reactive`)\cr
-    #'   a `reactive` returning a filtered vector or returning `NULL`. It is used to update
-    #'   counts following the change in values of the filtered dataset. If the `reactive`
-    #'   is `NULL` counts based on filtered dataset are not shown.
-    #' @param varname (`character`)\cr
-    #'   name of the variable
-    #' @param varlabel (`character(1)`)\cr
-    #'   label of the variable (optional).
+    #'   returning vector of the same type as `x`. Is used to update
+    #'   counts following the change in values of the filtered dataset.
+    #'   If it is set to `reactive(NULL)` then counts based on filtered
+    #'   dataset are not shown.
     #' @param dataname (`character(1)`)\cr
-    #'   name of dataset where `x` is taken from. Must be specified if `extract_type` argument
-    #'   is not empty.
+    #'   optional name of dataset where `x` is taken from. Must be specified
+    #'   if `extract_type` argument is not empty.
+    #' @param varname (`character(1)`)\cr
+    #'   name of the variable.
+    #' @param choices (`atomic`, `NULL`)\cr
+    #'   vector specifying allowed selection values
+    #' @param selected (`atomic`, `NULL`)\cr
+    #'   vector specifying selection
+    #' @param varlabel (`character(0)`, `character(1)`)\cr
+    #'   label of the variable (optional)
+    #' @param keep_na (`logical(1)`, `NULL`)\cr
+    #'   flag specifying whether to keep missing values
+    #' @param keep_inf (`logical(1)`, `NULL`)\cr
+    #'   flag specifying whether to keep infinite values
+    #' @param fixed (`logical(1)`)\cr
+    #'   flag specifying whether the `FilterState` is initiated fixed
     #' @param extract_type (`character(0)`, `character(1)`)\cr
     #' whether condition calls should be prefixed by dataname. Possible values:
     #' \itemize{
     #' \item{`character(0)` (default)}{ `varname` in the condition call will not be prefixed}
     #' \item{`"list"`}{ `varname` in the condition call will be returned as `<dataname>$<varname>`}
-    #' \item{`"matrix"`}{ `varname` in the condition call will be returned as `<dataname>[, "<varname>"]`}
+    #' \item{`"matrix"`}{ `varname` in the condition call will be returned as `<dataname>[, <varname>]`}
     #' }
     #'
     #' @return self invisibly
@@ -78,6 +89,7 @@ FilterState <- R6::R6Class( # nolint
                           selected = NULL,
                           varlabel = character(0),
                           keep_na = NULL,
+                          keep_inf = NULL,
                           fixed = FALSE,
                           extract_type = character(0)) {
       checkmate::assert_class(x_reactive, "reactive")
@@ -357,6 +369,9 @@ FilterState <- R6::R6Class( # nolint
       if (inherits(state, "teal_slice")) {
         if (!is.null(state$selected)) {
           self$set_selected(state$selected)
+        }
+        if (!is.null(state$varlabel)) {
+          private$varlabel <- state$varlabel
         }
         if (!is.null(state$keep_na)) {
           self$set_keep_na(state$keep_na)

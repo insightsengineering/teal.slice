@@ -4,12 +4,10 @@
 #' @examples
 #' library(shiny)
 #' ds <- teal.slice:::DefaultFilteredDataset$new(iris, "iris")
-#' isolate(
-#'   ds$set_filter_state(
-#'     state = list(
-#'       Species = list(selected = "virginica"),
-#'       Petal.Length = list(selected = c(2.0, 5))
-#'     )
+#' ds$set_filter_state(
+#'   filter_settings(
+#'     filter_var(dataname = "iris", varname = "Species", selected = "virginica")
+#'     filter_var(dataname = "iris", varname = "Petal.Length", selected = c(2.0, 5))
 #'   )
 #' )
 #' isolate(ds$get_filter_state())
@@ -160,17 +158,15 @@ DefaultFilteredDataset <- R6::R6Class( # nolint
     #' @description
     #' Set filter state
     #'
-    #' @param state (`named list`)\cr
-    #'  containing values of the initial filter. Values should be relevant
-    #'  to the referred column.
+    #' @param state (`teal_slice`) object
     #'
     #' @examples
     #' dataset <- teal.slice:::DefaultFilteredDataset$new(iris, "iris")
-    #' fs <- list(
-    #'   Sepal.Length = list(selected = c(5.1, 6.4), keep_na = TRUE, keep_inf = TRUE),
-    #'   Species = list(selected = c("setosa", "versicolor"), keep_na = FALSE)
+    #' fs <- filter_settings(
+    #'   filter_var(dataname = "iris", varname = "Species", selected = "virginica"),
+    #'   filter_var(dataname = "iris", varname = "Petal.Length", selected = c(2.0, 5))
     #' )
-    #' shiny::isolate(dataset$set_filter_state(state = fs))
+    #' dataset$set_filter_state(state = fs)
     #' shiny::isolate(dataset$get_filter_state())
     #'
     #' @return `NULL`

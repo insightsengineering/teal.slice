@@ -26,10 +26,13 @@
 #' data_date <- c(seq(from = dates[1], to = dates[2], length.out = 100), NA)
 #' filter_state_date <- DateFilterState$new(
 #'   x = data_date,
+#'   dataname = "data",
 #'   varname = "variable",
 #'   varlabel = "label"
 #' )
-#' filter_state_date$set_state(list(selected = data_date[c(47, 98)], keep_na = TRUE))
+#' filter_state_date$set_state(
+#'   filter_var("data", "variable", selected = data_date[c(47, 98)], keep_na = TRUE)
+#' )
 #'
 #' ui <- fluidPage(
 #'   useShinyjs(),
@@ -73,7 +76,9 @@
 #'   observeEvent(input$button4_date, filter_state_date$set_selected(dates))
 #'   observeEvent(
 #'     input$button0_date,
-#'     filter_state_date$set_state(list(selected = data_date[c(47, 98)], keep_na = TRUE))
+#'     filter_state_date$set_state(
+#'       filter_var("data", "variable", selected = data_date[c(47, 98)], keep_na = TRUE)
+#'     )
 #'   )
 #' }
 #'
@@ -95,15 +100,27 @@ DateFilterState <- R6::R6Class( # nolint
     #' @param x (`Date`)\cr
     #'   values of the variable used in filter
     #' @param x_reactive (`reactive`)\cr
-    #'   a `reactive` returning a filtered vector or returning `NULL`. Is used to update
-    #'   counts following the change in values of the filtered dataset. If the `reactive`
-    #'   is `NULL` counts based on filtered dataset are not shown.
-    #' @param varname (`character`, `name`)\cr
-    #'   name of the variable
-    #' @param varlabel (`character(1)`)\cr
-    #'   label of the variable (optional).
+    #'   returning vector of the same type as `x`. Is used to update
+    #'   counts following the change in values of the filtered dataset.
+    #'   If it is set to `reactive(NULL)` then counts based on filtered
+    #'   dataset are not shown.
     #' @param dataname (`character(1)`)\cr
-    #'   optional name of dataset where `x` is taken from
+    #'   optional name of dataset where `x` is taken from. Must be specified
+    #'   if `extract_type` argument is not empty.
+    #' @param varname (`character(1)`)\cr
+    #'   name of the variable.
+    #' @param choices (`atomic`, `NULL`)\cr
+    #'   vector specifying allowed selection values
+    #' @param selected (`atomic`, `NULL`)\cr
+    #'   vector specifying selection
+    #' @param varlabel (`character(0)`, `character(1)`)\cr
+    #'   label of the variable (optional)
+    #' @param keep_na (`logical(1)`, `NULL`)\cr
+    #'   flag specifying whether to keep missing values
+    #' @param keep_inf (`logical(1)`, `NULL`)\cr
+    #'   flag specifying whether to keep infinite values
+    #' @param fixed (`logical(1)`)\cr
+    #'   flag specifying whether the `FilterState` is initiated fixed
     #' @param extract_type (`character(0)`, `character(1)`)\cr
     #' whether condition calls should be prefixed by dataname. Possible values:
     #' \itemize{
@@ -119,6 +136,7 @@ DateFilterState <- R6::R6Class( # nolint
                           selected = NULL,
                           varlabel = character(0),
                           keep_na = NULL,
+                          keep_inf = NULL,
                           fixed = FALSE,
                           extract_type = character(0)) {
       stopifnot(is(x, "Date"))
@@ -133,6 +151,7 @@ DateFilterState <- R6::R6Class( # nolint
         selected = selected,
         varlabel = varlabel,
         keep_na = keep_na,
+        keep_inf = keep_inf,
         fixed = fixed,
         extract_type = extract_type)
 

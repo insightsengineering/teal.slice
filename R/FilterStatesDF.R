@@ -81,27 +81,31 @@
 #'   output$formatted_df <- renderText(filter_states_df$format())
 #'
 #'   observeEvent(input$button1_df, {
-#'     filter_state <- list(NUM1 = list(selected = c(0, 30)))
+#'     filter_state <- filter_settings(filter_var("dataset", "NUM1", selected = c(0, 30)))
 #'     filter_states_df$set_filter_state(state = filter_state)
 #'   })
 #'   observeEvent(input$button2_df, {
-#'     filter_state <- list(NUM2 = list(selected = c(20, 21)))
+#'     filter_state <- filter_settings(filter_var("dataset", "NUM2", selected = c(20, 21)))
 #'     filter_states_df$set_filter_state(state = filter_state)
 #'   })
 #'   observeEvent(input$button3_df, {
-#'     filter_state <- list(CHAR1 = list(selected = c("B", "C", "D")))
+#'     filter_state <- filter_settings(filter_var("dataset", "CHAR1", selected = c("B", "C", "D")))
 #'     filter_states_df$set_filter_state(state = filter_state)
 #'   })
 #'   observeEvent(input$button4_df, {
-#'     filter_state <- list(CHAR2 = list(selected = "F"))
+#'     filter_state <- filter_settings(filter_var("dataset", "CHAR2", selected = c("F")))
 #'     filter_states_df$set_filter_state(state = filter_state)
 #'   })
 #'   observeEvent(input$button5_df, {
-#'     filter_state <- list(DATE = list(selected = c("2020-01-01", "2020-02-02")))
+#'     filter_state <- filter_settings(
+#'       filter_var("dataset", "DATE", selected = c("2020-01-01", "2020-02-02"))
+#'     )
 #'     filter_states_df$set_filter_state(state = filter_state)
 #'   })
 #'   observeEvent(input$button6_df, {
-#'     filter_state <- list(DATETIME = list(selected = as.POSIXct(c("2020-01-01", "2020-02-02"))))
+#'     filter_state <- filter_settings(
+#'       filter_var("dataset", "DATETIME", selected = as.POSIXct(c("2020-01-01", "2020-02-02")))
+#'     )
 #'     filter_states_df$set_filter_state(state = filter_state)
 #'   })
 #'   observeEvent(input$button7_df, filter_states_df$remove_filter_state(state_id = "NUM1"))
@@ -134,23 +138,22 @@ DFFilterStates <- R6::R6Class( # nolint
     #'
     #' @param data (`data.frame`)\cr
     #'   the R object which `dplyr::filter` function is applied on.
-    #'
     #' @param data_reactive (`function(sid)`)\cr
     #'   should return a `data.frame` object or `NULL`.
     #'   This object is needed for the `FilterState` counts being updated
     #'   on a change in filters. If function returns `NULL` then filtered counts are not shown.
     #'   Function has to have `sid` argument being a character.
-    #'
     #' @param dataname (`character`)\cr
     #'   name of the data used in the \emph{subset expression}
     #'   specified to the function argument attached to this `FilterStates`
-    #'
     #' @param datalabel (`character(0)` or `character(1)`)\cr
     #'   text label value
-    #'
     #' @param varlabels (`character`)\cr
-    #'   labels of the variables used in this object
-    #'
+    #'   labels of the variables used in this object.
+    #' @param excluded_varnames (`character`)\cr
+    #'   names of variables that can \strong{not} be filtered on.
+    #' @param count_type `character(1)`\cr
+    #'   specifying how observations are tallied.
     #' @param keys (`character`)\cr
     #'   key columns names
     #'
@@ -159,24 +162,15 @@ DFFilterStates <- R6::R6Class( # nolint
                           dataname,
                           datalabel = character(0),
                           varlabels = character(0),
-                          filterable_varnames = character(0),
-                          count_type = character(0),
+                          excluded_varnames = character(0),
+                          count_type = c("none", "all", "hierarchical"),
                           keys = character(0)) {
       checkmate::assert_function(data_reactive, args = "sid")
       checkmate::assert_data_frame(data)
-      super$initialize(data, data_reactive, dataname, datalabel)
+      super$initialize(data, data_reactive, dataname, datalabel, excluded_varnames, count_type)
       private$varlabels <- varlabels
       private$keys <- keys
-      if (identical(filterable_varnames, character(0))) {
-        self$set_filterable_varnames(colnames(data))
-      } else {
-        self$set_filterable_varnames(filterable_varnames)
-      }
-      if (identical(filterable_varnames, character(0))) {
-        private$count_type <- "none"
-      } else {
-        private$count_type <- count_type
-      }
+      self$set_filterable_varnames(colnames(data))
       private$state_list <- list(
         reactiveVal()
       )
@@ -267,9 +261,13 @@ DFFilterStates <- R6::R6Class( # nolint
     #'
     get_filter_state = function() {
       slices <- lapply(private$state_list_get(1L), function(x) x$get_state())
+      excluded_varnames <- structure(
+        list(setdiff(colnames(private$data), private$filterable_varnames)),
+        names = private$dataname)
+      excluded_varnames <- Filter(function(x) !identical(x, character(0)), excluded_varnames)
       filter_settings(
         slices = slices,
-        filterable = structure(list(private$filterable_varnames), names = private$dataname),
+        exclude = excluded_varnames,
         count_type = private$count_type
       )
     },
@@ -379,8 +377,6 @@ DFFilterStates <- R6::R6Class( # nolint
       }
     },
 
-    # shiny modules ----
-
     #' @description
     #' Set the allowed filterable variables
     #' @param varnames (`character` or `NULL`) The variables which can be filtered
@@ -389,13 +385,15 @@ DFFilterStates <- R6::R6Class( # nolint
     #' those which have filtering supported (i.e. are of the permitted types)
     #' are included.
     #'
-    #' @return invisibly this `FilteredDataset`
+    #' @return NULL invisibly
     set_filterable_varnames = function(varnames) {
       checkmate::assert_character(varnames, any.missing = FALSE, null.ok = TRUE)
       supported_vars <- get_supported_filter_varnames(private$data)
       private$filterable_varnames <- intersect(varnames, supported_vars)
-      return(invisible(self))
+      invisible(NULL)
     },
+
+    # shiny modules ----
 
     #' @description
     #' Shiny UI module to add filter variable.
