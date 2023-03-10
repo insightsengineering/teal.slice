@@ -266,7 +266,7 @@ DFFilterStates <- R6::R6Class( # nolint
         names = private$dataname)
       excluded_varnames <- Filter(function(x) !identical(x, character(0)), excluded_varnames)
 
-      do.call(filter_settings, c(slices, exclude = excluded_varnames, count_type = private$count_type))
+      do.call(filter_settings, c(slices, list(exclude = excluded_varnames, count_type = private$count_type)))
     },
 
     #' @description
