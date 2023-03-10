@@ -221,7 +221,7 @@ RangeFilterState <- R6::R6Class( # nolint
     is_any_filtered = function() {
       if (private$is_disabled()) {
         FALSE
-      } else if (private$choices_limited) {
+      } else if (private$is_choice_limited) {
         TRUE
       } else if (!isTRUE(all.equal(self$get_selected(), private$choices))) {
         TRUE
@@ -315,8 +315,8 @@ RangeFilterState <- R6::R6Class( # nolint
     #' @description
     #' Check whether the initial choices filter out some values of x and set the flag in case.
     #'
-    set_choices_limited = function(x, range) {
-      private$choices_limited <- (range[1] > min(x)) | (range[2] < max(x))
+    set_is_choice_limited = function(x, range) {
+      private$is_choice_limited <- (range[1] > min(x)) | (range[2] < max(x))
       invisible(NULL)
     },
 

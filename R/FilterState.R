@@ -463,7 +463,7 @@ FilterState <- R6::R6Class( # nolint
     dataname = character(0),
     varname = character(0),
     choices = NULL, # because each class has different choices type
-    is_choices_limited = FALSE, # flag whether number of possible choices was limited when specifying filter
+    is_choice_limited = FALSE, # flag whether number of possible choices was limited when specifying filter
     selected = NULL, # because it holds reactiveVal and each class has different choices type
     varlabel = character(0),
     keep_na = NULL, # reactiveVal logical(),
@@ -484,9 +484,9 @@ FilterState <- R6::R6Class( # nolint
     #' @description
     #' Check whether the initial choices filter out some values of x and set the flag in case.
     #'
-    set_choices_limited = function(x, choices = NULL) {
+    set_is_choice_limited = function(x, choices = NULL) {
       if (!is.null(choices)) {
-        private$choices_limited <- length(unique(choices[choices %in% x])) < length(unique(x))
+        private$is_choice_limited <- length(unique(choices[choices %in% x])) < length(unique(x))
       }
       invisible(NULL)
     },

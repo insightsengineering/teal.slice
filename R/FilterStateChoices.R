@@ -172,7 +172,7 @@ ChoicesFilterState <- R6::R6Class( # nolint
       private$set_choices(names(choices_table))
       self$set_selected(names(choices_table))
       private$set_choices_counts(unname(choices_table))
-      private$set_choices_limited(x, choices)
+      private$set_is_choice_limited(x, choices)
 
       return(invisible(self))
     },
@@ -183,7 +183,7 @@ ChoicesFilterState <- R6::R6Class( # nolint
     is_any_filtered = function() {
       if (private$is_disabled()) {
         FALSE
-      } else if (private$choices_limited) {
+      } else if (private$is_choice_limited) {
         TRUE
       } else if (!setequal(self$get_selected(), private$choices)) {
         TRUE

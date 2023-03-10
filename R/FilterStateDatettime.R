@@ -163,7 +163,7 @@ DatetimeFilterState <- R6::R6Class( # nolint
       private$set_choices(var_range)
       self$set_selected(var_range)
       if (!is.null(choices)) {
-        private$set_choices_limited(
+        private$set_is_choice_limited(
           as.POSIXct(trunc(x, units = "secs")),
           as.POSIXct(trunc(choices, units = "secs"))
         )
@@ -199,7 +199,7 @@ DatetimeFilterState <- R6::R6Class( # nolint
     is_any_filtered = function() {
       if (private$is_disabled()) {
         FALSE
-      } else if (private$choices_limited) {
+      } else if (private$is_choice_limited) {
         TRUE
       } else if (!setequal(self$get_selected(), private$choices)) {
         TRUE
