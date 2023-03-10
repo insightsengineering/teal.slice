@@ -10,7 +10,6 @@
 #'                type and size depends on variable type
 #' @param selected vector specifying selection;
 #'                 type and size depends on variable type
-#' @param varlabel `character(0-1)` optional variable label
 #' @param keep_na `logical(0-1)` optional logical flag specifying whether to keep missing values
 #' @param keep_inf `logical(0-1)` optional logical flag specifying whether to keep infinite values
 #' @param fixed `logical(1)` logical flag specifying whether to fix this filter state (i.e. forbid setting state)
@@ -32,7 +31,6 @@ filter_var <- function(
     varname,
     choices = NULL,
     selected = NULL,
-    varlabel = character(0),
     keep_na = NULL,
     keep_inf = NULL,
     fixed = FALSE,
@@ -56,7 +54,6 @@ filter_var <- function(
       stop("filter_var cannot handle \"choices\" of type: ", toString(class(choices)))
     }
   }
-  checkmate::assert_character(varlabel, max.len = 1L)
   checkmate::assert_flag(keep_na, null.ok = TRUE)
   checkmate::assert_flag(keep_inf, null.ok = TRUE)
   checkmate::assert_flag(fixed)
@@ -66,7 +63,6 @@ filter_var <- function(
     varname = varname,
     choices = choices,
     selected = selected,
-    varlabel = varlabel,
     keep_na = keep_na,
     keep_inf = keep_inf,
     fixed = fixed

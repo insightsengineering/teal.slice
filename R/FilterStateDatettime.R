@@ -101,6 +101,7 @@ DatetimeFilterState <- R6::R6Class( # nolint
     #' default. However, in case when using this module in `teal` app, one needs
     #' timezone of the app user. App user timezone is taken from `session$userData$timezone`
     #' and is set only if object is initialized in `shiny`.
+    #'
     #' @param x (`POSIXct` or `POSIXlt`)\cr
     #'   values of the variable used in filter
     #' @param x_reactive (`reactive`)\cr
@@ -117,14 +118,14 @@ DatetimeFilterState <- R6::R6Class( # nolint
     #'   vector specifying allowed selection values
     #' @param selected (`atomic`, `NULL`)\cr
     #'   vector specifying selection
-    #' @param varlabel (`character(0)`, `character(1)`)\cr
-    #'   label of the variable (optional)
     #' @param keep_na (`logical(1)`, `NULL`)\cr
     #'   flag specifying whether to keep missing values
     #' @param keep_inf (`logical(1)`, `NULL`)\cr
     #'   flag specifying whether to keep infinite values
     #' @param fixed (`logical(1)`)\cr
     #'   flag specifying whether the `FilterState` is initiated fixed
+    #' @param varlabel (`character(0)`, `character(1)`)\cr
+    #'   label of the variable (optional)
     #' @param extract_type (`character(0)`, `character(1)`)\cr
     #' whether condition calls should be prefixed by dataname. Possible values:
     #' \itemize{
@@ -132,16 +133,17 @@ DatetimeFilterState <- R6::R6Class( # nolint
     #' \item{`"list"`}{ `varname` in the condition call will be returned as `<dataname>$<varname>`}
     #' \item{`"matrix"`}{ `varname` in the condition call will be returned as `<dataname>[, <varname>]`}
     #' }
+    #'
     initialize = function(x,
                           x_reactive = reactive(NULL),
                           dataname,
                           varname,
                           choices = NULL,
                           selected = NULL,
-                          varlabel = character(0),
                           keep_na = NULL,
                           keep_inf = NULL,
                           fixed = FALSE,
+                          varlabel = character(0),
                           extract_type = character(0)) {
       checkmate::assert_multi_class(x, c("POSIXct", "POSIXlt"))
 

@@ -23,6 +23,7 @@ EmptyFilterState <- R6::R6Class( # nolint
 
   # public methods ----
   public = list(
+
     #' @description
     #' Initialize `EmptyFilterState` object.
     #'
@@ -42,14 +43,14 @@ EmptyFilterState <- R6::R6Class( # nolint
     #'   vector specifying allowed selection values
     #' @param selected (`atomic`, `NULL`)\cr
     #'   vector specifying selection
-    #' @param varlabel (`character(0)`, `character(1)`)\cr
-    #'   label of the variable (optional)
     #' @param keep_na (`logical(1)`, `NULL`)\cr
     #'   flag specifying whether to keep missing values
     #' @param keep_inf (`logical(1)`, `NULL`)\cr
     #'   flag specifying whether to keep infinite values
     #' @param fixed (`logical(1)`)\cr
     #'   flag specifying whether the `FilterState` is initiated fixed
+    #' @param varlabel (`character(0)`, `character(1)`)\cr
+    #'   label of the variable (optional)
     #' @param extract_type (`character(0)`, `character(1)`)\cr
     #' whether condition calls should be prefixed by dataname. Possible values:
     #' \itemize{
@@ -57,16 +58,17 @@ EmptyFilterState <- R6::R6Class( # nolint
     #' \item{`"list"`}{ `varname` in the condition call will be returned as `<dataname>$<varname>`}
     #' \item{`"matrix"`}{ `varname` in the condition call will be returned as `<dataname>[, <varname>]`}
     #' }
+    #'
     initialize = function(x,
                           x_reactive = reactive(NULL),
                           dataname,
                           varname,
                           choices = NULL,
                           selected = NULL,
-                          varlabel = character(0),
                           keep_na = NULL,
                           keep_inf = NULL,
                           fixed = FALSE,
+                          varlabel = character(0),
                           extract_type = character(0)) {
       super$initialize(
         x = x,

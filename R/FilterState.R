@@ -46,8 +46,10 @@ InteractiveFilterState <- R6::R6Class( # nolint
 
   # public methods ----
   public = list(
+
     #' @description
     #' Initialize a `InteractiveFilterState` object
+    #'
     #' @param x (`vector`)\cr
     #'   values of the variable used in filter
     #' @param x_reactive (`reactive`)\cr
@@ -64,14 +66,14 @@ InteractiveFilterState <- R6::R6Class( # nolint
     #'   vector specifying allowed selection values
     #' @param selected (`atomic`, `NULL`)\cr
     #'   vector specifying selection
-    #' @param varlabel (`character(0)`, `character(1)`)\cr
-    #'   label of the variable (optional)
     #' @param keep_na (`logical(1)`, `NULL`)\cr
     #'   flag specifying whether to keep missing values
     #' @param keep_inf (`logical(1)`, `NULL`)\cr
     #'   flag specifying whether to keep infinite values
     #' @param fixed (`logical(1)`)\cr
     #'   flag specifying whether the `FilterState` is initiated fixed
+    #' @param varlabel (`character(0)`, `character(1)`)\cr
+    #'   label of the variable (optional)
     #' @param extract_type (`character(0)`, `character(1)`)\cr
     #' whether condition calls should be prefixed by dataname. Possible values:
     #' \itemize{
@@ -88,10 +90,10 @@ InteractiveFilterState <- R6::R6Class( # nolint
                           varname,
                           choices = NULL,
                           selected = NULL,
-                          varlabel = character(0),
                           keep_na = NULL,
                           keep_inf = NULL,
                           fixed = FALSE,
+                          varlabel = character(0),
                           extract_type = character(0)) {
       checkmate::assert_class(x_reactive, "reactive")
       checkmate::assert_string(dataname)
@@ -370,9 +372,6 @@ InteractiveFilterState <- R6::R6Class( # nolint
       if (inherits(state, "teal_slice")) {
         if (!is.null(state$selected)) {
           self$set_selected(state$selected)
-        }
-        if (!is.null(state$varlabel)) {
-          private$varlabel <- state$varlabel
         }
         if (!is.null(state$keep_na)) {
           self$set_keep_na(state$keep_na)
