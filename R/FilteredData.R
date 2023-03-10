@@ -1050,7 +1050,6 @@ FilteredData <- R6::R6Class( # nolint
                   ""
                 )
               )
-
             }
             datasets_df <- datasets_df[, colnames(datasets_df) %in% c("dataname", "Obs", "Subjects")]
 
