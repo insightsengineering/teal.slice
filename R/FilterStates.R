@@ -598,8 +598,8 @@ FilterStates <- R6::R6Class( # nolint
             varname = x$varname,
             choices = x$choices,
             selected = x$selected,
-            varlabel = x$varlabel,
             keep_na = x$keep_na,
+            keep_inf = x$keep_inf,
             fixed = x$fixed,
             extract_type = extract_type
           )
