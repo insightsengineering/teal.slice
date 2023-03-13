@@ -149,7 +149,7 @@ is.teal_slice <- function(x) {
   y <- NextMethod("[")
   attributes(y) <- attributes(x)
   excludes <- unique(unlist(vapply(y, function(ts) ts[["dataname"]], character(1L))))
-  attr(y, "exclude") <- attr(x, "exclude")[excludes]
+  attr(y, "exclude") <- Filter(Negate(is.null), attr(x, "exclude")[excludes])
   y
 }
 
