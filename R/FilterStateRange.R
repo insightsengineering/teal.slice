@@ -392,7 +392,16 @@ RangeFilterState <- R6::R6Class( # nolint
     ui_inputs = function(id) {
       ns <- NS(id)
       tagList(
-        checkboxInput(ns("manual"), "Enter range manully"),
+        shinyWidgets::switchInput(
+          ns("manual"),
+          label = "Enter manually",
+          size = "small",
+          labelWidth = "100px",
+          onLabel = "Yes",
+          offLabel = "No",
+          onStatus = "info",
+          offStatus = "info"
+        ),
         conditionalPanel(
           ns = ns,
           condition = "input.manual == false",
