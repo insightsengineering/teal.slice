@@ -173,14 +173,23 @@ SEFilterStates <- R6::R6Class( # nolint
     #' `state_list` object (I.e. if `rowData` and `colData` exist). Each
     #' `list` contains elements number equal to number of active filter variables.
     get_filter_state = function() {
-      states <- sapply(
-        X = names(private$state_list),
-        simplify = FALSE,
-        function(x) {
-          lapply(private$state_list_get(state_list_index = x), function(xx) xx$get_state())
-        }
-      )
-      Filter(function(x) length(x) > 0, states)
+      slices_subset <- lapply(private$state_list$subset(), function(x) x$get_state())
+      slices_subset <- lapply(slices_subset, function(x) {
+        x$extras <- list(target = "subset")
+        x
+      })
+      slices_select <- lapply(private$state_list$select(), function(x) x$get_state())
+      slices_select <- lapply(slices_select, function(x) {
+        x$extras <- list(target = "subset")
+        x
+      })
+      slices <- c(slices_subset, slices_select)
+      excluded_varnames <- structure(
+        list(setdiff(colnames(private$data), private$filterable_varnames)),
+        names = private$dataname)
+      excluded_varnames <- Filter(function(x) !identical(x, character(0)), excluded_varnames)
+
+      do.call(filter_settings, c(slices, list(exclude = excluded_varnames, count_type = private$count_type)))
     },
 
     #' @description
@@ -193,29 +202,45 @@ SEFilterStates <- R6::R6Class( # nolint
     #'   the name of the column in `rowData(data)` and `colData(data)`.
     #' @return `NULL`
     set_filter_state = function(state) {
-      logger::log_trace("SEFilterState$set_filter_state initializing, dataname: { private$dataname }")
-      checkmate::assert_class(state, "list")
-      checkmate::assert_subset(names(state), c("subset", "select"))
+      if (is.teal_slices(state)) {
+        private$set_filter_state_impl(
+          state = extract_fun(state, extras$target == "subset"),
+          state_list_index = "subset",
+          data = SummarizedExperiment::rowData(private$data),
+          data_reactive = function(sid) SummarizedExperiment::rowData(private$data_reactive(sid))
+        )
+        private$set_filter_state_impl(
+          state = extract_fun(state, extras$target == "select"),
+          state_list_index = "select",
+          data = SummarizedExperiment::rowData(private$data),
+          data_reactive = function(sid) SummarizedExperiment::rowData(private$data_reactive(sid))
+        )
+        NULL
+      } else {
+        logger::log_trace("SEFilterState$set_filter_state initializing, dataname: { private$dataname }")
+        checkmate::assert_class(state, "list")
+        checkmate::assert_subset(names(state), c("subset", "select"))
 
-      data <- private$data
-      data_reactive <- private$data_reactive
+        data <- private$data
+        data_reactive <- private$data_reactive
 
-      private$set_filter_state_impl(
-        state = state$subset,
-        state_list_index = "subset",
-        data = SummarizedExperiment::rowData(data),
-        data_reactive = function(sid) SummarizedExperiment::rowData(data_reactive(sid))
-      )
+        private$set_filter_state_impl(
+          state = state$subset,
+          state_list_index = "subset",
+          data = SummarizedExperiment::rowData(data),
+          data_reactive = function(sid) SummarizedExperiment::rowData(data_reactive(sid))
+        )
 
-      private$set_filter_state_impl(
-        state = state$select,
-        state_list_index = "select",
-        data = SummarizedExperiment::colData(data),
-        data_reactive = function(sid) SummarizedExperiment::colData(data_reactive(sid))
-      )
+        private$set_filter_state_impl(
+          state = state$select,
+          state_list_index = "select",
+          data = SummarizedExperiment::colData(data),
+          data_reactive = function(sid) SummarizedExperiment::colData(data_reactive(sid))
+        )
 
-      logger::log_trace("SEFilterState$set_filter_state initialized, dataname: { private$dataname }")
-      NULL
+        logger::log_trace("SEFilterState$set_filter_state initialized, dataname: { private$dataname }")
+        NULL
+      }
     },
 
     #' @description Remove a variable from the `state_list` and its corresponding UI element.
