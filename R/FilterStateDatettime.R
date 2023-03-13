@@ -101,6 +101,7 @@ DatetimeFilterState <- R6::R6Class( # nolint
     #' default. However, in case when using this module in `teal` app, one needs
     #' timezone of the app user. App user timezone is taken from `session$userData$timezone`
     #' and is set only if object is initialized in `shiny`.
+    #'
     #' @param x (`POSIXct` or `POSIXlt`)\cr
     #'   values of the variable used in filter
     #' @param x_reactive (`reactive`)\cr
@@ -117,14 +118,14 @@ DatetimeFilterState <- R6::R6Class( # nolint
     #'   vector specifying allowed selection values
     #' @param selected (`atomic`, `NULL`)\cr
     #'   vector specifying selection
-    #' @param varlabel (`character(0)`, `character(1)`)\cr
-    #'   label of the variable (optional)
     #' @param keep_na (`logical(1)`, `NULL`)\cr
     #'   flag specifying whether to keep missing values
     #' @param keep_inf (`logical(1)`, `NULL`)\cr
     #'   flag specifying whether to keep infinite values
     #' @param fixed (`logical(1)`)\cr
     #'   flag specifying whether the `FilterState` is initiated fixed
+    #' @param varlabel (`character(0)`, `character(1)`)\cr
+    #'   label of the variable (optional)
     #' @param extract_type (`character(0)`, `character(1)`)\cr
     #' whether condition calls should be prefixed by dataname. Possible values:
     #' \itemize{
@@ -132,16 +133,17 @@ DatetimeFilterState <- R6::R6Class( # nolint
     #' \item{`"list"`}{ `varname` in the condition call will be returned as `<dataname>$<varname>`}
     #' \item{`"matrix"`}{ `varname` in the condition call will be returned as `<dataname>[, <varname>]`}
     #' }
+    #'
     initialize = function(x,
                           x_reactive = reactive(NULL),
                           dataname,
                           varname,
                           choices = c(min(x, na.rm = TRUE), max(x, na.rm = TRUE)),
                           selected = NULL,
-                          varlabel = character(0),
                           keep_na = NULL,
                           keep_inf = NULL,
                           fixed = FALSE,
+                          varlabel = character(0),
                           extract_type = character(0)) {
       checkmate::assert_multi_class(x, c("POSIXct", "POSIXlt"))
       checkmate::assert_class(x_reactive, 'reactive')
@@ -453,36 +455,60 @@ DatetimeFilterState <- R6::R6Class( # nolint
           )
 
 
-          private$observers$selection <- observeEvent(
+          private$observers$selection_start <- observeEvent(
             ignoreNULL = TRUE, # dates needs to be selected
             ignoreInit = TRUE, # ignoreInit: should not matter because we set the UI with the desired initial state
-            eventExpr = {
-              input$selection_start
-              input$selection_end
-            },
+            eventExpr = input$selection_start,
             handlerExpr = {
               start_date <- input$selection_start
-              end_date <- input$selection_end
+              end_date <- self$get_selected()[[2]]
               tzone <- Find(function(x) x != "", attr(as.POSIXlt(private$choices), "tzone"))
               attr(start_date, "tzone") <- tzone
+
+              if (start_date > end_date) {
+                showNotification(
+                  "Start date must not be greater than the end date. Ignoring selection.",
+                  type = "warning"
+                )
+                shinyWidgets::updateAirDateInput(
+                  session = session,
+                  inputId = "selection_start",
+                  value = self$get_selected()[1] # sets back to latest selected value
+                )
+                return(NULL)
+              }
+
+              self$set_selected(c(start_date, end_date))
+              logger::log_trace(sprintf(
+                "DatetimeFilterState$server@2 selection of variable %s changed, dataname: %s",
+                private$varname,
+                private$dataname
+              ))
+            }
+          )
+
+          private$observers$selection_end <- observeEvent(
+            ignoreNULL = TRUE, # dates needs to be selected
+            ignoreInit = TRUE, # ignoreInit: should not matter because we set the UI with the desired initial state
+            eventExpr = input$selection_end,
+            handlerExpr = {
+              start_date <- self$get_selected()[1]
+              end_date <- input$selection_end
+              tzone <- Find(function(x) x != "", attr(as.POSIXlt(private$choices), "tzone"))
               attr(end_date, "tzone") <- tzone
 
-              if (start_date < private$choices[1]) {
-                start_date <- private$choices[1]
+              if (start_date > end_date) {
+                showNotification(
+                  "End date must not be lower than the start date. Ignoring selection.",
+                  type = "warning"
+                )
+                shinyWidgets::updateAirDateInput(
+                  session = session,
+                  inputId = "selection_end",
+                  value = self$get_selected()[2] # sets back to latest selected value
+                )
+                return(NULL)
               }
-
-              if (end_date > private$choices[2]) {
-                end_date <- private$choices[2]
-              }
-
-              iv <- shinyvalidate::InputValidator$new()
-              iv$add_rule("selection_start", ~ if (
-                input$selection_start > input$selection_end
-              ) {
-                "Start date must not be greater than the end date."
-              })
-              iv$enable()
-              teal::validate_inputs(iv)
 
               self$set_selected(c(start_date, end_date))
               logger::log_trace(sprintf(

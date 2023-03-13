@@ -13,18 +13,18 @@
 #'   if `extract_type` argument is not empty.
 #' @param varname (`character(1)`)\cr
 #'   name of the variable.
-#' @param choices (`atomic`, `NULL`)\cr
+#' @param choices (`atomic`)\cr
 #'   vector specifying allowed selection values
 #' @param selected (`atomic`, `NULL`)\cr
 #'   vector specifying selection
-#' @param varlabel (`character(0)`, `character(1)`)\cr
-#'   label of the variable (optional)
 #' @param keep_na (`logical(1)`, `NULL`)\cr
 #'   flag specifying whether to keep missing values
 #' @param keep_inf (`logical(1)`, `NULL`)\cr
 #'   flag specifying whether to keep infinite values
 #' @param fixed (`logical(1)`)\cr
 #'   flag specifying whether the `FilterState` is initiated fixed
+#' @param varlabel (`character(0)`, `character(1)`)\cr
+#'   label of the variable (optional)
 #' @param extract_type (`character(0)`, `character(1)`)\cr
 #' whether condition calls should be prefixed by dataname. Possible values:
 #' \itemize{
@@ -32,6 +32,7 @@
 #' \item{`"list"`}{ `varname` in the condition call will be returned as `<dataname>$<varname>`}
 #' \item{`"matrix"`}{ `varname` in the condition call will be returned as `<dataname>[, <varname>]`}
 #' }
+#'
 #' @keywords internal
 #'
 #' @examples
@@ -67,12 +68,12 @@ init_filter_state <- function(x,
                               x_reactive = reactive(NULL),
                               dataname,
                               varname = attr(x, "label"),
-                              choices = NULL,
+                              choices = unique(na.omit(x)),
                               selected = NULL,
-                              varlabel = character(0),
                               keep_na = NULL,
                               keep_inf = NULL,
                               fixed = FALSE,
+                              varlabel = character(0),
                               extract_type = character(0)) {
   checkmate::assert_string(varname)
   checkmate::assert_character(varlabel, max.len = 1L, any.missing = FALSE, null.ok = TRUE)
@@ -113,12 +114,12 @@ init_filter_state.default <- function(x,
                                       x_reactive = reactive(NULL),
                                       dataname,
                                       varname = attr(x, "label"),
-                                      choices = NULL,
+                                      choices = unique(na.omit(x)),
                                       selected = NULL,
-                                      varlabel = character(0),
                                       keep_na = NULL,
                                       keep_inf = NULL,
                                       fixed = FALSE,
+                                      varlabel = character(0),
                                       extract_type = character(0)) {
   if (is.null(varlabel)) varlabel <- character(0)
 
@@ -145,12 +146,12 @@ init_filter_state.logical <- function(x,
                                       x_reactive = reactive(NULL),
                                       dataname,
                                       varname = attr(x, "label"),
-                                      choices = NULL,
+                                      choices = unique(na.omit(x)),
                                       selected = NULL,
-                                      varlabel = character(0),
                                       keep_na = NULL,
                                       keep_inf = NULL,
                                       fixed = FALSE,
+                                      varlabel = character(0),
                                       extract_type = character(0)) {
   if (is.null(varlabel)) varlabel <- character(0)
 
@@ -177,12 +178,12 @@ init_filter_state.numeric <- function(x,
                                       x_reactive = reactive(NULL),
                                       dataname,
                                       varname = attr(x, "label"),
-                                      choices = NULL,
+                                      choices = unique(na.omit(x)),
                                       selected = NULL,
-                                      varlabel = character(0),
                                       keep_na = NULL,
                                       keep_inf = NULL,
                                       fixed = FALSE,
+                                      varlabel = character(0),
                                       extract_type = character(0)) {
   if (is.null(varlabel)) varlabel <- character(0)
 
@@ -213,12 +214,12 @@ init_filter_state.factor <- function(x,
                                      x_reactive = reactive(NULL),
                                      dataname,
                                      varname = attr(x, "label"),
-                                     choices = NULL,
+                                     choices = unique(na.omit(x)),
                                      selected = NULL,
-                                     varlabel = character(0),
                                      keep_na = NULL,
                                      keep_inf = NULL,
                                      fixed = FALSE,
+                                     varlabel = character(0),
                                      extract_type = character(0)) {
   if (is.null(varlabel)) varlabel <- character(0)
 
@@ -245,12 +246,12 @@ init_filter_state.character <- function(x,
                                         x_reactive = reactive(NULL),
                                         dataname,
                                         varname = attr(x, "label"),
-                                        choices = NULL,
+                                        choices = unique(na.omit(x)),
                                         selected = NULL,
-                                        varlabel = character(0),
                                         keep_na = NULL,
                                         keep_inf = NULL,
                                         fixed = FALSE,
+                                        varlabel = character(0),
                                         extract_type = character(0)) {
   if (is.null(varlabel)) varlabel <- character(0)
 
@@ -277,12 +278,12 @@ init_filter_state.Date <- function(x,
                                    x_reactive = reactive(NULL),
                                    dataname,
                                    varname = attr(x, "label"),
-                                   choices = NULL,
+                                   choices = unique(na.omit(x)),
                                    selected = NULL,
-                                   varlabel = character(0),
                                    keep_na = NULL,
                                    keep_inf = NULL,
                                    fixed = FALSE,
+                                   varlabel = character(0),
                                    extract_type = character(0)) {
   if (is.null(varlabel)) varlabel <- character(0)
 
@@ -313,12 +314,12 @@ init_filter_state.POSIXct <- function(x,
                                       x_reactive = reactive(NULL),
                                       dataname,
                                       varname = attr(x, "label"),
-                                      choices = NULL,
+                                      choices = unique(na.omit(x)),
                                       selected = NULL,
-                                      varlabel = character(0),
                                       keep_na = NULL,
                                       keep_inf = NULL,
                                       fixed = FALSE,
+                                      varlabel = character(0),
                                       extract_type = character(0)) {
   if (is.null(varlabel)) varlabel <- character(0)
 
@@ -349,12 +350,12 @@ init_filter_state.POSIXlt <- function(x,
                                       x_reactive = reactive(NULL),
                                       dataname,
                                       varname = attr(x, "label"),
-                                      choices = NULL,
+                                      choices = unique(na.omit(x)),
                                       selected = NULL,
-                                      varlabel = character(0),
                                       keep_na = NULL,
                                       keep_inf = NULL,
                                       fixed = FALSE,
+                                      varlabel = character(0),
                                       extract_type = character(0)) {
   if (is.null(varlabel)) varlabel <- character(0)
 
@@ -431,8 +432,7 @@ check_in_range <- function(subinterval, range, pre_msg = "") {
 #'
 #' Raises an error message if not and says which elements are not in the allowed `choices`.
 #'
-#' @param subset `collection-like` should be a subset of the second argument `choices`
-#' @param choices `collection-like` superset
+#' @param subset,choices atomic vectors
 #' @param pre_msg `character` message to print before error should there be any errors
 #' @keywords internal
 #'
@@ -446,6 +446,8 @@ check_in_range <- function(subinterval, range, pre_msg = "") {
 #' }
 #' }
 check_in_subset <- function(subset, choices, pre_msg = "") {
+  checkmate::assert_atomic(subset)
+  checkmate::assert_atomic(choices)
   checkmate::assert_string(pre_msg)
 
   subset <- unique(subset)

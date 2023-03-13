@@ -45,6 +45,7 @@ FilterState <- R6::R6Class( # nolint
 
   # public methods ----
   public = list(
+
     #' @description
     #' Initialize a `FilterState` object
     #' @param x (`vector`)\cr
@@ -63,14 +64,14 @@ FilterState <- R6::R6Class( # nolint
     #'   vector specifying allowed selection values
     #' @param selected (`atomic`, `NULL`)\cr
     #'   vector specifying selection
-    #' @param varlabel (`character(0)`, `character(1)`)\cr
-    #'   label of the variable (optional)
     #' @param keep_na (`logical(1)`, `NULL`)\cr
     #'   flag specifying whether to keep missing values
     #' @param keep_inf (`logical(1)`, `NULL`)\cr
     #'   flag specifying whether to keep infinite values
     #' @param fixed (`logical(1)`)\cr
     #'   flag specifying whether the `FilterState` is initiated fixed
+    #' @param varlabel (`character(0)`, `character(1)`)\cr
+    #'   label of the variable (optional)
     #' @param extract_type (`character(0)`, `character(1)`)\cr
     #' whether condition calls should be prefixed by dataname. Possible values:
     #' \itemize{
@@ -87,10 +88,10 @@ FilterState <- R6::R6Class( # nolint
                           varname,
                           choices = unique(na.omit(x)),
                           selected = NULL,
-                          varlabel = character(0),
                           keep_na = NULL,
                           keep_inf = NULL,
                           fixed = FALSE,
+                          varlabel = character(0),
                           extract_type = character(0)) {
       checkmate::assert_class(x_reactive, "reactive")
       checkmate::assert_string(dataname)
@@ -251,9 +252,8 @@ FilterState <- R6::R6Class( # nolint
       args <- list(
         dataname = private$dataname,
         varname = private$varname,
-        choices = unlist(private$choices, use.names = FALSE),
+        choices = private$choices,
         selected = private$selected(),
-        varlabel = private$varlabel,
         keep_na = if (!is.null(private$keep_na)) private$keep_na() else NULL,
         keep_inf = if (!is.null(private$keep_inf)) private$keep_inf() else NULL,
         fixed = private$fixed
@@ -369,9 +369,6 @@ FilterState <- R6::R6Class( # nolint
       if (inherits(state, "teal_slice")) {
         if (!is.null(state$selected)) {
           self$set_selected(state$selected)
-        }
-        if (!is.null(state$varlabel)) {
-          private$varlabel <- state$varlabel
         }
         if (!is.null(state$keep_na)) {
           self$set_keep_na(state$keep_na)
