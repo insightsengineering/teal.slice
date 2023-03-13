@@ -525,6 +525,56 @@ RangeFilterState <- R6::R6Class( # nolint
             ignoreInit = TRUE, # ignoreInit: should not matter because we set the UI with the desired initial state
             eventExpr = input$selection_manual,
             handlerExpr = {
+              # 3 separate checks are required here to prevent errors
+              #
+              # if the user sets either input to 'e' it will return NA
+              # this NA would cause the lower > upper check to return NA
+              #  and the if(lower > upper) check would throw an error
+              #
+              # if lower > manual, contain_interval() will error because it
+              #  expects it's input to be sorted
+              if (any(is.na(input$selection_manual))) {
+                showNotification(
+                  "Numeric range values must be numbers.",
+                  type = "warning"
+                )
+                shinyWidgets::updateNumericRangeInput(
+                  session = session,
+                  inputId = "selection_manual",
+                  value = self$get_selected()
+                )
+                return(NULL)
+              }
+              if (input$selection_manual[1] > input$selection_manual[2]) {
+                showNotification(
+                  "Numeric range start value must be less than end value.",
+                  type = "warning"
+                )
+                shinyWidgets::updateNumericRangeInput(
+                  session = session,
+                  inputId = "selection_manual",
+                  value = self$get_selected()
+                )
+                return(NULL)
+              }
+              # all.equal not enough here b/c tolerance
+              # all.equal(0.000000001, 0) is TRUE
+              out_of_range <- isFALSE(identical(
+                input$selection_manual,
+                contain_interval(input$selection_manual, private$slider_ticks)
+              ))
+              if (out_of_range) {
+                showNotification(
+                  "Numeric range values should correspond to slider values.",
+                  type = "warning"
+                )
+                shinyWidgets::updateNumericRangeInput(
+                  session = session,
+                  inputId = "selection_manual",
+                  value = self$get_selected()
+                )
+                return(NULL)
+              }
               logger::log_trace(
                 sprintf(
                   "RangeFilterState$server@3 selection of variable %s changed, dataname: %s",
@@ -556,23 +606,26 @@ RangeFilterState <- R6::R6Class( # nolint
             )
           })
 
-          observeEvent(input$manual, {
-            if (input$manual) {
-              self$set_selected(input$selection)
-              shinyWidgets::updateNumericRangeInput(
-                session = session,
-                inputId = "selection_manual",
-                value = input$selection
-              )
-            } else {
-              self$set_selected(input$selection_manual)
-              updateSliderInput(
-                session = session,
-                inputId = "selection",
-                value = input$selection_manual
-              )
-            }
-          }, ignoreInit = TRUE)
+          observeEvent(input$manual,
+            {
+              if (input$manual) {
+                self$set_selected(input$selection)
+                shinyWidgets::updateNumericRangeInput(
+                  session = session,
+                  inputId = "selection_manual",
+                  value = input$selection
+                )
+              } else {
+                self$set_selected(input$selection_manual)
+                updateSliderInput(
+                  session = session,
+                  inputId = "selection",
+                  value = input$selection_manual
+                )
+              }
+            },
+            ignoreInit = TRUE
+          )
 
           logger::log_trace("RangeFilterState$server initialized, dataname: { private$dataname }")
           NULL
