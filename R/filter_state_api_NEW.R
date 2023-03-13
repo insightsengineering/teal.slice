@@ -204,3 +204,13 @@ extract_feat <- function(tss, feature) {
   lapply(tss, function(x) x[[feature]])
 }
 extract_feat(all_filters, "dataname")
+
+# get slices where logical predicate is TRUE
+extract_fun <- function(tss, expr) {
+  checkmate::assert_class(tss, "teal_slices")
+  expr <- substitute(expr)
+  checkmate::assert_class(expr, "call")
+  Filter(function(x) isTRUE(eval(expr, x)), tss)
+}
+extract_fun(all_filters, dataname == "dataname2")
+extract_fun(all_filters, extras$extra2 == "extratwo")
