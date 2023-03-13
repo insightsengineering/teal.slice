@@ -587,6 +587,12 @@ FilterStates <- R6::R6Class( # nolint
           sid <- sprintf("%s-%s-%s", state_list_index, x$varname, sample.int(size = 1L, n = .Machine$integer.max))
           fstate <- init_filter_state(
             x = data[, x$varname, drop = TRUE],
+            # data_reactive is a function which eventually calls get_call(sid).
+            # This chain of calls returns column from the data filtered by everything
+            # but filter identified by the sid argument. FilterState then get x_reactive
+            # and this no longer needs to be a function to pass sid. reactive in the FilterState
+            # is also beneficial as it can be cached and retriger filter counts only if
+            # returned vector is different.
             x_reactive = reactive(data_reactive(sid)[, x$varname, drop = TRUE]),
             dataname = x$dataname,
             varname = x$varname,

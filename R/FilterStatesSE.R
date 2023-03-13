@@ -34,14 +34,14 @@ SEFilterStates <- R6::R6Class( # nolint
                           data_reactive = function(sid = "") NULL,
                           dataname,
                           datalabel = character(0),
-                          exclude_varnames = character(0),
+                          excluded_varnames = character(0),
                           count_type = c("none", "all", "hierarchical")) {
       if (!requireNamespace("SummarizedExperiment", quietly = TRUE)) {
         stop("Cannot load SummarizedExperiment - please install the package or restart your session.")
       }
       checkmate::assert_function(data_reactive, args = "sid")
       checkmate::assert_class(data, "SummarizedExperiment")
-      super$initialize(data, data_reactive, dataname, datalabel, exclude_varnames, count_type)
+      super$initialize(data, data_reactive, dataname, datalabel, excluded_varnames, count_type)
       private$state_list <- list(
         subset = reactiveVal(),
         select = reactiveVal()

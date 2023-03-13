@@ -25,7 +25,7 @@ MAEFilterStates <- R6::R6Class( # nolint
     #'   text label value.
     #' @param varlabels (`character`)\cr
     #'   labels of the variables used in this object
-    #' @param exclude_varnames `named list` containing one character vector
+    #' @param excluded_varnames `named list` containing one character vector
     #'   of names of variables that can be filtered;
     #'   names of the list must match `dataname`
     #' @param count_type `character(1)`\cr

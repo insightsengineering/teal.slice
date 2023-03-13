@@ -34,11 +34,11 @@ MatrixFilterStates <- R6::R6Class( # nolint
                           data_reactive = function(sid = "") NULL,
                           dataname,
                           datalabel = character(0),
-                          exclude_varnames = character(0),
+                          excluded_varnames = character(0),
                           count_type = c("none", "all", "hierarchical")) {
       checkmate::assert_function(data_reactive, args = "sid")
       checkmate::assert_matrix(data)
-      super$initialize(data, data_reactive, dataname, datalabel, exclude_varnames, count_type)
+      super$initialize(data, data_reactive, dataname, datalabel, excluded_varnames, count_type)
       private$state_list <- list(
         subset = reactiveVal()
       )
