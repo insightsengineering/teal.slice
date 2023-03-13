@@ -115,7 +115,7 @@ InteractiveFilterState <- R6::R6Class( # nolint
         varlabel
       }
       private$selected <- reactiveVal(NULL)
-      private$keep_na <- reactiveVal(FALSE)
+      private$keep_na <- reactiveVal(keep_na)
       private$extract_type <- extract_type
       private$fixed <- fixed
       private$na_count <- sum(is.na(x))

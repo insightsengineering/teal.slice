@@ -160,7 +160,7 @@ RangeFilterState <- R6::R6Class( # nolint
         extract_type = extract_type)
 
       private$is_integer <- checkmate::test_integerish(x)
-      private$keep_inf <- reactiveVal(FALSE)
+      private$keep_inf <- reactiveVal(keep_inf)
       private$inf_filtered_count <- reactive(
         if (!is.null(private$x_reactive())) sum(is.infinite(private$x_reactive()))
       )
