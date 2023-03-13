@@ -366,7 +366,7 @@ testthat::test_that(
       varname = "x",
       dataname = "data",
       extract_type = character(0),
-      choices = c("B", "C", "D", "E", "F", "Z", "X", "Y")
+      choices = c("B", "C", "D", "E", "F")
     )
     testthat::expect_true(shiny::isolate(filter_state$is_any_filtered()))
     testthat::expect_true(shiny::isolate(filter_state$test_is_choice_limited()))

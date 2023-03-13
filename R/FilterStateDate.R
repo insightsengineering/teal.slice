@@ -135,7 +135,7 @@ DateFilterState <- R6::R6Class( # nolint
                           dataname,
                           varname,
                           choices = c(min(x, na.rm = TRUE), max(x, na.rm = TRUE)),
-                          selected = NULL,
+                          selected = choices,
                           keep_na = NULL,
                           keep_inf = NULL,
                           fixed = FALSE,
