@@ -157,8 +157,8 @@ ChoicesFilterState <- R6::R6Class( # nolint
         keep_na = keep_na,
         keep_inf = keep_inf,
         fixed = fixed,
-        extract_type = extract_type)
-
+        extract_type = extract_type
+      )
       private$data_class <- class(x)[1L]
       if (inherits(x, "POSIXt")) {
         private$tzone <- Find(function(x) x != "", attr(as.POSIXlt(x), "tzone"))
@@ -287,8 +287,9 @@ ChoicesFilterState <- R6::R6Class( # nolint
     #' @description
     #' Check whether the initial choices filter out some values of x and set the flag in case.
     #'
-    set_is_choice_limited = function(x, choices = NULL) {
-      private$is_choice_limited <- length(unique(choices[choices %in% x])) < length(unique(x))
+    set_is_choice_limited = function(xl, choices = NULL) {
+      xl <- xl[!is.na(xl)]
+      private$is_choice_limited <- length(unique(choices[choices %in% xl])) < length(unique(xl))
       invisible(NULL)
     },
     #' @description
