@@ -581,6 +581,8 @@ FilterStates <- R6::R6Class( # nolint
         checkmate::assert_multi_class(data, c("data.frame", "matrix", "DataFrame"))
         checkmate::assert_function(data_reactive, args = "sid")
 
+        if (length(state) == 0L) return(NULL)
+
         lapply(state, function(x) {
           # objects has random and unique sid attribute
           # which allows a reactive from below to find a right object in the state_list
