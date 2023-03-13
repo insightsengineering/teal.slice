@@ -10,7 +10,6 @@
 #'                type and size depends on variable type
 #' @param selected vector specifying selection;
 #'                 type and size depends on variable type
-#' @param varlabel `character(0-1)` optional variable label
 #' @param keep_na `logical(0-1)` optional logical flag specifying whether to keep missing values
 #' @param keep_inf `logical(0-1)` optional logical flag specifying whether to keep infinite values
 #' @param fixed `logical(1)` logical flag specifying whether to fix this filter state (i.e. forbid setting state)
@@ -20,9 +19,9 @@
 #' Object of class `teal_slice`, which is a named list.
 #'
 #' @examples
-#' filter_one <- filter_var("dataname1", "varname1", letters, "b", "characters", FALSE, extra1 = "extraone")
-#' filter_two <- filter_var("dataname1", "varname2", 1:10, 2, "integers", TRUE, FALSE, extra2 = "extratwo")
-#' filter_three <- filter_var("dataname2", "varname3", 1:10/10, 0.2, "doubles", TRUE, FALSE, extra1 = "extraone", extra2 = "extratwo")
+#' filter_one <- filter_var("dataname1", "varname1", letters, "b", FALSE, extra1 = "extraone")
+#' filter_two <- filter_var("dataname1", "varname2", 1:10, 2, TRUE, FALSE, extra2 = "extratwo")
+#' filter_three <- filter_var("dataname2", "varname3", 1:10/10, 0.2, TRUE, FALSE, extra1 = "extraone", extra2 = "extratwo")
 #'
 #' @export
 #' @rdname new_api
@@ -32,7 +31,6 @@ filter_var <- function(
     varname,
     choices = NULL,
     selected = NULL,
-    varlabel = character(0),
     keep_na = NULL,
     keep_inf = NULL,
     fixed = FALSE,
@@ -56,7 +54,6 @@ filter_var <- function(
       stop("filter_var cannot handle \"choices\" of type: ", toString(class(choices)))
     }
   }
-  checkmate::assert_character(varlabel, max.len = 1L)
   checkmate::assert_flag(keep_na, null.ok = TRUE)
   checkmate::assert_flag(keep_inf, null.ok = TRUE)
   checkmate::assert_flag(fixed)
@@ -66,7 +63,6 @@ filter_var <- function(
     varname = varname,
     choices = choices,
     selected = selected,
-    varlabel = varlabel,
     keep_na = keep_na,
     keep_inf = keep_inf,
     fixed = fixed
@@ -118,16 +114,10 @@ print.teal_slice <- function(x) {
 #'
 filter_settings <- function(
     ...,
-    slices,
     exclude = list(),
     count_type = c("none", "all", "hierarchical")
 ) {
-  slices <-
-    if (missing(slices)) {
-      list(...)
-    } else {
-      slices <- c(list(...), slices)
-    }
+  slices <- list(...)
   checkmate::assert_list(slices, types = "teal_slice", any.missing = FALSE)
   checkmate::assert_list(exclude, names = "named", types = "character")
   count_type <- match.arg(count_type)
@@ -148,7 +138,7 @@ c.teal_slices <- function(...) {
   count_types <- unique(unlist(count_types))
   checkmate::assert_string(count_types)
 
-  filter_settings(slices = unlist(x, recursive = FALSE), exclude = excludes, count_type = count_types)
+  do.call(filter_settings, c(unlist(x, recursive = FALSE), list(exclude = excludes, count_type = count_types)))
 }
 
 is.teal_slice <- function(x) {
@@ -185,9 +175,9 @@ is.teal_slices <- function(x) {
 }
 
 
-filter_one <- filter_var("dataname1", "varname1", letters, "b", "characters", FALSE, extra1 = "extraone")
-filter_two <- filter_var("dataname1", "varname2", 1:10, 2, "integers", TRUE, FALSE, extra2 = "extratwo")
-filter_three <- filter_var("dataname2", "varname3", 1:10/10, 0.2, "doubles", TRUE, FALSE, extra1 = "extraone", extra2 = "extratwo")
+filter_one <- filter_var("dataname1", "varname1", letters, "b", FALSE, extra1 = "extraone")
+filter_two <- filter_var("dataname1", "varname2", 1:10, 2, TRUE, FALSE, extra2 = "extratwo")
+filter_three <- filter_var("dataname2", "varname3", 1:10/10, 0.2, TRUE, FALSE, extra1 = "extraone", extra2 = "extratwo")
 
 all_filters <- filter_settings(
   filter_one,

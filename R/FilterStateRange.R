@@ -113,14 +113,14 @@ RangeFilterState <- R6::R6Class( # nolint
     #'   vector specifying allowed selection values
     #' @param selected (`atomic`, `NULL`)\cr
     #'   vector specifying selection
-    #' @param varlabel (`character(0)`, `character(1)`)\cr
-    #'   label of the variable (optional)
     #' @param keep_na (`logical(1)`, `NULL`)\cr
     #'   flag specifying whether to keep missing values
     #' @param keep_inf (`logical(1)`, `NULL`)\cr
     #'   flag specifying whether to keep infinite values
     #' @param fixed (`logical(1)`)\cr
     #'   flag specifying whether the `FilterState` is initiated fixed
+    #' @param varlabel (`character(0)`, `character(1)`)\cr
+    #'   label of the variable (optional)
     #' @param extract_type (`character(0)`, `character(1)`)\cr
     #' whether condition calls should be prefixed by dataname. Possible values:
     #' \itemize{
@@ -128,16 +128,17 @@ RangeFilterState <- R6::R6Class( # nolint
     #' \item{`"list"`}{ `varname` in the condition call will be returned as `<dataname>$<varname>`}
     #' \item{`"matrix"`}{ `varname` in the condition call will be returned as `<dataname>[, <varname>]`}
     #' }
+    #'
     initialize = function(x,
                           x_reactive = reactive(NULL),
                           dataname,
                           varname,
                           choices = NULL,
                           selected = NULL,
-                          varlabel = character(0),
                           keep_na = NULL,
                           keep_inf = NULL,
                           fixed = FALSE,
+                          varlabel = character(0),
                           extract_type = character(0)) {
       checkmate::assert_numeric(x, all.missing = FALSE)
       if (!any(is.finite(x))) stop("\"x\" contains no finite values")
@@ -282,6 +283,28 @@ RangeFilterState <- R6::R6Class( # nolint
           )
         )
       }
+    },
+
+    #' @description
+    #' Set state
+    #' @param state (`list`)\cr
+    #'  contains fields relevant for a specific class
+    #' \itemize{
+    #' \item{`selected`}{ defines initial selection}
+    #' \item{`keep_na` (`logical`)}{ defines whether to keep or remove `NA` values}
+    #' \item{`keep_inf` (`logical`)}{ defines whether to keep or remove `Inf` values}
+    #' }
+    set_state = function(state) {
+      if (inherits(state, "teal_slice")) {
+        super$set_state(state)
+      } else {
+        stopifnot(is.list(state) && all(names(state) %in% c("selected", "keep_na", "keep_inf")))
+        if (!is.null(state$keep_inf)) {
+          self$set_keep_inf(state$keep_inf)
+        }
+        super$set_state(state[names(state) %in% c("selected", "keep_na")])
+      }
+      invisible(NULL)
     },
 
     #' @description
