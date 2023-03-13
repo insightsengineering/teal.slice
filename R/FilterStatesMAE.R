@@ -38,7 +38,7 @@ MAEFilterStates <- R6::R6Class( # nolint
                           dataname,
                           datalabel = "subjects",
                           varlabels = character(0),
-                          exclude_varnames = character(0),
+                          excluded_varnames = character(0),
                           count_type = c("none", "all", "hierarchical"),
                           keys = character(0)) {
       if (!requireNamespace("MultiAssayExperiment", quietly = TRUE)) {
@@ -46,7 +46,7 @@ MAEFilterStates <- R6::R6Class( # nolint
       }
       checkmate::assert_function(data_reactive, args = "sid")
       checkmate::assert_class(data, "MultiAssayExperiment")
-      super$initialize(data, data_reactive, dataname, datalabel, exclude_varnames, count_type)
+      super$initialize(data, data_reactive, dataname, datalabel, excluded_varnames, count_type)
       private$keys <- keys
       private$varlabels <- varlabels
       private$state_list <- list(
