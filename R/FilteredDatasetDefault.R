@@ -178,8 +178,7 @@ DefaultFilteredDataset <- R6::R6Class( # nolint
         checkmate::check_class(state, "teal_slices")
       )
       if (is.teal_slices(state)) {
-        fs <- private$get_filter_states()[[1]]
-        fs$set_filter_state(state = state)
+        private$get_filter_states()[[1L]]$set_filter_state(state = state)
         NULL
       } else {
         warning(paste(
