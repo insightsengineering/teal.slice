@@ -171,7 +171,6 @@ ChoicesFilterState <- R6::R6Class( # nolint
       if (!is.factor(x)) {
         x <- factor(as.character(x), levels = as.character(sort(unique(x))))
       }
-      browser()
       x <- droplevels(x)
       choices_table <- table(x)
       private$set_choices(names(choices_table))
