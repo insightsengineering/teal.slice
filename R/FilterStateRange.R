@@ -404,7 +404,7 @@ RangeFilterState <- R6::R6Class( # nolint
         ),
         conditionalPanel(
           ns = ns,
-          condition = "input.manual == false",
+          condition = "input.manual === false",
           div(
             class = "choices_state",
             div(
