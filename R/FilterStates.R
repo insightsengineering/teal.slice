@@ -77,6 +77,7 @@ FilterStates <- R6::R6Class( # nolint
       checkmate::assert_character(datalabel, max.len = 1, any.missing = FALSE)
 
       private$dataname <- dataname
+      private$dataname_prefixed <- private$get_dataname_prefixed()
       private$datalabel <- datalabel
       private$data <- data
       private$data_reactive <- data_reactive
@@ -322,9 +323,14 @@ FilterStates <- R6::R6Class( # nolint
     ns = NULL, # shiny ns()
     observers = list(), # observers
     state_list = NULL, # list of `reactiveVal`s initialized by init methods of child classes,
-    count_type = character(0), # specifies how observation numbers are displayed in filter cards
+    count_type = character(0), # specifies how observation numbers are displayed in filter cards,
+    dataname_prefixed = character(0),
 
     # private methods ----
+
+    get_dataname_prefixed = function() {
+      private$dataname
+    },
 
     # Module to insert/remove `FilterState` UI
     #
@@ -604,6 +610,7 @@ FilterStates <- R6::R6Class( # nolint
             keep_inf = x$keep_inf,
             fixed = x$fixed,
             extras = x$extras,
+            dataname_prefixed = private$dataname_prefixed,
             extract_type = extract_type
           )
           attr(fstate, "sid") <- sid

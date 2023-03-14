@@ -142,6 +142,7 @@ DateFilterState <- R6::R6Class( # nolint
                           keep_inf = NULL,
                           fixed = FALSE,
                           extras = NULL,
+                          dataname_prefixed = character(0),
                           varlabel = character(0),
                           extract_type = character(0)) {
       stopifnot(is(x, "Date"))
@@ -158,6 +159,7 @@ DateFilterState <- R6::R6Class( # nolint
         keep_inf = keep_inf,
         fixed = fixed,
         extras = extras,
+        dataname_prefixed = dataname_prefixed,
         varlabel = varlabel,
         extract_type = extract_type)
 

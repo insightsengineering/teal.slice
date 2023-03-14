@@ -46,6 +46,7 @@ SEFilterStates <- R6::R6Class( # nolint
         subset = reactiveVal(),
         select = reactiveVal()
       )
+      private$dataname_prefixed <- private$get_dataname_prefixed()
     },
 
     #' @description
@@ -516,6 +517,13 @@ SEFilterStates <- R6::R6Class( # nolint
           NULL
         }
       )
+    }
+  ),
+
+  # private methods ----
+  private = list(
+    get_dataname_prefixed = function() {
+      sprintf('%s[["%s"]]', private$dataname, private$datalabel)
     }
   )
 )

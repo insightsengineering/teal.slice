@@ -96,6 +96,7 @@ InteractiveFilterState <- R6::R6Class( # nolint
                           keep_inf = NULL,
                           fixed = FALSE,
                           extras = NULL,
+                          dataname_prefixed = character(0),
                           varlabel = character(0),
                           extract_type = character(0)) {
       checkmate::assert_class(x_reactive, "reactive")
@@ -115,6 +116,7 @@ InteractiveFilterState <- R6::R6Class( # nolint
       private$keep_na <- reactiveVal(keep_na)
       private$extras <- extras
       private$fixed <- fixed
+      private$dataname_prefixed <- dataname_prefixed
       private$varlabel <-
         if (identical(varlabel, as.character(varname))) {
           # to not display duplicated label
@@ -480,6 +482,7 @@ InteractiveFilterState <- R6::R6Class( # nolint
     disabled = NULL, # reactiveVal holding a logical(1)
     cache = NULL, # cache state when filter disabled so we can later restore
     extract_type = character(0),
+    dataname_prefixed = character(0), # depends on encapsulating FilterStates object class
 
     # private methods ----
 
@@ -491,9 +494,9 @@ InteractiveFilterState <- R6::R6Class( # nolint
     get_varname_prefixed = function() {
       ans <-
         if (isTRUE(private$extract_type == "list")) {
-          sprintf("%s$%s", private$dataname, private$varname)
+          sprintf("%s$%s", private$dataname_prefixed, private$varname)
         } else if (isTRUE(private$extract_type == "matrix")) {
-          sprintf("%s[, \"%s\"]", private$dataname, private$varname)
+          sprintf("%s[, \"%s\"]", private$dataname_prefixed, private$varname)
         } else {
           private$varname
         }

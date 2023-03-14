@@ -53,7 +53,7 @@ MAEFilteredDataset <- R6::R6Class( # nolint
             filter_states = init_filter_states(
               data = dataset[[experiment_name]],
               data_reactive = data_reactive,
-              dataname = sprintf('%s[["%s"]]', dataname, experiment_name),
+              dataname = dataname,
               datalabel = experiment_name
             ),
             id = experiment_name
