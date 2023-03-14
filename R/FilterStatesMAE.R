@@ -137,7 +137,6 @@ MAEFilterStates <- R6::R6Class( # nolint
     #' @return `list` with elements number equal number of `FilterStates`.
     get_filter_state = function() {
       slices <- lapply(private$state_list$y(), function(x) x$get_state())
-      slices <- add_extras(slices, list(target = "y"))
       excluded_varnames <- structure(
         list(setdiff(colnames(SummarizedExperiment::colData(private$data)), private$filterable_varnames)),
         names = private$dataname)

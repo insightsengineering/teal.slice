@@ -174,9 +174,7 @@ SEFilterStates <- R6::R6Class( # nolint
     #' `list` contains elements number equal to number of active filter variables.
     get_filter_state = function() {
       slices_subset <- lapply(private$state_list$subset(), function(x) x$get_state())
-      slices_subset <- add_extras(slices_subset, list(target = "subset"))
       slices_select <- lapply(private$state_list$select(), function(x) x$get_state())
-      slices_select <- add_extras(slices_select, list(target = "select"))
       slices <- c(slices_subset, slices_select)
       excluded_varnames <- structure(
         list(setdiff(colnames(private$data), private$filterable_varnames)),
