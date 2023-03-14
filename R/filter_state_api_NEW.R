@@ -215,6 +215,17 @@ extract_fun <- function(tss, expr) {
 extract_fun(all_filters, dataname == "dataname2")
 extract_fun(all_filters, extras$extra2 == "extratwo")
 
+# string version
+extract_fun_s <- function(tss, expr) {
+  checkmate::assert_class(tss, "teal_slices")
+  checkmate::assert_string(expr)
+  expr <- str2lang(expr)
+  Filter(function(x) isTRUE(eval(expr, x)), tss)
+}
+extract_fun_s(all_filters, 'dataname == "dataname2"')
+x = "dataname2"
+extract_fun_s(all_filters, sprintf('dataname == "%s"', x))
+
 # add elements to extras in all slices
 add_extras <- function(tss, extras) {
   ans <- lapply(tss, function(ts) {
