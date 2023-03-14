@@ -113,6 +113,8 @@ LogicalFilterState <- R6::R6Class( # nolint
     #'   flag specifying whether to keep infinite values
     #' @param fixed (`logical(1)`)\cr
     #'   flag specifying whether the `FilterState` is initiated fixed
+    #' @param extras (`named list` or `NULL`) of `character` vectors\cr
+    #'   storing additional information on this filter state
     #' @param varlabel (`character(0)`, `character(1)`)\cr
     #'   label of the variable (optional)
     #' @param extract_type (`character(0)`, `character(1)`)\cr
@@ -132,6 +134,7 @@ LogicalFilterState <- R6::R6Class( # nolint
                           keep_na = NULL,
                           keep_inf = NULL,
                           fixed = FALSE,
+                          extras = NULL,
                           varlabel = character(0),
                           extract_type = character(0)) {
       stopifnot(is.logical(x))
@@ -142,10 +145,11 @@ LogicalFilterState <- R6::R6Class( # nolint
         varname = varname,
         choices = choices,
         selected = selected,
-        varlabel = varlabel,
         keep_na = keep_na,
         keep_inf = keep_inf,
         fixed = fixed,
+        extras = extras,
+        varlabel = varlabel,
         extract_type = extract_type)
       df <- as.factor(x)
       if (length(levels(df)) != 2) {

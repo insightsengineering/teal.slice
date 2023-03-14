@@ -603,6 +603,7 @@ FilterStates <- R6::R6Class( # nolint
             keep_na = x$keep_na,
             keep_inf = x$keep_inf,
             fixed = x$fixed,
+            extras = x$extras,
             extract_type = extract_type
           )
           attr(fstate, "sid") <- sid
