@@ -87,7 +87,7 @@ FilterState <- R6::R6Class( # nolint
                           dataname,
                           varname,
                           choices = unique(na.omit(x)),
-                          selected = choices,
+                          selected = NULL,
                           keep_na = NULL,
                           keep_inf = NULL,
                           fixed = FALSE,

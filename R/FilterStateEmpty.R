@@ -77,8 +77,6 @@ EmptyFilterState <- R6::R6Class( # nolint
         x_reactive = x_reactive,
         dataname = dataname,
         varname = varname,
-        choices = choices,
-        selected = selected,
         varlabel = varlabel,
         keep_na = keep_na,
         keep_inf = keep_inf,

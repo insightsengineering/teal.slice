@@ -134,7 +134,7 @@ ChoicesFilterState <- R6::R6Class( # nolint
                           dataname,
                           varname,
                           choices = unique(na.omit(x)),
-                          selected = choices,
+                          selected = NULL,
                           keep_na = NULL,
                           keep_inf = NULL,
                           fixed = FALSE,
@@ -153,14 +153,13 @@ ChoicesFilterState <- R6::R6Class( # nolint
         x_reactive = x_reactive,
         dataname = dataname,
         varname = varname,
-        choices = choices,
-        selected = selected,
         varlabel = varlabel,
         keep_na = keep_na,
         keep_inf = keep_inf,
         fixed = fixed,
         extract_type = extract_type
       )
+
       private$data_class <- class(x)[1L]
       if (inherits(x, "POSIXt")) {
         private$tzone <- Find(function(x) x != "", attr(as.POSIXlt(x), "tzone"))
@@ -172,6 +171,7 @@ ChoicesFilterState <- R6::R6Class( # nolint
       if (!is.factor(x)) {
         x <- factor(as.character(x), levels = as.character(sort(unique(x))))
       }
+      browser()
       x <- droplevels(x)
       choices_table <- table(x)
       private$set_choices(names(choices_table))
