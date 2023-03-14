@@ -236,7 +236,7 @@ LogicalFilterState <- R6::R6Class( # nolint
     #' @description
     #' Check whether the initial choices filter out some values of x and set the flag in case.
     #'
-    set_is_choice_limited = function(x, choices = NULL) {
+    set_is_choice_limited = function(xl, choices = NULL) {
       xl <- xl[!is.na(xl)]
       private$is_choice_limited <- length(unique(choices[choices %in% x])) < length(unique(x))
       invisible(NULL)
