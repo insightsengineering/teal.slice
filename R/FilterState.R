@@ -70,6 +70,8 @@ FilterState <- R6::R6Class( # nolint
     #'   flag specifying whether to keep infinite values
     #' @param fixed (`logical(1)`)\cr
     #'   flag specifying whether the `FilterState` is initiated fixed
+    #' @param extras (`named list` or `NULL`) of `character` vectors\cr
+    #'   storing additional information on this filter state
     #' @param varlabel (`character(0)`, `character(1)`)\cr
     #'   label of the variable (optional)
     #' @param extract_type (`character(0)`, `character(1)`)\cr
@@ -91,6 +93,8 @@ FilterState <- R6::R6Class( # nolint
                           keep_na = NULL,
                           keep_inf = NULL,
                           fixed = FALSE,
+                          extras = NULL,
+                          dataname_prefixed = character(0),
                           varlabel = character(0),
                           extract_type = character(0)) {
       checkmate::assert_class(x_reactive, "reactive")
@@ -106,16 +110,19 @@ FilterState <- R6::R6Class( # nolint
       }
       private$dataname <- dataname
       private$varname <- varname
-      private$varlabel <- if (identical(varlabel, as.character(varname))) {
-        # to not display duplicated label
-        character(0)
-      } else {
-        varlabel
-      }
       private$selected <- reactiveVal(NULL)
-      private$keep_na <- reactiveVal(FALSE)
-      private$extract_type <- extract_type
+      private$keep_na <- reactiveVal(keep_na)
+      private$extras <- extras
       private$fixed <- fixed
+      private$dataname_prefixed <- dataname_prefixed
+      private$varlabel <-
+        if (identical(varlabel, as.character(varname))) {
+          # to not display duplicated label
+          character(0)
+        } else {
+          varlabel
+        }
+      private$extract_type <- extract_type
       private$na_count <- sum(is.na(x))
       private$x_reactive <- x_reactive
       private$filtered_na_count <- reactive(
@@ -463,17 +470,18 @@ FilterState <- R6::R6Class( # nolint
     is_choice_limited = FALSE, # flag whether number of possible choices was limited when specifying filter
     selected = NULL, # because it holds reactiveVal and each class has different choices type
     varlabel = character(0),
-    keep_na = NULL, # reactiveVal logical(),
-    fixed = logical(0), # whether this filter state is fixed/locked
+    keep_na = NULL, # reactiveVal holding a logical(1),
+    fixed = logical(0), # logical flag whether this filter state is fixed/locked
     extras = list(), # additional information passed in teal_slice (product of filter_var)
-    na_rm = FALSE, # it's logical(1)
+    na_rm = FALSE, # logical(1)
     na_count = integer(0),
     filtered_na_count = NULL, # reactive containing the count of NA in the filtered dataset
-    observers = NULL, # here observers are stored
+    observers = NULL, # stores observers
     x_reactive = NULL, # reactive containing the filtered variable, used for updating counts and histograms
-    disabled = NULL, # reactiveVal returning logical
+    disabled = NULL, # reactiveVal holding a logical(1)
     cache = NULL, # cache state when filter disabled so we can later restore
-    extract_type = logical(0),
+    extract_type = character(0),
+    dataname_prefixed = character(0), # depends on encapsulating FilterStates object class
 
     # private methods ----
 
@@ -485,9 +493,9 @@ FilterState <- R6::R6Class( # nolint
     get_varname_prefixed = function() {
       ans <-
         if (isTRUE(private$extract_type == "list")) {
-          sprintf("%s$%s", private$dataname, private$varname)
+          sprintf("%s$%s", private$dataname_prefixed, private$varname)
         } else if (isTRUE(private$extract_type == "matrix")) {
-          sprintf("%s[, \"%s\"]", private$dataname, private$varname)
+          sprintf("%s[, \"%s\"]", private$dataname_prefixed, private$varname)
         } else {
           private$varname
         }

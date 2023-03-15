@@ -34,11 +34,11 @@ MatrixFilterStates <- R6::R6Class( # nolint
                           data_reactive = function(sid = "") NULL,
                           dataname,
                           datalabel = character(0),
-                          exclude_varnames = character(0),
+                          excluded_varnames = character(0),
                           count_type = c("none", "all", "hierarchical")) {
       checkmate::assert_function(data_reactive, args = "sid")
       checkmate::assert_matrix(data)
-      super$initialize(data, data_reactive, dataname, datalabel, exclude_varnames, count_type)
+      super$initialize(data, data_reactive, dataname, datalabel, excluded_varnames, count_type)
       private$state_list <- list(
         subset = reactiveVal()
       )
@@ -115,7 +115,14 @@ MatrixFilterStates <- R6::R6Class( # nolint
     #'
     #' @return `list` containing `list` with selected values for each `FilterState`.
     get_filter_state = function() {
-      lapply(private$state_list_get(state_list_index = "subset"), function(x) x$get_state())
+      slices <- lapply(private$state_list_get("subset"), function(x) x$get_state())
+      excluded_varnames <- structure(
+        list(setdiff(colnames(private$data), private$filterable_varnames)),
+        names = private$dataname)
+      excluded_varnames <- Filter(function(x) !identical(x, character(0)), excluded_varnames)
+
+      do.call(filter_settings, c(slices, list(exclude = excluded_varnames, count_type = private$count_type)))
+
     },
 
     #' @description
@@ -127,22 +134,33 @@ MatrixFilterStates <- R6::R6Class( # nolint
     #'   column in `data`.
     #' @return `NULL`
     set_filter_state = function(state) {
-      logger::log_trace("MatrixFilterState$set_filter_state initializing, dataname: { private$dataname }")
-      checkmate::assert_list(state, null.ok = TRUE, names = "named")
+      if (is.teal_slices(state)) {
+        private$set_filter_state_impl(
+          state = state,
+          state_list_index = "subset",
+          data = private$data,
+          data_reactive = private$data_reactive,
+          extract_type = "matrix"
+        )
+        NULL
+      } else {
+        logger::log_trace("MatrixFilterState$set_filter_state initializing, dataname: { private$dataname }")
+        checkmate::assert_list(state, null.ok = TRUE, names = "named")
 
-      data <- private$data
-      data_reactive <- private$data_reactive
+        data <- private$data
+        data_reactive <- private$data_reactive
 
-      private$set_filter_state_impl(
-        state = state,
-        state_list_index = "subset",
-        data = data,
-        data_reactive = data_reactive,
-        extract_type = "matrix"
-      )
+        private$set_filter_state_impl(
+          state = state,
+          state_list_index = "subset",
+          data = data,
+          data_reactive = data_reactive,
+          extract_type = "matrix"
+        )
 
-      logger::log_trace("MatrixFilterState$set_filter_state initialized, dataname: { private$dataname }")
+        logger::log_trace("MatrixFilterState$set_filter_state initialized, dataname: { private$dataname }")
       NULL
+      }
     },
 
     #' @description Remove a variable from the `state_list` and its corresponding UI element.

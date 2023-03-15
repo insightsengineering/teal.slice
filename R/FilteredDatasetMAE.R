@@ -53,7 +53,7 @@ MAEFilteredDataset <- R6::R6Class( # nolint
             filter_states = init_filter_states(
               data = dataset[[experiment_name]],
               data_reactive = data_reactive,
-              dataname = sprintf('%s[["%s"]]', dataname, experiment_name),
+              dataname = dataname,
               datalabel = experiment_name
             ),
             id = experiment_name
@@ -89,28 +89,39 @@ MAEFilteredDataset <- R6::R6Class( # nolint
     #' @return `NULL`
     #'
     set_filter_state = function(state) {
-      checkmate::assert_list(state)
-      checkmate::assert_subset(names(state), c(names(private$get_filter_states())))
+      if (is.teal_slices(state)) {
+        # determine target datalabels (defined in teal_slices)
+        datalabels <- unique(unlist(lapply(extract_feat(state, "extras"), function(x) x$datalabel)))
+        # set states on state_lists with corresponding datalabels
+        lapply(datalabels, function(x) {
+          private$get_filter_states()[[x]]$set_filter_state(
+            extract_fun_s(state, sprintf("extras$datalabel == %s", dQuote(x, q = FALSE)))
+          )
+        })
+      } else {
+        checkmate::assert_list(state)
+        checkmate::assert_subset(names(state), c(names(private$get_filter_states())))
 
-      logger::log_trace(
-        sprintf(
-          "MAEFilteredDataset$set_filter_state setting up filters of variable %s, dataname: %s",
-          paste(names(state), collapse = ", "),
-          self$get_dataname()
+        logger::log_trace(
+          sprintf(
+            "MAEFilteredDataset$set_filter_state setting up filters of variable %s, dataname: %s",
+            paste(names(state), collapse = ", "),
+            self$get_dataname()
+          )
         )
-      )
-      lapply(names(state), function(fs_name) {
-        fs <- private$get_filter_states()[[fs_name]]
-        fs$set_filter_state(state = state[[fs_name]])
-      })
+        lapply(names(state), function(fs_name) {
+          fs <- private$get_filter_states()[[fs_name]]
+          fs$set_filter_state(state = state[[fs_name]])
+        })
 
-      logger::log_trace(
-        sprintf(
-          "MAEFilteredDataset$set_filter_state done setting filters of variable %s, dataname: %s",
-          paste(names(state), collapse = ", "),
-          self$get_dataname()
+        logger::log_trace(
+          sprintf(
+            "MAEFilteredDataset$set_filter_state done setting filters of variable %s, dataname: %s",
+            paste(names(state), collapse = ", "),
+            self$get_dataname()
+          )
         )
-      )
+      }
       NULL
     },
 

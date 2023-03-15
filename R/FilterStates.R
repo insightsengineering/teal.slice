@@ -77,6 +77,7 @@ FilterStates <- R6::R6Class( # nolint
       checkmate::assert_character(datalabel, max.len = 1, any.missing = FALSE)
 
       private$dataname <- dataname
+      private$dataname_prefixed <- private$get_dataname_prefixed()
       private$datalabel <- datalabel
       private$data <- data
       private$data_reactive <- data_reactive
@@ -322,9 +323,14 @@ FilterStates <- R6::R6Class( # nolint
     ns = NULL, # shiny ns()
     observers = list(), # observers
     state_list = NULL, # list of `reactiveVal`s initialized by init methods of child classes,
-    count_type = character(0), # specifies how observation numbers are displayed in filter cards
+    count_type = character(0), # specifies how observation numbers are displayed in filter cards,
+    dataname_prefixed = character(0),
 
     # private methods ----
+
+    get_dataname_prefixed = function() {
+      private$dataname
+    },
 
     # Module to insert/remove `FilterState` UI
     #
@@ -581,20 +587,30 @@ FilterStates <- R6::R6Class( # nolint
         checkmate::assert_multi_class(data, c("data.frame", "matrix", "DataFrame"))
         checkmate::assert_function(data_reactive, args = "sid")
 
+        if (length(state) == 0L) return(NULL)
+
         lapply(state, function(x) {
           # objects has random and unique sid attribute
           # which allows a reactive from below to find a right object in the state_list
           sid <- sprintf("%s-%s-%s", state_list_index, x$varname, sample.int(size = 1L, n = .Machine$integer.max))
           fstate <- init_filter_state(
             x = data[, x$varname, drop = TRUE],
+            # data_reactive is a function which eventually calls get_call(sid).
+            # This chain of calls returns column from the data filtered by everything
+            # but filter identified by the sid argument. FilterState then get x_reactive
+            # and this no longer needs to be a function to pass sid. reactive in the FilterState
+            # is also beneficial as it can be cached and retriger filter counts only if
+            # returned vector is different.
             x_reactive = reactive(data_reactive(sid)[, x$varname, drop = TRUE]),
             dataname = x$dataname,
             varname = x$varname,
             choices = x$choices,
             selected = x$selected,
-            varlabel = x$varlabel,
             keep_na = x$keep_na,
+            keep_inf = x$keep_inf,
             fixed = x$fixed,
+            extras = x$extras,
+            dataname_prefixed = private$dataname_prefixed,
             extract_type = extract_type
           )
           attr(fstate, "sid") <- sid
