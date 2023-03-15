@@ -508,42 +508,37 @@ FilteredData <- R6::R6Class( # nolint
     #'   filter_settings(
     #'     filter_var(dataname = "iris", varname = "Sepal.Length", selected = c(5.1, 6.4), keep_na = TRUE, keep_inf = FALSE),
     #'     filter_var(dataname = "iris", varname = "Species", selected = c("setosa", "versicolor"), keep_na = FALSE),
-    #'     filter_var(dataname = "mae", varname = "years_to_birth", selected = c(30, 50), keep_na = TRUE, keep_inf = FALSE, target = "subjects"),
-    #'     filter_var(dataname = "mae", varname = "vital_status", selected = "1", keep_na = FALSE, target = "subjects"),
-    #'     filter_var(dataname = "mae", varname = "gender", selected = "female", keep_na = TRUE, target = "subjects"),
+    #'     filter_var(dataname = "mae", varname = "years_to_birth", selected = c(30, 50), keep_na = TRUE, keep_inf = FALSE, datalabel = "subjects", target = "y"),
+    #'     filter_var(dataname = "mae", varname = "vital_status", selected = "1", keep_na = FALSE, datalabel = "subjects", target = "y"),
+    #'     filter_var(dataname = "mae", varname = "gender", selected = "female", keep_na = TRUE, datalabel = "subjects", target = "y"),
     #'     filter_var(dataname = "mae", varname = "ARRAY_TYPE", selected = "", keep_na = TRUE, experiment = "RPPAArray", target = "subset")
     #'   )
     #' shiny::isolate(datasets$set_filter_state(state = fs))
     #' shiny::isolate(datasets$get_filter_state())
     #'
     set_filter_state = function(state) {
-      if (is.teal_slices(state)) {
-        checkmate::assert_class(state, "teal_slices")
-        lapply(self$datanames(), function(x) {
-          relevant_slices <- extract_by_feat(state, "dataname", x)
-          private$get_filtered_dataset(x)$set_filter_state(relevant_slices)
-        })
-      } else {
+      if (!is.teal_slices(state)) {
         warning(paste(
           "From FilteredData:",
           "Specifying filters as lists is obsolete and will be deprecated in the next release.",
           "Please see ?set_filter_state and ?filter_settings for details."
         ),
         call. = FALSE)
-        checkmate::assert_subset(names(state), self$datanames())
-        lapply(names(state), function(dataname) {
-          logger::log_trace(
-            "FilteredData$set_filter_state initializing, dataname: { paste(names(state), collapse = ' ') }"
-          )
-
-          fdataset <- private$get_filtered_dataset(dataname = dataname)
-          dataset_state <- state[[dataname]]
-          fdataset$set_filter_state(state = dataset_state)
-        })
-        logger::log_trace(
-          "FilteredData$set_filter_state initialized, dataname: { paste(names(state), collapse = ' ') }"
-        )
+       state <- as.teal_slices(state)
       }
+      checkmate::assert_class(state, "teal_slices")
+      datanames <- unique(unlist(extract_feat(state, "dataname")))
+      checkmate::assert_subset(datanames, self$datanames())
+
+      lapply(datanames, function(x) {
+        logger::log_trace(
+          "FilteredData$set_filter_state initializing, dataname: {x}"
+        )
+        private$get_filtered_dataset(x)$set_filter_state(extract_by_feat(state, "dataname", x))
+        logger::log_trace(
+          "FilteredData$set_filter_state initialized, dataname: {x}"
+        )
+      })
 
       invisible(NULL)
     },

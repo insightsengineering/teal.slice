@@ -241,42 +241,110 @@ as.teal_slice <- function(x) {
   do.call(filter_var, x)
 }
 
-# convert list to teal_slice
-as.teal_slices <- function(x, master) {
-  varnames <- lapply(x, names)
-  selecteds <- unlist(lapply(x, function(x) lapply(x, function(x) x$selected)), recursive = FALSE)
-  keep_nas <- unlist(lapply(x, function(x) lapply(x, function(x) x$keep_na)), recursive = FALSE)
-  keep_infs <- unlist(lapply(x, function(x) lapply(x, function(x) x$keep_inf)), recursive = FALSE)
+# # convert list to teal_slice
+# as.teal_slices <- function(x, master) {
+#   varnames <- lapply(x, names)
+#   selecteds <- unlist(lapply(x, function(x) lapply(x, function(x) x$selected)), recursive = FALSE)
+#   keep_nas <- unlist(lapply(x, function(x) lapply(x, function(x) x$keep_na)), recursive = FALSE)
+#   keep_infs <- unlist(lapply(x, function(x) lapply(x, function(x) x$keep_inf)), recursive = FALSE)
+#
+#   datanames <- character(0)
+#   for (d in seq_along(x)) {
+#     for (v in seq_along(x[[d]])) {
+#       datanames <- c(datanames, names(x)[d])
+#     }
+#   }
+#   varnames <- unname(unlist(lapply(x, names)))
+#
+#   slices <- .mapply(
+#     FUN = filter_var,
+#     dots = list(
+#       dataname = datanames,
+#       varname = varnames,
+#       selected = selecteds,
+#       keep_na = keep_nas,
+#       keep_inf = keep_infs
+#     ),
+#     MoreArgs = list(
+#       choices = NULL,
+#       fixed = FALSE
+#     )
+#   )
+#
+#   if (!missing(master)) {
+#     slices <- lapply(slices, function(x) {
+#       x$dataname <- master
+#       x
+#     })
+#   }
+#
+#   do.call(filter_settings, as.list(slices, list(exclude = list(), count_types = "none")))
+# }
+as.teal_slices <- function(x) {
+  checkmate::assert_list(x, names = "named")
 
-  datanames <- character(0)
-  for (d in seq_along(x)) {
-    for (v in seq_along(x[[d]])) {
-      datanames <- c(datanames, names(x)[d])
+  is.bottom <- function(x) {
+    isTRUE(is.list(x) && all(names(x) %in% c("selected", "keep_na", "keep_inf")))
+  }
+  make_args <- function() {
+    list(
+      dataname = NULL,
+      varname = NULL,
+      selected = NULL,
+      keep_na = NULL,
+      keep_inf = NULL,
+      datalabel = NULL,
+      target = NULL
+    )
+  }
+  args <- make_args()
+  slices <- vector("list")
+
+  for (i in seq_along(x)) {
+    item <- x[[i]]
+    for (ii in seq_along(x[[i]])) {
+      subitem <- item[[ii]]
+      if (is.bottom(subitem)) {
+        args$dataname <- names(x)[i]
+        args$varname <- names(item)[[ii]]
+        args$selected <- subitem$selected
+        args$keep_na <- subitem$keep_na
+        args$keep_inf <- subitem$keep_inf
+        slices[[length(slices)+1]] <- as.teal_slice(Filter(Negate(is.null), args))
+        args <- make_args()
+      } else {
+        for (iii in seq_along(subitem)) {
+          subsubitem <- subitem[[iii]]
+          if (is.bottom(subsubitem)) {
+            args$dataname <- names(x)[i]
+            args$varname <- names(subitem)[iii]
+            args$selected <- subsubitem$selected
+            args$keep_na <- subsubitem$keep_na
+            args$keep_inf <- subsubitem$keep_inf
+            args$datalabel <- names(item)[ii]
+            if (args$datalabel == "subjects") args$target <- "y"
+            slices[[length(slices)+1]] <- as.teal_slice(Filter(Negate(is.null), args))
+            args <- make_args()
+          } else {
+            for (iiii in seq_along(subsubitem)) {
+              subsubsubitem <- subsubitem[[iiii]]
+              if (is.bottom(subsubsubitem)) {
+                args$dataname <- names(x)[i]
+                args$varname <- names(subsubitem)[iiii]
+                args$selected <- subsubsubitem$selected
+                args$keep_na <- subsubsubitem$keep_na
+                args$keep_inf <- subsubsubitem$keep_inf
+                args$datalabel <- names(item)[ii]
+                args$target <- names(subitem)[iiii]
+                slices[[length(slices)+1]] <- as.teal_slice(Filter(Negate(is.null), args))
+                args <- make_args()
+              }
+            }
+          }
+        }
+      }
     }
   }
-  varnames <- unname(unlist(lapply(x, names)))
 
-  slices <- .mapply(
-    FUN = filter_var,
-    dots = list(
-      dataname = datanames,
-      varname = varnames,
-      selected = selecteds,
-      keep_na = keep_nas,
-      keep_inf = keep_infs
-    ),
-    MoreArgs = list(
-      choices = NULL,
-      fixed = FALSE
-    )
-  )
-
-  if (!missing(master)) {
-    slices <- lapply(slices, function(x) {
-      x$dataname <- master
-      x
-    })
-  }
-
-  do.call(filter_settings, as.list(slices, list(exclude = list(), count_types = "none")))
+  do.call(filter_settings, slices)
 }
