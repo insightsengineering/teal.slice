@@ -299,9 +299,7 @@ SEFilterStates <- R6::R6Class( # nolint
     ui_add = function(id) {
       data <- private$data
       checkmate::assert_string(id)
-
       ns <- NS(id)
-
       row_input <- if (ncol(SummarizedExperiment::rowData(data)) == 0) {
         div("no sample variables available")
       } else if (nrow(SummarizedExperiment::rowData(data)) == 0) {
@@ -358,32 +356,16 @@ SEFilterStates <- R6::R6Class( # nolint
         id = id,
         function(input, output, session) {
           logger::log_trace("SEFilterState$srv_add initializing, dataname: { private$dataname }")
-          active_filter_col_vars <- reactive({
-            vapply(
-              X = private$state_list_get(state_list_index = "select"),
-              FUN.VALUE = character(1),
-              FUN = function(x) x$get_varname()
-            )
-          })
-          active_filter_row_vars <- reactive({
-            vapply(
-              X = private$state_list_get(state_list_index = "subset"),
-              FUN.VALUE = character(1),
-              FUN = function(x) x$get_varname()
-            )
-          })
 
-
-
+          # available choices to display
           row_data <- SummarizedExperiment::rowData(data)
           col_data <- SummarizedExperiment::colData(data)
 
-          # available choices to display
           avail_row_data_choices <- reactive({
             active_filter_row_vars <- vapply(
               X = private$state_list_get(state_list_index = "subset"),
               FUN.VALUE = character(1),
-              FUN = function(x) x$get_varname(deparse = TRUE)
+              FUN = function(x) x$get_varname()
             )
             choices <- setdiff(
               get_supported_filter_varnames(data = row_data),
@@ -402,7 +384,7 @@ SEFilterStates <- R6::R6Class( # nolint
             active_filter_col_vars <- vapply(
               X = private$state_list_get(state_list_index = "select"),
               FUN.VALUE = character(1),
-              FUN = function(x) x$get_varname(deparse = TRUE)
+              FUN = function(x) x$get_varname()
             )
             choices <- setdiff(
               get_supported_filter_varnames(data = col_data),
