@@ -244,22 +244,6 @@ ChoicesFilterState <- R6::R6Class( # nolint
     },
 
     #' @description
-    #' Set state
-    #' @param state (`list`)\cr
-    #'  contains fields relevant for a specific class
-    #' \itemize{
-    #' \item{`selected`}{ defines initial selection}
-    #' \item{`keep_na` (`logical`)}{ defines whether to keep or remove `NA` values}
-    #' }
-    set_state = function(state) {
-      if (!is.null(state$selected)) {
-        state$selected <- as.character(state$selected)
-      }
-      super$set_state(state)
-      invisible(NULL)
-    },
-
-    #' @description
     #' Sets the selected values of this `ChoicesFilterState`.
     #'
     #' @param value (`character`) the array of the selected choices.

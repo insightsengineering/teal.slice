@@ -266,28 +266,6 @@ RangeFilterState <- R6::R6Class( # nolint
     },
 
     #' @description
-    #' Set state
-    #' @param state (`list`)\cr
-    #'  contains fields relevant for a specific class
-    #' \itemize{
-    #' \item{`selected`}{ defines initial selection}
-    #' \item{`keep_na` (`logical`)}{ defines whether to keep or remove `NA` values}
-    #' \item{`keep_inf` (`logical`)}{ defines whether to keep or remove `Inf` values}
-    #' }
-    set_state = function(state) {
-      if (inherits(state, "teal_slice")) {
-        super$set_state(state)
-      } else {
-        stopifnot(is.list(state) && all(names(state) %in% c("selected", "keep_na", "keep_inf")))
-        if (!is.null(state$keep_inf)) {
-          self$set_keep_inf(state$keep_inf)
-        }
-        super$set_state(state[names(state) %in% c("selected", "keep_na")])
-      }
-      invisible(NULL)
-    },
-
-    #' @description
     #' Sets the selected values of this `RangeFilterState`.
     #'
     #' @param value (`numeric(2)`) the two-elements array of the lower and upper bound
