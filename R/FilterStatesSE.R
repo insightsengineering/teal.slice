@@ -188,52 +188,33 @@ SEFilterStates <- R6::R6Class( # nolint
     #' @description
     #' Set filter state
     #'
-    #' @param state (`named list`)\cr
-    #'   this list should contain `subset` and `select` element where
-    #'   each should be a named list containing values as a selection in the `FilterState`.
-    #'   Names of each the `list` element in `subset` and `select` should correspond to
-    #'   the name of the column in `rowData(data)` and `colData(data)`.
-    #' @return `NULL`
+    #' @param state (`teal_slices`)\cr
+    #'   `teal_slice` objects targeting `rowData(data)` should contain the field `target = "subset"`\cr
+    #'   `teal_slice` objects targeting `colData(data)` should contain the field `target = "select"`
+    #'
+    #' @return `NULL` invisibly
+    #'
     set_filter_state = function(state) {
-      if (is.teal_slices(state)) {
-        private$set_filter_state_impl(
-          state = extract_fun(state, extras$target == "subset"),
-          state_list_index = "subset",
-          data = SummarizedExperiment::rowData(private$data),
-          data_reactive = function(sid) SummarizedExperiment::rowData(private$data_reactive(sid))
-        )
-        private$set_filter_state_impl(
-          state = extract_fun(state, extras$target == "select"),
-          state_list_index = "select",
-          data = SummarizedExperiment::rowData(private$data),
-          data_reactive = function(sid) SummarizedExperiment::rowData(private$data_reactive(sid))
-        )
-        NULL
-      } else {
-        logger::log_trace("SEFilterState$set_filter_state initializing, dataname: { private$dataname }")
-        checkmate::assert_class(state, "list")
-        checkmate::assert_subset(names(state), c("subset", "select"))
+      checkmate::assert_class(state, "teal_slices")
 
-        data <- private$data
-        data_reactive <- private$data_reactive
+      logger::log_trace("{ class(self)[1] }$set_filter_state initializing, dataname: { private$dataname }")
 
-        private$set_filter_state_impl(
-          state = state$subset,
-          state_list_index = "subset",
-          data = SummarizedExperiment::rowData(data),
-          data_reactive = function(sid) SummarizedExperiment::rowData(data_reactive(sid))
-        )
+      private$set_filter_state_impl(
+        state = extract_fun(state, extras$target == "subset"),
+        state_list_index = "subset",
+        data = SummarizedExperiment::rowData(private$data),
+        data_reactive = function(sid) SummarizedExperiment::rowData(private$data_reactive(sid))
+      )
+      private$set_filter_state_impl(
+        state = extract_fun(state, extras$target == "select"),
+        state_list_index = "select",
+        data = SummarizedExperiment::rowData(private$data),
+        data_reactive = function(sid) SummarizedExperiment::rowData(private$data_reactive(sid))
+      )
 
-        private$set_filter_state_impl(
-          state = state$select,
-          state_list_index = "select",
-          data = SummarizedExperiment::colData(data),
-          data_reactive = function(sid) SummarizedExperiment::colData(data_reactive(sid))
-        )
+      logger::log_trace("{ class(self)[1] }$set_filter_state initialized, dataname: { private$dataname }")
 
-        logger::log_trace("SEFilterState$set_filter_state initialized, dataname: { private$dataname }")
-        NULL
-      }
+      invisible(NULL)
     },
 
     #' @description Remove a variable from the `state_list` and its corresponding UI element.

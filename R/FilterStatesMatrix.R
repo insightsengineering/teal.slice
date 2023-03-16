@@ -128,39 +128,26 @@ MatrixFilterStates <- R6::R6Class( # nolint
     #' @description
     #' Sets a filter state
     #'
-    #' @param state (`named list`)\cr
-    #'   should contain values which are initial selection in the `FilterState`.
-    #'   Names of the `list` element should correspond to the name of the
-    #'   column in `data`.
-    #' @return `NULL`
+    #' @param state (`teal_slices`)
+    #'
+    #' @return `NULL` invisibly
+    #'
     set_filter_state = function(state) {
-      if (is.teal_slices(state)) {
-        private$set_filter_state_impl(
-          state = state,
-          state_list_index = "subset",
-          data = private$data,
-          data_reactive = private$data_reactive,
-          extract_type = "matrix"
-        )
-        NULL
-      } else {
-        logger::log_trace("MatrixFilterState$set_filter_state initializing, dataname: { private$dataname }")
-        checkmate::assert_list(state, null.ok = TRUE, names = "named")
+      checkmate::assert_class(state, "teal_slices")
 
-        data <- private$data
-        data_reactive <- private$data_reactive
+      logger::log_trace("{ class(self)[1] }$set_filter_state initializing, dataname: { private$dataname }")
 
-        private$set_filter_state_impl(
-          state = state,
-          state_list_index = "subset",
-          data = data,
-          data_reactive = data_reactive,
-          extract_type = "matrix"
-        )
+      private$set_filter_state_impl(
+        state = state,
+        state_list_index = "subset",
+        data = private$data,
+        data_reactive = private$data_reactive,
+        extract_type = "matrix"
+      )
 
-        logger::log_trace("MatrixFilterState$set_filter_state initialized, dataname: { private$dataname }")
-      NULL
-      }
+      logger::log_trace("{ class(self)[1] }$set_filter_state initialized, dataname: { private$dataname }")
+
+      invisible(NULL)
     },
 
     #' @description Remove a variable from the `state_list` and its corresponding UI element.

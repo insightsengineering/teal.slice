@@ -149,55 +149,38 @@ MAEFilterStates <- R6::R6Class( # nolint
     #' Set filter state
     #'
     #' @param state (`named list`)\cr
-    #'   should contain values which are initial selection in the `FilterState`.
-    #'   Names of the `list` element should correspond to the name of the
-    #'   column in `colData(data)`.
-    #' @return `NULL`
+    #'    `teal_slice` objects should contain the field `target = "y"`
+    #'
+    #' @return `NULL` invisibly
+    #'
     set_filter_state = function(state) {
-      if (is.teal_slices(state)) {
-        private$set_filter_state_impl(
-          state = extract_fun(state, extras$target == "y"),
-          state_list_index = "y",
-          data = SummarizedExperiment::colData(private$data),
-          data_reactive = function(sid) SummarizedExperiment::colData(private$data_reactive(sid)),
-          extract_type = "list"
+      checkmate::assert_class(state, "teal_slices")
+
+      logger::log_trace("{ class(self)[1] }$set_filter_state initializing, dataname: { private$dataname }")
+
+      # Drop teal_slices that refer to excluded variables.
+      varnames <- unique(unlist(extract_feat(state, "varname")))
+      filterable <- get_supported_filter_varnames(SummarizedExperiment::colData(private$data))
+      if (!all(varnames %in% filterable)) {
+        excluded_variables <- toString(dQuote(setdiff(varnames, filterable), q = FALSE))
+        state <- extract_fun_s(
+          state,
+          sprintf("!varname %%in%% c(%s)", )
         )
-        NULL
-      } else {
-        logger::log_trace("MAEFilterState$set_filter_state initializing, dataname: { private$dataname }")
-        checkmate::assert_list(state, null.ok = TRUE, names = "named")
-
-        data <- private$data
-        data_reactive <- private$data_reactive
-
-        # excluding not supported variables
-        state_varnames <- names(state)
-        filterable_varnames <- get_supported_filter_varnames(SummarizedExperiment::colData(data))
-        excluded_varnames <- setdiff(state_varnames, filterable_varnames)
-        if (length(excluded_varnames) > 0) {
-          excluded_varnames_str <- toString(excluded_varnames)
-          warning(
-            "These columns filters were excluded: ",
-            excluded_varnames_str,
-            " from dataset ",
-            private$dataname
-          )
-          logger::log_warn("Columns filters { excluded_varnames_str } were excluded from { private$dataname }")
-          state <- state[state_varnames %in% filterable_varnames]
-        }
-
-        private$set_filter_state_impl(
-          state = state,
-          state_list_index = "y",
-          data = SummarizedExperiment::colData(data),
-          data_reactive = function(sid) SummarizedExperiment::colData(data_reactive(sid)),
-          extract_type = "list",
-          na_rm = TRUE
-        )
-
-        logger::log_trace("{ class(self)[1] }$set_filter_state initialized, dataname: { private$dataname }")
-        NULL
+        logger::log_warn("filters for columns: { excluded_varnames } excluded from { private$dataname }")
       }
+
+      private$set_filter_state_impl(
+        state = extract_fun(state, extras$target == "y"),
+        state_list_index = "y",
+        data = SummarizedExperiment::colData(private$data),
+        data_reactive = function(sid) SummarizedExperiment::colData(private$data_reactive(sid)),
+        extract_type = "list"
+      )
+
+      logger::log_trace("{ class(self)[1] }$set_filter_state initialized, dataname: { private$dataname }")
+
+      invisible(NULL)
     },
 
     #' @description
