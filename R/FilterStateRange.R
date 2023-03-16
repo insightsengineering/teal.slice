@@ -137,7 +137,6 @@ RangeFilterState <- R6::R6Class( # nolint
                           keep_na = NULL,
                           keep_inf = NULL,
                           fixed = FALSE,
-                          dataname_prefixed = character(0),
                           extract_type = character(0),
                           ...) {
       checkmate::assert_numeric(x, all.missing = FALSE)
@@ -158,7 +157,6 @@ RangeFilterState <- R6::R6Class( # nolint
             keep_na = keep_na,
             keep_inf = keep_inf,
             fixed = fixed,
-            dataname_prefixed = dataname_prefixed,
             extract_type = extract_type),
           list(...)
         )
@@ -246,15 +244,18 @@ RangeFilterState <- R6::R6Class( # nolint
     #' For this class returned call looks like
     #' `<varname> >= <min value> & <varname> <= <max value>` with
     #' optional `is.na(<varname>)` and `is.finite(<varname>)`.
+    #' @param dataname name of data set; defaults to `private$dataname`
     #' @return (`call`)
-    get_call = function() {
+    #'
+    get_call = function(dataname) {
+      if (missing(dataname)) dataname <- private$dataname
       filter_call <-
         call(
           "&",
-          call(">=", private$get_varname_prefixed(), self$get_selected()[1L]),
-          call("<=", private$get_varname_prefixed(), self$get_selected()[2L])
+          call(">=", private$get_varname_prefixed(dataname), self$get_selected()[1L]),
+          call("<=", private$get_varname_prefixed(dataname), self$get_selected()[2L])
         )
-      private$add_keep_na_call(private$add_keep_inf_call(filter_call))
+      private$add_keep_na_call(private$add_keep_inf_call(filter_call, dataname), dataname)
     },
 
     #' @description
@@ -297,9 +298,9 @@ RangeFilterState <- R6::R6Class( # nolint
     # private methods ----
     # Adds is.infinite(varname) before existing condition calls if keep_inf is selected
     # returns a call
-    add_keep_inf_call = function(filter_call) {
+    add_keep_inf_call = function(filter_call, dataname) {
       if (isTRUE(self$get_keep_inf())) {
-        call("|", call("is.infinite", private$get_varname_prefixed()), filter_call)
+        call("|", call("is.infinite", private$get_varname_prefixed(dataname)), filter_call)
       } else {
         filter_call
       }

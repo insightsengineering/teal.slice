@@ -67,7 +67,6 @@ EmptyFilterState <- R6::R6Class( # nolint
                           keep_na = NULL,
                           keep_inf = NULL,
                           fixed = FALSE,
-                          dataname_prefixed = character(0),
                           extract_type = character(0),
                           ...) {
 
@@ -84,7 +83,6 @@ EmptyFilterState <- R6::R6Class( # nolint
             keep_na = keep_na,
             keep_inf = keep_inf,
             fixed = fixed,
-            dataname_prefixed = dataname_prefixed,
             extract_type = extract_type),
           list(...)
         )
@@ -114,14 +112,15 @@ EmptyFilterState <- R6::R6Class( # nolint
     #' for selected variable type.
     #' Uses internal reactive values, hence must be called
     #' in reactive or isolated context.
-    #'
+    #' @param dataname name of data set; defaults to `private$dataname`
     #' @return `logical(1)`
     #'
-    get_call = function() {
+    get_call = function(dataname) {
+      if (missing(dataname)) dataname <- private$dataname
       filter_call <- if (isTRUE(self$get_keep_na())) {
-        call("is.na", private$get_varname_prefixed())
+        call("is.na", private$get_varname_prefixed(dataname))
       } else {
-        substitute(!is.na(varname), list(varname = private$get_varname_prefixed()))
+        substitute(!is.na(varname), list(varname = private$get_varname_prefixed(dataname)))
       }
     },
 

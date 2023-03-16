@@ -46,7 +46,6 @@ SEFilterStates <- R6::R6Class( # nolint
         subset = reactiveVal(),
         select = reactiveVal()
       )
-      private$dataname_prefixed <- private$get_dataname_prefixed()
     },
 
     #' @description

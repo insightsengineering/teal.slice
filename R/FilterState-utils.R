@@ -72,7 +72,6 @@ init_filter_state <- function(x,
                               keep_na = NULL,
                               keep_inf = NULL,
                               fixed = FALSE,
-                              dataname_prefixed = character(0),
                               extract_type = character(0),
                               ...) {
   checkmate::assert_string(varname)
@@ -96,7 +95,6 @@ init_filter_state <- function(x,
       keep_na = keep_na,
       keep_inf = keep_inf,
       fixed = fixed,
-      dataname_prefixed = dataname_prefixed,
       extract_type = extract_type
     )
     args <- append(args, list(...))
@@ -118,7 +116,6 @@ init_filter_state.default <- function(x,
                                       keep_na = NULL,
                                       keep_inf = NULL,
                                       fixed = FALSE,
-                                      dataname_prefixed = character(0),
                                       extract_type = character(0),
                                       ...) {
   args <- list(
@@ -131,7 +128,6 @@ init_filter_state.default <- function(x,
     keep_na = keep_na,
     keep_inf = keep_inf,
     fixed = fixed,
-    dataname_prefixed = dataname_prefixed,
     extract_type = extract_type
   )
   args <- append(args, list(...))
@@ -150,7 +146,6 @@ init_filter_state.logical <- function(x,
                                       keep_na = NULL,
                                       keep_inf = NULL,
                                       fixed = FALSE,
-                                      dataname_prefixed = character(0),
                                       extract_type = character(0),
                                       ...) {
   args <- list(
@@ -163,7 +158,6 @@ init_filter_state.logical <- function(x,
     keep_na = keep_na,
     keep_inf = keep_inf,
     fixed = fixed,
-    dataname_prefixed = dataname_prefixed,
     extract_type = extract_type
   )
   args <- append(args, list(...))
@@ -182,7 +176,6 @@ init_filter_state.numeric <- function(x,
                                       keep_na = NULL,
                                       keep_inf = NULL,
                                       fixed = FALSE,
-                                      dataname_prefixed = character(0),
                                       extract_type = character(0),
                                       ...) {
   args <- list(
@@ -195,7 +188,6 @@ init_filter_state.numeric <- function(x,
     keep_na = keep_na,
     keep_inf = keep_inf,
     fixed = fixed,
-    dataname_prefixed = dataname_prefixed,
     extract_type = extract_type
   )
   args <- append(args, list(...))
@@ -218,7 +210,6 @@ init_filter_state.factor <- function(x,
                                      keep_na = NULL,
                                      keep_inf = NULL,
                                      fixed = FALSE,
-                                     dataname_prefixed = character(0),
                                      extract_type = character(0),
                                      ...) {
   args <- list(
@@ -231,7 +222,6 @@ init_filter_state.factor <- function(x,
     keep_na = keep_na,
     keep_inf = keep_inf,
     fixed = fixed,
-    dataname_prefixed = dataname_prefixed,
     extract_type = extract_type
   )
   args <- append(args, list(...))
@@ -250,7 +240,6 @@ init_filter_state.character <- function(x,
                                         keep_na = NULL,
                                         keep_inf = NULL,
                                         fixed = FALSE,
-                                        dataname_prefixed = character(0),
                                         extract_type = character(0),
                                         ...) {
   args <- list(
@@ -263,7 +252,6 @@ init_filter_state.character <- function(x,
     keep_na = keep_na,
     keep_inf = keep_inf,
     fixed = fixed,
-    dataname_prefixed = dataname_prefixed,
     extract_type = extract_type
   )
   args <- append(args, list(...))
@@ -282,7 +270,6 @@ init_filter_state.Date <- function(x,
                                    keep_na = NULL,
                                    keep_inf = NULL,
                                    fixed = FALSE,
-                                   dataname_prefixed = character(0),
                                    extract_type = character(0),
                                    ...) {
   args <- list(
@@ -295,7 +282,6 @@ init_filter_state.Date <- function(x,
     keep_na = keep_na,
     keep_inf = keep_inf,
     fixed = fixed,
-    dataname_prefixed = dataname_prefixed,
     extract_type = extract_type
   )
   args <- append(args, list(...))
@@ -318,7 +304,6 @@ init_filter_state.POSIXct <- function(x,
                                       keep_na = NULL,
                                       keep_inf = NULL,
                                       fixed = FALSE,
-                                      dataname_prefixed = character(0),
                                       extract_type = character(0),
                                       ...) {
   args <- list(
@@ -331,7 +316,6 @@ init_filter_state.POSIXct <- function(x,
     keep_na = keep_na,
     keep_inf = keep_inf,
     fixed = fixed,
-    dataname_prefixed = dataname_prefixed,
     extract_type = extract_type
   )
   args <- append(args, list(...))
@@ -354,7 +338,6 @@ init_filter_state.POSIXlt <- function(x,
                                       keep_na = NULL,
                                       keep_inf = NULL,
                                       fixed = FALSE,
-                                      dataname_prefixed = character(0),
                                       extract_type = character(0),
                                       ...) {
   args <- list(
@@ -367,7 +350,6 @@ init_filter_state.POSIXlt <- function(x,
     keep_na = keep_na,
     keep_inf = keep_inf,
     fixed = fixed,
-    dataname_prefixed = dataname_prefixed,
     extract_type = extract_type
   )
   args <- append(args, list(...))

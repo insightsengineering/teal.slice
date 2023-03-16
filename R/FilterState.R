@@ -92,7 +92,6 @@ InteractiveFilterState <- R6::R6Class( # nolint
                           keep_na = NULL,
                           keep_inf = NULL,
                           fixed = FALSE,
-                          dataname_prefixed = character(0),
                           extract_type = character(0),
                           ...) {
       checkmate::assert_class(x_reactive, "reactive")
@@ -111,7 +110,6 @@ InteractiveFilterState <- R6::R6Class( # nolint
       private$keep_na <- reactiveVal(keep_na)
       private$extras <- list(...)
       private$fixed <- fixed
-      private$dataname_prefixed <- dataname_prefixed
       # Establish varlabel.
       varlabel <- attr(x, "label")
       # Only display it if different to varname.
@@ -492,7 +490,6 @@ InteractiveFilterState <- R6::R6Class( # nolint
     disabled = NULL, # reactiveVal holding a logical(1)
     cache = NULL, # cache state when filter disabled so we can later restore
     extract_type = character(0),
-    dataname_prefixed = character(0), # depends on encapsulating FilterStates object class
 
     # private methods ----
 
@@ -501,12 +498,12 @@ InteractiveFilterState <- R6::R6Class( # nolint
     # for example `data$var`
     # @return a character string representation of a subset call
     #         that extracts the variable from the dataset
-    get_varname_prefixed = function() {
+    get_varname_prefixed = function(dataname) {
       ans <-
         if (isTRUE(private$extract_type == "list")) {
-          sprintf("%s$%s", private$dataname_prefixed, private$varname)
+          sprintf("%s$%s", dataname, private$varname)
         } else if (isTRUE(private$extract_type == "matrix")) {
-          sprintf("%s[, \"%s\"]", private$dataname_prefixed, private$varname)
+          sprintf("%s[, \"%s\"]", dataname, private$varname)
         } else {
           private$varname
         }
@@ -518,13 +515,13 @@ InteractiveFilterState <- R6::R6Class( # nolint
     # Otherwise, if missings are found in the variable `!is.na` will be added
     # only if `private$na_rm = TRUE`
     # @return a `call`
-    add_keep_na_call = function(filter_call) {
+    add_keep_na_call = function(filter_call, dataname) {
       if (isTRUE(self$get_keep_na())) {
-        call("|", call("is.na", private$get_varname_prefixed()), filter_call)
+        call("|", call("is.na", private$get_varname_prefixed(dataname)), filter_call)
       } else if (isTRUE(private$na_rm) && private$na_count > 0L) {
         call(
           "&",
-          call("!", call("is.na", private$get_varname_prefixed())),
+          call("!", call("is.na", private$get_varname_prefixed(dataname))),
           filter_call
         )
       } else {

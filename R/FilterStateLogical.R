@@ -130,7 +130,6 @@ LogicalFilterState <- R6::R6Class( # nolint
                           keep_na = NULL,
                           keep_inf = NULL,
                           fixed = FALSE,
-                          dataname_prefixed = character(0),
                           extract_type = character(0),
                           ...) {
       stopifnot(is.logical(x))
@@ -148,7 +147,6 @@ LogicalFilterState <- R6::R6Class( # nolint
             keep_na = keep_na,
             keep_inf = keep_inf,
             fixed = fixed,
-            dataname_prefixed = dataname_prefixed,
             extract_type = extract_type),
           list(...)
         )
@@ -202,14 +200,18 @@ LogicalFilterState <- R6::R6Class( # nolint
     #' Returns reproducible condition call for current selection.
     #' For `LogicalFilterState` it's a `!<varname>` or `<varname>` and optionally
     #' `is.na(<varname>)`
-    get_call = function() {
+    #' @param dataname name of data set; defaults to `private$dataname`
+    #' @return (`call`)
+    #'
+    get_call = function(dataname) {
+      if (missing(dataname)) dataname <- private$dataname
       filter_call <-
         if (self$get_selected()) {
-          private$get_varname_prefixed()
+          private$get_varname_prefixed(dataname)
         } else {
-          call("!", private$get_varname_prefixed())
+          call("!", private$get_varname_prefixed(dataname))
         }
-      private$add_keep_na_call(filter_call)
+      private$add_keep_na_call(filter_call, dataname)
     },
 
     #' @description

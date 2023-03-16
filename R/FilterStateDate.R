@@ -137,7 +137,6 @@ DateFilterState <- R6::R6Class( # nolint
                           keep_na = NULL,
                           keep_inf = NULL,
                           fixed = FALSE,
-                          dataname_prefixed = character(0),
                           extract_type = character(0),
                           ...) {
       stopifnot(is(x, "Date"))
@@ -156,7 +155,6 @@ DateFilterState <- R6::R6Class( # nolint
             keep_na = keep_na,
             keep_inf = keep_inf,
             fixed = fixed,
-            dataname_prefixed = dataname_prefixed,
             extract_type = extract_type),
           list(...)
         )
@@ -210,16 +208,19 @@ DateFilterState <- R6::R6Class( # nolint
     #' For this class returned call looks like
     #' `<varname> >= <min value> & <varname> <= <max value>` with
     #' optional `is.na(<varname>)`.
+    #' @param dataname name of data set; defaults to `private$dataname`
     #' @return (`call`)
-    get_call = function() {
-      choices <- as.character(self$get_selected())
+    #'
+    get_call = function(dataname) {
+      if (missing(dataname)) dataname <- private$dataname
+      choices <- as.character(self$get_selected(dataname))
       filter_call <-
         call(
           "&",
           call(">=", private$get_varname_prefixed(), call("as.Date", choices[1L])),
           call("<=", private$get_varname_prefixed(), call("as.Date", choices[2L]))
         )
-      private$add_keep_na_call(filter_call)
+      private$add_keep_na_call(filter_call, dataname)
     },
 
     #' @description

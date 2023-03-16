@@ -77,7 +77,6 @@ FilterStates <- R6::R6Class( # nolint
       checkmate::assert_character(datalabel, max.len = 1, any.missing = FALSE)
 
       private$dataname <- dataname
-      private$dataname_prefixed <- private$get_dataname_prefixed()
       private$datalabel <- datalabel
       private$data <- data
       private$data_reactive <- data_reactive
@@ -149,7 +148,7 @@ FilterStates <- R6::R6Class( # nolint
           calls <- lapply(
             filtered_items,
             function(state) {
-              state$get_call()
+              state$get_call(dataname = private$get_dataname_prefixed())
             }
           )
           calls_combine_by(calls, operator = "&")
@@ -324,7 +323,6 @@ FilterStates <- R6::R6Class( # nolint
     observers = list(), # observers
     state_list = NULL, # list of `reactiveVal`s initialized by init methods of child classes,
     count_type = character(0), # specifies how observation numbers are displayed in filter cards,
-    dataname_prefixed = character(0),
 
     # private methods ----
 
@@ -617,7 +615,6 @@ FilterStates <- R6::R6Class( # nolint
           # is also beneficial as it can be cached and retriger filter counts only if
           # returned vector is different.
           x_reactive = reactive(data_reactive(sid)[, x$varname, drop = TRUE]),
-          dataname_prefixed = private$dataname_prefixed,
           extract_type = extract_type
         )
         arg_list <- append(arg_list, as.list(x))

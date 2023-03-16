@@ -136,7 +136,6 @@ ChoicesFilterState <- R6::R6Class( # nolint
                           keep_na = NULL,
                           keep_inf = NULL,
                           fixed = FALSE,
-                          dataname_prefixed = character(0),
                           extract_type = character(0),
                           ...) {
       checkmate::assert(
@@ -159,7 +158,6 @@ ChoicesFilterState <- R6::R6Class( # nolint
             keep_na = keep_na,
             keep_inf = keep_inf,
             fixed = fixed,
-            dataname_prefixed = dataname_prefixed,
             extract_type = extract_type),
           list(...)
         )
@@ -202,9 +200,12 @@ ChoicesFilterState <- R6::R6Class( # nolint
     #' For this class returned call looks like
     #' `<varname> %in%  c(<values selected>)` with
     #' optional `is.na(<varname>)`.
+    #' @param dataname name of data set; defaults to `private$dataname`
     #' @return (`call`)
-    get_call = function() {
-      varname <- private$get_varname_prefixed()
+    #'
+    get_call = function(dataname) {
+      if (missing(dataname)) dataname <- private$dataname
+      varname <- private$get_varname_prefixed(dataname)
       choices <- self$get_selected()
       if (private$data_class != "factor") {
         choices <- do.call(sprintf("as.%s", private$data_class), list(x = choices))
@@ -238,7 +239,7 @@ ChoicesFilterState <- R6::R6Class( # nolint
           # This handles numerics, characters, and factors.
           call(fun_compare, varname, make_c_call(choices))
         }
-      private$add_keep_na_call(filter_call)
+      private$add_keep_na_call(filter_call, dataname)
     },
 
     #' @description

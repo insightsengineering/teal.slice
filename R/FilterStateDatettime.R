@@ -140,7 +140,6 @@ DatetimeFilterState <- R6::R6Class( # nolint
                           keep_na = NULL,
                           keep_inf = NULL,
                           fixed = FALSE,
-                          dataname_prefixed = character(0),
                           extract_type = character(0),
                           ...) {
       checkmate::assert_multi_class(x, c("POSIXct", "POSIXlt"))
@@ -159,7 +158,6 @@ DatetimeFilterState <- R6::R6Class( # nolint
             keep_na = keep_na,
             keep_inf = keep_inf,
             fixed = fixed,
-            dataname_prefixed = dataname_prefixed,
             extract_type = extract_type),
           list(...)
         )
@@ -213,7 +211,11 @@ DatetimeFilterState <- R6::R6Class( # nolint
     #' For this class returned call looks like
     #' `<varname> >= as.POSIXct(<min>) & <varname> <= <max>)`
     #' with optional `is.na(<varname>)`.
-    get_call = function() {
+    #' @param dataname name of data set; defaults to `private$dataname`
+    #' @return (`call`)
+    #'
+    get_call = function(dataname) {
+      if (missing(dataname)) dataname <- private$dataname
       choices <- self$get_selected()
       tzone <- Find(function(x) x != "", attr(as.POSIXlt(choices), "tzone"))
       class <- class(choices)[1L]
@@ -227,16 +229,16 @@ DatetimeFilterState <- R6::R6Class( # nolint
           "&",
           call(
             ">=",
-            private$get_varname_prefixed(),
+            private$get_varname_prefixed(dataname),
             as.call(list(date_fun, choices[1L], tz = tzone))
           ),
           call(
             "<",
-            private$get_varname_prefixed(),
+            private$get_varname_prefixed(dataname),
             as.call(list(date_fun, choices[2L], tz = tzone))
           )
         )
-      private$add_keep_na_call(filter_call)
+      private$add_keep_na_call(filter_call, dataname)
     },
 
     #' @description
