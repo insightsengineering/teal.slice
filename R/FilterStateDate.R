@@ -134,8 +134,8 @@ DateFilterState <- R6::R6Class( # nolint
                           varname,
                           choices = c(min(x, na.rm = TRUE), max(x, na.rm = TRUE)),
                           selected = NULL,
-                          keep_na = NULL,
-                          keep_inf = NULL,
+                          keep_na = FALSE,
+                          keep_inf = FALSE,
                           fixed = FALSE,
                           extract_type = character(0),
                           ...) {
@@ -154,6 +154,8 @@ DateFilterState <- R6::R6Class( # nolint
 
       if (is.null(selected)) selected <- choices
       selected <- c(max(selected[1], min(choices)) , min(selected[2], max(choices)))
+
+      if (is.null(keep_na)) keep_na <- TRUE
 
       do.call(
         super$initialize,
