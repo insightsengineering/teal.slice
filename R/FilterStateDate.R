@@ -148,6 +148,19 @@ DateFilterState <- R6::R6Class( # nolint
       stopifnot(is(x, "Date"))
       checkmate::assert_class(x_reactive, 'reactive')
 
+      var_range <- range(x, na.rm = TRUE)
+
+      if (is.null(choices)) {
+        choices <- var_range
+      } else {
+        private$set_is_choice_limited(x, choices)
+        x <- x[x >= choices[1] & x <= choices[2]]
+        choices <- c(max(choices[1], min(x)) , min(choices[2], max(x)))
+      }
+
+      if (is.null(selected)) selected <- choices
+      selected <- c(max(selected[1], min(choices)) , min(selected[2], max(choices)))
+
       super$initialize(
         x = x,
         x_reactive = x_reactive,
@@ -161,15 +174,7 @@ DateFilterState <- R6::R6Class( # nolint
         fixed = fixed,
         extras = extras,
         dataname_prefixed = dataname_prefixed,
-        varlabel = varlabel,
         extract_type = extract_type)
-
-      private$set_is_choice_limited(x, choices)
-      x <- x[x >= choices[1] & x <= choices[2]]
-
-      var_range <- range(x, na.rm = TRUE)
-      private$set_choices(var_range)
-      self$set_selected(var_range)
 
       return(invisible(self))
     },
@@ -227,28 +232,6 @@ DateFilterState <- R6::R6Class( # nolint
           call("<=", private$get_varname_prefixed(), call("as.Date", choices[2L]))
         )
       private$add_keep_na_call(filter_call)
-    },
-
-    #' @description
-    #' Sets the selected time frame of this `DateFilterState`.
-    #'
-    #' @param value (`Date(2)`) the lower and the upper bound of the selected
-    #'   time frame. Must not contain NA values.
-    #'
-    #' @return invisibly `NULL`.
-    #'
-    #' @note Casts the passed object to `Date` before validating the input
-    #' making it possible to pass any object coercible to `Date` to this method.
-    #'
-    #' @examples
-    #' date <- as.Date("13/09/2021")
-    #' filter <- teal.slice:::DateFilterState$new(
-    #'   c(date, date + 1, date + 2, date + 3),
-    #'   varname = "name", dataname = "data"
-    #' )
-    #' filter$set_selected(c(date + 1, date + 2))
-    set_selected = function(value) {
-      super$set_selected(value)
     }
   ),
 

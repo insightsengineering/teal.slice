@@ -190,7 +190,7 @@ ChoicesFilterState <- R6::R6Class( # nolint
         varlabel = varlabel,
         extract_type = extract_type)
 
-      private$set_filtered_counts(unname(table(x)))
+      private$set_choices_counts(unname(table(x)))
 
       return(invisible(self))
     },
@@ -260,7 +260,7 @@ ChoicesFilterState <- R6::R6Class( # nolint
   # private members ----
 
   private = list(
-    filtered_counts = integer(0),
+    choices_counts = integer(0),
     data_class = character(0), # stores class of filtered variable so that it can be restored in $get_call
     tzone = character(0), # if x is a datetime, stores time zone so that it can be restored in $get_call
 
@@ -277,11 +277,11 @@ ChoicesFilterState <- R6::R6Class( # nolint
     #' @description
     #' Check whether the initial choices filter out some values of x and set the flag in case.
     #'
-    set_filtered_counts = function(filtered_counts) {
-      private$filtered_counts <- filtered_counts
+    set_choices_counts = function(choices_counts) {
+      private$choices_counts <- choices_counts
       invisible(NULL)
     },
-    get_filtered_counts = function() {
+    get_choices_counts = function() {
       if (!is.null(private$x_reactive)) {
         table(factor(private$x_reactive(), levels = private$choices))
       } else {
@@ -340,7 +340,7 @@ ChoicesFilterState <- R6::R6Class( # nolint
     ui_inputs = function(id) {
       ns <- NS(id)
 
-      countsmax <- private$filtered_counts
+      countsmax <- private$choices_counts
       countsnow <- isolate(unname(table(factor(private$x_reactive(), levels = private$choices))))
 
       ui_input <- if (private$is_checkboxgroup()) {
@@ -414,14 +414,14 @@ ChoicesFilterState <- R6::R6Class( # nolint
               updateCountBars(
                 inputId = "labels",
                 choices = private$choices,
-                countsmax = private$filtered_counts,
+                countsmax = private$choices_counts,
                 countsnow = unname(table(factor(non_missing_values(), levels = private$choices)))
               )
             } else {
               labels <- mapply(
                 FUN = make_count_text,
                 label = private$choices,
-                countmax = private$filtered_counts,
+                countmax = private$choices_counts,
                 countnow = unname(table(factor(non_missing_values(), levels = private$choices)))
               )
               teal.widgets::updateOptionalSelectInput(
