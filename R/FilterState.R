@@ -398,45 +398,32 @@ InteractiveFilterState <- R6::R6Class( # nolint
     #'
     #' @param state a (`teal_slice`) object; see `Filter state specification`
     #'
-    #' @return NULL invisibly
+    #' @return `NULL` invisibly
     #'
     set_state = function(state) {
-      if (inherits(state, "teal_slice")) {
-        if (!is.null(state$selected)) {
-          self$set_selected(state$selected)
-        }
-        if (!is.null(state$keep_na)) {
-          self$set_keep_na(state$keep_na)
-        }
-        if (!is.null(state$keep_inf)) {
-          self$set_keep_inf(state$keep_inf)
-        }
-      } else {
-        logger::log_trace(sprintf(
-          "%s$set_state, dataname: %s setting state of variable %s to: selected=%s, keep_na=%s",
-          class(self)[1],
-          private$dataname,
-          private$varname,
-          paste(state$selected, collapse = " "),
-          state$keep_na
-        ))
-        stopifnot(is.list(state) && all(names(state) %in% c("selected", "keep_na")))
+      checkmate::assert_class(state, "teal_slice")
 
-        if (!is.null(state$keep_na)) {
-          self$set_keep_na(state$keep_na)
-        }
-        if (!is.null(state$selected)) {
-          self$set_selected(state$selected)
-        }
-        logger::log_trace(
-          sprintf(
-            "%s$set_state, dataname: %s done setting state for variable %s",
-            class(self)[1],
-            private$dataname,
-            private$varname
-          )
-        )
+      logger::log_trace("{ class(self)[1] }$set_state setting state of variable: { state$varname }")
+
+      if (!is.null(state$selected)) {
+        self$set_selected(state$selected)
       }
+      if (!is.null(state$keep_na)) {
+        self$set_keep_na(state$keep_na)
+      }
+      if (!is.null(state$keep_inf)) {
+        self$set_keep_inf(state$keep_inf)
+      }
+
+      current_state <- sprintf(
+        "selected: %s, keep_na: %s, keep_inf: %s",
+        toString(state$selected),
+        state$keep_na,
+        state$keep_inf
+      )
+
+      logger::log_trace("state of variable: { state$varname } set to: { current_state }")
+
       invisible(NULL)
     },
 
