@@ -276,45 +276,8 @@ as.teal_slice <- function(x) {
   do.call(filter_var, x)
 }
 
-# # convert list to teal_slice
-# as.teal_slices <- function(x, master) {
-#   varnames <- lapply(x, names)
-#   selecteds <- unlist(lapply(x, function(x) lapply(x, function(x) x$selected)), recursive = FALSE)
-#   keep_nas <- unlist(lapply(x, function(x) lapply(x, function(x) x$keep_na)), recursive = FALSE)
-#   keep_infs <- unlist(lapply(x, function(x) lapply(x, function(x) x$keep_inf)), recursive = FALSE)
-#
-#   datanames <- character(0)
-#   for (d in seq_along(x)) {
-#     for (v in seq_along(x[[d]])) {
-#       datanames <- c(datanames, names(x)[d])
-#     }
-#   }
-#   varnames <- unname(unlist(lapply(x, names)))
-#
-#   slices <- .mapply(
-#     FUN = filter_var,
-#     dots = list(
-#       dataname = datanames,
-#       varname = varnames,
-#       selected = selecteds,
-#       keep_na = keep_nas,
-#       keep_inf = keep_infs
-#     ),
-#     MoreArgs = list(
-#       choices = NULL,
-#       fixed = FALSE
-#     )
-#   )
-#
-#   if (!missing(master)) {
-#     slices <- lapply(slices, function(x) {
-#       x$dataname <- master
-#       x
-#     })
-#   }
-#
-#   do.call(filter_settings, as.list(slices, list(exclude = list(), count_types = "none")))
-# }
+# convert nested list to teal_slices
+# this function is not overly robust, it covers cases that are encountered in teal at this time
 as.teal_slices <- function(x) {
   checkmate::assert_list(x, names = "named")
 
@@ -396,3 +359,4 @@ name_slices <- function(tss, field) {
 
   names(tss) <- feats
   tss
+}
