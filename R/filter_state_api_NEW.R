@@ -80,9 +80,40 @@ c.teal_slice <- function(...) {
   ans
 }
 print.teal_slice <- function(x) {
-  str(x)
-}
+  name_width <- max(nchar(names(x)))
+  format_value <- function(v) {
+    if (is.null(v)) return("NULL")
+    if (inherits(v,  c("character", "factor"))) {
+      v <- dQuote(v, q = FALSE)
+    }
+    v <- paste(v, collapse = " ")
+    if (nchar(v) > 20L) {
+      v <- paste(substr(v, 1, 16), "...")
+    }
+    v
+  }
 
+  ind <- intersect(names(x), names(formals(filter_var)))
+  xx <- x[ind]
+  cat("teal_slice", "\n")
+  for (i in seq_along(xx)) {
+    element_name <- format(names(xx)[i], width = name_width)
+    element_value <- format_value(xx[[i]])
+    cat(sprintf(" $ %s: %s", element_name, element_value), "\n")
+  }
+
+  ind <- setdiff(names(x), names(formals(filter_var)))
+  if (length(ind) != 0L) {
+    xx <- x[ind]
+    cat(" .. additional information", "\n")
+    for (i in seq_along(xx)) {
+      # element_name <- format(names(xx)[i], width = name_width)
+      # element_value <- format_value(xx[[i]])
+      # cat(sprintf("     $ %s: %s", element_name, element_value), "\n")
+      str(xx[[i]])
+    }
+  }
+}
 
 
 #' complete filter settings
@@ -156,8 +187,12 @@ is.teal_slice <- function(x) {
 print.teal_slices <- function(x) {
   f <- attr(x, "exclude")
   ct <- attr(x, "count_type")
-  x <- lapply(x, unclass)
-  lapply(x, str)
+  for (i in seq_along(x)) {
+    ind <- names(x)[i]
+    if (is.null(ind)) ind <- sprintf("[[%d]]", i)
+    cat(ind, "\n")
+    print(x[[i]])
+  }
   cat("\nnon-filterable variables:")
   if (is.list(f) & length(f) == 0L) {
     cat(" none\n")
