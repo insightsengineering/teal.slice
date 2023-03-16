@@ -131,6 +131,8 @@ FilterState <- R6::R6Class( # nolint
         }
       )
       private$disabled <- reactiveVal(FALSE)
+      private$set_choices(choices)
+      self$set_selected(selected)
       logger::log_trace(
         sprintf(
           "Instantiated %s with variable %s, dataname: %s",

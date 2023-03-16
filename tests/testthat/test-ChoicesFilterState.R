@@ -283,8 +283,8 @@ testthat::test_that(
     test <- R6::R6Class(
       inherit = ChoicesFilterState,
       public = list(
-        test_get_filter_counts = function() private$get_filtered_counts(),
-        test_choices_counts = function() private$choices_counts
+        test_get_filtered_counts = function() private$get_filtered_counts(),
+        test_filtered_counts = function() private$filtered_counts
       )
     )
 
@@ -300,13 +300,13 @@ testthat::test_that(
     )
 
     testthat::expect_identical(
-      shiny::isolate(filter_state$test_get_filter_counts()),
+      shiny::isolate(filter_state$test_get_filtered_counts()),
       table(factor(xr, levels = unique(x)))
     )
 
 
     testthat::expect_identical(
-      shiny::isolate(filter_state$test_choices_counts()),
+      shiny::isolate(filter_state$test_filtered_counts()),
       unname(table(x))
     )
   }

@@ -109,7 +109,7 @@ ChoicesFilterState <- R6::R6Class( # nolint
     #'   if `extract_type` argument is not empty.
     #' @param varname (`character(1)`)\cr
     #'   name of the variable.
-    #' @param choices (`vector`, unique(na.omit(x)))\cr
+    #' @param choices (`atomic`, `NULL`)\cr
     #'   vector specifying allowed selection values
     #' @param selected (`atomic`, `NULL`)\cr
     #'   vector specifying selection
@@ -135,7 +135,7 @@ ChoicesFilterState <- R6::R6Class( # nolint
                           x_reactive = reactive(NULL),
                           dataname,
                           varname,
-                          choices = unique(na.omit(x)),
+                          choices = NULL,
                           selected = NULL,
                           keep_na = NULL,
                           keep_inf = NULL,
@@ -152,6 +152,29 @@ ChoicesFilterState <- R6::R6Class( # nolint
       )
       checkmate::assert_class(x_reactive, 'reactive')
 
+      private$data_class <- class(x)[1L]
+      if (inherits(x, "POSIXt")) {
+        private$tzone <- Find(function(x) x != "", attr(as.POSIXlt(x), "tzone"))
+      }
+
+      if (!is.factor(x)) {
+        x <- factor(as.character(x), levels = as.character(sort(unique(x))))
+      }
+      x <- droplevels(x)
+
+      if (is.null(choices)) {
+        choices <- levels(x)
+      } else {
+        choices <- as.character(choices)
+        choices <- choices[choices %in% x]
+        private$set_is_choice_limited(x, choices)
+        x <- x[x %in% choices]
+        x <- droplevels(x)
+      }
+
+      if (is.null(selected)) selected <- choices
+      selected <- selected[selected %in% choices]
+
       super$initialize(
         x = x,
         x_reactive = x_reactive,
@@ -167,22 +190,7 @@ ChoicesFilterState <- R6::R6Class( # nolint
         varlabel = varlabel,
         extract_type = extract_type)
 
-      private$data_class <- class(x)[1L]
-      if (inherits(x, "POSIXt")) {
-        private$tzone <- Find(function(x) x != "", attr(as.POSIXlt(x), "tzone"))
-      }
-      private$set_is_choice_limited(x, choices)
-      x <- x[x %in% choices]
-      selected <- selected[selected %in% choices]
-
-      if (!is.factor(x)) {
-        x <- factor(as.character(x), levels = as.character(sort(unique(x))))
-      }
-      x <- droplevels(x)
-      choices_table <- table(x)
-      private$set_choices(names(choices_table))
-      self$set_selected(selected)
-      private$set_choices_counts(unname(choices_table))
+      private$set_filtered_counts(unname(table(x)))
 
       return(invisible(self))
     },
@@ -246,47 +254,13 @@ ChoicesFilterState <- R6::R6Class( # nolint
           call(fun_compare, varname, make_c_call(choices))
         }
       private$add_keep_na_call(filter_call)
-    },
-
-    #' @description
-    #' Set state
-    #' @param state (`list`)\cr
-    #'  contains fields relevant for a specific class
-    #' \itemize{
-    #' \item{`selected`}{ defines initial selection}
-    #' \item{`keep_na` (`logical`)}{ defines whether to keep or remove `NA` values}
-    #' }
-    set_state = function(state) {
-      if (!is.null(state$selected)) {
-        state$selected <- as.character(state$selected)
-      }
-      super$set_state(state)
-      invisible(NULL)
-    },
-
-    #' @description
-    #' Sets the selected values of this `ChoicesFilterState`.
-    #'
-    #' @param value (`character`) the array of the selected choices.
-    #'   Must not contain NA values.
-    #'
-    #' @return invisibly `NULL`
-    #'
-    #' @note Casts the passed object to `character` before validating the input
-    #' making it possible to pass any object coercible to `character` to this method.
-    #'
-    #' @examples
-    #' filter <- teal.slice:::ChoicesFilterState$new(c("a", "b", "c"), varname = "name", dataname = "data")
-    #' filter$set_selected(c("c", "a"))
-    set_selected = function(value) {
-      super$set_selected(value)
     }
   ),
 
   # private members ----
 
   private = list(
-    choices_counts = integer(0),
+    filtered_counts = integer(0),
     data_class = character(0), # stores class of filtered variable so that it can be restored in $get_call
     tzone = character(0), # if x is a datetime, stores time zone so that it can be restored in $get_call
 
@@ -303,8 +277,8 @@ ChoicesFilterState <- R6::R6Class( # nolint
     #' @description
     #' Check whether the initial choices filter out some values of x and set the flag in case.
     #'
-    set_choices_counts = function(choices_counts) {
-      private$choices_counts <- choices_counts
+    set_filtered_counts = function(filtered_counts) {
+      private$filtered_counts <- filtered_counts
       invisible(NULL)
     },
     get_filtered_counts = function() {
@@ -366,7 +340,7 @@ ChoicesFilterState <- R6::R6Class( # nolint
     ui_inputs = function(id) {
       ns <- NS(id)
 
-      countsmax <- private$choices_counts
+      countsmax <- private$filtered_counts
       countsnow <- isolate(unname(table(factor(private$x_reactive(), levels = private$choices))))
 
       ui_input <- if (private$is_checkboxgroup()) {
@@ -440,14 +414,14 @@ ChoicesFilterState <- R6::R6Class( # nolint
               updateCountBars(
                 inputId = "labels",
                 choices = private$choices,
-                countsmax = private$choices_counts,
+                countsmax = private$filtered_counts,
                 countsnow = unname(table(factor(non_missing_values(), levels = private$choices)))
               )
             } else {
               labels <- mapply(
                 FUN = make_count_text,
                 label = private$choices,
-                countmax = private$choices_counts,
+                countmax = private$filtered_counts,
                 countnow = unname(table(factor(non_missing_values(), levels = private$choices)))
               )
               teal.widgets::updateOptionalSelectInput(
