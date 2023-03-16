@@ -27,8 +27,7 @@
 #' filter_state_range <- RangeFilterState$new(
 #'   x = data_range,
 #'   dataname = "data"
-#'   varname = "variable",
-#'   varlabel = "label"
+#'   varname = "variable"
 #' )
 #' filter_state_range$set_state(
 #'   filter_var("data", "variable", selected = c(0.15, 0.93), keep_na = TRUE, keep_inf = TRUE)
@@ -119,10 +118,6 @@ RangeFilterState <- R6::R6Class( # nolint
     #'   flag specifying whether to keep infinite values
     #' @param fixed (`logical(1)`)\cr
     #'   flag specifying whether the `FilterState` is initiated fixed
-    #' @param extras (`named list` or `NULL`) of `character` vectors\cr
-    #'   storing additional information on this filter state
-    #' @param varlabel (`character(0)`, `character(1)`)\cr
-    #'   label of the variable (optional)
     #' @param extract_type (`character(0)`, `character(1)`)\cr
     #' whether condition calls should be prefixed by dataname. Possible values:
     #' \itemize{
@@ -130,6 +125,7 @@ RangeFilterState <- R6::R6Class( # nolint
     #' \item{`"list"`}{ `varname` in the condition call will be returned as `<dataname>$<varname>`}
     #' \item{`"matrix"`}{ `varname` in the condition call will be returned as `<dataname>[, <varname>]`}
     #' }
+    #' @param ... additional arguments to be saved as a list in `private$extras` field
     #'
     initialize = function(x,
                           x_reactive = reactive(NULL),
@@ -140,28 +136,30 @@ RangeFilterState <- R6::R6Class( # nolint
                           keep_na = NULL,
                           keep_inf = NULL,
                           fixed = FALSE,
-                          extras = NULL,
-                          dataname_prefixed = character(0),
-                          varlabel = character(0),
-                          extract_type = character(0)) {
+                          extract_type = character(0),
+                          ...) {
       checkmate::assert_numeric(x, all.missing = FALSE)
       if (!any(is.finite(x))) stop("\"x\" contains no finite values")
       checkmate::assert_class(x_reactive, 'reactive')
 
-      super$initialize(
-        x = x,
-        x_reactive = x_reactive,
-        dataname = dataname,
-        varname = varname,
-        choices = choices,
-        selected = selected,
-        keep_na = keep_na,
-        keep_inf = keep_inf,
-        fixed = fixed,
-        extras = extras,
-        dataname_prefixed = dataname_prefixed,
-        varlabel = varlabel,
-        extract_type = extract_type)
+      do.call(
+        super$initialize,
+        append(
+          list(
+            x = x,
+            x_reactive = x_reactive,
+            dataname = dataname,
+            varname = varname,
+            choices = choices,
+            selected = selected,
+            keep_na = keep_na,
+            keep_inf = keep_inf,
+            fixed = fixed,
+            extract_type = extract_type),
+          list(...)
+        )
+      )
+
       private$is_integer <- checkmate::test_integerish(x)
       private$keep_inf <- reactiveVal(keep_inf)
       private$inf_filtered_count <- reactive(
@@ -249,15 +247,18 @@ RangeFilterState <- R6::R6Class( # nolint
     #' For this class returned call looks like
     #' `<varname> >= <min value> & <varname> <= <max value>` with
     #' optional `is.na(<varname>)` and `is.finite(<varname>)`.
+    #' @param dataname name of data set; defaults to `private$dataname`
     #' @return (`call`)
-    get_call = function() {
+    #'
+    get_call = function(dataname) {
+      if (missing(dataname)) dataname <- private$dataname
       filter_call <-
         call(
           "&",
-          call(">=", private$get_varname_prefixed(), self$get_selected()[1L]),
-          call("<=", private$get_varname_prefixed(), self$get_selected()[2L])
+          call(">=", private$get_varname_prefixed(dataname), self$get_selected()[1L]),
+          call("<=", private$get_varname_prefixed(dataname), self$get_selected()[2L])
         )
-      private$add_keep_na_call(private$add_keep_inf_call(filter_call))
+      private$add_keep_na_call(private$add_keep_inf_call(filter_call, dataname), dataname)
     },
 
     #' @description
@@ -265,52 +266,6 @@ RangeFilterState <- R6::R6Class( # nolint
     #' @return (`logical(1)`)
     get_keep_inf = function() {
       private$keep_inf()
-    },
-
-    #' @description
-    #' Set if `Inf` should be kept
-    #' @param value (`logical(1)`)\cr
-    #'  Value(s) which come from the filter selection. Value is set in `server`
-    #'  modules after selecting check-box-input in the shiny interface. Values are set to
-    #'  `private$keep_inf` which is reactive.
-    set_keep_inf = function(value) {
-      if (shiny::isolate(private$is_disabled())) {
-        warning("This filter state is disabled. Can not change keep Inf.")
-      } else {
-        checkmate::assert_flag(value)
-        private$keep_inf(value)
-        logger::log_trace(
-          sprintf(
-            "%s$set_keep_inf of variable %s set to %s, dataname: %s.",
-            class(self)[1],
-            private$varname,
-            value,
-            private$dataname
-          )
-        )
-      }
-    },
-
-    #' @description
-    #' Set state
-    #' @param state (`list`)\cr
-    #'  contains fields relevant for a specific class
-    #' \itemize{
-    #' \item{`selected`}{ defines initial selection}
-    #' \item{`keep_na` (`logical`)}{ defines whether to keep or remove `NA` values}
-    #' \item{`keep_inf` (`logical`)}{ defines whether to keep or remove `Inf` values}
-    #' }
-    set_state = function(state) {
-      if (inherits(state, "teal_slice")) {
-        super$set_state(state)
-      } else {
-        stopifnot(is.list(state) && all(names(state) %in% c("selected", "keep_na", "keep_inf")))
-        if (!is.null(state$keep_inf)) {
-          self$set_keep_inf(state$keep_inf)
-        }
-        super$set_state(state[names(state) %in% c("selected", "keep_na")])
-      }
-      invisible(NULL)
     },
 
     #' @description
@@ -356,9 +311,9 @@ RangeFilterState <- R6::R6Class( # nolint
 
     # Adds is.infinite(varname) before existing condition calls if keep_inf is selected
     # returns a call
-    add_keep_inf_call = function(filter_call) {
+    add_keep_inf_call = function(filter_call, dataname) {
       if (isTRUE(self$get_keep_inf())) {
-        call("|", call("is.infinite", private$get_varname_prefixed()), filter_call)
+        call("|", call("is.infinite", private$get_varname_prefixed(dataname)), filter_call)
       } else {
         filter_call
       }

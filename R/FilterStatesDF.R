@@ -289,51 +289,42 @@ DFFilterStates <- R6::R6Class( # nolint
     #'   keys = character(0)
     #' )
     #' filter_states$set_filter_state(list(character = list("a")))
+    #' filter_states$set_filter_state(
+    #'   filter_settings(
+    #'     filter_var(dataname = "data", varname = "character", selected = "a")
+    #'   )
+    #' )
     #' isolate(filter_states$get_call())
     #'
-    #' @return `NULL`
+    #' @return `NULL` invisibly
+    #'
     set_filter_state = function(state) {
-      if (is.teal_slices(state)) {
-        private$set_filter_state_impl(
-          state = state,
-          state_list_index = 1L,
-          data = private$data,
-          data_reactive = private$data_reactive
+      checkmate::assert_class(state, "teal_slices")
+
+      logger::log_trace("{ class(self)[1] }$set_filter_state initializing, dataname: { private$dataname }")
+
+      # Drop teal_slices that refer to excluded variables.
+      varnames <- unique(unlist(extract_feat(state, "varname")))
+      filterable <- private$filterable_varnames
+      if (!all(varnames %in% filterable)) {
+        excluded_variables <- toString(dQuote(setdiff(varnames, filterable), q = FALSE))
+        state <- extract_fun_s(
+          state,
+          sprintf("!varname %%in%% c(%s)", )
         )
-        NULL
-      } else {
-        logger::log_trace("{ class(self)[1] }$set_filter_state initializing, dataname: { private$dataname }")
-        checkmate::assert_list(state, null.ok = TRUE, names = "named")
-
-        data <- private$data
-        data_reactive <- private$data_reactive
-
-        # excluding not supported variables
-        state_varnames <- names(state)
-        filterable_varnames <- private$filterable_varnames
-        excluded_varnames <- setdiff(state_varnames, filterable_varnames)
-        if (length(excluded_varnames) > 0) {
-          excluded_varnames_str <- toString(excluded_varnames)
-          warning(
-            "These columns filters were excluded: ",
-            excluded_varnames_str,
-            " from dataset ",
-            private$dataname
-          )
-          logger::log_warn("Columns filters { excluded_varnames_str } were excluded from { private$dataname }")
-          state <- state[state_varnames %in% filterable_varnames]
-        }
-
-        private$set_filter_state_impl(
-          state = state,
-          state_list_index = 1L,
-          data = data,
-          data_reactive = private$data_reactive
-        )
-
-        logger::log_trace("{ class(self)[1] }$set_filter_state initialized, dataname: { private$dataname }")
-        NULL
+        logger::log_warn("filters for columns: { excluded_varnames } excluded from { private$dataname }")
       }
+
+      private$set_filter_state_impl(
+        state = state,
+        state_list_index = 1L,
+        data = private$data,
+        data_reactive = private$data_reactive
+      )
+
+      logger::log_trace("{ class(self)[1] }$set_filter_state initialized, dataname: { private$dataname }")
+
+      invisible(NULL)
     },
 
     #' @description Remove a `FilterState` from the `state_list`.

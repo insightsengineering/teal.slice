@@ -27,8 +27,7 @@
 #' filter_state_date <- DateFilterState$new(
 #'   x = data_date,
 #'   dataname = "data",
-#'   varname = "variable",
-#'   varlabel = "label"
+#'   varname = "variable"
 #' )
 #' filter_state_date$set_state(
 #'   filter_var("data", "variable", selected = data_date[c(47, 98)], keep_na = TRUE)
@@ -120,10 +119,6 @@ DateFilterState <- R6::R6Class( # nolint
     #'   flag specifying whether to keep infinite values
     #' @param fixed (`logical(1)`)\cr
     #'   flag specifying whether the `FilterState` is initiated fixed
-    #' @param extras (`named list` or `NULL`) of `character` vectors\cr
-    #'   storing additional information on this filter state
-    #' @param varlabel (`character(0)`, `character(1)`)\cr
-    #'   label of the variable (optional)
     #' @param extract_type (`character(0)`, `character(1)`)\cr
     #' whether condition calls should be prefixed by dataname. Possible values:
     #' \itemize{
@@ -131,6 +126,7 @@ DateFilterState <- R6::R6Class( # nolint
     #' \item{`"list"`}{ `varname` in the condition call will be returned as `<dataname>$<varname>`}
     #' \item{`"matrix"`}{ `varname` in the condition call will be returned as `<dataname>[, <varname>]`}
     #' }
+    #' @param ... additional arguments to be saved as a list in `private$extras` field
     #'
     initialize = function(x,
                           x_reactive = reactive(NULL),
@@ -141,10 +137,8 @@ DateFilterState <- R6::R6Class( # nolint
                           keep_na = NULL,
                           keep_inf = NULL,
                           fixed = FALSE,
-                          extras = NULL,
-                          dataname_prefixed = character(0),
-                          varlabel = character(0),
-                          extract_type = character(0)) {
+                          extract_type = character(0),
+                          ...) {
       stopifnot(is(x, "Date"))
       checkmate::assert_class(x_reactive, 'reactive')
 
@@ -161,20 +155,23 @@ DateFilterState <- R6::R6Class( # nolint
       if (is.null(selected)) selected <- choices
       selected <- c(max(selected[1], min(choices)) , min(selected[2], max(choices)))
 
-      super$initialize(
-        x = x,
-        x_reactive = x_reactive,
-        dataname = dataname,
-        varname = varname,
-        choices = choices,
-        selected = selected,
-        varlabel = varlabel,
-        keep_na = keep_na,
-        keep_inf = keep_inf,
-        fixed = fixed,
-        extras = extras,
-        dataname_prefixed = dataname_prefixed,
-        extract_type = extract_type)
+      do.call(
+        super$initialize,
+        append(
+          list(
+            x = x,
+            x_reactive = x_reactive,
+            dataname = dataname,
+            varname = varname,
+            choices = choices,
+            selected = selected,
+            keep_na = keep_na,
+            keep_inf = keep_inf,
+            fixed = fixed,
+            extract_type = extract_type),
+          list(...)
+        )
+      )
 
       return(invisible(self))
     },
@@ -222,9 +219,12 @@ DateFilterState <- R6::R6Class( # nolint
     #' For this class returned call looks like
     #' `<varname> >= <min value> & <varname> <= <max value>` with
     #' optional `is.na(<varname>)`.
+    #' @param dataname name of data set; defaults to `private$dataname`
     #' @return (`call`)
-    get_call = function() {
-      choices <- as.character(self$get_selected())
+    #'
+    get_call = function(dataname) {
+      if (missing(dataname)) dataname <- private$dataname
+      choices <- as.character(self$get_selected(dataname))
       filter_call <-
         call(
           "&",

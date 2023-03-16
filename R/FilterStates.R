@@ -77,7 +77,6 @@ FilterStates <- R6::R6Class( # nolint
       checkmate::assert_character(datalabel, max.len = 1, any.missing = FALSE)
 
       private$dataname <- dataname
-      private$dataname_prefixed <- private$get_dataname_prefixed()
       private$datalabel <- datalabel
       private$data <- data
       private$data_reactive <- data_reactive
@@ -149,7 +148,7 @@ FilterStates <- R6::R6Class( # nolint
           calls <- lapply(
             filtered_items,
             function(state) {
-              state$get_call()
+              state$get_call(dataname = private$get_dataname_prefixed())
             }
           )
           calls_combine_by(calls, operator = "&")
@@ -324,7 +323,6 @@ FilterStates <- R6::R6Class( # nolint
     observers = list(), # observers
     state_list = NULL, # list of `reactiveVal`s initialized by init methods of child classes,
     count_type = character(0), # specifies how observation numbers are displayed in filter cards,
-    dataname_prefixed = character(0),
 
     # private methods ----
 
@@ -542,7 +540,7 @@ FilterStates <- R6::R6Class( # nolint
     # @description
     # Remove all `FilterState` objects from this `FilterStates` object.
     #
-    # @return NULL
+    # @return invisible NULL
     #
     state_list_empty = function() {
       logger::log_trace("{ class(self)[1] }$state_list_empty initializing for dataname: { private$dataname }")
@@ -563,123 +561,69 @@ FilterStates <- R6::R6Class( # nolint
     #
     # Utility method for `set_filter_state` to create or modify `FilterState` from a single
     #  `state_list_index`.
-    # @param state (`list`)
-    #   should contain values which are initial selection in the `FilterState`.
-    #   Names of the `list` element should correspond to the name of the columns.
+    # @param state (`teal_slices`)
     # @param state_list_index (`vector(1)`)
     #  index of the `state_list`
     # @param data (`data.frame`, `matrix` or `DataFrame`)
     # @param data_reactive (`function`)
     #  function having `sid` as argument
     # @param extract_type (`character(0)` or `chracter(1)`)
+    #
+    # @return invisible NULL
+    #
     set_filter_state_impl = function(state,
                                      state_list_index,
                                      data,
                                      data_reactive,
-                                     extract_type = character(0),
-                                     na_rm = FALSE) {
-      checkmate::assert(
-        checkmate::check_list(state, null.ok = TRUE, names = "named"),
-        checkmate::check_class(state, "teal_slices")
-      )
-      if (is.teal_slices(state)) {
-        checkmate::assert_scalar(state_list_index)
-        checkmate::assert_multi_class(data, c("data.frame", "matrix", "DataFrame"))
-        checkmate::assert_function(data_reactive, args = "sid")
-
-        if (length(state) == 0L) return(NULL)
-
-        lapply(state, function(x) {
-          # objects has random and unique sid attribute
-          # which allows a reactive from below to find a right object in the state_list
-          sid <- sprintf("%s-%s-%s", state_list_index, x$varname, sample.int(size = 1L, n = .Machine$integer.max))
-          fstate <- init_filter_state(
-            x = data[, x$varname, drop = TRUE],
-            # data_reactive is a function which eventually calls get_call(sid).
-            # This chain of calls returns column from the data filtered by everything
-            # but filter identified by the sid argument. FilterState then get x_reactive
-            # and this no longer needs to be a function to pass sid. reactive in the FilterState
-            # is also beneficial as it can be cached and retriger filter counts only if
-            # returned vector is different.
-            x_reactive = reactive(data_reactive(sid)[, x$varname, drop = TRUE]),
-            dataname = x$dataname,
-            varname = x$varname,
-            choices = x$choices,
-            selected = x$selected,
-            keep_na = x$keep_na,
-            keep_inf = x$keep_inf,
-            fixed = x$fixed,
-            extras = x$extras,
-            dataname_prefixed = private$dataname_prefixed,
-            extract_type = extract_type
-          )
-          attr(fstate, "sid") <- sid
-          private$state_list_push(x = fstate, state_list_index = state_list_index, state_id = x$varname)
-        })
-      } else {
-        warning(paste(
-          "From FilterStates:",
-          "Specifying filters as lists is obsolete and will be deprecated in the next release.",
-          "Please see ?set_filter_state and ?filter_settings for details."
-        ),
-        call. = FALSE)
-        checkmate::assert_scalar(state_list_index)
-        checkmate::assert_multi_class(data, c("data.frame", "matrix", "DataFrame"))
-        checkmate::assert_function(data_reactive, args = "sid")
-        checkmate::assert(
-          checkmate::check_subset(names(state), colnames(data)),
-          checkmate::check_class(state, "default_filter"),
-          combine = "or"
-        )
-        # add new states and modify existing:
-        # - modify existing states
-        states_now <- shiny::isolate(private$state_list_get(state_list_index))
-        state_names_existing <- intersect(names(states_now), names(state))
-        mapply(
-          fstate = states_now[state_names_existing],
-          value = state[state_names_existing],
-          function(fstate, value) fstate$set_state(resolve_state(value))
-        )
-
-        # - add new states
-        max_id <- max(0L, unlist(lapply(states_now, attr, "sid")))
-        state_names_new <- setdiff(names(state), names(states_now))
-        mapply(
-          varname = state_names_new,
-          value = state[state_names_new],
-          function(varname, value) {
-            # objects has random and unique sid attribute
-            #  which allows a reactive from below to find a right object in the state_list
-            sid <- sprintf("%s-%s-%s", state_list_index, varname, sample.int(size = 1L, n = .Machine$integer.max))
-            fstate <- init_filter_state(
-              x = if (!is.array(data)) {
-                data[[varname]]
-              } else {
-                data[, varname]
-              },
-
-              # data_reactive is a function which eventually calls get_call(sid).
-              # This chain of calls returns column from the data filtered by everything
-              # but filter identified by the sid argument. FilterState then get x_reactive
-              # and this no longer needs to be a function to pass sid. reactive in the FilterState
-              # is also beneficial as it can be cached and retriger filter counts only if
-              # returned vector is different.
-              x_reactive = if (!is.array(data)) {
-                reactive(data_reactive(sid)[[varname]])
-              } else {
-                reactive(data_reactive(sid)[, varname])
-              },
-              varname = varname,
-              dataname = private$dataname,
-              extract_type = extract_type
-            )
-            attr(fstate, "sid") <- sid
-            fstate$set_state(resolve_state(value))
-            if (na_rm) fstate$set_na_rm(na_rm)
-            private$state_list_push(x = fstate, state_list_index = state_list_index, state_id = varname)
-          }
-        )
+                                     extract_type = character(0)) {
+      checkmate::assert_class(state, "teal_slices")
+      checkmate::assert_scalar(state_list_index)
+      checkmate::assert_multi_class(data, c("data.frame", "matrix", "DataFrame"))
+      checkmate::assert_function(data_reactive, args = "sid")
+      checkmate::assert_character(extract_type, max.len = 1L)
+      if (length(extract_type) != 0L) {
+        extract_type <- match.arg(extract_type, c("list", "matrix"))
       }
+
+      if (length(state) == 0L) return(invisible(NULL))
+
+      # Modify existing filter states.
+      state_list <- shiny::isolate(private$state_list_get(state_list_index))
+      slices_for_update <- extract_fun_s(
+        state,
+        sprintf("varname %%in%% c(%s)", toString(dQuote(names(state_list), q = FALSE)))
+      )
+      lapply(slices_for_update, function(x) {
+        state_list[[x$varname]]$set_state(x)
+      })
+
+      # Create new filter states.
+      slices_for_create <- extract_fun_s(
+        state,
+        sprintf("!varname %%in%% c(%s)", toString(dQuote(names(state_list), q = FALSE)))
+      )
+      lapply(slices_for_create, function(x) {
+        # objects has random and unique sid attribute
+        # which allows a reactive from below to find a right object in the state_list
+        sid <- sprintf("%s-%s-%s", state_list_index, x$varname, sample.int(size = 1L, n = .Machine$integer.max))
+        arg_list <- list(
+          x = data[, x$varname, drop = TRUE],
+          # data_reactive is a function which eventually calls get_call(sid).
+          # This chain of calls returns column from the data filtered by everything
+          # but filter identified by the sid argument. FilterState then get x_reactive
+          # and this no longer needs to be a function to pass sid. reactive in the FilterState
+          # is also beneficial as it can be cached and retriger filter counts only if
+          # returned vector is different.
+          x_reactive = reactive(data_reactive(sid)[, x$varname, drop = TRUE]),
+          extract_type = extract_type
+        )
+        arg_list <- append(arg_list, as.list(x))
+        fstate <- do.call(init_filter_state, arg_list)
+        attr(fstate, "sid") <- sid
+        private$state_list_push(x = fstate, state_list_index = state_list_index, state_id = x$varname)
+      })
+
+      invisible(NULL)
     },
 
     # Checks if the state_list of the given index was initialized in this `FilterStates`

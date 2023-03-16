@@ -70,10 +70,6 @@ FilterState <- R6::R6Class( # nolint
     #'   flag specifying whether to keep infinite values
     #' @param fixed (`logical(1)`)\cr
     #'   flag specifying whether the `FilterState` is initiated fixed
-    #' @param extras (`named list` or `NULL`) of `character` vectors\cr
-    #'   storing additional information on this filter state
-    #' @param varlabel (`character(0)`, `character(1)`)\cr
-    #'   label of the variable (optional)
     #' @param extract_type (`character(0)`, `character(1)`)\cr
     #' whether condition calls should be prefixed by dataname. Possible values:
     #' \itemize{
@@ -81,6 +77,7 @@ FilterState <- R6::R6Class( # nolint
     #' \item{`"list"`}{ `varname` in the condition call will be returned as `<dataname>$<varname>`}
     #' \item{`"matrix"`}{ `varname` in the condition call will be returned as `<dataname>[, <varname>]`}
     #' }
+    #' @param ... additional arguments to be saved as a list in `private$extras` field
     #'
     #' @return self invisibly
     #'
@@ -93,14 +90,11 @@ FilterState <- R6::R6Class( # nolint
                           keep_na = NULL,
                           keep_inf = NULL,
                           fixed = FALSE,
-                          extras = NULL,
-                          dataname_prefixed = character(0),
-                          varlabel = character(0),
-                          extract_type = character(0)) {
+                          extract_type = character(0),
+                          ...) {
       checkmate::assert_class(x_reactive, "reactive")
       checkmate::assert_string(dataname)
       checkmate::assert_string(varname)
-      checkmate::assert_character(varlabel, max.len = 1, any.missing = FALSE)
       checkmate::assert_character(extract_type, max.len = 1, any.missing = FALSE)
       if (length(extract_type) == 1) {
         checkmate::assert_choice(extract_type, choices = c("list", "matrix"))
@@ -112,12 +106,13 @@ FilterState <- R6::R6Class( # nolint
       private$varname <- varname
       private$selected <- reactiveVal(NULL)
       private$keep_na <- reactiveVal(keep_na)
-      private$extras <- extras
+      private$extras <- list(...)
       private$fixed <- fixed
-      private$dataname_prefixed <- dataname_prefixed
+      # Establish varlabel.
+      varlabel <- attr(x, "label")
+      # Only display it if different to varname.
       private$varlabel <-
         if (identical(varlabel, as.character(varname))) {
-          # to not display duplicated label
           character(0)
         } else {
           varlabel
@@ -310,6 +305,32 @@ FilterState <- R6::R6Class( # nolint
     },
 
     #' @description
+    #' Set whether to keep Infs
+    #'
+    #' @param value (`logical(1)`)\cr
+    #'  Value(s) which come from the filter selection. Value is set in `server`
+    #'  modules after selecting check-box-input in the shiny interface. Values are set to
+    #'  `private$keep_inf` which is reactive.
+    #'
+    set_keep_inf = function(value) {
+      if (shiny::isolate(private$is_disabled())) {
+        warning("This filter state is disabled. Can not change keep Inf.")
+      } else {
+        checkmate::assert_flag(value)
+        private$keep_inf(value)
+        logger::log_trace(
+          sprintf(
+            "%s$set_keep_inf of variable %s set to %s, dataname: %s.",
+            class(self)[1],
+            private$varname,
+            value,
+            private$dataname
+          )
+        )
+      }
+    },
+
+    #' @description
     #' Some methods need an additional `!is.na(varame)` condition to drop
     #' missing values. When `private$na_rm = TRUE`, `self$get_call` returns
     #' condition extended by `!is.na`.
@@ -372,45 +393,32 @@ FilterState <- R6::R6Class( # nolint
     #'
     #' @param state a (`teal_slice`) object; see `Filter state specification`
     #'
-    #' @return NULL invisibly
+    #' @return `NULL` invisibly
     #'
     set_state = function(state) {
-      if (inherits(state, "teal_slice")) {
-        if (!is.null(state$selected)) {
-          self$set_selected(state$selected)
-        }
-        if (!is.null(state$keep_na)) {
-          self$set_keep_na(state$keep_na)
-        }
-        if (!is.null(state$keep_inf)) {
-          self$set_keep_inf(state$keep_inf)
-        }
-      } else {
-        logger::log_trace(sprintf(
-          "%s$set_state, dataname: %s setting state of variable %s to: selected=%s, keep_na=%s",
-          class(self)[1],
-          private$dataname,
-          private$varname,
-          paste(state$selected, collapse = " "),
-          state$keep_na
-        ))
-        stopifnot(is.list(state) && all(names(state) %in% c("selected", "keep_na")))
+      checkmate::assert_class(state, "teal_slice")
 
-        if (!is.null(state$keep_na)) {
-          self$set_keep_na(state$keep_na)
-        }
-        if (!is.null(state$selected)) {
-          self$set_selected(state$selected)
-        }
-        logger::log_trace(
-          sprintf(
-            "%s$set_state, dataname: %s done setting state for variable %s",
-            class(self)[1],
-            private$dataname,
-            private$varname
-          )
-        )
+      logger::log_trace("{ class(self)[1] }$set_state setting state of variable: { state$varname }")
+
+      if (!is.null(state$selected)) {
+        self$set_selected(state$selected)
       }
+      if (!is.null(state$keep_na)) {
+        self$set_keep_na(state$keep_na)
+      }
+      if (!is.null(state$keep_inf)) {
+        self$set_keep_inf(state$keep_inf)
+      }
+
+      current_state <- sprintf(
+        "selected: %s, keep_na: %s, keep_inf: %s",
+        toString(state$selected),
+        state$keep_na,
+        state$keep_inf
+      )
+
+      logger::log_trace("state of variable: { state$varname } set to: { current_state }")
+
       invisible(NULL)
     },
 
@@ -483,7 +491,6 @@ FilterState <- R6::R6Class( # nolint
     disabled = NULL, # reactiveVal holding a logical(1)
     cache = NULL, # cache state when filter disabled so we can later restore
     extract_type = character(0),
-    dataname_prefixed = character(0), # depends on encapsulating FilterStates object class
 
     # private methods ----
 
@@ -492,12 +499,12 @@ FilterState <- R6::R6Class( # nolint
     # for example `data$var`
     # @return a character string representation of a subset call
     #         that extracts the variable from the dataset
-    get_varname_prefixed = function() {
+    get_varname_prefixed = function(dataname) {
       ans <-
         if (isTRUE(private$extract_type == "list")) {
-          sprintf("%s$%s", private$dataname_prefixed, private$varname)
+          sprintf("%s$%s", dataname, private$varname)
         } else if (isTRUE(private$extract_type == "matrix")) {
-          sprintf("%s[, \"%s\"]", private$dataname_prefixed, private$varname)
+          sprintf("%s[, \"%s\"]", dataname, private$varname)
         } else {
           private$varname
         }
@@ -509,13 +516,13 @@ FilterState <- R6::R6Class( # nolint
     # Otherwise, if missings are found in the variable `!is.na` will be added
     # only if `private$na_rm = TRUE`
     # @return a `call`
-    add_keep_na_call = function(filter_call) {
+    add_keep_na_call = function(filter_call, dataname) {
       if (isTRUE(self$get_keep_na())) {
-        call("|", call("is.na", private$get_varname_prefixed()), filter_call)
+        call("|", call("is.na", private$get_varname_prefixed(dataname)), filter_call)
       } else if (isTRUE(private$na_rm) && private$na_count > 0L) {
         call(
           "&",
-          call("!", call("is.na", private$get_varname_prefixed())),
+          call("!", call("is.na", private$get_varname_prefixed(dataname))),
           filter_call
         )
       } else {

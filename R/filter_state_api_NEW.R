@@ -67,8 +67,7 @@ filter_var <- function(
     keep_inf = keep_inf,
     fixed = fixed
   )
-  extras <- list(...)
-  if (length(extras) != 0L) ans$extras <- extras
+  ans <- append(ans, list(...))
 
   class(ans) <- c("teal_slice", class(ans))
   ans
@@ -80,9 +79,39 @@ c.teal_slice <- function(...) {
   ans
 }
 print.teal_slice <- function(x) {
-  str(x)
-}
+  name_width <- max(nchar(names(x)))
+  format_value <- function(v) {
+    if (is.null(v)) return("NULL")
+    if (inherits(v,  c("character", "factor"))) {
+      v <- dQuote(v, q = FALSE)
+    }
+    v <- paste(v, collapse = " ")
+    if (nchar(v) > 20L) {
+      v <- paste(substr(v, 1, 16), "...")
+    }
+    v
+  }
 
+  ind <- intersect(names(x), names(formals(filter_var)))
+  xx <- x[ind]
+  cat("teal_slice", "\n")
+  for (i in seq_along(xx)) {
+    element_name <- format(names(xx)[i], width = name_width)
+    element_value <- format_value(xx[[i]])
+    cat(sprintf(" $ %s: %s", element_name, element_value), "\n")
+  }
+
+  ind <- setdiff(names(x), names(formals(filter_var)))
+  if (length(ind) != 0L) {
+    xx <- x[ind]
+    cat(" .. additional information", "\n")
+    for (i in seq_along(xx)) {
+      element_name <- format(names(xx)[i], width = name_width)
+      element_value <- format_value(xx[[i]])
+      cat(sprintf("     $ %s: %s", element_name, element_value), "\n")
+    }
+  }
+}
 
 
 #' complete filter settings
@@ -156,8 +185,12 @@ is.teal_slice <- function(x) {
 print.teal_slices <- function(x) {
   f <- attr(x, "exclude")
   ct <- attr(x, "count_type")
-  x <- lapply(x, unclass)
-  lapply(x, str)
+  for (i in seq_along(x)) {
+    ind <- names(x)[i]
+    if (is.null(ind)) ind <- sprintf("[[%d]]", i)
+    cat(ind, "\n")
+    print(x[[i]])
+  }
   cat("\nnon-filterable variables:")
   if (is.list(f) & length(f) == 0L) {
     cat(" none\n")
@@ -213,7 +246,7 @@ extract_fun <- function(tss, expr) {
   Filter(function(x) isTRUE(eval(expr, x)), tss)
 }
 extract_fun(all_filters, dataname == "dataname2")
-extract_fun(all_filters, extras$extra2 == "extratwo")
+# extract_fun(all_filters, extras$extra2 == "extratwo") # obsolete
 
 # string version
 extract_fun_s <- function(tss, expr) {
@@ -226,60 +259,14 @@ extract_fun_s(all_filters, 'dataname == "dataname2"')
 x = "dataname2"
 extract_fun_s(all_filters, sprintf('dataname == "%s"', x))
 
-# add elements to extras in all slices
-add_extras <- function(tss, extras) {
-  ans <- lapply(tss, function(ts) {
-    ts$extras <- c(ts$extras, extras)
-    ts
-  })
-  attributes(ans) <- attributes(tss)
-  ans
-}
 
 # convert list to teal_slice
 as.teal_slice <- function(x) {
   do.call(filter_var, x)
 }
 
-# # convert list to teal_slice
-# as.teal_slices <- function(x, master) {
-#   varnames <- lapply(x, names)
-#   selecteds <- unlist(lapply(x, function(x) lapply(x, function(x) x$selected)), recursive = FALSE)
-#   keep_nas <- unlist(lapply(x, function(x) lapply(x, function(x) x$keep_na)), recursive = FALSE)
-#   keep_infs <- unlist(lapply(x, function(x) lapply(x, function(x) x$keep_inf)), recursive = FALSE)
-#
-#   datanames <- character(0)
-#   for (d in seq_along(x)) {
-#     for (v in seq_along(x[[d]])) {
-#       datanames <- c(datanames, names(x)[d])
-#     }
-#   }
-#   varnames <- unname(unlist(lapply(x, names)))
-#
-#   slices <- .mapply(
-#     FUN = filter_var,
-#     dots = list(
-#       dataname = datanames,
-#       varname = varnames,
-#       selected = selecteds,
-#       keep_na = keep_nas,
-#       keep_inf = keep_infs
-#     ),
-#     MoreArgs = list(
-#       choices = NULL,
-#       fixed = FALSE
-#     )
-#   )
-#
-#   if (!missing(master)) {
-#     slices <- lapply(slices, function(x) {
-#       x$dataname <- master
-#       x
-#     })
-#   }
-#
-#   do.call(filter_settings, as.list(slices, list(exclude = list(), count_types = "none")))
-# }
+# convert nested list to teal_slices
+# this function is not overly robust, it covers cases that are encountered in teal at this time
 as.teal_slices <- function(x) {
   checkmate::assert_list(x, names = "named")
 
@@ -347,4 +334,18 @@ as.teal_slices <- function(x) {
   }
 
   do.call(filter_settings, slices)
+}
+
+# name teal_slices according to value of respective field in slices
+# possibly useful in set_filter_state_impl but needs safeguards
+name_slices <- function(tss, field) {
+  checkmate::assert_class(tss, "teal_slices")
+  checkmate::assert_string(field)
+  checkmate::assert_choice(field, setdiff(names(formals(filter_var)), "..."))
+
+  feats <- unlist(extract_feat(tss, field))
+  if (anyDuplicated(feats)) stop("duplicated values")
+
+  names(tss) <- feats
+  tss
 }

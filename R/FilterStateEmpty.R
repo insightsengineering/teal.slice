@@ -49,10 +49,6 @@ EmptyFilterState <- R6::R6Class( # nolint
     #'   flag specifying whether to keep infinite values
     #' @param fixed (`logical(1)`)\cr
     #'   flag specifying whether the `FilterState` is initiated fixed
-    #' @param extras (`named list` or `NULL`) of `character` vectors\cr
-    #'   storing additional information on this filter state
-    #' @param varlabel (`character(0)`, `character(1)`)\cr
-    #'   label of the variable (optional)
     #' @param extract_type (`character(0)`, `character(1)`)\cr
     #' whether condition calls should be prefixed by dataname. Possible values:
     #' \itemize{
@@ -60,6 +56,7 @@ EmptyFilterState <- R6::R6Class( # nolint
     #' \item{`"list"`}{ `varname` in the condition call will be returned as `<dataname>$<varname>`}
     #' \item{`"matrix"`}{ `varname` in the condition call will be returned as `<dataname>[, <varname>]`}
     #' }
+    #' @param ... additional arguments to be saved as a list in `private$extras` field
     #'
     initialize = function(x,
                           x_reactive = reactive(NULL),
@@ -70,26 +67,26 @@ EmptyFilterState <- R6::R6Class( # nolint
                           keep_na = NULL,
                           keep_inf = NULL,
                           fixed = FALSE,
-                          extras = NULL,
-                          dataname_prefixed = character(0),
-                          varlabel = character(0),
-                          extract_type = character(0)) {
+                          extract_type = character(0),
+                          ...) {
 
-      checkmate::assert_class(x_reactive, 'reactive')
-      super$initialize(
-        x = x,
-        x_reactive = x_reactive,
-        dataname = dataname,
-        varname = varname,
-        choices = choices,
-        selected = selected,
-        keep_na = keep_na,
-        keep_inf = keep_inf,
-        fixed = fixed,
-        extras = extras,
-        dataname_prefixed = dataname_prefixed,
-        varlabel = varlabel,
-        extract_type = extract_type)
+      do.call(
+        super$initialize,
+        append(
+          list(
+            x = x,
+            x_reactive = x_reactive,
+            dataname = dataname,
+            varname = varname,
+            choices = choices,
+            selected = selected,
+            keep_na = keep_na,
+            keep_inf = keep_inf,
+            fixed = fixed,
+            extract_type = extract_type),
+          list(...)
+        )
+      )
 
       private$set_choices(list())
       self$set_selected(list())
@@ -115,14 +112,15 @@ EmptyFilterState <- R6::R6Class( # nolint
     #' for selected variable type.
     #' Uses internal reactive values, hence must be called
     #' in reactive or isolated context.
-    #'
+    #' @param dataname name of data set; defaults to `private$dataname`
     #' @return `logical(1)`
     #'
-    get_call = function() {
+    get_call = function(dataname) {
+      if (missing(dataname)) dataname <- private$dataname
       filter_call <- if (isTRUE(self$get_keep_na())) {
-        call("is.na", private$get_varname_prefixed())
+        call("is.na", private$get_varname_prefixed(dataname))
       } else {
-        substitute(!is.na(varname), list(varname = private$get_varname_prefixed()))
+        substitute(!is.na(varname), list(varname = private$get_varname_prefixed(dataname)))
       }
     },
 
@@ -139,12 +137,12 @@ EmptyFilterState <- R6::R6Class( # nolint
     },
 
     #' @description
-    #' Set state.
+    #' Set state
     #'
-    #' @param state (`list`)\cr
-    #'  contains fields relevant for specific class:
+    #' @param state (`teal_slice`)\cr
+    #'  only the `keep_na` field will be considered; a non-NULL `selected` field raises an error
     #' \itemize{
-    #' \item{`keep_na` (`logical`)}{ defines whether to keep or remove `NA` values}
+    #'   \item{`keep_na` (`logical`)}{ defines whether to keep or remove `NA` values }
     #' }
     #'
     #' @return NULL invisibly
@@ -158,10 +156,9 @@ EmptyFilterState <- R6::R6Class( # nolint
           )
         )
       }
-      stopifnot(is.list(state) && all(names(state) == "keep_na"))
-      if (!is.null(state$keep_na) || private$is_disabled()) {
-        self$set_keep_na(state$keep_na)
-      }
+
+      super$set_state(state)
+
       invisible(NULL)
     }
   ),

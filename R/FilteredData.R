@@ -491,10 +491,11 @@ FilteredData <- R6::R6Class( # nolint
     #' @description
     #' Sets active filter states.
     #'
-    #' @param state (`named list`)\cr
-    #'  nested list of filter selections applied to datasets
+    #' @param state either a `named list` list of filter selections
+    #'              or a `teal_slices` object\cr
+    #'              specification by list will be deprecated soon
     #'
-    #' @return `NULL`
+    #' @return `NULL` invisibly
     #'
     #' @examples
     #' utils::data(miniACC, package = "MultiAssayExperiment")
@@ -526,19 +527,18 @@ FilteredData <- R6::R6Class( # nolint
         call. = FALSE)
        state <- as.teal_slices(state)
       }
+
       checkmate::assert_class(state, "teal_slices")
       datanames <- unique(unlist(extract_feat(state, "dataname")))
       checkmate::assert_subset(datanames, self$datanames())
 
+      logger::log_trace("{ class(self)[1] }$set_filter_state initializing, dataname: { private$dataname }")
+
       lapply(datanames, function(x) {
-        logger::log_trace(
-          "FilteredData$set_filter_state initializing, dataname: {x}"
-        )
         private$get_filtered_dataset(x)$set_filter_state(extract_by_feat(state, "dataname", x))
-        logger::log_trace(
-          "FilteredData$set_filter_state initialized, dataname: {x}"
-        )
       })
+
+      logger::log_trace("{ class(self)[1] }$set_filter_state initialized, dataname: { private$dataname }")
 
       invisible(NULL)
     },
