@@ -136,12 +136,12 @@ EmptyFilterState <- R6::R6Class( # nolint
     },
 
     #' @description
-    #' Set state.
+    #' Set state
     #'
-    #' @param state (`list`)\cr
-    #'  contains fields relevant for specific class:
+    #' @param state (`teal_slice`)\cr
+    #'  only the `keep_na` field will be considered; a non-NULL `selected` field raises an error
     #' \itemize{
-    #' \item{`keep_na` (`logical`)}{ defines whether to keep or remove `NA` values}
+    #'   \item{`keep_na` (`logical`)}{ defines whether to keep or remove `NA` values }
     #' }
     #'
     #' @return NULL invisibly
@@ -155,10 +155,9 @@ EmptyFilterState <- R6::R6Class( # nolint
           )
         )
       }
-      stopifnot(is.list(state) && all(names(state) == "keep_na"))
-      if (!is.null(state$keep_na) || private$is_disabled()) {
-        self$set_keep_na(state$keep_na)
-      }
+
+      super$set_state(state)
+
       invisible(NULL)
     }
   ),
