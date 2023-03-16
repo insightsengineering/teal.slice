@@ -214,19 +214,12 @@ testthat::test_that("set_selected sets the intersection of choices and the passe
 })
 
 # set_state ----
-testthat::test_that("set_state needs a named list with selected and keep_na elements", {
-  filter_state <- ChoicesFilterState$new(
-    x = c("a", "b", NA_character_), x_reactive = reactive(NULL), varname = "variable", dataname = "data"
-  )
-  testthat::expect_no_error(filter_state$set_state(list(selected = "a", keep_na = TRUE)))
-  testthat::expect_error(filter_state$set_state(list(selected = "a", unknown = TRUE)), "all\\(names\\(state\\)")
-})
 
 testthat::test_that("set_state sets values of selected and keep_na as provided in the list", {
   filter_state <- ChoicesFilterState$new(
     x = c("a", "b", NA_character_), x_reactive = reactive(NULL), varname = "variable", dataname = "data"
   )
-  filter_state$set_state(list(selected = "a", keep_na = TRUE))
+  filter_state$set_state(filter_var(selected = "a", keep_na = TRUE, varname = "variable", dataname = "data"))
   testthat::expect_identical(shiny::isolate(filter_state$get_selected()), "a")
   testthat::expect_true(shiny::isolate(filter_state$get_keep_na()))
 })
@@ -235,8 +228,8 @@ testthat::test_that("set_state overwrites fields included in the input only", {
   filter_state <- ChoicesFilterState$new(
     x = c("a", "b", NA_character_), x_reactive = reactive(NULL), varname = "variable", dataname = "data"
   )
-  filter_state$set_state(list(selected = "a", keep_na = TRUE))
-  testthat::expect_no_error(filter_state$set_state(list(selected = "b")))
+  filter_state$set_state(filter_var(selected = "a", keep_na = TRUE, varname = "variable", dataname = "data"))
+  testthat::expect_no_error(filter_state$set_state(filter_var(selected = "b", varname = "variable", dataname = "data")))
   testthat::expect_identical(shiny::isolate(filter_state$get_selected()), "b")
   testthat::expect_true(shiny::isolate(filter_state$get_keep_na()))
 })
@@ -324,7 +317,7 @@ testthat::test_that("is_any_filtered returns TRUE when enabled", {
     )
   )
   fs <- testfs$new(c("a", "b"), varname = "x", dataname = "data")
-  fs$set_state(list(selected = "a", keep_na = TRUE))
+  fs$set_state(filter_var(selected = "a", keep_na = TRUE, varname = "x", dataname = "data"))
   fs$disable()
   fs$enable()
   testthat::expect_true(fs$is_any_filtered())

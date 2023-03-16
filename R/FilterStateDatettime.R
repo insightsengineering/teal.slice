@@ -137,13 +137,33 @@ DatetimeFilterState <- R6::R6Class( # nolint
                           varname,
                           choices = c(min(x, na.rm = TRUE), max(x, na.rm = TRUE)),
                           selected = NULL,
-                          keep_na = NULL,
-                          keep_inf = NULL,
+                          keep_na = FALSE,
+                          keep_inf = FALSE,
                           fixed = FALSE,
                           extract_type = character(0),
                           ...) {
       checkmate::assert_multi_class(x, c("POSIXct", "POSIXlt"))
       checkmate::assert_class(x_reactive, 'reactive')
+
+      if (is.null(choices)) {
+        choices <- as.POSIXct(trunc(range(x, na.rm = TRUE), units = "secs"))
+      } else {
+        private$set_is_choice_limited(
+          as.POSIXct(trunc(x, units = "secs")),
+          as.POSIXct(trunc(choices, units = "secs"))
+        )
+        x <- x[
+          as.POSIXct(trunc(x, units = "secs")) >= as.POSIXct(trunc(choices[1], units = "secs")) &
+            as.POSIXct(trunc(x, units = "secs")) <= as.POSIXct(trunc(choices[2], units = "secs"))
+        ]
+        choices <- c(
+          max(as.POSIXct(trunc(choices, units = "secs"))[1], min(x)),
+          min(as.POSIXct(trunc(choices, units = "secs"))[2], max(x))
+        )
+      }
+
+      if (is.null(selected)) selected <- choices
+      selected <- c(max(selected[1], min(choices)) , min(selected[2], max(choices)))
 
       do.call(
         super$initialize,
@@ -162,19 +182,6 @@ DatetimeFilterState <- R6::R6Class( # nolint
           list(...)
         )
       )
-
-      private$set_is_choice_limited(
-        as.POSIXct(trunc(x, units = "secs")),
-        as.POSIXct(trunc(choices, units = "secs"))
-      )
-      x <- x[
-        as.POSIXct(trunc(x, units = "secs")) >= as.POSIXct(trunc(choices[1], units = "secs")) &
-          as.POSIXct(trunc(x, units = "secs")) <= as.POSIXct(trunc(choices[2], units = "secs"))
-      ]
-
-      var_range <- as.POSIXct(trunc(range(x, na.rm = TRUE), units = "secs"))
-      private$set_choices(var_range)
-      self$set_selected(var_range)
 
       return(invisible(self))
     },
@@ -250,28 +257,6 @@ DatetimeFilterState <- R6::R6Class( # nolint
           )
         )
       private$add_keep_na_call(filter_call, dataname)
-    },
-
-    #' @description
-    #' Sets the selected time frame of this `DatetimeFilterState`.
-    #'
-    #' @param value (`POSIX(2)`) the lower and the upper bound of the selected
-    #'   time frame. Must not contain NA values.
-    #'
-    #' @return invisibly `NULL`.
-    #'
-    #' @note Casts the passed object to `POSIXct` before validating the input
-    #' making it possible to pass any object coercible to `POSIXct` to this method.
-    #'
-    #' @examples
-    #' date <- as.POSIXct(1, origin = "01/01/1970")
-    #' filter <- teal.slice:::DatetimeFilterState$new(
-    #'   c(date, date + 1, date + 2, date + 3),
-    #'   varname = "name", dataname = "data"
-    #' )
-    #' filter$set_selected(c(date + 1, date + 2))
-    set_selected = function(value) {
-      super$set_selected(value)
     }
   ),
 

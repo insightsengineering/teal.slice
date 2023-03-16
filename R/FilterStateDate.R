@@ -142,10 +142,8 @@ DateFilterState <- R6::R6Class( # nolint
       stopifnot(is(x, "Date"))
       checkmate::assert_class(x_reactive, 'reactive')
 
-      var_range <- range(x, na.rm = TRUE)
-
       if (is.null(choices)) {
-        choices <- var_range
+        choices <- range(x, na.rm = TRUE)
       } else {
         private$set_is_choice_limited(x, choices)
         x <- x[x >= choices[1] & x <= choices[2]]
@@ -154,8 +152,6 @@ DateFilterState <- R6::R6Class( # nolint
 
       if (is.null(selected)) selected <- choices
       selected <- c(max(selected[1], min(choices)) , min(selected[2], max(choices)))
-
-      if (is.null(keep_na)) keep_na <- TRUE
 
       do.call(
         super$initialize,
