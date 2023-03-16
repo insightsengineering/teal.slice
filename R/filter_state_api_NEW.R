@@ -73,11 +73,24 @@ filter_var <- function(
   ans
 }
 
+# check for teal_slice
+is.teal_slice <- function(x) {
+  inherits(x, "teal_slice")
+}
+
+# convert list to teal_slice
+as.teal_slice <- function(x) {
+  do.call(filter_var, x)
+}
+
+# concatenate method for teal_slice
 c.teal_slice <- function(...) {
   ans <- unlist(list(...), recursive = FALSE)
   class(ans) <- "teal_slice"
   ans
 }
+
+# print method for teal_slice
 print.teal_slice <- function(x) {
   name_width <- max(nchar(names(x)))
   format_value <- function(v) {
@@ -157,6 +170,12 @@ filter_settings <- function(
   slices
 }
 
+# check for teal_slices
+is.teal_slices <- function(x) {
+  inherits(x, "teal_slices")
+}
+
+# concatenate method for teal_slices
 c.teal_slices <- function(...) {
   x <- list(...)
   excludes <- lapply(x, attr, "exclude")
@@ -170,18 +189,24 @@ c.teal_slices <- function(...) {
   do.call(filter_settings, c(unlist(x, recursive = FALSE), list(exclude = excludes, count_type = count_types)))
 }
 
-is.teal_slice <- function(x) {
-  inherits(x, "teal_slice")
-}
-
+# subset method for teal_slices
 `[.teal_slices` <- function(x, i) {
+  if (missing(i)) i <- seq_along(x)
+  if (length(i) == 0L) return(x[0])
+  if (is.logical(i) & length(i) > length(x)) stop("subscript out of bounds")
+  if (is.numeric(i) & max(i) > length(x)) stop("subscript out of bounds")
+  if (is.character(i) & !all(is.element(i, names(x)))) stop("subscript out of bounds")
+
   y <- NextMethod("[")
-  attributes(y) <- attributes(x)
+  attrs <- attributes(x)
+  attrs$names <- attrs$names[i]
+  attributes(y) <- attrs
   excludes <- unique(unlist(vapply(y, function(ts) ts[["dataname"]], character(1L))))
   attr(y, "exclude") <- Filter(Negate(is.null), attr(x, "exclude")[excludes])
   y
 }
 
+# print method for teal_slices
 print.teal_slices <- function(x) {
   f <- attr(x, "exclude")
   ct <- attr(x, "count_type")
@@ -201,10 +226,6 @@ print.teal_slices <- function(x) {
     }
   }
   cat(sprintf("\ncount type: %s", ct), "\n")
-}
-
-is.teal_slices <- function(x) {
-  inherits(x, "teal_slices")
 }
 
 
@@ -260,10 +281,6 @@ x = "dataname2"
 extract_fun_s(all_filters, sprintf('dataname == "%s"', x))
 
 
-# convert list to teal_slice
-as.teal_slice <- function(x) {
-  do.call(filter_var, x)
-}
 
 # convert nested list to teal_slices
 # this function is not overly robust, it covers cases that are encountered in teal at this time
