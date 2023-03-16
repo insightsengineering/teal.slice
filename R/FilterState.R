@@ -60,7 +60,7 @@ FilterState <- R6::R6Class( # nolint
     #'   if `extract_type` argument is not empty.
     #' @param varname (`character(1)`)\cr
     #'   name of the variable.
-    #' @param choices (`vector`, unique(na.omit(x)))\cr
+    #' @param selected (`atomic`, `NULL`)\cr
     #'   vector specifying allowed selection values
     #' @param selected (`atomic`, `NULL`)\cr
     #'   vector specifying selection
@@ -88,7 +88,7 @@ FilterState <- R6::R6Class( # nolint
                           x_reactive = reactive(NULL),
                           dataname,
                           varname,
-                          choices = unique(na.omit(x)),
+                          choices = NULL,
                           selected = NULL,
                           keep_na = NULL,
                           keep_inf = NULL,
