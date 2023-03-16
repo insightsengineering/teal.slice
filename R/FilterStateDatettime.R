@@ -313,8 +313,8 @@ DatetimeFilterState <- R6::R6Class( # nolint
             div(class = "w-45 text-center", {
               x <- shinyWidgets::airDatepickerInput(
                 inputId = ns("selection_start"),
-                value = self$get_selected()[1],
-                startView = self$get_selected()[1],
+                value = shiny::isolate(self$get_selected())[1],
+                startView = shiny::isolate(self$get_selected())[1],
                 timepicker = TRUE,
                 minDate = private$choices[1],
                 maxDate = private$choices[2],
@@ -333,8 +333,8 @@ DatetimeFilterState <- R6::R6Class( # nolint
             div(class = "w-45 text-center", {
               x <- shinyWidgets::airDatepickerInput(
                 inputId = ns("selection_end"),
-                value = self$get_selected()[2],
-                startView = self$get_selected()[2],
+                value = shiny::isolate(self$get_selected())[2],
+                startView = shiny::isolate(self$get_selected())[2],
                 timepicker = TRUE,
                 minDate = private$choices[1],
                 maxDate = private$choices[2],

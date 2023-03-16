@@ -293,8 +293,8 @@ DateFilterState <- R6::R6Class( # nolint
             dateRangeInput(
               inputId = ns("selection"),
               label = NULL,
-              start = self$get_selected()[1],
-              end = self$get_selected()[2],
+              start = shiny::isolate(self$get_selected())[1],
+              end = shiny::isolate(self$get_selected())[2],
               min = private$choices[1],
               max = private$choices[2],
               width = "100%"

@@ -538,7 +538,7 @@ RangeFilterState <- R6::R6Class( # nolint
                 countnow = countnow
               )
             ),
-            value = isolate(self$get_keep_inf())
+            value = shiny::isolate(self$get_keep_inf())
           )
         )
       } else {

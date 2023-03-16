@@ -256,7 +256,7 @@ LogicalFilterState <- R6::R6Class( # nolint
             label = NULL,
             choiceNames = labels,
             choiceValues = as.character(private$choices),
-            selected = isolate(as.character(self$get_selected())),
+            selected = shiny::isolate(as.character(self$get_selected())),
             width = "100%"
           )
         ),

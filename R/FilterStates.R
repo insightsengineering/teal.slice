@@ -233,7 +233,7 @@ FilterStates <- R6::R6Class( # nolint
       ns <- NS(id)
       datalabel <- self$get_datalabel()
       tags$div(
-        class = "list-group hideable-list-group",
+        class = "panel-group accordion",
         `data-label` = ifelse(datalabel == "", "", datalabel), # todo: labels are not displayed for MAE - see filter-panel.css
         shiny::tagList(uiOutput(ns("filters")))
       )
@@ -247,21 +247,22 @@ FilterStates <- R6::R6Class( # nolint
     #'
     #' @return `moduleServer` function which returns `NULL`
     #'
-    server_active = function(id) {
+    srv_active = function(id) {
       moduleServer(
         id = id,
         function(input, output, session) {
+          logger::log_trace("FilterState$srv_active initializing, dataname: { private$dataname }")
           previous_state <- reactiveVal(character(0))
           added_state_name <- reactiveVal(character(0))
           removed_state_name <- reactiveVal(character(0))
 
-          observeEvent(self$state_list_get(1L), {
-            added_state_name(setdiff(names(self$state_list_get(1L)), names(previous_state())))
-            previous_state(self$state_list_get(1L))
+          observeEvent(private$state_list_get(1L), {
+            added_state_name(setdiff(names(private$state_list_get(1L)), names(previous_state())))
+            previous_state(private$state_list_get(1L))
           })
 
           output[["filters"]] <- shiny::renderUI({
-            fstates <- self$state_list_get(1L) # rerenders when queue changes / not when the state changes
+            fstates <- private$state_list_get(1L) # rerenders when queue changes / not when the state changes
             lapply(names(fstates), function(fname) {
               id <- sprintf("1L-%s", fname)
               private$ui_card_module(id = session$ns(id), fstates[[fname]])
@@ -272,7 +273,7 @@ FilterStates <- R6::R6Class( # nolint
             added_state_name(), # we want to call FilterState module only once when it's added
             ignoreNULL = TRUE,
             {
-              fstates <- self$state_list_get(1L)
+              fstates <- private$state_list_get(1L)
               lapply(added_state_name(), function(fname) {
                 id <- sprintf("1L-%s", fname)
                 private$srv_card_module(id = id, state_list_index = 1L, element_id = fname, fs = fstates[[fname]])
@@ -368,37 +369,6 @@ FilterStates <- R6::R6Class( # nolint
     state_list = NULL, # list of `reactiveVal`s initialized by init methods of child classes
 
     # private methods ----
-
-    #' UI wrapping a single `FilterState`
-    #'
-    #' This module contains a single `FilterState` card and remove (from the `ReactiveQueue`) button.
-    #'
-    #' return `moduleServer` function which returns `NULL`
-    #' @keywords internal
-    ui_card_module = function(id, fs) {
-      ns <- NS(id)
-      div(
-        id = ns("card"),
-        class = "list-group-item",
-        fs$ui(id = ns("content"))
-      )
-    },
-
-    #' Server module for a single `FilterState`
-    #'
-    #' Calls server from `FilterState` and observes remove (from the `ReactiveQueue`) button
-    #' @keywords internal
-    srv_card_module = function(id, state_list_index, element_id, fs) {
-      moduleServer(id, function(input, output, session) {
-        fs_callback <- fs$server(id = "content")
-        observeEvent(
-          eventExpr = fs_callback(), # when remove button is clicked in the FilterState ui
-          once = TRUE, # remove button can be called once, should be destroyed afterwards
-          handlerExpr = self$state_list_remove(state_list_index, element_id)
-        )
-      })
-    },
-
     # state_list methods ----
 
     # @description
@@ -477,7 +447,7 @@ FilterStates <- R6::R6Class( # nolint
       )
 
       new_state_list <- shiny::isolate(private$state_list[[state_list_index]]())
-      new_state_list[[state_id]]$destroy_observers()
+      new_state_list[[state_id]]$destroy_shiny()
       new_state_list[[state_id]] <- NULL
       shiny::isolate(private$state_list[[state_list_index]](new_state_list))
 
@@ -608,6 +578,37 @@ FilterStates <- R6::R6Class( # nolint
           )
         )
       }
+    },
+
+        #' UI wrapping a single `FilterState`
+    #'
+    #' This module contains a single `FilterState` card and remove (from the `ReactiveQueue`) button.
+    #'
+    #' return `moduleServer` function which returns `NULL`
+    #' @keywords internal
+    ui_card_module = function(id, fs) {
+      ns <- NS(id)
+      div(
+        id = ns("card"),
+        class = "list-group-item",
+        fs$ui(id = ns("content"))
+      )
+    },
+
+    #' Server module for a single `FilterState`
+    #'
+    #' Calls server from `FilterState` and observes remove (from the `ReactiveQueue`) button
+    #' @keywords internal
+    srv_card_module = function(id, state_list_index, element_id, fs) {
+      moduleServer(id, function(input, output, session) {
+        logger::log_trace("FilterStates$srv_card_module initializing, dataname: { private$dataname }")
+        fs_callback <- fs$server(id = "content")
+        observeEvent(
+          eventExpr = fs_callback(), # when remove button is clicked in the FilterState ui
+          once = TRUE, # remove button can be called once, should be destroyed afterwards
+          handlerExpr = private$state_list_remove(state_list_index, element_id)
+        )
+      })
     }
   )
 )

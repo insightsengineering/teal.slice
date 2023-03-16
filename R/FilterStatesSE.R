@@ -75,91 +75,6 @@ SEFilterStates <- R6::R6Class( # nolint
     },
 
     #' @description
-    #' Server module
-    #' @param id (`character(1)`)\cr
-    #'   an ID string that corresponds with the ID used to call the module's UI function.
-    #' @return `moduleServer` function which returns `NULL`
-    srv_active = function(id) {
-      moduleServer(
-        id = id,
-        function(input, output, session) {
-          previous_state_subset <- reactiveVal(isolate(private$state_list_get("subset")))
-          added_state_name_subset <- reactiveVal(character(0))
-          removed_state_name_subset <- reactiveVal(character(0))
-
-          observeEvent(private$state_list_get("subset"), {
-            added_state_name_subset(
-              setdiff(names(private$state_list_get("subset")), names(previous_state_subset()))
-            )
-            removed_state_name_subset(
-              setdiff(names(previous_state_subset()), names(private$state_list_get("subset")))
-            )
-            previous_state_subset(private$state_list_get("subset"))
-          })
-
-          observeEvent(added_state_name_subset(), ignoreNULL = TRUE, {
-            fstates <- private$state_list_get("subset")
-            html_ids <- private$map_vars_to_html_ids(keys = names(fstates), prefix = "rowData")
-            for (fname in added_state_name_subset()) {
-              private$insert_filter_state_ui(
-                id = html_ids[fname],
-                filter_state = fstates[[fname]],
-                state_list_index = "subset",
-                state_id = fname
-              )
-            }
-            added_state_name_subset(character(0))
-          })
-
-          observeEvent(removed_state_name_subset(), ignoreNULL = TRUE, {
-            for (fname in removed_state_name_subset()) {
-              private$remove_filter_state_ui("subset", fname, .input = input)
-            }
-            removed_state_name_subset(character(0))
-          })
-
-          # select
-          previous_state_select <- reactiveVal(isolate(private$state_list_get("select")))
-          added_state_name_select <- reactiveVal(character(0))
-          removed_state_name_select <- reactiveVal(character(0))
-
-          observeEvent(private$state_list_get("select"), {
-            # find what has been added or removed
-            added_state_name_select(
-              setdiff(names(private$state_list_get("select")), names(previous_state_select()))
-            )
-            removed_state_name_select(
-              setdiff(names(previous_state_select()), names(private$state_list_get("select")))
-            )
-            previous_state_select(private$state_list_get("select"))
-          })
-
-          observeEvent(added_state_name_select(), ignoreNULL = TRUE, {
-            fstates <- private$state_list_get("select")
-            html_ids <- private$map_vars_to_html_ids(keys = names(fstates), prefix = "colData")
-            for (fname in added_state_name_select()) {
-              private$insert_filter_state_ui(
-                id = html_ids[fname],
-                filter_state = fstates[[fname]],
-                state_list_index = "select",
-                state_id = fname
-              )
-            }
-            added_state_name_select(character(0))
-          })
-
-          observeEvent(removed_state_name_select(), ignoreNULL = TRUE, {
-            for (fname in removed_state_name_select()) {
-              private$remove_filter_state_ui("select", fname, .input = input)
-            }
-            removed_state_name_select(character(0))
-          })
-          NULL
-        }
-      )
-    },
-
-    #' @description
     #' Gets the reactive values from the active `FilterState` objects.
     #'
     #' Gets all active filters from this dataset in form of the nested list.
@@ -307,23 +222,24 @@ SEFilterStates <- R6::R6Class( # nolint
     #'
     #' @return `moduleServer` function which returns `NULL`
     #'
-    server_active = function(id) {
+    srv_active = function(id) {
       moduleServer(
         id = id,
         function(input, output, session) {
+          logger::log_trace("SEFilterState$srv_active initializing, dataname: { private$dataname }")
           genes_previous_state <- reactiveVal(character(0))
           genes_added_state_name <- reactiveVal(character(0))
 
-          observeEvent(self$state_list_get(1L), {
-            genes_added_state_name(setdiff(names(self$state_list_get(1L)), names(genes_previous_state())))
-            genes_previous_state(self$state_list_get(1L))
+          observeEvent(private$state_list_get(1L), {
+            genes_added_state_name(setdiff(names(private$state_list_get(1L)), names(genes_previous_state())))
+            genes_previous_state(private$state_list_get(1L))
           })
 
           observeEvent(
             genes_added_state_name(), # we want to call FilterState module only once when it's added
             ignoreNULL = TRUE,
             {
-              fstates <- self$state_list_get(1L)
+              fstates <- private$state_list_get(1L)
               lapply(genes_added_state_name(), function(fname) {
                 id <- sprintf("genes-%s", fname)
                 private$srv_card_module(id = id, state_list_index = 1L, element_id = fname, fs = fstates[[fname]])
@@ -333,7 +249,7 @@ SEFilterStates <- R6::R6Class( # nolint
           )
 
           output[["genes"]] <- shiny::renderUI({
-            fstates <- self$state_list_get(1L) # rerenders when queue changes / not when the state changes
+            fstates <- private$state_list_get(1L) # rerenders when queue changes / not when the state changes
             lapply(names(fstates), function(fname) {
               id <- sprintf("genes-%s", fname)
               private$ui_card_module(id = session$ns(id), fstates[[fname]])
@@ -344,16 +260,16 @@ SEFilterStates <- R6::R6Class( # nolint
           samples_previous_state <- reactiveVal(character(0))
           samples_added_state_name <- reactiveVal(character(0))
 
-          observeEvent(self$state_list_get(2L), {
-            samples_added_state_name(setdiff(names(self$state_list_get(2L)), names(samples_previous_state())))
-            samples_previous_state(self$state_list_get(2L))
+          observeEvent(private$state_list_get(2L), {
+            samples_added_state_name(setdiff(names(private$state_list_get(2L)), names(samples_previous_state())))
+            samples_previous_state(private$state_list_get(2L))
           })
 
           observeEvent(
             samples_added_state_name(), # we want to call FilterState module only once when it's added
             ignoreNULL = TRUE,
             {
-              fstates <- self$state_list_get(2L)
+              fstates <- private$state_list_get(2L)
               lapply(samples_added_state_name(), function(fname) {
                 id <- sprintf("samples-%s", fname)
                 private$srv_card_module(id = id, state_list_index = 2L, element_id = fname, fs = fstates[[fname]])
@@ -363,7 +279,7 @@ SEFilterStates <- R6::R6Class( # nolint
           )
 
           output[["samples"]] <- shiny::renderUI({
-            fstates <- self$state_list_get(2L) # rerenders when queue changes / not when the state changes
+            fstates <- private$state_list_get(2L) # rerenders when queue changes / not when the state changes
             lapply(names(fstates), function(fname) {
               id <- sprintf("samples-%s", fname)
               private$ui_card_module(id = session$ns(id), fstates[[fname]])
@@ -441,9 +357,7 @@ SEFilterStates <- R6::R6Class( # nolint
       moduleServer(
         id = id,
         function(input, output, session) {
-          logger::log_trace(
-            "SEFilterState$srv_add initializing, dataname: { private$dataname }"
-          )
+          logger::log_trace("SEFilterState$srv_add initializing, dataname: { private$dataname }")
           active_filter_col_vars <- reactive({
             vapply(
               X = private$state_list_get(state_list_index = "select"),
@@ -467,7 +381,7 @@ SEFilterStates <- R6::R6Class( # nolint
           # available choices to display
           avail_row_data_choices <- reactive({
             active_filter_row_vars <- vapply(
-              X = self$state_list_get(state_list_index = "subset"),
+              X = private$state_list_get(state_list_index = "subset"),
               FUN.VALUE = character(1),
               FUN = function(x) x$get_varname(deparse = TRUE)
             )
@@ -486,7 +400,7 @@ SEFilterStates <- R6::R6Class( # nolint
 
           avail_col_data_choices <- reactive({
             active_filter_col_vars <- vapply(
-              X = self$state_list_get(state_list_index = "select"),
+              X = private$state_list_get(state_list_index = "select"),
               FUN.VALUE = character(1),
               FUN = function(x) x$get_varname(deparse = TRUE)
             )
