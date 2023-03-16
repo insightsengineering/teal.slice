@@ -135,7 +135,7 @@ DatetimeFilterState <- R6::R6Class( # nolint
                           x_reactive = reactive(NULL),
                           dataname,
                           varname,
-                          choices = c(min(x, na.rm = TRUE), max(x, na.rm = TRUE)),
+                          choices = NULL,
                           selected = NULL,
                           keep_na = FALSE,
                           keep_inf = FALSE,
@@ -144,24 +144,22 @@ DatetimeFilterState <- R6::R6Class( # nolint
                           ...) {
       checkmate::assert_multi_class(x, c("POSIXct", "POSIXlt"))
       checkmate::assert_class(x_reactive, 'reactive')
+      checkmate::assert_multi_class(choices, c("POSIXct", "POSIXlt"), null.ok = TRUE)
 
       if (is.null(choices)) {
         choices <- as.POSIXct(trunc(range(x, na.rm = TRUE), units = "secs"))
       } else {
-        private$set_is_choice_limited(
-          as.POSIXct(trunc(x, units = "secs")),
-          as.POSIXct(trunc(choices, units = "secs"))
-        )
+        choices <- as.POSIXct(choices, units = "secs")
+        private$set_is_choice_limited(x, choices)
         x <- x[
-          as.POSIXct(trunc(x, units = "secs")) >= as.POSIXct(trunc(choices[1], units = "secs")) &
-            as.POSIXct(trunc(x, units = "secs")) <= as.POSIXct(trunc(choices[2], units = "secs"))
+          as.POSIXct(trunc(x, units = "secs")) >= choices[1] &
+            as.POSIXct(trunc(x, units = "secs")) <= choices[2]
         ]
         choices <- c(
-          max(as.POSIXct(trunc(choices, units = "secs"))[1], min(x)),
-          min(as.POSIXct(trunc(choices, units = "secs"))[2], max(x))
+          max(choices[1], min(as.POSIXct(x), na.rm = TRUE)),
+          min(choices[2], max(as.POSIXct(x), na.rm = TRUE))
         )
       }
-
       if (is.null(selected)) selected <- choices
       selected <- c(max(selected[1], min(choices)) , min(selected[2], max(choices)))
 

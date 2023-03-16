@@ -62,21 +62,16 @@ testthat::test_that("get_keep_na returns FALSE after initialization", {
 # set_state ----
 testthat::test_that("set_state sets selected and keep_na", {
   filter_state <- FilterState$new(c("a", NA_character_), varname = "var", dataname = "data")
-  state <- list(selected = "a", keep_na = TRUE)
+  state <- filter_var(selected = "a", keep_na = TRUE, varname = "var", dataname = "data")
   filter_state$set_state(state)
-  testthat::expect_identical(
-    state,
-    list(
-      selected = shiny::isolate(filter_state$get_selected()),
-      keep_na = shiny::isolate(filter_state$get_keep_na())
-    )
-  )
+  testthat::expect_identical(state$selected, shiny::isolate(filter_state$get_selected()))
+  testthat::expect_identical(state$keep_na, shiny::isolate(filter_state$get_keep_na()))
 })
 
 # get_state ----
 testthat::test_that("get_state returns a list identical to set_state input", {
   filter_state <- FilterState$new(c("a", NA_character_), varname = "var", dataname = "data")
-  state <- list(selected = "a", keep_na = TRUE)
+  state <- filter_var(selected = "a", keep_na = TRUE, varname = "var", dataname = "data")
   filter_state$set_state(state)
   testthat::expect_identical(shiny::isolate(filter_state$get_state()), state)
 })
@@ -186,7 +181,7 @@ testthat::test_that("$format() asserts that indent is numeric", {
 testthat::test_that("$format() returns a string representation the FilterState object", {
   values <- paste("value", 1:3, sep = "_")
   filter_state <- FilterState$new(values, varname = "test", dataname = "data")
-  filter_state$set_state(list(selected = values))
+  filter_state$set_state(filter_var(selected = values, varname = "test", dataname = "data"))
   testthat::expect_equal(
     shiny::isolate(filter_state$format(indent = 0)),
     paste(
@@ -201,7 +196,7 @@ testthat::test_that("$format() returns a string representation the FilterState o
 testthat::test_that("$format() prepends spaces to every line of the returned string", {
   values <- paste("value", 1:3, sep = "_")
   filter_state <- FilterState$new(values, varname = "test", dataname = "data")
-  filter_state$set_state(list(selected = values))
+  filter_state$set_state(filter_var(selected = values, varname = "test", dataname = "data"))
   for (i in 1:3) {
     whitespace_indent <- paste0(rep(" ", i), collapse = "")
     testthat::expect_equal(
@@ -221,7 +216,7 @@ testthat::test_that("$format() prepends spaces to every line of the returned str
 testthat::test_that("$format() returns a properly wrapped string", {
   values <- paste("value", 1:3, sep = "_")
   filter_state <- FilterState$new(values, varname = "test", dataname = "data")
-  filter_state$set_state(list(selected = values))
+  filter_state$set_state(filter_var(selected = values, varname = "test", dataname = "data"))
   line_width <- 76L # arbitrary value given in method body
   manual <- 4L # manual third order indent given in method body
   for (i in 1:10) {
@@ -235,7 +230,7 @@ testthat::test_that("$format() returns a properly wrapped string", {
 testthat::test_that("$format() line wrapping breaks if strings are too long", {
   values <- c("exceedinglylongvaluenameexample", "exceedingly long value name example with spaces")
   filter_state <- FilterState$new(values, varname = "test", dataname = "data")
-  filter_state$set_state(list(selected = values))
+  filter_state$set_state(filter_var(selected = values, varname = "test", dataname = "data"))
   manual <- 4L # manual third order indent given in method body
   linewidth <- 30L
   output <- shiny::isolate(filter_state$format(indent = 2, wrap_width = linewidth))
@@ -263,8 +258,8 @@ testthat::test_that("disable sets all state elements to NULL", {
   fs <- testfs$new(c(1:10, NA), varname = "x", dataname = "data")
   fs$disable()
   testthat::expect_equal(
-    fs$get_state(),
-    list(selected = NULL, keep_na = NULL)
+    list(fs$get_state()$selected, fs$get_state()$keep_na),
+    list(NULL, NULL)
   )
 })
 
@@ -280,7 +275,7 @@ testthat::test_that("disable copies last state to the cache", {
     )
   )
   fs <- testfs$new(c(1:10, NA), varname = "x", dataname = "data")
-  fs$set_state(list(selected = c(4, 5), keep_na = TRUE))
+  fs$set_state(filter_var(selected = c(4, 5), keep_na = TRUE, varname = "x", dataname = "data"))
   last_state <- fs$get_state()
   fs$disable()
   testthat::expect_identical(fs$get_cache(), last_state)
@@ -298,7 +293,7 @@ testthat::test_that("enable sets state back to the last state", {
     )
   )
   fs <- testfs$new(c(1:10, NA), varname = "x", dataname = "data")
-  fs$set_state(list(selected = c(4, 5), keep_na = TRUE))
+  fs$set_state(filter_var(selected = c(4, 5), keep_na = TRUE, varname = "x", dataname = "data"))
   last_state <- fs$get_state()
   fs$disable()
   fs$enable()
@@ -318,7 +313,7 @@ testthat::test_that("enable clears cache", {
     )
   )
   fs <- testfs$new(c(1:10, NA), varname = "x", dataname = "data")
-  fs$set_state(list(selected = c(4, 5), keep_na = TRUE))
+  fs$set_state(filter_var(selected = c(4, 5), keep_na = TRUE, varname = "x", dataname = "data"))
   fs$disable()
   fs$enable()
   testthat::expect_null(fs$get_cache())

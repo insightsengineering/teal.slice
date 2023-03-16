@@ -132,7 +132,7 @@ DateFilterState <- R6::R6Class( # nolint
                           x_reactive = reactive(NULL),
                           dataname,
                           varname,
-                          choices = c(min(x, na.rm = TRUE), max(x, na.rm = TRUE)),
+                          choices = NULL,
                           selected = NULL,
                           keep_na = FALSE,
                           keep_inf = FALSE,
@@ -141,6 +141,7 @@ DateFilterState <- R6::R6Class( # nolint
                           ...) {
       stopifnot(is(x, "Date"))
       checkmate::assert_class(x_reactive, 'reactive')
+      checkmate::assert_multi_class(choices, c("Date"), null.ok = TRUE)
 
       if (is.null(choices)) {
         choices <- range(x, na.rm = TRUE)

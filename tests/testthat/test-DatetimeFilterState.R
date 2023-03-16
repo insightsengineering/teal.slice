@@ -3,9 +3,11 @@ posixlt <- as.POSIXlt(posixct)
 
 testthat::test_that("constructor accepts a POSIXct or POSIXlt object", {
   testthat::expect_no_error(
-    DatetimeFilterState$new(posixct, x_reactive = reactive(NULL), varname = "variable", dataname = "data"))
+    DatetimeFilterState$new(posixct, x_reactive = reactive(NULL), varname = "variable", dataname = "data")
+  )
   testthat::expect_no_error(
-    DatetimeFilterState$new(posixlt, x_reactive = reactive(NULL), varname = "variable", dataname = "data"))
+    DatetimeFilterState$new(posixlt, x_reactive = reactive(NULL), varname = "variable", dataname = "data")
+  )
 })
 
 testthat::test_that("get_call returns call that encompasses all values passed to constructor", {
@@ -173,7 +175,7 @@ testthat::test_that("$format() returns a string representation the FilterState o
   )
   object <- as.POSIXct(8, origin = "1900/01/01 00:00:00", tz = "GMT")
   filter_state <- DatetimeFilterState$new(object, x_reactive = reactive(NULL), varname = "test", dataname = "data")
-  filter_state$set_state(list(selected = c(object, object)))
+  filter_state$set_state(filter_var(selected = c(object, object), varname = "test", dataname = "data"))
   testthat::expect_equal(
     shiny::isolate(filter_state$format(indent = 0)),
     paste(
