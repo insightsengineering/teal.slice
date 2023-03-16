@@ -266,30 +266,6 @@ RangeFilterState <- R6::R6Class( # nolint
     },
 
     #' @description
-    #' Set if `Inf` should be kept
-    #' @param value (`logical(1)`)\cr
-    #'  Value(s) which come from the filter selection. Value is set in `server`
-    #'  modules after selecting check-box-input in the shiny interface. Values are set to
-    #'  `private$keep_inf` which is reactive.
-    set_keep_inf = function(value) {
-      if (shiny::isolate(private$is_disabled())) {
-        warning("This filter state is disabled. Can not change keep Inf.")
-      } else {
-        checkmate::assert_flag(value)
-        private$keep_inf(value)
-        logger::log_trace(
-          sprintf(
-            "%s$set_keep_inf of variable %s set to %s, dataname: %s.",
-            class(self)[1],
-            private$varname,
-            value,
-            private$dataname
-          )
-        )
-      }
-    },
-
-    #' @description
     #' Set state
     #' @param state (`list`)\cr
     #'  contains fields relevant for a specific class
