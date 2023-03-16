@@ -288,7 +288,7 @@ SEFilterStates <- R6::R6Class( # nolint
     #'
     #' @return `shiny.tag`
     #'
-    ui = function(id) {
+    ui_active = function(id) {
       ns <- NS(id)
       datalabel <- self$get_datalabel()
       tags$div(
@@ -307,7 +307,7 @@ SEFilterStates <- R6::R6Class( # nolint
     #'
     #' @return `moduleServer` function which returns `NULL`
     #'
-    server = function(id) {
+    server_active = function(id) {
       moduleServer(
         id = id,
         function(input, output, session) {

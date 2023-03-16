@@ -15,10 +15,7 @@ Handles filter states in a \code{matrix}
 \itemize{
 \item \href{#method-MatrixFilterStates-new}{\code{MatrixFilterStates$new()}}
 \item \href{#method-MatrixFilterStates-format}{\code{MatrixFilterStates$format()}}
-<<<<<<< HEAD
-=======
 \item \href{#method-MatrixFilterStates-srv_active}{\code{MatrixFilterStates$srv_active()}}
->>>>>>> filter_panel_refactor@main
 \item \href{#method-MatrixFilterStates-get_filter_state}{\code{MatrixFilterStates$get_filter_state()}}
 \item \href{#method-MatrixFilterStates-set_filter_state}{\code{MatrixFilterStates$set_filter_state()}}
 \item \href{#method-MatrixFilterStates-remove_filter_state}{\code{MatrixFilterStates$remove_filter_state()}}
@@ -101,8 +98,6 @@ Returns the formatted string representing this \code{MatrixFilterStates} object.
 }
 }
 \if{html}{\out{<hr>}}
-<<<<<<< HEAD
-=======
 \if{html}{\out{<a id="method-MatrixFilterStates-srv_active"></a>}}
 \if{latex}{\out{\hypertarget{method-MatrixFilterStates-srv_active}{}}}
 \subsection{Method \code{srv_active()}}{
@@ -124,7 +119,6 @@ an ID string that corresponds with the ID used to call the module's UI function.
 }
 }
 \if{html}{\out{<hr>}}
->>>>>>> filter_panel_refactor@main
 \if{html}{\out{<a id="method-MatrixFilterStates-get_filter_state"></a>}}
 \if{latex}{\out{\hypertarget{method-MatrixFilterStates-get_filter_state}{}}}
 \subsection{Method \code{get_filter_state()}}{

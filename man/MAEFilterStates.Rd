@@ -16,10 +16,7 @@ Handles filter states in a \code{MultiAssayExperiment}
 \item \href{#method-MAEFilterStates-new}{\code{MAEFilterStates$new()}}
 \item \href{#method-MAEFilterStates-format}{\code{MAEFilterStates$format()}}
 \item \href{#method-MAEFilterStates-get_fun}{\code{MAEFilterStates$get_fun()}}
-<<<<<<< HEAD
-=======
 \item \href{#method-MAEFilterStates-srv_active}{\code{MAEFilterStates$srv_active()}}
->>>>>>> filter_panel_refactor@main
 \item \href{#method-MAEFilterStates-get_filter_state}{\code{MAEFilterStates$get_filter_state()}}
 \item \href{#method-MAEFilterStates-set_filter_state}{\code{MAEFilterStates$set_filter_state()}}
 \item \href{#method-MAEFilterStates-remove_filter_state}{\code{MAEFilterStates$remove_filter_state()}}
@@ -123,8 +120,6 @@ For \code{MAEFilterStates} \code{MultiAssayExperiment::subsetByColData} is used.
 }
 }
 \if{html}{\out{<hr>}}
-<<<<<<< HEAD
-=======
 \if{html}{\out{<a id="method-MAEFilterStates-srv_active"></a>}}
 \if{latex}{\out{\hypertarget{method-MAEFilterStates-srv_active}{}}}
 \subsection{Method \code{srv_active()}}{
@@ -146,7 +141,6 @@ an ID string that corresponds with the ID used to call the module's UI function.
 }
 }
 \if{html}{\out{<hr>}}
->>>>>>> filter_panel_refactor@main
 \if{html}{\out{<a id="method-MAEFilterStates-get_filter_state"></a>}}
 \if{latex}{\out{\hypertarget{method-MAEFilterStates-get_filter_state}{}}}
 \subsection{Method \code{get_filter_state()}}{

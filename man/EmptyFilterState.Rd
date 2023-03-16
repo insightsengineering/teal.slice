@@ -38,7 +38,7 @@ isolate(filter_state$get_call())
 \if{html}{\out{
 <details><summary>Inherited methods</summary>
 <ul>
-<li><span class="pkg-link" data-pkg="teal.slice" data-topic="InteractiveFilterState" data-id="destroy_observers"><a href='../../teal.slice/html/InteractiveFilterState.html#method-InteractiveFilterState-destroy_observers'><code>teal.slice::InteractiveFilterState$destroy_observers()</code></a></span></li>
+<li><span class="pkg-link" data-pkg="teal.slice" data-topic="InteractiveFilterState" data-id="destroy_shiny"><a href='../../teal.slice/html/InteractiveFilterState.html#method-InteractiveFilterState-destroy_shiny'><code>teal.slice::InteractiveFilterState$destroy_shiny()</code></a></span></li>
 <li><span class="pkg-link" data-pkg="teal.slice" data-topic="InteractiveFilterState" data-id="format"><a href='../../teal.slice/html/InteractiveFilterState.html#method-InteractiveFilterState-format'><code>teal.slice::InteractiveFilterState$format()</code></a></span></li>
 <li><span class="pkg-link" data-pkg="teal.slice" data-topic="InteractiveFilterState" data-id="get_dataname"><a href='../../teal.slice/html/InteractiveFilterState.html#method-InteractiveFilterState-get_dataname'><code>teal.slice::InteractiveFilterState$get_dataname()</code></a></span></li>
 <li><span class="pkg-link" data-pkg="teal.slice" data-topic="InteractiveFilterState" data-id="get_keep_na"><a href='../../teal.slice/html/InteractiveFilterState.html#method-InteractiveFilterState-get_keep_na'><code>teal.slice::InteractiveFilterState$get_keep_na()</code></a></span></li>

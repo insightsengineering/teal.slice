@@ -55,7 +55,7 @@ of the \code{InteractiveFilterState} object.
 \subsection{Public methods}{
 \itemize{
 \item \href{#method-InteractiveFilterState-new}{\code{InteractiveFilterState$new()}}
-\item \href{#method-InteractiveFilterState-destroy_observers}{\code{InteractiveFilterState$destroy_observers()}}
+\item \href{#method-InteractiveFilterState-destroy_shiny}{\code{InteractiveFilterState$destroy_shiny()}}
 \item \href{#method-InteractiveFilterState-format}{\code{InteractiveFilterState$format()}}
 \item \href{#method-InteractiveFilterState-get_call}{\code{InteractiveFilterState$get_call()}}
 \item \href{#method-InteractiveFilterState-get_dataname}{\code{InteractiveFilterState$get_dataname()}}
@@ -126,17 +126,18 @@ self invisibly
 }
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-InteractiveFilterState-destroy_observers"></a>}}
-\if{latex}{\out{\hypertarget{method-InteractiveFilterState-destroy_observers}{}}}
-\subsection{Method \code{destroy_observers()}}{
-Destroy observers stored in \code{private$observers}.
+\if{html}{\out{<a id="method-InteractiveFilterState-destroy_shiny"></a>}}
+\if{latex}{\out{\hypertarget{method-InteractiveFilterState-destroy_shiny}{}}}
+\subsection{Method \code{destroy_shiny()}}{
+Destroying shiny observers and inputs registered in the session.
+If observers are not removed they will still react to the changes
+in the reactive data to change the filtered labels count.
+\code{destroy_shiny} executes function created in the \code{server}, so it has access
+to the \code{input} and \code{session}.
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{InteractiveFilterState$destroy_observers()}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{InteractiveFilterState$destroy_shiny()}\if{html}{\out{</div>}}
 }
 
-\subsection{Returns}{
-NULL invisibly
-}
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-InteractiveFilterState-format"></a>}}

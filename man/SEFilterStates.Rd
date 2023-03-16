@@ -15,22 +15,14 @@ Handles filter states in a \code{SummaryExperiment}
 \itemize{
 \item \href{#method-SEFilterStates-new}{\code{SEFilterStates$new()}}
 \item \href{#method-SEFilterStates-format}{\code{SEFilterStates$format()}}
-<<<<<<< HEAD
+\item \href{#method-SEFilterStates-srv_active}{\code{SEFilterStates$srv_active()}}
 \item \href{#method-SEFilterStates-get_filter_state}{\code{SEFilterStates$get_filter_state()}}
 \item \href{#method-SEFilterStates-set_filter_state}{\code{SEFilterStates$set_filter_state()}}
 \item \href{#method-SEFilterStates-remove_filter_state}{\code{SEFilterStates$remove_filter_state()}}
 \item \href{#method-SEFilterStates-ui}{\code{SEFilterStates$ui()}}
 \item \href{#method-SEFilterStates-server}{\code{SEFilterStates$server()}}
-\item \href{#method-SEFilterStates-ui_add_filter_state}{\code{SEFilterStates$ui_add_filter_state()}}
-\item \href{#method-SEFilterStates-srv_add_filter_state}{\code{SEFilterStates$srv_add_filter_state()}}
-=======
-\item \href{#method-SEFilterStates-srv_active}{\code{SEFilterStates$srv_active()}}
-\item \href{#method-SEFilterStates-get_filter_state}{\code{SEFilterStates$get_filter_state()}}
-\item \href{#method-SEFilterStates-set_filter_state}{\code{SEFilterStates$set_filter_state()}}
-\item \href{#method-SEFilterStates-remove_filter_state}{\code{SEFilterStates$remove_filter_state()}}
 \item \href{#method-SEFilterStates-ui_add}{\code{SEFilterStates$ui_add()}}
 \item \href{#method-SEFilterStates-srv_add}{\code{SEFilterStates$srv_add()}}
->>>>>>> filter_panel_refactor@main
 \item \href{#method-SEFilterStates-clone}{\code{SEFilterStates$clone()}}
 }
 }
@@ -44,14 +36,7 @@ Handles filter states in a \code{SummaryExperiment}
 <li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilterStates" data-id="get_fun"><a href='../../teal.slice/html/FilterStates.html#method-FilterStates-get_fun'><code>teal.slice::FilterStates$get_fun()</code></a></span></li>
 <li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilterStates" data-id="print"><a href='../../teal.slice/html/FilterStates.html#method-FilterStates-print'><code>teal.slice::FilterStates$print()</code></a></span></li>
 <li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilterStates" data-id="set_filterable_varnames"><a href='../../teal.slice/html/FilterStates.html#method-FilterStates-set_filterable_varnames'><code>teal.slice::FilterStates$set_filterable_varnames()</code></a></span></li>
-<<<<<<< HEAD
-<li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilterStates" data-id="state_list_empty"><a href='../../teal.slice/html/FilterStates.html#method-FilterStates-state_list_empty'><code>teal.slice::FilterStates$state_list_empty()</code></a></span></li>
-<li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilterStates" data-id="state_list_get"><a href='../../teal.slice/html/FilterStates.html#method-FilterStates-state_list_get'><code>teal.slice::FilterStates$state_list_get()</code></a></span></li>
-<li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilterStates" data-id="state_list_push"><a href='../../teal.slice/html/FilterStates.html#method-FilterStates-state_list_push'><code>teal.slice::FilterStates$state_list_push()</code></a></span></li>
-<li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilterStates" data-id="state_list_remove"><a href='../../teal.slice/html/FilterStates.html#method-FilterStates-state_list_remove'><code>teal.slice::FilterStates$state_list_remove()</code></a></span></li>
-=======
 <li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilterStates" data-id="ui_active"><a href='../../teal.slice/html/FilterStates.html#method-FilterStates-ui_active'><code>teal.slice::FilterStates$ui_active()</code></a></span></li>
->>>>>>> filter_panel_refactor@main
 </ul>
 </details>
 }}
@@ -114,8 +99,6 @@ Returns the formatted string representing this \code{MAEFilterStates} object.
 }
 }
 \if{html}{\out{<hr>}}
-<<<<<<< HEAD
-=======
 \if{html}{\out{<a id="method-SEFilterStates-srv_active"></a>}}
 \if{latex}{\out{\hypertarget{method-SEFilterStates-srv_active}{}}}
 \subsection{Method \code{srv_active()}}{
@@ -137,7 +120,6 @@ an ID string that corresponds with the ID used to call the module's UI function.
 }
 }
 \if{html}{\out{<hr>}}
->>>>>>> filter_panel_refactor@main
 \if{html}{\out{<a id="method-SEFilterStates-get_filter_state"></a>}}
 \if{latex}{\out{\hypertarget{method-SEFilterStates-get_filter_state}{}}}
 \subsection{Method \code{get_filter_state()}}{
@@ -200,7 +182,6 @@ Remove a variable from the \code{state_list} and its corresponding UI element.
 }
 }
 \if{html}{\out{<hr>}}
-<<<<<<< HEAD
 \if{html}{\out{<a id="method-SEFilterStates-ui"></a>}}
 \if{latex}{\out{\hypertarget{method-SEFilterStates-ui}{}}}
 \subsection{Method \code{ui()}}{
@@ -246,14 +227,9 @@ shiny module instance id}
 }
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-SEFilterStates-ui_add_filter_state"></a>}}
-\if{latex}{\out{\hypertarget{method-SEFilterStates-ui_add_filter_state}{}}}
-\subsection{Method \code{ui_add_filter_state()}}{
-=======
 \if{html}{\out{<a id="method-SEFilterStates-ui_add"></a>}}
 \if{latex}{\out{\hypertarget{method-SEFilterStates-ui_add}{}}}
 \subsection{Method \code{ui_add()}}{
->>>>>>> filter_panel_refactor@main
 Shiny UI module to add filter variable
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{SEFilterStates$ui_add(id)}\if{html}{\out{</div>}}

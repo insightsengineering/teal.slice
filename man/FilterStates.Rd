@@ -59,13 +59,9 @@ isolate(filter_states$get_call())
 \item \href{#method-FilterStates-get_fun}{\code{FilterStates$get_fun()}}
 \item \href{#method-FilterStates-get_filter_count}{\code{FilterStates$get_filter_count()}}
 \item \href{#method-FilterStates-remove_filter_state}{\code{FilterStates$remove_filter_state()}}
-<<<<<<< HEAD
-\item \href{#method-FilterStates-ui}{\code{FilterStates$ui()}}
-\item \href{#method-FilterStates-server}{\code{FilterStates$server()}}
-=======
 \item \href{#method-FilterStates-clear_filter_states}{\code{FilterStates$clear_filter_states()}}
 \item \href{#method-FilterStates-ui_active}{\code{FilterStates$ui_active()}}
->>>>>>> filter_panel_refactor@main
+\item \href{#method-FilterStates-server}{\code{FilterStates$server()}}
 \item \href{#method-FilterStates-get_filter_state}{\code{FilterStates$get_filter_state()}}
 \item \href{#method-FilterStates-set_filter_state}{\code{FilterStates$set_filter_state()}}
 \item \href{#method-FilterStates-set_filterable_varnames}{\code{FilterStates$set_filterable_varnames()}}

@@ -170,20 +170,12 @@ shiny::isolate(datasets$get_filter_state())
 \item \href{#method-FilteredData-get_filter_panel_ui_id}{\code{FilteredData$get_filter_panel_ui_id()}}
 \item \href{#method-FilteredData-ui_filter_panel}{\code{FilteredData$ui_filter_panel()}}
 \item \href{#method-FilteredData-srv_filter_panel}{\code{FilteredData$srv_filter_panel()}}
-<<<<<<< HEAD
-\item \href{#method-FilteredData-ui_overview}{\code{FilteredData$ui_overview()}}
-\item \href{#method-FilteredData-srv_overview}{\code{FilteredData$srv_overview()}}
-=======
->>>>>>> filter_panel_refactor@main
 \item \href{#method-FilteredData-ui_active}{\code{FilteredData$ui_active()}}
 \item \href{#method-FilteredData-srv_active}{\code{FilteredData$srv_active()}}
 \item \href{#method-FilteredData-ui_add}{\code{FilteredData$ui_add()}}
 \item \href{#method-FilteredData-srv_add}{\code{FilteredData$srv_add()}}
-<<<<<<< HEAD
-=======
 \item \href{#method-FilteredData-ui_overview}{\code{FilteredData$ui_overview()}}
 \item \href{#method-FilteredData-srv_overview}{\code{FilteredData$srv_overview()}}
->>>>>>> filter_panel_refactor@main
 \item \href{#method-FilteredData-clone}{\code{FilteredData$clone()}}
 }
 }
@@ -1017,105 +1009,6 @@ data}
 \subsection{Method \code{srv_overview()}}{
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{FilteredData$srv_overview(id, active_datanames = reactive(self$datanames()))}\if{html}{\out{</div>}}
-<<<<<<< HEAD
-}
-
-\subsection{Arguments}{
-\if{html}{\out{<div class="arguments">}}
-\describe{
-\item{\code{id}}{(\code{character(1)})\cr
-an ID string that corresponds with the ID used to call the module's UI function.}
-
-\item{\code{active_datanames}}{(\code{function}, \code{reactive})\cr
-returning datanames that should be shown on the filter panel,
-must be a subset of the \code{datanames} argument provided to \code{ui_filter_panel};
-if the function returns \code{NULL} (as opposed to \code{character(0)}), the filter
-panel will be hidden.}
-}
-\if{html}{\out{</div>}}
-}
-\subsection{Returns}{
-\code{moduleServer} function which returns \code{NULL}
-}
-}
-\if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-FilteredData-ui_active"></a>}}
-\if{latex}{\out{\hypertarget{method-FilteredData-ui_active}{}}}
-\subsection{Method \code{ui_active()}}{
-UI module to display active filter states
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{FilteredData$ui_active(id)}\if{html}{\out{</div>}}
-}
-
-\subsection{Arguments}{
-\if{html}{\out{<div class="arguments">}}
-\describe{
-\item{\code{id}}{(\code{character(1)})\cr
-identifier of the element - preferably containing dataset name}
-}
-\if{html}{\out{</div>}}
-}
-\subsection{Returns}{
-shiny \code{ui} module
-}
-}
-\if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-FilteredData-srv_active"></a>}}
-\if{latex}{\out{\hypertarget{method-FilteredData-srv_active}{}}}
-\subsection{Method \code{srv_active()}}{
-Server module to display active filter states
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{FilteredData$srv_active(id, active_datanames = reactive(self$datanames()))}\if{html}{\out{</div>}}
-}
-
-\subsection{Arguments}{
-\if{html}{\out{<div class="arguments">}}
-\describe{
-\item{\code{id}}{(\code{character(1)})\cr
-an ID string that corresponds with the ID used to call the module's UI function.}
-
-\item{\code{active_datanames}}{(\code{function}, \code{reactive})\cr
-returning datanames that should be shown on the filter panel,
-must be a subset of the \code{datanames} argument provided to \code{ui_filter_panel};
-if the function returns \code{NULL} (as opposed to \code{character(0)}), the filter
-panel will be hidden.}
-}
-\if{html}{\out{</div>}}
-}
-\subsection{Returns}{
-\code{moduleServer} function which returns \code{NULL}
-}
-}
-\if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-FilteredData-ui_add"></a>}}
-\if{latex}{\out{\hypertarget{method-FilteredData-ui_add}{}}}
-\subsection{Method \code{ui_add()}}{
-UI module to add a new filter state
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{FilteredData$ui_add(id)}\if{html}{\out{</div>}}
-}
-
-\subsection{Arguments}{
-\if{html}{\out{<div class="arguments">}}
-\describe{
-\item{\code{id}}{(\code{character(1)})\cr
-identifier of the element - preferably containing dataset name}
-}
-\if{html}{\out{</div>}}
-}
-\subsection{Returns}{
-shiny \code{ui} module
-}
-}
-\if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-FilteredData-srv_add"></a>}}
-\if{latex}{\out{\hypertarget{method-FilteredData-srv_add}{}}}
-\subsection{Method \code{srv_add()}}{
-Server module to add a new filter state
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{FilteredData$srv_add(id, active_datanames = reactive(self$datanames()))}\if{html}{\out{</div>}}
-=======
->>>>>>> filter_panel_refactor@main
 }
 
 \subsection{Arguments}{

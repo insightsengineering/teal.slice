@@ -247,7 +247,7 @@ FilterStates <- R6::R6Class( # nolint
     #'
     #' @return `moduleServer` function which returns `NULL`
     #'
-    server = function(id) {
+    server_active = function(id) {
       moduleServer(
         id = id,
         function(input, output, session) {
