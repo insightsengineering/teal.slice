@@ -61,7 +61,7 @@ isolate(filter_states$get_call())
 \item \href{#method-FilterStates-remove_filter_state}{\code{FilterStates$remove_filter_state()}}
 \item \href{#method-FilterStates-clear_filter_states}{\code{FilterStates$clear_filter_states()}}
 \item \href{#method-FilterStates-ui_active}{\code{FilterStates$ui_active()}}
-\item \href{#method-FilterStates-server}{\code{FilterStates$server()}}
+\item \href{#method-FilterStates-srv_active}{\code{FilterStates$srv_active()}}
 \item \href{#method-FilterStates-get_filter_state}{\code{FilterStates$get_filter_state()}}
 \item \href{#method-FilterStates-set_filter_state}{\code{FilterStates$set_filter_state()}}
 \item \href{#method-FilterStates-set_filterable_varnames}{\code{FilterStates$set_filterable_varnames()}}
@@ -279,12 +279,12 @@ shiny element (module instance) id}
 }
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-FilterStates-server"></a>}}
-\if{latex}{\out{\hypertarget{method-FilterStates-server}{}}}
-\subsection{Method \code{server()}}{
+\if{html}{\out{<a id="method-FilterStates-srv_active"></a>}}
+\if{latex}{\out{\hypertarget{method-FilterStates-srv_active}{}}}
+\subsection{Method \code{srv_active()}}{
 Shiny server module.
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{FilterStates$server(id)}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{FilterStates$srv_active(id)}\if{html}{\out{</div>}}
 }
 
 \subsection{Arguments}{

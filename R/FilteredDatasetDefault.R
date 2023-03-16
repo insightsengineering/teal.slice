@@ -32,8 +32,8 @@ DefaultFilteredDataset <- R6::R6Class( # nolint
     #'   Name of the parent dataset
     #' @param parent (`reactive`)\cr
     #'   object returned by this reactive is a filtered `data.frame` from other `FilteredDataset`
-    #'   named `parent_name`. Consequence of passing `parent` is a `reactive` link which causes
-    #'   causing refiltering of this `dataset` based on the changes in `parent`.
+    #'   named `parent_name`. As a consequence of passing `parent` `reactive` link is established
+    #'   to cause filtering of this `dataset` based on the changes in `parent`.
     #' @param join_keys (`character`)\cr
     #'   Name of the columns in this dataset to join with `parent`
     #'   dataset. If the column names are different if both datasets

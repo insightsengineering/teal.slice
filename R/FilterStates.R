@@ -234,7 +234,7 @@ FilterStates <- R6::R6Class( # nolint
       datalabel <- self$get_datalabel()
       tags$div(
         class = "panel-group accordion",
-        `data-label` = ifelse(datalabel == "", "", datalabel), # todo: labels are not displayed for MAE - see filter-panel.css
+        `data-label` = ifelse(datalabel == "", "", datalabel),
         shiny::tagList(uiOutput(ns("filters")))
       )
     },
@@ -580,7 +580,7 @@ FilterStates <- R6::R6Class( # nolint
       }
     },
 
-        #' UI wrapping a single `FilterState`
+    #' UI wrapping a single `FilterState`
     #'
     #' This module contains a single `FilterState` card and remove (from the `ReactiveQueue`) button.
     #'

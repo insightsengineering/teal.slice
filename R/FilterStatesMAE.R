@@ -78,51 +78,6 @@ MAEFilterStates <- R6::R6Class( # nolint
     },
 
     #' @description
-    #' Server module
-    #' @param id (`character(1)`)\cr
-    #'   an ID string that corresponds with the ID used to call the module's UI function.
-    #' @return `moduleServer` function which returns `NULL`
-    srv_active = function(id) {
-      moduleServer(
-        id = id,
-        function(input, output, session) {
-          previous_state <- reactiveVal(isolate(private$state_list_get("y")))
-          added_state_name <- reactiveVal(character(0))
-          removed_state_name <- reactiveVal(character(0))
-
-          observeEvent(private$state_list_get("y"), {
-            added_state_name(setdiff(names(private$state_list_get("y")), names(previous_state())))
-            removed_state_name(setdiff(names(previous_state()), names(private$state_list_get("y"))))
-
-            previous_state(private$state_list_get("y"))
-          })
-
-          observeEvent(added_state_name(), ignoreNULL = TRUE, {
-            fstates <- private$state_list_get("y")
-            html_ids <- private$map_vars_to_html_ids(names(fstates))
-            for (fname in added_state_name()) {
-              private$insert_filter_state_ui(
-                id = html_ids[fname],
-                filter_state = fstates[[fname]],
-                "y",
-                state_id = fname
-              )
-            }
-            added_state_name(character(0))
-          })
-
-          observeEvent(removed_state_name(), ignoreNULL = TRUE, {
-            for (fname in removed_state_name()) {
-              private$remove_filter_state_ui("y", fname, .input = input)
-            }
-            removed_state_name(character(0))
-          })
-          NULL
-        }
-      )
-    },
-
-    #' @description
     #' Returns active `FilterState` objects.
     #'
     #' Gets all active filters from this dataset in form of the nested list.

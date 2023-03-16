@@ -15,12 +15,11 @@ Handles filter states in a \code{SummaryExperiment}
 \itemize{
 \item \href{#method-SEFilterStates-new}{\code{SEFilterStates$new()}}
 \item \href{#method-SEFilterStates-format}{\code{SEFilterStates$format()}}
-\item \href{#method-SEFilterStates-srv_active}{\code{SEFilterStates$srv_active()}}
 \item \href{#method-SEFilterStates-get_filter_state}{\code{SEFilterStates$get_filter_state()}}
 \item \href{#method-SEFilterStates-set_filter_state}{\code{SEFilterStates$set_filter_state()}}
 \item \href{#method-SEFilterStates-remove_filter_state}{\code{SEFilterStates$remove_filter_state()}}
-\item \href{#method-SEFilterStates-ui}{\code{SEFilterStates$ui()}}
-\item \href{#method-SEFilterStates-server}{\code{SEFilterStates$server()}}
+\item \href{#method-SEFilterStates-ui_active}{\code{SEFilterStates$ui_active()}}
+\item \href{#method-SEFilterStates-srv_active}{\code{SEFilterStates$srv_active()}}
 \item \href{#method-SEFilterStates-ui_add}{\code{SEFilterStates$ui_add()}}
 \item \href{#method-SEFilterStates-srv_add}{\code{SEFilterStates$srv_add()}}
 \item \href{#method-SEFilterStates-clone}{\code{SEFilterStates$clone()}}
@@ -36,7 +35,6 @@ Handles filter states in a \code{SummaryExperiment}
 <li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilterStates" data-id="get_fun"><a href='../../teal.slice/html/FilterStates.html#method-FilterStates-get_fun'><code>teal.slice::FilterStates$get_fun()</code></a></span></li>
 <li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilterStates" data-id="print"><a href='../../teal.slice/html/FilterStates.html#method-FilterStates-print'><code>teal.slice::FilterStates$print()</code></a></span></li>
 <li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilterStates" data-id="set_filterable_varnames"><a href='../../teal.slice/html/FilterStates.html#method-FilterStates-set_filterable_varnames'><code>teal.slice::FilterStates$set_filterable_varnames()</code></a></span></li>
-<li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilterStates" data-id="ui_active"><a href='../../teal.slice/html/FilterStates.html#method-FilterStates-ui_active'><code>teal.slice::FilterStates$ui_active()</code></a></span></li>
 </ul>
 </details>
 }}
@@ -96,27 +94,6 @@ Returns the formatted string representing this \code{MAEFilterStates} object.
 }
 \subsection{Returns}{
 \code{character(1)} the formatted string
-}
-}
-\if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-SEFilterStates-srv_active"></a>}}
-\if{latex}{\out{\hypertarget{method-SEFilterStates-srv_active}{}}}
-\subsection{Method \code{srv_active()}}{
-Server module
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{SEFilterStates$srv_active(id)}\if{html}{\out{</div>}}
-}
-
-\subsection{Arguments}{
-\if{html}{\out{<div class="arguments">}}
-\describe{
-\item{\code{id}}{(\code{character(1)})\cr
-an ID string that corresponds with the ID used to call the module's UI function.}
-}
-\if{html}{\out{</div>}}
-}
-\subsection{Returns}{
-\code{moduleServer} function which returns \code{NULL}
 }
 }
 \if{html}{\out{<hr>}}
@@ -182,15 +159,15 @@ Remove a variable from the \code{state_list} and its corresponding UI element.
 }
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-SEFilterStates-ui"></a>}}
-\if{latex}{\out{\hypertarget{method-SEFilterStates-ui}{}}}
-\subsection{Method \code{ui()}}{
+\if{html}{\out{<a id="method-SEFilterStates-ui_active"></a>}}
+\if{latex}{\out{\hypertarget{method-SEFilterStates-ui_active}{}}}
+\subsection{Method \code{ui_active()}}{
 Shiny module UI
 
 Shiny UI element that stores \code{FilterState} UI elements.
 Populated with elements created with \code{renderUI} in the module server.
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{SEFilterStates$ui(id)}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{SEFilterStates$ui_active(id)}\if{html}{\out{</div>}}
 }
 
 \subsection{Arguments}{
@@ -206,12 +183,12 @@ shiny element (module instance) id}
 }
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-SEFilterStates-server"></a>}}
-\if{latex}{\out{\hypertarget{method-SEFilterStates-server}{}}}
-\subsection{Method \code{server()}}{
+\if{html}{\out{<a id="method-SEFilterStates-srv_active"></a>}}
+\if{latex}{\out{\hypertarget{method-SEFilterStates-srv_active}{}}}
+\subsection{Method \code{srv_active()}}{
 Shiny server module.
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{SEFilterStates$server(id)}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{SEFilterStates$srv_active(id)}\if{html}{\out{</div>}}
 }
 
 \subsection{Arguments}{

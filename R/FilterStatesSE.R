@@ -207,8 +207,8 @@ SEFilterStates <- R6::R6Class( # nolint
       ns <- NS(id)
       datalabel <- self$get_datalabel()
       tags$div(
-        class = "list-group hideable-list-group",
-        `data-label` = ifelse(datalabel == "", "", datalabel), # todo: labels are not displayed for MAE - see filter-panel.css
+        class = "panel-group accordion",
+        `data-label` = datalabel,
         shiny::tagList(uiOutput(ns("genes"))),
         shiny::tagList(uiOutput(ns("samples")))
       )

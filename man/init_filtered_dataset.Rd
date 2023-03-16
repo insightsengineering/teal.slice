@@ -29,8 +29,8 @@ Name of the parent dataset}
 
 \item{parent}{(\code{reactive})\cr
 object returned by this reactive is a filtered \code{data.frame} from other \code{FilteredDataset}
-named \code{parent_name}. Consequence of passing \code{parent} is a \code{reactive} link which causes
-causing refiltering of this \code{dataset} based on the changes in \code{parent}.}
+named \code{parent_name}. As a consequence of passing \code{parent} \code{reactive} link is established
+to cause filtering of this \code{dataset} based on the changes in \code{parent}.}
 
 \item{join_keys}{(\code{character})\cr
 Name of the columns in this dataset to join with \code{parent}
