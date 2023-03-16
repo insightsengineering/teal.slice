@@ -72,8 +72,6 @@ InteractiveFilterState <- R6::R6Class( # nolint
     #'   flag specifying whether to keep infinite values
     #' @param fixed (`logical(1)`)\cr
     #'   flag specifying whether the `FilterState` is initiated fixed
-    #' @param extras (`named list` or `NULL`) of `character` vectors\cr
-    #'   storing additional information on this filter state
     #' @param varlabel (`character(0)`, `character(1)`)\cr
     #'   label of the variable (optional)
     #' @param extract_type (`character(0)`, `character(1)`)\cr
@@ -83,6 +81,7 @@ InteractiveFilterState <- R6::R6Class( # nolint
     #' \item{`"list"`}{ `varname` in the condition call will be returned as `<dataname>$<varname>`}
     #' \item{`"matrix"`}{ `varname` in the condition call will be returned as `<dataname>[, <varname>]`}
     #' }
+    #' @param ... additional arguments to be saved as a list in `private$extras` field
     #'
     #' @return self invisibly
     #'
@@ -95,10 +94,10 @@ InteractiveFilterState <- R6::R6Class( # nolint
                           keep_na = NULL,
                           keep_inf = NULL,
                           fixed = FALSE,
-                          extras = NULL,
                           dataname_prefixed = character(0),
                           varlabel = character(0),
-                          extract_type = character(0)) {
+                          extract_type = character(0),
+                          ...) {
       checkmate::assert_class(x_reactive, "reactive")
       checkmate::assert_string(dataname)
       checkmate::assert_string(varname)
@@ -114,7 +113,7 @@ InteractiveFilterState <- R6::R6Class( # nolint
       private$varname <- varname
       private$selected <- reactiveVal(NULL)
       private$keep_na <- reactiveVal(keep_na)
-      private$extras <- extras
+      private$extras <- list(...)
       private$fixed <- fixed
       private$dataname_prefixed <- dataname_prefixed
       private$varlabel <-

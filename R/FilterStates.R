@@ -608,7 +608,7 @@ FilterStates <- R6::R6Class( # nolint
         # objects has random and unique sid attribute
         # which allows a reactive from below to find a right object in the state_list
         sid <- sprintf("%s-%s-%s", state_list_index, x$varname, sample.int(size = 1L, n = .Machine$integer.max))
-        fstate <- init_filter_state(
+        arg_list <- list(
           x = data[, x$varname, drop = TRUE],
           # data_reactive is a function which eventually calls get_call(sid).
           # This chain of calls returns column from the data filtered by everything
@@ -617,17 +617,11 @@ FilterStates <- R6::R6Class( # nolint
           # is also beneficial as it can be cached and retriger filter counts only if
           # returned vector is different.
           x_reactive = reactive(data_reactive(sid)[, x$varname, drop = TRUE]),
-          dataname = x$dataname,
-          varname = x$varname,
-          choices = x$choices,
-          selected = x$selected,
-          keep_na = x$keep_na,
-          keep_inf = x$keep_inf,
-          fixed = x$fixed,
-          extras = x$extras,
           dataname_prefixed = private$dataname_prefixed,
           extract_type = extract_type
         )
+        arg_list <- append(arg_list, as.list(x))
+        fstate <- do.call(init_filter_state, arg_list)
         attr(fstate, "sid") <- sid
         private$state_list_push(x = fstate, state_list_index = state_list_index, state_id = x$varname)
       })

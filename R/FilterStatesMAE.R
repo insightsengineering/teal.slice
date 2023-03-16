@@ -171,7 +171,7 @@ MAEFilterStates <- R6::R6Class( # nolint
       }
 
       private$set_filter_state_impl(
-        state = extract_fun(state, extras$target == "y"),
+        state = extract_fun(state, target == "y"),
         state_list_index = "y",
         data = SummarizedExperiment::colData(private$data),
         data_reactive = function(sid) SummarizedExperiment::colData(private$data_reactive(sid)),

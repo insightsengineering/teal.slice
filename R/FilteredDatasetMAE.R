@@ -95,11 +95,11 @@ MAEFilteredDataset <- R6::R6Class( # nolint
       logger::log_trace("{ class(self)[1] }$set_filter_state initializing, dataname: { private$dataname }")
 
       # determine target datalabels (defined in teal_slices)
-      datalabels <- unique(unlist(lapply(extract_feat(state, "extras"), function(x) x$datalabel)))
+      datalabels <- unique(unlist(extract_feat(state, "datalabel")))
       # set states on state_lists with corresponding datalabels
       lapply(datalabels, function(x) {
         private$get_filter_states()[[x]]$set_filter_state(
-          extract_fun_s(state, sprintf("extras$datalabel == %s", dQuote(x, q = FALSE)))
+          extract_fun_s(state, sprintf("datalabel == \"%s\"", x))
         )
       })
 

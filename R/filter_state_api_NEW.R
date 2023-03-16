@@ -67,8 +67,7 @@ filter_var <- function(
     keep_inf = keep_inf,
     fixed = fixed
   )
-  extras <- list(...)
-  if (length(extras) != 0L) ans$extras <- extras
+  ans <- append(ans, list(...))
 
   class(ans) <- c("teal_slice", class(ans))
   ans
@@ -107,10 +106,9 @@ print.teal_slice <- function(x) {
     xx <- x[ind]
     cat(" .. additional information", "\n")
     for (i in seq_along(xx)) {
-      # element_name <- format(names(xx)[i], width = name_width)
-      # element_value <- format_value(xx[[i]])
-      # cat(sprintf("     $ %s: %s", element_name, element_value), "\n")
-      str(xx[[i]])
+      element_name <- format(names(xx)[i], width = name_width)
+      element_value <- format_value(xx[[i]])
+      cat(sprintf("     $ %s: %s", element_name, element_value), "\n")
     }
   }
 }
@@ -248,7 +246,7 @@ extract_fun <- function(tss, expr) {
   Filter(function(x) isTRUE(eval(expr, x)), tss)
 }
 extract_fun(all_filters, dataname == "dataname2")
-extract_fun(all_filters, extras$extra2 == "extratwo")
+# extract_fun(all_filters, extras$extra2 == "extratwo") # obsolete
 
 # string version
 extract_fun_s <- function(tss, expr) {
@@ -261,15 +259,6 @@ extract_fun_s(all_filters, 'dataname == "dataname2"')
 x = "dataname2"
 extract_fun_s(all_filters, sprintf('dataname == "%s"', x))
 
-# add elements to extras in all slices
-add_extras <- function(tss, extras) {
-  ans <- lapply(tss, function(ts) {
-    ts$extras <- c(ts$extras, extras)
-    ts
-  })
-  attributes(ans) <- attributes(tss)
-  ans
-}
 
 # convert list to teal_slice
 as.teal_slice <- function(x) {

@@ -113,8 +113,6 @@ LogicalFilterState <- R6::R6Class( # nolint
     #'   flag specifying whether to keep infinite values
     #' @param fixed (`logical(1)`)\cr
     #'   flag specifying whether the `FilterState` is initiated fixed
-    #' @param extras (`named list` or `NULL`) of `character` vectors\cr
-    #'   storing additional information on this filter state
     #' @param varlabel (`character(0)`, `character(1)`)\cr
     #'   label of the variable (optional)
     #' @param extract_type (`character(0)`, `character(1)`)\cr
@@ -124,6 +122,7 @@ LogicalFilterState <- R6::R6Class( # nolint
     #' \item{`"list"`}{ `varname` in the condition call will be returned as `<dataname>$<varname>`}
     #' \item{`"matrix"`}{ `varname` in the condition call will be returned as `<dataname>[, <varname>]`}
     #' }
+    #' @param ... additional arguments to be saved as a list in `private$extras` field
     #'
     initialize = function(x,
                           x_reactive = reactive(NULL),
@@ -134,25 +133,32 @@ LogicalFilterState <- R6::R6Class( # nolint
                           keep_na = NULL,
                           keep_inf = NULL,
                           fixed = FALSE,
-                          extras = NULL,
                           dataname_prefixed = character(0),
                           varlabel = character(0),
-                          extract_type = character(0)) {
+                          extract_type = character(0),
+                          ...) {
       stopifnot(is.logical(x))
-      super$initialize(
-        x = x,
-        x_reactive = x_reactive,
-        dataname = dataname,
-        varname = varname,
-        choices = choices,
-        selected = selected,
-        keep_na = keep_na,
-        keep_inf = keep_inf,
-        fixed = fixed,
-        extras = extras,
-        dataname_prefixed = dataname_prefixed,
-        varlabel = varlabel,
-        extract_type = extract_type)
+
+      do.call(
+        super$initialize,
+        append(
+          list(
+            x = x,
+            x_reactive = x_reactive,
+            dataname = dataname,
+            varname = varname,
+            choices = choices,
+            selected = selected,
+            keep_na = keep_na,
+            keep_inf = keep_inf,
+            fixed = fixed,
+            dataname_prefixed = dataname_prefixed,
+            varlabel = varlabel,
+            extract_type = extract_type),
+          list(...)
+        )
+      )
+
       df <- as.factor(x)
       if (length(levels(df)) != 2) {
         if (levels(df) %in% c(TRUE, FALSE)) {
