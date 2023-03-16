@@ -348,3 +348,16 @@ as.teal_slices <- function(x) {
 
   do.call(filter_settings, slices)
 }
+
+# name teal_slices according to value of respective field in slices
+# possibly useful in set_filter_state_impl but needs safeguards
+name_slices <- function(tss, field) {
+  checkmate::assert_class(tss, "teal_slices")
+  checkmate::assert_string(field)
+  checkmate::assert_choice(field, setdiff(names(formals(filter_var)), "..."))
+
+  feats <- unlist(extract_feat(tss, field))
+  if (anyDuplicated(feats)) stop("duplicated values")
+
+  names(tss) <- feats
+  tss
