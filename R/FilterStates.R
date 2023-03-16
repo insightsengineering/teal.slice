@@ -235,7 +235,7 @@ FilterStates <- R6::R6Class( # nolint
       tags$div(
         class = "panel-group accordion",
         `data-label` = ifelse(datalabel == "", "", datalabel),
-        shiny::tagList(uiOutput(ns("filters")))
+        shiny::tagList(uiOutput(ns("filters"), inline = TRUE))
       )
     },
 
@@ -588,11 +588,7 @@ FilterStates <- R6::R6Class( # nolint
     #' @keywords internal
     ui_card_module = function(id, fs) {
       ns <- NS(id)
-      div(
-        id = ns("card"),
-        class = "list-group-item",
-        fs$ui(id = ns("content"))
-      )
+      fs$ui(id = ns("content"))
     },
 
     #' Server module for a single `FilterState`

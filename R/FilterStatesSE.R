@@ -209,8 +209,8 @@ SEFilterStates <- R6::R6Class( # nolint
       tags$div(
         class = "panel-group accordion",
         `data-label` = datalabel,
-        shiny::tagList(uiOutput(ns("genes"))),
-        shiny::tagList(uiOutput(ns("samples")))
+        shiny::tagList(uiOutput(ns("genes"), inline = TRUE)),
+        shiny::tagList(uiOutput(ns("samples"), inline = TRUE))
       )
     },
 
