@@ -147,8 +147,8 @@ DateFilterState <- R6::R6Class( # nolint
         choices <- range(x, na.rm = TRUE)
       } else {
         private$set_is_choice_limited(x, choices)
-        x <- x[x >= choices[1] & x <= choices[2]]
-        choices <- c(max(choices[1], min(x)) , min(choices[2], max(x)))
+        x <- x[x >= choices[1L] & x <= choices[2L]]
+        choices <- c(max(choices[1L], min(x)) , min(choices[2L], max(x)))
       }
 
       if (is.null(selected)) selected <- choices
@@ -218,12 +218,10 @@ DateFilterState <- R6::R6Class( # nolint
     #' For this class returned call looks like
     #' `<varname> >= <min value> & <varname> <= <max value>` with
     #' optional `is.na(<varname>)`.
-    #' @param dataname name of data set; defaults to `private$dataname`
     #' @return (`call`)
     #'
-    get_call = function(dataname) {
-      if (missing(dataname)) dataname <- private$dataname
-      choices <- as.character(self$get_selected(dataname))
+    get_call = function() {
+      choices <- as.character(self$get_selected())
       filter_call <-
         call(
           "&",
@@ -241,7 +239,7 @@ DateFilterState <- R6::R6Class( # nolint
     #' Check whether the initial choices filter out some values of x and set the flag in case.
     #'
     set_is_choice_limited = function(xl, choices) {
-      private$is_choice_limited <- (any(xl < choices[1], na.rm = TRUE) | any(xl > choices[2], na.rm = TRUE))
+      private$is_choice_limited <- (any(xl < choices[1L], na.rm = TRUE) | any(xl > choices[2L], na.rm = TRUE))
       invisible(NULL)
     },
     validate_selection = function(value) {
@@ -273,24 +271,24 @@ DateFilterState <- R6::R6Class( # nolint
       values
     },
     remove_out_of_bound_values = function(values) {
-      if (values[1] < private$choices[1] | values[1] > private$choices[2]) {
+      if (values[1] < private$choices[1L] | values[1] > private$choices[2L]) {
         warning(
           sprintf(
             "Value: %s is outside of the possible range for column %s of dataset %s, setting minimum possible value.",
             values[1], private$varname, private$dataname
           )
         )
-        values[1] <- private$choices[1]
+        values[1] <- private$choices[1L]
       }
 
-      if (values[2] > private$choices[2] | values[2] < private$choices[1]) {
+      if (values[2] > private$choices[2L] | values[2] < private$choices[1L]) {
         warning(
           sprintf(
             "Value: %s is outside of the possible range for column %s of dataset %s, setting maximum possible value.",
             values[2], private$varname, private$dataname
           )
         )
-        values[2] <- private$choices[2]
+        values[2] <- private$choices[2L]
       }
 
       if (values[1] > values[2]) {
@@ -300,7 +298,7 @@ DateFilterState <- R6::R6Class( # nolint
             values[1], values[2]
           )
         )
-        values <- c(private$choices[1], private$choices[2])
+        values <- c(private$choices[1L], private$choices[2L])
       }
       values
     },
@@ -331,8 +329,8 @@ DateFilterState <- R6::R6Class( # nolint
               label = NULL,
               start = self$get_selected()[1],
               end = self$get_selected()[2],
-              min = private$choices[1],
-              max = private$choices[2],
+              min = private$choices[1L],
+              max = private$choices[2L],
               width = "100%"
             )
           ),
@@ -411,7 +409,7 @@ DateFilterState <- R6::R6Class( # nolint
             updateDateRangeInput(
               session = session,
               inputId = "selection",
-              start = private$choices[1]
+              start = private$choices[1L]
             )
             logger::log_trace(sprintf(
               "DateFilterState$server@3 reset start date of variable %s, dataname: %s",
@@ -424,7 +422,7 @@ DateFilterState <- R6::R6Class( # nolint
             updateDateRangeInput(
               session = session,
               inputId = "selection",
-              end = private$choices[2]
+              end = private$choices[2L]
             )
             logger::log_trace(sprintf(
               "DateFilterState$server@4 reset end date of variable %s, dataname: %s",

@@ -168,7 +168,7 @@ RangeFilterState <- R6::R6Class( # nolint
       private$inf_count <- sum(is.infinite(x))
 
       private$set_is_choice_limited(x, choices)
-      x <- x[x >= choices[1] & x <= choices[2]]
+      x <- x[x >= choices[1L] & x <= choices[2L]]
 
       x_range <- range(x, finite = TRUE)
       x_pretty <- pretty(x_range, 100L)
@@ -195,7 +195,7 @@ RangeFilterState <- R6::R6Class( # nolint
         ggplot2::theme_void() +
         ggplot2::coord_cartesian(
           expand = FALSE,
-          xlim = c(private$choices[1], private$choices[2])
+          xlim = c(private$choices[1L], private$choices[2L])
         )
 
       return(invisible(self))
@@ -305,7 +305,7 @@ RangeFilterState <- R6::R6Class( # nolint
     set_is_choice_limited = function(xl, choices) {
       xl <- xl[!is.na(xl)]
       xl <- xl[!is.finite(xl)]
-      private$is_choice_limited <- (any(xl < choices[1]) | any(xl > choices[2]))
+      private$is_choice_limited <- (any(xl < choices[1L]) | any(xl > choices[2L]))
       invisible(NULL)
     },
 
@@ -400,8 +400,8 @@ RangeFilterState <- R6::R6Class( # nolint
           teal.widgets::optionalSliderInput(
             inputId = ns("selection"),
             label = NULL,
-            min = private$choices[1],
-            max = private$choices[2],
+            min = private$choices[1L],
+            max = private$choices[2L],
             value = shiny::isolate(private$selected()),
             step = private$slider_step,
             width = "100%"

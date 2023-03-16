@@ -152,12 +152,12 @@ DatetimeFilterState <- R6::R6Class( # nolint
         choices <- as.POSIXct(choices, units = "secs")
         private$set_is_choice_limited(x, choices)
         x <- x[
-          as.POSIXct(trunc(x, units = "secs")) >= choices[1] &
-            as.POSIXct(trunc(x, units = "secs")) <= choices[2]
+          as.POSIXct(trunc(x, units = "secs")) >= choices[1L] &
+            as.POSIXct(trunc(x, units = "secs")) <= choices[2L]
         ]
         choices <- c(
-          max(choices[1], min(as.POSIXct(x), na.rm = TRUE)),
-          min(choices[2], max(as.POSIXct(x), na.rm = TRUE))
+          max(choices[1L], min(as.POSIXct(x), na.rm = TRUE)),
+          min(choices[2L], max(as.POSIXct(x), na.rm = TRUE))
         )
       }
       if (is.null(selected)) selected <- choices
@@ -267,7 +267,7 @@ DatetimeFilterState <- R6::R6Class( # nolint
     #' Check whether the initial choices filter out some values of x and set the flag in case.
     #'
     set_is_choice_limited = function(xl, choices = NULL) {
-      private$is_choice_limited <- (any(xl < choices[1], na.rm = TRUE) | any(xl > choices[2], na.rm = TRUE))
+      private$is_choice_limited <- (any(xl < choices[1L], na.rm = TRUE) | any(xl > choices[2L], na.rm = TRUE))
       invisible(NULL)
     },
     validate_selection = function(value) {
@@ -300,24 +300,24 @@ DatetimeFilterState <- R6::R6Class( # nolint
       values
     },
     remove_out_of_bound_values = function(values) {
-      if (values[1] < private$choices[1] || values[1] > private$choices[2]) {
+      if (values[1] < private$choices[1L] || values[1] > private$choices[2L]) {
         warning(
           sprintf(
             "Value: %s is outside of the range for the column '%s' in dataset '%s', setting minimum possible value.",
             values[1], private$varname, toString(private$dataname)
           )
         )
-        values[1] <- private$choices[1]
+        values[1] <- private$choices[1L]
       }
 
-      if (values[2] > private$choices[2] | values[2] < private$choices[1]) {
+      if (values[2] > private$choices[2L] | values[2] < private$choices[1L]) {
         warning(
           sprintf(
             "Value: '%s' is outside of the range for the column '%s' in dataset '%s', setting maximum possible value.",
             values[2], private$varname, toString(private$dataname)
           )
         )
-        values[2] <- private$choices[2]
+        values[2] <- private$choices[2L]
       }
 
       if (values[1] > values[2]) {
@@ -327,7 +327,7 @@ DatetimeFilterState <- R6::R6Class( # nolint
             values[1], values[2]
           )
         )
-        values <- c(private$choices[1], private$choices[2])
+        values <- c(private$choices[1L], private$choices[2L])
       }
       values
     },
@@ -359,8 +359,8 @@ DatetimeFilterState <- R6::R6Class( # nolint
                 value = self$get_selected()[1],
                 startView = self$get_selected()[1],
                 timepicker = TRUE,
-                minDate = private$choices[1],
-                maxDate = private$choices[2],
+                minDate = private$choices[1L],
+                maxDate = private$choices[2L],
                 update_on = "close",
                 addon = "none",
                 position = "bottom right"
@@ -379,8 +379,8 @@ DatetimeFilterState <- R6::R6Class( # nolint
                 value = self$get_selected()[2],
                 startView = self$get_selected()[2],
                 timepicker = TRUE,
-                minDate = private$choices[1],
-                maxDate = private$choices[2],
+                minDate = private$choices[1L],
+                maxDate = private$choices[2L],
                 update_on = "close",
                 addon = "none",
                 position = "bottom right"
@@ -521,7 +521,7 @@ DatetimeFilterState <- R6::R6Class( # nolint
               shinyWidgets::updateAirDateInput(
                 session = session,
                 inputId = "selection_start",
-                value = private$choices[1]
+                value = private$choices[1L]
               )
               logger::log_trace(sprintf(
                 "DatetimeFilterState$server@2 reset start date of variable %s, dataname: %s",
@@ -538,7 +538,7 @@ DatetimeFilterState <- R6::R6Class( # nolint
               shinyWidgets::updateAirDateInput(
                 session = session,
                 inputId = "selection_end",
-                value = private$choices[2]
+                value = private$choices[2L]
               )
               logger::log_trace(sprintf(
                 "DatetimeFilterState$server@3 reset end date of variable %s, dataname: %s",
