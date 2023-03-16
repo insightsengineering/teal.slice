@@ -171,40 +171,18 @@ DefaultFilteredDataset <- R6::R6Class( # nolint
     #' dataset$set_filter_state(state = fs)
     #' shiny::isolate(dataset$get_filter_state())
     #'
-    #' @return `NULL`
+    #' @return `NULL` invisibly
+    #'
     set_filter_state = function(state) {
-      checkmate::assert(
-        checkmate::check_list(state),
-        checkmate::check_class(state, "teal_slices")
-      )
-      if (is.teal_slices(state)) {
-        private$get_filter_states()[[1L]]$set_filter_state(state = state)
-        NULL
-      } else {
-        warning(paste(
-          "From FilteredDatasetDefault:",
-          "Specifying filters as lists is obsolete and will be deprecated in the next release.",
-          "Please see ?set_filter_state and ?filter_settings for details."
-        ),
-        call. = FALSE)
-      logger::log_trace(
-        sprintf(
-          "DefaultFilteredDataset$set_filter_state setting up filters of variables %s, dataname: %s",
-          paste(names(state), collapse = ", "),
-          self$get_dataname()
-        )
-      )
-      fs <- private$get_filter_states()[[1]]
-      fs$set_filter_state(state = state)
-      logger::log_trace(
-        sprintf(
-          "DefaultFilteredDataset$set_filter_state done setting up filters of variables %s, dataname: %s",
-          paste(names(state), collapse = ", "),
-          self$get_dataname()
-        )
-      )
-      NULL
-      }
+      checkmate::assert_class(state, "teal_slices")
+
+      logger::log_trace("{ class(self)[1] }$set_filter_state initializing, dataname: { private$dataname }")
+
+      private$get_filter_states()[[1L]]$set_filter_state(state = state)
+
+      logger::log_trace("{ class(self)[1] }$set_filter_state initialized, dataname: { private$dataname }")
+
+      invisible(NULL)
     },
 
     #' @description Remove one or more `FilterState` of a `FilteredDataset`
