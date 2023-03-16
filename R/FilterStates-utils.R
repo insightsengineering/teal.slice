@@ -6,10 +6,13 @@
 #' @param data (`data.frame`, `MultiAssayExperiment`, `SummarizedExperiment`, `matrix`)\cr
 #'   the R object which `subset` function is applied on.
 #'
-#' @param data_reactive (`reactive`)\cr
-#'   should return an object constistent with the `FilterState` class or `NULL`.
-#'   This object is needed for the `FilterState` counts being updated
-#'   on a change in filters. If `reactive(NULL)` then filtered counts are not shown.
+#' @param data_reactive (`function(sid)`)\cr
+#'   should return an object of the same type as `data` or `NULL`.
+#'   This object is needed for the `FilterState` shiny module to update
+#'   counts if filtered data changes.
+#'   If function returns `NULL` then filtered counts
+#'   are not shown. Function has to have `sid` argument being a character which
+#'   is related to `sid` argument in the `get_call` method.
 #'
 #' @param dataname (`character(1)`)\cr
 #'   name of the data used in the expression
@@ -41,13 +44,13 @@
 #' shinyApp(
 #'   ui = fluidPage(
 #'     actionButton("clear", span(icon("xmark"), "Remove all filters")),
-#'     rf$ui_add_filter_state(id = "add"),
-#'     rf$ui("states"),
+#'     rf$ui_add(id = "add"),
+#'     rf$ui_active("states"),
 #'     verbatimTextOutput("expr"),
 #'   ),
 #'   server = function(input, output, session) {
-#'     rf$srv_add_filter_state(id = "add")
-#'     rf$server(id = "states")
+#'     rf$srv_add(id = "add")
+#'     rf$srv_active(id = "states")
 #'     output$expr <- renderText({
 #'       deparse1(rf$get_call(), collapse = "\n")
 #'     })
@@ -66,7 +69,7 @@ init_filter_states <- function(data,
 #' @keywords internal
 #' @export
 init_filter_states.data.frame <- function(data, # nolint
-                                          data_reactive = reactive(NULL),
+                                          data_reactive = function(sid = "") NULL,
                                           dataname,
                                           datalabel = character(0),
                                           varlabels = character(0),
@@ -85,7 +88,7 @@ init_filter_states.data.frame <- function(data, # nolint
 #' @keywords internal
 #' @export
 init_filter_states.matrix <- function(data, # nolint
-                                      data_reactive = reactive(NULL),
+                                      data_reactive = function(sid = "") NULL,
                                       dataname,
                                       datalabel = character(0),
                                       ...) {
@@ -100,10 +103,10 @@ init_filter_states.matrix <- function(data, # nolint
 #' @keywords internal
 #' @export
 init_filter_states.MultiAssayExperiment <- function(data, # nolint
-                                                    data_reactive = reactive(NULL),
+                                                    data_reactive = function(sid = "") NULL,
                                                     dataname,
-                                                    datalabel = character(0),
-                                                    varlabels,
+                                                    datalabel = "patients",
+                                                    varlabels = character(0),
                                                     keys = character(0),
                                                     ...) {
   if (!requireNamespace("MultiAssayExperiment", quietly = TRUE)) {
@@ -122,7 +125,7 @@ init_filter_states.MultiAssayExperiment <- function(data, # nolint
 #' @keywords internal
 #' @export
 init_filter_states.SummarizedExperiment <- function(data, # nolint
-                                                    data_reactive = reactive(NULL),
+                                                    data_reactive = function(sid = "") NULL,
                                                     dataname,
                                                     datalabel = character(0),
                                                     ...) {
@@ -208,41 +211,19 @@ get_supported_filter_varnames.MAEFilteredDataset <- function(data) { # nolint
 #'  the names of the key columns in data
 #' @return `character(0)` if choices are empty; a `choices_labeled` object otherwise
 #' @keywords internal
-data_choices_labeled <- function(data, choices, varlabels = character(0), keys = character(0)) {
+data_choices_labeled <- function(data,
+                                 choices,
+                                 varlabels = formatters::var_labels(data, fill = TRUE),
+                                 keys = character(0)) {
   if (length(choices) == 0) {
     return(character(0))
   }
+  choice_types <- setNames(variable_types(data = data, columns = choices), choices)
+  choice_types[keys] <- "primary_key"
 
-  choice_labels <- if (identical(varlabels, character(0))) {
-    vapply(
-      X = data,
-      FUN.VALUE = character(1),
-      FUN = function(x) {
-        label <- attr(x, "label")
-        if (length(label) != 1) {
-          ""
-        } else {
-          label
-        }
-      }
-    )[choices]
-  } else {
-    varlabels
-  }
-
-  if (!identical(choice_labels, character(0))) {
-    choice_labels[is.na(choice_labels) | choice_labels == ""] <- names(
-      choice_labels[is.na(choice_labels) | choice_labels == ""]
-    )
-    choice_types <- setNames(variable_types(data = data, columns = choices), choices)
-    choice_types[keys] <- "primary_key"
-
-    choices_labeled(
-      choices = choices,
-      labels = unname(choice_labels[choices]),
-      types = choice_types[choices]
-    )
-  } else {
-    choices
-  }
+  choices_labeled(
+    choices = choices,
+    labels = unname(varlabels[choices]),
+    types = choice_types[choices]
+  )
 }

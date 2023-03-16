@@ -1,14 +1,16 @@
-#' @name FilterState
+#' @name InteractiveFilterState
 #' @docType class
 #'
 #'
-#' @title Abstract class to encapsulate filter states
+#' @title `InteractiveFilterState` Abstract Class
+#'
+#' @description Abstract class to encapsulate single filter state
 #'
 #' @details
 #' This class is responsible for managing single filter item within
 #' `FilteredData` class. Filter states depend on the variable type:
 #' (`logical`, `integer`, `numeric`, `factor`, `character`, `Date`, `POSIXct`, `POSIXlt`)
-#' and returns `FilterState` object with class corresponding to input variable.
+#' and returns `InteractiveFilterState` object with class corresponding to input variable.
 #' Class controls single filter entry in `module_single_filter_item` and returns
 #' code relevant to selected values.
 #' - `factor`, `character`: `class = ChoicesFilterState`
@@ -29,22 +31,23 @@
 #' \cr
 #' \cr
 #' @section Modifying state:
-#' Modifying a `FilterState` object is possible in three scenarios:
+#' Modifying a `InteractiveFilterState` object is possible in three scenarios:
 #' * In the interactive session by directly specifying values of `selected`,
 #'   `keep_na` or `keep_inf` using `set_state` method (to update all at once),
 #'   or using `set_selected`, `set_keep_na` or `set_keep_inf`
 #' * In a running application by changing appropriate inputs
 #' * In a running application by using [filter_state_api] which directly uses `set_state` method
-#'  of the `FilterState` object.
+#'  of the `InteractiveFilterState` object.
 #'
 #' @keywords internal
-FilterState <- R6::R6Class( # nolint
-  "FilterState",
+InteractiveFilterState <- R6::R6Class( # nolint
+  "InteractiveFilterState",
+  inherit = FilterState,
 
   # public methods ----
   public = list(
     #' @description
-    #' Initialize a `FilterState` object
+    #' Initialize a `InteractiveFilterState` object
     #' @param x (`vector`)\cr
     #'   values of the variable used in filter
     #' @param x_reactive (`reactive`)\cr
@@ -69,11 +72,12 @@ FilterState <- R6::R6Class( # nolint
     #' @return self invisibly
     #'
     initialize = function(x,
-                          x_reactive,
+                          x_reactive = reactive(NULL),
                           varname,
                           varlabel = character(0),
                           dataname = NULL,
                           extract_type = character(0)) {
+      checkmate::assert_class(x_reactive, "reactive")
       checkmate::assert_string(varname)
       checkmate::assert_character(varlabel, max.len = 1, any.missing = FALSE)
       checkmate::assert_string(dataname, null.ok = TRUE)
@@ -84,7 +88,6 @@ FilterState <- R6::R6Class( # nolint
       if (length(extract_type) == 1 && is.null(dataname)) {
         stop("if extract_type is specified, dataname must also be specified")
       }
-
       private$dataname <- dataname
       private$varname <- varname
       private$varlabel <- if (identical(varlabel, as.character(varname))) {
@@ -98,7 +101,12 @@ FilterState <- R6::R6Class( # nolint
       private$na_count <- sum(is.na(x))
       private$keep_na <- reactiveVal(FALSE)
       private$x_reactive <- x_reactive
-      private$filtered_na_count <- reactive(sum(is.na(x_reactive())))
+      private$filtered_na_count <- reactive(
+        if (!is.null(private$x_reactive())) {
+          sum(is.na(private$x_reactive()))
+        }
+      )
+      private$disabled <- reactiveVal(FALSE)
       logger::log_trace(
         sprintf(
           "Instantiated %s with variable %s, dataname: %s",
@@ -255,15 +263,19 @@ FilterState <- R6::R6Class( # nolint
     #'
     set_keep_na = function(value) {
       checkmate::assert_flag(value)
-      private$keep_na(value)
-      logger::log_trace(
-        sprintf(
-          "%s$set_keep_na set for variable %s to %s.",
-          class(self)[1],
-          private$varname,
-          value
+      if (shiny::isolate(private$is_disabled())) {
+        warning("This filter state is disabled. Can not change keep NA.")
+      } else {
+        private$keep_na(value)
+        logger::log_trace(
+          sprintf(
+            "%s$set_keep_na set for variable %s to %s.",
+            class(self)[1],
+            private$varname,
+            value
+          )
         )
-      )
+      }
       invisible(NULL)
     },
 
@@ -290,7 +302,7 @@ FilterState <- R6::R6Class( # nolint
     #' @param value (`vector`)\cr
     #'   value(s) that come from filter selection; values are set in the
     #'   module server after a selection is made in the app interface;
-    #'   values are stored in `private$selected`n which is reactive;
+    #'   values are stored in `private$selected` which is reactive;
     #'   value types have to be the same as `private$choices`
     #'
     #' @return NULL invisibly
@@ -304,16 +316,24 @@ FilterState <- R6::R6Class( # nolint
           private$dataname
         )
       )
-      value <- private$cast_and_validate(value)
-      value <- private$remove_out_of_bound_values(value)
-      private$validate_selection(value)
-      private$selected(value)
-      logger::log_trace(sprintf(
-        "%s$set_selected selection of variable %s set, dataname: %s",
-        class(self)[1],
-        private$varname,
-        private$dataname
-      ))
+
+      if (shiny::isolate(private$is_disabled())) {
+        warning("This filter state is disabled. Can not change selected.")
+      } else {
+        value <- private$cast_and_validate(value)
+        value <- private$remove_out_of_bound_values(value)
+        private$validate_selection(value)
+        private$selected(value)
+        logger::log_trace(
+          sprintf(
+            "%s$set_selected selection of variable %s set, dataname: %s",
+            class(self)[1],
+            private$varname,
+            private$dataname
+          )
+        )
+      }
+
       invisible(NULL)
     },
 
@@ -339,6 +359,7 @@ FilterState <- R6::R6Class( # nolint
         state$keep_na
       ))
       stopifnot(is.list(state) && all(names(state) %in% c("selected", "keep_na")))
+
       if (!is.null(state$keep_na)) {
         self$set_keep_na(state$keep_na)
       }
@@ -369,7 +390,19 @@ FilterState <- R6::R6Class( # nolint
       moduleServer(
         id = id,
         function(input, output, session) {
+          private$server_summary("summary")
           private$server_inputs("inputs")
+          observeEvent(input$enable,
+            {
+              if (isTRUE(input$enable)) {
+                private$enable()
+              } else {
+                private$disable()
+              }
+            },
+            ignoreInit = TRUE
+          )
+          reactive(input$remove) # back to parent to remove self
 
           # function removes observers and inputs related with this filter
           private$destroy_shiny_impl <- function() {
@@ -400,39 +433,17 @@ FilterState <- R6::R6Class( # nolint
     #' @param id (`character(1)`)\cr
     #'  shiny element (module instance) id;
     #'  the UI for this class contains simple message stating that it is not supported
-    #'
-    ui = function(id) {
+    #' @param parent_id (`character(1)`) id of the FilterStates card container
+    ui = function(id, parent_id = "cards") {
       ns <- NS(id)
-      fluidPage(
-        include_css_files(pattern = "filter-panel"),
-        theme = get_teal_bs_theme(),
-        fluidRow(
-          column(
-            width = 10,
-            class = "no-left-right-padding",
-            tags$div(
-              tags$span(private$varname,
-                class = "filter_panel_varname"
-              ),
-              if (checkmate::test_character(self$get_varlabel(), min.len = 1) &&
-                tolower(private$varname) != tolower(self$get_varlabel())) {
-                tags$span(self$get_varlabel(), class = "filter_panel_varlabel")
-              }
-            )
-          ),
-          column(
-            width = 2,
-            class = "no-left-right-padding",
-            actionLink(
-              ns("remove"),
-              label = "",
-              icon = icon("circle-xmark", lib = "font-awesome"),
-              class = "remove pull-right"
-            )
-          )
-        ),
-        private$ui_inputs(ns("inputs"))
-      )
+
+      theme <- getOption("teal.bs_theme")
+
+      if (is.null(theme)) {
+        private$ui_bs3(id, parent_id)
+      } else {
+        private$ui_bs45(id, parent_id)
+      }
     }
   ),
 
@@ -451,23 +462,40 @@ FilterState <- R6::R6Class( # nolint
     extract_type = logical(0),
     x_reactive = NULL, # reactive containing the filtered variable, used for updating counts and histograms
     filtered_na_count = NULL, # reactive containing the count of NA in the filtered dataset
+    disabled = NULL, # reactiveVal returning logical
+    cache = NULL, # cache state when filter disabled so we can later restore
 
-    #' description
-    #' Adds `is.na(varname)` before existing condition calls if `keep_na` is selected.
-    #' Otherwise, if missings are found in the variable `!is.na` will be added
-    #' only if `private$na_rm = TRUE`
-    #' return (`call`)
+    # private methods ----
+
+    # @description
+    # Return variable name prefixed by dataname to be evaluated as extracted object,
+    # for example `data$var`
+    # @return a character string representation of a subset call
+    #         that extracts the variable from the dataset
+    get_varname_prefixed = function() {
+      ans <-
+        if (isTRUE(private$extract_type == "list")) {
+          sprintf("%s$%s", private$dataname, private$varname)
+        } else if (isTRUE(private$extract_type == "matrix")) {
+          sprintf("%s[, \"%s\"]", private$dataname, private$varname)
+        } else {
+          private$varname
+        }
+      str2lang(ans)
+    },
+
+    # @description
+    # Adds `is.na(varname)` before existing condition calls if `keep_na` is selected.
+    # Otherwise, if missings are found in the variable `!is.na` will be added
+    # only if `private$na_rm = TRUE`
+    # @return a `call`
     add_keep_na_call = function(filter_call) {
       if (isTRUE(self$get_keep_na())) {
-        call(
-          "|",
-          call("is.na", private$get_varname_prefixed()),
-          filter_call
-        )
-      } else if (isTRUE(private$na_rm) && private$na_count > 0) {
+        call("|", call("is.na", private$get_varname_prefixed()), filter_call)
+      } else if (isTRUE(private$na_rm) && private$na_count > 0L) {
         call(
           "&",
-          substitute(!is.na(var), list(var = private$get_varname_prefixed())),
+          call("!", call("is.na", private$get_varname_prefixed())),
           filter_call
         )
       } else {
@@ -475,34 +503,12 @@ FilterState <- R6::R6Class( # nolint
       }
     },
 
-    #' description
-    #' Prefixed (or not) variable
-    #'
-    #' Return variable name needed to condition call.
-    #' If `isTRUE(private$use_dataset)` variable is prefixed by
-    #' dataname to be evaluated as extracted object, for example
-    #' `data$var`
-    #' return (`name` or `call`)
-    get_varname_prefixed = function() {
-      if (isTRUE(private$extract_type == "list")) {
-        call_extract_list(private$dataname, private$varname)
-      } else if (isTRUE(private$extract_type == "matrix")) {
-        call_extract_matrix(
-          dataname = private$dataname,
-          column = private$varname
-        )
-      } else {
-        str2lang(private$varname)
-      }
-    },
-
-    #' Set choices
-    #'
-    #' Set choices is supposed to be executed once in the constructor
-    #' to define set/range which selection is made from.
-    #' parameter choices (`vector`)\cr
-    #'  class of the vector depends on the `FilterState` class.
-    #' return a `NULL`
+    # @description
+    # Set choices is supposed to be executed once in the constructor
+    # to define set/range which selection is made from.
+    # parameter choices (`vector`)\cr
+    #  class of the vector depends on the `FilterState` class.
+    # @return `NULL`
     set_choices = function(choices) {
       private$choices <- choices
       invisible(NULL)
@@ -538,25 +544,69 @@ FilterState <- R6::R6Class( # nolint
       values
     },
 
-    # Calculates NA counts
-    #
-    # NA counts are based on unfiltered and filtered (optional) `x`.
-    get_na_label = function() {
-      sprintf(
-        "Keep NA (%s%s)",
-        if (is.null(private$x_reactive())) "" else sprintf("%s/", private$filtered_na_count()),
-        private$na_count
+    # Disables `FilterState`
+    # `state` is moved to cache and set to `NULL`
+    # @return `NULL` invisibly
+    disable = function() {
+      private$cache <- self$get_state()
+      private$selected(NULL)
+      private$keep_na(NULL)
+      private$disabled(TRUE)
+      invisible(NULL)
+    },
+
+    # Enables `FilterState`
+    # Cached `state` is reset again and cache is cleared.
+    # @return `NULL` invisibly
+    enable = function() {
+      if (!is.null(private$cache)) {
+        private$disabled(FALSE)
+        self$set_state(private$cache)
+        private$cache <- NULL
+      }
+      invisible(NULL)
+    },
+
+    # Check whether filter is disabled
+    # @return `logical(1)`
+    is_disabled = function() {
+      private$disabled()
+    },
+
+    # shiny modules -----
+
+    # @description
+    # Server module to display filter summary
+    # @param id `shiny` id parameter
+    ui_summary = function(id) {
+      ns <- NS(id)
+      uiOutput(ns("summary"), class = "filter-card-summary")
+    },
+
+    # @description
+    # UI module to display filter summary
+    # @param shiny `id` parametr passed to moduleServer
+    #  renders text describing current state
+    server_summary = function(id) {
+      moduleServer(
+        id = id,
+        function(input, output, session) {
+          output$summary <- renderUI({
+            if (private$is_disabled()) {
+              tags$span("Disabled")
+            } else {
+              private$content_summary()
+            }
+          })
+        }
       )
     },
 
-    # shiny private modules ----
-
-    # shiny modules -----
     #' module with inputs
     ui_inputs = function(id) {
       stop("abstract class")
     },
-    #' module with inputs
+    # module with inputs
     server_inputs = function(id) {
       stop("abstract class")
     },
@@ -569,10 +619,22 @@ FilterState <- R6::R6Class( # nolint
     keep_na_ui = function(id) {
       ns <- NS(id)
       if (private$na_count > 0) {
-        checkboxInput(
-          ns("value"),
-          isolate(private$get_na_label()),
-          value = isolate(self$get_keep_na())
+        countmax <- private$na_count
+        countnow <- isolate(private$filtered_na_count())
+        div(
+          uiOutput(ns("trigger_visible"), inline = TRUE),
+          checkboxInput(
+            inputId = ns("value"),
+            label = tags$span(
+              id = ns("count_label"),
+              make_count_text(
+                label = "Keep NA",
+                countmax = countmax,
+                countnow = countnow
+              )
+            ),
+            value = shiny::isolate(self$get_keep_na())
+          )
         )
       } else {
         NULL
@@ -587,34 +649,38 @@ FilterState <- R6::R6Class( # nolint
     #  changed through the api
     keep_na_srv = function(id) {
       moduleServer(id, function(input, output, session) {
-        observeEvent(private$filtered_na_count(), {
-          updateCheckboxInput(
-            session,
-            "value",
-            label = private$get_na_label(),
-            value = self$get_keep_na()
+        # 1. renderUI is used here as an observer which triggers only if output is visible
+        #  and if the reactive changes - reactive triggers only if the output is visible.
+        # 2. We want to trigger change of the labels only if reactive count changes (not underlying data)
+        output$trigger_visible <- renderUI({
+          updateCountText(
+            inputId = "count_label",
+            label = "Keep NA",
+            countmax = private$na_count,
+            countnow = private$filtered_na_count()
           )
+          NULL
         })
 
         # this observer is needed in the situation when private$keep_inf has been
         # changed directly by the api - then it's needed to rerender UI element
         # to show relevant values
         private$observers$keep_na_api <- observeEvent(
+          eventExpr = self$get_keep_na(),
           ignoreNULL = FALSE, # nothing selected is possible for NA
           ignoreInit = TRUE, # ignoreInit: should not matter because we set the UI with the desired initial state
-          eventExpr = self$get_keep_na(),
           handlerExpr = {
             if (!setequal(self$get_keep_na(), input$value)) {
               updateCheckboxInput(
                 inputId = "value",
-                label = private$get_na_label(),
+                label = sprintf("Keep NA (%s/%s)", private$filtered_na_count(), private$na_count),
                 value = self$get_keep_na()
               )
             }
           }
         )
         private$observers$keep_na <- observeEvent(
-          ignoreNULL = FALSE, # ignoreNULL: we don't want to ignore NULL when nothing is selected in the `selectInput`,
+          ignoreNULL = FALSE, # ignoreNULL: we don't want to ignore NULL when nothing is selected in the `selectInput`
           ignoreInit = TRUE, # ignoreInit: should not matter because we set the UI with the desired initial state
           eventExpr = input$value,
           handlerExpr = {
@@ -637,6 +703,119 @@ FilterState <- R6::R6Class( # nolint
         )
         invisible(NULL)
       })
+    },
+    # @description
+    # Filter card UI for Bootstrap 3.
+    #
+    # @param id (`character(1)`) Id for the containing HTML element.
+    # @param parent_id (`character(1)`) id of the FilterStates card container
+    ui_bs3 = function(id, parent_id) {
+      ns <- NS(id)
+
+      enable <- !private$is_disabled()
+
+      tags$div(
+        id = id,
+        class = "panel panel-default",
+        include_js_files("count-bar-labels.js"),
+        tags$div(
+          class = "panel-heading",
+          tags$div(
+            class = "panel-title",
+            tags$a(
+              class = "accordion-toggle",
+              `data-toggle` = "collapse",
+              `data-parent` = paste0("#", parent_id),
+              href = paste0("#", ns("body")),
+              tags$span(tags$strong(self$get_varname())),
+              if (length(self$get_varlabel())) {
+                tags$span(self$get_varlabel(), class = "filter-card-varlabel")
+              } else {
+                NULL
+              }
+            ),
+            shinyWidgets::prettySwitch(
+              ns("enable"),
+              label = "",
+              status = "success",
+              fill = TRUE,
+              value = enable,
+              width = 30
+            ),
+            actionLink(
+              inputId = ns("remove"),
+              label = icon("circle-xmark", lib = "font-awesome"),
+              class = "filter-card-remove"
+            )
+          ),
+          private$ui_summary(ns("summary"))
+        ),
+        tags$div(
+          id = ns("body"),
+          class = "panel-collapse collapse out",
+          tags$div(
+            class = "panel-body",
+            private$ui_inputs(ns("inputs"))
+          )
+        )
+      )
+    },
+    # @description
+    # Filter card ui for Bootstrap 4 and 5.
+    #
+    # @param id (`character(1)`) Id for the containing HTML element.
+    # @param parent_id (`character(1)`) id of the FilterStates card container
+    ui_bs45 = function(id, parent_id) {
+      ns <- NS(id)
+      enable <- !private$is_disabled()
+
+      tags$div(
+        id = id,
+        class = "card",
+        include_js_files("count-bar-labels.js"),
+        tags$div(
+          class = "card-header",
+          tags$div(
+            class = "card-title",
+            tags$a(
+              class = "accordion-toggle",
+              `data-toggle` = "collapse",
+              `data-bs-toggle` = "collapse",
+              href = paste0("#", ns("body")),
+              tags$span(tags$strong(self$get_varname())),
+              if (length(self$get_varlabel())) {
+                tags$span(self$get_varlabel(), class = "filter-card-varlabel")
+              } else {
+                NULL
+              }
+            ),
+            shinyWidgets::prettySwitch(
+              ns("enable"),
+              label = "",
+              status = "success",
+              fill = TRUE,
+              value = enable,
+              width = 30
+            ),
+            actionLink(
+              inputId = ns("remove"),
+              label = icon("circle-xmark", lib = "font-awesome"),
+              class = "filter-card-remove"
+            )
+          ),
+          private$ui_summary(ns("summary"))
+        ),
+        tags$div(
+          id = ns("body"),
+          class = "collapse out",
+          `data-parent` = paste0("#", parent_id),
+          `data-bs-parent` = paste0("#", parent_id),
+          tags$div(
+            class = "card-body",
+            private$ui_inputs(ns("inputs"))
+          )
+        )
+      )
     }
   )
 )

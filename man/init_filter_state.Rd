@@ -2,7 +2,7 @@
 % Please edit documentation in R/FilterState-utils.R
 \name{init_filter_state}
 \alias{init_filter_state}
-\title{Initializes \code{FilterState}}
+\title{Initializes \code{InteractiveFilterState}}
 \usage{
 init_filter_state(
   x,
@@ -45,7 +45,7 @@ whether condition calls should be prefixed by dataname. Possible values:
 \code{FilterState} object
 }
 \description{
-Initializes \code{FilterState} depending on a variable class.\cr
+Initializes \code{InteractiveFilterState} depending on a variable class.\cr
 }
 \examples{
 filter_state <- teal.slice:::RangeFilterState$new(

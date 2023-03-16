@@ -2,9 +2,9 @@
 % Please edit documentation in R/FilterStatesMAE.R
 \name{MAEFilterStates}
 \alias{MAEFilterStates}
-\title{\code{MAEFilterStates}}
+\title{\code{FilterStates} subclass for MultiAssayExperiments}
 \description{
-Specialization of \code{FilterStates} for \code{MultiAssayExperiment}.
+Handles filter states in a \code{MultiAssayExperiment}
 }
 \keyword{internal}
 \section{Super class}{
@@ -16,28 +16,29 @@ Specialization of \code{FilterStates} for \code{MultiAssayExperiment}.
 \item \href{#method-MAEFilterStates-new}{\code{MAEFilterStates$new()}}
 \item \href{#method-MAEFilterStates-format}{\code{MAEFilterStates$format()}}
 \item \href{#method-MAEFilterStates-get_fun}{\code{MAEFilterStates$get_fun()}}
+<<<<<<< HEAD
+=======
+\item \href{#method-MAEFilterStates-srv_active}{\code{MAEFilterStates$srv_active()}}
+>>>>>>> filter_panel_refactor@main
 \item \href{#method-MAEFilterStates-get_filter_state}{\code{MAEFilterStates$get_filter_state()}}
 \item \href{#method-MAEFilterStates-set_filter_state}{\code{MAEFilterStates$set_filter_state()}}
 \item \href{#method-MAEFilterStates-remove_filter_state}{\code{MAEFilterStates$remove_filter_state()}}
-\item \href{#method-MAEFilterStates-ui_add_filter_state}{\code{MAEFilterStates$ui_add_filter_state()}}
-\item \href{#method-MAEFilterStates-srv_add_filter_state}{\code{MAEFilterStates$srv_add_filter_state()}}
+\item \href{#method-MAEFilterStates-ui_add}{\code{MAEFilterStates$ui_add()}}
+\item \href{#method-MAEFilterStates-srv_add}{\code{MAEFilterStates$srv_add()}}
 \item \href{#method-MAEFilterStates-clone}{\code{MAEFilterStates$clone()}}
 }
 }
 \if{html}{\out{
 <details><summary>Inherited methods</summary>
 <ul>
+<li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilterStates" data-id="clear_filter_states"><a href='../../teal.slice/html/FilterStates.html#method-FilterStates-clear_filter_states'><code>teal.slice::FilterStates$clear_filter_states()</code></a></span></li>
 <li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilterStates" data-id="get_call"><a href='../../teal.slice/html/FilterStates.html#method-FilterStates-get_call'><code>teal.slice::FilterStates$get_call()</code></a></span></li>
 <li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilterStates" data-id="get_datalabel"><a href='../../teal.slice/html/FilterStates.html#method-FilterStates-get_datalabel'><code>teal.slice::FilterStates$get_datalabel()</code></a></span></li>
 <li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilterStates" data-id="get_filter_count"><a href='../../teal.slice/html/FilterStates.html#method-FilterStates-get_filter_count'><code>teal.slice::FilterStates$get_filter_count()</code></a></span></li>
 <li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilterStates" data-id="print"><a href='../../teal.slice/html/FilterStates.html#method-FilterStates-print'><code>teal.slice::FilterStates$print()</code></a></span></li>
 <li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilterStates" data-id="server"><a href='../../teal.slice/html/FilterStates.html#method-FilterStates-server'><code>teal.slice::FilterStates$server()</code></a></span></li>
 <li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilterStates" data-id="set_filterable_varnames"><a href='../../teal.slice/html/FilterStates.html#method-FilterStates-set_filterable_varnames'><code>teal.slice::FilterStates$set_filterable_varnames()</code></a></span></li>
-<li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilterStates" data-id="state_list_empty"><a href='../../teal.slice/html/FilterStates.html#method-FilterStates-state_list_empty'><code>teal.slice::FilterStates$state_list_empty()</code></a></span></li>
-<li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilterStates" data-id="state_list_get"><a href='../../teal.slice/html/FilterStates.html#method-FilterStates-state_list_get'><code>teal.slice::FilterStates$state_list_get()</code></a></span></li>
-<li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilterStates" data-id="state_list_push"><a href='../../teal.slice/html/FilterStates.html#method-FilterStates-state_list_push'><code>teal.slice::FilterStates$state_list_push()</code></a></span></li>
-<li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilterStates" data-id="state_list_remove"><a href='../../teal.slice/html/FilterStates.html#method-FilterStates-state_list_remove'><code>teal.slice::FilterStates$state_list_remove()</code></a></span></li>
-<li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilterStates" data-id="ui"><a href='../../teal.slice/html/FilterStates.html#method-FilterStates-ui'><code>teal.slice::FilterStates$ui()</code></a></span></li>
+<li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilterStates" data-id="ui_active"><a href='../../teal.slice/html/FilterStates.html#method-FilterStates-ui_active'><code>teal.slice::FilterStates$ui_active()</code></a></span></li>
 </ul>
 </details>
 }}
@@ -49,7 +50,14 @@ Initializes \code{MAEFilterStates} object
 
 Initialize \code{MAEFilterStates} object
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{MAEFilterStates$new(data, data_reactive, dataname, datalabel, varlabels, keys)}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{MAEFilterStates$new(
+  data,
+  data_reactive = function(sid = "") NULL,
+  dataname,
+  datalabel = "subjects",
+  varlabels = character(0),
+  keys = character(0)
+)}\if{html}{\out{</div>}}
 }
 
 \subsection{Arguments}{
@@ -58,10 +66,11 @@ Initialize \code{MAEFilterStates} object
 \item{\code{data}}{(\code{MultiAssayExperiment})\cr
 the R object which \code{MultiAssayExperiment::subsetByColData} function is applied on.}
 
-\item{\code{data_reactive}}{(\code{reactive})\cr
-should return \code{MultiAssayExperiment} or \code{NULL} object.
+\item{\code{data_reactive}}{(\verb{function(sid)})\cr
+should return a \code{MultiAssayExperiment} object or \code{NULL}.
 This object is needed for the \code{FilterState} counts being updated
-on a change in filters. If \code{reactive(NULL)} then filtered counts are not shown.}
+on a change in filters. If function returns \code{NULL} then filtered counts are not shown.
+Function has to have \code{sid} argument being a character.}
 
 \item{\code{dataname}}{(\code{character(1)})\cr
 name of the data used in the expression
@@ -114,6 +123,30 @@ For \code{MAEFilterStates} \code{MultiAssayExperiment::subsetByColData} is used.
 }
 }
 \if{html}{\out{<hr>}}
+<<<<<<< HEAD
+=======
+\if{html}{\out{<a id="method-MAEFilterStates-srv_active"></a>}}
+\if{latex}{\out{\hypertarget{method-MAEFilterStates-srv_active}{}}}
+\subsection{Method \code{srv_active()}}{
+Server module
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{MAEFilterStates$srv_active(id)}\if{html}{\out{</div>}}
+}
+
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{id}}{(\code{character(1)})\cr
+an ID string that corresponds with the ID used to call the module's UI function.}
+}
+\if{html}{\out{</div>}}
+}
+\subsection{Returns}{
+\code{moduleServer} function which returns \code{NULL}
+}
+}
+\if{html}{\out{<hr>}}
+>>>>>>> filter_panel_refactor@main
 \if{html}{\out{<a id="method-MAEFilterStates-get_filter_state"></a>}}
 \if{latex}{\out{\hypertarget{method-MAEFilterStates-get_filter_state}{}}}
 \subsection{Method \code{get_filter_state()}}{
@@ -173,12 +206,12 @@ Removes a variable from the \code{ReactiveQueue} and its corresponding UI elemen
 }
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-MAEFilterStates-ui_add_filter_state"></a>}}
-\if{latex}{\out{\hypertarget{method-MAEFilterStates-ui_add_filter_state}{}}}
-\subsection{Method \code{ui_add_filter_state()}}{
+\if{html}{\out{<a id="method-MAEFilterStates-ui_add"></a>}}
+\if{latex}{\out{\hypertarget{method-MAEFilterStates-ui_add}{}}}
+\subsection{Method \code{ui_add()}}{
 Shiny UI module to add filter variable
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{MAEFilterStates$ui_add_filter_state(id)}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{MAEFilterStates$ui_add(id)}\if{html}{\out{</div>}}
 }
 
 \subsection{Arguments}{
@@ -194,16 +227,16 @@ shiny.tag
 }
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-MAEFilterStates-srv_add_filter_state"></a>}}
-\if{latex}{\out{\hypertarget{method-MAEFilterStates-srv_add_filter_state}{}}}
-\subsection{Method \code{srv_add_filter_state()}}{
+\if{html}{\out{<a id="method-MAEFilterStates-srv_add"></a>}}
+\if{latex}{\out{\hypertarget{method-MAEFilterStates-srv_add}{}}}
+\subsection{Method \code{srv_add()}}{
 Shiny server module to add filter variable.
 
 Module controls available choices to select as a filter variable.
 Selected filter variable is being removed from available choices.
 Removed filter variable gets back to available choices.
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{MAEFilterStates$srv_add_filter_state(id)}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{MAEFilterStates$srv_add(id)}\if{html}{\out{</div>}}
 }
 
 \subsection{Arguments}{
@@ -216,12 +249,6 @@ an ID string that corresponds with the ID used to call the module's UI function.
 }
 \subsection{Returns}{
 \code{moduleServer} function which returns \code{NULL}
-description
-Get label of specific variable. In case when variable label is missing
-name of the variable is returned.
-parameter variable (\code{character})\cr
-name of the variable for which label should be returned
-return \code{character}
 }
 }
 \if{html}{\out{<hr>}}

@@ -1,13 +1,9 @@
 #' @name EmptyFilterState
-#'
-#' @title `FilterState` object for empty variable
-#'
-#' @description
-#' `FilterState` subclass representing an empty variable.
-#'
+#' @title `InteractiveFilterState` object for empty variable
+#' @description `InteractiveFilterState` subclass representing an empty variable
 #' @docType class
-#'
 #' @keywords internal
+#'
 #'
 #' @examples
 #' filter_state <- teal.slice:::EmptyFilterState$new(
@@ -23,7 +19,7 @@
 #'
 EmptyFilterState <- R6::R6Class( # nolint
   "EmptyFilterState",
-  inherit = FilterState,
+  inherit = InteractiveFilterState,
 
   # public methods ----
   public = list(
@@ -51,7 +47,7 @@ EmptyFilterState <- R6::R6Class( # nolint
     #' }
     #'
     initialize = function(x,
-                          x_reactive,
+                          x_reactive = reactive(NULL),
                           varname,
                           varlabel = character(0),
                           dataname = NULL,
@@ -69,7 +65,11 @@ EmptyFilterState <- R6::R6Class( # nolint
     #' @return `logical(1)`
     #'
     is_any_filtered = function() {
-      !isTRUE(self$get_keep_na())
+      if (private$is_disabled()) {
+        FALSE
+      } else {
+        !isTRUE(self$get_keep_na())
+      }
     },
 
     #' @description
@@ -84,7 +84,7 @@ EmptyFilterState <- R6::R6Class( # nolint
       filter_call <- if (isTRUE(self$get_keep_na())) {
         call("is.na", private$get_varname_prefixed())
       } else {
-        FALSE
+        substitute(!is.na(varname), list(varname = private$get_varname_prefixed()))
       }
     },
 
@@ -121,7 +121,7 @@ EmptyFilterState <- R6::R6Class( # nolint
         )
       }
       stopifnot(is.list(state) && all(names(state) == "keep_na"))
-      if (!is.null(state$keep_na)) {
+      if (!is.null(state$keep_na) || private$is_disabled()) {
         self$set_keep_na(state$keep_na)
       }
       invisible(NULL)
@@ -130,6 +130,14 @@ EmptyFilterState <- R6::R6Class( # nolint
 
   # private members ----
   private = list(
+    cache_state = function() {
+      private$cache <- self$get_state()
+      self$set_state(
+        list(
+          keep_na = NULL
+        )
+      )
+    },
     # @description
     # UI Module for `EmptyFilterState`.
     # This UI element contains a checkbox input to filter or keep missing values.
@@ -163,8 +171,22 @@ EmptyFilterState <- R6::R6Class( # nolint
         id = id,
         function(input, output, session) {
           private$keep_na_srv("keep_na")
+
+          observeEvent(private$is_disabled(), {
+            shinyjs::toggleState(
+              id = "keep_na-value",
+              condition = !private$is_disabled()
+            )
+          })
         }
       )
+    },
+
+    # @description
+    # Server module to display filter summary
+    # Doesn't render anything
+    content_summary = function(id) {
+      tags$span("All empty")
     }
   )
 )

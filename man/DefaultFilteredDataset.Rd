@@ -47,30 +47,26 @@ shiny::isolate(dataset$get_filter_state())
 \item \href{#method-DefaultFilteredDataset-get_filter_state}{\code{DefaultFilteredDataset$get_filter_state()}}
 \item \href{#method-DefaultFilteredDataset-set_filter_state}{\code{DefaultFilteredDataset$set_filter_state()}}
 \item \href{#method-DefaultFilteredDataset-remove_filter_state}{\code{DefaultFilteredDataset$remove_filter_state()}}
-\item \href{#method-DefaultFilteredDataset-ui_add_filter_state}{\code{DefaultFilteredDataset$ui_add_filter_state()}}
-\item \href{#method-DefaultFilteredDataset-srv_add_filter_state}{\code{DefaultFilteredDataset$srv_add_filter_state()}}
-\item \href{#method-DefaultFilteredDataset-get_filter_overview_nsubjs}{\code{DefaultFilteredDataset$get_filter_overview_nsubjs()}}
+\item \href{#method-DefaultFilteredDataset-ui_add}{\code{DefaultFilteredDataset$ui_add()}}
+\item \href{#method-DefaultFilteredDataset-srv_add}{\code{DefaultFilteredDataset$srv_add()}}
+\item \href{#method-DefaultFilteredDataset-get_filter_overview}{\code{DefaultFilteredDataset$get_filter_overview()}}
 \item \href{#method-DefaultFilteredDataset-clone}{\code{DefaultFilteredDataset$clone()}}
 }
 }
 \if{html}{\out{
 <details><summary>Inherited methods</summary>
 <ul>
+<li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilteredDataset" data-id="clear_filter_states"><a href='../../teal.slice/html/FilteredDataset.html#method-FilteredDataset-clear_filter_states'><code>teal.slice::FilteredDataset$clear_filter_states()</code></a></span></li>
 <li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilteredDataset" data-id="get_dataname"><a href='../../teal.slice/html/FilteredDataset.html#method-FilteredDataset-get_dataname'><code>teal.slice::FilteredDataset$get_dataname()</code></a></span></li>
 <li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilteredDataset" data-id="get_dataset"><a href='../../teal.slice/html/FilteredDataset.html#method-FilteredDataset-get_dataset'><code>teal.slice::FilteredDataset$get_dataset()</code></a></span></li>
 <li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilteredDataset" data-id="get_dataset_label"><a href='../../teal.slice/html/FilteredDataset.html#method-FilteredDataset-get_dataset_label'><code>teal.slice::FilteredDataset$get_dataset_label()</code></a></span></li>
 <li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilteredDataset" data-id="get_filter_count"><a href='../../teal.slice/html/FilteredDataset.html#method-FilteredDataset-get_filter_count'><code>teal.slice::FilteredDataset$get_filter_count()</code></a></span></li>
-<li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilteredDataset" data-id="get_filter_overview_info"><a href='../../teal.slice/html/FilteredDataset.html#method-FilteredDataset-get_filter_overview_info'><code>teal.slice::FilteredDataset$get_filter_overview_info()</code></a></span></li>
-<li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilteredDataset" data-id="get_filter_states"><a href='../../teal.slice/html/FilteredDataset.html#method-FilteredDataset-get_filter_states'><code>teal.slice::FilteredDataset$get_filter_states()</code></a></span></li>
 <li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilteredDataset" data-id="get_formatted_filter_state"><a href='../../teal.slice/html/FilteredDataset.html#method-FilteredDataset-get_formatted_filter_state'><code>teal.slice::FilteredDataset$get_formatted_filter_state()</code></a></span></li>
 <li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilteredDataset" data-id="get_keys"><a href='../../teal.slice/html/FilteredDataset.html#method-FilteredDataset-get_keys'><code>teal.slice::FilteredDataset$get_keys()</code></a></span></li>
 <li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilteredDataset" data-id="get_metadata"><a href='../../teal.slice/html/FilteredDataset.html#method-FilteredDataset-get_metadata'><code>teal.slice::FilteredDataset$get_metadata()</code></a></span></li>
-<li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilteredDataset" data-id="get_varlabels"><a href='../../teal.slice/html/FilteredDataset.html#method-FilteredDataset-get_varlabels'><code>teal.slice::FilteredDataset$get_varlabels()</code></a></span></li>
-<li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilteredDataset" data-id="get_varnames"><a href='../../teal.slice/html/FilteredDataset.html#method-FilteredDataset-get_varnames'><code>teal.slice::FilteredDataset$get_varnames()</code></a></span></li>
-<li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilteredDataset" data-id="server"><a href='../../teal.slice/html/FilteredDataset.html#method-FilteredDataset-server'><code>teal.slice::FilteredDataset$server()</code></a></span></li>
 <li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilteredDataset" data-id="set_filterable_varnames"><a href='../../teal.slice/html/FilteredDataset.html#method-FilteredDataset-set_filterable_varnames'><code>teal.slice::FilteredDataset$set_filterable_varnames()</code></a></span></li>
-<li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilteredDataset" data-id="state_lists_empty"><a href='../../teal.slice/html/FilteredDataset.html#method-FilteredDataset-state_lists_empty'><code>teal.slice::FilteredDataset$state_lists_empty()</code></a></span></li>
-<li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilteredDataset" data-id="ui"><a href='../../teal.slice/html/FilteredDataset.html#method-FilteredDataset-ui'><code>teal.slice::FilteredDataset$ui()</code></a></span></li>
+<li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilteredDataset" data-id="srv_active"><a href='../../teal.slice/html/FilteredDataset.html#method-FilteredDataset-srv_active'><code>teal.slice::FilteredDataset$srv_active()</code></a></span></li>
+<li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilteredDataset" data-id="ui_active"><a href='../../teal.slice/html/FilteredDataset.html#method-FilteredDataset-ui_active'><code>teal.slice::FilteredDataset$ui_active()</code></a></span></li>
 </ul>
 </details>
 }}
@@ -108,7 +104,9 @@ Vector with primary keys}
 Name of the parent dataset}
 
 \item{\code{parent}}{(\code{reactive})\cr
-a \code{reactive} returning parent \code{data.frame}}
+object returned by this reactive is a filtered \code{data.frame} from other \code{FilteredDataset}
+named \code{parent_name}. Consequence of passing \code{parent} is a \code{reactive} link which causes
+causing refiltering of this \code{dataset} based on the changes in \code{parent}.}
 
 \item{\code{join_keys}}{(\code{character})\cr
 Name of the columns in this dataset to join with \code{parent}
@@ -138,9 +136,18 @@ This class contains single \code{FilterStates}
 which contains single \code{state_list} and all \code{FilterState} objects
 applies to one argument (\code{...}) in \code{dplyr::filter} call.
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{DefaultFilteredDataset$get_call()}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{DefaultFilteredDataset$get_call(sid = "")}\if{html}{\out{</div>}}
 }
 
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{sid}}{(\code{character})\cr
+when specified then method returns code containing filter conditions of
+\code{FilterState} objects which \code{"sid"} attribute is different than this \code{sid} argument.}
+}
+\if{html}{\out{</div>}}
+}
 \subsection{Returns}{
 filter \code{call} or \code{list} of filter calls
 }
@@ -221,14 +228,14 @@ Vector of character names of variables to remove their \code{FilterState}.}
 }
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-DefaultFilteredDataset-ui_add_filter_state"></a>}}
-\if{latex}{\out{\hypertarget{method-DefaultFilteredDataset-ui_add_filter_state}{}}}
-\subsection{Method \code{ui_add_filter_state()}}{
+\if{html}{\out{<a id="method-DefaultFilteredDataset-ui_add"></a>}}
+\if{latex}{\out{\hypertarget{method-DefaultFilteredDataset-ui_add}{}}}
+\subsection{Method \code{ui_add()}}{
 UI module to add filter variable for this dataset
 
 UI module to add filter variable for this dataset
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{DefaultFilteredDataset$ui_add_filter_state(id)}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{DefaultFilteredDataset$ui_add(id)}\if{html}{\out{</div>}}
 }
 
 \subsection{Arguments}{
@@ -244,17 +251,17 @@ function - shiny UI module
 }
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-DefaultFilteredDataset-srv_add_filter_state"></a>}}
-\if{latex}{\out{\hypertarget{method-DefaultFilteredDataset-srv_add_filter_state}{}}}
-\subsection{Method \code{srv_add_filter_state()}}{
+\if{html}{\out{<a id="method-DefaultFilteredDataset-srv_add"></a>}}
+\if{latex}{\out{\hypertarget{method-DefaultFilteredDataset-srv_add}{}}}
+\subsection{Method \code{srv_add()}}{
 Server module to add filter variable for this dataset
 
 Server module to add filter variable for this dataset.
-For this class \code{srv_add_filter_state} calls single module
-\code{srv_add_filter_state} from \code{FilterStates} (\code{DefaultFilteredDataset}
+For this class \code{srv_add} calls single module
+\code{srv_add} from \code{FilterStates} (\code{DefaultFilteredDataset}
 contains single \code{FilterStates})
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{DefaultFilteredDataset$srv_add_filter_state(id)}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{DefaultFilteredDataset$srv_add(id)}\if{html}{\out{</div>}}
 }
 
 \subsection{Arguments}{
@@ -270,14 +277,14 @@ an ID string that corresponds with the ID used to call the module's UI function.
 }
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-DefaultFilteredDataset-get_filter_overview_nsubjs"></a>}}
-\if{latex}{\out{\hypertarget{method-DefaultFilteredDataset-get_filter_overview_nsubjs}{}}}
-\subsection{Method \code{get_filter_overview_nsubjs()}}{
+\if{html}{\out{<a id="method-DefaultFilteredDataset-get_filter_overview"></a>}}
+\if{latex}{\out{\hypertarget{method-DefaultFilteredDataset-get_filter_overview}{}}}
+\subsection{Method \code{get_filter_overview()}}{
 Get number of observations based on given keys
 The output shows the comparison between \code{filtered_dataset}
 function parameter and the dataset inside self
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{DefaultFilteredDataset$get_filter_overview_nsubjs()}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{DefaultFilteredDataset$get_filter_overview()}\if{html}{\out{</div>}}
 }
 
 \subsection{Returns}{

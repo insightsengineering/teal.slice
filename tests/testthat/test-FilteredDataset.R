@@ -4,12 +4,19 @@ testthat::test_that("The constructor accepts a data.frame object and dataname", 
 
 testthat::test_that("state_lists_empty does not throw after initializing FilteredDataset", {
   filtered_dataset <- FilteredDataset$new(dataset = head(iris), dataname = "iris")
-  testthat::expect_no_error(filtered_dataset$state_lists_empty())
+  testthat::expect_no_error(filtered_dataset$clear_filter_states())
 })
 
-testthat::test_that("get_filter_states returns an empty list after initialization", {
-  filtered_dataset <- FilteredDataset$new(dataset = head(iris), dataname = "iris")
-  testthat::expect_equal(filtered_dataset$get_filter_states(), list())
+testthat::test_that("filter_states is empty when not initialized", {
+  testfd <- R6::R6Class(
+    "testfd",
+    inherit = FilteredDataset,
+    public = list(
+      get_filter_states = function() private$filter_states
+    )
+  )
+  filtered_dataset <- testfd$new(dataset = head(iris), dataname = "iris")
+  testthat::expect_identical(filtered_dataset$get_filter_states(), list())
 })
 
 testthat::test_that("get_dataname returns the dataname passed to the constructor", {
@@ -32,86 +39,11 @@ testthat::test_that("get_keys returns the keys passed to the constructor", {
   testthat::expect_equal("Petal.length", filtered_dataset$get_keys())
 })
 
-
-testthat::test_that("set_filterable_varnames restricts which variables can be filtered", {
-  filtered_dataset <- FilteredDataset$new(dataset = head(iris), dataname = "iris")
-  expect_setequal(
-    filtered_dataset$get_filterable_varnames(),
-    c("Sepal.Length", "Sepal.Width", "Petal.Length", "Petal.Width", "Species")
-  )
-
-  filtered_dataset$set_filterable_varnames(c("Species", "Sepal.Length"))
-  expect_setequal(filtered_dataset$get_filterable_varnames(), c("Species", "Sepal.Length"))
-})
-
-testthat::test_that("setting filterable varnames to NULL or character(0) does not affect the filterable variables", {
-  filtered_dataset <- FilteredDataset$new(dataset = head(iris), dataname = "iris")
-  expected <- c("Sepal.Length", "Sepal.Width", "Petal.Length", "Petal.Width", "Species")
-
-  filtered_dataset$set_filterable_varnames(NULL)
-  expect_setequal(filtered_dataset$get_filterable_varnames(), expected)
-
-  filtered_dataset$set_filterable_varnames(character(0))
-  expect_setequal(filtered_dataset$get_filterable_varnames(), expected)
-})
-
-testthat::test_that("setting filterable varnames which include columns that do not exist ignores these columns", {
-  filtered_dataset <- FilteredDataset$new(dataset = head(iris), dataname = "iris")
-  filtered_dataset$set_filterable_varnames(c("Species", "Invalid"))
-  expect_equal(filtered_dataset$get_filterable_varnames(), "Species")
-})
-
-
-testthat::test_that("setting filterable varnames with varnames not NULL or non-missing character throws error", {
-  filtered_dataset <- FilteredDataset$new(dataset = head(iris), dataname = "iris")
-  expect_error(
-    filtered_dataset$set_filterable_varnames(1:10),
-    "Assertion on 'varnames' failed:"
-  )
-  expect_error(
-    filtered_dataset$set_filterable_varnames(TRUE),
-    "Assertion on 'varnames' failed:"
-  )
-
-  expect_error(
-    filtered_dataset$set_filterable_varnames(c("Species", NA)),
-    "Assertion on 'varnames' failed:"
-  )
-})
-
-
-testthat::test_that("get_varlabels(NULL) returns a named array of NAs if data.frame has no varlabels", {
+testthat::test_that("ui_add is pure virtual", {
   filtered_dataset <- FilteredDataset$new(
     dataset = head(iris), dataname = "iris"
   )
-  testthat::expect_equal(
-    filtered_dataset$get_varlabels(),
-    setNames(as.character(rep(NA, ncol(head(iris)))), nm = names(iris))
-  )
-})
-
-testthat::test_that("get_varlabels returns labels for the part of the variables only", {
-  filtered_dataset <- FilteredDataset$new(
-    dataset = head(iris), dataname = "iris"
-  )
-  testthat::expect_equal(
-    filtered_dataset$get_varlabels(variables = c("Petal.Length")),
-    setNames(object = as.character(NA), nm = "Petal.Length")
-  )
-})
-
-testthat::test_that("get_varnames returns the names of the variables in the data passed to the constructor", {
-  filtered_dataset <- FilteredDataset$new(
-    dataset = head(iris), dataname = "iris"
-  )
-  testthat::expect_equal(filtered_dataset$get_varnames(), names(iris))
-})
-
-testthat::test_that("ui_add_filter_state is pure virtual", {
-  filtered_dataset <- FilteredDataset$new(
-    dataset = head(iris), dataname = "iris"
-  )
-  testthat::expect_error(filtered_dataset$ui_add_filter_state(), regex = "Pure virtual")
+  testthat::expect_error(filtered_dataset$ui_add(), regex = "Pure virtual")
 })
 
 testthat::test_that("get_metadata returns the metadata of the data passed to the constructor", {
@@ -134,11 +66,20 @@ testthat::test_that("$get_formatted_filter_state returns a string representation
     Species = list(selected = c("setosa", "versicolor"), keep_na = FALSE)
   )
   shiny::isolate(dataset$set_filter_state(state = fs))
-  states <- dataset$get_filter_states()[[1]]
 
   testthat::expect_equal(
     shiny::isolate(dataset$get_formatted_filter_state()),
-    paste("Filters for dataset: iris", shiny::isolate(states$format(indent = 2)), sep = "\n")
+    paste(
+      c(
+        "Filters for dataset: iris", "  Filtering on: Sepal.Length",
+        "    Selected range: 5.100 - 6.400",
+        "    Include missing values: TRUE",
+        "  Filtering on: Species",
+        "    Selected values: setosa, versicolor",
+        "    Include missing values: FALSE"
+      ),
+      collapse = "\n"
+    )
   )
 })
 
@@ -152,10 +93,14 @@ testthat::test_that("$get_call returns the filter call of the dataset", {
   filter_call <- shiny::isolate(dataset$get_call())$filter
 
   testthat::expect_equal(
-    deparse1(filter_call),
-    paste0(
-      "iris <- dplyr::filter(iris, (is.na(Sepal.Length) | (is.infinite(Sepal.Length) |",
-      " Sepal.Length >= 5.1 & Sepal.Length <= 6.4)) & Species %in% c(\"setosa\", \"versicolor\"))"
+    filter_call,
+    quote(
+      iris <- dplyr::filter(
+        iris,
+        (is.na(Sepal.Length) |
+          (is.infinite(Sepal.Length) | Sepal.Length >= 5.1 & Sepal.Length <= 6.4)) &
+          Species %in% c("setosa", "versicolor")
+      )
     )
   )
 })

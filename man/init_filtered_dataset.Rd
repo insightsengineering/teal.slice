@@ -28,7 +28,9 @@ Vector with primary keys}
 Name of the parent dataset}
 
 \item{parent}{(\code{reactive})\cr
-a \code{reactive} returning parent \code{data.frame}}
+object returned by this reactive is a filtered \code{data.frame} from other \code{FilteredDataset}
+named \code{parent_name}. Consequence of passing \code{parent} is a \code{reactive} link which causes
+causing refiltering of this \code{dataset} based on the changes in \code{parent}.}
 
 \item{join_keys}{(\code{character})\cr
 Name of the columns in this dataset to join with \code{parent}
@@ -59,14 +61,14 @@ iris_fd <- teal.slice:::init_filtered_dataset(
 \dontrun{
 shinyApp(
   ui = fluidPage(
-    iris_fd$ui_add_filter_state(id = "add"),
-    iris_fd$ui("dataset"),
+    iris_fd$ui_add(id = "add"),
+    iris_fd$ui_active("dataset"),
     verbatimTextOutput("call"),
     verbatimTextOutput("metadata")
   ),
   server = function(input, output, session) {
-    iris_fd$srv_add_filter_state(id = "add")
-    iris_fd$server(id = "dataset")
+    iris_fd$srv_add(id = "add")
+    iris_fd$srv_active(id = "dataset")
 
     output$metadata <- renderText({
       paste("Type =", iris_fd$get_metadata()$type)
@@ -89,14 +91,14 @@ MAE_fd <- teal.slice:::init_filtered_dataset(miniACC, "MAE", metadata = list(typ
 \dontrun{
 shinyApp(
   ui = fluidPage(
-    MAE_fd$ui_add_filter_state(id = "add"),
-    MAE_fd$ui("dataset"),
+    MAE_fd$ui_add(id = "add"),
+    MAE_fd$ui_active("dataset"),
     verbatimTextOutput("call"),
     verbatimTextOutput("metadata")
   ),
   server = function(input, output, session) {
-    MAE_fd$srv_add_filter_state(id = "add")
-    MAE_fd$server(id = "dataset")
+    MAE_fd$srv_add(id = "add")
+    MAE_fd$srv_active(id = "dataset")
     output$metadata <- renderText({
       paste("Type =", MAE_fd$get_metadata()$type)
     })

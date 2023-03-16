@@ -1,6 +1,6 @@
-#' Initializes `FilterState`
+#' Initializes `InteractiveFilterState`
 #'
-#' Initializes `FilterState` depending on a variable class.\cr
+#' Initializes `InteractiveFilterState` depending on a variable class.\cr
 #' @param x (`vector`)\cr
 #'   values of the variable used in filter
 #'
@@ -101,7 +101,7 @@ init_filter_state.default <- function(x,
                                       dataname = NULL,
                                       extract_type = character(0)) {
   if (is.null(varlabel)) varlabel <- character(0)
-  FilterState$new(
+  InteractiveFilterState$new(
     x = x,
     x_reactive = x_reactive,
     varname = varname,
@@ -207,14 +207,25 @@ init_filter_state.Date <- function(x,
                                    dataname = NULL,
                                    extract_type = character(0)) {
   if (is.null(varlabel)) varlabel <- character(0)
-  DateFilterState$new(
-    x = x,
-    x_reactive = x_reactive,
-    varname = varname,
-    varlabel = varlabel,
-    dataname = dataname,
-    extract_type = extract_type
-  )
+  if (length(unique(x[!is.na(x)])) < getOption("teal.threshold_slider_vs_checkboxgroup")) {
+    ChoicesFilterState$new(
+      x = x,
+      x_reactive = x_reactive,
+      varname = varname,
+      varlabel = varlabel,
+      dataname = dataname,
+      extract_type = extract_type
+    )
+  } else {
+    DateFilterState$new(
+      x = x,
+      x_reactive = x_reactive,
+      varname = varname,
+      varlabel = varlabel,
+      dataname = dataname,
+      extract_type = extract_type
+    )
+  }
 }
 
 #' @keywords internal
@@ -226,14 +237,25 @@ init_filter_state.POSIXct <- function(x,
                                       dataname = NULL,
                                       extract_type = character(0)) {
   if (is.null(varlabel)) varlabel <- character(0)
-  DatetimeFilterState$new(
-    x = x,
-    x_reactive = x_reactive,
-    varname = varname,
-    varlabel = varlabel,
-    dataname = dataname,
-    extract_type = extract_type
-  )
+  if (length(unique(x[!is.na(x)])) < getOption("teal.threshold_slider_vs_checkboxgroup")) {
+    ChoicesFilterState$new(
+      x = x,
+      x_reactive = x_reactive,
+      varname = varname,
+      varlabel = varlabel,
+      dataname = dataname,
+      extract_type = extract_type
+    )
+  } else {
+    DatetimeFilterState$new(
+      x = x,
+      x_reactive = x_reactive,
+      varname = varname,
+      varlabel = varlabel,
+      dataname = dataname,
+      extract_type = extract_type
+    )
+  }
 }
 
 #' @keywords internal
@@ -245,14 +267,25 @@ init_filter_state.POSIXlt <- function(x,
                                       dataname = NULL,
                                       extract_type = character(0)) {
   if (is.null(varlabel)) varlabel <- character(0)
-  DatetimeFilterState$new(
-    x = x,
-    x_reactive = x_reactive,
-    varname = varname,
-    varlabel = varlabel,
-    dataname = dataname,
-    extract_type = extract_type
-  )
+  if (length(unique(x[!is.na(x)])) < getOption("teal.threshold_slider_vs_checkboxgroup")) {
+    ChoicesFilterState$new(
+      x = x,
+      x_reactive = x_reactive,
+      varname = varname,
+      varlabel = varlabel,
+      dataname = dataname,
+      extract_type = extract_type
+    )
+  } else {
+    DatetimeFilterState$new(
+      x = x,
+      x_reactive = x_reactive,
+      varname = varname,
+      varlabel = varlabel,
+      dataname = dataname,
+      extract_type = extract_type
+    )
+  }
 }
 
 #' Check that a given range is valid
@@ -266,9 +299,9 @@ init_filter_state.POSIXlt <- function(x,
 #'
 #' @examples
 #' \dontrun{
-#' check_in_range(c(3, 1), c(1, 3))
-#' check_in_range(c(0, 3), c(1, 3))
-#' check_in_range(
+#' teal.slice:::check_in_range(c(3, 1), c(1, 3))
+#' teal.slice:::check_in_range(c(0, 3), c(1, 3))
+#' teal.slice:::check_in_range(
 #'   c(as.Date("2020-01-01"), as.Date("2020-01-20")),
 #'   c(as.Date("2020-01-01"), as.Date("2020-01-02"))
 #' )
@@ -313,12 +346,13 @@ check_in_range <- function(subinterval, range, pre_msg = "") {
 #' @keywords internal
 #'
 #' @examples
-#' check_in_subset <- teal.slice:::check_in_subset
-#' check_in_subset(c("a", "b"), c("a", "b", "c"))
+#' \donttest{
+#' teal.slice:::check_in_subset(c("a", "b"), c("a", "b", "c"))
 #' \dontrun{
-#' check_in_subset(c("a", "b"), c("b", "c"), pre_msg = "Error: ")
+#' teal.slice:::check_in_subset(c("a", "b"), c("b", "c"), pre_msg = "Error: ")
 #' # truncated because too long
-#' check_in_subset("a", LETTERS, pre_msg = "Error: ")
+#' teal.slice:::check_in_subset("a", LETTERS, pre_msg = "Error: ")
+#' }
 #' }
 check_in_subset <- function(subset, choices, pre_msg = "") {
   checkmate::assert_string(pre_msg)
@@ -335,4 +369,47 @@ check_in_subset <- function(subset, choices, pre_msg = "") {
     ), call. = FALSE)
   }
   return(invisible(NULL))
+}
+
+#' Find containing limits for interval.
+#'
+#' Given an interval and a numeric vector,
+#' find the smallest interval within the numeric vector that contains the interval.
+#'
+#' This is a helper function for `RangeFilterState` that modifies slider selection
+#' so that the _subsetting call_ includes the value specified by the filter API call.
+#'
+#' Regardless of the underlying numeric data, the slider always presents 100 steps.
+#' The ticks on the slider do not represent actual observations but rather borders between virtual bins.
+#' Since the value selected on the slider is passed to `private$selected` and that in turn
+#' updates the slider selection, programmatic selection of arbitrary values may inadvertently shift
+#' the selection to the closest tick, thereby dropping the actual value set (if it exists in the data).
+#'
+#' This function purposely shifts the selection to the closest ticks whose values form an interval
+#' that will contain the interval defined by the filter API call.
+#'
+#' @param x `numeric(2)` interval to contain
+#' @param range `numeric(>=2)` vector of values to contain `x` in
+#'
+#' @return Numeric vector of length 2 that lies within `range`.
+#'
+#' @keywords internal
+#'
+#' @examples
+#' \donttest{
+#' ticks <- 1:10
+#' values1 <- c(3, 5)
+#' teal.slice:::contain_interval(values1, ticks)
+#' values2 <- c(3.1, 5.7)
+#' teal.slice:::contain_interval(values2, ticks)
+#' values3 <- c(0, 20)
+#' teal.slice:::contain_interval(values3, ticks)
+#'}
+contain_interval <- function(x, range) {
+  checkmate::assert_numeric(x, len = 2L, any.missing = FALSE, sorted = TRUE)
+  checkmate::assert_numeric(range, min.len = 2L, any.missing = FALSE, sorted = TRUE)
+
+  x[1] <- Find(function(i) i <= x[1], range, nomatch = min(range), right = TRUE)
+  x[2] <- Find(function(i) i >= x[2], range, nomatch = max(range))
+  x
 }

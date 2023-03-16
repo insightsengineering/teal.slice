@@ -11,14 +11,14 @@
 #' \dontrun{
 #' shinyApp(
 #'   ui = fluidPage(
-#'     iris_fd$ui_add_filter_state(id = "add"),
-#'     iris_fd$ui("dataset"),
+#'     iris_fd$ui_add(id = "add"),
+#'     iris_fd$ui_active("dataset"),
 #'     verbatimTextOutput("call"),
 #'     verbatimTextOutput("metadata")
 #'   ),
 #'   server = function(input, output, session) {
-#'     iris_fd$srv_add_filter_state(id = "add")
-#'     iris_fd$server(id = "dataset")
+#'     iris_fd$srv_add(id = "add")
+#'     iris_fd$srv_active(id = "dataset")
 #'
 #'     output$metadata <- renderText({
 #'       paste("Type =", iris_fd$get_metadata()$type)
@@ -41,14 +41,14 @@
 #' \dontrun{
 #' shinyApp(
 #'   ui = fluidPage(
-#'     MAE_fd$ui_add_filter_state(id = "add"),
-#'     MAE_fd$ui("dataset"),
+#'     MAE_fd$ui_add(id = "add"),
+#'     MAE_fd$ui_active("dataset"),
 #'     verbatimTextOutput("call"),
 #'     verbatimTextOutput("metadata")
 #'   ),
 #'   server = function(input, output, session) {
-#'     MAE_fd$srv_add_filter_state(id = "add")
-#'     MAE_fd$server(id = "dataset")
+#'     MAE_fd$srv_add(id = "add")
+#'     MAE_fd$srv_active(id = "dataset")
 #'     output$metadata <- renderText({
 #'       paste("Type =", MAE_fd$get_metadata()$type)
 #'     })
@@ -69,7 +69,9 @@
 #' @param parent_name (`character(1)`)\cr
 #'   Name of the parent dataset
 #' @param parent (`reactive`)\cr
-#'   a `reactive` returning parent `data.frame`
+#'   object returned by this reactive is a filtered `data.frame` from other `FilteredDataset`
+#'   named `parent_name`. Consequence of passing `parent` is a `reactive` link which causes
+#'   causing refiltering of this `dataset` based on the changes in `parent`.
 #' @param join_keys (`character`)\cr
 #'   Name of the columns in this dataset to join with `parent`
 #'   dataset. If the column names are different if both datasets
