@@ -108,38 +108,30 @@ MAEFilteredDataset <- R6::R6Class( # nolint
       invisible(NULL)
     },
 
-    #' @description Remove one or more `FilterState` of a `MAEFilteredDataset`
+    #' @description
+    #' Remove one or more `FilterState` of a `MAEFilteredDataset`
     #'
-    #' @param state_id (`list`)\cr
-    #'  Named list of variables to remove their `FilterState`.
+    #' @param state (`teal_slices`)\cr
+    #'   specifying `FilterState` objects to remove;
+    #'   `teal_slice`s may contain only `dataname` and `varname`, other elements are ignored
     #'
-    #' @return `NULL`
+    #' @return `NULL` invisibly
     #'
-    remove_filter_state = function(state_id) {
-      checkmate::assert_list(state_id, names = "unique")
-      checkmate::assert_subset(names(state_id), c(names(private$get_filter_states())))
+    remove_filter_state = function(state) {
+      checkmate::assert_class(state, "teal_slices")
 
-      logger::log_trace(
-        sprintf(
-          "MAEFilteredDataset$remove_filter_state removing filters of variable %s, dataname: %s",
-          state_id,
-          self$get_dataname()
-        )
-      )
+      logger::log_trace("{ class(self)[1] }$remove_filter_state removing filter(s), dataname: { private$dataname }")
 
-      for (fs_name in names(state_id)) {
-        fdata_filter_state <- private$get_filter_states()[[fs_name]]
-        fdata_filter_state$remove_filter_state(
-          `if`(fs_name == "subjects", state_id[[fs_name]][[1]], state_id[[fs_name]])
-        )
-      }
-      logger::log_trace(
-        sprintf(
-          "MAEFilteredDataset$remove_filter_state done removing filters of variable %s, dataname: %s",
-          state_id,
-          self$get_dataname()
-        )
-      )
+      varnames <- unique(unlist(extract_feat(state, "varname")))
+      current_states <- self$get_filter_state() %>% isolate
+
+      lapply(varnames, function(x) {
+        slice <- extract_fun_s(current_states, sprintf("varname  == \"%s\"", x))
+        private$get_filter_states()[[slice[[1]]$datalabel]]$remove_filter_state(slice)
+      })
+
+      logger::log_trace("{ class(self)[1] }$remove_filter_state removed filter(s), dataname: { private$dataname }")
+
       invisible(NULL)
     },
 

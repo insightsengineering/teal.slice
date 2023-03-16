@@ -520,7 +520,7 @@ FilteredData <- R6::R6Class( # nolint
     set_filter_state = function(state) {
       if (!is.teal_slices(state)) {
         warning(paste(
-          "From FilteredData:",
+          "From FilteredData$set_filter_state:",
           "Specifying filters as lists is obsolete and will be deprecated in the next release.",
           "Please see ?set_filter_state and ?filter_settings for details."
         ),
@@ -544,27 +544,39 @@ FilteredData <- R6::R6Class( # nolint
     },
 
     #' @description
-    #' Removes one or more `FilterState` of a `FilteredDataset` in a `FilteredData` object.
+    #' Removes one or more `FilterState` from a `FilteredData` object.
     #'
-    #' @param state (`named list`)\cr
-    #'  nested list of filter selections applied to datasets
+    #' @param state (`teal_slices`)\cr
+    #'   specifying `FilterState` objects to remove;
+    #'   `teal_slice`s may contain only `dataname` and `varname`, other elements are ignored
     #'
     #' @return `NULL` invisibly
     #'
     remove_filter_state = function(state) {
-      checkmate::assert_subset(names(state), self$datanames())
-
-      logger::log_trace(
-        "FilteredData$remove_filter_state called, dataname: { paste(names(state), collapse = ' ') }"
-      )
-
-      for (dataname in names(state)) {
-        fdataset <- private$get_filtered_dataset(dataname = dataname)
-        fdataset$remove_filter_state(state_id = state[[dataname]])
+      if (!is.teal_slices(state)) {
+        warning(paste(
+          "From FilteredData$remove_filter_state:",
+          "Specifying filters as lists is obsolete and will be deprecated in the next release.",
+          "Please see ?set_filter_state and ?filter_settings for details."
+        ),
+        call. = FALSE)
+        state <- as.teal_slices(state)
       }
 
+      checkmate::assert_class(state, "teal_slices")
+      datanames <- unique(unlist(extract_feat(state, "dataname")))
+      checkmate::assert_subset(datanames, self$datanames())
+
       logger::log_trace(
-        "FilteredData$remove_filter_state done, dataname: { paste(names(state), collapse = ' ') }"
+        "{ class(self)[1] }$remove_filter_state removing filter(s), dataname: { private$dataname }"
+      )
+
+      lapply(datanames, function(x) {
+        private$get_filtered_dataset(x)$remove_filter_state(extract_by_feat(state, "dataname", x))
+      })
+
+      logger::log_trace(
+        "{ class(self)[1] }$remove_filter_state removed filter(s), dataname: { private$dataname }"
       )
 
       invisible(NULL)

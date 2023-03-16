@@ -216,66 +216,52 @@ SEFilterStates <- R6::R6Class( # nolint
       invisible(NULL)
     },
 
-    #' @description Remove a variable from the `state_list` and its corresponding UI element.
+    #' @description
+    #' Remove a variable from the `state_list` and its corresponding UI element.
     #'
-    #' @param state_id (`character(1)`)\cr name of `state_list` element.
+    #' @param state (`teal_slices`)\cr
+    #'   specifying `FilterState` objects to remove;
+    #'   `teal_slice`s may contain only `dataname` and `varname`, other elements are ignored
     #'
-    #' @return `NULL`
-    remove_filter_state = function(state_id) {
-      logger::log_trace(
-        sprintf(
-          "%s$remove_filter_state called, dataname: %s",
-          class(self)[1],
-          private$dataname
+    #' @return `NULL` invisibly
+    #'
+    remove_filter_state = function(state) {
+      checkmate::assert_class(state, "teal_slices")
+
+      slices_for_subset <- extract_fun_s(
+        state,
+        sprintf("varname %%in%% c(%s)", dQuote(toString(names(private$state_list$subset())), q = FALSE))
+      )
+      slices_for_select <- extract_fun_s(
+        state,
+        sprintf("varname %%in%% c(%s)", dQuote(toString(names(private$state_list$select())), q = FALSE))
+      )
+
+      lapply(slices_for_subset, function(x) {
+        logger::log_trace(
+          "{ class(self)[1] }$remove_filter_state removing filter, dataname: { x$dataname }, varname: { x$varname }"
         )
-      )
 
-      checkmate::assert(
-        !checkmate::test_null(names(state_id)),
-        checkmate::check_subset(names(state_id), c("subset", "select")),
-        combine = "and"
-      )
-      for (varname in state_id$subset) {
-        if (!all(unlist(state_id$subset) %in% names(shiny::isolate(private$state_list_get("subset"))))) {
-          msg <- sprintf(
-            "%s is not an active 'subset' filter of dataset: %s and can't be removed.",
-            state_id,
-            private$dataname
-          )
-          warning(msg)
-          logger::log_warn(msg)
-        } else {
-          private$state_list_remove(state_list_index = "subset", state_id = varname)
-          logger::log_trace(
-            sprintf(
-              "%s$remove_filter_state for subset variable %s done, dataname: %s",
-              class(self)[1],
-              varname,
-              private$dataname
-            )
-          )
-        }
-      }
+        private$state_list_remove(state_list_index = "subset", state_id = x$varname)
 
-      for (varname in state_id$select) {
-        if (!all(unlist(state_id$select) %in% names(shiny::isolate(private$state_list_get("select"))))) {
-          msg <- sprintf(
-            "%s is not an active 'select' filter of dataset: %s and can't be removed.",
-            state_id,
-            private$dataname
-          )
-          warning(msg)
-          logger::log_warn(msg)
-        } else {
-          private$state_list_remove(state_list_index = "select", state_id = varname)
-          sprintf(
-            "%s$remove_filter_state for select variable %s done, dataname: %s",
-            class(self)[1],
-            varname,
-            private$dataname
-          )
-        }
-      }
+        logger::log_trace(
+          "{ class(self)[1] }$remove_filter_state removed filter, dataname: { x$dataname }, varname: { x$varname }"
+        )
+      })
+
+      lapply(slices_for_select, function(x) {
+        logger::log_trace(
+          "{ class(self)[1] }$remove_filter_state removing filter, dataname: { x$dataname }, varname: { x$varname }"
+        )
+
+        private$state_list_remove(state_list_index = "select", state_id = x$varname)
+
+        logger::log_trace(
+          "{ class(self)[1] }$remove_filter_state removed filter, dataname: { x$dataname }, varname: { x$varname }"
+        )
+      })
+
+      invisible(NULL)
     },
 
     # shiny modules ----
