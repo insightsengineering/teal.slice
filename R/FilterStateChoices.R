@@ -10,7 +10,6 @@
 #'   x = c(LETTERS, NA),
 #'   dataname = "data",
 #'   varname = "x",
-#'   varlabel = "label",
 #'   extract_type = character(0)
 #' )
 #' isolate(filter_state$get_call())
@@ -28,8 +27,7 @@
 #' filter_state_choices <- ChoicesFilterState$new(
 #'   x = data_choices,
 #'   dataname = "data",
-#'   varname = "variable",
-#'   varlabel = "label"
+#'   varname = "variable"
 #' )
 #' filter_state_choices$set_state(
 #'   filter_var("data", "variable", selected = c("a", "c"), keep_na = TRUE))
@@ -120,8 +118,6 @@ ChoicesFilterState <- R6::R6Class( # nolint
     #'   flag specifying whether to keep infinite values
     #' @param fixed (`logical(1)`)\cr
     #'   flag specifying whether the `FilterState` is initiated fixed
-    #' @param varlabel (`character(0)`, `character(1)`)\cr
-    #'   label of the variable (optional)
     #' @param extract_type (`character(0)`, `character(1)`)\cr
     #' whether condition calls should be prefixed by dataname. Possible values:
     #' \itemize{
@@ -141,7 +137,6 @@ ChoicesFilterState <- R6::R6Class( # nolint
                           keep_inf = NULL,
                           fixed = FALSE,
                           dataname_prefixed = character(0),
-                          varlabel = character(0),
                           extract_type = character(0),
                           ...) {
       checkmate::assert(
@@ -165,7 +160,6 @@ ChoicesFilterState <- R6::R6Class( # nolint
             keep_inf = keep_inf,
             fixed = fixed,
             dataname_prefixed = dataname_prefixed,
-            varlabel = varlabel,
             extract_type = extract_type),
           list(...)
         )

@@ -27,8 +27,6 @@
 #' filter_state_datetime <- DatetimeFilterState$new(
 #'   x = data_datetime,
 #'   dataname = "data",
-#'   varname = "variable",
-#'   varlabel = "label"
 #' )
 #' filter_state_datetime$set_state(
 #'   filter_var("data"variable, selected = data_datetime[c(47, 98)], keep_na = TRUE))
@@ -124,8 +122,6 @@ DatetimeFilterState <- R6::R6Class( # nolint
     #'   flag specifying whether to keep infinite values
     #' @param fixed (`logical(1)`)\cr
     #'   flag specifying whether the `FilterState` is initiated fixed
-    #' @param varlabel (`character(0)`, `character(1)`)\cr
-    #'   label of the variable (optional)
     #' @param extract_type (`character(0)`, `character(1)`)\cr
     #' whether condition calls should be prefixed by dataname. Possible values:
     #' \itemize{
@@ -145,7 +141,6 @@ DatetimeFilterState <- R6::R6Class( # nolint
                           keep_inf = NULL,
                           fixed = FALSE,
                           dataname_prefixed = character(0),
-                          varlabel = character(0),
                           extract_type = character(0),
                           ...) {
       checkmate::assert_multi_class(x, c("POSIXct", "POSIXlt"))
@@ -165,7 +160,6 @@ DatetimeFilterState <- R6::R6Class( # nolint
             keep_inf = keep_inf,
             fixed = fixed,
             dataname_prefixed = dataname_prefixed,
-            varlabel = varlabel,
             extract_type = extract_type),
           list(...)
         )

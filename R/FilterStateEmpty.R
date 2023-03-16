@@ -49,8 +49,6 @@ EmptyFilterState <- R6::R6Class( # nolint
     #'   flag specifying whether to keep infinite values
     #' @param fixed (`logical(1)`)\cr
     #'   flag specifying whether the `FilterState` is initiated fixed
-    #' @param varlabel (`character(0)`, `character(1)`)\cr
-    #'   label of the variable (optional)
     #' @param extract_type (`character(0)`, `character(1)`)\cr
     #' whether condition calls should be prefixed by dataname. Possible values:
     #' \itemize{
@@ -70,7 +68,6 @@ EmptyFilterState <- R6::R6Class( # nolint
                           keep_inf = NULL,
                           fixed = FALSE,
                           dataname_prefixed = character(0),
-                          varlabel = character(0),
                           extract_type = character(0),
                           ...) {
 
@@ -88,7 +85,6 @@ EmptyFilterState <- R6::R6Class( # nolint
             keep_inf = keep_inf,
             fixed = fixed,
             dataname_prefixed = dataname_prefixed,
-            varlabel = varlabel,
             extract_type = extract_type),
           list(...)
         )

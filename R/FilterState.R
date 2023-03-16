@@ -72,8 +72,6 @@ InteractiveFilterState <- R6::R6Class( # nolint
     #'   flag specifying whether to keep infinite values
     #' @param fixed (`logical(1)`)\cr
     #'   flag specifying whether the `FilterState` is initiated fixed
-    #' @param varlabel (`character(0)`, `character(1)`)\cr
-    #'   label of the variable (optional)
     #' @param extract_type (`character(0)`, `character(1)`)\cr
     #' whether condition calls should be prefixed by dataname. Possible values:
     #' \itemize{
@@ -95,13 +93,11 @@ InteractiveFilterState <- R6::R6Class( # nolint
                           keep_inf = NULL,
                           fixed = FALSE,
                           dataname_prefixed = character(0),
-                          varlabel = character(0),
                           extract_type = character(0),
                           ...) {
       checkmate::assert_class(x_reactive, "reactive")
       checkmate::assert_string(dataname)
       checkmate::assert_string(varname)
-      checkmate::assert_character(varlabel, max.len = 1, any.missing = FALSE)
       checkmate::assert_character(extract_type, max.len = 1, any.missing = FALSE)
       if (length(extract_type) == 1) {
         checkmate::assert_choice(extract_type, choices = c("list", "matrix"))
@@ -116,9 +112,11 @@ InteractiveFilterState <- R6::R6Class( # nolint
       private$extras <- list(...)
       private$fixed <- fixed
       private$dataname_prefixed <- dataname_prefixed
+      # Establish varlabel.
+      varlabel <- attr(x, "label")
+      # Only display it if different to varname.
       private$varlabel <-
         if (identical(varlabel, as.character(varname))) {
-          # to not display duplicated label
           character(0)
         } else {
           varlabel
