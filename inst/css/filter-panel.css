@@ -218,28 +218,44 @@ a.remove_all:hover {
 .teal_active_summary_filter_panel {
   overflow-x: auto;
 }
+.filter-card-header {
+  color: var(--bs-body-color, #333333);
+  padding: 5px 10px;
+  border: 1px solid var(--bs-gray-300, #dee2e6);
+  border-radius: 0.25em;
+  display: grid;
+  grid-template-columns: 85% 15%;
+  grid-template-areas:
+  "title controls"
+  "summary summary"
+}
 
-.panel-title,
-.card-title {
+.filter-card-header:not(.collapsed) {
+  border-bottom-left-radius: 0;
+  border-bottom-right-radius: 0;
+}
+
+.filter-card-header:hover,
+.filter-card-body:hover {
+  background-color: var(--bs-gray-200, #e9ecef);
+}
+
+.filter-card-title {
+  grid-area: title;
+}
+
+.filter-card-controls {
   display: flex;
+  justify-content: flex-start;
+  gap: 1em;
+  grid-area: controls;
 }
 
-.panel-title a,
-.card-title a {
-  text-decoration: none;
-}
-
-.card-title a {
-  color: var(--bs-body-color, var(--dark, #333333));
-}
-
-.panel-title > *:last-child,
-.card-title > *:last-child {
-  margin-left: 1em;
-}
-
-.accordion-toggle {
-  width: 100%
+.filter-card-summary {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  grid-area: summary;
 }
 
 .filter-card-varlabel {
@@ -253,9 +269,12 @@ a.remove_all:hover {
   color: var(--bs-body-color, var(--dark, #333333));
 }
 
-.filter-card-summary {
-  display: flex;
-  justify-content: space-between;
+.filter-card-body {
+  border: 1px solid var(--bs-gray-300, #dee2e6);
+  border-top: none;
+  border-bottom-left-radius: 0.25rem;
+  border-bottom-right-radius: 0.25rem;
+  padding: 5px 10px;
 }
 
 .progress.state-count-container {
@@ -277,3 +296,4 @@ a.remove_all:hover {
 .progress-bar.state-count-bar-unfiltered {
   background-color: rgba(173, 216, 230, 0.439) !important;
 }
+
