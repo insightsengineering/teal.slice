@@ -218,6 +218,18 @@ a.remove_all:hover {
 .teal_active_summary_filter_panel {
   overflow-x: auto;
 }
+
+/* .panel class needed for bs3 accordion to work properly
+  it's styles need to be overwritten to have consistent look
+ */
+.panel {
+  background-color: transparent;
+  border: none;
+  border-radius: 0;
+  box-shadow: none;
+  margin: 0;
+}
+
 .filter-card-header {
   color: var(--bs-body-color, #333333);
   padding: 5px 10px;
