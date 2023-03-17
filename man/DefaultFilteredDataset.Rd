@@ -11,12 +11,10 @@ The \code{DefaultFilteredDataset} R6 class
 \examples{
 library(shiny)
 ds <- teal.slice:::DefaultFilteredDataset$new(iris, "iris")
-isolate(
-  ds$set_filter_state(
-    state = list(
-      Species = list(selected = "virginica"),
-      Petal.Length = list(selected = c(2.0, 5))
-    )
+ds$set_filter_state(
+  filter_settings(
+    filter_var(dataname = "iris", varname = "Species", selected = "virginica")
+    filter_var(dataname = "iris", varname = "Petal.Length", selected = c(2.0, 5))
   )
 )
 isolate(ds$get_filter_state())
@@ -27,11 +25,11 @@ isolate(ds$get_call())
 ## ------------------------------------------------
 
 dataset <- teal.slice:::DefaultFilteredDataset$new(iris, "iris")
-fs <- list(
-  Sepal.Length = list(selected = c(5.1, 6.4), keep_na = TRUE, keep_inf = TRUE),
-  Species = list(selected = c("setosa", "versicolor"), keep_na = FALSE)
+fs <- filter_settings(
+  filter_var(dataname = "iris", varname = "Species", selected = "virginica"),
+  filter_var(dataname = "iris", varname = "Petal.Length", selected = c(2.0, 5))
 )
-shiny::isolate(dataset$set_filter_state(state = fs))
+dataset$set_filter_state(state = fs)
 shiny::isolate(dataset$get_filter_state())
 
 }
@@ -44,7 +42,6 @@ shiny::isolate(dataset$get_filter_state())
 \itemize{
 \item \href{#method-DefaultFilteredDataset-new}{\code{DefaultFilteredDataset$new()}}
 \item \href{#method-DefaultFilteredDataset-get_call}{\code{DefaultFilteredDataset$get_call()}}
-\item \href{#method-DefaultFilteredDataset-get_filter_state}{\code{DefaultFilteredDataset$get_filter_state()}}
 \item \href{#method-DefaultFilteredDataset-set_filter_state}{\code{DefaultFilteredDataset$set_filter_state()}}
 \item \href{#method-DefaultFilteredDataset-remove_filter_state}{\code{DefaultFilteredDataset$remove_filter_state()}}
 \item \href{#method-DefaultFilteredDataset-ui_add}{\code{DefaultFilteredDataset$ui_add()}}
@@ -61,6 +58,7 @@ shiny::isolate(dataset$get_filter_state())
 <li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilteredDataset" data-id="get_dataset"><a href='../../teal.slice/html/FilteredDataset.html#method-FilteredDataset-get_dataset'><code>teal.slice::FilteredDataset$get_dataset()</code></a></span></li>
 <li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilteredDataset" data-id="get_dataset_label"><a href='../../teal.slice/html/FilteredDataset.html#method-FilteredDataset-get_dataset_label'><code>teal.slice::FilteredDataset$get_dataset_label()</code></a></span></li>
 <li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilteredDataset" data-id="get_filter_count"><a href='../../teal.slice/html/FilteredDataset.html#method-FilteredDataset-get_filter_count'><code>teal.slice::FilteredDataset$get_filter_count()</code></a></span></li>
+<li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilteredDataset" data-id="get_filter_state"><a href='../../teal.slice/html/FilteredDataset.html#method-FilteredDataset-get_filter_state'><code>teal.slice::FilteredDataset$get_filter_state()</code></a></span></li>
 <li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilteredDataset" data-id="get_formatted_filter_state"><a href='../../teal.slice/html/FilteredDataset.html#method-FilteredDataset-get_formatted_filter_state'><code>teal.slice::FilteredDataset$get_formatted_filter_state()</code></a></span></li>
 <li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilteredDataset" data-id="get_keys"><a href='../../teal.slice/html/FilteredDataset.html#method-FilteredDataset-get_keys'><code>teal.slice::FilteredDataset$get_keys()</code></a></span></li>
 <li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilteredDataset" data-id="get_metadata"><a href='../../teal.slice/html/FilteredDataset.html#method-FilteredDataset-get_metadata'><code>teal.slice::FilteredDataset$get_metadata()</code></a></span></li>
@@ -153,23 +151,6 @@ filter \code{call} or \code{list} of filter calls
 }
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-DefaultFilteredDataset-get_filter_state"></a>}}
-\if{latex}{\out{\hypertarget{method-DefaultFilteredDataset-get_filter_state}{}}}
-\subsection{Method \code{get_filter_state()}}{
-Gets the reactive values from the active \code{FilterState} objects.
-
-Get all active filters from this dataset in form of the nested list.
-The output list is a compatible input to \code{self$set_filter_state}.
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{DefaultFilteredDataset$get_filter_state()}\if{html}{\out{</div>}}
-}
-
-\subsection{Returns}{
-\code{list} with named elements corresponding to \code{FilterState} objects
-(active filters).
-}
-}
-\if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-DefaultFilteredDataset-set_filter_state"></a>}}
 \if{latex}{\out{\hypertarget{method-DefaultFilteredDataset-set_filter_state}{}}}
 \subsection{Method \code{set_filter_state()}}{
@@ -181,23 +162,21 @@ Set filter state
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
-\item{\code{state}}{(\verb{named list})\cr
-containing values of the initial filter. Values should be relevant
-to the referred column.}
+\item{\code{state}}{(\code{teal_slice}) object}
 }
 \if{html}{\out{</div>}}
 }
 \subsection{Returns}{
-\code{NULL}
+\code{NULL} invisibly
 }
 \subsection{Examples}{
 \if{html}{\out{<div class="r example copy">}}
 \preformatted{dataset <- teal.slice:::DefaultFilteredDataset$new(iris, "iris")
-fs <- list(
-  Sepal.Length = list(selected = c(5.1, 6.4), keep_na = TRUE, keep_inf = TRUE),
-  Species = list(selected = c("setosa", "versicolor"), keep_na = FALSE)
+fs <- filter_settings(
+  filter_var(dataname = "iris", varname = "Species", selected = "virginica"),
+  filter_var(dataname = "iris", varname = "Petal.Length", selected = c(2.0, 5))
 )
-shiny::isolate(dataset$set_filter_state(state = fs))
+dataset$set_filter_state(state = fs)
 shiny::isolate(dataset$get_filter_state())
 
 }
@@ -210,21 +189,22 @@ shiny::isolate(dataset$get_filter_state())
 \if{html}{\out{<a id="method-DefaultFilteredDataset-remove_filter_state"></a>}}
 \if{latex}{\out{\hypertarget{method-DefaultFilteredDataset-remove_filter_state}{}}}
 \subsection{Method \code{remove_filter_state()}}{
-Remove one or more \code{FilterState} of a \code{FilteredDataset}
+Remove one or more \code{FilterState} form a \code{FilteredDataset}
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{DefaultFilteredDataset$remove_filter_state(state_id)}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{DefaultFilteredDataset$remove_filter_state(state)}\if{html}{\out{</div>}}
 }
 
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
-\item{\code{state_id}}{(\code{character})\cr
-Vector of character names of variables to remove their \code{FilterState}.}
+\item{\code{state}}{(\code{teal_slices})\cr
+specifying \code{FilterState} objects to remove;
+\code{teal_slice}s may contain only \code{dataname} and \code{varname}, other elements are ignored}
 }
 \if{html}{\out{</div>}}
 }
 \subsection{Returns}{
-\code{NULL}
+\code{NULL} invisibly
 }
 }
 \if{html}{\out{<hr>}}

@@ -3,14 +3,27 @@
 \name{filter_var}
 \alias{filter_var}
 \alias{filter_settings}
-\title{single variable filter}
+\alias{is.teal_slice}
+\alias{as.teal_slice}
+\alias{c.teal_slice}
+\alias{print.teal_slice}
+\alias{is.teal_slices}
+\alias{as.teal_slices}
+\alias{[.teal_slices}
+\alias{c.teal_slices}
+\alias{print.teal_slices}
+\alias{extract_by_feat}
+\alias{extract_feat}
+\alias{extract_fun}
+\alias{extract_fun_s}
+\alias{name_slices}
+\title{Manage filter state(s).}
 \usage{
 filter_var(
   dataname,
   varname,
   choices = NULL,
   selected = NULL,
-  varlabel = NULL,
   keep_na = NULL,
   keep_inf = NULL,
   fixed = FALSE,
@@ -19,10 +32,37 @@ filter_var(
 
 filter_settings(
   ...,
-  slices,
-  filterable = list(),
+  exclude = list(),
   count_type = c("none", "all", "hierarchical")
 )
+
+is.teal_slice(x)
+
+as.teal_slice(x)
+
+\method{c}{teal_slice}(...)
+
+\method{print}{teal_slice}(x)
+
+is.teal_slices(x)
+
+as.teal_slices(x)
+
+\method{[}{teal_slices}(x, i)
+
+\method{c}{teal_slices}(...)
+
+\method{print}{teal_slices}(x)
+
+extract_by_feat(tss, feature, value)
+
+extract_feat(tss, feature)
+
+extract_fun(tss, expr)
+
+extract_fun_s(tss, expr)
+
+name_slices(tss, field)
 }
 \arguments{
 \item{dataname}{\code{character(1)} name of data set}
@@ -36,41 +76,83 @@ type and size depends on variable type}
 \item{selected}{vector specifying selection;
 type and size depends on variable type}
 
-\item{varlabel}{\code{character(0-1)} optional variable label}
-
 \item{keep_na}{\code{logical(0-1)} optional logical flag specifying whether to keep missing values}
 
 \item{keep_inf}{\code{logical(0-1)} optional logical flag specifying whether to keep infinite values}
 
 \item{fixed}{\code{logical(1)} logical flag specifying whether to fix this filter state (i.e. forbid setting state)}
 
-\item{...}{any number of \code{teal_slice} objects}
+\item{...}{for \code{filter_var} any number of additional features given as \code{name:value} pairs\cr
+for \code{filter_settings} any number of \code{teal_slice} objects}
 
-\item{slices}{optional \code{list} of \code{teal_slice} objects}
+\item{exclude}{\verb{named list} of \code{character} vectors where list names match names of data sets
+and vector elements match variable names in respective data sets;
+specifies which variables are not allowed to be filtered}
+
+\item{count_type}{\code{character(1)} string specifying how observations are tallied by these filter states}
 }
 \value{
-Object of class \code{teal_slice}, which is a named list.
-
-Object of class \code{teal_slices}, which is an unnamed list of \code{teal_slice} objects.
+\code{filter_var} returns object of class \code{teal_slice}, which is a named list.
+\code{filter_settings} returns object of class \code{teal_slices}, which is an unnamed list of \code{teal_slice} objects.
 }
 \description{
-Specifies a filter state.
+Functions for passing filter state information between objects.
+}
+\details{
+These functions create and manage filter state specifications.
+A single filter state can be fully described by a \code{teal_slice} object and such
+objects will be used to create, modify, and delete filter state.
 
-Collate single variable filter states into a complete filter specification.
+A \code{teal_slice} contains a number of common elements (all named arguments of \code{filter_var})
+but only \code{dataname} and \code{varname} are mandatory, while the others have default values.
+Setting any of the other values to NULL means that these parameters will not be modified
+(when setting an existing state) or that they will be determined by data (when creating new a new one).
+Each of the common elements corresponds to one private field in \code{FilterState}
+where it is stored and from where it is retrieved when calling \code{FiterState$get_state}.
+
+A \code{teal_slice} can also contain any number of additional elements, passed to \code{...}
+as \code{name:value} pairs. These are collated into a list and stored in the
+\code{private$extras} field.
+
+All \code{teal_slice} elements can be passed as arguments to \code{FilterState} constructors.
+A \code{teal_slice} can be passed to \code{FilterState$set_state}, which will modify the state.
+However, once a \code{FilterState} is created, only three values can be set with a \code{teal_slice}:
+\code{selected}, \code{keep_na} and \code{keep_inf}.
+
+Special consideration is given to the \code{fixed} element.
+This is always a logical flag that defaults to FALSE.
+In a \code{FilterState} instantiated with \code{fixed = TRUE} \strong{none} of the state features can be changed.
+
+\code{filter_var} creates a \code{teal_slice} object, which specifies a filter for a single variable,
+passed to and resolved by \code{FilterState} objects.
+\code{filter_settings} collates multiple \code{teal_slice} objects into \code{teal_slices},
+a complete filter specification. This is used by all classes above \code{FilterState}
+as well as \code{filter_panel_api} wrapper functions.
+\code{teal_slices} also specifies which variables cannot be filtered
+and how observations are tallied, which is resolved by \code{FilterStates}.
 }
 \examples{
-filter_one <- filter_var("dataname1", "varname1", letters, "b", "characters", FALSE, extra1 = "extraone")
-filter_two <- filter_var("dataname1", "varname2", 1:10, 2, "integers", TRUE, FALSE, extra2 = "extratwo")
-filter_three <- filter_var("dataname2", "varname3", 1:10/10, 0.2, "doubles", TRUE, FALSE, extra1 = "extraone", extra2 = "extratwo")
+filter_1 <- filter_var("dataname1", "varname1", letters, "b", FALSE, extra1 = "extraone")
+filter_2 <- filter_var("dataname1", "varname2", 1:10, 2, TRUE, FALSE, extra2 = "extratwo")
+filter_3 <- filter_var("dataname2", "varname3", 1:10/10, 0.2, TRUE, FALSE,
+                       extra1 = "extraone", extra2 = "extratwo")
 
 all_filters <- filter_settings(
-  filter_one,
-  filter_two,
-  filter_three,
-  filterable = list(
-    "dataname1" = c("varname1", "varname2"),
-    "dataname2" = "varname3"
+  filter_1,
+  filter_2,
+  filter_3,
+  exclude = list(
+    "dataname1" = "varname2"
   )
 )
 
+extract_by_feat(all_filters, "dataname", "dataname1")
+extract_feat(all_filters, "dataname")
+extract_fun(all_filters, dataname == "dataname2")
+extract_fun_s(all_filters, 'dataname == "dataname2"')
+x <- "dataname2"
+extract_fun_s(all_filters, sprintf('dataname == "\%s"', x))
+
+NULL
 }
+\keyword{internal}

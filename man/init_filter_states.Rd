@@ -9,6 +9,8 @@ init_filter_states(
   data_reactive = reactive(NULL),
   dataname,
   datalabel = character(0),
+  excluded_varnames = character(0),
+  count_type = c("none", "all", "hierarchical"),
   ...
 )
 }
@@ -31,8 +33,14 @@ specified to the function argument attached to this \code{FilterStates}.}
 \item{datalabel}{(\code{character(0)} or \code{character(1)})\cr
 text label value.}
 
+\item{excluded_varnames}{(\code{character})\cr
+names of variables that can \strong{not} be filtered on.}
+
+\item{count_type}{\code{character(1)}\cr
+specifying how observations are tallied.}
+
 \item{...}{(optional)
-additional arguments for specific classes: keys}
+additional arguments for specific classes: keys.}
 }
 \description{
 Initialize \code{FilterStates} object

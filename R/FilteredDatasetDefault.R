@@ -185,32 +185,29 @@ DefaultFilteredDataset <- R6::R6Class( # nolint
       invisible(NULL)
     },
 
-    #' @description Remove one or more `FilterState` of a `FilteredDataset`
+    #' @description
+    #' Remove one or more `FilterState` form a `FilteredDataset`
     #'
-    #' @param state_id (`character`)\cr
-    #'  Vector of character names of variables to remove their `FilterState`.
+    #' @param state (`teal_slices`)\cr
+    #'   specifying `FilterState` objects to remove;
+    #'   `teal_slice`s may contain only `dataname` and `varname`, other elements are ignored
     #'
-    #' @return `NULL`
-    remove_filter_state = function(state_id) {
-      logger::log_trace(
-        sprintf(
-          "DefaultFilteredDataset$remove_filter_state removing filters of variable: %s; dataname: %s",
-          toString(state_id),
-          self$get_dataname()
-        )
-      )
+    #' @return `NULL` invisibly
+    #'
+    remove_filter_state = function(state) {
+      checkmate::assert_class(state, "teal_slices")
 
-      fdata_filter_state <- shiny::isolate(private$get_filter_states())[[1]]
-      for (element in state_id) {
-        fdata_filter_state$remove_filter_state(element)
-      }
-      logger::log_trace(
-        sprintf(
-          "DefaultFilteredDataset$remove_filter_state done removing filters of variable: %s; dataname: %s",
-          toString(state_id),
-          self$get_dataname()
+      logger::log_trace("{ class(self)[1] }$remove_filter_state removing filter(s), dataname: { private$dataname }")
+
+      varnames <- unique(unlist(extract_feat(state, "varname")))
+      lapply(varnames, function(x) {
+        private$get_filter_states()[[1]]$remove_filter_state(
+          extract_fun_s(state, sprintf("varname == \"%s\"", x))
         )
-      )
+      })
+
+      logger::log_trace("{ class(self)[1] }$remove_filter_state removed filter(s), dataname: { privarte$dataname }")
+
       invisible(NULL)
     },
 

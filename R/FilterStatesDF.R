@@ -327,42 +327,31 @@ DFFilterStates <- R6::R6Class( # nolint
       invisible(NULL)
     },
 
-    #' @description Remove a `FilterState` from the `state_list`.
+    #' @description
+    #' Remove one or more `FilterState`s from the `state_list` along with their UI elements.
     #'
-    #' @param state_id (`character(1)`)\cr name of `state_list` element
+    #' @param state (`teal_slices`)\cr
+    #'   specifying `FilterState` objects to remove;
+    #'   `teal_slice`s may contain only `dataname` and `varname`, other elements are ignored
     #'
-    #' @return `NULL`
+    #' @return `NULL` invisibly
     #'
-    remove_filter_state = function(state_id) {
-      logger::log_trace(
-        sprintf(
-          "%s$remove_filter_state for variable %s called, dataname: %s",
-          class(self)[1],
-          state_id,
-          private$dataname
-        )
-      )
+    remove_filter_state = function(state) {
+      checkmate::assert_class(state, "teal_slices")
 
-      current_state_names <- names(shiny::isolate(private$state_list_get(1L)))
-      if (!state_id %in% current_state_names) {
-        msg <- sprintf(
-          "%s is not an active filter of dataset: %s and can't be removed.",
-          state_id,
-          private$dataname
-        )
-        warning(msg)
-        logger::log_warn(msg)
-      } else {
-        private$state_list_remove(state_list_index = 1L, state_id = state_id)
+      lapply(state, function(x) {
         logger::log_trace(
-          sprintf(
-            "%s$remove_filter_state for variable %s done, dataname: %s",
-            class(self)[1],
-            state_id,
-            private$dataname
-          )
+          "{ class(self)[1] }$remove_filter_state removing filter, dataname: { x$dataname }, varname: { x$varname }"
         )
-      }
+
+        private$state_list_remove(state_list_index = 1L, state_id = x$varname)
+
+        logger::log_trace(
+          "{ class(self)[1] }$remove_filter_state removed filter, dataname: { x$dataname }, varname: { x$varname }"
+        )
+      })
+
+      invisible(NULL)
     },
 
     #' @description

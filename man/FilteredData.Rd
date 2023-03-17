@@ -59,12 +59,12 @@ print(df)
 datasets$get_metadata("mtcars")
 
 datasets$set_filter_state(
-  list(iris = list(Species = list(selected = "virginica")))
+  filter_settings(filter_var(dataname = "iris", varname = "Species", selected = "virginica"))
 )
 isolate(datasets$get_call("iris"))
 
 datasets$set_filter_state(
-  list(mtcars = list(mpg = list(selected = c(15, 20))))
+  filter_settings(filter_var(dataname = "mtcars", varname = "mpg", selected = c(15, 20)))
 )
 
 isolate(datasets$get_filter_state())
@@ -115,22 +115,15 @@ datasets <- teal.slice:::FilteredData$new(
        mae = list(dataset = miniACC)
   )
 )
-fs <- list(
-  iris = list(
-    Sepal.Length = list(selected = c(5.1, 6.4), keep_na = TRUE, keep_inf = FALSE),
-    Species = list(selected = c("setosa", "versicolor"), keep_na = FALSE)
-  ),
-  mae = list(
-    subjects = list(
-      years_to_birth = list(selected = c(30, 50), keep_na = TRUE, keep_inf = FALSE),
-      vital_status = list(selected = "1", keep_na = FALSE),
-      gender = list(selected = "female", keep_na = TRUE)
-    ),
-    RPPAArray = list(
-      subset = list(ARRAY_TYPE = list(selected = "", keep_na = TRUE))
-    )
+fs <-
+  filter_settings(
+    filter_var(dataname = "iris", varname = "Sepal.Length", selected = c(5.1, 6.4), keep_na = TRUE, keep_inf = FALSE),
+    filter_var(dataname = "iris", varname = "Species", selected = c("setosa", "versicolor"), keep_na = FALSE),
+    filter_var(dataname = "mae", varname = "years_to_birth", selected = c(30, 50), keep_na = TRUE, keep_inf = FALSE, datalabel = "subjects", target = "y"),
+    filter_var(dataname = "mae", varname = "vital_status", selected = "1", keep_na = FALSE, datalabel = "subjects", target = "y"),
+    filter_var(dataname = "mae", varname = "gender", selected = "female", keep_na = TRUE, datalabel = "subjects", target = "y"),
+    filter_var(dataname = "mae", varname = "ARRAY_TYPE", selected = "", keep_na = TRUE, experiment = "RPPAArray", target = "subset")
   )
-)
 shiny::isolate(datasets$set_filter_state(state = fs))
 shiny::isolate(datasets$get_filter_state())
 
@@ -612,20 +605,13 @@ preprocessing code that can be parsed to generate the unfiltered datasets}
 \if{html}{\out{<a id="method-FilteredData-get_filter_state"></a>}}
 \if{latex}{\out{\hypertarget{method-FilteredData-get_filter_state}{}}}
 \subsection{Method \code{get_filter_state()}}{
-Gets the reactive values from the active \code{FilterState} objects.
-
-Gets all active filters in the form of a nested list.
-The output list is a compatible input to \code{self$set_filter_state}.
-The attribute \code{formatted} renders the output of \code{self$get_formatted_filter_state},
-which is a character formatting of the filter state.
+Gets states of all active \code{FilterState} objects.
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{FilteredData$get_filter_state()}\if{html}{\out{</div>}}
 }
 
 \subsection{Returns}{
-\verb{named list} with elements corresponding to \code{FilteredDataset} objects
-with active filters. In addition, the \code{formatted} attribute holds
-the character format of the active filter states.
+A \code{teal_slices} object.
 }
 }
 \if{html}{\out{<hr>}}
@@ -685,13 +671,14 @@ Sets active filter states.
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
-\item{\code{state}}{(\verb{named list})\cr
-nested list of filter selections applied to datasets}
+\item{\code{state}}{either a \verb{named list} list of filter selections
+or a \code{teal_slices} object\cr
+specification by list will be deprecated soon}
 }
 \if{html}{\out{</div>}}
 }
 \subsection{Returns}{
-\code{NULL}
+\code{NULL} invisibly
 }
 \subsection{Examples}{
 \if{html}{\out{<div class="r example copy">}}
@@ -702,22 +689,15 @@ datasets <- teal.slice:::FilteredData$new(
        mae = list(dataset = miniACC)
   )
 )
-fs <- list(
-  iris = list(
-    Sepal.Length = list(selected = c(5.1, 6.4), keep_na = TRUE, keep_inf = FALSE),
-    Species = list(selected = c("setosa", "versicolor"), keep_na = FALSE)
-  ),
-  mae = list(
-    subjects = list(
-      years_to_birth = list(selected = c(30, 50), keep_na = TRUE, keep_inf = FALSE),
-      vital_status = list(selected = "1", keep_na = FALSE),
-      gender = list(selected = "female", keep_na = TRUE)
-    ),
-    RPPAArray = list(
-      subset = list(ARRAY_TYPE = list(selected = "", keep_na = TRUE))
-    )
+fs <-
+  filter_settings(
+    filter_var(dataname = "iris", varname = "Sepal.Length", selected = c(5.1, 6.4), keep_na = TRUE, keep_inf = FALSE),
+    filter_var(dataname = "iris", varname = "Species", selected = c("setosa", "versicolor"), keep_na = FALSE),
+    filter_var(dataname = "mae", varname = "years_to_birth", selected = c(30, 50), keep_na = TRUE, keep_inf = FALSE, datalabel = "subjects", target = "y"),
+    filter_var(dataname = "mae", varname = "vital_status", selected = "1", keep_na = FALSE, datalabel = "subjects", target = "y"),
+    filter_var(dataname = "mae", varname = "gender", selected = "female", keep_na = TRUE, datalabel = "subjects", target = "y"),
+    filter_var(dataname = "mae", varname = "ARRAY_TYPE", selected = "", keep_na = TRUE, experiment = "RPPAArray", target = "subset")
   )
-)
 shiny::isolate(datasets$set_filter_state(state = fs))
 shiny::isolate(datasets$get_filter_state())
 
@@ -731,7 +711,7 @@ shiny::isolate(datasets$get_filter_state())
 \if{html}{\out{<a id="method-FilteredData-remove_filter_state"></a>}}
 \if{latex}{\out{\hypertarget{method-FilteredData-remove_filter_state}{}}}
 \subsection{Method \code{remove_filter_state()}}{
-Removes one or more \code{FilterState} of a \code{FilteredDataset} in a \code{FilteredData} object.
+Removes one or more \code{FilterState} from a \code{FilteredData} object.
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{FilteredData$remove_filter_state(state)}\if{html}{\out{</div>}}
 }
@@ -739,8 +719,9 @@ Removes one or more \code{FilterState} of a \code{FilteredDataset} in a \code{Fi
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
-\item{\code{state}}{(\verb{named list})\cr
-nested list of filter selections applied to datasets}
+\item{\code{state}}{(\code{teal_slices})\cr
+specifying \code{FilterState} objects to remove;
+\code{teal_slice}s may contain only \code{dataname} and \code{varname}, other elements are ignored}
 }
 \if{html}{\out{</div>}}
 }

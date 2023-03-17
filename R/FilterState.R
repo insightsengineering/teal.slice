@@ -26,18 +26,17 @@
 #' variable type specific fields (`keep_inf`, `inf_count`, `timezone`).
 #' Object contains also shiny module (`ui` and `server`) which manages
 #' state of the filter through reactive values `selected`, `keep_na`, `keep_inf`
-#' which trigger `get_call()` and every R function call up in reactive
-#' chain.
+#' which trigger `get_call()` and every R function call up in reactive chain.
 #' \cr
 #' \cr
 #' @section Modifying state:
 #' Modifying a `FilterState` object is possible in three scenarios:
-#' * In the interactive session by directly specifying values of `selected`,
-#'   `keep_na` or `keep_inf` using `set_state` method (to update all at once),
-#'   or using `set_selected`, `set_keep_na` or `set_keep_inf`
-#' * In a running application by changing appropriate inputs
-#' * In a running application by using [filter_state_api] which directly uses `set_state` method
-#'  of the `FilterState` object.
+#' * In the interactive session by passing an appropriate `teal_slice`
+#'   to the `set_state` method, or using
+#'   `set_selected`, `set_keep_na` or `set_keep_inf` methods.
+#' * In a running application by changing appropriate inputs.
+#' * In a running application by using [filter_state_api] which directly uses
+#' `set_state` method of the `InteractiveFilterState` object.
 #'
 #' @keywords internal
 FilterState <- R6::R6Class( # nolint
@@ -391,7 +390,7 @@ FilterState <- R6::R6Class( # nolint
     #' @description
     #' Sets filtering state.
     #'
-    #' @param state a (`teal_slice`) object; see `Filter state specification`
+    #' @param state a (`teal_slice`) object
     #'
     #' @return `NULL` invisibly
     #'

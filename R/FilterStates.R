@@ -207,14 +207,16 @@ FilterStates <- R6::R6Class( # nolint
       }, FUN.VALUE = integer(1)))
     },
 
-    #' @description Remove a single `FilterState` from `state_list`.
+    #' @description
+    #' Remove one or more `FilterState`s from any `state_list`.
     #'
-    #' @param state_id (`character`)\cr
-    #'   name of variable for which to remove `FilterState`
+    #' @param state (`teal_slices`)\cr
+    #'   specifying `FilterState` objects to remove;
+    #'   `teal_slice`s may contain only `dataname` and `varname`, other elements are ignored
     #'
-    #' @return `NULL`
+    #' @return `NULL` invisibly
     #'
-    remove_filter_state = function(state_id) {
+    remove_filter_state = function(state) {
       stop("This variable can not be removed from the filter.")
     },
 
@@ -543,7 +545,7 @@ FilterStates <- R6::R6Class( # nolint
     # @return invisible NULL
     #
     state_list_empty = function() {
-      logger::log_trace("{ class(self)[1] }$state_list_empty initializing for dataname: { private$dataname }")
+      logger::log_trace("{ class(self)[1] }$state_list_empty removing all filters for dataname: { private$dataname }")
 
       for (state_list_index in seq_along(private$state_list)) {
         state_list_i <- shiny::isolate(private$state_list[[state_list_index]]())
@@ -552,7 +554,7 @@ FilterStates <- R6::R6Class( # nolint
         }
       }
 
-      logger::log_trace("{ class(self)[1] }$state_list_empty done for dataname: { private$dataname }")
+      logger::log_trace("{ class(self)[1] }$state_list_empty removed all filters for dataname: { private$dataname }")
       invisible(NULL)
     },
 

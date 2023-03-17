@@ -184,41 +184,31 @@ MAEFilterStates <- R6::R6Class( # nolint
     },
 
     #' @description
-    #' Removes a variable from the `ReactiveQueue` and its corresponding UI element.
+    #' Remove one or more `FilterState`s from the `state_list` along with their corresponding UI elements.
     #'
-    #' @param state_id (`character(1)`)\cr name of `ReactiveQueue` element.
+    #' @param state (`teal_slices`)\cr
+    #'   specifying `FilterState` objects to remove;
+    #'   `teal_slice`s may contain only `dataname` and `varname`, other elements are ignored
     #'
-    #' @return `NULL`
+    #' @return `NULL` invisibly
     #'
-    remove_filter_state = function(state_id) {
-      logger::log_trace(
-        sprintf(
-          "%s$remove_filter_state for %s called, dataname: %s",
-          class(self)[1],
-          state_id,
-          private$dataname
-        )
-      )
+    remove_filter_state = function(state) {
 
-      if (!state_id %in% names(isolate(private$state_list_get("y")))) {
-        msg <- sprintf(
-          "%s is not an active 'patient' filter of dataset: %s and can't be removed.",
-          state_id,
-          private$dataname
-        )
-        warning(msg)
-        logger::log_warn(msg)
-      } else {
-        private$state_list_remove("y", state_id = state_id)
+      checkmate::assert_class(state, "teal_slices")
+
+      lapply(state, function(x) {
         logger::log_trace(
-          sprintf(
-            "%s$remove_filter_state for variable %s done, dataname: %s",
-            class(self)[1],
-            state_id,
-            private$dataname
-          )
+          "{ class(self)[1] }$remove_filter_state removing filter, dataname: { x$dataname }, varname: { x$varname }"
         )
-      }
+
+        private$state_list_remove(state_list_index = "y", state_id = x$varname)
+
+        logger::log_trace(
+          "{ class(self)[1] }$remove_filter_state removed filter, dataname: { x$dataname }, varname: { x$varname }"
+        )
+      })
+
+      invisible(NULL)
     },
 
     # shiny modules ----
