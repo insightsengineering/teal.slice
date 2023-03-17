@@ -122,23 +122,19 @@ when specified then method returns code containing filter conditions of
 }
 \subsection{Returns}{
 filter \code{call} or \code{list} of filter calls
-Gets the reactive values from the active \code{FilterState} objects.
-
-Get all active filters from this dataset in form of the nested list.
-The output list is a compatible input to \code{self$set_filter_state}.
 }
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-FilteredDataset-get_filter_state"></a>}}
 \if{latex}{\out{\hypertarget{method-FilteredDataset-get_filter_state}{}}}
 \subsection{Method \code{get_filter_state()}}{
+Gets states of all active \code{FilterState} objects
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{FilteredDataset$get_filter_state()}\if{html}{\out{</div>}}
 }
 
 \subsection{Returns}{
-\code{list} with named elements corresponding to \code{FilterStates} objects
-with active filters.
+A \code{teal_slices} object.
 }
 }
 \if{html}{\out{<hr>}}
@@ -158,9 +154,7 @@ Gets the number of active \code{FilterState} objects in all \code{FilterStates} 
 \if{html}{\out{<a id="method-FilteredDataset-get_dataname"></a>}}
 \if{latex}{\out{\hypertarget{method-FilteredDataset-get_dataname}{}}}
 \subsection{Method \code{get_dataname()}}{
-Get name of the dataset
-
-Get name of the dataset
+Gets the name of the dataset
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{FilteredDataset$get_dataname()}\if{html}{\out{</div>}}
 }
@@ -186,8 +180,8 @@ Gets the dataset object in this \code{FilteredDataset}
 \if{html}{\out{</div>}}
 }
 \subsection{Returns}{
-\code{data.frame} or \code{MultiAssayExperiment} as a raw data
-or as a reactive with filter applied
+\code{data.frame} or \code{MultiAssayExperiment}, either raw
+or as a reactive with current filters applied
 }
 }
 \if{html}{\out{<hr>}}

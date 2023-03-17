@@ -28,8 +28,7 @@ Each variable's filter state is an \code{R6} object which contains \code{choices
 variable type specific fields (\code{keep_inf}, \code{inf_count}, \code{timezone}).
 Object contains also shiny module (\code{ui} and \code{server}) which manages
 state of the filter through reactive values \code{selected}, \code{keep_na}, \code{keep_inf}
-which trigger \code{get_call()} and every R function call up in reactive
-chain.
+which trigger \code{get_call()} and every R function call up in reactive chain.
 \cr
 \cr
 }
@@ -38,12 +37,12 @@ chain.
 
 Modifying a \code{InteractiveFilterState} object is possible in three scenarios:
 \itemize{
-\item In the interactive session by directly specifying values of \code{selected},
-\code{keep_na} or \code{keep_inf} using \code{set_state} method (to update all at once),
-or using \code{set_selected}, \code{set_keep_na} or \code{set_keep_inf}
-\item In a running application by changing appropriate inputs
-\item In a running application by using \link{filter_state_api} which directly uses \code{set_state} method
-of the \code{InteractiveFilterState} object.
+\item In the interactive session by passing an appropriate \code{teal_slice}
+to the \code{set_state} method, or using
+\code{set_selected}, \code{set_keep_na} or \code{set_keep_inf} methods.
+\item In a running application by changing appropriate inputs.
+\item In a running application by using \link{filter_state_api} which directly uses
+\code{set_state} method of the \code{InteractiveFilterState} object.
 }
 }
 
@@ -66,6 +65,7 @@ of the \code{InteractiveFilterState} object.
 \item \href{#method-InteractiveFilterState-get_state}{\code{InteractiveFilterState$get_state()}}
 \item \href{#method-InteractiveFilterState-print}{\code{InteractiveFilterState$print()}}
 \item \href{#method-InteractiveFilterState-set_keep_na}{\code{InteractiveFilterState$set_keep_na()}}
+\item \href{#method-InteractiveFilterState-set_keep_inf}{\code{InteractiveFilterState$set_keep_inf()}}
 \item \href{#method-InteractiveFilterState-set_na_rm}{\code{InteractiveFilterState$set_na_rm()}}
 \item \href{#method-InteractiveFilterState-set_selected}{\code{InteractiveFilterState$set_selected()}}
 \item \href{#method-InteractiveFilterState-set_state}{\code{InteractiveFilterState$set_state()}}
@@ -83,10 +83,15 @@ Initialize a \code{InteractiveFilterState} object
 \if{html}{\out{<div class="r">}}\preformatted{InteractiveFilterState$new(
   x,
   x_reactive = reactive(NULL),
+  dataname,
   varname,
-  varlabel = character(0),
-  dataname = NULL,
-  extract_type = character(0)
+  choices = NULL,
+  selected = NULL,
+  keep_na = NULL,
+  keep_inf = NULL,
+  fixed = FALSE,
+  extract_type = character(0),
+  ...
 )}\if{html}{\out{</div>}}
 }
 
@@ -97,19 +102,32 @@ Initialize a \code{InteractiveFilterState} object
 values of the variable used in filter}
 
 \item{\code{x_reactive}}{(\code{reactive})\cr
-a \code{reactive} returning a filtered vector or returning \code{NULL}. It is used to update
-counts following the change in values of the filtered dataset. If the \code{reactive}
-is \code{NULL} counts based on filtered dataset are not shown.}
-
-\item{\code{varname}}{(\code{character})\cr
-name of the variable}
-
-\item{\code{varlabel}}{(\code{character(1)})\cr
-label of the variable (optional).}
+returning vector of the same type as \code{x}. Is used to update
+counts following the change in values of the filtered dataset.
+If it is set to \code{reactive(NULL)} then counts based on filtered
+dataset are not shown.}
 
 \item{\code{dataname}}{(\code{character(1)})\cr
-name of dataset where \code{x} is taken from. Must be specified if \code{extract_type} argument
-is not empty.}
+optional name of dataset where \code{x} is taken from. Must be specified
+if \code{extract_type} argument is not empty.}
+
+\item{\code{varname}}{(\code{character(1)})\cr
+name of the variable.}
+
+\item{\code{choices}}{(\code{atomic}, \code{NULL})\cr
+vector specifying allowed selection values}
+
+\item{\code{selected}}{(\code{atomic}, \code{NULL})\cr
+vector specifying selection}
+
+\item{\code{keep_na}}{(\code{logical(1)}, \code{NULL})\cr
+flag specifying whether to keep missing values}
+
+\item{\code{keep_inf}}{(\code{logical(1)}, \code{NULL})\cr
+flag specifying whether to keep infinite values}
+
+\item{\code{fixed}}{(\code{logical(1)})\cr
+flag specifying whether the \code{FilterState} is initiated fixed}
 
 \item{\code{extract_type}}{(\code{character(0)}, \code{character(1)})\cr
 whether condition calls should be prefixed by dataname. Possible values:
@@ -118,6 +136,8 @@ whether condition calls should be prefixed by dataname. Possible values:
 \item{\code{"list"}}{ \code{varname} in the condition call will be returned as \verb{<dataname>$<varname>}}
 \item{\code{"matrix"}}{ \code{varname} in the condition call will be returned as \verb{<dataname>[, <varname>]}}
 }}
+
+\item{\code{...}}{additional arguments to be saved as a list in \code{private$extras} field}
 }
 \if{html}{\out{</div>}}
 }
@@ -246,17 +266,13 @@ class of the returned object depends of class of the \code{FilterState}
 \if{html}{\out{<a id="method-InteractiveFilterState-get_state"></a>}}
 \if{latex}{\out{\hypertarget{method-InteractiveFilterState-get_state}{}}}
 \subsection{Method \code{get_state()}}{
-Returns the filtering state.
+Returns filtering state.
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{InteractiveFilterState$get_state()}\if{html}{\out{</div>}}
 }
 
 \subsection{Returns}{
-\code{list} containing values taken from the reactive fields:
-\itemize{
-\item \code{selected} (\code{atomic}) length depends on a \code{FilterState} variant.
-\item \code{keep_na} (\code{logical(1)}) whether \code{NA} should be kept.
-}
+A \code{teal_slice} object.
 }
 }
 \if{html}{\out{<hr>}}
@@ -297,6 +313,26 @@ modules after selecting check-box-input in the shiny interface. Values are set t
 }
 \subsection{Returns}{
 NULL invisibly
+}
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-InteractiveFilterState-set_keep_inf"></a>}}
+\if{latex}{\out{\hypertarget{method-InteractiveFilterState-set_keep_inf}{}}}
+\subsection{Method \code{set_keep_inf()}}{
+Set whether to keep Infs
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{InteractiveFilterState$set_keep_inf(value)}\if{html}{\out{</div>}}
+}
+
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{value}}{(\code{logical(1)})\cr
+Value(s) which come from the filter selection. Value is set in \code{server}
+modules after selecting check-box-input in the shiny interface. Values are set to
+\code{private$keep_inf} which is reactive.}
+}
+\if{html}{\out{</div>}}
 }
 }
 \if{html}{\out{<hr>}}
@@ -351,7 +387,7 @@ NULL invisibly
 \if{html}{\out{<a id="method-InteractiveFilterState-set_state"></a>}}
 \if{latex}{\out{\hypertarget{method-InteractiveFilterState-set_state}{}}}
 \subsection{Method \code{set_state()}}{
-Set state.
+Sets filtering state.
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{InteractiveFilterState$set_state(state)}\if{html}{\out{</div>}}
 }
@@ -359,17 +395,12 @@ Set state.
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
-\item{\code{state}}{(\code{list})\cr
-contains fields relevant for a specific class:
-\itemize{
-\item{\code{selected}}{ defines initial selection}
-\item{\code{keep_na} (\code{logical})}{ defines whether to keep or remove \code{NA} values}
-}}
+\item{\code{state}}{a (\code{teal_slice}) object}
 }
 \if{html}{\out{</div>}}
 }
 \subsection{Returns}{
-NULL invisibly
+\code{NULL} invisibly
 }
 }
 \if{html}{\out{<hr>}}

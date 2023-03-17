@@ -33,7 +33,6 @@ Handles filter states in a \code{MultiAssayExperiment}
 <li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilterStates" data-id="get_datalabel"><a href='../../teal.slice/html/FilterStates.html#method-FilterStates-get_datalabel'><code>teal.slice::FilterStates$get_datalabel()</code></a></span></li>
 <li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilterStates" data-id="get_filter_count"><a href='../../teal.slice/html/FilterStates.html#method-FilterStates-get_filter_count'><code>teal.slice::FilterStates$get_filter_count()</code></a></span></li>
 <li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilterStates" data-id="print"><a href='../../teal.slice/html/FilterStates.html#method-FilterStates-print'><code>teal.slice::FilterStates$print()</code></a></span></li>
-<li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilterStates" data-id="set_filterable_varnames"><a href='../../teal.slice/html/FilterStates.html#method-FilterStates-set_filterable_varnames'><code>teal.slice::FilterStates$set_filterable_varnames()</code></a></span></li>
 <li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilterStates" data-id="ui_active"><a href='../../teal.slice/html/FilterStates.html#method-FilterStates-ui_active'><code>teal.slice::FilterStates$ui_active()</code></a></span></li>
 </ul>
 </details>
@@ -52,6 +51,8 @@ Initialize \code{MAEFilterStates} object
   dataname,
   datalabel = "subjects",
   varlabels = character(0),
+  excluded_varnames = character(0),
+  count_type = c("none", "all", "hierarchical"),
   keys = character(0)
 )}\if{html}{\out{</div>}}
 }
@@ -77,6 +78,13 @@ text label value.}
 
 \item{\code{varlabels}}{(\code{character})\cr
 labels of the variables used in this object}
+
+\item{\code{excluded_varnames}}{\verb{named list} containing one character vector
+of names of variables that can be filtered;
+names of the list must match \code{dataname}}
+
+\item{\code{count_type}}{\code{character(1)}\cr
+specifying how observations are tallied}
 
 \item{\code{keys}}{(\code{character})\cr
 key columns names}
@@ -168,34 +176,34 @@ Set filter state
 \if{html}{\out{<div class="arguments">}}
 \describe{
 \item{\code{state}}{(\verb{named list})\cr
-should contain values which are initial selection in the \code{FilterState}.
-Names of the \code{list} element should correspond to the name of the
-column in \code{colData(data)}.}
+\code{teal_slice} objects should contain the field \code{target = "y"}}
 }
 \if{html}{\out{</div>}}
 }
 \subsection{Returns}{
-\code{NULL}
+\code{NULL} invisibly
 }
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-MAEFilterStates-remove_filter_state"></a>}}
 \if{latex}{\out{\hypertarget{method-MAEFilterStates-remove_filter_state}{}}}
 \subsection{Method \code{remove_filter_state()}}{
-Removes a variable from the \code{ReactiveQueue} and its corresponding UI element.
+Remove one or more \code{FilterState}s from the \code{state_list} along with their corresponding UI elements.
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{MAEFilterStates$remove_filter_state(state_id)}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{MAEFilterStates$remove_filter_state(state)}\if{html}{\out{</div>}}
 }
 
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
-\item{\code{state_id}}{(\code{character(1)})\cr name of \code{ReactiveQueue} element.}
+\item{\code{state}}{(\code{teal_slices})\cr
+specifying \code{FilterState} objects to remove;
+\code{teal_slice}s may contain only \code{dataname} and \code{varname}, other elements are ignored}
 }
 \if{html}{\out{</div>}}
 }
 \subsection{Returns}{
-\code{NULL}
+\code{NULL} invisibly
 }
 }
 \if{html}{\out{<hr>}}

@@ -28,6 +28,7 @@ fs <- list(
 )
 dataset$set_filter_state(state = fs)
 shiny::isolate(dataset$get_filter_state())
+
 }
 \keyword{internal}
 \section{Super class}{
@@ -122,7 +123,7 @@ to the referred column.}
 \if{html}{\out{</div>}}
 }
 \subsection{Returns}{
-\code{NULL}
+\code{NULL} invisibly
 }
 \subsection{Examples}{
 \if{html}{\out{<div class="r example copy">}}
@@ -140,6 +141,7 @@ fs <- list(
 )
 dataset$set_filter_state(state = fs)
 shiny::isolate(dataset$get_filter_state())
+
 }
 \if{html}{\out{</div>}}
 
@@ -152,19 +154,20 @@ shiny::isolate(dataset$get_filter_state())
 \subsection{Method \code{remove_filter_state()}}{
 Remove one or more \code{FilterState} of a \code{MAEFilteredDataset}
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{MAEFilteredDataset$remove_filter_state(state_id)}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{MAEFilteredDataset$remove_filter_state(state)}\if{html}{\out{</div>}}
 }
 
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
-\item{\code{state_id}}{(\code{list})\cr
-Named list of variables to remove their \code{FilterState}.}
+\item{\code{state}}{(\code{teal_slices})\cr
+specifying \code{FilterState} objects to remove;
+\code{teal_slice}s may contain only \code{dataname} and \code{varname}, other elements are ignored}
 }
 \if{html}{\out{</div>}}
 }
 \subsection{Returns}{
-\code{NULL}
+\code{NULL} invisibly
 }
 }
 \if{html}{\out{<hr>}}
