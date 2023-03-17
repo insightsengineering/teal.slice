@@ -142,7 +142,6 @@ filter_states <- teal.slice:::DFFilterStates$new(
   datalabel = character(0),
   keys = character(0)
 )
-filter_states$set_filter_state(list(character = list("a")))
 filter_states$set_filter_state(
   filter_settings(
     filter_var(dataname = "data", varname = "character", selected = "a")
@@ -302,16 +301,15 @@ shiny module instance id}
 \if{html}{\out{<a id="method-DFFilterStates-get_filter_state"></a>}}
 \if{latex}{\out{\hypertarget{method-DFFilterStates-get_filter_state}{}}}
 \subsection{Method \code{get_filter_state()}}{
-Gets the reactive values from the active \code{FilterState} objects.
+Returns active \code{FilterState} objects.
 
-Get active filter state from the \code{FilterState} objects kept in \code{state_list}.
-The output list is a compatible input to \code{self$set_filter_state}.
+Gets all filter state information from this dataset.
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{DFFilterStates$get_filter_state()}\if{html}{\out{</div>}}
 }
 
 \subsection{Returns}{
-\code{list} with named elements corresponding to \code{FilterState} in the \code{state_list}.
+\code{teal_slices}
 }
 }
 \if{html}{\out{<hr>}}
@@ -326,9 +324,7 @@ Set filter state.
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
-\item{\code{state}}{(\verb{named list})\cr
-should contain values which are initial selection in the \code{FilterState}.
-Names of the \code{list} element should correspond to the name of the columns.}
+\item{\code{state}}{(\code{teal_slices})}
 }
 \if{html}{\out{</div>}}
 }
@@ -349,7 +345,6 @@ filter_states <- teal.slice:::DFFilterStates$new(
   datalabel = character(0),
   keys = character(0)
 )
-filter_states$set_filter_state(list(character = list("a")))
 filter_states$set_filter_state(
   filter_settings(
     filter_var(dataname = "data", varname = "character", selected = "a")

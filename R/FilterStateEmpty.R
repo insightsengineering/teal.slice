@@ -83,7 +83,8 @@ EmptyFilterState <- R6::R6Class( # nolint
             keep_na = keep_na,
             keep_inf = keep_inf,
             fixed = fixed,
-            extract_type = extract_type),
+            extract_type = extract_type
+          ),
           list(...)
         )
       )

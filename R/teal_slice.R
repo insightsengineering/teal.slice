@@ -45,12 +45,14 @@
 #' @param keep_na `logical(0-1)` optional logical flag specifying whether to keep missing values
 #' @param keep_inf `logical(0-1)` optional logical flag specifying whether to keep infinite values
 #' @param fixed `logical(1)` logical flag specifying whether to fix this filter state (i.e. forbid setting state)
-#' @param ... for `filter_var` any number of additional features given as `name:value` pairs\cr
-#'            for `filter_settings` any number of `teal_slice` objects
 #' @param exclude `named list` of `character` vectors where list names match names of data sets
 #'                 and vector elements match variable names in respective data sets;
 #'                 specifies which variables are not allowed to be filtered
 #' @param count_type `character(1)` string specifying how observations are tallied by these filter states
+#' @param show_all `logical(1)` specifying whether NULL elements should also be printed
+#' @param ... for `filter_var` any number of additional features given as `name:value` pairs\cr
+#'            for `filter_settings` any number of `teal_slice` objects\cr
+#'            for other functions arguments passed to other methods
 #'
 #' @return
 #' `filter_var` returns object of class `teal_slice`, which is a named list.
@@ -78,11 +80,12 @@
 #' x <- "dataname2"
 #' extract_fun_s(all_filters, sprintf('dataname == "%s"', x))
 #'
-#'NULL
+#' @name teal_slice
+NULL
 
 
 #' @export
-#' @rdname new_api
+#' @rdname teal_slice
 #'
 filter_var <- function(
     dataname,
@@ -98,20 +101,6 @@ filter_var <- function(
   checkmate::assert_string(varname)
   checkmate::assert_atomic(choices)
   checkmate::assert_atomic(selected)
-  if (!is.null(choices) && !is.null(selected)) {
-    if (inherits(choices, c("integer", "numeric", "Date", "POSIXt"))) {
-      rc <- range(choices, na.rm = TRUE)
-      rs <- range(selected, na.rm = TRUE)
-      checkmate::assert_true(
-        rs[1L] >= rc[1L] && rs[2L] <= rc[2L],
-        .var.name = "range of \"selected\" is within range of \"choices\""
-      )
-    } else if (inherits(choices, c("logical", "character", "factor"))) {
-      checkmate::assert_subset(selected, choices)
-    } else {
-      stop("filter_var cannot handle \"choices\" of type: ", toString(class(choices)))
-    }
-  }
   checkmate::assert_flag(keep_na, null.ok = TRUE)
   checkmate::assert_flag(keep_inf, null.ok = TRUE)
   checkmate::assert_flag(fixed)
@@ -133,7 +122,7 @@ filter_var <- function(
 
 
 #' @export
-#' @rdname new_api
+#' @rdname teal_slice
 #'
 filter_settings <- function(
     ...,
@@ -153,8 +142,8 @@ filter_settings <- function(
 
 
 # check for teal_slice
-#' @export
-#' @rdname new_api
+#' @rdname teal_slice
+#' @keywords internal
 #'
 is.teal_slice <- function(x) {
   inherits(x, "teal_slice")
@@ -162,8 +151,8 @@ is.teal_slice <- function(x) {
 
 
 # convert list to teal_slice
-#' @export
-#' @rdname new_api
+#' @rdname teal_slice
+#' @keywords internal
 #'
 as.teal_slice <- function(x) {
   do.call(filter_var, x)
@@ -172,7 +161,7 @@ as.teal_slice <- function(x) {
 
 # concatenate method for teal_slice
 #' @export
-#' @rdname new_api
+#' @rdname teal_slice
 #' @keywords internal
 #'
 c.teal_slice <- function(...) {
@@ -184,10 +173,10 @@ c.teal_slice <- function(...) {
 
 # print method for teal_slice
 #' @export
-#' @rdname new_api
+#' @rdname teal_slice
 #' @keywords internal
 #'
-print.teal_slice <- function(x) {
+print.teal_slice <- function(x, show_all = FALSE) {
   name_width <- max(nchar(names(x)))
   format_value <- function(v) {
     if (is.null(v)) return("NULL")
@@ -206,6 +195,7 @@ print.teal_slice <- function(x) {
   cat("teal_slice", "\n")
   for (i in seq_along(xx)) {
     element_name <- format(names(xx)[i], width = name_width)
+    if (is.null(xx[[i]]) & !show_all) next
     element_value <- format_value(xx[[i]])
     cat(sprintf(" $ %s: %s", element_name, element_value), "\n")
   }
@@ -224,8 +214,8 @@ print.teal_slice <- function(x) {
 
 
 # check for teal_slices
-#' @export
-#' @rdname new_api
+#' @rdname teal_slice
+#' @keywords internal
 #'
 is.teal_slices <- function(x) {
   inherits(x, "teal_slices")
@@ -234,8 +224,7 @@ is.teal_slices <- function(x) {
 
 # convert nested list to teal_slices
 # this function is not overly robust, it covers cases that are encountered in teal at this time
-#' @export
-#' @rdname new_api
+#' @rdname teal_slice
 #' @keywords internal
 #'
 as.teal_slices <- function(x) {
@@ -310,7 +299,7 @@ as.teal_slices <- function(x) {
 
 # subset method for teal_slices
 #' @export
-#' @rdname new_api
+#' @rdname teal_slice
 #' @keywords internal
 #'
 `[.teal_slices` <- function(x, i) {
@@ -332,7 +321,7 @@ as.teal_slices <- function(x) {
 
 # concatenate method for teal_slices
 #' @export
-#' @rdname new_api
+#' @rdname teal_slice
 #' @keywords internal
 #'
 c.teal_slices <- function(...) {
@@ -351,17 +340,17 @@ c.teal_slices <- function(...) {
 
 # print method for teal_slices
 #' @export
-#' @rdname new_api
+#' @rdname teal_slice
 #' @keywords internal
 #'
-print.teal_slices <- function(x) {
+print.teal_slices <- function(x, ...) {
   f <- attr(x, "exclude")
   ct <- attr(x, "count_type")
   for (i in seq_along(x)) {
     ind <- names(x)[i]
     if (is.null(ind)) ind <- sprintf("[[%d]]", i)
     cat(ind, "\n")
-    print(x[[i]])
+    print(x[[i]], ...)
   }
   cat("\nnon-filterable variables:")
   if (is.list(f) & length(f) == 0L) {
@@ -377,8 +366,7 @@ print.teal_slices <- function(x) {
 
 
 # get slices where feature is value
-#' @export
-#' @rdname new_api
+#' @rdname teal_slice
 #' @keywords internal
 #'
 extract_by_feat <- function(tss, feature, value) {
@@ -388,8 +376,7 @@ extract_by_feat <- function(tss, feature, value) {
 
 
 # get feature from all slices
-#' @export
-#' @rdname new_api
+#' @rdname teal_slice
 #' @keywords internal
 #'
 extract_feat <- function(tss, feature) {
@@ -399,8 +386,7 @@ extract_feat <- function(tss, feature) {
 
 
 # get slices where logical predicate is TRUE
-#' @export
-#' @rdname new_api
+#' @rdname teal_slice
 #' @keywords internal
 #'
 extract_fun <- function(tss, expr) {
@@ -412,8 +398,7 @@ extract_fun <- function(tss, expr) {
 
 
 # string version
-#' @export
-#' @rdname new_api
+#' @rdname teal_slice
 #' @keywords internal
 #'
 extract_fun_s <- function(tss, expr) {
@@ -426,7 +411,7 @@ extract_fun_s <- function(tss, expr) {
 
 # name teal_slices according to value of respective field in slices
 # possibly useful in set_filter_state_impl but needs safeguards
-#' @rdname new_api
+#' @rdname teal_slice
 #' @keywords internal
 #'
 name_slices <- function(tss, field) {

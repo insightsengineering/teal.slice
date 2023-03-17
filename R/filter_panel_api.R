@@ -13,10 +13,11 @@
 #'   specify filters in place on app start-up
 #'
 #' @return
-#' - set, remove and clear return `NULL` invisibly
-#' - get returns named a `teal_slices` object containing a `teal_slice` for every existing `FilterState`
+#' - `set_*`, `remove_*` and `clear_filter_state` return `NULL` invisibly
+#' - `get_filter_state` returns a named `teal_slices` object
+#'    containing a `teal_slice` for every existing `FilterState`
 #'
-#' @seealso [`new_api`]
+#' @seealso [`teal_slice`]
 #'
 #' @examples
 #' utils::data(miniACC, package = "MultiAssayExperiment")
@@ -69,7 +70,13 @@ NULL
 #' @export
 set_filter_state <- function(datasets, filter) {
   checkmate::assert_multi_class(datasets, c("FilteredData", "FilterPanelAPI"))
-  checkmate::assert_class(filter, "teal_slices")
+  checkmate::assert(
+    checkmate::check_class(filter, "teal_slices"),
+    checkmate::check_list(filter, min.len = 0, null.ok = TRUE)
+  )
+  if (!is.teal_slices(filter)) {
+    filter <- as.teal_slices(filter)
+  }
 
   datasets$set_filter_state(filter)
   invisible(NULL)
@@ -90,7 +97,10 @@ get_filter_state <- function(datasets) {
 #' @export
 remove_filter_state <- function(datasets, filter) {
   checkmate::assert_multi_class(datasets, c("FilteredData", "FilterPanelAPI"))
-  checkmate::assert_class(filter, "teal_slices")
+  checkmate::assert(
+    checkmate::check_class(filter, "teal_slices"),
+    checkmate::check_list(filter, min.len = 0, null.ok = TRUE)
+  )
 
   datasets$remove_filter_state(filter)
   invisible(NULL)

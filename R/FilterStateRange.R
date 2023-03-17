@@ -193,7 +193,8 @@ RangeFilterState <- R6::R6Class( # nolint
             keep_na = keep_na,
             keep_inf = keep_inf,
             fixed = fixed,
-            extract_type = extract_type),
+            extract_type = extract_type
+          ),
           list(...)
         )
       )
@@ -272,7 +273,6 @@ RangeFilterState <- R6::R6Class( # nolint
   # private fields----
   private = list(
     unfiltered_histogram = NULL, # ggplot object
-    keep_inf = NULL, # because it holds reactiveVal
     inf_count = integer(0),
     inf_filtered_count = NULL,
     is_integer = logical(0),
@@ -353,12 +353,29 @@ RangeFilterState <- R6::R6Class( # nolint
     remove_out_of_bound_values = function(values) {
       values
     },
+
     disable = function() {
       private$cache <- self$get_state()
       private$selected(NULL)
       private$keep_na(NULL)
       private$keep_inf(NULL)
       private$disabled(TRUE)
+    },
+
+    # @description
+    # Server module to display filter summary
+    #  renders text describing selected range and
+    #  if NA or Inf are included also
+    # @return `shiny.tag` to include in the `ui_summary`
+    content_summary = function() {
+      selected <- sprintf("%.4g", self$get_selected())
+      min <- selected[1]
+      max <- selected[2]
+      tagList(
+        tags$span(paste0(min, " - ", max)),
+        if (isTRUE(self$get_keep_na())) tags$span("NA") else NULL,
+        if (isTRUE(self$get_keep_inf())) tags$span("Inf") else NULL
+      )
     },
 
     # shiny modules ----
@@ -583,22 +600,6 @@ RangeFilterState <- R6::R6Class( # nolint
         )
         invisible(NULL)
       })
-    },
-
-    # @description
-    # Server module to display filter summary
-    #  renders text describing selected range and
-    #  if NA or Inf are included also
-    # @return `shiny.tag` to include in the `ui_summary`
-    content_summary = function() {
-      selected <- sprintf("%.4g", self$get_selected())
-      min <- selected[1]
-      max <- selected[2]
-      tagList(
-        tags$span(paste0(min, " - ", max)),
-        if (isTRUE(self$get_keep_na())) tags$span("NA") else NULL,
-        if (isTRUE(self$get_keep_inf())) tags$span("Inf") else NULL
-      )
     }
   )
 )

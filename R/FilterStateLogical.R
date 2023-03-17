@@ -164,7 +164,8 @@ LogicalFilterState <- R6::R6Class( # nolint
             keep_na = keep_na,
             keep_inf = keep_inf,
             fixed = fixed,
-            extract_type = extract_type),
+            extract_type = extract_type
+          ),
           list(...)
         )
       )
@@ -215,6 +216,7 @@ LogicalFilterState <- R6::R6Class( # nolint
   # private fields ----
 
   private = list(
+    choices_counts = integer(0),
     histogram_data = data.frame(),
 
     # private methods ----
@@ -266,7 +268,7 @@ LogicalFilterState <- R6::R6Class( # nolint
     ui_inputs = function(id) {
       ns <- NS(id)
 
-      countsmax <- as.numeric(names(private$choices))
+      countsmax <- private$choices_counts
       countsnow <- isolate(unname(table(factor(private$x_reactive(), levels = private$choices))))
 
       labels <- countBars(
@@ -316,7 +318,7 @@ LogicalFilterState <- R6::R6Class( # nolint
             updateCountBars(
               inputId = "labels",
               choices = as.character(private$choices),
-              countsmax = as.numeric(names(private$choices)),
+              countsmax = private$choices_counts,
               countsnow = unname(table(factor(non_missing_values(), levels = private$choices)))
             )
             NULL
@@ -388,7 +390,7 @@ LogicalFilterState <- R6::R6Class( # nolint
     content_summary = function(id) {
       tagList(
         tags$span(self$get_selected()),
-        if (self$get_keep_na()) tags$span("NA") else NULL
+        if (isTRUE(self$get_keep_na())) tags$span("NA") else NULL
       )
     }
   )

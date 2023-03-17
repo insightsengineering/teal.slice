@@ -131,10 +131,10 @@ MAEFilterStates <- R6::R6Class( # nolint
     #' @description
     #' Returns active `FilterState` objects.
     #'
-    #' Gets all active filters from this dataset in form of the nested list.
-    #' The output list can be used as input to `self$set_filter_state`.
+    #' Gets all filter state information from this dataset.
     #'
-    #' @return `list` with elements number equal number of `FilterStates`.
+    #' @return `teal_slices`
+    #'
     get_filter_state = function() {
       slices <- lapply(private$state_list$y(), function(x) x$get_state())
       excluded_varnames <- structure(
@@ -257,21 +257,15 @@ MAEFilterStates <- R6::R6Class( # nolint
         id = id,
         function(input, output, session) {
           logger::log_trace("MAEFilterState$srv_add initializing, dataname: { private$dataname }")
-          active_filter_vars <- reactive({
-            vapply(
-              X = private$state_list_get("y"),
-              FUN.VALUE = character(1),
-              FUN = function(x) x$get_varname()
-            )
-          })
 
           # available choices to display
           avail_column_choices <- reactive({
-            choices <- setdiff(get_supported_filter_varnames(data = data), active_filter_vars())
+            active_filter_vars <- unique(unlist(extract_feat(self$get_filter_state(), "varname")))
+            choices <- setdiff(get_supported_filter_varnames(data = data), active_filter_vars)
             varlabels <- vapply(
               colnames(data),
               FUN = function(x) {
-                label <- attr(data[[x]], "label")
+                label <- attr(data[[x]], "label") # TODO: can this ever be NULL or just character(0)
                 if (is.null(label)) {
                   x
                 } else {
@@ -322,8 +316,10 @@ MAEFilterStates <- R6::R6Class( # nolint
                   private$dataname
                 )
               )
+
               varname <- input$var_to_add
-              self$set_filter_state(setNames(list(list()), varname))
+              self$set_filter_state(filter_settings(filter_var(private$dataname, varname)))
+
               logger::log_trace(
                 sprintf(
                   "MAEFilterStates$srv_add@2 added FilterState of variable %s, dataname: %s",
