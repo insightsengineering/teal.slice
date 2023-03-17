@@ -10,23 +10,9 @@ testthat::test_that("get_call returns a call after set_keep_na(TRUE)", {
   testthat::expect_equal(shiny::isolate(filter_state$get_call()), quote(is.na(test)))
 })
 
-testthat::test_that("set_state needs a named list with selected and keep_na elements", {
-  filter_state <- EmptyFilterState$new(7, varname = "test", dataname = "data")
-  filter_state$set_state(list(keep_na = TRUE))
-  testthat::expect_true(shiny::isolate(filter_state$get_keep_na()))
-  testthat::expect_error(
-    filter_state$set_state(list(selected = 1)),
-    "All values in variable 'test' are `NA`"
-  )
-  testthat::expect_error(
-    filter_state$set_state(list(keep_na = FALSE, unknown = TRUE)),
-    "all\\(names\\(state\\)"
-  )
-})
-
 testthat::test_that("get_state returns a list identical to set_state input", {
   filter_state <- EmptyFilterState$new(NA_character_, varname = "test", dataname = "data")
-  state <- list(keep_na = TRUE)
+  state <- filter_var(keep_na = TRUE, varname = "test", dataname = "data")
   filter_state$set_state(state)
   testthat::expect_identical(shiny::isolate(filter_state$get_state()), state)
 })

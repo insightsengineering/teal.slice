@@ -102,7 +102,7 @@ LogicalFilterState <- R6::R6Class( # nolint
     #'   if `extract_type` argument is not empty.
     #' @param varname (`character(1)`)\cr
     #'   name of the variable.
-    #' @param choices (`vector`, unique(na.omit(x)))\cr
+    #' @param choices (`atomic`, `NULL`)\cr
     #'   vector specifying allowed selection values
     #' @param selected (`atomic`, `NULL`)\cr
     #'   vector specifying selection
@@ -125,17 +125,32 @@ LogicalFilterState <- R6::R6Class( # nolint
                           x_reactive = reactive(NULL),
                           dataname,
                           varname,
-                          choices = unique(na.omit(x)),
+                          choices = NULL,
                           selected = NULL,
-                          keep_na = NULL,
-                          keep_inf = NULL,
+                          keep_na = FALSE,
+                          keep_inf = FALSE,
                           fixed = FALSE,
                           extract_type = character(0),
                           ...) {
       stopifnot(is.logical(x))
       checkmate::assert_class(x_reactive, 'reactive')
+
+      if (is.null(choices)) choices <- unique(x)
       private$set_is_choice_limited(x, choices)
       x <- x[x %in% choices]
+      df <- factor(x, levels = c(TRUE, FALSE))
+      tbl <- table(df)
+      if (is.null(selected)) selected <- as.logical(levels(df))[1]
+
+      private$histogram_data <- data.frame(
+        x = sprintf(
+          "%s (%s)",
+          names(tbl),
+          tbl
+        ),
+        y = as.vector(tbl)
+      )
+
       do.call(
         super$initialize,
         append(
@@ -154,28 +169,6 @@ LogicalFilterState <- R6::R6Class( # nolint
         )
       )
 
-      df <- as.factor(x)
-      if (length(levels(df)) != 2) {
-        if (levels(df) %in% c(TRUE, FALSE)) {
-          choices_not_included <- c(TRUE, FALSE)[!c(TRUE, FALSE) %in% levels(df)]
-          levels(df) <- c(levels(df), choices_not_included)
-        }
-      }
-
-      tbl <- table(df)
-
-      choices <- as.logical(names(tbl))
-      private$set_choices(choices)
-      self$set_selected(unname(choices)[1])
-      private$histogram_data <- data.frame(
-        x = sprintf(
-          "%s (%s)",
-          choices,
-          tbl
-        ),
-        y = as.vector(tbl)
-      )
-
       invisible(self)
     },
 
@@ -185,6 +178,8 @@ LogicalFilterState <- R6::R6Class( # nolint
     is_any_filtered = function() {
       if (private$is_disabled()) {
         FALSE
+      } else if (private$is_choice_limited) {
+        TRUE
       } else if (!isTRUE(self$get_keep_na()) && private$na_count > 0) {
         TRUE
       } else if (all(private$histogram_data$y > 0)) {
@@ -214,24 +209,6 @@ LogicalFilterState <- R6::R6Class( # nolint
           call("!", private$get_varname_prefixed(dataname))
         }
       private$add_keep_na_call(filter_call, dataname)
-    },
-
-    #' @description
-    #' Sets the selected values of this `LogicalFilterState`.
-    #'
-    #' @param value (`logical(1)`)\cr
-    #'  the value to set. Must not contain the NA value.
-    #'
-    #' @returns invisibly `NULL`.
-    #'
-    #' @note Casts the passed object to `logical` before validating the input
-    #' making it possible to pass any object coercible to `logical` to this method.
-    #'
-    #' @examples
-    #' filter <- teal.slice:::LogicalFilterState$new(c(TRUE), varname = "name", dataname = "data")
-    #' filter$set_selected(TRUE)
-    set_selected = function(value) {
-      super$set_selected(value)
     }
   ),
 
@@ -246,7 +223,7 @@ LogicalFilterState <- R6::R6Class( # nolint
     #'
     set_is_choice_limited = function(xl, choices = NULL) {
       xl <- xl[!is.na(xl)]
-      private$is_choice_limited <- length(unique(choices[choices %in% x])) < length(unique(x))
+      private$is_choice_limited <- length(unique(choices[choices %in% xl])) < length(unique(xl))
       invisible(NULL)
     },
     validate_selection = function(value) {

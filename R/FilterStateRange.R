@@ -108,7 +108,7 @@ RangeFilterState <- R6::R6Class( # nolint
     #'   if `extract_type` argument is not empty.
     #' @param varname (`character(1)`)\cr
     #'   name of the variable.
-    #' @param choices (`vector`, c(min(x, na.rm = TRUE), max(x, na.rm = TRUE)))\cr
+    #' @param choices (`atomic`, `NULL`)\cr
     #'   vector specifying allowed selection values
     #' @param selected (`atomic`, `NULL`)\cr
     #'   vector specifying selection
@@ -149,12 +149,9 @@ RangeFilterState <- R6::R6Class( # nolint
         if (!is.null(private$x_reactive())) sum(is.infinite(private$x_reactive()))
       )
       private$inf_count <- sum(is.infinite(x))
-
       if (is.null(choices)) choices <- c(min(na.omit(x[is.finite(x)])), max(na.omit(x[is.finite(x)])))
-
       private$set_is_choice_limited(x, choices)
       x <- x[x >= choices[1L] & x <= choices[2L]]
-
       x_range <- range(x, finite = TRUE)
 
       if (identical(diff(x_range), 0)) {
