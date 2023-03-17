@@ -100,23 +100,16 @@ testthat::test_that("NA and Inf can bothe be included by call returned by get_ca
 testthat::test_that("get_state returns a list identical to set_state input", {
   filter_state <- RangeFilterState$new(
     c(1.0, 8.0, NA_real_, Inf), x_reactive = reactive(NULL), varname = "test", dataname = "data")
-  state <- list(selected = c(2.0, 7.0), keep_na = TRUE, keep_inf = TRUE)
+  state <- filter_var(selected = c(2.0, 7.0), choices = c(1, 8),
+                      keep_na = TRUE, keep_inf = TRUE, varname = "test", dataname = "data")
   filter_state$set_state(state)
   testthat::expect_identical(shiny::isolate(filter_state$get_state()), state)
-})
-
-# set_state ----
-testthat::test_that("set_state needs a named list with selected, keep_na and keep_inf elements", {
-  filter_state <- RangeFilterState$new(
-    c(1, 8, NA_real_, Inf), x_reactive = reactive(NULL), varname = "test", dataname = "data")
-  testthat::expect_no_error(filter_state$set_state(list(selected = c(1, 2), keep_na = TRUE, keep_inf = TRUE)))
-  testthat::expect_error(filter_state$set_state(list(selected = c(1, 2), unknown = TRUE)), "all\\(names\\(state\\)")
 })
 
 testthat::test_that("set_state sets values of selected and keep_na as provided in the list", {
   filter_state <- RangeFilterState$new(
     c(1, 8, NA_real_, Inf), x_reactive = reactive(NULL), varname = "test", dataname = "data")
-  filter_state$set_state(list(selected = c(1, 2), keep_na = TRUE, keep_inf = TRUE))
+  filter_state$set_state(filter_var(selected = c(1, 2), keep_na = TRUE, keep_inf = TRUE, varname = "test", dataname = "data"))
   testthat::expect_identical(shiny::isolate(filter_state$get_selected()), c(1, 2))
   testthat::expect_true(shiny::isolate(filter_state$get_keep_na()))
   testthat::expect_true(shiny::isolate(filter_state$get_keep_inf()))
@@ -125,8 +118,12 @@ testthat::test_that("set_state sets values of selected and keep_na as provided i
 testthat::test_that("set_state overwrites fields included in the input only", {
   filter_state <- RangeFilterState$new(
     c(1, 8, NA_real_, Inf), x_reactive = reactive(NULL), varname = "test", dataname = "data")
-  filter_state$set_state(list(selected = c(1, 2), keep_na = TRUE, keep_inf = TRUE))
-  testthat::expect_no_error(filter_state$set_state(list(selected = c(5, 6), keep_na = TRUE, keep_inf = TRUE)))
+  filter_state$set_state(filter_var(
+    selected = c(1, 2), keep_na = TRUE, keep_inf = TRUE, varname = "test", dataname = "data"
+  ))
+  testthat::expect_no_error(filter_state$set_state(filter_var(
+    selected = c(5, 6), keep_na = TRUE, keep_inf = TRUE, varname = "test", dataname = "data"
+  )))
   testthat::expect_identical(shiny::isolate(filter_state$get_selected()), c(5, 6))
   testthat::expect_true(shiny::isolate(filter_state$get_keep_na()))
   testthat::expect_true(shiny::isolate(filter_state$get_keep_inf()))
@@ -208,7 +205,7 @@ testthat::test_that("$format() asserts that indent is numeric", {
 
 testthat::test_that("$format() returns a string representation the FilterState object", {
   filter_state <- RangeFilterState$new(c(7), x_reactive = reactive(NULL), varname = "test", dataname = "data")
-  filter_state$set_state(list(selected = c(7, 7)))
+  filter_state$set_state(filter_var(selected = c(7, 7), varname = "test", dataname = "data"))
   testthat::expect_equal(
     shiny::isolate(filter_state$format(indent = 0)),
     paste(
@@ -222,7 +219,7 @@ testthat::test_that("$format() returns a string representation the FilterState o
 
 testthat::test_that("$format() prepends spaces to every line of the returned string", {
   filter_state <- RangeFilterState$new(c(7), x_reactive = reactive(NULL), varname = "test", dataname = "data")
-  filter_state$set_state(list(selected = c(7, 7)))
+  filter_state$set_state(filter_var(selected = c(7, 7), varname = "test", dataname = "data"))
   for (i in 1:3) {
     testthat::expect_equal(
       shiny::isolate(filter_state$format(indent = !!(i))),
@@ -273,8 +270,8 @@ testthat::test_that("disable sets all state elements to NULL", {
   fs$disable()
   testthat::expect_false(fs$is_any_filtered())
   testthat::expect_equal(
-    fs$get_state(),
-    list(selected = NULL, keep_na = NULL, keep_inf = NULL)
+    list(fs$get_state()$selected, fs$get_state()$keep_na, fs$get_state()$keep_inf),
+    list(NULL, NULL, NULL)
   )
 })
 
@@ -290,7 +287,7 @@ testthat::test_that("disable copies last state to the cache", {
     )
   )
   fs <- testfs$new(c(1:10, Inf), varname = "x", dataname = "data")
-  fs$set_state(list(keep_inf = TRUE))
+  fs$set_state(filter_var(keep_inf = TRUE, varname = "x", dataname = "data"))
   last_state <- fs$get_state()
   fs$disable()
   testthat::expect_identical(fs$get_cache(), last_state)
@@ -307,7 +304,7 @@ testthat::test_that("is_any_filtered returns FALSE when disabled", {
     )
   )
   fs <- testfs$new(c(1:10, Inf), varname = "x", dataname = "data")
-  fs$set_state(list(selected = c(4, 5), keep_inf = TRUE))
+  fs$set_state(filter_var(selected = c(4, 5), keep_inf = TRUE, varname = "x", dataname = "data"))
   fs$disable()
   testthat::expect_false(fs$is_any_filtered())
 })
@@ -324,7 +321,7 @@ testthat::test_that("enable sets state back to the last state", {
     )
   )
   fs <- testfs$new(c(1:10, Inf), varname = "x", dataname = "data")
-  fs$set_state(list(selected = c(4, 5), keep_inf = TRUE))
+  fs$set_state(filter_var(selected = c(4, 5), keep_inf = TRUE, varname = "x", dataname = "data"))
   last_state <- fs$get_state()
   fs$disable()
   fs$enable()
@@ -344,7 +341,7 @@ testthat::test_that("enable clears cache", {
     )
   )
   fs <- testfs$new(c(1:10, Inf), varname = "x", dataname = "data")
-  fs$set_state(list(selected = c(4, 5), keep_inf = TRUE))
+  fs$set_state(filter_var(selected = c(4, 5), keep_inf = TRUE, varname = "x", dataname = "data"))
   fs$disable()
   fs$enable()
   testthat::expect_null(fs$get_cache())
@@ -362,7 +359,7 @@ testthat::test_that("is_any_filtered returns TRUE when enabled", {
     )
   )
   fs <- testfs$new(c(1:10, Inf), varname = "x", dataname = "data")
-  fs$set_state(list(selected = c(4, 5), keep_inf = TRUE))
+  fs$set_state(filter_var(selected = c(4, 5), keep_inf = TRUE, varname = "x", dataname = "data"))
   fs$disable()
   fs$enable()
   testthat::expect_true(fs$is_any_filtered())

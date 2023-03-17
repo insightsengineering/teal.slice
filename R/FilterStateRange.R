@@ -139,6 +139,7 @@ RangeFilterState <- R6::R6Class( # nolint
                           extract_type = character(0),
                           ...) {
       checkmate::assert_numeric(x, all.missing = FALSE)
+      checkmate::assert_numeric(choices, null.ok = TRUE)
       if (!any(is.finite(x))) stop("\"x\" contains no finite values")
       checkmate::assert_class(x_reactive, 'reactive')
 
@@ -149,25 +150,38 @@ RangeFilterState <- R6::R6Class( # nolint
       )
       private$inf_count <- sum(is.infinite(x))
 
+      if (is.null(choices)) choices <- c(min(na.omit(x[is.finite(x)])), max(na.omit(x[is.finite(x)])))
 
       private$set_is_choice_limited(x, choices)
       x <- x[x >= choices[1L] & x <= choices[2L]]
 
-
       x_range <- range(x, finite = TRUE)
-      x_pretty <- pretty(x_range, 100L)
 
       if (identical(diff(x_range), 0)) {
-        private$set_choices(x_range)
+        choices <- x_range
         private$slider_ticks <- signif(x_range, digits = 10)
         private$slider_step <- NULL
-        self$set_selected(x_range)
+        if (is.null(selected)) selected <- x_range
       } else {
-        private$set_choices(range(x_pretty))
+        x_pretty <- pretty(x_range, 100L)
+        choices <- range(x_pretty)
         private$slider_ticks <- signif(x_pretty, digits = 10)
         private$slider_step <- signif(private$get_pretty_range_step(x_pretty), digits = 10)
-        self$set_selected(range(x_pretty))
+        if (is.null(selected)) selected <- range(x_pretty)
       }
+
+      private$unfiltered_histogram <- ggplot2::ggplot(data.frame(x = Filter(is.finite, x))) +
+        ggplot2::geom_histogram(
+          ggplot2::aes(x = x),
+          bins = 100,
+          fill = grDevices::rgb(211 / 255, 211 / 255, 211 / 255),
+          color = grDevices::rgb(211 / 255, 211 / 255, 211 / 255)
+        ) +
+        ggplot2::theme_void() +
+        ggplot2::coord_cartesian(
+          expand = FALSE,
+          xlim = c(private$choices[1L], private$choices[2L])
+        )
 
       do.call(
         super$initialize,
@@ -186,19 +200,6 @@ RangeFilterState <- R6::R6Class( # nolint
           list(...)
         )
       )
-
-      private$unfiltered_histogram <- ggplot2::ggplot(data.frame(x = Filter(is.finite, x))) +
-        ggplot2::geom_histogram(
-          ggplot2::aes(x = x),
-          bins = 100,
-          fill = grDevices::rgb(211 / 255, 211 / 255, 211 / 255),
-          color = grDevices::rgb(211 / 255, 211 / 255, 211 / 255)
-        ) +
-        ggplot2::theme_void() +
-        ggplot2::coord_cartesian(
-          expand = FALSE,
-          xlim = c(private$choices[1L], private$choices[2L])
-        )
 
       return(invisible(self))
     },
@@ -268,25 +269,6 @@ RangeFilterState <- R6::R6Class( # nolint
     #' @return (`logical(1)`)
     get_keep_inf = function() {
       private$keep_inf()
-    },
-
-    #' @description
-    #' Sets the selected values of this `RangeFilterState`.
-    #'
-    #' @param value (`numeric(2)`) the two-elements array of the lower and upper bound
-    #'   of the selected range. Must not contain NA values.
-    #'
-    #' @returns invisibly `NULL`
-    #'
-    #' @note Casts the passed object to `numeric` before validating the input
-    #' making it possible to pass any object coercible to `numeric` to this method.
-    #'
-    #' @examples
-    #' filter <- teal.slice:::RangeFilterState$new(c(1, 2, 3, 4), varname = "name", dataname = "data")
-    #' filter$set_selected(c(2, 3))
-    #'
-    set_selected = function(value) {
-      super$set_selected(value)
     }
   ),
 
@@ -306,7 +288,7 @@ RangeFilterState <- R6::R6Class( # nolint
     #'
     set_is_choice_limited = function(xl, choices) {
       xl <- xl[!is.na(xl)]
-      xl <- xl[!is.finite(xl)]
+      xl <- xl[is.finite(xl)]
       private$is_choice_limited <- (any(xl < choices[1L]) | any(xl > choices[2L]))
       invisible(NULL)
     },
