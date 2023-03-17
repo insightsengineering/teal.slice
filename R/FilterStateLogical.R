@@ -132,7 +132,7 @@ LogicalFilterState <- R6::R6Class( # nolint
                           fixed = FALSE,
                           extract_type = character(0),
                           ...) {
-      stopifnot(is.logical(x))
+      checkmate::assert_logical(x)
 
       do.call(
         super$initialize,
@@ -147,7 +147,8 @@ LogicalFilterState <- R6::R6Class( # nolint
             keep_na = keep_na,
             keep_inf = keep_inf,
             fixed = fixed,
-            extract_type = extract_type),
+            extract_type = extract_type
+          ),
           list(...)
         )
       )
@@ -159,12 +160,12 @@ LogicalFilterState <- R6::R6Class( # nolint
           levels(df) <- c(levels(df), choices_not_included)
         }
       }
-
       tbl <- table(df)
-
       choices <- as.logical(names(tbl))
+
       private$set_choices(choices)
-      self$set_selected(unname(choices)[1])
+      private$set_choices_counts(as.integer(tbl))
+      self$set_selected(choices[1])
       private$histogram_data <- data.frame(
         x = sprintf(
           "%s (%s)",
@@ -236,9 +237,22 @@ LogicalFilterState <- R6::R6Class( # nolint
   # private fields ----
 
   private = list(
+    choices_counts = integer(0),
     histogram_data = data.frame(),
 
     # private methods ----
+    set_choices_counts = function(choices_counts) {
+      private$choices_counts <- choices_counts
+      invisible(NULL)
+    },
+
+    get_filtered_counts = function() {
+      if (!is.null(private$x_reactive)) {
+        table(factor(private$x_reactive(), levels = private$choices))
+      } else {
+        NULL
+      }
+    },
 
     validate_selection = function(value) {
       if (!(checkmate::test_logical(value, max.len = 1, any.missing = FALSE))) {
@@ -280,7 +294,7 @@ LogicalFilterState <- R6::R6Class( # nolint
     ui_inputs = function(id) {
       ns <- NS(id)
 
-      countsmax <- as.numeric(names(private$choices))
+      countsmax <- private$choices_counts
       countsnow <- isolate(unname(table(factor(private$x_reactive(), levels = private$choices))))
 
       labels <- countBars(
@@ -402,7 +416,7 @@ LogicalFilterState <- R6::R6Class( # nolint
     content_summary = function(id) {
       tagList(
         tags$span(self$get_selected()),
-        if (self$get_keep_na()) tags$span("NA") else NULL
+        if (isTRUE(self$get_keep_na())) tags$span("NA") else NULL
       )
     }
   )

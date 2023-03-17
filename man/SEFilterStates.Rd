@@ -128,18 +128,15 @@ an ID string that corresponds with the ID used to call the module's UI function.
 \if{html}{\out{<a id="method-SEFilterStates-get_filter_state"></a>}}
 \if{latex}{\out{\hypertarget{method-SEFilterStates-get_filter_state}{}}}
 \subsection{Method \code{get_filter_state()}}{
-Gets the reactive values from the active \code{FilterState} objects.
+Returns active \code{FilterState} objects.
 
-Gets all active filters from this dataset in form of the nested list.
-The output list is a compatible input to \code{self$set_filter_state}.
+Gets all filter state information from this dataset.
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{SEFilterStates$get_filter_state()}\if{html}{\out{</div>}}
 }
 
 \subsection{Returns}{
-\code{list} containing one or two lists  depending on the number of
-\code{state_list} object (I.e. if \code{rowData} and \code{colData} exist). Each
-\code{list} contains elements number equal to number of active filter variables.
+\code{teal_slices}
 }
 }
 \if{html}{\out{<hr>}}

@@ -140,7 +140,7 @@ RangeFilterState <- R6::R6Class( # nolint
                           extract_type = character(0),
                           ...) {
       checkmate::assert_numeric(x, all.missing = FALSE)
-      if (!any(is.finite(x))) stop("\"x\" contains no finite values")
+      if (all(is.infinite(x))) stop("\"x\" contains no finite values")
 
       # validation on x_reactive here
 
@@ -157,7 +157,8 @@ RangeFilterState <- R6::R6Class( # nolint
             keep_na = keep_na,
             keep_inf = keep_inf,
             fixed = fixed,
-            extract_type = extract_type),
+            extract_type = extract_type
+          ),
           list(...)
         )
       )
@@ -259,13 +260,6 @@ RangeFilterState <- R6::R6Class( # nolint
     },
 
     #' @description
-    #' Returns current `keep_inf` selection
-    #' @return (`logical(1)`)
-    get_keep_inf = function() {
-      private$keep_inf()
-    },
-
-    #' @description
     #' Sets the selected values of this `RangeFilterState`.
     #'
     #' @param value (`numeric(2)`) the two-elements array of the lower and upper bound
@@ -288,7 +282,6 @@ RangeFilterState <- R6::R6Class( # nolint
   # private fields----
   private = list(
     unfiltered_histogram = NULL, # ggplot object
-    keep_inf = NULL, # because it holds reactiveVal
     inf_count = integer(0),
     inf_filtered_count = NULL,
     is_integer = logical(0),
@@ -359,12 +352,29 @@ RangeFilterState <- R6::R6Class( # nolint
     remove_out_of_bound_values = function(values) {
       values
     },
+
     disable = function() {
       private$cache <- self$get_state()
       private$selected(NULL)
       private$keep_na(NULL)
       private$keep_inf(NULL)
       private$disabled(TRUE)
+    },
+
+    # @description
+    # Server module to display filter summary
+    #  renders text describing selected range and
+    #  if NA or Inf are included also
+    # @return `shiny.tag` to include in the `ui_summary`
+    content_summary = function() {
+      selected <- sprintf("%.4g", self$get_selected())
+      min <- selected[1]
+      max <- selected[2]
+      tagList(
+        tags$span(paste0(min, " - ", max)),
+        if (isTRUE(self$get_keep_na())) tags$span("NA") else NULL,
+        if (isTRUE(self$get_keep_inf())) tags$span("Inf") else NULL
+      )
     },
 
     # shiny modules ----
@@ -589,22 +599,6 @@ RangeFilterState <- R6::R6Class( # nolint
         )
         invisible(NULL)
       })
-    },
-
-    # @description
-    # Server module to display filter summary
-    #  renders text describing selected range and
-    #  if NA or Inf are included also
-    # @return `shiny.tag` to include in the `ui_summary`
-    content_summary = function() {
-      selected <- sprintf("%.4g", self$get_selected())
-      min <- selected[1]
-      max <- selected[2]
-      tagList(
-        tags$span(paste0(min, " - ", max)),
-        if (isTRUE(self$get_keep_na())) tags$span("NA") else NULL,
-        if (isTRUE(self$get_keep_inf())) tags$span("Inf") else NULL
-      )
     }
   )
 )

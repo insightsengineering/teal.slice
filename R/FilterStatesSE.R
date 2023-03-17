@@ -164,14 +164,12 @@ SEFilterStates <- R6::R6Class( # nolint
     },
 
     #' @description
-    #' Gets the reactive values from the active `FilterState` objects.
+    #' Returns active `FilterState` objects.
     #'
-    #' Gets all active filters from this dataset in form of the nested list.
-    #' The output list is a compatible input to `self$set_filter_state`.
+    #' Gets all filter state information from this dataset.
     #'
-    #' @return `list` containing one or two lists  depending on the number of
-    #' `state_list` object (I.e. if `rowData` and `colData` exist). Each
-    #' `list` contains elements number equal to number of active filter variables.
+    #' @return `teal_slices`
+    #'
     get_filter_state = function() {
       slices_subset <- lapply(private$state_list$subset(), function(x) x$get_state())
       slices_select <- lapply(private$state_list$select(), function(x) x$get_state())
@@ -335,29 +333,17 @@ SEFilterStates <- R6::R6Class( # nolint
           logger::log_trace(
             "SEFilterState$srv_add initializing, dataname: { private$dataname }"
           )
-          active_filter_col_vars <- reactive({
-            vapply(
-              X = private$state_list_get(state_list_index = "select"),
-              FUN.VALUE = character(1),
-              FUN = function(x) x$get_varname()
-            )
-          })
-          active_filter_row_vars <- reactive({
-            vapply(
-              X = private$state_list_get(state_list_index = "subset"),
-              FUN.VALUE = character(1),
-              FUN = function(x) x$get_varname()
-            )
-          })
-
           row_data <- SummarizedExperiment::rowData(data)
           col_data <- SummarizedExperiment::colData(data)
 
           # available choices to display
           avail_row_data_choices <- reactive({
+            slices_for_subset <- extract_fun(self$get_filter_state(), "target == \"subset\"")
+            active_filter_row_vars <- unique(unlist(extract_feat(slices_for_subset, "varname")))
+
             choices <- setdiff(
               get_supported_filter_varnames(data = row_data),
-              active_filter_row_vars()
+              active_filter_row_vars
             )
 
             data_choices_labeled(
@@ -368,9 +354,12 @@ SEFilterStates <- R6::R6Class( # nolint
             )
           })
           avail_col_data_choices <- reactive({
+            slices_for_select <- extract_fun(self$get_filter_state(), "target == \"select\"")
+            active_filter_col_vars <- unique(unlist(extract_feat(slices_for_subset, "varname")))
+
             choices <- setdiff(
               get_supported_filter_varnames(data = col_data),
-              active_filter_col_vars()
+              active_filter_col_vars
             )
 
             data_choices_labeled(
@@ -443,7 +432,9 @@ SEFilterStates <- R6::R6Class( # nolint
                 )
               )
               varname <- input$col_to_add
-              self$set_filter_state(list(select = setNames(list(list()), varname)))
+              # self$set_filter_state(list(select = setNames(list(list()), varname)))
+              self$set_filter_state(filter_settings(filter_var(private$dataname, varname, target = "select")))
+
               logger::log_trace(
                 sprintf(
                   "SEFilterStates$srv_add@3 added FilterState of column %s to col data, dataname: %s",
@@ -466,7 +457,8 @@ SEFilterStates <- R6::R6Class( # nolint
                 )
               )
               varname <- input$row_to_add
-              self$set_filter_state(list(subset = setNames(list(list()), varname)))
+              self$set_filter_state(filter_settings(filter_var(private$dataname, varname, target = "subset")))
+
               logger::log_trace(
                 sprintf(
                   "SEFilterStates$srv_add@4 added FilterState of variable %s to row data, dataname: %s",

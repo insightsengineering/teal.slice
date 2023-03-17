@@ -130,14 +130,13 @@ an ID string that corresponds with the ID used to call the module's UI function.
 \subsection{Method \code{get_filter_state()}}{
 Returns active \code{FilterState} objects.
 
-Gets all active filters from this dataset in form of the nested list.
-The output list can be used as input to \code{self$set_filter_state}.
+Gets all filter state information from this dataset.
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{MatrixFilterStates$get_filter_state()}\if{html}{\out{</div>}}
 }
 
 \subsection{Returns}{
-\code{list} containing \code{list} with selected values for each \code{FilterState}.
+\code{teal_slices}
 }
 }
 \if{html}{\out{<hr>}}

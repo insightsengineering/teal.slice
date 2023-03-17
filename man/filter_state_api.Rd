@@ -26,8 +26,9 @@ specify filters in place on app start-up}
 }
 \value{
 \itemize{
-\item set, remove and clear return \code{NULL} invisibly
-\item get returns named a \code{teal_slices} object containing a \code{teal_slice} for every existing \code{FilterState}
+\item \verb{set_*}, \verb{remove_*} and \code{clear_filter_state} return \code{NULL} invisibly
+\item \code{get_filter_state} returns a named \code{teal_slices} object
+containing a \code{teal_slice} for every existing \code{FilterState}
 }
 }
 \description{
@@ -81,5 +82,5 @@ remove_filter_state(
 clear_filter_states(datasets)
 }
 \seealso{
-\code{\link{new_api}}
+\code{\link{teal_slice}}
 }

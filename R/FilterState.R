@@ -107,13 +107,14 @@ InteractiveFilterState <- R6::R6Class( # nolint
       private$varname <- varname
       private$selected <- reactiveVal(NULL)
       private$keep_na <- reactiveVal(keep_na)
+      private$keep_inf <- reactiveVal(keep_inf)
       private$extras <- list(...)
       private$fixed <- fixed
       # Establish varlabel.
       varlabel <- attr(x, "label")
       # Only display it if different to varname.
       private$varlabel <-
-        if (identical(varlabel, as.character(varname))) {
+        if (identical(varlabel, varname)) {
           character(0)
         } else {
           varlabel
@@ -220,6 +221,15 @@ InteractiveFilterState <- R6::R6Class( # nolint
     },
 
     #' @description
+    #' Returns current `keep_inf` selection.
+    #'
+    #' @return (`logical(1)`)
+    #'
+    get_keep_inf = function() {
+      private$keep_inf()
+    },
+
+    #' @description
     #' Returns variable label.
     #'
     #' @return `character(1)`
@@ -255,7 +265,7 @@ InteractiveFilterState <- R6::R6Class( # nolint
       args <- list(
         dataname = private$dataname,
         varname = private$varname,
-        choices = private$choices,
+        choices = unname(private$choices),
         selected = private$selected(),
         keep_na = if (!is.null(private$keep_na)) private$keep_na() else NULL,
         keep_inf = if (!is.null(private$keep_inf)) private$keep_inf() else NULL,
@@ -478,7 +488,8 @@ InteractiveFilterState <- R6::R6Class( # nolint
     choices = NULL, # because each class has different choices type
     selected = NULL, # because it holds reactiveVal and each class has different choices type
     varlabel = character(0),
-    keep_na = NULL, # reactiveVal holding a logical(1),
+    keep_na = NULL, # reactiveVal holding a logical(1)
+    keep_inf = NULL, # reactiveVal holding a logical(1)
     fixed = logical(0), # logical flag whether this filter state is fixed/locked
     extras = list(), # additional information passed in teal_slice (product of filter_var)
     na_rm = FALSE, # logical(1)

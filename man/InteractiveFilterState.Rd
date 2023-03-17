@@ -59,6 +59,7 @@ to the \code{set_state} method, or using
 \item \href{#method-InteractiveFilterState-get_call}{\code{InteractiveFilterState$get_call()}}
 \item \href{#method-InteractiveFilterState-get_dataname}{\code{InteractiveFilterState$get_dataname()}}
 \item \href{#method-InteractiveFilterState-get_keep_na}{\code{InteractiveFilterState$get_keep_na()}}
+\item \href{#method-InteractiveFilterState-get_keep_inf}{\code{InteractiveFilterState$get_keep_inf()}}
 \item \href{#method-InteractiveFilterState-get_varlabel}{\code{InteractiveFilterState$get_varlabel()}}
 \item \href{#method-InteractiveFilterState-get_varname}{\code{InteractiveFilterState$get_varname()}}
 \item \href{#method-InteractiveFilterState-get_selected}{\code{InteractiveFilterState$get_selected()}}
@@ -221,6 +222,19 @@ Returns current \code{keep_na} selection.
 
 \subsection{Returns}{
 \code{logical(1)}
+}
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-InteractiveFilterState-get_keep_inf"></a>}}
+\if{latex}{\out{\hypertarget{method-InteractiveFilterState-get_keep_inf}{}}}
+\subsection{Method \code{get_keep_inf()}}{
+Returns current \code{keep_inf} selection.
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{InteractiveFilterState$get_keep_inf()}\if{html}{\out{</div>}}
+}
+
+\subsection{Returns}{
+(\code{logical(1)})
 }
 }
 \if{html}{\out{<hr>}}

@@ -110,10 +110,10 @@ MatrixFilterStates <- R6::R6Class( # nolint
     #' @description
     #' Returns active `FilterState` objects.
     #'
-    #' Gets all active filters from this dataset in form of the nested list.
-    #' The output list can be used as input to `self$set_filter_state`.
+    #' Gets all filter state information from this dataset.
     #'
-    #' @return `list` containing `list` with selected values for each `FilterState`.
+    #' @return `teal_slices`
+    #'
     get_filter_state = function() {
       slices <- lapply(private$state_list_get("subset"), function(x) x$get_state())
       excluded_varnames <- structure(
@@ -228,19 +228,13 @@ MatrixFilterStates <- R6::R6Class( # nolint
           logger::log_trace(
             "MatrixFilterStates$srv_add initializing, dataname: { private$dataname }"
           )
-          active_filter_vars <- reactive({
-            vapply(
-              X = private$state_list_get(state_list_index = "subset"),
-              FUN.VALUE = character(1),
-              FUN = function(x) x$get_varname()
-            )
-          })
 
           # available choices to display
           avail_column_choices <- reactive({
+            active_filter_vars <- unique(unlist(extract_feat(self$get_filter_state(), "varname")))
             choices <- setdiff(
               get_supported_filter_varnames(data = data),
-              active_filter_vars()
+              active_filter_vars
             )
             data_choices_labeled(
               data = data,
@@ -285,7 +279,8 @@ MatrixFilterStates <- R6::R6Class( # nolint
                 )
               )
               varname <- input$var_to_add
-              self$set_filter_state(setNames(list(list()), varname))
+              self$set_filter_state(filter_settings(filter_var(private$dataname, varname)))
+
               logger::log_trace(
                 sprintf(
                   "MatrixFilterState$srv_add@2 added FilterState of variable %s, dataname: %s",

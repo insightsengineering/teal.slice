@@ -158,7 +158,8 @@ DatetimeFilterState <- R6::R6Class( # nolint
             keep_na = keep_na,
             keep_inf = keep_inf,
             fixed = fixed,
-            extract_type = extract_type),
+            extract_type = extract_type
+          ),
           list(...)
         )
       )
@@ -577,7 +578,7 @@ DatetimeFilterState <- R6::R6Class( # nolint
       max <- selected[2]
       tagList(
         tags$span(paste0(min, " - ", max)),
-        if (self$get_keep_na()) tags$span("NA") else NULL
+        if (isTRUE(self$get_keep_na())) tags$span("NA") else NULL
       )
     }
   )

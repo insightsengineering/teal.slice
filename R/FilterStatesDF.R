@@ -252,12 +252,11 @@ DFFilterStates <- R6::R6Class( # nolint
     },
 
     #' @description
-    #' Gets the reactive values from the active `FilterState` objects.
+    #' Returns active `FilterState` objects.
     #'
-    #' Get active filter state from the `FilterState` objects kept in `state_list`.
-    #' The output list is a compatible input to `self$set_filter_state`.
+    #' Gets all filter state information from this dataset.
     #'
-    #' @return `list` with named elements corresponding to `FilterState` in the `state_list`.
+    #' @return `teal_slices`
     #'
     get_filter_state = function() {
       slices <- lapply(private$state_list_get(1L), function(x) x$get_state())
@@ -272,9 +271,8 @@ DFFilterStates <- R6::R6Class( # nolint
     #' @description
     #' Set filter state.
     #'
-    #' @param state (`named list`)\cr
-    #'   should contain values which are initial selection in the `FilterState`.
-    #'   Names of the `list` element should correspond to the name of the columns.
+    #' @param state (`teal_slices`)
+    #'
     #' @examples
     #' df <- data.frame(
     #'   character = letters,
@@ -288,7 +286,6 @@ DFFilterStates <- R6::R6Class( # nolint
     #'   datalabel = character(0),
     #'   keys = character(0)
     #' )
-    #' filter_states$set_filter_state(list(character = list("a")))
     #' filter_states$set_filter_state(
     #'   filter_settings(
     #'     filter_var(dataname = "data", varname = "character", selected = "a")
@@ -420,19 +417,13 @@ DFFilterStates <- R6::R6Class( # nolint
         id = id,
         function(input, output, session) {
           logger::log_trace("DFFilterStates$srv_add initializing, dataname: { private$dataname }")
-          data <- private$data
-          vars_include <- private$filterable_varnames
-          active_filter_vars <- reactive({
-            vapply(
-              X = private$state_list_get(state_list_index = 1L),
-              FUN.VALUE = character(1),
-              FUN = function(x) x$get_varname()
-            )
-          })
 
           # available choices to display
           avail_column_choices <- reactive({
-            choices <- setdiff(vars_include, active_filter_vars())
+            data <- private$data
+            vars_include <- private$filterable_varnames
+            active_filter_vars <- unique(unlist(extract_feat(self$get_filter_state(), "varname")))
+            choices <- setdiff(vars_include, active_filter_vars)
 
             data_choices_labeled(
               data = data,
@@ -477,7 +468,7 @@ DFFilterStates <- R6::R6Class( # nolint
                 )
               )
               varname <- input$var_to_add
-              self$set_filter_state(state = setNames(list(list()), varname))
+              self$set_filter_state(filter_settings(filter_var(private$dataname, varname)))
               logger::log_trace(
                 sprintf(
                   "DFFilterStates$srv_add@2 added FilterState of variable %s, dataname: %s",

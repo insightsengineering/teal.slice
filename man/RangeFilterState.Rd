@@ -116,7 +116,6 @@ filter$set_selected(c(2, 3))
 \item \href{#method-RangeFilterState-format}{\code{RangeFilterState$format()}}
 \item \href{#method-RangeFilterState-is_any_filtered}{\code{RangeFilterState$is_any_filtered()}}
 \item \href{#method-RangeFilterState-get_call}{\code{RangeFilterState$get_call()}}
-\item \href{#method-RangeFilterState-get_keep_inf}{\code{RangeFilterState$get_keep_inf()}}
 \item \href{#method-RangeFilterState-set_selected}{\code{RangeFilterState$set_selected()}}
 \item \href{#method-RangeFilterState-clone}{\code{RangeFilterState$clone()}}
 }
@@ -126,6 +125,7 @@ filter$set_selected(c(2, 3))
 <ul>
 <li><span class="pkg-link" data-pkg="teal.slice" data-topic="InteractiveFilterState" data-id="destroy_observers"><a href='../../teal.slice/html/InteractiveFilterState.html#method-InteractiveFilterState-destroy_observers'><code>teal.slice::InteractiveFilterState$destroy_observers()</code></a></span></li>
 <li><span class="pkg-link" data-pkg="teal.slice" data-topic="InteractiveFilterState" data-id="get_dataname"><a href='../../teal.slice/html/InteractiveFilterState.html#method-InteractiveFilterState-get_dataname'><code>teal.slice::InteractiveFilterState$get_dataname()</code></a></span></li>
+<li><span class="pkg-link" data-pkg="teal.slice" data-topic="InteractiveFilterState" data-id="get_keep_inf"><a href='../../teal.slice/html/InteractiveFilterState.html#method-InteractiveFilterState-get_keep_inf'><code>teal.slice::InteractiveFilterState$get_keep_inf()</code></a></span></li>
 <li><span class="pkg-link" data-pkg="teal.slice" data-topic="InteractiveFilterState" data-id="get_keep_na"><a href='../../teal.slice/html/InteractiveFilterState.html#method-InteractiveFilterState-get_keep_na'><code>teal.slice::InteractiveFilterState$get_keep_na()</code></a></span></li>
 <li><span class="pkg-link" data-pkg="teal.slice" data-topic="InteractiveFilterState" data-id="get_selected"><a href='../../teal.slice/html/InteractiveFilterState.html#method-InteractiveFilterState-get_selected'><code>teal.slice::InteractiveFilterState$get_selected()</code></a></span></li>
 <li><span class="pkg-link" data-pkg="teal.slice" data-topic="InteractiveFilterState" data-id="get_state"><a href='../../teal.slice/html/InteractiveFilterState.html#method-InteractiveFilterState-get_state'><code>teal.slice::InteractiveFilterState$get_state()</code></a></span></li>
@@ -265,19 +265,6 @@ optional \verb{is.na(<varname>)} and \verb{is.finite(<varname>)}.
 }
 \subsection{Returns}{
 (\code{call})
-}
-}
-\if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-RangeFilterState-get_keep_inf"></a>}}
-\if{latex}{\out{\hypertarget{method-RangeFilterState-get_keep_inf}{}}}
-\subsection{Method \code{get_keep_inf()}}{
-Returns current \code{keep_inf} selection
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{RangeFilterState$get_keep_inf()}\if{html}{\out{</div>}}
-}
-
-\subsection{Returns}{
-(\code{logical(1)})
 }
 }
 \if{html}{\out{<hr>}}

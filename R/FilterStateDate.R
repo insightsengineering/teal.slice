@@ -139,7 +139,7 @@ DateFilterState <- R6::R6Class( # nolint
                           fixed = FALSE,
                           extract_type = character(0),
                           ...) {
-      stopifnot(is(x, "Date"))
+      checkmate::assert_date(x)
 
       # validation on x_reactive here
       do.call(
@@ -155,7 +155,8 @@ DateFilterState <- R6::R6Class( # nolint
             keep_na = keep_na,
             keep_inf = keep_inf,
             fixed = fixed,
-            extract_type = extract_type),
+            extract_type = extract_type
+          ),
           list(...)
         )
       )
@@ -213,12 +214,12 @@ DateFilterState <- R6::R6Class( # nolint
     #'
     get_call = function(dataname) {
       if (missing(dataname)) dataname <- private$dataname
-      choices <- as.character(self$get_selected(dataname))
+      choices <- as.character(self$get_selected())
       filter_call <-
         call(
           "&",
-          call(">=", private$get_varname_prefixed(), call("as.Date", choices[1L])),
-          call("<=", private$get_varname_prefixed(), call("as.Date", choices[2L]))
+          call(">=", private$get_varname_prefixed(dataname), call("as.Date", choices[1L])),
+          call("<=", private$get_varname_prefixed(dataname), call("as.Date", choices[2L]))
         )
       private$add_keep_na_call(filter_call, dataname)
     },
@@ -464,7 +465,7 @@ DateFilterState <- R6::R6Class( # nolint
       max <- selected[2]
       tagList(
         tags$span(paste0(min, " - ", max)),
-        if (self$get_keep_na()) tags$span("NA") else NULL
+        if (isTRUE(self$get_keep_na())) tags$span("NA") else NULL
       )
     }
   )
