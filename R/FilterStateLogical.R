@@ -344,7 +344,7 @@ LogicalFilterState <- R6::R6Class( # nolint
             updateCountBars(
               inputId = "labels",
               choices = as.character(private$choices),
-              countsmax = as.numeric(names(private$choices)),
+              countsmax = private$choices_counts,
               countsnow = unname(table(factor(non_missing_values(), levels = private$choices)))
             )
             NULL
