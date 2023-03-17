@@ -50,6 +50,10 @@
 #'                 specifies which variables are not allowed to be filtered
 #' @param count_type `character(1)` string specifying how observations are tallied by these filter states
 #' @param show_all `logical(1)` specifying whether NULL elements should also be printed
+#' @param tss `teal_slices`
+#' @param feature `character(1)` name of `teal_slice` element
+#' @param expr `expression` or `character` string representing and expression
+#'             that evaluates to a single `logical`; will be evaluated in individual `teal_slice` objects
 #' @param ... for `filter_var` any number of additional features given as `name:value` pairs\cr
 #'            for `filter_settings` any number of `teal_slice` objects\cr
 #'            for other functions arguments passed to other methods
@@ -73,12 +77,12 @@
 #'   )
 #' )
 #'
-#' extract_by_feat(all_filters, "dataname", "dataname1")
-#' extract_feat(all_filters, "dataname")
-#' extract_fun(all_filters, dataname == "dataname2")
-#' extract_fun_s(all_filters, 'dataname == "dataname2"')
+#' teal.slice:::extract_by_feat(all_filters, "dataname", "dataname1")
+#' teal.slice:::extract_feat(all_filters, "dataname")
+#' teal.slice:::extract_fun(all_filters, dataname == "dataname2")
+#' teal.slice:::extract_fun_s(all_filters, 'dataname == "dataname2"')
 #' x <- "dataname2"
-#' extract_fun_s(all_filters, sprintf('dataname == "%s"', x))
+#' teal.slice:::extract_fun_s(all_filters, sprintf('dataname == "%s"', x))
 #'
 #' @name teal_slice
 NULL
@@ -409,17 +413,17 @@ extract_fun_s <- function(tss, expr) {
 }
 
 
-# name teal_slices according to value of respective field in slices
+# name teal_slices according to value of respective feature in slices
 # possibly useful in set_filter_state_impl but needs safeguards
 #' @rdname teal_slice
 #' @keywords internal
 #'
-name_slices <- function(tss, field) {
+name_slices <- function(tss, feature) {
   checkmate::assert_class(tss, "teal_slices")
-  checkmate::assert_string(field)
-  checkmate::assert_choice(field, setdiff(names(formals(filter_var)), "..."))
+  checkmate::assert_string(feature)
+  checkmate::assert_choice(feature, setdiff(names(formals(filter_var)), "..."))
 
-  feats <- unlist(extract_feat(tss, field))
+  feats <- unlist(extract_feat(tss, feature))
   if (anyDuplicated(feats)) stop("duplicated values")
 
   names(tss) <- feats
