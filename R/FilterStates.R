@@ -208,7 +208,7 @@ FilterStates <- R6::R6Class( # nolint
     },
 
     #' @description
-    #' Remove a single `FilterState` from any `state_list`.
+    #' Remove one or more `FilterState`s from any `state_list`.
     #'
     #' @param state (`teal_slices`)\cr
     #'   specifying `FilterState` objects to remove;

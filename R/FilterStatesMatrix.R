@@ -151,7 +151,7 @@ MatrixFilterStates <- R6::R6Class( # nolint
     },
 
     #' @description
-    #' Remove a variable from the `state_list` and its corresponding UI element.
+    #' Remove one or more `FilterState`s from the `state_list` along with their corresponding UI elements.
     #'
     #' @param state (`teal_slices`)\cr
     #'   specifying `FilterState` objects to remove;

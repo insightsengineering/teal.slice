@@ -10,11 +10,13 @@
 #'   see [`FilteredData`] for details
 #'
 #' @param filter (`teal_slices`)\cr
-#'   specify filters in place on app startup
+#'   specify filters in place on app start-up
 #'
 #' @return
 #' - set, remove and clear return `NULL` invisibly
 #' - get returns named a `teal_slices` object containing a `teal_slice` for every existing `FilterState`
+#'
+#' @seealso [`new_api`]
 #'
 #' @examples
 #' utils::data(miniACC, package = "MultiAssayExperiment")
