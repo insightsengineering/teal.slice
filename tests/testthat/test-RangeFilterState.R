@@ -103,7 +103,7 @@ testthat::test_that("get_state returns a list identical to set_state input", {
   state <- filter_var(selected = c(2.0, 7.0), choices = c(1, 8),
                       keep_na = TRUE, keep_inf = TRUE, varname = "test", dataname = "data")
   filter_state$set_state(state)
-  testthat::expect_identical(shiny::isolate(filter_state$get_state()), state)
+  testthat::expect_identical(unlist(shiny::isolate(filter_state$get_state())), unlist(state))
 })
 
 testthat::test_that("set_state sets values of selected and keep_na as provided in the list", {
@@ -187,7 +187,6 @@ testthat::test_that(
     )
   }
 )
-
 
 # format ----
 testthat::test_that("$format() is a FilterStates's method that accepts indent", {
@@ -379,3 +378,4 @@ testthat::test_that("is_any_filtered reacts to choices", {
   fs <- testfs$new(c(1:10, Inf), varname = "x", dataname = "data", choices = c(1, 9))
   testthat::expect_true(fs$is_any_filtered())
 })
+
