@@ -103,10 +103,16 @@ These functions create and manage filter state specifications.
 A single filter state can be fully described by a \code{teal_slice} object and such
 objects will be used to create, modify, and delete filter state.
 
-A \code{teal_slice} contains a number of mandatory elements (all named arguments of \code{filter_var})
+A \code{teal_slice} contains a number of common elements (all named arguments of \code{filter_var})
 but only \code{dataname} and \code{varname} are mandatory, while the others have default values.
-Passing NULL to any of the other values means that these parameters will not be modified
+Setting any of the other values to NULL means that these parameters will not be modified
 (when setting an existing state) or that they will be determined by data (when creating new a new one).
+Each of the common elements corresponds to one private field in \code{FilterState}
+where it is stored and from where it is retrieved when calling \code{FiterState$get_state}.
+
+A \code{teal_slice} can also contain any number of additional elements, passed to \code{...}
+as \code{name:value} pairs. These are collated into a list and stored in the
+\code{private$extras} field.
 
 All \code{teal_slice} elements can be passed as arguments to \code{FilterState} constructors.
 A \code{teal_slice} can be passed to \code{FilterState$set_state}, which will modify the state.
