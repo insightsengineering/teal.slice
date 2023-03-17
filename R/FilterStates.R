@@ -234,7 +234,6 @@ FilterStates <- R6::R6Class( # nolint
       private$cards_container_id <- ns("cards")
       tagList(
         include_css_files(pattern = "filter-panel"),
-        include_js_files(pattern = "accordion"),
         tags$div(
           id = private$cards_container_id,
           class = "panel-group accordion",
