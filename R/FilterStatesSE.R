@@ -338,7 +338,7 @@ SEFilterStates <- R6::R6Class( # nolint
 
           # available choices to display
           avail_row_data_choices <- reactive({
-            slices_for_subset <- extract_fun(self$get_filter_state(), "target == \"subset\"")
+            slices_for_subset <- extract_fun(self$get_filter_state(), target == "subset")
             active_filter_row_vars <- unique(unlist(extract_feat(slices_for_subset, "varname")))
 
             choices <- setdiff(
@@ -354,8 +354,8 @@ SEFilterStates <- R6::R6Class( # nolint
             )
           })
           avail_col_data_choices <- reactive({
-            slices_for_select <- extract_fun(self$get_filter_state(), "target == \"select\"")
-            active_filter_col_vars <- unique(unlist(extract_feat(slices_for_subset, "varname")))
+            slices_for_select <- extract_fun(self$get_filter_state(), target == "select")
+            active_filter_col_vars <- unique(unlist(extract_feat(slices_for_select, "varname")))
 
             choices <- setdiff(
               get_supported_filter_varnames(data = col_data),
