@@ -168,7 +168,6 @@ ChoicesFilterState <- R6::R6Class( # nolint
       }
 
       if (is.null(selected)) selected <- choices
-      selected <- selected[selected %in% choices]
 
       do.call(
         super$initialize,
