@@ -152,7 +152,6 @@ DateFilterState <- R6::R6Class( # nolint
       }
 
       if (is.null(selected)) selected <- choices
-      selected <- c(max(selected[1], min(choices)) , min(selected[2], max(choices)))
 
       do.call(
         super$initialize,

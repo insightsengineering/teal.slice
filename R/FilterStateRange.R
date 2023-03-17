@@ -131,16 +131,43 @@ RangeFilterState <- R6::R6Class( # nolint
                           x_reactive = reactive(NULL),
                           dataname,
                           varname,
-                          choices = c(min(x, na.rm = TRUE), max(x, na.rm = TRUE)),
+                          choices = NULL,
                           selected = NULL,
-                          keep_na = NULL,
-                          keep_inf = NULL,
+                          keep_na = FALSE,
+                          keep_inf = FALSE,
                           fixed = FALSE,
                           extract_type = character(0),
                           ...) {
       checkmate::assert_numeric(x, all.missing = FALSE)
       if (!any(is.finite(x))) stop("\"x\" contains no finite values")
       checkmate::assert_class(x_reactive, 'reactive')
+
+      private$is_integer <- checkmate::test_integerish(x)
+      private$keep_inf <- reactiveVal(keep_inf)
+      private$inf_filtered_count <- reactive(
+        if (!is.null(private$x_reactive())) sum(is.infinite(private$x_reactive()))
+      )
+      private$inf_count <- sum(is.infinite(x))
+
+
+      private$set_is_choice_limited(x, choices)
+      x <- x[x >= choices[1L] & x <= choices[2L]]
+
+
+      x_range <- range(x, finite = TRUE)
+      x_pretty <- pretty(x_range, 100L)
+
+      if (identical(diff(x_range), 0)) {
+        private$set_choices(x_range)
+        private$slider_ticks <- signif(x_range, digits = 10)
+        private$slider_step <- NULL
+        self$set_selected(x_range)
+      } else {
+        private$set_choices(range(x_pretty))
+        private$slider_ticks <- signif(x_pretty, digits = 10)
+        private$slider_step <- signif(private$get_pretty_range_step(x_pretty), digits = 10)
+        self$set_selected(range(x_pretty))
+      }
 
       do.call(
         super$initialize,
@@ -159,31 +186,6 @@ RangeFilterState <- R6::R6Class( # nolint
           list(...)
         )
       )
-
-      private$is_integer <- checkmate::test_integerish(x)
-      private$keep_inf <- reactiveVal(keep_inf)
-      private$inf_filtered_count <- reactive(
-        if (!is.null(private$x_reactive())) sum(is.infinite(private$x_reactive()))
-      )
-      private$inf_count <- sum(is.infinite(x))
-
-      private$set_is_choice_limited(x, choices)
-      x <- x[x >= choices[1L] & x <= choices[2L]]
-
-      x_range <- range(x, finite = TRUE)
-      x_pretty <- pretty(x_range, 100L)
-
-      if (identical(diff(x_range), 0)) {
-        private$set_choices(x_range)
-        private$slider_ticks <- signif(x_range, digits = 10)
-        private$slider_step <- NULL
-        self$set_selected(x_range)
-      } else {
-        private$set_choices(range(x_pretty))
-        private$slider_ticks <- signif(x_pretty, digits = 10)
-        private$slider_step <- signif(private$get_pretty_range_step(x_pretty), digits = 10)
-        self$set_selected(range(x_pretty))
-      }
 
       private$unfiltered_histogram <- ggplot2::ggplot(data.frame(x = Filter(is.finite, x))) +
         ggplot2::geom_histogram(

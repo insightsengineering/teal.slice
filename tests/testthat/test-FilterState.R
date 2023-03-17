@@ -25,7 +25,9 @@ testthat::test_that("get_call returns NULL", {
 
 # get_varlabel ----
 testthat::test_that("get_varlabel returns a string passed to the constructor", {
-  filter_state <- FilterState$new(7, varname = "7", varlabel = "test", dataname = "data")
+  seven <- c(7)
+  attr(seven, "label") <- "test"
+  filter_state <- FilterState$new(seven, varname = "7", dataname = "data")
   testthat::expect_equal(filter_state$get_varlabel(), "test")
 })
 
