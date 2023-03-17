@@ -63,7 +63,7 @@ extract_fun(tss, expr)
 
 extract_fun_s(tss, expr)
 
-name_slices(tss, field)
+name_slices(tss, feature)
 }
 \arguments{
 \item{dataname}{\code{character(1)} name of data set}
@@ -94,6 +94,13 @@ specifies which variables are not allowed to be filtered}
 \item{count_type}{\code{character(1)} string specifying how observations are tallied by these filter states}
 
 \item{show_all}{\code{logical(1)} specifying whether NULL elements should also be printed}
+
+\item{tss}{\code{teal_slices}}
+
+\item{feature}{\code{character(1)} name of \code{teal_slice} element}
+
+\item{expr}{\code{expression} or \code{character} string representing and expression
+that evaluates to a single \code{logical}; will be evaluated in individual \code{teal_slice} objects}
 }
 \value{
 \code{filter_var} returns object of class \code{teal_slice}, which is a named list.
@@ -150,12 +157,12 @@ all_filters <- filter_settings(
   )
 )
 
-extract_by_feat(all_filters, "dataname", "dataname1")
-extract_feat(all_filters, "dataname")
-extract_fun(all_filters, dataname == "dataname2")
-extract_fun_s(all_filters, 'dataname == "dataname2"')
+teal.slice:::extract_by_feat(all_filters, "dataname", "dataname1")
+teal.slice:::extract_feat(all_filters, "dataname")
+teal.slice:::extract_fun(all_filters, dataname == "dataname2")
+teal.slice:::extract_fun_s(all_filters, 'dataname == "dataname2"')
 x <- "dataname2"
-extract_fun_s(all_filters, sprintf('dataname == "\%s"', x))
+teal.slice:::extract_fun_s(all_filters, sprintf('dataname == "\%s"', x))
 
 }
 \keyword{internal}
