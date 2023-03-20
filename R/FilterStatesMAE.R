@@ -165,7 +165,7 @@ MAEFilterStates <- R6::R6Class( # nolint
         excluded_variables <- toString(dQuote(setdiff(varnames, filterable), q = FALSE))
         state <- extract_fun_s(
           state,
-          sprintf("!varname %%in%% c(%s)", )
+          sprintf("!varname %%in%% c(%s)", excluded_variables)
         )
         logger::log_warn("filters for columns: { excluded_varnames } excluded from { private$dataname }")
       }

@@ -286,7 +286,7 @@ as.teal_slices <- function(x) {
                 args$keep_na <- subsubsubitem$keep_na
                 args$keep_inf <- subsubsubitem$keep_inf
                 args$datalabel <- names(item)[ii]
-                args$target <- names(subitem)[iiii]
+                args$target <- names(subitem)[iii]
                 slices[[length(slices)+1]] <- as.teal_slice(Filter(Negate(is.null), args))
                 args <- make_args()
               }
