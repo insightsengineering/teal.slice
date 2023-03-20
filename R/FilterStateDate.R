@@ -109,7 +109,7 @@ DateFilterState <- R6::R6Class( # nolint
     #'   if `extract_type` argument is not empty.
     #' @param varname (`character(1)`)\cr
     #'   name of the variable.
-    #' @param choices (`vector`, c(min(x, na.rm = TRUE), max(x, na.rm = TRUE)))\cr
+    #' @param choices (`vector`, `range(x, na.rm = TRUE)`)\cr
     #'   vector specifying allowed selection values
     #' @param selected (`atomic`, `NULL`)\cr
     #'   vector specifying selection
