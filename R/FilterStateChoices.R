@@ -271,7 +271,7 @@ ChoicesFilterState <- R6::R6Class( # nolint
     #'
     set_is_choice_limited = function(xl, choices = NULL) {
       xl <- xl[!is.na(xl)]
-      private$is_choice_limited <- length(unique(choices[choices %in% xl])) < length(unique(xl))
+      private$is_choice_limited <- length(setdiff(choices, xl)) > 0L
       invisible(NULL)
     },
     #' @description
