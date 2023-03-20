@@ -309,7 +309,7 @@ DFFilterStates <- R6::R6Class( # nolint
           state,
           sprintf("!varname %%in%% c(%s)", )
         )
-        logger::log_warn("filters for columns: { excluded_varnames } excluded from { private$dataname }")
+        logger::log_warn("filters for columns: { excluded_variables } excluded from { private$dataname }")
       }
 
       private$set_filter_state_impl(
