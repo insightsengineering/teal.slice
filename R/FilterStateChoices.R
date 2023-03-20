@@ -27,8 +27,7 @@
 #'   x = data_choices,
 #'   dataname = "data",
 #'   varname = "variable",
-#'   varlabel = "label",
-#'   dataname = "data
+#'   varlabel = "label"
 #' )
 #' filter_state_choices$set_state(
 #'   filter_var("data", "variable", selected = c("a", "c"), keep_na = TRUE))
