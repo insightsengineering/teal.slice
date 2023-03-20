@@ -220,7 +220,7 @@ DateFilterState <- R6::R6Class( # nolint
     #' optional `is.na(<varname>)`.
     #' @return (`call`)
     #'
-    get_call = function() {
+    get_call = function(dataname) {
       choices <- as.character(self$get_selected())
       filter_call <-
         call(
