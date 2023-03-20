@@ -159,6 +159,7 @@ FilterStates <- R6::R6Class( # nolint
         f = Negate(is.null)
       )
       if (length(filter_items) > 0L) {
+browser()
         if (is.null(filter_items$subset)) filter_items$subset <- quote(TRUE)
         filter_function <- str2lang(self$get_fun())
         data_name <- str2lang(private$dataname)
@@ -591,7 +592,7 @@ FilterStates <- R6::R6Class( # nolint
       if (length(state) == 0L) return(invisible(NULL))
 
       # Modify existing filter states.
-      state_list <- shiny::isolate(private$state_list_get(state_list_index)) # TODO verify thie isolate is necessary
+      state_list <- shiny::isolate(private$state_list_get(state_list_index))
       slices_for_update <- extract_fun_s(
         state,
         sprintf("varname %%in%% c(%s)", toString(dQuote(names(state_list), q = FALSE)))
