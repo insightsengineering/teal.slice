@@ -159,6 +159,7 @@ FilterStates <- R6::R6Class( # nolint
         f = Negate(is.null)
       )
       if (length(filter_items) > 0L) {
+        if (is.null(filter_items$subset)) filter_items$subset <- quote(TRUE)
         filter_function <- str2lang(self$get_fun())
         data_name <- str2lang(private$dataname)
         substitute(

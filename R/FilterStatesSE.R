@@ -205,8 +205,8 @@ SEFilterStates <- R6::R6Class( # nolint
       private$set_filter_state_impl(
         state = extract_fun(state, target == "select"),
         state_list_index = "select",
-        data = SummarizedExperiment::rowData(private$data),
-        data_reactive = function(sid) SummarizedExperiment::rowData(private$data_reactive(sid))
+        data = SummarizedExperiment::colData(private$data),
+        data_reactive = function(sid) SummarizedExperiment::colData(private$data_reactive(sid))
       )
 
       logger::log_trace("{ class(self)[1] }$set_filter_state initialized, dataname: { private$dataname }")
