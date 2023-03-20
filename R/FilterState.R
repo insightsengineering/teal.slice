@@ -420,7 +420,7 @@ InteractiveFilterState <- R6::R6Class( # nolint
       }
 
       current_state <- sprintf(
-        "selected: %s, keep_na: %s, keep_inf: %s",
+        "selected: %s; keep_na: %s; keep_inf: %s",
         toString(state$selected),
         state$keep_na,
         state$keep_inf

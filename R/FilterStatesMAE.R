@@ -166,10 +166,10 @@ MAEFilterStates <- R6::R6Class( # nolint
       varnames <- unique(unlist(extract_feat(state, "varname")))
       filterable <- get_supported_filter_varnames(SummarizedExperiment::colData(private$data))
       if (!all(varnames %in% filterable)) {
-        excluded_variables <- toString(dQuote(setdiff(varnames, filterable), q = FALSE))
+        excluded_varnames <- toString(dQuote(setdiff(varnames, filterable), q = FALSE))
         state <- extract_fun_s(
           state,
-          sprintf("!varname %%in%% c(%s)", excluded_variables)
+          sprintf("!varname %%in%% c(%s)", excluded_varnames)
         )
         logger::log_warn("filters for columns: { excluded_varnames } excluded from { private$dataname }")
       }
