@@ -275,7 +275,7 @@ ChoicesFilterState <- R6::R6Class( # nolint
       invisible(NULL)
     },
     #' @description
-    #' Check whether the initial choices filter out some values of x and set the flag in case.
+    #' Sets choices_counts private field
     #'
     set_choices_counts = function(choices_counts) {
       private$choices_counts <- choices_counts

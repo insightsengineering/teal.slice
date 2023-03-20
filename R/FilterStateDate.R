@@ -147,7 +147,7 @@ DateFilterState <- R6::R6Class( # nolint
         choices <- range(x, na.rm = TRUE)
       } else {
         private$set_is_choice_limited(x, choices)
-        x <- x[x >= choices[1L] & x <= choices[2L]]
+        x <- x[(x >= choices[1L] & x <= choices[2L]) | is.na(x)]
         choices <- c(max(choices[1L], min(x)) , min(choices[2L], max(x)))
       }
 

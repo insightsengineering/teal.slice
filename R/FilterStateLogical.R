@@ -135,12 +135,14 @@ LogicalFilterState <- R6::R6Class( # nolint
       stopifnot(is.logical(x))
       checkmate::assert_class(x_reactive, 'reactive')
 
-      if (is.null(choices)) choices <- unique(x)
+      if (is.null(choices)) choices <- unique((na.omit(x)))
       private$set_is_choice_limited(x, choices)
-      x <- x[x %in% choices]
+      x <- x[x %in% choices | is.na(x)]
       df <- factor(x, levels = c(TRUE, FALSE))
       tbl <- table(df)
       if (is.null(selected)) selected <- as.logical(levels(df))[1]
+
+      private$set_choices_counts(unname(tbl))
 
       private$histogram_data <- data.frame(
         x = sprintf(
@@ -218,7 +220,13 @@ LogicalFilterState <- R6::R6Class( # nolint
   private = list(
     choices_counts = integer(0),
     histogram_data = data.frame(),
-
+    #' @description
+    #' Sets choices_counts private field
+    #'
+    set_choices_counts = function(choices_counts) {
+      private$choices_counts <- choices_counts
+      invisible(NULL)
+    },
     # private methods ----
     #' @description
     #' Check whether the initial choices filter out some values of x and set the flag in case.

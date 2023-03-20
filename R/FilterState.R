@@ -380,6 +380,7 @@ FilterState <- R6::R6Class( # nolint
       if (shiny::isolate(private$is_disabled())) {
         warning("This filter state is disabled. Can not change selected.")
       } else {
+
         value <- private$cast_and_validate(value)
         value <- private$remove_out_of_bound_values(value)
         private$validate_selection(value)
