@@ -148,13 +148,17 @@ MAEFilterStates <- R6::R6Class( # nolint
     #' @description
     #' Set filter state
     #'
-    #' @param state (`named list`)\cr
+    #' @param state (`teal_slices`)\cr
     #'    `teal_slice` objects should contain the field `target = "y"`
     #'
     #' @return `NULL` invisibly
     #'
     set_filter_state = function(state) {
       checkmate::assert_class(state, "teal_slices")
+      checkmate::assert_true(
+        all(vapply(state, function(x) identical(x$target, "y"), logical(1L))),
+        .var.name = "FilterStatesMAE$set_filter_state: all slices in state must have target = \"y\""
+      )
 
       logger::log_trace("{ class(self)[1] }$set_filter_state initializing, dataname: { private$dataname }")
 
@@ -318,7 +322,7 @@ MAEFilterStates <- R6::R6Class( # nolint
               )
 
               varname <- input$var_to_add
-              self$set_filter_state(filter_settings(filter_var(private$dataname, varname)))
+              self$set_filter_state(filter_settings(filter_var(private$dataname, varname, target = "y")))
 
               logger::log_trace(
                 sprintf(
