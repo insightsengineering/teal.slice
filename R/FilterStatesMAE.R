@@ -269,7 +269,7 @@ MAEFilterStates <- R6::R6Class( # nolint
             varlabels <- vapply(
               colnames(data),
               FUN = function(x) {
-                label <- attr(data[[x]], "label") # TODO: can this ever be NULL or just character(0)
+                label <- attr(data[[x]], "label")
                 if (is.null(label)) {
                   x
                 } else {
