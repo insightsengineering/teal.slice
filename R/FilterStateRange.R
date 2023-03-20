@@ -140,8 +140,8 @@ RangeFilterState <- R6::R6Class( # nolint
                           ...) {
       checkmate::assert_numeric(x, all.missing = FALSE)
       checkmate::assert_numeric(choices, null.ok = TRUE)
-      if (!any(is.finite(x))) stop("\"x\" contains no finite values")
       checkmate::assert_class(x_reactive, 'reactive')
+      if (!any(is.finite(x))) stop("\"x\" contains no finite values")
 
       private$is_integer <- checkmate::test_integerish(x)
       private$keep_inf <- reactiveVal(keep_inf)
@@ -149,7 +149,7 @@ RangeFilterState <- R6::R6Class( # nolint
         if (!is.null(private$x_reactive())) sum(is.infinite(private$x_reactive()))
       )
       private$inf_count <- sum(is.infinite(x))
-      if (is.null(choices)) choices <- c(min(na.omit(x[is.finite(x)])), max(na.omit(x[is.finite(x)])))
+      if (is.null(choices)) choices <- range(na.omit(x[is.finite(x)]))
       private$set_is_choice_limited(x, choices)
       x <- x[x >= choices[1L] & x <= choices[2L]]
       x_range <- range(x, finite = TRUE)

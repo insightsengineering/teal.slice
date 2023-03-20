@@ -109,7 +109,7 @@ DateFilterState <- R6::R6Class( # nolint
     #'   if `extract_type` argument is not empty.
     #' @param varname (`character(1)`)\cr
     #'   name of the variable.
-    #' @param choices (`vector`, `range(x, na.rm = TRUE)`)\cr
+    #' @param choices (`atomic`, `NULL`)\cr
     #'   vector specifying allowed selection values
     #' @param selected (`atomic`, `NULL`)\cr
     #'   vector specifying selection
@@ -139,7 +139,7 @@ DateFilterState <- R6::R6Class( # nolint
                           fixed = FALSE,
                           extract_type = character(0),
                           ...) {
-      stopifnot(is(x, "Date"))
+      checkmate::assert_date(x)
       checkmate::assert_class(x_reactive, 'reactive')
       checkmate::assert_multi_class(choices, c("Date"), null.ok = TRUE)
 
