@@ -150,15 +150,22 @@ DatetimeFilterState <- R6::R6Class( # nolint
         choices <- as.POSIXct(trunc(range(x, na.rm = TRUE), units = "secs"))
       } else {
         choices <- as.POSIXct(choices, units = "secs")
+        choices <- c(
+          max(choices[1L], min(as.POSIXct(x), na.rm = TRUE)),
+          min(choices[2L], max(as.POSIXct(x), na.rm = TRUE))
+        )
+        if (choices[1L] >= choices[2L]) {
+          warning(sprintf(
+            "Invalid choices: lower is higher / equal to upper, or not in range of variable values.
+            Setting defaults. Varname: %s, dataname: %s.",
+            private$varname, private$dataname))
+          choices <- range(x, na.rm = TRUE)
+        }
         private$set_is_choice_limited(x, choices)
         x <- x[
           (as.POSIXct(trunc(x, units = "secs")) >= choices[1L] &
             as.POSIXct(trunc(x, units = "secs")) <= choices[2L] )| is.na(x)
         ]
-        choices <- c(
-          max(choices[1L], min(as.POSIXct(x), na.rm = TRUE)),
-          min(choices[2L], max(as.POSIXct(x), na.rm = TRUE))
-        )
       }
       if (is.null(selected)) selected <- choices
 

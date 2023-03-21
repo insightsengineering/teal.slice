@@ -141,14 +141,21 @@ DateFilterState <- R6::R6Class( # nolint
                           ...) {
       checkmate::assert_date(x)
       checkmate::assert_class(x_reactive, 'reactive')
-      checkmate::assert_multi_class(choices, c("Date"), null.ok = TRUE)
+      checkmate::assert_date(choices, null.ok = TRUE)
 
       if (is.null(choices)) {
         choices <- range(x, na.rm = TRUE)
       } else {
+        choices <- c(max(choices[1L], min(x)), min(choices[2L], max(x)))
+        if (choices[1L] >= choices[2L]) {
+          warning(sprintf(
+            "Invalid choices: lower is higher / equal to upper, or not in range of variable values.
+            Setting defaults. Varname: %s, dataname: %s.",
+            private$varname, private$dataname))
+          choices <- range(x, na.rm = TRUE)
+        }
         private$set_is_choice_limited(x, choices)
         x <- x[(x >= choices[1L] & x <= choices[2L]) | is.na(x)]
-        choices <- c(max(choices[1L], min(x)) , min(choices[2L], max(x)))
       }
 
       if (is.null(selected)) selected <- choices

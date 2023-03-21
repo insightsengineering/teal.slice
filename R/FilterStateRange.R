@@ -150,6 +150,12 @@ RangeFilterState <- R6::R6Class( # nolint
       )
       private$inf_count <- sum(is.infinite(x))
       if (is.null(choices)) choices <- range(na.omit(x[is.finite(x)]))
+      if (length(choices) == 0) {
+        warning(sprintf(
+          "Invalid choices set: none of them overlap with the variable values. Setting defaults. Varname: %s, dataname: %s.",
+          private$varname, private$dataname))
+        choices <- range(x)
+      }
       private$set_is_choice_limited(x, choices)
       x <- x[(x >= choices[1L] & x <= choices[2L]) | is.na(x)]
       x_range <- range(x, finite = TRUE)
