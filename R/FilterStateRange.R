@@ -149,15 +149,28 @@ RangeFilterState <- R6::R6Class( # nolint
         if (!is.null(private$x_reactive())) sum(is.infinite(private$x_reactive()))
       )
       private$inf_count <- sum(is.infinite(x))
-      if (is.null(choices)) choices <- range(na.omit(x[is.finite(x)]))
-      if (length(choices) == 0) {
-        warning(sprintf(
-          "Invalid choices set: none of them overlap with the variable values. Setting defaults. Varname: %s, dataname: %s.",
-          private$varname, private$dataname))
-        choices <- range(x)
+
+      if (is.null(choices)) {
+        choices <- range(na.omit(x[is.finite(x)]))
+      } else {
+        choices_adjusted <- c(max(choices[1L], min(x)), min(choices[2L], max(x)))
+        if (any(choices != choices_adjusted)) {
+          warning(sprintf(
+            "Some choices outside the possible range, adjusting. Varname: %s, dataname: %s.",
+            private$varname, private$dataname))
+          choices <- choices_adjusted
+        }
+        if (choices[1L] >= choices[2L]) {
+          warning(sprintf(
+            "Invalid choices: lower is higher / equal to upper, or not in range of variable values.
+            Setting defaults. Varname: %s, dataname: %s.",
+            private$varname, private$dataname))
+          choices <- range(x)
+        }
+        private$set_is_choice_limited(x, choices)
+        x <- x[(x >= choices[1L] & x <= choices[2L]) | is.na(x) | !is.finite(x)]
       }
-      private$set_is_choice_limited(x, choices)
-      x <- x[(x >= choices[1L] & x <= choices[2L]) | is.na(x)]
+
       x_range <- range(x, finite = TRUE)
 
       if (identical(diff(x_range), 0)) {

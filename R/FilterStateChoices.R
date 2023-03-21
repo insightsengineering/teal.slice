@@ -155,15 +155,17 @@ ChoicesFilterState <- R6::R6Class( # nolint
         x <- factor(as.character(x), levels = as.character(sort(unique(x))))
       }
       x <- droplevels(x)
+
       if (is.null(choices)) {
         choices <- levels(x)
       } else {
         choices <- as.character(choices)
-        if (choices[choices %in% x] != choices) {
+        choices_adjusted <- choices[choices %in% x]
+        if (choices_adjusted != choices) {
           warning(sprintf(
             "Some of the choices not within variable values, adjusting. Varname: %s, dataname: %s.",
             private$varname, private$dataname))
-          choices <- choices[choices %in% x]
+          choices <- choices_adjusted
         }
         if (length(choices) == 0) {
           warning(sprintf(
