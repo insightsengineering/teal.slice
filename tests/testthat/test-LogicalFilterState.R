@@ -221,4 +221,3 @@ testthat::test_that("is_any_filtered returns TRUE when enabled", {
   fs$enable()
   testthat::expect_true(fs$is_any_filtered())
 })
-

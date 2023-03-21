@@ -135,9 +135,7 @@ LogicalFilterState <- R6::R6Class( # nolint
       stopifnot(is.logical(x))
       checkmate::assert_class(x_reactive, 'reactive')
 
-      if (is.null(choices)) choices <- unique((na.omit(x)))
-      private$set_is_choice_limited(x, choices)
-      x <- x[x %in% choices | is.na(x)]
+      if (is.null(choices)) choices <- c(TRUE, FALSE)
       df <- factor(x, levels = c(TRUE, FALSE))
       tbl <- table(df)
       if (is.null(selected)) selected <- as.logical(levels(df))[1]
@@ -225,15 +223,6 @@ LogicalFilterState <- R6::R6Class( # nolint
     #'
     set_choices_counts = function(choices_counts) {
       private$choices_counts <- choices_counts
-      invisible(NULL)
-    },
-    # private methods ----
-    #' @description
-    #' Check whether the initial choices filter out some values of x and set the flag in case.
-    #'
-    set_is_choice_limited = function(xl, choices = NULL) {
-      xl <- xl[!is.na(xl)]
-      private$is_choice_limited <- length(unique(choices[choices %in% xl])) < length(unique(xl))
       invisible(NULL)
     },
     validate_selection = function(value) {

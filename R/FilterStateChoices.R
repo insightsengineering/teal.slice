@@ -162,7 +162,7 @@ ChoicesFilterState <- R6::R6Class( # nolint
         choices <- as.character(choices)
         choices <- choices[choices %in% x]
         private$set_is_choice_limited(x, choices)
-        x <- x[x %in% choices]
+        x <- x[(x %in% choices) | is.na(x)]
         x <- droplevels(x)
       }
 

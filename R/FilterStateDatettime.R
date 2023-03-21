@@ -152,8 +152,8 @@ DatetimeFilterState <- R6::R6Class( # nolint
         choices <- as.POSIXct(choices, units = "secs")
         private$set_is_choice_limited(x, choices)
         x <- x[
-          as.POSIXct(trunc(x, units = "secs")) >= choices[1L] &
-            as.POSIXct(trunc(x, units = "secs")) <= choices[2L]
+          (as.POSIXct(trunc(x, units = "secs")) >= choices[1L] &
+            as.POSIXct(trunc(x, units = "secs")) <= choices[2L] )| is.na(x)
         ]
         choices <- c(
           max(choices[1L], min(as.POSIXct(x), na.rm = TRUE)),

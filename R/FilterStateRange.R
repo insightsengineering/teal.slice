@@ -151,7 +151,7 @@ RangeFilterState <- R6::R6Class( # nolint
       private$inf_count <- sum(is.infinite(x))
       if (is.null(choices)) choices <- range(na.omit(x[is.finite(x)]))
       private$set_is_choice_limited(x, choices)
-      x <- x[x >= choices[1L] & x <= choices[2L]]
+      x <- x[(x >= choices[1L] & x <= choices[2L]) | is.na(x)]
       x_range <- range(x, finite = TRUE)
 
       if (identical(diff(x_range), 0)) {
