@@ -176,7 +176,7 @@ DefaultFilteredDataset <- R6::R6Class( # nolint
     set_filter_state = function(state) {
       checkmate::assert_class(state, "teal_slices")
       lapply(state, function(x) {
-        checkmate::assert_true(x$dataname == private$dataname, .var_name = "dataname mathces private$dataname")
+        checkmate::assert_true(x$dataname == private$dataname, .var.name = "dataname matches private$dataname")
       })
 
       logger::log_trace("{ class(self)[1] }$set_filter_state initializing, dataname: { private$dataname }")
@@ -202,10 +202,10 @@ DefaultFilteredDataset <- R6::R6Class( # nolint
 
       logger::log_trace("{ class(self)[1] }$remove_filter_state removing filter(s), dataname: { private$dataname }")
 
-      varnames <- unique(unlist(extract_feat(state, "varname")))
+      varnames <- slices_field(state, "varname")
       lapply(varnames, function(x) {
         private$get_filter_states()[[1]]$remove_filter_state(
-          extract_fun_s(state, sprintf("varname == \"%s\"", x))
+          slices_which(state, sprintf("varname == \"%s\"", x))
         )
       })
 

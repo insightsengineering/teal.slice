@@ -156,7 +156,7 @@ MAEFilterStates <- R6::R6Class( # nolint
     set_filter_state = function(state) {
       checkmate::assert_class(state, "teal_slices")
       lapply(state, function(x) {
-        checkmate::assert_true(x$dataname == private$dataname, .var_name = "dataname mathces private$dataname")
+        checkmate::assert_true(x$dataname == private$dataname, .var.name = "dataname matches private$dataname")
       })
       checkmate::assert_true(
         all(vapply(state, function(x) identical(x$target, "y"), logical(1L))),
@@ -166,11 +166,11 @@ MAEFilterStates <- R6::R6Class( # nolint
       logger::log_trace("{ class(self)[1] }$set_filter_state initializing, dataname: { private$dataname }")
 
       # Drop teal_slices that refer to excluded variables.
-      varnames <- unique(unlist(extract_feat(state, "varname")))
+      varnames <- slices_field(state, "varname")
       filterable <- get_supported_filter_varnames(SummarizedExperiment::colData(private$data))
       if (!all(varnames %in% filterable)) {
         excluded_varnames <- toString(dQuote(setdiff(varnames, filterable), q = FALSE))
-        state <- extract_fun_s(
+        state <- slices_which(
           state,
           sprintf("!varname %%in%% c(%s)", excluded_varnames)
         )
@@ -178,7 +178,7 @@ MAEFilterStates <- R6::R6Class( # nolint
       }
 
       private$set_filter_state_impl(
-        state = extract_fun(state, target == "y"),
+        state = slices_which(state, "target == \"y\""),
         state_list_index = "y",
         data = SummarizedExperiment::colData(private$data),
         data_reactive = function(sid) SummarizedExperiment::colData(private$data_reactive(sid)),
@@ -267,7 +267,7 @@ MAEFilterStates <- R6::R6Class( # nolint
 
           # available choices to display
           avail_column_choices <- reactive({
-            active_filter_vars <- unique(unlist(extract_feat(self$get_filter_state(), "varname")))
+            active_filter_vars <- slices_field(self$get_filter_state(), "varname")
             choices <- setdiff(get_supported_filter_varnames(data = data), active_filter_vars)
             varlabels <- vapply(
               colnames(data),

@@ -298,17 +298,17 @@ DFFilterStates <- R6::R6Class( # nolint
     set_filter_state = function(state) {
       checkmate::assert_class(state, "teal_slices")
       lapply(state, function(x) {
-        checkmate::assert_true(x$dataname == private$dataname, .var_name = "dataname mathces private$dataname")
+        checkmate::assert_true(x$dataname == private$dataname, .var.name = "dataname matches private$dataname")
       })
 
       logger::log_trace("{ class(self)[1] }$set_filter_state initializing, dataname: { private$dataname }")
 
       # Drop teal_slices that refer to excluded variables.
-      varnames <- unique(unlist(extract_feat(state, "varname")))
+      varnames <- slices_field(state, "varname")
       filterable <- private$filterable_varnames
       if (!all(varnames %in% filterable)) {
         excluded_varnames <- toString(dQuote(setdiff(varnames, filterable), q = FALSE))
-        state <- extract_fun_s(
+        state <- slices_which(
           state,
           sprintf("!varname %%in%% c(%s)", )
         )
@@ -425,7 +425,7 @@ DFFilterStates <- R6::R6Class( # nolint
           avail_column_choices <- reactive({
             data <- private$data
             vars_include <- private$filterable_varnames
-            active_filter_vars <- unique(unlist(extract_feat(self$get_filter_state(), "varname")))
+            active_filter_vars <- slices_field(self$get_filter_state(), "varname")
             choices <- setdiff(vars_include, active_filter_vars)
 
             data_choices_labeled(

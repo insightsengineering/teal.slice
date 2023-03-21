@@ -194,19 +194,19 @@ SEFilterStates <- R6::R6Class( # nolint
     set_filter_state = function(state) {
       checkmate::assert_class(state, "teal_slices")
       lapply(state, function(x) {
-        checkmate::assert_true(x$dataname == private$dataname, .var_name = "dataname mathces private$dataname")
+        checkmate::assert_true(x$dataname == private$dataname, .var.name = "dataname matches private$dataname")
       })
 
       logger::log_trace("{ class(self)[1] }$set_filter_state initializing, dataname: { private$dataname }")
 
       private$set_filter_state_impl(
-        state = extract_fun(state, target == "subset"),
+        state = slices_which(state, "target == \"subset\""),
         state_list_index = "subset",
         data = SummarizedExperiment::rowData(private$data),
         data_reactive = function(sid) SummarizedExperiment::rowData(private$data_reactive(sid))
       )
       private$set_filter_state_impl(
-        state = extract_fun(state, target == "select"),
+        state = slices_which(state, "target == \"select\""),
         state_list_index = "select",
         data = SummarizedExperiment::colData(private$data),
         data_reactive = function(sid) SummarizedExperiment::colData(private$data_reactive(sid))
@@ -229,11 +229,11 @@ SEFilterStates <- R6::R6Class( # nolint
     remove_filter_state = function(state) {
       checkmate::assert_class(state, "teal_slices")
 
-      slices_for_subset <- extract_fun_s(
+      slices_for_subset <- slices_which(
         state,
         sprintf("varname %%in%% c(%s)", dQuote(toString(names(private$state_list$subset())), q = FALSE))
       )
-      slices_for_select <- extract_fun_s(
+      slices_for_select <- slices_which(
         state,
         sprintf("varname %%in%% c(%s)", dQuote(toString(names(private$state_list$select())), q = FALSE))
       )
@@ -341,8 +341,8 @@ SEFilterStates <- R6::R6Class( # nolint
 
           # available choices to display
           avail_row_data_choices <- reactive({
-            slices_for_subset <- extract_fun(self$get_filter_state(), target == "subset")
-            active_filter_row_vars <- unique(unlist(extract_feat(slices_for_subset, "varname")))
+            slices_for_subset <- slices_which(self$get_filter_state(), "target == \"subset\"")
+            active_filter_row_vars <- slices_field(slices_for_subset, "varname")
 
             choices <- setdiff(
               get_supported_filter_varnames(data = row_data),
@@ -357,8 +357,8 @@ SEFilterStates <- R6::R6Class( # nolint
             )
           })
           avail_col_data_choices <- reactive({
-            slices_for_select <- extract_fun(self$get_filter_state(), target == "select")
-            active_filter_col_vars <- unique(unlist(extract_feat(slices_for_select, "varname")))
+            slices_for_select <- slices_which(self$get_filter_state(), "target == \"select\"")
+            active_filter_col_vars <- slices_field(slices_for_select, "varname")
 
             choices <- setdiff(
               get_supported_filter_varnames(data = col_data),

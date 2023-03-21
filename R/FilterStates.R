@@ -591,7 +591,7 @@ FilterStates <- R6::R6Class( # nolint
 
       # Modify existing filter states.
       state_list <- shiny::isolate(private$state_list_get(state_list_index))
-      slices_for_update <- extract_fun_s(
+      slices_for_update <- slices_which(
         state,
         sprintf("varname %%in%% c(%s)", toString(dQuote(names(state_list), q = FALSE)))
       )
@@ -600,7 +600,7 @@ FilterStates <- R6::R6Class( # nolint
       })
 
       # Create new filter states.
-      slices_for_create <- extract_fun_s(
+      slices_for_create <- slices_which(
         state,
         sprintf("!varname %%in%% c(%s)", toString(dQuote(names(state_list), q = FALSE)))
       )
