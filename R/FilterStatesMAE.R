@@ -155,6 +155,9 @@ MAEFilterStates <- R6::R6Class( # nolint
     #'
     set_filter_state = function(state) {
       checkmate::assert_class(state, "teal_slices")
+      lapply(state, function(x) {
+        checkmate::assert_true(x$dataname == private$dataname, .var_name = "dataname mathces private$dataname")
+      })
       checkmate::assert_true(
         all(vapply(state, function(x) identical(x$target, "y"), logical(1L))),
         .var.name = "FilterStatesMAE$set_filter_state: all slices in state must have target = \"y\""

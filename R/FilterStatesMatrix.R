@@ -134,6 +134,9 @@ MatrixFilterStates <- R6::R6Class( # nolint
     #'
     set_filter_state = function(state) {
       checkmate::assert_class(state, "teal_slices")
+      lapply(state, function(x) {
+        checkmate::assert_true(x$dataname == private$dataname, .var_name = "dataname mathces private$dataname")
+      })
 
       logger::log_trace("{ class(self)[1] }$set_filter_state initializing, dataname: { private$dataname }")
 
