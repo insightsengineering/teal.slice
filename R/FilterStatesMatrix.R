@@ -135,7 +135,7 @@ MatrixFilterStates <- R6::R6Class( # nolint
     set_filter_state = function(state) {
       checkmate::assert_class(state, "teal_slices")
       lapply(state, function(x) {
-        checkmate::assert_true(x$dataname == private$dataname, .var_name = "dataname mathces private$dataname")
+        checkmate::assert_true(x$dataname == private$dataname, .var.name = "dataname matches private$dataname")
       })
 
       logger::log_trace("{ class(self)[1] }$set_filter_state initializing, dataname: { private$dataname }")
@@ -234,7 +234,7 @@ MatrixFilterStates <- R6::R6Class( # nolint
 
           # available choices to display
           avail_column_choices <- reactive({
-            active_filter_vars <- unique(unlist(extract_feat(self$get_filter_state(), "varname")))
+            active_filter_vars <- slices_field(self$get_filter_state(), "varname")
             choices <- setdiff(
               get_supported_filter_varnames(data = data),
               active_filter_vars

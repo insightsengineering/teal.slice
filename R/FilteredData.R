@@ -529,13 +529,15 @@ FilteredData <- R6::R6Class( # nolint
       }
 
       checkmate::assert_class(state, "teal_slices")
-      datanames <- unique(unlist(extract_feat(state, "dataname")))
+      datanames <- slices_field(state, "dataname")
       checkmate::assert_subset(datanames, self$datanames())
 
       logger::log_trace("{ class(self)[1] }$set_filter_state initializing, dataname: { private$dataname }")
 
       lapply(datanames, function(x) {
-        private$get_filtered_dataset(x)$set_filter_state(extract_by_feat(state, "dataname", x))
+        private$get_filtered_dataset(x)$set_filter_state(
+          slices_which(state, sprintf("dataname == \"%s\"", x))
+        )
       })
 
       logger::log_trace("{ class(self)[1] }$set_filter_state initialized, dataname: { private$dataname }")
@@ -564,7 +566,7 @@ FilteredData <- R6::R6Class( # nolint
       }
 
       checkmate::assert_class(state, "teal_slices")
-      datanames <- unique(unlist(extract_feat(state, "dataname")))
+      datanames <- slices_field(state, "dataname")
       checkmate::assert_subset(datanames, self$datanames())
 
       logger::log_trace(
@@ -572,7 +574,9 @@ FilteredData <- R6::R6Class( # nolint
       )
 
       lapply(datanames, function(x) {
-        private$get_filtered_dataset(x)$remove_filter_state(extract_by_feat(state, "dataname", x))
+        private$get_filtered_dataset(x)$remove_filter_state(
+          slices_which(state, sprintf("dataname == \"%s\"", x))
+          )
       })
 
       logger::log_trace(

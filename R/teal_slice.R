@@ -51,10 +51,10 @@
 #' @param count_type `character(1)` string specifying how observations are tallied by these filter states
 #' @param show_all `logical(1)` specifying whether NULL elements should also be printed
 #' @param tss `teal_slices`
-#' @param feature `character(1)` name of `teal_slice` element
-#' @param expr `expression` or `character` string representing and expression
-#'             that evaluates to a single `logical`; will be evaluated in individual `teal_slice` objects
-#' @param ... for `filter_var` any number of additional features given as `name:value` pairs\cr
+#' @param field `character(1)` name of `teal_slice` element
+#' @param expr `character` string representing and expression that evaluates to a single `logical`;
+#'             will be evaluated in individual `teal_slice` objects
+#' @param ... for `filter_var` any number of additional fields given as `name:value` pairs\cr
 #'            for `filter_settings` any number of `teal_slice` objects\cr
 #'            for other functions arguments passed to other methods
 #'
@@ -77,12 +77,10 @@
 #'   )
 #' )
 #'
-#' teal.slice:::extract_by_feat(all_filters, "dataname", "dataname1")
-#' teal.slice:::extract_feat(all_filters, "dataname")
-#' teal.slice:::extract_fun(all_filters, dataname == "dataname2")
-#' teal.slice:::extract_fun_s(all_filters, 'dataname == "dataname2"')
+#' teal.slice:::slices_which(all_filters, 'dataname == "dataname2"')
 #' x <- "dataname2"
-#' teal.slice:::extract_fun_s(all_filters, sprintf('dataname == "%s"', x))
+#' teal.slice:::slices_which(all_filters, sprintf('dataname == "%s"', x))
+#' teal.slice:::slices_field(all_filters, "dataname")
 #'
 #' @name teal_slice
 NULL
@@ -369,23 +367,13 @@ print.teal_slices <- function(x, ...) {
 }
 
 
-# get slices where feature is value
+# get field from all slices
 #' @rdname teal_slice
 #' @keywords internal
 #'
-extract_by_feat <- function(tss, feature, value) {
+slices_field <- function(tss, field) {
   checkmate::assert_class(tss, "teal_slices")
-  Filter(function(x) x[[feature]] == value, tss)
-}
-
-
-# get feature from all slices
-#' @rdname teal_slice
-#' @keywords internal
-#'
-extract_feat <- function(tss, feature) {
-  checkmate::assert_class(tss, "teal_slices")
-  lapply(tss, function(x) x[[feature]])
+  unique(unlist(lapply(tss, function(x) x[[field]])))
 }
 
 
@@ -393,39 +381,9 @@ extract_feat <- function(tss, feature) {
 #' @rdname teal_slice
 #' @keywords internal
 #'
-extract_fun <- function(tss, expr) {
-  checkmate::assert_class(tss, "teal_slices")
-  expr <- substitute(expr)
-  checkmate::assert_class(expr, "call")
-  Filter(function(x) isTRUE(eval(expr, x)), tss)
-}
-
-
-# string version
-#' @rdname teal_slice
-#' @keywords internal
-#'
-extract_fun_s <- function(tss, expr) {
+slices_which <- function(tss, expr) {
   checkmate::assert_class(tss, "teal_slices")
   checkmate::assert_string(expr)
   expr <- str2lang(expr)
   Filter(function(x) isTRUE(eval(expr, x)), tss)
-}
-
-
-# name teal_slices according to value of respective feature in slices
-# possibly useful in set_filter_state_impl but needs safeguards
-#' @rdname teal_slice
-#' @keywords internal
-#'
-name_slices <- function(tss, feature) {
-  checkmate::assert_class(tss, "teal_slices")
-  checkmate::assert_string(feature)
-  checkmate::assert_choice(feature, setdiff(names(formals(filter_var)), "..."))
-
-  feats <- unlist(extract_feat(tss, feature))
-  if (anyDuplicated(feats)) stop("duplicated values")
-
-  names(tss) <- feats
-  tss
 }
