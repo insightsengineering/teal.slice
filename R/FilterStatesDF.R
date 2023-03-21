@@ -297,6 +297,9 @@ DFFilterStates <- R6::R6Class( # nolint
     #'
     set_filter_state = function(state) {
       checkmate::assert_class(state, "teal_slices")
+      lapply(state, function(x) {
+        checkmate::assert_true(x$dataname == private$dataname, .var_name = "dataname mathces private$dataname")
+      })
 
       logger::log_trace("{ class(self)[1] }$set_filter_state initializing, dataname: { private$dataname }")
 
@@ -304,12 +307,12 @@ DFFilterStates <- R6::R6Class( # nolint
       varnames <- unique(unlist(extract_feat(state, "varname")))
       filterable <- private$filterable_varnames
       if (!all(varnames %in% filterable)) {
-        excluded_variables <- toString(dQuote(setdiff(varnames, filterable), q = FALSE))
+        excluded_varnames <- toString(dQuote(setdiff(varnames, filterable), q = FALSE))
         state <- extract_fun_s(
           state,
           sprintf("!varname %%in%% c(%s)", )
         )
-        logger::log_warn("filters for columns: { excluded_variables } excluded from { private$dataname }")
+        logger::log_warn("filters for columns: { excluded_varnames } excluded from { private$dataname }")
       }
 
       private$set_filter_state_impl(

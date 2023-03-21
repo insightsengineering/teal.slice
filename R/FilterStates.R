@@ -160,7 +160,7 @@ FilterStates <- R6::R6Class( # nolint
       )
       if (length(filter_items) > 0L) {
         filter_function <- str2lang(self$get_fun())
-        data_name <- str2lang(private$dataname)
+        data_name <- str2lang(private$get_dataname_prefixed())
         substitute(
           env = list(
             lhs = data_name,

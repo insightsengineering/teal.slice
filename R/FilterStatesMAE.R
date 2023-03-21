@@ -155,6 +155,9 @@ MAEFilterStates <- R6::R6Class( # nolint
     #'
     set_filter_state = function(state) {
       checkmate::assert_class(state, "teal_slices")
+      lapply(state, function(x) {
+        checkmate::assert_true(x$dataname == private$dataname, .var_name = "dataname mathces private$dataname")
+      })
       checkmate::assert_true(
         all(vapply(state, function(x) identical(x$target, "y"), logical(1L))),
         .var.name = "FilterStatesMAE$set_filter_state: all slices in state must have target = \"y\""
@@ -166,10 +169,10 @@ MAEFilterStates <- R6::R6Class( # nolint
       varnames <- unique(unlist(extract_feat(state, "varname")))
       filterable <- get_supported_filter_varnames(SummarizedExperiment::colData(private$data))
       if (!all(varnames %in% filterable)) {
-        excluded_variables <- toString(dQuote(setdiff(varnames, filterable), q = FALSE))
+        excluded_varnames <- toString(dQuote(setdiff(varnames, filterable), q = FALSE))
         state <- extract_fun_s(
           state,
-          sprintf("!varname %%in%% c(%s)", excluded_variables)
+          sprintf("!varname %%in%% c(%s)", excluded_varnames)
         )
         logger::log_warn("filters for columns: { excluded_varnames } excluded from { private$dataname }")
       }
@@ -269,7 +272,7 @@ MAEFilterStates <- R6::R6Class( # nolint
             varlabels <- vapply(
               colnames(data),
               FUN = function(x) {
-                label <- attr(data[[x]], "label") # TODO: can this ever be NULL or just character(0)
+                label <- attr(data[[x]], "label")
                 if (is.null(label)) {
                   x
                 } else {

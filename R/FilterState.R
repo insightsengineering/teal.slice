@@ -94,6 +94,9 @@ FilterState <- R6::R6Class( # nolint
       checkmate::assert_class(x_reactive, "reactive")
       checkmate::assert_string(dataname)
       checkmate::assert_string(varname)
+      checkmate::assert_flag(keep_na, null.ok = TRUE)
+      checkmate::assert_flag(keep_inf, null.ok = TRUE)
+      checkmate::assert_flag(fixed)
       checkmate::assert_character(extract_type, max.len = 1, any.missing = FALSE)
       if (length(extract_type) == 1) {
         checkmate::assert_choice(extract_type, choices = c("list", "matrix"))
@@ -101,6 +104,7 @@ FilterState <- R6::R6Class( # nolint
       if (length(extract_type) == 1 && is.null(dataname)) {
         stop("if extract_type is specified, dataname must also be specified")
       }
+
       private$dataname <- dataname
       private$varname <- varname
       private$selected <- reactiveVal(NULL)
@@ -407,6 +411,8 @@ FilterState <- R6::R6Class( # nolint
     #'
     set_state = function(state) {
       checkmate::assert_class(state, "teal_slice")
+      checkmate::assert_true(state$dataname == private$dataname)
+      checkmate::assert_true(state$varname == private$varname)
 
       logger::log_trace("{ class(self)[1] }$set_state setting state of variable: { state$varname }")
 
@@ -421,7 +427,7 @@ FilterState <- R6::R6Class( # nolint
       }
 
       current_state <- sprintf(
-        "selected: %s, keep_na: %s, keep_inf: %s",
+        "selected: %s; keep_na: %s; keep_inf: %s",
         toString(state$selected),
         state$keep_na,
         state$keep_inf
