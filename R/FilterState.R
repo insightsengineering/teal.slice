@@ -186,8 +186,8 @@ FilterState <- R6::R6Class( # nolint
       checkmate::assert_flag(keep_na, null.ok = TRUE)
       checkmate::assert_flag(keep_inf, null.ok = TRUE)
       checkmate::assert_flag(fixed)
-      checkmate::assert_true(state$dataname == private$dataname)
-      checkmate::assert_true(state$varname == private$varname)
+      checkmate::assert_true(dataname == private$dataname)
+      checkmate::assert_true(varname == private$varname)
 
       logger::log_trace("{ class(self)[1] }$set_state setting state of variable: { varname }")
 
