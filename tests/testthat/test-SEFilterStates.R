@@ -292,7 +292,7 @@ testthat::test_that(
 testthat::test_that("get_filter_count properly tallies multiple state lists - SEFilterStates", {
   filter_states <- SEFilterStates$new(data = get_test_data(), dataname = "test", datalabel = "test")
 
-  fs <- list(
+  fs <- filter_var(
     select = list(Treatment = "ChIP"),
     subset = list(feature_id = c("ID001", "ID002"))
   )
