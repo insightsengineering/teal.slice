@@ -174,11 +174,11 @@ ChoicesFilterState <- R6::R6Class( # nolint
             private$varname, private$dataname))
           choices <- levels(x)
         }
-        private$set_is_choice_limited(x, choices)
-        x <- x[(x %in% choices) | is.na(x)]
-        x <- droplevels(x)
       }
 
+      private$set_is_choice_limited(x, choices)
+      x <- x[(x %in% choices) | is.na(x)]
+      x <- droplevels(x)
       if (is.null(selected)) selected <- choices
 
       do.call(

@@ -167,10 +167,10 @@ RangeFilterState <- R6::R6Class( # nolint
             private$varname, private$dataname))
           choices <- range(x)
         }
-        private$set_is_choice_limited(x, choices)
-        x <- x[(x >= choices[1L] & x <= choices[2L]) | is.na(x) | !is.finite(x)]
       }
 
+      private$set_is_choice_limited(x, choices)
+      x <- x[(x >= choices[1L] & x <= choices[2L]) | is.na(x) | !is.finite(x)]
       x_range <- range(x, finite = TRUE)
 
       if (identical(diff(x_range), 0)) {

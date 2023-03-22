@@ -167,12 +167,13 @@ DatetimeFilterState <- R6::R6Class( # nolint
             private$varname, private$dataname))
           choices <- range(x, na.rm = TRUE)
         }
-        private$set_is_choice_limited(x, choices)
-        x <- x[
-          (as.POSIXct(trunc(x, units = "secs")) >= choices[1L] &
-            as.POSIXct(trunc(x, units = "secs")) <= choices[2L] )| is.na(x)
-        ]
       }
+
+      private$set_is_choice_limited(x, choices)
+      x <- x[
+        (as.POSIXct(trunc(x, units = "secs")) >= choices[1L] &
+           as.POSIXct(trunc(x, units = "secs")) <= choices[2L] )| is.na(x)
+      ]
       if (is.null(selected)) selected <- choices
 
       do.call(
