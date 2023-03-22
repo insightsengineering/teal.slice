@@ -3,7 +3,7 @@
 \docType{class}
 \name{DateFilterState}
 \alias{DateFilterState}
-\title{\code{InteractiveFilterState} object for Date variable}
+\title{\code{FilterState} object for Date variable}
 \description{
 Manages choosing a range of Dates
 }
@@ -100,13 +100,13 @@ if (interactive()) {
 date <- as.Date("13/09/2021")
 filter <- teal.slice:::DateFilterState$new(
   c(date, date + 1, date + 2, date + 3),
-  varname = "name"
+  varname = "name", dataname = "data"
 )
 filter$set_selected(c(date + 1, date + 2))
 }
 \keyword{internal}
-\section{Super classes}{
-\code{\link[teal.slice:FilterState]{teal.slice::FilterState}} -> \code{\link[teal.slice:InteractiveFilterState]{teal.slice::InteractiveFilterState}} -> \code{DateFilterState}
+\section{Super class}{
+\code{\link[teal.slice:FilterState]{teal.slice::FilterState}} -> \code{DateFilterState}
 }
 \section{Methods}{
 \subsection{Public methods}{
@@ -290,7 +290,7 @@ invisibly \code{NULL}.
 \preformatted{date <- as.Date("13/09/2021")
 filter <- teal.slice:::DateFilterState$new(
   c(date, date + 1, date + 2, date + 3),
-  varname = "name"
+  varname = "name", dataname = "data"
 )
 filter$set_selected(c(date + 1, date + 2))
 }

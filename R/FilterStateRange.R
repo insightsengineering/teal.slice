@@ -1,5 +1,5 @@
 #' @name RangeFilterState
-#' @title `InteractiveFilterState` object for numeric variable
+#' @title `FilterState` object for numeric variable
 #' @description Manages choosing a numeric range
 #' @docType class
 #' @keywords internal
@@ -89,14 +89,13 @@
 #'
 RangeFilterState <- R6::R6Class( # nolint
   "RangeFilterState",
-  inherit = InteractiveFilterState,
+  inherit = FilterState,
 
   # public methods ----
   public = list(
 
     #' @description
-    #' Initialize a `InteractiveFilterState` object for range selection
-    #'
+    #' Initialize a `FilterState` object for range selection
     #' @param x (`numeric`)\cr
     #'   values of the variable used in filter
     #' @param x_reactive (`reactive`)\cr
@@ -134,15 +133,71 @@ RangeFilterState <- R6::R6Class( # nolint
                           varname,
                           choices = NULL,
                           selected = NULL,
-                          keep_na = NULL,
-                          keep_inf = NULL,
+                          keep_na = FALSE,
+                          keep_inf = FALSE,
                           fixed = FALSE,
                           extract_type = character(0),
                           ...) {
       checkmate::assert_numeric(x, all.missing = FALSE)
-      if (all(is.infinite(x))) stop("\"x\" contains no finite values")
+      checkmate::assert_numeric(choices, null.ok = TRUE)
+      checkmate::assert_class(x_reactive, 'reactive')
+      if (!any(is.finite(x))) stop("\"x\" contains no finite values")
 
-      # validation on x_reactive here
+      private$is_integer <- checkmate::test_integerish(x)
+      private$keep_inf <- reactiveVal(keep_inf)
+      private$inf_filtered_count <- reactive(
+        if (!is.null(private$x_reactive())) sum(is.infinite(private$x_reactive()))
+      )
+      private$inf_count <- sum(is.infinite(x))
+
+      if (is.null(choices)) {
+        choices <- range(na.omit(x[is.finite(x)]))
+      } else {
+        choices_adjusted <- c(max(choices[1L], min(x)), min(choices[2L], max(x)))
+        if (any(choices != choices_adjusted)) {
+          warning(sprintf(
+            "Choices adjusted (some values outside of variable range). Varname: %s, dataname: %s.",
+            private$varname, private$dataname))
+          choices <- choices_adjusted
+        }
+        if (choices[1L] >= choices[2L]) {
+          warning(sprintf(
+            "Invalid choices: lower is higher / equal to upper, or not in range of variable values.
+            Setting defaults. Varname: %s, dataname: %s.",
+            private$varname, private$dataname))
+          choices <- range(x)
+        }
+      }
+
+      private$set_is_choice_limited(x, choices)
+      x <- x[(x >= choices[1L] & x <= choices[2L]) | is.na(x) | !is.finite(x)]
+      x_range <- range(x, finite = TRUE)
+
+      if (identical(diff(x_range), 0)) {
+        choices <- x_range
+        private$slider_ticks <- signif(x_range, digits = 10)
+        private$slider_step <- NULL
+        if (is.null(selected)) selected <- x_range
+      } else {
+        x_pretty <- pretty(x_range, 100L)
+        choices <- range(x_pretty)
+        private$slider_ticks <- signif(x_pretty, digits = 10)
+        private$slider_step <- signif(private$get_pretty_range_step(x_pretty), digits = 10)
+        if (is.null(selected)) selected <- range(x_pretty)
+      }
+
+      private$unfiltered_histogram <- ggplot2::ggplot(data.frame(x = Filter(is.finite, x))) +
+        ggplot2::geom_histogram(
+          ggplot2::aes(x = x),
+          bins = 100,
+          fill = grDevices::rgb(211 / 255, 211 / 255, 211 / 255),
+          color = grDevices::rgb(211 / 255, 211 / 255, 211 / 255)
+        ) +
+        ggplot2::theme_void() +
+        ggplot2::coord_cartesian(
+          expand = FALSE,
+          xlim = c(private$choices[1L], private$choices[2L])
+        )
 
       do.call(
         super$initialize,
@@ -162,41 +217,6 @@ RangeFilterState <- R6::R6Class( # nolint
           list(...)
         )
       )
-
-      private$is_integer <- checkmate::test_integerish(x)
-      private$keep_inf <- reactiveVal(keep_inf)
-      private$inf_filtered_count <- reactive(
-        if (!is.null(private$x_reactive())) sum(is.infinite(private$x_reactive()))
-      )
-      private$inf_count <- sum(is.infinite(x))
-
-      x_range <- range(x, finite = TRUE)
-      x_pretty <- pretty(x_range, 100L)
-
-      if (identical(diff(x_range), 0)) {
-        private$set_choices(x_range)
-        private$slider_ticks <- signif(x_range, digits = 10)
-        private$slider_step <- NULL
-        self$set_selected(x_range)
-      } else {
-        private$set_choices(range(x_pretty))
-        private$slider_ticks <- signif(x_pretty, digits = 10)
-        private$slider_step <- signif(private$get_pretty_range_step(x_pretty), digits = 10)
-        self$set_selected(range(x_pretty))
-      }
-
-      private$unfiltered_histogram <- ggplot2::ggplot(data.frame(x = Filter(is.finite, x))) +
-        ggplot2::geom_histogram(
-          ggplot2::aes(x = x),
-          bins = 100,
-          fill = grDevices::rgb(211 / 255, 211 / 255, 211 / 255),
-          color = grDevices::rgb(211 / 255, 211 / 255, 211 / 255)
-        ) +
-        ggplot2::theme_void() +
-        ggplot2::coord_cartesian(
-          expand = FALSE,
-          xlim = c(private$choices[1], private$choices[2])
-        )
 
       return(invisible(self))
     },
@@ -229,6 +249,8 @@ RangeFilterState <- R6::R6Class( # nolint
     is_any_filtered = function() {
       if (private$is_disabled()) {
         FALSE
+      } else if (private$is_choice_limited) {
+        TRUE
       } else if (!isTRUE(all.equal(self$get_selected(), private$choices))) {
         TRUE
       } else if (!isTRUE(self$get_keep_inf()) && private$inf_count > 0) {
@@ -260,22 +282,10 @@ RangeFilterState <- R6::R6Class( # nolint
     },
 
     #' @description
-    #' Sets the selected values of this `RangeFilterState`.
-    #'
-    #' @param value (`numeric(2)`) the two-elements array of the lower and upper bound
-    #'   of the selected range. Must not contain NA values.
-    #'
-    #' @returns invisibly `NULL`
-    #'
-    #' @note Casts the passed object to `numeric` before validating the input
-    #' making it possible to pass any object coercible to `numeric` to this method.
-    #'
-    #' @examples
-    #' filter <- teal.slice:::RangeFilterState$new(c(1, 2, 3, 4), varname = "name")
-    #' filter$set_selected(c(2, 3))
-    #'
-    set_selected = function(value) {
-      super$set_selected(value)
+    #' Returns current `keep_inf` selection
+    #' @return (`logical(1)`)
+    get_keep_inf = function() {
+      private$keep_inf()
     }
   ),
 
@@ -289,6 +299,16 @@ RangeFilterState <- R6::R6Class( # nolint
     slider_ticks = numeric(0), # allowed values for the slider input widget, calculated from input data (x)
 
     # private methods ----
+    #' @description
+    #' Check whether the initial choices filter out some values of x and set the flag in case.
+    #'
+    set_is_choice_limited = function(xl, choices) {
+      xl <- xl[!is.na(xl)]
+      xl <- xl[is.finite(xl)]
+      private$is_choice_limited <- (any(xl < choices[1L]) | any(xl > choices[2L]))
+      invisible(NULL)
+    },
+
     # Adds is.infinite(varname) before existing condition calls if keep_inf is selected
     # returns a call
     add_keep_inf_call = function(filter_call, dataname) {
@@ -397,8 +417,8 @@ RangeFilterState <- R6::R6Class( # nolint
           teal.widgets::optionalSliderInput(
             inputId = ns("selection"),
             label = NULL,
-            min = private$choices[1],
-            max = private$choices[2],
+            min = private$choices[1L],
+            max = private$choices[2L],
             value = shiny::isolate(private$selected()),
             step = private$slider_step,
             width = "100%"

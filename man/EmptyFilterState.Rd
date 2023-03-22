@@ -3,9 +3,9 @@
 \docType{class}
 \name{EmptyFilterState}
 \alias{EmptyFilterState}
-\title{\code{InteractiveFilterState} object for empty variable}
+\title{\code{FilterState} object for empty variable}
 \description{
-\code{InteractiveFilterState} subclass representing an empty variable
+\code{FilterState} subclass representing an empty variable
 }
 \examples{
 filter_state <- teal.slice:::EmptyFilterState$new(
@@ -21,8 +21,8 @@ isolate(filter_state$get_call())
 
 }
 \keyword{internal}
-\section{Super classes}{
-\code{\link[teal.slice:FilterState]{teal.slice::FilterState}} -> \code{\link[teal.slice:InteractiveFilterState]{teal.slice::InteractiveFilterState}} -> \code{EmptyFilterState}
+\section{Super class}{
+\code{\link[teal.slice:FilterState]{teal.slice::FilterState}} -> \code{EmptyFilterState}
 }
 \section{Methods}{
 \subsection{Public methods}{

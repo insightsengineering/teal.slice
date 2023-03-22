@@ -1,5 +1,5 @@
 #' @name LogicalFilterState
-#' @title `InteractiveFilterState` object for logical variable
+#' @title `FilterState` object for logical variable
 #' @description Manages choosing a logical state
 #' @docType class
 #' @keywords internal
@@ -82,7 +82,7 @@
 #'
 LogicalFilterState <- R6::R6Class( # nolint
   "LogicalFilterState",
-  inherit = InteractiveFilterState,
+  inherit = FilterState,
 
   # public methods ----
   public = list(
@@ -127,12 +127,29 @@ LogicalFilterState <- R6::R6Class( # nolint
                           varname,
                           choices = NULL,
                           selected = NULL,
-                          keep_na = NULL,
-                          keep_inf = NULL,
+                          keep_na = FALSE,
+                          keep_inf = FALSE,
                           fixed = FALSE,
                           extract_type = character(0),
                           ...) {
-      checkmate::assert_logical(x)
+      stopifnot(is.logical(x))
+      checkmate::assert_class(x_reactive, 'reactive')
+
+      if (is.null(choices)) choices <- c(TRUE, FALSE)
+      df <- factor(x, levels = c(TRUE, FALSE))
+      tbl <- table(df)
+      if (is.null(selected)) selected <- as.logical(levels(df))[1]
+
+      private$set_choices_counts(unname(tbl))
+
+      private$histogram_data <- data.frame(
+        x = sprintf(
+          "%s (%s)",
+          names(tbl),
+          tbl
+        ),
+        y = as.vector(tbl)
+      )
 
       do.call(
         super$initialize,
@@ -153,28 +170,6 @@ LogicalFilterState <- R6::R6Class( # nolint
         )
       )
 
-      df <- as.factor(x)
-      if (length(levels(df)) != 2) {
-        if (levels(df) %in% c(TRUE, FALSE)) {
-          choices_not_included <- c(TRUE, FALSE)[!c(TRUE, FALSE) %in% levels(df)]
-          levels(df) <- c(levels(df), choices_not_included)
-        }
-      }
-      tbl <- table(df)
-      choices <- as.logical(names(tbl))
-
-      private$set_choices(choices)
-      private$set_choices_counts(as.integer(tbl))
-      self$set_selected(choices[1])
-      private$histogram_data <- data.frame(
-        x = sprintf(
-          "%s (%s)",
-          choices,
-          tbl
-        ),
-        y = as.vector(tbl)
-      )
-
       invisible(self)
     },
 
@@ -184,6 +179,8 @@ LogicalFilterState <- R6::R6Class( # nolint
     is_any_filtered = function() {
       if (private$is_disabled()) {
         FALSE
+      } else if (private$is_choice_limited) {
+        TRUE
       } else if (!isTRUE(self$get_keep_na()) && private$na_count > 0) {
         TRUE
       } else if (all(private$histogram_data$y > 0)) {
@@ -213,24 +210,6 @@ LogicalFilterState <- R6::R6Class( # nolint
           call("!", private$get_varname_prefixed(dataname))
         }
       private$add_keep_na_call(filter_call, dataname)
-    },
-
-    #' @description
-    #' Sets the selected values of this `LogicalFilterState`.
-    #'
-    #' @param value (`logical(1)`)\cr
-    #'  the value to set. Must not contain the NA value.
-    #'
-    #' @returns invisibly `NULL`.
-    #'
-    #' @note Casts the passed object to `logical` before validating the input
-    #' making it possible to pass any object coercible to `logical` to this method.
-    #'
-    #' @examples
-    #' filter <- teal.slice:::LogicalFilterState$new(c(TRUE), varname = "name")
-    #' filter$set_selected(TRUE)
-    set_selected = function(value) {
-      super$set_selected(value)
     }
   ),
 
@@ -239,21 +218,13 @@ LogicalFilterState <- R6::R6Class( # nolint
   private = list(
     choices_counts = integer(0),
     histogram_data = data.frame(),
-
-    # private methods ----
+    #' @description
+    #' Sets choices_counts private field
+    #'
     set_choices_counts = function(choices_counts) {
       private$choices_counts <- choices_counts
       invisible(NULL)
     },
-
-    get_filtered_counts = function() {
-      if (!is.null(private$x_reactive)) {
-        table(factor(private$x_reactive(), levels = private$choices))
-      } else {
-        NULL
-      }
-    },
-
     validate_selection = function(value) {
       if (!(checkmate::test_logical(value, max.len = 1, any.missing = FALSE))) {
         stop(

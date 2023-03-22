@@ -3,7 +3,7 @@
 \docType{class}
 \name{ChoicesFilterState}
 \alias{ChoicesFilterState}
-\title{\code{InteractiveFilterState} object for factor or character variable}
+\title{\code{FilterState} object for factor or character variable}
 \description{
 Manages choosing elements from a set
 }
@@ -96,12 +96,12 @@ if (interactive()) {
 ## Method `ChoicesFilterState$set_selected`
 ## ------------------------------------------------
 
-filter <- teal.slice:::ChoicesFilterState$new(c("a", "b", "c"), varname = "name")
+filter <- teal.slice:::ChoicesFilterState$new(c("a", "b", "c"), varname = "name", dataname = "data")
 filter$set_selected(c("c", "a"))
 }
 \keyword{internal}
-\section{Super classes}{
-\code{\link[teal.slice:FilterState]{teal.slice::FilterState}} -> \code{\link[teal.slice:InteractiveFilterState]{teal.slice::InteractiveFilterState}} -> \code{ChoicesFilterState}
+\section{Super class}{
+\code{\link[teal.slice:FilterState]{teal.slice::FilterState}} -> \code{ChoicesFilterState}
 }
 \section{Methods}{
 \subsection{Public methods}{
@@ -261,7 +261,7 @@ invisibly \code{NULL}
 }
 \subsection{Examples}{
 \if{html}{\out{<div class="r example copy">}}
-\preformatted{filter <- teal.slice:::ChoicesFilterState$new(c("a", "b", "c"), varname = "name")
+\preformatted{filter <- teal.slice:::ChoicesFilterState$new(c("a", "b", "c"), varname = "name", dataname = "data")
 filter$set_selected(c("c", "a"))
 }
 \if{html}{\out{</div>}}

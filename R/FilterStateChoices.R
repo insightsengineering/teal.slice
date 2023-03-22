@@ -1,5 +1,5 @@
 #' @name ChoicesFilterState
-#' @title `InteractiveFilterState` object for factor or character variable
+#' @title `FilterState` object for factor or character variable
 #' @description Manages choosing elements from a set
 #' @docType class
 #' @keywords internal
@@ -8,15 +8,14 @@
 #' @examples
 #' filter_state <- teal.slice:::ChoicesFilterState$new(
 #'   x = c(LETTERS, NA),
-#'   dataname = "data",
 #'   varname = "x",
+#'   dataname = "data",
 #'   extract_type = character(0)
 #' )
 #' isolate(filter_state$get_call())
 #' isolate(filter_state$set_selected("B"))
 #' isolate(filter_state$set_keep_na(TRUE))
 #' isolate(filter_state$get_call())
-#' isolate(filter_state$get_state())
 #'
 #' \dontrun{
 #' # working filter in an app
@@ -27,7 +26,8 @@
 #' filter_state_choices <- ChoicesFilterState$new(
 #'   x = data_choices,
 #'   dataname = "data",
-#'   varname = "variable"
+#'   varname = "variable",
+#'   varlabel = "label"
 #' )
 #' filter_state_choices$set_state(
 #'   filter_var("data", "variable", selected = c("a", "c"), keep_na = TRUE))
@@ -87,7 +87,7 @@
 #'
 ChoicesFilterState <- R6::R6Class( # nolint
   "ChoicesFilterState",
-  inherit = InteractiveFilterState,
+  inherit = FilterState,
 
   # public methods ----
 
@@ -133,8 +133,8 @@ ChoicesFilterState <- R6::R6Class( # nolint
                           varname,
                           choices = NULL,
                           selected = NULL,
-                          keep_na = NULL,
-                          keep_inf = NULL,
+                          keep_na = FALSE,
+                          keep_inf = FALSE,
                           fixed = FALSE,
                           extract_type = character(0),
                           ...) {
@@ -144,6 +144,42 @@ ChoicesFilterState <- R6::R6Class( # nolint
         length(unique(x[!is.na(x)])) < getOption("teal.threshold_slider_vs_checkboxgroup"),
         combine = "or"
       )
+      checkmate::assert_class(x_reactive, 'reactive')
+
+      private$data_class <- class(x)[1L]
+      if (inherits(x, "POSIXt")) {
+        private$tzone <- Find(function(x) x != "", attr(as.POSIXlt(x), "tzone"))
+      }
+
+      if (!is.factor(x)) {
+        x <- factor(as.character(x), levels = as.character(sort(unique(x))))
+      }
+      x <- droplevels(x)
+
+      if (is.null(choices)) {
+        choices <- levels(x)
+      } else {
+        choices <- as.character(choices)
+        choices_adjusted <- choices[choices %in% x]
+        if (length(setdiff(choices, choices_adjusted)) > 0L) {
+          warning(sprintf(
+            "Some of the choices not within variable values, adjusting. Varname: %s, dataname: %s.",
+            private$varname, private$dataname))
+          choices <- choices_adjusted
+        }
+        if (length(choices) == 0) {
+          warning(sprintf(
+            "Invalid choices: none of them within the values in the variable.
+            Setting defaults. Varname: %s, dataname: %s.",
+            private$varname, private$dataname))
+          choices <- levels(x)
+        }
+      }
+
+      private$set_is_choice_limited(x, choices)
+      x <- x[(x %in% choices) | is.na(x)]
+      x <- droplevels(x)
+      if (is.null(selected)) selected <- choices
 
       do.call(
         super$initialize,
@@ -164,19 +200,7 @@ ChoicesFilterState <- R6::R6Class( # nolint
         )
       )
 
-      private$data_class <- class(x)[1L]
-      if (inherits(x, "POSIXt")) {
-        private$tzone <- Find(function(x) x != "", attr(as.POSIXlt(x), "tzone"))
-      }
-
-      if (!is.factor(x)) {
-        x <- factor(as.character(x), levels = as.character(sort(unique(x))))
-      }
-      x <- droplevels(x)
-      choices <- table(x)
-      private$set_choices(names(choices))
-      self$set_selected(names(choices))
-      private$set_choices_counts(unname(choices))
+      private$set_choices_counts(unname(table(x)))
 
       return(invisible(self))
     },
@@ -187,6 +211,8 @@ ChoicesFilterState <- R6::R6Class( # nolint
     is_any_filtered = function() {
       if (private$is_disabled()) {
         FALSE
+      } else if (private$is_choice_limited) {
+        TRUE
       } else if (!setequal(self$get_selected(), private$choices)) {
         TRUE
       } else if (!isTRUE(self$get_keep_na()) && private$na_count > 0) {
@@ -240,25 +266,7 @@ ChoicesFilterState <- R6::R6Class( # nolint
           # This handles numerics, characters, and factors.
           call(fun_compare, varname, make_c_call(choices))
         }
-      private$add_keep_na_call(filter_call, dataname)
-    },
-
-    #' @description
-    #' Sets the selected values of this `ChoicesFilterState`.
-    #'
-    #' @param value (`character`) the array of the selected choices.
-    #'   Must not contain NA values.
-    #'
-    #' @return invisibly `NULL`
-    #'
-    #' @note Casts the passed object to `character` before validating the input
-    #' making it possible to pass any object coercible to `character` to this method.
-    #'
-    #' @examples
-    #' filter <- teal.slice:::ChoicesFilterState$new(c("a", "b", "c"), varname = "name")
-    #' filter$set_selected(c("c", "a"))
-    set_selected = function(value) {
-      super$set_selected(value)
+      private$add_keep_na_call(filter_call)
     }
   ),
 
@@ -270,12 +278,23 @@ ChoicesFilterState <- R6::R6Class( # nolint
     tzone = character(0), # if x is a datetime, stores time zone so that it can be restored in $get_call
 
     # private methods ----
+
+    #' @description
+    #' Check whether the initial choices filter out some values of x and set the flag in case.
+    #'
+    set_is_choice_limited = function(xl, choices = NULL) {
+      xl <- xl[!is.na(xl)]
+      private$is_choice_limited <- length(setdiff(xl, choices)) > 0L
+      invisible(NULL)
+    },
+    #' @description
+    #' Sets choices_counts private field
+    #'
     set_choices_counts = function(choices_counts) {
       private$choices_counts <- choices_counts
       invisible(NULL)
     },
-
-    get_filtered_counts = function() {
+    get_choices_counts = function() {
       if (!is.null(private$x_reactive)) {
         table(factor(private$x_reactive(), levels = private$choices))
       } else {

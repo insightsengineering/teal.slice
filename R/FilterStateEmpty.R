@@ -1,6 +1,6 @@
 #' @name EmptyFilterState
-#' @title `InteractiveFilterState` object for empty variable
-#' @description `InteractiveFilterState` subclass representing an empty variable
+#' @title `FilterState` object for empty variable
+#' @description `FilterState` subclass representing an empty variable
 #' @docType class
 #' @keywords internal
 #'
@@ -19,7 +19,7 @@
 #'
 EmptyFilterState <- R6::R6Class( # nolint
   "EmptyFilterState",
-  inherit = InteractiveFilterState,
+  inherit = FilterState,
 
   # public methods ----
   public = list(
@@ -62,7 +62,7 @@ EmptyFilterState <- R6::R6Class( # nolint
                           x_reactive = reactive(NULL),
                           dataname,
                           varname,
-                          choices = NULL,
+                          choices = unique(na.omit(x)),
                           selected = NULL,
                           keep_na = NULL,
                           keep_inf = NULL,
@@ -78,8 +78,8 @@ EmptyFilterState <- R6::R6Class( # nolint
             x_reactive = x_reactive,
             dataname = dataname,
             varname = varname,
-            choices = choices,
-            selected = selected,
+            choices = list(),
+            selected = list(),
             keep_na = keep_na,
             keep_inf = keep_inf,
             fixed = fixed,
@@ -88,9 +88,6 @@ EmptyFilterState <- R6::R6Class( # nolint
           list(...)
         )
       )
-
-      private$set_choices(list())
-      self$set_selected(list())
 
       return(invisible(self))
     },
@@ -103,6 +100,8 @@ EmptyFilterState <- R6::R6Class( # nolint
     is_any_filtered = function() {
       if (private$is_disabled()) {
         FALSE
+      } else if (private$is_choice_limited) {
+        TRUE
       } else {
         !isTRUE(self$get_keep_na())
       }
@@ -135,32 +134,6 @@ EmptyFilterState <- R6::R6Class( # nolint
       list(
         keep_na = self$get_keep_na()
       )
-    },
-
-    #' @description
-    #' Set state
-    #'
-    #' @param state (`teal_slice`)\cr
-    #'  only the `keep_na` field will be considered; a non-NULL `selected` field raises an error
-    #' \itemize{
-    #'   \item{`keep_na` (`logical`)}{ defines whether to keep or remove `NA` values }
-    #' }
-    #'
-    #' @return NULL invisibly
-    set_state = function(state) {
-      if (!is.null(state$selected)) {
-        stop(
-          sprintf(
-            "All values in variable '%s' are `NA`. Unable to apply filter values \n  %s",
-            private$varname,
-            paste(state$selected, collapse = ", ")
-          )
-        )
-      }
-
-      super$set_state(state)
-
-      invisible(NULL)
     }
   ),
 

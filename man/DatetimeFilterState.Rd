@@ -3,7 +3,7 @@
 \docType{class}
 \name{DatetimeFilterState}
 \alias{DatetimeFilterState}
-\title{\code{InteractiveFilterState} object for \code{POSIXct} variable}
+\title{\code{FilterState} object for \code{POSIXct} variable}
 \description{
 Manages choosing a range of date-times
 }
@@ -99,13 +99,13 @@ if (interactive()) {
 date <- as.POSIXct(1, origin = "01/01/1970")
 filter <- teal.slice:::DatetimeFilterState$new(
   c(date, date + 1, date + 2, date + 3),
-  varname = "name"
+  varname = "name", dataname = "data"
 )
 filter$set_selected(c(date + 1, date + 2))
 }
 \keyword{internal}
-\section{Super classes}{
-\code{\link[teal.slice:FilterState]{teal.slice::FilterState}} -> \code{\link[teal.slice:InteractiveFilterState]{teal.slice::InteractiveFilterState}} -> \code{DatetimeFilterState}
+\section{Super class}{
+\code{\link[teal.slice:FilterState]{teal.slice::FilterState}} -> \code{DatetimeFilterState}
 }
 \section{Methods}{
 \subsection{Public methods}{
@@ -293,7 +293,7 @@ invisibly \code{NULL}.
 \preformatted{date <- as.POSIXct(1, origin = "01/01/1970")
 filter <- teal.slice:::DatetimeFilterState$new(
   c(date, date + 1, date + 2, date + 3),
-  varname = "name"
+  varname = "name", dataname = "data"
 )
 filter$set_selected(c(date + 1, date + 2))
 }

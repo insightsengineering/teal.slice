@@ -3,7 +3,7 @@
 \docType{class}
 \name{RangeFilterState}
 \alias{RangeFilterState}
-\title{\code{InteractiveFilterState} object for numeric variable}
+\title{\code{FilterState} object for numeric variable}
 \value{
 invisibly \code{NULL}
 }
@@ -101,13 +101,13 @@ if (interactive()) {
 ## Method `RangeFilterState$set_selected`
 ## ------------------------------------------------
 
-filter <- teal.slice:::RangeFilterState$new(c(1, 2, 3, 4), varname = "name")
+filter <- teal.slice:::RangeFilterState$new(c(1, 2, 3, 4), varname = "name", dataname = "data")
 filter$set_selected(c(2, 3))
 
 }
 \keyword{internal}
-\section{Super classes}{
-\code{\link[teal.slice:FilterState]{teal.slice::FilterState}} -> \code{\link[teal.slice:InteractiveFilterState]{teal.slice::InteractiveFilterState}} -> \code{RangeFilterState}
+\section{Super class}{
+\code{\link[teal.slice:FilterState]{teal.slice::FilterState}} -> \code{RangeFilterState}
 }
 \section{Methods}{
 \subsection{Public methods}{
@@ -145,7 +145,7 @@ filter$set_selected(c(2, 3))
 \if{html}{\out{<a id="method-RangeFilterState-new"></a>}}
 \if{latex}{\out{\hypertarget{method-RangeFilterState-new}{}}}
 \subsection{Method \code{new()}}{
-Initialize a \code{InteractiveFilterState} object for range selection
+Initialize a \code{FilterState} object for range selection
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{RangeFilterState$new(
   x,
@@ -286,7 +286,7 @@ of the selected range. Must not contain NA values.}
 }
 \subsection{Examples}{
 \if{html}{\out{<div class="r example copy">}}
-\preformatted{filter <- teal.slice:::RangeFilterState$new(c(1, 2, 3, 4), varname = "name")
+\preformatted{filter <- teal.slice:::RangeFilterState$new(c(1, 2, 3, 4), varname = "name", dataname = "data")
 filter$set_selected(c(2, 3))
 
 }

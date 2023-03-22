@@ -1,8 +1,8 @@
-#' @name InteractiveFilterState
+#' @name FilterState
 #' @docType class
 #'
 #'
-#' @title `InteractiveFilterState` Abstract Class
+#' @title `FilterState` Abstract Class
 #'
 #' @description Abstract class to encapsulate single filter state
 #'
@@ -10,7 +10,7 @@
 #' This class is responsible for managing single filter item within
 #' `FilteredData` class. Filter states depend on the variable type:
 #' (`logical`, `integer`, `numeric`, `factor`, `character`, `Date`, `POSIXct`, `POSIXlt`)
-#' and returns `InteractiveFilterState` object with class corresponding to input variable.
+#' and returns `FilterState` object with class corresponding to input variable.
 #' Class controls single filter entry in `module_single_filter_item` and returns
 #' code relevant to selected values.
 #' - `factor`, `character`: `class = ChoicesFilterState`
@@ -30,7 +30,7 @@
 #' \cr
 #' \cr
 #' @section Modifying state:
-#' Modifying a `InteractiveFilterState` object is possible in three scenarios:
+#' Modifying a `FilterState` object is possible in three scenarios:
 #' * In the interactive session by passing an appropriate `teal_slice`
 #'   to the `set_state` method, or using
 #'   `set_selected`, `set_keep_na` or `set_keep_inf` methods.
@@ -39,16 +39,14 @@
 #' `set_state` method of the `InteractiveFilterState` object.
 #'
 #' @keywords internal
-InteractiveFilterState <- R6::R6Class( # nolint
-  "InteractiveFilterState",
-  inherit = FilterState,
+FilterState <- R6::R6Class( # nolint
+  "FilterState",
 
   # public methods ----
   public = list(
 
     #' @description
-    #' Initialize a `InteractiveFilterState` object
-    #'
+    #' Initialize a `FilterState` object
     #' @param x (`vector`)\cr
     #'   values of the variable used in filter
     #' @param x_reactive (`reactive`)\cr
@@ -61,7 +59,7 @@ InteractiveFilterState <- R6::R6Class( # nolint
     #'   if `extract_type` argument is not empty.
     #' @param varname (`character(1)`)\cr
     #'   name of the variable.
-    #' @param choices (`atomic`, `NULL`)\cr
+    #' @param selected (`atomic`, `NULL`)\cr
     #'   vector specifying allowed selection values
     #' @param selected (`atomic`, `NULL`)\cr
     #'   vector specifying selection
@@ -88,8 +86,8 @@ InteractiveFilterState <- R6::R6Class( # nolint
                           varname,
                           choices = NULL,
                           selected = NULL,
-                          keep_na = NULL,
-                          keep_inf = NULL,
+                          keep_na = FALSE,
+                          keep_inf = FALSE,
                           fixed = FALSE,
                           extract_type = character(0),
                           ...) {
@@ -132,6 +130,8 @@ InteractiveFilterState <- R6::R6Class( # nolint
         }
       )
       private$disabled <- reactiveVal(FALSE)
+      private$set_choices(choices)
+      self$set_selected(selected)
       logger::log_trace(
         sprintf(
           "Instantiated %s with variable %s, dataname: %s",
@@ -384,6 +384,7 @@ InteractiveFilterState <- R6::R6Class( # nolint
       if (shiny::isolate(private$is_disabled())) {
         warning("This filter state is disabled. Can not change selected.")
       } else {
+
         value <- private$cast_and_validate(value)
         value <- private$remove_out_of_bound_values(value)
         private$validate_selection(value)
@@ -492,6 +493,7 @@ InteractiveFilterState <- R6::R6Class( # nolint
     dataname = character(0),
     varname = character(0),
     choices = NULL, # because each class has different choices type
+    is_choice_limited = FALSE, # flag whether number of possible choices was limited when specifying filter
     selected = NULL, # because it holds reactiveVal and each class has different choices type
     varlabel = character(0),
     keep_na = NULL, # reactiveVal holding a logical(1)
