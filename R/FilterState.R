@@ -487,7 +487,7 @@ FilterState <- R6::R6Class( # nolint
         warning("FilterState fixed cannot be modified")
       }
       invisible(NULL)
-    }
+    },
 
     # @description
     # Returns dataname.
