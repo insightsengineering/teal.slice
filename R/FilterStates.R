@@ -596,7 +596,7 @@ FilterStates <- R6::R6Class( # nolint
         sprintf("varname %%in%% c(%s)", toString(dQuote(names(state_list), q = FALSE)))
       )
       lapply(slices_for_update, function(x) {
-        state_list[[x$varname]]$set_state(x)
+        do.call(state_list[[x$varname]]$set_state, as.list(x))
       })
 
       # Create new filter states.

@@ -83,26 +83,26 @@ init_filter_state <- function(x,
   if (length(extract_type) == 1) {
     checkmate::assert_choice(extract_type, choices = c("list", "matrix"))
   }
-  if (length(extract_type) == 1 && is.null(dataname)) {
-    stop("if extract_type is specified, dataname must also be specified")
-  }
 
   if (all(is.na(x))) {
-    args <- list(
+    args_init <- list(
       x = x,
       x_reactive = x_reactive,
+      extract_type = extract_type
+    )
+    args_set <- list(
       dataname = dataname,
       varname = varname,
       choices = choices,
       selected = selected,
       keep_na = keep_na,
       keep_inf = keep_inf,
-      fixed = fixed,
-      extract_type = extract_type
+      fixed = fixed
     )
-    args <- append(args, list(...))
+    args_set <- append(args_set, list(...))
 
-    do.call(EmptyFilterState$new, args)
+    filter_state <- do.call(EmptyFilterState$new, args_init)
+    do.call(filter_state$set_state, args_set)
   } else {
     UseMethod("init_filter_state")
   }
@@ -121,21 +121,24 @@ init_filter_state.default <- function(x,
                                       fixed = FALSE,
                                       extract_type = character(0),
                                       ...) {
-  args <- list(
+  args_init <- list(
     x = x,
     x_reactive = x_reactive,
+    extract_type = extract_type
+  )
+  args_set <- list(
     dataname = dataname,
     varname = varname,
     choices = choices,
     selected = selected,
     keep_na = keep_na,
     keep_inf = keep_inf,
-    fixed = fixed,
-    extract_type = extract_type
+    fixed = fixed
   )
-  args <- append(args, list(...))
+  args_set <- append(args_set, list(...))
 
-  do.call(FilterState$new, args)
+  filter_state <-   do.call(FilterState$new, args_init)
+  do.call(filter_state$set_state, args_set)
 }
 
 #' @keywords internal
@@ -151,21 +154,24 @@ init_filter_state.logical <- function(x,
                                       fixed = FALSE,
                                       extract_type = character(0),
                                       ...) {
-  args <- list(
+  args_init <- list(
     x = x,
     x_reactive = x_reactive,
+    extract_type = extract_type
+  )
+  args_set <- list(
     dataname = dataname,
     varname = varname,
     choices = choices,
     selected = selected,
     keep_na = keep_na,
     keep_inf = keep_inf,
-    fixed = fixed,
-    extract_type = extract_type
+    fixed = fixed
   )
-  args <- append(args, list(...))
+  args_set <- append(args_set, list(...))
 
-  do.call(LogicalFilterState$new, args)
+  filter_state <- do.call(LogicalFilterState$new, args_init)
+  do.call(filter_state$set_state, args_set)
 }
 
 #' @keywords internal
@@ -181,24 +187,28 @@ init_filter_state.numeric <- function(x,
                                       fixed = FALSE,
                                       extract_type = character(0),
                                       ...) {
-  args <- list(
+  args_init <- list(
     x = x,
     x_reactive = x_reactive,
+    extract_type = extract_type
+  )
+  args_set <- list(
     dataname = dataname,
     varname = varname,
     choices = choices,
     selected = selected,
     keep_na = keep_na,
     keep_inf = keep_inf,
-    fixed = fixed,
-    extract_type = extract_type
+    fixed = fixed
   )
-  args <- append(args, list(...))
+  args_set <- append(args_set, list(...))
 
   if (length(unique(x[!is.na(x)])) < getOption("teal.threshold_slider_vs_checkboxgroup")) {
-    do.call(ChoicesFilterState$new, args)
+    filter_state <- do.call(ChoicesFilterState$new, args_init)
+    do.call(filter_state$set_state, args_set)
   } else {
-    do.call(RangeFilterState$new, args)
+    filter_state <- do.call(RangeFilterState$new, args_init)
+    do.call(filter_state$set_state, args_set)
   }
 }
 
@@ -215,21 +225,24 @@ init_filter_state.factor <- function(x,
                                      fixed = FALSE,
                                      extract_type = character(0),
                                      ...) {
-  args <- list(
+  args_init <- list(
     x = x,
     x_reactive = x_reactive,
+    extract_type = extract_type
+  )
+  args_set <- list(
     dataname = dataname,
     varname = varname,
     choices = choices,
     selected = selected,
     keep_na = keep_na,
     keep_inf = keep_inf,
-    fixed = fixed,
-    extract_type = extract_type
+    fixed = fixed
   )
-  args <- append(args, list(...))
+  args_set <- append(args_set, list(...))
 
-  do.call(ChoicesFilterState$new, args)
+  filter_state <- do.call(ChoicesFilterState$new, args_init)
+  do.call(filter_state$set_state, args_set)
 }
 
 #' @keywords internal
@@ -245,21 +258,24 @@ init_filter_state.character <- function(x,
                                         fixed = FALSE,
                                         extract_type = character(0),
                                         ...) {
-  args <- list(
+  args_init <- list(
     x = x,
     x_reactive = x_reactive,
+    extract_type = extract_type
+  )
+  args_set <- list(
     dataname = dataname,
     varname = varname,
     choices = choices,
     selected = selected,
     keep_na = keep_na,
     keep_inf = keep_inf,
-    fixed = fixed,
-    extract_type = extract_type
+    fixed = fixed
   )
-  args <- append(args, list(...))
+  args_set <- append(args_set, list(...))
 
-  do.call(ChoicesFilterState$new, args)
+  filter_state <- do.call(ChoicesFilterState$new, args_init)
+  do.call(filter_state$set_state, args_set)
 }
 
 #' @keywords internal
@@ -275,24 +291,28 @@ init_filter_state.Date <- function(x,
                                    fixed = FALSE,
                                    extract_type = character(0),
                                    ...) {
-  args <- list(
+  args_init <- list(
     x = x,
     x_reactive = x_reactive,
+    extract_type = extract_type
+  )
+  args_set <- list(
     dataname = dataname,
     varname = varname,
     choices = choices,
     selected = selected,
     keep_na = keep_na,
     keep_inf = keep_inf,
-    fixed = fixed,
-    extract_type = extract_type
+    fixed = fixed
   )
-  args <- append(args, list(...))
+  args_set <- append(args_set, list(...))
 
   if (length(unique(x[!is.na(x)])) < getOption("teal.threshold_slider_vs_checkboxgroup")) {
-    do.call(ChoicesFilterState$new, args)
+    filter_state <- do.call(ChoicesFilterState$new, args_init)
+    do.call(filter_state$set_state, args_set)
   } else {
-    do.call(DateFilterState$new, args)
+    filter_state <- do.call(DateFilterState$new, args_init)
+    do.call(filter_state$set_state, args_set)
   }
 }
 
@@ -309,24 +329,28 @@ init_filter_state.POSIXct <- function(x,
                                       fixed = FALSE,
                                       extract_type = character(0),
                                       ...) {
-  args <- list(
+  args_init <- list(
     x = x,
     x_reactive = x_reactive,
+    extract_type = extract_type
+  )
+  args_set <- list(
     dataname = dataname,
     varname = varname,
     choices = choices,
     selected = selected,
     keep_na = keep_na,
     keep_inf = keep_inf,
-    fixed = fixed,
-    extract_type = extract_type
+    fixed = fixed
   )
-  args <- append(args, list(...))
+  args_set <- append(args_set, list(...))
 
   if (length(unique(x[!is.na(x)])) < getOption("teal.threshold_slider_vs_checkboxgroup")) {
-    do.call(ChoicesFilterState$new, args)
+    filter_state <- do.call(ChoicesFilterState$new, args_init)
+    do.call(filter_state$set_state, args_set)
   } else {
-    do.call(DatetimeFilterState$new, args)
+    filter_state <- do.call(DatetimeFilterState$new, args_init)
+    do.call(filter_state$set_state, args_set)
   }
 }
 
@@ -343,24 +367,28 @@ init_filter_state.POSIXlt <- function(x,
                                       fixed = FALSE,
                                       extract_type = character(0),
                                       ...) {
-  args <- list(
+  args_init <- list(
     x = x,
     x_reactive = x_reactive,
+    extract_type = extract_type
+  )
+  args_set <- list(
     dataname = dataname,
     varname = varname,
     choices = choices,
     selected = selected,
     keep_na = keep_na,
     keep_inf = keep_inf,
-    fixed = fixed,
-    extract_type = extract_type
+    fixed = fixed
   )
-  args <- append(args, list(...))
+  args_set <- append(args_set, list(...))
 
   if (length(unique(x[!is.na(x)])) < getOption("teal.threshold_slider_vs_checkboxgroup")) {
-    do.call(ChoicesFilterState$new, args)
+    filter_state <- do.call(ChoicesFilterState$new, args_init)
+    do.call(filter_state$set_state, args_set)
   } else {
-    do.call(DatetimeFilterState$new, args)
+    filter_state <- do.call(DatetimeFilterState$new, args_init)
+    do.call(filter_state$set_state, args_set)
   }
 }
 
