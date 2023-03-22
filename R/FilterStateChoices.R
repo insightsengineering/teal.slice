@@ -161,7 +161,7 @@ ChoicesFilterState <- R6::R6Class( # nolint
       } else {
         choices <- as.character(choices)
         choices_adjusted <- choices[choices %in% x]
-        if (choices_adjusted != choices) {
+        if (length(setdiff(choices, choices_adjusted)) > 0) {
           warning(sprintf(
             "Some of the choices not within variable values, adjusting. Varname: %s, dataname: %s.",
             private$varname, private$dataname))
