@@ -236,7 +236,7 @@ FilterStates <- R6::R6Class( # nolint
         include_css_files(pattern = "filter-panel"),
         tags$div(
           id = private$cards_container_id,
-          class = "panel-group accordion",
+          class = "accordion",
           `data-label` = ifelse(private$datalabel == "", "", (paste0("> ", private$datalabel)))
         )
       )
