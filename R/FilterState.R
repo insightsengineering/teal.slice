@@ -178,20 +178,12 @@ FilterState <- R6::R6Class( # nolint
       checkmate::assert_flag(keep_inf, null.ok = TRUE)
       checkmate::assert_flag(fixed)
 
-      # Establish varlabel.
-      varlabel <- attr(x, "label")
-      # Only display it if different to varname.
-      private$varlabel <-
-        if (identical(varlabel, varname)) {
-          character(0)
-        } else {
-          varlabel
-        }
       logger::log_trace("{ class(self)[1] }$set_state setting state of variable: { varname }")
 
-      private$disabled(FALSE)
+      private$init_disabled() # TODO
       private$set_dataname(dataname)
       private$set_varname(varname)
+      private$set_varlabel(attr(private$x, "label"))
       private$set_choices(choices)
       private$set_selected(selected)
       private$set_keep_na(keep_na)
@@ -329,17 +321,26 @@ FilterState <- R6::R6Class( # nolint
     cache = NULL, # cache state when filter disabled so we can later restore
 
     # private methods ----
-
-    set_disabled = function(val = NULL) {
+    init_disabled = function(val = NULL) {
       if (!is.null(val)) {
-        private$disabled <- val
+        private$disabled(val)
       } else
-        private$disabled <- TRUE
+        private$disabled(FALSE)
       invisible(NULL)
     },
 
+    set_varlabel = function(varlabel) {
+      # Display only when different from varname.
+      private$varlabel <-
+        if (identical(varlabel, private$varname)) {
+          character(0)
+        } else {
+          varlabel
+        }
+    },
+
     set_dataname = function(x) {
-      if (identical(private$dataname, character(0))) {
+      if (identical(private$dataname, character(0)) | identical(private$dataname, x)) {
         private$dataname <- x
       } else {
         warning("FilterState dataname cannot be modified")
@@ -348,7 +349,7 @@ FilterState <- R6::R6Class( # nolint
     },
 
     set_varname = function(x) {
-      if (identical(private$varname, character(0))) {
+      if (identical(private$varname, character(0)) | identical(private$varname, x)) {
         private$varname <- x
       } else {
         warning("FilterState varname cannot be modified")
@@ -478,7 +479,7 @@ FilterState <- R6::R6Class( # nolint
     },
 
     set_extras = function(x) {
-      if (length(private$extras) == 0L) {
+      if (length(private$extras) == 0L | identical(private$extras, x)) {
         checkmate::assert_list(x)
         private$extras <- x
       } else {
@@ -488,7 +489,7 @@ FilterState <- R6::R6Class( # nolint
     },
 
     set_fixed = function(x) {
-      if (identical(private$fixed, logical(0))) {
+      if (identical(private$fixed, logical(0)) | identical(private$fixed, x)) {
         checkmate::assert_flag(x)
         private$fixed <- x
       } else {

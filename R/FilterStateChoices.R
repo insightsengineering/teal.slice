@@ -173,7 +173,8 @@ ChoicesFilterState <- R6::R6Class( # nolint
                      selected = selected,
                      keep_na = keep_na,
                      keep_inf = keep_inf,
-                     fixed = fixed)
+                     fixed = fixed,
+                     list(...))
 
       private$set_choices_counts(unname(table(x)))
 
