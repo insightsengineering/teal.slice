@@ -181,13 +181,13 @@ LogicalFilterState <- R6::R6Class( # nolint
         FALSE
       } else if (private$is_choice_limited) {
         TRUE
-      } else if (!isTRUE(self$get_keep_na()) && private$na_count > 0) {
+      } else if (!isTRUE(private$get_keep_na()) && private$na_count > 0) {
         TRUE
       } else if (all(private$histogram_data$y > 0)) {
         TRUE
-      } else if (self$get_selected() == FALSE && "FALSE (0)" %in% private$histogram_data$x) {
+      } else if (private$get_selected() == FALSE && "FALSE (0)" %in% private$histogram_data$x) {
         TRUE
-      } else if (self$get_selected() == TRUE && "TRUE (0)" %in% private$histogram_data$x) {
+      } else if (private$get_selected() == TRUE && "TRUE (0)" %in% private$histogram_data$x) {
         TRUE
       } else {
         FALSE
@@ -204,7 +204,7 @@ LogicalFilterState <- R6::R6Class( # nolint
     get_call = function(dataname) {
       if (missing(dataname)) dataname <- private$dataname
       filter_call <-
-        if (self$get_selected()) {
+        if (private$get_selected()) {
           private$get_varname_prefixed(dataname)
         } else {
           call("!", private$get_varname_prefixed(dataname))
@@ -230,16 +230,16 @@ LogicalFilterState <- R6::R6Class( # nolint
         stop(
           sprintf(
             "value of the selection for `%s` in `%s` should be a logical scalar (TRUE or FALSE)",
-            self$get_varname(),
-            self$get_dataname()
+            private$get_varname(),
+            private$get_dataname()
           )
         )
       }
 
       pre_msg <- sprintf(
         "dataset '%s', variable '%s': ",
-        self$get_dataname(),
-        self$get_varname()
+        private$get_dataname(),
+        private$get_varname()
       )
       check_in_subset(value, private$choices, pre_msg = pre_msg)
     },
@@ -284,7 +284,7 @@ LogicalFilterState <- R6::R6Class( # nolint
             label = NULL,
             choiceNames = labels,
             choiceValues = as.character(private$choices),
-            selected = isolate(as.character(self$get_selected())),
+            selected = isolate(as.character(private$get_selected())),
             width = "100%"
           )
         ),
@@ -324,13 +324,13 @@ LogicalFilterState <- R6::R6Class( # nolint
           private$observers$seleted_api <- observeEvent(
             ignoreNULL = TRUE, # this is radio button so something have to be selected
             ignoreInit = TRUE,
-            eventExpr = self$get_selected(),
+            eventExpr = private$get_selected(),
             handlerExpr = {
-              if (!setequal(self$get_selected(), input$selection)) {
+              if (!setequal(private$get_selected(), input$selection)) {
                 updateRadioButtons(
                   session = session,
                   inputId = "selection",
-                  selected =  self$get_selected()
+                  selected =  private$get_selected()
                 )
                 logger::log_trace(sprintf(
                   "LogicalFilterState$server@1 state of variable %s changed, dataname: %s",
@@ -357,7 +357,7 @@ LogicalFilterState <- R6::R6Class( # nolint
               if (is.null(selection_state)) {
                 selection_state <- logical(0)
               }
-              self$set_selected(selection_state)
+              private$set_selected(selection_state)
             }
           )
 
@@ -386,8 +386,8 @@ LogicalFilterState <- R6::R6Class( # nolint
     #  and if NA are included also
     content_summary = function(id) {
       tagList(
-        tags$span(self$get_selected()),
-        if (isTRUE(self$get_keep_na())) tags$span("NA") else NULL
+        tags$span(private$get_selected()),
+        if (isTRUE(private$get_keep_na())) tags$span("NA") else NULL
       )
     }
   )

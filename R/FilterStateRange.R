@@ -232,14 +232,14 @@ RangeFilterState <- R6::R6Class( # nolint
     format = function(indent = 0) {
       checkmate::assert_number(indent, finite = TRUE, lower = 0)
 
-      vals <- self$get_selected()
+      vals <- private$get_selected()
       sprintf(
         "%sFiltering on: %s\n%1$s  Selected range: %s - %s\n%1$s  Include missing values: %s",
         format("", width = indent),
         private$varname,
         format(vals[1], nsmall = 3),
         format(vals[2], nsmall = 3),
-        format(self$get_keep_na())
+        format(private$get_keep_na())
       )
     },
 
@@ -251,11 +251,11 @@ RangeFilterState <- R6::R6Class( # nolint
         FALSE
       } else if (private$is_choice_limited) {
         TRUE
-      } else if (!isTRUE(all.equal(self$get_selected(), private$choices))) {
+      } else if (!isTRUE(all.equal(private$get_selected(), private$choices))) {
         TRUE
-      } else if (!isTRUE(self$get_keep_inf()) && private$inf_count > 0) {
+      } else if (!isTRUE(private$get_keep_inf()) && private$inf_count > 0) {
         TRUE
-      } else if (!isTRUE(self$get_keep_na()) && private$na_count > 0) {
+      } else if (!isTRUE(private$get_keep_na()) && private$na_count > 0) {
         TRUE
       } else {
         FALSE
@@ -275,8 +275,8 @@ RangeFilterState <- R6::R6Class( # nolint
       filter_call <-
         call(
           "&",
-          call(">=", private$get_varname_prefixed(dataname), self$get_selected()[1L]),
-          call("<=", private$get_varname_prefixed(dataname), self$get_selected()[2L])
+          call(">=", private$get_varname_prefixed(dataname), private$get_selected()[1L]),
+          call("<=", private$get_varname_prefixed(dataname), private$get_selected()[2L])
         )
       private$add_keep_na_call(private$add_keep_inf_call(filter_call, dataname), dataname)
     },
@@ -312,7 +312,7 @@ RangeFilterState <- R6::R6Class( # nolint
     # Adds is.infinite(varname) before existing condition calls if keep_inf is selected
     # returns a call
     add_keep_inf_call = function(filter_call, dataname) {
-      if (isTRUE(self$get_keep_inf())) {
+      if (isTRUE(private$get_keep_inf())) {
         call("|", call("is.infinite", private$get_varname_prefixed(dataname)), filter_call)
       } else {
         filter_call
@@ -340,8 +340,8 @@ RangeFilterState <- R6::R6Class( # nolint
         stop(
           sprintf(
             "value of the selection for `%s` in `%s` should be a numeric",
-            self$get_varname(),
-            self$get_dataname()
+            private$get_varname(),
+            private$get_dataname()
           )
         )
       }
@@ -374,7 +374,7 @@ RangeFilterState <- R6::R6Class( # nolint
     },
 
     disable = function() {
-      private$cache <- self$get_state()
+      private$cache <- private$get_state()
       private$selected(NULL)
       private$keep_na(NULL)
       private$keep_inf(NULL)
@@ -387,13 +387,13 @@ RangeFilterState <- R6::R6Class( # nolint
     #  if NA or Inf are included also
     # @return `shiny.tag` to include in the `ui_summary`
     content_summary = function() {
-      selected <- sprintf("%.4g", self$get_selected())
+      selected <- sprintf("%.4g", private$get_selected())
       min <- selected[1]
       max <- selected[2]
       tagList(
         tags$span(paste0(min, " - ", max)),
-        if (isTRUE(self$get_keep_na())) tags$span("NA") else NULL,
-        if (isTRUE(self$get_keep_inf())) tags$span("Inf") else NULL
+        if (isTRUE(private$get_keep_na())) tags$span("NA") else NULL,
+        if (isTRUE(private$get_keep_inf())) tags$span("Inf") else NULL
       )
     },
 
@@ -470,16 +470,16 @@ RangeFilterState <- R6::R6Class( # nolint
           private$observers$selection_api <- observeEvent(
             ignoreNULL = FALSE,
             ignoreInit = TRUE,
-            eventExpr = self$get_selected(),
+            eventExpr = private$get_selected(),
             handlerExpr = {
               logger::log_trace(
                 sprintf(
                   "RangeFilterState$server@2 state of %s changed, dataname: %s",
-                  self$get_varname(),
+                  private$get_varname(),
                   private$dataname
                 )
               )
-              if (!isTRUE(all.equal(input$selection, self$get_selected()))) {
+              if (!isTRUE(all.equal(input$selection, private$get_selected()))) {
                 updateSliderInput(
                   session = session,
                   inputId = "selection",
@@ -501,8 +501,8 @@ RangeFilterState <- R6::R6Class( # nolint
                   private$dataname
                 )
               )
-              if (!isTRUE(all.equal(input$selection, self$get_selected()))) {
-                self$set_selected(input$selection)
+              if (!isTRUE(all.equal(input$selection, private$get_selected()))) {
+                private$set_selected(input$selection)
               }
             }
           )
@@ -553,7 +553,7 @@ RangeFilterState <- R6::R6Class( # nolint
                 countnow = countnow
               )
             ),
-            value = isolate(self$get_keep_inf())
+            value = isolate(private$get_keep_inf())
           )
         )
       } else {
@@ -588,12 +588,12 @@ RangeFilterState <- R6::R6Class( # nolint
         private$observers$keep_inf_api <- observeEvent(
           ignoreNULL = TRUE, # its not possible for range that NULL is selected
           ignoreInit = TRUE, # ignoreInit: should not matter because we set the UI with the desired initial state
-          eventExpr = self$get_keep_inf(),
+          eventExpr = private$get_keep_inf(),
           handlerExpr = {
-            if (!setequal(self$get_keep_inf(), input$value)) {
+            if (!setequal(private$get_keep_inf(), input$value)) {
               updateCheckboxInput(
                 inputId = "value",
-                value = self$get_keep_inf()
+                value = private$get_keep_inf()
               )
             }
           }
@@ -605,7 +605,7 @@ RangeFilterState <- R6::R6Class( # nolint
           eventExpr = input$value,
           handlerExpr = {
             keep_inf <- input$value
-            self$set_keep_inf(keep_inf)
+            private$set_keep_inf(keep_inf)
             logger::log_trace(
               sprintf(
                 "%s$server keep_inf of variable %s set to: %s, dataname: %s",

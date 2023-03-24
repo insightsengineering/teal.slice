@@ -76,18 +76,20 @@ EmptyFilterState <- R6::R6Class( # nolint
           list(
             x = x,
             x_reactive = x_reactive,
-            dataname = dataname,
-            varname = varname,
-            choices = list(),
-            selected = list(),
-            keep_na = keep_na,
-            keep_inf = keep_inf,
-            fixed = fixed,
             extract_type = extract_type
           ),
           list(...)
         )
       )
+
+      self$set_state(dataname = dataname,
+                     varname = varname,
+                     choices = choices,
+                     selected = selected,
+                     keep_na = keep_na,
+                     keep_inf = keep_inf,
+                     fixed = fixed,
+                     list(...))
 
       return(invisible(self))
     },
@@ -103,7 +105,7 @@ EmptyFilterState <- R6::R6Class( # nolint
       } else if (private$is_choice_limited) {
         TRUE
       } else {
-        !isTRUE(self$get_keep_na())
+        !isTRUE(private$get_keep_na())
       }
     },
 
@@ -117,7 +119,7 @@ EmptyFilterState <- R6::R6Class( # nolint
     #'
     get_call = function(dataname) {
       if (missing(dataname)) dataname <- private$dataname
-      filter_call <- if (isTRUE(self$get_keep_na())) {
+      filter_call <- if (isTRUE(private$get_keep_na())) {
         call("is.na", private$get_varname_prefixed(dataname))
       } else {
         substitute(!is.na(varname), list(varname = private$get_varname_prefixed(dataname)))
@@ -132,7 +134,7 @@ EmptyFilterState <- R6::R6Class( # nolint
     #'
     get_state = function() {
       list(
-        keep_na = self$get_keep_na()
+        keep_na = private$get_keep_na()
       )
     }
   ),
@@ -140,7 +142,7 @@ EmptyFilterState <- R6::R6Class( # nolint
   # private members ----
   private = list(
     cache_state = function() {
-      private$cache <- self$get_state()
+      private$cache <- private$get_state()
       self$set_state(
         list(
           keep_na = NULL
