@@ -625,8 +625,10 @@ FilteredData <- R6::R6Class( # nolint
     #'
     filter_panel_disable = function() {
       private$filter_panel_active <- FALSE
-      shinyjs::disable("add")
-      shinyjs::disable("active")
+      # needed to get correct id b/c enable/disable lives in a sibling module
+      session <- shiny::getDefaultReactiveDomain()
+      shinyjs::disable(session$ns("add"), asis = TRUE)
+      shinyjs::disable(session$ns("active"), asis = TRUE)
       private$cached_states <- self$get_filter_state()
       self$clear_filter_states()
       invisible(NULL)
