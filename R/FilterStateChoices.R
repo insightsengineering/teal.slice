@@ -167,6 +167,7 @@ ChoicesFilterState <- R6::R6Class( # nolint
           list(...)
         )
       )
+
       self$set_state(dataname = dataname,
                      varname = varname,
                      choices = choices,

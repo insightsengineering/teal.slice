@@ -154,6 +154,7 @@ DateFilterState <- R6::R6Class( # nolint
           list(...)
         )
       )
+
       self$set_state(dataname = dataname,
                      varname = varname,
                      choices = choices,
@@ -249,7 +250,7 @@ DateFilterState <- R6::R6Class( # nolint
       private$set_is_choice_limited(private$x, choices)
       private$x <- private$x[(private$x >= choices[1L] & private$x <= choices[2L]) | is.na(private$x)]
       private$choices <- choices
-      invisible(self)
+      invisible(NULL)
     },
 
     #' @description

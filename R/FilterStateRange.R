@@ -144,51 +144,35 @@ RangeFilterState <- R6::R6Class( # nolint
       if (!any(is.finite(x))) stop("\"x\" contains no finite values")
 
       private$is_integer <- checkmate::test_integerish(x)
-      private$keep_inf <- reactiveVal(keep_inf)
       private$inf_filtered_count <- reactive(
         if (!is.null(private$x_reactive())) sum(is.infinite(private$x_reactive()))
       )
       private$inf_count <- sum(is.infinite(x))
 
-      if (is.null(choices)) {
-        choices <- range(na.omit(x[is.finite(x)]))
-      } else {
-        choices_adjusted <- c(max(choices[1L], min(x)), min(choices[2L], max(x)))
-        if (any(choices != choices_adjusted)) {
-          warning(sprintf(
-            "Choices adjusted (some values outside of variable range). Varname: %s, dataname: %s.",
-            private$varname, private$dataname))
-          choices <- choices_adjusted
-        }
-        if (choices[1L] >= choices[2L]) {
-          warning(sprintf(
-            "Invalid choices: lower is higher / equal to upper, or not in range of variable values.
-            Setting defaults. Varname: %s, dataname: %s.",
-            private$varname, private$dataname))
-          choices <- range(x)
-        }
-      }
+      do.call(
+        super$initialize,
+        append(
+          list(
+            x = x,
+            x_reactive = x_reactive,
+            extract_type = extract_type
+          ),
+          list(...)
+        )
+      )
 
-      private$set_is_choice_limited(x, choices)
-      x <- x[(x >= choices[1L] & x <= choices[2L]) | is.na(x) | !is.finite(x)]
-      x_range <- range(x, finite = TRUE)
+      self$set_state(dataname = dataname,
+                     varname = varname,
+                     choices = choices,
+                     selected = selected,
+                     keep_na = keep_na,
+                     keep_inf = keep_inf,
+                     fixed = fixed,
+                     ...)
 
-      if (identical(diff(x_range), 0)) {
-        choices <- x_range
-        private$slider_ticks <- signif(x_range, digits = 10)
-        private$slider_step <- NULL
-        if (is.null(selected)) selected <- x_range
-      } else {
-        x_pretty <- pretty(x_range, 100L)
-        choices <- range(x_pretty)
-        private$slider_ticks <- signif(x_pretty, digits = 10)
-        private$slider_step <- signif(private$get_pretty_range_step(x_pretty), digits = 10)
-        if (is.null(selected)) selected <- range(x_pretty)
-      }
-
-      private$unfiltered_histogram <- ggplot2::ggplot(data.frame(x = Filter(is.finite, x))) +
+      private$unfiltered_histogram <- ggplot2::ggplot(data.frame(x = Filter(is.finite, private$x))) +
         ggplot2::geom_histogram(
-          ggplot2::aes(x = x),
+          ggplot2::aes(x = private$x),
           bins = 100,
           fill = grDevices::rgb(211 / 255, 211 / 255, 211 / 255),
           color = grDevices::rgb(211 / 255, 211 / 255, 211 / 255)
@@ -198,25 +182,6 @@ RangeFilterState <- R6::R6Class( # nolint
           expand = FALSE,
           xlim = c(private$choices[1L], private$choices[2L])
         )
-
-      do.call(
-        super$initialize,
-        append(
-          list(
-            x = x,
-            x_reactive = x_reactive,
-            dataname = dataname,
-            varname = varname,
-            choices = choices,
-            selected = selected,
-            keep_na = keep_na,
-            keep_inf = keep_inf,
-            fixed = fixed,
-            extract_type = extract_type
-          ),
-          list(...)
-        )
-      )
 
       return(invisible(self))
     },
@@ -299,6 +264,51 @@ RangeFilterState <- R6::R6Class( # nolint
     slider_ticks = numeric(0), # allowed values for the slider input widget, calculated from input data (x)
 
     # private methods ----
+
+    set_choices = function(choices) {
+      x <- private$x[is.finite(private$x)]
+      if (is.null(choices)) {
+        choices <- range(x)
+      } else {
+        choices_adjusted <- c(max(choices[1L], min(x)), min(choices[2L], max(x)))
+        if (any(choices != choices_adjusted)) {
+          warning(sprintf(
+            "Choices adjusted (some values outside of variable range). Varname: %s, dataname: %s.",
+            private$varname, private$dataname))
+          choices <- choices_adjusted
+        }
+        if (choices[1L] > choices[2L]) {
+          warning(sprintf(
+            "Invalid choices: lower is higher / equal to upper, or not in range of variable values.
+            Setting defaults. Varname: %s, dataname: %s.",
+            private$varname, private$dataname))
+          choices <- range(x)
+        }
+      }
+
+      private$set_is_choice_limited(private$x, choices)
+      private$x <- private$x[
+        (private$x >= choices[1L] & private$x <= choices[2L]) | is.na(private$x) | !is.finite(private$x)
+      ]
+
+      x_range <- range(x, finite = TRUE)
+
+      if (identical(diff(x_range), 0)) {
+        choices <- x_range
+        private$slider_ticks <- signif(x_range, digits = 10)
+        private$slider_step <- NULL
+        if (is.null(private$selected)) private$selected <- x_range
+      } else {
+        x_pretty <- pretty(x_range, 100L)
+        choices <- range(x_pretty)
+        private$slider_ticks <- signif(x_pretty, digits = 10)
+        private$slider_step <- signif(private$get_pretty_range_step(x_pretty), digits = 10)
+        if (is.null(private$selected)) private$selected <- range(x_pretty)
+      }
+      private$choices <- choices
+      invisible(NULL)
+    },
+
     #' @description
     #' Check whether the initial choices filter out some values of x and set the flag in case.
     #'

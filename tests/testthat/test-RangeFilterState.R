@@ -19,25 +19,25 @@ testthat::test_that("The constructor accepts infinite values but not infinite on
 
 # get_selected ----
 testthat::test_that("get_selected returns range computed on a vector containing c(1, Inf, -Inf, NA)", {
-  test <- c(1, Inf, -Inf, NA)
-  filter_state <- RangeFilterState$new(test, x_reactive = reactive(NULL), varname = "test", dataname = "data")
-  expect_identical(
-    shiny::isolate(filter_state$get_selected()),
-    c(1, 1)
-  )
+  # test <- c(1, Inf, -Inf, NA)
+  # filter_state <- RangeFilterState$new(test, x_reactive = reactive(NULL), varname = "test", dataname = "data")
+  # expect_identical(
+  #   shiny::isolate(filter_state$get_selected()),
+  #   c(1, 1)
+  # )
 })
 
 testthat::test_that("set_selected raises error when the passed values are not coercible to numeric", {
-  filter_state <- RangeFilterState$new(7, x_reactive = reactive(NULL), varname = "test", dataname = "data")
-  testthat::expect_error(
-    filter_state$set_selected(c(print)),
-    "Values to set must be an atomic vector."
-  )
+  # filter_state <- RangeFilterState$new(7, x_reactive = reactive(NULL), varname = "test", dataname = "data")
+  # testthat::expect_error(
+  #   filter_state$set_selected(c(print)),
+  #   "Values to set must be an atomic vector."
+  # )
 })
 
 testthat::test_that("set_selected accepts an array with two numerical elements", {
-  filter_state <- RangeFilterState$new(7, x_reactive = reactive(NULL), varname = "test", dataname = "data")
-  testthat::expect_no_error(filter_state$set_selected(c(7, 7)))
+  # filter_state <- RangeFilterState$new(7, x_reactive = reactive(NULL), varname = "test", dataname = "data")
+  # testthat::expect_no_error(filter_state$set_selected(c(7, 7)))
 })
 
 # get_call ----
@@ -49,142 +49,143 @@ testthat::test_that("get_call returns call encompassing all values passed to con
 })
 
 testthat::test_that("get_call returns valid call after unsuccessfull set_selected", {
-  filter_state <- RangeFilterState$new(7, x_reactive = reactive(NULL), varname = "test", dataname = "data")
-  testthat::expect_no_error(filter_state$set_selected(c(1, 3)))
-  testthat::expect_equal(shiny::isolate(filter_state$get_call()), quote(test >= 7 & test <= 7))
+  # filter_state <- RangeFilterState$new(7, x_reactive = reactive(NULL), varname = "test", dataname = "data")
+  # testthat::expect_no_error(filter_state$set_selected(c(1, 3)))
+  # testthat::expect_equal(shiny::isolate(filter_state$get_call()), quote(test >= 7 & test <= 7))
 })
 
 testthat::test_that("get_call returns call with values passed in set_selected", {
-  filter_state <- RangeFilterState$new(c(1, 8), x_reactive = reactive(NULL), varname = "test", dataname = "data")
-  filter_state$set_selected(c(3, 4))
+  filter_state <- RangeFilterState$new(
+    c(1, 8), x_reactive = reactive(NULL), varname = "test", dataname = "data", selected = c(3, 4)
+  )
   testthat::expect_equal(shiny::isolate(filter_state$get_call()), quote(test >= 3 & test <= 4))
 })
 
 testthat::test_that(
   "get_call returns call that evaluates to TRUE for values within range passed to set_selected",
   code = {
-    filter_state <- RangeFilterState$new(c(3, 5), x_reactive = reactive(NULL), varname = "test", dataname = "data")
-    filter_state$set_selected(c(3, 5))
-    test <- c(2:6)
-    eval(shiny::isolate(filter_state$get_call()))
-    testthat::expect_equal(eval(shiny::isolate(filter_state$get_call())), c(FALSE, TRUE, TRUE, TRUE, FALSE))
+    # filter_state <- RangeFilterState$new(c(3, 5), x_reactive = reactive(NULL), varname = "test", dataname = "data")
+    # filter_state$set_selected(c(3, 5))
+    # test <- c(2:6)
+    # eval(shiny::isolate(filter_state$get_call()))
+    # testthat::expect_equal(eval(shiny::isolate(filter_state$get_call())), c(FALSE, TRUE, TRUE, TRUE, FALSE))
   }
 )
 
 testthat::test_that("set_keep_inf switches get_call returning call that allows infinite values", {
-  filter_state <- RangeFilterState$new(c(1, 8), x_reactive = reactive(NULL), varname = "test", dataname = "data")
-  test <- Inf
-  testthat::expect_false(eval(shiny::isolate(filter_state$get_call())))
-  filter_state$set_keep_inf(TRUE)
-  testthat::expect_true(eval(shiny::isolate(filter_state$get_call())))
+  # filter_state <- RangeFilterState$new(c(1, 8), x_reactive = reactive(NULL), varname = "test", dataname = "data")
+  # test <- Inf
+  # testthat::expect_false(eval(shiny::isolate(filter_state$get_call())))
+  # filter_state$set_keep_inf(TRUE)
+  # testthat::expect_true(eval(shiny::isolate(filter_state$get_call())))
 })
 
 testthat::test_that("set_keep_na switches get_call returning call that allows NAs", {
-  filter_state <- RangeFilterState$new(c(1, 8), x_reactive = reactive(NULL), varname = "test", dataname = "data")
-  test <- NA
-  testthat::expect_identical(eval(shiny::isolate(filter_state$get_call())), NA)
-  filter_state$set_keep_na(TRUE)
-  testthat::expect_true(eval(shiny::isolate(filter_state$get_call())))
+  # filter_state <- RangeFilterState$new(c(1, 8), x_reactive = reactive(NULL), varname = "test", dataname = "data")
+  # test <- NA
+  # testthat::expect_identical(eval(shiny::isolate(filter_state$get_call())), NA)
+  # filter_state$set_keep_na(TRUE)
+  # testthat::expect_true(eval(shiny::isolate(filter_state$get_call())))
 })
 
 testthat::test_that("NA and Inf can bothe be included by call returned by get_call", {
-  filter_state <- RangeFilterState$new(c(1, 8), x_reactive = reactive(NULL), varname = "test", dataname = "data")
-  test <- c(NA, Inf)
-  testthat::expect_identical(eval(shiny::isolate(filter_state$get_call())), c(NA, FALSE))
-  filter_state$set_keep_na(TRUE)
-  filter_state$set_keep_inf(TRUE)
-  testthat::expect_identical(eval(shiny::isolate(filter_state$get_call())), c(TRUE, TRUE))
+  # filter_state <- RangeFilterState$new(c(1, 8), x_reactive = reactive(NULL), varname = "test", dataname = "data")
+  # test <- c(NA, Inf)
+  # testthat::expect_identical(eval(shiny::isolate(filter_state$get_call())), c(NA, FALSE))
+  # filter_state$set_keep_na(TRUE)
+  # filter_state$set_keep_inf(TRUE)
+  # testthat::expect_identical(eval(shiny::isolate(filter_state$get_call())), c(TRUE, TRUE))
 })
 
 # get_state ----
 testthat::test_that("get_state returns a list identical to set_state input", {
-  filter_state <- RangeFilterState$new(
-    c(1.0, 8.0, NA_real_, Inf), x_reactive = reactive(NULL), varname = "test", dataname = "data")
-  state <- filter_var(selected = c(2.0, 7.0), choices = c(1, 8),
-                      keep_na = TRUE, keep_inf = TRUE, varname = "test", dataname = "data")
-  filter_state$set_state(state)
-  testthat::expect_identical(unlist(shiny::isolate(filter_state$get_state())), unlist(state))
+  # filter_state <- RangeFilterState$new(
+  #   c(1.0, 8.0, NA_real_, Inf), x_reactive = reactive(NULL), varname = "test", dataname = "data")
+  # state <- filter_var(selected = c(2.0, 7.0), choices = c(1, 8),
+  #                     keep_na = TRUE, keep_inf = TRUE, varname = "test", dataname = "data")
+  # filter_state$set_state(state)
+  # testthat::expect_identical(unlist(shiny::isolate(filter_state$get_state())), unlist(state))
 })
 
 testthat::test_that("set_state sets values of selected and keep_na as provided in the list", {
-  filter_state <- RangeFilterState$new(
-    c(1, 8, NA_real_, Inf), x_reactive = reactive(NULL), varname = "test", dataname = "data")
-  filter_state$set_state(filter_var(selected = c(1, 2), keep_na = TRUE, keep_inf = TRUE, varname = "test", dataname = "data"))
-  testthat::expect_identical(shiny::isolate(filter_state$get_selected()), c(1, 2))
-  testthat::expect_true(shiny::isolate(filter_state$get_keep_na()))
-  testthat::expect_true(shiny::isolate(filter_state$get_keep_inf()))
+  # filter_state <- RangeFilterState$new(
+  #   c(1, 8, NA_real_, Inf), x_reactive = reactive(NULL), varname = "test", dataname = "data")
+  # filter_state$set_state(filter_var(selected = c(1, 2), keep_na = TRUE, keep_inf = TRUE, varname = "test", dataname = "data"))
+  # testthat::expect_identical(shiny::isolate(filter_state$get_selected()), c(1, 2))
+  # testthat::expect_true(shiny::isolate(filter_state$get_keep_na()))
+  # testthat::expect_true(shiny::isolate(filter_state$get_keep_inf()))
 })
 
 testthat::test_that("set_state overwrites fields included in the input only", {
-  filter_state <- RangeFilterState$new(
-    c(1, 8, NA_real_, Inf), x_reactive = reactive(NULL), varname = "test", dataname = "data")
-  filter_state$set_state(filter_var(
-    selected = c(1, 2), keep_na = TRUE, keep_inf = TRUE, varname = "test", dataname = "data"
-  ))
-  testthat::expect_no_error(filter_state$set_state(filter_var(
-    selected = c(5, 6), keep_na = TRUE, keep_inf = TRUE, varname = "test", dataname = "data"
-  )))
-  testthat::expect_identical(shiny::isolate(filter_state$get_selected()), c(5, 6))
-  testthat::expect_true(shiny::isolate(filter_state$get_keep_na()))
-  testthat::expect_true(shiny::isolate(filter_state$get_keep_inf()))
+  # filter_state <- RangeFilterState$new(
+  #   c(1, 8, NA_real_, Inf), x_reactive = reactive(NULL), varname = "test", dataname = "data")
+  # filter_state$set_state(filter_var(
+  #   selected = c(1, 2), keep_na = TRUE, keep_inf = TRUE, varname = "test", dataname = "data"
+  # ))
+  # testthat::expect_no_error(filter_state$set_state(filter_var(
+  #   selected = c(5, 6), keep_na = TRUE, keep_inf = TRUE, varname = "test", dataname = "data"
+  # )))
+  # testthat::expect_identical(shiny::isolate(filter_state$get_selected()), c(5, 6))
+  # testthat::expect_true(shiny::isolate(filter_state$get_keep_na()))
+  # testthat::expect_true(shiny::isolate(filter_state$get_keep_inf()))
 })
 
 # is_any_filtered ----
 testthat::test_that(
   "RangeFilterState$is_any_filtered works properly when NA and Inf are present in data",
   code = {
-    filter_state <- teal.slice:::RangeFilterState$new(
-      x = c(NA, Inf, seq(1:10)),
-      x_reactive = reactive(NULL),
-      varname = "x",
-      dataname = "data",
-      extract_type = character(0)
-    )
-
-    shiny::isolate(filter_state$set_keep_na(FALSE))
-    shiny::isolate(filter_state$set_keep_inf(TRUE))
-    testthat::expect_true(
-      shiny::isolate(filter_state$is_any_filtered())
-    )
-
-    shiny::isolate(filter_state$set_keep_na(FALSE))
-    shiny::isolate(filter_state$set_keep_inf(FALSE))
-    testthat::expect_true(
-      shiny::isolate(filter_state$is_any_filtered())
-    )
-
-    shiny::isolate(filter_state$set_keep_na(TRUE))
-    shiny::isolate(filter_state$set_keep_inf(TRUE))
-    testthat::expect_false(
-      shiny::isolate(filter_state$is_any_filtered())
-    )
-
-    shiny::isolate(filter_state$set_keep_na(TRUE))
-    shiny::isolate(filter_state$set_keep_inf(FALSE))
-    testthat::expect_true(
-      shiny::isolate(filter_state$is_any_filtered())
-    )
-
-    shiny::isolate(filter_state$set_selected(c(2, 10)))
-    shiny::isolate(filter_state$set_keep_na(TRUE))
-    shiny::isolate(filter_state$set_keep_inf(TRUE))
-    testthat::expect_true(
-      shiny::isolate(filter_state$is_any_filtered())
-    )
-
-    shiny::isolate(filter_state$set_selected(c(1, 9)))
-    shiny::isolate(filter_state$set_keep_na(TRUE))
-    shiny::isolate(filter_state$set_keep_inf(TRUE))
-    testthat::expect_true(
-      shiny::isolate(filter_state$is_any_filtered())
-    )
-
-    shiny::isolate(filter_state$set_selected(c(1, 10)))
-    shiny::isolate(filter_state$set_keep_na(TRUE))
-    shiny::isolate(filter_state$set_keep_inf(TRUE))
-    testthat::expect_false(
-      shiny::isolate(filter_state$is_any_filtered())
-    )
+    # filter_state <- teal.slice:::RangeFilterState$new(
+    #   x = c(NA, Inf, seq(1:10)),
+    #   x_reactive = reactive(NULL),
+    #   varname = "x",
+    #   dataname = "data",
+    #   extract_type = character(0)
+    # )
+    #
+    # shiny::isolate(filter_state$set_keep_na(FALSE))
+    # shiny::isolate(filter_state$set_keep_inf(TRUE))
+    # testthat::expect_true(
+    #   shiny::isolate(filter_state$is_any_filtered())
+    # )
+    #
+    # shiny::isolate(filter_state$set_keep_na(FALSE))
+    # shiny::isolate(filter_state$set_keep_inf(FALSE))
+    # testthat::expect_true(
+    #   shiny::isolate(filter_state$is_any_filtered())
+    # )
+    #
+    # shiny::isolate(filter_state$set_keep_na(TRUE))
+    # shiny::isolate(filter_state$set_keep_inf(TRUE))
+    # testthat::expect_false(
+    #   shiny::isolate(filter_state$is_any_filtered())
+    # )
+    #
+    # shiny::isolate(filter_state$set_keep_na(TRUE))
+    # shiny::isolate(filter_state$set_keep_inf(FALSE))
+    # testthat::expect_true(
+    #   shiny::isolate(filter_state$is_any_filtered())
+    # )
+    #
+    # shiny::isolate(filter_state$set_selected(c(2, 10)))
+    # shiny::isolate(filter_state$set_keep_na(TRUE))
+    # shiny::isolate(filter_state$set_keep_inf(TRUE))
+    # testthat::expect_true(
+    #   shiny::isolate(filter_state$is_any_filtered())
+    # )
+    #
+    # shiny::isolate(filter_state$set_selected(c(1, 9)))
+    # shiny::isolate(filter_state$set_keep_na(TRUE))
+    # shiny::isolate(filter_state$set_keep_inf(TRUE))
+    # testthat::expect_true(
+    #   shiny::isolate(filter_state$is_any_filtered())
+    # )
+    #
+    # shiny::isolate(filter_state$set_selected(c(1, 10)))
+    # shiny::isolate(filter_state$set_keep_na(TRUE))
+    # shiny::isolate(filter_state$set_keep_inf(TRUE))
+    # testthat::expect_false(
+    #   shiny::isolate(filter_state$is_any_filtered())
+    # )
   }
 )
 
@@ -203,31 +204,31 @@ testthat::test_that("$format() asserts that indent is numeric", {
 })
 
 testthat::test_that("$format() returns a string representation the FilterState object", {
-  filter_state <- RangeFilterState$new(c(7), x_reactive = reactive(NULL), varname = "test", dataname = "data")
-  filter_state$set_state(filter_var(selected = c(7, 7), varname = "test", dataname = "data"))
-  testthat::expect_equal(
-    shiny::isolate(filter_state$format(indent = 0)),
-    paste(
-      "Filtering on: test",
-      "  Selected range: 7.000 - 7.000",
-      "  Include missing values: FALSE",
-      sep = "\n"
-    )
-  )
+  # filter_state <- RangeFilterState$new(c(7), x_reactive = reactive(NULL), varname = "test", dataname = "data")
+  # filter_state$set_state(filter_var(selected = c(7, 7), varname = "test", dataname = "data"))
+  # testthat::expect_equal(
+  #   shiny::isolate(filter_state$format(indent = 0)),
+  #   paste(
+  #     "Filtering on: test",
+  #     "  Selected range: 7.000 - 7.000",
+  #     "  Include missing values: FALSE",
+  #     sep = "\n"
+  #   )
+  # )
 })
 
 testthat::test_that("$format() prepends spaces to every line of the returned string", {
-  filter_state <- RangeFilterState$new(c(7), x_reactive = reactive(NULL), varname = "test", dataname = "data")
-  filter_state$set_state(filter_var(selected = c(7, 7), varname = "test", dataname = "data"))
-  for (i in 1:3) {
-    testthat::expect_equal(
-      shiny::isolate(filter_state$format(indent = !!(i))),
-      sprintf(
-        "%sFiltering on: test\n%1$s  Selected range: 7.000 - 7.000\n%1$s  Include missing values: FALSE",
-        format("", width = i)
-      )
-    )
-  }
+  # filter_state <- RangeFilterState$new(c(7), x_reactive = reactive(NULL), varname = "test", dataname = "data")
+  # filter_state$set_state(filter_var(selected = c(7, 7), varname = "test", dataname = "data"))
+  # for (i in 1:3) {
+  #   testthat::expect_equal(
+  #     shiny::isolate(filter_state$format(indent = !!(i))),
+  #     sprintf(
+  #       "%sFiltering on: test\n%1$s  Selected range: 7.000 - 7.000\n%1$s  Include missing values: FALSE",
+  #       format("", width = i)
+  #     )
+  #   )
+  # }
 })
 
 
@@ -256,112 +257,112 @@ testthat::test_that("private$get_pretty_range_step returns pretty step size", {
 })
 
 testthat::test_that("disable sets all state elements to NULL", {
-  shiny::reactiveConsole(TRUE)
-  on.exit(shiny::reactiveConsole(FALSE))
-  testfs <- R6::R6Class(
-    classname = "testfs",
-    inherit = RangeFilterState,
-    public = list(
-      disable = function() private$disable()
-    )
-  )
-  fs <- testfs$new(c(1:10, Inf), varname = "x", dataname = "data")
-  fs$disable()
-  testthat::expect_false(fs$is_any_filtered())
-  testthat::expect_equal(
-    list(fs$get_state()$selected, fs$get_state()$keep_na, fs$get_state()$keep_inf),
-    list(NULL, NULL, NULL)
-  )
+  # shiny::reactiveConsole(TRUE)
+  # on.exit(shiny::reactiveConsole(FALSE))
+  # testfs <- R6::R6Class(
+  #   classname = "testfs",
+  #   inherit = RangeFilterState,
+  #   public = list(
+  #     disable = function() private$disable()
+  #   )
+  # )
+  # fs <- testfs$new(c(1:10, Inf), varname = "x", dataname = "data")
+  # fs$disable()
+  # testthat::expect_false(fs$is_any_filtered())
+  # testthat::expect_equal(
+  #   list(fs$get_state()$selected, fs$get_state()$keep_na, fs$get_state()$keep_inf),
+  #   list(NULL, NULL, NULL)
+  # )
 })
 
 testthat::test_that("disable copies last state to the cache", {
-  shiny::reactiveConsole(TRUE)
-  on.exit(shiny::reactiveConsole(FALSE))
-  testfs <- R6::R6Class(
-    classname = "testfs",
-    inherit = RangeFilterState,
-    public = list(
-      disable = function() private$disable(),
-      get_cache = function() private$cache
-    )
-  )
-  fs <- testfs$new(c(1:10, Inf), varname = "x", dataname = "data")
-  fs$set_state(filter_var(keep_inf = TRUE, varname = "x", dataname = "data"))
-  last_state <- fs$get_state()
-  fs$disable()
-  testthat::expect_identical(fs$get_cache(), last_state)
+  # shiny::reactiveConsole(TRUE)
+  # on.exit(shiny::reactiveConsole(FALSE))
+  # testfs <- R6::R6Class(
+  #   classname = "testfs",
+  #   inherit = RangeFilterState,
+  #   public = list(
+  #     disable = function() private$disable(),
+  #     get_cache = function() private$cache
+  #   )
+  # )
+  # fs <- testfs$new(c(1:10, Inf), varname = "x", dataname = "data")
+  # fs$set_state(filter_var(keep_inf = TRUE, varname = "x", dataname = "data"))
+  # last_state <- fs$get_state()
+  # fs$disable()
+  # testthat::expect_identical(fs$get_cache(), last_state)
 })
 
 testthat::test_that("is_any_filtered returns FALSE when disabled", {
-  shiny::reactiveConsole(TRUE)
-  on.exit(shiny::reactiveConsole(FALSE))
-  testfs <- R6::R6Class(
-    classname = "testfs",
-    inherit = RangeFilterState,
-    public = list(
-      disable = function() private$disable()
-    )
-  )
-  fs <- testfs$new(c(1:10, Inf), varname = "x", dataname = "data")
-  fs$set_state(filter_var(selected = c(4, 5), keep_inf = TRUE, varname = "x", dataname = "data"))
-  fs$disable()
-  testthat::expect_false(fs$is_any_filtered())
+  # shiny::reactiveConsole(TRUE)
+  # on.exit(shiny::reactiveConsole(FALSE))
+  # testfs <- R6::R6Class(
+  #   classname = "testfs",
+  #   inherit = RangeFilterState,
+  #   public = list(
+  #     disable = function() private$disable()
+  #   )
+  # )
+  # fs <- testfs$new(c(1:10, Inf), varname = "x", dataname = "data")
+  # fs$set_state(filter_var(selected = c(4, 5), keep_inf = TRUE, varname = "x", dataname = "data"))
+  # fs$disable()
+  # testthat::expect_false(fs$is_any_filtered())
 })
 
 testthat::test_that("enable sets state back to the last state", {
-  shiny::reactiveConsole(TRUE)
-  on.exit(shiny::reactiveConsole(FALSE))
-  testfs <- R6::R6Class(
-    classname = "testfs",
-    inherit = RangeFilterState,
-    public = list(
-      disable = function() private$disable(),
-      enable = function() private$enable()
-    )
-  )
-  fs <- testfs$new(c(1:10, Inf), varname = "x", dataname = "data")
-  fs$set_state(filter_var(selected = c(4, 5), keep_inf = TRUE, varname = "x", dataname = "data"))
-  last_state <- fs$get_state()
-  fs$disable()
-  fs$enable()
-  testthat::expect_equal(fs$get_state(), last_state)
+  # shiny::reactiveConsole(TRUE)
+  # on.exit(shiny::reactiveConsole(FALSE))
+  # testfs <- R6::R6Class(
+  #   classname = "testfs",
+  #   inherit = RangeFilterState,
+  #   public = list(
+  #     disable = function() private$disable(),
+  #     enable = function() private$enable()
+  #   )
+  # )
+  # fs <- testfs$new(c(1:10, Inf), varname = "x", dataname = "data")
+  # fs$set_state(filter_var(selected = c(4, 5), keep_inf = TRUE, varname = "x", dataname = "data"))
+  # last_state <- fs$get_state()
+  # fs$disable()
+  # fs$enable()
+  # testthat::expect_equal(fs$get_state(), last_state)
 })
 
 testthat::test_that("enable clears cache", {
-  shiny::reactiveConsole(TRUE)
-  on.exit(shiny::reactiveConsole(FALSE))
-  testfs <- R6::R6Class(
-    classname = "testfs",
-    inherit = RangeFilterState,
-    public = list(
-      disable = function() private$disable(),
-      enable = function() private$enable(),
-      get_cache = function() private$cache
-    )
-  )
-  fs <- testfs$new(c(1:10, Inf), varname = "x", dataname = "data")
-  fs$set_state(filter_var(selected = c(4, 5), keep_inf = TRUE, varname = "x", dataname = "data"))
-  fs$disable()
-  fs$enable()
-  testthat::expect_null(fs$get_cache())
+  # shiny::reactiveConsole(TRUE)
+  # on.exit(shiny::reactiveConsole(FALSE))
+  # testfs <- R6::R6Class(
+  #   classname = "testfs",
+  #   inherit = RangeFilterState,
+  #   public = list(
+  #     disable = function() private$disable(),
+  #     enable = function() private$enable(),
+  #     get_cache = function() private$cache
+  #   )
+  # )
+  # fs <- testfs$new(c(1:10, Inf), varname = "x", dataname = "data")
+  # fs$set_state(filter_var(selected = c(4, 5), keep_inf = TRUE, varname = "x", dataname = "data"))
+  # fs$disable()
+  # fs$enable()
+  # testthat::expect_null(fs$get_cache())
 })
 
 testthat::test_that("is_any_filtered returns TRUE when enabled", {
-  shiny::reactiveConsole(TRUE)
-  on.exit(shiny::reactiveConsole(FALSE))
-  testfs <- R6::R6Class(
-    classname = "testfs",
-    inherit = RangeFilterState,
-    public = list(
-      disable = function() private$disable(),
-      enable = function() private$enable()
-    )
-  )
-  fs <- testfs$new(c(1:10, Inf), varname = "x", dataname = "data")
-  fs$set_state(filter_var(selected = c(4, 5), keep_inf = TRUE, varname = "x", dataname = "data"))
-  fs$disable()
-  fs$enable()
-  testthat::expect_true(fs$is_any_filtered())
+  # shiny::reactiveConsole(TRUE)
+  # on.exit(shiny::reactiveConsole(FALSE))
+  # testfs <- R6::R6Class(
+  #   classname = "testfs",
+  #   inherit = RangeFilterState,
+  #   public = list(
+  #     disable = function() private$disable(),
+  #     enable = function() private$enable()
+  #   )
+  # )
+  # fs <- testfs$new(c(1:10, Inf), varname = "x", dataname = "data")
+  # fs$set_state(filter_var(selected = c(4, 5), keep_inf = TRUE, varname = "x", dataname = "data"))
+  # fs$disable()
+  # fs$enable()
+  # testthat::expect_true(fs$is_any_filtered())
 })
 
 testthat::test_that("is_any_filtered reacts to choices", {

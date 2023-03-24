@@ -135,12 +135,30 @@ LogicalFilterState <- R6::R6Class( # nolint
       stopifnot(is.logical(x))
       checkmate::assert_class(x_reactive, 'reactive')
 
-      if (is.null(choices)) choices <- c(TRUE, FALSE)
-      df <- factor(x, levels = c(TRUE, FALSE))
+      do.call(
+        super$initialize,
+        append(
+          list(
+            x = x,
+            x_reactive = x_reactive,
+            extract_type = extract_type
+          ),
+          list(...)
+        )
+      )
+
+      df <- factor(private$x, levels = c(TRUE, FALSE))
       tbl <- table(df)
       if (is.null(selected)) selected <- as.logical(levels(df))[1]
 
-      private$set_choices_counts(unname(tbl))
+      self$set_state(dataname = dataname,
+                     varname = varname,
+                     choices = choices,
+                     selected = selected,
+                     keep_na = keep_na,
+                     keep_inf = keep_inf,
+                     fixed = fixed,
+                     list(...))
 
       private$histogram_data <- data.frame(
         x = sprintf(
@@ -149,25 +167,6 @@ LogicalFilterState <- R6::R6Class( # nolint
           tbl
         ),
         y = as.vector(tbl)
-      )
-
-      do.call(
-        super$initialize,
-        append(
-          list(
-            x = x,
-            x_reactive = x_reactive,
-            dataname = dataname,
-            varname = varname,
-            choices = choices,
-            selected = selected,
-            keep_na = keep_na,
-            keep_inf = keep_inf,
-            fixed = fixed,
-            extract_type = extract_type
-          ),
-          list(...)
-        )
       )
 
       invisible(self)
@@ -218,6 +217,10 @@ LogicalFilterState <- R6::R6Class( # nolint
   private = list(
     choices_counts = integer(0),
     histogram_data = data.frame(),
+    set_choices = function(choices) {
+      private$choices <- c(TRUE, FALSE)
+      invisible(NULL)
+    },
     #' @description
     #' Sets choices_counts private field
     #'

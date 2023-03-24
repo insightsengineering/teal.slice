@@ -64,8 +64,8 @@ EmptyFilterState <- R6::R6Class( # nolint
                           varname,
                           choices = unique(na.omit(x)),
                           selected = NULL,
-                          keep_na = NULL,
-                          keep_inf = NULL,
+                          keep_na = FALSE,
+                          keep_inf = FALSE,
                           fixed = FALSE,
                           extract_type = character(0),
                           ...) {
@@ -148,6 +148,10 @@ EmptyFilterState <- R6::R6Class( # nolint
           keep_na = NULL
         )
       )
+    },
+    set_choices = function(choices) {
+      private$choices <- choices
+      invisible(NULL)
     },
     # @description
     # UI Module for `EmptyFilterState`.
