@@ -84,15 +84,6 @@ FilterState <- R6::R6Class( # nolint
           sum(is.na(private$x_reactive()))
         }
       )
-      # Establish varlabel.
-      varlabel <- attr(x, "label")
-      # Only display it if different to varname.
-      private$varlabel <-
-        if (identical(varlabel, varname)) {
-          character(0)
-        } else {
-          varlabel
-        }
 
       # initialize reactive values
       private$selected <- reactiveVal(NULL)
@@ -186,11 +177,19 @@ FilterState <- R6::R6Class( # nolint
       checkmate::assert_flag(keep_na, null.ok = TRUE)
       checkmate::assert_flag(keep_inf, null.ok = TRUE)
       checkmate::assert_flag(fixed)
-      checkmate::assert_true(dataname == private$dataname)
-      checkmate::assert_true(varname == private$varname)
 
+      # Establish varlabel.
+      varlabel <- attr(x, "label")
+      # Only display it if different to varname.
+      private$varlabel <-
+        if (identical(varlabel, varname)) {
+          character(0)
+        } else {
+          varlabel
+        }
       logger::log_trace("{ class(self)[1] }$set_state setting state of variable: { varname }")
 
+      private$disabled(FALSE)
       private$set_dataname(dataname)
       private$set_varname(varname)
       private$set_choices(choices)
@@ -202,9 +201,9 @@ FilterState <- R6::R6Class( # nolint
 
       current_state <- sprintf(
         "selected: %s; keep_na: %s; keep_inf: %s",
-        toString(state$selected),
-        state$keep_na,
-        state$keep_inf
+        toString(shiny::isolate(private$get_selected())),
+        shiny::isolate(private$get_keep_na()),
+        shiny::isolate(private$get_keep_inf())
       )
 
       logger::log_trace("state of variable: { varname } set to: { current_state }")
@@ -331,6 +330,14 @@ FilterState <- R6::R6Class( # nolint
 
     # private methods ----
 
+    set_disabled = function(val = NULL) {
+      if (!is.null(val)) {
+        private$disabled <- val
+      } else
+        private$disabled <- TRUE
+      invisible(NULL)
+    },
+
     set_dataname = function(x) {
       if (identical(private$dataname, character(0))) {
         private$dataname <- x
@@ -341,7 +348,7 @@ FilterState <- R6::R6Class( # nolint
     },
 
     set_varname = function(x) {
-      if (identical(private$dataname, character(0))) {
+      if (identical(private$varname, character(0))) {
         private$varname <- x
       } else {
         warning("FilterState varname cannot be modified")
@@ -374,6 +381,7 @@ FilterState <- R6::R6Class( # nolint
           private$dataname
         )
       )
+      if (is.null(value)) value <- private$choices
 
       if (shiny::isolate(private$is_disabled())) {
         warning("This filter state is disabled. Can not change selected.")
@@ -487,7 +495,7 @@ FilterState <- R6::R6Class( # nolint
         warning("FilterState fixed cannot be modified")
       }
       invisible(NULL)
-    }
+    },
 
     # @description
     # Returns dataname.

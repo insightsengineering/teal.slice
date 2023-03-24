@@ -156,49 +156,24 @@ ChoicesFilterState <- R6::R6Class( # nolint
       }
       x <- droplevels(x)
 
-      if (is.null(choices)) {
-        choices <- levels(x)
-      } else {
-        choices <- as.character(choices)
-        choices_adjusted <- choices[choices %in% x]
-        if (length(setdiff(choices, choices_adjusted)) > 0L) {
-          warning(sprintf(
-            "Some of the choices not within variable values, adjusting. Varname: %s, dataname: %s.",
-            private$varname, private$dataname))
-          choices <- choices_adjusted
-        }
-        if (length(choices) == 0) {
-          warning(sprintf(
-            "Invalid choices: none of them within the values in the variable.
-            Setting defaults. Varname: %s, dataname: %s.",
-            private$varname, private$dataname))
-          choices <- levels(x)
-        }
-      }
-
-      private$set_is_choice_limited(x, choices)
-      x <- x[(x %in% choices) | is.na(x)]
-      x <- droplevels(x)
-      if (is.null(selected)) selected <- choices
-
       do.call(
         super$initialize,
         append(
           list(
             x = x,
             x_reactive = x_reactive,
-            dataname = dataname,
-            varname = varname,
-            choices = choices,
-            selected = selected,
-            keep_na = keep_na,
-            keep_inf = keep_inf,
-            fixed = fixed,
             extract_type = extract_type
           ),
           list(...)
         )
       )
+      self$set_state(dataname = dataname,
+                     varname = varname,
+                     choices = choices,
+                     selected = selected,
+                     keep_na = keep_na,
+                     keep_inf = keep_inf,
+                     fixed = fixed)
 
       private$set_choices_counts(unname(table(x)))
 
@@ -213,9 +188,9 @@ ChoicesFilterState <- R6::R6Class( # nolint
         FALSE
       } else if (private$is_choice_limited) {
         TRUE
-      } else if (!setequal(self$get_selected(), private$choices)) {
+      } else if (!setequal(private$get_selected(), private$choices)) {
         TRUE
-      } else if (!isTRUE(self$get_keep_na()) && private$na_count > 0) {
+      } else if (!isTRUE(private$get_keep_na()) && private$na_count > 0) {
         TRUE
       } else {
         FALSE
@@ -233,7 +208,7 @@ ChoicesFilterState <- R6::R6Class( # nolint
     get_call = function(dataname) {
       if (missing(dataname)) dataname <- private$dataname
       varname <- private$get_varname_prefixed(dataname)
-      choices <- self$get_selected()
+      choices <- private$get_selected()
       if (private$data_class != "factor") {
         choices <- do.call(sprintf("as.%s", private$data_class), list(x = choices))
       }
@@ -273,17 +248,47 @@ ChoicesFilterState <- R6::R6Class( # nolint
   # private members ----
 
   private = list(
+    x = NULL,
     choices_counts = integer(0),
     data_class = character(0), # stores class of filtered variable so that it can be restored in $get_call
     tzone = character(0), # if x is a datetime, stores time zone so that it can be restored in $get_call
 
     # private methods ----
-
+    #' @description
+    #' Checks validity of the choices, adjust if neccessary and sets the flag for the case where choices
+    #'  are limited by default from the start.
+    #'
+    set_choices = function(choices) {
+      if (is.null(choices)) {
+        choices <- levels(private$x)
+      } else {
+        choices <- as.character(choices)
+        choices_adjusted <- choices[choices %in% private$x]
+        if (length(setdiff(choices, choices_adjusted)) > 0L) {
+          warning(sprintf(
+            "Some of the choices not within variable values, adjusting. Varname: %s, dataname: %s.",
+            private$varname, private$dataname))
+          choices <- choices_adjusted
+        }
+        if (length(choices) == 0) {
+          warning(sprintf(
+            "Invalid choices: none of them within the values in the variable.
+            Setting defaults. Varname: %s, dataname: %s.",
+            private$varname, private$dataname))
+          choices <- levels(private$x)
+        }
+      }
+      private$set_is_choice_limited(private$x, choices)
+      private$choices <- choices
+      private$x <- private$x[(private$x %in% private$choices) | is.na(private$x)]
+      private$x <- droplevels(private$x)
+      invisible(NULL)
+    },
     #' @description
     #' Check whether the initial choices filter out some values of x and set the flag in case.
     #'
-    set_is_choice_limited = function(xl, choices = NULL) {
-      xl <- xl[!is.na(xl)]
+    set_is_choice_limited = function(x, choices) {
+      xl <- x[!is.na(x)]
       private$is_choice_limited <- length(setdiff(xl, choices)) > 0L
       invisible(NULL)
     },
@@ -307,15 +312,15 @@ ChoicesFilterState <- R6::R6Class( # nolint
         stop(
           sprintf(
             "Values of the selection for `%s` in `%s` should be an array of character.",
-            self$get_varname(),
-            self$get_dataname()
+            private$get_varname(),
+            private$get_dataname()
           )
         )
       }
       pre_msg <- sprintf(
         "data '%s', variable '%s': ",
-        self$get_dataname(),
-        self$get_varname()
+        private$get_dataname(),
+        private$get_varname()
       )
       check_in_subset(value, private$choices, pre_msg = pre_msg)
     },
@@ -386,7 +391,7 @@ ChoicesFilterState <- R6::R6Class( # nolint
         teal.widgets::optionalSelectInput(
           inputId = ns("selection"),
           choices = stats::setNames(private$choices, labels),
-          selected = isolate(self$get_selected()),
+          selected = isolate(private$get_selected()),
           multiple = TRUE,
           options = shinyWidgets::pickerOptions(
             actionsBox = TRUE,
@@ -442,7 +447,7 @@ ChoicesFilterState <- R6::R6Class( # nolint
                 session = session,
                 inputId = "selection",
                 choices = stats::setNames(private$choices, labels),
-                selected = self$get_selected()
+                selected = private$get_selected()
               )
             }
             NULL
@@ -460,7 +465,7 @@ ChoicesFilterState <- R6::R6Class( # nolint
                   private$dataname
                 ))
                 selection <- if (is.null(input$selection)) character(0) else input$selection
-                self$set_selected(selection)
+                private$set_selected(selection)
               }
             )
           } else {
@@ -476,7 +481,7 @@ ChoicesFilterState <- R6::R6Class( # nolint
                     private$dataname
                   ))
                   selection <- if (is.null(input$selection)) character(0) else input$selection
-                  self$set_selected(selection)
+                  private$set_selected(selection)
                 }
               }
             )
@@ -487,7 +492,7 @@ ChoicesFilterState <- R6::R6Class( # nolint
           # changed directly by the api - then it's needed to rerender UI element
           # to show relevant values
           private$observers$selection_api <- observeEvent(private$selected(), {
-            if (!isTRUE(all.equal(input$selection, self$get_selected()))) {
+            if (!isTRUE(all.equal(input$selection, private$get_selected()))) {
               logger::log_trace(sprintf(
                 "ChoicesFilterState$server@2 state of variable %s changed, dataname: %s",
                 private$varname,
@@ -529,10 +534,10 @@ ChoicesFilterState <- R6::R6Class( # nolint
     #  renders text describing number of selected levels
     #  and if NA are included also
     content_summary = function(id) {
-      n_selected <- length(self$get_selected())
+      n_selected <- length(private$get_selected())
       tagList(
         tags$span(sprintf("%s levels selected", n_selected)),
-        if (isTRUE(self$get_keep_na())) tags$span("NA") else NULL
+        if (isTRUE(private$get_keep_na())) tags$span("NA") else NULL
       )
     }
   )
