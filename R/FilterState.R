@@ -286,9 +286,9 @@ FilterState <- R6::R6Class( # nolint
             `data-toggle` = "collapse",
             `data-bs-toggle` = "collapse",
             href = paste0("#", ns("body")),
-            tags$span(tags$strong(self$get_varname())),
-            if (length(self$get_varlabel())) {
-              tags$span(self$get_varlabel(), class = "filter-card-varlabel")
+            tags$span(tags$strong(private$get_varname())),
+            if (length(private$get_varlabel())) {
+              tags$span(private$get_varlabel(), class = "filter-card-varlabel")
             } else {
               NULL
             }
