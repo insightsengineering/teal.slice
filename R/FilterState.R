@@ -180,7 +180,7 @@ FilterState <- R6::R6Class( # nolint
 
       logger::log_trace("{ class(self)[1] }$set_state setting state of variable: { varname }")
 
-      private$init_disabled() # TODO
+      private$init_disabled()
       private$set_dataname(dataname)
       private$set_varname(varname)
       private$set_varlabel(attr(private$x, "label"))
@@ -775,7 +775,6 @@ FilterState <- R6::R6Class( # nolint
     # @param parent_id (`character(1)`) id of the FilterStates card container
     ui_bs3 = function(id, parent_id) {
       ns <- NS(id)
-
       enable <- !private$is_disabled()
 
       tags$div(
