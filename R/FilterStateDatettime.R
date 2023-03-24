@@ -146,54 +146,26 @@ DatetimeFilterState <- R6::R6Class( # nolint
       checkmate::assert_class(x_reactive, 'reactive')
       checkmate::assert_multi_class(choices, c("POSIXct", "POSIXlt"), null.ok = TRUE)
 
-      if (is.null(choices)) {
-        choices <- as.POSIXct(trunc(range(x, na.rm = TRUE), units = "secs"))
-      } else {
-        choices <- as.POSIXct(choices, units = "secs")
-        choices_adjusted <- c(
-          max(choices[1L], min(as.POSIXct(x), na.rm = TRUE)),
-          min(choices[2L], max(as.POSIXct(x), na.rm = TRUE))
-        )
-        if (any(choices != choices_adjusted)) {
-          warning(sprintf(
-            "Choices adjusted (some values outside of variable range). Varname: %s, dataname: %s.",
-            private$varname, private$dataname))
-          choices <- choices_adjusted
-        }
-        if (choices[1L] >= choices[2L]) {
-          warning(sprintf(
-            "Invalid choices: lower is higher / equal to upper, or not in range of variable values.
-            Setting defaults. Varname: %s, dataname: %s.",
-            private$varname, private$dataname))
-          choices <- range(x, na.rm = TRUE)
-        }
-      }
-
-      private$set_is_choice_limited(x, choices)
-      x <- x[
-        (as.POSIXct(trunc(x, units = "secs")) >= choices[1L] &
-           as.POSIXct(trunc(x, units = "secs")) <= choices[2L] )| is.na(x)
-      ]
-      if (is.null(selected)) selected <- choices
-
       do.call(
         super$initialize,
         append(
           list(
             x = x,
             x_reactive = x_reactive,
-            dataname = dataname,
-            varname = varname,
-            choices = choices,
-            selected = selected,
-            keep_na = keep_na,
-            keep_inf = keep_inf,
-            fixed = fixed,
             extract_type = extract_type
           ),
           list(...)
         )
       )
+
+      self$set_state(dataname = dataname,
+                     varname = varname,
+                     choices = choices,
+                     selected = selected,
+                     keep_na = keep_na,
+                     keep_inf = keep_inf,
+                     fixed = fixed,
+                     ...)
 
       return(invisible(self))
     },
@@ -208,14 +180,14 @@ DatetimeFilterState <- R6::R6Class( # nolint
     format = function(indent = 0) {
       checkmate::assert_number(indent, finite = TRUE, lower = 0)
 
-      vals <- self$get_selected()
+      vals <- private$get_selected()
       sprintf(
         "%sFiltering on: %s\n%1$s  Selected range: %s - %s\n%1$s  Include missing values: %s",
         format("", width = indent),
         private$varname,
         format(vals[1], nsmall = 3),
         format(vals[2], nsmall = 3),
-        format(self$get_keep_na())
+        format(private$get_keep_na())
       )
     },
 
@@ -227,9 +199,9 @@ DatetimeFilterState <- R6::R6Class( # nolint
         FALSE
       } else if (private$is_choice_limited) {
         TRUE
-      } else if (!setequal(self$get_selected(), private$choices)) {
+      } else if (!setequal(private$get_selected(), private$choices)) {
         TRUE
-      } else if (!isTRUE(self$get_keep_na()) && private$na_count > 0) {
+      } else if (!isTRUE(private$get_keep_na()) && private$na_count > 0) {
         TRUE
       } else {
         FALSE
@@ -246,7 +218,7 @@ DatetimeFilterState <- R6::R6Class( # nolint
     #'
     get_call = function(dataname) {
       if (missing(dataname)) dataname <- private$dataname
-      choices <- self$get_selected()
+      choices <- private$get_selected()
       tzone <- Find(function(x) x != "", attr(as.POSIXlt(choices), "tzone"))
       class <- class(choices)[1L]
       date_fun <- as.name(switch(class,
@@ -277,6 +249,39 @@ DatetimeFilterState <- R6::R6Class( # nolint
   private = list(
     # private methods ----
 
+    set_choices = function(choices) {
+      if (is.null(choices)) {
+        choices <- as.POSIXct(trunc(range(private$x, na.rm = TRUE), units = "secs"))
+      } else {
+        choices <- as.POSIXct(choices, units = "secs")
+        choices_adjusted <- c(
+          max(choices[1L], min(as.POSIXct(private$x), na.rm = TRUE)),
+          min(choices[2L], max(as.POSIXct(vx), na.rm = TRUE))
+        )
+        if (any(choices != choices_adjusted)) {
+          warning(sprintf(
+            "Choices adjusted (some values outside of variable range). Varname: %s, dataname: %s.",
+            private$varname, private$dataname))
+          choices <- choices_adjusted
+        }
+        if (choices[1L] >= choices[2L]) {
+          warning(sprintf(
+            "Invalid choices: lower is higher / equal to upper, or not in range of variable values.
+            Setting defaults. Varname: %s, dataname: %s.",
+            private$varname, private$dataname))
+          choices <- range(private$x, na.rm = TRUE)
+        }
+      }
+
+      private$set_is_choice_limited(private$x, choices)
+      private$x <- private$x[
+        (as.POSIXct(trunc(private$x, units = "secs")) >= choices[1L] &
+           as.POSIXct(trunc(private$x, units = "secs")) <= choices[2L] )| is.na(private$x)
+      ]
+      private$choices <- choices
+      invisible(NULL)
+    },
+
     #' @description
     #' Check whether the initial choices filter out some values of x and set the flag in case.
     #'
@@ -289,16 +294,16 @@ DatetimeFilterState <- R6::R6Class( # nolint
         stop(
           sprintf(
             "value of the selection for `%s` in `%s` should be a POSIXct or POSIXlt",
-            self$get_varname(),
-            self$get_dataname()
+            private$get_varname(),
+            private$get_dataname()
           )
         )
       }
 
       pre_msg <- sprintf(
         "dataset '%s', variable '%s': ",
-        self$get_dataname(),
-        self$get_varname()
+        private$get_dataname(),
+        private$get_varname()
       )
       check_in_range(value, private$choices, pre_msg = pre_msg)
     },
@@ -370,8 +375,8 @@ DatetimeFilterState <- R6::R6Class( # nolint
             div(class = "w-45 text-center", {
               x <- shinyWidgets::airDatepickerInput(
                 inputId = ns("selection_start"),
-                value = self$get_selected()[1],
-                startView = self$get_selected()[1],
+                value = private$get_selected()[1],
+                startView = private$get_selected()[1],
                 timepicker = TRUE,
                 minDate = private$choices[1L],
                 maxDate = private$choices[2L],
@@ -390,8 +395,8 @@ DatetimeFilterState <- R6::R6Class( # nolint
             div(class = "w-45 text-center", {
               x <- shinyWidgets::airDatepickerInput(
                 inputId = ns("selection_end"),
-                value = self$get_selected()[2],
-                startView = self$get_selected()[2],
+                value = private$get_selected()[2],
+                startView = private$get_selected()[2],
                 timepicker = TRUE,
                 minDate = private$choices[1L],
                 maxDate = private$choices[2L],
@@ -430,24 +435,24 @@ DatetimeFilterState <- R6::R6Class( # nolint
           private$observers$selection_api <- observeEvent(
             ignoreNULL = TRUE, # dates needs to be selected
             ignoreInit = TRUE, # on init selected == default, so no need to trigger
-            eventExpr = self$get_selected(),
+            eventExpr = private$get_selected(),
             handlerExpr = {
               start_date <- input$selection_start
               end_date <- input$selection_end
-              if (!all(self$get_selected() == c(start_date, end_date))) {
-                if (self$get_selected()[1] != start_date) {
+              if (!all(private$get_selected() == c(start_date, end_date))) {
+                if (private$get_selected()[1] != start_date) {
                   shinyWidgets::updateAirDateInput(
                     session = session,
                     inputId = "selection_start",
-                    value = self$get_selected()[1]
+                    value = private$get_selected()[1]
                   )
                 }
 
-                if (self$get_selected()[2] != end_date) {
+                if (private$get_selected()[2] != end_date) {
                   shinyWidgets::updateAirDateInput(
                     session = session,
                     inputId = "selection_end",
-                    value = self$get_selected()[2]
+                    value = private$get_selected()[2]
                   )
                 }
 
@@ -467,7 +472,7 @@ DatetimeFilterState <- R6::R6Class( # nolint
             eventExpr = input$selection_start,
             handlerExpr = {
               start_date <- input$selection_start
-              end_date <- self$get_selected()[[2]]
+              end_date <- private$get_selected()[[2]]
               tzone <- Find(function(x) x != "", attr(as.POSIXlt(private$choices), "tzone"))
               attr(start_date, "tzone") <- tzone
 
@@ -479,12 +484,12 @@ DatetimeFilterState <- R6::R6Class( # nolint
                 shinyWidgets::updateAirDateInput(
                   session = session,
                   inputId = "selection_start",
-                  value = self$get_selected()[1] # sets back to latest selected value
+                  value = private$get_selected()[1] # sets back to latest selected value
                 )
                 return(NULL)
               }
 
-              self$set_selected(c(start_date, end_date))
+              private$set_selected(c(start_date, end_date))
               logger::log_trace(sprintf(
                 "DatetimeFilterState$server@2 selection of variable %s changed, dataname: %s",
                 private$varname,
@@ -498,7 +503,7 @@ DatetimeFilterState <- R6::R6Class( # nolint
             ignoreInit = TRUE, # ignoreInit: should not matter because we set the UI with the desired initial state
             eventExpr = input$selection_end,
             handlerExpr = {
-              start_date <- self$get_selected()[1]
+              start_date <- private$get_selected()[1]
               end_date <- input$selection_end
               tzone <- Find(function(x) x != "", attr(as.POSIXlt(private$choices), "tzone"))
               attr(end_date, "tzone") <- tzone
@@ -511,12 +516,12 @@ DatetimeFilterState <- R6::R6Class( # nolint
                 shinyWidgets::updateAirDateInput(
                   session = session,
                   inputId = "selection_end",
-                  value = self$get_selected()[2] # sets back to latest selected value
+                  value = private$get_selected()[2] # sets back to latest selected value
                 )
                 return(NULL)
               }
 
-              self$set_selected(c(start_date, end_date))
+              private$set_selected(c(start_date, end_date))
               logger::log_trace(sprintf(
                 "DatetimeFilterState$server@2 selection of variable %s changed, dataname: %s",
                 private$varname,
@@ -588,12 +593,12 @@ DatetimeFilterState <- R6::R6Class( # nolint
     #  renders text describing selected date range and
     #  if NA are included also
     content_summary = function(id) {
-      selected <- format(self$get_selected(), "%Y-%m-%d %H:%M:%S")
+      selected <- format(private$get_selected(), "%Y-%m-%d %H:%M:%S")
       min <- selected[1]
       max <- selected[2]
       tagList(
         tags$span(paste0(min, " - ", max)),
-        if (isTRUE(self$get_keep_na())) tags$span("NA") else NULL
+        if (isTRUE(private$get_keep_na())) tags$span("NA") else NULL
       )
     }
   )

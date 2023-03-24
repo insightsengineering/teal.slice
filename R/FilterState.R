@@ -168,8 +168,8 @@ FilterState <- R6::R6Class( # nolint
                          varname,
                          choices = NULL,
                          selected = NULL,
-                         keep_na = NULL,
-                         keep_inf = NULL,
+                         keep_na = FALSE,
+                         keep_inf = FALSE,
                          fixed = FALSE,
                          ...) {
       checkmate::assert_string(dataname)
@@ -479,7 +479,7 @@ FilterState <- R6::R6Class( # nolint
     },
 
     set_extras = function(x) {
-      if (length(private$extras) == 0L | identical(private$extras, x)) {
+      if (length(private$extras) == 0L) {
         checkmate::assert_list(x)
         private$extras <- x
       } else {

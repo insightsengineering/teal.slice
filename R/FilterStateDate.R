@@ -143,47 +143,25 @@ DateFilterState <- R6::R6Class( # nolint
       checkmate::assert_class(x_reactive, 'reactive')
       checkmate::assert_date(choices, null.ok = TRUE)
 
-      if (is.null(choices)) {
-        choices <- range(x, na.rm = TRUE)
-      } else {
-        choices_adjusted <- c(max(choices[1L], min(x)), min(choices[2L], max(x)))
-        if (any(choices != choices_adjusted)) {
-          warning(sprintf(
-            "Choices adjusted (some values outside of variable range). Varname: %s, dataname: %s.",
-            private$varname, private$dataname))
-          choices <- choices_adjusted
-        }
-        if (choices[1L] >= choices[2L]) {
-          warning(sprintf(
-            "Invalid choices: lower is higher / equal to upper, or not in range of variable values.
-            Setting defaults. Varname: %s, dataname: %s.",
-            private$varname, private$dataname))
-          choices <- range(x, na.rm = TRUE)
-        }
-      }
-
-      private$set_is_choice_limited(x, choices)
-      x <- x[(x >= choices[1L] & x <= choices[2L]) | is.na(x)]
-      if (is.null(selected)) selected <- choices
-
       do.call(
         super$initialize,
         append(
           list(
             x = x,
             x_reactive = x_reactive,
-            dataname = dataname,
-            varname = varname,
-            choices = choices,
-            selected = selected,
-            keep_na = keep_na,
-            keep_inf = keep_inf,
-            fixed = fixed,
             extract_type = extract_type
           ),
           list(...)
         )
       )
+      self$set_state(dataname = dataname,
+                     varname = varname,
+                     choices = choices,
+                     selected = selected,
+                     keep_na = keep_na,
+                     keep_inf = keep_inf,
+                     fixed = fixed,
+                     ...)
 
       return(invisible(self))
     },
@@ -198,14 +176,14 @@ DateFilterState <- R6::R6Class( # nolint
     format = function(indent = 0) {
       checkmate::assert_number(indent, finite = TRUE, lower = 0)
 
-      vals <- self$get_selected()
+      vals <- private$get_selected()
       sprintf(
         "%sFiltering on: %s\n%1$s  Selected range: %s - %s\n%1$s  Include missing values: %s",
         format("", width = indent),
         private$varname,
         format(vals[1], nsmall = 3),
         format(vals[2], nsmall = 3),
-        format(self$get_keep_na())
+        format(private$get_keep_na())
       )
     },
 
@@ -217,9 +195,9 @@ DateFilterState <- R6::R6Class( # nolint
         FALSE
       } else if (private$is_choice_limited) {
         TRUE
-      } else if (!setequal(self$get_selected(), private$choices)) {
+      } else if (!setequal(private$get_selected(), private$choices)) {
         TRUE
-      } else if (!isTRUE(self$get_keep_na()) && private$na_count > 0) {
+      } else if (!isTRUE(private$get_keep_na()) && private$na_count > 0) {
         TRUE
       } else {
         FALSE
@@ -234,7 +212,7 @@ DateFilterState <- R6::R6Class( # nolint
     #' @return (`call`)
     #'
     get_call = function(dataname) {
-      choices <- as.character(self$get_selected())
+      choices <- as.character(private$get_selected())
       filter_call <-
         call(
           "&",
@@ -248,6 +226,32 @@ DateFilterState <- R6::R6Class( # nolint
   # private methods ----
 
   private = list(
+
+    set_choices = function(choices) {
+      if (is.null(choices)) {
+        choices <- range(private$x, na.rm = TRUE)
+      } else {
+        choices_adjusted <- c(max(choices[1L], min(private$x)), min(choices[2L], max(private$x)))
+        if (any(choices != choices_adjusted)) {
+          warning(sprintf(
+            "Choices adjusted (some values outside of variable range). Varname: %s, dataname: %s.",
+            private$varname, private$dataname))
+          choices <- choices_adjusted
+        }
+        if (choices[1L] >= choices[2L]) {
+          warning(sprintf(
+            "Invalid choices: lower is higher / equal to upper, or not in range of variable values.
+            Setting defaults. Varname: %s, dataname: %s.",
+            private$varname, private$dataname))
+          choices <- range(x, na.rm = TRUE)
+        }
+      }
+      private$set_is_choice_limited(private$x, choices)
+      private$x <- private$x[(private$x >= choices[1L] & private$x <= choices[2L]) | is.na(private$x)]
+      private$choices <- choices
+      invisible(self)
+    },
+
     #' @description
     #' Check whether the initial choices filter out some values of x and set the flag in case.
     #'
@@ -260,15 +264,15 @@ DateFilterState <- R6::R6Class( # nolint
         stop(
           sprintf(
             "value of the selection for `%s` in `%s` should be a Date",
-            self$get_varname(),
-            self$get_dataname()
+            private$get_varname(),
+            private$get_dataname()
           )
         )
       }
       pre_msg <- sprintf(
         "dataset '%s', variable '%s': ",
-        self$get_dataname(),
-        self$get_varname()
+        private$get_dataname(),
+        private$get_varname()
       )
       check_in_range(value, private$choices, pre_msg = pre_msg)
     },
@@ -340,8 +344,8 @@ DateFilterState <- R6::R6Class( # nolint
             dateRangeInput(
               inputId = ns("selection"),
               label = NULL,
-              start = self$get_selected()[1],
-              end = self$get_selected()[2],
+              start = private$get_selected()[1],
+              end = private$get_selected()[2],
               min = private$choices[1L],
               max = private$choices[2L],
               width = "100%"
@@ -375,14 +379,14 @@ DateFilterState <- R6::R6Class( # nolint
           private$observers$seletion_api <- observeEvent(
             ignoreNULL = TRUE, # dates needs to be selected
             ignoreInit = TRUE,
-            eventExpr = self$get_selected(),
+            eventExpr = private$get_selected(),
             handlerExpr = {
-              if (!setequal(self$get_selected(), input$selection)) {
+              if (!setequal(private$get_selected(), input$selection)) {
                 updateDateRangeInput(
                   session = session,
                   inputId = "selection",
-                  start = self$get_selected()[1],
-                  end = self$get_selected()[2]
+                  start = private$get_selected()[1],
+                  end = private$get_selected()[2]
                 )
                 logger::log_trace(sprintf(
                   "DateFilterState$server@1 selection of variable %s changed, dataname: %s",
@@ -406,7 +410,7 @@ DateFilterState <- R6::R6Class( # nolint
                   type = "warning"
                 )
               }
-              self$set_selected(c(start_date, end_date))
+              private$set_selected(c(start_date, end_date))
               logger::log_trace(sprintf(
                 "DateFilterState$server@2 selection of variable %s changed, dataname: %s",
                 private$varname,
@@ -465,12 +469,12 @@ DateFilterState <- R6::R6Class( # nolint
     #  renders text describing selected date range and
     #  if NA are included also
     content_summary = function(id) {
-      selected <- as.character(self$get_selected())
+      selected <- as.character(private$get_selected())
       min <- selected[1]
       max <- selected[2]
       tagList(
         tags$span(paste0(min, " - ", max)),
-        if (isTRUE(self$get_keep_na())) tags$span("NA") else NULL
+        if (isTRUE(private$get_keep_na())) tags$span("NA") else NULL
       )
     }
   )
