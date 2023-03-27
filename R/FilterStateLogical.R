@@ -135,30 +135,28 @@ LogicalFilterState <- R6::R6Class( # nolint
       stopifnot(is.logical(x))
       checkmate::assert_class(x_reactive, 'reactive')
 
+      df <- factor(private$x, levels = c(TRUE, FALSE))
+      tbl <- table(df)
+      if (is.null(selected)) selected <- as.logical(levels(df))[1]
+
       do.call(
         super$initialize,
         append(
           list(
             x = x,
             x_reactive = x_reactive,
+            dataname = dataname,
+            varname = varname,
+            choices = choices,
+            selected = selected,
+            keep_na = keep_na,
+            keep_inf = keep_inf,
+            fixed = fixed,
             extract_type = extract_type
           ),
           list(...)
         )
       )
-
-      df <- factor(private$x, levels = c(TRUE, FALSE))
-      tbl <- table(df)
-      if (is.null(selected)) selected <- as.logical(levels(df))[1]
-
-      self$set_state(dataname = dataname,
-                     varname = varname,
-                     choices = choices,
-                     selected = selected,
-                     keep_na = keep_na,
-                     keep_inf = keep_inf,
-                     fixed = fixed,
-                     list(...))
 
       private$histogram_data <- data.frame(
         x = sprintf(

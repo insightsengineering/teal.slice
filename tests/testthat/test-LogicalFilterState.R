@@ -2,12 +2,12 @@ logs <- as.logical(c(rbinom(10, 1, 0.5), NA))
 
 testthat::test_that("The constructor accepts logical values", {
   testthat::expect_no_error(
-    LogicalFilterState$new(c(TRUE), x_reactive = reactive(NULL), varname = "test", dataname = "data"))
+    LogicalFilterState$new(x = c(TRUE), x_reactive = reactive(NULL), varname = "test", dataname = "data"))
 })
 
 testthat::test_that("The constructor accepts NA values", {
   testthat::expect_no_error(
-    LogicalFilterState$new(c(TRUE, NA), x_reactive = reactive(NULL), varname = "test", dataname = "data"))
+    LogicalFilterState$new(x = c(TRUE, NA), x_reactive = reactive(NULL), varname = "test", dataname = "data"))
 })
 
 testthat::test_that("get_call returns FALSE values from data passed to selector", {

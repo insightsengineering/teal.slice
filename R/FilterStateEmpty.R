@@ -76,20 +76,18 @@ EmptyFilterState <- R6::R6Class( # nolint
           list(
             x = x,
             x_reactive = x_reactive,
+            dataname = dataname,
+            varname = varname,
+            choices = choices,
+            selected = selected,
+            keep_na = keep_na,
+            keep_inf = keep_inf,
+            fixed = fixed,
             extract_type = extract_type
           ),
           list(...)
         )
       )
-
-      self$set_state(dataname = dataname,
-                     varname = varname,
-                     choices = choices,
-                     selected = selected,
-                     keep_na = keep_na,
-                     keep_inf = keep_inf,
-                     fixed = fixed,
-                     list(...))
 
       return(invisible(self))
     },

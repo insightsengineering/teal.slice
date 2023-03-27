@@ -68,8 +68,8 @@ init_filter_state <- function(x,
                               varname,
                               choices = NULL,
                               selected = NULL,
-                              keep_na = NULL,
-                              keep_inf = NULL,
+                              keep_na = FALSE,
+                              keep_inf = FALSE,
                               fixed = FALSE,
                               extract_type = character(0),
                               ...) {
@@ -116,8 +116,8 @@ init_filter_state.default <- function(x,
                                       varname,
                                       choices = NULL,
                                       selected = NULL,
-                                      keep_na = NULL,
-                                      keep_inf = NULL,
+                                      keep_na = FALSE,
+                                      keep_inf = FALSE,
                                       fixed = FALSE,
                                       extract_type = character(0),
                                       ...) {
@@ -136,8 +136,7 @@ init_filter_state.default <- function(x,
     fixed = fixed
   )
   args_set <- append(args_set, list(...))
-
-  filter_state <-   do.call(FilterState$new, args_init)
+  filter_state <- do.call(FilterState$new, args_init)
   do.call(filter_state$set_state, args_set)
 }
 
@@ -149,8 +148,8 @@ init_filter_state.logical <- function(x,
                                       varname,
                                       choices = NULL,
                                       selected = NULL,
-                                      keep_na = NULL,
-                                      keep_inf = NULL,
+                                      keep_na = FALSE,
+                                      keep_inf = FALSE,
                                       fixed = FALSE,
                                       extract_type = character(0),
                                       ...) {
@@ -182,8 +181,8 @@ init_filter_state.numeric <- function(x,
                                       varname,
                                       choices = NULL,
                                       selected = NULL,
-                                      keep_na = NULL,
-                                      keep_inf = NULL,
+                                      keep_na = FALSE,
+                                      keep_inf = FALSE,
                                       fixed = FALSE,
                                       extract_type = character(0),
                                       ...) {
@@ -202,12 +201,11 @@ init_filter_state.numeric <- function(x,
     fixed = fixed
   )
   args_set <- append(args_set, list(...))
-
   if (length(unique(x[!is.na(x)])) < getOption("teal.threshold_slider_vs_checkboxgroup")) {
     filter_state <- do.call(ChoicesFilterState$new, args_init)
     do.call(filter_state$set_state, args_set)
   } else {
-    filter_state <- do.call(RangeFilterState$new, args_init)
+    filter_state <- do.call(RangeFilterState$new, append(args_init, args_set))
     do.call(filter_state$set_state, args_set)
   }
 }
@@ -220,8 +218,8 @@ init_filter_state.factor <- function(x,
                                      varname,
                                      choices = NULL,
                                      selected = NULL,
-                                     keep_na = NULL,
-                                     keep_inf = NULL,
+                                     keep_na = FALSE,
+                                     keep_inf = FALSE,
                                      fixed = FALSE,
                                      extract_type = character(0),
                                      ...) {
@@ -253,8 +251,8 @@ init_filter_state.character <- function(x,
                                         varname,
                                         choices = NULL,
                                         selected = NULL,
-                                        keep_na = NULL,
-                                        keep_inf = NULL,
+                                        keep_na = FALSE,
+                                        keep_inf = FALSE,
                                         fixed = FALSE,
                                         extract_type = character(0),
                                         ...) {
@@ -286,8 +284,8 @@ init_filter_state.Date <- function(x,
                                    varname,
                                    choices = NULL,
                                    selected = NULL,
-                                   keep_na = NULL,
-                                   keep_inf = NULL,
+                                   keep_na = FALSE,
+                                   keep_inf = FALSE,
                                    fixed = FALSE,
                                    extract_type = character(0),
                                    ...) {
@@ -324,8 +322,8 @@ init_filter_state.POSIXct <- function(x,
                                       varname,
                                       choices = NULL,
                                       selected = NULL,
-                                      keep_na = NULL,
-                                      keep_inf = NULL,
+                                      keep_na = FALSE,
+                                      keep_inf = FALSE,
                                       fixed = FALSE,
                                       extract_type = character(0),
                                       ...) {
@@ -362,8 +360,8 @@ init_filter_state.POSIXlt <- function(x,
                                       varname,
                                       choices = NULL,
                                       selected = NULL,
-                                      keep_na = NULL,
-                                      keep_inf = NULL,
+                                      keep_na = FALSE,
+                                      keep_inf = FALSE,
                                       fixed = FALSE,
                                       extract_type = character(0),
                                       ...) {

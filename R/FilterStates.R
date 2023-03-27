@@ -596,7 +596,7 @@ FilterStates <- R6::R6Class( # nolint
         sprintf("varname %%in%% c(%s)", toString(dQuote(names(state_list), q = FALSE)))
       )
       lapply(slices_for_update, function(x) {
-        do.call(state_list[[x$varname]]$set_state, as.list(x))
+        do.call(state_list[[x$varname]]$set_state, unclass(x))
       })
 
       # Create new filter states.
@@ -619,7 +619,7 @@ FilterStates <- R6::R6Class( # nolint
           x_reactive = reactive(data_reactive(sid)[, x$varname, drop = TRUE]),
           extract_type = extract_type
         )
-        arg_list <- append(arg_list, as.list(x))
+        arg_list <- append(arg_list, unclass(x))
         fstate <- do.call(init_filter_state, arg_list)
         attr(fstate, "sid") <- sid
         private$state_list_push(x = fstate, state_list_index = state_list_index, state_id = x$varname)

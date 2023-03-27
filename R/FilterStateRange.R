@@ -155,20 +155,18 @@ RangeFilterState <- R6::R6Class( # nolint
           list(
             x = x,
             x_reactive = x_reactive,
+            dataname = dataname,
+            varname = varname,
+            choices = choices,
+            selected = selected,
+            keep_na = keep_na,
+            keep_inf = keep_inf,
+            fixed = fixed,
             extract_type = extract_type
           ),
           list(...)
         )
       )
-
-      self$set_state(dataname = dataname,
-                     varname = varname,
-                     choices = choices,
-                     selected = selected,
-                     keep_na = keep_na,
-                     keep_inf = keep_inf,
-                     fixed = fixed,
-                     ...)
 
       private$unfiltered_histogram <- ggplot2::ggplot(data.frame(x = Filter(is.finite, private$x))) +
         ggplot2::geom_histogram(
@@ -291,8 +289,9 @@ RangeFilterState <- R6::R6Class( # nolint
         (private$x >= choices[1L] & private$x <= choices[2L]) | is.na(private$x) | !is.finite(private$x)
       ]
 
-      x_range <- range(x, finite = TRUE)
+      x_range <- range(private$x, finite = TRUE)
 
+      # Required for displaying ticks on the slider, can modify choices!
       if (identical(diff(x_range), 0)) {
         choices <- x_range
         private$slider_ticks <- signif(x_range, digits = 10)

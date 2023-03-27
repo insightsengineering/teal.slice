@@ -67,7 +67,15 @@ FilterState <- R6::R6Class( # nolint
     #'
     initialize = function(x,
                           x_reactive = reactive(NULL),
-                          extract_type = character(0)) {
+                          dataname,
+                          varname,
+                          choices = NULL,
+                          selected = NULL,
+                          keep_na = FALSE,
+                          keep_inf = FALSE,
+                          fixed = FALSE,
+                          extract_type = character(0),
+                          ...) {
       checkmate::assert_class(x_reactive, "reactive")
       checkmate::assert_character(extract_type, max.len = 1, any.missing = FALSE)
       if (length(extract_type) == 1) {
@@ -89,7 +97,16 @@ FilterState <- R6::R6Class( # nolint
       private$selected <- reactiveVal(NULL)
       private$keep_na <- reactiveVal(NULL)
       private$keep_inf <- reactiveVal(NULL)
-      private$disabled <- reactiveVal(NULL)
+      private$disabled <- FALSE
+
+      self$set_state(dataname = dataname,
+                     varname = varname,
+                     choices = choices,
+                     selected = selected,
+                     keep_na = keep_na,
+                     keep_inf = keep_inf,
+                     fixed = fixed,
+                     ...)
 
       logger::log_trace("Instantiated FilterState object")
 
@@ -172,6 +189,7 @@ FilterState <- R6::R6Class( # nolint
                          keep_inf = FALSE,
                          fixed = FALSE,
                          ...) {
+      browser
       checkmate::assert_string(dataname)
       checkmate::assert_string(varname)
       checkmate::assert_flag(keep_na, null.ok = TRUE)
@@ -180,7 +198,6 @@ FilterState <- R6::R6Class( # nolint
 
       logger::log_trace("{ class(self)[1] }$set_state setting state of variable: { varname }")
 
-      private$init_disabled()
       private$set_dataname(dataname)
       private$set_varname(varname)
       private$set_varlabel(attr(private$x, "label"))
@@ -366,15 +383,6 @@ FilterState <- R6::R6Class( # nolint
     na_rm = FALSE, # logical(1)
     observers = NULL, # stores observers
     cache = NULL, # cache state when filter disabled so we can later restore
-
-    # private methods ----
-    init_disabled = function(val = NULL) {
-      if (!is.null(val)) {
-        private$disabled(val)
-      } else
-        private$disabled(FALSE)
-      invisible(NULL)
-    },
 
     set_varlabel = function(varlabel) {
       # Display only when different from varname.
@@ -681,7 +689,7 @@ FilterState <- R6::R6Class( # nolint
     # Check whether filter is disabled
     # @return `logical(1)`
     is_disabled = function() {
-      private$disabled()
+      private$disabled
     },
 
     # shiny modules -----
