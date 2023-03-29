@@ -148,8 +148,10 @@ ChoicesFilterState <- R6::R6Class( # nolint
         combine = "or"
       )
 
-      if (!is.factor(x)) {
-        x_factor <- factor(as.character(x), levels = as.character(sort(unique(x))))
+      x_factor <- if (!is.factor(x)) {
+        factor(as.character(x), levels = as.character(sort(unique(x))))
+      } else {
+        x
       }
       x_factor <- droplevels(x_factor)
 
