@@ -49,6 +49,8 @@ EmptyFilterState <- R6::R6Class( # nolint
     #'   flag specifying whether to keep infinite values
     #' @param fixed (`logical(1)`)\cr
     #'   flag specifying whether the `FilterState` is initiated fixed
+    #' @param disabled (`logical(1)`)\cr
+    #'   flag specifying whether the `FilterState` is initiated disabled
     #' @param extract_type (`character(0)`, `character(1)`)\cr
     #' whether condition calls should be prefixed by dataname. Possible values:
     #' \itemize{
@@ -62,34 +64,32 @@ EmptyFilterState <- R6::R6Class( # nolint
                           x_reactive = reactive(NULL),
                           dataname,
                           varname,
-                          choices = unique(na.omit(x)),
+                          choices = NULL,
                           selected = NULL,
-                          keep_na = FALSE,
-                          keep_inf = FALSE,
+                          keep_na = NULL,
+                          keep_inf = NULL,
                           fixed = FALSE,
+                          disabled = FALSE,
                           extract_type = character(0),
                           ...) {
 
-      do.call(
-        super$initialize,
-        append(
-          list(
-            x = x,
-            x_reactive = x_reactive,
-            dataname = dataname,
-            varname = varname,
-            choices = choices,
-            selected = selected,
-            keep_na = keep_na,
-            keep_inf = keep_inf,
-            fixed = fixed,
-            extract_type = extract_type
-          ),
-          list(...)
-        )
+      args <- list(
+        x = x,
+        x_reactive = x_reactive,
+        dataname = dataname,
+        varname = varname,
+        choices = choices,
+        selected = selected,
+        keep_na = keep_na,
+        keep_inf = keep_inf,
+        fixed = fixed,
+        disabled = disabled,
+        extract_type = extract_type
       )
+      args <- append(args, list(...))
+      do.call(super$initialize, args)
 
-      return(invisible(self))
+      invisible(self)
     },
 
     #' @description

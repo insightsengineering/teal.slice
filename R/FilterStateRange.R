@@ -118,6 +118,8 @@ RangeFilterState <- R6::R6Class( # nolint
     #'   flag specifying whether to keep infinite values
     #' @param fixed (`logical(1)`)\cr
     #'   flag specifying whether the `FilterState` is initiated fixed
+    #' @param disabled (`logical(1)`)\cr
+    #'   flag specifying whether the `FilterState` is initiated disabled
     #' @param extract_type (`character(0)`, `character(1)`)\cr
     #' whether condition calls should be prefixed by dataname. Possible values:
     #' \itemize{
@@ -133,9 +135,10 @@ RangeFilterState <- R6::R6Class( # nolint
                           varname,
                           choices = NULL,
                           selected = NULL,
-                          keep_na = FALSE,
-                          keep_inf = FALSE,
+                          keep_na = NULL,
+                          keep_inf = NULL,
                           fixed = FALSE,
+                          disabled = FALSE,
                           extract_type = character(0),
                           ...) {
       checkmate::assert_numeric(x, all.missing = FALSE)
@@ -143,30 +146,27 @@ RangeFilterState <- R6::R6Class( # nolint
       checkmate::assert_class(x_reactive, 'reactive')
       if (!any(is.finite(x))) stop("\"x\" contains no finite values")
 
+      args <- list(
+        x = x,
+        x_reactive = x_reactive,
+        dataname = dataname,
+        varname = varname,
+        choices = choices,
+        selected = selected,
+        keep_na = keep_na,
+        keep_inf = keep_inf,
+        fixed = fixed,
+        disabled = disabled,
+        extract_type = extract_type
+      )
+      args <- append(args, list(...))
+      do.call(super$initialize, args)
+
       private$is_integer <- checkmate::test_integerish(x)
       private$inf_filtered_count <- reactive(
         if (!is.null(private$x_reactive())) sum(is.infinite(private$x_reactive()))
       )
       private$inf_count <- sum(is.infinite(x))
-
-      do.call(
-        super$initialize,
-        append(
-          list(
-            x = x,
-            x_reactive = x_reactive,
-            dataname = dataname,
-            varname = varname,
-            choices = choices,
-            selected = selected,
-            keep_na = keep_na,
-            keep_inf = keep_inf,
-            fixed = fixed,
-            extract_type = extract_type
-          ),
-          list(...)
-        )
-      )
 
       private$unfiltered_histogram <- ggplot2::ggplot(data.frame(x = Filter(is.finite, private$x))) +
         ggplot2::geom_histogram(
@@ -181,7 +181,7 @@ RangeFilterState <- R6::R6Class( # nolint
           xlim = c(private$choices[1L], private$choices[2L])
         )
 
-      return(invisible(self))
+      invisible(self)
     },
 
     #' @description

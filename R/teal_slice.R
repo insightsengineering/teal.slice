@@ -45,6 +45,7 @@
 #' @param keep_na `logical(0-1)` optional logical flag specifying whether to keep missing values
 #' @param keep_inf `logical(0-1)` optional logical flag specifying whether to keep infinite values
 #' @param fixed `logical(1)` logical flag specifying whether to fix this filter state (i.e. forbid setting state)
+#' @param disabled `logical(1)`logical flag specifying whether to disable this filter state
 #' @param exclude `named list` of `character` vectors where list names match names of data sets
 #'                 and vector elements match variable names in respective data sets;
 #'                 specifies which variables are not allowed to be filtered
@@ -97,6 +98,7 @@ filter_var <- function(
     keep_na = NULL,
     keep_inf = NULL,
     fixed = FALSE,
+    disabled = FALSE,
     ...
 ) {
   checkmate::assert_string(dataname)
@@ -106,6 +108,7 @@ filter_var <- function(
   checkmate::assert_flag(keep_na, null.ok = TRUE)
   checkmate::assert_flag(keep_inf, null.ok = TRUE)
   checkmate::assert_flag(fixed)
+  checkmate::assert_flag(disabled)
 
   ans <- list(
     dataname = dataname,
@@ -114,7 +117,8 @@ filter_var <- function(
     selected = selected,
     keep_na = keep_na,
     keep_inf = keep_inf,
-    fixed = fixed
+    fixed = fixed,
+    disabled = disabled
   )
   ans <- append(ans, list(...))
 

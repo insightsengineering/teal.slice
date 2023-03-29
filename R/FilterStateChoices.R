@@ -118,6 +118,8 @@ ChoicesFilterState <- R6::R6Class( # nolint
     #'   flag specifying whether to keep infinite values
     #' @param fixed (`logical(1)`)\cr
     #'   flag specifying whether the `FilterState` is initiated fixed
+    #' @param disabled (`logical(1)`)\cr
+    #'   flag specifying whether the `FilterState` is initiated disabled
     #' @param extract_type (`character(0)`, `character(1)`)\cr
     #' whether condition calls should be prefixed by dataname. Possible values:
     #' \itemize{
@@ -133,9 +135,10 @@ ChoicesFilterState <- R6::R6Class( # nolint
                           varname,
                           choices = NULL,
                           selected = NULL,
-                          keep_na = FALSE,
-                          keep_inf = FALSE,
+                          keep_na = NULL,
+                          keep_inf = NULL,
                           fixed = FALSE,
+                          disabled = FALSE,
                           extract_type = character(0),
                           ...) {
       checkmate::assert(
@@ -144,40 +147,36 @@ ChoicesFilterState <- R6::R6Class( # nolint
         length(unique(x[!is.na(x)])) < getOption("teal.threshold_slider_vs_checkboxgroup"),
         combine = "or"
       )
-      checkmate::assert_class(x_reactive, 'reactive')
+
+      if (!is.factor(x)) {
+        x_factor <- factor(as.character(x), levels = as.character(sort(unique(x))))
+      }
+      x_factor <- droplevels(x_factor)
+
+      args <- list(
+        x = x_factor,
+        x_reactive = x_reactive,
+        dataname = dataname,
+        varname = varname,
+        choices = choices,
+        selected = selected,
+        keep_na = keep_na,
+        keep_inf = keep_inf,
+        fixed = fixed,
+        disabled = disabled,
+        extract_type = extract_type
+      )
+      args <- append(args, list(...))
+      do.call(super$initialize, args)
 
       private$data_class <- class(x)[1L]
       if (inherits(x, "POSIXt")) {
         private$tzone <- Find(function(x) x != "", attr(as.POSIXlt(x), "tzone"))
       }
 
-      if (!is.factor(x)) {
-        x <- factor(as.character(x), levels = as.character(sort(unique(x))))
-      }
-      x <- droplevels(x)
+      private$set_choices_counts(unname(table(x)))
 
-      do.call(
-        super$initialize,
-        append(
-          list(
-            x = x,
-            x_reactive = x_reactive,
-            dataname = dataname,
-            varname = varname,
-            choices = choices,
-            selected = selected,
-            keep_na = keep_na,
-            keep_inf = keep_inf,
-            fixed = fixed,
-            extract_type = extract_type
-          ),
-          list(...)
-        )
-      )
-
-      private$set_choices_counts(unname(table(private$x)))
-
-      return(invisible(self))
+      invisible(self)
     },
 
     #' @description
