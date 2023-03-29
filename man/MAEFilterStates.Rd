@@ -174,7 +174,7 @@ Set filter state
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
-\item{\code{state}}{(\verb{named list})\cr
+\item{\code{state}}{(\code{teal_slices})\cr
 \code{teal_slice} objects should contain the field \code{target = "y"}}
 }
 \if{html}{\out{</div>}}

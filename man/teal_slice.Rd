@@ -13,11 +13,8 @@
 \alias{[.teal_slices}
 \alias{c.teal_slices}
 \alias{print.teal_slices}
-\alias{extract_by_feat}
-\alias{extract_feat}
-\alias{extract_fun}
-\alias{extract_fun_s}
-\alias{name_slices}
+\alias{slices_field}
+\alias{slices_which}
 \title{Manage filter state(s).}
 \usage{
 filter_var(
@@ -28,6 +25,7 @@ filter_var(
   keep_na = NULL,
   keep_inf = NULL,
   fixed = FALSE,
+  disabled = FALSE,
   ...
 )
 
@@ -55,15 +53,9 @@ as.teal_slices(x)
 
 \method{print}{teal_slices}(x, ...)
 
-extract_by_feat(tss, feature, value)
+slices_field(tss, field)
 
-extract_feat(tss, feature)
-
-extract_fun(tss, expr)
-
-extract_fun_s(tss, expr)
-
-name_slices(tss, feature)
+slices_which(tss, expr)
 }
 \arguments{
 \item{dataname}{\code{character(1)} name of data set}
@@ -83,7 +75,9 @@ type and size depends on variable type}
 
 \item{fixed}{\code{logical(1)} logical flag specifying whether to fix this filter state (i.e. forbid setting state)}
 
-\item{...}{for \code{filter_var} any number of additional features given as \code{name:value} pairs\cr
+\item{disabled}{\code{logical(1)}logical flag specifying whether to disable this filter state}
+
+\item{...}{for \code{filter_var} any number of additional fields given as \code{name:value} pairs\cr
 for \code{filter_settings} any number of \code{teal_slice} objects\cr
 for other functions arguments passed to other methods}
 
@@ -97,10 +91,10 @@ specifies which variables are not allowed to be filtered}
 
 \item{tss}{\code{teal_slices}}
 
-\item{feature}{\code{character(1)} name of \code{teal_slice} element}
+\item{field}{\code{character(1)} name of \code{teal_slice} element}
 
-\item{expr}{\code{expression} or \code{character} string representing and expression
-that evaluates to a single \code{logical}; will be evaluated in individual \code{teal_slice} objects}
+\item{expr}{\code{character} string representing and expression that evaluates to a single \code{logical};
+will be evaluated in individual \code{teal_slice} objects}
 }
 \value{
 \code{filter_var} returns object of class \code{teal_slice}, which is a named list.
@@ -157,12 +151,10 @@ all_filters <- filter_settings(
   )
 )
 
-teal.slice:::extract_by_feat(all_filters, "dataname", "dataname1")
-teal.slice:::extract_feat(all_filters, "dataname")
-teal.slice:::extract_fun(all_filters, dataname == "dataname2")
-teal.slice:::extract_fun_s(all_filters, 'dataname == "dataname2"')
+teal.slice:::slices_which(all_filters, 'dataname == "dataname2"')
 x <- "dataname2"
-teal.slice:::extract_fun_s(all_filters, sprintf('dataname == "\%s"', x))
+teal.slice:::slices_which(all_filters, sprintf('dataname == "\%s"', x))
+teal.slice:::slices_field(all_filters, "dataname")
 
 }
 \keyword{internal}

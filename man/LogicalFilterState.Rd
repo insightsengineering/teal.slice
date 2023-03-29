@@ -4,15 +4,8 @@
 \name{LogicalFilterState}
 \alias{LogicalFilterState}
 \title{\code{FilterState} object for logical variable}
-\value{
-invisibly \code{NULL}.
-}
 \description{
 Manages choosing a logical state
-}
-\note{
-Casts the passed object to \code{logical} before validating the input
-making it possible to pass any object coercible to \code{logical} to this method.
 }
 \examples{
 filter_state <- teal.slice:::LogicalFilterState$new(
@@ -89,13 +82,6 @@ if (interactive()) {
 }
 }
 
-
-## ------------------------------------------------
-## Method `LogicalFilterState$set_selected`
-## ------------------------------------------------
-
-filter <- teal.slice:::LogicalFilterState$new(c(TRUE), varname = "name", dataname = "data")
-filter$set_selected(TRUE)
 }
 \keyword{internal}
 \section{Super class}{
@@ -107,29 +93,19 @@ filter$set_selected(TRUE)
 \item \href{#method-LogicalFilterState-new}{\code{LogicalFilterState$new()}}
 \item \href{#method-LogicalFilterState-is_any_filtered}{\code{LogicalFilterState$is_any_filtered()}}
 \item \href{#method-LogicalFilterState-get_call}{\code{LogicalFilterState$get_call()}}
-\item \href{#method-LogicalFilterState-set_selected}{\code{LogicalFilterState$set_selected()}}
 \item \href{#method-LogicalFilterState-clone}{\code{LogicalFilterState$clone()}}
 }
 }
 \if{html}{\out{
 <details><summary>Inherited methods</summary>
 <ul>
-<li><span class="pkg-link" data-pkg="teal.slice" data-topic="InteractiveFilterState" data-id="destroy_observers"><a href='../../teal.slice/html/InteractiveFilterState.html#method-InteractiveFilterState-destroy_observers'><code>teal.slice::InteractiveFilterState$destroy_observers()</code></a></span></li>
-<li><span class="pkg-link" data-pkg="teal.slice" data-topic="InteractiveFilterState" data-id="format"><a href='../../teal.slice/html/InteractiveFilterState.html#method-InteractiveFilterState-format'><code>teal.slice::InteractiveFilterState$format()</code></a></span></li>
-<li><span class="pkg-link" data-pkg="teal.slice" data-topic="InteractiveFilterState" data-id="get_dataname"><a href='../../teal.slice/html/InteractiveFilterState.html#method-InteractiveFilterState-get_dataname'><code>teal.slice::InteractiveFilterState$get_dataname()</code></a></span></li>
-<li><span class="pkg-link" data-pkg="teal.slice" data-topic="InteractiveFilterState" data-id="get_keep_inf"><a href='../../teal.slice/html/InteractiveFilterState.html#method-InteractiveFilterState-get_keep_inf'><code>teal.slice::InteractiveFilterState$get_keep_inf()</code></a></span></li>
-<li><span class="pkg-link" data-pkg="teal.slice" data-topic="InteractiveFilterState" data-id="get_keep_na"><a href='../../teal.slice/html/InteractiveFilterState.html#method-InteractiveFilterState-get_keep_na'><code>teal.slice::InteractiveFilterState$get_keep_na()</code></a></span></li>
-<li><span class="pkg-link" data-pkg="teal.slice" data-topic="InteractiveFilterState" data-id="get_selected"><a href='../../teal.slice/html/InteractiveFilterState.html#method-InteractiveFilterState-get_selected'><code>teal.slice::InteractiveFilterState$get_selected()</code></a></span></li>
-<li><span class="pkg-link" data-pkg="teal.slice" data-topic="InteractiveFilterState" data-id="get_state"><a href='../../teal.slice/html/InteractiveFilterState.html#method-InteractiveFilterState-get_state'><code>teal.slice::InteractiveFilterState$get_state()</code></a></span></li>
-<li><span class="pkg-link" data-pkg="teal.slice" data-topic="InteractiveFilterState" data-id="get_varlabel"><a href='../../teal.slice/html/InteractiveFilterState.html#method-InteractiveFilterState-get_varlabel'><code>teal.slice::InteractiveFilterState$get_varlabel()</code></a></span></li>
-<li><span class="pkg-link" data-pkg="teal.slice" data-topic="InteractiveFilterState" data-id="get_varname"><a href='../../teal.slice/html/InteractiveFilterState.html#method-InteractiveFilterState-get_varname'><code>teal.slice::InteractiveFilterState$get_varname()</code></a></span></li>
-<li><span class="pkg-link" data-pkg="teal.slice" data-topic="InteractiveFilterState" data-id="print"><a href='../../teal.slice/html/InteractiveFilterState.html#method-InteractiveFilterState-print'><code>teal.slice::InteractiveFilterState$print()</code></a></span></li>
-<li><span class="pkg-link" data-pkg="teal.slice" data-topic="InteractiveFilterState" data-id="server"><a href='../../teal.slice/html/InteractiveFilterState.html#method-InteractiveFilterState-server'><code>teal.slice::InteractiveFilterState$server()</code></a></span></li>
-<li><span class="pkg-link" data-pkg="teal.slice" data-topic="InteractiveFilterState" data-id="set_keep_inf"><a href='../../teal.slice/html/InteractiveFilterState.html#method-InteractiveFilterState-set_keep_inf'><code>teal.slice::InteractiveFilterState$set_keep_inf()</code></a></span></li>
-<li><span class="pkg-link" data-pkg="teal.slice" data-topic="InteractiveFilterState" data-id="set_keep_na"><a href='../../teal.slice/html/InteractiveFilterState.html#method-InteractiveFilterState-set_keep_na'><code>teal.slice::InteractiveFilterState$set_keep_na()</code></a></span></li>
-<li><span class="pkg-link" data-pkg="teal.slice" data-topic="InteractiveFilterState" data-id="set_na_rm"><a href='../../teal.slice/html/InteractiveFilterState.html#method-InteractiveFilterState-set_na_rm'><code>teal.slice::InteractiveFilterState$set_na_rm()</code></a></span></li>
-<li><span class="pkg-link" data-pkg="teal.slice" data-topic="InteractiveFilterState" data-id="set_state"><a href='../../teal.slice/html/InteractiveFilterState.html#method-InteractiveFilterState-set_state'><code>teal.slice::InteractiveFilterState$set_state()</code></a></span></li>
-<li><span class="pkg-link" data-pkg="teal.slice" data-topic="InteractiveFilterState" data-id="ui"><a href='../../teal.slice/html/InteractiveFilterState.html#method-InteractiveFilterState-ui'><code>teal.slice::InteractiveFilterState$ui()</code></a></span></li>
+<li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilterState" data-id="destroy_observers"><a href='../../teal.slice/html/FilterState.html#method-FilterState-destroy_observers'><code>teal.slice::FilterState$destroy_observers()</code></a></span></li>
+<li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilterState" data-id="format"><a href='../../teal.slice/html/FilterState.html#method-FilterState-format'><code>teal.slice::FilterState$format()</code></a></span></li>
+<li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilterState" data-id="get_state"><a href='../../teal.slice/html/FilterState.html#method-FilterState-get_state'><code>teal.slice::FilterState$get_state()</code></a></span></li>
+<li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilterState" data-id="print"><a href='../../teal.slice/html/FilterState.html#method-FilterState-print'><code>teal.slice::FilterState$print()</code></a></span></li>
+<li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilterState" data-id="server"><a href='../../teal.slice/html/FilterState.html#method-FilterState-server'><code>teal.slice::FilterState$server()</code></a></span></li>
+<li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilterState" data-id="set_state"><a href='../../teal.slice/html/FilterState.html#method-FilterState-set_state'><code>teal.slice::FilterState$set_state()</code></a></span></li>
+<li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilterState" data-id="ui"><a href='../../teal.slice/html/FilterState.html#method-FilterState-ui'><code>teal.slice::FilterState$ui()</code></a></span></li>
 </ul>
 </details>
 }}
@@ -149,6 +125,7 @@ Initialize a \code{FilterState} object
   keep_na = NULL,
   keep_inf = NULL,
   fixed = FALSE,
+  disabled = FALSE,
   extract_type = character(0),
   ...
 )}\if{html}{\out{</div>}}
@@ -187,6 +164,9 @@ flag specifying whether to keep infinite values}
 
 \item{\code{fixed}}{(\code{logical(1)})\cr
 flag specifying whether the \code{FilterState} is initiated fixed}
+
+\item{\code{disabled}}{(\code{logical(1)})\cr
+flag specifying whether the \code{FilterState} is initiated disabled}
 
 \item{\code{extract_type}}{(\code{character(0)}, \code{character(1)})\cr
 whether condition calls should be prefixed by dataname. Possible values:
@@ -235,33 +215,6 @@ For \code{LogicalFilterState} it's a \verb{!<varname>} or \verb{<varname>} and o
 \subsection{Returns}{
 (\code{call})
 }
-}
-\if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-LogicalFilterState-set_selected"></a>}}
-\if{latex}{\out{\hypertarget{method-LogicalFilterState-set_selected}{}}}
-\subsection{Method \code{set_selected()}}{
-Sets the selected values of this \code{LogicalFilterState}.
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{LogicalFilterState$set_selected(value)}\if{html}{\out{</div>}}
-}
-
-\subsection{Arguments}{
-\if{html}{\out{<div class="arguments">}}
-\describe{
-\item{\code{value}}{(\code{logical(1)})\cr
-the value to set. Must not contain the NA value.}
-}
-\if{html}{\out{</div>}}
-}
-\subsection{Examples}{
-\if{html}{\out{<div class="r example copy">}}
-\preformatted{filter <- teal.slice:::LogicalFilterState$new(c(TRUE), varname = "name", dataname = "data")
-filter$set_selected(TRUE)
-}
-\if{html}{\out{</div>}}
-
-}
-
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-LogicalFilterState-clone"></a>}}

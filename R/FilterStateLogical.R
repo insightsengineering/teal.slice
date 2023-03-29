@@ -219,9 +219,8 @@ LogicalFilterState <- R6::R6Class( # nolint
       private$choices <- c(TRUE, FALSE)
       invisible(NULL)
     },
-    #' @description
-    #' Sets choices_counts private field
-    #'
+    # @description
+    # Sets choices_counts private field
     set_choices_counts = function(choices_counts) {
       private$choices_counts <- choices_counts
       invisible(NULL)

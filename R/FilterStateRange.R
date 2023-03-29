@@ -308,9 +308,8 @@ RangeFilterState <- R6::R6Class( # nolint
       invisible(NULL)
     },
 
-    #' @description
-    #' Check whether the initial choices filter out some values of x and set the flag in case.
-    #'
+    # @description
+    # Check whether the initial choices filter out some values of x and set the flag in case.
     set_is_choice_limited = function(xl, choices) {
       xl <- xl[!is.na(xl)]
       xl <- xl[is.finite(xl)]

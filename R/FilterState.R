@@ -195,7 +195,7 @@ FilterState <- R6::R6Class( # nolint
     #' @description
     #' Sets filtering state.
     #'
-    #' @param a `teal_slice` object
+    #' @param state a `teal_slice` object
     #'
     #' @return `self` invisibly
     #'

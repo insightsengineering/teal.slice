@@ -9,11 +9,12 @@ init_filter_state(
   x_reactive = reactive(NULL),
   dataname,
   varname,
-  choices = unique(na.omit(x)),
+  choices = NULL,
   selected = NULL,
   keep_na = NULL,
   keep_inf = NULL,
   fixed = FALSE,
+  disabled = FALSE,
   extract_type = character(0),
   ...
 )
@@ -49,6 +50,9 @@ flag specifying whether to keep infinite values}
 
 \item{fixed}{(\code{logical(1)})\cr
 flag specifying whether the \code{FilterState} is initiated fixed}
+
+\item{disabled}{(\code{logical(1)})\cr
+flag specifying whether the \code{FilterState} is initiated disabled}
 
 \item{extract_type}{(\code{character(0)}, \code{character(1)})\cr
 whether condition calls should be prefixed by dataname. Possible values:

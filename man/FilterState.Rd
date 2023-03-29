@@ -28,8 +28,7 @@ Each variable's filter state is an \code{R6} object which contains \code{choices
 variable type specific fields (\code{keep_inf}, \code{inf_count}, \code{timezone}).
 Object contains also shiny module (\code{ui} and \code{server}) which manages
 state of the filter through reactive values \code{selected}, \code{keep_na}, \code{keep_inf}
-which trigger \code{get_call()} and every R function call up in reactive
-chain.
+which trigger \code{get_call()} and every R function call up in reactive chain.
 \cr
 \cr
 }
@@ -38,12 +37,12 @@ chain.
 
 Modifying a \code{FilterState} object is possible in three scenarios:
 \itemize{
-\item In the interactive session by directly specifying values of \code{selected},
-\code{keep_na} or \code{keep_inf} using \code{set_state} method (to update all at once),
-or using \code{set_selected}, \code{set_keep_na} or \code{set_keep_inf}
-\item In a running application by changing appropriate inputs
-\item In a running application by using \link{filter_state_api} which directly uses \code{set_state} method
-of the \code{FilterState} object.
+\item In the interactive session by passing an appropriate \code{teal_slice}
+to the \code{set_state} method, or using
+\code{set_selected}, \code{set_keep_na} or \code{set_keep_inf} methods.
+\item In a running application by changing appropriate inputs.
+\item In a running application by using \link{filter_state_api} which directly uses
+\code{set_state} method of the \code{InteractiveFilterState} object.
 }
 }
 
@@ -52,22 +51,14 @@ of the \code{FilterState} object.
 \subsection{Public methods}{
 \itemize{
 \item \href{#method-FilterState-new}{\code{FilterState$new()}}
-\item \href{#method-FilterState-destroy_observers}{\code{FilterState$destroy_observers()}}
 \item \href{#method-FilterState-format}{\code{FilterState$format()}}
-\item \href{#method-FilterState-get_call}{\code{FilterState$get_call()}}
-\item \href{#method-FilterState-get_dataname}{\code{FilterState$get_dataname()}}
-\item \href{#method-FilterState-get_keep_na}{\code{FilterState$get_keep_na()}}
-\item \href{#method-FilterState-get_varlabel}{\code{FilterState$get_varlabel()}}
-\item \href{#method-FilterState-get_varname}{\code{FilterState$get_varname()}}
-\item \href{#method-FilterState-get_selected}{\code{FilterState$get_selected()}}
-\item \href{#method-FilterState-get_state}{\code{FilterState$get_state()}}
 \item \href{#method-FilterState-print}{\code{FilterState$print()}}
-\item \href{#method-FilterState-set_keep_na}{\code{FilterState$set_keep_na()}}
-\item \href{#method-FilterState-set_na_rm}{\code{FilterState$set_na_rm()}}
-\item \href{#method-FilterState-set_selected}{\code{FilterState$set_selected()}}
 \item \href{#method-FilterState-set_state}{\code{FilterState$set_state()}}
+\item \href{#method-FilterState-get_state}{\code{FilterState$get_state()}}
+\item \href{#method-FilterState-get_call}{\code{FilterState$get_call()}}
 \item \href{#method-FilterState-server}{\code{FilterState$server()}}
 \item \href{#method-FilterState-ui}{\code{FilterState$ui()}}
+\item \href{#method-FilterState-destroy_observers}{\code{FilterState$destroy_observers()}}
 \item \href{#method-FilterState-clone}{\code{FilterState$clone()}}
 }
 }
@@ -84,10 +75,12 @@ Initialize a \code{FilterState} object
   varname,
   choices = NULL,
   selected = NULL,
-  varlabel = character(0),
   keep_na = NULL,
+  keep_inf = NULL,
   fixed = FALSE,
-  extract_type = character(0)
+  disabled = FALSE,
+  extract_type = character(0),
+  ...
 )}\if{html}{\out{</div>}}
 }
 
@@ -98,45 +91,50 @@ Initialize a \code{FilterState} object
 values of the variable used in filter}
 
 \item{\code{x_reactive}}{(\code{reactive})\cr
-a \code{reactive} returning a filtered vector or returning \code{NULL}. It is used to update
-counts following the change in values of the filtered dataset. If the \code{reactive}
-is \code{NULL} counts based on filtered dataset are not shown.}
+returning vector of the same type as \code{x}. Is used to update
+counts following the change in values of the filtered dataset.
+If it is set to \code{reactive(NULL)} then counts based on filtered
+dataset are not shown.}
 
 \item{\code{dataname}}{(\code{character(1)})\cr
-name of dataset where \code{x} is taken from. Must be specified if \code{extract_type} argument
-is not empty.}
+optional name of dataset where \code{x} is taken from. Must be specified
+if \code{extract_type} argument is not empty.}
 
-\item{\code{varname}}{(\code{character})\cr
-name of the variable}
+\item{\code{varname}}{(\code{character(1)})\cr
+name of the variable.}
 
-\item{\code{varlabel}}{(\code{character(1)})\cr
-label of the variable (optional).}
+\item{\code{choices}}{(\code{atomic})\cr
+vector specifying allowed selection values}
+
+\item{\code{selected}}{(\code{atomic}, \code{NULL})\cr
+vector specifying selection}
+
+\item{\code{keep_na}}{(\code{logical(1)}, \code{NULL})\cr
+flag specifying whether to keep missing values}
+
+\item{\code{keep_inf}}{(\code{logical(1)}, \code{NULL})\cr
+flag specifying whether to keep infinite values}
+
+\item{\code{fixed}}{(\code{logical(1)})\cr
+flag specifying whether the \code{FilterState} is initiated fixed}
+
+\item{\code{disabled}}{(\code{logical(1)})\cr
+flag specifying whether the \code{FilterState} is initiated disabled}
 
 \item{\code{extract_type}}{(\code{character(0)}, \code{character(1)})\cr
 whether condition calls should be prefixed by dataname. Possible values:
 \itemize{
 \item{\code{character(0)} (default)}{ \code{varname} in the condition call will not be prefixed}
 \item{\code{"list"}}{ \code{varname} in the condition call will be returned as \verb{<dataname>$<varname>}}
-\item{\code{"matrix"}}{ \code{varname} in the condition call will be returned as \verb{<dataname>[, "<varname>"]}}
+\item{\code{"matrix"}}{ \code{varname} in the condition call will be returned as \verb{<dataname>[, <varname>]}}
 }}
+
+\item{\code{...}}{additional arguments to be saved as a list in \code{private$extras} field}
 }
 \if{html}{\out{</div>}}
 }
 \subsection{Returns}{
 self invisibly
-}
-}
-\if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-FilterState-destroy_observers"></a>}}
-\if{latex}{\out{\hypertarget{method-FilterState-destroy_observers}{}}}
-\subsection{Method \code{destroy_observers()}}{
-Destroy observers stored in \code{private$observers}.
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{FilterState$destroy_observers()}\if{html}{\out{</div>}}
-}
-
-\subsection{Returns}{
-NULL invisibly
 }
 }
 \if{html}{\out{<hr>}}
@@ -166,101 +164,6 @@ allowed range is 30 to 120; defaults to 76}
 }
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-FilterState-get_call"></a>}}
-\if{latex}{\out{\hypertarget{method-FilterState-get_call}{}}}
-\subsection{Method \code{get_call()}}{
-Returns reproducible condition call for current selection relevant
-for selected variable type.
-Method is using internal reactive values which makes it reactive
-and must be executed in reactive or isolated context.
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{FilterState$get_call()}\if{html}{\out{</div>}}
-}
-
-}
-\if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-FilterState-get_dataname"></a>}}
-\if{latex}{\out{\hypertarget{method-FilterState-get_dataname}{}}}
-\subsection{Method \code{get_dataname()}}{
-Returns dataname or "NULL" if dataname is NULL.
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{FilterState$get_dataname()}\if{html}{\out{</div>}}
-}
-
-\subsection{Returns}{
-\code{character(1)}
-}
-}
-\if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-FilterState-get_keep_na"></a>}}
-\if{latex}{\out{\hypertarget{method-FilterState-get_keep_na}{}}}
-\subsection{Method \code{get_keep_na()}}{
-Returns current \code{keep_na} selection.
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{FilterState$get_keep_na()}\if{html}{\out{</div>}}
-}
-
-\subsection{Returns}{
-\code{logical(1)}
-}
-}
-\if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-FilterState-get_varlabel"></a>}}
-\if{latex}{\out{\hypertarget{method-FilterState-get_varlabel}{}}}
-\subsection{Method \code{get_varlabel()}}{
-Returns variable label.
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{FilterState$get_varlabel()}\if{html}{\out{</div>}}
-}
-
-\subsection{Returns}{
-\code{character(1)}
-}
-}
-\if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-FilterState-get_varname"></a>}}
-\if{latex}{\out{\hypertarget{method-FilterState-get_varname}{}}}
-\subsection{Method \code{get_varname()}}{
-Get variable name.
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{FilterState$get_varname()}\if{html}{\out{</div>}}
-}
-
-\subsection{Returns}{
-\code{character(1)}
-}
-}
-\if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-FilterState-get_selected"></a>}}
-\if{latex}{\out{\hypertarget{method-FilterState-get_selected}{}}}
-\subsection{Method \code{get_selected()}}{
-Get selected values from \code{FilterState}.
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{FilterState$get_selected()}\if{html}{\out{</div>}}
-}
-
-\subsection{Returns}{
-class of the returned object depends of class of the \code{FilterState}
-}
-}
-\if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-FilterState-get_state"></a>}}
-\if{latex}{\out{\hypertarget{method-FilterState-get_state}{}}}
-\subsection{Method \code{get_state()}}{
-Returns the filtering state.
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{FilterState$get_state()}\if{html}{\out{</div>}}
-}
-
-\subsection{Returns}{
-\code{list} containing values taken from the reactive fields:
-\itemize{
-\item \code{selected} (\code{atomic}) length depends on a \code{FilterState} variant.
-\item \code{keep_na} (\code{logical(1)}) whether \code{NA} should be kept.
-}
-}
-}
-\if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-FilterState-print"></a>}}
 \if{latex}{\out{\hypertarget{method-FilterState-print}{}}}
 \subsection{Method \code{print()}}{
@@ -278,81 +181,10 @@ Prints this \code{FilterState} object.
 }
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-FilterState-set_keep_na"></a>}}
-\if{latex}{\out{\hypertarget{method-FilterState-set_keep_na}{}}}
-\subsection{Method \code{set_keep_na()}}{
-Set whether to keep NAs.
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{FilterState$set_keep_na(value)}\if{html}{\out{</div>}}
-}
-
-\subsection{Arguments}{
-\if{html}{\out{<div class="arguments">}}
-\describe{
-\item{\code{value}}{\code{logical(1)}\cr
-value(s) which come from the filter selection. Value is set in \code{server}
-modules after selecting check-box-input in the shiny interface. Values are set to
-\code{private$keep_na} which is reactive.}
-}
-\if{html}{\out{</div>}}
-}
-\subsection{Returns}{
-NULL invisibly
-}
-}
-\if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-FilterState-set_na_rm"></a>}}
-\if{latex}{\out{\hypertarget{method-FilterState-set_na_rm}{}}}
-\subsection{Method \code{set_na_rm()}}{
-Some methods need an additional \code{!is.na(varame)} condition to drop
-missing values. When \code{private$na_rm = TRUE}, \code{self$get_call} returns
-condition extended by \code{!is.na}.
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{FilterState$set_na_rm(value)}\if{html}{\out{</div>}}
-}
-
-\subsection{Arguments}{
-\if{html}{\out{<div class="arguments">}}
-\describe{
-\item{\code{value}}{\code{logical(1)}\cr
-when \code{TRUE}, \code{FilterState$get_call} appends an expression
-removing \code{NA} values to the filter expression returned by \code{get_call}}
-}
-\if{html}{\out{</div>}}
-}
-\subsection{Returns}{
-NULL invisibly
-}
-}
-\if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-FilterState-set_selected"></a>}}
-\if{latex}{\out{\hypertarget{method-FilterState-set_selected}{}}}
-\subsection{Method \code{set_selected()}}{
-Set selection.
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{FilterState$set_selected(value)}\if{html}{\out{</div>}}
-}
-
-\subsection{Arguments}{
-\if{html}{\out{<div class="arguments">}}
-\describe{
-\item{\code{value}}{(\code{vector})\cr
-value(s) that come from filter selection; values are set in the
-module server after a selection is made in the app interface;
-values are stored in \code{private$selected} which is reactive;
-value types have to be the same as \code{private$choices}}
-}
-\if{html}{\out{</div>}}
-}
-\subsection{Returns}{
-NULL invisibly
-}
-}
-\if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-FilterState-set_state"></a>}}
 \if{latex}{\out{\hypertarget{method-FilterState-set_state}{}}}
 \subsection{Method \code{set_state()}}{
-Set state.
+Sets filtering state.
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{FilterState$set_state(state)}\if{html}{\out{</div>}}
 }
@@ -360,18 +192,39 @@ Set state.
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
-\item{\code{state}}{(\code{list})\cr
-contains fields relevant for a specific class:
-\itemize{
-\item{\code{selected}}{ defines initial selection}
-\item{\code{keep_na} (\code{logical})}{ defines whether to keep or remove \code{NA} values}
-}}
+\item{\code{state}}{a \code{teal_slice} object}
 }
 \if{html}{\out{</div>}}
 }
 \subsection{Returns}{
-NULL invisibly
+\code{self} invisibly
 }
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-FilterState-get_state"></a>}}
+\if{latex}{\out{\hypertarget{method-FilterState-get_state}{}}}
+\subsection{Method \code{get_state()}}{
+Returns filtering state.
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{FilterState$get_state()}\if{html}{\out{</div>}}
+}
+
+\subsection{Returns}{
+A \code{teal_slice} object.
+}
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-FilterState-get_call"></a>}}
+\if{latex}{\out{\hypertarget{method-FilterState-get_call}{}}}
+\subsection{Method \code{get_call()}}{
+Returns reproducible condition call for current selection relevant
+for selected variable type.
+Method is using internal reactive values which makes it reactive
+and must be executed in reactive or isolated context.
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{FilterState$get_call()}\if{html}{\out{</div>}}
+}
+
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-FilterState-server"></a>}}
@@ -411,10 +264,24 @@ Shiny module UI.
 shiny element (module instance) id;
 the UI for this class contains simple message stating that it is not supported}
 
-\item{\code{parent_id}}{(\code{character(1)}) id of the FilterStates card container
-module with inputs}
+\item{\code{parent_id}}{(\code{character(1)}) id of the FilterStates card container}
 }
 \if{html}{\out{</div>}}
+}
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-FilterState-destroy_observers"></a>}}
+\if{latex}{\out{\hypertarget{method-FilterState-destroy_observers}{}}}
+\subsection{Method \code{destroy_observers()}}{
+Destroy observers stored in \code{private$observers}.
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{FilterState$destroy_observers()}\if{html}{\out{</div>}}
+}
+
+\subsection{Returns}{
+NULL invisibly
+
+module with inputs
 }
 }
 \if{html}{\out{<hr>}}

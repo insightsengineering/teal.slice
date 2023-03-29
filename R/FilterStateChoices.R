@@ -255,10 +255,9 @@ ChoicesFilterState <- R6::R6Class( # nolint
     tzone = character(0), # if x is a datetime, stores time zone so that it can be restored in $get_call
 
     # private methods ----
-    #' @description
-    #' Checks validity of the choices, adjust if neccessary and sets the flag for the case where choices
-    #'  are limited by default from the start.
-    #'
+    # @description
+    # Checks validity of the choices, adjust if neccessary and sets the flag for the case where choices
+    #  are limited by default from the start.
     set_choices = function(choices) {
       if (is.null(choices)) {
         choices <- levels(private$x)
@@ -285,17 +284,15 @@ ChoicesFilterState <- R6::R6Class( # nolint
       private$x <- droplevels(private$x)
       invisible(NULL)
     },
-    #' @description
-    #' Check whether the initial choices filter out some values of x and set the flag in case.
-    #'
+    # @description
+    # Check whether the initial choices filter out some values of x and set the flag in case.
     set_is_choice_limited = function(x, choices) {
       xl <- x[!is.na(x)]
       private$is_choice_limited <- length(setdiff(xl, choices)) > 0L
       invisible(NULL)
     },
-    #' @description
-    #' Sets choices_counts private field
-    #'
+    # @description
+    # Sets choices_counts private field
     set_choices_counts = function(choices_counts) {
       private$choices_counts <- choices_counts
       invisible(NULL)

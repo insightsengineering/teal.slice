@@ -208,6 +208,7 @@ DateFilterState <- R6::R6Class( # nolint
     #' For this class returned call looks like
     #' `<varname> >= <min value> & <varname> <= <max value>` with
     #' optional `is.na(<varname>)`.
+    #' @param dataname `character(1)` containing possibly prefixed name of data set
     #' @return (`call`)
     #'
     get_call = function(dataname) {
@@ -251,9 +252,8 @@ DateFilterState <- R6::R6Class( # nolint
       invisible(NULL)
     },
 
-    #' @description
-    #' Check whether the initial choices filter out some values of x and set the flag in case.
-    #'
+    # @description
+    # Check whether the initial choices filter out some values of x and set the flag in case.
     set_is_choice_limited = function(xl, choices) {
       private$is_choice_limited <- (any(xl < choices[1L], na.rm = TRUE) | any(xl > choices[2L], na.rm = TRUE))
       invisible(NULL)
