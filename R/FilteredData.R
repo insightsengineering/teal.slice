@@ -625,8 +625,8 @@ FilteredData <- R6::R6Class( # nolint
     #'
     filter_panel_disable = function() {
       private$filter_panel_active <- FALSE
-      shinyjs::disable("add")
-      shinyjs::disable("active")
+      fp_id <- self$get_filter_panel_ui_id()
+      shinyjs::disable(paste0(fp_id, "-add"), asis = TRUE)
       private$cached_states <- self$get_filter_state()
       self$clear_filter_states()
       invisible(NULL)
@@ -639,8 +639,8 @@ FilteredData <- R6::R6Class( # nolint
     #'
     filter_panel_enable = function() {
       private$filter_panel_active <- TRUE
-      shinyjs::enable("add")
-      shinyjs::enable("active")
+      fp_id <- self$get_filter_panel_ui_id()
+      shinyjs::enable(paste0(fp_id, "-add"), asis = TRUE)
       if (length(private$cached_states) && (length(self$get_filter_state()) == 0)) {
         self$set_filter_state(private$cached_states)
       }
@@ -676,22 +676,6 @@ FilteredData <- R6::R6Class( # nolint
       div(
         id = ns(NULL), # used for hiding / showing
         include_css_files(pattern = "filter-panel"),
-        div(
-          id = ns("switch-button"),
-          class = "flex justify-content-right",
-          div(
-            title = "Enable/Disable filtering",
-            shinyWidgets::prettySwitch(
-              ns("filter_panel_active"),
-              label = "",
-              status = "success",
-              fill = TRUE,
-              value = TRUE,
-              inline = FALSE,
-              width = 30
-            )
-          )
-        ),
         self$ui_overview(ns("overview")),
         self$ui_active(ns("active")),
         self$ui_add(ns("add"))
@@ -724,18 +708,6 @@ FilteredData <- R6::R6Class( # nolint
           self$srv_add("add", active_datanames_resolved)
 
           private$filter_panel_ui_id <- session$ns(NULL)
-          observeEvent(
-            eventExpr = input$filter_panel_active,
-            handlerExpr = {
-              if (isTRUE(input$filter_panel_active)) {
-                self$filter_panel_enable()
-                logger::log_trace("Enable the Filtered Panel with the filter_panel_enable method")
-              } else {
-                self$filter_panel_disable()
-                logger::log_trace("Disable the Filtered Panel with the filter_panel_enable method")
-              }
-            }, ignoreNULL = TRUE
-          )
 
           logger::log_trace("FilteredData$srv_filter_panel initialized")
           NULL
@@ -754,27 +726,30 @@ FilteredData <- R6::R6Class( # nolint
         id = id, # not used, can be used to customize CSS behavior
         class = "well",
         tags$div(
-          class = "row",
-          tags$div(
-            class = "col-sm-6",
-            tags$label("Active Filter Variables", class = "text-primary mb-4")
+          class = "filter-panel-active-header",
+          tags$span("Active Filter Variables", class = "text-primary mb-4"),
+          shinyWidgets::prettySwitch(
+            ns("filter_panel_active"),
+            label = "",
+            status = "success",
+            fill = TRUE,
+            value = TRUE,
+            inline = TRUE,
+            width = 30
           ),
-          tags$div(
-            class = "col-sm-6",
-            actionLink(
-              ns("remove_all_filters"),
-              label = "",
-              icon("circle-xmark", lib = "font-awesome"),
-              title = "Remove active filters",
-              class = "remove_all pull-right"
-            ),
-            actionLink(
-              ns("minimise_filter_active"),
-              label = NULL,
-              icon = icon("angle-down", lib = "font-awesome"),
-              title = "Minimise panel",
-              class = "remove pull-right"
-            )
+          actionLink(
+            ns("minimise_filter_active"),
+            label = NULL,
+            icon = icon("angle-down", lib = "font-awesome"),
+            title = "Minimise panel",
+            class = "remove pull-right"
+          ),
+          actionLink(
+            ns("remove_all_filters"),
+            label = "",
+            icon("circle-xmark", lib = "font-awesome"),
+            title = "Remove active filters",
+            class = "remove_all pull-right"
           )
         ),
         div(
@@ -853,6 +828,19 @@ FilteredData <- R6::R6Class( # nolint
             ifelse(n_filters_active == 1, "", "s")
           )
         })
+
+        observeEvent(
+          eventExpr = input$filter_panel_active,
+          handlerExpr = {
+            if (isTRUE(input$filter_panel_active)) {
+              self$filter_panel_enable()
+              logger::log_trace("Enable the Filtered Panel with the filter_panel_enable method")
+            } else {
+              self$filter_panel_disable()
+              logger::log_trace("Disable the Filtered Panel with the filter_panel_enable method")
+            }
+          }, ignoreNULL = TRUE
+        )
 
         observeEvent(input$remove_all_filters, {
           logger::log_trace("FilteredData$srv_filter_panel@1 removing all filters")

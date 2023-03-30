@@ -92,6 +92,16 @@
   margin-bottom: 0;
 }
 
+.filter-panel-active-header {
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.25em;
+}
+
+.filter-panel-active-header span:first-child {
+  margin-right: auto;
+}
+
 a.remove {
   font-weight: normal;
   float: right;
