@@ -103,12 +103,6 @@ if \code{extract_type} argument is not empty.}
 \item{\code{varname}}{(\code{character(1)})\cr
 name of the variable.}
 
-\item{\code{choices}}{(\code{atomic})\cr
-vector specifying allowed selection values}
-
-\item{\code{selected}}{(\code{atomic}, \code{NULL})\cr
-vector specifying selection}
-
 \item{\code{keep_na}}{(\code{logical(1)}, \code{NULL})\cr
 flag specifying whether to keep missing values}
 
