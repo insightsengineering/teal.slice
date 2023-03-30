@@ -138,17 +138,11 @@ LogicalFilterState <- R6::R6Class( # nolint
       stopifnot(is.logical(x))
       checkmate::assert_class(x_reactive, 'reactive')
 
-      df <- factor(x, levels = c(TRUE, FALSE))
-      tbl <- table(df)
-      if (is.null(selected)) selected <- as.logical(levels(df))[1]
-
       args <- list(
         x = x,
         x_reactive = x_reactive,
         dataname = dataname,
         varname = varname,
-        choices = choices,
-        selected = selected,
         keep_na = keep_na,
         keep_inf = keep_inf,
         fixed = fixed,
@@ -158,14 +152,12 @@ LogicalFilterState <- R6::R6Class( # nolint
       args <- append(args, list(...))
       do.call(super$initialize, args)
 
-      private$histogram_data <- data.frame(
-        x = sprintf(
-          "%s (%s)",
-          names(tbl),
-          tbl
-        ),
-        y = as.vector(tbl)
-      )
+      private$set_choices(choices)
+      private$set_selected(TRUE)
+
+      df <- factor(x, levels = c(TRUE, FALSE))
+      tbl <- table(df)
+      private$set_choices_counts(tbl)
 
       invisible(self)
     },
@@ -180,11 +172,11 @@ LogicalFilterState <- R6::R6Class( # nolint
         TRUE
       } else if (!isTRUE(private$get_keep_na()) && private$na_count > 0) {
         TRUE
-      } else if (all(private$histogram_data$y > 0)) {
+      } else if (all(private$choices_counts > 0)) {
         TRUE
-      } else if (private$get_selected() == FALSE && "FALSE (0)" %in% private$histogram_data$x) {
+      } else if (private$get_selected() == FALSE && private$choices_counts["FALSE"] == 0L) {
         TRUE
-      } else if (private$get_selected() == TRUE && "TRUE (0)" %in% private$histogram_data$x) {
+      } else if (private$get_selected() == TRUE && private$choices_counts["TRUE"] == 0L) {
         TRUE
       } else {
         FALSE
@@ -214,7 +206,6 @@ LogicalFilterState <- R6::R6Class( # nolint
 
   private = list(
     choices_counts = integer(0),
-    histogram_data = data.frame(),
     set_choices = function(choices) {
       private$choices <- c(TRUE, FALSE)
       invisible(NULL)

@@ -119,9 +119,7 @@ FilterState <- R6::R6Class( # nolint
       # Set state properties.
       private$dataname <- dataname
       private$varname <- varname
-      private$set_choices(choices)
       private$selected <- reactiveVal()
-      private$set_selected(selected)
       private$keep_na <- reactiveVal(keep_na)
       private$keep_inf <- reactiveVal(keep_inf)
       private$fixed <- fixed
@@ -205,9 +203,9 @@ FilterState <- R6::R6Class( # nolint
         logger::log_trace("{ this filter state is fixed: { private$dataname } { private$varname }")
       } else {
         # Allow for enabling a filter state before altering state.
-        if (!is.null(state$disabled)) {
-          private$set_disabled(state$disabled)
-        }
+        if (isTRUE(state$disabled)) private$disable()
+        if (isFALSE(state$disabled)) private$enable()
+
         if (private$is_disabled()) {
           logger::log_trace("{ this filter state is disabled: { private$dataname } { private$varname }")
         } else {
@@ -457,19 +455,15 @@ FilterState <- R6::R6Class( # nolint
     #
     set_keep_na = function(value) {
       checkmate::assert_flag(value)
-      if (shiny::isolate(private$is_disabled())) {
-        warning("This filter state is disabled. Can not change keep NA.")
-      } else {
-        private$keep_na(value)
-        logger::log_trace(
-          sprintf(
-            "%s$set_keep_na set for variable %s to %s.",
-            class(self)[1],
-            private$varname,
-            value
-          )
+      private$keep_na(value)
+      logger::log_trace(
+        sprintf(
+          "%s$set_keep_na set for variable %s to %s.",
+          class(self)[1],
+          private$varname,
+          value
         )
-      }
+      )
 
       invisible(NULL)
     },
@@ -483,21 +477,17 @@ FilterState <- R6::R6Class( # nolint
     #  `private$keep_inf` which is reactive.
     #
     set_keep_inf = function(value) {
-      if (shiny::isolate(private$is_disabled())) {
-        warning("This filter state is disabled. Can not change keep Inf.")
-      } else {
-        checkmate::assert_flag(value)
-        private$keep_inf(value)
-        logger::log_trace(
-          sprintf(
-            "%s$set_keep_inf of variable %s set to %s, dataname: %s.",
-            class(self)[1],
-            private$varname,
-            value,
-            private$dataname
-          )
+      checkmate::assert_flag(value)
+      private$keep_inf(value)
+      logger::log_trace(
+        sprintf(
+          "%s$set_keep_inf of variable %s set to %s, dataname: %s.",
+          class(self)[1],
+          private$varname,
+          value,
+          private$dataname
         )
-      }
+      )
 
       invisible(NULL)
     },

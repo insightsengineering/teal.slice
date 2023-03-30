@@ -151,8 +151,6 @@ RangeFilterState <- R6::R6Class( # nolint
         x_reactive = x_reactive,
         dataname = dataname,
         varname = varname,
-        choices = choices,
-        selected = selected,
         keep_na = keep_na,
         keep_inf = keep_inf,
         fixed = fixed,
@@ -167,6 +165,9 @@ RangeFilterState <- R6::R6Class( # nolint
         if (!is.null(private$x_reactive())) sum(is.infinite(private$x_reactive()))
       )
       private$inf_count <- sum(is.infinite(x))
+
+      private$set_choices(choices)
+      private$set_selected(selected)
 
       private$unfiltered_histogram <- ggplot2::ggplot(data.frame(x = Filter(is.finite, private$x))) +
         ggplot2::geom_histogram(
@@ -379,14 +380,6 @@ RangeFilterState <- R6::R6Class( # nolint
     # for numeric ranges selecting out of bound values is allowed
     remove_out_of_bound_values = function(values) {
       values
-    },
-
-    disable = function() {
-      private$cache <- private$get_state()
-      private$selected(NULL)
-      private$keep_na(NULL)
-      private$keep_inf(NULL)
-      private$disabled(TRUE)
     },
 
     # @description
