@@ -303,6 +303,10 @@ as.teal_slices <- function(x) {
     }
   }
 
+  if (length(slices) == 0L && length(x) != 0L) {
+    stop("conversion to filter_slices failed")
+  }
+
   do.call(filter_settings, slices)
 }
 
