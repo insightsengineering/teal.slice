@@ -237,17 +237,18 @@ as.teal_slices <- function(x) {
   checkmate::assert_list(x, names = "named")
 
   is.bottom <- function(x) {
-    isTRUE(is.list(x) && all(names(x) %in% c("selected", "keep_na", "keep_inf")))
+    isTRUE(is.list(x) && any(names(x) %in% c("selected", "keep_na", "keep_inf")))
   }
   make_args <- function() {
     list(
       dataname = NULL,
       varname = NULL,
+      choices = NULL,
       selected = NULL,
       keep_na = NULL,
       keep_inf = NULL,
-      datalabel = NULL,
-      target = NULL
+      fixed = FALSE,
+      disabled = FALSE
     )
   }
   args <- make_args()
@@ -260,6 +261,7 @@ as.teal_slices <- function(x) {
       if (is.bottom(subitem)) {
         args$dataname <- names(x)[i]
         args$varname <- names(item)[[ii]]
+        args$choices <- subitem$choices
         args$selected <- subitem$selected
         args$keep_na <- subitem$keep_na
         args$keep_inf <- subitem$keep_inf
@@ -271,6 +273,7 @@ as.teal_slices <- function(x) {
           if (is.bottom(subsubitem)) {
             args$dataname <- names(x)[i]
             args$varname <- names(subitem)[iii]
+            args$choices <- subsubitem$choices
             args$selected <- subsubitem$selected
             args$keep_na <- subsubitem$keep_na
             args$keep_inf <- subsubitem$keep_inf
@@ -284,6 +287,7 @@ as.teal_slices <- function(x) {
               if (is.bottom(subsubsubitem)) {
                 args$dataname <- names(x)[i]
                 args$varname <- names(subsubitem)[iiii]
+                args$choices <- subsubsubitem$choices
                 args$selected <- subsubsubitem$selected
                 args$keep_na <- subsubsubitem$keep_na
                 args$keep_inf <- subsubsubitem$keep_inf
