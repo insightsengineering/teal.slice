@@ -321,7 +321,10 @@ as.teal_slices <- function(x) {
   if (length(i) == 0L) return(x[0])
   if (is.logical(i) & length(i) > length(x)) stop("subscript out of bounds")
   if (is.numeric(i) & max(i) > length(x)) stop("subscript out of bounds")
-  if (is.character(i) & !all(is.element(i, names(x)))) stop("subscript out of bounds")
+  if (is.character(i)) {
+    if (!all(is.element(i, names(x)))) stop("subscript out of bounds")
+    i <- which(is.element(i, names(x)))
+  }
 
   y <- NextMethod("[")
   attrs <- attributes(x)
