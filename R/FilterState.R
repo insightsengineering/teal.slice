@@ -205,7 +205,7 @@ FilterState <- R6::R6Class( # nolint
         if (private$is_disabled()) {
           logger::log_trace("{ this filter state is disabled: { private$dataname } { private$varname }")
         } else {
-          logger::log_trace("{ class(self)[1] }$set_state setting state of variable: { varname }")
+          logger::log_trace("{ class(self)[1] }$set_state setting state of variable: { private$varname }")
 
           if (!is.null(state$selected)) {
             private$set_selected(state$selected)
@@ -224,7 +224,7 @@ FilterState <- R6::R6Class( # nolint
             shiny::isolate(private$get_keep_inf())
           )
 
-          logger::log_trace("state of variable: { varname } set to: { current_state }")
+          logger::log_trace("state of variable: { private$varname } set to: { current_state }")
         }
       }
 

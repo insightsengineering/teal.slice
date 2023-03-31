@@ -320,7 +320,7 @@ testthat::test_that("is_any_filtered returns TRUE when enabled", {
     )
   )
   fs <- testfs$new(c("a", "b"), varname = "x", dataname = "data")
-  fs$set_state(selected = "a", keep_na = TRUE, varname = "x", dataname = "data", keep_inf = FALSE)
+  fs$set_state(filter_var(selected = "a", keep_na = TRUE, varname = "x", dataname = "data", keep_inf = FALSE))
   testthat::expect_true(fs$is_any_filtered())
 })
 
