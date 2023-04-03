@@ -153,19 +153,19 @@ testthat::test_that("get_call returns condition that specifies values passed to 
     deparse1(quote(variable == as.POSIXlt("2000-01-01 12:00:00", tz = "GMT")))
   )
 
-  # filter_state$set_state(filter_var(varname = "variable", dataname = "data", selected = posixlt[1:2]))
-  # testthat::expect_identical(
-  #   deparse1(shiny::isolate(filter_state$get_call())),
-  #   deparse1(quote(variable %in% as.POSIXlt(c("2000-01-01 12:00:00", "2000-01-01 12:00:01"), tz = "GMT")))
-  # )
-  # filter_state$set_state(filter_var(varname = "variable", dataname = "data", keep_na = TRUE))
-  # testthat::expect_identical(
-  #   deparse1(shiny::isolate(filter_state$get_call())),
-  #   deparse1(
-  #     quote(is.na(variable) |
-  #       variable %in% as.POSIXlt(c("2000-01-01 12:00:00", "2000-01-01 12:00:01"), tz = "GMT"))
-  #   )
-  # )
+  filter_state$set_state(filter_var(varname = "variable", dataname = "data", selected = posixlt[1:2]))
+  testthat::expect_identical(
+    deparse1(shiny::isolate(filter_state$get_call())),
+    deparse1(quote(variable %in% as.POSIXlt(c("2000-01-01 12:00:00", "2000-01-01 12:00:01"), tz = "GMT")))
+  )
+  filter_state$set_state(filter_var(varname = "variable", dataname = "data", keep_na = TRUE))
+  testthat::expect_identical(
+    deparse1(shiny::isolate(filter_state$get_call())),
+    deparse1(
+      quote(is.na(variable) |
+        variable %in% as.POSIXlt(c("2000-01-01 12:00:00", "2000-01-01 12:00:01"), tz = "GMT"))
+    )
+  )
 })
 
 # set_selected ----
@@ -267,12 +267,12 @@ testthat::test_that("set_selected sets the intersection of choices and the passe
   testthat::expect_identical(shiny::isolate(filter_state$get_state()$selected), "2000-01-01 12:00:00")
 
   filter_state <- ChoicesFilterState$new(posixlt, x_reactive = reactive(NULL), varname = "variable", dataname = "data")
-  # testthat::expect_warning(
-  #   isolate(
-  #     filter_state$set_state(filter_var(selected = as.POSIXlt(c(posixlt[1], posixlt[3] + 1)), varname = "variable", dataname = "data"))
-  #   )
-  # )
-  # testthat::expect_identical(shiny::isolate(filter_state$get_state()$selected), "2000-01-01 12:00:00")
+  testthat::expect_warning(
+    isolate(
+      filter_state$set_state(filter_var(selected = as.POSIXlt(c(posixlt[1], posixlt[3] + 1)), varname = "variable", dataname = "data"))
+    )
+  )
+  testthat::expect_identical(shiny::isolate(filter_state$get_state()$selected), "2000-01-01 12:00:00")
 })
 
 # set_state ----

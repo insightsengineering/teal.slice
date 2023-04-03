@@ -206,7 +206,6 @@ FilterState <- R6::R6Class( # nolint
           logger::log_trace("{ this filter state is disabled: { private$dataname } { private$varname }")
         } else {
           logger::log_trace("{ class(self)[1] }$set_state setting state of variable: { private$varname }")
-
           if (!is.null(state$selected)) {
             private$set_selected(state$selected)
           }
