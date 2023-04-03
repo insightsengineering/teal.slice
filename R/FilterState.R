@@ -632,7 +632,9 @@ FilterState <- R6::R6Class( # nolint
     enable = function() {
       if (!is.null(private$cache)) {
         private$disabled(FALSE)
-        self$set_state(private$cache)
+        state <- private$cache
+        state$disabled = NULL
+        self$set_state(state)
         private$cache <- NULL
       }
       invisible(NULL)
