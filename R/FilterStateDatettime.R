@@ -139,7 +139,7 @@ DatetimeFilterState <- R6::R6Class( # nolint
                           varname,
                           choices = NULL,
                           selected = NULL,
-                          keep_na = NULL,
+                          keep_na = FALSE,
                           keep_inf = NULL,
                           fixed = FALSE,
                           disabled = FALSE,
@@ -255,7 +255,7 @@ DatetimeFilterState <- R6::R6Class( # nolint
         choices <- as.POSIXct(choices, units = "secs")
         choices_adjusted <- c(
           max(choices[1L], min(as.POSIXct(private$x), na.rm = TRUE)),
-          min(choices[2L], max(as.POSIXct(vx), na.rm = TRUE))
+          min(choices[2L], max(as.POSIXct(private$x), na.rm = TRUE))
         )
         if (any(choices != choices_adjusted)) {
           warning(sprintf(
