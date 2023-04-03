@@ -12,8 +12,10 @@ testthat::test_that("get_call returns a condition true for the object passed in 
 })
 
 testthat::test_that("set_selected accepts an array of two Date objects", {
-  # filter_state <- DateFilterState$new(dates, x_reactive = reactive(NULL), varname = "variable", dataname = "data")
-  # testthat::expect_no_error(filter_state$set_selected(dates[c(1, 10)]))
+  filter_state <- DateFilterState$new(dates, x_reactive = reactive(NULL), varname = "variable", dataname = "data")
+  testthat::expect_no_error(
+    filter_state$set_state(filter_var(selected = dates[c(1, 10)], varname = "variable", dataname = "data"))
+  )
 })
 
 testthat::test_that("set_selected warns when selection is not within the possible range", {
@@ -42,13 +44,19 @@ testthat::test_that("set_selected warns when selection is not within the possibl
 })
 
 testthat::test_that("set_selected limits the selected range to the lower and the upper bound of the possible range", {
-  # filter_state <- DateFilterState$new(dates, x_reactive = reactive(NULL), varname = "variable", dataname = "data")
-  # suppressWarnings(filter_state$set_selected(c(dates[1] - 1, dates[10])))
-  # testthat::expect_equal(shiny::isolate(filter_state$get_selected()), c(dates[1], dates[10]))
-  # suppressWarnings(filter_state$set_selected(c(dates[1], dates[10] + 1)))
-  # testthat::expect_equal(shiny::isolate(filter_state$get_selected()), c(dates[1], dates[10]))
-  # suppressWarnings(filter_state$set_selected(c(dates[1] - 1, dates[10] + 1)))
-  # testthat::expect_equal(shiny::isolate(filter_state$get_selected()), c(dates[1], dates[10]))
+  filter_state <- DateFilterState$new(dates, x_reactive = reactive(NULL), varname = "variable", dataname = "data")
+  suppressWarnings(filter_state$set_state(
+    filter_var(varname = "variable", dataname = "data", selected = c(dates[1] - 1, dates[10]))
+  ))
+  testthat::expect_equal(shiny::isolate(filter_state$get_state()$selected), c(dates[1], dates[10]))
+  suppressWarnings(filter_state$set_state(
+    filter_var(varname = "variable", dataname = "data", selected = c(dates[1], dates[10] + 1))
+    ))
+  testthat::expect_equal(shiny::isolate(filter_state$get_state()$selected), c(dates[1], dates[10]))
+  suppressWarnings(filter_state$set_state(
+    filter_var(varname = "variable", dataname = "data", selected = c(dates[1] - 1, dates[10] + 1))
+    ))
+  testthat::expect_equal(shiny::isolate(filter_state$get_state()$selected), c(dates[1], dates[10]))
 })
 
 testthat::test_that("set_selected warns when selection is not sorted", {
@@ -86,67 +94,70 @@ testthat::test_that("set_keep_na changes whether call returned by get_call allow
   variable <- c(dates, NA)
   filter_state <- DateFilterState$new(variable, x_reactive = reactive(NULL), varname = "variable", dataname = "data")
   testthat::expect_identical(eval(shiny::isolate(filter_state$get_call()))[11], NA)
-  # filter_state$set_keep_na(TRUE)
-  # testthat::expect_identical(eval(shiny::isolate(filter_state$get_call()))[11], TRUE)
+  filter_state$set_state(filter_var(keep_na = TRUE, varname = "variable", dataname = "data"))
+  testthat::expect_identical(eval(shiny::isolate(filter_state$get_call()))[11], TRUE)
 })
 
 
 testthat::test_that("set_state sets values of selected and keep_na as provided in the list", {
   filter_state <- DateFilterState$new(dates, x_reactive = reactive(NULL), varname = "variable", dataname = "data")
-  filter_state$set_state(
-    selected = c(dates[2], dates[3]), keep_na = TRUE, keep_inf = FALSE, varname = "variable", dataname = "data"
-  )
-  # testthat::expect_identical(shiny::isolate(filter_state$get_selected()), c(dates[2], dates[3]))
-  # testthat::expect_true(shiny::isolate(filter_state$get_keep_na()))
+  filter_state$set_state(filter_var(
+      selected = c(dates[2], dates[3]), keep_na = TRUE, keep_inf = FALSE, varname = "variable", dataname = "data"))
+  testthat::expect_identical(shiny::isolate(filter_state$get_state()$selected), c(dates[2], dates[3]))
+  testthat::expect_true(shiny::isolate(filter_state$get_state()$keep_na))
 })
 
 
 testthat::test_that("set_state overwrites fields included in the input only", {
   filter_state <- DateFilterState$new(dates, x_reactive = reactive(NULL), varname = "variable", dataname = "data")
   filter_state$set_state(
-    selected = c(dates[2], dates[3]), keep_na = TRUE, keep_inf = FALSE, varname = "variable", dataname = "data"
+    filter_var(selected = c(dates[2], dates[3]), keep_na = TRUE, keep_inf = FALSE, varname = "variable", dataname = "data")
   )
   testthat::expect_no_error(filter_state$set_state(
-    selected = c(dates[3], dates[4]), varname = "variable", dataname = "data", keep_na = TRUE, keep_inf = FALSE)
+   filter_var(selected = c(dates[3], dates[4]), varname = "variable", dataname = "data", keep_na = TRUE, keep_inf = FALSE))
   )
-  # testthat::expect_identical(shiny::isolate(filter_state$get_selected()), c(dates[3], dates[4]))
-  # testthat::expect_true(shiny::isolate(filter_state$get_keep_na()))
+  testthat::expect_identical(shiny::isolate(filter_state$get_state()$selected), c(dates[3], dates[4]))
+  testthat::expect_true(shiny::isolate(filter_state$get_state()$keep_na))
 })
 
 testthat::test_that(
   "DateFilterState$is_any_filtered works properly when NA is present in data",
   code = {
-    # filter_state <- teal.slice:::DateFilterState$new(
-    #   x = c(dates, NA),
-    #   x_reactive = reactive(NULL),
-    #   varname = "x",
-    #   dataname = "data",
-    #   extract_type = character(0)
-    # )
-    #
-    # shiny::isolate(filter_state$set_keep_na(FALSE))
-    # shiny::isolate(filter_state$set_selected(c(dates[1], dates[10])))
-    # testthat::expect_true(
-    #   shiny::isolate(filter_state$is_any_filtered())
-    # )
-    #
-    # shiny::isolate(filter_state$set_keep_na(TRUE))
-    # shiny::isolate(filter_state$set_selected(c(dates[1], dates[10])))
-    # testthat::expect_false(
-    #   shiny::isolate(filter_state$is_any_filtered())
-    # )
-    #
-    # shiny::isolate(filter_state$set_keep_na(TRUE))
-    # shiny::isolate(filter_state$set_selected(c(dates[2], dates[10])))
-    # testthat::expect_true(
-    #   shiny::isolate(filter_state$is_any_filtered())
-    # )
-    #
-    # shiny::isolate(filter_state$set_keep_na(TRUE))
-    # shiny::isolate(filter_state$set_selected(c(dates[1], dates[9])))
-    # testthat::expect_true(
-    #   shiny::isolate(filter_state$is_any_filtered())
-    # )
+    filter_state <- teal.slice:::DateFilterState$new(
+      x = c(dates, NA),
+      x_reactive = reactive(NULL),
+      varname = "x",
+      dataname = "data",
+      extract_type = character(0)
+    )
+
+    shiny::isolate(filter_state$set_state(filter_var(
+      varname = "x", dataname = "data", keep_na = FALSE, selected = c(dates[1], dates[10]))
+    ))
+    testthat::expect_true(
+      shiny::isolate(filter_state$is_any_filtered())
+    )
+
+    shiny::isolate(filter_state$set_state(filter_var(
+      varname = "x", dataname = "data", keep_na = TRUE, selected = c(dates[1], dates[10]))
+    ))
+    testthat::expect_false(
+      shiny::isolate(filter_state$is_any_filtered())
+    )
+
+    shiny::isolate(filter_state$set_state(filter_var(
+      varname = "x", dataname = "data", keep_na = TRUE, selected = c(dates[2], dates[10]))
+    ))
+    testthat::expect_true(
+      shiny::isolate(filter_state$is_any_filtered())
+    )
+
+    shiny::isolate(filter_state$set_state(filter_var(
+      varname = "x", dataname = "data", keep_na = TRUE, selected = c(dates[1], dates[9]))
+    ))
+    testthat::expect_true(
+      shiny::isolate(filter_state$is_any_filtered())
+    )
   }
 )
 
@@ -166,7 +177,7 @@ testthat::test_that("$format() asserts that indent is numeric", {
 
 testthat::test_that("$format() returns a string representation the FilterState object", {
   filter_state <- DateFilterState$new(dates, x_reactive = reactive(NULL), varname = "variable", dataname = "data")
-  filter_state$set_state(selected = range(dates), varname = "variable", dataname = "data")
+  filter_state$set_state(filter_var(selected = range(dates), varname = "variable", dataname = "data"))
   testthat::expect_equal(
     shiny::isolate(filter_state$format(indent = 0)),
     paste(
@@ -180,7 +191,7 @@ testthat::test_that("$format() returns a string representation the FilterState o
 
 testthat::test_that("$format() prepends spaces to every line of the returned string", {
   filter_state <- DateFilterState$new(dates, x_reactive = reactive(NULL), varname = "variable", dataname = "data")
-  filter_state$set_state(selected = range(dates), varname = "variable", dataname = "data")
+  filter_state$set_state(filter_var(selected = range(dates), varname = "variable", dataname = "data"))
   for (i in 1:3) {
     whitespace_indent <- paste0(rep(" ", i), collapse = "")
     testthat::expect_equal(
@@ -206,9 +217,9 @@ testthat::test_that("is_any_filtered returns TRUE when enabled", {
   )
   date_seq <- seq(Sys.Date() - 2, Sys.Date(), 1)
   fs <- testfs$new(date_seq, varname = "x", dataname = "data")
-  fs$set_state(selected = date_seq[1:2], keep_na = TRUE, varname = "x", dataname = "data")
-  # fs$disable()
-  # fs$enable()
+  fs$set_state(filter_var(selected = date_seq[1:2], keep_na = TRUE, varname = "x", dataname = "data"))
+  fs$disable()
+  fs$enable()
   testthat::expect_true(fs$is_any_filtered())
 })
 
