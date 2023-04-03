@@ -9,10 +9,10 @@ testthat::test_that("get_call returns a call after set_keep_na(TRUE)", {
 })
 
 testthat::test_that("get_state returns a list identical to set_state input", {
-  # filter_state <- EmptyFilterState$new(NA_character_, varname = "test", dataname = "data")
-  # state <- filter_var(keep_na = TRUE, varname = "test", dataname = "data")
-  # filter_state$set_state(state)
-  # testthat::expect_identical(shiny::isolate(filter_state$get_state()), state)
+  filter_state <- EmptyFilterState$new(NA_character_, varname = "test", dataname = "data")
+  state <- filter_var(keep_na = TRUE, varname = "test", dataname = "data")
+  filter_state$set_state(state)
+  testthat::expect_identical(shiny::isolate(filter_state$get_state()), unclass(state))
 })
 
 testthat::test_that(

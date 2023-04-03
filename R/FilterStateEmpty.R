@@ -133,7 +133,14 @@ EmptyFilterState <- R6::R6Class( # nolint
     #'
     get_state = function() {
       list(
-        keep_na = private$get_keep_na()
+        dataname = private$get_dataname(),
+        varname = private$get_varname(),
+        choices = private$choices,
+        selected = private$get_selected(),
+        keep_na = private$get_keep_na(),
+        keep_inf = private$get_keep_inf(),
+        fixed = private$fixed,
+        disabled = private$is_disabled()
       )
     }
   ),
