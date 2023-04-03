@@ -11,14 +11,14 @@ testthat::test_that("get_call returns a condition true for the object passed in 
   testthat::expect_true(all(eval(shiny::isolate(filter_state$get_call()))))
 })
 
-testthat::test_that("set_selected accepts an array of two Date objects", {
+testthat::test_that("set_state: selected accepts an array of two Date objects", {
   filter_state <- DateFilterState$new(dates, x_reactive = reactive(NULL), varname = "variable", dataname = "data")
   testthat::expect_no_error(
     filter_state$set_state(filter_var(selected = dates[c(1, 10)], varname = "variable", dataname = "data"))
   )
 })
 
-testthat::test_that("set_selected warns when selection is not within the possible range", {
+testthat::test_that("set_state: selected warns when selection is not within the possible range", {
 
   testthat::expect_warning(
     DateFilterState$new(
@@ -43,7 +43,8 @@ testthat::test_that("set_selected warns when selection is not within the possibl
   )
 })
 
-testthat::test_that("set_selected limits the selected range to the lower and the upper bound of the possible range", {
+testthat::test_that(
+  "set_state: selected limits the selected range to the lower and the upper bound of the possible range", {
   filter_state <- DateFilterState$new(dates, x_reactive = reactive(NULL), varname = "variable", dataname = "data")
   suppressWarnings(filter_state$set_state(
     filter_var(varname = "variable", dataname = "data", selected = c(dates[1] - 1, dates[10]))
@@ -59,7 +60,7 @@ testthat::test_that("set_selected limits the selected range to the lower and the
   testthat::expect_equal(shiny::isolate(filter_state$get_state()$selected), c(dates[1], dates[10]))
 })
 
-testthat::test_that("set_selected warns when selection is not sorted", {
+testthat::test_that("Initialization warns when selected is not sorted", {
   testthat::expect_warning(
     DateFilterState$new(
       dates, x_reactive = reactive(NULL), varname = "variable", dataname = "data", selected = dates[c(10, 1)]
@@ -68,7 +69,7 @@ testthat::test_that("set_selected warns when selection is not sorted", {
   )
 })
 
-testthat::test_that("set_selected raises error when selection is not Date", {
+testthat::test_that("Initialization raises error when selection is not Date", {
   testthat::expect_error(
     DateFilterState$new(dates, x_reactive = reactive(NULL), varname = "variable", dataname = "data", selected = c("a", "b")),
     "The array of set values must contain values coercible to Date."
@@ -90,7 +91,7 @@ testthat::test_that("get_call returns call with limits imposed by constructor an
   )
 })
 
-testthat::test_that("set_keep_na changes whether call returned by get_call allows NA values", {
+testthat::test_that("set_state: keep_na changes whether call returned by get_call allows NA values", {
   variable <- c(dates, NA)
   filter_state <- DateFilterState$new(variable, x_reactive = reactive(NULL), varname = "variable", dataname = "data")
   testthat::expect_identical(eval(shiny::isolate(filter_state$get_call()))[11], NA)

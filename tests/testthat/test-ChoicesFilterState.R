@@ -168,8 +168,8 @@ testthat::test_that("get_call returns condition that specifies values passed to 
   )
 })
 
-# set_selected ----
-testthat::test_that("set_selected raises warning when selection not within allowed choices", {
+# selected ----
+testthat::test_that("set-state: selected raises warning when selection not within allowed choices", {
   filter_state <- ChoicesFilterState$new(chars, x_reactive = reactive(NULL), varname = "variable", dataname = "data")
   testthat::expect_warning(
     filter_state$set_state(filter_var(varname = "variable", dataname = "data", selected = "item4")), "not in choices"
@@ -215,9 +215,9 @@ testthat::test_that("set_selected raises warning when selection not within allow
     "not in choices"
   )
 
-  filter_state <- ChoicesFilterState$new(posixlt, x_reactive = reactive(NULL), varname = "variable", dataname = "data")
+  # filter_state <- ChoicesFilterState$new(posixlt, x_reactive = reactive(NULL), varname = "variable", dataname = "data")
   # testthat::expect_warning(
-  #   filter_state$set_state(filter_var(varname = "variable", dataname = "data", selected = as.POSIXlt(posixlt[3] + 1))), "not in choices"
+  #   filter_state$set_state(filter_var(varname = "variable", dataname = "data", selected = aposixlt[3] + 1)), "not in choices"
   # )
   # testthat::expect_warning(filter_state$set_state(
   #   filter_var(varname = "variable", dataname = "data", selected = as.POSIXlt(c(posixlt[1], posixlt[3] + 1)))),

@@ -19,7 +19,7 @@ testthat::test_that("get_call returns call that encompasses all values passed to
   )
 })
 
-testthat::test_that("set selected accepts an array of two POSIXct objects", {
+testthat::test_that("set_state: selected accepts an array of two POSIXct objects", {
   filter_state <- DatetimeFilterState$new(posixct, x_reactive = reactive(NULL), varname = "variable", dataname = "data")
   testthat::expect_no_error(
     filter_state$set_state(filter_var(selected = posixct[1:2], varname = "variable", dataname = "data"))
@@ -66,7 +66,8 @@ testthat::test_that("DatetimeFilterState echoes the timezone of the ISO object p
   )
 })
 
-testthat::test_that("set_selected warns when the selected range intersects the range but is not fully included in it", {
+testthat::test_that(
+  "set_state: selected warns when the selected range intersects the range but is not fully included in it", {
   objects <- as.POSIXct(c(2, 3), origin = "1900/01/01 00:00:00")
   filter_state <- DatetimeFilterState$new(objects, varname = "objects", dataname = "data")
   testthat::expect_warning(
@@ -89,7 +90,7 @@ testthat::test_that("set_selected warns when the selected range intersects the r
   )
 })
 
-testthat::test_that("set_selected throws when the selected range is completely outside of the possible range", {
+testthat::test_that("set_state: selected throws when the selected range is completely outside of the possible range", {
   objects <- as.POSIXct(c(2, 3), origin = "1900/01/01 00:00:00")
   filter_state <- DatetimeFilterState$new(objects, x_reactive = reactive(NULL), varname = "objects", dataname = "data")
   testthat::expect_warning(
@@ -100,7 +101,8 @@ testthat::test_that("set_selected throws when the selected range is completely o
   )
 })
 
-testthat::test_that("set_selected limits the selected range to the lower and the upper bound of the possible range", {
+testthat::test_that(
+  "set_state: selected limits the selected range to the lower and the upper bound of the possible range", {
   objects <- as.POSIXct(c(2, 3), origin = "1900/01/01 00:00:00")
   filter_state <- DatetimeFilterState$new(objects, x_reactive = reactive(NULL), varname = "objects", dataname = "data")
   suppressWarnings(filter_state$set_state(
@@ -119,7 +121,7 @@ testthat::test_that("set_selected limits the selected range to the lower and the
   testthat::expect_equal(shiny::isolate(filter_state$get_state()$selected), c(objects[1], objects[2]))
 })
 
-testthat::test_that("set_selected throws when the value type cannot be interpreted as POSIX", {
+testthat::test_that("set_state: selected throws when the value type cannot be interpreted as POSIX", {
   objects <- as.POSIXct(c(1, 2, 3), origin = "1900/01/01 00:00:00")
   filter_state <- DatetimeFilterState$new(objects, x_reactive = reactive(NULL), varname = "objects", dataname = "data")
   testthat::expect_error(

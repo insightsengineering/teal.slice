@@ -23,34 +23,34 @@ testthat::test_that("get_call returns NULL", {
   testthat::expect_null(filter_state$get_call())
 })
 
-# get_varlabel ----
-testthat::test_that("get_varlabel returns a string passed to the constructor", {
+# get_state: varlabel ----
+testthat::test_that("get_state()$varlabel returns a string passed to the constructor", {
   seven <- c(7)
   attr(seven, "label") <- "test"
   filter_state <- FilterState$new(seven, varname = "7", dataname = "data")
-  testthat::expect_equal(filter_state$get_varlabel(), "test")
+  testthat::expect_equal(shiny::isolate(filter_state$get_state()$varlabel), "test")
 })
 
-# get_varname ----
+# get_state: varname ----
 testthat::test_that("get_varname() returns a name if varname passed to the constructor is a string", {
   filter_state <- FilterState$new(7, varname = "7", dataname = "data")
-  testthat::expect_equal(filter_state$get_varname(), "7")
+  testthat::expect_equal(shiny::isolate(filter_state$get_state()$varname), "7")
 })
 
-testthat::test_that("get_varname() returns a string if varname passed to the constructor is a string", {
+testthat::test_that("get_state()$varname returns a string if varname passed to the constructor is a string", {
   filter_state <- FilterState$new(7, varname = "7", dataname = "data")
-  testthat::expect_equal(filter_state$get_varname(), "7")
+  testthat::expect_equal(shiny::isolate(filter_state$get_state()$varname), "7")
 })
 
-# get_get_selected ----
+# get state: selected ----
 testthat::test_that("get_selected returns NULL after initialization", {
   filter_state <- FilterState$new(7, varname = "7", dataname = "data")
-  testthat::expect_null(shiny::isolate(filter_state$get_selected()))
+  testthat::expect_null(shiny::isolate(filter_state$get_state()$selected))
 })
 
 # set_selected ----
-testthat::test_that("set_selected sets value, get_selected returns the same", {
-  filter_state <- FilterState$new(7L, varname = "7", dataname = "data")
+testthat::test_that("set_state sets value, get_selected returns the same", {
+  filter_state <- FilterState$new(7L, varname = "7", dataname = "data", selected)
   filter_state$set_selected(7L)
   testthat::expect_identical(shiny::isolate(filter_state$get_selected()), 7L)
 })

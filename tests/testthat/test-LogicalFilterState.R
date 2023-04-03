@@ -11,11 +11,13 @@ testthat::test_that("The constructor accepts NA values", {
 })
 
 testthat::test_that("get_call returns FALSE values from data passed to selector", {
-  # filter_state <- LogicalFilterState$new(logs, x_reactive = reactive(NULL), varname = "logs", dataname = "data")
-  # expect_identical(
-  #   eval(shiny::isolate(filter_state$get_call())),
-  #   !logs
-  # )
+  filter_state <- LogicalFilterState$new(
+    logs, x_reactive = reactive(NULL), varname = "logs", dataname = "data", selected = FALSE
+  )
+  expect_identical(
+    eval(shiny::isolate(filter_state$get_call())),
+    !logs
+  )
 })
 
 testthat::test_that("set_selected accepts a logical of length 1", {
