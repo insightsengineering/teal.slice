@@ -161,6 +161,7 @@ is.teal_slice <- function(x) {
 #' @keywords internal
 #'
 as.teal_slice <- function(x) {
+  checkmate::assert_list(x, names = "named")
   do.call(filter_var, x)
 }
 
@@ -172,7 +173,11 @@ as.teal_slice <- function(x) {
 #'
 c.teal_slice <- function(...) {
   ans <- unlist(list(...), recursive = FALSE)
-  class(ans) <- "teal_slice"
+  if (anyDuplicated(names(ans))) {
+    ans <- ans[!duplicated(names(ans))]
+    warning("duplicate field names were discarded")
+  }
+  class(ans) <- c("teal_slice", class(ans))
   ans
 }
 
@@ -343,6 +348,7 @@ as.teal_slices <- function(x) {
 #'
 c.teal_slices <- function(...) {
   x <- list(...)
+  checkmate::assert_true(all(vapply(x, is.teal_slices, logical(1L))), .var.name = "all arguments are teal_slices")
   excludes <- lapply(x, attr, "exclude")
   names(excludes) <- NULL
   excludes <- unlist(excludes, recursive = FALSE)
