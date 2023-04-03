@@ -81,7 +81,7 @@ testthat::test_that("filter_var checks arguments", {
 })
 
 
-testthat::test_that("filter_var returns a teal_slice", {
+testthat::test_that("filter_var returns `teal_slice`", {
   fs1 <- filter_var("data", "var1")
 
   testthat::expect_s3_class(fs1, "teal_slice")
@@ -93,7 +93,7 @@ testthat::test_that("filter_var returns a teal_slice", {
 })
 
 
-testthat::test_that("filter_var checks arguments", {
+testthat::test_that("filter_settings checks arguments", {
   fs1 <- filter_var("data", "var1")
   fs2 <- filter_var("data", "var2")
 
@@ -109,7 +109,7 @@ testthat::test_that("filter_var checks arguments", {
 })
 
 
-testthat::test_that("filter_settings returns a teal_slices", {
+testthat::test_that("filter_settings returns `teal_slices`", {
   fs1 <- filter_var("data", "var1")
   fs2 <- filter_var("data", "var2")
   fs <- filter_settings(fs1, fs2)
@@ -143,13 +143,57 @@ testthat::test_that("is* functions work", {
 })
 
 
-testthat::test_that("as* functions work", {
+testthat::test_that("as.teal_slice checks arguments", {
+  fl1 <- list(
+    dataname = "data",
+    varname = "var1"
+  )
+
+  testthat::expect_no_error(as.teal_slice(fl1))
+  testthat::expect_error(as.teal_slice(unlist(fl1)), "Assertion on 'x' failed")
+  testthat::expect_error(as.teal_slice(unname(fl1)), "Assertion on 'x' failed")
+  testthat::expect_error(as.teal_slice(list()), "argument \"dataname\" is missing, with no default")
+})
+
+
+testthat::test_that("as.teal_slice converts list to `teal_slice`", {
   fl1 <- list(
     dataname = "data",
     varname = "var1"
   )
   fs1 <- filter_var("data", "var1")
 
+  testthat::expect_s3_class(as.teal_slice(fl1), "teal_slice")
+  testthat::expect_identical(as.teal_slice(fl1), fs1)
+})
+
+
+testthat::test_that("as.teal_slices checks arguments", {
+  fl2 <- list(
+    "data1" = list(
+      "var1" = list(
+        selected = "a",
+        keep_na = TRUE
+      )
+    ),
+    "data1" = list(
+      "var2" = list(
+        selected = 2,
+        keep_na = TRUE,
+        keep_inf = FALSE
+      )
+    )
+  )
+
+  testthat::expect_no_error(as.teal_slices(fl2))
+  testthat::expect_no_error(as.teal_slices(fl2[1]))
+  testthat::expect_error(as.teal_slices(fl2[[1]]), "conversion to filter_slices failed")
+  testthat::expect_error(as.teal_slices(list("a", 1L)), "Assertion on 'x' failed")
+  testthat::expect_error(as.teal_slices(list(a = "a", b = 1L)), "conversion to filter_slices failed")
+})
+
+
+testthat::test_that("as.teal_slices converts list to `teal_slices`", {
   fl2 <- list(
     "data1" = list(
       "var1" = list(
@@ -170,16 +214,6 @@ testthat::test_that("as* functions work", {
     filter_var("data1", "var2", selected = 2, keep_na = TRUE, keep_inf = FALSE)
   )
 
-  testthat::expect_no_error(as.teal_slice(fl1))
-  testthat::expect_error(as.teal_slice(fl2))
-
-  testthat::expect_s3_class(as.teal_slice(fl1), "teal_slice")
-  testthat::expect_identical(as.teal_slice(fl1), fs1)
-
-
-  testthat::expect_no_error(as.teal_slices(fl2))
-  testthat::expect_error(as.teal_slices(fl1), "conversion to filter_slices failed")
-
   testthat::expect_s3_class(as.teal_slices(fl2), "teal_slices")
   testthat::expect_identical(as.teal_slices(fl2), fs2)
 
@@ -187,14 +221,11 @@ testthat::test_that("as* functions work", {
 })
 
 
-testthat::test_that("[.teal_slices works", {
+testthat::test_that("[.teal_slices accepts various types of indices", {
   fs1 <- filter_var("data", "var1")
   fs2 <- filter_var("data", "var2")
   fs <- filter_settings(fs1, fs2)
   names(fs) <- c("one", "two")
-
-  fss1 <- filter_settings(fs1)
-  names(fss1) <- "one"
 
   testthat::expect_no_error(fs[])
   testthat::expect_no_error(fs[integer(0)])
@@ -212,52 +243,150 @@ testthat::test_that("[.teal_slices works", {
   testthat::expect_no_error(fs[[1]])
   testthat::expect_no_error(fs[["one"]])
   testthat::expect_error(fs[[c(TRUE, FALSE)]], "attempt to select less than one element in integerOneIndex")
+})
 
+
+testthat::test_that("[.teal_slices subsets properly", {
+  fs1 <- filter_var("data", "var1")
+  fs2 <- filter_var("data", "var2")
+  fs <- filter_settings(fs1, fs2)
+  names(fs) <- c("one", "two")
+
+  fss1 <- filter_settings(fs1)
+  names(fss1) <- "one"
+
+  # return class
   testthat::expect_s3_class(fs[1], "teal_slices")
   testthat::expect_s3_class(fs[[1]], "teal_slice")
 
+  # different indices return the same subset
   testthat::expect_identical(fs[1], fs["one"])
+  testthat::expect_identical(fs[1], fs[c(TRUE, FALSE)])
   testthat::expect_identical(fs[[1]], fs[["one"]])
 
+  # a subset of teal_slices is the same as teal_slices created from a subset of teal_slice's
   testthat::expect_identical(fs[1], fss1)
   testthat::expect_identical(fs[[1]], fss1[[1]])
   testthat::expect_identical(fs[["one"]], fss1[["one"]])
 
+  # also for unnamed objects
   fs <- unname(fs)
   fss1 <- unname(fss1)
   testthat::expect_identical(fs[1], fss1)
   testthat::expect_identical(fs[[1]], fss1[[1]])
-
-  # TODO exclude and count_type no covered
 })
 
 
-testthat::test_that("c.teal_slices works", {
+testthat::test_that("[.teal_slices also subsets the exclude attribute", {
   fs1 <- filter_var("data1", "var1")
   fs2 <- filter_var("data1", "var2")
   fs3 <- filter_var("data2", "var1")
   fs4 <- filter_var("data2", "var2")
-  fss1 <- filter_settings(fs1, fs2, exclude = list(data1 = "var1"))
-  fss2 <- filter_settings(fs3, fs4, exclude = list(data2 = "var1"))
-  fss3 <- filter_settings(fs3, fs4, exclude = list(data2 = "var1"), count_type = "all")
+  fs <- filter_settings(fs1, fs2, fs3, fs4, exclude = list(data1 = "var1", data2 = "var1"))
 
+  testthat::expect_identical(
+    attr(fs[1], "exclude"),
+    list("data1" = "var1")
+  )
+  testthat::expect_identical(
+    attr(fs[2], "exclude"),
+    list("data1" = "var1")
+  )
+  testthat::expect_identical(
+    attr(fs[1:2], "exclude"),
+    list("data1" = "var1")
+  )
+  testthat::expect_identical(
+    attr(fs[3], "exclude"),
+    list("data2" = "var1")
+  )
+  testthat::expect_identical(
+    attr(fs[4], "exclude"),
+    list("data2" = "var1")
+  )
+  testthat::expect_identical(
+    attr(fs[3:4], "exclude"),
+    list("data2" = "var1")
+  )
+  testthat::expect_identical(
+    attr(fs[], "exclude"),
+    list("data1" = "var1", "data2" = "var1")
+  )
+})
+
+
+testthat::test_that("[.teal_slices preserves count_type", {
+  fs1 <- filter_var("data", "var1")
+  fs2 <- filter_var("data", "var2")
+  fs <- filter_settings(fs1, fs2)
+
+  testthat::expect_identical(
+    attr(fs, "count_type"),
+    attr(fs[1], "count_type")
+  )
+})
+
+
+testthat::test_that("c.teal_slice adds fields to `teal_slice`", {
+  fs1 <- filter_var("data1", "var1")
+  extra <- list("name" = "value")
+
+  testthat::expect_no_error(c(fs1, extra))
+  testthat::expect_s3_class(c(fs1, extra), "teal_slice")
+  testthat::expect_warning(c(fs1, fs1), "duplicate field names were discarded")
+
+  testthat::expect_identical(suppressWarnings(c(fs1, fs1)), fs1)
+  testthat::expect_identical(
+    filter_var("data1", "var1", "name" = "value"),
+    c(fs1, extra)
+  )
+  testthat::expect_identical(c(fs1, list()), fs1)
+})
+
+
+testthat::test_that("c.teal_slices concatenates `teal_slices` objects", {
+  fs1 <- filter_var("data1", "var1")
+  fs2 <- filter_var("data1", "var2")
+  fs3 <- filter_var("data2", "var1")
+  fs4 <- filter_var("data2", "var2")
+  fss1 <- filter_settings(fs1, fs2)
+  fss2 <- filter_settings(fs3, fs4)
+
+  testthat::expect_no_error(c(fss1, fss2))
+  testthat::expect_error(c(fss1, fs1), "Assertion on 'all arguments are teal_slices' failed")
+
+  testthat::expect_s3_class(c(fss1, fss2), "teal_slices")
+  testthat::expect_length(c(fss1, fss2), length(fss1) + length(fss2))
+})
+
+
+testthat::test_that("c.teal_slices handles attributes", {
+  fs1 <- filter_var("data1", "var1")
+  fs2 <- filter_var("data1", "var2")
+  fs3 <- filter_var("data2", "var1")
+  fs4 <- filter_var("data2", "var2")
+  fss1 <- filter_settings(fs1, fs2, exclude = list("data1" = "var1"))
+  fss2 <- filter_settings(fs3, fs4, exclude = list("data2" = "var1"))
+  fss3 <- filter_settings(fs3, fs4, exclude = list("data2" = "var1"), count_type = "all")
+
+  # teal_slices with different exclude attributes
   testthat::expect_no_error(c(fss1, fss2))
 
   fsss <- c(fss1, fss2)
 
-  testthat::expect_s3_class(fsss, "teal_slices")
-  testthat::expect_length(fsss, length(fss1) + length(fss2))
-
+  # exclude attributes are combined
   testthat::expect_identical(
     attr(fsss, "exclude"),
-    list(data1 = "var1", data2 = "var1")
+    list("data1" = "var1", "data2" = "var1")
   )
 
+  # count_type attribute is preserved
   testthat::expect_identical(
     attr(fsss, "count_type"),
     attr(fss1, "count_type")
   )
 
+  # different count_type attributes raise error
   testthat::expect_error(c(fss1, fss3), "Assertion on 'count_types' failed")
 })
 
@@ -267,10 +396,19 @@ testthat::test_that("slices_field works", {
   fs2 <- filter_var("data", "var2")
   fs <- filter_settings(fs1, fs2)
 
+  # argument checks
   testthat::expect_no_error(slices_field(fs, "dataname"))
   testthat::expect_error(slices_field(fs), "argument \"field\" is missing")
 
+  # vector is returned when non-empty fields are queried
   testthat::expect_vector(slices_field(fs, "dataname"))
+  testthat::expect_vector(slices_field(fs, "varname"))
+
+  # proper content is returned
+  testthat::expect_identical(slices_field(fs, "dataname"), "data")
+  testthat::expect_identical(slices_field(fs, "varname"), c("var1", "var2"))
+  testthat::expect_identical(slices_field(fs, "choices"), NULL)
+  testthat::expect_identical(slices_field(fs, "fixed"), FALSE)
 })
 
 
@@ -279,17 +417,16 @@ testthat::test_that("slices_which works", {
   fs2 <- filter_var("data", "var2")
   fs <- filter_settings(fs1, fs2)
 
+  # argument checks
   testthat::expect_no_error(slices_which(fs, "dataname == \"data\""))
   testthat::expect_error(slices_which(fs, str2lang("dataname == \"data\"")), "Assertion on 'expr' failed")
 
-  fssub1 <- slices_which(fs, "dataname == \"data\"")
-  fssub2 <- slices_which(fs, "varname == \"var1\"")
-  fssub3 <- slices_which(fs, "dataname == \"dataa\"")
-
+  # return type
   testthat::expect_s3_class(fssub1, "teal_slices")
   testthat::expect_s3_class(fssub1, "teal_slices")
 
-  testthat::expect_identical(fssub1, fs)
-  testthat::expect_identical(fssub2, fs[1])
-  testthat::expect_identical(fssub3, filter_settings())
+  # proper content is returned
+  testthat::expect_identical(slices_which(fs, "dataname == \"data\""), fs)
+  testthat::expect_identical(slices_which(fs, "varname == \"var1\""), fs[1])
+  testthat::expect_identical(slices_which(fs, "dataname == \"dataa\""), filter_settings())
 })
