@@ -130,7 +130,7 @@ MAEFilteredDataset <- R6::R6Class( # nolint
       logger::log_trace("{ class(self)[1] }$remove_filter_state removing filter(s), dataname: { private$dataname }")
 
       varnames <- slices_field(state, "varname")
-      current_states <- self$get_filter_state() %>% isolate
+      current_states <- shiny::isolate(self$get_filter_state())
 
       lapply(varnames, function(x) {
         slice <- slices_which(current_states, sprintf("varname  == \"%s\"", x))
