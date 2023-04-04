@@ -135,10 +135,7 @@ FilteredDataset <- R6::R6Class( # nolint
     #' Gets the number of active `FilterState` objects in all `FilterStates` in this `FilteredDataset`.
     #' @return `integer(1)`
     get_filter_count = function() {
-      sum(vapply(private$filter_states,
-        function(state) state$get_filter_count(),
-        FUN.VALUE = integer(1)
-      ))
+      length(self$get_filter_state())
     },
 
     #' @description

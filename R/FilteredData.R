@@ -1150,9 +1150,7 @@ FilteredData <- R6::R6Class( # nolint
     # in all `FilteredDataset`s in this `FilteredData` object.
     # @return `integer(1)`
     get_filter_count = function() {
-      sum(vapply(self$datanames(), function(dataname) {
-        private$get_filtered_dataset(dataname)$get_filter_count()
-      }, numeric(1L)))
+      length(self$get_filter_state())
     }
   )
 )
