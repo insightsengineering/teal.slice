@@ -103,8 +103,8 @@ filter_var <- function(
 ) {
   checkmate::assert_string(dataname)
   checkmate::assert_string(varname)
-  checkmate::assert(is.atomic(choices), inherits(choices, "POSIXlt"), combine = "or")
-  checkmate::assert(is.atomic(selected), inherits(selected, "POSIXlt"), combine = "or")
+  checkmate::assert_multi_class(choices, .filterable_class, null.ok = TRUE)
+  checkmate::assert_multi_class(selected, .filterable_class, null.ok = TRUE)
   checkmate::assert_flag(keep_na, null.ok = TRUE)
   checkmate::assert_flag(keep_inf, null.ok = TRUE)
   checkmate::assert_flag(fixed)
