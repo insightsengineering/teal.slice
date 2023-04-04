@@ -521,6 +521,7 @@ FilterStates <- R6::R6Class( # nolint
       logger::log_trace(
         "{ class(self)[1] } removing a filter from state_list: { state_list_index }; dataname: { private$dataname }"
       )
+
       private$validate_state_list_exists(state_list_index)
       checkmate::assert_vector(state_id, len = 1)
       checkmate::assert(
@@ -529,13 +530,19 @@ FilterStates <- R6::R6Class( # nolint
       )
 
       new_state_list <- shiny::isolate(private$state_list[[state_list_index]]())
-      new_state_list[[state_id]]$destroy_observers()
-      new_state_list[[state_id]] <- NULL
-      shiny::isolate(private$state_list[[state_list_index]](new_state_list))
+      if (is.element(state_id, names(new_state_list))) {
+        new_state_list[[state_id]]$destroy_observers()
+        new_state_list[[state_id]] <- NULL
+        shiny::isolate(private$state_list[[state_list_index]](new_state_list))
 
-      logger::log_trace(
-        "{ class(self)[1] } removed from state_list: { state_list_index }; dataname: { private$dataname }"
-      )
+        logger::log_trace(
+          "{ class(self)[1] } removed from state_list: { state_list_index }; dataname: { private$dataname }"
+        )
+      } else {
+        warning(sprintf("\"%s\" not found in state list %s", state_id, state_list_index))
+
+      }
+
       invisible(NULL)
     },
 
