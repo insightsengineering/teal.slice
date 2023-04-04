@@ -1,5 +1,3 @@
-.filterable_class <- c("logical", "integer", "numeric", "factor", "character", "Date", "POSIXct", "POSIXlt")
-
 #' Initialize `FilterStates` object
 #'
 #' Initialize `FilterStates` object
