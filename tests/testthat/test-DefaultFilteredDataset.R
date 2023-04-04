@@ -19,9 +19,9 @@ testthat::test_that("get_call returns a list of calls or NULL", {
     dataset = iris, dataname = "iris"
   )
   testthat::expect_null(shiny::isolate(filtered_dataset$get_call()))
-  fs <- list(
-    Sepal.Length = c(5.1, 6.4),
-    Species = c("setosa", "versicolor")
+  fs <- filter_settings(
+    filter_var(dataname = "iris", varname = "Sepal.Length", selected = c(5.1, 6.4), keep_na = FALSE, keep_inf = FALSE),
+    filter_var(dataname = "iris", varname = "Species", selected = c("setosa", "versicolor"), keep_na = FALSE)
   )
   filtered_dataset$set_filter_state(state = fs)
 
@@ -33,9 +33,9 @@ testthat::test_that(
   code = {
     dataset <- DefaultFilteredDataset$new(dataset = iris, dataname = "iris")
 
-    fs <- list(
-      Sepal.Length = c(5.1, 6.4),
-      Species = c("setosa", "versicolor")
+    fs <- filter_settings(
+      filter_var(dataname = "iris", varname = "Sepal.Length", selected = c(5.1, 6.4), keep_na = FALSE, keep_inf = FALSE),
+      filter_var(dataname = "iris", varname = "Species", selected = c("setosa", "versicolor"), keep_na = FALSE)
     )
     dataset$set_filter_state(state = fs)
     testthat::expect_equal(
@@ -68,12 +68,12 @@ testthat::test_that(
   "DefaultFilteredDataset$remove_filter_state removes desired filter",
   code = {
     dataset <- DefaultFilteredDataset$new(dataset = iris, dataname = "iris")
-    fs <- list(
-      Sepal.Length = c(5.1, 6.4),
-      Species = c("setosa", "versicolor")
+    fs <- filter_settings(
+      filter_var(dataname = "iris", varname = "Sepal.Length", selected = c(5.1, 6.4), keep_na = FALSE, keep_inf = FALSE),
+      filter_var(dataname = "iris", varname = "Species", selected = c("setosa", "versicolor"), keep_na = FALSE)
     )
     dataset$set_filter_state(state = fs)
-    dataset$remove_filter_state("Species")
+    dataset$remove_filter_state(filter_settings(filter_var(dataname = "iris", varname = "Species")))
 
     testthat::expect_equal(
       shiny::isolate(dataset$get_call()),
@@ -93,12 +93,22 @@ testthat::test_that(
   "DefaultFilteredDataset$get_filter_state returns list identical to input",
   code = {
     dataset <- DefaultFilteredDataset$new(dataset = iris, dataname = "iris")
-    fs <- list(
-      Sepal.Length = list(selected = c(5.1, 6.4), keep_na = TRUE, keep_inf = TRUE),
-      Species = list(selected = c("setosa", "versicolor"), keep_na = FALSE)
+    fs <- filter_settings(
+      filter_var(dataname = "iris", varname = "Sepal.Length", selected = c(5.1, 6.4), keep_na = TRUE, keep_inf = TRUE),
+      filter_var(dataname = "iris", varname = "Species", selected = c("setosa", "versicolor"), keep_na = FALSE)
     )
     dataset$set_filter_state(state = fs)
-    testthat::expect_identical(shiny::isolate(dataset$get_filter_state()), fs)
+
+    current_states <- unname(shiny::isolate(dataset$get_filter_state()))
+    current_states <- lapply(current_states, function(x) {
+      x <- unclass(x)
+      x$choices = NULL
+      x
+    })
+    current_states <- lapply(current_states, as.teal_slice)
+    current_states <- do.call(filter_settings, current_states)
+
+    testthat::expect_identical(current_states, fs)
   }
 )
 
@@ -106,12 +116,17 @@ testthat::test_that(
   "DefaultFilteredDataset$remove_filter_state removes more than one filter",
   code = {
     dataset <- DefaultFilteredDataset$new(dataset = iris, dataname = "iris")
-    fs <- list(
-      Sepal.Length = c(5.1, 6.4),
-      Species = c("setosa", "versicolor")
+    fs <- filter_settings(
+      filter_var(dataname = "iris", varname = "Sepal.Length", selected = c(5.1, 6.4), keep_na = FALSE, keep_inf = FALSE),
+      filter_var(dataname = "iris", varname = "Species", selected = c("setosa", "versicolor"), keep_na = FALSE)
     )
     dataset$set_filter_state(state = fs)
-    dataset$remove_filter_state(c("Species", "Sepal.Length"))
+    dataset$remove_filter_state(
+      filter_settings(
+        filter_var(dataname = "iris", varname = "Sepal.Length"),
+        filter_var(dataname = "iris", varname = "Species")
+      )
+    )
 
     testthat::expect_null(
       shiny::isolate(dataset$get_call())
@@ -129,7 +144,10 @@ testthat::test_that("get_filter_overview returns overview data.frame with obs fi
 
 testthat::test_that("get_filter_overview returns overview data.frame with obs filter counts", {
   dataset_iris <- DefaultFilteredDataset$new(dataset = head(iris), dataname = "iris")
-  dataset_iris$set_filter_state(list(Sepal.Length = c(5.1, 5.1)))
+  fs <- filter_settings(
+    filter_var(dataname = "iris", varname = "Sepal.Length", selected = c(5.1, 5.1), keep_na = FALSE, keep_inf = FALSE)
+  )
+  dataset_iris$set_filter_state(fs)
   testthat::expect_equal(
     shiny::isolate(dataset_iris$get_filter_overview()),
     data.frame(dataname = "iris", obs = 6, obs_filtered = 1)
@@ -138,7 +156,10 @@ testthat::test_that("get_filter_overview returns overview data.frame with obs fi
 
 testthat::test_that("get_filter_overview returns overview data.frame with obs and subject filter counts  ", {
   dataset_iris <- DefaultFilteredDataset$new(dataset = head(iris), dataname = "iris", keys = "Species")
-  dataset_iris$set_filter_state(list(Sepal.Length = c(5.1, 5.1)))
+  fs <- filter_settings(
+    filter_var(dataname = "iris", varname = "Sepal.Length", selected = c(5.1, 5.1), keep_na = FALSE, keep_inf = FALSE)
+  )
+  dataset_iris$set_filter_state(fs)
   testthat::expect_equal(
     shiny::isolate(dataset_iris$get_filter_overview()),
     data.frame(dataname = "iris", obs = 6, obs_filtered = 1, subjects = 1, subjects_filtered = 1)
