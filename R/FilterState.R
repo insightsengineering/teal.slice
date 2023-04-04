@@ -630,8 +630,8 @@ FilterState <- R6::R6Class( # nolint
     # Cached `state` is reset again and cache is cleared.
     # @return `NULL` invisibly
     enable = function() {
+      private$disabled(FALSE)
       if (!is.null(private$cache)) {
-        private$disabled(FALSE)
         state <- private$cache
         state$disabled <- NULL
         self$set_state(state)
