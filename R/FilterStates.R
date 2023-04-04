@@ -219,6 +219,32 @@ FilterStates <- R6::R6Class( # nolint
     },
 
     #' @description
+    #' Gets reactive values from active `FilterState` objects.
+    #'
+    #' Get active filter state from `FilterState` objects stored in `state_list`(s).
+    #' The output is a list compatible with input to `self$set_filter_state`.
+    #'
+    #' @return `list` containing `list` per `FilterState` in the `state_list`
+    #'
+    get_filter_state = function() {
+      stop("Pure virtual method.")
+    },
+
+    #' @description
+    #' Sets active `FilterState` objects.
+    #'
+    #' @param data (`data.frame`)\cr
+    #'   data which are supposed to be filtered
+    #' @param state (`named list`)\cr
+    #'   should contain values which are initial selection in the `FilterState`.
+    #'   Names of the `list` element should correspond to the name of the
+    #'   column in `data`.
+    #' @return function which throws an error
+    set_filter_state = function(state) {
+      stop("Pure virtual method.")
+    },
+
+    #' @description
     #' Remove all `FilterState` objects from this `FilterStates` object.
     #'
     #' @return NULL
@@ -251,32 +277,6 @@ FilterStates <- R6::R6Class( # nolint
           `data-label` = ifelse(private$datalabel == "", "", (paste0("> ", private$datalabel)))
         )
       )
-    },
-
-    #' @description
-    #' Gets reactive values from active `FilterState` objects.
-    #'
-    #' Get active filter state from `FilterState` objects stored in `state_list`(s).
-    #' The output is a list compatible with input to `self$set_filter_state`.
-    #'
-    #' @return `list` containing `list` per `FilterState` in the `state_list`
-    #'
-    get_filter_state = function() {
-      stop("Pure virtual method.")
-    },
-
-    #' @description
-    #' Sets active `FilterState` objects.
-    #'
-    #' @param data (`data.frame`)\cr
-    #'   data which are supposed to be filtered
-    #' @param state (`named list`)\cr
-    #'   should contain values which are initial selection in the `FilterState`.
-    #'   Names of the `list` element should correspond to the name of the
-    #'   column in `data`.
-    #' @return function which throws an error
-    set_filter_state = function(state) {
-      stop("Pure virtual method.")
     },
 
     #' @description
