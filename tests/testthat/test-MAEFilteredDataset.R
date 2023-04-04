@@ -37,15 +37,15 @@ testthat::test_that("MAEFilteredDataset$get_call returns NULL without applying f
 testthat::test_that("MAEFilteredDataset$get_call returns a call with applying filter", {
   utils::data(miniACC, package = "MultiAssayExperiment")
   filtered_dataset <- MAEFilteredDataset$new(dataset = miniACC, dataname = "miniacc")
-  fs <- list(
-    subjects = list(
-      years_to_birth = list(selected = c(30, 50), keep_na = TRUE, keep_inf = FALSE),
-      vital_status = list(selected = "1", keep_na = FALSE),
-      gender = list(selected = "female", keep_na = TRUE)
-    ),
-    RPPAArray = list(
-      subset = list(ARRAY_TYPE = list(selected = "", keep_na = TRUE))
-    )
+  fs <- filter_settings(
+    filter_var(dataname = "miniacc", varname = "years_to_birth", selected = c(30, 50),
+               keep_na = TRUE, keep_inf = FALSE, datalabel = "subjects", target = "y"),
+    filter_var(dataname = "miniacc", varname = "vital_status", selected = "1",
+               keep_na = FALSE, datalabel = "subjects", target = "y"),
+    filter_var(dataname = "miniacc", varname = "gender", selected = "female",
+               keep_na = TRUE, datalabel = "subjects", target = "y"),
+    filter_var(dataname = "miniacc", varname = "ARRAY_TYPE", selected = "",
+               keep_na = TRUE, datalabel = "RPPAArray", target = "subset")
   )
   filtered_dataset$set_filter_state(fs)
   get_call_output <- shiny::isolate(filtered_dataset$get_call())
@@ -85,23 +85,23 @@ testthat::test_that("get_filter_overview_info returns overview matrix for MAEFil
 
 testthat::test_that("get_filter_overview_info returns overview matrix for MAEFilteredDataset with filtering", {
   utils::data(miniACC, package = "MultiAssayExperiment")
-  filtered_dataset <- MAEFilteredDataset$new(dataset = miniACC, dataname = "miniACC")
-  fs <- list(
-    subjects = list(
-      years_to_birth = list(selected = c(30, 50), keep_na = TRUE, keep_inf = FALSE),
-      vital_status = list(selected = "1", keep_na = FALSE),
-      gender = list(selected = "female", keep_na = TRUE)
-    ),
-    RPPAArray = list(
-      subset = list(ARRAY_TYPE = list(selected = "", keep_na = TRUE))
-    )
+  filtered_dataset <- MAEFilteredDataset$new(dataset = miniACC, dataname = "miniacc")
+  fs <- filter_settings(
+    filter_var(dataname = "miniacc", varname = "years_to_birth", selected = c(30, 50),
+               keep_na = TRUE, keep_inf = FALSE, datalabel = "subjects", target = "y"),
+    filter_var(dataname = "miniacc", varname = "vital_status", selected = "1",
+               keep_na = FALSE, datalabel = "subjects", target = "y"),
+    filter_var(dataname = "miniacc", varname = "gender", selected = "female",
+               keep_na = TRUE, datalabel = "subjects", target = "y"),
+    filter_var(dataname = "miniacc", varname = "ARRAY_TYPE", selected = "",
+               keep_na = TRUE, datalabel = "RPPAArray", target = "subset")
   )
   filtered_dataset$set_filter_state(fs)
 
   testthat::expect_equal(
     shiny::isolate(filtered_dataset$get_filter_overview()),
     data.frame(
-      dataname = c("miniACC", sprintf("- %s", names(miniACC))),
+      dataname = c("miniacc", sprintf("- %s", names(miniACC))),
       subjects = c(92, 79, 90, 46, 90, 80),
       subjects_filtered = c(6, 5, 6, 4, 5, 5),
       obs = c(NA_real_, 79, 90, 46, 90, 80),
@@ -111,35 +111,35 @@ testthat::test_that("get_filter_overview_info returns overview matrix for MAEFil
 })
 
 testthat::test_that(
-  "MAEFilteredDataset$set_filter_state sets filters in FilterStates specified by list names",
+  "MAEFilteredDataset$set_filter_state sets filters in FilterStates specified by `teal_slices",
   code = {
     utils::data(miniACC, package = "MultiAssayExperiment")
-    dataset <- MAEFilteredDataset$new(dataset = miniACC, dataname = "MAE")
-    fs <- list(
-      subjects = list(
-        years_to_birth = c(30, 50),
-        vital_status = 1,
-        gender = "female"
-      ),
-      RPPAArray = list(
-        subset = list(ARRAY_TYPE = "")
-      )
+    dataset <- MAEFilteredDataset$new(dataset = miniACC, dataname = "miniacc")
+    fs <- filter_settings(
+      filter_var(dataname = "miniacc", varname = "years_to_birth", selected = c(30, 50),
+                 keep_na = FALSE, keep_inf = FALSE, datalabel = "subjects", target = "y"),
+      filter_var(dataname = "miniacc", varname = "vital_status", selected = "1",
+                 keep_na = FALSE, datalabel = "subjects", target = "y"),
+      filter_var(dataname = "miniacc", varname = "gender", selected = "female",
+                 keep_na = FALSE, datalabel = "subjects", target = "y"),
+      filter_var(dataname = "miniacc", varname = "ARRAY_TYPE", selected = "",
+                 keep_na = FALSE, datalabel = "RPPAArray", target = "subset")
     )
     dataset$set_filter_state(state = fs)
     testthat::expect_equal(
       shiny::isolate(dataset$get_call()),
       list(
         subjects = quote(
-          MAE <- MultiAssayExperiment::subsetByColData( # nolint
-            MAE,
-            y = MAE$years_to_birth >= 30 & MAE$years_to_birth <= 50 &
-              MAE$vital_status == 1L &
-              MAE$gender == "female"
+          miniacc <- MultiAssayExperiment::subsetByColData( # nolint
+            miniacc,
+            y = miniacc$years_to_birth >= 30 & miniacc$years_to_birth <= 50 &
+              miniacc$vital_status == 1L &
+              miniacc$gender == "female"
           )
         ),
         RPPAArray = quote(
-          MAE[["RPPAArray"]] <- subset( # nolint
-            MAE[["RPPAArray"]],
+          miniacc[["RPPAArray"]] <- subset( # nolint
+            miniacc[["RPPAArray"]],
             subset = ARRAY_TYPE == ""
           )
         )
@@ -149,10 +149,10 @@ testthat::test_that(
 )
 
 testthat::test_that(
-  "MAEFilteredDataset$set_filter_state throws error when using unnamed list",
+  "MAEFilteredDataset$set_filter_state only acceps `teal_slices",
   code = {
     utils::data(miniACC, package = "MultiAssayExperiment")
-    dataset <- MAEFilteredDataset$new(dataset = miniACC, dataname = "miniACC")
+    dataset <- MAEFilteredDataset$new(dataset = miniACC, dataname = "miniacc")
     fs <- list(
       list(
         years_to_birth = c(30, 50),
@@ -163,57 +163,28 @@ testthat::test_that(
         subset = list(ARRAY_TYPE = "")
       )
     )
-    testthat::expect_error(dataset$set_filter_state(state = fs))
+    testthat::expect_error(dataset$set_filter_state(state = fs), "Assertion on 'state' failed")
   }
 )
-
-testthat::test_that(
-  "MAEFilteredDataset$set_filter_state throws error when using unnamed variables list",
-  code = {
-    utils::data(miniACC, package = "MultiAssayExperiment")
-    dataset <- MAEFilteredDataset$new(dataset = miniACC, dataname = "miniACC")
-    fs <- list(
-      subjects = list(
-        c(30, 50),
-        vital_status = 1,
-        gender = "female"
-      ),
-      RPPAArray = list(
-        subset = list(ARRAY_TYPE = "")
-      )
-    )
-    testthat::expect_error(dataset$set_filter_state(state = fs))
-  }
-)
-
-testthat::test_that("MAEFilteredDataset$set_filter_state throws error if state argument is not a list ", {
-  utils::data(miniACC, package = "MultiAssayExperiment")
-  dataset <- MAEFilteredDataset$new(dataset = miniACC, dataname = "miniACC")
-  fs <- c("not_list")
-  testthat::expect_error(
-    dataset$set_filter_state(state = fs),
-    "Must be of type 'list', not 'character'.",
-    fixed = TRUE
-  )
-})
 
 testthat::test_that(
   "MAEFilteredDataset$get_filter_state returns list identical to input",
   code = {
     utils::data(miniACC, package = "MultiAssayExperiment")
-    dataset <- MAEFilteredDataset$new(dataset = miniACC, dataname = "miniACC")
-    fs <- list(
-      subjects = list(
-        years_to_birth = list(selected = c(30, 50), keep_na = TRUE, keep_inf = FALSE),
-        vital_status = list(selected = "1", keep_na = FALSE),
-        gender = list(selected = "female", keep_na = TRUE)
-      ),
-      RPPAArray = list(
-        subset = list(ARRAY_TYPE = list(selected = "", keep_na = TRUE))
-      )
+    dataset <- MAEFilteredDataset$new(dataset = miniACC, dataname = "miniacc")
+    fs <- filter_settings(
+      filter_var(dataname = "miniacc", varname = "years_to_birth", selected = c(30, 50),
+                 keep_na = FALSE, keep_inf = FALSE, datalabel = "subjects", target = "y"),
+      filter_var(dataname = "miniacc", varname = "vital_status", selected = "1",
+                 keep_na = FALSE, datalabel = "subjects", target = "y"),
+      filter_var(dataname = "miniacc", varname = "gender", selected = "female",
+                 keep_na = FALSE, datalabel = "subjects", target = "y"),
+      filter_var(dataname = "miniacc", varname = "ARRAY_TYPE", selected = "",
+                 keep_na = FALSE, datalabel = "RPPAArray", target = "subset")
     )
+
     dataset$set_filter_state(state = fs)
-    testthat::expect_identical(shiny::isolate(dataset$get_filter_state()), fs)
+    testthat::expect_identical(adjust_states(shiny::isolate(dataset$get_filter_state())), fs)
   }
 )
 
@@ -221,33 +192,33 @@ testthat::test_that(
   "MAEFilteredDataset$remove_filter_state removes desired filter",
   code = {
     utils::data(miniACC, package = "MultiAssayExperiment")
-    dataset <- MAEFilteredDataset$new(dataset = miniACC, dataname = "MAE")
-    fs <- list(
-      subjects = list(
-        years_to_birth = c(30, 50),
-        vital_status = 1,
-        gender = "female"
-      ),
-      RPPAArray = list(
-        subset = list(ARRAY_TYPE = "")
-      )
+    dataset <- MAEFilteredDataset$new(dataset = miniACC, dataname = "miniacc")
+    fs <- filter_settings(
+      filter_var(dataname = "miniacc", varname = "years_to_birth", selected = c(30, 50),
+                 keep_na = TRUE, keep_inf = FALSE, datalabel = "subjects", target = "y"),
+      filter_var(dataname = "miniacc", varname = "vital_status", selected = "1",
+                 keep_na = FALSE, datalabel = "subjects", target = "y"),
+      filter_var(dataname = "miniacc", varname = "gender", selected = "female",
+                 keep_na = FALSE, datalabel = "subjects", target = "y"),
+      filter_var(dataname = "miniacc", varname = "ARRAY_TYPE", selected = "",
+                 keep_na = FALSE, datalabel = "RPPAArray", target = "subset")
     )
     dataset$set_filter_state(state = fs)
-    dataset$remove_filter_state(state_id = list(subjects = list("years_to_birth")))
+    dataset$remove_filter_state(filter_settings(filter_var(dataname = "miniacc", varname = "years_to_birth")))
 
     testthat::expect_equal(
       shiny::isolate(dataset$get_call()),
       list(
         subjects = quote(
-          MAE <- MultiAssayExperiment::subsetByColData( # nolint
-            MAE,
-            y = MAE$vital_status == 1L &
-              MAE$gender == "female"
+          miniacc <- MultiAssayExperiment::subsetByColData( # nolint
+            miniacc,
+            y = miniacc$vital_status == 1L &
+              miniacc$gender == "female"
           )
         ),
         RPPAArray = quote(
-          MAE[["RPPAArray"]] <- subset( # nolint
-            MAE[["RPPAArray"]],
+          miniacc[["RPPAArray"]] <- subset( # nolint
+            miniacc[["RPPAArray"]],
             subset = ARRAY_TYPE == ""
           )
         )
@@ -257,19 +228,19 @@ testthat::test_that(
 )
 
 testthat::test_that(
-  "MAEFilteredDataset$remove_filter_state throws error if list in unnamed",
+  "MAEFilteredDataset$remove_filter_state only accepts `teal_slices",
   code = {
     utils::data(miniACC, package = "MultiAssayExperiment")
-    dataset <- MAEFilteredDataset$new(dataset = miniACC, dataname = "miniACC")
-    fs <- list(
-      subjects = list(
-        years_to_birth = c(30, 50),
-        vital_status = 1,
-        gender = "female"
-      ),
-      RPPAArray = list(
-        subset = list(ARRAY_TYPE = "")
-      )
+    dataset <- MAEFilteredDataset$new(dataset = miniACC, dataname = "miniacc")
+    fs <- filter_settings(
+      filter_var(dataname = "miniacc", varname = "years_to_birth", selected = c(30, 50),
+                 keep_na = TRUE, keep_inf = FALSE, datalabel = "subjects", target = "y"),
+      filter_var(dataname = "miniacc", varname = "vital_status", selected = "1",
+                 keep_na = FALSE, datalabel = "subjects", target = "y"),
+      filter_var(dataname = "miniacc", varname = "gender", selected = "female",
+                 keep_na = FALSE, datalabel = "subjects", target = "y"),
+      filter_var(dataname = "miniacc", varname = "ARRAY_TYPE", selected = "",
+                 keep_na = FALSE, datalabel = "RPPAArray", target = "subset")
     )
     dataset$set_filter_state(state = fs)
     testthat::expect_error(dataset$remove_filter_state(state_id = list("years_to_birth")))
@@ -278,22 +249,22 @@ testthat::test_that(
 
 testthat::test_that("get_supported_filter_varnames.MAEFilteredDataset returns character(0)", {
   utils::data(miniACC, package = "MultiAssayExperiment")
-  filtered_dataset <- MAEFilteredDataset$new(dataset = miniACC, dataname = "miniACC")
+  filtered_dataset <- MAEFilteredDataset$new(dataset = miniACC, dataname = "miniacc")
   testthat::expect_identical(get_supported_filter_varnames(filtered_dataset), character(0))
 })
 
 testthat::test_that("MAEFilteredDataset filters removed using remove_filters", {
   utils::data(miniACC, package = "MultiAssayExperiment")
-  filtered_dataset <- MAEFilteredDataset$new(dataset = miniACC, dataname = "MAE")
-  fs <- list(
-    subjects = list(
-      years_to_birth = c(30, 50),
-      vital_status = 1,
-      gender = "female"
-    ),
-    RPPAArray = list(
-      subset = list(ARRAY_TYPE = "")
-    )
+  filtered_dataset <- MAEFilteredDataset$new(dataset = miniACC, dataname = "miniacc")
+  fs <- filter_settings(
+    filter_var(dataname = "miniacc", varname = "years_to_birth", selected = c(30, 50),
+               keep_na = FALSE, keep_inf = FALSE, datalabel = "subjects", target = "y"),
+    filter_var(dataname = "miniacc", varname = "vital_status", selected = "1",
+               keep_na = FALSE, datalabel = "subjects", target = "y"),
+    filter_var(dataname = "miniacc", varname = "gender", selected = "female",
+               keep_na = FALSE, datalabel = "subjects", target = "y"),
+    filter_var(dataname = "miniacc", varname = "ARRAY_TYPE", selected = "",
+               keep_na = FALSE, datalabel = "RPPAArray", target = "subset")
   )
 
   shiny::isolate(filtered_dataset$set_filter_state(state = fs))
@@ -302,16 +273,16 @@ testthat::test_that("MAEFilteredDataset filters removed using remove_filters", {
     shiny::isolate(filtered_dataset$get_call()),
     list(
       subjects = quote(
-        MAE <- MultiAssayExperiment::subsetByColData( # nolint
-          MAE,
-          y = MAE$years_to_birth >= 30 & MAE$years_to_birth <= 50 &
-            MAE$vital_status == 1L &
-            MAE$gender == "female"
+        miniacc <- MultiAssayExperiment::subsetByColData( # nolint
+          miniacc,
+          y = miniacc$years_to_birth >= 30 & miniacc$years_to_birth <= 50 &
+            miniacc$vital_status == 1L &
+            miniacc$gender == "female"
         )
       ),
       RPPAArray = quote(
-        MAE[["RPPAArray"]] <- subset( # nolint
-          MAE[["RPPAArray"]],
+        miniacc[["RPPAArray"]] <- subset( # nolint
+          miniacc[["RPPAArray"]],
           subset = ARRAY_TYPE == ""
         )
       )
