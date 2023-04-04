@@ -24,7 +24,7 @@
 #' set_filter_state(
 #'   fpa,
 #'   filter_settings(
-#'     filter_var("iris", "Species", selected = "setosa", keep_na = TRUE)
+#'     filter_var(dataname = "iris", varname = "Species", selected = "setosa", keep_na = TRUE)
 #'   )
 #' )
 #'

@@ -137,6 +137,7 @@ LogicalFilterState <- R6::R6Class( # nolint
                           ...) {
       stopifnot(is.logical(x))
       checkmate::assert_class(x_reactive, 'reactive')
+      checkmate::assert_flag(selected, null.ok = TRUE)
 
       args <- list(
         x = x,
@@ -153,7 +154,11 @@ LogicalFilterState <- R6::R6Class( # nolint
       do.call(super$initialize, args)
 
       private$set_choices(choices)
-      private$set_selected(TRUE)
+      if (is.null(selected)) {
+        private$set_selected(TRUE)
+      } else {
+        private$set_selected(selected)
+      }
 
       df <- factor(x, levels = c(TRUE, FALSE))
       tbl <- table(df)
