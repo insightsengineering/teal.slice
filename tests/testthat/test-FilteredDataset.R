@@ -61,9 +61,9 @@ testthat::test_that("get_metadata returns the metadata of the data passed to the
 # Format
 testthat::test_that("$get_formatted_filter_state returns a string representation of filters", {
   dataset <- DefaultFilteredDataset$new(dataset = iris, dataname = "iris")
-  fs <- list(
-    Sepal.Length = list(selected = c(5.1, 6.4), keep_na = TRUE, keep_inf = TRUE),
-    Species = list(selected = c("setosa", "versicolor"), keep_na = FALSE)
+  fs <- filter_settings(
+    filter_var(dataname = "iris", varname = "Sepal.Length", selected = c(5.1, 6.4), keep_na = TRUE, keep_inf = FALSE),
+    filter_var(dataname = "iris", varname = "Species", selected = c("setosa", "versicolor"), keep_na = FALSE)
   )
   shiny::isolate(dataset$set_filter_state(state = fs))
 
@@ -85,9 +85,9 @@ testthat::test_that("$get_formatted_filter_state returns a string representation
 
 testthat::test_that("$get_call returns the filter call of the dataset", {
   dataset <- DefaultFilteredDataset$new(dataset = iris, dataname = "iris")
-  fs <- list(
-    Sepal.Length = list(selected = c(5.1, 6.4), keep_na = TRUE, keep_inf = TRUE),
-    Species = list(selected = c("setosa", "versicolor"), keep_na = FALSE)
+  fs <- filter_settings(
+    filter_var(dataname = "iris", varname = "Sepal.Length", selected = c(5.1, 6.4), keep_na = TRUE, keep_inf = TRUE),
+    filter_var(dataname = "iris", varname = "Species", selected = c("setosa", "versicolor"), keep_na = FALSE)
   )
   shiny::isolate(dataset$set_filter_state(state = fs))
   filter_call <- shiny::isolate(dataset$get_call())$filter
