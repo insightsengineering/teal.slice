@@ -99,16 +99,7 @@ testthat::test_that(
     )
     dataset$set_filter_state(state = fs)
 
-    current_states <- unname(shiny::isolate(dataset$get_filter_state()))
-    current_states <- lapply(current_states, function(x) {
-      x <- unclass(x)
-      x$choices = NULL
-      x
-    })
-    current_states <- lapply(current_states, as.teal_slice)
-    current_states <- do.call(filter_settings, current_states)
-
-    testthat::expect_identical(current_states, fs)
+    testthat::expect_identical(adjust_states(shiny::isolate(dataset$get_filter_state())), fs)
   }
 )
 

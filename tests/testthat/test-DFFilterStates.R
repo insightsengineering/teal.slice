@@ -92,17 +92,9 @@ testthat::test_that("DFFilterStates$set_filter_state updates filter state which 
       filter_var(dataname = "iris", varname = "Species", selected = "setosa")
     )
   )
-  current_states <- unname(shiny::isolate(dffs$get_filter_state()))
-  current_states <- lapply(current_states, function(x) {
-    x <- unclass(x)
-    x$choices = NULL
-    x
-  })
-  current_states <- lapply(current_states, as.teal_slice)
-  current_states <- do.call(filter_settings, current_states)
 
   testthat::expect_identical(
-    current_states,
+    adjust_states(shiny::isolate(dffs$get_filter_state())),
     filter_settings(
       filter_var(dataname = "iris", varname = "Sepal.Length", selected = c(5.1, 6.4), keep_na = FALSE, keep_inf = FALSE),
       filter_var(dataname = "iris", varname = "Species", selected = "setosa", keep_na = FALSE),
@@ -133,16 +125,7 @@ testthat::test_that(
     )
     dffs$set_filter_state(state = fs)
 
-    current_states <- unname(shiny::isolate(dffs$get_filter_state()))
-    current_states <- lapply(current_states, function(x) {
-      x <- unclass(x)
-      x$choices = NULL
-      x
-    })
-    current_states <- lapply(current_states, as.teal_slice)
-    current_states <- do.call(filter_settings, current_states)
-
-    testthat::expect_identical(current_states, fs)
+    testthat::expect_identical(adjust_states(shiny::isolate(dffs$get_filter_state())), fs)
   })
 
 testthat::test_that("Selecting a new variable initializes a new filter state", {
@@ -154,17 +137,8 @@ testthat::test_that("Selecting a new variable initializes a new filter state", {
     }
   )
 
-  current_states <- unname(shiny::isolate(dffs$get_filter_state()))
-  current_states <- lapply(current_states, function(x) {
-    x <- unclass(x)
-    x$choices = NULL
-    x
-  })
-  current_states <- lapply(current_states, as.teal_slice)
-  current_states <- do.call(filter_settings, current_states)
-
   testthat::expect_identical(
-    current_states,
+    adjust_states(shiny::isolate(dffs$get_filter_state())),
     filter_settings(
       filter_var(
         dataname = "iris",
@@ -195,17 +169,8 @@ testthat::test_that("Adding 'var_to_add' adds another filter state", {
     }
   )
 
-  current_states <- unname(shiny::isolate(dffs$get_filter_state()))
-  current_states <- lapply(current_states, function(x) {
-    x <- unclass(x)
-    x$choices = NULL
-    x
-  })
-  current_states <- lapply(current_states, as.teal_slice)
-  current_states <- do.call(filter_settings, current_states)
-
   testthat::expect_identical(
-    current_states,
+    adjust_states(shiny::isolate(dffs$get_filter_state())),
     filter_settings(
       filter_var(dataname = "iris", varname = "Sepal.Length", selected = c(5.1, 6.4), keep_na = FALSE, keep_inf = FALSE),
       filter_var(dataname = "iris", varname = "Petal.Length", selected = c(1.0, 6.9)),
@@ -227,17 +192,8 @@ testthat::test_that(
     dffs$set_filter_state(state = fs)
     dffs$remove_filter_state(filter_settings(filter_var(dataname = "iris", varname = "Species")))
 
-    current_states <- unname(shiny::isolate(dffs$get_filter_state()))
-    current_states <- lapply(current_states, function(x) {
-      x <- unclass(x)
-      x$choices = NULL
-      x
-    })
-    current_states <- lapply(current_states, as.teal_slice)
-    current_states <- do.call(filter_settings, current_states)
-
     testthat::expect_identical(
-      current_states,
+      adjust_states(shiny::isolate(dffs$get_filter_state())),
       filter_settings(
         filter_var(dataname = "iris", varname = "Sepal.Length", selected = c(5.1, 6.4), keep_na = FALSE, keep_inf = FALSE)
       )

@@ -461,15 +461,10 @@ testthat::test_that(
 
     datasets$set_filter_state(state = fs)
 
-    current_states <- unname(shiny::isolate(datasets$get_filter_state()))
+    current_states <- shiny::isolate(datasets$get_filter_state())
     attr_formatted <- attr(current_states, "formatted")
-    current_states <- lapply(current_states, function(x) {
-      x <- unclass(x)
-      x$choices = NULL
-      x
-    })
-    current_states <- lapply(current_states, as.teal_slice)
-    current_states <- do.call(filter_settings, current_states)
+
+    current_states <- adjust_states(current_states)
     attr(current_states, "formatted") <- attr_formatted
 
     formatted_state <- fs

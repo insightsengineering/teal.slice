@@ -125,3 +125,18 @@ include_js_files <- function(pattern) {
   )
   return(singleton(lapply(js_files, includeScript)))
 }
+
+
+# helper for unit testing filter states
+# sets `choices` field to NULL in all `teal_slice`s in a `teal_slices`
+#' @keywords internal
+adjust_states <- function(tss) {
+  checkmate::assert_class(tss, "teal_slices")
+
+  ans <- lapply(tss, function(x) {
+    x <- unclass(x)
+    x$choices = NULL
+    x
+  })
+  unname(do.call(filter_settings, lapply(ans, as.teal_slice)))
+}
