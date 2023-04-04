@@ -443,7 +443,12 @@ FilteredData <- R6::R6Class( # nolint
     #'
     get_filter_state = function() {
       states <- lapply(private$filtered_datasets, function(x) x$get_filter_state())
-      do.call(c, states)
+      slices <- Filter(Negate(is.null), states)
+      state <- do.call(c, slices)
+      if (!is.null(state)) {
+        attr(state, "formatted") <- self$get_formatted_filter_state()
+      }
+      state
     },
 
     #' @description
