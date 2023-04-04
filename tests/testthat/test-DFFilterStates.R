@@ -20,7 +20,7 @@ testthat::test_that("get_fun returns dplyr::filter", {
 })
 
 testthat::test_that(
-  "DFFilterStates$set_filter_state sets filters in FilterState(s) specified by the named list",
+  "DFFilterStates$set_filter_state sets filters in FilterState(s) specified by `teal_slices`",
   code = {
     dffs <- DFFilterStates$new(
       data = iris,
@@ -29,9 +29,9 @@ testthat::test_that(
       varlabels = character(0),
       keys = character(0)
     )
-    fs <- list(
-      Sepal.Length = c(5.1, 6.4),
-      Species = c("setosa", "versicolor")
+    fs <- filter_settings(
+      filter_var(dataname = "iris", varname = "Sepal.Length", selected = c(5.1, 6.4)),
+      filter_var(dataname = "iris", varname = "Species", selected = c("setosa", "versicolor"))
     )
     dffs$set_filter_state(state = fs)
     testthat::expect_equal(
@@ -55,9 +55,9 @@ testthat::test_that("DFFilterStates$set_filter_state sets filters as a named/unn
     varlabels = character(0),
     keys = character(0)
   )
-  fs <- list(
-    Sepal.Length = list(c(5.1, 6.4)),
-    Species = list(selected = c("setosa", "versicolor"))
+  fs <- filter_settings(
+    filter_var(dataname = "iris", varname = "Sepal.Length", selected = c(5.1, 6.4)),
+    filter_var(dataname = "iris", varname = "Species", selected = c("setosa", "versicolor"))
   )
   dffs$set_filter_state(state = fs)
   testthat::expect_equal(
@@ -81,17 +81,32 @@ testthat::test_that("DFFilterStates$set_filter_state updates filter state which 
     keys = character(0)
   )
   dffs$set_filter_state(
-    state = list(Sepal.Length = c(5.1, 6.4), Species = c("setosa", "versicolor"))
+    state = filter_settings(
+      filter_var(dataname = "iris", varname = "Sepal.Length", selected = c(5.1, 6.4), keep_na = FALSE, keep_inf = FALSE),
+      filter_var(dataname = "iris", varname = "Species", selected = c("setosa", "versicolor"), keep_na = FALSE)
+    )
   )
   dffs$set_filter_state(
-    state = list(Species = "setosa", Petal.Length = c(2.0, 5.0))
+    state = filter_settings(
+      filter_var(dataname = "iris", varname = "Petal.Length", selected = c(2.0, 5.0), keep_na = FALSE, keep_inf = FALSE),
+      filter_var(dataname = "iris", varname = "Species", selected = "setosa")
+    )
   )
+  current_states <- unname(shiny::isolate(dffs$get_filter_state()))
+  current_states <- lapply(current_states, function(x) {
+    x <- unclass(x)
+    x$choices = NULL
+    x
+  })
+  current_states <- lapply(current_states, as.teal_slice)
+  current_states <- do.call(filter_settings, current_states)
+
   testthat::expect_identical(
-    shiny::isolate(dffs$get_filter_state()),
-    list(
-      Sepal.Length = list(selected = c(5.1, 6.4), keep_na = FALSE, keep_inf = FALSE),
-      Species = list(selected = "setosa", keep_na = FALSE),
-      Petal.Length = list(selected = c(2.0, 5.0), keep_na = FALSE, keep_inf = FALSE)
+    current_states,
+    filter_settings(
+      filter_var(dataname = "iris", varname = "Sepal.Length", selected = c(5.1, 6.4), keep_na = FALSE, keep_inf = FALSE),
+      filter_var(dataname = "iris", varname = "Species", selected = "setosa", keep_na = FALSE),
+      filter_var(dataname = "iris", varname = "Petal.Length", selected = c(2.0, 5.0), keep_na = FALSE, keep_inf = FALSE)
     )
   )
 })
@@ -109,17 +124,26 @@ testthat::test_that(
 )
 
 testthat::test_that(
-  "DFFilterStates$get_filter_state returns list identical to input",
+  "DFFilterStates$get_filter_state returns list identical to input (choices excluded)",
   code = {
     dffs <- DFFilterStates$new(data = iris, dataname = "iris")
-    fs <- list(
-      Sepal.Length = list(selected = c(5.1, 6.4), keep_na = TRUE, keep_inf = TRUE),
-      Species = list(selected = c("setosa", "versicolor"), keep_na = FALSE)
+    fs <- filter_settings(
+      filter_var(dataname = "iris", varname = "Sepal.Length", selected = c(5.1, 6.4), keep_na = TRUE, keep_inf = TRUE),
+      filter_var(dataname = "iris", varname = "Species", selected = c("setosa", "versicolor"), keep_na = TRUE)
     )
     dffs$set_filter_state(state = fs)
-    testthat::expect_identical(shiny::isolate(dffs$get_filter_state()), fs)
-  }
-)
+
+    current_states <- unname(shiny::isolate(dffs$get_filter_state()))
+    current_states <- lapply(current_states, function(x) {
+      x <- unclass(x)
+      x$choices = NULL
+      x
+    })
+    current_states <- lapply(current_states, as.teal_slice)
+    current_states <- do.call(filter_settings, current_states)
+
+    testthat::expect_identical(current_states, fs)
+  })
 
 testthat::test_that("Selecting a new variable initializes a new filter state", {
   dffs <- DFFilterStates$new(data = iris, dataname = "iris")
@@ -129,10 +153,24 @@ testthat::test_that("Selecting a new variable initializes a new filter state", {
       session$setInputs(var_to_add = "Sepal.Length")
     }
   )
+
+  current_states <- unname(shiny::isolate(dffs$get_filter_state()))
+  current_states <- lapply(current_states, function(x) {
+    x <- unclass(x)
+    x$choices = NULL
+    x
+  })
+  current_states <- lapply(current_states, as.teal_slice)
+  current_states <- do.call(filter_settings, current_states)
+
   testthat::expect_identical(
-    shiny::isolate(dffs$get_filter_state()),
-    list(
-      Sepal.Length = list(selected = c(4.3, 7.9), keep_na = FALSE, keep_inf = FALSE)
+    current_states,
+    filter_settings(
+      filter_var(
+        dataname = "iris",
+        varname = "Sepal.Length",
+        selected = c(4.3, 7.9)
+      )
     )
   )
 })
@@ -140,8 +178,8 @@ testthat::test_that("Selecting a new variable initializes a new filter state", {
 testthat::test_that("Adding 'var_to_add' adds another filter state", {
   dffs <- DFFilterStates$new(data = iris, dataname = "iris")
 
-  fs <- list(
-    Sepal.Length = list(selected = c(5.1, 6.4))
+  fs <- filter_settings(
+    filter_var(dataname = "iris", varname = "Sepal.Length", selected = c(5.1, 6.4), keep_na = FALSE, keep_inf = FALSE)
   )
   shiny::isolate(dffs$set_filter_state(state = fs))
   shiny::testServer(
@@ -157,12 +195,21 @@ testthat::test_that("Adding 'var_to_add' adds another filter state", {
     }
   )
 
+  current_states <- unname(shiny::isolate(dffs$get_filter_state()))
+  current_states <- lapply(current_states, function(x) {
+    x <- unclass(x)
+    x$choices = NULL
+    x
+  })
+  current_states <- lapply(current_states, as.teal_slice)
+  current_states <- do.call(filter_settings, current_states)
+
   testthat::expect_identical(
-    shiny::isolate(dffs$get_filter_state()),
-    list(
-      Sepal.Length = list(selected = c(5.1, 6.4), keep_na = FALSE, keep_inf = FALSE),
-      Petal.Length = list(selected = c(1.0, 6.9), keep_na = FALSE, keep_inf = FALSE),
-      Species = list(selected = c("setosa", "versicolor", "virginica"), keep_na = FALSE)
+    current_states,
+    filter_settings(
+      filter_var(dataname = "iris", varname = "Sepal.Length", selected = c(5.1, 6.4), keep_na = FALSE, keep_inf = FALSE),
+      filter_var(dataname = "iris", varname = "Petal.Length", selected = c(1.0, 6.9)),
+      filter_var(dataname = "iris", varname = "Species", selected = c("setosa", "versicolor", "virginica"))
     )
   )
 })
@@ -171,35 +218,49 @@ testthat::test_that(
   "DFFilterStates$remove_filter_state removes specified filter in FilterState(s)",
   code = {
     dffs <- DFFilterStates$new(data = iris, dataname = "iris")
-    fs <- list(
-      Sepal.Length = list(selected = c(5.1, 6.4)),
-      Species = list(selected = c("setosa", "versicolor"))
+
+    fs <- filter_settings(
+      filter_var(dataname = "iris", varname = "Sepal.Length", selected = c(5.1, 6.4), keep_na = FALSE, keep_inf = FALSE),
+      filter_var(dataname = "iris", varname = "Species",selected = c("setosa", "versicolor"))
     )
 
     dffs$set_filter_state(state = fs)
-    dffs$remove_filter_state("Species")
+    dffs$remove_filter_state(filter_settings(filter_var(dataname = "iris", varname = "Species")))
+
+    current_states <- unname(shiny::isolate(dffs$get_filter_state()))
+    current_states <- lapply(current_states, function(x) {
+      x <- unclass(x)
+      x$choices = NULL
+      x
+    })
+    current_states <- lapply(current_states, as.teal_slice)
+    current_states <- do.call(filter_settings, current_states)
 
     testthat::expect_identical(
-      shiny::isolate(dffs$get_filter_state()),
-      list(
-        Sepal.Length = list(selected = c(5.1, 6.4), keep_na = FALSE, keep_inf = FALSE)
+      current_states,
+      filter_settings(
+        filter_var(dataname = "iris", varname = "Sepal.Length", selected = c(5.1, 6.4), keep_na = FALSE, keep_inf = FALSE)
       )
     )
   }
 )
 
 testthat::test_that(
-  "DFFilterStates$remove_filter_state throws warning when name is not in FilterStates",
+  "DFFilterStates$remove_filter_state raises warning when name is not in FilterStates",
   code = {
     teal.logger::suppress_logs()
     dffs <- DFFilterStates$new(data = iris, dataname = "iris")
-    fs <- list(
-      Sepal.Length = list(selected = c(5.1, 6.4)),
-      Species = list(selected = c("setosa", "versicolor"))
+    fs <- filter_settings(
+      filter_var(dataname = "iris", varname = "Sepal.Length", selected = c(5.1, 6.4), keep_na = FALSE, keep_inf = FALSE),
+      filter_var(dataname = "iris", varname = "Species",selected = c("setosa", "versicolor"))
     )
 
     shiny::isolate(dffs$set_filter_state(state = fs))
-    testthat::expect_warning(shiny::isolate(dffs$remove_filter_state("Species2")))
+    testthat::expect_warning(shiny::isolate(dffs$remove_filter_state(
+      filter_settings(
+        filter_var(dataname = "iris", varname = "Species2")
+      )
+    )))
   }
 )
 
@@ -242,9 +303,10 @@ testthat::test_that("$format() asserts the indent argument is a number", {
 
 testthat::test_that("$format() concatenates its FilterState elements using \\n without additional indent", {
   dffs <- DFFilterStates$new(data = iris, dataname = "iris")
-  fs <- list(
-    Sepal.Length = list(selected = c(5.1, 6.4), keep_na = TRUE, keep_inf = TRUE),
-    Species = list(selected = c("setosa", "versicolor"), keep_na = FALSE)
+
+  fs <- filter_settings(
+    filter_var(dataname = "iris", varname = "Sepal.Length", selected = c(5.1, 6.4), keep_na = TRUE, keep_inf = TRUE),
+    filter_var(dataname = "iris", varname = "Species",selected = c("setosa", "versicolor"), keep_na = FALSE)
   )
   dffs$set_filter_state(state = fs)
 
@@ -286,9 +348,9 @@ testthat::test_that(
       dataname = "iris"
     )
     filter_states$set_filter_state(
-      list(
-        Sepal.Length = c(5.1, 6.4),
-        Petal.Length = c(1.5, 6.9)
+      filter_settings(
+        filter_var(dataname = "iris", varname = "Sepal.Length", selected = c(5.1, 6.4)),
+        filter_var(dataname = "iris", varname = "Petal.Length", selected = c(1.5, 6.9))
       )
     )
     testthat::expect_true(
@@ -319,10 +381,10 @@ testthat::test_that(
     )
     filter_states <- testfs$new(data = iris, dataname = "iris")
     filter_states$set_filter_state(
-      list(
-        Sepal.Length = c(5.1, 6.4),
-        Petal.Length = c(1.5, 6.9),
-        Species = "setosa"
+      filter_settings(
+        filter_var(dataname = "iris", varname = "Sepal.Length", selected = c(5.1, 6.4)),
+        filter_var(dataname = "iris", varname = "Petal.Length", selected = c(1.5, 6.9)),
+        filter_var(dataname = "iris", varname = "Species", selected = "setosa")
       )
     )
     sid_attrs <- unname(shiny::isolate(filter_states$get_filter_states_sid()))
@@ -354,14 +416,20 @@ testthat::test_that(
 )
 
 testthat::test_that("get_filter_count returns the number of active filter states - DFFilterStates", {
-  filter_states <- DFFilterStates$new(data = iris, dataname = "test")
+  filter_states <- DFFilterStates$new(data = iris, dataname = "iris")
   filter_states$set_filter_state(
-    list(
-      Sepal.Length = c(5.1, 6.4),
-      Petal.Length = c(1.5, 6.9)
+    filter_settings(
+      filter_var(dataname = "iris", varname = "Sepal.Length", selected = c(5.1, 6.4)),
+      filter_var(dataname = "iris", varname = "Petal.Length", selected = c(1.5, 6.9))
     )
   )
+  # filter_states$set_filter_state(
+  #   list(
+  #     Sepal.Length = c(5.1, 6.4),
+  #     Petal.Length = c(1.5, 6.9)
+  #   )
+  # )
   testthat::expect_equal(shiny::isolate(filter_states$get_filter_count()), 2)
-  filter_states$remove_filter_state(state_id = "Petal.Length")
+  filter_states$remove_filter_state(filter_settings(filter_var(dataname = "iris", varname = "Petal.Length")))
   testthat::expect_equal(shiny::isolate(filter_states$get_filter_count()), 1)
 })
