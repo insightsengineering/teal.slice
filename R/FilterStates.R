@@ -202,9 +202,7 @@ FilterStates <- R6::R6Class( # nolint
     #' @return `integer(1)`
     #'
     get_filter_count = function() {
-      sum(vapply(private$state_list, function(state_list) {
-        length(state_list())
-      }, FUN.VALUE = integer(1)))
+      length(self$get_filter_state())
     },
 
     #' @description
