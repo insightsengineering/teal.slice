@@ -19,8 +19,6 @@ testthat::test_that("get_call returns FALSE values from data passed to selector"
     !logs
   )
 })
-filter_state$set_state(filter_var(selected = FALSE, varname = "logs", dataname = "data" ))
-
 
 testthat::test_that("set_state accepts a logical of length 1 as selected", {
   filter_state <- LogicalFilterState$new(logs, x_reactive = reactive(NULL), varname = "logs", dataname = "data")
