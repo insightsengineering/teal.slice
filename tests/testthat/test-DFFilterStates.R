@@ -423,12 +423,6 @@ testthat::test_that("get_filter_count returns the number of active filter states
       filter_var(dataname = "iris", varname = "Petal.Length", selected = c(1.5, 6.9))
     )
   )
-  # filter_states$set_filter_state(
-  #   list(
-  #     Sepal.Length = c(5.1, 6.4),
-  #     Petal.Length = c(1.5, 6.9)
-  #   )
-  # )
   testthat::expect_equal(shiny::isolate(filter_states$get_filter_count()), 2)
   filter_states$remove_filter_state(filter_settings(filter_var(dataname = "iris", varname = "Petal.Length")))
   testthat::expect_equal(shiny::isolate(filter_states$get_filter_count()), 1)
