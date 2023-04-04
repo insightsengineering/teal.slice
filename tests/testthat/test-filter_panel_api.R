@@ -33,11 +33,9 @@ testthat::test_that("FilterPanelAPI$set_filter_state sets filters specified by t
   code = {
     datasets <- FilterPanelAPI$new(filtered_data)
 
-    filter_list <- list(
-      df1 = list(
-        num = list(selected = c(5.1, 6.4), keep_na = FALSE, keep_inf = FALSE),
-        fact = list(selected = c("a", "b"), keep_na = FALSE)
-      )
+    filter_list <- filter_settings(
+      filter_var(dataname = "df1", varname = "num", selected = c(5.1, 6.4), keep_na = FALSE, keep_inf = FALSE),
+      filter_var(dataname = "df1", varname = "fact",selected = c("a", "b"), keep_na = FALSE)
     )
     shiny::isolate(datasets$set_filter_state(filter_list))
     testthat::expect_equal(
@@ -47,51 +45,41 @@ testthat::test_that("FilterPanelAPI$set_filter_state sets filters specified by t
   }
 )
 
-testthat::test_that("FilterPanelAPI$get_filter_state returns list identical to input without attribute",
+testthat::test_that("FilterPanelAPI$get_filter_state returns `teal_slices` identical to input",
   code = {
     datasets <- FilterPanelAPI$new(filtered_data)
 
-    filter_list <- list(
-      df1 = list(
-        num = list(selected = c(5.1, 6.4), keep_na = FALSE, keep_inf = FALSE),
-        fact = list(selected = c("a", "b"), keep_na = FALSE)
-      ),
-      df2 = list(
-        int = list(selected = c(52, 65), keep_na = FALSE, keep_inf = FALSE)
-      )
+    filter_list <- filter_settings(
+      filter_var(dataname = "df1", varname = "num", selected = c(5.1, 6.4), keep_na = FALSE, keep_inf = FALSE),
+      filter_var(dataname = "df1", varname = "fact",selected = c("a", "b"), keep_na = FALSE),
+      filter_var(dataname = "df2", varname = "int", selected = c(52, 65), keep_na = FALSE, keep_inf = FALSE)
     )
     shiny::isolate(datasets$set_filter_state(filter_list))
     fs_wo_attr <- shiny::isolate(datasets$get_filter_state())
-    attr(fs_wo_attr, "formatted") <- NULL
 
     testthat::expect_equal(
-      fs_wo_attr,
+      adjust_states(fs_wo_attr),
       filter_list
     )
   }
 )
 
-testthat::test_that("FilterPanelAPI$remove_filter_state removes filter states defined in the list", {
+testthat::test_that("FilterPanelAPI$remove_filter_state removes filter states specified by `teal_slices`", {
   datasets <- FilterPanelAPI$new(filtered_data)
-  filter_list <- list(
-    df1 = list(
-      num = list(selected = c(5.1, 6.4), keep_na = FALSE, keep_inf = FALSE),
-      fact = list(selected = c("a", "b"), keep_na = FALSE)
-    ),
-    df2 = list(
-      int = list(selected = c(52, 65), keep_na = FALSE, keep_inf = FALSE)
-    )
+  filter_list <- filter_settings(
+    filter_var(dataname = "df1", varname = "num", selected = c(5.1, 6.4), keep_na = FALSE, keep_inf = FALSE),
+    filter_var(dataname = "df1", varname = "fact",selected = c("a", "b"), keep_na = FALSE),
+    filter_var(dataname = "df2", varname = "int", selected = c(52, 65), keep_na = FALSE, keep_inf = FALSE)
   )
   shiny::isolate(datasets$set_filter_state(filter_list))
-  shiny::isolate(datasets$remove_filter_state(filter = list(df1 = "num")))
+  shiny::isolate(datasets$remove_filter_state(filter_settings(filter_var(dataname = "df1", varname = "num"))))
   fs_wo_attr <- shiny::isolate(datasets$get_filter_state())
-  attr(fs_wo_attr, "formatted") <- NULL
 
   testthat::expect_equal(
-    fs_wo_attr,
-    list(
-      df1 = list(fact = list(selected = c("a", "b"), keep_na = FALSE)),
-      df2 = list(int = list(selected = c(52, 65), keep_na = FALSE, keep_inf = FALSE))
+    adjust_states(fs_wo_attr),
+    filter_list <- filter_settings(
+      filter_var(dataname = "df1", varname = "fact",selected = c("a", "b"), keep_na = FALSE),
+      filter_var(dataname = "df2", varname = "int", selected = c(52, 65), keep_na = FALSE, keep_inf = FALSE)
     )
   )
 })
@@ -100,16 +88,18 @@ testthat::test_that(
   "FilterPanelAPI$clear_filter_states removes all filters of datasets in FilterPanelAPI",
   code = {
     datasets <- FilterPanelAPI$new(filtered_data)
-    filter_list <- list(
-      df1 = list(
-        num = list(selected = c(5.1, 6.4), keep_na = FALSE, keep_inf = FALSE),
-        fact = list(selected = c("a", "b"), keep_na = FALSE)
-      ),
-      df2 = list(
-        int = list(selected = c(52, 65), keep_na = FALSE, keep_inf = FALSE)
-      )
+    filter_list <- filter_settings(
+      filter_var(dataname = "df1", varname = "num", selected = c(5.1, 6.4), keep_na = FALSE, keep_inf = FALSE),
+      filter_var(dataname = "df1", varname = "fact",selected = c("a", "b"), keep_na = FALSE),
+      filter_var(dataname = "df2", varname = "int", selected = c(52, 65), keep_na = FALSE, keep_inf = FALSE)
     )
     shiny::isolate(datasets$set_filter_state(filter_list))
+
+    testthat::expect_equal(
+      length(shiny::isolate(datasets$get_filter_state())),
+      3
+    )
+
     shiny::isolate(datasets$clear_filter_states())
 
     testthat::expect_equal(
@@ -123,25 +113,31 @@ testthat::test_that(
   "FilterPanelAPI$clear_filter_states remove the filters of the desired dataset only",
   code = {
     datasets <- FilterPanelAPI$new(filtered_data)
-    filter_list <- list(
-      df1 = list(
-        num = list(c(5.1, 6.4)),
-        fact = c("a", "b")
-      ),
-      df2 = list(
-        int = list(selected = c(52, 65), keep_na = FALSE, keep_inf = FALSE)
-      )
+    filter_list <- filter_settings(
+      filter_var(dataname = "df1", varname = "num", selected = c(5.1, 6.4), keep_na = FALSE, keep_inf = FALSE),
+      filter_var(dataname = "df1", varname = "fact",selected = c("a", "b"), keep_na = FALSE),
+      filter_var(dataname = "df2", varname = "int", selected = c(52, 65), keep_na = FALSE, keep_inf = FALSE)
     )
     shiny::isolate(datasets$set_filter_state(filter_list))
-    shiny::isolate(datasets$clear_filter_states(datanames = "df1"))
-    fs_wo_attr <- shiny::isolate(datasets$get_filter_state())
-    attr(fs_wo_attr, "formatted") <- NULL
 
     testthat::expect_equal(
-      fs_wo_attr,
-      list(df2 = list(
-        int = list(selected = c(52, 65), keep_na = FALSE, keep_inf = FALSE)
-      ))
+      length(shiny::isolate(datasets$get_filter_state())),
+      3
+    )
+
+    shiny::isolate(datasets$clear_filter_states(datanames = "df1"))
+
+    testthat::expect_equal(
+      length(shiny::isolate(datasets$get_filter_state())),
+      1
+    )
+    fs_wo_attr <- shiny::isolate(datasets$get_filter_state())
+
+    testthat::expect_equal(
+      adjust_states(fs_wo_attr),
+      filter_list <- filter_settings(
+        filter_var(dataname = "df2", varname = "int", selected = c(52, 65), keep_na = FALSE, keep_inf = FALSE)
+      )
     )
   }
 )
@@ -156,25 +152,17 @@ testthat::test_that("filter_panel_api neutral when filter panel is disabled", {
       )
       filtered_data$filter_panel_disable()
       fs <- FilterPanelAPI$new(filtered_data)
-      filter_list <- list(
-        df1 = list(
-          Sepal.Length = list(c(5.1, 6.4)),
-          Species = c("setosa", "versicolor")
-        ),
-        df2 = list(
-          int = list(selected = c(52, 65), keep_na = FALSE, keep_inf = FALSE)
-        )
+      filter_list <- filter_settings(
+        filter_var(dataname = "df1", varname = "num", selected = c(5.1, 6.4), keep_na = FALSE, keep_inf = FALSE),
+        filter_var(dataname = "df1", varname = "fact",selected = c("a", "b"), keep_na = FALSE),
+        filter_var(dataname = "df2", varname = "int", selected = c(52, 65), keep_na = FALSE, keep_inf = FALSE)
       )
       testthat::expect_warning(fs$set_filter_state(filter_list))
       testthat::expect_warning(fs$clear_filter_states(datanames = "df1"))
-      fs_wo_attr <- shiny::isolate(fs$get_filter_state())
-      attr(fs_wo_attr, "formatted") <- NULL
-      names(fs_wo_attr) <- NULL
 
-      testthat::expect_equal(
-        fs_wo_attr,
-        list()
-      )
+      fs_wo_attr <- shiny::isolate(fs$get_filter_state())
+
+      testthat::expect_null(fs_wo_attr,)
     }
   )
 })
@@ -189,14 +177,10 @@ testthat::test_that("filter_panel_api under disable/enable filter panel", {
       )
       filtered_data$filter_panel_disable()
       fs <- FilterPanelAPI$new(filtered_data)
-      filter_list <- list(
-        df1 = list(
-          num = list(c(5.1, 6.4)),
-          fact = c("a", "b")
-        ),
-        df2 = list(
-          int = list(selected = c(52, 65), keep_na = FALSE, keep_inf = FALSE)
-        )
+      filter_list <- filter_settings(
+        filter_var(dataname = "df1", varname = "num", selected = c(5.1, 6.4), keep_na = FALSE, keep_inf = FALSE),
+        filter_var(dataname = "df1", varname = "fact",selected = c("a", "b"), keep_na = FALSE),
+        filter_var(dataname = "df2", varname = "int", selected = c(52, 65), keep_na = FALSE, keep_inf = FALSE)
       )
       testthat::expect_warning(fs$set_filter_state(filter_list))
       testthat::expect_warning(fs$clear_filter_states(datanames = "df1"))
@@ -204,13 +188,12 @@ testthat::test_that("filter_panel_api under disable/enable filter panel", {
       fs$set_filter_state(filter_list)
       fs$clear_filter_states(datanames = "df1")
       fs_wo_attr <- shiny::isolate(fs$get_filter_state())
-      attr(fs_wo_attr, "formatted") <- NULL
 
       testthat::expect_equal(
-        fs_wo_attr,
-        list(df2 = list(
-          int = list(selected = c(52, 65), keep_na = FALSE, keep_inf = FALSE)
-        ))
+        adjust_states(fs_wo_attr),
+        filter_list <- filter_settings(
+          filter_var(dataname = "df2", varname = "int", selected = c(52, 65), keep_na = FALSE, keep_inf = FALSE)
+        )
       )
     }
   )
