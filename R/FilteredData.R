@@ -463,21 +463,19 @@ FilteredData <- R6::R6Class( # nolint
     #'        mae = list(dataset = miniACC)
     #'   )
     #' )
-    #' fs <- list(
-    #'   iris = list(
-    #'     Sepal.Length = list(selected = c(5.1, 6.4), keep_na = TRUE, keep_inf = FALSE),
-    #'     Species = list(selected = c("setosa", "versicolor"), keep_na = FALSE)
-    #'   ),
-    #'   mae = list(
-    #'     subjects = list(
-    #'       years_to_birth = list(selected = c(30, 50), keep_na = TRUE, keep_inf = FALSE),
-    #'       vital_status = list(selected = "1", keep_na = FALSE),
-    #'       gender = list(selected = "female", keep_na = TRUE)
-    #'     ),
-    #'     RPPAArray = list(
-    #'       subset = list(ARRAY_TYPE = list(selected = "", keep_na = TRUE))
-    #'     )
-    #'   )
+    #' fs <- filter_settings(
+    #'   filter_var(dataname = "iris", varname = "Sepal.Length",
+    #'              selected = c(5.1, 6.4), keep_na = TRUE, keep_inf = FALSE),
+    #'   filter_var(dataname = "iris", varname = "Species",
+    #'              selected = c("setosa", "versicolor"), keep_na = FALSE),
+    #'   filter_var(dataname = "mae", varname = "years_to_birth",
+    #'              selected = c(30, 50), keep_na = TRUE, keep_inf = FALSE, datalabel = "subjects", target = "y"),
+    #'   filter_var(dataname = "mae", varname = "vital_status",
+    #'              selected = "1", keep_na = FALSE, datalabel = "subjects", target = "y"),
+    #'   filter_var(dataname = "mae", varname = "gender",
+    #'              selected = "female", keep_na = TRUE, datalabel = "subjects", target = "y"),
+    #'   filter_var(dataname = "mae", varname = "ARRAY_TYPE",
+    #'              selected = "", keep_na = TRUE, datalabel = "RPPAArray", target = "subset")
     #' )
     #' isolate(datasets$set_filter_state(state = fs))
     #' cat(shiny::isolate(datasets$get_formatted_filter_state()))
