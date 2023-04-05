@@ -237,8 +237,8 @@ SEFilterStates <- R6::R6Class( # nolint
         sprintf("varname %%in%% c(%s)", dQuote(toString(names(private$state_list$select())), q = FALSE))
       )
 
-      if ((length(slices_for_subset) + length(slices_for_select) == 0)) {
-        warning(sprintf("Remove filter state called, but no filter will be removed, check input"))
+      if ((length(slices_for_subset) + length(slices_for_select) == 0L)) {
+        warning("SEFilterStates$remove_filter_state: no filter states to remove")
       }
 
       lapply(slices_for_subset, function(x) {
