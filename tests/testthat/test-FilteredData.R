@@ -738,7 +738,7 @@ testthat::test_that("disable/enable_filter_panel caches and restores state", {
       filtered_data$filter_panel_disable()
       testthat::expect_null(filtered_data$get_filter_state())
       testthat::expect_false(filtered_data$get_filter_panel_active())
-      suppressWarnings({filtered_data$filter_panel_enable()})
+      suppressWarnings({filtered_data$filter_panel_enable()}) # TODO
       testthat::expect_identical(filtered_data$get_filter_state(), cached)
       testthat::expect_true(filtered_data$get_filter_panel_active())
     }
@@ -768,7 +768,7 @@ testthat::test_that("switching disable/enable button caches and restores state",
       session$setInputs(filter_panel_active = FALSE)
       testthat::expect_null(filtered_data$get_filter_state())
       testthat::expect_false(filtered_data$get_filter_panel_active())
-      suppressWarnings({session$setInputs(filter_panel_active = TRUE)})
+      suppressWarnings({session$setInputs(filter_panel_active = TRUE)}) #TODO
       testthat::expect_identical(filtered_data$get_filter_state(), cached)
       testthat::expect_true(filtered_data$get_filter_panel_active())
     }
