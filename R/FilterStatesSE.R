@@ -482,9 +482,14 @@ SEFilterStates <- R6::R6Class( # nolint
   ),
 
   # private methods ----
+  # private methods ----
   private = list(
     get_dataname_prefixed = function() {
-      sprintf('%s[["%s"]]', private$dataname, private$datalabel)
+      if (identical(private$datalabel, character(0))) {
+        private$dataname
+      } else {
+        sprintf('%s[["%s"]]', private$dataname, private$datalabel)
+      }
     }
   )
 )

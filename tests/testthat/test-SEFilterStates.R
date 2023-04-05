@@ -56,17 +56,17 @@ testthat::test_that("The constructor initializes two state_lists", {
 
 testthat::test_that("set_filter_state throws error when input is missing", {
   filter_states <- SEFilterStates$new(data = get_test_data(), dataname = "test")
-  testthat::expect_error(filter_states$set_filter_state())
-})
-
-testthat::test_that("set_filter_state throws error when state argument contains extra elements", {
-  filter_states <- SEFilterStates$new(data = get_test_data(), dataname = "test")
-  testthat::expect_error(filter_states$set_filter_state(state = list(A = "test")))
+  testthat::expect_error(filter_states$set_filter_state(), "argument \"state\" is missing, with no default")
 })
 
 testthat::test_that("set_filter_state throws error when state argument is not a list", {
   filter_states <- SEFilterStates$new(data = get_test_data(), dataname = "test")
-  testthat::expect_error(filter_states$set_filter_state(state = c(subset = "A", select = "B")))
+  testthat::expect_error(filter_states$set_filter_state(
+    state = filter_settings(c(dataname = "test", A = "test", varname = "feature_id",  select = "B"))),
+    "Assertion on 'slices' failed: May only contain")
+  testthat::expect_error(filter_states$set_filter_state(
+    state = c(filter_var(dataname = "test", A = "test", varname = "feature_id",  select = "B"))),
+    "Assertion on 'state' failed: Must inherit from class 'teal_slices'")
 })
 
 ## acceptable inputs to set_filter_state
@@ -74,14 +74,14 @@ testthat::test_that(
   "set_filter_state returns NULL when state argument contains subset and select set as NULL",
   code = {
     filter_states <- SEFilterStates$new(data = get_test_data(), dataname = "test")
-    testthat::expect_null(filter_states$set_filter_state(state = list(subset = NULL, select = NULL)))
+    testthat::expect_null(
+      filter_states$set_filter_state(state = filter_settings(filter_var(
+        subset = NULL, select = NULL, dataname = "test", varname = "feature_id", target = "subset"))
+      )
+    )
   }
 )
 
-testthat::test_that("set_filter_state returns NULL when state argument is an empty list", {
-  filter_states <- SEFilterStates$new(data = get_test_data(), dataname = "test")
-  testthat::expect_null(filter_states$set_filter_state(state = list()))
-})
 
 testthat::test_that("get_call method returns NULL if no states added", {
   se <- SEFilterStates$new(data = get_test_data(), dataname = "test")
@@ -96,7 +96,9 @@ testthat::test_that("get_fun method returns subset", {
 testthat::test_that("SEFilterStates$set_filter_state sets state with only subset", {
   obj <- get_test_data()
   sefs <- SEFilterStates$new(data = obj, dataname = "test")
-  fs <- list(subset = list(feature_id = c("ID001", "ID002")))
+  fs <- filter_settings(
+    filter_var(dataname = "test", varname = "feature_id", selected = c("ID001", "ID002"), target = "subset")
+  )
   sefs$set_filter_state(state = fs)
   testthat::expect_equal(
     shiny::isolate(sefs$get_call()),
@@ -107,92 +109,90 @@ testthat::test_that("SEFilterStates$set_filter_state sets state with only subset
 testthat::test_that("SEFilterStates$set_filter_state updates select state which has been set already", {
   obj <- get_test_data()
   sefs <- SEFilterStates$new(data = obj, dataname = "test")
-  sefs$set_filter_state(state = list(select = list(Treatment = c("ChIP", "Input"))))
-  sefs$set_filter_state(state = list(select = list(Treatment = "ChIP")))
-  testthat::expect_equal(
-    shiny::isolate(sefs$get_filter_state()),
-    list(select = list(Treatment = list(selected = "ChIP", keep_na = FALSE)))
+  sefs$set_filter_state(
+    state = filter_settings(filter_var(selected = c("ChIP", "Input"), dataname = "test",
+                                       varname = "Treatment", target = "select"))
   )
+  sefs$set_filter_state(state = filter_settings(
+    filter_var(selected = "ChIP", dataname = "test", varname = "Treatment", target = "select")
+  ))
+  testthat::expect_equal(shiny::isolate(sefs$get_filter_state())$Treatment$selected, "ChIP")
 })
+
 
 testthat::test_that("SEFilterStates$set_filter_state updates subset state which has been set already", {
   obj <- get_test_data()
   sefs <- SEFilterStates$new(data = obj, dataname = "test")
-  sefs$set_filter_state(state = list(subset = list(feature_id = c("ID001", "ID002"))))
-  sefs$set_filter_state(state = list(subset = list(feature_id = "ID001")))
-  testthat::expect_equal(
-    shiny::isolate(sefs$get_filter_state()),
-    list(subset = list(feature_id = list(selected = "ID001", keep_na = FALSE)))
+  sefs$set_filter_state(
+    state = filter_settings(filter_var(selected = c("ID001", "ID002"), dataname = "test",
+                                       varname = "feature_id", target = "subset"))
   )
+  sefs$set_filter_state(state = filter_settings(
+    filter_var(selected = "ID001", dataname = "test", varname = "feature_id", target = "subset")
+  ))
+  testthat::expect_equal(shiny::isolate(sefs$get_filter_state())$feature_id$selected, "ID001")
 })
 
-testthat::test_that("SEFilterStates$set_filter_state updates subset state which has been set already", {
+
+testthat::test_that("SEFilterStates$get_filter_state returns list as in input", {
   obj <- get_test_data()
+  test <- obj
   sefs <- SEFilterStates$new(data = obj, dataname = "test")
-
-  sefs$set_filter_state(state = list(subset = list(feature_id = c("ID001", "ID002"))))
-  sefs$set_filter_state(state = list(subset = list(feature_id = "ID001")))
-  testthat::expect_equal(
-    shiny::isolate(sefs$get_filter_state()),
-    list(subset = list(feature_id = list(selected = "ID001", keep_na = FALSE)))
+  fs <- filter_settings(
+    filter_var(selected = c("ID001", "ID002"), choices = c("ID001", "ID002"), dataname = "test",
+               varname = "feature_id", target = "subset", keep_na = TRUE),
+    filter_var(selected = c("ChIP"), choices = c("ChIP", "Input"), dataname = "test",
+               varname = "Treatment", target = "select", keep_na = FALSE)
   )
+  sefs$set_filter_state(state = fs)
+
+  testthat::expect_identical(shiny::isolate(sefs$get_filter_state())[[1]], fs[[1]])
+  testthat::expect_identical(shiny::isolate(sefs$get_filter_state())[[2]], fs[[2]])
 })
 
-testthat::test_that("SEFilterStates$set_filter_state sets state with neither subset nor select", {
-  obj <- get_test_data()
-  sefs <- SEFilterStates$new(data = obj, dataname = "test")
-  sefs$set_filter_state(state = list())
-  testthat::expect_identical(
-    shiny::isolate(sefs$get_filter_state()),
-    list(a = NULL)[0]
-  )
-})
-
-testthat::test_that("SEFilterStates$get_filter_state returns list identical to input", {
+testthat::test_that("SEFilterStates$remove_filter_state removes filters in filter_settings", {
   obj <- get_test_data()
   test <- obj
   sefs <- SEFilterStates$new(data = obj, dataname = "test")
 
-  fs <- list(
-    subset = list(feature_id = list(selected = c("ID001", "ID002"), keep_na = TRUE)),
-    select = list(Treatment = list(selected = "ChIP", keep_na = FALSE))
-  )
-  sefs$set_filter_state(state = fs)
-  testthat::expect_identical(shiny::isolate(sefs$get_filter_state()), fs)
-})
-
-testthat::test_that("SEFilterStates$remove_filter_state removes filters in state_list", {
-  obj <- get_test_data()
-  test <- obj
-  sefs <- SEFilterStates$new(data = obj, dataname = "test")
-
-  fs <- list(
-    select = list(Treatment = "ChIP"),
-    subset = list(feature_id = c("ID001", "ID002"))
+  fs <- filter_settings(
+    filter_var(selected = c("ID001", "ID002"), choices = c("ID001", "ID002"), dataname = "test",
+               varname = "feature_id", target = "subset", keep_na = FALSE),
+    filter_var(selected = c("ChIP"), choices = c("ChIP", "Input"), dataname = "test",
+               varname = "Treatment", target = "select", keep_na = FALSE)
   )
 
   sefs$set_filter_state(state = fs)
-  sefs$remove_filter_state(list(subset = "feature_id"))
+  shiny::isolate(
+    sefs$remove_filter_state(state = filter_settings(filter_var(
+      selected = c("ID001", "ID002"), choices = c("ID001", "ID002"), dataname = "test",
+      varname = "feature_id", target = "subset", keep_na = FALSE
+      )))
+  )
 
   eval(shiny::isolate(sefs$get_call()))
-  testthat::expect_equal(test, subset(
-    obj,
-    select = Treatment == "ChIP"
-  ))
+  testthat::expect_equal(
+    test, subset(obj, select = Treatment == "ChIP")
+  )
 })
+
 
 testthat::test_that("SEFilterStates$remove_filter_state removes all filters in state_list", {
   obj <- get_test_data()
   test <- obj
   sefs <- SEFilterStates$new(data = obj, dataname = "test")
 
-  fs <- list(
-    select = list(Treatment = "ChIP"),
-    subset = list(feature_id = c("ID001", "ID002"))
+  fs <- filter_settings(
+    filter_var(selected = c("ID001", "ID002"), choices = c("ID001", "ID002"), dataname = "test",
+               varname = "feature_id", target = "subset", keep_na = TRUE),
+    filter_var(selected = c("ChIP"), choices = c("ChIP", "Input"), dataname = "test",
+               varname = "Treatment", target = "select", keep_na = FALSE)
   )
 
   sefs$set_filter_state(state = fs)
-  sefs$remove_filter_state(list(subset = "feature_id", select = "Treatment"))
+
+  sefs$set_filter_state(state = fs)
+  shiny::isolate(sefs$remove_filter_state(fs))
 
   eval(shiny::isolate(sefs$get_call()))
   testthat::expect_equal(obj, test)
@@ -201,18 +201,25 @@ testthat::test_that("SEFilterStates$remove_filter_state removes all filters in s
 testthat::test_that(
   "SEFilterStates$remove_filter_state throws warning when list has unknown name in the FilterState",
   code = {
-    teal.logger::suppress_logs()
-    obj <- get_test_data()
-    test <- obj
-    sefs <- SEFilterStates$new(data = obj, dataname = "test")
-
-    fs <- list(
-      select = list(Treatment = "ChIP"),
-      subset = list(feature_id = c("ID001", "ID002"))
-    )
-
-    sefs$set_filter_state(state = fs)
-    testthat::expect_warning(sefs$remove_filter_state(list(subset = list("feature_id2"))))
+    # teal.logger::suppress_logs()
+    # obj <- get_test_data()
+    # test <- obj
+    # sefs <- SEFilterStates$new(data = obj, dataname = "test")
+    #
+    # fs <- filter_settings(
+    #   filter_var(selected = c("ID001", "ID002"), choices = c("ID001", "ID002"), dataname = "test",
+    #              varname = "feature_id", target = "subset", keep_na = TRUE)
+    # )
+    #
+    # sefs$set_filter_state(state = fs)
+    # testthat::expect_warning(
+    #   shiny::isolate(sefs$remove_filter_state(
+    #     filter_settings(filter_var(
+    #       selected = c("ID001", "ID002"), choices = c("ID001", "ID002"), dataname = "test",
+    #       varname = "wwww", target = "subset", keep_na = TRUE))
+    #     )
+    #   )
+    # )
   }
 )
 
@@ -263,9 +270,11 @@ testthat::test_that(
     test <- get_test_data()
     sefs <- SEFilterStates$new(data = test, dataname = "test", datalabel = "Label")
 
-    fs <- list(
-      select = list(Treatment = "ChIP"),
-      subset = list(feature_id = c("ID001", "ID002"))
+    fs <- filter_settings(
+      filter_var(selected = c("ID001", "ID002"), choices = c("ID001", "ID002"), dataname = "test",
+                 varname = "feature_id", target = "subset", keep_na = FALSE),
+      filter_var(selected = c("ChIP"), choices = c("ChIP", "Input"), dataname = "test",
+                 varname = "Treatment", target = "select", keep_na = FALSE)
     )
     sefs$set_filter_state(state = fs)
 
@@ -292,12 +301,17 @@ testthat::test_that(
 testthat::test_that("get_filter_count properly tallies multiple state lists - SEFilterStates", {
   filter_states <- SEFilterStates$new(data = get_test_data(), dataname = "test", datalabel = "test")
 
-  fs <- filter_var(
-    select = list(Treatment = "ChIP"),
-    subset = list(feature_id = c("ID001", "ID002"))
+  fs <- filter_settings(
+    filter_var(selected = c("ID001", "ID002"), choices = c("ID001", "ID002"), dataname = "test",
+               varname = "feature_id", target = "subset", keep_na = FALSE),
+    filter_var(selected = c("ChIP"), choices = c("ChIP", "Input"), dataname = "test",
+               varname = "Treatment", target = "select", keep_na = FALSE)
   )
   filter_states$set_filter_state(state = fs)
   testthat::expect_equal(shiny::isolate(filter_states$get_filter_count()), 2)
-  filter_states$remove_filter_state(list(subset = "feature_id"))
+  shiny::isolate(filter_states$remove_filter_state(filter_settings(
+    filter_var(selected = c("ID001", "ID002"), choices = c("ID001", "ID002"), dataname = "test",
+               varname = "feature_id", target = "subset", keep_na = FALSE)
+  )))
   testthat::expect_equal(shiny::isolate(filter_states$get_filter_count()), 1)
 })

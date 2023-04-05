@@ -82,13 +82,16 @@ testthat::test_that("DFFilterStates$set_filter_state updates filter state which 
   )
   dffs$set_filter_state(
     state = filter_settings(
-      filter_var(dataname = "iris", varname = "Sepal.Length", selected = c(5.1, 6.4), keep_na = FALSE, keep_inf = FALSE),
-      filter_var(dataname = "iris", varname = "Species", selected = c("setosa", "versicolor"), keep_na = FALSE)
+      filter_var(dataname = "iris", varname = "Sepal.Length", selected = c(5.1, 6.4),
+                 keep_na = FALSE, keep_inf = FALSE),
+      filter_var(dataname = "iris", varname = "Species", selected = c("setosa", "versicolor"),
+                 keep_na = FALSE)
     )
   )
   dffs$set_filter_state(
     state = filter_settings(
-      filter_var(dataname = "iris", varname = "Petal.Length", selected = c(2.0, 5.0), keep_na = FALSE, keep_inf = FALSE),
+      filter_var(dataname = "iris", varname = "Petal.Length", selected = c(2.0, 5.0),
+                 keep_na = FALSE, keep_inf = FALSE),
       filter_var(dataname = "iris", varname = "Species", selected = "setosa")
     )
   )
@@ -96,9 +99,11 @@ testthat::test_that("DFFilterStates$set_filter_state updates filter state which 
   testthat::expect_identical(
     adjust_states(shiny::isolate(dffs$get_filter_state())),
     filter_settings(
-      filter_var(dataname = "iris", varname = "Sepal.Length", selected = c(5.1, 6.4), keep_na = FALSE, keep_inf = FALSE),
+      filter_var(dataname = "iris", varname = "Sepal.Length", selected = c(5.1, 6.4),
+                 keep_na = FALSE, keep_inf = FALSE),
       filter_var(dataname = "iris", varname = "Species", selected = "setosa", keep_na = FALSE),
-      filter_var(dataname = "iris", varname = "Petal.Length", selected = c(2.0, 5.0), keep_na = FALSE, keep_inf = FALSE)
+      filter_var(dataname = "iris", varname = "Petal.Length", selected = c(2.0, 5.0),
+                 keep_na = FALSE, keep_inf = FALSE)
     )
   )
 })
@@ -120,8 +125,10 @@ testthat::test_that(
   code = {
     dffs <- DFFilterStates$new(data = iris, dataname = "iris")
     fs <- filter_settings(
-      filter_var(dataname = "iris", varname = "Sepal.Length", selected = c(5.1, 6.4), keep_na = TRUE, keep_inf = TRUE),
-      filter_var(dataname = "iris", varname = "Species", selected = c("setosa", "versicolor"), keep_na = TRUE)
+      filter_var(dataname = "iris", varname = "Sepal.Length", selected = c(5.1, 6.4),
+                 keep_na = TRUE, keep_inf = TRUE),
+      filter_var(dataname = "iris", varname = "Species", selected = c("setosa", "versicolor"),
+                 keep_na = TRUE)
     )
     dffs$set_filter_state(state = fs)
 
@@ -153,7 +160,8 @@ testthat::test_that("Adding 'var_to_add' adds another filter state", {
   dffs <- DFFilterStates$new(data = iris, dataname = "iris")
 
   fs <- filter_settings(
-    filter_var(dataname = "iris", varname = "Sepal.Length", selected = c(5.1, 6.4), keep_na = FALSE, keep_inf = FALSE)
+    filter_var(dataname = "iris", varname = "Sepal.Length", selected = c(5.1, 6.4),
+               keep_na = FALSE, keep_inf = FALSE)
   )
   shiny::isolate(dffs$set_filter_state(state = fs))
   shiny::testServer(
@@ -172,7 +180,8 @@ testthat::test_that("Adding 'var_to_add' adds another filter state", {
   testthat::expect_identical(
     adjust_states(shiny::isolate(dffs$get_filter_state())),
     filter_settings(
-      filter_var(dataname = "iris", varname = "Sepal.Length", selected = c(5.1, 6.4), keep_na = FALSE, keep_inf = FALSE),
+      filter_var(dataname = "iris", varname = "Sepal.Length", selected = c(5.1, 6.4),
+                 keep_na = FALSE, keep_inf = FALSE),
       filter_var(dataname = "iris", varname = "Petal.Length", selected = c(1.0, 6.9)),
       filter_var(dataname = "iris", varname = "Species", selected = c("setosa", "versicolor", "virginica"))
     )
@@ -195,7 +204,8 @@ testthat::test_that(
     testthat::expect_identical(
       adjust_states(shiny::isolate(dffs$get_filter_state())),
       filter_settings(
-        filter_var(dataname = "iris", varname = "Sepal.Length", selected = c(5.1, 6.4), keep_na = FALSE, keep_inf = FALSE)
+        filter_var(dataname = "iris", varname = "Sepal.Length", selected = c(5.1, 6.4),
+                   keep_na = FALSE, keep_inf = FALSE)
       )
     )
   }
@@ -207,7 +217,8 @@ testthat::test_that(
     teal.logger::suppress_logs()
     dffs <- DFFilterStates$new(data = iris, dataname = "iris")
     fs <- filter_settings(
-      filter_var(dataname = "iris", varname = "Sepal.Length", selected = c(5.1, 6.4), keep_na = FALSE, keep_inf = FALSE),
+      filter_var(dataname = "iris", varname = "Sepal.Length", selected = c(5.1, 6.4),
+                 keep_na = FALSE, keep_inf = FALSE),
       filter_var(dataname = "iris", varname = "Species",selected = c("setosa", "versicolor"))
     )
 
