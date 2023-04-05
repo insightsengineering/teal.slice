@@ -196,14 +196,14 @@ FilterState <- R6::R6Class( # nolint
     set_state = function(state) {
       checkmate::assert_class(state, "teal_slice")
       if (private$fixed) {
-        logger::log_trace("{ this filter state is fixed: { private$dataname } { private$varname }")
+        logger::log_warn("attempt to set state on fixed filter aborted: { private$dataname } { private$varname }")
       } else {
         # Allow for enabling a filter state before altering state.
         if (isTRUE(state$disabled)) private$disable()
         if (isFALSE(state$disabled)) private$enable()
 
         if (private$is_disabled()) {
-          logger::log_trace("{ this filter state is disabled: { private$dataname } { private$varname }")
+          logger::log_warn("attempt to set state on disabled filter aborted: { private$dataname } { private$varname }")
         } else {
           logger::log_trace("{ class(self)[1] }$set_state setting state of variable: { private$varname }")
           if (!is.null(state$selected)) {
