@@ -729,21 +729,21 @@ testthat::test_that("disable/enable_filter_panel caches and restores state", {
     filter_var(dataname = "mtcars", varname = "disp", keep_na = FALSE, keep_inf = FALSE)
   )
   filtered_data$set_filter_state(fs)
-  suppressWarnings({
-    shiny::testServer(
-      filtered_data$srv_filter_panel,
-      expr = {
-        cached <- filtered_data$get_filter_state()
-        testthat::expect_true(filtered_data$get_filter_panel_active())
-        filtered_data$filter_panel_disable()
-        testthat::expect_null(filtered_data$get_filter_state())
-        testthat::expect_false(filtered_data$get_filter_panel_active())
-        filtered_data$filter_panel_enable()
-        testthat::expect_identical(filtered_data$get_filter_state(), cached)
-        testthat::expect_true(filtered_data$get_filter_panel_active())
-      }
-    )
-  })
+
+  shiny::testServer(
+    filtered_data$srv_filter_panel,
+    expr = {
+      cached <- filtered_data$get_filter_state()
+      testthat::expect_true(filtered_data$get_filter_panel_active())
+      filtered_data$filter_panel_disable()
+      testthat::expect_null(filtered_data$get_filter_state())
+      testthat::expect_false(filtered_data$get_filter_panel_active())
+      suppressWarnings({filtered_data$filter_panel_enable()})
+      testthat::expect_identical(filtered_data$get_filter_state(), cached)
+      testthat::expect_true(filtered_data$get_filter_panel_active())
+    }
+  )
+
 })
 
 testthat::test_that("switching disable/enable button caches and restores state", {
@@ -760,21 +760,19 @@ testthat::test_that("switching disable/enable button caches and restores state",
     filter_var(dataname = "mtcars", varname = "disp", keep_na = FALSE, keep_inf = FALSE)
   )
   filtered_data$set_filter_state(fs)
-  suppressWarnings({
-      shiny::testServer(
-      filtered_data$srv_filter_panel,
-      expr = {
-        cached <- filtered_data$get_filter_state()
-        testthat::expect_true(filtered_data$get_filter_panel_active())
-        session$setInputs(filter_panel_active = FALSE)
-        testthat::expect_null(filtered_data$get_filter_state())
-        testthat::expect_false(filtered_data$get_filter_panel_active())
-        session$setInputs(filter_panel_active = TRUE)
-        testthat::expect_identical(filtered_data$get_filter_state(), cached)
-        testthat::expect_true(filtered_data$get_filter_panel_active())
-      }
-    )
-  })
+    shiny::testServer(
+    filtered_data$srv_filter_panel,
+    expr = {
+      cached <- filtered_data$get_filter_state()
+      testthat::expect_true(filtered_data$get_filter_panel_active())
+      session$setInputs(filter_panel_active = FALSE)
+      testthat::expect_null(filtered_data$get_filter_state())
+      testthat::expect_false(filtered_data$get_filter_panel_active())
+      suppressWarnings({session$setInputs(filter_panel_active = TRUE)})
+      testthat::expect_identical(filtered_data$get_filter_state(), cached)
+      testthat::expect_true(filtered_data$get_filter_panel_active())
+    }
+  )
 })
 
 testthat::test_that("active_datanames in srv_filter_panel gets resolved to valid datanames", {
