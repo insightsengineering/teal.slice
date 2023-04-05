@@ -197,7 +197,7 @@ testthat::test_that("SEFilterStates$remove_filter_state removes all filters in s
 })
 
 testthat::test_that(
-  "SEFilterStates$remove_filter_state throws warning when list has unknown name in the FilterState",
+  "SEFilterStates$remove_filter_state raises warning when non-existent filter state specified",
   code = {
     teal.logger::suppress_logs()
     obj <- get_test_data()
@@ -205,19 +205,17 @@ testthat::test_that(
     sefs <- SEFilterStates$new(data = obj, dataname = "test")
 
     fs <- filter_settings(
-      filter_var(selected = c("ID001", "ID002"), choices = c("ID001", "ID002"), dataname = "test",
-                 varname = "feature_id", target = "subset", keep_na = TRUE)
+      filter_var(dataname = "test", varname = "feature_id", target = "subset")
     )
 
     sefs$set_filter_state(state = fs)
     testthat::expect_warning(
       shiny::isolate(sefs$remove_filter_state(
-        filter_settings(filter_var(
-          selected = c("ID001", "ID002"), choices = c("ID001", "ID002"), dataname = "test",
-          varname = "wwww", target = "subset", keep_na = TRUE))
+        filter_settings(
+          filter_var(dataname = "test", varname = "feature_ID", target = "subset")
         )
-      ),
-      "Remove filter state called, but"
+      )),
+      "no filter states to remove"
     )
   }
 )
