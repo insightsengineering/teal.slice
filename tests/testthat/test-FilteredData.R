@@ -694,101 +694,83 @@ testthat::test_that("filter_panel_disable", {
 })
 
 testthat::test_that("filter_panel_enable", {
-  # filtered_data <- FilteredData$new(data_objects = list("iris" = list(dataset = iris)))
-  # filtered_data$set_filter_state(
-  #   filter_settings(
-  #     filter_var(dataname = "iris", varname = "Sepal.Width", selected = c(3, 4), keep_na = FALSE, keep_inf = FALSE)
-  #   )
-  # )
-  # shiny::testServer(
-  #   filtered_data$srv_filter_panel,
-  #   expr = {
-  #     filtered_data$filter_panel_enable()
-  #     testthat::expect_length(filtered_data$get_filter_state(), 1)
-  #
-  #     current_states <- unname(shiny::isolate(dataset$get_filter_state()))
-  #     current_states <- lapply(current_states, function(x) {
-  #       x <- unclass(x)
-  #       x$choices = NULL
-  #       x
-  #     })
-  #     current_states <- lapply(current_states, as.teal_slice)
-  #     current_states <- do.call(filter_settings, current_states)
-  #
-  #     testthat::expect_equal(
-  #       current_states,
-  #       filter_settings(
-  #         filter_var(dataname = "iris", varname = "Sepal.Width", selected = c(3, 4), keep_na = FALSE, keep_inf = FALSE)
-  #       )
-  #     )
-  #   }
-  # )
+  filtered_data <- FilteredData$new(data_objects = list("iris" = list(dataset = iris)))
+  filtered_data$set_filter_state(
+    filter_settings(
+      filter_var(dataname = "iris", varname = "Sepal.Width", selected = c(3, 4), keep_na = FALSE, keep_inf = FALSE)
+    )
+  )
+  shiny::testServer(
+    filtered_data$srv_filter_panel,
+    expr = {
+      filtered_data$filter_panel_enable()
+      testthat::expect_length(filtered_data$get_filter_state(), 1)
+      testthat::expect_equal(
+        adjust_states(shiny::isolate(filtered_data$get_filter_state())),
+        filter_settings(
+          filter_var(dataname = "iris", varname = "Sepal.Width", selected = c(3, 4), keep_na = FALSE, keep_inf = FALSE)
+        )
+      )
+    }
+  )
 })
 
 testthat::test_that("disable/enable_filter_panel caches and restores state", {
-  # filtered_data <- FilteredData$new(
-  #   list(
-  #     iris = list(dataset = iris),
-  #     mtcars = list(dataset = mtcars)
-  #   )
-  # )
-  # fs <- list(
-  #   iris = list(
-  #     Sepal.Length = list(c(5.1, 6.4)),
-  #     Species = c("setosa", "versicolor")
-  #   ),
-  #   mtcars = list(
-  #     cyl = c(4, 6),
-  #     disp = list()
-  #   )
-  # )
-  # filtered_data$set_filter_state(fs)
-  # shiny::testServer(
-  #   filtered_data$srv_filter_panel,
-  #   expr = {
-  #     cached <- filtered_data$get_filter_state()
-  #     testthat::expect_true(filtered_data$get_filter_panel_active())
-  #     filtered_data$filter_panel_disable()
-  #     testthat::expect_identical(filtered_data$get_filter_state(), structure(list(a = NULL)[0], formatted = ""))
-  #     testthat::expect_false(filtered_data$get_filter_panel_active())
-  #     filtered_data$filter_panel_enable()
-  #     testthat::expect_identical(filtered_data$get_filter_state(), cached)
-  #     testthat::expect_true(filtered_data$get_filter_panel_active())
-  #   }
-  # )
+  filtered_data <- FilteredData$new(
+    list(
+      iris = list(dataset = iris),
+      mtcars = list(dataset = mtcars)
+    )
+  )
+  fs <- filter_settings(
+    filter_var(dataname = "iris", varname = "Sepal.Length", selected = c(5.1, 6.4), keep_na = TRUE, keep_inf = FALSE),
+    filter_var(dataname = "iris", varname = "Species", selected = c("setosa", "versicolor"), keep_na = FALSE),
+    filter_var(dataname = "mtcars", varname = "cyl", selected = c(4, 6), keep_na = FALSE, keep_inf = FALSE),
+    filter_var(dataname = "mtcars", varname = "disp", keep_na = FALSE, keep_inf = FALSE)
+  )
+  filtered_data$set_filter_state(fs)
+  shiny::testServer(
+    filtered_data$srv_filter_panel,
+    expr = {
+      cached <- filtered_data$get_filter_state()
+      testthat::expect_true(filtered_data$get_filter_panel_active())
+      filtered_data$filter_panel_disable()
+      testthat::expect_null(filtered_data$get_filter_state())
+      testthat::expect_false(filtered_data$get_filter_panel_active())
+      filtered_data$filter_panel_enable()
+      testthat::expect_identical(filtered_data$get_filter_state(), cached)
+      testthat::expect_true(filtered_data$get_filter_panel_active())
+    }
+  )
 })
 
 testthat::test_that("switching disable/enable button caches and restores state", {
-  # filtered_data <- FilteredData$new(
-  #   list(
-  #     iris = list(dataset = iris),
-  #     mtcars = list(dataset = mtcars)
-  #   )
-  # )
-  # fs <- list(
-  #   iris = list(
-  #     Sepal.Length = list(c(5.1, 6.4)),
-  #     Species = c("setosa", "versicolor")
-  #   ),
-  #   mtcars = list(
-  #     cyl = c(4, 6),
-  #     disp = list()
-  #   )
-  # )
-  # filtered_data$set_filter_state(fs)
-  # shiny::testServer(
-  #   filtered_data$srv_filter_panel,
-  #   expr = {
-  #     cached <- filtered_data$get_filter_state()
-  #     testthat::expect_true(filtered_data$get_filter_panel_active())
-  #     session$setInputs(filter_panel_active = FALSE)
-  #     testthat::expect_identical(filtered_data$get_filter_state(), structure(list(a = NULL)[0], formatted = ""))
-  #     testthat::expect_false(filtered_data$get_filter_panel_active())
-  #     session$setInputs(filter_panel_active = TRUE)
-  #     testthat::expect_identical(filtered_data$get_filter_state(), cached)
-  #     testthat::expect_true(filtered_data$get_filter_panel_active())
-  #   }
-  # )
+  filtered_data <- FilteredData$new(
+    list(
+      iris = list(dataset = iris),
+      mtcars = list(dataset = mtcars)
+    )
+  )
+  fs <- filter_settings(
+    filter_var(dataname = "iris", varname = "Sepal.Length", selected = c(5.1, 6.4), keep_na = TRUE, keep_inf = FALSE),
+    filter_var(dataname = "iris", varname = "Species", selected = c("setosa", "versicolor"), keep_na = FALSE),
+    filter_var(dataname = "mtcars", varname = "cyl", selected = c(4, 6), keep_na = FALSE, keep_inf = FALSE),
+    filter_var(dataname = "mtcars", varname = "disp", keep_na = FALSE, keep_inf = FALSE)
+  )
+  filtered_data$set_filter_state(fs)
+  shiny::testServer(
+    filtered_data$srv_filter_panel,
+    expr = {
+      cached <- filtered_data$get_filter_state()
+      testthat::expect_true(filtered_data$get_filter_panel_active())
+      session$setInputs(filter_panel_active = FALSE)
+      testthat::expect_null(filtered_data$get_filter_state())
+      testthat::expect_false(filtered_data$get_filter_panel_active())
+      session$setInputs(filter_panel_active = TRUE)
+      testthat::expect_identical(filtered_data$get_filter_state(), cached)
+      testthat::expect_true(filtered_data$get_filter_panel_active())
+    }
+  )
 })
 
 testthat::test_that("active_datanames in srv_filter_panel gets resolved to valid datanames", {
