@@ -228,7 +228,6 @@ SEFilterStates <- R6::R6Class( # nolint
     #'
     remove_filter_state = function(state) {
       checkmate::assert_class(state, "teal_slices")
-
       slices_for_subset <- slices_which(
         state,
         sprintf("varname %%in%% c(%s)", dQuote(toString(names(private$state_list$subset())), q = FALSE))
@@ -237,6 +236,10 @@ SEFilterStates <- R6::R6Class( # nolint
         state,
         sprintf("varname %%in%% c(%s)", dQuote(toString(names(private$state_list$select())), q = FALSE))
       )
+
+      if ((length(slices_for_subset) + length(slices_for_select) == 0)) {
+        warning(sprintf("Remove filter state called, but no filter will be removed, check input"))
+      }
 
       lapply(slices_for_subset, function(x) {
         logger::log_trace(

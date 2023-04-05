@@ -190,8 +190,6 @@ testthat::test_that("SEFilterStates$remove_filter_state removes all filters in s
   )
 
   sefs$set_filter_state(state = fs)
-
-  sefs$set_filter_state(state = fs)
   shiny::isolate(sefs$remove_filter_state(fs))
 
   eval(shiny::isolate(sefs$get_call()))
@@ -201,25 +199,26 @@ testthat::test_that("SEFilterStates$remove_filter_state removes all filters in s
 testthat::test_that(
   "SEFilterStates$remove_filter_state throws warning when list has unknown name in the FilterState",
   code = {
-    # teal.logger::suppress_logs()
-    # obj <- get_test_data()
-    # test <- obj
-    # sefs <- SEFilterStates$new(data = obj, dataname = "test")
-    #
-    # fs <- filter_settings(
-    #   filter_var(selected = c("ID001", "ID002"), choices = c("ID001", "ID002"), dataname = "test",
-    #              varname = "feature_id", target = "subset", keep_na = TRUE)
-    # )
-    #
-    # sefs$set_filter_state(state = fs)
-    # testthat::expect_warning(
-    #   shiny::isolate(sefs$remove_filter_state(
-    #     filter_settings(filter_var(
-    #       selected = c("ID001", "ID002"), choices = c("ID001", "ID002"), dataname = "test",
-    #       varname = "wwww", target = "subset", keep_na = TRUE))
-    #     )
-    #   )
-    # )
+    teal.logger::suppress_logs()
+    obj <- get_test_data()
+    test <- obj
+    sefs <- SEFilterStates$new(data = obj, dataname = "test")
+
+    fs <- filter_settings(
+      filter_var(selected = c("ID001", "ID002"), choices = c("ID001", "ID002"), dataname = "test",
+                 varname = "feature_id", target = "subset", keep_na = TRUE)
+    )
+
+    sefs$set_filter_state(state = fs)
+    testthat::expect_warning(
+      shiny::isolate(sefs$remove_filter_state(
+        filter_settings(filter_var(
+          selected = c("ID001", "ID002"), choices = c("ID001", "ID002"), dataname = "test",
+          varname = "wwww", target = "subset", keep_na = TRUE))
+        )
+      ),
+      "Remove filter state called, but"
+    )
   }
 )
 
