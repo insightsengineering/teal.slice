@@ -19,7 +19,10 @@ testthat::test_that("The constructor initializes one state_list", {
 testthat::test_that("get_call returns a executable call filtering a matrix with numeric values", {
   test <- matrix(c(1, 2, 3, 4, 5), nrow = 5, ncol = 1, dimnames = list(c(), c("a")))
   filter_states <- MatrixFilterStates$new(data = test, dataname = "test")
-  filter_states$set_filter_state(list(a = c(1, 3)))
+  fs <- filter_settings(
+    filter_var(dataname = "test", varname = "a", selected = c(1, 3))
+  )
+  filter_states$set_filter_state(fs)
   testthat::expect_identical(
     shiny::isolate(filter_states$get_call()),
     quote(test <- subset(test, subset = test[, "a"] >= 1 & test[, "a"] <= 3))
@@ -31,35 +34,46 @@ testthat::test_that("get_call returns a executable call filtering a matrix with 
 testthat::test_that("set_filter_state adds filters to state_list", {
   test <- matrix(c(1, 2, 3, 4, 5), nrow = 5, ncol = 1, dimnames = list(c(), c("a")))
   filter_states <- MatrixFilterStates$new(data = test, dataname = "test")
-  fs <- list(a = list(selected = c(1, 2), keep_na = FALSE, keep_inf = FALSE))
+  fs <- filter_settings(
+    filter_var(dataname = "test", varname = "a", selected = c(1, 3), keep_na = FALSE, keep_inf = FALSE)
+  )
   filter_states$set_filter_state(state = fs)
 
-  testthat::expect_identical(shiny::isolate(filter_states$get_filter_state()), fs)
+  testthat::expect_identical(
+    adjust_states(shiny::isolate(filter_states$get_filter_state())),
+    fs
+  )
 })
 
-testthat::test_that("set_filter_state throws error when list is unnamed", {
+testthat::test_that("set_filter_state only accepts `teal_slices`", {
   test <- matrix(c(1, 2, 3, 4, 5), nrow = 5, ncol = 1, dimnames = list(c(), c("a")))
   filter_states <- MatrixFilterStates$new(data = test, dataname = "test")
   fs <- list(c(1, 2))
 
   testthat::expect_error(
     filter_states$set_filter_state(state = fs),
-    "Assertion on 'state' failed: Must have names.",
-    fixed = TRUE
+    "Assertion on 'state' failed",
   )
+  fs <- filter_settings(
+    filter_var(dataname = "test", varname = "a", selected = c(1, 3))
+  )
+  testthat::expect_no_error(filter_states$set_filter_state(fs))
 })
 
 testthat::test_that("remove_filter_state removes filters from state_list", {
   test <- matrix(c(1, 2, 3, 4, 5), nrow = 5, ncol = 1, dimnames = list(c(), c("a")))
   filter_states <- MatrixFilterStates$new(data = test, dataname = "test")
   test_compare <- test
-  fs <- list(a = c(1, 2))
-  filter_states$set_filter_state(state = fs)
-  isolate(filter_states$remove_filter_state("a"))
-  testthat::expect_identical(
-    shiny::isolate(filter_states$get_filter_state()),
-    list(a = NULL)[0]
+  fs <- filter_settings(
+    filter_var(dataname = "test", varname = "a", selected = c(1, 3))
   )
+  filter_states$set_filter_state(state = fs)
+  shiny::isolate(filter_states$remove_filter_state(
+    filter_settings(
+      filter_var(dataname = "test", varname = "a")
+    )
+  ))
+  testthat::expect_length(shiny::isolate(filter_states$get_filter_state()), 0)
 })
 
 testthat::test_that("remove_filter_state throws warning when state_id is not in state_list", {
@@ -67,9 +81,15 @@ testthat::test_that("remove_filter_state throws warning when state_id is not in 
   test <- matrix(c(1, 2, 3, 4, 5), nrow = 5, ncol = 1, dimnames = list(c(), c("a")))
   filter_states <- MatrixFilterStates$new(data = test, dataname = "test")
   test_compare <- test
-  fs <- list(a = c(1, 2))
+  fs <- filter_settings(
+    filter_var(dataname = "test", varname = "a", selected = c(1, 3))
+  )
   filter_states$set_filter_state(state = fs)
-  testthat::expect_warning(filter_states$remove_filter_state("B"))
+  testthat::expect_warning(filter_states$remove_filter_state(
+    filter_settings(
+      filter_var(dataname = "test", varname = "B")
+    )
+  ))
 })
 
 testthat::test_that(
@@ -88,9 +108,16 @@ testthat::test_that("get_filter_count returns the number of active filter states
   filter_states <- MatrixFilterStates$new(data = data, dataname = "test")
 
   filter_states$set_filter_state(
-    list(a = list(), b = list())
+    filter_settings(
+      filter_var(dataname = "test", varname = "a"),
+      filter_var(dataname = "test", varname = "b")
+    )
   )
   testthat::expect_equal(shiny::isolate(filter_states$get_filter_count()), 2)
-  filter_states$remove_filter_state(state_id = "a")
+  filter_states$remove_filter_state(
+    filter_settings(
+      filter_var(dataname = "test", varname = "a")
+    )
+  )
   testthat::expect_equal(shiny::isolate(filter_states$get_filter_count()), 1)
 })
