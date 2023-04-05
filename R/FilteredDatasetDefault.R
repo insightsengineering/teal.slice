@@ -209,7 +209,7 @@ DefaultFilteredDataset <- R6::R6Class( # nolint
         )
       })
 
-      logger::log_trace("{ class(self)[1] }$remove_filter_state removed filter(s), dataname: { privarte$dataname }")
+      logger::log_trace("{ class(self)[1] }$remove_filter_state removed filter(s), dataname: { private$dataname }")
 
       invisible(NULL)
     },
