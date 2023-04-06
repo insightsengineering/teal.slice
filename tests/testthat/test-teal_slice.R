@@ -194,7 +194,7 @@ testthat::test_that("as.teal_slices checks arguments", {
 
 
 testthat::test_that("as.teal_slices converts list to `teal_slices`", {
-  fl2 <- list(
+  fl3 <- list(
     data1 = list(
       var1 = list(
         selected = "a",
@@ -202,20 +202,32 @@ testthat::test_that("as.teal_slices converts list to `teal_slices`", {
       )
     ),
     data1 = list(
-      var2 = list(
-        selected = 2,
-        keep_na = TRUE,
-        keep_inf = FALSE
+      subjects = list(
+        var31 = list(
+          selected = 31,
+          keep_na = TRUE,
+          keep_inf = FALSE
+        )
+      ),
+      exp1 = list(
+        subset = list(
+          var32 = list(
+            selected = 32,
+            keep_na = TRUE,
+            keep_inf = FALSE
+          )
+        )
       )
     )
   )
-  fs2 <- filter_settings(
+  fs3 <- filter_settings(
     filter_var("data1", "var1", selected = "a", keep_na = TRUE),
-    filter_var("data1", "var2", selected = 2, keep_na = TRUE, keep_inf = FALSE)
+    filter_var("data1", "var31", selected = 31, keep_na = TRUE, keep_inf = FALSE, datalabel = "subjects", target = "y"),
+    filter_var("data1", "var32", selected = 32, keep_na = TRUE, keep_inf = FALSE, datalabel = "exp1", target = "subset")
   )
 
-  testthat::expect_s3_class(as.teal_slices(fl2), "teal_slices")
-  testthat::expect_identical(as.teal_slices(fl2), fs2)
+  testthat::expect_s3_class(as.teal_slices(fl3), "teal_slices")
+  testthat::expect_identical(as.teal_slices(fl3), fs3)
 
   testthat::expect_identical(as.teal_slices(list()), filter_settings())
 })
