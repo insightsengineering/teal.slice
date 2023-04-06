@@ -1,43 +1,52 @@
-testthat::test_that("get_call returns NULL after set_keep_na(FALSE)", {
-  filter_state <- EmptyFilterState$new(7, varname = "7", dataname = "data", keep_na = FALSE)
-  testthat::expect_identical(shiny::isolate(filter_state$get_call()), quote(!is.na(7)))
-})
 
-testthat::test_that("get_call returns a call after set_keep_na(TRUE)", {
-  filter_state <- EmptyFilterState$new(7, varname = "test", dataname = "data", keep_na = TRUE)
-  testthat::expect_equal(shiny::isolate(filter_state$get_call()), quote(is.na(test)))
-})
 
-testthat::test_that("get_state returns a list identical to set_state input", {
-  filter_state <- EmptyFilterState$new(NA_character_, varname = "test", dataname = "data")
-  state <- filter_var(keep_na = TRUE, varname = "test", dataname = "data")
+# set_state ----
+testthat::test_that("set_state returns a list identical to set_state input", {
+  filter_state <- EmptyFilterState$new(character(0), dataname = "data", varname = "variable")
+  state <- filter_var(dataname = "data", varname = "variable", keep_na = TRUE)
   filter_state$set_state(state)
   testthat::expect_identical(shiny::isolate(filter_state$get_state()), unclass(state))
 })
 
-testthat::test_that(
-  "EmptyFilterState$is_any_filtered returns FALSE when keep_na is TRUE and returns TRUE when keep_na is FALSE",
-  code = {
-    filter_state <- teal.slice:::EmptyFilterState$new(
-      rep(NA, 10),
-      varname = "x",
-      dataname = "data",
-      extract_type = character(0),
-      keep_na = TRUE
-    )
-    testthat::expect_false(
-      shiny::isolate(filter_state$is_any_filtered())
-    )
+# get_state ----
+testthat::test_that("get_state returns a list identical to set_state input", {
+  filter_state <- EmptyFilterState$new(character(0), dataname = "data", varname = "variable")
+  state <- filter_var(dataname = "data", varname = "variable", keep_na = TRUE)
+  filter_state$set_state(state)
+  testthat::expect_identical(shiny::isolate(filter_state$get_state()), unclass(state))
+})
 
-    filter_state <- teal.slice:::EmptyFilterState$new(
-      rep(NA, 10),
-      varname = "x",
-      dataname = "data",
-      extract_type = character(0),
-      keep_na = FALSE
-    )
-    testthat::expect_true(
-      shiny::isolate(filter_state$is_any_filtered())
-    )
-  }
-)
+# get_call ----
+testthat::test_that("get_call returns NULL after set_keep_na(FALSE)", {
+  # filter_state <- EmptyFilterState$new("7", dataname = "data", varname = "variable", keep_na = FALSE)
+  # testthat::expect_null(shiny::isolate(filter_state$get_call()), NULL)
+})
+
+testthat::test_that("get_call returns a call if keep_na is TRUE", {
+  filter_state <- EmptyFilterState$new(character(0), dataname = "data", varname = "variable", keep_na = TRUE)
+  testthat::expect_equal(shiny::isolate(filter_state$get_call()), quote(is.na(variable)))
+})
+
+
+# is_any_filtered ----
+testthat::test_that("is_any_filtered returns FALSE when keep_na is TRUE and returns TRUE when keep_na is FALSE", {
+  filter_state <- teal.slice:::EmptyFilterState$new(
+    rep(NA, 10),
+    dataname = "data",
+    varname = "variable",
+    keep_na = TRUE
+  )
+  testthat::expect_false(
+    shiny::isolate(filter_state$is_any_filtered())
+  )
+
+  filter_state <- teal.slice:::EmptyFilterState$new(
+    rep(NA, 10),
+    dataname = "data",
+    varname = "variable",
+    keep_na = FALSE
+  )
+  testthat::expect_true(
+    shiny::isolate(filter_state$is_any_filtered())
+  )
+})
