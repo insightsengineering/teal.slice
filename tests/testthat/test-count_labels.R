@@ -1,14 +1,14 @@
 # make_count_text ----
 testthat::test_that("make_count_text requires label to be a character(1)", {
   testthat::expect_no_error(make_count_text(label = "a", countmax = 50))
-  testthat::expect_error(make_count_text(label = character(0), countmax = 50), "Assertion on `label` failed")
-  testthat::expect_error(make_count_text(label = 1, countmax = 50), "Assertion on `label` failed")
+  testthat::expect_error(make_count_text(label = character(0), countmax = 50), "Assertion on 'label' failed")
+  testthat::expect_error(make_count_text(label = 1, countmax = 50), "Assertion on 'label' failed")
 })
 
 testthat::test_that("make_count_text requires countmax to be a numeric(1)", {
   testthat::expect_no_error(make_count_text(label = "a", countmax = 100))
-  testthat::expect_error(make_count_text(label = "a", countmax = "100"), "Assertion on `countmax` failed")
-  testthat::expect_error(make_count_text(label = "a", countmax = numeric(0)), "Assertion on `countmax` failed")
+  testthat::expect_error(make_count_text(label = "a", countmax = "100"), "Assertion on 'countmax' failed")
+  testthat::expect_error(make_count_text(label = "a", countmax = numeric(0)), "Assertion on 'countmax' failed")
 })
 
 
@@ -17,11 +17,11 @@ testthat::test_that("make_count_text requires countnow to be a numeric(1) or NUL
   testthat::expect_no_error(make_count_text(label = "a", countmax = 100, countnow = 1))
   testthat::expect_error(
     make_count_text(label = "a", countmax = 100, countnow = "50"),
-    "Assertion on `countnow` failed"
+    "Assertion on 'countnow' failed"
   )
   testthat::expect_error(
     make_count_text(label = "a", countmax = 100, countnow = numeric(0)),
-    "Assertion on `countnow` failed"
+    "Assertion on 'countnow' failed"
   )
 })
 
