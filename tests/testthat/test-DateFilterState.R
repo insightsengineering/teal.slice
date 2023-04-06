@@ -35,7 +35,7 @@ testthat::test_that("set_state: selected accepts vector of two Date objects", {
   )
   testthat::expect_error(
     filter_state$set_state(filter_var(selected = dates[1], dataname = "data", varname = "variable")),
-    "The array of set values must have length two."
+    "The array of set values must have length two"
   )
   testthat::expect_error(
     filter_state$set_state(filter_var(selected = c(1, 10), dataname = "data", varname = "variable")),

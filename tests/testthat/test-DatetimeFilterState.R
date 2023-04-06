@@ -41,7 +41,7 @@ testthat::test_that("set_state: selected accepts vector of two POSIXct objects o
   )
   testthat::expect_error(
     filter_state$set_state(filter_var(dataname = "data", varname = "variable", selected = posixct[1])),
-    "The array of set values must have length two."
+    "The array of set values must have length two"
   )
   testthat::expect_error(
     filter_state$set_state(filter_var(dataname = "data", varname = "variable", selected = 1:2)),
@@ -221,7 +221,7 @@ testthat::test_that("is_any_filtered works properly when NA is present in data",
   testthat::expect_true(shiny::isolate(filter_state$is_any_filtered()))
 })
 
-testthat::test_that("is_any_filtered returns TRUE when enabled", {
+testthat::test_that("is_any_filtered returns TRUE when enabled and FALSE when disabled", {
   testfs <- R6::R6Class(
     classname = "testfs",
     inherit = DatetimeFilterState,
