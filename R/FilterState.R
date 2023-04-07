@@ -203,7 +203,10 @@ FilterState <- R6::R6Class( # nolint
         if (isFALSE(state$disabled)) private$enable()
 
         if (private$is_disabled()) {
-          logger::log_warn("attempt to set state on disabled filter aborted: { private$dataname } { private$varname }")
+          mutables <- state[c("selected", "keep_na", "keep_inf")]
+          if (any(!vapply(mutables, is.null, logical(1L)))) {
+            logger::log_warn("attempt to set state on disabled filter aborted: { private$dataname } { private$varname }")
+          }
         } else {
           logger::log_trace("{ class(self)[1] }$set_state setting state of variable: { private$varname }")
           if (!is.null(state$selected)) {
