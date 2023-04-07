@@ -269,6 +269,83 @@ testthat::test_that("set_statre sets the intersection of choices and the passed 
   testthat::expect_identical(shiny::isolate(filter_state$get_state()$selected), "2000-01-01 12:00:00")
 })
 
+
+# format ----
+testthat::test_that("format accepts numeric as indent", {
+  filter_state <- ChoicesFilterState$new(7, dataname = "data", varname = "variable")
+  testthat::expect_no_error(shiny::isolate(filter_state$format(indent = 0L)))
+  testthat::expect_no_error(shiny::isolate(filter_state$format(indent = 0)))
+  testthat::expect_error(shiny::isolate(filter_state$format(indent = "0")), "Assertion on 'indent' failed")
+})
+
+testthat::test_that("format returns properly formatted string representation", {
+  values <- paste("value", 1:3, sep = "_")
+  filter_state <- ChoicesFilterState$new(values, dataname = "data", varname = "variable")
+  filter_state$set_state(filter_var(dataname = "data", varname = "variable", selected = values, keep_na = FALSE))
+  testthat::expect_equal(
+    shiny::isolate(filter_state$format(indent = 0)),
+    paste(
+      "Filtering on: variable",
+      "  Selected values: value_1, value_2, value_3",
+      "  Include missing values: FALSE",
+      sep = "\n"
+    )
+  )
+})
+
+testthat::test_that("format prepends spaces to every line of the returned string", {
+  values <- paste("value", 1:3, sep = "_")
+  filter_state <- ChoicesFilterState$new(values, dataname = "data", varname = "variable")
+  filter_state$set_state(filter_var(dataname = "data", varname = "variable", selected = values, keep_na = FALSE))
+  for (i in 1:3) {
+    whitespace_indent <- paste0(rep(" ", i), collapse = "")
+    testthat::expect_equal(
+      shiny::isolate(filter_state$format(indent = i)),
+      paste(format("", width = i),
+            c(
+              "Filtering on: variable",
+              "  Selected values: value_1, value_2, value_3",
+              "  Include missing values: FALSE"
+            ),
+            sep = "", collapse = "\n"
+      )
+    )
+  }
+})
+
+testthat::test_that("format returns a properly wrapped string", {
+  values <- paste("value", 1:3, sep = "_")
+  filter_state <- ChoicesFilterState$new(values, dataname = "data", varname = "variable")
+  filter_state$set_state(filter_var(selected = values, dataname = "data", varname = "variable"))
+  line_width <- 76L # arbitrary value given in method body
+  manual <- 4L # manual third order indent given in method body
+  for (i in 1:10) {
+    output <- shiny::isolate(filter_state$format(indent = i))
+    captured <- utils::capture.output(cat(output))
+    line_lengths <- vapply(captured, nchar, integer(1L))
+    testthat::expect_lte(max(line_lengths), line_width + i + manual)
+  }
+})
+
+testthat::test_that("format line wrapping breaks if strings are too long", {
+  values <- c("exceedinglylongvaluenameexample", "exceedingly long value name example with spaces")
+  filter_state <- ChoicesFilterState$new(values, dataname = "data", varname = "variable")
+  filter_state$set_state(filter_var(selected = values, dataname = "data", varname = "variable"))
+  manual <- 4L # manual third order indent given in method body
+  linewidth <- 30L
+  output <- shiny::isolate(filter_state$format(indent = 2, wrap_width = linewidth))
+  captured <- utils::capture.output(cat(output))
+  line_lengths <- vapply(captured, nchar, integer(1L))
+  testthat::expect_failure(
+    testthat::expect_lte(max(line_lengths), 2 + manual + linewidth)
+  )
+  expect_error(
+    shiny::isolate(filter_state$format(indent = 2, wrap_width = 10)),
+    "[Aa]ssertion.+failed"
+  )
+})
+
+
 # is_any_filtered ----
 testthat::test_that("is_any_filtered works properly when NA is present in data", {
   filter_state <- teal.slice:::ChoicesFilterState$new(
