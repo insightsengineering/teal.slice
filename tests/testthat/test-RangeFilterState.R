@@ -60,30 +60,10 @@ testthat::test_that("set_state: selected accepts vector of two numbers or coerci
     ),
     "The array of set values must contain values coercible to numeric"
   )
-})
-
-testthat::test_that("set_state raises error when the passed values for selected are not coercible to numeric", {
-  filter_state <- RangeFilterState$new(nums, dataname = "data", varname = "variable")
   testthat::expect_error(
     filter_state$set_state(filter_var(dataname = "data", varname = "variable", selected = c(print))),
     "Assertion on 'selected' failed"
   )
-})
-
-testthat::test_that("set_state: keep_inf switches get_call returning call that allows infinite values", {
-  variable <- Inf
-  filter_state <- RangeFilterState$new(nums, dataname = "data", varname = "variable")
-  testthat::expect_false(eval(shiny::isolate(filter_state$get_call())))
-  filter_state$set_state(filter_var(dataname = "data", varname = "variable", keep_inf = TRUE))
-  testthat::expect_true(eval(shiny::isolate(filter_state$get_call())))
-})
-
-testthat::test_that("set_state: keep_na switches get_call returning call that allows NAs", {
-  variable <- NA
-  filter_state <- RangeFilterState$new(c(1, 8), dataname = "data", varname = "variable")
-  testthat::expect_identical(eval(shiny::isolate(filter_state$get_call())), NA)
-  filter_state$set_state(filter_var(dataname = "data", varname = "variable", keep_na = TRUE))
-  testthat::expect_true(eval(shiny::isolate(filter_state$get_call())))
 })
 
 
@@ -91,22 +71,11 @@ testthat::test_that("set_state: keep_na switches get_call returning call that al
 testthat::test_that("get_call returns call encompassing all values passed to constructor", {
   filter_state <- RangeFilterState$new(nums, dataname = "data", varname = "variable")
   testthat::expect_equal(shiny::isolate(filter_state$get_call()), quote(variable >= 1 & variable <= 10))
-})
-
-testthat::test_that("get_call returns call encompassing all values passed to constructor", {
   filter_state <- RangeFilterState$new(nums, dataname = "data", varname = "variable", select = c(4, 6))
   testthat::expect_equal(shiny::isolate(filter_state$get_call()), quote(variable >= 4 & variable <= 6))
 })
 
-testthat::test_that("get_call returns valid call after unsuccessfull setting of selected", {
-  filter_state <- RangeFilterState$new(7, dataname = "data", varname = "variable")
-  testthat::expect_no_error(
-    filter_state$set_state(filter_var(dataname = "data", varname = "variable", selected = c(1, 3)))
-  )
-  testthat::expect_equal(shiny::isolate(filter_state$get_call()), quote(variable >= 7 & variable <= 7))
-})
-
-testthat::test_that("get_call returns call with values passed in set_selected", {
+testthat::test_that("get_call returns call encompassing all values passed in set_selected", {
   filter_state <- RangeFilterState$new(nums, dataname = "data", varname = "variable", selected = c(3, 4))
   testthat::expect_equal(shiny::isolate(filter_state$get_call()), quote(variable >= 3 & variable <= 4))
 })
@@ -119,6 +88,13 @@ testthat::test_that("NA and Inf can both be included by call returned by get_cal
   testthat::expect_identical(eval(shiny::isolate(filter_state$get_call())), c(TRUE, TRUE))
 })
 
+testthat::test_that("get_call returns valid call after unsuccessfull setting of selected", {
+  filter_state <- RangeFilterState$new(7, dataname = "data", varname = "variable")
+  testthat::expect_no_error(
+    filter_state$set_state(filter_var(dataname = "data", varname = "variable", selected = c(1, 3)))
+  )
+  testthat::expect_equal(shiny::isolate(filter_state$get_call()), quote(variable >= 7 & variable <= 7))
+})
 
 
 # format ----
