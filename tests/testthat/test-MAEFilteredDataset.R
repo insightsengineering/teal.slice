@@ -1,14 +1,14 @@
-testthat::test_that("MAEFilteredDataset accepts a MultiAssayExperiment object", {
+
+# initialize ----
+testthat::test_that("constructor accepts a MultiAssayExperiment object", {
   utils::data(miniACC, package = "MultiAssayExperiment")
   testthat::expect_no_error(MAEFilteredDataset$new(dataset = miniACC, dataname = "miniACC"))
-})
-
-testthat::test_that("MAEFilteredDataset throws error with a data.frame passed to constructor", {
   testthat::expect_error(
-    MAEFilteredDataset$new(dataset = head(iris), dataname = "iris"),
-    "Must inherit from class 'MultiAssayExperiment'",
-    fixed = TRUE
-  )
+    MAEFilteredDataset$new(dataset = miniACC[[1]], dataname = "miniACC"),
+    "Assertion on 'dataset' failed")
+  testthat::expect_error(
+    MAEFilteredDataset$new(dataset = iris, dataname = "miniACC"),
+    "Assertion on 'dataset' failed")
 })
 
 testthat::test_that("filter_states list is initialized with names of experiments", {
@@ -27,14 +27,15 @@ testthat::test_that("filter_states list is initialized with names of experiments
   )
 })
 
-testthat::test_that("MAEFilteredDataset$get_call returns NULL without applying filter", {
+# get_call ----
+testthat::test_that("get_call returns NULL when no filter applied", {
   utils::data(miniACC, package = "MultiAssayExperiment")
   filtered_dataset <- MAEFilteredDataset$new(dataset = miniACC, dataname = "miniACC")
   get_call_output <- shiny::isolate(filtered_dataset$get_call())
   testthat::expect_null(get_call_output)
 })
 
-testthat::test_that("MAEFilteredDataset$get_call returns a call with applying filter", {
+testthat::test_that("get_call returns a call with applying filter", {
   utils::data(miniACC, package = "MultiAssayExperiment")
   filtered_dataset <- MAEFilteredDataset$new(dataset = miniACC, dataname = "miniacc")
   fs <- filter_settings(
@@ -68,6 +69,7 @@ testthat::test_that("MAEFilteredDataset$get_call returns a call with applying fi
   )
 })
 
+# get_filter_overview ----
 testthat::test_that("get_filter_overview_info returns overview matrix for MAEFilteredDataset without filtering", {
   utils::data(miniACC, package = "MultiAssayExperiment")
   filtered_dataset <- MAEFilteredDataset$new(dataset = miniACC, dataname = "miniACC")
@@ -247,19 +249,21 @@ testthat::test_that(
   }
 )
 
-testthat::test_that("get_supported_filter_varnames.MAEFilteredDataset returns character(0)", {
+# get_supported_filter_varnames ----
+testthat::test_that("get_supported_filter_varnames returns character(0)", {
   utils::data(miniACC, package = "MultiAssayExperiment")
   filtered_dataset <- MAEFilteredDataset$new(dataset = miniACC, dataname = "miniacc")
   testthat::expect_identical(get_supported_filter_varnames(filtered_dataset), character(0))
 })
 
-testthat::test_that("MAEFilteredDataset filters removed using remove_filters", {
+# UI actions ----
+testthat::test_that("remove_filters button removes all filters", {
   utils::data(miniACC, package = "MultiAssayExperiment")
   filtered_dataset <- MAEFilteredDataset$new(dataset = miniACC, dataname = "miniacc")
   fs <- filter_settings(
     filter_var(dataname = "miniacc", varname = "years_to_birth", selected = c(30, 50),
                keep_na = FALSE, keep_inf = FALSE, datalabel = "subjects", target = "y"),
-    filter_var(dataname = "miniacc", varname = "vital_status", selected = "1",
+    filter_var(dataname = "miniacc", varname = "vital_status", selected = 1,
                keep_na = FALSE, datalabel = "subjects", target = "y"),
     filter_var(dataname = "miniacc", varname = "gender", selected = "female",
                keep_na = FALSE, datalabel = "subjects", target = "y"),
@@ -293,7 +297,6 @@ testthat::test_that("MAEFilteredDataset filters removed using remove_filters", {
     filtered_dataset$srv_active,
     expr = {
       session$setInputs(remove_filters = TRUE)
-      testthat::expect_true(input$remove_filters)
     }
   )
 
