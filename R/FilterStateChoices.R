@@ -183,6 +183,45 @@ ChoicesFilterState <- R6::R6Class( # nolint
     },
 
     #' @description
+    #' Returns a formatted string representing this `FilterState`.
+    #'
+    #' @param indent (`numeric(1)`)
+    #'   number of spaces before after each new line character of the formatted string;
+    #'   defaults to 0
+    #' @param wrap_width (`numeric(1)`)
+    #'   number of characters to wrap lines at in the printed output;
+    #'   allowed range is 30 to 120; defaults to 76
+    #'
+    #' @return `character(1)` the formatted string
+    #'
+    format = function(indent = 0L, wrap_width = 76L) {
+      checkmate::assert_number(indent, finite = TRUE, lower = 0L)
+      checkmate::assert_number(wrap_width, finite = TRUE, lower = 30L, upper = 120L)
+
+      # List all selected values separated by commas.
+      values <- paste(format(private$get_selected(), nsmall = 3L, justify = "none"), collapse = ", ")
+      paste(c(
+        strwrap(
+          sprintf("Filtering on: %s", private$varname),
+          width = wrap_width,
+          indent = indent
+        ),
+        # Add wrapping and progressive indent to values enumeration as it is likely to be long.
+        strwrap(
+          sprintf("Selected values: %s", values),
+          width = wrap_width,
+          indent = indent + 2L,
+          exdent = indent + 4L
+        ),
+        strwrap(
+          sprintf("Include missing values: %s", private$get_keep_na()),
+          width = wrap_width,
+          indent = indent + 2L
+        )
+      ), collapse = "\n")
+    },
+
+    #' @description
     #' Answers the question of whether the current settings and values selected actually filters out any values.
     #' @return logical scalar
     is_any_filtered = function() {
