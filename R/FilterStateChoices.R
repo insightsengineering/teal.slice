@@ -194,7 +194,7 @@ ChoicesFilterState <- R6::R6Class( # nolint
     #'
     #' @return `character(1)` the formatted string
     #'
-    format = function(indent = 0L, wrap_width = 76L) {
+    format = function(indent = 2L, wrap_width = 76L) {
       checkmate::assert_number(indent, finite = TRUE, lower = 0L)
       checkmate::assert_number(wrap_width, finite = TRUE, lower = 30L, upper = 120L)
 
@@ -210,13 +210,13 @@ ChoicesFilterState <- R6::R6Class( # nolint
         strwrap(
           sprintf("Selected values: %s", values),
           width = wrap_width,
-          indent = indent + 2L,
-          exdent = indent + 4L
+          indent = indent * 2L,
+          exdent = indent * 3L
         ),
         strwrap(
           sprintf("Include missing values: %s", private$get_keep_na()),
           width = wrap_width,
-          indent = indent + 2L
+          indent = indent * 2L
         )
       ), collapse = "\n")
     },
