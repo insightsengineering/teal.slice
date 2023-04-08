@@ -79,91 +79,6 @@ SEFilterStates <- R6::R6Class( # nolint
     },
 
     #' @description
-    #' Server module
-    #' @param id (`character(1)`)\cr
-    #'   an ID string that corresponds with the ID used to call the module's UI function.
-    #' @return `moduleServer` function which returns `NULL`
-    srv_active = function(id) {
-      moduleServer(
-        id = id,
-        function(input, output, session) {
-          previous_state_subset <- reactiveVal(isolate(private$state_list_get("subset")))
-          added_state_name_subset <- reactiveVal(character(0))
-          removed_state_name_subset <- reactiveVal(character(0))
-
-          observeEvent(private$state_list_get("subset"), {
-            added_state_name_subset(
-              setdiff(names(private$state_list_get("subset")), names(previous_state_subset()))
-            )
-            removed_state_name_subset(
-              setdiff(names(previous_state_subset()), names(private$state_list_get("subset")))
-            )
-            previous_state_subset(private$state_list_get("subset"))
-          })
-
-          observeEvent(added_state_name_subset(), ignoreNULL = TRUE, {
-            fstates <- private$state_list_get("subset")
-            html_ids <- private$map_vars_to_html_ids(keys = names(fstates), prefix = "rowData")
-            for (fname in added_state_name_subset()) {
-              private$insert_filter_state_ui(
-                id = html_ids[fname],
-                filter_state = fstates[[fname]],
-                state_list_index = "subset",
-                state_id = fname
-              )
-            }
-            added_state_name_subset(character(0))
-          })
-
-          observeEvent(removed_state_name_subset(), ignoreNULL = TRUE, {
-            for (fname in removed_state_name_subset()) {
-              private$remove_filter_state_ui("subset", fname, .input = input)
-            }
-            removed_state_name_subset(character(0))
-          })
-
-          # select
-          previous_state_select <- reactiveVal(isolate(private$state_list_get("select")))
-          added_state_name_select <- reactiveVal(character(0))
-          removed_state_name_select <- reactiveVal(character(0))
-
-          observeEvent(private$state_list_get("select"), {
-            # find what has been added or removed
-            added_state_name_select(
-              setdiff(names(private$state_list_get("select")), names(previous_state_select()))
-            )
-            removed_state_name_select(
-              setdiff(names(previous_state_select()), names(private$state_list_get("select")))
-            )
-            previous_state_select(private$state_list_get("select"))
-          })
-
-          observeEvent(added_state_name_select(), ignoreNULL = TRUE, {
-            fstates <- private$state_list_get("select")
-            html_ids <- private$map_vars_to_html_ids(keys = names(fstates), prefix = "colData")
-            for (fname in added_state_name_select()) {
-              private$insert_filter_state_ui(
-                id = html_ids[fname],
-                filter_state = fstates[[fname]],
-                state_list_index = "select",
-                state_id = fname
-              )
-            }
-            added_state_name_select(character(0))
-          })
-
-          observeEvent(removed_state_name_select(), ignoreNULL = TRUE, {
-            for (fname in removed_state_name_select()) {
-              private$remove_filter_state_ui("select", fname, .input = input)
-            }
-            removed_state_name_select(character(0))
-          })
-          NULL
-        }
-      )
-    },
-
-    #' @description
     #' Returns active `FilterState` objects.
     #'
     #' Gets all filter state information from this dataset.
@@ -271,6 +186,91 @@ SEFilterStates <- R6::R6Class( # nolint
     # shiny modules ----
 
     #' @description
+    #' Server module
+    #' @param id (`character(1)`)\cr
+    #'   an ID string that corresponds with the ID used to call the module's UI function.
+    #' @return `moduleServer` function which returns `NULL`
+    srv_active = function(id) {
+      moduleServer(
+        id = id,
+        function(input, output, session) {
+          previous_state_subset <- reactiveVal(isolate(private$state_list_get("subset")))
+          added_state_name_subset <- reactiveVal(character(0))
+          removed_state_name_subset <- reactiveVal(character(0))
+
+          observeEvent(private$state_list_get("subset"), {
+            added_state_name_subset(
+              setdiff(names(private$state_list_get("subset")), names(previous_state_subset()))
+            )
+            removed_state_name_subset(
+              setdiff(names(previous_state_subset()), names(private$state_list_get("subset")))
+            )
+            previous_state_subset(private$state_list_get("subset"))
+          })
+
+          observeEvent(added_state_name_subset(), ignoreNULL = TRUE, {
+            fstates <- private$state_list_get("subset")
+            html_ids <- private$map_vars_to_html_ids(keys = names(fstates), prefix = "rowData")
+            for (fname in added_state_name_subset()) {
+              private$insert_filter_state_ui(
+                id = html_ids[fname],
+                filter_state = fstates[[fname]],
+                state_list_index = "subset",
+                state_id = fname
+              )
+            }
+            added_state_name_subset(character(0))
+          })
+
+          observeEvent(removed_state_name_subset(), ignoreNULL = TRUE, {
+            for (fname in removed_state_name_subset()) {
+              private$remove_filter_state_ui("subset", fname, .input = input)
+            }
+            removed_state_name_subset(character(0))
+          })
+
+          # select
+          previous_state_select <- reactiveVal(isolate(private$state_list_get("select")))
+          added_state_name_select <- reactiveVal(character(0))
+          removed_state_name_select <- reactiveVal(character(0))
+
+          observeEvent(private$state_list_get("select"), {
+            # find what has been added or removed
+            added_state_name_select(
+              setdiff(names(private$state_list_get("select")), names(previous_state_select()))
+            )
+            removed_state_name_select(
+              setdiff(names(previous_state_select()), names(private$state_list_get("select")))
+            )
+            previous_state_select(private$state_list_get("select"))
+          })
+
+          observeEvent(added_state_name_select(), ignoreNULL = TRUE, {
+            fstates <- private$state_list_get("select")
+            html_ids <- private$map_vars_to_html_ids(keys = names(fstates), prefix = "colData")
+            for (fname in added_state_name_select()) {
+              private$insert_filter_state_ui(
+                id = html_ids[fname],
+                filter_state = fstates[[fname]],
+                state_list_index = "select",
+                state_id = fname
+              )
+            }
+            added_state_name_select(character(0))
+          })
+
+          observeEvent(removed_state_name_select(), ignoreNULL = TRUE, {
+            for (fname in removed_state_name_select()) {
+              private$remove_filter_state_ui("select", fname, .input = input)
+            }
+            removed_state_name_select(character(0))
+          })
+          NULL
+        }
+      )
+    },
+
+      #' @description
     #' Shiny UI module to add filter variable
     #' @param id (`character(1)`)\cr
     #'  id of shiny module
