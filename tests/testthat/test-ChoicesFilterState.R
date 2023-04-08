@@ -273,7 +273,6 @@ testthat::test_that("set_statre sets the intersection of choices and the passed 
 # format ----
 testthat::test_that("format accepts numeric as indent", {
   filter_state <- ChoicesFilterState$new(7, dataname = "data", varname = "variable")
-  testthat::expect_no_error(shiny::isolate(filter_state$format(indent = 0L)))
   testthat::expect_no_error(shiny::isolate(filter_state$format(indent = 0)))
   testthat::expect_error(shiny::isolate(filter_state$format(indent = "0")), "Assertion on 'indent' failed")
 })
@@ -283,11 +282,11 @@ testthat::test_that("format returns properly formatted string representation", {
   filter_state <- ChoicesFilterState$new(values, dataname = "data", varname = "variable")
   filter_state$set_state(filter_var(dataname = "data", varname = "variable", selected = values, keep_na = FALSE))
   testthat::expect_equal(
-    shiny::isolate(filter_state$format(indent = 0)),
+    shiny::isolate(filter_state$format()),
     paste(
-      "Filtering on: variable",
-      "  Selected values: value_1, value_2, value_3",
-      "  Include missing values: FALSE",
+      "  Filtering on: variable",
+      "    Selected values: value_1, value_2, value_3",
+      "    Include missing values: FALSE",
       sep = "\n"
     )
   )
@@ -297,15 +296,14 @@ testthat::test_that("format prepends spaces to every line of the returned string
   values <- paste("value", 1:3, sep = "_")
   filter_state <- ChoicesFilterState$new(values, dataname = "data", varname = "variable")
   filter_state$set_state(filter_var(dataname = "data", varname = "variable", selected = values, keep_na = FALSE))
-  for (i in 1:3) {
-    whitespace_indent <- paste0(rep(" ", i), collapse = "")
+  for (i in 0:3) {
     testthat::expect_equal(
       shiny::isolate(filter_state$format(indent = i)),
       paste(format("", width = i),
             c(
               "Filtering on: variable",
-              "  Selected values: value_1, value_2, value_3",
-              "  Include missing values: FALSE"
+              sprintf("%sSelected values: value_1, value_2, value_3", format("", width = i)),
+              sprintf("%sInclude missing values: FALSE", format("", width = i))
             ),
             sep = "", collapse = "\n"
       )

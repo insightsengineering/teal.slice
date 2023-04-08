@@ -176,30 +176,28 @@ testthat::test_that("format accepts numeric as indent", {
 testthat::test_that("format returns a properly formatted string representation", {
   filter_state <- DatetimeFilterState$new(posixct, dataname = "data", varname = "variable")
   testthat::expect_equal(
-    shiny::isolate(filter_state$format(indent = 0)),
+    shiny::isolate(filter_state$format()),
     paste(
-      "Filtering on: variable",
-      "  Selected range: 2000-01-01 12:00:00 - 2000-01-01 12:00:09",
-      "  Include missing values: FALSE",
+      "  Filtering on: variable",
+      "    Selected range: 2000-01-01 12:00:00 - 2000-01-01 12:00:09",
+      "    Include missing values: FALSE",
       sep = "\n"
     )
   )
 })
 
 testthat::test_that("format prepends spaces to every line of the returned string", {
-  filter_state <- DatetimeFilterState$new(posixct, varname = "test", dataname = "data")
-  for (i in 1:3) {
-    whitespace_indent <- paste0(rep(" ", i), collapse = "")
+  filter_state <- DatetimeFilterState$new(posixct, dataname = "data", varname = "variable")
+  for (i in 0:3) {
     testthat::expect_equal(
-      shiny::isolate(filter_state$format(indent = !!(i))),
-      sprintf(
-        paste(
-          "%sFiltering on: test",
-          "%1$s  Selected range: 2000-01-01 12:00:00 - 2000-01-01 12:00:09",
-          "%1$s  Include missing values: FALSE",
-          sep = "\n"
-        ),
-        format("", width = i)
+      shiny::isolate(filter_state$format(indent = i)),
+      paste(format("", width = i),
+            c(
+              "Filtering on: variable",
+              sprintf("%sSelected range: 2000-01-01 12:00:00 - 2000-01-01 12:00:09", format("", width = i)),
+              sprintf("%sInclude missing values: FALSE", format("", width = i))
+            ),
+            sep = "", collapse = "\n"
       )
     )
   }
