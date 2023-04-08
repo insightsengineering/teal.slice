@@ -69,7 +69,7 @@ MAEFilterStates <- R6::R6Class( # nolint
       if (length(private$state_list_get(1L)) > 0) {
         formatted_states <- sprintf("%sSubject filters:", format("", width = indent))
         for (state in private$state_list_get(1L)) {
-          formatted_states <- c(formatted_states, state$format(indent = indent + 2))
+          formatted_states <- c(formatted_states, state$format(indent = indent * 2))
         }
         paste(formatted_states, collapse = "\n")
       }

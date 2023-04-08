@@ -54,7 +54,7 @@ MatrixFilterStates <- R6::R6Class( # nolint
 
       formatted_states <- c()
       for (state in private$state_list_get(state_list_index = "subset")) {
-        formatted_states <- c(formatted_states, state$format(indent = indent + 2))
+        formatted_states <- c(formatted_states, state$format(indent = indent))
       }
       paste(formatted_states, collapse = "\n")
     },

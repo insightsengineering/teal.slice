@@ -56,24 +56,26 @@ SEFilterStates <- R6::R6Class( # nolint
     format = function(indent = 0) {
       checkmate::assert_number(indent, finite = TRUE, lower = 0)
 
-      whitespace_indent <- format("", width = indent)
       formatted_states <- c()
       if (!is.null(private$state_list_get(state_list_index = "subset"))) {
-        formatted_states <- c(formatted_states, paste0(whitespace_indent, "  Subsetting:"))
+        formatted_states <- c(formatted_states, sprintf("%sSubsetting:", format("", width = indent * 2)))
         for (state in private$state_list_get(state_list_index = "subset")) {
-          formatted_states <- c(formatted_states, state$format(indent = indent + 4))
+          formatted_states <- c(formatted_states, state$format(indent = indent * 2))
         }
       }
 
       if (!is.null(private$state_list_get(state_list_index = "select"))) {
-        formatted_states <- c(formatted_states, paste0(whitespace_indent, "  Selecting:"))
+        formatted_states <- c(formatted_states, sprintf("%sSelecting:", format("", width = indent * 2)))
         for (state in private$state_list_get(state_list_index = "select")) {
-          formatted_states <- c(formatted_states, state$format(indent = indent + 4))
+          formatted_states <- c(formatted_states, state$format(indent = indent * 2))
         }
       }
 
       if (length(formatted_states) > 0) {
-        formatted_states <- c(paste0(whitespace_indent, "Assay ", self$get_datalabel(), " filters:"), formatted_states)
+        formatted_states <- c(
+          sprintf("%sAssay %s filters:", format("", width = indent), self$get_datalabel()),
+          formatted_states
+        )
         paste(formatted_states, collapse = "\n")
       }
     },
