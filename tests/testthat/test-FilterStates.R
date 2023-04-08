@@ -1,18 +1,24 @@
-# Notice, the particular design of these tests. We don't test the particulars of
-# the calls, but only whether they evaluate to the expected value.
 
-# constructor ----
-testthat::test_that("The constructor accepts only a string as dataname", {
-  testthat::expect_no_error(
-    FilterStates$new(data = NULL, dataname = "string")
-  )
-  testthat::expect_error(
-    FilterStates$new(data = NULL, dataname = quote(name))
-  )
-  testthat::expect_error(
-    FilterStates$new(data = NULL, dataname = call("call"))
-  )
+# initialize ----
+testthat::test_that("constructor accepts only a string as dataname", {
+  testthat::expect_no_error(FilterStates$new(data = NULL, dataname = "string"))
+  testthat::expect_error(FilterStates$new(data = NULL, dataname = quote(name)), "Assertion on 'dataname' failed")
+  testthat::expect_error(FilterStates$new(data = NULL, dataname = call("call")), "Assertion on 'dataname' failed")
 })
+
+# get_fun ----
+testthat::test_that("get_fun returns subset after initialization", {
+  filter_states <- FilterStates$new(data = NULL, dataname = "test")
+  testthat::expect_equal(filter_states$get_fun(), "subset")
+})
+
+# get_call ----
+testthat::test_that("get_call returns NULL after initialization if no filter applied", {
+  filter_states <- FilterStates$new(data = NULL, dataname = "test")
+  testthat::expect_null(filter_states$get_call())
+})
+# call construction will be tested in child classes
+# due to differences in subsetting functions and data-/variable name prefixing
 
 # validate_state_list_exists ----
 testthat::test_that("validate_state_list_exists raises errors if no filters were added", {
@@ -31,34 +37,23 @@ testthat::test_that("validate_state_list_exists raises errors if no filters were
   )
 })
 
-testthat::test_that("Clearing empty FilterStates does not raise errors", {
+# clear_filter_states ----
+testthat::test_that("clearing empty FilterStates does not raise errors", {
   filter_states <- FilterStates$new(data = NULL, dataname = "test")
   testthat::expect_no_error(filter_states$clear_filter_states())
 })
 
-# get_fun ----
-testthat::test_that("get_fun returns subset after initialization", {
-  filter_states <- FilterStates$new(data = NULL, dataname = "test")
-  testthat::expect_equal(filter_states$get_fun(), "subset")
-})
-
-# get_call ----
-testthat::test_that("get_call returns NULL after initialization if no filter applied", {
-  filter_states <- FilterStates$new(data = NULL, dataname = "test")
-  testthat::expect_null(filter_states$get_call())
-})
-
 # data_choices_labeled ----
 testthat::test_that("data_choices_labeled returns an empty character array if choices are an empty array", {
-  testthat::expect_equal(data_choices_labeled(7, choices = c()), character(0))
+  testthat::expect_identical(data_choices_labeled(7, choices = c()), character(0))
 })
 
 testthat::test_that("data_choices_labeled returns a choices_labeled object if choices are not empty", {
-  testthat::expect_true(is(data_choices_labeled(data.frame(a = 1), choices = c("a")), "choices_labeled"))
+  testthat::expect_s3_class(data_choices_labeled(data.frame(a = 1), choices = c("a")), "choices_labeled")
 })
 
 testthat::test_that("data_choices_labeled returns names of the elements matching the choices", {
-  testthat::expect_equal(data_choices_labeled(data.frame(a = 1, b = 2), choices = c("a"))[1], c("a: a" = "a"))
+  testthat::expect_identical(data_choices_labeled(data.frame(a = 1, b = 2), choices = c("a"))[1], c("a: a" = "a"))
 })
 
 testthat::test_that("data_choices_labeled returns labels of the elements matching the choices
