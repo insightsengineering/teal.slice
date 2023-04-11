@@ -15,6 +15,15 @@ testthat::test_that("constructor accepts a POSIXct or POSIXlt object", {
   )
 })
 
+testthat::test_that("constructor raises warning when selected is out of range", {
+  testthat::expect_warning(
+    DatetimeFilterState$new(
+      posixct, dataname = "data", varname = "variable", selected = range(posixct) + c(-1, 1)
+    ),
+    "outside of the range"
+  )
+})
+
 testthat::test_that("constructor raises warning when selected is not sorted", {
   testthat::expect_warning(
     DatetimeFilterState$new(
@@ -24,10 +33,35 @@ testthat::test_that("constructor raises warning when selected is not sorted", {
   )
 })
 
-testthat::test_that("constructor raises error when selection is not Date", {
+testthat::test_that("constructor raises error when selection is not Datetime or coercible", {
   testthat::expect_error(
     DatetimeFilterState$new(posixct, dataname = "data", varname = "variable", selected = c("a", "b")),
     "The array of set values must contain values coercible to POSIX"
+  )
+})
+
+testthat::test_that("constructor raises warning when choices is out of range", {
+  testthat::expect_warning(
+    DatetimeFilterState$new(
+      posixct, dataname = "data", varname = "variable", chioces = range(posixct) + c(-1, 1)
+    ),
+    "outside of variable range"
+  )
+})
+
+testthat::test_that("constructor raises warning when choices is not sorted", {
+  testthat::expect_warning(
+    DatetimeFilterState$new(
+      posixct, dataname = "data", varname = "variable", choices = posixct[c(10, 1)]
+    ),
+    "Invalid choices"
+  )
+})
+
+testthat::test_that("constructor raises error when choices is not Date", {
+  testthat::expect_error(
+    DatetimeFilterState$new(posixct, dataname = "data", varname = "variable", choices = c("a", "b")),
+    "Assertion on 'choices' failed"
   )
 })
 
@@ -89,6 +123,14 @@ testthat::test_that("set_state: selected range is limited to lower and upper bou
     filter_var(dataname = "data", varname = "posixct", selected = c(posixct[1] - 1, posixct[10] + 1))
   ))
   testthat::expect_equal(shiny::isolate(filter_state$get_state()$selected), c(posixct[1], posixct[10]))
+})
+
+testthat::test_that("set_state: selected raises error when selection is not a Date or coercible", {
+  filter_state <- DatetimeFilterState$new(posixct, dataname = "data", varname = "variable")
+  testthat::expect_error(
+    filter_state$set_state(filter_var(dataname = "data", varname = "variable", selected = c("a", "b"))),
+    "The array of set values must contain values coercible to POSIX"
+  )
 })
 
 

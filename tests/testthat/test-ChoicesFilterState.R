@@ -16,6 +16,35 @@ testthat::test_that("constructor accepts all data classes", {
   testthat::expect_no_error(ChoicesFilterState$new(posixlt, dataname = "data", varname = "variable"))
 })
 
+testthat::test_that("constructor raises warning if choices out of range", {
+  testthat::expect_warning(
+    ChoicesFilterState$new(chars, dataname = "data", varname = "variable", choices = c(chars, "item4")),
+    "Some of the choices not within variable values, adjusting"
+  )
+})
+
+testthat::test_that("constructor raises warning if choices out of range", {
+  testthat::expect_warning(
+    ChoicesFilterState$new(chars, dataname = "data", varname = "variable", choices = "item4"),
+    "Some of the choices not within variable values, adjusting"
+  )
+  testthat::expect_warning(
+    ChoicesFilterState$new(chars, dataname = "data", varname = "variable", choices = "item4"),
+    "Invalid choices: none of them within the values in the variable"
+  )
+})
+
+testthat::test_that("constructor raises warning if selected out of range", {
+  testthat::expect_warning(
+    ChoicesFilterState$new(chars, dataname = "data", varname = "variable", selected = c(chars, "item4")),
+    "not in choices"
+  )
+  testthat::expect_warning(
+    ChoicesFilterState$new(chars, dataname = "data", varname = "variable", selected = "item4"),
+    "not in choices"
+  )
+})
+
 # get_call ----
 testthat::test_that("get_call returns call that evaluated leaves all values passed to constructor", {
   filter_state <- ChoicesFilterState$new(chars, dataname = "data", varname = "variable")

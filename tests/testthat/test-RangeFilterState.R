@@ -21,7 +21,16 @@ testthat::test_that("constructor accepts infinite values but not infinite only",
   )
 })
 
-testthat::test_that("constructor raises errpr when selected is not sorted", {
+testthat::test_that("constructor raises error when selected is out of range", {
+  testthat::expect_warning(
+    RangeFilterState$new(
+      nums, dataname = "data", varname = "variable", selected = range(nums) + c(-1, 1)
+    ),
+    "Assertion on 'x' failed: Must be sorted"
+  )
+})
+
+testthat::test_that("constructor raises error when selected is not sorted", {
   testthat::expect_error(
     RangeFilterState$new(
       nums, dataname = "data", varname = "variable", selected = nums[c(10, 1)]
@@ -36,6 +45,33 @@ testthat::test_that("constructor raises error when selection is not numeric or c
       RangeFilterState$new(nums, dataname = "data", varname = "variable", selected = c("a", "b"))
     ),
     "The array of set values must contain values coercible to numeric"
+  )
+})
+
+testthat::test_that("constructor raises error when choices is out of range", {
+  testthat::expect_warning(
+    RangeFilterState$new(
+      nums, dataname = "data", varname = "variable", choices = range(nums) + c(-1, 1)
+    ),
+    "Choices adjusted"
+  )
+})
+
+testthat::test_that("constructor raises warning when choices is not sorted", {
+  testthat::expect_warning(
+    RangeFilterState$new(
+      nums, dataname = "data", varname = "variable", choices = nums[c(10, 1)]
+    ),
+    "Invalid choices"
+  )
+})
+
+testthat::test_that("constructor raises error when choices is not numeric or coercible", {
+  testthat::expect_error(
+    suppressWarnings(
+      RangeFilterState$new(nums, dataname = "data", varname = "variable", choices = c("a", "b"))
+    ),
+    "Assertion on 'choices' failed"
   )
 })
 

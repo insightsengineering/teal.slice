@@ -1,10 +1,5 @@
 
 # get_call ----
-testthat::test_that("get_call returns NULL after set_keep_na(FALSE)", {
-  # filter_state <- EmptyFilterState$new("7", dataname = "data", varname = "variable", keep_na = FALSE)
-  # testthat::expect_null(shiny::isolate(filter_state$get_call()), NULL)
-})
-
 testthat::test_that("get_call returns a call if keep_na is TRUE", {
   filter_state <- EmptyFilterState$new(character(0), dataname = "data", varname = "variable", keep_na = TRUE)
   testthat::expect_equal(shiny::isolate(filter_state$get_call()), quote(is.na(variable)))

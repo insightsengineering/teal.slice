@@ -11,6 +11,15 @@ testthat::test_that("constructor accepts a Date object", {
   )
 })
 
+testthat::test_that("constructor raises warning when selected out of range", {
+  testthat::expect_warning(
+    DateFilterState$new(
+      dates, dataname = "data", varname = "variable", selected = range(dates) + c(-1, 1)
+    ),
+    regexp = "outside of the possible range"
+  )
+})
+
 testthat::test_that("constructor raises warning when selected is not sorted", {
   testthat::expect_warning(
     DateFilterState$new(
@@ -26,6 +35,32 @@ testthat::test_that("constructor raises error when selection is not Date", {
     "The array of set values must contain values coercible to Date."
   )
 })
+
+testthat::test_that("constructor raises warning when chioces is not sorted", {
+  testthat::expect_warning(
+    DateFilterState$new(
+      dates, dataname = "data", varname = "variable", choices = dates[c(10, 1)]
+    ),
+    regexp = "Invalid choices"
+  )
+})
+
+testthat::test_that("constructor raises warning when chioces out of range", {
+  testthat::expect_warning(
+    DateFilterState$new(
+      dates, dataname = "data", varname = "variable", choices = range(dates) + c(-1, 1)
+    ),
+    regexp = "Choices adjusted"
+  )
+})
+
+testthat::test_that("constructor raises error when selection is not Date", {
+  testthat::expect_error(
+    DateFilterState$new(dates, dataname = "data", varname = "variable", choices = c("a", "b")),
+    "Assertion on 'choices' failed"
+  )
+})
+
 
 # set_state ----
 testthat::test_that("set_state: selected accepts vector of two Date objects", {
@@ -80,6 +115,14 @@ testthat::test_that("set_state: selected range is limited to lower and upper bou
     filter_var(dataname = "data", varname = "variable", selected = c(dates[1] - 1, dates[10] + 1))
     ))
   testthat::expect_equal(shiny::isolate(filter_state$get_state()$selected), c(dates[1], dates[10]))
+})
+
+testthat::test_that("set_state: selected raises error when selection is not a Date or coercible", {
+  filter_state <- DateFilterState$new(dates, dataname = "data", varname = "variable")
+  testthat::expect_error(
+    filter_state$set_state(filter_var(dataname = "data", varname = "variable", selected = c("a", "b"))),
+    "The array of set values must contain values coercible to Date"
+  )
 })
 
 
