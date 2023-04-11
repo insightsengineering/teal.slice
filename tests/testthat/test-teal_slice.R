@@ -1,4 +1,5 @@
 
+# filter_var ----
 testthat::test_that("filter_var checks arguments", {
   testthat::expect_no_error(filter_var(dataname = "data", varname = "var"))
   testthat::expect_no_error(filter_var(dataname = "data", varname = "var", extra = "extra"))
@@ -93,6 +94,7 @@ testthat::test_that("filter_var returns `teal_slice`", {
 })
 
 
+# filter_settings ----
 testthat::test_that("filter_settings checks arguments", {
   fs1 <- filter_var("data", "var1")
   fs2 <- filter_var("data", "var2")
@@ -126,6 +128,7 @@ testthat::test_that("filter_settings returns `teal_slices`", {
 })
 
 
+# is.teal_slice(s) ----
 testthat::test_that("is* functions work", {
   fs1 <- filter_var("data", "var1")
   fs2 <- filter_var("data", "var2")
@@ -143,6 +146,7 @@ testthat::test_that("is* functions work", {
 })
 
 
+# as.teal_slice(s)
 testthat::test_that("as.teal_slice checks arguments", {
   fl1 <- list(
     dataname = "data",
@@ -233,6 +237,7 @@ testthat::test_that("as.teal_slices converts list to `teal_slices`", {
 })
 
 
+# [.teal_slices ----
 testthat::test_that("[.teal_slices accepts various types of indices", {
   fs1 <- filter_var("data", "var1")
   fs2 <- filter_var("data", "var2")
@@ -246,6 +251,10 @@ testthat::test_that("[.teal_slices accepts various types of indices", {
   testthat::expect_no_error(fs[1])
   testthat::expect_no_error(fs["one"])
   testthat::expect_no_error(fs[c(TRUE, FALSE)])
+
+  testthat::expect_error(fs[c(TRUE, TRUE, FALSE)], "subscript out of bounds")
+  testthat::expect_error(fs[3], "subscript out of bounds")
+  testthat::expect_error(fs["three"], "subscript out of bounds")
 
   testthat::expect_no_error(fs[[]])
   testthat::expect_null(fs[[]])
@@ -339,6 +348,7 @@ testthat::test_that("[.teal_slices preserves count_type", {
 })
 
 
+# c.teal_slice(s) ----
 testthat::test_that("c.teal_slice adds fields to `teal_slice`", {
   fs1 <- filter_var("data1", "var1")
   extra <- list(name = "value")
@@ -403,6 +413,122 @@ testthat::test_that("c.teal_slices handles attributes", {
 })
 
 
+# format.teal_slice ----
+testthat::test_that("format.teal_slice returns a character string", {
+  fs <- filter_var("dataname2", "varname3", 1:10/10, 0.2, TRUE, extra1 = "extraone", extra2 = "extratwo")
+  testthat::expect_true(checkmate::check_string(format(fs)))
+  testthat::expect_true(checkmate::check_string(format(fs, show_all = TRUE)))
+})
+
+
+testthat::test_that("format.teal_slice prints 'teal_slice' header", {
+  fs <- filter_var("dataname2", "varname3", 1:10/10, 0.2, TRUE, extra1 = "extraone", extra2 = "extratwo")
+  ffs <- strsplit(format(fs), "\n")[[1]]
+  testthat::expect_identical(ffs[1], "teal_slice")
+})
+
+
+testthat::test_that("format.teal_slice prints all mandatory fields with prefix when show_all is TRUE", {
+  fs <- filter_var("dataname2", "varname3", 1:10/10, 0.2, TRUE, extra1 = "extraone", extra2 = "extratwo")
+  ffs <- strsplit(format(fs, show_all = TRUE), "\n")[[1]]
+  mandatory <- setdiff(names(formals(filter_var)), "...")
+  lapply(mandatory, function(x) {
+    testthat::expect_true(any(grepl(sprintf(" \\$ %s.*:", x), ffs)))
+  })
+})
+
+
+testthat::test_that("format.teal_slice skips empty mandatory fields show_all is FALSE", {
+  fs <- filter_var("dataname2", "varname3", 1:10/10, 0.2, TRUE, extra1 = "extraone", extra2 = "extratwo")
+  ffs <- strsplit(format(fs, show_all = FALSE), "\n")[[1]]
+  empty <- names(Filter(is.null, fs))
+  lapply(empty, function(x) {
+    testthat::expect_false(any(grepl(sprintf(" \\$ %s.*:", x), ffs)))
+  })
+})
+
+
+testthat::test_that("format.teal_slice prints additional information header", {
+  fs <- filter_var("dataname2", "varname3", 1:10/10, 0.2, TRUE, FALSE, extra1 = "extraone", extra2 = "extratwo")
+  ffs <- strsplit(format(fs), "\n")[[1]]
+  testthat::expect_true(any(grepl(" .. additional information", ffs)))
+})
+
+
+testthat::test_that("format.teal_slice prints optional fields with prefix", {
+  fs <- filter_var("dataname2", "varname3", 1:10/10, 0.2, TRUE, FALSE, extra1 = "extraone", extra2 = "extratwo")
+  ffs <- strsplit(format(fs), "\n")[[1]]
+  optional <- setdiff(names(fs), names(formals(filter_var)))
+  lapply(optional, function(x) {
+    testthat::expect_true(any(grepl(sprintf("     \\$ %s.*:", x), ffs)))
+  })
+})
+
+
+# format.teal_slices ----
+testthat::test_that("format.teal_slices returns a character string", {
+  fs1 <- filter_var("data", "var1")
+  fs2 <- filter_var("data", "var2")
+  fs <- filter_settings(fs1, fs2)
+  names(fs) <- c("one", "two")
+  testthat::expect_true(checkmate::check_string(format(fs, show_all = TRUE)))
+})
+
+testthat::test_that("format.teal_slices prints names of `tesl_slice`s, if any", {
+  fs1 <- filter_var("data", "var1")
+  fs2 <- filter_var("data", "var2")
+  fs <- filter_settings(fs1, fs2)
+  names(fs) <- c("one", "two")
+  ffs <- format(fs, show_all = TRUE)
+  nms <- names(fs)
+  lapply(nms, function(x) {
+    testthat::expect_true(any(grepl(sprintf("%s\nteal_slice", x), ffs)))
+  })
+})
+
+testthat::test_that("format.teal_slices prints numerical indices of `tesl_slice`s, if no names", {
+  fs1 <- filter_var("data", "var1")
+  fs2 <- filter_var("data", "var2")
+  fs <- filter_settings(fs1, fs2)
+  ffs <- format(fs, show_all = TRUE)
+  nms <- c("\\[\\[1]]", "\\[\\[2]]")
+  lapply(nms, function(x) {
+    testthat::expect_true(any(grepl(sprintf("%s\nteal_slice", x), ffs)))
+  })
+})
+
+testthat::test_that("format.teal_slices contains literal formatted representations of all included `teal_slice`s", {
+  fs1 <- filter_var("data", "var1")
+  fs2 <- filter_var("data", "var2")
+  fs <- filter_settings(fs1, fs2)
+  ffs <- format(fs, show_all = TRUE)
+  slices <- lapply(fs, format, show_all = TRUE)
+  lapply(slices, function(x) {
+    testthat::expect_true(any(grepl(x, ffs, fixed = TRUE)))
+  })
+})
+
+testthat::test_that("format.teal_slices prints exclude attribute", {
+  fs1 <- filter_var("data", "var1")
+  fs2 <- filter_var("data", "var2")
+  fs <- filter_settings(fs1, fs2)
+  ffs <- format(fs, show_all = TRUE)
+  testthat::expect_true(grepl("non-filterable variables: none", ffs))
+  fs <- filter_settings(fs1, fs2, exclude = list(data = "var2"))
+  ffs <- format(fs, show_all = TRUE)
+  testthat::expect_true(grepl("non-filterable variables:\n \\$ data: \"var2\"", ffs))
+})
+
+testthat::test_that("format.teal_slices prints count_type attribute", {
+  fs1 <- filter_var("data", "var1")
+  fs2 <- filter_var("data", "var2")
+  fs <- filter_settings(fs1, fs2)
+  ffs <- format(fs, show_all = TRUE)
+  testthat::expect_true(grepl("count type: none", ffs))
+})
+
+
+# helpers ----
 testthat::test_that("slices_field works", {
   fs1 <- filter_var("data", "var1")
   fs2 <- filter_var("data", "var2")
