@@ -170,6 +170,11 @@ testthat::test_that("remove_filter_state removes filters specified by `teal_slic
     adjust_states(shiny::isolate(filter_states$get_filter_state())),
     fs[2]
   )
+
+  shiny::isolate(
+    filter_states$remove_filter_state(filter_settings(filter_var(dataname = "test", varname = "Treatment")))
+  )
+  testthat::expect_length(shiny::isolate(filter_states$get_filter_state()), 0)
 })
 
 testthat::test_that("remove_filter_state raises warning when non-existent filter state specified", {
