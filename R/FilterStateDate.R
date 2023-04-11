@@ -246,7 +246,7 @@ DateFilterState <- R6::R6Class( # nolint
             "Invalid choices: lower is higher / equal to upper, or not in range of variable values.
             Setting defaults. Varname: %s, dataname: %s.",
             private$varname, private$dataname))
-          choices <- range(x, na.rm = TRUE)
+          choices <- range(private$x, na.rm = TRUE)
         }
       }
       private$set_is_choice_limited(private$x, choices)
