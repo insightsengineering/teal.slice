@@ -12,19 +12,19 @@
 #'
 #' @examples
 #' \dontrun{
-#' fs1 <- ChoicesFilterState$new(x = c("F", "M"),varname = "SEX")
-#' fs1$set_state(list(selected = c("F")))
+#' fs_ch <- ChoicesFilterState$new(x = c("F", "M"),varname = "SEX")
+#' fs_ch$set_state(list(selected = c("F")))
 #'
-#' fs2 <- RangeFilterState$new(x = 1:100, varname = "AGE")
-#' fs2$set_state(list(selected = c(20, 50)))
+#' fs_rng <- RangeFilterState$new(x = 1:100, varname = "AGE")
+#' fs_rng$set_state(list(selected = c(20, 50)))
 #'
-#' fs3 <- LogicalFilterState$new(x = c(TRUE, FALSE), varname = "SURV")
-#' fs3$set_state(list(selected = TRUE))
+#' fs_log <- LogicalFilterState$new(x = c(TRUE, FALSE), varname = "SURV")
+#' fs_log$set_state(list(selected = TRUE))
 #'
 #' calls <- list(
-#'   shiny::isolate(fs1$get_call()),
-#'   shiny::isolate(fs2$get_call()),
-#'   shiny::isolate(fs3$get_call())
+#'   shiny::isolate(fs_ch$get_call()),
+#'   shiny::isolate(fs_rng$get_call()),
+#'   shiny::isolate(fs_log$get_call())
 #' )
 #' calls_combine_by(calls, "&")
 #' }
