@@ -131,7 +131,7 @@ and is set only if object is initialized in \code{shiny}.
   varname,
   choices = NULL,
   selected = NULL,
-  keep_na = NULL,
+  keep_na = FALSE,
   keep_inf = NULL,
   fixed = FALSE,
   disabled = FALSE,
@@ -196,7 +196,7 @@ whether condition calls should be prefixed by dataname. Possible values:
 \subsection{Method \code{format()}}{
 Returns a formatted string representing this \code{DatetimeFilterState}.
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{DatetimeFilterState$format(indent = 0)}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{DatetimeFilterState$format(indent = 2)}\if{html}{\out{</div>}}
 }
 
 \subsection{Arguments}{

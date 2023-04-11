@@ -16,10 +16,10 @@ Handles filter states in a \code{MultiAssayExperiment}
 \item \href{#method-MAEFilterStates-new}{\code{MAEFilterStates$new()}}
 \item \href{#method-MAEFilterStates-format}{\code{MAEFilterStates$format()}}
 \item \href{#method-MAEFilterStates-get_fun}{\code{MAEFilterStates$get_fun()}}
-\item \href{#method-MAEFilterStates-srv_active}{\code{MAEFilterStates$srv_active()}}
 \item \href{#method-MAEFilterStates-get_filter_state}{\code{MAEFilterStates$get_filter_state()}}
 \item \href{#method-MAEFilterStates-set_filter_state}{\code{MAEFilterStates$set_filter_state()}}
 \item \href{#method-MAEFilterStates-remove_filter_state}{\code{MAEFilterStates$remove_filter_state()}}
+\item \href{#method-MAEFilterStates-srv_active}{\code{MAEFilterStates$srv_active()}}
 \item \href{#method-MAEFilterStates-ui_add}{\code{MAEFilterStates$ui_add()}}
 \item \href{#method-MAEFilterStates-srv_add}{\code{MAEFilterStates$srv_add()}}
 \item \href{#method-MAEFilterStates-clone}{\code{MAEFilterStates$clone()}}
@@ -127,27 +127,6 @@ For \code{MAEFilterStates} \code{MultiAssayExperiment::subsetByColData} is used.
 }
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-MAEFilterStates-srv_active"></a>}}
-\if{latex}{\out{\hypertarget{method-MAEFilterStates-srv_active}{}}}
-\subsection{Method \code{srv_active()}}{
-Server module
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{MAEFilterStates$srv_active(id)}\if{html}{\out{</div>}}
-}
-
-\subsection{Arguments}{
-\if{html}{\out{<div class="arguments">}}
-\describe{
-\item{\code{id}}{(\code{character(1)})\cr
-an ID string that corresponds with the ID used to call the module's UI function.}
-}
-\if{html}{\out{</div>}}
-}
-\subsection{Returns}{
-\code{moduleServer} function which returns \code{NULL}
-}
-}
-\if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-MAEFilterStates-get_filter_state"></a>}}
 \if{latex}{\out{\hypertarget{method-MAEFilterStates-get_filter_state}{}}}
 \subsection{Method \code{get_filter_state()}}{
@@ -203,6 +182,27 @@ specifying \code{FilterState} objects to remove;
 }
 \subsection{Returns}{
 \code{NULL} invisibly
+}
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-MAEFilterStates-srv_active"></a>}}
+\if{latex}{\out{\hypertarget{method-MAEFilterStates-srv_active}{}}}
+\subsection{Method \code{srv_active()}}{
+Server module
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{MAEFilterStates$srv_active(id)}\if{html}{\out{</div>}}
+}
+
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{id}}{(\code{character(1)})\cr
+an ID string that corresponds with the ID used to call the module's UI function.}
+}
+\if{html}{\out{</div>}}
+}
+\subsection{Returns}{
+\code{moduleServer} function which returns \code{NULL}
 }
 }
 \if{html}{\out{<hr>}}

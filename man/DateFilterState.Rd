@@ -128,7 +128,7 @@ Initialize a \code{FilterState} object
   varname,
   choices = NULL,
   selected = NULL,
-  keep_na = NULL,
+  keep_na = FALSE,
   keep_inf = NULL,
   fixed = FALSE,
   disabled = FALSE,
@@ -193,7 +193,7 @@ whether condition calls should be prefixed by dataname. Possible values:
 \subsection{Method \code{format()}}{
 Returns a formatted string representing this \code{DateFilterState}.
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{DateFilterState$format(indent = 0)}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{DateFilterState$format(indent = 2)}\if{html}{\out{</div>}}
 }
 
 \subsection{Arguments}{

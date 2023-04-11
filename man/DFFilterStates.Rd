@@ -160,11 +160,11 @@ isolate(filter_states$get_call())
 \item \href{#method-DFFilterStates-new}{\code{DFFilterStates$new()}}
 \item \href{#method-DFFilterStates-format}{\code{DFFilterStates$format()}}
 \item \href{#method-DFFilterStates-get_fun}{\code{DFFilterStates$get_fun()}}
-\item \href{#method-DFFilterStates-srv_active}{\code{DFFilterStates$srv_active()}}
 \item \href{#method-DFFilterStates-get_filter_state}{\code{DFFilterStates$get_filter_state()}}
 \item \href{#method-DFFilterStates-set_filter_state}{\code{DFFilterStates$set_filter_state()}}
 \item \href{#method-DFFilterStates-remove_filter_state}{\code{DFFilterStates$remove_filter_state()}}
 \item \href{#method-DFFilterStates-set_filterable_varnames}{\code{DFFilterStates$set_filterable_varnames()}}
+\item \href{#method-DFFilterStates-srv_active}{\code{DFFilterStates$srv_active()}}
 \item \href{#method-DFFilterStates-ui_add}{\code{DFFilterStates$ui_add()}}
 \item \href{#method-DFFilterStates-srv_add}{\code{DFFilterStates$srv_add()}}
 \item \href{#method-DFFilterStates-clone}{\code{DFFilterStates$clone()}}
@@ -277,27 +277,6 @@ For \code{DFFilterStates} this is \code{dplyr::filter}.
 }
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-DFFilterStates-srv_active"></a>}}
-\if{latex}{\out{\hypertarget{method-DFFilterStates-srv_active}{}}}
-\subsection{Method \code{srv_active()}}{
-Shiny server module.
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{DFFilterStates$srv_active(id)}\if{html}{\out{</div>}}
-}
-
-\subsection{Arguments}{
-\if{html}{\out{<div class="arguments">}}
-\describe{
-\item{\code{id}}{(\code{character(1)})\cr
-shiny module instance id}
-}
-\if{html}{\out{</div>}}
-}
-\subsection{Returns}{
-\code{moduleServer} function which returns \code{NULL}
-}
-}
-\if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-DFFilterStates-get_filter_state"></a>}}
 \if{latex}{\out{\hypertarget{method-DFFilterStates-get_filter_state}{}}}
 \subsection{Method \code{get_filter_state()}}{
@@ -404,6 +383,27 @@ are included.
 
 \subsection{Returns}{
 NULL invisibly
+}
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-DFFilterStates-srv_active"></a>}}
+\if{latex}{\out{\hypertarget{method-DFFilterStates-srv_active}{}}}
+\subsection{Method \code{srv_active()}}{
+Shiny server module.
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{DFFilterStates$srv_active(id)}\if{html}{\out{</div>}}
+}
+
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{id}}{(\code{character(1)})\cr
+shiny module instance id}
+}
+\if{html}{\out{</div>}}
+}
+\subsection{Returns}{
+\code{moduleServer} function which returns \code{NULL}
 }
 }
 \if{html}{\out{<hr>}}

@@ -130,8 +130,8 @@ Initialize a \code{FilterState} object for range selection
   varname,
   choices = NULL,
   selected = NULL,
-  keep_na = NULL,
-  keep_inf = NULL,
+  keep_na = FALSE,
+  keep_inf = FALSE,
   fixed = FALSE,
   disabled = FALSE,
   extract_type = character(0),
@@ -195,7 +195,7 @@ whether condition calls should be prefixed by dataname. Possible values:
 \subsection{Method \code{format()}}{
 Returns a formatted string representing this \code{RangeFilterState}.
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{RangeFilterState$format(indent = 0)}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{RangeFilterState$format(indent = 2)}\if{html}{\out{</div>}}
 }
 
 \subsection{Arguments}{

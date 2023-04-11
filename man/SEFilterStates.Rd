@@ -15,10 +15,10 @@ Handles filter states in a \code{SummaryExperiment}
 \itemize{
 \item \href{#method-SEFilterStates-new}{\code{SEFilterStates$new()}}
 \item \href{#method-SEFilterStates-format}{\code{SEFilterStates$format()}}
-\item \href{#method-SEFilterStates-srv_active}{\code{SEFilterStates$srv_active()}}
 \item \href{#method-SEFilterStates-get_filter_state}{\code{SEFilterStates$get_filter_state()}}
 \item \href{#method-SEFilterStates-set_filter_state}{\code{SEFilterStates$set_filter_state()}}
 \item \href{#method-SEFilterStates-remove_filter_state}{\code{SEFilterStates$remove_filter_state()}}
+\item \href{#method-SEFilterStates-srv_active}{\code{SEFilterStates$srv_active()}}
 \item \href{#method-SEFilterStates-ui_add}{\code{SEFilterStates$ui_add()}}
 \item \href{#method-SEFilterStates-srv_add}{\code{SEFilterStates$srv_add()}}
 \item \href{#method-SEFilterStates-clone}{\code{SEFilterStates$clone()}}
@@ -104,27 +104,6 @@ Returns the formatted string representing this \code{MAEFilterStates} object.
 }
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-SEFilterStates-srv_active"></a>}}
-\if{latex}{\out{\hypertarget{method-SEFilterStates-srv_active}{}}}
-\subsection{Method \code{srv_active()}}{
-Server module
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{SEFilterStates$srv_active(id)}\if{html}{\out{</div>}}
-}
-
-\subsection{Arguments}{
-\if{html}{\out{<div class="arguments">}}
-\describe{
-\item{\code{id}}{(\code{character(1)})\cr
-an ID string that corresponds with the ID used to call the module's UI function.}
-}
-\if{html}{\out{</div>}}
-}
-\subsection{Returns}{
-\code{moduleServer} function which returns \code{NULL}
-}
-}
-\if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-SEFilterStates-get_filter_state"></a>}}
 \if{latex}{\out{\hypertarget{method-SEFilterStates-get_filter_state}{}}}
 \subsection{Method \code{get_filter_state()}}{
@@ -181,6 +160,27 @@ specifying \code{FilterState} objects to remove;
 }
 \subsection{Returns}{
 \code{NULL} invisibly
+}
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-SEFilterStates-srv_active"></a>}}
+\if{latex}{\out{\hypertarget{method-SEFilterStates-srv_active}{}}}
+\subsection{Method \code{srv_active()}}{
+Server module
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{SEFilterStates$srv_active(id)}\if{html}{\out{</div>}}
+}
+
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{id}}{(\code{character(1)})\cr
+an ID string that corresponds with the ID used to call the module's UI function.}
+}
+\if{html}{\out{</div>}}
+}
+\subsection{Returns}{
+\code{moduleServer} function which returns \code{NULL}
 }
 }
 \if{html}{\out{<hr>}}

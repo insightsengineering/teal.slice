@@ -7,11 +7,13 @@
 \alias{is.teal_slice}
 \alias{as.teal_slice}
 \alias{c.teal_slice}
+\alias{format.teal_slice}
 \alias{print.teal_slice}
 \alias{is.teal_slices}
 \alias{as.teal_slices}
 \alias{[.teal_slices}
 \alias{c.teal_slices}
+\alias{format.teal_slices}
 \alias{print.teal_slices}
 \alias{slices_field}
 \alias{slices_which}
@@ -41,7 +43,9 @@ as.teal_slice(x)
 
 \method{c}{teal_slice}(...)
 
-\method{print}{teal_slice}(x, show_all = FALSE)
+\method{format}{teal_slice}(x, show_all = FALSE, ...)
+
+\method{print}{teal_slice}(x, ...)
 
 is.teal_slices(x)
 
@@ -50,6 +54,8 @@ as.teal_slices(x)
 \method{[}{teal_slices}(x, i)
 
 \method{c}{teal_slices}(...)
+
+\method{format}{teal_slices}(x, show_all = FALSE, ...)
 
 \method{print}{teal_slices}(x, ...)
 

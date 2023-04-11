@@ -73,8 +73,6 @@ Initialize a \code{FilterState} object
   x_reactive = reactive(NULL),
   dataname,
   varname,
-  choices = NULL,
-  selected = NULL,
   keep_na = NULL,
   keep_inf = NULL,
   fixed = FALSE,
@@ -135,27 +133,11 @@ self invisibly
 \if{html}{\out{<a id="method-FilterState-format"></a>}}
 \if{latex}{\out{\hypertarget{method-FilterState-format}{}}}
 \subsection{Method \code{format()}}{
-Returns a formatted string representing this \code{FilterState}.
+Virtual method for printing FilterState.
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{FilterState$format(indent = 0L, wrap_width = 76L)}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{FilterState$format()}\if{html}{\out{</div>}}
 }
 
-\subsection{Arguments}{
-\if{html}{\out{<div class="arguments">}}
-\describe{
-\item{\code{indent}}{(\code{numeric(1)})
-number of spaces before after each new line character of the formatted string;
-defaults to 0}
-
-\item{\code{wrap_width}}{(\code{numeric(1)})
-number of characters to wrap lines at in the printed output;
-allowed range is 30 to 120; defaults to 76}
-}
-\if{html}{\out{</div>}}
-}
-\subsection{Returns}{
-\code{character(1)} the formatted string
-}
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-FilterState-print"></a>}}

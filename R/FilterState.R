@@ -82,8 +82,6 @@ FilterState <- R6::R6Class( # nolint
                           x_reactive = reactive(NULL),
                           dataname,
                           varname,
-                          choices = NULL,
-                          selected = NULL,
                           keep_na = NULL,
                           keep_inf = NULL,
                           fixed = FALSE,

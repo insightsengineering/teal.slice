@@ -49,10 +49,10 @@ isolate(filter_states$get_call())
 \item \href{#method-FilterStates-get_fun}{\code{FilterStates$get_fun()}}
 \item \href{#method-FilterStates-get_filter_count}{\code{FilterStates$get_filter_count()}}
 \item \href{#method-FilterStates-remove_filter_state}{\code{FilterStates$remove_filter_state()}}
-\item \href{#method-FilterStates-clear_filter_states}{\code{FilterStates$clear_filter_states()}}
-\item \href{#method-FilterStates-ui_active}{\code{FilterStates$ui_active()}}
 \item \href{#method-FilterStates-get_filter_state}{\code{FilterStates$get_filter_state()}}
 \item \href{#method-FilterStates-set_filter_state}{\code{FilterStates$set_filter_state()}}
+\item \href{#method-FilterStates-clear_filter_states}{\code{FilterStates$clear_filter_states()}}
+\item \href{#method-FilterStates-ui_active}{\code{FilterStates$ui_active()}}
 \item \href{#method-FilterStates-ui_add}{\code{FilterStates$ui_add()}}
 \item \href{#method-FilterStates-srv_add}{\code{FilterStates$srv_add()}}
 \item \href{#method-FilterStates-clone}{\code{FilterStates$clone()}}
@@ -239,43 +239,6 @@ specifying \code{FilterState} objects to remove;
 }
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-FilterStates-clear_filter_states"></a>}}
-\if{latex}{\out{\hypertarget{method-FilterStates-clear_filter_states}{}}}
-\subsection{Method \code{clear_filter_states()}}{
-Remove all \code{FilterState} objects from this \code{FilterStates} object.
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{FilterStates$clear_filter_states()}\if{html}{\out{</div>}}
-}
-
-\subsection{Returns}{
-NULL
-}
-}
-\if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-FilterStates-ui_active"></a>}}
-\if{latex}{\out{\hypertarget{method-FilterStates-ui_active}{}}}
-\subsection{Method \code{ui_active()}}{
-Shiny module UI
-
-Shiny UI element that stores \code{FilterState} UI elements.
-Populated with elements created with \code{renderUI} in the module server.
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{FilterStates$ui_active(id)}\if{html}{\out{</div>}}
-}
-
-\subsection{Arguments}{
-\if{html}{\out{<div class="arguments">}}
-\describe{
-\item{\code{id}}{(\code{character(1)})\cr
-shiny element (module instance) id}
-}
-\if{html}{\out{</div>}}
-}
-\subsection{Returns}{
-\code{shiny.tag}
-}
-}
-\if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-FilterStates-get_filter_state"></a>}}
 \if{latex}{\out{\hypertarget{method-FilterStates-get_filter_state}{}}}
 \subsection{Method \code{get_filter_state()}}{
@@ -315,6 +278,43 @@ data which are supposed to be filtered}
 }
 \subsection{Returns}{
 function which throws an error
+}
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-FilterStates-clear_filter_states"></a>}}
+\if{latex}{\out{\hypertarget{method-FilterStates-clear_filter_states}{}}}
+\subsection{Method \code{clear_filter_states()}}{
+Remove all \code{FilterState} objects from this \code{FilterStates} object.
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{FilterStates$clear_filter_states()}\if{html}{\out{</div>}}
+}
+
+\subsection{Returns}{
+NULL
+}
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-FilterStates-ui_active"></a>}}
+\if{latex}{\out{\hypertarget{method-FilterStates-ui_active}{}}}
+\subsection{Method \code{ui_active()}}{
+Shiny module UI
+
+Shiny UI element that stores \code{FilterState} UI elements.
+Populated with elements created with \code{renderUI} in the module server.
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{FilterStates$ui_active(id)}\if{html}{\out{</div>}}
+}
+
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{id}}{(\code{character(1)})\cr
+shiny element (module instance) id}
+}
+\if{html}{\out{</div>}}
+}
+\subsection{Returns}{
+\code{shiny.tag}
 }
 }
 \if{html}{\out{<hr>}}
