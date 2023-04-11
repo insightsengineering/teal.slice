@@ -10,90 +10,95 @@ df2 <- data.frame(
   fact = sample(rep_len(letters, 100)),
   stringsAsFactors = TRUE
 )
-
 filtered_data <- teal.slice:::init_filtered_data(list(df1 = list(dataset = df1), df2 = list(dataset = df2)))
 
+# initialize ----
 testthat::test_that("FilterPanelAPI constructor accepts a FilteredData object", {
   testthat::expect_no_error(FilterPanelAPI$new(filtered_data))
-})
-
-testthat::test_that("FilterPanelAPI constructor throws error with a non FilteredData object", {
   testthat::expect_error(
     FilterPanelAPI$new(list(df1 = list(dataset = df1))),
     "Must inherit from class 'FilteredData', but has class 'list'."
   )
-
   testthat::expect_error(
     FilterPanelAPI$new(df1),
     "Must inherit from class 'FilteredData', but has class 'data.frame'."
   )
 })
 
-testthat::test_that("FilterPanelAPI$set_filter_state sets filters specified by the named list",
-  code = {
-    datasets <- FilterPanelAPI$new(filtered_data)
-
-    filter_list <- filter_settings(
-      filter_var(dataname = "df1", varname = "num", selected = c(5.1, 6.4), keep_na = FALSE, keep_inf = FALSE),
-      filter_var(dataname = "df1", varname = "fact",selected = c("a", "b"), keep_na = FALSE)
+# set_filter_state ----
+testthat::test_that("FilterPanelAPI$set_filter_state accepts `teal_slies` and named list (with warning)", {
+  fl <- list(
+    df1 = list(
+      num = list(selected = c(5.1, 6.4), keep_na = FALSE, keep_inf = FALSE),
+      fact = list(selected = c("a", "b"), keep_na = FALSE)
     )
-    shiny::isolate(datasets$set_filter_state(filter_list))
-    testthat::expect_equal(
-      shiny::isolate(datasets$get_filter_state()),
-      shiny::isolate(filtered_data$get_filter_state())
-    )
-  }
-)
+  )
+  fs <- filter_settings(
+    filter_var(dataname = "df1", varname = "num", selected = c(5.1, 6.4), keep_na = FALSE, keep_inf = FALSE),
+    filter_var(dataname = "df1", varname = "fact", selected = c("a", "b"), keep_na = FALSE)
+  )
+  datasets1 <- FilterPanelAPI$new(filtered_data)
+  testthat::expect_warning(shiny::isolate(datasets1$set_filter_state(fl)))
+  datasets2 <- FilterPanelAPI$new(filtered_data)
+  testthat::expect_no_error(shiny::isolate(datasets2$set_filter_state(fs)))
 
-testthat::test_that("FilterPanelAPI$get_filter_state returns `teal_slices` identical to input",
-  code = {
-    datasets <- FilterPanelAPI$new(filtered_data)
+  testthat::expect_equal(datasets1, datasets2)
+})
 
-    filter_list <- filter_settings(
-      filter_var(dataname = "df1", varname = "num", selected = c(5.1, 6.4), keep_na = FALSE, keep_inf = FALSE),
-      filter_var(dataname = "df1", varname = "fact",selected = c("a", "b"), keep_na = FALSE),
-      filter_var(dataname = "df2", varname = "int", selected = c(52, 65), keep_na = FALSE, keep_inf = FALSE)
-    )
-    shiny::isolate(datasets$set_filter_state(filter_list))
-    fs_wo_attr <- shiny::isolate(datasets$get_filter_state())
-
-    testthat::expect_equal(
-      adjust_states(fs_wo_attr),
-      filter_list
-    )
-  }
-)
-
-testthat::test_that("FilterPanelAPI$remove_filter_state removes filter states specified by `teal_slices`", {
+testthat::test_that("FilterPanelAPI$set_filter_state adds filter states" , {
   datasets <- FilterPanelAPI$new(filtered_data)
-  filter_list <- filter_settings(
+  fs <- filter_settings(
+    filter_var(dataname = "df1", varname = "num", selected = c(5.1, 6.4), keep_na = FALSE, keep_inf = FALSE),
+    filter_var(dataname = "df1", varname = "fact", selected = c("a", "b"), keep_na = FALSE)
+  )
+  shiny::isolate(datasets$set_filter_state(fs))
+
+  testthat::expect_length(shiny::isolate(datasets$get_filter_state()), 2)
+})
+
+# get_filter_state ----
+testthat::test_that("FilterPanelAPI$get_filter_state returns `teal_slices` identical to input", {
+  datasets <- FilterPanelAPI$new(filtered_data)
+
+  fs <- filter_settings(
     filter_var(dataname = "df1", varname = "num", selected = c(5.1, 6.4), keep_na = FALSE, keep_inf = FALSE),
     filter_var(dataname = "df1", varname = "fact",selected = c("a", "b"), keep_na = FALSE),
     filter_var(dataname = "df2", varname = "int", selected = c(52, 65), keep_na = FALSE, keep_inf = FALSE)
   )
-  shiny::isolate(datasets$set_filter_state(filter_list))
-  shiny::isolate(datasets$remove_filter_state(filter_settings(filter_var(dataname = "df1", varname = "num"))))
-  fs_wo_attr <- shiny::isolate(datasets$get_filter_state())
+  shiny::isolate(datasets$set_filter_state(fs))
 
   testthat::expect_equal(
-    adjust_states(fs_wo_attr),
-    filter_list <- filter_settings(
-      filter_var(dataname = "df1", varname = "fact",selected = c("a", "b"), keep_na = FALSE),
-      filter_var(dataname = "df2", varname = "int", selected = c(52, 65), keep_na = FALSE, keep_inf = FALSE)
-    )
+    adjust_states(shiny::isolate(datasets$get_filter_state())),
+    fs
   )
 })
 
-testthat::test_that(
-  "FilterPanelAPI$clear_filter_states removes all filters of datasets in FilterPanelAPI",
-  code = {
+# remove_filter_state ----
+testthat::test_that("FilterPanelAPI$remove_filter_state removes filter states specified by `teal_slices`", {
+  datasets <- FilterPanelAPI$new(filtered_data)
+  fs <- filter_settings(
+    filter_var(dataname = "df1", varname = "num", selected = c(5.1, 6.4), keep_na = FALSE, keep_inf = FALSE),
+    filter_var(dataname = "df1", varname = "fact",selected = c("a", "b"), keep_na = FALSE),
+    filter_var(dataname = "df2", varname = "int", selected = c(52, 65), keep_na = FALSE, keep_inf = FALSE)
+  )
+  shiny::isolate(datasets$set_filter_state(fs))
+  shiny::isolate(datasets$remove_filter_state(filter_settings(filter_var(dataname = "df1", varname = "num"))))
+
+  testthat::expect_equal(
+    adjust_states(shiny::isolate(datasets$get_filter_state())),
+    fs[-1]
+  )
+})
+
+# clear_filter_states ----
+testthat::test_that("FilterPanelAPI$clear_filter_states removes all filters of datasets in FilterPanelAPI", {
     datasets <- FilterPanelAPI$new(filtered_data)
-    filter_list <- filter_settings(
+    fs <- filter_settings(
       filter_var(dataname = "df1", varname = "num", selected = c(5.1, 6.4), keep_na = FALSE, keep_inf = FALSE),
       filter_var(dataname = "df1", varname = "fact",selected = c("a", "b"), keep_na = FALSE),
       filter_var(dataname = "df2", varname = "int", selected = c(52, 65), keep_na = FALSE, keep_inf = FALSE)
     )
-    shiny::isolate(datasets$set_filter_state(filter_list))
+    shiny::isolate(datasets$set_filter_state(fs))
 
     testthat::expect_equal(
       length(shiny::isolate(datasets$get_filter_state())),
@@ -109,60 +114,49 @@ testthat::test_that(
   }
 )
 
-testthat::test_that(
-  "FilterPanelAPI$clear_filter_states remove the filters of the desired dataset only",
-  code = {
-    datasets <- FilterPanelAPI$new(filtered_data)
-    filter_list <- filter_settings(
-      filter_var(dataname = "df1", varname = "num", selected = c(5.1, 6.4), keep_na = FALSE, keep_inf = FALSE),
-      filter_var(dataname = "df1", varname = "fact",selected = c("a", "b"), keep_na = FALSE),
-      filter_var(dataname = "df2", varname = "int", selected = c(52, 65), keep_na = FALSE, keep_inf = FALSE)
-    )
-    shiny::isolate(datasets$set_filter_state(filter_list))
+testthat::test_that("FilterPanelAPI$clear_filter_states remove the filters of the desired dataset only", {
+  datasets <- FilterPanelAPI$new(filtered_data)
+  fs <- filter_settings(
+    filter_var(dataname = "df1", varname = "num", selected = c(5.1, 6.4), keep_na = FALSE, keep_inf = FALSE),
+    filter_var(dataname = "df1", varname = "fact",selected = c("a", "b"), keep_na = FALSE),
+    filter_var(dataname = "df2", varname = "int", selected = c(52, 65), keep_na = FALSE, keep_inf = FALSE)
+  )
+  shiny::isolate(datasets$set_filter_state(fs))
 
-    testthat::expect_equal(
-      length(shiny::isolate(datasets$get_filter_state())),
-      3
-    )
+  testthat::expect_equal(
+    length(shiny::isolate(datasets$get_filter_state())),
+    3
+  )
 
-    shiny::isolate(datasets$clear_filter_states(datanames = "df1"))
+  shiny::isolate(datasets$clear_filter_states(datanames = "df1"))
 
-    testthat::expect_equal(
-      length(shiny::isolate(datasets$get_filter_state())),
-      1
-    )
-    fs_wo_attr <- shiny::isolate(datasets$get_filter_state())
+  testthat::expect_equal(
+    length(shiny::isolate(datasets$get_filter_state())),
+    1
+  )
 
-    testthat::expect_equal(
-      adjust_states(fs_wo_attr),
-      filter_list <- filter_settings(
-        filter_var(dataname = "df2", varname = "int", selected = c(52, 65), keep_na = FALSE, keep_inf = FALSE)
-      )
-    )
-  }
-)
+  testthat::expect_equal(
+    adjust_states(shiny::isolate(datasets$get_filter_state())),
+    fs[3]
+  )
+})
 
-
+# behavior ----
 testthat::test_that("filter_panel_api neutral when filter panel is disabled", {
   shiny::testServer(
     filtered_data$srv_filter_panel,
     expr = {
-      filtered_data <- teal.slice:::init_filtered_data(
-        list(df1 = list(dataset = df1), df2 = list(dataset = df2))
-      )
       filtered_data$filter_panel_disable()
-      fs <- FilterPanelAPI$new(filtered_data)
-      filter_list <- filter_settings(
+      datasets <- FilterPanelAPI$new(filtered_data)
+      fs <- filter_settings(
         filter_var(dataname = "df1", varname = "num", selected = c(5.1, 6.4), keep_na = FALSE, keep_inf = FALSE),
         filter_var(dataname = "df1", varname = "fact",selected = c("a", "b"), keep_na = FALSE),
         filter_var(dataname = "df2", varname = "int", selected = c(52, 65), keep_na = FALSE, keep_inf = FALSE)
       )
-      testthat::expect_warning(fs$set_filter_state(filter_list))
-      testthat::expect_warning(fs$clear_filter_states(datanames = "df1"))
+      testthat::expect_warning(datasets$set_filter_state(fs))
+      testthat::expect_warning(datasets$clear_filter_states(datanames = "df1"))
 
-      fs_wo_attr <- shiny::isolate(fs$get_filter_state())
-
-      testthat::expect_null(fs_wo_attr,)
+      testthat::expect_null(shiny::isolate(datasets$get_filter_state()))
     }
   )
 })
@@ -172,29 +166,142 @@ testthat::test_that("filter_panel_api under disable/enable filter panel", {
   shiny::testServer(
     filtered_data$srv_filter_panel,
     expr = {
-      filtered_data <- teal.slice:::init_filtered_data(
-        list(df1 = list(dataset = df1), df2 = list(dataset = df2))
-      )
       filtered_data$filter_panel_disable()
-      fs <- FilterPanelAPI$new(filtered_data)
-      filter_list <- filter_settings(
+      datasets <- FilterPanelAPI$new(filtered_data)
+      fs <- filter_settings(
         filter_var(dataname = "df1", varname = "num", selected = c(5.1, 6.4), keep_na = FALSE, keep_inf = FALSE),
         filter_var(dataname = "df1", varname = "fact",selected = c("a", "b"), keep_na = FALSE),
         filter_var(dataname = "df2", varname = "int", selected = c(52, 65), keep_na = FALSE, keep_inf = FALSE)
       )
-      testthat::expect_warning(fs$set_filter_state(filter_list))
-      testthat::expect_warning(fs$clear_filter_states(datanames = "df1"))
+      testthat::expect_warning(datasets$set_filter_state(fs))
+      testthat::expect_warning(datasets$clear_filter_states(datanames = "df1"))
       filtered_data$filter_panel_enable()
-      fs$set_filter_state(filter_list)
-      fs$clear_filter_states(datanames = "df1")
-      fs_wo_attr <- shiny::isolate(fs$get_filter_state())
+      datasets$set_filter_state(fs)
+      datasets$clear_filter_states(datanames = "df1")
 
       testthat::expect_equal(
-        adjust_states(fs_wo_attr),
-        filter_list <- filter_settings(
-          filter_var(dataname = "df2", varname = "int", selected = c(52, 65), keep_na = FALSE, keep_inf = FALSE)
-        )
+        adjust_states(shiny::isolate(datasets$get_filter_state())),
+        fs[3]
       )
     }
   )
+})
+
+
+
+
+# WRAPPER FUNCTIONS ----
+# set_filter_state ----
+testthat::test_that("set_filter_state accepts `teal_slices` and nested list", {
+  utils::data(miniACC, package = "MultiAssayExperiment")
+  datasets <- init_filtered_data(
+    x = list(
+      iris = list(dataset = iris),
+      mae = list(dataset = miniACC)
+    )
+  )
+  fs <- list(
+    iris = list(
+      Species = list(selected = c("setosa", "versicolor")),
+      Sepal.Length = list(selected = c(5.1, 6.4))
+    ),
+    mae = list(
+      subjects = list(
+        years_to_birth = list(selected = c(30, 50), keep_na = TRUE, keep_inf = FALSE),
+        vital_status = list(selected = "1", keep_na = FALSE),
+        gender = list(selected = "female", keep_na = TRUE)
+      ),
+      RPPAArray = list(
+        subset = list(
+          ARRAY_TYPE = list(selected = "", keep_na = TRUE)
+        )
+      )
+    )
+  )
+
+  testthat::expect_no_error(set_filter_state(datasets, filter = fs))
+  testthat::expect_no_error(set_filter_state(datasets, filter = as.teal_slices(fs)))
+  testthat::expect_error(
+    set_filter_state(datasets, filter = as.teal_slices(unclass(as.teal_slices(fs)))),
+    "Assertion on 'x' failed"
+  )
+})
+
+# get_filter_state ----
+testthat::test_that("get_filter_state returns `teal_slices` identical to that used in input", {
+  utils::data(miniACC, package = "MultiAssayExperiment")
+  datasets <- init_filtered_data(
+    x = list(
+      iris = list(dataset = iris),
+      mae = list(dataset = miniACC)
+    )
+  )
+  fs <- filter_settings(
+    filter_var("iris", "Species", selected = c("setosa", "versicolor")),
+    filter_var("iris", "Sepal.Length", selected = c(5.1, 6.4)),
+    filter_var("mae", "years_to_birth", selected = c(30, 50),
+               keep_na = TRUE, keep_inf = FALSE, datalabel = "subjects", target = "y"),
+    filter_var("mae", "vital_status", selected = "1", keep_na = FALSE, datalabel = "subjects", target = "y"),
+    filter_var("mae", "gender", selected = "female", keep_na = TRUE, datalabel = "subjects", target = "y"),
+    filter_var("mae", "ARRAY_TYPE", selected = "", keep_na = TRUE, datalabel = "RPPAArray", target = "subset")
+  )
+  set_filter_state(datasets, filter = fs)
+
+  testthat::expect_identical(
+    adjust_states(shiny::isolate(get_filter_state(datasets))),
+    fs
+  )
+})
+
+# remove_filter_state ----
+testthat::test_that("remove_filter_state removes filter state specified by `teal_slices`", {
+  utils::data(miniACC, package = "MultiAssayExperiment")
+  datasets <- init_filtered_data(
+    x = list(
+      iris = list(dataset = iris),
+      mae = list(dataset = miniACC)
+    )
+  )
+  fs <- filter_settings(
+    filter_var("iris", "Species", selected = c("setosa", "versicolor")),
+    filter_var("iris", "Sepal.Length", selected = c(5.1, 6.4)),
+    filter_var("mae", "years_to_birth", selected = c(30, 50),
+               keep_na = TRUE, keep_inf = FALSE, datalabel = "subjects", target = "y"),
+    filter_var("mae", "vital_status", selected = "1", keep_na = FALSE, datalabel = "subjects", target = "y"),
+    filter_var("mae", "gender", selected = "female", keep_na = TRUE, datalabel = "subjects", target = "y"),
+    filter_var("mae", "ARRAY_TYPE", selected = "", keep_na = TRUE, datalabel = "RPPAArray", target = "subset")
+  )
+  set_filter_state(datasets, fs)
+  testthat::expect_no_error(
+    remove_filter_state(datasets, filter_settings(filter_var(dataname = "iris", varname = "Species")))
+  )
+  testthat::expect_identical(
+    adjust_states(shiny::isolate(get_filter_state(datasets))),
+    fs[-1]
+  )
+})
+
+# clear_filter_states ----
+testthat::test_that("clear_filter_states removes all filter states", {
+  utils::data(miniACC, package = "MultiAssayExperiment")
+  datasets <- init_filtered_data(
+    x = list(
+      iris = list(dataset = iris),
+      mae = list(dataset = miniACC)
+    )
+  )
+  fs <- filter_settings(
+    filter_var("iris", "Species", selected = c("setosa", "versicolor")),
+    filter_var("iris", "Sepal.Length", selected = c(5.1, 6.4)),
+    filter_var("mae", "years_to_birth", selected = c(30, 50),
+               keep_na = TRUE, keep_inf = FALSE, datalabel = "subjects", target = "y"),
+    filter_var("mae", "vital_status", selected = "1", keep_na = FALSE, datalabel = "subjects", target = "y"),
+    filter_var("mae", "gender", selected = "female", keep_na = TRUE, datalabel = "subjects", target = "y"),
+    filter_var("mae", "ARRAY_TYPE", selected = "", keep_na = TRUE, datalabel = "RPPAArray", target = "subset")
+  )
+  set_filter_state(datasets, fs)
+  testthat::expect_no_error(
+    clear_filter_states(datasets)
+  )
+  testthat::expect_null(shiny::isolate(get_filter_state(datasets)))
 })
