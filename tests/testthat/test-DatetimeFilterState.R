@@ -43,7 +43,7 @@ testthat::test_that("constructor raises error when selection is not Datetime or 
 testthat::test_that("constructor raises warning when choices is out of range", {
   testthat::expect_warning(
     DatetimeFilterState$new(
-      posixct, dataname = "data", varname = "variable", chioces = range(posixct) + c(-1, 1)
+      posixct, dataname = "data", varname = "variable", choices = range(posixct) + c(-1, 1)
     ),
     "outside of variable range"
   )
