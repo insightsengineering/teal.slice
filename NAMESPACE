@@ -3,6 +3,8 @@
 S3method("[",teal_slices)
 S3method(c,teal_slice)
 S3method(c,teal_slices)
+S3method(format,teal_slice)
+S3method(format,teal_slices)
 S3method(get_supported_filter_varnames,FilteredDataset)
 S3method(get_supported_filter_varnames,MAEFilteredDataset)
 S3method(get_supported_filter_varnames,default)
