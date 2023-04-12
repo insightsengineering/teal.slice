@@ -26,6 +26,7 @@
 #'   shiny::isolate(fs_rng$get_call()),
 #'   shiny::isolate(fs_log$get_call())
 #' )
+#'
 #' calls_combine_by(calls, "&")
 #' }
 #' @return a combined `call`
