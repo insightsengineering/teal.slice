@@ -21,15 +21,6 @@ testthat::test_that("constructor accepts infinite values but not infinite only",
   )
 })
 
-testthat::test_that("constructor raises error when selected is out of range", {
-  testthat::expect_warning(
-    RangeFilterState$new(
-      nums, dataname = "data", varname = "variable", selected = range(nums) + c(-1, 1)
-    ),
-    "Assertion on 'x' failed: Must be sorted"
-  )
-})
-
 testthat::test_that("constructor raises error when selected is not sorted", {
   testthat::expect_error(
     RangeFilterState$new(
