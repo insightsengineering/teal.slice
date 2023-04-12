@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE coverage SYSTEM "https://raw.githubusercontent.com/cobertura/cobertura/master/cobertura/src/site/htdocs/xml/coverage-04.dtd">
-<coverage line-rate="0.570238095238095" branch-rate="0" lines-covered="2395" lines-valid="4200" branches-covered="0" branches-valid="0" complexity="0" version="3.6.2" timestamp="2023-04-12 07:43:58">
+<coverage line-rate="0.570238095238095" branch-rate="0" lines-covered="2395" lines-valid="4200" branches-covered="0" branches-valid="0" complexity="0" version="3.6.2" timestamp="2023-04-12 10:11:18">
   <sources>
     <source>/__w/teal.slice/teal.slice/teal.slice</source>
   </sources>
@@ -11,24 +11,24 @@
           <methods>
             <method name="calls_combine_by" signature="" line-rate="1" branch-rate="0" complexity="0">
               <lines>
-                <line number="35" hits="174" branch="false"/>
-                <line number="36" hits="53" branch="false"/>
-                <line number="37" hits="173" branch="false"/>
-                <line number="39" hits="171" branch="false"/>
-                <line number="40" hits="171" branch="false"/>
-                <line number="41" hits="171" branch="false"/>
-                <line number="42" hits="171" branch="false"/>
+                <line number="25" hits="174" branch="false"/>
+                <line number="26" hits="53" branch="false"/>
+                <line number="27" hits="173" branch="false"/>
+                <line number="29" hits="171" branch="false"/>
+                <line number="30" hits="171" branch="false"/>
+                <line number="31" hits="171" branch="false"/>
+                <line number="32" hits="171" branch="false"/>
               </lines>
             </method>
           </methods>
           <lines>
-            <line number="35" hits="174" branch="false"/>
-            <line number="36" hits="53" branch="false"/>
-            <line number="37" hits="173" branch="false"/>
-            <line number="39" hits="171" branch="false"/>
-            <line number="40" hits="171" branch="false"/>
-            <line number="41" hits="171" branch="false"/>
-            <line number="42" hits="171" branch="false"/>
+            <line number="25" hits="174" branch="false"/>
+            <line number="26" hits="53" branch="false"/>
+            <line number="27" hits="173" branch="false"/>
+            <line number="29" hits="171" branch="false"/>
+            <line number="30" hits="171" branch="false"/>
+            <line number="31" hits="171" branch="false"/>
+            <line number="32" hits="171" branch="false"/>
           </lines>
         </class>
         <class name="choices_labeled.R" filename="R/choices_labeled.R" line-rate="0.714285714285714" branch-rate="0" complexity="0">
