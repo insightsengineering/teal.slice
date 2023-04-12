@@ -12,21 +12,11 @@
 #'
 #' @examples
 #' \dontrun{
-#' fs_ch <- ChoicesFilterState$new(x = c("F", "M"), varname = "SEX")
-#' fs_ch$set_state(list(selected = c("F")))
-#'
-#' fs_rng <- RangeFilterState$new(x = 1:100, varname = "AGE")
-#' fs_rng$set_state(list(selected = c(20, 50)))
-#'
-#' fs_log <- LogicalFilterState$new(x = c(TRUE, FALSE), varname = "SURV")
-#' fs_log$set_state(list(selected = TRUE))
-#'
 #' calls <- list(
-#'   shiny::isolate(fs_ch$get_call()),
-#'   shiny::isolate(fs_rng$get_call()),
-#'   shiny::isolate(fs_log$get_call())
+#'   quote(SEX == "F"),              # subsetting on factor
+#'   quote(AGE >= 20 & AGE <= 50),   # subsetting on range
+#'   quote(!SURV)                    # subsetting on logical
 #' )
-#'
 #' calls_combine_by(calls, "&")
 #' }
 #' @return a combined `call`
