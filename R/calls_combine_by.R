@@ -12,7 +12,7 @@
 #'
 #' @examples
 #' \dontrun{
-#' fs_ch <- ChoicesFilterState$new(x = c("F", "M"),varname = "SEX")
+#' fs_ch <- ChoicesFilterState$new(x = c("F", "M"), varname = "SEX")
 #' fs_ch$set_state(list(selected = c("F")))
 #'
 #' fs_rng <- RangeFilterState$new(x = 1:100, varname = "AGE")
