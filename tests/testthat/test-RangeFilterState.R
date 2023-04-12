@@ -2,8 +2,7 @@ nums <- 1:10
 
 # initialize ----
 testthat::test_that("constructor accepts numerical values", {
-  testthat::expect_no_error(
-    RangeFilterState$new(nums, dataname = "data", varname = "variable"))
+  testthat::expect_no_error(RangeFilterState$new(nums, dataname = "data", varname = "variable"))
   testthat::expect_error(
     RangeFilterState$new(as.character(nums), dataname = "data", varname = "variable"), "Assertion on 'x' failed")
 })
