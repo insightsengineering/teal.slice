@@ -168,6 +168,28 @@ LogicalFilterState <- R6::R6Class( # nolint
     },
 
     #' @description
+    #' Returns a formatted string representing this `FilterState`.
+    #'
+    #' @param indent (`numeric(1)`)
+    #'   number of spaces before after each new line character of the formatted string;
+    #'   defaults to 0
+    #'
+    #' @return `character(1)` the formatted string
+    #'
+    format = function(indent = 2L) {
+      checkmate::assert_number(indent, finite = TRUE, lower = 0L)
+      sprintf(
+        "%sFiltering on: %s\n%sSelected values: %s\n%sInclude missing values: %s",
+        format("", width = indent),
+        private$varname,
+        format("", width = indent * 2),
+        toString(private$get_selected()),
+        format("", width = indent * 2),
+        private$get_keep_na()
+      )
+    },
+
+    #' @description
     #' Answers the question of whether the current settings and values selected actually filters out any values.
     #' @return logical scalar
     is_any_filtered = function() {
