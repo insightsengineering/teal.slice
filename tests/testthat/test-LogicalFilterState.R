@@ -63,6 +63,47 @@ testthat::test_that("get_call returns appropriate call depending on selection st
   )
 })
 
+
+# format ----
+testthat::test_that("format accepts numeric as indent", {
+  filter_state <- LogicalFilterState$new(logs, dataname = "data", varname = "variable")
+  testthat::expect_no_error(shiny::isolate(filter_state$format(indent = 0)))
+  testthat::expect_error(shiny::isolate(filter_state$format(indent = "0")), "Assertion on 'indent' failed")
+})
+
+testthat::test_that("format returns a string representation the FilterState object", {
+  filter_state <- LogicalFilterState$new(logs, dataname = "data", varname = "variable")
+  filter_state$set_state(filter_var(dataname = "data", varname = "variable", keep_na = FALSE))
+  testthat::expect_equal(
+    shiny::isolate(filter_state$format()),
+    paste(
+      "  Filtering on: variable",
+      "    Selected values: TRUE",
+      "    Include missing values: FALSE",
+      sep = "\n"
+    )
+  )
+})
+
+testthat::test_that("format prepends spaces to every line of the returned string", {
+  filter_state <- LogicalFilterState$new(logs, dataname = "data", varname = "variable")
+  filter_state$set_state(filter_var(dataname = "data", varname = "variable", keep_na = FALSE))
+  for (i in 0:3) {
+    testthat::expect_equal(
+      shiny::isolate(filter_state$format(indent = i)),
+      paste(format("", width = i),
+            c(
+              "Filtering on: variable",
+              sprintf("%sSelected values: TRUE", format("", width = i)),
+              sprintf("%sInclude missing values: FALSE", format("", width = i))
+            ),
+            sep = "", collapse = "\n"
+      )
+    )
+  }
+})
+
+
 # is_any_filtered ----
 testthat::test_that("is_any_filtered works properly when both TRUE and FALSE are present", {
   filter_state <- LogicalFilterState$new(x = logs, dataname = "data",varname = "variable")
