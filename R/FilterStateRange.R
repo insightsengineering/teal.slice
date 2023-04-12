@@ -299,13 +299,11 @@ RangeFilterState <- R6::R6Class( # nolint
         choices <- x_range
         private$slider_ticks <- signif(x_range, digits = 10)
         private$slider_step <- NULL
-        if (is.null(private$selected)) private$selected <- x_range
       } else {
         x_pretty <- pretty(x_range, 100L)
         choices <- range(x_pretty)
         private$slider_ticks <- signif(x_pretty, digits = 10)
         private$slider_step <- signif(private$get_pretty_range_step(x_pretty), digits = 10)
-        if (is.null(private$selected)) private$selected <- range(x_pretty)
       }
       private$choices <- choices
       invisible(NULL)
