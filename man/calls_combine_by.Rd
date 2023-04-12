@@ -26,7 +26,7 @@ Combine list of calls by specific operator
 \dontrun{
 calls <- list(
   quote(SEX == "F"), # subsetting on factor
-  quote(AGE >= 30 & AGE <= 50), # subsetting on range
+  quote(AGE >= 20 & AGE <= 50), # subsetting on range
   quote(!SURV) # subsetting on logical
 )
 calls_combine_by(calls, "&")
