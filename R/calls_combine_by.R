@@ -13,12 +13,10 @@
 #' @examples
 #' \dontrun{
 #' calls <- list(
-#'   call_condition_choice("SEX", "F"),
-#'   call_condition_range("AGE", c(20, 50)),
-#'   call_condition_choice("ARM", "ARM: A"),
-#'   call_condition_logical("SURV", TRUE)
+#'   quote(SEX == "F"),              # subsetting on factor
+#'   quote(AGE >= 20 & AGE <= 50),   # subsetting on range
+#'   quote(!SURV)                    # subsetting on logical
 #' )
-#' calls <- lapply(calls, str2lang)
 #' calls_combine_by(calls, "&")
 #' }
 #' @return a combined `call`
