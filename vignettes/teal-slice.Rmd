@@ -95,9 +95,11 @@ if (interactive()) {
 The `FilteredData` object (`datasets` above) provides additional methods (such as `datasets$get_call(<dataname>)` to get the code used to filter the data) and is also possible to programmatically set the state of the filter panel using the `set_filter_state` function for example:
 
 ```{r, eval=FALSE}
-set_filter_state(
-  datasets,
-  list(iris = list(Species = list(selected = c("setosa", "versicolor"))))
+shiny::isolate(
+  set_filter_state(
+    datasets,
+    list(iris = list(Species = list(selected = c("setosa", "versicolor"))))
+  )
 )
 ```
 
