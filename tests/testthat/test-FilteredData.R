@@ -730,7 +730,7 @@ testthat::test_that("switching disable/enable button caches and restores state",
   )
   filtered_data$set_filter_state(fs)
   shiny::testServer(
-    filtered_data$srv_filter_panel,
+    filtered_data$srv_active,
     expr = {
       cached <- filtered_data$get_filter_state()
       testthat::expect_true(filtered_data$get_filter_panel_active())
