@@ -5,27 +5,27 @@
 #'
 #' These functions create and manage filter state specifications.
 #' A single filter state can be fully described by a `teal_slice` object and such
-#' objects will be used to create, modify, and delete filter state.
+#' objects will be used to create, modify, and delete a filter state.
 #'
-#' A `teal_slice` contains a number of common elements (all named arguments of `filter_var`)
+#' A `teal_slice` contains a number of common fields (all named arguments of `filter_var`)
 #' but only `dataname` and `varname` are mandatory, while the others have default values.
 #' Setting any of the other values to NULL means that these parameters will not be modified
 #' (when setting an existing state) or that they will be determined by data (when creating new a new one).
-#' Each of the common elements corresponds to one private field in `FilterState`
+#' Each of the common fields corresponds to one private field in `FilterState`
 #' where it is stored and from where it is retrieved when calling `FiterState$get_state`.
 #'
-#' A `teal_slice` can also contain any number of additional elements, passed to `...`
+#' A `teal_slice` can also contain any number of additional fields, passed to `...`
 #' as `name:value` pairs. These are collated into a list and stored in the
 #' `private$extras` field.
 #'
-#' All `teal_slice` elements can be passed as arguments to `FilterState` constructors.
+#' All `teal_slice` fields can be passed as arguments to `FilterState` constructors.
 #' A `teal_slice` can be passed to `FilterState$set_state`, which will modify the state.
-#' However, once a `FilterState` is created, only three values can be set with a `teal_slice`:
-#' `selected`, `keep_na` and `keep_inf`.
+#' However, once a `FilterState` is created, only the **mutable** features can be set with a `teal_slice`:
+#' `selected`, `keep_na`, `keep_inf`, and `disabled`.
 #'
-#' Special consideration is given to the `fixed` element.
-#' This is always a logical flag that defaults to FALSE.
-#' In a `FilterState` instantiated with `fixed = TRUE` **none** of the state features can be changed.
+#' Special consideration is given to the `fixed` field. This is always a logical flag that defaults to FALSE.
+#' In a `FilterState` instantiated with `fixed = TRUE` the features `selected`, `keep_na`, `keep_inf`
+#' cannot be changed but the`disabled` can.
 #'
 #' `filter_var` creates a `teal_slice` object, which specifies a filter for a single variable,
 #' passed to and resolved by `FilterState` objects.
@@ -34,16 +34,31 @@
 #' as well as `filter_panel_api` wrapper functions.
 #' `teal_slices` also specifies which variables cannot be filtered
 #' and how observations are tallied, which is resolved by `FilterStates`.
+#' 
+#' @section Filters in `SumarizedExperiment` and `MultiAssayExperiment` objects:
+#' 
+#' To establish a filter on a column in a `data.frame`, `dataname` and `varname` are sufficient.
+#' Filter states created created for `SummarizedExperiments` require more information 
+#' as each variable is either located in the `rowData` or `colData` slots. 
+#' Thus, `teal_slice` objects taht refer to such filter states must also contain the field `target` 
+#' that specifies "subset" for variales in `rowData` and "select" for those in `colData`.
+#' 
+#' Likewise, observations in a `MultiAssayExpeeiment` can be filtered based on the content of the `colData` slot
+#' or based on the contents of `rowData` and `colData` of any of its experiments. Hence, another field is necessary.
+#' `teal_slice` objects refering to `MultiAssayExperiment` objects must contain the field `datalabel`
+#' that names either an experiment (as listed in `experimentList(<MAE>)`) or "subjects" 
+#' if it referes to the MAE's `colData`. They must **also** specify `target` as "subset" or "select"
+#' for experiments and as "y" for `colData`.
 #'
 #' @param dataname `character(1)` name of data set
 #' @param varname `character(1)` name of variable
-#' @param choices vector specifying allowed choices;
+#' @param choices optional vector specifying allowed choices;
 #'                possibly a subset of values in data;
 #'                type and size depends on variable type
-#' @param selected vector specifying selection;
+#' @param selected optional vector specifying selection;
 #'                 type and size depends on variable type
-#' @param keep_na `logical(0-1)` optional logical flag specifying whether to keep missing values
-#' @param keep_inf `logical(0-1)` optional logical flag specifying whether to keep infinite values
+#' @param keep_na `logical(1)` or `NULL` optional logical flag specifying whether to keep missing values
+#' @param keep_inf `logical(1)` or `NULL` optional logical flag specifying whether to keep infinite values
 #' @param fixed `logical(1)` logical flag specifying whether to fix this filter state (i.e. forbid setting state)
 #' @param disabled `logical(1)`logical flag specifying whether to disable this filter state
 #' @param exclude `named list` of `character` vectors where list names match names of data sets

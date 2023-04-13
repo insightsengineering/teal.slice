@@ -68,16 +68,16 @@ slices_which(tss, expr)
 
 \item{varname}{\code{character(1)} name of variable}
 
-\item{choices}{vector specifying allowed choices;
+\item{choices}{optional vector specifying allowed choices;
 possibly a subset of values in data;
 type and size depends on variable type}
 
-\item{selected}{vector specifying selection;
+\item{selected}{optional vector specifying selection;
 type and size depends on variable type}
 
-\item{keep_na}{\code{logical(0-1)} optional logical flag specifying whether to keep missing values}
+\item{keep_na}{\code{logical(1)} or \code{NULL} optional logical flag specifying whether to keep missing values}
 
-\item{keep_inf}{\code{logical(0-1)} optional logical flag specifying whether to keep infinite values}
+\item{keep_inf}{\code{logical(1)} or \code{NULL} optional logical flag specifying whether to keep infinite values}
 
 \item{fixed}{\code{logical(1)} logical flag specifying whether to fix this filter state (i.e. forbid setting state)}
 
@@ -112,27 +112,27 @@ Functions for passing filter state information between objects.
 \details{
 These functions create and manage filter state specifications.
 A single filter state can be fully described by a \code{teal_slice} object and such
-objects will be used to create, modify, and delete filter state.
+objects will be used to create, modify, and delete a filter state.
 
-A \code{teal_slice} contains a number of common elements (all named arguments of \code{filter_var})
+A \code{teal_slice} contains a number of common fields (all named arguments of \code{filter_var})
 but only \code{dataname} and \code{varname} are mandatory, while the others have default values.
 Setting any of the other values to NULL means that these parameters will not be modified
 (when setting an existing state) or that they will be determined by data (when creating new a new one).
-Each of the common elements corresponds to one private field in \code{FilterState}
+Each of the common fields corresponds to one private field in \code{FilterState}
 where it is stored and from where it is retrieved when calling \code{FiterState$get_state}.
 
-A \code{teal_slice} can also contain any number of additional elements, passed to \code{...}
+A \code{teal_slice} can also contain any number of additional fields, passed to \code{...}
 as \code{name:value} pairs. These are collated into a list and stored in the
 \code{private$extras} field.
 
-All \code{teal_slice} elements can be passed as arguments to \code{FilterState} constructors.
+All \code{teal_slice} fields can be passed as arguments to \code{FilterState} constructors.
 A \code{teal_slice} can be passed to \code{FilterState$set_state}, which will modify the state.
-However, once a \code{FilterState} is created, only three values can be set with a \code{teal_slice}:
-\code{selected}, \code{keep_na} and \code{keep_inf}.
+However, once a \code{FilterState} is created, only the \strong{mutable} features can be set with a \code{teal_slice}:
+\code{selected}, \code{keep_na}, \code{keep_inf}, and \code{disabled}.
 
-Special consideration is given to the \code{fixed} element.
-This is always a logical flag that defaults to FALSE.
-In a \code{FilterState} instantiated with \code{fixed = TRUE} \strong{none} of the state features can be changed.
+Special consideration is given to the \code{fixed} field. This is always a logical flag that defaults to FALSE.
+In a \code{FilterState} instantiated with \code{fixed = TRUE} the features \code{selected}, \code{keep_na}, \code{keep_inf}
+cannot be changed but the\code{disabled} can.
 
 \code{filter_var} creates a \code{teal_slice} object, which specifies a filter for a single variable,
 passed to and resolved by \code{FilterState} objects.
@@ -142,6 +142,23 @@ as well as \code{filter_panel_api} wrapper functions.
 \code{teal_slices} also specifies which variables cannot be filtered
 and how observations are tallied, which is resolved by \code{FilterStates}.
 }
+\section{Filters in \code{SumarizedExperiment} and \code{MultiAssayExperiment} objects}{
+
+
+To establish a filter on a column in a \code{data.frame}, \code{dataname} and \code{varname} are sufficient.
+Filter states created created for \code{SummarizedExperiments} require more information
+as each variable is either located in the \code{rowData} or \code{colData} slots.
+Thus, \code{teal_slice} objects taht refer to such filter states must also contain the field \code{target}
+that specifies "subset" for variales in \code{rowData} and "select" for those in \code{colData}.
+
+Likewise, observations in a \code{MultiAssayExpeeiment} can be filtered based on the content of the \code{colData} slot
+or based on the contents of \code{rowData} and \code{colData} of any of its experiments. Hence, another field is necessary.
+\code{teal_slice} objects refering to \code{MultiAssayExperiment} objects must contain the field \code{datalabel}
+that names either an experiment (as listed in \verb{experimentList(<MAE>)}) or "subjects"
+if it referes to the MAE's \code{colData}. They must \strong{also} specify \code{target} as "subset" or "select"
+for experiments and as "y" for \code{colData}.
+}
+
 \examples{
 filter_1 <- filter_var("dataname1", "varname1", letters, "b", FALSE, extra1 = "extraone")
 filter_2 <- filter_var("dataname1", "varname2", 1:10, 2, TRUE, FALSE, extra2 = "extratwo")
