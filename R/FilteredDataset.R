@@ -120,31 +120,27 @@ FilteredDataset <- R6::R6Class( # nolint
       filter_call
     },
 
-    #' Gets the reactive values from the active `FilterState` objects.
+    #' @description
+    #' Gets states of all active `FilterState` objects
     #'
-    #' Get all active filters from this dataset in form of the nested list.
-    #' The output list is a compatible input to `self$set_filter_state`.
-    #' @return `list` with named elements corresponding to `FilterStates` objects
-    #' with active filters.
+    #' @return A `teal_slices` object.
+    #'
     get_filter_state = function() {
       states <- lapply(private$get_filter_states(), function(x) x$get_filter_state())
-      Filter(function(x) length(x) > 0, states)
+      states <- Filter(function(x) length(x) != 0L, states)
+      do.call(c, states)
     },
 
     #' @description
     #' Gets the number of active `FilterState` objects in all `FilterStates` in this `FilteredDataset`.
     #' @return `integer(1)`
     get_filter_count = function() {
-      sum(vapply(private$filter_states,
-        function(state) state$get_filter_count(),
-        FUN.VALUE = integer(1)
-      ))
+      length(self$get_filter_state())
     },
 
     #' @description
-    #' Get name of the dataset
+    #' Gets the name of the dataset
     #'
-    #' Get name of the dataset
     #' @return `character(1)` as a name of this dataset
     get_dataname = function() {
       private$dataname
@@ -154,8 +150,8 @@ FilteredDataset <- R6::R6Class( # nolint
     #' Gets the dataset object in this `FilteredDataset`
     #' @param filtered (`logical(1)`)\cr
     #'
-    #' @return `data.frame` or `MultiAssayExperiment` as a raw data
-    #'  or as a reactive with filter applied
+    #' @return `data.frame` or `MultiAssayExperiment`, either raw
+    #'  or as a reactive with current filters applied
     #'
     get_dataset = function(filtered = FALSE) {
       if (filtered) {
@@ -219,7 +215,7 @@ FilteredDataset <- R6::R6Class( # nolint
         private$get_filter_states(),
         function(x) x$set_filterable_varnames(varnames)
       )
-      return(invisible(self))
+      invisible(self)
     },
 
     # modules ------

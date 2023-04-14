@@ -10,3 +10,11 @@
 
   invisible()
 }
+
+
+### GLOBAL VARIABLES ###
+
+.filterable_class <- c("logical", "integer", "numeric", "factor", "character", "Date", "POSIXct", "POSIXlt")
+
+
+### END GLOBAL VARIABLES ###

@@ -15,10 +15,10 @@ Handles filter states in a \code{SummaryExperiment}
 \itemize{
 \item \href{#method-SEFilterStates-new}{\code{SEFilterStates$new()}}
 \item \href{#method-SEFilterStates-format}{\code{SEFilterStates$format()}}
-\item \href{#method-SEFilterStates-srv_active}{\code{SEFilterStates$srv_active()}}
 \item \href{#method-SEFilterStates-get_filter_state}{\code{SEFilterStates$get_filter_state()}}
 \item \href{#method-SEFilterStates-set_filter_state}{\code{SEFilterStates$set_filter_state()}}
 \item \href{#method-SEFilterStates-remove_filter_state}{\code{SEFilterStates$remove_filter_state()}}
+\item \href{#method-SEFilterStates-srv_active}{\code{SEFilterStates$srv_active()}}
 \item \href{#method-SEFilterStates-ui_add}{\code{SEFilterStates$ui_add()}}
 \item \href{#method-SEFilterStates-srv_add}{\code{SEFilterStates$srv_add()}}
 \item \href{#method-SEFilterStates-clone}{\code{SEFilterStates$clone()}}
@@ -33,7 +33,6 @@ Handles filter states in a \code{SummaryExperiment}
 <li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilterStates" data-id="get_filter_count"><a href='../../teal.slice/html/FilterStates.html#method-FilterStates-get_filter_count'><code>teal.slice::FilterStates$get_filter_count()</code></a></span></li>
 <li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilterStates" data-id="get_fun"><a href='../../teal.slice/html/FilterStates.html#method-FilterStates-get_fun'><code>teal.slice::FilterStates$get_fun()</code></a></span></li>
 <li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilterStates" data-id="print"><a href='../../teal.slice/html/FilterStates.html#method-FilterStates-print'><code>teal.slice::FilterStates$print()</code></a></span></li>
-<li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilterStates" data-id="set_filterable_varnames"><a href='../../teal.slice/html/FilterStates.html#method-FilterStates-set_filterable_varnames'><code>teal.slice::FilterStates$set_filterable_varnames()</code></a></span></li>
 <li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilterStates" data-id="ui_active"><a href='../../teal.slice/html/FilterStates.html#method-FilterStates-ui_active'><code>teal.slice::FilterStates$ui_active()</code></a></span></li>
 </ul>
 </details>
@@ -50,7 +49,9 @@ Initialize \code{SEFilterStates} object
   data,
   data_reactive = function(sid = "") NULL,
   dataname,
-  datalabel = character(0)
+  datalabel = character(0),
+  excluded_varnames = character(0),
+  count_type = c("none", "all", "hierarchical")
 )}\if{html}{\out{</div>}}
 }
 
@@ -72,6 +73,12 @@ specified to the function argument attached to this \code{FilterStates}.}
 
 \item{\code{datalabel}}{(\code{character(0)} or \code{character(1)})\cr
 text label value.}
+
+\item{\code{excluded_varnames}}{(\code{character})\cr
+names of variables that can \strong{not} be filtered on.}
+
+\item{\code{count_type}}{\code{character(1)}\cr
+specifying how observations are tallied}
 }
 \if{html}{\out{</div>}}
 }
@@ -97,6 +104,65 @@ Returns the formatted string representing this \code{MAEFilterStates} object.
 }
 }
 \if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-SEFilterStates-get_filter_state"></a>}}
+\if{latex}{\out{\hypertarget{method-SEFilterStates-get_filter_state}{}}}
+\subsection{Method \code{get_filter_state()}}{
+Returns active \code{FilterState} objects.
+
+Gets all filter state information from this dataset.
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{SEFilterStates$get_filter_state()}\if{html}{\out{</div>}}
+}
+
+\subsection{Returns}{
+\code{teal_slices}
+}
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-SEFilterStates-set_filter_state"></a>}}
+\if{latex}{\out{\hypertarget{method-SEFilterStates-set_filter_state}{}}}
+\subsection{Method \code{set_filter_state()}}{
+Set filter state
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{SEFilterStates$set_filter_state(state)}\if{html}{\out{</div>}}
+}
+
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{state}}{(\code{teal_slices})\cr
+\code{teal_slice} objects targeting \code{rowData(data)} should contain the field \code{target = "subset"}\cr
+\code{teal_slice} objects targeting \code{colData(data)} should contain the field \code{target = "select"}}
+}
+\if{html}{\out{</div>}}
+}
+\subsection{Returns}{
+\code{NULL} invisibly
+}
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-SEFilterStates-remove_filter_state"></a>}}
+\if{latex}{\out{\hypertarget{method-SEFilterStates-remove_filter_state}{}}}
+\subsection{Method \code{remove_filter_state()}}{
+Remove one or more \code{FilterState}s from \code{state_list}s along with their corresponding UI elements.
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{SEFilterStates$remove_filter_state(state)}\if{html}{\out{</div>}}
+}
+
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{state}}{(\code{teal_slices})\cr
+specifying \code{FilterState} objects to remove;
+\code{teal_slice}s may contain only \code{dataname} and \code{varname}, other elements are ignored}
+}
+\if{html}{\out{</div>}}
+}
+\subsection{Returns}{
+\code{NULL} invisibly
+}
+}
+\if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-SEFilterStates-srv_active"></a>}}
 \if{latex}{\out{\hypertarget{method-SEFilterStates-srv_active}{}}}
 \subsection{Method \code{srv_active()}}{
@@ -115,68 +181,6 @@ an ID string that corresponds with the ID used to call the module's UI function.
 }
 \subsection{Returns}{
 \code{moduleServer} function which returns \code{NULL}
-}
-}
-\if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-SEFilterStates-get_filter_state"></a>}}
-\if{latex}{\out{\hypertarget{method-SEFilterStates-get_filter_state}{}}}
-\subsection{Method \code{get_filter_state()}}{
-Gets the reactive values from the active \code{FilterState} objects.
-
-Gets all active filters from this dataset in form of the nested list.
-The output list is a compatible input to \code{self$set_filter_state}.
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{SEFilterStates$get_filter_state()}\if{html}{\out{</div>}}
-}
-
-\subsection{Returns}{
-\code{list} containing one or two lists  depending on the number of
-\code{state_list} object (I.e. if \code{rowData} and \code{colData} exist). Each
-\code{list} contains elements number equal to number of active filter variables.
-}
-}
-\if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-SEFilterStates-set_filter_state"></a>}}
-\if{latex}{\out{\hypertarget{method-SEFilterStates-set_filter_state}{}}}
-\subsection{Method \code{set_filter_state()}}{
-Set filter state
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{SEFilterStates$set_filter_state(state)}\if{html}{\out{</div>}}
-}
-
-\subsection{Arguments}{
-\if{html}{\out{<div class="arguments">}}
-\describe{
-\item{\code{state}}{(\verb{named list})\cr
-this list should contain \code{subset} and \code{select} element where
-each should be a named list containing values as a selection in the \code{FilterState}.
-Names of each the \code{list} element in \code{subset} and \code{select} should correspond to
-the name of the column in \code{rowData(data)} and \code{colData(data)}.}
-}
-\if{html}{\out{</div>}}
-}
-\subsection{Returns}{
-\code{NULL}
-}
-}
-\if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-SEFilterStates-remove_filter_state"></a>}}
-\if{latex}{\out{\hypertarget{method-SEFilterStates-remove_filter_state}{}}}
-\subsection{Method \code{remove_filter_state()}}{
-Remove a variable from the \code{state_list} and its corresponding UI element.
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{SEFilterStates$remove_filter_state(state_id)}\if{html}{\out{</div>}}
-}
-
-\subsection{Arguments}{
-\if{html}{\out{<div class="arguments">}}
-\describe{
-\item{\code{state_id}}{(\code{character(1)})\cr name of \code{state_list} element.}
-}
-\if{html}{\out{</div>}}
-}
-\subsection{Returns}{
-\code{NULL}
 }
 }
 \if{html}{\out{<hr>}}

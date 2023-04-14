@@ -25,10 +25,10 @@ fpa <- FilterPanelAPI$new(fd)
 isolate(fpa$get_filter_state())
 
 # set a filter state
-isolate(
-  set_filter_state(
-    fpa,
-    list(iris = list(Species = list(selected = "setosa", keep_na = TRUE)))
+set_filter_state(
+  fpa,
+  filter_settings(
+    filter_var(dataname = "iris", varname = "Species", selected = "setosa", keep_na = TRUE)
   )
 )
 
@@ -99,13 +99,12 @@ Sets active filter states.
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
-\item{\code{filter}}{(\verb{named list})\cr
-nested list of filter selections applied to datasets.}
+\item{\code{filter}}{(\code{teal_slices})}
 }
 \if{html}{\out{</div>}}
 }
 \subsection{Returns}{
-\code{NULL}
+\code{NULL} invisibly
 }
 }
 \if{html}{\out{<hr>}}
@@ -120,13 +119,14 @@ Remove one or more \code{FilterState} of a \code{FilteredDataset} in the \code{F
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
-\item{\code{filter}}{(\verb{named list})\cr
-nested list of filter selections applied to datasets.}
+\item{\code{filter}}{(\code{teal_slices})\cr
+specifying \code{FilterState} objects to remove;
+\code{teal_slice}s may contain only \code{dataname} and \code{varname}, other elements are ignored}
 }
 \if{html}{\out{</div>}}
 }
 \subsection{Returns}{
-\code{NULL}
+\code{NULL} invisibly
 }
 }
 \if{html}{\out{<hr>}}
@@ -148,7 +148,7 @@ omit to remove all \code{FilterStates} in the \code{FilteredData} object}
 \if{html}{\out{</div>}}
 }
 \subsection{Returns}{
-\code{NULL}
+\code{NULL} invisibly
 }
 }
 \if{html}{\out{<hr>}}
@@ -165,7 +165,7 @@ This button is observed in \code{srv_filter_panel} method that executes
 }
 
 \subsection{Returns}{
-\code{NULL}
+\code{NULL} invisibly
 }
 }
 \if{html}{\out{<hr>}}

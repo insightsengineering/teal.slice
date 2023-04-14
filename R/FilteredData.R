@@ -51,12 +51,12 @@
 #' datasets$get_metadata("mtcars")
 #'
 #' datasets$set_filter_state(
-#'   list(iris = list(Species = list(selected = "virginica")))
+#'   filter_settings(filter_var(dataname = "iris", varname = "Species", selected = "virginica"))
 #' )
 #' isolate(datasets$get_call("iris"))
 #'
 #' datasets$set_filter_state(
-#'   list(mtcars = list(mpg = list(selected = c(15, 20))))
+#'   filter_settings(filter_var(dataname = "mtcars", varname = "mpg", selected = c(15, 20)))
 #' )
 #'
 #' isolate(datasets$get_filter_state())
@@ -435,22 +435,20 @@ FilteredData <- R6::R6Class( # nolint
     },
 
     # Functions useful for restoring from another dataset ----
+
     #' @description
-    #' Gets the reactive values from the active `FilterState` objects.
+    #' Gets states of all active `FilterState` objects.
     #'
-    #' Gets all active filters in the form of a nested list.
-    #' The output list is a compatible input to `self$set_filter_state`.
-    #' The attribute `formatted` renders the output of `self$get_formatted_filter_state`,
-    #' which is a character formatting of the filter state.
-    #'
-    #' @return `named list` with elements corresponding to `FilteredDataset` objects
-    #' with active filters. In addition, the `formatted` attribute holds
-    #' the character format of the active filter states.
+    #' @return A `teal_slices` object.
     #'
     get_filter_state = function() {
-      states <- lapply(private$get_filtered_dataset(), function(x) x$get_filter_state())
-      filtered_states <- Filter(function(x) length(x) > 0, states)
-      structure(filtered_states, formatted = self$get_formatted_filter_state())
+      states <- lapply(private$filtered_datasets, function(x) x$get_filter_state())
+      slices <- Filter(Negate(is.null), states)
+      state <- do.call(c, slices)
+      if (!is.null(state)) {
+        attr(state, "formatted") <- self$get_formatted_filter_state()
+      }
+      state
     },
 
     #' @description
@@ -465,21 +463,19 @@ FilteredData <- R6::R6Class( # nolint
     #'        mae = list(dataset = miniACC)
     #'   )
     #' )
-    #' fs <- list(
-    #'   iris = list(
-    #'     Sepal.Length = list(selected = c(5.1, 6.4), keep_na = TRUE, keep_inf = FALSE),
-    #'     Species = list(selected = c("setosa", "versicolor"), keep_na = FALSE)
-    #'   ),
-    #'   mae = list(
-    #'     subjects = list(
-    #'       years_to_birth = list(selected = c(30, 50), keep_na = TRUE, keep_inf = FALSE),
-    #'       vital_status = list(selected = "1", keep_na = FALSE),
-    #'       gender = list(selected = "female", keep_na = TRUE)
-    #'     ),
-    #'     RPPAArray = list(
-    #'       subset = list(ARRAY_TYPE = list(selected = "", keep_na = TRUE))
-    #'     )
-    #'   )
+    #' fs <- filter_settings(
+    #'   filter_var(dataname = "iris", varname = "Sepal.Length",
+    #'              selected = c(5.1, 6.4), keep_na = TRUE, keep_inf = FALSE),
+    #'   filter_var(dataname = "iris", varname = "Species",
+    #'              selected = c("setosa", "versicolor"), keep_na = FALSE),
+    #'   filter_var(dataname = "mae", varname = "years_to_birth",
+    #'              selected = c(30, 50), keep_na = TRUE, keep_inf = FALSE, datalabel = "subjects", target = "y"),
+    #'   filter_var(dataname = "mae", varname = "vital_status",
+    #'              selected = "1", keep_na = FALSE, datalabel = "subjects", target = "y"),
+    #'   filter_var(dataname = "mae", varname = "gender",
+    #'              selected = "female", keep_na = TRUE, datalabel = "subjects", target = "y"),
+    #'   filter_var(dataname = "mae", varname = "ARRAY_TYPE",
+    #'              selected = "", keep_na = TRUE, datalabel = "RPPAArray", target = "subset")
     #' )
     #' isolate(datasets$set_filter_state(state = fs))
     #' cat(shiny::isolate(datasets$get_formatted_filter_state()))
@@ -498,10 +494,11 @@ FilteredData <- R6::R6Class( # nolint
     #' @description
     #' Sets active filter states.
     #'
-    #' @param state (`named list`)\cr
-    #'  nested list of filter selections applied to datasets
+    #' @param state either a `named list` list of filter selections
+    #'              or a `teal_slices` object\cr
+    #'              specification by list will be deprecated soon
     #'
-    #' @return `NULL`
+    #' @return `NULL` invisibly
     #'
     #' @examples
     #' utils::data(miniACC, package = "MultiAssayExperiment")
@@ -511,65 +508,82 @@ FilteredData <- R6::R6Class( # nolint
     #'        mae = list(dataset = miniACC)
     #'   )
     #' )
-    #' fs <- list(
-    #'   iris = list(
-    #'     Sepal.Length = list(selected = c(5.1, 6.4), keep_na = TRUE, keep_inf = FALSE),
-    #'     Species = list(selected = c("setosa", "versicolor"), keep_na = FALSE)
-    #'   ),
-    #'   mae = list(
-    #'     subjects = list(
-    #'       years_to_birth = list(selected = c(30, 50), keep_na = TRUE, keep_inf = FALSE),
-    #'       vital_status = list(selected = "1", keep_na = FALSE),
-    #'       gender = list(selected = "female", keep_na = TRUE)
-    #'     ),
-    #'     RPPAArray = list(
-    #'       subset = list(ARRAY_TYPE = list(selected = "", keep_na = TRUE))
-    #'     )
+    #' fs <-
+    #'   filter_settings(
+    #'     filter_var(dataname = "iris", varname = "Sepal.Length", selected = c(5.1, 6.4), keep_na = TRUE, keep_inf = FALSE),
+    #'     filter_var(dataname = "iris", varname = "Species", selected = c("setosa", "versicolor"), keep_na = FALSE),
+    #'     filter_var(dataname = "mae", varname = "years_to_birth", selected = c(30, 50), keep_na = TRUE, keep_inf = FALSE, datalabel = "subjects", target = "y"),
+    #'     filter_var(dataname = "mae", varname = "vital_status", selected = "1", keep_na = FALSE, datalabel = "subjects", target = "y"),
+    #'     filter_var(dataname = "mae", varname = "gender", selected = "female", keep_na = TRUE, datalabel = "subjects", target = "y"),
+    #'     filter_var(dataname = "mae", varname = "ARRAY_TYPE", selected = "", keep_na = TRUE, experiment = "RPPAArray", target = "subset")
     #'   )
-    #' )
     #' shiny::isolate(datasets$set_filter_state(state = fs))
     #' shiny::isolate(datasets$get_filter_state())
     #'
     set_filter_state = function(state) {
-      checkmate::assert_subset(names(state), self$datanames())
-      lapply(names(state), function(dataname) {
-        logger::log_trace(
-          "FilteredData$set_filter_state initializing, dataname: { paste(names(state), collapse = ' ') }"
-        )
+      if (!is.teal_slices(state)) {
+        warning(paste(
+          "From FilteredData$set_filter_state:",
+          "Specifying filters as lists is obsolete and will be deprecated in the next release.",
+          "Please see ?set_filter_state and ?filter_settings for details."
+        ),
+        call. = FALSE)
+       state <- as.teal_slices(state)
+      }
 
-        fdataset <- private$get_filtered_dataset(dataname = dataname)
-        dataset_state <- state[[dataname]]
-        fdataset$set_filter_state(state = dataset_state)
+      checkmate::assert_class(state, "teal_slices")
+      datanames <- slices_field(state, "dataname")
+      checkmate::assert_subset(datanames, self$datanames())
+
+      logger::log_trace("{ class(self)[1] }$set_filter_state initializing, dataname: { private$dataname }")
+
+      lapply(datanames, function(x) {
+        private$get_filtered_dataset(x)$set_filter_state(
+          slices_which(state, sprintf("dataname == \"%s\"", x))
+        )
       })
-      logger::log_trace(
-        "FilteredData$set_filter_state initialized, dataname: { paste(names(state), collapse = ' ') }"
-      )
+
+      logger::log_trace("{ class(self)[1] }$set_filter_state initialized, dataname: { private$dataname }")
 
       invisible(NULL)
     },
 
     #' @description
-    #' Removes one or more `FilterState` of a `FilteredDataset` in a `FilteredData` object.
+    #' Removes one or more `FilterState` from a `FilteredData` object.
     #'
-    #' @param state (`named list`)\cr
-    #'  nested list of filter selections applied to datasets
+    #' @param state (`teal_slices`)\cr
+    #'   specifying `FilterState` objects to remove;
+    #'   `teal_slice`s may contain only `dataname` and `varname`, other elements are ignored
     #'
     #' @return `NULL` invisibly
     #'
     remove_filter_state = function(state) {
-      checkmate::assert_subset(names(state), self$datanames())
-
-      logger::log_trace(
-        "FilteredData$remove_filter_state called, dataname: { paste(names(state), collapse = ' ') }"
-      )
-
-      for (dataname in names(state)) {
-        fdataset <- private$get_filtered_dataset(dataname = dataname)
-        fdataset$remove_filter_state(state_id = state[[dataname]])
+      if (!is.teal_slices(state)) {
+        warning(paste(
+          "From FilteredData$remove_filter_state:",
+          "Specifying filters as lists is obsolete and will be deprecated in the next release.",
+          "Please see ?set_filter_state and ?filter_settings for details."
+        ),
+        call. = FALSE)
+        state <- as.teal_slices(state)
       }
 
+      checkmate::assert_class(state, "teal_slices")
+      datanames <- slices_field(state, "dataname")
+      checkmate::assert_subset(datanames, self$datanames())
+
       logger::log_trace(
-        "FilteredData$remove_filter_state done, dataname: { paste(names(state), collapse = ' ') }"
+        "{ class(self)[1] }$remove_filter_state removing filter(s), dataname: { private$dataname }"
+      )
+
+      lapply(datanames, function(x) {
+        private$get_filtered_dataset(x)$remove_filter_state(
+          slices_which(state, sprintf("dataname == \"%s\"", x))
+          )
+      })
+
+      logger::log_trace(
+        "{ class(self)[1] }$remove_filter_state removed filter(s), dataname: { private$dataname }"
       )
 
       invisible(NULL)
@@ -1127,9 +1141,7 @@ FilteredData <- R6::R6Class( # nolint
     # in all `FilteredDataset`s in this `FilteredData` object.
     # @return `integer(1)`
     get_filter_count = function() {
-      sum(vapply(self$datanames(), function(dataname) {
-        private$get_filtered_dataset(dataname)$get_filter_count()
-      }, numeric(1L)))
+      length(self$get_filter_state())
     }
   )
 )

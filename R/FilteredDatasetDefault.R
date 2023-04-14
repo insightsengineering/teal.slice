@@ -4,12 +4,10 @@
 #' @examples
 #' library(shiny)
 #' ds <- teal.slice:::DefaultFilteredDataset$new(iris, "iris")
-#' isolate(
-#'   ds$set_filter_state(
-#'     state = list(
-#'       Species = list(selected = "virginica"),
-#'       Petal.Length = list(selected = c(2.0, 5))
-#'     )
+#' ds$set_filter_state(
+#'   filter_settings(
+#'     filter_var(dataname = "iris", varname = "Species", selected = "virginica")
+#'     filter_var(dataname = "iris", varname = "Petal.Length", selected = c(2.0, 5))
 #'   )
 #' )
 #' isolate(ds$get_filter_state())
@@ -160,80 +158,59 @@ DefaultFilteredDataset <- R6::R6Class( # nolint
     },
 
     #' @description
-    #' Gets the reactive values from the active `FilterState` objects.
-    #'
-    #' Get all active filters from this dataset in form of the nested list.
-    #' The output list is a compatible input to `self$set_filter_state`.
-    #' @return `list` with named elements corresponding to `FilterState` objects
-    #' (active filters).
-    get_filter_state = function() {
-      private$get_filter_states("filter")$get_filter_state()
-    },
-
-    #' @description
     #' Set filter state
     #'
-    #' @param state (`named list`)\cr
-    #'  containing values of the initial filter. Values should be relevant
-    #'  to the referred column.
+    #' @param state (`teal_slice`) object
     #'
     #' @examples
     #' dataset <- teal.slice:::DefaultFilteredDataset$new(iris, "iris")
-    #' fs <- list(
-    #'   Sepal.Length = list(selected = c(5.1, 6.4), keep_na = TRUE, keep_inf = TRUE),
-    #'   Species = list(selected = c("setosa", "versicolor"), keep_na = FALSE)
+    #' fs <- filter_settings(
+    #'   filter_var(dataname = "iris", varname = "Species", selected = "virginica"),
+    #'   filter_var(dataname = "iris", varname = "Petal.Length", selected = c(2.0, 5))
     #' )
-    #' shiny::isolate(dataset$set_filter_state(state = fs))
+    #' dataset$set_filter_state(state = fs)
     #' shiny::isolate(dataset$get_filter_state())
     #'
-    #' @return `NULL`
+    #' @return `NULL` invisibly
+    #'
     set_filter_state = function(state) {
-      checkmate::assert_list(state)
-      logger::log_trace(
-        sprintf(
-          "DefaultFilteredDataset$set_filter_state setting up filters of variables %s, dataname: %s",
-          paste(names(state), collapse = ", "),
-          self$get_dataname()
-        )
-      )
-      fs <- private$get_filter_states()[[1]]
-      fs$set_filter_state(state = state)
-      logger::log_trace(
-        sprintf(
-          "DefaultFilteredDataset$set_filter_state done setting up filters of variables %s, dataname: %s",
-          paste(names(state), collapse = ", "),
-          self$get_dataname()
-        )
-      )
-      NULL
+      checkmate::assert_class(state, "teal_slices")
+      lapply(state, function(x) {
+        checkmate::assert_true(x$dataname == private$dataname, .var.name = "dataname matches private$dataname")
+      })
+
+      logger::log_trace("{ class(self)[1] }$set_filter_state initializing, dataname: { private$dataname }")
+
+      private$get_filter_states()[[1L]]$set_filter_state(state = state)
+
+      logger::log_trace("{ class(self)[1] }$set_filter_state initialized, dataname: { private$dataname }")
+
+      invisible(NULL)
     },
 
-    #' @description Remove one or more `FilterState` of a `FilteredDataset`
+    #' @description
+    #' Remove one or more `FilterState` form a `FilteredDataset`
     #'
-    #' @param state_id (`character`)\cr
-    #'  Vector of character names of variables to remove their `FilterState`.
+    #' @param state (`teal_slices`)\cr
+    #'   specifying `FilterState` objects to remove;
+    #'   `teal_slice`s may contain only `dataname` and `varname`, other elements are ignored
     #'
-    #' @return `NULL`
-    remove_filter_state = function(state_id) {
-      logger::log_trace(
-        sprintf(
-          "DefaultFilteredDataset$remove_filter_state removing filters of variable: %s; dataname: %s",
-          toString(state_id),
-          self$get_dataname()
-        )
-      )
+    #' @return `NULL` invisibly
+    #'
+    remove_filter_state = function(state) {
+      checkmate::assert_class(state, "teal_slices")
 
-      fdata_filter_state <- shiny::isolate(private$get_filter_states())[[1]]
-      for (element in state_id) {
-        fdata_filter_state$remove_filter_state(element)
-      }
-      logger::log_trace(
-        sprintf(
-          "DefaultFilteredDataset$remove_filter_state done removing filters of variable: %s; dataname: %s",
-          toString(state_id),
-          self$get_dataname()
+      logger::log_trace("{ class(self)[1] }$remove_filter_state removing filter(s), dataname: { private$dataname }")
+
+      varnames <- slices_field(state, "varname")
+      lapply(varnames, function(x) {
+        private$get_filter_states()[[1]]$remove_filter_state(
+          slices_which(state, sprintf("varname == \"%s\"", x))
         )
-      )
+      })
+
+      logger::log_trace("{ class(self)[1] }$remove_filter_state removed filter(s), dataname: { private$dataname }")
+
       invisible(NULL)
     },
 

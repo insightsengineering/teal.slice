@@ -84,27 +84,31 @@ server <- function(input, output, session) {
   output$formatted_df <- renderText(filter_states_df$format())
 
   observeEvent(input$button1_df, {
-    filter_state <- list(NUM1 = list(selected = c(0, 30)))
+    filter_state <- filter_settings(filter_var("dataset", "NUM1", selected = c(0, 30)))
     filter_states_df$set_filter_state(state = filter_state)
   })
   observeEvent(input$button2_df, {
-    filter_state <- list(NUM2 = list(selected = c(20, 21)))
+    filter_state <- filter_settings(filter_var("dataset", "NUM2", selected = c(20, 21)))
     filter_states_df$set_filter_state(state = filter_state)
   })
   observeEvent(input$button3_df, {
-    filter_state <- list(CHAR1 = list(selected = c("B", "C", "D")))
+    filter_state <- filter_settings(filter_var("dataset", "CHAR1", selected = c("B", "C", "D")))
     filter_states_df$set_filter_state(state = filter_state)
   })
   observeEvent(input$button4_df, {
-    filter_state <- list(CHAR2 = list(selected = "F"))
+    filter_state <- filter_settings(filter_var("dataset", "CHAR2", selected = c("F")))
     filter_states_df$set_filter_state(state = filter_state)
   })
   observeEvent(input$button5_df, {
-    filter_state <- list(DATE = list(selected = c("2020-01-01", "2020-02-02")))
+    filter_state <- filter_settings(
+      filter_var("dataset", "DATE", selected = c("2020-01-01", "2020-02-02"))
+    )
     filter_states_df$set_filter_state(state = filter_state)
   })
   observeEvent(input$button6_df, {
-    filter_state <- list(DATETIME = list(selected = as.POSIXct(c("2020-01-01", "2020-02-02"))))
+    filter_state <- filter_settings(
+      filter_var("dataset", "DATETIME", selected = as.POSIXct(c("2020-01-01", "2020-02-02")))
+    )
     filter_states_df$set_filter_state(state = filter_state)
   })
   observeEvent(input$button7_df, filter_states_df$remove_filter_state(state_id = "NUM1"))
@@ -138,7 +142,11 @@ filter_states <- teal.slice:::DFFilterStates$new(
   datalabel = character(0),
   keys = character(0)
 )
-filter_states$set_filter_state(list(character = list("a")))
+filter_states$set_filter_state(
+  filter_settings(
+    filter_var(dataname = "data", varname = "character", selected = "a")
+  )
+)
 isolate(filter_states$get_call())
 
 }
@@ -152,11 +160,11 @@ isolate(filter_states$get_call())
 \item \href{#method-DFFilterStates-new}{\code{DFFilterStates$new()}}
 \item \href{#method-DFFilterStates-format}{\code{DFFilterStates$format()}}
 \item \href{#method-DFFilterStates-get_fun}{\code{DFFilterStates$get_fun()}}
-\item \href{#method-DFFilterStates-srv_active}{\code{DFFilterStates$srv_active()}}
 \item \href{#method-DFFilterStates-get_filter_state}{\code{DFFilterStates$get_filter_state()}}
 \item \href{#method-DFFilterStates-set_filter_state}{\code{DFFilterStates$set_filter_state()}}
 \item \href{#method-DFFilterStates-remove_filter_state}{\code{DFFilterStates$remove_filter_state()}}
 \item \href{#method-DFFilterStates-set_filterable_varnames}{\code{DFFilterStates$set_filterable_varnames()}}
+\item \href{#method-DFFilterStates-srv_active}{\code{DFFilterStates$srv_active()}}
 \item \href{#method-DFFilterStates-ui_add}{\code{DFFilterStates$ui_add()}}
 \item \href{#method-DFFilterStates-srv_add}{\code{DFFilterStates$srv_add()}}
 \item \href{#method-DFFilterStates-clone}{\code{DFFilterStates$clone()}}
@@ -192,6 +200,8 @@ which means that when calling the subset function associated with this class
   dataname,
   datalabel = character(0),
   varlabels = character(0),
+  excluded_varnames = character(0),
+  count_type = c("none", "all", "hierarchical"),
   keys = character(0)
 )}\if{html}{\out{</div>}}
 }
@@ -216,7 +226,13 @@ specified to the function argument attached to this \code{FilterStates}}
 text label value}
 
 \item{\code{varlabels}}{(\code{character})\cr
-labels of the variables used in this object}
+labels of the variables used in this object.}
+
+\item{\code{excluded_varnames}}{(\code{character})\cr
+names of variables that can \strong{not} be filtered on.}
+
+\item{\code{count_type}}{\code{character(1)}\cr
+specifying how observations are tallied.}
 
 \item{\code{keys}}{(\code{character})\cr
 key columns names}
@@ -261,40 +277,18 @@ For \code{DFFilterStates} this is \code{dplyr::filter}.
 }
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-DFFilterStates-srv_active"></a>}}
-\if{latex}{\out{\hypertarget{method-DFFilterStates-srv_active}{}}}
-\subsection{Method \code{srv_active()}}{
-Shiny server module.
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{DFFilterStates$srv_active(id)}\if{html}{\out{</div>}}
-}
-
-\subsection{Arguments}{
-\if{html}{\out{<div class="arguments">}}
-\describe{
-\item{\code{id}}{(\code{character(1)})\cr
-shiny module instance id}
-}
-\if{html}{\out{</div>}}
-}
-\subsection{Returns}{
-\code{moduleServer} function which returns \code{NULL}
-}
-}
-\if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-DFFilterStates-get_filter_state"></a>}}
 \if{latex}{\out{\hypertarget{method-DFFilterStates-get_filter_state}{}}}
 \subsection{Method \code{get_filter_state()}}{
-Gets the reactive values from the active \code{FilterState} objects.
+Returns active \code{FilterState} objects.
 
-Get active filter state from the \code{FilterState} objects kept in \code{state_list}.
-The output list is a compatible input to \code{self$set_filter_state}.
+Gets all filter state information from this dataset.
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{DFFilterStates$get_filter_state()}\if{html}{\out{</div>}}
 }
 
 \subsection{Returns}{
-\code{list} with named elements corresponding to \code{FilterState} in the \code{state_list}.
+\code{teal_slices}
 }
 }
 \if{html}{\out{<hr>}}
@@ -309,14 +303,12 @@ Set filter state.
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
-\item{\code{state}}{(\verb{named list})\cr
-should contain values which are initial selection in the \code{FilterState}.
-Names of the \code{list} element should correspond to the name of the columns.}
+\item{\code{state}}{(\code{teal_slices})}
 }
 \if{html}{\out{</div>}}
 }
 \subsection{Returns}{
-\code{NULL}
+\code{NULL} invisibly
 }
 \subsection{Examples}{
 \if{html}{\out{<div class="r example copy">}}
@@ -332,7 +324,11 @@ filter_states <- teal.slice:::DFFilterStates$new(
   datalabel = character(0),
   keys = character(0)
 )
-filter_states$set_filter_state(list(character = list("a")))
+filter_states$set_filter_state(
+  filter_settings(
+    filter_var(dataname = "data", varname = "character", selected = "a")
+  )
+)
 isolate(filter_states$get_call())
 
 }
@@ -345,20 +341,22 @@ isolate(filter_states$get_call())
 \if{html}{\out{<a id="method-DFFilterStates-remove_filter_state"></a>}}
 \if{latex}{\out{\hypertarget{method-DFFilterStates-remove_filter_state}{}}}
 \subsection{Method \code{remove_filter_state()}}{
-Remove a \code{FilterState} from the \code{state_list}.
+Remove one or more \code{FilterState}s from the \code{state_list} along with their UI elements.
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{DFFilterStates$remove_filter_state(state_id)}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{DFFilterStates$remove_filter_state(state)}\if{html}{\out{</div>}}
 }
 
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
-\item{\code{state_id}}{(\code{character(1)})\cr name of \code{state_list} element}
+\item{\code{state}}{(\code{teal_slices})\cr
+specifying \code{FilterState} objects to remove;
+\code{teal_slice}s may contain only \code{dataname} and \code{varname}, other elements are ignored}
 }
 \if{html}{\out{</div>}}
 }
 \subsection{Returns}{
-\code{NULL}
+\code{NULL} invisibly
 }
 }
 \if{html}{\out{<hr>}}
@@ -384,7 +382,28 @@ are included.
 }
 
 \subsection{Returns}{
-invisibly this \code{FilteredDataset}
+NULL invisibly
+}
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-DFFilterStates-srv_active"></a>}}
+\if{latex}{\out{\hypertarget{method-DFFilterStates-srv_active}{}}}
+\subsection{Method \code{srv_active()}}{
+Shiny server module.
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{DFFilterStates$srv_active(id)}\if{html}{\out{</div>}}
+}
+
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{id}}{(\code{character(1)})\cr
+shiny module instance id}
+}
+\if{html}{\out{</div>}}
+}
+\subsection{Returns}{
+\code{moduleServer} function which returns \code{NULL}
 }
 }
 \if{html}{\out{<hr>}}

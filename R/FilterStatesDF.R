@@ -81,27 +81,31 @@
 #'   output$formatted_df <- renderText(filter_states_df$format())
 #'
 #'   observeEvent(input$button1_df, {
-#'     filter_state <- list(NUM1 = list(selected = c(0, 30)))
+#'     filter_state <- filter_settings(filter_var("dataset", "NUM1", selected = c(0, 30)))
 #'     filter_states_df$set_filter_state(state = filter_state)
 #'   })
 #'   observeEvent(input$button2_df, {
-#'     filter_state <- list(NUM2 = list(selected = c(20, 21)))
+#'     filter_state <- filter_settings(filter_var("dataset", "NUM2", selected = c(20, 21)))
 #'     filter_states_df$set_filter_state(state = filter_state)
 #'   })
 #'   observeEvent(input$button3_df, {
-#'     filter_state <- list(CHAR1 = list(selected = c("B", "C", "D")))
+#'     filter_state <- filter_settings(filter_var("dataset", "CHAR1", selected = c("B", "C", "D")))
 #'     filter_states_df$set_filter_state(state = filter_state)
 #'   })
 #'   observeEvent(input$button4_df, {
-#'     filter_state <- list(CHAR2 = list(selected = "F"))
+#'     filter_state <- filter_settings(filter_var("dataset", "CHAR2", selected = c("F")))
 #'     filter_states_df$set_filter_state(state = filter_state)
 #'   })
 #'   observeEvent(input$button5_df, {
-#'     filter_state <- list(DATE = list(selected = c("2020-01-01", "2020-02-02")))
+#'     filter_state <- filter_settings(
+#'       filter_var("dataset", "DATE", selected = c("2020-01-01", "2020-02-02"))
+#'     )
 #'     filter_states_df$set_filter_state(state = filter_state)
 #'   })
 #'   observeEvent(input$button6_df, {
-#'     filter_state <- list(DATETIME = list(selected = as.POSIXct(c("2020-01-01", "2020-02-02"))))
+#'     filter_state <- filter_settings(
+#'       filter_var("dataset", "DATETIME", selected = as.POSIXct(c("2020-01-01", "2020-02-02")))
+#'     )
 #'     filter_states_df$set_filter_state(state = filter_state)
 #'   })
 #'   observeEvent(input$button7_df, filter_states_df$remove_filter_state(state_id = "NUM1"))
@@ -134,23 +138,22 @@ DFFilterStates <- R6::R6Class( # nolint
     #'
     #' @param data (`data.frame`)\cr
     #'   the R object which `dplyr::filter` function is applied on.
-    #'
     #' @param data_reactive (`function(sid)`)\cr
     #'   should return a `data.frame` object or `NULL`.
     #'   This object is needed for the `FilterState` counts being updated
     #'   on a change in filters. If function returns `NULL` then filtered counts are not shown.
     #'   Function has to have `sid` argument being a character.
-    #'
     #' @param dataname (`character`)\cr
     #'   name of the data used in the \emph{subset expression}
     #'   specified to the function argument attached to this `FilterStates`
-    #'
     #' @param datalabel (`character(0)` or `character(1)`)\cr
     #'   text label value
-    #'
     #' @param varlabels (`character`)\cr
-    #'   labels of the variables used in this object
-    #'
+    #'   labels of the variables used in this object.
+    #' @param excluded_varnames (`character`)\cr
+    #'   names of variables that can \strong{not} be filtered on.
+    #' @param count_type `character(1)`\cr
+    #'   specifying how observations are tallied.
     #' @param keys (`character`)\cr
     #'   key columns names
     #'
@@ -159,10 +162,12 @@ DFFilterStates <- R6::R6Class( # nolint
                           dataname,
                           datalabel = character(0),
                           varlabels = character(0),
+                          excluded_varnames = character(0),
+                          count_type = c("none", "all", "hierarchical"),
                           keys = character(0)) {
       checkmate::assert_function(data_reactive, args = "sid")
       checkmate::assert_data_frame(data)
-      super$initialize(data, data_reactive, dataname, datalabel)
+      super$initialize(data, data_reactive, dataname, datalabel, excluded_varnames, count_type)
       private$varlabels <- varlabels
       private$keys <- keys
       self$set_filterable_varnames(colnames(data))
@@ -198,6 +203,127 @@ DFFilterStates <- R6::R6Class( # nolint
     get_fun = function() {
       "dplyr::filter"
     },
+
+    #' @description
+    #' Returns active `FilterState` objects.
+    #'
+    #' Gets all filter state information from this dataset.
+    #'
+    #' @return `teal_slices`
+    #'
+    get_filter_state = function() {
+      slices <- lapply(private$state_list_get(1L), function(x) x$get_state())
+      excluded_varnames <- structure(
+        list(setdiff(colnames(private$data), private$filterable_varnames)),
+        names = private$dataname)
+      excluded_varnames <- Filter(function(x) !identical(x, character(0)), excluded_varnames)
+
+      do.call(filter_settings, c(slices, list(exclude = excluded_varnames, count_type = private$count_type)))
+    },
+
+    #' @description
+    #' Set filter state.
+    #'
+    #' @param state (`teal_slices`)
+    #'
+    #' @examples
+    #' df <- data.frame(
+    #'   character = letters,
+    #'   numeric = seq_along(letters),
+    #'   date = seq(Sys.Date(), length.out = length(letters), by = "1 day"),
+    #'   datetime = seq(Sys.time(), length.out = length(letters), by = "33.33 hours")
+    #' )
+    #' filter_states <- teal.slice:::DFFilterStates$new(
+    #'   data = df,
+    #'   dataname = "data",
+    #'   datalabel = character(0),
+    #'   keys = character(0)
+    #' )
+    #' filter_states$set_filter_state(
+    #'   filter_settings(
+    #'     filter_var(dataname = "data", varname = "character", selected = "a")
+    #'   )
+    #' )
+    #' isolate(filter_states$get_call())
+    #'
+    #' @return `NULL` invisibly
+    #'
+    set_filter_state = function(state) {
+      checkmate::assert_class(state, "teal_slices")
+      lapply(state, function(x) {
+        checkmate::assert_true(x$dataname == private$dataname, .var.name = "dataname matches private$dataname")
+      })
+
+      logger::log_trace("{ class(self)[1] }$set_filter_state initializing, dataname: { private$dataname }")
+
+      # Drop teal_slices that refer to excluded variables.
+      varnames <- slices_field(state, "varname")
+      filterable <- private$filterable_varnames
+      if (!all(varnames %in% filterable)) {
+        excluded_varnames <- toString(dQuote(setdiff(varnames, filterable), q = FALSE))
+        state <- slices_which(
+          state,
+          sprintf("!varname %%in%% c(%s)", )
+        )
+        logger::log_warn("filters for columns: { excluded_varnames } excluded from { private$dataname }")
+      }
+
+      private$set_filter_state_impl(
+        state = state,
+        state_list_index = 1L,
+        data = private$data,
+        data_reactive = private$data_reactive
+      )
+
+      logger::log_trace("{ class(self)[1] }$set_filter_state initialized, dataname: { private$dataname }")
+
+      invisible(NULL)
+    },
+
+    #' @description
+    #' Remove one or more `FilterState`s from the `state_list` along with their UI elements.
+    #'
+    #' @param state (`teal_slices`)\cr
+    #'   specifying `FilterState` objects to remove;
+    #'   `teal_slice`s may contain only `dataname` and `varname`, other elements are ignored
+    #'
+    #' @return `NULL` invisibly
+    #'
+    remove_filter_state = function(state) {
+      checkmate::assert_class(state, "teal_slices")
+
+      lapply(state, function(x) {
+        logger::log_trace(
+          "{ class(self)[1] }$remove_filter_state removing filter, dataname: { x$dataname }, varname: { x$varname }"
+        )
+
+        private$state_list_remove(state_list_index = 1L, state_id = x$varname)
+
+        logger::log_trace(
+          "{ class(self)[1] }$remove_filter_state removed filter, dataname: { x$dataname }, varname: { x$varname }"
+        )
+      })
+
+      invisible(NULL)
+    },
+
+    #' @description
+    #' Set the allowed filterable variables
+    #' @param varnames (`character` or `NULL`) The variables which can be filtered
+    #'
+    #' @details When retrieving the filtered variables only
+    #' those which have filtering supported (i.e. are of the permitted types)
+    #' are included.
+    #'
+    #' @return NULL invisibly
+    set_filterable_varnames = function(varnames) {
+      checkmate::assert_character(varnames, any.missing = FALSE, null.ok = TRUE)
+      supported_vars <- get_supported_filter_varnames(private$data)
+      private$filterable_varnames <- intersect(varnames, supported_vars)
+      invisible(NULL)
+    },
+
+    # shiny modules ----
 
     #' @description
     #' Shiny server module.
@@ -244,131 +370,6 @@ DFFilterStates <- R6::R6Class( # nolint
           NULL
         }
       )
-    },
-
-    #' @description
-    #' Gets the reactive values from the active `FilterState` objects.
-    #'
-    #' Get active filter state from the `FilterState` objects kept in `state_list`.
-    #' The output list is a compatible input to `self$set_filter_state`.
-    #'
-    #' @return `list` with named elements corresponding to `FilterState` in the `state_list`.
-    #'
-    get_filter_state = function() {
-      lapply(private$state_list_get(1L), function(x) x$get_state())
-    },
-
-    #' @description
-    #' Set filter state.
-    #'
-    #' @param state (`named list`)\cr
-    #'   should contain values which are initial selection in the `FilterState`.
-    #'   Names of the `list` element should correspond to the name of the columns.
-    #' @examples
-    #' df <- data.frame(
-    #'   character = letters,
-    #'   numeric = seq_along(letters),
-    #'   date = seq(Sys.Date(), length.out = length(letters), by = "1 day"),
-    #'   datetime = seq(Sys.time(), length.out = length(letters), by = "33.33 hours")
-    #' )
-    #' filter_states <- teal.slice:::DFFilterStates$new(
-    #'   data = df,
-    #'   dataname = "data",
-    #'   datalabel = character(0),
-    #'   keys = character(0)
-    #' )
-    #' filter_states$set_filter_state(list(character = list("a")))
-    #' isolate(filter_states$get_call())
-    #'
-    #' @return `NULL`
-    set_filter_state = function(state) {
-      logger::log_trace("{ class(self)[1] }$set_filter_state initializing, dataname: { private$dataname }")
-      checkmate::assert_list(state, null.ok = TRUE, names = "named")
-
-      data <- private$data
-      data_reactive <- private$data_reactive
-
-      # excluding not supported variables
-      state_varnames <- names(state)
-      filterable_varnames <- private$filterable_varnames
-      excluded_varnames <- setdiff(state_varnames, filterable_varnames)
-      if (length(excluded_varnames) > 0) {
-        excluded_varnames_str <- toString(excluded_varnames)
-        warning(
-          "These columns filters were excluded: ",
-          excluded_varnames_str,
-          " from dataset ",
-          private$dataname
-        )
-        logger::log_warn("Columns filters { excluded_varnames_str } were excluded from { private$dataname }")
-        state <- state[state_varnames %in% filterable_varnames]
-      }
-
-      private$set_filter_state_impl(
-        state = state,
-        state_list_index = 1L,
-        data = data,
-        data_reactive = private$data_reactive
-      )
-
-      logger::log_trace("{ class(self)[1] }$set_filter_state initialized, dataname: { private$dataname }")
-      NULL
-    },
-
-    #' @description Remove a `FilterState` from the `state_list`.
-    #'
-    #' @param state_id (`character(1)`)\cr name of `state_list` element
-    #'
-    #' @return `NULL`
-    #'
-    remove_filter_state = function(state_id) {
-      logger::log_trace(
-        sprintf(
-          "%s$remove_filter_state for variable %s called, dataname: %s",
-          class(self)[1],
-          state_id,
-          private$dataname
-        )
-      )
-
-      current_state_names <- names(shiny::isolate(private$state_list_get(1L)))
-      if (!state_id %in% current_state_names) {
-        msg <- sprintf(
-          "%s is not an active filter of dataset: %s and can't be removed.",
-          state_id,
-          private$dataname
-        )
-        warning(msg)
-        logger::log_warn(msg)
-      } else {
-        private$state_list_remove(state_list_index = 1L, state_id = state_id)
-        logger::log_trace(
-          sprintf(
-            "%s$remove_filter_state for variable %s done, dataname: %s",
-            class(self)[1],
-            state_id,
-            private$dataname
-          )
-        )
-      }
-    },
-
-    # shiny modules ----
-
-    #' @description
-    #' Set the allowed filterable variables
-    #' @param varnames (`character` or `NULL`) The variables which can be filtered
-    #'
-    #' @details When retrieving the filtered variables only
-    #' those which have filtering supported (i.e. are of the permitted types)
-    #' are included.
-    #'
-    #' @return invisibly this `FilteredDataset`
-    set_filterable_varnames = function(varnames) {
-      checkmate::assert_character(varnames, any.missing = FALSE, null.ok = TRUE)
-      supported_vars <- get_supported_filter_varnames(private$data)
-      private$filterable_varnames <- intersect(varnames, supported_vars)
-      return(invisible(self))
     },
 
     #' @description
@@ -419,19 +420,13 @@ DFFilterStates <- R6::R6Class( # nolint
         id = id,
         function(input, output, session) {
           logger::log_trace("DFFilterStates$srv_add initializing, dataname: { private$dataname }")
-          data <- private$data
-          vars_include <- private$filterable_varnames
-          active_filter_vars <- reactive({
-            vapply(
-              X = private$state_list_get(state_list_index = 1L),
-              FUN.VALUE = character(1),
-              FUN = function(x) x$get_varname()
-            )
-          })
 
           # available choices to display
           avail_column_choices <- reactive({
-            choices <- setdiff(vars_include, active_filter_vars())
+            data <- private$data
+            vars_include <- private$filterable_varnames
+            active_filter_vars <- slices_field(self$get_filter_state(), "varname")
+            choices <- setdiff(vars_include, active_filter_vars)
 
             data_choices_labeled(
               data = data,
@@ -476,7 +471,7 @@ DFFilterStates <- R6::R6Class( # nolint
                 )
               )
               varname <- input$var_to_add
-              self$set_filter_state(state = setNames(list(list()), varname))
+              self$set_filter_state(filter_settings(filter_var(private$dataname, varname)))
               logger::log_trace(
                 sprintf(
                   "DFFilterStates$srv_add@2 added FilterState of variable %s, dataname: %s",

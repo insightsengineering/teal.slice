@@ -27,7 +27,13 @@ filter_states <- teal.slice:::DFFilterStates$new(
   datalabel = character(0),
   keys = character(0)
 )
-filter_states$set_filter_state(list(sex = "F", x = 1))
+filter_states$set_filter_state(
+  filter_settings(
+    filter_var(dataname = "data", varname = "x", selected = 1),
+    filter_var(dataname = "data", varname = "sex", selected = "F")
+  )
+)
+isolate(filter_states$get_filter_state())
 isolate(filter_states$get_call())
 
 }
@@ -43,11 +49,10 @@ isolate(filter_states$get_call())
 \item \href{#method-FilterStates-get_fun}{\code{FilterStates$get_fun()}}
 \item \href{#method-FilterStates-get_filter_count}{\code{FilterStates$get_filter_count()}}
 \item \href{#method-FilterStates-remove_filter_state}{\code{FilterStates$remove_filter_state()}}
-\item \href{#method-FilterStates-clear_filter_states}{\code{FilterStates$clear_filter_states()}}
-\item \href{#method-FilterStates-ui_active}{\code{FilterStates$ui_active()}}
 \item \href{#method-FilterStates-get_filter_state}{\code{FilterStates$get_filter_state()}}
 \item \href{#method-FilterStates-set_filter_state}{\code{FilterStates$set_filter_state()}}
-\item \href{#method-FilterStates-set_filterable_varnames}{\code{FilterStates$set_filterable_varnames()}}
+\item \href{#method-FilterStates-clear_filter_states}{\code{FilterStates$clear_filter_states()}}
+\item \href{#method-FilterStates-ui_active}{\code{FilterStates$ui_active()}}
 \item \href{#method-FilterStates-ui_add}{\code{FilterStates$ui_add()}}
 \item \href{#method-FilterStates-srv_add}{\code{FilterStates$srv_add()}}
 \item \href{#method-FilterStates-clone}{\code{FilterStates$clone()}}
@@ -66,7 +71,9 @@ Initializes \code{FilterStates} object by setting
   data,
   data_reactive = function(sid = "") NULL,
   dataname,
-  datalabel = character(0)
+  datalabel = character(0),
+  excluded_varnames = character(0),
+  count_type = c("none", "all", "hierarchical")
 )}\if{html}{\out{</div>}}
 }
 
@@ -88,6 +95,12 @@ specified to the function argument attached to this \code{FilterStates}}
 
 \item{\code{datalabel}}{(\code{character(0)} or \code{character(1)})\cr
 text label value}
+
+\item{\code{excluded_varnames}}{(\code{character})\cr
+names of variables that can \strong{not} be filtered on.}
+
+\item{\code{count_type}}{\code{character(1)}\cr
+specifying how observations are tallied}
 }
 \if{html}{\out{</div>}}
 }
@@ -207,58 +220,22 @@ Gets the number of active \code{FilterState} objects in this \code{FilterStates}
 \if{html}{\out{<a id="method-FilterStates-remove_filter_state"></a>}}
 \if{latex}{\out{\hypertarget{method-FilterStates-remove_filter_state}{}}}
 \subsection{Method \code{remove_filter_state()}}{
-Remove a single \code{FilterState} from \code{state_list}.
+Remove one or more \code{FilterState}s from any \code{state_list}.
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{FilterStates$remove_filter_state(state_id)}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{FilterStates$remove_filter_state(state)}\if{html}{\out{</div>}}
 }
 
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
-\item{\code{state_id}}{(\code{character})\cr
-name of variable for which to remove \code{FilterState}}
+\item{\code{state}}{(\code{teal_slices})\cr
+specifying \code{FilterState} objects to remove;
+\code{teal_slice}s may contain only \code{dataname} and \code{varname}, other elements are ignored}
 }
 \if{html}{\out{</div>}}
 }
 \subsection{Returns}{
-\code{NULL}
-}
-}
-\if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-FilterStates-clear_filter_states"></a>}}
-\if{latex}{\out{\hypertarget{method-FilterStates-clear_filter_states}{}}}
-\subsection{Method \code{clear_filter_states()}}{
-Remove all \code{FilterState} objects from this \code{FilterStates} object.
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{FilterStates$clear_filter_states()}\if{html}{\out{</div>}}
-}
-
-\subsection{Returns}{
-NULL
-}
-}
-\if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-FilterStates-ui_active"></a>}}
-\if{latex}{\out{\hypertarget{method-FilterStates-ui_active}{}}}
-\subsection{Method \code{ui_active()}}{
-Shiny module UI
-
-Shiny UI element that stores \code{FilterState} UI elements.
-Populated with elements created with \code{renderUI} in the module server.
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{FilterStates$ui_active(id)}\if{html}{\out{</div>}}
-}
-
-\subsection{Arguments}{
-\if{html}{\out{<div class="arguments">}}
-\describe{
-\item{\code{id}}{(\code{character(1)})\cr
-shiny element (module instance) id}
-}
-\if{html}{\out{</div>}}
-}
-\subsection{Returns}{
-\code{shiny.tag}
+\code{NULL} invisibly
 }
 }
 \if{html}{\out{<hr>}}
@@ -304,29 +281,40 @@ function which throws an error
 }
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-FilterStates-set_filterable_varnames"></a>}}
-\if{latex}{\out{\hypertarget{method-FilterStates-set_filterable_varnames}{}}}
-\subsection{Method \code{set_filterable_varnames()}}{
-Set the allowed filterable variables
+\if{html}{\out{<a id="method-FilterStates-clear_filter_states"></a>}}
+\if{latex}{\out{\hypertarget{method-FilterStates-clear_filter_states}{}}}
+\subsection{Method \code{clear_filter_states()}}{
+Remove all \code{FilterState} objects from this \code{FilterStates} object.
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{FilterStates$set_filterable_varnames(varnames)}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{FilterStates$clear_filter_states()}\if{html}{\out{</div>}}
+}
+
+\subsection{Returns}{
+NULL
+}
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-FilterStates-ui_active"></a>}}
+\if{latex}{\out{\hypertarget{method-FilterStates-ui_active}{}}}
+\subsection{Method \code{ui_active()}}{
+Shiny module UI
+
+Shiny UI element that stores \code{FilterState} UI elements.
+Populated with elements created with \code{renderUI} in the module server.
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{FilterStates$ui_active(id)}\if{html}{\out{</div>}}
 }
 
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
-\item{\code{varnames}}{(\code{character} or \code{NULL}) The variables which can be filtered}
+\item{\code{id}}{(\code{character(1)})\cr
+shiny element (module instance) id}
 }
 \if{html}{\out{</div>}}
 }
-\subsection{Details}{
-When retrieving the filtered variables only
-those which have filtering supported (i.e. are of the permitted types)
-are included.
-}
-
 \subsection{Returns}{
-invisibly this \code{FilteredDataset}
+\code{shiny.tag}
 }
 }
 \if{html}{\out{<hr>}}

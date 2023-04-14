@@ -1,201 +1,231 @@
 utils::data(miniACC, package = "MultiAssayExperiment")
 
-testthat::test_that("The constructor does not throw", {
+# initialize ----
+testthat::test_that("constructor accepts a MultiAssayExperiment", {
   testthat::expect_no_error(
-    MAEFilterStates$new(data = miniACC, dataname = "test")
+    MAEFilterStates$new(data = miniACC, dataname = "miniACC")
+  )
+  testthat::expect_error(
+    MAEFilterStates$new(data = miniACC[[1]], dataname = "miniACC"),
+    "Assertion on 'data' failed"
   )
 })
 
-testthat::test_that("MAEFilterStates accept vector as an input for varlabels", {
-  filter_states <- MAEFilterStates$new(data = miniACC, dataname = "iris")
-  testthat::expect_equal(filter_states$get_fun(), "MultiAssayExperiment::subsetByColData")
-})
-
-testthat::test_that("get_fun returns the MAE specific subset function", {
-  filter_states <- MAEFilterStates$new(data = miniACC, dataname = "test")
-  testthat::expect_equal(filter_states$get_fun(), "MultiAssayExperiment::subsetByColData")
-})
-
-testthat::test_that("The constructor initializes a state_list", {
-  testfs <- R6::R6Class(
-    classname = "testfs",
+testthat::test_that("constructor initializes state_list with one element named 'y'", {
+  test_class <- R6::R6Class(
+    classname = "test_class",
     inherit = MAEFilterStates,
     public = list(
-      state_list_get = function(x) private$state_list_get(x)
+      state_list_get = function(state_list_index, state_id) private$state_list_get(state_list_index, state_id)
     )
   )
-  filter_states <- testfs$new(data = miniACC, dataname = "test")
-  testthat::expect_null(shiny::isolate(filter_states$state_list_get(1)))
+  filter_states <- test_class$new(data = miniACC, dataname = "miniACC")
+  testthat::expect_null(shiny::isolate(filter_states$state_list_get(1, NULL)))
+  testthat::expect_no_error(shiny::isolate(filter_states$state_list_get("y", NULL)))
+  testthat::expect_error(
+    shiny::isolate(filter_states$state_list_get(2, NULL)),
+    "Filter state list 2 has not been initialized"
+  )
 })
 
+# get_fun ----
+testthat::test_that("get_fun returns MultiAssayExperiment::subsetByColData", {
+  filter_states <- MAEFilterStates$new(data = miniACC, dataname = "miniACC")
+  testthat::expect_identical(filter_states$get_fun(), "MultiAssayExperiment::subsetByColData")
+})
+
+# set_filter_state ----
+testthat::test_that("set_filter_state only accepts `teal_slices`", {
+  filter_states <- MAEFilterStates$new(data = miniACC, dataname = "miniACC")
+  fs <- filter_settings(
+    filter_var(dataname = "miniACC", varname = "years_to_birth", selected = c(30, 50),
+               keep_na = FALSE, keep_inf = FALSE, datalabel = "subjects", target = "y"),
+    filter_var(dataname = "miniACC", varname = "gender", selected = "female",
+               keep_na = FALSE, datalabel = "subjects", target = "y")
+  )
+  testthat::expect_error(filter_states$set_filter_state(state = fs[[1]]), "Assertion on 'state' failed")
+  testthat::expect_no_error(filter_states$set_filter_state(state = fs))
+})
+
+
+testthat::test_that("set_filter_state adds states to state_list", {
+  test_class <- R6::R6Class(
+    classname = "test_class",
+    inherit = MAEFilterStates,
+    public = list(
+      state_list_get = function(state_list_index, state_id) private$state_list_get(state_list_index, state_id)
+    )
+  )
+  filter_states <- test_class$new(data = miniACC, dataname = "miniACC")
+  fs <- filter_settings(
+    filter_var(dataname = "miniACC", varname = "years_to_birth", selected = c(30, 50),
+               keep_na = FALSE, keep_inf = FALSE, datalabel = "subjects", target = "y"),
+    filter_var(dataname = "miniACC", varname = "gender", selected = "female",
+               keep_na = FALSE, datalabel = "subjects", target = "y")
+  )
+  state_list <- shiny::isolate(filter_states$state_list_get(1, NULL))
+
+  testthat::expect_length(state_list, 0)
+
+  filter_states$set_filter_state(state = fs)
+  state_list <- shiny::isolate(filter_states$state_list_get(1, NULL))
+
+  testthat::expect_length(state_list, 2)
+})
+
+# get_filter_state ----
+testthat::test_that("get_filter_state returns `teal_slices` identical to that used to set state (choices excluded)", {
+  filter_states <- MAEFilterStates$new(data = miniACC, dataname = "miniACC")
+  fs <- filter_settings(
+    filter_var(dataname = "miniACC", varname = "years_to_birth", selected = c(31, 50),
+               keep_na = FALSE, keep_inf = FALSE, datalabel = "subjects", target = "y"),
+    filter_var(dataname = "miniACC", varname = "gender", selected = "female",
+               keep_na = FALSE, datalabel = "subjects", target = "y")
+  )
+  filter_states$set_filter_state(fs)
+
+  testthat::expect_identical(
+    adjust_states(shiny::isolate(filter_states$get_filter_state())),
+    fs
+  )
+})
+
+# set_filter_state ctd. ----
+testthat::test_that("set_filter_state updates existing filter states", {
+  filter_states <- MAEFilterStates$new(data = miniACC, dataname = "miniACC")
+  filter_states$set_filter_state(
+    filter_settings(
+      filter_var(dataname = "miniACC", varname = "years_to_birth", selected = c(30, 50),
+                 keep_na = FALSE, datalabel = "subjects", target = "y")
+    )
+  )
+  fs <- filter_settings(
+    filter_var(dataname = "miniACC", varname = "years_to_birth", selected = c(31, 50),
+               keep_na = FALSE, keep_inf = FALSE, datalabel = "subjects", target = "y"),
+    filter_var(dataname = "miniACC", varname = "gender", selected = "female",
+               keep_na = FALSE, datalabel = "subjects", target = "y")
+  )
+  filter_states$set_filter_state(fs)
+
+  testthat::expect_equal(
+    adjust_states(shiny::isolate(filter_states$get_filter_state())),
+    fs
+  )
+})
+
+# remove_filter_state ----
+testthat::test_that("remove_filter_state removes filters", {
+
+  filter_states <- MAEFilterStates$new(data = miniACC, dataname = "miniACC")
+  fs <- filter_settings(
+    filter_var(dataname = "miniACC", varname = "years_to_birth", selected = c(33, 50),
+               keep_na = FALSE, keep_inf = FALSE, datalabel = "subjects", target = "y"),
+    filter_var(dataname = "miniACC", varname = "gender", selected = "female",
+               keep_na = FALSE, datalabel = "subjects", target = "y")
+  )
+  filter_states$set_filter_state(state = fs)
+
+  testthat::expect_length(shiny::isolate(filter_states$get_filter_state()), 2)
+  filter_states$remove_filter_state(fs[1])
+  testthat::expect_length(shiny::isolate(filter_states$get_filter_state()), 1)
+
+  testthat::expect_equal(
+    shiny::isolate(filter_states$get_call()),
+    quote(miniACC <- MultiAssayExperiment::subsetByColData(miniACC, y = miniACC$gender == "female"))
+  )
+})
+
+testthat::test_that("remove_filter_state raises warning when name is not in FilterStates", {
+  teal.logger::suppress_logs()
+
+  filter_states <- MAEFilterStates$new(data = miniACC, dataname = "miniACC")
+  fs <- filter_settings(
+    filter_var(dataname = "miniACC", varname = "years_to_birth", selected = c(33, 50),
+               keep_na = FALSE, keep_inf = FALSE, datalabel = "subjects", target = "y"),
+    filter_var(dataname = "miniACC", varname = "gender", selected = "female",
+               keep_na = FALSE, datalabel = "subjects", target = "y")
+  )
+  filter_states$set_filter_state(state = fs)
+  testthat::expect_warning(filter_states$remove_filter_state(filter_settings(
+    filter_var(dataname = "miniACC", varname = "years_to_birth2", datalabel = "subjects", target = "y")))
+  )
+})
+
+# format ----
+testthat::test_that("format is a method of MAEFilterStates that accepts numeric indent argument", {
+  filter_states <- MAEFilterStates$new(data = miniACC, dataname = "iris")
+  testthat::expect_no_error(shiny::isolate(filter_states$format(indent = 0)))
+  testthat::expect_error(shiny::isolate(filter_states$format(indent = "0")), "Assertion on 'indent' failed")
+})
+
+testthat::test_that("format concatenates its FilterState elements using \\n and adds header", {
+  test_class <- R6::R6Class(
+    classname = "test_class",
+    inherit = MAEFilterStates,
+    public = list(
+      state_list_get = function(state_list_index, state_id) private$state_list_get(state_list_index, state_id)
+    )
+  )
+  filter_states <- test_class$new(data = miniACC, dataname = "miniACC")
+  filter_states$set_filter_state(
+    filter_settings(
+      filter_var(dataname = "miniACC", varname = "years_to_birth", selected = c(30, 50),
+                 keep_na = FALSE, keep_inf = FALSE, target = "y", datalabel = "subjects"),
+      filter_var(dataname = "miniACC", varname = "vital_status", selected = 1,
+                 keep_na = FALSE, keep_inf = FALSE, target = "y", datalabel = "subjects")
+    )
+  )
+
+  for (i in 0:3) {
+    states_formatted <- shiny::isolate(
+      lapply(filter_states$state_list_get(1, NULL), function(x) x$format(indent = i * 2))
+    )
+    header <- sprintf("%sSubject filters:", format("", width = i))
+
+    testthat::expect_identical(
+      shiny::isolate(filter_states$format(indent = i)),
+      paste(c(header, states_formatted), collapse = "\n")
+    )
+  }
+})
+
+# get_call ----
 testthat::test_that("get_call returns executable subsetByColData call ", {
-  test <- miniACC
-  filter_states <- MAEFilterStates$new(data = test, dataname = "test")
-  filter_states$set_filter_state(list(years_to_birth = list(selected = c(18, 60))))
+  filter_states <- MAEFilterStates$new(data = miniACC, dataname = "miniACC")
+  filter_states$set_filter_state(
+    filter_settings(
+      filter_var(dataname = "miniACC", varname = "years_to_birth", selected = c(18, 60),
+                 keep_na = FALSE, keep_inf = FALSE, datalabel = "subjects", target = "y")
+    )
+  )
 
   testthat::expect_equal(
     shiny::isolate(filter_states$get_call()),
     quote(
-      test <- MultiAssayExperiment::subsetByColData(test, y = test$years_to_birth >= 18 & test$years_to_birth <= 60)
+      miniACC <- MultiAssayExperiment::subsetByColData(miniACC,
+                                                       y = miniACC$years_to_birth >= 18 &
+                                                         miniACC$years_to_birth <= 60)
     )
   )
 
   eval(shiny::isolate(filter_states$get_call()))
   testthat::expect_true(
-    all(test$years_to_birth >= 18 & test$years_to_birth <= 60)
+    all(miniACC$years_to_birth >= 18 & miniACC$years_to_birth <= 60)
   )
 })
 
-testthat::test_that(
-  "MAEFilterStates$set_filter_state sets filters in FilterState(s) specified by the named list",
-  code = {
-    maefs <- MAEFilterStates$new(data = miniACC, dataname = "test")
-    fs <- list(
-      years_to_birth = c(30, 50),
-      gender = "female"
-    )
-    maefs$set_filter_state(state = fs)
-
-    testthat::expect_equal(
-      shiny::isolate(maefs$get_call()),
-      quote(
-        test <- MultiAssayExperiment::subsetByColData(
-          test,
-          y = test$years_to_birth >= 30 & test$years_to_birth <= 50 &
-            test$gender == "female"
-        )
-      )
-    )
-  }
-)
-
-testthat::test_that("MAEFilterStates$set_filter_state updates filter state which was set already", {
-  maefs <- MAEFilterStates$new(data = miniACC, dataname = "test")
-  maefs$set_filter_state(state = list(years_to_birth = c(30, 50)))
-  maefs$set_filter_state(
-    state = list(
-      years_to_birth = c(31, 50),
-      gender = "female"
-    )
-  )
-
-  testthat::expect_equal(
-    shiny::isolate(maefs$get_filter_state()),
-    list(
-      years_to_birth = list(selected = c(31, 50), keep_na = FALSE, keep_inf = FALSE),
-      gender = list(selected = "female", keep_na = FALSE)
-    )
-  )
-})
-
-testthat::test_that(
-  "MAEFilterStates$set_filter_state throws error when not using a named list",
-  code = {
-    maefs <- MAEFilterStates$new(data = miniACC, dataname = "test")
-    fs <- list(c(30, 50), "female")
-    testthat::expect_error(maefs$set_filter_state(state = fs, data = miniACC))
-  }
-)
-
-testthat::test_that(
-  "MAEFilterStates$get_filter_state returns list identical to input",
-  code = {
-    utils::data(miniACC, package = "MultiAssayExperiment")
-    maefs <- MAEFilterStates$new(data = miniACC, dataname = "test")
-    fs <- list(
-      years_to_birth = list(selected = c(30, 50), keep_na = TRUE, keep_inf = FALSE),
-      gender = list(selected = "female", keep_na = TRUE)
-    )
-    maefs$set_filter_state(state = fs)
-    testthat::expect_equal(shiny::isolate(maefs$get_filter_state()), fs)
-  }
-)
-
-testthat::test_that(
-  "MAEFilterStates$remove_filter_state removes filters in FilterState(s)",
-  code = {
-    utils::data(miniACC, package = "MultiAssayExperiment")
-    maefs <- MAEFilterStates$new(data = miniACC, dataname = "test")
-    fs <- list(
-      years_to_birth = c(30, 50),
-      gender = "female"
-    )
-    maefs$set_filter_state(state = fs)
-    maefs$remove_filter_state("years_to_birth")
-
-    testthat::expect_equal(
-      shiny::isolate(maefs$get_call()),
-      quote(test <- MultiAssayExperiment::subsetByColData(test, y = test$gender == "female"))
-    )
-  }
-)
-
-testthat::test_that(
-  "MAEFilterStates$remove_filter_state throws warning when name is not in FilterStates",
-  code = {
-    teal.logger::suppress_logs()
-    utils::data(miniACC, package = "MultiAssayExperiment")
-    maefs <- MAEFilterStates$new(data = miniACC, dataname = "test")
-    fs <- list(
-      years_to_birth = c(30, 50),
-      gender = "female"
-    )
-    maefs$set_filter_state(state = fs)
-    testthat::expect_warning(maefs$remove_filter_state("years_to_birth2"))
-  }
-)
-
-# Format ----
-testthat::test_that("$format() is a method of MAEFilterStates", {
-  maefs <- MAEFilterStates$new(data = miniACC, dataname = "iris")
-  testthat::expect_no_error(
-    shiny::isolate(maefs$format())
-  )
-})
-
-testthat::test_that("$format() asserts the indent argument is a number", {
-  maefs <- MAEFilterStates$new(data = miniACC, dataname = "iris")
-  testthat::expect_error(
-    maefs$format(indent = "wrong type"),
-    regexp = "Assertion on 'indent' failed: Must be of type 'number'"
-  )
-})
-
-testthat::test_that("$format() concatenates its FilterState elements using \\n and indents the FilterState objects", {
-  maefs <- MAEFilterStates$new(data = miniACC, dataname = "test")
-  maefs$set_filter_state(
-    state = list(
-      years_to_birth = c(30, 50),
-      vital_status = 1
-    )
-  )
-
-  testthat::expect_equal(
-    shiny::isolate(maefs$format()),
-    paste(
-      c(
-        "Subject filters:",
-        "  Filtering on: years_to_birth",
-        "    Selected range: 30.000 - 50.000",
-        "    Include missing values: FALSE",
-        "  Filtering on: vital_status",
-        "    Selected values: 1",
-        "    Include missing values: FALSE"
-      ),
-      collapse = "\n"
-    )
-  )
-})
-
+# get_filter_count ----
 testthat::test_that("get_filter_count returns the number of active filter states - MAEFilterStates", {
-  filter_states <- MAEFilterStates$new(data = miniACC, dataname = "test")
+  filter_states <- MAEFilterStates$new(data = miniACC, dataname = "miniACC")
   filter_states$set_filter_state(
-    state = list(
-      years_to_birth = c(30, 50),
-      vital_status = 1
+    filter_settings(
+      filter_var(dataname = "miniACC", varname = "years_to_birth", selected = c(30, 50),
+                 keep_na = FALSE, keep_inf = FALSE, target = "y", datalabel = "subjects"),
+      filter_var(dataname = "miniACC", varname = "vital_status", selected = 1,
+                 keep_na = FALSE, keep_inf = FALSE, target = "y", datalabel = "subjects")
     )
   )
   testthat::expect_equal(shiny::isolate(filter_states$get_filter_count()), 2)
-  filter_states$remove_filter_state(state_id = "vital_status")
+  filter_states$remove_filter_state(filter_settings(filter_var("test", "years_to_birth")))
   testthat::expect_equal(shiny::isolate(filter_states$get_filter_count()), 1)
 })

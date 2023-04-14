@@ -7,9 +7,7 @@
 check_in_subset(subset, choices, pre_msg = "")
 }
 \arguments{
-\item{subset}{\code{collection-like} should be a subset of the second argument \code{choices}}
-
-\item{choices}{\code{collection-like} superset}
+\item{subset, choices}{atomic vectors}
 
 \item{pre_msg}{\code{character} message to print before error should there be any errors}
 }

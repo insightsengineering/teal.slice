@@ -1,5 +1,5 @@
 #' @name ChoicesFilterState
-#' @title `InteractiveFilterState` object for factor or character variable
+#' @title `FilterState` object for factor or character variable
 #' @description Manages choosing elements from a set
 #' @docType class
 #' @keywords internal
@@ -25,10 +25,13 @@
 #' data_choices <- c(sample(letters[1:4], 100, replace = TRUE), NA)
 #' filter_state_choices <- ChoicesFilterState$new(
 #'   x = data_choices,
+#'   dataname = "data",
 #'   varname = "variable",
 #'   varlabel = "label"
 #' )
-#' filter_state_choices$set_state(list(selected = c("a", "c"), keep_na = TRUE))
+#' filter_state_choices$set_state(
+#'   filter_var("data", "variable", selected = c("a", "c"), keep_na = TRUE))
+#' )
 #'
 #' ui <- fluidPage(
 #'   useShinyjs(),
@@ -71,7 +74,9 @@
 #'   observeEvent(input$button4_choices, filter_state_choices$set_selected(c()))
 #'   observeEvent(
 #'     input$button0_choices,
-#'     filter_state_choices$set_state(list(selected = c("a", "c"), keep_na = TRUE))
+#'       filter_state_choices$set_state(
+#'         filter_var("data", "variable", selected = c("a", "c"), keep_na = TRUE))
+#'       )
 #'   )
 #' }
 #'
@@ -82,26 +87,39 @@
 #'
 ChoicesFilterState <- R6::R6Class( # nolint
   "ChoicesFilterState",
-  inherit = InteractiveFilterState,
+  inherit = FilterState,
 
   # public methods ----
 
   public = list(
 
     #' @description
-    #' Initialize a `FilterState` object
-    #' @param x (`character` or `factor`)\cr
+    #' Initialize a `InteractiveFilterState` object
+    #'
+    #' @param x (`vector`)\cr
     #'   values of the variable used in filter
     #' @param x_reactive (`reactive`)\cr
-    #'   a `reactive` returning a filtered vector or returning `NULL`. Is used to update
-    #'   counts following the change in values of the filtered dataset. If the `reactive`
-    #'   is `NULL` counts based on filtered dataset are not shown.
-    #' @param varname (`character`)\cr
-    #'   name of the variable
-    #' @param varlabel (`character(1)`)\cr
-    #'   label of the variable (optional).
+    #'   returning vector of the same type as `x`. Is used to update
+    #'   counts following the change in values of the filtered dataset.
+    #'   If it is set to `reactive(NULL)` then counts based on filtered
+    #'   dataset are not shown.
     #' @param dataname (`character(1)`)\cr
-    #'   optional name of dataset where `x` is taken from
+    #'   optional name of dataset where `x` is taken from. Must be specified
+    #'   if `extract_type` argument is not empty.
+    #' @param varname (`character(1)`)\cr
+    #'   name of the variable.
+    #' @param choices (`atomic`, `NULL`)\cr
+    #'   vector specifying allowed selection values
+    #' @param selected (`atomic`, `NULL`)\cr
+    #'   vector specifying selection
+    #' @param keep_na (`logical(1)`, `NULL`)\cr
+    #'   flag specifying whether to keep missing values
+    #' @param keep_inf (`logical(1)`, `NULL`)\cr
+    #'   flag specifying whether to keep infinite values
+    #' @param fixed (`logical(1)`)\cr
+    #'   flag specifying whether the `FilterState` is initiated fixed
+    #' @param disabled (`logical(1)`)\cr
+    #'   flag specifying whether the `FilterState` is initiated disabled
     #' @param extract_type (`character(0)`, `character(1)`)\cr
     #' whether condition calls should be prefixed by dataname. Possible values:
     #' \itemize{
@@ -109,12 +127,20 @@ ChoicesFilterState <- R6::R6Class( # nolint
     #' \item{`"list"`}{ `varname` in the condition call will be returned as `<dataname>$<varname>`}
     #' \item{`"matrix"`}{ `varname` in the condition call will be returned as `<dataname>[, <varname>]`}
     #' }
+    #' @param ... additional arguments to be saved as a list in `private$extras` field
+    #'
     initialize = function(x,
                           x_reactive = reactive(NULL),
+                          dataname,
                           varname,
-                          varlabel = character(0),
-                          dataname = NULL,
-                          extract_type = character(0)) {
+                          choices = NULL,
+                          selected = NULL,
+                          keep_na = NULL,
+                          keep_inf = NULL,
+                          fixed = FALSE,
+                          disabled = FALSE,
+                          extract_type = character(0),
+                          ...) {
       checkmate::assert(
         is.character(x),
         is.factor(x),
@@ -122,23 +148,77 @@ ChoicesFilterState <- R6::R6Class( # nolint
         combine = "or"
       )
 
-      super$initialize(x, x_reactive, varname, varlabel, dataname, extract_type)
+      x_factor <- if (!is.factor(x)) {
+        factor(as.character(x), levels = as.character(sort(unique(x))))
+      } else {
+        x
+      }
+      x_factor <- droplevels(x_factor)
+
+      args <- list(
+        x = x_factor,
+        x_reactive = x_reactive,
+        dataname = dataname,
+        varname = varname,
+        keep_na = keep_na,
+        keep_inf = keep_inf,
+        fixed = fixed,
+        disabled = disabled,
+        extract_type = extract_type
+      )
+      args <- append(args, list(...))
+      do.call(super$initialize, args)
+
+      private$set_choices(choices)
+      private$set_selected(selected)
 
       private$data_class <- class(x)[1L]
       if (inherits(x, "POSIXt")) {
         private$tzone <- Find(function(x) x != "", attr(as.POSIXlt(x), "tzone"))
       }
 
-      if (!is.factor(x)) {
-        x <- factor(as.character(x), levels = as.character(sort(unique(x))))
-      }
-      x <- droplevels(x)
-      choices <- table(x)
-      private$set_choices(names(choices))
-      self$set_selected(names(choices))
-      private$set_choices_counts(unname(choices))
+      private$set_choices_counts(unname(table(x)))
 
-      return(invisible(self))
+      invisible(self)
+    },
+
+    #' @description
+    #' Returns a formatted string representing this `FilterState`.
+    #'
+    #' @param indent (`numeric(1)`)
+    #'   number of spaces before after each new line character of the formatted string;
+    #'   defaults to 0
+    #' @param wrap_width (`numeric(1)`)
+    #'   number of characters to wrap lines at in the printed output;
+    #'   allowed range is 30 to 120; defaults to 76
+    #'
+    #' @return `character(1)` the formatted string
+    #'
+    format = function(indent = 2L, wrap_width = 76L) {
+      checkmate::assert_number(indent, finite = TRUE, lower = 0L)
+      checkmate::assert_number(wrap_width, finite = TRUE, lower = 30L, upper = 120L)
+
+      # List all selected values separated by commas.
+      values <- paste(format(private$get_selected(), nsmall = 3L, justify = "none"), collapse = ", ")
+      paste(c(
+        strwrap(
+          sprintf("Filtering on: %s", private$varname),
+          width = wrap_width,
+          indent = indent
+        ),
+        # Add wrapping and progressive indent to values enumeration as it is likely to be long.
+        strwrap(
+          sprintf("Selected values: %s", values),
+          width = wrap_width,
+          indent = indent * 2L,
+          exdent = indent * 3L
+        ),
+        strwrap(
+          sprintf("Include missing values: %s", private$get_keep_na()),
+          width = wrap_width,
+          indent = indent * 2L
+        )
+      ), collapse = "\n")
     },
 
     #' @description
@@ -147,9 +227,11 @@ ChoicesFilterState <- R6::R6Class( # nolint
     is_any_filtered = function() {
       if (private$is_disabled()) {
         FALSE
-      } else if (!setequal(self$get_selected(), private$choices)) {
+      } else if (private$is_choice_limited) {
         TRUE
-      } else if (!isTRUE(self$get_keep_na()) && private$na_count > 0) {
+      } else if (!setequal(private$get_selected(), private$choices)) {
+        TRUE
+      } else if (!isTRUE(private$get_keep_na()) && private$na_count > 0) {
         TRUE
       } else {
         FALSE
@@ -161,10 +243,13 @@ ChoicesFilterState <- R6::R6Class( # nolint
     #' For this class returned call looks like
     #' `<varname> %in%  c(<values selected>)` with
     #' optional `is.na(<varname>)`.
+    #' @param dataname name of data set; defaults to `private$dataname`
     #' @return (`call`)
-    get_call = function() {
-      varname <- private$get_varname_prefixed()
-      choices <- self$get_selected()
+    #'
+    get_call = function(dataname) {
+      if (missing(dataname)) dataname <- private$dataname
+      varname <- private$get_varname_prefixed(dataname)
+      choices <- private$get_selected()
       if (private$data_class != "factor") {
         choices <- do.call(sprintf("as.%s", private$data_class), list(x = choices))
       }
@@ -173,12 +258,10 @@ ChoicesFilterState <- R6::R6Class( # nolint
       # to return `c` call instead of a vector
       make_c_call <- function(choices) {
         if (length(choices) > 1) {
-          choices <- do.call(
-            "call",
-            append(list("c"), choices)
-          )
+          do.call("call", append(list("c"), choices))
+        } else {
+          choices
         }
-        choices
       }
 
       filter_call <-
@@ -199,77 +282,83 @@ ChoicesFilterState <- R6::R6Class( # nolint
           # This handles numerics, characters, and factors.
           call(fun_compare, varname, make_c_call(choices))
         }
-      private$add_keep_na_call(filter_call)
-    },
-
-    #' @description
-    #' Set state
-    #' @param state (`list`)\cr
-    #'  contains fields relevant for a specific class
-    #' \itemize{
-    #' \item{`selected`}{ defines initial selection}
-    #' \item{`keep_na` (`logical`)}{ defines whether to keep or remove `NA` values}
-    #' }
-    set_state = function(state) {
-      if (!is.null(state$selected)) {
-        state$selected <- as.character(state$selected)
-      }
-      super$set_state(state)
-      invisible(NULL)
-    },
-
-    #' @description
-    #' Sets the selected values of this `ChoicesFilterState`.
-    #'
-    #' @param value (`character`) the array of the selected choices.
-    #'   Must not contain NA values.
-    #'
-    #' @return invisibly `NULL`
-    #'
-    #' @note Casts the passed object to `character` before validating the input
-    #' making it possible to pass any object coercible to `character` to this method.
-    #'
-    #' @examples
-    #' filter <- teal.slice:::ChoicesFilterState$new(c("a", "b", "c"), varname = "name")
-    #' filter$set_selected(c("c", "a"))
-    set_selected = function(value) {
-      super$set_selected(value)
+      private$add_keep_na_call(filter_call, dataname)
     }
   ),
 
   # private members ----
 
   private = list(
+    x = NULL,
     choices_counts = integer(0),
     data_class = character(0), # stores class of filtered variable so that it can be restored in $get_call
     tzone = character(0), # if x is a datetime, stores time zone so that it can be restored in $get_call
 
     # private methods ----
+    # @description
+    # Checks validity of the choices, adjust if neccessary and sets the flag for the case where choices
+    #  are limited by default from the start.
+    set_choices = function(choices) {
+      if (is.null(choices)) {
+        choices <- levels(private$x)
+      } else {
+        choices <- as.character(choices)
+        choices_adjusted <- choices[choices %in% private$x]
+        if (length(setdiff(choices, choices_adjusted)) > 0L) {
+          warning(sprintf(
+            "Some of the choices not within variable values, adjusting. Varname: %s, dataname: %s.",
+            private$varname, private$dataname))
+          choices <- choices_adjusted
+        }
+        if (length(choices) == 0) {
+          warning(sprintf(
+            "Invalid choices: none of them within the values in the variable.
+            Setting defaults. Varname: %s, dataname: %s.",
+            private$varname, private$dataname))
+          choices <- levels(private$x)
+        }
+      }
+      private$set_is_choice_limited(private$x, choices)
+      private$choices <- choices
+      private$x <- private$x[(private$x %in% private$choices) | is.na(private$x)]
+      private$x <- droplevels(private$x)
+      invisible(NULL)
+    },
+    # @description
+    # Check whether the initial choices filter out some values of x and set the flag in case.
+    set_is_choice_limited = function(x, choices) {
+      xl <- x[!is.na(x)]
+      private$is_choice_limited <- length(setdiff(xl, choices)) > 0L
+      invisible(NULL)
+    },
+    # @description
+    # Sets choices_counts private field
     set_choices_counts = function(choices_counts) {
       private$choices_counts <- choices_counts
       invisible(NULL)
     },
-    get_filtered_counts = function() {
+    get_choices_counts = function() {
       if (!is.null(private$x_reactive)) {
         table(factor(private$x_reactive(), levels = private$choices))
       } else {
         NULL
       }
     },
+
     validate_selection = function(value) {
       if (!is.character(value)) {
         stop(
           sprintf(
             "Values of the selection for `%s` in `%s` should be an array of character.",
-            self$get_varname(),
-            self$get_dataname()
+            private$get_varname(),
+            private$get_dataname()
           )
         )
       }
       pre_msg <- sprintf(
         "data '%s', variable '%s': ",
-        self$get_dataname(),
-        self$get_varname()
+        private$get_dataname(),
+        private$get_varname()
       )
       check_in_subset(value, private$choices, pre_msg = pre_msg)
     },
@@ -340,7 +429,7 @@ ChoicesFilterState <- R6::R6Class( # nolint
         teal.widgets::optionalSelectInput(
           inputId = ns("selection"),
           choices = stats::setNames(private$choices, labels),
-          selected = isolate(self$get_selected()),
+          selected = isolate(private$get_selected()),
           multiple = TRUE,
           options = shinyWidgets::pickerOptions(
             actionsBox = TRUE,
@@ -396,7 +485,7 @@ ChoicesFilterState <- R6::R6Class( # nolint
                 session = session,
                 inputId = "selection",
                 choices = stats::setNames(private$choices, labels),
-                selected = self$get_selected()
+                selected = private$get_selected()
               )
             }
             NULL
@@ -414,7 +503,7 @@ ChoicesFilterState <- R6::R6Class( # nolint
                   private$dataname
                 ))
                 selection <- if (is.null(input$selection)) character(0) else input$selection
-                self$set_selected(selection)
+                private$set_selected(selection)
               }
             )
           } else {
@@ -430,7 +519,7 @@ ChoicesFilterState <- R6::R6Class( # nolint
                     private$dataname
                   ))
                   selection <- if (is.null(input$selection)) character(0) else input$selection
-                  self$set_selected(selection)
+                  private$set_selected(selection)
                 }
               }
             )
@@ -441,7 +530,7 @@ ChoicesFilterState <- R6::R6Class( # nolint
           # changed directly by the api - then it's needed to rerender UI element
           # to show relevant values
           private$observers$selection_api <- observeEvent(private$selected(), {
-            if (!isTRUE(all.equal(input$selection, self$get_selected()))) {
+            if (!isTRUE(all.equal(input$selection, private$get_selected()))) {
               logger::log_trace(sprintf(
                 "ChoicesFilterState$server@2 state of variable %s changed, dataname: %s",
                 private$varname,
@@ -483,10 +572,10 @@ ChoicesFilterState <- R6::R6Class( # nolint
     #  renders text describing number of selected levels
     #  and if NA are included also
     content_summary = function(id) {
-      n_selected <- length(self$get_selected())
+      n_selected <- length(private$get_selected())
       tagList(
         tags$span(sprintf("%s levels selected", n_selected)),
-        if (self$get_keep_na()) tags$span("NA") else NULL
+        if (isTRUE(private$get_keep_na())) tags$span("NA") else NULL
       )
     }
   )

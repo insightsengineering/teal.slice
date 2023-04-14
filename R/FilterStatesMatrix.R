@@ -15,26 +15,30 @@ MatrixFilterStates <- R6::R6Class( # nolint
     #'
     #' @param data (`matrix`)\cr
     #'   the R object which `subset` function is applied on.
-    #'
     #' @param data_reactive (`function(sid)`)\cr
     #'   should return a `matrix` object or `NULL`.
     #'   This object is needed for the `FilterState` counts being updated
     #'   on a change in filters. If function returns `NULL` then filtered counts are not shown.
     #'   Function has to have `sid` argument being a character.
-    #'
     #' @param dataname (`character(1)`)\cr
     #'   name of the data used in the expression
     #'   specified to the function argument attached to this `FilterStates`.
-    #'
     #' @param datalabel (`character(0)` or `character(1)`)\cr
     #'   text label value.
+    #' @param excluded_varnames (`character`)\cr
+    #'   names of variables that can \strong{not} be filtered on.
+    #' @param count_type `character(1)`\cr
+    #'   specifying how observations are tallied.
+    #'
     initialize = function(data,
                           data_reactive = function(sid = "") NULL,
                           dataname,
-                          datalabel = character(0)) {
+                          datalabel = character(0),
+                          excluded_varnames = character(0),
+                          count_type = c("none", "all", "hierarchical")) {
       checkmate::assert_function(data_reactive, args = "sid")
       checkmate::assert_matrix(data)
-      super$initialize(data, data_reactive, dataname, datalabel)
+      super$initialize(data, data_reactive, dataname, datalabel, excluded_varnames, count_type)
       private$state_list <- list(
         subset = reactiveVal()
       )
@@ -50,7 +54,7 @@ MatrixFilterStates <- R6::R6Class( # nolint
 
       formatted_states <- c()
       for (state in private$state_list_get(state_list_index = "subset")) {
-        formatted_states <- c(formatted_states, state$format(indent = indent + 2))
+        formatted_states <- c(formatted_states, state$format(indent = indent))
       }
       paste(formatted_states, collapse = "\n")
     },
@@ -106,75 +110,74 @@ MatrixFilterStates <- R6::R6Class( # nolint
     #' @description
     #' Returns active `FilterState` objects.
     #'
-    #' Gets all active filters from this dataset in form of the nested list.
-    #' The output list can be used as input to `self$set_filter_state`.
+    #' Gets all filter state information from this dataset.
     #'
-    #' @return `list` containing `list` with selected values for each `FilterState`.
+    #' @return `teal_slices`
+    #'
     get_filter_state = function() {
-      lapply(private$state_list_get(state_list_index = "subset"), function(x) x$get_state())
+      slices <- lapply(private$state_list_get("subset"), function(x) x$get_state())
+      excluded_varnames <- structure(
+        list(setdiff(colnames(private$data), private$filterable_varnames)),
+        names = private$dataname)
+      excluded_varnames <- Filter(function(x) !identical(x, character(0)), excluded_varnames)
+
+      do.call(filter_settings, c(slices, list(exclude = excluded_varnames, count_type = private$count_type)))
+
     },
 
     #' @description
     #' Sets a filter state
     #'
-    #' @param state (`named list`)\cr
-    #'   should contain values which are initial selection in the `FilterState`.
-    #'   Names of the `list` element should correspond to the name of the
-    #'   column in `data`.
-    #' @return `NULL`
+    #' @param state (`teal_slices`)
+    #'
+    #' @return `NULL` invisibly
+    #'
     set_filter_state = function(state) {
-      logger::log_trace("MatrixFilterState$set_filter_state initializing, dataname: { private$dataname }")
-      checkmate::assert_list(state, null.ok = TRUE, names = "named")
+      checkmate::assert_class(state, "teal_slices")
+      lapply(state, function(x) {
+        checkmate::assert_true(x$dataname == private$dataname, .var.name = "dataname matches private$dataname")
+      })
 
-      data <- private$data
-      data_reactive <- private$data_reactive
+      logger::log_trace("{ class(self)[1] }$set_filter_state initializing, dataname: { private$dataname }")
 
       private$set_filter_state_impl(
         state = state,
         state_list_index = "subset",
-        data = data,
-        data_reactive = data_reactive,
+        data = private$data,
+        data_reactive = private$data_reactive,
         extract_type = "matrix"
       )
 
-      logger::log_trace("MatrixFilterState$set_filter_state initialized, dataname: { private$dataname }")
-      NULL
+      logger::log_trace("{ class(self)[1] }$set_filter_state initialized, dataname: { private$dataname }")
+
+      invisible(NULL)
     },
 
-    #' @description Remove a variable from the `state_list` and its corresponding UI element.
+    #' @description
+    #' Remove one or more `FilterState`s from the `state_list` along with their corresponding UI elements.
     #'
-    #' @param state_id (`character(1)`)\cr name of `state_list` element.
+    #' @param state (`teal_slices`)\cr
+    #'   specifying `FilterState` objects to remove;
+    #'   `teal_slice`s may contain only `dataname` and `varname`, other elements are ignored
     #'
-    #' @return `NULL`
-    remove_filter_state = function(state_id) {
-      logger::log_trace(
-        sprintf(
-          "%s$remove_filter_state of variable %s, dataname: %s",
-          class(self)[1],
-          state_id,
-          private$dataname
-        )
-      )
+    #' @return `NULL` invisibly
+    #'
+    remove_filter_state = function(state) {
+      checkmate::assert_class(state, "teal_slices")
 
-      if (!state_id %in% names(shiny::isolate(private$state_list_get("subset")))) {
-        msg <- sprintf(
-          "%s is not an active filter of dataset: %s and can't be removed.",
-          state_id,
-          private$dataname
-        )
-        warning(msg)
-        logger::log_warn(msg)
-      } else {
-        private$state_list_remove(state_list_index = "subset", state_id = state_id)
+      lapply(state, function(x) {
         logger::log_trace(
-          sprintf(
-            "%s$remove_filter_state of variable %s done, dataname: %s",
-            class(self)[1],
-            state_id,
-            private$dataname
-          )
+          "{ class(self)[1] }$remove_filter_state removing filter, dataname: { x$dataname }, varname: { x$varname }"
         )
-      }
+
+        private$state_list_remove(state_list_index = "subset", state_id = x$varname)
+
+        logger::log_trace(
+          "{ class(self)[1] }$remove_filter_state removed filter, dataname: { x$dataname }, varname: { x$varname }"
+        )
+      })
+
+      invisible(NULL)
     },
 
     # shiny modules ----
@@ -228,19 +231,13 @@ MatrixFilterStates <- R6::R6Class( # nolint
           logger::log_trace(
             "MatrixFilterStates$srv_add initializing, dataname: { private$dataname }"
           )
-          active_filter_vars <- reactive({
-            vapply(
-              X = private$state_list_get(state_list_index = "subset"),
-              FUN.VALUE = character(1),
-              FUN = function(x) x$get_varname()
-            )
-          })
 
           # available choices to display
           avail_column_choices <- reactive({
+            active_filter_vars <- slices_field(self$get_filter_state(), "varname")
             choices <- setdiff(
               get_supported_filter_varnames(data = data),
-              active_filter_vars()
+              active_filter_vars
             )
             data_choices_labeled(
               data = data,
@@ -285,7 +282,8 @@ MatrixFilterStates <- R6::R6Class( # nolint
                 )
               )
               varname <- input$var_to_add
-              self$set_filter_state(setNames(list(list()), varname))
+              self$set_filter_state(filter_settings(filter_var(private$dataname, varname)))
+
               logger::log_trace(
                 sprintf(
                   "MatrixFilterState$srv_add@2 added FilterState of variable %s, dataname: %s",
