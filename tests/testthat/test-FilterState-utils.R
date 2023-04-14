@@ -1,4 +1,3 @@
-
 # check_in_range ----
 testthat::test_that("check_in_range raises errors as desired", {
   testthat::expect_no_error(
@@ -12,7 +11,7 @@ testthat::test_that("check_in_range raises errors as desired", {
     check_in_range(subinterval = c(4, 3), range = c(1, 10)),
     "the upper bound of the range lower than the lower bound"
   )
-   testthat::expect_error(
+  testthat::expect_error(
     check_in_range(subinterval = c(1, 10), range = c(3, 4)),
     "not valid for full range"
   )

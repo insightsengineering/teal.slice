@@ -18,7 +18,8 @@ testthat::test_that("constructor accepts a POSIXct or POSIXlt object", {
 testthat::test_that("constructor raises warning when selected is out of range", {
   testthat::expect_warning(
     DatetimeFilterState$new(
-      posixct, dataname = "data", varname = "variable", selected = range(posixct) + c(-1, 1)
+      posixct,
+      dataname = "data", varname = "variable", selected = range(posixct) + c(-1, 1)
     ),
     "outside of the range"
   )
@@ -27,7 +28,8 @@ testthat::test_that("constructor raises warning when selected is out of range", 
 testthat::test_that("constructor raises warning when selected is not sorted", {
   testthat::expect_warning(
     DatetimeFilterState$new(
-      posixct, dataname = "data", varname = "variable", selected = posixct[c(10, 1)]
+      posixct,
+      dataname = "data", varname = "variable", selected = posixct[c(10, 1)]
     ),
     "Start date '2000-01-01 12:00:09' is set after"
   )
@@ -43,7 +45,8 @@ testthat::test_that("constructor raises error when selection is not Datetime or 
 testthat::test_that("constructor raises warning when choices is out of range", {
   testthat::expect_warning(
     DatetimeFilterState$new(
-      posixct, dataname = "data", varname = "variable", choices = range(posixct) + c(-1, 1)
+      posixct,
+      dataname = "data", varname = "variable", choices = range(posixct) + c(-1, 1)
     ),
     "outside of variable range"
   )
@@ -52,7 +55,8 @@ testthat::test_that("constructor raises warning when choices is out of range", {
 testthat::test_that("constructor raises warning when choices is not sorted", {
   testthat::expect_warning(
     DatetimeFilterState$new(
-      posixct, dataname = "data", varname = "variable", choices = posixct[c(10, 1)]
+      posixct,
+      dataname = "data", varname = "variable", choices = posixct[c(10, 1)]
     ),
     "Invalid choices"
   )
@@ -140,7 +144,7 @@ testthat::test_that("get_call returns call that encompasses all values passed to
   testthat::expect_identical(
     shiny::isolate(filter_state$get_call()),
     quote(variable >= as.POSIXct("2000-01-01 12:00:00", tz = "GMT") & variable <
-            as.POSIXct("2000-01-01 12:00:10", tz = "GMT"))
+      as.POSIXct("2000-01-01 12:00:10", tz = "GMT"))
   )
 })
 
@@ -164,7 +168,9 @@ testthat::test_that("get_call returns a condition true for the object in the sel
 testthat::test_that("get_call returns a condition evaluating to TRUE for NA values is keep_na is TRUE", {
   variable <- c(posixct, NA)
   filter_state <- DatetimeFilterState$new(
-    variable, dataname = "data", varname = "variable")
+    variable,
+    dataname = "data", varname = "variable"
+  )
   testthat::expect_identical(eval(shiny::isolate(filter_state$get_call()))[11], NA)
   filter_state$set_state(filter_var(dataname = "data", varname = "variable", keep_na = TRUE))
   testthat::expect_identical(eval(shiny::isolate(filter_state$get_call()))[11], TRUE)
@@ -174,7 +180,9 @@ testthat::test_that("get_call returns a condition evaluating to TRUE for NA valu
 testthat::test_that("get_call preserves timezone of ISO object passed to constructor", {
   variable <- ISOdate(2021, 8, 25, tz = "Australia/Brisbane")
   filter_state <- DatetimeFilterState$new(
-    variable, dataname = "data", varname = "variable")
+    variable,
+    dataname = "data", varname = "variable"
+  )
   testthat::expect_equal(
     shiny::isolate(filter_state$get_call()),
     quote(
@@ -234,12 +242,12 @@ testthat::test_that("format prepends spaces to every line of the returned string
     testthat::expect_equal(
       shiny::isolate(filter_state$format(indent = i)),
       paste(format("", width = i),
-            c(
-              "Filtering on: variable",
-              sprintf("%sSelected range: 2000-01-01 12:00:00 - 2000-01-01 12:00:09", format("", width = i)),
-              sprintf("%sInclude missing values: FALSE", format("", width = i))
-            ),
-            sep = "", collapse = "\n"
+        c(
+          "Filtering on: variable",
+          sprintf("%sSelected range: 2000-01-01 12:00:00 - 2000-01-01 12:00:09", format("", width = i)),
+          sprintf("%sInclude missing values: FALSE", format("", width = i))
+        ),
+        sep = "", collapse = "\n"
       )
     )
   }
@@ -256,8 +264,8 @@ testthat::test_that("is_any_filtered works properly when NA is present in data",
   testthat::expect_false(shiny::isolate(filter_state$is_any_filtered()))
 
   shiny::isolate(filter_state$set_state(
-    filter_var(varname = "variable", dataname = "data", selected = c(posixct[2], posixct[10])))
-  )
+    filter_var(varname = "variable", dataname = "data", selected = c(posixct[2], posixct[10]))
+  ))
   testthat::expect_true(shiny::isolate(filter_state$is_any_filtered()))
 })
 

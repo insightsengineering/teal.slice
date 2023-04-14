@@ -522,13 +522,15 @@ FilteredData <- R6::R6Class( # nolint
     #'
     set_filter_state = function(state) {
       if (!is.teal_slices(state)) {
-        warning(paste(
-          "From FilteredData$set_filter_state:",
-          "Specifying filters as lists is obsolete and will be deprecated in the next release.",
-          "Please see ?set_filter_state and ?filter_settings for details."
-        ),
-        call. = FALSE)
-       state <- as.teal_slices(state)
+        warning(
+          paste(
+            "From FilteredData$set_filter_state:",
+            "Specifying filters as lists is obsolete and will be deprecated in the next release.",
+            "Please see ?set_filter_state and ?filter_settings for details."
+          ),
+          call. = FALSE
+        )
+        state <- as.teal_slices(state)
       }
 
       checkmate::assert_class(state, "teal_slices")
@@ -559,12 +561,14 @@ FilteredData <- R6::R6Class( # nolint
     #'
     remove_filter_state = function(state) {
       if (!is.teal_slices(state)) {
-        warning(paste(
-          "From FilteredData$remove_filter_state:",
-          "Specifying filters as lists is obsolete and will be deprecated in the next release.",
-          "Please see ?set_filter_state and ?filter_settings for details."
-        ),
-        call. = FALSE)
+        warning(
+          paste(
+            "From FilteredData$remove_filter_state:",
+            "Specifying filters as lists is obsolete and will be deprecated in the next release.",
+            "Please see ?set_filter_state and ?filter_settings for details."
+          ),
+          call. = FALSE
+        )
         state <- as.teal_slices(state)
       }
 
@@ -579,7 +583,7 @@ FilteredData <- R6::R6Class( # nolint
       lapply(datanames, function(x) {
         private$get_filtered_dataset(x)$remove_filter_state(
           slices_which(state, sprintf("dataname == \"%s\"", x))
-          )
+        )
       })
 
       logger::log_trace(

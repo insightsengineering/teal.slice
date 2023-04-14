@@ -604,10 +604,14 @@ testthat::test_that("get_filter_overview returns overview data.frame with filter
   )
   datasets$set_filter_state(
     filter_settings(
-      filter_var(dataname = "iris", varname = "Sepal.Length", selected = c(5.1, 5.1),
-                 keep_na = TRUE, keep_inf = FALSE),
-      filter_var(dataname = "mtcars", varname = "cyl", selected = 6,
-                 keep_na = FALSE, keep_inf = FALSE)
+      filter_var(
+        dataname = "iris", varname = "Sepal.Length", selected = c(5.1, 5.1),
+        keep_na = TRUE, keep_inf = FALSE
+      ),
+      filter_var(
+        dataname = "mtcars", varname = "cyl", selected = 6,
+        keep_na = FALSE, keep_inf = FALSE
+      )
     )
   )
 
@@ -670,7 +674,7 @@ testthat::test_that("filter_panel_disable removes filter states", {
 
 testthat::test_that("filter_panel_enable restores filter states", {
   filtered_data <- FilteredData$new(data_objects = list("iris" = list(dataset = iris)))
-  fs <-  filter_settings(filter_var(dataname = "iris", varname = "Sepal.Width", selected = c(3, 4)))
+  fs <- filter_settings(filter_var(dataname = "iris", varname = "Sepal.Width", selected = c(3, 4)))
   filtered_data$set_filter_state(fs)
   shiny::testServer(
     filtered_data$srv_filter_panel,
@@ -899,14 +903,22 @@ testthat::test_that("get_filter_count properly tallies active filter states for 
     )
   )
   fs <- filter_settings(
-    filter_var(dataname = "mae", varname = "years_to_birth",
-               selected = c(30, 50), keep_na = TRUE, keep_inf = FALSE, datalabel = "subjects", target = "y"),
-    filter_var(dataname = "mae", varname = "vital_status",
-               selected = "1", keep_na = FALSE, datalabel = "subjects", target = "y"),
-    filter_var(dataname = "mae", varname = "gender",
-               selected = "female", keep_na = TRUE, datalabel = "subjects", target = "y"),
-    filter_var(dataname = "mae", varname = "ARRAY_TYPE",
-               selected = "", keep_na = TRUE, datalabel = "RPPAArray", target = "subset")
+    filter_var(
+      dataname = "mae", varname = "years_to_birth",
+      selected = c(30, 50), keep_na = TRUE, keep_inf = FALSE, datalabel = "subjects", target = "y"
+    ),
+    filter_var(
+      dataname = "mae", varname = "vital_status",
+      selected = "1", keep_na = FALSE, datalabel = "subjects", target = "y"
+    ),
+    filter_var(
+      dataname = "mae", varname = "gender",
+      selected = "female", keep_na = TRUE, datalabel = "subjects", target = "y"
+    ),
+    filter_var(
+      dataname = "mae", varname = "ARRAY_TYPE",
+      selected = "", keep_na = TRUE, datalabel = "RPPAArray", target = "subset"
+    )
   )
   shiny::isolate(testthat::expect_equal(datasets$get_filter_count(), 0L))
   datasets$set_filter_state(state = fs)

@@ -3,9 +3,11 @@ logs <- as.logical(c(1, 0, 0, 0, 1, 1, 0, 1, 0, 1, NA))
 # initialize ----
 testthat::test_that("constructor accepts logical values", {
   testthat::expect_no_error(
-    LogicalFilterState$new(logs, dataname = "data", varname = "variable"))
+    LogicalFilterState$new(logs, dataname = "data", varname = "variable")
+  )
   testthat::expect_error(
-    LogicalFilterState$new(0:1, dataname = "data", varname = "variable"), "Assertion on 'x' failed")
+    LogicalFilterState$new(0:1, dataname = "data", varname = "variable"), "Assertion on 'x' failed"
+  )
 })
 
 testthat::test_that("constructor raises error when selection is not logical", {
@@ -92,12 +94,12 @@ testthat::test_that("format prepends spaces to every line of the returned string
     testthat::expect_equal(
       shiny::isolate(filter_state$format(indent = i)),
       paste(format("", width = i),
-            c(
-              "Filtering on: variable",
-              sprintf("%sSelected values: TRUE", format("", width = i)),
-              sprintf("%sInclude missing values: FALSE", format("", width = i))
-            ),
-            sep = "", collapse = "\n"
+        c(
+          "Filtering on: variable",
+          sprintf("%sSelected values: TRUE", format("", width = i)),
+          sprintf("%sInclude missing values: FALSE", format("", width = i))
+        ),
+        sep = "", collapse = "\n"
       )
     )
   }
@@ -106,7 +108,7 @@ testthat::test_that("format prepends spaces to every line of the returned string
 
 # is_any_filtered ----
 testthat::test_that("is_any_filtered works properly when both TRUE and FALSE are present", {
-  filter_state <- LogicalFilterState$new(x = logs, dataname = "data",varname = "variable")
+  filter_state <- LogicalFilterState$new(x = logs, dataname = "data", varname = "variable")
 
   filter_state$set_state(filter_var(dataname = "data", varname = "variable", selected = TRUE))
   testthat::expect_true(
@@ -139,7 +141,7 @@ testthat::test_that("is_any_filtered works properly when both TRUE and FALSE are
   )
 
 
-  filter_state <- LogicalFilterState$new(x = logs[!logs], dataname = "data",varname = "variable")
+  filter_state <- LogicalFilterState$new(x = logs[!logs], dataname = "data", varname = "variable")
   filter_state$set_state(filter_var(dataname = "data", varname = "variable", selected = TRUE, keep_na = TRUE))
   testthat::expect_true(
     shiny::isolate(filter_state$is_any_filtered())

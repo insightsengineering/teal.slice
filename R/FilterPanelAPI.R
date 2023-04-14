@@ -40,7 +40,6 @@
 FilterPanelAPI <- R6::R6Class( # nolint
   "FilterPanelAPI",
   ## __Public Methods ====
-
   public = list(
     #' @description
     #' Initialize a `FilterPanelAPI` object

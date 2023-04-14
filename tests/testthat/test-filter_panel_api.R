@@ -45,7 +45,7 @@ testthat::test_that("FilterPanelAPI$set_filter_state accepts `teal_slies` and na
   testthat::expect_equal(datasets1, datasets2)
 })
 
-testthat::test_that("FilterPanelAPI$set_filter_state adds filter states" , {
+testthat::test_that("FilterPanelAPI$set_filter_state adds filter states", {
   datasets <- FilterPanelAPI$new(filtered_data)
   fs <- filter_settings(
     filter_var(dataname = "df1", varname = "num", selected = c(5.1, 6.4), keep_na = FALSE, keep_inf = FALSE),
@@ -62,7 +62,7 @@ testthat::test_that("FilterPanelAPI$get_filter_state returns `teal_slices` ident
 
   fs <- filter_settings(
     filter_var(dataname = "df1", varname = "num", selected = c(5.1, 6.4), keep_na = FALSE, keep_inf = FALSE),
-    filter_var(dataname = "df1", varname = "fact",selected = c("a", "b"), keep_na = FALSE),
+    filter_var(dataname = "df1", varname = "fact", selected = c("a", "b"), keep_na = FALSE),
     filter_var(dataname = "df2", varname = "int", selected = c(52, 65), keep_na = FALSE, keep_inf = FALSE)
   )
   shiny::isolate(datasets$set_filter_state(fs))
@@ -78,7 +78,7 @@ testthat::test_that("FilterPanelAPI$remove_filter_state removes filter states sp
   datasets <- FilterPanelAPI$new(filtered_data)
   fs <- filter_settings(
     filter_var(dataname = "df1", varname = "num", selected = c(5.1, 6.4), keep_na = FALSE, keep_inf = FALSE),
-    filter_var(dataname = "df1", varname = "fact",selected = c("a", "b"), keep_na = FALSE),
+    filter_var(dataname = "df1", varname = "fact", selected = c("a", "b"), keep_na = FALSE),
     filter_var(dataname = "df2", varname = "int", selected = c(52, 65), keep_na = FALSE, keep_inf = FALSE)
   )
   shiny::isolate(datasets$set_filter_state(fs))
@@ -92,33 +92,32 @@ testthat::test_that("FilterPanelAPI$remove_filter_state removes filter states sp
 
 # clear_filter_states ----
 testthat::test_that("FilterPanelAPI$clear_filter_states removes all filters of datasets in FilterPanelAPI", {
-    datasets <- FilterPanelAPI$new(filtered_data)
-    fs <- filter_settings(
-      filter_var(dataname = "df1", varname = "num", selected = c(5.1, 6.4), keep_na = FALSE, keep_inf = FALSE),
-      filter_var(dataname = "df1", varname = "fact",selected = c("a", "b"), keep_na = FALSE),
-      filter_var(dataname = "df2", varname = "int", selected = c(52, 65), keep_na = FALSE, keep_inf = FALSE)
-    )
-    shiny::isolate(datasets$set_filter_state(fs))
+  datasets <- FilterPanelAPI$new(filtered_data)
+  fs <- filter_settings(
+    filter_var(dataname = "df1", varname = "num", selected = c(5.1, 6.4), keep_na = FALSE, keep_inf = FALSE),
+    filter_var(dataname = "df1", varname = "fact", selected = c("a", "b"), keep_na = FALSE),
+    filter_var(dataname = "df2", varname = "int", selected = c(52, 65), keep_na = FALSE, keep_inf = FALSE)
+  )
+  shiny::isolate(datasets$set_filter_state(fs))
 
-    testthat::expect_equal(
-      length(shiny::isolate(datasets$get_filter_state())),
-      3
-    )
+  testthat::expect_equal(
+    length(shiny::isolate(datasets$get_filter_state())),
+    3
+  )
 
-    shiny::isolate(datasets$clear_filter_states())
+  shiny::isolate(datasets$clear_filter_states())
 
-    testthat::expect_equal(
-      length(shiny::isolate(datasets$get_filter_state())),
-      0
-    )
-  }
-)
+  testthat::expect_equal(
+    length(shiny::isolate(datasets$get_filter_state())),
+    0
+  )
+})
 
 testthat::test_that("FilterPanelAPI$clear_filter_states remove the filters of the desired dataset only", {
   datasets <- FilterPanelAPI$new(filtered_data)
   fs <- filter_settings(
     filter_var(dataname = "df1", varname = "num", selected = c(5.1, 6.4), keep_na = FALSE, keep_inf = FALSE),
-    filter_var(dataname = "df1", varname = "fact",selected = c("a", "b"), keep_na = FALSE),
+    filter_var(dataname = "df1", varname = "fact", selected = c("a", "b"), keep_na = FALSE),
     filter_var(dataname = "df2", varname = "int", selected = c(52, 65), keep_na = FALSE, keep_inf = FALSE)
   )
   shiny::isolate(datasets$set_filter_state(fs))
@@ -150,7 +149,7 @@ testthat::test_that("filter_panel_api neutral when filter panel is disabled", {
       datasets <- FilterPanelAPI$new(filtered_data)
       fs <- filter_settings(
         filter_var(dataname = "df1", varname = "num", selected = c(5.1, 6.4), keep_na = FALSE, keep_inf = FALSE),
-        filter_var(dataname = "df1", varname = "fact",selected = c("a", "b"), keep_na = FALSE),
+        filter_var(dataname = "df1", varname = "fact", selected = c("a", "b"), keep_na = FALSE),
         filter_var(dataname = "df2", varname = "int", selected = c(52, 65), keep_na = FALSE, keep_inf = FALSE)
       )
       testthat::expect_warning(datasets$set_filter_state(fs))
@@ -170,7 +169,7 @@ testthat::test_that("filter_panel_api under disable/enable filter panel", {
       datasets <- FilterPanelAPI$new(filtered_data)
       fs <- filter_settings(
         filter_var(dataname = "df1", varname = "num", selected = c(5.1, 6.4), keep_na = FALSE, keep_inf = FALSE),
-        filter_var(dataname = "df1", varname = "fact",selected = c("a", "b"), keep_na = FALSE),
+        filter_var(dataname = "df1", varname = "fact", selected = c("a", "b"), keep_na = FALSE),
         filter_var(dataname = "df2", varname = "int", selected = c(52, 65), keep_na = FALSE, keep_inf = FALSE)
       )
       testthat::expect_warning(datasets$set_filter_state(fs))
@@ -239,8 +238,10 @@ testthat::test_that("get_filter_state returns `teal_slices` identical to that us
   fs <- filter_settings(
     filter_var("iris", "Species", selected = c("setosa", "versicolor")),
     filter_var("iris", "Sepal.Length", selected = c(5.1, 6.4)),
-    filter_var("mae", "years_to_birth", selected = c(30, 50),
-               keep_na = TRUE, keep_inf = FALSE, datalabel = "subjects", target = "y"),
+    filter_var("mae", "years_to_birth",
+      selected = c(30, 50),
+      keep_na = TRUE, keep_inf = FALSE, datalabel = "subjects", target = "y"
+    ),
     filter_var("mae", "vital_status", selected = "1", keep_na = FALSE, datalabel = "subjects", target = "y"),
     filter_var("mae", "gender", selected = "female", keep_na = TRUE, datalabel = "subjects", target = "y"),
     filter_var("mae", "ARRAY_TYPE", selected = "", keep_na = TRUE, datalabel = "RPPAArray", target = "subset")
@@ -265,8 +266,10 @@ testthat::test_that("remove_filter_state removes filter state specified by `teal
   fs <- filter_settings(
     filter_var("iris", "Species", selected = c("setosa", "versicolor")),
     filter_var("iris", "Sepal.Length", selected = c(5.1, 6.4)),
-    filter_var("mae", "years_to_birth", selected = c(30, 50),
-               keep_na = TRUE, keep_inf = FALSE, datalabel = "subjects", target = "y"),
+    filter_var("mae", "years_to_birth",
+      selected = c(30, 50),
+      keep_na = TRUE, keep_inf = FALSE, datalabel = "subjects", target = "y"
+    ),
     filter_var("mae", "vital_status", selected = "1", keep_na = FALSE, datalabel = "subjects", target = "y"),
     filter_var("mae", "gender", selected = "female", keep_na = TRUE, datalabel = "subjects", target = "y"),
     filter_var("mae", "ARRAY_TYPE", selected = "", keep_na = TRUE, datalabel = "RPPAArray", target = "subset")
@@ -293,8 +296,10 @@ testthat::test_that("clear_filter_states removes all filter states", {
   fs <- filter_settings(
     filter_var("iris", "Species", selected = c("setosa", "versicolor")),
     filter_var("iris", "Sepal.Length", selected = c(5.1, 6.4)),
-    filter_var("mae", "years_to_birth", selected = c(30, 50),
-               keep_na = TRUE, keep_inf = FALSE, datalabel = "subjects", target = "y"),
+    filter_var("mae", "years_to_birth",
+      selected = c(30, 50),
+      keep_na = TRUE, keep_inf = FALSE, datalabel = "subjects", target = "y"
+    ),
     filter_var("mae", "vital_status", selected = "1", keep_na = FALSE, datalabel = "subjects", target = "y"),
     filter_var("mae", "gender", selected = "female", keep_na = TRUE, datalabel = "subjects", target = "y"),
     filter_var("mae", "ARRAY_TYPE", selected = "", keep_na = TRUE, datalabel = "RPPAArray", target = "subset")

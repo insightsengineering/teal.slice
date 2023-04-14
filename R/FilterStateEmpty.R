@@ -72,7 +72,6 @@ EmptyFilterState <- R6::R6Class( # nolint
                           disabled = FALSE,
                           extract_type = character(0),
                           ...) {
-
       args <- list(
         x = x,
         x_reactive = x_reactive,

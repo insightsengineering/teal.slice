@@ -247,14 +247,14 @@ FilterState <- R6::R6Class( # nolint
           private$server_summary("summary")
           private$server_inputs("inputs")
           observeEvent(input$enable,
-                       {
-                         if (isTRUE(input$enable)) {
-                           private$enable()
-                         } else {
-                           private$disable()
-                         }
-                       },
-                       ignoreInit = TRUE
+            {
+              if (isTRUE(input$enable)) {
+                private$enable()
+              } else {
+                private$disable()
+              }
+            },
+            ignoreInit = TRUE
           )
           reactive(input$remove) # back to parent to remove self
         }
@@ -336,7 +336,6 @@ FilterState <- R6::R6Class( # nolint
       lapply(private$observers, function(x) x$destroy())
       return(invisible(NULL))
     }
-
   ),
 
   # private members ----

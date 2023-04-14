@@ -48,7 +48,7 @@ testthat::test_that("constructor initializes state_list with two elements named 
     classname = "filter_states",
     inherit = SEFilterStates,
     public = list(
-        state_list_get = function(state_list_index, state_id) private$state_list_get(state_list_index, state_id)
+      state_list_get = function(state_list_index, state_id) private$state_list_get(state_list_index, state_id)
     )
   )
   filter_states <- test_class$new(data = get_test_data(), dataname = "test")
@@ -113,10 +113,14 @@ testthat::test_that("set_filter_state adds states to state_list", {
 testthat::test_that("get_filter_state returns `teal_slices` identical to that used to set state (choices excluded)", {
   filter_states <- SEFilterStates$new(data = get_test_data(), dataname = "test")
   fs <- filter_settings(
-    filter_var(dataname = "test", varname = "feature_id", selected = c("ID001", "ID002"), keep_na = FALSE,
-               target = "subset"),
-    filter_var(dataname = "test", varname = "Treatment", selected = c("ChIP", "Input"), keep_na = FALSE,
-               target = "select")
+    filter_var(
+      dataname = "test", varname = "feature_id", selected = c("ID001", "ID002"), keep_na = FALSE,
+      target = "subset"
+    ),
+    filter_var(
+      dataname = "test", varname = "Treatment", selected = c("ChIP", "Input"), keep_na = FALSE,
+      target = "select"
+    )
   )
   filter_states$set_filter_state(state = fs)
 
@@ -211,10 +215,14 @@ testthat::test_that("format concatenates its FilterState elements using \\n and 
   )
   filter_states <- test_class$new(data = get_test_data(), dataname = "test", datalabel = "Label")
   fs <- filter_settings(
-    filter_var(dataname = "test", varname = "feature_id", selected = c("ID001", "ID002"), keep_na = FALSE,
-               target = "subset"),
-    filter_var(dataname = "test", varname = "Treatment", selected = c("ChIP"), keep_na = FALSE,
-               target = "select")
+    filter_var(
+      dataname = "test", varname = "feature_id", selected = c("ID001", "ID002"), keep_na = FALSE,
+      target = "subset"
+    ),
+    filter_var(
+      dataname = "test", varname = "Treatment", selected = c("ChIP"), keep_na = FALSE,
+      target = "select"
+    )
   )
   filter_states$set_filter_state(state = fs)
 
@@ -272,16 +280,22 @@ testthat::test_that("get_filter_count properly tallies multiple state lists - SE
   filter_states <- SEFilterStates$new(data = get_test_data(), dataname = "test", datalabel = "test")
 
   fs <- filter_settings(
-    filter_var(selected = c("ID001", "ID002"), choices = c("ID001", "ID002"), dataname = "test",
-               varname = "feature_id", target = "subset", keep_na = FALSE),
-    filter_var(selected = c("ChIP"), choices = c("ChIP", "Input"), dataname = "test",
-               varname = "Treatment", target = "select", keep_na = FALSE)
+    filter_var(
+      selected = c("ID001", "ID002"), choices = c("ID001", "ID002"), dataname = "test",
+      varname = "feature_id", target = "subset", keep_na = FALSE
+    ),
+    filter_var(
+      selected = c("ChIP"), choices = c("ChIP", "Input"), dataname = "test",
+      varname = "Treatment", target = "select", keep_na = FALSE
+    )
   )
   filter_states$set_filter_state(state = fs)
   testthat::expect_equal(shiny::isolate(filter_states$get_filter_count()), 2)
   shiny::isolate(filter_states$remove_filter_state(filter_settings(
-    filter_var(selected = c("ID001", "ID002"), choices = c("ID001", "ID002"), dataname = "test",
-               varname = "feature_id", target = "subset", keep_na = FALSE)
+    filter_var(
+      selected = c("ID001", "ID002"), choices = c("ID001", "ID002"), dataname = "test",
+      varname = "feature_id", target = "subset", keep_na = FALSE
+    )
   )))
   testthat::expect_equal(shiny::isolate(filter_states$get_filter_count()), 1)
 })

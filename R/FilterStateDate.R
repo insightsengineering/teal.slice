@@ -143,7 +143,7 @@ DateFilterState <- R6::R6Class( # nolint
                           extract_type = character(0),
                           ...) {
       checkmate::assert_date(x)
-      checkmate::assert_class(x_reactive, 'reactive')
+      checkmate::assert_class(x_reactive, "reactive")
       checkmate::assert_date(choices, null.ok = TRUE)
 
       args <- list(
@@ -229,7 +229,6 @@ DateFilterState <- R6::R6Class( # nolint
   # private methods ----
 
   private = list(
-
     set_choices = function(choices) {
       if (is.null(choices)) {
         choices <- range(private$x, na.rm = TRUE)
@@ -238,14 +237,16 @@ DateFilterState <- R6::R6Class( # nolint
         if (any(choices != choices_adjusted)) {
           warning(sprintf(
             "Choices adjusted (some values outside of variable range). Varname: %s, dataname: %s.",
-            private$varname, private$dataname))
+            private$varname, private$dataname
+          ))
           choices <- choices_adjusted
         }
         if (choices[1L] >= choices[2L]) {
           warning(sprintf(
             "Invalid choices: lower is higher / equal to upper, or not in range of variable values.
             Setting defaults. Varname: %s, dataname: %s.",
-            private$varname, private$dataname))
+            private$varname, private$dataname
+          ))
           choices <- range(private$x, na.rm = TRUE)
         }
       }

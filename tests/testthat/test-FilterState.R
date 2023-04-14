@@ -292,7 +292,8 @@ testthat::test_that(
       shiny::isolate(filter_state$test_add_keep_na_call()),
       quote(TRUE)
     )
-  })
+  }
+)
 
 # get_varlabel ----
 testthat::test_that("get_varlabel returns a string if x has the label attribute different to varname", {

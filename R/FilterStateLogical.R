@@ -136,7 +136,7 @@ LogicalFilterState <- R6::R6Class( # nolint
                           extract_type = character(0),
                           ...) {
       checkmate::assert_logical(x)
-      checkmate::assert_class(x_reactive, 'reactive')
+      checkmate::assert_class(x_reactive, "reactive")
       checkmate::assert_flag(selected, null.ok = TRUE)
 
       args <- list(

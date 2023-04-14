@@ -4,12 +4,14 @@ nums <- 1:10
 testthat::test_that("constructor accepts numerical values", {
   testthat::expect_no_error(RangeFilterState$new(nums, dataname = "data", varname = "variable"))
   testthat::expect_error(
-    RangeFilterState$new(as.character(nums), dataname = "data", varname = "variable"), "Assertion on 'x' failed")
+    RangeFilterState$new(as.character(nums), dataname = "data", varname = "variable"), "Assertion on 'x' failed"
+  )
 })
 
 testthat::test_that("constructor accepts infinite values but not infinite only", {
   testthat::expect_no_error(
-    RangeFilterState$new(c(nums, Inf, -Inf), dataname = "data", varname = "variable"))
+    RangeFilterState$new(c(nums, Inf, -Inf), dataname = "data", varname = "variable")
+  )
   testthat::expect_error(
     RangeFilterState$new(Inf, dataname = "data", varname = "variable"),
     "\"x\" contains no finite values"
@@ -23,7 +25,8 @@ testthat::test_that("constructor accepts infinite values but not infinite only",
 testthat::test_that("constructor raises error when selected is not sorted", {
   testthat::expect_error(
     RangeFilterState$new(
-      nums, dataname = "data", varname = "variable", selected = nums[c(10, 1)]
+      nums,
+      dataname = "data", varname = "variable", selected = nums[c(10, 1)]
     ),
     "Assertion on 'x' failed: Must be sorted"
   )
@@ -41,7 +44,8 @@ testthat::test_that("constructor raises error when selection is not numeric or c
 testthat::test_that("constructor raises error when choices is out of range", {
   testthat::expect_warning(
     RangeFilterState$new(
-      nums, dataname = "data", varname = "variable", choices = range(nums) + c(-1, 1)
+      nums,
+      dataname = "data", varname = "variable", choices = range(nums) + c(-1, 1)
     ),
     "Choices adjusted"
   )
@@ -50,7 +54,8 @@ testthat::test_that("constructor raises error when choices is out of range", {
 testthat::test_that("constructor raises warning when choices is not sorted", {
   testthat::expect_warning(
     RangeFilterState$new(
-      nums, dataname = "data", varname = "variable", choices = nums[c(10, 1)]
+      nums,
+      dataname = "data", varname = "variable", choices = nums[c(10, 1)]
     ),
     "Invalid choices"
   )
@@ -151,12 +156,12 @@ testthat::test_that("format prepends spaces to every line of the returned string
     testthat::expect_equal(
       shiny::isolate(filter_state$format(indent = i)),
       paste(format("", width = i),
-            c(
-              "Filtering on: variable",
-              sprintf("%sSelected range: 1.000 - 10.000", format("", width = i)),
-              sprintf("%sInclude missing values: FALSE", format("", width = i))
-            ),
-            sep = "", collapse = "\n"
+        c(
+          "Filtering on: variable",
+          sprintf("%sSelected range: 1.000 - 10.000", format("", width = i)),
+          sprintf("%sInclude missing values: FALSE", format("", width = i))
+        ),
+        sep = "", collapse = "\n"
       )
     )
   }

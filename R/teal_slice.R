@@ -1,4 +1,3 @@
-
 #' Manage filter state(s).
 #'
 #' Functions for passing filter state information between objects.
@@ -34,19 +33,19 @@
 #' as well as `filter_panel_api` wrapper functions.
 #' `teal_slices` also specifies which variables cannot be filtered
 #' and how observations are tallied, which is resolved by `FilterStates`.
-#' 
+#'
 #' @section Filters in `SumarizedExperiment` and `MultiAssayExperiment` objects:
-#' 
+#'
 #' To establish a filter on a column in a `data.frame`, `dataname` and `varname` are sufficient.
-#' Filter states created created for `SummarizedExperiments` require more information 
-#' as each variable is either located in the `rowData` or `colData` slots. 
-#' Thus, `teal_slice` objects taht refer to such filter states must also contain the field `target` 
+#' Filter states created created for `SummarizedExperiments` require more information
+#' as each variable is either located in the `rowData` or `colData` slots.
+#' Thus, `teal_slice` objects taht refer to such filter states must also contain the field `target`
 #' that specifies "subset" for variales in `rowData` and "select" for those in `colData`.
-#' 
+#'
 #' Likewise, observations in a `MultiAssayExpeeiment` can be filtered based on the content of the `colData` slot
 #' or based on the contents of `rowData` and `colData` of any of its experiments. Hence, another field is necessary.
 #' `teal_slice` objects refering to `MultiAssayExperiment` objects must contain the field `datalabel`
-#' that names either an experiment (as listed in `experimentList(<MAE>)`) or "subjects" 
+#' that names either an experiment (as listed in `experimentList(<MAE>)`) or "subjects"
 #' if it referes to the MAE's `colData`. They must **also** specify `target` as "subset" or "select"
 #' for experiments and as "y" for `colData`.
 #'
@@ -81,8 +80,9 @@
 #' @examples
 #' filter_1 <- filter_var("dataname1", "varname1", letters, "b", FALSE, extra1 = "extraone")
 #' filter_2 <- filter_var("dataname1", "varname2", 1:10, 2, TRUE, FALSE, extra2 = "extratwo")
-#' filter_3 <- filter_var("dataname2", "varname3", 1:10/10, 0.2, TRUE, FALSE,
-#'                        extra1 = "extraone", extra2 = "extratwo")
+#' filter_3 <- filter_var("dataname2", "varname3", 1:10 / 10, 0.2, TRUE, FALSE,
+#'   extra1 = "extraone", extra2 = "extratwo"
+#' )
 #'
 #' all_filters <- filter_settings(
 #'   filter_1,
@@ -114,8 +114,7 @@ filter_var <- function(
     keep_inf = NULL,
     fixed = FALSE,
     disabled = FALSE,
-    ...
-) {
+    ...) {
   checkmate::assert_string(dataname)
   checkmate::assert_string(varname)
   checkmate::assert_multi_class(choices, .filterable_class, null.ok = TRUE)
@@ -148,8 +147,7 @@ filter_var <- function(
 filter_settings <- function(
     ...,
     exclude = list(),
-    count_type = c("none", "all", "hierarchical")
-) {
+    count_type = c("none", "all", "hierarchical")) {
   slices <- list(...)
   checkmate::assert_list(slices, types = "teal_slice", any.missing = FALSE)
   checkmate::assert_list(exclude, names = "named", types = "character")
@@ -205,8 +203,10 @@ c.teal_slice <- function(...) {
 format.teal_slice <- function(x, show_all = FALSE, ...) {
   name_width <- max(nchar(names(x)))
   format_value <- function(v) {
-    if (is.null(v)) return("NULL")
-    if (inherits(v,  c("character", "factor"))) {
+    if (is.null(v)) {
+      return("NULL")
+    }
+    if (inherits(v, c("character", "factor"))) {
       v <- dQuote(v, q = FALSE)
     }
     v <- paste(v, collapse = " ")
@@ -296,7 +296,7 @@ as.teal_slices <- function(x) {
         args$selected <- subitem$selected
         args$keep_na <- subitem$keep_na
         args$keep_inf <- subitem$keep_inf
-        slices[[length(slices)+1]] <- as.teal_slice(Filter(Negate(is.null), args))
+        slices[[length(slices) + 1]] <- as.teal_slice(Filter(Negate(is.null), args))
         args <- make_args()
       } else {
         for (iii in seq_along(subitem)) {
@@ -310,7 +310,7 @@ as.teal_slices <- function(x) {
             args$keep_inf <- subsubitem$keep_inf
             args$datalabel <- names(item)[ii]
             if (args$datalabel == "subjects") args$target <- "y"
-            slices[[length(slices)+1]] <- as.teal_slice(Filter(Negate(is.null), args))
+            slices[[length(slices) + 1]] <- as.teal_slice(Filter(Negate(is.null), args))
             args <- make_args()
           } else {
             for (iiii in seq_along(subsubitem)) {
@@ -324,7 +324,7 @@ as.teal_slices <- function(x) {
                 args$keep_inf <- subsubsubitem$keep_inf
                 args$datalabel <- names(item)[ii]
                 args$target <- names(subitem)[iii]
-                slices[[length(slices)+1]] <- as.teal_slice(Filter(Negate(is.null), args))
+                slices[[length(slices) + 1]] <- as.teal_slice(Filter(Negate(is.null), args))
                 args <- make_args()
               }
             }
@@ -349,7 +349,9 @@ as.teal_slices <- function(x) {
 #'
 `[.teal_slices` <- function(x, i) {
   if (missing(i)) i <- seq_along(x)
-  if (length(i) == 0L) return(x[0])
+  if (length(i) == 0L) {
+    return(x[0])
+  }
   if (is.logical(i) & length(i) > length(x)) stop("subscript out of bounds")
   if (is.numeric(i) & max(i) > length(x)) stop("subscript out of bounds")
   if (is.character(i)) {

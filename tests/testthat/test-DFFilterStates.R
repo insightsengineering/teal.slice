@@ -1,8 +1,8 @@
-
 # initialize ----
 testthat::test_that("contructor accepts a string as varlabels and keys", {
   testthat::expect_no_error(
-    DFFilterStates$new(data = data.frame(), dataname = "test", varlabels = "test", keys = "test"))
+    DFFilterStates$new(data = data.frame(), dataname = "test", varlabels = "test", keys = "test")
+  )
 })
 
 testthat::test_that("constructor initializes state_list of length 1", {
@@ -36,7 +36,6 @@ testthat::test_that("set_filter_state only accepts `teal_slices`", {
   )
   testthat::expect_error(filter_states$set_filter_state(state = fs[[1]]), "Assertion on 'state' failed")
   testthat::expect_no_error(filter_states$set_filter_state(state = fs))
-
 })
 
 testthat::test_that("set_filter_state adds states to state_list", {
@@ -82,16 +81,22 @@ testthat::test_that("set_filter_state updates existing filter states", {
   filter_states <- DFFilterStates$new(data = iris, dataname = "iris")
   filter_states$set_filter_state(
     state = filter_settings(
-      filter_var(dataname = "iris", varname = "Sepal.Length", selected = c(5.1, 6.4),
-                 keep_na = FALSE, keep_inf = FALSE),
-      filter_var(dataname = "iris", varname = "Species", selected = c("setosa", "versicolor"),
-                 keep_na = FALSE)
+      filter_var(
+        dataname = "iris", varname = "Sepal.Length", selected = c(5.1, 6.4),
+        keep_na = FALSE, keep_inf = FALSE
+      ),
+      filter_var(
+        dataname = "iris", varname = "Species", selected = c("setosa", "versicolor"),
+        keep_na = FALSE
+      )
     )
   )
   filter_states$set_filter_state(
     state = filter_settings(
-      filter_var(dataname = "iris", varname = "Petal.Length", selected = c(2.0, 5.0),
-                 keep_na = FALSE, keep_inf = FALSE),
+      filter_var(
+        dataname = "iris", varname = "Petal.Length", selected = c(2.0, 5.0),
+        keep_na = FALSE, keep_inf = FALSE
+      ),
       filter_var(dataname = "iris", varname = "Species", selected = "setosa")
     )
   )
@@ -99,11 +104,15 @@ testthat::test_that("set_filter_state updates existing filter states", {
   testthat::expect_identical(
     adjust_states(shiny::isolate(filter_states$get_filter_state())),
     filter_settings(
-      filter_var(dataname = "iris", varname = "Sepal.Length", selected = c(5.1, 6.4),
-                 keep_na = FALSE, keep_inf = FALSE),
+      filter_var(
+        dataname = "iris", varname = "Sepal.Length", selected = c(5.1, 6.4),
+        keep_na = FALSE, keep_inf = FALSE
+      ),
       filter_var(dataname = "iris", varname = "Species", selected = "setosa", keep_na = FALSE),
-      filter_var(dataname = "iris", varname = "Petal.Length", selected = c(2.0, 5.0),
-                 keep_na = FALSE, keep_inf = FALSE)
+      filter_var(
+        dataname = "iris", varname = "Petal.Length", selected = c(2.0, 5.0),
+        keep_na = FALSE, keep_inf = FALSE
+      )
     )
   )
 })
@@ -142,9 +151,11 @@ testthat::test_that("set_filter_state sets sid after state_list_index and varnam
 testthat::test_that("remove_filter_state removes specified filter in FilterStates", {
   filter_states <- DFFilterStates$new(data = iris, dataname = "iris")
   fs <- filter_settings(
-    filter_var(dataname = "iris", varname = "Sepal.Length", selected = c(5.1, 6.4),
-               keep_na = FALSE, keep_inf = FALSE),
-    filter_var(dataname = "iris", varname = "Species",selected = c("setosa", "versicolor"))
+    filter_var(
+      dataname = "iris", varname = "Sepal.Length", selected = c(5.1, 6.4),
+      keep_na = FALSE, keep_inf = FALSE
+    ),
+    filter_var(dataname = "iris", varname = "Species", selected = c("setosa", "versicolor"))
   )
   filter_states$set_filter_state(state = fs)
   filter_states$remove_filter_state(filter_settings(filter_var(dataname = "iris", varname = "Species")))
@@ -159,9 +170,11 @@ testthat::test_that("remove_filter_state raises warning when name is not in Filt
   teal.logger::suppress_logs()
   filter_states <- DFFilterStates$new(data = iris, dataname = "iris")
   fs <- filter_settings(
-    filter_var(dataname = "iris", varname = "Sepal.Length", selected = c(5.1, 6.4),
-               keep_na = FALSE, keep_inf = FALSE),
-    filter_var(dataname = "iris", varname = "Species",selected = c("setosa", "versicolor"))
+    filter_var(
+      dataname = "iris", varname = "Sepal.Length", selected = c(5.1, 6.4),
+      keep_na = FALSE, keep_inf = FALSE
+    ),
+    filter_var(dataname = "iris", varname = "Species", selected = c("setosa", "versicolor"))
   )
   shiny::isolate(filter_states$set_filter_state(state = fs))
 
@@ -190,7 +203,7 @@ testthat::test_that("format concatenates its FilterState elements using \\n with
   filter_states <- test_class$new(data = iris, dataname = "iris")
   fs <- filter_settings(
     filter_var(dataname = "iris", varname = "Sepal.Length", selected = c(5.1, 6.4), keep_na = TRUE, keep_inf = TRUE),
-    filter_var(dataname = "iris", varname = "Species",selected = c("setosa", "versicolor"), keep_na = FALSE)
+    filter_var(dataname = "iris", varname = "Species", selected = c("setosa", "versicolor"), keep_na = FALSE)
   )
   filter_states$set_filter_state(state = fs)
 
@@ -349,8 +362,10 @@ testthat::test_that("Adding 'var_to_add' adds another filter state", {
   testthat::expect_identical(
     adjust_states(shiny::isolate(filter_states$get_filter_state())),
     filter_settings(
-      filter_var(dataname = "iris", varname = "Sepal.Length", selected = c(5.1, 6.4),
-                 keep_na = FALSE, keep_inf = FALSE),
+      filter_var(
+        dataname = "iris", varname = "Sepal.Length", selected = c(5.1, 6.4),
+        keep_na = FALSE, keep_inf = FALSE
+      ),
       filter_var(dataname = "iris", varname = "Petal.Length", selected = c(1.0, 6.9)),
       filter_var(dataname = "iris", varname = "Species", selected = c("setosa", "versicolor", "virginica"))
     )

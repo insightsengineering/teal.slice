@@ -1,4 +1,3 @@
-
 # argument checks ----
 testthat::test_that("init_filter_state checks arguments", {
   testthat::expect_error(init_filter_state(), "argument \"dataname\" is missing")
@@ -76,18 +75,22 @@ testthat::test_that("init_filter_state returns a ChoicesFilterState object if pa
   a POSIXct or POSIXlt of length 1", {
   dates <- seq(as.Date("1990/01/01"), by = 1, length.out = 1)
   testthat::expect_s3_class(
-    init_filter_state(as.POSIXct(dates), dataname = "data", varname = "variable"), "ChoicesFilterState")
+    init_filter_state(as.POSIXct(dates), dataname = "data", varname = "variable"), "ChoicesFilterState"
+  )
   testthat::expect_s3_class(
-    init_filter_state(as.POSIXlt(dates), dataname = "data", varname = "variable"), "ChoicesFilterState")
+    init_filter_state(as.POSIXlt(dates), dataname = "data", varname = "variable"), "ChoicesFilterState"
+  )
 })
 
 testthat::test_that("init_filter_state returns a DatetimeFilterState object if passed
   a longer POSIXct or POSIXlt", {
   dates <- seq(as.Date("1990/01/01"), by = 1, length.out = getOption("teal.threshold_slider_vs_checkboxgroup") + 1)
   testthat::expect_s3_class(
-    init_filter_state(as.POSIXct(dates), dataname = "data", varname = "variable"), "DatetimeFilterState")
+    init_filter_state(as.POSIXct(dates), dataname = "data", varname = "variable"), "DatetimeFilterState"
+  )
   testthat::expect_s3_class(
-    init_filter_state(as.POSIXlt(dates), dataname = "data", varname = "variable"), "DatetimeFilterState")
+    init_filter_state(as.POSIXlt(dates), dataname = "data", varname = "variable"), "DatetimeFilterState"
+  )
 })
 
 testthat::test_that("init_filter_state returns a RangeFilterState if passed a numeric vector containing Inf", {

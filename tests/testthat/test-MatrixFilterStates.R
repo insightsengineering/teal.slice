@@ -1,4 +1,3 @@
-
 # initialize ----
 testthat::test_that("constructor accepts a matrix", {
   testthat::expect_no_error(
@@ -216,7 +215,7 @@ testthat::test_that("get_filter_count returns the number of active filter states
 
 # ui_add ----
 testthat::test_that("ui_add returns a message inside a div when data has no rows or no columns", {
-  test <-  matrix(nrow = 0, ncol = 0)
+  test <- matrix(nrow = 0, ncol = 0)
   filter_state <- MatrixFilterStates$new(data = test, dataname = "test")
   testthat::expect_identical(
     filter_state$ui_add("id"),

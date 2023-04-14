@@ -118,11 +118,11 @@ MatrixFilterStates <- R6::R6Class( # nolint
       slices <- lapply(private$state_list_get("subset"), function(x) x$get_state())
       excluded_varnames <- structure(
         list(setdiff(colnames(private$data), private$filterable_varnames)),
-        names = private$dataname)
+        names = private$dataname
+      )
       excluded_varnames <- Filter(function(x) !identical(x, character(0)), excluded_varnames)
 
       do.call(filter_settings, c(slices, list(exclude = excluded_varnames, count_type = private$count_type)))
-
     },
 
     #' @description

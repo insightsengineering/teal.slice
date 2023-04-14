@@ -1,4 +1,3 @@
-
 # initialize ----
 testthat::test_that("constructor accepts only a string as dataname", {
   testthat::expect_no_error(FilterStates$new(data = NULL, dataname = "string"))

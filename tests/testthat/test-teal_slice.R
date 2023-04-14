@@ -1,4 +1,3 @@
-
 # filter_var ----
 testthat::test_that("filter_var checks arguments", {
   testthat::expect_no_error(filter_var(dataname = "data", varname = "var"))
@@ -12,7 +11,8 @@ testthat::test_that("filter_var checks arguments", {
       keep_na = NULL,
       keep_inf = NULL,
       fixed = FALSE,
-      disabled = FALSE)
+      disabled = FALSE
+    )
   )
 
   testthat::expect_error(filter_var(dataname = "data"), "argument \"varname\" is missing, with no default")
@@ -56,11 +56,13 @@ testthat::test_that("filter_var checks arguments", {
 
   testthat::expect_error(
     filter_var(dataname = "data", varname = "var", keep_na = "TRUE"),
-    "Assertion on 'keep_na' failed")
+    "Assertion on 'keep_na' failed"
+  )
 
   testthat::expect_error(
     filter_var(dataname = "data", varname = "var", keep_inf = "TRUE"),
-    "Assertion on 'keep_inf' failed")
+    "Assertion on 'keep_inf' failed"
+  )
 
   testthat::expect_error(
     filter_var(dataname = "data", varname = "var", fixed = NULL),
@@ -415,21 +417,21 @@ testthat::test_that("c.teal_slices handles attributes", {
 
 # format.teal_slice ----
 testthat::test_that("format.teal_slice returns a character string", {
-  fs <- filter_var("dataname2", "varname3", 1:10/10, 0.2, TRUE, extra1 = "extraone", extra2 = "extratwo")
+  fs <- filter_var("dataname2", "varname3", 1:10 / 10, 0.2, TRUE, extra1 = "extraone", extra2 = "extratwo")
   testthat::expect_true(checkmate::check_string(format(fs)))
   testthat::expect_true(checkmate::check_string(format(fs, show_all = TRUE)))
 })
 
 
 testthat::test_that("format.teal_slice prints 'teal_slice' header", {
-  fs <- filter_var("dataname2", "varname3", 1:10/10, 0.2, TRUE, extra1 = "extraone", extra2 = "extratwo")
+  fs <- filter_var("dataname2", "varname3", 1:10 / 10, 0.2, TRUE, extra1 = "extraone", extra2 = "extratwo")
   ffs <- strsplit(format(fs), "\n")[[1]]
   testthat::expect_identical(ffs[1], "teal_slice")
 })
 
 
 testthat::test_that("format.teal_slice prints all mandatory fields with prefix when show_all is TRUE", {
-  fs <- filter_var("dataname2", "varname3", 1:10/10, 0.2, TRUE, extra1 = "extraone", extra2 = "extratwo")
+  fs <- filter_var("dataname2", "varname3", 1:10 / 10, 0.2, TRUE, extra1 = "extraone", extra2 = "extratwo")
   ffs <- strsplit(format(fs, show_all = TRUE), "\n")[[1]]
   mandatory <- setdiff(names(formals(filter_var)), "...")
   lapply(mandatory, function(x) {
@@ -439,7 +441,7 @@ testthat::test_that("format.teal_slice prints all mandatory fields with prefix w
 
 
 testthat::test_that("format.teal_slice skips empty mandatory fields show_all is FALSE", {
-  fs <- filter_var("dataname2", "varname3", 1:10/10, 0.2, TRUE, extra1 = "extraone", extra2 = "extratwo")
+  fs <- filter_var("dataname2", "varname3", 1:10 / 10, 0.2, TRUE, extra1 = "extraone", extra2 = "extratwo")
   ffs <- strsplit(format(fs, show_all = FALSE), "\n")[[1]]
   empty <- names(Filter(is.null, fs))
   lapply(empty, function(x) {
@@ -449,14 +451,14 @@ testthat::test_that("format.teal_slice skips empty mandatory fields show_all is 
 
 
 testthat::test_that("format.teal_slice prints additional information header", {
-  fs <- filter_var("dataname2", "varname3", 1:10/10, 0.2, TRUE, FALSE, extra1 = "extraone", extra2 = "extratwo")
+  fs <- filter_var("dataname2", "varname3", 1:10 / 10, 0.2, TRUE, FALSE, extra1 = "extraone", extra2 = "extratwo")
   ffs <- strsplit(format(fs), "\n")[[1]]
   testthat::expect_true(any(grepl(" .. additional information", ffs)))
 })
 
 
 testthat::test_that("format.teal_slice prints optional fields with prefix", {
-  fs <- filter_var("dataname2", "varname3", 1:10/10, 0.2, TRUE, FALSE, extra1 = "extraone", extra2 = "extratwo")
+  fs <- filter_var("dataname2", "varname3", 1:10 / 10, 0.2, TRUE, FALSE, extra1 = "extraone", extra2 = "extratwo")
   ffs <- strsplit(format(fs), "\n")[[1]]
   optional <- setdiff(names(fs), names(formals(filter_var)))
   lapply(optional, function(x) {

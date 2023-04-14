@@ -1,4 +1,3 @@
-
 # initialize ----
 testthat::test_that("constructor creates FilteredDataset with empty filter_states", {
   testfd <- R6::R6Class(
@@ -111,7 +110,7 @@ testthat::test_that("get_filter_overview returns a data frame", {
     filter_var(dataname = "iris", varname = "Species", selected = c("setosa", "versicolor"), keep_na = FALSE)
   )
   dataset$set_filter_state(state = fs)
-  overview <-   shiny::isolate(dataset$get_filter_overview())
+  overview <- shiny::isolate(dataset$get_filter_overview())
 
   testthat::expect_s3_class(overview, "data.frame")
   testthat::expect_equal(

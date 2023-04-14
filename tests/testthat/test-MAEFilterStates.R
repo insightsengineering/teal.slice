@@ -38,10 +38,14 @@ testthat::test_that("get_fun returns MultiAssayExperiment::subsetByColData", {
 testthat::test_that("set_filter_state only accepts `teal_slices`", {
   filter_states <- MAEFilterStates$new(data = miniACC, dataname = "miniACC")
   fs <- filter_settings(
-    filter_var(dataname = "miniACC", varname = "years_to_birth", selected = c(30, 50),
-               keep_na = FALSE, keep_inf = FALSE, datalabel = "subjects", target = "y"),
-    filter_var(dataname = "miniACC", varname = "gender", selected = "female",
-               keep_na = FALSE, datalabel = "subjects", target = "y")
+    filter_var(
+      dataname = "miniACC", varname = "years_to_birth", selected = c(30, 50),
+      keep_na = FALSE, keep_inf = FALSE, datalabel = "subjects", target = "y"
+    ),
+    filter_var(
+      dataname = "miniACC", varname = "gender", selected = "female",
+      keep_na = FALSE, datalabel = "subjects", target = "y"
+    )
   )
   testthat::expect_error(filter_states$set_filter_state(state = fs[[1]]), "Assertion on 'state' failed")
   testthat::expect_no_error(filter_states$set_filter_state(state = fs))
@@ -58,10 +62,14 @@ testthat::test_that("set_filter_state adds states to state_list", {
   )
   filter_states <- test_class$new(data = miniACC, dataname = "miniACC")
   fs <- filter_settings(
-    filter_var(dataname = "miniACC", varname = "years_to_birth", selected = c(30, 50),
-               keep_na = FALSE, keep_inf = FALSE, datalabel = "subjects", target = "y"),
-    filter_var(dataname = "miniACC", varname = "gender", selected = "female",
-               keep_na = FALSE, datalabel = "subjects", target = "y")
+    filter_var(
+      dataname = "miniACC", varname = "years_to_birth", selected = c(30, 50),
+      keep_na = FALSE, keep_inf = FALSE, datalabel = "subjects", target = "y"
+    ),
+    filter_var(
+      dataname = "miniACC", varname = "gender", selected = "female",
+      keep_na = FALSE, datalabel = "subjects", target = "y"
+    )
   )
   state_list <- shiny::isolate(filter_states$state_list_get(1, NULL))
 
@@ -77,10 +85,14 @@ testthat::test_that("set_filter_state adds states to state_list", {
 testthat::test_that("get_filter_state returns `teal_slices` identical to that used to set state (choices excluded)", {
   filter_states <- MAEFilterStates$new(data = miniACC, dataname = "miniACC")
   fs <- filter_settings(
-    filter_var(dataname = "miniACC", varname = "years_to_birth", selected = c(31, 50),
-               keep_na = FALSE, keep_inf = FALSE, datalabel = "subjects", target = "y"),
-    filter_var(dataname = "miniACC", varname = "gender", selected = "female",
-               keep_na = FALSE, datalabel = "subjects", target = "y")
+    filter_var(
+      dataname = "miniACC", varname = "years_to_birth", selected = c(31, 50),
+      keep_na = FALSE, keep_inf = FALSE, datalabel = "subjects", target = "y"
+    ),
+    filter_var(
+      dataname = "miniACC", varname = "gender", selected = "female",
+      keep_na = FALSE, datalabel = "subjects", target = "y"
+    )
   )
   filter_states$set_filter_state(fs)
 
@@ -95,15 +107,21 @@ testthat::test_that("set_filter_state updates existing filter states", {
   filter_states <- MAEFilterStates$new(data = miniACC, dataname = "miniACC")
   filter_states$set_filter_state(
     filter_settings(
-      filter_var(dataname = "miniACC", varname = "years_to_birth", selected = c(30, 50),
-                 keep_na = FALSE, datalabel = "subjects", target = "y")
+      filter_var(
+        dataname = "miniACC", varname = "years_to_birth", selected = c(30, 50),
+        keep_na = FALSE, datalabel = "subjects", target = "y"
+      )
     )
   )
   fs <- filter_settings(
-    filter_var(dataname = "miniACC", varname = "years_to_birth", selected = c(31, 50),
-               keep_na = FALSE, keep_inf = FALSE, datalabel = "subjects", target = "y"),
-    filter_var(dataname = "miniACC", varname = "gender", selected = "female",
-               keep_na = FALSE, datalabel = "subjects", target = "y")
+    filter_var(
+      dataname = "miniACC", varname = "years_to_birth", selected = c(31, 50),
+      keep_na = FALSE, keep_inf = FALSE, datalabel = "subjects", target = "y"
+    ),
+    filter_var(
+      dataname = "miniACC", varname = "gender", selected = "female",
+      keep_na = FALSE, datalabel = "subjects", target = "y"
+    )
   )
   filter_states$set_filter_state(fs)
 
@@ -115,13 +133,16 @@ testthat::test_that("set_filter_state updates existing filter states", {
 
 # remove_filter_state ----
 testthat::test_that("remove_filter_state removes filters", {
-
   filter_states <- MAEFilterStates$new(data = miniACC, dataname = "miniACC")
   fs <- filter_settings(
-    filter_var(dataname = "miniACC", varname = "years_to_birth", selected = c(33, 50),
-               keep_na = FALSE, keep_inf = FALSE, datalabel = "subjects", target = "y"),
-    filter_var(dataname = "miniACC", varname = "gender", selected = "female",
-               keep_na = FALSE, datalabel = "subjects", target = "y")
+    filter_var(
+      dataname = "miniACC", varname = "years_to_birth", selected = c(33, 50),
+      keep_na = FALSE, keep_inf = FALSE, datalabel = "subjects", target = "y"
+    ),
+    filter_var(
+      dataname = "miniACC", varname = "gender", selected = "female",
+      keep_na = FALSE, datalabel = "subjects", target = "y"
+    )
   )
   filter_states$set_filter_state(state = fs)
 
@@ -140,15 +161,19 @@ testthat::test_that("remove_filter_state raises warning when name is not in Filt
 
   filter_states <- MAEFilterStates$new(data = miniACC, dataname = "miniACC")
   fs <- filter_settings(
-    filter_var(dataname = "miniACC", varname = "years_to_birth", selected = c(33, 50),
-               keep_na = FALSE, keep_inf = FALSE, datalabel = "subjects", target = "y"),
-    filter_var(dataname = "miniACC", varname = "gender", selected = "female",
-               keep_na = FALSE, datalabel = "subjects", target = "y")
+    filter_var(
+      dataname = "miniACC", varname = "years_to_birth", selected = c(33, 50),
+      keep_na = FALSE, keep_inf = FALSE, datalabel = "subjects", target = "y"
+    ),
+    filter_var(
+      dataname = "miniACC", varname = "gender", selected = "female",
+      keep_na = FALSE, datalabel = "subjects", target = "y"
+    )
   )
   filter_states$set_filter_state(state = fs)
   testthat::expect_warning(filter_states$remove_filter_state(filter_settings(
-    filter_var(dataname = "miniACC", varname = "years_to_birth2", datalabel = "subjects", target = "y")))
-  )
+    filter_var(dataname = "miniACC", varname = "years_to_birth2", datalabel = "subjects", target = "y")
+  )))
 })
 
 # format ----
@@ -169,10 +194,14 @@ testthat::test_that("format concatenates its FilterState elements using \\n and 
   filter_states <- test_class$new(data = miniACC, dataname = "miniACC")
   filter_states$set_filter_state(
     filter_settings(
-      filter_var(dataname = "miniACC", varname = "years_to_birth", selected = c(30, 50),
-                 keep_na = FALSE, keep_inf = FALSE, target = "y", datalabel = "subjects"),
-      filter_var(dataname = "miniACC", varname = "vital_status", selected = 1,
-                 keep_na = FALSE, keep_inf = FALSE, target = "y", datalabel = "subjects")
+      filter_var(
+        dataname = "miniACC", varname = "years_to_birth", selected = c(30, 50),
+        keep_na = FALSE, keep_inf = FALSE, target = "y", datalabel = "subjects"
+      ),
+      filter_var(
+        dataname = "miniACC", varname = "vital_status", selected = 1,
+        keep_na = FALSE, keep_inf = FALSE, target = "y", datalabel = "subjects"
+      )
     )
   )
 
@@ -194,8 +223,10 @@ testthat::test_that("get_call returns executable subsetByColData call ", {
   filter_states <- MAEFilterStates$new(data = miniACC, dataname = "miniACC")
   filter_states$set_filter_state(
     filter_settings(
-      filter_var(dataname = "miniACC", varname = "years_to_birth", selected = c(18, 60),
-                 keep_na = FALSE, keep_inf = FALSE, datalabel = "subjects", target = "y")
+      filter_var(
+        dataname = "miniACC", varname = "years_to_birth", selected = c(18, 60),
+        keep_na = FALSE, keep_inf = FALSE, datalabel = "subjects", target = "y"
+      )
     )
   )
 
@@ -203,8 +234,9 @@ testthat::test_that("get_call returns executable subsetByColData call ", {
     shiny::isolate(filter_states$get_call()),
     quote(
       miniACC <- MultiAssayExperiment::subsetByColData(miniACC,
-                                                       y = miniACC$years_to_birth >= 18 &
-                                                         miniACC$years_to_birth <= 60)
+        y = miniACC$years_to_birth >= 18 &
+          miniACC$years_to_birth <= 60
+      )
     )
   )
 
@@ -219,10 +251,14 @@ testthat::test_that("get_filter_count returns the number of active filter states
   filter_states <- MAEFilterStates$new(data = miniACC, dataname = "miniACC")
   filter_states$set_filter_state(
     filter_settings(
-      filter_var(dataname = "miniACC", varname = "years_to_birth", selected = c(30, 50),
-                 keep_na = FALSE, keep_inf = FALSE, target = "y", datalabel = "subjects"),
-      filter_var(dataname = "miniACC", varname = "vital_status", selected = 1,
-                 keep_na = FALSE, keep_inf = FALSE, target = "y", datalabel = "subjects")
+      filter_var(
+        dataname = "miniACC", varname = "years_to_birth", selected = c(30, 50),
+        keep_na = FALSE, keep_inf = FALSE, target = "y", datalabel = "subjects"
+      ),
+      filter_var(
+        dataname = "miniACC", varname = "vital_status", selected = 1,
+        keep_na = FALSE, keep_inf = FALSE, target = "y", datalabel = "subjects"
+      )
     )
   )
   testthat::expect_equal(shiny::isolate(filter_states$get_filter_count()), 2)

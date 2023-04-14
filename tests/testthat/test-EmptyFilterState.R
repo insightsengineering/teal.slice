@@ -1,4 +1,3 @@
-
 # get_call ----
 testthat::test_that("get_call returns a call if keep_na is TRUE", {
   filter_state <- EmptyFilterState$new(character(0), dataname = "data", varname = "variable", keep_na = TRUE)

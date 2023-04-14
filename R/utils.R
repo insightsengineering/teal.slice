@@ -135,7 +135,7 @@ adjust_states <- function(tss) {
 
   ans <- lapply(tss, function(x) {
     x <- unclass(x)
-    x$choices = NULL
+    x$choices <- NULL
     x
   })
   unname(do.call(filter_settings, lapply(ans, as.teal_slice)))

@@ -538,7 +538,6 @@ FilterStates <- R6::R6Class( # nolint
         )
       } else {
         warning(sprintf("\"%s\" not found in state list %s", state_id, state_list_index))
-
       }
 
       invisible(NULL)
@@ -592,7 +591,9 @@ FilterStates <- R6::R6Class( # nolint
         extract_type <- match.arg(extract_type, c("list", "matrix"))
       }
 
-      if (length(state) == 0L) return(invisible(NULL))
+      if (length(state) == 0L) {
+        return(invisible(NULL))
+      }
 
       # Modify existing filter states.
       state_list <- shiny::isolate(private$state_list_get(state_list_index))

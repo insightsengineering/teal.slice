@@ -1,4 +1,3 @@
-
 # initialize ----
 testthat::test_that("constructor accepts data.frame object with a dataname", {
   testthat::expect_no_error(DefaultFilteredDataset$new(dataset = head(iris), dataname = "iris"))

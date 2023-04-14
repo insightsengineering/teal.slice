@@ -31,8 +31,10 @@
 #' fs <- filter_settings(
 #'   filter_var("iris", "Species", selected = c("setosa", "versicolor")),
 #'   filter_var("iris", "Sepal.Length", selected = c(5.1, 6.4)),
-#'   filter_var("mae", "years_to_birth", selected = c(30, 50),
-#'              keep_na = TRUE, keep_inf = FALSE, datalabel = "subjects", target = "y"),
+#'   filter_var("mae", "years_to_birth",
+#'     selected = c(30, 50),
+#'     keep_na = TRUE, keep_inf = FALSE, datalabel = "subjects", target = "y"
+#'   ),
 #'   filter_var("mae", "vital_status", selected = "1", keep_na = FALSE, datalabel = "subjects", target = "y"),
 #'   filter_var("mae", "gender", selected = "female", keep_na = TRUE, datalabel = "subjects", target = "y"),
 #'   filter_var("mae", "ARRAY_TYPE", selected = "", keep_na = TRUE, datalabel = "RPPAArray", target = "subset")
