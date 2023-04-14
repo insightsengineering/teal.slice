@@ -171,7 +171,7 @@ RangeFilterState <- R6::R6Class( # nolint
 
       private$unfiltered_histogram <- ggplot2::ggplot(data.frame(x = Filter(is.finite, private$x))) +
         ggplot2::geom_histogram(
-          ggplot2::aes(x = private$x),
+          ggplot2::aes(x = Filter(is.finite, private$x)),
           bins = 100,
           fill = grDevices::rgb(211 / 255, 211 / 255, 211 / 255),
           color = grDevices::rgb(211 / 255, 211 / 255, 211 / 255)
