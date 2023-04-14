@@ -178,14 +178,13 @@ LogicalFilterState <- R6::R6Class( # nolint
     #'
     format = function(indent = 2L) {
       checkmate::assert_number(indent, finite = TRUE, lower = 0L)
-      sprintf(
-        "%sFiltering on: %s\n%sSelected values: %s\n%sInclude missing values: %s",
-        format("", width = indent),
-        private$varname,
-        format("", width = indent * 2),
-        toString(private$get_selected()),
-        format("", width = indent * 2),
-        private$get_keep_na()
+      paste(
+        c(
+          sprintf("%sFiltering on: %s", format("", width = indent), private$varname),
+          sprintf("%sSelected values: %s", format("", width = indent * 2), toString(private$get_selected())),
+          sprintf("%sInclude missing values: %s", format("", width = indent * 2), private$get_keep_na())
+        ),
+        collapse = "\n"
       )
     },
 
