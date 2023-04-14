@@ -13,14 +13,32 @@ MatrixFilterStates <- R6::R6Class( # nolint
     #'
     #' Initialize `MatrixFilterStates` object
     #'
+    #' @param data (`matrix`)\cr
+    #'   the R object which `subset` function is applied on.
+    #' @param data_reactive (`function(sid)`)\cr
+    #'   should return a `matrix` object or `NULL`.
+    #'   This object is needed for the `FilterState` counts being updated
+    #'   on a change in filters. If function returns `NULL` then filtered counts are not shown.
+    #'   Function has to have `sid` argument being a character.
     #' @param dataname (`character(1)`)\cr
     #'   name of the data used in the expression
     #'   specified to the function argument attached to this `FilterStates`.
-    #'
     #' @param datalabel (`character(0)` or `character(1)`)\cr
     #'   text label value.
-    initialize = function(dataname, datalabel) {
-      super$initialize(dataname, datalabel)
+    #' @param excluded_varnames (`character`)\cr
+    #'   names of variables that can \strong{not} be filtered on.
+    #' @param count_type `character(1)`\cr
+    #'   specifying how observations are tallied.
+    #'
+    initialize = function(data,
+                          data_reactive = function(sid = "") NULL,
+                          dataname,
+                          datalabel = character(0),
+                          excluded_varnames = character(0),
+                          count_type = c("none", "all", "hierarchical")) {
+      checkmate::assert_function(data_reactive, args = "sid")
+      checkmate::assert_matrix(data)
+      super$initialize(data, data_reactive, dataname, datalabel, excluded_varnames, count_type)
       private$state_list <- list(
         subset = reactiveVal()
       )
@@ -35,8 +53,8 @@ MatrixFilterStates <- R6::R6Class( # nolint
       checkmate::assert_number(indent, finite = TRUE, lower = 0)
 
       formatted_states <- c()
-      for (state in self$state_list_get(state_list_index = "subset")) {
-        formatted_states <- c(formatted_states, state$format(indent = indent + 2))
+      for (state in private$state_list_get(state_list_index = "subset")) {
+        formatted_states <- c(formatted_states, state$format(indent = indent))
       }
       paste(formatted_states, collapse = "\n")
     },
@@ -46,26 +64,26 @@ MatrixFilterStates <- R6::R6Class( # nolint
     #' @param id (`character(1)`)\cr
     #'   an ID string that corresponds with the ID used to call the module's UI function.
     #' @return `moduleServer` function which returns `NULL`
-    server = function(id) {
+    srv_active = function(id) {
       moduleServer(
         id = id,
         function(input, output, session) {
-          previous_state <- reactiveVal(isolate(self$state_list_get("subset")))
+          previous_state <- reactiveVal(isolate(private$state_list_get("subset")))
           added_state_name <- reactiveVal(character(0))
           removed_state_name <- reactiveVal(character(0))
 
-          observeEvent(self$state_list_get("subset"), {
+          observeEvent(private$state_list_get("subset"), {
             added_state_name(
-              setdiff(names(self$state_list_get("subset")), names(previous_state()))
+              setdiff(names(private$state_list_get("subset")), names(previous_state()))
             )
             removed_state_name(
-              setdiff(names(previous_state()), names(self$state_list_get("subset")))
+              setdiff(names(previous_state()), names(private$state_list_get("subset")))
             )
-            previous_state(self$state_list_get("subset"))
+            previous_state(private$state_list_get("subset"))
           })
 
           observeEvent(added_state_name(), ignoreNULL = TRUE, {
-            fstates <- self$state_list_get("subset")
+            fstates <- private$state_list_get("subset")
             html_ids <- private$map_vars_to_html_ids(keys = names(fstates))
             for (fname in added_state_name()) {
               private$insert_filter_state_ui(
@@ -78,9 +96,7 @@ MatrixFilterStates <- R6::R6Class( # nolint
             added_state_name(character(0))
           })
 
-          observeEvent(removed_state_name(), {
-            req(removed_state_name())
-
+          observeEvent(removed_state_name(), ignoreNULL = TRUE, {
             for (fname in removed_state_name()) {
               private$remove_filter_state_ui("subset", fname, .input = input)
             }
@@ -94,106 +110,74 @@ MatrixFilterStates <- R6::R6Class( # nolint
     #' @description
     #' Returns active `FilterState` objects.
     #'
-    #' Gets all active filters from this dataset in form of the nested list.
-    #' The output list can be used as input to `self$set_filter_state`.
+    #' Gets all filter state information from this dataset.
     #'
-    #' @return `list` containing `list` with selected values for each `FilterState`.
+    #' @return `teal_slices`
+    #'
     get_filter_state = function() {
-      lapply(self$state_list_get(state_list_index = "subset"), function(x) x$get_state())
+      slices <- lapply(private$state_list_get("subset"), function(x) x$get_state())
+      excluded_varnames <- structure(
+        list(setdiff(colnames(private$data), private$filterable_varnames)),
+        names = private$dataname)
+      excluded_varnames <- Filter(function(x) !identical(x, character(0)), excluded_varnames)
+
+      do.call(filter_settings, c(slices, list(exclude = excluded_varnames, count_type = private$count_type)))
+
     },
 
     #' @description
     #' Sets a filter state
     #'
-    #' @param data (`matrix`)\cr
-    #'   data which are supposed to be filtered.
-    #' @param state (`named list`)\cr
-    #'   should contain values which are initial selection in the `FilterState`.
-    #'   Names of the `list` element should correspond to the name of the
-    #'   column in `data`.
-    #' @param ... ignored.
-    #' @return `NULL`
-    set_filter_state = function(data, state, ...) {
-      checkmate::assert_class(data, "matrix")
-      checkmate::assert(
-        checkmate::assert(
-          !checkmate::test_null(names(state)),
-          checkmate::check_subset(names(state), colnames(data)),
-          combine = "and"
-        ),
-        checkmate::check_class(state, "default_filter"),
-        combine = "or"
+    #' @param state (`teal_slices`)
+    #'
+    #' @return `NULL` invisibly
+    #'
+    set_filter_state = function(state) {
+      checkmate::assert_class(state, "teal_slices")
+      lapply(state, function(x) {
+        checkmate::assert_true(x$dataname == private$dataname, .var.name = "dataname matches private$dataname")
+      })
+
+      logger::log_trace("{ class(self)[1] }$set_filter_state initializing, dataname: { private$dataname }")
+
+      private$set_filter_state_impl(
+        state = state,
+        state_list_index = "subset",
+        data = private$data,
+        data_reactive = private$data_reactive,
+        extract_type = "matrix"
       )
-      logger::log_trace(paste(
-        "MatrixFilterState$set_filter_state initializing,",
-        "dataname: { private$dataname }"
-      ))
-      filter_states <- self$state_list_get("subset")
-      for (varname in names(state)) {
-        value <- resolve_state(state[[varname]])
-        if (varname %in% names(filter_states)) {
-          fstate <- filter_states[[varname]]
-          fstate$set_state(value)
-        } else {
-          fstate <- init_filter_state(
-            data[, varname],
-            varname = varname,
-            varlabel = varname,
-            dataname = private$dataname,
-            extract_type = "matrix"
-          )
-          fstate$set_state(value)
-          self$state_list_push(
-            x = fstate,
-            state_list_index = "subset",
-            state_id = varname
-          )
-        }
-      }
-      logger::log_trace(paste(
-        "MatrixFilterState$set_filter_state initialized,",
-        "dataname: { private$dataname }"
-      ))
-      NULL
+
+      logger::log_trace("{ class(self)[1] }$set_filter_state initialized, dataname: { private$dataname }")
+
+      invisible(NULL)
     },
 
-    #' @description Remove a variable from the `state_list` and its corresponding UI element.
+    #' @description
+    #' Remove one or more `FilterState`s from the `state_list` along with their corresponding UI elements.
     #'
-    #' @param state_id (`character(1)`)\cr name of `state_list` element.
+    #' @param state (`teal_slices`)\cr
+    #'   specifying `FilterState` objects to remove;
+    #'   `teal_slice`s may contain only `dataname` and `varname`, other elements are ignored
     #'
-    #' @return `NULL`
-    remove_filter_state = function(state_id) {
-      logger::log_trace(
-        sprintf(
-          "%s$remove_filter_state of variable %s, dataname: %s",
-          class(self)[1],
-          state_id,
-          private$dataname
-        )
-      )
+    #' @return `NULL` invisibly
+    #'
+    remove_filter_state = function(state) {
+      checkmate::assert_class(state, "teal_slices")
 
-      if (!state_id %in% names(self$state_list_get("subset"))) {
-        warning(paste(
-          "Variable:", state_id, "is not present in the actual active filters of dataset:",
-          "{ private$dataname } therefore no changes are applied."
-        ))
-        logger::log_warn(
-          paste(
-            "Variable:", state_id, "is not present in the actual active filters of dataset:",
-            "{ private$dataname } therefore no changes are applied."
-          )
-        )
-      } else {
-        self$state_list_remove(state_list_index = "subset", state_id = state_id)
+      lapply(state, function(x) {
         logger::log_trace(
-          sprintf(
-            "%s$remove_filter_state of variable %s done, dataname: %s",
-            class(self)[1],
-            state_id,
-            private$dataname
-          )
+          "{ class(self)[1] }$remove_filter_state removing filter, dataname: { x$dataname }, varname: { x$varname }"
         )
-      }
+
+        private$state_list_remove(state_list_index = "subset", state_id = x$varname)
+
+        logger::log_trace(
+          "{ class(self)[1] }$remove_filter_state removed filter, dataname: { x$dataname }, varname: { x$varname }"
+        )
+      })
+
+      invisible(NULL)
     },
 
     # shiny modules ----
@@ -202,15 +186,12 @@ MatrixFilterStates <- R6::R6Class( # nolint
     #' Shiny UI module to add filter variable.
     #'
     #' @param id (`character(1)`)\cr
-    #'   id of shiny module
-    #' @param data (`matrix`)\cr
-    #'   data object for which to define a subset
+    #'  id of shiny module
+    #' @return shiny.tag
     #'
-    #' @return `shiny.tag`
-    #'
-    ui_add_filter_state = function(id, data) {
+    ui_add = function(id) {
+      data <- private$data
       checkmate::assert_string(id)
-      stopifnot(is.matrix(data))
 
       ns <- NS(id)
 
@@ -239,35 +220,24 @@ MatrixFilterStates <- R6::R6Class( # nolint
     #'
     #' @param id (`character(1)`)\cr
     #'   shiny module instance id
-    #' @param data (`matrix`)\cr
-    #'   data object for which to define a subset
-    #' @param ... ignored
     #'
     #' @return `moduleServer` function which returns `NULL`
-    #'
-    srv_add_filter_state = function(id, data, ...) {
-      stopifnot(is.matrix(data))
-      check_ellipsis(..., stop = FALSE)
+    srv_add = function(id) {
+      data <- private$data
+      data_reactive <- private$data_reactive
       moduleServer(
         id = id,
         function(input, output, session) {
           logger::log_trace(
-            "MatrixFilterStates$srv_add_filter_state initializing, dataname: { private$dataname }"
+            "MatrixFilterStates$srv_add initializing, dataname: { private$dataname }"
           )
-          shiny::setBookmarkExclude("var_to_add")
-          active_filter_vars <- reactive({
-            vapply(
-              X = self$state_list_get(state_list_index = "subset"),
-              FUN.VALUE = character(1),
-              FUN = function(x) x$get_varname()
-            )
-          })
 
           # available choices to display
           avail_column_choices <- reactive({
+            active_filter_vars <- slices_field(self$get_filter_state(), "varname")
             choices <- setdiff(
               get_supported_filter_varnames(data = data),
-              active_filter_vars()
+              active_filter_vars
             )
             data_choices_labeled(
               data = data,
@@ -281,7 +251,7 @@ MatrixFilterStates <- R6::R6Class( # nolint
             ignoreNULL = TRUE,
             handlerExpr = {
               logger::log_trace(paste(
-                "MatrixFilterStates$srv_add_filter_state@1 updating column choices,",
+                "MatrixFilterStates$srv_add@1 updating column choices,",
                 "dataname: { private$dataname }"
               ))
               if (length(avail_column_choices()) < 0) {
@@ -295,7 +265,7 @@ MatrixFilterStates <- R6::R6Class( # nolint
                 choices = avail_column_choices()
               )
               logger::log_trace(paste(
-                "MatrixFilterStates$srv_add_filter_state@1 updated column choices,",
+                "MatrixFilterStates$srv_add@1 updated column choices,",
                 "dataname: { private$dataname }"
               ))
             }
@@ -306,26 +276,18 @@ MatrixFilterStates <- R6::R6Class( # nolint
             handlerExpr = {
               logger::log_trace(
                 sprintf(
-                  "MatrixFilterState$srv_add_filter_state@2 adding FilterState of variable %s, dataname: %s",
+                  "MatrixFilterState$srv_add@2 adding FilterState of variable %s, dataname: %s",
                   deparse1(input$var_to_add),
                   private$dataname
                 )
               )
-              self$state_list_push(
-                x = init_filter_state(
-                  subset(data, select = input$var_to_add),
-                  varname = input$var_to_add,
-                  varlabel = private$get_varlabel(input$var_to_add),
-                  dataname = private$dataname,
-                  extract_type = "matrix"
-                ),
-                state_list_index = "subset",
-                state_id = input$var_to_add
-              )
+              varname <- input$var_to_add
+              self$set_filter_state(filter_settings(filter_var(private$dataname, varname)))
+
               logger::log_trace(
                 sprintf(
-                  "MatrixFilterState$srv_add_filter_state@2 added FilterState of variable %s, dataname: %s",
-                  deparse1(input$var_to_add),
+                  "MatrixFilterState$srv_add@2 added FilterState of variable %s, dataname: %s",
+                  deparse1(varname),
                   private$dataname
                 )
               )
@@ -333,7 +295,7 @@ MatrixFilterStates <- R6::R6Class( # nolint
           )
 
           logger::log_trace(
-            "MatrixFilterStates$srv_add_filter_state initialized, dataname: { private$dataname }"
+            "MatrixFilterStates$srv_add initialized, dataname: { private$dataname }"
           )
           NULL
         }

@@ -137,7 +137,7 @@ Currently following variants are possible:
 
 `FilterStates` serves two Shiny related purposes:
 
-- `ui/srv_add_filter_state` allow to add `FilterState` for selected variable. Variables included
+- `ui/srv_add` allow to add `FilterState` for selected variable. Variables included
   in the module are the filterable colnames of the provided dataset. Variable selection adds `FilterState` to
   `reactiveVal` (stored in list `private$state_list[[state_list_id]]`). `FilterState` is dispatched
   automatically on a selected column class.
@@ -284,22 +284,19 @@ The above list structure is applied in `get_filter_state`, `set_filter_state` an
 ```{r, message=FALSE, warning=FALSE}
 library(teal.slice)
 
-datasets <- shiny::isolate(
-  init_filtered_data(
-    list(
-      iris = list(dataset = iris),
-      mtcars = list(dataset = mtcars)
-    )
+datasets <- init_filtered_data(
+  list(
+    iris = list(dataset = iris),
+    mtcars = list(dataset = mtcars)
   )
 )
 
-shiny::isolate(
-  set_filter_state(
-    datasets = datasets,
-    filter = list(
-      iris = list(Species = list(selected = "virginica", keep_na = FALSE)),
-      mtcars = list(mpg = list(selected = c(20.0, 25.0), keep_na = FALSE, keep_inf = FALSE))
-    )
+
+set_filter_state(
+  datasets = datasets,
+  filter = list(
+    iris = list(Species = list(selected = "virginica", keep_na = FALSE)),
+    mtcars = list(mpg = list(selected = c(20.0, 25.0), keep_na = FALSE, keep_inf = FALSE))
   )
 )
 ```
@@ -311,22 +308,18 @@ get_filter_state(datasets)
 
 3. Removing filter states
 ```{r, message=FALSE, warning=FALSE}
-shiny::isolate(
-  remove_filter_state(
-    datasets = datasets,
-    filter = list(iris = c("Species"))
-  )
+remove_filter_state(
+  datasets = datasets,
+  filter = list(iris = c("Species"))
 )
 ```
 
 4. Updating filter states. *Works only in the shiny reactive context.
 ```{r, message=FALSE, warning=FALSE}
-shiny::isolate(
-  set_filter_state(
-    datasets = datasets,
-    filter = list(
-      mtcars = list(mpg = list(selected = c(22.0, 25.0)))
-    )
+set_filter_state(
+  datasets = datasets,
+  filter = list(
+    mtcars = list(mpg = list(selected = c(22.0, 25.0)))
   )
 )
 ```

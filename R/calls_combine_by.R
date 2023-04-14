@@ -13,9 +13,9 @@
 #' @examples
 #' \dontrun{
 #' calls <- list(
-#'   quote(SEX == "F"), # subsetting on factor
-#'   quote(AGE >= 20 & AGE <= 50), # subsetting on range
-#'   quote(!SURV) # subsetting on logical
+#'   quote(SEX == "F"),              # subsetting on factor
+#'   quote(AGE >= 20 & AGE <= 50),   # subsetting on range
+#'   quote(!SURV)                    # subsetting on logical
 #' )
 #' calls_combine_by(calls, "&")
 #' }
@@ -25,6 +25,8 @@ calls_combine_by <- function(calls, operator) {
   checkmate::assert_list(calls)
   if (length(calls) > 0L) checkmate::assert_list(calls, types = c("call", "name"))
   checkmate::assert_string(operator)
+
+  calls <- Filter(x = calls, f = Negate(is.null)) # disabled filters
 
   Reduce(
     x = calls,

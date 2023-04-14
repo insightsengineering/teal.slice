@@ -10,7 +10,6 @@
 #' - `parent` (optional) which `dataset` is a parent of this one.
 #' @param join_keys (`JoinKeys`) see [teal.data::join_keys()].
 #' @param code (`CodeClass`) see [`teal.data::CodeClass`].
-#' @param cdisc (`logical(1)`) whether data is of `cdisc` type (relational).
 #' @param check (`logical(1)`) whether data has been check against reproducibility.
 #' @examples
 #' library(shiny)
@@ -21,7 +20,7 @@
 #'   )
 #' )
 #' @export
-init_filtered_data <- function(x, join_keys, code, cdisc, check) {
+init_filtered_data <- function(x, join_keys, code, check) {
   UseMethod("init_filtered_data")
 }
 
@@ -30,50 +29,37 @@ init_filtered_data <- function(x, join_keys, code, cdisc, check) {
 init_filtered_data.TealData <- function(x, # nolint
                                         join_keys = x$get_join_keys(),
                                         code = x$get_code_class(),
-                                        cdisc = FALSE,
                                         check = x$get_check()) {
-  cdisc <- length(join_keys$get_parents()) > 0
-  data_objects <- lapply(x$get_datanames(), function(dataname) {
-    dataset <- x$get_dataset(dataname)
-
-    parent <- if (cdisc) join_keys$get_parent(dataname) else NULL
-
-    return_list <- list(
-      dataset = dataset$get_raw_data(),
-      keys = dataset$get_keys(),
-      metadata = dataset$get_metadata(),
-      label = dataset$get_dataset_label()
-    )
-
-    if (cdisc) return_list[["parent"]] <- parent
-    return_list
-  })
-
+  data_objects <- lapply(
+    x$get_datanames(),
+    function(dataname) {
+      dataset <- x$get_dataset(dataname)
+      list(
+        dataset = dataset$get_raw_data(),
+        metadata = dataset$get_metadata(),
+        label = dataset$get_dataset_label()
+      )
+    }
+  )
   names(data_objects) <- x$get_datanames()
 
   init_filtered_data(
     x = data_objects,
     join_keys = join_keys,
     code = code,
-    check = check,
-    cdisc = cdisc
+    check = check
   )
 }
 
 #' @keywords internal
 #' @export
-init_filtered_data.default <- function(x, join_keys = NULL, code = NULL, cdisc = FALSE, check = FALSE) { # nolint
+init_filtered_data.default <- function(x, join_keys = teal.data::join_keys(), code = NULL, check = FALSE) { # nolint
   checkmate::assert_list(x, any.missing = FALSE, names = "unique")
-  mapply(validate_dataset_args, x, names(x), MoreArgs = list(allowed_parent = cdisc))
+  mapply(validate_dataset_args, x, names(x))
   checkmate::assert_class(code, "CodeClass", null.ok = TRUE)
-  checkmate::assert_class(join_keys, "JoinKeys", null.ok = TRUE)
+  checkmate::assert_class(join_keys, "JoinKeys")
   checkmate::assert_flag(check)
-
-  datasets <- if (cdisc) {
-    CDISCFilteredData$new(x, join_keys = join_keys, code = code, check = check)
-  } else {
-    FilteredData$new(x, join_keys = join_keys, code = code, check = check)
-  }
+  FilteredData$new(x, join_keys = join_keys, code = code, check = check)
 }
 
 #' Validate dataset arguments
@@ -84,27 +70,18 @@ init_filtered_data.default <- function(x, join_keys = NULL, code = NULL, cdisc =
 #'   needed by `init_filtered_dataset`
 #' @param dataname (`character(1)`)\cr
 #'   the name of the `dataset` to be added to this object
-#' @param allowed_parent (`logical(1)`)\cr
-#'   whether `FilteredDataset` can have a parent - i.e. if it's a part of `CDISCFilteredData`
 #' @keywords internal
-#' @return (`NULL` or throws an error)
-validate_dataset_args <- function(dataset_args, dataname, allowed_parent = FALSE) {
+#' @return (`NULL` or raises an error)
+validate_dataset_args <- function(dataset_args, dataname) {
   check_simple_name(dataname)
-  checkmate::assert_flag(allowed_parent)
   checkmate::assert_list(dataset_args, names = "unique")
 
-  allowed_names <- c("dataset", "keys", "label", "metadata")
-  if (allowed_parent) {
-    allowed_names <- c(allowed_names, "parent")
-  }
+  allowed_names <- c("dataset", "label", "metadata")
 
   checkmate::assert_subset(names(dataset_args), choices = allowed_names)
-
   checkmate::assert_multi_class(dataset_args[["dataset"]], classes = c("data.frame", "MultiAssayExperiment"))
-  checkmate::assert_character(dataset_args[["keys"]], null.ok = TRUE)
   teal.data::validate_metadata(dataset_args[["metadata"]])
   checkmate::assert_character(dataset_args[["label"]], null.ok = TRUE, min.len = 0, max.len = 1)
-  checkmate::assert_character(dataset_args[["parent"]], null.ok = TRUE, min.len = 0, max.len = 1)
 }
 
 #' Evaluate expression with meaningful message
@@ -162,13 +139,6 @@ eval_expr_with_msg <- function(expr, env) {
 #' @examples
 #' \dontrun{
 #'
-#' # continuously switch between right- and down-pointing chevrons
-#' toggle_icon("toggle_element", c("fa-angle-right", "fa-angle-down"))
-#'
-#' # switch right- to down-pointing chevron
-#' toggle_icon("toggle_element", c("fa-angle-right", "fa-angle-down"), one_way = TRUE)
-#' }
-#'
 #' library(shiny)
 #'
 #' ui <- fluidPage(
@@ -184,30 +154,37 @@ eval_expr_with_msg <- function(expr, env) {
 #' )
 #'
 #' server <- function(input, output, session) {
+#'   observeEvent(input$hide_content,
+#'     {
+#'       shinyjs::hide("content")
+#'       toggle_icon("toggle_content", c("fa-angle-down", "fa-angle-right"), one_way = TRUE)
+#'     },
+#'     ignoreInit = TRUE
+#'   )
 #'
-#'   observeEvent(input$hide_content, {
-#'     shinyjs::hide("content")
-#'     toggle_icon("toggle_content", c("fa-angle-down", "fa-angle-right"), one_way = TRUE)
-#'   }, ignoreInit = TRUE)
+#'   observeEvent(input$show_content,
+#'     {
+#'       shinyjs::show("content")
+#'       toggle_icon("toggle_content", c("fa-angle-right", "fa-angle-down"), one_way = TRUE)
+#'     },
+#'     ignoreInit = TRUE
+#'   )
 #'
-#'   observeEvent(input$show_content, {
-#'     shinyjs::show("content")
-#'     toggle_icon("toggle_content", c("fa-angle-right", "fa-angle-down"), one_way = TRUE)
-#'   }, ignoreInit = TRUE)
-#'
-#'   observeEvent(input$toggle_content, {
-#'     shinyjs::toggle("content")
-#'     toggle_icon("toggle_content", c("fa-angle-right", "fa-angle-down"))
-#'   }, ignoreInit = TRUE)
+#'   observeEvent(input$toggle_content,
+#'     {
+#'       shinyjs::toggle("content")
+#'       toggle_icon("toggle_content", c("fa-angle-right", "fa-angle-down"))
+#'     },
+#'     ignoreInit = TRUE
+#'   )
 #'
 #'   output$printout <- renderPrint({
 #'     head(faithful, 10)
 #'   })
-#'
 #' }
-#'
 #' if (interactive()) {
 #'   shinyApp(ui, server)
+#' }
 #' }
 #'
 #' @rdname toggle_button
@@ -261,4 +238,67 @@ toggle_title <- function(input_id, titles, one_way = FALSE) {
   shinyjs::runjs(expr)
 
   invisible(NULL)
+}
+
+#' Topological graph sort
+#'
+#' Graph is a list which for each node contains a vector of child nodes
+#' in the returned list, parents appear before their children.
+#'
+#' Implementation of Kahn algorithm with a modification to maintain the order of input elements.
+#'
+#' @param graph (named `list`) list with node vector elements
+#' @keywords internal
+#'
+#' @examples
+#' \dontrun{
+#' topological_sort(list(A = c(), B = c("A"), C = c("B"), D = c("A")))
+#' topological_sort(list(D = c("A"), A = c(), B = c("A"), C = c("B")))
+#' topological_sort(list(D = c("A"), B = c("A"), C = c("B"), A = c()))
+#' }
+topological_sort <- function(graph) {
+  # compute in-degrees
+  in_degrees <- list()
+  for (node in names(graph)) {
+    in_degrees[[node]] <- 0
+    for (to_edge in graph[[node]]) {
+      in_degrees[[to_edge]] <- 0
+    }
+  }
+
+  for (node in graph) {
+    for (to_edge in node) {
+      in_degrees[[to_edge]] <- in_degrees[[to_edge]] + 1
+    }
+  }
+
+  # sort
+  visited <- 0
+  sorted <- list()
+  zero_in <- list()
+  for (node in names(in_degrees)) {
+    if (in_degrees[[node]] == 0) zero_in <- append(zero_in, node)
+  }
+  zero_in <- rev(zero_in)
+
+  while (length(zero_in) != 0) {
+    visited <- visited + 1
+    sorted <- c(zero_in[[1]], sorted)
+    for (edge_to in graph[[zero_in[[1]]]]) {
+      in_degrees[[edge_to]] <- in_degrees[[edge_to]] - 1
+      if (in_degrees[[edge_to]] == 0) {
+        zero_in <- append(zero_in, edge_to, 1)
+      }
+    }
+    zero_in[[1]] <- NULL
+  }
+
+  if (visited != length(in_degrees)) {
+    stop(
+      "Graph is not a directed acyclic graph. Cycles involving nodes: ",
+      paste0(setdiff(names(in_degrees), sorted), collapse = " ")
+    )
+  } else {
+    return(sorted)
+  }
 }
