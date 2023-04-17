@@ -256,8 +256,6 @@ Destroy observers stored in \code{private$observers}.
 
 \subsection{Returns}{
 NULL invisibly
-
-module with inputs
 }
 }
 \if{html}{\out{<hr>}}

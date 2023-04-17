@@ -162,7 +162,7 @@ for experiments and as "y" for \code{colData}.
 \examples{
 filter_1 <- filter_var("dataname1", "varname1", letters, "b", FALSE, extra1 = "extraone")
 filter_2 <- filter_var("dataname1", "varname2", 1:10, 2, TRUE, FALSE, extra2 = "extratwo")
-filter_3 <- filter_var("dataname2", "varname3", 1:10/10, 0.2, TRUE, FALSE,
+filter_3 <- filter_var("dataname2", "varname3", 1:10 / 10, 0.2, TRUE, FALSE,
                        extra1 = "extraone", extra2 = "extratwo")
 
 all_filters <- filter_settings(
