@@ -283,6 +283,11 @@ FilterState <- R6::R6Class( # nolint
             `data-toggle` = "collapse",
             `data-bs-toggle` = "collapse",
             href = paste0("#", ns("body")),
+            if (private$fixed) {
+              actionButton("dummy", label = NULL, icon = icon("lock"), class = "dummy-button")
+            } else {
+              NULL
+            },
             tags$span(tags$strong(private$get_varname())),
             if (length(private$get_varlabel())) {
               tags$span(private$get_varlabel(), class = "filter-card-varlabel")
