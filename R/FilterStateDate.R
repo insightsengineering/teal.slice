@@ -467,6 +467,28 @@ DateFilterState <- R6::R6Class( # nolint
         }
       )
     },
+
+    server_inputs_fixed = function(id) {
+      moduleServer(
+        id = id,
+        function(input, output, session) {
+          logger::log_trace("DateFilterState$server initializing, dataname: { private$dataname }")
+
+          output$selection <- renderUI({
+            vals <- private$get_selected()
+            sprintf(
+              "%s - %s",
+              format(vals[1], nsmall = 3),
+              format(vals[2], nsmall = 3)
+            )
+          })
+
+          logger::log_trace("DateFilterState$server initialized, dataname: { private$dataname }")
+          NULL
+        }
+      )
+    },
+
     # @description
     # Server module to display filter summary
     #  renders text describing selected date range and

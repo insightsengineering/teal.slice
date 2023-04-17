@@ -567,6 +567,39 @@ ChoicesFilterState <- R6::R6Class( # nolint
       )
     },
 
+    server_inputs_fixed = function(id) {
+      moduleServer(
+        id = id,
+        function(input, output, session) {
+          logger::log_trace("ChoicesFilterState$server initializing, dataname: { private$dataname }")
+
+          output$selection <- renderUI({
+            countsnow <- unname(table(factor(private$x_reactive(), levels = private$choices)))
+            countsmax <- private$choices_counts
+
+            if (private$is_checkboxgroup()) {
+              countBars(
+                inputId = session$ns("labels"),
+                choices = private$choices,
+                countsnow = countsnow,
+                countsmax = countsmax
+              )
+            } else {
+              mapply(
+                FUN = make_count_text,
+                label = private$choices,
+                countnow = countsnow,
+                countmax = countsmax
+              )
+            }
+          })
+
+          logger::log_trace("ChoicesFilterState$server initialized, dataname: { private$dataname }")
+          NULL
+        }
+      )
+    },
+
     # @description
     # UI module to display filter summary
     #  renders text describing number of selected levels
