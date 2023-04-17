@@ -245,7 +245,11 @@ FilterState <- R6::R6Class( # nolint
         id = id,
         function(input, output, session) {
           private$server_summary("summary")
-          private$server_inputs("inputs")
+          if (private$fixed) {
+            private$server_inputs_fixed("inputs")
+          } else {
+            private$server_inputs("inputs")
+          }
           observeEvent(input$enable,
             {
               if (isTRUE(input$enable)) {
@@ -326,7 +330,11 @@ FilterState <- R6::R6Class( # nolint
           `data-bs-parent` = paste0("#", parent_id),
           tags$div(
             class = "filter-card-body",
-            private$ui_inputs(ns("inputs"))
+            if (private$fixed) {
+              private$ui_inputs_fixed(ns("inputs"))
+            } else {
+              private$ui_inputs(ns("inputs"))
+            }
           )
         )
       )
@@ -654,12 +662,33 @@ FilterState <- R6::R6Class( # nolint
       )
     },
 
-    #' module with inputs
+    # module with inputs
     ui_inputs = function(id) {
       stop("abstract class")
     },
     # module with inputs
     server_inputs = function(id) {
+      stop("abstract class")
+    },
+
+    # @description
+    # module displaying inputs in a fixed filter state
+    # there are no input widgets, only selection visualizations
+    # @param id
+    #   character string specifying this `shiny` module instance
+    ui_inputs_fixed = function(id) {
+      ns <- NS(id)
+      div(
+        class = "choices_state",
+        uiOutput(ns("selection"))
+      )
+    },
+
+    # @description
+    # module creating the display of a fixed filter state
+    # @param id
+    #   character string specifying this `shiny` module instance
+    server_inputs_fixed = function(id) {
       stop("abstract class")
     },
 
