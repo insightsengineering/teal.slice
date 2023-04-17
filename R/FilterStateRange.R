@@ -563,7 +563,7 @@ RangeFilterState <- R6::R6Class( # nolint
           )
 
           output$selection <- renderUI({
-              plotOutput(session$ns("plot"), height = "2em")
+            plotOutput(session$ns("plot"), height = "2em")
           })
 
           logger::log_trace("RangeFilterState$server initialized, dataname: { private$dataname }")

@@ -269,10 +269,13 @@ ChoicesFilterState <- R6::R6Class( # nolint
           call(fun_compare, varname, call("as.Date", make_c_call(as.character(choices))))
         } else if (inherits(choices, c("POSIXct", "POSIXlt"))) {
           class <- class(choices)[1L]
-          date_fun <- as.name(switch(class,
-            "POSIXct" = "as.POSIXct",
-            "POSIXlt" = "as.POSIXlt"
-          ))
+          date_fun <- as.name(
+            switch(
+              class,
+              "POSIXct" = "as.POSIXct",
+              "POSIXlt" = "as.POSIXlt"
+            )
+          )
           call(
             fun_compare,
             varname,
@@ -397,8 +400,8 @@ ChoicesFilterState <- R6::R6Class( # nolint
     ui_inputs = function(id) {
       ns <- NS(id)
 
-      countsmax <- private$choices_counts
       countsnow <- isolate(unname(table(factor(private$x_reactive(), levels = private$choices))))
+      countsmax <- private$choices_counts
 
       ui_input <- if (private$is_checkboxgroup()) {
         labels <- countBars(

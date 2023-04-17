@@ -222,10 +222,13 @@ DatetimeFilterState <- R6::R6Class( # nolint
       choices <- private$get_selected()
       tzone <- Find(function(x) x != "", attr(as.POSIXlt(choices), "tzone"))
       class <- class(choices)[1L]
-      date_fun <- as.name(switch(class,
-        "POSIXct" = "as.POSIXct",
-        "POSIXlt" = "as.POSIXlt"
-      ))
+      date_fun <- as.name(
+        switch(
+          class,
+          "POSIXct" = "as.POSIXct",
+          "POSIXlt" = "as.POSIXlt"
+        )
+      )
       choices <- as.character(choices + c(0, 1))
       filter_call <-
         call(

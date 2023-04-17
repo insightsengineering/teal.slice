@@ -274,7 +274,6 @@ FilterState <- R6::R6Class( # nolint
     #' @param parent_id (`character(1)`) id of the FilterStates card container
     ui = function(id, parent_id = "cards") {
       ns <- NS(id)
-      enable <- !private$is_disabled()
 
       tags$div(
         id = id,
@@ -306,7 +305,7 @@ FilterState <- R6::R6Class( # nolint
               label = "",
               status = "success",
               fill = TRUE,
-              value = enable,
+              value = !private$is_disabled(),
               width = 30
             ),
             actionLink(
@@ -645,7 +644,7 @@ FilterState <- R6::R6Class( # nolint
 
     # @description
     # UI module to display filter summary
-    # @param shiny `id` parametr passed to moduleServer
+    # @param shiny `id` parameter passed to `moduleServer`
     #  renders text describing current state
     server_summary = function(id) {
       moduleServer(
