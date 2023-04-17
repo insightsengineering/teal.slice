@@ -475,11 +475,19 @@ DateFilterState <- R6::R6Class( # nolint
           logger::log_trace("DateFilterState$server initializing, dataname: { private$dataname }")
 
           output$selection <- renderUI({
-            vals <- private$get_selected()
-            sprintf(
-              "%s - %s",
-              format(vals[1], nsmall = 3),
-              format(vals[2], nsmall = 3)
+            vals <- format(private$get_selected(), nsmall = 3)
+            div(
+              actionButton(
+                "dummy-min",
+                label = vals[1],
+                icon = icon("calendar-days"),
+                class = "dummy-button"),
+              span(" - "),
+              actionButton(
+                "dummy-max",
+                label = vals[2],
+                icon = icon("calendar-days"),
+                class = "dummy-button")
             )
           })
 
