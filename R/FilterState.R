@@ -607,7 +607,9 @@ FilterState <- R6::R6Class( # nolint
       if (!is.null(private$cache)) {
         state <- private$cache
         state$disabled <- NULL
+        private$fixed <- FALSE
         self$set_state(state)
+        private$fixed <- TRUE
         private$cache <- NULL
       }
       invisible(NULL)
