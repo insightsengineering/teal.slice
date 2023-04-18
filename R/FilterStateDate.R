@@ -477,17 +477,8 @@ DateFilterState <- R6::R6Class( # nolint
           output$selection <- renderUI({
             vals <- format(private$get_selected(), nsmall = 3)
             div(
-              actionButton(
-                "dummy-min",
-                label = vals[1],
-                icon = icon("calendar-days"),
-                class = "dummy-button"),
-              span(" - "),
-              actionButton(
-                "dummy-max",
-                label = vals[2],
-                icon = icon("calendar-days"),
-                class = "dummy-button")
+              div(icon("calendar-days"), vals[1]),
+              div(span(" - "), icon("calendar-days"), vals[2])
             )
           })
 

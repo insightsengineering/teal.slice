@@ -318,12 +318,3 @@ a.remove_all:hover {
 .progress-bar.state-count-bar-unfiltered {
   background-color: rgba(173, 216, 230, 0.439) !important;
 }
-
-.dummy-button {
-  background-color: inherit;
-  border: 0;
-}
-.dummy-button:hover {
-  background-color: inherit;
-  border: 0;
-}

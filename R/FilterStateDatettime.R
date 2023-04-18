@@ -600,17 +600,8 @@ DatetimeFilterState <- R6::R6Class( # nolint
           output$selection <- renderUI({
             vals <- format(private$get_selected(), usetz = TRUE, nsmall = 3)
             div(
-              actionButton(
-                "dummy-min",
-                label = vals[1],
-                icon = icon("clock"),
-                class = "dummy-button"),
-              span(" - "),
-              actionButton(
-                "dummy-max",
-                label = vals[2],
-                icon = icon("clock"),
-                class = "dummy-button")
+              div(icon("clock"), vals[1]),
+              div(span(" - "), icon("clock"), vals[2])
             )
           })
 

@@ -287,7 +287,7 @@ FilterState <- R6::R6Class( # nolint
             `data-bs-toggle` = "collapse",
             href = paste0("#", ns("body")),
             if (private$fixed) {
-              actionButton("dummy", label = NULL, icon = icon("lock"), class = "dummy-button")
+              icon = icon("lock")
             } else {
               NULL
             },
