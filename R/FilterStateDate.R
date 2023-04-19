@@ -128,6 +128,12 @@ DateFilterState <- R6::R6Class( # nolint
     #' \item{`"list"`}{ `varname` in the condition call will be returned as `<dataname>$<varname>`}
     #' \item{`"matrix"`}{ `varname` in the condition call will be returned as `<dataname>[, <varname>]`}
     #' }
+    #' @param citril_id (`character(0)`, `character(1)`)\cr
+    #'   id of a one-variable subset expression in `citril`
+    #' @param citril_title (`character(0)`, `character(1)`)\cr
+    #'   description of a one-variable subset expression in `citril`
+    #' @param citril_condition (`character(0)`, `character(1)`)\cr
+    #'   one-variable subset expression in `citril`, e.g. `SEX == "F"`
     #' @param ... additional arguments to be saved as a list in `private$extras` field
     #'
     initialize = function(x,
@@ -141,6 +147,9 @@ DateFilterState <- R6::R6Class( # nolint
                           fixed = FALSE,
                           disabled = FALSE,
                           extract_type = character(0),
+                          citril_id = character(0),
+                          citril_title = character(0),
+                          citril_condition = character(0),
                           ...) {
       checkmate::assert_date(x)
       checkmate::assert_class(x_reactive, "reactive")
@@ -155,7 +164,10 @@ DateFilterState <- R6::R6Class( # nolint
         keep_inf = keep_inf,
         fixed = fixed,
         disabled = disabled,
-        extract_type = extract_type
+        extract_type = extract_type,
+        citril_id = citril_id,
+        citril_title = citril_title,
+        citril_condition = citril_condition
       )
       args <- append(args, list(...))
       do.call(super$initialize, args)

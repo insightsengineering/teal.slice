@@ -74,6 +74,12 @@ FilterState <- R6::R6Class( # nolint
     #' \item{`"list"`}{ `varname` in the condition call will be returned as `<dataname>$<varname>`}
     #' \item{`"matrix"`}{ `varname` in the condition call will be returned as `<dataname>[, <varname>]`}
     #' }
+    #' @param citril_id (`character(0)`, `character(1)`)\cr
+    #'   id of a one-variable subset expression in `citril`
+    #' @param citril_title (`character(0)`, `character(1)`)\cr
+    #'   description of a one-variable subset expression in `citril`
+    #' @param citril_condition (`character(0)`, `character(1)`)\cr
+    #'   one-variable subset expression in `citril`, e.g. `SEX == "F"`
     #' @param ... additional arguments to be saved as a list in `private$extras` field
     #'
     #' @return self invisibly
@@ -87,6 +93,9 @@ FilterState <- R6::R6Class( # nolint
                           fixed = FALSE,
                           disabled = FALSE,
                           extract_type = character(0),
+                          citril_id = character(0),
+                          citril_title = character(0),
+                          citril_condition = character(0),
                           ...) {
       checkmate::assert_class(x_reactive, "reactive")
       checkmate::assert_string(dataname)
@@ -99,6 +108,9 @@ FilterState <- R6::R6Class( # nolint
       if (length(extract_type) == 1) {
         checkmate::assert_choice(extract_type, choices = c("list", "matrix"))
       }
+      checkmate::assert_character(citril_id, max.len = 1, any.missing = FALSE)
+      checkmate::assert_character(citril_title, max.len = 1, any.missing = FALSE)
+      checkmate::assert_character(citril_condition, max.len = 1, any.missing = FALSE)
 
       # Set data properties.
       private$x <- x
@@ -130,6 +142,10 @@ FilterState <- R6::R6Class( # nolint
         } else {
           varlabel
         }
+      # Set citril features.
+      private$citril_id <- citril_id
+      private$citril_title <- citril_title
+      private$citril_condition <- citril_condition
 
       logger::log_trace("Instantiated FilterState object")
 
@@ -358,8 +374,11 @@ FilterState <- R6::R6Class( # nolint
     extract_type = character(0), # used by private$get_varname_prefixed
     na_count = integer(0),
     filtered_na_count = NULL, # reactive containing the count of NA in the filtered dataset
-    varlabel = character(0),
-    # set by set_state
+    varlabel = character(0), # taken from variable labels in data; displayed in filter cards
+    citril_id = character(0),
+    citril_title = character(0),
+    citril_condition = character(0),
+    ## corresponding to fields in teal_slice
     dataname = character(0),
     varname = character(0),
     choices = NULL, # because each class has different choices type
@@ -369,11 +388,14 @@ FilterState <- R6::R6Class( # nolint
     fixed = logical(0), # logical flag whether this filter state is fixed/locked
     extras = list(), # additional information passed in teal_slice (product of filter_var)
     disabled = NULL, # reactiveVal holding a logical(1)
+    ##
     # other
     is_choice_limited = FALSE, # flag whether number of possible choices was limited when specifying filter
     na_rm = FALSE, # logical(1)
     observers = NULL, # stores observers
     cache = NULL, # cache state when filter disabled so we can later restore
+
+    # private methods ----
 
     # @description
     # Set values that can be selected from.
@@ -541,6 +563,26 @@ FilterState <- R6::R6Class( # nolint
           private$varname
         }
       str2lang(ans)
+    },
+
+    get_citril_id = function() {
+      private$citril_id
+    },
+
+    get_citril_title = function() {
+      if (identical(private$citril_title, character(0))) {
+        private$get_varname()
+      } else {
+        private$citril_title
+      }
+    },
+
+    get_citril_condition = function() {
+      if (identical(private$citril_condition, character(0))) {
+        deparse1(self$get_call())
+      } else {
+        private$citril_condition
+      }
     },
 
     # @description
