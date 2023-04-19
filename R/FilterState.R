@@ -671,27 +671,6 @@ FilterState <- R6::R6Class( # nolint
     },
 
     # @description
-    # module displaying inputs in a fixed filter state
-    # there are no input widgets, only selection visualizations
-    # @param id
-    #   character string specifying this `shiny` module instance
-    ui_inputs_fixed = function(id) {
-      ns <- NS(id)
-      div(
-        class = "choices_state",
-        uiOutput(ns("selection"))
-      )
-    },
-
-    # @description
-    # module creating the display of a fixed filter state
-    # @param id
-    #   character string specifying this `shiny` module instance
-    server_inputs_fixed = function(id) {
-      stop("abstract class")
-    },
-
-    # @description
     # module displaying input to keep or remove NA in the FilterState call
     # @param id `shiny` id parameter
     #  renders checkbox input only when variable from which FilterState has

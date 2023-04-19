@@ -532,46 +532,6 @@ RangeFilterState <- R6::R6Class( # nolint
       )
     },
 
-    server_inputs_fixed = function(id) {
-      moduleServer(
-        id = id,
-        function(input, output, session) {
-          logger::log_trace("RangeFilterState$server initializing, dataname: { private$dataname }")
-
-          finite_values <- reactive(Filter(is.finite, private$x_reactive()))
-          output$plot <- bindCache(
-            finite_values(),
-            cache = "session",
-            x = renderPlot(
-              bg = "transparent",
-              height = 25,
-              expr = {
-                private$unfiltered_histogram +
-                  if (!is.null(finite_values())) {
-                    ggplot2::geom_histogram(
-                      data = data.frame(x = Filter(is.finite, private$x_reactive())),
-                      ggplot2::aes(x = x),
-                      bins = 100,
-                      fill = grDevices::rgb(173 / 255, 216 / 255, 230 / 255),
-                      color = grDevices::rgb(173 / 255, 216 / 255, 230 / 255)
-                    )
-                  } else {
-                    NULL
-                  }
-              }
-            )
-          )
-
-          output$selection <- renderUI({
-            plotOutput(session$ns("plot"), height = "2em")
-          })
-
-          logger::log_trace("RangeFilterState$server initialized, dataname: { private$dataname }")
-          NULL
-        }
-      )
-    },
-
     # @description
     # module displaying input to keep or remove Inf in the FilterState call
     # @param id `shiny` id parameter

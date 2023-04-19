@@ -591,26 +591,6 @@ DatetimeFilterState <- R6::R6Class( # nolint
       )
     },
 
-    server_inputs_fixed = function(id) {
-      moduleServer(
-        id = id,
-        function(input, output, session) {
-          logger::log_trace("DatetimeFilterState$server initializing, dataname: { private$dataname }")
-
-          output$selection <- renderUI({
-            vals <- format(private$get_selected(), usetz = TRUE, nsmall = 3)
-            div(
-              div(icon("clock"), vals[1]),
-              div(span(" - "), icon("clock"), vals[2])
-            )
-          })
-
-          logger::log_trace("DatetimeFilterState$server initialized, dataname: { private$dataname }")
-          NULL
-        }
-      )
-    },
-
     # @description
     # UI module to display filter summary
     #  renders text describing selected date range and
