@@ -291,6 +291,24 @@ FilterState <- R6::R6Class( # nolint
     ui = function(id, parent_id = "cards") {
       ns <- NS(id)
 
+      header_content <-
+        if (private$fixed) {
+          tags$span(
+            icon("lock"),
+            tags$strong(private$get_citril_id()),
+            private$get_citril_title()
+          )
+        } else {
+          tags$span(
+            tags$span(tags$strong(private$get_varname())),
+            if (length(private$get_varlabel())) {
+              tags$span(private$get_varlabel(), class = "filter-card-varlabel")
+            } else {
+              NULL
+            }
+          )
+        }
+
       tags$div(
         id = id,
         class = "panel filter-card",
@@ -302,17 +320,7 @@ FilterState <- R6::R6Class( # nolint
             `data-toggle` = "collapse",
             `data-bs-toggle` = "collapse",
             href = paste0("#", ns("body")),
-            if (private$fixed) {
-              icon = icon("lock")
-            } else {
-              NULL
-            },
-            tags$span(tags$strong(private$get_varname())),
-            if (length(private$get_varlabel())) {
-              tags$span(private$get_varlabel(), class = "filter-card-varlabel")
-            } else {
-              NULL
-            }
+            header_content
           ),
           tags$div(
             class = "filter-card-controls",
@@ -330,13 +338,17 @@ FilterState <- R6::R6Class( # nolint
               class = "filter-card-remove"
             )
           ),
-          tags$div(
-            class = "filter-card-summary",
-            `data-toggle` = "collapse",
-            `data-bs-toggle` = "collapse",
-            href = paste0("#", ns("body")),
-            private$ui_summary(ns("summary"))
-          )
+          if (private$fixed) {
+            NULL
+          } else {
+            tags$div(
+              class = "filter-card-summary",
+              `data-toggle` = "collapse",
+              `data-bs-toggle` = "collapse",
+              href = paste0("#", ns("body")),
+              private$ui_summary(ns("summary"))
+            )
+          }
         ),
         tags$div(
           id = ns("body"),
@@ -346,7 +358,7 @@ FilterState <- R6::R6Class( # nolint
           tags$div(
             class = "filter-card-body",
             if (private$fixed) {
-              private$ui_inputs_fixed(ns("inputs"))
+              tags$span(private$get_citril_condition())
             } else {
               private$ui_inputs(ns("inputs"))
             }
