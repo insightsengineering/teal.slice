@@ -259,14 +259,15 @@ FilterState <- R6::R6Class( # nolint
         function(input, output, session) {
           private$server_summary("summary")
           private$server_inputs("inputs")
-          observeEvent(input$enable, {
-            if (isTRUE(input$enable)) {
-              private$enable()
-            } else {
-              private$disable()
-            }
-          },
-          ignoreInit = TRUE
+          observeEvent(input$enable,
+            {
+              if (isTRUE(input$enable)) {
+                private$enable()
+              } else {
+                private$disable()
+              }
+            },
+            ignoreInit = TRUE
           )
           reactive(input$remove) # back to parent to remove self
         }
@@ -568,11 +569,9 @@ FilterState <- R6::R6Class( # nolint
         }
       str2lang(ans)
     },
-
     get_metadata_id = function() {
       private$metadata_id
     },
-
     get_metadata_title = function() {
       if (identical(private$metadata_title, character(0))) {
         private$get_varname()
@@ -580,7 +579,6 @@ FilterState <- R6::R6Class( # nolint
         private$metadata_title
       }
     },
-
     get_metadata_condition = function() {
       if (identical(private$metadata_condition, character(0))) {
         deparse1(self$get_call())
@@ -674,6 +672,15 @@ FilterState <- R6::R6Class( # nolint
       invisible(NULL)
     },
 
+    # Cache state of a filter
+    #
+    # This method is intended to be called reacting to the global filter disable switch.
+    # It is similar to `private$disable()` but here we need slightly different behavior.
+    # When the global filter switch is enabled, we may not want to enable every FilterState.
+    # Instead, we want it to be in the state it was when the global switch was set to disable.
+    # So if a FilterState is disabled when the global switched is 'turned off'
+    #  then when it is 'turned on', we want that disabled FilterState to still be disabled.
+    # @return `NULL` invisibly.
     cache_state = function() {
       logger::log_trace("{ class(self)[1] }$set_state caching state of variable: { private$varname }")
 
@@ -683,6 +690,15 @@ FilterState <- R6::R6Class( # nolint
 
       invisible(NULL)
     },
+    # Restore state of a filter
+    #
+    # This method is intended to be called reacting to the global filter disable switch.
+    # It is similar to `private$enable()` but here we need slightly different behavior.
+    # When the global filter switch is enabled, we may not want to enable every FilterState.
+    # Instead, we want it to be in the state it was when the global switch was set to disable.
+    # So if a FilterState is disabled when the global switched is 'turned off'
+    #  then when it is 'turned on', we want that disabled FilterState to still be disabled.
+    # @return `NULL` invisibly.
     restore_state = function() {
       logger::log_trace("{ class(self)[1] }$set_state restoring state of variable: { private$varname }")
 
