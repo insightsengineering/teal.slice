@@ -74,12 +74,9 @@ FilterState <- R6::R6Class( # nolint
     #' \item{`"list"`}{ `varname` in the condition call will be returned as `<dataname>$<varname>`}
     #' \item{`"matrix"`}{ `varname` in the condition call will be returned as `<dataname>[, <varname>]`}
     #' }
-    #' @param citril_id (`character(0)`, `character(1)`)\cr
-    #'   id of a one-variable subset expression in `citril`
-    #' @param citril_title (`character(0)`, `character(1)`)\cr
-    #'   description of a one-variable subset expression in `citril`
-    #' @param citril_condition (`character(0)`, `character(1)`)\cr
-    #'   one-variable subset expression in `citril`, e.g. `SEX == "F"`
+    #' @param metadata_id,metadata_title,metadata_condition (`character(0)`, `character(1)`)\cr
+    #'   metadata describing the filter state; will be displayed in cards of fixed filters;
+    #'   `metadata_condition` is a one-variable subset expression in `metadata`, e.g. `SEX == "F"`
     #' @param ... additional arguments to be saved as a list in `private$extras` field
     #'
     #' @return self invisibly
@@ -93,9 +90,9 @@ FilterState <- R6::R6Class( # nolint
                           fixed = FALSE,
                           disabled = FALSE,
                           extract_type = character(0),
-                          citril_id = character(0),
-                          citril_title = character(0),
-                          citril_condition = character(0),
+                          metadata_id = character(0),
+                          metadata_title = character(0),
+                          metadata_condition = character(0),
                           ...) {
       checkmate::assert_class(x_reactive, "reactive")
       checkmate::assert_string(dataname)
@@ -108,9 +105,9 @@ FilterState <- R6::R6Class( # nolint
       if (length(extract_type) == 1) {
         checkmate::assert_choice(extract_type, choices = c("list", "matrix"))
       }
-      checkmate::assert_character(citril_id, max.len = 1, any.missing = FALSE)
-      checkmate::assert_character(citril_title, max.len = 1, any.missing = FALSE)
-      checkmate::assert_character(citril_condition, max.len = 1, any.missing = FALSE)
+      checkmate::assert_character(metadata_id, max.len = 1, any.missing = FALSE)
+      checkmate::assert_character(metadata_title, max.len = 1, any.missing = FALSE)
+      checkmate::assert_character(metadata_condition, max.len = 1, any.missing = FALSE)
 
       # Set data properties.
       private$x <- x
@@ -142,10 +139,10 @@ FilterState <- R6::R6Class( # nolint
         } else {
           varlabel
         }
-      # Set citril features.
-      private$citril_id <- citril_id
-      private$citril_title <- citril_title
-      private$citril_condition <- citril_condition
+      # Set metadata features.
+      private$metadata_id <- metadata_id
+      private$metadata_title <- metadata_title
+      private$metadata_condition <- metadata_condition
 
       logger::log_trace("Instantiated FilterState object")
 
@@ -290,8 +287,8 @@ FilterState <- R6::R6Class( # nolint
         if (private$fixed) {
           tags$span(
             icon("lock"),
-            tags$strong(private$get_citril_id()),
-            private$get_citril_title()
+            tags$strong(private$get_metadata_id()),
+            private$get_metadata_title()
           )
         } else {
           tags$span(
@@ -353,7 +350,7 @@ FilterState <- R6::R6Class( # nolint
           tags$div(
             class = "filter-card-body",
             if (private$fixed) {
-              tags$span(private$get_citril_condition())
+              tags$span(private$get_metadata_condition())
             } else {
               private$ui_inputs(ns("inputs"))
             }
@@ -382,9 +379,9 @@ FilterState <- R6::R6Class( # nolint
     na_count = integer(0),
     filtered_na_count = NULL, # reactive containing the count of NA in the filtered dataset
     varlabel = character(0), # taken from variable labels in data; displayed in filter cards
-    citril_id = character(0),
-    citril_title = character(0),
-    citril_condition = character(0),
+    metadata_id = character(0),
+    metadata_title = character(0),
+    metadata_condition = character(0),
     ## corresponding to fields in teal_slice
     dataname = character(0),
     varname = character(0),
@@ -393,8 +390,8 @@ FilterState <- R6::R6Class( # nolint
     keep_na = NULL, # reactiveVal holding a logical(1)
     keep_inf = NULL, # reactiveVal holding a logical(1)
     fixed = logical(0), # logical flag whether this filter state is fixed/locked
-    extras = list(), # additional information passed in teal_slice (product of filter_var)
     disabled = NULL, # reactiveVal holding a logical(1)
+    extras = list(), # additional information passed in teal_slice (product of filter_var)
     ##
     # other
     is_choice_limited = FALSE, # flag whether number of possible choices was limited when specifying filter
@@ -572,23 +569,23 @@ FilterState <- R6::R6Class( # nolint
       str2lang(ans)
     },
 
-    get_citril_id = function() {
-      private$citril_id
+    get_metadata_id = function() {
+      private$metadata_id
     },
 
-    get_citril_title = function() {
-      if (identical(private$citril_title, character(0))) {
+    get_metadata_title = function() {
+      if (identical(private$metadata_title, character(0))) {
         private$get_varname()
       } else {
-        private$citril_title
+        private$metadata_title
       }
     },
 
-    get_citril_condition = function() {
-      if (identical(private$citril_condition, character(0))) {
+    get_metadata_condition = function() {
+      if (identical(private$metadata_condition, character(0))) {
         deparse1(self$get_call())
       } else {
-        private$citril_condition
+        private$metadata_condition
       }
     },
 
