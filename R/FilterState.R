@@ -647,11 +647,16 @@ FilterState <- R6::R6Class( # nolint
     # `state` is moved to cache and set to `NULL`
     # @return `NULL` invisibly
     disable = function() {
-      private$cache <- self$get_state()
+      logger::log_trace("{ class(self)[1] }$set_state disabling fiter state of variable: { private$varname }")
+
+      private$cache_state()
       private$selected(NULL)
       private$keep_na(NULL)
       private$keep_inf(NULL)
       private$disabled(TRUE)
+
+      logger::log_trace("{ class(self)[1] }$set_state disabled fiter state of variable: { private$varname }")
+
       invisible(NULL)
     },
 
@@ -659,15 +664,40 @@ FilterState <- R6::R6Class( # nolint
     # Cached `state` is reset again and cache is cleared.
     # @return `NULL` invisibly
     enable = function() {
-      private$disabled(FALSE)
-      if (!is.null(private$cache)) {
-        state <- private$cache
-        state$disabled <- NULL
-        private$fixed <- FALSE
-        self$set_state(state)
-        private$fixed <- TRUE
+      logger::log_trace("{ class(self)[1] }$set_state enabling fiter state of variable: { private$varname }")
+      if (is.null(private$cache)) {
+        logger::log_warn("attempt to restore state failed (cache empty): { private$dataname } { private$varname }")
+      } else {
+        private$restore_state()
         private$cache <- NULL
+        private$disabled(FALSE)
+
+        logger::log_trace("{ class(self)[1] }$set_state enabled state of variable: { private$varname }")
       }
+      invisible(NULL)
+    },
+
+    cache_state = function() {
+      logger::log_trace("{ class(self)[1] }$set_state caching state of variable: { private$varname }")
+
+      private$cache <- self$get_state()
+
+      logger::log_trace("{ class(self)[1] }$set_state cached state of variable: { private$varname }")
+
+      invisible(NULL)
+    },
+    restore_state = function() {
+      logger::log_trace("{ class(self)[1] }$set_state restoring state of variable: { private$varname }")
+
+      state <- private$cache
+      private$set_selected(state$selected)
+      private$set_keep_na(state$keep_na)
+      private$set_keep_inf(state$keep_inf)
+      private$fixed <- state$fixed
+      private$disabled(state$disabled)
+
+      logger::log_trace("{ class(self)[1] }$set_state restored state of variable: { private$varname }")
+
       invisible(NULL)
     },
 
