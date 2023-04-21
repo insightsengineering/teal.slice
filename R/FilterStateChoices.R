@@ -129,7 +129,13 @@ ChoicesFilterState <- R6::R6Class( # nolint
     #' }
     #' @param metadata_id,metadata_title,metadata_condition (`character(0)`, `character(1)`)\cr
     #'   metadata describing the filter state; will be displayed in cards of fixed filters;
-    #'   `metadata_condition` is a one-variable subset expression in `metadata`, e.g. `SEX == "F"`
+    #'   `metadata_condition` is a one-variable subset expression in `metadata`, e.g. `SEX == "F"`\cr
+    #'   if not provided, will be filled in with filter properties:
+    #'   \itemize{
+    #'   \item{`metadata_id` defaults to `varname`}
+    #'   \item{`metadata_title` defaults to `varlabel`}
+    #'   \item{`metadata_condition` defaults to this state's subsetting call}
+    #'   }
     #' @param ... additional arguments to be saved as a list in `private$extras` field
     #'
     initialize = function(x,

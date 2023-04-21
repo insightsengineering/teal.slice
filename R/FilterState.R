@@ -76,7 +76,13 @@ FilterState <- R6::R6Class( # nolint
     #' }
     #' @param metadata_id,metadata_title,metadata_condition (`character(0)`, `character(1)`)\cr
     #'   metadata describing the filter state; will be displayed in cards of fixed filters;
-    #'   `metadata_condition` is a one-variable subset expression in `metadata`, e.g. `SEX == "F"`
+    #'   `metadata_condition` is a one-variable subset expression in `metadata`, e.g. `SEX == "F"`\cr
+    #'   if not provided, will be filled in with filter properties:
+    #'   \itemize{
+    #'   \item{`metadata_id` defaults to `varname`}
+    #'   \item{`metadata_title` defaults to `varlabel`}
+    #'   \item{`metadata_condition` defaults to this state's subsetting call}
+    #'   }
     #' @param ... additional arguments to be saved as a list in `private$extras` field
     #'
     #' @return self invisibly
@@ -569,6 +575,10 @@ FilterState <- R6::R6Class( # nolint
         }
       str2lang(ans)
     },
+
+    # Retrieve filter ID specified in metadata.
+    # If missing, use variable name.
+    # Only used by fixed filters.
     get_metadata_id = function() {
       if (identical(private$metadata_id, character(0))) {
         private$get_varname()
@@ -576,6 +586,10 @@ FilterState <- R6::R6Class( # nolint
         private$metadata_id
       }
     },
+
+    # Retrieve filter title specified in metadata.
+    # If missing, use variable label
+    # Only used by fixed filters.
     get_metadata_title = function() {
       if (identical(private$metadata_title, character(0))) {
         private$get_varlabel()
@@ -583,6 +597,10 @@ FilterState <- R6::R6Class( # nolint
         private$metadata_title
       }
     },
+
+    # Retrieve filter condition (logical predicate) specified in metadata.
+    # If missing, use current call.
+    # Only used by fixed filters.
     get_metadata_condition = function() {
       if (identical(private$metadata_condition, character(0))) {
         deparse1(self$get_call())
