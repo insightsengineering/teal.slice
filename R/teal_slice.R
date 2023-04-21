@@ -234,7 +234,7 @@ format.teal_slice <- function(x, show_all = FALSE, ...) {
       hm <- append(hm, sprintf("     $ %s: %s", element_name, element_value))
     }
   }
-  paste(hm, collapse = "\n")
+  paste(c(hm, ""), collapse = "\n")
 }
 
 
@@ -412,7 +412,7 @@ format.teal_slices <- function(x, show_all = FALSE, ...) {
     }
   }
   res <- append(res, sprintf("\ncount type: %s", ct))
-  paste(res, collapse = "\n")
+  paste(c(res, ""), collapse = "\n")
 }
 
 
