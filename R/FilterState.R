@@ -570,11 +570,15 @@ FilterState <- R6::R6Class( # nolint
       str2lang(ans)
     },
     get_metadata_id = function() {
-      private$metadata_id
+      if (identical(private$metadata_id, character(0))) {
+        private$get_varname()
+      } else {
+        private$metadata_id
+      }
     },
     get_metadata_title = function() {
       if (identical(private$metadata_title, character(0))) {
-        private$get_varname()
+        private$get_varlabel()
       } else {
         private$metadata_title
       }
