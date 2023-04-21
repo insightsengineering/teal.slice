@@ -647,9 +647,8 @@ FilterState <- R6::R6Class( # nolint
       values
     },
 
-    # Casts an array of values to the type fitting this `FilterState`
-    # and validates the elements of the casted array
-    # satisfy the requirements of this `FilterState`.
+    # Converts values to the type fitting this `FilterState` and validates
+    # whether the elements of the resulting vector satisfy the requirements of this `FilterState`.
     #
     # @param values the array of values
     #
@@ -660,8 +659,11 @@ FilterState <- R6::R6Class( # nolint
       values
     },
 
-    # Disables `FilterState`
-    # `state` is moved to cache and set to `NULL`
+    # Disables this `FilterState`.
+    #
+    # Filter state properties are packed into a `teal_slice` and saved in cache (private field).
+    # State properties that refer to selection are set to NULL.
+    #
     # @return `NULL` invisibly
     disable = function() {
       logger::log_trace("{ class(self)[1] }$set_state disabling fiter state of variable: { private$varname }")
@@ -677,8 +679,10 @@ FilterState <- R6::R6Class( # nolint
       invisible(NULL)
     },
 
-    # Enables `FilterState`
-    # Cached `state` is reset again and cache is cleared.
+    # Enables this `FilterState`.
+    #
+    # Cached state is restored and filter state is enabled. This is done regardless of fixed state.
+    #
     # @return `NULL` invisibly
     enable = function() {
       logger::log_trace("{ class(self)[1] }$set_state enabling fiter state of variable: { private$varname }")
@@ -686,7 +690,6 @@ FilterState <- R6::R6Class( # nolint
         logger::log_warn("attempt to restore state failed (cache empty): { private$dataname } { private$varname }")
       } else {
         private$restore_state()
-        private$cache <- NULL
         private$disabled(FALSE)
 
         logger::log_trace("{ class(self)[1] }$set_state enabled state of variable: { private$varname }")
@@ -696,12 +699,11 @@ FilterState <- R6::R6Class( # nolint
 
     # Cache state of a filter
     #
-    # This method is intended to be called reacting to the global filter disable switch.
-    # It is similar to `private$disable()` but here we need slightly different behavior.
-    # When the global filter switch is enabled, we may not want to enable every FilterState.
-    # Instead, we want it to be in the state it was when the global switch was set to disable.
-    # So if a FilterState is disabled when the global switched is 'turned off'
-    #  then when it is 'turned on', we want that disabled FilterState to still be disabled.
+    # Called when filter state is disabled, whether by its own switch, or the global one.
+    # Having separate methods to cache and restore allows to manipulate
+    # state independently of disabled status and thus cache and restore a disabled state.
+    # It also effectively bypasses the bar on modifying fixed state.
+    #
     # @return `NULL` invisibly.
     cache_state = function() {
       logger::log_trace("{ class(self)[1] }$set_state caching state of variable: { private$varname }")
@@ -712,19 +714,20 @@ FilterState <- R6::R6Class( # nolint
 
       invisible(NULL)
     },
+
     # Restore state of a filter
     #
-    # This method is intended to be called reacting to the global filter disable switch.
-    # It is similar to `private$enable()` but here we need slightly different behavior.
-    # When the global filter switch is enabled, we may not want to enable every FilterState.
-    # Instead, we want it to be in the state it was when the global switch was set to disable.
-    # So if a FilterState is disabled when the global switched is 'turned off'
-    #  then when it is 'turned on', we want that disabled FilterState to still be disabled.
+    # Called when filter state is disabled, whether by its own switch, or the global one.
+    # Having separate methods to cache and restore allows to manipulate
+    # state independently of disabled status and thus cache and restore a disabled state.
+    # It also effectively bypasses the bar on modifying fixed state.
+    #
     # @return `NULL` invisibly.
     restore_state = function() {
       logger::log_trace("{ class(self)[1] }$set_state restoring state of variable: { private$varname }")
 
       state <- private$cache
+      private$cache <- NULL
       private$set_selected(state$selected)
       private$set_keep_na(state$keep_na)
       private$set_keep_inf(state$keep_inf)
