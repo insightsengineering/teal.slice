@@ -271,24 +271,6 @@ FilterState <- R6::R6Class( # nolint
     ui = function(id, parent_id = "cards") {
       ns <- NS(id)
 
-      header_content <-
-        if (private$fixed) {
-          tags$span(
-            icon("lock"),
-            tags$strong(private$get_metadata_id()),
-            private$get_metadata_title()
-          )
-        } else {
-          tags$span(
-            tags$span(tags$strong(private$get_varname())),
-            if (length(private$get_varlabel())) {
-              tags$span(private$get_varlabel(), class = "filter-card-varlabel")
-            } else {
-              NULL
-            }
-          )
-        }
-
       tags$div(
         id = id,
         class = "panel filter-card",
@@ -296,11 +278,15 @@ FilterState <- R6::R6Class( # nolint
         tags$div(
           class = "filter-card-header",
           tags$div(
+            # header properties
             class = "filter-card-title",
             `data-toggle` = "collapse",
             `data-bs-toggle` = "collapse",
             href = paste0("#", ns("body")),
-            header_content
+            # header elements
+            if (private$fixed) icon("lock") else NULL,
+            tags$span(tags$strong(private$get_varname())),
+            tags$span(private$get_varlabel(), class = "filter-card-varlabel")
           ),
           tags$div(
             class = "filter-card-controls",
@@ -338,7 +324,7 @@ FilterState <- R6::R6Class( # nolint
           tags$div(
             class = "filter-card-body",
             if (private$fixed) {
-              tags$span(private$get_metadata_condition())
+              tags$span(private$get_metadata_expression())
             } else {
               private$ui_inputs(ns("inputs"))
             }
