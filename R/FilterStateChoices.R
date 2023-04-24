@@ -352,11 +352,11 @@ ChoicesFilterState <- R6::R6Class( # nolint
     get_metadata_expression = function(dataname) {
       if (missing(dataname)) dataname <- private$dataname
       varname <- private$get_varname_prefixed(dataname)
-      choices <- private$get_selected()
+      selected <- private$get_selected()
       if (length(selected) == 1L) {
         sprintf("%s == %s", deparse1(varname), selected)
       } else {
-        sprintf("%s %in% c(%s)", deparse1(varname), toString(selected))
+        sprintf("%s %%in%% c(%s)", deparse1(varname), toString(selected))
       }
     },
 
