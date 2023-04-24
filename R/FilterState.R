@@ -74,15 +74,6 @@ FilterState <- R6::R6Class( # nolint
     #' \item{`"list"`}{ `varname` in the condition call will be returned as `<dataname>$<varname>`}
     #' \item{`"matrix"`}{ `varname` in the condition call will be returned as `<dataname>[, <varname>]`}
     #' }
-    #' @param metadata_id,metadata_title,metadata_condition (`character(0)`, `character(1)`)\cr
-    #'   metadata describing the filter state; will be displayed in cards of fixed filters;
-    #'   `metadata_condition` is a one-variable subset expression in `metadata`, e.g. `SEX == "F"`\cr
-    #'   if not provided, will be filled in with filter properties:
-    #'   \itemize{
-    #'   \item{`metadata_id` defaults to `varname`}
-    #'   \item{`metadata_title` defaults to `varlabel`}
-    #'   \item{`metadata_condition` defaults to this state's subsetting call}
-    #'   }
     #' @param ... additional arguments to be saved as a list in `private$extras` field
     #'
     #' @return self invisibly
@@ -96,9 +87,6 @@ FilterState <- R6::R6Class( # nolint
                           fixed = FALSE,
                           disabled = FALSE,
                           extract_type = character(0),
-                          metadata_id = character(0),
-                          metadata_title = character(0),
-                          metadata_condition = character(0),
                           ...) {
       checkmate::assert_class(x_reactive, "reactive")
       checkmate::assert_string(dataname)
@@ -111,9 +99,6 @@ FilterState <- R6::R6Class( # nolint
       if (length(extract_type) == 1) {
         checkmate::assert_choice(extract_type, choices = c("list", "matrix"))
       }
-      checkmate::assert_character(metadata_id, max.len = 1, any.missing = FALSE)
-      checkmate::assert_character(metadata_title, max.len = 1, any.missing = FALSE)
-      checkmate::assert_character(metadata_condition, max.len = 1, any.missing = FALSE)
 
       # Set data properties.
       private$x <- x
@@ -145,10 +130,6 @@ FilterState <- R6::R6Class( # nolint
         } else {
           varlabel
         }
-      # Set metadata features.
-      private$metadata_id <- metadata_id
-      private$metadata_title <- metadata_title
-      private$metadata_condition <- metadata_condition
 
       logger::log_trace("Instantiated FilterState object")
 
@@ -386,9 +367,6 @@ FilterState <- R6::R6Class( # nolint
     na_count = integer(0),
     filtered_na_count = NULL, # reactive containing the count of NA in the filtered dataset
     varlabel = character(0), # taken from variable labels in data; displayed in filter cards
-    metadata_id = character(0),
-    metadata_title = character(0),
-    metadata_condition = character(0),
     ## corresponding to fields in teal_slice
     dataname = character(0),
     varname = character(0),
@@ -576,37 +554,11 @@ FilterState <- R6::R6Class( # nolint
       str2lang(ans)
     },
 
-    # Retrieve filter ID specified in metadata.
-    # If missing, use variable name.
-    # Only used by fixed filters.
-    get_metadata_id = function() {
-      if (identical(private$metadata_id, character(0))) {
-        private$get_varname()
-      } else {
-        private$metadata_id
-      }
-    },
-
-    # Retrieve filter title specified in metadata.
-    # If missing, use variable label
-    # Only used by fixed filters.
-    get_metadata_title = function() {
-      if (identical(private$metadata_title, character(0))) {
-        private$get_varlabel()
-      } else {
-        private$metadata_title
-      }
-    },
-
     # Retrieve filter condition (logical predicate) specified in metadata.
     # If missing, use current call.
     # Only used by fixed filters.
-    get_metadata_condition = function() {
-      if (identical(private$metadata_condition, character(0))) {
-        deparse1(self$get_call())
-      } else {
-        private$metadata_condition
-      }
+    get_metadata_expression = function() {
+      stop("this is a virtual method")
     },
 
     # @description
