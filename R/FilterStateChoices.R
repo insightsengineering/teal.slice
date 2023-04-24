@@ -340,11 +340,23 @@ ChoicesFilterState <- R6::R6Class( # nolint
       private$choices_counts <- choices_counts
       invisible(NULL)
     },
+
     get_choices_counts = function() {
       if (!is.null(private$x_reactive)) {
         table(factor(private$x_reactive(), levels = private$choices))
       } else {
         NULL
+      }
+    },
+
+    get_metadata_expression = function(dataname) {
+      if (missing(dataname)) dataname <- private$dataname
+      varname <- private$get_varname_prefixed(dataname)
+      choices <- private$get_selected()
+      if (length(selected) == 1L) {
+        sprintf("%s == %s", deparse1(varname), selected)
+      } else {
+        sprintf("%s %in% c(%s)", deparse1(varname), toString(selected))
       }
     },
 

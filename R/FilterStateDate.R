@@ -262,6 +262,14 @@ DateFilterState <- R6::R6Class( # nolint
       private$is_choice_limited <- (any(xl < choices[1L], na.rm = TRUE) | any(xl > choices[2L], na.rm = TRUE))
       invisible(NULL)
     },
+
+    get_metadata_expression = function(dataname) {
+      if (missing(dataname)) dataname <- private$dataname
+      varname <- private$get_varname_prefixed(dataname)
+      selected <- private$get_selected()
+      sprintf("%1$s => %2$s & %1$s <= %3$s", deparse1(varname), selected[1], selected[2])
+    },
+
     validate_selection = function(value) {
       if (!is(value, "Date")) {
         stop(
@@ -279,6 +287,7 @@ DateFilterState <- R6::R6Class( # nolint
       )
       check_in_range(value, private$choices, pre_msg = pre_msg)
     },
+
     cast_and_validate = function(values) {
       tryCatch(
         expr = {
@@ -290,6 +299,7 @@ DateFilterState <- R6::R6Class( # nolint
       if (length(values) != 2) stop("The array of set values must have length two.")
       values
     },
+
     remove_out_of_bound_values = function(values) {
       if (values[1] < private$choices[1L] | values[1] > private$choices[2L]) {
         warning(

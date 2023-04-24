@@ -242,6 +242,14 @@ LogicalFilterState <- R6::R6Class( # nolint
       private$choices_counts <- choices_counts
       invisible(NULL)
     },
+
+    get_metadata_expression = function(dataname) {
+      if (missing(dataname)) dataname <- private$dataname
+      varname <- private$get_varname_prefixed(dataname)
+      selected <- private$get_selected()
+      sprintf("%s == %s", deparse1(varname), isTRUE(selected))
+    },
+
     validate_selection = function(value) {
       if (!(checkmate::test_logical(value, max.len = 1, any.missing = FALSE))) {
         stop(
@@ -260,6 +268,7 @@ LogicalFilterState <- R6::R6Class( # nolint
       )
       check_in_subset(value, private$choices, pre_msg = pre_msg)
     },
+
     cast_and_validate = function(values) {
       tryCatch(
         expr = {
