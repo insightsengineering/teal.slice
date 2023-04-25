@@ -143,8 +143,9 @@ testthat::test_that("get_call returns call that encompasses all values passed to
   filter_state <- DatetimeFilterState$new(posixct, dataname = "data", varname = "variable")
   testthat::expect_identical(
     shiny::isolate(filter_state$get_call()),
-    quote(variable >= as.POSIXct("2000-01-01 12:00:00", tz = "GMT") & variable <
-      as.POSIXct("2000-01-01 12:00:10", tz = "GMT"))
+    quote(is.na(variable) |
+            variable >= as.POSIXct("2000-01-01 12:00:00", tz = "GMT") & variable <
+            as.POSIXct("2000-01-01 12:00:10", tz = "GMT"))
   )
 })
 
@@ -159,6 +160,7 @@ testthat::test_that("get_call returns a condition true for the object in the sel
   testthat::expect_equal(
     shiny::isolate(filter_state$get_call()),
     quote(
+      is.na(variable) |
       variable >= as.POSIXct("2000-01-01 12:00:01", tz = "GMT") & variable <
         as.POSIXct("2000-01-01 12:00:03", tz = "GMT")
     )
@@ -171,9 +173,9 @@ testthat::test_that("get_call returns a condition evaluating to TRUE for NA valu
     variable,
     dataname = "data", varname = "variable"
   )
-  testthat::expect_identical(eval(shiny::isolate(filter_state$get_call()))[11], NA)
-  filter_state$set_state(filter_var(dataname = "data", varname = "variable", keep_na = TRUE))
   testthat::expect_identical(eval(shiny::isolate(filter_state$get_call()))[11], TRUE)
+  filter_state$set_state(filter_var(dataname = "data", varname = "variable", keep_na = FALSE))
+  testthat::expect_identical(eval(shiny::isolate(filter_state$get_call()))[11], NA)
 })
 
 
@@ -186,7 +188,8 @@ testthat::test_that("get_call preserves timezone of ISO object passed to constru
   testthat::expect_equal(
     shiny::isolate(filter_state$get_call()),
     quote(
-      variable >= as.POSIXct("2021-08-25 12:00:00", tz = "Australia/Brisbane") &
+      is.na(variable) |
+        variable >= as.POSIXct("2021-08-25 12:00:00", tz = "Australia/Brisbane") &
         variable < as.POSIXct("2021-08-25 12:00:01", tz = "Australia/Brisbane")
     )
   )
@@ -230,7 +233,7 @@ testthat::test_that("format returns a properly formatted string representation",
     paste(
       "  Filtering on: variable",
       "    Selected range: 2000-01-01 12:00:00 - 2000-01-01 12:00:09",
-      "    Include missing values: FALSE",
+      "    Include missing values: TRUE",
       sep = "\n"
     )
   )
@@ -245,7 +248,7 @@ testthat::test_that("format prepends spaces to every line of the returned string
         c(
           "Filtering on: variable",
           sprintf("%sSelected range: 2000-01-01 12:00:00 - 2000-01-01 12:00:09", format("", width = i)),
-          sprintf("%sInclude missing values: FALSE", format("", width = i))
+          sprintf("%sInclude missing values: TRUE", format("", width = i))
         ),
         sep = "", collapse = "\n"
       )

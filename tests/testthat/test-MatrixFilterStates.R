@@ -66,7 +66,7 @@ testthat::test_that("set_filter_state adds states to state_list", {
 })
 
 # get_filter_state ----
-testthat::test_that("get_filter_state returns `teal_slices` identical to that used to set state (choices excluded)", {
+testthat::test_that("get_filter_state returns `teal_slices` with features identical to those used to set state", {
   test <- matrix(1:100, ncol = 10, dimnames = list(NULL, letters[1:10]))
   filter_states <- MatrixFilterStates$new(data = test, dataname = "test")
   fs <- filter_settings(
@@ -74,11 +74,15 @@ testthat::test_that("get_filter_state returns `teal_slices` identical to that us
     filter_var(dataname = "test", varname = "b", selected = c(14, 16))
   )
   filter_states$set_filter_state(fs)
+  fs_out <- unname(shiny::isolate(filter_states$get_filter_state()))
 
-  testthat::expect_identical(
-    adjust_states(shiny::isolate(filter_states$get_filter_state())),
-    fs
-  )
+  testthat::expect_true(compare_slices(
+    fs[[1]], fs_out[[1]], fields = c("dataname", "varname", "selected")
+  ))
+  testthat::expect_true(compare_slices(
+    fs[[2]], fs_out[[2]], fields = c("dataname", "varname", "selected")
+  ))
+  testthat::expect_equal(attributes(fs), attributes(fs_out)) #todo; test fails but should pass
 })
 
 # set_filter_state ctd. ----
@@ -98,14 +102,22 @@ testthat::test_that("set_filter_state updates existing filter states", {
     )
   )
 
-  testthat::expect_identical(
-    adjust_states(shiny::isolate(filter_states$get_filter_state())),
-    filter_settings(
-      filter_var(dataname = "test", varname = "a", selected = c(2, 8)),
-      filter_var(dataname = "test", varname = "b", selected = c(16, 18)),
-      filter_var(dataname = "test", varname = "c", selected = c(28, 30))
-    )
+  fs_expected <- filter_settings(
+    filter_var(dataname = "test", varname = "a", selected = c(2, 8)),
+    filter_var(dataname = "test", varname = "b", selected = c(16, 18)),
+    filter_var(dataname = "test", varname = "c", selected = c(28, 30))
   )
+  fs_out <- unname(shiny::isolate(filter_states$get_filter_state()))
+  testthat::expect_true(compare_slices(
+    fs_expected[[1]], fs_out[[1]], fields = c("dataname", "varname", "selected")
+  ))
+  testthat::expect_true(compare_slices(
+    fs_expected[[2]], fs_out[[2]], fields = c("dataname", "varname", "selected")
+  ))
+  testthat::expect_true(compare_slices(
+    fs_expected[[3]], fs_out[[3]], fields = c("dataname", "varname", "selected")
+  ))
+  testthat::expect_equal(attributes(fs_expected), attributes(fs_out)) # TODO: test fails but should pass
 })
 
 # remove_filter_state ----
@@ -182,7 +194,7 @@ testthat::test_that("get_call returns executable call filtering a matrix with nu
   test <- matrix(1:100, ncol = 10, dimnames = list(NULL, letters[1:10]))
   filter_states <- MatrixFilterStates$new(data = test, dataname = "test")
   fs <- filter_settings(
-    filter_var(dataname = "test", varname = "a", selected = c(1, 3))
+    filter_var(dataname = "test", varname = "a", selected = c(1, 3), keep_na = FALSE, keep_inf = FALSE)
   )
   filter_states$set_filter_state(fs)
   testthat::expect_identical(

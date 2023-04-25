@@ -82,7 +82,7 @@ testthat::test_that("set_filter_state adds states to state_list", {
 })
 
 # get_filter_state ----
-testthat::test_that("get_filter_state returns `teal_slices` identical to that used to set state (choices excluded)", {
+testthat::test_that("get_filter_state returns `teal_slices` with features identical those used to set state", {
   filter_states <- MAEFilterStates$new(data = miniACC, dataname = "miniACC")
   fs <- filter_settings(
     filter_var(
@@ -96,10 +96,15 @@ testthat::test_that("get_filter_state returns `teal_slices` identical to that us
   )
   filter_states$set_filter_state(fs)
 
-  testthat::expect_identical(
-    adjust_states(shiny::isolate(filter_states$get_filter_state())),
-    fs
-  )
+  fs_out <- unname(shiny::isolate(filter_states$get_filter_state()))
+
+  testthat::expect_true(compare_slices(
+    fs[[1]], fs_out[[1]], fields = c("dataname", "varname", "selected", "keep_na", "keep_inf", "datalabel", "target")
+  ))
+  testthat::expect_true(compare_slices(
+    fs[[2]], fs_out[[2]], fields = c("dataname", "varname", "selected", "keep_na", "datalabel", "target")
+  ))
+  testthat::expect_equal(attributes(fs), attributes(fs_out)) #todo; test fails but should pass
 })
 
 # set_filter_state ctd. ----
@@ -124,11 +129,15 @@ testthat::test_that("set_filter_state updates existing filter states", {
     )
   )
   filter_states$set_filter_state(fs)
+  fs_out <- unname(shiny::isolate(filter_states$get_filter_state()))
 
-  testthat::expect_equal(
-    adjust_states(shiny::isolate(filter_states$get_filter_state())),
-    fs
-  )
+  testthat::expect_true(compare_slices(
+    fs[[1]], fs_out[[1]], fields = c("dataname", "varname", "selected", "keep_na", "keep_inf", "datalabel", "target")
+  ))
+  testthat::expect_true(compare_slices(
+    fs[[2]], fs_out[[2]], fields = c("dataname", "varname", "selected", "keep_na", "datalabel", "target")
+  ))
+  testthat::expect_equal(attributes(fs), attributes(fs_out)) #todo; test fails but should pass
 })
 
 # remove_filter_state ----
@@ -175,6 +184,7 @@ testthat::test_that("remove_filter_state raises warning when name is not in Filt
     filter_var(dataname = "miniACC", varname = "years_to_birth2", datalabel = "subjects", target = "y")
   )))
 })
+
 
 # format ----
 testthat::test_that("format is a method of MAEFilterStates that accepts numeric indent argument", {

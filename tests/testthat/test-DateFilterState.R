@@ -140,7 +140,7 @@ testthat::test_that("get_call returns call with limits imposed by constructor an
   filter_state <- DateFilterState$new(dates, dataname = "data", varname = "variable")
   testthat::expect_equal(
     shiny::isolate(filter_state$get_call()),
-    quote(variable >= as.Date("2000-01-01") & variable <= as.Date("2000-01-10"))
+    quote(is.na(variable) | variable >= as.Date("2000-01-01") & variable <= as.Date("2000-01-10"))
   )
   filter_state <- DateFilterState$new(
     dates,
@@ -148,7 +148,7 @@ testthat::test_that("get_call returns call with limits imposed by constructor an
   )
   testthat::expect_equal(
     shiny::isolate(filter_state$get_call()),
-    quote(variable >= as.Date("2000-01-03") & variable <= as.Date("2000-01-04"))
+    quote(is.na(variable) | variable >= as.Date("2000-01-03") & variable <= as.Date("2000-01-04"))
   )
 })
 
@@ -158,9 +158,9 @@ testthat::test_that("get_call returns a condition evaluating to TRUE for NA valu
     variable,
     dataname = "data", varname = "variable"
   )
-  testthat::expect_identical(eval(shiny::isolate(filter_state$get_call()))[11], NA)
-  filter_state$set_state(filter_var(dataname = "data", varname = "variable", keep_na = TRUE))
   testthat::expect_identical(eval(shiny::isolate(filter_state$get_call()))[11], TRUE)
+  filter_state$set_state(filter_var(dataname = "data", varname = "variable", keep_na = FALSE))
+  testthat::expect_identical(eval(shiny::isolate(filter_state$get_call()))[11], NA)
 })
 
 
@@ -179,7 +179,7 @@ testthat::test_that("format returns a properly formatted string representation",
     paste(
       "  Filtering on: variable",
       "    Selected range: 2000-01-01 - 2000-01-10",
-      "    Include missing values: FALSE",
+      "    Include missing values: TRUE",
       sep = "\n"
     )
   )
@@ -196,7 +196,7 @@ testthat::test_that("format prepends spaces to every line of the returned string
         c(
           "Filtering on: variable",
           sprintf("%sSelected range: 2000-01-01 - 2000-01-10", format("", width = i)),
-          sprintf("%sInclude missing values: FALSE", format("", width = i))
+          sprintf("%sInclude missing values: TRUE", format("", width = i))
         ),
         sep = "", collapse = "\n"
       )
