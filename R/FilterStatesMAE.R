@@ -125,16 +125,16 @@ MAEFilterStates <- R6::R6Class( # nolint
       varnames <- slices_field(state, "varname")
       filterable <- get_supported_filter_varnames(SummarizedExperiment::colData(private$data))
       if (!all(varnames %in% filterable)) {
-        excluded_varnames <- toString(dQuote(setdiff(varnames, filterable), q = FALSE))
-        state <- slices_which(
-          state,
-          sprintf("!varname %%in%% c(%s)", excluded_varnames)
+        excluded_varnames <- setdiff(varnames, filterable)
+        state <- Filter(
+          function(x) !x$varname %in% excluded_varnames,
+          state
         )
-        logger::log_warn("filters for columns: { excluded_varnames } excluded from { private$dataname }")
+        logger::log_warn("filters for columns: { toString(excluded_varnames) } excluded from { private$dataname }")
       }
 
       private$set_filter_state_impl(
-        state = slices_which(state, "target == \"y\""),
+        state = Filter(function(x) x$target == "y", state),
         state_list_index = "y",
         data = SummarizedExperiment::colData(private$data),
         data_reactive = function(sid) SummarizedExperiment::colData(private$data_reactive(sid)),

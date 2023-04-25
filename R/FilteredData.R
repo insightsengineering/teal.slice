@@ -539,9 +539,9 @@ FilteredData <- R6::R6Class( # nolint
 
       logger::log_trace("{ class(self)[1] }$set_filter_state initializing, dataname: { private$dataname }")
 
-      lapply(datanames, function(x) {
-        private$get_filtered_dataset(x)$set_filter_state(
-          slices_which(state, sprintf("dataname == \"%s\"", x))
+      lapply(datanames, function(dataname) {
+        private$get_filtered_dataset(dataname)$set_filter_state(
+          Filter(function(x) x$dataname == dataname, state)
         )
       })
 
@@ -580,9 +580,9 @@ FilteredData <- R6::R6Class( # nolint
         "{ class(self)[1] }$remove_filter_state removing filter(s), dataname: { private$dataname }"
       )
 
-      lapply(datanames, function(x) {
-        private$get_filtered_dataset(x)$remove_filter_state(
-          slices_which(state, sprintf("dataname == \"%s\"", x))
+      lapply(datanames, function(dataname) {
+        private$get_filtered_dataset(dataname)$remove_filter_state(
+          Filter(function(x) x$dataname == dataname, state)
         )
       })
 

@@ -93,9 +93,6 @@
 #'   )
 #' )
 #'
-#' teal.slice:::slices_which(all_filters, 'dataname == "dataname2"')
-#' x <- "dataname2"
-#' teal.slice:::slices_which(all_filters, sprintf('dataname == "%s"', x))
 #' teal.slice:::slices_field(all_filters, "dataname")
 #'
 #' @name teal_slice
@@ -434,16 +431,4 @@ print.teal_slices <- function(x, ...) {
 slices_field <- function(tss, field) {
   checkmate::assert_class(tss, "teal_slices")
   unique(unlist(lapply(tss, function(x) x[[field]])))
-}
-
-
-# get slices where logical predicate is TRUE
-#' @rdname teal_slice
-#' @keywords internal
-#'
-slices_which <- function(tss, expr) {
-  checkmate::assert_class(tss, "teal_slices")
-  checkmate::assert_string(expr)
-  expr <- str2lang(expr)
-  Filter(function(x) isTRUE(eval(expr, x)), tss)
 }

@@ -597,18 +597,18 @@ FilterStates <- R6::R6Class( # nolint
 
       # Modify existing filter states.
       state_list <- shiny::isolate(private$state_list_get(state_list_index))
-      slices_for_update <- slices_which(
-        state,
-        sprintf("varname %%in%% c(%s)", toString(dQuote(names(state_list), q = FALSE)))
+      slices_for_update <- Filter(
+        function(x) x$varname %in% names(state_list),
+        state
       )
       lapply(slices_for_update, function(x) {
         do.call(state_list[[x$varname]]$set_state, list(x))
       })
 
       # Create new filter states.
-      slices_for_create <- slices_which(
-        state,
-        sprintf("!varname %%in%% c(%s)", toString(dQuote(names(state_list), q = FALSE)))
+      slices_for_create <- Filter(
+        function(x) !x$varname %in% names(state_list),
+        state
       )
       lapply(slices_for_create, function(x) {
         # objects has random and unique sid attribute

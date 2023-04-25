@@ -203,9 +203,9 @@ DefaultFilteredDataset <- R6::R6Class( # nolint
       logger::log_trace("{ class(self)[1] }$remove_filter_state removing filter(s), dataname: { private$dataname }")
 
       varnames <- slices_field(state, "varname")
-      lapply(varnames, function(x) {
+      lapply(varnames, function(varname) {
         private$get_filter_states()[[1]]$remove_filter_state(
-          slices_which(state, sprintf("varname == \"%s\"", x))
+          Filter(function(x) x$varname == varname, state)
         )
       })
 

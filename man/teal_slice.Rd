@@ -16,7 +16,6 @@
 \alias{format.teal_slices}
 \alias{print.teal_slices}
 \alias{slices_field}
-\alias{slices_which}
 \title{Manage filter state(s).}
 \usage{
 filter_var(
@@ -60,8 +59,6 @@ as.teal_slices(x)
 \method{print}{teal_slices}(x, ...)
 
 slices_field(tss, field)
-
-slices_which(tss, expr)
 }
 \arguments{
 \item{dataname}{\code{character(1)} name of data set}
@@ -175,9 +172,6 @@ all_filters <- filter_settings(
   )
 )
 
-teal.slice:::slices_which(all_filters, 'dataname == "dataname2"')
-x <- "dataname2"
-teal.slice:::slices_which(all_filters, sprintf('dataname == "\%s"', x))
 teal.slice:::slices_field(all_filters, "dataname")
 
 }
