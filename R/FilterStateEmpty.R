@@ -160,7 +160,7 @@ EmptyFilterState <- R6::R6Class( # nolint
       invisible(NULL)
     },
 
-    get_metadata_condition = function() {
+    get_metadata_expression = function() {
       ""
     },
 
