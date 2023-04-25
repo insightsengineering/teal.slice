@@ -109,7 +109,10 @@ testthat::test_that("filter_settings checks arguments", {
   testthat::expect_error(filter_settings(fs1, fs2, exclude = "fs1"), "Assertion on 'exclude' failed")
 
   testthat::expect_error(filter_settings(fs1, fs2, count_type = "fs1"), "'arg' should be")
-  testthat::expect_error(filter_settings(fs1, fs2, count_type = c("all", "none")), "'arg' must be of length 1")
+
+  testthat::expect_error(filter_settings(fs1, fs2, count_type = c("a", "b")), "'arg' must be of length 1")
+
+  testthat::expect_no_error(filter_settings(fs1, fs2, count_type = c("all", "none")))
 })
 
 
@@ -391,7 +394,7 @@ testthat::test_that("c.teal_slices handles attributes", {
   fs4 <- filter_var("data2", "var2")
   fss1 <- filter_settings(fs1, fs2, exclude = list(data1 = "var1"))
   fss2 <- filter_settings(fs3, fs4, exclude = list(data2 = "var1"))
-  fss3 <- filter_settings(fs3, fs4, exclude = list(data2 = "var1"), count_type = "all")
+  fss3 <- filter_settings(fs3, fs4, exclude = list(data2 = "var1"), count_type = "none")
 
   # teal_slices with different exclude attributes
   testthat::expect_no_error(c(fss1, fss2))
@@ -526,7 +529,7 @@ testthat::test_that("format.teal_slices prints count_type attribute", {
   fs2 <- filter_var("data", "var2")
   fs <- filter_settings(fs1, fs2)
   ffs <- format(fs, show_all = TRUE)
-  testthat::expect_true(grepl("count type: none", ffs))
+  testthat::expect_true(grepl("count type: all", ffs))
 })
 
 
