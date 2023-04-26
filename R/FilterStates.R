@@ -683,7 +683,11 @@ FilterStates <- R6::R6Class( # nolint
           # and this no longer needs to be a function to pass sid. reactive in the FilterState
           # is also beneficial as it can be cached and retriger filter counts only if
           # returned vector is different.
-          x_reactive = reactive(data_reactive(sid)[, x$varname, drop = TRUE]),
+          x_reactive = if (attr(state, "count_type") == "none") {
+            reactive(NULL)
+          } else {
+            reactive(data_reactive(sid)[, x$varname, drop = TRUE])
+          },
           extract_type = extract_type
         )
         arg_list <- append(arg_list, x)

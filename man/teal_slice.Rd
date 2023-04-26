@@ -35,7 +35,7 @@ filter_settings(
   ...,
   exclude_varnames = list(),
   include_varnames = list(),
-  count_type = c("none", "all", "hierarchical")
+  count_type = c("all", "none")
 )
 
 is.teal_slice(x)
@@ -97,7 +97,13 @@ and vector elements match variable names in respective data sets;
 specifies which variables are not allowed to be filtered.
 Both \code{include_varnames} and \code{exclude_varnames} can't be specified for the same dataset in the same call.}
 
-\item{count_type}{\code{character(1)} string specifying how observations are tallied by these filter states}
+\item{count_type}{\code{character(1)} string specifying how observations are tallied by these filter states.
+Possible options:
+\itemize{
+\item \code{"all"} to have counts of single \code{FilterState} to show number of observation in filtered
+and unfiltered dataset.
+\item \code{"none"} to have counts of single \code{FilterState} to show unfiltered number only.
+}}
 
 \item{show_all}{\code{logical(1)} specifying whether NULL elements should also be printed}
 
