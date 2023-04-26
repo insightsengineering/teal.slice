@@ -31,11 +31,7 @@ filter_var(
   ...
 )
 
-filter_settings(
-  ...,
-  exclude = list(),
-  count_type = c("all", "none", "hierarchical")
-)
+filter_settings(..., exclude = list(), count_type = c("all", "none"))
 
 is.teal_slice(x)
 
@@ -97,7 +93,6 @@ Possible options:
 \item \code{"all"} to have counts of single \code{FilterState} to show number of observation in filtered
 and unfiltered dataset.
 \item \code{"none"} to have counts of single \code{FilterState} to show unfiltered number only.
-\item \code{"hierarchical"} not implemented yet.
 }}
 
 \item{show_all}{\code{logical(1)} specifying whether NULL elements should also be printed}

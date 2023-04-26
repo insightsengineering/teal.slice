@@ -52,7 +52,7 @@ Initialize \code{MAEFilterStates} object
   datalabel = "subjects",
   varlabels = character(0),
   excluded_varnames = character(0),
-  count_type = c("none", "all", "hierarchical"),
+  count_type = c("all", "none"),
   keys = character(0)
 )}\if{html}{\out{</div>}}
 }

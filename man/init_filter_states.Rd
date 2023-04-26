@@ -10,7 +10,7 @@ init_filter_states(
   dataname,
   datalabel = character(0),
   excluded_varnames = character(0),
-  count_type = c("none", "all", "hierarchical"),
+  count_type = c("all", "none"),
   ...
 )
 }
