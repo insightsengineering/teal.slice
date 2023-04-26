@@ -412,8 +412,12 @@ ChoicesFilterState <- R6::R6Class( # nolint
     ui_inputs = function(id) {
       ns <- NS(id)
 
-      countsnow <- isolate(unname(table(factor(private$x_reactive(), levels = private$choices))))
       countsmax <- private$choices_counts
+      countsnow <- if (!is.null(private$x_reactive())) {
+        isolate(unname(table(factor(private$x_reactive(), levels = private$choices))))
+      } else {
+        NULL
+      }
 
       ui_input <- if (private$is_checkboxgroup()) {
         labels <- countBars(
@@ -482,19 +486,26 @@ ChoicesFilterState <- R6::R6Class( # nolint
               private$varname,
               private$dataname
             ))
+
+            countsnow <- if (!is.null(private$x_reactive())) {
+              unname(table(factor(non_missing_values(), levels = private$choices)))
+            } else {
+              NULL
+            }
+
             if (private$is_checkboxgroup()) {
               updateCountBars(
                 inputId = "labels",
                 choices = private$choices,
                 countsmax = private$choices_counts,
-                countsnow = unname(table(factor(non_missing_values(), levels = private$choices)))
+                countsnow = countsnow
               )
             } else {
               labels <- mapply(
                 FUN = make_count_text,
                 label = private$choices,
                 countmax = private$choices_counts,
-                countnow = unname(table(factor(non_missing_values(), levels = private$choices)))
+                countnow = countsnow
               )
               teal.widgets::updateOptionalSelectInput(
                 session = session,

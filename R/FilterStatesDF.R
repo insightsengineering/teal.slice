@@ -163,7 +163,7 @@ DFFilterStates <- R6::R6Class( # nolint
                           datalabel = character(0),
                           varlabels = character(0),
                           excluded_varnames = character(0),
-                          count_type = c("none", "all", "hierarchical"),
+                          count_type = c("all", "none"),
                           keys = character(0)) {
       checkmate::assert_function(data_reactive, args = "sid")
       checkmate::assert_data_frame(data)

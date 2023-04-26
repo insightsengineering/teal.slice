@@ -71,7 +71,7 @@ FilterStates <- R6::R6Class( # nolint
                           dataname,
                           datalabel = character(0),
                           excluded_varnames = character(0),
-                          count_type = c("none", "all", "hierarchical")) {
+                          count_type = c("all", "none")) {
       checkmate::assert_function(data_reactive, args = "sid")
       checkmate::assert_string(dataname)
       checkmate::assert_character(datalabel, max.len = 1, any.missing = FALSE)
@@ -622,7 +622,11 @@ FilterStates <- R6::R6Class( # nolint
           # and this no longer needs to be a function to pass sid. reactive in the FilterState
           # is also beneficial as it can be cached and retriger filter counts only if
           # returned vector is different.
-          x_reactive = reactive(data_reactive(sid)[, x$varname, drop = TRUE]),
+          x_reactive = if (attr(state, "count_type") == "none") {
+            reactive(NULL)
+          } else {
+            reactive(data_reactive(sid)[, x$varname, drop = TRUE])
+          },
           extract_type = extract_type
         )
         arg_list <- append(arg_list, x)

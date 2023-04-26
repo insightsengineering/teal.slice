@@ -73,7 +73,7 @@ Initializes \code{FilterStates} object by setting
   dataname,
   datalabel = character(0),
   excluded_varnames = character(0),
-  count_type = c("none", "all", "hierarchical")
+  count_type = c("all", "none")
 )}\if{html}{\out{</div>}}
 }
 

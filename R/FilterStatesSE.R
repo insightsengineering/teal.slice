@@ -35,7 +35,7 @@ SEFilterStates <- R6::R6Class( # nolint
                           dataname,
                           datalabel = character(0),
                           excluded_varnames = character(0),
-                          count_type = c("none", "all", "hierarchical")) {
+                          count_type = c("all", "none")) {
       if (!requireNamespace("SummarizedExperiment", quietly = TRUE)) {
         stop("Cannot load SummarizedExperiment - please install the package or restart your session.")
       }
