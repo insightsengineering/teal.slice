@@ -6,7 +6,7 @@
 #' ds <- teal.slice:::DefaultFilteredDataset$new(iris, "iris")
 #' ds$set_filter_state(
 #'   filter_settings(
-#'     filter_var(dataname = "iris", varname = "Species", selected = "virginica")
+#'     filter_var(dataname = "iris", varname = "Species", selected = "virginica"),
 #'     filter_var(dataname = "iris", varname = "Petal.Length", selected = c(2.0, 5))
 #'   )
 #' )
@@ -87,10 +87,15 @@ DefaultFilteredDataset <- R6::R6Class( # nolint
         id = "filter"
       )
 
+      # todo: Should we make these defaults? It could be handled by the app developer
       if (!is.null(parent)) {
-        self$set_filterable_varnames(setdiff(colnames(dataset), colnames(isolate(parent()))))
-      } else {
-        self$set_filterable_varnames(colnames(dataset))
+        fs <- filter_settings(
+          exclude_varnames = structure(
+            list(intersect(colnames(dataset), colnames(isolate(parent())))),
+            names = private$dataname
+          )
+        )
+        self$set_filter_state(fs)
       }
 
       invisible(self)
@@ -264,6 +269,7 @@ DefaultFilteredDataset <- R6::R6Class( # nolint
     #' function parameter and the dataset inside self
     #' @return `list` containing character `#filtered/#not_filtered`
     get_filter_overview = function() {
+      logger::log_trace("FilteredDataset$srv_filter_overview initialized")
       # Gets filter overview subjects number and returns a list
       # of the number of subjects of filtered/non-filtered datasets
       subject_keys <- if (length(private$parent_name) > 0) {

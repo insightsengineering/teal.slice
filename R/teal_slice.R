@@ -52,17 +52,21 @@
 #' @param dataname `character(1)` name of data set
 #' @param varname `character(1)` name of variable
 #' @param choices optional vector specifying allowed choices;
-#'                possibly a subset of values in data;
-#'                type and size depends on variable type
+#'  possibly a subset of values in data; type and size depends on variable type
 #' @param selected optional vector specifying selection;
-#'                 type and size depends on variable type
+#'  type and size depends on variable type
 #' @param keep_na `logical(1)` or `NULL` optional logical flag specifying whether to keep missing values
 #' @param keep_inf `logical(1)` or `NULL` optional logical flag specifying whether to keep infinite values
 #' @param fixed `logical(1)` logical flag specifying whether to fix this filter state (i.e. forbid setting state)
 #' @param disabled `logical(1)`logical flag specifying whether to disable this filter state
-#' @param exclude `named list` of `character` vectors where list names match names of data sets
-#'                 and vector elements match variable names in respective data sets;
-#'                 specifies which variables are not allowed to be filtered
+#' @param include_varnames `named list` of `character` vectors where list names match names of data sets
+#'  and vector elements match variable names in respective data sets;
+#'  specifies which variables are not allowed to be filtered.
+#'  Both `include_varnames` and `exclude_varnames` can't be specified for the same dataset in the same call.
+#' @param exclude_varnames `named list` of `character` vectors where list names match names of data sets
+#'  and vector elements match variable names in respective data sets;
+#'  specifies which variables are not allowed to be filtered.
+#'  Both `include_varnames` and `exclude_varnames` can't be specified for the same dataset in the same call.
 #' @param count_type `character(1)` string specifying how observations are tallied by these filter states
 #' @param show_all `logical(1)` specifying whether NULL elements should also be printed
 #' @param tss `teal_slices`
@@ -146,14 +150,17 @@ filter_var <- function(
 #'
 filter_settings <- function(
     ...,
-    exclude = list(),
+    exclude_varnames = list(),
+    include_varnames = list(),
     count_type = c("none", "all", "hierarchical")) {
   slices <- list(...)
   checkmate::assert_list(slices, types = "teal_slice", any.missing = FALSE)
-  checkmate::assert_list(exclude, names = "named", types = "character")
+  checkmate::assert_list(exclude_varnames, names = "named", types = "character")
+  checkmate::assert_list(include_varnames, names = "named", types = "character")
   count_type <- match.arg(count_type)
 
-  attr(slices, "exclude") <- exclude
+  attr(slices, "exclude_varnames") <- exclude_varnames
+  attr(slices, "include_varnames") <- include_varnames
   attr(slices, "count_type") <- count_type
   class(slices) <- c("teal_slices", class(slices))
   slices
@@ -363,8 +370,9 @@ as.teal_slices <- function(x) {
   attrs <- attributes(x)
   attrs$names <- attrs$names[i]
   attributes(y) <- attrs
-  excludes <- unique(unlist(vapply(y, function(ts) ts[["dataname"]], character(1L))))
-  attr(y, "exclude") <- Filter(Negate(is.null), attr(x, "exclude")[excludes])
+  datanames <- unique(unlist(vapply(y, function(ts) ts[["dataname"]], character(1L))))
+  attr(y, "exclude_varnames") <- Filter(Negate(is.null), attr(x, "exclude_varnames")[datanames])
+  attr(y, "include_varnames") <- Filter(Negate(is.null), attr(x, "include_varnames")[datanames])
   y
 }
 
@@ -377,15 +385,32 @@ as.teal_slices <- function(x) {
 c.teal_slices <- function(...) {
   x <- list(...)
   checkmate::assert_true(all(vapply(x, is.teal_slices, logical(1L))), .var.name = "all arguments are teal_slices")
+
   excludes <- lapply(x, attr, "exclude")
   names(excludes) <- NULL
   excludes <- unlist(excludes, recursive = FALSE)
   excludes <- excludes[!duplicated(names(excludes))]
+
+  includes <- lapply(x, attr, "include_varnames")
+  names(includes) <- NULL
+  includes <- unlist(includes, recursive = FALSE)
+  includes <- includes[!duplicated(names(includes))]
+
   count_types <- lapply(x, attr, "count_type")
   count_types <- unique(unlist(count_types))
   checkmate::assert_string(count_types)
 
-  do.call(filter_settings, c(unlist(x, recursive = FALSE), list(exclude = excludes, count_type = count_types)))
+  do.call(
+    filter_settings,
+    c(
+      unlist(x, recursive = FALSE),
+      list(
+        exclude_varnames = excludes,
+        include_varnames = includes,
+        count_type = count_types
+      )
+    )
+  )
 }
 
 
@@ -395,8 +420,6 @@ c.teal_slices <- function(...) {
 #' @keywords internal
 #'
 format.teal_slices <- function(x, show_all = FALSE, ...) {
-  f <- attr(x, "exclude")
-  ct <- attr(x, "count_type")
   res <- character(0)
   for (i in seq_along(x)) {
     ind <- names(x)[i]
@@ -404,14 +427,28 @@ format.teal_slices <- function(x, show_all = FALSE, ...) {
     res <- append(res, ind)
     res <- append(res, format(x[[i]], show_all = show_all, ...))
   }
-  res <- append(res, "\nnon-filterable variables:")
-  if (is.list(f) & length(f) == 0L) {
-    res[length(res)] <- paste(res[length(res)], "none")
+
+  res <- append(res, "\nfilterable variables:")
+  includes <- attr(x, "include_varnames")
+  if (is.list(includes) && length(includes) == 0L) {
+      res[length(res)] <- paste(res[length(res)], "none")
   } else {
-    for (i in seq_along(f)) {
-      res <- append(res, sprintf(" $ %s: %s", names(f)[i], dQuote(f[[i]], q = FALSE)))
+    for (i in seq_along(includes)) {
+      res <- append(res, sprintf(" $ %s: %s", names(includes)[i], toString(includes[[i]])))
     }
   }
+
+  res <- append(res, "\nnon-filterable variables:")
+  excludes <- attr(x, "exclude_varnames")
+  if (is.list(excludes) && length(excludes) == 0L) {
+      res[length(res)] <- paste(res[length(res)], "none")
+  } else {
+    for (i in seq_along(excludes)) {
+      res <- append(res, sprintf(" $ %s: %s", names(excludes)[i], toString(excludes[[i]])))
+    }
+  }
+
+  ct <- attr(x, "count_type")
   res <- append(res, sprintf("\ncount type: %s", ct))
   paste(res, collapse = "\n")
 }

@@ -16,7 +16,6 @@ Handles filter states in a \code{MultiAssayExperiment}
 \item \href{#method-MAEFilterStates-new}{\code{MAEFilterStates$new()}}
 \item \href{#method-MAEFilterStates-format}{\code{MAEFilterStates$format()}}
 \item \href{#method-MAEFilterStates-get_fun}{\code{MAEFilterStates$get_fun()}}
-\item \href{#method-MAEFilterStates-get_filter_state}{\code{MAEFilterStates$get_filter_state()}}
 \item \href{#method-MAEFilterStates-set_filter_state}{\code{MAEFilterStates$set_filter_state()}}
 \item \href{#method-MAEFilterStates-remove_filter_state}{\code{MAEFilterStates$remove_filter_state()}}
 \item \href{#method-MAEFilterStates-srv_active}{\code{MAEFilterStates$srv_active()}}
@@ -32,6 +31,7 @@ Handles filter states in a \code{MultiAssayExperiment}
 <li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilterStates" data-id="get_call"><a href='../../teal.slice/html/FilterStates.html#method-FilterStates-get_call'><code>teal.slice::FilterStates$get_call()</code></a></span></li>
 <li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilterStates" data-id="get_datalabel"><a href='../../teal.slice/html/FilterStates.html#method-FilterStates-get_datalabel'><code>teal.slice::FilterStates$get_datalabel()</code></a></span></li>
 <li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilterStates" data-id="get_filter_count"><a href='../../teal.slice/html/FilterStates.html#method-FilterStates-get_filter_count'><code>teal.slice::FilterStates$get_filter_count()</code></a></span></li>
+<li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilterStates" data-id="get_filter_state"><a href='../../teal.slice/html/FilterStates.html#method-FilterStates-get_filter_state'><code>teal.slice::FilterStates$get_filter_state()</code></a></span></li>
 <li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilterStates" data-id="print"><a href='../../teal.slice/html/FilterStates.html#method-FilterStates-print'><code>teal.slice::FilterStates$print()</code></a></span></li>
 <li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilterStates" data-id="ui_active"><a href='../../teal.slice/html/FilterStates.html#method-FilterStates-ui_active'><code>teal.slice::FilterStates$ui_active()</code></a></span></li>
 </ul>
@@ -51,8 +51,6 @@ Initialize \code{MAEFilterStates} object
   dataname,
   datalabel = "subjects",
   varlabels = character(0),
-  excluded_varnames = character(0),
-  count_type = c("none", "all", "hierarchical"),
   keys = character(0)
 )}\if{html}{\out{</div>}}
 }
@@ -78,13 +76,6 @@ text label value.}
 
 \item{\code{varlabels}}{(\code{character})\cr
 labels of the variables used in this object}
-
-\item{\code{excluded_varnames}}{\verb{named list} containing one character vector
-of names of variables that can be filtered;
-names of the list must match \code{dataname}}
-
-\item{\code{count_type}}{\code{character(1)}\cr
-specifying how observations are tallied}
 
 \item{\code{keys}}{(\code{character})\cr
 key columns names}
@@ -124,21 +115,6 @@ For \code{MAEFilterStates} \code{MultiAssayExperiment::subsetByColData} is used.
 
 \subsection{Returns}{
 \code{character(1)}
-}
-}
-\if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-MAEFilterStates-get_filter_state"></a>}}
-\if{latex}{\out{\hypertarget{method-MAEFilterStates-get_filter_state}{}}}
-\subsection{Method \code{get_filter_state()}}{
-Returns active \code{FilterState} objects.
-
-Gets all filter state information from this dataset.
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{MAEFilterStates$get_filter_state()}\if{html}{\out{</div>}}
-}
-
-\subsection{Returns}{
-\code{teal_slices}
 }
 }
 \if{html}{\out{<hr>}}

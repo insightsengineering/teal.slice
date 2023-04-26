@@ -171,23 +171,6 @@ FilteredData <- R6::R6Class( # nolint
       return(unique(c(parents, dataname)))
     },
 
-    #' @description
-    #' Set the variable names of a given dataset for the filtering.
-    #'
-    #' @param dataname (`character(1)`) name of the dataset
-    #' @param varnames (`character` or `NULL`)
-    #'   variables which users can choose to filter the data;
-    #'
-    #' @return this `FilteredData` object invisibly
-    #'
-    set_filterable_varnames = function(dataname, varnames) {
-      checkmate::assert_subset(dataname, self$datanames())
-      if (!is.null(varnames)) {
-        private$get_filtered_dataset(dataname)$set_filterable_varnames(varnames)
-      }
-      invisible(self)
-    },
-
     # datasets methods ----
     #' @description
     #' Gets a `call` to filter the dataset according to the filter state.
@@ -521,6 +504,7 @@ FilteredData <- R6::R6Class( # nolint
     #' shiny::isolate(datasets$get_filter_state())
     #'
     set_filter_state = function(state) {
+      logger::log_trace("{ class(self)[1] }$set_filter_state initializing")
       if (!is.teal_slices(state)) {
         warning(
           paste(
@@ -537,15 +521,13 @@ FilteredData <- R6::R6Class( # nolint
       datanames <- slices_field(state, "dataname")
       checkmate::assert_subset(datanames, self$datanames())
 
-      logger::log_trace("{ class(self)[1] }$set_filter_state initializing, dataname: { private$dataname }")
-
       lapply(datanames, function(x) {
         private$get_filtered_dataset(x)$set_filter_state(
           slices_which(state, sprintf("dataname == \"%s\"", x))
         )
       })
 
-      logger::log_trace("{ class(self)[1] }$set_filter_state initialized, dataname: { private$dataname }")
+      logger::log_trace("{ class(self)[1] }$set_filter_state initialized")
 
       invisible(NULL)
     },
@@ -1020,18 +1002,11 @@ FilteredData <- R6::R6Class( # nolint
 
           output$table <- renderUI({
             logger::log_trace("FilteredData$srv_filter_overview@1 updating counts")
-            datanames <- if (identical(active_datanames(), "all")) {
-              self$datanames()
-            } else {
-              active_datanames()
-            }
-
-            if (length(datanames) == 0) {
+            if (length(active_datanames()) == 0) {
               return(NULL)
             }
 
-            datasets_df <- self$get_filter_overview(datanames = datanames)
-
+            datasets_df <- self$get_filter_overview(datanames = active_datanames())
 
             if (!is.null(datasets_df$obs)) {
               # some datasets (MAE colData) doesn't return obs column

@@ -160,10 +160,8 @@ isolate(filter_states$get_call())
 \item \href{#method-DFFilterStates-new}{\code{DFFilterStates$new()}}
 \item \href{#method-DFFilterStates-format}{\code{DFFilterStates$format()}}
 \item \href{#method-DFFilterStates-get_fun}{\code{DFFilterStates$get_fun()}}
-\item \href{#method-DFFilterStates-get_filter_state}{\code{DFFilterStates$get_filter_state()}}
 \item \href{#method-DFFilterStates-set_filter_state}{\code{DFFilterStates$set_filter_state()}}
 \item \href{#method-DFFilterStates-remove_filter_state}{\code{DFFilterStates$remove_filter_state()}}
-\item \href{#method-DFFilterStates-set_filterable_varnames}{\code{DFFilterStates$set_filterable_varnames()}}
 \item \href{#method-DFFilterStates-srv_active}{\code{DFFilterStates$srv_active()}}
 \item \href{#method-DFFilterStates-ui_add}{\code{DFFilterStates$ui_add()}}
 \item \href{#method-DFFilterStates-srv_add}{\code{DFFilterStates$srv_add()}}
@@ -177,6 +175,7 @@ isolate(filter_states$get_call())
 <li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilterStates" data-id="get_call"><a href='../../teal.slice/html/FilterStates.html#method-FilterStates-get_call'><code>teal.slice::FilterStates$get_call()</code></a></span></li>
 <li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilterStates" data-id="get_datalabel"><a href='../../teal.slice/html/FilterStates.html#method-FilterStates-get_datalabel'><code>teal.slice::FilterStates$get_datalabel()</code></a></span></li>
 <li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilterStates" data-id="get_filter_count"><a href='../../teal.slice/html/FilterStates.html#method-FilterStates-get_filter_count'><code>teal.slice::FilterStates$get_filter_count()</code></a></span></li>
+<li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilterStates" data-id="get_filter_state"><a href='../../teal.slice/html/FilterStates.html#method-FilterStates-get_filter_state'><code>teal.slice::FilterStates$get_filter_state()</code></a></span></li>
 <li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilterStates" data-id="print"><a href='../../teal.slice/html/FilterStates.html#method-FilterStates-print'><code>teal.slice::FilterStates$print()</code></a></span></li>
 <li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilterStates" data-id="ui_active"><a href='../../teal.slice/html/FilterStates.html#method-FilterStates-ui_active'><code>teal.slice::FilterStates$ui_active()</code></a></span></li>
 </ul>
@@ -200,8 +199,6 @@ which means that when calling the subset function associated with this class
   dataname,
   datalabel = character(0),
   varlabels = character(0),
-  excluded_varnames = character(0),
-  count_type = c("none", "all", "hierarchical"),
   keys = character(0)
 )}\if{html}{\out{</div>}}
 }
@@ -227,12 +224,6 @@ text label value}
 
 \item{\code{varlabels}}{(\code{character})\cr
 labels of the variables used in this object.}
-
-\item{\code{excluded_varnames}}{(\code{character})\cr
-names of variables that can \strong{not} be filtered on.}
-
-\item{\code{count_type}}{\code{character(1)}\cr
-specifying how observations are tallied.}
 
 \item{\code{keys}}{(\code{character})\cr
 key columns names}
@@ -274,21 +265,6 @@ For \code{DFFilterStates} this is \code{dplyr::filter}.
 
 \subsection{Returns}{
 \code{character(1)}
-}
-}
-\if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-DFFilterStates-get_filter_state"></a>}}
-\if{latex}{\out{\hypertarget{method-DFFilterStates-get_filter_state}{}}}
-\subsection{Method \code{get_filter_state()}}{
-Returns active \code{FilterState} objects.
-
-Gets all filter state information from this dataset.
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{DFFilterStates$get_filter_state()}\if{html}{\out{</div>}}
-}
-
-\subsection{Returns}{
-\code{teal_slices}
 }
 }
 \if{html}{\out{<hr>}}
@@ -357,32 +333,6 @@ specifying \code{FilterState} objects to remove;
 }
 \subsection{Returns}{
 \code{NULL} invisibly
-}
-}
-\if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-DFFilterStates-set_filterable_varnames"></a>}}
-\if{latex}{\out{\hypertarget{method-DFFilterStates-set_filterable_varnames}{}}}
-\subsection{Method \code{set_filterable_varnames()}}{
-Set the allowed filterable variables
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{DFFilterStates$set_filterable_varnames(varnames)}\if{html}{\out{</div>}}
-}
-
-\subsection{Arguments}{
-\if{html}{\out{<div class="arguments">}}
-\describe{
-\item{\code{varnames}}{(\code{character} or \code{NULL}) The variables which can be filtered}
-}
-\if{html}{\out{</div>}}
-}
-\subsection{Details}{
-When retrieving the filtered variables only
-those which have filtering supported (i.e. are of the permitted types)
-are included.
-}
-
-\subsection{Returns}{
-NULL invisibly
 }
 }
 \if{html}{\out{<hr>}}

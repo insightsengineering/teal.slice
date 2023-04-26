@@ -33,7 +33,8 @@ filter_var(
 
 filter_settings(
   ...,
-  exclude = list(),
+  exclude_varnames = list(),
+  include_varnames = list(),
   count_type = c("none", "all", "hierarchical")
 )
 
@@ -69,8 +70,7 @@ slices_which(tss, expr)
 \item{varname}{\code{character(1)} name of variable}
 
 \item{choices}{optional vector specifying allowed choices;
-possibly a subset of values in data;
-type and size depends on variable type}
+possibly a subset of values in data; type and size depends on variable type}
 
 \item{selected}{optional vector specifying selection;
 type and size depends on variable type}
@@ -87,9 +87,15 @@ type and size depends on variable type}
 for \code{filter_settings} any number of \code{teal_slice} objects\cr
 for other functions arguments passed to other methods}
 
-\item{exclude}{\verb{named list} of \code{character} vectors where list names match names of data sets
+\item{exclude_varnames}{\verb{named list} of \code{character} vectors where list names match names of data sets
 and vector elements match variable names in respective data sets;
-specifies which variables are not allowed to be filtered}
+specifies which variables are not allowed to be filtered.
+Both \code{include_varnames} and \code{exclude_varnames} can't be specified for the same dataset in the same call.}
+
+\item{include_varnames}{\verb{named list} of \code{character} vectors where list names match names of data sets
+and vector elements match variable names in respective data sets;
+specifies which variables are not allowed to be filtered.
+Both \code{include_varnames} and \code{exclude_varnames} can't be specified for the same dataset in the same call.}
 
 \item{count_type}{\code{character(1)} string specifying how observations are tallied by these filter states}
 

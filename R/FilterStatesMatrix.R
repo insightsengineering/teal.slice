@@ -25,20 +25,14 @@ MatrixFilterStates <- R6::R6Class( # nolint
     #'   specified to the function argument attached to this `FilterStates`.
     #' @param datalabel (`character(0)` or `character(1)`)\cr
     #'   text label value.
-    #' @param excluded_varnames (`character`)\cr
-    #'   names of variables that can \strong{not} be filtered on.
-    #' @param count_type `character(1)`\cr
-    #'   specifying how observations are tallied.
     #'
     initialize = function(data,
                           data_reactive = function(sid = "") NULL,
                           dataname,
-                          datalabel = character(0),
-                          excluded_varnames = character(0),
-                          count_type = c("none", "all", "hierarchical")) {
+                          datalabel = character(0)) {
       checkmate::assert_function(data_reactive, args = "sid")
       checkmate::assert_matrix(data)
-      super$initialize(data, data_reactive, dataname, datalabel, excluded_varnames, count_type)
+      super$initialize(data, data_reactive, dataname, datalabel)
       private$state_list <- list(
         subset = reactiveVal()
       )
@@ -105,24 +99,6 @@ MatrixFilterStates <- R6::R6Class( # nolint
           NULL
         }
       )
-    },
-
-    #' @description
-    #' Returns active `FilterState` objects.
-    #'
-    #' Gets all filter state information from this dataset.
-    #'
-    #' @return `teal_slices`
-    #'
-    get_filter_state = function() {
-      slices <- lapply(private$state_list_get("subset"), function(x) x$get_state())
-      excluded_varnames <- structure(
-        list(setdiff(colnames(private$data), private$filterable_varnames)),
-        names = private$dataname
-      )
-      excluded_varnames <- Filter(function(x) !identical(x, character(0)), excluded_varnames)
-
-      do.call(filter_settings, c(slices, list(exclude = excluded_varnames, count_type = private$count_type)))
     },
 
     #' @description
