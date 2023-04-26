@@ -99,7 +99,7 @@ specifies which variables are not allowed to be filtered}
 
 \item{field}{\code{character(1)} name of \code{teal_slice} element}
 
-\item{expr}{\code{character} string representing and expression that evaluates to a single \code{logical};
+\item{expr}{\code{character} string representing an expression that evaluates to a single \code{logical};
 will be evaluated in individual \code{teal_slice} objects}
 }
 \value{
