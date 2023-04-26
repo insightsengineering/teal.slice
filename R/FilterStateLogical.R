@@ -414,8 +414,11 @@ LogicalFilterState <- R6::R6Class( # nolint
     #  and if NA are included also
     content_summary = function(id) {
       tagList(
-        tags$span(private$get_selected()),
-        if (isTRUE(private$get_keep_na())) tags$span("NA") else NULL
+        tags$span(private$get_selected(), class = "filter-card-summary-value"),
+        tags$span(
+          class = "filter-card-summary-controls",
+          if (isTRUE(private$get_keep_na())) tags$span("NA", class = "filter-card-summary-na") else NULL
+        )
       )
     }
   )

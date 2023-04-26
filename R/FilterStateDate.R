@@ -477,7 +477,10 @@ DateFilterState <- R6::R6Class( # nolint
       max <- selected[2]
       tagList(
         tags$span(paste0(min, " - ", max)),
-        if (isTRUE(private$get_keep_na())) tags$span("NA") else NULL
+        tags$span(
+          class = "filter-card-summary-controls",
+          if (isTRUE(private$get_keep_na())) tags$span("NA") else NULL
+        )
       )
     }
   )

@@ -392,9 +392,12 @@ RangeFilterState <- R6::R6Class( # nolint
       min <- selected[1]
       max <- selected[2]
       tagList(
-        tags$span(paste0(min, " - ", max)),
-        if (isTRUE(private$get_keep_na())) tags$span("NA") else NULL,
-        if (isTRUE(private$get_keep_inf())) tags$span("Inf") else NULL
+        tags$span(paste0(min, " - ", max), class = "filter-card-summary-value"),
+        tags$span(
+          class = "filter-card-summary-controls",
+          if (isTRUE(private$get_keep_na())) tags$span("NA", class = "filter-card-summary-na") else NULL,
+          if (isTRUE(private$get_keep_inf())) tags$span("Inf", class = "filter-card-summary-inf") else NULL
+        )
       )
     },
 

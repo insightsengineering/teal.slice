@@ -276,8 +276,13 @@ a.remove_all:hover {
 .filter-card-summary {
   width: 100%;
   display: flex;
-  justify-content: space-between;
   grid-area: summary;
+}
+
+.filter-card-summary-controls {
+  margin-left: auto;
+  display: flex;
+  gap: 1em;
 }
 
 .filter-card-varlabel {
