@@ -63,7 +63,12 @@
 #' @param exclude `named list` of `character` vectors where list names match names of data sets
 #'                 and vector elements match variable names in respective data sets;
 #'                 specifies which variables are not allowed to be filtered
-#' @param count_type `character(1)` string specifying how observations are tallied by these filter states
+#' @param count_type `character(1)` string specifying how observations are tallied by these filter states.
+#'  Possible options:
+#'  - `"all"` to have counts of single `FilterState` to show number of observation in filtered
+#'   and unfiltered dataset.
+#'  - `"none"` to have counts of single `FilterState` to show unfiltered number only.
+#'
 #' @param show_all `logical(1)` specifying whether NULL elements should also be printed
 #' @param tss `teal_slices`
 #' @param field `character(1)` name of `teal_slice` element
@@ -147,11 +152,12 @@ filter_var <- function(
 filter_settings <- function(
     ...,
     exclude = list(),
-    count_type = c("none", "all", "hierarchical")) {
+    count_type = c("all", "none")) {
   slices <- list(...)
   checkmate::assert_list(slices, types = "teal_slice", any.missing = FALSE)
   checkmate::assert_list(exclude, names = "named", types = "character")
   count_type <- match.arg(count_type)
+
 
   attr(slices, "exclude") <- exclude
   attr(slices, "count_type") <- count_type

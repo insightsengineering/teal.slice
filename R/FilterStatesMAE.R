@@ -41,7 +41,7 @@ MAEFilterStates <- R6::R6Class( # nolint
                           datalabel = "subjects",
                           varlabels = character(0),
                           excluded_varnames = character(0),
-                          count_type = c("none", "all", "hierarchical"),
+                          count_type = c("all", "none"),
                           keys = character(0)) {
       if (!requireNamespace("MultiAssayExperiment", quietly = TRUE)) {
         stop("Cannot load MultiAssayExperiment - please install the package or restart your session.")

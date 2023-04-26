@@ -34,7 +34,7 @@ filter_var(
 filter_settings(
   ...,
   exclude = list(),
-  count_type = c("none", "all", "hierarchical")
+  count_type = c("all", "none", "hierarchical")
 )
 
 is.teal_slice(x)
@@ -91,7 +91,14 @@ for other functions arguments passed to other methods}
 and vector elements match variable names in respective data sets;
 specifies which variables are not allowed to be filtered}
 
-\item{count_type}{\code{character(1)} string specifying how observations are tallied by these filter states}
+\item{count_type}{\code{character(1)} string specifying how observations are tallied by these filter states.
+Possible options:
+\itemize{
+\item \code{"all"} to have counts of single \code{FilterState} to show number of observation in filtered
+and unfiltered dataset.
+\item \code{"none"} to have counts of single \code{FilterState} to show unfiltered number only.
+\item \code{"hierarchical"} not implemented yet.
+}}
 
 \item{show_all}{\code{logical(1)} specifying whether NULL elements should also be printed}
 

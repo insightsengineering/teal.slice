@@ -283,7 +283,11 @@ LogicalFilterState <- R6::R6Class( # nolint
       ns <- NS(id)
 
       countsmax <- private$choices_counts
-      countsnow <- isolate(unname(table(factor(private$x_reactive(), levels = private$choices))))
+      countsnow <- countsnow <- if (!is.null(private$x_reactive())) {
+        isolate(unname(table(factor(private$x_reactive(), levels = private$choices))))
+      } else {
+        NULL
+      }
 
       labels <- countBars(
         inputId = ns("labels"),
@@ -329,11 +333,18 @@ LogicalFilterState <- R6::R6Class( # nolint
               private$varname,
               private$dataname
             ))
+
+            countsnow <- if (!is.null(private$x_reactive())) {
+              unname(table(factor(non_missing_values(), levels = private$choices)))
+            } else {
+              NULL
+            }
+
             updateCountBars(
               inputId = "labels",
               choices = as.character(private$choices),
               countsmax = private$choices_counts,
-              countsnow = unname(table(factor(non_missing_values(), levels = private$choices)))
+              countsnow = countsnow
             )
             NULL
           })
