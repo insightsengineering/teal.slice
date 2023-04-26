@@ -627,8 +627,8 @@ FilterState <- R6::R6Class( # nolint
       if (is.null(private$cache)) {
         logger::log_warn("attempt to restore state failed (cache empty): { private$dataname } { private$varname }")
       } else {
-        private$restore_state()
         private$disabled(FALSE)
+        private$restore_state()
 
         logger::log_trace("{ class(self)[1] }$set_state enabled state of variable: { private$varname }")
       }
@@ -640,7 +640,7 @@ FilterState <- R6::R6Class( # nolint
     # Called when filter state is disabled, whether by its own switch, or the global one.
     # Having separate methods to cache and restore allows to manipulate
     # state independently of disabled status and thus cache and restore a disabled state.
-    # It also effectively bypasses the bar on modifying fixed state.
+    # It also allows for modifying mutable fields in a fixed state, which is forbidden to set_state.
     #
     # @return `NULL` invisibly.
     cache_state = function() {
@@ -658,7 +658,7 @@ FilterState <- R6::R6Class( # nolint
     # Called when filter state is disabled, whether by its own switch, or the global one.
     # Having separate methods to cache and restore allows to manipulate
     # state independently of disabled status and thus cache and restore a disabled state.
-    # It also effectively bypasses the bar on modifying fixed state.
+    # It also allows for modifying mutable fields in a fixed state, which is forbidden to set_state.
     #
     # @return `NULL` invisibly.
     restore_state = function() {
@@ -669,7 +669,6 @@ FilterState <- R6::R6Class( # nolint
       private$set_selected(state$selected)
       private$set_keep_na(state$keep_na)
       private$set_keep_inf(state$keep_inf)
-      private$fixed <- state$fixed
       private$disabled(state$disabled)
 
       logger::log_trace("{ class(self)[1] }$set_state restored state of variable: { private$varname }")
