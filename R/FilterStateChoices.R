@@ -585,7 +585,10 @@ ChoicesFilterState <- R6::R6Class( # nolint
     content_summary = function(id) {
       n_selected <- length(private$get_selected())
       tagList(
-        tags$span(sprintf("%s levels selected", n_selected), class = "filter-card-summary-value"),
+        tags$span(
+          class = "filter-card-summary-value",
+          paste0(private$get_selected(), collapse = ", ")
+        ),
         tags$span(
           class = "filter-card-summary-controls",
           if (isTRUE(private$get_keep_na()) && private$na_count > 0) {

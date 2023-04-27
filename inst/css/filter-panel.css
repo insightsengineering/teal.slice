@@ -279,6 +279,13 @@ a.remove_all:hover {
   grid-area: summary;
 }
 
+.filter-card-summary-value {
+  max-width: 300px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
 .filter-card-summary-controls {
   margin-left: auto;
   display: flex;
