@@ -417,7 +417,21 @@ LogicalFilterState <- R6::R6Class( # nolint
         tags$span(private$get_selected(), class = "filter-card-summary-value"),
         tags$span(
           class = "filter-card-summary-controls",
-          if (isTRUE(private$get_keep_na())) tags$span("NA", class = "filter-card-summary-na") else NULL
+          if (isTRUE(private$get_keep_na()) && private$na_count > 0) {
+            tags$span(
+              class = "filter-card-summary-na",
+              "NA",
+              shiny::icon("check")
+            )
+          } else if (isFALSE(private$get_keep_na()) && private$na_count > 0) {
+            tags$span(
+              class = "filter-card-summary-na",
+              "NA",
+              shiny::icon("xmark")
+            )
+          } else {
+            NULL
+          }
         )
       )
     }

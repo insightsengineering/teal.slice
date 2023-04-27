@@ -600,7 +600,21 @@ DatetimeFilterState <- R6::R6Class( # nolint
         tags$span(paste0(min, " - ", max)),
         tags$span(
           class = "filter-card-summary-controls",
-          if (isTRUE(private$get_keep_na())) tags$span("NA") else NULL
+          if (isTRUE(private$get_keep_na()) && private$na_count > 0) {
+            tags$span(
+              class = "filter-card-summary-na",
+              "NA",
+              shiny::icon("check")
+            )
+          } else if (isFALSE(private$get_keep_na()) && private$na_count > 0) {
+            tags$span(
+              class = "filter-card-summary-na",
+              "NA",
+              shiny::icon("xmark")
+            )
+          } else {
+            NULL
+          }
         )
       )
     }

@@ -285,6 +285,14 @@ a.remove_all:hover {
   gap: 1em;
 }
 
+.fa-check {
+  color: var(--bs-success, var(--success, #3c763d))
+}
+
+.fa-xmark {
+  color: var(--bs-danger, var(--danger, #a94442))
+}
+
 .filter-card-varlabel {
  color: var(--bs-gray-500, var(--gray, darkgray));
  margin-left: 0.5em;
