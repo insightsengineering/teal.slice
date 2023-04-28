@@ -397,7 +397,6 @@ ChoicesFilterState <- R6::R6Class( # nolint
     ui_inputs = function(id) {
       ns <- NS(id)
 
-      browser()
       countsmax <- private$choices_counts
       countsnow <- if (!is.null(private$x_reactive())) {
         isolate(unname(table(factor(private$x_reactive(), levels = private$choices))))
@@ -427,7 +426,7 @@ ChoicesFilterState <- R6::R6Class( # nolint
         labels <- mapply(
           FUN = make_count_text,
           label = private$choices,
-          countnow = countsnow,
+          countnow = if (is.null(countsnow)) rep(list(NULL), length(private$choices)) else countsnow,
           countmax = countsmax
         )
 

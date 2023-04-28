@@ -129,6 +129,7 @@ FilterStates <- R6::R6Class( # nolint
       states_list <- private$state_list
       filter_items <- sapply(
         X = states_list,
+        # todo: instead of taking names from here we should take `target` from the teal_slice (and change `target` -> `argname`)
         USE.NAMES = TRUE,
         simplify = FALSE,
         function(state_list) {
