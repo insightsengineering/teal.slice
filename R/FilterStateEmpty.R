@@ -208,6 +208,23 @@ EmptyFilterState <- R6::R6Class( # nolint
       )
     },
 
+    server_inputs_fixed = function(id) {
+      moduleServer(
+        id = id,
+        function(input, output, session) {
+          output$selection <- renderUI({
+            div(
+              class = "relative",
+              div(
+                span("Variable contains missing values only")
+              )
+            )
+          })
+          NULL
+        }
+      )
+    },
+
     # @description
     # Server module to display filter summary
     # Doesn't render anything

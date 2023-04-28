@@ -245,20 +245,23 @@ FilterState <- R6::R6Class( # nolint
         id = id,
         function(input, output, session) {
           private$server_summary("summary")
-          private$server_inputs("inputs")
-          observeEvent(input$enable,
-            {
-              if (isTRUE(input$enable)) {
-                private$enable()
-              } else {
-                private$disable()
-              }
-            },
-            ignoreInit = TRUE
+          if (private$fixed) {
+            private$server_inputs_fixed("inputs")
+          } else {
+            private$server_inputs("inputs")
+          }
+
+          observeEvent(input$enable, {
+            if (isTRUE(input$enable)) {
+              private$enable()
+            } else {
+              private$disable()
+            }
+          },
+          ignoreInit = TRUE
           )
           reactive(input$remove) # back to parent to remove self
-        }
-      )
+        })
     },
 
     #' @description
@@ -304,17 +307,13 @@ FilterState <- R6::R6Class( # nolint
               class = "filter-card-remove"
             )
           ),
-          if (private$fixed) {
-            NULL
-          } else {
-            tags$div(
-              class = "filter-card-summary",
-              `data-toggle` = "collapse",
-              `data-bs-toggle` = "collapse",
-              href = paste0("#", ns("body")),
-              private$ui_summary(ns("summary"))
-            )
-          }
+          tags$div(
+            class = "filter-card-summary",
+            `data-toggle` = "collapse",
+            `data-bs-toggle` = "collapse",
+            href = paste0("#", ns("body")),
+            private$ui_summary(ns("summary"))
+          )
         ),
         tags$div(
           id = ns("body"),
@@ -324,7 +323,7 @@ FilterState <- R6::R6Class( # nolint
           tags$div(
             class = "filter-card-body",
             if (private$fixed) {
-              tags$span(private$get_metadata_expression())
+              private$ui_inputs_fixed(ns("inputs"))
             } else {
               private$ui_inputs(ns("inputs"))
             }
@@ -721,6 +720,27 @@ FilterState <- R6::R6Class( # nolint
     },
     # module with inputs
     server_inputs = function(id) {
+      stop("abstract class")
+    },
+
+    # @description
+    # module displaying inputs in a fixed filter state
+    # there are no input widgets, only selection visualizations
+    # @param id
+    #   character string specifying this `shiny` module instance
+    ui_inputs_fixed = function(id) {
+      ns <- NS(id)
+      div(
+        class = "choices_state",
+        uiOutput(ns("selection"))
+      )
+    },
+
+    # @description
+    # module creating the display of a fixed filter state
+    # @param id
+    #   character string specifying this `shiny` module instance
+    server_inputs_fixed = function(id) {
       stop("abstract class")
     },
 
