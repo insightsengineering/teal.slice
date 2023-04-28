@@ -114,8 +114,8 @@ FilterState <- R6::R6Class( # nolint
       private$dataname <- dataname
       private$varname <- varname
       private$selected <- reactiveVal()
-      private$keep_na <- if (is.null(keep_na)) reactiveVal(TRUE) else reactiveVal(keep_na)
-      private$keep_inf <- if (is.null(keep_inf)) reactiveVal(TRUE) else reactiveVal(keep_inf)
+      private$keep_na <- if (is.null(keep_na) && anyNA(x)) reactiveVal(TRUE) else reactiveVal(keep_na)
+      private$keep_inf <- if (is.null(keep_inf) && any(is.infinite(x))) reactiveVal(TRUE) else reactiveVal(keep_inf)
       private$fixed <- fixed
       private$disabled <- reactiveVal(disabled)
       private$extras <- list(...)
