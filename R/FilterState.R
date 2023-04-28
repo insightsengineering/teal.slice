@@ -627,8 +627,8 @@ FilterState <- R6::R6Class( # nolint
       if (is.null(private$cache)) {
         logger::log_warn("attempt to restore state failed (cache empty): { private$dataname } { private$varname }")
       } else {
-        private$disabled(FALSE)
         private$restore_state()
+        private$disabled(FALSE)
 
         logger::log_trace("{ class(self)[1] }$set_state enabled state of variable: { private$varname }")
       }
