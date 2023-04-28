@@ -160,10 +160,6 @@ EmptyFilterState <- R6::R6Class( # nolint
       invisible(NULL)
     },
 
-    get_metadata_expression = function() {
-      ""
-    },
-
     # @description
     # UI Module for `EmptyFilterState`.
     # This UI element contains a checkbox input to filter or keep missing values.

@@ -243,13 +243,6 @@ LogicalFilterState <- R6::R6Class( # nolint
       invisible(NULL)
     },
 
-    get_metadata_expression = function(dataname) {
-      if (missing(dataname)) dataname <- private$dataname
-      varname <- private$get_varname_prefixed(dataname)
-      selected <- private$get_selected()
-      sprintf("%s == %s", deparse1(varname), isTRUE(selected))
-    },
-
     validate_selection = function(value) {
       if (!(checkmate::test_logical(value, max.len = 1, any.missing = FALSE))) {
         stop(

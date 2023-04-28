@@ -539,13 +539,6 @@ FilterState <- R6::R6Class( # nolint
       str2lang(ans)
     },
 
-    # Retrieve filter condition (logical predicate) specified in metadata.
-    # If missing, use current call.
-    # Only used by fixed filters.
-    get_metadata_expression = function() {
-      stop("this is a virtual method")
-    },
-
     # @description
     # Adds `is.na(varname)` before existing condition calls if `keep_na` is selected.
     # Otherwise, if missing values are found in the variable `!is.na` will be added

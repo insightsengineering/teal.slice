@@ -263,13 +263,6 @@ DateFilterState <- R6::R6Class( # nolint
       invisible(NULL)
     },
 
-    get_metadata_expression = function(dataname) {
-      if (missing(dataname)) dataname <- private$dataname
-      varname <- private$get_varname_prefixed(dataname)
-      selected <- private$get_selected()
-      sprintf("%1$s => %2$s & %1$s <= %3$s", deparse1(varname), selected[1], selected[2])
-    },
-
     validate_selection = function(value) {
       if (!is(value, "Date")) {
         stop(
