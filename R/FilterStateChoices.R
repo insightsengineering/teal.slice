@@ -603,11 +603,12 @@ ChoicesFilterState <- R6::R6Class( # nolint
             countsnow <- unname(table(factor(private$x_reactive(), levels = private$choices)))
             countsmax <- private$choices_counts
 
+            ind <- private$choices %in% private$selected()
             countBars(
               inputId = session$ns("labels"),
-              choices = private$choices,
-              countsnow = countsnow,
-              countsmax = countsmax
+              choices = private$selected(),
+              countsnow = countsnow[ind],
+              countsmax = countsmax[ind]
             )
           })
 
