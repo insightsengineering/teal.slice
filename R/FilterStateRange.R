@@ -388,11 +388,11 @@ RangeFilterState <- R6::R6Class( # nolint
     #  if NA or Inf are included also
     # @return `shiny.tag` to include in the `ui_summary`
     content_summary = function() {
-      selected <- sprintf("%.4g", private$get_selected())
-      min <- selected[1]
-      max <- selected[2]
+      fmt_selected <- format_range_for_summary(private$get_selected())
+      min <- fmt_selected[1]
+      max <- fmt_selected[2]
       tagList(
-        tags$span(paste0(min, " - ", max), class = "filter-card-summary-value"),
+        tags$span(shiny::HTML(min, "&ndash;", max), class = "filter-card-summary-value"),
         tags$span(
           class = "filter-card-summary-controls",
           if (isTRUE(private$get_keep_na()) && private$na_count > 0) {
