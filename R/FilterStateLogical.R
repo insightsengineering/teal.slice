@@ -421,17 +421,18 @@ LogicalFilterState <- R6::R6Class( # nolint
       moduleServer(
         id = id,
         function(input, output, session) {
-          output$selection <- renderUI({
-            logger::log_trace("LogicalFilterState$server initializing, dataname: { private$dataname }")
+          logger::log_trace("LogicalFilterState$server initializing, dataname: { private$dataname }")
 
+          output$selection <- renderUI({
             countsnow <- unname(table(factor(private$x_reactive(), levels = private$choices)))
             countsmax <- private$choices_counts
 
+            ind <- private$choices %in% private$selected()
             countBars(
               inputId = session$ns("labels"),
-              choices = as.character(private$choices),
-              countsnow = countsnow,
-              countsmax = countsmax
+              choices = private$selected(),
+              countsnow = countsnow[ind],
+              countsmax = countsmax[ind]
             )
           })
 
