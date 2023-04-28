@@ -164,7 +164,7 @@ DFFilterStates <- R6::R6Class( # nolint
       super$initialize(data, data_reactive, dataname, datalabel)
       private$varlabels <- varlabels
       private$keys <- keys
-      private$include_varnames <- private$set_filterable_varnames(colnames(private$data))
+      private$set_filterable_varnames(include_varnames = colnames(private$data))
       private$state_list <- list(
         reactiveVal()
       )

@@ -75,23 +75,6 @@ SEFilterStates <- R6::R6Class( # nolint
     },
 
     #' @description
-    #' Returns active `FilterState` objects.
-    #'
-    #' Gets all filter state information from this dataset.
-    #'
-    #' @return `teal_slices`
-    #'
-    get_filter_state = function() {
-      # todo: first three lines can be abstracted as we don't need to have two reactive lists
-      slices_subset <- lapply(private$state_list$subset(), function(x) x$get_state())
-      slices_select <- lapply(private$state_list$select(), function(x) x$get_state())
-      slices <- c(slices_subset, slices_select)
-      fs <- do.call(filter_settings, c(slices, list(count_type = private$count_type)))
-
-      return(fs)
-    },
-
-    #' @description
     #' Set filter state
     #'
     #' @param state (`teal_slices`)\cr

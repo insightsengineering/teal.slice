@@ -219,7 +219,13 @@ FilterStates <- R6::R6Class( # nolint
     #' @return `list` containing `list` per `FilterState` in the `state_list`
     #'
     get_filter_state = function() {
-      slices <- unname(lapply(private$state_list_get(1L), function(x) x$get_state()))
+      slices <- unlist(
+        lapply(private$state_list, function(slot) {
+          unname(lapply(slot(), function(x) x$get_state()))
+        }),
+        recursive = FALSE,
+        use.names = FALSE
+      )
       fs <- do.call(filter_settings, c(slices, list(count_type = private$count_type)))
 
       include_varnames <- private$include_varnames
@@ -351,6 +357,9 @@ FilterStates <- R6::R6Class( # nolint
     #
     # @return NULL invisibly
     set_filterable_varnames = function(include_varnames = character(0), exclude_varnames = character(0)) {
+      if ((length(include_varnames) + length(exclude_varnames)) == 0L) {
+        return(invisible(NULL))
+      }
       checkmate::assert_character(include_varnames, any.missing = FALSE, min.len = 0L, null.ok = TRUE)
       checkmate::assert_character(exclude_varnames, any.missing = FALSE, min.len = 0L, null.ok = TRUE)
       if (length(include_varnames) && length(exclude_varnames)) {
@@ -379,10 +388,10 @@ FilterStates <- R6::R6Class( # nolint
     #
     # @return character vector with names of the columns
     get_filterable_varnames = function() {
-      supported_varnames <- get_supported_filter_varnames(private$data)
       if (length(private$include_varnames)) {
         private$include_varnames
       } else {
+        supported_varnames <- get_supported_filter_varnames(private$data)
         setdiff(supported_varnames, private$exclude_varnames)
       }
     },

@@ -44,7 +44,7 @@ MAEFilterStates <- R6::R6Class( # nolint
       super$initialize(data, data_reactive, dataname, datalabel)
       private$keys <- keys
       private$varlabels <- varlabels
-      private$include_varnames <- get_supported_filter_varnames(SummarizedExperiment::colData(data))
+      private$set_filterable_varnames(include_varnames = colnames(SummarizedExperiment::colData(data)))
       private$state_list <- list(
         y = reactiveVal()
       )
@@ -251,8 +251,9 @@ MAEFilterStates <- R6::R6Class( # nolint
 
           # available choices to display
           avail_column_choices <- reactive({
+            vars_include <- private$get_filterable_varnames()
             active_filter_vars <- slices_field(self$get_filter_state(), "varname")
-            choices <- private$get_filterable_varnames()
+            choices <- setdiff(vars_include, active_filter_vars)
             varlabels <- vapply(
               colnames(data),
               FUN = function(x) {
@@ -309,7 +310,9 @@ MAEFilterStates <- R6::R6Class( # nolint
               )
 
               varname <- input$var_to_add
-              self$set_filter_state(filter_settings(filter_var(private$dataname, varname, target = "y")))
+              self$set_filter_state(filter_settings(
+                filter_var(dataname = private$dataname, varname = varname, datalabel = "subjects", target = "y")
+              ))
 
               logger::log_trace(
                 sprintf(

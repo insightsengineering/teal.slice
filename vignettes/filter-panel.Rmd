@@ -302,12 +302,12 @@ set_filter_state(
 )
 ```
 
-1. Getting the filter state
+2. Getting the filter state
 ```{r, message=FALSE, warning=FALSE}
 get_filter_state(datasets)
 ```
 
-1. Removing filter states
+3. Removing filter states
 ```{r, message=FALSE, warning=FALSE}
 remove_filter_state(
   datasets = datasets,
@@ -317,7 +317,7 @@ remove_filter_state(
 )
 ```
 
-1. Updating filter states. *Works only in the shiny reactive context.
+4. Updating filter states. *Works only in the shiny reactive context.
 ```{r, message=FALSE, warning=FALSE}
 set_filter_state(
   datasets = datasets,
@@ -327,7 +327,7 @@ set_filter_state(
 )
 ```
 
-1. Clear the filter state
+5. Clear the filter state
 ```{r, message=FALSE, warning=FALSE}
 clear_filter_states(datasets)
 ```
