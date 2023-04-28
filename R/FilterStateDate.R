@@ -478,7 +478,7 @@ DateFilterState <- R6::R6Class( # nolint
       tagList(
         tags$span(
           class = "filter-card-summary-value",
-          paste0(min, " - ", max)
+          shiny::HTML(min, "&ndash;", max)
         ),
         tags$span(
           class = "filter-card-summary-controls",
