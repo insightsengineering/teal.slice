@@ -33,9 +33,9 @@ filter_var(
 
 filter_settings(
   ...,
-  exclude_varnames = list(),
-  include_varnames = list(),
-  count_type = c("all", "none")
+  exclude_varnames = NULL,
+  include_varnames = NULL,
+  count_type = NULL
 )
 
 is.teal_slice(x)
@@ -160,7 +160,7 @@ and how observations are tallied, which is resolved by \code{FilterStates}.
 To establish a filter on a column in a \code{data.frame}, \code{dataname} and \code{varname} are sufficient.
 Filter states created created for \code{SummarizedExperiments} require more information
 as each variable is either located in the \code{rowData} or \code{colData} slots.
-Thus, \code{teal_slice} objects taht refer to such filter states must also contain the field \code{target}
+Thus, \code{teal_slice} objects that refer to such filter states must also contain the field \code{target}
 that specifies "subset" for variales in \code{rowData} and "select" for those in \code{colData}.
 
 Likewise, observations in a \code{MultiAssayExpeeiment} can be filtered based on the content of the \code{colData} slot

@@ -425,7 +425,7 @@ FilteredData <- R6::R6Class( # nolint
     #' @return A `teal_slices` object.
     #'
     get_filter_state = function() {
-      states <- lapply(private$filtered_datasets, function(x) x$get_filter_state())
+      states <- unname(lapply(private$filtered_datasets, function(x) x$get_filter_state()))
       slices <- Filter(Negate(is.null), states)
       state <- do.call(c, slices)
       if (!is.null(state)) {

@@ -219,7 +219,7 @@ FilterStates <- R6::R6Class( # nolint
     #' @return `list` containing `list` per `FilterState` in the `state_list`
     #'
     get_filter_state = function() {
-      slices <- lapply(private$state_list_get(1L), function(x) x$get_state())
+      slices <- unname(lapply(private$state_list_get(1L), function(x) x$get_state()))
       fs <- do.call(filter_settings, c(slices, list(count_type = private$count_type)))
 
       include_varnames <- private$include_varnames
@@ -334,7 +334,7 @@ FilterStates <- R6::R6Class( # nolint
     ns = NULL, # shiny ns()
     observers = list(), # observers
     state_list = NULL, # list of `reactiveVal`s initialized by init methods of child classes,
-    count_type = "none", # specifies how observation numbers are displayed in filter cards,
+    count_type = "all", # specifies how observation numbers are displayed in filter cards,
 
     # private methods ----
 
@@ -683,7 +683,7 @@ FilterStates <- R6::R6Class( # nolint
           # and this no longer needs to be a function to pass sid. reactive in the FilterState
           # is also beneficial as it can be cached and retriger filter counts only if
           # returned vector is different.
-          x_reactive = if (attr(state, "count_type") == "none") {
+          x_reactive = if (private$count_type == "none") {
             reactive(NULL)
           } else {
             reactive(data_reactive(sid)[, x$varname, drop = TRUE])

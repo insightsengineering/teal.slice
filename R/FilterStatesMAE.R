@@ -100,6 +100,11 @@ MAEFilterStates <- R6::R6Class( # nolint
         exclude_varnames = attr(state, "exclude_varnames")[[private$dataname]]
       )
 
+      count_type <- attr(state, "count_type")
+      if (length(count_type)) {
+        private$count_type <- count_type
+      }
+
       # Drop teal_slices that refer to excluded variables.
       varnames <- slices_field(state, "varname")
       filterable <- private$get_filterable_varnames()

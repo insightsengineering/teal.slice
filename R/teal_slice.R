@@ -39,7 +39,7 @@
 #' To establish a filter on a column in a `data.frame`, `dataname` and `varname` are sufficient.
 #' Filter states created created for `SummarizedExperiments` require more information
 #' as each variable is either located in the `rowData` or `colData` slots.
-#' Thus, `teal_slice` objects taht refer to such filter states must also contain the field `target`
+#' Thus, `teal_slice` objects that refer to such filter states must also contain the field `target`
 #' that specifies "subset" for variales in `rowData` and "select" for those in `colData`.
 #'
 #' Likewise, observations in a `MultiAssayExpeeiment` can be filtered based on the content of the `colData` slot
@@ -155,20 +155,23 @@ filter_var <- function(
 #'
 filter_settings <- function(
     ...,
-    exclude_varnames = list(),
-    include_varnames = list(),
-    count_type = c("all", "none")) {
+    exclude_varnames = NULL,
+    include_varnames = NULL,
+    count_type = NULL) {
   slices <- list(...)
   checkmate::assert_list(slices, types = "teal_slice", any.missing = FALSE)
-  checkmate::assert_list(exclude_varnames, names = "named", types = "character")
-  checkmate::assert_list(include_varnames, names = "named", types = "character")
-  count_type <- match.arg(count_type)
+  checkmate::assert_list(exclude_varnames, names = "named", types = "character", null.ok = TRUE, min.len = 1)
+  checkmate::assert_list(include_varnames, names = "named", types = "character", null.ok = TRUE, min.len = 1)
+  checkmate::assert_character(count_type, len = 1, null.ok = TRUE)
+  checkmate::assert_subset(count_type, choices = c("all", "none"), empty.ok = TRUE)
 
-  attr(slices, "exclude_varnames") <- exclude_varnames
-  attr(slices, "include_varnames") <- include_varnames
-  attr(slices, "count_type") <- count_type
-  class(slices) <- c("teal_slices", class(slices))
-  slices
+  structure(
+    slices,
+    exclude_varnames = exclude_varnames,
+    include_varnames = include_varnames,
+    count_type = count_type,
+    class = c("teal_slices", class(slices))
+  )
 }
 
 
@@ -278,7 +281,6 @@ is.teal_slices <- function(x) {
 #'
 as.teal_slices <- function(x) {
   checkmate::assert_list(x, names = "named")
-
   is.bottom <- function(x) {
     isTRUE(is.list(x) && any(names(x) %in% c("selected", "keep_na", "keep_inf")))
   }
@@ -350,7 +352,7 @@ as.teal_slices <- function(x) {
     stop("conversion to filter_slices failed")
   }
 
-  do.call(filter_settings, slices)
+  do.call(filter_settings, c(slices, list(include_varnames = attr(x, "filterable"))))
 }
 
 
@@ -374,10 +376,10 @@ as.teal_slices <- function(x) {
   y <- NextMethod("[")
   attrs <- attributes(x)
   attrs$names <- attrs$names[i]
-  attributes(y) <- attrs
   datanames <- unique(unlist(vapply(y, function(ts) ts[["dataname"]], character(1L))))
-  attr(y, "exclude_varnames") <- Filter(Negate(is.null), attr(x, "exclude_varnames")[datanames])
-  attr(y, "include_varnames") <- Filter(Negate(is.null), attr(x, "include_varnames")[datanames])
+  attrs[["exclude_varnames"]] <- Filter(Negate(is.null), attr(x, "exclude_varnames")[datanames])
+  attrs[["include_varnames"]] <- Filter(Negate(is.null), attr(x, "include_varnames")[datanames])
+  attributes(y) <- attrs
   y
 }
 
@@ -391,7 +393,7 @@ c.teal_slices <- function(...) {
   x <- list(...)
   checkmate::assert_true(all(vapply(x, is.teal_slices, logical(1L))), .var.name = "all arguments are teal_slices")
 
-  excludes <- lapply(x, attr, "exclude")
+  excludes <- lapply(x, attr, "exclude_varnames")
   names(excludes) <- NULL
   excludes <- unlist(excludes, recursive = FALSE)
   excludes <- excludes[!duplicated(names(excludes))]
@@ -403,15 +405,14 @@ c.teal_slices <- function(...) {
 
   count_types <- lapply(x, attr, "count_type")
   count_types <- unique(unlist(count_types))
-  checkmate::assert_string(count_types)
 
   do.call(
     filter_settings,
     c(
       unlist(x, recursive = FALSE),
       list(
-        exclude_varnames = excludes,
         include_varnames = includes,
+        exclude_varnames = excludes,
         count_type = count_types
       )
     )
@@ -433,21 +434,17 @@ format.teal_slices <- function(x, show_all = FALSE, ...) {
     res <- append(res, format(x[[i]], show_all = show_all, ...))
   }
 
-  res <- append(res, "\nfilterable variables:")
   includes <- attr(x, "include_varnames")
-  if (is.list(includes) && length(includes) == 0L) {
-      res[length(res)] <- paste(res[length(res)], "none")
-  } else {
+  if (length(includes) > 0L) {
+    res <- append(res, "\nfilterable variables:")
     for (i in seq_along(includes)) {
       res <- append(res, sprintf(" $ %s: %s", names(includes)[i], toString(includes[[i]])))
     }
   }
 
-  res <- append(res, "\nnon-filterable variables:")
   excludes <- attr(x, "exclude_varnames")
-  if (is.list(excludes) && length(excludes) == 0L) {
-      res[length(res)] <- paste(res[length(res)], "none")
-  } else {
+  if (length(excludes) > 0L) {
+    res <- append(res, "\nnon-filterable variables:")
     for (i in seq_along(excludes)) {
       res <- append(res, sprintf(" $ %s: %s", names(excludes)[i], toString(excludes[[i]])))
     }
