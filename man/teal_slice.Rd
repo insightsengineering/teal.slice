@@ -3,6 +3,7 @@
 \name{teal_slice}
 \alias{teal_slice}
 \alias{filter_var}
+\alias{filter_expr}
 \alias{filter_settings}
 \alias{is.teal_slice}
 \alias{as.teal_slice}
@@ -30,6 +31,8 @@ filter_var(
   disabled = FALSE,
   ...
 )
+
+filter_expr(id, title, dataname, expr, disabled = FALSE)
 
 filter_settings(..., exclude = list(), count_type = c("all", "none"))
 
@@ -83,6 +86,9 @@ type and size depends on variable type}
 for \code{filter_settings} any number of \code{teal_slice} objects\cr
 for other functions arguments passed to other methods}
 
+\item{expr}{\code{character} string representing and expression that evaluates to a single \code{logical};
+will be evaluated in individual \code{teal_slice} objects}
+
 \item{exclude}{\verb{named list} of \code{character} vectors where list names match names of data sets
 and vector elements match variable names in respective data sets;
 specifies which variables are not allowed to be filtered}
@@ -100,9 +106,6 @@ and unfiltered dataset.
 \item{tss}{\code{teal_slices}}
 
 \item{field}{\code{character(1)} name of \code{teal_slice} element}
-
-\item{expr}{\code{character} string representing and expression that evaluates to a single \code{logical};
-will be evaluated in individual \code{teal_slice} objects}
 }
 \value{
 \code{filter_var} returns object of class \code{teal_slice}, which is a named list.

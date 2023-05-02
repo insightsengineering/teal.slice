@@ -139,7 +139,6 @@ FilterStates <- R6::R6Class( # nolint
         simplify = FALSE,
         function(state_list) {
           items <- state_list()
-
           # removing empty filters and filters identified by sid
           nonempty_filter_idx <- vapply(items, function(x) x$is_any_filtered(), logical(1L))
           other_filter_idx <- vapply(items, function(x) !attr(x, "sid") %in% sid, logical(1L))
@@ -350,7 +349,7 @@ FilterStates <- R6::R6Class( # nolint
     # @return `moduleServer` function which returns `NULL`
     #
     insert_filter_state_ui = function(id, filter_state, state_list_index, state_id) {
-      checkmate::assert_class(filter_state, "FilterState")
+      checkmate::assert_multi_class(filter_state, c("FilterState", "FilterStateExpr"))
       checkmate::assert(
         checkmate::check_int(state_list_index),
         checkmate::check_character(state_list_index, len = 1),
@@ -489,8 +488,8 @@ FilterStates <- R6::R6Class( # nolint
       logger::log_trace("{ class(self)[1] } pushing into state_list, dataname: { private$dataname }")
       private$validate_state_list_exists(state_list_index)
       checkmate::assert_string(state_id)
-      checkmate::assert_class(x, "FilterState")
-
+      checkmate::assert_multi_class(x, c("FilterState", "FilterStateExpr"))
+      attr(x, "sid") <- state_id
       state <- stats::setNames(list(x), state_id)
       new_state_list <- c(
         shiny::isolate(private$state_list[[state_list_index]]()),
@@ -597,42 +596,48 @@ FilterStates <- R6::R6Class( # nolint
 
       # Modify existing filter states.
       state_list <- shiny::isolate(private$state_list_get(state_list_index))
-      slices_for_update <- slices_which(
-        state,
-        sprintf("varname %%in%% c(%s)", toString(dQuote(names(state_list), q = FALSE)))
+      state_list_ids <- gsub("^[^-]+-([^-])-[^-]", "\\1", names(state_list))
+      slices_for_update <- Filter(
+        function(x) c(x$varname, x$id) %in% state_list_ids,
+        state
       )
       lapply(slices_for_update, function(x) {
         do.call(state_list[[x$varname]]$set_state, list(x))
       })
 
       # Create new filter states.
-      slices_for_create <- slices_which(
-        state,
-        sprintf("!varname %%in%% c(%s)", toString(dQuote(names(state_list), q = FALSE)))
-      )
+      slices_for_create <- Filter(function(x) !isTRUE(x$varname %in% names(state_list)), state)
       lapply(slices_for_create, function(x) {
         # objects has random and unique sid attribute
         # which allows a reactive from below to find a right object in the state_list
-        sid <- sprintf("%s-%s-%s", state_list_index, x$varname, sample.int(size = 1L, n = .Machine$integer.max))
-        arg_list <- list(
-          x = data[, x$varname, drop = TRUE],
-          # data_reactive is a function which eventually calls get_call(sid).
-          # This chain of calls returns column from the data filtered by everything
-          # but filter identified by the sid argument. FilterState then get x_reactive
-          # and this no longer needs to be a function to pass sid. reactive in the FilterState
-          # is also beneficial as it can be cached and retriger filter counts only if
-          # returned vector is different.
-          x_reactive = if (attr(state, "count_type") == "none") {
-            reactive(NULL)
-          } else {
-            reactive(data_reactive(sid)[, x$varname, drop = TRUE])
-          },
-          extract_type = extract_type
-        )
-        arg_list <- append(arg_list, x)
-        fstate <- do.call(init_filter_state, arg_list)
-        attr(fstate, "sid") <- sid
-        private$state_list_push(x = fstate, state_list_index = state_list_index, state_id = x$varname)
+        if (inherits(x, "teal_slice_expr")) {
+          sid <- sprintf("%s-%s-%s", state_list_index, x$id, sample.int(size = 1L, n = .Machine$integer.max))
+          fstate <- init_filter_state_expr(
+            id = x$id, title = x$title, dataname = x$dataname, expr = x$expr, disabled = x$disabled
+          )
+          private$state_list_push(x = fstate, state_list_index = state_list_index, state_id = sid)
+        } else {
+          sid <- sprintf("%s-%s-%s", state_list_index, x$varname, sample.int(size = 1L, n = .Machine$integer.max))
+          arg_list <- list(
+            x = data[, x$varname, drop = TRUE],
+            # data_reactive is a function which eventually calls get_call(sid).
+            # This chain of calls returns column from the data filtered by everything
+            # but filter identified by the sid argument. FilterState then get x_reactive
+            # and this no longer needs to be a function to pass sid. reactive in the FilterState
+            # is also beneficial as it can be cached and retriger filter counts only if
+            # returned vector is different.
+            x_reactive = if (attr(state, "count_type") == "none") {
+              reactive(NULL)
+            } else {
+              reactive(data_reactive(sid)[, x$varname, drop = TRUE])
+            },
+            extract_type = extract_type
+          )
+          arg_list <- append(arg_list, x)
+          fstate <- do.call(init_filter_state, arg_list)
+          private$state_list_push(x = fstate, state_list_index = state_list_index, state_id = sid)
+        }
+
       })
 
       invisible(NULL)

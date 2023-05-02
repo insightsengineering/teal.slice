@@ -383,6 +383,11 @@ init_filter_state.POSIXlt <- function(x,
   }
 }
 
+#' @keywords internal
+init_filter_state_expr <- function(id, title, dataname, expr, disabled) {
+  FilterStateExpr$new(id = id, title = title, dataname = dataname, expr = expr, disabled = disabled)
+}
+
 #' Check that a given range is valid
 #'
 #' @param subinterval (`numeric` or `date`)\cr vector of length 2 to be compared against the full range.
@@ -509,3 +514,5 @@ contain_interval <- function(x, range) {
   x[2] <- Find(function(i) i >= x[2], range, nomatch = max(range))
   x
 }
+
+

@@ -264,7 +264,7 @@ DFFilterStates <- R6::R6Class( # nolint
         excluded_varnames <- toString(dQuote(setdiff(varnames, filterable), q = FALSE))
         state <- slices_which(
           state,
-          sprintf("!varname %%in%% c(%s)", )
+          sprintf("!varname %%in%% c(%s)", excluded_varnames)
         )
         logger::log_warn("filters for columns: { excluded_varnames } excluded from { private$dataname }")
       }
