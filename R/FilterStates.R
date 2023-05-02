@@ -82,7 +82,7 @@ FilterStates <- R6::R6Class( # nolint
       private$data_reactive <- data_reactive
       private$filterable_varnames <- setdiff(colnames(data), excluded_varnames)
       private$count_type <- match.arg(count_type)
-
+      private$state_list <- reactiveVal(list())
       logger::log_trace("Instantiated { class(self)[1] }, dataname: { private$dataname }")
       invisible(self)
     },
@@ -103,14 +103,14 @@ FilterStates <- R6::R6Class( # nolint
     #'
     #' @return `character(1)` the formatted string
     #'
-    format = function(indent) {
-      sprintf(
-        paste(
-          "%sThis is an instance of an abstract class.",
-          "Use child class constructors to instantiate objects."
-        ),
-        paste(rep(" ", indent), collapse = "")
+    format = function(indent = 0) {
+      checkmate::assert_number(indent, finite = TRUE, lower = 0)
+
+      formatted_states <- vapply(
+        private$state_list_get(), function(state) state$format(indent = indent),
+        USE.NAMES = FALSE, FUN.VALUE = character(1)
       )
+      paste(formatted_states, collapse = "\n")
     },
 
     #' @description
@@ -132,13 +132,16 @@ FilterStates <- R6::R6Class( # nolint
     get_call = function(sid = "") {
       # state_list (list) names must be the same as argument of the function
       # for ... list should be unnamed
-      states_list <- private$state_list
+      states_list <- private$state_list()
+      states_list <- list()
+      #args <- lapply(states_list, function(x) x$get_state()$arg)
+      #split(states_list, args)
+
       filter_items <- sapply(
         X = states_list,
         USE.NAMES = TRUE,
         simplify = FALSE,
-        function(state_list) {
-          items <- state_list()
+        function(item) {
           # removing empty filters and filters identified by sid
           nonempty_filter_idx <- vapply(items, function(x) x$is_any_filtered(), logical(1L))
           other_filter_idx <- vapply(items, function(x) !attr(x, "sid") %in% sid, logical(1L))
@@ -313,15 +316,16 @@ FilterStates <- R6::R6Class( # nolint
     # private fields ----
     cards_container_id = character(0),
     card_ids = character(0),
+    count_type = character(0), # specifies how observation numbers are displayed in filter cards,
     data = NULL, # data.frame, MAE, SE or matrix
     data_reactive = NULL, # reactive
     datalabel = character(0),
     dataname = NULL, # because it holds object of class name
+    extract_type = character(0),
     filterable_varnames = character(0),
     ns = NULL, # shiny ns()
     observers = list(), # observers
     state_list = NULL, # list of `reactiveVal`s initialized by init methods of child classes,
-    count_type = character(0), # specifies how observation numbers are displayed in filter cards,
 
     # private methods ----
 
@@ -460,14 +464,13 @@ FilterStates <- R6::R6Class( # nolint
     #
     # @return `list` of `FilterState` objects
     #
-    state_list_get = function(state_list_index, state_id = NULL) {
-      private$validate_state_list_exists(state_list_index)
+    state_list_get = function(state_id = NULL) {
       checkmate::assert_string(state_id, null.ok = TRUE)
 
       if (is.null(state_id)) {
-        private$state_list[[state_list_index]]()
+        private$state_list()
       } else {
-        private$state_list[[state_list_index]]()[[state_id]]
+        private$state_list()[[state_id]]
       }
     },
 
@@ -484,18 +487,16 @@ FilterStates <- R6::R6Class( # nolint
     #
     # @return NULL
     #
-    state_list_push = function(x, state_list_index, state_id) {
+    state_list_push = function(x, state_id) {
       logger::log_trace("{ class(self)[1] } pushing into state_list, dataname: { private$dataname }")
-      private$validate_state_list_exists(state_list_index)
       checkmate::assert_string(state_id)
       checkmate::assert_multi_class(x, c("FilterState", "FilterStateExpr"))
-      attr(x, "sid") <- state_id
       state <- stats::setNames(list(x), state_id)
       new_state_list <- c(
-        shiny::isolate(private$state_list[[state_list_index]]()),
+        shiny::isolate(private$state_list()),
         state
       )
-      shiny::isolate(private$state_list[[state_list_index]](new_state_list))
+      shiny::isolate(private$state_list(new_state_list))
 
       logger::log_trace("{ class(self)[1] } pushed into queue, dataname: { private$dataname }")
       invisible(NULL)
@@ -514,29 +515,18 @@ FilterStates <- R6::R6Class( # nolint
     #
     # @return NULL
     #
-    state_list_remove = function(state_list_index, state_id) {
-      logger::log_trace(
-        "{ class(self)[1] } removing a filter from state_list: { state_list_index }; dataname: { private$dataname }"
-      )
-
-      private$validate_state_list_exists(state_list_index)
-      checkmate::assert_vector(state_id, len = 1)
-      checkmate::assert(
-        checkmate::check_string(state_list_index),
-        checkmate::check_int(state_list_index)
-      )
-
-      new_state_list <- shiny::isolate(private$state_list[[state_list_index]]())
+    state_list_remove = function(state_id) { # todo: state_id as vector
+      logger::log_trace("{ class(self)[1] } removing a filter, state_id: { state_id }")
+      checkmate::assert_character(state_id)
+      new_state_list <- shiny::isolate(private$state_list())
       if (is.element(state_id, names(new_state_list))) {
         new_state_list[[state_id]]$destroy_observers()
         new_state_list[[state_id]] <- NULL
-        shiny::isolate(private$state_list[[state_list_index]](new_state_list))
+        shiny::isolate(private$state_list(new_state_list))
 
-        logger::log_trace(
-          "{ class(self)[1] } removed from state_list: { state_list_index }; dataname: { private$dataname }"
-        )
+        logger::log_trace("{ class(self)[1] } removed a filter, state_id: { state_id }")
       } else {
-        warning(sprintf("\"%s\" not found in state list %s", state_id, state_list_index))
+        warning(sprintf("\"%s\" not found in state list", state_id))
       }
 
       invisible(NULL)
@@ -572,54 +562,44 @@ FilterStates <- R6::R6Class( # nolint
     # @param data (`data.frame`, `matrix` or `DataFrame`)
     # @param data_reactive (`function`)
     #  function having `sid` as argument
-    # @param extract_type (`character(0)` or `chracter(1)`)
     #
     # @return invisible NULL
     #
     set_filter_state_impl = function(state,
-                                     state_list_index,
                                      data,
-                                     data_reactive,
-                                     extract_type = character(0)) {
+                                     data_reactive) {
       checkmate::assert_class(state, "teal_slices")
-      checkmate::assert_scalar(state_list_index)
       checkmate::assert_multi_class(data, c("data.frame", "matrix", "DataFrame"))
       checkmate::assert_function(data_reactive, args = "sid")
-      checkmate::assert_character(extract_type, max.len = 1L)
-      if (length(extract_type) != 0L) {
-        extract_type <- match.arg(extract_type, c("list", "matrix"))
-      }
-
       if (length(state) == 0L) {
         return(invisible(NULL))
       }
 
-      # Modify existing filter states.
-      state_list <- shiny::isolate(private$state_list_get(state_list_index))
-      state_list_ids <- gsub("^[^-]+-([^-])-[^-]", "\\1", names(state_list))
-      slices_for_update <- Filter(
-        function(x) c(x$varname, x$id) %in% state_list_ids,
-        state
-      )
-      lapply(slices_for_update, function(x) {
-        do.call(state_list[[x$varname]]$set_state, list(x))
-      })
+      states_id <- vapply(state, get_teal_slice_id, character(1))
+      state_list <- shiny::isolate(private$state_list_get())
 
-      # Create new filter states.
-      slices_for_create <- Filter(function(x) !isTRUE(x$varname %in% names(state_list)), state)
-      lapply(slices_for_create, function(x) {
-        # objects has random and unique sid attribute
-        # which allows a reactive from below to find a right object in the state_list
-        if (inherits(x, "teal_slice_expr")) {
-          sid <- sprintf("%s-%s-%s", state_list_index, x$id, sample.int(size = 1L, n = .Machine$integer.max))
+      lapply(seq_along(state), function(i) {
+        state_id <- states_id[i]
+
+        if (state_id[i] %in% names(state_list)) {
+          # Modify existing filter states.
+          do.call(state_list[[state_id]], state[[i]])
+
+        } else if (inherits(state[[i]], "teal_slice_expr")) {
+          # create a new FilterStateExpr
           fstate <- init_filter_state_expr(
-            id = x$id, title = x$title, dataname = x$dataname, expr = x$expr, disabled = x$disabled
+            id = state[[i]]$id,
+            title = state[[i]]$title,
+            dataname = state[[i]]$dataname,
+            expr = state[[i]]$expr,
+            disabled = state[[i]]$disabled
           )
-          private$state_list_push(x = fstate, state_list_index = state_list_index, state_id = sid)
+          private$state_list_push(x = fstate, state_id = state_id)
+
         } else {
-          sid <- sprintf("%s-%s-%s", state_list_index, x$varname, sample.int(size = 1L, n = .Machine$integer.max))
+          # create a new FilterState
           arg_list <- list(
-            x = data[, x$varname, drop = TRUE],
+            x = data[, state[[i]]$varname, drop = TRUE],
             # data_reactive is a function which eventually calls get_call(sid).
             # This chain of calls returns column from the data filtered by everything
             # but filter identified by the sid argument. FilterState then get x_reactive
@@ -629,15 +609,14 @@ FilterStates <- R6::R6Class( # nolint
             x_reactive = if (attr(state, "count_type") == "none") {
               reactive(NULL)
             } else {
-              reactive(data_reactive(sid)[, x$varname, drop = TRUE])
+              reactive(data_reactive(state_id)[, state[[i]]$varname, drop = TRUE])
             },
-            extract_type = extract_type
+            extract_type = private$extract_type
           )
-          arg_list <- append(arg_list, x)
+          arg_list <- append(arg_list, state[[i]])
           fstate <- do.call(init_filter_state, arg_list)
-          private$state_list_push(x = fstate, state_list_index = state_list_index, state_id = sid)
+          private$state_list_push(x = fstate, state_id = state_id)
         }
-
       })
 
       invisible(NULL)

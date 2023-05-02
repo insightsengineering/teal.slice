@@ -467,3 +467,16 @@ slices_which <- function(tss, expr) {
   expr <- str2lang(expr)
   Filter(function(x) isTRUE(eval(expr, x)), tss)
 }
+
+
+#' Get hash identifier of `teal_slice`
+#'
+#' Returns hash of `teal_slice` object which uniquely identifies object.
+#' Hash is obtained from fields which determines single filter-state.
+#' @param x (`teal_slice`, `teal_slice_expr`) single `teal_slice` object
+#' @return `character(1)`
+get_teal_slice_id <- function(x) {
+  rlang::hash(
+    x[c("dataname", "datalabel", "arg", "id", "varname")]
+  )
+}

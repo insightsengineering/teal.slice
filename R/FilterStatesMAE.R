@@ -52,9 +52,7 @@ MAEFilterStates <- R6::R6Class( # nolint
       private$keys <- keys
       private$varlabels <- varlabels
       private$filterable_varnames <- setdiff(colnames(SummarizedExperiment::colData(data)), excluded_varnames)
-      private$state_list <- list(
-        y = reactiveVal()
-      )
+      private$extract_type <- "list"
       return(invisible(self))
     },
 
@@ -137,8 +135,7 @@ MAEFilterStates <- R6::R6Class( # nolint
         state = slices_which(state, "target == \"y\""),
         state_list_index = "y",
         data = SummarizedExperiment::colData(private$data),
-        data_reactive = function(sid) SummarizedExperiment::colData(private$data_reactive(sid)),
-        extract_type = "list"
+        data_reactive = function(sid) SummarizedExperiment::colData(private$data_reactive(sid))
       )
 
       logger::log_trace("{ class(self)[1] }$set_filter_state initialized, dataname: { private$dataname }")

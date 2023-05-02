@@ -171,26 +171,6 @@ DFFilterStates <- R6::R6Class( # nolint
       private$varlabels <- varlabels
       private$keys <- keys
       self$set_filterable_varnames(colnames(data))
-      private$state_list <- list(
-        reactiveVal()
-      )
-    },
-
-    #' @description
-    #' Returns a formatted string representing this `FilterStates` object.
-    #'
-    #' @param indent (`numeric(1)`) the number of spaces prepended to each line of the output
-    #'
-    #' @return `character(1)` the formatted string
-    #'
-    format = function(indent = 0) {
-      checkmate::assert_number(indent, finite = TRUE, lower = 0)
-
-      formatted_states <- vapply(
-        private$state_list_get(1L), function(state) state$format(indent = indent),
-        USE.NAMES = FALSE, FUN.VALUE = character(1)
-      )
-      paste(formatted_states, collapse = "\n")
     },
 
     #' @description
@@ -212,13 +192,12 @@ DFFilterStates <- R6::R6Class( # nolint
     #' @return `teal_slices`
     #'
     get_filter_state = function() {
-      slices <- lapply(private$state_list_get(1L), function(x) x$get_state())
+      slices <- lapply(private$state_list_get(), function(x) x$get_state())
       excluded_varnames <- structure(
         list(setdiff(colnames(private$data), private$filterable_varnames)),
         names = private$dataname
       )
       excluded_varnames <- Filter(function(x) !identical(x, character(0)), excluded_varnames)
-
       do.call(filter_settings, c(slices, list(exclude = excluded_varnames, count_type = private$count_type)))
     },
 
@@ -271,7 +250,6 @@ DFFilterStates <- R6::R6Class( # nolint
 
       private$set_filter_state_impl(
         state = state,
-        state_list_index = 1L,
         data = private$data,
         data_reactive = private$data_reactive
       )
@@ -342,14 +320,14 @@ DFFilterStates <- R6::R6Class( # nolint
           added_state_name <- reactiveVal(character(0))
           removed_state_name <- reactiveVal(character(0))
 
-          observeEvent(private$state_list_get(1L), {
-            added_state_name(setdiff(names(private$state_list_get(1L)), names(previous_state())))
-            removed_state_name(setdiff(names(previous_state()), names(private$state_list_get(1L))))
-            previous_state(private$state_list_get(1L))
+          observeEvent(private$state_list_get(), {
+            added_state_name(setdiff(names(private$state_list_get()), names(previous_state())))
+            removed_state_name(setdiff(names(previous_state()), names(private$state_list_get())))
+            previous_state(private$state_list_get())
           })
 
           observeEvent(added_state_name(), ignoreNULL = TRUE, {
-            fstates <- private$state_list_get(1L)
+            fstates <- private$state_list_get()
             html_ids <- private$map_vars_to_html_ids(names(fstates))
             for (fname in added_state_name()) {
               private$insert_filter_state_ui(

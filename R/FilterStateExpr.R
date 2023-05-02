@@ -17,7 +17,6 @@ FilterStateExpr <- R6::R6Class( # nolint
   # public methods ----
   public = list(
     initialize = function(id, title, dataname, expr, disabled) {
-
       private$id <- id
       private$title <- title
       private$dataname <- dataname
@@ -225,3 +224,20 @@ FilterStateExpr <- R6::R6Class( # nolint
     }
   )
 )
+
+
+is_predicate <-  function(x) {
+  is.call(x) && list(x[[1]]) %in% lapply(c(">=", "<=", "==", "<", ">", "%in%", "!="), as.symbol)
+}
+
+get_varnames <- function(x) {
+  if (is_predicate(x)) {
+    if (is.name(x[[2]])) {
+      x[[2]]
+    } else if (is.name(x[[3]])) {
+      x[[3]]
+    }
+  } else {
+    lapply(as.list(x), get_varnames)
+  }
+}

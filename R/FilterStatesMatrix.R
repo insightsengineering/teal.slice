@@ -38,25 +38,8 @@ MatrixFilterStates <- R6::R6Class( # nolint
                           count_type = c("all", "none")) {
       checkmate::assert_function(data_reactive, args = "sid")
       checkmate::assert_matrix(data)
+      private$extract_type <- "matrix"
       super$initialize(data, data_reactive, dataname, datalabel, excluded_varnames, count_type)
-      private$state_list <- list(
-        subset = reactiveVal()
-      )
-    },
-
-    #' @description
-    #' Returns the formatted string representing this `MatrixFilterStates` object.
-    #'
-    #' @param indent (`numeric(1)`) the number of spaces before each line of the representation
-    #' @return `character(1)` the formatted string
-    format = function(indent = 0) {
-      checkmate::assert_number(indent, finite = TRUE, lower = 0)
-
-      formatted_states <- c()
-      for (state in private$state_list_get(state_list_index = "subset")) {
-        formatted_states <- c(formatted_states, state$format(indent = indent))
-      }
-      paste(formatted_states, collapse = "\n")
     },
 
     #' @description
@@ -144,8 +127,7 @@ MatrixFilterStates <- R6::R6Class( # nolint
         state = state,
         state_list_index = "subset",
         data = private$data,
-        data_reactive = private$data_reactive,
-        extract_type = "matrix"
+        data_reactive = private$data_reactive
       )
 
       logger::log_trace("{ class(self)[1] }$set_filter_state initialized, dataname: { private$dataname }")
