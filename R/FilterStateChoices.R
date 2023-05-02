@@ -177,7 +177,7 @@ ChoicesFilterState <- R6::R6Class( # nolint
         private$tzone <- Find(function(x) x != "", attr(as.POSIXlt(x), "tzone"))
       }
 
-      private$set_choices_counts(unname(table(x)))
+      private$set_choices_counts(unname(table(x_factor)))
 
       invisible(self)
     },
