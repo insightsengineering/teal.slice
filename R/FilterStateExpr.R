@@ -91,7 +91,7 @@ FilterStateExpr <- R6::R6Class( # nolint
         id = id,
         function(input, output, session) {
           summary <- private$server_summary("summary")
-          observeEvent(input$enable,
+          private$observers$enable <- observeEvent(input$enable,
             {
               if (isTRUE(input$enable)) {
                 private$enable()
@@ -160,14 +160,25 @@ FilterStateExpr <- R6::R6Class( # nolint
           )
         )
       )
+    },
+    #' @description
+    #' Destroy observers stored in `private$observers`.
+    #'
+    #' @return NULL invisibly
+    #'
+    destroy_observers = function() {
+      lapply(private$observers, function(x) x$destroy())
+      return(invisible(NULL))
     }
   ),
   private = list(
-    id = character(0),
-    title = character(0),
     dataname = character(0),
-    expr = NULL,
     disabled = NULL,
+    expr = NULL,
+    id = character(0),
+    observers = list(),
+    title = character(0),
+
     # Disables `FilterState`
     # `state` is moved to cache and set to `NULL`
     # @return `NULL` invisibly

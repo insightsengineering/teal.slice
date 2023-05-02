@@ -246,7 +246,7 @@ FilterState <- R6::R6Class( # nolint
         function(input, output, session) {
           private$server_summary("summary")
           private$server_inputs("inputs")
-          observeEvent(input$enable,
+          private$observers$enable <- observeEvent(input$enable,
             {
               if (isTRUE(input$enable)) {
                 private$enable()
@@ -360,7 +360,7 @@ FilterState <- R6::R6Class( # nolint
     # other
     is_choice_limited = FALSE, # flag whether number of possible choices was limited when specifying filter
     na_rm = FALSE, # logical(1)
-    observers = NULL, # stores observers
+    observers = list(), # stores observers
     cache = NULL, # cache state when filter disabled so we can later restore
 
     # @description

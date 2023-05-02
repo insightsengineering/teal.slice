@@ -223,11 +223,12 @@ c.teal_slice <- function(...) {
 format.teal_slice <- function(x, show_all = FALSE, ...) {
   name_width <- max(nchar(names(x)))
   format_value <- function(v) {
-    if (is.null(v)) {
+    v <- if (is.null(v)) {
       return("NULL")
-    }
-    if (inherits(v, c("character", "factor"))) {
-      v <- dQuote(v, q = FALSE)
+    } else  if (inherits(v, c("character", "factor"))) {
+      dQuote(v, q = FALSE)
+    } else if (is.language(v)) {
+      deparse1(v)
     }
     v <- paste(v, collapse = " ")
     if (nchar(v) > 30L) {

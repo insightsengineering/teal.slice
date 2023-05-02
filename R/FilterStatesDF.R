@@ -260,33 +260,6 @@ DFFilterStates <- R6::R6Class( # nolint
     },
 
     #' @description
-    #' Remove one or more `FilterState`s from the `state_list` along with their UI elements.
-    #'
-    #' @param state (`teal_slices`)\cr
-    #'   specifying `FilterState` objects to remove;
-    #'   `teal_slice`s may contain only `dataname` and `varname`, other elements are ignored
-    #'
-    #' @return `NULL` invisibly
-    #'
-    remove_filter_state = function(state) {
-      checkmate::assert_class(state, "teal_slices")
-
-      lapply(state, function(x) {
-        logger::log_trace(
-          "{ class(self)[1] }$remove_filter_state removing filter, dataname: { x$dataname }, varname: { x$varname }"
-        )
-
-        private$state_list_remove(state_list_index = 1L, state_id = x$varname)
-
-        logger::log_trace(
-          "{ class(self)[1] }$remove_filter_state removed filter, dataname: { x$dataname }, varname: { x$varname }"
-        )
-      })
-
-      invisible(NULL)
-    },
-
-    #' @description
     #' Set the allowed filterable variables
     #' @param varnames (`character` or `NULL`) The variables which can be filtered
     #'
@@ -328,12 +301,10 @@ DFFilterStates <- R6::R6Class( # nolint
 
           observeEvent(added_state_name(), ignoreNULL = TRUE, {
             fstates <- private$state_list_get()
-            html_ids <- private$map_vars_to_html_ids(names(fstates))
             for (fname in added_state_name()) {
               private$insert_filter_state_ui(
-                id = html_ids[fname],
+                id = fname,
                 filter_state = fstates[[fname]],
-                state_list_index = 1L,
                 state_id = fname
               )
             }
@@ -342,7 +313,7 @@ DFFilterStates <- R6::R6Class( # nolint
 
           observeEvent(removed_state_name(), ignoreNULL = TRUE, {
             for (fname in removed_state_name()) {
-              private$remove_filter_state_ui(1L, fname, .input = input)
+              private$remove_filter_state_ui(fname, .input = input)
             }
             removed_state_name(character(0))
           })

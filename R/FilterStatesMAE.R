@@ -133,39 +133,11 @@ MAEFilterStates <- R6::R6Class( # nolint
 
       private$set_filter_state_impl(
         state = slices_which(state, "target == \"y\""),
-        state_list_index = "y",
         data = SummarizedExperiment::colData(private$data),
         data_reactive = function(sid) SummarizedExperiment::colData(private$data_reactive(sid))
       )
 
       logger::log_trace("{ class(self)[1] }$set_filter_state initialized, dataname: { private$dataname }")
-
-      invisible(NULL)
-    },
-
-    #' @description
-    #' Remove one or more `FilterState`s from the `state_list` along with their corresponding UI elements.
-    #'
-    #' @param state (`teal_slices`)\cr
-    #'   specifying `FilterState` objects to remove;
-    #'   `teal_slice`s may contain only `dataname` and `varname`, other elements are ignored
-    #'
-    #' @return `NULL` invisibly
-    #'
-    remove_filter_state = function(state) {
-      checkmate::assert_class(state, "teal_slices")
-
-      lapply(state, function(x) {
-        logger::log_trace(
-          "{ class(self)[1] }$remove_filter_state removing filter, dataname: { x$dataname }, varname: { x$varname }"
-        )
-
-        private$state_list_remove(state_list_index = "y", state_id = x$varname)
-
-        logger::log_trace(
-          "{ class(self)[1] }$remove_filter_state removed filter, dataname: { x$dataname }, varname: { x$varname }"
-        )
-      })
 
       invisible(NULL)
     },

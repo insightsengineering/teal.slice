@@ -131,20 +131,25 @@ FilterStates <- R6::R6Class( # nolint
     #'
     get_call = function(sid = "") {
       # state_list (list) names must be the same as argument of the function
-      # for ... list should be unnamed
+      # for unnamed arguments state_list should have `arg = NULL`
       states_list <- private$state_list()
-      states_list <- list()
-      #args <- lapply(states_list, function(x) x$get_state()$arg)
-      #split(states_list, args)
+      args <- vapply(
+        states_list,
+        function(x) {
+          arg <- x$get_state()$arg
+          `if`(is.null(arg), "", arg) # converting NULL -> "" to enable tapply.
+        },
+        character(1)
+      )
 
-      filter_items <- sapply(
+      filter_items <- tapply(
         X = states_list,
-        USE.NAMES = TRUE,
+        INDEX = args,
         simplify = FALSE,
-        function(item) {
+        function(items) {
           # removing empty filters and filters identified by sid
           nonempty_filter_idx <- vapply(items, function(x) x$is_any_filtered(), logical(1L))
-          other_filter_idx <- vapply(items, function(x) !attr(x, "sid") %in% sid, logical(1L))
+          other_filter_idx <- !names(items) %in% sid
           filtered_items <- items[nonempty_filter_idx & other_filter_idx]
 
           calls <- lapply(
@@ -196,8 +201,6 @@ FilterStates <- R6::R6Class( # nolint
       "subset"
     },
 
-
-
     #' @description
     #' Gets the number of active `FilterState` objects in this `FilterStates` object.
     #'
@@ -208,7 +211,7 @@ FilterStates <- R6::R6Class( # nolint
     },
 
     #' @description
-    #' Remove one or more `FilterState`s from any `state_list`.
+    #' Remove one or more `FilterState`s from the `state_list` along with their UI elements.
     #'
     #' @param state (`teal_slices`)\cr
     #'   specifying `FilterState` objects to remove;
@@ -217,7 +220,20 @@ FilterStates <- R6::R6Class( # nolint
     #' @return `NULL` invisibly
     #'
     remove_filter_state = function(state) {
-      stop("This variable can not be removed from the filter.")
+      checkmate::assert_class(state, "teal_slices")
+
+      lapply(state, function(x) {
+        state_id <- get_teal_slice_id(x)
+        logger::log_trace(
+          "{ class(self)[1] }$remove_filter_state removing filter, dataname: { x$dataname }; state_id: { state_id }"
+        )
+        private$state_list_remove(state_id = state_id)
+        logger::log_trace(
+          "{ class(self)[1] }$remove_filter_state removed filter, dataname: { x$dataname }; state_id: { state_id }"
+        )
+      })
+
+      invisible(NULL)
     },
 
     #' @description
@@ -345,27 +361,20 @@ FilterStates <- R6::R6Class( # nolint
     # @param filter_state (`named list`)\cr
     #   should contain values of initial selections in the `FilterState`;
     #   `list` names must correspond to column names in `data`
-    # @param state_list_index (`character(1)`, `integer(1)`)\cr
-    #   index on the list in `private$state_list` where filter states are kept
     # @param state_id (`character(1)`)\cr
     #   name of element in a filter state (which is a `reactiveVal` containing a list)
     #
     # @return `moduleServer` function which returns `NULL`
     #
-    insert_filter_state_ui = function(id, filter_state, state_list_index, state_id) {
+    insert_filter_state_ui = function(id, filter_state, state_id) {
       checkmate::assert_multi_class(filter_state, c("FilterState", "FilterStateExpr"))
-      checkmate::assert(
-        checkmate::check_int(state_list_index),
-        checkmate::check_character(state_list_index, len = 1),
-        combine = "or"
-      )
       checkmate::assert_character(state_id, len = 1)
       moduleServer(
         id = id,
         function(input, output, session) {
           logger::log_trace(
             sprintf(
-              "%s$insert_filter_state_ui, adding FilterState UI of variable %s, dataname: %s",
+              "%s$insert_filter_state_ui, adding FilterState UI of state_id: %s; dataname: %s",
               class(self)[1],
               state_id,
               private$dataname
@@ -379,8 +388,7 @@ FilterStates <- R6::R6Class( # nolint
           #   - remove button in FilteredData module
           #   - API call remove_filter_state
           card_id <- session$ns("card")
-          state_list_id <- sprintf("%s-%s", state_list_index, state_id)
-          private$card_ids[state_list_id] <- card_id
+          private$card_ids[state_id] <- card_id
 
           insertUI(
             selector = sprintf("#%s", private$cards_container_id),
@@ -390,20 +398,20 @@ FilterStates <- R6::R6Class( # nolint
           # signal sent from filter_state when it is marked for removal
           remove_fs <- filter_state$server(id = "card")
 
-          private$observers[[state_list_id]] <- observeEvent(
+          private$observers[[state_id]] <- observeEvent(
             ignoreInit = TRUE,
             ignoreNULL = TRUE,
             eventExpr = remove_fs(),
             handlerExpr = {
               logger::log_trace(paste(
                 "{ class(self)[1] }$insert_filter_state_ui@1",
-                "removing FilterState from state_list '{ state_list_index }',",
+                "removing FilterState state_id: '{ state_id }',",
                 "dataname: { private$dataname }"
               ))
-              private$state_list_remove(state_list_index, state_id)
+              private$state_list_remove(state_id)
               logger::log_trace(paste(
                 "{ class(self)[1] }$insert_filter_state_ui@1",
-                "removed FilterState from state_list '{ state_list_index }',",
+                "removed FilterState, state_id: '{ state_id }',",
                 "dataname: { private$dataname }"
               ))
             }
@@ -411,7 +419,7 @@ FilterStates <- R6::R6Class( # nolint
 
           logger::log_trace(
             sprintf(
-              "%s$insert_filter_state_ui, added FilterState UI of variable %s, dataname: %s",
+              "%s$insert_filter_state_ui, added FilterState UI of state_id: %s; dataname: %s",
               class(self)[1],
               state_id,
               private$dataname
@@ -426,18 +434,17 @@ FilterStates <- R6::R6Class( # nolint
     # `observeEvent` for remove-filter-state is set and also from `FilteredDataset`
     # level, where shiny-session-namespace is different. That is why it's important
     # to remove shiny elements from anywhere. In `add_filter_state` `session$ns(NULL)`
-    # is equivalent to `private$ns(state_list_index)`.
+    # is equivalent to `private$ns(state_id)`.
     # In addition, an unused reactive is being removed from input:
     # method searches input for the unique matches with the filter name
     # and then removes objects constructed with current card id + filter name.
     #
-    remove_filter_state_ui = function(state_list_index, state_id, .input) {
-      state_list_id <- sprintf("%s-%s", state_list_index, state_id)
-      removeUI(selector = sprintf("#%s", private$card_ids[state_list_id]))
-      private$card_ids <- private$card_ids[names(private$card_ids) != state_list_id]
-      if (length(private$observers[[state_list_id]]) > 0) {
-        private$observers[[state_list_id]]$destroy()
-        private$observers[[state_list_id]] <- NULL
+    remove_filter_state_ui = function(state_id, .input) {
+      removeUI(selector = sprintf("#%s", private$card_ids[state_id]))
+      private$card_ids <- private$card_ids[names(private$card_ids) != state_id]
+      if (length(private$observers[[state_id]]) > 0) {
+        private$observers[[state_id]]$destroy()
+        private$observers[[state_id]] <- NULL
       }
       # Remove unused reactive from shiny input (leftover of removeUI).
       # This default behavior may change in the future, making this part obsolete.
@@ -457,8 +464,6 @@ FilterStates <- R6::R6Class( # nolint
     # @description
     # Returns a list of `FilterState` objects stored in this `FilterStates`.
     #
-    # @param state_list_index (`character(1)`, `integer(1)`)\cr
-    #   index on the list in `private$state_list` where filter states are kept
     # @param state_id (`character(1)`)\cr
     #   name of element in a filter state (which is a `reactiveVal` containing a list)
     #
@@ -480,8 +485,6 @@ FilterStates <- R6::R6Class( # nolint
     #
     # @param x (`FilterState`)\cr
     #   object to be added to filter state list
-    # @param state_list_index (`character(1)`, `integer(1)`)\cr
-    #   index on the list in `private$state_list` where filter states are kept
     # @param state_id (`character(1)`)\cr
     #   name of element in a filter state (which is a `reactiveVal` containing a list)
     #
@@ -508,8 +511,6 @@ FilterStates <- R6::R6Class( # nolint
     # * UI card created for this filter
     # * observers tracking the selection and remove button
     #
-    # @param state_list_index (`character(1)`, `integer(1)`)\cr
-    #   index on the list in `private$state_list` where filter states are kept
     # @param state_id (`character`)\cr
     #   names of element in a filter state (which is a `reactiveVal` containing a list)
     #
@@ -540,11 +541,9 @@ FilterStates <- R6::R6Class( # nolint
     state_list_empty = function() {
       logger::log_trace("{ class(self)[1] }$state_list_empty removing all filters for dataname: { private$dataname }")
 
-      for (state_list_index in seq_along(private$state_list)) {
-        state_list_i <- shiny::isolate(private$state_list[[state_list_index]]())
-        for (state_id in names(state_list_i)) {
-          private$state_list_remove(state_list_index, state_id)
-        }
+      state_list <- shiny::isolate(private$state_list())
+      for (state_id in names(state_list)) {
+        private$state_list_remove(state_id)
       }
 
       logger::log_trace("{ class(self)[1] }$state_list_empty removed all filters for dataname: { private$dataname }")
@@ -554,11 +553,9 @@ FilterStates <- R6::R6Class( # nolint
     # @description
     # Set filter state
     #
-    # Utility method for `set_filter_state` to create or modify `FilterState` from a single
-    #  `state_list_index`.
+    # Utility method for `set_filter_state` to create or modify `FilterState` using a single
+    #  `teal_slice`.
     # @param state (`teal_slices`)
-    # @param state_list_index (`vector(1)`)
-    #  index of the `state_list`
     # @param data (`data.frame`, `matrix` or `DataFrame`)
     # @param data_reactive (`function`)
     #  function having `sid` as argument
@@ -620,44 +617,6 @@ FilterStates <- R6::R6Class( # nolint
       })
 
       invisible(NULL)
-    },
-
-    # Checks if the state_list of the given index was initialized in this `FilterStates`
-    # @param state_list_index (character or integer)
-    validate_state_list_exists = function(state_list_index) {
-      checkmate::assert(
-        checkmate::check_string(state_list_index),
-        checkmate::check_int(state_list_index)
-      )
-      if (
-        !(
-          is.numeric(state_list_index) &&
-            all(state_list_index <= length(private$state_list) && state_list_index > 0) ||
-            is.character(state_list_index) && all(state_list_index %in% names(private$state_list))
-        )
-      ) {
-        stop(
-          paste(
-            "Filter state list",
-            state_list_index,
-            "has not been initialized in FilterStates object belonging to the dataset",
-            private$datalabel
-          )
-        )
-      }
-    },
-
-    # Maps the array of strings to sanitized unique HTML ids.
-    # @param keys `character` the array of strings
-    # @param prefix `character(1)` text to prefix id. Needed in case of multiple
-    #  state_list objects where keys (variables) might be duplicated across state_lists
-    # @return `list` the mapping
-    map_vars_to_html_ids = function(keys, prefix = "") {
-      checkmate::assert_character(keys, null.ok = TRUE)
-      checkmate::assert_character(prefix, len = 1)
-      sanitized_values <- make.unique(gsub("[^[:alnum:]]", perl = TRUE, replacement = "", x = keys))
-      sanitized_values <- paste(prefix, "var", sanitized_values, sep = "_")
-      stats::setNames(object = sanitized_values, nm = keys)
     }
   )
 )

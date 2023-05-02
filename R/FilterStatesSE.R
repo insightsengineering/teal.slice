@@ -212,7 +212,6 @@ SEFilterStates <- R6::R6Class( # nolint
               private$insert_filter_state_ui(
                 id = html_ids[fname],
                 filter_state = fstates[[fname]],
-                state_list_index = "subset",
                 state_id = fname
               )
             }
@@ -249,7 +248,6 @@ SEFilterStates <- R6::R6Class( # nolint
               private$insert_filter_state_ui(
                 id = html_ids[fname],
                 filter_state = fstates[[fname]],
-                state_list_index = "select",
                 state_id = fname
               )
             }
