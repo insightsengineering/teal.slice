@@ -41,7 +41,7 @@ MAEFilterStates <- R6::R6Class( # nolint
       }
       checkmate::assert_function(data_reactive, args = "sid")
       checkmate::assert_class(data, "MultiAssayExperiment")
-      data <- colData(data)
+      data <- SummarizedExperiment::colData(data)
       data_reactive <- function(sid = character(0)) SummarizedExperiment::colData(data_reactive())
       super$initialize(data, data_reactive, dataname, datalabel)
       private$keys <- keys
@@ -65,26 +65,6 @@ MAEFilterStates <- R6::R6Class( # nolint
         }
         paste(formatted_states, collapse = "\n")
       }
-    },
-
-    #' @description
-    #' Set filter state
-    #'
-    #' @param state (`teal_slices`)\cr
-    #'    `teal_slice` objects should contain the field `arg = "y"`
-    #'
-    #' @return `NULL` invisibly
-    #'
-    set_filter_state = function(state) {
-      logger::log_trace("{ class(self)[1] }$set_filter_state initializing, dataname: { private$dataname }")
-      checkmate::assert_class(state, "teal_slices")
-      lapply(state, function(x) checkmate::assert_true(x$arg == "y", .var.name = "teal_slice"))
-
-      super$set_filter_state(state)
-
-      logger::log_trace("{ class(self)[1] }$set_filter_state initialized, dataname: { private$dataname }")
-
-      invisible(NULL)
     },
 
     # shiny modules ----
@@ -114,107 +94,6 @@ MAEFilterStates <- R6::R6Class( # nolint
           )
         )
       }
-    },
-
-    #' @description
-    #' Shiny server module to add filter variable.
-    #'
-    #' Module controls available choices to select as a filter variable.
-    #' Selected filter variable is being removed from available choices.
-    #' Removed filter variable gets back to available choices.
-    #'
-    #' @param id (`character(1)`)\cr
-    #'   an ID string that corresponds with the ID used to call the module's UI function.
-    #' @return `moduleServer` function which returns `NULL`
-    srv_add = function(id) {
-      data <- private$data
-
-      moduleServer(
-        id = id,
-        function(input, output, session) {
-          logger::log_trace("MAEFilterState$srv_add initializing, dataname: { private$dataname }")
-
-          # available choices to display
-          avail_column_choices <- reactive({
-            vars_include <- private$get_filterable_varnames()
-            active_filter_vars <- slices_field(self$get_filter_state(), "varname")
-            choices <- setdiff(vars_include, active_filter_vars)
-            varlabels <- vapply(
-              colnames(data),
-              FUN = function(x) {
-                label <- attr(data[[x]], "label")
-                if (is.null(label)) {
-                  x
-                } else {
-                  label
-                }
-              },
-              FUN.VALUE = character(1)
-            )
-            data_choices_labeled(
-              data = data,
-              choices = choices,
-              varlabels = varlabels,
-              keys = private$keys
-            )
-          })
-          observeEvent(
-            avail_column_choices(),
-            ignoreNULL = TRUE,
-            handlerExpr = {
-              logger::log_trace(paste(
-                "MAEFilterStates$srv_add@1 updating available column choices,",
-                "dataname: { private$dataname }"
-              ))
-              if (is.null(avail_column_choices())) {
-                shinyjs::hide("var_to_add")
-              } else {
-                shinyjs::show("var_to_add")
-              }
-              teal.widgets::updateOptionalSelectInput(
-                session,
-                "var_to_add",
-                choices = avail_column_choices()
-              )
-              logger::log_trace(paste(
-                "MAEFilterStates$srv_add@1 updated available column choices,",
-                "dataname: { private$dataname }"
-              ))
-            }
-          )
-
-          observeEvent(
-            eventExpr = input$var_to_add,
-            handlerExpr = {
-              logger::log_trace(
-                sprintf(
-                  "MAEFilterStates$srv_add@2 adding FilterState of variable %s, dataname: %s",
-                  deparse1(input$var_to_add),
-                  private$dataname
-                )
-              )
-
-              varname <- input$var_to_add
-              self$set_filter_state(filter_settings(
-                filter_var(dataname = private$dataname, varname = varname, datalabel = "subjects")
-              ))
-
-              logger::log_trace(
-                sprintf(
-                  "MAEFilterStates$srv_add@2 added FilterState of variable %s, dataname: %s",
-                  deparse1(varname),
-                  private$dataname
-                )
-              )
-            }
-          )
-
-          logger::log_trace(
-            "MAEFilterState$srv_add initialized, dataname: { private$dataname }"
-          )
-          NULL
-        }
-      )
     }
   ),
 

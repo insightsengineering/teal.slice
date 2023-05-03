@@ -19,7 +19,7 @@
 #'
 #' @examples
 #' library(shiny)
-#' filter_states <- teal.slice:::DFFilterStates$new(
+#' filter_states <- teal.slice:::FilterStates$new(
 #'   data = data.frame(x = 1:2, sex = c("F", "M")),
 #'   dataname = "data",
 #'   varlabels = c(x = "x variable", sex = "Sex"),
@@ -97,6 +97,7 @@ FilterStates <- R6::R6Class( # nolint
     #' @return `character(1)` the formatted string
     #'
     format = function(indent = 0) {
+      # todo: format should be based on get_filter_state
       checkmate::assert_number(indent, finite = TRUE, lower = 0)
 
       formatted_states <- vapply(
@@ -204,15 +205,6 @@ FilterStates <- R6::R6Class( # nolint
     #' @param ... additional arguments to this method
     print = function(...) {
       cat(shiny::isolate(self$format()), "\n")
-    },
-
-    #' @description
-    #' Gets the number of active `FilterState` objects in this `FilterStates` object.
-    #'
-    #' @return `integer(1)`
-    #'
-    get_filter_count = function() {
-      length(self$get_filter_state())
     },
 
     #' @description
@@ -351,12 +343,12 @@ FilterStates <- R6::R6Class( # nolint
         tags$div(
           id = private$cards_container_id,
           class = "accordion",
-          `data-label` = ifelse(private$datalabel == "", "", (paste0("> ", private$datalabel)))
+          `data-label` = ifelse(identical(private$datalabel, character(0)), "", paste0("> ", private$datalabel))
         )
       )
     },
 
-        #' @description
+    #' @description
     #' Shiny server module.
     #'
     #' @param id (`character(1)`)\cr
@@ -368,6 +360,7 @@ FilterStates <- R6::R6Class( # nolint
       moduleServer(
         id = id,
         function(input, output, session) {
+          logger::log_trace("FilterStates$srv_add initializing, dataname: { private$dataname }")
           previous_state <- reactiveVal(character(0))
           added_state_name <- reactiveVal(character(0))
           removed_state_name <- reactiveVal(character(0))
@@ -399,37 +392,135 @@ FilterStates <- R6::R6Class( # nolint
             }
             removed_state_name(character(0))
           })
+          logger::log_trace("FilterStates$srv_add initialized, dataname: { private$dataname }")
           NULL
         }
       )
     },
 
     #' @description
-    #' Shiny module UI that adds a filter variable.
+    #' Shiny UI module to add filter variable.
     #'
     #' @param id (`character(1)`)\cr
-    #'   shiny element (module instance) id
+    #'  shiny element (module instance) id
     #'
-    #' @param data (`data.frame`, `MultiAssayExperiment`, `SummarizedExperiment`, `matrix`)
-    #'   object which columns are used to choose filter variables.
     #' @return `shiny.tag`
     #'
-    ui_add = function(id, data) {
-      div("This object cannot be filtered")
+    ui_add = function(id) {
+      checkmate::assert_string(id)
+      data <- private$data
+
+      ns <- NS(id)
+
+      if (ncol(data) == 0) {
+        div("no sample variables available")
+      } else if (nrow(data) == 0) {
+        div("no samples available")
+      } else {
+        div(
+          teal.widgets::optionalSelectInput(
+            ns("var_to_add"),
+            choices = NULL,
+            options = shinyWidgets::pickerOptions(
+              liveSearch = TRUE,
+              noneSelectedText = "Select variable to filter"
+            )
+          )
+        )
+      }
     },
 
     #' @description
-    #' Shiny module server that adds a filter variable.
+    #' Shiny server module to add filter variable.
+    #'
+    #' This module controls available choices to select as a filter variable.
+    #' Once selected, a variable is removed from available choices.
+    #' Removing a filter variable adds it back to available choices.
     #'
     #' @param id (`character(1)`)\cr
-    #'   shiny module instance id
+    #'   an ID string that corresponds with the ID used to call the module's UI function.
     #'
     #' @return `moduleServer` function which returns `NULL`
-    #'
     srv_add = function(id) {
       moduleServer(
         id = id,
         function(input, output, session) {
+          logger::log_trace("FilterStates$srv_add initializing, dataname: { private$dataname }")
+
+          # available choices to display
+          avail_column_choices <- reactive({
+            data <- private$data
+            vars_include <- private$get_filterable_varnames()
+            active_filter_vars <- slices_field(self$get_filter_state(), "varname")
+            choices <- setdiff(vars_include, active_filter_vars)
+            varlabels <- vapply(
+              colnames(data),
+              FUN = function(x) {
+                label <- attr(data[[x]], "label")
+                if (is.null(label)) {
+                  x
+                } else {
+                  label
+                }
+              },
+              FUN.VALUE = character(1)
+            )
+            data_choices_labeled(
+              data = data,
+              choices = choices,
+              varlabels = varlabels,
+              keys = private$keys
+            )
+          })
+          observeEvent(
+            avail_column_choices(),
+            ignoreNULL = TRUE,
+            handlerExpr = {
+              logger::log_trace(
+                "FilterStates$srv_add@1 updating available column choices, dataname: { private$dataname }"
+              )
+              if (is.null(avail_column_choices())) {
+                shinyjs::hide("var_to_add")
+              } else {
+                shinyjs::show("var_to_add")
+              }
+              teal.widgets::updateOptionalSelectInput(
+                session,
+                "var_to_add",
+                choices = avail_column_choices()
+              )
+              logger::log_trace(
+                "FilterStates$srv_add@1 updated available column choices, dataname: { private$dataname }"
+              )
+            }
+          )
+
+          observeEvent(
+            eventExpr = input$var_to_add,
+            handlerExpr = {
+              logger::log_trace(
+                sprintf(
+                  "FilterStates$srv_add@2 adding FilterState of variable %s, dataname: %s",
+                  input$var_to_add,
+                  private$dataname
+                )
+              )
+              self$set_filter_state(
+                filter_settings(
+                  filter_var(dataname = private$dataname, varname = input$var_to_add, datalabel = private$datalabel)
+                )
+              )
+              logger::log_trace(
+                sprintf(
+                  "FilterStates$srv_add@2 added FilterState of variable %s, dataname: %s",
+                  input$var_to_add,
+                  private$dataname
+                )
+              )
+            }
+          )
+
+          logger::log_trace("FilterStates$srv_add initialized, dataname: { private$dataname }")
           NULL
         }
       )

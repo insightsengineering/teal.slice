@@ -464,6 +464,7 @@ FilteredData <- R6::R6Class( # nolint
     #' cat(shiny::isolate(datasets$get_formatted_filter_state()))
     #'
     get_formatted_filter_state = function() {
+      # todo: this should be removed as teal_slices has own format method
       out <-
         unlist(sapply(
           private$get_filtered_dataset(),

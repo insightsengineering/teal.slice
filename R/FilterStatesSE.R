@@ -47,18 +47,18 @@ SEFilterStates <- R6::R6Class( # nolint
       checkmate::assert_number(indent, finite = TRUE, lower = 0)
 
       formatted_states <- c()
-      return("")
-      private$state_list_get()
-      if (!is.null(private$state_list_get(state_list_index = "subset"))) {
+      subset_states <- Filter(function(x) x$arg == "subset", private$state_list_get())
+      if (!is.null(subset_states)) {
         formatted_states <- c(formatted_states, sprintf("%sSubsetting:", format("", width = indent * 2)))
-        for (state in private$state_list_get(state_list_index = "subset")) {
+        for (state in subset_states) {
           formatted_states <- c(formatted_states, state$format(indent = indent * 2))
         }
       }
 
-      if (!is.null(private$state_list_get(state_list_index = "select"))) {
+      select_states <- Filter(function(x) x$arg == "select", private$state_list_get())
+      if (!is.null(select_states)) {
         formatted_states <- c(formatted_states, sprintf("%sSelecting:", format("", width = indent * 2)))
-        for (state in private$state_list_get(state_list_index = "select")) {
+        for (state in select_states) {
           formatted_states <- c(formatted_states, state$format(indent = indent * 2))
         }
       }
@@ -72,7 +72,7 @@ SEFilterStates <- R6::R6Class( # nolint
       }
     },
 
-        #' @description
+    #' @description
     #' Set filter state
     #'
     #' @param state (`teal_slices`)\cr
@@ -83,8 +83,9 @@ SEFilterStates <- R6::R6Class( # nolint
     set_filter_state = function(state) {
       logger::log_trace("{ class(self)[1] }$set_filter_state initializing, dataname: { private$dataname }")
       checkmate::assert_class(state, "teal_slices")
-      lapply(state, function(x) checkmate::assert_true(x$arg %in% c("subset", "select"), .var.name = "teal_slice"))
-
+      lapply(state, function(x) {
+        checkmate::assert_choice(x$arg, choices = c("subset", "select"), null.ok = TRUE, .var.name = "teal_slice$arg")
+      })
       count_type <- attr(state, "count_type")
       if (length(count_type)) {
         private$count_type <- count_type
@@ -177,15 +178,13 @@ SEFilterStates <- R6::R6Class( # nolint
       moduleServer(
         id = id,
         function(input, output, session) {
-          logger::log_trace(
-            "SEFilterState$srv_add initializing, dataname: { private$dataname }"
-          )
+          logger::log_trace("SEFilterState$srv_add initializing, dataname: { private$dataname }")
           row_data <- SummarizedExperiment::rowData(data)
           col_data <- SummarizedExperiment::colData(data)
-          return(NULL)
+
           # available choices to display
           avail_row_data_choices <- reactive({
-            slices_for_subset <- slices_which(self$get_filter_state(), "arg == \"subset\"")
+            slices_for_subset <- Filter(function(x) x$arg == "subset", self$get_filter_state())
             active_filter_row_vars <- slices_field(slices_for_subset, "varname")
 
             choices <- setdiff(
@@ -201,7 +200,7 @@ SEFilterStates <- R6::R6Class( # nolint
             )
           })
           avail_col_data_choices <- reactive({
-            slices_for_select <- slices_which(self$get_filter_state(), "arg == \"select\"")
+            slices_for_select <- Filter(function(x) x$arg == "select", self$get_filter_state())
             active_filter_col_vars <- slices_field(slices_for_select, "varname")
 
             choices <- setdiff(
@@ -279,7 +278,6 @@ SEFilterStates <- R6::R6Class( # nolint
                 )
               )
               varname <- input$col_to_add
-              # self$set_filter_state(list(select = setNames(list(list()), varname)))
               self$set_filter_state(filter_settings(filter_var(private$dataname, varname, arg = "select")))
 
               logger::log_trace(
@@ -316,9 +314,7 @@ SEFilterStates <- R6::R6Class( # nolint
             }
           )
 
-          logger::log_trace(
-            "SEFilterState$srv_add initialized, dataname: { private$dataname }"
-          )
+          logger::log_trace("SEFilterState$srv_add initialized, dataname: { private$dataname }")
           NULL
         }
       )

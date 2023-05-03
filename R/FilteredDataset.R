@@ -58,7 +58,6 @@ FilteredDataset <- R6::R6Class( # nolint
       invisible(self)
     },
 
-
     #' @description
     #' Returns a string representation of the filter state in this `FilteredDataset`.
     #'
@@ -262,7 +261,7 @@ FilteredDataset <- R6::R6Class( # nolint
               lapply(
                 names(private$get_filter_states()),
                 function(x) {
-                  tagList(private$get_filter_states(id = x)$ui_active(id = ns(x)))
+                  tagList(private$get_filter_states()[[x]]$ui_active(id = ns(x)))
                 }
               )
             )
@@ -296,7 +295,7 @@ FilteredDataset <- R6::R6Class( # nolint
           lapply(
             names(private$get_filter_states()),
             function(x) {
-              private$get_filter_states(id = x)$srv_active(id = x)
+              private$get_filter_states()[[x]]$srv_active(id = x)
             }
           )
 
@@ -341,15 +340,32 @@ FilteredDataset <- R6::R6Class( # nolint
     #' @description
     #' Server module to add filter variable for this dataset
     #'
-    #' Server module to add filter variable for this dataset
+    #' Server module to add filter variable for this dataset.
+    #' For this class `srv_add` calls multiple modules
+    #' of the same name from `FilterStates` as `MAEFilteredDataset`
+    #' contains one `FilterStates` object for `colData` and one for each
+    #' experiment.
+    #'
     #' @param id (`character(1)`)\cr
     #'   an ID string that corresponds with the ID used to call the module's UI function.
-    #' @return `moduleServer` function.
+    #'
+    #' @return `moduleServer` function which returns `NULL`
+    #'
     srv_add = function(id) {
       moduleServer(
         id = id,
         function(input, output, session) {
-          stop("Pure virtual method")
+          logger::log_trace("MAEFilteredDataset$srv_add initializing, dataname: { deparse1(self$get_dataname()) }")
+          elements <- private$get_filter_states()
+          element_names <- names(private$get_filter_states())
+          lapply(
+            element_names,
+            function(elem_name) {
+              elements[[elem_name]]$srv_add(elem_name)
+            }
+          )
+          logger::log_trace("MAEFilteredDataset$srv_add initialized, dataname: { deparse1(self$get_dataname()) }")
+          NULL
         }
       )
     }
@@ -381,12 +397,8 @@ FilteredDataset <- R6::R6Class( # nolint
     # @param id (`character(1)`, `character(0)`)\cr
     #   the id of the `private$filter_states` list element where `FilterStates` is kept.
     # @return `FilterStates` or `list` of `FilterStates` objects.
-    get_filter_states = function(id = character(0)) {
-      if (length(id) == 0) {
-        private$filter_states
-      } else {
-        private$filter_states[[id]]
-      }
+    get_filter_states = function() {
+      private$filter_states
     }
   )
 )
