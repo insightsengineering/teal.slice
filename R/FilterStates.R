@@ -396,7 +396,6 @@ FilterStates <- R6::R6Class( # nolint
         setdiff(supported_varnames, private$exclude_varnames)
       }
     },
-
     get_dataname_prefixed = function() {
       private$dataname
     },

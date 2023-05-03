@@ -387,7 +387,7 @@ app <- shinyApp(
       states <- get_filter_state(datasets)
       if (!is.null(states$iris$Species)) {
         remove_filter_state(
-          datasets, 
+          datasets,
           filter_settings(
             filter_var(dataname = "iris", varname = "Species")
           )
