@@ -74,6 +74,7 @@ FilterStates <- R6::R6Class( # nolint
       private$datalabel <- datalabel
       private$data <- data
       private$data_reactive <- data_reactive
+      private$state_list <- reactiveVal()
 
       logger::log_trace("Instantiated { class(self)[1] }, dataname: { private$dataname }")
       invisible(self)
@@ -122,11 +123,13 @@ FilterStates <- R6::R6Class( # nolint
     #' @return `call` or `NULL`
     #'
     get_call = function(sid = "") {
-      logger::log_trace("FilterStates$get_call initialized")
+      logger::log_trace("FilterStates$get_call initializing")
 
-      # state_list (list) names must be the same as argument of the function
-      # for unnamed arguments state_list should have `arg = NULL`
-      states_list <- private$state_list()
+      # `arg` must be the same as argument of the function where
+      # predicate is passed to.
+      # For unnamed arguments state_list should have `arg = NULL`
+      states_list <- private$state_list_get()
+      if (length(states_list) == 0) return(NULL)
       args <- vapply(
         states_list,
         function(x) {
@@ -239,13 +242,10 @@ FilterStates <- R6::R6Class( # nolint
     #' @return `list` containing `list` per `FilterState` in the `state_list`
     #'
     get_filter_state = function() {
-      slices <- unlist(
-        lapply(private$state_list, function(slot) {
-          unname(lapply(slot(), function(x) x$get_state()))
-        }),
-        recursive = FALSE,
-        use.names = FALSE
+      logger::log_trace(
+        "{ class(self)[1] }$get_filter_state initializing for dataname: { private$dataname }; states number: { length(private$state_list()) }"
       )
+      slices <- unname(lapply(private$state_list(), function(x) x$get_state()))
       fs <- do.call(filter_settings, c(slices, list(count_type = private$count_type)))
 
       include_varnames <- private$include_varnames
@@ -351,13 +351,14 @@ FilterStates <- R6::R6Class( # nolint
     # private fields ----
     cards_container_id = character(0),
     card_ids = character(0),
-    count_type = character(0), # specifies how observation numbers are displayed in filter cards,
+    count_type = "all", # specifies how observation numbers are displayed in filter cards,
     data = NULL, # data.frame, MAE, SE or matrix
     data_reactive = NULL, # reactive
     datalabel = character(0),
     dataname = NULL, # because it holds object of class name
-    include_varnames = character(0), # holds column names
     exclude_varnames = character(0), # holds column names
+    include_varnames = character(0), # holds column names
+    extract_type = character(0),
     ns = NULL, # shiny ns()
     observers = list(), # observers
     state_list = NULL, # list of `reactiveVal`s initialized by init methods of child classes,
@@ -648,10 +649,9 @@ FilterStates <- R6::R6Class( # nolint
 
       lapply(seq_along(state), function(i) {
         state_id <- states_id[i]
-
-        if (state_id[i] %in% names(state_list)) {
+        if (state_id %in% names(state_list)) {
           # Modify existing filter states.
-          do.call(state_list[[state_id]], state[[i]])
+          state_list[[state_id]]$set_state(state[[i]])
 
         } else if (inherits(state[[i]], "teal_slice_expr")) {
           # create a new FilterStateExpr
@@ -674,7 +674,7 @@ FilterStates <- R6::R6Class( # nolint
             # and this no longer needs to be a function to pass sid. reactive in the FilterState
             # is also beneficial as it can be cached and retriger filter counts only if
             # returned vector is different.
-            x_reactive = if (attr(state, "count_type") == "none") {
+            x_reactive = if (private$count_type == "none") {
               reactive(NULL)
             } else {
               reactive(data_reactive(state_id)[, state[[i]]$varname, drop = TRUE])

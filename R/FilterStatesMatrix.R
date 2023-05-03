@@ -234,5 +234,8 @@ MatrixFilterStates <- R6::R6Class( # nolint
         }
       )
     }
+  ),
+  private = list(
+    extract_type = "matrix"
   )
 )

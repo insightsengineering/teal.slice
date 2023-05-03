@@ -71,44 +71,6 @@ SEFilterStates <- R6::R6Class( # nolint
     },
 
     #' @description
-    #' Set filter state
-    #'
-    #' @param state (`teal_slices`)\cr
-    #'   `teal_slice` objects targeting `rowData(data)` should contain the field `target = "subset"`\cr
-    #'   `teal_slice` objects targeting `colData(data)` should contain the field `target = "select"`
-    #'
-    #' @return `NULL` invisibly
-    #'
-    set_filter_state = function(state) {
-      checkmate::assert_class(state, "teal_slices")
-      lapply(state, function(x) {
-        checkmate::assert_true(x$dataname == private$dataname, .var.name = "dataname matches private$dataname")
-      })
-
-      logger::log_trace("{ class(self)[1] }$set_filter_state initializing, dataname: { private$dataname }")
-
-      count_type <- attr(state, "count_type")
-      if (length(count_type)) {
-        private$count_type <- count_type
-      }
-
-      private$set_filter_state_impl(
-        state = slices_which(state, "target == \"subset\""),
-        data = SummarizedExperiment::rowData(private$data),
-        data_reactive = function(sid) SummarizedExperiment::rowData(private$data_reactive(sid))
-      )
-      private$set_filter_state_impl(
-        state = slices_which(state, "target == \"select\""),
-        data = SummarizedExperiment::colData(private$data),
-        data_reactive = function(sid) SummarizedExperiment::colData(private$data_reactive(sid))
-      )
-
-      logger::log_trace("{ class(self)[1] }$set_filter_state initialized, dataname: { private$dataname }")
-
-      invisible(NULL)
-    },
-
-    #' @description
     #' Remove one or more `FilterState`s from `state_list`s along with their corresponding UI elements.
     #'
     #' @param state (`teal_slices`)\cr

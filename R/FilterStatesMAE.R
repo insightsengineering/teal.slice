@@ -304,7 +304,8 @@ MAEFilterStates <- R6::R6Class( # nolint
   # private fields ----
 
   private = list(
-    varlabels = character(0),
-    keys = character(0)
+    extract_type = "list",
+    keys = character(0),
+    varlabels = character(0)
   )
 )
