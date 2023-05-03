@@ -444,7 +444,6 @@ testthat::test_that("get_data of the child is dependent on the ancestor filter",
   )
 })
 
-
 # get_filter_state ----
 testthat::test_that("get_filter_state returns `teal_slices` with features identical to those in input, adds format", {
   datasets <- FilteredData$new(
@@ -455,9 +454,24 @@ testthat::test_that("get_filter_state returns `teal_slices` with features identi
   )
 
   fs <- filter_settings(
-    filter_var(dataname = "iris", varname = "Sepal.Length", selected = c(5.1, 6.4), keep_na = FALSE, keep_inf = FALSE),
-    filter_var(dataname = "iris", varname = "Species", selected = c("setosa", "versicolor"), keep_na = FALSE),
-    filter_var(dataname = "mtcars", varname = "cyl", selected = c("4", "6"), keep_na = FALSE, keep_inf = FALSE)
+    filter_var(
+      dataname = "iris", varname = "Sepal.Length",
+      choices = c(4.3, 7.9), selected = c(5.1, 6.4),
+      keep_na = FALSE, keep_inf = FALSE
+    ),
+    filter_var(
+      dataname = "iris", varname = "Species",
+      choices = c("setosa", "versicolor", "virginica"), selected = c("setosa", "versicolor"),
+      keep_na = FALSE
+    ),
+    filter_var(
+      dataname = "mtcars", varname = "cyl",
+      choices = c("4", "6", "8"), selected = c("4", "6"),
+      keep_na = FALSE, keep_inf = FALSE
+    ),
+    count_type = "none",
+    include_varnames = list(mtcars = "cyl"),
+    exclude_varnames = list(iris = c("Petal.Length", "Petal.Width"))
   )
 
   datasets$set_filter_state(state = fs)

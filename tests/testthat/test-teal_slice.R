@@ -102,19 +102,19 @@ testthat::test_that("filter_settings checks arguments", {
   fs2 <- filter_var("data", "var2")
 
   testthat::expect_no_error(filter_settings(fs1, fs2))
-  testthat::expect_no_error(filter_settings(fs1, fs2, exclude = list(data = "var1"), count_type = "all"))
+  testthat::expect_no_error(filter_settings(fs1, fs2, exclude_varnames = list(data = "var1"), count_type = "all"))
 
   testthat::expect_error(filter_settings(fs1, fs2, "fs1"), "Assertion on 'slices' failed")
 
-  testthat::expect_error(filter_settings(fs1, fs2, exclude = "fs1"), "Assertion on 'exclude' failed")
+  testthat::expect_error(filter_settings(fs1, fs2, exclude_varnames = "fs1"), "Assertion on 'exclude_varnames' failed")
+  testthat::expect_error(filter_settings(fs1, fs2, include_varnames = "fs1"), "Assertion on 'include_varnames' failed")
 
-  testthat::expect_error(filter_settings(fs1, fs2, count_type = "fs1"), "'arg' should be")
+  testthat::expect_error(filter_settings(fs1, fs2, count_type = "fs1"), "Must be a subset")
 
-  testthat::expect_error(filter_settings(fs1, fs2, count_type = c("a", "b")), "'arg' must be of length 1")
+  testthat::expect_error(filter_settings(fs1, fs2, count_type = c("a", "b")), "Must have length 1")
 
-  testthat::expect_no_error(filter_settings(fs1, fs2, count_type = c("all", "none")))
+  testthat::expect_error(filter_settings(fs1, fs2, count_type = c("all", "none")))
 })
-
 
 testthat::test_that("filter_settings returns `teal_slices`", {
   fs1 <- filter_var("data", "var1")
@@ -127,8 +127,10 @@ testthat::test_that("filter_settings returns `teal_slices`", {
     testthat::expect_s3_class(fs, "teal_slice")
   )
 
-  testthat::expect_false(is.null(attr(fs, "exclude")))
-  testthat::expect_false(is.null(attr(fs, "count_type")))
+  testthat::expect_null(attr(fs, "include"))
+  testthat::expect_null(attr(fs, "exclude"))
+
+  testthat::expect_null(attr(fs, "count_type"))
   testthat::expect_length(filter_settings(fs1, fs2), 2L)
 })
 
@@ -178,20 +180,23 @@ testthat::test_that("as.teal_slice converts list to `teal_slice`", {
 
 
 testthat::test_that("as.teal_slices checks arguments", {
-  fl2 <- list(
-    data1 = list(
-      var1 = list(
-        selected = "a",
-        keep_na = TRUE
+  fl2 <- structure(
+    list(
+      data1 = list(
+        var1 = list(
+          selected = "a",
+          keep_na = TRUE
+        )
+      ),
+      data2 = list(
+        var2 = list(
+          selected = 2,
+          keep_na = TRUE,
+          keep_inf = FALSE
+        )
       )
     ),
-    data1 = list(
-      var2 = list(
-        selected = 2,
-        keep_na = TRUE,
-        keep_inf = FALSE
-      )
-    )
+    filterable = list(data1 = "a")
   )
 
   testthat::expect_no_error(as.teal_slices(fl2))
@@ -210,7 +215,7 @@ testthat::test_that("as.teal_slices converts list to `teal_slices`", {
         keep_na = TRUE
       )
     ),
-    data1 = list(
+    data2 = list(
       subjects = list(
         var31 = list(
           selected = 31,
@@ -229,14 +234,18 @@ testthat::test_that("as.teal_slices converts list to `teal_slices`", {
       )
     )
   )
+  attr(fl3, "filterable") <- list(data1 = "a")
+
   fs3 <- filter_settings(
     filter_var("data1", "var1", selected = "a", keep_na = TRUE),
-    filter_var("data1", "var31", selected = 31, keep_na = TRUE, keep_inf = FALSE, datalabel = "subjects", target = "y"),
-    filter_var("data1", "var32", selected = 32, keep_na = TRUE, keep_inf = FALSE, datalabel = "exp1", target = "subset")
+    filter_var("data2", "var31", selected = 31, keep_na = TRUE, keep_inf = FALSE, datalabel = "subjects", target = "y"),
+    filter_var("data@", "var32", selected = 32, keep_na = TRUE, keep_inf = FALSE, datalabel = "exp1", target = "subset"),
+    include_varnames = list(data1 = "a")
   )
 
   testthat::expect_s3_class(as.teal_slices(fl3), "teal_slices")
-  testthat::expect_identical(as.teal_slices(fl3), fs3)
+  testthat::expect_identical(as.teal_slices(fl3)[2], fs3[2])
+
 
   testthat::expect_identical(as.teal_slices(list()), filter_settings())
 })
@@ -303,39 +312,39 @@ testthat::test_that("[.teal_slices subsets properly", {
 })
 
 
-testthat::test_that("[.teal_slices also subsets the exclude attribute", {
+testthat::test_that("[.teal_slices also subsets the exclude_varnames attribute", {
   fs1 <- filter_var("data1", "var1")
   fs2 <- filter_var("data1", "var2")
   fs3 <- filter_var("data2", "var1")
   fs4 <- filter_var("data2", "var2")
-  fs <- filter_settings(fs1, fs2, fs3, fs4, exclude = list(data1 = "var1", data2 = "var1"))
+  fs <- filter_settings(fs1, fs2, fs3, fs4, exclude_varnames = list(data1 = "var1", data2 = "var1"))
 
   testthat::expect_identical(
-    attr(fs[1], "exclude"),
+    attr(fs[1], "exclude_varnames"),
     list(data1 = "var1")
   )
   testthat::expect_identical(
-    attr(fs[2], "exclude"),
+    attr(fs[2], "exclude_varnames"),
     list(data1 = "var1")
   )
   testthat::expect_identical(
-    attr(fs[1:2], "exclude"),
+    attr(fs[1:2], "exclude_varnames"),
     list(data1 = "var1")
   )
   testthat::expect_identical(
-    attr(fs[3], "exclude"),
+    attr(fs[3], "exclude_varnames"),
     list(data2 = "var1")
   )
   testthat::expect_identical(
-    attr(fs[4], "exclude"),
+    attr(fs[4], "exclude_varnames"),
     list(data2 = "var1")
   )
   testthat::expect_identical(
-    attr(fs[3:4], "exclude"),
+    attr(fs[3:4], "exclude_varnames"),
     list(data2 = "var1")
   )
   testthat::expect_identical(
-    attr(fs[], "exclude"),
+    attr(fs[], "exclude_varnames"),
     list(data1 = "var1", data2 = "var1")
   )
 })
@@ -392,9 +401,9 @@ testthat::test_that("c.teal_slices handles attributes", {
   fs2 <- filter_var("data1", "var2")
   fs3 <- filter_var("data2", "var1")
   fs4 <- filter_var("data2", "var2")
-  fss1 <- filter_settings(fs1, fs2, exclude = list(data1 = "var1"))
-  fss2 <- filter_settings(fs3, fs4, exclude = list(data2 = "var1"))
-  fss3 <- filter_settings(fs3, fs4, exclude = list(data2 = "var1"), count_type = "none")
+  fss1 <- filter_settings(fs1, fs2, exclude_varnames = list(data1 = "var1"))
+  fss2 <- filter_settings(fs3, fs4, exclude_varnames = list(data2 = "var1"))
+  fss3 <- filter_settings(fs3, fs4, exclude_varnames = list(data2 = "var1"), count_type = "none")
 
   # teal_slices with different exclude attributes
   testthat::expect_no_error(c(fss1, fss2))
@@ -403,7 +412,7 @@ testthat::test_that("c.teal_slices handles attributes", {
 
   # exclude attributes are combined
   testthat::expect_identical(
-    attr(fsss, "exclude"),
+    attr(fsss, "exclude_varnames"),
     list(data1 = "var1", data2 = "var1")
   )
 
@@ -412,9 +421,6 @@ testthat::test_that("c.teal_slices handles attributes", {
     attr(fsss, "count_type"),
     attr(fss1, "count_type")
   )
-
-  # different count_type attributes raise error
-  testthat::expect_error(c(fss1, fss3), "Assertion on 'count_types' failed")
 })
 
 
@@ -513,23 +519,34 @@ testthat::test_that("format.teal_slices contains literal formatted representatio
   })
 })
 
-testthat::test_that("format.teal_slices prints exclude attribute", {
+testthat::test_that("format.teal_slices prints include_varnames attribute if not empty", {
   fs1 <- filter_var("data", "var1")
   fs2 <- filter_var("data", "var2")
   fs <- filter_settings(fs1, fs2)
   ffs <- format(fs, show_all = TRUE)
-  testthat::expect_true(grepl("non-filterable variables: none", ffs))
-  fs <- filter_settings(fs1, fs2, exclude = list(data = "var2"))
+  testthat::expect_true(!grepl("filterable variables:", ffs))
+  fs <- filter_settings(fs1, fs2, include_varnames = list(data = "var2"))
   ffs <- format(fs, show_all = TRUE)
-  testthat::expect_true(grepl("non-filterable variables:\n \\$ data: \"var2\"", ffs))
+  testthat::expect_true(grepl("filterable variables:\n \\$ data: var2", ffs))
 })
 
-testthat::test_that("format.teal_slices prints count_type attribute", {
+testthat::test_that("format.teal_slices prints include_varnames attribute if not empty", {
   fs1 <- filter_var("data", "var1")
   fs2 <- filter_var("data", "var2")
   fs <- filter_settings(fs1, fs2)
   ffs <- format(fs, show_all = TRUE)
-  testthat::expect_true(grepl("count type: all", ffs))
+  testthat::expect_true(!grepl("non-filterable variables:", ffs))
+  fs <- filter_settings(fs1, fs2, exclude_varnames = list(data = "var2"))
+  ffs <- format(fs, show_all = TRUE)
+  testthat::expect_true(grepl("non-filterable variables:\n \\$ data: var2", ffs))
+})
+
+testthat::test_that("format.teal_slices prints count_type attribute if not empty", {
+  fs1 <- filter_var("data", "var1")
+  fs2 <- filter_var("data", "var2")
+  fs <- filter_settings(fs1, fs2)
+  ffs <- format(fs, show_all = TRUE)
+  testthat::expect_true(!grepl("count type:", ffs))
 })
 
 

@@ -126,7 +126,7 @@ FilteredDataset <- R6::R6Class( # nolint
     #' @return A `teal_slices` object.
     #'
     get_filter_state = function() {
-      states <- lapply(private$get_filter_states(), function(x) x$get_filter_state())
+      states <- unname(lapply(private$get_filter_states(), function(x) x$get_filter_state()))
       states <- Filter(function(x) length(x) != 0L, states)
       do.call(c, states)
     },
@@ -198,24 +198,6 @@ FilteredDataset <- R6::R6Class( # nolint
     #' @return (`character`) the dataset label
     get_dataset_label = function() {
       private$label
-    },
-
-    #' @description
-    #' Set the allowed filterable variables
-    #' @param varnames (`character` or `NULL`) The variables which can be filtered
-    #'
-    #' @details When retrieving the filtered variables only
-    #' those which have filtering supported (i.e. are of the permitted types)
-    #' are included.
-    #'
-    #' @return invisibly this `FilteredDataset`
-    set_filterable_varnames = function(varnames) {
-      checkmate::assert_character(varnames, any.missing = FALSE, null.ok = TRUE)
-      lapply(
-        private$get_filter_states(),
-        function(x) x$set_filterable_varnames(varnames)
-      )
-      invisible(self)
     },
 
     # modules ------
