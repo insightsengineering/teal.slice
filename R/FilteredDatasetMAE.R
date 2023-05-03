@@ -96,7 +96,7 @@ MAEFilteredDataset <- R6::R6Class( # nolint
       })
       checkmate::assert_true(
         all(vapply(state, function(x) identical(x$dataname, private$dataname), logical(1L))),
-        .var.name = "FilterStatesMAE$set_filter_state: all slices in state must have target = \"y\""
+        .var.name = "FilterStatesMAE$set_filter_state: all slices in state must have arg = \"y\""
       )
 
       logger::log_trace("{ class(self)[1] }$set_filter_state initializing, dataname: { private$dataname }")

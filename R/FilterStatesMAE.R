@@ -41,10 +41,12 @@ MAEFilterStates <- R6::R6Class( # nolint
       }
       checkmate::assert_function(data_reactive, args = "sid")
       checkmate::assert_class(data, "MultiAssayExperiment")
+      data <- colData(data)
+      data_reactive <- function(sid = character(0)) SummarizedExperiment::colData(data_reactive())
       super$initialize(data, data_reactive, dataname, datalabel)
       private$keys <- keys
       private$varlabels <- varlabels
-      private$set_filterable_varnames(include_varnames = colnames(SummarizedExperiment::colData(data)))
+      private$set_filterable_varnames(include_varnames = colnames(data))
       return(invisible(self))
     },
 
@@ -56,9 +58,9 @@ MAEFilterStates <- R6::R6Class( # nolint
     format = function(indent = 0) {
       checkmate::assert_number(indent, finite = TRUE, lower = 0)
 
-      if (length(private$state_list_get(1L)) > 0) {
+      if (length(private$state_list_get()) > 0) {
         formatted_states <- sprintf("%sSubject filters:", format("", width = indent))
-        for (state in private$state_list_get(1L)) {
+        for (state in private$state_list_get()) {
           formatted_states <- c(formatted_states, state$format(indent = indent * 2))
         }
         paste(formatted_states, collapse = "\n")
@@ -66,59 +68,19 @@ MAEFilterStates <- R6::R6Class( # nolint
     },
 
     #' @description
-    #' Returns function name used to create filter call.
-    #' For `MAEFilterStates` `MultiAssayExperiment::subsetByColData` is used.
-    #' @return `character(1)`
-    get_fun = function() {
-      "MultiAssayExperiment::subsetByColData"
-    },
-
-    #' @description
     #' Set filter state
     #'
     #' @param state (`teal_slices`)\cr
-    #'    `teal_slice` objects should contain the field `target = "y"`
+    #'    `teal_slice` objects should contain the field `arg = "y"`
     #'
     #' @return `NULL` invisibly
     #'
     set_filter_state = function(state) {
       logger::log_trace("{ class(self)[1] }$set_filter_state initializing, dataname: { private$dataname }")
       checkmate::assert_class(state, "teal_slices")
-      lapply(state, function(x) {
-        checkmate::assert_true(x$dataname == private$dataname, .var.name = "dataname matches private$dataname")
-      })
-      checkmate::assert_true(
-        all(vapply(state, function(x) identical(x$target, "y"), logical(1L))),
-        .var.name = "FilterStatesMAE$set_filter_state: all slices in state must have target = \"y\""
-      )
+      lapply(state, function(x) checkmate::assert_true(x$arg == "y", .var.name = "teal_slice"))
 
-      private$set_filterable_varnames(
-        include_varnames = attr(state, "include_varnames")[[private$dataname]],
-        exclude_varnames = attr(state, "exclude_varnames")[[private$dataname]]
-      )
-
-      count_type <- attr(state, "count_type")
-      if (length(count_type)) {
-        private$count_type <- count_type
-      }
-
-      # Drop teal_slices that refer to excluded variables.
-      varnames <- slices_field(state, "varname")
-      filterable <- private$get_filterable_varnames()
-      if (!all(varnames %in% filterable)) {
-        excluded_varnames <- toString(dQuote(setdiff(varnames, filterable), q = FALSE))
-        state <- slices_which(
-          state,
-          sprintf("!varname %%in%% c(%s)", excluded_varnames)
-        )
-        logger::log_warn("filters for columns: { excluded_varnames } excluded from { private$dataname }")
-      }
-
-      private$set_filter_state_impl(
-        state = slices_which(state, "target == \"y\""),
-        data = SummarizedExperiment::colData(private$data),
-        data_reactive = function(sid) SummarizedExperiment::colData(private$data_reactive(sid))
-      )
+      super$set_filter_state(state)
 
       logger::log_trace("{ class(self)[1] }$set_filter_state initialized, dataname: { private$dataname }")
 
@@ -126,51 +88,6 @@ MAEFilterStates <- R6::R6Class( # nolint
     },
 
     # shiny modules ----
-
-    #' @description
-    #' Server module
-    #' @param id (`character(1)`)\cr
-    #'   an ID string that corresponds with the ID used to call the module's UI function.
-    #' @return `moduleServer` function which returns `NULL`
-    srv_active = function(id) {
-      moduleServer(
-        id = id,
-        function(input, output, session) {
-          previous_state <- reactiveVal(isolate(private$state_list_get("y")))
-          added_state_name <- reactiveVal(character(0))
-          removed_state_name <- reactiveVal(character(0))
-
-          observeEvent(private$state_list_get("y"), {
-            added_state_name(setdiff(names(private$state_list_get("y")), names(previous_state())))
-            removed_state_name(setdiff(names(previous_state()), names(private$state_list_get("y"))))
-
-            previous_state(private$state_list_get("y"))
-          })
-
-          observeEvent(added_state_name(), ignoreNULL = TRUE, {
-            fstates <- private$state_list_get("y")
-            html_ids <- private$map_vars_to_html_ids(names(fstates))
-            for (fname in added_state_name()) {
-              private$insert_filter_state_ui(
-                id = html_ids[fname],
-                filter_state = fstates[[fname]],
-                "y",
-                state_id = fname
-              )
-            }
-            added_state_name(character(0))
-          })
-
-          observeEvent(removed_state_name(), ignoreNULL = TRUE, {
-            for (fname in removed_state_name()) {
-              private$remove_filter_state_ui("y", fname, .input = input)
-            }
-            removed_state_name(character(0))
-          })
-          NULL
-        }
-      )
-    },
 
     #' @description
     #' Shiny UI module to add filter variable
@@ -183,9 +100,9 @@ MAEFilterStates <- R6::R6Class( # nolint
 
       ns <- NS(id)
 
-      if (ncol(SummarizedExperiment::colData(data)) == 0) {
+      if (ncol(data) == 0) {
         div("no sample variables available")
-      } else if (nrow(SummarizedExperiment::colData(data)) == 0) {
+      } else if (nrow(data) == 0) {
         div("no samples available")
       } else {
         teal.widgets::optionalSelectInput(
@@ -210,7 +127,7 @@ MAEFilterStates <- R6::R6Class( # nolint
     #'   an ID string that corresponds with the ID used to call the module's UI function.
     #' @return `moduleServer` function which returns `NULL`
     srv_add = function(id) {
-      data <- SummarizedExperiment::colData(private$data)
+      data <- private$data
 
       moduleServer(
         id = id,
@@ -279,7 +196,7 @@ MAEFilterStates <- R6::R6Class( # nolint
 
               varname <- input$var_to_add
               self$set_filter_state(filter_settings(
-                filter_var(dataname = private$dataname, varname = varname, datalabel = "subjects", target = "y")
+                filter_var(dataname = private$dataname, varname = varname, datalabel = "subjects")
               ))
 
               logger::log_trace(
@@ -305,6 +222,7 @@ MAEFilterStates <- R6::R6Class( # nolint
 
   private = list(
     extract_type = "list",
+    fun = quote(MultiAssayExperiment::subsetByColData),
     keys = character(0),
     varlabels = character(0)
   )

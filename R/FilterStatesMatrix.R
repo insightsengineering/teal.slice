@@ -44,22 +44,22 @@ MatrixFilterStates <- R6::R6Class( # nolint
       moduleServer(
         id = id,
         function(input, output, session) {
-          previous_state <- reactiveVal(isolate(private$state_list_get("subset")))
+          previous_state <- reactiveVal(isolate(private$state_list_get()))
           added_state_name <- reactiveVal(character(0))
           removed_state_name <- reactiveVal(character(0))
 
-          observeEvent(private$state_list_get("subset"), {
+          observeEvent(private$state_list_get(), {
             added_state_name(
-              setdiff(names(private$state_list_get("subset")), names(previous_state()))
+              setdiff(names(private$state_list_get()), names(previous_state()))
             )
             removed_state_name(
-              setdiff(names(previous_state()), names(private$state_list_get("subset")))
+              setdiff(names(previous_state()), names(private$state_list_get()))
             )
-            previous_state(private$state_list_get("subset"))
+            previous_state(private$state_list_get())
           })
 
           observeEvent(added_state_name(), ignoreNULL = TRUE, {
-            fstates <- private$state_list_get("subset")
+            fstates <- private$state_list_get()
             html_ids <- private$map_vars_to_html_ids(keys = names(fstates))
             for (fname in added_state_name()) {
               private$insert_filter_state_ui(

@@ -39,14 +39,14 @@
 #' To establish a filter on a column in a `data.frame`, `dataname` and `varname` are sufficient.
 #' Filter states created created for `SummarizedExperiments` require more information
 #' as each variable is either located in the `rowData` or `colData` slots.
-#' Thus, `teal_slice` objects that refer to such filter states must also contain the field `target`
+#' Thus, `teal_slice` objects that refer to such filter states must also contain the field `arg`
 #' that specifies "subset" for variales in `rowData` and "select" for those in `colData`.
 #'
 #' Likewise, observations in a `MultiAssayExpeeiment` can be filtered based on the content of the `colData` slot
 #' or based on the contents of `rowData` and `colData` of any of its experiments. Hence, another field is necessary.
 #' `teal_slice` objects refering to `MultiAssayExperiment` objects must contain the field `datalabel`
 #' that names either an experiment (as listed in `experimentList(<MAE>)`) or "subjects"
-#' if it referes to the MAE's `colData`. They must **also** specify `target` as "subset" or "select"
+#' if it referes to the MAE's `colData`. They must **also** specify `arg` as "subset" or "select"
 #' for experiments and as "y" for `colData`.
 #'
 #' @param dataname `character(1)` name of data set
@@ -338,7 +338,7 @@ as.teal_slices <- function(x) {
             args$keep_na <- subsubitem$keep_na
             args$keep_inf <- subsubitem$keep_inf
             args$datalabel <- names(item)[ii]
-            if (args$datalabel == "subjects") args$target <- "y"
+            if (args$datalabel == "subjects") args$arg <- "y"
             slices[[length(slices) + 1]] <- as.teal_slice(Filter(Negate(is.null), args))
             args <- make_args()
           } else {
@@ -352,7 +352,7 @@ as.teal_slices <- function(x) {
                 args$keep_na <- subsubsubitem$keep_na
                 args$keep_inf <- subsubsubitem$keep_inf
                 args$datalabel <- names(item)[ii]
-                args$target <- names(subitem)[iii]
+                args$arg <- names(subitem)[iii]
                 slices[[length(slices) + 1]] <- as.teal_slice(Filter(Negate(is.null), args))
                 args <- make_args()
               }
