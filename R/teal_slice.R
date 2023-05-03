@@ -39,7 +39,7 @@
 #' To establish a filter on a column in a `data.frame`, `dataname` and `varname` are sufficient.
 #' Filter states created created for `SummarizedExperiments` require more information
 #' as each variable is either located in the `rowData` or `colData` slots.
-#' Thus, `teal_slice` objects taht refer to such filter states must also contain the field `target`
+#' Thus, `teal_slice` objects that refer to such filter states must also contain the field `target`
 #' that specifies "subset" for variales in `rowData` and "select" for those in `colData`.
 #'
 #' Likewise, observations in a `MultiAssayExpeeiment` can be filtered based on the content of the `colData` slot
@@ -52,17 +52,21 @@
 #' @param dataname `character(1)` name of data set
 #' @param varname `character(1)` name of variable
 #' @param choices optional vector specifying allowed choices;
-#'                possibly a subset of values in data;
-#'                type and size depends on variable type
+#'  possibly a subset of values in data; type and size depends on variable type
 #' @param selected optional vector specifying selection;
-#'                 type and size depends on variable type
+#'  type and size depends on variable type
 #' @param keep_na `logical(1)` or `NULL` optional logical flag specifying whether to keep missing values
 #' @param keep_inf `logical(1)` or `NULL` optional logical flag specifying whether to keep infinite values
 #' @param fixed `logical(1)` logical flag specifying whether to fix this filter state (i.e. forbid setting state)
 #' @param disabled `logical(1)`logical flag specifying whether to disable this filter state
-#' @param exclude `named list` of `character` vectors where list names match names of data sets
-#'                 and vector elements match variable names in respective data sets;
-#'                 specifies which variables are not allowed to be filtered
+#' @param include_varnames `named list` of `character` vectors where list names match names of data sets
+#'  and vector elements match variable names in respective data sets;
+#'  specifies which variables are not allowed to be filtered.
+#'  Both `include_varnames` and `exclude_varnames` can't be specified for the same dataset in the same call.
+#' @param exclude_varnames `named list` of `character` vectors where list names match names of data sets
+#'  and vector elements match variable names in respective data sets;
+#'  specifies which variables are not allowed to be filtered.
+#'  Both `include_varnames` and `exclude_varnames` can't be specified for the same dataset in the same call.
 #' @param count_type `character(1)` string specifying how observations are tallied by these filter states.
 #'  Possible options:
 #'  - `"all"` to have counts of single `FilterState` to show number of observation in filtered
@@ -151,18 +155,23 @@ filter_var <- function(
 #'
 filter_settings <- function(
     ...,
-    exclude = list(),
-    count_type = c("all", "none")) {
+    exclude_varnames = NULL,
+    include_varnames = NULL,
+    count_type = NULL) {
   slices <- list(...)
   checkmate::assert_list(slices, types = "teal_slice", any.missing = FALSE)
-  checkmate::assert_list(exclude, names = "named", types = "character")
-  count_type <- match.arg(count_type)
+  checkmate::assert_list(exclude_varnames, names = "named", types = "character", null.ok = TRUE, min.len = 1)
+  checkmate::assert_list(include_varnames, names = "named", types = "character", null.ok = TRUE, min.len = 1)
+  checkmate::assert_character(count_type, len = 1, null.ok = TRUE)
+  checkmate::assert_subset(count_type, choices = c("all", "none"), empty.ok = TRUE)
 
-
-  attr(slices, "exclude") <- exclude
-  attr(slices, "count_type") <- count_type
-  class(slices) <- c("teal_slices", class(slices))
-  slices
+  structure(
+    slices,
+    exclude_varnames = exclude_varnames,
+    include_varnames = include_varnames,
+    count_type = count_type,
+    class = c("teal_slices", class(slices))
+  )
 }
 
 
@@ -272,7 +281,6 @@ is.teal_slices <- function(x) {
 #'
 as.teal_slices <- function(x) {
   checkmate::assert_list(x, names = "named")
-
   is.bottom <- function(x) {
     isTRUE(is.list(x) && any(names(x) %in% c("selected", "keep_na", "keep_inf")))
   }
@@ -344,7 +352,7 @@ as.teal_slices <- function(x) {
     stop("conversion to filter_slices failed")
   }
 
-  do.call(filter_settings, slices)
+  do.call(filter_settings, c(slices, list(include_varnames = attr(x, "filterable"))))
 }
 
 
@@ -368,9 +376,10 @@ as.teal_slices <- function(x) {
   y <- NextMethod("[")
   attrs <- attributes(x)
   attrs$names <- attrs$names[i]
+  datanames <- unique(unlist(vapply(y, function(ts) ts[["dataname"]], character(1L))))
+  attrs[["exclude_varnames"]] <- Filter(Negate(is.null), attr(x, "exclude_varnames")[datanames])
+  attrs[["include_varnames"]] <- Filter(Negate(is.null), attr(x, "include_varnames")[datanames])
   attributes(y) <- attrs
-  excludes <- unique(unlist(vapply(y, function(ts) ts[["dataname"]], character(1L))))
-  attr(y, "exclude") <- Filter(Negate(is.null), attr(x, "exclude")[excludes])
   y
 }
 
@@ -383,15 +392,31 @@ as.teal_slices <- function(x) {
 c.teal_slices <- function(...) {
   x <- list(...)
   checkmate::assert_true(all(vapply(x, is.teal_slices, logical(1L))), .var.name = "all arguments are teal_slices")
-  excludes <- lapply(x, attr, "exclude")
+
+  excludes <- lapply(x, attr, "exclude_varnames")
   names(excludes) <- NULL
   excludes <- unlist(excludes, recursive = FALSE)
   excludes <- excludes[!duplicated(names(excludes))]
+
+  includes <- lapply(x, attr, "include_varnames")
+  names(includes) <- NULL
+  includes <- unlist(includes, recursive = FALSE)
+  includes <- includes[!duplicated(names(includes))]
+
   count_types <- lapply(x, attr, "count_type")
   count_types <- unique(unlist(count_types))
-  checkmate::assert_string(count_types)
 
-  do.call(filter_settings, c(unlist(x, recursive = FALSE), list(exclude = excludes, count_type = count_types)))
+  do.call(
+    filter_settings,
+    c(
+      unlist(x, recursive = FALSE),
+      list(
+        include_varnames = includes,
+        exclude_varnames = excludes,
+        count_type = count_types
+      )
+    )
+  )
 }
 
 
@@ -401,8 +426,6 @@ c.teal_slices <- function(...) {
 #' @keywords internal
 #'
 format.teal_slices <- function(x, show_all = FALSE, ...) {
-  f <- attr(x, "exclude")
-  ct <- attr(x, "count_type")
   res <- character(0)
   for (i in seq_along(x)) {
     ind <- names(x)[i]
@@ -410,14 +433,24 @@ format.teal_slices <- function(x, show_all = FALSE, ...) {
     res <- append(res, ind)
     res <- append(res, format(x[[i]], show_all = show_all, ...))
   }
-  res <- append(res, "\nnon-filterable variables:")
-  if (is.list(f) & length(f) == 0L) {
-    res[length(res)] <- paste(res[length(res)], "none")
-  } else {
-    for (i in seq_along(f)) {
-      res <- append(res, sprintf(" $ %s: %s", names(f)[i], dQuote(f[[i]], q = FALSE)))
+
+  includes <- attr(x, "include_varnames")
+  if (length(includes) > 0L) {
+    res <- append(res, "\nfilterable variables:")
+    for (i in seq_along(includes)) {
+      res <- append(res, sprintf(" $ %s: %s", names(includes)[i], toString(includes[[i]])))
     }
   }
+
+  excludes <- attr(x, "exclude_varnames")
+  if (length(excludes) > 0L) {
+    res <- append(res, "\nnon-filterable variables:")
+    for (i in seq_along(excludes)) {
+      res <- append(res, sprintf(" $ %s: %s", names(excludes)[i], toString(excludes[[i]])))
+    }
+  }
+
+  ct <- attr(x, "count_type")
   res <- append(res, sprintf("\ncount type: %s", ct))
   paste(res, collapse = "\n")
 }
