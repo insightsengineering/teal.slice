@@ -26,7 +26,6 @@ components of the dataset.
 \item \href{#method-FilteredDataset-get_filter_overview}{\code{FilteredDataset$get_filter_overview()}}
 \item \href{#method-FilteredDataset-get_keys}{\code{FilteredDataset$get_keys()}}
 \item \href{#method-FilteredDataset-get_dataset_label}{\code{FilteredDataset$get_dataset_label()}}
-\item \href{#method-FilteredDataset-set_filterable_varnames}{\code{FilteredDataset$set_filterable_varnames()}}
 \item \href{#method-FilteredDataset-ui_active}{\code{FilteredDataset$ui_active()}}
 \item \href{#method-FilteredDataset-srv_active}{\code{FilteredDataset$srv_active()}}
 \item \href{#method-FilteredDataset-ui_add}{\code{FilteredDataset$ui_add()}}
@@ -245,32 +244,6 @@ Gets the dataset label
 
 \subsection{Returns}{
 (\code{character}) the dataset label
-}
-}
-\if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-FilteredDataset-set_filterable_varnames"></a>}}
-\if{latex}{\out{\hypertarget{method-FilteredDataset-set_filterable_varnames}{}}}
-\subsection{Method \code{set_filterable_varnames()}}{
-Set the allowed filterable variables
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{FilteredDataset$set_filterable_varnames(varnames)}\if{html}{\out{</div>}}
-}
-
-\subsection{Arguments}{
-\if{html}{\out{<div class="arguments">}}
-\describe{
-\item{\code{varnames}}{(\code{character} or \code{NULL}) The variables which can be filtered}
-}
-\if{html}{\out{</div>}}
-}
-\subsection{Details}{
-When retrieving the filtered variables only
-those which have filtering supported (i.e. are of the permitted types)
-are included.
-}
-
-\subsection{Returns}{
-invisibly this \code{FilteredDataset}
 }
 }
 \if{html}{\out{<hr>}}

@@ -16,7 +16,6 @@ Handles filter states in a \code{matrix}
 \item \href{#method-MatrixFilterStates-new}{\code{MatrixFilterStates$new()}}
 \item \href{#method-MatrixFilterStates-format}{\code{MatrixFilterStates$format()}}
 \item \href{#method-MatrixFilterStates-srv_active}{\code{MatrixFilterStates$srv_active()}}
-\item \href{#method-MatrixFilterStates-get_filter_state}{\code{MatrixFilterStates$get_filter_state()}}
 \item \href{#method-MatrixFilterStates-set_filter_state}{\code{MatrixFilterStates$set_filter_state()}}
 \item \href{#method-MatrixFilterStates-remove_filter_state}{\code{MatrixFilterStates$remove_filter_state()}}
 \item \href{#method-MatrixFilterStates-ui_add}{\code{MatrixFilterStates$ui_add()}}
@@ -31,6 +30,7 @@ Handles filter states in a \code{matrix}
 <li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilterStates" data-id="get_call"><a href='../../teal.slice/html/FilterStates.html#method-FilterStates-get_call'><code>teal.slice::FilterStates$get_call()</code></a></span></li>
 <li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilterStates" data-id="get_datalabel"><a href='../../teal.slice/html/FilterStates.html#method-FilterStates-get_datalabel'><code>teal.slice::FilterStates$get_datalabel()</code></a></span></li>
 <li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilterStates" data-id="get_filter_count"><a href='../../teal.slice/html/FilterStates.html#method-FilterStates-get_filter_count'><code>teal.slice::FilterStates$get_filter_count()</code></a></span></li>
+<li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilterStates" data-id="get_filter_state"><a href='../../teal.slice/html/FilterStates.html#method-FilterStates-get_filter_state'><code>teal.slice::FilterStates$get_filter_state()</code></a></span></li>
 <li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilterStates" data-id="get_fun"><a href='../../teal.slice/html/FilterStates.html#method-FilterStates-get_fun'><code>teal.slice::FilterStates$get_fun()</code></a></span></li>
 <li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilterStates" data-id="print"><a href='../../teal.slice/html/FilterStates.html#method-FilterStates-print'><code>teal.slice::FilterStates$print()</code></a></span></li>
 <li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilterStates" data-id="ui_active"><a href='../../teal.slice/html/FilterStates.html#method-FilterStates-ui_active'><code>teal.slice::FilterStates$ui_active()</code></a></span></li>
@@ -49,9 +49,7 @@ Initialize \code{MatrixFilterStates} object
   data,
   data_reactive = function(sid = "") NULL,
   dataname,
-  datalabel = character(0),
-  excluded_varnames = character(0),
-  count_type = c("all", "none")
+  datalabel = character(0)
 )}\if{html}{\out{</div>}}
 }
 
@@ -73,12 +71,6 @@ specified to the function argument attached to this \code{FilterStates}.}
 
 \item{\code{datalabel}}{(\code{character(0)} or \code{character(1)})\cr
 text label value.}
-
-\item{\code{excluded_varnames}}{(\code{character})\cr
-names of variables that can \strong{not} be filtered on.}
-
-\item{\code{count_type}}{\code{character(1)}\cr
-specifying how observations are tallied.}
 }
 \if{html}{\out{</div>}}
 }
@@ -122,21 +114,6 @@ an ID string that corresponds with the ID used to call the module's UI function.
 }
 \subsection{Returns}{
 \code{moduleServer} function which returns \code{NULL}
-}
-}
-\if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-MatrixFilterStates-get_filter_state"></a>}}
-\if{latex}{\out{\hypertarget{method-MatrixFilterStates-get_filter_state}{}}}
-\subsection{Method \code{get_filter_state()}}{
-Returns active \code{FilterState} objects.
-
-Gets all filter state information from this dataset.
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{MatrixFilterStates$get_filter_state()}\if{html}{\out{</div>}}
-}
-
-\subsection{Returns}{
-\code{teal_slices}
 }
 }
 \if{html}{\out{<hr>}}

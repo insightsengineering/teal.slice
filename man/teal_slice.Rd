@@ -31,7 +31,12 @@ filter_var(
   ...
 )
 
-filter_settings(..., exclude = list(), count_type = c("all", "none"))
+filter_settings(
+  ...,
+  exclude_varnames = NULL,
+  include_varnames = NULL,
+  count_type = NULL
+)
 
 is.teal_slice(x)
 
@@ -65,8 +70,7 @@ slices_which(tss, expr)
 \item{varname}{\code{character(1)} name of variable}
 
 \item{choices}{optional vector specifying allowed choices;
-possibly a subset of values in data;
-type and size depends on variable type}
+possibly a subset of values in data; type and size depends on variable type}
 
 \item{selected}{optional vector specifying selection;
 type and size depends on variable type}
@@ -83,9 +87,15 @@ type and size depends on variable type}
 for \code{filter_settings} any number of \code{teal_slice} objects\cr
 for other functions arguments passed to other methods}
 
-\item{exclude}{\verb{named list} of \code{character} vectors where list names match names of data sets
+\item{exclude_varnames}{\verb{named list} of \code{character} vectors where list names match names of data sets
 and vector elements match variable names in respective data sets;
-specifies which variables are not allowed to be filtered}
+specifies which variables are not allowed to be filtered.
+Both \code{include_varnames} and \code{exclude_varnames} can't be specified for the same dataset in the same call.}
+
+\item{include_varnames}{\verb{named list} of \code{character} vectors where list names match names of data sets
+and vector elements match variable names in respective data sets;
+specifies which variables are not allowed to be filtered.
+Both \code{include_varnames} and \code{exclude_varnames} can't be specified for the same dataset in the same call.}
 
 \item{count_type}{\code{character(1)} string specifying how observations are tallied by these filter states.
 Possible options:
@@ -150,7 +160,7 @@ and how observations are tallied, which is resolved by \code{FilterStates}.
 To establish a filter on a column in a \code{data.frame}, \code{dataname} and \code{varname} are sufficient.
 Filter states created created for \code{SummarizedExperiments} require more information
 as each variable is either located in the \code{rowData} or \code{colData} slots.
-Thus, \code{teal_slice} objects taht refer to such filter states must also contain the field \code{target}
+Thus, \code{teal_slice} objects that refer to such filter states must also contain the field \code{target}
 that specifies "subset" for variales in \code{rowData} and "select" for those in \code{colData}.
 
 Likewise, observations in a \code{MultiAssayExpeeiment} can be filtered based on the content of the \code{colData} slot

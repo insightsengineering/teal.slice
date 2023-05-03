@@ -58,10 +58,6 @@ FilterStates <- R6::R6Class( # nolint
     #'   specified to the function argument attached to this `FilterStates`
     #' @param datalabel (`character(0)` or `character(1)`)\cr
     #'   text label value
-    #' @param excluded_varnames (`character`)\cr
-    #'   names of variables that can \strong{not} be filtered on.
-    #' @param count_type `character(1)`\cr
-    #'   specifying how observations are tallied
     #'
     #' @return
     #' self invisibly
@@ -69,9 +65,7 @@ FilterStates <- R6::R6Class( # nolint
     initialize = function(data,
                           data_reactive = function(sid = "") NULL,
                           dataname,
-                          datalabel = character(0),
-                          excluded_varnames = character(0),
-                          count_type = c("all", "none")) {
+                          datalabel = character(0)) {
       checkmate::assert_function(data_reactive, args = "sid")
       checkmate::assert_string(dataname)
       checkmate::assert_character(datalabel, max.len = 1, any.missing = FALSE)
@@ -80,8 +74,6 @@ FilterStates <- R6::R6Class( # nolint
       private$datalabel <- datalabel
       private$data <- data
       private$data_reactive <- data_reactive
-      private$filterable_varnames <- setdiff(colnames(data), excluded_varnames)
-      private$count_type <- match.arg(count_type)
 
       logger::log_trace("Instantiated { class(self)[1] }, dataname: { private$dataname }")
       invisible(self)
@@ -130,11 +122,14 @@ FilterStates <- R6::R6Class( # nolint
     #' @return `call` or `NULL`
     #'
     get_call = function(sid = "") {
+      logger::log_trace("FilterStates$get_call initialized")
+
       # state_list (list) names must be the same as argument of the function
       # for ... list should be unnamed
       states_list <- private$state_list
       filter_items <- sapply(
         X = states_list,
+        # todo: instead of taking names from here we should take `target` from the teal_slice (and change `target` -> `argname`)
         USE.NAMES = TRUE,
         simplify = FALSE,
         function(state_list) {
@@ -194,8 +189,6 @@ FilterStates <- R6::R6Class( # nolint
       "subset"
     },
 
-
-
     #' @description
     #' Gets the number of active `FilterState` objects in this `FilterStates` object.
     #'
@@ -227,7 +220,32 @@ FilterStates <- R6::R6Class( # nolint
     #' @return `list` containing `list` per `FilterState` in the `state_list`
     #'
     get_filter_state = function() {
-      stop("Pure virtual method.")
+      slices <- unlist(
+        lapply(private$state_list, function(slot) {
+          unname(lapply(slot(), function(x) x$get_state()))
+        }),
+        recursive = FALSE,
+        use.names = FALSE
+      )
+      fs <- do.call(filter_settings, c(slices, list(count_type = private$count_type)))
+
+      include_varnames <- private$include_varnames
+      if (length(include_varnames)) {
+        attr(fs, "include_varnames") <- structure(
+          list(include_varnames),
+          names = private$dataname
+        )
+      }
+
+      exclude_varnames <- private$exclude_varnames
+      if (length(exclude_varnames)) {
+        attr(fs, "exclude_varnames") <- structure(
+          list(exclude_varnames),
+          names = private$dataname
+        )
+      }
+
+      return(fs)
     },
 
     #' @description
@@ -318,14 +336,66 @@ FilterStates <- R6::R6Class( # nolint
     data_reactive = NULL, # reactive
     datalabel = character(0),
     dataname = NULL, # because it holds object of class name
-    filterable_varnames = character(0),
+    include_varnames = character(0), # holds column names
+    exclude_varnames = character(0), # holds column names
     ns = NULL, # shiny ns()
     observers = list(), # observers
     state_list = NULL, # list of `reactiveVal`s initialized by init methods of child classes,
-    count_type = character(0), # specifies how observation numbers are displayed in filter cards,
+    count_type = "all", # specifies how observation numbers are displayed in filter cards,
 
     # private methods ----
 
+    # @description
+    # Set the allowed filterable variables
+    # @param include_varnames (`character`) Names of variables included in filtering.
+    # @param exclude_varnames (`character`) Names of variables excluded from filtering.
+    #
+    # @details When retrieving the filtered variables only
+    # those which have filtering supported (i.e. are of the permitted types).
+    # Only one from `include_varnames` and `exclude_varnames` can be used in one call. When `exclude_varnames`
+    # is called `include_varnames` is cleared - same otherwise.
+    # are included.
+    #
+    # @return NULL invisibly
+    set_filterable_varnames = function(include_varnames = character(0), exclude_varnames = character(0)) {
+      if ((length(include_varnames) + length(exclude_varnames)) == 0L) {
+        return(invisible(NULL))
+      }
+      checkmate::assert_character(include_varnames, any.missing = FALSE, min.len = 0L, null.ok = TRUE)
+      checkmate::assert_character(exclude_varnames, any.missing = FALSE, min.len = 0L, null.ok = TRUE)
+      if (length(include_varnames) && length(exclude_varnames)) {
+        stop(
+          "`include_varnames` and `exclude_varnames` has been both specified for",
+          private$dataname,
+          ". Only one per dataset is allowed.",
+        )
+      }
+      supported_vars <- get_supported_filter_varnames(private$data)
+      if (length(include_varnames)) {
+        private$include_varnames <- intersect(include_varnames, supported_vars)
+        private$exclude_varnames <- character(0)
+      } else {
+        private$exclude_varnames <- exclude_varnames
+        private$include_varnames <- character(0)
+      }
+      invisible(NULL)
+    },
+
+    # @description
+    # Get vector of filterable varnames
+    #
+    # @details
+    #  These are the only columns which can be used in the filter panel
+    #
+    # @return character vector with names of the columns
+    get_filterable_varnames = function() {
+      if (length(private$include_varnames)) {
+        private$include_varnames
+      } else {
+        supported_varnames <- get_supported_filter_varnames(private$data)
+        setdiff(supported_varnames, private$exclude_varnames)
+      }
+    },
     get_dataname_prefixed = function() {
       private$dataname
     },
@@ -622,7 +692,7 @@ FilterStates <- R6::R6Class( # nolint
           # and this no longer needs to be a function to pass sid. reactive in the FilterState
           # is also beneficial as it can be cached and retriger filter counts only if
           # returned vector is different.
-          x_reactive = if (attr(state, "count_type") == "none") {
+          x_reactive = if (private$count_type == "none") {
             reactive(NULL)
           } else {
             reactive(data_reactive(sid)[, x$varname, drop = TRUE])
