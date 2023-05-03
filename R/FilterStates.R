@@ -20,27 +20,19 @@
 #' @examples
 #' library(shiny)
 #' filter_states <- teal.slice:::DFFilterStates$new(
+#'   data = data.frame(x = 1:2, sex = c("F", "M")),
 #'   dataname = "data",
-#'   varlabels = c(x = "x variable", SEX = "Sex"),
+#'   varlabels = c(x = "x variable", sex = "Sex"),
 #'   datalabel = character(0),
 #'   keys = character(0)
 #' )
-#' filter_state <- teal.slice:::RangeFilterState$new(
-#'   c(NA, Inf, seq(1:10)),
-#'   varname = "x",
-#'   varlabel = "x variable",
-#'   dataname = "data",
-#'   extract_type = "list"
-#' )
-#' isolate(filter_state$set_selected(c(3L, 8L)))
-#'
-#' isolate(
-#'   filter_states$state_list_push(
-#'     x = filter_state,
-#'     state_list_index = 1L,
-#'     state_id = "x"
+#' filter_states$set_filter_state(
+#'   filter_settings(
+#'     filter_var(dataname = "data", varname = "x", selected = 1),
+#'     filter_var(dataname = "data", varname = "sex", selected = "F")
 #'   )
 #' )
+#' isolate(filter_states$get_filter_state())
 #' isolate(filter_states$get_call())
 #'
 FilterStates <- R6::R6Class( # nolint
@@ -54,6 +46,13 @@ FilterStates <- R6::R6Class( # nolint
     #' Initializes `FilterStates` object by setting
     #' `dataname`, and `datalabel`.
     #'
+    #' @param data (`data.frame`, `MultiAssayExperiment`, `SummarizedExperiment`, `matrix`)\cr
+    #'   the R object which `subset` function is applied on.
+    #' @param data_reactive (`function(sid)`)\cr
+    #'   should return an object of the same type as `data` object or `NULL`.
+    #'   This object is needed for the `FilterState` counts being updated
+    #'   on a change in filters. If function returns `NULL` then filtered counts are not shown.
+    #'   Function has to have `sid` argument being a character.
     #' @param dataname (`character(1)`)\cr
     #'   name of the data used in the expression
     #'   specified to the function argument attached to this `FilterStates`
@@ -63,12 +62,18 @@ FilterStates <- R6::R6Class( # nolint
     #' @return
     #' self invisibly
     #'
-    initialize = function(dataname, datalabel) {
+    initialize = function(data,
+                          data_reactive = function(sid = "") NULL,
+                          dataname,
+                          datalabel = character(0)) {
+      checkmate::assert_function(data_reactive, args = "sid")
       checkmate::assert_string(dataname)
       checkmate::assert_character(datalabel, max.len = 1, any.missing = FALSE)
 
       private$dataname <- dataname
       private$datalabel <- datalabel
+      private$data <- data
+      private$data_reactive <- data_reactive
 
       logger::log_trace("Instantiated { class(self)[1] }, dataname: { private$dataname }")
       invisible(self)
@@ -108,26 +113,37 @@ FilterStates <- R6::R6Class( # nolint
     #' The `rhs` is a call to `self$get_fun()` with `private$dataname`
     #' as argument and a list of condition calls from `FilterState` objects
     #' stored in `private$state_list`.
-    #' If no filters are applied,
-    #' `NULL` is returned to avoid no-op calls such as `x <- x`.
+    #' If no filters are applied, `NULL` is returned to avoid no-op calls such as `x <- x`.
+    #'
+    #' @param sid (`character`)\cr
+    #'  when specified then method returns code containing filter conditions of
+    #'  `FilterState` objects which `"sid"` attribute is different than this `sid` argument.
     #'
     #' @return `call` or `NULL`
     #'
-    get_call = function() {
+    get_call = function(sid = "") {
+      logger::log_trace("FilterStates$get_call initialized")
+
       # state_list (list) names must be the same as argument of the function
       # for ... list should be unnamed
       states_list <- private$state_list
       filter_items <- sapply(
         X = states_list,
+        # todo: instead of taking names from here we should take `target` from the teal_slice (and change `target` -> `argname`)
         USE.NAMES = TRUE,
         simplify = FALSE,
         function(state_list) {
           items <- state_list()
-          filtered_items <- Filter(f = function(x) x$is_any_filtered(), x = items)
+
+          # removing empty filters and filters identified by sid
+          nonempty_filter_idx <- vapply(items, function(x) x$is_any_filtered(), logical(1L))
+          other_filter_idx <- vapply(items, function(x) !attr(x, "sid") %in% sid, logical(1L))
+          filtered_items <- items[nonempty_filter_idx & other_filter_idx]
+
           calls <- lapply(
             filtered_items,
             function(state) {
-              state$get_call()
+              state$get_call(dataname = private$get_dataname_prefixed())
             }
           )
           calls_combine_by(calls, operator = "&")
@@ -139,7 +155,7 @@ FilterStates <- R6::R6Class( # nolint
       )
       if (length(filter_items) > 0L) {
         filter_function <- str2lang(self$get_fun())
-        data_name <- str2lang(private$dataname)
+        data_name <- str2lang(private$get_dataname_prefixed())
         substitute(
           env = list(
             lhs = data_name,
@@ -173,99 +189,77 @@ FilterStates <- R6::R6Class( # nolint
       "subset"
     },
 
-    # state_list methods ----
-
     #' @description
-    #' Returns a list of `FilterState` objects stored in this `FilterStates`.
+    #' Gets the number of active `FilterState` objects in this `FilterStates` object.
     #'
-    #' @param state_list_index (`character(1)`, `integer(1)`)\cr
-    #'   index on the list in `private$state_list` where filter states are kept
-    #' @param state_id (`character(1)`)\cr
-    #'   name of element in a filter state (which is a `reactiveVal` containing a list)
+    #' @return `integer(1)`
     #'
-    #' @return `list` of `FilterState` objects
-    #'
-    state_list_get = function(state_list_index, state_id = NULL) {
-      private$validate_state_list_exists(state_list_index)
-      checkmate::assert_string(state_id, null.ok = TRUE)
-
-      if (is.null(state_id)) {
-        private$state_list[[state_list_index]]()
-      } else {
-        private$state_list[[state_list_index]]()[[state_id]]
-      }
+    get_filter_count = function() {
+      length(self$get_filter_state())
     },
 
     #' @description
-    #' Adds a new `FilterState` object to this `FilterStates`.\cr
-    #' Raises error if the length of `x` does not match the length of `state_id`.
+    #' Remove one or more `FilterState`s from any `state_list`.
     #'
-    #' @param x (`FilterState`)\cr
-    #'   object to be added to filter state list
-    #' @param state_list_index (`character(1)`, `integer(1)`)\cr
-    #'   index on the list in `private$state_list` where filter states are kept
-    #' @param state_id (`character(1)`)\cr
-    #'   name of element in a filter state (which is a `reactiveVal` containing a list)
+    #' @param state (`teal_slices`)\cr
+    #'   specifying `FilterState` objects to remove;
+    #'   `teal_slice`s may contain only `dataname` and `varname`, other elements are ignored
     #'
-    #' @return NULL
+    #' @return `NULL` invisibly
     #'
-    state_list_push = function(x, state_list_index, state_id) {
-      logger::log_trace(
-        "{ class(self)[1] } pushing into state_list, dataname: { private$dataname }"
-      )
-      private$validate_state_list_exists(state_list_index)
-      checkmate::assert_string(state_id)
-
-      states <- if (is.list(x)) {
-        x
-      } else {
-        list(x)
-      }
-
-      state <- stats::setNames(states, state_id)
-      new_state_list <- c(private$state_list[[state_list_index]](), state)
-      private$state_list[[state_list_index]](new_state_list)
-
-      logger::log_trace(
-        "{ class(self)[1] } pushed into queue, dataname: { private$dataname }"
-      )
-      invisible(NULL)
+    remove_filter_state = function(state) {
+      stop("This variable can not be removed from the filter.")
     },
 
     #' @description
-    #' Removes a single filter state with all associated shiny elements:\cr
-    #' * specified `FilterState` from `private$state_list`
-    #' * UI card created for this filter
-    #' * observers tracking the selection and remove button
+    #' Gets reactive values from active `FilterState` objects.
     #'
-    #' @param state_list_index (`character(1)`, `integer(1)`)\cr
-    #'   index on the list in `private$state_list` where filter states are kept
-    #' @param state_id (`character(1)`)\cr
-    #'   name of element in a filter state (which is a `reactiveVal` containing a list)
+    #' Get active filter state from `FilterState` objects stored in `state_list`(s).
+    #' The output is a list compatible with input to `self$set_filter_state`.
     #'
-    #' @return NULL
+    #' @return `list` containing `list` per `FilterState` in the `state_list`
     #'
-    state_list_remove = function(state_list_index, state_id) {
-      logger::log_trace(paste(
-        "{ class(self)[1] } removing a filter from state_list { state_list_index },",
-        "dataname: { private$dataname }"
-      ))
-      private$validate_state_list_exists(state_list_index)
-      checkmate::assert_string(state_id)
-      checkmate::assert(
-        checkmate::check_string(state_list_index),
-        checkmate::check_int(state_list_index)
+    get_filter_state = function() {
+      slices <- unlist(
+        lapply(private$state_list, function(slot) {
+          unname(lapply(slot(), function(x) x$get_state()))
+        }),
+        recursive = FALSE,
+        use.names = FALSE
       )
+      fs <- do.call(filter_settings, c(slices, list(count_type = private$count_type)))
 
-      new_state_list <- private$state_list[[state_list_index]]()
-      new_state_list[[state_id]] <- NULL
-      private$state_list[[state_list_index]](new_state_list)
+      include_varnames <- private$include_varnames
+      if (length(include_varnames)) {
+        attr(fs, "include_varnames") <- structure(
+          list(include_varnames),
+          names = private$dataname
+        )
+      }
 
-      logger::log_trace(paste(
-        "{ class(self)[1] } removed from state_list { state_list_index },",
-        "dataname: { private$dataname }"
-      ))
-      invisible(NULL)
+      exclude_varnames <- private$exclude_varnames
+      if (length(exclude_varnames)) {
+        attr(fs, "exclude_varnames") <- structure(
+          list(exclude_varnames),
+          names = private$dataname
+        )
+      }
+
+      return(fs)
+    },
+
+    #' @description
+    #' Sets active `FilterState` objects.
+    #'
+    #' @param data (`data.frame`)\cr
+    #'   data which are supposed to be filtered
+    #' @param state (`named list`)\cr
+    #'   should contain values which are initial selection in the `FilterState`.
+    #'   Names of the `list` element should correspond to the name of the
+    #'   column in `data`.
+    #' @return function which throws an error
+    set_filter_state = function(state) {
+      stop("Pure virtual method.")
     },
 
     #' @description
@@ -273,41 +267,8 @@ FilterStates <- R6::R6Class( # nolint
     #'
     #' @return NULL
     #'
-    state_list_empty = function() {
-      logger::log_trace(
-        "{ class(self)[1] } emptying state_list, dataname: { private$dataname }"
-      )
-
-      for (i in seq_along(private$state_list)) {
-        private$state_list[[i]](list())
-      }
-
-      logger::log_trace(
-        "{ class(self)[1] } emptied state_list, dataname: { private$dataname }"
-      )
-      invisible(NULL)
-    },
-
-    #' @description
-    #' Gets the number of active `FilterState` objects in this `FilterStates` object.
-    #'
-    #' @return `integer(1)`
-    #'
-    get_filter_count = function() {
-      sum(vapply(private$state_list, function(state_list) {
-        length(state_list())
-      }, FUN.VALUE = integer(1)))
-    },
-
-    #' @description Remove a single `FilterState` from `state_list`.
-    #'
-    #' @param state_id (`character`)\cr
-    #'   name of variable for which to remove `FilterState`
-    #'
-    #' @return `NULL`
-    #'
-    remove_filter_state = function(state_id) {
-      stop("This variable can not be removed from the filter.")
+    clear_filter_states = function() {
+      private$state_list_empty()
     },
 
     # shiny modules ----
@@ -323,44 +284,17 @@ FilterStates <- R6::R6Class( # nolint
     #'
     #' @return `shiny.tag`
     #'
-    ui = function(id) {
+    ui_active = function(id) {
       ns <- NS(id)
       private$cards_container_id <- ns("cards")
       tagList(
         include_css_files(pattern = "filter-panel"),
         tags$div(
           id = private$cards_container_id,
-          class = "list-group hideable-list-group",
+          class = "accordion",
           `data-label` = ifelse(private$datalabel == "", "", (paste0("> ", private$datalabel)))
         )
       )
-    },
-
-    #' @description
-    #' Gets reactive values from active `FilterState` objects.
-    #'
-    #' Get active filter state from `FilterState` objects stored in `state_list`(s).
-    #' The output is a list compatible with input to `self$set_filter_state`.
-    #'
-    #' @return `list` containing `list` per `FilterState` in the `state_list`
-    #'
-    get_filter_state = function() {
-      stop("Pure virtual method.")
-    },
-
-    #' @description
-    #' Sets active `FilterState` objects.
-    #'
-    #' @param data (`data.frame`)\cr
-    #'   data object for which to define a subset
-    #' @param state (`named list`)\cr
-    #'   should contain values of initial selections in the `FilterState`;
-    #'   `list` names must correspond to column names in `data`
-    #' @param filtered_dataset
-    #'   data object for which to define a subset(?)
-    #'
-    set_filter_state = function(data, state, filtered_dataset) {
-      stop("Pure virtual method.")
     },
 
     #' @description
@@ -368,12 +302,12 @@ FilterStates <- R6::R6Class( # nolint
     #'
     #' @param id (`character(1)`)\cr
     #'   shiny element (module instance) id
-    #' @param data (`data.frame`, `MultiAssayExperiment`, `SummarizedExperiment`, `matrix`)\cr
-    #'   data object for which to define a subset
     #'
+    #' @param data (`data.frame`, `MultiAssayExperiment`, `SummarizedExperiment`, `matrix`)
+    #'   object which columns are used to choose filter variables.
     #' @return `shiny.tag`
     #'
-    ui_add_filter_state = function(id, data) {
+    ui_add = function(id, data) {
       div("This object cannot be filtered")
     },
 
@@ -382,14 +316,10 @@ FilterStates <- R6::R6Class( # nolint
     #'
     #' @param id (`character(1)`)\cr
     #'   shiny module instance id
-    #' @param data (`data.frame`, `MultiAssayExperiment`, `SummarizedExperiment`, `matrix`)\cr
-    #'   data object for which to define a subset
-    #' @param ... ignored
     #'
     #' @return `moduleServer` function which returns `NULL`
     #'
-    srv_add_filter_state = function(id, data, ...) {
-      check_ellipsis(..., stop = FALSE)
+    srv_add = function(id) {
       moduleServer(
         id = id,
         function(input, output, session) {
@@ -402,13 +332,74 @@ FilterStates <- R6::R6Class( # nolint
     # private fields ----
     cards_container_id = character(0),
     card_ids = character(0),
+    data = NULL, # data.frame, MAE, SE or matrix
+    data_reactive = NULL, # reactive
     datalabel = character(0),
     dataname = NULL, # because it holds object of class name
+    include_varnames = character(0), # holds column names
+    exclude_varnames = character(0), # holds column names
     ns = NULL, # shiny ns()
     observers = list(), # observers
-    state_list = NULL, # list of `reactiveVal`s initialized by init methods of child classes
+    state_list = NULL, # list of `reactiveVal`s initialized by init methods of child classes,
+    count_type = "all", # specifies how observation numbers are displayed in filter cards,
 
     # private methods ----
+
+    # @description
+    # Set the allowed filterable variables
+    # @param include_varnames (`character`) Names of variables included in filtering.
+    # @param exclude_varnames (`character`) Names of variables excluded from filtering.
+    #
+    # @details When retrieving the filtered variables only
+    # those which have filtering supported (i.e. are of the permitted types).
+    # Only one from `include_varnames` and `exclude_varnames` can be used in one call. When `exclude_varnames`
+    # is called `include_varnames` is cleared - same otherwise.
+    # are included.
+    #
+    # @return NULL invisibly
+    set_filterable_varnames = function(include_varnames = character(0), exclude_varnames = character(0)) {
+      if ((length(include_varnames) + length(exclude_varnames)) == 0L) {
+        return(invisible(NULL))
+      }
+      checkmate::assert_character(include_varnames, any.missing = FALSE, min.len = 0L, null.ok = TRUE)
+      checkmate::assert_character(exclude_varnames, any.missing = FALSE, min.len = 0L, null.ok = TRUE)
+      if (length(include_varnames) && length(exclude_varnames)) {
+        stop(
+          "`include_varnames` and `exclude_varnames` has been both specified for",
+          private$dataname,
+          ". Only one per dataset is allowed.",
+        )
+      }
+      supported_vars <- get_supported_filter_varnames(private$data)
+      if (length(include_varnames)) {
+        private$include_varnames <- intersect(include_varnames, supported_vars)
+        private$exclude_varnames <- character(0)
+      } else {
+        private$exclude_varnames <- exclude_varnames
+        private$include_varnames <- character(0)
+      }
+      invisible(NULL)
+    },
+
+    # @description
+    # Get vector of filterable varnames
+    #
+    # @details
+    #  These are the only columns which can be used in the filter panel
+    #
+    # @return character vector with names of the columns
+    get_filterable_varnames = function() {
+      if (length(private$include_varnames)) {
+        private$include_varnames
+      } else {
+        supported_varnames <- get_supported_filter_varnames(private$data)
+        setdiff(supported_varnames, private$exclude_varnames)
+      }
+    },
+
+    get_dataname_prefixed = function() {
+      private$dataname
+    },
 
     # Module to insert/remove `FilterState` UI
     #
@@ -462,15 +453,10 @@ FilterStates <- R6::R6Class( # nolint
           insertUI(
             selector = sprintf("#%s", private$cards_container_id),
             where = "beforeEnd",
-            # add span with id to be removable
-            ui = div(
-              id = card_id,
-              class = "list-group-item",
-              filter_state$ui(session$ns("content"))
-            )
+            ui = filter_state$ui(card_id, private$cards_container_id)
           )
           # signal sent from filter_state when it is marked for removal
-          remove_fs <- filter_state$server(id = "content")
+          remove_fs <- filter_state$server(id = "card")
 
           private$observers[[state_list_id]] <- observeEvent(
             ignoreInit = TRUE,
@@ -482,7 +468,7 @@ FilterStates <- R6::R6Class( # nolint
                 "removing FilterState from state_list '{ state_list_index }',",
                 "dataname: { private$dataname }"
               ))
-              self$state_list_remove(state_list_index, state_id)
+              private$state_list_remove(state_list_index, state_id)
               logger::log_trace(paste(
                 "{ class(self)[1] }$insert_filter_state_ui@1",
                 "removed FilterState from state_list '{ state_list_index }',",
@@ -533,6 +519,196 @@ FilterStates <- R6::R6Class( # nolint
         )
       )
     },
+
+    # state_list methods ----
+
+    # @description
+    # Returns a list of `FilterState` objects stored in this `FilterStates`.
+    #
+    # @param state_list_index (`character(1)`, `integer(1)`)\cr
+    #   index on the list in `private$state_list` where filter states are kept
+    # @param state_id (`character(1)`)\cr
+    #   name of element in a filter state (which is a `reactiveVal` containing a list)
+    #
+    # @return `list` of `FilterState` objects
+    #
+    state_list_get = function(state_list_index, state_id = NULL) {
+      private$validate_state_list_exists(state_list_index)
+      checkmate::assert_string(state_id, null.ok = TRUE)
+
+      if (is.null(state_id)) {
+        private$state_list[[state_list_index]]()
+      } else {
+        private$state_list[[state_list_index]]()[[state_id]]
+      }
+    },
+
+    # @description
+    # Adds a new `FilterState` object to this `FilterStates`.\cr
+    # Raises error if the length of `x` does not match the length of `state_id`.
+    #
+    # @param x (`FilterState`)\cr
+    #   object to be added to filter state list
+    # @param state_list_index (`character(1)`, `integer(1)`)\cr
+    #   index on the list in `private$state_list` where filter states are kept
+    # @param state_id (`character(1)`)\cr
+    #   name of element in a filter state (which is a `reactiveVal` containing a list)
+    #
+    # @return NULL
+    #
+    state_list_push = function(x, state_list_index, state_id) {
+      logger::log_trace("{ class(self)[1] } pushing into state_list, dataname: { private$dataname }")
+      private$validate_state_list_exists(state_list_index)
+      checkmate::assert_string(state_id)
+      checkmate::assert_class(x, "FilterState")
+
+      state <- stats::setNames(list(x), state_id)
+      new_state_list <- c(
+        shiny::isolate(private$state_list[[state_list_index]]()),
+        state
+      )
+      shiny::isolate(private$state_list[[state_list_index]](new_state_list))
+
+      logger::log_trace("{ class(self)[1] } pushed into queue, dataname: { private$dataname }")
+      invisible(NULL)
+    },
+
+    # @description
+    # Removes a single filter state with all associated shiny elements:\cr
+    # * specified `FilterState` from `private$state_list`
+    # * UI card created for this filter
+    # * observers tracking the selection and remove button
+    #
+    # @param state_list_index (`character(1)`, `integer(1)`)\cr
+    #   index on the list in `private$state_list` where filter states are kept
+    # @param state_id (`character`)\cr
+    #   names of element in a filter state (which is a `reactiveVal` containing a list)
+    #
+    # @return NULL
+    #
+    state_list_remove = function(state_list_index, state_id) {
+      logger::log_trace(
+        "{ class(self)[1] } removing a filter from state_list: { state_list_index }; dataname: { private$dataname }"
+      )
+
+      private$validate_state_list_exists(state_list_index)
+      checkmate::assert_vector(state_id, len = 1)
+      checkmate::assert(
+        checkmate::check_string(state_list_index),
+        checkmate::check_int(state_list_index)
+      )
+
+      new_state_list <- shiny::isolate(private$state_list[[state_list_index]]())
+      if (is.element(state_id, names(new_state_list))) {
+        new_state_list[[state_id]]$destroy_observers()
+        new_state_list[[state_id]] <- NULL
+        shiny::isolate(private$state_list[[state_list_index]](new_state_list))
+
+        logger::log_trace(
+          "{ class(self)[1] } removed from state_list: { state_list_index }; dataname: { private$dataname }"
+        )
+      } else {
+        warning(sprintf("\"%s\" not found in state list %s", state_id, state_list_index))
+      }
+
+      invisible(NULL)
+    },
+
+    # @description
+    # Remove all `FilterState` objects from this `FilterStates` object.
+    #
+    # @return invisible NULL
+    #
+    state_list_empty = function() {
+      logger::log_trace("{ class(self)[1] }$state_list_empty removing all filters for dataname: { private$dataname }")
+
+      for (state_list_index in seq_along(private$state_list)) {
+        state_list_i <- shiny::isolate(private$state_list[[state_list_index]]())
+        for (state_id in names(state_list_i)) {
+          private$state_list_remove(state_list_index, state_id)
+        }
+      }
+
+      logger::log_trace("{ class(self)[1] }$state_list_empty removed all filters for dataname: { private$dataname }")
+      invisible(NULL)
+    },
+
+    # @description
+    # Set filter state
+    #
+    # Utility method for `set_filter_state` to create or modify `FilterState` from a single
+    #  `state_list_index`.
+    # @param state (`teal_slices`)
+    # @param state_list_index (`vector(1)`)
+    #  index of the `state_list`
+    # @param data (`data.frame`, `matrix` or `DataFrame`)
+    # @param data_reactive (`function`)
+    #  function having `sid` as argument
+    # @param extract_type (`character(0)` or `chracter(1)`)
+    #
+    # @return invisible NULL
+    #
+    set_filter_state_impl = function(state,
+                                     state_list_index,
+                                     data,
+                                     data_reactive,
+                                     extract_type = character(0)) {
+      checkmate::assert_class(state, "teal_slices")
+      checkmate::assert_scalar(state_list_index)
+      checkmate::assert_multi_class(data, c("data.frame", "matrix", "DataFrame"))
+      checkmate::assert_function(data_reactive, args = "sid")
+      checkmate::assert_character(extract_type, max.len = 1L)
+      if (length(extract_type) != 0L) {
+        extract_type <- match.arg(extract_type, c("list", "matrix"))
+      }
+
+      if (length(state) == 0L) {
+        return(invisible(NULL))
+      }
+
+      # Modify existing filter states.
+      state_list <- shiny::isolate(private$state_list_get(state_list_index))
+      slices_for_update <- slices_which(
+        state,
+        sprintf("varname %%in%% c(%s)", toString(dQuote(names(state_list), q = FALSE)))
+      )
+      lapply(slices_for_update, function(x) {
+        do.call(state_list[[x$varname]]$set_state, list(x))
+      })
+
+      # Create new filter states.
+      slices_for_create <- slices_which(
+        state,
+        sprintf("!varname %%in%% c(%s)", toString(dQuote(names(state_list), q = FALSE)))
+      )
+      lapply(slices_for_create, function(x) {
+        # objects has random and unique sid attribute
+        # which allows a reactive from below to find a right object in the state_list
+        sid <- sprintf("%s-%s-%s", state_list_index, x$varname, sample.int(size = 1L, n = .Machine$integer.max))
+        arg_list <- list(
+          x = data[, x$varname, drop = TRUE],
+          # data_reactive is a function which eventually calls get_call(sid).
+          # This chain of calls returns column from the data filtered by everything
+          # but filter identified by the sid argument. FilterState then get x_reactive
+          # and this no longer needs to be a function to pass sid. reactive in the FilterState
+          # is also beneficial as it can be cached and retriger filter counts only if
+          # returned vector is different.
+          x_reactive = if (private$count_type == "none") {
+            reactive(NULL)
+          } else {
+            reactive(data_reactive(sid)[, x$varname, drop = TRUE])
+          },
+          extract_type = extract_type
+        )
+        arg_list <- append(arg_list, x)
+        fstate <- do.call(init_filter_state, arg_list)
+        attr(fstate, "sid") <- sid
+        private$state_list_push(x = fstate, state_list_index = state_list_index, state_id = x$varname)
+      })
+
+      invisible(NULL)
+    },
+
     # Checks if the state_list of the given index was initialized in this `FilterStates`
     # @param state_list_index (character or integer)
     validate_state_list_exists = function(state_list_index) {

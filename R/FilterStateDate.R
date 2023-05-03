@@ -7,13 +7,12 @@
 #'
 #' @examples
 #' filter_state <- teal.slice:::DateFilterState$new(
-#'   c(Sys.Date() + seq(1:10), NA),
+#'   x = c(Sys.Date() + seq(1:10), NA),
 #'   varname = "x",
 #'   dataname = "data",
 #'   extract_type = character(0)
 #' )
 #' isolate(filter_state$get_call())
-#'
 #' isolate(filter_state$set_selected(c(Sys.Date() + 3L, Sys.Date() + 8L)))
 #' isolate(filter_state$set_keep_na(TRUE))
 #' isolate(filter_state$get_call())
@@ -21,17 +20,23 @@
 #' \dontrun{
 #' # working filter in an app
 #' library(shiny)
+#' library(shinyjs)
 #'
 #' dates <- c(Sys.Date() - 100, Sys.Date())
 #' data_date <- c(seq(from = dates[1], to = dates[2], length.out = 100), NA)
 #' filter_state_date <- DateFilterState$new(
 #'   x = data_date,
-#'   varname = "variable",
-#'   varlabel = "label"
+#'   dataname = "data",
+#'   varname = "variable"
 #' )
-#' filter_state_date$set_state(list(selected = data_date[c(47, 98)], keep_na = TRUE))
+#' filter_state_date$set_state(
+#'   filter_var("data", "variable", selected = data_date[c(47, 98)], keep_na = TRUE)
+#' )
 #'
 #' ui <- fluidPage(
+#'   useShinyjs(),
+#'   include_css_files(pattern = "filter-panel"),
+#'   include_js_files(pattern = "count-bar-labels"),
 #'   column(4, div(
 #'     h4("DateFilterState"),
 #'     isolate(filter_state_date$ui("fs"))
@@ -70,7 +75,9 @@
 #'   observeEvent(input$button4_date, filter_state_date$set_selected(dates))
 #'   observeEvent(
 #'     input$button0_date,
-#'     filter_state_date$set_state(list(selected = data_date[c(47, 98)], keep_na = TRUE))
+#'     filter_state_date$set_state(
+#'       filter_var("data", "variable", selected = data_date[c(47, 98)], keep_na = TRUE)
+#'     )
 #'   )
 #' }
 #'
@@ -89,14 +96,31 @@ DateFilterState <- R6::R6Class( # nolint
 
     #' @description
     #' Initialize a `FilterState` object
+    #'
     #' @param x (`Date`)\cr
     #'   values of the variable used in filter
-    #' @param varname (`character`, `name`)\cr
-    #'   name of the variable
-    #' @param varlabel (`character(1)`)\cr
-    #'   label of the variable (optional).
+    #' @param x_reactive (`reactive`)\cr
+    #'   returning vector of the same type as `x`. Is used to update
+    #'   counts following the change in values of the filtered dataset.
+    #'   If it is set to `reactive(NULL)` then counts based on filtered
+    #'   dataset are not shown.
     #' @param dataname (`character(1)`)\cr
-    #'   optional name of dataset where `x` is taken from
+    #'   optional name of dataset where `x` is taken from. Must be specified
+    #'   if `extract_type` argument is not empty.
+    #' @param varname (`character(1)`)\cr
+    #'   name of the variable.
+    #' @param choices (`atomic`, `NULL`)\cr
+    #'   vector specifying allowed selection values
+    #' @param selected (`atomic`, `NULL`)\cr
+    #'   vector specifying selection
+    #' @param keep_na (`logical(1)`, `NULL`)\cr
+    #'   flag specifying whether to keep missing values
+    #' @param keep_inf (`logical(1)`, `NULL`)\cr
+    #'   flag specifying whether to keep infinite values
+    #' @param fixed (`logical(1)`)\cr
+    #'   flag specifying whether the `FilterState` is initiated fixed
+    #' @param disabled (`logical(1)`)\cr
+    #'   flag specifying whether the `FilterState` is initiated disabled
     #' @param extract_type (`character(0)`, `character(1)`)\cr
     #' whether condition calls should be prefixed by dataname. Possible values:
     #' \itemize{
@@ -104,19 +128,42 @@ DateFilterState <- R6::R6Class( # nolint
     #' \item{`"list"`}{ `varname` in the condition call will be returned as `<dataname>$<varname>`}
     #' \item{`"matrix"`}{ `varname` in the condition call will be returned as `<dataname>[, <varname>]`}
     #' }
+    #' @param ... additional arguments to be saved as a list in `private$extras` field
+    #'
     initialize = function(x,
+                          x_reactive = reactive(NULL),
+                          dataname,
                           varname,
-                          varlabel = character(0),
-                          dataname = NULL,
-                          extract_type = character(0)) {
-      stopifnot(is(x, "Date"))
-      super$initialize(x, varname, varlabel, dataname, extract_type)
+                          choices = NULL,
+                          selected = NULL,
+                          keep_na = FALSE,
+                          keep_inf = NULL,
+                          fixed = FALSE,
+                          disabled = FALSE,
+                          extract_type = character(0),
+                          ...) {
+      checkmate::assert_date(x)
+      checkmate::assert_class(x_reactive, "reactive")
+      checkmate::assert_date(choices, null.ok = TRUE)
 
-      var_range <- range(x, na.rm = TRUE)
-      private$set_choices(var_range)
-      self$set_selected(var_range)
+      args <- list(
+        x = x,
+        x_reactive = x_reactive,
+        dataname = dataname,
+        varname = varname,
+        keep_na = keep_na,
+        keep_inf = keep_inf,
+        fixed = fixed,
+        disabled = disabled,
+        extract_type = extract_type
+      )
+      args <- append(args, list(...))
+      do.call(super$initialize, args)
 
-      return(invisible(self))
+      private$set_choices(choices)
+      private$set_selected(selected)
+
+      invisible(self)
     },
 
     #' @description
@@ -126,17 +173,19 @@ DateFilterState <- R6::R6Class( # nolint
     #' Default: 0
     #' @return `character(1)` the formatted string
     #'
-    format = function(indent = 0) {
+    format = function(indent = 2) {
       checkmate::assert_number(indent, finite = TRUE, lower = 0)
 
-      vals <- self$get_selected()
+      vals <- private$get_selected()
       sprintf(
-        "%sFiltering on: %s\n%1$s  Selected range: %s - %s\n%1$s  Include missing values: %s",
+        "%sFiltering on: %s\n%sSelected range: %s - %s\n%sInclude missing values: %s",
         format("", width = indent),
         private$varname,
+        format("", width = indent * 2),
         format(vals[1], nsmall = 3),
         format(vals[2], nsmall = 3),
-        format(self$get_keep_na())
+        format("", width = indent * 2),
+        format(private$get_keep_na())
       )
     },
 
@@ -144,9 +193,13 @@ DateFilterState <- R6::R6Class( # nolint
     #' Answers the question of whether the current settings and values selected actually filters out any values.
     #' @return logical scalar
     is_any_filtered = function() {
-      if (!setequal(self$get_selected(), private$choices)) {
+      if (private$is_disabled()) {
+        FALSE
+      } else if (private$is_choice_limited) {
         TRUE
-      } else if (!isTRUE(self$get_keep_na()) && private$na_count > 0) {
+      } else if (!setequal(private$get_selected(), private$choices)) {
+        TRUE
+      } else if (!isTRUE(private$get_keep_na()) && private$na_count > 0) {
         TRUE
       } else {
         FALSE
@@ -158,58 +211,71 @@ DateFilterState <- R6::R6Class( # nolint
     #' For this class returned call looks like
     #' `<varname> >= <min value> & <varname> <= <max value>` with
     #' optional `is.na(<varname>)`.
+    #' @param dataname `character(1)` containing possibly prefixed name of data set
     #' @return (`call`)
-    get_call = function() {
-      choices <- as.character(self$get_selected())
+    #'
+    get_call = function(dataname) {
+      choices <- as.character(private$get_selected())
       filter_call <-
         call(
           "&",
-          call(">=", private$get_varname_prefixed(), call("as.Date", choices[1L])),
-          call("<=", private$get_varname_prefixed(), call("as.Date", choices[2L]))
+          call(">=", private$get_varname_prefixed(dataname), call("as.Date", choices[1L])),
+          call("<=", private$get_varname_prefixed(dataname), call("as.Date", choices[2L]))
         )
       private$add_keep_na_call(filter_call)
-    },
-
-    #' @description
-    #' Sets the selected time frame of this `DateFilterState`.
-    #'
-    #' @param value (`Date(2)`) the lower and the upper bound of the selected
-    #'   time frame. Must not contain NA values.
-    #'
-    #' @return invisibly `NULL`.
-    #'
-    #' @note Casts the passed object to `Date` before validating the input
-    #' making it possible to pass any object coercible to `Date` to this method.
-    #'
-    #' @examples
-    #' date <- as.Date("13/09/2021")
-    #' filter <- teal.slice:::DateFilterState$new(
-    #'   c(date, date + 1, date + 2, date + 3),
-    #'   varname = "name"
-    #' )
-    #' filter$set_selected(c(date + 1, date + 2))
-    set_selected = function(value) {
-      super$set_selected(value)
     }
   ),
 
   # private methods ----
 
   private = list(
+    set_choices = function(choices) {
+      if (is.null(choices)) {
+        choices <- range(private$x, na.rm = TRUE)
+      } else {
+        choices_adjusted <- c(max(choices[1L], min(private$x)), min(choices[2L], max(private$x)))
+        if (any(choices != choices_adjusted)) {
+          warning(sprintf(
+            "Choices adjusted (some values outside of variable range). Varname: %s, dataname: %s.",
+            private$varname, private$dataname
+          ))
+          choices <- choices_adjusted
+        }
+        if (choices[1L] >= choices[2L]) {
+          warning(sprintf(
+            "Invalid choices: lower is higher / equal to upper, or not in range of variable values.
+            Setting defaults. Varname: %s, dataname: %s.",
+            private$varname, private$dataname
+          ))
+          choices <- range(private$x, na.rm = TRUE)
+        }
+      }
+      private$set_is_choice_limited(private$x, choices)
+      private$x <- private$x[(private$x >= choices[1L] & private$x <= choices[2L]) | is.na(private$x)]
+      private$choices <- choices
+      invisible(NULL)
+    },
+
+    # @description
+    # Check whether the initial choices filter out some values of x and set the flag in case.
+    set_is_choice_limited = function(xl, choices) {
+      private$is_choice_limited <- (any(xl < choices[1L], na.rm = TRUE) | any(xl > choices[2L], na.rm = TRUE))
+      invisible(NULL)
+    },
     validate_selection = function(value) {
       if (!is(value, "Date")) {
         stop(
           sprintf(
             "value of the selection for `%s` in `%s` should be a Date",
-            self$get_varname(),
-            self$get_dataname()
+            private$get_varname(),
+            private$get_dataname()
           )
         )
       }
       pre_msg <- sprintf(
         "dataset '%s', variable '%s': ",
-        self$get_dataname(),
-        self$get_varname()
+        private$get_dataname(),
+        private$get_varname()
       )
       check_in_range(value, private$choices, pre_msg = pre_msg)
     },
@@ -225,20 +291,34 @@ DateFilterState <- R6::R6Class( # nolint
       values
     },
     remove_out_of_bound_values = function(values) {
-      if (values[1] < private$choices[1]) {
-        warning(paste(
-          "Value:", values[1], "is outside of the possible range for column", private$varname,
-          "of dataset", private$dataname, "."
-        ))
-        values[1] <- private$choices[1]
+      if (values[1] < private$choices[1L] | values[1] > private$choices[2L]) {
+        warning(
+          sprintf(
+            "Value: %s is outside of the possible range for column %s of dataset %s, setting minimum possible value.",
+            values[1], private$varname, private$dataname
+          )
+        )
+        values[1] <- private$choices[1L]
       }
 
-      if (values[2] > private$choices[2]) {
-        warning(paste(
-          "Value:", values[2], "is outside of the possible range for column", private$varname,
-          "of dataset", private$dataname, "."
-        ))
-        values[2] <- private$choices[2]
+      if (values[2] > private$choices[2L] | values[2] < private$choices[1L]) {
+        warning(
+          sprintf(
+            "Value: %s is outside of the possible range for column %s of dataset %s, setting maximum possible value.",
+            values[2], private$varname, private$dataname
+          )
+        )
+        values[2] <- private$choices[2L]
+      }
+
+      if (values[1] > values[2]) {
+        warning(
+          sprintf(
+            "Start date %s is set after the end date %s, the values will be replaced with a default date range.",
+            values[1], values[2]
+          )
+        )
+        values <- c(private$choices[1L], private$choices[2L])
       }
       values
     },
@@ -267,10 +347,10 @@ DateFilterState <- R6::R6Class( # nolint
             dateRangeInput(
               inputId = ns("selection"),
               label = NULL,
-              start = self$get_selected()[1],
-              end = self$get_selected()[2],
-              min = private$choices[1],
-              max = private$choices[2],
+              start = private$get_selected()[1],
+              end = private$get_selected()[2],
+              min = private$choices[1L],
+              max = private$choices[2L],
               width = "100%"
             )
           ),
@@ -302,14 +382,14 @@ DateFilterState <- R6::R6Class( # nolint
           private$observers$seletion_api <- observeEvent(
             ignoreNULL = TRUE, # dates needs to be selected
             ignoreInit = TRUE,
-            eventExpr = self$get_selected(),
+            eventExpr = private$get_selected(),
             handlerExpr = {
-              if (!setequal(self$get_selected(), input$selection)) {
+              if (!setequal(private$get_selected(), input$selection)) {
                 updateDateRangeInput(
                   session = session,
                   inputId = "selection",
-                  start = self$get_selected()[1],
-                  end = self$get_selected()[2]
+                  start = private$get_selected()[1],
+                  end = private$get_selected()[2]
                 )
                 logger::log_trace(sprintf(
                   "DateFilterState$server@1 selection of variable %s changed, dataname: %s",
@@ -327,8 +407,13 @@ DateFilterState <- R6::R6Class( # nolint
             handlerExpr = {
               start_date <- input$selection[1]
               end_date <- input$selection[2]
-
-              self$set_selected(c(start_date, end_date))
+              if (start_date > end_date) {
+                showNotification(
+                  "Start date must not be greater than the end date. Setting back to default values.",
+                  type = "warning"
+                )
+              }
+              private$set_selected(c(start_date, end_date))
               logger::log_trace(sprintf(
                 "DateFilterState$server@2 selection of variable %s changed, dataname: %s",
                 private$varname,
@@ -344,7 +429,7 @@ DateFilterState <- R6::R6Class( # nolint
             updateDateRangeInput(
               session = session,
               inputId = "selection",
-              start = private$choices[1]
+              start = private$choices[1L]
             )
             logger::log_trace(sprintf(
               "DateFilterState$server@3 reset start date of variable %s, dataname: %s",
@@ -357,7 +442,7 @@ DateFilterState <- R6::R6Class( # nolint
             updateDateRangeInput(
               session = session,
               inputId = "selection",
-              end = private$choices[2]
+              end = private$choices[2L]
             )
             logger::log_trace(sprintf(
               "DateFilterState$server@4 reset end date of variable %s, dataname: %s",
@@ -365,9 +450,34 @@ DateFilterState <- R6::R6Class( # nolint
               private$dataname
             ))
           })
+
+          observeEvent(private$is_disabled(), {
+            shinyjs::toggleState(
+              id = "selection",
+              condition = !private$is_disabled()
+            )
+            shinyjs::toggleState(
+              id = "keep_na-value",
+              condition = !private$is_disabled()
+            )
+          })
+
           logger::log_trace("DateFilterState$server initialized, dataname: { private$dataname }")
           NULL
         }
+      )
+    },
+    # @description
+    # Server module to display filter summary
+    #  renders text describing selected date range and
+    #  if NA are included also
+    content_summary = function(id) {
+      selected <- as.character(private$get_selected())
+      min <- selected[1]
+      max <- selected[2]
+      tagList(
+        tags$span(paste0(min, " - ", max)),
+        if (isTRUE(private$get_keep_na())) tags$span("NA") else NULL
       )
     }
   )

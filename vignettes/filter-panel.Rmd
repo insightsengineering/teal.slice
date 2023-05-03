@@ -137,7 +137,7 @@ Currently following variants are possible:
 
 `FilterStates` serves two Shiny related purposes:
 
-- `ui/srv_add_filter_state` allow to add `FilterState` for selected variable. Variables included
+- `ui/srv_add` allow to add `FilterState` for selected variable. Variables included
   in the module are the filterable colnames of the provided dataset. Variable selection adds `FilterState` to
   `reactiveVal` (stored in list `private$state_list[[state_list_id]]`). `FilterState` is dispatched
   automatically on a selected column class.
@@ -284,22 +284,20 @@ The above list structure is applied in `get_filter_state`, `set_filter_state` an
 ```{r, message=FALSE, warning=FALSE}
 library(teal.slice)
 
-datasets <- shiny::isolate(
-  init_filtered_data(
-    list(
-      iris = list(dataset = iris),
-      mtcars = list(dataset = mtcars)
-    )
+datasets <- init_filtered_data(
+  list(
+    iris = list(dataset = iris),
+    mtcars = list(dataset = mtcars)
   )
 )
 
-shiny::isolate(
-  set_filter_state(
-    datasets = datasets,
-    filter = list(
-      iris = list(Species = list(selected = "virginica", keep_na = FALSE)),
-      mtcars = list(mpg = list(selected = c(20.0, 25.0), keep_na = FALSE, keep_inf = FALSE))
-    )
+set_filter_state(
+  datasets = datasets,
+  filter = filter_settings(
+    filter_var(dataname = "iris", varname = "Species", selected = "virginica", keep_na = FALSE),
+    filter_var(dataname = "mtcars", varname = "mpg", selected = c(20.0, 25.0), keep_na = FALSE, keep_inf = FALSE),
+    include_varnames = list(iris = c("Species", "Sepal.Length")),
+    exclude_varnames = list(mtcars = "cyl")
   )
 )
 ```
@@ -311,22 +309,20 @@ get_filter_state(datasets)
 
 3. Removing filter states
 ```{r, message=FALSE, warning=FALSE}
-shiny::isolate(
-  remove_filter_state(
-    datasets = datasets,
-    filter = list(iris = c("Species"))
+remove_filter_state(
+  datasets = datasets,
+  filter = filter_settings(
+    filter_var(dataname = "iris", varname = "Species")
   )
 )
 ```
 
 4. Updating filter states. *Works only in the shiny reactive context.
 ```{r, message=FALSE, warning=FALSE}
-shiny::isolate(
-  set_filter_state(
-    datasets = datasets,
-    filter = list(
-      mtcars = list(mpg = list(selected = c(22.0, 25.0)))
-    )
+set_filter_state(
+  datasets = datasets,
+  filter = filter_settings(
+    filter_var(dataname = "mtcars", varname = "mpg", selected = c(22.0, 25.0))
   )
 )
 ```
@@ -382,13 +378,20 @@ app <- shinyApp(
     observeEvent(input$add_species_filter, {
       set_filter_state(
         datasets,
-        list(iris = list(Species = list(selected = c("setosa", "versicolor"))))
+        filter_settings(
+          filter_var(dataname = "iris", varname = "Species", selected = c("setosa", "versicolor"))
+        )
       )
     })
     observeEvent(input$remove_species_filter, {
       states <- get_filter_state(datasets)
       if (!is.null(states$iris$Species)) {
-        remove_filter_state(datasets, list(iris = "Species"))
+        remove_filter_state(
+          datasets, 
+          filter_settings(
+            filter_var(dataname = "iris", varname = "Species")
+          )
+        )
       }
     })
     observeEvent(input$remove_all_filters, clear_filter_states(datasets))
