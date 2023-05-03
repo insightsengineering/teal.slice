@@ -150,10 +150,6 @@ DFFilterStates <- R6::R6Class( # nolint
     #'   text label value
     #' @param varlabels (`character`)\cr
     #'   labels of the variables used in this object.
-    #' @param excluded_varnames (`character`)\cr
-    #'   names of variables that can \strong{not} be filtered on.
-    #' @param count_type `character(1)`\cr
-    #'   specifying how observations are tallied.
     #' @param keys (`character`)\cr
     #'   key columns names
     #'
@@ -162,15 +158,13 @@ DFFilterStates <- R6::R6Class( # nolint
                           dataname,
                           datalabel = character(0),
                           varlabels = character(0),
-                          excluded_varnames = character(0),
-                          count_type = c("all", "none"),
                           keys = character(0)) {
       checkmate::assert_function(data_reactive, args = "sid")
       checkmate::assert_data_frame(data)
-      super$initialize(data, data_reactive, dataname, datalabel, excluded_varnames, count_type)
+      super$initialize(data, data_reactive, dataname, datalabel)
       private$varlabels <- varlabels
       private$keys <- keys
-      self$set_filterable_varnames(colnames(data))
+      private$set_filterable_varnames(include_varnames = colnames(private$data))
     },
 
     #' @description
@@ -182,23 +176,6 @@ DFFilterStates <- R6::R6Class( # nolint
     #' @return `character(1)`
     get_fun = function() {
       "dplyr::filter"
-    },
-
-    #' @description
-    #' Returns active `FilterState` objects.
-    #'
-    #' Gets all filter state information from this dataset.
-    #'
-    #' @return `teal_slices`
-    #'
-    get_filter_state = function() {
-      slices <- lapply(private$state_list_get(), function(x) x$get_state())
-      excluded_varnames <- structure(
-        list(setdiff(colnames(private$data), private$filterable_varnames)),
-        names = private$dataname
-      )
-      excluded_varnames <- Filter(function(x) !identical(x, character(0)), excluded_varnames)
-      do.call(filter_settings, c(slices, list(exclude = excluded_varnames, count_type = private$count_type)))
     },
 
     #' @description
@@ -229,23 +206,31 @@ DFFilterStates <- R6::R6Class( # nolint
     #' @return `NULL` invisibly
     #'
     set_filter_state = function(state) {
+      logger::log_trace("{ class(self)[1] }$set_filter_state initializing, dataname: { private$dataname }")
       checkmate::assert_class(state, "teal_slices")
       lapply(state, function(x) {
         checkmate::assert_true(x$dataname == private$dataname, .var.name = "dataname matches private$dataname")
       })
 
-      logger::log_trace("{ class(self)[1] }$set_filter_state initializing, dataname: { private$dataname }")
+      private$set_filterable_varnames(
+        include_varnames = attr(state, "include_varnames")[[private$dataname]],
+        exclude_varnames = attr(state, "exclude_varnames")[[private$dataname]]
+      )
+
+      count_type <- attr(state, "count_type")
+      if (length(count_type)) {
+        private$count_type <- count_type
+      }
 
       # Drop teal_slices that refer to excluded variables.
       varnames <- slices_field(state, "varname")
-      filterable <- private$filterable_varnames
-      if (!all(varnames %in% filterable)) {
-        excluded_varnames <- toString(dQuote(setdiff(varnames, filterable), q = FALSE))
+      excluded_varnames <- setdiff(varnames, private$get_filterable_varnames())
+      if (length(excluded_varnames)) {
         state <- slices_which(
           state,
-          sprintf("!varname %%in%% c(%s)", excluded_varnames)
+          sprintf("!varname %%in%% c(%s)", toString(dQuote(excluded_varnames, q = FALSE)))
         )
-        logger::log_warn("filters for columns: { excluded_varnames } excluded from { private$dataname }")
+        logger::log_warn("filters for columns: { toString(excluded_varnames) } excluded from { private$dataname }")
       }
 
       private$set_filter_state_impl(
@@ -260,20 +245,6 @@ DFFilterStates <- R6::R6Class( # nolint
     },
 
     #' @description
-    #' Set the allowed filterable variables
-    #' @param varnames (`character` or `NULL`) The variables which can be filtered
-    #'
-    #' @details When retrieving the filtered variables only
-    #' those which have filtering supported (i.e. are of the permitted types)
-    #' are included.
-    #'
-    #' @return NULL invisibly
-    set_filterable_varnames = function(varnames) {
-      checkmate::assert_character(varnames, any.missing = FALSE, null.ok = TRUE)
-      supported_vars <- get_supported_filter_varnames(private$data)
-      private$filterable_varnames <- intersect(varnames, supported_vars)
-      invisible(NULL)
-    },
 
     # shiny modules ----
 
@@ -374,7 +345,7 @@ DFFilterStates <- R6::R6Class( # nolint
           # available choices to display
           avail_column_choices <- reactive({
             data <- private$data
-            vars_include <- private$filterable_varnames
+            vars_include <- private$get_filterable_varnames()
             active_filter_vars <- slices_field(self$get_filter_state(), "varname")
             choices <- setdiff(vars_include, active_filter_vars)
 

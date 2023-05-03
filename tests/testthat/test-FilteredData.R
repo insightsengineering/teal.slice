@@ -444,7 +444,6 @@ testthat::test_that("get_data of the child is dependent on the ancestor filter",
   )
 })
 
-
 # get_filter_state ----
 testthat::test_that("get_filter_state returns `teal_slices` identical to input with added format attribute", {
   datasets <- FilteredData$new(
@@ -455,21 +454,35 @@ testthat::test_that("get_filter_state returns `teal_slices` identical to input w
   )
 
   fs <- filter_settings(
-    filter_var(dataname = "iris", varname = "Sepal.Length", selected = c(5.1, 6.4), keep_na = FALSE, keep_inf = FALSE),
-    filter_var(dataname = "iris", varname = "Species", selected = c("setosa", "versicolor"), keep_na = FALSE),
-    filter_var(dataname = "mtcars", varname = "cyl", selected = c("4", "6"), keep_na = FALSE, keep_inf = FALSE)
+    filter_var(
+      dataname = "iris", varname = "Sepal.Length",
+      choices = c(4.3, 7.9), selected = c(5.1, 6.4),
+      keep_na = FALSE, keep_inf = FALSE
+    ),
+    filter_var(
+      dataname = "iris", varname = "Species",
+      choices = c("setosa", "versicolor", "virginica"), selected = c("setosa", "versicolor"),
+      keep_na = FALSE
+    ),
+    filter_var(
+      dataname = "mtcars", varname = "cyl",
+      choices = c("4", "6", "8"), selected = c("4", "6"),
+      keep_na = FALSE, keep_inf = FALSE
+    ),
+    count_type = "none",
+    include_varnames = list(mtcars = "cyl"),
+    exclude_varnames = list(iris = c("Petal.Length", "Petal.Width"))
   )
 
   datasets$set_filter_state(state = fs)
 
   current_states <- shiny::isolate(datasets$get_filter_state())
-  attr_formatted <- attr(current_states, "formatted")
+  formatted <- attr(current_states, "formatted")
+  attr(current_states, "formatted") <- NULL
 
-  current_states <- adjust_states(current_states)
-  attr(current_states, "formatted") <- attr_formatted
+  testthat::expect_equal(fs, current_states)
 
-  formatted_state <- fs
-  attr(formatted_state, "formatted") <- paste0(
+  expected_format <- paste0(
     c(
       "Filters for dataset: iris",
       "  Filtering on: Sepal.Length",
@@ -486,10 +499,7 @@ testthat::test_that("get_filter_state returns `teal_slices` identical to input w
     collapse = "\n"
   )
 
-  testthat::expect_equal(
-    current_states,
-    formatted_state
-  )
+  testthat::expect_equal(formatted, expected_format)
 })
 
 # remove_filter_state ----

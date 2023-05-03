@@ -71,9 +71,7 @@ Initializes \code{FilterStates} object by setting
   data,
   data_reactive = function(sid = "") NULL,
   dataname,
-  datalabel = character(0),
-  excluded_varnames = character(0),
-  count_type = c("all", "none")
+  datalabel = character(0)
 )}\if{html}{\out{</div>}}
 }
 
@@ -95,12 +93,6 @@ specified to the function argument attached to this \code{FilterStates}}
 
 \item{\code{datalabel}}{(\code{character(0)} or \code{character(1)})\cr
 text label value}
-
-\item{\code{excluded_varnames}}{(\code{character})\cr
-names of variables that can \strong{not} be filtered on.}
-
-\item{\code{count_type}}{\code{character(1)}\cr
-specifying how observations are tallied}
 }
 \if{html}{\out{</div>}}
 }

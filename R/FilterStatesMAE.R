@@ -27,11 +27,6 @@ MAEFilterStates <- R6::R6Class( # nolint
     #'   text label value.
     #' @param varlabels (`character`)\cr
     #'   labels of the variables used in this object
-    #' @param excluded_varnames `named list` containing one character vector
-    #'   of names of variables that can be filtered;
-    #'   names of the list must match `dataname`
-    #' @param count_type `character(1)`\cr
-    #'   specifying how observations are tallied
     #' @param keys (`character`)\cr
     #'   key columns names
     #'
@@ -40,19 +35,16 @@ MAEFilterStates <- R6::R6Class( # nolint
                           dataname,
                           datalabel = "subjects",
                           varlabels = character(0),
-                          excluded_varnames = character(0),
-                          count_type = c("all", "none"),
                           keys = character(0)) {
       if (!requireNamespace("MultiAssayExperiment", quietly = TRUE)) {
         stop("Cannot load MultiAssayExperiment - please install the package or restart your session.")
       }
       checkmate::assert_function(data_reactive, args = "sid")
       checkmate::assert_class(data, "MultiAssayExperiment")
-      super$initialize(data, data_reactive, dataname, datalabel, excluded_varnames, count_type)
+      super$initialize(data, data_reactive, dataname, datalabel)
       private$keys <- keys
       private$varlabels <- varlabels
-      private$filterable_varnames <- setdiff(colnames(SummarizedExperiment::colData(data)), excluded_varnames)
-      private$extract_type <- "list"
+      private$set_filterable_varnames(include_varnames = colnames(SummarizedExperiment::colData(data)))
       return(invisible(self))
     },
 
@@ -82,24 +74,6 @@ MAEFilterStates <- R6::R6Class( # nolint
     },
 
     #' @description
-    #' Returns active `FilterState` objects.
-    #'
-    #' Gets all filter state information from this dataset.
-    #'
-    #' @return `teal_slices`
-    #'
-    get_filter_state = function() {
-      slices <- lapply(private$state_list$y(), function(x) x$get_state())
-      excluded_varnames <- structure(
-        list(setdiff(colnames(SummarizedExperiment::colData(private$data)), private$filterable_varnames)),
-        names = private$dataname
-      )
-      excluded_varnames <- Filter(function(x) !identical(x, character(0)), excluded_varnames)
-
-      do.call(filter_settings, c(slices, list(exclude = excluded_varnames, count_type = private$count_type)))
-    },
-
-    #' @description
     #' Set filter state
     #'
     #' @param state (`teal_slices`)\cr
@@ -108,6 +82,7 @@ MAEFilterStates <- R6::R6Class( # nolint
     #' @return `NULL` invisibly
     #'
     set_filter_state = function(state) {
+      logger::log_trace("{ class(self)[1] }$set_filter_state initializing, dataname: { private$dataname }")
       checkmate::assert_class(state, "teal_slices")
       lapply(state, function(x) {
         checkmate::assert_true(x$dataname == private$dataname, .var.name = "dataname matches private$dataname")
@@ -117,11 +92,19 @@ MAEFilterStates <- R6::R6Class( # nolint
         .var.name = "FilterStatesMAE$set_filter_state: all slices in state must have target = \"y\""
       )
 
-      logger::log_trace("{ class(self)[1] }$set_filter_state initializing, dataname: { private$dataname }")
+      private$set_filterable_varnames(
+        include_varnames = attr(state, "include_varnames")[[private$dataname]],
+        exclude_varnames = attr(state, "exclude_varnames")[[private$dataname]]
+      )
+
+      count_type <- attr(state, "count_type")
+      if (length(count_type)) {
+        private$count_type <- count_type
+      }
 
       # Drop teal_slices that refer to excluded variables.
       varnames <- slices_field(state, "varname")
-      filterable <- get_supported_filter_varnames(SummarizedExperiment::colData(private$data))
+      filterable <- private$get_filterable_varnames()
       if (!all(varnames %in% filterable)) {
         excluded_varnames <- toString(dQuote(setdiff(varnames, filterable), q = FALSE))
         state <- slices_which(
@@ -236,8 +219,9 @@ MAEFilterStates <- R6::R6Class( # nolint
 
           # available choices to display
           avail_column_choices <- reactive({
+            vars_include <- private$get_filterable_varnames()
             active_filter_vars <- slices_field(self$get_filter_state(), "varname")
-            choices <- setdiff(get_supported_filter_varnames(data = data), active_filter_vars)
+            choices <- setdiff(vars_include, active_filter_vars)
             varlabels <- vapply(
               colnames(data),
               FUN = function(x) {
@@ -294,7 +278,9 @@ MAEFilterStates <- R6::R6Class( # nolint
               )
 
               varname <- input$var_to_add
-              self$set_filter_state(filter_settings(filter_var(private$dataname, varname, target = "y")))
+              self$set_filter_state(filter_settings(
+                filter_var(dataname = private$dataname, varname = varname, datalabel = "subjects", target = "y")
+              ))
 
               logger::log_trace(
                 sprintf(
