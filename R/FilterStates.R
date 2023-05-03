@@ -66,8 +66,9 @@ FilterStates <- R6::R6Class( # nolint
                           data_reactive = function(sid = "") NULL,
                           dataname,
                           datalabel = character(0)) {
-      checkmate::assert_function(data_reactive, args = "sid")
       checkmate::assert_string(dataname)
+      logger::log_trace("Instantiating { class(self)[1] }, dataname: { dataname }")
+      checkmate::assert_function(data_reactive, args = "sid")
       checkmate::assert_character(datalabel, max.len = 1, any.missing = FALSE)
 
       private$dataname <- dataname

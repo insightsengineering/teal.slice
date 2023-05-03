@@ -26,6 +26,8 @@ FilteredDataset <- R6::R6Class( # nolint
     #'   Field containing metadata about the dataset. Each element of the list
     #'   should be atomic and length one.
     initialize = function(dataset, dataname, keys = character(0), label = attr(dataset, "label"), metadata = NULL) {
+      logger::log_trace("Instantiating { class(self)[1] }, dataname: { dataname }")
+
       # dataset assertion in child classes
       check_simple_name(dataname)
       checkmate::assert_character(keys, any.missing = FALSE)
@@ -55,6 +57,7 @@ FilteredDataset <- R6::R6Class( # nolint
       }
 
       private$data_filtered <- reactive(private$data_filtered_fun())
+      logger::log_trace("Instantiated { class(self)[1] }, dataname: { private$dataname }")
       invisible(self)
     },
 
@@ -128,6 +131,17 @@ FilteredDataset <- R6::R6Class( # nolint
       states <- unname(lapply(private$get_filter_states(), function(x) x$get_filter_state()))
       states <- Filter(function(x) length(x) != 0L, states)
       do.call(c, states)
+    },
+
+    #' @description
+    #' Set filter state
+    #'
+    #' @param state (`teal_slice`) object
+    #'
+    #' @return `NULL` invisibly
+    #'
+    set_filter_state = function(state) {
+      stop("set_filter_state is an abstract class method.")
     },
 
     #' @description
@@ -356,13 +370,11 @@ FilteredDataset <- R6::R6Class( # nolint
         id = id,
         function(input, output, session) {
           logger::log_trace("MAEFilteredDataset$srv_add initializing, dataname: { deparse1(self$get_dataname()) }")
-          elements <- private$get_filter_states()
-          element_names <- names(private$get_filter_states())
+          elems <- private$get_filter_states()
+          elem_names <- names(private$get_filter_states())
           lapply(
-            element_names,
-            function(elem_name) {
-              elements[[elem_name]]$srv_add(elem_name)
-            }
+            elem_names,
+            function(elem_name) elems[[elem_name]]$srv_add(elem_name)
           )
           logger::log_trace("MAEFilteredDataset$srv_add initialized, dataname: { deparse1(self$get_dataname()) }")
           NULL

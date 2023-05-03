@@ -117,6 +117,7 @@ DefaultFilteredDataset <- R6::R6Class( # nolint
     #'
     #' @return filter `call` or `list` of filter calls
     get_call = function(sid = "") {
+      logger::log_trace("FilteredDatasetDefault$get_call initializing for dataname: { private$dataname }")
       filter_call <- super$get_call(sid)
       dataname <- private$dataname
       parent_dataname <- private$parent_name
@@ -159,7 +160,39 @@ DefaultFilteredDataset <- R6::R6Class( # nolint
 
         filter_call <- c(filter_call, merge_call)
       }
+      logger::log_trace("FilteredDatasetDefault$get_call initializing for dataname: { private$dataname }")
       filter_call
+    },
+
+    #' @description
+    #' Set filter state
+    #'
+    #' @param state (`teal_slice`) object
+    #'
+    #' @examples
+    #' dataset <- teal.slice:::DefaultFilteredDataset$new(iris, "iris")
+    #' fs <- filter_settings(
+    #'   filter_var(dataname = "iris", varname = "Species", selected = "virginica"),
+    #'   filter_var(dataname = "iris", varname = "Petal.Length", selected = c(2.0, 5))
+    #' )
+    #' dataset$set_filter_state(state = fs)
+    #' shiny::isolate(dataset$get_filter_state())
+    #'
+    #' @return `NULL` invisibly
+    #'
+    set_filter_state = function(state) {
+      checkmate::assert_class(state, "teal_slices")
+      lapply(state, function(x) {
+        checkmate::assert_true(x$dataname == private$dataname, .var.name = "dataname matches private$dataname")
+      })
+
+      logger::log_trace("{ class(self)[1] }$set_filter_state initializing, dataname: { private$dataname }")
+
+      private$get_filter_states()[[1L]]$set_filter_state(state = state)
+
+      logger::log_trace("{ class(self)[1] }$set_filter_state initialized, dataname: { private$dataname }")
+
+      invisible(NULL)
     },
 
     #' @description
