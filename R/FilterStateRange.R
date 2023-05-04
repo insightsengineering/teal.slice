@@ -438,7 +438,7 @@ RangeFilterState <- R6::R6Class( # nolint
                 private$unfiltered_histogram +
                   if (!is.null(finite_values())) {
                     ggplot2::geom_histogram(
-                      data = data.frame(x = Filter(is.finite, private$x_reactive())),
+                      data = data.frame(x = finite_values()),
                       ggplot2::aes(x = x),
                       bins = 100,
                       fill = grDevices::rgb(173 / 255, 216 / 255, 230 / 255),
@@ -535,7 +535,7 @@ RangeFilterState <- R6::R6Class( # nolint
                 private$unfiltered_histogram +
                   if (!is.null(finite_values())) {
                     ggplot2::geom_histogram(
-                      data = data.frame(x = Filter(is.finite, private$x_reactive())),
+                      data = data.frame(x = finite_values()),
                       ggplot2::aes(x = x),
                       bins = 100,
                       fill = grDevices::rgb(173 / 255, 216 / 255, 230 / 255),

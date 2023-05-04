@@ -592,10 +592,10 @@ ChoicesFilterState <- R6::R6Class( # nolint
             countsnow <- unname(table(factor(private$x_reactive(), levels = private$choices)))
             countsmax <- private$choices_counts
 
-            ind <- private$choices %in% private$selected()
+            ind <- private$choices %in% shiny::isolate(private$selected())
             countBars(
               inputId = session$ns("labels"),
-              choices = private$selected(),
+              choices = shiny::isolate(private$selected()),
               countsnow = countsnow[ind],
               countsmax = countsmax[ind]
             )
