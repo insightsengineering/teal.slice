@@ -165,8 +165,8 @@ FilterState <- R6::R6Class( # nolint
         logger::log_warn("attempt to set state on fixed filter aborted: { private$dataname } { private$varname }")
       } else {
         # Allow for enabling a filter state before altering state.
-        if (isTRUE(state$disabled)) private$disable()
-        if (isFALSE(state$disabled)) private$enable()
+        if (isTRUE(state$disabled) && isFALSE(private$is_disabled())) private$disable()
+        if (isFALSE(state$disabled) && isTRUE(private$is_disabled())) private$enable()
 
         if (private$is_disabled()) {
           mutables <- state[c("selected", "keep_na", "keep_inf")]
