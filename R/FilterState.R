@@ -659,9 +659,15 @@ FilterState <- R6::R6Class( # nolint
       state <- private$cache
       private$cache <- NULL
       private$set_selected(state$selected)
-      private$set_keep_na(state$keep_na)
-      private$set_keep_inf(state$keep_inf)
-      private$disabled(state$disabled)
+      if (!is.null(state$selected)) {
+        private$set_selected(state$selected)
+      }
+      if (!is.null(state$keep_na)) {
+        private$set_keep_na(state$keep_na)
+      }
+      if (!is.null(state$keep_inf)) {
+        private$set_keep_inf(state$keep_inf)
+      }
 
       logger::log_trace("{ class(self)[1] }$set_state restored state of variable: { private$varname }")
 
