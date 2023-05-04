@@ -186,6 +186,9 @@ a.remove_all:hover {
   max-width: 100%;
 }
 
+.irs.irs--shiny.js-irs-0.irs-with-grid * {
+  font-size: 0.85em;
+}
 
 .filter_panel_dataname {
   font-weight: bold;
@@ -276,8 +279,29 @@ a.remove_all:hover {
 .filter-card-summary {
   width: 100%;
   display: flex;
-  justify-content: space-between;
   grid-area: summary;
+}
+
+.filter-card-summary-value {
+  max-width: 300px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.filter-card-summary-controls {
+  margin-left: auto;
+  padding-left: 1em;
+  display: flex;
+  gap: 1em;
+}
+
+.fa-check {
+  color: var(--bs-success, var(--success, #3c763d))
+}
+
+.fa-xmark {
+  color: var(--bs-danger, var(--danger, #a94442))
 }
 
 .filter-card-varlabel {
@@ -313,8 +337,22 @@ a.remove_all:hover {
   overflow: visible;
   text-align: left;
   white-space: nowrap;
+  font-size: 1em;
 }
 
 .progress-bar.state-count-bar-unfiltered {
   background-color: rgba(173, 216, 230, 0.439) !important;
+}
+
+.input-daterange > input {
+  font-size: 1em !important;
+}
+
+.input-group-prepend {
+ font-size: 1em !important;;
+}
+
+
+.filter_datelike_input  input {
+  font-size: 1em !important;
 }
