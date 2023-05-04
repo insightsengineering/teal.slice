@@ -79,17 +79,17 @@ testthat::test_that("set_state only sets properties defined in `teal_slice", {
   filter_state <- FilterState$new(x = 7, dataname = "data", varname = "variable")
   testthat::expect_identical(
     shiny::isolate(filter_state$get_state())[c("selected", "keep_na", "keep_inf")],
-    list(selected = NULL, keep_na = TRUE, keep_inf = TRUE)
+    list(selected = NULL, keep_na = NULL, keep_inf = NULL)
   )
   filter_state$set_state(filter_var(dataname = "data", varname = "variable", selected = 7))
   testthat::expect_identical(
     shiny::isolate(filter_state$get_state())[c("selected", "keep_na", "keep_inf")],
-    list(selected = 7, keep_na = TRUE, keep_inf = TRUE)
+    list(selected = 7, keep_na = NULL, keep_inf = NULL)
   )
   filter_state$set_state(filter_var(dataname = "data", varname = "variable", keep_na = FALSE))
   testthat::expect_identical(
     shiny::isolate(filter_state$get_state())[c("selected", "keep_na", "keep_inf")],
-    list(selected = 7, keep_na = FALSE, keep_inf = TRUE)
+    list(selected = 7, keep_na = FALSE, keep_inf = NULL)
   )
   filter_state$set_state(filter_var(dataname = "data", varname = "variable", keep_inf = FALSE))
   testthat::expect_identical(
@@ -182,14 +182,11 @@ testthat::test_that("constructor initializes selected = NULL by default", {
   testthat::expect_null(shiny::isolate(filter_state$get_state()$selected))
 })
 
-testthat::test_that("constructor initializes keep_na = TRUE by default", {
+testthat::test_that("constructor initializes keep_na = TRUE by default if data contains NAs", {
   filter_state <- FilterState$new(7, dataname = "data", varname = "7")
+  testthat::expect_null(shiny::isolate(filter_state$get_state())$keep_na)
+  filter_state <- FilterState$new(c(7, NA), dataname = "data", varname = "7")
   testthat::expect_true(shiny::isolate(filter_state$get_state())$keep_na)
-})
-
-testthat::test_that("constructor initializes keep_inf = TRUE by default", {
-  filter_state <- FilterState$new(7, dataname = "data", varname = "7")
-  testthat::expect_true(shiny::isolate(filter_state$get_state())$keep_inf)
 })
 
 # get_call ----

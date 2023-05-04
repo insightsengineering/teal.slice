@@ -80,17 +80,17 @@ testthat::test_that("get_call returns condition that specifies values passed to 
   )
   testthat::expect_identical(
     deparse1(shiny::isolate(filter_state$get_call())),
-    deparse1(quote(is.na(variable) | variable == "item1"))
+    deparse1(quote(variable == "item1"))
   )
   filter_state$set_state(filter_var(dataname = "data", varname = "variable", selected = chars[1:2]))
   testthat::expect_identical(
     deparse1(shiny::isolate(filter_state$get_call())),
-    deparse1(quote(is.na(variable) | variable %in% c("item1", "item2")))
+    deparse1(quote(variable %in% c("item1", "item2")))
   )
-  filter_state$set_state(filter_var(dataname = "data", varname = "variable", keep_na = FALSE))
+  filter_state$set_state(filter_var(dataname = "data", varname = "variable", keep_na = TRUE))
   testthat::expect_identical(
     deparse1(shiny::isolate(filter_state$get_call())),
-    deparse1(quote(variable %in% c("item1", "item2")))
+    deparse1(quote(is.na(variable) | variable %in% c("item1", "item2")))
   )
 
   filter_state <- ChoicesFilterState$new(
@@ -99,17 +99,17 @@ testthat::test_that("get_call returns condition that specifies values passed to 
   )
   testthat::expect_identical(
     deparse1(shiny::isolate(filter_state$get_call())),
-    deparse1(quote(is.na(variable) | variable == "item1"))
+    deparse1(quote(variable == "item1"))
   )
   filter_state$set_state(filter_var(dataname = "data", varname = "variable", selected = facts[1:2]))
   testthat::expect_identical(
     deparse1(shiny::isolate(filter_state$get_call())),
-    deparse1(quote(is.na(variable) | variable %in% c("item1", "item2")))
+    deparse1(quote(variable %in% c("item1", "item2")))
   )
-  filter_state$set_state(filter_var(dataname = "data", varname = "variable", keep_na = FALSE))
+  filter_state$set_state(filter_var(dataname = "data", varname = "variable", keep_na = TRUE))
   testthat::expect_identical(
     deparse1(shiny::isolate(filter_state$get_call())),
-    deparse1(quote(variable %in% c("item1", "item2")))
+    deparse1(quote(is.na(variable) | variable %in% c("item1", "item2")))
   )
 
   filter_state <- ChoicesFilterState$new(
@@ -118,17 +118,17 @@ testthat::test_that("get_call returns condition that specifies values passed to 
   )
   testthat::expect_identical(
     deparse1(shiny::isolate(filter_state$get_call())),
-    deparse1(quote(is.na(variable) | variable == 1))
+    deparse1(quote(variable == 1))
   )
   filter_state$set_state(filter_var(dataname = "data", varname = "variable", selected = nums[1:2]))
   testthat::expect_identical(
     deparse1(shiny::isolate(filter_state$get_call())),
-    deparse1(quote(is.na(variable) | variable %in% c(1, 2)))
+    deparse1(quote(variable %in% c(1, 2)))
   )
-  filter_state$set_state(filter_var(dataname = "data", varname = "variable", keep_na = FALSE))
+  filter_state$set_state(filter_var(dataname = "data", varname = "variable", keep_na = TRUE))
   testthat::expect_identical(
     deparse1(shiny::isolate(filter_state$get_call())),
-    deparse1(quote(variable %in% c(1, 2)))
+    deparse1(quote(is.na(variable) | variable %in% c(1, 2)))
   )
 
   filter_state <- ChoicesFilterState$new(
@@ -137,17 +137,17 @@ testthat::test_that("get_call returns condition that specifies values passed to 
   )
   testthat::expect_identical(
     deparse1(shiny::isolate(filter_state$get_call())),
-    deparse1(quote(is.na(variable) | variable == as.Date("2000-01-01")))
+    deparse1(quote(variable == as.Date("2000-01-01")))
   )
   filter_state$set_state(filter_var(dataname = "data", varname = "variable", selected = dates[1:2]))
   testthat::expect_identical(
     deparse1(shiny::isolate(filter_state$get_call())),
-    deparse1(quote(is.na(variable) | variable %in% as.Date(c("2000-01-01", "2000-01-02"))))
+    deparse1(quote(variable %in% as.Date(c("2000-01-01", "2000-01-02"))))
   )
-  filter_state$set_state(filter_var(dataname = "data", varname = "variable", keep_na = FALSE))
+  filter_state$set_state(filter_var(dataname = "data", varname = "variable", keep_na = TRUE))
   testthat::expect_identical(
     deparse1(shiny::isolate(filter_state$get_call())),
-    deparse1(quote(variable %in% as.Date(c("2000-01-01", "2000-01-02"))))
+    deparse1(quote(is.na(variable) | variable %in% as.Date(c("2000-01-01", "2000-01-02"))))
   )
 
   filter_state <- ChoicesFilterState$new(
@@ -156,19 +156,19 @@ testthat::test_that("get_call returns condition that specifies values passed to 
   )
   testthat::expect_identical(
     deparse1(shiny::isolate(filter_state$get_call())),
-    deparse1(quote(is.na(variable) | variable == as.POSIXct("2000-01-01 12:00:00", tz = "GMT")))
+    deparse1(quote(variable == as.POSIXct("2000-01-01 12:00:00", tz = "GMT")))
   )
 
   filter_state$set_state(filter_var(dataname = "data", varname = "variable", selected = posixct[1:2]))
   testthat::expect_identical(
     deparse1(shiny::isolate(filter_state$get_call())),
-    deparse1(quote(is.na(variable) |
-                     variable %in% as.POSIXct(c("2000-01-01 12:00:00", "2000-01-01 12:00:01"), tz = "GMT")))
+    deparse1(quote(variable %in% as.POSIXct(c("2000-01-01 12:00:00", "2000-01-01 12:00:01"), tz = "GMT")))
   )
-  filter_state$set_state(filter_var(dataname = "data", varname = "variable", keep_na = FALSE))
+  filter_state$set_state(filter_var(dataname = "data", varname = "variable", keep_na = TRUE))
   testthat::expect_identical(
     deparse1(shiny::isolate(filter_state$get_call())),
-    deparse1(quote(variable %in% as.POSIXct(c("2000-01-01 12:00:00", "2000-01-01 12:00:01"), tz = "GMT"))
+    deparse1(quote(is.na(variable) |
+                     variable %in% as.POSIXct(c("2000-01-01 12:00:00", "2000-01-01 12:00:01"), tz = "GMT"))
     )
   )
 
@@ -178,19 +178,19 @@ testthat::test_that("get_call returns condition that specifies values passed to 
   )
   testthat::expect_identical(
     deparse1(shiny::isolate(filter_state$get_call())),
-    deparse1(quote(is.na(variable) | variable == as.POSIXlt("2000-01-01 12:00:00", tz = "GMT")))
+    deparse1(quote(variable == as.POSIXlt("2000-01-01 12:00:00", tz = "GMT")))
   )
 
   filter_state$set_state(filter_var(dataname = "data", varname = "variable", selected = posixlt[1:2]))
   testthat::expect_identical(
     deparse1(shiny::isolate(filter_state$get_call())),
-    deparse1(quote(is.na(variable) |
-                     variable %in% as.POSIXlt(c("2000-01-01 12:00:00", "2000-01-01 12:00:01"), tz = "GMT")))
+    deparse1(quote(variable %in% as.POSIXlt(c("2000-01-01 12:00:00", "2000-01-01 12:00:01"), tz = "GMT")))
   )
-  filter_state$set_state(filter_var(dataname = "data", varname = "variable", keep_na = FALSE))
+  filter_state$set_state(filter_var(dataname = "data", varname = "variable", keep_na = TRUE))
   testthat::expect_identical(
     deparse1(shiny::isolate(filter_state$get_call())),
-    deparse1(quote(variable %in% as.POSIXlt(c("2000-01-01 12:00:00", "2000-01-01 12:00:01"), tz = "GMT"))
+    deparse1(quote(is.na(variable) |
+                     variable %in% as.POSIXlt(c("2000-01-01 12:00:00", "2000-01-01 12:00:01"), tz = "GMT"))
     )
   )
 })
