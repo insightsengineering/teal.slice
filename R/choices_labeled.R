@@ -14,6 +14,9 @@
 #' Duplicated elements from `choices` get removed.
 #'
 #' @return a named character vector
+#'
+#' @keywords internatl
+#'
 choices_labeled <- function(choices, labels, subset = NULL, types = NULL) {
   if (is.factor(choices)) {
     choices <- as.character(choices)

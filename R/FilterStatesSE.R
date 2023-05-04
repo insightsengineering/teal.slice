@@ -36,6 +36,7 @@ SEFilterStates <- R6::R6Class( # nolint
       checkmate::assert_function(data_reactive, args = "sid")
       checkmate::assert_class(data, "SummarizedExperiment")
       super$initialize(data, data_reactive, dataname, datalabel)
+      private$dataname_prefixed <- sprintf("%s[[%s]]", dataname, datalabel)
     },
 
     #' @description
@@ -65,7 +66,7 @@ SEFilterStates <- R6::R6Class( # nolint
 
       if (length(formatted_states) > 0) {
         formatted_states <- c(
-          sprintf("%sAssay %s filters:", format("", width = indent), self$get_datalabel()),
+          sprintf("%sAssay %s filters:", format("", width = indent), private$datalabel),
           formatted_states
         )
         paste(formatted_states, collapse = "\n")
@@ -318,17 +319,6 @@ SEFilterStates <- R6::R6Class( # nolint
           NULL
         }
       )
-    }
-  ),
-
-  # private methods ----
-  private = list(
-    get_dataname_prefixed = function() {
-      if (identical(private$datalabel, character(0))) {
-        private$dataname
-      } else {
-        sprintf('%s[["%s"]]', private$dataname, private$datalabel)
-      }
     }
   )
 )

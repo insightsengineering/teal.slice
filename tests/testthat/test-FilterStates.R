@@ -5,58 +5,390 @@ testthat::test_that("constructor accepts only a string as dataname", {
   testthat::expect_error(FilterStates$new(data = NULL, dataname = call("call")), "Assertion on 'dataname' failed")
 })
 
-# get_fun ----
-testthat::test_that("get_fun returns subset after initialization", {
+# filter states api -----
+testthat::test_that("get_filter_state returns default count_type = 'all'", {
   filter_states <- FilterStates$new(data = NULL, dataname = "test")
-  testthat::expect_equal(filter_states$get_fun(), "subset")
+  testthat::expect_identical(
+    shiny::isolate(filter_states$get_filter_state()),
+    filter_settings(count_type = "all")
+  )
 })
 
-# get_call ----
-testthat::test_that("get_call returns NULL after initialization if no filter applied", {
-  filter_states <- FilterStates$new(data = NULL, dataname = "test")
-  testthat::expect_null(filter_states$get_call())
-})
-# call construction will be tested in child classes
-# due to differences in subsetting functions and data-/variable name prefixing
-
-# validate_state_list_exists ----
-testthat::test_that("validate_state_list_exists raises errors if no filters were added", {
-  testfs <- R6::R6Class(
-    classname = "testfs",
-    inherit = FilterStates,
-    public = list(
-      validate_state_list_exists = function(x) private$validate_state_list_exists(x)
+testthat::test_that("set_filter_state sets include_variables by excluding unsupported cols from inputed list", {
+  test <- iris
+  test$col <- as.complex(1:150)
+  test$col2 <- as.list(1:150)
+  filter_states <- FilterStates$new(data = test, dataname = "test")
+  teal_slices <- filter_settings(
+    include_varnames = list(test = c("Species", "Sepal.Length", "inexisting", "col", "col2"))
+  )
+  filter_states$set_filter_state(teal_slices)
+  testthat::expect_identical(
+    shiny::isolate(filter_states$get_filter_state()),
+    filter_settings(
+      include_varnames = list(test = c("Species", "Sepal.Length")),
+      count_type = "all"
     )
   )
-  filter_states <- testfs$new(data = NULL, dataname = "test")
+})
 
-  testthat::expect_error(
-    shiny::isolate(filter_states$validate_state_list_exists(1)),
-    regexp = "Filter state list 1 has not been initialized in FilterStates object belonging to the dataset"
+testthat::test_that("set_filter_state sets count_type", {
+  filter_states <- FilterStates$new(data = NULL, dataname = "test")
+  filter_states$set_filter_state(filter_settings(count_type = "none"))
+  testthat::expect_identical(
+    shiny::isolate(filter_states$get_filter_state()),
+    filter_settings(count_type = "none")
   )
 })
 
-# clear_filter_states ----
+testthat::test_that("set_filter_state ignores teal_slice for inexisting variables with log warning", {
+  filter_states <- FilterStates$new(data = data.frame(a = 1), dataname = "test")
+  res <- capture.output(
+    filter_states$set_filter_state(filter_settings(filter_var(dataname = "test", varname = "inexisting")))
+  )
+  testthat::expect_true(grepl("\\[WARN\\].+inexisting excluded from test", res))
+})
+
+testthat::test_that("set_filter_state and get_filter_state, sets and returns the same fully specified teal_slices", {
+  filter_states <- FilterStates$new(data = data.frame(a = 1:10), dataname = "test")
+  fs <- filter_settings(
+    filter_var(
+      dataname = "test", varname = "a", choices = c(1, 5), selected = c(1, 4), keep_na = FALSE, keep_inf = FALSE,
+      fixed = FALSE, disabled = FALSE,
+      any_attribute = "a", another_attribute = "b"
+    ),
+    count_type = "none"
+  )
+  filter_states$set_filter_state(fs)
+  testthat::expect_identical(
+    shiny::isolate(filter_states$get_filter_state()),
+    fs
+  )
+})
+
+testthat::test_that("set_filter_state updates FilterState when dataname and varname are matched between teal_slice and
+existing filter", {
+  filter_states <- FilterStates$new(data = data.frame(a = 1:10), dataname = "test")
+  fs <- filter_settings(
+    filter_var(
+      dataname = "test", varname = "a", choices = c(1, 5), selected = c(1, 4), keep_na = FALSE, keep_inf = FALSE,
+      fixed = FALSE, disabled = FALSE, any_attribute = "a", another_attribute = "b"
+    ),
+    count_type = "none"
+  )
+  filter_states$set_filter_state(fs)
+  fs[[1]]$selected <- c(1, 5)
+  filter_states$set_filter_state(fs)
+  testthat::expect_equal(
+    shiny::isolate(filter_states$get_filter_state()),
+    fs
+  )
+})
+
+testthat::test_that("set_filter_state doesn't allow to create two filters on the same variable", {
+  filter_states <- FilterStates$new(data = data.frame(a = 1:10), dataname = "test")
+  fs <- filter_settings(
+    filter_var(dataname = "test", varname = "a", selected = c(1, 5)),
+    filter_var(dataname = "test", varname = "a", selected = c(1, 10)),
+    count_type = "none"
+  )
+
+  testthat::expect_error(
+    filter_states$set_filter_state(fs), "Some of the teal_slice objects refer to the same filter."
+  )
+})
+
+testthat::test_that("set_filter_state allows to create two filters on the same variable if combination of their
+fields (dataname, varname, varlabel, arg, id) differ", {
+  filter_states <- FilterStates$new(data = data.frame(a = 1:10), dataname = "a")
+  fs <- filter_settings(
+    filter_var(dataname = "a", varname = "a"),
+    filter_var(dataname = "a", varname = "a", datalabel = "a"),
+    filter_var(dataname = "a", varname = "a", datalabel = "a", arg = "a"),
+    filter_var(dataname = "a", varname = "a", datalabel = "a", arg = "a", id = "a"),
+    count_type = "none"
+  )
+  filter_states$set_filter_state(fs)
+  testthat::expect_length(shiny::isolate(filter_states$get_filter_state()), 4)
+})
+
+
+testthat::test_that("set_filter_state creates a new FilterStateExpr", {
+  filter_states <- FilterStates$new(data = data.frame(a = 1:5, b = 6:10), dataname = "test")
+  fs <- filter_settings(
+    filter_expr(id = "test", dataname = "test", title = "expression", expr = quote(a > 1 & b < 10)),
+    count_type = "none"
+  )
+  filter_states$set_filter_state(fs)
+  testthat::expect_equal(shiny::isolate(filter_states$get_filter_state()), fs)
+})
+
+testthat::test_that("remove_filter_state of inexistent FilterState raiser warning", {
+  filter_states <- FilterStates$new(data = data.frame(a = 1:5), dataname = "a")
+  testthat::expect_warning(
+    filter_states$remove_filter_state(filter_settings(filter_var(dataname = "a", varname = "a"))),
+    "not found in state list"
+  )
+})
+
+testthat::test_that("remove_filter_state removes FilterState objects identified by 'dataname', 'datalabel',
+'varname', 'arg' and/or 'id'", {
+  filter_states <- FilterStates$new(data = data.frame(a = 1:5), dataname = "a")
+  fs <- filter_settings(
+    filter_var(dataname = "a", varname = "a"),
+    filter_var(dataname = "a", varname = "a", datalabel = "a"),
+    filter_var(dataname = "a", varname = "a", datalabel = "a", arg = "a"),
+    filter_var(dataname = "a", varname = "a", datalabel = "a", arg = "a", id = "a"),
+    count_type = "none"
+  )
+  filter_states$set_filter_state(fs)
+
+  filter_states$remove_filter_state(filter_settings(filter_var(dataname = "a", varname = "a")))
+  testthat::expect_length(shiny::isolate(filter_states$get_filter_state()), 3)
+
+  filter_states$remove_filter_state(filter_settings(
+    filter_var(dataname = "a", varname = "a", datalabel = "a")
+  ))
+  testthat::expect_length(shiny::isolate(filter_states$get_filter_state()), 2)
+
+  filter_states$remove_filter_state(filter_settings(
+    filter_var(dataname = "a", varname = "a", datalabel = "a", arg = "a")
+  ))
+  testthat::expect_length(shiny::isolate(filter_states$get_filter_state()), 1)
+
+  filter_states$remove_filter_state(filter_settings(
+    filter_var(dataname = "a", varname = "a", datalabel = "a", arg = "a", id = "a")
+  ))
+  testthat::expect_length(shiny::isolate(filter_states$get_filter_state()), 0)
+})
+
 testthat::test_that("clearing empty FilterStates does not raise errors", {
   filter_states <- FilterStates$new(data = NULL, dataname = "test")
   testthat::expect_no_error(filter_states$clear_filter_states())
 })
 
-# data_choices_labeled ----
-testthat::test_that("data_choices_labeled returns an empty character array if choices are an empty array", {
-  testthat::expect_identical(data_choices_labeled(7, choices = c()), character(0))
+
+testthat::test_that("clear_filter_state empties the state_list", {
+    filter_states <- FilterStates$new(data = data.frame(a = 1:5), dataname = "a")
+  fs <- filter_settings(
+    filter_var(dataname = "a", varname = "a"),
+    filter_var(dataname = "a", varname = "a", datalabel = "a"),
+    filter_var(dataname = "a", varname = "a", datalabel = "a", arg = "a"),
+    filter_var(dataname = "a", varname = "a", datalabel = "a", arg = "a", id = "a"),
+    count_type = "none"
+  )
+  filter_states$set_filter_state(fs)
+  filter_states$clear_filter_states()
+  testthat::expect_length(shiny::isolate(filter_states$get_filter_state()), 0)
 })
 
-testthat::test_that("data_choices_labeled returns a choices_labeled object if choices are not empty", {
-  testthat::expect_s3_class(data_choices_labeled(data.frame(a = 1), choices = c("a")), "choices_labeled")
+
+# get_call ----
+testthat::test_that("get_call returns NULL after initialization if no filter applied", {
+  filter_states <- FilterStates$new(data = NULL, dataname = "test")
+  testthat::expect_null(shiny::isolate(filter_states$get_call()))
 })
 
-testthat::test_that("data_choices_labeled returns names of the elements matching the choices", {
-  testthat::expect_identical(data_choices_labeled(data.frame(a = 1, b = 2), choices = c("a"))[1], c("a: a" = "a"))
+testthat::test_that("get_call returns subset call with dataname and logical expressions by default", {
+  fs <- FilterStates$new(data = data.frame(a = 1:10), dataname = "test", datalabel = "1")
+  fs$set_filter_state(filter_settings(
+    filter_var(dataname = "test", varname = "a", datalabel = "1", selected = c(1, 9))
+  ))
+  testthat::expect_identical(
+    shiny::isolate(fs$get_call()),
+    quote(test <- subset(test, a >= 1 & a <= 9))
+  )
 })
 
-testthat::test_that("data_choices_labeled returns labels of the elements matching the choices
-  if the varlabels are provided for the elements", {
-  result <- unname(data_choices_labeled(list(a = 1, b = 2), choices = c("a"), varlabels = c(a = "labelA"))[1])
-  testthat::expect_equal(result, "a")
+testthat::test_that("get_call returns custom fun call", {
+  test <- R6::R6Class(
+    "test",
+    inherit = FilterStates,
+    private = list(
+      fun = quote(fun)
+    )
+  )
+  fs <- test$new(data = data.frame(a = 1:10), dataname = "test", datalabel = "1")
+  fs$set_filter_state(filter_settings(
+    filter_var(dataname = "test", varname = "a", datalabel = "1", selected = c(1, 9))
+  ))
+
+  testthat::expect_identical(
+    shiny::isolate(fs$get_call()),
+    quote(test <- fun(test, a >= 1 & a <= 9))
+  )
+})
+
+testthat::test_that("get_call returns subset call on custom dataname_prefixed", {
+  test <- R6::R6Class(
+    "test",
+    inherit = FilterStates,
+    public = list(
+      initialize = function(data, dataname) {
+        super$initialize(data = data, dataname = dataname)
+        private$dataname_prefixed <- 'dataname[["slot"]]'
+      }
+    )
+  )
+  fs <- test$new(data = data.frame(a = 1:10), dataname = "test")
+  fs$set_filter_state(filter_settings(
+    filter_var(dataname = "test", varname = "a", datalabel = "1", selected = c(1, 9))
+  ))
+
+  testthat::expect_identical(
+    shiny::isolate(fs$get_call()),
+    quote(dataname[["slot"]] <- subset(dataname[["slot"]], a >= 1 & a <= 9))
+  )
+})
+
+testthat::test_that("get_call returns subset with varnames prefixed depending on a extract_type", {
+  test <- R6::R6Class(
+    "test",
+    inherit = FilterStates,
+    private = list(
+      extract_type = "list"
+    )
+  )
+  fs <- test$new(data = data.frame(a = 1:10), dataname = "test")
+  fs$set_filter_state(filter_settings(
+    filter_var(dataname = "test", varname = "a", datalabel = "1", selected = c(1, 9))
+  ))
+
+  testthat::expect_identical(
+    shiny::isolate(fs$get_call()),
+    quote(test <- subset(test, test$a >= 1 & test$a <= 9))
+  )
+})
+
+testthat::test_that("get_call returns subset with multiple filter expressions combined by '&' operator", {
+  fs <- FilterStates$new(data = data.frame(a = 1:10, b = 1:10, c = 1:10), dataname = "test")
+  fs$set_filter_state(filter_settings(
+    filter_var(dataname = "test", varname = "a", datalabel = "1", selected = c(1, 9)),
+    filter_expr(id = "a", dataname = "test", title = "a", expr = quote(b > 5 | a > 5))
+  ))
+
+  testthat::expect_equal(
+    shiny::isolate(fs$get_call()),
+    quote(test <- subset(test, a >= 1 & a <= 9 & (b > 5 | a > 5)))
+  )
+})
+
+
+testthat::test_that("get_call skips conditions form FilterState which are identified by sid", {
+  shiny::reactiveConsole(TRUE)
+  on.exit(shiny::reactiveConsole(FALSE))
+  test_class <- R6::R6Class(
+    classname = "test_class",
+    inherit = FilterStates,
+    public = list(
+      get_filter_states_sid = function() {
+        names(private$state_list())
+      }
+    )
+  )
+  filter_states <- test_class$new(data = iris, dataname = "iris")
+  filter_states$set_filter_state(
+    filter_settings(
+      filter_var(dataname = "iris", varname = "Sepal.Length", selected = c(5.1, 6.4)),
+      filter_var(dataname = "iris", varname = "Petal.Length", selected = c(1.5, 6.9)),
+      filter_var(dataname = "iris", varname = "Species", selected = "setosa")
+    )
+  )
+  sid_attrs <- unname(filter_states$get_filter_states_sid())
+  testthat::expect_equal(
+    filter_states$get_call(sid = sid_attrs[1]),
+    quote(
+      iris <- subset(iris, Petal.Length >= 1.5 & Petal.Length <= 6.9 & Species == "setosa")
+    )
+  )
+  testthat::expect_equal(
+    filter_states$get_call(sid = sid_attrs[2]),
+    quote(
+      iris <- subset(iris, Sepal.Length >= 5.1 & Sepal.Length <= 6.4 & Species == "setosa")
+    )
+  )
+  testthat::expect_equal(
+    filter_states$get_call(sid = sid_attrs[3]),
+    quote(
+      iris <- subset(
+        iris,
+        Sepal.Length >= 5.1 & Sepal.Length <= 6.4 & (Petal.Length >= 1.5 & Petal.Length <= 6.9)
+      )
+    )
+  )
+  testthat::expect_null(
+    filter_states$get_call(sid = sid_attrs)
+  )
+})
+
+# todo: test modules - we probably need shinytest2
+# ui_active
+# srv_active
+
+# ui_add ----
+testthat::test_that("ui_add returns a message inside a div when data has no columns or no rows", {
+  filter_states <- FilterStates$new(data = data.frame(), dataname = "iris")
+  testthat::expect_identical(
+    filter_states$ui_add("id"),
+    div("no sample variables available")
+  )
+})
+
+# UI actions ----
+testthat::test_that("Selecting a new variable initializes a new filter state with default states", {
+  filter_states <- FilterStates$new(data = iris, dataname = "iris")
+  shiny::testServer(
+    filter_states$srv_add,
+    expr = {
+      session$setInputs(var_to_add = "Sepal.Length")
+    }
+  )
+
+  testthat::expect_identical(
+    shiny::isolate(filter_states$get_filter_state()),
+    filter_settings(
+      filter_var(
+        dataname = "iris",
+        varname = "Sepal.Length",
+        choices = c(4.3, 7.9),
+        selected = c(4.3, 7.9),
+        datalabel = character(0) # todo: should be dropped
+      ),
+      include_varnames = list(iris = colnames(iris)),
+      count_type = "all"
+    )
+  )
+})
+
+testthat::test_that("Adding 'var_to_add' adds another filter state", {
+  filter_states <- FilterStates$new(data = iris, dataname = "iris")
+
+  fs <- filter_settings(
+    filter_var(dataname = "iris", varname = "Sepal.Length", selected = c(5.1, 6.4), keep_na = FALSE, keep_inf = FALSE)
+  )
+  shiny::isolate(filter_states$set_filter_state(state = fs))
+  shiny::testServer(
+    filter_states$srv_add,
+    expr = {
+      session$setInputs(var_to_add = "Petal.Length")
+    }
+  )
+  shiny::testServer(
+    filter_states$srv_add,
+    expr = {
+      session$setInputs(var_to_add = "Species")
+    }
+  )
+
+  testthat::expect_identical(
+    adjust_states(shiny::isolate(filter_states$get_filter_state())),
+    filter_settings(
+      filter_var(
+        dataname = "iris", varname = "Sepal.Length", selected = c(5.1, 6.4),
+        keep_na = FALSE, keep_inf = FALSE
+      ),
+      filter_var(dataname = "iris", varname = "Petal.Length", selected = c(1.0, 6.9)),
+      filter_var(dataname = "iris", varname = "Species", selected = c("setosa", "versicolor", "virginica"))
+    )
+  )
 })

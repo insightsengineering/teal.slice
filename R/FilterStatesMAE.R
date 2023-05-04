@@ -42,7 +42,7 @@ MAEFilterStates <- R6::R6Class( # nolint
       checkmate::assert_function(data_reactive, args = "sid")
       checkmate::assert_class(data, "MultiAssayExperiment")
       data <- SummarizedExperiment::colData(data)
-      data_reactive <- function(sid = character(0)) SummarizedExperiment::colData(data_reactive())
+      data_reactive <- function(sid = character(0)) SummarizedExperiment::colData(data_reactive(sid = sid))
       super$initialize(data, data_reactive, dataname, datalabel)
       private$keys <- keys
       private$varlabels <- varlabels
