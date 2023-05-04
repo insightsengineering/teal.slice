@@ -583,10 +583,37 @@ ChoicesFilterState <- R6::R6Class( # nolint
     #  renders text describing number of selected levels
     #  and if NA are included also
     content_summary = function(id) {
-      n_selected <- length(private$get_selected())
+      selected <- private$get_selected()
+      selected_length <- nchar(paste0(selected, collapse = ""))
+      if (selected_length <= 40) {
+        selected_text <- paste0(selected, collapse = ", ")
+      } else {
+        n_selected <- length(selected)
+        selected_text <- paste(n_selected, "levels selected")
+      }
       tagList(
-        tags$span(sprintf("%s levels selected", n_selected)),
-        if (isTRUE(private$get_keep_na())) tags$span("NA") else NULL
+        tags$span(
+          class = "filter-card-summary-value",
+          selected_text
+        ),
+        tags$span(
+          class = "filter-card-summary-controls",
+          if (isTRUE(private$get_keep_na()) && private$na_count > 0) {
+            tags$span(
+              class = "filter-card-summary-na",
+              "NA",
+              shiny::icon("check")
+            )
+          } else if (isFALSE(private$get_keep_na()) && private$na_count > 0) {
+            tags$span(
+              class = "filter-card-summary-na",
+              "NA",
+              shiny::icon("xmark")
+            )
+          } else {
+            NULL
+          }
+        )
       )
     }
   )
