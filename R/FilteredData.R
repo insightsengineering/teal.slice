@@ -1107,11 +1107,13 @@ FilteredData <- R6::R6Class( # nolint
       fp_id <- self$get_filter_panel_ui_id()
       shinyjs::disable(paste0(fp_id, "-add"), asis = TRUE)
       slices <- self$get_filter_state()
-      private$cached_states <- slices
-      for (i in seq_along(slices)) {
-        slices[[i]]$disabled <- TRUE
+      if (!is.null(slices)) {
+        private$cached_states <- slices
+        for (i in seq_along(slices)) {
+          slices[[i]]$disabled <- TRUE
+        }
+        self$set_filter_state(slices)
       }
-      self$set_filter_state(slices)
 
       invisible(NULL)
     },
@@ -1126,10 +1128,12 @@ FilteredData <- R6::R6Class( # nolint
       fp_id <- self$get_filter_panel_ui_id()
       shinyjs::enable(paste0(fp_id, "-add"), asis = TRUE)
       slices <- private$cached_states
-      if (is.null(slices)){
+      if (is.null(slices)) {
         slices <- self$get_filter_state()
       }
-      self$set_filter_state(slices)
+      if (!is.null(slices)) {
+        self$set_filter_state(slices)
+      }
 
       invisible(NULL)
     }
