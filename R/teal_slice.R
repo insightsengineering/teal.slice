@@ -528,7 +528,7 @@ slices_set <- function(tss, set) {
   checkmate::assert_list(set, names = "named")
 
   attrs <- Filter(Negate(is.null), attributes(tss)[c("include_varnames", "exclude_varnames", "count_type")])
-
+browser()
   for (i in seq_along(set)) {
     tss <- lapply(tss, function(x) {
       within(x, assign(x = names(set[i]), value = set[[i]]))
