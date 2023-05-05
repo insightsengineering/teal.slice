@@ -618,44 +618,6 @@ FilteredData <- R6::R6Class( # nolint
     },
 
     #' @description
-    #' Disable the filter panel by adding `disable` class to `filter_add_vars`
-    #' and `filter_panel_active_vars` tags in the User Interface.
-    #' In addition, it will store the existing filter states in a private field called `cached_states`
-    #' before removing all filter states from the object.
-    #'
-    filter_panel_disable = function() {
-      private$filter_panel_active <- FALSE
-      fp_id <- self$get_filter_panel_ui_id()
-      shinyjs::disable(paste0(fp_id, "-add"), asis = TRUE)
-      slices <- self$get_filter_state()
-      private$cached_states <- slices
-      for (i in seq_along(slices)) {
-        slices[[i]]$disabled <- TRUE
-      }
-      self$set_filter_state(slices)
-
-      invisible(NULL)
-    },
-
-    #' @description enable the filter panel
-    #' Enable the filter panel by adding `enable` class to `filter_add_vars`
-    #' and `filter_active_vars` tags in the User Interface.
-    #' In addition, it will restore the filter states from a private field called `cached_states`.
-    #'
-    filter_panel_enable = function() {
-      private$filter_panel_active <- TRUE
-      fp_id <- self$get_filter_panel_ui_id()
-      shinyjs::enable(paste0(fp_id, "-add"), asis = TRUE)
-      slices <- private$cached_states
-      if (is.null(slices)){
-        slices <- self$get_filter_state()
-      }
-      self$set_filter_state(slices)
-
-      invisible(NULL)
-    },
-
-    #' @description
     #' Gets the state of filter panel, if activated.
     #'
     get_filter_panel_active = function() {
@@ -841,10 +803,10 @@ FilteredData <- R6::R6Class( # nolint
           eventExpr = input$filter_panel_active,
           handlerExpr = {
             if (isTRUE(input$filter_panel_active)) {
-              self$filter_panel_enable()
+              private$filter_panel_enable()
               logger::log_trace("Enable the Filtered Panel with the filter_panel_enable method")
             } else {
-              self$filter_panel_disable()
+              private$filter_panel_disable()
               logger::log_trace("Disable the Filtered Panel with the filter_panel_enable method")
             }
           }, ignoreNULL = TRUE
@@ -1104,6 +1066,8 @@ FilteredData <- R6::R6Class( # nolint
 
     cached_states = NULL,
 
+    # private methods ----
+
     # @description
     # Gets `FilteredDataset` object which contains all information
     # pertaining to the specified dataset.
@@ -1130,6 +1094,44 @@ FilteredData <- R6::R6Class( # nolint
     # @return `integer(1)`
     get_filter_count = function() {
       length(self$get_filter_state())
+    },
+
+    # @description
+    # Disable the filter panel by adding `disable` class to `filter_add_vars`
+    # and `filter_panel_active_vars` tags in the User Interface.
+    # In addition, it will store the existing filter states in a private field called `cached_states`
+    # before removing all filter states from the object.
+    #
+    filter_panel_disable = function() {
+      private$filter_panel_active <- FALSE
+      fp_id <- self$get_filter_panel_ui_id()
+      shinyjs::disable(paste0(fp_id, "-add"), asis = TRUE)
+      slices <- self$get_filter_state()
+      private$cached_states <- slices
+      for (i in seq_along(slices)) {
+        slices[[i]]$disabled <- TRUE
+      }
+      self$set_filter_state(slices)
+
+      invisible(NULL)
+    },
+
+    # @description enable the filter panel
+    # Enable the filter panel by adding `enable` class to `filter_add_vars`
+    # and `filter_active_vars` tags in the User Interface.
+    # In addition, it will restore the filter states from a private field called `cached_states`.
+    #
+    filter_panel_enable = function() {
+      private$filter_panel_active <- TRUE
+      fp_id <- self$get_filter_panel_ui_id()
+      shinyjs::enable(paste0(fp_id, "-add"), asis = TRUE)
+      slices <- private$cached_states
+      if (is.null(slices)){
+        slices <- self$get_filter_state()
+      }
+      self$set_filter_state(slices)
+
+      invisible(NULL)
     }
   )
 )
