@@ -915,19 +915,19 @@ testthat::test_that("get_filter_count properly tallies active filter states for 
   fs <- filter_settings(
     filter_var(
       dataname = "mae", varname = "years_to_birth",
-      selected = c(30, 50), keep_na = TRUE, keep_inf = FALSE, datalabel = "subjects", target = "y"
+      selected = c(30, 50), keep_na = TRUE, keep_inf = FALSE, datalabel = "subjects", arg = "y"
     ),
     filter_var(
       dataname = "mae", varname = "vital_status",
-      selected = "1", keep_na = FALSE, datalabel = "subjects", target = "y"
+      selected = "1", keep_na = FALSE, datalabel = "subjects", arg = "y"
     ),
     filter_var(
       dataname = "mae", varname = "gender",
-      selected = "female", keep_na = TRUE, datalabel = "subjects", target = "y"
+      selected = "female", keep_na = TRUE, datalabel = "subjects", arg = "y"
     ),
     filter_var(
       dataname = "mae", varname = "ARRAY_TYPE",
-      selected = "", keep_na = TRUE, datalabel = "RPPAArray", target = "subset"
+      selected = "", keep_na = TRUE, datalabel = "RPPAArray", arg = "subset"
     )
   )
   shiny::isolate(testthat::expect_equal(datasets$get_filter_count(), 0L))

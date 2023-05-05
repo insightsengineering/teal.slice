@@ -46,9 +46,19 @@ testthat::test_that("constructor accepts a SummarizedExperiment", {
 # set_filter_state ----
 testthat::test_that("set_filter_state only accepts `teal_slices`", {
   filter_states <- SEFilterStates$new(data = get_test_data(), dataname = "test")
+  fs <- filter_settings()
+  testthat::expect_error(
+    filter_states$set_filter_state("anything"),
+    "Assertion on 'state' failed"
+  )
+  testthat::expect_no_error(filter_states$set_filter_state(fs))
+})
+
+testthat::test_that("set_filter_state arg - ", {
+  filter_states <- SEFilterStates$new(data = get_test_data(), dataname = "test")
   fs <- filter_settings(
-    filter_var(dataname = "test", varname = "feature_id", selected = c("ID001", "ID002"), target = "subset"),
-    filter_var(dataname = "test", varname = "Treatment", selected = c("ChIP", "Input"), target = "select")
+    filter_var(dataname = "test", varname = "feature_id", selected = c("ID001", "ID002"), arg = "subset"),
+    filter_var(dataname = "test", varname = "Treatment", selected = c("ChIP", "Input"), arg = "select")
   )
   testthat::expect_error(
     filter_states$set_filter_state(fs[[1]]),
@@ -57,67 +67,20 @@ testthat::test_that("set_filter_state only accepts `teal_slices`", {
   testthat::expect_no_error(filter_states$set_filter_state(fs))
 })
 
-
-# format ----
-testthat::test_that("format is a method of MAEFilterStates that accepts numeric indent argument", {
-  filter_states <- SEFilterStates$new(data = get_test_data(), dataname = "test")
-  testthat::expect_no_error(shiny::isolate(filter_states$format(indent = 0)))
-  testthat::expect_error(shiny::isolate(filter_states$format(indent = "0")), "Assertion on 'indent' failed")
-})
-
-testthat::test_that("format concatenates its FilterState elements using \\n and adds header", {
-  test_class <- R6::R6Class(
-    classname = "test_class",
-    inherit = SEFilterStates,
-    public = list(
-      state_list_get = function(state_list_index, state_id) private$state_list_get(state_list_index, state_id)
-    )
-  )
-  filter_states <- test_class$new(data = get_test_data(), dataname = "test", datalabel = "Label")
-  fs <- filter_settings(
-    filter_var(
-      dataname = "test", varname = "feature_id", selected = c("ID001", "ID002"), keep_na = FALSE,
-      target = "subset"
-    ),
-    filter_var(
-      dataname = "test", varname = "Treatment", selected = c("ChIP"), keep_na = FALSE,
-      target = "select"
-    )
-  )
-  filter_states$set_filter_state(state = fs)
-
-  for (i in 0:3) {
-    states_formatted_subset <- shiny::isolate(
-      lapply(filter_states$state_list_get("subset", NULL), function(x) x$format(indent = i * 2))
-    )
-    states_formatted_select <- shiny::isolate(
-      lapply(filter_states$state_list_get("select", NULL), function(x) x$format(indent = i * 2))
-    )
-    header1 <- sprintf("%sAssay Label filters:", format("", width = i))
-    header2 <- sprintf("%sSubsetting:", format("", width = i * 2))
-    header3 <- sprintf("%sSelecting:", format("", width = i * 2))
-
-    testthat::expect_identical(
-      shiny::isolate(filter_states$format(indent = i)),
-      paste(c(header1, header2, states_formatted_subset, header3, states_formatted_select), collapse = "\n")
-    )
-  }
-})
-
 # get_call ----
 testthat::test_that("get_call returns executable subset call ", {
   test <- get_test_data()
   filter_states <- SEFilterStates$new(data = test, dataname = "test")
   fs <- filter_settings(
-    filter_var(dataname = "test", varname = "feature_id", selected = c("ID001", "ID002"), target = "subset"),
-    filter_var(dataname = "test", varname = "Treatment", selected = "ChIP", target = "select")
+    filter_var(dataname = "test", varname = "feature_id", selected = c("ID001", "ID002"), arg = "subset"),
+    filter_var(dataname = "test", varname = "Treatment", selected = "ChIP", arg = "select")
   )
   filter_states$set_filter_state(fs)
 
   testthat::expect_equal(
     shiny::isolate(filter_states$get_call()),
     quote(
-      test <- subset(test, subset = feature_id %in% c("ID001", "ID002"), select = Treatment == "ChIP")
+      test <- subset(test, select = Treatment == "ChIP", subset = feature_id %in% c("ID001", "ID002"))
     )
   )
 

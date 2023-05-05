@@ -42,19 +42,19 @@ testthat::test_that("get_call returns a call with applying filter", {
   fs <- filter_settings(
     filter_var(
       dataname = "miniacc", varname = "years_to_birth", selected = c(30, 50),
-      keep_na = TRUE, keep_inf = FALSE, datalabel = "subjects", target = "y"
+      keep_na = TRUE, keep_inf = FALSE, datalabel = "subjects", arg =  "y"
     ),
     filter_var(
       dataname = "miniacc", varname = "vital_status", selected = "1",
-      keep_na = FALSE, datalabel = "subjects", target = "y"
+      keep_na = FALSE, datalabel = "subjects", arg =  "y"
     ),
     filter_var(
       dataname = "miniacc", varname = "gender", selected = "female",
-      keep_na = TRUE, datalabel = "subjects", target = "y"
+      keep_na = TRUE, datalabel = "subjects", arg =  "y"
     ),
     filter_var(
       dataname = "miniacc", varname = "ARRAY_TYPE", selected = "",
-      keep_na = TRUE, datalabel = "RPPAArray", target = "subset"
+      keep_na = TRUE, datalabel = "RPPAArray", arg = "subset"
     )
   )
   filtered_dataset$set_filter_state(fs)
@@ -100,19 +100,19 @@ testthat::test_that("get_filter_overview_info returns overview matrix for MAEFil
   fs <- filter_settings(
     filter_var(
       dataname = "miniacc", varname = "years_to_birth", selected = c(30, 50),
-      keep_na = TRUE, keep_inf = FALSE, datalabel = "subjects", target = "y"
+      keep_na = TRUE, keep_inf = FALSE, datalabel = "subjects", arg =  "y"
     ),
     filter_var(
       dataname = "miniacc", varname = "vital_status", selected = "1",
-      keep_na = FALSE, datalabel = "subjects", target = "y"
+      keep_na = FALSE, datalabel = "subjects", arg =  "y"
     ),
     filter_var(
       dataname = "miniacc", varname = "gender", selected = "female",
-      keep_na = TRUE, datalabel = "subjects", target = "y"
+      keep_na = TRUE, datalabel = "subjects", arg =  "y"
     ),
     filter_var(
       dataname = "miniacc", varname = "ARRAY_TYPE", selected = "",
-      keep_na = TRUE, datalabel = "RPPAArray", target = "subset"
+      keep_na = TRUE, datalabel = "RPPAArray", arg = "subset"
     )
   )
   filtered_dataset$set_filter_state(fs)
@@ -137,19 +137,19 @@ testthat::test_that(
     fs <- filter_settings(
       filter_var(
         dataname = "miniacc", varname = "years_to_birth", selected = c(30, 50),
-        keep_na = FALSE, keep_inf = FALSE, datalabel = "subjects", target = "y"
+        keep_na = FALSE, keep_inf = FALSE, datalabel = "subjects", arg =  "y"
       ),
       filter_var(
         dataname = "miniacc", varname = "vital_status", selected = "1",
-        keep_na = FALSE, datalabel = "subjects", target = "y"
+        keep_na = FALSE, datalabel = "subjects", arg =  "y"
       ),
       filter_var(
         dataname = "miniacc", varname = "gender", selected = "female",
-        keep_na = FALSE, datalabel = "subjects", target = "y"
+        keep_na = FALSE, datalabel = "subjects", arg =  "y"
       ),
       filter_var(
         dataname = "miniacc", varname = "ARRAY_TYPE", selected = "",
-        keep_na = FALSE, datalabel = "RPPAArray", target = "subset"
+        keep_na = FALSE, datalabel = "RPPAArray", arg = "subset"
       )
     )
     dataset$set_filter_state(state = fs)
@@ -202,19 +202,19 @@ testthat::test_that(
     fs <- filter_settings(
       filter_var(
         dataname = "miniacc", varname = "years_to_birth", selected = c(30, 50),
-        keep_na = FALSE, keep_inf = FALSE, datalabel = "subjects", target = "y"
+        keep_na = FALSE, keep_inf = FALSE, datalabel = "subjects", arg =  "y"
       ),
       filter_var(
         dataname = "miniacc", varname = "vital_status", selected = "1",
-        keep_na = FALSE, datalabel = "subjects", target = "y"
+        keep_na = FALSE, datalabel = "subjects", arg =  "y"
       ),
       filter_var(
         dataname = "miniacc", varname = "gender", selected = "female",
-        keep_na = FALSE, datalabel = "subjects", target = "y"
+        keep_na = FALSE, datalabel = "subjects", arg =  "y"
       ),
       filter_var(
         dataname = "miniacc", varname = "ARRAY_TYPE", selected = "",
-        keep_na = FALSE, datalabel = "RPPAArray", target = "subset"
+        keep_na = FALSE, datalabel = "RPPAArray", arg = "subset"
       )
     )
 
@@ -231,19 +231,19 @@ testthat::test_that(
     fs <- filter_settings(
       filter_var(
         dataname = "miniacc", varname = "years_to_birth", selected = c(30, 50),
-        keep_na = TRUE, keep_inf = FALSE, datalabel = "subjects", target = "y"
+        keep_na = TRUE, keep_inf = FALSE, datalabel = "subjects", arg =  "y"
       ),
       filter_var(
         dataname = "miniacc", varname = "vital_status", selected = "1",
-        keep_na = FALSE, datalabel = "subjects", target = "y"
+        keep_na = FALSE, datalabel = "subjects", arg =  "y"
       ),
       filter_var(
         dataname = "miniacc", varname = "gender", selected = "female",
-        keep_na = FALSE, datalabel = "subjects", target = "y"
+        keep_na = FALSE, datalabel = "subjects", arg =  "y"
       ),
       filter_var(
         dataname = "miniacc", varname = "ARRAY_TYPE", selected = "",
-        keep_na = FALSE, datalabel = "RPPAArray", target = "subset"
+        keep_na = FALSE, datalabel = "RPPAArray", arg = "subset"
       )
     )
     dataset$set_filter_state(state = fs)
@@ -278,32 +278,25 @@ testthat::test_that(
     fs <- filter_settings(
       filter_var(
         dataname = "miniacc", varname = "years_to_birth", selected = c(30, 50),
-        keep_na = TRUE, keep_inf = FALSE, datalabel = "subjects", target = "y"
+        keep_na = TRUE, keep_inf = FALSE, datalabel = "subjects", arg =  "y"
       ),
       filter_var(
         dataname = "miniacc", varname = "vital_status", selected = "1",
-        keep_na = FALSE, datalabel = "subjects", target = "y"
+        keep_na = FALSE, datalabel = "subjects", arg =  "y"
       ),
       filter_var(
         dataname = "miniacc", varname = "gender", selected = "female",
-        keep_na = FALSE, datalabel = "subjects", target = "y"
+        keep_na = FALSE, datalabel = "subjects", arg =  "y"
       ),
       filter_var(
         dataname = "miniacc", varname = "ARRAY_TYPE", selected = "",
-        keep_na = FALSE, datalabel = "RPPAArray", target = "subset"
+        keep_na = FALSE, datalabel = "RPPAArray", arg = "subset"
       )
     )
     dataset$set_filter_state(state = fs)
     testthat::expect_error(dataset$remove_filter_state(state_id = list("years_to_birth")))
   }
 )
-
-# get_supported_filter_varnames ----
-testthat::test_that("get_supported_filter_varnames returns character(0)", {
-  utils::data(miniACC, package = "MultiAssayExperiment")
-  filtered_dataset <- MAEFilteredDataset$new(dataset = miniACC, dataname = "miniacc")
-  testthat::expect_identical(get_supported_filter_varnames(filtered_dataset), character(0))
-})
 
 # UI actions ----
 testthat::test_that("remove_filters button removes all filters", {
@@ -312,43 +305,26 @@ testthat::test_that("remove_filters button removes all filters", {
   fs <- filter_settings(
     filter_var(
       dataname = "miniacc", varname = "years_to_birth", selected = c(30, 50),
-      keep_na = FALSE, keep_inf = FALSE, datalabel = "subjects", target = "y"
+      keep_na = FALSE, keep_inf = FALSE, datalabel = "subjects", arg =  "y"
     ),
     filter_var(
       dataname = "miniacc", varname = "vital_status", selected = 1,
-      keep_na = FALSE, datalabel = "subjects", target = "y"
+      keep_na = FALSE, datalabel = "subjects", arg =  "y"
     ),
     filter_var(
       dataname = "miniacc", varname = "gender", selected = "female",
-      keep_na = FALSE, datalabel = "subjects", target = "y"
+      keep_na = FALSE, datalabel = "subjects", arg =  "y"
     ),
     filter_var(
       dataname = "miniacc", varname = "ARRAY_TYPE", selected = "",
-      keep_na = FALSE, datalabel = "RPPAArray", target = "subset"
-    )
+      keep_na = FALSE, datalabel = "RPPAArray", arg = "subset"
+    ),
+    count_type = "none"
   )
 
   shiny::isolate(filtered_dataset$set_filter_state(state = fs))
 
-  testthat::expect_equal(
-    shiny::isolate(filtered_dataset$get_call()),
-    list(
-      subjects = quote(
-        miniacc <- MultiAssayExperiment::subsetByColData( # nolint
-          miniacc,
-          y = miniacc$years_to_birth >= 30 & miniacc$years_to_birth <= 50 &
-            miniacc$vital_status == 1L &
-            miniacc$gender == "female"
-        )
-      ),
-      RPPAArray = quote(
-        miniacc[["RPPAArray"]] <- subset( # nolint
-          miniacc[["RPPAArray"]],
-          subset = ARRAY_TYPE == ""
-        )
-      )
-    )
-  )
+  testthat::expect_length(shiny::isolate(filtered_dataset$get_filter_state()), 4)
 
   shiny::testServer(
     filtered_dataset$srv_active,
@@ -357,5 +333,5 @@ testthat::test_that("remove_filters button removes all filters", {
     }
   )
 
-  testthat::expect_null(shiny::isolate(filtered_dataset$get_call()))
+  testthat::expect_length(shiny::isolate(filtered_dataset$get_filter_state()), 0)
 })

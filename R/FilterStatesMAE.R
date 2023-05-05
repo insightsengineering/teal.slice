@@ -41,7 +41,7 @@ MAEFilterStates <- R6::R6Class( # nolint
       checkmate::assert_function(data_reactive, args = "sid")
       checkmate::assert_class(data, "MultiAssayExperiment")
       data <- SummarizedExperiment::colData(data)
-      data_reactive <- function(sid = character(0)) SummarizedExperiment::colData(data_reactive(sid = sid))
+      data_reactive <- function(sid = "") SummarizedExperiment::colData(data_reactive(sid = sid))
       super$initialize(data, data_reactive, dataname, datalabel)
       private$keys <- keys
       private$set_filterable_varnames(include_varnames = colnames(data))
@@ -98,6 +98,7 @@ MAEFilterStates <- R6::R6Class( # nolint
   # private fields ----
 
   private = list(
+    count_type = "none",
     extract_type = "list",
     fun = quote(MultiAssayExperiment::subsetByColData)
   )

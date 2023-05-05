@@ -238,8 +238,8 @@ testthat::test_that("as.teal_slices converts list to `teal_slices`", {
 
   fs3 <- filter_settings(
     filter_var("data1", "var1", selected = "a", keep_na = TRUE),
-    filter_var("data2", "var31", selected = 31, keep_na = TRUE, keep_inf = FALSE, datalabel = "subjects", target = "y"),
-    filter_var("data@", "var32", selected = 32, keep_na = TRUE, keep_inf = FALSE, datalabel = "exp1", target = "subset"),
+    filter_var("data2", "var31", selected = 31, keep_na = TRUE, keep_inf = FALSE, datalabel = "subjects", arg =  "y"),
+    filter_var("data@", "var32", selected = 32, keep_na = TRUE, keep_inf = FALSE, datalabel = "exp1", arg = "subset"),
     include_varnames = list(data1 = "a")
   )
 
