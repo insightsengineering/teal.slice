@@ -168,8 +168,7 @@ testthat::test_that("get_call returns condition that specifies values passed to 
   testthat::expect_identical(
     deparse1(shiny::isolate(filter_state$get_call())),
     deparse1(quote(is.na(variable) |
-                     variable %in% as.POSIXct(c("2000-01-01 12:00:00", "2000-01-01 12:00:01"), tz = "GMT"))
-    )
+      variable %in% as.POSIXct(c("2000-01-01 12:00:00", "2000-01-01 12:00:01"), tz = "GMT")))
   )
 
   filter_state <- ChoicesFilterState$new(
@@ -190,8 +189,7 @@ testthat::test_that("get_call returns condition that specifies values passed to 
   testthat::expect_identical(
     deparse1(shiny::isolate(filter_state$get_call())),
     deparse1(quote(is.na(variable) |
-                     variable %in% as.POSIXlt(c("2000-01-01 12:00:00", "2000-01-01 12:00:01"), tz = "GMT"))
-    )
+      variable %in% as.POSIXlt(c("2000-01-01 12:00:00", "2000-01-01 12:00:01"), tz = "GMT")))
   )
 })
 
@@ -341,12 +339,12 @@ testthat::test_that("format prepends spaces to every line of the returned string
     testthat::expect_equal(
       shiny::isolate(filter_state$format(indent = i)),
       paste(format("", width = i),
-            c(
-              "Filtering on: variable",
-              sprintf("%sSelected values: value_1, value_2, value_3", format("", width = i)),
-              sprintf("%sInclude missing values: FALSE", format("", width = i))
-            ),
-            sep = "", collapse = "\n"
+        c(
+          "Filtering on: variable",
+          sprintf("%sSelected values: value_1, value_2, value_3", format("", width = i)),
+          sprintf("%sInclude missing values: FALSE", format("", width = i))
+        ),
+        sep = "", collapse = "\n"
       )
     )
   }

@@ -107,17 +107,23 @@ testthat::test_that("set_state: selected accepts vector of two numbers or coerci
 
 # get_call ----
 testthat::test_that("get_call returns call encompassing all values passed to constructor", {
-  filter_state <- RangeFilterState$new(nums, dataname = "data", varname = "variable",
-                                       keep_na = FALSE, keep_inf = FALSE)
+  filter_state <- RangeFilterState$new(nums,
+    dataname = "data", varname = "variable",
+    keep_na = FALSE, keep_inf = FALSE
+  )
   testthat::expect_equal(shiny::isolate(filter_state$get_call()), quote(variable >= 1 & variable <= 10))
-  filter_state <- RangeFilterState$new(nums, dataname = "data", varname = "variable", select = c(4, 6),
-                                       keep_na = FALSE, keep_inf = FALSE)
+  filter_state <- RangeFilterState$new(nums,
+    dataname = "data", varname = "variable", select = c(4, 6),
+    keep_na = FALSE, keep_inf = FALSE
+  )
   testthat::expect_equal(shiny::isolate(filter_state$get_call()), quote(variable >= 4 & variable <= 6))
 })
 
 testthat::test_that("get_call returns call encompassing all values passed in set_selected", {
-  filter_state <- RangeFilterState$new(nums, dataname = "data", varname = "variable", selected = c(3, 4),
-                                       keep_na = FALSE, keep_inf = FALSE)
+  filter_state <- RangeFilterState$new(nums,
+    dataname = "data", varname = "variable", selected = c(3, 4),
+    keep_na = FALSE, keep_inf = FALSE
+  )
   testthat::expect_equal(shiny::isolate(filter_state$get_call()), quote(variable >= 3 & variable <= 4))
 })
 

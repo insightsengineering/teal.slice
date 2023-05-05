@@ -43,9 +43,13 @@ testthat::test_that("get_filter_state returns `teal_slices` with features to one
   dataset$set_filter_state(fs)
   fs_out <- unname(shiny::isolate(dataset$get_filter_state()))
   testthat::expect_true(compare_slices(
-    fs[[1]], fs_out[[1]], fields = c("dataname", "varname", "selected", "keep_na", "keep_inf")))
+    fs[[1]], fs_out[[1]],
+    fields = c("dataname", "varname", "selected", "keep_na", "keep_inf")
+  ))
   testthat::expect_true(compare_slices(
-    fs[[2]], fs_out[[2]], fields = c("dataname", "varname", "selected", "keep_na")))
+    fs[[2]], fs_out[[2]],
+    fields = c("dataname", "varname", "selected", "keep_na")
+  ))
 })
 
 
@@ -63,14 +67,20 @@ testthat::test_that("set_filter_state sets filters specified by `teal_slices`", 
   dataset$set_filter_state(state = fs1)
   fs_out <- unname(shiny::isolate(dataset$get_filter_state()))
   testthat::expect_true(compare_slices(
-    fs1[[1]], fs_out[[1]], fields = c("dataname", "varname", "selected", "keep_na", "keep_inf")))
+    fs1[[1]], fs_out[[1]],
+    fields = c("dataname", "varname", "selected", "keep_na", "keep_inf")
+  ))
 
   dataset$set_filter_state(state = fs2)
   fs_out <- unname(shiny::isolate(dataset$get_filter_state()))
   testthat::expect_true(compare_slices(
-    c(fs1, fs2)[[1]], fs_out[[1]], fields = c("dataname", "varname", "selected", "keep_na", "keep_inf")))
+    c(fs1, fs2)[[1]], fs_out[[1]],
+    fields = c("dataname", "varname", "selected", "keep_na", "keep_inf")
+  ))
   testthat::expect_true(compare_slices(
-    c(fs1, fs2)[[2]], fs_out[[2]], fields = c("dataname", "varname", "selected", "keep_na")))
+    c(fs1, fs2)[[2]], fs_out[[2]],
+    fields = c("dataname", "varname", "selected", "keep_na")
+  ))
 })
 
 
@@ -166,4 +176,3 @@ testthat::test_that("get_call returns a list of `<-` calls or NULL", {
 
   checkmate::expect_list(shiny::isolate(filtered_dataset$get_call()), types = "<-")
 })
-

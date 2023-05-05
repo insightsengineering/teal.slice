@@ -154,7 +154,6 @@ EmptyFilterState <- R6::R6Class( # nolint
         )
       )
     },
-
     set_choices = function(choices) {
       private$choices <- choices
       invisible(NULL)
@@ -203,7 +202,6 @@ EmptyFilterState <- R6::R6Class( # nolint
         }
       )
     },
-
     server_inputs_fixed = function(id) {
       moduleServer(
         id = id,

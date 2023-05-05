@@ -99,10 +99,12 @@ testthat::test_that("get_filter_state returns `teal_slices` with features identi
   fs_out <- unname(shiny::isolate(filter_states$get_filter_state()))
 
   testthat::expect_true(compare_slices(
-    fs[[1]], fs_out[[1]], fields = c("dataname", "varname", "selected", "keep_na", "keep_inf", "datalabel", "target")
+    fs[[1]], fs_out[[1]],
+    fields = c("dataname", "varname", "selected", "keep_na", "keep_inf", "datalabel", "target")
   ))
   testthat::expect_true(compare_slices(
-    fs[[2]], fs_out[[2]], fields = c("dataname", "varname", "selected", "keep_na", "datalabel", "target")
+    fs[[2]], fs_out[[2]],
+    fields = c("dataname", "varname", "selected", "keep_na", "datalabel", "target")
   ))
   testthat::skip("temporary")
   testthat::expect_equal(attributes(fs), attributes(fs_out))
@@ -133,10 +135,12 @@ testthat::test_that("set_filter_state updates existing filter states", {
   fs_out <- unname(shiny::isolate(filter_states$get_filter_state()))
 
   testthat::expect_true(compare_slices(
-    fs[[1]], fs_out[[1]], fields = c("dataname", "varname", "selected", "keep_na", "keep_inf", "datalabel", "target")
+    fs[[1]], fs_out[[1]],
+    fields = c("dataname", "varname", "selected", "keep_na", "keep_inf", "datalabel", "target")
   ))
   testthat::expect_true(compare_slices(
-    fs[[2]], fs_out[[2]], fields = c("dataname", "varname", "selected", "keep_na", "datalabel", "target")
+    fs[[2]], fs_out[[2]],
+    fields = c("dataname", "varname", "selected", "keep_na", "datalabel", "target")
   ))
   testthat::skip("temporary")
   testthat::expect_equal(attributes(fs), attributes(fs_out))

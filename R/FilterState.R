@@ -251,17 +251,19 @@ FilterState <- R6::R6Class( # nolint
             private$server_inputs("inputs")
           }
 
-          observeEvent(input$enable, {
-            if (isTRUE(input$enable)) {
-              private$enable()
-            } else {
-              private$disable()
-            }
-          },
-          ignoreInit = TRUE
+          observeEvent(input$enable,
+            {
+              if (isTRUE(input$enable)) {
+                private$enable()
+              } else {
+                private$disable()
+              }
+            },
+            ignoreInit = TRUE
           )
           reactive(input$remove) # back to parent to remove self
-        })
+        }
+      )
     },
 
     #' @description

@@ -242,7 +242,6 @@ LogicalFilterState <- R6::R6Class( # nolint
       private$choices_counts <- choices_counts
       invisible(NULL)
     },
-
     validate_selection = function(value) {
       if (!(checkmate::test_logical(value, max.len = 1, any.missing = FALSE))) {
         stop(
@@ -261,7 +260,6 @@ LogicalFilterState <- R6::R6Class( # nolint
       )
       check_in_subset(value, private$choices, pre_msg = pre_msg)
     },
-
     cast_and_validate = function(values) {
       tryCatch(
         expr = {
@@ -409,7 +407,6 @@ LogicalFilterState <- R6::R6Class( # nolint
         }
       )
     },
-
     server_inputs_fixed = function(id) {
       moduleServer(
         id = id,

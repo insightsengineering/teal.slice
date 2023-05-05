@@ -124,10 +124,12 @@ testthat::test_that("get_filter_state returns `teal_slices` with features identi
   fs_out <- unname(shiny::isolate(filter_states$get_filter_state()))
 
   testthat::expect_true(compare_slices(
-    fs[[1]], fs_out[[1]], fields = c("dataname", "varname", "selected", "keep_na", "target")
+    fs[[1]], fs_out[[1]],
+    fields = c("dataname", "varname", "selected", "keep_na", "target")
   ))
   testthat::expect_true(compare_slices(
-    fs[[2]], fs_out[[2]], fields = c("dataname", "varname", "selected", "keep_na", "target")
+    fs[[2]], fs_out[[2]],
+    fields = c("dataname", "varname", "selected", "keep_na", "target")
   ))
   testthat::skip("temporary")
   testthat::expect_equal(attributes(fs), attributes(fs_out))
@@ -150,10 +152,12 @@ testthat::test_that("set_filter_state updates select state which has been set al
   fs_out <- unname(shiny::isolate(filter_states$get_filter_state()))
 
   testthat::expect_true(compare_slices(
-    fs[[1]], fs_out[[1]], fields = c("dataname", "varname", "selected", "target")
+    fs[[1]], fs_out[[1]],
+    fields = c("dataname", "varname", "selected", "target")
   ))
   testthat::expect_true(compare_slices(
-    fs[[2]], fs_out[[2]], fields = c("dataname", "varname", "selected", "target")
+    fs[[2]], fs_out[[2]],
+    fields = c("dataname", "varname", "selected", "target")
   ))
   testthat::skip("temporary")
   testthat::expect_equal(attributes(fs), attributes(fs_out))
@@ -263,10 +267,14 @@ testthat::test_that("get_call returns executable subset call ", {
   test <- get_test_data()
   filter_states <- SEFilterStates$new(data = test, dataname = "test")
   fs <- filter_settings(
-    filter_var(dataname = "test", varname = "feature_id", selected = c("ID001", "ID002"),
-               keep_na = FALSE, target = "subset"),
-    filter_var(dataname = "test", varname = "Treatment", selected = "ChIP",
-               keep_na = FALSE, target = "select")
+    filter_var(
+      dataname = "test", varname = "feature_id", selected = c("ID001", "ID002"),
+      keep_na = FALSE, target = "subset"
+    ),
+    filter_var(
+      dataname = "test", varname = "Treatment", selected = "ChIP",
+      keep_na = FALSE, target = "select"
+    )
   )
   filter_states$set_filter_state(fs)
 

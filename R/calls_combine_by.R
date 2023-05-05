@@ -13,9 +13,9 @@
 #' @examples
 #' \dontrun{
 #' calls <- list(
-#'   quote(SEX == "F"),              # subsetting on factor
-#'   quote(AGE >= 20 & AGE <= 50),   # subsetting on range
-#'   quote(!SURV)                    # subsetting on logical
+#'   quote(SEX == "F"), # subsetting on factor
+#'   quote(AGE >= 20 & AGE <= 50), # subsetting on range
+#'   quote(!SURV) # subsetting on logical
 #' )
 #' calls_combine_by(calls, "&")
 #' }

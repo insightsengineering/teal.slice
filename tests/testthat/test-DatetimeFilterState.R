@@ -144,7 +144,7 @@ testthat::test_that("get_call returns call that encompasses all values passed to
   testthat::expect_identical(
     shiny::isolate(filter_state$get_call()),
     quote(variable >= as.POSIXct("2000-01-01 12:00:00", tz = "GMT") & variable <
-            as.POSIXct("2000-01-01 12:00:10", tz = "GMT"))
+      as.POSIXct("2000-01-01 12:00:10", tz = "GMT"))
   )
 })
 
@@ -186,7 +186,7 @@ testthat::test_that("get_call preserves timezone of ISO object passed to constru
   testthat::expect_equal(
     shiny::isolate(filter_state$get_call()),
     quote(
-        variable >= as.POSIXct("2021-08-25 12:00:00", tz = "Australia/Brisbane") &
+      variable >= as.POSIXct("2021-08-25 12:00:00", tz = "Australia/Brisbane") &
         variable < as.POSIXct("2021-08-25 12:00:01", tz = "Australia/Brisbane")
     )
   )

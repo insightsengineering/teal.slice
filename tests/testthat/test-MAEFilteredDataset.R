@@ -221,16 +221,20 @@ testthat::test_that("get_filter_state returns `teal_slices` with features identi
   fs_out <- unname(shiny::isolate(dataset$get_filter_state()))
 
   testthat::expect_true(compare_slices(
-    fs[[1]], fs_out[[1]], fields = c("dataname", "varname", "selected", "keep_na", "keep_inf", "fatalabel", "target")
+    fs[[1]], fs_out[[1]],
+    fields = c("dataname", "varname", "selected", "keep_na", "keep_inf", "fatalabel", "target")
   ))
   testthat::expect_true(compare_slices(
-    fs[[2]], fs_out[[2]], fields = c("dataname", "varname", "selected", "keep_na", "datalabel", "target")
+    fs[[2]], fs_out[[2]],
+    fields = c("dataname", "varname", "selected", "keep_na", "datalabel", "target")
   ))
   testthat::expect_true(compare_slices(
-    fs[[3]], fs_out[[3]], fields = c("dataname", "varname", "selected", "keep_na", "datalabel", "target")
+    fs[[3]], fs_out[[3]],
+    fields = c("dataname", "varname", "selected", "keep_na", "datalabel", "target")
   ))
   testthat::expect_true(compare_slices(
-    fs[[4]], fs_out[[4]], fields = c("dataname", "varname", "selected", "keep_na", "datalabel", "target")
+    fs[[4]], fs_out[[4]],
+    fields = c("dataname", "varname", "selected", "keep_na", "datalabel", "target")
   ))
 })
 
