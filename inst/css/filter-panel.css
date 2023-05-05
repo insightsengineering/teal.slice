@@ -92,6 +92,16 @@
   margin-bottom: 0;
 }
 
+.filter-panel-active-header {
+  display: flex;
+  justify-content: flex-end;
+  gap: 0.25em;
+}
+
+.filter-panel-active-header span:first-child {
+  margin-right: auto;
+}
+
 a.remove {
   font-weight: normal;
   float: right;
@@ -141,13 +151,23 @@ a.remove_all:hover {
 .choices_state_label_text {
   position: absolute;
   padding: 2px;
+  margin-top: -3px;
 }
 
 .choices_state_label {
   background-color:lightblue;
   height:2rem;
+  display:inline-block;
+  position:absolute;
+  margin-top: -3px;
+}
+
+.choices_state_label_unfiltered {
+  background-color:lightgray;
+  height:2rem;
   margin-top: -3px;
   display:inline-block;
+  position: absolute;
 }
 
 .filterPlotOverlayRange {
@@ -166,6 +186,9 @@ a.remove_all:hover {
   max-width: 100%;
 }
 
+.irs.irs--shiny.js-irs-0.irs-with-grid * {
+  font-size: 0.85em;
+}
 
 .filter_panel_dataname {
   font-weight: bold;
@@ -183,7 +206,7 @@ a.remove_all:hover {
   color: rgb(122, 122, 122);
 }
 
-.parent-hideable-list-group > div.hideable-list-group:not(:empty):before {
+.parent-hideable-list-group > div.hideable-list-group:not([data-label=""]):before {
   padding: 2px 4px;
   font-size: 90%;
   color: #c7254e;
@@ -207,4 +230,129 @@ a.remove_all:hover {
 
 .teal_active_summary_filter_panel {
   overflow-x: auto;
+}
+
+/* .panel class needed for bs3 accordion to work properly
+  it's styles need to be overwritten to have consistent look
+ */
+.panel {
+  background-color: transparent;
+  border: none;
+  border-radius: 0;
+  box-shadow: none;
+  margin: 0;
+}
+
+.filter-card-header {
+  color: var(--bs-body-color, #333333);
+  padding: 5px 10px;
+  border: 1px solid var(--bs-gray-300, #dee2e6);
+  border-radius: 0.25em;
+  display: grid;
+  grid-template-columns: 85% 15%;
+  grid-template-areas:
+  "title controls"
+  "summary summary"
+}
+
+.filter-card-header:not(.collapsed) {
+  border-bottom-left-radius: 0;
+  border-bottom-right-radius: 0;
+}
+
+.filter-card-header:hover,
+.filter-card-body:hover {
+  background-color: var(--bs-gray-200, #e9ecef);
+}
+
+.filter-card-title {
+  grid-area: title;
+}
+
+.filter-card-controls {
+  display: flex;
+  justify-content: flex-start;
+  gap: 1em;
+  grid-area: controls;
+}
+
+.filter-card-summary {
+  width: 100%;
+  display: flex;
+  grid-area: summary;
+}
+
+.filter-card-summary-value {
+  max-width: 300px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.filter-card-summary-controls {
+  margin-left: auto;
+  padding-left: 1em;
+  display: flex;
+  gap: 1em;
+}
+
+.fa-check {
+  color: var(--bs-success, var(--success, #3c763d))
+}
+
+.fa-xmark {
+  color: var(--bs-danger, var(--danger, #a94442))
+}
+
+.filter-card-varlabel {
+ color: var(--bs-gray-500, var(--gray, darkgray));
+ margin-left: 0.5em;
+ margin-right: auto;
+}
+
+.filter-card-remove,
+.filter-card-remove:hover {
+  color: var(--bs-body-color, var(--dark, #333333));
+}
+
+.filter-card-body {
+  border: 1px solid var(--bs-gray-300, #dee2e6);
+  border-top: none;
+  border-bottom-left-radius: 0.25rem;
+  border-bottom-right-radius: 0.25rem;
+  padding: 5px 10px;
+}
+
+.progress.state-count-container {
+  height: 1.75em;
+  width: 90%;
+  background-color: white;
+  margin: 0px;
+  border-radius: 0px;
+}
+
+.progress-bar.state-count-bar-filtered {
+  background-color: lightblue !important;
+  color: var(--bs-body-color, var(--dark, #333333));
+  overflow: visible;
+  text-align: left;
+  white-space: nowrap;
+  font-size: 1em;
+}
+
+.progress-bar.state-count-bar-unfiltered {
+  background-color: rgba(173, 216, 230, 0.439) !important;
+}
+
+.input-daterange > input {
+  font-size: 1em !important;
+}
+
+.input-group-prepend {
+ font-size: 1em !important;;
+}
+
+
+.filter_datelike_input  input {
+  font-size: 1em !important;
 }
