@@ -29,7 +29,7 @@ testthat::test_that("get_call returns executable call filtering a matrix with nu
   test <- matrix(1:100, ncol = 10, dimnames = list(NULL, letters[1:10]))
   filter_states <- MatrixFilterStates$new(data = test, dataname = "test")
   fs <- filter_settings(
-    filter_var(dataname = "test", varname = "a", selected = c(1, 3), keep_na = FALSE, keep_inf = FALSE)
+    filter_var(dataname = "test", varname = "a", selected = c(1, 3))
   )
   filter_states$set_filter_state(fs)
   testthat::expect_identical(

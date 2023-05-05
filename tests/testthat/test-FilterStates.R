@@ -60,7 +60,7 @@ testthat::test_that("set_filter_state and get_filter_state, sets and returns the
     count_type = "none"
   )
   filter_states$set_filter_state(fs)
-  testthat::expect_identical(
+  testthat::expect_equal(
     shiny::isolate(filter_states$get_filter_state()),
     fs
   )

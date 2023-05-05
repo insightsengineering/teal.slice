@@ -201,26 +201,32 @@ testthat::test_that(
     dataset <- MAEFilteredDataset$new(dataset = miniACC, dataname = "miniacc")
     fs <- filter_settings(
       filter_var(
-        dataname = "miniacc", varname = "years_to_birth", selected = c(30, 50),
-        keep_na = FALSE, keep_inf = FALSE, datalabel = "subjects", arg =  "y"
+        dataname = "miniacc", varname = "years_to_birth", choices = c(14, 83), selected = c(30, 50),
+        keep_na = FALSE, keep_inf = FALSE, fixed = FALSE, disabled = FALSE, datalabel = "subjects", arg =  "y"
       ),
       filter_var(
-        dataname = "miniacc", varname = "vital_status", selected = "1",
-        keep_na = FALSE, datalabel = "subjects", arg =  "y"
+        dataname = "miniacc", varname = "vital_status", choices = c("0", "1"), selected = "1",
+        keep_na = FALSE, keep_inf = NULL, fixed = FALSE, disabled = FALSE, datalabel = "subjects", arg =  "y"
       ),
       filter_var(
-        dataname = "miniacc", varname = "gender", selected = "female",
-        keep_na = FALSE, datalabel = "subjects", arg =  "y"
+        dataname = "miniacc", varname = "gender", choices = c("female", "male"), selected = "female",
+        keep_na = FALSE, keep_inf = FALSE, fixed = FALSE, disabled = FALSE, datalabel = "subjects", arg =  "y"
       ),
       filter_var(
-        dataname = "miniacc", varname = "ARRAY_TYPE", selected = "",
-        keep_na = FALSE, datalabel = "RPPAArray", arg = "subset"
-      )
+        dataname = "miniacc", varname = "ARRAY_TYPE", choices = c("", "protein_level"), selected = "",
+        keep_na = FALSE, keep_inf = NULL, fixed = FALSE, disabled = FALSE, datalabel = "RPPAArray", arg = "subset"
+      ),
+      count_type = "none",
+      include_varnames = list(miniacc = colnames(SummarizedExperiment::colData(miniACC)))
     )
-  )
 
-  dataset$set_filter_state(state = fs)
-  fs_out <- unname(shiny::isolate(dataset$get_filter_state()))
+    dataset$set_filter_state(state = fs)
+    testthat::expect_equal(
+      shiny::isolate(dataset$get_filter_state()),
+      fs
+    )
+  }
+)
 
 testthat::test_that(
   "MAEFilteredDataset$remove_filter_state removes desired filter",
@@ -245,28 +251,13 @@ testthat::test_that(
         keep_na = FALSE, datalabel = "RPPAArray", arg = "subset"
       )
     )
-  )
-  dataset$set_filter_state(state = fs)
-
-  testthat::expect_error(
-    dataset$remove_filter_state(list(filter_var(dataname = "miniacc", varname = "years_to_birth"))),
-    "Assertion on 'state' failed"
-  )
-
-  testthat::expect_no_error(
+    dataset$set_filter_state(state = fs)
     dataset$remove_filter_state(filter_settings(filter_var(dataname = "miniacc", varname = "years_to_birth")))
-  )
 
-  testthat::expect_equal(
-    shiny::isolate(dataset$get_call()),
-    list(
-      subjects = quote(
-        miniacc <- MultiAssayExperiment::subsetByColData( # nolint
-          miniacc,
-          y = miniacc$vital_status == 1L &
-            miniacc$gender == "female"
-        )
-      )
+
+    testthat::expect_equal(
+      sapply(shiny::isolate(dataset$get_filter_state()), `[[`, "varname"),
+      c("vital_status", "gender", "ARRAY_TYPE")
     )
   }
 )
@@ -294,8 +285,10 @@ testthat::test_that(
         keep_na = FALSE, datalabel = "RPPAArray", arg = "subset"
       )
     )
-  )
-})
+    dataset$set_filter_state(state = fs)
+    testthat::expect_error(dataset$remove_filter_state(state_id = list("years_to_birth")))
+  }
+)
 
 # UI actions ----
 testthat::test_that("remove_filters button removes all filters", {

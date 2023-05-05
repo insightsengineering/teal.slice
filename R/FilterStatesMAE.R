@@ -98,7 +98,6 @@ MAEFilterStates <- R6::R6Class( # nolint
   # private fields ----
 
   private = list(
-    count_type = "none",
     extract_type = "list",
     fun = quote(MultiAssayExperiment::subsetByColData)
   )

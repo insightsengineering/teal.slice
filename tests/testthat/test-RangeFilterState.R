@@ -22,13 +22,6 @@ testthat::test_that("constructor accepts infinite values but not infinite only",
   )
 })
 
-testthat::test_that("constructor initializes keep_inf = TRUE by default if x contains Infs", {
-  filter_state <- RangeFilterState$new(7, dataname = "data", varname = "7")
-  testthat::expect_null(shiny::isolate(filter_state$get_state())$keep_inf)
-  filter_state <- RangeFilterState$new(c(7, Inf), dataname = "data", varname = "7")
-  testthat::expect_true(shiny::isolate(filter_state$get_state())$keep_inf)
-})
-
 testthat::test_that("constructor raises error when selected is not sorted", {
   testthat::expect_error(
     RangeFilterState$new(
@@ -107,23 +100,14 @@ testthat::test_that("set_state: selected accepts vector of two numbers or coerci
 
 # get_call ----
 testthat::test_that("get_call returns call encompassing all values passed to constructor", {
-  filter_state <- RangeFilterState$new(nums,
-    dataname = "data", varname = "variable",
-    keep_na = FALSE, keep_inf = FALSE
-  )
+  filter_state <- RangeFilterState$new(nums, dataname = "data", varname = "variable")
   testthat::expect_equal(shiny::isolate(filter_state$get_call()), quote(variable >= 1 & variable <= 10))
-  filter_state <- RangeFilterState$new(nums,
-    dataname = "data", varname = "variable", select = c(4, 6),
-    keep_na = FALSE, keep_inf = FALSE
-  )
+  filter_state <- RangeFilterState$new(nums, dataname = "data", varname = "variable", select = c(4, 6))
   testthat::expect_equal(shiny::isolate(filter_state$get_call()), quote(variable >= 4 & variable <= 6))
 })
 
 testthat::test_that("get_call returns call encompassing all values passed in set_selected", {
-  filter_state <- RangeFilterState$new(nums,
-    dataname = "data", varname = "variable", selected = c(3, 4),
-    keep_na = FALSE, keep_inf = FALSE
-  )
+  filter_state <- RangeFilterState$new(nums, dataname = "data", varname = "variable", selected = c(3, 4))
   testthat::expect_equal(shiny::isolate(filter_state$get_call()), quote(variable >= 3 & variable <= 4))
 })
 
@@ -136,7 +120,7 @@ testthat::test_that("NA and Inf can both be included by call returned by get_cal
 })
 
 testthat::test_that("get_call returns valid call after unsuccessfull setting of selected", {
-  filter_state <- RangeFilterState$new(7, dataname = "data", varname = "variable", keep_na = FALSE, keep_inf = FALSE)
+  filter_state <- RangeFilterState$new(7, dataname = "data", varname = "variable")
   testthat::expect_no_error(
     filter_state$set_state(filter_var(dataname = "data", varname = "variable", selected = c(1, 3)))
   )
@@ -152,7 +136,6 @@ testthat::test_that("format accepts numeric as indent", {
 })
 
 testthat::test_that("format returns a string representation the FilterState object", {
-  testthat::skip("temporary")
   filter_state <- RangeFilterState$new(nums, dataname = "data", varname = "variable")
   filter_state$set_state(filter_var(dataname = "data", varname = "variable"))
   testthat::expect_equal(
@@ -160,14 +143,13 @@ testthat::test_that("format returns a string representation the FilterState obje
     paste(
       "  Filtering on: variable",
       "    Selected range: 1.000 - 10.000",
-      "    Include missing values: TRUE",
+      "    Include missing values: FALSE",
       sep = "\n"
     )
   )
 })
 
 testthat::test_that("format prepends spaces to every line of the returned string", {
-  testthat::skip("temporary")
   filter_state <- RangeFilterState$new(nums, dataname = "data", varname = "variable")
   filter_state$set_state(filter_var(dataname = "data", varname = "variable"))
   for (i in 0:3) {
@@ -177,13 +159,14 @@ testthat::test_that("format prepends spaces to every line of the returned string
         c(
           "Filtering on: variable",
           sprintf("%sSelected range: 1.000 - 10.000", format("", width = i)),
-          sprintf("%sInclude missing values: TRUE", format("", width = i))
+          sprintf("%sInclude missing values: FALSE", format("", width = i))
         ),
         sep = "", collapse = "\n"
       )
     )
   }
 })
+
 
 
 # is_any_filtered ----

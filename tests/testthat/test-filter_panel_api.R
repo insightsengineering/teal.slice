@@ -242,7 +242,7 @@ testthat::test_that("get_filter_state returns `teal_slices` with features identi
   )
   set_filter_state(datasets, filter = fs)
 
-  fs_out <- unname(shiny::isolate(get_filter_state(datasets)))
+  fs_out <- shiny::isolate(get_filter_state(datasets))
 
   testthat::expect_true(compare_slices(
     fs[[1]], fs_out[[1]],

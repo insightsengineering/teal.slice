@@ -321,8 +321,5 @@ SEFilterStates <- R6::R6Class( # nolint
         }
       )
     }
-  ),
-  private = list(
-    count_type = "none"
   )
 )

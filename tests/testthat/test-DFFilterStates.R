@@ -22,8 +22,8 @@ testthat::test_that("get_filter_state return `teal_slices` with include_varnames
 testthat::test_that("get_call returns filter call on dataname with unprefixed variables in logical expression", {
   filter_states <- DFFilterStates$new(data = iris, dataname = "iris")
   fs <- filter_settings(
-    filter_var(dataname = "iris", varname = "Sepal.Length", selected = c(5.1, 6.4), keep_na = FALSE, keep_inf = FALSE),
-    filter_var(dataname = "iris", varname = "Species", selected = c("setosa", "versicolor"), keep_na = FALSE)
+    filter_var(dataname = "iris", varname = "Sepal.Length", selected = c(5.1, 6.4)),
+    filter_var(dataname = "iris", varname = "Species", selected = c("setosa", "versicolor"))
   )
   filter_states$set_filter_state(fs)
   testthat::expect_equal(
