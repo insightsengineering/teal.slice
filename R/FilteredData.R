@@ -629,8 +629,9 @@ FilteredData <- R6::R6Class( # nolint
       shinyjs::disable(paste0(fp_id, "-add"), asis = TRUE)
       slices <- self$get_filter_state()
       private$cached_states <- slices
-      slices <- slices_drop(slices)
-      slices <- slices_set(slices, list(disabled = TRUE))
+      for (i in seq_along(slices)) {
+        slices[[i]]$disabled <- TRUE
+      }
       self$set_filter_state(slices)
 
       invisible(NULL)
