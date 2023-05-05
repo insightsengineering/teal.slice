@@ -251,16 +251,28 @@ FilterState <- R6::R6Class( # nolint
             private$server_inputs("inputs")
           }
 
-          observeEvent(input$enable,
-            {
-              if (isTRUE(input$enable)) {
-                private$enable()
-              } else {
-                private$disable()
-              }
-            },
-            ignoreInit = TRUE
+          # Disable/enable this filter state in response to switch flip.
+          observeEvent(input$enable, {
+            if (isTRUE(input$enable)) {
+              private$enable()
+            } else {
+              private$disable()
+            }
+          },
+          ignoreInit = TRUE
           )
+
+          # Update disable switch according to disabled state.
+          # This is necessary to react to the global disable action.
+          observeEvent(private$is_disabled(), {
+            if (isTRUE(private$is_disabled())) {
+              shinyWidgets::updateSwitchInput(inputId = "enable", value = FALSE)
+            }
+            if (isFALSE(private$is_disabled())) {
+              shinyWidgets::updateSwitchInput(inputId = "enable", value = TRUE)
+            }
+          })
+
           reactive(input$remove) # back to parent to remove self
         }
       )
