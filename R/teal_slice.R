@@ -78,6 +78,9 @@
 #' @param field `character(1)` name of `teal_slice` element
 #' @param expr `character` string representing an expression that evaluates to a single `logical`;
 #'             will be evaluated in individual `teal_slice` objects
+#' @param drop `character` vector of fields to set to NULL; defaults to all except
+#'             `datamane`, `varname`, `datalabel`, `target` (these have to be specified explicitly)
+#' @param set `named list` specifying new values of desired fields, given as `name:value` pairs
 #' @param ... for `filter_var` any number of additional fields given as `name:value` pairs\cr
 #'            for `filter_settings` any number of `teal_slice` objects\cr
 #'            for other functions arguments passed to other methods
@@ -485,4 +488,53 @@ slices_which <- function(tss, expr) {
   checkmate::assert_string(expr)
   expr <- str2lang(expr)
   Filter(function(x) isTRUE(eval(expr, x)), tss)
+}
+
+
+# sets selected fields to NULL in all `teal_slice`s in a `teal_slices`
+#' @rdname teal_slice
+#' @keywords internal
+#'
+slices_drop <- function(tss, drop = NULL) {
+  checkmate::assert_class(tss, "teal_slices")
+  checkmate::assert_character(drop, min.len = 1L, null.ok = TRUE)
+
+  if (is.null(drop)) {
+    drop <- setdiff(
+      unique(unlist(lapply(tss, names))),
+      c("dataname", "varname", "varlabel", "target")
+    )
+  }
+  attrs <- Filter(Negate(is.null), attributes(tss)[c("include_varnames", "exclude_varnames", "count_type")])
+
+  for (i in seq_along(drop)) {
+    tss <- lapply(tss, function(x) {
+      x <- unclass(x)
+      x[[drop[i]]] <- NULL
+      x
+    })
+  }
+
+  unname(do.call(filter_settings, c(lapply(tss, as.teal_slice), attrs)))
+}
+
+
+# sets selected fields in all `teal_slice`s in a `teal_slices` to specified values
+#' @rdname teal_slice
+#' @keywords internal
+#'
+slices_set <- function(tss, set) {
+  checkmate::assert_class(tss, "teal_slices")
+  checkmate::assert_list(set, names = "named")
+
+  attrs <- Filter(Negate(is.null), attributes(tss)[c("include_varnames", "exclude_varnames", "count_type")])
+
+  for (i in seq_along(set)) {
+    tss <- lapply(tss, function(x) {
+      within(x, assign(x = names(set[i]), value = set[[i]]))
+    })
+  }
+  ans <- unname(do.call(filter_settings, c(tss, attrs)))
+
+  ans
 }

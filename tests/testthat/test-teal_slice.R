@@ -590,3 +590,165 @@ testthat::test_that("slices_which works", {
   testthat::expect_identical(slices_which(fs, "varname == \"var1\""), fs[1])
   testthat::expect_identical(slices_which(fs, "dataname == \"dataa\""), filter_settings())
 })
+
+
+testthat::test_that("slices_drop accepts `teal_slices`", {
+  fs <- filter_settings(
+    filter_var(
+      dataname = "iris", varname = "Species",
+      choices = c("setosa", "versicolor", "virginica"), selected = "setosa", keep_na = TRUE
+    ),
+    filter_var(
+      dataname = "iris", varname = "Sepal.Length",
+      choices = c(4.3, 7.9), selected = c(5.1, 6.4), keep_na = TRUE, keep_inf = TRUE
+    )
+  )
+  testthat::expect_no_error(slices_drop(fs))
+  testthat::expect_error(slices_drop(unclass(fs)), "Assertion on 'tss' failed")
+})
+
+testthat::test_that("slices_drop sets desired fields to NULL", {
+  fs <- filter_settings(
+    filter_var(
+      dataname = "iris", varname = "Species",
+      choices = c("setosa", "versicolor", "virginica"), selected = "setosa", keep_na = TRUE
+    ),
+    filter_var(
+      dataname = "iris", varname = "Sepal.Length",
+      choices = c(4.3, 7.9), selected = c(5.1, 6.4), keep_na = TRUE, keep_inf = TRUE
+    )
+  )
+
+  # drop single field
+  testthat::expect_identical(
+    slices_field(fs, "keep_na"),
+    TRUE
+  )
+  fs <- slices_drop(fs, drop = "keep_na")
+  testthat::expect_identical(
+    slices_field(fs, "keep_na"),
+    NULL
+  )
+  # drop multiple fields
+  testthat::expect_identical(
+    slices_field(fs, "choices"),
+    c("setosa", "versicolor", "virginica", "4.3", "7.9")
+  )
+  testthat::expect_identical(
+    slices_field(fs, "selected"),
+    c("setosa", "5.1", "6.4")
+  )
+  fs <- slices_drop(fs, drop = c("choices", "selected"))
+  testthat::expect_identical(
+    slices_field(fs, "choices"),
+    NULL
+  )
+  testthat::expect_identical(
+    slices_field(fs, "selected"),
+    NULL
+  )
+})
+
+
+testthat::test_that("slices_drop returns `teal_slices` with selected field set to NULL and otherwise identical", {
+  fs <- filter_settings(
+    filter_var(
+      dataname = "iris", varname = "Species",
+      choices = c("setosa", "versicolor", "virginica"), selected = "setosa", keep_na = TRUE
+    ),
+    filter_var(
+      dataname = "iris", varname = "Sepal.Length",
+      choices = c(4.3, 7.9), selected = c(5.1, 6.4), keep_na = TRUE, keep_inf = TRUE
+    )
+  )
+  fss <- expect_no_error(slices_drop(fs, "choices"))
+
+  testthat::expect_null(slices_field(fss, "choices"))
+
+  fs[[1]]["choices"] <- NULL
+  fs[[2]]["choices"] <- NULL
+  fss[[1]]["choices"] <- NULL
+  fss[[2]]["choices"] <- NULL
+  testthat::expect_identical(fs, fss)
+})
+
+
+testthat::test_that("slices_set accepts `teal_slices`", {
+  fs <- filter_settings(
+    filter_var(
+      dataname = "iris", varname = "Species",
+      choices = c("setosa", "versicolor", "virginica"), selected = "setosa", keep_na = TRUE
+    ),
+    filter_var(
+      dataname = "iris", varname = "Sepal.Length",
+      choices = c(4.3, 7.9), selected = c(5.1, 6.4), keep_na = TRUE, keep_inf = TRUE
+    )
+  )
+  testthat::expect_no_error(slices_set(fs, set = list(keep_na = TRUE)))
+  testthat::expect_error(slices_set(unclass(fs), list(keep_na = TRUE)), "Assertion on 'tss' failed")
+})
+
+testthat::test_that("slices_set sets desired fields to desired values", {
+  fs <- filter_settings(
+    filter_var(
+      dataname = "iris", varname = "Species",
+      choices = c("setosa", "versicolor", "virginica"), selected = "setosa", keep_na = TRUE
+    ),
+    filter_var(
+      dataname = "iris", varname = "Sepal.Length",
+      choices = c(4.3, 7.9), selected = c(5.1, 6.4), keep_na = TRUE, keep_inf = TRUE
+    )
+  )
+
+  # set single field
+  testthat::expect_identical(
+    slices_field(fs, "keep_na"),
+    TRUE
+  )
+  fs <- slices_set(fs, set = list(keep_na = FALSE))
+  testthat::expect_identical(
+    slices_field(fs, "keep_na"),
+    FALSE
+  )
+  # set multiple fields
+  testthat::expect_identical(
+    slices_field(fs, "choices"),
+    c("setosa", "versicolor", "virginica", "4.3", "7.9")
+  )
+  testthat::expect_identical(
+    slices_field(fs, "selected"),
+    c("setosa", "5.1", "6.4")
+  )
+  fs <- slices_set(fs, set = list(choices = c("choice1", "choice2"), selected = c("selection1", "selection2")))
+  testthat::expect_identical(
+    slices_field(fs, "choices"),
+    c("choice1", "choice2")
+  )
+  testthat::expect_identical(
+    slices_field(fs, "selected"),
+    c("selection1", "selection2")
+  )
+})
+
+testthat::test_that("slices_set returns `teal_slices` with unspecified fields unchanged", {
+  fs <- filter_settings(
+    filter_var(
+      dataname = "iris", varname = "Species",
+      choices = c("setosa", "versicolor", "virginica"), selected = "setosa", keep_na = TRUE
+    ),
+    filter_var(
+      dataname = "iris", varname = "Sepal.Length",
+      choices = c(4.3, 7.9), selected = c(5.1, 6.4), keep_na = TRUE, keep_inf = TRUE
+    )
+  )
+  fss <- expect_no_error(slices_set(fs, set = list("choices" = "choice", "selected" = "selection")))
+
+  # verify that fields were set properly
+  testthat::expect_identical(slices_field(fss, "choices"), "choice")
+  testthat::expect_identical(slices_field(fss, "selected"), "selection")
+  # remove the fields that were set so remaining ones can be easily compared
+  fs <- slices_drop(fs, c("choices", "selected"))
+  fss <- slices_drop(fss, c("choices", "selected"))
+
+  testthat::expect_identical(fs, fss)
+})
