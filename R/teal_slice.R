@@ -78,9 +78,6 @@
 #' @param field `character(1)` name of `teal_slice` element
 #' @param expr `character` string representing an expression that evaluates to a single `logical`;
 #'             will be evaluated in individual `teal_slice` objects
-#' @param drop `character` vector of fields to set to NULL; defaults to all except
-#'             `datamane`, `varname`, `datalabel`, `target` (these have to be specified explicitly)
-#' @param set `named list` specifying new values of desired fields, given as `name:value` pairs
 #' @param ... for `filter_var` any number of additional fields given as `name:value` pairs\cr
 #'            for `filter_settings` any number of `teal_slice` objects\cr
 #'            for other functions arguments passed to other methods
