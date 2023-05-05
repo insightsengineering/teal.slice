@@ -158,6 +158,7 @@ EmptyFilterState <- R6::R6Class( # nolint
       private$choices <- choices
       invisible(NULL)
     },
+
     # @description
     # UI Module for `EmptyFilterState`.
     # This UI element contains a checkbox input to filter or keep missing values.
@@ -198,6 +199,22 @@ EmptyFilterState <- R6::R6Class( # nolint
               condition = !private$is_disabled()
             )
           })
+        }
+      )
+    },
+    server_inputs_fixed = function(id) {
+      moduleServer(
+        id = id,
+        function(input, output, session) {
+          output$selection <- renderUI({
+            div(
+              class = "relative",
+              div(
+                span("Variable contains missing values only")
+              )
+            )
+          })
+          NULL
         }
       )
     },

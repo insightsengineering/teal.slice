@@ -269,10 +269,13 @@ ChoicesFilterState <- R6::R6Class( # nolint
           call(fun_compare, varname, call("as.Date", make_c_call(as.character(choices))))
         } else if (inherits(choices, c("POSIXct", "POSIXlt"))) {
           class <- class(choices)[1L]
-          date_fun <- as.name(switch(class,
-            "POSIXct" = "as.POSIXct",
-            "POSIXlt" = "as.POSIXlt"
-          ))
+          date_fun <- as.name(
+            switch(
+              class,
+              "POSIXct" = "as.POSIXct",
+              "POSIXlt" = "as.POSIXlt"
+            )
+          )
           call(
             fun_compare,
             varname,
@@ -337,6 +340,7 @@ ChoicesFilterState <- R6::R6Class( # nolint
       private$choices_counts <- choices_counts
       invisible(NULL)
     },
+
     get_choices_counts = function() {
       if (!is.null(private$x_reactive)) {
         table(factor(private$x_reactive(), levels = private$choices))
@@ -569,6 +573,31 @@ ChoicesFilterState <- R6::R6Class( # nolint
             shinyjs::toggleState(
               id = "keep_na-value",
               condition = !private$is_disabled()
+            )
+          })
+
+          logger::log_trace("ChoicesFilterState$server initialized, dataname: { private$dataname }")
+          NULL
+        }
+      )
+    },
+
+    server_inputs_fixed = function(id) {
+      moduleServer(
+        id = id,
+        function(input, output, session) {
+          logger::log_trace("ChoicesFilterState$server initializing, dataname: { private$dataname }")
+
+          output$selection <- renderUI({
+            countsnow <- unname(table(factor(private$x_reactive(), levels = private$choices)))
+            countsmax <- private$choices_counts
+
+            ind <- private$choices %in% shiny::isolate(private$selected())
+            countBars(
+              inputId = session$ns("labels"),
+              choices = shiny::isolate(private$selected()),
+              countsnow = countsnow[ind],
+              countsmax = countsmax[ind]
             )
           })
 

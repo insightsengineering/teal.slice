@@ -86,15 +86,15 @@ testthat::test_that("set_state only sets properties defined in `teal_slice", {
     shiny::isolate(filter_state$get_state())[c("selected", "keep_na", "keep_inf")],
     list(selected = 7, keep_na = NULL, keep_inf = NULL)
   )
-  filter_state$set_state(filter_var(dataname = "data", varname = "variable", keep_na = TRUE))
+  filter_state$set_state(filter_var(dataname = "data", varname = "variable", keep_na = FALSE))
   testthat::expect_identical(
     shiny::isolate(filter_state$get_state())[c("selected", "keep_na", "keep_inf")],
-    list(selected = 7, keep_na = TRUE, keep_inf = NULL)
+    list(selected = 7, keep_na = FALSE, keep_inf = NULL)
   )
-  filter_state$set_state(filter_var(dataname = "data", varname = "variable", keep_inf = TRUE))
+  filter_state$set_state(filter_var(dataname = "data", varname = "variable", keep_inf = FALSE))
   testthat::expect_identical(
     shiny::isolate(filter_state$get_state())[c("selected", "keep_na", "keep_inf")],
-    list(selected = 7, keep_na = TRUE, keep_inf = TRUE)
+    list(selected = 7, keep_na = FALSE, keep_inf = FALSE)
   )
 })
 
@@ -114,7 +114,8 @@ testthat::test_that("set_state cannot set mutable fields in a fixed FilterState"
 })
 
 testthat::test_that("set_state cannot set mutable fields in a disabled FilterState", {
-  filter_state <- FilterState$new(c("a", NA_character_), dataname = "data", varname = "variable", disabled = TRUE)
+  filter_state <- FilterState$new(c("a", NA_character_), dataname = "data", varname = "variable")
+  shiny::isolate(filter_state$set_state(filter_var("data", "variable", disabled = TRUE)))
   old_state <- shiny::isolate(filter_state$get_state())
   new_state <- filter_var(
     dataname = "data",
@@ -129,7 +130,8 @@ testthat::test_that("set_state cannot set mutable fields in a disabled FilterSta
 })
 
 testthat::test_that("set_state can enable FilerState and set mutable fields in a disabled FilterState", {
-  filter_state <- FilterState$new(c("a", NA_character_), dataname = "data", varname = "variable", disabled = TRUE)
+  filter_state <- FilterState$new(c("a", NA_character_), dataname = "data", varname = "variable")
+  shiny::isolate(filter_state$set_state(filter_var("data", "variable", disabled = TRUE)))
   old_state <- shiny::isolate(filter_state$get_state())
   new_state <- filter_var(
     dataname = "data",
@@ -180,14 +182,11 @@ testthat::test_that("constructor initializes selected = NULL by default", {
   testthat::expect_null(shiny::isolate(filter_state$get_state()$selected))
 })
 
-testthat::test_that("constructor initializes keep_na = NULL by default", {
+testthat::test_that("constructor initializes keep_na = TRUE by default if data contains NAs", {
   filter_state <- FilterState$new(7, dataname = "data", varname = "7")
   testthat::expect_null(shiny::isolate(filter_state$get_state())$keep_na)
-})
-
-testthat::test_that("constructor initializes keep_inf = NULL by default", {
-  filter_state <- FilterState$new(7, dataname = "data", varname = "7")
-  testthat::expect_null(shiny::isolate(filter_state$get_state())$keep_inf)
+  filter_state <- FilterState$new(c(7, NA), dataname = "data", varname = "7")
+  testthat::expect_true(shiny::isolate(filter_state$get_state())$keep_na)
 })
 
 # get_call ----
@@ -228,15 +227,13 @@ testthat::test_that("add_keep_na_call modifies call if keep_na set to TRUE", {
       }
     )
   )
-  filter_state <- test_class$new(c(1, NA), dataname = "data", varname = "variable")
+  filter_state <- test_class$new(c(1, NA), dataname = "data", varname = "variable", keep_na = FALSE)
   testthat::expect_identical(
     shiny::isolate(filter_state$test_add_keep_na_call()),
     quote(TRUE)
   )
 
-  shiny::isolate(filter_state$set_state(
-    filter_var(dataname = "data", varname = "variable", keep_na = TRUE)
-  ))
+  shiny::isolate(filter_state$set_state(filter_var(dataname = "data", varname = "variable", keep_na = TRUE)))
   testthat::expect_identical(
     shiny::isolate(filter_state$test_add_keep_na_call()),
     quote(is.na(variable) | TRUE)
@@ -258,7 +255,7 @@ testthat::test_that("setting private$na_rm to TRUE adds `!is.na` before conditio
       }
     )
   )
-  filter_state <- test_class$new(c(1, NA), dataname = "data", varname = "variable")
+  filter_state <- test_class$new(c(1, NA), dataname = "data", varname = "variable", keep_na = FALSE)
   filter_state$set_na_rm(TRUE)
 
   testthat::expect_identical(
@@ -285,7 +282,7 @@ testthat::test_that(
         }
       )
     )
-    filter_state <- test_class$new(c(1), dataname = "data", varname = "variable")
+    filter_state <- test_class$new(c(1), dataname = "data", varname = "variable", keep_na = FALSE)
     filter_state$set_na_rm(TRUE)
 
     testthat::expect_identical(
@@ -332,7 +329,7 @@ testthat::test_that("disable sets all state elements to NULL", {
     )
   )
   filter_state <- testfs$new(c(1:10, NA), dataname = "data", varname = "variable")
-  fs <- filter_var(dataname = "data", varname = "variable", selected = c(1:10, NA), keep_na = FALSE)
+  fs <- filter_var(dataname = "data", varname = "variable", selected = c(1:10, NA), keep_na = FALSE, keep_inf = FALSE)
   filter_state$set_state(fs)
   testthat::expect_identical(
     shiny::isolate(filter_state$get_state()),
@@ -356,7 +353,7 @@ testthat::test_that("disable copies last state to the cache", {
     )
   )
   filter_state <- testfs$new(c(1:10, NA), dataname = "data", varname = "variable")
-  fs <- filter_var(dataname = "data", varname = "variable", selected = c(1:10, NA), keep_na = FALSE)
+  fs <- filter_var(dataname = "data", varname = "variable", selected = c(1:10, NA), keep_na = FALSE, keep_inf = FALSE)
   filter_state$set_state(fs)
   shiny::isolate(filter_state$disable())
   state_cached <- shiny::isolate(filter_state$get_cache())
@@ -379,7 +376,7 @@ testthat::test_that("enable sets state back to the last state", {
     )
   )
   filter_state <- testfs$new(c(1:10, NA), dataname = "data", varname = "variable")
-  fs <- filter_var(dataname = "data", varname = "variable", selected = c(1:10, NA), keep_na = FALSE)
+  fs <- filter_var(dataname = "data", varname = "variable", selected = c(1:10, NA), keep_na = FALSE, keep_inf = FALSE)
   filter_state$set_state(fs)
   testthat::expect_identical(
     shiny::isolate(filter_state$get_state()),

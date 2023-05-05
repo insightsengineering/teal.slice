@@ -87,6 +87,7 @@ init_filter_state <- function(x,
   if (length(extract_type) == 1) {
     checkmate::assert_choice(extract_type, choices = c("list", "matrix"))
   }
+
   if (all(is.na(x))) {
     args <- list(
       x = x,

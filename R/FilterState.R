@@ -114,7 +114,7 @@ FilterState <- R6::R6Class( # nolint
       private$dataname <- dataname
       private$varname <- varname
       private$selected <- reactiveVal()
-      private$keep_na <- reactiveVal(keep_na)
+      private$keep_na <- if (is.null(keep_na) && anyNA(x)) reactiveVal(TRUE) else reactiveVal(keep_na)
       private$keep_inf <- reactiveVal(keep_inf)
       private$fixed <- fixed
       private$disabled <- reactiveVal(disabled)
@@ -165,8 +165,8 @@ FilterState <- R6::R6Class( # nolint
         logger::log_warn("attempt to set state on fixed filter aborted: { private$dataname } { private$varname }")
       } else {
         # Allow for enabling a filter state before altering state.
-        if (isTRUE(state$disabled)) private$disable()
-        if (isFALSE(state$disabled)) private$enable()
+        if (isTRUE(state$disabled) && isFALSE(private$is_disabled())) private$disable()
+        if (isFALSE(state$disabled) && isTRUE(private$is_disabled())) private$enable()
 
         if (private$is_disabled()) {
           mutables <- state[c("selected", "keep_na", "keep_inf")]
@@ -245,7 +245,12 @@ FilterState <- R6::R6Class( # nolint
         id = id,
         function(input, output, session) {
           private$server_summary("summary")
-          private$server_inputs("inputs")
+          if (private$fixed) {
+            private$server_inputs_fixed("inputs")
+          } else {
+            private$server_inputs("inputs")
+          }
+
           observeEvent(input$enable,
             {
               if (isTRUE(input$enable)) {
@@ -270,7 +275,6 @@ FilterState <- R6::R6Class( # nolint
     #' @param parent_id (`character(1)`) id of the FilterStates card container
     ui = function(id, parent_id = "cards") {
       ns <- NS(id)
-      enable <- !private$is_disabled()
 
       tags$div(
         id = id,
@@ -279,16 +283,15 @@ FilterState <- R6::R6Class( # nolint
         tags$div(
           class = "filter-card-header",
           tags$div(
+            # header properties
             class = "filter-card-title",
             `data-toggle` = "collapse",
             `data-bs-toggle` = "collapse",
             href = paste0("#", ns("body")),
+            # header elements
+            if (private$fixed) icon("lock") else NULL,
             tags$span(tags$strong(private$get_varname())),
-            if (length(private$get_varlabel())) {
-              tags$span(private$get_varlabel(), class = "filter-card-varlabel")
-            } else {
-              NULL
-            }
+            tags$span(private$get_varlabel(), class = "filter-card-varlabel")
           ),
           tags$div(
             class = "filter-card-controls",
@@ -297,7 +300,7 @@ FilterState <- R6::R6Class( # nolint
               label = "",
               status = "success",
               fill = TRUE,
-              value = enable,
+              value = !private$is_disabled(),
               width = 30
             ),
             actionLink(
@@ -321,7 +324,11 @@ FilterState <- R6::R6Class( # nolint
           `data-bs-parent` = paste0("#", parent_id),
           tags$div(
             class = "filter-card-body",
-            private$ui_inputs(ns("inputs"))
+            if (private$fixed) {
+              private$ui_inputs_fixed(ns("inputs"))
+            } else {
+              private$ui_inputs(ns("inputs"))
+            }
           )
         )
       )
@@ -346,8 +353,8 @@ FilterState <- R6::R6Class( # nolint
     extract_type = character(0), # used by private$get_varname_prefixed
     na_count = integer(0),
     filtered_na_count = NULL, # reactive containing the count of NA in the filtered dataset
-    varlabel = character(0),
-    # set by set_state
+    varlabel = character(0), # taken from variable labels in data; displayed in filter cards
+    ## corresponding to fields in teal_slice
     dataname = character(0),
     varname = character(0),
     choices = NULL, # because each class has different choices type
@@ -355,13 +362,16 @@ FilterState <- R6::R6Class( # nolint
     keep_na = NULL, # reactiveVal holding a logical(1)
     keep_inf = NULL, # reactiveVal holding a logical(1)
     fixed = logical(0), # logical flag whether this filter state is fixed/locked
-    extras = list(), # additional information passed in teal_slice (product of filter_var)
     disabled = NULL, # reactiveVal holding a logical(1)
+    extras = list(), # additional information passed in teal_slice (product of filter_var)
+    ##
     # other
     is_choice_limited = FALSE, # flag whether number of possible choices was limited when specifying filter
     na_rm = FALSE, # logical(1)
     observers = NULL, # stores observers
     cache = NULL, # cache state when filter disabled so we can later restore
+
+    # private methods ----
 
     # @description
     # Set values that can be selected from.
@@ -569,9 +579,8 @@ FilterState <- R6::R6Class( # nolint
       values
     },
 
-    # Casts an array of values to the type fitting this `FilterState`
-    # and validates the elements of the casted array
-    # satisfy the requirements of this `FilterState`.
+    # Converts values to the type fitting this `FilterState` and validates
+    # whether the elements of the resulting vector satisfy the requirements of this `FilterState`.
     #
     # @param values the array of values
     #
@@ -582,29 +591,88 @@ FilterState <- R6::R6Class( # nolint
       values
     },
 
-    # Disables `FilterState`
-    # `state` is moved to cache and set to `NULL`
+    # Disables this `FilterState`.
+    #
+    # Filter state properties are packed into a `teal_slice` and saved in cache (private field).
+    # State properties that refer to selection are set to NULL.
+    #
     # @return `NULL` invisibly
     disable = function() {
-      private$cache <- self$get_state()
+      logger::log_trace("{ class(self)[1] }$set_state disabling fiter state of variable: { private$varname }")
+
+      private$cache_state()
       private$selected(NULL)
       private$keep_na(NULL)
       private$keep_inf(NULL)
       private$disabled(TRUE)
+
+      logger::log_trace("{ class(self)[1] }$set_state disabled fiter state of variable: { private$varname }")
+
       invisible(NULL)
     },
 
-    # Enables `FilterState`
-    # Cached `state` is reset again and cache is cleared.
+    # Enables this `FilterState`.
+    #
+    # Cached state is restored and filter state is enabled. This is done regardless of fixed state.
+    #
     # @return `NULL` invisibly
     enable = function() {
-      private$disabled(FALSE)
-      if (!is.null(private$cache)) {
-        state <- private$cache
-        state$disabled <- NULL
-        self$set_state(state)
-        private$cache <- NULL
+      logger::log_trace("{ class(self)[1] }$set_state enabling fiter state of variable: { private$varname }")
+      if (is.null(private$cache)) {
+        logger::log_warn("attempt to restore state failed (cache empty): { private$dataname } { private$varname }")
+      } else {
+        private$restore_state()
+        private$disabled(FALSE)
+
+        logger::log_trace("{ class(self)[1] }$set_state enabled state of variable: { private$varname }")
       }
+      invisible(NULL)
+    },
+
+    # Cache state of a filter
+    #
+    # Called when filter state is disabled, whether by its own switch, or the global one.
+    # Having separate methods to cache and restore allows to manipulate
+    # state independently of disabled status and thus cache and restore a disabled state.
+    # It also allows for modifying mutable fields in a fixed state, which is forbidden to set_state.
+    #
+    # @return `NULL` invisibly.
+    cache_state = function() {
+      logger::log_trace("{ class(self)[1] }$set_state caching state of variable: { private$varname }")
+
+      private$cache <- self$get_state()
+
+      logger::log_trace("{ class(self)[1] }$set_state cached state of variable: { private$varname }")
+
+      invisible(NULL)
+    },
+
+    # Restore state of a filter
+    #
+    # Called when filter state is disabled, whether by its own switch, or the global one.
+    # Having separate methods to cache and restore allows to manipulate
+    # state independently of disabled status and thus cache and restore a disabled state.
+    # It also allows for modifying mutable fields in a fixed state, which is forbidden to set_state.
+    #
+    # @return `NULL` invisibly.
+    restore_state = function() {
+      logger::log_trace("{ class(self)[1] }$set_state restoring state of variable: { private$varname }")
+
+      state <- private$cache
+      private$cache <- NULL
+      private$set_selected(state$selected)
+      if (!is.null(state$selected)) {
+        private$set_selected(state$selected)
+      }
+      if (!is.null(state$keep_na)) {
+        private$set_keep_na(state$keep_na)
+      }
+      if (!is.null(state$keep_inf)) {
+        private$set_keep_inf(state$keep_inf)
+      }
+
+      logger::log_trace("{ class(self)[1] }$set_state restored state of variable: { private$varname }")
+
       invisible(NULL)
     },
 
@@ -630,7 +698,7 @@ FilterState <- R6::R6Class( # nolint
 
     # @description
     # UI module to display filter summary
-    # @param shiny `id` parametr passed to moduleServer
+    # @param shiny `id` parameter passed to `moduleServer`
     #  renders text describing current state
     server_summary = function(id) {
       moduleServer(
@@ -647,12 +715,33 @@ FilterState <- R6::R6Class( # nolint
       )
     },
 
-    #' module with inputs
+    # module with inputs
     ui_inputs = function(id) {
       stop("abstract class")
     },
     # module with inputs
     server_inputs = function(id) {
+      stop("abstract class")
+    },
+
+    # @description
+    # module displaying inputs in a fixed filter state
+    # there are no input widgets, only selection visualizations
+    # @param id
+    #   character string specifying this `shiny` module instance
+    ui_inputs_fixed = function(id) {
+      ns <- NS(id)
+      div(
+        class = "choices_state",
+        uiOutput(ns("selection"))
+      )
+    },
+
+    # @description
+    # module creating the display of a fixed filter state
+    # @param id
+    #   character string specifying this `shiny` module instance
+    server_inputs_fixed = function(id) {
       stop("abstract class")
     },
 

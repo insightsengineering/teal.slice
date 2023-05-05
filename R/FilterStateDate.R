@@ -136,7 +136,7 @@ DateFilterState <- R6::R6Class( # nolint
                           varname,
                           choices = NULL,
                           selected = NULL,
-                          keep_na = FALSE,
+                          keep_na = NULL,
                           keep_inf = NULL,
                           fixed = FALSE,
                           disabled = FALSE,
@@ -467,6 +467,26 @@ DateFilterState <- R6::R6Class( # nolint
         }
       )
     },
+    server_inputs_fixed = function(id) {
+      moduleServer(
+        id = id,
+        function(input, output, session) {
+          logger::log_trace("DateFilterState$server initializing, dataname: { private$dataname }")
+
+          output$selection <- renderUI({
+            vals <- format(private$get_selected(), nsmall = 3)
+            div(
+              div(icon("calendar-days"), vals[1]),
+              div(span(" - "), icon("calendar-days"), vals[2])
+            )
+          })
+
+          logger::log_trace("DateFilterState$server initialized, dataname: { private$dataname }")
+          NULL
+        }
+      )
+    },
+
     # @description
     # Server module to display filter summary
     #  renders text describing selected date range and

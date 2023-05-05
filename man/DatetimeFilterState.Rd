@@ -131,7 +131,7 @@ and is set only if object is initialized in \code{shiny}.
   varname,
   choices = NULL,
   selected = NULL,
-  keep_na = FALSE,
+  keep_na = NULL,
   keep_inf = NULL,
   fixed = FALSE,
   disabled = FALSE,

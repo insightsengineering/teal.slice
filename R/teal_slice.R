@@ -76,7 +76,7 @@
 #' @param show_all `logical(1)` specifying whether NULL elements should also be printed
 #' @param tss `teal_slices`
 #' @param field `character(1)` name of `teal_slice` element
-#' @param expr `character` string representing and expression that evaluates to a single `logical`;
+#' @param expr `character` string representing an expression that evaluates to a single `logical`;
 #'             will be evaluated in individual `teal_slice` objects
 #' @param ... for `filter_var` any number of additional fields given as `name:value` pairs\cr
 #'            for `filter_settings` any number of `teal_slice` objects\cr
@@ -250,7 +250,7 @@ format.teal_slice <- function(x, show_all = FALSE, ...) {
       hm <- append(hm, sprintf("     $ %s: %s", element_name, element_value))
     }
   }
-  paste(hm, collapse = "\n")
+  paste(c(hm, ""), collapse = "\n")
 }
 
 
@@ -452,7 +452,7 @@ format.teal_slices <- function(x, show_all = FALSE, ...) {
 
   ct <- attr(x, "count_type")
   res <- append(res, sprintf("\ncount type: %s", ct))
-  paste(res, collapse = "\n")
+  paste(c(res, ""), collapse = "\n")
 }
 
 

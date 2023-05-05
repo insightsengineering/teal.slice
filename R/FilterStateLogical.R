@@ -407,6 +407,30 @@ LogicalFilterState <- R6::R6Class( # nolint
         }
       )
     },
+    server_inputs_fixed = function(id) {
+      moduleServer(
+        id = id,
+        function(input, output, session) {
+          logger::log_trace("LogicalFilterState$server initializing, dataname: { private$dataname }")
+
+          output$selection <- renderUI({
+            countsnow <- unname(table(factor(private$x_reactive(), levels = private$choices)))
+            countsmax <- private$choices_counts
+
+            ind <- private$choices %in% private$selected()
+            countBars(
+              inputId = session$ns("labels"),
+              choices = private$selected(),
+              countsnow = countsnow[ind],
+              countsmax = countsmax[ind]
+            )
+          })
+
+          logger::log_trace("LogicalFilterState$server initialized, dataname: { private$dataname }")
+          NULL
+        }
+      )
+    },
 
     # @description
     # Server module to display filter summary
