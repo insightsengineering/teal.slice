@@ -1,9 +1,11 @@
 # initialize ----
-testthat::test_that("contructor accepts a string as varlabels and keys", {
+testthat::test_that("contructor accepts keys as string", {
   testthat::expect_no_error(
-    DFFilterStates$new(data = data.frame(), dataname = "test", varlabels = "test", keys = "test")
+    DFFilterStates$new(data = data.frame(), dataname = "test", keys = "test")
   )
 })
+
+
 
 # get_filter_state ----
 testthat::test_that("get_filter_state return `teal_slices` with include_varnames by default", {
@@ -21,7 +23,7 @@ testthat::test_that("get_filter_state return `teal_slices` with include_varnames
 
 # format ----
 testthat::test_that("format is a method of DFFilterStates that accepts numeric indent argument", {
-  filter_states <- DFFilterStates$new(data = iris, dataname = "test", varlabels = "test", keys = "test")
+  filter_states <- DFFilterStates$new(data = iris, dataname = "test", keys = "test")
   testthat::expect_no_error(shiny::isolate(filter_states$format(indent = 0)))
   testthat::expect_error(shiny::isolate(filter_states$format(indent = "0")), "Assertion on 'indent' failed")
 })
@@ -73,3 +75,4 @@ testthat::test_that("get_call returns filter call on dataname with unprefixed va
     )
   )
 })
+

@@ -151,7 +151,7 @@ filter_var <- function(
 
 #' @export
 #' @rdname teal_slice
-filter_expr <- function(id, title, dataname, expr, disabled = FALSE) {
+filter_expr <- function(id, title, dataname, expr, disabled = FALSE, ...) {
   ans <- list(
     id = id,
     title = title,
@@ -159,6 +159,7 @@ filter_expr <- function(id, title, dataname, expr, disabled = FALSE) {
     expr = expr,
     disabled = disabled
   )
+  ans <- append(ans, list(...))
   class(ans) <- c("teal_slice", "teal_slice_expr", class(ans))
   ans
 }

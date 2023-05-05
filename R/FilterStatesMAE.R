@@ -23,8 +23,8 @@ MAEFilterStates <- R6::R6Class( # nolint
     #' @param dataname (`character(1)`)\cr
     #'   name of the data used in the expression
     #'   specified to the function argument attached to this `FilterStates`.
-    #' @param datalabel (`character(0)` or `character(1)`)\cr
-    #'   text label value.
+    #' @param datalabel (`NULL` or `character(1)`)\cr
+    #'   text label value
     #' @param varlabels (`character`)\cr
     #'   labels of the variables used in this object
     #' @param keys (`character`)\cr
@@ -34,7 +34,6 @@ MAEFilterStates <- R6::R6Class( # nolint
                           data_reactive = function(sid = "") NULL,
                           dataname,
                           datalabel = "subjects",
-                          varlabels = character(0),
                           keys = character(0)) {
       if (!requireNamespace("MultiAssayExperiment", quietly = TRUE)) {
         stop("Cannot load MultiAssayExperiment - please install the package or restart your session.")
@@ -45,7 +44,6 @@ MAEFilterStates <- R6::R6Class( # nolint
       data_reactive <- function(sid = character(0)) SummarizedExperiment::colData(data_reactive(sid = sid))
       super$initialize(data, data_reactive, dataname, datalabel)
       private$keys <- keys
-      private$varlabels <- varlabels
       private$set_filterable_varnames(include_varnames = colnames(data))
       return(invisible(self))
     },
@@ -101,8 +99,6 @@ MAEFilterStates <- R6::R6Class( # nolint
 
   private = list(
     extract_type = "list",
-    fun = quote(MultiAssayExperiment::subsetByColData),
-    keys = character(0),
-    varlabels = character(0)
+    fun = quote(MultiAssayExperiment::subsetByColData)
   )
 )

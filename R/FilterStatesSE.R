@@ -29,14 +29,16 @@ SEFilterStates <- R6::R6Class( # nolint
     initialize = function(data,
                           data_reactive = function(sid = "") NULL,
                           dataname,
-                          datalabel = character(0)) {
+                          datalabel = NULL) {
       if (!requireNamespace("SummarizedExperiment", quietly = TRUE)) {
         stop("Cannot load SummarizedExperiment - please install the package or restart your session.")
       }
       checkmate::assert_function(data_reactive, args = "sid")
       checkmate::assert_class(data, "SummarizedExperiment")
       super$initialize(data, data_reactive, dataname, datalabel)
-      private$dataname_prefixed <- sprintf("%s[[%s]]", dataname, datalabel)
+      if (!is.null(datalabel)) {
+        private$dataname_prefixed <- sprintf("%s[['%s']]", dataname, datalabel)
+      }
     },
 
     #' @description

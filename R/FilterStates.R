@@ -38,7 +38,7 @@ FilterStates <- R6::R6Class( # nolint
     #' @param dataname (`character(1)`)\cr
     #'   name of the data used in the expression
     #'   specified to the function argument attached to this `FilterStates`
-    #' @param datalabel (`character(0)` or `character(1)`)\cr
+    #' @param datalabel (`NULL` or `character(1)`)\cr
     #'   text label value
     #'
     #' @return
@@ -47,11 +47,11 @@ FilterStates <- R6::R6Class( # nolint
     initialize = function(data,
                           data_reactive = function(sid = "") NULL,
                           dataname,
-                          datalabel = character(0)) {
+                          datalabel = NULL) {
       checkmate::assert_string(dataname)
       logger::log_trace("Instantiating { class(self)[1] }, dataname: { dataname }")
       checkmate::assert_function(data_reactive, args = "sid")
-      checkmate::assert_character(datalabel, max.len = 1, any.missing = FALSE)
+      checkmate::assert_string(datalabel, na.ok = FALSE, null.ok = TRUE)
 
       private$dataname <- dataname
       private$datalabel <- datalabel
@@ -436,18 +436,8 @@ FilterStates <- R6::R6Class( # nolint
             vars_include <- private$get_filterable_varnames()
             active_filter_vars <- slices_field(self$get_filter_state(), "varname")
             choices <- setdiff(vars_include, active_filter_vars)
-            varlabels <- vapply(
-              colnames(data),
-              FUN = function(x) {
-                label <- attr(data[[x]], "label")
-                if (is.null(label)) {
-                  x
-                } else {
-                  label
-                }
-              },
-              FUN.VALUE = character(1)
-            )
+            varlabels <- get_varlabels(data)
+
             data_choices_labeled(
               data = data,
               choices = choices,
@@ -490,7 +480,6 @@ FilterStates <- R6::R6Class( # nolint
               )
               self$set_filter_state(
                 filter_settings(
-                  # todo: drop datalabe if empty
                   filter_var(dataname = private$dataname, varname = input$var_to_add, datalabel = private$datalabel)
                 )
               )
@@ -517,13 +506,14 @@ FilterStates <- R6::R6Class( # nolint
     count_type = "all", # specifies how observation numbers are displayed in filter cards,
     data = NULL, # data.frame, MAE, SE or matrix
     data_reactive = NULL, # reactive
-    datalabel = character(0),
+    datalabel = NULL, # to follow default `datalabel = NULL` in `filter_var`
     dataname = NULL, # because it holds object of class name
     dataname_prefixed = character(0), # name used in call returned from get_call
     exclude_varnames = character(0), # holds column names
     include_varnames = character(0), # holds column names
     extract_type = character(0), # type of the prefix in a subset call (eg. "list": x$var; "matrix": x[["var"]])
     fun = quote(subset), # function used to generate subset call
+    keys = character(0),
     ns = NULL, # shiny ns()
     observers = list(), # observers
     state_list = NULL, # list of `reactiveVal`s initialized by init methods of child classes,

@@ -33,8 +33,7 @@
 #' filter_states_df <- init_filter_states(
 #'   data = data_df,
 #'   dataname = "dataset",
-#'   datalabel = ("label"),
-#'   varlabels = c("long", "short", "long", "short", "long", "long")
+#'   datalabel = ("label")
 #' )
 #'
 #' ui <- fluidPage(
@@ -146,23 +145,19 @@ DFFilterStates <- R6::R6Class( # nolint
     #' @param dataname (`character`)\cr
     #'   name of the data used in the \emph{subset expression}
     #'   specified to the function argument attached to this `FilterStates`
-    #' @param datalabel (`character(0)` or `character(1)`)\cr
+    #' @param datalabel (`NULL` or `character(1)`)\cr
     #'   text label value
-    #' @param varlabels (`character`)\cr
-    #'   labels of the variables used in this object.
     #' @param keys (`character`)\cr
     #'   key columns names
     #'
     initialize = function(data,
                           data_reactive = function(sid = "") NULL,
                           dataname,
-                          datalabel = character(0),
-                          varlabels = character(0),
+                          datalabel = NULL,
                           keys = character(0)) {
       checkmate::assert_function(data_reactive, args = "sid")
       checkmate::assert_data_frame(data)
       super$initialize(data, data_reactive, dataname, datalabel)
-      private$varlabels <- varlabels
       private$keys <- keys
       private$set_filterable_varnames(include_varnames = colnames(private$data))
     }
@@ -170,8 +165,6 @@ DFFilterStates <- R6::R6Class( # nolint
 
   # private members ----
   private = list(
-    fun = quote(dplyr::filter),
-    keys = character(0),
-    varlabels = character(0)
+    fun = quote(dplyr::filter)
   )
 )

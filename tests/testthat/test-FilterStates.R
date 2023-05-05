@@ -321,11 +321,9 @@ testthat::test_that("get_call skips conditions form FilterState which are identi
   )
 })
 
-# todo: test modules - we probably need shinytest2
-# ui_active
-# srv_active
+# todo: test srv_active - we probably need shinytest2
 
-# ui_add ----
+# module_add ----
 testthat::test_that("ui_add returns a message inside a div when data has no columns or no rows", {
   filter_states <- FilterStates$new(data = data.frame(), dataname = "iris")
   testthat::expect_identical(
@@ -334,7 +332,6 @@ testthat::test_that("ui_add returns a message inside a div when data has no colu
   )
 })
 
-# UI actions ----
 testthat::test_that("Selecting a new variable initializes a new filter state with default states", {
   filter_states <- FilterStates$new(data = iris, dataname = "iris")
   shiny::testServer(
@@ -344,17 +341,15 @@ testthat::test_that("Selecting a new variable initializes a new filter state wit
     }
   )
 
-  testthat::expect_identical(
+  testthat::expect_equal(
     shiny::isolate(filter_states$get_filter_state()),
     filter_settings(
       filter_var(
         dataname = "iris",
         varname = "Sepal.Length",
         choices = c(4.3, 7.9),
-        selected = c(4.3, 7.9),
-        datalabel = character(0) # todo: should be dropped
+        selected = c(4.3, 7.9)
       ),
-      include_varnames = list(iris = colnames(iris)),
       count_type = "all"
     )
   )
@@ -366,7 +361,7 @@ testthat::test_that("Adding 'var_to_add' adds another filter state", {
   fs <- filter_settings(
     filter_var(dataname = "iris", varname = "Sepal.Length", selected = c(5.1, 6.4), keep_na = FALSE, keep_inf = FALSE)
   )
-  shiny::isolate(filter_states$set_filter_state(state = fs))
+  filter_states$set_filter_state(state = fs)
   shiny::testServer(
     filter_states$srv_add,
     expr = {
@@ -380,15 +375,107 @@ testthat::test_that("Adding 'var_to_add' adds another filter state", {
     }
   )
 
-  testthat::expect_identical(
-    adjust_states(shiny::isolate(filter_states$get_filter_state())),
+  testthat::expect_equal(
+    shiny::isolate(filter_states$get_filter_state()),
     filter_settings(
       filter_var(
-        dataname = "iris", varname = "Sepal.Length", selected = c(5.1, 6.4),
-        keep_na = FALSE, keep_inf = FALSE
+        dataname = "iris", varname = "Sepal.Length", choices = c(4.3, 7.9), selected = c(5.1, 6.4),
+        keep_na = FALSE, keep_inf = FALSE, fixed = FALSE, disabled = FALSE
       ),
-      filter_var(dataname = "iris", varname = "Petal.Length", selected = c(1.0, 6.9)),
-      filter_var(dataname = "iris", varname = "Species", selected = c("setosa", "versicolor", "virginica"))
+      filter_var(
+        dataname = "iris", varname = "Petal.Length", choices = c(1.0, 6.9), selected = c(1.0, 6.9),
+        keep_na = NULL, keep_inf = NULL, fixed = FALSE, disabled = FALSE
+      ),
+      filter_var(
+        dataname = "iris", varname = "Species", choices = c("setosa", "versicolor", "virginica"),
+        selected = c("setosa", "versicolor", "virginica"), keep_na = NULL, keep_inf = NULL,
+        fixed = FALSE, disabled = FALSE
+      ),
+      count_type = "all"
     )
+  )
+})
+
+testthat::test_that("srv_add determines labels for the choices based on the column attribute", {
+  data <- iris[c("Sepal.Length", "Species")]
+  colnames(data) <- tolower(colnames(data))
+  attr(data[["sepal.length"]], "label") <- "Sepal length"
+  attr(data[["species"]], "label") <- "Species"
+  filter_states <- FilterStates$new(data = data, dataname = "test")
+
+  shiny::testServer(
+    filter_states$srv_add,
+    expr = {
+      testthat::expect_identical(
+        avail_column_choices(),
+        structure(
+          c(`sepal.length: Sepal length` = "sepal.length", `species: Species` = "species"),
+          raw_labels = c("Sepal length", "Species"),
+          combined_labels = c("sepal.length: Sepal length", "species: Species"),
+          class = c("choices_labeled", "character"),
+          types = c(sepal.length = "numeric", species = "factor")
+        )
+      )
+    }
+  )
+})
+
+testthat::test_that("srv_add limits choices to the include_varnames", {
+  data <- iris
+  colnames(data) <- tolower(colnames(data))
+  filter_states <- FilterStates$new(data = data, dataname = "test")
+  filter_states$set_filter_state(state = filter_settings(
+    include_varnames = list(test = c("sepal.length", "species"))
+  ))
+
+  shiny::testServer(
+    filter_states$srv_add,
+    expr = {
+      testthat::expect_identical(
+        avail_column_choices(),
+        structure(
+          c(`sepal.length: sepal.length` = "sepal.length", `species: species` = "species"),
+          raw_labels = c("sepal.length", "species"),
+          combined_labels = c("sepal.length: sepal.length", "species: species"),
+          class = c("choices_labeled", "character"),
+          types = c(sepal.length = "numeric", species = "factor")
+        )
+      )
+    }
+  )
+})
+
+testthat::test_that("srv_add flags keys as primary_key", {
+  data <- iris
+  colnames(data) <- tolower(colnames(data))
+  testFS <- R6::R6Class(
+    "testFS",
+    inherit = FilterStates,
+    public = list(
+      initialize = function(data, dataname, keys) {
+        super$initialize(data = data, dataname = dataname)
+        private$keys <- keys
+      }
+    )
+  )
+  filter_states <- testFS$new(data = data, dataname = "test", keys = "species")
+  filter_states$set_filter_state(state = filter_settings(
+    include_varnames = list(test = c("sepal.length", "species"))
+  ))
+
+  shiny::testServer(
+    filter_states$srv_add,
+    expr = {
+      testthat::expect_identical(
+        avail_column_choices(),
+        structure(
+          c(`sepal.length: sepal.length` = "sepal.length", `species: species` = "species"),
+          raw_labels = c("sepal.length", "species"),
+          combined_labels = c("sepal.length: sepal.length", "species: species"),
+          class = c("choices_labeled", "character"),
+          types = c(sepal.length = "numeric", species = "primary_key")
+        )
+      )
+    }
   )
 })
