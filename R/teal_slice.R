@@ -48,7 +48,6 @@
 #' that names either an experiment (as listed in `experimentList(<MAE>)`) or "subjects"
 #' if it referes to the MAE's `colData`. They must **also** specify `arg` as "subset" or "select"
 #' for experiments and as "y" for `colData`.
-#'
 #' @param dataname `character(1)` name of data set
 #' @param varname `character(1)` name of variable
 #' @param choices optional vector specifying allowed choices;
@@ -72,12 +71,22 @@
 #'  - `"all"` to have counts of single `FilterState` to show number of observation in filtered
 #'   and unfiltered dataset.
 #'  - `"none"` to have counts of single `FilterState` to show unfiltered number only.
-#'
+#' @param id (`character(1)`)\cr
+#'   identifier of the filter
+#' @param title (`reactive`)\cr
+#'   title of the filter (used by `filter_expr`)
+#' @param expr (`language`)\cr
+#'   logical expression written in executable way. By "executable" means
+#'   that `subset` call should be able to evaluate this without failure. For
+#'   example `MultiAssayExperiment::subsetByColData` requires varnames prefixed
+#'   by dataname (e.g. `data$var1 == "x" & data$var2 > 0`). For `data.frame` call
+#'   can be written without prefixing `var1 == "x" & var2 > 0`.
+#' @param disabled (`logical(1)`)\cr
+#'   flag specifying whether the `FilterState` is initiated disabled
+#' @param ... additional arguments to be saved as a list in `private$extras` field
 #' @param show_all `logical(1)` specifying whether NULL elements should also be printed
 #' @param tss `teal_slices`
 #' @param field `character(1)` name of `teal_slice` element
-#' @param expr `character` string representing an expression that evaluates to a single `logical`;
-#'             will be evaluated in individual `teal_slice` objects
 #' @param ... for `filter_var` any number of additional fields given as `name:value` pairs\cr
 #'            for `filter_settings` any number of `teal_slice` objects\cr
 #'            for other functions arguments passed to other methods

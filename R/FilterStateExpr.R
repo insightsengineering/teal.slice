@@ -15,13 +15,31 @@ FilterStateExpr <- R6::R6Class( # nolint
   classname = "FilterStateExpr",
 
   # public methods ----
+      #' @description
+    #' Initialize a `FilterStateExpr` object
+    #' @param id (`character(1)`)\cr
+    #'   identifier of the filter
+    #' @param title (`reactive`)\cr
+    #'   title of the filter
+    #' @param dataname (`character(1)`)\cr
+    #'   name of the dataset where `expr` could be executed on.
+    #' @param expr (`language`)\cr
+    #'   logical expression written in executable way. By "executable" means
+    #'   that `subset` call should be able to evaluate this without failure. For
+    #'   example `MultiAssayExperiment::subsetByColData` requires varnames prefixed
+    #'   by dataname (e.g. `data$var1 == "x" & data$var2 > 0`). For `data.frame` call
+    #'   can be written without prefixing `var1 == "x" & var2 > 0`.
+    #' @param disabled (`logical(1)`)\cr
+    #'   flag specifying whether the `FilterState` is initiated disabled
+    #' @param ... additional arguments to be saved as a list in `private$extras` field
   public = list(
-    initialize = function(id, title, dataname, expr, disabled) {
+    initialize = function(id, title, dataname, expr, disabled, ...) {
       private$id <- id
       private$title <- title
       private$dataname <- dataname
       private$expr <- expr
       private$disabled <- reactiveVal(disabled)
+      private$extras <- list(...)
       invisible(self)
 
     },
@@ -52,29 +70,59 @@ FilterStateExpr <- R6::R6Class( # nolint
         collapse = "\n")
     },
 
+    #' @description
+    #' Returns filtering state.
+    #'
+    #' @return A `teal_slice` object.
+    #'
     get_state = function() {
-      filter_expr(
-        id = private$id,
-        title = private$title,
-        dataname = private$dataname,
-        expr = private$expr,
-        disable = private$disabled()
+      states <- append(
+        list(
+          id = private$id,
+          title = private$title,
+          dataname = private$dataname,
+          expr = private$expr,
+          disable = private$disabled()
+        ),
+        private$extras
       )
+      do.call(filter_expr, states)
     },
 
+    #' @description
+    #' Sets filtering state.
+    #'
+    #' @param state a `teal_slice` object
+    #'
+    #' @return `self` invisibly
+    #'
     set_state = function(state) {
-      stopifnot(inherits(state, "teal_slice_expr"))
-      if (!is.null(state$disabled)) {
-        private$disabled(state$disabled)
-      }
+      checkmate::assert_class(state, "teal_slice_expr")
+      if (isTRUE(state$disabled) && isFALSE(private$is_disabled())) private$disable()
+      if (isFALSE(state$disabled) && isTRUE(private$is_disabled())) private$enable()
+
     },
 
-    get_call = function(dataname) {
+    #' @description
+    #' Returns reproducible condition call for current selection relevant
+    #' for selected variable type.
+    #' Method is using internal reactive values which makes it reactive
+    #' and must be executed in reactive or isolated context.
+    #' @return `language`
+    get_call = function() {
       private$expr
     },
 
+    #' @description
+    #' Answers the question of whether the current settings and values selected actually filters out any values.
+    #' `FALSE` only when disabled.
+    #' @return logical scalar
     is_any_filtered = function() {
-      TRUE
+      if (isTRUE(private$is_disabled())) {
+        FALSE
+      } else {
+        TRUE
+      }
     },
 
     #' @description
@@ -175,6 +223,7 @@ FilterStateExpr <- R6::R6Class( # nolint
     dataname = character(0),
     disabled = NULL,
     expr = NULL,
+    extras = list(),
     id = character(0),
     observers = list(),
     title = character(0),

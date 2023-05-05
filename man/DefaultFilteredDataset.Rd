@@ -45,7 +45,6 @@ shiny::isolate(dataset$get_filter_state())
 \item \href{#method-DefaultFilteredDataset-set_filter_state}{\code{DefaultFilteredDataset$set_filter_state()}}
 \item \href{#method-DefaultFilteredDataset-remove_filter_state}{\code{DefaultFilteredDataset$remove_filter_state()}}
 \item \href{#method-DefaultFilteredDataset-ui_add}{\code{DefaultFilteredDataset$ui_add()}}
-\item \href{#method-DefaultFilteredDataset-srv_add}{\code{DefaultFilteredDataset$srv_add()}}
 \item \href{#method-DefaultFilteredDataset-get_filter_overview}{\code{DefaultFilteredDataset$get_filter_overview()}}
 \item \href{#method-DefaultFilteredDataset-clone}{\code{DefaultFilteredDataset$clone()}}
 }
@@ -63,6 +62,7 @@ shiny::isolate(dataset$get_filter_state())
 <li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilteredDataset" data-id="get_keys"><a href='../../teal.slice/html/FilteredDataset.html#method-FilteredDataset-get_keys'><code>teal.slice::FilteredDataset$get_keys()</code></a></span></li>
 <li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilteredDataset" data-id="get_metadata"><a href='../../teal.slice/html/FilteredDataset.html#method-FilteredDataset-get_metadata'><code>teal.slice::FilteredDataset$get_metadata()</code></a></span></li>
 <li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilteredDataset" data-id="srv_active"><a href='../../teal.slice/html/FilteredDataset.html#method-FilteredDataset-srv_active'><code>teal.slice::FilteredDataset$srv_active()</code></a></span></li>
+<li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilteredDataset" data-id="srv_add"><a href='../../teal.slice/html/FilteredDataset.html#method-FilteredDataset-srv_add'><code>teal.slice::FilteredDataset$srv_add()</code></a></span></li>
 <li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilteredDataset" data-id="ui_active"><a href='../../teal.slice/html/FilteredDataset.html#method-FilteredDataset-ui_active'><code>teal.slice::FilteredDataset$ui_active()</code></a></span></li>
 </ul>
 </details>
@@ -227,32 +227,6 @@ identifier of the element - preferably containing dataset name}
 }
 \subsection{Returns}{
 function - shiny UI module
-}
-}
-\if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-DefaultFilteredDataset-srv_add"></a>}}
-\if{latex}{\out{\hypertarget{method-DefaultFilteredDataset-srv_add}{}}}
-\subsection{Method \code{srv_add()}}{
-Server module to add filter variable for this dataset
-
-Server module to add filter variable for this dataset.
-For this class \code{srv_add} calls single module
-\code{srv_add} from \code{FilterStates} (\code{DefaultFilteredDataset}
-contains single \code{FilterStates})
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{DefaultFilteredDataset$srv_add(id)}\if{html}{\out{</div>}}
-}
-
-\subsection{Arguments}{
-\if{html}{\out{<div class="arguments">}}
-\describe{
-\item{\code{id}}{(\code{character(1)})\cr
-an ID string that corresponds with the ID used to call the module's UI function.}
-}
-\if{html}{\out{</div>}}
-}
-\subsection{Returns}{
-\code{moduleServer} function which returns \code{NULL}
 }
 }
 \if{html}{\out{<hr>}}

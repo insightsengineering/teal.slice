@@ -8,7 +8,7 @@ init_filter_states(
   data,
   data_reactive = reactive(NULL),
   dataname,
-  datalabel = character(0),
+  datalabel = NULL,
   ...
 )
 }
@@ -47,10 +47,7 @@ df <- data.frame(
 )
 rf <- teal.slice:::init_filter_states(
   data = df,
-  dataname = "DF",
-  varlabels = c(
-    "character variable", "numeric variable", "date variable", "datetime variable"
-  )
+  dataname = "DF"
 )
 \dontrun{
 shinyApp(
