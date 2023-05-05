@@ -76,7 +76,7 @@
 #' @param show_all `logical(1)` specifying whether NULL elements should also be printed
 #' @param tss `teal_slices`
 #' @param field `character(1)` name of `teal_slice` element
-#' @param expr `character` string representing and expression that evaluates to a single `logical`;
+#' @param expr `character` string representing an expression that evaluates to a single `logical`;
 #'             will be evaluated in individual `teal_slice` objects
 #' @param ... for `filter_var` any number of additional fields given as `name:value` pairs\cr
 #'            for `filter_settings` any number of `teal_slice` objects\cr
@@ -90,8 +90,7 @@
 #' filter_1 <- filter_var("dataname1", "varname1", letters, "b", FALSE, extra1 = "extraone")
 #' filter_2 <- filter_var("dataname1", "varname2", 1:10, 2, TRUE, FALSE, extra2 = "extratwo")
 #' filter_3 <- filter_var("dataname2", "varname3", 1:10 / 10, 0.2, TRUE, FALSE,
-#'   extra1 = "extraone", extra2 = "extratwo"
-#' )
+#'                        extra1 = "extraone", extra2 = "extratwo")
 #'
 #' all_filters <- filter_settings(
 #'   filter_1,
@@ -250,7 +249,7 @@ format.teal_slice <- function(x, show_all = FALSE, ...) {
       hm <- append(hm, sprintf("     $ %s: %s", element_name, element_value))
     }
   }
-  paste(hm, collapse = "\n")
+  paste(c(hm, ""), collapse = "\n")
 }
 
 
@@ -452,7 +451,7 @@ format.teal_slices <- function(x, show_all = FALSE, ...) {
 
   ct <- attr(x, "count_type")
   res <- append(res, sprintf("\ncount type: %s", ct))
-  paste(res, collapse = "\n")
+  paste(c(res, ""), collapse = "\n")
 }
 
 

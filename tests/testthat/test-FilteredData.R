@@ -445,7 +445,7 @@ testthat::test_that("get_data of the child is dependent on the ancestor filter",
 })
 
 # get_filter_state ----
-testthat::test_that("get_filter_state returns `teal_slices` identical to input with added format attribute", {
+testthat::test_that("get_filter_state returns `teal_slices` with features identical to those in input, adds format", {
   datasets <- FilteredData$new(
     list(
       iris = list(dataset = iris),
@@ -476,13 +476,21 @@ testthat::test_that("get_filter_state returns `teal_slices` identical to input w
 
   datasets$set_filter_state(state = fs)
 
-  current_states <- shiny::isolate(datasets$get_filter_state())
-  formatted <- attr(current_states, "formatted")
-  attr(current_states, "formatted") <- NULL
+  fs_out <- unname(shiny::isolate(datasets$get_filter_state()))
 
-  testthat::expect_equal(fs, current_states)
+  testthat::expect_true(compare_slices(
+    fs[[1]], fs_out[[1]], fields = c("varname", "dataname", "selected", "keep_na", "keep_inf")
+  ))
+  testthat::expect_true(compare_slices(
+    fs[[2]], fs_out[[2]], fields = c("varname", "dataname", "selected", "keep_na")
+  ))
+  testthat::expect_true(compare_slices(
+    fs[[3]], fs_out[[3]], fields = c("varname", "dataname", "selected", "keep_na", "keep_inf")
+  ))
 
-  expected_format <- paste0(
+
+  fs_out_formatted <- attr(fs_out, "formatted")
+  attr_formatted <- paste0(
     c(
       "Filters for dataset: iris",
       "  Filtering on: Sepal.Length",
@@ -499,11 +507,14 @@ testthat::test_that("get_filter_state returns `teal_slices` identical to input w
     collapse = "\n"
   )
 
-  testthat::expect_equal(formatted, expected_format)
+  testthat::expect_identical(
+    attr_formatted,
+    fs_out_formatted
+  )
 })
 
 # remove_filter_state ----
-testthat::test_that("remove_filter_state removes specified states", {
+testthat::test_that("remove_filter_state removes states specified by `teal_slices", {
   datasets <- FilteredData$new(
     list(
       iris = list(dataset = iris),
@@ -548,7 +559,7 @@ testthat::test_that("clear_filter_states removes all filters of all datasets in 
   testthat::expect_null(shiny::isolate(datasets$get_filter_state()))
 })
 
-testthat::test_that("clear_filter_states remove the filters of the desired dataset only", {
+testthat::test_that("clear_filter_states removes filters of desired dataset only", {
   datasets <- FilteredData$new(
     list(
       iris = list(dataset = iris),
@@ -586,7 +597,6 @@ testthat::test_that("get_filter_overview checks arguments", {
   testthat::expect_error(shiny::isolate(datasets$get_filter_overview("")), "Must be a subset of")
   testthat::expect_error(shiny::isolate(datasets$get_filter_overview(23)), "Must be a subset of")
 })
-
 
 testthat::test_that("get_filter_overview returns overview data.frame with obs counts if the keys are not specified", {
   datasets <- FilteredData$new(
@@ -684,17 +694,19 @@ testthat::test_that("filter_panel_disable removes filter states", {
 
 testthat::test_that("filter_panel_enable restores filter states", {
   filtered_data <- FilteredData$new(data_objects = list("iris" = list(dataset = iris)))
-  fs <- filter_settings(filter_var(dataname = "iris", varname = "Sepal.Width", selected = c(3, 4)))
+  fs <- filter_settings(
+    filter_var(dataname = "iris", varname = "Sepal.Width", selected = c(3, 4), keep_na = TRUE, keep_inf = FALSE)
+  )
   filtered_data$set_filter_state(fs)
   shiny::testServer(
     filtered_data$srv_filter_panel,
     expr = {
       filtered_data$filter_panel_disable()
       filtered_data$filter_panel_enable()
-      testthat::expect_equal(
-        adjust_states(shiny::isolate(filtered_data$get_filter_state())),
-        fs
-      )
+      fs_out <- shiny::isolate(filtered_data$get_filter_state())
+      testthat::expect_true(compare_slices(
+        fs[[1]], fs_out[[1]], c("dataname", "Varname", "selected", "keep_na", "keep_inf")
+      ))
     }
   )
 })

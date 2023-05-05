@@ -194,109 +194,99 @@ testthat::test_that(
   }
 )
 
-testthat::test_that(
-  "MAEFilteredDataset$get_filter_state returns list identical to input",
-  code = {
-    utils::data(miniACC, package = "MultiAssayExperiment")
-    dataset <- MAEFilteredDataset$new(dataset = miniACC, dataname = "miniacc")
-    fs <- filter_settings(
-      filter_var(
-        dataname = "miniacc", varname = "years_to_birth", selected = c(30, 50),
-        keep_na = FALSE, keep_inf = FALSE, datalabel = "subjects", target = "y"
-      ),
-      filter_var(
-        dataname = "miniacc", varname = "vital_status", selected = "1",
-        keep_na = FALSE, datalabel = "subjects", target = "y"
-      ),
-      filter_var(
-        dataname = "miniacc", varname = "gender", selected = "female",
-        keep_na = FALSE, datalabel = "subjects", target = "y"
-      ),
-      filter_var(
-        dataname = "miniacc", varname = "ARRAY_TYPE", selected = "",
-        keep_na = FALSE, datalabel = "RPPAArray", target = "subset"
-      )
+# get_filter_state ----
+testthat::test_that("get_filter_state returns `teal_slices` with features identical to those used to set state", {
+  utils::data(miniACC, package = "MultiAssayExperiment")
+  dataset <- MAEFilteredDataset$new(dataset = miniACC, dataname = "miniacc")
+  fs <- filter_settings(
+    filter_var(
+      dataname = "miniacc", varname = "years_to_birth", selected = c(30, 50),
+      keep_na = FALSE, keep_inf = FALSE, datalabel = "subjects", target = "y"
+    ),
+    filter_var(
+      dataname = "miniacc", varname = "vital_status", selected = "1",
+      keep_na = FALSE, datalabel = "subjects", target = "y"
+    ),
+    filter_var(
+      dataname = "miniacc", varname = "gender", selected = "female",
+      keep_na = FALSE, datalabel = "subjects", target = "y"
+    ),
+    filter_var(
+      dataname = "miniacc", varname = "ARRAY_TYPE", selected = "",
+      keep_na = FALSE, datalabel = "RPPAArray", target = "subset"
     )
+  )
 
-    dataset$set_filter_state(state = fs)
-    testthat::expect_identical(adjust_states(shiny::isolate(dataset$get_filter_state())), fs)
-  }
-)
+  dataset$set_filter_state(state = fs)
+  fs_out <- unname(shiny::isolate(dataset$get_filter_state()))
 
-testthat::test_that(
-  "MAEFilteredDataset$remove_filter_state removes desired filter",
-  code = {
-    utils::data(miniACC, package = "MultiAssayExperiment")
-    dataset <- MAEFilteredDataset$new(dataset = miniACC, dataname = "miniacc")
-    fs <- filter_settings(
-      filter_var(
-        dataname = "miniacc", varname = "years_to_birth", selected = c(30, 50),
-        keep_na = TRUE, keep_inf = FALSE, datalabel = "subjects", target = "y"
-      ),
-      filter_var(
-        dataname = "miniacc", varname = "vital_status", selected = "1",
-        keep_na = FALSE, datalabel = "subjects", target = "y"
-      ),
-      filter_var(
-        dataname = "miniacc", varname = "gender", selected = "female",
-        keep_na = FALSE, datalabel = "subjects", target = "y"
-      ),
-      filter_var(
-        dataname = "miniacc", varname = "ARRAY_TYPE", selected = "",
-        keep_na = FALSE, datalabel = "RPPAArray", target = "subset"
-      )
+  testthat::expect_true(compare_slices(
+    fs[[1]], fs_out[[1]], fields = c("dataname", "varname", "selected", "keep_na", "keep_inf", "fatalabel", "target")
+  ))
+  testthat::expect_true(compare_slices(
+    fs[[2]], fs_out[[2]], fields = c("dataname", "varname", "selected", "keep_na", "datalabel", "target")
+  ))
+  testthat::expect_true(compare_slices(
+    fs[[3]], fs_out[[3]], fields = c("dataname", "varname", "selected", "keep_na", "datalabel", "target")
+  ))
+  testthat::expect_true(compare_slices(
+    fs[[4]], fs_out[[4]], fields = c("dataname", "varname", "selected", "keep_na", "datalabel", "target")
+  ))
+})
+
+
+# remove_filter_state ----
+testthat::test_that("remove_filter_state removes filter state specified by`teal_slices", {
+  utils::data(miniACC, package = "MultiAssayExperiment")
+  dataset <- MAEFilteredDataset$new(dataset = miniACC, dataname = "miniacc")
+  fs <- filter_settings(
+    filter_var(
+      dataname = "miniacc", varname = "years_to_birth", selected = c(30, 50),
+      keep_na = TRUE, keep_inf = FALSE, datalabel = "subjects", target = "y"
+    ),
+    filter_var(
+      dataname = "miniacc", varname = "vital_status", selected = "1",
+      keep_na = FALSE, datalabel = "subjects", target = "y"
+    ),
+    filter_var(
+      dataname = "miniacc", varname = "gender", selected = "female",
+      keep_na = FALSE, datalabel = "subjects", target = "y"
+    ),
+    filter_var(
+      dataname = "miniacc", varname = "ARRAY_TYPE", selected = "",
+      keep_na = FALSE, datalabel = "RPPAArray", target = "subset"
     )
-    dataset$set_filter_state(state = fs)
+  )
+  dataset$set_filter_state(state = fs)
+
+  testthat::expect_error(
+    dataset$remove_filter_state(list(filter_var(dataname = "miniacc", varname = "years_to_birth"))),
+    "Assertion on 'state' failed"
+  )
+
+  testthat::expect_no_error(
     dataset$remove_filter_state(filter_settings(filter_var(dataname = "miniacc", varname = "years_to_birth")))
+  )
 
-    testthat::expect_equal(
-      shiny::isolate(dataset$get_call()),
-      list(
-        subjects = quote(
-          miniacc <- MultiAssayExperiment::subsetByColData( # nolint
-            miniacc,
-            y = miniacc$vital_status == 1L &
-              miniacc$gender == "female"
-          )
-        ),
-        RPPAArray = quote(
-          miniacc[["RPPAArray"]] <- subset( # nolint
-            miniacc[["RPPAArray"]],
-            subset = ARRAY_TYPE == ""
-          )
+  testthat::expect_equal(
+    shiny::isolate(dataset$get_call()),
+    list(
+      subjects = quote(
+        miniacc <- MultiAssayExperiment::subsetByColData( # nolint
+          miniacc,
+          y = miniacc$vital_status == 1L &
+            miniacc$gender == "female"
+        )
+      ),
+      RPPAArray = quote(
+        miniacc[["RPPAArray"]] <- subset( # nolint
+          miniacc[["RPPAArray"]],
+          subset = ARRAY_TYPE == ""
         )
       )
     )
-  }
-)
-
-testthat::test_that(
-  "MAEFilteredDataset$remove_filter_state only accepts `teal_slices",
-  code = {
-    utils::data(miniACC, package = "MultiAssayExperiment")
-    dataset <- MAEFilteredDataset$new(dataset = miniACC, dataname = "miniacc")
-    fs <- filter_settings(
-      filter_var(
-        dataname = "miniacc", varname = "years_to_birth", selected = c(30, 50),
-        keep_na = TRUE, keep_inf = FALSE, datalabel = "subjects", target = "y"
-      ),
-      filter_var(
-        dataname = "miniacc", varname = "vital_status", selected = "1",
-        keep_na = FALSE, datalabel = "subjects", target = "y"
-      ),
-      filter_var(
-        dataname = "miniacc", varname = "gender", selected = "female",
-        keep_na = FALSE, datalabel = "subjects", target = "y"
-      ),
-      filter_var(
-        dataname = "miniacc", varname = "ARRAY_TYPE", selected = "",
-        keep_na = FALSE, datalabel = "RPPAArray", target = "subset"
-      )
-    )
-    dataset$set_filter_state(state = fs)
-    testthat::expect_error(dataset$remove_filter_state(state_id = list("years_to_birth")))
-  }
-)
+  )
+})
 
 # get_supported_filter_varnames ----
 testthat::test_that("get_supported_filter_varnames returns character(0)", {

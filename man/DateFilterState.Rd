@@ -128,7 +128,7 @@ Initialize a \code{FilterState} object
   varname,
   choices = NULL,
   selected = NULL,
-  keep_na = FALSE,
+  keep_na = NULL,
   keep_inf = NULL,
   fixed = FALSE,
   disabled = FALSE,

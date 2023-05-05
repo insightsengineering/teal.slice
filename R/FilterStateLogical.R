@@ -242,6 +242,7 @@ LogicalFilterState <- R6::R6Class( # nolint
       private$choices_counts <- choices_counts
       invisible(NULL)
     },
+
     validate_selection = function(value) {
       if (!(checkmate::test_logical(value, max.len = 1, any.missing = FALSE))) {
         stop(
@@ -260,6 +261,7 @@ LogicalFilterState <- R6::R6Class( # nolint
       )
       check_in_subset(value, private$choices, pre_msg = pre_msg)
     },
+
     cast_and_validate = function(values) {
       tryCatch(
         expr = {
@@ -399,6 +401,31 @@ LogicalFilterState <- R6::R6Class( # nolint
             shinyjs::toggleState(
               id = "keep_na-value",
               condition = !private$is_disabled()
+            )
+          })
+
+          logger::log_trace("LogicalFilterState$server initialized, dataname: { private$dataname }")
+          NULL
+        }
+      )
+    },
+
+    server_inputs_fixed = function(id) {
+      moduleServer(
+        id = id,
+        function(input, output, session) {
+          logger::log_trace("LogicalFilterState$server initializing, dataname: { private$dataname }")
+
+          output$selection <- renderUI({
+            countsnow <- unname(table(factor(private$x_reactive(), levels = private$choices)))
+            countsmax <- private$choices_counts
+
+            ind <- private$choices %in% private$selected()
+            countBars(
+              inputId = session$ns("labels"),
+              choices = private$selected(),
+              countsnow = countsnow[ind],
+              countsmax = countsmax[ind]
             )
           })
 
