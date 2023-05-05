@@ -269,10 +269,13 @@ ChoicesFilterState <- R6::R6Class( # nolint
           call(fun_compare, varname, call("as.Date", make_c_call(as.character(choices))))
         } else if (inherits(choices, c("POSIXct", "POSIXlt"))) {
           class <- class(choices)[1L]
-          date_fun <- as.name(switch(class,
-            "POSIXct" = "as.POSIXct",
-            "POSIXlt" = "as.POSIXlt"
-          ))
+          date_fun <- as.name(
+            switch(
+              class,
+              "POSIXct" = "as.POSIXct",
+              "POSIXlt" = "as.POSIXlt"
+            )
+          )
           call(
             fun_compare,
             varname,
@@ -337,6 +340,7 @@ ChoicesFilterState <- R6::R6Class( # nolint
       private$choices_counts <- choices_counts
       invisible(NULL)
     },
+
     get_choices_counts = function() {
       if (!is.null(private$x_reactive)) {
         table(factor(private$x_reactive(), levels = private$choices))
@@ -578,15 +582,67 @@ ChoicesFilterState <- R6::R6Class( # nolint
       )
     },
 
+    server_inputs_fixed = function(id) {
+      moduleServer(
+        id = id,
+        function(input, output, session) {
+          logger::log_trace("ChoicesFilterState$server initializing, dataname: { private$dataname }")
+
+          output$selection <- renderUI({
+            countsnow <- unname(table(factor(private$x_reactive(), levels = private$choices)))
+            countsmax <- private$choices_counts
+
+            ind <- private$choices %in% shiny::isolate(private$selected())
+            countBars(
+              inputId = session$ns("labels"),
+              choices = shiny::isolate(private$selected()),
+              countsnow = countsnow[ind],
+              countsmax = countsmax[ind]
+            )
+          })
+
+          logger::log_trace("ChoicesFilterState$server initialized, dataname: { private$dataname }")
+          NULL
+        }
+      )
+    },
+
     # @description
     # UI module to display filter summary
     #  renders text describing number of selected levels
     #  and if NA are included also
     content_summary = function(id) {
-      n_selected <- length(private$get_selected())
+      selected <- private$get_selected()
+      selected_length <- nchar(paste0(selected, collapse = ""))
+      if (selected_length <= 40) {
+        selected_text <- paste0(selected, collapse = ", ")
+      } else {
+        n_selected <- length(selected)
+        selected_text <- paste(n_selected, "levels selected")
+      }
       tagList(
-        tags$span(sprintf("%s levels selected", n_selected)),
-        if (isTRUE(private$get_keep_na())) tags$span("NA") else NULL
+        tags$span(
+          class = "filter-card-summary-value",
+          selected_text
+        ),
+        tags$span(
+          class = "filter-card-summary-controls",
+          if (isTRUE(private$get_keep_na()) && private$na_count > 0) {
+            tags$span(
+              class = "filter-card-summary-na",
+              "NA",
+              shiny::icon("check")
+            )
+          } else if (isFALSE(private$get_keep_na()) && private$na_count > 0) {
+            tags$span(
+              class = "filter-card-summary-na",
+              "NA",
+              shiny::icon("xmark")
+            )
+          } else {
+            NULL
+          }
+        )
       )
     }
   )

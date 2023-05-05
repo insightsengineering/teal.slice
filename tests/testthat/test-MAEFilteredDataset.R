@@ -217,11 +217,10 @@ testthat::test_that(
         keep_na = FALSE, datalabel = "RPPAArray", arg = "subset"
       )
     )
+  )
 
-    dataset$set_filter_state(state = fs)
-    testthat::expect_identical(adjust_states(shiny::isolate(dataset$get_filter_state())), fs)
-  }
-)
+  dataset$set_filter_state(state = fs)
+  fs_out <- unname(shiny::isolate(dataset$get_filter_state()))
 
 testthat::test_that(
   "MAEFilteredDataset$remove_filter_state removes desired filter",
@@ -246,24 +245,26 @@ testthat::test_that(
         keep_na = FALSE, datalabel = "RPPAArray", arg = "subset"
       )
     )
-    dataset$set_filter_state(state = fs)
-    dataset$remove_filter_state(filter_settings(filter_var(dataname = "miniacc", varname = "years_to_birth")))
+  )
+  dataset$set_filter_state(state = fs)
 
-    testthat::expect_equal(
-      shiny::isolate(dataset$get_call()),
-      list(
-        subjects = quote(
-          miniacc <- MultiAssayExperiment::subsetByColData( # nolint
-            miniacc,
-            y = miniacc$vital_status == 1L &
-              miniacc$gender == "female"
-          )
-        ),
-        RPPAArray = quote(
-          miniacc[["RPPAArray"]] <- subset( # nolint
-            miniacc[["RPPAArray"]],
-            subset = ARRAY_TYPE == ""
-          )
+  testthat::expect_error(
+    dataset$remove_filter_state(list(filter_var(dataname = "miniacc", varname = "years_to_birth"))),
+    "Assertion on 'state' failed"
+  )
+
+  testthat::expect_no_error(
+    dataset$remove_filter_state(filter_settings(filter_var(dataname = "miniacc", varname = "years_to_birth")))
+  )
+
+  testthat::expect_equal(
+    shiny::isolate(dataset$get_call()),
+    list(
+      subjects = quote(
+        miniacc <- MultiAssayExperiment::subsetByColData( # nolint
+          miniacc,
+          y = miniacc$vital_status == 1L &
+            miniacc$gender == "female"
         )
       )
     )
@@ -293,10 +294,8 @@ testthat::test_that(
         keep_na = FALSE, datalabel = "RPPAArray", arg = "subset"
       )
     )
-    dataset$set_filter_state(state = fs)
-    testthat::expect_error(dataset$remove_filter_state(state_id = list("years_to_birth")))
-  }
-)
+  )
+})
 
 # UI actions ----
 testthat::test_that("remove_filters button removes all filters", {

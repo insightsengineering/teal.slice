@@ -38,7 +38,7 @@ testthat::test_that("set_state: selected accepts a logical (or coercible) of len
 # get_call ----
 testthat::test_that("get_call returns FALSE values from data passed to selector", {
   variable <- logs
-  filter_state <- LogicalFilterState$new(logs, dataname = "data", varname = "variable", selected = FALSE)
+  filter_state <- LogicalFilterState$new(logs, dataname = "data", varname = "variable", selected = FALSE, keep_na = FALSE)
 
   expect_identical(
     eval(shiny::isolate(filter_state$get_call())),
@@ -47,7 +47,7 @@ testthat::test_that("get_call returns FALSE values from data passed to selector"
 })
 
 testthat::test_that("get_call returns appropriate call depending on selection state", {
-  filter_state <- LogicalFilterState$new(logs, dataname = "data", varname = "variable", selected = FALSE)
+  filter_state <- LogicalFilterState$new(logs, dataname = "data", varname = "variable", selected = FALSE, keep_na = FALSE)
 
   expect_identical(
     shiny::isolate(filter_state$get_call()),

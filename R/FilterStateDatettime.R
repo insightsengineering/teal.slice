@@ -139,7 +139,7 @@ DatetimeFilterState <- R6::R6Class( # nolint
                           varname,
                           choices = NULL,
                           selected = NULL,
-                          keep_na = FALSE,
+                          keep_na = NULL,
                           keep_inf = NULL,
                           fixed = FALSE,
                           disabled = FALSE,
@@ -222,10 +222,13 @@ DatetimeFilterState <- R6::R6Class( # nolint
       choices <- private$get_selected()
       tzone <- Find(function(x) x != "", attr(as.POSIXlt(choices), "tzone"))
       class <- class(choices)[1L]
-      date_fun <- as.name(switch(class,
-        "POSIXct" = "as.POSIXct",
-        "POSIXlt" = "as.POSIXlt"
-      ))
+      date_fun <- as.name(
+        switch(
+          class,
+          "POSIXct" = "as.POSIXct",
+          "POSIXlt" = "as.POSIXlt"
+        )
+      )
       choices <- as.character(choices + c(0, 1))
       filter_call <-
         call(
@@ -289,6 +292,7 @@ DatetimeFilterState <- R6::R6Class( # nolint
       private$is_choice_limited <- (any(xl < choices[1L], na.rm = TRUE) | any(xl > choices[2L], na.rm = TRUE))
       invisible(NULL)
     },
+
     validate_selection = function(value) {
       if (!(is(value, "POSIXct") || is(value, "POSIXlt"))) {
         stop(
@@ -307,6 +311,7 @@ DatetimeFilterState <- R6::R6Class( # nolint
       )
       check_in_range(value, private$choices, pre_msg = pre_msg)
     },
+
     cast_and_validate = function(values) {
       tryCatch(
         expr = {
@@ -318,6 +323,7 @@ DatetimeFilterState <- R6::R6Class( # nolint
       if (length(values) != 2) stop("The array of set values must have length two.")
       values
     },
+
     remove_out_of_bound_values = function(values) {
       if (values[1] < private$choices[1L] || values[1] > private$choices[2L]) {
         warning(
@@ -588,6 +594,26 @@ DatetimeFilterState <- R6::R6Class( # nolint
       )
     },
 
+    server_inputs_fixed = function(id) {
+      moduleServer(
+        id = id,
+        function(input, output, session) {
+          logger::log_trace("DatetimeFilterState$server initializing, dataname: { private$dataname }")
+
+          output$selection <- renderUI({
+            vals <- format(private$get_selected(), usetz = TRUE, nsmall = 3)
+            div(
+              div(icon("clock"), vals[1]),
+              div(span(" - "), icon("clock"), vals[2])
+            )
+          })
+
+          logger::log_trace("DatetimeFilterState$server initialized, dataname: { private$dataname }")
+          NULL
+        }
+      )
+    },
+
     # @description
     # UI module to display filter summary
     #  renders text describing selected date range and
@@ -597,8 +623,28 @@ DatetimeFilterState <- R6::R6Class( # nolint
       min <- selected[1]
       max <- selected[2]
       tagList(
-        tags$span(paste0(min, " - ", max)),
-        if (isTRUE(private$get_keep_na())) tags$span("NA") else NULL
+        tags$span(
+          class = "filter-card-summary-value",
+          shiny::HTML(min, "&ndash;", max)
+        ),
+        tags$span(
+          class = "filter-card-summary-controls",
+          if (isTRUE(private$get_keep_na()) && private$na_count > 0) {
+            tags$span(
+              class = "filter-card-summary-na",
+              "NA",
+              shiny::icon("check")
+            )
+          } else if (isFALSE(private$get_keep_na()) && private$na_count > 0) {
+            tags$span(
+              class = "filter-card-summary-na",
+              "NA",
+              shiny::icon("xmark")
+            )
+          } else {
+            NULL
+          }
+        )
       )
     }
   )

@@ -167,10 +167,8 @@ testthat::test_that("get_call returns condition that specifies values passed to 
   filter_state$set_state(filter_var(dataname = "data", varname = "variable", keep_na = TRUE))
   testthat::expect_identical(
     deparse1(shiny::isolate(filter_state$get_call())),
-    deparse1(
-      quote(is.na(variable) |
-        variable %in% as.POSIXct(c("2000-01-01 12:00:00", "2000-01-01 12:00:01"), tz = "GMT"))
-    )
+    deparse1(quote(is.na(variable) |
+      variable %in% as.POSIXct(c("2000-01-01 12:00:00", "2000-01-01 12:00:01"), tz = "GMT")))
   )
 
   filter_state <- ChoicesFilterState$new(
@@ -190,10 +188,8 @@ testthat::test_that("get_call returns condition that specifies values passed to 
   filter_state$set_state(filter_var(dataname = "data", varname = "variable", keep_na = TRUE))
   testthat::expect_identical(
     deparse1(shiny::isolate(filter_state$get_call())),
-    deparse1(
-      quote(is.na(variable) |
-        variable %in% as.POSIXlt(c("2000-01-01 12:00:00", "2000-01-01 12:00:01"), tz = "GMT"))
-    )
+    deparse1(quote(is.na(variable) |
+      variable %in% as.POSIXlt(c("2000-01-01 12:00:00", "2000-01-01 12:00:01"), tz = "GMT")))
   )
 })
 
@@ -258,7 +254,7 @@ testthat::test_that("set_state raises warning when selection not within allowed 
   )
 })
 
-testthat::test_that("set_statre sets the intersection of choices and the passed values", {
+testthat::test_that("set_state sets intersection of choices and passed values", {
   filter_state <- ChoicesFilterState$new(chars, dataname = "data", varname = "variable")
   suppressWarnings(
     shiny::isolate(
@@ -398,6 +394,7 @@ testthat::test_that("is_any_filtered works properly when NA is present in data",
   )
 
   shiny::isolate(filter_state$set_state(filter_var(dataname = "data", varname = "x", selected = LETTERS[1:2])))
+
   shiny::isolate(filter_state$set_state(filter_var(dataname = "data", varname = "x", keep_na = FALSE)))
   testthat::expect_true(shiny::isolate(filter_state$is_any_filtered()))
 
@@ -410,8 +407,6 @@ testthat::test_that("is_any_filtered works properly when NA is present in data",
   shiny::isolate(filter_state$set_state(filter_var(dataname = "data", varname = "x", keep_na = FALSE)))
   testthat::expect_true(shiny::isolate(filter_state$is_any_filtered()))
 })
-
-
 
 testthat::test_that("is_any_filtered returns TRUE when enabled and FALSE when disabled", {
   testfs <- R6::R6Class(

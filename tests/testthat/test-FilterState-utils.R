@@ -70,3 +70,54 @@ testthat::test_that("contain_interval returns 'x' if interval matches ticks", {
 testthat::test_that("contain_interval returns 'range' if 'x' is x is out of bounds", {
   testthat::expect_equal(contain_interval(c(0, 11), 1:10), c(1, 10))
 })
+
+testthat::test_that("n_sig_digits counts correctly", {
+  values <- as.character(c(
+    1.23,
+    exp(1),
+    pi,
+    45678,
+    0.0001245
+  ))
+
+  expected <- c(
+    3,
+    15,
+    15,
+    5,
+    4
+  )
+
+  testthat::expect_equal(n_sig_digits(values), expected)
+})
+
+testthat::test_that("formatting of range filter state for card summary", {
+  values <- c(
+    -10.000000235,
+    -4.5,
+    0.00,
+    0.00412,
+    pi,
+    12.01,
+    20.0,
+    14328948789,
+    -Inf,
+    Inf,
+    NA
+  )
+  expected <- c(
+    "-10",
+    "-4.5",
+    "0",
+    "0.00412",
+    "3.142E+00",
+    "12.01",
+    "20",
+    "1.433E+10",
+    "-Inf",
+    "Inf",
+    "NA"
+  )
+
+  testthat::expect_equal(format_range_for_summary(values), expected)
+})

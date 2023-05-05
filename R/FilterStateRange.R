@@ -135,16 +135,18 @@ RangeFilterState <- R6::R6Class( # nolint
                           varname,
                           choices = NULL,
                           selected = NULL,
-                          keep_na = FALSE,
-                          keep_inf = FALSE,
+                          keep_na = NULL,
+                          keep_inf = NULL,
                           fixed = FALSE,
                           disabled = FALSE,
                           extract_type = character(0),
                           ...) {
       checkmate::assert_numeric(x, all.missing = FALSE)
       checkmate::assert_numeric(choices, null.ok = TRUE)
-      checkmate::assert_class(x_reactive, 'reactive')
+      checkmate::assert_class(x_reactive, "reactive")
       if (!any(is.finite(x))) stop("\"x\" contains no finite values")
+
+      keep_inf <- if (is.null(keep_inf) && any(is.infinite(x))) TRUE else keep_inf
 
       args <- list(
         x = x,
@@ -382,22 +384,6 @@ RangeFilterState <- R6::R6Class( # nolint
       values
     },
 
-    # @description
-    # Server module to display filter summary
-    #  renders text describing selected range and
-    #  if NA or Inf are included also
-    # @return `shiny.tag` to include in the `ui_summary`
-    content_summary = function() {
-      selected <- sprintf("%.4g", private$get_selected())
-      min <- selected[1]
-      max <- selected[2]
-      tagList(
-        tags$span(paste0(min, " - ", max)),
-        if (isTRUE(private$get_keep_na())) tags$span("NA") else NULL,
-        if (isTRUE(private$get_keep_inf())) tags$span("Inf") else NULL
-      )
-    },
-
     # shiny modules ----
 
     # UI Module for `RangeFilterState`.
@@ -452,7 +438,7 @@ RangeFilterState <- R6::R6Class( # nolint
                 private$unfiltered_histogram +
                   if (!is.null(finite_values())) {
                     ggplot2::geom_histogram(
-                      data = data.frame(x = Filter(is.finite, private$x_reactive())),
+                      data = data.frame(x = finite_values()),
                       ggplot2::aes(x = x),
                       bins = 100,
                       fill = grDevices::rgb(173 / 255, 216 / 255, 230 / 255),
@@ -529,6 +515,93 @@ RangeFilterState <- R6::R6Class( # nolint
           logger::log_trace("RangeFilterState$server initialized, dataname: { private$dataname }")
           NULL
         }
+      )
+    },
+
+    server_inputs_fixed = function(id) {
+      moduleServer(
+        id = id,
+        function(input, output, session) {
+          logger::log_trace("RangeFilterState$server initializing, dataname: { private$dataname }")
+
+          finite_values <- reactive(Filter(is.finite, private$x_reactive()))
+          output$plot <- bindCache(
+            finite_values(),
+            cache = "session",
+            x = renderPlot(
+              bg = "transparent",
+              height = 25,
+              expr = {
+                private$unfiltered_histogram +
+                  if (!is.null(finite_values())) {
+                    ggplot2::geom_histogram(
+                      data = data.frame(x = finite_values()),
+                      ggplot2::aes(x = x),
+                      bins = 100,
+                      fill = grDevices::rgb(173 / 255, 216 / 255, 230 / 255),
+                      color = grDevices::rgb(173 / 255, 216 / 255, 230 / 255)
+                    )
+                  } else {
+                    NULL
+                  }
+              }
+            )
+          )
+
+          output$selection <- renderUI({
+            plotOutput(session$ns("plot"), height = "2em")
+          })
+
+          logger::log_trace("RangeFilterState$server initialized, dataname: { private$dataname }")
+          NULL
+        }
+      )
+    },
+
+    # @description
+    # Server module to display filter summary
+    #  renders text describing selected range and
+    #  if NA or Inf are included also
+    # @return `shiny.tag` to include in the `ui_summary`
+    content_summary = function() {
+      fmt_selected <- format_range_for_summary(private$get_selected())
+      min <- fmt_selected[1]
+      max <- fmt_selected[2]
+      tagList(
+        tags$span(shiny::HTML(min, "&ndash;", max), class = "filter-card-summary-value"),
+        tags$span(
+          class = "filter-card-summary-controls",
+          if (isTRUE(private$get_keep_na()) && private$na_count > 0) {
+            tags$span(
+              class = "filter-card-summary-na",
+              "NA",
+              shiny::icon("check")
+            )
+          } else if (isFALSE(private$get_keep_na()) && private$na_count > 0) {
+            tags$span(
+              class = "filter-card-summary-na",
+              "NA",
+              shiny::icon("xmark")
+            )
+          } else {
+            NULL
+          },
+          if (isTRUE(private$get_keep_inf()) && private$inf_count > 0) {
+            tags$span(
+              class = "filter-card-summary-inf",
+              "Inf",
+              shiny::icon("check")
+            )
+          } else if (isFALSE(private$get_keep_inf()) && private$inf_count > 0) {
+            tags$span(
+              class = "filter-card-summary-inf",
+              "Inf",
+              shiny::icon("xmark")
+            )
+          } else {
+            NULL
+          }
+        )
       )
     },
 
