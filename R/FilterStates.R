@@ -72,7 +72,6 @@ FilterStates <- R6::R6Class( # nolint
     #' @return `character(1)` the formatted string
     #'
     format = function(indent = 0) {
-      # todo: format should be based on get_filter_state
       checkmate::assert_number(indent, finite = TRUE, lower = 0)
 
       formatted_states <- vapply(

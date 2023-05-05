@@ -161,6 +161,7 @@ filter_var <- function(
 #' @export
 #' @rdname teal_slice
 filter_expr <- function(id, title, dataname, expr, disabled = FALSE, ...) {
+  assert_logical_expr(expr)
   ans <- list(
     id = id,
     title = title,

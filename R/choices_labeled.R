@@ -15,7 +15,7 @@
 #'
 #' @return a named character vector
 #'
-#' @keywords internatl
+#' @keywords internal
 #'
 choices_labeled <- function(choices, labels, subset = NULL, types = NULL) {
   if (is.factor(choices)) {

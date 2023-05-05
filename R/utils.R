@@ -125,3 +125,25 @@ include_js_files <- function(pattern) {
   )
   return(singleton(lapply(js_files, includeScript)))
 }
+
+
+#' Assert logical expression
+#'
+#' Assert logical expression. If object is not a logical expression then error is thrown.
+#' @param x anything
+#' @return NULL or error
+#' @keywords internal
+assert_logical_expr <-  function(x) {
+  logical_funs <- c(
+    "!", ">=", "<=", "==", "<", ">", "%in%", "!=", "grepl", "isTRUE", "isFALSE","is.na", "is.finite",
+    "&", "|", "or", "and", "xor", "all", "any"
+  )
+  res <- is.call(x) && list(x[[1]]) %in% lapply(logical_funs, as.symbol)
+  if (!res) {
+    stop(sprintf(
+      "expr has to be a logical expression based on following functions:\n %s",
+      paste(logical_funs, collapse = ", ")
+    ))
+  }
+}
+

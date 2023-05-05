@@ -384,6 +384,27 @@ init_filter_state.POSIXlt <- function(x,
   }
 }
 
+
+#' Initialize a `FilterStateExpr` object
+#'
+#' Initialize a `FilterStateExpr` object
+#' @param id (`character(1)`)\cr
+#'   identifier of the filter
+#' @param title (`reactive`)\cr
+#'   title of the filter
+#' @param dataname (`character(1)`)\cr
+#'   name of the dataset where `expr` could be executed on.
+#' @param expr (`language`)\cr
+#'   logical expression written in executable way. By "executable" means
+#'   that `subset` call should be able to evaluate this without failure. For
+#'   example `MultiAssayExperiment::subsetByColData` requires varnames prefixed
+#'   by dataname (e.g. `data$var1 == "x" & data$var2 > 0`). For `data.frame` call
+#'   can be written without prefixing `var1 == "x" & var2 > 0`.
+#' @param disabled (`logical(1)`)\cr
+#'   flag specifying whether the `FilterState` is initiated disabled
+#' @param ... additional arguments to be saved as a list in `private$extras` field
+#'
+#' @return `FilterStateExpr` object
 #' @keywords internal
 init_filter_state_expr <- function(id, title, dataname, expr, disabled, ...) {
   FilterStateExpr$new(id = id, title = title, dataname = dataname, expr = expr, disabled = disabled, ...)

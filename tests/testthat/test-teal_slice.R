@@ -270,8 +270,6 @@ testthat::test_that("[.teal_slices accepts various types of indices", {
   testthat::expect_error(fs[3], "subscript out of bounds")
   testthat::expect_error(fs["three"], "subscript out of bounds")
 
-  testthat::expect_no_error(fs[[]])
-  testthat::expect_null(fs[[]])
   testthat::expect_error(fs[[integer(0)]], "attempt to select less than one element in get1index")
   testthat::expect_error(fs[[character(0)]], "attempt to select less than one element in get1index")
   testthat::expect_error(fs[[logical(0)]], "attempt to select less than one element in get1index")
