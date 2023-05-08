@@ -29,6 +29,7 @@ reference:
       - set_filter_state
       - remove_filter_state
       - clear_filter_states
+      - teal_slice
   - title: Helpers
     desc: Other useful functions for users and developers.
     contents:
@@ -39,7 +40,6 @@ reference:
     subtitle: R6 Classes
     desc: Abstract and concrete classes used to build teal functionality.
     contents:
-      - CDISCFilteredData
       - DefaultFilteredDataset
       - FilteredData
       - FilteredDataset

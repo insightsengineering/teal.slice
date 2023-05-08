@@ -31,6 +31,6 @@ testthat::test_that("calls_combine_by - different forms of calls", {
   )
   testthat::expect_error(
     calls_combine_by(calls = list("a", quote(a)), operator = "%>%"),
-    "Assertion.+ failed"
+    "Assertion on 'calls' failed"
   )
 })

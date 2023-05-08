@@ -7,13 +7,9 @@
 \description{
 Manages choosing elements from a set
 }
-\note{
-Casts the passed object to \code{character} before validating the input
-making it possible to pass any object coercible to \code{character} to this method.
-}
 \examples{
 filter_state <- teal.slice:::ChoicesFilterState$new(
-  c(LETTERS, NA),
+  x = c(LETTERS, NA),
   varname = "x",
   dataname = "data",
   extract_type = character(0)
@@ -26,16 +22,23 @@ isolate(filter_state$get_call())
 \dontrun{
 # working filter in an app
 library(shiny)
+library(shinyjs)
 
 data_choices <- c(sample(letters[1:4], 100, replace = TRUE), NA)
 filter_state_choices <- ChoicesFilterState$new(
   x = data_choices,
+  dataname = "data",
   varname = "variable",
   varlabel = "label"
 )
-filter_state_choices$set_state(list(selected = c("a", "c"), keep_na = TRUE))
+filter_state_choices$set_state(
+  filter_var("data", "variable", selected = c("a", "c"), keep_na = TRUE))
+)
 
 ui <- fluidPage(
+  useShinyjs(),
+  include_css_files(pattern = "filter-panel"),
+  include_js_files(pattern = "count-bar-labels"),
   column(4, div(
     h4("ChoicesFilterState"),
     isolate(filter_state_choices$ui("fs"))
@@ -73,7 +76,9 @@ server <- function(input, output, session) {
   observeEvent(input$button4_choices, filter_state_choices$set_selected(c()))
   observeEvent(
     input$button0_choices,
-    filter_state_choices$set_state(list(selected = c("a", "c"), keep_na = TRUE))
+      filter_state_choices$set_state(
+        filter_var("data", "variable", selected = c("a", "c"), keep_na = TRUE))
+      )
   )
 }
 
@@ -82,13 +87,6 @@ if (interactive()) {
 }
 }
 
-
-## ------------------------------------------------
-## Method `ChoicesFilterState$set_selected`
-## ------------------------------------------------
-
-filter <- teal.slice:::ChoicesFilterState$new(c("a", "b", "c"), varname = "name")
-filter$set_selected(c("c", "a"))
 }
 \keyword{internal}
 \section{Super class}{
@@ -98,10 +96,9 @@ filter$set_selected(c("c", "a"))
 \subsection{Public methods}{
 \itemize{
 \item \href{#method-ChoicesFilterState-new}{\code{ChoicesFilterState$new()}}
+\item \href{#method-ChoicesFilterState-format}{\code{ChoicesFilterState$format()}}
 \item \href{#method-ChoicesFilterState-is_any_filtered}{\code{ChoicesFilterState$is_any_filtered()}}
 \item \href{#method-ChoicesFilterState-get_call}{\code{ChoicesFilterState$get_call()}}
-\item \href{#method-ChoicesFilterState-set_state}{\code{ChoicesFilterState$set_state()}}
-\item \href{#method-ChoicesFilterState-set_selected}{\code{ChoicesFilterState$set_selected()}}
 \item \href{#method-ChoicesFilterState-clone}{\code{ChoicesFilterState$clone()}}
 }
 }
@@ -109,17 +106,10 @@ filter$set_selected(c("c", "a"))
 <details><summary>Inherited methods</summary>
 <ul>
 <li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilterState" data-id="destroy_observers"><a href='../../teal.slice/html/FilterState.html#method-FilterState-destroy_observers'><code>teal.slice::FilterState$destroy_observers()</code></a></span></li>
-<li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilterState" data-id="format"><a href='../../teal.slice/html/FilterState.html#method-FilterState-format'><code>teal.slice::FilterState$format()</code></a></span></li>
-<li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilterState" data-id="get_dataname"><a href='../../teal.slice/html/FilterState.html#method-FilterState-get_dataname'><code>teal.slice::FilterState$get_dataname()</code></a></span></li>
-<li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilterState" data-id="get_keep_na"><a href='../../teal.slice/html/FilterState.html#method-FilterState-get_keep_na'><code>teal.slice::FilterState$get_keep_na()</code></a></span></li>
-<li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilterState" data-id="get_selected"><a href='../../teal.slice/html/FilterState.html#method-FilterState-get_selected'><code>teal.slice::FilterState$get_selected()</code></a></span></li>
 <li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilterState" data-id="get_state"><a href='../../teal.slice/html/FilterState.html#method-FilterState-get_state'><code>teal.slice::FilterState$get_state()</code></a></span></li>
-<li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilterState" data-id="get_varlabel"><a href='../../teal.slice/html/FilterState.html#method-FilterState-get_varlabel'><code>teal.slice::FilterState$get_varlabel()</code></a></span></li>
-<li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilterState" data-id="get_varname"><a href='../../teal.slice/html/FilterState.html#method-FilterState-get_varname'><code>teal.slice::FilterState$get_varname()</code></a></span></li>
 <li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilterState" data-id="print"><a href='../../teal.slice/html/FilterState.html#method-FilterState-print'><code>teal.slice::FilterState$print()</code></a></span></li>
 <li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilterState" data-id="server"><a href='../../teal.slice/html/FilterState.html#method-FilterState-server'><code>teal.slice::FilterState$server()</code></a></span></li>
-<li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilterState" data-id="set_keep_na"><a href='../../teal.slice/html/FilterState.html#method-FilterState-set_keep_na'><code>teal.slice::FilterState$set_keep_na()</code></a></span></li>
-<li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilterState" data-id="set_na_rm"><a href='../../teal.slice/html/FilterState.html#method-FilterState-set_na_rm'><code>teal.slice::FilterState$set_na_rm()</code></a></span></li>
+<li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilterState" data-id="set_state"><a href='../../teal.slice/html/FilterState.html#method-FilterState-set_state'><code>teal.slice::FilterState$set_state()</code></a></span></li>
 <li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilterState" data-id="ui"><a href='../../teal.slice/html/FilterState.html#method-FilterState-ui'><code>teal.slice::FilterState$ui()</code></a></span></li>
 </ul>
 </details>
@@ -128,31 +118,60 @@ filter$set_selected(c("c", "a"))
 \if{html}{\out{<a id="method-ChoicesFilterState-new"></a>}}
 \if{latex}{\out{\hypertarget{method-ChoicesFilterState-new}{}}}
 \subsection{Method \code{new()}}{
-Initialize a \code{FilterState} object
+Initialize a \code{InteractiveFilterState} object
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{ChoicesFilterState$new(
   x,
+  x_reactive = reactive(NULL),
+  dataname,
   varname,
-  varlabel = character(0),
-  dataname = NULL,
-  extract_type = character(0)
+  choices = NULL,
+  selected = NULL,
+  keep_na = NULL,
+  keep_inf = NULL,
+  fixed = FALSE,
+  disabled = FALSE,
+  extract_type = character(0),
+  ...
 )}\if{html}{\out{</div>}}
 }
 
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
-\item{\code{x}}{(\code{character} or \code{factor})\cr
+\item{\code{x}}{(\code{vector})\cr
 values of the variable used in filter}
 
-\item{\code{varname}}{(\code{character})\cr
-name of the variable}
-
-\item{\code{varlabel}}{(\code{character(1)})\cr
-label of the variable (optional).}
+\item{\code{x_reactive}}{(\code{reactive})\cr
+returning vector of the same type as \code{x}. Is used to update
+counts following the change in values of the filtered dataset.
+If it is set to \code{reactive(NULL)} then counts based on filtered
+dataset are not shown.}
 
 \item{\code{dataname}}{(\code{character(1)})\cr
-optional name of dataset where \code{x} is taken from}
+optional name of dataset where \code{x} is taken from. Must be specified
+if \code{extract_type} argument is not empty.}
+
+\item{\code{varname}}{(\code{character(1)})\cr
+name of the variable.}
+
+\item{\code{choices}}{(\code{atomic}, \code{NULL})\cr
+vector specifying allowed selection values}
+
+\item{\code{selected}}{(\code{atomic}, \code{NULL})\cr
+vector specifying selection}
+
+\item{\code{keep_na}}{(\code{logical(1)}, \code{NULL})\cr
+flag specifying whether to keep missing values}
+
+\item{\code{keep_inf}}{(\code{logical(1)}, \code{NULL})\cr
+flag specifying whether to keep infinite values}
+
+\item{\code{fixed}}{(\code{logical(1)})\cr
+flag specifying whether the \code{FilterState} is initiated fixed}
+
+\item{\code{disabled}}{(\code{logical(1)})\cr
+flag specifying whether the \code{FilterState} is initiated disabled}
 
 \item{\code{extract_type}}{(\code{character(0)}, \code{character(1)})\cr
 whether condition calls should be prefixed by dataname. Possible values:
@@ -161,8 +180,36 @@ whether condition calls should be prefixed by dataname. Possible values:
 \item{\code{"list"}}{ \code{varname} in the condition call will be returned as \verb{<dataname>$<varname>}}
 \item{\code{"matrix"}}{ \code{varname} in the condition call will be returned as \verb{<dataname>[, <varname>]}}
 }}
+
+\item{\code{...}}{additional arguments to be saved as a list in \code{private$extras} field}
 }
 \if{html}{\out{</div>}}
+}
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-ChoicesFilterState-format"></a>}}
+\if{latex}{\out{\hypertarget{method-ChoicesFilterState-format}{}}}
+\subsection{Method \code{format()}}{
+Returns a formatted string representing this \code{FilterState}.
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{ChoicesFilterState$format(indent = 2L, wrap_width = 76L)}\if{html}{\out{</div>}}
+}
+
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{indent}}{(\code{numeric(1)})
+number of spaces before after each new line character of the formatted string;
+defaults to 0}
+
+\item{\code{wrap_width}}{(\code{numeric(1)})
+number of characters to wrap lines at in the printed output;
+allowed range is 30 to 120; defaults to 76}
+}
+\if{html}{\out{</div>}}
+}
+\subsection{Returns}{
+\code{character(1)} the formatted string
 }
 }
 \if{html}{\out{<hr>}}
@@ -187,64 +234,19 @@ For this class returned call looks like
 \verb{<varname> \%in\%  c(<values selected>)} with
 optional \verb{is.na(<varname>)}.
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{ChoicesFilterState$get_call()}\if{html}{\out{</div>}}
-}
-
-\subsection{Returns}{
-(\code{call})
-}
-}
-\if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-ChoicesFilterState-set_state"></a>}}
-\if{latex}{\out{\hypertarget{method-ChoicesFilterState-set_state}{}}}
-\subsection{Method \code{set_state()}}{
-Set state
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{ChoicesFilterState$set_state(state)}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{ChoicesFilterState$get_call(dataname)}\if{html}{\out{</div>}}
 }
 
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
-\item{\code{state}}{(\code{list})\cr
-contains fields relevant for a specific class
-\itemize{
-\item{\code{selected}}{ defines initial selection}
-\item{\code{keep_na} (\code{logical})}{ defines whether to keep or remove \code{NA} values}
-}}
-}
-\if{html}{\out{</div>}}
-}
-}
-\if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-ChoicesFilterState-set_selected"></a>}}
-\if{latex}{\out{\hypertarget{method-ChoicesFilterState-set_selected}{}}}
-\subsection{Method \code{set_selected()}}{
-Sets the selected values of this \code{ChoicesFilterState}.
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{ChoicesFilterState$set_selected(value)}\if{html}{\out{</div>}}
-}
-
-\subsection{Arguments}{
-\if{html}{\out{<div class="arguments">}}
-\describe{
-\item{\code{value}}{(\code{character}) the array of the selected choices.
-Must not contain NA values.}
+\item{\code{dataname}}{name of data set; defaults to \code{private$dataname}}
 }
 \if{html}{\out{</div>}}
 }
 \subsection{Returns}{
-invisibly \code{NULL}
+(\code{call})
 }
-\subsection{Examples}{
-\if{html}{\out{<div class="r example copy">}}
-\preformatted{filter <- teal.slice:::ChoicesFilterState$new(c("a", "b", "c"), varname = "name")
-filter$set_selected(c("c", "a"))
-}
-\if{html}{\out{</div>}}
-
-}
-
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-ChoicesFilterState-clone"></a>}}

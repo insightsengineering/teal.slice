@@ -4,19 +4,12 @@
 \name{RangeFilterState}
 \alias{RangeFilterState}
 \title{\code{FilterState} object for numeric variable}
-\value{
-invisibly \code{NULL}
-}
 \description{
 Manages choosing a numeric range
 }
-\note{
-Casts the passed object to \code{numeric} before validating the input
-making it possible to pass any object coercible to \code{numeric} to this method.
-}
 \examples{
 filter_state <- teal.slice:::RangeFilterState$new(
-  c(NA, Inf, seq(1:10)),
+  x = c(NA, Inf, seq(1:10)),
   varname = "x",
   dataname = "data",
   extract_type = character(0)
@@ -30,16 +23,22 @@ isolate(filter_state$get_call())
 \dontrun{
 # working filter in an app
 library(shiny)
+library(shinyjs)
 
 data_range <- c(runif(100, 0, 1), NA, Inf)
 filter_state_range <- RangeFilterState$new(
   x = data_range,
-  varname = "variable",
-  varlabel = "label"
+  dataname = "data"
+  varname = "variable"
 )
-filter_state_range$set_state(list(selected = c(0.15, 0.93), keep_na = TRUE, keep_inf = TRUE))
+filter_state_range$set_state(
+  filter_var("data", "variable", selected = c(0.15, 0.93), keep_na = TRUE, keep_inf = TRUE)
+)
 
 ui <- fluidPage(
+  useShinyjs(),
+  include_css_files(pattern = "filter-panel"),
+  include_js_files(pattern = "count-bar-labels"),
   column(4, div(
     h4("RangeFilterState"),
     isolate(filter_state_range$ui("fs"))
@@ -79,7 +78,9 @@ server <- function(input, output, session) {
   observeEvent(input$button6_range, filter_state_range$set_selected(c(0, 1)))
   observeEvent(
     input$button0_range,
-    filter_state_range$set_state(list(selected = c(0.15, 0.93), keep_na = TRUE, keep_inf = TRUE))
+    filter_state_range$set_state(
+      filter_var("data", "variable", selected = c(0.15, 0.93), keep_na = TRUE, keep_inf = TRUE)
+    )
   )
 }
 
@@ -87,14 +88,6 @@ if (interactive()) {
   shinyApp(ui, server)
 }
 }
-
-
-## ------------------------------------------------
-## Method `RangeFilterState$set_selected`
-## ------------------------------------------------
-
-filter <- teal.slice:::RangeFilterState$new(c(1, 2, 3, 4), varname = "name")
-filter$set_selected(c(2, 3))
 
 }
 \keyword{internal}
@@ -109,10 +102,6 @@ filter$set_selected(c(2, 3))
 \item \href{#method-RangeFilterState-is_any_filtered}{\code{RangeFilterState$is_any_filtered()}}
 \item \href{#method-RangeFilterState-get_call}{\code{RangeFilterState$get_call()}}
 \item \href{#method-RangeFilterState-get_keep_inf}{\code{RangeFilterState$get_keep_inf()}}
-\item \href{#method-RangeFilterState-get_state}{\code{RangeFilterState$get_state()}}
-\item \href{#method-RangeFilterState-set_keep_inf}{\code{RangeFilterState$set_keep_inf()}}
-\item \href{#method-RangeFilterState-set_state}{\code{RangeFilterState$set_state()}}
-\item \href{#method-RangeFilterState-set_selected}{\code{RangeFilterState$set_selected()}}
 \item \href{#method-RangeFilterState-clone}{\code{RangeFilterState$clone()}}
 }
 }
@@ -120,15 +109,10 @@ filter$set_selected(c(2, 3))
 <details><summary>Inherited methods</summary>
 <ul>
 <li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilterState" data-id="destroy_observers"><a href='../../teal.slice/html/FilterState.html#method-FilterState-destroy_observers'><code>teal.slice::FilterState$destroy_observers()</code></a></span></li>
-<li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilterState" data-id="get_dataname"><a href='../../teal.slice/html/FilterState.html#method-FilterState-get_dataname'><code>teal.slice::FilterState$get_dataname()</code></a></span></li>
-<li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilterState" data-id="get_keep_na"><a href='../../teal.slice/html/FilterState.html#method-FilterState-get_keep_na'><code>teal.slice::FilterState$get_keep_na()</code></a></span></li>
-<li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilterState" data-id="get_selected"><a href='../../teal.slice/html/FilterState.html#method-FilterState-get_selected'><code>teal.slice::FilterState$get_selected()</code></a></span></li>
-<li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilterState" data-id="get_varlabel"><a href='../../teal.slice/html/FilterState.html#method-FilterState-get_varlabel'><code>teal.slice::FilterState$get_varlabel()</code></a></span></li>
-<li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilterState" data-id="get_varname"><a href='../../teal.slice/html/FilterState.html#method-FilterState-get_varname'><code>teal.slice::FilterState$get_varname()</code></a></span></li>
+<li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilterState" data-id="get_state"><a href='../../teal.slice/html/FilterState.html#method-FilterState-get_state'><code>teal.slice::FilterState$get_state()</code></a></span></li>
 <li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilterState" data-id="print"><a href='../../teal.slice/html/FilterState.html#method-FilterState-print'><code>teal.slice::FilterState$print()</code></a></span></li>
 <li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilterState" data-id="server"><a href='../../teal.slice/html/FilterState.html#method-FilterState-server'><code>teal.slice::FilterState$server()</code></a></span></li>
-<li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilterState" data-id="set_keep_na"><a href='../../teal.slice/html/FilterState.html#method-FilterState-set_keep_na'><code>teal.slice::FilterState$set_keep_na()</code></a></span></li>
-<li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilterState" data-id="set_na_rm"><a href='../../teal.slice/html/FilterState.html#method-FilterState-set_na_rm'><code>teal.slice::FilterState$set_na_rm()</code></a></span></li>
+<li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilterState" data-id="set_state"><a href='../../teal.slice/html/FilterState.html#method-FilterState-set_state'><code>teal.slice::FilterState$set_state()</code></a></span></li>
 <li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilterState" data-id="ui"><a href='../../teal.slice/html/FilterState.html#method-FilterState-ui'><code>teal.slice::FilterState$ui()</code></a></span></li>
 </ul>
 </details>
@@ -137,14 +121,21 @@ filter$set_selected(c(2, 3))
 \if{html}{\out{<a id="method-RangeFilterState-new"></a>}}
 \if{latex}{\out{\hypertarget{method-RangeFilterState-new}{}}}
 \subsection{Method \code{new()}}{
-Initialize a \code{FilterState} object
+Initialize a \code{FilterState} object for range selection
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{RangeFilterState$new(
   x,
+  x_reactive = reactive(NULL),
+  dataname,
   varname,
-  varlabel = character(0),
-  dataname = NULL,
-  extract_type = character(0)
+  choices = NULL,
+  selected = NULL,
+  keep_na = NULL,
+  keep_inf = NULL,
+  fixed = FALSE,
+  disabled = FALSE,
+  extract_type = character(0),
+  ...
 )}\if{html}{\out{</div>}}
 }
 
@@ -154,14 +145,36 @@ Initialize a \code{FilterState} object
 \item{\code{x}}{(\code{numeric})\cr
 values of the variable used in filter}
 
-\item{\code{varname}}{(\code{character}, \code{name})\cr
-name of the variable}
-
-\item{\code{varlabel}}{(\code{character(1)})\cr
-label of the variable (optional).}
+\item{\code{x_reactive}}{(\code{reactive})\cr
+returning vector of the same type as \code{x}. Is used to update
+counts following the change in values of the filtered dataset.
+If it is set to \code{reactive(NULL)} then counts based on filtered
+dataset are not shown.}
 
 \item{\code{dataname}}{(\code{character(1)})\cr
-optional name of dataset where \code{x} is taken from}
+optional name of dataset where \code{x} is taken from. Must be specified
+if \code{extract_type} argument is not empty.}
+
+\item{\code{varname}}{(\code{character(1)})\cr
+name of the variable.}
+
+\item{\code{choices}}{(\code{atomic}, \code{NULL})\cr
+vector specifying allowed selection values}
+
+\item{\code{selected}}{(\code{atomic}, \code{NULL})\cr
+vector specifying selection}
+
+\item{\code{keep_na}}{(\code{logical(1)}, \code{NULL})\cr
+flag specifying whether to keep missing values}
+
+\item{\code{keep_inf}}{(\code{logical(1)}, \code{NULL})\cr
+flag specifying whether to keep infinite values}
+
+\item{\code{fixed}}{(\code{logical(1)})\cr
+flag specifying whether the \code{FilterState} is initiated fixed}
+
+\item{\code{disabled}}{(\code{logical(1)})\cr
+flag specifying whether the \code{FilterState} is initiated disabled}
 
 \item{\code{extract_type}}{(\code{character(0)}, \code{character(1)})\cr
 whether condition calls should be prefixed by dataname. Possible values:
@@ -170,6 +183,8 @@ whether condition calls should be prefixed by dataname. Possible values:
 \item{\code{"list"}}{ \code{varname} in the condition call will be returned as \verb{<dataname>$<varname>}}
 \item{\code{"matrix"}}{ \code{varname} in the condition call will be returned as \verb{<dataname>[, <varname>]}}
 }}
+
+\item{\code{...}}{additional arguments to be saved as a list in \code{private$extras} field}
 }
 \if{html}{\out{</div>}}
 }
@@ -180,7 +195,7 @@ whether condition calls should be prefixed by dataname. Possible values:
 \subsection{Method \code{format()}}{
 Returns a formatted string representing this \code{RangeFilterState}.
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{RangeFilterState$format(indent = 0)}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{RangeFilterState$format(indent = 2)}\if{html}{\out{</div>}}
 }
 
 \subsection{Arguments}{
@@ -218,9 +233,16 @@ For this class returned call looks like
 \verb{<varname> >= <min value> & <varname> <= <max value>} with
 optional \verb{is.na(<varname>)} and \verb{is.finite(<varname>)}.
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{RangeFilterState$get_call()}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{RangeFilterState$get_call(dataname)}\if{html}{\out{</div>}}
 }
 
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{dataname}}{name of data set; defaults to \code{private$dataname}}
+}
+\if{html}{\out{</div>}}
+}
 \subsection{Returns}{
 (\code{call})
 }
@@ -237,95 +259,6 @@ Returns current \code{keep_inf} selection
 \subsection{Returns}{
 (\code{logical(1)})
 }
-}
-\if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-RangeFilterState-get_state"></a>}}
-\if{latex}{\out{\hypertarget{method-RangeFilterState-get_state}{}}}
-\subsection{Method \code{get_state()}}{
-Returns the filtering state.
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{RangeFilterState$get_state()}\if{html}{\out{</div>}}
-}
-
-\subsection{Returns}{
-\code{list} containing values taken from the reactive fields:
-\itemize{
-\item \code{selected} (\code{numeric(2)}) range of the filter.
-\item \code{keep_na} (\code{logical(1)}) whether \code{NA} should be kept.
-\item \code{keep_inf} (\code{logical(1)})  whether \code{Inf} should be kept.
-}
-}
-}
-\if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-RangeFilterState-set_keep_inf"></a>}}
-\if{latex}{\out{\hypertarget{method-RangeFilterState-set_keep_inf}{}}}
-\subsection{Method \code{set_keep_inf()}}{
-Set if \code{Inf} should be kept
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{RangeFilterState$set_keep_inf(value)}\if{html}{\out{</div>}}
-}
-
-\subsection{Arguments}{
-\if{html}{\out{<div class="arguments">}}
-\describe{
-\item{\code{value}}{(\code{logical(1)})\cr
-Value(s) which come from the filter selection. Value is set in \code{server}
-modules after selecting check-box-input in the shiny interface. Values are set to
-\code{private$keep_inf} which is reactive.}
-}
-\if{html}{\out{</div>}}
-}
-}
-\if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-RangeFilterState-set_state"></a>}}
-\if{latex}{\out{\hypertarget{method-RangeFilterState-set_state}{}}}
-\subsection{Method \code{set_state()}}{
-Set state
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{RangeFilterState$set_state(state)}\if{html}{\out{</div>}}
-}
-
-\subsection{Arguments}{
-\if{html}{\out{<div class="arguments">}}
-\describe{
-\item{\code{state}}{(\code{list})\cr
-contains fields relevant for a specific class
-\itemize{
-\item{\code{selected}}{ defines initial selection}
-\item{\code{keep_na} (\code{logical})}{ defines whether to keep or remove \code{NA} values}
-\item{\code{keep_inf} (\code{logical})}{ defines whether to keep or remove \code{Inf} values}
-}}
-}
-\if{html}{\out{</div>}}
-}
-}
-\if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-RangeFilterState-set_selected"></a>}}
-\if{latex}{\out{\hypertarget{method-RangeFilterState-set_selected}{}}}
-\subsection{Method \code{set_selected()}}{
-Sets the selected values of this \code{RangeFilterState}.
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{RangeFilterState$set_selected(value)}\if{html}{\out{</div>}}
-}
-
-\subsection{Arguments}{
-\if{html}{\out{<div class="arguments">}}
-\describe{
-\item{\code{value}}{(\code{numeric(2)}) the two-elements array of the lower and upper bound
-of the selected range. Must not contain NA values.}
-}
-\if{html}{\out{</div>}}
-}
-\subsection{Examples}{
-\if{html}{\out{<div class="r example copy">}}
-\preformatted{filter <- teal.slice:::RangeFilterState$new(c(1, 2, 3, 4), varname = "name")
-filter$set_selected(c(2, 3))
-
-}
-\if{html}{\out{</div>}}
-
-}
-
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-RangeFilterState-clone"></a>}}
