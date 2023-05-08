@@ -134,53 +134,6 @@ testthat::test_that("FilterPanelAPI$clear_filter_states remove the filters of th
   testthat::expect_identical(slices_field(shiny::isolate(datasets$get_filter_state()), "varname"), "int")
 })
 
-# behavior ----
-testthat::test_that("filter_panel_api neutral when filter panel is disabled", {
-  shiny::testServer(
-    filtered_data$srv_filter_panel,
-    expr = {
-      filtered_data$filter_panel_disable()
-      datasets <- FilterPanelAPI$new(filtered_data)
-      fs <- filter_settings(
-        filter_var(dataname = "df1", varname = "num", selected = c(5.1, 6.4), keep_na = FALSE, keep_inf = FALSE),
-        filter_var(dataname = "df1", varname = "fact", selected = c("a", "b"), keep_na = FALSE),
-        filter_var(dataname = "df2", varname = "int", selected = c(52, 65), keep_na = FALSE, keep_inf = FALSE)
-      )
-      testthat::expect_warning(datasets$set_filter_state(fs))
-      testthat::expect_warning(datasets$clear_filter_states(datanames = "df1"))
-
-      testthat::expect_null(shiny::isolate(datasets$get_filter_state()))
-    }
-  )
-})
-
-
-testthat::test_that("filter_panel_api under disable/enable filter panel", {
-  shiny::testServer(
-    filtered_data$srv_filter_panel,
-    expr = {
-      filtered_data$filter_panel_disable()
-      datasets <- FilterPanelAPI$new(filtered_data)
-      fs <- filter_settings(
-        filter_var(dataname = "df1", varname = "num", selected = c(5.1, 6.4), keep_na = FALSE, keep_inf = FALSE),
-        filter_var(dataname = "df1", varname = "fact", selected = c("a", "b"), keep_na = FALSE),
-        filter_var(dataname = "df2", varname = "int", selected = c(52, 65), keep_na = FALSE, keep_inf = FALSE)
-      )
-      testthat::expect_warning(datasets$set_filter_state(fs))
-      testthat::expect_warning(datasets$clear_filter_states(datanames = "df1"))
-      filtered_data$filter_panel_enable()
-      datasets$set_filter_state(fs)
-      datasets$clear_filter_states(datanames = "df1")
-
-      testthat::expect_identical(
-        slices_field(shiny::isolate(datasets$get_filter_state()), "dataname"),
-        "df2"
-      )
-    }
-  )
-})
-
-
 
 
 # WRAPPER FUNCTIONS ----

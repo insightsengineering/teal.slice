@@ -623,36 +623,6 @@ FilteredData <- R6::R6Class( # nolint
     },
 
     #' @description
-    #' Disable the filter panel by adding `disable` class to `filter_add_vars`
-    #' and `filter_panel_active_vars` tags in the User Interface.
-    #' In addition, it will store the existing filter states in a private field called `cached_states`
-    #' before removing all filter states from the object.
-    #'
-    filter_panel_disable = function() {
-      private$filter_panel_active <- FALSE
-      fp_id <- self$get_filter_panel_ui_id()
-      shinyjs::disable(paste0(fp_id, "-add"), asis = TRUE)
-      private$cached_states <- self$get_filter_state()
-      self$clear_filter_states()
-      invisible(NULL)
-    },
-
-    #' @description enable the filter panel
-    #' Enable the filter panel by adding `enable` class to `filter_add_vars`
-    #' and `filter_active_vars` tags in the User Interface.
-    #' In addition, it will restore the filter states from a private field called `cached_states`.
-    #'
-    filter_panel_enable = function() {
-      private$filter_panel_active <- TRUE
-      fp_id <- self$get_filter_panel_ui_id()
-      shinyjs::enable(paste0(fp_id, "-add"), asis = TRUE)
-      if (length(private$cached_states) && (length(self$get_filter_state()) == 0)) {
-        self$set_filter_state(private$cached_states)
-      }
-      invisible(NULL)
-    },
-
-    #' @description
     #' Gets the state of filter panel, if activated.
     #'
     get_filter_panel_active = function() {
@@ -838,10 +808,10 @@ FilteredData <- R6::R6Class( # nolint
           eventExpr = input$filter_panel_active,
           handlerExpr = {
             if (isTRUE(input$filter_panel_active)) {
-              self$filter_panel_enable()
+              private$filter_panel_enable()
               logger::log_trace("Enable the Filtered Panel with the filter_panel_enable method")
             } else {
-              self$filter_panel_disable()
+              private$filter_panel_disable()
               logger::log_trace("Disable the Filtered Panel with the filter_panel_enable method")
             }
           }, ignoreNULL = TRUE
@@ -1098,7 +1068,10 @@ FilteredData <- R6::R6Class( # nolint
 
     # reactive i.e. filtered data
     reactive_data = list(),
+
     cached_states = NULL,
+
+    # private methods ----
 
     # @description
     # Gets `FilteredDataset` object which contains all information
@@ -1126,6 +1099,59 @@ FilteredData <- R6::R6Class( # nolint
     # @return `integer(1)`
     get_filter_count = function() {
       length(self$get_filter_state())
+    },
+
+    # @description
+    # Disable the filter panel by adding `disable` class to `filter_add_vars`
+    # and `filter_panel_active_vars` tags in the User Interface.
+    # In addition, it will store the existing filter states in a private field called `cached_states`
+    # before removing all filter states from the object.
+    #
+    filter_panel_disable = function() {
+      private$filter_panel_active <- FALSE
+      fp_id <- self$get_filter_panel_ui_id()
+      shinyjs::disable(paste0(fp_id, "-add"), asis = TRUE)
+      slices <- self$get_filter_state()
+      if (!is.null(slices)) {
+        private$cached_states <- slices
+        for (i in seq_along(slices)) {
+          slices[[i]]$disabled <- TRUE
+        }
+        self$set_filter_state(slices)
+      }
+
+      invisible(NULL)
+    },
+
+    # @description enable the filter panel
+    # Enable the filter panel by adding `enable` class to `filter_add_vars`
+    # and `filter_active_vars` tags in the User Interface.
+    # In addition, it will restore the filter states from a private field called `cached_states`.
+    #
+    filter_panel_enable = function() {
+      private$filter_panel_active <- TRUE
+      fp_id <- self$get_filter_panel_ui_id()
+      shinyjs::enable(paste0(fp_id, "-add"), asis = TRUE)
+      slices <- private$cached_states
+      # If no states were cached, use existing ones.
+      # This is necessary because this method is called on start-up.
+      if (is.null(slices)) {
+        slices <- self$get_filter_state()
+      }
+      # If states were cached, drop ones that don't match current ones.
+      # This is necessary because the user may remove some states while the panel is disabled.
+      if (!is.null(slices)) {
+        slices <-  Filter(
+          function(x) {
+            id_vars <- intersect(names(x), c("dataname", "varname", "varlabel", "target"))
+            any(vapply(self$get_filter_state(), function(y) identical(x[id_vars], y[id_vars]), logical(1L)))
+          },
+          slices
+        )
+        self$set_filter_state(slices)
+      }
+
+      invisible(NULL)
     }
   )
 )
