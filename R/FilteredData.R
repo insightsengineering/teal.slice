@@ -1128,10 +1128,21 @@ FilteredData <- R6::R6Class( # nolint
       fp_id <- self$get_filter_panel_ui_id()
       shinyjs::enable(paste0(fp_id, "-add"), asis = TRUE)
       slices <- private$cached_states
+      # If no states were cached, use existing ones.
+      # This is necessary because this method is called on start-up.
       if (is.null(slices)) {
         slices <- self$get_filter_state()
       }
+      # If states were cached, drop ones that don't match current ones.
+      # This is necessary because the user may remove some states while the panel is disabled.
       if (!is.null(slices)) {
+        slices <-  Filter(
+          function(x) {
+            id_vars <- intersect(names(x), c("dataname", "varname", "varlabel", "target"))
+            any(vapply(self$get_filter_state(), function(y) identical(x[id_vars], y[id_vars]), logical(1L)))
+          },
+          slices
+        )
         self$set_filter_state(slices)
       }
 
