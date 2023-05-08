@@ -21,7 +21,7 @@ FilterStateExpr <- R6::R6Class( # nolint
     #' Initialize a `FilterStateExpr` object
     #' @param id (`character(1)`)\cr
     #'   identifier of the filter
-    #' @param title (`reactive`)\cr
+    #' @param title (`character(1)`)\cr
     #'   title of the filter
     #' @param dataname (`character(1)`)\cr
     #'   name of the dataset where `expr` could be executed on.
@@ -150,8 +150,8 @@ FilterStateExpr <- R6::R6Class( # nolint
     #'
     set_state = function(state) {
       checkmate::assert_class(state, "teal_slice_expr")
-      if (isTRUE(state$disabled) && isFALSE(private$is_disabled())) private$disable()
-      if (isFALSE(state$disabled) && isTRUE(private$is_disabled())) private$enable()
+      if (isTRUE(state$disabled) && isFALSE(private$is_disabled())) private$disabled(TRUE)
+      if (isFALSE(state$disabled) && isTRUE(private$is_disabled())) private$disabled(FALSE)
       invisible(NULL)
     },
 
@@ -199,9 +199,9 @@ FilterStateExpr <- R6::R6Class( # nolint
           # Disable/enable this filter state in response to switch flip.
           private$observers$is_disabled <- observeEvent(input$enable, {
             if (isTRUE(input$enable)) {
-              private$enable()
+              private$disabled(FALSE)
             } else {
-              private$disable()
+              private$disabled(TRUE)
             }
           },
           ignoreInit = TRUE
@@ -292,22 +292,6 @@ FilterStateExpr <- R6::R6Class( # nolint
     observers = list(),
     title = character(0),
 
-    # Disables `FilterState`
-    # `state` is moved to cache and set to `NULL`
-    # @return `NULL` invisibly
-    disable = function() {
-      private$disabled(TRUE)
-      invisible(NULL)
-    },
-
-    # Enables `FilterState`
-    # Cached `state` is reset again and cache is cleared.
-    # @return `NULL` invisibly
-    enable = function() {
-      private$disabled(FALSE)
-      invisible(NULL)
-    },
-
     # Check whether this filter is disabled
     # @return `logical(1)`
     is_disabled = function() {
@@ -317,6 +301,7 @@ FilterStateExpr <- R6::R6Class( # nolint
         shiny::isolate(isTRUE(private$disabled()))
       }
     },
+
     # @description
     # Server module to display filter summary
     # @param id `shiny` id parameter

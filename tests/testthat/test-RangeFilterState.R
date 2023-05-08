@@ -213,8 +213,8 @@ testthat::test_that("is_any_filtered returns TRUE when enabled and FALSE when di
     classname = "testfs",
     inherit = RangeFilterState,
     public = list(
-      disable = function() private$disable(),
-      enable = function() private$enable()
+      disable = function() private$disabled(TRUE),
+      enable = function() private$disabled(FALSE)
     )
   )
   fs <- testfs$new(c(1:10, Inf), dataname = "data", varname = "variable")
@@ -231,8 +231,8 @@ testthat::test_that("is_any_filtered reacts to choices", {
     classname = "testfs",
     inherit = RangeFilterState,
     public = list(
-      disable = function() private$disable(),
-      enable = function() private$enable()
+      disable = function() private$disabled(TRUE),
+      enable = function() private$disabled(FALSE)
     )
   )
   fs <- testfs$new(c(nums, Inf), dataname = "data", varname = "variable", keep_inf = TRUE)

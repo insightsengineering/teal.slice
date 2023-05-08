@@ -228,8 +228,8 @@ testthat::test_that("is_any_filtered returns TRUE when enabled and FLASE when di
     classname = "testfs",
     inherit = DateFilterState,
     public = list(
-      disable = function() private$disable(),
-      enable = function() private$enable()
+      disable = function() private$disabled(TRUE),
+      enable = function() private$disabled(FALSE)
     )
   )
   fs <- testfs$new(dates, dataname = "data", varname = "variable", selected = dates[1:2])
@@ -245,8 +245,8 @@ testthat::test_that("is_any_filtered reacts to choices", {
     classname = "testfs",
     inherit = DateFilterState,
     public = list(
-      disable = function() private$disable(),
-      enable = function() private$enable()
+      disable = function() private$disabled(TRUE),
+      enable = function() private$disabled(FALSE)
     )
   )
   fs <- testfs$new(dates, dataname = "data", varname = "variable")

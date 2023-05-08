@@ -163,8 +163,8 @@ FilterState <- R6::R6Class( # nolint
       checkmate::assert_class(state, "teal_slice")
 
       # Allow for enabling a filter state before altering state.
-      if (isTRUE(state$disabled) && isFALSE(private$is_disabled())) private$disable()
-      if (isFALSE(state$disabled) && isTRUE(private$is_disabled())) private$enable()
+      if (isTRUE(state$disabled) && isFALSE(private$is_disabled())) private$disabled(TRUE)
+      if (isFALSE(state$disabled) && isTRUE(private$is_disabled())) private$disabled(FALSE)
 
       if (private$is_disabled()) {
         mutables <- state[c("selected", "keep_na", "keep_inf")]
@@ -254,9 +254,9 @@ FilterState <- R6::R6Class( # nolint
           # Disable/enable this filter state in response to switch flip.
           private$observers$is_disabled <- observeEvent(input$enable, {
             if (isTRUE(input$enable)) {
-              private$enable()
+              private$disabled(FALSE)
             } else {
-              private$disable()
+              private$disabled(TRUE)
             }
           },
           ignoreInit = TRUE
@@ -600,36 +600,6 @@ FilterState <- R6::R6Class( # nolint
     # @note throws an error if the casting did not execute successfully.
     cast_and_validate = function(values) {
       values
-    },
-
-    # Disables this `FilterState`.
-    #
-    # Sets `disabled` to TRUE. This causes `is_any_filtered` to ignore selection.
-    #
-    # @return `NULL` invisibly
-    disable = function() {
-      logger::log_trace("{ class(self)[1] }$set_state disabling fiter state of variable: { private$varname }")
-
-      private$disabled(TRUE)
-
-      logger::log_trace("{ class(self)[1] }$set_state disabled fiter state of variable: { private$varname }")
-
-      invisible(NULL)
-    },
-
-    # Enables this `FilterState`.
-    #
-    # `disabled` is set to TRUE.
-    #
-    # @return `NULL` invisibly
-    enable = function() {
-      logger::log_trace("{ class(self)[1] }$set_state enabling fiter state of variable: { private$varname }")
-
-      private$disabled(FALSE)
-
-      logger::log_trace("{ class(self)[1] }$set_state enabled state of variable: { private$varname }")
-
-      invisible(NULL)
     },
 
     # Check whether this filter is disabled
