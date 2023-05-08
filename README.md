@@ -1,9 +1,9 @@
 # teal.slice
 
 <!-- start badges -->
-[![Check 🛠](https://github.com/insightsengineering/teal.slice/actions/workflows/check.yaml/badge.svg)](https://github.com/insightsengineering/teal.slice/actions/workflows/check.yaml)
+[![Check 🛠](https://github.com/insightsengineering/teal.slice/actions/workflows/check.yaml/badge.svg)](https://insightsengineering.github.io/teal.slice/main/unit-test-report/)
 [![Docs 📚](https://github.com/insightsengineering/teal.slice/actions/workflows/docs.yaml/badge.svg)](https://insightsengineering.github.io/teal.slice/)
-[![Code Coverage 📔](https://raw.githubusercontent.com/insightsengineering/teal.slice/_xml_coverage_reports/data/main/badge.svg)](https://raw.githubusercontent.com/insightsengineering/teal.slice/_xml_coverage_reports/data/main/coverage.xml)
+[![Code Coverage 📔](https://raw.githubusercontent.com/insightsengineering/teal.slice/_xml_coverage_reports/data/main/badge.svg)](https://insightsengineering.github.io/teal.slice/main/coverage-report/)
 
 ![GitHub forks](https://img.shields.io/github/forks/insightsengineering/teal.slice?style=social)
 ![GitHub Repo stars](https://img.shields.io/github/stars/insightsengineering/teal.slice?style=social)
