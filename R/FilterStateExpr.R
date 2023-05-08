@@ -35,7 +35,7 @@ FilterStateExpr <- R6::R6Class( # nolint
     #'   flag specifying whether the `FilterState` is initiated disabled
     #' @param ... additional arguments to be saved as a list in `private$extras` field
     #' @examples
-    #' filter_state <- FilterStateExpr$new(
+    #' filter_state <- teal.slice:::FilterStateExpr$new(
     #'   id = "FA",
     #'   title = "Adult females",
     #'   dataname = "x",

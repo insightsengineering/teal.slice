@@ -16,7 +16,7 @@ This class is responsible for displaying filter card and returning filter expres
 ## Method `FilterStateExpr$new`
 ## ------------------------------------------------
 
-filter_state <- FilterStateExpr$new(
+filter_state <- teal.slice:::FilterStateExpr$new(
   id = "FA",
   title = "Adult females",
   dataname = "x",
@@ -116,7 +116,7 @@ flag specifying whether the \code{FilterState} is initiated disabled}
 }
 \subsection{Examples}{
 \if{html}{\out{<div class="r example copy">}}
-\preformatted{filter_state <- FilterStateExpr$new(
+\preformatted{filter_state <- teal.slice:::FilterStateExpr$new(
   id = "FA",
   title = "Adult females",
   dataname = "x",

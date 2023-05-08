@@ -29,4 +29,4 @@ This is often useful for as it marks up the dropdown boxes for \code{\link[shiny
 If either \code{choices} or \code{labels} are factors, they are coerced to character.
 Duplicated elements from \code{choices} get removed.
 }
-\keyword{internatl}
+\keyword{internal}
