@@ -477,8 +477,8 @@ ChoicesFilterState <- R6::R6Class( # nolint
               labels <- mapply(
                 FUN = make_count_text,
                 label = private$choices,
-                countmax = private$choices_counts,
-                countnow = countsnow
+                countnow = if (is.null(countsnow)) rep(list(NULL), length(private$choices)) else countsnow,
+                countmax = private$choices_counts
               )
               teal.widgets::updateOptionalSelectInput(
                 session = session,
