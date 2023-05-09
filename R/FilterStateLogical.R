@@ -189,27 +189,6 @@ LogicalFilterState <- R6::R6Class( # nolint
     },
 
     #' @description
-    #' Answers the question of whether the current settings and values selected actually filters out any values.
-    #' @return logical scalar
-    is_any_filtered = function() {
-      if (private$is_disabled()) {
-        FALSE
-      } else if (private$is_choice_limited) {
-        TRUE
-      } else if (!isTRUE(private$get_keep_na()) && private$na_count > 0) {
-        TRUE
-      } else if (all(private$choices_counts > 0)) {
-        TRUE
-      } else if (private$get_selected() == FALSE && private$choices_counts["FALSE"] == 0L) {
-        TRUE
-      } else if (private$get_selected() == TRUE && private$choices_counts["TRUE"] == 0L) {
-        TRUE
-      } else {
-        FALSE
-      }
-    },
-
-    #' @description
     #' Returns reproducible condition call for current selection.
     #' For `LogicalFilterState` it's a `!<varname>` or `<varname>` and optionally
     #' `is.na(<varname>)`
@@ -217,6 +196,7 @@ LogicalFilterState <- R6::R6Class( # nolint
     #' @return (`call`)
     #'
     get_call = function(dataname) {
+      if (isFALSE(private$is_any_filtered())) return(NULL)
       if (missing(dataname)) dataname <- private$dataname
       filter_call <-
         if (private$get_selected()) {
@@ -269,6 +249,26 @@ LogicalFilterState <- R6::R6Class( # nolint
         error = function(cond) stop("The array of set values must contain values coercible to logical.")
       )
       values_logical
+    },
+
+    # Answers the question of whether the current settings and values selected actually filters out any values.
+    # @return logical scalar
+    is_any_filtered = function() {
+      if (private$is_disabled()) {
+        FALSE
+      } else if (private$is_choice_limited) {
+        TRUE
+      } else if (!isTRUE(private$get_keep_na()) && private$na_count > 0) {
+        TRUE
+      } else if (all(private$choices_counts > 0)) {
+        TRUE
+      } else if (private$get_selected() == FALSE && private$choices_counts["FALSE"] == 0L) {
+        TRUE
+      } else if (private$get_selected() == TRUE && private$choices_counts["TRUE"] == 0L) {
+        TRUE
+      } else {
+        FALSE
+      }
     },
 
     # shiny modules ----

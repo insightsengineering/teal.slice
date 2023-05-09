@@ -68,17 +68,7 @@ testthat::test_that("get_call returns call identical to one passed in the constr
   testthat::expect_identical(shiny::isolate(state$get_call()), quote(x == "x"))
 })
 
-testthat::test_that("is_any_filtered returns TRUE by default (when disabled = FALSE)", {
-  state <- FilterStateExpr$new(
-    dataname = "x",
-    id = "id",
-    title = "testtitle",
-    expr = quote(x == "x")
-  )
-  testthat::expect_true(shiny::isolate(state$is_any_filtered()))
-})
-
-testthat::test_that("disabled sets is_any_filtered to FALSE", {
+testthat::test_that("get_call returns NULL when disabled", {
   state <- FilterStateExpr$new(
     dataname = "x",
     id = "id",
@@ -86,9 +76,8 @@ testthat::test_that("disabled sets is_any_filtered to FALSE", {
     expr = quote(x == "x"),
     disabled = TRUE
   )
-  testthat::expect_false(shiny::isolate(state$is_any_filtered()))
+  testthat::expect_null(shiny::isolate(state$get_call()))
 })
-
 
 # set/get_state -----
 testthat::test_that("get_state returns list of state values", {

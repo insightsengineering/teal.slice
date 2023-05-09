@@ -77,12 +77,15 @@ testthat::test_that("set_state: selected accepts vector of two POSIXct objects o
   testthat::expect_no_error(
     filter_state$set_state(filter_var(dataname = "data", varname = "variable", selected = posixct[1:2]))
   )
+  testthat::expect_no_error(
+    filter_state$set_state(filter_var(dataname = "data", varname = "variable", selected = as.integer(posixct[1:2])))
+  )
   testthat::expect_error(
     filter_state$set_state(filter_var(dataname = "data", varname = "variable", selected = posixct[1])),
     "The array of set values must have length two"
   )
   testthat::expect_error(
-    filter_state$set_state(filter_var(dataname = "data", varname = "variable", selected = 1:2)),
+    filter_state$set_state(filter_var(dataname = "data", varname = "variable", selected = c("a", "b"))),
     "The array of set values must contain values coercible to POSIX"
   )
 })
@@ -139,81 +142,95 @@ testthat::test_that("set_state: selected raises error when selection is not a Da
 
 
 # get_call ----
-testthat::test_that("get_call returns call that encompasses all values passed to constructor", {
+testthat::test_that("get_call method of default DatetimeFilterState object returns NULL", {
   filter_state <- DatetimeFilterState$new(posixct, dataname = "data", varname = "variable")
+  testthat::expect_null(shiny::isolate(filter_state$get_call()))
+})
+
+testthat::test_that("get_call returns call selected different than choices", {
+  filter_state <- DatetimeFilterState$new(posixct, dataname = "data", varname = "variable", selected = posixct[c(1, 3)])
   testthat::expect_identical(
     shiny::isolate(filter_state$get_call()),
-    quote(variable >= as.POSIXct("2000-01-01 12:00:00", tz = "GMT") & variable <
-      as.POSIXct("2000-01-01 12:00:10", tz = "GMT"))
+    quote(
+      variable >= as.POSIXct("2000-01-01 12:00:00", tz = "GMT") &
+      variable < as.POSIXct("2000-01-01 12:00:03", tz = "GMT")
+    )
   )
 })
 
-testthat::test_that("get_call returns a condition true for the object in the selected range", {
-  filter_state <- DatetimeFilterState$new(posixct, dataname = "data", varname = "variable")
-  filter_state$set_state(filter_var(dataname = "data", varname = "variable", selected = posixct[2:3]))
-  variable <- posixct[1:4]
-  testthat::expect_equal(
-    eval(shiny::isolate(filter_state$get_call())),
-    c(FALSE, TRUE, TRUE, FALSE)
+testthat::test_that("get_call returns NULL if disabled", {
+  filter_state <- DatetimeFilterState$new(
+    posixct, dataname = "data", varname = "variable", selected = posixct[c(1, 3)], disabled = TRUE
   )
-  testthat::expect_equal(
+  testthat::expect_null(shiny::isolate(filter_state$get_call()))
+})
+
+testthat::test_that("get_call returns call always if choices are limited - regardless of selected", {
+  filter_state <- DatetimeFilterState$new(
+    posixct, dataname = "data", varname = "variable",
+    choices = posixct[c(1, 3)], selected = posixct[c(1, 3)]
+  )
+  testthat::expect_identical(
     shiny::isolate(filter_state$get_call()),
     quote(
-      variable >= as.POSIXct("2000-01-01 12:00:01", tz = "GMT") & variable <
-        as.POSIXct("2000-01-01 12:00:03", tz = "GMT")
+      variable >= as.POSIXct("2000-01-01 12:00:00", tz = "GMT") &
+      variable < as.POSIXct("2000-01-01 12:00:03", tz = "GMT")
     )
   )
 })
 
-testthat::test_that("get_call returns a condition evaluating to TRUE for NA values is keep_na is TRUE", {
-  variable <- c(posixct, NA)
+testthat::test_that("get_call prefixes varname by dataname$varname if extract_type='list'", {
   filter_state <- DatetimeFilterState$new(
-    variable,
-    dataname = "data", varname = "variable"
+    posixct, dataname = "data", varname = "variable", selected = posixct[c(1, 3)], extract_type = "list"
   )
-  testthat::expect_identical(eval(shiny::isolate(filter_state$get_call()))[11], TRUE)
-  filter_state$set_state(filter_var(dataname = "data", varname = "variable", keep_na = FALSE))
-  testthat::expect_identical(eval(shiny::isolate(filter_state$get_call()))[11], NA)
+  testthat::expect_identical(
+    shiny::isolate(filter_state$get_call(dataname = "dataname")),
+    quote(
+      dataname$variable >= as.POSIXct("2000-01-01 12:00:00", tz = "GMT") &
+      dataname$variable < as.POSIXct("2000-01-01 12:00:03", tz = "GMT")
+    )
+  )
 })
 
-
-testthat::test_that("get_call preserves timezone of ISO object passed to constructor", {
-  variable <- ISOdate(2021, 8, 25, tz = "Australia/Brisbane")
+testthat::test_that("get_call prefixes varname by dataname[, 'varname'] if extract_type='matrix'", {
   filter_state <- DatetimeFilterState$new(
-    variable,
-    dataname = "data", varname = "variable"
+    posixct, dataname = "data", varname = "variable", selected = posixct[c(1, 3)], extract_type = "matrix"
   )
-  testthat::expect_equal(
+  testthat::expect_identical(
+    shiny::isolate(filter_state$get_call(dataname = "dataname")),
+    quote(
+      dataname[, "variable"] >= as.POSIXct("2000-01-01 12:00:00", tz = "GMT") &
+      dataname[, "variable"] < as.POSIXct("2000-01-01 12:00:03", tz = "GMT")
+    )
+  )
+})
+
+testthat::test_that("get_call adds is.na(variable) to returned call if keep_na is true", {
+  filter_state <- DatetimeFilterState$new(
+    c(posixct, NA), dataname = "data", varname = "variable", selected = posixct[c(1, 3)], keep_na = TRUE
+  )
+  testthat::expect_identical(
     shiny::isolate(filter_state$get_call()),
     quote(
-      variable >= as.POSIXct("2021-08-25 12:00:00", tz = "Australia/Brisbane") &
-        variable < as.POSIXct("2021-08-25 12:00:01", tz = "Australia/Brisbane")
+      is.na(variable) |
+      variable >= as.POSIXct("2000-01-01 12:00:00", tz = "GMT") &
+      variable < as.POSIXct("2000-01-01 12:00:03", tz = "GMT")
     )
   )
 })
 
-
-testthat::test_that("is_any_filtered works properly when NA is present in data",
-  code = {
-    filter_state <- teal.slice:::DatetimeFilterState$new(
-      x = c(posixct, NA),
-      x_reactive = reactive(NULL),
-      varname = "variable",
-      dataname = "data",
-      extract_type = character(0)
+testthat::test_that("get_call returns call if all selected but NA exists", {
+  filter_state <- DatetimeFilterState$new(
+    c(posixct, NA), dataname = "data", varname = "variable", keep_na = FALSE
+  )
+  testthat::expect_identical(
+    shiny::isolate(filter_state$get_call()),
+    quote(
+      variable >= as.POSIXct("2000-01-01 13:00:00", tz = "CET") &
+      variable < as.POSIXct("2000-01-01 13:00:10", tz = "CET")
     )
-
-    shiny::isolate(filter_state$set_state(filter_var(keep_na = FALSE, varname = "variable", dataname = "data")))
-    testthat::expect_true(
-      shiny::isolate(filter_state$is_any_filtered())
-    )
-
-    shiny::isolate(filter_state$set_state(filter_var(keep_na = TRUE, varname = "variable", dataname = "data")))
-    testthat::expect_false(
-      shiny::isolate(filter_state$is_any_filtered())
-    )
-  }
-)
+  )
+})
 
 # format ----
 testthat::test_that("format accepts numeric as indent", {
@@ -253,53 +270,4 @@ testthat::test_that("format prepends spaces to every line of the returned string
       )
     )
   }
-})
-
-# is_any_filtered ----
-testthat::test_that("is_any_filtered works properly when NA is present in data", {
-  filter_state <- teal.slice:::DatetimeFilterState$new(c(posixct, NA), varname = "variable", dataname = "data")
-
-  shiny::isolate(filter_state$set_state(filter_var(varname = "variable", dataname = "data", keep_na = FALSE)))
-  testthat::expect_true(shiny::isolate(filter_state$is_any_filtered()))
-
-  shiny::isolate(filter_state$set_state(filter_var(varname = "variable", dataname = "data", keep_na = TRUE)))
-  testthat::expect_false(shiny::isolate(filter_state$is_any_filtered()))
-
-  shiny::isolate(filter_state$set_state(
-    filter_var(varname = "variable", dataname = "data", selected = c(posixct[2], posixct[10]))
-  ))
-  testthat::expect_true(shiny::isolate(filter_state$is_any_filtered()))
-})
-
-testthat::test_that("is_any_filtered returns TRUE when enabled and FALSE when disabled", {
-  testfs <- R6::R6Class(
-    classname = "testfs",
-    inherit = DatetimeFilterState,
-    public = list(
-      disable = function() private$disabled(TRUE),
-      enable = function() private$disabled(FALSE)
-    )
-  )
-  fs <- testfs$new(posixct, dataname = "data", varname = "variable")
-  fs$set_state(filter_var(dataname = "data", varname = "variable", selected = posixct[1:2], keep_na = TRUE))
-  testthat::expect_true(shiny::isolate(fs$is_any_filtered()))
-  shiny::isolate(fs$disable())
-  testthat::expect_false(shiny::isolate(fs$is_any_filtered()))
-  shiny::isolate(fs$enable())
-  testthat::expect_true(shiny::isolate(fs$is_any_filtered()))
-})
-
-testthat::test_that("is_any_filtered reacts to choices", {
-  testfs <- R6::R6Class(
-    classname = "testfs",
-    inherit = DatetimeFilterState,
-    public = list(
-      disable = function() private$disabled(TRUE),
-      enable = function() private$disabled(FALSE)
-    )
-  )
-  fs <- testfs$new(posixct, dataname = "data", varname = "variable")
-  testthat::expect_false(shiny::isolate(fs$is_any_filtered()))
-  fs <- testfs$new(posixct, dataname = "data", varname = "variable", choices = posixct[c(1, 3)])
-  testthat::expect_true(shiny::isolate(fs$is_any_filtered()))
 })

@@ -706,13 +706,19 @@ testthat::test_that("filter_panel_disable/enable disables and restores all filte
         c(FALSE, TRUE)
       )
 
-      filtered_data$filter_panel_disable()
+      testthat::expect_output(
+        filtered_data$filter_panel_disable(),
+        "WARN.+attempt to set state on disabled filter"
+      )
       testthat::expect_identical(
         slices_field(shiny::isolate(filtered_data$get_filter_state()), "disabled"),
         TRUE
       )
 
-      filtered_data$filter_panel_enable()
+      testthat::expect_output(
+        filtered_data$filter_panel_enable(),
+        "WARN.+attempt to set state on disabled filter"
+      )
       testthat::expect_identical(
         slices_field(shiny::isolate(filtered_data$get_filter_state()), "disabled"),
         c(FALSE, TRUE)
@@ -740,7 +746,10 @@ testthat::test_that("switching disable/enable button caches and restores state",
     expr = {
       cached <- filtered_data$get_filter_state()
       testthat::expect_true(filtered_data$get_filter_panel_active())
-      session$setInputs(filter_panel_active = FALSE)
+      testthat::expect_output(
+        session$setInputs(filter_panel_active = FALSE),
+        "WARN.+attempt to set state on disabled"
+      )
       testthat::expect_false(filtered_data$get_filter_panel_active())
       session$setInputs(filter_panel_active = TRUE)
       testthat::expect_true(filtered_data$get_filter_panel_active())

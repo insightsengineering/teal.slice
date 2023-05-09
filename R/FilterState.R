@@ -612,6 +612,23 @@ FilterState <- R6::R6Class( # nolint
       }
     },
 
+    #' @description
+    #' Answers the question of whether the current settings and values selected actually filters out any values.
+    #' @return logical scalar
+    is_any_filtered = function() {
+      if (private$is_disabled()) {
+        FALSE
+      } else if (private$is_choice_limited) {
+        TRUE
+      } else if (!setequal(private$get_selected(), private$choices)) {
+        TRUE
+      } else if (!isTRUE(private$get_keep_na()) && private$na_count > 0) {
+        TRUE
+      } else {
+        FALSE
+      }
+    },
+
     # shiny modules -----
 
     # @description

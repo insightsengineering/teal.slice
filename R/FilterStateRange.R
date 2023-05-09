@@ -212,25 +212,6 @@ RangeFilterState <- R6::R6Class( # nolint
     },
 
     #' @description
-    #' Answers the question of whether the current settings and values selected actually filters out any values.
-    #' @return logical scalar
-    is_any_filtered = function() {
-      if (private$is_disabled()) {
-        FALSE
-      } else if (private$is_choice_limited) {
-        TRUE
-      } else if (!isTRUE(all.equal(private$get_selected(), private$choices))) {
-        TRUE
-      } else if (!isTRUE(private$get_keep_inf()) && private$inf_count > 0) {
-        TRUE
-      } else if (!isTRUE(private$get_keep_na()) && private$na_count > 0) {
-        TRUE
-      } else {
-        FALSE
-      }
-    },
-
-    #' @description
     #' Returns reproducible condition call for current selection.
     #' For this class returned call looks like
     #' `<varname> >= <min value> & <varname> <= <max value>` with
@@ -239,6 +220,7 @@ RangeFilterState <- R6::R6Class( # nolint
     #' @return (`call`)
     #'
     get_call = function(dataname) {
+      if (isFALSE(private$is_any_filtered())) return(NULL)
       if (missing(dataname)) dataname <- private$dataname
       filter_call <-
         call(
@@ -382,6 +364,24 @@ RangeFilterState <- R6::R6Class( # nolint
     # for numeric ranges selecting out of bound values is allowed
     remove_out_of_bound_values = function(values) {
       values
+    },
+
+    # Answers the question of whether the current settings and values selected actually filters out any values.
+    # @return logical scalar
+    is_any_filtered = function() {
+      if (private$is_disabled()) {
+        FALSE
+      } else if (private$is_choice_limited) {
+        TRUE
+      } else if (!isTRUE(all.equal(private$get_selected(), private$choices))) {
+        TRUE
+      } else if (!isTRUE(private$get_keep_inf()) && private$inf_count > 0) {
+        TRUE
+      } else if (!isTRUE(private$get_keep_na()) && private$na_count > 0) {
+        TRUE
+      } else {
+        FALSE
+      }
     },
 
     # shiny modules ----

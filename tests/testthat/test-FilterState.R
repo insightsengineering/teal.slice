@@ -109,7 +109,7 @@ testthat::test_that("set_state cannot set mutable fields in a fixed FilterState"
     keep_inf = FALSE,
     disabled = FALSE
   )
-  filter_state$set_state(new_state)
+  testthat::expect_output(filter_state$set_state(new_state), "WARN.+attempt to set state on fixed filter")
   testthat::expect_identical(shiny::isolate(filter_state$get_state()), old_state)
 })
 
@@ -125,7 +125,10 @@ testthat::test_that("set_state cannot set mutable fields in a disabled FilterSta
     keep_inf = FALSE,
     disabled = TRUE
   )
-  shiny::isolate(filter_state$set_state(new_state))
+  testthat::expect_output(
+    shiny::isolate(filter_state$set_state(new_state)),
+    "WARN.+attempt to set state on disabled filter"
+  )
   testthat::expect_identical(shiny::isolate(filter_state$get_state()), old_state)
 })
 

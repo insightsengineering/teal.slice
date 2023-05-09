@@ -166,19 +166,8 @@ FilterStateExpr <- R6::R6Class( # nolint
     #' and must be executed in reactive or isolated context.
     #' @return `language`
     get_call = function(dataname) {
+      if (isTRUE(private$is_disabled())) return(NULL)
       private$expr
-    },
-
-    #' @description
-    #' Answers the question of whether the current settings and values selected actually filters out any values.
-    #' `FALSE` only when disabled.
-    #' @return logical scalar
-    is_any_filtered = function() {
-      if (isTRUE(private$is_disabled())) {
-        FALSE
-      } else {
-        TRUE
-      }
     },
 
     #' @description

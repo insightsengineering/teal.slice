@@ -144,16 +144,18 @@ FilterStates <- R6::R6Class( # nolint
         INDEX = args,
         simplify = FALSE,
         function(items) {
-          # removing empty filters and filters identified by sid
-          nonempty_filter_idx <- vapply(items, function(x) x$is_any_filtered(), logical(1L))
+          # removing filters identified by sid
           other_filter_idx <- !names(items) %in% sid
-          filtered_items <- items[nonempty_filter_idx & other_filter_idx]
+          filtered_items <- items[other_filter_idx]
 
-          calls <- lapply(
-            filtered_items,
-            function(state) {
-              state$get_call(dataname = private$dataname_prefixed)
-            }
+          calls <- Filter(
+            Negate(is.null),
+            lapply(
+              filtered_items,
+              function(state) {
+                state$get_call(dataname = private$dataname_prefixed)
+              }
+            )
           )
           calls_combine_by(calls, operator = "&")
         }
