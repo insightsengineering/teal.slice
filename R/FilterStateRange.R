@@ -393,16 +393,46 @@ RangeFilterState <- R6::R6Class( # nolint
     #  id of shiny element
     ui_inputs = function(id) {
       ns <- NS(id)
-      div(
-        class = "choices_state",
-        div(
-          class = "filterPlotOverlayRange",
-          plotOutput(ns("plot"), height = "100%"),
+
+      tagList(
+        shinyWidgets::switchInput(
+          ns("manual"),
+          label = "Enter manually",
+          size = "small",
+          labelWidth = "100px",
+          onLabel = "Yes",
+          offLabel = "No",
+          onStatus = "info",
+          offStatus = "info"
         ),
-        div(
-          class = "filterRangeSlider",
-          teal.widgets::optionalSliderInput(
-            inputId = ns("selection"),
+        conditionalPanel(
+          ns = ns,
+          condition = "input.manual === false",
+          div(
+            class = "choices_state",
+            div(
+              class = "filterPlotOverlayRange",
+              plotOutput(ns("plot"), height = "100%"),
+            ),
+            div(
+              class = "filterRangeSlider",
+              teal.widgets::optionalSliderInput(
+                inputId = ns("selection"),
+                label = NULL,
+                min = private$choices[1L],
+                max = private$choices[2L],
+                value = shiny::isolate(private$selected()),
+                step = private$slider_step,
+                width = "100%"
+              )
+            )
+          )
+        ),
+        conditionalPanel(
+          ns = ns,
+          condition = "input.manual === true",
+          shinyWidgets::numericRangeInput(
+            inputId = ns("selection_manual"),
             label = NULL,
             min = private$choices[1L],
             max = private$choices[2L],
@@ -411,8 +441,11 @@ RangeFilterState <- R6::R6Class( # nolint
             width = "100%"
           )
         ),
-        private$keep_inf_ui(ns("keep_inf")),
-        private$keep_na_ui(ns("keep_na"))
+        div(
+          class = "filter-card-body-keep-na-inf",
+          private$keep_inf_ui(ns("keep_inf")),
+          private$keep_na_ui(ns("keep_na"))
+        )
       )
     },
 
@@ -493,6 +526,74 @@ RangeFilterState <- R6::R6Class( # nolint
               }
             }
           )
+          
+          private$observers$selection_manual <- observeEvent(
+            ignoreNULL = FALSE,
+            ignoreInit = TRUE,
+            eventExpr = input$selection_manual,
+            handlerExpr = {
+              # 3 separate checks are required here to prevent errors
+              #
+              # if the user sets either input to 'e' it will return NA
+              # this NA would cause the lower > upper check to return NA
+              #  and the if(lower > upper) check would throw an error
+              #
+              # if lower > manual, contain_interval() will error because it
+              #  expects it's input to be sorted
+              if (any(is.na(input$selection_manual))) {
+                showNotification(
+                  "Numeric range values must be numbers.",
+                  type = "warning"
+                )
+                shinyWidgets::updateNumericRangeInput(
+                  session = session,
+                  inputId = "selection_manual",
+                  value = private$get_selected()
+                )
+                return(NULL)
+              }
+              if (input$selection_manual[1] > input$selection_manual[2]) {
+                showNotification(
+                  "Numeric range start value must be less than end value.",
+                  type = "warning"
+                )
+                shinyWidgets::updateNumericRangeInput(
+                  session = session,
+                  inputId = "selection_manual",
+                  value = private$get_selected()
+                )
+                return(NULL)
+              }
+              # all.equal not enough here b/c tolerance
+              # all.equal(0.000000001, 0) is TRUE
+              out_of_range <- isFALSE(identical(
+                input$selection_manual,
+                contain_interval(input$selection_manual, private$slider_ticks)
+              ))
+              if (out_of_range) {
+                showNotification(
+                  "Numeric range values should correspond to slider values.",
+                  type = "warning"
+                )
+                shinyWidgets::updateNumericRangeInput(
+                  session = session,
+                  inputId = "selection_manual",
+                  value = private$get_selected()
+                )
+                return(NULL)
+              }
+              logger::log_trace(
+                sprintf(
+                  "RangeFilterState$server@3 selection of variable %s changed, dataname: %s",
+                  private$varname,
+                  private$dataname
+                )
+              )
+              if (!isTRUE(all.equal(input$selection_manual, private$get_selected()))) {
+                private$set_selected(input$selection_manual)
+              }
+            }
+          )
 
           private$keep_inf_srv("keep_inf")
           private$keep_na_srv("keep_na")
@@ -503,6 +604,10 @@ RangeFilterState <- R6::R6Class( # nolint
               condition = !private$is_disabled()
             )
             shinyjs::toggleState(
+              id = "selection_manual",
+              condition = !private$is_disabled()
+            )
+            shinyjs::toggleState(
               id = "keep_na-value",
               condition = !private$is_disabled()
             )
@@ -510,7 +615,33 @@ RangeFilterState <- R6::R6Class( # nolint
               id = "keep_inf-value",
               condition = !private$is_disabled()
             )
+            shinyWidgets::updateSwitchInput(
+              session = session,
+              inputId = "manual",
+              disabled = private$is_disabled()
+            )
           })
+          
+          observeEvent(input$manual,
+            {
+              if (input$manual) {
+                private$set_selected(input$selection)
+                shinyWidgets::updateNumericRangeInput(
+                  session = session,
+                  inputId = "selection_manual",
+                  value = input$selection
+                )
+              } else {
+                private$set_selected(input$selection_manual)
+                updateSliderInput(
+                  session = session,
+                  inputId = "selection",
+                  value = input$selection_manual
+                )
+              }
+            },
+            ignoreInit = TRUE
+          )
 
           logger::log_trace("RangeFilterState$server initialized, dataname: { private$dataname }")
           NULL

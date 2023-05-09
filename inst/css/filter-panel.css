@@ -323,6 +323,11 @@ a.remove_all:hover {
   padding: 5px 10px;
 }
 
+.filter-card-body-keep-na-inf {
+  display: flex;
+  justify-content: space-evenly;
+}
+
 .progress.state-count-container {
   height: 1.75em;
   width: 90%;
