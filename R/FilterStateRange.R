@@ -548,7 +548,7 @@ RangeFilterState <- R6::R6Class( # nolint
                 shinyWidgets::updateNumericRangeInput(
                   session = session,
                   inputId = "selection_manual",
-                  value = self$get_selected()
+                  value = private$get_selected()
                 )
                 return(NULL)
               }
@@ -560,7 +560,7 @@ RangeFilterState <- R6::R6Class( # nolint
                 shinyWidgets::updateNumericRangeInput(
                   session = session,
                   inputId = "selection_manual",
-                  value = self$get_selected()
+                  value = private$get_selected()
                 )
                 return(NULL)
               }
