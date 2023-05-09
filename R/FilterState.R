@@ -119,6 +119,7 @@ FilterState <- R6::R6Class( # nolint
       private$fixed <- fixed
       private$disabled <- reactiveVal(disabled)
       private$extras <- list(...)
+      private$disabled_global <- reactiveVal(FALSE)
       # Set extract type.
       private$extract_type <- extract_type
       # Obtain variable label.
@@ -163,8 +164,8 @@ FilterState <- R6::R6Class( # nolint
       checkmate::assert_class(state, "teal_slice")
 
       # Allow for enabling a filter state before altering state.
-      if (isTRUE(state$disabled) && isFALSE(private$is_disabled())) private$disable()
-      if (isFALSE(state$disabled) && isTRUE(private$is_disabled())) private$enable()
+      if (isTRUE(state$disabled) && isFALSE(private$is_disabled_global())) private$disable_global()
+      if (isFALSE(state$disabled) && isTRUE(private$is_disabled_global())) private$enable_global()
 
       if (private$is_disabled()) {
         mutables <- state[c("selected", "keep_na", "keep_inf")]
@@ -252,15 +253,14 @@ FilterState <- R6::R6Class( # nolint
           }
 
           # Disable/enable this filter state in response to switch flip.
-          private$observers$is_disabled <- observeEvent(input$enable,
-            {
-              if (isTRUE(input$enable)) {
-                private$enable()
-              } else {
-                private$disable()
-              }
-            },
-            ignoreInit = TRUE
+          private$observers$is_disabled <- observeEvent(input$enable, {
+            if (isTRUE(input$enable)) {
+              private$enable()
+            } else {
+              private$disable()
+            }
+          },
+          ignoreInit = TRUE
           )
 
           # Update disable switch according to disabled state.
@@ -271,6 +271,15 @@ FilterState <- R6::R6Class( # nolint
             }
             if (isFALSE(private$is_disabled())) {
               shinyWidgets::updateSwitchInput(inputId = "enable", value = TRUE)
+            }
+          })
+
+          private$observers$is_disabled_global <- observeEvent(private$is_disabled_global(), {
+            if (isTRUE(private$is_disabled_global())) {
+              shinyjs::disable(id = "enable")
+            }
+            if (isFALSE(private$is_disabled_global())) {
+              shinyjs::enable(id = "enable")
             }
           })
 
@@ -376,6 +385,7 @@ FilterState <- R6::R6Class( # nolint
     keep_inf = NULL, # reactiveVal holding a logical(1)
     fixed = logical(0), # logical flag whether this filter state is fixed/locked
     disabled = NULL, # reactiveVal holding a logical(1)
+    disabled_global = NULL, # reactiveVal holding a logical(1)
     extras = list(), # additional information passed in teal_slice (product of filter_var)
     ##
     # other
@@ -618,6 +628,12 @@ FilterState <- R6::R6Class( # nolint
       invisible(NULL)
     },
 
+    disable_global = function() {
+      private$disable()
+      private$disabled_global(TRUE)
+      invisible(NULL)
+    },
+
     # Enables this `FilterState`.
     #
     # `disabled` is set to TRUE.
@@ -632,6 +648,11 @@ FilterState <- R6::R6Class( # nolint
 
       invisible(NULL)
     },
+    enable_global = function() {
+      private$enable()
+      private$disabled_global(FALSE)
+      invisible(NULL)
+    },
 
     # Check whether this filter is disabled
     # @return `logical(1)`
@@ -640,6 +661,13 @@ FilterState <- R6::R6Class( # nolint
         private$disabled()
       } else {
         shiny::isolate(private$disabled())
+      }
+    },
+    is_disabled_global = function() {
+      if (shiny::isRunning()) {
+        private$disabled_global()
+      } else {
+        shiny::isolate(private$disabled_global())
       }
     },
 
