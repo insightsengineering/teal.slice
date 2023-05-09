@@ -161,18 +161,19 @@ FilterState <- R6::R6Class( # nolint
     #'
     set_state = function(state) {
       checkmate::assert_class(state, "teal_slice")
-      if (private$fixed) {
-        logger::log_warn("attempt to set state on fixed filter aborted: { private$dataname } { private$varname }")
-      } else {
-        # Allow for enabling a filter state before altering state.
-        if (isTRUE(state$disabled) && isFALSE(private$is_disabled())) private$disable()
-        if (isFALSE(state$disabled) && isTRUE(private$is_disabled())) private$enable()
 
-        if (private$is_disabled()) {
-          mutables <- state[c("selected", "keep_na", "keep_inf")]
-          if (any(!vapply(mutables, is.null, logical(1L)))) {
-            logger::log_warn("attempt to set state on disabled filter aborted: { private$dataname } { private$varname }")
-          }
+      # Allow for enabling a filter state before altering state.
+      if (isTRUE(state$disabled) && isFALSE(private$is_disabled())) private$disable()
+      if (isFALSE(state$disabled) && isTRUE(private$is_disabled())) private$enable()
+
+      if (private$is_disabled()) {
+        mutables <- state[c("selected", "keep_na", "keep_inf")]
+        if (any(!vapply(mutables, is.null, logical(1L)))) {
+          logger::log_warn("attempt to set state on disabled filter aborted: { private$dataname } { private$varname }")
+        }
+      } else {
+        if (private$fixed) {
+          logger::log_warn("attempt to set state on fixed filter aborted: { private$dataname } { private$varname }")
         } else {
           logger::log_trace("{ class(self)[1] }$set_state setting state of variable: { private$varname }")
           if (!is.null(state$selected)) {
@@ -191,7 +192,6 @@ FilterState <- R6::R6Class( # nolint
             shiny::isolate(private$get_keep_na()),
             shiny::isolate(private$get_keep_inf())
           )
-
           logger::log_trace("state of variable: { private$varname } set to: { current_state }")
         }
       }
@@ -251,7 +251,8 @@ FilterState <- R6::R6Class( # nolint
             private$server_inputs("inputs")
           }
 
-          observeEvent(input$enable,
+          # Disable/enable this filter state in response to switch flip.
+          private$observers$is_disabled <- observeEvent(input$enable,
             {
               if (isTRUE(input$enable)) {
                 private$enable()
@@ -261,6 +262,18 @@ FilterState <- R6::R6Class( # nolint
             },
             ignoreInit = TRUE
           )
+
+          # Update disable switch according to disabled state.
+          # This is necessary to react to the global disable action.
+          private$observers$is_disabled <- observeEvent(private$is_disabled(), {
+            if (isTRUE(private$is_disabled())) {
+              shinyWidgets::updateSwitchInput(inputId = "enable", value = FALSE)
+            }
+            if (isFALSE(private$is_disabled())) {
+              shinyWidgets::updateSwitchInput(inputId = "enable", value = TRUE)
+            }
+          })
+
           reactive(input$remove) # back to parent to remove self
         }
       )
@@ -369,7 +382,6 @@ FilterState <- R6::R6Class( # nolint
     is_choice_limited = FALSE, # flag whether number of possible choices was limited when specifying filter
     na_rm = FALSE, # logical(1)
     observers = NULL, # stores observers
-    cache = NULL, # cache state when filter disabled so we can later restore
 
     # private methods ----
 
@@ -593,17 +605,12 @@ FilterState <- R6::R6Class( # nolint
 
     # Disables this `FilterState`.
     #
-    # Filter state properties are packed into a `teal_slice` and saved in cache (private field).
-    # State properties that refer to selection are set to NULL.
+    # Sets `disabled` to TRUE. This causes `is_any_filtered` to ignore selection.
     #
     # @return `NULL` invisibly
     disable = function() {
       logger::log_trace("{ class(self)[1] }$set_state disabling fiter state of variable: { private$varname }")
 
-      private$cache_state()
-      private$selected(NULL)
-      private$keep_na(NULL)
-      private$keep_inf(NULL)
       private$disabled(TRUE)
 
       logger::log_trace("{ class(self)[1] }$set_state disabled fiter state of variable: { private$varname }")
@@ -613,65 +620,15 @@ FilterState <- R6::R6Class( # nolint
 
     # Enables this `FilterState`.
     #
-    # Cached state is restored and filter state is enabled. This is done regardless of fixed state.
+    # `disabled` is set to TRUE.
     #
     # @return `NULL` invisibly
     enable = function() {
       logger::log_trace("{ class(self)[1] }$set_state enabling fiter state of variable: { private$varname }")
-      if (is.null(private$cache)) {
-        logger::log_warn("attempt to restore state failed (cache empty): { private$dataname } { private$varname }")
-      } else {
-        private$restore_state()
-        private$disabled(FALSE)
 
-        logger::log_trace("{ class(self)[1] }$set_state enabled state of variable: { private$varname }")
-      }
-      invisible(NULL)
-    },
+      private$disabled(FALSE)
 
-    # Cache state of a filter
-    #
-    # Called when filter state is disabled, whether by its own switch, or the global one.
-    # Having separate methods to cache and restore allows to manipulate
-    # state independently of disabled status and thus cache and restore a disabled state.
-    # It also allows for modifying mutable fields in a fixed state, which is forbidden to set_state.
-    #
-    # @return `NULL` invisibly.
-    cache_state = function() {
-      logger::log_trace("{ class(self)[1] }$set_state caching state of variable: { private$varname }")
-
-      private$cache <- self$get_state()
-
-      logger::log_trace("{ class(self)[1] }$set_state cached state of variable: { private$varname }")
-
-      invisible(NULL)
-    },
-
-    # Restore state of a filter
-    #
-    # Called when filter state is disabled, whether by its own switch, or the global one.
-    # Having separate methods to cache and restore allows to manipulate
-    # state independently of disabled status and thus cache and restore a disabled state.
-    # It also allows for modifying mutable fields in a fixed state, which is forbidden to set_state.
-    #
-    # @return `NULL` invisibly.
-    restore_state = function() {
-      logger::log_trace("{ class(self)[1] }$set_state restoring state of variable: { private$varname }")
-
-      state <- private$cache
-      private$cache <- NULL
-      private$set_selected(state$selected)
-      if (!is.null(state$selected)) {
-        private$set_selected(state$selected)
-      }
-      if (!is.null(state$keep_na)) {
-        private$set_keep_na(state$keep_na)
-      }
-      if (!is.null(state$keep_inf)) {
-        private$set_keep_inf(state$keep_inf)
-      }
-
-      logger::log_trace("{ class(self)[1] }$set_state restored state of variable: { private$varname }")
+      logger::log_trace("{ class(self)[1] }$set_state enabled state of variable: { private$varname }")
 
       invisible(NULL)
     },
