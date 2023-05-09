@@ -149,11 +149,13 @@ ChoicesFilterState <- R6::R6Class( # nolint
       )
 
       x_factor <- if (!is.factor(x)) {
-        factor(as.character(x), levels = as.character(sort(unique(x))))
+        structure(
+          factor(as.character(x), levels = as.character(sort(unique(x)))),
+          label = attr(x, "label") 
+        )
       } else {
         x
       }
-      x_factor <- droplevels(x_factor)
 
       args <- list(
         x = x_factor,
