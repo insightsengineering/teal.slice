@@ -1068,7 +1068,6 @@ FilteredData <- R6::R6Class( # nolint
 
     # reactive i.e. filtered data
     reactive_data = list(),
-
     cached_states = NULL,
 
     # private methods ----
@@ -1141,7 +1140,7 @@ FilteredData <- R6::R6Class( # nolint
       # If states were cached, drop ones that don't match current ones.
       # This is necessary because the user may remove some states while the panel is disabled.
       if (!is.null(slices)) {
-        slices <-  Filter(
+        slices <- Filter(
           function(x) {
             id_vars <- intersect(names(x), c("dataname", "varname", "varlabel", "target"))
             any(vapply(self$get_filter_state(), function(y) identical(x[id_vars], y[id_vars]), logical(1L)))
