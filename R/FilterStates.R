@@ -814,13 +814,9 @@ FilterStates <- R6::R6Class( # nolint
 
         } else if (inherits(state[[i]], "teal_slice_expr")) {
           # create a new FilterStateExpr
-          fstate <- init_filter_state_expr(
-            id = state[[i]]$id,
-            title = state[[i]]$title,
-            dataname = state[[i]]$dataname,
-            expr = state[[i]]$expr,
-            disabled = state[[i]]$disabled
-          )
+          state_i <- state[[i]]
+          state_i$expr <- substitute(quote(expr), list(expr = state[[i]]$expr))
+          fstate <- do.call(init_filter_state_expr, state_i)
           private$state_list_push(x = fstate, state_id = state_id)
 
         } else {
