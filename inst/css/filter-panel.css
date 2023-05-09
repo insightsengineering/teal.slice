@@ -271,7 +271,7 @@ a.remove_all:hover {
 
 .filter-card-controls {
   display: flex;
-  justify-content: flex-start;
+  justify-content: flex-end;
   gap: 1em;
   grid-area: controls;
 }
