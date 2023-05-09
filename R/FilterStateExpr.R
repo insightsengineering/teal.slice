@@ -230,9 +230,7 @@ FilterStateExpr <- R6::R6Class( # nolint
           class = "filter-card-header",
           tags$div(
             class = "filter-card-title",
-            `data-toggle` = "collapse",
-            `data-bs-toggle` = "collapse",
-            href = paste0("#", ns("body")),
+            icon("lock"),
             tags$span(tags$strong(private$id)),
             tags$span(private$title, class = "filter-card-varlabel")
           ),
