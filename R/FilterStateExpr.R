@@ -252,9 +252,6 @@ FilterStateExpr <- R6::R6Class( # nolint
           ),
           tags$div(
             class = "filter-card-summary",
-            `data-toggle` = "collapse",
-            `data-bs-toggle` = "collapse",
-            href = paste0("#", ns("body")),
             private$ui_summary(ns("summary"))
           )
         )
