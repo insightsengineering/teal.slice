@@ -1,67 +1,67 @@
 testthat::test_that("initialize require id, title, dataname and expr to be specified", {
-  testthat::expect_no_error(FilterStateExpr$new(id = "x", title = "x", dataname = "x", expr = quote(x == "x")))
-  testthat::expect_error(FilterStateExpr$new(id = "x", title = "x", dataname = "x"), "expr")
-  testthat::expect_error(FilterStateExpr$new(id = "x", title = "x"), "dataname")
-  testthat::expect_error(FilterStateExpr$new(id = "x"), "title")
-  testthat::expect_error(FilterStateExpr$new(), "id")
+  testthat::expect_no_error(FilterStateExpr$new(dataname = "x", id = "x", title = "x", expr = quote(x == "x")))
+  testthat::expect_error(FilterStateExpr$new(dataname = "x", id = "x", title = "x"), "expr")
+  testthat::expect_error(FilterStateExpr$new(dataname = "x", id = "x"), "title")
+  testthat::expect_error(FilterStateExpr$new(dataname = "x"), "id")
+  testthat::expect_error(FilterStateExpr$new(), "dataname")
 })
 
 
 testthat::test_that("id has to be a string", {
-  testthat::expect_no_error(FilterStateExpr$new(id = "x", title = "x", dataname = "x", expr = quote(x == "x")))
-  testthat::expect_error(FilterStateExpr$new(id = 1, title = "x", dataname = "x", expr = quote(x == "x")), "string")
-  testthat::expect_error(FilterStateExpr$new(id = NULL, title = "x", dataname = "x", expr = quote(x == "x")), "string")
+  testthat::expect_no_error(FilterStateExpr$new(dataname = "x", id = "x", title = "x", expr = quote(x == "x")))
+  testthat::expect_error(FilterStateExpr$new(dataname = "x", id = 1, title = "x", expr = quote(x == "x")), "string")
+  testthat::expect_error(FilterStateExpr$new(dataname = "x", id = NULL, title = "x", expr = quote(x == "x")), "string")
   testthat::expect_error(
-    FilterStateExpr$new(id = character(0), title = "x", dataname = "x", expr = quote(x == "x")), "length"
+    FilterStateExpr$new(dataname = "x", id = character(0), title = "x", expr = quote(x == "x")), "length"
   )
 })
 
 testthat::test_that("title has to be a string", {
-  testthat::expect_no_error(FilterStateExpr$new(id = "x", title = "x", dataname = "x", expr = quote(x == "x")))
-  testthat::expect_error(FilterStateExpr$new(id = "x", title = 1, dataname = "x", expr = quote(x == "x")), "string")
-  testthat::expect_error(FilterStateExpr$new(id = "x", title = NULL, dataname = "x", expr = quote(x == "x")), "string")
+  testthat::expect_no_error(FilterStateExpr$new(dataname = "x", id = "x", title = "x", expr = quote(x == "x")))
+  testthat::expect_error(FilterStateExpr$new(dataname = "x", id = "x", title = 1, expr = quote(x == "x")), "string")
+  testthat::expect_error(FilterStateExpr$new(dataname = "x", id = "x", title = NULL, expr = quote(x == "x")), "string")
   testthat::expect_error(
-    FilterStateExpr$new(id = "x", title = character(0), dataname = "x", expr = quote(x == "x")), "length"
+    FilterStateExpr$new(dataname = "x", id = "x", title = character(0), expr = quote(x == "x")), "length"
   )
 })
 
 testthat::test_that("dataname has to be a string", {
-  testthat::expect_no_error(FilterStateExpr$new(id = "x", title = "x", dataname = "x", expr = quote(x == "x")))
-  testthat::expect_error(FilterStateExpr$new(id = "x", title = "x", dataname = 1, expr = quote(x == "x")), "string")
-  testthat::expect_error(FilterStateExpr$new(id = "x", title = "x", dataname = NULL, expr = quote(x == "x")), "string")
+  testthat::expect_no_error(FilterStateExpr$new(dataname = "x", id = "x", title = "x", expr = quote(x == "x")))
+  testthat::expect_error(FilterStateExpr$new(dataname = 1, id = "x", title = "x", expr = quote(x == "x")), "string")
+  testthat::expect_error(FilterStateExpr$new(dataname = NULL, id = "x", title = "x", expr = quote(x == "x")), "string")
   testthat::expect_error(
-    FilterStateExpr$new(id = "x", title = "x", dataname = character(0), expr = quote(x == "x")), "length"
+    FilterStateExpr$new(dataname = character(0), id = "x", title = "x", expr = quote(x == "x")), "length"
   )
 })
 
 testthat::test_that("expr has to be a logical expression", {
-  testthat::expect_no_error(FilterStateExpr$new(id = "x", title = "x", dataname = "x", expr = quote(x == FALSE)))
-  testthat::expect_no_error(FilterStateExpr$new(id = "x", title = "x", dataname = "x", expr = quote(!is.na(x))))
-  testthat::expect_no_error(FilterStateExpr$new(id = "x", title = "x", dataname = "x", expr = quote(is.finite(x))))
-  testthat::expect_no_error(FilterStateExpr$new(id = "x", title = "x", dataname = "x", expr = quote(grepl("x", x))))
+  testthat::expect_no_error(FilterStateExpr$new(dataname = "x", id = "x", title = "x", expr = quote(x == FALSE)))
+  testthat::expect_no_error(FilterStateExpr$new(dataname = "x", id = "x", title = "x", expr = quote(!is.na(x))))
+  testthat::expect_no_error(FilterStateExpr$new(dataname = "x", id = "x", title = "x", expr = quote(is.finite(x))))
+  testthat::expect_no_error(FilterStateExpr$new(dataname = "x", id = "x", title = "x", expr = quote(grepl("x", x))))
   testthat::expect_error(
-    FilterStateExpr$new(id = "x", title = "x", dataname = "x", expr = quote(x <- 2)),
+    FilterStateExpr$new(dataname = "x", id = "x", title = "x", expr = quote(x <- 2)),
     "has to be a logical expression"
   )
   testthat::expect_error(
-    FilterStateExpr$new(id = "x", title = "x", dataname = "x", expr = TRUE),
+    FilterStateExpr$new(dataname = "x", id = "x", title = "x", expr = TRUE),
     "has to be a logical expression"
   )
   testthat::expect_error(
-    FilterStateExpr$new(id = "x", title = "x", dataname = "x", expr = 1),
+    FilterStateExpr$new(dataname = "x", id = "x", title = "x", expr = 1),
     "has to be a logical expression"
   )
   testthat::expect_error(
-    FilterStateExpr$new(id = "x", title = "x", dataname = "x", expr = quote(1)),
+    FilterStateExpr$new(dataname = "x", id = "x", title = "x", expr = quote(1)),
     "has to be a logical expression"
   )
 })
 
 testthat::test_that("get_call returns call identical to one passed in the constructor", {
   state <- FilterStateExpr$new(
+    dataname = "x",
     id = "id",
     title = "testtitle",
-    dataname = "x",
     expr = quote(x == "x"),
     disabled = FALSE
   )
@@ -70,9 +70,9 @@ testthat::test_that("get_call returns call identical to one passed in the constr
 
 testthat::test_that("is_any_filtered returns TRUE by default (when disabled = FALSE)", {
   state <- FilterStateExpr$new(
+    dataname = "x",
     id = "id",
     title = "testtitle",
-    dataname = "x",
     expr = quote(x == "x")
   )
   testthat::expect_true(shiny::isolate(state$is_any_filtered()))
@@ -80,9 +80,9 @@ testthat::test_that("is_any_filtered returns TRUE by default (when disabled = FA
 
 testthat::test_that("disabled sets is_any_filtered to FALSE", {
   state <- FilterStateExpr$new(
+    dataname = "x",
     id = "id",
     title = "testtitle",
-    dataname = "x",
     expr = quote(x == "x"),
     disabled = TRUE
   )
@@ -93,9 +93,9 @@ testthat::test_that("disabled sets is_any_filtered to FALSE", {
 # set/get_state -----
 testthat::test_that("get_state returns list of state values", {
   state <- FilterStateExpr$new(
+    dataname = "x",
     id = "id",
     title = "testtitle",
-    dataname = "x",
     expr = quote(x == "x")
   )
   testthat::expect_identical(
@@ -108,9 +108,9 @@ testthat::test_that("get_state returns list of state values", {
 
 testthat::test_that("set_state accepts only filter_state_expr", {
   state <- FilterStateExpr$new(
+    dataname = "x",
     id = "id",
     title = "testtitle",
-    dataname = "x",
     expr = quote(x == "x"),
     disabled = FALSE
   )

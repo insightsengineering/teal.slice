@@ -160,7 +160,7 @@ filter_var <- function(
 
 #' @export
 #' @rdname teal_slice
-filter_expr <- function(id, title, dataname, expr, disabled = FALSE, ...) {
+filter_expr <- function(dataname, id, title, expr, disabled = FALSE, ...) {
   assert_logical_expr(expr)
   ans <- list(
     id = id,
@@ -170,7 +170,7 @@ filter_expr <- function(id, title, dataname, expr, disabled = FALSE, ...) {
     disabled = disabled
   )
   ans <- append(ans, list(...))
-  class(ans) <- c("teal_slice", "teal_slice_expr", class(ans))
+  class(ans) <- c("teal_slice_expr", "teal_slice", class(ans))
   ans
 }
 
@@ -243,14 +243,10 @@ c.teal_slice <- function(...) {
 format.teal_slice <- function(x, show_all = FALSE, ...) {
   name_width <- max(nchar(names(x)))
   format_value <- function(v) {
-    v <- if (is.null(v)) {
+    if (is.null(v)) {
       return("NULL")
-    } else  if (inherits(v, c("character", "factor"))) {
-      dQuote(v, q = FALSE)
-    } else if (is.language(v)) {
-      deparse1(v)
     }
-    v <- paste(v, collapse = " ")
+    v <- paste(deparse1(v), collapse = " ")
     if (nchar(v) > 30L) {
       v <- paste0(substr(v, 1, 26), "...")
     }

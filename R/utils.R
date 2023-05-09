@@ -145,5 +145,6 @@ assert_logical_expr <-  function(x) {
       paste(logical_funs, collapse = ", ")
     ))
   }
+  invisible(x)
 }
 

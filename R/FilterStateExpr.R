@@ -19,13 +19,13 @@ FilterStateExpr <- R6::R6Class( # nolint
   public = list(
     #' @description
     #' Initialize a `FilterStateExpr` object
+    #' @param dataname (`character(1)`)\cr
+    #'   name of the dataset where `expr` could be executed on.
+    #' @param expr (`language`)\cr
     #' @param id (`character(1)`)\cr
     #'   identifier of the filter
     #' @param title (`character(1)`)\cr
     #'   title of the filter
-    #' @param dataname (`character(1)`)\cr
-    #'   name of the dataset where `expr` could be executed on.
-    #' @param expr (`language`)\cr
     #'   logical expression written in executable way. By "executable" means
     #'   that `subset` call should be able to evaluate this without failure. For
     #'   example `MultiAssayExperiment::subsetByColData` requires varnames prefixed
@@ -36,9 +36,9 @@ FilterStateExpr <- R6::R6Class( # nolint
     #' @param ... additional arguments to be saved as a list in `private$extras` field
     #' @examples
     #' filter_state <- teal.slice:::FilterStateExpr$new(
+    #'   dataname = "x",
     #'   id = "FA",
     #'   title = "Adult females",
-    #'   dataname = "x",
     #'   expr = quote(sex == "F" & age >= 18)
     #' )
     #' shiny::isolate(filter_state$get_call())
@@ -79,10 +79,10 @@ FilterStateExpr <- R6::R6Class( # nolint
     #' }
     #'
     #' @return `FilterStateExpr`
-    initialize = function(id, title, dataname, expr, disabled = FALSE, ...) {
+    initialize = function(dataname, id, title, expr, disabled = FALSE, ...) {
+      checkmate::assert_string(dataname)
       checkmate::assert_string(id)
       checkmate::assert_string(title)
-      checkmate::assert_string(dataname)
       assert_logical_expr(expr)
       checkmate::assert_flag(disabled)
 
