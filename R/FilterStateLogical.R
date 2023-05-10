@@ -314,7 +314,7 @@ LogicalFilterState <- R6::R6Class( # nolint
         selected = shiny::isolate(as.character(private$get_selected())),
         width = "100%"
       )
-     if (shiny::isolate(private$is_disabled())) ui_input <- shinyjs::disabled(ui_input)
+      if (shiny::isolate(private$is_disabled())) ui_input <- shinyjs::disabled(ui_input)
       div(
         div(
           class = "choices_state",

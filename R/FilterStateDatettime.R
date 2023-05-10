@@ -401,7 +401,7 @@ DatetimeFilterState <- R6::R6Class( # nolint
         label = NULL,
         icon = icon("fas fa-undo")
       )
-      ui_reset_2 <-  actionButton(
+      ui_reset_2 <- actionButton(
         class = "date_reset_button",
         inputId = ns("end_date_reset"),
         label = NULL,

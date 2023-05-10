@@ -781,7 +781,7 @@ FilterState <- R6::R6Class( # nolint
           }
         )
 
-       private$observers$disabled_toggle_na <- observeEvent(private$is_disabled(), {
+        private$observers$disabled_toggle_na <- observeEvent(private$is_disabled(), {
           shinyjs::toggleState(
             id = "value",
             condition = !private$is_disabled()
