@@ -456,7 +456,7 @@ ChoicesFilterState <- R6::R6Class( # nolint
           )
         )
       }
-
+      if (shiny::isolate(private$is_disabled())) ui_input <- shinyjs::disabled(ui_input)
       div(
         uiOutput(ns("trigger_visible")),
         ui_input,
@@ -575,13 +575,9 @@ ChoicesFilterState <- R6::R6Class( # nolint
             }
           })
 
-          observeEvent(private$is_disabled(), {
+          private$observers$disabled_toggle_selection <- observeEvent(private$is_disabled(), {
             shinyjs::toggleState(
               id = "selection",
-              condition = !private$is_disabled()
-            )
-            shinyjs::toggleState(
-              id = "keep_na-value",
               condition = !private$is_disabled()
             )
           })

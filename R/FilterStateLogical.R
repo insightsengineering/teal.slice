@@ -306,19 +306,20 @@ LogicalFilterState <- R6::R6Class( # nolint
         countsnow = countsnow,
         countsmax = countsmax
       )
-
+      ui_input <- radioButtons(
+        ns("selection"),
+        label = NULL,
+        choiceNames = labels,
+        choiceValues = as.character(private$choices),
+        selected = shiny::isolate(as.character(private$get_selected())),
+        width = "100%"
+      )
+     if (shiny::isolate(private$is_disabled())) ui_input <- shinyjs::disabled(ui_input)
       div(
         div(
           class = "choices_state",
           uiOutput(ns("trigger_visible"), inline = TRUE),
-          radioButtons(
-            ns("selection"),
-            label = NULL,
-            choiceNames = labels,
-            choiceValues = as.character(private$choices),
-            selected = shiny::isolate(as.character(private$get_selected())),
-            width = "100%"
-          )
+          ui_input
         ),
         private$keep_na_ui(ns("keep_na"))
       )
@@ -402,13 +403,9 @@ LogicalFilterState <- R6::R6Class( # nolint
 
           private$keep_na_srv("keep_na")
 
-          observeEvent(private$is_disabled(), {
+          private$observers$disabled_toggle_selection <- observeEvent(private$is_disabled(), {
             shinyjs::toggleState(
               id = "selection",
-              condition = !private$is_disabled()
-            )
-            shinyjs::toggleState(
-              id = "keep_na-value",
               condition = !private$is_disabled()
             )
           })

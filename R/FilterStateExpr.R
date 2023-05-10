@@ -243,7 +243,7 @@ FilterStateExpr <- R6::R6Class( # nolint
               label = "",
               status = "success",
               fill = TRUE,
-              value = !private$is_disabled(),
+              value = shiny::isolate(!private$is_disabled()),
               width = 30
             ),
             actionLink(

@@ -194,13 +194,6 @@ EmptyFilterState <- R6::R6Class( # nolint
         id = id,
         function(input, output, session) {
           private$keep_na_srv("keep_na")
-
-          observeEvent(private$is_disabled(), {
-            shinyjs::toggleState(
-              id = "keep_na-value",
-              condition = !private$is_disabled()
-            )
-          })
         }
       )
     },

@@ -698,20 +698,22 @@ FilterState <- R6::R6Class( # nolint
       if (private$na_count > 0) {
         countmax <- private$na_count
         countnow <- shiny::isolate(private$filtered_na_count())
+        ui_input <- checkboxInput(
+          inputId = ns("value"),
+          label = tags$span(
+            id = ns("count_label"),
+            make_count_text(
+              label = "Keep NA",
+              countmax = countmax,
+              countnow = countnow
+            )
+          ),
+          value = shiny::isolate(private$get_keep_na())
+        )
+        if (shiny::isolate(private$is_disabled())) ui_input <- shinyjs::disabled(ui_input)
         div(
           uiOutput(ns("trigger_visible"), inline = TRUE),
-          checkboxInput(
-            inputId = ns("value"),
-            label = tags$span(
-              id = ns("count_label"),
-              make_count_text(
-                label = "Keep NA",
-                countmax = countmax,
-                countnow = countnow
-              )
-            ),
-            value = shiny::isolate(private$get_keep_na())
-          )
+          ui_input
         )
       } else {
         NULL
@@ -778,6 +780,13 @@ FilterState <- R6::R6Class( # nolint
             )
           }
         )
+
+       private$observers$disabled_toggle_na <- observeEvent(private$is_disabled(), {
+          shinyjs::toggleState(
+            id = "value",
+            condition = !private$is_disabled()
+          )
+        })
         invisible(NULL)
       })
     }

@@ -371,59 +371,66 @@ DatetimeFilterState <- R6::R6Class( # nolint
     #  id of shiny element
     ui_inputs = function(id) {
       ns <- NS(id)
+
+
+      ui_input_1 <- shinyWidgets::airDatepickerInput(
+        inputId = ns("selection_start"),
+        value = shiny::isolate(private$get_selected())[1],
+        startView = shiny::isolate(private$get_selected())[1],
+        timepicker = TRUE,
+        minDate = private$choices[1L],
+        maxDate = private$choices[2L],
+        update_on = "close",
+        addon = "none",
+        position = "bottom right"
+      )
+      ui_input_2 <- shinyWidgets::airDatepickerInput(
+        inputId = ns("selection_end"),
+        value = shiny::isolate(private$get_selected())[2],
+        startView = shiny::isolate(private$get_selected())[2],
+        timepicker = TRUE,
+        minDate = private$choices[1L],
+        maxDate = private$choices[2L],
+        update_on = "close",
+        addon = "none",
+        position = "bottom right"
+      )
+      ui_reset_1 <- actionButton(
+        class = "date_reset_button",
+        inputId = ns("start_date_reset"),
+        label = NULL,
+        icon = icon("fas fa-undo")
+      )
+      ui_reset_2 <-  actionButton(
+        class = "date_reset_button",
+        inputId = ns("end_date_reset"),
+        label = NULL,
+        icon = icon("fas fa-undo")
+      )
+      ui_input_1$children[[2]]$attribs <- c(ui_input_1$children[[2]]$attribs, list(class = "input-sm"))
+      ui_input_2$children[[2]]$attribs <- c(ui_input_2$children[[2]]$attribs, list(class = "input-sm"))
+      if (shiny::isolate(private$is_disabled())) {
+        ui_input_1 <- shinyjs::disabled(ui_input_1)
+        ui_input_2 <- shinyjs::disabled(ui_input_2)
+        ui_reset_1 <- shinyjs::disabled(ui_reset_2)
+        ui_reset_2 <- shinyjs::disabled(ui_reset_2)
+      }
+
       div(
         div(
           class = "flex",
-          actionButton(
-            class = "date_reset_button",
-            inputId = ns("start_date_reset"),
-            label = NULL,
-            icon = icon("fas fa-undo")
-          ),
+          ui_reset_1,
           div(
             class = "flex w-80 filter_datelike_input",
-            div(class = "w-45 text-center", {
-              x <- shinyWidgets::airDatepickerInput(
-                inputId = ns("selection_start"),
-                value = shiny::isolate(private$get_selected())[1],
-                startView = shiny::isolate(private$get_selected())[1],
-                timepicker = TRUE,
-                minDate = private$choices[1L],
-                maxDate = private$choices[2L],
-                update_on = "close",
-                addon = "none",
-                position = "bottom right"
-              )
-              x$children[[2]]$attribs <- c(x$children[[2]]$attribs, list(class = "input-sm"))
-              x
-            }),
+            div(class = "w-45 text-center", ui_input_1),
             span(
               class = "input-group-addon w-10",
               span(class = "input-group-text w-100 justify-content-center", "to"),
               title = "Times are displayed in the local timezone and are converted to UTC in the analysis"
             ),
-            div(class = "w-45 text-center", {
-              x <- shinyWidgets::airDatepickerInput(
-                inputId = ns("selection_end"),
-                value = shiny::isolate(private$get_selected())[2],
-                startView = shiny::isolate(private$get_selected())[2],
-                timepicker = TRUE,
-                minDate = private$choices[1L],
-                maxDate = private$choices[2L],
-                update_on = "close",
-                addon = "none",
-                position = "bottom right"
-              )
-              x$children[[2]]$attribs <- c(x$children[[2]]$attribs, list(class = "input-sm"))
-              x
-            })
+            div(class = "w-45 text-center", ui_input_2)
           ),
-          actionButton(
-            class = "date_reset_button",
-            inputId = ns("end_date_reset"),
-            label = NULL,
-            icon = icon("fas fa-undo")
-          )
+          ui_reset_2
         ),
         private$keep_na_ui(ns("keep_na"))
       )
@@ -577,17 +584,13 @@ DatetimeFilterState <- R6::R6Class( # nolint
             }
           )
 
-          observeEvent(private$is_disabled(), {
+          private$observers$disabled_toggle_selection <- observeEvent(private$is_disabled(), {
             shinyjs::toggleState(
               id = "selection_start",
               condition = !private$is_disabled()
             )
             shinyjs::toggleState(
               id = "selection_end",
-              condition = !private$is_disabled()
-            )
-            shinyjs::toggleState(
-              id = "keep_na-value",
               condition = !private$is_disabled()
             )
           })

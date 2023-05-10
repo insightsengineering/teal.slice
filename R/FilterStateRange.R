@@ -424,6 +424,30 @@ RangeFilterState <- R6::R6Class( # nolint
     ui_inputs = function(id) {
       ns <- NS(id)
 
+      ui_input_slider <- teal.widgets::optionalSliderInput(
+        inputId = ns("selection"),
+        label = NULL,
+        min = private$choices[1L],
+        max = private$choices[2L],
+        value = shiny::isolate(private$selected()),
+        step = private$slider_step,
+        width = "100%"
+      )
+      ui_input_manual <- shinyWidgets::numericRangeInput(
+        inputId = ns("selection_manual"),
+        label = NULL,
+        min = private$choices[1L],
+        max = private$choices[2L],
+        value = shiny::isolate(private$selected()),
+        step = private$slider_step,
+        width = "100%"
+      )
+
+      if (shiny::isolate(private$is_disabled())) {
+        ui_input_slider <- shinyjs::disabled(ui_input_slider)
+        ui_input_manual <- shinyjs::disabled(ui_input_manual)
+      }
+
       tagList(
         shinyWidgets::switchInput(
           ns("manual"),
@@ -433,7 +457,8 @@ RangeFilterState <- R6::R6Class( # nolint
           onLabel = "Yes",
           offLabel = "No",
           onStatus = "info",
-          offStatus = "info"
+          offStatus = "info",
+          disabled = shiny::isolate(private$is_disabled())
         ),
         conditionalPanel(
           ns = ns,
@@ -444,32 +469,13 @@ RangeFilterState <- R6::R6Class( # nolint
               class = "filterPlotOverlayRange",
               plotOutput(ns("plot"), height = "100%"),
             ),
-            div(
-              class = "filterRangeSlider",
-              teal.widgets::optionalSliderInput(
-                inputId = ns("selection"),
-                label = NULL,
-                min = private$choices[1L],
-                max = private$choices[2L],
-                value = shiny::isolate(private$selected()),
-                step = private$slider_step,
-                width = "100%"
-              )
-            )
+            div(class = "filterRangeSlider", ui_input_slider)
           )
         ),
         conditionalPanel(
           ns = ns,
           condition = "input.manual === true",
-          shinyWidgets::numericRangeInput(
-            inputId = ns("selection_manual"),
-            label = NULL,
-            min = private$choices[1L],
-            max = private$choices[2L],
-            value = shiny::isolate(private$selected()),
-            step = private$slider_step,
-            width = "100%"
-          )
+          ui_input_manual
         ),
         div(
           class = "filter-card-body-keep-na-inf",
@@ -637,14 +643,6 @@ RangeFilterState <- R6::R6Class( # nolint
               id = "selection_manual",
               condition = !private$is_disabled()
             )
-            shinyjs::toggleState(
-              id = "keep_na-value",
-              condition = !private$is_disabled()
-            )
-            shinyjs::toggleState(
-              id = "keep_inf-value",
-              condition = !private$is_disabled()
-            )
             shinyWidgets::updateSwitchInput(
               session = session,
               inputId = "manual",
@@ -772,23 +770,26 @@ RangeFilterState <- R6::R6Class( # nolint
     #  been created has some Inf values.
     keep_inf_ui = function(id) {
       ns <- NS(id)
+
       if (private$inf_count > 0) {
         countmax <- private$na_count
         countnow <- isolate(private$filtered_na_count())
+        ui_input <- checkboxInput(
+          inputId = ns("value"),
+          label = tags$span(
+            id = ns("count_label"),
+            make_count_text(
+              label = "Keep Inf",
+              countmax = countmax,
+              countnow = countnow
+            )
+          ),
+          value = isolate(private$get_keep_inf())
+        )
+        if (shiny::isolate(private$is_disabled())) ui_input <- shinyjs::disabled(ui_input)
         div(
           uiOutput(ns("trigger_visible"), inline = TRUE),
-          checkboxInput(
-            inputId = ns("value"),
-            label = tags$span(
-              id = ns("count_label"),
-              make_count_text(
-                label = "Keep Inf",
-                countmax = countmax,
-                countnow = countnow
-              )
-            ),
-            value = isolate(private$get_keep_inf())
-          )
+          ui_input
         )
       } else {
         NULL
@@ -851,6 +852,13 @@ RangeFilterState <- R6::R6Class( # nolint
             )
           }
         )
+
+        observeEvent(private$is_disabled(), {
+          shinyjs::toggleState(
+            id = "value",
+            condition = !private$is_disabled()
+          )
+        })
         invisible(NULL)
       })
     }
