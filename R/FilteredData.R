@@ -1096,15 +1096,17 @@ FilteredData <- R6::R6Class( # nolint
     },
 
     # @description
-    # Disable the filter panel by adding `disable` class to `filter_add_vars`
-    # and `filter_panel_active_vars` tags in the User Interface.
-    # In addition, it will store the existing filter states in a private field called `cached_states`
-    # before removing all filter states from the object.
+    # Disable the filter panel.
+    #
+    # Adds `disable` class to `filter_add_vars` `filter_panel_active_vars` and `filter_active_vars_contents` divs.
+    # Existing filter states are stored in `cached_states` private field
+    # so their individual disabled status can be recalled.
     #
     filter_panel_disable = function() {
       private$filter_panel_active <- FALSE
       fp_id <- self$get_filter_panel_ui_id()
       shinyjs::disable(paste0(fp_id, "-add"), asis = TRUE)
+      shinyjs::disable("filter_active_vars_contents")
       slices <- self$get_filter_state()
       if (!is.null(slices)) {
         private$cached_states <- slices
@@ -1117,15 +1119,18 @@ FilteredData <- R6::R6Class( # nolint
       invisible(NULL)
     },
 
-    # @description enable the filter panel
-    # Enable the filter panel by adding `enable` class to `filter_add_vars`
-    # and `filter_active_vars` tags in the User Interface.
-    # In addition, it will restore the filter states from a private field called `cached_states`.
+    # @description
+    # Enable the filter panel.
+    #
+    # Adds `disable` class to `filter_add_vars` `filter_panel_active_vars` and `filter_active_vars_contents` divs.
+    # Existing filter states are stored in `cached_states` private field
+    # so their individual disabled status can be recalled.
     #
     filter_panel_enable = function() {
       private$filter_panel_active <- TRUE
       fp_id <- self$get_filter_panel_ui_id()
       shinyjs::enable(paste0(fp_id, "-add"), asis = TRUE)
+      shinyjs::enable("filter_active_vars_contents")
       slices <- private$cached_states
       # If no states were cached, use existing ones.
       # This is necessary because this method is called on start-up.
