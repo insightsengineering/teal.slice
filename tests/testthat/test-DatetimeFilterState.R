@@ -225,15 +225,16 @@ testthat::test_that("get_call adds is.na(variable) to returned call if keep_na i
 })
 
 testthat::test_that("get_call returns call if all selected but NA exists", {
+  posixct_na <- as.POSIXct(c(as.character(posixct), NA), tz = "GMT")
   filter_state <- DatetimeFilterState$new(
-    c(posixct, NA),
+    posixct_na,
     dataname = "data", varname = "variable", keep_na = FALSE
   )
   testthat::expect_identical(
     shiny::isolate(filter_state$get_call()),
     quote(
-      variable >= as.POSIXct("2000-01-01 13:00:00", tz = "CET") &
-        variable < as.POSIXct("2000-01-01 13:00:10", tz = "CET")
+      variable >= as.POSIXct("2000-01-01 12:00:00", tz = "GMT") &
+        variable < as.POSIXct("2000-01-01 12:00:10", tz = "GMT")
     )
   )
 })
