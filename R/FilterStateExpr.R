@@ -1,4 +1,3 @@
-
 #' @name FilterStateExpr
 #' @docType class
 #'
