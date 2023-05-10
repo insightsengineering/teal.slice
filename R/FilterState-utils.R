@@ -45,13 +45,11 @@
 #'   extract_type = "matrix"
 #' )
 #'
-#' filter_state$get_varname()
-#' filter_state$get_varlabel()
-#' isolate(filter_state$get_call())
+#' shiny::isolate(filter_state$get_call())
 #' \dontrun{
 #' shinyApp(
 #'   ui = fluidPage(
-#'     isolate(filter_state$ui(id = "app")),
+#'     filter_state$ui(id = "app"),
 #'     verbatimTextOutput("call")
 #'   ),
 #'   server = function(input, output, session) {
@@ -390,14 +388,14 @@ init_filter_state.POSIXlt <- function(x,
 #' Initialize a `FilterStateExpr` object
 #' @param id (`character(1)`)\cr
 #'   identifier of the filter
-#' @param title (`reactive`)\cr
+#' @param title (`character(1)`)\cr
 #'   title of the filter
 #' @param dataname (`character(1)`)\cr
 #'   name of the dataset where `expr` could be executed on.
-#' @param expr (`language`)\cr
+#' @param expr (`character(1)`)\cr
 #'   logical expression written in executable way. By "executable" means
 #'   that `subset` call should be able to evaluate this without failure. For
-#'   example `MultiAssayExperiment::subsetByColData` requires varnames prefixed
+#'   example `MultiAssayExperiment::subsetByColData` requires variable names prefixed
 #'   by dataname (e.g. `data$var1 == "x" & data$var2 > 0`). For `data.frame` call
 #'   can be written without prefixing `var1 == "x" & var2 > 0`.
 #' @param disabled (`logical(1)`)\cr

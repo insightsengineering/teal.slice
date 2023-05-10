@@ -12,10 +12,9 @@
 #'   dataname = "data",
 #'   extract_type = character(0)
 #' )
-#' isolate(filter_state$get_call())
-#' isolate(filter_state$set_selected(TRUE))
-#' isolate(filter_state$set_keep_na(TRUE))
-#' isolate(filter_state$get_call())
+#' shiny::isolate(filter_state$get_call())
+#' filter_state$set_state(filter_var(dataname = "data", varname = "x", keep_na = TRUE))
+#' shiny::isolate(filter_state$get_call())
 #'
 EmptyFilterState <- R6::R6Class( # nolint
   "EmptyFilterState",
@@ -101,7 +100,9 @@ EmptyFilterState <- R6::R6Class( # nolint
     #' @return `logical(1)`
     #'
     get_call = function(dataname) {
-      if (isFALSE(private$is_any_filtered())) return(NULL)
+      if (isFALSE(private$is_any_filtered())) {
+        return(NULL)
+      }
       if (missing(dataname)) dataname <- private$dataname
       filter_call <- if (isTRUE(private$get_keep_na())) {
         call("is.na", private$get_varname_prefixed(dataname))

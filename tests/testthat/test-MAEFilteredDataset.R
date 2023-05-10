@@ -42,15 +42,15 @@ testthat::test_that("get_call returns a call with applying filter", {
   fs <- filter_settings(
     filter_var(
       dataname = "miniacc", varname = "years_to_birth", selected = c(30, 50),
-      keep_na = TRUE, keep_inf = FALSE, datalabel = "subjects", arg =  "y"
+      keep_na = TRUE, keep_inf = FALSE, datalabel = "subjects", arg = "y"
     ),
     filter_var(
       dataname = "miniacc", varname = "vital_status", selected = "1",
-      keep_na = FALSE, datalabel = "subjects", arg =  "y"
+      keep_na = FALSE, datalabel = "subjects", arg = "y"
     ),
     filter_var(
       dataname = "miniacc", varname = "gender", selected = "female",
-      keep_na = TRUE, datalabel = "subjects", arg =  "y"
+      keep_na = TRUE, datalabel = "subjects", arg = "y"
     ),
     filter_var(
       dataname = "miniacc", varname = "ARRAY_TYPE", selected = "",
@@ -100,15 +100,15 @@ testthat::test_that("get_filter_overview_info returns overview matrix for MAEFil
   fs <- filter_settings(
     filter_var(
       dataname = "miniacc", varname = "years_to_birth", selected = c(30, 50),
-      keep_na = TRUE, keep_inf = FALSE, datalabel = "subjects", arg =  "y"
+      keep_na = TRUE, keep_inf = FALSE, datalabel = "subjects", arg = "y"
     ),
     filter_var(
       dataname = "miniacc", varname = "vital_status", selected = "1",
-      keep_na = FALSE, datalabel = "subjects", arg =  "y"
+      keep_na = FALSE, datalabel = "subjects", arg = "y"
     ),
     filter_var(
       dataname = "miniacc", varname = "gender", selected = "female",
-      keep_na = TRUE, datalabel = "subjects", arg =  "y"
+      keep_na = TRUE, datalabel = "subjects", arg = "y"
     ),
     filter_var(
       dataname = "miniacc", varname = "ARRAY_TYPE", selected = "",
@@ -137,15 +137,15 @@ testthat::test_that(
     fs <- filter_settings(
       filter_var(
         dataname = "miniacc", varname = "years_to_birth", selected = c(30, 50),
-        keep_na = FALSE, keep_inf = FALSE, datalabel = "subjects", arg =  "y"
+        keep_na = FALSE, keep_inf = FALSE, datalabel = "subjects", arg = "y"
       ),
       filter_var(
         dataname = "miniacc", varname = "vital_status", selected = "1",
-        keep_na = FALSE, datalabel = "subjects", arg =  "y"
+        keep_na = FALSE, datalabel = "subjects", arg = "y"
       ),
       filter_var(
         dataname = "miniacc", varname = "gender", selected = "female",
-        keep_na = FALSE, datalabel = "subjects", arg =  "y"
+        keep_na = FALSE, datalabel = "subjects", arg = "y"
       ),
       filter_var(
         dataname = "miniacc", varname = "ARRAY_TYPE", selected = "",
@@ -202,15 +202,15 @@ testthat::test_that(
     fs <- filter_settings(
       filter_var(
         dataname = "miniacc", varname = "years_to_birth", choices = c(14, 83), selected = c(30, 50),
-        keep_na = FALSE, keep_inf = FALSE, fixed = FALSE, disabled = FALSE, datalabel = "subjects", arg =  "y"
+        keep_na = FALSE, keep_inf = FALSE, fixed = FALSE, disabled = FALSE, datalabel = "subjects", arg = "y"
       ),
       filter_var(
         dataname = "miniacc", varname = "vital_status", choices = c("0", "1"), selected = "1",
-        keep_na = FALSE, keep_inf = NULL, fixed = FALSE, disabled = FALSE, datalabel = "subjects", arg =  "y"
+        keep_na = FALSE, keep_inf = NULL, fixed = FALSE, disabled = FALSE, datalabel = "subjects", arg = "y"
       ),
       filter_var(
         dataname = "miniacc", varname = "gender", choices = c("female", "male"), selected = "female",
-        keep_na = FALSE, keep_inf = FALSE, fixed = FALSE, disabled = FALSE, datalabel = "subjects", arg =  "y"
+        keep_na = FALSE, keep_inf = FALSE, fixed = FALSE, disabled = FALSE, datalabel = "subjects", arg = "y"
       ),
       filter_var(
         dataname = "miniacc", varname = "ARRAY_TYPE", choices = c("", "protein_level"), selected = "",
@@ -236,15 +236,15 @@ testthat::test_that(
     fs <- filter_settings(
       filter_var(
         dataname = "miniacc", varname = "years_to_birth", selected = c(30, 50),
-        keep_na = TRUE, keep_inf = FALSE, datalabel = "subjects", arg =  "y"
+        keep_na = TRUE, keep_inf = FALSE, datalabel = "subjects", arg = "y"
       ),
       filter_var(
         dataname = "miniacc", varname = "vital_status", selected = "1",
-        keep_na = FALSE, datalabel = "subjects", arg =  "y"
+        keep_na = FALSE, datalabel = "subjects", arg = "y"
       ),
       filter_var(
         dataname = "miniacc", varname = "gender", selected = "female",
-        keep_na = FALSE, datalabel = "subjects", arg =  "y"
+        keep_na = FALSE, datalabel = "subjects", arg = "y"
       ),
       filter_var(
         dataname = "miniacc", varname = "ARRAY_TYPE", selected = "",
@@ -270,15 +270,15 @@ testthat::test_that(
     fs <- filter_settings(
       filter_var(
         dataname = "miniacc", varname = "years_to_birth", selected = c(30, 50),
-        keep_na = TRUE, keep_inf = FALSE, datalabel = "subjects", arg =  "y"
+        keep_na = TRUE, keep_inf = FALSE, datalabel = "subjects", arg = "y"
       ),
       filter_var(
         dataname = "miniacc", varname = "vital_status", selected = "1",
-        keep_na = FALSE, datalabel = "subjects", arg =  "y"
+        keep_na = FALSE, datalabel = "subjects", arg = "y"
       ),
       filter_var(
         dataname = "miniacc", varname = "gender", selected = "female",
-        keep_na = FALSE, datalabel = "subjects", arg =  "y"
+        keep_na = FALSE, datalabel = "subjects", arg = "y"
       ),
       filter_var(
         dataname = "miniacc", varname = "ARRAY_TYPE", selected = "",
@@ -297,15 +297,15 @@ testthat::test_that("remove_filters button removes all filters", {
   fs <- filter_settings(
     filter_var(
       dataname = "miniacc", varname = "years_to_birth", selected = c(30, 50),
-      keep_na = FALSE, keep_inf = FALSE, datalabel = "subjects", arg =  "y"
+      keep_na = FALSE, keep_inf = FALSE, datalabel = "subjects", arg = "y"
     ),
     filter_var(
       dataname = "miniacc", varname = "vital_status", selected = 1,
-      keep_na = FALSE, datalabel = "subjects", arg =  "y"
+      keep_na = FALSE, datalabel = "subjects", arg = "y"
     ),
     filter_var(
       dataname = "miniacc", varname = "gender", selected = "female",
-      keep_na = FALSE, datalabel = "subjects", arg =  "y"
+      keep_na = FALSE, datalabel = "subjects", arg = "y"
     ),
     filter_var(
       dataname = "miniacc", varname = "ARRAY_TYPE", selected = "",

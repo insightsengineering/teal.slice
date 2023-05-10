@@ -39,4 +39,3 @@ testthat::test_that("get_call returns executable call filtering a matrix with nu
   eval(shiny::isolate(filter_states$get_call()))
   testthat::expect_true(all(test[1:3, "a"] >= 1 & test[1:3, "a"] <= 3))
 })
-

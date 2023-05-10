@@ -12,10 +12,16 @@
 #'   dataname = "data",
 #'   extract_type = character(0)
 #' )
-#' isolate(filter_state$get_call())
-#' isolate(filter_state$set_selected(c(Sys.time() + 3L, Sys.time() + 8L)))
-#' isolate(filter_state$set_keep_na(TRUE))
-#' isolate(filter_state$get_call())
+#' shiny::isolate(filter_state$get_call())
+#' filter_state$set_state(
+#'   filter_var(
+#'     dataname = "data",
+#'     varname = "x",
+#'     selected = c(Sys.time() + 3L, Sys.time() + 8L),
+#'     keep_na = TRUE
+#'   )
+#' )
+#' shiny::isolate(filter_state$get_call())
 #'
 #' \dontrun{
 #' # working filter in an app
@@ -24,12 +30,12 @@
 #'
 #' datetimes <- as.POSIXct(c("2012-01-01 12:00:00", "2020-01-01 12:00:00"))
 #' data_datetime <- c(seq(from = datetimes[1], to = datetimes[2], length.out = 100), NA)
-#' filter_state_datetime <- DatetimeFilterState$new(
+#' fs <- teal.slice:::DatetimeFilterState$new(
 #'   x = data_datetime,
+#'   varname = "x",
 #'   dataname = "data",
-#' )
-#' filter_state_datetime$set_state(
-#'   filter_var("data"variable, selected = data_datetime[c(47, 98)], keep_na = TRUE))
+#'   selected = data_datetime[c(47, 98)],
+#'   keep_na = TRUE
 #' )
 #'
 #' ui <- fluidPage(
@@ -38,7 +44,7 @@
 #'   include_js_files(pattern = "count-bar-labels"),
 #'   column(4, div(
 #'     h4("DatetimeFilterState"),
-#'     isolate(filter_state_datetime$ui("fs"))
+#'     fs$ui("fs")
 #'   )),
 #'   column(4, div(
 #'     id = "outputs", # div id is needed for toggling the element
@@ -60,22 +66,37 @@
 #' )
 #'
 #' server <- function(input, output, session) {
-#'   filter_state_datetime$server("fs")
-#'   output$condition_datetime <- renderPrint(filter_state_datetime$get_call())
-#'   output$formatted_datetime <- renderText(filter_state_datetime$format())
-#'   output$unformatted_datetime <- renderPrint(filter_state_datetime$get_state())
+#'   fs$server("fs")
+#'   output$condition_datetime <- renderPrint(fs$get_call())
+#'   output$formatted_datetime <- renderText(fs$format())
+#'   output$unformatted_datetime <- renderPrint(fs$get_state())
 #'   # modify filter state programmatically
-#'   observeEvent(input$button1_datetime, filter_state_datetime$set_keep_na(FALSE))
-#'   observeEvent(input$button2_datetime, filter_state_datetime$set_keep_na(TRUE))
+#'   observeEvent(
+#'     input$button1_datetime,
+#'     fs$set_state(filter_var(dataname = "data", varname = "x", keep_na = FALSE))
+#'   )
+#'   observeEvent(
+#'     input$button2_datetime,
+#'     fs$set_state(filter_var(dataname = "data", varname = "x", keep_na = TRUE))
+#'   )
 #'   observeEvent(
 #'     input$button3_datetime,
-#'     filter_state_datetime$set_selected(data_datetime[c(34, 56)])
+#'     fs$set_state(
+#'       filter_var(dataname = "data", varname = "x", selected = data_datetime[c(34, 56)])
+#'     )
 #'   )
-#'   observeEvent(input$button4_datetime, filter_state_datetime$set_selected(datetimes))
+#'   observeEvent(
+#'     input$button4_datetime,
+#'     fs$set_state(
+#'       filter_var(dataname = "data", varname = "x", selected = datetimes)
+#'     )
+#'   )
 #'   observeEvent(
 #'     input$button0_datetime,
-#'     filter_state_datetime$set_state(
-#'       filter_var("data"variable, selected = data_datetime[c(47, 98)], keep_na = TRUE))
+#'     fs$set_state(
+#'       filter_var(
+#'         dataname = "data", varname = "x", selected = data_datetime[c(47, 98)], keep_na = TRUE
+#'       )
 #'     )
 #'   )
 #' }
@@ -146,7 +167,7 @@ DatetimeFilterState <- R6::R6Class( # nolint
                           extract_type = character(0),
                           ...) {
       checkmate::assert_multi_class(x, c("POSIXct", "POSIXlt"))
-      checkmate::assert_class(x_reactive, 'reactive')
+      checkmate::assert_class(x_reactive, "reactive")
       checkmate::assert_multi_class(choices, c("POSIXct", "POSIXlt"), null.ok = TRUE)
 
       args <- list(
@@ -201,14 +222,15 @@ DatetimeFilterState <- R6::R6Class( # nolint
     #' @return (`call`)
     #'
     get_call = function(dataname) {
-      if (isFALSE(private$is_any_filtered())) return(NULL)
+      if (isFALSE(private$is_any_filtered())) {
+        return(NULL)
+      }
       if (missing(dataname)) dataname <- private$dataname
       choices <- private$get_selected()
       tzone <- Find(function(x) x != "", attr(as.POSIXlt(choices), "tzone"))
       class <- class(choices)[1L]
       date_fun <- as.name(
-        switch(
-          class,
+        switch(class,
           "POSIXct" = "as.POSIXct",
           "POSIXlt" = "as.POSIXlt"
         )
@@ -236,7 +258,6 @@ DatetimeFilterState <- R6::R6Class( # nolint
 
   private = list(
     # private methods ----
-
     set_choices = function(choices) {
       if (is.null(choices)) {
         choices <- as.POSIXct(trunc(range(private$x, na.rm = TRUE), units = "secs"))
@@ -249,14 +270,16 @@ DatetimeFilterState <- R6::R6Class( # nolint
         if (any(choices != choices_adjusted)) {
           warning(sprintf(
             "Choices adjusted (some values outside of variable range). Varname: %s, dataname: %s.",
-            private$varname, private$dataname))
+            private$varname, private$dataname
+          ))
           choices <- choices_adjusted
         }
         if (choices[1L] >= choices[2L]) {
           warning(sprintf(
             "Invalid choices: lower is higher / equal to upper, or not in range of variable values.
             Setting defaults. Varname: %s, dataname: %s.",
-            private$varname, private$dataname))
+            private$varname, private$dataname
+          ))
           choices <- range(private$x, na.rm = TRUE)
         }
       }
@@ -264,7 +287,7 @@ DatetimeFilterState <- R6::R6Class( # nolint
       private$set_is_choice_limited(private$x, choices)
       private$x <- private$x[
         (as.POSIXct(trunc(private$x, units = "secs")) >= choices[1L] &
-           as.POSIXct(trunc(private$x, units = "secs")) <= choices[2L] )| is.na(private$x)
+          as.POSIXct(trunc(private$x, units = "secs")) <= choices[2L]) | is.na(private$x)
       ]
       private$choices <- choices
       invisible(NULL)
@@ -276,7 +299,6 @@ DatetimeFilterState <- R6::R6Class( # nolint
       private$is_choice_limited <- (any(xl < choices[1L], na.rm = TRUE) | any(xl > choices[2L], na.rm = TRUE))
       invisible(NULL)
     },
-
     validate_selection = function(value) {
       if (!(is(value, "POSIXct") || is(value, "POSIXlt"))) {
         stop(
@@ -295,11 +317,10 @@ DatetimeFilterState <- R6::R6Class( # nolint
       )
       check_in_range(value, private$choices, pre_msg = pre_msg)
     },
-
     cast_and_validate = function(values) {
       tryCatch(
         expr = {
-          values <- as.POSIXct(values)
+          values <- as.POSIXct(values, origin = "1970-01-01 00:00:00")
           if (any(is.na(values))) stop()
         },
         error = function(error) stop("The array of set values must contain values coercible to POSIX.")
@@ -307,7 +328,6 @@ DatetimeFilterState <- R6::R6Class( # nolint
       if (length(values) != 2) stop("The array of set values must have length two.")
       values
     },
-
     remove_out_of_bound_values = function(values) {
       if (values[1] < private$choices[1L] || values[1] > private$choices[2L]) {
         warning(
@@ -365,8 +385,8 @@ DatetimeFilterState <- R6::R6Class( # nolint
             div(class = "w-45 text-center", {
               x <- shinyWidgets::airDatepickerInput(
                 inputId = ns("selection_start"),
-                value = private$get_selected()[1],
-                startView = private$get_selected()[1],
+                value = shiny::isolate(private$get_selected())[1],
+                startView = shiny::isolate(private$get_selected())[1],
                 timepicker = TRUE,
                 minDate = private$choices[1L],
                 maxDate = private$choices[2L],
@@ -385,8 +405,8 @@ DatetimeFilterState <- R6::R6Class( # nolint
             div(class = "w-45 text-center", {
               x <- shinyWidgets::airDatepickerInput(
                 inputId = ns("selection_end"),
-                value = private$get_selected()[2],
-                startView = private$get_selected()[2],
+                value = shiny::isolate(private$get_selected())[2],
+                startView = shiny::isolate(private$get_selected())[2],
                 timepicker = TRUE,
                 minDate = private$choices[1L],
                 maxDate = private$choices[2L],
@@ -577,7 +597,6 @@ DatetimeFilterState <- R6::R6Class( # nolint
         }
       )
     },
-
     server_inputs_fixed = function(id) {
       moduleServer(
         id = id,

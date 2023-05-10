@@ -12,11 +12,17 @@
 #'   dataname = "data",
 #'   extract_type = character(0)
 #' )
-#' isolate(filter_state$get_call())
-#' isolate(filter_state$set_selected(c(3L, 8L)))
-#' isolate(filter_state$set_keep_na(TRUE))
-#' isolate(filter_state$set_keep_inf(TRUE))
-#' isolate(filter_state$get_call())
+#' shiny::isolate(filter_state$get_call())
+#' filter_state$set_state(
+#'   filter_var(
+#'     dataname = "data",
+#'     varname = "x",
+#'     selected = c(3L, 8L),
+#'     keep_na = TRUE,
+#'     keep_inf = TRUE
+#'   )
+#' )
+#' shiny::isolate(filter_state$get_call())
 #'
 #' \dontrun{
 #' # working filter in an app
@@ -24,13 +30,13 @@
 #' library(shinyjs)
 #'
 #' data_range <- c(runif(100, 0, 1), NA, Inf)
-#' filter_state_range <- RangeFilterState$new(
+#' fs <- teal.slice:::RangeFilterState$new(
 #'   x = data_range,
-#'   dataname = "data"
-#'   varname = "variable"
-#' )
-#' filter_state_range$set_state(
-#'   filter_var("data", "variable", selected = c(0.15, 0.93), keep_na = TRUE, keep_inf = TRUE)
+#'   dataname = "data",
+#'   varname = "x",
+#'   selected = c(0.15, 0.93),
+#'   keep_na = TRUE,
+#'   keep_inf = TRUE
 #' )
 #'
 #' ui <- fluidPage(
@@ -39,7 +45,7 @@
 #'   include_js_files(pattern = "count-bar-labels"),
 #'   column(4, div(
 #'     h4("RangeFilterState"),
-#'     isolate(filter_state_range$ui("fs"))
+#'     fs$ui("fs")
 #'   )),
 #'   column(4, div(
 #'     id = "outputs", # div id is needed for toggling the element
@@ -63,20 +69,40 @@
 #' )
 #'
 #' server <- function(input, output, session) {
-#'   filter_state_range$server("fs")
-#'   output$condition_range <- renderPrint(filter_state_range$get_call())
-#'   output$formatted_range <- renderText(filter_state_range$format())
-#'   output$unformatted_range <- renderPrint(filter_state_range$get_state())
+#'   fs$server("fs")
+#'   output$condition_range <- renderPrint(fs$get_call())
+#'   output$formatted_range <- renderText(fs$format())
+#'   output$unformatted_range <- renderPrint(fs$get_state())
 #'   # modify filter state programmatically
-#'   observeEvent(input$button1_range, filter_state_range$set_keep_na(FALSE))
-#'   observeEvent(input$button2_range, filter_state_range$set_keep_na(TRUE))
-#'   observeEvent(input$button3_range, filter_state_range$set_keep_inf(FALSE))
-#'   observeEvent(input$button4_range, filter_state_range$set_keep_inf(TRUE))
-#'   observeEvent(input$button5_range, filter_state_range$set_selected(c(0.2, 0.74)))
-#'   observeEvent(input$button6_range, filter_state_range$set_selected(c(0, 1)))
+#'   observeEvent(
+#'     input$button1_range,
+#'     fs$set_state(filter_var(dataname = "data", varname = "x", keep_na = FALSE))
+#'   )
+#'   observeEvent(
+#'     input$button2_range,
+#'     fs$set_state(filter_var(dataname = "data", varname = "x", keep_na = TRUE))
+#'   )
+#'   observeEvent(
+#'     input$button3_range,
+#'     fs$set_state(filter_var(dataname = "data", varname = "x", keep_inf = FALSE))
+#'   )
+#'   observeEvent(
+#'     input$button4_range,
+#'     fs$set_state(filter_var(dataname = "data", varname = "x", keep_inf = TRUE))
+#'   )
+#'   observeEvent(
+#'     input$button5_range,
+#'     fs$set_state(
+#'       filter_var(dataname = "data", varname = "x", selected = c(0.2, 0.74))
+#'     )
+#'   )
+#'   observeEvent(
+#'     input$button6_range,
+#'     fs$set_state(filter_var(dataname = "data", varname = "x", selected = c(0, 1)))
+#'   )
 #'   observeEvent(
 #'     input$button0_range,
-#'     filter_state_range$set_state(
+#'     fs$set_state(
 #'       filter_var("data", "variable", selected = c(0.15, 0.93), keep_na = TRUE, keep_inf = TRUE)
 #'     )
 #'   )
@@ -220,7 +246,9 @@ RangeFilterState <- R6::R6Class( # nolint
     #' @return (`call`)
     #'
     get_call = function(dataname) {
-      if (isFALSE(private$is_any_filtered())) return(NULL)
+      if (isFALSE(private$is_any_filtered())) {
+        return(NULL)
+      }
       if (missing(dataname)) dataname <- private$dataname
       filter_call <-
         call(
@@ -259,14 +287,16 @@ RangeFilterState <- R6::R6Class( # nolint
         if (any(choices != choices_adjusted)) {
           warning(sprintf(
             "Choices adjusted (some values outside of variable range). Varname: %s, dataname: %s.",
-            private$varname, private$dataname))
+            private$varname, private$dataname
+          ))
           choices <- choices_adjusted
         }
         if (choices[1L] > choices[2L]) {
           warning(sprintf(
             "Invalid choices: lower is higher / equal to upper, or not in range of variable values.
             Setting defaults. Varname: %s, dataname: %s.",
-            private$varname, private$dataname))
+            private$varname, private$dataname
+          ))
           choices <- range(x)
         }
       }
@@ -526,7 +556,7 @@ RangeFilterState <- R6::R6Class( # nolint
               }
             }
           )
-          
+
           private$observers$selection_manual <- observeEvent(
             ignoreNULL = FALSE,
             ignoreInit = TRUE,
@@ -621,7 +651,7 @@ RangeFilterState <- R6::R6Class( # nolint
               disabled = private$is_disabled()
             )
           })
-          
+
           observeEvent(input$manual,
             {
               if (input$manual) {
@@ -648,7 +678,6 @@ RangeFilterState <- R6::R6Class( # nolint
         }
       )
     },
-
     server_inputs_fixed = function(id) {
       moduleServer(
         id = id,

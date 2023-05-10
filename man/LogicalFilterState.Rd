@@ -14,10 +14,11 @@ filter_state <- teal.slice:::LogicalFilterState$new(
   dataname = "data",
   extract_type = character(0)
 )
-isolate(filter_state$get_call())
-isolate(filter_state$set_selected(TRUE))
-isolate(filter_state$set_keep_na(TRUE))
-isolate(filter_state$get_call())
+shiny::isolate(filter_state$get_call())
+filter_state$set_state(
+  filter_var(dataname = "data", varname = "x", selected = TRUE, keep_na = TRUE)
+)
+shiny::isolate(filter_state$get_call())
 
 \dontrun{
 # working filter in an app
@@ -25,13 +26,12 @@ library(shiny)
 library(shinyjs)
 
 data_logical <- c(sample(c(TRUE, FALSE), 10, replace = TRUE), NA)
-filter_state_logical <- LogicalFilterState$new(
+fs <- teal.slice:::LogicalFilterState$new(
   x = data_logical,
   dataname = "data",
-  varname = "variable"
-)
-filter_state_logical$set_state(
-  filter_var("data", "variable", selected = FALSE, keep_na = TRUE)
+  varname = "x",
+  selected = FALSE,
+  keep_na = TRUE
 )
 
 ui <- fluidPage(
@@ -40,7 +40,7 @@ ui <- fluidPage(
   include_js_files(pattern = "count-bar-labels"),
   column(4, div(
     h4("LogicalFilterState"),
-    isolate(filter_state_logical$ui("fs"))
+    fs$ui("fs")
   )),
   column(4, div(
     id = "outputs", # div id is needed for toggling the element
@@ -61,18 +61,27 @@ ui <- fluidPage(
 )
 
 server <- function(input, output, session) {
-  filter_state_logical$server("fs")
-  output$condition_logical <- renderPrint(filter_state_logical$get_call())
-  output$formatted_logical <- renderText(filter_state_logical$format())
-  output$unformatted_logical <- renderPrint(filter_state_logical$get_state())
+  fs$server("fs")
+  output$condition_logical <- renderPrint(fs$get_call())
+  output$formatted_logical <- renderText(fs$format())
+  output$unformatted_logical <- renderPrint(fs$get_state())
   # modify filter state programmatically
-  observeEvent(input$button1_logical, filter_state_logical$set_keep_na(FALSE))
-  observeEvent(input$button2_logical, filter_state_logical$set_keep_na(TRUE))
-  observeEvent(input$button3_logical, filter_state_logical$set_selected(TRUE))
+  observeEvent(
+    input$button1_logical,
+    fs$set_state(filter_var(dataname = "data", varname = "x", keep_na = FALSE))
+  )
+  observeEvent(
+    input$button2_logical,
+    fs$set_state(filter_var(dataname = "data", varname = "x", keep_na = TRUE))
+  )
+  observeEvent(
+    input$button3_logical,
+    fs$set_state(filter_var(dataname = "data", varname = "x", selected = TRUE))
+  )
   observeEvent(
     input$button0_logical,
-    filter_state_logical$set_state(
-      filter_var("data", "variable", selected = FALSE, keep_na = TRUE)
+    fs$set_state(
+      filter_var(dataname = "data", varname = "x", selected = FALSE, keep_na = TRUE)
     )
   )
 }
@@ -92,7 +101,6 @@ if (interactive()) {
 \itemize{
 \item \href{#method-LogicalFilterState-new}{\code{LogicalFilterState$new()}}
 \item \href{#method-LogicalFilterState-format}{\code{LogicalFilterState$format()}}
-\item \href{#method-LogicalFilterState-is_any_filtered}{\code{LogicalFilterState$is_any_filtered()}}
 \item \href{#method-LogicalFilterState-get_call}{\code{LogicalFilterState$get_call()}}
 \item \href{#method-LogicalFilterState-clone}{\code{LogicalFilterState$clone()}}
 }
@@ -201,19 +209,6 @@ defaults to 0}
 }
 \subsection{Returns}{
 \code{character(1)} the formatted string
-}
-}
-\if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-LogicalFilterState-is_any_filtered"></a>}}
-\if{latex}{\out{\hypertarget{method-LogicalFilterState-is_any_filtered}{}}}
-\subsection{Method \code{is_any_filtered()}}{
-Answers the question of whether the current settings and values selected actually filters out any values.
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{LogicalFilterState$is_any_filtered()}\if{html}{\out{</div>}}
-}
-
-\subsection{Returns}{
-logical scalar
 }
 }
 \if{html}{\out{<hr>}}

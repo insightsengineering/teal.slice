@@ -116,7 +116,7 @@ fields (dataname, varname, varlabel, arg, id) differ", {
 testthat::test_that("set_filter_state creates a new FilterStateExpr", {
   filter_states <- FilterStates$new(data = data.frame(a = 1:5, b = 6:10), dataname = "test")
   fs <- filter_settings(
-    filter_expr(id = "test", dataname = "test", title = "expression", expr = quote(a > 1 & b < 10)),
+    filter_expr(id = "test", dataname = "test", title = "expression", expr = "a > 1 & b < 10"),
     count_type = "none"
   )
   filter_states$set_filter_state(fs)
@@ -169,7 +169,7 @@ testthat::test_that("clearing empty FilterStates does not raise errors", {
 
 
 testthat::test_that("clear_filter_state empties the state_list", {
-    filter_states <- FilterStates$new(data = data.frame(a = 1:5), dataname = "a")
+  filter_states <- FilterStates$new(data = data.frame(a = 1:5), dataname = "a")
   fs <- filter_settings(
     filter_var(dataname = "a", varname = "a"),
     filter_var(dataname = "a", varname = "a", datalabel = "a"),
@@ -264,7 +264,7 @@ testthat::test_that("get_call returns subset with multiple filter expressions co
   fs <- FilterStates$new(data = data.frame(a = 1:10, b = 1:10, c = 1:10), dataname = "test")
   fs$set_filter_state(filter_settings(
     filter_var(dataname = "test", varname = "a", datalabel = "1", selected = c(1, 9)),
-    filter_expr(id = "a", dataname = "test", title = "a", expr = quote(b > 5 | a > 5))
+    filter_expr(id = "a", dataname = "test", title = "a", expr = "b > 5 | a > 5")
   ))
 
   testthat::expect_equal(
@@ -449,8 +449,8 @@ testthat::test_that("srv_add limits choices to the include_varnames", {
 testthat::test_that("srv_add flags keys as primary_key", {
   data <- iris
   colnames(data) <- tolower(colnames(data))
-  testFS <- R6::R6Class(
-    "testFS",
+  testfs <- R6::R6Class(
+    "testfs",
     inherit = FilterStates,
     public = list(
       initialize = function(data, dataname, keys) {
@@ -459,7 +459,7 @@ testthat::test_that("srv_add flags keys as primary_key", {
       }
     )
   )
-  filter_states <- testFS$new(data = data, dataname = "test", keys = "species")
+  filter_states <- testfs$new(data = data, dataname = "test", keys = "species")
   filter_states$set_filter_state(state = filter_settings(
     include_varnames = list(test = c("sepal.length", "species"))
   ))

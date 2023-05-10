@@ -29,15 +29,24 @@
 #'   )
 #' )
 #' fs <- filter_settings(
-#'   filter_var("iris", "Species", selected = c("setosa", "versicolor")),
-#'   filter_var("iris", "Sepal.Length", selected = c(5.1, 6.4)),
-#'   filter_var("mae", "years_to_birth",
-#'     selected = c(30, 50),
-#'     keep_na = TRUE, keep_inf = FALSE, datalabel = "subjects", arg = "y"
+#'   filter_var(dataname = "iris", varname = "Species", selected = c("setosa", "versicolor")),
+#'   filter_var(dataname = "iris", varname = "Sepal.Length", selected = c(5.1, 6.4)),
+#'   filter_var(
+#'     dataname = "mae", varname = "years_to_birth", selected = c(30, 50),
+#'     keep_na = TRUE, keep_inf = FALSE, datalabel = "subjects"
 #'   ),
-#'   filter_var("mae", "vital_status", selected = "1", keep_na = FALSE, datalabel = "subjects", arg = "y"),
-#'   filter_var("mae", "gender", selected = "female", keep_na = TRUE, datalabel = "subjects", arg = "y"),
-#'   filter_var("mae", "ARRAY_TYPE", selected = "", keep_na = TRUE, datalabel = "RPPAArray", arg = "subset")
+#'   filter_var(
+#'     dataname = "mae", varname = "vital_status", selected = "1",
+#'     keep_na = FALSE, datalabel = "subjects"
+#'   ),
+#'   filter_var(
+#'     dataname = "mae", varname = "gender", selected = "female",
+#'     keep_na = TRUE, datalabel = "subjects"
+#'   ),
+#'   filter_var(
+#'     dataname = "mae", varname = "ARRAY_TYPE", selected = "",
+#'     keep_na = TRUE, datalabel = "RPPAArray", arg = "subset"
+#'   )
 #' )
 #'
 #' # set initial filter state
@@ -50,7 +59,7 @@
 #' set_filter_state(
 #'   datasets,
 #'   filter_settings(
-#'     filter_var("iris", "Species", selected = "setosa", keep_na = TRUE)
+#'     filter_var(dataname = "iris", varname = "Species", selected = "setosa", keep_na = TRUE)
 #'   )
 #' )
 #'
@@ -58,9 +67,9 @@
 #' remove_filter_state(
 #'   datasets,
 #'   filter_settings(
-#'     filter_var("iris", "Species"),
-#'     filter_var("mae", "years_to_birth"),
-#'     filter_var("mae", "vital_status")
+#'     filter_var(dataname = "iris", varname = "Species"),
+#'     filter_var(dataname = "mae", varname = "years_to_birth"),
+#'     filter_var(dataname = "mae", varname = "vital_status")
 #'   )
 #' )
 #'

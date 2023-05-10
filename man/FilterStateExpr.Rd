@@ -17,10 +17,10 @@ This class is responsible for displaying filter card and returning filter expres
 ## ------------------------------------------------
 
 filter_state <- teal.slice:::FilterStateExpr$new(
+  dataname = "x",
   id = "FA",
   title = "Adult females",
-  dataname = "x",
-  expr = quote(sex == "F" & age >= 18)
+  expr = "sex == 'F' & age >= 18"
 )
 shiny::isolate(filter_state$get_call())
 
@@ -69,7 +69,6 @@ if (interactive()) {
 \item \href{#method-FilterStateExpr-get_state}{\code{FilterStateExpr$get_state()}}
 \item \href{#method-FilterStateExpr-set_state}{\code{FilterStateExpr$set_state()}}
 \item \href{#method-FilterStateExpr-get_call}{\code{FilterStateExpr$get_call()}}
-\item \href{#method-FilterStateExpr-is_any_filtered}{\code{FilterStateExpr$is_any_filtered()}}
 \item \href{#method-FilterStateExpr-server}{\code{FilterStateExpr$server()}}
 \item \href{#method-FilterStateExpr-ui}{\code{FilterStateExpr$ui()}}
 \item \href{#method-FilterStateExpr-destroy_observers}{\code{FilterStateExpr$destroy_observers()}}
@@ -82,27 +81,27 @@ if (interactive()) {
 \subsection{Method \code{new()}}{
 Initialize a \code{FilterStateExpr} object
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{FilterStateExpr$new(id, title, dataname, expr, disabled = FALSE, ...)}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{FilterStateExpr$new(dataname, id, title, expr, disabled = FALSE, ...)}\if{html}{\out{</div>}}
 }
 
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
-\item{\code{id}}{(\code{character(1)})\cr
-identifier of the filter}
-
-\item{\code{title}}{(\code{reactive})\cr
-title of the filter}
-
 \item{\code{dataname}}{(\code{character(1)})\cr
 name of the dataset where \code{expr} could be executed on.}
 
-\item{\code{expr}}{(\code{language})\cr
+\item{\code{id}}{(\code{character(1)})\cr
+identifier of the filter}
+
+\item{\code{title}}{(\code{character(1)})\cr
+title of the filter
 logical expression written in executable way. By "executable" means
 that \code{subset} call should be able to evaluate this without failure. For
-example \code{MultiAssayExperiment::subsetByColData} requires varnames prefixed
+example \code{MultiAssayExperiment::subsetByColData} requires variable names prefixed
 by dataname (e.g. \code{data$var1 == "x" & data$var2 > 0}). For \code{data.frame} call
 can be written without prefixing \code{var1 == "x" & var2 > 0}.}
+
+\item{\code{expr}}{(\code{character(1)})\cr}
 
 \item{\code{disabled}}{(\code{logical(1)})\cr
 flag specifying whether the \code{FilterState} is initiated disabled}
@@ -117,10 +116,10 @@ flag specifying whether the \code{FilterState} is initiated disabled}
 \subsection{Examples}{
 \if{html}{\out{<div class="r example copy">}}
 \preformatted{filter_state <- teal.slice:::FilterStateExpr$new(
+  dataname = "x",
   id = "FA",
   title = "Adult females",
-  dataname = "x",
-  expr = quote(sex == "F" & age >= 18)
+  expr = "sex == 'F' & age >= 18"
 )
 shiny::isolate(filter_state$get_call())
 
@@ -247,20 +246,6 @@ and must be executed in reactive or isolated context.}
 }
 \subsection{Returns}{
 \code{language}
-}
-}
-\if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-FilterStateExpr-is_any_filtered"></a>}}
-\if{latex}{\out{\hypertarget{method-FilterStateExpr-is_any_filtered}{}}}
-\subsection{Method \code{is_any_filtered()}}{
-Answers the question of whether the current settings and values selected actually filters out any values.
-\code{FALSE} only when disabled.
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{FilterStateExpr$is_any_filtered()}\if{html}{\out{</div>}}
-}
-
-\subsection{Returns}{
-logical scalar
 }
 }
 \if{html}{\out{<hr>}}

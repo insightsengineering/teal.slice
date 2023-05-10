@@ -32,7 +32,7 @@ filter_var(
   ...
 )
 
-filter_expr(id, title, dataname, expr, disabled = FALSE, ...)
+filter_expr(dataname, id, title, expr, disabled = FALSE, ...)
 
 filter_settings(
   ...,
@@ -100,7 +100,7 @@ title of the filter (used by \code{filter_expr})}
 \item{expr}{(\code{language})\cr
 logical expression written in executable way. By "executable" means
 that \code{subset} call should be able to evaluate this without failure. For
-example \code{MultiAssayExperiment::subsetByColData} requires varnames prefixed
+example \code{MultiAssayExperiment::subsetByColData} requires variable names prefixed
 by dataname (e.g. \code{data$var1 == "x" & data$var2 > 0}). For \code{data.frame} call
 can be written without prefixing \code{var1 == "x" & var2 > 0}.}
 
@@ -175,13 +175,13 @@ To establish a filter on a column in a \code{data.frame}, \code{dataname} and \c
 Filter states created created for \code{SummarizedExperiments} require more information
 as each variable is either located in the \code{rowData} or \code{colData} slots.
 Thus, \code{teal_slice} objects that refer to such filter states must also contain the field \code{arg}
-that specifies "subset" for variales in \code{rowData} and "select" for those in \code{colData}.
+that specifies "subset" for variables in \code{rowData} and "select" for those in \code{colData}.
 
 Likewise, observations in a \code{MultiAssayExpeeiment} can be filtered based on the content of the \code{colData} slot
 or based on the contents of \code{rowData} and \code{colData} of any of its experiments. Hence, another field is necessary.
-\code{teal_slice} objects refering to \code{MultiAssayExperiment} objects must contain the field \code{datalabel}
+\code{teal_slice} objects referring to \code{MultiAssayExperiment} objects must contain the field \code{datalabel}
 that names either an experiment (as listed in \verb{experimentList(<MAE>)}) or "subjects"
-if it referes to the MAE's \code{colData}. They must \strong{also} specify \code{arg} as "subset" or "select"
+if it refers to the MultiAssaysExperiment's \code{colData}. They must \strong{also} specify \code{arg} as "subset" or "select"
 for experiments and as "y" for \code{colData}.
 }
 
@@ -196,7 +196,7 @@ all_filters <- filter_settings(
   filter_1,
   filter_2,
   filter_3,
-  exclude = list(
+  exclude_varnames = list(
     "dataname1" = "varname2"
   )
 )
@@ -206,5 +206,11 @@ x <- "dataname2"
 teal.slice:::slices_which(all_filters, sprintf('dataname == "\%s"', x))
 teal.slice:::slices_field(all_filters, "dataname")
 
+filter_expr(
+  dataname = "data",
+  id = "FA",
+  title = "Female adults",
+  expr = "SEX == 'F' & AGE >= 18"
+)
 }
 \keyword{internal}

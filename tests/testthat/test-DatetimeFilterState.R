@@ -153,81 +153,87 @@ testthat::test_that("get_call returns call selected different than choices", {
     shiny::isolate(filter_state$get_call()),
     quote(
       variable >= as.POSIXct("2000-01-01 12:00:00", tz = "GMT") &
-      variable < as.POSIXct("2000-01-01 12:00:03", tz = "GMT")
+        variable < as.POSIXct("2000-01-01 12:00:03", tz = "GMT")
     )
   )
 })
 
 testthat::test_that("get_call returns NULL if disabled", {
   filter_state <- DatetimeFilterState$new(
-    posixct, dataname = "data", varname = "variable", selected = posixct[c(1, 3)], disabled = TRUE
+    posixct,
+    dataname = "data", varname = "variable", selected = posixct[c(1, 3)], disabled = TRUE
   )
   testthat::expect_null(shiny::isolate(filter_state$get_call()))
 })
 
 testthat::test_that("get_call returns call always if choices are limited - regardless of selected", {
   filter_state <- DatetimeFilterState$new(
-    posixct, dataname = "data", varname = "variable",
+    posixct,
+    dataname = "data", varname = "variable",
     choices = posixct[c(1, 3)], selected = posixct[c(1, 3)]
   )
   testthat::expect_identical(
     shiny::isolate(filter_state$get_call()),
     quote(
       variable >= as.POSIXct("2000-01-01 12:00:00", tz = "GMT") &
-      variable < as.POSIXct("2000-01-01 12:00:03", tz = "GMT")
+        variable < as.POSIXct("2000-01-01 12:00:03", tz = "GMT")
     )
   )
 })
 
 testthat::test_that("get_call prefixes varname by dataname$varname if extract_type='list'", {
   filter_state <- DatetimeFilterState$new(
-    posixct, dataname = "data", varname = "variable", selected = posixct[c(1, 3)], extract_type = "list"
+    posixct,
+    dataname = "data", varname = "variable", selected = posixct[c(1, 3)], extract_type = "list"
   )
   testthat::expect_identical(
     shiny::isolate(filter_state$get_call(dataname = "dataname")),
     quote(
       dataname$variable >= as.POSIXct("2000-01-01 12:00:00", tz = "GMT") &
-      dataname$variable < as.POSIXct("2000-01-01 12:00:03", tz = "GMT")
+        dataname$variable < as.POSIXct("2000-01-01 12:00:03", tz = "GMT")
     )
   )
 })
 
 testthat::test_that("get_call prefixes varname by dataname[, 'varname'] if extract_type='matrix'", {
   filter_state <- DatetimeFilterState$new(
-    posixct, dataname = "data", varname = "variable", selected = posixct[c(1, 3)], extract_type = "matrix"
+    posixct,
+    dataname = "data", varname = "variable", selected = posixct[c(1, 3)], extract_type = "matrix"
   )
   testthat::expect_identical(
     shiny::isolate(filter_state$get_call(dataname = "dataname")),
     quote(
       dataname[, "variable"] >= as.POSIXct("2000-01-01 12:00:00", tz = "GMT") &
-      dataname[, "variable"] < as.POSIXct("2000-01-01 12:00:03", tz = "GMT")
+        dataname[, "variable"] < as.POSIXct("2000-01-01 12:00:03", tz = "GMT")
     )
   )
 })
 
 testthat::test_that("get_call adds is.na(variable) to returned call if keep_na is true", {
   filter_state <- DatetimeFilterState$new(
-    c(posixct, NA), dataname = "data", varname = "variable", selected = posixct[c(1, 3)], keep_na = TRUE
+    c(posixct, NA),
+    dataname = "data", varname = "variable", selected = posixct[c(1, 3)], keep_na = TRUE
   )
   testthat::expect_identical(
     shiny::isolate(filter_state$get_call()),
     quote(
       is.na(variable) |
-      variable >= as.POSIXct("2000-01-01 12:00:00", tz = "GMT") &
-      variable < as.POSIXct("2000-01-01 12:00:03", tz = "GMT")
+        variable >= as.POSIXct("2000-01-01 12:00:00", tz = "GMT") &
+          variable < as.POSIXct("2000-01-01 12:00:03", tz = "GMT")
     )
   )
 })
 
 testthat::test_that("get_call returns call if all selected but NA exists", {
   filter_state <- DatetimeFilterState$new(
-    c(posixct, NA), dataname = "data", varname = "variable", keep_na = FALSE
+    c(posixct, NA),
+    dataname = "data", varname = "variable", keep_na = FALSE
   )
   testthat::expect_identical(
     shiny::isolate(filter_state$get_call()),
     quote(
       variable >= as.POSIXct("2000-01-01 13:00:00", tz = "CET") &
-      variable < as.POSIXct("2000-01-01 13:00:10", tz = "CET")
+        variable < as.POSIXct("2000-01-01 13:00:10", tz = "CET")
     )
   )
 })

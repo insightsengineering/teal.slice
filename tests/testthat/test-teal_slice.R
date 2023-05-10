@@ -153,7 +153,6 @@ testthat::test_that("is* functions work", {
 })
 
 
-# as.teal_slice(s)
 testthat::test_that("as.teal_slice checks arguments", {
   fl1 <- list(
     dataname = "data",
@@ -238,7 +237,7 @@ testthat::test_that("as.teal_slices converts list to `teal_slices`", {
 
   fs3 <- filter_settings(
     filter_var("data1", "var1", selected = "a", keep_na = TRUE),
-    filter_var("data2", "var31", selected = 31, keep_na = TRUE, keep_inf = FALSE, datalabel = "subjects", arg =  "y"),
+    filter_var("data2", "var31", selected = 31, keep_na = TRUE, keep_inf = FALSE, datalabel = "subjects", arg = "y"),
     filter_var("data@", "var32", selected = 32, keep_na = TRUE, keep_inf = FALSE, datalabel = "exp1", arg = "subset"),
     include_varnames = list(data1 = "a")
   )
@@ -550,8 +549,8 @@ testthat::test_that("format.teal_slices prints count_type attribute if not empty
 
 # helpers ----
 testthat::test_that("slices_field works", {
-  fs1 <- filter_var("data", "var1")
-  fs2 <- filter_var("data", "var2")
+  fs1 <- filter_var(dataname = "data", varname = "var1")
+  fs2 <- filter_var(dataname = "data", varname = "var2")
   fs <- filter_settings(fs1, fs2)
 
   # argument checks

@@ -199,14 +199,16 @@ testthat::test_that("get_call returns call selected different than choices", {
 
 testthat::test_that("get_call returns NULL if disabled", {
   filter_state <- RangeFilterState$new(
-    nums, dataname = "data", varname = "variable", selected = nums[c(1, 3)], disabled = TRUE
+    nums,
+    dataname = "data", varname = "variable", selected = nums[c(1, 3)], disabled = TRUE
   )
   testthat::expect_null(shiny::isolate(filter_state$get_call()))
 })
 
 testthat::test_that("get_call returns call always if choices are limited - regardless of selected", {
   filter_state <- RangeFilterState$new(
-    nums, dataname = "data", varname = "variable",
+    nums,
+    dataname = "data", varname = "variable",
     choices = nums[c(1, 3)], selected = nums[c(1, 3)]
   )
   testthat::expect_identical(
@@ -217,7 +219,8 @@ testthat::test_that("get_call returns call always if choices are limited - regar
 
 testthat::test_that("get_call prefixes varname by dataname$varname if extract_type='list'", {
   filter_state <- RangeFilterState$new(
-    nums, dataname = "data", varname = "variable", selected = nums[c(1, 3)], extract_type = "list"
+    nums,
+    dataname = "data", varname = "variable", selected = nums[c(1, 3)], extract_type = "list"
   )
   testthat::expect_identical(
     shiny::isolate(filter_state$get_call(dataname = "dataname")),
@@ -227,7 +230,8 @@ testthat::test_that("get_call prefixes varname by dataname$varname if extract_ty
 
 testthat::test_that("get_call prefixes varname by dataname[, 'varname'] if extract_type='matrix'", {
   filter_state <- RangeFilterState$new(
-    nums, dataname = "data", varname = "variable", selected = nums[c(1, 3)], extract_type = "matrix"
+    nums,
+    dataname = "data", varname = "variable", selected = nums[c(1, 3)], extract_type = "matrix"
   )
   testthat::expect_identical(
     shiny::isolate(filter_state$get_call(dataname = "dataname")),
@@ -237,7 +241,8 @@ testthat::test_that("get_call prefixes varname by dataname[, 'varname'] if extra
 
 testthat::test_that("get_call adds is.na(variable) to returned call if keep_na is true", {
   filter_state <- RangeFilterState$new(
-    c(nums, NA), dataname = "data", varname = "variable", selected = nums[c(1, 3)], keep_na = TRUE
+    c(nums, NA),
+    dataname = "data", varname = "variable", selected = nums[c(1, 3)], keep_na = TRUE
   )
   testthat::expect_identical(
     shiny::isolate(filter_state$get_call()),
@@ -247,7 +252,8 @@ testthat::test_that("get_call adds is.na(variable) to returned call if keep_na i
 
 testthat::test_that("get_call returns call if all selected but NA exists", {
   filter_state <- RangeFilterState$new(
-    c(nums, NA), dataname = "data", varname = "variable", keep_na = FALSE
+    c(nums, NA),
+    dataname = "data", varname = "variable", keep_na = FALSE
   )
   testthat::expect_identical(
     shiny::isolate(filter_state$get_call()),

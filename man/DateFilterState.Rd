@@ -14,10 +14,16 @@ filter_state <- teal.slice:::DateFilterState$new(
   dataname = "data",
   extract_type = character(0)
 )
-isolate(filter_state$get_call())
-isolate(filter_state$set_selected(c(Sys.Date() + 3L, Sys.Date() + 8L)))
-isolate(filter_state$set_keep_na(TRUE))
-isolate(filter_state$get_call())
+shiny::isolate(filter_state$get_call())
+filter_state$set_state(
+  filter_var(
+    dataname = "data",
+    varname = "x",
+    selected = c(Sys.Date() + 3L, Sys.Date() + 8L),
+    keep_na = TRUE
+  )
+)
+shiny::isolate(filter_state$get_call())
 
 \dontrun{
 # working filter in an app
@@ -26,13 +32,12 @@ library(shinyjs)
 
 dates <- c(Sys.Date() - 100, Sys.Date())
 data_date <- c(seq(from = dates[1], to = dates[2], length.out = 100), NA)
-filter_state_date <- DateFilterState$new(
+fs <- DateFilterState$new(
   x = data_date,
   dataname = "data",
-  varname = "variable"
-)
-filter_state_date$set_state(
-  filter_var("data", "variable", selected = data_date[c(47, 98)], keep_na = TRUE)
+  varname = "x",
+  selected = data_date[c(47, 98)],
+  keep_na = TRUE
 )
 
 ui <- fluidPage(
@@ -41,7 +46,7 @@ ui <- fluidPage(
   include_js_files(pattern = "count-bar-labels"),
   column(4, div(
     h4("DateFilterState"),
-    isolate(filter_state_date$ui("fs"))
+    fs$ui("fs")
   )),
   column(4, div(
     id = "outputs", # div id is needed for toggling the element
@@ -63,21 +68,30 @@ ui <- fluidPage(
 )
 
 server <- function(input, output, session) {
-  filter_state_date$server("fs")
-  output$condition_date <- renderPrint(filter_state_date$get_call())
-  output$formatted_date <- renderText(filter_state_date$format())
-  output$unformatted_date <- renderPrint(filter_state_date$get_state())
+  fs$server("fs")
+  output$condition_date <- renderPrint(fs$get_call())
+  output$formatted_date <- renderText(fs$format())
+  output$unformatted_date <- renderPrint(fs$get_state())
   # modify filter state programmatically
-  observeEvent(input$button1_date, filter_state_date$set_keep_na(FALSE))
-  observeEvent(input$button2_date, filter_state_date$set_keep_na(TRUE))
+  observeEvent(
+    input$button1_date,
+    fs$set_state(filter_var(dataname = "data", varname = "x", keep_na = FALSE))
+  )
+  observeEvent(
+    input$button2_date,
+    fs$set_state(filter_var(dataname = "data", varname = "x", keep_na = TRUE))
+  )
   observeEvent(
     input$button3_date,
-    filter_state_date$set_selected(data_date[c(34, 56)])
+    fs$set_state(filter_var(dataname = "data", varname = "x", selected = data_date[c(34, 56)]))
   )
-  observeEvent(input$button4_date, filter_state_date$set_selected(dates))
+  observeEvent(
+    input$button4_date,
+    fs$set_state(filter_var(dataname = "data", varname = "x", selected = dates))
+  )
   observeEvent(
     input$button0_date,
-    filter_state_date$set_state(
+    fs$set_state(
       filter_var("data", "variable", selected = data_date[c(47, 98)], keep_na = TRUE)
     )
   )
@@ -98,7 +112,6 @@ if (interactive()) {
 \itemize{
 \item \href{#method-DateFilterState-new}{\code{DateFilterState$new()}}
 \item \href{#method-DateFilterState-format}{\code{DateFilterState$format()}}
-\item \href{#method-DateFilterState-is_any_filtered}{\code{DateFilterState$is_any_filtered()}}
 \item \href{#method-DateFilterState-get_call}{\code{DateFilterState$get_call()}}
 \item \href{#method-DateFilterState-clone}{\code{DateFilterState$clone()}}
 }
@@ -206,19 +219,6 @@ Default: 0}
 }
 \subsection{Returns}{
 \code{character(1)} the formatted string
-}
-}
-\if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-DateFilterState-is_any_filtered"></a>}}
-\if{latex}{\out{\hypertarget{method-DateFilterState-is_any_filtered}{}}}
-\subsection{Method \code{is_any_filtered()}}{
-Answers the question of whether the current settings and values selected actually filters out any values.
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{DateFilterState$is_any_filtered()}\if{html}{\out{</div>}}
-}
-
-\subsection{Returns}{
-logical scalar
 }
 }
 \if{html}{\out{<hr>}}

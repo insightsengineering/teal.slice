@@ -21,14 +21,14 @@ FilterStateExpr <- R6::R6Class( # nolint
     #' Initialize a `FilterStateExpr` object
     #' @param dataname (`character(1)`)\cr
     #'   name of the dataset where `expr` could be executed on.
-    #' @param expr (`language`)\cr
+    #' @param expr (`character(1)`)\cr
     #' @param id (`character(1)`)\cr
     #'   identifier of the filter
     #' @param title (`character(1)`)\cr
     #'   title of the filter
     #'   logical expression written in executable way. By "executable" means
     #'   that `subset` call should be able to evaluate this without failure. For
-    #'   example `MultiAssayExperiment::subsetByColData` requires varnames prefixed
+    #'   example `MultiAssayExperiment::subsetByColData` requires variable names prefixed
     #'   by dataname (e.g. `data$var1 == "x" & data$var2 > 0`). For `data.frame` call
     #'   can be written without prefixing `var1 == "x" & var2 > 0`.
     #' @param disabled (`logical(1)`)\cr
@@ -39,7 +39,7 @@ FilterStateExpr <- R6::R6Class( # nolint
     #'   dataname = "x",
     #'   id = "FA",
     #'   title = "Adult females",
-    #'   expr = quote(sex == "F" & age >= 18)
+    #'   expr = "sex == 'F' & age >= 18"
     #' )
     #' shiny::isolate(filter_state$get_call())
     #'
@@ -83,8 +83,8 @@ FilterStateExpr <- R6::R6Class( # nolint
       checkmate::assert_string(dataname)
       checkmate::assert_string(id)
       checkmate::assert_string(title)
-      assert_logical_expr(expr)
       checkmate::assert_flag(disabled)
+      checkmate::assert_string(expr)
 
       private$id <- id
       private$title <- title
@@ -93,7 +93,6 @@ FilterStateExpr <- R6::R6Class( # nolint
       private$disabled <- reactiveVal(disabled)
       private$extras <- list(...)
       invisible(self)
-
     },
 
     #' @description
@@ -119,7 +118,8 @@ FilterStateExpr <- R6::R6Class( # nolint
           width = wrap_width,
           indent = indent
         ),
-        collapse = "\n")
+        collapse = "\n"
+      )
     },
 
     #' @description
@@ -133,7 +133,7 @@ FilterStateExpr <- R6::R6Class( # nolint
           id = private$id,
           title = private$title,
           dataname = private$dataname,
-          expr = quote(private$expr),
+          expr = private$expr,
           disable = private$disabled()
         ),
         private$extras
@@ -166,8 +166,10 @@ FilterStateExpr <- R6::R6Class( # nolint
     #' and must be executed in reactive or isolated context.
     #' @return `language`
     get_call = function(dataname) {
-      if (isTRUE(private$is_disabled())) return(NULL)
-      private$expr
+      if (isTRUE(private$is_disabled())) {
+        return(NULL)
+      }
+      str2lang(private$expr)
     },
 
     #' @description
@@ -186,14 +188,15 @@ FilterStateExpr <- R6::R6Class( # nolint
           private$server_summary("summary")
 
           # Disable/enable this filter state in response to switch flip.
-          private$observers$is_disabled <- observeEvent(input$enable, {
-            if (isTRUE(input$enable)) {
-              private$disabled(FALSE)
-            } else {
-              private$disabled(TRUE)
-            }
-          },
-          ignoreInit = TRUE
+          private$observers$is_disabled <- observeEvent(input$enable,
+            {
+              if (isTRUE(input$enable)) {
+                private$disabled(FALSE)
+              } else {
+                private$disabled(TRUE)
+              }
+            },
+            ignoreInit = TRUE
           )
 
           # Update disable switch according to disabled state.
@@ -313,7 +316,7 @@ FilterStateExpr <- R6::R6Class( # nolint
       )
     },
     content_summary = function() {
-      deparse1(private$expr)
+      private$expr
     }
   )
 )

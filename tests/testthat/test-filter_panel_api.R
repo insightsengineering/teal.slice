@@ -187,10 +187,10 @@ testthat::test_that("get_filter_state returns `teal_slices` with features identi
     filter_var("iris", "Sepal.Length", selected = c(5.1, 6.4)),
     filter_var("mae", "years_to_birth",
       selected = c(30, 50),
-      keep_na = TRUE, keep_inf = FALSE, datalabel = "subjects", arg =  "y"
+      keep_na = TRUE, keep_inf = FALSE, datalabel = "subjects", arg = "y"
     ),
-    filter_var("mae", "vital_status", selected = "1", keep_na = FALSE, datalabel = "subjects", arg =  "y"),
-    filter_var("mae", "gender", selected = "female", keep_na = TRUE, datalabel = "subjects", arg =  "y"),
+    filter_var("mae", "vital_status", selected = "1", keep_na = FALSE, datalabel = "subjects", arg = "y"),
+    filter_var("mae", "gender", selected = "female", keep_na = TRUE, datalabel = "subjects", arg = "y"),
     filter_var("mae", "ARRAY_TYPE", selected = "", keep_na = TRUE, datalabel = "RPPAArray", arg = "subset")
   )
   set_filter_state(datasets, filter = fs)
@@ -237,10 +237,10 @@ testthat::test_that("remove_filter_state removes filter state specified by `teal
     filter_var("iris", "Sepal.Length", selected = c(5.1, 6.4)),
     filter_var("mae", "years_to_birth",
       selected = c(30, 50),
-      keep_na = TRUE, keep_inf = FALSE, datalabel = "subjects", arg =  "y"
+      keep_na = TRUE, keep_inf = FALSE, datalabel = "subjects", arg = "y"
     ),
-    filter_var("mae", "vital_status", selected = "1", keep_na = FALSE, datalabel = "subjects", arg =  "y"),
-    filter_var("mae", "gender", selected = "female", keep_na = TRUE, datalabel = "subjects", arg =  "y"),
+    filter_var("mae", "vital_status", selected = "1", keep_na = FALSE, datalabel = "subjects", arg = "y"),
+    filter_var("mae", "gender", selected = "female", keep_na = TRUE, datalabel = "subjects", arg = "y"),
     filter_var("mae", "ARRAY_TYPE", selected = "", keep_na = TRUE, datalabel = "RPPAArray", arg = "subset")
   )
   set_filter_state(datasets, fs)
@@ -267,10 +267,10 @@ testthat::test_that("clear_filter_states removes all filter states", {
     filter_var("iris", "Sepal.Length", selected = c(5.1, 6.4)),
     filter_var("mae", "years_to_birth",
       selected = c(30, 50),
-      keep_na = TRUE, keep_inf = FALSE, datalabel = "subjects", arg =  "y"
+      keep_na = TRUE, keep_inf = FALSE, datalabel = "subjects", arg = "y"
     ),
-    filter_var("mae", "vital_status", selected = "1", keep_na = FALSE, datalabel = "subjects", arg =  "y"),
-    filter_var("mae", "gender", selected = "female", keep_na = TRUE, datalabel = "subjects", arg =  "y"),
+    filter_var("mae", "vital_status", selected = "1", keep_na = FALSE, datalabel = "subjects", arg = "y"),
+    filter_var("mae", "gender", selected = "female", keep_na = TRUE, datalabel = "subjects", arg = "y"),
     filter_var("mae", "ARRAY_TYPE", selected = "", keep_na = TRUE, datalabel = "RPPAArray", arg = "subset")
   )
   set_filter_state(datasets, fs)

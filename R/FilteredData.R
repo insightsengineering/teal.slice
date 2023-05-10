@@ -439,30 +439,6 @@ FilteredData <- R6::R6Class( # nolint
     #'
     #' @return `character` the pre-formatted filter state
     #'
-    #' @examples
-    #' utils::data(miniACC, package = "MultiAssayExperiment")
-    #' datasets <- teal.slice:::FilteredData$new(
-    #'   list(iris = list(dataset = iris),
-    #'        mae = list(dataset = miniACC)
-    #'   )
-    #' )
-    #' fs <- filter_settings(
-    #'   filter_var(dataname = "iris", varname = "Sepal.Length",
-    #'              selected = c(5.1, 6.4), keep_na = TRUE, keep_inf = FALSE),
-    #'   filter_var(dataname = "iris", varname = "Species",
-    #'              selected = c("setosa", "versicolor"), keep_na = FALSE),
-    #'   filter_var(dataname = "mae", varname = "years_to_birth", selected = c(30, 50),
-    #'              keep_na = TRUE, keep_inf = FALSE, datalabel = "subjects", arg = "y"),
-    #'   filter_var(dataname = "mae", varname = "vital_status",
-    #'              selected = "1", keep_na = FALSE, datalabel = "subjects", arg = "y"),
-    #'   filter_var(dataname = "mae", varname = "gender",
-    #'              selected = "female", keep_na = TRUE, datalabel = "subjects", arg = "y"),
-    #'   filter_var(dataname = "mae", varname = "ARRAY_TYPE",
-    #'              selected = "", keep_na = TRUE, datalabel = "RPPAArray", arg = "subset")
-    #' )
-    #' isolate(datasets$set_filter_state(state = fs))
-    #' cat(shiny::isolate(datasets$get_formatted_filter_state()))
-    #'
     get_formatted_filter_state = function() {
       # todo: this should be removed as teal_slices has own format method
       out <-
@@ -494,8 +470,10 @@ FilteredData <- R6::R6Class( # nolint
     #' )
     #' fs <-
     #'   filter_settings(
-    #'     filter_var(dataname = "iris", varname = "Sepal.Length", selected = c(5.1, 6.4), keep_na = TRUE, keep_inf = FALSE),
-    #'     filter_var(dataname = "iris", varname = "Species", selected = c("setosa", "versicolor"), keep_na = FALSE),
+    #'     filter_var(dataname = "iris", varname = "Sepal.Length", selected = c(5.1, 6.4),
+    #'                keep_na = TRUE, keep_inf = FALSE),
+    #'     filter_var(dataname = "iris", varname = "Species", selected = c("setosa", "versicolor"),
+    #'                keep_na = FALSE),
     #'     filter_var(dataname = "mae", varname = "years_to_birth", selected = c(30, 50),
     #'                keep_na = TRUE, keep_inf = FALSE, datalabel = "subjects", arg = "y"),
     #'     filter_var(dataname = "mae", varname = "vital_status",
@@ -503,9 +481,9 @@ FilteredData <- R6::R6Class( # nolint
     #'     filter_var(dataname = "mae", varname = "gender",
     #'                selected = "female", keep_na = TRUE, datalabel = "subjects", arg = "y"),
     #'     filter_var(dataname = "mae", varname = "ARRAY_TYPE",
-    #'                selected = "", keep_na = TRUE, experiment = "RPPAArray", arg = "subset")
+    #'                selected = "", keep_na = TRUE, datalabel = "RPPAArray", arg = "subset")
     #'   )
-    #' shiny::isolate(datasets$set_filter_state(state = fs))
+    #' datasets$set_filter_state(state = fs)
     #' shiny::isolate(datasets$get_filter_state())
     #'
     set_filter_state = function(state) {

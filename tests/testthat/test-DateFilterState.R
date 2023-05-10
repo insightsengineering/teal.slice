@@ -85,7 +85,7 @@ testthat::test_that("set_state: selected accepts vector of two coercible to Date
   testthat::expect_no_error(
     filter_state$set_state(filter_var(selected = dates[c(1, 10)], dataname = "data", varname = "variable"))
   )
-    testthat::expect_no_error(
+  testthat::expect_no_error(
     filter_state$set_state(filter_var(selected = as.integer(dates[c(1, 10)]), dataname = "data", varname = "variable"))
   )
   testthat::expect_error(
@@ -162,14 +162,16 @@ testthat::test_that("get_call returns call selected different than choices", {
 
 testthat::test_that("get_call returns NULL if disabled", {
   filter_state <- DateFilterState$new(
-    dates, dataname = "data", varname = "variable", selected = dates[c(1, 3)], disabled = TRUE
+    dates,
+    dataname = "data", varname = "variable", selected = dates[c(1, 3)], disabled = TRUE
   )
   testthat::expect_null(shiny::isolate(filter_state$get_call()))
 })
 
 testthat::test_that("get_call returns call always if choices are limited - regardless of selected", {
   filter_state <- DateFilterState$new(
-    dates, dataname = "data", varname = "variable",
+    dates,
+    dataname = "data", varname = "variable",
     choices = dates[c(1, 3)], selected = dates[c(1, 3)]
   )
   testthat::expect_identical(
@@ -180,7 +182,8 @@ testthat::test_that("get_call returns call always if choices are limited - regar
 
 testthat::test_that("get_call prefixes varname by dataname$varname if extract_type='list'", {
   filter_state <- DateFilterState$new(
-    dates, dataname = "data", varname = "variable", selected = dates[c(1, 3)], extract_type = "list"
+    dates,
+    dataname = "data", varname = "variable", selected = dates[c(1, 3)], extract_type = "list"
   )
   testthat::expect_identical(
     shiny::isolate(filter_state$get_call(dataname = "dataname")),
@@ -190,7 +193,8 @@ testthat::test_that("get_call prefixes varname by dataname$varname if extract_ty
 
 testthat::test_that("get_call prefixes varname by dataname[, 'varname'] if extract_type='matrix'", {
   filter_state <- DateFilterState$new(
-    dates, dataname = "data", varname = "variable", selected = dates[c(1, 3)], extract_type = "matrix"
+    dates,
+    dataname = "data", varname = "variable", selected = dates[c(1, 3)], extract_type = "matrix"
   )
   testthat::expect_identical(
     shiny::isolate(filter_state$get_call(dataname = "dataname")),
@@ -200,7 +204,8 @@ testthat::test_that("get_call prefixes varname by dataname[, 'varname'] if extra
 
 testthat::test_that("get_call adds is.na(variable) to returned call if keep_na is true", {
   filter_state <- DateFilterState$new(
-    c(dates, NA), dataname = "data", varname = "variable", selected = dates[c(1, 3)], keep_na = TRUE
+    c(dates, NA),
+    dataname = "data", varname = "variable", selected = dates[c(1, 3)], keep_na = TRUE
   )
   testthat::expect_identical(
     shiny::isolate(filter_state$get_call()),
@@ -210,7 +215,8 @@ testthat::test_that("get_call adds is.na(variable) to returned call if keep_na i
 
 testthat::test_that("get_call returns call if all selected but NA exists", {
   filter_state <- DateFilterState$new(
-    c(dates, NA), dataname = "data", varname = "variable", keep_na = FALSE
+    c(dates, NA),
+    dataname = "data", varname = "variable", keep_na = FALSE
   )
   testthat::expect_identical(
     shiny::isolate(filter_state$get_call()),

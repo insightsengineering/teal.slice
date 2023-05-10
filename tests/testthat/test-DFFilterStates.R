@@ -37,4 +37,3 @@ testthat::test_that("get_call returns filter call on dataname with unprefixed va
     )
   )
 })
-

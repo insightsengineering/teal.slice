@@ -252,14 +252,15 @@ FilterState <- R6::R6Class( # nolint
           }
 
           # Disable/enable this filter state in response to switch flip.
-          private$observers$is_disabled <- observeEvent(input$enable, {
-            if (isTRUE(input$enable)) {
-              private$disabled(FALSE)
-            } else {
-              private$disabled(TRUE)
-            }
-          },
-          ignoreInit = TRUE
+          private$observers$is_disabled <- observeEvent(input$enable,
+            {
+              if (isTRUE(input$enable)) {
+                private$disabled(FALSE)
+              } else {
+                private$disabled(TRUE)
+              }
+            },
+            ignoreInit = TRUE
           )
 
           # Update disable switch according to disabled state.
@@ -312,7 +313,7 @@ FilterState <- R6::R6Class( # nolint
               label = "",
               status = "success",
               fill = TRUE,
-              value = !private$is_disabled(),
+              value = !shiny::isolate(private$is_disabled()),
               width = 30
             ),
             actionLink(
@@ -379,7 +380,7 @@ FilterState <- R6::R6Class( # nolint
     ##
     # other
     is_choice_limited = FALSE, # flag whether number of possible choices was limited when specifying filter
-    na_rm = FALSE, # logical(1)
+    na_rm = FALSE,
     observers = list(), # stores observers
 
     # private methods ----
@@ -410,7 +411,6 @@ FilterState <- R6::R6Class( # nolint
         )
       )
       if (is.null(value)) value <- private$choices
-
       value <- private$cast_and_validate(value)
       value <- private$remove_out_of_bound_values(value)
       private$validate_selection(value)
@@ -612,9 +612,9 @@ FilterState <- R6::R6Class( # nolint
       }
     },
 
-    #' @description
-    #' Answers the question of whether the current settings and values selected actually filters out any values.
-    #' @return logical scalar
+    # @description
+    # Answers the question of whether the current settings and values selected actually filters out any values.
+    # @return logical scalar
     is_any_filtered = function() {
       if (private$is_disabled()) {
         FALSE
@@ -697,7 +697,7 @@ FilterState <- R6::R6Class( # nolint
       ns <- NS(id)
       if (private$na_count > 0) {
         countmax <- private$na_count
-        countnow <- isolate(private$filtered_na_count())
+        countnow <- shiny::isolate(private$filtered_na_count())
         div(
           uiOutput(ns("trigger_visible"), inline = TRUE),
           checkboxInput(

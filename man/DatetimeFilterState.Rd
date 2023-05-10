@@ -14,10 +14,16 @@ filter_state <- teal.slice:::DatetimeFilterState$new(
   dataname = "data",
   extract_type = character(0)
 )
-isolate(filter_state$get_call())
-isolate(filter_state$set_selected(c(Sys.time() + 3L, Sys.time() + 8L)))
-isolate(filter_state$set_keep_na(TRUE))
-isolate(filter_state$get_call())
+shiny::isolate(filter_state$get_call())
+filter_state$set_state(
+  filter_var(
+    dataname = "data",
+    varname = "x",
+    selected = c(Sys.time() + 3L, Sys.time() + 8L),
+    keep_na = TRUE
+  )
+)
+shiny::isolate(filter_state$get_call())
 
 \dontrun{
 # working filter in an app
@@ -26,12 +32,12 @@ library(shinyjs)
 
 datetimes <- as.POSIXct(c("2012-01-01 12:00:00", "2020-01-01 12:00:00"))
 data_datetime <- c(seq(from = datetimes[1], to = datetimes[2], length.out = 100), NA)
-filter_state_datetime <- DatetimeFilterState$new(
+fs <- teal.slice:::DatetimeFilterState$new(
   x = data_datetime,
+  varname = "x",
   dataname = "data",
-)
-filter_state_datetime$set_state(
-  filter_var("data"variable, selected = data_datetime[c(47, 98)], keep_na = TRUE))
+  selected = data_datetime[c(47, 98)],
+  keep_na = TRUE
 )
 
 ui <- fluidPage(
@@ -40,7 +46,7 @@ ui <- fluidPage(
   include_js_files(pattern = "count-bar-labels"),
   column(4, div(
     h4("DatetimeFilterState"),
-    isolate(filter_state_datetime$ui("fs"))
+    fs$ui("fs")
   )),
   column(4, div(
     id = "outputs", # div id is needed for toggling the element
@@ -62,22 +68,37 @@ ui <- fluidPage(
 )
 
 server <- function(input, output, session) {
-  filter_state_datetime$server("fs")
-  output$condition_datetime <- renderPrint(filter_state_datetime$get_call())
-  output$formatted_datetime <- renderText(filter_state_datetime$format())
-  output$unformatted_datetime <- renderPrint(filter_state_datetime$get_state())
+  fs$server("fs")
+  output$condition_datetime <- renderPrint(fs$get_call())
+  output$formatted_datetime <- renderText(fs$format())
+  output$unformatted_datetime <- renderPrint(fs$get_state())
   # modify filter state programmatically
-  observeEvent(input$button1_datetime, filter_state_datetime$set_keep_na(FALSE))
-  observeEvent(input$button2_datetime, filter_state_datetime$set_keep_na(TRUE))
+  observeEvent(
+    input$button1_datetime,
+    fs$set_state(filter_var(dataname = "data", varname = "x", keep_na = FALSE))
+  )
+  observeEvent(
+    input$button2_datetime,
+    fs$set_state(filter_var(dataname = "data", varname = "x", keep_na = TRUE))
+  )
   observeEvent(
     input$button3_datetime,
-    filter_state_datetime$set_selected(data_datetime[c(34, 56)])
+    fs$set_state(
+      filter_var(dataname = "data", varname = "x", selected = data_datetime[c(34, 56)])
+    )
   )
-  observeEvent(input$button4_datetime, filter_state_datetime$set_selected(datetimes))
+  observeEvent(
+    input$button4_datetime,
+    fs$set_state(
+      filter_var(dataname = "data", varname = "x", selected = datetimes)
+    )
+  )
   observeEvent(
     input$button0_datetime,
-    filter_state_datetime$set_state(
-      filter_var("data"variable, selected = data_datetime[c(47, 98)], keep_na = TRUE))
+    fs$set_state(
+      filter_var(
+        dataname = "data", varname = "x", selected = data_datetime[c(47, 98)], keep_na = TRUE
+      )
     )
   )
 }
@@ -97,7 +118,6 @@ if (interactive()) {
 \itemize{
 \item \href{#method-DatetimeFilterState-new}{\code{DatetimeFilterState$new()}}
 \item \href{#method-DatetimeFilterState-format}{\code{DatetimeFilterState$format()}}
-\item \href{#method-DatetimeFilterState-is_any_filtered}{\code{DatetimeFilterState$is_any_filtered()}}
 \item \href{#method-DatetimeFilterState-get_call}{\code{DatetimeFilterState$get_call()}}
 \item \href{#method-DatetimeFilterState-clone}{\code{DatetimeFilterState$clone()}}
 }
@@ -209,19 +229,6 @@ Default: 0}
 }
 \subsection{Returns}{
 \code{character(1)} the formatted string
-}
-}
-\if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-DatetimeFilterState-is_any_filtered"></a>}}
-\if{latex}{\out{\hypertarget{method-DatetimeFilterState-is_any_filtered}{}}}
-\subsection{Method \code{is_any_filtered()}}{
-Answers the question of whether the current settings and values selected actually filters out any values.
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{DatetimeFilterState$is_any_filtered()}\if{html}{\out{</div>}}
-}
-
-\subsection{Returns}{
-logical scalar
 }
 }
 \if{html}{\out{<hr>}}

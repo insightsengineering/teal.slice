@@ -10,16 +10,16 @@ init_filter_state_expr(id, title, dataname, expr, disabled, ...)
 \item{id}{(\code{character(1)})\cr
 identifier of the filter}
 
-\item{title}{(\code{reactive})\cr
+\item{title}{(\code{character(1)})\cr
 title of the filter}
 
 \item{dataname}{(\code{character(1)})\cr
 name of the dataset where \code{expr} could be executed on.}
 
-\item{expr}{(\code{language})\cr
+\item{expr}{(\code{character(1)})\cr
 logical expression written in executable way. By "executable" means
 that \code{subset} call should be able to evaluate this without failure. For
-example \code{MultiAssayExperiment::subsetByColData} requires varnames prefixed
+example \code{MultiAssayExperiment::subsetByColData} requires variable names prefixed
 by dataname (e.g. \code{data$var1 == "x" & data$var2 > 0}). For \code{data.frame} call
 can be written without prefixing \code{var1 == "x" & var2 > 0}.}
 

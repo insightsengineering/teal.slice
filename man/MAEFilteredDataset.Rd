@@ -16,14 +16,18 @@
 
 utils::data(miniACC, package = "MultiAssayExperiment")
 dataset <- teal.slice:::MAEFilteredDataset$new(miniACC, "MAE")
-fs <- list(
-  subjects = list(
-    years_to_birth = list(selected = c(30, 50), keep_na = TRUE, keep_inf = FALSE),
-    vital_status = list(selected = "1", keep_na = FALSE),
-    gender = list(selected = "female", keep_na = TRUE)
+fs <- filter_settings(
+  filter_var(
+    dataname = "MAE", varname = "years_to_birth", selected = c(30, 50), keep_na = TRUE
   ),
-  RPPAArray = list(
-    subset = list(ARRAY_TYPE = list(selected = "", keep_na = TRUE))
+  filter_var(
+    dataname = "MAE", varname = "vital_status", selected = "1", keep_na = FALSE
+  ),
+  filter_var(
+    dataname = "MAE", varname = "gender", selected = "female", keep_na = TRUE
+  ),
+  filter_var(
+    dataname = "MAE", varname = "ARRAY_TYPE", selected = "", keep_na = TRUE
   )
 )
 dataset$set_filter_state(state = fs)
@@ -128,14 +132,18 @@ to the referred column.}
 \if{html}{\out{<div class="r example copy">}}
 \preformatted{utils::data(miniACC, package = "MultiAssayExperiment")
 dataset <- teal.slice:::MAEFilteredDataset$new(miniACC, "MAE")
-fs <- list(
-  subjects = list(
-    years_to_birth = list(selected = c(30, 50), keep_na = TRUE, keep_inf = FALSE),
-    vital_status = list(selected = "1", keep_na = FALSE),
-    gender = list(selected = "female", keep_na = TRUE)
+fs <- filter_settings(
+  filter_var(
+    dataname = "MAE", varname = "years_to_birth", selected = c(30, 50), keep_na = TRUE
   ),
-  RPPAArray = list(
-    subset = list(ARRAY_TYPE = list(selected = "", keep_na = TRUE))
+  filter_var(
+    dataname = "MAE", varname = "vital_status", selected = "1", keep_na = FALSE
+  ),
+  filter_var(
+    dataname = "MAE", varname = "gender", selected = "female", keep_na = TRUE
+  ),
+  filter_var(
+    dataname = "MAE", varname = "ARRAY_TYPE", selected = "", keep_na = TRUE
   )
 )
 dataset$set_filter_state(state = fs)
