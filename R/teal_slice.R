@@ -46,7 +46,7 @@
 #' or based on the contents of `rowData` and `colData` of any of its experiments. Hence, another field is necessary.
 #' `teal_slice` objects referring to `MultiAssayExperiment` objects must contain the field `datalabel`
 #' that names either an experiment (as listed in `experimentList(<MAE>)`) or "subjects"
-#' if it refers to the MultiAssaysExperiment's `colData`. They must **also** specify `arg` as "subset" or "select"
+#' if it refers to the `MultiAssaysExperiment` `colData`. They must **also** specify `arg` as "subset" or "select"
 #' for experiments and as "y" for `colData`.
 #' @param dataname `character(1)` name of data set
 #' @param varname `character(1)` name of variable

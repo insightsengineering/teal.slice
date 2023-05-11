@@ -181,7 +181,7 @@ Likewise, observations in a \code{MultiAssayExpeeiment} can be filtered based on
 or based on the contents of \code{rowData} and \code{colData} of any of its experiments. Hence, another field is necessary.
 \code{teal_slice} objects referring to \code{MultiAssayExperiment} objects must contain the field \code{datalabel}
 that names either an experiment (as listed in \verb{experimentList(<MAE>)}) or "subjects"
-if it refers to the MultiAssaysExperiment's \code{colData}. They must \strong{also} specify \code{arg} as "subset" or "select"
+if it refers to the \code{MultiAssaysExperiment}'s \code{colData}. They must \strong{also} specify \code{arg} as "subset" or "select"
 for experiments and as "y" for \code{colData}.
 }
 
