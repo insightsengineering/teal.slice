@@ -18,20 +18,6 @@ classes of the underlying data object and \code{FilterStates} subclasses.
 Currently implemented for \code{data.frame}, \code{matrix},
 \code{SummarizedExperiment}, and \code{MultiAssayExperiment}.
 }
-<<<<<<< HEAD
-\examples{
-library(shiny)
-filter_states <- teal.slice:::DFFilterStates$new(
-  data = data.frame(x = 1:2, sex = c("F", "M")),
-  dataname = "data",
-  varlabels = c(x = "x variable", sex = "Sex"),
-  datalabel = character(0),
-  keys = character(0)
-)
-filter_states$set_filter_state(list(sex = "F", x = 1))
-isolate(filter_states$get_call())
-
-}
 \keyword{(from}
 \keyword{Calls}
 \keyword{Server}
@@ -42,8 +28,6 @@ isolate(filter_states$get_call())
 \keyword{button}
 \keyword{for}
 \keyword{from}
-=======
->>>>>>> filter_panel_refactor@main
 \keyword{internal}
 \keyword{module}
 \keyword{observes}
@@ -59,12 +43,6 @@ isolate(filter_states$get_call())
 \item \href{#method-FilterStates-get_call}{\code{FilterStates$get_call()}}
 \item \href{#method-FilterStates-print}{\code{FilterStates$print()}}
 \item \href{#method-FilterStates-remove_filter_state}{\code{FilterStates$remove_filter_state()}}
-<<<<<<< HEAD
-\item \href{#method-FilterStates-clear_filter_states}{\code{FilterStates$clear_filter_states()}}
-\item \href{#method-FilterStates-ui_active}{\code{FilterStates$ui_active()}}
-\item \href{#method-FilterStates-srv_active}{\code{FilterStates$srv_active()}}
-=======
->>>>>>> filter_panel_refactor@main
 \item \href{#method-FilterStates-get_filter_state}{\code{FilterStates$get_filter_state()}}
 \item \href{#method-FilterStates-set_filter_state}{\code{FilterStates$set_filter_state()}}
 \item \href{#method-FilterStates-clear_filter_states}{\code{FilterStates$clear_filter_states()}}
@@ -316,33 +294,6 @@ shiny element (module instance) id}
 \if{latex}{\out{\hypertarget{method-FilterStates-srv_active}{}}}
 \subsection{Method \code{srv_active()}}{
 Shiny server module.
-<<<<<<< HEAD
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{FilterStates$srv_active(id)}\if{html}{\out{</div>}}
-}
-
-\subsection{Arguments}{
-\if{html}{\out{<div class="arguments">}}
-\describe{
-\item{\code{id}}{(\code{character(1)})\cr
-shiny module instance id}
-}
-\if{html}{\out{</div>}}
-}
-\subsection{Returns}{
-\code{moduleServer} function which returns \code{NULL}
-}
-}
-\if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-FilterStates-get_filter_state"></a>}}
-\if{latex}{\out{\hypertarget{method-FilterStates-get_filter_state}{}}}
-\subsection{Method \code{get_filter_state()}}{
-Gets reactive values from active \code{FilterState} objects.
-
-Get active filter state from \code{FilterState} objects stored in \code{state_list}(s).
-The output is a list compatible with input to \code{self$set_filter_state}.
-=======
->>>>>>> filter_panel_refactor@main
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{FilterStates$srv_active(id)}\if{html}{\out{</div>}}
 }
@@ -403,7 +354,6 @@ an ID string that corresponds with the ID used to call the module's UI function.
 }
 \subsection{Returns}{
 \code{moduleServer} function which returns \code{NULL}
-
 UI wrapping a single \code{FilterState}
 
 This module contains a single \code{FilterState} card and remove (from the \code{ReactiveQueue}) button.
