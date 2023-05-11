@@ -274,7 +274,24 @@ FilterState <- R6::R6Class( # nolint
             }
           })
 
-          reactive(input$remove) # back to parent to remove self
+          private$destroy_shiny <- function() {
+            logger::log_trace("Destroying FilterState inputs and observers; variable: { deparse1(private$varname) }")
+            # remove values from the input list
+            lapply(session$ns(names(input)), .subset2(input, "impl")$.values$remove)
+
+            # remove observers
+            lapply(private$observers, function(x) x$destroy())
+
+            logger::log_trace(
+              sprintf(
+                "Destroyed FilterState inputs and observers; variable %s; %s inputs remained.",
+                deparse1(private$varname),
+                length(reactiveValuesToList(input))
+              )
+            )
+          }
+
+          reactive(input$remove)
         }
       )
     },
@@ -353,8 +370,9 @@ FilterState <- R6::R6Class( # nolint
     #' @return NULL invisibly
     #'
     destroy_observers = function() {
-      lapply(private$observers, function(x) x$destroy())
-      return(invisible(NULL))
+      if (!is.null(private$destroy_shiny)) {
+        private$destroy_shiny()
+      }
     }
   ),
 
@@ -369,6 +387,7 @@ FilterState <- R6::R6Class( # nolint
     varlabel = character(0), # taken from variable labels in data; displayed in filter cards
     ## corresponding to fields in teal_slice
     dataname = character(0),
+    destroy_shiny = NULL, # function is set in server
     varname = character(0),
     choices = NULL, # because each class has different choices type
     selected = NULL, # reactiveVal holding vector of choices (depends on class)

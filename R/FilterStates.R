@@ -322,13 +322,13 @@ FilterStates <- R6::R6Class( # nolint
     #'
     ui_active = function(id) {
       ns <- NS(id)
-      private$cards_container_id <- ns("cards")
       tagList(
         include_css_files(pattern = "filter-panel"),
         tags$div(
           id = private$cards_container_id,
           class = "accordion",
-          `data-label` = ifelse(identical(private$datalabel, character(0)), "", paste0("> ", private$datalabel))
+          `data-label` = ifelse(length(private$datalabel), "", paste0("> ", private$datalabel)),
+          shiny::tagList(uiOutput(ns("filters"), inline = TRUE))
         )
       )
     },
@@ -345,40 +345,36 @@ FilterStates <- R6::R6Class( # nolint
       moduleServer(
         id = id,
         function(input, output, session) {
-          logger::log_trace("FilterStates$srv_add initializing, dataname: { private$dataname }")
+          logger::log_trace("FilterState$srv_active initializing, dataname: { private$dataname }")
           current_state <- reactive(private$state_list_get())
           previous_state <- reactiveVal(character(0))
           added_state_name <- reactiveVal(character(0))
-          removed_state_name <- reactiveVal(character(0))
 
           observeEvent(current_state(), {
             logger::log_trace("FilterStates$srv_active@1 determining added and removed filter states")
             added_state_name(setdiff(names(current_state()), names(previous_state())))
-            removed_state_name(setdiff(names(previous_state()), names(current_state())))
             previous_state(current_state())
           })
 
-          observeEvent(added_state_name(), ignoreNULL = TRUE, {
-            logger::log_trace("FilterStates$srv_active@2 inserting a new filter state card")
-            fstates <- current_state()
-            for (fname in added_state_name()) {
-              private$insert_filter_state_ui(
-                id = fname,
-                filter_state = fstates[[fname]],
-                state_id = fname
-              )
-            }
-            added_state_name(character(0))
+          output[["filters"]] <- shiny::renderUI({
+            fstates <- current_state() # rerenders when queue changes / not when the state changes
+            lapply(names(fstates), function(fname) {
+              private$ui_card_module(id = session$ns(fname), fstates[[fname]])
+            })
           })
 
-          observeEvent(removed_state_name(), ignoreNULL = TRUE, {
-            logger::log_trace("FilterStates$srv_active@3 removing filter state card")
-            for (fname in removed_state_name()) {
-              private$remove_filter_state_ui(fname, .input = input)
+          observeEvent(
+            added_state_name(), # we want to call FilterState module only once when it's added
+            ignoreNULL = TRUE,
+            {
+              fstates <- current_state()
+              lapply(added_state_name(), function(fname) {
+                private$srv_card_module(id = fname, element_id = fname, fs = fstates[[fname]])
+              })
+              added_state_name(character(0))
             }
-            removed_state_name(character(0))
-          })
-          logger::log_trace("FilterStates$srv_add initialized, dataname: { private$dataname }")
+          )
+
           NULL
         }
       )
@@ -575,116 +571,6 @@ FilterStates <- R6::R6Class( # nolint
       }
     },
 
-    # Module to insert/remove `FilterState` UI
-    #
-    # This module adds the shiny UI of the `FilterState` object newly added
-    # to state_list to the Active Filter Variables,
-    # calls `FilterState` modules and creates an observer to remove state
-    # parameter filter_state (`FilterState`).
-    #
-    # @param id (`character(1)`)\cr
-    #   shiny module instance id
-    # @param filter_state (`named list`)\cr
-    #   should contain values of initial selections in the `FilterState`;
-    #   `list` names must correspond to column names in `data`
-    # @param state_id (`character(1)`)\cr
-    #   name of element in a filter state (which is a `reactiveVal` containing a list)
-    #
-    # @return `moduleServer` function which returns `NULL`
-    #
-    insert_filter_state_ui = function(id, filter_state, state_id) {
-      checkmate::assert_multi_class(filter_state, c("FilterState", "FilterStateExpr"))
-      checkmate::assert_character(state_id, len = 1)
-      moduleServer(
-        id = id,
-        function(input, output, session) {
-          logger::log_trace(
-            sprintf(
-              "%s$insert_filter_state_ui, adding FilterState UI of state_id: %s; dataname: %s",
-              class(self)[1],
-              state_id,
-              private$dataname
-            )
-          )
-
-          # card_id of inserted card must be saved in private$card_ids as
-          # it might be removed by the several events:
-          #   - remove button in FilterStates module
-          #   - remove button in FilteredDataset module
-          #   - remove button in FilteredData module
-          #   - API call remove_filter_state
-          card_id <- session$ns("card")
-          private$card_ids[state_id] <- card_id
-
-          insertUI(
-            selector = sprintf("#%s", private$cards_container_id),
-            where = "beforeEnd",
-            ui = filter_state$ui(card_id, private$cards_container_id)
-          )
-          # signal sent from filter_state when it is marked for removal
-          remove_fs <- filter_state$server(id = "card")
-
-          private$observers[[state_id]] <- observeEvent(
-            ignoreInit = TRUE,
-            ignoreNULL = TRUE,
-            eventExpr = remove_fs(),
-            handlerExpr = {
-              logger::log_trace(paste(
-                "{ class(self)[1] }$insert_filter_state_ui@1",
-                "removing FilterState state_id: '{ state_id }',",
-                "dataname: { private$dataname }"
-              ))
-              private$state_list_remove(state_id)
-              logger::log_trace(paste(
-                "{ class(self)[1] }$insert_filter_state_ui@1",
-                "removed FilterState, state_id: '{ state_id }',",
-                "dataname: { private$dataname }"
-              ))
-            }
-          )
-
-          logger::log_trace(
-            sprintf(
-              "%s$insert_filter_state_ui, added FilterState UI of state_id: %s; dataname: %s",
-              class(self)[1],
-              state_id,
-              private$dataname
-            )
-          )
-          NULL
-        }
-      )
-    },
-
-    # Remove shiny element. Method can be called from reactive session where
-    # `observeEvent` for remove-filter-state is set and also from `FilteredDataset`
-    # level, where shiny-session-namespace is different. That is why it's important
-    # to remove shiny elements from anywhere. In `add_filter_state` `session$ns(NULL)`
-    # is equivalent to `private$ns(state_id)`.
-    # In addition, an unused reactive is being removed from input:
-    # method searches input for the unique matches with the filter name
-    # and then removes objects constructed with current card id + filter name.
-    #
-    remove_filter_state_ui = function(state_id, .input) {
-      removeUI(selector = sprintf("#%s", private$card_ids[state_id]))
-      private$card_ids <- private$card_ids[names(private$card_ids) != state_id]
-      if (length(private$observers[[state_id]]) > 0) {
-        private$observers[[state_id]]$destroy()
-        private$observers[[state_id]] <- NULL
-      }
-      # Remove unused reactive from shiny input (leftover of removeUI).
-      # This default behavior may change in the future, making this part obsolete.
-      prefix <- paste0(gsub("cards$", "", private$cards_container_id))
-      invisible(
-        lapply(
-          unique(grep(state_id, names(.input), value = TRUE)),
-          function(i) {
-            .subset2(.input, "impl")$.values$remove(paste0(prefix, i))
-          }
-        )
-      )
-    },
-
     # state_list methods ----
 
     # @description
@@ -750,7 +636,6 @@ FilterStates <- R6::R6Class( # nolint
         new_state_list[[state_id]]$destroy_observers()
         new_state_list[[state_id]] <- NULL
         shiny::isolate(private$state_list(new_state_list))
-
         logger::log_trace("{ class(self)[1] } removed a filter, state_id: { state_id }")
       } else {
         warning(sprintf("\"%s\" not found in state list", state_id))
@@ -841,6 +726,33 @@ FilterStates <- R6::R6Class( # nolint
       })
 
       invisible(NULL)
+    },
+
+    #' UI wrapping a single `FilterState`
+    #'
+    #' This module contains a single `FilterState` card and remove (from the `ReactiveQueue`) button.
+    #'
+    #' return `moduleServer` function which returns `NULL`
+    #' @keywords internal
+    ui_card_module = function(id, fs) {
+      ns <- NS(id)
+      fs$ui(id = ns("content"))
+    },
+
+    #' Server module for a single `FilterState`
+    #'
+    #' Calls server from `FilterState` and observes remove (from the `ReactiveQueue`) button
+    #' @keywords internal
+    srv_card_module = function(id, element_id, fs) {
+      moduleServer(id, function(input, output, session) {
+        logger::log_trace("FilterStates$srv_card_module initializing, dataname: { private$dataname }")
+        fs_callback <- fs$server(id = "content")
+        observeEvent(
+          eventExpr = fs_callback(), # when remove button is clicked in the FilterState ui
+          once = TRUE, # remove button can be called once, should be destroyed afterwards
+          handlerExpr = private$state_list_remove(element_id)
+        )
+      })
     }
   )
 )

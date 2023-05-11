@@ -112,8 +112,6 @@ SEFilterStates <- R6::R6Class( # nolint
       invisible(NULL)
     },
 
-    # shiny modules ----
-
     #' @description
     #' Shiny UI module to add filter variable
     #' @param id (`character(1)`)\cr
@@ -122,9 +120,7 @@ SEFilterStates <- R6::R6Class( # nolint
     ui_add = function(id) {
       data <- private$data
       checkmate::assert_string(id)
-
       ns <- NS(id)
-
       row_input <- if (ncol(SummarizedExperiment::rowData(data)) == 0) {
         div("no sample variables available")
       } else if (nrow(SummarizedExperiment::rowData(data)) == 0) {
@@ -184,7 +180,6 @@ SEFilterStates <- R6::R6Class( # nolint
           row_data <- SummarizedExperiment::rowData(data)
           col_data <- SummarizedExperiment::colData(data)
 
-          # available choices to display
           avail_row_data_choices <- reactive({
             slices_for_subset <- Filter(function(x) x$arg == "subset", self$get_filter_state())
             active_filter_row_vars <- slices_field(slices_for_subset, "varname")
@@ -201,6 +196,7 @@ SEFilterStates <- R6::R6Class( # nolint
               keys = NULL
             )
           })
+
           avail_col_data_choices <- reactive({
             slices_for_select <- Filter(function(x) x$arg == "select", self$get_filter_state())
             active_filter_col_vars <- slices_field(slices_for_select, "varname")
@@ -217,7 +213,6 @@ SEFilterStates <- R6::R6Class( # nolint
               keys = NULL
             )
           })
-
 
           observeEvent(
             avail_row_data_choices(),
