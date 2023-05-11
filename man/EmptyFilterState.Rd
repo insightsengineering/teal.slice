@@ -14,10 +14,9 @@ filter_state <- teal.slice:::EmptyFilterState$new(
   dataname = "data",
   extract_type = character(0)
 )
-isolate(filter_state$get_call())
-isolate(filter_state$set_selected(TRUE))
-isolate(filter_state$set_keep_na(TRUE))
-isolate(filter_state$get_call())
+shiny::isolate(filter_state$get_call())
+filter_state$set_state(filter_var(dataname = "data", varname = "x", keep_na = TRUE))
+shiny::isolate(filter_state$get_call())
 
 }
 \keyword{internal}
@@ -28,7 +27,6 @@ isolate(filter_state$get_call())
 \subsection{Public methods}{
 \itemize{
 \item \href{#method-EmptyFilterState-new}{\code{EmptyFilterState$new()}}
-\item \href{#method-EmptyFilterState-is_any_filtered}{\code{EmptyFilterState$is_any_filtered()}}
 \item \href{#method-EmptyFilterState-get_call}{\code{EmptyFilterState$get_call()}}
 \item \href{#method-EmptyFilterState-get_state}{\code{EmptyFilterState$get_state()}}
 \item \href{#method-EmptyFilterState-clone}{\code{EmptyFilterState$clone()}}
@@ -116,19 +114,6 @@ whether condition calls should be prefixed by dataname. Possible values:
 \item{\code{...}}{additional arguments to be saved as a list in \code{private$extras} field}
 }
 \if{html}{\out{</div>}}
-}
-}
-\if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-EmptyFilterState-is_any_filtered"></a>}}
-\if{latex}{\out{\hypertarget{method-EmptyFilterState-is_any_filtered}{}}}
-\subsection{Method \code{is_any_filtered()}}{
-Reports whether the current state filters out any values.(?)
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{EmptyFilterState$is_any_filtered()}\if{html}{\out{</div>}}
-}
-
-\subsection{Returns}{
-\code{logical(1)}
 }
 }
 \if{html}{\out{<hr>}}

@@ -34,83 +34,44 @@ testthat::test_that("set_filter_state accepts `teal_slices`", {
 
 
 # get_filter_state ----
-testthat::test_that("get_filter_state returns `teal_slices` with features to ones used in set_state", {
+testthat::test_that("set_filter_state sets `teal_slice`", {
   dataset <- DefaultFilteredDataset$new(dataset = iris, dataname = "iris")
   fs <- filter_settings(
-    filter_var(dataname = "iris", varname = "Sepal.Length", selected = c(5.1, 6.4), keep_na = FALSE, keep_inf = FALSE),
-    filter_var(dataname = "iris", varname = "Species", selected = c("setosa", "versicolor"), keep_na = FALSE)
+    filter_var(
+      dataname = "iris", varname = "Sepal.Length", choices = c(4.3, 7.9), selected = c(5.1, 6.4),
+      keep_na = FALSE, keep_inf = FALSE, fixed = FALSE, disabled = FALSE
+    ),
+    filter_var(
+      dataname = "iris", varname = "Species",
+      choices = c("setosa", "versicolor", "virginica"), selected = c("setosa", "versicolor"),
+      keep_na = FALSE, keep_inf = FALSE, fixed = FALSE, disabled = FALSE
+    ),
+    count_type = "all",
+    include_varnames = list(iris = colnames(iris))
   )
   dataset$set_filter_state(fs)
-  fs_out <- unname(shiny::isolate(dataset$get_filter_state()))
-  testthat::expect_true(compare_slices(
-    fs[[1]], fs_out[[1]],
-    fields = c("dataname", "varname", "selected", "keep_na", "keep_inf")
-  ))
-  testthat::expect_true(compare_slices(
-    fs[[2]], fs_out[[2]],
-    fields = c("dataname", "varname", "selected", "keep_na")
-  ))
-})
-
-
-# set_filter_state ctd.----
-testthat::test_that("set_filter_state sets filters specified by `teal_slices`", {
-  dataset <- DefaultFilteredDataset$new(dataset = iris, dataname = "iris")
-
-  fs1 <- filter_settings(
-    filter_var(dataname = "iris", varname = "Sepal.Length", selected = c(5.1, 6.4), keep_na = FALSE, keep_inf = FALSE)
+  testthat::expect_equal(
+    shiny::isolate(dataset$get_filter_state()),
+    fs
   )
-  fs2 <- filter_settings(
-    filter_var(dataname = "iris", varname = "Species", selected = c("setosa", "versicolor"), keep_na = FALSE)
-  )
-
-  dataset$set_filter_state(state = fs1)
-  fs_out <- unname(shiny::isolate(dataset$get_filter_state()))
-  testthat::expect_true(compare_slices(
-    fs1[[1]], fs_out[[1]],
-    fields = c("dataname", "varname", "selected", "keep_na", "keep_inf")
-  ))
-
-  dataset$set_filter_state(state = fs2)
-  fs_out <- unname(shiny::isolate(dataset$get_filter_state()))
-  testthat::expect_true(compare_slices(
-    c(fs1, fs2)[[1]], fs_out[[1]],
-    fields = c("dataname", "varname", "selected", "keep_na", "keep_inf")
-  ))
-  testthat::expect_true(compare_slices(
-    c(fs1, fs2)[[2]], fs_out[[2]],
-    fields = c("dataname", "varname", "selected", "keep_na")
-  ))
 })
-
 
 # remove_filter_state ----
-testthat::test_that("remove_filter_state removes filter specified by `teal_slices`", {
+testthat::test_that("remove_filter_state removes desired filter", {
   dataset <- DefaultFilteredDataset$new(dataset = iris, dataname = "iris")
   fs <- filter_settings(
     filter_var(dataname = "iris", varname = "Sepal.Length", selected = c(5.1, 6.4), keep_na = FALSE, keep_inf = FALSE),
     filter_var(dataname = "iris", varname = "Species", selected = c("setosa", "versicolor"), keep_na = FALSE)
   )
   dataset$set_filter_state(state = fs)
-  testthat::expect_error(
-    dataset$remove_filter_state(list(filter_var(dataname = "iris", varname = "Species"))),
-    "Assertion on 'state' failed"
-  )
-  testthat::expect_no_error(
-    dataset$remove_filter_state(filter_settings(filter_var(dataname = "iris", varname = "Species")))
-  )
-
-  testthat::expect_identical(
-    slices_field(shiny::isolate(dataset$get_filter_state()), "varname"),
-    "Sepal.Length"
-  )
+  dataset$remove_filter_state(filter_settings(filter_var(dataname = "iris", varname = "Species")))
+  testthat::expect_length(shiny::isolate(dataset$get_filter_state()), 1)
 })
 
 testthat::test_that("remove_filter_state can remove multiple filters", {
   dataset <- DefaultFilteredDataset$new(dataset = iris, dataname = "iris")
   fs <- filter_settings(
     filter_var(dataname = "iris", varname = "Sepal.Length", selected = c(5.1, 6.4), keep_na = FALSE, keep_inf = FALSE),
-    filter_var(dataname = "iris", varname = "Petal.Length", selected = c(5.1, 6.4), keep_na = FALSE, keep_inf = FALSE),
     filter_var(dataname = "iris", varname = "Species", selected = c("setosa", "versicolor"), keep_na = FALSE)
   )
   dataset$set_filter_state(state = fs)
@@ -121,10 +82,7 @@ testthat::test_that("remove_filter_state can remove multiple filters", {
     )
   )
 
-  testthat::expect_identical(
-    slices_field(shiny::isolate(dataset$get_filter_state()), "varname"),
-    "Petal.Length"
-  )
+  testthat::expect_length(shiny::isolate(dataset$get_filter_state()), 0)
 })
 
 

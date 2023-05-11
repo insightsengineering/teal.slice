@@ -39,16 +39,15 @@
 #' To establish a filter on a column in a `data.frame`, `dataname` and `varname` are sufficient.
 #' Filter states created created for `SummarizedExperiments` require more information
 #' as each variable is either located in the `rowData` or `colData` slots.
-#' Thus, `teal_slice` objects that refer to such filter states must also contain the field `target`
-#' that specifies "subset" for variales in `rowData` and "select" for those in `colData`.
+#' Thus, `teal_slice` objects that refer to such filter states must also contain the field `arg`
+#' that specifies "subset" for variables in `rowData` and "select" for those in `colData`.
 #'
 #' Likewise, observations in a `MultiAssayExpeeiment` can be filtered based on the content of the `colData` slot
 #' or based on the contents of `rowData` and `colData` of any of its experiments. Hence, another field is necessary.
-#' `teal_slice` objects refering to `MultiAssayExperiment` objects must contain the field `datalabel`
+#' `teal_slice` objects referring to `MultiAssayExperiment` objects must contain the field `datalabel`
 #' that names either an experiment (as listed in `experimentList(<MAE>)`) or "subjects"
-#' if it referes to the MAE's `colData`. They must **also** specify `target` as "subset" or "select"
+#' if it refers to the MultiAssaysExperiment's `colData`. They must **also** specify `arg` as "subset" or "select"
 #' for experiments and as "y" for `colData`.
-#'
 #' @param dataname `character(1)` name of data set
 #' @param varname `character(1)` name of variable
 #' @param choices optional vector specifying allowed choices;
@@ -72,12 +71,22 @@
 #'  - `"all"` to have counts of single `FilterState` to show number of observation in filtered
 #'   and unfiltered dataset.
 #'  - `"none"` to have counts of single `FilterState` to show unfiltered number only.
-#'
+#' @param id (`character(1)`)\cr
+#'   identifier of the filter
+#' @param title (`reactive`)\cr
+#'   title of the filter (used by `filter_expr`)
+#' @param expr (`language`)\cr
+#'   logical expression written in executable way. By "executable" means
+#'   that `subset` call should be able to evaluate this without failure. For
+#'   example `MultiAssayExperiment::subsetByColData` requires variable names prefixed
+#'   by dataname (e.g. `data$var1 == "x" & data$var2 > 0`). For `data.frame` call
+#'   can be written without prefixing `var1 == "x" & var2 > 0`.
+#' @param disabled (`logical(1)`)\cr
+#'   flag specifying whether the `FilterState` is initiated disabled
+#' @param ... additional arguments to be saved as a list in `private$extras` field
 #' @param show_all `logical(1)` specifying whether NULL elements should also be printed
 #' @param tss `teal_slices`
 #' @param field `character(1)` name of `teal_slice` element
-#' @param expr `character` string representing an expression that evaluates to a single `logical`;
-#'             will be evaluated in individual `teal_slice` objects
 #' @param ... for `filter_var` any number of additional fields given as `name:value` pairs\cr
 #'            for `filter_settings` any number of `teal_slice` objects\cr
 #'            for other functions arguments passed to other methods
@@ -97,7 +106,7 @@
 #'   filter_1,
 #'   filter_2,
 #'   filter_3,
-#'   exclude = list(
+#'   exclude_varnames = list(
 #'     "dataname1" = "varname2"
 #'   )
 #' )
@@ -114,16 +123,15 @@ NULL
 #' @export
 #' @rdname teal_slice
 #'
-filter_var <- function(
-    dataname,
-    varname,
-    choices = NULL,
-    selected = NULL,
-    keep_na = NULL,
-    keep_inf = NULL,
-    fixed = FALSE,
-    disabled = FALSE,
-    ...) {
+filter_var <- function(dataname,
+                       varname,
+                       choices = NULL,
+                       selected = NULL,
+                       keep_na = NULL,
+                       keep_inf = NULL,
+                       fixed = FALSE,
+                       disabled = FALSE,
+                       ...) {
   checkmate::assert_string(dataname)
   checkmate::assert_string(varname)
   checkmate::assert_multi_class(choices, .filterable_class, null.ok = TRUE)
@@ -149,15 +157,41 @@ filter_var <- function(
   ans
 }
 
+#' @export
+#' @rdname teal_slice
+#' @examples
+#' filter_expr(
+#'   dataname = "data",
+#'   id = "FA",
+#'   title = "Female adults",
+#'   expr = "SEX == 'F' & AGE >= 18"
+#' )
+filter_expr <- function(dataname, id, title, expr, disabled = FALSE, ...) {
+  checkmate::assert_string(dataname)
+  checkmate::assert_string(id)
+  checkmate::assert_string(title)
+  checkmate::assert_string(expr)
+  checkmate::assert_flag(disabled)
+  ans <- list(
+    id = id,
+    title = title,
+    dataname = dataname,
+    expr = expr,
+    disabled = disabled
+  )
+  ans <- append(ans, list(...))
+  class(ans) <- c("teal_slice_expr", "teal_slice", class(ans))
+  ans
+}
+
 
 #' @export
 #' @rdname teal_slice
 #'
-filter_settings <- function(
-    ...,
-    exclude_varnames = NULL,
-    include_varnames = NULL,
-    count_type = NULL) {
+filter_settings <- function(...,
+                            exclude_varnames = NULL,
+                            include_varnames = NULL,
+                            count_type = NULL) {
   slices <- list(...)
   checkmate::assert_list(slices, types = "teal_slice", any.missing = FALSE)
   checkmate::assert_list(exclude_varnames, names = "named", types = "character", null.ok = TRUE, min.len = 1)
@@ -179,7 +213,7 @@ filter_settings <- function(
 #' @rdname teal_slice
 #' @keywords internal
 #'
-is.teal_slice <- function(x) {
+is.teal_slice <- function(x) { # nolint
   inherits(x, "teal_slice")
 }
 
@@ -188,7 +222,7 @@ is.teal_slice <- function(x) {
 #' @rdname teal_slice
 #' @keywords internal
 #'
-as.teal_slice <- function(x) {
+as.teal_slice <- function(x) { # nolint
   checkmate::assert_list(x, names = "named")
   do.call(filter_var, x)
 }
@@ -216,15 +250,13 @@ c.teal_slice <- function(...) {
 #' @keywords internal
 #'
 format.teal_slice <- function(x, show_all = FALSE, ...) {
+  checkmate::assert_flag(show_all)
   name_width <- max(nchar(names(x)))
   format_value <- function(v) {
     if (is.null(v)) {
       return("NULL")
     }
-    if (inherits(v, c("character", "factor"))) {
-      v <- dQuote(v, q = FALSE)
-    }
-    v <- paste(v, collapse = " ")
+    v <- paste(deparse1(v), collapse = " ")
     if (nchar(v) > 30L) {
       v <- paste0(substr(v, 1, 26), "...")
     }
@@ -235,7 +267,7 @@ format.teal_slice <- function(x, show_all = FALSE, ...) {
   hm <- "teal_slice"
   for (i in seq_along(xx)) {
     element_name <- format(names(xx)[i], width = name_width)
-    if (is.null(xx[[i]]) & !show_all) next
+    if (is.null(xx[[i]]) && !show_all) next
     element_value <- format_value(xx[[i]])
     hm <- append(hm, sprintf(" $ %s: %s", element_name, element_value))
   }
@@ -268,7 +300,7 @@ print.teal_slice <- function(x, ...) {
 #' @rdname teal_slice
 #' @keywords internal
 #'
-is.teal_slices <- function(x) {
+is.teal_slices <- function(x) { # nolint
   inherits(x, "teal_slices")
 }
 
@@ -279,67 +311,64 @@ is.teal_slices <- function(x) {
 #' @rdname teal_slice
 #' @keywords internal
 #'
-as.teal_slices <- function(x) {
+as.teal_slices <- function(x) { # nolint
   checkmate::assert_list(x, names = "named")
-  is.bottom <- function(x) {
-    isTRUE(is.list(x) && any(names(x) %in% c("selected", "keep_na", "keep_inf")))
+  is_bottom <- function(x) {
+    isTRUE(is.list(x) && any(names(x) %in% c("selected", "keep_na", "keep_inf"))) ||
+    identical(x, list()) ||
+    is.atomic(x)
   }
-  make_args <- function() {
-    list(
-      dataname = NULL,
-      varname = NULL,
-      choices = NULL,
-      selected = NULL,
-      keep_na = NULL,
-      keep_inf = NULL,
-      fixed = FALSE,
-      disabled = FALSE
+  make_args <- function(object, dataname, varname, datalabel, arg = NULL) {
+    args <- list(
+      dataname = dataname,
+      varname = varname
     )
+    if (!missing(datalabel)) args$datalabel <- datalabel
+    if (!missing(arg)) args$arg <- arg
+    if (is.list(object)) {
+      args <- c(args, object)
+    } else if (is.atomic(object)) {
+      args$selected <- object
+    }
+    args
   }
-  args <- make_args()
   slices <- vector("list")
 
-  for (i in seq_along(x)) {
-    item <- x[[i]]
-    for (ii in seq_along(x[[i]])) {
-      subitem <- item[[ii]]
-      if (is.bottom(subitem)) {
-        args$dataname <- names(x)[i]
-        args$varname <- names(item)[[ii]]
-        args$choices <- subitem$choices
-        args$selected <- subitem$selected
-        args$keep_na <- subitem$keep_na
-        args$keep_inf <- subitem$keep_inf
-        slices[[length(slices) + 1]] <- as.teal_slice(Filter(Negate(is.null), args))
-        args <- make_args()
+  for (dataname in names(x)) {
+    item <- x[[dataname]]
+    for (name_i in names(item)) {
+      subitem <- item[[name_i]]
+      if (is_bottom(subitem)) {
+        args <- make_args(
+          subitem,
+          dataname = dataname,
+          varname = name_i
+        )
+        slices <- c(slices, list(as.teal_slice(args)))
       } else {
-        for (iii in seq_along(subitem)) {
-          subsubitem <- subitem[[iii]]
-          if (is.bottom(subsubitem)) {
-            args$dataname <- names(x)[i]
-            args$varname <- names(subitem)[iii]
-            args$choices <- subsubitem$choices
-            args$selected <- subsubitem$selected
-            args$keep_na <- subsubitem$keep_na
-            args$keep_inf <- subsubitem$keep_inf
-            args$datalabel <- names(item)[ii]
-            if (args$datalabel == "subjects") args$target <- "y"
-            slices[[length(slices) + 1]] <- as.teal_slice(Filter(Negate(is.null), args))
-            args <- make_args()
+        # MAE zone
+        for (name_ii in names(subitem)) {
+          subsubitem <- subitem[[name_ii]]
+          if (is_bottom(subsubitem)) {
+            args <- make_args(
+              subsubitem,
+              dataname = dataname,
+              datalabel = name_i,
+              varname = name_ii
+            )
+            slices <- c(slices, list(as.teal_slice(args)))
           } else {
-            for (iiii in seq_along(subsubitem)) {
-              subsubsubitem <- subsubitem[[iiii]]
-              if (is.bottom(subsubsubitem)) {
-                args$dataname <- names(x)[i]
-                args$varname <- names(subsubitem)[iiii]
-                args$choices <- subsubsubitem$choices
-                args$selected <- subsubsubitem$selected
-                args$keep_na <- subsubsubitem$keep_na
-                args$keep_inf <- subsubsubitem$keep_inf
-                args$datalabel <- names(item)[ii]
-                args$target <- names(subitem)[iii]
-                slices[[length(slices) + 1]] <- as.teal_slice(Filter(Negate(is.null), args))
-                args <- make_args()
+            for (name_iii in names(subsubitem)) {
+              subsubsubitem <- subsubitem[[name_iii]]
+              if (is_bottom(subsubsubitem)) {
+                args <- make_args(
+                  subsubsubitem,
+                  dataname = dataname,
+                  datalabel = name_i,
+                  arg = name_ii,
+                  varname = name_iii
+                )
+                slices <- c(slices, list(as.teal_slice(args)))
               }
             }
           }
@@ -366,8 +395,8 @@ as.teal_slices <- function(x) {
   if (length(i) == 0L) {
     return(x[0])
   }
-  if (is.logical(i) & length(i) > length(x)) stop("subscript out of bounds")
-  if (is.numeric(i) & max(i) > length(x)) stop("subscript out of bounds")
+  if (is.logical(i) && length(i) > length(x)) stop("subscript out of bounds")
+  if (is.numeric(i) && max(i) > length(x)) stop("subscript out of bounds")
   if (is.character(i)) {
     if (!all(is.element(i, names(x)))) stop("subscript out of bounds")
     i <- which(is.element(i, names(x)))
@@ -471,6 +500,7 @@ print.teal_slices <- function(x, ...) {
 #' @keywords internal
 #'
 slices_field <- function(tss, field) {
+  checkmate::assert_string(field)
   checkmate::assert_class(tss, "teal_slices")
   unique(unlist(lapply(tss, function(x) x[[field]])))
 }
@@ -485,4 +515,17 @@ slices_which <- function(tss, expr) {
   checkmate::assert_string(expr)
   expr <- str2lang(expr)
   Filter(function(x) isTRUE(eval(expr, x)), tss)
+}
+
+
+#' Get hash identifier of `teal_slice`
+#'
+#' Returns hash of `teal_slice` object which uniquely identifies object.
+#' Hash is obtained from fields which determines single filter-state.
+#' @param x (`teal_slice`, `teal_slice_expr`) single `teal_slice` object
+#' @return `character(1)`
+get_teal_slice_id <- function(x) {
+  rlang::hash(
+    x[c("dataname", "datalabel", "arg", "id", "varname")]
+  )
 }

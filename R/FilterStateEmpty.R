@@ -12,10 +12,9 @@
 #'   dataname = "data",
 #'   extract_type = character(0)
 #' )
-#' isolate(filter_state$get_call())
-#' isolate(filter_state$set_selected(TRUE))
-#' isolate(filter_state$set_keep_na(TRUE))
-#' isolate(filter_state$get_call())
+#' shiny::isolate(filter_state$get_call())
+#' filter_state$set_state(filter_var(dataname = "data", varname = "x", keep_na = TRUE))
+#' shiny::isolate(filter_state$get_call())
 #'
 EmptyFilterState <- R6::R6Class( # nolint
   "EmptyFilterState",
@@ -93,21 +92,6 @@ EmptyFilterState <- R6::R6Class( # nolint
     },
 
     #' @description
-    #' Reports whether the current state filters out any values.(?)
-    #'
-    #' @return `logical(1)`
-    #'
-    is_any_filtered = function() {
-      if (private$is_disabled()) {
-        FALSE
-      } else if (private$is_choice_limited) {
-        TRUE
-      } else {
-        !isTRUE(private$get_keep_na())
-      }
-    },
-
-    #' @description
     #' Returns reproducible condition call for current selection relevant
     #' for selected variable type.
     #' Uses internal reactive values, hence must be called
@@ -116,6 +100,9 @@ EmptyFilterState <- R6::R6Class( # nolint
     #' @return `logical(1)`
     #'
     get_call = function(dataname) {
+      if (isFALSE(private$is_any_filtered())) {
+        return(NULL)
+      }
       if (missing(dataname)) dataname <- private$dataname
       filter_call <- if (isTRUE(private$get_keep_na())) {
         call("is.na", private$get_varname_prefixed(dataname))
@@ -159,6 +146,21 @@ EmptyFilterState <- R6::R6Class( # nolint
       invisible(NULL)
     },
 
+
+    # Reports whether the current state filters out any values.(?)
+    #
+    # @return `logical(1)`
+    #
+    is_any_filtered = function() {
+      if (private$is_disabled()) {
+        FALSE
+      } else if (private$is_choice_limited) {
+        TRUE
+      } else {
+        !isTRUE(private$get_keep_na())
+      }
+    },
+
     # @description
     # UI Module for `EmptyFilterState`.
     # This UI element contains a checkbox input to filter or keep missing values.
@@ -192,13 +194,6 @@ EmptyFilterState <- R6::R6Class( # nolint
         id = id,
         function(input, output, session) {
           private$keep_na_srv("keep_na")
-
-          observeEvent(private$is_disabled(), {
-            shinyjs::toggleState(
-              id = "keep_na-value",
-              condition = !private$is_disabled()
-            )
-          })
         }
       )
     },

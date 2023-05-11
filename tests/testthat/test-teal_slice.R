@@ -152,105 +152,6 @@ testthat::test_that("is* functions work", {
   testthat::expect_false(is.teal_slices(fs1))
 })
 
-
-# as.teal_slice(s)
-testthat::test_that("as.teal_slice checks arguments", {
-  fl1 <- list(
-    dataname = "data",
-    varname = "var1"
-  )
-
-  testthat::expect_no_error(as.teal_slice(fl1))
-  testthat::expect_error(as.teal_slice(unlist(fl1)), "Assertion on 'x' failed")
-  testthat::expect_error(as.teal_slice(unname(fl1)), "Assertion on 'x' failed")
-  testthat::expect_error(as.teal_slice(list()), "argument \"dataname\" is missing, with no default")
-})
-
-
-testthat::test_that("as.teal_slice converts list to `teal_slice`", {
-  fl1 <- list(
-    dataname = "data",
-    varname = "var1"
-  )
-  fs1 <- filter_var("data", "var1")
-
-  testthat::expect_s3_class(as.teal_slice(fl1), "teal_slice")
-  testthat::expect_identical(as.teal_slice(fl1), fs1)
-})
-
-
-testthat::test_that("as.teal_slices checks arguments", {
-  fl2 <- structure(
-    list(
-      data1 = list(
-        var1 = list(
-          selected = "a",
-          keep_na = TRUE
-        )
-      ),
-      data2 = list(
-        var2 = list(
-          selected = 2,
-          keep_na = TRUE,
-          keep_inf = FALSE
-        )
-      )
-    ),
-    filterable = list(data1 = "a")
-  )
-
-  testthat::expect_no_error(as.teal_slices(fl2))
-  testthat::expect_no_error(as.teal_slices(fl2[1]))
-  testthat::expect_error(as.teal_slices(fl2[[1]]), "conversion to filter_slices failed")
-  testthat::expect_error(as.teal_slices(list("a", 1L)), "Assertion on 'x' failed")
-  testthat::expect_error(as.teal_slices(list(a = "a", b = 1L)), "conversion to filter_slices failed")
-})
-
-
-testthat::test_that("as.teal_slices converts list to `teal_slices`", {
-  fl3 <- list(
-    data1 = list(
-      var1 = list(
-        selected = "a",
-        keep_na = TRUE
-      )
-    ),
-    data2 = list(
-      subjects = list(
-        var31 = list(
-          selected = 31,
-          keep_na = TRUE,
-          keep_inf = FALSE
-        )
-      ),
-      exp1 = list(
-        subset = list(
-          var32 = list(
-            selected = 32,
-            keep_na = TRUE,
-            keep_inf = FALSE
-          )
-        )
-      )
-    )
-  )
-  attr(fl3, "filterable") <- list(data1 = "a")
-
-  fs3 <- filter_settings(
-    filter_var("data1", "var1", selected = "a", keep_na = TRUE),
-    filter_var("data2", "var31", selected = 31, keep_na = TRUE, keep_inf = FALSE, datalabel = "subjects", target = "y"),
-    filter_var("data@", "var32", selected = 32, keep_na = TRUE, keep_inf = FALSE, datalabel = "exp1", target = "subset"),
-    include_varnames = list(data1 = "a")
-  )
-
-  testthat::expect_s3_class(as.teal_slices(fl3), "teal_slices")
-  testthat::expect_identical(as.teal_slices(fl3)[2], fs3[2])
-
-
-  testthat::expect_identical(as.teal_slices(list()), filter_settings())
-})
-
-
 # [.teal_slices ----
 testthat::test_that("[.teal_slices accepts various types of indices", {
   fs1 <- filter_var("data", "var1")
@@ -270,8 +171,6 @@ testthat::test_that("[.teal_slices accepts various types of indices", {
   testthat::expect_error(fs[3], "subscript out of bounds")
   testthat::expect_error(fs["three"], "subscript out of bounds")
 
-  testthat::expect_no_error(fs[[]])
-  testthat::expect_null(fs[[]])
   testthat::expect_error(fs[[integer(0)]], "attempt to select less than one element in get1index")
   testthat::expect_error(fs[[character(0)]], "attempt to select less than one element in get1index")
   testthat::expect_error(fs[[logical(0)]], "attempt to select less than one element in get1index")
@@ -552,8 +451,8 @@ testthat::test_that("format.teal_slices prints count_type attribute if not empty
 
 # helpers ----
 testthat::test_that("slices_field works", {
-  fs1 <- filter_var("data", "var1")
-  fs2 <- filter_var("data", "var2")
+  fs1 <- filter_var(dataname = "data", varname = "var1")
+  fs2 <- filter_var(dataname = "data", varname = "var2")
   fs <- filter_settings(fs1, fs2)
 
   # argument checks

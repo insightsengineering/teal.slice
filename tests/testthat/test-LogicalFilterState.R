@@ -22,8 +22,12 @@ testthat::test_that("constructor raises error when selection is not logical", {
 # set_state ----
 testthat::test_that("set_state: selected accepts a logical (or coercible) of length 1", {
   filter_state <- LogicalFilterState$new(logs, dataname = "data", varname = "variable")
-  testthat::expect_no_error(filter_state$set_state(filter_var(dataname = "data", varname = "variable", selected = TRUE)))
-  testthat::expect_no_error(filter_state$set_state(filter_var(dataname = "data", varname = "variable", selected = "TRUE")))
+  testthat::expect_no_error(
+    filter_state$set_state(filter_var(dataname = "data", varname = "variable", selected = TRUE))
+  )
+  testthat::expect_no_error(
+    filter_state$set_state(filter_var(dataname = "data", varname = "variable", selected = "TRUE"))
+  )
   testthat::expect_no_error(filter_state$set_state(filter_var(dataname = "data", varname = "variable", selected = 1)))
   testthat::expect_error(
     filter_state$set_state(filter_var(dataname = "data", varname = "variable", selected = c(TRUE, TRUE))),
@@ -36,35 +40,74 @@ testthat::test_that("set_state: selected accepts a logical (or coercible) of len
 })
 
 # get_call ----
-testthat::test_that("get_call returns FALSE values from data passed to selector", {
-  variable <- logs
-  filter_state <- LogicalFilterState$new(logs, dataname = "data", varname = "variable", selected = FALSE, keep_na = FALSE)
-
-  expect_identical(
-    eval(shiny::isolate(filter_state$get_call())),
-    !logs
-  )
+testthat::test_that("get_call of default LogicalFilterState object returns variable name", {
+  filter_state <- LogicalFilterState$new(logs[1:10], dataname = "data", varname = "variable")
+  expect_identical(shiny::isolate(filter_state$get_call()), quote(variable))
 })
 
-testthat::test_that("get_call returns appropriate call depending on selection state", {
-  filter_state <- LogicalFilterState$new(logs, dataname = "data", varname = "variable", selected = FALSE, keep_na = FALSE)
-
-  expect_identical(
+testthat::test_that("get_call returns call selected different than choices", {
+  filter_state <- LogicalFilterState$new(
+    logs[1:10],
+    dataname = "data", varname = "variable",
+    choices = c(TRUE, FALSE), selected = FALSE
+  )
+  testthat::expect_identical(
     shiny::isolate(filter_state$get_call()),
     quote(!variable)
   )
-  filter_state$set_state(filter_var(dataname = "data", varname = "variable", selected = TRUE))
-  expect_identical(
+})
+
+testthat::test_that("get_call returns NULL if disabled", {
+  filter_state <- LogicalFilterState$new(
+    logs,
+    dataname = "data", varname = "variable", selected = FALSE, disabled = TRUE
+  )
+  testthat::expect_null(shiny::isolate(filter_state$get_call()))
+})
+
+testthat::test_that("get_call returns call always if choices are limited - regardless of selected", {
+  filter_state <- LogicalFilterState$new(
+    logs[1:10],
+    dataname = "data", varname = "variable", choices = FALSE
+  )
+  testthat::expect_identical(
     shiny::isolate(filter_state$get_call()),
     quote(variable)
   )
-  filter_state$set_state(filter_var(dataname = "data", varname = "variable", keep_na = TRUE))
-  expect_identical(
-    shiny::isolate(filter_state$get_call()),
-    quote(is.na(variable) | variable)
+})
+
+testthat::test_that("get_call prefixes varname by dataname$varname if extract_type='list'", {
+  filter_state <- LogicalFilterState$new(
+    logs[1:10],
+    dataname = "data", varname = "variable", selected = FALSE, extract_type = "list"
+  )
+  testthat::expect_identical(
+    shiny::isolate(filter_state$get_call(dataname = "dataname")),
+    quote(!dataname$variable)
   )
 })
 
+testthat::test_that("get_call prefixes varname by dataname[, 'varname'] if extract_type='matrix'", {
+  filter_state <- LogicalFilterState$new(
+    logs[1:10],
+    dataname = "data", varname = "variable", selected = FALSE, extract_type = "matrix"
+  )
+  testthat::expect_identical(
+    shiny::isolate(filter_state$get_call(dataname = "dataname")),
+    quote(!dataname[, "variable"])
+  )
+})
+
+testthat::test_that("get_call adds is.na(variable) to returned call if keep_na is true", {
+  filter_state <- LogicalFilterState$new(
+    logs,
+    dataname = "data", varname = "variable", selected = FALSE, keep_na = TRUE
+  )
+  testthat::expect_identical(
+    shiny::isolate(filter_state$get_call()),
+    quote(is.na(variable) | !variable)
+  )
+})
 
 # format ----
 testthat::test_that("format accepts numeric as indent", {
@@ -103,69 +146,4 @@ testthat::test_that("format prepends spaces to every line of the returned string
       )
     )
   }
-})
-
-
-# is_any_filtered ----
-testthat::test_that("is_any_filtered works properly when both TRUE and FALSE are present", {
-  filter_state <- LogicalFilterState$new(x = logs, dataname = "data", varname = "variable")
-
-  filter_state$set_state(filter_var(dataname = "data", varname = "variable", selected = TRUE))
-  testthat::expect_true(
-    shiny::isolate(filter_state$is_any_filtered())
-  )
-
-  filter_state$set_state(filter_var(dataname = "data", varname = "variable", selected = FALSE))
-  testthat::expect_true(
-    shiny::isolate(filter_state$is_any_filtered())
-  )
-
-  filter_state$set_state(filter_var(dataname = "data", varname = "variable", selected = TRUE, keep_na = TRUE))
-  testthat::expect_true(
-    shiny::isolate(filter_state$is_any_filtered())
-  )
-
-  filter_state$set_state(filter_var(dataname = "data", varname = "variable", selected = TRUE, keep_na = FALSE))
-  testthat::expect_true(
-    shiny::isolate(filter_state$is_any_filtered())
-  )
-
-  filter_state$set_state(filter_var(dataname = "data", varname = "variable", selected = FALSE, keep_na = TRUE))
-  testthat::expect_true(
-    shiny::isolate(filter_state$is_any_filtered())
-  )
-
-  filter_state$set_state(filter_var(dataname = "data", varname = "variable", selected = FALSE, keep_na = FALSE))
-  testthat::expect_true(
-    shiny::isolate(filter_state$is_any_filtered())
-  )
-
-
-  filter_state <- LogicalFilterState$new(x = logs[!logs], dataname = "data", varname = "variable")
-  filter_state$set_state(filter_var(dataname = "data", varname = "variable", selected = TRUE, keep_na = TRUE))
-  testthat::expect_true(
-    shiny::isolate(filter_state$is_any_filtered())
-  )
-
-  filter_state$set_state(filter_var(dataname = "data", varname = "variable", selected = FALSE, keep_na = TRUE))
-  testthat::expect_false(
-    shiny::isolate(filter_state$is_any_filtered())
-  )
-})
-
-testthat::test_that("is_any_filtered returns TRUE when enabled and FALSE when disabled", {
-  testfs <- R6::R6Class(
-    classname = "testfs",
-    inherit = LogicalFilterState,
-    public = list(
-      disable = function() private$disable(),
-      enable = function() private$enable()
-    )
-  )
-  fs <- testfs$new(logs, dataname = "data", varname = "variable", selected = TRUE, keep_na = TRUE)
-  testthat::expect_true(shiny::isolate(fs$is_any_filtered()))
-  shiny::isolate(fs$disable())
-  testthat::expect_false(shiny::isolate(fs$is_any_filtered()))
-  shiny::isolate(fs$enable())
-  testthat::expect_true(shiny::isolate(fs$is_any_filtered()))
 })

@@ -7,7 +7,6 @@ MAEFilteredDataset <- R6::R6Class( # nolint
 
   # public methods ----
   public = list(
-
     #' @description
     #' Initialize `MAEFilteredDataset` object
     #'
@@ -74,14 +73,18 @@ MAEFilteredDataset <- R6::R6Class( # nolint
     #' @examples
     #' utils::data(miniACC, package = "MultiAssayExperiment")
     #' dataset <- teal.slice:::MAEFilteredDataset$new(miniACC, "MAE")
-    #' fs <- list(
-    #'   subjects = list(
-    #'     years_to_birth = list(selected = c(30, 50), keep_na = TRUE, keep_inf = FALSE),
-    #'     vital_status = list(selected = "1", keep_na = FALSE),
-    #'     gender = list(selected = "female", keep_na = TRUE)
+    #' fs <- filter_settings(
+    #'   filter_var(
+    #'     dataname = "MAE", varname = "years_to_birth", selected = c(30, 50), keep_na = TRUE
     #'   ),
-    #'   RPPAArray = list(
-    #'     subset = list(ARRAY_TYPE = list(selected = "", keep_na = TRUE))
+    #'   filter_var(
+    #'     dataname = "MAE", varname = "vital_status", selected = "1", keep_na = FALSE
+    #'   ),
+    #'   filter_var(
+    #'     dataname = "MAE", varname = "gender", selected = "female", keep_na = TRUE
+    #'   ),
+    #'   filter_var(
+    #'     dataname = "MAE", varname = "ARRAY_TYPE", selected = "", keep_na = TRUE
     #'   )
     #' )
     #' dataset$set_filter_state(state = fs)
@@ -90,19 +93,25 @@ MAEFilteredDataset <- R6::R6Class( # nolint
     #' @return `NULL` invisibly
     #'
     set_filter_state = function(state) {
+      logger::log_trace("{ class(self)[1] }$set_filter_state initializing, dataname: { private$dataname }")
       checkmate::assert_class(state, "teal_slices")
       lapply(state, function(x) {
         checkmate::assert_true(x$dataname == private$dataname, .var.name = "dataname matches private$dataname")
       })
-      checkmate::assert_true(
-        all(vapply(state, function(x) identical(x$dataname, private$dataname), logical(1L))),
-        .var.name = "FilterStatesMAE$set_filter_state: all slices in state must have target = \"y\""
-      )
-
-      logger::log_trace("{ class(self)[1] }$set_filter_state initializing, dataname: { private$dataname }")
 
       # determine target datalabels (defined in teal_slices)
       datalabels <- slices_field(state, "datalabel")
+      slot_names <- names(private$get_filter_states())
+      excluded_filters <- setdiff(datalabels, slot_names)
+      if (length(excluded_filters)) {
+        stop(sprintf(
+          "%s doesn't contain elements soecified in 'datalabel': %s\n'datalabel' should be a subset of: %s",
+          private$dataname,
+          paste(excluded_filters, collapse = ", "),
+          paste(slot_names, collapse = ", ")
+        ))
+      }
+
       # set states on state_lists with corresponding datalabels
       lapply(datalabels, function(x) {
         private$get_filter_states()[[x]]$set_filter_state(
@@ -161,7 +170,7 @@ MAEFilteredDataset <- R6::R6Class( # nolint
         br(),
         HTML("&#9658;"),
         tags$label("Add subjects filter"),
-        private$get_filter_states("subjects")$ui_add(id = ns("subjects")),
+        private$get_filter_states()[["subjects"]]$ui_add(id = ns("subjects")),
         tagList(
           lapply(
             experiment_names,
@@ -169,50 +178,11 @@ MAEFilteredDataset <- R6::R6Class( # nolint
               tagList(
                 HTML("&#9658;"),
                 tags$label("Add", tags$code(experiment_name), "filter"),
-                private$get_filter_states(experiment_name)$ui_add(id = ns(experiment_name))
+                private$get_filter_states()[[experiment_name]]$ui_add(id = ns(experiment_name))
               )
             }
           )
         )
-      )
-    },
-
-    #' @description
-    #' Server module to add filter variable for this dataset
-    #'
-    #' Server module to add filter variable for this dataset.
-    #' For this class `srv_add` calls multiple modules
-    #' of the same name from `FilterStates` as `MAEFilteredDataset`
-    #' contains one `FilterStates` object for `colData` and one for each
-    #' experiment.
-    #'
-    #' @param id (`character(1)`)\cr
-    #'   an ID string that corresponds with the ID used to call the module's UI function.
-    #'
-    #' @return `moduleServer` function which returns `NULL`
-    #'
-    srv_add = function(id) {
-      moduleServer(
-        id = id,
-        function(input, output, session) {
-          logger::log_trace(paste(
-            "MAEFilteredDataset$srv_add initializing,",
-            "dataname: { deparse1(self$get_dataname()) }"
-          ))
-          private$get_filter_states("subjects")$srv_add(id = "subjects")
-          experiment_names <- names(self$get_dataset())
-          lapply(
-            experiment_names,
-            function(experiment_name) {
-              private$get_filter_states(experiment_name)$srv_add(experiment_name)
-            }
-          )
-          logger::log_trace(paste(
-            "MAEFilteredDataset$srv_add initialized,",
-            "dataname: { deparse1(self$get_dataname()) }"
-          ))
-          NULL
-        }
       )
     },
 

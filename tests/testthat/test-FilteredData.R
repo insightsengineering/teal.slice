@@ -444,6 +444,66 @@ testthat::test_that("get_data of the child is dependent on the ancestor filter",
   )
 })
 
+# supporting previous api ----
+testthat::test_that("set_filter_state accepts `teal_slices` and nested list and both set identical settings", {
+  utils::data(miniACC, package = "MultiAssayExperiment")
+  x <- list(iris = list(dataset = iris), mae = list(dataset = miniACC))
+  datasets1 <- init_filtered_data(x)
+  datasets2 <- init_filtered_data(x)
+  fs1 <- structure(
+    list(
+      iris = list(
+        Species = list(selected = c("setosa", "versicolor")),
+        Sepal.Length = c(5.1, 6.4),
+        Petal.Length = list()
+      ),
+      mae = list(
+        subjects = list(
+          years_to_birth = list(selected = c(30, 50), keep_na = TRUE, keep_inf = FALSE),
+          vital_status = list(selected = "1", keep_na = FALSE),
+          gender = list(selected = "female", keep_na = TRUE)
+        ),
+        RPPAArray = list(
+          subset = list(
+            ARRAY_TYPE = list(selected = "", keep_na = TRUE)
+          )
+        )
+      )
+    ),
+    filterable = list(
+      iris = c("Species", "Sepal.Length", "Petal.Length"),
+      mae = c("years_to_birth", "vital_status", "gender")
+    )
+  )
+
+  fs2 <- filter_settings(
+    filter_var(dataname = "iris", varname = "Species", selected = c("setosa", "versicolor")),
+    filter_var(dataname = "iris", varname = "Sepal.Length", selected = c(5.1, 6.4)),
+    filter_var(dataname = "iris", varname = "Petal.Length"),
+    filter_var(dataname = "mae", varname = "years_to_birth", datalabel = "subjects",
+               selected = c(30, 50), , keep_na = TRUE, keep_inf = FALSE),
+    filter_var(dataname = "mae", varname = "vital_status", datalabel = "subjects",
+               selected = "1", keep_na = FALSE),
+    filter_var(dataname = "mae", varname = "gender", datalabel = "subjects",
+               selected = "female", keep_na = TRUE),
+    filter_var(dataname = "mae", varname = "ARRAY_TYPE", datalabel = "RPPAArray", arg = "subset",
+               selected = "", keep_na = TRUE),
+    include_varnames = list(
+      iris = c("Species", "Sepal.Length", "Petal.Length"),
+      mae = c("years_to_birth", "vital_status", "gender")
+    )
+  )
+
+  testthat::expect_warning(datasets1$set_filter_state(fs1), "deprecated")
+  datasets2$set_filter_state(fs2)
+
+  testthat::expect_identical(
+    shiny::isolate(datasets1$get_filter_state()),
+    shiny::isolate(datasets2$get_filter_state())
+  )
+})
+
+
 # get_filter_state ----
 testthat::test_that("get_filter_state returns `teal_slices` with features identical to those in input, adds format", {
   datasets <- FilteredData$new(
@@ -706,13 +766,19 @@ testthat::test_that("filter_panel_disable/enable disables and restores all filte
         c(FALSE, TRUE)
       )
 
-      filtered_data$filter_panel_disable()
+      testthat::expect_output(
+        filtered_data$filter_panel_disable(),
+        "WARN.+attempt to set state on disabled filter"
+      )
       testthat::expect_identical(
         slices_field(shiny::isolate(filtered_data$get_filter_state()), "disabled"),
         TRUE
       )
 
-      filtered_data$filter_panel_enable()
+      testthat::expect_output(
+        filtered_data$filter_panel_enable(),
+        "WARN.+attempt to set state on disabled filter"
+      )
       testthat::expect_identical(
         slices_field(shiny::isolate(filtered_data$get_filter_state()), "disabled"),
         c(FALSE, TRUE)
@@ -740,7 +806,10 @@ testthat::test_that("switching disable/enable button caches and restores state",
     expr = {
       cached <- filtered_data$get_filter_state()
       testthat::expect_true(filtered_data$get_filter_panel_active())
-      session$setInputs(filter_panel_active = FALSE)
+      testthat::expect_output(
+        session$setInputs(filter_panel_active = FALSE),
+        "WARN.+attempt to set state on disabled"
+      )
       testthat::expect_false(filtered_data$get_filter_panel_active())
       session$setInputs(filter_panel_active = TRUE)
       testthat::expect_true(filtered_data$get_filter_panel_active())
@@ -906,19 +975,19 @@ testthat::test_that("get_filter_count properly tallies active filter states for 
   fs <- filter_settings(
     filter_var(
       dataname = "mae", varname = "years_to_birth",
-      selected = c(30, 50), keep_na = TRUE, keep_inf = FALSE, datalabel = "subjects", target = "y"
+      selected = c(30, 50), keep_na = TRUE, keep_inf = FALSE, datalabel = "subjects", arg = "y"
     ),
     filter_var(
       dataname = "mae", varname = "vital_status",
-      selected = "1", keep_na = FALSE, datalabel = "subjects", target = "y"
+      selected = "1", keep_na = FALSE, datalabel = "subjects", arg = "y"
     ),
     filter_var(
       dataname = "mae", varname = "gender",
-      selected = "female", keep_na = TRUE, datalabel = "subjects", target = "y"
+      selected = "female", keep_na = TRUE, datalabel = "subjects", arg = "y"
     ),
     filter_var(
       dataname = "mae", varname = "ARRAY_TYPE",
-      selected = "", keep_na = TRUE, datalabel = "RPPAArray", target = "subset"
+      selected = "", keep_na = TRUE, datalabel = "RPPAArray", arg = "subset"
     )
   )
   shiny::isolate(testthat::expect_equal(datasets$get_filter_count(), 0L))

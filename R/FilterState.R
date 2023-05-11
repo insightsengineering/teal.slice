@@ -163,8 +163,8 @@ FilterState <- R6::R6Class( # nolint
       checkmate::assert_class(state, "teal_slice")
 
       # Allow for enabling a filter state before altering state.
-      if (isTRUE(state$disabled) && isFALSE(private$is_disabled())) private$disable()
-      if (isFALSE(state$disabled) && isTRUE(private$is_disabled())) private$enable()
+      if (isTRUE(state$disabled) && isFALSE(private$is_disabled())) private$disabled(TRUE)
+      if (isFALSE(state$disabled) && isTRUE(private$is_disabled())) private$disabled(FALSE)
 
       if (private$is_disabled()) {
         mutables <- state[c("selected", "keep_na", "keep_inf")]
@@ -255,9 +255,9 @@ FilterState <- R6::R6Class( # nolint
           private$observers$is_disabled <- observeEvent(input$enable,
             {
               if (isTRUE(input$enable)) {
-                private$enable()
+                private$disabled(FALSE)
               } else {
-                private$disable()
+                private$disabled(TRUE)
               }
             },
             ignoreInit = TRUE
@@ -313,7 +313,7 @@ FilterState <- R6::R6Class( # nolint
               label = "",
               status = "success",
               fill = TRUE,
-              value = !private$is_disabled(),
+              value = !shiny::isolate(private$is_disabled()),
               width = 30
             ),
             actionLink(
@@ -380,8 +380,8 @@ FilterState <- R6::R6Class( # nolint
     ##
     # other
     is_choice_limited = FALSE, # flag whether number of possible choices was limited when specifying filter
-    na_rm = FALSE, # logical(1)
-    observers = NULL, # stores observers
+    na_rm = FALSE,
+    observers = list(), # stores observers
 
     # private methods ----
 
@@ -411,7 +411,6 @@ FilterState <- R6::R6Class( # nolint
         )
       )
       if (is.null(value)) value <- private$choices
-
       value <- private$cast_and_validate(value)
       value <- private$remove_out_of_bound_values(value)
       private$validate_selection(value)
@@ -603,36 +602,6 @@ FilterState <- R6::R6Class( # nolint
       values
     },
 
-    # Disables this `FilterState`.
-    #
-    # Sets `disabled` to TRUE. This causes `is_any_filtered` to ignore selection.
-    #
-    # @return `NULL` invisibly
-    disable = function() {
-      logger::log_trace("{ class(self)[1] }$set_state disabling fiter state of variable: { private$varname }")
-
-      private$disabled(TRUE)
-
-      logger::log_trace("{ class(self)[1] }$set_state disabled fiter state of variable: { private$varname }")
-
-      invisible(NULL)
-    },
-
-    # Enables this `FilterState`.
-    #
-    # `disabled` is set to TRUE.
-    #
-    # @return `NULL` invisibly
-    enable = function() {
-      logger::log_trace("{ class(self)[1] }$set_state enabling fiter state of variable: { private$varname }")
-
-      private$disabled(FALSE)
-
-      logger::log_trace("{ class(self)[1] }$set_state enabled state of variable: { private$varname }")
-
-      invisible(NULL)
-    },
-
     # Check whether this filter is disabled
     # @return `logical(1)`
     is_disabled = function() {
@@ -640,6 +609,23 @@ FilterState <- R6::R6Class( # nolint
         private$disabled()
       } else {
         shiny::isolate(private$disabled())
+      }
+    },
+
+    # @description
+    # Answers the question of whether the current settings and values selected actually filters out any values.
+    # @return logical scalar
+    is_any_filtered = function() {
+      if (private$is_disabled()) {
+        FALSE
+      } else if (private$is_choice_limited) {
+        TRUE
+      } else if (!setequal(private$get_selected(), private$choices)) {
+        TRUE
+      } else if (!isTRUE(private$get_keep_na()) && private$na_count > 0) {
+        TRUE
+      } else {
+        FALSE
       }
     },
 
@@ -711,21 +697,23 @@ FilterState <- R6::R6Class( # nolint
       ns <- NS(id)
       if (private$na_count > 0) {
         countmax <- private$na_count
-        countnow <- isolate(private$filtered_na_count())
+        countnow <- shiny::isolate(private$filtered_na_count())
+        ui_input <- checkboxInput(
+          inputId = ns("value"),
+          label = tags$span(
+            id = ns("count_label"),
+            make_count_text(
+              label = "Keep NA",
+              countmax = countmax,
+              countnow = countnow
+            )
+          ),
+          value = shiny::isolate(private$get_keep_na())
+        )
+        if (shiny::isolate(private$is_disabled())) ui_input <- shinyjs::disabled(ui_input)
         div(
           uiOutput(ns("trigger_visible"), inline = TRUE),
-          checkboxInput(
-            inputId = ns("value"),
-            label = tags$span(
-              id = ns("count_label"),
-              make_count_text(
-                label = "Keep NA",
-                countmax = countmax,
-                countnow = countnow
-              )
-            ),
-            value = shiny::isolate(private$get_keep_na())
-          )
+          ui_input
         )
       } else {
         NULL
@@ -792,6 +780,13 @@ FilterState <- R6::R6Class( # nolint
             )
           }
         )
+
+        private$observers$disabled_toggle_na <- observeEvent(private$is_disabled(), {
+          shinyjs::toggleState(
+            id = "value",
+            condition = !private$is_disabled()
+          )
+        })
         invisible(NULL)
       })
     }

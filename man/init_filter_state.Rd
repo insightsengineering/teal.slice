@@ -79,13 +79,11 @@ filter_state <- teal.slice:::RangeFilterState$new(
   extract_type = "matrix"
 )
 
-filter_state$get_varname()
-filter_state$get_varlabel()
-isolate(filter_state$get_call())
+shiny::isolate(filter_state$get_call())
 \dontrun{
 shinyApp(
   ui = fluidPage(
-    isolate(filter_state$ui(id = "app")),
+    filter_state$ui(id = "app"),
     verbatimTextOutput("call")
   ),
   server = function(input, output, session) {

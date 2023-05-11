@@ -12,11 +12,17 @@
 #'   dataname = "data",
 #'   extract_type = character(0)
 #' )
-#' isolate(filter_state$get_call())
-#' isolate(filter_state$set_selected(c(3L, 8L)))
-#' isolate(filter_state$set_keep_na(TRUE))
-#' isolate(filter_state$set_keep_inf(TRUE))
-#' isolate(filter_state$get_call())
+#' shiny::isolate(filter_state$get_call())
+#' filter_state$set_state(
+#'   filter_var(
+#'     dataname = "data",
+#'     varname = "x",
+#'     selected = c(3L, 8L),
+#'     keep_na = TRUE,
+#'     keep_inf = TRUE
+#'   )
+#' )
+#' shiny::isolate(filter_state$get_call())
 #'
 #' \dontrun{
 #' # working filter in an app
@@ -24,13 +30,13 @@
 #' library(shinyjs)
 #'
 #' data_range <- c(runif(100, 0, 1), NA, Inf)
-#' filter_state_range <- RangeFilterState$new(
+#' fs <- teal.slice:::RangeFilterState$new(
 #'   x = data_range,
-#'   dataname = "data"
-#'   varname = "variable"
-#' )
-#' filter_state_range$set_state(
-#'   filter_var("data", "variable", selected = c(0.15, 0.93), keep_na = TRUE, keep_inf = TRUE)
+#'   dataname = "data",
+#'   varname = "x",
+#'   selected = c(0.15, 0.93),
+#'   keep_na = TRUE,
+#'   keep_inf = TRUE
 #' )
 #'
 #' ui <- fluidPage(
@@ -39,7 +45,7 @@
 #'   include_js_files(pattern = "count-bar-labels"),
 #'   column(4, div(
 #'     h4("RangeFilterState"),
-#'     isolate(filter_state_range$ui("fs"))
+#'     fs$ui("fs")
 #'   )),
 #'   column(4, div(
 #'     id = "outputs", # div id is needed for toggling the element
@@ -63,20 +69,40 @@
 #' )
 #'
 #' server <- function(input, output, session) {
-#'   filter_state_range$server("fs")
-#'   output$condition_range <- renderPrint(filter_state_range$get_call())
-#'   output$formatted_range <- renderText(filter_state_range$format())
-#'   output$unformatted_range <- renderPrint(filter_state_range$get_state())
+#'   fs$server("fs")
+#'   output$condition_range <- renderPrint(fs$get_call())
+#'   output$formatted_range <- renderText(fs$format())
+#'   output$unformatted_range <- renderPrint(fs$get_state())
 #'   # modify filter state programmatically
-#'   observeEvent(input$button1_range, filter_state_range$set_keep_na(FALSE))
-#'   observeEvent(input$button2_range, filter_state_range$set_keep_na(TRUE))
-#'   observeEvent(input$button3_range, filter_state_range$set_keep_inf(FALSE))
-#'   observeEvent(input$button4_range, filter_state_range$set_keep_inf(TRUE))
-#'   observeEvent(input$button5_range, filter_state_range$set_selected(c(0.2, 0.74)))
-#'   observeEvent(input$button6_range, filter_state_range$set_selected(c(0, 1)))
+#'   observeEvent(
+#'     input$button1_range,
+#'     fs$set_state(filter_var(dataname = "data", varname = "x", keep_na = FALSE))
+#'   )
+#'   observeEvent(
+#'     input$button2_range,
+#'     fs$set_state(filter_var(dataname = "data", varname = "x", keep_na = TRUE))
+#'   )
+#'   observeEvent(
+#'     input$button3_range,
+#'     fs$set_state(filter_var(dataname = "data", varname = "x", keep_inf = FALSE))
+#'   )
+#'   observeEvent(
+#'     input$button4_range,
+#'     fs$set_state(filter_var(dataname = "data", varname = "x", keep_inf = TRUE))
+#'   )
+#'   observeEvent(
+#'     input$button5_range,
+#'     fs$set_state(
+#'       filter_var(dataname = "data", varname = "x", selected = c(0.2, 0.74))
+#'     )
+#'   )
+#'   observeEvent(
+#'     input$button6_range,
+#'     fs$set_state(filter_var(dataname = "data", varname = "x", selected = c(0, 1)))
+#'   )
 #'   observeEvent(
 #'     input$button0_range,
-#'     filter_state_range$set_state(
+#'     fs$set_state(
 #'       filter_var("data", "variable", selected = c(0.15, 0.93), keep_na = TRUE, keep_inf = TRUE)
 #'     )
 #'   )
@@ -212,25 +238,6 @@ RangeFilterState <- R6::R6Class( # nolint
     },
 
     #' @description
-    #' Answers the question of whether the current settings and values selected actually filters out any values.
-    #' @return logical scalar
-    is_any_filtered = function() {
-      if (private$is_disabled()) {
-        FALSE
-      } else if (private$is_choice_limited) {
-        TRUE
-      } else if (!isTRUE(all.equal(private$get_selected(), private$choices))) {
-        TRUE
-      } else if (!isTRUE(private$get_keep_inf()) && private$inf_count > 0) {
-        TRUE
-      } else if (!isTRUE(private$get_keep_na()) && private$na_count > 0) {
-        TRUE
-      } else {
-        FALSE
-      }
-    },
-
-    #' @description
     #' Returns reproducible condition call for current selection.
     #' For this class returned call looks like
     #' `<varname> >= <min value> & <varname> <= <max value>` with
@@ -239,6 +246,9 @@ RangeFilterState <- R6::R6Class( # nolint
     #' @return (`call`)
     #'
     get_call = function(dataname) {
+      if (isFALSE(private$is_any_filtered())) {
+        return(NULL)
+      }
       if (missing(dataname)) dataname <- private$dataname
       filter_call <-
         call(
@@ -277,14 +287,16 @@ RangeFilterState <- R6::R6Class( # nolint
         if (any(choices != choices_adjusted)) {
           warning(sprintf(
             "Choices adjusted (some values outside of variable range). Varname: %s, dataname: %s.",
-            private$varname, private$dataname))
+            private$varname, private$dataname
+          ))
           choices <- choices_adjusted
         }
         if (choices[1L] > choices[2L]) {
           warning(sprintf(
             "Invalid choices: lower is higher / equal to upper, or not in range of variable values.
             Setting defaults. Varname: %s, dataname: %s.",
-            private$varname, private$dataname))
+            private$varname, private$dataname
+          ))
           choices <- range(x)
         }
       }
@@ -384,6 +396,24 @@ RangeFilterState <- R6::R6Class( # nolint
       values
     },
 
+    # Answers the question of whether the current settings and values selected actually filters out any values.
+    # @return logical scalar
+    is_any_filtered = function() {
+      if (private$is_disabled()) {
+        FALSE
+      } else if (private$is_choice_limited) {
+        TRUE
+      } else if (!isTRUE(all.equal(private$get_selected(), private$choices))) {
+        TRUE
+      } else if (!isTRUE(private$get_keep_inf()) && private$inf_count > 0) {
+        TRUE
+      } else if (!isTRUE(private$get_keep_na()) && private$na_count > 0) {
+        TRUE
+      } else {
+        FALSE
+      }
+    },
+
     # shiny modules ----
 
     # UI Module for `RangeFilterState`.
@@ -394,6 +424,30 @@ RangeFilterState <- R6::R6Class( # nolint
     ui_inputs = function(id) {
       ns <- NS(id)
 
+      ui_input_slider <- teal.widgets::optionalSliderInput(
+        inputId = ns("selection"),
+        label = NULL,
+        min = private$choices[1L],
+        max = private$choices[2L],
+        value = shiny::isolate(private$selected()),
+        step = private$slider_step,
+        width = "100%"
+      )
+      ui_input_manual <- shinyWidgets::numericRangeInput(
+        inputId = ns("selection_manual"),
+        label = NULL,
+        min = private$choices[1L],
+        max = private$choices[2L],
+        value = shiny::isolate(private$selected()),
+        step = private$slider_step,
+        width = "100%"
+      )
+
+      if (shiny::isolate(private$is_disabled())) {
+        ui_input_slider <- shinyjs::disabled(ui_input_slider)
+        ui_input_manual <- shinyjs::disabled(ui_input_manual)
+      }
+
       tagList(
         shinyWidgets::switchInput(
           ns("manual"),
@@ -403,7 +457,8 @@ RangeFilterState <- R6::R6Class( # nolint
           onLabel = "Yes",
           offLabel = "No",
           onStatus = "info",
-          offStatus = "info"
+          offStatus = "info",
+          disabled = shiny::isolate(private$is_disabled())
         ),
         conditionalPanel(
           ns = ns,
@@ -414,32 +469,13 @@ RangeFilterState <- R6::R6Class( # nolint
               class = "filterPlotOverlayRange",
               plotOutput(ns("plot"), height = "100%"),
             ),
-            div(
-              class = "filterRangeSlider",
-              teal.widgets::optionalSliderInput(
-                inputId = ns("selection"),
-                label = NULL,
-                min = private$choices[1L],
-                max = private$choices[2L],
-                value = shiny::isolate(private$selected()),
-                step = private$slider_step,
-                width = "100%"
-              )
-            )
+            div(class = "filterRangeSlider", ui_input_slider)
           )
         ),
         conditionalPanel(
           ns = ns,
           condition = "input.manual === true",
-          shinyWidgets::numericRangeInput(
-            inputId = ns("selection_manual"),
-            label = NULL,
-            min = private$choices[1L],
-            max = private$choices[2L],
-            value = shiny::isolate(private$selected()),
-            step = private$slider_step,
-            width = "100%"
-          )
+          ui_input_manual
         ),
         div(
           class = "filter-card-body-keep-na-inf",
@@ -526,7 +562,7 @@ RangeFilterState <- R6::R6Class( # nolint
               }
             }
           )
-          
+
           private$observers$selection_manual <- observeEvent(
             ignoreNULL = FALSE,
             ignoreInit = TRUE,
@@ -607,21 +643,13 @@ RangeFilterState <- R6::R6Class( # nolint
               id = "selection_manual",
               condition = !private$is_disabled()
             )
-            shinyjs::toggleState(
-              id = "keep_na-value",
-              condition = !private$is_disabled()
-            )
-            shinyjs::toggleState(
-              id = "keep_inf-value",
-              condition = !private$is_disabled()
-            )
             shinyWidgets::updateSwitchInput(
               session = session,
               inputId = "manual",
               disabled = private$is_disabled()
             )
           })
-          
+
           observeEvent(input$manual,
             {
               if (input$manual) {
@@ -648,7 +676,6 @@ RangeFilterState <- R6::R6Class( # nolint
         }
       )
     },
-
     server_inputs_fixed = function(id) {
       moduleServer(
         id = id,
@@ -743,23 +770,26 @@ RangeFilterState <- R6::R6Class( # nolint
     #  been created has some Inf values.
     keep_inf_ui = function(id) {
       ns <- NS(id)
+
       if (private$inf_count > 0) {
         countmax <- private$na_count
         countnow <- isolate(private$filtered_na_count())
+        ui_input <- checkboxInput(
+          inputId = ns("value"),
+          label = tags$span(
+            id = ns("count_label"),
+            make_count_text(
+              label = "Keep Inf",
+              countmax = countmax,
+              countnow = countnow
+            )
+          ),
+          value = isolate(private$get_keep_inf())
+        )
+        if (shiny::isolate(private$is_disabled())) ui_input <- shinyjs::disabled(ui_input)
         div(
           uiOutput(ns("trigger_visible"), inline = TRUE),
-          checkboxInput(
-            inputId = ns("value"),
-            label = tags$span(
-              id = ns("count_label"),
-              make_count_text(
-                label = "Keep Inf",
-                countmax = countmax,
-                countnow = countnow
-              )
-            ),
-            value = isolate(private$get_keep_inf())
-          )
+          ui_input
         )
       } else {
         NULL
@@ -822,6 +852,13 @@ RangeFilterState <- R6::R6Class( # nolint
             )
           }
         )
+
+        observeEvent(private$is_disabled(), {
+          shinyjs::toggleState(
+            id = "value",
+            condition = !private$is_disabled()
+          )
+        })
         invisible(NULL)
       })
     }

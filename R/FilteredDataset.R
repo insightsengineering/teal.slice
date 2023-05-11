@@ -26,6 +26,8 @@ FilteredDataset <- R6::R6Class( # nolint
     #'   Field containing metadata about the dataset. Each element of the list
     #'   should be atomic and length one.
     initialize = function(dataset, dataname, keys = character(0), label = attr(dataset, "label"), metadata = NULL) {
+      logger::log_trace("Instantiating { class(self)[1] }, dataname: { dataname }")
+
       # dataset assertion in child classes
       check_simple_name(dataname)
       checkmate::assert_character(keys, any.missing = FALSE)
@@ -55,9 +57,9 @@ FilteredDataset <- R6::R6Class( # nolint
       }
 
       private$data_filtered <- reactive(private$data_filtered_fun())
+      logger::log_trace("Instantiated { class(self)[1] }, dataname: { private$dataname }")
       invisible(self)
     },
-
 
     #' @description
     #' Returns a string representation of the filter state in this `FilteredDataset`.
@@ -129,6 +131,17 @@ FilteredDataset <- R6::R6Class( # nolint
       states <- unname(lapply(private$get_filter_states(), function(x) x$get_filter_state()))
       states <- Filter(function(x) length(x) != 0L, states)
       do.call(c, states)
+    },
+
+    #' @description
+    #' Set filter state
+    #'
+    #' @param state (`teal_slice`) object
+    #'
+    #' @return `NULL` invisibly
+    #'
+    set_filter_state = function(state) {
+      stop("set_filter_state is an abstract class method.")
     },
 
     #' @description
@@ -262,7 +275,7 @@ FilteredDataset <- R6::R6Class( # nolint
               lapply(
                 names(private$get_filter_states()),
                 function(x) {
-                  tagList(private$get_filter_states(id = x)$ui_active(id = ns(x)))
+                  tagList(private$get_filter_states()[[x]]$ui_active(id = ns(x)))
                 }
               )
             )
@@ -296,7 +309,7 @@ FilteredDataset <- R6::R6Class( # nolint
           lapply(
             names(private$get_filter_states()),
             function(x) {
-              private$get_filter_states(id = x)$srv_active(id = x)
+              private$get_filter_states()[[x]]$srv_active(id = x)
             }
           )
 
@@ -341,15 +354,30 @@ FilteredDataset <- R6::R6Class( # nolint
     #' @description
     #' Server module to add filter variable for this dataset
     #'
-    #' Server module to add filter variable for this dataset
+    #' Server module to add filter variable for this dataset.
+    #' For this class `srv_add` calls multiple modules
+    #' of the same name from `FilterStates` as `MAEFilteredDataset`
+    #' contains one `FilterStates` object for `colData` and one for each
+    #' experiment.
+    #'
     #' @param id (`character(1)`)\cr
     #'   an ID string that corresponds with the ID used to call the module's UI function.
-    #' @return `moduleServer` function.
+    #'
+    #' @return `moduleServer` function which returns `NULL`
+    #'
     srv_add = function(id) {
       moduleServer(
         id = id,
         function(input, output, session) {
-          stop("Pure virtual method")
+          logger::log_trace("MAEFilteredDataset$srv_add initializing, dataname: { deparse1(self$get_dataname()) }")
+          elems <- private$get_filter_states()
+          elem_names <- names(private$get_filter_states())
+          lapply(
+            elem_names,
+            function(elem_name) elems[[elem_name]]$srv_add(elem_name)
+          )
+          logger::log_trace("MAEFilteredDataset$srv_add initialized, dataname: { deparse1(self$get_dataname()) }")
+          NULL
         }
       )
     }
@@ -381,12 +409,8 @@ FilteredDataset <- R6::R6Class( # nolint
     # @param id (`character(1)`, `character(0)`)\cr
     #   the id of the `private$filter_states` list element where `FilterStates` is kept.
     # @return `FilterStates` or `list` of `FilterStates` objects.
-    get_filter_states = function(id = character(0)) {
-      if (length(id) == 0) {
-        private$filter_states
-      } else {
-        private$filter_states[[id]]
-      }
+    get_filter_states = function() {
+      private$filter_states
     }
   )
 )

@@ -12,10 +12,11 @@
 #'   dataname = "data",
 #'   extract_type = character(0)
 #' )
-#' isolate(filter_state$get_call())
-#' isolate(filter_state$set_selected(TRUE))
-#' isolate(filter_state$set_keep_na(TRUE))
-#' isolate(filter_state$get_call())
+#' shiny::isolate(filter_state$get_call())
+#' filter_state$set_state(
+#'   filter_var(dataname = "data", varname = "x", selected = TRUE, keep_na = TRUE)
+#' )
+#' shiny::isolate(filter_state$get_call())
 #'
 #' \dontrun{
 #' # working filter in an app
@@ -23,13 +24,12 @@
 #' library(shinyjs)
 #'
 #' data_logical <- c(sample(c(TRUE, FALSE), 10, replace = TRUE), NA)
-#' filter_state_logical <- LogicalFilterState$new(
+#' fs <- teal.slice:::LogicalFilterState$new(
 #'   x = data_logical,
 #'   dataname = "data",
-#'   varname = "variable"
-#' )
-#' filter_state_logical$set_state(
-#'   filter_var("data", "variable", selected = FALSE, keep_na = TRUE)
+#'   varname = "x",
+#'   selected = FALSE,
+#'   keep_na = TRUE
 #' )
 #'
 #' ui <- fluidPage(
@@ -38,7 +38,7 @@
 #'   include_js_files(pattern = "count-bar-labels"),
 #'   column(4, div(
 #'     h4("LogicalFilterState"),
-#'     isolate(filter_state_logical$ui("fs"))
+#'     fs$ui("fs")
 #'   )),
 #'   column(4, div(
 #'     id = "outputs", # div id is needed for toggling the element
@@ -59,18 +59,27 @@
 #' )
 #'
 #' server <- function(input, output, session) {
-#'   filter_state_logical$server("fs")
-#'   output$condition_logical <- renderPrint(filter_state_logical$get_call())
-#'   output$formatted_logical <- renderText(filter_state_logical$format())
-#'   output$unformatted_logical <- renderPrint(filter_state_logical$get_state())
+#'   fs$server("fs")
+#'   output$condition_logical <- renderPrint(fs$get_call())
+#'   output$formatted_logical <- renderText(fs$format())
+#'   output$unformatted_logical <- renderPrint(fs$get_state())
 #'   # modify filter state programmatically
-#'   observeEvent(input$button1_logical, filter_state_logical$set_keep_na(FALSE))
-#'   observeEvent(input$button2_logical, filter_state_logical$set_keep_na(TRUE))
-#'   observeEvent(input$button3_logical, filter_state_logical$set_selected(TRUE))
+#'   observeEvent(
+#'     input$button1_logical,
+#'     fs$set_state(filter_var(dataname = "data", varname = "x", keep_na = FALSE))
+#'   )
+#'   observeEvent(
+#'     input$button2_logical,
+#'     fs$set_state(filter_var(dataname = "data", varname = "x", keep_na = TRUE))
+#'   )
+#'   observeEvent(
+#'     input$button3_logical,
+#'     fs$set_state(filter_var(dataname = "data", varname = "x", selected = TRUE))
+#'   )
 #'   observeEvent(
 #'     input$button0_logical,
-#'     filter_state_logical$set_state(
-#'       filter_var("data", "variable", selected = FALSE, keep_na = TRUE)
+#'     fs$set_state(
+#'       filter_var(dataname = "data", varname = "x", selected = FALSE, keep_na = TRUE)
 #'     )
 #'   )
 #' }
@@ -189,27 +198,6 @@ LogicalFilterState <- R6::R6Class( # nolint
     },
 
     #' @description
-    #' Answers the question of whether the current settings and values selected actually filters out any values.
-    #' @return logical scalar
-    is_any_filtered = function() {
-      if (private$is_disabled()) {
-        FALSE
-      } else if (private$is_choice_limited) {
-        TRUE
-      } else if (!isTRUE(private$get_keep_na()) && private$na_count > 0) {
-        TRUE
-      } else if (all(private$choices_counts > 0)) {
-        TRUE
-      } else if (private$get_selected() == FALSE && private$choices_counts["FALSE"] == 0L) {
-        TRUE
-      } else if (private$get_selected() == TRUE && private$choices_counts["TRUE"] == 0L) {
-        TRUE
-      } else {
-        FALSE
-      }
-    },
-
-    #' @description
     #' Returns reproducible condition call for current selection.
     #' For `LogicalFilterState` it's a `!<varname>` or `<varname>` and optionally
     #' `is.na(<varname>)`
@@ -217,6 +205,9 @@ LogicalFilterState <- R6::R6Class( # nolint
     #' @return (`call`)
     #'
     get_call = function(dataname) {
+      if (isFALSE(private$is_any_filtered())) {
+        return(NULL)
+      }
       if (missing(dataname)) dataname <- private$dataname
       filter_call <-
         if (private$get_selected()) {
@@ -271,6 +262,26 @@ LogicalFilterState <- R6::R6Class( # nolint
       values_logical
     },
 
+    # Answers the question of whether the current settings and values selected actually filters out any values.
+    # @return logical scalar
+    is_any_filtered = function() {
+      if (private$is_disabled()) {
+        FALSE
+      } else if (private$is_choice_limited) {
+        TRUE
+      } else if (!isTRUE(private$get_keep_na()) && private$na_count > 0) {
+        TRUE
+      } else if (all(private$choices_counts > 0)) {
+        TRUE
+      } else if (private$get_selected() == FALSE && private$choices_counts["FALSE"] == 0L) {
+        TRUE
+      } else if (private$get_selected() == TRUE && private$choices_counts["TRUE"] == 0L) {
+        TRUE
+      } else {
+        FALSE
+      }
+    },
+
     # shiny modules ----
 
     # @description
@@ -283,8 +294,8 @@ LogicalFilterState <- R6::R6Class( # nolint
       ns <- NS(id)
 
       countsmax <- private$choices_counts
-      countsnow <- countsnow <- if (!is.null(private$x_reactive())) {
-        isolate(unname(table(factor(private$x_reactive(), levels = private$choices))))
+      countsnow <- countsnow <- if (!is.null(shiny::isolate(private$x_reactive()))) {
+        shiny::isolate(unname(table(factor(private$x_reactive(), levels = private$choices))))
       } else {
         NULL
       }
@@ -295,19 +306,20 @@ LogicalFilterState <- R6::R6Class( # nolint
         countsnow = countsnow,
         countsmax = countsmax
       )
-
+      ui_input <- radioButtons(
+        ns("selection"),
+        label = NULL,
+        choiceNames = labels,
+        choiceValues = as.character(private$choices),
+        selected = shiny::isolate(as.character(private$get_selected())),
+        width = "100%"
+      )
+      if (shiny::isolate(private$is_disabled())) ui_input <- shinyjs::disabled(ui_input)
       div(
         div(
           class = "choices_state",
           uiOutput(ns("trigger_visible"), inline = TRUE),
-          radioButtons(
-            ns("selection"),
-            label = NULL,
-            choiceNames = labels,
-            choiceValues = as.character(private$choices),
-            selected = isolate(as.character(private$get_selected())),
-            width = "100%"
-          )
+          ui_input
         ),
         private$keep_na_ui(ns("keep_na"))
       )
@@ -391,13 +403,9 @@ LogicalFilterState <- R6::R6Class( # nolint
 
           private$keep_na_srv("keep_na")
 
-          observeEvent(private$is_disabled(), {
+          private$observers$disabled_toggle_selection <- observeEvent(private$is_disabled(), {
             shinyjs::toggleState(
               id = "selection",
-              condition = !private$is_disabled()
-            )
-            shinyjs::toggleState(
-              id = "keep_na-value",
               condition = !private$is_disabled()
             )
           })

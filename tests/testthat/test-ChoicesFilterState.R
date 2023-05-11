@@ -45,151 +45,148 @@ testthat::test_that("constructor raises warning if selected out of range", {
   )
 })
 
-# get_call ----
-testthat::test_that("get_call returns call that evaluated leaves all values passed to constructor", {
-  filter_state <- ChoicesFilterState$new(chars, dataname = "data", varname = "variable")
-  variable <- chars
-  testthat::expect_true(all(eval(shiny::isolate(filter_state$get_call()))))
-
-  filter_state <- ChoicesFilterState$new(facts, dataname = "data", varname = "variable")
-  variable <- facts
-  testthat::expect_true(all(eval(shiny::isolate(filter_state$get_call()))))
-
-  filter_state <- ChoicesFilterState$new(nums, dataname = "data", varname = "variable")
-  variable <- nums
-  testthat::expect_true(all(eval(shiny::isolate(filter_state$get_call()))))
-
-  filter_state <- ChoicesFilterState$new(dates, dataname = "data", varname = "variable")
-  variable <- dates
-  testthat::expect_true(all(eval(shiny::isolate(filter_state$get_call()))))
-
-  filter_state <- ChoicesFilterState$new(posixct, dataname = "data", varname = "variable")
-  variable <- posixct
-  testthat::expect_true(all(eval(shiny::isolate(filter_state$get_call()))))
-
-  filter_state <- ChoicesFilterState$new(posixlt, dataname = "data", varname = "variable")
-  variable <- posixlt
-  testthat::expect_true(all(eval(shiny::isolate(filter_state$get_call()))))
+testthat::test_that("constructor sets default state", {
+  fs <- ChoicesFilterState$new(letters, dataname = "data", varname = "variable")
+  testthat::expect_identical(
+    shiny::isolate(fs$get_state()),
+    filter_var(
+      dataname = "data",
+      varname = "variable",
+      choices = letters,
+      selected = letters
+    )
+  )
 })
 
+# get_call ----
+testthat::test_that("method get_call of default ChoicesFilterState object returns NULL", {
+  filter_state <- ChoicesFilterState$new(letters, dataname = "data", varname = "variable")
+  testthat::expect_null(shiny::isolate(filter_state$get_call()))
+})
 
-testthat::test_that("get_call returns condition that specifies values passed to set_selected", {
+testthat::test_that("get_call returns NULL if all choices are selected", {
+  filter_state <- ChoicesFilterState$new(letters, dataname = "data", varname = "variable", selected = letters)
+  testthat::expect_null(shiny::isolate(filter_state$get_call()))
+})
+
+testthat::test_that("get_call returns call selected different than choices", {
+  filter_state <- ChoicesFilterState$new(letters, dataname = "data", varname = "variable", selected = letters[1:3])
+  testthat::expect_identical(
+    shiny::isolate(filter_state$get_call()),
+    quote(variable %in% c("a", "b", "c"))
+  )
+})
+
+testthat::test_that("get_call returns NULL if disabled", {
   filter_state <- ChoicesFilterState$new(
-    chars,
-    dataname = "data", varname = "variable", selected = chars[1]
+    letters,
+    dataname = "data", varname = "variable", selected = letters[1:3], disabled = TRUE
   )
-  testthat::expect_identical(
-    deparse1(shiny::isolate(filter_state$get_call())),
-    deparse1(quote(variable == "item1"))
-  )
-  filter_state$set_state(filter_var(dataname = "data", varname = "variable", selected = chars[1:2]))
-  testthat::expect_identical(
-    deparse1(shiny::isolate(filter_state$get_call())),
-    deparse1(quote(variable %in% c("item1", "item2")))
-  )
-  filter_state$set_state(filter_var(dataname = "data", varname = "variable", keep_na = TRUE))
-  testthat::expect_identical(
-    deparse1(shiny::isolate(filter_state$get_call())),
-    deparse1(quote(is.na(variable) | variable %in% c("item1", "item2")))
-  )
+  testthat::expect_null(shiny::isolate(filter_state$get_call()))
+})
 
+testthat::test_that("get_call returns call always if choices are limited - regardless of selected", {
   filter_state <- ChoicesFilterState$new(
-    facts,
-    dataname = "data", varname = "variable", selected = facts[1]
+    letters,
+    dataname = "data", varname = "variable",
+    choices = letters[1:3], selected = letters[1:3]
   )
   testthat::expect_identical(
-    deparse1(shiny::isolate(filter_state$get_call())),
-    deparse1(quote(variable == "item1"))
+    shiny::isolate(filter_state$get_call()),
+    quote(variable %in% c("a", "b", "c"))
   )
-  filter_state$set_state(filter_var(dataname = "data", varname = "variable", selected = facts[1:2]))
-  testthat::expect_identical(
-    deparse1(shiny::isolate(filter_state$get_call())),
-    deparse1(quote(variable %in% c("item1", "item2")))
-  )
-  filter_state$set_state(filter_var(dataname = "data", varname = "variable", keep_na = TRUE))
-  testthat::expect_identical(
-    deparse1(shiny::isolate(filter_state$get_call())),
-    deparse1(quote(is.na(variable) | variable %in% c("item1", "item2")))
-  )
+})
 
+testthat::test_that("get_call prefixes varname by dataname$varname if extract_type='list'", {
   filter_state <- ChoicesFilterState$new(
-    nums,
-    dataname = "data", varname = "variable", selected = nums[1]
+    letters,
+    dataname = "data", varname = "variable", selected = letters[1:3], extract_type = "list"
   )
   testthat::expect_identical(
-    deparse1(shiny::isolate(filter_state$get_call())),
-    deparse1(quote(variable == 1))
+    shiny::isolate(filter_state$get_call(dataname = "dataname")),
+    quote(dataname$variable %in% c("a", "b", "c"))
   )
-  filter_state$set_state(filter_var(dataname = "data", varname = "variable", selected = nums[1:2]))
-  testthat::expect_identical(
-    deparse1(shiny::isolate(filter_state$get_call())),
-    deparse1(quote(variable %in% c(1, 2)))
-  )
-  filter_state$set_state(filter_var(dataname = "data", varname = "variable", keep_na = TRUE))
-  testthat::expect_identical(
-    deparse1(shiny::isolate(filter_state$get_call())),
-    deparse1(quote(is.na(variable) | variable %in% c(1, 2)))
-  )
+})
 
+testthat::test_that("get_call prefixes varname by dataname[, 'varname'] if extract_type='matrix'", {
   filter_state <- ChoicesFilterState$new(
-    dates,
-    dataname = "data", varname = "variable", selected = dates[1]
+    letters,
+    dataname = "data", varname = "variable", selected = letters[1:3], extract_type = "matrix"
   )
   testthat::expect_identical(
-    deparse1(shiny::isolate(filter_state$get_call())),
-    deparse1(quote(variable == as.Date("2000-01-01")))
+    shiny::isolate(filter_state$get_call(dataname = "dataname")),
+    quote(dataname[, "variable"] %in% c("a", "b", "c"))
   )
-  filter_state$set_state(filter_var(dataname = "data", varname = "variable", selected = dates[1:2]))
-  testthat::expect_identical(
-    deparse1(shiny::isolate(filter_state$get_call())),
-    deparse1(quote(variable %in% as.Date(c("2000-01-01", "2000-01-02"))))
-  )
-  filter_state$set_state(filter_var(dataname = "data", varname = "variable", keep_na = TRUE))
-  testthat::expect_identical(
-    deparse1(shiny::isolate(filter_state$get_call())),
-    deparse1(quote(is.na(variable) | variable %in% as.Date(c("2000-01-01", "2000-01-02"))))
-  )
+})
 
+testthat::test_that("get_call uses `==` comparison when single value selected", {
+  filter_state <- ChoicesFilterState$new(chars, dataname = "data", varname = "variable", selected = chars[1])
+  testthat::expect_identical(
+    shiny::isolate(filter_state$get_call()),
+    quote(variable == "item1")
+  )
+})
+
+testthat::test_that("get_call adds is.na(variable) to returned call if keep_na is true", {
   filter_state <- ChoicesFilterState$new(
-    posixct,
-    dataname = "data", varname = "variable", selected = posixct[1]
+    c(chars, NA),
+    dataname = "data", varname = "variable",
+    selected = chars[1:2], keep_na = TRUE
   )
   testthat::expect_identical(
-    deparse1(shiny::isolate(filter_state$get_call())),
-    deparse1(quote(variable == as.POSIXct("2000-01-01 12:00:00", tz = "GMT")))
+    shiny::isolate(filter_state$get_call()),
+    quote(is.na(variable) | variable %in% c("item1", "item2"))
   )
+})
 
-  filter_state$set_state(filter_var(dataname = "data", varname = "variable", selected = posixct[1:2]))
-  testthat::expect_identical(
-    deparse1(shiny::isolate(filter_state$get_call())),
-    deparse1(quote(variable %in% as.POSIXct(c("2000-01-01 12:00:00", "2000-01-01 12:00:01"), tz = "GMT")))
-  )
-  filter_state$set_state(filter_var(dataname = "data", varname = "variable", keep_na = TRUE))
-  testthat::expect_identical(
-    deparse1(shiny::isolate(filter_state$get_call())),
-    deparse1(quote(is.na(variable) |
-      variable %in% as.POSIXct(c("2000-01-01 12:00:00", "2000-01-01 12:00:01"), tz = "GMT")))
-  )
-
+testthat::test_that("get_call returns call if all selected but NA exists", {
   filter_state <- ChoicesFilterState$new(
-    posixlt,
-    dataname = "data", varname = "variable", selected = posixlt[1]
+    c(chars, NA),
+    dataname = "data", varname = "variable", keep_na = FALSE
   )
   testthat::expect_identical(
-    deparse1(shiny::isolate(filter_state$get_call())),
-    deparse1(quote(variable == as.POSIXlt("2000-01-01 12:00:00", tz = "GMT")))
+    shiny::isolate(filter_state$get_call()),
+    quote(variable %in% c("item1", "item2", "item3"))
   )
+})
 
-  filter_state$set_state(filter_var(dataname = "data", varname = "variable", selected = posixlt[1:2]))
+testthat::test_that("get_call returns calls appropriate for factor variable", {
+  filter_state <- ChoicesFilterState$new(facts, dataname = "data", varname = "variable", selected = facts[1])
   testthat::expect_identical(
-    deparse1(shiny::isolate(filter_state$get_call())),
-    deparse1(quote(variable %in% as.POSIXlt(c("2000-01-01 12:00:00", "2000-01-01 12:00:01"), tz = "GMT")))
+    shiny::isolate(filter_state$get_call()),
+    quote(variable == "item1")
   )
-  filter_state$set_state(filter_var(dataname = "data", varname = "variable", keep_na = TRUE))
+})
+
+testthat::test_that("get_call returns calls appropriate for numeric variable", {
+  filter_state <- ChoicesFilterState$new(nums, dataname = "data", varname = "variable", selected = nums[1])
   testthat::expect_identical(
-    deparse1(shiny::isolate(filter_state$get_call())),
-    deparse1(quote(is.na(variable) |
-      variable %in% as.POSIXlt(c("2000-01-01 12:00:00", "2000-01-01 12:00:01"), tz = "GMT")))
+    shiny::isolate(filter_state$get_call()),
+    quote(variable == 1)
+  )
+})
+
+testthat::test_that("get_call returns calls appropriate for date variable", {
+  filter_state <- ChoicesFilterState$new(dates, dataname = "data", varname = "variable", selected = dates[1])
+  testthat::expect_identical(
+    shiny::isolate(filter_state$get_call()),
+    quote(variable == as.Date("2000-01-01"))
+  )
+})
+
+testthat::test_that("get_call returns calls appropriate for posixct variable", {
+  filter_state <- ChoicesFilterState$new(posixct, dataname = "data", varname = "variable", selected = posixct[1])
+  testthat::expect_identical(
+    shiny::isolate(filter_state$get_call()),
+    quote(variable == as.POSIXct("2000-01-01 12:00:00", tz = "GMT"))
+  )
+})
+
+testthat::test_that("get_call returns calls appropriate for posixlt variable", {
+  filter_state <- ChoicesFilterState$new(posixlt, dataname = "data", varname = "variable", selected = posixlt[1])
+  testthat::expect_identical(
+    shiny::isolate(filter_state$get_call()),
+    quote(variable == as.POSIXlt("2000-01-01 12:00:00", tz = "GMT"))
   )
 })
 
@@ -379,123 +376,5 @@ testthat::test_that("format line wrapping breaks if strings are too long", {
   expect_error(
     shiny::isolate(filter_state$format(indent = 2, wrap_width = 10)),
     "[Aa]ssertion.+failed"
-  )
-})
-
-
-# is_any_filtered ----
-testthat::test_that("is_any_filtered works properly when NA is present in data", {
-  filter_state <- teal.slice:::ChoicesFilterState$new(
-    c(LETTERS[1:2], NA),
-    x_reactive = reactive(NULL),
-    dataname = "data",
-    varname = "x",
-    extract_type = character(0)
-  )
-
-  shiny::isolate(filter_state$set_state(filter_var(dataname = "data", varname = "x", selected = LETTERS[1:2])))
-
-  shiny::isolate(filter_state$set_state(filter_var(dataname = "data", varname = "x", keep_na = FALSE)))
-  testthat::expect_true(shiny::isolate(filter_state$is_any_filtered()))
-
-  shiny::isolate(filter_state$set_state(filter_var(dataname = "data", varname = "x", keep_na = TRUE)))
-  testthat::expect_false(shiny::isolate(filter_state$is_any_filtered()))
-
-  shiny::isolate(filter_state$set_state(filter_var(dataname = "data", varname = "x", selected = LETTERS[1])))
-  testthat::expect_true(shiny::isolate(filter_state$is_any_filtered()))
-
-  shiny::isolate(filter_state$set_state(filter_var(dataname = "data", varname = "x", keep_na = FALSE)))
-  testthat::expect_true(shiny::isolate(filter_state$is_any_filtered()))
-})
-
-testthat::test_that("is_any_filtered returns TRUE when enabled and FALSE when disabled", {
-  testfs <- R6::R6Class(
-    classname = "testfs",
-    inherit = ChoicesFilterState,
-    public = list(
-      disable = function() private$disable(),
-      enable = function() private$enable()
-    )
-  )
-  fs <- testfs$new(c("a", "b"), varname = "x", dataname = "data")
-  fs$set_state(filter_var(dataname = "data", varname = "x", selected = "a", keep_na = TRUE))
-  testthat::expect_true(shiny::isolate(fs$is_any_filtered()))
-  shiny::isolate(fs$disable())
-  testthat::expect_false(shiny::isolate(fs$is_any_filtered()))
-})
-
-testthat::test_that("is_any_filtered is changed by choices parameter", {
-  filter_state <- ChoicesFilterState$new(
-    chars,
-    dataname = "data", varname = "variable", choices = chars[c(1, 2)]
-  )
-  testthat::expect_true(shiny::isolate(filter_state$is_any_filtered()))
-
-  filter_state <- ChoicesFilterState$new(
-    chars,
-    dataname = "data", varname = "variable", choices = chars[c(1, 2, 3)]
-  )
-  testthat::expect_false(shiny::isolate(filter_state$is_any_filtered()))
-
-  filter_state <- ChoicesFilterState$new(
-    chars,
-    dataname = "data", varname = "variable", choices = chars[1]
-  )
-  testthat::expect_true(shiny::isolate(filter_state$is_any_filtered()))
-})
-
-# is_choice_limited ----
-testthat::test_that("is_choice_limited is set properly", {
-  test <- R6::R6Class(
-    inherit = ChoicesFilterState,
-    public = list(
-      test_is_choice_limited = function() private$is_choice_limited
-    )
-  )
-
-  x <- rep(c("A", "B", "C", "D", "E", "F"), times = 5)
-  xr <- c(rep(c("F", "A", "D"), times = 2), "D")
-
-  filter_state <- test$new(
-    x = x,
-    x_reactive = reactive(xr),
-    dataname = "data",
-    varname = "x",
-    choices = c("B", "C", "D", "E", "F"),
-    extract_type = character(0)
-  )
-  testthat::expect_true(shiny::isolate(filter_state$is_any_filtered()))
-  testthat::expect_true(shiny::isolate(filter_state$test_is_choice_limited()))
-})
-
-testthat::test_that("ChoicesFilterState private methods return proper filtered counts", {
-  test <- R6::R6Class(
-    inherit = ChoicesFilterState,
-    public = list(
-      test_get_choices_counts = function() private$get_choices_counts(),
-      test_choices_counts = function() private$choices_counts
-    )
-  )
-
-  x <- rep(c("A", "B", "C", "D", "E", "F"), times = 5)
-  xr <- c(rep(c("F", "A", "D"), times = 2), "D")
-
-  filter_state <- test$new(
-    x = x,
-    x_reactive = reactive(xr),
-    varname = "x",
-    dataname = "data",
-    extract_type = character(0)
-  )
-
-  testthat::expect_identical(
-    shiny::isolate(filter_state$test_get_choices_counts()),
-    table(factor(xr, levels = unique(x)))
-  )
-
-
-  testthat::expect_identical(
-    shiny::isolate(filter_state$test_choices_counts()),
-    unname(table(x))
   )
 })

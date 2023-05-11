@@ -3,6 +3,7 @@
 \name{teal_slice}
 \alias{teal_slice}
 \alias{filter_var}
+\alias{filter_expr}
 \alias{filter_settings}
 \alias{is.teal_slice}
 \alias{as.teal_slice}
@@ -30,6 +31,8 @@ filter_var(
   disabled = FALSE,
   ...
 )
+
+filter_expr(dataname, id, title, expr, disabled = FALSE, ...)
 
 filter_settings(
   ...,
@@ -81,11 +84,25 @@ type and size depends on variable type}
 
 \item{fixed}{\code{logical(1)} logical flag specifying whether to fix this filter state (i.e. forbid setting state)}
 
-\item{disabled}{\code{logical(1)}logical flag specifying whether to disable this filter state}
+\item{disabled}{(\code{logical(1)})\cr
+flag specifying whether the \code{FilterState} is initiated disabled}
 
 \item{...}{for \code{filter_var} any number of additional fields given as \code{name:value} pairs\cr
 for \code{filter_settings} any number of \code{teal_slice} objects\cr
 for other functions arguments passed to other methods}
+
+\item{id}{(\code{character(1)})\cr
+identifier of the filter}
+
+\item{title}{(\code{reactive})\cr
+title of the filter (used by \code{filter_expr})}
+
+\item{expr}{(\code{language})\cr
+logical expression written in executable way. By "executable" means
+that \code{subset} call should be able to evaluate this without failure. For
+example \code{MultiAssayExperiment::subsetByColData} requires variable names prefixed
+by dataname (e.g. \code{data$var1 == "x" & data$var2 > 0}). For \code{data.frame} call
+can be written without prefixing \code{var1 == "x" & var2 > 0}.}
 
 \item{exclude_varnames}{\verb{named list} of \code{character} vectors where list names match names of data sets
 and vector elements match variable names in respective data sets;
@@ -110,9 +127,6 @@ and unfiltered dataset.
 \item{tss}{\code{teal_slices}}
 
 \item{field}{\code{character(1)} name of \code{teal_slice} element}
-
-\item{expr}{\code{character} string representing an expression that evaluates to a single \code{logical};
-will be evaluated in individual \code{teal_slice} objects}
 }
 \value{
 \code{filter_var} returns object of class \code{teal_slice}, which is a named list.
@@ -160,14 +174,14 @@ and how observations are tallied, which is resolved by \code{FilterStates}.
 To establish a filter on a column in a \code{data.frame}, \code{dataname} and \code{varname} are sufficient.
 Filter states created created for \code{SummarizedExperiments} require more information
 as each variable is either located in the \code{rowData} or \code{colData} slots.
-Thus, \code{teal_slice} objects that refer to such filter states must also contain the field \code{target}
-that specifies "subset" for variales in \code{rowData} and "select" for those in \code{colData}.
+Thus, \code{teal_slice} objects that refer to such filter states must also contain the field \code{arg}
+that specifies "subset" for variables in \code{rowData} and "select" for those in \code{colData}.
 
 Likewise, observations in a \code{MultiAssayExpeeiment} can be filtered based on the content of the \code{colData} slot
 or based on the contents of \code{rowData} and \code{colData} of any of its experiments. Hence, another field is necessary.
-\code{teal_slice} objects refering to \code{MultiAssayExperiment} objects must contain the field \code{datalabel}
+\code{teal_slice} objects referring to \code{MultiAssayExperiment} objects must contain the field \code{datalabel}
 that names either an experiment (as listed in \verb{experimentList(<MAE>)}) or "subjects"
-if it referes to the MAE's \code{colData}. They must \strong{also} specify \code{target} as "subset" or "select"
+if it refers to the MultiAssaysExperiment's \code{colData}. They must \strong{also} specify \code{arg} as "subset" or "select"
 for experiments and as "y" for \code{colData}.
 }
 
@@ -182,7 +196,7 @@ all_filters <- filter_settings(
   filter_1,
   filter_2,
   filter_3,
-  exclude = list(
+  exclude_varnames = list(
     "dataname1" = "varname2"
   )
 )
@@ -192,5 +206,11 @@ x <- "dataname2"
 teal.slice:::slices_which(all_filters, sprintf('dataname == "\%s"', x))
 teal.slice:::slices_field(all_filters, "dataname")
 
+filter_expr(
+  dataname = "data",
+  id = "FA",
+  title = "Female adults",
+  expr = "SEX == 'F' & AGE >= 18"
+)
 }
 \keyword{internal}

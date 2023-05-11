@@ -12,10 +12,16 @@
 #'   dataname = "data",
 #'   extract_type = character(0)
 #' )
-#' isolate(filter_state$get_call())
-#' isolate(filter_state$set_selected(c(Sys.Date() + 3L, Sys.Date() + 8L)))
-#' isolate(filter_state$set_keep_na(TRUE))
-#' isolate(filter_state$get_call())
+#' shiny::isolate(filter_state$get_call())
+#' filter_state$set_state(
+#'   filter_var(
+#'     dataname = "data",
+#'     varname = "x",
+#'     selected = c(Sys.Date() + 3L, Sys.Date() + 8L),
+#'     keep_na = TRUE
+#'   )
+#' )
+#' shiny::isolate(filter_state$get_call())
 #'
 #' \dontrun{
 #' # working filter in an app
@@ -24,13 +30,12 @@
 #'
 #' dates <- c(Sys.Date() - 100, Sys.Date())
 #' data_date <- c(seq(from = dates[1], to = dates[2], length.out = 100), NA)
-#' filter_state_date <- DateFilterState$new(
+#' fs <- DateFilterState$new(
 #'   x = data_date,
 #'   dataname = "data",
-#'   varname = "variable"
-#' )
-#' filter_state_date$set_state(
-#'   filter_var("data", "variable", selected = data_date[c(47, 98)], keep_na = TRUE)
+#'   varname = "x",
+#'   selected = data_date[c(47, 98)],
+#'   keep_na = TRUE
 #' )
 #'
 #' ui <- fluidPage(
@@ -39,7 +44,7 @@
 #'   include_js_files(pattern = "count-bar-labels"),
 #'   column(4, div(
 #'     h4("DateFilterState"),
-#'     isolate(filter_state_date$ui("fs"))
+#'     fs$ui("fs")
 #'   )),
 #'   column(4, div(
 #'     id = "outputs", # div id is needed for toggling the element
@@ -61,21 +66,30 @@
 #' )
 #'
 #' server <- function(input, output, session) {
-#'   filter_state_date$server("fs")
-#'   output$condition_date <- renderPrint(filter_state_date$get_call())
-#'   output$formatted_date <- renderText(filter_state_date$format())
-#'   output$unformatted_date <- renderPrint(filter_state_date$get_state())
+#'   fs$server("fs")
+#'   output$condition_date <- renderPrint(fs$get_call())
+#'   output$formatted_date <- renderText(fs$format())
+#'   output$unformatted_date <- renderPrint(fs$get_state())
 #'   # modify filter state programmatically
-#'   observeEvent(input$button1_date, filter_state_date$set_keep_na(FALSE))
-#'   observeEvent(input$button2_date, filter_state_date$set_keep_na(TRUE))
+#'   observeEvent(
+#'     input$button1_date,
+#'     fs$set_state(filter_var(dataname = "data", varname = "x", keep_na = FALSE))
+#'   )
+#'   observeEvent(
+#'     input$button2_date,
+#'     fs$set_state(filter_var(dataname = "data", varname = "x", keep_na = TRUE))
+#'   )
 #'   observeEvent(
 #'     input$button3_date,
-#'     filter_state_date$set_selected(data_date[c(34, 56)])
+#'     fs$set_state(filter_var(dataname = "data", varname = "x", selected = data_date[c(34, 56)]))
 #'   )
-#'   observeEvent(input$button4_date, filter_state_date$set_selected(dates))
+#'   observeEvent(
+#'     input$button4_date,
+#'     fs$set_state(filter_var(dataname = "data", varname = "x", selected = dates))
+#'   )
 #'   observeEvent(
 #'     input$button0_date,
-#'     filter_state_date$set_state(
+#'     fs$set_state(
 #'       filter_var("data", "variable", selected = data_date[c(47, 98)], keep_na = TRUE)
 #'     )
 #'   )
@@ -190,23 +204,6 @@ DateFilterState <- R6::R6Class( # nolint
     },
 
     #' @description
-    #' Answers the question of whether the current settings and values selected actually filters out any values.
-    #' @return logical scalar
-    is_any_filtered = function() {
-      if (private$is_disabled()) {
-        FALSE
-      } else if (private$is_choice_limited) {
-        TRUE
-      } else if (!setequal(private$get_selected(), private$choices)) {
-        TRUE
-      } else if (!isTRUE(private$get_keep_na()) && private$na_count > 0) {
-        TRUE
-      } else {
-        FALSE
-      }
-    },
-
-    #' @description
     #' Returns reproducible condition call for current selection.
     #' For this class returned call looks like
     #' `<varname> >= <min value> & <varname> <= <max value>` with
@@ -215,6 +212,9 @@ DateFilterState <- R6::R6Class( # nolint
     #' @return (`call`)
     #'
     get_call = function(dataname) {
+      if (isFALSE(private$is_any_filtered())) {
+        return(NULL)
+      }
       choices <- as.character(private$get_selected())
       filter_call <-
         call(
@@ -282,7 +282,7 @@ DateFilterState <- R6::R6Class( # nolint
     cast_and_validate = function(values) {
       tryCatch(
         expr = {
-          values <- as.Date(values)
+          values <- as.Date(values, origin = "1970-01-01")
           if (any(is.na(values))) stop()
         },
         error = function(error) stop("The array of set values must contain values coercible to Date.")
@@ -347,8 +347,8 @@ DateFilterState <- R6::R6Class( # nolint
             dateRangeInput(
               inputId = ns("selection"),
               label = NULL,
-              start = private$get_selected()[1],
-              end = private$get_selected()[2],
+              start = shiny::isolate(private$get_selected())[1],
+              end = shiny::isolate(private$get_selected())[2],
               min = private$choices[1L],
               max = private$choices[2L],
               width = "100%"
@@ -451,13 +451,9 @@ DateFilterState <- R6::R6Class( # nolint
             ))
           })
 
-          observeEvent(private$is_disabled(), {
+          private$observers$disabled_toggle_selection <- observeEvent(private$is_disabled(), {
             shinyjs::toggleState(
               id = "selection",
-              condition = !private$is_disabled()
-            )
-            shinyjs::toggleState(
-              id = "keep_na-value",
               condition = !private$is_disabled()
             )
           })
