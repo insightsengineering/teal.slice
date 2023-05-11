@@ -1,4 +1,3 @@
-
 #' Get classes of selected columns from dataset
 #'
 #' @param data (`data.frame`) data to determine variable types from

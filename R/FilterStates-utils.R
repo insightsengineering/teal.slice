@@ -1,23 +1,26 @@
-.filterable_class <- c("logical", "integer", "numeric", "factor", "character", "Date", "POSIXct", "POSIXlt")
-
 #' Initialize `FilterStates` object
 #'
 #' Initialize `FilterStates` object
 #' @param data (`data.frame`, `MultiAssayExperiment`, `SummarizedExperiment`, `matrix`)\cr
 #'   the R object which `subset` function is applied on.
-#'
+#' @param data_reactive (`function(sid)`)\cr
+#'   should return an object of the same type as `data` or `NULL`.
+#'   This object is needed for the `FilterState` shiny module to update
+#'   counts if filtered data changes.
+#'   If function returns `NULL` then filtered counts
+#'   are not shown. Function has to have `sid` argument being a character which
+#'   is related to `sid` argument in the `get_call` method.
 #' @param dataname (`character(1)`)\cr
 #'   name of the data used in the expression
 #'   specified to the function argument attached to this `FilterStates`.
-#'
 #' @param datalabel (`character(0)` or `character(1)`)\cr
 #'   text label value.
-#'
 #' @param ... (optional)
-#'   additional arguments for specific classes: keys
+#'   additional arguments for specific classes: keys.
 #' @keywords internal
 #' @export
 #' @examples
+#' library(shiny)
 #' df <- data.frame(
 #'   character = letters,
 #'   numeric = seq_along(letters),
@@ -26,22 +29,19 @@
 #' )
 #' rf <- teal.slice:::init_filter_states(
 #'   data = df,
-#'   dataname = "DF",
-#'   varlabels = c(
-#'     "character variable", "numeric variable", "date variable", "datetime variable"
-#'   )
+#'   dataname = "DF"
 #' )
 #' \dontrun{
 #' shinyApp(
 #'   ui = fluidPage(
 #'     actionButton("clear", span(icon("xmark"), "Remove all filters")),
-#'     rf$ui_add_filter_state(id = "add", data = df),
-#'     rf$ui("states"),
+#'     rf$ui_add(id = "add"),
+#'     rf$ui_active("states"),
 #'     verbatimTextOutput("expr"),
 #'   ),
 #'   server = function(input, output, session) {
-#'     rf$srv_add_filter_state(id = "add", data = df)
-#'     rf$server(id = "states")
+#'     rf$srv_add(id = "add")
+#'     rf$srv_active(id = "states")
 #'     output$expr <- renderText({
 #'       deparse1(rf$get_call(), collapse = "\n")
 #'     })
@@ -50,8 +50,9 @@
 #' )
 #' }
 init_filter_states <- function(data,
+                               data_reactive = reactive(NULL),
                                dataname,
-                               datalabel = character(0),
+                               datalabel = NULL,
                                ...) {
   UseMethod("init_filter_states")
 }
@@ -59,15 +60,16 @@ init_filter_states <- function(data,
 #' @keywords internal
 #' @export
 init_filter_states.data.frame <- function(data, # nolint
+                                          data_reactive = function(sid = "") NULL,
                                           dataname,
-                                          datalabel = character(0),
-                                          varlabels = character(0),
+                                          datalabel = NULL,
                                           keys = character(0),
                                           ...) {
   DFFilterStates$new(
+    data = data,
+    data_reactive = data_reactive,
     dataname = dataname,
     datalabel = datalabel,
-    varlabels = varlabels,
     keys = keys
   )
 }
@@ -75,10 +77,13 @@ init_filter_states.data.frame <- function(data, # nolint
 #' @keywords internal
 #' @export
 init_filter_states.matrix <- function(data, # nolint
+                                      data_reactive = function(sid = "") NULL,
                                       dataname,
-                                      datalabel = character(0),
+                                      datalabel = NULL,
                                       ...) {
   MatrixFilterStates$new(
+    data = data,
+    data_reactive = data_reactive,
     dataname = dataname,
     datalabel = datalabel
   )
@@ -87,18 +92,19 @@ init_filter_states.matrix <- function(data, # nolint
 #' @keywords internal
 #' @export
 init_filter_states.MultiAssayExperiment <- function(data, # nolint
+                                                    data_reactive = function(sid = "") NULL,
                                                     dataname,
-                                                    datalabel = character(0),
-                                                    varlabels,
+                                                    datalabel = "subjects",
                                                     keys = character(0),
                                                     ...) {
   if (!requireNamespace("MultiAssayExperiment", quietly = TRUE)) {
     stop("Cannot load MultiAssayExperiment - please install the package or restart your session.")
   }
   MAEFilterStates$new(
+    data = data,
+    data_reactive = data_reactive,
     dataname = dataname,
     datalabel = datalabel,
-    varlabels = varlabels,
     keys = keys
   )
 }
@@ -106,13 +112,16 @@ init_filter_states.MultiAssayExperiment <- function(data, # nolint
 #' @keywords internal
 #' @export
 init_filter_states.SummarizedExperiment <- function(data, # nolint
+                                                    data_reactive = function(sid = "") NULL,
                                                     dataname,
-                                                    datalabel = character(0),
+                                                    datalabel = NULL,
                                                     ...) {
   if (!requireNamespace("SummarizedExperiment", quietly = TRUE)) {
     stop("Cannot load SummarizedExperiment - please install the package or restart your session.")
   }
   SEFilterStates$new(
+    data = data,
+    data_reactive = data_reactive,
     dataname = dataname,
     datalabel = datalabel
   )
@@ -156,8 +165,8 @@ get_supported_filter_varnames.default <- function(data) { # nolint
 get_supported_filter_varnames.matrix <- function(data) { # nolint
   # all columns are the same type in matrix
   is_expected_class <- class(data[, 1]) %in% .filterable_class
-  if (is_expected_class && !is.null(names(data))) {
-    names(data)
+  if (is_expected_class && !is.null(colnames(data))) {
+    colnames(data)
   } else {
     character(0)
   }
@@ -165,16 +174,16 @@ get_supported_filter_varnames.matrix <- function(data) { # nolint
 
 #' @keywords internal
 #' @export
-get_supported_filter_varnames.FilteredDataset <- function(data) { # nolint
-  get_supported_filter_varnames(data$get_dataset())
+get_supported_filter_varnames.MultiAssayExperiment <- function(data) { # nolint
+  data <- SummarizedExperiment::colData(data)
+  # all columns are the same type in matrix
+  is_expected_class <- class(data[, 1]) %in% .filterable_class
+  if (is_expected_class && !is.null(names(data))) {
+    names(data)
+  } else {
+    character(0)
+  }
 }
-
-#' @keywords internal
-#' @export
-get_supported_filter_varnames.MAEFilteredDataset <- function(data) { # nolint
-  character(0)
-}
-
 
 #' @title Returns a `choices_labeled` object
 #'
@@ -189,41 +198,38 @@ get_supported_filter_varnames.MAEFilteredDataset <- function(data) { # nolint
 #'  the names of the key columns in data
 #' @return `character(0)` if choices are empty; a `choices_labeled` object otherwise
 #' @keywords internal
-data_choices_labeled <- function(data, choices, varlabels = character(0), keys = character(0)) {
+data_choices_labeled <- function(data,
+                                 choices,
+                                 varlabels = formatters::var_labels(data, fill = TRUE),
+                                 keys = character(0)) {
   if (length(choices) == 0) {
     return(character(0))
   }
+  choice_types <- setNames(variable_types(data = data, columns = choices), choices)
+  choice_types[keys] <- "primary_key"
 
-  choice_labels <- if (identical(varlabels, character(0))) {
+  choices_labeled(
+    choices = choices,
+    labels = unname(varlabels[choices]),
+    types = choice_types[choices]
+  )
+}
+
+get_varlabels <- function(data) {
+  if (!is.array(data)) {
     vapply(
-      X = data,
-      FUN.VALUE = character(1),
+      colnames(data),
       FUN = function(x) {
-        label <- attr(x, "label")
-        if (length(label) != 1) {
-          ""
+        label <- attr(data[[x]], "label")
+        if (is.null(label)) {
+          x
         } else {
           label
         }
-      }
-    )[choices]
-  } else {
-    varlabels
-  }
-
-  if (!identical(choice_labels, character(0))) {
-    choice_labels[is.na(choice_labels) | choice_labels == ""] <- names(
-      choice_labels[is.na(choice_labels) | choice_labels == ""]
-    )
-    choice_types <- setNames(variable_types(data = data, columns = choices), choices)
-    choice_types[keys] <- "primary_key"
-
-    choices_labeled(
-      choices = choices,
-      labels = unname(choice_labels[choices]),
-      types = choice_types[choices]
+      },
+      FUN.VALUE = character(1)
     )
   } else {
-    choices
+    character(0)
   }
 }
