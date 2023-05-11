@@ -112,29 +112,6 @@ SEFilterStates <- R6::R6Class( # nolint
       invisible(NULL)
     },
 
-    # shiny modules ----
-    #' @description
-    #' Shiny module UI
-    #'
-    #' Shiny UI element that stores `FilterState` UI elements.
-    #' Populated with elements created with `renderUI` in the module server.
-    #'
-    #' @param id (`character(1)`)\cr
-    #'   shiny element (module instance) id
-    #'
-    #' @return `shiny.tag`
-    #'
-    ui_active = function(id) {
-      ns <- NS(id)
-      datalabel <- self$get_datalabel()
-      tags$div(
-        class = "panel-group accordion",
-        `data-label` = datalabel,
-        shiny::tagList(uiOutput(ns("genes"), inline = TRUE)),
-        shiny::tagList(uiOutput(ns("samples"), inline = TRUE))
-      )
-    },
-
     #' @description
     #' Shiny UI module to add filter variable
     #' @param id (`character(1)`)\cr

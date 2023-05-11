@@ -274,25 +274,6 @@ FilterState <- R6::R6Class( # nolint
             }
           })
 
-          # function removes observers and inputs related with this filter
-          #private$destroy_shiny_impl <-
-          function() {
-            logger::log_trace("Destroying FilterState inputs and observers; variable: { deparse1(private$varname) }")
-            # remove values from the input list
-            lapply(session$ns(names(input)), .subset2(input, "impl")$.values$remove)
-
-            # remove observers
-            lapply(private$observers, function(x) x$destroy())
-
-            logger::log_trace(
-              sprintf(
-                "Destroyed FilterState inputs and observers; variable %s; %s inputs remained.",
-                deparse1(private$varname),
-                length(reactiveValuesToList(input))
-              )
-            )
-          }
-
           reactive(input$remove)
         }
       )

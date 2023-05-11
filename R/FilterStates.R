@@ -322,13 +322,12 @@ FilterStates <- R6::R6Class( # nolint
     #'
     ui_active = function(id) {
       ns <- NS(id)
-
       tagList(
         include_css_files(pattern = "filter-panel"),
         tags$div(
           id = private$cards_container_id,
           class = "accordion",
-          `data-label` = ifelse(identical(private$datalabel, character(0)), "", paste0("> ", private$datalabel)),
+          `data-label` = ifelse(length(private$datalabel), "", paste0("> ", private$datalabel)),
           shiny::tagList(uiOutput(ns("filters"), inline = TRUE))
         )
       )
