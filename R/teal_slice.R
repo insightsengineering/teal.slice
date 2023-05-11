@@ -315,8 +315,8 @@ as.teal_slices <- function(x) { # nolint
   checkmate::assert_list(x, names = "named")
   is_bottom <- function(x) {
     isTRUE(is.list(x) && any(names(x) %in% c("selected", "keep_na", "keep_inf"))) ||
-    identical(x, list()) ||
-    is.atomic(x)
+      identical(x, list()) ||
+      is.atomic(x)
   }
   make_args <- function(object, dataname, varname, datalabel, arg = NULL) {
     args <- list(

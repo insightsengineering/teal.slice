@@ -480,14 +480,22 @@ testthat::test_that("set_filter_state accepts `teal_slices` and nested list and 
     filter_var(dataname = "iris", varname = "Species", selected = c("setosa", "versicolor")),
     filter_var(dataname = "iris", varname = "Sepal.Length", selected = c(5.1, 6.4)),
     filter_var(dataname = "iris", varname = "Petal.Length"),
-    filter_var(dataname = "mae", varname = "years_to_birth", datalabel = "subjects",
-               selected = c(30, 50), , keep_na = TRUE, keep_inf = FALSE),
-    filter_var(dataname = "mae", varname = "vital_status", datalabel = "subjects",
-               selected = "1", keep_na = FALSE),
-    filter_var(dataname = "mae", varname = "gender", datalabel = "subjects",
-               selected = "female", keep_na = TRUE),
-    filter_var(dataname = "mae", varname = "ARRAY_TYPE", datalabel = "RPPAArray", arg = "subset",
-               selected = "", keep_na = TRUE),
+    filter_var(
+      dataname = "mae", varname = "years_to_birth", datalabel = "subjects",
+      selected = c(30, 50), , keep_na = TRUE, keep_inf = FALSE
+    ),
+    filter_var(
+      dataname = "mae", varname = "vital_status", datalabel = "subjects",
+      selected = "1", keep_na = FALSE
+    ),
+    filter_var(
+      dataname = "mae", varname = "gender", datalabel = "subjects",
+      selected = "female", keep_na = TRUE
+    ),
+    filter_var(
+      dataname = "mae", varname = "ARRAY_TYPE", datalabel = "RPPAArray", arg = "subset",
+      selected = "", keep_na = TRUE
+    ),
     include_varnames = list(
       iris = c("Species", "Sepal.Length", "Petal.Length"),
       mae = c("years_to_birth", "vital_status", "gender")
