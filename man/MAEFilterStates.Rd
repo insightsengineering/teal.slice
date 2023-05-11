@@ -15,12 +15,14 @@ Handles filter states in a \code{MultiAssayExperiment}
 \itemize{
 \item \href{#method-MAEFilterStates-new}{\code{MAEFilterStates$new()}}
 \item \href{#method-MAEFilterStates-format}{\code{MAEFilterStates$format()}}
+<<<<<<< HEAD
 \item \href{#method-MAEFilterStates-get_fun}{\code{MAEFilterStates$get_fun()}}
 \item \href{#method-MAEFilterStates-get_filter_state}{\code{MAEFilterStates$get_filter_state()}}
 \item \href{#method-MAEFilterStates-set_filter_state}{\code{MAEFilterStates$set_filter_state()}}
 \item \href{#method-MAEFilterStates-remove_filter_state}{\code{MAEFilterStates$remove_filter_state()}}
+=======
+>>>>>>> filter_panel_refactor@main
 \item \href{#method-MAEFilterStates-ui_add}{\code{MAEFilterStates$ui_add()}}
-\item \href{#method-MAEFilterStates-srv_add}{\code{MAEFilterStates$srv_add()}}
 \item \href{#method-MAEFilterStates-clone}{\code{MAEFilterStates$clone()}}
 }
 }
@@ -29,11 +31,17 @@ Handles filter states in a \code{MultiAssayExperiment}
 <ul>
 <li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilterStates" data-id="clear_filter_states"><a href='../../teal.slice/html/FilterStates.html#method-FilterStates-clear_filter_states'><code>teal.slice::FilterStates$clear_filter_states()</code></a></span></li>
 <li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilterStates" data-id="get_call"><a href='../../teal.slice/html/FilterStates.html#method-FilterStates-get_call'><code>teal.slice::FilterStates$get_call()</code></a></span></li>
-<li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilterStates" data-id="get_datalabel"><a href='../../teal.slice/html/FilterStates.html#method-FilterStates-get_datalabel'><code>teal.slice::FilterStates$get_datalabel()</code></a></span></li>
-<li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilterStates" data-id="get_filter_count"><a href='../../teal.slice/html/FilterStates.html#method-FilterStates-get_filter_count'><code>teal.slice::FilterStates$get_filter_count()</code></a></span></li>
+<li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilterStates" data-id="get_filter_state"><a href='../../teal.slice/html/FilterStates.html#method-FilterStates-get_filter_state'><code>teal.slice::FilterStates$get_filter_state()</code></a></span></li>
 <li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilterStates" data-id="print"><a href='../../teal.slice/html/FilterStates.html#method-FilterStates-print'><code>teal.slice::FilterStates$print()</code></a></span></li>
+<<<<<<< HEAD
 <li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilterStates" data-id="set_filterable_varnames"><a href='../../teal.slice/html/FilterStates.html#method-FilterStates-set_filterable_varnames'><code>teal.slice::FilterStates$set_filterable_varnames()</code></a></span></li>
 <li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilterStates" data-id="srv_active"><a href='../../teal.slice/html/FilterStates.html#method-FilterStates-srv_active'><code>teal.slice::FilterStates$srv_active()</code></a></span></li>
+=======
+<li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilterStates" data-id="remove_filter_state"><a href='../../teal.slice/html/FilterStates.html#method-FilterStates-remove_filter_state'><code>teal.slice::FilterStates$remove_filter_state()</code></a></span></li>
+<li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilterStates" data-id="set_filter_state"><a href='../../teal.slice/html/FilterStates.html#method-FilterStates-set_filter_state'><code>teal.slice::FilterStates$set_filter_state()</code></a></span></li>
+<li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilterStates" data-id="srv_active"><a href='../../teal.slice/html/FilterStates.html#method-FilterStates-srv_active'><code>teal.slice::FilterStates$srv_active()</code></a></span></li>
+<li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilterStates" data-id="srv_add"><a href='../../teal.slice/html/FilterStates.html#method-FilterStates-srv_add'><code>teal.slice::FilterStates$srv_add()</code></a></span></li>
+>>>>>>> filter_panel_refactor@main
 <li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilterStates" data-id="ui_active"><a href='../../teal.slice/html/FilterStates.html#method-FilterStates-ui_active'><code>teal.slice::FilterStates$ui_active()</code></a></span></li>
 </ul>
 </details>
@@ -51,7 +59,6 @@ Initialize \code{MAEFilterStates} object
   data_reactive = function(sid = "") NULL,
   dataname,
   datalabel = "subjects",
-  varlabels = character(0),
   keys = character(0)
 )}\if{html}{\out{</div>}}
 }
@@ -72,14 +79,14 @@ Function has to have \code{sid} argument being a character.}
 name of the data used in the expression
 specified to the function argument attached to this \code{FilterStates}.}
 
-\item{\code{datalabel}}{(\code{character(0)} or \code{character(1)})\cr
-text label value.}
-
-\item{\code{varlabels}}{(\code{character})\cr
-labels of the variables used in this object}
+\item{\code{datalabel}}{(\code{NULL} or \code{character(1)})\cr
+text label value}
 
 \item{\code{keys}}{(\code{character})\cr
 key columns names}
+
+\item{\code{varlabels}}{(\code{character})\cr
+labels of the variables used in this object}
 }
 \if{html}{\out{</div>}}
 }
@@ -105,6 +112,7 @@ Returns the formatted string representing this \code{MAEFilterStates} object.
 }
 }
 \if{html}{\out{<hr>}}
+<<<<<<< HEAD
 \if{html}{\out{<a id="method-MAEFilterStates-get_fun"></a>}}
 \if{latex}{\out{\hypertarget{method-MAEFilterStates-get_fun}{}}}
 \subsection{Method \code{get_fun()}}{
@@ -178,6 +186,8 @@ Removes a variable from the \code{ReactiveQueue} and its corresponding UI elemen
 }
 }
 \if{html}{\out{<hr>}}
+=======
+>>>>>>> filter_panel_refactor@main
 \if{html}{\out{<a id="method-MAEFilterStates-ui_add"></a>}}
 \if{latex}{\out{\hypertarget{method-MAEFilterStates-ui_add}{}}}
 \subsection{Method \code{ui_add()}}{
@@ -196,31 +206,6 @@ id of shiny module}
 }
 \subsection{Returns}{
 shiny.tag
-}
-}
-\if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-MAEFilterStates-srv_add"></a>}}
-\if{latex}{\out{\hypertarget{method-MAEFilterStates-srv_add}{}}}
-\subsection{Method \code{srv_add()}}{
-Shiny server module to add filter variable.
-
-Module controls available choices to select as a filter variable.
-Selected filter variable is being removed from available choices.
-Removed filter variable gets back to available choices.
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{MAEFilterStates$srv_add(id)}\if{html}{\out{</div>}}
-}
-
-\subsection{Arguments}{
-\if{html}{\out{<div class="arguments">}}
-\describe{
-\item{\code{id}}{(\code{character(1)})\cr
-an ID string that corresponds with the ID used to call the module's UI function.}
-}
-\if{html}{\out{</div>}}
-}
-\subsection{Returns}{
-\code{moduleServer} function which returns \code{NULL}
 }
 }
 \if{html}{\out{<hr>}}

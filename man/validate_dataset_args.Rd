@@ -15,7 +15,7 @@ needed by \code{init_filtered_dataset}}
 the name of the \code{dataset} to be added to this object}
 }
 \value{
-(\code{NULL} or throws an error)
+(\code{NULL} or raises an error)
 }
 \description{
 Validate dataset arguments

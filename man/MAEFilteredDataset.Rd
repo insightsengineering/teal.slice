@@ -16,18 +16,23 @@
 
 utils::data(miniACC, package = "MultiAssayExperiment")
 dataset <- teal.slice:::MAEFilteredDataset$new(miniACC, "MAE")
-fs <- list(
-  subjects = list(
-    years_to_birth = list(selected = c(30, 50), keep_na = TRUE, keep_inf = FALSE),
-    vital_status = list(selected = "1", keep_na = FALSE),
-    gender = list(selected = "female", keep_na = TRUE)
+fs <- filter_settings(
+  filter_var(
+    dataname = "MAE", varname = "years_to_birth", selected = c(30, 50), keep_na = TRUE
   ),
-  RPPAArray = list(
-    subset = list(ARRAY_TYPE = list(selected = "", keep_na = TRUE))
+  filter_var(
+    dataname = "MAE", varname = "vital_status", selected = "1", keep_na = FALSE
+  ),
+  filter_var(
+    dataname = "MAE", varname = "gender", selected = "female", keep_na = TRUE
+  ),
+  filter_var(
+    dataname = "MAE", varname = "ARRAY_TYPE", selected = "", keep_na = TRUE
   )
 )
 dataset$set_filter_state(state = fs)
 shiny::isolate(dataset$get_filter_state())
+
 }
 \keyword{internal}
 \section{Super class}{
@@ -40,7 +45,6 @@ shiny::isolate(dataset$get_filter_state())
 \item \href{#method-MAEFilteredDataset-set_filter_state}{\code{MAEFilteredDataset$set_filter_state()}}
 \item \href{#method-MAEFilteredDataset-remove_filter_state}{\code{MAEFilteredDataset$remove_filter_state()}}
 \item \href{#method-MAEFilteredDataset-ui_add}{\code{MAEFilteredDataset$ui_add()}}
-\item \href{#method-MAEFilteredDataset-srv_add}{\code{MAEFilteredDataset$srv_add()}}
 \item \href{#method-MAEFilteredDataset-get_filter_overview}{\code{MAEFilteredDataset$get_filter_overview()}}
 \item \href{#method-MAEFilteredDataset-clone}{\code{MAEFilteredDataset$clone()}}
 }
@@ -58,8 +62,8 @@ shiny::isolate(dataset$get_filter_state())
 <li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilteredDataset" data-id="get_formatted_filter_state"><a href='../../teal.slice/html/FilteredDataset.html#method-FilteredDataset-get_formatted_filter_state'><code>teal.slice::FilteredDataset$get_formatted_filter_state()</code></a></span></li>
 <li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilteredDataset" data-id="get_keys"><a href='../../teal.slice/html/FilteredDataset.html#method-FilteredDataset-get_keys'><code>teal.slice::FilteredDataset$get_keys()</code></a></span></li>
 <li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilteredDataset" data-id="get_metadata"><a href='../../teal.slice/html/FilteredDataset.html#method-FilteredDataset-get_metadata'><code>teal.slice::FilteredDataset$get_metadata()</code></a></span></li>
-<li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilteredDataset" data-id="set_filterable_varnames"><a href='../../teal.slice/html/FilteredDataset.html#method-FilteredDataset-set_filterable_varnames'><code>teal.slice::FilteredDataset$set_filterable_varnames()</code></a></span></li>
 <li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilteredDataset" data-id="srv_active"><a href='../../teal.slice/html/FilteredDataset.html#method-FilteredDataset-srv_active'><code>teal.slice::FilteredDataset$srv_active()</code></a></span></li>
+<li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilteredDataset" data-id="srv_add"><a href='../../teal.slice/html/FilteredDataset.html#method-FilteredDataset-srv_add'><code>teal.slice::FilteredDataset$srv_add()</code></a></span></li>
 <li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilteredDataset" data-id="ui_active"><a href='../../teal.slice/html/FilteredDataset.html#method-FilteredDataset-ui_active'><code>teal.slice::FilteredDataset$ui_active()</code></a></span></li>
 </ul>
 </details>
@@ -122,24 +126,29 @@ to the referred column.}
 \if{html}{\out{</div>}}
 }
 \subsection{Returns}{
-\code{NULL}
+\code{NULL} invisibly
 }
 \subsection{Examples}{
 \if{html}{\out{<div class="r example copy">}}
 \preformatted{utils::data(miniACC, package = "MultiAssayExperiment")
 dataset <- teal.slice:::MAEFilteredDataset$new(miniACC, "MAE")
-fs <- list(
-  subjects = list(
-    years_to_birth = list(selected = c(30, 50), keep_na = TRUE, keep_inf = FALSE),
-    vital_status = list(selected = "1", keep_na = FALSE),
-    gender = list(selected = "female", keep_na = TRUE)
+fs <- filter_settings(
+  filter_var(
+    dataname = "MAE", varname = "years_to_birth", selected = c(30, 50), keep_na = TRUE
   ),
-  RPPAArray = list(
-    subset = list(ARRAY_TYPE = list(selected = "", keep_na = TRUE))
+  filter_var(
+    dataname = "MAE", varname = "vital_status", selected = "1", keep_na = FALSE
+  ),
+  filter_var(
+    dataname = "MAE", varname = "gender", selected = "female", keep_na = TRUE
+  ),
+  filter_var(
+    dataname = "MAE", varname = "ARRAY_TYPE", selected = "", keep_na = TRUE
   )
 )
 dataset$set_filter_state(state = fs)
 shiny::isolate(dataset$get_filter_state())
+
 }
 \if{html}{\out{</div>}}
 
@@ -152,19 +161,20 @@ shiny::isolate(dataset$get_filter_state())
 \subsection{Method \code{remove_filter_state()}}{
 Remove one or more \code{FilterState} of a \code{MAEFilteredDataset}
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{MAEFilteredDataset$remove_filter_state(state_id)}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{MAEFilteredDataset$remove_filter_state(state)}\if{html}{\out{</div>}}
 }
 
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
-\item{\code{state_id}}{(\code{list})\cr
-Named list of variables to remove their \code{FilterState}.}
+\item{\code{state}}{(\code{teal_slices})\cr
+specifying \code{FilterState} objects to remove;
+\code{teal_slice}s may contain only \code{dataname} and \code{varname}, other elements are ignored}
 }
 \if{html}{\out{</div>}}
 }
 \subsection{Returns}{
-\code{NULL}
+\code{NULL} invisibly
 }
 }
 \if{html}{\out{<hr>}}
@@ -188,33 +198,6 @@ identifier of the element - preferably containing dataset name}
 }
 \subsection{Returns}{
 function - shiny UI module
-}
-}
-\if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-MAEFilteredDataset-srv_add"></a>}}
-\if{latex}{\out{\hypertarget{method-MAEFilteredDataset-srv_add}{}}}
-\subsection{Method \code{srv_add()}}{
-Server module to add filter variable for this dataset
-
-Server module to add filter variable for this dataset.
-For this class \code{srv_add} calls multiple modules
-of the same name from \code{FilterStates} as \code{MAEFilteredDataset}
-contains one \code{FilterStates} object for \code{colData} and one for each
-experiment.
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{MAEFilteredDataset$srv_add(id)}\if{html}{\out{</div>}}
-}
-
-\subsection{Arguments}{
-\if{html}{\out{<div class="arguments">}}
-\describe{
-\item{\code{id}}{(\code{character(1)})\cr
-an ID string that corresponds with the ID used to call the module's UI function.}
-}
-\if{html}{\out{</div>}}
-}
-\subsection{Returns}{
-\code{moduleServer} function which returns \code{NULL}
 }
 }
 \if{html}{\out{<hr>}}

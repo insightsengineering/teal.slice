@@ -7,7 +7,6 @@ MAEFilteredDataset <- R6::R6Class( # nolint
 
   # public methods ----
   public = list(
-
     #' @description
     #' Initialize `MAEFilteredDataset` object
     #'
@@ -53,7 +52,7 @@ MAEFilteredDataset <- R6::R6Class( # nolint
             filter_states = init_filter_states(
               data = dataset[[experiment_name]],
               data_reactive = data_reactive,
-              dataname = sprintf('%s[["%s"]]', dataname, experiment_name),
+              dataname = dataname,
               datalabel = experiment_name
             ),
             id = experiment_name
@@ -74,78 +73,81 @@ MAEFilteredDataset <- R6::R6Class( # nolint
     #' @examples
     #' utils::data(miniACC, package = "MultiAssayExperiment")
     #' dataset <- teal.slice:::MAEFilteredDataset$new(miniACC, "MAE")
-    #' fs <- list(
-    #'   subjects = list(
-    #'     years_to_birth = list(selected = c(30, 50), keep_na = TRUE, keep_inf = FALSE),
-    #'     vital_status = list(selected = "1", keep_na = FALSE),
-    #'     gender = list(selected = "female", keep_na = TRUE)
+    #' fs <- filter_settings(
+    #'   filter_var(
+    #'     dataname = "MAE", varname = "years_to_birth", selected = c(30, 50), keep_na = TRUE
     #'   ),
-    #'   RPPAArray = list(
-    #'     subset = list(ARRAY_TYPE = list(selected = "", keep_na = TRUE))
+    #'   filter_var(
+    #'     dataname = "MAE", varname = "vital_status", selected = "1", keep_na = FALSE
+    #'   ),
+    #'   filter_var(
+    #'     dataname = "MAE", varname = "gender", selected = "female", keep_na = TRUE
+    #'   ),
+    #'   filter_var(
+    #'     dataname = "MAE", varname = "ARRAY_TYPE", selected = "", keep_na = TRUE
     #'   )
     #' )
     #' dataset$set_filter_state(state = fs)
     #' shiny::isolate(dataset$get_filter_state())
-    #' @return `NULL`
+    #'
+    #' @return `NULL` invisibly
     #'
     set_filter_state = function(state) {
-      checkmate::assert_list(state)
-      checkmate::assert_subset(names(state), c(names(private$get_filter_states())))
-
-      logger::log_trace(
-        sprintf(
-          "MAEFilteredDataset$set_filter_state setting up filters of variable %s, dataname: %s",
-          paste(names(state), collapse = ", "),
-          self$get_dataname()
-        )
-      )
-      lapply(names(state), function(fs_name) {
-        fs <- private$get_filter_states()[[fs_name]]
-        fs$set_filter_state(state = state[[fs_name]])
+      logger::log_trace("{ class(self)[1] }$set_filter_state initializing, dataname: { private$dataname }")
+      checkmate::assert_class(state, "teal_slices")
+      lapply(state, function(x) {
+        checkmate::assert_true(x$dataname == private$dataname, .var.name = "dataname matches private$dataname")
       })
 
-      logger::log_trace(
-        sprintf(
-          "MAEFilteredDataset$set_filter_state done setting filters of variable %s, dataname: %s",
-          paste(names(state), collapse = ", "),
-          self$get_dataname()
+      # determine target datalabels (defined in teal_slices)
+      datalabels <- slices_field(state, "datalabel")
+      slot_names <- names(private$get_filter_states())
+      excluded_filters <- setdiff(datalabels, slot_names)
+      if (length(excluded_filters)) {
+        stop(sprintf(
+          "%s doesn't contain elements soecified in 'datalabel': %s\n'datalabel' should be a subset of: %s",
+          private$dataname,
+          paste(excluded_filters, collapse = ", "),
+          paste(slot_names, collapse = ", ")
+        ))
+      }
+
+      # set states on state_lists with corresponding datalabels
+      lapply(datalabels, function(x) {
+        private$get_filter_states()[[x]]$set_filter_state(
+          slices_which(state, sprintf("datalabel == \"%s\"", x))
         )
-      )
-      NULL
+      })
+
+      logger::log_trace("{ class(self)[1] }$set_filter_state initialized, dataname: { private$dataname }")
+
+      invisible(NULL)
     },
 
-    #' @description Remove one or more `FilterState` of a `MAEFilteredDataset`
+    #' @description
+    #' Remove one or more `FilterState` of a `MAEFilteredDataset`
     #'
-    #' @param state_id (`list`)\cr
-    #'  Named list of variables to remove their `FilterState`.
+    #' @param state (`teal_slices`)\cr
+    #'   specifying `FilterState` objects to remove;
+    #'   `teal_slice`s may contain only `dataname` and `varname`, other elements are ignored
     #'
-    #' @return `NULL`
+    #' @return `NULL` invisibly
     #'
-    remove_filter_state = function(state_id) {
-      checkmate::assert_list(state_id, names = "unique")
-      checkmate::assert_subset(names(state_id), c(names(private$get_filter_states())))
+    remove_filter_state = function(state) {
+      checkmate::assert_class(state, "teal_slices")
 
-      logger::log_trace(
-        sprintf(
-          "MAEFilteredDataset$remove_filter_state removing filters of variable %s, dataname: %s",
-          state_id,
-          self$get_dataname()
-        )
-      )
+      logger::log_trace("{ class(self)[1] }$remove_filter_state removing filter(s), dataname: { private$dataname }")
 
-      for (fs_name in names(state_id)) {
-        fdata_filter_state <- private$get_filter_states()[[fs_name]]
-        fdata_filter_state$remove_filter_state(
-          `if`(fs_name == "subjects", state_id[[fs_name]][[1]], state_id[[fs_name]])
-        )
-      }
-      logger::log_trace(
-        sprintf(
-          "MAEFilteredDataset$remove_filter_state done removing filters of variable %s, dataname: %s",
-          state_id,
-          self$get_dataname()
-        )
-      )
+      varnames <- slices_field(state, "varname")
+      current_states <- shiny::isolate(self$get_filter_state())
+
+      lapply(varnames, function(x) {
+        slice <- slices_which(current_states, sprintf("varname  == \"%s\"", x))
+        private$get_filter_states()[[slice[[1]]$datalabel]]$remove_filter_state(slice)
+      })
+
+      logger::log_trace("{ class(self)[1] }$remove_filter_state removed filter(s), dataname: { private$dataname }")
+
       invisible(NULL)
     },
 
@@ -168,7 +170,7 @@ MAEFilteredDataset <- R6::R6Class( # nolint
         br(),
         HTML("&#9658;"),
         tags$label("Add subjects filter"),
-        private$get_filter_states("subjects")$ui_add(id = ns("subjects")),
+        private$get_filter_states()[["subjects"]]$ui_add(id = ns("subjects")),
         tagList(
           lapply(
             experiment_names,
@@ -176,50 +178,11 @@ MAEFilteredDataset <- R6::R6Class( # nolint
               tagList(
                 HTML("&#9658;"),
                 tags$label("Add", tags$code(experiment_name), "filter"),
-                private$get_filter_states(experiment_name)$ui_add(id = ns(experiment_name))
+                private$get_filter_states()[[experiment_name]]$ui_add(id = ns(experiment_name))
               )
             }
           )
         )
-      )
-    },
-
-    #' @description
-    #' Server module to add filter variable for this dataset
-    #'
-    #' Server module to add filter variable for this dataset.
-    #' For this class `srv_add` calls multiple modules
-    #' of the same name from `FilterStates` as `MAEFilteredDataset`
-    #' contains one `FilterStates` object for `colData` and one for each
-    #' experiment.
-    #'
-    #' @param id (`character(1)`)\cr
-    #'   an ID string that corresponds with the ID used to call the module's UI function.
-    #'
-    #' @return `moduleServer` function which returns `NULL`
-    #'
-    srv_add = function(id) {
-      moduleServer(
-        id = id,
-        function(input, output, session) {
-          logger::log_trace(paste(
-            "MAEFilteredDataset$srv_add initializing,",
-            "dataname: { deparse1(self$get_dataname()) }"
-          ))
-          private$get_filter_states("subjects")$srv_add(id = "subjects")
-          experiment_names <- names(self$get_dataset())
-          lapply(
-            experiment_names,
-            function(experiment_name) {
-              private$get_filter_states(experiment_name)$srv_add(experiment_name)
-            }
-          )
-          logger::log_trace(paste(
-            "MAEFilteredDataset$srv_add initialized,",
-            "dataname: { deparse1(self$get_dataname()) }"
-          ))
-          NULL
-        }
       )
     },
 

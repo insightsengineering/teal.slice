@@ -14,12 +14,15 @@ Handles filter states in a \code{matrix}
 \subsection{Public methods}{
 \itemize{
 \item \href{#method-MatrixFilterStates-new}{\code{MatrixFilterStates$new()}}
+<<<<<<< HEAD
 \item \href{#method-MatrixFilterStates-format}{\code{MatrixFilterStates$format()}}
 \item \href{#method-MatrixFilterStates-get_filter_state}{\code{MatrixFilterStates$get_filter_state()}}
 \item \href{#method-MatrixFilterStates-set_filter_state}{\code{MatrixFilterStates$set_filter_state()}}
 \item \href{#method-MatrixFilterStates-remove_filter_state}{\code{MatrixFilterStates$remove_filter_state()}}
 \item \href{#method-MatrixFilterStates-ui_add}{\code{MatrixFilterStates$ui_add()}}
 \item \href{#method-MatrixFilterStates-srv_add}{\code{MatrixFilterStates$srv_add()}}
+=======
+>>>>>>> filter_panel_refactor@main
 \item \href{#method-MatrixFilterStates-clone}{\code{MatrixFilterStates$clone()}}
 }
 }
@@ -27,14 +30,21 @@ Handles filter states in a \code{matrix}
 <details><summary>Inherited methods</summary>
 <ul>
 <li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilterStates" data-id="clear_filter_states"><a href='../../teal.slice/html/FilterStates.html#method-FilterStates-clear_filter_states'><code>teal.slice::FilterStates$clear_filter_states()</code></a></span></li>
+<li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilterStates" data-id="format"><a href='../../teal.slice/html/FilterStates.html#method-FilterStates-format'><code>teal.slice::FilterStates$format()</code></a></span></li>
 <li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilterStates" data-id="get_call"><a href='../../teal.slice/html/FilterStates.html#method-FilterStates-get_call'><code>teal.slice::FilterStates$get_call()</code></a></span></li>
-<li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilterStates" data-id="get_datalabel"><a href='../../teal.slice/html/FilterStates.html#method-FilterStates-get_datalabel'><code>teal.slice::FilterStates$get_datalabel()</code></a></span></li>
-<li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilterStates" data-id="get_filter_count"><a href='../../teal.slice/html/FilterStates.html#method-FilterStates-get_filter_count'><code>teal.slice::FilterStates$get_filter_count()</code></a></span></li>
-<li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilterStates" data-id="get_fun"><a href='../../teal.slice/html/FilterStates.html#method-FilterStates-get_fun'><code>teal.slice::FilterStates$get_fun()</code></a></span></li>
+<li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilterStates" data-id="get_filter_state"><a href='../../teal.slice/html/FilterStates.html#method-FilterStates-get_filter_state'><code>teal.slice::FilterStates$get_filter_state()</code></a></span></li>
 <li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilterStates" data-id="print"><a href='../../teal.slice/html/FilterStates.html#method-FilterStates-print'><code>teal.slice::FilterStates$print()</code></a></span></li>
+<<<<<<< HEAD
 <li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilterStates" data-id="set_filterable_varnames"><a href='../../teal.slice/html/FilterStates.html#method-FilterStates-set_filterable_varnames'><code>teal.slice::FilterStates$set_filterable_varnames()</code></a></span></li>
 <li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilterStates" data-id="srv_active"><a href='../../teal.slice/html/FilterStates.html#method-FilterStates-srv_active'><code>teal.slice::FilterStates$srv_active()</code></a></span></li>
+=======
+<li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilterStates" data-id="remove_filter_state"><a href='../../teal.slice/html/FilterStates.html#method-FilterStates-remove_filter_state'><code>teal.slice::FilterStates$remove_filter_state()</code></a></span></li>
+<li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilterStates" data-id="set_filter_state"><a href='../../teal.slice/html/FilterStates.html#method-FilterStates-set_filter_state'><code>teal.slice::FilterStates$set_filter_state()</code></a></span></li>
+<li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilterStates" data-id="srv_active"><a href='../../teal.slice/html/FilterStates.html#method-FilterStates-srv_active'><code>teal.slice::FilterStates$srv_active()</code></a></span></li>
+<li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilterStates" data-id="srv_add"><a href='../../teal.slice/html/FilterStates.html#method-FilterStates-srv_add'><code>teal.slice::FilterStates$srv_add()</code></a></span></li>
+>>>>>>> filter_panel_refactor@main
 <li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilterStates" data-id="ui_active"><a href='../../teal.slice/html/FilterStates.html#method-FilterStates-ui_active'><code>teal.slice::FilterStates$ui_active()</code></a></span></li>
+<li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilterStates" data-id="ui_add"><a href='../../teal.slice/html/FilterStates.html#method-FilterStates-ui_add'><code>teal.slice::FilterStates$ui_add()</code></a></span></li>
 </ul>
 </details>
 }}
@@ -50,7 +60,7 @@ Initialize \code{MatrixFilterStates} object
   data,
   data_reactive = function(sid = "") NULL,
   dataname,
-  datalabel = character(0)
+  datalabel = NULL
 )}\if{html}{\out{</div>}}
 }
 
@@ -70,13 +80,14 @@ Function has to have \code{sid} argument being a character.}
 name of the data used in the expression
 specified to the function argument attached to this \code{FilterStates}.}
 
-\item{\code{datalabel}}{(\code{character(0)} or \code{character(1)})\cr
+\item{\code{datalabel}}{(\code{NULL} or \code{character(1)})\cr
 text label value.}
 }
 \if{html}{\out{</div>}}
 }
 }
 \if{html}{\out{<hr>}}
+<<<<<<< HEAD
 \if{html}{\out{<a id="method-MatrixFilterStates-format"></a>}}
 \if{latex}{\out{\hypertarget{method-MatrixFilterStates-format}{}}}
 \subsection{Method \code{format()}}{
@@ -202,6 +213,8 @@ shiny module instance id}
 }
 }
 \if{html}{\out{<hr>}}
+=======
+>>>>>>> filter_panel_refactor@main
 \if{html}{\out{<a id="method-MatrixFilterStates-clone"></a>}}
 \if{latex}{\out{\hypertarget{method-MatrixFilterStates-clone}{}}}
 \subsection{Method \code{clone()}}{

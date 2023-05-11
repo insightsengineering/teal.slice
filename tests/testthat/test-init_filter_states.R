@@ -19,11 +19,7 @@ testthat::test_that("init_filter_states returns a MatrixFilterStates object if p
 testthat::test_that("init_filter_states returns an MAEFilterStates object if passed an object of class MAE", {
   mock_mae <- structure(list(), class = "MultiAssayExperiment")
   testthat::expect_no_error(
-    filter_states <- init_filter_states(
-      mock_mae,
-      dataname = "test",
-      varlabels = "test"
-    )
+    filter_states <- init_filter_states(mock_mae, dataname = "test")
   )
   testthat::expect_true(is(filter_states, "MAEFilterStates"))
 })

@@ -51,12 +51,12 @@
 #' datasets$get_metadata("mtcars")
 #'
 #' datasets$set_filter_state(
-#'   list(iris = list(Species = list(selected = "virginica")))
+#'   filter_settings(filter_var(dataname = "iris", varname = "Species", selected = "virginica"))
 #' )
 #' isolate(datasets$get_call("iris"))
 #'
 #' datasets$set_filter_state(
-#'   list(mtcars = list(mpg = list(selected = c(15, 20))))
+#'   filter_settings(filter_var(dataname = "mtcars", varname = "mpg", selected = c(15, 20)))
 #' )
 #'
 #' isolate(datasets$get_filter_state())
@@ -169,23 +169,6 @@ FilteredData <- R6::R6Class( # nolint
       }
 
       return(unique(c(parents, dataname)))
-    },
-
-    #' @description
-    #' Set the variable names of a given dataset for the filtering.
-    #'
-    #' @param dataname (`character(1)`) name of the dataset
-    #' @param varnames (`character` or `NULL`)
-    #'   variables which users can choose to filter the data;
-    #'
-    #' @return this `FilteredData` object invisibly
-    #'
-    set_filterable_varnames = function(dataname, varnames) {
-      checkmate::assert_subset(dataname, self$datanames())
-      if (!is.null(varnames)) {
-        private$get_filtered_dataset(dataname)$set_filterable_varnames(varnames)
-      }
-      invisible(self)
     },
 
     # datasets methods ----
@@ -435,22 +418,20 @@ FilteredData <- R6::R6Class( # nolint
     },
 
     # Functions useful for restoring from another dataset ----
+
     #' @description
-    #' Gets the reactive values from the active `FilterState` objects.
+    #' Gets states of all active `FilterState` objects.
     #'
-    #' Gets all active filters in the form of a nested list.
-    #' The output list is a compatible input to `self$set_filter_state`.
-    #' The attribute `formatted` renders the output of `self$get_formatted_filter_state`,
-    #' which is a character formatting of the filter state.
-    #'
-    #' @return `named list` with elements corresponding to `FilteredDataset` objects
-    #' with active filters. In addition, the `formatted` attribute holds
-    #' the character format of the active filter states.
+    #' @return A `teal_slices` object.
     #'
     get_filter_state = function() {
-      states <- lapply(private$get_filtered_dataset(), function(x) x$get_filter_state())
-      filtered_states <- Filter(function(x) length(x) > 0, states)
-      structure(filtered_states, formatted = self$get_formatted_filter_state())
+      states <- unname(lapply(private$filtered_datasets, function(x) x$get_filter_state()))
+      slices <- Filter(Negate(is.null), states)
+      state <- do.call(c, slices)
+      if (!is.null(state)) {
+        attr(state, "formatted") <- self$get_formatted_filter_state()
+      }
+      state
     },
 
     #' @description
@@ -458,33 +439,8 @@ FilteredData <- R6::R6Class( # nolint
     #'
     #' @return `character` the pre-formatted filter state
     #'
-    #' @examples
-    #' utils::data(miniACC, package = "MultiAssayExperiment")
-    #' datasets <- teal.slice:::FilteredData$new(
-    #'   list(iris = list(dataset = iris),
-    #'        mae = list(dataset = miniACC)
-    #'   )
-    #' )
-    #' fs <- list(
-    #'   iris = list(
-    #'     Sepal.Length = list(selected = c(5.1, 6.4), keep_na = TRUE, keep_inf = FALSE),
-    #'     Species = list(selected = c("setosa", "versicolor"), keep_na = FALSE)
-    #'   ),
-    #'   mae = list(
-    #'     subjects = list(
-    #'       years_to_birth = list(selected = c(30, 50), keep_na = TRUE, keep_inf = FALSE),
-    #'       vital_status = list(selected = "1", keep_na = FALSE),
-    #'       gender = list(selected = "female", keep_na = TRUE)
-    #'     ),
-    #'     RPPAArray = list(
-    #'       subset = list(ARRAY_TYPE = list(selected = "", keep_na = TRUE))
-    #'     )
-    #'   )
-    #' )
-    #' isolate(datasets$set_filter_state(state = fs))
-    #' cat(shiny::isolate(datasets$get_formatted_filter_state()))
-    #'
     get_formatted_filter_state = function() {
+      # todo: this should be removed as teal_slices has own format method
       out <-
         unlist(sapply(
           private$get_filtered_dataset(),
@@ -498,10 +454,11 @@ FilteredData <- R6::R6Class( # nolint
     #' @description
     #' Sets active filter states.
     #'
-    #' @param state (`named list`)\cr
-    #'  nested list of filter selections applied to datasets
+    #' @param state either a `named list` list of filter selections
+    #'              or a `teal_slices` object\cr
+    #'              specification by list will be deprecated soon
     #'
-    #' @return `NULL`
+    #' @return `NULL` invisibly
     #'
     #' @examples
     #' utils::data(miniACC, package = "MultiAssayExperiment")
@@ -511,65 +468,91 @@ FilteredData <- R6::R6Class( # nolint
     #'        mae = list(dataset = miniACC)
     #'   )
     #' )
-    #' fs <- list(
-    #'   iris = list(
-    #'     Sepal.Length = list(selected = c(5.1, 6.4), keep_na = TRUE, keep_inf = FALSE),
-    #'     Species = list(selected = c("setosa", "versicolor"), keep_na = FALSE)
-    #'   ),
-    #'   mae = list(
-    #'     subjects = list(
-    #'       years_to_birth = list(selected = c(30, 50), keep_na = TRUE, keep_inf = FALSE),
-    #'       vital_status = list(selected = "1", keep_na = FALSE),
-    #'       gender = list(selected = "female", keep_na = TRUE)
-    #'     ),
-    #'     RPPAArray = list(
-    #'       subset = list(ARRAY_TYPE = list(selected = "", keep_na = TRUE))
-    #'     )
+    #' fs <-
+    #'   filter_settings(
+    #'     filter_var(dataname = "iris", varname = "Sepal.Length", selected = c(5.1, 6.4),
+    #'                keep_na = TRUE, keep_inf = FALSE),
+    #'     filter_var(dataname = "iris", varname = "Species", selected = c("setosa", "versicolor"),
+    #'                keep_na = FALSE),
+    #'     filter_var(dataname = "mae", varname = "years_to_birth", selected = c(30, 50),
+    #'                keep_na = TRUE, keep_inf = FALSE, datalabel = "subjects", arg = "y"),
+    #'     filter_var(dataname = "mae", varname = "vital_status",
+    #'                selected = "1", keep_na = FALSE, datalabel = "subjects", arg = "y"),
+    #'     filter_var(dataname = "mae", varname = "gender",
+    #'                selected = "female", keep_na = TRUE, datalabel = "subjects", arg = "y"),
+    #'     filter_var(dataname = "mae", varname = "ARRAY_TYPE",
+    #'                selected = "", keep_na = TRUE, datalabel = "RPPAArray", arg = "subset")
     #'   )
-    #' )
-    #' shiny::isolate(datasets$set_filter_state(state = fs))
+    #' datasets$set_filter_state(state = fs)
     #' shiny::isolate(datasets$get_filter_state())
     #'
     set_filter_state = function(state) {
-      checkmate::assert_subset(names(state), self$datanames())
-      lapply(names(state), function(dataname) {
-        logger::log_trace(
-          "FilteredData$set_filter_state initializing, dataname: { paste(names(state), collapse = ' ') }"
+      logger::log_trace("{ class(self)[1] }$set_filter_state initializing")
+      if (!is.teal_slices(state)) {
+        warning(
+          paste(
+            "From FilteredData$set_filter_state:",
+            "Specifying filters as lists is obsolete and will be deprecated in the next release.",
+            "Please see ?set_filter_state and ?filter_settings for details."
+          ),
+          call. = FALSE
         )
+        state <- as.teal_slices(state)
+      }
 
-        fdataset <- private$get_filtered_dataset(dataname = dataname)
-        dataset_state <- state[[dataname]]
-        fdataset$set_filter_state(state = dataset_state)
+      checkmate::assert_class(state, "teal_slices")
+      datanames <- slices_field(state, "dataname")
+      checkmate::assert_subset(datanames, self$datanames())
+
+      lapply(datanames, function(x) {
+        private$get_filtered_dataset(x)$set_filter_state(
+          slices_which(state, sprintf("dataname == \"%s\"", x))
+        )
       })
-      logger::log_trace(
-        "FilteredData$set_filter_state initialized, dataname: { paste(names(state), collapse = ' ') }"
-      )
+
+      logger::log_trace("{ class(self)[1] }$set_filter_state initialized")
 
       invisible(NULL)
     },
 
     #' @description
-    #' Removes one or more `FilterState` of a `FilteredDataset` in a `FilteredData` object.
+    #' Removes one or more `FilterState` from a `FilteredData` object.
     #'
-    #' @param state (`named list`)\cr
-    #'  nested list of filter selections applied to datasets
+    #' @param state (`teal_slices`)\cr
+    #'   specifying `FilterState` objects to remove;
+    #'   `teal_slice`s may contain only `dataname` and `varname`, other elements are ignored
     #'
     #' @return `NULL` invisibly
     #'
     remove_filter_state = function(state) {
-      checkmate::assert_subset(names(state), self$datanames())
-
-      logger::log_trace(
-        "FilteredData$remove_filter_state called, dataname: { paste(names(state), collapse = ' ') }"
-      )
-
-      for (dataname in names(state)) {
-        fdataset <- private$get_filtered_dataset(dataname = dataname)
-        fdataset$remove_filter_state(state_id = state[[dataname]])
+      if (!is.teal_slices(state)) {
+        warning(
+          paste(
+            "From FilteredData$remove_filter_state:",
+            "Specifying filters as lists is obsolete and will be deprecated in the next release.",
+            "Please see ?set_filter_state and ?filter_settings for details."
+          ),
+          call. = FALSE
+        )
+        state <- as.teal_slices(state)
       }
 
+      checkmate::assert_class(state, "teal_slices")
+      datanames <- slices_field(state, "dataname")
+      checkmate::assert_subset(datanames, self$datanames())
+
       logger::log_trace(
-        "FilteredData$remove_filter_state done, dataname: { paste(names(state), collapse = ' ') }"
+        "{ class(self)[1] }$remove_filter_state removing filter(s), dataname: { private$dataname }"
+      )
+
+      lapply(datanames, function(x) {
+        private$get_filtered_dataset(x)$remove_filter_state(
+          slices_which(state, sprintf("dataname == \"%s\"", x))
+        )
+      })
+
+      logger::log_trace(
+        "{ class(self)[1] }$remove_filter_state removed filter(s), dataname: { private$dataname }"
       )
 
       invisible(NULL)
@@ -618,36 +601,6 @@ FilteredData <- R6::R6Class( # nolint
     },
 
     #' @description
-    #' Disable the filter panel by adding `disable` class to `filter_add_vars`
-    #' and `filter_panel_active_vars` tags in the User Interface.
-    #' In addition, it will store the existing filter states in a private field called `cached_states`
-    #' before removing all filter states from the object.
-    #'
-    filter_panel_disable = function() {
-      private$filter_panel_active <- FALSE
-      shinyjs::disable("add")
-      shinyjs::disable("active")
-      private$cached_states <- self$get_filter_state()
-      self$clear_filter_states()
-      invisible(NULL)
-    },
-
-    #' @description enable the filter panel
-    #' Enable the filter panel by adding `enable` class to `filter_add_vars`
-    #' and `filter_active_vars` tags in the User Interface.
-    #' In addition, it will restore the filter states from a private field called `cached_states`.
-    #'
-    filter_panel_enable = function() {
-      private$filter_panel_active <- TRUE
-      shinyjs::enable("add")
-      shinyjs::enable("active")
-      if (length(private$cached_states) && (length(self$get_filter_state()) == 0)) {
-        self$set_filter_state(private$cached_states)
-      }
-      invisible(NULL)
-    },
-
-    #' @description
     #' Gets the state of filter panel, if activated.
     #'
     get_filter_panel_active = function() {
@@ -676,22 +629,6 @@ FilteredData <- R6::R6Class( # nolint
       div(
         id = ns(NULL), # used for hiding / showing
         include_css_files(pattern = "filter-panel"),
-        div(
-          id = ns("switch-button"),
-          class = "flex justify-content-right",
-          div(
-            title = "Enable/Disable filtering",
-            shinyWidgets::prettySwitch(
-              ns("filter_panel_active"),
-              label = "",
-              status = "success",
-              fill = TRUE,
-              value = TRUE,
-              inline = FALSE,
-              width = 30
-            )
-          )
-        ),
         self$ui_overview(ns("overview")),
         self$ui_active(ns("active")),
         self$ui_add(ns("add"))
@@ -724,18 +661,6 @@ FilteredData <- R6::R6Class( # nolint
           self$srv_add("add", active_datanames_resolved)
 
           private$filter_panel_ui_id <- session$ns(NULL)
-          observeEvent(
-            eventExpr = input$filter_panel_active,
-            handlerExpr = {
-              if (isTRUE(input$filter_panel_active)) {
-                self$filter_panel_enable()
-                logger::log_trace("Enable the Filtered Panel with the filter_panel_enable method")
-              } else {
-                self$filter_panel_disable()
-                logger::log_trace("Disable the Filtered Panel with the filter_panel_enable method")
-              }
-            }, ignoreNULL = TRUE
-          )
 
           logger::log_trace("FilteredData$srv_filter_panel initialized")
           NULL
@@ -754,27 +679,30 @@ FilteredData <- R6::R6Class( # nolint
         id = id, # not used, can be used to customize CSS behavior
         class = "well",
         tags$div(
-          class = "row",
-          tags$div(
-            class = "col-sm-6",
-            tags$label("Active Filter Variables", class = "text-primary mb-4")
+          class = "filter-panel-active-header",
+          tags$span("Active Filter Variables", class = "text-primary mb-4"),
+          shinyWidgets::prettySwitch(
+            ns("filter_panel_active"),
+            label = "",
+            status = "success",
+            fill = TRUE,
+            value = TRUE,
+            inline = TRUE,
+            width = 30
           ),
-          tags$div(
-            class = "col-sm-6",
-            actionLink(
-              ns("remove_all_filters"),
-              label = "",
-              icon("circle-xmark", lib = "font-awesome"),
-              title = "Remove active filters",
-              class = "remove_all pull-right"
-            ),
-            actionLink(
-              ns("minimise_filter_active"),
-              label = NULL,
-              icon = icon("angle-down", lib = "font-awesome"),
-              title = "Minimise panel",
-              class = "remove pull-right"
-            )
+          actionLink(
+            ns("minimise_filter_active"),
+            label = NULL,
+            icon = icon("angle-down", lib = "font-awesome"),
+            title = "Minimise panel",
+            class = "remove pull-right"
+          ),
+          actionLink(
+            ns("remove_all_filters"),
+            label = "",
+            icon("circle-xmark", lib = "font-awesome"),
+            title = "Remove active filters",
+            class = "remove_all pull-right"
           )
         ),
         div(
@@ -853,6 +781,19 @@ FilteredData <- R6::R6Class( # nolint
             ifelse(n_filters_active == 1, "", "s")
           )
         })
+
+        observeEvent(
+          eventExpr = input$filter_panel_active,
+          handlerExpr = {
+            if (isTRUE(input$filter_panel_active)) {
+              private$filter_panel_enable()
+              logger::log_trace("Enable the Filtered Panel with the filter_panel_enable method")
+            } else {
+              private$filter_panel_disable()
+              logger::log_trace("Disable the Filtered Panel with the filter_panel_enable method")
+            }
+          }, ignoreNULL = TRUE
+        )
 
         observeEvent(input$remove_all_filters, {
           logger::log_trace("FilteredData$srv_filter_panel@1 removing all filters")
@@ -1014,18 +955,11 @@ FilteredData <- R6::R6Class( # nolint
 
           output$table <- renderUI({
             logger::log_trace("FilteredData$srv_filter_overview@1 updating counts")
-            datanames <- if (identical(active_datanames(), "all")) {
-              self$datanames()
-            } else {
-              active_datanames()
-            }
-
-            if (length(datanames) == 0) {
+            if (length(active_datanames()) == 0) {
               return(NULL)
             }
 
-            datasets_df <- self$get_filter_overview(datanames = datanames)
-
+            datasets_df <- self$get_filter_overview(datanames = active_datanames())
 
             if (!is.null(datasets_df$obs)) {
               # some datasets (MAE colData) doesn't return obs column
@@ -1114,6 +1048,8 @@ FilteredData <- R6::R6Class( # nolint
     reactive_data = list(),
     cached_states = NULL,
 
+    # private methods ----
+
     # @description
     # Gets `FilteredDataset` object which contains all information
     # pertaining to the specified dataset.
@@ -1139,9 +1075,65 @@ FilteredData <- R6::R6Class( # nolint
     # in all `FilteredDataset`s in this `FilteredData` object.
     # @return `integer(1)`
     get_filter_count = function() {
-      sum(vapply(self$datanames(), function(dataname) {
-        private$get_filtered_dataset(dataname)$get_filter_count()
-      }, numeric(1L)))
+      length(self$get_filter_state())
+    },
+
+    # @description
+    # Disable the filter panel.
+    #
+    # Adds `disable` class to `filter_add_vars` `filter_panel_active_vars` and `filter_active_vars_contents` divs.
+    # Existing filter states are stored in `cached_states` private field
+    # so their individual disabled status can be recalled.
+    #
+    filter_panel_disable = function() {
+      private$filter_panel_active <- FALSE
+      fp_id <- self$get_filter_panel_ui_id()
+      shinyjs::disable(paste0(fp_id, "-add"), asis = TRUE)
+      shinyjs::disable("filter_active_vars_contents")
+      slices <- self$get_filter_state()
+      if (!is.null(slices)) {
+        private$cached_states <- slices
+        for (i in seq_along(slices)) {
+          slices[[i]]$disabled <- TRUE
+        }
+        self$set_filter_state(slices)
+      }
+
+      invisible(NULL)
+    },
+
+    # @description
+    # Enable the filter panel.
+    #
+    # Adds `disable` class to `filter_add_vars` `filter_panel_active_vars` and `filter_active_vars_contents` divs.
+    # Existing filter states are stored in `cached_states` private field
+    # so their individual disabled status can be recalled.
+    #
+    filter_panel_enable = function() {
+      private$filter_panel_active <- TRUE
+      fp_id <- self$get_filter_panel_ui_id()
+      shinyjs::enable(paste0(fp_id, "-add"), asis = TRUE)
+      shinyjs::enable("filter_active_vars_contents")
+      slices <- private$cached_states
+      # If no states were cached, use existing ones.
+      # This is necessary because this method is called on start-up.
+      if (is.null(slices)) {
+        slices <- self$get_filter_state()
+      }
+      # If states were cached, drop ones that don't match current ones.
+      # This is necessary because the user may remove some states while the panel is disabled.
+      if (!is.null(slices)) {
+        slices <- Filter(
+          function(x) {
+            id_vars <- intersect(names(x), c("dataname", "varname", "varlabel", "target"))
+            any(vapply(self$get_filter_state(), function(y) identical(x[id_vars], y[id_vars]), logical(1L)))
+          },
+          slices
+        )
+        self$set_filter_state(slices)
+      }
+
+      invisible(NULL)
     }
   )
 )

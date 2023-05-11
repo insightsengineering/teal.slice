@@ -71,7 +71,7 @@ countBars <- function(inputId, choices, countsmax, countsnow = NULL) { # nolint
     inputId = ns(seq_along(choices)),
     label = as.character(choices),
     countmax = countsmax,
-    countnow = countsnow,
+    countnow = if (is.null(countsnow)) rep(list(NULL), length(choices)) else countsnow,
     MoreArgs = list(
       counttotal = sum(countsmax)
     ),
@@ -101,6 +101,7 @@ countBar <- function(inputId, label, countmax, countnow = NULL, counttotal = cou
 
   label <- make_count_text(label, countmax = countmax, countnow = countnow)
   ns <- NS(inputId)
+  if (is.null(countnow)) countnow <- 0
   tags$div(
     class = "progress state-count-container",
     # * .9 to not exceed width of the parent html element
@@ -134,7 +135,7 @@ updateCountBars <- function(session = getDefaultReactiveDomain(), inputId, choic
     inputId = ns(seq_along(choices)),
     label = choices,
     countmax = countsmax,
-    countnow = countsnow,
+    countnow = if (is.null(countsnow)) rep(list(NULL), length(choices)) else countsnow,
     MoreArgs = list(
       counttotal = sum(countsmax)
     )
@@ -151,8 +152,8 @@ updateCountBar <- function(session = getDefaultReactiveDomain(), inputId, label,
   checkmate::assert_number(countnow, null.ok = TRUE)
   checkmate::assert_number(counttotal)
 
-  if (is.null(countnow)) countnow <- countmax
   label <- make_count_text(label, countmax = countmax, countnow = countnow)
+  if (is.null(countnow)) countnow <- countmax
   session$sendCustomMessage(
     type = "updateCountBar",
     message = list(

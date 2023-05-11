@@ -59,12 +59,12 @@ print(df)
 datasets$get_metadata("mtcars")
 
 datasets$set_filter_state(
-  list(iris = list(Species = list(selected = "virginica")))
+  filter_settings(filter_var(dataname = "iris", varname = "Species", selected = "virginica"))
 )
 isolate(datasets$get_call("iris"))
 
 datasets$set_filter_state(
-  list(mtcars = list(mpg = list(selected = c(15, 20))))
+  filter_settings(filter_var(dataname = "mtcars", varname = "mpg", selected = c(15, 20)))
 )
 
 isolate(datasets$get_filter_state())
@@ -72,36 +72,6 @@ isolate(datasets$get_filter_overview("iris"))
 isolate(datasets$get_filter_overview("mtcars"))
 isolate(datasets$get_call("iris"))
 isolate(datasets$get_call("mtcars"))
-
-
-## ------------------------------------------------
-## Method `FilteredData$get_formatted_filter_state`
-## ------------------------------------------------
-
-utils::data(miniACC, package = "MultiAssayExperiment")
-datasets <- teal.slice:::FilteredData$new(
-  list(iris = list(dataset = iris),
-       mae = list(dataset = miniACC)
-  )
-)
-fs <- list(
-  iris = list(
-    Sepal.Length = list(selected = c(5.1, 6.4), keep_na = TRUE, keep_inf = FALSE),
-    Species = list(selected = c("setosa", "versicolor"), keep_na = FALSE)
-  ),
-  mae = list(
-    subjects = list(
-      years_to_birth = list(selected = c(30, 50), keep_na = TRUE, keep_inf = FALSE),
-      vital_status = list(selected = "1", keep_na = FALSE),
-      gender = list(selected = "female", keep_na = TRUE)
-    ),
-    RPPAArray = list(
-      subset = list(ARRAY_TYPE = list(selected = "", keep_na = TRUE))
-    )
-  )
-)
-isolate(datasets$set_filter_state(state = fs))
-cat(shiny::isolate(datasets$get_formatted_filter_state()))
 
 
 ## ------------------------------------------------
@@ -115,23 +85,22 @@ datasets <- teal.slice:::FilteredData$new(
        mae = list(dataset = miniACC)
   )
 )
-fs <- list(
-  iris = list(
-    Sepal.Length = list(selected = c(5.1, 6.4), keep_na = TRUE, keep_inf = FALSE),
-    Species = list(selected = c("setosa", "versicolor"), keep_na = FALSE)
-  ),
-  mae = list(
-    subjects = list(
-      years_to_birth = list(selected = c(30, 50), keep_na = TRUE, keep_inf = FALSE),
-      vital_status = list(selected = "1", keep_na = FALSE),
-      gender = list(selected = "female", keep_na = TRUE)
-    ),
-    RPPAArray = list(
-      subset = list(ARRAY_TYPE = list(selected = "", keep_na = TRUE))
-    )
+fs <-
+  filter_settings(
+    filter_var(dataname = "iris", varname = "Sepal.Length", selected = c(5.1, 6.4),
+               keep_na = TRUE, keep_inf = FALSE),
+    filter_var(dataname = "iris", varname = "Species", selected = c("setosa", "versicolor"),
+               keep_na = FALSE),
+    filter_var(dataname = "mae", varname = "years_to_birth", selected = c(30, 50),
+               keep_na = TRUE, keep_inf = FALSE, datalabel = "subjects", arg = "y"),
+    filter_var(dataname = "mae", varname = "vital_status",
+               selected = "1", keep_na = FALSE, datalabel = "subjects", arg = "y"),
+    filter_var(dataname = "mae", varname = "gender",
+               selected = "female", keep_na = TRUE, datalabel = "subjects", arg = "y"),
+    filter_var(dataname = "mae", varname = "ARRAY_TYPE",
+               selected = "", keep_na = TRUE, datalabel = "RPPAArray", arg = "subset")
   )
-)
-shiny::isolate(datasets$set_filter_state(state = fs))
+datasets$set_filter_state(state = fs)
 shiny::isolate(datasets$get_filter_state())
 
 }
@@ -143,7 +112,6 @@ shiny::isolate(datasets$get_filter_state())
 \item \href{#method-FilteredData-datanames}{\code{FilteredData$datanames()}}
 \item \href{#method-FilteredData-get_datalabel}{\code{FilteredData$get_datalabel()}}
 \item \href{#method-FilteredData-get_filterable_datanames}{\code{FilteredData$get_filterable_datanames()}}
-\item \href{#method-FilteredData-set_filterable_varnames}{\code{FilteredData$set_filterable_varnames()}}
 \item \href{#method-FilteredData-get_call}{\code{FilteredData$get_call()}}
 \item \href{#method-FilteredData-get_code}{\code{FilteredData$get_code()}}
 \item \href{#method-FilteredData-get_data}{\code{FilteredData$get_data()}}
@@ -164,8 +132,6 @@ shiny::isolate(datasets$get_filter_state())
 \item \href{#method-FilteredData-remove_filter_state}{\code{FilteredData$remove_filter_state()}}
 \item \href{#method-FilteredData-remove_all_filter_states}{\code{FilteredData$remove_all_filter_states()}}
 \item \href{#method-FilteredData-clear_filter_states}{\code{FilteredData$clear_filter_states()}}
-\item \href{#method-FilteredData-filter_panel_disable}{\code{FilteredData$filter_panel_disable()}}
-\item \href{#method-FilteredData-filter_panel_enable}{\code{FilteredData$filter_panel_enable()}}
 \item \href{#method-FilteredData-get_filter_panel_active}{\code{FilteredData$get_filter_panel_active()}}
 \item \href{#method-FilteredData-get_filter_panel_ui_id}{\code{FilteredData$get_filter_panel_ui_id()}}
 \item \href{#method-FilteredData-ui_filter_panel}{\code{FilteredData$ui_filter_panel()}}
@@ -269,29 +235,6 @@ returns all datanames set in \code{FilteredData}}
 }
 \subsection{Returns}{
 (\code{character}) of dataset names
-}
-}
-\if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-FilteredData-set_filterable_varnames"></a>}}
-\if{latex}{\out{\hypertarget{method-FilteredData-set_filterable_varnames}{}}}
-\subsection{Method \code{set_filterable_varnames()}}{
-Set the variable names of a given dataset for the filtering.
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{FilteredData$set_filterable_varnames(dataname, varnames)}\if{html}{\out{</div>}}
-}
-
-\subsection{Arguments}{
-\if{html}{\out{<div class="arguments">}}
-\describe{
-\item{\code{dataname}}{(\code{character(1)}) name of the dataset}
-
-\item{\code{varnames}}{(\code{character} or \code{NULL})
-variables which users can choose to filter the data;}
-}
-\if{html}{\out{</div>}}
-}
-\subsection{Returns}{
-this \code{FilteredData} object invisibly
 }
 }
 \if{html}{\out{<hr>}}
@@ -612,20 +555,13 @@ preprocessing code that can be parsed to generate the unfiltered datasets}
 \if{html}{\out{<a id="method-FilteredData-get_filter_state"></a>}}
 \if{latex}{\out{\hypertarget{method-FilteredData-get_filter_state}{}}}
 \subsection{Method \code{get_filter_state()}}{
-Gets the reactive values from the active \code{FilterState} objects.
-
-Gets all active filters in the form of a nested list.
-The output list is a compatible input to \code{self$set_filter_state}.
-The attribute \code{formatted} renders the output of \code{self$get_formatted_filter_state},
-which is a character formatting of the filter state.
+Gets states of all active \code{FilterState} objects.
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{FilteredData$get_filter_state()}\if{html}{\out{</div>}}
 }
 
 \subsection{Returns}{
-\verb{named list} with elements corresponding to \code{FilteredDataset} objects
-with active filters. In addition, the \code{formatted} attribute holds
-the character format of the active filter states.
+A \code{teal_slices} object.
 }
 }
 \if{html}{\out{<hr>}}
@@ -640,38 +576,6 @@ Returns the filter state formatted for printing to an \code{IO} device.
 \subsection{Returns}{
 \code{character} the pre-formatted filter state
 }
-\subsection{Examples}{
-\if{html}{\out{<div class="r example copy">}}
-\preformatted{utils::data(miniACC, package = "MultiAssayExperiment")
-datasets <- teal.slice:::FilteredData$new(
-  list(iris = list(dataset = iris),
-       mae = list(dataset = miniACC)
-  )
-)
-fs <- list(
-  iris = list(
-    Sepal.Length = list(selected = c(5.1, 6.4), keep_na = TRUE, keep_inf = FALSE),
-    Species = list(selected = c("setosa", "versicolor"), keep_na = FALSE)
-  ),
-  mae = list(
-    subjects = list(
-      years_to_birth = list(selected = c(30, 50), keep_na = TRUE, keep_inf = FALSE),
-      vital_status = list(selected = "1", keep_na = FALSE),
-      gender = list(selected = "female", keep_na = TRUE)
-    ),
-    RPPAArray = list(
-      subset = list(ARRAY_TYPE = list(selected = "", keep_na = TRUE))
-    )
-  )
-)
-isolate(datasets$set_filter_state(state = fs))
-cat(shiny::isolate(datasets$get_formatted_filter_state()))
-
-}
-\if{html}{\out{</div>}}
-
-}
-
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-FilteredData-set_filter_state"></a>}}
@@ -685,13 +589,14 @@ Sets active filter states.
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
-\item{\code{state}}{(\verb{named list})\cr
-nested list of filter selections applied to datasets}
+\item{\code{state}}{either a \verb{named list} list of filter selections
+or a \code{teal_slices} object\cr
+specification by list will be deprecated soon}
 }
 \if{html}{\out{</div>}}
 }
 \subsection{Returns}{
-\code{NULL}
+\code{NULL} invisibly
 }
 \subsection{Examples}{
 \if{html}{\out{<div class="r example copy">}}
@@ -702,23 +607,22 @@ datasets <- teal.slice:::FilteredData$new(
        mae = list(dataset = miniACC)
   )
 )
-fs <- list(
-  iris = list(
-    Sepal.Length = list(selected = c(5.1, 6.4), keep_na = TRUE, keep_inf = FALSE),
-    Species = list(selected = c("setosa", "versicolor"), keep_na = FALSE)
-  ),
-  mae = list(
-    subjects = list(
-      years_to_birth = list(selected = c(30, 50), keep_na = TRUE, keep_inf = FALSE),
-      vital_status = list(selected = "1", keep_na = FALSE),
-      gender = list(selected = "female", keep_na = TRUE)
-    ),
-    RPPAArray = list(
-      subset = list(ARRAY_TYPE = list(selected = "", keep_na = TRUE))
-    )
+fs <-
+  filter_settings(
+    filter_var(dataname = "iris", varname = "Sepal.Length", selected = c(5.1, 6.4),
+               keep_na = TRUE, keep_inf = FALSE),
+    filter_var(dataname = "iris", varname = "Species", selected = c("setosa", "versicolor"),
+               keep_na = FALSE),
+    filter_var(dataname = "mae", varname = "years_to_birth", selected = c(30, 50),
+               keep_na = TRUE, keep_inf = FALSE, datalabel = "subjects", arg = "y"),
+    filter_var(dataname = "mae", varname = "vital_status",
+               selected = "1", keep_na = FALSE, datalabel = "subjects", arg = "y"),
+    filter_var(dataname = "mae", varname = "gender",
+               selected = "female", keep_na = TRUE, datalabel = "subjects", arg = "y"),
+    filter_var(dataname = "mae", varname = "ARRAY_TYPE",
+               selected = "", keep_na = TRUE, datalabel = "RPPAArray", arg = "subset")
   )
-)
-shiny::isolate(datasets$set_filter_state(state = fs))
+datasets$set_filter_state(state = fs)
 shiny::isolate(datasets$get_filter_state())
 
 }
@@ -731,7 +635,7 @@ shiny::isolate(datasets$get_filter_state())
 \if{html}{\out{<a id="method-FilteredData-remove_filter_state"></a>}}
 \if{latex}{\out{\hypertarget{method-FilteredData-remove_filter_state}{}}}
 \subsection{Method \code{remove_filter_state()}}{
-Removes one or more \code{FilterState} of a \code{FilteredDataset} in a \code{FilteredData} object.
+Removes one or more \code{FilterState} from a \code{FilteredData} object.
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{FilteredData$remove_filter_state(state)}\if{html}{\out{</div>}}
 }
@@ -739,8 +643,9 @@ Removes one or more \code{FilterState} of a \code{FilteredDataset} in a \code{Fi
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
-\item{\code{state}}{(\verb{named list})\cr
-nested list of filter selections applied to datasets}
+\item{\code{state}}{(\code{teal_slices})\cr
+specifying \code{FilterState} objects to remove;
+\code{teal_slice}s may contain only \code{dataname} and \code{varname}, other elements are ignored}
 }
 \if{html}{\out{</div>}}
 }
@@ -790,32 +695,6 @@ all \code{FilterStates} in the \code{FilteredData} object}
 \subsection{Returns}{
 \code{NULL} invisibly
 }
-}
-\if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-FilteredData-filter_panel_disable"></a>}}
-\if{latex}{\out{\hypertarget{method-FilteredData-filter_panel_disable}{}}}
-\subsection{Method \code{filter_panel_disable()}}{
-Disable the filter panel by adding \code{disable} class to \code{filter_add_vars}
-and \code{filter_panel_active_vars} tags in the User Interface.
-In addition, it will store the existing filter states in a private field called \code{cached_states}
-before removing all filter states from the object.
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{FilteredData$filter_panel_disable()}\if{html}{\out{</div>}}
-}
-
-}
-\if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-FilteredData-filter_panel_enable"></a>}}
-\if{latex}{\out{\hypertarget{method-FilteredData-filter_panel_enable}{}}}
-\subsection{Method \code{filter_panel_enable()}}{
-enable the filter panel
-Enable the filter panel by adding \code{enable} class to \code{filter_add_vars}
-and \code{filter_active_vars} tags in the User Interface.
-In addition, it will restore the filter states from a private field called \code{cached_states}.
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{FilteredData$filter_panel_enable()}\if{html}{\out{</div>}}
-}
-
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-FilteredData-get_filter_panel_active"></a>}}

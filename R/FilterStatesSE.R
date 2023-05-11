@@ -15,33 +15,30 @@ SEFilterStates <- R6::R6Class( # nolint
     #'
     #' @param data (`SummarizedExperiment`)\cr
     #'   the R object which `subset` function is applied on.
-    #'
     #' @param data_reactive (`function(sid)`)\cr
     #'   should return a `SummarizedExperiment` object or `NULL`.
     #'   This object is needed for the `FilterState` counts being updated
     #'   on a change in filters. If function returns `NULL` then filtered counts are not shown.
     #'   Function has to have `sid` argument being a character.
-    #'
     #' @param dataname (`character(1)`)\cr
     #'   name of the data used in the expression
     #'   specified to the function argument attached to this `FilterStates`.
-    #'
     #' @param datalabel (`character(0)` or `character(1)`)\cr
     #'   text label value.
+    #'
     initialize = function(data,
                           data_reactive = function(sid = "") NULL,
                           dataname,
-                          datalabel = character(0)) {
+                          datalabel = NULL) {
       if (!requireNamespace("SummarizedExperiment", quietly = TRUE)) {
         stop("Cannot load SummarizedExperiment - please install the package or restart your session.")
       }
       checkmate::assert_function(data_reactive, args = "sid")
       checkmate::assert_class(data, "SummarizedExperiment")
       super$initialize(data, data_reactive, dataname, datalabel)
-      private$state_list <- list(
-        subset = reactiveVal(),
-        select = reactiveVal()
-      )
+      if (!is.null(datalabel)) {
+        private$dataname_prefixed <- sprintf("%s[['%s']]", dataname, datalabel)
+      }
     },
 
     #' @description
@@ -52,143 +49,67 @@ SEFilterStates <- R6::R6Class( # nolint
     format = function(indent = 0) {
       checkmate::assert_number(indent, finite = TRUE, lower = 0)
 
-      whitespace_indent <- format("", width = indent)
       formatted_states <- c()
-      if (!is.null(private$state_list_get(state_list_index = "subset"))) {
-        formatted_states <- c(formatted_states, paste0(whitespace_indent, "  Subsetting:"))
-        for (state in private$state_list_get(state_list_index = "subset")) {
-          formatted_states <- c(formatted_states, state$format(indent = indent + 4))
+      subset_states <- Filter(function(x) x$arg == "subset", private$state_list_get())
+      if (!is.null(subset_states)) {
+        formatted_states <- c(formatted_states, sprintf("%sSubsetting:", format("", width = indent * 2)))
+        for (state in subset_states) {
+          formatted_states <- c(formatted_states, state$format(indent = indent * 2))
         }
       }
 
-      if (!is.null(private$state_list_get(state_list_index = "select"))) {
-        formatted_states <- c(formatted_states, paste0(whitespace_indent, "  Selecting:"))
-        for (state in private$state_list_get(state_list_index = "select")) {
-          formatted_states <- c(formatted_states, state$format(indent = indent + 4))
+      select_states <- Filter(function(x) x$arg == "select", private$state_list_get())
+      if (!is.null(select_states)) {
+        formatted_states <- c(formatted_states, sprintf("%sSelecting:", format("", width = indent * 2)))
+        for (state in select_states) {
+          formatted_states <- c(formatted_states, state$format(indent = indent * 2))
         }
       }
 
       if (length(formatted_states) > 0) {
-        formatted_states <- c(paste0(whitespace_indent, "Assay ", self$get_datalabel(), " filters:"), formatted_states)
+        formatted_states <- c(
+          sprintf("%sAssay %s filters:", format("", width = indent), private$datalabel),
+          formatted_states
+        )
         paste(formatted_states, collapse = "\n")
       }
     },
 
     #' @description
-    #' Gets the reactive values from the active `FilterState` objects.
-    #'
-    #' Gets all active filters from this dataset in form of the nested list.
-    #' The output list is a compatible input to `self$set_filter_state`.
-    #'
-    #' @return `list` containing one or two lists  depending on the number of
-    #' `state_list` object (I.e. if `rowData` and `colData` exist). Each
-    #' `list` contains elements number equal to number of active filter variables.
-    get_filter_state = function() {
-      states <- sapply(
-        X = names(private$state_list),
-        simplify = FALSE,
-        function(x) {
-          lapply(private$state_list_get(state_list_index = x), function(xx) xx$get_state())
-        }
-      )
-      Filter(function(x) length(x) > 0, states)
-    },
-
-    #' @description
     #' Set filter state
     #'
-    #' @param state (`named list`)\cr
-    #'   this list should contain `subset` and `select` element where
-    #'   each should be a named list containing values as a selection in the `FilterState`.
-    #'   Names of each the `list` element in `subset` and `select` should correspond to
-    #'   the name of the column in `rowData(data)` and `colData(data)`.
-    #' @return `NULL`
+    #' @param state (`teal_slices`)\cr
+    #'    `teal_slice` objects should contain the field `arg %in% c("subset", "select")`
+    #'
+    #' @return `NULL` invisibly
+    #'
     set_filter_state = function(state) {
-      logger::log_trace("SEFilterState$set_filter_state initializing, dataname: { private$dataname }")
-      checkmate::assert_class(state, "list")
-      checkmate::assert_subset(names(state), c("subset", "select"))
-
-      data <- private$data
-      data_reactive <- private$data_reactive
-
-      private$set_filter_state_impl(
-        state = state$subset,
-        state_list_index = "subset",
-        data = SummarizedExperiment::rowData(data),
-        data_reactive = function(sid) SummarizedExperiment::rowData(data_reactive(sid))
-      )
-
-      private$set_filter_state_impl(
-        state = state$select,
-        state_list_index = "select",
-        data = SummarizedExperiment::colData(data),
-        data_reactive = function(sid) SummarizedExperiment::colData(data_reactive(sid))
-      )
-
-      logger::log_trace("SEFilterState$set_filter_state initialized, dataname: { private$dataname }")
-      NULL
-    },
-
-    #' @description Remove a variable from the `state_list` and its corresponding UI element.
-    #'
-    #' @param state_id (`character(1)`)\cr name of `state_list` element.
-    #'
-    #' @return `NULL`
-    remove_filter_state = function(state_id) {
-      logger::log_trace(
-        sprintf(
-          "%s$remove_filter_state called, dataname: %s",
-          class(self)[1],
-          private$dataname
-        )
-      )
-
-      checkmate::assert(
-        !checkmate::test_null(names(state_id)),
-        checkmate::check_subset(names(state_id), c("subset", "select")),
-        combine = "and"
-      )
-      for (varname in state_id$subset) {
-        if (!all(unlist(state_id$subset) %in% names(shiny::isolate(private$state_list_get("subset"))))) {
-          msg <- sprintf(
-            "%s is not an active 'subset' filter of dataset: %s and can't be removed.",
-            state_id,
-            private$dataname
-          )
-          warning(msg)
-          logger::log_warn(msg)
-        } else {
-          private$state_list_remove(state_list_index = "subset", state_id = varname)
-          logger::log_trace(
-            sprintf(
-              "%s$remove_filter_state for subset variable %s done, dataname: %s",
-              class(self)[1],
-              varname,
-              private$dataname
-            )
-          )
-        }
+      logger::log_trace("{ class(self)[1] }$set_filter_state initializing, dataname: { private$dataname }")
+      checkmate::assert_class(state, "teal_slices")
+      lapply(state, function(x) {
+        checkmate::assert_choice(x$arg, choices = c("subset", "select"), null.ok = TRUE, .var.name = "teal_slice$arg")
+      })
+      count_type <- attr(state, "count_type")
+      if (length(count_type)) {
+        private$count_type <- count_type
       }
 
-      for (varname in state_id$select) {
-        if (!all(unlist(state_id$select) %in% names(shiny::isolate(private$state_list_get("select"))))) {
-          msg <- sprintf(
-            "%s is not an active 'select' filter of dataset: %s and can't be removed.",
-            state_id,
-            private$dataname
-          )
-          warning(msg)
-          logger::log_warn(msg)
-        } else {
-          private$state_list_remove(state_list_index = "select", state_id = varname)
-          sprintf(
-            "%s$remove_filter_state for select variable %s done, dataname: %s",
-            class(self)[1],
-            varname,
-            private$dataname
-          )
-        }
-      }
+      subset_states <- Filter(function(x) x$arg == "subset", state)
+      private$set_filter_state_impl(
+        state = subset_states,
+        data = SummarizedExperiment::rowData(private$data),
+        data_reactive = function(sid = "") SummarizedExperiment::rowData(private$data_reactive())
+      )
+
+      select_states <- Filter(function(x) x$arg == "select", state)
+      private$set_filter_state_impl(
+        state = select_states,
+        data = SummarizedExperiment::colData(private$data),
+        data_reactive = function(sid = "") SummarizedExperiment::colData(private$data_reactive())
+      )
+
+      logger::log_trace("{ class(self)[1] }$set_filter_state initialized, dataname: { private$dataname }")
+      invisible(NULL)
     },
 
     # shiny modules ----
@@ -356,17 +277,13 @@ SEFilterStates <- R6::R6Class( # nolint
         id = id,
         function(input, output, session) {
           logger::log_trace("SEFilterState$srv_add initializing, dataname: { private$dataname }")
-
-          # available choices to display
           row_data <- SummarizedExperiment::rowData(data)
           col_data <- SummarizedExperiment::colData(data)
 
           avail_row_data_choices <- reactive({
-            active_filter_row_vars <- vapply(
-              X = private$state_list_get(state_list_index = "subset"),
-              FUN.VALUE = character(1),
-              FUN = function(x) x$get_varname()
-            )
+            slices_for_subset <- Filter(function(x) x$arg == "subset", self$get_filter_state())
+            active_filter_row_vars <- slices_field(slices_for_subset, "varname")
+
             choices <- setdiff(
               get_supported_filter_varnames(data = row_data),
               active_filter_row_vars
@@ -381,11 +298,9 @@ SEFilterStates <- R6::R6Class( # nolint
           })
 
           avail_col_data_choices <- reactive({
-            active_filter_col_vars <- vapply(
-              X = private$state_list_get(state_list_index = "select"),
-              FUN.VALUE = character(1),
-              FUN = function(x) x$get_varname()
-            )
+            slices_for_select <- Filter(function(x) x$arg == "select", self$get_filter_state())
+            active_filter_col_vars <- slices_field(slices_for_select, "varname")
+
             choices <- setdiff(
               get_supported_filter_varnames(data = col_data),
               active_filter_col_vars
@@ -460,7 +375,8 @@ SEFilterStates <- R6::R6Class( # nolint
                 )
               )
               varname <- input$col_to_add
-              self$set_filter_state(list(select = setNames(list(list()), varname)))
+              self$set_filter_state(filter_settings(filter_var(private$dataname, varname, arg = "select")))
+
               logger::log_trace(
                 sprintf(
                   "SEFilterStates$srv_add@3 added FilterState of column %s to col data, dataname: %s",
@@ -483,7 +399,8 @@ SEFilterStates <- R6::R6Class( # nolint
                 )
               )
               varname <- input$row_to_add
-              self$set_filter_state(list(subset = setNames(list(list()), varname)))
+              self$set_filter_state(filter_settings(filter_var(private$dataname, varname, arg = "subset")))
+
               logger::log_trace(
                 sprintf(
                   "SEFilterStates$srv_add@4 added FilterState of variable %s to row data, dataname: %s",
@@ -494,9 +411,7 @@ SEFilterStates <- R6::R6Class( # nolint
             }
           )
 
-          logger::log_trace(
-            "SEFilterState$srv_add initialized, dataname: { private$dataname }"
-          )
+          logger::log_trace("SEFilterState$srv_add initialized, dataname: { private$dataname }")
           NULL
         }
       )
