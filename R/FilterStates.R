@@ -636,11 +636,6 @@ FilterStates <- R6::R6Class( # nolint
         new_state_list[[state_id]]$destroy_observers()
         new_state_list[[state_id]] <- NULL
         shiny::isolate(private$state_list(new_state_list))
-
-      new_state_list <- shiny::isolate(private$state_list[[state_list_index]]())
-      new_state_list[[state_id]]$destroy_observers()
-      new_state_list[[state_id]] <- NULL
-      shiny::isolate(private$state_list[[state_list_index]](new_state_list))
         logger::log_trace("{ class(self)[1] } removed a filter, state_id: { state_id }")
       } else {
         warning(sprintf("\"%s\" not found in state list", state_id))
