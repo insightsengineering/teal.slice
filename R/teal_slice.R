@@ -314,64 +314,61 @@ is.teal_slices <- function(x) { # nolint
 as.teal_slices <- function(x) { # nolint
   checkmate::assert_list(x, names = "named")
   is_bottom <- function(x) {
-    isTRUE(is.list(x) && any(names(x) %in% c("selected", "keep_na", "keep_inf")))
+    isTRUE(is.list(x) && any(names(x) %in% c("selected", "keep_na", "keep_inf"))) ||
+    identical(x, list()) ||
+    is.atomic(x)
   }
-  make_args <- function() {
-    list(
-      dataname = NULL,
-      varname = NULL,
-      choices = NULL,
-      selected = NULL,
-      keep_na = NULL,
-      keep_inf = NULL,
-      fixed = FALSE,
-      disabled = FALSE
+  make_args <- function(object, dataname, varname, datalabel, arg = NULL) {
+    args <- list(
+      dataname = dataname,
+      varname = varname
     )
+    if (!missing(datalabel)) args$datalabel <- datalabel
+    if (!missing(arg)) args$arg <- arg
+    if (is.list(object)) {
+      args <- c(args, object)
+    } else if (is.atomic(object)) {
+      args$selected <- object
+    }
+    args
   }
-  args <- make_args()
   slices <- vector("list")
 
-  for (i in seq_along(x)) {
-    item <- x[[i]]
-    for (ii in seq_along(x[[i]])) {
-      subitem <- item[[ii]]
+  for (dataname in names(x)) {
+    item <- x[[dataname]]
+    for (name_i in names(item)) {
+      subitem <- item[[name_i]]
       if (is_bottom(subitem)) {
-        args$dataname <- names(x)[i]
-        args$varname <- names(item)[[ii]]
-        args$choices <- subitem$choices
-        args$selected <- subitem$selected
-        args$keep_na <- subitem$keep_na
-        args$keep_inf <- subitem$keep_inf
-        slices[[length(slices) + 1]] <- as.teal_slice(Filter(Negate(is.null), args))
-        args <- make_args()
+        args <- make_args(
+          subitem,
+          dataname = dataname,
+          varname = name_i
+        )
+        slices <- c(slices, list(as.teal_slice(args)))
       } else {
-        for (iii in seq_along(subitem)) {
-          subsubitem <- subitem[[iii]]
+        # MAE zone
+        for (name_ii in names(subitem)) {
+          subsubitem <- subitem[[name_ii]]
           if (is_bottom(subsubitem)) {
-            args$dataname <- names(x)[i]
-            args$varname <- names(subitem)[iii]
-            args$choices <- subsubitem$choices
-            args$selected <- subsubitem$selected
-            args$keep_na <- subsubitem$keep_na
-            args$keep_inf <- subsubitem$keep_inf
-            args$datalabel <- names(item)[ii]
-            if (args$datalabel == "subjects") args$arg <- "y"
-            slices[[length(slices) + 1]] <- as.teal_slice(Filter(Negate(is.null), args))
-            args <- make_args()
+            args <- make_args(
+              subsubitem,
+              dataname = dataname,
+              datalabel = name_i,
+              varname = name_ii
+            )
+            slices <- c(slices, list(as.teal_slice(args)))
           } else {
-            for (iiii in seq_along(subsubitem)) {
-              subsubsubitem <- subsubitem[[iiii]]
+            for (name_iii in names(subsubitem)) {
+              subsubsubitem <- subsubitem[[name_iii]]
               if (is_bottom(subsubsubitem)) {
-                args$dataname <- names(x)[i]
-                args$varname <- names(subsubitem)[iiii]
-                args$choices <- subsubsubitem$choices
-                args$selected <- subsubsubitem$selected
-                args$keep_na <- subsubsubitem$keep_na
-                args$keep_inf <- subsubsubitem$keep_inf
-                args$datalabel <- names(item)[ii]
-                args$arg <- names(subitem)[iii]
-                slices[[length(slices) + 1]] <- as.teal_slice(Filter(Negate(is.null), args))
-                args <- make_args()
+                args <- make_args(
+                  subsubsubitem,
+                  dataname = dataname,
+                  datalabel = name_i,
+                  arg = name_ii,
+                  varname = name_iii
+                )
+                slices <- c(slices, list(as.teal_slice(args)))
               }
             }
           }
