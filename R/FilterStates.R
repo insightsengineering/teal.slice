@@ -346,57 +346,9 @@ FilterStates <- R6::R6Class( # nolint
         id = id,
         function(input, output, session) {
           logger::log_trace("FilterState$srv_active initializing, dataname: { private$dataname }")
-          previous_state <- reactiveVal(character(0))
-          added_state_name <- reactiveVal(character(0))
-          removed_state_name <- reactiveVal(character(0))
-
-          observeEvent(private$state_list_get(1L), {
-            added_state_name(setdiff(names(private$state_list_get(1L)), names(previous_state())))
-            previous_state(private$state_list_get(1L))
-          })
-
-          output[["filters"]] <- shiny::renderUI({
-            fstates <- private$state_list_get(1L) # rerenders when queue changes / not when the state changes
-            lapply(names(fstates), function(fname) {
-              id <- sprintf("1L-%s", fname)
-              private$ui_card_module(id = session$ns(id), fstates[[fname]])
-            })
-          })
-
-          observeEvent(
-            added_state_name(), # we want to call FilterState module only once when it's added
-            ignoreNULL = TRUE,
-            {
-              fstates <- private$state_list_get(1L)
-              lapply(added_state_name(), function(fname) {
-                id <- sprintf("1L-%s", fname)
-                private$srv_card_module(id = id, state_list_index = 1L, element_id = fname, fs = fstates[[fname]])
-              })
-              added_state_name(character(0))
-            }
-          )
-
-          NULL
-        }
-      )
-    },
-
-    #' Shiny server module.
-    #'
-    #' @param id (`character(1)`)\cr
-    #'   shiny module instance id
-    #'
-    #' @return `moduleServer` function which returns `NULL`
-    #'
-    srv_active = function(id) {
-      moduleServer(
-        id = id,
-        function(input, output, session) {
-          logger::log_trace("FilterStates$srv_add initializing, dataname: { private$dataname }")
           current_state <- reactive(private$state_list_get())
           previous_state <- reactiveVal(character(0))
           added_state_name <- reactiveVal(character(0))
-          removed_state_name <- reactiveVal(character(0))
 
           observeEvent(current_state(), {
             logger::log_trace("FilterStates$srv_active@1 determining added and removed filter states")
@@ -405,27 +357,30 @@ FilterStates <- R6::R6Class( # nolint
             previous_state(current_state())
           })
 
-          observeEvent(added_state_name(), ignoreNULL = TRUE, {
-            logger::log_trace("FilterStates$srv_active@2 inserting a new filter state card")
-            fstates <- current_state()
-            for (fname in added_state_name()) {
-              private$insert_filter_state_ui(
-                id = fname,
-                filter_state = fstates[[fname]],
-                state_id = fname
-              )
-            }
-            added_state_name(character(0))
+          observeEvent(private$state_list_get(), {
+            added_state_name(setdiff(names(private$state_list_get()), names(previous_state())))
+            previous_state(private$state_list_get())
           })
 
-          observeEvent(removed_state_name(), ignoreNULL = TRUE, {
-            logger::log_trace("FilterStates$srv_active@3 removing filter state card")
-            for (fname in removed_state_name()) {
-              private$remove_filter_state_ui(fname, .input = input)
-            }
-            removed_state_name(character(0))
+          output[["filters"]] <- shiny::renderUI({
+            fstates <- private$state_list_get() # rerenders when queue changes / not when the state changes
+            lapply(names(fstates), function(fname) {
+              private$ui_card_module(id = session$ns(fname), fstates[[fname]])
+            })
           })
-          logger::log_trace("FilterStates$srv_add initialized, dataname: { private$dataname }")
+
+          observeEvent(
+            added_state_name(), # we want to call FilterState module only once when it's added
+            ignoreNULL = TRUE,
+            {
+              fstates <- private$state_list_get()
+              lapply(added_state_name(), function(fname) {
+                private$srv_card_module(id = fname, element_id = fname, fs = fstates[[fname]])
+              })
+              added_state_name(character(0))
+            }
+          )
+
           NULL
         }
       )
@@ -636,7 +591,7 @@ FilterStates <- R6::R6Class( # nolint
         shiny::isolate(private$state_list(new_state_list))
 
       new_state_list <- shiny::isolate(private$state_list[[state_list_index]]())
-      new_state_list[[state_id]]$destroy_shiny()
+      new_state_list[[state_id]]$destroy_observers()
       new_state_list[[state_id]] <- NULL
       shiny::isolate(private$state_list[[state_list_index]](new_state_list))
         logger::log_trace("{ class(self)[1] } removed a filter, state_id: { state_id }")
@@ -729,6 +684,33 @@ FilterStates <- R6::R6Class( # nolint
       })
 
       invisible(NULL)
+    },
+
+    #' UI wrapping a single `FilterState`
+    #'
+    #' This module contains a single `FilterState` card and remove (from the `ReactiveQueue`) button.
+    #'
+    #' return `moduleServer` function which returns `NULL`
+    #' @keywords internal
+    ui_card_module = function(id, fs) {
+      ns <- NS(id)
+      fs$ui(id = ns("content"))
+    },
+
+    #' Server module for a single `FilterState`
+    #'
+    #' Calls server from `FilterState` and observes remove (from the `ReactiveQueue`) button
+    #' @keywords internal
+    srv_card_module = function(id, element_id, fs) {
+      moduleServer(id, function(input, output, session) {
+        logger::log_trace("FilterStates$srv_card_module initializing, dataname: { private$dataname }")
+        fs_callback <- fs$server(id = "content")
+        observeEvent(
+          eventExpr = fs_callback(), # when remove button is clicked in the FilterState ui
+          once = TRUE, # remove button can be called once, should be destroyed afterwards
+          handlerExpr = private$state_list_remove(element_id)
+        )
+      })
     }
   )
 )
