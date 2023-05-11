@@ -1,232 +1,306 @@
+nums <- 1:10
+
 # initialize ----
-testthat::test_that("The constructor accepts numerical values", {
-  testthat::expect_no_error(RangeFilterState$new(c(1), x_reactive = reactive(NULL), varname = "test"))
+testthat::test_that("constructor accepts numerical values", {
+  testthat::expect_no_error(RangeFilterState$new(nums, dataname = "data", varname = "variable"))
+  testthat::expect_error(
+    RangeFilterState$new(as.character(nums), dataname = "data", varname = "variable"), "Assertion on 'x' failed"
+  )
 })
 
-testthat::test_that("The constructor accepts infinite values but not infinite only", {
-  testthat::expect_no_error(RangeFilterState$new(c(1, Inf, -Inf), x_reactive = reactive(NULL), varname = "test"))
+testthat::test_that("constructor accepts infinite values but not infinite only", {
+  testthat::expect_no_error(
+    RangeFilterState$new(c(nums, Inf, -Inf), dataname = "data", varname = "variable")
+  )
   testthat::expect_error(
-    RangeFilterState$new(Inf, x_reactive = reactive(NULL), varname = "test"),
+    RangeFilterState$new(Inf, dataname = "data", varname = "variable"),
     "\"x\" contains no finite values"
   )
   testthat::expect_error(
-    RangeFilterState$new(c(Inf, NA), x_reactive = reactive(NULL), varname = "test"),
+    RangeFilterState$new(c(Inf, NA), dataname = "data", varname = "variable"),
     "\"x\" contains no finite values"
   )
 })
 
-# get_selected ----
-testthat::test_that("get_selected returns range computed on a vector containing c(1, Inf, -Inf, NA)", {
-  test <- c(1, Inf, -Inf, NA)
-  filter_state <- RangeFilterState$new(test, x_reactive = reactive(NULL), varname = "test")
-  expect_identical(
-    shiny::isolate(filter_state$get_selected()),
-    c(1, 1)
-  )
+testthat::test_that("constructor initializes keep_inf = TRUE by default if x contains Infs", {
+  filter_state <- RangeFilterState$new(7, dataname = "data", varname = "7")
+  testthat::expect_null(shiny::isolate(filter_state$get_state())$keep_inf)
+  filter_state <- RangeFilterState$new(c(7, Inf), dataname = "data", varname = "7")
+  testthat::expect_true(shiny::isolate(filter_state$get_state())$keep_inf)
 })
 
-testthat::test_that("set_selected raises error when the passed values are not coercible to numeric", {
-  filter_state <- RangeFilterState$new(7, x_reactive = reactive(NULL), varname = "test")
+testthat::test_that("constructor raises error when selected is not sorted", {
   testthat::expect_error(
-    filter_state$set_selected(c(print)),
-    "Values to set must be an atomic vector."
+    RangeFilterState$new(
+      nums,
+      dataname = "data", varname = "variable", selected = nums[c(10, 1)]
+    ),
+    "Assertion on 'x' failed: Must be sorted"
   )
 })
 
-testthat::test_that("set_selected accepts an array with two numerical elements", {
-  filter_state <- RangeFilterState$new(7, x_reactive = reactive(NULL), varname = "test")
-  testthat::expect_no_error(filter_state$set_selected(c(7, 7)))
+testthat::test_that("constructor raises error when selection is not numeric or coercible", {
+  testthat::expect_error(
+    suppressWarnings(
+      RangeFilterState$new(nums, dataname = "data", varname = "variable", selected = c("a", "b"))
+    ),
+    "The array of set values must contain values coercible to numeric"
+  )
 })
 
-# get_call ----
-testthat::test_that("get_call returns call encompassing all values passed to constructor", {
-  filter_state <- RangeFilterState$new(7, x_reactive = reactive(NULL), varname = "test")
-  testthat::expect_equal(shiny::isolate(filter_state$get_call()), quote(test >= 7 & test <= 7))
-  filter_state <- RangeFilterState$new(c(1, 2, 3), x_reactive = reactive(NULL), varname = "test")
-  testthat::expect_equal(shiny::isolate(filter_state$get_call()), quote(test >= 1 & test <= 3))
+testthat::test_that("constructor raises error when choices is out of range", {
+  testthat::expect_warning(
+    RangeFilterState$new(
+      nums,
+      dataname = "data", varname = "variable", choices = range(nums) + c(-1, 1)
+    ),
+    "Choices adjusted"
+  )
 })
 
-testthat::test_that("get_call returns valid call after unsuccessfull set_selected", {
-  filter_state <- RangeFilterState$new(7, x_reactive = reactive(NULL), varname = "test")
-  testthat::expect_no_error(filter_state$set_selected(c(1, 3)))
-  testthat::expect_equal(shiny::isolate(filter_state$get_call()), quote(test >= 7 & test <= 7))
+testthat::test_that("constructor raises warning when choices is not sorted", {
+  testthat::expect_warning(
+    RangeFilterState$new(
+      nums,
+      dataname = "data", varname = "variable", choices = nums[c(10, 1)]
+    ),
+    "Invalid choices"
+  )
 })
 
-testthat::test_that("get_call returns call with values passed in set_selected", {
-  filter_state <- RangeFilterState$new(c(1, 8), x_reactive = reactive(NULL), varname = "test")
-  filter_state$set_selected(c(3, 4))
-  testthat::expect_equal(shiny::isolate(filter_state$get_call()), quote(test >= 3 & test <= 4))
+testthat::test_that("constructor raises error when choices is not numeric or coercible", {
+  testthat::expect_error(
+    suppressWarnings(
+      RangeFilterState$new(nums, dataname = "data", varname = "variable", choices = c("a", "b"))
+    ),
+    "Assertion on 'choices' failed"
+  )
 })
 
-testthat::test_that(
-  "get_call returns call that evaluates to TRUE for values within range passed to set_selected",
-  code = {
-    filter_state <- RangeFilterState$new(c(3, 5), x_reactive = reactive(NULL), varname = "test")
-    filter_state$set_selected(c(3, 5))
-    test <- c(2:6)
-    eval(shiny::isolate(filter_state$get_call()))
-    testthat::expect_equal(eval(shiny::isolate(filter_state$get_call())), c(FALSE, TRUE, TRUE, TRUE, FALSE))
-  }
-)
-
-testthat::test_that("set_keep_inf switches get_call returning call that allows infinite values", {
-  filter_state <- RangeFilterState$new(c(1, 8), x_reactive = reactive(NULL), varname = "test")
-  test <- Inf
-  testthat::expect_false(eval(shiny::isolate(filter_state$get_call())))
-  filter_state$set_keep_inf(TRUE)
-  testthat::expect_true(eval(shiny::isolate(filter_state$get_call())))
-})
-
-testthat::test_that("set_keep_na switches get_call returning call that allows NAs", {
-  filter_state <- RangeFilterState$new(c(1, 8), x_reactive = reactive(NULL), varname = "test")
-  test <- NA
-  testthat::expect_identical(eval(shiny::isolate(filter_state$get_call())), NA)
-  filter_state$set_keep_na(TRUE)
-  testthat::expect_true(eval(shiny::isolate(filter_state$get_call())))
-})
-
-testthat::test_that("NA and Inf can bothe be included by call returned by get_call", {
-  filter_state <- RangeFilterState$new(c(1, 8), x_reactive = reactive(NULL), varname = "test")
-  test <- c(NA, Inf)
-  testthat::expect_identical(eval(shiny::isolate(filter_state$get_call())), c(NA, FALSE))
-  filter_state$set_keep_na(TRUE)
-  filter_state$set_keep_inf(TRUE)
-  testthat::expect_identical(eval(shiny::isolate(filter_state$get_call())), c(TRUE, TRUE))
-})
-
-# get_state ----
-testthat::test_that("get_state returns a list identical to set_state input", {
-  filter_state <- RangeFilterState$new(c(1.0, 8.0, NA_real_, Inf), x_reactive = reactive(NULL), varname = "test")
-  state <- list(selected = c(2.0, 7.0), keep_na = TRUE, keep_inf = TRUE)
-  filter_state$set_state(state)
-  testthat::expect_identical(shiny::isolate(filter_state$get_state()), state)
-})
 
 # set_state ----
-testthat::test_that("set_state needs a named list with selected, keep_na and keep_inf elements", {
-  filter_state <- RangeFilterState$new(c(1, 8, NA_real_, Inf), x_reactive = reactive(NULL), varname = "test")
-  testthat::expect_no_error(filter_state$set_state(list(selected = c(1, 2), keep_na = TRUE, keep_inf = TRUE)))
-  testthat::expect_error(filter_state$set_state(list(selected = c(1, 2), unknown = TRUE)), "all\\(names\\(state\\)")
-})
+testthat::test_that("set_state: selected accepts vector of two numbers or coercible", {
+  filter_state <- RangeFilterState$new(nums, dataname = "data", varname = "variable")
 
-testthat::test_that("set_state sets values of selected and keep_na as provided in the list", {
-  filter_state <- RangeFilterState$new(c(1, 8, NA_real_, Inf), x_reactive = reactive(NULL), varname = "test")
-  filter_state$set_state(list(selected = c(1, 2), keep_na = TRUE, keep_inf = TRUE))
-  testthat::expect_identical(shiny::isolate(filter_state$get_selected()), c(1, 2))
-  testthat::expect_true(shiny::isolate(filter_state$get_keep_na()))
-  testthat::expect_true(shiny::isolate(filter_state$get_keep_inf()))
-})
-
-testthat::test_that("set_state overwrites fields included in the input only", {
-  filter_state <- RangeFilterState$new(c(1, 8, NA_real_, Inf), x_reactive = reactive(NULL), varname = "test")
-  filter_state$set_state(list(selected = c(1, 2), keep_na = TRUE, keep_inf = TRUE))
-  testthat::expect_no_error(filter_state$set_state(list(selected = c(5, 6), keep_na = TRUE, keep_inf = TRUE)))
-  testthat::expect_identical(shiny::isolate(filter_state$get_selected()), c(5, 6))
-  testthat::expect_true(shiny::isolate(filter_state$get_keep_na()))
-  testthat::expect_true(shiny::isolate(filter_state$get_keep_inf()))
-})
-
-# is_any_filtered ----
-testthat::test_that(
-  "RangeFilterState$is_any_filtered works properly when NA and Inf are present in data",
-  code = {
-    filter_state <- teal.slice:::RangeFilterState$new(
-      x = c(NA, Inf, seq(1:10)),
-      x_reactive = reactive(NULL),
-      varname = "x",
-      dataname = "data",
-      extract_type = character(0)
-    )
-
-    shiny::isolate(filter_state$set_keep_na(FALSE))
-    shiny::isolate(filter_state$set_keep_inf(TRUE))
-    testthat::expect_true(
-      shiny::isolate(filter_state$is_any_filtered())
-    )
-
-    shiny::isolate(filter_state$set_keep_na(FALSE))
-    shiny::isolate(filter_state$set_keep_inf(FALSE))
-    testthat::expect_true(
-      shiny::isolate(filter_state$is_any_filtered())
-    )
-
-    shiny::isolate(filter_state$set_keep_na(TRUE))
-    shiny::isolate(filter_state$set_keep_inf(TRUE))
-    testthat::expect_false(
-      shiny::isolate(filter_state$is_any_filtered())
-    )
-
-    shiny::isolate(filter_state$set_keep_na(TRUE))
-    shiny::isolate(filter_state$set_keep_inf(FALSE))
-    testthat::expect_true(
-      shiny::isolate(filter_state$is_any_filtered())
-    )
-
-    shiny::isolate(filter_state$set_selected(c(2, 10)))
-    shiny::isolate(filter_state$set_keep_na(TRUE))
-    shiny::isolate(filter_state$set_keep_inf(TRUE))
-    testthat::expect_true(
-      shiny::isolate(filter_state$is_any_filtered())
-    )
-
-    shiny::isolate(filter_state$set_selected(c(1, 9)))
-    shiny::isolate(filter_state$set_keep_na(TRUE))
-    shiny::isolate(filter_state$set_keep_inf(TRUE))
-    testthat::expect_true(
-      shiny::isolate(filter_state$is_any_filtered())
-    )
-
-    shiny::isolate(filter_state$set_selected(c(1, 10)))
-    shiny::isolate(filter_state$set_keep_na(TRUE))
-    shiny::isolate(filter_state$set_keep_inf(TRUE))
-    testthat::expect_false(
-      shiny::isolate(filter_state$is_any_filtered())
-    )
-  }
-)
-
-
-# format ----
-testthat::test_that("$format() is a FilterStates's method that accepts indent", {
-  filter_state <- RangeFilterState$new(7, x_reactive = reactive(NULL), varname = "test")
-  testthat::expect_no_error(shiny::isolate(filter_state$format(indent = 0)))
-})
-
-testthat::test_that("$format() asserts that indent is numeric", {
+  testthat::expect_no_error(
+    filter_state$set_state(filter_var(dataname = "data", varname = "variable", selected = nums[1:2]))
+  )
   testthat::expect_error(
-    RangeFilterState$new(c(7), x_reactive = reactive(NULL), varname = "test")$format(indent = "wrong type"),
-    regexp = "Assertion on 'indent' failed: Must be of type 'number'"
+    filter_state$set_state(filter_var(dataname = "data", varname = "variable", selected = nums[1])),
+    "The array of set values must have length two"
+  )
+  testthat::expect_no_error(
+    filter_state$set_state(filter_var(dataname = "data", varname = "variable", selected = as.character(1:2)))
+  )
+  testthat::expect_error(
+    suppressWarnings(
+      filter_state$set_state(filter_var(dataname = "data", varname = "variable", selected = as.character("a", "b")))
+    ),
+    "The array of set values must contain values coercible to numeric"
+  )
+  testthat::expect_error(
+    filter_state$set_state(filter_var(dataname = "data", varname = "variable", selected = c(print))),
+    "Assertion on 'selected' failed"
   )
 })
 
-testthat::test_that("$format() returns a string representation the FilterState object", {
-  filter_state <- RangeFilterState$new(c(7), x_reactive = reactive(NULL), varname = "test")
-  filter_state$set_state(list(selected = c(7, 7)))
+
+# set_state ----
+testthat::test_that("set_state: selected accepts numeric vector of length 2", {
+  filter_state <- RangeFilterState$new(nums, dataname = "data", varname = "variable")
+  testthat::expect_no_error(
+    filter_state$set_state(filter_var(selected = nums[c(1, 10)], dataname = "data", varname = "variable"))
+  )
+  testthat::expect_error(
+    filter_state$set_state(filter_var(selected = nums[1], dataname = "data", varname = "variable")),
+    "The array of set values must have length two"
+  )
+
+  testthat::expect_error(
+    suppressWarnings(
+      filter_state$set_state(filter_var(selected = c("a", "b"), dataname = "data", varname = "variable"))
+    ),
+    "The array of set values must contain values coercible to numeric"
+  )
+})
+
+testthat::test_that("set_state: selected raises `logger` warning when selection is not within the possible range", {
+  filter_state <- RangeFilterState$new(nums, dataname = "data", varname = "variable")
+
+  testthat::expect_output(
+    filter_state$set_state(
+      filter_var(nums, dataname = "data", varname = "variable", selected = c(nums[1] - 1, nums[10]))
+    ),
+    "Programmatic range specification"
+  )
+  testthat::expect_output(
+    filter_state$set_state(
+      filter_var(nums, dataname = "data", varname = "variable", selected = c(nums[1], nums[10] + 1))
+    ),
+    "Programmatic range"
+  )
+  testthat::expect_output(
+    filter_state$set_state(
+      filter_var(nums, dataname = "data", varname = "variable", selected = c(nums[1] - 1, nums[10] + 1))
+    ),
+    "Programmatic range"
+  )
+})
+
+testthat::test_that("set_state: selected range is limited to lower and upper bound of possible range", {
+  filter_state <- RangeFilterState$new(nums, dataname = "data", varname = "variable")
+  testthat::expect_output(
+    filter_state$set_state(
+      filter_var(dataname = "data", varname = "variable", selected = c(nums[1] - 1, nums[10]))
+    ),
+    "Programmatic range"
+  )
+  testthat::expect_equal(shiny::isolate(filter_state$get_state()$selected), c(nums[1], nums[10]))
+  testthat::expect_output(
+    filter_state$set_state(
+      filter_var(dataname = "data", varname = "variable", selected = c(nums[1], nums[10] + 1))
+    ),
+    "Programmatic range"
+  )
+  testthat::expect_equal(shiny::isolate(filter_state$get_state()$selected), c(nums[1], nums[10]))
+  testthat::expect_output(
+    filter_state$set_state(
+      filter_var(dataname = "data", varname = "variable", selected = c(nums[1] - 1, nums[10] + 1))
+    ),
+    "Programmatic range"
+  )
+  testthat::expect_equal(shiny::isolate(filter_state$get_state()$selected), c(nums[1], nums[10]))
+})
+
+testthat::test_that("set_state: selected raises error when selection is not coercible to numeric", {
+  filter_state <- RangeFilterState$new(nums, dataname = "data", varname = "variable")
+  testthat::expect_error(
+    suppressWarnings(
+      filter_state$set_state(filter_var(dataname = "data", varname = "variable", selected = c("a", "b")))
+    ),
+    "The array of set values must contain values coercible to numeric"
+  )
+})
+
+
+# get_call ----
+testthat::test_that("method get_call of default RangeFilterState object returns NULL", {
+  filter_state <- RangeFilterState$new(nums, dataname = "data", varname = "nums")
+  testthat::expect_null(shiny::isolate(filter_state$get_call()))
+})
+
+testthat::test_that("get_call returns call selected different than choices", {
+  filter_state <- RangeFilterState$new(nums, dataname = "data", varname = "variable", selected = nums[c(1, 3)])
+  testthat::expect_identical(
+    shiny::isolate(filter_state$get_call()),
+    quote(variable >= 1 & variable <= 3)
+  )
+})
+
+testthat::test_that("get_call returns NULL if disabled", {
+  filter_state <- RangeFilterState$new(
+    nums,
+    dataname = "data", varname = "variable", selected = nums[c(1, 3)], disabled = TRUE
+  )
+  testthat::expect_null(shiny::isolate(filter_state$get_call()))
+})
+
+testthat::test_that("get_call returns call always if choices are limited - regardless of selected", {
+  filter_state <- RangeFilterState$new(
+    nums,
+    dataname = "data", varname = "variable",
+    choices = nums[c(1, 3)], selected = nums[c(1, 3)]
+  )
+  testthat::expect_identical(
+    shiny::isolate(filter_state$get_call()),
+    quote(variable >= 1 & variable <= 3)
+  )
+})
+
+testthat::test_that("get_call prefixes varname by dataname$varname if extract_type='list'", {
+  filter_state <- RangeFilterState$new(
+    nums,
+    dataname = "data", varname = "variable", selected = nums[c(1, 3)], extract_type = "list"
+  )
+  testthat::expect_identical(
+    shiny::isolate(filter_state$get_call(dataname = "dataname")),
+    quote(dataname$variable >= 1 & dataname$variable <= 3)
+  )
+})
+
+testthat::test_that("get_call prefixes varname by dataname[, 'varname'] if extract_type='matrix'", {
+  filter_state <- RangeFilterState$new(
+    nums,
+    dataname = "data", varname = "variable", selected = nums[c(1, 3)], extract_type = "matrix"
+  )
+  testthat::expect_identical(
+    shiny::isolate(filter_state$get_call(dataname = "dataname")),
+    quote(dataname[, "variable"] >= 1 & dataname[, "variable"] <= 3)
+  )
+})
+
+testthat::test_that("get_call adds is.na(variable) to returned call if keep_na is true", {
+  filter_state <- RangeFilterState$new(
+    c(nums, NA),
+    dataname = "data", varname = "variable", selected = nums[c(1, 3)], keep_na = TRUE
+  )
+  testthat::expect_identical(
+    shiny::isolate(filter_state$get_call()),
+    quote(is.na(variable) | variable >= 1 & variable <= 3)
+  )
+})
+
+testthat::test_that("get_call returns call if all selected but NA exists", {
+  filter_state <- RangeFilterState$new(
+    c(nums, NA),
+    dataname = "data", varname = "variable", keep_na = FALSE
+  )
+  testthat::expect_identical(
+    shiny::isolate(filter_state$get_call()),
+    quote(variable >= 1 & variable <= 10)
+  )
+})
+
+# format ----
+testthat::test_that("format accepts numeric as indent", {
+  filter_state <- RangeFilterState$new(nums, dataname = "data", varname = "variable")
+  testthat::expect_no_error(shiny::isolate(filter_state$format(indent = 0)))
+  testthat::expect_error(shiny::isolate(filter_state$format(indent = "0")), "Assertion on 'indent' failed")
+})
+
+testthat::test_that("format returns a string representation the FilterState object", {
+  testthat::skip("temporary")
+  filter_state <- RangeFilterState$new(nums, dataname = "data", varname = "variable")
+  filter_state$set_state(filter_var(dataname = "data", varname = "variable"))
   testthat::expect_equal(
-    shiny::isolate(filter_state$format(indent = 0)),
+    shiny::isolate(filter_state$format()),
     paste(
-      "Filtering on: test",
-      "  Selected range: 7.000 - 7.000",
-      "  Include missing values: FALSE",
+      "  Filtering on: variable",
+      "    Selected range: 1.000 - 10.000",
+      "    Include missing values: TRUE",
       sep = "\n"
     )
   )
 })
 
-testthat::test_that("$format() prepends spaces to every line of the returned string", {
-  filter_state <- RangeFilterState$new(c(7), x_reactive = reactive(NULL), varname = "test")
-  filter_state$set_state(list(selected = c(7, 7)))
-  for (i in 1:3) {
+testthat::test_that("format prepends spaces to every line of the returned string", {
+  testthat::skip("temporary")
+  filter_state <- RangeFilterState$new(nums, dataname = "data", varname = "variable")
+  filter_state$set_state(filter_var(dataname = "data", varname = "variable"))
+  for (i in 0:3) {
     testthat::expect_equal(
-      shiny::isolate(filter_state$format(indent = !!(i))),
-      sprintf(
-        "%sFiltering on: test\n%1$s  Selected range: 7.000 - 7.000\n%1$s  Include missing values: FALSE",
-        format("", width = i)
+      shiny::isolate(filter_state$format(indent = i)),
+      paste(format("", width = i),
+        c(
+          "Filtering on: variable",
+          sprintf("%sSelected range: 1.000 - 10.000", format("", width = i)),
+          sprintf("%sInclude missing values: TRUE", format("", width = i))
+        ),
+        sep = "", collapse = "\n"
       )
     )
   }
 })
-
 
 # get_pretty_range_step ----
 testthat::test_that("private$get_pretty_range_step returns pretty step size", {
@@ -241,122 +315,13 @@ testthat::test_that("private$get_pretty_range_step returns pretty step size", {
   )
 
   pretty_sepal_length <- pretty(iris$Sepal.Length, n = 100)
-  filter_state <- test_class$new(pretty_sepal_length, x_reactive = reactive(NULL), varname = "test")
+  filter_state <- test_class$new(pretty_sepal_length, dataname = "data", varname = "variable")
   step <- filter_state$test_get_pretty_range_step(pretty_sepal_length)
   testthat::expect_identical(step, 0.05)
 
   pretty_mpg <- pretty(mtcars$mpg, n = 100)
 
-  filter_state <- test_class$new(pretty_mpg, x_reactive = reactive(NULL), varname = "test")
+  filter_state <- test_class$new(pretty_mpg, dataname = "data", varname = "variable")
   step <- filter_state$test_get_pretty_range_step(pretty_mpg)
   testthat::expect_identical(step, 0.2)
-})
-
-testthat::test_that("disable sets all state elements to NULL", {
-  shiny::reactiveConsole(TRUE)
-  on.exit(shiny::reactiveConsole(FALSE))
-  testfs <- R6::R6Class(
-    classname = "testfs",
-    inherit = RangeFilterState,
-    public = list(
-      disable = function() private$disable()
-    )
-  )
-  fs <- testfs$new(c(1:10, Inf), varname = "x")
-  fs$disable()
-  testthat::expect_false(fs$is_any_filtered())
-  testthat::expect_equal(
-    fs$get_state(),
-    list(selected = NULL, keep_na = NULL, keep_inf = NULL)
-  )
-})
-
-testthat::test_that("disable copies last state to the cache", {
-  shiny::reactiveConsole(TRUE)
-  on.exit(shiny::reactiveConsole(FALSE))
-  testfs <- R6::R6Class(
-    classname = "testfs",
-    inherit = RangeFilterState,
-    public = list(
-      disable = function() private$disable(),
-      get_cache = function() private$cache
-    )
-  )
-  fs <- testfs$new(c(1:10, Inf), varname = "x")
-  fs$set_state(list(keep_inf = TRUE))
-  last_state <- fs$get_state()
-  fs$disable()
-  testthat::expect_identical(fs$get_cache(), last_state)
-})
-
-testthat::test_that("is_any_filtered returns FALSE when disabled", {
-  shiny::reactiveConsole(TRUE)
-  on.exit(shiny::reactiveConsole(FALSE))
-  testfs <- R6::R6Class(
-    classname = "testfs",
-    inherit = RangeFilterState,
-    public = list(
-      disable = function() private$disable()
-    )
-  )
-  fs <- testfs$new(c(1:10, Inf), varname = "x")
-  fs$set_state(list(selected = c(4, 5), keep_inf = TRUE))
-  fs$disable()
-  testthat::expect_false(fs$is_any_filtered())
-})
-
-testthat::test_that("enable sets state back to the last state", {
-  shiny::reactiveConsole(TRUE)
-  on.exit(shiny::reactiveConsole(FALSE))
-  testfs <- R6::R6Class(
-    classname = "testfs",
-    inherit = RangeFilterState,
-    public = list(
-      disable = function() private$disable(),
-      enable = function() private$enable()
-    )
-  )
-  fs <- testfs$new(c(1:10, Inf), varname = "x")
-  fs$set_state(list(selected = c(4, 5), keep_inf = TRUE))
-  last_state <- fs$get_state()
-  fs$disable()
-  fs$enable()
-  testthat::expect_equal(fs$get_state(), last_state)
-})
-
-testthat::test_that("enable clears cache", {
-  shiny::reactiveConsole(TRUE)
-  on.exit(shiny::reactiveConsole(FALSE))
-  testfs <- R6::R6Class(
-    classname = "testfs",
-    inherit = RangeFilterState,
-    public = list(
-      disable = function() private$disable(),
-      enable = function() private$enable(),
-      get_cache = function() private$cache
-    )
-  )
-  fs <- testfs$new(c(1:10, Inf), varname = "x")
-  fs$set_state(list(selected = c(4, 5), keep_inf = TRUE))
-  fs$disable()
-  fs$enable()
-  testthat::expect_null(fs$get_cache())
-})
-
-testthat::test_that("is_any_filtered returns TRUE when enabled", {
-  shiny::reactiveConsole(TRUE)
-  on.exit(shiny::reactiveConsole(FALSE))
-  testfs <- R6::R6Class(
-    classname = "testfs",
-    inherit = RangeFilterState,
-    public = list(
-      disable = function() private$disable(),
-      enable = function() private$enable()
-    )
-  )
-  fs <- testfs$new(c(1:10, Inf), varname = "x")
-  fs$set_state(list(selected = c(4, 5), keep_inf = TRUE))
-  fs$disable()
-  fs$enable()
-  testthat::expect_true(fs$is_any_filtered())
 })

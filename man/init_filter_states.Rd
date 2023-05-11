@@ -8,7 +8,7 @@ init_filter_states(
   data,
   data_reactive = reactive(NULL),
   dataname,
-  datalabel = character(0),
+  datalabel = NULL,
   ...
 )
 }
@@ -32,7 +32,7 @@ specified to the function argument attached to this \code{FilterStates}.}
 text label value.}
 
 \item{...}{(optional)
-additional arguments for specific classes: keys}
+additional arguments for specific classes: keys.}
 }
 \description{
 Initialize \code{FilterStates} object
@@ -47,10 +47,7 @@ df <- data.frame(
 )
 rf <- teal.slice:::init_filter_states(
   data = df,
-  dataname = "DF",
-  varlabels = c(
-    "character variable", "numeric variable", "date variable", "datetime variable"
-  )
+  dataname = "DF"
 )
 \dontrun{
 shinyApp(

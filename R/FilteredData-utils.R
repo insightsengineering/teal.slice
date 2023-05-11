@@ -71,7 +71,7 @@ init_filtered_data.default <- function(x, join_keys = teal.data::join_keys(), co
 #' @param dataname (`character(1)`)\cr
 #'   the name of the `dataset` to be added to this object
 #' @keywords internal
-#' @return (`NULL` or throws an error)
+#' @return (`NULL` or raises an error)
 validate_dataset_args <- function(dataset_args, dataname) {
   check_simple_name(dataname)
   checkmate::assert_list(dataset_args, names = "unique")

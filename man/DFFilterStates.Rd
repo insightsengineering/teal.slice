@@ -36,8 +36,7 @@ data_df <- rbind(data_df, data_na)
 filter_states_df <- init_filter_states(
   data = data_df,
   dataname = "dataset",
-  datalabel = ("label"),
-  varlabels = c("long", "short", "long", "short", "long", "long")
+  datalabel = ("label")
 )
 
 ui <- fluidPage(
@@ -84,27 +83,31 @@ server <- function(input, output, session) {
   output$formatted_df <- renderText(filter_states_df$format())
 
   observeEvent(input$button1_df, {
-    filter_state <- list(NUM1 = list(selected = c(0, 30)))
+    filter_state <- filter_settings(filter_var("dataset", "NUM1", selected = c(0, 30)))
     filter_states_df$set_filter_state(state = filter_state)
   })
   observeEvent(input$button2_df, {
-    filter_state <- list(NUM2 = list(selected = c(20, 21)))
+    filter_state <- filter_settings(filter_var("dataset", "NUM2", selected = c(20, 21)))
     filter_states_df$set_filter_state(state = filter_state)
   })
   observeEvent(input$button3_df, {
-    filter_state <- list(CHAR1 = list(selected = c("B", "C", "D")))
+    filter_state <- filter_settings(filter_var("dataset", "CHAR1", selected = c("B", "C", "D")))
     filter_states_df$set_filter_state(state = filter_state)
   })
   observeEvent(input$button4_df, {
-    filter_state <- list(CHAR2 = list(selected = "F"))
+    filter_state <- filter_settings(filter_var("dataset", "CHAR2", selected = c("F")))
     filter_states_df$set_filter_state(state = filter_state)
   })
   observeEvent(input$button5_df, {
-    filter_state <- list(DATE = list(selected = c("2020-01-01", "2020-02-02")))
+    filter_state <- filter_settings(
+      filter_var("dataset", "DATE", selected = c("2020-01-01", "2020-02-02"))
+    )
     filter_states_df$set_filter_state(state = filter_state)
   })
   observeEvent(input$button6_df, {
-    filter_state <- list(DATETIME = list(selected = as.POSIXct(c("2020-01-01", "2020-02-02"))))
+    filter_state <- filter_settings(
+      filter_var("dataset", "DATETIME", selected = as.POSIXct(c("2020-01-01", "2020-02-02")))
+    )
     filter_states_df$set_filter_state(state = filter_state)
   })
   observeEvent(input$button7_df, filter_states_df$remove_filter_state(state_id = "NUM1"))
@@ -121,26 +124,6 @@ if (interactive()) {
 }
 }
 
-
-## ------------------------------------------------
-## Method `DFFilterStates$set_filter_state`
-## ------------------------------------------------
-
-df <- data.frame(
-  character = letters,
-  numeric = seq_along(letters),
-  date = seq(Sys.Date(), length.out = length(letters), by = "1 day"),
-  datetime = seq(Sys.time(), length.out = length(letters), by = "33.33 hours")
-)
-filter_states <- teal.slice:::DFFilterStates$new(
-  data = df,
-  dataname = "data",
-  datalabel = character(0),
-  keys = character(0)
-)
-filter_states$set_filter_state(list(character = list("a")))
-isolate(filter_states$get_call())
-
 }
 \keyword{internal}
 \section{Super class}{
@@ -150,14 +133,6 @@ isolate(filter_states$get_call())
 \subsection{Public methods}{
 \itemize{
 \item \href{#method-DFFilterStates-new}{\code{DFFilterStates$new()}}
-\item \href{#method-DFFilterStates-format}{\code{DFFilterStates$format()}}
-\item \href{#method-DFFilterStates-get_fun}{\code{DFFilterStates$get_fun()}}
-\item \href{#method-DFFilterStates-get_filter_state}{\code{DFFilterStates$get_filter_state()}}
-\item \href{#method-DFFilterStates-set_filter_state}{\code{DFFilterStates$set_filter_state()}}
-\item \href{#method-DFFilterStates-remove_filter_state}{\code{DFFilterStates$remove_filter_state()}}
-\item \href{#method-DFFilterStates-set_filterable_varnames}{\code{DFFilterStates$set_filterable_varnames()}}
-\item \href{#method-DFFilterStates-ui_add}{\code{DFFilterStates$ui_add()}}
-\item \href{#method-DFFilterStates-srv_add}{\code{DFFilterStates$srv_add()}}
 \item \href{#method-DFFilterStates-clone}{\code{DFFilterStates$clone()}}
 }
 }
@@ -165,12 +140,16 @@ isolate(filter_states$get_call())
 <details><summary>Inherited methods</summary>
 <ul>
 <li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilterStates" data-id="clear_filter_states"><a href='../../teal.slice/html/FilterStates.html#method-FilterStates-clear_filter_states'><code>teal.slice::FilterStates$clear_filter_states()</code></a></span></li>
+<li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilterStates" data-id="format"><a href='../../teal.slice/html/FilterStates.html#method-FilterStates-format'><code>teal.slice::FilterStates$format()</code></a></span></li>
 <li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilterStates" data-id="get_call"><a href='../../teal.slice/html/FilterStates.html#method-FilterStates-get_call'><code>teal.slice::FilterStates$get_call()</code></a></span></li>
-<li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilterStates" data-id="get_datalabel"><a href='../../teal.slice/html/FilterStates.html#method-FilterStates-get_datalabel'><code>teal.slice::FilterStates$get_datalabel()</code></a></span></li>
-<li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilterStates" data-id="get_filter_count"><a href='../../teal.slice/html/FilterStates.html#method-FilterStates-get_filter_count'><code>teal.slice::FilterStates$get_filter_count()</code></a></span></li>
+<li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilterStates" data-id="get_filter_state"><a href='../../teal.slice/html/FilterStates.html#method-FilterStates-get_filter_state'><code>teal.slice::FilterStates$get_filter_state()</code></a></span></li>
 <li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilterStates" data-id="print"><a href='../../teal.slice/html/FilterStates.html#method-FilterStates-print'><code>teal.slice::FilterStates$print()</code></a></span></li>
+<li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilterStates" data-id="remove_filter_state"><a href='../../teal.slice/html/FilterStates.html#method-FilterStates-remove_filter_state'><code>teal.slice::FilterStates$remove_filter_state()</code></a></span></li>
+<li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilterStates" data-id="set_filter_state"><a href='../../teal.slice/html/FilterStates.html#method-FilterStates-set_filter_state'><code>teal.slice::FilterStates$set_filter_state()</code></a></span></li>
 <li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilterStates" data-id="srv_active"><a href='../../teal.slice/html/FilterStates.html#method-FilterStates-srv_active'><code>teal.slice::FilterStates$srv_active()</code></a></span></li>
+<li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilterStates" data-id="srv_add"><a href='../../teal.slice/html/FilterStates.html#method-FilterStates-srv_add'><code>teal.slice::FilterStates$srv_add()</code></a></span></li>
 <li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilterStates" data-id="ui_active"><a href='../../teal.slice/html/FilterStates.html#method-FilterStates-ui_active'><code>teal.slice::FilterStates$ui_active()</code></a></span></li>
+<li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilterStates" data-id="ui_add"><a href='../../teal.slice/html/FilterStates.html#method-FilterStates-ui_add'><code>teal.slice::FilterStates$ui_add()</code></a></span></li>
 </ul>
 </details>
 }}
@@ -190,8 +169,7 @@ which means that when calling the subset function associated with this class
   data,
   data_reactive = function(sid = "") NULL,
   dataname,
-  datalabel = character(0),
-  varlabels = character(0),
+  datalabel = NULL,
   keys = character(0)
 )}\if{html}{\out{</div>}}
 }
@@ -212,204 +190,13 @@ Function has to have \code{sid} argument being a character.}
 name of the data used in the \emph{subset expression}
 specified to the function argument attached to this \code{FilterStates}}
 
-\item{\code{datalabel}}{(\code{character(0)} or \code{character(1)})\cr
+\item{\code{datalabel}}{(\code{NULL} or \code{character(1)})\cr
 text label value}
-
-\item{\code{varlabels}}{(\code{character})\cr
-labels of the variables used in this object}
 
 \item{\code{keys}}{(\code{character})\cr
 key columns names}
 }
 \if{html}{\out{</div>}}
-}
-}
-\if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-DFFilterStates-format"></a>}}
-\if{latex}{\out{\hypertarget{method-DFFilterStates-format}{}}}
-\subsection{Method \code{format()}}{
-Returns a formatted string representing this \code{FilterStates} object.
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{DFFilterStates$format(indent = 0)}\if{html}{\out{</div>}}
-}
-
-\subsection{Arguments}{
-\if{html}{\out{<div class="arguments">}}
-\describe{
-\item{\code{indent}}{(\code{numeric(1)}) the number of spaces prepended to each line of the output}
-}
-\if{html}{\out{</div>}}
-}
-\subsection{Returns}{
-\code{character(1)} the formatted string
-}
-}
-\if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-DFFilterStates-get_fun"></a>}}
-\if{latex}{\out{\hypertarget{method-DFFilterStates-get_fun}{}}}
-\subsection{Method \code{get_fun()}}{
-Gets the name of the function used to filter the data in this \code{FilterStates}.
-
-Get name of  function used to create the \emph{subset expression}.
-For \code{DFFilterStates} this is \code{dplyr::filter}.
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{DFFilterStates$get_fun()}\if{html}{\out{</div>}}
-}
-
-\subsection{Returns}{
-\code{character(1)}
-}
-}
-\if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-DFFilterStates-get_filter_state"></a>}}
-\if{latex}{\out{\hypertarget{method-DFFilterStates-get_filter_state}{}}}
-\subsection{Method \code{get_filter_state()}}{
-Gets the reactive values from the active \code{FilterState} objects.
-
-Get active filter state from the \code{FilterState} objects kept in \code{state_list}.
-The output list is a compatible input to \code{self$set_filter_state}.
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{DFFilterStates$get_filter_state()}\if{html}{\out{</div>}}
-}
-
-\subsection{Returns}{
-\code{list} with named elements corresponding to \code{FilterState} in the \code{state_list}.
-}
-}
-\if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-DFFilterStates-set_filter_state"></a>}}
-\if{latex}{\out{\hypertarget{method-DFFilterStates-set_filter_state}{}}}
-\subsection{Method \code{set_filter_state()}}{
-Set filter state.
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{DFFilterStates$set_filter_state(state)}\if{html}{\out{</div>}}
-}
-
-\subsection{Arguments}{
-\if{html}{\out{<div class="arguments">}}
-\describe{
-\item{\code{state}}{(\verb{named list})\cr
-should contain values which are initial selection in the \code{FilterState}.
-Names of the \code{list} element should correspond to the name of the columns.}
-}
-\if{html}{\out{</div>}}
-}
-\subsection{Returns}{
-\code{NULL}
-}
-\subsection{Examples}{
-\if{html}{\out{<div class="r example copy">}}
-\preformatted{df <- data.frame(
-  character = letters,
-  numeric = seq_along(letters),
-  date = seq(Sys.Date(), length.out = length(letters), by = "1 day"),
-  datetime = seq(Sys.time(), length.out = length(letters), by = "33.33 hours")
-)
-filter_states <- teal.slice:::DFFilterStates$new(
-  data = df,
-  dataname = "data",
-  datalabel = character(0),
-  keys = character(0)
-)
-filter_states$set_filter_state(list(character = list("a")))
-isolate(filter_states$get_call())
-
-}
-\if{html}{\out{</div>}}
-
-}
-
-}
-\if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-DFFilterStates-remove_filter_state"></a>}}
-\if{latex}{\out{\hypertarget{method-DFFilterStates-remove_filter_state}{}}}
-\subsection{Method \code{remove_filter_state()}}{
-Remove a \code{FilterState} from the \code{state_list}.
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{DFFilterStates$remove_filter_state(state_id)}\if{html}{\out{</div>}}
-}
-
-\subsection{Arguments}{
-\if{html}{\out{<div class="arguments">}}
-\describe{
-\item{\code{state_id}}{(\code{character(1)})\cr name of \code{state_list} element}
-}
-\if{html}{\out{</div>}}
-}
-\subsection{Returns}{
-\code{NULL}
-}
-}
-\if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-DFFilterStates-set_filterable_varnames"></a>}}
-\if{latex}{\out{\hypertarget{method-DFFilterStates-set_filterable_varnames}{}}}
-\subsection{Method \code{set_filterable_varnames()}}{
-Set the allowed filterable variables
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{DFFilterStates$set_filterable_varnames(varnames)}\if{html}{\out{</div>}}
-}
-
-\subsection{Arguments}{
-\if{html}{\out{<div class="arguments">}}
-\describe{
-\item{\code{varnames}}{(\code{character} or \code{NULL}) The variables which can be filtered}
-}
-\if{html}{\out{</div>}}
-}
-\subsection{Details}{
-When retrieving the filtered variables only
-those which have filtering supported (i.e. are of the permitted types)
-are included.
-}
-
-\subsection{Returns}{
-invisibly this \code{FilteredDataset}
-}
-}
-\if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-DFFilterStates-ui_add"></a>}}
-\if{latex}{\out{\hypertarget{method-DFFilterStates-ui_add}{}}}
-\subsection{Method \code{ui_add()}}{
-Shiny UI module to add filter variable.
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{DFFilterStates$ui_add(id)}\if{html}{\out{</div>}}
-}
-
-\subsection{Arguments}{
-\if{html}{\out{<div class="arguments">}}
-\describe{
-\item{\code{id}}{(\code{character(1)})\cr
-shiny element (module instance) id}
-}
-\if{html}{\out{</div>}}
-}
-\subsection{Returns}{
-\code{shiny.tag}
-}
-}
-\if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-DFFilterStates-srv_add"></a>}}
-\if{latex}{\out{\hypertarget{method-DFFilterStates-srv_add}{}}}
-\subsection{Method \code{srv_add()}}{
-Shiny server module to add filter variable.
-
-This module controls available choices to select as a filter variable.
-Once selected, a variable is removed from available choices.
-Removing a filter variable adds it back to available choices.
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{DFFilterStates$srv_add(id)}\if{html}{\out{</div>}}
-}
-
-\subsection{Arguments}{
-\if{html}{\out{<div class="arguments">}}
-\describe{
-\item{\code{id}}{(\code{character(1)})\cr
-an ID string that corresponds with the ID used to call the module's UI function.}
-}
-\if{html}{\out{</div>}}
-}
-\subsection{Returns}{
-\code{moduleServer} function which returns \code{NULL}
 }
 }
 \if{html}{\out{<hr>}}

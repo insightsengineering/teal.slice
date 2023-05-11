@@ -1,22 +1,28 @@
+# make_count_text ----
 testthat::test_that("make_count_text requires label to be a character(1)", {
   testthat::expect_no_error(make_count_text(label = "a", countmax = 50))
-  testthat::expect_error(make_count_text(label = character(0), countmax = 50), "label")
-  testthat::expect_error(make_count_text(label = 1, countmax = 50), "label")
+  testthat::expect_error(make_count_text(label = character(0), countmax = 50), "Assertion on 'label' failed")
+  testthat::expect_error(make_count_text(label = 1, countmax = 50), "Assertion on 'label' failed")
 })
 
 testthat::test_that("make_count_text requires countmax to be a numeric(1)", {
   testthat::expect_no_error(make_count_text(label = "a", countmax = 100))
-  testthat::expect_error(make_count_text(label = "a", countmax = "100"), "countmax")
-  testthat::expect_error(make_count_text(label = "a", countmax = numeric(0)), "countmax")
+  testthat::expect_error(make_count_text(label = "a", countmax = "100"), "Assertion on 'countmax' failed")
+  testthat::expect_error(make_count_text(label = "a", countmax = numeric(0)), "Assertion on 'countmax' failed")
 })
 
 
-testthat::test_that("make_count_text requires countnow to be a numeric(1), NULL or missing", {
-  testthat::expect_no_error(make_count_text(label = "a", countmax = 100, countnow = 1))
-  testthat::expect_no_error(make_count_text(label = "a", countmax = 100, countnow = NULL))
+testthat::test_that("make_count_text requires countnow to be a numeric(1) or NULL", {
   testthat::expect_no_error(make_count_text(label = "a", countmax = 100))
-  testthat::expect_error(make_count_text(label = "a", countmax = 100, countnow = "50"), "countnow")
-  testthat::expect_error(make_count_text(label = "a", countmax = 100, countnow = numeric(0)), "countnow")
+  testthat::expect_no_error(make_count_text(label = "a", countmax = 100, countnow = 1))
+  testthat::expect_error(
+    make_count_text(label = "a", countmax = 100, countnow = "50"),
+    "Assertion on 'countnow' failed"
+  )
+  testthat::expect_error(
+    make_count_text(label = "a", countmax = 100, countnow = numeric(0)),
+    "Assertion on 'countnow' failed"
+  )
 })
 
 testthat::test_that("make_count_text returns label + (countnow/countmax)", {
@@ -26,13 +32,9 @@ testthat::test_that("make_count_text returns label + (countnow/countmax)", {
   )
 })
 
-testthat::test_that("make_count_text returns label + (countmax) when countnow is null or missing", {
+testthat::test_that("make_count_text returns label + (countmax) when countnow is NULL", {
   testthat::expect_identical(
     make_count_text(label = "a", countmax = 100, countnow = NULL),
-    "a (100)"
-  )
-  testthat::expect_identical(
-    make_count_text(label = "a", countmax = 100),
     "a (100)"
   )
 })
@@ -40,42 +42,74 @@ testthat::test_that("make_count_text returns label + (countmax) when countnow is
 # countBar -------
 testthat::test_that("countBar requires InputId to be a character(1)", {
   testthat::expect_no_error(countBar(inputId = "a", label = "a", countmax = 50, counttotal = 200))
-  testthat::expect_error(countBar(label = "a", countmax = 50, counttotal = 200), "inputId")
-  testthat::expect_error(countBar(inputId = NULL, label = "a", countmax = 50, counttotal = 200), "inputId")
-  testthat::expect_error(countBar(inputId = character(0), label = "a", countmax = 50, counttotal = 200), "inputId")
-  testthat::expect_error(countBar(inputId = 1L, label = "a", countmax = 50, counttotal = 200), "inputId")
+  testthat::expect_error(
+    countBar(label = "a", countmax = 50, counttotal = 200),
+    "argument \"inputId\" is missing, with no default"
+  )
+  testthat::expect_error(
+    countBar(inputId = NULL, label = "a", countmax = 50, counttotal = 200),
+    "Assertion on 'inputId' failed"
+  )
+  testthat::expect_error(
+    countBar(inputId = character(0), label = "a", countmax = 50, counttotal = 200),
+    "Assertion on 'inputId' failed"
+  )
+  testthat::expect_error(
+    countBar(inputId = 1L, label = "a", countmax = 50, counttotal = 200),
+    "Assertion on 'inputId' failed"
+  )
 })
 
 testthat::test_that("countBar requires label to be a character(1)", {
   testthat::expect_no_error(countBar(inputId = "a", label = "a", countmax = 50, counttotal = 200))
-  testthat::expect_error(countBar(inputId = "a", label = NULL, countmax = 50, counttotal = 200), "label")
-  testthat::expect_error(countBar(inputId = "a", label = character(0), countmax = 50, counttotal = 200), "label")
-  testthat::expect_error(countBar(inputId = "a", label = 1L, label = "a", countmax = 50, counttotal = 200), "label")
+  testthat::expect_error(
+    countBar(inputId = "a", label = NULL, countmax = 50, counttotal = 200),
+    "Assertion on 'label' failed"
+  )
+  testthat::expect_error(
+    countBar(inputId = "a", label = character(0), countmax = 50, counttotal = 200),
+    "Assertion on 'label' failed"
+  )
+  testthat::expect_error(
+    countBar(inputId = "a", label = 1L, countmax = 50, counttotal = 200),
+    "Assertion on 'label' failed"
+  )
 })
 
 testthat::test_that("countBar requires countmax to be a numeric(1)", {
   testthat::expect_no_error(countBar(inputId = "a", label = "a", countmax = 100, counttotal = 200))
-  testthat::expect_error(countBar(inputId = "a", label = "a", countmax = "100", counttotal = 200), "countmax")
-  testthat::expect_error(countBar(inputId = "a", label = "a", countmax = numeric(0), counttotal = 200), "countmax")
+  testthat::expect_error(
+    countBar(inputId = "a", label = "a", countmax = "100", counttotal = 200),
+    "Assertion on 'countmax' failed"
+  )
+  testthat::expect_error(
+    countBar(inputId = "a", label = "a", countmax = numeric(0), counttotal = 200),
+    "Assertion on 'countmax' failed"
+  )
 })
 
 testthat::test_that("countBar requires counttotal to be a numeric(1)", {
   testthat::expect_no_error(countBar(inputId = "a", label = "a", countmax = 100, counttotal = 200))
-  testthat::expect_error(countBar(inputId = "a", label = "a", countmax = 100, counttotal = "200"), "counttotal")
-  testthat::expect_error(countBar(inputId = "a", label = "a", countmax = 100, counttotal = numeric(0)), "counttotal")
+  testthat::expect_error(
+    countBar(inputId = "a", label = "a", countmax = 100, counttotal = "200"),
+    "Assertion on 'counttotal' failed"
+  )
+  testthat::expect_error(
+    countBar(inputId = "a", label = "a", countmax = 100, counttotal = numeric(0)),
+    "Assertion on 'counttotal' failed"
+  )
 })
 
-testthat::test_that("countBar requires countnow to be a numeric(1), NULL or missing", {
+testthat::test_that("countBar requires countnow to be a numeric(1), NULL", {
   testthat::expect_no_error(countBar(inputId = "a", label = "a", countmax = 100, countnow = 1, counttotal = 200))
-  testthat::expect_no_error(countBar(inputId = "a", label = "a", countmax = 100, countnow = NULL, counttotal = 200))
   testthat::expect_no_error(countBar(inputId = "a", label = "a", countmax = 100, counttotal = 200))
   testthat::expect_error(
     countBar(inputId = "a", label = "a", countmax = 100, countnow = "50", counttotal = 200),
-    "countnow"
+    "Assertion on 'countnow' failed"
   )
   testthat::expect_error(
     countBar(inputId = "a", label = "a", countmax = 100, countnow = numeric(0), counttotal = 200),
-    "countnow"
+    "Assertion on 'countnow' failed"
   )
 })
 
@@ -129,19 +163,19 @@ testthat::test_that("countBars requires InputId to be a character(1)", {
   )
   testthat::expect_error(
     countBars(inputId = NULL, choices = choices, countsmax = countsmax, countsnow = countsnow),
-    "inputId"
+    "Assertion on 'inputId' failed"
   )
   testthat::expect_error(
     countBars(inputId = character(0), choices = choices, countsmax = countsmax, countsnow = countsnow),
-    "inputId"
+    "Assertion on 'inputId' failed"
   )
   testthat::expect_error(
     countBars(inputId = 1, choices = choices, countsmax = countsmax, countsnow = countsnow),
-    "inputId"
+    "Assertion on 'inputId' failed"
   )
   testthat::expect_error(
     countBars(choices = choices, countsmax = countsmax, countsnow = countsnow),
-    "inputId"
+    "argument \"inputId\" is missing, with no default"
   )
 })
 
@@ -154,7 +188,7 @@ testthat::test_that("countBars requires choices to be a vector", {
   )
   testthat::expect_error(
     countBars(inputId = "a", countsmax = countsmax, countsnow = countsnow),
-    "choices"
+    "argument \"choices\" is missing, with no default"
   )
 })
 
@@ -164,35 +198,35 @@ testthat::test_that("countBars requires countsmax to be a numeric of the same le
   )
   testthat::expect_error(
     countBars(inputId = "a", choices = choices, countsnow = countsnow),
-    "countsmax"
+    "argument \"countsmax\" is missing, with no default"
   )
   testthat::expect_error(
     countBars(inputId = "a", choices = choices, countsmax = as.character(countsmax), countsnow = countsnow),
-    "countsmax"
+    "Assertion on 'countsmax' failed"
   )
   testthat::expect_error(
     countBars(inputId = "a", choices = choices, countsmax = c(3, 7), countsnow = countsnow),
-    "countsmax"
+    "Assertion on 'countsmax' failed"
   )
 })
 
 
-testthat::test_that("countBars requires counstnow to be a numeric lower than countsmax, NULL or missing", {
+testthat::test_that("countBars requires counstnow to be a numeric lower than countsmax, NULL", {
   testthat::expect_no_error(
     countBars(inputId = "a", choices = choices, countsmax = countsmax, countsnow = countsnow)
   )
   testthat::expect_no_error(countBars(inputId = "a", choices = choices, countsmax = countsmax))
   testthat::expect_error(
     countBars(inputId = "a", choices = choices, countsmax = countsmax, countsnow = c(0, 0)),
-    "countsnow"
+    "Assertion on 'countsnow' failed"
   )
   testthat::expect_error(
     countBars(inputId = "a", choices = choices, countsmax = countsmax, countsnow = c(1, 20, 2)),
-    "countsnow"
+    "Assertion on '.+' failed"
   )
   testthat::expect_error(
     countBars(inputId = "a", choices = choices, countsmax = countsmax, countsnow = as.character(countsnow)),
-    "countsnow"
+    "Assertion on 'countsnow' failed"
   )
 })
 

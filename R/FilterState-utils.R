@@ -1,25 +1,30 @@
-#' Initializes `InteractiveFilterState`
+#' Initializes `FilterState`
 #'
-#' Initializes `InteractiveFilterState` depending on a variable class.\cr
+#' Initializes `FilterState` depending on a variable class.\cr
 #' @param x (`vector`)\cr
 #'   values of the variable used in filter
-#'
 #' @param x_reactive (`reactive`)\cr
 #'   returning vector of the same type as `x`. Is used to update
 #'   counts following the change in values of the filtered dataset.
 #'   If it is set to `reactive(NULL)` then counts based on filtered
 #'   dataset are not shown.
-#'
-#' @param varname (`character(1)`)\cr
-#'   name of the variable.
-#'
-#' @param varlabel (`character(0)`, `character(1)` or `NULL`)\cr
-#'   label of the variable (optional).
-#'
 #' @param dataname (`character(1)`)\cr
 #'   optional name of dataset where `x` is taken from. Must be specified
 #'   if `extract_type` argument is not empty.
-#'
+#' @param varname (`character(1)`)\cr
+#'   name of the variable.
+#' @param choices (`atomic`)\cr
+#'   vector specifying allowed selection values
+#' @param selected (`atomic`, `NULL`)\cr
+#'   vector specifying selection
+#' @param keep_na (`logical(1)`, `NULL`)\cr
+#'   flag specifying whether to keep missing values
+#' @param keep_inf (`logical(1)`, `NULL`)\cr
+#'   flag specifying whether to keep infinite values
+#' @param fixed (`logical(1)`)\cr
+#'   flag specifying whether the `FilterState` is initiated fixed
+#' @param disabled (`logical(1)`)\cr
+#'   flag specifying whether the `FilterState` is initiated disabled
 #' @param extract_type (`character(0)`, `character(1)`)\cr
 #' whether condition calls should be prefixed by dataname. Possible values:
 #' \itemize{
@@ -27,6 +32,8 @@
 #' \item{`"list"`}{ `varname` in the condition call will be returned as `<dataname>$<varname>`}
 #' \item{`"matrix"`}{ `varname` in the condition call will be returned as `<dataname>[, <varname>]`}
 #' }
+#' @param ... additional arguments to be saved as a list in `private$extras` field
+#'
 #' @keywords internal
 #'
 #' @examples
@@ -34,18 +41,15 @@
 #'   x = c(1:10, NA, Inf),
 #'   x_reactive = reactive(c(1:10, NA, Inf)),
 #'   varname = "x",
-#'   varlabel = "Pretty name",
 #'   dataname = "dataname",
 #'   extract_type = "matrix"
 #' )
 #'
-#' filter_state$get_varname()
-#' filter_state$get_varlabel()
-#' isolate(filter_state$get_call())
+#' shiny::isolate(filter_state$get_call())
 #' \dontrun{
 #' shinyApp(
 #'   ui = fluidPage(
-#'     isolate(filter_state$ui(id = "app")),
+#'     filter_state$ui(id = "app"),
 #'     verbatimTextOutput("call")
 #'   ),
 #'   server = function(input, output, session) {
@@ -60,103 +64,147 @@
 #' @return `FilterState` object
 init_filter_state <- function(x,
                               x_reactive = reactive(NULL),
+                              dataname,
                               varname,
-                              varlabel = attr(x, "label"),
-                              dataname = NULL,
-                              extract_type = character(0)) {
+                              choices = NULL,
+                              selected = NULL,
+                              keep_na = NULL,
+                              keep_inf = NULL,
+                              fixed = FALSE,
+                              disabled = FALSE,
+                              extract_type = character(0),
+                              ...) {
+  checkmate::assert_class(x_reactive, "reactive")
+  checkmate::assert_string(dataname)
   checkmate::assert_string(varname)
-  checkmate::assert_character(varlabel, max.len = 1L, any.missing = FALSE, null.ok = TRUE)
-  checkmate::assert_string(dataname, null.ok = TRUE)
-  checkmate::assert_character(extract_type, max.len = 1L, any.missing = FALSE)
+  checkmate::assert_flag(keep_na, null.ok = TRUE)
+  checkmate::assert_flag(keep_inf, null.ok = TRUE)
+  checkmate::assert_flag(fixed)
+  checkmate::assert_flag(disabled)
+  checkmate::assert_character(extract_type, max.len = 1, any.missing = FALSE)
   if (length(extract_type) == 1) {
     checkmate::assert_choice(extract_type, choices = c("list", "matrix"))
   }
-  if (length(extract_type) == 1 && is.null(dataname)) {
-    stop("if extract_type is specified, dataname must also be specified")
-  }
-
-  if (is.null(varlabel)) varlabel <- character(0L)
 
   if (all(is.na(x))) {
-    return(
-      EmptyFilterState$new(
-        x = x,
-        x_reactive = x_reactive,
-        varname = varname,
-        varlabel = varlabel,
-        dataname = dataname,
-        extract_type = extract_type
-      )
+    args <- list(
+      x = x,
+      x_reactive = x_reactive,
+      dataname = dataname,
+      varname = varname,
+      choices = choices,
+      selected = selected,
+      keep_na = keep_na,
+      keep_inf = keep_inf,
+      fixed = fixed,
+      disabled = disabled,
+      extract_type = extract_type
     )
+    args <- append(args, list(...))
+
+    do.call(EmptyFilterState$new, args)
+  } else {
+    UseMethod("init_filter_state")
   }
-  UseMethod("init_filter_state")
 }
 
 #' @keywords internal
 #' @export
 init_filter_state.default <- function(x,
                                       x_reactive = reactive(NULL),
+                                      dataname,
                                       varname,
-                                      varlabel = attr(x, "label"),
-                                      dataname = NULL,
-                                      extract_type = character(0)) {
-  if (is.null(varlabel)) varlabel <- character(0)
-  InteractiveFilterState$new(
+                                      choices = NULL,
+                                      selected = NULL,
+                                      keep_na = NULL,
+                                      keep_inf = NULL,
+                                      fixed = FALSE,
+                                      disabled = FALSE,
+                                      extract_type = character(0),
+                                      ...) {
+  args <- list(
     x = x,
     x_reactive = x_reactive,
-    varname = varname,
-    varlabel = varlabel,
     dataname = dataname,
+    varname = varname,
+    choices = choices,
+    selected = selected,
+    keep_na = keep_na,
+    keep_inf = keep_inf,
+    fixed = fixed,
+    disabled = disabled,
     extract_type = extract_type
   )
+  args <- append(args, list(...))
+
+  do.call(FilterState$new, args)
 }
 
 #' @keywords internal
 #' @export
 init_filter_state.logical <- function(x,
                                       x_reactive = reactive(NULL),
+                                      dataname,
                                       varname,
-                                      varlabel = attr(x, "label"),
-                                      dataname = NULL,
-                                      extract_type = character(0)) {
-  if (is.null(varlabel)) varlabel <- character(0)
-  LogicalFilterState$new(
+                                      choices = NULL,
+                                      selected = NULL,
+                                      keep_na = NULL,
+                                      keep_inf = NULL,
+                                      fixed = FALSE,
+                                      disabled = FALSE,
+                                      extract_type = character(0),
+                                      ...) {
+  args <- list(
     x = x,
     x_reactive = x_reactive,
-    varname = varname,
-    varlabel = varlabel,
     dataname = dataname,
+    varname = varname,
+    choices = choices,
+    selected = selected,
+    keep_na = keep_na,
+    keep_inf = keep_inf,
+    fixed = fixed,
+    disabled = disabled,
     extract_type = extract_type
   )
+  args <- append(args, list(...))
+
+  do.call(LogicalFilterState$new, args)
 }
 
 #' @keywords internal
 #' @export
 init_filter_state.numeric <- function(x,
                                       x_reactive = reactive(NULL),
+                                      dataname,
                                       varname,
-                                      varlabel = attr(x, "label"),
-                                      dataname = NULL,
-                                      extract_type = character(0)) {
-  if (is.null(varlabel)) varlabel <- character(0)
+                                      choices = NULL,
+                                      selected = NULL,
+                                      keep_na = NULL,
+                                      keep_inf = NULL,
+                                      fixed = FALSE,
+                                      disabled = FALSE,
+                                      extract_type = character(0),
+                                      ...) {
+  args <- list(
+    x = x,
+    x_reactive = x_reactive,
+    dataname = dataname,
+    varname = varname,
+    choices = choices,
+    selected = selected,
+    keep_na = keep_na,
+    keep_inf = keep_inf,
+    fixed = fixed,
+    disabled = disabled,
+    extract_type = extract_type
+  )
+  args <- append(args, list(...))
+
   if (length(unique(x[!is.na(x)])) < getOption("teal.threshold_slider_vs_checkboxgroup")) {
-    ChoicesFilterState$new(
-      x = x,
-      x_reactive = x_reactive,
-      varname = varname,
-      varlabel = varlabel,
-      dataname = dataname,
-      extract_type = extract_type
-    )
+    do.call(ChoicesFilterState$new, args)
   } else {
-    RangeFilterState$new(
-      x = x,
-      x_reactive = x_reactive,
-      varname = varname,
-      varlabel = varlabel,
-      dataname = dataname,
-      extract_type = extract_type
-    )
+    do.call(RangeFilterState$new, args)
   }
 }
 
@@ -164,67 +212,99 @@ init_filter_state.numeric <- function(x,
 #' @export
 init_filter_state.factor <- function(x,
                                      x_reactive = reactive(NULL),
+                                     dataname,
                                      varname,
-                                     varlabel = attr(x, "label"),
-                                     dataname = NULL,
-                                     extract_type = character(0)) {
-  if (is.null(varlabel)) varlabel <- character(0)
-  ChoicesFilterState$new(
+                                     choices = NULL,
+                                     selected = NULL,
+                                     keep_na = NULL,
+                                     keep_inf = NULL,
+                                     fixed = FALSE,
+                                     disabled = FALSE,
+                                     extract_type = character(0),
+                                     ...) {
+  args <- list(
     x = x,
     x_reactive = x_reactive,
-    varname = varname,
-    varlabel = varlabel,
     dataname = dataname,
+    varname = varname,
+    choices = choices,
+    selected = selected,
+    keep_na = keep_na,
+    keep_inf = keep_inf,
+    fixed = fixed,
+    disabled = disabled,
     extract_type = extract_type
   )
+  args <- append(args, list(...))
+
+  do.call(ChoicesFilterState$new, args)
 }
 
 #' @keywords internal
 #' @export
 init_filter_state.character <- function(x,
                                         x_reactive = reactive(NULL),
+                                        dataname,
                                         varname,
-                                        varlabel = attr(x, "label"),
-                                        dataname = NULL,
-                                        extract_type = character(0)) {
-  if (is.null(varlabel)) varlabel <- character(0)
-  ChoicesFilterState$new(
+                                        choices = NULL,
+                                        selected = NULL,
+                                        keep_na = NULL,
+                                        keep_inf = NULL,
+                                        fixed = FALSE,
+                                        disabled = FALSE,
+                                        extract_type = character(0),
+                                        ...) {
+  args <- list(
     x = x,
     x_reactive = x_reactive,
-    varname = varname,
-    varlabel = varlabel,
     dataname = dataname,
+    varname = varname,
+    choices = choices,
+    selected = selected,
+    keep_na = keep_na,
+    keep_inf = keep_inf,
+    fixed = fixed,
+    disabled = disabled,
     extract_type = extract_type
   )
+  args <- append(args, list(...))
+
+  do.call(ChoicesFilterState$new, args)
 }
 
 #' @keywords internal
 #' @export
 init_filter_state.Date <- function(x,
                                    x_reactive = reactive(NULL),
+                                   dataname,
                                    varname,
-                                   varlabel = attr(x, "label"),
-                                   dataname = NULL,
-                                   extract_type = character(0)) {
-  if (is.null(varlabel)) varlabel <- character(0)
+                                   choices = NULL,
+                                   selected = NULL,
+                                   keep_na = NULL,
+                                   keep_inf = NULL,
+                                   fixed = FALSE,
+                                   disabled = FALSE,
+                                   extract_type = character(0),
+                                   ...) {
+  args <- list(
+    x = x,
+    x_reactive = x_reactive,
+    dataname = dataname,
+    varname = varname,
+    choices = choices,
+    selected = selected,
+    keep_na = keep_na,
+    keep_inf = keep_inf,
+    fixed = fixed,
+    disabled = disabled,
+    extract_type = extract_type
+  )
+  args <- append(args, list(...))
+
   if (length(unique(x[!is.na(x)])) < getOption("teal.threshold_slider_vs_checkboxgroup")) {
-    ChoicesFilterState$new(
-      x = x,
-      x_reactive = x_reactive,
-      varname = varname,
-      varlabel = varlabel,
-      dataname = dataname,
-      extract_type = extract_type
-    )
+    do.call(ChoicesFilterState$new, args)
   } else {
-    DateFilterState$new(
-      x = x,
-      x_reactive = x_reactive,
-      varname = varname,
-      varlabel = varlabel,
-      dataname = dataname,
-      extract_type = extract_type
-    )
+    do.call(DateFilterState$new, args)
   }
 }
 
@@ -232,29 +312,35 @@ init_filter_state.Date <- function(x,
 #' @export
 init_filter_state.POSIXct <- function(x,
                                       x_reactive = reactive(NULL),
+                                      dataname,
                                       varname,
-                                      varlabel = attr(x, "label"),
-                                      dataname = NULL,
-                                      extract_type = character(0)) {
-  if (is.null(varlabel)) varlabel <- character(0)
+                                      choices = NULL,
+                                      selected = NULL,
+                                      keep_na = NULL,
+                                      keep_inf = NULL,
+                                      fixed = FALSE,
+                                      disabled = FALSE,
+                                      extract_type = character(0),
+                                      ...) {
+  args <- list(
+    x = x,
+    x_reactive = x_reactive,
+    dataname = dataname,
+    varname = varname,
+    choices = choices,
+    selected = selected,
+    keep_na = keep_na,
+    keep_inf = keep_inf,
+    fixed = fixed,
+    disabled = disabled,
+    extract_type = extract_type
+  )
+  args <- append(args, list(...))
+
   if (length(unique(x[!is.na(x)])) < getOption("teal.threshold_slider_vs_checkboxgroup")) {
-    ChoicesFilterState$new(
-      x = x,
-      x_reactive = x_reactive,
-      varname = varname,
-      varlabel = varlabel,
-      dataname = dataname,
-      extract_type = extract_type
-    )
+    do.call(ChoicesFilterState$new, args)
   } else {
-    DatetimeFilterState$new(
-      x = x,
-      x_reactive = x_reactive,
-      varname = varname,
-      varlabel = varlabel,
-      dataname = dataname,
-      extract_type = extract_type
-    )
+    do.call(DatetimeFilterState$new, args)
   }
 }
 
@@ -262,30 +348,64 @@ init_filter_state.POSIXct <- function(x,
 #' @export
 init_filter_state.POSIXlt <- function(x,
                                       x_reactive = reactive(NULL),
+                                      dataname,
                                       varname,
-                                      varlabel = attr(x, "label"),
-                                      dataname = NULL,
-                                      extract_type = character(0)) {
-  if (is.null(varlabel)) varlabel <- character(0)
+                                      choices = NULL,
+                                      selected = NULL,
+                                      keep_na = NULL,
+                                      keep_inf = NULL,
+                                      fixed = FALSE,
+                                      disabled = FALSE,
+                                      extract_type = character(0),
+                                      ...) {
+  args <- list(
+    x = x,
+    x_reactive = x_reactive,
+    dataname = dataname,
+    varname = varname,
+    choices = choices,
+    selected = selected,
+    keep_na = keep_na,
+    keep_inf = keep_inf,
+    fixed = fixed,
+    disabled = disabled,
+    extract_type = extract_type
+  )
+  args <- append(args, list(...))
+
+  do.call(FilterState$new, args)
+
   if (length(unique(x[!is.na(x)])) < getOption("teal.threshold_slider_vs_checkboxgroup")) {
-    ChoicesFilterState$new(
-      x = x,
-      x_reactive = x_reactive,
-      varname = varname,
-      varlabel = varlabel,
-      dataname = dataname,
-      extract_type = extract_type
-    )
+    do.call(ChoicesFilterState$new, args)
   } else {
-    DatetimeFilterState$new(
-      x = x,
-      x_reactive = x_reactive,
-      varname = varname,
-      varlabel = varlabel,
-      dataname = dataname,
-      extract_type = extract_type
-    )
+    do.call(DatetimeFilterState$new, args)
   }
+}
+
+
+#' Initialize a `FilterStateExpr` object
+#'
+#' Initialize a `FilterStateExpr` object
+#' @param id (`character(1)`)\cr
+#'   identifier of the filter
+#' @param title (`character(1)`)\cr
+#'   title of the filter
+#' @param dataname (`character(1)`)\cr
+#'   name of the dataset where `expr` could be executed on.
+#' @param expr (`character(1)`)\cr
+#'   logical expression written in executable way. By "executable" means
+#'   that `subset` call should be able to evaluate this without failure. For
+#'   example `MultiAssayExperiment::subsetByColData` requires variable names prefixed
+#'   by dataname (e.g. `data$var1 == "x" & data$var2 > 0`). For `data.frame` call
+#'   can be written without prefixing `var1 == "x" & var2 > 0`.
+#' @param disabled (`logical(1)`)\cr
+#'   flag specifying whether the `FilterState` is initiated disabled
+#' @param ... additional arguments to be saved as a list in `private$extras` field
+#'
+#' @return `FilterStateExpr` object
+#' @keywords internal
+init_filter_state_expr <- function(id, title, dataname, expr, disabled, ...) {
+  FilterStateExpr$new(id = id, title = title, dataname = dataname, expr = expr, disabled = disabled, ...)
 }
 
 #' Check that a given range is valid
@@ -340,8 +460,7 @@ check_in_range <- function(subinterval, range, pre_msg = "") {
 #'
 #' Raises an error message if not and says which elements are not in the allowed `choices`.
 #'
-#' @param subset `collection-like` should be a subset of the second argument `choices`
-#' @param choices `collection-like` superset
+#' @param subset,choices atomic vectors
 #' @param pre_msg `character` message to print before error should there be any errors
 #' @keywords internal
 #'
@@ -355,6 +474,8 @@ check_in_range <- function(subinterval, range, pre_msg = "") {
 #' }
 #' }
 check_in_subset <- function(subset, choices, pre_msg = "") {
+  checkmate::assert_atomic(subset)
+  checkmate::assert_atomic(choices)
   checkmate::assert_string(pre_msg)
 
   subset <- unique(subset)
@@ -412,4 +533,122 @@ contain_interval <- function(x, range) {
   x[1] <- Find(function(i) i <= x[1], range, nomatch = min(range), right = TRUE)
   x[2] <- Find(function(i) i >= x[2], range, nomatch = max(range))
   x
+}
+
+
+#' Formats selected values of a RangeFilterState for display in the header summary.
+#'
+#' If a number has more significant digits than the threshhold, it will be
+#'  formatted in scientific notation. The resulting number will have 'threshold'
+#'  significant digits. If any `NA`s are present, they will be converted to the
+#'  character "NA". Similarly `Inf` and `-Inf` will be converted to the strings
+#'  "Inf" and "-Inf" respectively.
+#'
+#'
+#' @param values Vector of values to format. Can contain `NA`, `Inf`, `-Inf`.
+#' @param threshold Number of significant digits above which the number will be
+#'  formatted in scientific notation.
+#'
+#' @return Vector of `length(values)` as a string suitable for display.
+#' @keywords internal
+#' @noRd
+format_range_for_summary <- function(values, threshold = 4) {
+  checkmate::assert_numeric(values, min.len = 1)
+  checkmate::assert_number(threshold, lower = 1, finite = TRUE)
+
+  ops <- options(scipen = 9999)
+  on.exit(options(ops))
+
+  # convert to a string representation
+  values_str <- vapply(
+    values,
+    FUN.VALUE = character(1),
+    USE.NAMES = FALSE,
+    FUN = function(value) {
+      if (is.na(value) || is.finite(value)) {
+        format(value)
+      } else {
+        as.character(value)
+      }
+    })
+
+  n_digits <- n_sig_digits(values_str)
+
+  mapply(
+    values_str,
+    n_digits,
+    USE.NAMES = FALSE,
+    MoreArgs = list(threshold = threshold),
+    FUN = function(value, digits, threshold) {
+      if (digits == -1) { # special case for Inf, -Inf, NA
+        value
+      } else if (digits > threshold) {
+        val <- format(as.numeric(value), digits = threshold, scientific = TRUE)
+        val <- sub("e", "E", val)
+        val
+      } else {
+        value
+      }
+    }
+  )
+}
+
+#' Count the number of significant digits in a number.
+#'
+#' Adapted from https://www.r-bloggers.com/2010/04/significant-figures-in-r-and-info-zeros/
+#'  The supplied vector should be numbers represented as a character. `NA`, `Inf`,
+#'  and `-Inf` should be coded as the strings "NA", "Inf", and "-Inf". In these
+#'  cases, a count of -1 is returned.
+#'
+#' @param nums A vector of numbers that have been converted to character.
+#'
+#' @return Vector of `length(nums)` with counts of significant digits.
+#' @keywords internal
+#' @noRd
+n_sig_digits <- function(nums) {
+  checkmate::assert_character(nums, any.missing = FALSE)
+
+  vapply(nums, FUN.VALUE = numeric(1), USE.NAMES = FALSE, FUN = function(num) {
+
+    if (grepl("e", num)) return(-1)
+    if (num == "NA") return(-1)
+    if (num == "Inf" || num == "-Inf") return(-1)
+
+    sig_digits <- 1
+    i <- 0
+
+    if (grepl("\\.", num)) {
+
+      num_split <- unlist(strsplit(num, "\\."))
+      num_str <- paste(num_split[1], num_split[2], sep = "")
+      current_n_digits <- nchar(num_str)
+
+      while (i < current_n_digits) {
+
+        if (substr(num_str, i + 1, i + 1) == "0") {
+          i <- i + 1
+          next
+        } else {
+          sig_digits <- current_n_digits - i
+          break
+        }
+      }
+    } else {
+
+      num_str <- num
+      current_n_digits <- nchar(num_str)
+
+      while (i < current_n_digits) {
+        if (substr(num_str, current_n_digits - i, current_n_digits - i) == "0") {
+          i <- i + 1
+          next
+        } else {
+          sig_digits <- current_n_digits - i
+          break
+        }
+      }
+    }
+
+    return(sig_digits)
+  })
 }
