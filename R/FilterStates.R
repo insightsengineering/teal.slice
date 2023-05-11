@@ -322,13 +322,14 @@ FilterStates <- R6::R6Class( # nolint
     #'
     ui_active = function(id) {
       ns <- NS(id)
-      private$cards_container_id <- ns("cards")
+
       tagList(
         include_css_files(pattern = "filter-panel"),
         tags$div(
           id = private$cards_container_id,
           class = "accordion",
-          `data-label` = ifelse(identical(private$datalabel, character(0)), "", paste0("> ", private$datalabel))
+          `data-label` = ifelse(identical(private$datalabel, character(0)), "", paste0("> ", private$datalabel)),
+          shiny::tagList(uiOutput(ns("filters"), inline = TRUE))
         )
       )
     },
@@ -353,17 +354,11 @@ FilterStates <- R6::R6Class( # nolint
           observeEvent(current_state(), {
             logger::log_trace("FilterStates$srv_active@1 determining added and removed filter states")
             added_state_name(setdiff(names(current_state()), names(previous_state())))
-            removed_state_name(setdiff(names(previous_state()), names(current_state())))
             previous_state(current_state())
           })
 
-          observeEvent(private$state_list_get(), {
-            added_state_name(setdiff(names(private$state_list_get()), names(previous_state())))
-            previous_state(private$state_list_get())
-          })
-
           output[["filters"]] <- shiny::renderUI({
-            fstates <- private$state_list_get() # rerenders when queue changes / not when the state changes
+            fstates <- current_state() # rerenders when queue changes / not when the state changes
             lapply(names(fstates), function(fname) {
               private$ui_card_module(id = session$ns(fname), fstates[[fname]])
             })
@@ -373,7 +368,7 @@ FilterStates <- R6::R6Class( # nolint
             added_state_name(), # we want to call FilterState module only once when it's added
             ignoreNULL = TRUE,
             {
-              fstates <- private$state_list_get()
+              fstates <- current_state()
               lapply(added_state_name(), function(fname) {
                 private$srv_card_module(id = fname, element_id = fname, fs = fstates[[fname]])
               })
@@ -524,6 +519,59 @@ FilterStates <- R6::R6Class( # nolint
     state_list = NULL, # list of `reactiveVal`s initialized by init methods of child classes,
 
     # private methods ----
+
+    # @description
+    # Set the allowed filterable variables
+    # @param include_varnames (`character`) Names of variables included in filtering.
+    # @param exclude_varnames (`character`) Names of variables excluded from filtering.
+    #
+    # @details When retrieving the filtered variables only
+    # those which have filtering supported (i.e. are of the permitted types).
+    # Only one from `include_varnames` and `exclude_varnames` can be used in one call. When `exclude_varnames`
+    # is called `include_varnames` is cleared - same otherwise.
+    # are included.
+    #
+    # @return NULL invisibly
+    set_filterable_varnames = function(include_varnames = character(0), exclude_varnames = character(0)) {
+      if ((length(include_varnames) + length(exclude_varnames)) == 0L) {
+        return(invisible(NULL))
+      }
+      checkmate::assert_character(include_varnames, any.missing = FALSE, min.len = 0L, null.ok = TRUE)
+      checkmate::assert_character(exclude_varnames, any.missing = FALSE, min.len = 0L, null.ok = TRUE)
+      if (length(include_varnames) && length(exclude_varnames)) {
+        stop(
+          "`include_varnames` and `exclude_varnames` has been both specified for",
+          private$dataname,
+          ". Only one per dataset is allowed.",
+        )
+      }
+      supported_vars <- get_supported_filter_varnames(private$data)
+      if (length(include_varnames)) {
+        private$include_varnames <- intersect(include_varnames, supported_vars)
+        private$exclude_varnames <- character(0)
+      } else {
+        private$exclude_varnames <- exclude_varnames
+        private$include_varnames <- character(0)
+      }
+      invisible(NULL)
+    },
+
+    # @description
+    # Get vector of filterable varnames
+    #
+    # @details
+    #  These are the only columns which can be used in the filter panel
+    #
+    # @return character vector with names of the columns
+    get_filterable_varnames = function() {
+      if (length(private$include_varnames)) {
+        private$include_varnames
+      } else {
+        supported_varnames <- get_supported_filter_varnames(private$data)
+        setdiff(supported_varnames, private$exclude_varnames)
+      }
+    },
+
     # state_list methods ----
 
     # @description
