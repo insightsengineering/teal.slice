@@ -169,7 +169,7 @@ init_filter_state.logical <- function(x,
   )
   args <- append(args, list(...))
 
-  do.call(LogicalFilterState$new, args)
+  do.call(ChoicesFilterState$new, args)
 }
 
 #' @keywords internal

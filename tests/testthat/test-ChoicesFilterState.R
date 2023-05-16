@@ -4,6 +4,7 @@ nums <- c(1, 2, 3)
 dates <- as.Date("2000-01-01") + 0:2
 posixct <- as.POSIXct("2000-01-01 12:00:00", tz = "GMT") + 0:2
 posixlt <- as.POSIXlt(as.POSIXct("2000-01-01 12:00:00", tz = "GMT") + 0:2)
+logs <- as.logical(c(1, 0, 0, 0, 1, 1, 0, 1, 0, 1, NA))
 
 
 # constructor ----
@@ -14,6 +15,7 @@ testthat::test_that("constructor accepts all data classes", {
   testthat::expect_no_error(ChoicesFilterState$new(dates, dataname = "data", varname = "variable"))
   testthat::expect_no_error(ChoicesFilterState$new(posixct, dataname = "data", varname = "variable"))
   testthat::expect_no_error(ChoicesFilterState$new(posixlt, dataname = "data", varname = "variable"))
+  testthat::expect_no_error(ChoicesFilterState$new(logs, dataname = "data", varname = "variable"))
 })
 
 testthat::test_that("constructor raises warning if choices out of range", {
@@ -249,6 +251,18 @@ testthat::test_that("set_state raises warning when selection not within allowed 
     ),
     "not in choices"
   )
+
+  filter_state <- ChoicesFilterState$new(logs, dataname = "data", varname = "variable")
+  testthat::expect_warning(
+    filter_state$set_state(filter_var(dataname = "data", varname = "variable", selected = "test")),
+    "not in choices"
+  )
+  testthat::expect_warning(
+    filter_state$set_state(
+      filter_var(dataname = "data", varname = "variable", selected = c("test1", "test2"))
+    ),
+    "not in choices"
+  )
 })
 
 testthat::test_that("set_state sets intersection of choices and passed values", {
@@ -304,7 +318,6 @@ testthat::test_that("set_state sets intersection of choices and passed values", 
   )
   testthat::expect_identical(shiny::isolate(filter_state$get_state()$selected), "2000-01-01 12:00:00")
 })
-
 
 # format ----
 testthat::test_that("format accepts numeric as indent", {
