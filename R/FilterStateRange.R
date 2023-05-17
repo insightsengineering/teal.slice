@@ -197,26 +197,6 @@ RangeFilterState <- R6::R6Class( # nolint
       private$set_choices(choices)
       private$set_selected(selected)
 
-      private$unfiltered_histogram <-
-        plotly::plot_ly(
-          x = Filter(Negate(is.na), Filter(is.finite, x)),
-          type = "histogram",
-          bingroup = 1,
-          showlegend = FALSE,
-          hoverinfo = "none",
-          source = "histogram_plot"
-        ) %>%
-        plotly::layout(
-          barmode = "overlay",
-          xaxis = list(showticklabels = TRUE, rangeslider = list(thickness = 0)),
-          yaxis = list(showgrid = FALSE, showticklabels = FALSE),
-          margin = list(b = 10, l = 5, r = 5, t = 5),
-          plot_bgcolor = "#FFFFFF00",
-          paper_bgcolor = "#FFFFFF00",
-          shapes = private$get_shape_properties(shiny::isolate(private$get_selected()))
-        ) %>%
-        plotly::config(displayModeBar = FALSE, edits = list(shapePosition = TRUE))
-
       invisible(self)
     },
 
@@ -276,8 +256,6 @@ RangeFilterState <- R6::R6Class( # nolint
 
   # private fields----
   private = list(
-    shape_properties = NULL,
-    unfiltered_histogram = NULL, # ggplot object
     inf_count = integer(0),
     inf_filtered_count = NULL,
     is_integer = logical(0),
@@ -479,13 +457,35 @@ RangeFilterState <- R6::R6Class( # nolint
         function(input, output, session) {
           logger::log_trace("RangeFilterState$server initializing, dataname: { private$dataname }")
 
+          unfiltered_histogram <-
+            plotly::plot_ly(
+              x = Filter(Negate(is.na), Filter(is.finite, private$x)),
+              type = "histogram",
+              bingroup = 1,
+              showlegend = FALSE,
+              hoverinfo = "none",
+              source = session$ns("histogram_plot")
+            ) %>%
+            plotly::layout(
+              barmode = "overlay",
+              xaxis = list(showticklabels = TRUE, rangeslider = list(thickness = 0)),
+              yaxis = list(showgrid = FALSE, showticklabels = FALSE),
+              margin = list(b = 10, l = 5, r = 5, t = 5),
+              plot_bgcolor = "#FFFFFF00",
+              paper_bgcolor = "#FFFFFF00",
+              shapes = private$get_shape_properties(shiny::isolate(private$get_selected()))
+            ) %>%
+            plotly::config(displayModeBar = FALSE, edits = list(shapePosition = TRUE))
+
           # display histogram, adding a second trace that contains filtered data
           finite_values <- reactive(Filter(is.finite, private$x_reactive()))
           output$plot <- plotly::renderPlotly({
             if (is.null(finite_values())) {
-              private$unfiltered_histogram
+              # private$unfiltered_histogram
+              unfiltered_histogram
             } else {
-              plotly::add_histogram(p = private$unfiltered_histogram, x = finite_values(), bingroup = 1)
+              # plotly::add_histogram(p = private$unfiltered_histogram, x = finite_values(), bingroup = 1)
+              plotly::add_histogram(p = unfiltered_histogram, x = finite_values(), bingroup = 1)
             }
           })
 
@@ -494,9 +494,9 @@ RangeFilterState <- R6::R6Class( # nolint
             observeEvent(
               ignoreNULL = FALSE,
               ignoreInit = TRUE,
-              eventExpr = plotly::event_data("plotly_relayout", source = "histogram_plot"),
+              eventExpr = plotly::event_data("plotly_relayout", source = session$ns("histogram_plot")),
               handlerExpr = {
-                event <- plotly::event_data("plotly_relayout", source = "histogram_plot")
+                event <- plotly::event_data("plotly_relayout", source = session$ns("histogram_plot"))
                 if (any(grepl("shapes", names(event)))) {
                   line_positions <- private$get_selected()
                   if (any(grepl("shapes[0]", names(event), fixed = TRUE))) {
@@ -630,32 +630,37 @@ RangeFilterState <- R6::R6Class( # nolint
         function(input, output, session) {
           logger::log_trace("RangeFilterState$server initializing, dataname: { private$dataname }")
 
+          unfiltered_histogram <-
+            plotly::plot_ly(
+              x = Filter(Negate(is.na), Filter(is.finite, private$x)),
+              type = "histogram",
+              bingroup = 1,
+              showlegend = FALSE,
+              hoverinfo = "none",
+              source = session$ns("histogram_plot")
+            ) %>%
+            plotly::layout(
+              barmode = "overlay",
+              xaxis = list(showticklabels = TRUE, rangeslider = list(thickness = 0)),
+              yaxis = list(showgrid = FALSE, showticklabels = FALSE),
+              margin = list(b = 10, l = 5, r = 5, t = 5),
+              plot_bgcolor = "#FFFFFF00",
+              paper_bgcolor = "#FFFFFF00",
+              shapes = private$get_shape_properties(shiny::isolate(private$get_selected()))
+            ) %>%
+            plotly::config(displayModeBar = FALSE, staticPlot = TRUE)
+
           finite_values <- reactive(Filter(is.finite, private$x_reactive()))
-          output$plot <- bindCache(
-            finite_values(),
-            cache = "session",
-            x = renderPlot(
-              bg = "transparent",
-              height = 25,
-              expr = {
-                private$unfiltered_histogram +
-                  if (!is.null(finite_values())) {
-                    ggplot2::geom_histogram(
-                      data = data.frame(x = finite_values()),
-                      ggplot2::aes(x = x),
-                      bins = 100,
-                      fill = grDevices::rgb(173 / 255, 216 / 255, 230 / 255),
-                      color = grDevices::rgb(173 / 255, 216 / 255, 230 / 255)
-                    )
-                  } else {
-                    NULL
-                  }
-              }
-            )
-          )
+          output$plot <- plotly::renderPlotly({
+            if (is.null(finite_values())) {
+              unfiltered_histogram
+            } else {
+              plotly::add_histogram(p = unfiltered_histogram, x = finite_values(), bingroup = 1)
+            }
+          })
 
           output$selection <- renderUI({
-            plotOutput(session$ns("plot"), height = "2em")
+            plotly::plotlyOutput(session$ns("plot"), height = "50px")
           })
 
           logger::log_trace("RangeFilterState$server initialized, dataname: { private$dataname }")
