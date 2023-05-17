@@ -77,14 +77,10 @@ FilteredDataset <- R6::R6Class( # nolint
     #'
     #' @return filter `call` or `list` of filter calls
     get_call = function(sid = "") {
-      filter_call <- NULL
-      if (length(filter_call) == 0) {
-        return(NULL)
-      }
-      filter_call
+      stop("Abstract class method")
     },
 
-        #' @description
+    #' @description
     #' Remove one or more `FilterState`s from the `state_list` along with their UI elements.
     #'
     #' @param state (`teal_slices`)\cr
@@ -247,12 +243,11 @@ FilteredDataset <- R6::R6Class( # nolint
     #' is used.
     #' @return (`data.frame`) matrix of observations and subjects
     get_filter_overview = function() {
-      dataset <- self$get_dataset()
-      data_filtered <- self$get_dataset(TRUE)
-      data.frame(
+      get_filter_overview(
+        data = self$get_dataset(),
+        data_filtered = self$get_dataset(TRUE)(),
         dataname = private$dataname,
-        obs = nrow(dataset),
-        obs_filtered = nrow(data_filtered)
+        keys = self$get_keys()
       )
     },
 
@@ -410,52 +405,6 @@ FilteredDataset <- R6::R6Class( # nolint
 
           logger::log_trace("FilteredDataset$srv_active initialized, dataname: { dataname }")
 
-          NULL
-        }
-      )
-    },
-
-    #' @description
-    #' UI module to add filter variable for this dataset
-    #'
-    #' UI module to add filter variable for this dataset
-    #' @param id (`character(1)`)\cr
-    #'  identifier of the element - preferably containing dataset name
-    #'
-    #' @return function - shiny UI module
-    ui_add = function(id) {
-      stop("Pure virtual method")
-    },
-
-    #' @description
-    #' Server module to add filter variable for this dataset
-    #'
-    #' Server module to add filter variable for this dataset.
-    #' For this class `srv_add` calls multiple modules
-    #' of the same name from `FilterStates` as `MAEFilteredDataset`
-    #' contains one `FilterStates` object for `colData` and one for each
-    #' experiment.
-    #'
-    #' @param id (`character(1)`)\cr
-    #'   an ID string that corresponds with the ID used to call the module's UI function.
-    #'
-    #' @return `moduleServer` function which returns `NULL`
-    #'
-    srv_add = function(id) {
-      moduleServer(
-        id = id,
-        function(input, output, session) {
-          logger::log_trace("MAEFilteredDataset$srv_add initializing, dataname: { deparse1(self$get_dataname()) }")
-          elems <- private$get_filter_states()
-          elem_names <- names(private$get_filter_states())
-          lapply(
-            elem_names,
-            function(elem_name) {
-              NULL
-              #elems[[elem_name]]$srv_add(elem_name)
-            }
-          )
-          logger::log_trace("MAEFilteredDataset$srv_add initialized, dataname: { deparse1(self$get_dataname()) }")
           NULL
         }
       )
@@ -620,6 +569,7 @@ FilteredDataset <- R6::R6Class( # nolint
             } else {
               reactive(pull_vector(data_reactive(state_id), state[[i]]))
             },
+            # todo: extract_type should be removed and implemented in FilterState$get_call(dataname, extract_type)
             extract_type = if (inherits(state[[i]], "teal_slice_mae_subjects")) {
               "list"
             } else {

@@ -69,7 +69,7 @@ DefaultFilteredDataset <- R6::R6Class( # nolint
             logger::log_trace("filtering data dataname: { dataname }, sid: { sid }")
           }
           env <- new.env(parent = parent.env(globalenv()))
-          env[[dataname]] <- private$dataset
+          env[[dataname]] <- private$data
           env[[parent_name]] <- parent()
           filter_call <- self$get_call(sid)
           eval_expr_with_msg(filter_call, env)
@@ -108,9 +108,24 @@ DefaultFilteredDataset <- R6::R6Class( # nolint
     #' @return filter `call` or `list` of filter calls
     get_call = function(sid = "") {
       logger::log_trace("FilteredDatasetDefault$get_call initializing for dataname: { private$dataname }")
-      filter_call <- super$get_call(sid)
       dataname <- private$dataname
       parent_dataname <- private$parent_name
+
+      states <- private$state_list_get()
+      logical_calls <- Filter(
+        Negate(is.null),
+        lapply(states, function(state)  state$get_call())
+      )
+
+      filter_call <- if (length(logical_calls)) {
+        substitute(
+          dataname <- dplyr::filter(dataname, expr),
+          list(
+            dataname = str2lang(dataname),
+            expr = calls_combine_by(logical_calls, operator = "&")
+          )
+        )
+      }
 
       if (!identical(parent_dataname, character(0))) {
         join_keys <- private$join_keys
@@ -155,53 +170,104 @@ DefaultFilteredDataset <- R6::R6Class( # nolint
     },
 
     #' @description
-    #' UI module to add filter variable for this dataset
+    #' Shiny server module to add filter variable.
     #'
-    #' UI module to add filter variable for this dataset
+    #' This module controls available choices to select as a filter variable.
+    #' Once selected, a variable is removed from available choices.
+    #' Removing a filter variable adds it back to available choices.
+    #'
     #' @param id (`character(1)`)\cr
-    #'  identifier of the element - preferably containing dataset name
+    #'   an ID string that corresponds with the ID used to call the module's UI function.
     #'
-    #' @return function - shiny UI module
-    ui_add = function(id) {
-      ns <- NS(id)
-      tagList(
-        tags$label("Add", tags$code(self$get_dataname()), "filter"),
-        private$get_filter_states()[["filter"]]$ui_add(id = ns("filter"))
+    #' @return `moduleServer` function which returns `NULL`
+    srv_add = function(id) {
+      moduleServer(
+        id = id,
+        function(input, output, session) {
+          logger::log_trace("FilterStates$srv_add initializing, dataname: { private$dataname }")
+
+          output$inputs <- renderUI({
+            div(
+              teal.widgets::optionalSelectInput(
+                session$ns("var_to_add"),
+                choices = colnames(data),
+                options = shinyWidgets::pickerOptions(
+                  liveSearch = TRUE,
+                  noneSelectedText = "Select variable to filter"
+                )
+              )
+            )
+          })
+
+          # available choices to display
+          avail_column_choices <- reactive({
+            data <- private$data
+            vars_include <- private$get_filterable_varnames()
+            active_filter_vars <- slices_field(self$get_filter_state(), "varname")
+            choices <- setdiff(vars_include, active_filter_vars)
+            varlabels <- get_varlabels(data)
+
+            data_choices_labeled(
+              data = data,
+              choices = choices,
+              varlabels = varlabels,
+              keys = private$keys
+            )
+          })
+
+          observeEvent(
+            avail_column_choices(),
+            ignoreNULL = TRUE,
+            handlerExpr = {
+              logger::log_trace(
+                "FilterStates$srv_add@1 updating available column choices, dataname: { private$dataname }"
+              )
+              if (is.null(avail_column_choices())) {
+                shinyjs::hide("var_to_add")
+              } else {
+                shinyjs::show("var_to_add")
+              }
+              teal.widgets::updateOptionalSelectInput(
+                session,
+                "var_to_add",
+                choices = avail_column_choices()
+              )
+              logger::log_trace(
+                "FilterStates$srv_add@1 updated available column choices, dataname: { private$dataname }"
+              )
+            }
+          )
+
+          observeEvent(
+            eventExpr = input$var_to_add,
+            handlerExpr = {
+              logger::log_trace(
+                sprintf(
+                  "FilterStates$srv_add@2 adding FilterState of variable %s, dataname: %s",
+                  input$var_to_add,
+                  private$dataname
+                )
+              )
+
+              self$set_filter_state(
+                filter_settings(
+                  filter_var(dataname = private$dataname, varname = input$var_to_add)
+                )
+              )
+              logger::log_trace(
+                sprintf(
+                  "FilterStates$srv_add@2 added FilterState of variable %s, dataname: %s",
+                  input$var_to_add,
+                  private$dataname
+                )
+              )
+            }
+          )
+
+          logger::log_trace("FilterStates$srv_add initialized, dataname: { private$dataname }")
+          NULL
+        }
       )
-    },
-
-    #' @description
-    #' Get number of observations based on given keys
-    #' The output shows the comparison between `filtered_dataset`
-    #' function parameter and the dataset inside self
-    #' @return `list` containing character `#filtered/#not_filtered`
-    get_filter_overview = function() {
-      logger::log_trace("FilteredDataset$srv_filter_overview initialized")
-      # Gets filter overview subjects number and returns a list
-      # of the number of subjects of filtered/non-filtered datasets
-      subject_keys <- if (length(private$parent_name) > 0) {
-        private$join_keys
-      } else {
-        self$get_keys()
-      }
-
-      dataset <- self$get_dataset()
-      data_filtered <- self$get_dataset(TRUE)
-      if (length(subject_keys) == 0) {
-        data.frame(
-          dataname = private$dataname,
-          obs = nrow(dataset),
-          obs_filtered = nrow(data_filtered())
-        )
-      } else {
-        data.frame(
-          dataname = private$dataname,
-          obs = nrow(dataset),
-          obs_filtered = nrow(data_filtered()),
-          subjects = nrow(unique(dataset[subject_keys])),
-          subjects_filtered = nrow(unique(data_filtered()[subject_keys]))
-        )
-      }
     }
   ),
   private = list(

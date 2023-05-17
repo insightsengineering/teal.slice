@@ -626,8 +626,8 @@ FilteredData <- R6::R6Class( # nolint
         id = ns(NULL), # used for hiding / showing
         include_css_files(pattern = "filter-panel"),
         self$ui_overview(ns("overview")),
-        self$ui_active(ns("active"))
-        #self$ui_add(ns("add"))
+        self$ui_active(ns("active")),
+        self$ui_add(ns("add"))
       )
     },
 
@@ -654,7 +654,7 @@ FilteredData <- R6::R6Class( # nolint
 
           self$srv_overview("overview", active_datanames_resolved)
           self$srv_active("active", active_datanames_resolved)
-          #self$srv_add("add", active_datanames_resolved)
+          self$srv_add("add", active_datanames_resolved)
 
           private$filter_panel_ui_id <- session$ns(NULL)
 
@@ -834,8 +834,7 @@ FilteredData <- R6::R6Class( # nolint
             lapply(
               self$datanames(),
               function(dataname) {
-                fdataset <- private$get_filtered_dataset(dataname)
-                span(id = ns(dataname), fdataset$ui_add(ns(dataname)))
+                span(id = ns(dataname), ui_add(ns(dataname), dataname))
               }
             )
           )

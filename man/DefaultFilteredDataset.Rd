@@ -19,19 +19,6 @@ ds$set_filter_state(
 )
 isolate(ds$get_filter_state())
 isolate(ds$get_call())
-
-## ------------------------------------------------
-## Method `DefaultFilteredDataset$set_filter_state`
-## ------------------------------------------------
-
-dataset <- teal.slice:::DefaultFilteredDataset$new(iris, "iris")
-fs <- filter_settings(
-  filter_var(dataname = "iris", varname = "Species", selected = "virginica"),
-  filter_var(dataname = "iris", varname = "Petal.Length", selected = c(2.0, 5))
-)
-dataset$set_filter_state(state = fs)
-shiny::isolate(dataset$get_filter_state())
-
 }
 \keyword{internal}
 \section{Super class}{
@@ -42,10 +29,7 @@ shiny::isolate(dataset$get_filter_state())
 \itemize{
 \item \href{#method-DefaultFilteredDataset-new}{\code{DefaultFilteredDataset$new()}}
 \item \href{#method-DefaultFilteredDataset-get_call}{\code{DefaultFilteredDataset$get_call()}}
-\item \href{#method-DefaultFilteredDataset-set_filter_state}{\code{DefaultFilteredDataset$set_filter_state()}}
-\item \href{#method-DefaultFilteredDataset-remove_filter_state}{\code{DefaultFilteredDataset$remove_filter_state()}}
-\item \href{#method-DefaultFilteredDataset-ui_add}{\code{DefaultFilteredDataset$ui_add()}}
-\item \href{#method-DefaultFilteredDataset-get_filter_overview}{\code{DefaultFilteredDataset$get_filter_overview()}}
+\item \href{#method-DefaultFilteredDataset-srv_add}{\code{DefaultFilteredDataset$srv_add()}}
 \item \href{#method-DefaultFilteredDataset-clone}{\code{DefaultFilteredDataset$clone()}}
 }
 }
@@ -57,12 +41,13 @@ shiny::isolate(dataset$get_filter_state())
 <li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilteredDataset" data-id="get_dataset"><a href='../../teal.slice/html/FilteredDataset.html#method-FilteredDataset-get_dataset'><code>teal.slice::FilteredDataset$get_dataset()</code></a></span></li>
 <li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilteredDataset" data-id="get_dataset_label"><a href='../../teal.slice/html/FilteredDataset.html#method-FilteredDataset-get_dataset_label'><code>teal.slice::FilteredDataset$get_dataset_label()</code></a></span></li>
 <li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilteredDataset" data-id="get_filter_count"><a href='../../teal.slice/html/FilteredDataset.html#method-FilteredDataset-get_filter_count'><code>teal.slice::FilteredDataset$get_filter_count()</code></a></span></li>
+<li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilteredDataset" data-id="get_filter_overview"><a href='../../teal.slice/html/FilteredDataset.html#method-FilteredDataset-get_filter_overview'><code>teal.slice::FilteredDataset$get_filter_overview()</code></a></span></li>
 <li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilteredDataset" data-id="get_filter_state"><a href='../../teal.slice/html/FilteredDataset.html#method-FilteredDataset-get_filter_state'><code>teal.slice::FilteredDataset$get_filter_state()</code></a></span></li>
-<li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilteredDataset" data-id="get_formatted_filter_state"><a href='../../teal.slice/html/FilteredDataset.html#method-FilteredDataset-get_formatted_filter_state'><code>teal.slice::FilteredDataset$get_formatted_filter_state()</code></a></span></li>
 <li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilteredDataset" data-id="get_keys"><a href='../../teal.slice/html/FilteredDataset.html#method-FilteredDataset-get_keys'><code>teal.slice::FilteredDataset$get_keys()</code></a></span></li>
 <li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilteredDataset" data-id="get_metadata"><a href='../../teal.slice/html/FilteredDataset.html#method-FilteredDataset-get_metadata'><code>teal.slice::FilteredDataset$get_metadata()</code></a></span></li>
+<li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilteredDataset" data-id="remove_filter_state"><a href='../../teal.slice/html/FilteredDataset.html#method-FilteredDataset-remove_filter_state'><code>teal.slice::FilteredDataset$remove_filter_state()</code></a></span></li>
+<li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilteredDataset" data-id="set_filter_state"><a href='../../teal.slice/html/FilteredDataset.html#method-FilteredDataset-set_filter_state'><code>teal.slice::FilteredDataset$set_filter_state()</code></a></span></li>
 <li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilteredDataset" data-id="srv_active"><a href='../../teal.slice/html/FilteredDataset.html#method-FilteredDataset-srv_active'><code>teal.slice::FilteredDataset$srv_active()</code></a></span></li>
-<li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilteredDataset" data-id="srv_add"><a href='../../teal.slice/html/FilteredDataset.html#method-FilteredDataset-srv_add'><code>teal.slice::FilteredDataset$srv_add()</code></a></span></li>
 <li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilteredDataset" data-id="ui_active"><a href='../../teal.slice/html/FilteredDataset.html#method-FilteredDataset-ui_active'><code>teal.slice::FilteredDataset$ui_active()</code></a></span></li>
 </ul>
 </details>
@@ -150,98 +135,28 @@ filter \code{call} or \code{list} of filter calls
 }
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-DefaultFilteredDataset-set_filter_state"></a>}}
-\if{latex}{\out{\hypertarget{method-DefaultFilteredDataset-set_filter_state}{}}}
-\subsection{Method \code{set_filter_state()}}{
-Set filter state
+\if{html}{\out{<a id="method-DefaultFilteredDataset-srv_add"></a>}}
+\if{latex}{\out{\hypertarget{method-DefaultFilteredDataset-srv_add}{}}}
+\subsection{Method \code{srv_add()}}{
+Shiny server module to add filter variable.
+
+This module controls available choices to select as a filter variable.
+Once selected, a variable is removed from available choices.
+Removing a filter variable adds it back to available choices.
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{DefaultFilteredDataset$set_filter_state(state)}\if{html}{\out{</div>}}
-}
-
-\subsection{Arguments}{
-\if{html}{\out{<div class="arguments">}}
-\describe{
-\item{\code{state}}{(\code{teal_slice}) object}
-}
-\if{html}{\out{</div>}}
-}
-\subsection{Returns}{
-\code{NULL} invisibly
-}
-\subsection{Examples}{
-\if{html}{\out{<div class="r example copy">}}
-\preformatted{dataset <- teal.slice:::DefaultFilteredDataset$new(iris, "iris")
-fs <- filter_settings(
-  filter_var(dataname = "iris", varname = "Species", selected = "virginica"),
-  filter_var(dataname = "iris", varname = "Petal.Length", selected = c(2.0, 5))
-)
-dataset$set_filter_state(state = fs)
-shiny::isolate(dataset$get_filter_state())
-
-}
-\if{html}{\out{</div>}}
-
-}
-
-}
-\if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-DefaultFilteredDataset-remove_filter_state"></a>}}
-\if{latex}{\out{\hypertarget{method-DefaultFilteredDataset-remove_filter_state}{}}}
-\subsection{Method \code{remove_filter_state()}}{
-Remove one or more \code{FilterState} form a \code{FilteredDataset}
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{DefaultFilteredDataset$remove_filter_state(state)}\if{html}{\out{</div>}}
-}
-
-\subsection{Arguments}{
-\if{html}{\out{<div class="arguments">}}
-\describe{
-\item{\code{state}}{(\code{teal_slices})\cr
-specifying \code{FilterState} objects to remove;
-\code{teal_slice}s may contain only \code{dataname} and \code{varname}, other elements are ignored}
-}
-\if{html}{\out{</div>}}
-}
-\subsection{Returns}{
-\code{NULL} invisibly
-}
-}
-\if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-DefaultFilteredDataset-ui_add"></a>}}
-\if{latex}{\out{\hypertarget{method-DefaultFilteredDataset-ui_add}{}}}
-\subsection{Method \code{ui_add()}}{
-UI module to add filter variable for this dataset
-
-UI module to add filter variable for this dataset
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{DefaultFilteredDataset$ui_add(id)}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{DefaultFilteredDataset$srv_add(id)}\if{html}{\out{</div>}}
 }
 
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
 \item{\code{id}}{(\code{character(1)})\cr
-identifier of the element - preferably containing dataset name}
+an ID string that corresponds with the ID used to call the module's UI function.}
 }
 \if{html}{\out{</div>}}
 }
 \subsection{Returns}{
-function - shiny UI module
-}
-}
-\if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-DefaultFilteredDataset-get_filter_overview"></a>}}
-\if{latex}{\out{\hypertarget{method-DefaultFilteredDataset-get_filter_overview}{}}}
-\subsection{Method \code{get_filter_overview()}}{
-Get number of observations based on given keys
-The output shows the comparison between \code{filtered_dataset}
-function parameter and the dataset inside self
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{DefaultFilteredDataset$get_filter_overview()}\if{html}{\out{</div>}}
-}
-
-\subsection{Returns}{
-\code{list} containing character \verb{#filtered/#not_filtered}
+\code{moduleServer} function which returns \code{NULL}
 }
 }
 \if{html}{\out{<hr>}}

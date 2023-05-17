@@ -10,16 +10,32 @@ Each \code{FilteredDataset} contains \code{filter_states} field - a \code{list} 
 Each \code{FilterStates} is responsible for one filter/subset expression applied for specific
 components of the dataset.
 }
+\keyword{(from}
+\keyword{Calls}
+\keyword{Server}
+\keyword{`FilterState`}
+\keyword{`ReactiveQueue`)}
+\keyword{a}
+\keyword{and}
+\keyword{button}
+\keyword{for}
+\keyword{from}
 \keyword{internal}
+\keyword{module}
+\keyword{observes}
+\keyword{remove}
+\keyword{server}
+\keyword{single}
+\keyword{the}
 \section{Methods}{
 \subsection{Public methods}{
 \itemize{
 \item \href{#method-FilteredDataset-new}{\code{FilteredDataset$new()}}
-\item \href{#method-FilteredDataset-get_formatted_filter_state}{\code{FilteredDataset$get_formatted_filter_state()}}
-\item \href{#method-FilteredDataset-clear_filter_states}{\code{FilteredDataset$clear_filter_states()}}
 \item \href{#method-FilteredDataset-get_call}{\code{FilteredDataset$get_call()}}
+\item \href{#method-FilteredDataset-remove_filter_state}{\code{FilteredDataset$remove_filter_state()}}
 \item \href{#method-FilteredDataset-get_filter_state}{\code{FilteredDataset$get_filter_state()}}
 \item \href{#method-FilteredDataset-set_filter_state}{\code{FilteredDataset$set_filter_state()}}
+\item \href{#method-FilteredDataset-clear_filter_states}{\code{FilteredDataset$clear_filter_states()}}
 \item \href{#method-FilteredDataset-get_filter_count}{\code{FilteredDataset$get_filter_count()}}
 \item \href{#method-FilteredDataset-get_dataname}{\code{FilteredDataset$get_dataname()}}
 \item \href{#method-FilteredDataset-get_dataset}{\code{FilteredDataset$get_dataset()}}
@@ -29,8 +45,6 @@ components of the dataset.
 \item \href{#method-FilteredDataset-get_dataset_label}{\code{FilteredDataset$get_dataset_label()}}
 \item \href{#method-FilteredDataset-ui_active}{\code{FilteredDataset$ui_active()}}
 \item \href{#method-FilteredDataset-srv_active}{\code{FilteredDataset$srv_active()}}
-\item \href{#method-FilteredDataset-ui_add}{\code{FilteredDataset$ui_add()}}
-\item \href{#method-FilteredDataset-srv_add}{\code{FilteredDataset$srv_add()}}
 \item \href{#method-FilteredDataset-clone}{\code{FilteredDataset$clone()}}
 }
 }
@@ -45,7 +59,8 @@ Initializes this \code{FilteredDataset} object
   dataname,
   keys = character(0),
   label = attr(dataset, "label"),
-  metadata = NULL
+  metadata = NULL,
+  ...
 )}\if{html}{\out{</div>}}
 }
 
@@ -69,33 +84,6 @@ Field containing metadata about the dataset. Each element of the list
 should be atomic and length one.}
 }
 \if{html}{\out{</div>}}
-}
-}
-\if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-FilteredDataset-get_formatted_filter_state"></a>}}
-\if{latex}{\out{\hypertarget{method-FilteredDataset-get_formatted_filter_state}{}}}
-\subsection{Method \code{get_formatted_filter_state()}}{
-Returns a string representation of the filter state in this \code{FilteredDataset}.
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{FilteredDataset$get_formatted_filter_state()}\if{html}{\out{</div>}}
-}
-
-\subsection{Returns}{
-\code{character(1)} the formatted string representing the filter state or
-\code{NULL} if no filter state is present.
-}
-}
-\if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-FilteredDataset-clear_filter_states"></a>}}
-\if{latex}{\out{\hypertarget{method-FilteredDataset-clear_filter_states}{}}}
-\subsection{Method \code{clear_filter_states()}}{
-Removes all active filter items applied to this dataset
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{FilteredDataset$clear_filter_states()}\if{html}{\out{</div>}}
-}
-
-\subsection{Returns}{
-NULL
 }
 }
 \if{html}{\out{<hr>}}
@@ -125,23 +113,48 @@ filter \code{call} or \code{list} of filter calls
 }
 }
 \if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-FilteredDataset-remove_filter_state"></a>}}
+\if{latex}{\out{\hypertarget{method-FilteredDataset-remove_filter_state}{}}}
+\subsection{Method \code{remove_filter_state()}}{
+Remove one or more \code{FilterState}s from the \code{state_list} along with their UI elements.
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{FilteredDataset$remove_filter_state(state)}\if{html}{\out{</div>}}
+}
+
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{state}}{(\code{teal_slices})\cr
+specifying \code{FilterState} objects to remove;
+\code{teal_slice}s may contain only \code{dataname} and \code{varname}, other elements are ignored}
+}
+\if{html}{\out{</div>}}
+}
+\subsection{Returns}{
+\code{NULL} invisibly
+}
+}
+\if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-FilteredDataset-get_filter_state"></a>}}
 \if{latex}{\out{\hypertarget{method-FilteredDataset-get_filter_state}{}}}
 \subsection{Method \code{get_filter_state()}}{
-Gets states of all active \code{FilterState} objects
+Gets reactive values from active \code{FilterState} objects.
+
+Get active filter state from \code{FilterState} objects stored in \code{state_list}(s).
+The output is a list compatible with input to \code{self$set_filter_state}.
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{FilteredDataset$get_filter_state()}\if{html}{\out{</div>}}
 }
 
 \subsection{Returns}{
-A \code{teal_slices} object.
+\code{list} containing \code{list} per \code{FilterState} in the \code{state_list}
 }
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-FilteredDataset-set_filter_state"></a>}}
 \if{latex}{\out{\hypertarget{method-FilteredDataset-set_filter_state}{}}}
 \subsection{Method \code{set_filter_state()}}{
-Set filter state
+Sets active \code{FilterState} objects.
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{FilteredDataset$set_filter_state(state)}\if{html}{\out{</div>}}
 }
@@ -149,12 +162,31 @@ Set filter state
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
-\item{\code{state}}{(\code{teal_slice}) object}
+\item{\code{state}}{(\verb{named list})\cr
+should contain values which are initial selection in the \code{FilterState}.
+Names of the \code{list} element should correspond to the name of the
+column in \code{data}.}
+
+\item{\code{data}}{(\code{data.frame})\cr
+data which are supposed to be filtered}
 }
 \if{html}{\out{</div>}}
 }
 \subsection{Returns}{
-\code{NULL} invisibly
+function which throws an error
+}
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-FilteredDataset-clear_filter_states"></a>}}
+\if{latex}{\out{\hypertarget{method-FilteredDataset-clear_filter_states}{}}}
+\subsection{Method \code{clear_filter_states()}}{
+Remove all \code{FilterState} objects from this \code{FilterStates} object.
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{FilteredDataset$clear_filter_states()}\if{html}{\out{</div>}}
+}
+
+\subsection{Returns}{
+NULL
 }
 }
 \if{html}{\out{<hr>}}
@@ -312,56 +344,11 @@ an ID string that corresponds with the ID used to call the module's UI function.
 }
 \subsection{Returns}{
 \code{moduleServer} function which returns \code{NULL}
-}
-}
-\if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-FilteredDataset-ui_add"></a>}}
-\if{latex}{\out{\hypertarget{method-FilteredDataset-ui_add}{}}}
-\subsection{Method \code{ui_add()}}{
-UI module to add filter variable for this dataset
+UI wrapping a single \code{FilterState}
 
-UI module to add filter variable for this dataset
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{FilteredDataset$ui_add(id)}\if{html}{\out{</div>}}
-}
+This module contains a single \code{FilterState} card and remove (from the \code{ReactiveQueue}) button.
 
-\subsection{Arguments}{
-\if{html}{\out{<div class="arguments">}}
-\describe{
-\item{\code{id}}{(\code{character(1)})\cr
-identifier of the element - preferably containing dataset name}
-}
-\if{html}{\out{</div>}}
-}
-\subsection{Returns}{
-function - shiny UI module
-}
-}
-\if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-FilteredDataset-srv_add"></a>}}
-\if{latex}{\out{\hypertarget{method-FilteredDataset-srv_add}{}}}
-\subsection{Method \code{srv_add()}}{
-Server module to add filter variable for this dataset
-
-Server module to add filter variable for this dataset.
-For this class \code{srv_add} calls multiple modules
-of the same name from \code{FilterStates} as \code{MAEFilteredDataset}
-contains one \code{FilterStates} object for \code{colData} and one for each
-experiment.
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{FilteredDataset$srv_add(id)}\if{html}{\out{</div>}}
-}
-
-\subsection{Arguments}{
-\if{html}{\out{<div class="arguments">}}
-\describe{
-\item{\code{id}}{(\code{character(1)})\cr
-an ID string that corresponds with the ID used to call the module's UI function.}
-}
-\if{html}{\out{</div>}}
-}
-\subsection{Returns}{
-\code{moduleServer} function which returns \code{NULL}
+return \code{moduleServer} function which returns \code{NULL}
 }
 }
 \if{html}{\out{<hr>}}

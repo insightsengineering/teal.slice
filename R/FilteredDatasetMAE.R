@@ -7,6 +7,52 @@ MAEFilteredDataset <- R6::R6Class( # nolint
 
   # public methods ----
   public = list(
+
+    #' @description
+    #' Gets a filter expression
+    #'
+    #' This functions returns filter calls equivalent to selected items
+    #' within each of `filter_states`. Configuration of the calls is constant and
+    #' depends on `filter_states` type and order which are set during initialization.
+    #'
+    #' @param sid (`character`)\cr
+    #'  when specified then method returns code containing filter conditions of
+    #'  `FilterState` objects which `"sid"` attribute is different than this `sid` argument.
+    #'
+    #' @return filter `call` or `list` of filter calls
+    get_call = function(sid = "") {
+      states <- private$state_list_get()
+      subject_states <- Filter(
+        function(x) inherits(x$get_state(), "teal_slice_mae_subjects"),
+        states
+      )
+      subject_calls <- Filter(
+        Negate(is.null),
+        lapply(
+          subject_states,
+          function(state) {
+            state$get_call(dataname = private$dataname)
+          }
+        )
+      )
+
+      subjects_call <- if (length(subject_calls)) {
+        substitute(
+          dataname <- MultiAssayExperiment::subsetByColData(dataname, expr),
+          list(
+            dataname = str2lang(private$dataname),
+            expr = calls_combine_by(subject_calls, operator = "&")
+          )
+        )
+      }
+
+      # experiment calls
+      filter_call <- subjects_call
+      if (length(filter_call) == 0) {
+        return(NULL)
+      }
+    },
+
     #' @description
     #' Set filter state
     #'
@@ -59,84 +105,61 @@ MAEFilteredDataset <- R6::R6Class( # nolint
       invisible(NULL)
     },
 
-
     #' @description
-    #' UI module to add filter variable for this dataset
+    #' Shiny server module to add filter variable.
     #'
-    #' UI module to add filter variable for this dataset
+    #' This module controls available choices to select as a filter variable.
+    #' Once selected, a variable is removed from available choices.
+    #' Removing a filter variable adds it back to available choices.
+    #'
     #' @param id (`character(1)`)\cr
-    #'  identifier of the element - preferably containing dataset name
+    #'   an ID string that corresponds with the ID used to call the module's UI function.
     #'
-    #' @return function - shiny UI module
-    #'
-    ui_add = function(id) {
-      ns <- NS(id)
-      data <- self$get_dataset()
-      experiment_names <- names(data)
+    #' @return `moduleServer` function which returns `NULL`
+    srv_add = function(id) {
+       moduleServer(
+        id = id,
+        function(input, output, session) {
+          logger::log_trace("FilterStates$srv_add initializing, dataname: { private$dataname }")
 
-      div(
-        tags$label("Add", tags$code(self$get_dataname()), "filter"),
-        br(),
-        HTML("&#9658;"),
-        tags$label("Add subjects filter"),
-        private$get_filter_states()[["subjects"]]$ui_add(id = ns("subjects")),
-        tagList(
-          lapply(
-            experiment_names,
-            function(experiment_name) {
+          output$inputs <- renderUI({
+            data <- self$get_dataset()
+            dataname <- self$get_dataname()
+            experiment_names <- names(data)
+
+            div(
+              br(),
+              HTML("&#9658;"),
+              tags$label("Add subjects filter"),
+              div(
+                teal.widgets::optionalSelectInput(
+                  session$ns("var_to_add"),
+                  choices = colnames(MultiAssayExperiment::colData(data)),
+                  options = shinyWidgets::pickerOptions(
+                    liveSearch = TRUE,
+                    noneSelectedText = "Select variable to filter"
+                  )
+                )
+              ),
               tagList(
-                HTML("&#9658;"),
-                tags$label("Add", tags$code(experiment_name), "filter"),
-                private$get_filter_states()[[experiment_name]]$ui_add(id = ns(experiment_name))
+                lapply(
+                  experiment_names,
+                  function(experiment_name) {
+                    tagList(
+                      HTML("&#9658;"),
+                      tags$label("Add", tags$code(experiment_name), "filter"),
+                      div(
+                        # todo: experiment inputs
+                      )
+                    )
+                  }
+                )
               )
-            }
-          )
-        )
-      )
-    },
-
-    #' @description
-    #' Get filter overview rows of a dataset
-    #' @return (`matrix`) matrix of observations and subjects
-    get_filter_overview = function() {
-      data <- self$get_dataset()
-      data_filtered <- self$get_dataset(TRUE)
-      experiment_names <- names(data)
-
-      mae_info <- data.frame(
-        dataname = private$dataname,
-        subjects = nrow(SummarizedExperiment::colData(data)),
-        subjects_filtered = nrow(SummarizedExperiment::colData(data_filtered()))
-      )
-
-      experiment_obs_info <- do.call("rbind", lapply(
-        experiment_names,
-        function(experiment_name) {
-          data.frame(
-            dataname = sprintf("- %s", experiment_name),
-            obs = ncol(data[[experiment_name]]),
-            obs_filtered = ncol(data_filtered()[[experiment_name]])
-          )
+            )
+          })
         }
-      ))
-
-      get_experiment_keys <- function(mae, experiment) {
-        sample_subset <- subset(MultiAssayExperiment::sampleMap(mae), colname %in% colnames(experiment))
-        length(unique(sample_subset$primary))
-      }
-
-      experiment_subjects_info <- do.call("rbind", lapply(
-        experiment_names,
-        function(experiment_name) {
-          data.frame(
-            subjects = get_experiment_keys(data, data[[experiment_name]]),
-            subjects_filtered = get_experiment_keys(data_filtered(), data_filtered()[[experiment_name]])
-          )
-        }
-      ))
-
-      experiment_info <- cbind(experiment_obs_info, experiment_subjects_info)
-      dplyr::bind_rows(mae_info, experiment_info)
+       )
     }
+
   )
 )
