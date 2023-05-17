@@ -26,6 +26,7 @@ Imports:
     lifecycle,
     logger (>= 0.2.0),
     methods,
+    plotly,
     R6,
     rlang,
     shinyjs,
