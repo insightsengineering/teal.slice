@@ -427,11 +427,7 @@ FilteredData <- R6::R6Class( # nolint
     get_filter_state = function() {
       states <- unname(lapply(private$filtered_datasets, function(x) x$get_filter_state()))
       slices <- Filter(Negate(is.null), states)
-      state <- do.call(c, slices)
-      if (!is.null(state)) {
-        attr(state, "formatted") <- self$get_formatted_filter_state()
-      }
-      state
+      do.call(c, slices)
     },
 
     #' @description
@@ -630,8 +626,8 @@ FilteredData <- R6::R6Class( # nolint
         id = ns(NULL), # used for hiding / showing
         include_css_files(pattern = "filter-panel"),
         self$ui_overview(ns("overview")),
-        self$ui_active(ns("active")),
-        self$ui_add(ns("add"))
+        self$ui_active(ns("active"))
+        #self$ui_add(ns("add"))
       )
     },
 
@@ -658,7 +654,7 @@ FilteredData <- R6::R6Class( # nolint
 
           self$srv_overview("overview", active_datanames_resolved)
           self$srv_active("active", active_datanames_resolved)
-          self$srv_add("add", active_datanames_resolved)
+          #self$srv_add("add", active_datanames_resolved)
 
           private$filter_panel_ui_id <- session$ns(NULL)
 

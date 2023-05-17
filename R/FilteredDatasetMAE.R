@@ -8,60 +8,6 @@ MAEFilteredDataset <- R6::R6Class( # nolint
   # public methods ----
   public = list(
     #' @description
-    #' Initialize `MAEFilteredDataset` object
-    #'
-    #' @param dataset (`MulitiAssayExperiment`)\cr
-    #'  a single `MultiAssayExperiment` for which to define a subset
-    #' @param dataname (`character`)\cr
-    #'  a given name for the dataset it may not contain spaces
-    #' @param keys optional, (`character`)\cr
-    #'   vector with primary keys
-    #' @param label (`character`)\cr
-    #'   label to describe the dataset
-    #' @param metadata (named `list` or `NULL`) \cr
-    #'   field containing metadata about the dataset;
-    #'   each element of the list must be atomic and length one
-    #'
-    initialize = function(dataset, dataname, keys = character(0), label = character(0), metadata = NULL) {
-      if (!requireNamespace("MultiAssayExperiment", quietly = TRUE)) {
-        stop("Cannot load MultiAssayExperiment - please install the package or restart your session.")
-      }
-      checkmate::assert_class(dataset, "MultiAssayExperiment")
-      super$initialize(dataset, dataname, keys, label, metadata)
-      experiment_names <- names(dataset)
-
-      # subsetting by subjects means subsetting by colData(MAE)
-      private$add_filter_states(
-        filter_states = init_filter_states(
-          data = dataset,
-          data_reactive = private$data_filtered_fun,
-          dataname = dataname,
-          datalabel = "subjects",
-          keys = self$get_keys()
-        ),
-        id = "subjects"
-      )
-      # elements of the list (experiments) are unknown
-      # dispatch needed because we can't hardcode methods otherwise:
-      #  if (matrix) else if (SummarizedExperiment) else if ...
-      lapply(
-        experiment_names,
-        function(experiment_name) {
-          data_reactive <- function(sid = "") private$data_filtered_fun(sid)[[experiment_name]]
-          private$add_filter_states(
-            filter_states = init_filter_states(
-              data = dataset[[experiment_name]],
-              data_reactive = data_reactive,
-              dataname = dataname,
-              datalabel = experiment_name
-            ),
-            id = experiment_name
-          )
-        }
-      )
-    },
-
-    #' @description
     #' Set filter state
     #'
     #' @param state (`named list`)\cr
@@ -99,57 +45,20 @@ MAEFilteredDataset <- R6::R6Class( # nolint
         checkmate::assert_true(x$dataname == private$dataname, .var.name = "dataname matches private$dataname")
       })
 
-      # determine target datalabels (defined in teal_slices)
-      datalabels <- slices_field(state, "datalabel")
-      slot_names <- names(private$get_filter_states())
-      excluded_filters <- setdiff(datalabels, slot_names)
-      if (length(excluded_filters)) {
-        stop(sprintf(
-          "%s doesn't contain elements soecified in 'datalabel': %s\n'datalabel' should be a subset of: %s",
-          private$dataname,
-          paste(excluded_filters, collapse = ", "),
-          paste(slot_names, collapse = ", ")
-        ))
+      if (length(state) > 0) {
+        private$set_filter_state_impl(
+          state = state,
+          data = private$data,
+          data_reactive = private$data_filtered_fun
+        )
       }
 
-      # set states on state_lists with corresponding datalabels
-      lapply(datalabels, function(x) {
-        private$get_filter_states()[[x]]$set_filter_state(
-          slices_which(state, sprintf("datalabel == \"%s\"", x))
-        )
-      })
 
       logger::log_trace("{ class(self)[1] }$set_filter_state initialized, dataname: { private$dataname }")
 
       invisible(NULL)
     },
 
-    #' @description
-    #' Remove one or more `FilterState` of a `MAEFilteredDataset`
-    #'
-    #' @param state (`teal_slices`)\cr
-    #'   specifying `FilterState` objects to remove;
-    #'   `teal_slice`s may contain only `dataname` and `varname`, other elements are ignored
-    #'
-    #' @return `NULL` invisibly
-    #'
-    remove_filter_state = function(state) {
-      checkmate::assert_class(state, "teal_slices")
-
-      logger::log_trace("{ class(self)[1] }$remove_filter_state removing filter(s), dataname: { private$dataname }")
-
-      varnames <- slices_field(state, "varname")
-      current_states <- shiny::isolate(self$get_filter_state())
-
-      lapply(varnames, function(x) {
-        slice <- slices_which(current_states, sprintf("varname  == \"%s\"", x))
-        private$get_filter_states()[[slice[[1]]$datalabel]]$remove_filter_state(slice)
-      })
-
-      logger::log_trace("{ class(self)[1] }$remove_filter_state removed filter(s), dataname: { private$dataname }")
-
-      invisible(NULL)
-    },
 
     #' @description
     #' UI module to add filter variable for this dataset

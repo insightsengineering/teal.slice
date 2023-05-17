@@ -119,7 +119,6 @@
 #' @name teal_slice
 NULL
 
-
 #' @export
 #' @rdname teal_slice
 #'
@@ -140,20 +139,12 @@ filter_var <- function(dataname,
   checkmate::assert_flag(keep_inf, null.ok = TRUE)
   checkmate::assert_flag(fixed)
   checkmate::assert_flag(disabled)
+  # todo: if expr is specified then it is ignored and removed from the list
+  ans <- as.list(match.call())[-1]
+  class(ans) <- "teal_slice"
+  # this if can be fixed in filter_var S4 constructor
+  class(ans) <- c(teal_slice_class(ans), class(ans))
 
-  ans <- list(
-    dataname = dataname,
-    varname = varname,
-    choices = choices,
-    selected = selected,
-    keep_na = keep_na,
-    keep_inf = keep_inf,
-    fixed = fixed,
-    disabled = disabled
-  )
-  ans <- append(ans, list(...))
-
-  class(ans) <- c("teal_slice", class(ans))
   ans
 }
 
@@ -172,6 +163,7 @@ filter_expr <- function(dataname, id, title, expr, disabled = FALSE, ...) {
   checkmate::assert_string(title)
   checkmate::assert_string(expr)
   checkmate::assert_flag(disabled)
+  # todo: if varname, choices, selected, keep_na, keep_inf specified then they're ignored and removed from the list
   ans <- list(
     id = id,
     title = title,
@@ -180,7 +172,10 @@ filter_expr <- function(dataname, id, title, expr, disabled = FALSE, ...) {
     disabled = disabled
   )
   ans <- append(ans, list(...))
-  class(ans) <- c("teal_slice_expr", "teal_slice", class(ans))
+  class(ans) <- c("teal_slice_expr", "teal_slice")
+  # this if can be fixed in filter_var S4 constructor
+  class(ans) <- c(teal_slice_class(ans), class(ans))
+
   ans
 }
 

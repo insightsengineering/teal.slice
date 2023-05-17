@@ -77,16 +77,6 @@ DefaultFilteredDataset <- R6::R6Class( # nolint
         }
       }
 
-      private$add_filter_states(
-        filter_states = init_filter_states(
-          data = dataset,
-          data_reactive = private$data_filtered_fun,
-          dataname = dataname,
-          keys = self$get_keys()
-        ),
-        id = "filter"
-      )
-
       # todo: Should we make these defaults? It could be handled by the app developer
       if (!is.null(parent)) {
         fs <- filter_settings(
@@ -162,63 +152,6 @@ DefaultFilteredDataset <- R6::R6Class( # nolint
       }
       logger::log_trace("FilteredDatasetDefault$get_call initializing for dataname: { private$dataname }")
       filter_call
-    },
-
-    #' @description
-    #' Set filter state
-    #'
-    #' @param state (`teal_slice`) object
-    #'
-    #' @examples
-    #' dataset <- teal.slice:::DefaultFilteredDataset$new(iris, "iris")
-    #' fs <- filter_settings(
-    #'   filter_var(dataname = "iris", varname = "Species", selected = "virginica"),
-    #'   filter_var(dataname = "iris", varname = "Petal.Length", selected = c(2.0, 5))
-    #' )
-    #' dataset$set_filter_state(state = fs)
-    #' shiny::isolate(dataset$get_filter_state())
-    #'
-    #' @return `NULL` invisibly
-    #'
-    set_filter_state = function(state) {
-      checkmate::assert_class(state, "teal_slices")
-      lapply(state, function(x) {
-        checkmate::assert_true(x$dataname == private$dataname, .var.name = "dataname matches private$dataname")
-      })
-
-      logger::log_trace("{ class(self)[1] }$set_filter_state initializing, dataname: { private$dataname }")
-
-      private$get_filter_states()[[1L]]$set_filter_state(state = state)
-
-      logger::log_trace("{ class(self)[1] }$set_filter_state initialized, dataname: { private$dataname }")
-
-      invisible(NULL)
-    },
-
-    #' @description
-    #' Remove one or more `FilterState` form a `FilteredDataset`
-    #'
-    #' @param state (`teal_slices`)\cr
-    #'   specifying `FilterState` objects to remove;
-    #'   `teal_slice`s may contain only `dataname` and `varname`, other elements are ignored
-    #'
-    #' @return `NULL` invisibly
-    #'
-    remove_filter_state = function(state) {
-      checkmate::assert_class(state, "teal_slices")
-
-      logger::log_trace("{ class(self)[1] }$remove_filter_state removing filter(s), dataname: { private$dataname }")
-
-      varnames <- slices_field(state, "varname")
-      lapply(varnames, function(x) {
-        private$get_filter_states()[[1]]$remove_filter_state(
-          slices_which(state, sprintf("varname == \"%s\"", x))
-        )
-      })
-
-      logger::log_trace("{ class(self)[1] }$remove_filter_state removed filter(s), dataname: { private$dataname }")
-
-      invisible(NULL)
     },
 
     #' @description
