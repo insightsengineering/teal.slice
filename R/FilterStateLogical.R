@@ -209,11 +209,17 @@ LogicalFilterState <- R6::R6Class( # nolint
         return(NULL)
       }
       if (missing(dataname)) dataname <- private$dataname
+      varname <- private$get_varname_prefixed(dataname)
+      choices <- private$get_selected()
+      n_choices <- length(choices)
+
       filter_call <-
-        if (private$get_selected()) {
+        if (n_choices == 1 && choices) {
           private$get_varname_prefixed(dataname)
-        } else {
+        } else if (n_choices == 1 && !choices) {
           call("!", private$get_varname_prefixed(dataname))
+        } else {
+          call("%in%", varname, choices)
         }
       private$add_keep_na_call(filter_call, dataname)
     }
@@ -234,10 +240,10 @@ LogicalFilterState <- R6::R6Class( # nolint
       invisible(NULL)
     },
     validate_selection = function(value) {
-      if (!(checkmate::test_logical(value, max.len = 1, any.missing = FALSE))) {
+      if (!(checkmate::test_logical(value, max.len = 2, any.missing = FALSE))) {
         stop(
           sprintf(
-            "value of the selection for `%s` in `%s` should be a logical scalar (TRUE or FALSE)",
+            "value of the selection for `%s` in `%s` should be a logical vector of length <= 2",
             private$get_varname(),
             private$get_dataname()
           )
@@ -269,13 +275,9 @@ LogicalFilterState <- R6::R6Class( # nolint
         FALSE
       } else if (private$is_choice_limited) {
         TRUE
+      } else if (!setequal(private$get_selected(), private$choices)) {
+        TRUE
       } else if (!isTRUE(private$get_keep_na()) && private$na_count > 0) {
-        TRUE
-      } else if (all(private$choices_counts > 0)) {
-        TRUE
-      } else if (private$get_selected() == FALSE && private$choices_counts["FALSE"] == 0L) {
-        TRUE
-      } else if (private$get_selected() == TRUE && private$choices_counts["TRUE"] == 0L) {
         TRUE
       } else {
         FALSE
@@ -306,7 +308,7 @@ LogicalFilterState <- R6::R6Class( # nolint
         countsnow = countsnow,
         countsmax = countsmax
       )
-      ui_input <- radioButtons(
+      ui_input <- checkboxGroupInput(
         ns("selection"),
         label = NULL,
         choiceNames = labels,
@@ -367,10 +369,9 @@ LogicalFilterState <- R6::R6Class( # nolint
             eventExpr = private$get_selected(),
             handlerExpr = {
               if (!setequal(private$get_selected(), input$selection)) {
-                updateRadioButtons(
-                  session = session,
+                updateCheckboxGroupInput(
                   inputId = "selection",
-                  selected =  private$get_selected()
+                  selected = private$selected()
                 )
                 logger::log_trace(sprintf(
                   "LogicalFilterState$server@1 state of variable %s changed, dataname: %s",
@@ -382,7 +383,7 @@ LogicalFilterState <- R6::R6Class( # nolint
           )
 
           private$observers$selection <- observeEvent(
-            ignoreNULL = TRUE, # in radio button something has to be selected to input$selection can't be NULL
+            ignoreNULL = FALSE,
             ignoreInit = TRUE,
             eventExpr = input$selection,
             handlerExpr = {
@@ -446,7 +447,10 @@ LogicalFilterState <- R6::R6Class( # nolint
     #  and if NA are included also
     content_summary = function(id) {
       tagList(
-        tags$span(private$get_selected(), class = "filter-card-summary-value"),
+        tags$span(
+          class = "filter-card-summary-value",
+          paste0(private$get_selected(), collapse = ", ")
+        ),
         tags$span(
           class = "filter-card-summary-controls",
           if (isTRUE(private$get_keep_na()) && private$na_count > 0) {
