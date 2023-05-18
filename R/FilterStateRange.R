@@ -527,7 +527,7 @@ RangeFilterState <- R6::R6Class( # nolint
                       type = "warning"
                     )
                     plotly::plotlyProxyInvoke(
-                      plotly::plotlyProxy("plot", deferUntilFlush = FALSE),
+                      plotly::plotlyProxy("plot"),
                       "relayout",
                       shapes = private$get_shape_properties(private$get_selected())
                     )
@@ -553,11 +553,11 @@ RangeFilterState <- R6::R6Class( # nolint
                     private$dataname
                   )
                 )
-                plotly::plotlyProxyInvoke(
-                  plotly::plotlyProxy("plot"),
-                  "relayout",
-                  shapes = private$get_shape_properties(private$get_selected())
-                )
+                # plotly::plotlyProxyInvoke(
+                #   plotly::plotlyProxy("plot"),
+                #   "relayout",
+                #   shapes = private$get_shape_properties(private$get_selected())
+                # )
                 shinyWidgets::updateNumericRangeInput(
                   session = session,
                   inputId = "selection_manual",
