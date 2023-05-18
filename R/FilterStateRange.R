@@ -459,6 +459,7 @@ RangeFilterState <- R6::R6Class( # nolint
 
           plot_data <- list(
             x = Filter(Negate(is.na), Filter(is.finite, private$x)),
+            color = I("#868e9655"),
             type = "histogram",
             bingroup = 1,
             showlegend = FALSE,
@@ -500,7 +501,7 @@ RangeFilterState <- R6::R6Class( # nolint
             if (is.null(finite_values())) {
               unfiltered_histogram
             } else {
-              plotly::add_histogram(p = unfiltered_histogram, x = finite_values(), bingroup = 1)
+              plotly::add_histogram(p = unfiltered_histogram, x = finite_values(), bingroup = 1, color = I("#007bff55"))
             }
           })
 
