@@ -465,7 +465,13 @@ RangeFilterState <- R6::R6Class( # nolint
             hoverinfo = "none",
             source = session$ns("histogram_plot")
           )
+          plot_mask <- list(list(
+            type = "rect", fillcolor = rgb(1, 1, 1, .65), line = list(width = 0),
+            x0 = -0.5, x1 = 1.5, y0 = -0.5, y1 = 1.5, xref = "paper", yref = "paper"
+          ))
           plot_layout <- reactive({
+            shapes <- private$get_shape_properties(private$get_selected())
+            if (private$is_disabled()) shapes <- c(shapes, plot_mask)
             list(
               barmode = "overlay",
               xaxis = list(showticklabels = TRUE, rangeslider = list(thickness = 0)),
@@ -473,7 +479,7 @@ RangeFilterState <- R6::R6Class( # nolint
               margin = list(b = 10, l = 5, r = 5, t = 5),
               plot_bgcolor = "#FFFFFF00",
               paper_bgcolor = "#FFFFFF00",
-              shapes = private$get_shape_properties(private$get_selected())
+              shapes = shapes
             )
           })
           plot_config <- reactive({
