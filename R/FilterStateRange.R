@@ -475,7 +475,7 @@ RangeFilterState <- R6::R6Class( # nolint
             if (private$is_disabled()) shapes <- c(shapes, plot_mask)
             list(
               barmode = "overlay",
-              xaxis = list(showticklabels = TRUE, rangeslider = list(thickness = 0)),
+              xaxis = list(range = private$choices, showticklabels = TRUE, rangeslider = list(thickness = 0)),
               yaxis = list(showgrid = FALSE, showticklabels = FALSE),
               margin = list(b = 10, l = 5, r = 5, t = 5),
               plot_bgcolor = "#FFFFFF00",
