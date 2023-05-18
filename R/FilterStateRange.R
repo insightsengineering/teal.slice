@@ -626,6 +626,15 @@ RangeFilterState <- R6::R6Class( # nolint
               inputId = "manual",
               disabled = private$is_disabled()
             )
+
+            # recreate plot as a static object
+            plotly::plotlyProxyInvoke(
+              plotly::plotlyProxy("plot"),
+              "react",
+              data = plot_data,
+              layout = plot_layout(),
+              config = plot_config()
+            )
           })
 
           logger::log_trace("RangeFilterState$server initialized, dataname: { private$dataname }")
