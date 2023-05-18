@@ -655,32 +655,44 @@ RangeFilterState <- R6::R6Class( # nolint
         function(input, output, session) {
           logger::log_trace("RangeFilterState$server initializing, dataname: { private$dataname }")
 
-          unfiltered_histogram <-
-            plotly::plot_ly(
-              x = Filter(Negate(is.na), Filter(is.finite, private$x)),
-              type = "histogram",
-              bingroup = 1,
-              showlegend = FALSE,
-              hoverinfo = "none",
-              source = session$ns("histogram_plot")
-            ) %>%
-            plotly::layout(
-              barmode = "overlay",
-              xaxis = list(showticklabels = TRUE, rangeslider = list(thickness = 0)),
-              yaxis = list(showgrid = FALSE, showticklabels = FALSE),
-              margin = list(b = 10, l = 5, r = 5, t = 5),
-              plot_bgcolor = "#FFFFFF00",
-              paper_bgcolor = "#FFFFFF00",
-              shapes = private$get_shape_properties(shiny::isolate(private$get_selected()))
-            ) %>%
-            plotly::config(displayModeBar = FALSE, staticPlot = TRUE)
+          plot_data <- list(
+            x = Filter(Negate(is.na), Filter(is.finite, private$x)),
+            color = I("#868e9655"),
+            type = "histogram",
+            bingroup = 1,
+            showlegend = FALSE,
+            hoverinfo = "none",
+            source = session$ns("histogram_plot")
+          )
+          plot_mask <- list(list(
+            type = "rect", fillcolor = rgb(1, 1, 1, .65), line = list(width = 0),
+            x0 = -0.5, x1 = 1.5, y0 = -0.5, y1 = 1.5, xref = "paper", yref = "paper"
+          ))
+          plot_layout <- list(
+            barmode = "overlay",
+            xaxis = list(range = private$choices, showticklabels = TRUE, rangeslider = list(thickness = 0)),
+            yaxis = list(showgrid = FALSE, showticklabels = FALSE),
+            margin = list(b = 10, l = 5, r = 5, t = 5),
+            plot_bgcolor = "#FFFFFF00",
+            paper_bgcolor = "#FFFFFF00",
+            shapes = c(private$get_shape_properties(shiny::isolate(private$get_selected())), plot_mask)
+          )
+          plot_config <- list(
+            displayModeBar = FALSE,
+            staticPlot = FALSE
+          )
 
+          # display histogram, adding a second trace that contains filtered data
           finite_values <- reactive(Filter(is.finite, private$x_reactive()))
           output$plot <- plotly::renderPlotly({
+            unfiltered_histogram <- do.call(plotly::plot_ly, plot_data)
+            unfiltered_histogram <- do.call(plotly::layout, c(list(p = unfiltered_histogram), plot_layout))
+            unfiltered_histogram <- do.call(plotly::config, c(list(p = unfiltered_histogram), plot_config))
+
             if (is.null(finite_values())) {
               unfiltered_histogram
             } else {
-              plotly::add_histogram(p = unfiltered_histogram, x = finite_values(), bingroup = 1)
+              plotly::add_histogram(p = unfiltered_histogram, x = finite_values(), bingroup = 1, color = I("#007bff55"))
             }
           })
 
