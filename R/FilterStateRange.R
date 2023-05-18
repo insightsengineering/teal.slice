@@ -457,34 +457,43 @@ RangeFilterState <- R6::R6Class( # nolint
         function(input, output, session) {
           logger::log_trace("RangeFilterState$server initializing, dataname: { private$dataname }")
 
-          unfiltered_histogram <-
-            plotly::plot_ly(
-              x = Filter(Negate(is.na), Filter(is.finite, private$x)),
-              type = "histogram",
-              bingroup = 1,
-              showlegend = FALSE,
-              hoverinfo = "none",
-              source = session$ns("histogram_plot")
-            ) %>%
-            plotly::layout(
+          plot_data <- list(
+            x = Filter(Negate(is.na), Filter(is.finite, private$x)),
+            type = "histogram",
+            bingroup = 1,
+            showlegend = FALSE,
+            hoverinfo = "none",
+            source = session$ns("histogram_plot")
+          )
+          plot_layout <- reactive({
+            list(
               barmode = "overlay",
               xaxis = list(showticklabels = TRUE, rangeslider = list(thickness = 0)),
               yaxis = list(showgrid = FALSE, showticklabels = FALSE),
               margin = list(b = 10, l = 5, r = 5, t = 5),
               plot_bgcolor = "#FFFFFF00",
               paper_bgcolor = "#FFFFFF00",
-              shapes = private$get_shape_properties(shiny::isolate(private$get_selected()))
-            ) %>%
-            plotly::config(displayModeBar = FALSE, edits = list(shapePosition = TRUE))
+              shapes = private$get_shape_properties(private$get_selected())
+            )
+          })
+          plot_config <- reactive({
+            list(
+              displayModeBar = FALSE,
+              edits = list(shapePosition = TRUE),
+              staticPlot = private$is_disabled()
+            )
+          })
 
           # display histogram, adding a second trace that contains filtered data
           finite_values <- reactive(Filter(is.finite, private$x_reactive()))
           output$plot <- plotly::renderPlotly({
+            unfiltered_histogram <- do.call(plotly::plot_ly, plot_data)
+            unfiltered_histogram <- do.call(plotly::layout, c(list(p = unfiltered_histogram), plot_layout()))
+            unfiltered_histogram <- do.call(plotly::config, c(list(p = unfiltered_histogram), plot_config()))
+
             if (is.null(finite_values())) {
-              # private$unfiltered_histogram
               unfiltered_histogram
             } else {
-              # plotly::add_histogram(p = private$unfiltered_histogram, x = finite_values(), bingroup = 1)
               plotly::add_histogram(p = unfiltered_histogram, x = finite_values(), bingroup = 1)
             }
           })
