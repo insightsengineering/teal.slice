@@ -1,6 +1,9 @@
 teal_slice_class <- function(ans) {
+  # todo: for experiments use experiment_name
   if (all(c("datalabel", "arg") %in% names(ans))) {
     "teal_slice_mae_se"
+
+  # todo: what to use to identify mae subjects filter
   } else if (identical("subjects", ans$datalabel)) {
     "teal_slice_mae_subjects"
   } else if ("datalabel" %in% names(ans)) {

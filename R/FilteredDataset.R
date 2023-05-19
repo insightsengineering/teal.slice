@@ -665,3 +665,4 @@ FilteredDataset <- R6::R6Class( # nolint
     }
   )
 )
+

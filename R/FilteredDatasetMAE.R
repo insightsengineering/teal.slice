@@ -127,19 +127,15 @@ MAEFilteredDataset <- R6::R6Class( # nolint
             dataname <- self$get_dataname()
             experiment_names <- names(data)
 
+            # implement labels to the choices
+
+            browser()
             div(
               br(),
               HTML("&#9658;"),
               tags$label("Add subjects filter"),
               div(
-                teal.widgets::optionalSelectInput(
-                  session$ns("var_to_add"),
-                  choices = colnames(MultiAssayExperiment::colData(data)),
-                  options = shinyWidgets::pickerOptions(
-                    liveSearch = TRUE,
-                    noneSelectedText = "Select variable to filter"
-                  )
-                )
+                ui_add(colnames(MultiAssayExperiment::colData(data)))
               ),
               tagList(
                 lapply(
@@ -149,7 +145,7 @@ MAEFilteredDataset <- R6::R6Class( # nolint
                       HTML("&#9658;"),
                       tags$label("Add", tags$code(experiment_name), "filter"),
                       div(
-                        # todo: experiment inputs
+                        ui_add(session$ns(experiment_name), data[[experiment_name]])
                       )
                     )
                   }
@@ -158,8 +154,62 @@ MAEFilteredDataset <- R6::R6Class( # nolint
             )
           })
         }
-       )
+      )
     }
-
   )
 )
+
+ui_add <- function(id, data) {
+  UseMethod("ui_add", data)
+}
+
+ui_add.SummarizedExperiment <- function(id, data) {
+  ns <- NS(id)
+  row_input <- if (ncol(SummarizedExperiment::rowData(data)) == 0) {
+    div("no sample variables available")
+  } else if (nrow(SummarizedExperiment::rowData(data)) == 0) {
+    div("no samples available")
+  } else {
+    teal.widgets::optionalSelectInput(
+      ns("row_to_add"),
+      choices = colnames(SummarizedExperiment::rowData(data)),
+      options = shinyWidgets::pickerOptions(
+        liveSearch = TRUE,
+        noneSelectedText = "Select gene variable"
+      )
+    )
+  }
+
+  col_input <- if (ncol(SummarizedExperiment::colData(data)) == 0) {
+    div("no sample variables available")
+  } else if (nrow(SummarizedExperiment::colData(data)) == 0) {
+    div("no samples available")
+  } else {
+    teal.widgets::optionalSelectInput(
+      ns("col_to_add"),
+      choices = colnames(SummarizedExperiment::colData(data)),
+      options = shinyWidgets::pickerOptions(
+        liveSearch = TRUE,
+        noneSelectedText = "Select sample variable"
+      )
+    )
+  }
+
+  div(row_input, col_input)
+}
+
+ui_add.default <- function(id, data) {
+  ns <- NS(id)
+  teal.widgets::optionalSelectInput(
+    ns("col_to_add"),
+    choices = colnames(data),
+    options = shinyWidgets::pickerOptions(
+      liveSearch = TRUE,
+      noneSelectedText = "Select sample variable"
+    )
+  )
+}
+
+ui_add.RaggedExperiment <- function(id, data) {
+  NULL
+}
