@@ -402,17 +402,18 @@ RangeFilterState <- R6::R6Class( # nolint
       if (any(is.na(values))) stop("The array of set values must contain values coercible to numeric.")
       if (length(values) != 2) stop("The array of set values must have length two.")
 
-      values_adjusted <- contain_interval(values, private$slider_ticks)
-      if (!isTRUE(all.equal(values, values_adjusted))) {
-        logger::log_warn(sprintf(
-          paste(
-            "Programmatic range specification on %s was adjusted to existing slider ticks.",
-            "It is now broader in order to contain the specified values."
-          ),
-          private$varname
-        ))
-      }
-      values_adjusted
+      # values_adjusted <- contain_interval(values, private$slider_ticks)
+      # if (!isTRUE(all.equal(values, values_adjusted))) {
+      #   logger::log_warn(sprintf(
+      #     paste(
+      #       "Programmatic range specification on %s was adjusted to existing slider ticks.",
+      #       "It is now broader in order to contain the specified values."
+      #     ),
+      #     private$varname
+      #   ))
+      # }
+      # values_adjusted
+      values
     },
     # for numeric ranges selecting out of bound values is allowed
     remove_out_of_bound_values = function(values) {
