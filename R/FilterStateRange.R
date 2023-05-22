@@ -553,11 +553,6 @@ RangeFilterState <- R6::R6Class( # nolint
                     private$dataname
                   )
                 )
-                # plotly::plotlyProxyInvoke(
-                #   plotly::plotlyProxy("plot"),
-                #   "relayout",
-                #   shapes = private$get_shape_properties(private$get_selected())
-                # )
                 shinyWidgets::updateNumericRangeInput(
                   session = session,
                   inputId = "selection_manual",
