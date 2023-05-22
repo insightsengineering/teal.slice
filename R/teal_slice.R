@@ -256,7 +256,10 @@ format.teal_slice <- function(x, show_all = FALSE, ...) {
     if (is.null(v)) {
       return("NULL")
     }
-    v <- paste(deparse1(v), collapse = " ")
+    if (is.language(v)) {
+      v <- deparse1(v)
+    }
+    v <- paste(v, collapse = " ")
     if (nchar(v) > 30L) {
       v <- paste0(substr(v, 1, 26), "...")
     }
