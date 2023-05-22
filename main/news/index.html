@@ -10,7 +10,7 @@
     
     <a class="navbar-brand me-2" href="../index.html">teal.slice</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.2.0.9028</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.3.0</small>
 
     <div style="width: 140px; margin-left: 0.5rem;"> <small class="nav-text text-muted me-auto">part of</small> <img src="https://github.com/insightsengineering/hex-stickers/blob/main/PNG/nest.png?raw=true" alt="NEST" style="height: 30px;"><a href="https://pharmaverse.org/" class="external-link"><img src="https://github.com/insightsengineering/hex-stickers/blob/main/PNG/pharmaverse.png?raw=true" alt="pharmaverse" style="height: 28px;"></a> </div>
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -33,14 +33,6 @@
 <li class="active nav-item">
   <a class="nav-link" href="../news/index.html">Changelog</a>
 </li>
-<!-- start dropdown for versions --> <li class="nav-item dropdown">
-        <a href="#" class="nav-link dropdown-toggle"
-          data-bs-toggle="dropdown" role="button"
-          aria-expanded="false" aria-haspopup="true"
-          id="dropdown-versions">Versions</a> <div class="dropdown-menu" aria-labelledby="dropdown-versions"> <a class="dropdown-item" data-toggle="tooltip" title="" href="https://insightsengineering.github.io/teal.slice/main">main</a>
-<a class="dropdown-item" data-toggle="tooltip" title="" href="https://insightsengineering.github.io/teal.slice/latest-tag">latest-tag</a>
-<a class="dropdown-item" data-toggle="tooltip" title="" href="https://insightsengineering.github.io/teal.slice/v0.2.0">v0.2.0</a> </div></li>
-<!-- end dropdown for versions -->
 <li class="nav-item dropdown">
   <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown" role="button" aria-expanded="false" aria-haspopup="true" id="dropdown-reports">Reports</a>
   <div class="dropdown-menu" aria-labelledby="dropdown-reports">
@@ -69,27 +61,27 @@
     </div>
 
     <div class="section level2">
-<h2 class="pkg-version" data-toc-text="0.2.0.9028" id="tealslice-0209028">teal.slice 0.2.0.9028<a class="anchor" aria-label="anchor" href="#tealslice-0209028"></a></h2>
+<h2 class="pkg-version" data-toc-text="0.3.0" id="tealslice-030">teal.slice 0.3.0<a class="anchor" aria-label="anchor" href="#tealslice-030"></a></h2>
 <ul><li>Examples now use <code>scda.2022</code> instead of <code>scda.2021</code>.</li>
 <li>Transferred data hashing step in <code>FilteredDataset</code> to <code>teal</code>.</li>
 <li>Removed constructor of <code>Queue</code> class.</li>
 </ul><div class="section level4">
-<h4 id="new-features-0-2-0-9028">New features<a class="anchor" aria-label="anchor" href="#new-features-0-2-0-9028"></a></h4>
+<h4 id="new-features-0-3-0">New features<a class="anchor" aria-label="anchor" href="#new-features-0-3-0"></a></h4>
 <ul><li>Added a global turn on/off button for the Filter Panel.</li>
 <li>Added ability to collapse Active Filter Display panel.</li>
 <li>Added ability to collapse all filters of an individual dataset.</li>
 </ul></div>
 <div class="section level4">
-<h4 id="enhancements-0-2-0-9028">Enhancements<a class="anchor" aria-label="anchor" href="#enhancements-0-2-0-9028"></a></h4>
+<h4 id="enhancements-0-3-0">Enhancements<a class="anchor" aria-label="anchor" href="#enhancements-0-3-0"></a></h4>
 <ul><li>Improved filter state presentation in <code>FilterState$format</code>.</li>
 </ul></div>
 <div class="section level4">
-<h4 id="bug-fixes-0-2-0-9028">Bug fixes<a class="anchor" aria-label="anchor" href="#bug-fixes-0-2-0-9028"></a></h4>
+<h4 id="bug-fixes-0-3-0">Bug fixes<a class="anchor" aria-label="anchor" href="#bug-fixes-0-3-0"></a></h4>
 <ul><li>Fixed an error where the <code>RangeFilterState</code> produced an error when using <code>bootstrap 4</code>.</li>
 <li>Fixed a bug that caused the range slider to omit values selected programmatically through the filter API.</li>
 </ul></div>
 <div class="section level4">
-<h4 id="miscellaneous-0-2-0-9028">Miscellaneous<a class="anchor" aria-label="anchor" href="#miscellaneous-0-2-0-9028"></a></h4>
+<h4 id="miscellaneous-0-3-0">Miscellaneous<a class="anchor" aria-label="anchor" href="#miscellaneous-0-3-0"></a></h4>
 <ul><li>Calculation of step in slider for <code>RangeFilterState</code> now uses <code><a href="https://mllg.github.io/checkmate/reference/checkIntegerish.html" class="external-link">checkmate::test_integerish</a></code> instead of <code>is.integer</code>.</li>
 <li>Updated <code>init_filtered_data</code> to take into account the removal of <code>CDISCTealData</code> from <code>teal.data</code> package.</li>
 <li>Added examples apps for <code>ChoicesFilterState</code> and <code>DFFilterStates</code>.</li>
