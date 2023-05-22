@@ -197,6 +197,39 @@ RangeFilterState <- R6::R6Class( # nolint
       private$set_choices(choices)
       private$set_selected(selected)
 
+      private$plot_data <- list(
+        x = Filter(Negate(is.na), Filter(is.finite, private$x)),
+        color = I("#868e9655"),
+        type = "histogram",
+        bingroup = 1,
+        showlegend = FALSE,
+        hoverinfo = "none"
+      )
+      private$plot_mask <- list(list(
+        type = "rect", fillcolor = rgb(1, 1, 1, .65), line = list(width = 0),
+        x0 = -0.5, x1 = 1.5, y0 = -0.5, y1 = 1.5, xref = "paper", yref = "paper"
+      ))
+      private$plot_layout <- reactive({
+        shapes <- private$get_shape_properties(private$get_selected())
+        if (private$is_disabled()) shapes <- c(shapes, private$plot_mask)
+        list(
+          barmode = "overlay",
+          xaxis = list(range = private$choices, showticklabels = TRUE, rangeslider = list(thickness = 0)),
+          yaxis = list(showgrid = FALSE, showticklabels = FALSE),
+          margin = list(b = 10, l = 5, r = 5, t = 5),
+          plot_bgcolor = "#FFFFFF00",
+          paper_bgcolor = "#FFFFFF00",
+          shapes = shapes
+        )
+      })
+      private$plot_config <- reactive({
+        list(
+          displayModeBar = FALSE,
+          edits = list(shapePosition = TRUE),
+          staticPlot = private$is_disabled()
+        )
+      })
+
       invisible(self)
     },
 
@@ -260,7 +293,11 @@ RangeFilterState <- R6::R6Class( # nolint
     inf_filtered_count = NULL,
     is_integer = logical(0),
     slider_step = numeric(0), # step for the slider input widget, calculated from input data (x)
-    slider_ticks = numeric(0), # allowed values for the slider input widget, calculated from input data (x)
+    slider_ticks = numeric(0), # allowed values for the slider input widget, calculated from input data (x),
+    plot_data = NULL,
+    plot_mask = list(),
+    plot_layout = NULL,
+    plot_config = NULL,
 
     # private methods ----
 
@@ -458,45 +495,13 @@ RangeFilterState <- R6::R6Class( # nolint
         function(input, output, session) {
           logger::log_trace("RangeFilterState$server initializing, dataname: { private$dataname }")
 
-          plot_data <- list(
-            x = Filter(Negate(is.na), Filter(is.finite, private$x)),
-            color = I("#868e9655"),
-            type = "histogram",
-            bingroup = 1,
-            showlegend = FALSE,
-            hoverinfo = "none",
-            source = session$ns("histogram_plot")
-          )
-          plot_mask <- list(list(
-            type = "rect", fillcolor = rgb(1, 1, 1, .65), line = list(width = 0),
-            x0 = -0.5, x1 = 1.5, y0 = -0.5, y1 = 1.5, xref = "paper", yref = "paper"
-          ))
-          plot_layout <- reactive({
-            shapes <- private$get_shape_properties(private$get_selected())
-            if (private$is_disabled()) shapes <- c(shapes, plot_mask)
-            list(
-              barmode = "overlay",
-              xaxis = list(range = private$choices, showticklabels = TRUE, rangeslider = list(thickness = 0)),
-              yaxis = list(showgrid = FALSE, showticklabels = FALSE),
-              margin = list(b = 10, l = 5, r = 5, t = 5),
-              plot_bgcolor = "#FFFFFF00",
-              paper_bgcolor = "#FFFFFF00",
-              shapes = shapes
-            )
-          })
-          plot_config <- reactive({
-            list(
-              displayModeBar = FALSE,
-              edits = list(shapePosition = TRUE),
-              staticPlot = private$is_disabled()
-            )
-          })
+          plot_data <- c(private$plot_data, source = session$ns("histogram_plot"))
 
           # display histogram, adding a second trace that contains filtered data
           output$plot <- plotly::renderPlotly({
             unfiltered_histogram <- do.call(plotly::plot_ly, plot_data)
-            unfiltered_histogram <- do.call(plotly::layout, c(list(p = unfiltered_histogram), plot_layout()))
-            unfiltered_histogram <- do.call(plotly::config, c(list(p = unfiltered_histogram), plot_config()))
+            unfiltered_histogram <- do.call(plotly::layout, c(list(p = unfiltered_histogram), private$plot_layout()))
+            unfiltered_histogram <- do.call(plotly::config, c(list(p = unfiltered_histogram), private$plot_config()))
 
             finite_values <- Filter(is.finite, private$x_reactive())
             if (is.null(finite_values)) {
@@ -637,36 +642,12 @@ RangeFilterState <- R6::R6Class( # nolint
         function(input, output, session) {
           logger::log_trace("RangeFilterState$server initializing, dataname: { private$dataname }")
 
-          plot_data <- list(
-            x = Filter(Negate(is.na), Filter(is.finite, private$x)),
-            color = I("#868e9655"),
-            type = "histogram",
-            bingroup = 1,
-            showlegend = FALSE,
-            hoverinfo = "none",
-            source = session$ns("histogram_plot")
-          )
-          plot_mask <- list(list(
-            type = "rect", fillcolor = rgb(1, 1, 1, .65), line = list(width = 0),
-            x0 = -0.5, x1 = 1.5, y0 = -0.5, y1 = 1.5, xref = "paper", yref = "paper"
-          ))
-          plot_layout <- list(
-            barmode = "overlay",
-            xaxis = list(range = private$choices, showticklabels = TRUE, rangeslider = list(thickness = 0)),
-            yaxis = list(showgrid = FALSE, showticklabels = FALSE),
-            margin = list(b = 10, l = 5, r = 5, t = 5),
-            plot_bgcolor = "#FFFFFF00",
-            paper_bgcolor = "#FFFFFF00",
-            shapes = c(private$get_shape_properties(shiny::isolate(private$get_selected())), plot_mask)
-          )
-          plot_config <- list(
-            displayModeBar = FALSE,
-            staticPlot = FALSE
-          )
+          plot_config <- private$plot_config()
+          plot_config$staticPlot <- TRUE
 
           output$plot <- plotly::renderPlotly({
-            unfiltered_histogram <- do.call(plotly::plot_ly, plot_data)
-            unfiltered_histogram <- do.call(plotly::layout, c(list(p = unfiltered_histogram), plot_layout))
+            unfiltered_histogram <- do.call(plotly::plot_ly, private$plot_data)
+            unfiltered_histogram <- do.call(plotly::layout, c(list(p = unfiltered_histogram), private$plot_layout()))
             unfiltered_histogram <- do.call(plotly::config, c(list(p = unfiltered_histogram), plot_config))
 
             finite_values <- Filter(is.finite, private$x_reactive())
