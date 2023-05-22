@@ -456,7 +456,7 @@ RangeFilterState <- R6::R6Class( # nolint
     ui_inputs = function(id) {
       ns <- NS(id)
 
-      ui_input_manual <- shinyWidgets::numericRangeInput(
+      ui_input <- shinyWidgets::numericRangeInput(
         inputId = ns("selection_manual"),
         label = NULL,
         min = private$choices[1L],
@@ -466,16 +466,14 @@ RangeFilterState <- R6::R6Class( # nolint
         width = "100%"
       )
 
-      if (shiny::isolate(private$is_disabled())) {
-        ui_input_manual <- shinyjs::disabled(ui_input_manual)
-      }
+      if (shiny::isolate(private$is_disabled())) ui_input <- shinyjs::disabled(ui_input)
 
       tagList(
         div(
           class = "choices_state",
           plotly::plotlyOutput(ns("plot"), height = "50px")
         ),
-        ui_input_manual,
+        ui_input,
         div(
           class = "filter-card-body-keep-na-inf",
           private$keep_inf_ui(ns("keep_inf")),
