@@ -538,7 +538,7 @@ RangeFilterState <- R6::R6Class( # nolint
                     return(NULL)
                   }
 
-                  private$set_selected(line_positions)
+                  private$set_selected(signif(line_positions, digits = 4L))
                 }
               }
             )
