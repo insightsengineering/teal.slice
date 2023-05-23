@@ -658,15 +658,19 @@ n_sig_digits <- function(nums) {
 
 #' Get hex code of the current Bootstrap theme color.
 #'
+#' Determines the color specification for the currently active Bootstrap color theme and returns one queried color.
+#'
 #' @param color `character(1)` naming one of the available theme colors
 #' @param alpha either a `numeric(1)` or `character(1)` specifying transparency
-#'              in the range of 0-1 or a hexadecimal value 00-ff, respectively;
+#'              in the range of `0-1` or a hexadecimal value `00-ff`, respectively;
 #'              set to NULL to omit adding the alpha channel
 #'
 #' @return Named `character(1)` containing a hexadecimal color representation.
 #'
 #' @examples
-#' fetch_bs_color("primary")
+#' teal.slice:::fetch_bs_color("primary")
+#' teal.slice:::fetch_bs_color("danger", 0.35)
+#' teal.slice:::fetch_bs_color("danger", "80")
 #'
 #' @keywords internal
 #'
