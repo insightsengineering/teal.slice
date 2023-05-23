@@ -19,6 +19,7 @@ Depends:
     R (>= 4.0),
     shiny
 Imports:
+    bslib,
     checkmate,
     dplyr,
     ggplot2,
@@ -36,7 +37,6 @@ Imports:
     teal.logger (>= 0.1.1),
     teal.widgets (>= 0.2.0)
 Suggests:
-    bslib,
     formatters (>= 0.3.1),
     knitr,
     MultiAssayExperiment,
