@@ -160,7 +160,7 @@ LogicalFilterState <- R6::R6Class( # nolint
         keep_inf = keep_inf,
         fixed = fixed,
         disabled = disabled,
-        multiple = multiple
+        multiple = multiple,
         extract_type = extract_type
       )
       args <- append(args, list(...))
