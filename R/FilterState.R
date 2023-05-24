@@ -159,6 +159,9 @@ FilterState <- R6::R6Class( # nolint
 
     #' @description
     #' Sets filtering state.
+    #' - `fixed` state is prevented from changing state
+    #' - `disabled` state is prevented from changing state, but may be enabled and changed in one operation
+    #' - `locked` state is prevented from changing `disabled` status
     #'
     #' @param state a `teal_slice` object
     #'
@@ -167,9 +170,14 @@ FilterState <- R6::R6Class( # nolint
     set_state = function(state) {
       checkmate::assert_class(state, "teal_slice")
 
-      # Allow for enabling a filter state before altering state.
-      if (isTRUE(state$disabled) && isFALSE(private$is_disabled())) private$disabled(TRUE)
+      # Allow for enabling filter state before altering state.
       if (isFALSE(state$disabled) && isTRUE(private$is_disabled())) private$disabled(FALSE)
+      # Unless locked, allow for disabling filter state before.
+      if (isFALSE(private$locked)) {
+        if (isTRUE(state$disabled) && isFALSE(private$is_disabled())) private$disabled(TRUE)
+      } else {
+        logger::log_warn("attempt to disable a locked filter aborted: { private$dataname } { private$varname }")
+      }
 
       if (private$is_disabled()) {
         mutables <- state[c("selected", "keep_na", "keep_inf")]
@@ -218,8 +226,9 @@ FilterState <- R6::R6Class( # nolint
         selected = private$get_selected(),
         keep_na = private$get_keep_na(),
         keep_inf = private$get_keep_inf(),
+        disabled = private$is_disabled(),
         fixed = private$fixed,
-        disabled = private$is_disabled()
+        locked = private$locked
       )
       args <- append(args, private$extras)
       args <- Filter(Negate(is.null), args)

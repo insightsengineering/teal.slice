@@ -134,11 +134,12 @@ FilterStateExpr <- R6::R6Class( # nolint
     get_state = function() {
       states <- append(
         list(
+          dataname = private$dataname,
           id = private$id,
           title = private$title,
-          dataname = private$dataname,
           expr = private$expr,
-          disable = private$disabled()
+          disabled = private$disabled(),
+          locked = private$locked
         ),
         private$extras
       )
@@ -154,8 +155,12 @@ FilterStateExpr <- R6::R6Class( # nolint
     #'
     set_state = function(state) {
       checkmate::assert_class(state, "teal_slice_expr")
-      if (isTRUE(state$disabled) && isFALSE(private$is_disabled())) private$disabled(TRUE)
-      if (isFALSE(state$disabled) && isTRUE(private$is_disabled())) private$disabled(FALSE)
+      if (isTRUE(private$locked)) {
+        logger::log_warn("attempt to disable a locked filter aborted: { private$dataname } { private$varname }")
+      } else {
+        if (isTRUE(state$disabled) && isFALSE(private$is_disabled())) private$disabled(TRUE)
+        if (isFALSE(state$disabled) && isTRUE(private$is_disabled())) private$disabled(FALSE)
+      }
       invisible(NULL)
     },
 
