@@ -90,7 +90,6 @@ testthat::test_that("print returns a string representation of filters", {
     utils::capture.output(shiny::isolate(dataset$print(show_all = TRUE))),
     utils::capture.output(shiny::isolate(print(dataset, show_all = TRUE)))
   )
-
 })
 
 # get_call ----

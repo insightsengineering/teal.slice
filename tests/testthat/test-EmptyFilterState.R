@@ -32,14 +32,14 @@ testthat::test_that("format returns a properly formatted string representation",
   testthat::expect_equal(
     shiny::isolate(filter_state$format()),
     paste0(
-      'EmptyFilterState:\n',
+      "EmptyFilterState:\n",
       format(shiny::isolate(filter_state$get_state()))
     )
   )
   testthat::expect_equal(
     shiny::isolate(filter_state$format(show_all = TRUE)),
     paste0(
-      'EmptyFilterState:\n',
+      "EmptyFilterState:\n",
       format(shiny::isolate(filter_state$get_state()), show_all = TRUE)
     )
   )

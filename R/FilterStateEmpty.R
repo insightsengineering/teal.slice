@@ -110,7 +110,6 @@ EmptyFilterState <- R6::R6Class( # nolint
         substitute(!is.na(varname), list(varname = private$get_varname_prefixed(dataname)))
       }
     }
-
   ),
 
   # private members ----

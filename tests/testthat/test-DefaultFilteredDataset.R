@@ -76,14 +76,14 @@ testthat::test_that("format returns a properly formatted string representation",
   testthat::expect_equal(
     shiny::isolate(dataset$format()),
     paste0(
-      'DefaultFilteredDataset:\n',
+      "DefaultFilteredDataset:\n",
       format(shiny::isolate(dataset$get_filter_state()))
     )
   )
   testthat::expect_equal(
     shiny::isolate(dataset$format(show_all = TRUE)),
     paste0(
-      'DefaultFilteredDataset:\n',
+      "DefaultFilteredDataset:\n",
       format(shiny::isolate(dataset$get_filter_state()), show_all = TRUE)
     )
   )

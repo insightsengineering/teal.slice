@@ -322,14 +322,14 @@ testthat::test_that("format returns properly formatted string representation", {
   testthat::expect_equal(
     shiny::isolate(filter_state$format()),
     paste0(
-      'ChoicesFilterState:\n',
+      "ChoicesFilterState:\n",
       format(shiny::isolate(filter_state$get_state()))
     )
   )
   testthat::expect_equal(
     shiny::isolate(filter_state$format(show_all = TRUE)),
     paste0(
-      'ChoicesFilterState:\n',
+      "ChoicesFilterState:\n",
       format(shiny::isolate(filter_state$get_state()), show_all = TRUE)
     )
   )
@@ -354,7 +354,6 @@ testthat::test_that("format shortens names if strings are too long", {
       sep = "\n"
     )
   )
-
 })
 
 # print ---

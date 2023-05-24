@@ -134,7 +134,7 @@ testthat::test_that("format returns a properly formatted string representation",
   testthat::expect_equal(
     shiny::isolate(state$format()),
     paste0(
-      'FilterStateExpr:\n',
+      "FilterStateExpr:\n",
       format(shiny::isolate(state$get_state()))
     )
   )

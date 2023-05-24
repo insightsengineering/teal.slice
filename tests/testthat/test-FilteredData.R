@@ -554,7 +554,6 @@ testthat::test_that("get_filter_state returns `teal_slices` with features identi
     shiny::isolate(datasets$format(show_all = TRUE)),
     paste0("FilteredData:\n", format(fs_out, show_all = TRUE))
   )
-
 })
 
 # print ---
@@ -605,7 +604,6 @@ testthat::test_that("print returns properly formatted string representing `teal_
       " "
     )
   )
-
 })
 
 # remove_filter_state ----

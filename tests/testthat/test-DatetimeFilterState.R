@@ -247,7 +247,6 @@ testthat::test_that("format accepts logical show_all", {
   testthat::expect_error(shiny::isolate(filter_state$format(show_all = 1)), "Assertion on 'show_all' failed: Must be of type 'logical flag', not 'double'")
   testthat::expect_error(shiny::isolate(filter_state$format(show_all = 0)), "Assertion on 'show_all' failed: Must be of type 'logical flag', not 'double'")
   testthat::expect_error(shiny::isolate(filter_state$format(show_all = "TRUE")), "Assertion on 'show_all' failed")
-
 })
 
 testthat::test_that("format returns a properly formatted string representation", {
@@ -255,14 +254,14 @@ testthat::test_that("format returns a properly formatted string representation",
   testthat::expect_equal(
     shiny::isolate(filter_state$format()),
     paste0(
-      'DatetimeFilterState:\n',
+      "DatetimeFilterState:\n",
       format(shiny::isolate(filter_state$get_state()))
     )
   )
   testthat::expect_equal(
     shiny::isolate(filter_state$format(show_all = TRUE)),
     paste0(
-      'DatetimeFilterState:\n',
+      "DatetimeFilterState:\n",
       format(shiny::isolate(filter_state$get_state()), show_all = TRUE)
     )
   )

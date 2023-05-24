@@ -96,7 +96,6 @@ testthat::test_that("print returns properly formatted string", {
     utils::capture.output(shiny::isolate(filtered_dataset$print(show_all = TRUE))),
     utils::capture.output(shiny::isolate(print(filtered_dataset, show_all = TRUE)))
   )
-
 })
 
 # get_call ----
