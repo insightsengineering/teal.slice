@@ -95,30 +95,26 @@ FilterStateExpr <- R6::R6Class( # nolint
     },
 
     #' @description
-    #' Returns a formatted string representing this `FilterState`.
+    #' Returns a formatted string representing this `FilterStateExpr` object.
     #'
-    #' @param indent (`numeric(1)`)
-    #'   number of spaces before after each new line character of the formatted string;
-    #'   defaults to 0
-    #' @param wrap_width (`numeric(1)`)
-    #'   number of characters to wrap lines at in the printed output;
-    #'   allowed range is 30 to 120; defaults to 76
+    #' @param show_all `logical(1)` passed to `format.teal_slice`
     #'
     #' @return `character(1)` the formatted string
     #'
-    format = function(indent = 2L, wrap_width = 76L) {
-      checkmate::assert_number(indent, finite = TRUE, lower = 0L)
-      checkmate::assert_number(wrap_width, finite = TRUE, lower = 30L, upper = 120L)
-
-      # List all selected values separated by commas.
-      paste(
-        strwrap(
-          sprintf("Filter expr: %s", deparse1(private$expr)),
-          width = wrap_width,
-          indent = indent
-        ),
-        collapse = "\n"
+    format = function(show_all = FALSE) {
+      sprintf(
+        "%s:\n%s",
+        class(self)[1],
+        format(self$get_state(), show_all = show_all)
       )
+    },
+
+    #' @description
+    #' Prints this `FilterStateExpr` object.
+    #'
+    #' @param ... additional arguments
+    print = function(...) {
+      cat(shiny::isolate(self$format(...)), "\n")
     },
 
     #' @description

@@ -240,41 +240,52 @@ testthat::test_that("get_call returns call if all selected but NA exists", {
 })
 
 # format ----
-testthat::test_that("format accepts numeric as indent", {
+testthat::test_that("format accepts logical show_all", {
   filter_state <- DatetimeFilterState$new(posixct, dataname = "data", varname = "variable")
-  testthat::expect_no_error(shiny::isolate(filter_state$format(indent = 0L)))
-  testthat::expect_no_error(shiny::isolate(filter_state$format(indent = 0)))
-  testthat::expect_error(shiny::isolate(filter_state$format(indent = "0")), "Assertion on 'indent' failed")
+  testthat::expect_no_error(shiny::isolate(filter_state$format(show_all = TRUE)))
+  testthat::expect_no_error(shiny::isolate(filter_state$format(show_all = FALSE)))
+  testthat::expect_error(shiny::isolate(filter_state$format(show_all = 1)), "Assertion on 'show_all' failed: Must be of type 'logical flag', not 'double'")
+  testthat::expect_error(shiny::isolate(filter_state$format(show_all = 0)), "Assertion on 'show_all' failed: Must be of type 'logical flag', not 'double'")
+  testthat::expect_error(shiny::isolate(filter_state$format(show_all = "TRUE")), "Assertion on 'show_all' failed")
+
 })
 
 testthat::test_that("format returns a properly formatted string representation", {
-  skip("temporary")
   filter_state <- DatetimeFilterState$new(posixct, dataname = "data", varname = "variable")
   testthat::expect_equal(
     shiny::isolate(filter_state$format()),
-    paste(
-      "  Filtering on: variable",
-      "    Selected range: 2000-01-01 12:00:00 - 2000-01-01 12:00:09",
-      "    Include missing values: TRUE",
-      sep = "\n"
+    paste0(
+      'DatetimeFilterState:\n',
+      format(shiny::isolate(filter_state$get_state()))
+    )
+  )
+  testthat::expect_equal(
+    shiny::isolate(filter_state$format(show_all = TRUE)),
+    paste0(
+      'DatetimeFilterState:\n',
+      format(shiny::isolate(filter_state$get_state()), show_all = TRUE)
     )
   )
 })
 
-testthat::test_that("format prepends spaces to every line of the returned string", {
-  skip("temporary")
+# print ---
+
+testthat::test_that("print returns a properly formatted string representation", {
   filter_state <- DatetimeFilterState$new(posixct, dataname = "data", varname = "variable")
-  for (i in 0:3) {
-    testthat::expect_equal(
-      shiny::isolate(filter_state$format(indent = i)),
-      paste(format("", width = i),
-        c(
-          "Filtering on: variable",
-          sprintf("%sSelected range: 2000-01-01 12:00:00 - 2000-01-01 12:00:09", format("", width = i)),
-          sprintf("%sInclude missing values: TRUE", format("", width = i))
-        ),
-        sep = "", collapse = "\n"
-      )
+  testthat::expect_equal(
+    utils::capture.output(cat(filter_state$print())),
+    c(
+      "DatetimeFilterState:",
+      utils::capture.output(print(shiny::isolate(filter_state$get_state()))),
+      " "
     )
-  }
+  )
+  testthat::expect_equal(
+    utils::capture.output(cat(filter_state$print(show_all = TRUE))),
+    c(
+      "DatetimeFilterState:",
+      utils::capture.output(print(shiny::isolate(filter_state$get_state()), show_all = TRUE)),
+      " "
+    )
+  )
 })
