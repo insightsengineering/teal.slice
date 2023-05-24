@@ -292,8 +292,7 @@ RangeFilterState <- R6::R6Class( # nolint
     inf_count = integer(0),
     inf_filtered_count = NULL,
     is_integer = logical(0),
-    slider_step = numeric(0), # step for the slider input widget, calculated from input data (x)
-    slider_ticks = numeric(0), # allowed values for the slider input widget, calculated from input data (x),
+    numeric_step = numeric(0), # step for the slider input widget, calculated from input data (x)
     plot_data = NULL,
     plot_mask = list(),
     plot_layout = NULL,
@@ -334,13 +333,10 @@ RangeFilterState <- R6::R6Class( # nolint
       # Required for displaying ticks on the slider, can modify choices!
       if (identical(diff(x_range), 0)) {
         choices <- x_range
-        private$slider_ticks <- signif(x_range, digits = 10)
-        private$slider_step <- NULL
       } else {
-        x_pretty <- pretty(x_range, 100L)
+        x_pretty <- pretty(x_range, 10000L)
         choices <- range(x_pretty)
-        private$slider_ticks <- signif(x_pretty, digits = 10)
-        private$slider_step <- signif(private$get_pretty_range_step(x_pretty), digits = 10)
+        private$numeric_step <- signif(private$get_pretty_range_step(x_pretty), digits = 10)
       }
       private$choices <- choices
       invisible(NULL)
@@ -463,7 +459,7 @@ RangeFilterState <- R6::R6Class( # nolint
         min = private$choices[1L],
         max = private$choices[2L],
         value = shiny::isolate(private$selected()),
-        step = private$slider_step,
+        step = private$numeric_step,
         width = "100%"
       )
 
