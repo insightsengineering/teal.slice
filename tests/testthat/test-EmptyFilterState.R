@@ -1,53 +1,68 @@
-testthat::test_that("get_call returns NULL after set_keep_na(FALSE)", {
-  filter_state <- EmptyFilterState$new(7, varname = "7")
-  filter_state$set_keep_na(FALSE)
-  testthat::expect_false(shiny::isolate(filter_state$get_call()))
+# get_call ----
+testthat::test_that("get_call of default EmptyFilterState returns NULL by default", {
+  filter_state <- EmptyFilterState$new(NA, dataname = "data", varname = "variable")
+  testthat::expect_null(shiny::isolate(filter_state$get_call()))
 })
 
-testthat::test_that("get_call returns a call after set_keep_na(TRUE)", {
-  filter_state <- EmptyFilterState$new(7, varname = "test")
-  filter_state$set_keep_na(TRUE)
-  testthat::expect_equal(shiny::isolate(filter_state$get_call()), quote(is.na(test)))
-})
-
-testthat::test_that("set_state needs a named list with selected and keep_na elements", {
-  filter_state <- EmptyFilterState$new(7, varname = "test")
-  filter_state$set_state(list(keep_na = TRUE))
-  testthat::expect_true(shiny::isolate(filter_state$get_keep_na()))
-  testthat::expect_error(
-    filter_state$set_state(list(selected = 1)),
-    "All values in variable 'test' are `NA`"
-  )
-  testthat::expect_error(
-    filter_state$set_state(list(keep_na = FALSE, unknown = TRUE)),
-    "all\\(names\\(state\\)"
+testthat::test_that("get_call of default EmptyFilterState returns !is.na() call if keep_na is FALSE", {
+  filter_state <- EmptyFilterState$new(NA, dataname = "data", varname = "variable", keep_na = FALSE)
+  testthat::expect_identical(
+    shiny::isolate(filter_state$get_call()),
+    quote(!is.na(variable))
   )
 })
 
-testthat::test_that("get_state returns a list identical to set_state input", {
-  filter_state <- EmptyFilterState$new(NA_character_, varname = "test")
-  state <- list(keep_na = TRUE)
-  filter_state$set_state(state)
-  testthat::expect_identical(shiny::isolate(filter_state$get_state()), state)
+testthat::test_that("get_call of default EmptyFilterState returns null if disabled", {
+  filter_state <- EmptyFilterState$new(NA, dataname = "data", varname = "variable", keep_na = FALSE, disabled = TRUE)
+  testthat::expect_null(shiny::isolate(filter_state$get_call()))
 })
 
-testthat::test_that(
-  "EmptyFilterState$is_any_filtered returns FALSE when keep_na is TRUE and returns TRUE when keep_na is FALSE",
-  code = {
-    filter_state <- teal.slice:::EmptyFilterState$new(
-      rep(NA, 10),
-      varname = "x",
-      dataname = "data",
-      extract_type = character(0)
-    )
-    shiny::isolate(filter_state$set_keep_na(TRUE))
-    testthat::expect_false(
-      shiny::isolate(filter_state$is_any_filtered())
-    )
+# format ---
+testthat::test_that("format accepts logical show_all", {
+  filter_state <- EmptyFilterState$new(NA, dataname = "data", varname = "variable", keep_na = FALSE, disabled = TRUE)
+  testthat::expect_no_error(shiny::isolate(filter_state$format(show_all = TRUE)))
+  testthat::expect_no_error(shiny::isolate(filter_state$format(show_all = FALSE)))
+  testthat::expect_error(shiny::isolate(filter_state$format(show_all = 1)), "Assertion on 'show_all' failed: Must be of type 'logical flag', not 'double'")
+  testthat::expect_error(shiny::isolate(filter_state$format(show_all = 0)), "Assertion on 'show_all' failed: Must be of type 'logical flag', not 'double'")
+  testthat::expect_error(shiny::isolate(filter_state$format(show_all = "TRUE")), "Assertion on 'show_all' failed")
+})
 
-    shiny::isolate(filter_state$set_keep_na(FALSE))
-    testthat::expect_true(
-      shiny::isolate(filter_state$is_any_filtered())
+testthat::test_that("format returns a properly formatted string representation", {
+  filter_state <- EmptyFilterState$new(NA, dataname = "data", varname = "variable", keep_na = FALSE, disabled = TRUE)
+  testthat::expect_equal(
+    shiny::isolate(filter_state$format()),
+    paste0(
+      'EmptyFilterState:\n',
+      format(shiny::isolate(filter_state$get_state()))
     )
-  }
-)
+  )
+  testthat::expect_equal(
+    shiny::isolate(filter_state$format(show_all = TRUE)),
+    paste0(
+      'EmptyFilterState:\n',
+      format(shiny::isolate(filter_state$get_state()), show_all = TRUE)
+    )
+  )
+})
+
+# print ---
+
+testthat::test_that("print returns a properly formatted string representation", {
+  filter_state <- EmptyFilterState$new(NA, dataname = "data", varname = "variable", keep_na = FALSE, disabled = TRUE)
+  testthat::expect_equal(
+    utils::capture.output(cat(filter_state$print())),
+    c(
+      "EmptyFilterState:",
+      utils::capture.output(print(shiny::isolate(filter_state$get_state()))),
+      " "
+    )
+  )
+  testthat::expect_equal(
+    utils::capture.output(cat(filter_state$print(show_all = TRUE))),
+    c(
+      "EmptyFilterState:",
+      utils::capture.output(print(shiny::isolate(filter_state$get_state()), show_all = TRUE)),
+      " "
+    )
+  )
+})

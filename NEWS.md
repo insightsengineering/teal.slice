@@ -9,6 +9,7 @@
 * Added a global turn on/off button for the Filter Panel.
 * Added ability to collapse Active Filter Display panel.
 * Added ability to collapse all filters of an individual dataset.
+* Added fixed filter states.
 
 ### Enhancements
 
@@ -18,12 +19,14 @@
 
 * Fixed an error where the `RangeFilterState` produced an error when using `bootstrap 4`.
 * Fixed a bug that caused the range slider to omit values selected programmatically through the filter API.
+* Fixed a bug where setting incorrect values for Date and Date time ranges caused the app to crash.
 
 ### Miscellaneous
 
 * Calculation of step in slider for `RangeFilterState` now uses `checkmate::test_integerish` instead of `is.integer`.
 * Updated `init_filtered_data` to take into account the removal of `CDISCTealData` from `teal.data` package.
-* Added examples apps for `ChoicesFilterState` and `DFFilterStates`.
+* Added `shinyvalidate` validation for Date and Date time ranges.
+* Added examples apps for `FilterState` child classes and `DFFilterStates`.
 
 # teal.slice 0.2.0
 

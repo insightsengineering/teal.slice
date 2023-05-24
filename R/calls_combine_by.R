@@ -26,6 +26,8 @@ calls_combine_by <- function(calls, operator) {
   if (length(calls) > 0L) checkmate::assert_list(calls, types = c("call", "name"))
   checkmate::assert_string(operator)
 
+  calls <- Filter(x = calls, f = Negate(is.null)) # disabled filters
+
   Reduce(
     x = calls,
     f = function(x, y) call(operator, x, y)

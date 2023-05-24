@@ -1,119 +1,47 @@
-testthat::test_that("The constructor accepts a data.frame object and dataname", {
-  testthat::expect_no_error(FilteredDataset$new(dataset = head(iris), dataname = "iris"))
+# initialize ----
+testthat::test_that("constructor creates FilteredDataset with empty filter_states", {
+  testfd <- R6::R6Class(
+    "testfd",
+    inherit = FilteredDataset,
+    public = list(
+      get_filter_states = function() private$filter_states
+    )
+  )
+  filtered_dataset <- testfd$new(dataset = head(iris), dataname = "iris")
+  testthat::expect_identical(filtered_dataset$get_filter_states(), list())
 })
 
-testthat::test_that("state_lists_empty does not throw after initializing FilteredDataset", {
+# clear_filter_states ----
+testthat::test_that("clear_filter_states does not raise errors after initializing FilteredDataset", {
   filtered_dataset <- FilteredDataset$new(dataset = head(iris), dataname = "iris")
-  testthat::expect_no_error(filtered_dataset$state_lists_empty())
+  testthat::expect_no_error(filtered_dataset$clear_filter_states())
 })
 
-testthat::test_that("get_filter_states returns an empty list after initialization", {
-  filtered_dataset <- FilteredDataset$new(dataset = head(iris), dataname = "iris")
-  testthat::expect_equal(filtered_dataset$get_filter_states(), list())
-})
-
-testthat::test_that("get_dataname returns the dataname passed to the constructor", {
-  filtered_dataset <- FilteredDataset$new(dataset = head(iris), dataname = "iris")
-  testthat::expect_equal(filtered_dataset$get_dataname(), "iris")
-})
-
+# get_dataset ----
 testthat::test_that("get_dataset returns the dataset passed to the constructor", {
   filtered_dataset <- FilteredDataset$new(dataset = head(iris), dataname = "iris")
-  testthat::expect_equal(filtered_dataset$get_dataset(), head(iris))
+  testthat::expect_identical(filtered_dataset$get_dataset(), head(iris))
 })
 
+# get_dataname ----
+testthat::test_that("get_dataname returns the dataname passed to the constructor", {
+  filtered_dataset <- FilteredDataset$new(dataset = head(iris), dataname = "iris")
+  testthat::expect_identical(filtered_dataset$get_dataname(), "iris")
+})
+
+# get_dataset_label ----
 testthat::test_that("get_dataset_label retruns the dataset label passed to the constructor", {
   filtered_dataset <- FilteredDataset$new(dataset = head(iris), dataname = "iris", label = "dataset label")
-  testthat::expect_equal(filtered_dataset$get_dataset_label(), "dataset label")
+  testthat::expect_identical(filtered_dataset$get_dataset_label(), "dataset label")
 })
 
+# get_keys ----
 testthat::test_that("get_keys returns the keys passed to the constructor", {
   filtered_dataset <- FilteredDataset$new(dataset = head(iris), dataname = "iris", keys = c("Petal.length"))
-  testthat::expect_equal("Petal.length", filtered_dataset$get_keys())
+  testthat::expect_identical("Petal.length", filtered_dataset$get_keys())
 })
 
-
-testthat::test_that("set_filterable_varnames restricts which variables can be filtered", {
-  filtered_dataset <- FilteredDataset$new(dataset = head(iris), dataname = "iris")
-  expect_setequal(
-    filtered_dataset$get_filterable_varnames(),
-    c("Sepal.Length", "Sepal.Width", "Petal.Length", "Petal.Width", "Species")
-  )
-
-  filtered_dataset$set_filterable_varnames(c("Species", "Sepal.Length"))
-  expect_setequal(filtered_dataset$get_filterable_varnames(), c("Species", "Sepal.Length"))
-})
-
-testthat::test_that("setting filterable varnames to NULL or character(0) does not affect the filterable variables", {
-  filtered_dataset <- FilteredDataset$new(dataset = head(iris), dataname = "iris")
-  expected <- c("Sepal.Length", "Sepal.Width", "Petal.Length", "Petal.Width", "Species")
-
-  filtered_dataset$set_filterable_varnames(NULL)
-  expect_setequal(filtered_dataset$get_filterable_varnames(), expected)
-
-  filtered_dataset$set_filterable_varnames(character(0))
-  expect_setequal(filtered_dataset$get_filterable_varnames(), expected)
-})
-
-testthat::test_that("setting filterable varnames which include columns that do not exist ignores these columns", {
-  filtered_dataset <- FilteredDataset$new(dataset = head(iris), dataname = "iris")
-  filtered_dataset$set_filterable_varnames(c("Species", "Invalid"))
-  expect_equal(filtered_dataset$get_filterable_varnames(), "Species")
-})
-
-
-testthat::test_that("setting filterable varnames with varnames not NULL or non-missing character throws error", {
-  filtered_dataset <- FilteredDataset$new(dataset = head(iris), dataname = "iris")
-  expect_error(
-    filtered_dataset$set_filterable_varnames(1:10),
-    "Assertion on 'varnames' failed:"
-  )
-  expect_error(
-    filtered_dataset$set_filterable_varnames(TRUE),
-    "Assertion on 'varnames' failed:"
-  )
-
-  expect_error(
-    filtered_dataset$set_filterable_varnames(c("Species", NA)),
-    "Assertion on 'varnames' failed:"
-  )
-})
-
-
-testthat::test_that("get_varlabels(NULL) returns a named array of NAs if data.frame has no varlabels", {
-  filtered_dataset <- FilteredDataset$new(
-    dataset = head(iris), dataname = "iris"
-  )
-  testthat::expect_equal(
-    filtered_dataset$get_varlabels(),
-    setNames(as.character(rep(NA, ncol(head(iris)))), nm = names(iris))
-  )
-})
-
-testthat::test_that("get_varlabels returns labels for the part of the variables only", {
-  filtered_dataset <- FilteredDataset$new(
-    dataset = head(iris), dataname = "iris"
-  )
-  testthat::expect_equal(
-    filtered_dataset$get_varlabels(variables = c("Petal.Length")),
-    setNames(object = as.character(NA), nm = "Petal.Length")
-  )
-})
-
-testthat::test_that("get_varnames returns the names of the variables in the data passed to the constructor", {
-  filtered_dataset <- FilteredDataset$new(
-    dataset = head(iris), dataname = "iris"
-  )
-  testthat::expect_equal(filtered_dataset$get_varnames(), names(iris))
-})
-
-testthat::test_that("ui_add_filter_state is pure virtual", {
-  filtered_dataset <- FilteredDataset$new(
-    dataset = head(iris), dataname = "iris"
-  )
-  testthat::expect_error(filtered_dataset$ui_add_filter_state(), regex = "Pure virtual")
-})
-
+# get_metadata ----
 testthat::test_that("get_metadata returns the metadata of the data passed to the constructor", {
   filtered_dataset <- FilteredDataset$new(
     dataset = head(iris), dataname = "iris", metadata = list(A = "A", B = TRUE, C = 5)
@@ -126,27 +54,51 @@ testthat::test_that("get_metadata returns the metadata of the data passed to the
   testthat::expect_null(filtered_dataset$get_metadata())
 })
 
-# Format
-testthat::test_that("$get_formatted_filter_state returns a string representation of filters", {
+# format ----
+testthat::test_that("format returns a string representation of filters", {
   dataset <- DefaultFilteredDataset$new(dataset = iris, dataname = "iris")
-  fs <- list(
-    Sepal.Length = list(selected = c(5.1, 6.4), keep_na = TRUE, keep_inf = TRUE),
-    Species = list(selected = c("setosa", "versicolor"), keep_na = FALSE)
+  fs <- filter_settings(
+    filter_var(dataname = "iris", varname = "Sepal.Length", selected = c(5.1, 6.4), keep_na = TRUE, keep_inf = FALSE),
+    filter_var(dataname = "iris", varname = "Species", selected = c("setosa", "versicolor"), keep_na = FALSE)
   )
-  shiny::isolate(dataset$set_filter_state(state = fs))
-  states <- dataset$get_filter_states()[[1]]
+  dataset$set_filter_state(state = fs)
 
   testthat::expect_equal(
-    shiny::isolate(dataset$get_formatted_filter_state()),
-    paste("Filters for dataset: iris", shiny::isolate(states$format(indent = 2)), sep = "\n")
+    shiny::isolate(dataset$format()),
+    shiny::isolate(format(dataset))
+  )
+  testthat::expect_equal(
+    shiny::isolate(dataset$format(show_all = TRUE)),
+    shiny::isolate(format(dataset, show_all = TRUE))
   )
 })
 
-testthat::test_that("$get_call returns the filter call of the dataset", {
+# print ---
+testthat::test_that("print returns a string representation of filters", {
   dataset <- DefaultFilteredDataset$new(dataset = iris, dataname = "iris")
-  fs <- list(
-    Sepal.Length = list(selected = c(5.1, 6.4), keep_na = TRUE, keep_inf = TRUE),
-    Species = list(selected = c("setosa", "versicolor"), keep_na = FALSE)
+  fs <- filter_settings(
+    filter_var(dataname = "iris", varname = "Sepal.Length", selected = c(5.1, 6.4), keep_na = TRUE, keep_inf = FALSE),
+    filter_var(dataname = "iris", varname = "Species", selected = c("setosa", "versicolor"), keep_na = FALSE)
+  )
+  dataset$set_filter_state(state = fs)
+
+  testthat::expect_equal(
+    utils::capture.output(shiny::isolate(dataset$print())),
+    utils::capture.output(shiny::isolate(print(dataset)))
+  )
+  testthat::expect_equal(
+    utils::capture.output(shiny::isolate(dataset$print(show_all = TRUE))),
+    utils::capture.output(shiny::isolate(print(dataset, show_all = TRUE)))
+  )
+
+})
+
+# get_call ----
+testthat::test_that("get_call returns the filter call of the dataset", {
+  dataset <- DefaultFilteredDataset$new(dataset = iris, dataname = "iris")
+  fs <- filter_settings(
+    filter_var(dataname = "iris", varname = "Sepal.Length", selected = c(5.1, 6.4), keep_na = TRUE, keep_inf = TRUE),
+    filter_var(dataname = "iris", varname = "Species", selected = c("setosa", "versicolor"), keep_na = FALSE)
   )
   shiny::isolate(dataset$set_filter_state(state = fs))
   filter_call <- shiny::isolate(dataset$get_call())$filter
@@ -162,4 +114,33 @@ testthat::test_that("$get_call returns the filter call of the dataset", {
       )
     )
   )
+})
+
+# get_filter_overview ----
+testthat::test_that("get_filter_overview returns a data frame", {
+  dataset <- DefaultFilteredDataset$new(dataset = iris, dataname = "iris")
+  fs <- filter_settings(
+    filter_var(dataname = "iris", varname = "Sepal.Length", selected = c(5.1, 6.4), keep_na = TRUE, keep_inf = TRUE),
+    filter_var(dataname = "iris", varname = "Species", selected = c("setosa", "versicolor"), keep_na = FALSE)
+  )
+  dataset$set_filter_state(state = fs)
+  overview <- shiny::isolate(dataset$get_filter_overview())
+
+  testthat::expect_s3_class(overview, "data.frame")
+  testthat::expect_equal(
+    overview,
+    data.frame(
+      dataname = "iris",
+      obs = 150,
+      obs_filtered = 60
+    )
+  )
+})
+
+# ui_add ----
+testthat::test_that("ui_add is pure virtual", {
+  filtered_dataset <- FilteredDataset$new(
+    dataset = head(iris), dataname = "iris"
+  )
+  testthat::expect_error(filtered_dataset$ui_add(), regex = "Pure virtual")
 })
