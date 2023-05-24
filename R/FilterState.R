@@ -266,7 +266,7 @@ FilterState <- R6::R6Class( # nolint
           }
 
           # Disable/enable this filter state in response to switch flip.
-          private$observers$is_disabled <- observeEvent(input$enable,
+          private$observers$enable <- observeEvent(input$enable,
             {
               if (isTRUE(input$enable)) {
                 private$disabled(FALSE)
