@@ -143,6 +143,8 @@ ChoicesFilterState <- R6::R6Class( # nolint
     #'   flag specifying whether the `FilterState` is initiated fixed
     #' @param disabled (`logical(1)`)\cr
     #'   flag specifying whether the `FilterState` is initiated disabled
+    #' @param multiple (`logical(1)`)\cr
+    #'   flag specifying whether to enable/disable selecting multiple value
     #' @param extract_type (`character(0)`, `character(1)`)\cr
     #' whether condition calls should be prefixed by dataname. Possible values:
     #' \itemize{
@@ -308,7 +310,6 @@ ChoicesFilterState <- R6::R6Class( # nolint
     choices_counts = integer(0),
     data_class = character(0), # stores class of filtered variable so that it can be restored in $get_call
     tzone = character(0), # if x is a datetime, stores time zone so that it can be restored in $get_call
-    #multiple = multiple,
 
     # private methods ----
     # @description

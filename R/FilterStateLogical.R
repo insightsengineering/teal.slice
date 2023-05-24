@@ -123,6 +123,8 @@ LogicalFilterState <- R6::R6Class( # nolint
     #'   flag specifying whether the `FilterState` is initiated fixed
     #' @param disabled (`logical(1)`)\cr
     #'   flag specifying whether the `FilterState` is initiated disabled
+    #' @param multiple (`logical(1)`)\cr
+    #'   flag specifying whether to enable/disable selecting multiple value
     #' @param extract_type (`character(0)`, `character(1)`)\cr
     #' whether condition calls should be prefixed by dataname. Possible values:
     #' \itemize{
@@ -142,6 +144,7 @@ LogicalFilterState <- R6::R6Class( # nolint
                           keep_inf = NULL,
                           fixed = FALSE,
                           disabled = FALSE,
+                          multiple = FALSE,
                           extract_type = character(0),
                           ...) {
       checkmate::assert_logical(x)
@@ -157,6 +160,7 @@ LogicalFilterState <- R6::R6Class( # nolint
         keep_inf = keep_inf,
         fixed = fixed,
         disabled = disabled,
+        multiple = multiple
         extract_type = extract_type
       )
       args <- append(args, list(...))
