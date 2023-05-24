@@ -42,40 +42,6 @@ SEFilterStates <- R6::R6Class( # nolint
     },
 
     #' @description
-    #' Returns the formatted string representing this `MAEFilterStates` object.
-    #'
-    #' @param indent (`numeric(1)`) the number of spaces before each line of the representation
-    #' @return `character(1)` the formatted string
-    format = function(indent = 0) {
-      checkmate::assert_number(indent, finite = TRUE, lower = 0)
-
-      formatted_states <- c()
-      subset_states <- Filter(function(x) x$arg == "subset", private$state_list_get())
-      if (!is.null(subset_states)) {
-        formatted_states <- c(formatted_states, sprintf("%sSubsetting:", format("", width = indent * 2)))
-        for (state in subset_states) {
-          formatted_states <- c(formatted_states, state$format(indent = indent * 2))
-        }
-      }
-
-      select_states <- Filter(function(x) x$arg == "select", private$state_list_get())
-      if (!is.null(select_states)) {
-        formatted_states <- c(formatted_states, sprintf("%sSelecting:", format("", width = indent * 2)))
-        for (state in select_states) {
-          formatted_states <- c(formatted_states, state$format(indent = indent * 2))
-        }
-      }
-
-      if (length(formatted_states) > 0) {
-        formatted_states <- c(
-          sprintf("%sAssay %s filters:", format("", width = indent), private$datalabel),
-          formatted_states
-        )
-        paste(formatted_states, collapse = "\n")
-      }
-    },
-
-    #' @description
     #' Set filter state
     #'
     #' @param state (`teal_slices`)\cr

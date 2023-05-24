@@ -56,6 +56,75 @@ testthat::test_that("set_filter_state sets `teal_slice`", {
   )
 })
 
+# format ---
+testthat::test_that("format returns a properly formatted string representation", {
+  dataset <- DefaultFilteredDataset$new(dataset = iris, dataname = "iris")
+  fs <- filter_settings(
+    filter_var(
+      dataname = "iris", varname = "Sepal.Length", choices = c(4.3, 7.9), selected = c(5.1, 6.4),
+      keep_inf = FALSE, fixed = FALSE, disabled = FALSE
+    ),
+    filter_var(
+      dataname = "iris", varname = "Species",
+      choices = c("setosa", "versicolor", "virginica"), selected = c("setosa", "versicolor"),
+      keep_na = FALSE, fixed = FALSE, disabled = FALSE
+    ),
+    count_type = "all",
+    include_varnames = list(iris = colnames(iris))
+  )
+  dataset$set_filter_state(fs)
+  testthat::expect_equal(
+    shiny::isolate(dataset$format()),
+    paste0(
+      'DefaultFilteredDataset:\n',
+      format(shiny::isolate(dataset$get_filter_state()))
+    )
+  )
+  testthat::expect_equal(
+    shiny::isolate(dataset$format(show_all = TRUE)),
+    paste0(
+      'DefaultFilteredDataset:\n',
+      format(shiny::isolate(dataset$get_filter_state()), show_all = TRUE)
+    )
+  )
+})
+
+# print ---
+testthat::test_that("print returns a properly formatted string representation", {
+  dataset <- DefaultFilteredDataset$new(dataset = iris, dataname = "iris")
+  fs <- filter_settings(
+    filter_var(
+      dataname = "iris", varname = "Sepal.Length", choices = c(4.3, 7.9), selected = c(5.1, 6.4),
+      keep_inf = FALSE, fixed = FALSE, disabled = FALSE
+    ),
+    filter_var(
+      dataname = "iris", varname = "Species",
+      choices = c("setosa", "versicolor", "virginica"), selected = c("setosa", "versicolor"),
+      keep_na = FALSE, fixed = FALSE, disabled = FALSE
+    ),
+    count_type = "all",
+    include_varnames = list(iris = colnames(iris))
+  )
+  dataset$set_filter_state(fs)
+
+  testthat::expect_equal(
+    utils::capture.output(cat(dataset$print())),
+    c(
+      "DefaultFilteredDataset:",
+      utils::capture.output(print(shiny::isolate(dataset$get_filter_state()))),
+      " "
+    )
+  )
+  testthat::expect_equal(
+    utils::capture.output(cat(dataset$print(show_all = TRUE))),
+    c(
+      "DefaultFilteredDataset:",
+      utils::capture.output(print(shiny::isolate(dataset$get_filter_state()), show_all = TRUE)),
+      " "
+    )
+  )
+})
+
 # remove_filter_state ----
 testthat::test_that("remove_filter_state removes desired filter", {
   dataset <- DefaultFilteredDataset$new(dataset = iris, dataname = "iris")

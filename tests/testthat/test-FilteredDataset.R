@@ -55,28 +55,42 @@ testthat::test_that("get_metadata returns the metadata of the data passed to the
 })
 
 # format ----
-testthat::test_that("get_formatted_filter_state returns a string representation of filters", {
+testthat::test_that("format returns a string representation of filters", {
   dataset <- DefaultFilteredDataset$new(dataset = iris, dataname = "iris")
   fs <- filter_settings(
     filter_var(dataname = "iris", varname = "Sepal.Length", selected = c(5.1, 6.4), keep_na = TRUE, keep_inf = FALSE),
     filter_var(dataname = "iris", varname = "Species", selected = c("setosa", "versicolor"), keep_na = FALSE)
   )
-  shiny::isolate(dataset$set_filter_state(state = fs))
+  dataset$set_filter_state(state = fs)
 
   testthat::expect_equal(
-    shiny::isolate(dataset$get_formatted_filter_state()),
-    paste(
-      c(
-        "Filters for dataset: iris", "  Filtering on: Sepal.Length",
-        "    Selected range: 5.100 - 6.400",
-        "    Include missing values: TRUE",
-        "  Filtering on: Species",
-        "    Selected values: setosa, versicolor",
-        "    Include missing values: FALSE"
-      ),
-      collapse = "\n"
-    )
+    shiny::isolate(dataset$format()),
+    shiny::isolate(format(dataset))
   )
+  testthat::expect_equal(
+    shiny::isolate(dataset$format(show_all = TRUE)),
+    shiny::isolate(format(dataset, show_all = TRUE))
+  )
+})
+
+# print ---
+testthat::test_that("print returns a string representation of filters", {
+  dataset <- DefaultFilteredDataset$new(dataset = iris, dataname = "iris")
+  fs <- filter_settings(
+    filter_var(dataname = "iris", varname = "Sepal.Length", selected = c(5.1, 6.4), keep_na = TRUE, keep_inf = FALSE),
+    filter_var(dataname = "iris", varname = "Species", selected = c("setosa", "versicolor"), keep_na = FALSE)
+  )
+  dataset$set_filter_state(state = fs)
+
+  testthat::expect_equal(
+    utils::capture.output(shiny::isolate(dataset$print())),
+    utils::capture.output(shiny::isolate(print(dataset)))
+  )
+  testthat::expect_equal(
+    utils::capture.output(shiny::isolate(dataset$print(show_all = TRUE))),
+    utils::capture.output(shiny::isolate(print(dataset, show_all = TRUE)))
+  )
+
 })
 
 # get_call ----
