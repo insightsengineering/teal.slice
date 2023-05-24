@@ -162,6 +162,7 @@ ChoicesFilterState <- R6::R6Class( # nolint
                           keep_inf = NULL,
                           fixed = FALSE,
                           disabled = FALSE,
+                          multiple = FALSE,
                           extract_type = character(0),
                           ...) {
       checkmate::assert(
@@ -189,6 +190,7 @@ ChoicesFilterState <- R6::R6Class( # nolint
         keep_inf = keep_inf,
         fixed = fixed,
         disabled = disabled,
+        multiple = multiple,
         extract_type = extract_type
       )
       args <- append(args, list(...))
@@ -306,6 +308,7 @@ ChoicesFilterState <- R6::R6Class( # nolint
     choices_counts = integer(0),
     data_class = character(0), # stores class of filtered variable so that it can be restored in $get_call
     tzone = character(0), # if x is a datetime, stores time zone so that it can be restored in $get_call
+    #multiple = multiple,
 
     # private methods ----
     # @description
@@ -425,17 +428,32 @@ ChoicesFilterState <- R6::R6Class( # nolint
           countsnow = countsnow,
           countsmax = countsmax
         )
-        div(
-          class = "choices_state",
-          checkboxGroupInput(
-            inputId = ns("selection"),
-            label = NULL,
-            selected = shiny::isolate(private$selected()),
-            choiceNames = labels,
-            choiceValues = private$choices,
-            width = "100%"
+        if (private$multiple) {
+          div(
+            class = "choices_state",
+            checkboxGroupInput(
+              inputId = ns("selection"),
+              label = NULL,
+              selected = shiny::isolate(private$selected()),
+              choiceNames = labels,
+              choiceValues = private$choices,
+              width = "100%"
+            )
           )
-        )
+        } else {
+          div(
+            class = "choices_state",
+            radioButtons(
+              inputId = ns("selection"),
+              label = NULL,
+              selected = shiny::isolate(private$selected()[1]),
+              choiceNames = labels,
+              choiceValues = private$choices,
+              inline = TRUE,
+              width = "100%"
+            )
+          )
+        }
       } else {
         labels <- mapply(
           FUN = make_count_text,

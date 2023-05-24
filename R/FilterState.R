@@ -87,6 +87,7 @@ FilterState <- R6::R6Class( # nolint
                           fixed = FALSE,
                           disabled = FALSE,
                           extract_type = character(0),
+                          multiple = FALSE,
                           ...) {
       checkmate::assert_class(x_reactive, "reactive")
       checkmate::assert_string(dataname)
@@ -95,6 +96,7 @@ FilterState <- R6::R6Class( # nolint
       checkmate::assert_flag(keep_inf, null.ok = TRUE)
       checkmate::assert_flag(fixed)
       checkmate::assert_flag(disabled)
+      checkmate::assert_flag(multiple)
       checkmate::assert_character(extract_type, max.len = 1, any.missing = FALSE)
       if (length(extract_type) == 1) {
         checkmate::assert_choice(extract_type, choices = c("list", "matrix"))
@@ -113,6 +115,7 @@ FilterState <- R6::R6Class( # nolint
       # Set state properties.
       private$dataname <- dataname
       private$varname <- varname
+      private$multiple <- multiple
       private$selected <- reactiveVal()
       private$keep_na <- if (is.null(keep_na) && anyNA(x)) reactiveVal(TRUE) else reactiveVal(keep_na)
       private$keep_inf <- reactiveVal(keep_inf)
@@ -214,7 +217,8 @@ FilterState <- R6::R6Class( # nolint
         keep_na = private$get_keep_na(),
         keep_inf = private$get_keep_inf(),
         fixed = private$fixed,
-        disabled = private$is_disabled()
+        disabled = private$is_disabled(),
+        multiple = private$multiple
       )
       args <- append(args, private$extras)
       args <- Filter(Negate(is.null), args)
@@ -376,6 +380,7 @@ FilterState <- R6::R6Class( # nolint
     keep_inf = NULL, # reactiveVal holding a logical(1)
     fixed = logical(0), # logical flag whether this filter state is fixed/locked
     disabled = NULL, # reactiveVal holding a logical(1)
+    multiple = FALSE,
     extras = list(), # additional information passed in teal_slice (product of filter_var)
     ##
     # other
