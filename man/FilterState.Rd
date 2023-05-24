@@ -75,8 +75,9 @@ Initialize a \code{FilterState} object
   varname,
   keep_na = NULL,
   keep_inf = NULL,
-  fixed = FALSE,
   disabled = FALSE,
+  fixed = FALSE,
+  locked = FALSE,
   extract_type = character(0),
   ...
 )}\if{html}{\out{</div>}}
@@ -107,11 +108,14 @@ flag specifying whether to keep missing values}
 \item{\code{keep_inf}}{(\code{logical(1)}, \code{NULL})\cr
 flag specifying whether to keep infinite values}
 
+\item{\code{disabled}}{(\code{logical(1)})\cr
+flag specifying whether the \code{FilterState} is initiated disabled}
+
 \item{\code{fixed}}{(\code{logical(1)})\cr
 flag specifying whether the \code{FilterState} is initiated fixed}
 
-\item{\code{disabled}}{(\code{logical(1)})\cr
-flag specifying whether the \code{FilterState} is initiated disabled}
+\item{\code{locked}}{(\code{logical(1)}) \cr
+flag specifying whether to lock this filter state (forbid disabling and removing)}
 
 \item{\code{extract_type}}{(\code{character(0)}, \code{character(1)})\cr
 whether condition calls should be prefixed by dataname. Possible values:
@@ -161,6 +165,11 @@ Prints this \code{FilterState} object.
 \if{latex}{\out{\hypertarget{method-FilterState-set_state}{}}}
 \subsection{Method \code{set_state()}}{
 Sets filtering state.
+\itemize{
+\item \code{fixed} state is prevented from changing state
+\item \code{disabled} state is prevented from changing state, but may be enabled and changed in one operation
+\item \code{locked} state is prevented from changing \code{disabled} status
+}
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{FilterState$set_state(state)}\if{html}{\out{</div>}}
 }
