@@ -453,7 +453,7 @@ FilterState <- R6::R6Class( # nolint
           value
         )
       )
-
+      private$set_na_rm(!value)
       invisible(NULL)
     },
 

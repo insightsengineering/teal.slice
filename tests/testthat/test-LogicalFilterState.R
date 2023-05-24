@@ -20,7 +20,7 @@ testthat::test_that("constructor raises error when selection is not logical", {
 
 
 # set_state ----
-testthat::test_that("set_state: selected accepts a logical (or coercible) of length 1", {
+testthat::test_that("set_state: selected accepts a logical (or coercible) of length <=2", {
   filter_state <- LogicalFilterState$new(logs, dataname = "data", varname = "variable")
   testthat::expect_no_error(
     filter_state$set_state(filter_var(dataname = "data", varname = "variable", selected = TRUE))
@@ -29,9 +29,12 @@ testthat::test_that("set_state: selected accepts a logical (or coercible) of len
     filter_state$set_state(filter_var(dataname = "data", varname = "variable", selected = "TRUE"))
   )
   testthat::expect_no_error(filter_state$set_state(filter_var(dataname = "data", varname = "variable", selected = 1)))
+  testthat::expect_no_error(
+    filter_state$set_state(filter_var(dataname = "data", varname = "variable", selected = c(TRUE, TRUE)))
+  )
   testthat::expect_error(
-    filter_state$set_state(filter_var(dataname = "data", varname = "variable", selected = c(TRUE, TRUE))),
-    "should be a logical scalar"
+    filter_state$set_state(filter_var(dataname = "data", varname = "variable", selected = c(TRUE, TRUE, FALSE))),
+    "should be a logical vector of length <= 2"
   )
   testthat::expect_error(
     filter_state$set_state(filter_var(dataname = "data", varname = "variable", selected = "a")),

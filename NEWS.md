@@ -13,6 +13,7 @@
 
 ### Enhancements
 
+* Logical filters now use a checkbox group instead of radio buttons.
 * Improved filter state presentation in `FilterState$format`.
 
 ### Bug fixes
