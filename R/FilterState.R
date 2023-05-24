@@ -63,10 +63,12 @@ FilterState <- R6::R6Class( # nolint
     #'   flag specifying whether to keep missing values
     #' @param keep_inf (`logical(1)`, `NULL`)\cr
     #'   flag specifying whether to keep infinite values
-    #' @param fixed (`logical(1)`)\cr
-    #'   flag specifying whether the `FilterState` is initiated fixed
     #' @param disabled (`logical(1)`)\cr
     #'   flag specifying whether the `FilterState` is initiated disabled
+    #' @param fixed (`logical(1)`)\cr
+    #'   flag specifying whether the `FilterState` is initiated fixed
+    #' @param locked (`logical(1)`) \cr
+    #'   flag specifying whether to lock this filter state (forbid disabling and removing)
     #' @param extract_type (`character(0)`, `character(1)`)\cr
     #' whether condition calls should be prefixed by dataname. Possible values:
     #' \itemize{
@@ -84,8 +86,9 @@ FilterState <- R6::R6Class( # nolint
                           varname,
                           keep_na = NULL,
                           keep_inf = NULL,
-                          fixed = FALSE,
                           disabled = FALSE,
+                          fixed = FALSE,
+                          locked = FALSE,
                           extract_type = character(0),
                           ...) {
       checkmate::assert_class(x_reactive, "reactive")
@@ -93,8 +96,9 @@ FilterState <- R6::R6Class( # nolint
       checkmate::assert_string(varname)
       checkmate::assert_flag(keep_na, null.ok = TRUE)
       checkmate::assert_flag(keep_inf, null.ok = TRUE)
-      checkmate::assert_flag(fixed)
       checkmate::assert_flag(disabled)
+      checkmate::assert_flag(fixed)
+      checkmate::assert_flag(locked)
       checkmate::assert_character(extract_type, max.len = 1, any.missing = FALSE)
       if (length(extract_type) == 1) {
         checkmate::assert_choice(extract_type, choices = c("list", "matrix"))
@@ -116,8 +120,9 @@ FilterState <- R6::R6Class( # nolint
       private$selected <- reactiveVal()
       private$keep_na <- if (is.null(keep_na) && anyNA(x)) reactiveVal(TRUE) else reactiveVal(keep_na)
       private$keep_inf <- reactiveVal(keep_inf)
+      private$disabled <- if (isTRUE(locked)) reactiveVal(FALSE) else reactiveVal(disabled)
       private$fixed <- fixed
-      private$disabled <- reactiveVal(disabled)
+      private$locked <- locked
       private$extras <- list(...)
       # Set extract type.
       private$extract_type <- extract_type
@@ -374,8 +379,9 @@ FilterState <- R6::R6Class( # nolint
     selected = NULL, # reactiveVal holding vector of choices (depends on class)
     keep_na = NULL, # reactiveVal holding a logical(1)
     keep_inf = NULL, # reactiveVal holding a logical(1)
-    fixed = logical(0), # logical flag whether this filter state is fixed/locked
     disabled = NULL, # reactiveVal holding a logical(1)
+    fixed = logical(0), # logical flag whether this filter state is fixed
+    locked = logical(0), # logical flag whether this filter state is locked
     extras = list(), # additional information passed in teal_slice (product of filter_var)
     ##
     # other

@@ -32,6 +32,8 @@ FilterStateExpr <- R6::R6Class( # nolint
     #'   can be written without prefixing `var1 == "x" & var2 > 0`.
     #' @param disabled (`logical(1)`)\cr
     #'   flag specifying whether the `FilterState` is initiated disabled
+    #' @param locked (`logical(1)`) \cr
+    #'   flag specifying whether the `FilterState` is initiated locked
     #' @param ... additional arguments to be saved as a list in `private$extras` field
     #' @examples
     #' filter_state <- teal.slice:::FilterStateExpr$new(
@@ -78,19 +80,22 @@ FilterStateExpr <- R6::R6Class( # nolint
     #' }
     #'
     #' @return `FilterStateExpr`
-    initialize = function(dataname, id, title, expr, disabled = FALSE, ...) {
+    initialize = function(dataname, id, title, expr, disabled = FALSE, locked = FALSE, ...) {
       checkmate::assert_string(dataname)
       checkmate::assert_string(id)
       checkmate::assert_string(title)
       checkmate::assert_flag(disabled)
+      checkmate::assert_flag(locked)
       checkmate::assert_string(expr)
 
+      private$dataname <- dataname
       private$id <- id
       private$title <- title
-      private$dataname <- dataname
       private$expr <- expr
       private$disabled <- reactiveVal(disabled)
+      private$locked <- locked
       private$extras <- list(...)
+
       invisible(self)
     },
 
@@ -170,6 +175,18 @@ FilterStateExpr <- R6::R6Class( # nolint
       }
       str2lang(private$expr)
     },
+
+    #' @description
+    #' Destroy observers stored in `private$observers`.
+    #'
+    #' @return NULL invisibly
+    #'
+    destroy_observers = function() {
+      lapply(private$observers, function(x) x$destroy())
+      return(invisible(NULL))
+    },
+
+    # public shiny modules ----
 
     #' @description
     #' Shiny module server.
@@ -258,25 +275,22 @@ FilterStateExpr <- R6::R6Class( # nolint
           )
         )
       )
-    },
-    #' @description
-    #' Destroy observers stored in `private$observers`.
-    #'
-    #' @return NULL invisibly
-    #'
-    destroy_observers = function() {
-      lapply(private$observers, function(x) x$destroy())
-      return(invisible(NULL))
     }
   ),
+
+  # private members ----
+
   private = list(
     dataname = character(0),
-    disabled = NULL,
-    expr = NULL,
-    extras = list(),
     id = character(0),
-    observers = list(),
+    expr = NULL,
     title = character(0),
+    disabled = NULL,
+    locked = logical(0),
+    extras = list(),
+    observers = list(),
+
+    # private methods ----
 
     # Check whether this filter is disabled
     # @return `logical(1)`
@@ -287,6 +301,12 @@ FilterStateExpr <- R6::R6Class( # nolint
         shiny::isolate(isTRUE(private$disabled()))
       }
     },
+
+    content_summary = function() {
+      private$expr
+    },
+
+    # shiny modules ----
 
     # @description
     # Server module to display filter summary
@@ -313,9 +333,6 @@ FilterStateExpr <- R6::R6Class( # nolint
           })
         }
       )
-    },
-    content_summary = function() {
-      private$expr
     }
   )
 )

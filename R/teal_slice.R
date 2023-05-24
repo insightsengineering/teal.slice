@@ -129,8 +129,9 @@ filter_var <- function(dataname,
                        selected = NULL,
                        keep_na = NULL,
                        keep_inf = NULL,
-                       fixed = FALSE,
                        disabled = FALSE,
+                       fixed = FALSE,
+                       locked = FALSE,
                        ...) {
   checkmate::assert_string(dataname)
   checkmate::assert_string(varname)
@@ -138,8 +139,9 @@ filter_var <- function(dataname,
   checkmate::assert_multi_class(selected, .filterable_class, null.ok = TRUE)
   checkmate::assert_flag(keep_na, null.ok = TRUE)
   checkmate::assert_flag(keep_inf, null.ok = TRUE)
-  checkmate::assert_flag(fixed)
   checkmate::assert_flag(disabled)
+  checkmate::assert_flag(fixed)
+  checkmate::assert_flag(locked)
 
   ans <- list(
     dataname = dataname,
@@ -148,8 +150,9 @@ filter_var <- function(dataname,
     selected = selected,
     keep_na = keep_na,
     keep_inf = keep_inf,
+    disabled = disabled,
     fixed = fixed,
-    disabled = disabled
+    locked = locked
   )
   ans <- append(ans, list(...))
 
@@ -166,7 +169,7 @@ filter_var <- function(dataname,
 #'   title = "Female adults",
 #'   expr = "SEX == 'F' & AGE >= 18"
 #' )
-filter_expr <- function(dataname, id, title, expr, disabled = FALSE, ...) {
+filter_expr <- function(dataname, id, title, expr, disabled = FALSE, locked = FALSE, ...) {
   checkmate::assert_string(dataname)
   checkmate::assert_string(id)
   checkmate::assert_string(title)
@@ -177,7 +180,8 @@ filter_expr <- function(dataname, id, title, expr, disabled = FALSE, ...) {
     title = title,
     dataname = dataname,
     expr = expr,
-    disabled = disabled
+    disabled = disabled,
+    locked = locked
   )
   ans <- append(ans, list(...))
   class(ans) <- c("teal_slice_expr", "teal_slice", class(ans))
