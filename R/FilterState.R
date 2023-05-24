@@ -316,26 +316,29 @@ FilterState <- R6::R6Class( # nolint
             `data-bs-toggle` = "collapse",
             href = paste0("#", ns("body")),
             # header elements
-            if (private$fixed) icon("lock") else NULL,
+            if (private$locked) icon("lock") else NULL,
+            if (private$fixed) icon("burst") else NULL,
             tags$span(tags$strong(private$get_varname())),
             tags$span(private$get_varlabel(), class = "filter-card-varlabel")
           ),
-          tags$div(
-            class = "filter-card-controls",
-            shinyWidgets::prettySwitch(
-              ns("enable"),
-              label = "",
-              status = "success",
-              fill = TRUE,
-              value = !shiny::isolate(private$is_disabled()),
-              width = 30
-            ),
-            actionLink(
-              inputId = ns("remove"),
-              label = icon("circle-xmark", lib = "font-awesome"),
-              class = "filter-card-remove"
+          if (isFALSE(private$locked)) {
+            tags$div(
+              class = "filter-card-controls",
+              shinyWidgets::prettySwitch(
+                ns("enable"),
+                label = "",
+                status = "success",
+                fill = TRUE,
+                value = !shiny::isolate(private$is_disabled()),
+                width = 30
+              ),
+              actionLink(
+                inputId = ns("remove"),
+                label = icon("circle-xmark", lib = "font-awesome"),
+                class = "filter-card-remove"
+              )
             )
-          ),
+          },
           tags$div(
             class = "filter-card-summary",
             `data-toggle` = "collapse",
