@@ -28,6 +28,76 @@ testthat::test_that("filter_states list is initialized with names of experiments
   )
 })
 
+# format ---
+testthat::test_that("format returns properly formatted string", {
+  utils::data(miniACC, package = "MultiAssayExperiment")
+  filtered_dataset <- MAEFilteredDataset$new(dataset = miniACC, dataname = "miniacc")
+  fs <- filter_settings(
+    filter_var(
+      dataname = "miniacc", varname = "years_to_birth", selected = c(30, 50),
+      keep_na = TRUE, keep_inf = FALSE, datalabel = "subjects", arg = "y"
+    ),
+    filter_var(
+      dataname = "miniacc", varname = "vital_status", selected = "1",
+      keep_na = FALSE, datalabel = "subjects", arg = "y"
+    ),
+    filter_var(
+      dataname = "miniacc", varname = "gender", selected = "female",
+      keep_na = TRUE, datalabel = "subjects", arg = "y"
+    ),
+    filter_var(
+      dataname = "miniacc", varname = "ARRAY_TYPE", selected = "",
+      keep_na = TRUE, datalabel = "RPPAArray", arg = "subset"
+    )
+  )
+  filtered_dataset$set_filter_state(fs)
+
+  testthat::expect_identical(
+    shiny::isolate(filtered_dataset$format()),
+    shiny::isolate(format(filtered_dataset))
+  )
+
+  testthat::expect_identical(
+    shiny::isolate(filtered_dataset$format(show_all = TRUE)),
+    shiny::isolate(format(filtered_dataset, show_all = TRUE))
+  )
+})
+
+# print ---
+testthat::test_that("print returns properly formatted string", {
+  utils::data(miniACC, package = "MultiAssayExperiment")
+  filtered_dataset <- MAEFilteredDataset$new(dataset = miniACC, dataname = "miniacc")
+  fs <- filter_settings(
+    filter_var(
+      dataname = "miniacc", varname = "years_to_birth", selected = c(30, 50),
+      keep_na = TRUE, keep_inf = FALSE, datalabel = "subjects", arg = "y"
+    ),
+    filter_var(
+      dataname = "miniacc", varname = "vital_status", selected = "1",
+      keep_na = FALSE, datalabel = "subjects", arg = "y"
+    ),
+    filter_var(
+      dataname = "miniacc", varname = "gender", selected = "female",
+      keep_na = TRUE, datalabel = "subjects", arg = "y"
+    ),
+    filter_var(
+      dataname = "miniacc", varname = "ARRAY_TYPE", selected = "",
+      keep_na = TRUE, datalabel = "RPPAArray", arg = "subset"
+    )
+  )
+  filtered_dataset$set_filter_state(fs)
+
+  testthat::expect_identical(
+    utils::capture.output(shiny::isolate(filtered_dataset$print())),
+    utils::capture.output(shiny::isolate(print(filtered_dataset)))
+  )
+
+  testthat::expect_identical(
+    utils::capture.output(shiny::isolate(filtered_dataset$print(show_all = TRUE))),
+    utils::capture.output(shiny::isolate(print(filtered_dataset, show_all = TRUE)))
+  )
+})
+
 # get_call ----
 testthat::test_that("get_call returns NULL when no filter applied", {
   utils::data(miniACC, package = "MultiAssayExperiment")

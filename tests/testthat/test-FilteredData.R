@@ -512,7 +512,7 @@ testthat::test_that("set_filter_state accepts `teal_slices` and nested list and 
 })
 
 
-# get_filter_state ----
+# get_filter_state / format ----
 testthat::test_that("get_filter_state returns `teal_slices` with features identical to those in input, adds format", {
   datasets <- FilteredData$new(
     list(
@@ -546,41 +546,63 @@ testthat::test_that("get_filter_state returns `teal_slices` with features identi
 
   fs_out <- unname(shiny::isolate(datasets$get_filter_state()))
 
-  testthat::expect_true(compare_slices(
-    fs[[1]], fs_out[[1]],
-    fields = c("varname", "dataname", "selected", "keep_na", "keep_inf")
-  ))
-  testthat::expect_true(compare_slices(
-    fs[[2]], fs_out[[2]],
-    fields = c("varname", "dataname", "selected", "keep_na")
-  ))
-  testthat::expect_true(compare_slices(
-    fs[[3]], fs_out[[3]],
-    fields = c("varname", "dataname", "selected", "keep_na", "keep_inf")
-  ))
+  testthat::expect_identical(
+    shiny::isolate(datasets$format()),
+    paste0("FilteredData:\n", format(fs_out))
+  )
+  testthat::expect_identical(
+    shiny::isolate(datasets$format(show_all = TRUE)),
+    paste0("FilteredData:\n", format(fs_out, show_all = TRUE))
+  )
+})
 
-
-  fs_out_formatted <- attr(fs_out, "formatted")
-  attr_formatted <- paste0(
-    c(
-      "Filters for dataset: iris",
-      "  Filtering on: Sepal.Length",
-      "    Selected range: 5.100 - 6.400",
-      "    Include missing values: FALSE",
-      "  Filtering on: Species",
-      "    Selected values: setosa, versicolor",
-      "    Include missing values: FALSE",
-      "Filters for dataset: mtcars",
-      "  Filtering on: cyl",
-      "    Selected values: 4, 6",
-      "    Include missing values: FALSE"
-    ),
-    collapse = "\n"
+# print ---
+testthat::test_that("print returns properly formatted string representing `teal_slices`", {
+  datasets <- FilteredData$new(
+    list(
+      iris = list(dataset = iris),
+      mtcars = list(dataset = mtcars)
+    )
   )
 
+  fs <- filter_settings(
+    filter_var(
+      dataname = "iris", varname = "Sepal.Length",
+      choices = c(4.3, 7.9), selected = c(5.1, 6.4),
+      keep_na = FALSE, keep_inf = FALSE
+    ),
+    filter_var(
+      dataname = "iris", varname = "Species",
+      choices = c("setosa", "versicolor", "virginica"), selected = c("setosa", "versicolor"),
+      keep_na = FALSE
+    ),
+    filter_var(
+      dataname = "mtcars", varname = "cyl",
+      choices = c("4", "6", "8"), selected = c("4", "6"),
+      keep_na = FALSE, keep_inf = FALSE
+    ),
+    count_type = "none",
+    include_varnames = list(mtcars = "cyl"),
+    exclude_varnames = list(iris = c("Petal.Length", "Petal.Width"))
+  )
+
+  datasets$set_filter_state(state = fs)
+
   testthat::expect_identical(
-    attr_formatted,
-    fs_out_formatted
+    utils::capture.output(shiny::isolate(datasets$print())),
+    c(
+      "FilteredData:",
+      utils::capture.output(print(fs)),
+      " "
+    )
+  )
+  testthat::expect_identical(
+    utils::capture.output(shiny::isolate(datasets$print(show_all = TRUE))),
+    c(
+      "FilteredData:",
+      utils::capture.output(print(fs, show_all = TRUE)),
+      " "
+    )
   )
 })
 
