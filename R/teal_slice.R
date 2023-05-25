@@ -247,7 +247,7 @@ format.teal_slice <- function(x, show_all = FALSE, ...) {
   x <- if (shiny::isRunning()) {
     shiny::reactiveValuesToList(x)
   } else {
-    shiny::reactiveValuesToList(shiny::isolate(x))
+    shiny::isolate(shiny::reactiveValuesToList(x))
   }
   x <- rev(x)
 
