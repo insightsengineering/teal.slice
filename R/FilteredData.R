@@ -1121,13 +1121,18 @@ FilteredData <- R6::R6Class( # nolint
       # If states were cached, drop ones that don't match current ones.
       # This is necessary because the user may remove some states while the panel is disabled.
       if (!is.null(slices)) {
-        slices <- Filter(
-          function(x) {
-            id_vars <- intersect(names(x), c("dataname", "varname", "varlabel", "target"))
-            any(vapply(self$get_filter_state(), function(y) identical(x[id_vars], y[id_vars]), logical(1L)))
-          },
-          slices
-        )
+        slices_cashed_hashed <- vapply(slices, get_teal_slice_id, character(1L))
+        slices_present_hashed <- vapply(self$get_filter_state(), get_teal_slice_id, character(1L))
+        slices <- slices[slices_cashed_hashed %in% slices_present_hashed]
+
+        # TODO: this can be removed, leaving just in case needed back as is complicated
+        # slices <- Filter(
+        #   function(x) {
+        #     id_vars <- intersect(names(x), c("dataname", "varname", "varlabel", "target"))
+        #     any(vapply(self$get_filter_state(), function(y) identical(x[id_vars], y[id_vars]), logical(1L)))
+        #   },
+        #   slices
+        # )
         self$set_filter_state(slices)
       }
 
