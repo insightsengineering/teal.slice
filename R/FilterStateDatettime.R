@@ -156,36 +156,22 @@ DatetimeFilterState <- R6::R6Class( # nolint
     #'
     initialize = function(x,
                           x_reactive = reactive(NULL),
-                          dataname,
-                          varname,
-                          choices = NULL,
-                          selected = NULL,
-                          keep_na = NULL,
-                          keep_inf = NULL,
-                          fixed = FALSE,
-                          disabled = FALSE,
                           extract_type = character(0),
-                          ...) {
+                          slice) {
       checkmate::assert_multi_class(x, c("POSIXct", "POSIXlt"))
       checkmate::assert_class(x_reactive, "reactive")
-      checkmate::assert_multi_class(choices, c("POSIXct", "POSIXlt"), null.ok = TRUE)
+      checkmate::assert_multi_class(slice$choices, c("POSIXct", "POSIXlt"), null.ok = TRUE)
 
       args <- list(
         x = x,
         x_reactive = x_reactive,
-        dataname = dataname,
-        varname = varname,
-        keep_na = keep_na,
-        keep_inf = keep_inf,
-        fixed = fixed,
-        disabled = disabled,
-        extract_type = extract_type
+        extract_type = extract_type,
+        slice
       )
-      args <- append(args, list(...))
       do.call(super$initialize, args)
 
-      private$set_choices(choices)
-      private$set_selected(selected)
+      private$set_choices(slice$choices)
+      private$set_selected(slice$selected)
 
       invisible(self)
     },

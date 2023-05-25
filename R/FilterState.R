@@ -80,25 +80,14 @@ FilterState <- R6::R6Class( # nolint
     #'
     initialize = function(x,
                           x_reactive = reactive(NULL),
-                          dataname,
-                          varname,
-                          keep_na = NULL,
-                          keep_inf = NULL,
-                          fixed = FALSE,
-                          disabled = FALSE,
                           extract_type = character(0),
-                          ...) {
+                          slice) {
       checkmate::assert_class(x_reactive, "reactive")
-      checkmate::assert_string(dataname)
-      checkmate::assert_string(varname)
-      checkmate::assert_flag(keep_na, null.ok = TRUE)
-      checkmate::assert_flag(keep_inf, null.ok = TRUE)
-      checkmate::assert_flag(fixed)
-      checkmate::assert_flag(disabled)
       checkmate::assert_character(extract_type, max.len = 1, any.missing = FALSE)
       if (length(extract_type) == 1) {
         checkmate::assert_choice(extract_type, choices = c("list", "matrix"))
       }
+      checkmate::assert_class(slice, "teal_slice")
 
       # Set data properties.
       private$x <- x
@@ -111,14 +100,15 @@ FilterState <- R6::R6Class( # nolint
         }
       )
       # Set state properties.
-      private$dataname <- dataname
-      private$varname <- varname
+      private$dataname <- slice$dataname
+      private$varname <- slice$varname
       private$selected <- reactiveVal()
-      private$keep_na <- if (is.null(keep_na) && anyNA(x)) reactiveVal(TRUE) else reactiveVal(keep_na)
-      private$keep_inf <- reactiveVal(keep_inf)
-      private$fixed <- fixed
-      private$disabled <- reactiveVal(disabled)
-      private$extras <- list(...)
+      private$keep_na <- if (is.null(slice$keep_na) && anyNA(x)) reactiveVal(TRUE) else reactiveVal(slice$keep_na)
+      private$keep_inf <- reactiveVal(slice$keep_inf)
+      private$fixed <- slice$fixed
+      private$disabled <- reactiveVal(slice$disabled)
+      ind <- setdiff(names(slice), names(formals(filter_var)))
+      private$extras <- shiny::isolate(shiny::reactiveValuesToList(slice))[ind] # TODO
       # Set extract type.
       private$extract_type <- extract_type
       # Obtain variable label.
@@ -167,7 +157,7 @@ FilterState <- R6::R6Class( # nolint
       if (isFALSE(state$disabled) && isTRUE(private$is_disabled())) private$disabled(FALSE)
 
       if (private$is_disabled()) {
-        mutables <- state[c("selected", "keep_na", "keep_inf")]
+        mutables <- list(state$selected, state$keep_na, state$keep_inf)
         if (any(!vapply(mutables, is.null, logical(1L)))) {
           logger::log_warn("attempt to set state on disabled filter aborted: { private$dataname } { private$varname }")
         }

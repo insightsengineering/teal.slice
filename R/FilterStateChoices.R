@@ -154,16 +154,8 @@ ChoicesFilterState <- R6::R6Class( # nolint
     #'
     initialize = function(x,
                           x_reactive = reactive(NULL),
-                          dataname,
-                          varname,
-                          choices = NULL,
-                          selected = NULL,
-                          keep_na = NULL,
-                          keep_inf = NULL,
-                          fixed = FALSE,
-                          disabled = FALSE,
                           extract_type = character(0),
-                          ...) {
+                          slice) {
       checkmate::assert(
         is.character(x),
         is.factor(x),
@@ -183,19 +175,13 @@ ChoicesFilterState <- R6::R6Class( # nolint
       args <- list(
         x = x_factor,
         x_reactive = x_reactive,
-        dataname = dataname,
-        varname = varname,
-        keep_na = keep_na,
-        keep_inf = keep_inf,
-        fixed = fixed,
-        disabled = disabled,
-        extract_type = extract_type
+        extract_type = extract_type,
+        slice = slice
       )
-      args <- append(args, list(...))
       do.call(super$initialize, args)
 
-      private$set_choices(choices)
-      private$set_selected(selected)
+      private$set_choices(slice$choices)
+      private$set_selected(slice$selected)
 
       private$data_class <- class(x)[1L]
       if (inherits(x, "POSIXt")) {

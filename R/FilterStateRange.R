@@ -157,35 +157,21 @@ RangeFilterState <- R6::R6Class( # nolint
     #'
     initialize = function(x,
                           x_reactive = reactive(NULL),
-                          dataname,
-                          varname,
-                          choices = NULL,
-                          selected = NULL,
-                          keep_na = NULL,
-                          keep_inf = NULL,
-                          fixed = FALSE,
-                          disabled = FALSE,
                           extract_type = character(0),
-                          ...) {
+                          slice) {
       checkmate::assert_numeric(x, all.missing = FALSE)
-      checkmate::assert_numeric(choices, null.ok = TRUE)
+      checkmate::assert_numeric(slice$choices, null.ok = TRUE)
       checkmate::assert_class(x_reactive, "reactive")
       if (!any(is.finite(x))) stop("\"x\" contains no finite values")
 
-      keep_inf <- if (is.null(keep_inf) && any(is.infinite(x))) TRUE else keep_inf
+      slice$keep_inf <- if (is.null(slice$keep_inf) && any(is.infinite(x))) TRUE else slice$keep_inf
 
       args <- list(
         x = x,
         x_reactive = x_reactive,
-        dataname = dataname,
-        varname = varname,
-        keep_na = keep_na,
-        keep_inf = keep_inf,
-        fixed = fixed,
-        disabled = disabled,
-        extract_type = extract_type
+        extract_type = extract_type,
+        slice
       )
-      args <- append(args, list(...))
       do.call(super$initialize, args)
 
       private$is_integer <- checkmate::test_integerish(x)
@@ -194,8 +180,8 @@ RangeFilterState <- R6::R6Class( # nolint
       )
       private$inf_count <- sum(is.infinite(x))
 
-      private$set_choices(choices)
-      private$set_selected(selected)
+      private$set_choices(slice$choices)
+      private$set_selected(slice$selected)
 
       private$unfiltered_histogram <- ggplot2::ggplot(data.frame(x = Filter(is.finite, private$x))) +
         ggplot2::geom_histogram(
