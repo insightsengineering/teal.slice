@@ -141,9 +141,19 @@ filter_var <- function(dataname,
   checkmate::assert_flag(fixed)
   checkmate::assert_flag(disabled)
 
-  ans <- as.list(environment())
+  ans <- list(
+    dataname = dataname,
+    varname = varname,
+    choices = choices,
+    selected = selected,
+    keep_na = keep_na,
+    keep_inf = keep_inf,
+    fixed = fixed,
+    disabled = disabled
+  )
   ans <- append(ans, list(...))
-  ans <- shiny::isolate(do.call(shiny::reactiveValues, ans))
+
+  ans <- do.call(shiny::reactiveValues, ans)
 
   class(ans) <- c("teal_slice", class(ans))
   ans
