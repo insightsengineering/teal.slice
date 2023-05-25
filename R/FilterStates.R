@@ -680,46 +680,48 @@ FilterStates <- R6::R6Class( # nolint
         return(invisible(NULL))
       }
 
-      states_id <- vapply(state, get_teal_slice_id, character(1))
-      state_list <- shiny::isolate(private$state_list_get())
-      if (any(duplicated(states_id))) {
+      ### QUESTION: move this check to filter_settings?
+      slices_hashed <- vapply(state, get_teal_slice_id, character(1L))
+      if (any(duplicated(slices_hashed))) {
         stop(
           "Some of the teal_slice objects refer to the same filter. ",
           "Please specify different 'id' when calling filter_var or filter_expr"
         )
       }
+      ### END QUESTION
 
-
-      lapply(seq_along(state), function(i) {
-
-        state_id <- states_id[i]
+      state_list <- shiny::isolate(private$state_list_get())
+      lapply(state, function(x) {
+        state_id <- get_teal_slice_id(x)
         if (state_id %in% names(state_list)) {
           # Modify existing filter states.
-          state_list[[state_id]]$set_state(state[[i]])
-        } else if (inherits(state[[i]], "teal_slice_expr")) {
-          # create a new FilterStateExpr
-          fstate <- do.call(init_filter_state_expr, state[[i]])
-          private$state_list_push(x = fstate, state_id = state_id)
+          state_list[[state_id]]$set_state(x)
         } else {
-          # create a new FilterState
-          arg_list <- list(
-            x = data[, state[[i]]$varname, drop = TRUE],
-            # data_reactive is a function which eventually calls get_call(sid).
-            # This chain of calls returns column from the data filtered by everything
-            # but filter identified by the sid argument. FilterState then get x_reactive
-            # and this no longer needs to be a function to pass sid. reactive in the FilterState
-            # is also beneficial as it can be cached and retriger filter counts only if
-            # returned vector is different.
-            x_reactive = if (private$count_type == "none") {
-              reactive(NULL)
-            } else {
-              reactive(data_reactive(state_id)[, state[[i]]$varname, drop = TRUE])
-            },
-            extract_type = private$extract_type
-          )
-          arg_list <- append(arg_list, state[[i]])
-          fstate <- do.call(init_filter_state, arg_list)
-          private$state_list_push(x = fstate, state_id = state_id)
+          if (inherits(x, "teal_slice_expr")) {
+            # create a new FilterStateExpr
+            fstate <- do.call(init_filter_state_expr, x)
+            private$state_list_push(x = fstate, state_id = state_id)
+          } else {
+            # create a new FilterState
+            arg_list <- list(
+              x = data[, x$varname, drop = TRUE],
+              # data_reactive is a function which eventually calls get_call(sid).
+              # This chain of calls returns column from the data filtered by everything
+              # but filter identified by the sid argument. FilterState then get x_reactive
+              # and this no longer needs to be a function to pass sid. reactive in the FilterState
+              # is also beneficial as it can be cached and retriger filter counts only if
+              # returned vector is different.
+              x_reactive = if (private$count_type == "none") {
+                reactive(NULL)
+              } else {
+                reactive(data_reactive(state_id)[, x$varname, drop = TRUE])
+              },
+              extract_type = private$extract_type
+            )
+            arg_list <- c(arg_list, list(slice = x))
+            fstate <- do.call(init_filter_state, arg_list)
+            private$state_list_push(x = fstate, state_id = state_id)
+          }
         }
       })
 
