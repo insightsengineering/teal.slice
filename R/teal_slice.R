@@ -153,6 +153,8 @@ filter_var <- function(dataname,
   )
   ans <- append(ans, list(...))
 
+  ans <- do.call(shiny::reactiveValues, ans)
+
   class(ans) <- c("teal_slice", class(ans))
   ans
 }
@@ -251,6 +253,14 @@ c.teal_slice <- function(...) {
 #'
 format.teal_slice <- function(x, show_all = FALSE, ...) {
   checkmate::assert_flag(show_all)
+
+  x <- if (shiny::isRunning()) {
+    shiny::reactiveValuesToList(x)
+  } else {
+    shiny::reactiveValuesToList(shiny::isolate(x))
+  }
+  x <- rev(x)
+
   name_width <- max(nchar(names(x)))
   format_value <- function(v) {
     if (is.null(v)) {
