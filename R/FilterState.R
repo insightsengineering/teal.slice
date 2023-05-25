@@ -280,6 +280,7 @@ FilterState <- R6::R6Class( # nolint
             if (isFALSE(private$is_disabled())) {
               shinyWidgets::updateSwitchInput(inputId = "enable", value = TRUE)
             }
+            shinyjs::toggleState(id = "body", condition = isFALSE(private$is_disabled()))
           })
 
           reactive(input$remove) # back to parent to remove self
