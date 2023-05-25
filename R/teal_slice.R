@@ -535,7 +535,7 @@ slices_which <- function(tss, expr) {
 #' @param x (`teal_slice`, `teal_slice_expr`) single `teal_slice` object
 #' @return `character(1)`
 get_teal_slice_id <- function(x) {
-  paste0(
+  paste(
     c(
       x$dataname,
       x$datalabel,
