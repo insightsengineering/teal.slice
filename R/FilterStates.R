@@ -680,8 +680,6 @@ FilterStates <- R6::R6Class( # nolint
         return(invisible(NULL))
       }
 
-
-      browser()
       states_id <- vapply(state, get_teal_slice_id, character(1))
       state_list <- shiny::isolate(private$state_list_get())
       if (any(duplicated(states_id))) {
