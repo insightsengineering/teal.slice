@@ -141,19 +141,9 @@ filter_var <- function(dataname,
   checkmate::assert_flag(fixed)
   checkmate::assert_flag(disabled)
 
-  ans <- list(
-    dataname = dataname,
-    varname = varname,
-    choices = choices,
-    selected = selected,
-    keep_na = keep_na,
-    keep_inf = keep_inf,
-    fixed = fixed,
-    disabled = disabled
-  )
+  ans <- as.list(environment())
   ans <- append(ans, list(...))
-
-  ans <- do.call(shiny::reactiveValues, ans)
+  ans <- shiny::isolate(do.call(shiny::reactiveValues, ans))
 
   class(ans) <- c("teal_slice", class(ans))
   ans
@@ -535,7 +525,14 @@ slices_which <- function(tss, expr) {
 #' @param x (`teal_slice`, `teal_slice_expr`) single `teal_slice` object
 #' @return `character(1)`
 get_teal_slice_id <- function(x) {
-  rlang::hash(
-    x[c("dataname", "datalabel", "arg", "id", "varname")]
+  paste0(
+    c(
+      x$dataname,
+      x$datalabel,
+      x$arg,
+      x$varname,
+      x$id
+    ),
+    collapse = "_"
   )
 }

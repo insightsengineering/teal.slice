@@ -278,10 +278,7 @@ FilterStates <- R6::R6Class( # nolint
       varnames <- slices_field(state, "varname")
       excluded_varnames <- setdiff(varnames, private$get_filterable_varnames())
       if (length(excluded_varnames)) {
-        state <- slices_which(
-          state,
-          sprintf("!varname %%in%% c(%s)", toString(dQuote(excluded_varnames, q = FALSE)))
-        )
+        state <- Filter(function(x) !x$varname %in% excluded_varnames)
         logger::log_warn("filters for columns: { toString(excluded_varnames) } excluded from { private$dataname }")
       }
 
@@ -683,6 +680,8 @@ FilterStates <- R6::R6Class( # nolint
         return(invisible(NULL))
       }
 
+
+      browser()
       states_id <- vapply(state, get_teal_slice_id, character(1))
       state_list <- shiny::isolate(private$state_list_get())
       if (any(duplicated(states_id))) {
@@ -694,6 +693,7 @@ FilterStates <- R6::R6Class( # nolint
 
 
       lapply(seq_along(state), function(i) {
+
         state_id <- states_id[i]
         if (state_id %in% names(state_list)) {
           # Modify existing filter states.

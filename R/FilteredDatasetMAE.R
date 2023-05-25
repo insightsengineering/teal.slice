@@ -113,10 +113,9 @@ MAEFilteredDataset <- R6::R6Class( # nolint
       }
 
       # set states on state_lists with corresponding datalabels
-      lapply(datalabels, function(x) {
-        private$get_filter_states()[[x]]$set_filter_state(
-          slices_which(state, sprintf("datalabel == \"%s\"", x))
-        )
+      lapply(datalabels, function(datalabel) {
+        slices <- Filter(function(x) identical(x$datalabel, datalabel), state)
+        private$get_filter_states()[[x]]$set_filter_state(slices)
       })
 
       logger::log_trace("{ class(self)[1] }$set_filter_state initialized, dataname: { private$dataname }")
@@ -141,8 +140,8 @@ MAEFilteredDataset <- R6::R6Class( # nolint
       varnames <- slices_field(state, "varname")
       current_states <- shiny::isolate(self$get_filter_state())
 
-      lapply(varnames, function(x) {
-        slice <- slices_which(current_states, sprintf("varname  == \"%s\"", x))
+      lapply(varnames, function(varname) {
+        slice <- Filter(function(x) identical(x$varname, varname))
         private$get_filter_states()[[slice[[1]]$datalabel]]$remove_filter_state(slice)
       })
 

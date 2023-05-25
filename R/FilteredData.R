@@ -504,10 +504,9 @@ FilteredData <- R6::R6Class( # nolint
       datanames <- slices_field(state, "dataname")
       checkmate::assert_subset(datanames, self$datanames())
 
-      lapply(datanames, function(x) {
-        private$get_filtered_dataset(x)$set_filter_state(
-          slices_which(state, sprintf("dataname == \"%s\"", x))
-        )
+      lapply(datanames, function(dataname) {
+        states <- Filter(function(x) identical(x$dataname, dataname), state)
+        private$get_filtered_dataset(dataname)$set_filter_state(states)
       })
 
       logger::log_trace("{ class(self)[1] }$set_filter_state initialized")
@@ -545,10 +544,9 @@ FilteredData <- R6::R6Class( # nolint
         "{ class(self)[1] }$remove_filter_state removing filter(s), dataname: { private$dataname }"
       )
 
-      lapply(datanames, function(x) {
-        private$get_filtered_dataset(x)$remove_filter_state(
-          slices_which(state, sprintf("dataname == \"%s\"", x))
-        )
+      lapply(datanames, function(dataname) {
+        slices <- Filter(function(x) identical(x$dataname, dataname))
+        private$get_filtered_dataset(dataname)$remove_filter_state(slices)
       })
 
       logger::log_trace(
