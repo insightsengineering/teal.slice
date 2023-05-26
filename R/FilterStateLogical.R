@@ -114,7 +114,7 @@ LogicalFilterState <- R6::R6Class( # nolint
     #' @param choices (`atomic`, `NULL`)\cr
     #'   vector specifying allowed selection values
     #' @param multiple (`logical(1)`)\cr
-    #'   flag specifying whether the `FilterState` is initiated multiple
+    #'   flag specifying whether the `FilterState` more than one value can be selected
     #' @param selected (`atomic`, `NULL`)\cr
     #'   vector specifying selection
     #' @param keep_na (`logical(1)`, `NULL`)\cr
