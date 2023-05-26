@@ -173,7 +173,6 @@ DatetimeFilterState <- R6::R6Class( # nolint
       checkmate::assert_multi_class(x, c("POSIXct", "POSIXlt"))
       checkmate::assert_class(x_reactive, "reactive")
       checkmate::assert_multi_class(choices, c("POSIXct", "POSIXlt"), null.ok = TRUE)
-      checkmate::assert_flag(multiple, null.ok = TRUE)
 
       args <- list(
         x = x,
