@@ -141,20 +141,8 @@ filter_var <- function(dataname,
   checkmate::assert_flag(fixed)
   checkmate::assert_flag(disabled)
 
-  ans <- list(
-    dataname = dataname,
-    varname = varname,
-    choices = choices,
-    selected = selected,
-    keep_na = keep_na,
-    keep_inf = keep_inf,
-    fixed = fixed,
-    disabled = disabled
-  )
-  ans <- append(ans, list(...))
-
+  ans <- as.list(environment())
   ans <- do.call(shiny::reactiveValues, ans)
-
   class(ans) <- c("teal_slice", class(ans))
   ans
 }
@@ -254,12 +242,7 @@ c.teal_slice <- function(...) {
 format.teal_slice <- function(x, show_all = FALSE, ...) {
   checkmate::assert_flag(show_all)
 
-  x <- if (shiny::isRunning()) {
-    shiny::reactiveValuesToList(x)
-  } else {
-    shiny::isolate(shiny::reactiveValuesToList(x))
-  }
-  x <- rev(x)
+  x <- rev(shiny::isolate(shiny::reactiveValuesToList(x)))
 
   name_width <- max(nchar(names(x)))
   format_value <- function(v) {
