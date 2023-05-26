@@ -136,6 +136,8 @@ RangeFilterState <- R6::R6Class( # nolint
     #'   name of the variable.
     #' @param choices (`atomic`, `NULL`)\cr
     #'   vector specifying allowed selection values
+    #' @param multiple (`logical(1)`)\cr
+    #'   flag specifying whether the `FilterState` is initiated multiple
     #' @param selected (`atomic`, `NULL`)\cr
     #'   vector specifying selection
     #' @param keep_na (`logical(1)`, `NULL`)\cr
@@ -160,6 +162,7 @@ RangeFilterState <- R6::R6Class( # nolint
                           dataname,
                           varname,
                           choices = NULL,
+                          multiple = NULL,
                           selected = NULL,
                           keep_na = NULL,
                           keep_inf = NULL,
@@ -169,6 +172,7 @@ RangeFilterState <- R6::R6Class( # nolint
                           ...) {
       checkmate::assert_numeric(x, all.missing = FALSE)
       checkmate::assert_numeric(choices, null.ok = TRUE)
+      checkmate::assert_flag(multiple, null.ok = TRUE)
       checkmate::assert_class(x_reactive, "reactive")
       if (!any(is.finite(x))) stop("\"x\" contains no finite values")
 
@@ -179,6 +183,7 @@ RangeFilterState <- R6::R6Class( # nolint
         x_reactive = x_reactive,
         dataname = dataname,
         varname = varname,
+        multiple = multiple,
         keep_na = keep_na,
         keep_inf = keep_inf,
         fixed = fixed,

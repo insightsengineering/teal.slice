@@ -59,6 +59,8 @@ FilterState <- R6::R6Class( # nolint
     #'   if `extract_type` argument is not empty.
     #' @param varname (`character(1)`)\cr
     #'   name of the variable.
+    #' @param multiple (`logical(1)`)\cr
+    #'   flag specifying whether to enable/disable multiple value selection for FilterStateChoices and FilterStateLogical
     #' @param keep_na (`logical(1)`, `NULL`)\cr
     #'   flag specifying whether to keep missing values
     #' @param keep_inf (`logical(1)`, `NULL`)\cr
@@ -82,21 +84,21 @@ FilterState <- R6::R6Class( # nolint
                           x_reactive = reactive(NULL),
                           dataname,
                           varname,
+                          multiple = NULL,
                           keep_na = NULL,
                           keep_inf = NULL,
                           fixed = FALSE,
                           disabled = FALSE,
                           extract_type = character(0),
-                          multiple = FALSE,
                           ...) {
       checkmate::assert_class(x_reactive, "reactive")
       checkmate::assert_string(dataname)
+      checkmate::assert_flag(multiple, null.ok = TRUE)
       checkmate::assert_string(varname)
       checkmate::assert_flag(keep_na, null.ok = TRUE)
       checkmate::assert_flag(keep_inf, null.ok = TRUE)
       checkmate::assert_flag(fixed)
       checkmate::assert_flag(disabled)
-      checkmate::assert_flag(multiple)
       checkmate::assert_character(extract_type, max.len = 1, any.missing = FALSE)
       if (length(extract_type) == 1) {
         checkmate::assert_choice(extract_type, choices = c("list", "matrix"))
@@ -221,12 +223,12 @@ FilterState <- R6::R6Class( # nolint
         dataname = private$get_dataname(),
         varname = private$get_varname(),
         choices = private$choices,
+        multiple = private$multiple,
         selected = private$get_selected(),
         keep_na = private$get_keep_na(),
         keep_inf = private$get_keep_inf(),
         fixed = private$fixed,
-        disabled = private$is_disabled(),
-        multiple = private$multiple
+        disabled = private$is_disabled()
       )
       args <- append(args, private$extras)
       args <- Filter(Negate(is.null), args)
@@ -383,12 +385,12 @@ FilterState <- R6::R6Class( # nolint
     dataname = character(0),
     varname = character(0),
     choices = NULL, # because each class has different choices type
+    multiple = NULL, # because multiple only affects ChoicesFilterState and LogicalFilterState
     selected = NULL, # reactiveVal holding vector of choices (depends on class)
     keep_na = NULL, # reactiveVal holding a logical(1)
     keep_inf = NULL, # reactiveVal holding a logical(1)
     fixed = logical(0), # logical flag whether this filter state is fixed/locked
     disabled = NULL, # reactiveVal holding a logical(1)
-    multiple = FALSE,
     extras = list(), # additional information passed in teal_slice (product of filter_var)
     ##
     # other

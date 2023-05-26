@@ -125,6 +125,8 @@ DateFilterState <- R6::R6Class( # nolint
     #'   name of the variable.
     #' @param choices (`atomic`, `NULL`)\cr
     #'   vector specifying allowed selection values
+    #' @param multiple (`logical(1)`)\cr
+    #'   flag specifying whether the `FilterState` is initiated multiple
     #' @param selected (`atomic`, `NULL`)\cr
     #'   vector specifying selection
     #' @param keep_na (`logical(1)`, `NULL`)\cr
@@ -149,6 +151,7 @@ DateFilterState <- R6::R6Class( # nolint
                           dataname,
                           varname,
                           choices = NULL,
+                          multiple = NULL,
                           selected = NULL,
                           keep_na = NULL,
                           keep_inf = NULL,
@@ -159,12 +162,14 @@ DateFilterState <- R6::R6Class( # nolint
       checkmate::assert_date(x)
       checkmate::assert_class(x_reactive, "reactive")
       checkmate::assert_date(choices, null.ok = TRUE)
+      checkmate::assert_flag(multiple, null.ok = TRUE)
 
       args <- list(
         x = x,
         x_reactive = x_reactive,
         dataname = dataname,
         varname = varname,
+        multiple = multiple,
         keep_na = keep_na,
         keep_inf = keep_inf,
         fixed = fixed,

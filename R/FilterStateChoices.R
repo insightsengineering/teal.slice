@@ -133,6 +133,8 @@ ChoicesFilterState <- R6::R6Class( # nolint
     #'   name of the variable.
     #' @param choices (`atomic`, `NULL`)\cr
     #'   vector specifying allowed selection values
+    #' @param multiple (`logical(1)`)\cr
+    #'   flag specifying whether the `FilterState` is initiated multiple
     #' @param selected (`atomic`, `NULL`)\cr
     #'   vector specifying selection
     #' @param keep_na (`logical(1)`, `NULL`)\cr
@@ -143,8 +145,6 @@ ChoicesFilterState <- R6::R6Class( # nolint
     #'   flag specifying whether the `FilterState` is initiated fixed
     #' @param disabled (`logical(1)`)\cr
     #'   flag specifying whether the `FilterState` is initiated disabled
-    #' @param multiple (`logical(1)`)\cr
-    #'   flag specifying whether to enable/disable selecting multiple value
     #' @param extract_type (`character(0)`, `character(1)`)\cr
     #' whether condition calls should be prefixed by dataname. Possible values:
     #' \itemize{
@@ -159,12 +159,12 @@ ChoicesFilterState <- R6::R6Class( # nolint
                           dataname,
                           varname,
                           choices = NULL,
+                          multiple = NULL,
                           selected = NULL,
                           keep_na = NULL,
                           keep_inf = NULL,
                           fixed = FALSE,
                           disabled = FALSE,
-                          multiple = FALSE,
                           extract_type = character(0),
                           ...) {
       checkmate::assert(
@@ -183,16 +183,18 @@ ChoicesFilterState <- R6::R6Class( # nolint
         x
       }
 
+      if (is.null(multiple)) multiple <- TRUE # Set default behavior of multiple variable to TRUE.
+
       args <- list(
         x = x_factor,
         x_reactive = x_reactive,
         dataname = dataname,
         varname = varname,
+        multiple = multiple,
         keep_na = keep_na,
         keep_inf = keep_inf,
         fixed = fixed,
         disabled = disabled,
-        multiple = multiple,
         extract_type = extract_type
       )
       args <- append(args, list(...))
@@ -208,6 +210,11 @@ ChoicesFilterState <- R6::R6Class( # nolint
 
       private$set_choices_counts(unname(table(x_factor)))
 
+      if (private$multiple) {
+        private$init_null <- FALSE
+      } else {
+        private$init_null <- TRUE
+      }
       invisible(self)
     },
 
@@ -271,6 +278,7 @@ ChoicesFilterState <- R6::R6Class( # nolint
     choices_counts = integer(0),
     data_class = character(0), # stores class of filtered variable so that it can be restored in $get_call
     tzone = character(0), # if x is a datetime, stores time zone so that it can be restored in $get_call
+    init_null = FALSE,
 
     # private methods ----
     # @description
@@ -396,7 +404,7 @@ ChoicesFilterState <- R6::R6Class( # nolint
             checkboxGroupInput(
               inputId = ns("selection"),
               label = NULL,
-              selected = shiny::isolate(private$selected()),
+              selected = shiny::isolate(private$get_selected()),
               choiceNames = labels,
               choiceValues = private$choices,
               width = "100%"
@@ -408,10 +416,9 @@ ChoicesFilterState <- R6::R6Class( # nolint
             radioButtons(
               inputId = ns("selection"),
               label = NULL,
-              selected = shiny::isolate(private$selected()[1]),
+              selected = shiny::isolate(private$get_selected()[1]),
               choiceNames = labels,
               choiceValues = private$choices,
-              inline = TRUE,
               width = "100%"
             )
           )
@@ -428,7 +435,7 @@ ChoicesFilterState <- R6::R6Class( # nolint
           inputId = ns("selection"),
           choices = stats::setNames(private$choices, labels),
           selected = shiny::isolate(private$get_selected()),
-          multiple = TRUE,
+          multiple = private$multiple,
           options = shinyWidgets::pickerOptions(
             actionsBox = TRUE,
             liveSearch = (length(private$choices) > 10),
@@ -513,7 +520,7 @@ ChoicesFilterState <- R6::R6Class( # nolint
             )
           } else {
             private$observers$selection <- observeEvent(
-              ignoreNULL = FALSE, # it's possible that nothing is selected
+              ignoreNULL = private$init_null, # init_null toggle for multiple var.
               ignoreInit = TRUE, # ignoreInit: should not matter because we set the UI with the desired initial state
               eventExpr = input$selection_open,
               handlerExpr = {
@@ -542,10 +549,17 @@ ChoicesFilterState <- R6::R6Class( # nolint
                 private$dataname
               ))
               if (private$is_checkboxgroup()) {
-                updateCheckboxGroupInput(
-                  inputId = "selection",
-                  selected = private$selected()
-                )
+                if(private$multiple) {
+                  updateCheckboxGroupInput(
+                    inputId = "selection",
+                    selected = private$selected()
+                  )
+                } else {
+                  updateRadioButtons(
+                    inputId = "selection",
+                    selected =  private$selected()
+                  )
+                }
               } else {
                 teal.widgets::updateOptionalSelectInput(
                   session, "selection",

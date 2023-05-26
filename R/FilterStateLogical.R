@@ -113,6 +113,8 @@ LogicalFilterState <- R6::R6Class( # nolint
     #'   name of the variable.
     #' @param choices (`atomic`, `NULL`)\cr
     #'   vector specifying allowed selection values
+    #' @param multiple (`logical(1)`)\cr
+    #'   flag specifying whether the `FilterState` is initiated multiple
     #' @param selected (`atomic`, `NULL`)\cr
     #'   vector specifying selection
     #' @param keep_na (`logical(1)`, `NULL`)\cr
@@ -123,8 +125,6 @@ LogicalFilterState <- R6::R6Class( # nolint
     #'   flag specifying whether the `FilterState` is initiated fixed
     #' @param disabled (`logical(1)`)\cr
     #'   flag specifying whether the `FilterState` is initiated disabled
-    #' @param multiple (`logical(1)`)\cr
-    #'   flag specifying whether to enable/disable selecting multiple value
     #' @param extract_type (`character(0)`, `character(1)`)\cr
     #' whether condition calls should be prefixed by dataname. Possible values:
     #' \itemize{
@@ -139,28 +139,29 @@ LogicalFilterState <- R6::R6Class( # nolint
                           dataname,
                           varname,
                           choices = NULL,
+                          multiple = NULL,
                           selected = NULL,
                           keep_na = NULL,
                           keep_inf = NULL,
                           fixed = FALSE,
                           disabled = FALSE,
-                          multiple = FALSE,
                           extract_type = character(0),
                           ...) {
       checkmate::assert_logical(x)
       checkmate::assert_class(x_reactive, "reactive")
       checkmate::assert_flag(selected, null.ok = TRUE)
 
+      if (is.null(multiple)) multiple <- TRUE # Set default behavior of multiple variable to TRUE.
       args <- list(
         x = x,
         x_reactive = x_reactive,
         dataname = dataname,
         varname = varname,
+        multiple = multiple,
         keep_na = keep_na,
         keep_inf = keep_inf,
         fixed = fixed,
         disabled = disabled,
-        multiple = multiple,
         extract_type = extract_type
       )
       args <- append(args, list(...))
@@ -176,6 +177,12 @@ LogicalFilterState <- R6::R6Class( # nolint
       df <- factor(x, levels = c(TRUE, FALSE))
       tbl <- table(df)
       private$set_choices_counts(tbl)
+
+      if (private$multiple) {
+        private$init_null <- FALSE
+      } else {
+        private$init_null <- TRUE
+      }
 
       invisible(self)
     },
@@ -212,6 +219,7 @@ LogicalFilterState <- R6::R6Class( # nolint
 
   private = list(
     choices_counts = integer(0),
+    init_null = FALSE,
     set_choices = function(choices) {
       private$choices <- c(TRUE, FALSE)
       invisible(NULL)
@@ -291,14 +299,25 @@ LogicalFilterState <- R6::R6Class( # nolint
         countsnow = countsnow,
         countsmax = countsmax
       )
-      ui_input <- checkboxGroupInput(
-        ns("selection"),
-        label = NULL,
-        choiceNames = labels,
-        choiceValues = as.character(private$choices),
-        selected = shiny::isolate(as.character(private$get_selected())),
-        width = "100%"
-      )
+      ui_input <- if (private$multiple) {
+        checkboxGroupInput(
+          inputId = ns("selection"),
+          label = NULL,
+          selected = shiny::isolate(as.character(private$get_selected())),
+          choiceNames = labels,
+          choiceValues = as.character(private$choices),
+          width = "100%"
+        )
+      } else {
+        radioButtons(
+          inputId = ns("selection"),
+          label = NULL,
+          selected = shiny::isolate(as.character(private$get_selected()[1])),
+          choiceNames = labels,
+          choiceValues = as.character(private$choices),
+          width = "100%"
+        )
+      }
       if (shiny::isolate(private$is_disabled())) ui_input <- shinyjs::disabled(ui_input)
       div(
         div(
@@ -352,10 +371,18 @@ LogicalFilterState <- R6::R6Class( # nolint
             eventExpr = private$get_selected(),
             handlerExpr = {
               if (!setequal(private$get_selected(), input$selection)) {
-                updateCheckboxGroupInput(
-                  inputId = "selection",
-                  selected = private$selected()
-                )
+                if(private$multiple) {
+                  updateCheckboxGroupInput(
+                    inputId = "selection",
+                    selected = private$get_selected()
+                  )
+                } else {
+                  updateRadioButtons(
+                    inputId = "selection",
+                    selected =  private$get_selected()
+                  )
+                }
+
                 logger::log_trace(sprintf(
                   "LogicalFilterState$server@1 state of variable %s changed, dataname: %s",
                   private$varname,
@@ -366,7 +393,7 @@ LogicalFilterState <- R6::R6Class( # nolint
           )
 
           private$observers$selection <- observeEvent(
-            ignoreNULL = FALSE,
+            ignoreNULL = private$init_null,
             ignoreInit = TRUE,
             eventExpr = input$selection,
             handlerExpr = {
