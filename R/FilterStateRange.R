@@ -173,7 +173,6 @@ RangeFilterState <- R6::R6Class( # nolint
                           ...) {
       checkmate::assert_numeric(x, all.missing = FALSE)
       checkmate::assert_numeric(choices, null.ok = TRUE)
-      checkmate::assert_flag(multiple, null.ok = TRUE)
       checkmate::assert_class(x_reactive, "reactive")
       if (!any(is.finite(x))) stop("\"x\" contains no finite values")
 
