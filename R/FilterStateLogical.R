@@ -268,7 +268,7 @@ LogicalFilterState <- R6::R6Class( # nolint
         TRUE
       } else if (!setequal(private$get_selected(), private$choices)) {
         TRUE
-      } else if (!isTRUE(private$get_keep_na()) && private$na_count > 0) {
+      } else if (isFALSE(private$get_keep_na()) && private$na_count > 0) {
         TRUE
       } else {
         FALSE
