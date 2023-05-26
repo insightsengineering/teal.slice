@@ -162,7 +162,6 @@ DateFilterState <- R6::R6Class( # nolint
       checkmate::assert_date(x)
       checkmate::assert_class(x_reactive, "reactive")
       checkmate::assert_date(choices, null.ok = TRUE)
-      checkmate::assert_flag(multiple, null.ok = TRUE)
 
       args <- list(
         x = x,
