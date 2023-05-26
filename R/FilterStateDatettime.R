@@ -161,7 +161,7 @@ DatetimeFilterState <- R6::R6Class( # nolint
                           dataname,
                           varname,
                           choices = NULL,
-                          multiple = FALSE,
+                          multiple = NULL,
                           selected = NULL,
                           keep_na = NULL,
                           keep_inf = NULL,
