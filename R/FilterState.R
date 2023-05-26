@@ -60,7 +60,8 @@ FilterState <- R6::R6Class( # nolint
     #' @param varname (`character(1)`)\cr
     #'   name of the variable.
     #' @param multiple (`logical(1)`)\cr
-    #'   flag specifying whether to enable/disable multiple value selection for FilterStateChoices and FilterStateLogical
+    #'   flag specifying whether the `FilterState` more than one value can be selected;
+    #'   only applicable to `FilterStateChoices` and `FilterStateLogical`
     #' @param keep_na (`logical(1)`, `NULL`)\cr
     #'   flag specifying whether to keep missing values
     #' @param keep_inf (`logical(1)`, `NULL`)\cr
