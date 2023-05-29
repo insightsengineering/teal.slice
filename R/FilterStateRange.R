@@ -387,8 +387,10 @@ RangeFilterState <- R6::R6Class( # nolint
       # values_adjusted
       values
     },
-    # for numeric ranges selecting out of bound values is allowed
+    # Trim selection to limits imposed by private$choices
     remove_out_of_bound_values = function(values) {
+      if (values[1L] < private$choices[1L]) values[1L] <- private$choices[1L]
+      if (values[2L] > private$choices[2L]) values[2L] <- private$choices[2L]
       values
     },
 
@@ -587,8 +589,11 @@ RangeFilterState <- R6::R6Class( # nolint
                   private$dataname
                 )
               )
+              selection <- input$selection_manual
               if (!isTRUE(all.equal(input$selection_manual, private$get_selected()))) {
-                private$set_selected(input$selection_manual)
+                if (selection[1L] < private$choices[1L]) selection[1L] <- private$choices[1L]
+                if (selection[2L] > private$choices[2L]) selection[2L] <- private$choices[2L]
+                private$set_selected(selection)
               }
             }
           )
