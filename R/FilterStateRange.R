@@ -504,6 +504,7 @@ RangeFilterState <- R6::R6Class( # nolint
                   } else if (any(grepl("shapes[1]", names(event), fixed = TRUE))) {
                     line_positions[2] <- event[["shapes[1].x0"]]
                   }
+                  # If one line was dragged past the other, abort action and reset lines.
                   if (line_positions[1] > line_positions[2]) {
                     showNotification(
                       "Numeric range start value must be less than end value.",
