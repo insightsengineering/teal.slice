@@ -345,10 +345,10 @@ testthat::test_that("format shortens names if strings are too long", {
     paste(
       "ChoicesFilterState:",
       "teal_slice",
-      " $ dataname: \"data\"",
-      " $ varname : \"variable\"",
-      " $ choices : c(\"exceedingly long value ...",
-      " $ selected: c(\"exceedinglylongvaluenam...",
+      " $ dataname: data",
+      " $ varname : variable",
+      " $ choices : exceedingly long value nam...",
+      " $ selected: exceedinglylongvaluenameex...",
       " $ fixed   : FALSE",
       " $ disabled: FALSE\n",
       sep = "\n"
