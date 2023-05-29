@@ -176,7 +176,7 @@ FilterState <- R6::R6Class( # nolint
             shiny::isolate(private$get_keep_na()),
             shiny::isolate(private$get_keep_inf())
           )
-          logger::log_trace("state of variable: { private$varname } set to: { current_state }")
+          logger::log_trace("state of variable: { private$get_varname() } set to: { current_state }")
         }
       }
 

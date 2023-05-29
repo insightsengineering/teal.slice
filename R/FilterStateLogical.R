@@ -175,7 +175,7 @@ LogicalFilterState <- R6::R6Class( # nolint
       checkmate::assert_number(indent, finite = TRUE, lower = 0L)
       paste(
         c(
-          sprintf("%sFiltering on: %s", format("", width = indent), private$varname),
+          sprintf("%sFiltering on: %s", format("", width = indent), private$get_varname()),
           sprintf("%sSelected values: %s", format("", width = indent * 2), toString(private$get_selected())),
           sprintf("%sInclude missing values: %s", format("", width = indent * 2), private$get_keep_na())
         ),
@@ -187,14 +187,14 @@ LogicalFilterState <- R6::R6Class( # nolint
     #' Returns reproducible condition call for current selection.
     #' For `LogicalFilterState` it's a `!<varname>` or `<varname>` and optionally
     #' `is.na(<varname>)`
-    #' @param dataname name of data set; defaults to `private$dataname`
+    #' @param dataname name of data set; defaults to `private$get_dataname()`
     #' @return (`call`)
     #'
     get_call = function(dataname) {
       if (isFALSE(private$is_any_filtered())) {
         return(NULL)
       }
-      if (missing(dataname)) dataname <- private$dataname
+      if (missing(dataname)) dataname <- private$get_dataname()
       filter_call <-
         if (private$get_selected()) {
           private$get_varname_prefixed(dataname)
@@ -328,8 +328,8 @@ LogicalFilterState <- R6::R6Class( # nolint
           output$trigger_visible <- renderUI({
             logger::log_trace(sprintf(
               "LogicalFilterState$server@1 updating count labels in variable: %s , dataname: %s",
-              private$varname,
-              private$dataname
+              private$get_varname(),
+              private$get_dataname()
             ))
 
             countsnow <- if (!is.null(private$x_reactive())) {
@@ -360,8 +360,8 @@ LogicalFilterState <- R6::R6Class( # nolint
                 )
                 logger::log_trace(sprintf(
                   "LogicalFilterState$server@1 state of variable %s changed, dataname: %s",
-                  private$varname,
-                  private$dataname
+                  private$get_varname(),
+                  private$get_dataname()
                 ))
               }
             }
@@ -375,8 +375,8 @@ LogicalFilterState <- R6::R6Class( # nolint
               logger::log_trace(
                 sprintf(
                   "LogicalFilterState$server@2 selection of variable %s changed, dataname: %s",
-                  private$varname,
-                  private$dataname
+                  private$get_varname(),
+                  private$get_dataname()
                 )
               )
               selection_state <- as.logical(input$selection)
@@ -396,7 +396,7 @@ LogicalFilterState <- R6::R6Class( # nolint
             )
           })
 
-          logger::log_trace("LogicalFilterState$server initialized, dataname: { private$dataname }")
+          logger::log_trace("LogicalFilterState$server initialized, dataname: { private$get_dataname() }")
           NULL
         }
       )
@@ -405,7 +405,7 @@ LogicalFilterState <- R6::R6Class( # nolint
       moduleServer(
         id = id,
         function(input, output, session) {
-          logger::log_trace("LogicalFilterState$server initializing, dataname: { private$dataname }")
+          logger::log_trace("LogicalFilterState$server initializing, dataname: { private$get_dataname() }")
 
           output$selection <- renderUI({
             countsnow <- unname(table(factor(private$x_reactive(), levels = private$get_choices())))
@@ -420,7 +420,7 @@ LogicalFilterState <- R6::R6Class( # nolint
             )
           })
 
-          logger::log_trace("LogicalFilterState$server initialized, dataname: { private$dataname }")
+          logger::log_trace("LogicalFilterState$server initialized, dataname: { private$get_dataname() }")
           NULL
         }
       )

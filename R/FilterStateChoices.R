@@ -237,7 +237,7 @@ ChoicesFilterState <- R6::R6Class( # nolint
     #' For this class returned call looks like
     #' `<varname> %in%  c(<values selected>)` with
     #' optional `is.na(<varname>)`.
-    #' @param dataname name of data set; defaults to `private$dataname`
+    #' @param dataname name of data set; defaults to `private$get_dataname()`
     #' @return (`call`) or `NULL`
     #'
     get_call = function(dataname) {
@@ -459,7 +459,7 @@ ChoicesFilterState <- R6::R6Class( # nolint
       moduleServer(
         id = id,
         function(input, output, session) {
-          logger::log_trace("ChoicesFilterState$server initializing, dataname: { private$dataname }")
+          logger::log_trace("ChoicesFilterState$server initializing, dataname: { private$get_dataname() }")
 
           # 1. renderUI is used here as an observer which triggers only if output is visible
           #  and if the reactive changes - reactive triggers only if the output is visible.
@@ -510,8 +510,8 @@ ChoicesFilterState <- R6::R6Class( # nolint
               handlerExpr = {
                 logger::log_trace(sprintf(
                   "ChoicesFilterState$server@2 selection of variable %s changed, dataname: %s",
-                  private$varname,
-                  private$dataname
+                  private$get_varname(),
+                  private$get_dataname()
                 ))
                 selection <- if (is.null(input$selection)) character(0) else input$selection
                 private$set_selected(selection)
@@ -540,12 +540,12 @@ ChoicesFilterState <- R6::R6Class( # nolint
           # this observer is needed in the situation when private$selected has been
           # changed directly by the api - then it's needed to rerender UI element
           # to show relevant values
-          private$observers$selection_api <- observeEvent(private$selected(), {
+          private$observers$selection_api <- observeEvent(private$get_selected(), {
             if (!isTRUE(all.equal(input$selection, private$get_selected()))) {
               logger::log_trace(sprintf(
                 "ChoicesFilterState$server@2 state of variable %s changed, dataname: %s",
-                private$varname,
-                private$dataname
+                private$get_varname(),
+                private$get_dataname()
               ))
               if (private$is_checkboxgroup()) {
                 updateCheckboxGroupInput(
@@ -568,7 +568,7 @@ ChoicesFilterState <- R6::R6Class( # nolint
             )
           })
 
-          logger::log_trace("ChoicesFilterState$server initialized, dataname: { private$dataname }")
+          logger::log_trace("ChoicesFilterState$server initialized, dataname: { private$get_dataname() }")
           NULL
         }
       )
@@ -577,7 +577,7 @@ ChoicesFilterState <- R6::R6Class( # nolint
       moduleServer(
         id = id,
         function(input, output, session) {
-          logger::log_trace("ChoicesFilterState$server initializing, dataname: { private$dataname }")
+          logger::log_trace("ChoicesFilterState$server initializing, dataname: { private$get_dataname() }")
 
           output$selection <- renderUI({
             countsnow <- unname(table(factor(private$x_reactive(), levels = private$get_choices())))
@@ -592,7 +592,7 @@ ChoicesFilterState <- R6::R6Class( # nolint
             )
           })
 
-          logger::log_trace("ChoicesFilterState$server initialized, dataname: { private$dataname }")
+          logger::log_trace("ChoicesFilterState$server initialized, dataname: { private$get_dataname() }")
           NULL
         }
       )
