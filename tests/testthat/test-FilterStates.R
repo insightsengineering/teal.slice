@@ -43,7 +43,7 @@ testthat::test_that("set_filter_state sets count_type", {
 
 testthat::test_that("set_filter_state ignores teal_slice for inexisting variables with log warning", {
   filter_states <- FilterStates$new(data = data.frame(a = 1), dataname = "test")
-  res <- capture.output(
+  res <- utils::capture.output(
     filter_states$set_filter_state(filter_settings(filter_var(dataname = "test", varname = "inexisting")))
   )
   testthat::expect_true(grepl("\\[WARN\\].+inexisting excluded from test", res))

@@ -320,3 +320,53 @@ testthat::test_that("get_varlabel returns a string if x has the label attribute 
   filter_state <- test_class$new(seven, dataname = "data", varname = "7")
   testthat::expect_equal(shiny::isolate(filter_state$get_varlabel()), "test")
 })
+
+# format ---
+testthat::test_that("format accepts logical show_all", {
+  filter_state <- FilterState$new(7, dataname = "data", varname = "7")
+  testthat::expect_no_error(shiny::isolate(filter_state$format(show_all = TRUE)))
+  testthat::expect_no_error(shiny::isolate(filter_state$format(show_all = FALSE)))
+  testthat::expect_error(shiny::isolate(filter_state$format(show_all = 1)), "Assertion on 'show_all' failed: Must be of type 'logical flag', not 'double'")
+  testthat::expect_error(shiny::isolate(filter_state$format(show_all = 0)), "Assertion on 'show_all' failed: Must be of type 'logical flag', not 'double'")
+  testthat::expect_error(shiny::isolate(filter_state$format(show_all = "TRUE")), "Assertion on 'show_all' failed")
+})
+
+
+testthat::test_that("format returns a properly formatted string representation", {
+  filter_state <- FilterState$new(7, dataname = "data", varname = "7")
+  testthat::expect_equal(
+    shiny::isolate(filter_state$format()),
+    paste0(
+      "FilterState:\n",
+      format(shiny::isolate(filter_state$get_state()))
+    )
+  )
+  testthat::expect_equal(
+    shiny::isolate(filter_state$format(show_all = TRUE)),
+    paste0(
+      "FilterState:\n",
+      format(shiny::isolate(filter_state$get_state()), show_all = TRUE)
+    )
+  )
+})
+
+# print ---
+testthat::test_that("print returns a properly formatted string representation", {
+  filter_state <- FilterState$new(7, dataname = "data", varname = "7")
+  testthat::expect_equal(
+    utils::capture.output(cat(filter_state$print())),
+    c(
+      "FilterState:",
+      utils::capture.output(print(shiny::isolate(filter_state$get_state()))),
+      " "
+    )
+  )
+  testthat::expect_equal(
+    utils::capture.output(cat(filter_state$print(show_all = TRUE))),
+    c(
+      "FilterState:",
+      utils::capture.output(print(shiny::isolate(filter_state$get_state()), show_all = TRUE)),
+      " "
+    )
+  )
+})

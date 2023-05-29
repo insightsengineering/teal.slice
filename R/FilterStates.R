@@ -67,18 +67,16 @@ FilterStates <- R6::R6Class( # nolint
     #' @description
     #' Returns a formatted string representing this `FilterStates` object.
     #'
-    #' @param indent (`numeric(1)`) the number of spaces prepended to each line of the output
+    #' @param show_all `logical(1)` passed to `format.teal_slices`
     #'
     #' @return `character(1)` the formatted string
     #'
-    format = function(indent = 0) {
-      checkmate::assert_number(indent, finite = TRUE, lower = 0)
-
-      formatted_states <- vapply(
-        private$state_list_get(), function(state) state$format(indent = indent),
-        USE.NAMES = FALSE, FUN.VALUE = character(1)
+    format = function(show_all = FALSE) {
+      sprintf(
+        "%s:\n%s",
+        class(self)[1],
+        format(self$get_filter_state(), show_all = show_all)
       )
-      paste(formatted_states, collapse = "\n")
     },
 
     #' @description
@@ -185,9 +183,9 @@ FilterStates <- R6::R6Class( # nolint
     #' @description
     #' Prints this `FilterStates` object.
     #'
-    #' @param ... additional arguments to this method
+    #' @param ... additional arguments
     print = function(...) {
-      cat(shiny::isolate(self$format()), "\n")
+      cat(shiny::isolate(self$format(...)), "\n")
     },
 
     #' @description

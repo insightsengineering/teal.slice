@@ -191,29 +191,6 @@ DatetimeFilterState <- R6::R6Class( # nolint
     },
 
     #' @description
-    #' Returns a formatted string representing this `DatetimeFilterState`.
-    #'
-    #' @param indent (`numeric(1)`) the number of spaces before after each new line character of the formatted string.
-    #' Default: 0
-    #' @return `character(1)` the formatted string
-    #'
-    format = function(indent = 2) {
-      checkmate::assert_number(indent, finite = TRUE, lower = 0)
-
-      vals <- private$get_selected()
-      sprintf(
-        "%sFiltering on: %s\n%sSelected range: %s - %s\n%sInclude missing values: %s",
-        format("", width = indent),
-        private$varname,
-        format("", width = indent * 2),
-        format(vals[1], nsmall = 3),
-        format(vals[2], nsmall = 3),
-        format("", width = indent * 2),
-        format(private$get_keep_na())
-      )
-    },
-
-    #' @description
     #' Returns reproducible condition call for current selection.
     #' For this class returned call looks like
     #' `<varname> >= as.POSIXct(<min>) & <varname> <= <max>)`
@@ -583,17 +560,6 @@ DatetimeFilterState <- R6::R6Class( # nolint
               ))
             }
           )
-
-          private$observers$disabled_toggle_selection <- observeEvent(private$is_disabled(), {
-            shinyjs::toggleState(
-              id = "selection_start",
-              condition = !private$is_disabled()
-            )
-            shinyjs::toggleState(
-              id = "selection_end",
-              condition = !private$is_disabled()
-            )
-          })
 
           logger::log_trace("DatetimeFilterState$server initialized, dataname: { private$dataname }")
           NULL

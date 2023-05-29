@@ -1,4 +1,5 @@
 *.Rcheck
+.Rprofile
 *.html
 *.rprof
 *.sas.txt

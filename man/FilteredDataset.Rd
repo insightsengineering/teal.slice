@@ -15,7 +15,8 @@ components of the dataset.
 \subsection{Public methods}{
 \itemize{
 \item \href{#method-FilteredDataset-new}{\code{FilteredDataset$new()}}
-\item \href{#method-FilteredDataset-get_formatted_filter_state}{\code{FilteredDataset$get_formatted_filter_state()}}
+\item \href{#method-FilteredDataset-format}{\code{FilteredDataset$format()}}
+\item \href{#method-FilteredDataset-print}{\code{FilteredDataset$print()}}
 \item \href{#method-FilteredDataset-clear_filter_states}{\code{FilteredDataset$clear_filter_states()}}
 \item \href{#method-FilteredDataset-get_call}{\code{FilteredDataset$get_call()}}
 \item \href{#method-FilteredDataset-get_filter_state}{\code{FilteredDataset$get_filter_state()}}
@@ -72,17 +73,40 @@ should be atomic and length one.}
 }
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-FilteredDataset-get_formatted_filter_state"></a>}}
-\if{latex}{\out{\hypertarget{method-FilteredDataset-get_formatted_filter_state}{}}}
-\subsection{Method \code{get_formatted_filter_state()}}{
-Returns a string representation of the filter state in this \code{FilteredDataset}.
+\if{html}{\out{<a id="method-FilteredDataset-format"></a>}}
+\if{latex}{\out{\hypertarget{method-FilteredDataset-format}{}}}
+\subsection{Method \code{format()}}{
+Returns a formatted string representing this \code{FilteredDataset} object.
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{FilteredDataset$get_formatted_filter_state()}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{FilteredDataset$format(show_all = FALSE)}\if{html}{\out{</div>}}
 }
 
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{show_all}}{\code{logical(1)} passed to \code{format.teal_slice}}
+}
+\if{html}{\out{</div>}}
+}
 \subsection{Returns}{
-\code{character(1)} the formatted string representing the filter state or
-\code{NULL} if no filter state is present.
+\code{character(1)} the formatted string
+}
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-FilteredDataset-print"></a>}}
+\if{latex}{\out{\hypertarget{method-FilteredDataset-print}{}}}
+\subsection{Method \code{print()}}{
+Prints this \code{FilteredDataset} object.
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{FilteredDataset$print(...)}\if{html}{\out{</div>}}
+}
+
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{...}}{additional arguments}
+}
+\if{html}{\out{</div>}}
 }
 }
 \if{html}{\out{<hr>}}

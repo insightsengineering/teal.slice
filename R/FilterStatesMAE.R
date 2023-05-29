@@ -48,23 +48,6 @@ MAEFilterStates <- R6::R6Class( # nolint
       return(invisible(self))
     },
 
-    #' @description
-    #' Returns the formatted string representing this `MAEFilterStates` object.
-    #'
-    #' @param indent (`numeric(1)`) the number of spaces before each line of the representation
-    #' @return `character(1)` the formatted string
-    format = function(indent = 0) {
-      checkmate::assert_number(indent, finite = TRUE, lower = 0)
-
-      if (length(private$state_list_get()) > 0) {
-        formatted_states <- sprintf("%sSubject filters:", format("", width = indent))
-        for (state in private$state_list_get()) {
-          formatted_states <- c(formatted_states, state$format(indent = indent * 2))
-        }
-        paste(formatted_states, collapse = "\n")
-      }
-    },
-
     # shiny modules ----
 
     #' @description

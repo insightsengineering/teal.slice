@@ -118,3 +118,46 @@ testthat::test_that("set_state ignores every attribute except disabled", {
     )
   )
 })
+
+# format ---
+testthat::test_that("format returns a properly formatted string representation", {
+  state <- FilterStateExpr$new(
+    id = "id",
+    title = "testtitle",
+    dataname = "x",
+    expr = "x == 'x'",
+    disabled = FALSE
+  )
+  state$set_state(
+    filter_expr(id = "id2", title = "title2", dataname = "x2", expr = "x2 == 'x2'", disabled = TRUE)
+  )
+  testthat::expect_equal(
+    shiny::isolate(state$format()),
+    paste0(
+      "FilterStateExpr:\n",
+      format(shiny::isolate(state$get_state()))
+    )
+  )
+})
+
+# print ---
+testthat::test_that("print returns a properly formatted string representation", {
+  state <- FilterStateExpr$new(
+    id = "id",
+    title = "testtitle",
+    dataname = "x",
+    expr = "x == 'x'",
+    disabled = FALSE
+  )
+  state$set_state(
+    filter_expr(id = "id2", title = "title2", dataname = "x2", expr = "x2 == 'x2'", disabled = TRUE)
+  )
+  testthat::expect_equal(
+    utils::capture.output(cat(state$print())),
+    c(
+      "FilterStateExpr:",
+      utils::capture.output(print(shiny::isolate(state$get_state()))),
+      " "
+    )
+  )
+})

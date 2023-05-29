@@ -427,28 +427,31 @@ FilteredData <- R6::R6Class( # nolint
     get_filter_state = function() {
       states <- unname(lapply(private$filtered_datasets, function(x) x$get_filter_state()))
       slices <- Filter(Negate(is.null), states)
-      state <- do.call(c, slices)
-      if (!is.null(state)) {
-        attr(state, "formatted") <- self$get_formatted_filter_state()
-      }
-      state
+      do.call(c, slices)
     },
 
     #' @description
-    #' Returns the filter state formatted for printing to an `IO` device.
+    #' Returns a formatted string representing this `FilteredData` object.
     #'
-    #' @return `character` the pre-formatted filter state
+    #' @param show_all `logical(1)` passed to `format.teal_slice`
     #'
-    get_formatted_filter_state = function() {
-      # todo: this should be removed as teal_slices has own format method
-      out <-
-        unlist(sapply(
-          private$get_filtered_dataset(),
-          function(filtered_dataset) {
-            filtered_dataset$get_formatted_filter_state()
-          }
-        ))
-      paste(out, collapse = "\n")
+    #' @return `character(1)` the formatted string
+    #'
+    format = function(show_all = FALSE) {
+      sprintf(
+        "%s:\n%s",
+        class(self)[1],
+        format(self$get_filter_state(), show_all = show_all)
+      )
+    },
+
+    #' @description
+    #' Prints this `FilteredData` object.
+    #'
+    #' @param ... additional arguments
+    #'
+    print = function(...) {
+      cat(shiny::isolate(self$format(...)), "\n")
     },
 
     #' @description
