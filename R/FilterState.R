@@ -121,19 +121,27 @@ FilterState <- R6::R6Class( # nolint
     },
 
     #' @description
-    #' Virtual method for printing FilterState.
+    #' Returns a formatted string representing this `FilterState` object.
     #'
-    format = function() {
-      stop("this is a virtual method")
+    #' @param show_all `logical(1)` passed to `format.teal_slice`
+    #'
+    #' @return `character(1)` the formatted string
+    #'
+    format = function(show_all = FALSE) {
+      sprintf(
+        "%s:\n%s",
+        class(self)[1],
+        format(self$get_state(), show_all = show_all)
+      )
     },
 
     #' @description
     #' Prints this `FilterState` object.
     #'
-    #' @param ... additional arguments to this method
+    #' @param ... additional arguments
     #'
     print = function(...) {
-      cat(shiny::isolate(self$format()), "\n")
+      cat(shiny::isolate(self$format(...)), "\n")
     },
 
     #' @description

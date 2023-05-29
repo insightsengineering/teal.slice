@@ -163,27 +163,6 @@ LogicalFilterState <- R6::R6Class( # nolint
     },
 
     #' @description
-    #' Returns a formatted string representing this `FilterState`.
-    #'
-    #' @param indent (`numeric(1)`)
-    #'   number of spaces before after each new line character of the formatted string;
-    #'   defaults to 0
-    #'
-    #' @return `character(1)` the formatted string
-    #'
-    format = function(indent = 2L) {
-      checkmate::assert_number(indent, finite = TRUE, lower = 0L)
-      paste(
-        c(
-          sprintf("%sFiltering on: %s", format("", width = indent), private$get_varname()),
-          sprintf("%sSelected values: %s", format("", width = indent * 2), toString(private$get_selected())),
-          sprintf("%sInclude missing values: %s", format("", width = indent * 2), private$get_keep_na())
-        ),
-        collapse = "\n"
-      )
-    },
-
-    #' @description
     #' Returns reproducible condition call for current selection.
     #' For `LogicalFilterState` it's a `!<varname>` or `<varname>` and optionally
     #' `is.na(<varname>)`
