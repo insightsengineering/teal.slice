@@ -28,7 +28,6 @@ shiny::isolate(filter_state$get_call())
 \itemize{
 \item \href{#method-EmptyFilterState-new}{\code{EmptyFilterState$new()}}
 \item \href{#method-EmptyFilterState-get_call}{\code{EmptyFilterState$get_call()}}
-\item \href{#method-EmptyFilterState-get_state}{\code{EmptyFilterState$get_state()}}
 \item \href{#method-EmptyFilterState-clone}{\code{EmptyFilterState$clone()}}
 }
 }
@@ -37,6 +36,7 @@ shiny::isolate(filter_state$get_call())
 <ul>
 <li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilterState" data-id="destroy_observers"><a href='../../teal.slice/html/FilterState.html#method-FilterState-destroy_observers'><code>teal.slice::FilterState$destroy_observers()</code></a></span></li>
 <li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilterState" data-id="format"><a href='../../teal.slice/html/FilterState.html#method-FilterState-format'><code>teal.slice::FilterState$format()</code></a></span></li>
+<li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilterState" data-id="get_state"><a href='../../teal.slice/html/FilterState.html#method-FilterState-get_state'><code>teal.slice::FilterState$get_state()</code></a></span></li>
 <li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilterState" data-id="print"><a href='../../teal.slice/html/FilterState.html#method-FilterState-print'><code>teal.slice::FilterState$print()</code></a></span></li>
 <li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilterState" data-id="server"><a href='../../teal.slice/html/FilterState.html#method-FilterState-server'><code>teal.slice::FilterState$server()</code></a></span></li>
 <li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilterState" data-id="set_state"><a href='../../teal.slice/html/FilterState.html#method-FilterState-set_state'><code>teal.slice::FilterState$set_state()</code></a></span></li>
@@ -137,22 +137,6 @@ in reactive or isolated context.
 }
 \subsection{Returns}{
 \code{logical(1)}
-}
-}
-\if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-EmptyFilterState-get_state"></a>}}
-\if{latex}{\out{\hypertarget{method-EmptyFilterState-get_state}{}}}
-\subsection{Method \code{get_state()}}{
-Returns the filtering state.
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{EmptyFilterState$get_state()}\if{html}{\out{</div>}}
-}
-
-\subsection{Returns}{
-\code{list} containing values taken from the reactive fields:
-\itemize{
-\item \code{keep_na} (\code{logical(1)}) whether \code{NA} should be kept.
-}
 }
 }
 \if{html}{\out{<hr>}}
