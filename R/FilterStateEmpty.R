@@ -82,38 +82,19 @@ EmptyFilterState <- R6::R6Class( # nolint
     #' for selected variable type.
     #' Uses internal reactive values, hence must be called
     #' in reactive or isolated context.
-    #' @param dataname name of data set; defaults to `private$dataname`
+    #' @param dataname name of data set; defaults to `private$get_dataname()`
     #' @return `logical(1)`
     #'
     get_call = function(dataname) {
       if (isFALSE(private$is_any_filtered())) {
         return(NULL)
       }
-      if (missing(dataname)) dataname <- private$dataname
+      if (missing(dataname)) dataname <- private$get_dataname()
       filter_call <- if (isTRUE(private$get_keep_na())) {
         call("is.na", private$get_varname_prefixed(dataname))
       } else {
         substitute(!is.na(varname), list(varname = private$get_varname_prefixed(dataname)))
       }
-    },
-
-    #' @description
-    #' Returns the filtering state.
-    #'
-    #' @return `list` containing values taken from the reactive fields:
-    #' * `keep_na` (`logical(1)`) whether `NA` should be kept.
-    #'
-    get_state = function() {
-      list(
-        dataname = private$get_dataname(),
-        varname = private$get_varname(),
-        choices = private$choices,
-        selected = private$get_selected(),
-        keep_na = private$get_keep_na(),
-        keep_inf = private$get_keep_inf(),
-        fixed = private$fixed,
-        disabled = private$is_disabled()
-      )
     }
   ),
 

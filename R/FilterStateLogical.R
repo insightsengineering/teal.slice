@@ -235,7 +235,7 @@ LogicalFilterState <- R6::R6Class( # nolint
         private$get_dataname(),
         private$get_varname()
       )
-      check_in_subset(value, private$choices, pre_msg = pre_msg)
+      check_in_subset(value, private$get_choices(), pre_msg = pre_msg)
     },
     cast_and_validate = function(values) {
       tryCatch(
@@ -281,14 +281,14 @@ LogicalFilterState <- R6::R6Class( # nolint
 
       countsmax <- private$choices_counts
       countsnow <- countsnow <- if (!is.null(shiny::isolate(private$x_reactive()))) {
-        shiny::isolate(unname(table(factor(private$x_reactive(), levels = private$choices))))
+        shiny::isolate(unname(table(factor(private$x_reactive(), levels = private$get_choices()))))
       } else {
         NULL
       }
 
       labels <- countBars(
         inputId = ns("labels"),
-        choices = as.character(private$choices),
+        choices = as.character(private$get_choices()),
         countsnow = countsnow,
         countsmax = countsmax
       )
@@ -296,7 +296,7 @@ LogicalFilterState <- R6::R6Class( # nolint
         ns("selection"),
         label = NULL,
         choiceNames = labels,
-        choiceValues = as.character(private$choices),
+        choiceValues = as.character(private$get_choices()),
         selected = shiny::isolate(as.character(private$get_selected())),
         width = "100%"
       )
@@ -333,14 +333,14 @@ LogicalFilterState <- R6::R6Class( # nolint
             ))
 
             countsnow <- if (!is.null(private$x_reactive())) {
-              unname(table(factor(non_missing_values(), levels = private$choices)))
+              unname(table(factor(non_missing_values(), levels = private$get_choices())))
             } else {
               NULL
             }
 
             updateCountBars(
               inputId = "labels",
-              choices = as.character(private$choices),
+              choices = as.character(private$get_choices()),
               countsmax = private$choices_counts,
               countsnow = countsnow
             )
@@ -408,13 +408,13 @@ LogicalFilterState <- R6::R6Class( # nolint
           logger::log_trace("LogicalFilterState$server initializing, dataname: { private$dataname }")
 
           output$selection <- renderUI({
-            countsnow <- unname(table(factor(private$x_reactive(), levels = private$choices)))
+            countsnow <- unname(table(factor(private$x_reactive(), levels = private$get_choices())))
             countsmax <- private$choices_counts
 
-            ind <- private$choices %in% private$selected()
+            ind <- private$get_choices() %in% private$get_selected()
             countBars(
               inputId = session$ns("labels"),
-              choices = private$selected(),
+              choices = private$get_selected(),
               countsnow = countsnow[ind],
               countsmax = countsmax[ind]
             )

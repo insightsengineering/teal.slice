@@ -730,7 +730,7 @@ FilterStates <- R6::R6Class( # nolint
 
     #' UI wrapping a single `FilterState`
     #'
-    #' This module contains a single `FilterState` card and remove (from the `ReactiveQueue`) button.
+    #' This module contains a single `FilterState` card, which contains a remove button.
     #'
     #' return `moduleServer` function which returns `NULL`
     #' @keywords internal
@@ -741,7 +741,7 @@ FilterStates <- R6::R6Class( # nolint
 
     #' Server module for a single `FilterState`
     #'
-    #' Calls server from `FilterState` and observes remove (from the `ReactiveQueue`) button
+    #' Calls server from `FilterState` and observes remove button.
     #' @keywords internal
     srv_card_module = function(id, element_id, fs) {
       moduleServer(id, function(input, output, session) {

@@ -170,7 +170,7 @@ RangeFilterState <- R6::R6Class( # nolint
         x = x,
         x_reactive = x_reactive,
         extract_type = extract_type,
-        slice
+        slice = slice
       )
       do.call(super$initialize, args)
 
@@ -193,7 +193,7 @@ RangeFilterState <- R6::R6Class( # nolint
         ggplot2::theme_void() +
         ggplot2::coord_cartesian(
           expand = FALSE,
-          xlim = c(private$choices[1L], private$choices[2L])
+          xlim = c(private$get_choices()[1L], private$get_choices()[2L])
         )
 
       invisible(self)
@@ -214,7 +214,7 @@ RangeFilterState <- R6::R6Class( # nolint
       sprintf(
         "%sFiltering on: %s\n%sSelected range: %s - %s\n%sInclude missing values: %s",
         format("", width = indent),
-        private$varname,
+        private$get_varname(),
         format("", width = indent * 2),
         format(vals[1], nsmall = 3),
         format(vals[2], nsmall = 3),
@@ -228,14 +228,14 @@ RangeFilterState <- R6::R6Class( # nolint
     #' For this class returned call looks like
     #' `<varname> >= <min value> & <varname> <= <max value>` with
     #' optional `is.na(<varname>)` and `is.finite(<varname>)`.
-    #' @param dataname name of data set; defaults to `private$dataname`
+    #' @param dataname name of data set; defaults to `private$get_dataname()`
     #' @return (`call`)
     #'
     get_call = function(dataname) {
       if (isFALSE(private$is_any_filtered())) {
         return(NULL)
       }
-      if (missing(dataname)) dataname <- private$dataname
+      if (missing(dataname)) dataname <- private$get_dataname()
       filter_call <-
         call(
           "&",
@@ -249,7 +249,7 @@ RangeFilterState <- R6::R6Class( # nolint
     #' Returns current `keep_inf` selection
     #' @return (`logical(1)`)
     get_keep_inf = function() {
-      private$keep_inf()
+      private$teal_slice$keep_inf
     }
   ),
 
@@ -273,7 +273,7 @@ RangeFilterState <- R6::R6Class( # nolint
         if (any(choices != choices_adjusted)) {
           warning(sprintf(
             "Choices adjusted (some values outside of variable range). Varname: %s, dataname: %s.",
-            private$varname, private$dataname
+            private$get_varname(), private$get_dataname()
           ))
           choices <- choices_adjusted
         }
@@ -281,7 +281,7 @@ RangeFilterState <- R6::R6Class( # nolint
           warning(sprintf(
             "Invalid choices: lower is higher / equal to upper, or not in range of variable values.
             Setting defaults. Varname: %s, dataname: %s.",
-            private$varname, private$dataname
+            private$get_varname(), private$get_dataname()
           ))
           choices <- range(x)
         }
@@ -305,7 +305,7 @@ RangeFilterState <- R6::R6Class( # nolint
         private$slider_ticks <- signif(x_pretty, digits = 10)
         private$slider_step <- signif(private$get_pretty_range_step(x_pretty), digits = 10)
       }
-      private$choices <- choices
+      private$teal_slice$choices <- choices
       invisible(NULL)
     },
 
@@ -372,7 +372,7 @@ RangeFilterState <- R6::R6Class( # nolint
             "Programmatic range specification on %s was adjusted to existing slider ticks.",
             "It is now broader in order to contain the specified values."
           ),
-          private$varname
+          private$get_varname()
         ))
       }
       values_adjusted
@@ -389,7 +389,7 @@ RangeFilterState <- R6::R6Class( # nolint
         FALSE
       } else if (private$is_choice_limited) {
         TRUE
-      } else if (!isTRUE(all.equal(private$get_selected(), private$choices))) {
+      } else if (!isTRUE(all.equal(private$get_selected(), private$get_choices()))) {
         TRUE
       } else if (!isTRUE(private$get_keep_inf()) && private$inf_count > 0) {
         TRUE
@@ -413,18 +413,18 @@ RangeFilterState <- R6::R6Class( # nolint
       ui_input_slider <- teal.widgets::optionalSliderInput(
         inputId = ns("selection"),
         label = NULL,
-        min = private$choices[1L],
-        max = private$choices[2L],
-        value = shiny::isolate(private$selected()),
+        min = private$get_choices()[1L],
+        max = private$get_choices()[2L],
+        value = shiny::isolate(private$get_selected()),
         step = private$slider_step,
         width = "100%"
       )
       ui_input_manual <- shinyWidgets::numericRangeInput(
         inputId = ns("selection_manual"),
         label = NULL,
-        min = private$choices[1L],
-        max = private$choices[2L],
-        value = shiny::isolate(private$selected()),
+        min = private$get_choices()[1L],
+        max = private$get_choices()[2L],
+        value = shiny::isolate(private$get_selected()),
         step = private$slider_step,
         width = "100%"
       )
@@ -480,7 +480,7 @@ RangeFilterState <- R6::R6Class( # nolint
       moduleServer(
         id = id,
         function(input, output, session) {
-          logger::log_trace("RangeFilterState$server initializing, dataname: { private$dataname }")
+          logger::log_trace("RangeFilterState$server initializing, dataname: { private$get_dataname() }")
 
           finite_values <- reactive(Filter(is.finite, private$x_reactive()))
           output$plot <- bindCache(
@@ -518,14 +518,14 @@ RangeFilterState <- R6::R6Class( # nolint
                 sprintf(
                   "RangeFilterState$server@2 state of %s changed, dataname: %s",
                   private$get_varname(),
-                  private$dataname
+                  private$get_dataname()
                 )
               )
               if (!isTRUE(all.equal(input$selection, private$get_selected()))) {
                 updateSliderInput(
                   session = session,
                   inputId = "selection",
-                  value = private$selected()
+                  value = private$get_selected()
                 )
               }
             }
@@ -539,8 +539,8 @@ RangeFilterState <- R6::R6Class( # nolint
               logger::log_trace(
                 sprintf(
                   "RangeFilterState$server@3 selection of variable %s changed, dataname: %s",
-                  private$varname,
-                  private$dataname
+                  private$get_varname(),
+                  private$get_dataname()
                 )
               )
               if (!isTRUE(all.equal(input$selection, private$get_selected()))) {
@@ -607,8 +607,8 @@ RangeFilterState <- R6::R6Class( # nolint
               logger::log_trace(
                 sprintf(
                   "RangeFilterState$server@3 selection of variable %s changed, dataname: %s",
-                  private$varname,
-                  private$dataname
+                  private$get_varname(),
+                  private$get_dataname()
                 )
               )
               if (!isTRUE(all.equal(input$selection_manual, private$get_selected()))) {
@@ -657,7 +657,7 @@ RangeFilterState <- R6::R6Class( # nolint
             ignoreInit = TRUE
           )
 
-          logger::log_trace("RangeFilterState$server initialized, dataname: { private$dataname }")
+          logger::log_trace("RangeFilterState$server initialized, dataname: { private$get_dataname() }")
           NULL
         }
       )
@@ -666,7 +666,7 @@ RangeFilterState <- R6::R6Class( # nolint
       moduleServer(
         id = id,
         function(input, output, session) {
-          logger::log_trace("RangeFilterState$server initializing, dataname: { private$dataname }")
+          logger::log_trace("RangeFilterState$server initializing, dataname: { private$get_dataname() }")
 
           finite_values <- reactive(Filter(is.finite, private$x_reactive()))
           output$plot <- bindCache(
@@ -696,7 +696,7 @@ RangeFilterState <- R6::R6Class( # nolint
             plotOutput(session$ns("plot"), height = "2em")
           })
 
-          logger::log_trace("RangeFilterState$server initialized, dataname: { private$dataname }")
+          logger::log_trace("RangeFilterState$server initialized, dataname: { private$get_dataname() }")
           NULL
         }
       )
@@ -785,8 +785,8 @@ RangeFilterState <- R6::R6Class( # nolint
     # @description
     # module to handle Inf values in the FilterState
     # @param shiny `id` parametr passed to moduleServer
-    #  module sets `private$keep_inf` according to the selection.
-    #  Module also updates a UI element if the `private$keep_inf` has been
+    #  module sets `private$teal_slice$keep_inf` according to the selection.
+    #  Module also updates a UI element if the `private$teal_slice$keep_inf` has been
     #  changed through the api
     keep_inf_srv = function(id) {
       moduleServer(id, function(input, output, session) {
@@ -803,7 +803,7 @@ RangeFilterState <- R6::R6Class( # nolint
           NULL
         })
 
-        # this observer is needed in the situation when private$keep_na has been
+        # this observer is needed in the situation when private$teal_slice$keep_inf has been
         # changed directly by the api - then it's needed to rerender UI element
         # to show relevant values
         private$observers$keep_inf_api <- observeEvent(
@@ -831,9 +831,9 @@ RangeFilterState <- R6::R6Class( # nolint
               sprintf(
                 "%s$server keep_inf of variable %s set to: %s, dataname: %s",
                 class(self)[1],
-                private$varname,
+                private$get_varname(),
                 input$value,
-                private$dataname
+                private$get_dataname()
               )
             )
           }

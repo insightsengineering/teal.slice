@@ -180,7 +180,7 @@ DateFilterState <- R6::R6Class( # nolint
       sprintf(
         "%sFiltering on: %s\n%sSelected range: %s - %s\n%sInclude missing values: %s",
         format("", width = indent),
-        private$varname,
+        private$get_varname(),
         format("", width = indent * 2),
         format(vals[1], nsmall = 3),
         format(vals[2], nsmall = 3),
@@ -223,7 +223,7 @@ DateFilterState <- R6::R6Class( # nolint
         if (any(choices != choices_adjusted)) {
           warning(sprintf(
             "Choices adjusted (some values outside of variable range). Varname: %s, dataname: %s.",
-            private$varname, private$dataname
+            private$get_varname(), private$get_dataname()
           ))
           choices <- choices_adjusted
         }
@@ -231,14 +231,14 @@ DateFilterState <- R6::R6Class( # nolint
           warning(sprintf(
             "Invalid choices: lower is higher / equal to upper, or not in range of variable values.
             Setting defaults. Varname: %s, dataname: %s.",
-            private$varname, private$dataname
+            private$get_varname(), private$get_dataname()
           ))
           choices <- range(private$x, na.rm = TRUE)
         }
       }
       private$set_is_choice_limited(private$x, choices)
       private$x <- private$x[(private$x >= choices[1L] & private$x <= choices[2L]) | is.na(private$x)]
-      private$choices <- choices
+      private$teal_slice$choices <- choices
       invisible(NULL)
     },
 
@@ -263,7 +263,7 @@ DateFilterState <- R6::R6Class( # nolint
         private$get_dataname(),
         private$get_varname()
       )
-      check_in_range(value, private$choices, pre_msg = pre_msg)
+      check_in_range(value, private$get_choices(), pre_msg = pre_msg)
     },
     cast_and_validate = function(values) {
       tryCatch(
@@ -277,24 +277,25 @@ DateFilterState <- R6::R6Class( # nolint
       values
     },
     remove_out_of_bound_values = function(values) {
-      if (values[1] < private$choices[1L] | values[1] > private$choices[2L]) {
+      choices <- private$get_choices()
+      if (values[1] < choices[1L] | values[1] > choices[2L]) {
         warning(
           sprintf(
             "Value: %s is outside of the possible range for column %s of dataset %s, setting minimum possible value.",
-            values[1], private$varname, private$dataname
+            values[1], private$get_varname(), private$get_dataname()
           )
         )
-        values[1] <- private$choices[1L]
+        values[1] <- choices[1L]
       }
 
-      if (values[2] > private$choices[2L] | values[2] < private$choices[1L]) {
+      if (values[2] > choices[2L] | values[2] < choices[1L]) {
         warning(
           sprintf(
             "Value: %s is outside of the possible range for column %s of dataset %s, setting maximum possible value.",
-            values[2], private$varname, private$dataname
+            values[2], private$get_varname(), private$get_dataname()
           )
         )
-        values[2] <- private$choices[2L]
+        values[2] <- choices[2L]
       }
 
       if (values[1] > values[2]) {
@@ -304,7 +305,7 @@ DateFilterState <- R6::R6Class( # nolint
             values[1], values[2]
           )
         )
-        values <- c(private$choices[1L], private$choices[2L])
+        values <- c(choices[1L], choices[2L])
       }
       values
     },
@@ -335,8 +336,8 @@ DateFilterState <- R6::R6Class( # nolint
               label = NULL,
               start = shiny::isolate(private$get_selected())[1],
               end = shiny::isolate(private$get_selected())[2],
-              min = private$choices[1L],
-              max = private$choices[2L],
+              min = private$get_choices()[1L],
+              max = private$get_choices()[2L],
               width = "100%"
             )
           ),
@@ -360,7 +361,7 @@ DateFilterState <- R6::R6Class( # nolint
       moduleServer(
         id = id,
         function(input, output, session) {
-          logger::log_trace("DateFilterState$server initializing, dataname: { private$dataname }")
+          logger::log_trace("DateFilterState$server initializing, dataname: { private$get_dataname() }")
 
           # this observer is needed in the situation when private$selected has been
           # changed directly by the api - then it's needed to rerender UI element
@@ -379,8 +380,8 @@ DateFilterState <- R6::R6Class( # nolint
                 )
                 logger::log_trace(sprintf(
                   "DateFilterState$server@1 selection of variable %s changed, dataname: %s",
-                  private$varname,
-                  private$dataname
+                  private$get_varname(),
+                  private$get_dataname()
                 ))
               }
             }
@@ -402,8 +403,8 @@ DateFilterState <- R6::R6Class( # nolint
               private$set_selected(c(start_date, end_date))
               logger::log_trace(sprintf(
                 "DateFilterState$server@2 selection of variable %s changed, dataname: %s",
-                private$varname,
-                private$dataname
+                private$get_varname(),
+                private$get_dataname()
               ))
             }
           )
@@ -415,12 +416,12 @@ DateFilterState <- R6::R6Class( # nolint
             updateDateRangeInput(
               session = session,
               inputId = "selection",
-              start = private$choices[1L]
+              start = private$get_choices()[1L]
             )
             logger::log_trace(sprintf(
               "DateFilterState$server@3 reset start date of variable %s, dataname: %s",
-              private$varname,
-              private$dataname
+              private$get_varname(),
+              private$get_dataname()
             ))
           })
 
@@ -428,12 +429,12 @@ DateFilterState <- R6::R6Class( # nolint
             updateDateRangeInput(
               session = session,
               inputId = "selection",
-              end = private$choices[2L]
+              end = private$get_choices()[2L]
             )
             logger::log_trace(sprintf(
               "DateFilterState$server@4 reset end date of variable %s, dataname: %s",
-              private$varname,
-              private$dataname
+              private$get_varname(),
+              private$get_dataname()
             ))
           })
 
@@ -444,7 +445,7 @@ DateFilterState <- R6::R6Class( # nolint
             )
           })
 
-          logger::log_trace("DateFilterState$server initialized, dataname: { private$dataname }")
+          logger::log_trace("DateFilterState$server initialized, dataname: { private$get_dataname() }")
           NULL
         }
       )
@@ -453,7 +454,7 @@ DateFilterState <- R6::R6Class( # nolint
       moduleServer(
         id = id,
         function(input, output, session) {
-          logger::log_trace("DateFilterState$server initializing, dataname: { private$dataname }")
+          logger::log_trace("DateFilterState$server initializing, dataname: { private$get_dataname() }")
 
           output$selection <- renderUI({
             vals <- format(private$get_selected(), nsmall = 3)
@@ -463,7 +464,7 @@ DateFilterState <- R6::R6Class( # nolint
             )
           })
 
-          logger::log_trace("DateFilterState$server initialized, dataname: { private$dataname }")
+          logger::log_trace("DateFilterState$server initialized, dataname: { private$get_dataname() }")
           NULL
         }
       )

@@ -190,7 +190,7 @@ DatetimeFilterState <- R6::R6Class( # nolint
       sprintf(
         "%sFiltering on: %s\n%sSelected range: %s - %s\n%sInclude missing values: %s",
         format("", width = indent),
-        private$varname,
+        private$get_varname(),
         format("", width = indent * 2),
         format(vals[1], nsmall = 3),
         format(vals[2], nsmall = 3),
@@ -204,14 +204,14 @@ DatetimeFilterState <- R6::R6Class( # nolint
     #' For this class returned call looks like
     #' `<varname> >= as.POSIXct(<min>) & <varname> <= <max>)`
     #' with optional `is.na(<varname>)`.
-    #' @param dataname name of data set; defaults to `private$dataname`
+    #' @param dataname name of data set; defaults to `private$get_dataname()`
     #' @return (`call`)
     #'
     get_call = function(dataname) {
       if (isFALSE(private$is_any_filtered())) {
         return(NULL)
       }
-      if (missing(dataname)) dataname <- private$dataname
+      if (missing(dataname)) dataname <- private$get_dataname()
       choices <- private$get_selected()
       tzone <- Find(function(x) x != "", attr(as.POSIXlt(choices), "tzone"))
       class <- class(choices)[1L]
@@ -256,7 +256,7 @@ DatetimeFilterState <- R6::R6Class( # nolint
         if (any(choices != choices_adjusted)) {
           warning(sprintf(
             "Choices adjusted (some values outside of variable range). Varname: %s, dataname: %s.",
-            private$varname, private$dataname
+            private$get_varname(), private$get_dataname()
           ))
           choices <- choices_adjusted
         }
@@ -264,7 +264,7 @@ DatetimeFilterState <- R6::R6Class( # nolint
           warning(sprintf(
             "Invalid choices: lower is higher / equal to upper, or not in range of variable values.
             Setting defaults. Varname: %s, dataname: %s.",
-            private$varname, private$dataname
+            private$get_varname(), private$get_dataname()
           ))
           choices <- range(private$x, na.rm = TRUE)
         }
@@ -301,7 +301,7 @@ DatetimeFilterState <- R6::R6Class( # nolint
         private$get_dataname(),
         private$get_varname()
       )
-      check_in_range(value, private$choices, pre_msg = pre_msg)
+      check_in_range(value, private$get_choices(), pre_msg = pre_msg)
     },
     cast_and_validate = function(values) {
       tryCatch(
@@ -315,24 +315,25 @@ DatetimeFilterState <- R6::R6Class( # nolint
       values
     },
     remove_out_of_bound_values = function(values) {
-      if (values[1] < private$choices[1L] || values[1] > private$choices[2L]) {
+      choices <- private$get_choices()
+      if (values[1] < choices[1L] || values[1] > choices[2L]) {
         warning(
           sprintf(
             "Value: %s is outside of the range for the column '%s' in dataset '%s', setting minimum possible value.",
-            values[1], private$varname, toString(private$dataname)
+            values[1], private$get_varname(), toString(private$get_dataname())
           )
         )
-        values[1] <- private$choices[1L]
+        values[1] <- choices[1L]
       }
 
-      if (values[2] > private$choices[2L] | values[2] < private$choices[1L]) {
+      if (values[2] > choices[2L] | values[2] < choices[1L]) {
         warning(
           sprintf(
             "Value: '%s' is outside of the range for the column '%s' in dataset '%s', setting maximum possible value.",
-            values[2], private$varname, toString(private$dataname)
+            values[2], private$get_varname(), toString(private$get_dataname())
           )
         )
-        values[2] <- private$choices[2L]
+        values[2] <- choices[2L]
       }
 
       if (values[1] > values[2]) {
@@ -342,7 +343,7 @@ DatetimeFilterState <- R6::R6Class( # nolint
             values[1], values[2]
           )
         )
-        values <- c(private$choices[1L], private$choices[2L])
+        values <- c(choices[1L], choices[2L])
       }
       values
     },
@@ -364,8 +365,8 @@ DatetimeFilterState <- R6::R6Class( # nolint
         value = shiny::isolate(private$get_selected())[1],
         startView = shiny::isolate(private$get_selected())[1],
         timepicker = TRUE,
-        minDate = private$choices[1L],
-        maxDate = private$choices[2L],
+        minDate = private$get_choices()[1L],
+        maxDate = private$get_choices()[2L],
         update_on = "close",
         addon = "none",
         position = "bottom right"
@@ -375,8 +376,8 @@ DatetimeFilterState <- R6::R6Class( # nolint
         value = shiny::isolate(private$get_selected())[2],
         startView = shiny::isolate(private$get_selected())[2],
         timepicker = TRUE,
-        minDate = private$choices[1L],
-        maxDate = private$choices[2L],
+        minDate = private$get_choices()[1L],
+        maxDate = private$get_choices()[2L],
         update_on = "close",
         addon = "none",
         position = "bottom right"
@@ -431,7 +432,7 @@ DatetimeFilterState <- R6::R6Class( # nolint
       moduleServer(
         id = id,
         function(input, output, session) {
-          logger::log_trace("DatetimeFilterState$server initializing, dataname: { private$dataname }")
+          logger::log_trace("DatetimeFilterState$server initializing, dataname: { private$get_dataname() }")
           # this observer is needed in the situation when private$selected has been
           # changed directly by the api - then it's needed to rerender UI element
           # to show relevant values
@@ -461,8 +462,8 @@ DatetimeFilterState <- R6::R6Class( # nolint
 
                 logger::log_trace(sprintf(
                   "DatetimeFilterState$server@1 selection of variable %s changed, dataname: %s",
-                  private$varname,
-                  private$dataname
+                  private$get_varname(),
+                  private$get_dataname()
                 ))
               }
             }
@@ -476,7 +477,7 @@ DatetimeFilterState <- R6::R6Class( # nolint
             handlerExpr = {
               start_date <- input$selection_start
               end_date <- private$get_selected()[[2]]
-              tzone <- Find(function(x) x != "", attr(as.POSIXlt(private$choices), "tzone"))
+              tzone <- Find(function(x) x != "", attr(as.POSIXlt(private$get_choices()), "tzone"))
               attr(start_date, "tzone") <- tzone
 
               if (start_date > end_date) {
@@ -495,8 +496,8 @@ DatetimeFilterState <- R6::R6Class( # nolint
               private$set_selected(c(start_date, end_date))
               logger::log_trace(sprintf(
                 "DatetimeFilterState$server@2 selection of variable %s changed, dataname: %s",
-                private$varname,
-                private$dataname
+                private$get_varname(),
+                private$get_dataname()
               ))
             }
           )
@@ -508,7 +509,7 @@ DatetimeFilterState <- R6::R6Class( # nolint
             handlerExpr = {
               start_date <- private$get_selected()[1]
               end_date <- input$selection_end
-              tzone <- Find(function(x) x != "", attr(as.POSIXlt(private$choices), "tzone"))
+              tzone <- Find(function(x) x != "", attr(as.POSIXlt(private$get_choices()), "tzone"))
               attr(end_date, "tzone") <- tzone
 
               if (start_date > end_date) {
@@ -527,8 +528,8 @@ DatetimeFilterState <- R6::R6Class( # nolint
               private$set_selected(c(start_date, end_date))
               logger::log_trace(sprintf(
                 "DatetimeFilterState$server@2 selection of variable %s changed, dataname: %s",
-                private$varname,
-                private$dataname
+                private$get_varname(),
+                private$get_dataname()
               ))
             }
           )
@@ -543,12 +544,12 @@ DatetimeFilterState <- R6::R6Class( # nolint
               shinyWidgets::updateAirDateInput(
                 session = session,
                 inputId = "selection_start",
-                value = private$choices[1L]
+                value = private$get_choices()[1L]
               )
               logger::log_trace(sprintf(
                 "DatetimeFilterState$server@2 reset start date of variable %s, dataname: %s",
-                private$varname,
-                private$dataname
+                private$get_varname(),
+                private$get_dataname()
               ))
             }
           )
@@ -560,12 +561,12 @@ DatetimeFilterState <- R6::R6Class( # nolint
               shinyWidgets::updateAirDateInput(
                 session = session,
                 inputId = "selection_end",
-                value = private$choices[2L]
+                value = private$get_choices()[2L]
               )
               logger::log_trace(sprintf(
                 "DatetimeFilterState$server@3 reset end date of variable %s, dataname: %s",
-                private$varname,
-                private$dataname
+                private$get_varname(),
+                private$get_dataname()
               ))
             }
           )
@@ -581,7 +582,7 @@ DatetimeFilterState <- R6::R6Class( # nolint
             )
           })
 
-          logger::log_trace("DatetimeFilterState$server initialized, dataname: { private$dataname }")
+          logger::log_trace("DatetimeFilterState$server initialized, dataname: { private$get_dataname() }")
           NULL
         }
       )
@@ -590,7 +591,7 @@ DatetimeFilterState <- R6::R6Class( # nolint
       moduleServer(
         id = id,
         function(input, output, session) {
-          logger::log_trace("DatetimeFilterState$server initializing, dataname: { private$dataname }")
+          logger::log_trace("DatetimeFilterState$server initializing, dataname: { private$get_dataname() }")
 
           output$selection <- renderUI({
             vals <- format(private$get_selected(), usetz = TRUE, nsmall = 3)
@@ -600,7 +601,7 @@ DatetimeFilterState <- R6::R6Class( # nolint
             )
           })
 
-          logger::log_trace("DatetimeFilterState$server initialized, dataname: { private$dataname }")
+          logger::log_trace("DatetimeFilterState$server initialized, dataname: { private$get_dataname() }")
           NULL
         }
       )
