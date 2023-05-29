@@ -109,7 +109,7 @@ EmptyFilterState <- R6::R6Class( # nolint
       )
     },
     set_choices = function(choices) {
-      private$choices <- choices
+      private$teal_slice$choices <- choices
       invisible(NULL)
     },
 

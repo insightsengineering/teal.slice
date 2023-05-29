@@ -210,7 +210,7 @@ LogicalFilterState <- R6::R6Class( # nolint
   private = list(
     choices_counts = integer(0),
     set_choices = function(choices) {
-      private$choices <- c(TRUE, FALSE)
+      private$teal_slice$choices <- c(TRUE, FALSE)
       invisible(NULL)
     },
     # @description
