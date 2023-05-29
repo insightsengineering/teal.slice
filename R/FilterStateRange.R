@@ -416,8 +416,8 @@ RangeFilterState <- R6::R6Class( # nolint
     # returns a list that is passed to plotly's layout.shapes property
     get_shape_properties = function(values) {
       list(
-        list(type = "line", x0 = values[1], x1 = values[1], y0 = -5, y1 = 5, yref = "paper"),
-        list(type = "line", x0 = values[2], x1 = values[2], y0 = -5, y1 = 5, yref = "paper")
+        list(type = "line", x0 = values[1], x1 = values[1], y0 = -10, y1 = 10, yref = "paper"),
+        list(type = "line", x0 = values[2], x1 = values[2], y0 = -10, y1 = 10, yref = "paper")
       )
     },
 
