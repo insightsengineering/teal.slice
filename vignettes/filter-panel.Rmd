@@ -347,6 +347,7 @@ datasets <- init_filtered_data(
 
 app <- shinyApp(
   ui = fluidPage(
+    shinyjs::useShinyjs(),
     fluidRow(
       column(
         width = 9,
