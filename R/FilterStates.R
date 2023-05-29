@@ -356,7 +356,7 @@ FilterStates <- R6::R6Class( # nolint
           output[["filters"]] <- shiny::renderUI({
             fstates <- current_state() # rerenders when queue changes / not when the state changes
             lapply(names(fstates), function(fname) {
-              private$ui_card_module(id = session$ns(fname), fstates[[fname]])
+              shiny::isolate(private$ui_card_module(id = session$ns(fname), fstates[[fname]]))
             })
           })
 
