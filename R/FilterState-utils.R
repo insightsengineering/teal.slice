@@ -255,8 +255,8 @@ init_filter_state.POSIXlt <- function(x,
 #'
 #' @return `FilterStateExpr` object
 #' @keywords internal
-init_filter_state_expr <- function(id, title, dataname, expr, disabled, ...) {
-  FilterStateExpr$new(id = id, title = title, dataname = dataname, expr = expr, disabled = disabled, ...)
+init_filter_state_expr <- function(slice) {
+  FilterStateExpr$new(slice)
 }
 
 #' Check that a given range is valid

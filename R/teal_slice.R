@@ -170,7 +170,10 @@ filter_expr <- function(dataname, id, title, expr, disabled = FALSE, ...) {
     expr = expr,
     disabled = disabled
   )
+
+  ans <- as.list(environment())
   ans <- append(ans, list(...))
+  ans <- do.call(shiny::reactiveValues, ans)
   class(ans) <- c("teal_slice_expr", "teal_slice", class(ans))
   ans
 }

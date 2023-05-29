@@ -78,19 +78,8 @@ FilterStateExpr <- R6::R6Class( # nolint
     #' }
     #'
     #' @return `FilterStateExpr`
-    initialize = function(dataname, id, title, expr, disabled = FALSE, ...) {
-      checkmate::assert_string(dataname)
-      checkmate::assert_string(id)
-      checkmate::assert_string(title)
-      checkmate::assert_flag(disabled)
-      checkmate::assert_string(expr)
-
-      private$id <- id
-      private$title <- title
-      private$dataname <- dataname
-      private$expr <- expr
-      private$disabled <- reactiveVal(disabled)
-      private$extras <- list(...)
+    initialize = function(slice) {
+      private$teal_slice <- slice
       invisible(self)
     },
 
@@ -113,7 +102,7 @@ FilterStateExpr <- R6::R6Class( # nolint
       # List all selected values separated by commas.
       paste(
         strwrap(
-          sprintf("Filter expr: %s", deparse1(private$expr)),
+          sprintf("Filter expr: %s", deparse1(private$teal_slice$expr)),
           width = wrap_width,
           indent = indent
         ),
@@ -127,17 +116,7 @@ FilterStateExpr <- R6::R6Class( # nolint
     #' @return A `teal_slice` object.
     #'
     get_state = function() {
-      states <- append(
-        list(
-          id = private$id,
-          title = private$title,
-          dataname = private$dataname,
-          expr = private$expr,
-          disable = private$disabled()
-        ),
-        private$extras
-      )
-      do.call(filter_expr, states)
+      private$teal_slice
     },
 
     #' @description
@@ -149,8 +128,8 @@ FilterStateExpr <- R6::R6Class( # nolint
     #'
     set_state = function(state) {
       checkmate::assert_class(state, "teal_slice_expr")
-      if (isTRUE(state$disabled) && isFALSE(private$is_disabled())) private$disabled(TRUE)
-      if (isFALSE(state$disabled) && isTRUE(private$is_disabled())) private$disabled(FALSE)
+      if (isTRUE(state$disabled) && isFALSE(private$is_disabled())) private$teal_slice$disabled(TRUE)
+      if (isFALSE(state$disabled) && isTRUE(private$is_disabled())) private$teal_slice$disabled(FALSE)
       invisible(NULL)
     },
 
@@ -168,7 +147,7 @@ FilterStateExpr <- R6::R6Class( # nolint
       if (isTRUE(private$is_disabled())) {
         return(NULL)
       }
-      str2lang(private$expr)
+      str2lang(private$teal_slice$expr)
     },
 
     #' @description
@@ -190,9 +169,9 @@ FilterStateExpr <- R6::R6Class( # nolint
           private$observers$is_disabled <- observeEvent(input$enable,
             {
               if (isTRUE(input$enable)) {
-                private$disabled(FALSE)
+                private$teal_slice$disabled <- FALSE
               } else {
-                private$disabled(TRUE)
+                private$teal_slice$disabled <- TRUE
               }
             },
             ignoreInit = TRUE
@@ -233,8 +212,8 @@ FilterStateExpr <- R6::R6Class( # nolint
           tags$div(
             class = "filter-card-title",
             icon("lock"),
-            tags$span(tags$strong(private$id)),
-            tags$span(private$title, class = "filter-card-varlabel")
+            tags$span(tags$strong(private$teal_slice$id)),
+            tags$span(private$teal_slice$title, class = "filter-card-varlabel")
           ),
           tags$div(
             class = "filter-card-controls",
@@ -270,21 +249,16 @@ FilterStateExpr <- R6::R6Class( # nolint
     }
   ),
   private = list(
-    dataname = character(0),
-    disabled = NULL,
-    expr = NULL,
-    extras = list(),
-    id = character(0),
-    observers = list(),
-    title = character(0),
+    observers = NULL, # stores observers
+    teal_slice = NULL, # stores reactiveValues
 
     # Check whether this filter is disabled
     # @return `logical(1)`
     is_disabled = function() {
       if (shiny::isRunning()) {
-        isTRUE(private$disabled())
+        isTRUE(private$teal_slice$disabled)
       } else {
-        shiny::isolate(isTRUE(private$disabled()))
+        shiny::isolate(isTRUE(private$teal_slice$disabled))
       }
     },
 
@@ -315,7 +289,7 @@ FilterStateExpr <- R6::R6Class( # nolint
       )
     },
     content_summary = function() {
-      private$expr
+      private$teal_slice$expr
     }
   )
 )

@@ -699,7 +699,7 @@ FilterStates <- R6::R6Class( # nolint
         } else {
           if (inherits(x, "teal_slice_expr")) {
             # create a new FilterStateExpr
-            fstate <- do.call(init_filter_state_expr, x)
+            fstate <- init_filter_state_expr(x)
             private$state_list_push(x = fstate, state_id = state_id)
           } else {
             # create a new FilterState
