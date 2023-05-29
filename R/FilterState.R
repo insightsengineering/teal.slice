@@ -386,7 +386,7 @@ FilterState <- R6::R6Class( # nolint
     dataname = character(0),
     varname = character(0),
     choices = NULL, # because each class has different choices type
-    multiple = NULL, # because multiple only affects ChoicesFilterState and LogicalFilterState
+    multiple = logical(0),
     selected = NULL, # reactiveVal holding vector of choices (depends on class)
     keep_na = NULL, # reactiveVal holding a logical(1)
     keep_inf = NULL, # reactiveVal holding a logical(1)
