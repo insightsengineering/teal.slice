@@ -119,7 +119,6 @@ if (interactive()) {
 \subsection{Public methods}{
 \itemize{
 \item \href{#method-ChoicesFilterState-new}{\code{ChoicesFilterState$new()}}
-\item \href{#method-ChoicesFilterState-format}{\code{ChoicesFilterState$format()}}
 \item \href{#method-ChoicesFilterState-get_call}{\code{ChoicesFilterState$get_call()}}
 \item \href{#method-ChoicesFilterState-clone}{\code{ChoicesFilterState$clone()}}
 }
@@ -128,6 +127,7 @@ if (interactive()) {
 <details><summary>Inherited methods</summary>
 <ul>
 <li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilterState" data-id="destroy_observers"><a href='../../teal.slice/html/FilterState.html#method-FilterState-destroy_observers'><code>teal.slice::FilterState$destroy_observers()</code></a></span></li>
+<li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilterState" data-id="format"><a href='../../teal.slice/html/FilterState.html#method-FilterState-format'><code>teal.slice::FilterState$format()</code></a></span></li>
 <li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilterState" data-id="get_state"><a href='../../teal.slice/html/FilterState.html#method-FilterState-get_state'><code>teal.slice::FilterState$get_state()</code></a></span></li>
 <li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilterState" data-id="print"><a href='../../teal.slice/html/FilterState.html#method-FilterState-print'><code>teal.slice::FilterState$print()</code></a></span></li>
 <li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilterState" data-id="server"><a href='../../teal.slice/html/FilterState.html#method-FilterState-server'><code>teal.slice::FilterState$server()</code></a></span></li>
@@ -206,32 +206,6 @@ whether condition calls should be prefixed by dataname. Possible values:
 \item{\code{...}}{additional arguments to be saved as a list in \code{private$extras} field}
 }
 \if{html}{\out{</div>}}
-}
-}
-\if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-ChoicesFilterState-format"></a>}}
-\if{latex}{\out{\hypertarget{method-ChoicesFilterState-format}{}}}
-\subsection{Method \code{format()}}{
-Returns a formatted string representing this \code{FilterState}.
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{ChoicesFilterState$format(indent = 2L, wrap_width = 76L)}\if{html}{\out{</div>}}
-}
-
-\subsection{Arguments}{
-\if{html}{\out{<div class="arguments">}}
-\describe{
-\item{\code{indent}}{(\code{numeric(1)})
-number of spaces before after each new line character of the formatted string;
-defaults to 0}
-
-\item{\code{wrap_width}}{(\code{numeric(1)})
-number of characters to wrap lines at in the printed output;
-allowed range is 30 to 120; defaults to 76}
-}
-\if{html}{\out{</div>}}
-}
-\subsection{Returns}{
-\code{character(1)} the formatted string
 }
 }
 \if{html}{\out{<hr>}}

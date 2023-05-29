@@ -127,7 +127,8 @@ shiny::isolate(datasets$get_filter_state())
 \item \href{#method-FilteredData-set_check}{\code{FilteredData$set_check()}}
 \item \href{#method-FilteredData-set_code}{\code{FilteredData$set_code()}}
 \item \href{#method-FilteredData-get_filter_state}{\code{FilteredData$get_filter_state()}}
-\item \href{#method-FilteredData-get_formatted_filter_state}{\code{FilteredData$get_formatted_filter_state()}}
+\item \href{#method-FilteredData-format}{\code{FilteredData$format()}}
+\item \href{#method-FilteredData-print}{\code{FilteredData$print()}}
 \item \href{#method-FilteredData-set_filter_state}{\code{FilteredData$set_filter_state()}}
 \item \href{#method-FilteredData-remove_filter_state}{\code{FilteredData$remove_filter_state()}}
 \item \href{#method-FilteredData-remove_all_filter_states}{\code{FilteredData$remove_all_filter_states()}}
@@ -565,16 +566,40 @@ A \code{teal_slices} object.
 }
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-FilteredData-get_formatted_filter_state"></a>}}
-\if{latex}{\out{\hypertarget{method-FilteredData-get_formatted_filter_state}{}}}
-\subsection{Method \code{get_formatted_filter_state()}}{
-Returns the filter state formatted for printing to an \code{IO} device.
+\if{html}{\out{<a id="method-FilteredData-format"></a>}}
+\if{latex}{\out{\hypertarget{method-FilteredData-format}{}}}
+\subsection{Method \code{format()}}{
+Returns a formatted string representing this \code{FilteredData} object.
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{FilteredData$get_formatted_filter_state()}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{FilteredData$format(show_all = FALSE)}\if{html}{\out{</div>}}
 }
 
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{show_all}}{\code{logical(1)} passed to \code{format.teal_slice}}
+}
+\if{html}{\out{</div>}}
+}
 \subsection{Returns}{
-\code{character} the pre-formatted filter state
+\code{character(1)} the formatted string
+}
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-FilteredData-print"></a>}}
+\if{latex}{\out{\hypertarget{method-FilteredData-print}{}}}
+\subsection{Method \code{print()}}{
+Prints this \code{FilteredData} object.
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{FilteredData$print(...)}\if{html}{\out{</div>}}
+}
+
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{...}}{additional arguments}
+}
+\if{html}{\out{</div>}}
 }
 }
 \if{html}{\out{<hr>}}

@@ -66,6 +66,7 @@ if (interactive()) {
 \itemize{
 \item \href{#method-FilterStateExpr-new}{\code{FilterStateExpr$new()}}
 \item \href{#method-FilterStateExpr-format}{\code{FilterStateExpr$format()}}
+\item \href{#method-FilterStateExpr-print}{\code{FilterStateExpr$print()}}
 \item \href{#method-FilterStateExpr-get_state}{\code{FilterStateExpr$get_state()}}
 \item \href{#method-FilterStateExpr-set_state}{\code{FilterStateExpr$set_state()}}
 \item \href{#method-FilterStateExpr-get_call}{\code{FilterStateExpr$get_call()}}
@@ -168,26 +169,37 @@ if (interactive()) {
 \if{html}{\out{<a id="method-FilterStateExpr-format"></a>}}
 \if{latex}{\out{\hypertarget{method-FilterStateExpr-format}{}}}
 \subsection{Method \code{format()}}{
-Returns a formatted string representing this \code{FilterState}.
+Returns a formatted string representing this \code{FilterStateExpr} object.
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{FilterStateExpr$format(indent = 2L, wrap_width = 76L)}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{FilterStateExpr$format(show_all = FALSE)}\if{html}{\out{</div>}}
 }
 
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
-\item{\code{indent}}{(\code{numeric(1)})
-number of spaces before after each new line character of the formatted string;
-defaults to 0}
-
-\item{\code{wrap_width}}{(\code{numeric(1)})
-number of characters to wrap lines at in the printed output;
-allowed range is 30 to 120; defaults to 76}
+\item{\code{show_all}}{\code{logical(1)} passed to \code{format.teal_slice}}
 }
 \if{html}{\out{</div>}}
 }
 \subsection{Returns}{
 \code{character(1)} the formatted string
+}
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-FilterStateExpr-print"></a>}}
+\if{latex}{\out{\hypertarget{method-FilterStateExpr-print}{}}}
+\subsection{Method \code{print()}}{
+Prints this \code{FilterStateExpr} object.
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{FilterStateExpr$print(...)}\if{html}{\out{</div>}}
+}
+
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{...}}{additional arguments}
+}
+\if{html}{\out{</div>}}
 }
 }
 \if{html}{\out{<hr>}}

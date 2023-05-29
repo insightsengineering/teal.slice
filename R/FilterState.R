@@ -137,19 +137,27 @@ FilterState <- R6::R6Class( # nolint
     },
 
     #' @description
-    #' Virtual method for printing FilterState.
+    #' Returns a formatted string representing this `FilterState` object.
     #'
-    format = function() {
-      stop("this is a virtual method")
+    #' @param show_all `logical(1)` passed to `format.teal_slice`
+    #'
+    #' @return `character(1)` the formatted string
+    #'
+    format = function(show_all = FALSE) {
+      sprintf(
+        "%s:\n%s",
+        class(self)[1],
+        format(self$get_state(), show_all = show_all)
+      )
     },
 
     #' @description
     #' Prints this `FilterState` object.
     #'
-    #' @param ... additional arguments to this method
+    #' @param ... additional arguments
     #'
     print = function(...) {
-      cat(shiny::isolate(self$format()), "\n")
+      cat(shiny::isolate(self$format(...)), "\n")
     },
 
     #' @description
@@ -266,12 +274,7 @@ FilterState <- R6::R6Class( # nolint
           # Update disable switch according to disabled state.
           # This is necessary to react to the global disable action.
           private$observers$is_disabled <- observeEvent(private$is_disabled(), {
-            if (isTRUE(private$is_disabled())) {
-              shinyWidgets::updateSwitchInput(inputId = "enable", value = FALSE)
-            }
-            if (isFALSE(private$is_disabled())) {
-              shinyWidgets::updateSwitchInput(inputId = "enable", value = TRUE)
-            }
+            shinyjs::toggleState(id = "body", condition = isFALSE(private$is_disabled()))
           })
 
           reactive(input$remove) # back to parent to remove self

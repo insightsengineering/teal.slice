@@ -62,25 +62,27 @@ FilteredDataset <- R6::R6Class( # nolint
     },
 
     #' @description
-    #' Returns a string representation of the filter state in this `FilteredDataset`.
+    #' Returns a formatted string representing this `FilteredDataset` object.
     #'
-    #' @return `character(1)` the formatted string representing the filter state or
-    #' `NULL` if no filter state is present.
+    #' @param show_all `logical(1)` passed to `format.teal_slice`
     #'
-    get_formatted_filter_state = function() {
-      out <- Filter(
-        function(x) x != "",
-        sapply(
-          private$get_filter_states(),
-          function(states) {
-            states$format(indent = 2)
-          }
-        )
+    #' @return `character(1)` the formatted string
+    #'
+    format = function(show_all = FALSE) {
+      sprintf(
+        "%s:\n%s",
+        class(self)[1],
+        format(self$get_filter_state(), show_all = show_all)
       )
-      if (length(out) > 0) {
-        header <- paste0("Filters for dataset: ", self$get_dataname())
-        paste(c(header, out), collapse = "\n")
-      }
+    },
+
+    #' @description
+    #' Prints this `FilteredDataset` object.
+    #'
+    #' @param ... additional arguments
+    #'
+    print = function(...) {
+      cat(shiny::isolate(self$format(...)), "\n")
     },
 
     #' @description

@@ -133,11 +133,21 @@ self invisibly
 \if{html}{\out{<a id="method-FilterState-format"></a>}}
 \if{latex}{\out{\hypertarget{method-FilterState-format}{}}}
 \subsection{Method \code{format()}}{
-Virtual method for printing FilterState.
+Returns a formatted string representing this \code{FilterState} object.
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{FilterState$format()}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{FilterState$format(show_all = FALSE)}\if{html}{\out{</div>}}
 }
 
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{show_all}}{\code{logical(1)} passed to \code{format.teal_slice}}
+}
+\if{html}{\out{</div>}}
+}
+\subsection{Returns}{
+\code{character(1)} the formatted string
+}
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-FilterState-print"></a>}}
@@ -151,7 +161,7 @@ Prints this \code{FilterState} object.
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
-\item{\code{...}}{additional arguments to this method}
+\item{\code{...}}{additional arguments}
 }
 \if{html}{\out{</div>}}
 }

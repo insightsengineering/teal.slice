@@ -234,30 +234,6 @@ RangeFilterState <- R6::R6Class( # nolint
     },
 
     #' @description
-    #' Returns a formatted string representing this `RangeFilterState`.
-    #'
-    #' @param indent (`numeric(1)`)
-    #'        the number of spaces before after each new line character of the formatted string.
-    #'        Default: 0
-    #' @return `character(1)` the formatted string
-    #'
-    format = function(indent = 2) {
-      checkmate::assert_number(indent, finite = TRUE, lower = 0)
-
-      vals <- private$get_selected()
-      sprintf(
-        "%sFiltering on: %s\n%sSelected range: %s - %s\n%sInclude missing values: %s",
-        format("", width = indent),
-        private$varname,
-        format("", width = indent * 2),
-        format(vals[1], nsmall = 3),
-        format(vals[2], nsmall = 3),
-        format("", width = indent * 2),
-        format(private$get_keep_na())
-      )
-    },
-
-    #' @description
     #' Returns reproducible condition call for current selection.
     #' For this class returned call looks like
     #' `<varname> >= <min value> & <varname> <= <max value>` with
@@ -622,10 +598,6 @@ RangeFilterState <- R6::R6Class( # nolint
 
           observeEvent(private$is_disabled(), {
             shinyjs::toggleState(
-              id = "selection",
-              condition = !private$is_disabled()
-            )
-            shinyjs::toggleState(
               id = "selection_manual",
               condition = !private$is_disabled()
             )
@@ -805,12 +777,6 @@ RangeFilterState <- R6::R6Class( # nolint
           }
         )
 
-        observeEvent(private$is_disabled(), {
-          shinyjs::toggleState(
-            id = "value",
-            condition = !private$is_disabled()
-          )
-        })
         invisible(NULL)
       })
     }
