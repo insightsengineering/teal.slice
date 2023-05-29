@@ -311,9 +311,18 @@ testthat::test_that("format accepts logical show_all", {
   filter_state <- ChoicesFilterState$new(7, dataname = "data", varname = "variable")
   testthat::expect_no_error(shiny::isolate(filter_state$format(show_all = TRUE)))
   testthat::expect_no_error(shiny::isolate(filter_state$format(show_all = FALSE)))
-  testthat::expect_error(shiny::isolate(filter_state$format(show_all = 1)), "Assertion on 'show_all' failed: Must be of type 'logical flag', not 'double'")
-  testthat::expect_error(shiny::isolate(filter_state$format(show_all = 0)), "Assertion on 'show_all' failed: Must be of type 'logical flag', not 'double'")
-  testthat::expect_error(shiny::isolate(filter_state$format(show_all = "TRUE")), "Assertion on 'show_all' failed")
+  testthat::expect_error(
+    shiny::isolate(filter_state$format(show_all = 1)),
+    "Assertion on 'show_all' failed: Must be of type 'logical flag', not 'double'"
+  )
+  testthat::expect_error(
+    shiny::isolate(filter_state$format(show_all = 0)),
+    "Assertion on 'show_all' failed: Must be of type 'logical flag', not 'double'"
+  )
+  testthat::expect_error(
+    shiny::isolate(filter_state$format(show_all = "TRUE")),
+    "Assertion on 'show_all' failed"
+  )
 })
 
 testthat::test_that("format returns properly formatted string representation", {
