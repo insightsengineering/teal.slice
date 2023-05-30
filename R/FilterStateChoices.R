@@ -202,8 +202,12 @@ ChoicesFilterState <- R6::R6Class( # nolint
 
       private$set_choices(choices)
 
-      if (is.null(selected) && isFALSE(multiple)) {
-        private$set_selected(choices[1])
+      if (is.null(selected)) {
+        if (multiple) {
+          private$set_selected(choices)
+        } else {
+          private$set_selected(choices[1])
+        }
       } else {
         private$set_selected(selected)
       }
