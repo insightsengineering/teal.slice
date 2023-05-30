@@ -246,7 +246,11 @@ c.teal_slice <- function(...) {
 format.teal_slice <- function(x, show_all = FALSE, ...) {
   checkmate::assert_flag(show_all)
 
-  x <- rev(shiny::isolate(shiny::reactiveValuesToList(x)))
+  x <- if (shiny::isRunning()) {
+    rev(shiny::reactiveValuesToList(x))
+  } else {
+    rev(shiny::isolate(shiny::reactiveValuesToList(x)))
+  }
 
   name_width <- max(nchar(names(x)))
   format_value <- function(v) {
