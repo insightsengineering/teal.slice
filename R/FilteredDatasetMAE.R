@@ -115,7 +115,7 @@ MAEFilteredDataset <- R6::R6Class( # nolint
       # set states on state_lists with corresponding datalabels
       lapply(datalabels, function(datalabel) {
         slices <- Filter(function(x) identical(x$datalabel, datalabel), state)
-        private$get_filter_states()[[x]]$set_filter_state(slices)
+        private$get_filter_states()[[datalabel]]$set_filter_state(slices)
       })
 
       logger::log_trace("{ class(self)[1] }$set_filter_state initialized, dataname: { private$dataname }")
