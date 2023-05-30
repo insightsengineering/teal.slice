@@ -14,7 +14,6 @@ Handles filter states in a \code{MultiAssayExperiment}
 \subsection{Public methods}{
 \itemize{
 \item \href{#method-MAEFilterStates-new}{\code{MAEFilterStates$new()}}
-\item \href{#method-MAEFilterStates-format}{\code{MAEFilterStates$format()}}
 \item \href{#method-MAEFilterStates-ui_add}{\code{MAEFilterStates$ui_add()}}
 \item \href{#method-MAEFilterStates-clone}{\code{MAEFilterStates$clone()}}
 }
@@ -23,6 +22,7 @@ Handles filter states in a \code{MultiAssayExperiment}
 <details><summary>Inherited methods</summary>
 <ul>
 <li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilterStates" data-id="clear_filter_states"><a href='../../teal.slice/html/FilterStates.html#method-FilterStates-clear_filter_states'><code>teal.slice::FilterStates$clear_filter_states()</code></a></span></li>
+<li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilterStates" data-id="format"><a href='../../teal.slice/html/FilterStates.html#method-FilterStates-format'><code>teal.slice::FilterStates$format()</code></a></span></li>
 <li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilterStates" data-id="get_call"><a href='../../teal.slice/html/FilterStates.html#method-FilterStates-get_call'><code>teal.slice::FilterStates$get_call()</code></a></span></li>
 <li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilterStates" data-id="get_filter_state"><a href='../../teal.slice/html/FilterStates.html#method-FilterStates-get_filter_state'><code>teal.slice::FilterStates$get_filter_state()</code></a></span></li>
 <li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilterStates" data-id="print"><a href='../../teal.slice/html/FilterStates.html#method-FilterStates-print'><code>teal.slice::FilterStates$print()</code></a></span></li>
@@ -77,26 +77,6 @@ key columns names}
 labels of the variables used in this object}
 }
 \if{html}{\out{</div>}}
-}
-}
-\if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-MAEFilterStates-format"></a>}}
-\if{latex}{\out{\hypertarget{method-MAEFilterStates-format}{}}}
-\subsection{Method \code{format()}}{
-Returns the formatted string representing this \code{MAEFilterStates} object.
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{MAEFilterStates$format(indent = 0)}\if{html}{\out{</div>}}
-}
-
-\subsection{Arguments}{
-\if{html}{\out{<div class="arguments">}}
-\describe{
-\item{\code{indent}}{(\code{numeric(1)}) the number of spaces before each line of the representation}
-}
-\if{html}{\out{</div>}}
-}
-\subsection{Returns}{
-\code{character(1)} the formatted string
 }
 }
 \if{html}{\out{<hr>}}

@@ -14,7 +14,6 @@ Handles filter states in a \code{SummaryExperiment}
 \subsection{Public methods}{
 \itemize{
 \item \href{#method-SEFilterStates-new}{\code{SEFilterStates$new()}}
-\item \href{#method-SEFilterStates-format}{\code{SEFilterStates$format()}}
 \item \href{#method-SEFilterStates-set_filter_state}{\code{SEFilterStates$set_filter_state()}}
 \item \href{#method-SEFilterStates-ui_add}{\code{SEFilterStates$ui_add()}}
 \item \href{#method-SEFilterStates-srv_add}{\code{SEFilterStates$srv_add()}}
@@ -25,6 +24,7 @@ Handles filter states in a \code{SummaryExperiment}
 <details><summary>Inherited methods</summary>
 <ul>
 <li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilterStates" data-id="clear_filter_states"><a href='../../teal.slice/html/FilterStates.html#method-FilterStates-clear_filter_states'><code>teal.slice::FilterStates$clear_filter_states()</code></a></span></li>
+<li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilterStates" data-id="format"><a href='../../teal.slice/html/FilterStates.html#method-FilterStates-format'><code>teal.slice::FilterStates$format()</code></a></span></li>
 <li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilterStates" data-id="get_call"><a href='../../teal.slice/html/FilterStates.html#method-FilterStates-get_call'><code>teal.slice::FilterStates$get_call()</code></a></span></li>
 <li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilterStates" data-id="get_filter_state"><a href='../../teal.slice/html/FilterStates.html#method-FilterStates-get_filter_state'><code>teal.slice::FilterStates$get_filter_state()</code></a></span></li>
 <li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilterStates" data-id="print"><a href='../../teal.slice/html/FilterStates.html#method-FilterStates-print'><code>teal.slice::FilterStates$print()</code></a></span></li>
@@ -70,26 +70,6 @@ specified to the function argument attached to this \code{FilterStates}.}
 text label value.}
 }
 \if{html}{\out{</div>}}
-}
-}
-\if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-SEFilterStates-format"></a>}}
-\if{latex}{\out{\hypertarget{method-SEFilterStates-format}{}}}
-\subsection{Method \code{format()}}{
-Returns the formatted string representing this \code{MAEFilterStates} object.
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{SEFilterStates$format(indent = 0)}\if{html}{\out{</div>}}
-}
-
-\subsection{Arguments}{
-\if{html}{\out{<div class="arguments">}}
-\describe{
-\item{\code{indent}}{(\code{numeric(1)}) the number of spaces before each line of the representation}
-}
-\if{html}{\out{</div>}}
-}
-\subsection{Returns}{
-\code{character(1)} the formatted string
 }
 }
 \if{html}{\out{<hr>}}

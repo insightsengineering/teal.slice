@@ -548,18 +548,7 @@ DatetimeFilterState <- R6::R6Class( # nolint
             }
           )
 
-          private$observers$disabled_toggle_selection <- observeEvent(private$is_disabled(), {
-            shinyjs::toggleState(
-              id = "selection_start",
-              condition = !private$is_disabled()
-            )
-            shinyjs::toggleState(
-              id = "selection_end",
-              condition = !private$is_disabled()
-            )
-          })
-
-          logger::log_trace("DatetimeFilterState$server initialized, dataname: { private$get_dataname() }")
+          logger::log_trace("DatetimeFilterState$server initialized, dataname: { private$dataname }")
           NULL
         }
       )

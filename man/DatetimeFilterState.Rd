@@ -117,7 +117,6 @@ if (interactive()) {
 \subsection{Public methods}{
 \itemize{
 \item \href{#method-DatetimeFilterState-new}{\code{DatetimeFilterState$new()}}
-\item \href{#method-DatetimeFilterState-format}{\code{DatetimeFilterState$format()}}
 \item \href{#method-DatetimeFilterState-get_call}{\code{DatetimeFilterState$get_call()}}
 \item \href{#method-DatetimeFilterState-clone}{\code{DatetimeFilterState$clone()}}
 }
@@ -126,6 +125,7 @@ if (interactive()) {
 <details><summary>Inherited methods</summary>
 <ul>
 <li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilterState" data-id="destroy_observers"><a href='../../teal.slice/html/FilterState.html#method-FilterState-destroy_observers'><code>teal.slice::FilterState$destroy_observers()</code></a></span></li>
+<li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilterState" data-id="format"><a href='../../teal.slice/html/FilterState.html#method-FilterState-format'><code>teal.slice::FilterState$format()</code></a></span></li>
 <li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilterState" data-id="get_state"><a href='../../teal.slice/html/FilterState.html#method-FilterState-get_state'><code>teal.slice::FilterState$get_state()</code></a></span></li>
 <li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilterState" data-id="print"><a href='../../teal.slice/html/FilterState.html#method-FilterState-print'><code>teal.slice::FilterState$print()</code></a></span></li>
 <li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilterState" data-id="server"><a href='../../teal.slice/html/FilterState.html#method-FilterState-server'><code>teal.slice::FilterState$server()</code></a></span></li>
@@ -208,27 +208,6 @@ whether condition calls should be prefixed by dataname. Possible values:
 \item{\code{...}}{additional arguments to be saved as a list in \code{private$extras} field}
 }
 \if{html}{\out{</div>}}
-}
-}
-\if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-DatetimeFilterState-format"></a>}}
-\if{latex}{\out{\hypertarget{method-DatetimeFilterState-format}{}}}
-\subsection{Method \code{format()}}{
-Returns a formatted string representing this \code{DatetimeFilterState}.
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{DatetimeFilterState$format(indent = 2)}\if{html}{\out{</div>}}
-}
-
-\subsection{Arguments}{
-\if{html}{\out{<div class="arguments">}}
-\describe{
-\item{\code{indent}}{(\code{numeric(1)}) the number of spaces before after each new line character of the formatted string.
-Default: 0}
-}
-\if{html}{\out{</div>}}
-}
-\subsection{Returns}{
-\code{character(1)} the formatted string
 }
 }
 \if{html}{\out{<hr>}}

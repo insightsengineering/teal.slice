@@ -101,13 +101,13 @@ self invisibly
 \subsection{Method \code{format()}}{
 Returns a formatted string representing this \code{FilterStates} object.
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{FilterStates$format(indent = 0)}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{FilterStates$format(show_all = FALSE)}\if{html}{\out{</div>}}
 }
 
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
-\item{\code{indent}}{(\code{numeric(1)}) the number of spaces prepended to each line of the output}
+\item{\code{show_all}}{\code{logical(1)} passed to \code{format.teal_slices}}
 }
 \if{html}{\out{</div>}}
 }
@@ -183,7 +183,7 @@ Prints this \code{FilterStates} object.
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
-\item{\code{...}}{additional arguments to this method}
+\item{\code{...}}{additional arguments}
 }
 \if{html}{\out{</div>}}
 }
