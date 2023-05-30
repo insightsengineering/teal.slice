@@ -178,12 +178,6 @@ LogicalFilterState <- R6::R6Class( # nolint
       tbl <- table(df)
       private$set_choices_counts(tbl)
 
-      if (private$multiple) {
-        private$init_null <- FALSE
-      } else {
-        private$init_null <- TRUE
-      }
-
       invisible(self)
     },
 
@@ -219,7 +213,6 @@ LogicalFilterState <- R6::R6Class( # nolint
 
   private = list(
     choices_counts = integer(0),
-    init_null = FALSE,
     set_choices = function(choices) {
       private$choices <- c(TRUE, FALSE)
       invisible(NULL)
@@ -366,7 +359,7 @@ LogicalFilterState <- R6::R6Class( # nolint
           })
 
           private$observers$seleted_api <- observeEvent(
-            ignoreNULL = TRUE, # this is radio button so something have to be selected
+            ignoreNULL = !private$multiple,
             ignoreInit = TRUE,
             eventExpr = private$get_selected(),
             handlerExpr = {
@@ -379,7 +372,7 @@ LogicalFilterState <- R6::R6Class( # nolint
                 } else {
                   updateRadioButtons(
                     inputId = "selection",
-                    selected =  private$get_selected()
+                    selected =  private$get_selected()[1]
                   )
                 }
 
@@ -393,7 +386,7 @@ LogicalFilterState <- R6::R6Class( # nolint
           )
 
           private$observers$selection <- observeEvent(
-            ignoreNULL = private$init_null,
+            ignoreNULL = !private$multiple,
             ignoreInit = TRUE,
             eventExpr = input$selection,
             handlerExpr = {
@@ -404,7 +397,12 @@ LogicalFilterState <- R6::R6Class( # nolint
                   private$dataname
                 )
               )
-              selection_state <- as.logical(input$selection)
+              if(is.null(input$selection) && isFALSE(private$multiple)) {
+                selection_state <- private$get_selected()[1]
+              } else {
+                selection_state <- as.logical(input$selection)
+              }
+
               if (is.null(selection_state)) {
                 selection_state <- logical(0)
               }

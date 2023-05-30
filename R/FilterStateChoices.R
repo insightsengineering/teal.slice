@@ -201,7 +201,12 @@ ChoicesFilterState <- R6::R6Class( # nolint
       do.call(super$initialize, args)
 
       private$set_choices(choices)
-      private$set_selected(selected)
+
+      if (is.null(selected) && isFALSE(multiple)) {
+        private$set_selected(choices[1])
+      } else {
+        private$set_selected(selected)
+      }
 
       private$data_class <- class(x)[1L]
       if (inherits(x, "POSIXt")) {
@@ -210,11 +215,6 @@ ChoicesFilterState <- R6::R6Class( # nolint
 
       private$set_choices_counts(unname(table(x_factor)))
 
-      if (private$multiple) {
-        private$init_null <- FALSE
-      } else {
-        private$init_null <- TRUE
-      }
       invisible(self)
     },
 
@@ -278,7 +278,6 @@ ChoicesFilterState <- R6::R6Class( # nolint
     choices_counts = integer(0),
     data_class = character(0), # stores class of filtered variable so that it can be restored in $get_call
     tzone = character(0), # if x is a datetime, stores time zone so that it can be restored in $get_call
-    init_null = FALSE,
 
     # private methods ----
     # @description
@@ -505,7 +504,7 @@ ChoicesFilterState <- R6::R6Class( # nolint
 
           if (private$is_checkboxgroup()) {
             private$observers$selection <- observeEvent(
-              ignoreNULL = FALSE, # it's possible that nothing is selected
+              ignoreNULL = !private$multiple, # toggle for multiple variable as radio button something has to be selected
               ignoreInit = TRUE, # ignoreInit: should not matter because we set the UI with the desired initial state
               eventExpr = input$selection,
               handlerExpr = {
@@ -520,7 +519,7 @@ ChoicesFilterState <- R6::R6Class( # nolint
             )
           } else {
             private$observers$selection <- observeEvent(
-              ignoreNULL = private$init_null, # init_null toggle for multiple var.
+              ignoreNULL = !private$mulitple, # toggle for multiple variable as radio button something has to be selected.
               ignoreInit = TRUE, # ignoreInit: should not matter because we set the UI with the desired initial state
               eventExpr = input$selection_open,
               handlerExpr = {
@@ -530,6 +529,12 @@ ChoicesFilterState <- R6::R6Class( # nolint
                     private$varname,
                     private$dataname
                   ))
+                  if(is.null(input$selection) && isFALSE(private$multiple)) {
+                    selection_state <- private$get_selected()[1]
+                  } else {
+                    selection_state <- as.logical(input$selection)
+                  }
+
                   selection <- if (is.null(input$selection)) character(0) else input$selection
                   private$set_selected(selection)
                 }
@@ -552,12 +557,12 @@ ChoicesFilterState <- R6::R6Class( # nolint
                 if(private$multiple) {
                   updateCheckboxGroupInput(
                     inputId = "selection",
-                    selected = private$selected()
+                    selected = private$get_selected()
                   )
                 } else {
                   updateRadioButtons(
                     inputId = "selection",
-                    selected =  private$selected()
+                    selected =  private$get_selected()[1]
                   )
                 }
               } else {
