@@ -364,7 +364,7 @@ LogicalFilterState <- R6::R6Class( # nolint
             eventExpr = private$get_selected(),
             handlerExpr = {
               if (!setequal(private$get_selected(), input$selection)) {
-                if(private$multiple) {
+                if (private$multiple) {
                   updateCheckboxGroupInput(
                     inputId = "selection",
                     selected = private$get_selected()
@@ -397,7 +397,7 @@ LogicalFilterState <- R6::R6Class( # nolint
                   private$dataname
                 )
               )
-              if(is.null(input$selection) && isFALSE(private$multiple)) {
+              if (is.null(input$selection) && isFALSE(private$multiple)) {
                 selection_state <- private$get_selected()[1]
               } else {
                 selection_state <- as.logical(input$selection)

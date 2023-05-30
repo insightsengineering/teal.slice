@@ -529,11 +529,6 @@ ChoicesFilterState <- R6::R6Class( # nolint
                     private$varname,
                     private$dataname
                   ))
-                  if(is.null(input$selection) && isFALSE(private$multiple)) {
-                    selection_state <- private$get_selected()[1]
-                  } else {
-                    selection_state <- as.logical(input$selection)
-                  }
 
                   selection <- if (is.null(input$selection)) character(0) else input$selection
                   private$set_selected(selection)
@@ -554,7 +549,7 @@ ChoicesFilterState <- R6::R6Class( # nolint
                 private$dataname
               ))
               if (private$is_checkboxgroup()) {
-                if(private$multiple) {
+                if (private$multiple) {
                   updateCheckboxGroupInput(
                     inputId = "selection",
                     selected = private$get_selected()
