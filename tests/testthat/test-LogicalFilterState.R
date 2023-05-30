@@ -42,6 +42,20 @@ testthat::test_that("set_state: selected accepts a logical (or coercible) of len
   )
 })
 
+testthat::test_that("set_state: multiple parameters accepting boolean and null values", {
+  filter_state <- LogicalFilterState$new(logs, dataname = "data", varname = "variable")
+  testthat::expect_no_error(
+    filter_state$set_state(filter_var(dataname = "data", varname = "variable", selected = TRUE, multiple = TRUE))
+  )
+  testthat::expect_no_error(
+    filter_state$set_state(filter_var(dataname = "data", varname = "variable", selected = NULL, multiple = FALSE))
+  )
+  testthat::expect_no_error(
+    filter_state$set_state(filter_var(dataname = "data", varname = "variable", selected = c(TRUE, TRUE), multiple = FALSE))
+  )
+
+})
+
 # get_call ----
 testthat::test_that("get_call of default LogicalFilterState object returns variable name", {
   filter_state <- LogicalFilterState$new(logs[1:10], dataname = "data", varname = "variable")
