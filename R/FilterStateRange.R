@@ -616,14 +616,6 @@ RangeFilterState <- R6::R6Class( # nolint
           private$keep_na_srv("keep_na")
 
           observeEvent(private$is_disabled(), {
-            shinyjs::toggleState(
-              id = "selection",
-              condition = !private$is_disabled()
-            )
-            shinyjs::toggleState(
-              id = "selection_manual",
-              condition = !private$is_disabled()
-            )
             shinyWidgets::updateSwitchInput(
               session = session,
               inputId = "manual",
@@ -834,12 +826,6 @@ RangeFilterState <- R6::R6Class( # nolint
           }
         )
 
-        observeEvent(private$is_disabled(), {
-          shinyjs::toggleState(
-            id = "value",
-            condition = !private$is_disabled()
-          )
-        })
         invisible(NULL)
       })
     }

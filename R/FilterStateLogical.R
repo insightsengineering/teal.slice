@@ -412,13 +412,6 @@ LogicalFilterState <- R6::R6Class( # nolint
 
           private$keep_na_srv("keep_na")
 
-          private$observers$disabled_toggle_selection <- observeEvent(private$is_disabled(), {
-            shinyjs::toggleState(
-              id = "selection",
-              condition = !private$is_disabled()
-            )
-          })
-
           logger::log_trace("LogicalFilterState$server initialized, dataname: { private$dataname }")
           NULL
         }

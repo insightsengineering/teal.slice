@@ -281,12 +281,7 @@ FilterState <- R6::R6Class( # nolint
           # Update disable switch according to disabled state.
           # This is necessary to react to the global disable action.
           private$observers$is_disabled <- observeEvent(private$is_disabled(), {
-            if (isTRUE(private$is_disabled())) {
-              shinyWidgets::updateSwitchInput(inputId = "enable", value = FALSE)
-            }
-            if (isFALSE(private$is_disabled())) {
-              shinyWidgets::updateSwitchInput(inputId = "enable", value = TRUE)
-            }
+            shinyjs::toggleState(id = "body", condition = isFALSE(private$is_disabled()))
           })
 
           reactive(input$remove) # back to parent to remove self
