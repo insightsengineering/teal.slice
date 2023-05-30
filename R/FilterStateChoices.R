@@ -203,13 +203,9 @@ ChoicesFilterState <- R6::R6Class( # nolint
       private$set_choices(choices)
 
       if (is.null(selected)) {
-        if (multiple) {
-          private$set_selected(choices)
-        } else {
-          private$set_selected(choices[1])
-        }
+        private$set_selected(if (multiple) choices else choices[1])
       } else {
-        private$set_selected(selected)
+        private$set_selected(if (multiple) selected else selected[1])
       }
 
       private$data_class <- class(x)[1L]
@@ -419,7 +415,7 @@ ChoicesFilterState <- R6::R6Class( # nolint
             radioButtons(
               inputId = ns("selection"),
               label = NULL,
-              selected = shiny::isolate(private$get_selected()[1]),
+              selected = shiny::isolate(private$get_selected()),
               choiceNames = labels,
               choiceValues = private$choices,
               width = "100%"
@@ -561,7 +557,7 @@ ChoicesFilterState <- R6::R6Class( # nolint
                 } else {
                   updateRadioButtons(
                     inputId = "selection",
-                    selected =  private$get_selected()[1]
+                    selected =  private$get_selected()
                   )
                 }
               } else {

@@ -169,9 +169,9 @@ LogicalFilterState <- R6::R6Class( # nolint
 
       private$set_choices(choices)
       if (is.null(selected)) {
-        private$set_selected(TRUE)
+        private$set_selected(if (multiple) choices else TRUE)
       } else {
-        private$set_selected(selected)
+        private$set_selected(if (multiple) selected else selected[1])
       }
 
       df <- factor(x, levels = c(TRUE, FALSE))
@@ -307,7 +307,7 @@ LogicalFilterState <- R6::R6Class( # nolint
         radioButtons(
           inputId = ns("selection"),
           label = NULL,
-          selected = shiny::isolate(as.character(private$get_selected()[1])),
+          selected = shiny::isolate(as.character(private$get_selected())),
           choiceNames = labels,
           choiceValues = as.character(private$choices),
           width = "100%"
@@ -374,7 +374,7 @@ LogicalFilterState <- R6::R6Class( # nolint
                 } else {
                   updateRadioButtons(
                     inputId = "selection",
-                    selected =  private$get_selected()[1]
+                    selected =  private$get_selected()
                   )
                 }
 
@@ -400,7 +400,7 @@ LogicalFilterState <- R6::R6Class( # nolint
                 )
               )
               if (is.null(input$selection) && isFALSE(private$multiple)) {
-                selection_state <- private$get_selected()[1]
+                selection_state <- private$get_selected()
               } else {
                 selection_state <- as.logical(input$selection)
               }
