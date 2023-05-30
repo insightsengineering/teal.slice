@@ -276,7 +276,7 @@ FilterStates <- R6::R6Class( # nolint
       varnames <- slices_field(state, "varname")
       excluded_varnames <- setdiff(varnames, private$get_filterable_varnames())
       if (length(excluded_varnames)) {
-        state <- Filter(function(x) !x$varname %in% excluded_varnames)
+        state <- Filter(function(x) !x$varname %in% excluded_varnames, state)
         logger::log_warn("filters for columns: { toString(excluded_varnames) } excluded from { private$dataname }")
       }
 
