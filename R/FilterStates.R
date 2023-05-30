@@ -319,11 +319,10 @@ FilterStates <- R6::R6Class( # nolint
       ns <- NS(id)
       tagList(
         include_css_files(pattern = "filter-panel"),
-        tags$div(
-          id = private$cards_container_id,
+        uiOutput(
+          ns("cards"),
           class = "accordion",
           `data-label` = ifelse(length(private$datalabel), "", paste0("> ", private$datalabel)),
-          shiny::tagList(uiOutput(ns("filters"), inline = TRUE))
         )
       )
     },
@@ -351,10 +350,12 @@ FilterStates <- R6::R6Class( # nolint
             previous_state(current_state())
           })
 
-          output[["filters"]] <- shiny::renderUI({
+          output[["cards"]] <- shiny::renderUI({
             fstates <- current_state() # rerenders when queue changes / not when the state changes
             lapply(names(fstates), function(fname) {
-              shiny::isolate(private$ui_card_module(id = session$ns(fname), fstates[[fname]]))
+              shiny::isolate(
+                fstates[[fname]]$ui(id = session$ns(fname), parent_id = session$ns("cards"))
+              )
             })
           })
 
@@ -364,7 +365,12 @@ FilterStates <- R6::R6Class( # nolint
             {
               fstates <- current_state()
               lapply(added_state_name(), function(fname) {
-                private$srv_card_module(id = fname, element_id = fname, fs = fstates[[fname]])
+                fs_callback <- fstates[[fname]]$server(id = fname)
+                observeEvent(
+                  eventExpr = fs_callback(), # when remove button is clicked in the FilterState ui
+                  once = TRUE, # remove button can be called once, should be destroyed afterwards
+                  handlerExpr = private$state_list_remove(fname)
+                )
               })
               added_state_name(character(0))
             }
@@ -495,8 +501,6 @@ FilterStates <- R6::R6Class( # nolint
   ),
   private = list(
     # private fields ----
-    cards_container_id = character(0),
-    card_ids = character(0),
     count_type = "all", # specifies how observation numbers are displayed in filter cards,
     data = NULL, # data.frame, MAE, SE or matrix
     data_reactive = NULL, # reactive
@@ -724,33 +728,6 @@ FilterStates <- R6::R6Class( # nolint
       })
 
       invisible(NULL)
-    },
-
-    #' UI wrapping a single `FilterState`
-    #'
-    #' This module contains a single `FilterState` card, which contains a remove button.
-    #'
-    #' return `moduleServer` function which returns `NULL`
-    #' @keywords internal
-    ui_card_module = function(id, fs) {
-      ns <- NS(id)
-      fs$ui(id = ns("content"))
-    },
-
-    #' Server module for a single `FilterState`
-    #'
-    #' Calls server from `FilterState` and observes remove button.
-    #' @keywords internal
-    srv_card_module = function(id, element_id, fs) {
-      moduleServer(id, function(input, output, session) {
-        logger::log_trace("FilterStates$srv_card_module initializing, dataname: { private$dataname }")
-        fs_callback <- fs$server(id = "content")
-        observeEvent(
-          eventExpr = fs_callback(), # when remove button is clicked in the FilterState ui
-          once = TRUE, # remove button can be called once, should be destroyed afterwards
-          handlerExpr = private$state_list_remove(element_id)
-        )
-      })
     }
   )
 )
