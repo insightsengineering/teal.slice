@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE coverage SYSTEM "https://raw.githubusercontent.com/cobertura/cobertura/master/cobertura/src/site/htdocs/xml/coverage-04.dtd">
-<coverage line-rate="0.655751647884329" branch-rate="0" lines-covered="3084" lines-valid="4703" branches-covered="0" branches-valid="0" complexity="0" version="3.6.2" timestamp="2023-05-29 20:19:42">
+<coverage line-rate="0.655751647884329" branch-rate="0" lines-covered="3084" lines-valid="4703" branches-covered="0" branches-valid="0" complexity="0" version="3.6.2" timestamp="2023-05-30 07:32:21">
   <sources>
     <source>/__w/teal.slice/teal.slice/teal.slice</source>
   </sources>
@@ -30417,9 +30417,9 @@
             </method>
             <method name="get_teal_slice_id" signature="" line-rate="1" branch-rate="0" complexity="0">
               <lines>
-                <line number="531" hits="220" branch="false"/>
-                <line number="532" hits="220" branch="false"/>
                 <line number="533" hits="220" branch="false"/>
+                <line number="534" hits="220" branch="false"/>
+                <line number="535" hits="220" branch="false"/>
               </lines>
             </method>
           </methods>
@@ -30638,9 +30638,9 @@
             <line number="518" hits="105" branch="false"/>
             <line number="519" hits="104" branch="false"/>
             <line number="520" hits="104" branch="false"/>
-            <line number="531" hits="220" branch="false"/>
-            <line number="532" hits="220" branch="false"/>
             <line number="533" hits="220" branch="false"/>
+            <line number="534" hits="220" branch="false"/>
+            <line number="535" hits="220" branch="false"/>
           </lines>
         </class>
         <class name="test_utils.R" filename="R/test_utils.R" line-rate="1" branch-rate="0" complexity="0">
