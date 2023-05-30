@@ -43,7 +43,7 @@ testthat::test_that("set_filter_state sets `teal_slice`", {
     ),
     filter_var(
       dataname = "iris", varname = "Species",
-      choices = c("setosa", "versicolor", "virginica"), selected = c("setosa", "versicolor"),
+      choices = c("setosa", "versicolor", "virginica"), multiple = TRUE, selected = c("setosa", "versicolor"),
       keep_na = FALSE, keep_inf = FALSE, fixed = FALSE, disabled = FALSE
     ),
     count_type = "all",

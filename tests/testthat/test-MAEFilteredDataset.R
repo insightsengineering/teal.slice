@@ -275,15 +275,15 @@ testthat::test_that(
         keep_na = FALSE, keep_inf = FALSE, fixed = FALSE, disabled = FALSE, datalabel = "subjects", arg = "y"
       ),
       filter_var(
-        dataname = "miniacc", varname = "vital_status", choices = c("0", "1"), selected = "1",
+        dataname = "miniacc", varname = "vital_status", choices = c("0", "1"), multiple = TRUE, selected = "1",
         keep_na = FALSE, keep_inf = NULL, fixed = FALSE, disabled = FALSE, datalabel = "subjects", arg = "y"
       ),
       filter_var(
-        dataname = "miniacc", varname = "gender", choices = c("female", "male"), selected = "female",
+        dataname = "miniacc", varname = "gender", choices = c("female", "male"), multiple = TRUE, selected = "female",
         keep_na = FALSE, keep_inf = FALSE, fixed = FALSE, disabled = FALSE, datalabel = "subjects", arg = "y"
       ),
       filter_var(
-        dataname = "miniacc", varname = "ARRAY_TYPE", choices = c("", "protein_level"), selected = "",
+        dataname = "miniacc", varname = "ARRAY_TYPE", choices = c("", "protein_level"), multiple = TRUE, selected = "",
         keep_na = FALSE, keep_inf = NULL, fixed = FALSE, disabled = FALSE, datalabel = "RPPAArray", arg = "subset"
       ),
       count_type = "none",
