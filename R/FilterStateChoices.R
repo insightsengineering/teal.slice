@@ -397,9 +397,9 @@ ChoicesFilterState <- R6::R6Class( # nolint
           countsnow = countsnow,
           countsmax = countsmax
         )
-        if (private$multiple) {
-          div(
-            class = "choices_state",
+        div(
+          class = "choices_state",
+          if (private$multiple) {
             checkboxGroupInput(
               inputId = ns("selection"),
               label = NULL,
@@ -408,10 +408,7 @@ ChoicesFilterState <- R6::R6Class( # nolint
               choiceValues = private$choices,
               width = "100%"
             )
-          )
-        } else {
-          div(
-            class = "choices_state",
+          } else {
             radioButtons(
               inputId = ns("selection"),
               label = NULL,
@@ -420,8 +417,8 @@ ChoicesFilterState <- R6::R6Class( # nolint
               choiceValues = private$choices,
               width = "100%"
             )
-          )
-        }
+          }
+        )
       } else {
         labels <- mapply(
           FUN = make_count_text,
