@@ -537,11 +537,13 @@ RangeFilterState <- R6::R6Class( # nolint
                     private$dataname
                   )
                 )
-                shinyWidgets::updateNumericRangeInput(
-                  session = session,
-                  inputId = "selection_manual",
-                  value = private$get_selected()
-                )
+                if (!isTRUE(all.equal(private$get_selected(), input$selection_manual))) {
+                  shinyWidgets::updateNumericRangeInput(
+                    session = session,
+                    inputId = "selection_manual",
+                    value = private$get_selected()
+                  )
+                }
               }
             )
 
