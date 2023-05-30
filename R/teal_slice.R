@@ -442,7 +442,7 @@ c.teal_slices <- function(...) {
   do.call(
     filter_settings,
     c(
-      unlist(x, recursive = FALSE),
+      unique(unlist(x, recursive = FALSE)),
       list(
         include_varnames = includes,
         exclude_varnames = excludes,
@@ -529,14 +529,17 @@ slices_which <- function(tss, expr) {
 #' @param x (`teal_slice`, `teal_slice_expr`) single `teal_slice` object
 #' @return `character(1)`
 get_teal_slice_id <- function(x) {
-  paste(
-    c(
-      x$dataname,
-      x$datalabel,
-      x$arg,
-      x$varname,
-      x$id
-    ),
-    collapse = "_"
-  )
+  if ("id" %in% names(x)) {
+    x$id
+  } else {
+    paste(
+      c(
+        x$dataname,
+        x$datalabel,
+        x$arg,
+        x$varname
+      ),
+      collapse = "_"
+    )
+  }
 }
