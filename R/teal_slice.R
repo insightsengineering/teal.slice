@@ -528,6 +528,8 @@ slices_which <- function(tss, expr) {
 #' Hash is obtained from fields which determines single filter-state.
 #' @param x (`teal_slice`, `teal_slice_expr`) single `teal_slice` object
 #' @return `character(1)`
+#' @keywords internal
+#'
 get_teal_slice_id <- function(x) {
   if ("id" %in% names(x)) {
     x$id
