@@ -168,11 +168,7 @@ LogicalFilterState <- R6::R6Class( # nolint
       do.call(super$initialize, args)
 
       private$set_choices(choices)
-      if (is.null(selected)) {
-        private$set_selected(if (multiple) choices else TRUE)
-      } else {
-        private$set_selected(if (multiple) selected else selected[1])
-      }
+      private$set_selected(selected)
 
       df <- factor(x, levels = c(TRUE, FALSE))
       tbl <- table(df)
@@ -203,7 +199,7 @@ LogicalFilterState <- R6::R6Class( # nolint
         } else if (n_choices == 1 && !choices) {
           call("!", private$get_varname_prefixed(dataname))
         } else {
-          call("%in%", private$get_varname_prefixed(dataname), choices)
+          call("%in%", private$get_varname_prefixed(dataname), make_c_call(choices))
         }
       private$add_keep_na_call(filter_call, dataname)
     }
@@ -250,6 +246,21 @@ LogicalFilterState <- R6::R6Class( # nolint
         error = function(cond) stop("The array of set values must contain values coercible to logical.")
       )
       values_logical
+    },
+    remove_out_of_bound_values = function(values) {
+      if (is.null(values)) {
+        values <- if (private$multiple) private$choices else TRUE
+      } else {
+        if (length(values) > 1 && !private$multiple) {
+          warning(paste(
+            "Values:", strtrim(paste(values, collapse = ", "), 360),
+            "are not a vector of length one.",
+            "The first value will be selected by default."
+          ))
+        }
+        values <- if (private$multiple) values else values[1]
+      }
+      values
     },
 
     # Answers the question of whether the current settings and values selected actually filters out any values.

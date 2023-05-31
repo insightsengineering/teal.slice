@@ -43,15 +43,18 @@ testthat::test_that("set_state: selected accepts a logical (or coercible) of len
 })
 
 testthat::test_that("set_state: multiple parameters accepting boolean and null values", {
-  filter_state <- LogicalFilterState$new(logs, dataname = "data", varname = "variable")
+  testthat::expect_warning(
+    filter_state <- LogicalFilterState$new(logs, dataname = "data", varname = "variable", multiple = FALSE)
+  )
+
   testthat::expect_no_error(
-    filter_state$set_state(filter_var(dataname = "data", varname = "variable", selected = TRUE, multiple = TRUE))
+    filter_state$set_state(filter_var(dataname = "data", varname = "variable", selected = TRUE))
   )
   testthat::expect_no_error(
-    filter_state$set_state(filter_var(dataname = "data", varname = "variable", selected = NULL, multiple = FALSE))
+    filter_state$set_state(filter_var(dataname = "data", varname = "variable", selected = NULL))
   )
-  testthat::expect_no_error(
-    filter_state$set_state(filter_var(dataname = "data", varname = "variable", selected = c(TRUE, TRUE), multiple = FALSE))
+  testthat::expect_warning(
+    filter_state$set_state(filter_var(dataname = "data", varname = "variable", selected = c(TRUE, TRUE)))
   )
 
 })
@@ -59,7 +62,7 @@ testthat::test_that("set_state: multiple parameters accepting boolean and null v
 # get_call ----
 testthat::test_that("get_call of default LogicalFilterState object returns variable name", {
   filter_state <- LogicalFilterState$new(logs[1:10], dataname = "data", varname = "variable")
-  expect_identical(shiny::isolate(filter_state$get_call()), quote(variable))
+  expect_identical(shiny::isolate(filter_state$get_call()), quote(variable %in% c(TRUE, FALSE)))
 })
 
 testthat::test_that("get_call returns call selected different than choices", {
@@ -89,7 +92,7 @@ testthat::test_that("get_call returns call always if choices are limited - regar
   )
   testthat::expect_identical(
     shiny::isolate(filter_state$get_call()),
-    quote(variable)
+    quote(variable %in% c(TRUE, FALSE))
   )
 })
 
