@@ -131,6 +131,7 @@ filter_var <- function(dataname,
                        keep_inf = NULL,
                        fixed = FALSE,
                        disabled = FALSE,
+                       id,
                        ...) {
   checkmate::assert_string(dataname)
   checkmate::assert_string(varname)
@@ -140,9 +141,11 @@ filter_var <- function(dataname,
   checkmate::assert_flag(keep_inf, null.ok = TRUE)
   checkmate::assert_flag(fixed)
   checkmate::assert_flag(disabled)
-
   ans <- as.list(environment())
   ans <- append(ans, list(...))
+  if (missing(id)) {
+    ans$id <- paste(Filter(length, ans[c("dataname", "varname", "datalabel", "arg")]), collapse = "_")
+  }
   ans <- do.call(shiny::reactiveValues, ans)
   class(ans) <- c("teal_slice", class(ans))
   ans
