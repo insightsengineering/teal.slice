@@ -516,7 +516,7 @@ ChoicesFilterState <- R6::R6Class( # nolint
             )
           } else {
             private$observers$selection <- observeEvent(
-              ignoreNULL = !private$mulitple, # toggle for multiple variable as radio button something has to be selected.
+              ignoreNULL = !private$multiple, # toggle for multiple variable as radio button something has to be selected.
               ignoreInit = TRUE, # ignoreInit: should not matter because we set the UI with the desired initial state
               eventExpr = input$selection_open,
               handlerExpr = {
