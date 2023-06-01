@@ -403,7 +403,7 @@ LogicalFilterState <- R6::R6Class( # nolint
                   private$dataname
                 )
               )
-
+              # for private$multiple == TRUE input$selection will always have value
               if (is.null(input$selection) && isFALSE(private$multiple)) {
                 selection_state <- private$get_selected()
               } else {
