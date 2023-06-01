@@ -457,6 +457,7 @@ RangeFilterState <- R6::R6Class( # nolint
       tagList(
         div(
           class = "choices_state",
+          div(actionLink(ns("plotly_info"), label = NULL, icon = icon("question")), style = "text-align: right;"),
           plotly::plotlyOutput(ns("plot"), height = "50px")
         ),
         ui_input,
@@ -612,11 +613,30 @@ RangeFilterState <- R6::R6Class( # nolint
             )
           })
 
+          private$observers$plotly_info <- observeEvent(input$plotly_info, {
+            showModal(
+              modalDialog(
+                div(
+                  class = "plotly_actions_info",
+                  "drag vertical lines to set selection", br(),
+                  "drag across plot to zoom in", br(),
+                  "drag axis to pan", br(),
+                  "double click to zoom out", br()
+                ),
+                title = "Plot actions",
+                footer = NULL,
+                size = "s",
+                easyClose = TRUE
+              )
+            )
+          })
+
           logger::log_trace("RangeFilterState$server initialized, dataname: { private$dataname }")
           NULL
         }
       )
     },
+
     server_inputs_fixed = function(id) {
       moduleServer(
         id = id,
