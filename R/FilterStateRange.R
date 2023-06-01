@@ -354,8 +354,10 @@ RangeFilterState <- R6::R6Class( # nolint
 
       values
     },
-    # for numeric ranges selecting out of bound values is allowed
+    # Trim selection to limits imposed by private$choices
     remove_out_of_bound_values = function(values) {
+      if (values[1L] < private$choices[1L]) values[1L] <- private$choices[1L]
+      if (values[2L] > private$choices[2L]) values[2L] <- private$choices[2L]
       values
     },
 
@@ -520,14 +522,11 @@ RangeFilterState <- R6::R6Class( # nolint
             ignoreInit = TRUE,
             eventExpr = input$selection_manual,
             handlerExpr = {
-              # 3 separate checks are required here to prevent errors
+              # 2 separate checks are required here to prevent errors
               #
               # if the user sets either input to 'e' it will return NA
               # this NA would cause the lower > upper check to return NA
               #  and the if(lower > upper) check would throw an error
-              #
-              # if lower > manual, contain_interval() will error because it
-              #  expects it's input to be sorted
               if (any(is.na(input$selection_manual))) {
                 showNotification(
                   "Numeric range values must be numbers.",
@@ -543,24 +542,6 @@ RangeFilterState <- R6::R6Class( # nolint
               if (input$selection_manual[1] > input$selection_manual[2]) {
                 showNotification(
                   "Numeric range start value must be less than end value.",
-                  type = "warning"
-                )
-                shinyWidgets::updateNumericRangeInput(
-                  session = session,
-                  inputId = "selection_manual",
-                  value = private$get_selected()
-                )
-                return(NULL)
-              }
-              # all.equal not enough here b/c tolerance
-              # all.equal(0.000000001, 0) is TRUE
-              out_of_range <- isFALSE(identical(
-                input$selection_manual,
-                contain_interval(input$selection_manual, private$slider_ticks)
-              ))
-              if (out_of_range) {
-                showNotification(
-                  "Numeric range values should correspond to slider values.",
                   type = "warning"
                 )
                 shinyWidgets::updateNumericRangeInput(
