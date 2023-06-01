@@ -249,8 +249,7 @@ RangeFilterState <- R6::R6Class( # nolint
     inf_count = integer(0),
     inf_filtered_count = NULL,
     is_integer = logical(0),
-    slider_step = numeric(0), # step for the slider input widget, calculated from input data (x)
-    slider_ticks = numeric(0), # allowed values for the slider input widget, calculated from input data (x)
+    numeric_step = numeric(0), # step for the slider input widget, calculated from input data (x)
 
     # private methods ----
 
@@ -403,7 +402,7 @@ RangeFilterState <- R6::R6Class( # nolint
         min = private$choices[1L],
         max = private$choices[2L],
         value = shiny::isolate(private$selected()),
-        step = private$slider_step,
+        step = private$numeric_step,
         width = "100%"
       )
 
