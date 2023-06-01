@@ -457,7 +457,7 @@ LogicalFilterState <- R6::R6Class( # nolint
       tagList(
         tags$span(
           class = "filter-card-summary-value",
-          paste0(private$get_selected(), collapse = ", ")
+          toString(private$get_selected())
         ),
         tags$span(
           class = "filter-card-summary-controls",
