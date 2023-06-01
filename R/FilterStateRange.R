@@ -458,7 +458,11 @@ RangeFilterState <- R6::R6Class( # nolint
         div(
           class = "choices_state",
           div(actionLink(ns("plotly_info"), label = NULL, icon = icon("question")), style = "text-align: right;"),
-          plotly::plotlyOutput(ns("plot"), height = "50px")
+          shinycssloaders::withSpinner(
+            plotly::plotlyOutput(ns("plot"), height = "50px"),
+            type = 4,
+            size = 0.25
+          )
         ),
         ui_input,
         div(
@@ -655,7 +659,11 @@ RangeFilterState <- R6::R6Class( # nolint
           })
 
           output$selection <- renderUI({
-            plotly::plotlyOutput(session$ns("plot"), height = "50px")
+            shinycssloaders::withSpinner(
+              plotly::plotlyOutput(session$ns("plot"), height = "50px"),
+              type = 4,
+              size = 0.25
+            )
           })
 
           logger::log_trace("RangeFilterState$server initialized, dataname: { private$dataname }")
