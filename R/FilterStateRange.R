@@ -491,11 +491,19 @@ RangeFilterState <- R6::R6Class( # nolint
                   private$dataname
                 )
               )
-              if (!isTRUE(all.equal(input$selection, private$get_selected()))) {
-                updateSliderInput(
+              new_selection <- private$get_selected()
+              if (!identical(new_selection, input$selection)) {
+                shinyWidgets::updateNoUiSliderInput(
                   session = session,
                   inputId = "selection",
-                  value = private$selected()
+                  value = new_selection
+                )
+              }
+              if (!identical(new_selection, input$selection_manual)) {
+                updateNumericRangeInput(
+                  session = session,
+                  inputId = "selection_manual",
+                  value = new_selection
                 )
               }
             }
@@ -513,8 +521,9 @@ RangeFilterState <- R6::R6Class( # nolint
                   private$dataname
                 )
               )
-              if (!isTRUE(all.equal(input$selection, private$get_selected()))) {
-                private$set_selected(input$selection)
+              new_selection <- input$selection
+              if (!identical(new_selection, input$selection_manual)) {
+                private$set_selected(new_selection)
               }
             }
           )
@@ -581,7 +590,8 @@ RangeFilterState <- R6::R6Class( # nolint
                   private$dataname
                 )
               )
-              if (!isTRUE(all.equal(input$selection_manual, private$get_selected()))) {
+              new_selection <- private$selection_manual
+              if (!identical(new_selection, input$selection)) {
                 private$set_selected(input$selection_manual)
               }
             }
