@@ -633,16 +633,6 @@ FilterState <- R6::R6Class( # nolint
       }
     },
 
-    # Check whether this filter is locked
-    # @return `logical(1)`
-    is_locked = function() {
-      if (shiny::isRunning()) {
-        private$locked()
-      } else {
-        shiny::isolate(private$locked())
-      }
-    },
-
     # @description
     # Answers the question of whether the current settings and values selected actually filters out any values.
     # @return logical scalar

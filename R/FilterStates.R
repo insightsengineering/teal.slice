@@ -202,15 +202,9 @@ FilterStates <- R6::R6Class( # nolint
 
       lapply(state, function(x) {
         state_id <- get_teal_slice_id(x)
-        logger::log_trace(
-          "{ class(self)[1] }$remove_filter_state checking if filter is locked, dataname: { x$dataname }; state_id: { state_id }"
-        )
 
         state <- shiny::isolate(private$state_list()[[state_id]])
-        if(!state$private$is_locked()) {
-          logger::log_trace(
-            "{ class(self)[1] }$remove_filter_state checked that filter is not locked, dataname: { x$dataname }; state_id: { state_id }"
-          )
+        if(!(state$private$locked)) {
           logger::log_trace(
             "{ class(self)[1] }$remove_filter_state removing filter, dataname: { x$dataname }; state_id: { state_id }"
           )
@@ -220,10 +214,7 @@ FilterStates <- R6::R6Class( # nolint
           )
         } else {
           logger::log_trace(
-            "{ class(self)[1] }$remove_filter_state checked that filter is locked, dataname: { x$dataname }; state_id: { state_id }"
-          )
-          logger::log_trace(
-            "{ class(self)[1] }$remove_filter_state did not remove filter, dataname: { x$dataname }; state_id: { state_id }"
+            "{ class(self)[1] }$remove_filter_state aborted removing (locked) filter, dataname: { x$dataname }; state_id: { state_id }"
           )
         }
       })
@@ -780,14 +771,14 @@ FilterStates <- R6::R6Class( # nolint
     # @return invisible NULL
     #
     state_list_empty = function() {
-      logger::log_trace("{ class(self)[1] }$state_list_empty removing all filters, besides locked filters, for dataname: { private$dataname }")
+      logger::log_trace("{ class(self)[1] }$state_list_empty removing all non-locked filters for dataname: { private$dataname }")
 
       state_list <- shiny::isolate(private$state_list())
       for (state_id in names(state_list)) {
 
-        if(state$private$is_locked()) {
+        if(state$private$locked) {
           logger::log_trace(
-            "{ class(self)[1] }$state_list_empty did not remove locked filter, dataname: { x$dataname }; state_id: { state_id }"
+            "{ class(self)[1] }$state_list_empty aborted removing (locked) filter, dataname: { x$dataname }; state_id: { state_id }"
           )
         } else {
           logger::log_trace(
@@ -797,7 +788,7 @@ FilterStates <- R6::R6Class( # nolint
         }
       }
 
-      logger::log_trace("{ class(self)[1] }$state_list_empty removed all filters, besides locked filters, for dataname: { private$dataname }")
+      logger::log_trace("{ class(self)[1] }$state_list_empty removed all non-locked filters for dataname: { private$dataname }")
       invisible(NULL)
     },
 
