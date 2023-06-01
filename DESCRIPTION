@@ -30,6 +30,7 @@ Imports:
     plotly,
     R6,
     rlang,
+    shinycssloaders,
     shinyjs,
     shinyWidgets (>= 0.6.2),
     stats,
