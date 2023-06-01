@@ -355,17 +355,7 @@ RangeFilterState <- R6::R6Class( # nolint
       if (any(is.na(values))) stop("The array of set values must contain values coercible to numeric.")
       if (length(values) != 2) stop("The array of set values must have length two.")
 
-      values_adjusted <- contain_interval(values, private$slider_ticks)
-      if (!isTRUE(all.equal(values, values_adjusted))) {
-        logger::log_warn(sprintf(
-          paste(
-            "Programmatic range specification on %s was adjusted to existing slider ticks.",
-            "It is now broader in order to contain the specified values."
-          ),
-          private$varname
-        ))
-      }
-      values_adjusted
+      values
     },
     # for numeric ranges selecting out of bound values is allowed
     remove_out_of_bound_values = function(values) {
@@ -401,7 +391,7 @@ RangeFilterState <- R6::R6Class( # nolint
       ns <- NS(id)
 
       ui_input_slider <- shinyWidgets::noUiSliderInput(
-        inputId = ns("selection"),
+        inputId = ns("selection_slider"),
         label = NULL,
         min = private$choices[1L],
         max = private$choices[2L],
@@ -492,10 +482,10 @@ RangeFilterState <- R6::R6Class( # nolint
                 )
               )
               new_selection <- private$get_selected()
-              if (!identical(new_selection, input$selection)) {
+              if (!identical(new_selection, input$selection_slider)) {
                 shinyWidgets::updateNoUiSliderInput(
                   session = session,
-                  inputId = "selection",
+                  inputId = "selection_slider",
                   value = new_selection
                 )
               }
@@ -509,10 +499,10 @@ RangeFilterState <- R6::R6Class( # nolint
             }
           )
 
-          private$observers$selection <- observeEvent(
+          private$observers$selection_slider <- observeEvent(
             ignoreNULL = FALSE, # ignoreNULL: we don't want to ignore NULL when nothing is selected in `selectInput`
             ignoreInit = TRUE, # ignoreInit: should not matter because we set the UI with the desired initial state
-            eventExpr = input$selection,
+            eventExpr = input$selection_slider,
             handlerExpr = {
               logger::log_trace(
                 sprintf(
@@ -521,7 +511,7 @@ RangeFilterState <- R6::R6Class( # nolint
                   private$dataname
                 )
               )
-              new_selection <- input$selection
+              new_selection <- input$selection_slider
               if (!identical(new_selection, input$selection_manual)) {
                 private$set_selected(new_selection)
               }
@@ -591,7 +581,7 @@ RangeFilterState <- R6::R6Class( # nolint
                 )
               )
               new_selection <- private$selection_manual
-              if (!identical(new_selection, input$selection)) {
+              if (!identical(new_selection, input$selection_slider)) {
                 private$set_selected(input$selection_manual)
               }
             }
@@ -600,40 +590,12 @@ RangeFilterState <- R6::R6Class( # nolint
           private$keep_inf_srv("keep_inf")
           private$keep_na_srv("keep_na")
 
-          observeEvent(private$is_disabled(), {
-            shinyWidgets::updateSwitchInput(
-              session = session,
-              inputId = "manual",
-              disabled = private$is_disabled()
-            )
-          })
-
-          observeEvent(input$manual,
-            {
-              if (input$manual) {
-                private$set_selected(input$selection)
-                shinyWidgets::updateNumericRangeInput(
-                  session = session,
-                  inputId = "selection_manual",
-                  value = input$selection
-                )
-              } else {
-                private$set_selected(input$selection_manual)
-                updateSliderInput(
-                  session = session,
-                  inputId = "selection",
-                  value = input$selection_manual
-                )
-              }
-            },
-            ignoreInit = TRUE
-          )
-
           logger::log_trace("RangeFilterState$server initialized, dataname: { private$dataname }")
           NULL
         }
       )
     },
+
     server_inputs_fixed = function(id) {
       moduleServer(
         id = id,
