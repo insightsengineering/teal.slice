@@ -204,7 +204,7 @@ FilterStates <- R6::R6Class( # nolint
         state_id <- get_teal_slice_id(x)
 
         state <- shiny::isolate(private$state_list()[[state_id]])
-        if(!(state$private$locked)) {
+        if(isFALSE(state$private$locked)) {
           logger::log_trace(
             "{ class(self)[1] }$remove_filter_state removing filter, dataname: { x$dataname }; state_id: { state_id }"
           )
