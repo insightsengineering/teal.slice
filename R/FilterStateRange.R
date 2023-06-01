@@ -287,13 +287,10 @@ RangeFilterState <- R6::R6Class( # nolint
       # Required for displaying ticks on the slider, can modify choices!
       if (identical(diff(x_range), 0)) {
         choices <- x_range
-        private$slider_ticks <- signif(x_range, digits = 10)
-        private$slider_step <- NULL
       } else {
-        x_pretty <- pretty(x_range, 100L)
+        x_pretty <- pretty(x_range, 10000L)
         choices <- range(x_pretty)
-        private$slider_ticks <- signif(x_pretty, digits = 10)
-        private$slider_step <- signif(private$get_pretty_range_step(x_pretty), digits = 10)
+        private$numeric_step <- signif(private$get_pretty_range_step(x_pretty), digits = 10)
       }
       private$choices <- choices
       invisible(NULL)
