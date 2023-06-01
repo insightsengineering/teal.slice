@@ -272,19 +272,19 @@ testthat::test_that(
     fs <- filter_settings(
       filter_var(
         dataname = "miniacc", varname = "years_to_birth", choices = c(14, 83), selected = c(30, 50),
-        keep_na = FALSE, keep_inf = FALSE, fixed = FALSE, disabled = FALSE, datalabel = "subjects", arg = "y"
+        keep_na = FALSE, keep_inf = FALSE, disabled = FALSE, fixed = FALSE, locked = FALSE, datalabel = "subjects", arg = "y"
       ),
       filter_var(
         dataname = "miniacc", varname = "vital_status", choices = c("0", "1"), selected = "1",
-        keep_na = FALSE, keep_inf = NULL, fixed = FALSE, disabled = FALSE, datalabel = "subjects", arg = "y"
+        keep_na = FALSE, keep_inf = NULL, disabled = FALSE, fixed = FALSE, locked = FALSE, datalabel = "subjects", arg = "y"
       ),
       filter_var(
         dataname = "miniacc", varname = "gender", choices = c("female", "male"), selected = "female",
-        keep_na = FALSE, keep_inf = FALSE, fixed = FALSE, disabled = FALSE, datalabel = "subjects", arg = "y"
+        keep_na = FALSE, keep_inf = FALSE, disabled = FALSE, fixed = FALSE, locked = FALSE, datalabel = "subjects", arg = "y"
       ),
       filter_var(
         dataname = "miniacc", varname = "ARRAY_TYPE", choices = c("", "protein_level"), selected = "",
-        keep_na = FALSE, keep_inf = NULL, fixed = FALSE, disabled = FALSE, datalabel = "RPPAArray", arg = "subset"
+        keep_na = FALSE, keep_inf = NULL, disabled = FALSE, fixed = FALSE, locked = FALSE, datalabel = "RPPAArray", arg = "subset"
       ),
       count_type = "none",
       include_varnames = list(miniacc = colnames(SummarizedExperiment::colData(miniACC)))

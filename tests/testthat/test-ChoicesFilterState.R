@@ -349,8 +349,9 @@ testthat::test_that("format shortens names if strings are too long", {
       " $ varname : variable",
       " $ choices : exceedingly long value nam...",
       " $ selected: exceedinglylongvaluenameex...",
+      " $ disabled: FALSE",
       " $ fixed   : FALSE",
-      " $ disabled: FALSE\n",
+      " $ locked  : FALSE\n",
       sep = "\n"
     )
   )
