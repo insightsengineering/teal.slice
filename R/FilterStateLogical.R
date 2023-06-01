@@ -248,17 +248,9 @@ LogicalFilterState <- R6::R6Class( # nolint
       values_logical
     },
     remove_out_of_bound_values = function(values) {
-      if (is.null(values)) {
-        values <- if (private$multiple) private$choices else TRUE
-      } else {
-        if (length(values) > 1 && !private$multiple) {
-          warning(paste(
-            "Values:", strtrim(paste(values, collapse = ", "), 360),
-            "are not a vector of length one.",
-            "The first value will be selected by default."
-          ))
-        }
-        values <- if (private$multiple) values else values[1]
+      if (length(values) != 1 && !private$multiple) {
+        warning("\"values\" is not a vector of length one. The first value will be selected.")
+        values <- TRUE
       }
       values
     },
@@ -272,9 +264,10 @@ LogicalFilterState <- R6::R6Class( # nolint
         TRUE
       } else if (all(private$choices_counts > 0)) {
         TRUE
-      } else if (isFALSE(all.equal(private$get_selected(), private$choices))) {
+      } else if (isFALSE(all.equal(private$get_selected(), private$choices)) &&
+                 !anyNA(private$get_selected(), private$choices)) {
         TRUE
-      } else if (isFALSE(private$get_keep_na()) && private$na_count > 0) {
+      } else if (!isTRUE(private$get_keep_na()) && private$na_count > 0) {
         TRUE
       } else {
         FALSE
@@ -311,7 +304,7 @@ LogicalFilterState <- R6::R6Class( # nolint
           label = NULL,
           selected = shiny::isolate(as.character(private$get_selected())),
           choiceNames = labels,
-          choiceValues = as.character(private$choices),
+          choiceValues = factor(as.character(private$choices), levels = c("TRUE", "FALSE")),
           width = "100%"
         )
       } else {
@@ -320,7 +313,7 @@ LogicalFilterState <- R6::R6Class( # nolint
           label = NULL,
           selected = shiny::isolate(as.character(private$get_selected())),
           choiceNames = labels,
-          choiceValues = as.character(private$choices),
+          choiceValues = factor(as.character(private$choices), levels = c("TRUE", "FALSE")),
           width = "100%"
         )
       }
@@ -399,7 +392,7 @@ LogicalFilterState <- R6::R6Class( # nolint
           )
 
           private$observers$selection <- observeEvent(
-            ignoreNULL = !private$multiple,
+            ignoreNULL = FALSE,
             ignoreInit = TRUE,
             eventExpr = input$selection,
             handlerExpr = {
@@ -410,6 +403,7 @@ LogicalFilterState <- R6::R6Class( # nolint
                   private$dataname
                 )
               )
+
               if (is.null(input$selection) && isFALSE(private$multiple)) {
                 selection_state <- private$get_selected()
               } else {

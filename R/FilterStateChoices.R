@@ -354,17 +354,9 @@ ChoicesFilterState <- R6::R6Class( # nolint
       }
       values <- values[in_choices_mask]
 
-      if (is.null(values)) {
-        values <- if (private$multiple) private$choices else private$choices[1]
-      } else {
-        if (length(values) > 1 && !private$multiple) {
-          warning(paste(
-            "Values:", strtrim(paste(values, collapse = ", "), 360),
-            "are not a vector of length one.",
-            "The first value will be selected by default."
-          ))
-        }
-        values <- if (private$multiple) values else values[1]
+      if (length(values) != 1 && !private$multiple) {
+        warning("\"values\" is not a vector of length one. The first value will be selected.")
+        values <- private$choices[1]
       }
       values
     },
@@ -499,40 +491,34 @@ ChoicesFilterState <- R6::R6Class( # nolint
             NULL
           })
 
-          if (private$is_checkboxgroup()) {
-            private$observers$selection <- observeEvent(
-              ignoreNULL = !private$multiple, # toggle for multiple variable as radio button something has to be selected
-              ignoreInit = TRUE, # ignoreInit: should not matter because we set the UI with the desired initial state
-              eventExpr = input$selection,
-              handlerExpr = {
-                logger::log_trace(sprintf(
-                  "ChoicesFilterState$server@2 selection of variable %s changed, dataname: %s",
-                  private$varname,
-                  private$dataname
-                ))
-                selection <- if (is.null(input$selection)) character(0) else input$selection
-                private$set_selected(selection)
-              }
-            )
-          } else {
-            private$observers$selection <- observeEvent(
-              ignoreNULL = !private$mulitple, # toggle for multiple variable as radio button something has to be selected.
-              ignoreInit = TRUE, # ignoreInit: should not matter because we set the UI with the desired initial state
-              eventExpr = input$selection_open,
-              handlerExpr = {
-                if (!isTRUE(input$selection_open)) {
-                  logger::log_trace(sprintf(
-                    "ChoicesFilterState$server@2 selection of variable %s changed, dataname: %s",
-                    private$varname,
-                    private$dataname
-                  ))
+          private$observers$selection <- observeEvent(
+            ignoreNULL = FALSE,
+            ignoreInit = TRUE, # ignoreInit: should not matter because we set the UI with the desired initial state
+            eventExpr = input$selection,
+            handlerExpr = {
+              logger::log_trace(sprintf(
+                "ChoicesFilterState$server@2 selection of variable %s changed, dataname: %s",
+                private$varname,
+                private$dataname
+              ))
 
-                  selection <- if (is.null(input$selection)) character(0) else input$selection
-                  private$set_selected(selection)
-                }
+              selection <- if (is.null(input$selection) && private$multiple){
+                character(0)
+              } else if (is.null(input$selection) && !private$multiple) {
+                showNotification("single selection is required, choice is ignored")
+                teal.widgets::updateOptionalSelectInput(
+                  session, "selection",
+                  selected = private$get_selected()
+                )
+                return(NULL)
+              } else {
+                input$selection
               }
-            )
-          }
+
+              private$set_selected(selection)
+            }
+          )
+
           private$keep_na_srv("keep_na")
 
           # this observer is needed in the situation when private$selected has been
@@ -560,7 +546,7 @@ ChoicesFilterState <- R6::R6Class( # nolint
               } else {
                 teal.widgets::updateOptionalSelectInput(
                   session, "selection",
-                  selected = private$selected()
+                  selected = private$get_selected()
                 )
               }
             }
