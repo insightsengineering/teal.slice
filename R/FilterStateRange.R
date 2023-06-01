@@ -351,7 +351,7 @@ RangeFilterState <- R6::R6Class( # nolint
       if (any(is.na(values))) stop("The array of set values must contain values coercible to numeric.")
       if (length(values) != 2) stop("The array of set values must have length two.")
 
-      values
+      signif(values, digits = 4L)
     },
     # Trim selection to limits imposed by private$choices
     remove_out_of_bound_values = function(values) {
