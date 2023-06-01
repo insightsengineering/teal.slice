@@ -424,34 +424,15 @@ RangeFilterState <- R6::R6Class( # nolint
       }
 
       tagList(
-        shinyWidgets::switchInput(
-          ns("manual"),
-          label = "Enter manually",
-          size = "small",
-          labelWidth = "100px",
-          onLabel = "Yes",
-          offLabel = "No",
-          onStatus = "info",
-          offStatus = "info",
-          disabled = shiny::isolate(private$is_disabled())
-        ),
-        conditionalPanel(
-          ns = ns,
-          condition = "input.manual === false",
+        div(
+          class = "choices_state",
           div(
-            class = "choices_state",
-            div(
-              class = "filterPlotOverlayRange",
-              plotOutput(ns("plot"), height = "100%"),
-            ),
-            div(class = "filterRangeSlider", ui_input_slider)
-          )
+            class = "filterPlotOverlayRange",
+            plotOutput(ns("plot"), height = "100%"),
+          ),
+          div(class = "filterRangeSlider", ui_input_slider)
         ),
-        conditionalPanel(
-          ns = ns,
-          condition = "input.manual === true",
-          ui_input_manual
-        ),
+        ui_input_manual,
         div(
           class = "filter-card-body-keep-na-inf",
           private$keep_inf_ui(ns("keep_inf")),
