@@ -198,9 +198,10 @@ RangeFilterState <- R6::R6Class( # nolint
       private$set_selected(selected)
 
       private$plot_data <- list(
-        x = Filter(Negate(is.na), Filter(is.finite, private$x)),
-        color = I(fetch_bs_color("secondary", alpha = 0.2)),
         type = "histogram",
+        x = Filter(Negate(is.na), Filter(is.finite, private$x)),
+        color = I(fetch_bs_color("secondary")),
+        alpha = 0.2,
         bingroup = 1,
         showlegend = FALSE,
         hoverinfo = "none"
@@ -229,6 +230,15 @@ RangeFilterState <- R6::R6Class( # nolint
           staticPlot = private$is_disabled()
         )
       })
+      private$plot_filtered <- reactive({
+        finite_values <- Filter(is.finite, private$x_reactive())
+        list(
+          x = finite_values,
+          bingroup = 1,
+          color = I(fetch_bs_color("primary"))
+        )
+      })
+
 
       invisible(self)
     },
@@ -273,6 +283,7 @@ RangeFilterState <- R6::R6Class( # nolint
     plot_mask = list(),
     plot_layout = NULL,
     plot_config = NULL,
+    plot_filtered = NULL,
 
     # private methods ----
 
@@ -472,21 +483,11 @@ RangeFilterState <- R6::R6Class( # nolint
 
           # display histogram, adding a second trace that contains filtered data
           output$plot <- plotly::renderPlotly({
-            unfiltered_histogram <- do.call(plotly::plot_ly, plot_data)
-            unfiltered_histogram <- do.call(plotly::layout, c(list(p = unfiltered_histogram), private$plot_layout()))
-            unfiltered_histogram <- do.call(plotly::config, c(list(p = unfiltered_histogram), private$plot_config()))
-
-            finite_values <- Filter(is.finite, private$x_reactive())
-            if (is.null(finite_values)) {
-              unfiltered_histogram
-            } else {
-              plotly::add_histogram(
-                p = unfiltered_histogram,
-                x = finite_values,
-                bingroup = 1,
-                color = I(fetch_bs_color("primary", alpha = 0.2))
-              )
-            }
+            histogram <- do.call(plotly::plot_ly, plot_data)
+            histogram <- do.call(plotly::layout, c(list(p = histogram), private$plot_layout()))
+            histogram <- do.call(plotly::config, c(list(p = histogram), private$plot_config()))
+            histogram <- do.call(plotly::add_histogram, c(list(p = histogram), private$plot_filtered()))
+            histogram
           })
 
           # dragging shapes (lines) on plot updates selection
@@ -626,16 +627,11 @@ RangeFilterState <- R6::R6Class( # nolint
           plot_config$staticPlot <- TRUE
 
           output$plot <- plotly::renderPlotly({
-            unfiltered_histogram <- do.call(plotly::plot_ly, private$plot_data)
-            unfiltered_histogram <- do.call(plotly::layout, c(list(p = unfiltered_histogram), private$plot_layout()))
-            unfiltered_histogram <- do.call(plotly::config, c(list(p = unfiltered_histogram), plot_config))
-
-            finite_values <- Filter(is.finite, private$x_reactive())
-            if (is.null(finite_values)) {
-              unfiltered_histogram
-            } else {
-              plotly::add_histogram(p = unfiltered_histogram, x = finite_values, bingroup = 1, color = I("#007bff55"))
-            }
+            histogram <- do.call(plotly::plot_ly, private$plot_data)
+            histogram <- do.call(plotly::layout, c(list(p = histogram), private$plot_layout()))
+            histogram <- do.call(plotly::config, c(list(p = histogram), plot_config))
+            histogram <- do.call(plotly::add_histogram, c(list(p = histogram), private$plot_filtered()))
+            histogram
           })
 
           output$selection <- renderUI({
