@@ -400,14 +400,13 @@ RangeFilterState <- R6::R6Class( # nolint
     ui_inputs = function(id) {
       ns <- NS(id)
 
-      ui_input_slider <- teal.widgets::optionalSliderInput(
+      ui_input_slider <- shinyWidgets::noUiSliderInput(
         inputId = ns("selection"),
         label = NULL,
         min = private$choices[1L],
         max = private$choices[2L],
         value = shiny::isolate(private$selected()),
-        step = private$slider_step,
-        width = "100%"
+        color = fetch_bs_color("primary")
       )
       ui_input_manual <- shinyWidgets::numericRangeInput(
         inputId = ns("selection_manual"),
