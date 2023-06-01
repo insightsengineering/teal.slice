@@ -559,7 +559,7 @@ RangeFilterState <- R6::R6Class( # nolint
               )
               new_selection <- private$selection_manual
               if (!identical(new_selection, input$selection_slider)) {
-                private$set_selected(input$selection_manual)
+                private$set_selected(new_selection)
               }
             }
           )
