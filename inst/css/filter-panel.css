@@ -361,3 +361,7 @@ a.remove_all:hover {
 .filter_datelike_input  input {
   font-size: 1em !important;
 }
+
+.choices_state {
+  margin-bottom: .45rem;
+}
