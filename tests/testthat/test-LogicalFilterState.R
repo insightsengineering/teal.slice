@@ -29,8 +29,9 @@ testthat::test_that("set_state: selected accepts a logical (or coercible) of len
     filter_state$set_state(filter_var(dataname = "data", varname = "variable", selected = "TRUE"))
   )
   testthat::expect_no_error(filter_state$set_state(filter_var(dataname = "data", varname = "variable", selected = 1)))
-  testthat::expect_no_error(
-    filter_state$set_state(filter_var(dataname = "data", varname = "variable", selected = c(TRUE, TRUE)))
+  testthat::expect_error(
+    filter_state$set_state(filter_var(dataname = "data", varname = "variable", selected = c(TRUE, TRUE))),
+    "should be a logical vector of length <= 2"
   )
   testthat::expect_error(
     filter_state$set_state(filter_var(dataname = "data", varname = "variable", selected = c(TRUE, TRUE, FALSE))),
