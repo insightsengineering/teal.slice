@@ -394,7 +394,15 @@ RangeFilterState <- R6::R6Class( # nolint
         min = private$choices[1L],
         max = private$choices[2L],
         value = shiny::isolate(private$selected()),
-        color = fetch_bs_color("primary")
+        color = fetch_bs_color("primary"),
+        pips = list(
+          mode = "values",
+          values = as.list(private$choices),
+          density = 10
+        ),
+        format = shinyWidgets::wNumbFormat(
+          decimals = 4
+        )
       )
       ui_input_manual <- shinyWidgets::numericRangeInput(
         inputId = ns("selection_manual"),
@@ -488,7 +496,7 @@ RangeFilterState <- R6::R6Class( # nolint
                 )
               }
               if (!identical(new_selection, input$selection_manual)) {
-                updateNumericRangeInput(
+                shinyWidgets::updateNumericRangeInput(
                   session = session,
                   inputId = "selection_manual",
                   value = new_selection

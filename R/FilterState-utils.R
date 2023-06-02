@@ -556,41 +556,43 @@ format_range_for_summary <- function(values, threshold = 4) {
   checkmate::assert_numeric(values, min.len = 1)
   checkmate::assert_number(threshold, lower = 1, finite = TRUE)
 
-  ops <- options(scipen = 9999)
-  on.exit(options(ops))
+  sprintf(sprintf("%%.%ig", threshold), values)
 
-  # convert to a string representation
-  values_str <- vapply(
-    values,
-    FUN.VALUE = character(1),
-    USE.NAMES = FALSE,
-    FUN = function(value) {
-      if (is.na(value) || is.finite(value)) {
-        format(value)
-      } else {
-        as.character(value)
-      }
-    })
-
-  n_digits <- n_sig_digits(values_str)
-
-  mapply(
-    values_str,
-    n_digits,
-    USE.NAMES = FALSE,
-    MoreArgs = list(threshold = threshold),
-    FUN = function(value, digits, threshold) {
-      if (digits == -1) { # special case for Inf, -Inf, NA
-        value
-      } else if (digits > threshold) {
-        val <- format(as.numeric(value), digits = threshold, scientific = TRUE)
-        val <- sub("e", "E", val)
-        val
-      } else {
-        value
-      }
-    }
-  )
+  # ops <- options(scipen = 9999)
+  # on.exit(options(ops))
+  #
+  # # convert to a string representation
+  # values_str <- vapply(
+  #   values,
+  #   FUN.VALUE = character(1),
+  #   USE.NAMES = FALSE,
+  #   FUN = function(value) {
+  #     if (is.na(value) || is.finite(value)) {
+  #       format(value)
+  #     } else {
+  #       as.character(value)
+  #     }
+  #   })
+  #
+  # n_digits <- n_sig_digits(values_str)
+  #
+  # mapply(
+  #   values_str,
+  #   n_digits,
+  #   USE.NAMES = FALSE,
+  #   MoreArgs = list(threshold = threshold),
+  #   FUN = function(value, digits, threshold) {
+  #     if (digits == -1) { # special case for Inf, -Inf, NA
+  #       value
+  #     } else if (digits > threshold) {
+  #       val <- format(as.numeric(value), digits = threshold, scientific = TRUE)
+  #       val <- sub("e", "E", val)
+  #       val
+  #     } else {
+  #       value
+  #     }
+  #   }
+  # )
 }
 
 #' Count the number of significant digits in a number.
