@@ -472,7 +472,8 @@ RangeFilterState <- R6::R6Class( # nolint
           shinycssloaders::withSpinner(
             plotly::plotlyOutput(ns("plot"), height = "50px"),
             type = 4,
-            size = 0.25
+            size = 0.25,
+            hide.ui = FALSE
           )
         ),
         ui_input,
