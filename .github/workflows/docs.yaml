@@ -5,6 +5,7 @@ on:
   push:
     branches:
       - main
+      - filter_panel_refactor
     paths:
       - "inst/templates/**"
       - "_pkgdown.y[a]ml"
@@ -22,6 +23,7 @@ on:
       - ready_for_review
     branches:
       - main
+      - filter_panel_refactor
     paths:
       - "inst/templates/**"
       - "_pkgdown.y[a]ml"
