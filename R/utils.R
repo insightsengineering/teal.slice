@@ -139,6 +139,7 @@ include_js_files <- function(pattern) {
 #'
 #' make_c_call(1)
 #' # [1] 1
+#' @keywords internal
 make_c_call <- function(choices) {
   if (length(choices) > 1) {
     do.call("call", append(list("c"), choices))
