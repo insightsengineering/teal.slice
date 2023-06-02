@@ -505,7 +505,7 @@ ChoicesFilterState <- R6::R6Class( # nolint
               selection <- if (is.null(input$selection) && private$multiple){
                 character(0)
               } else if (is.null(input$selection) && !private$multiple) {
-                showNotification("single selection is required, choice is ignored")
+                showNotification("This filter exclusively supports single selection. Any additional choices made will be disregarded.")
                 teal.widgets::updateOptionalSelectInput(
                   session, "selection",
                   selected = private$get_selected()
