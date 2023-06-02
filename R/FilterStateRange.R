@@ -459,7 +459,7 @@ RangeFilterState <- R6::R6Class( # nolint
           class = "choices_state",
           div(
             actionLink(ns("plotly_info"), label = NULL, icon = icon("question-circle")),
-            style = "text-align: right; font-size: 0.7em"
+            style = "text-align: right; font-size: 0.7em; margin-bottom: -0.7em;"
           ),
           shinycssloaders::withSpinner(
             plotly::plotlyOutput(ns("plot"), height = "50px"),
