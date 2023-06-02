@@ -202,21 +202,13 @@ FilterStates <- R6::R6Class( # nolint
 
       lapply(state, function(x) {
         state_id <- get_teal_slice_id(x)
-
-        state <- shiny::isolate(private$state_list()[[state_id]])
-        if(isFALSE(state$private$locked)) {
-          logger::log_trace(
-            "{ class(self)[1] }$remove_filter_state removing filter, dataname: { x$dataname }; state_id: { state_id }"
-          )
-          private$state_list_remove(state_id = state_id)
-          logger::log_trace(
-            "{ class(self)[1] }$remove_filter_state removed filter, dataname: { x$dataname }; state_id: { state_id }"
-          )
-        } else {
-          logger::log_trace(
-            "{ class(self)[1] }$remove_filter_state aborted removing (locked) filter, dataname: { x$dataname }; state_id: { state_id }"
-          )
-        }
+        logger::log_trace(
+          "{ class(self)[1] }$remove_filter_state removing filter, dataname: { x$dataname }; state_id: { state_id }"
+        )
+        private$state_list_remove(state_id = state_id)
+        logger::log_trace(
+          "{ class(self)[1] }$remove_filter_state removed filter, dataname: { x$dataname }; state_id: { state_id }"
+        )
       })
 
       invisible(NULL)
