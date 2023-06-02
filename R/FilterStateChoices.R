@@ -502,7 +502,7 @@ ChoicesFilterState <- R6::R6Class( # nolint
                 private$dataname
               ))
 
-              selection <- if (is.null(input$selection) && private$multiple){
+              selection <- if (is.null(input$selection) && private$multiple) {
                 character(0)
               } else if (is.null(input$selection) && !private$multiple) {
                 showNotification("single selection is required, choice is ignored")
