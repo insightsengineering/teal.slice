@@ -355,7 +355,10 @@ ChoicesFilterState <- R6::R6Class( # nolint
       values <- values[in_choices_mask]
 
       if (length(values) != 1 && !private$multiple) {
-        warning("\"values\" is not a vector of length one. The first value will be selected.")
+        warning(sprintf("Values: %s are not a vector of length one.The first value will be selected by default.
+                        Setting defaults. Varname: %s, dataname: %s.",
+                        strtrim(paste(values, collapse = ", "), 360),
+                        private$varname, private$dataname))
         values <- private$choices[1]
       }
       values
@@ -504,7 +507,7 @@ ChoicesFilterState <- R6::R6Class( # nolint
 
               selection <- if (is.null(input$selection) && private$multiple) {
                 character(0)
-              } else if (is.null(input$selection) && !private$multiple) {
+              } else if (isTRUE(length(input$selection) != 1) && !private$multiple) { # for length of input$selection other then 1 previous input is restored
                 showNotification("This filter exclusively supports single selection. Any additional choices made will be disregarded.")
                 teal.widgets::updateOptionalSelectInput(
                   session, "selection",

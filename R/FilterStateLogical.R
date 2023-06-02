@@ -249,7 +249,10 @@ LogicalFilterState <- R6::R6Class( # nolint
     },
     remove_out_of_bound_values = function(values) {
       if (length(values) != 1 && !private$multiple) {
-        warning("\"values\" is not a vector of length one. The first value will be selected.")
+        warning(sprintf("Values: %s are not a vector of length one. The first value will be selected by default.
+                        Setting defaults. Varname: %s, dataname: %s.",
+                        strtrim(paste(values, collapse = ", "), 360),
+                        private$varname, private$dataname))
         values <- TRUE
       }
       values
