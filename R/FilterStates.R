@@ -201,7 +201,7 @@ FilterStates <- R6::R6Class( # nolint
       checkmate::assert_class(state, "teal_slices")
 
       lapply(state, function(x) {
-        state_id <- get_teal_slice_id(x)
+        state_id <- x$id
         logger::log_trace(
           "{ class(self)[1] }$remove_filter_state removing filter, dataname: { x$dataname }; state_id: { state_id }"
         )
@@ -354,7 +354,7 @@ FilterStates <- R6::R6Class( # nolint
             fstates <- current_state() # rerenders when queue changes / not when the state changes
             lapply(names(fstates), function(fname) {
               shiny::isolate(
-                fstates[[fname]]$ui(id = session$ns(fname), parent_id = session$ns("cards"))
+                fstates[[fname]]$ui(id = session$ns(str_to_shiny_ns(fname)), parent_id = session$ns("cards"))
               )
             })
           })
@@ -365,7 +365,7 @@ FilterStates <- R6::R6Class( # nolint
             {
               fstates <- current_state()
               lapply(added_state_name(), function(fname) {
-                fs_callback <- fstates[[fname]]$server(id = fname)
+                fs_callback <- fstates[[fname]]$server(id = str_to_shiny_ns(fname))
                 observeEvent(
                   eventExpr = fs_callback(), # when remove button is clicked in the FilterState ui
                   once = TRUE, # remove button can be called once, should be destroyed afterwards
@@ -683,7 +683,7 @@ FilterStates <- R6::R6Class( # nolint
       }
 
       ### QUESTION: move this check to filter_settings?
-      slices_hashed <- vapply(state, get_teal_slice_id, character(1L))
+      slices_hashed <- vapply(state, `[[`, character(1L), "id")
       if (any(duplicated(slices_hashed))) {
         stop(
           "Some of the teal_slice objects refer to the same filter. ",
@@ -694,7 +694,7 @@ FilterStates <- R6::R6Class( # nolint
 
       state_list <- shiny::isolate(private$state_list_get())
       lapply(state, function(x) {
-        state_id <- get_teal_slice_id(x)
+        state_id <- x$id
         if (state_id %in% names(state_list)) {
           # Modify existing filter states.
           state_list[[state_id]]$set_state(x)

@@ -144,7 +144,7 @@ filter_var <- function(dataname,
   ans <- as.list(environment())
   ans <- append(ans, list(...))
   if (missing(id)) {
-    ans$id <- paste(Filter(length, ans[c("dataname", "varname", "datalabel", "arg")]), collapse = "_")
+    ans$id <- paste(Filter(length, ans[c("dataname", "varname", "datalabel", "arg")]), collapse = " ")
   }
   ans <- do.call(shiny::reactiveValues, ans)
   class(ans) <- c("teal_slice", class(ans))
@@ -525,26 +525,14 @@ slices_which <- function(tss, expr) {
 }
 
 
-#' Get hash identifier of `teal_slice`
+#' String to valid shiny `ns` identifier
 #'
-#' Returns hash of `teal_slice` object which uniquely identifies object.
-#' Hash is obtained from fields which determines single filter-state.
-#' @param x (`teal_slice`, `teal_slice_expr`) single `teal_slice` object
+#' Returns name with punctation and white spaces replaced by underscore.
+#'
+#' @param x (`character`) character
 #' @return `character(1)`
 #' @keywords internal
 #'
-get_teal_slice_id <- function(x) {
-  if ("id" %in% names(x)) {
-    x$id
-  } else {
-    paste(
-      c(
-        x$dataname,
-        x$datalabel,
-        x$arg,
-        x$varname
-      ),
-      collapse = "_"
-    )
-  }
+str_to_shiny_ns <- function(x) {
+  gsub("[[:punct:][:space:]]+", "_", x)
 }
