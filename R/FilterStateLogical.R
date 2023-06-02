@@ -220,7 +220,7 @@ LogicalFilterState <- R6::R6Class( # nolint
       invisible(NULL)
     },
     validate_selection = function(value) {
-      if (!(checkmate::test_logical(value, max.len = 2, any.missing = FALSE))) {
+      if (!(checkmate::test_logical(value, any.missing = FALSE, unique = TRUE))) {
         stop(
           sprintf(
             "value of the selection for `%s` in `%s` should be a logical vector of length <= 2",

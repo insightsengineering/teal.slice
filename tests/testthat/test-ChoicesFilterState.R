@@ -316,8 +316,8 @@ testthat::test_that("set_state sets multiple option", {
     filter_state <- ChoicesFilterState$new(chars, dataname = "data", varname = "variable", multiple = FALSE)
     shiny::isolate(
       filter_state$set_state(filter_var(dataname = "data", varname = "variable", selected = c("item1", "item3")))
-    )}
-  )
+    )
+  })
 
   filter_state <- ChoicesFilterState$new(facts, dataname = "data", varname = "variable", multiple = TRUE)
   testthat::expect_no_error(
