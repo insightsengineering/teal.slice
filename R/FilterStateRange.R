@@ -420,6 +420,19 @@ RangeFilterState <- R6::R6Class( # nolint
       }
 
       tagList(
+        tags$style(HTML(paste(
+          ".noUi-tooltip {",
+          "display: block;",
+          "position: absolute;",
+          "border: 1px solid #D9D9D9;",
+          "border-radius: 3px;",
+          "background: #fff7;",
+          "color: #000;",
+          "padding: 0.1em;",
+          "text-align: center;",
+          "white-space: nowrap;",
+          "font-size: 0.7em;",
+          "}"))),
         div(
           class = "choices_state",
           div(
