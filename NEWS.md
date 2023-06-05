@@ -1,4 +1,4 @@
-# teal.slice 0.3.0.9001
+# teal.slice 0.3.0.9002
 
 * Examples now use `scda.2022` instead of `scda.2021`.
 * Transferred data hashing step in `FilteredDataset` to `teal`.
