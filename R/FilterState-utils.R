@@ -545,9 +545,9 @@ contain_interval <- function(x, range) {
 #'  "Inf" and "-Inf" respectively.
 #'
 #'
-#' @param values Vector of values to format. Can contain `NA`, `Inf`, `-Inf`.
-#' @param threshold Number of significant digits above which the number will be
-#'  formatted in scientific notation.
+#' @param values `numeric` vector of values to format, may include NAs and Infs
+#' @param threshold `numeric(1) ` number of significant digits above which the number will be
+#'  formatted in scientific notation
 #'
 #' @return Vector of `length(values)` as a string suitable for display.
 #' @keywords internal
@@ -557,102 +557,6 @@ format_range_for_summary <- function(values, threshold = 4) {
   checkmate::assert_number(threshold, lower = 1, finite = TRUE)
 
   sprintf(sprintf("%%.%sg", threshold), values)
-
-  # ops <- options(scipen = 9999)
-  # on.exit(options(ops))
-  #
-  # # convert to a string representation
-  # values_str <- vapply(
-  #   values,
-  #   FUN.VALUE = character(1),
-  #   USE.NAMES = FALSE,
-  #   FUN = function(value) {
-  #     if (is.na(value) || is.finite(value)) {
-  #       format(value)
-  #     } else {
-  #       as.character(value)
-  #     }
-  #   })
-  #
-  # n_digits <- n_sig_digits(values_str)
-  #
-  # mapply(
-  #   values_str,
-  #   n_digits,
-  #   USE.NAMES = FALSE,
-  #   MoreArgs = list(threshold = threshold),
-  #   FUN = function(value, digits, threshold) {
-  #     if (digits == -1) { # special case for Inf, -Inf, NA
-  #       value
-  #     } else if (digits > threshold) {
-  #       val <- format(as.numeric(value), digits = threshold, scientific = TRUE)
-  #       val <- sub("e", "E", val)
-  #       val
-  #     } else {
-  #       value
-  #     }
-  #   }
-  # )
-}
-
-#' Count the number of significant digits in a number.
-#'
-#' Adapted from https://www.r-bloggers.com/2010/04/significant-figures-in-r-and-info-zeros/
-#'  The supplied vector should be numbers represented as a character. `NA`, `Inf`,
-#'  and `-Inf` should be coded as the strings "NA", "Inf", and "-Inf". In these
-#'  cases, a count of -1 is returned.
-#'
-#' @param nums A vector of numbers that have been converted to character.
-#'
-#' @return Vector of `length(nums)` with counts of significant digits.
-#' @keywords internal
-#' @noRd
-n_sig_digits <- function(nums) {
-  checkmate::assert_character(nums, any.missing = FALSE)
-
-  vapply(nums, FUN.VALUE = numeric(1), USE.NAMES = FALSE, FUN = function(num) {
-
-    if (grepl("e", num)) return(-1)
-    if (num == "NA") return(-1)
-    if (num == "Inf" || num == "-Inf") return(-1)
-
-    sig_digits <- 1
-    i <- 0
-
-    if (grepl("\\.", num)) {
-
-      num_split <- unlist(strsplit(num, "\\."))
-      num_str <- paste(num_split[1], num_split[2], sep = "")
-      current_n_digits <- nchar(num_str)
-
-      while (i < current_n_digits) {
-
-        if (substr(num_str, i + 1, i + 1) == "0") {
-          i <- i + 1
-          next
-        } else {
-          sig_digits <- current_n_digits - i
-          break
-        }
-      }
-    } else {
-
-      num_str <- num
-      current_n_digits <- nchar(num_str)
-
-      while (i < current_n_digits) {
-        if (substr(num_str, current_n_digits - i, current_n_digits - i) == "0") {
-          i <- i + 1
-          next
-        } else {
-          sig_digits <- current_n_digits - i
-          break
-        }
-      }
-    }
-
-    return(sig_digits)
-  })
 }
 
 
