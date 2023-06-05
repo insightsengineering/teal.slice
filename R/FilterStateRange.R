@@ -198,8 +198,10 @@ RangeFilterState <- R6::R6Class( # nolint
         if (!is.null(private$x_reactive())) sum(is.infinite(private$x_reactive()))
       )
       private$inf_count <- sum(is.infinite(x))
-
       private$set_choices(choices)
+      if (is.null(selected)) {
+        selected <- private$choices
+      }
       private$set_selected(selected)
 
       private$unfiltered_histogram <- ggplot2::ggplot(data.frame(x = Filter(is.finite, private$x))) +

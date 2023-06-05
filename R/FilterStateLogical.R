@@ -168,6 +168,9 @@ LogicalFilterState <- R6::R6Class( # nolint
       do.call(super$initialize, args)
 
       private$set_choices(choices)
+      if (is.null(selected)) {
+        selected <- private$choices[1]
+      }
       private$set_selected(selected)
 
       df <- factor(x, levels = c(TRUE, FALSE))

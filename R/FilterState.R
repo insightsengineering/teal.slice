@@ -421,7 +421,7 @@ FilterState <- R6::R6Class( # nolint
           private$dataname
         )
       )
-      if (is.null(value)) value <- private$choices
+      # if (is.null(value)) value <- private$choices
       value <- private$cast_and_validate(value)
       value <- private$remove_out_of_bound_values(value)
       private$validate_selection(value)
