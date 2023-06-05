@@ -16,3 +16,4 @@ get_teal_slice_id(x)
 Returns hash of \code{teal_slice} object which uniquely identifies object.
 Hash is obtained from fields which determines single filter-state.
 }
+\keyword{internal}
