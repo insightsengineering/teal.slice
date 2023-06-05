@@ -180,12 +180,6 @@ a.remove_all:hover {
   max-width: 100%;
 }
 
-/* Needed for bs4 */
-.filterRangeSlider {
-  width: 100%;
-  max-width: 100%;
-}
-
 .irs.irs--shiny.js-irs-0.irs-with-grid * {
   font-size: 0.85em;
 }
