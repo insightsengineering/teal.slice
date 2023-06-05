@@ -156,7 +156,7 @@ a.remove_all:hover {
 
 .choices_state_label {
   background-color:lightblue;
-  height:2rem;
+  height: 2rem;
   display:inline-block;
   position:absolute;
   margin-top: -3px;
