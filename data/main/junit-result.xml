@@ -1,727 +1,727 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <testsuites>
-  <testsuite name="CDISCFilteredData" timestamp="2023-06-05T13:59:10Z" hostname="7326b90c2626" tests="16" skipped="0" failures="0" errors="0" time="0.518">
-    <testcase time="0.118" classname="CDISCFilteredData" name="load_and_set_datasets"/>
-    <testcase time="0.153" classname="CDISCFilteredData" name="load_and_set_datasets"/>
+  <testsuite name="CDISCFilteredData" timestamp="2023-06-05T15:12:40Z" hostname="6876aea007b6" tests="16" skipped="0" failures="0" errors="0" time="0.521">
+    <testcase time="0.116" classname="CDISCFilteredData" name="load_and_set_datasets"/>
+    <testcase time="0.156" classname="CDISCFilteredData" name="load_and_set_datasets"/>
     <testcase time="0.00800000000000001" classname="CDISCFilteredData" name="load_and_set_datasets"/>
     <testcase time="0.002" classname="CDISCFilteredData" name="load_and_set_datasets"/>
-    <testcase time="0.0419999999999998" classname="CDISCFilteredData" name="set_filter_state"/>
-    <testcase time="0.0330000000000001" classname="CDISCFilteredData" name="get_call_for_child_dataset_includes_filter_call_for_parent_dataset"/>
-    <testcase time="0.0209999999999999" classname="CDISCFilteredData" name="get_parentname_returns_the_parent_name_of_the_datasets"/>
-    <testcase time="0.00100000000000011" classname="CDISCFilteredData" name="get_parentname_returns_the_parent_name_of_the_datasets"/>
-    <testcase time="0.0209999999999999" classname="CDISCFilteredData" name="get_varlabels_returns_the_column_labels_of_the_passed_dataset"/>
+    <testcase time="0.04" classname="CDISCFilteredData" name="set_filter_state"/>
+    <testcase time="0.034" classname="CDISCFilteredData" name="get_call_for_child_dataset_includes_filter_call_for_parent_dataset"/>
+    <testcase time="0.022" classname="CDISCFilteredData" name="get_parentname_returns_the_parent_name_of_the_datasets"/>
+    <testcase time="0.002" classname="CDISCFilteredData" name="get_parentname_returns_the_parent_name_of_the_datasets"/>
+    <testcase time="0.022" classname="CDISCFilteredData" name="get_varlabels_returns_the_column_labels_of_the_passed_dataset"/>
     <testcase time="0.002" classname="CDISCFilteredData" name="get_varlabels_returns_the_column_labels_of_the_passed_dataset"/>
-    <testcase time="0.022" classname="CDISCFilteredData" name="get_filterable_varnames_does_not_return_child_duplicates"/>
-    <testcase time="0.022" classname="CDISCFilteredData" name="get_filterable_varnames_does_not_return_child_non_filterable_variables"/>
-    <testcase time="0.0209999999999999" classname="CDISCFilteredData" name="get_filterable_varnames_return_all_filterable_variables_from_parent_dataset"/>
-    <testcase time="0.002" classname="CDISCFilteredData" name="get_filterable_varnames_return_all_filterable_variables_from_parent_dataset"/>
+    <testcase time="0.0209999999999999" classname="CDISCFilteredData" name="get_filterable_varnames_does_not_return_child_duplicates"/>
+    <testcase time="0.0229999999999999" classname="CDISCFilteredData" name="get_filterable_varnames_does_not_return_child_non_filterable_variables"/>
+    <testcase time="0.0210000000000001" classname="CDISCFilteredData" name="get_filterable_varnames_return_all_filterable_variables_from_parent_dataset"/>
+    <testcase time="0.00299999999999989" classname="CDISCFilteredData" name="get_filterable_varnames_return_all_filterable_variables_from_parent_dataset"/>
     <testcase time="0.022" classname="CDISCFilteredData" name="get_filterable_varnames_does_not_return_duplicates_from_parent_even_if_they_are_not_filterable"/>
-    <testcase time="0.028" classname="CDISCFilteredData" name="set_filter_state_returns_warning_when_setting_a_filter_on_a_column_which_belongs_to_parent_dataset"/>
+    <testcase time="0.0270000000000001" classname="CDISCFilteredData" name="set_filter_state_returns_warning_when_setting_a_filter_on_a_column_which_belongs_to_parent_dataset"/>
   </testsuite>
-  <testsuite name="ChoicesFilterState" timestamp="2023-06-05T13:59:11Z" hostname="7326b90c2626" tests="62" skipped="0" failures="0" errors="0" time="0.339">
-    <testcase time="0.0250000000000001" classname="ChoicesFilterState" name="constructor_accepts_all_data_classes"/>
-    <testcase time="0.00399999999999978" classname="ChoicesFilterState" name="constructor_accepts_all_data_classes"/>
+  <testsuite name="ChoicesFilterState" timestamp="2023-06-05T15:12:40Z" hostname="6876aea007b6" tests="62" skipped="0" failures="0" errors="0" time="0.348">
+    <testcase time="0.026" classname="ChoicesFilterState" name="constructor_accepts_all_data_classes"/>
     <testcase time="0.004" classname="ChoicesFilterState" name="constructor_accepts_all_data_classes"/>
     <testcase time="0.004" classname="ChoicesFilterState" name="constructor_accepts_all_data_classes"/>
-    <testcase time="0.00500000000000012" classname="ChoicesFilterState" name="constructor_accepts_all_data_classes"/>
     <testcase time="0.004" classname="ChoicesFilterState" name="constructor_accepts_all_data_classes"/>
+    <testcase time="0.00499999999999989" classname="ChoicesFilterState" name="constructor_accepts_all_data_classes"/>
+    <testcase time="0.004" classname="ChoicesFilterState" name="constructor_accepts_all_data_classes"/>
+    <testcase time="0.00800000000000001" classname="ChoicesFilterState" name="get_call_returns_call_that_evaluated_leaves_all_values_passed_to_constructor"/>
     <testcase time="0.00800000000000001" classname="ChoicesFilterState" name="get_call_returns_call_that_evaluated_leaves_all_values_passed_to_constructor"/>
     <testcase time="0.0069999999999999" classname="ChoicesFilterState" name="get_call_returns_call_that_evaluated_leaves_all_values_passed_to_constructor"/>
     <testcase time="0.00800000000000001" classname="ChoicesFilterState" name="get_call_returns_call_that_evaluated_leaves_all_values_passed_to_constructor"/>
-    <testcase time="0.00800000000000001" classname="ChoicesFilterState" name="get_call_returns_call_that_evaluated_leaves_all_values_passed_to_constructor"/>
-    <testcase time="0.00800000000000001" classname="ChoicesFilterState" name="get_call_returns_call_that_evaluated_leaves_all_values_passed_to_constructor"/>
-    <testcase time="0.00800000000000001" classname="ChoicesFilterState" name="get_call_returns_call_that_evaluated_leaves_all_values_passed_to_constructor"/>
+    <testcase time="0.00900000000000012" classname="ChoicesFilterState" name="get_call_returns_call_that_evaluated_leaves_all_values_passed_to_constructor"/>
+    <testcase time="0.0089999999999999" classname="ChoicesFilterState" name="get_call_returns_call_that_evaluated_leaves_all_values_passed_to_constructor"/>
     <testcase time="0.00600000000000001" classname="ChoicesFilterState" name="get_call_returns_condition_that_specifies_values_passed_to_set_selected"/>
-    <testcase time="0.002" classname="ChoicesFilterState" name="get_call_returns_condition_that_specifies_values_passed_to_set_selected"/>
-    <testcase time="0.00300000000000011" classname="ChoicesFilterState" name="get_call_returns_condition_that_specifies_values_passed_to_set_selected"/>
-    <testcase time="0.00499999999999989" classname="ChoicesFilterState" name="get_call_returns_condition_that_specifies_values_passed_to_set_selected"/>
     <testcase time="0.00300000000000011" classname="ChoicesFilterState" name="get_call_returns_condition_that_specifies_values_passed_to_set_selected"/>
     <testcase time="0.00299999999999989" classname="ChoicesFilterState" name="get_call_returns_condition_that_specifies_values_passed_to_set_selected"/>
     <testcase time="0.00500000000000012" classname="ChoicesFilterState" name="get_call_returns_condition_that_specifies_values_passed_to_set_selected"/>
     <testcase time="0.00299999999999989" classname="ChoicesFilterState" name="get_call_returns_condition_that_specifies_values_passed_to_set_selected"/>
     <testcase time="0.002" classname="ChoicesFilterState" name="get_call_returns_condition_that_specifies_values_passed_to_set_selected"/>
-    <testcase time="0.004" classname="ChoicesFilterState" name="get_call_returns_condition_that_specifies_values_passed_to_set_selected"/>
+    <testcase time="0.00600000000000001" classname="ChoicesFilterState" name="get_call_returns_condition_that_specifies_values_passed_to_set_selected"/>
+    <testcase time="0.00300000000000011" classname="ChoicesFilterState" name="get_call_returns_condition_that_specifies_values_passed_to_set_selected"/>
+    <testcase time="0.002" classname="ChoicesFilterState" name="get_call_returns_condition_that_specifies_values_passed_to_set_selected"/>
+    <testcase time="0.00600000000000001" classname="ChoicesFilterState" name="get_call_returns_condition_that_specifies_values_passed_to_set_selected"/>
     <testcase time="0.00299999999999989" classname="ChoicesFilterState" name="get_call_returns_condition_that_specifies_values_passed_to_set_selected"/>
     <testcase time="0.00300000000000011" classname="ChoicesFilterState" name="get_call_returns_condition_that_specifies_values_passed_to_set_selected"/>
     <testcase time="0.00600000000000001" classname="ChoicesFilterState" name="get_call_returns_condition_that_specifies_values_passed_to_set_selected"/>
     <testcase time="0.00299999999999989" classname="ChoicesFilterState" name="get_call_returns_condition_that_specifies_values_passed_to_set_selected"/>
     <testcase time="0.00300000000000011" classname="ChoicesFilterState" name="get_call_returns_condition_that_specifies_values_passed_to_set_selected"/>
-    <testcase time="0.00499999999999989" classname="ChoicesFilterState" name="get_call_returns_condition_that_specifies_values_passed_to_set_selected"/>
+    <testcase time="0.00600000000000001" classname="ChoicesFilterState" name="get_call_returns_condition_that_specifies_values_passed_to_set_selected"/>
     <testcase time="0.004" classname="ChoicesFilterState" name="get_call_returns_condition_that_specifies_values_passed_to_set_selected"/>
-    <testcase time="0.00299999999999989" classname="ChoicesFilterState" name="get_call_returns_condition_that_specifies_values_passed_to_set_selected"/>
+    <testcase time="0.002" classname="ChoicesFilterState" name="get_call_returns_condition_that_specifies_values_passed_to_set_selected"/>
+    <testcase time="0.0069999999999999" classname="ChoicesFilterState" name="set_selected_raises_warning_when_selection_not_within_allowed_choices"/>
+    <testcase time="0.002" classname="ChoicesFilterState" name="set_selected_raises_warning_when_selection_not_within_allowed_choices"/>
     <testcase time="0.00500000000000012" classname="ChoicesFilterState" name="set_selected_raises_warning_when_selection_not_within_allowed_choices"/>
     <testcase time="0.00299999999999989" classname="ChoicesFilterState" name="set_selected_raises_warning_when_selection_not_within_allowed_choices"/>
-    <testcase time="0.00500000000000012" classname="ChoicesFilterState" name="set_selected_raises_warning_when_selection_not_within_allowed_choices"/>
-    <testcase time="0.00299999999999989" classname="ChoicesFilterState" name="set_selected_raises_warning_when_selection_not_within_allowed_choices"/>
-    <testcase time="0.00500000000000012" classname="ChoicesFilterState" name="set_selected_raises_warning_when_selection_not_within_allowed_choices"/>
-    <testcase time="0.00299999999999989" classname="ChoicesFilterState" name="set_selected_raises_warning_when_selection_not_within_allowed_choices"/>
-    <testcase time="0.00500000000000012" classname="ChoicesFilterState" name="set_selected_raises_warning_when_selection_not_within_allowed_choices"/>
-    <testcase time="0.00299999999999989" classname="ChoicesFilterState" name="set_selected_raises_warning_when_selection_not_within_allowed_choices"/>
-    <testcase time="0.00500000000000012" classname="ChoicesFilterState" name="set_selected_raises_warning_when_selection_not_within_allowed_choices"/>
-    <testcase time="0.00299999999999989" classname="ChoicesFilterState" name="set_selected_raises_warning_when_selection_not_within_allowed_choices"/>
+    <testcase time="0.00499999999999989" classname="ChoicesFilterState" name="set_selected_raises_warning_when_selection_not_within_allowed_choices"/>
+    <testcase time="0.002" classname="ChoicesFilterState" name="set_selected_raises_warning_when_selection_not_within_allowed_choices"/>
     <testcase time="0.00600000000000001" classname="ChoicesFilterState" name="set_selected_raises_warning_when_selection_not_within_allowed_choices"/>
     <testcase time="0.00300000000000011" classname="ChoicesFilterState" name="set_selected_raises_warning_when_selection_not_within_allowed_choices"/>
-    <testcase time="0.0069999999999999" classname="ChoicesFilterState" name="set_selected_sets_the_intersection_of_choices_and_the_passed_values"/>
+    <testcase time="0.00499999999999989" classname="ChoicesFilterState" name="set_selected_raises_warning_when_selection_not_within_allowed_choices"/>
+    <testcase time="0.00300000000000011" classname="ChoicesFilterState" name="set_selected_raises_warning_when_selection_not_within_allowed_choices"/>
+    <testcase time="0.00600000000000001" classname="ChoicesFilterState" name="set_selected_raises_warning_when_selection_not_within_allowed_choices"/>
+    <testcase time="0.00299999999999989" classname="ChoicesFilterState" name="set_selected_raises_warning_when_selection_not_within_allowed_choices"/>
+    <testcase time="0.00700000000000012" classname="ChoicesFilterState" name="set_selected_sets_the_intersection_of_choices_and_the_passed_values"/>
     <testcase time="0.00600000000000001" classname="ChoicesFilterState" name="set_selected_sets_the_intersection_of_choices_and_the_passed_values"/>
-    <testcase time="0.00500000000000012" classname="ChoicesFilterState" name="set_selected_sets_the_intersection_of_choices_and_the_passed_values"/>
-    <testcase time="0.01" classname="ChoicesFilterState" name="set_selected_sets_the_intersection_of_choices_and_the_passed_values"/>
-    <testcase time="0.00300000000000011" classname="ChoicesFilterState" name="set_selected_sets_the_intersection_of_choices_and_the_passed_values"/>
-    <testcase time="0.00499999999999989" classname="ChoicesFilterState" name="set_selected_sets_the_intersection_of_choices_and_the_passed_values"/>
+    <testcase time="0.00600000000000001" classname="ChoicesFilterState" name="set_selected_sets_the_intersection_of_choices_and_the_passed_values"/>
+    <testcase time="0.0109999999999999" classname="ChoicesFilterState" name="set_selected_sets_the_intersection_of_choices_and_the_passed_values"/>
+    <testcase time="0.002" classname="ChoicesFilterState" name="set_selected_sets_the_intersection_of_choices_and_the_passed_values"/>
+    <testcase time="0.00600000000000001" classname="ChoicesFilterState" name="set_selected_sets_the_intersection_of_choices_and_the_passed_values"/>
     <testcase time="0.00300000000000011" classname="ChoicesFilterState" name="set_selected_sets_the_intersection_of_choices_and_the_passed_values"/>
     <testcase time="0.00599999999999978" classname="ChoicesFilterState" name="set_selected_sets_the_intersection_of_choices_and_the_passed_values"/>
     <testcase time="0.00200000000000022" classname="ChoicesFilterState" name="set_selected_sets_the_intersection_of_choices_and_the_passed_values"/>
-    <testcase time="0.00599999999999978" classname="ChoicesFilterState" name="set_state_needs_a_named_list_with_selected_and_keep_na_elements"/>
-    <testcase time="0.0209999999999999" classname="ChoicesFilterState" name="set_state_needs_a_named_list_with_selected_and_keep_na_elements"/>
-    <testcase time="0.00700000000000012" classname="ChoicesFilterState" name="set_state_sets_values_of_selected_and_keep_na_as_provided_in_the_list"/>
-    <testcase time="0.00599999999999978" classname="ChoicesFilterState" name="set_state_sets_values_of_selected_and_keep_na_as_provided_in_the_list"/>
-    <testcase time="0.00600000000000023" classname="ChoicesFilterState" name="set_state_overwrites_fields_included_in_the_input_only"/>
+    <testcase time="0.00700000000000012" classname="ChoicesFilterState" name="set_state_needs_a_named_list_with_selected_and_keep_na_elements"/>
+    <testcase time="0.0189999999999997" classname="ChoicesFilterState" name="set_state_needs_a_named_list_with_selected_and_keep_na_elements"/>
+    <testcase time="0.00800000000000001" classname="ChoicesFilterState" name="set_state_sets_values_of_selected_and_keep_na_as_provided_in_the_list"/>
+    <testcase time="0.00500000000000034" classname="ChoicesFilterState" name="set_state_sets_values_of_selected_and_keep_na_as_provided_in_the_list"/>
+    <testcase time="0.00699999999999967" classname="ChoicesFilterState" name="set_state_overwrites_fields_included_in_the_input_only"/>
     <testcase time="0.00300000000000011" classname="ChoicesFilterState" name="set_state_overwrites_fields_included_in_the_input_only"/>
     <testcase time="0.00499999999999989" classname="ChoicesFilterState" name="set_state_overwrites_fields_included_in_the_input_only"/>
     <testcase time="0.0110000000000001" classname="ChoicesFilterState" name="ChoicesFilterState_is_any_filtered_works_properly_when_NA_is_present_in_data"/>
     <testcase time="0.00599999999999978" classname="ChoicesFilterState" name="ChoicesFilterState_is_any_filtered_works_properly_when_NA_is_present_in_data"/>
     <testcase time="0.00700000000000012" classname="ChoicesFilterState" name="ChoicesFilterState_is_any_filtered_works_properly_when_NA_is_present_in_data"/>
-    <testcase time="0.00599999999999978" classname="ChoicesFilterState" name="ChoicesFilterState_is_any_filtered_works_properly_when_NA_is_present_in_data"/>
+    <testcase time="0.00600000000000023" classname="ChoicesFilterState" name="ChoicesFilterState_is_any_filtered_works_properly_when_NA_is_present_in_data"/>
   </testsuite>
-  <testsuite name="DFFilterStates" timestamp="2023-06-05T13:59:11Z" hostname="7326b90c2626" tests="19" skipped="0" failures="0" errors="0" time="0.507">
-    <testcase time="0.0210000000000004" classname="DFFilterStates" name="The_contructor_accepts_a_string_as_varlabels_and_keys"/>
-    <testcase time="0.004" classname="DFFilterStates" name="get_fun_returns_dplyr_filter"/>
+  <testsuite name="DFFilterStates" timestamp="2023-06-05T15:12:41Z" hostname="6876aea007b6" tests="19" skipped="0" failures="0" errors="0" time="0.5">
+    <testcase time="0.0209999999999999" classname="DFFilterStates" name="The_contructor_accepts_a_string_as_varlabels_and_keys"/>
+    <testcase time="0.00300000000000011" classname="DFFilterStates" name="get_fun_returns_dplyr_filter"/>
     <testcase time="0.0229999999999997" classname="DFFilterStates" name="DFFilterStates_set_filter_state_sets_filters_in_FilterState_s_specified_by_the_named_list"/>
     <testcase time="0.0150000000000001" classname="DFFilterStates" name="DFFilterStates_set_filter_state_sets_filters_as_a_named_unnamed_selected_list"/>
-    <testcase time="0.0350000000000001" classname="DFFilterStates" name="DFFilterStates_set_filter_state_updates_filter_state_which_was_set_already"/>
-    <testcase time="0.00800000000000001" classname="DFFilterStates" name="DFFilterStates_set_filter_state_throws_error_when_using_an_unnamed_list"/>
-    <testcase time="0.0189999999999997" classname="DFFilterStates" name="DFFilterStates_get_filter_state_returns_list_identical_to_input"/>
-    <testcase time="0.00600000000000023" classname="DFFilterStates" name="Selecting_a_new_variable_initializes_a_new_filter_state"/>
-    <testcase time="0.145" classname="DFFilterStates" name="Selecting_a_new_variable_initializes_a_new_filter_state"/>
-    <testcase time="0.00300000000000011" classname="DFFilterStates" name="Selecting_a_new_variable_initializes_a_new_filter_state"/>
+    <testcase time="0.0339999999999998" classname="DFFilterStates" name="DFFilterStates_set_filter_state_updates_filter_state_which_was_set_already"/>
+    <testcase time="0.0100000000000002" classname="DFFilterStates" name="DFFilterStates_set_filter_state_throws_error_when_using_an_unnamed_list"/>
+    <testcase time="0.0190000000000001" classname="DFFilterStates" name="DFFilterStates_get_filter_state_returns_list_identical_to_input"/>
+    <testcase time="0.00800000000000001" classname="DFFilterStates" name="Selecting_a_new_variable_initializes_a_new_filter_state"/>
+    <testcase time="0.139" classname="DFFilterStates" name="Selecting_a_new_variable_initializes_a_new_filter_state"/>
+    <testcase time="0.00200000000000022" classname="DFFilterStates" name="Selecting_a_new_variable_initializes_a_new_filter_state"/>
     <testcase time="0.00199999999999978" classname="DFFilterStates" name="Selecting_a_new_variable_initializes_a_new_filter_state"/>
-    <testcase time="0.161" classname="DFFilterStates" name="Adding_var_to_add_adds_another_filter_state"/>
-    <testcase time="0.0150000000000001" classname="DFFilterStates" name="DFFilterStates_remove_filter_state_removes_specified_filter_in_FilterState_s_"/>
+    <testcase time="0.158" classname="DFFilterStates" name="Adding_var_to_add_adds_another_filter_state"/>
+    <testcase time="0.016" classname="DFFilterStates" name="DFFilterStates_remove_filter_state_removes_specified_filter_in_FilterState_s_"/>
     <testcase time="0.016" classname="DFFilterStates" name="DFFilterStates_remove_filter_state_throws_warning_when_name_is_not_in_FilterStates"/>
     <testcase time="0.004" classname="DFFilterStates" name="DFFilterStates_ui_add_filter_state_returns_a_message_inside_a_div_when_data_has_no_columns_or_no_rows"/>
-    <testcase time="0.00199999999999978" classname="DFFilterStates" name="DFFilterStates_ui_add_filter_state_returns_a_message_inside_a_div_when_data_has_no_columns_or_no_rows"/>
+    <testcase time="0.00200000000000022" classname="DFFilterStates" name="DFFilterStates_ui_add_filter_state_returns_a_message_inside_a_div_when_data_has_no_columns_or_no_rows"/>
     <testcase time="0.004" classname="DFFilterStates" name="_format_is_a_method_of_DFFilterStates"/>
     <testcase time="0.00800000000000001" classname="DFFilterStates" name="_format_asserts_the_indent_argument_is_a_number"/>
     <testcase time="0.016" classname="DFFilterStates" name="_format_concatenates_its_FilterState_elements_using_n_without_additional_indent"/>
   </testsuite>
-  <testsuite name="DateFilterState" timestamp="2023-06-05T13:59:11Z" hostname="7326b90c2626" tests="32" skipped="0" failures="0" errors="0" time="0.191">
+  <testsuite name="DateFilterState" timestamp="2023-06-05T15:12:41Z" hostname="6876aea007b6" tests="32" skipped="0" failures="0" errors="0" time="0.194">
     <testcase time="0.0129999999999999" classname="DateFilterState" name="The_constructor_accepts_a_Date_object"/>
     <testcase time="0.00800000000000001" classname="DateFilterState" name="get_call_returns_a_condition_true_for_the_object_passed_in_the_constructor"/>
-    <testcase time="0.012" classname="DateFilterState" name="set_selected_accepts_an_array_of_two_Date_objects"/>
-    <testcase time="0.00499999999999989" classname="DateFilterState" name="set_selected_warns_when_selection_is_not_within_the_possible_range"/>
+    <testcase time="0.0129999999999999" classname="DateFilterState" name="set_selected_accepts_an_array_of_two_Date_objects"/>
+    <testcase time="0.00600000000000023" classname="DateFilterState" name="set_selected_warns_when_selection_is_not_within_the_possible_range"/>
     <testcase time="0.00199999999999978" classname="DateFilterState" name="set_selected_warns_when_selection_is_not_within_the_possible_range"/>
     <testcase time="0.00300000000000011" classname="DateFilterState" name="set_selected_warns_when_selection_is_not_within_the_possible_range"/>
-    <testcase time="0.00499999999999989" classname="DateFilterState" name="set_selected_limits_the_selected_range_to_the_lower_and_the_upper_bound_of_the_possible_range"/>
+    <testcase time="0.00599999999999978" classname="DateFilterState" name="set_selected_limits_the_selected_range_to_the_lower_and_the_upper_bound_of_the_possible_range"/>
     <testcase time="0.00300000000000011" classname="DateFilterState" name="set_selected_limits_the_selected_range_to_the_lower_and_the_upper_bound_of_the_possible_range"/>
     <testcase time="0.00300000000000011" classname="DateFilterState" name="set_selected_limits_the_selected_range_to_the_lower_and_the_upper_bound_of_the_possible_range"/>
-    <testcase time="0.0150000000000001" classname="DateFilterState" name="set_selected_raises_error_when_selection_is_not_sorted"/>
-    <testcase time="0.00799999999999956" classname="DateFilterState" name="set_selected_raises_error_when_selection_is_not_Date"/>
-    <testcase time="0.00600000000000023" classname="DateFilterState" name="get_call_returns_call_with_limits_imposed_by_constructor_and_selection"/>
+    <testcase time="0.0139999999999998" classname="DateFilterState" name="set_selected_raises_error_when_selection_is_not_sorted"/>
+    <testcase time="0.0100000000000002" classname="DateFilterState" name="set_selected_raises_error_when_selection_is_not_Date"/>
+    <testcase time="0.00599999999999978" classname="DateFilterState" name="get_call_returns_call_with_limits_imposed_by_constructor_and_selection"/>
     <testcase time="0.00300000000000011" classname="DateFilterState" name="get_call_returns_call_with_limits_imposed_by_constructor_and_selection"/>
     <testcase time="0.00499999999999989" classname="DateFilterState" name="set_keep_na_changes_whether_call_returned_by_get_call_allows_NA_values"/>
     <testcase time="0.00300000000000011" classname="DateFilterState" name="set_keep_na_changes_whether_call_returned_by_get_call_allows_NA_values"/>
-    <testcase time="0.00599999999999978" classname="DateFilterState" name="set_state_accepts_a_named_list_with_selected_and_keep_na_elements"/>
+    <testcase time="0.00499999999999989" classname="DateFilterState" name="set_state_accepts_a_named_list_with_selected_and_keep_na_elements"/>
     <testcase time="0.00600000000000023" classname="DateFilterState" name="set_state_accepts_a_named_list_with_selected_and_keep_na_elements"/>
     <testcase time="0.00599999999999978" classname="DateFilterState" name="set_state_sets_values_of_selected_and_keep_na_as_provided_in_the_list"/>
     <testcase time="0.00499999999999989" classname="DateFilterState" name="set_state_sets_values_of_selected_and_keep_na_as_provided_in_the_list"/>
     <testcase time="0.00600000000000023" classname="DateFilterState" name="set_state_overwrites_fields_included_in_the_input_only"/>
     <testcase time="0.00199999999999978" classname="DateFilterState" name="set_state_overwrites_fields_included_in_the_input_only"/>
     <testcase time="0.00500000000000034" classname="DateFilterState" name="set_state_overwrites_fields_included_in_the_input_only"/>
-    <testcase time="0.00999999999999979" classname="DateFilterState" name="DateFilterState_is_any_filtered_works_properly_when_NA_is_present_in_data"/>
+    <testcase time="0.0089999999999999" classname="DateFilterState" name="DateFilterState_is_any_filtered_works_properly_when_NA_is_present_in_data"/>
+    <testcase time="0.00599999999999978" classname="DateFilterState" name="DateFilterState_is_any_filtered_works_properly_when_NA_is_present_in_data"/>
     <testcase time="0.00600000000000023" classname="DateFilterState" name="DateFilterState_is_any_filtered_works_properly_when_NA_is_present_in_data"/>
-    <testcase time="0.00699999999999967" classname="DateFilterState" name="DateFilterState_is_any_filtered_works_properly_when_NA_is_present_in_data"/>
-    <testcase time="0.00500000000000034" classname="DateFilterState" name="DateFilterState_is_any_filtered_works_properly_when_NA_is_present_in_data"/>
-    <testcase time="0.00599999999999978" classname="DateFilterState" name="_format_is_a_FilterStates_s_method_that_accepts_indent"/>
-    <testcase time="0.0089999999999999" classname="DateFilterState" name="_format_asserts_that_indent_is_numeric"/>
-    <testcase time="0.00700000000000012" classname="DateFilterState" name="_format_returns_a_string_representation_the_FilterState_object"/>
-    <testcase time="0.00600000000000023" classname="DateFilterState" name="_format_prepends_spaces_to_every_line_of_the_returned_string"/>
-    <testcase time="0.00199999999999978" classname="DateFilterState" name="_format_prepends_spaces_to_every_line_of_the_returned_string"/>
-    <testcase time="0.00300000000000011" classname="DateFilterState" name="_format_prepends_spaces_to_every_line_of_the_returned_string"/>
+    <testcase time="0.00599999999999978" classname="DateFilterState" name="DateFilterState_is_any_filtered_works_properly_when_NA_is_present_in_data"/>
+    <testcase time="0.00600000000000023" classname="DateFilterState" name="_format_is_a_FilterStates_s_method_that_accepts_indent"/>
+    <testcase time="0.00999999999999979" classname="DateFilterState" name="_format_asserts_that_indent_is_numeric"/>
+    <testcase time="0.00600000000000023" classname="DateFilterState" name="_format_returns_a_string_representation_the_FilterState_object"/>
+    <testcase time="0.00700000000000012" classname="DateFilterState" name="_format_prepends_spaces_to_every_line_of_the_returned_string"/>
+    <testcase time="0.00299999999999967" classname="DateFilterState" name="_format_prepends_spaces_to_every_line_of_the_returned_string"/>
+    <testcase time="0.00200000000000022" classname="DateFilterState" name="_format_prepends_spaces_to_every_line_of_the_returned_string"/>
   </testsuite>
-  <testsuite name="DatetimeFilterState" timestamp="2023-06-05T13:59:12Z" hostname="7326b90c2626" tests="32" skipped="0" failures="0" errors="0" time="0.224">
-    <testcase time="0.0129999999999999" classname="DatetimeFilterState" name="constructor_accepts_a_POSIXct_or_POSIXlt_object"/>
+  <testsuite name="DatetimeFilterState" timestamp="2023-06-05T15:12:42Z" hostname="6876aea007b6" tests="32" skipped="0" failures="0" errors="0" time="0.229">
+    <testcase time="0.0139999999999998" classname="DatetimeFilterState" name="constructor_accepts_a_POSIXct_or_POSIXlt_object"/>
     <testcase time="0.004" classname="DatetimeFilterState" name="constructor_accepts_a_POSIXct_or_POSIXlt_object"/>
-    <testcase time="0.00599999999999978" classname="DatetimeFilterState" name="get_call_returns_call_that_encompasses_all_values_passed_to_constructor"/>
-    <testcase time="0.00500000000000034" classname="DatetimeFilterState" name="set_selected_accepts_an_array_of_two_POSIXct_objects"/>
-    <testcase time="0.00699999999999967" classname="DatetimeFilterState" name="get_call_returns_a_condition_true_for_the_object_in_the_selected_range"/>
-    <testcase time="0.00900000000000034" classname="DatetimeFilterState" name="get_call_returns_a_condition_true_for_the_object_in_the_selected_range"/>
+    <testcase time="0.00500000000000034" classname="DatetimeFilterState" name="get_call_returns_call_that_encompasses_all_values_passed_to_constructor"/>
+    <testcase time="0.00599999999999978" classname="DatetimeFilterState" name="set_selected_accepts_an_array_of_two_POSIXct_objects"/>
+    <testcase time="0.00700000000000012" classname="DatetimeFilterState" name="get_call_returns_a_condition_true_for_the_object_in_the_selected_range"/>
+    <testcase time="0.0089999999999999" classname="DatetimeFilterState" name="get_call_returns_a_condition_true_for_the_object_in_the_selected_range"/>
     <testcase time="0.00599999999999978" classname="DatetimeFilterState" name="get_call_returns_a_condition_evaluating_to_TRUE_for_NA_values_after_set_keep_na_TRUE_"/>
     <testcase time="0.00300000000000011" classname="DatetimeFilterState" name="get_call_returns_a_condition_evaluating_to_TRUE_for_NA_values_after_set_keep_na_TRUE_"/>
     <testcase time="0.0329999999999999" classname="DatetimeFilterState" name="DatetimeFilterState_echoes_the_timezone_of_the_ISO_object_passed_to_the_constructor"/>
     <testcase time="0.00700000000000012" classname="DatetimeFilterState" name="set_selected_warns_when_the_selected_range_intersects_the_possible_range_but_is_not_fully_included_in_it"/>
     <testcase time="0.00300000000000011" classname="DatetimeFilterState" name="set_selected_warns_when_the_selected_range_intersects_the_possible_range_but_is_not_fully_included_in_it"/>
-    <testcase time="0.00299999999999967" classname="DatetimeFilterState" name="set_selected_warns_when_the_selected_range_intersects_the_possible_range_but_is_not_fully_included_in_it"/>
-    <testcase time="0.0100000000000002" classname="DatetimeFilterState" name="set_selected_throws_when_the_selected_range_is_completely_outside_of_the_possible_range"/>
-    <testcase time="0.00800000000000001" classname="DatetimeFilterState" name="set_selected_limits_the_selected_range_to_the_lower_and_the_upper_bound_of_the_possible_range"/>
+    <testcase time="0.00300000000000011" classname="DatetimeFilterState" name="set_selected_warns_when_the_selected_range_intersects_the_possible_range_but_is_not_fully_included_in_it"/>
+    <testcase time="0.0109999999999997" classname="DatetimeFilterState" name="set_selected_throws_when_the_selected_range_is_completely_outside_of_the_possible_range"/>
+    <testcase time="0.00900000000000034" classname="DatetimeFilterState" name="set_selected_limits_the_selected_range_to_the_lower_and_the_upper_bound_of_the_possible_range"/>
     <testcase time="0.004" classname="DatetimeFilterState" name="set_selected_limits_the_selected_range_to_the_lower_and_the_upper_bound_of_the_possible_range"/>
-    <testcase time="0.00300000000000011" classname="DatetimeFilterState" name="set_selected_limits_the_selected_range_to_the_lower_and_the_upper_bound_of_the_possible_range"/>
-    <testcase time="0.0109999999999997" classname="DatetimeFilterState" name="set_selected_throws_when_the_value_type_cannot_be_interpreted_as_POSIX"/>
-    <testcase time="0.00600000000000023" classname="DatetimeFilterState" name="set_state_needs_a_named_list_with_selected_and_keep_na_elements"/>
+    <testcase time="0.00299999999999967" classname="DatetimeFilterState" name="set_selected_limits_the_selected_range_to_the_lower_and_the_upper_bound_of_the_possible_range"/>
+    <testcase time="0.0100000000000002" classname="DatetimeFilterState" name="set_selected_throws_when_the_value_type_cannot_be_interpreted_as_POSIX"/>
+    <testcase time="0.00700000000000012" classname="DatetimeFilterState" name="set_state_needs_a_named_list_with_selected_and_keep_na_elements"/>
     <testcase time="0.00599999999999978" classname="DatetimeFilterState" name="set_state_needs_a_named_list_with_selected_and_keep_na_elements"/>
-    <testcase time="0.00600000000000023" classname="DatetimeFilterState" name="set_state_sets_values_of_selected_and_keep_na_as_provided_in_the_list"/>
+    <testcase time="0.00700000000000012" classname="DatetimeFilterState" name="set_state_sets_values_of_selected_and_keep_na_as_provided_in_the_list"/>
     <testcase time="0.00499999999999989" classname="DatetimeFilterState" name="set_state_sets_values_of_selected_and_keep_na_as_provided_in_the_list"/>
     <testcase time="0.00700000000000012" classname="DatetimeFilterState" name="set_state_overwrites_fields_included_in_the_input_only"/>
-    <testcase time="0.00299999999999967" classname="DatetimeFilterState" name="set_state_overwrites_fields_included_in_the_input_only"/>
+    <testcase time="0.00199999999999978" classname="DatetimeFilterState" name="set_state_overwrites_fields_included_in_the_input_only"/>
     <testcase time="0.00500000000000034" classname="DatetimeFilterState" name="set_state_overwrites_fields_included_in_the_input_only"/>
     <testcase time="0.0089999999999999" classname="DatetimeFilterState" name="DatetimeFilterState_is_any_filtered_works_properly_when_NA_is_present_in_data"/>
-    <testcase time="0.00499999999999989" classname="DatetimeFilterState" name="DatetimeFilterState_is_any_filtered_works_properly_when_NA_is_present_in_data"/>
+    <testcase time="0.00599999999999978" classname="DatetimeFilterState" name="DatetimeFilterState_is_any_filtered_works_properly_when_NA_is_present_in_data"/>
     <testcase time="0.00700000000000012" classname="DatetimeFilterState" name="_format_is_a_FilterStates_s_method_that_accepts_indent"/>
-    <testcase time="0.00999999999999979" classname="DatetimeFilterState" name="_format_asserts_that_indent_is_numeric"/>
-    <testcase time="0.00700000000000012" classname="DatetimeFilterState" name="_format_returns_a_string_representation_the_FilterState_object"/>
-    <testcase time="0.00700000000000012" classname="DatetimeFilterState" name="_format_prepends_spaces_to_every_line_of_the_returned_string"/>
+    <testcase time="0.0100000000000002" classname="DatetimeFilterState" name="_format_asserts_that_indent_is_numeric"/>
+    <testcase time="0.00800000000000001" classname="DatetimeFilterState" name="_format_returns_a_string_representation_the_FilterState_object"/>
+    <testcase time="0.00699999999999967" classname="DatetimeFilterState" name="_format_prepends_spaces_to_every_line_of_the_returned_string"/>
     <testcase time="0.00300000000000011" classname="DatetimeFilterState" name="_format_prepends_spaces_to_every_line_of_the_returned_string"/>
-    <testcase time="0.00299999999999967" classname="DatetimeFilterState" name="_format_prepends_spaces_to_every_line_of_the_returned_string"/>
+    <testcase time="0.00300000000000011" classname="DatetimeFilterState" name="_format_prepends_spaces_to_every_line_of_the_returned_string"/>
   </testsuite>
-  <testsuite name="DefaultFilteredDataset" timestamp="2023-06-05T13:59:12Z" hostname="7326b90c2626" tests="10" skipped="0" failures="0" errors="0" time="0.135">
-    <testcase time="0.00800000000000001" classname="DefaultFilteredDataset" name="The_constructor_accepts_a_data.frame_object_with_a_dataname"/>
-    <testcase time="0.00800000000000001" classname="DefaultFilteredDataset" name="get_call_returns_a_list_of_calls_or_NULL"/>
+  <testsuite name="DefaultFilteredDataset" timestamp="2023-06-05T15:12:42Z" hostname="6876aea007b6" tests="10" skipped="0" failures="0" errors="0" time="0.139">
+    <testcase time="0.0089999999999999" classname="DefaultFilteredDataset" name="The_constructor_accepts_a_data.frame_object_with_a_dataname"/>
+    <testcase time="0.00700000000000012" classname="DefaultFilteredDataset" name="get_call_returns_a_list_of_calls_or_NULL"/>
     <testcase time="0.028" classname="DefaultFilteredDataset" name="get_call_returns_a_list_of_calls_or_NULL"/>
     <testcase time="0.016" classname="DefaultFilteredDataset" name="DefaultFilteredDataset_set_filter_state_sets_filters_specified_by_list_names"/>
-    <testcase time="0.00800000000000001" classname="DefaultFilteredDataset" name="DefaultFilteredDataset_set_filter_state_throws_error_when_list_is_not_named"/>
-    <testcase time="0.016" classname="DefaultFilteredDataset" name="DefaultFilteredDataset_remove_filter_state_removes_desired_filter"/>
-    <testcase time="0.0140000000000002" classname="DefaultFilteredDataset" name="DefaultFilteredDataset_get_filter_state_returns_list_identical_to_input"/>
-    <testcase time="0.0189999999999997" classname="DefaultFilteredDataset" name="DefaultFilteredDataset_remove_filter_state_removes_more_than_one_filter"/>
-    <testcase time="0.00500000000000034" classname="DefaultFilteredDataset" name="get_filter_overview_info_returns_overview_matrix_for_DefaultFilteredDataset_without_filtering"/>
-    <testcase time="0.0129999999999999" classname="DefaultFilteredDataset" name="get_filter_overview_info_returns_overview_matrix_for_DefaultFilteredDataset_if_a_filtered_dataset_is_passed_in"/>
+    <testcase time="0.0089999999999999" classname="DefaultFilteredDataset" name="DefaultFilteredDataset_set_filter_state_throws_error_when_list_is_not_named"/>
+    <testcase time="0.0169999999999999" classname="DefaultFilteredDataset" name="DefaultFilteredDataset_remove_filter_state_removes_desired_filter"/>
+    <testcase time="0.0150000000000001" classname="DefaultFilteredDataset" name="DefaultFilteredDataset_get_filter_state_returns_list_identical_to_input"/>
+    <testcase time="0.02" classname="DefaultFilteredDataset" name="DefaultFilteredDataset_remove_filter_state_removes_more_than_one_filter"/>
+    <testcase time="0.00499999999999989" classname="DefaultFilteredDataset" name="get_filter_overview_info_returns_overview_matrix_for_DefaultFilteredDataset_without_filtering"/>
+    <testcase time="0.0130000000000003" classname="DefaultFilteredDataset" name="get_filter_overview_info_returns_overview_matrix_for_DefaultFilteredDataset_if_a_filtered_dataset_is_passed_in"/>
   </testsuite>
-  <testsuite name="EmptyFilterState" timestamp="2023-06-05T13:59:12Z" hostname="7326b90c2626" tests="8" skipped="0" failures="0" errors="0" time="0.054">
-    <testcase time="0.012" classname="EmptyFilterState" name="get_call_returns_NULL_after_set_keep_na_FALSE_"/>
+  <testsuite name="EmptyFilterState" timestamp="2023-06-05T15:12:42Z" hostname="6876aea007b6" tests="8" skipped="0" failures="0" errors="0" time="0.055">
+    <testcase time="0.0129999999999999" classname="EmptyFilterState" name="get_call_returns_NULL_after_set_keep_na_FALSE_"/>
     <testcase time="0.00499999999999989" classname="EmptyFilterState" name="get_call_returns_a_call_after_set_keep_na_TRUE_"/>
-    <testcase time="0.00800000000000001" classname="EmptyFilterState" name="set_state_needs_a_named_list_with_selected_and_keep_na_elements"/>
-    <testcase time="0.00499999999999989" classname="EmptyFilterState" name="set_state_needs_a_named_list_with_selected_and_keep_na_elements"/>
+    <testcase time="0.00700000000000012" classname="EmptyFilterState" name="set_state_needs_a_named_list_with_selected_and_keep_na_elements"/>
     <testcase time="0.00600000000000023" classname="EmptyFilterState" name="set_state_needs_a_named_list_with_selected_and_keep_na_elements"/>
+    <testcase time="0.00599999999999978" classname="EmptyFilterState" name="set_state_needs_a_named_list_with_selected_and_keep_na_elements"/>
     <testcase time="0.00499999999999989" classname="EmptyFilterState" name="get_state_returns_a_list_identical_to_set_state_input"/>
     <testcase time="0.00800000000000001" classname="EmptyFilterState" name="EmptyFilterState_is_any_filtered_returns_FALSE_when_keep_na_is_TRUE_and_returns_TRUE_when_keep_na_is_FALSE"/>
     <testcase time="0.00499999999999989" classname="EmptyFilterState" name="EmptyFilterState_is_any_filtered_returns_FALSE_when_keep_na_is_TRUE_and_returns_TRUE_when_keep_na_is_FALSE"/>
   </testsuite>
-  <testsuite name="FilterState-utils" timestamp="2023-06-05T13:59:12Z" hostname="7326b90c2626" tests="12" skipped="0" failures="0" errors="0" time="0.065">
-    <testcase time="0.00499999999999989" classname="FilterState_utils" name="contain_interval_accepts_proper_arguments"/>
+  <testsuite name="FilterState-utils" timestamp="2023-06-05T15:12:42Z" hostname="6876aea007b6" tests="12" skipped="0" failures="0" errors="0" time="0.067">
+    <testcase time="0.00600000000000023" classname="FilterState_utils" name="contain_interval_accepts_proper_arguments"/>
+    <testcase time="0.00599999999999978" classname="FilterState_utils" name="contain_interval_accepts_proper_arguments"/>
     <testcase time="0.00500000000000034" classname="FilterState_utils" name="contain_interval_accepts_proper_arguments"/>
     <testcase time="0.00599999999999978" classname="FilterState_utils" name="contain_interval_accepts_proper_arguments"/>
-    <testcase time="0.00600000000000023" classname="FilterState_utils" name="contain_interval_accepts_proper_arguments"/>
-    <testcase time="0.00599999999999978" classname="FilterState_utils" name="contain_interval_accepts_proper_arguments"/>
+    <testcase time="0.00499999999999989" classname="FilterState_utils" name="contain_interval_accepts_proper_arguments"/>
     <testcase time="0.00600000000000023" classname="FilterState_utils" name="contain_interval_accepts_proper_arguments"/>
     <testcase time="0.012" classname="FilterState_utils" name="contain_interval_accepts_proper_arguments"/>
-    <testcase time="0.00499999999999989" classname="FilterState_utils" name="contain_interval_accepts_proper_arguments"/>
     <testcase time="0.00599999999999978" classname="FilterState_utils" name="contain_interval_accepts_proper_arguments"/>
+    <testcase time="0.00600000000000023" classname="FilterState_utils" name="contain_interval_accepts_proper_arguments"/>
     <testcase time="0.00300000000000011" classname="FilterState_utils" name="contain_interval_returns_containing_range"/>
-    <testcase time="0.00200000000000022" classname="FilterState_utils" name="contain_interval_returns_x_if_interval_matches_ticks"/>
-    <testcase time="0.00299999999999967" classname="FilterState_utils" name="contain_interval_returns_range_if_x_is_x_is_out_of_bounds"/>
+    <testcase time="0.00299999999999967" classname="FilterState_utils" name="contain_interval_returns_x_if_interval_matches_ticks"/>
+    <testcase time="0.00300000000000011" classname="FilterState_utils" name="contain_interval_returns_range_if_x_is_x_is_out_of_bounds"/>
   </testsuite>
-  <testsuite name="FilterState" timestamp="2023-06-05T13:59:12Z" hostname="7326b90c2626" tests="38" skipped="0" failures="0" errors="0" time="0.208">
+  <testsuite name="FilterState" timestamp="2023-06-05T15:12:42Z" hostname="6876aea007b6" tests="38" skipped="0" failures="0" errors="0" time="0.211">
     <testcase time="0.00800000000000001" classname="FilterState" name="The_constructor_accepts_character_as_varname"/>
     <testcase time="0.00600000000000023" classname="FilterState" name="The_constructor_accepts_character_as_varname"/>
-    <testcase time="0.00599999999999978" classname="FilterState" name="The_constructor_accepts_character_as_varname"/>
-    <testcase time="0.00600000000000023" classname="FilterState" name="The_constructor_requires_a_varname"/>
+    <testcase time="0.00499999999999989" classname="FilterState" name="The_constructor_accepts_character_as_varname"/>
+    <testcase time="0.00700000000000012" classname="FilterState" name="The_constructor_requires_a_varname"/>
     <testcase time="0.004" classname="FilterState" name="The_constructor_accepts_a_string_as_varlabel"/>
-    <testcase time="0.00700000000000012" classname="FilterState" name="dataname_must_be_specified_if_extract_type_is_specified"/>
-    <testcase time="0.00599999999999978" classname="FilterState" name="get_call_returns_NULL"/>
+    <testcase time="0.00699999999999967" classname="FilterState" name="dataname_must_be_specified_if_extract_type_is_specified"/>
+    <testcase time="0.00700000000000012" classname="FilterState" name="get_call_returns_NULL"/>
     <testcase time="0.004" classname="FilterState" name="get_dataname_returns_a_string_when_dataname_is_NULL"/>
-    <testcase time="0.004" classname="FilterState" name="get_varlabel_returns_a_string_passed_to_the_constructor"/>
-    <testcase time="0.00300000000000011" classname="FilterState" name="get_varname_returns_a_name_if_varname_passed_to_the_constructor_is_a_string"/>
+    <testcase time="0.00300000000000011" classname="FilterState" name="get_varlabel_returns_a_string_passed_to_the_constructor"/>
+    <testcase time="0.004" classname="FilterState" name="get_varname_returns_a_name_if_varname_passed_to_the_constructor_is_a_string"/>
     <testcase time="0.004" classname="FilterState" name="get_varname_returns_a_string_if_varname_passed_to_the_constructor_is_a_string"/>
     <testcase time="0.00699999999999967" classname="FilterState" name="get_selected_returns_NULL_after_initialization"/>
     <testcase time="0.004" classname="FilterState" name="set_selected_sets_value_get_selected_returns_the_same"/>
     <testcase time="0.00700000000000012" classname="FilterState" name="get_keep_na_returns_FALSE_after_initialization"/>
     <testcase time="0.00600000000000023" classname="FilterState" name="set_state_sets_selected_and_keep_na"/>
-    <testcase time="0.004" classname="FilterState" name="get_state_returns_a_list_identical_to_set_state_input"/>
-    <testcase time="0.00699999999999967" classname="FilterState" name="add_keep_na_call_does_not_add_anything_by_default"/>
-    <testcase time="0.0210000000000004" classname="FilterState" name="add_keep_na_call_adds_is.na_when_keep_na_is_set"/>
-    <testcase time="0.004" classname="FilterState" name="Setting_private_na_rm_to_TRUE_adds_is.na_before_condition_via_add_keep_na_call"/>
-    <testcase time="0.00499999999999989" classname="FilterState" name="Setting_private_na_rm_to_TRUE_doesn_t_add_is.na_before_condition_via_add_keep_na_call_when_variable_has_no_NAs"/>
-    <testcase time="0.004" classname="FilterState" name="_format_is_a_FilterStates_s_method_that_accepts_indent"/>
-    <testcase time="0.0089999999999999" classname="FilterState" name="_format_asserts_that_indent_is_numeric"/>
-    <testcase time="0.00499999999999989" classname="FilterState" name="_format_returns_a_string_representation_the_FilterState_object"/>
-    <testcase time="0.00500000000000034" classname="FilterState" name="_format_prepends_spaces_to_every_line_of_the_returned_string"/>
-    <testcase time="0.00800000000000001" classname="FilterState" name="_format_prepends_spaces_to_every_line_of_the_returned_string"/>
+    <testcase time="0.00499999999999989" classname="FilterState" name="get_state_returns_a_list_identical_to_set_state_input"/>
+    <testcase time="0.00599999999999978" classname="FilterState" name="add_keep_na_call_does_not_add_anything_by_default"/>
+    <testcase time="0.0220000000000002" classname="FilterState" name="add_keep_na_call_adds_is.na_when_keep_na_is_set"/>
+    <testcase time="0.00499999999999989" classname="FilterState" name="Setting_private_na_rm_to_TRUE_adds_is.na_before_condition_via_add_keep_na_call"/>
+    <testcase time="0.004" classname="FilterState" name="Setting_private_na_rm_to_TRUE_doesn_t_add_is.na_before_condition_via_add_keep_na_call_when_variable_has_no_NAs"/>
+    <testcase time="0.00499999999999989" classname="FilterState" name="_format_is_a_FilterStates_s_method_that_accepts_indent"/>
+    <testcase time="0.00900000000000034" classname="FilterState" name="_format_asserts_that_indent_is_numeric"/>
+    <testcase time="0.00599999999999978" classname="FilterState" name="_format_returns_a_string_representation_the_FilterState_object"/>
+    <testcase time="0.00499999999999989" classname="FilterState" name="_format_prepends_spaces_to_every_line_of_the_returned_string"/>
+    <testcase time="0.00900000000000034" classname="FilterState" name="_format_prepends_spaces_to_every_line_of_the_returned_string"/>
     <testcase time="0.00299999999999967" classname="FilterState" name="_format_prepends_spaces_to_every_line_of_the_returned_string"/>
-    <testcase time="0.00500000000000034" classname="FilterState" name="_format_returns_a_properly_wrapped_string"/>
+    <testcase time="0.00600000000000023" classname="FilterState" name="_format_returns_a_properly_wrapped_string"/>
+    <testcase time="0.00300000000000011" classname="FilterState" name="_format_returns_a_properly_wrapped_string"/>
+    <testcase time="0.00199999999999978" classname="FilterState" name="_format_returns_a_properly_wrapped_string"/>
+    <testcase time="0.00300000000000011" classname="FilterState" name="_format_returns_a_properly_wrapped_string"/>
+    <testcase time="0.00300000000000011" classname="FilterState" name="_format_returns_a_properly_wrapped_string"/>
+    <testcase time="0.00199999999999978" classname="FilterState" name="_format_returns_a_properly_wrapped_string"/>
+    <testcase time="0.00300000000000011" classname="FilterState" name="_format_returns_a_properly_wrapped_string"/>
     <testcase time="0.00299999999999967" classname="FilterState" name="_format_returns_a_properly_wrapped_string"/>
     <testcase time="0.00300000000000011" classname="FilterState" name="_format_returns_a_properly_wrapped_string"/>
-    <testcase time="0.00300000000000011" classname="FilterState" name="_format_returns_a_properly_wrapped_string"/>
-    <testcase time="0.00299999999999967" classname="FilterState" name="_format_returns_a_properly_wrapped_string"/>
-    <testcase time="0.00300000000000011" classname="FilterState" name="_format_returns_a_properly_wrapped_string"/>
-    <testcase time="0.00300000000000011" classname="FilterState" name="_format_returns_a_properly_wrapped_string"/>
-    <testcase time="0.00300000000000011" classname="FilterState" name="_format_returns_a_properly_wrapped_string"/>
-    <testcase time="0.00299999999999967" classname="FilterState" name="_format_returns_a_properly_wrapped_string"/>
-    <testcase time="0.00300000000000011" classname="FilterState" name="_format_returns_a_properly_wrapped_string"/>
+    <testcase time="0.00200000000000022" classname="FilterState" name="_format_returns_a_properly_wrapped_string"/>
     <testcase time="0.012" classname="FilterState" name="_format_line_wrapping_breaks_if_strings_are_too_long"/>
-    <testcase time="0.00700000000000012" classname="FilterState" name="_format_line_wrapping_breaks_if_strings_are_too_long"/>
+    <testcase time="0.00699999999999967" classname="FilterState" name="_format_line_wrapping_breaks_if_strings_are_too_long"/>
   </testsuite>
-  <testsuite name="FilterStates" timestamp="2023-06-05T13:59:12Z" hostname="7326b90c2626" tests="68" skipped="0" failures="0" errors="0" time="6.217">
-    <testcase time="0.00999999999999979" classname="FilterStates" name="The_constructor_accepts_only_a_string_as_dataname"/>
-    <testcase time="0.00600000000000023" classname="FilterStates" name="The_constructor_accepts_only_a_string_as_dataname"/>
-    <testcase time="0.00499999999999989" classname="FilterStates" name="The_constructor_accepts_only_a_string_as_dataname"/>
-    <testcase time="0.0089999999999999" classname="FilterStates" name="validate_state_list_exists_raises_errors_if_no_filters_were_added"/>
+  <testsuite name="FilterStates" timestamp="2023-06-05T15:12:42Z" hostname="6876aea007b6" tests="68" skipped="0" failures="0" errors="0" time="5.958">
+    <testcase time="0.0100000000000002" classname="FilterStates" name="The_constructor_accepts_only_a_string_as_dataname"/>
+    <testcase time="0.00700000000000012" classname="FilterStates" name="The_constructor_accepts_only_a_string_as_dataname"/>
+    <testcase time="0.00599999999999978" classname="FilterStates" name="The_constructor_accepts_only_a_string_as_dataname"/>
+    <testcase time="0.0100000000000002" classname="FilterStates" name="validate_state_list_exists_raises_errors_if_no_filters_were_added"/>
+    <testcase time="0.00699999999999967" classname="FilterStates" name="validate_state_list_exists_raises_errors_if_no_filters_were_added"/>
     <testcase time="0.00700000000000012" classname="FilterStates" name="validate_state_list_exists_raises_errors_if_no_filters_were_added"/>
-    <testcase time="0.00700000000000012" classname="FilterStates" name="validate_state_list_exists_raises_errors_if_no_filters_were_added"/>
-    <testcase time="0.00200000000000022" classname="FilterStates" name="Emptying_empty_FilterStates_does_not_raise_errors"/>
-    <testcase time="0.00599999999999978" classname="FilterStates" name="Error_message_from_validate_state_list_exists_displays_index_if_datalabel_is_character_0_"/>
-    <testcase time="0.00600000000000023" classname="FilterStates" name="state_list_push_does_not_raise_errors_DFFilterStates"/>
-    <testcase time="0.00800000000000001" classname="FilterStates" name="state_list_push_does_not_raise_errors_MatrixFilterStates"/>
-    <testcase time="5.412" classname="FilterStates" name="state_list_push_does_not_raise_errors_SEFilterStates"/>
-    <testcase time="0.302" classname="FilterStates" name="state_list_push_does_not_raise_errors_MAEFilterStates"/>
+    <testcase time="0.00300000000000011" classname="FilterStates" name="Emptying_empty_FilterStates_does_not_raise_errors"/>
+    <testcase time="0.00700000000000012" classname="FilterStates" name="Error_message_from_validate_state_list_exists_displays_index_if_datalabel_is_character_0_"/>
+    <testcase time="0.00499999999999989" classname="FilterStates" name="state_list_push_does_not_raise_errors_DFFilterStates"/>
+    <testcase time="0.0089999999999999" classname="FilterStates" name="state_list_push_does_not_raise_errors_MatrixFilterStates"/>
+    <testcase time="5.157" classname="FilterStates" name="state_list_push_does_not_raise_errors_SEFilterStates"/>
+    <testcase time="0.296999999999999" classname="FilterStates" name="state_list_push_does_not_raise_errors_MAEFilterStates"/>
     <testcase time="0.00900000000000034" classname="FilterStates" name="Passing_a_FilterState_to_state_list_push_is_the_same_as_passing_it_in_a_list_DFFilterStates"/>
     <testcase time="0.00900000000000034" classname="FilterStates" name="Passing_a_FilterState_to_state_list_push_is_the_same_as_passing_it_in_a_list_MatrixFilterStates"/>
-    <testcase time="0.00799999999999912" classname="FilterStates" name="Passing_a_FilterState_to_state_list_push_is_the_same_as_passing_it_in_a_list_SEFilterStates"/>
+    <testcase time="0.00999999999999979" classname="FilterStates" name="Passing_a_FilterState_to_state_list_push_is_the_same_as_passing_it_in_a_list_SEFilterStates"/>
     <testcase time="0.00900000000000034" classname="FilterStates" name="Passing_a_FilterState_to_state_list_push_is_the_same_as_passing_it_in_a_list_MAEFilterStates"/>
-    <testcase time="0.00499999999999901" classname="FilterStates" name="state_list_get_returns_the_list_of_FilterState_objects_pushed_DFFilterStates"/>
+    <testcase time="0.00600000000000023" classname="FilterStates" name="state_list_get_returns_the_list_of_FilterState_objects_pushed_DFFilterStates"/>
     <testcase time="0.00600000000000023" classname="FilterStates" name="state_list_get_returns_the_list_of_FilterState_objects_pushed_MatrixFilterStates"/>
-    <testcase time="0.00700000000000145" classname="FilterStates" name="state_list_get_returns_the_list_of_FilterState_objects_pushed_SEFilterStates"/>
-    <testcase time="0.00599999999999845" classname="FilterStates" name="state_list_get_returns_the_list_of_FilterState_objects_pushed_MAEFilterStates"/>
-    <testcase time="0.00700000000000145" classname="FilterStates" name="Elements_of_the_list_returned_by_state_list_get_have_names_corresponding_to_varname_DFFilterStates"/>
-    <testcase time="0.00599999999999845" classname="FilterStates" name="Elements_of_the_list_returned_by_state_list_get_have_names_corresponding_to_varname_MatrixFilterStates"/>
-    <testcase time="0.00700000000000145" classname="FilterStates" name="Elements_of_the_list_returned_by_state_list_get_have_names_corresponding_to_varname_SEFilterStates"/>
+    <testcase time="0.00699999999999967" classname="FilterStates" name="state_list_get_returns_the_list_of_FilterState_objects_pushed_SEFilterStates"/>
+    <testcase time="0.00600000000000023" classname="FilterStates" name="state_list_get_returns_the_list_of_FilterState_objects_pushed_MAEFilterStates"/>
+    <testcase time="0.00699999999999967" classname="FilterStates" name="Elements_of_the_list_returned_by_state_list_get_have_names_corresponding_to_varname_DFFilterStates"/>
+    <testcase time="0.00600000000000023" classname="FilterStates" name="Elements_of_the_list_returned_by_state_list_get_have_names_corresponding_to_varname_MatrixFilterStates"/>
+    <testcase time="0.00699999999999967" classname="FilterStates" name="Elements_of_the_list_returned_by_state_list_get_have_names_corresponding_to_varname_SEFilterStates"/>
     <testcase time="0.00699999999999967" classname="FilterStates" name="Elements_of_the_list_returned_by_state_list_get_have_names_corresponding_to_varname_MAEFilterStates"/>
-    <testcase time="0.00799999999999912" classname="FilterStates" name="state_list_remove_removes_filter_state_without_error_DFFilterStates"/>
-    <testcase time="0.00699999999999967" classname="FilterStates" name="state_list_remove_removes_filter_state_without_error_MatrixFilterStates"/>
-    <testcase time="0.0080000000000009" classname="FilterStates" name="state_list_remove_removes_filter_state_without_error_SEFilterStates"/>
+    <testcase time="0.00699999999999967" classname="FilterStates" name="state_list_remove_removes_filter_state_without_error_DFFilterStates"/>
+    <testcase time="0.00700000000000145" classname="FilterStates" name="state_list_remove_removes_filter_state_without_error_MatrixFilterStates"/>
+    <testcase time="0.00699999999999967" classname="FilterStates" name="state_list_remove_removes_filter_state_without_error_SEFilterStates"/>
     <testcase time="0.00799999999999912" classname="FilterStates" name="state_list_remove_removes_filter_state_without_error_MAEFilterStates"/>
     <testcase time="0.0080000000000009" classname="FilterStates" name="state_list_is_empty_after_pushing_and_removing_an_element_from_it_DFFilterStates"/>
     <testcase time="0.00699999999999967" classname="FilterStates" name="state_list_is_empty_after_pushing_and_removing_an_element_from_it_MatrixFilterStates"/>
     <testcase time="0.00900000000000034" classname="FilterStates" name="state_list_is_empty_after_pushing_and_removing_an_element_from_it_SEFilterStates"/>
-    <testcase time="0.00799999999999912" classname="FilterStates" name="state_list_is_empty_after_pushing_and_removing_an_element_from_it_MAEFilterStates"/>
-    <testcase time="0.00700000000000145" classname="FilterStates" name="state_list_is_empty_after_state_list_empty_DFFilterStates"/>
-    <testcase time="0.00799999999999912" classname="FilterStates" name="state_list_is_empty_after_state_list_empty_MatrixFilterStates"/>
-    <testcase time="0.0080000000000009" classname="FilterStates" name="state_list_is_empty_after_state_list_empty_SEFilterStates"/>
-    <testcase time="0.00799999999999912" classname="FilterStates" name="state_list_is_empty_after_state_list_empty_MAEFilterStates"/>
-    <testcase time="0.00300000000000011" classname="FilterStates" name="get_fun_returns_subset_after_initialization"/>
+    <testcase time="0.00699999999999967" classname="FilterStates" name="state_list_is_empty_after_pushing_and_removing_an_element_from_it_MAEFilterStates"/>
+    <testcase time="0.0080000000000009" classname="FilterStates" name="state_list_is_empty_after_state_list_empty_DFFilterStates"/>
+    <testcase time="0.00699999999999967" classname="FilterStates" name="state_list_is_empty_after_state_list_empty_MatrixFilterStates"/>
+    <testcase time="0.00799999999999912" classname="FilterStates" name="state_list_is_empty_after_state_list_empty_SEFilterStates"/>
+    <testcase time="0.00699999999999967" classname="FilterStates" name="state_list_is_empty_after_state_list_empty_MAEFilterStates"/>
+    <testcase time="0.00400000000000134" classname="FilterStates" name="get_fun_returns_subset_after_initialization"/>
     <testcase time="0.00600000000000023" classname="FilterStates" name="get_call_returns_NULL_after_initialization_if_no_filter_applied"/>
-    <testcase time="0.0129999999999999" classname="FilterStates" name="get_call_returns_a_call_filtering_a_data.frame_based_on_a_RangeFilterState"/>
-    <testcase time="0.00399999999999956" classname="FilterStates" name="get_call_returns_a_call_filtering_a_data.frame_based_on_a_RangeFilterState"/>
+    <testcase time="0.0119999999999987" classname="FilterStates" name="get_call_returns_a_call_filtering_a_data.frame_based_on_a_RangeFilterState"/>
+    <testcase time="0.00300000000000011" classname="FilterStates" name="get_call_returns_a_call_filtering_a_data.frame_based_on_a_RangeFilterState"/>
     <testcase time="0.0129999999999999" classname="FilterStates" name="get_call_returns_a_call_filtering_a_data.frame_based_on_a_ChoicesFilterState"/>
-    <testcase time="0.00300000000000011" classname="FilterStates" name="get_call_returns_a_call_filtering_a_data.frame_based_on_a_ChoicesFilterState"/>
-    <testcase time="0.0170000000000012" classname="FilterStates" name="get_call_returns_a_call_filtering_a_data.frame_based_on_a_LogicalFilterState"/>
-    <testcase time="0.00299999999999834" classname="FilterStates" name="get_call_returns_a_call_filtering_a_data.frame_based_on_a_LogicalFilterState"/>
-    <testcase time="0.0140000000000011" classname="FilterStates" name="get_call_returns_a_call_filtering_a_data.frame_based_on_a_DateFilterState"/>
-    <testcase time="0.00300000000000011" classname="FilterStates" name="get_call_returns_a_call_filtering_a_data.frame_based_on_a_DateFilterState"/>
-    <testcase time="0.0179999999999989" classname="FilterStates" name="get_call_returns_a_call_filtering_a_data.frame_based_on_a_DatetimeFilterState"/>
-    <testcase time="0.00500000000000078" classname="FilterStates" name="get_call_returns_a_call_filtering_a_data.frame_based_on_a_DatetimeFilterState"/>
-    <testcase time="0.0389999999999997" classname="FilterStates" name="get_call_returns_a_call_filtering_a_data.frame_base_on_a_combination_of_FilterState_objects"/>
-    <testcase time="0.00699999999999967" classname="FilterStates" name="get_call_returns_a_call_filtering_a_data.frame_base_on_a_combination_of_FilterState_objects"/>
-    <testcase time="0.00500000000000078" classname="FilterStates" name="data_choices_labeled_returns_an_empty_character_array_if_choices_are_an_empty_array"/>
+    <testcase time="0.00399999999999956" classname="FilterStates" name="get_call_returns_a_call_filtering_a_data.frame_based_on_a_ChoicesFilterState"/>
+    <testcase time="0.0169999999999995" classname="FilterStates" name="get_call_returns_a_call_filtering_a_data.frame_based_on_a_LogicalFilterState"/>
+    <testcase time="0.00399999999999956" classname="FilterStates" name="get_call_returns_a_call_filtering_a_data.frame_based_on_a_LogicalFilterState"/>
+    <testcase time="0.0150000000000006" classname="FilterStates" name="get_call_returns_a_call_filtering_a_data.frame_based_on_a_DateFilterState"/>
+    <testcase time="0.00399999999999956" classname="FilterStates" name="get_call_returns_a_call_filtering_a_data.frame_based_on_a_DateFilterState"/>
+    <testcase time="0.0180000000000007" classname="FilterStates" name="get_call_returns_a_call_filtering_a_data.frame_based_on_a_DatetimeFilterState"/>
+    <testcase time="0.00399999999999956" classname="FilterStates" name="get_call_returns_a_call_filtering_a_data.frame_based_on_a_DatetimeFilterState"/>
+    <testcase time="0.0400000000000009" classname="FilterStates" name="get_call_returns_a_call_filtering_a_data.frame_base_on_a_combination_of_FilterState_objects"/>
+    <testcase time="0.00600000000000023" classname="FilterStates" name="get_call_returns_a_call_filtering_a_data.frame_base_on_a_combination_of_FilterState_objects"/>
+    <testcase time="0.00399999999999956" classname="FilterStates" name="data_choices_labeled_returns_an_empty_character_array_if_choices_are_an_empty_array"/>
     <testcase time="0.00799999999999912" classname="FilterStates" name="data_choices_labeled_returns_a_choices_labeled_object_if_choices_are_not_empty"/>
-    <testcase time="0.00500000000000078" classname="FilterStates" name="data_choices_labeled_returns_names_of_the_elements_matching_the_choices"/>
-    <testcase time="0.00399999999999956" classname="FilterStates" name="data_choices_labeled_returns_labels_of_the_elements_matching_the_choices_if_the_varlabels_are_provided_for_the_elements"/>
+    <testcase time="0.00399999999999956" classname="FilterStates" name="data_choices_labeled_returns_names_of_the_elements_matching_the_choices"/>
+    <testcase time="0.00400000000000134" classname="FilterStates" name="data_choices_labeled_returns_labels_of_the_elements_matching_the_choices_if_the_varlabels_are_provided_for_the_elements"/>
     <testcase time="0.00600000000000023" classname="FilterStates" name="get_filter_count_returns_the_number_of_active_filter_states_DFFilterStates"/>
     <testcase time="0.00699999999999967" classname="FilterStates" name="get_filter_count_returns_the_number_of_active_filter_states_DFFilterStates"/>
-    <testcase time="0.00500000000000078" classname="FilterStates" name="get_filter_count_returns_the_number_of_active_filter_states_DFFilterStates"/>
+    <testcase time="0.00399999999999956" classname="FilterStates" name="get_filter_count_returns_the_number_of_active_filter_states_DFFilterStates"/>
     <testcase time="0.00600000000000023" classname="FilterStates" name="get_filter_count_returns_the_number_of_active_filter_states_MartixFilterStates"/>
     <testcase time="0.00699999999999967" classname="FilterStates" name="get_filter_count_returns_the_number_of_active_filter_states_MartixFilterStates"/>
-    <testcase time="0.00499999999999901" classname="FilterStates" name="get_filter_count_returns_the_number_of_active_filter_states_MartixFilterStates"/>
-    <testcase time="0.00700000000000145" classname="FilterStates" name="get_filter_count_returns_the_number_of_active_filter_states_SEFilterStates"/>
+    <testcase time="0.00399999999999956" classname="FilterStates" name="get_filter_count_returns_the_number_of_active_filter_states_MartixFilterStates"/>
+    <testcase time="0.00600000000000023" classname="FilterStates" name="get_filter_count_returns_the_number_of_active_filter_states_SEFilterStates"/>
     <testcase time="0.00699999999999967" classname="FilterStates" name="get_filter_count_returns_the_number_of_active_filter_states_SEFilterStates"/>
-    <testcase time="0.00499999999999901" classname="FilterStates" name="get_filter_count_returns_the_number_of_active_filter_states_SEFilterStates"/>
+    <testcase time="0.00500000000000078" classname="FilterStates" name="get_filter_count_returns_the_number_of_active_filter_states_SEFilterStates"/>
     <testcase time="0.00600000000000023" classname="FilterStates" name="get_filter_count_returns_the_number_of_active_filter_states_MAEFilterStates"/>
-    <testcase time="0.00600000000000023" classname="FilterStates" name="get_filter_count_returns_the_number_of_active_filter_states_MAEFilterStates"/>
-    <testcase time="0.00500000000000078" classname="FilterStates" name="get_filter_count_returns_the_number_of_active_filter_states_MAEFilterStates"/>
+    <testcase time="0.00699999999999967" classname="FilterStates" name="get_filter_count_returns_the_number_of_active_filter_states_MAEFilterStates"/>
+    <testcase time="0.00399999999999956" classname="FilterStates" name="get_filter_count_returns_the_number_of_active_filter_states_MAEFilterStates"/>
     <testcase time="0.00999999999999979" classname="FilterStates" name="get_filter_count_properly_tallies_multiple_state_lists_SEFilterStates"/>
-    <testcase time="0.00499999999999901" classname="FilterStates" name="get_filter_count_properly_tallies_multiple_state_lists_SEFilterStates"/>
+    <testcase time="0.00500000000000078" classname="FilterStates" name="get_filter_count_properly_tallies_multiple_state_lists_SEFilterStates"/>
   </testsuite>
-  <testsuite name="FilteredData" timestamp="2023-06-05T13:59:19Z" hostname="7326b90c2626" tests="66" skipped="0" failures="0" errors="0" time="2.592">
-    <testcase time="0.016" classname="FilteredData" name="The_constructor_does_not_throw"/>
-    <testcase time="0.00500000000000078" classname="FilteredData" name="set_dataset_accepts_a_data.frame_object"/>
+  <testsuite name="FilteredData" timestamp="2023-06-05T15:12:48Z" hostname="6876aea007b6" tests="66" skipped="0" failures="0" errors="0" time="2.573">
+    <testcase time="0.0150000000000006" classname="FilteredData" name="The_constructor_does_not_throw"/>
+    <testcase time="0.00699999999999967" classname="FilteredData" name="set_dataset_accepts_a_data.frame_object"/>
     <testcase time="0.00600000000000023" classname="FilteredData" name="set_dataset_returns_self"/>
     <testcase time="0.00699999999999967" classname="FilteredData" name="get_keys_returns_an_empty_character_when_dataset_has_no_keys"/>
-    <testcase time="0.00600000000000023" classname="FilteredData" name="get_keys_returns_the_same_character_array_if_a_dataset_has_keys"/>
-    <testcase time="0.00999999999999979" classname="FilteredData" name="get_join_keys_returns_NULL_if_no_join_keys"/>
+    <testcase time="0.00699999999999967" classname="FilteredData" name="get_keys_returns_the_same_character_array_if_a_dataset_has_keys"/>
+    <testcase time="0.00900000000000034" classname="FilteredData" name="get_join_keys_returns_NULL_if_no_join_keys"/>
     <testcase time="0.0299999999999994" classname="FilteredData" name="get_join_keys_returns_join_keys_object_if_it_exists"/>
-    <testcase time="0.00600000000000023" classname="FilteredData" name="get_varnames_returns_dataname_s_column_names"/>
-    <testcase time="0.00600000000000023" classname="FilteredData" name="get_varlabels_returns_an_array_of_NAs_when_dataset_has_no_variable_labels"/>
-    <testcase time="0.00699999999999967" classname="FilteredData" name="get_varlabels_returns_array_s_labels_when_dataset_has_variable_labels"/>
+    <testcase time="0.00699999999999967" classname="FilteredData" name="get_varnames_returns_dataname_s_column_names"/>
+    <testcase time="0.00700000000000145" classname="FilteredData" name="get_varlabels_returns_an_array_of_NAs_when_dataset_has_no_variable_labels"/>
+    <testcase time="0.00799999999999912" classname="FilteredData" name="get_varlabels_returns_array_s_labels_when_dataset_has_variable_labels"/>
     <testcase time="0.00699999999999967" classname="FilteredData" name="get_datalabel_returns_character_0_for_a_dataset_with_no_labels"/>
-    <testcase time="0.00600000000000023" classname="FilteredData" name="get_datalabel_returns_the_label_of_a_passed_dataset"/>
+    <testcase time="0.00699999999999967" classname="FilteredData" name="get_datalabel_returns_the_label_of_a_passed_dataset"/>
     <testcase time="0.0140000000000011" classname="FilteredData" name="get_metadata_throws_error_if_dataset_does_not_exist"/>
-    <testcase time="0.00999999999999979" classname="FilteredData" name="get_metadata_returns_metadata_if_dataset_exists"/>
+    <testcase time="0.0109999999999992" classname="FilteredData" name="get_metadata_returns_metadata_if_dataset_exists"/>
     <testcase time="0.00600000000000023" classname="FilteredData" name="get_metadata_returns_metadata_if_dataset_exists"/>
-    <testcase time="0.00799999999999912" classname="FilteredData" name="get_code_returns_the_code_passed_to_set_code"/>
+    <testcase time="0.00900000000000034" classname="FilteredData" name="get_code_returns_the_code_passed_to_set_code"/>
     <testcase time="0.00300000000000011" classname="FilteredData" name="get_code_returns_a_string_when_FilteredData_has_no_code"/>
-    <testcase time="0.00999999999999979" classname="FilteredData" name="get_data_does_not_throw_when_passed_a_dataset_name"/>
+    <testcase time="0.0109999999999992" classname="FilteredData" name="get_data_does_not_throw_when_passed_a_dataset_name"/>
     <testcase time="0.00600000000000023" classname="FilteredData" name="get_filtered_dataset_returns_a_list_of_FilteredDataset"/>
-    <testcase time="0.00900000000000034" classname="FilteredData" name="get_filtered_dataset_returns_a_list_with_elements_named_after_set_datasets"/>
+    <testcase time="0.011000000000001" classname="FilteredData" name="get_filtered_dataset_returns_a_list_with_elements_named_after_set_datasets"/>
     <testcase time="0.00999999999999979" classname="FilteredData" name="get_call_returns_a_list_of_language_objects_or_NULL"/>
     <testcase time="0.0139999999999993" classname="FilteredData" name="get_call_returns_a_list_of_language_objects_or_NULL"/>
-    <testcase time="0.0330000000000013" classname="FilteredData" name="FilteredData_set_filter_state_sets_filters_in_FilteredDataset_specified_by_the_named_list"/>
+    <testcase time="0.0340000000000007" classname="FilteredData" name="FilteredData_set_filter_state_sets_filters_in_FilteredDataset_specified_by_the_named_list"/>
     <testcase time="0.00499999999999901" classname="FilteredData" name="FilteredData_set_filter_state_sets_filters_in_FilteredDataset_specified_by_the_named_list"/>
     <testcase time="0.016" classname="FilteredData" name="FilteredData_set_filter_state_throws_error_with_unnamed_datasets_list"/>
     <testcase time="0.016" classname="FilteredData" name="FilteredData_set_filter_state_throws_error_with_unnamed_variables_list"/>
-    <testcase time="0.185" classname="FilteredData" name="FilteredData_get_filter_state_returns_list_identical_to_input_with_attributes"/>
+    <testcase time="0.184000000000001" classname="FilteredData" name="FilteredData_get_filter_state_returns_list_identical_to_input_with_attributes"/>
     <testcase time="0.125999999999999" classname="FilteredData" name="FilteredData_get_filter_state_returns_list_whose_attribute_is_a_character_form_of_the_list"/>
-    <testcase time="0.0120000000000005" classname="FilteredData" name="FilteredData_get_filter_state_returns_list_whose_attribute_is_a_character_form_of_the_list"/>
-    <testcase time="0.0389999999999997" classname="FilteredData" name="FilteredData_remove_filter_state_removes_states_defined_in_list"/>
-    <testcase time="0.0470000000000006" classname="FilteredData" name="FilteredData_remove_all_filter_states_removes_all_filters_of_all_datasets_in_FilteredData"/>
+    <testcase time="0.0129999999999999" classname="FilteredData" name="FilteredData_get_filter_state_returns_list_whose_attribute_is_a_character_form_of_the_list"/>
+    <testcase time="0.0400000000000009" classname="FilteredData" name="FilteredData_remove_filter_state_removes_states_defined_in_list"/>
+    <testcase time="0.0479999999999983" classname="FilteredData" name="FilteredData_remove_all_filter_states_removes_all_filters_of_all_datasets_in_FilteredData"/>
     <testcase time="0.00600000000000023" classname="FilteredData" name="FilteredData_remove_all_filter_states_removes_all_filters_of_all_datasets_in_FilteredData"/>
-    <testcase time="0.0309999999999988" classname="FilteredData" name="FilteredData_remove_all_filter_states_remove_the_filters_of_the_desired_dataset_only"/>
-    <testcase time="0.00500000000000078" classname="FilteredData" name="FilteredData_remove_all_filter_states_remove_the_filters_of_the_desired_dataset_only"/>
-    <testcase time="0.199999999999999" classname="FilteredData" name="get_filter_overview_accepts_all_datasets_argument_input"/>
-    <testcase time="0.0810000000000013" classname="FilteredData" name="get_filter_overview_accepts_single_dataset_argument_input"/>
-    <testcase time="0.016" classname="FilteredData" name="get_filter_overview_accepts_single_dataset_argument_input"/>
-    <testcase time="0.077" classname="FilteredData" name="get_filter_overview_accepts_single_dataset_argument_input"/>
-    <testcase time="0.0849999999999991" classname="FilteredData" name="get_filter_overview_throws_error_with_empty_argument_input"/>
-    <testcase time="0.0820000000000007" classname="FilteredData" name="get_filter_overview_throws_error_with_wrong_argument_input"/>
-    <testcase time="0.00900000000000034" classname="FilteredData" name="get_filter_overview_throws_error_with_wrong_argument_input"/>
+    <testcase time="0.0310000000000006" classname="FilteredData" name="FilteredData_remove_all_filter_states_remove_the_filters_of_the_desired_dataset_only"/>
+    <testcase time="0.00399999999999956" classname="FilteredData" name="FilteredData_remove_all_filter_states_remove_the_filters_of_the_desired_dataset_only"/>
+    <testcase time="0.187000000000001" classname="FilteredData" name="get_filter_overview_accepts_all_datasets_argument_input"/>
+    <testcase time="0.0779999999999994" classname="FilteredData" name="get_filter_overview_accepts_single_dataset_argument_input"/>
+    <testcase time="0.0150000000000006" classname="FilteredData" name="get_filter_overview_accepts_single_dataset_argument_input"/>
+    <testcase time="0.0739999999999998" classname="FilteredData" name="get_filter_overview_accepts_single_dataset_argument_input"/>
+    <testcase time="0.0809999999999995" classname="FilteredData" name="get_filter_overview_throws_error_with_empty_argument_input"/>
+    <testcase time="0.0809999999999995" classname="FilteredData" name="get_filter_overview_throws_error_with_wrong_argument_input"/>
+    <testcase time="0.0080000000000009" classname="FilteredData" name="get_filter_overview_throws_error_with_wrong_argument_input"/>
     <testcase time="0.00799999999999912" classname="FilteredData" name="get_filter_overview_throws_error_with_wrong_argument_input"/>
-    <testcase time="0.162000000000001" classname="FilteredData" name="get_filter_overview_returns_overview_matrix_for_non_filtered_datasets"/>
-    <testcase time="0.76" classname="FilteredData" name="get_filter_overview_returns_overview_matrix_for_filtered_datasets"/>
-    <testcase time="0.0119999999999987" classname="FilteredData" name="restore_state_from_bookmark_is_a_pure_virtual_method"/>
+    <testcase time="0.156000000000001" classname="FilteredData" name="get_filter_overview_returns_overview_matrix_for_non_filtered_datasets"/>
+    <testcase time="0.746" classname="FilteredData" name="get_filter_overview_returns_overview_matrix_for_filtered_datasets"/>
+    <testcase time="0.0109999999999992" classname="FilteredData" name="restore_state_from_bookmark_is_a_pure_virtual_method"/>
     <testcase time="0.011000000000001" classname="FilteredData" name="get_filter_expr_returns_a_string_with_a_filtering_expression"/>
-    <testcase time="0.00900000000000034" classname="FilteredData" name="FilteredData_from_TealData_preserves_the_check_field_when_check_is_FALSE"/>
+    <testcase time="0.00999999999999979" classname="FilteredData" name="FilteredData_from_TealData_preserves_the_check_field_when_check_is_FALSE"/>
     <testcase time="0.00899999999999856" classname="FilteredData" name="FilteredData_preserves_the_check_field_when_check_is_TRUE"/>
     <testcase time="0.00900000000000034" classname="FilteredData" name="get_data_returns_the_object_passed_to_the_constructor"/>
-    <testcase time="0.011000000000001" classname="FilteredData" name="get_data_assert_the_filtered_argument_is_logical_1_"/>
-    <testcase time="0.0679999999999996" classname="FilteredData" name="filter_panel_disable"/>
-    <testcase time="0.0440000000000005" classname="FilteredData" name="filter_panel_enable"/>
+    <testcase time="0.0120000000000005" classname="FilteredData" name="get_data_assert_the_filtered_argument_is_logical_1_"/>
+    <testcase time="0.0670000000000002" classname="FilteredData" name="filter_panel_disable"/>
+    <testcase time="0.0449999999999999" classname="FilteredData" name="filter_panel_enable"/>
     <testcase time="0.00399999999999956" classname="FilteredData" name="filter_panel_enable"/>
-    <testcase time="0.0440000000000005" classname="FilteredData" name="filter_panel_disable_and_filter_panel_enable"/>
+    <testcase time="0.0460000000000012" classname="FilteredData" name="filter_panel_disable_and_filter_panel_enable"/>
     <testcase time="0.00499999999999901" classname="FilteredData" name="filter_panel_disable_and_filter_panel_enable"/>
-    <testcase time="0.00399999999999956" classname="FilteredData" name="filter_panel_disable_and_filter_panel_enable"/>
     <testcase time="0.00500000000000078" classname="FilteredData" name="filter_panel_disable_and_filter_panel_enable"/>
-    <testcase time="0.0139999999999993" classname="FilteredData" name="filter_panel_disable_and_filter_panel_enable"/>
     <testcase time="0.00600000000000023" classname="FilteredData" name="filter_panel_disable_and_filter_panel_enable"/>
-    <testcase time="0.00999999999999979" classname="FilteredData" name="turn_filed_by_default_equal_to_TRUE"/>
-    <testcase time="0.00500000000000078" classname="FilteredData" name="get_filter_panel_ui_id_empty_when_no_shiny_session"/>
-    <testcase time="0.0350000000000001" classname="FilteredData" name="get_filter_panel_ui_id_non_empty_when_in_shiny_session"/>
-    <testcase time="0.0190000000000001" classname="FilteredData" name="FilteredData_get_active_filters_properly_tallies_active_filter_states"/>
+    <testcase time="0.016" classname="FilteredData" name="filter_panel_disable_and_filter_panel_enable"/>
+    <testcase time="0.00599999999999845" classname="FilteredData" name="filter_panel_disable_and_filter_panel_enable"/>
+    <testcase time="0.0100000000000016" classname="FilteredData" name="turn_filed_by_default_equal_to_TRUE"/>
+    <testcase time="0.00699999999999967" classname="FilteredData" name="get_filter_panel_ui_id_empty_when_no_shiny_session"/>
+    <testcase time="0.036999999999999" classname="FilteredData" name="get_filter_panel_ui_id_non_empty_when_in_shiny_session"/>
     <testcase time="0.0220000000000002" classname="FilteredData" name="FilteredData_get_active_filters_properly_tallies_active_filter_states"/>
-    <testcase time="0.0149999999999988" classname="FilteredData" name="FilteredData_get_active_filters_properly_tallies_active_filter_states_for_MAE_objects"/>
+    <testcase time="0.0220000000000002" classname="FilteredData" name="FilteredData_get_active_filters_properly_tallies_active_filter_states"/>
+    <testcase time="0.016" classname="FilteredData" name="FilteredData_get_active_filters_properly_tallies_active_filter_states_for_MAE_objects"/>
     <testcase time="0.0280000000000005" classname="FilteredData" name="FilteredData_get_active_filters_properly_tallies_active_filter_states_for_MAE_objects"/>
   </testsuite>
-  <testsuite name="FilteredDataset" timestamp="2023-06-05T13:59:21Z" hostname="7326b90c2626" tests="23" skipped="0" failures="0" errors="0" time="0.117">
+  <testsuite name="FilteredDataset" timestamp="2023-06-05T15:12:51Z" hostname="6876aea007b6" tests="23" skipped="0" failures="0" errors="0" time="0.118">
     <testcase time="0.00900000000000034" classname="FilteredDataset" name="The_constructor_accepts_a_data.frame_object_and_dataname"/>
-    <testcase time="0.00199999999999889" classname="FilteredDataset" name="state_lists_empty_does_not_throw_after_initializing_FilteredDataset"/>
-    <testcase time="0.00300000000000011" classname="FilteredDataset" name="get_filter_states_returns_an_empty_list_after_initialization"/>
-    <testcase time="0.00300000000000011" classname="FilteredDataset" name="get_dataname_returns_the_dataname_passed_to_the_constructor"/>
-    <testcase time="0.00400000000000134" classname="FilteredDataset" name="get_dataset_returns_the_dataset_passed_to_the_constructor"/>
+    <testcase time="0.00300000000000011" classname="FilteredDataset" name="state_lists_empty_does_not_throw_after_initializing_FilteredDataset"/>
+    <testcase time="0.00299999999999834" classname="FilteredDataset" name="get_filter_states_returns_an_empty_list_after_initialization"/>
+    <testcase time="0.00200000000000067" classname="FilteredDataset" name="get_dataname_returns_the_dataname_passed_to_the_constructor"/>
+    <testcase time="0.00399999999999956" classname="FilteredDataset" name="get_dataset_returns_the_dataset_passed_to_the_constructor"/>
     <testcase time="0.00300000000000011" classname="FilteredDataset" name="get_dataset_label_retruns_the_dataset_label_passed_to_the_constructor"/>
-    <testcase time="0.00299999999999834" classname="FilteredDataset" name="get_keys_returns_the_keys_passed_to_the_constructor"/>
+    <testcase time="0.00300000000000011" classname="FilteredDataset" name="get_keys_returns_the_keys_passed_to_the_constructor"/>
     <testcase time="0.00200000000000067" classname="FilteredDataset" name="set_filterable_varnames_restricts_which_variables_can_be_filtered"/>
-    <testcase time="0.00200000000000067" classname="FilteredDataset" name="set_filterable_varnames_restricts_which_variables_can_be_filtered"/>
+    <testcase time="0.00199999999999889" classname="FilteredDataset" name="set_filterable_varnames_restricts_which_variables_can_be_filtered"/>
     <testcase time="0.00300000000000011" classname="FilteredDataset" name="setting_filterable_varnames_to_NULL_or_character_0_does_not_affect_the_filterable_variables"/>
-    <testcase time="0.000999999999999446" classname="FilteredDataset" name="setting_filterable_varnames_to_NULL_or_character_0_does_not_affect_the_filterable_variables"/>
+    <testcase time="0.00100000000000122" classname="FilteredDataset" name="setting_filterable_varnames_to_NULL_or_character_0_does_not_affect_the_filterable_variables"/>
     <testcase time="0.00300000000000011" classname="FilteredDataset" name="setting_filterable_varnames_which_include_columns_that_do_not_exist_ignores_these_columns"/>
     <testcase time="0.00799999999999912" classname="FilteredDataset" name="setting_filterable_varnames_with_varnames_not_NULL_or_non_missing_character_throws_error"/>
     <testcase time="0.00600000000000023" classname="FilteredDataset" name="setting_filterable_varnames_with_varnames_not_NULL_or_non_missing_character_throws_error"/>
     <testcase time="0.00600000000000023" classname="FilteredDataset" name="setting_filterable_varnames_with_varnames_not_NULL_or_non_missing_character_throws_error"/>
-    <testcase time="0.00399999999999956" classname="FilteredDataset" name="get_varlabels_NULL_returns_a_named_array_of_NAs_if_data.frame_has_no_varlabels"/>
+    <testcase time="0.00300000000000011" classname="FilteredDataset" name="get_varlabels_NULL_returns_a_named_array_of_NAs_if_data.frame_has_no_varlabels"/>
     <testcase time="0.00300000000000011" classname="FilteredDataset" name="get_varlabels_returns_labels_for_the_part_of_the_variables_only"/>
-    <testcase time="0.00400000000000134" classname="FilteredDataset" name="get_varnames_returns_the_names_of_the_variables_in_the_data_passed_to_the_constructor"/>
+    <testcase time="0.00399999999999956" classname="FilteredDataset" name="get_varnames_returns_the_names_of_the_variables_in_the_data_passed_to_the_constructor"/>
     <testcase time="0.00699999999999967" classname="FilteredDataset" name="ui_add_filter_state_is_pure_virtual"/>
     <testcase time="0.00300000000000011" classname="FilteredDataset" name="get_metadata_returns_the_metadata_of_the_data_passed_to_the_constructor"/>
-    <testcase time="0.00499999999999901" classname="FilteredDataset" name="get_metadata_returns_the_metadata_of_the_data_passed_to_the_constructor"/>
-    <testcase time="0.0180000000000007" classname="FilteredDataset" name="_get_formatted_filter_state_returns_a_string_representation_of_filters"/>
-    <testcase time="0.0150000000000006" classname="FilteredDataset" name="_get_call_returns_the_filter_call_of_the_dataset"/>
+    <testcase time="0.00500000000000078" classname="FilteredDataset" name="get_metadata_returns_the_metadata_of_the_data_passed_to_the_constructor"/>
+    <testcase time="0.0179999999999989" classname="FilteredDataset" name="_get_formatted_filter_state_returns_a_string_representation_of_filters"/>
+    <testcase time="0.0170000000000012" classname="FilteredDataset" name="_get_call_returns_the_filter_call_of_the_dataset"/>
   </testsuite>
-  <testsuite name="LogicalFilterState" timestamp="2023-06-05T13:59:21Z" hostname="7326b90c2626" tests="35" skipped="0" failures="0" errors="0" time="0.734">
-    <testcase time="0.00900000000000034" classname="LogicalFilterState" name="The_constructor_accepts_logical_values"/>
+  <testsuite name="LogicalFilterState" timestamp="2023-06-05T15:12:51Z" hostname="6876aea007b6" tests="35" skipped="0" failures="0" errors="0" time="0.723">
+    <testcase time="0.00999999999999979" classname="LogicalFilterState" name="The_constructor_accepts_logical_values"/>
     <testcase time="0.00499999999999901" classname="LogicalFilterState" name="The_constructor_accepts_NA_values"/>
-    <testcase time="0.00500000000000078" classname="LogicalFilterState" name="get_call_returns_FALSE_values_from_data_passed_to_selector"/>
-    <testcase time="0.00399999999999956" classname="LogicalFilterState" name="set_selected_accepts_a_logical_of_length_1"/>
-    <testcase time="0.00200000000000067" classname="LogicalFilterState" name="set_selected_accepts_a_logical_of_length_1"/>
-    <testcase time="0.00600000000000023" classname="LogicalFilterState" name="set_selected_accepts_a_logical_of_length_1"/>
-    <testcase time="0.00499999999999901" classname="LogicalFilterState" name="set_selected_accepts_a_non_logical_coercible_to_logical_of_length_1"/>
-    <testcase time="0.00200000000000067" classname="LogicalFilterState" name="set_selected_accepts_a_non_logical_coercible_to_logical_of_length_1"/>
+    <testcase time="0.00600000000000023" classname="LogicalFilterState" name="get_call_returns_FALSE_values_from_data_passed_to_selector"/>
+    <testcase time="0.00500000000000078" classname="LogicalFilterState" name="set_selected_accepts_a_logical_of_length_1"/>
+    <testcase time="0.00199999999999889" classname="LogicalFilterState" name="set_selected_accepts_a_logical_of_length_1"/>
+    <testcase time="0.00500000000000078" classname="LogicalFilterState" name="set_selected_accepts_a_logical_of_length_1"/>
     <testcase time="0.00600000000000023" classname="LogicalFilterState" name="set_selected_accepts_a_non_logical_coercible_to_logical_of_length_1"/>
-    <testcase time="0.00499999999999901" classname="LogicalFilterState" name="get_call_returns_appropriate_call_depending_on_selection_state"/>
+    <testcase time="0.00199999999999889" classname="LogicalFilterState" name="set_selected_accepts_a_non_logical_coercible_to_logical_of_length_1"/>
+    <testcase time="0.00600000000000023" classname="LogicalFilterState" name="set_selected_accepts_a_non_logical_coercible_to_logical_of_length_1"/>
+    <testcase time="0.00500000000000078" classname="LogicalFilterState" name="get_call_returns_appropriate_call_depending_on_selection_state"/>
     <testcase time="0.00300000000000011" classname="LogicalFilterState" name="get_call_returns_appropriate_call_depending_on_selection_state"/>
-    <testcase time="0.00200000000000067" classname="LogicalFilterState" name="get_call_returns_appropriate_call_depending_on_selection_state"/>
+    <testcase time="0.00300000000000011" classname="LogicalFilterState" name="get_call_returns_appropriate_call_depending_on_selection_state"/>
     <testcase time="0.00499999999999901" classname="LogicalFilterState" name="set_state_needs_a_named_list_with_selected_and_keep_na_elements"/>
-    <testcase time="0.00500000000000078" classname="LogicalFilterState" name="set_state_needs_a_named_list_with_selected_and_keep_na_elements"/>
+    <testcase time="0.00600000000000023" classname="LogicalFilterState" name="set_state_needs_a_named_list_with_selected_and_keep_na_elements"/>
     <testcase time="0.00600000000000023" classname="LogicalFilterState" name="set_state_sets_values_of_selected_and_keep_na_as_provided_in_the_list"/>
-    <testcase time="0.00399999999999956" classname="LogicalFilterState" name="set_state_sets_values_of_selected_and_keep_na_as_provided_in_the_list"/>
+    <testcase time="0.00400000000000134" classname="LogicalFilterState" name="set_state_sets_values_of_selected_and_keep_na_as_provided_in_the_list"/>
+    <testcase time="0.00699999999999967" classname="LogicalFilterState" name="set_state_overwrites_fields_included_in_the_input_only"/>
+    <testcase time="0.00499999999999901" classname="LogicalFilterState" name="set_state_overwrites_fields_included_in_the_input_only"/>
     <testcase time="0.00500000000000078" classname="LogicalFilterState" name="set_state_overwrites_fields_included_in_the_input_only"/>
-    <testcase time="0.00399999999999956" classname="LogicalFilterState" name="set_state_overwrites_fields_included_in_the_input_only"/>
-    <testcase time="0.00500000000000078" classname="LogicalFilterState" name="set_state_overwrites_fields_included_in_the_input_only"/>
-    <testcase time="0.00900000000000034" classname="LogicalFilterState" name="LogicalFilterState_is_any_filtered_works_properly_when_NA_is_present_in_data"/>
+    <testcase time="0.0109999999999992" classname="LogicalFilterState" name="LogicalFilterState_is_any_filtered_works_properly_when_NA_is_present_in_data"/>
     <testcase time="0.00600000000000023" classname="LogicalFilterState" name="LogicalFilterState_is_any_filtered_works_properly_when_NA_is_present_in_data"/>
-    <testcase time="0.00899999999999856" classname="LogicalFilterState" name="LogicalFilterState_is_any_filtered_works_properly_when_both_TRUE_and_FALSE_are_present"/>
-    <testcase time="0.542000000000002" classname="LogicalFilterState" name="LogicalFilterState_is_any_filtered_works_properly_when_both_TRUE_and_FALSE_are_present"/>
+    <testcase time="0.00900000000000034" classname="LogicalFilterState" name="LogicalFilterState_is_any_filtered_works_properly_when_both_TRUE_and_FALSE_are_present"/>
+    <testcase time="0.52" classname="LogicalFilterState" name="LogicalFilterState_is_any_filtered_works_properly_when_both_TRUE_and_FALSE_are_present"/>
     <testcase time="0.00699999999999967" classname="LogicalFilterState" name="LogicalFilterState_is_any_filtered_works_properly_when_both_TRUE_and_FALSE_are_present"/>
     <testcase time="0.00600000000000023" classname="LogicalFilterState" name="LogicalFilterState_is_any_filtered_works_properly_when_both_TRUE_and_FALSE_are_present"/>
-    <testcase time="0.00599999999999845" classname="LogicalFilterState" name="LogicalFilterState_is_any_filtered_works_properly_when_both_TRUE_and_FALSE_are_present"/>
+    <testcase time="0.00600000000000023" classname="LogicalFilterState" name="LogicalFilterState_is_any_filtered_works_properly_when_both_TRUE_and_FALSE_are_present"/>
     <testcase time="0.00600000000000023" classname="LogicalFilterState" name="LogicalFilterState_is_any_filtered_works_properly_when_both_TRUE_and_FALSE_are_present"/>
     <testcase time="0.00999999999999979" classname="LogicalFilterState" name="LogicalFilterState_is_any_filtered_works_properly_when_only_TRUE_or_FALSE_is_present"/>
-    <testcase time="0.00700000000000145" classname="LogicalFilterState" name="LogicalFilterState_is_any_filtered_works_properly_when_only_TRUE_or_FALSE_is_present"/>
     <testcase time="0.00600000000000023" classname="LogicalFilterState" name="LogicalFilterState_is_any_filtered_works_properly_when_only_TRUE_or_FALSE_is_present"/>
-    <testcase time="0.00599999999999845" classname="LogicalFilterState" name="LogicalFilterState_is_any_filtered_works_properly_when_only_TRUE_or_FALSE_is_present"/>
+    <testcase time="0.00600000000000023" classname="LogicalFilterState" name="LogicalFilterState_is_any_filtered_works_properly_when_only_TRUE_or_FALSE_is_present"/>
+    <testcase time="0.00600000000000023" classname="LogicalFilterState" name="LogicalFilterState_is_any_filtered_works_properly_when_only_TRUE_or_FALSE_is_present"/>
     <testcase time="0.00900000000000034" classname="LogicalFilterState" name="LogicalFilterState_is_any_filtered_works_properly_when_only_TRUE_or_FALSE_is_present"/>
-    <testcase time="0.00600000000000023" classname="LogicalFilterState" name="LogicalFilterState_is_any_filtered_works_properly_when_only_TRUE_or_FALSE_is_present"/>
-    <testcase time="0.00600000000000023" classname="LogicalFilterState" name="LogicalFilterState_is_any_filtered_works_properly_when_only_TRUE_or_FALSE_is_present"/>
-    <testcase time="0.00500000000000078" classname="LogicalFilterState" name="LogicalFilterState_is_any_filtered_works_properly_when_only_TRUE_or_FALSE_is_present"/>
+    <testcase time="0.00599999999999845" classname="LogicalFilterState" name="LogicalFilterState_is_any_filtered_works_properly_when_only_TRUE_or_FALSE_is_present"/>
+    <testcase time="0.00700000000000145" classname="LogicalFilterState" name="LogicalFilterState_is_any_filtered_works_properly_when_only_TRUE_or_FALSE_is_present"/>
+    <testcase time="0.00599999999999845" classname="LogicalFilterState" name="LogicalFilterState_is_any_filtered_works_properly_when_only_TRUE_or_FALSE_is_present"/>
   </testsuite>
-  <testsuite name="MAEFilterStates" timestamp="2023-06-05T13:59:22Z" hostname="7326b90c2626" tests="17" skipped="0" failures="0" errors="0" time="2.292">
-    <testcase time="0.00899999999999856" classname="MAEFilterStates" name="The_constructor_does_not_throw"/>
-    <testcase time="0.00300000000000011" classname="MAEFilterStates" name="MAEFilterStates_accept_vector_as_an_input_for_varlabels"/>
-    <testcase time="0.00300000000000011" classname="MAEFilterStates" name="get_fun_returns_the_MAE_specific_subset_function"/>
-    <testcase time="0.00599999999999845" classname="MAEFilterStates" name="The_constructor_initializes_a_state_list"/>
-    <testcase time="0.825000000000001" classname="MAEFilterStates" name="get_call_returns_a_call_filtering_an_MAE_object_using_ChoicesFilterState"/>
-    <testcase time="0.843999999999999" classname="MAEFilterStates" name="get_call_returns_a_call_filtering_an_MAE_object_using_RangeFilterState"/>
-    <testcase time="0.0750000000000011" classname="MAEFilterStates" name="MAEFilterStates_set_filter_state_sets_filters_in_FilterState_s_specified_by_the_named_list"/>
-    <testcase time="0.0889999999999986" classname="MAEFilterStates" name="MAEFilterStates_set_filter_state_updates_filter_state_which_was_set_already"/>
-    <testcase time="0.0630000000000006" classname="MAEFilterStates" name="MAEFilterStates_set_filter_state_throws_error_when_not_using_a_named_list"/>
-    <testcase time="0.0739999999999998" classname="MAEFilterStates" name="MAEFilterStates_get_filter_state_returns_list_identical_to_input"/>
-    <testcase time="0.0749999999999993" classname="MAEFilterStates" name="MAEFilterStates_remove_filter_state_removes_filters_in_FilterState_s_"/>
-    <testcase time="0.0780000000000012" classname="MAEFilterStates" name="MAEFilterStates_remove_filter_state_throws_warning_when_name_is_not_in_FilterStates"/>
-    <testcase time="0.0599999999999987" classname="MAEFilterStates" name="MAEFilterStates_ui_add_filter_state_returns_a_message_inside_a_div_when_data_has_no_rows_or_no_columns"/>
-    <testcase time="0.00400000000000134" classname="MAEFilterStates" name="MAEFilterStates_ui_add_filter_state_returns_a_message_inside_a_div_when_data_has_no_rows_or_no_columns"/>
-    <testcase time="0.00399999999999956" classname="MAEFilterStates" name="_format_is_a_method_of_MAEFilterStates"/>
+  <testsuite name="MAEFilterStates" timestamp="2023-06-05T15:12:52Z" hostname="6876aea007b6" tests="17" skipped="0" failures="0" errors="0" time="2.273">
+    <testcase time="0.00900000000000034" classname="MAEFilterStates" name="The_constructor_does_not_throw"/>
+    <testcase time="0.00400000000000134" classname="MAEFilterStates" name="MAEFilterStates_accept_vector_as_an_input_for_varlabels"/>
+    <testcase time="0.00399999999999956" classname="MAEFilterStates" name="get_fun_returns_the_MAE_specific_subset_function"/>
+    <testcase time="0.00699999999999967" classname="MAEFilterStates" name="The_constructor_initializes_a_state_list"/>
+    <testcase time="0.802" classname="MAEFilterStates" name="get_call_returns_a_call_filtering_an_MAE_object_using_ChoicesFilterState"/>
+    <testcase time="0.828000000000001" classname="MAEFilterStates" name="get_call_returns_a_call_filtering_an_MAE_object_using_RangeFilterState"/>
+    <testcase time="0.077" classname="MAEFilterStates" name="MAEFilterStates_set_filter_state_sets_filters_in_FilterState_s_specified_by_the_named_list"/>
+    <testcase time="0.0879999999999992" classname="MAEFilterStates" name="MAEFilterStates_set_filter_state_updates_filter_state_which_was_set_already"/>
+    <testcase time="0.0649999999999995" classname="MAEFilterStates" name="MAEFilterStates_set_filter_state_throws_error_when_not_using_a_named_list"/>
+    <testcase time="0.0780000000000012" classname="MAEFilterStates" name="MAEFilterStates_get_filter_state_returns_list_identical_to_input"/>
+    <testcase time="0.0800000000000001" classname="MAEFilterStates" name="MAEFilterStates_remove_filter_state_removes_filters_in_FilterState_s_"/>
+    <testcase time="0.0789999999999988" classname="MAEFilterStates" name="MAEFilterStates_remove_filter_state_throws_warning_when_name_is_not_in_FilterStates"/>
+    <testcase time="0.0600000000000005" classname="MAEFilterStates" name="MAEFilterStates_ui_add_filter_state_returns_a_message_inside_a_div_when_data_has_no_rows_or_no_columns"/>
+    <testcase time="0.00399999999999956" classname="MAEFilterStates" name="MAEFilterStates_ui_add_filter_state_returns_a_message_inside_a_div_when_data_has_no_rows_or_no_columns"/>
+    <testcase time="0.00500000000000078" classname="MAEFilterStates" name="_format_is_a_method_of_MAEFilterStates"/>
     <testcase time="0.00799999999999912" classname="MAEFilterStates" name="_format_asserts_the_indent_argument_is_a_number"/>
-    <testcase time="0.072000000000001" classname="MAEFilterStates" name="_format_concatenates_its_FilterState_elements_using_n_and_indents_the_FilterState_objects"/>
+    <testcase time="0.0750000000000011" classname="MAEFilterStates" name="_format_concatenates_its_FilterState_elements_using_n_and_indents_the_FilterState_objects"/>
   </testsuite>
-  <testsuite name="MAEFilteredDataset" timestamp="2023-06-05T13:59:24Z" hostname="7326b90c2626" tests="20" skipped="0" failures="0" errors="0" time="1.916">
-    <testcase time="0.0670000000000002" classname="MAEFilteredDataset" name="MAEFilteredDataset_accepts_a_MultiAssayExperiment_object"/>
-    <testcase time="0.00699999999999967" classname="MAEFilteredDataset" name="MAEFilteredDataset_throws_error_with_a_data.frame_passed_to_constructor"/>
-    <testcase time="0.0670000000000002" classname="MAEFilteredDataset" name="MAEFilteredDataset_get_call_returns_NULL_without_applying_filter"/>
-    <testcase time="0.0700000000000003" classname="MAEFilteredDataset" name="MAEFilteredDataset_get_call_returns_a_call_with_applying_filter"/>
+  <testsuite name="MAEFilteredDataset" timestamp="2023-06-05T15:12:54Z" hostname="6876aea007b6" tests="20" skipped="0" failures="0" errors="0" time="1.948">
+    <testcase time="0.0719999999999992" classname="MAEFilteredDataset" name="MAEFilteredDataset_accepts_a_MultiAssayExperiment_object"/>
+    <testcase time="0.0080000000000009" classname="MAEFilteredDataset" name="MAEFilteredDataset_throws_error_with_a_data.frame_passed_to_constructor"/>
+    <testcase time="0.0699999999999985" classname="MAEFilteredDataset" name="MAEFilteredDataset_get_call_returns_NULL_without_applying_filter"/>
+    <testcase time="0.0740000000000016" classname="MAEFilteredDataset" name="MAEFilteredDataset_get_call_returns_a_call_with_applying_filter"/>
     <testcase time="0.00199999999999889" classname="MAEFilteredDataset" name="MAEFilteredDataset_get_call_returns_a_call_with_applying_filter"/>
-    <testcase time="0.107000000000001" classname="MAEFilteredDataset" name="get_filter_overview_info_returns_overview_matrix_for_MAEFilteredDataset_without_filtering"/>
-    <testcase time="0.451000000000001" classname="MAEFilteredDataset" name="get_filter_overview_info_returns_overview_matrix_for_MAEFilteredDataset_with_filtering"/>
-    <testcase time="0.102999999999998" classname="MAEFilteredDataset" name="MAEFilteredDataset_set_filter_state_sets_filters_in_FilterStates_specified_by_list_names"/>
+    <testcase time="0.102" classname="MAEFilteredDataset" name="get_filter_overview_info_returns_overview_matrix_for_MAEFilteredDataset_without_filtering"/>
+    <testcase time="0.449" classname="MAEFilteredDataset" name="get_filter_overview_info_returns_overview_matrix_for_MAEFilteredDataset_with_filtering"/>
+    <testcase time="0.105" classname="MAEFilteredDataset" name="MAEFilteredDataset_set_filter_state_sets_filters_in_FilterStates_specified_by_list_names"/>
     <testcase time="0.0730000000000004" classname="MAEFilteredDataset" name="MAEFilteredDataset_set_filter_state_throws_error_when_using_unnamed_list"/>
-    <testcase time="0.0689999999999991" classname="MAEFilteredDataset" name="MAEFilteredDataset_set_filter_state_throws_error_when_using_unnamed_variables_list"/>
-    <testcase time="0.0660000000000025" classname="MAEFilteredDataset" name="MAEFilteredDataset_set_filter_state_throws_error_if_state_argument_is_not_a_list_"/>
-    <testcase time="0.0899999999999999" classname="MAEFilteredDataset" name="MAEFilteredDataset_get_filter_state_returns_list_identical_to_input"/>
-    <testcase time="0.0919999999999987" classname="MAEFilteredDataset" name="MAEFilteredDataset_remove_filter_state_removes_desired_filter"/>
-    <testcase time="0.0960000000000001" classname="MAEFilteredDataset" name="MAEFilteredDataset_remove_filter_state_throws_error_if_list_in_unnamed"/>
-    <testcase time="0.0640000000000001" classname="MAEFilteredDataset" name="MAEFilteredDataset_get_filterable_varnames_returns_character_0_"/>
-    <testcase time="0.0650000000000013" classname="MAEFilteredDataset" name="get_supported_filter_varnames.MAEFilteredDataset_returns_character_0_"/>
-    <testcase time="0.0739999999999981" classname="MAEFilteredDataset" name="MAEFilteredDataset_get_varlabels_returns_column_variable_labels"/>
-    <testcase time="0.0950000000000024" classname="MAEFilteredDataset" name="MAEFilteredDataset_filters_removed_using_remove_filters"/>
-    <testcase time="0.242999999999999" classname="MAEFilteredDataset" name="MAEFilteredDataset_filters_removed_using_remove_filters"/>
-    <testcase time="0.0150000000000006" classname="MAEFilteredDataset" name="MAEFilteredDataset_filters_removed_using_remove_filters"/>
+    <testcase time="0.0739999999999981" classname="MAEFilteredDataset" name="MAEFilteredDataset_set_filter_state_throws_error_when_using_unnamed_variables_list"/>
+    <testcase time="0.0720000000000027" classname="MAEFilteredDataset" name="MAEFilteredDataset_set_filter_state_throws_error_if_state_argument_is_not_a_list_"/>
+    <testcase time="0.0939999999999976" classname="MAEFilteredDataset" name="MAEFilteredDataset_get_filter_state_returns_list_identical_to_input"/>
+    <testcase time="0.0960000000000001" classname="MAEFilteredDataset" name="MAEFilteredDataset_remove_filter_state_removes_desired_filter"/>
+    <testcase time="0.093" classname="MAEFilteredDataset" name="MAEFilteredDataset_remove_filter_state_throws_error_if_list_in_unnamed"/>
+    <testcase time="0.0680000000000014" classname="MAEFilteredDataset" name="MAEFilteredDataset_get_filterable_varnames_returns_character_0_"/>
+    <testcase time="0.0679999999999978" classname="MAEFilteredDataset" name="get_supported_filter_varnames.MAEFilteredDataset_returns_character_0_"/>
+    <testcase time="0.0770000000000017" classname="MAEFilteredDataset" name="MAEFilteredDataset_get_varlabels_returns_column_variable_labels"/>
+    <testcase time="0.0940000000000012" classname="MAEFilteredDataset" name="MAEFilteredDataset_filters_removed_using_remove_filters"/>
+    <testcase time="0.241" classname="MAEFilteredDataset" name="MAEFilteredDataset_filters_removed_using_remove_filters"/>
+    <testcase time="0.0159999999999982" classname="MAEFilteredDataset" name="MAEFilteredDataset_filters_removed_using_remove_filters"/>
   </testsuite>
-  <testsuite name="MatrixFilterStates" timestamp="2023-06-05T13:59:26Z" hostname="7326b90c2626" tests="11" skipped="0" failures="0" errors="0" time="0.075">
+  <testsuite name="MatrixFilterStates" timestamp="2023-06-05T15:12:56Z" hostname="6876aea007b6" tests="11" skipped="0" failures="0" errors="0" time="0.073">
     <testcase time="0.00799999999999912" classname="MatrixFilterStates" name="The_constructor_does_not_raise_errors"/>
-    <testcase time="0.00700000000000145" classname="MatrixFilterStates" name="The_constructor_initializes_one_state_list"/>
-    <testcase time="0.00999999999999801" classname="MatrixFilterStates" name="get_call_returns_a_call_filtering_a_matrix_with_numeric_values"/>
+    <testcase time="0.00600000000000023" classname="MatrixFilterStates" name="The_constructor_initializes_one_state_list"/>
+    <testcase time="0.0100000000000016" classname="MatrixFilterStates" name="get_call_returns_a_call_filtering_a_matrix_with_numeric_values"/>
     <testcase time="0.00900000000000034" classname="MatrixFilterStates" name="set_filter_state_adds_filters_to_state_list"/>
     <testcase time="0.00799999999999912" classname="MatrixFilterStates" name="set_filter_state_throws_error_when_list_is_unnamed"/>
-    <testcase time="0.0100000000000016" classname="MatrixFilterStates" name="remove_filter_state_removes_filters_from_state_list"/>
+    <testcase time="0.00900000000000034" classname="MatrixFilterStates" name="remove_filter_state_removes_filters_from_state_list"/>
     <testcase time="0.00300000000000011" classname="MatrixFilterStates" name="remove_filter_state_removes_filters_from_state_list"/>
-    <testcase time="0.0100000000000016" classname="MatrixFilterStates" name="remove_filter_state_throws_warning_when_state_id_is_not_in_state_list"/>
-    <testcase time="0.00399999999999778" classname="MatrixFilterStates" name="remove_filter_state_throws_warning_when_state_id_is_not_in_state_list"/>
-    <testcase time="0.00400000000000134" classname="MatrixFilterStates" name="MatrixFilterStates_ui_add_filter_state_returns_a_message_inside_a_div_when_data_has_no_rows_or_no_columns"/>
-    <testcase time="0.00199999999999889" classname="MatrixFilterStates" name="MatrixFilterStates_ui_add_filter_state_returns_a_message_inside_a_div_when_data_has_no_rows_or_no_columns"/>
+    <testcase time="0.00900000000000034" classname="MatrixFilterStates" name="remove_filter_state_throws_warning_when_state_id_is_not_in_state_list"/>
+    <testcase time="0.00499999999999901" classname="MatrixFilterStates" name="remove_filter_state_throws_warning_when_state_id_is_not_in_state_list"/>
+    <testcase time="0.00399999999999778" classname="MatrixFilterStates" name="MatrixFilterStates_ui_add_filter_state_returns_a_message_inside_a_div_when_data_has_no_rows_or_no_columns"/>
+    <testcase time="0.00200000000000244" classname="MatrixFilterStates" name="MatrixFilterStates_ui_add_filter_state_returns_a_message_inside_a_div_when_data_has_no_rows_or_no_columns"/>
   </testsuite>
-  <testsuite name="RangeFilterState" timestamp="2023-06-05T13:59:26Z" hostname="7326b90c2626" tests="44" skipped="0" failures="0" errors="0" time="0.311">
-    <testcase time="0.00799999999999912" classname="RangeFilterState" name="The_constructor_accepts_numerical_values"/>
-    <testcase time="0.00500000000000256" classname="RangeFilterState" name="The_constructor_accepts_infinite_values_but_not_infinite_only"/>
-    <testcase time="0.00600000000000023" classname="RangeFilterState" name="The_constructor_accepts_infinite_values_but_not_infinite_only"/>
+  <testsuite name="RangeFilterState" timestamp="2023-06-05T15:12:56Z" hostname="6876aea007b6" tests="44" skipped="0" failures="0" errors="0" time="0.329">
+    <testcase time="0.00900000000000034" classname="RangeFilterState" name="The_constructor_accepts_numerical_values"/>
     <testcase time="0.00499999999999901" classname="RangeFilterState" name="The_constructor_accepts_infinite_values_but_not_infinite_only"/>
+    <testcase time="0.00600000000000023" classname="RangeFilterState" name="The_constructor_accepts_infinite_values_but_not_infinite_only"/>
+    <testcase time="0.00600000000000023" classname="RangeFilterState" name="The_constructor_accepts_infinite_values_but_not_infinite_only"/>
     <testcase time="0.00499999999999901" classname="RangeFilterState" name="get_selected_returns_range_computed_on_a_vector_containing_c_1_Inf_Inf_NA_"/>
-    <testcase time="0.00799999999999912" classname="RangeFilterState" name="set_selected_raises_error_when_the_passed_values_are_not_coercible_to_numeric"/>
-    <testcase time="0.00500000000000256" classname="RangeFilterState" name="set_selected_accepts_an_array_with_two_numerical_elements"/>
+    <testcase time="0.0100000000000016" classname="RangeFilterState" name="set_selected_raises_error_when_the_passed_values_are_not_coercible_to_numeric"/>
+    <testcase time="0.00499999999999901" classname="RangeFilterState" name="set_selected_accepts_an_array_with_two_numerical_elements"/>
     <testcase time="0.00600000000000023" classname="RangeFilterState" name="get_call_returns_call_encompassing_all_values_passed_to_constructor"/>
     <testcase time="0.00499999999999901" classname="RangeFilterState" name="get_call_returns_call_encompassing_all_values_passed_to_constructor"/>
-    <testcase time="0.00600000000000023" classname="RangeFilterState" name="get_call_returns_valid_call_after_unsuccessfull_set_selected"/>
+    <testcase time="0.00799999999999912" classname="RangeFilterState" name="get_call_returns_valid_call_after_unsuccessfull_set_selected"/>
     <testcase time="0.00300000000000011" classname="RangeFilterState" name="get_call_returns_valid_call_after_unsuccessfull_set_selected"/>
-    <testcase time="0.00600000000000023" classname="RangeFilterState" name="get_call_returns_call_with_values_passed_in_set_selected"/>
+    <testcase time="0.00700000000000145" classname="RangeFilterState" name="get_call_returns_call_with_values_passed_in_set_selected"/>
     <testcase time="0.00799999999999912" classname="RangeFilterState" name="get_call_returns_call_that_evaluates_to_TRUE_for_values_within_range_passed_to_set_selected"/>
-    <testcase time="0.00900000000000034" classname="RangeFilterState" name="set_keep_inf_switches_get_call_returning_call_that_allows_infinite_values"/>
-    <testcase time="0.00399999999999778" classname="RangeFilterState" name="set_keep_inf_switches_get_call_returning_call_that_allows_infinite_values"/>
-    <testcase time="0.00700000000000145" classname="RangeFilterState" name="set_keep_na_switches_get_call_returning_call_that_allows_NAs"/>
-    <testcase time="0.00499999999999901" classname="RangeFilterState" name="set_keep_na_switches_get_call_returning_call_that_allows_NAs"/>
-    <testcase time="0.00600000000000023" classname="RangeFilterState" name="NA_and_Inf_can_bothe_be_included_by_call_returned_by_get_call"/>
+    <testcase time="0.00999999999999801" classname="RangeFilterState" name="set_keep_inf_switches_get_call_returning_call_that_allows_infinite_values"/>
+    <testcase time="0.00500000000000256" classname="RangeFilterState" name="set_keep_inf_switches_get_call_returning_call_that_allows_infinite_values"/>
+    <testcase time="0.0069999999999979" classname="RangeFilterState" name="set_keep_na_switches_get_call_returning_call_that_allows_NAs"/>
+    <testcase time="0.00500000000000256" classname="RangeFilterState" name="set_keep_na_switches_get_call_returning_call_that_allows_NAs"/>
+    <testcase time="0.0069999999999979" classname="RangeFilterState" name="NA_and_Inf_can_bothe_be_included_by_call_returned_by_get_call"/>
     <testcase time="0.00300000000000011" classname="RangeFilterState" name="NA_and_Inf_can_bothe_be_included_by_call_returned_by_get_call"/>
     <testcase time="0.00700000000000145" classname="RangeFilterState" name="get_state_returns_a_list_identical_to_set_state_input"/>
+    <testcase time="0.0069999999999979" classname="RangeFilterState" name="set_state_needs_a_named_list_with_selected_keep_na_and_keep_inf_elements"/>
     <testcase time="0.00600000000000023" classname="RangeFilterState" name="set_state_needs_a_named_list_with_selected_keep_na_and_keep_inf_elements"/>
-    <testcase time="0.00600000000000023" classname="RangeFilterState" name="set_state_needs_a_named_list_with_selected_keep_na_and_keep_inf_elements"/>
-    <testcase time="0.0069999999999979" classname="RangeFilterState" name="set_state_sets_values_of_selected_and_keep_na_as_provided_in_the_list"/>
-    <testcase time="0.00400000000000134" classname="RangeFilterState" name="set_state_sets_values_of_selected_and_keep_na_as_provided_in_the_list"/>
+    <testcase time="0.00700000000000145" classname="RangeFilterState" name="set_state_sets_values_of_selected_and_keep_na_as_provided_in_the_list"/>
     <testcase time="0.00499999999999901" classname="RangeFilterState" name="set_state_sets_values_of_selected_and_keep_na_as_provided_in_the_list"/>
-    <testcase time="0.00700000000000145" classname="RangeFilterState" name="set_state_overwrites_fields_included_in_the_input_only"/>
+    <testcase time="0.00499999999999901" classname="RangeFilterState" name="set_state_sets_values_of_selected_and_keep_na_as_provided_in_the_list"/>
+    <testcase time="0.00800000000000267" classname="RangeFilterState" name="set_state_overwrites_fields_included_in_the_input_only"/>
     <testcase time="0.00199999999999889" classname="RangeFilterState" name="set_state_overwrites_fields_included_in_the_input_only"/>
-    <testcase time="0.00400000000000134" classname="RangeFilterState" name="set_state_overwrites_fields_included_in_the_input_only"/>
-    <testcase time="0.00400000000000134" classname="RangeFilterState" name="set_state_overwrites_fields_included_in_the_input_only"/>
-    <testcase time="0.0100000000000016" classname="RangeFilterState" name="RangeFilterState_is_any_filtered_works_properly_when_NA_and_Inf_are_present_in_data"/>
-    <testcase time="0.00499999999999901" classname="RangeFilterState" name="RangeFilterState_is_any_filtered_works_properly_when_NA_and_Inf_are_present_in_data"/>
+    <testcase time="0.00499999999999901" classname="RangeFilterState" name="set_state_overwrites_fields_included_in_the_input_only"/>
+    <testcase time="0.00500000000000256" classname="RangeFilterState" name="set_state_overwrites_fields_included_in_the_input_only"/>
+    <testcase time="0.0109999999999992" classname="RangeFilterState" name="RangeFilterState_is_any_filtered_works_properly_when_NA_and_Inf_are_present_in_data"/>
+    <testcase time="0.00600000000000023" classname="RangeFilterState" name="RangeFilterState_is_any_filtered_works_properly_when_NA_and_Inf_are_present_in_data"/>
     <testcase time="0.00600000000000023" classname="RangeFilterState" name="RangeFilterState_is_any_filtered_works_properly_when_NA_and_Inf_are_present_in_data"/>
     <testcase time="0.00600000000000023" classname="RangeFilterState" name="RangeFilterState_is_any_filtered_works_properly_when_NA_and_Inf_are_present_in_data"/>
     <testcase time="0.0069999999999979" classname="RangeFilterState" name="RangeFilterState_is_any_filtered_works_properly_when_NA_and_Inf_are_present_in_data"/>
     <testcase time="0.00600000000000023" classname="RangeFilterState" name="RangeFilterState_is_any_filtered_works_properly_when_NA_and_Inf_are_present_in_data"/>
     <testcase time="0.00700000000000145" classname="RangeFilterState" name="RangeFilterState_is_any_filtered_works_properly_when_NA_and_Inf_are_present_in_data"/>
-    <testcase time="0.00600000000000023" classname="RangeFilterState" name="_format_is_a_FilterStates_s_method_that_accepts_indent"/>
+    <testcase time="0.0069999999999979" classname="RangeFilterState" name="_format_is_a_FilterStates_s_method_that_accepts_indent"/>
     <testcase time="0.0199999999999996" classname="RangeFilterState" name="_format_asserts_that_indent_is_numeric"/>
-    <testcase time="0.00600000000000023" classname="RangeFilterState" name="_format_returns_a_string_representation_the_FilterState_object"/>
-    <testcase time="0.00600000000000023" classname="RangeFilterState" name="_format_prepends_spaces_to_every_line_of_the_returned_string"/>
+    <testcase time="0.00700000000000145" classname="RangeFilterState" name="_format_returns_a_string_representation_the_FilterState_object"/>
+    <testcase time="0.00700000000000145" classname="RangeFilterState" name="_format_prepends_spaces_to_every_line_of_the_returned_string"/>
     <testcase time="0.00300000000000011" classname="RangeFilterState" name="_format_prepends_spaces_to_every_line_of_the_returned_string"/>
-    <testcase time="0.00300000000000011" classname="RangeFilterState" name="_format_prepends_spaces_to_every_line_of_the_returned_string"/>
-    <testcase time="0.00499999999999901" classname="RangeFilterState" name="private_get_pretty_range_step_returns_pretty_step_size"/>
-    <testcase time="0.0530000000000008" classname="RangeFilterState" name="private_get_pretty_range_step_returns_pretty_step_size"/>
+    <testcase time="0.00199999999999889" classname="RangeFilterState" name="_format_prepends_spaces_to_every_line_of_the_returned_string"/>
+    <testcase time="0.0069999999999979" classname="RangeFilterState" name="private_get_pretty_range_step_returns_pretty_step_size"/>
+    <testcase time="0.0500000000000007" classname="RangeFilterState" name="private_get_pretty_range_step_returns_pretty_step_size"/>
   </testsuite>
-  <testsuite name="SEFilterStates" timestamp="2023-06-05T13:59:27Z" hostname="7326b90c2626" tests="29" skipped="0" failures="0" errors="0" time="0.952">
-    <testcase time="0.00900000000000034" classname="SEFilterStates" name="The_constructor_does_not_throw"/>
+  <testsuite name="SEFilterStates" timestamp="2023-06-05T15:12:56Z" hostname="6876aea007b6" tests="29" skipped="0" failures="0" errors="0" time="1.03">
+    <testcase time="0.0100000000000016" classname="SEFilterStates" name="The_constructor_does_not_throw"/>
     <testcase time="0.0069999999999979" classname="SEFilterStates" name="The_constructor_initializes_two_state_lists"/>
-    <testcase time="0.00400000000000134" classname="SEFilterStates" name="The_constructor_initializes_two_state_lists"/>
-    <testcase time="0.00799999999999912" classname="SEFilterStates" name="set_filter_state_throws_error_when_input_is_missing"/>
-    <testcase time="0.00700000000000145" classname="SEFilterStates" name="set_filter_state_throws_error_when_no_data_argument_is_inputted"/>
+    <testcase time="0.00500000000000256" classname="SEFilterStates" name="The_constructor_initializes_two_state_lists"/>
+    <testcase time="0.0069999999999979" classname="SEFilterStates" name="set_filter_state_throws_error_when_input_is_missing"/>
+    <testcase time="0.00800000000000267" classname="SEFilterStates" name="set_filter_state_throws_error_when_no_data_argument_is_inputted"/>
     <testcase time="0.00799999999999912" classname="SEFilterStates" name="set_filter_state_throws_error_when_data_argument_is_not_of_class_SummarizedExperiment"/>
     <testcase time="0.00799999999999912" classname="SEFilterStates" name="set_filter_state_throws_error_when_state_argument_contains_extra_elements"/>
-    <testcase time="0.00900000000000034" classname="SEFilterStates" name="set_filter_state_throws_error_when_state_argument_is_not_a_list"/>
-    <testcase time="0.164999999999999" classname="SEFilterStates" name="set_filter_state_returns_NULL_when_state_argument_contains_subset_and_select_set_as_NULL"/>
-    <testcase time="0.0460000000000029" classname="SEFilterStates" name="set_filter_state_returns_NULL_when_state_argument_is_an_empty_list"/>
-    <testcase time="0.0549999999999997" classname="SEFilterStates" name="clone_method_returns_object_with_the_same_state"/>
+    <testcase time="0.00799999999999912" classname="SEFilterStates" name="set_filter_state_throws_error_when_state_argument_is_not_a_list"/>
+    <testcase time="0.179000000000002" classname="SEFilterStates" name="set_filter_state_returns_NULL_when_state_argument_contains_subset_and_select_set_as_NULL"/>
+    <testcase time="0.0489999999999995" classname="SEFilterStates" name="set_filter_state_returns_NULL_when_state_argument_is_an_empty_list"/>
+    <testcase time="0.0569999999999986" classname="SEFilterStates" name="clone_method_returns_object_with_the_same_state"/>
     <testcase time="0.00799999999999912" classname="SEFilterStates" name="get_call_method_returns_NULL"/>
-    <testcase time="0.00300000000000011" classname="SEFilterStates" name="get_fun_method_returns_subset"/>
-    <testcase time="0.0339999999999989" classname="SEFilterStates" name="SEFilterStates_set_filter_state_sets_state_with_only_subset"/>
-    <testcase time="0.0530000000000008" classname="SEFilterStates" name="SEFilterStates_set_filter_state_updates_select_state_which_has_been_set_already"/>
-    <testcase time="0.0360000000000014" classname="SEFilterStates" name="SEFilterStates_set_filter_state_updates_subset_state_which_has_been_set_already"/>
-    <testcase time="0.0359999999999978" classname="SEFilterStates" name="SEFilterStates_set_filter_state_updates_subset_state_which_has_been_set_already"/>
-    <testcase time="0.032" classname="SEFilterStates" name="SEFilterStates_set_filter_state_sets_state_with_neither_subset_nor_select"/>
-    <testcase time="0.0990000000000002" classname="SEFilterStates" name="SEFilterStates_set_filter_state_sets_filters_in_state_list_specified_by_the_named_list"/>
-    <testcase time="0.036999999999999" classname="SEFilterStates" name="SEFilterStates_get_filter_state_returns_list_identical_to_input"/>
-    <testcase time="0.0700000000000003" classname="SEFilterStates" name="SEFilterStates_remove_filter_state_removes_filters_in_state_list"/>
-    <testcase time="0.0449999999999982" classname="SEFilterStates" name="SEFilterStates_remove_filter_state_removes_all_filters_in_state_list"/>
-    <testcase time="0.0400000000000027" classname="SEFilterStates" name="SEFilterStates_remove_filter_state_throws_error_when_list_is_not_named"/>
-    <testcase time="0.0389999999999979" classname="SEFilterStates" name="SEFilterStates_remove_filter_state_throws_warning_when_list_has_unknown_name_in_the_FilterState"/>
-    <testcase time="0.0199999999999996" classname="SEFilterStates" name="SEFilterStates_ui_add_filter_state_returns_a_message_inside_a_div_when_data_has_no_rows_or_no_columns"/>
-    <testcase time="0.017000000000003" classname="SEFilterStates" name="SEFilterStates_ui_add_filter_state_returns_a_message_inside_a_div_when_data_has_no_rows_or_no_columns"/>
-    <testcase time="0.00499999999999901" classname="SEFilterStates" name="_format_is_a_method_of_SEFilterStates"/>
-    <testcase time="0.00900000000000034" classname="SEFilterStates" name="_format_asserts_the_indent_argument_is_a_number"/>
-    <testcase time="0.0429999999999993" classname="SEFilterStates" name="_format_concatenates_its_FilterState_elements_using_n_and_indents_the_FilterState_strings"/>
+    <testcase time="0.00400000000000134" classname="SEFilterStates" name="get_fun_method_returns_subset"/>
+    <testcase time="0.0360000000000014" classname="SEFilterStates" name="SEFilterStates_set_filter_state_sets_state_with_only_subset"/>
+    <testcase time="0.0569999999999986" classname="SEFilterStates" name="SEFilterStates_set_filter_state_updates_select_state_which_has_been_set_already"/>
+    <testcase time="0.0390000000000015" classname="SEFilterStates" name="SEFilterStates_set_filter_state_updates_subset_state_which_has_been_set_already"/>
+    <testcase time="0.0389999999999979" classname="SEFilterStates" name="SEFilterStates_set_filter_state_updates_subset_state_which_has_been_set_already"/>
+    <testcase time="0.0360000000000014" classname="SEFilterStates" name="SEFilterStates_set_filter_state_sets_state_with_neither_subset_nor_select"/>
+    <testcase time="0.108000000000001" classname="SEFilterStates" name="SEFilterStates_set_filter_state_sets_filters_in_state_list_specified_by_the_named_list"/>
+    <testcase time="0.0410000000000004" classname="SEFilterStates" name="SEFilterStates_get_filter_state_returns_list_identical_to_input"/>
+    <testcase time="0.0779999999999994" classname="SEFilterStates" name="SEFilterStates_remove_filter_state_removes_filters_in_state_list"/>
+    <testcase time="0.0500000000000007" classname="SEFilterStates" name="SEFilterStates_remove_filter_state_removes_all_filters_in_state_list"/>
+    <testcase time="0.0449999999999982" classname="SEFilterStates" name="SEFilterStates_remove_filter_state_throws_error_when_list_is_not_named"/>
+    <testcase time="0.0429999999999993" classname="SEFilterStates" name="SEFilterStates_remove_filter_state_throws_warning_when_list_has_unknown_name_in_the_FilterState"/>
+    <testcase time="0.0229999999999997" classname="SEFilterStates" name="SEFilterStates_ui_add_filter_state_returns_a_message_inside_a_div_when_data_has_no_rows_or_no_columns"/>
+    <testcase time="0.0180000000000007" classname="SEFilterStates" name="SEFilterStates_ui_add_filter_state_returns_a_message_inside_a_div_when_data_has_no_rows_or_no_columns"/>
+    <testcase time="0.00600000000000023" classname="SEFilterStates" name="_format_is_a_method_of_SEFilterStates"/>
+    <testcase time="0.00799999999999912" classname="SEFilterStates" name="_format_asserts_the_indent_argument_is_a_number"/>
+    <testcase time="0.0450000000000017" classname="SEFilterStates" name="_format_concatenates_its_FilterState_elements_using_n_and_indents_the_FilterState_strings"/>
   </testsuite>
-  <testsuite name="calls_combine_by" timestamp="2023-06-05T13:59:28Z" hostname="7326b90c2626" tests="9" skipped="0" failures="0" errors="0" time="0.031">
-    <testcase time="0.00600000000000023" classname="calls_combine_by" name="calls_combine_by_different_operators"/>
-    <testcase time="0.00199999999999889" classname="calls_combine_by" name="calls_combine_by_different_operators"/>
-    <testcase time="0.00100000000000122" classname="calls_combine_by" name="calls_combine_by_different_operators"/>
+  <testsuite name="calls_combine_by" timestamp="2023-06-05T15:12:57Z" hostname="6876aea007b6" tests="9" skipped="0" failures="0" errors="0" time="0.034">
+    <testcase time="0.00700000000000145" classname="calls_combine_by" name="calls_combine_by_different_operators"/>
+    <testcase time="0.000999999999997669" classname="calls_combine_by" name="calls_combine_by_different_operators"/>
+    <testcase time="0.00200000000000244" classname="calls_combine_by" name="calls_combine_by_different_operators"/>
     <testcase time="0.00499999999999901" classname="calls_combine_by" name="calls_combine_by_different_operators"/>
     <testcase time="0.00600000000000023" classname="calls_combine_by" name="calls_combine_by_different_operators"/>
-    <testcase time="0.00100000000000122" classname="calls_combine_by" name="calls_combine_by_different_operators"/>
-    <testcase time="0.00499999999999901" classname="calls_combine_by" name="calls_combine_by_different_forms_of_calls"/>
+    <testcase time="0.000999999999997669" classname="calls_combine_by" name="calls_combine_by_different_operators"/>
+    <testcase time="0.00500000000000256" classname="calls_combine_by" name="calls_combine_by_different_forms_of_calls"/>
     <testcase time="0.000999999999997669" classname="calls_combine_by" name="calls_combine_by_different_forms_of_calls"/>
-    <testcase time="0.00400000000000134" classname="calls_combine_by" name="calls_combine_by_different_forms_of_calls"/>
+    <testcase time="0.00600000000000023" classname="calls_combine_by" name="calls_combine_by_different_forms_of_calls"/>
   </testsuite>
-  <testsuite name="check_ellipsis" timestamp="2023-06-05T13:59:28Z" hostname="7326b90c2626" tests="18" skipped="0" failures="0" errors="0" time="0.073">
+  <testsuite name="check_ellipsis" timestamp="2023-06-05T15:12:57Z" hostname="6876aea007b6" tests="18" skipped="0" failures="0" errors="0" time="0.072">
     <testcase time="0.00700000000000145" classname="check_ellipsis" name="check_ellipsis_with_no_unused"/>
-    <testcase time="0.0069999999999979" classname="check_ellipsis" name="check_ellipsis_with_extra_unamed_arguments"/>
+    <testcase time="0.00600000000000023" classname="check_ellipsis" name="check_ellipsis_with_extra_unamed_arguments"/>
     <testcase time="0.00199999999999889" classname="check_ellipsis" name="check_ellipsis_with_extra_unamed_arguments"/>
-    <testcase time="0.00700000000000145" classname="check_ellipsis" name="check_ellipsis_with_extra_named_arguments"/>
+    <testcase time="0.00600000000000023" classname="check_ellipsis" name="check_ellipsis_with_extra_named_arguments"/>
     <testcase time="0.00199999999999889" classname="check_ellipsis" name="check_ellipsis_with_extra_named_arguments"/>
     <testcase time="0.00600000000000023" classname="check_ellipsis" name="check_ellipsis_with_extra_named_and_unamed_arguments"/>
     <testcase time="0.00200000000000244" classname="check_ellipsis" name="check_ellipsis_with_extra_named_and_unamed_arguments"/>
     <testcase time="0.00600000000000023" classname="check_ellipsis" name="check_ellipsis_with_extra_named_and_unamed_arguments_in_wrong_order"/>
     <testcase time="0.00199999999999889" classname="check_ellipsis" name="check_ellipsis_with_extra_named_and_unamed_arguments_in_wrong_order"/>
     <testcase time="0.00300000000000011" classname="check_ellipsis" name="check_ellipsis_with_allowed_args"/>
-    <testcase time="0.00499999999999901" classname="check_ellipsis" name="check_ellipsis_with_allowed_args"/>
-    <testcase time="0.00499999999999901" classname="check_ellipsis" name="check_ellipsis_with_allowed_args"/>
     <testcase time="0.00600000000000023" classname="check_ellipsis" name="check_ellipsis_with_allowed_args"/>
-    <testcase time="0.00200000000000244" classname="check_ellipsis" name="check_ellipsis_with_allowed_args"/>
     <testcase time="0.00499999999999901" classname="check_ellipsis" name="check_ellipsis_with_allowed_args"/>
+    <testcase time="0.00499999999999901" classname="check_ellipsis" name="check_ellipsis_with_allowed_args"/>
+    <testcase time="0.00300000000000011" classname="check_ellipsis" name="check_ellipsis_with_allowed_args"/>
+    <testcase time="0.00500000000000256" classname="check_ellipsis" name="check_ellipsis_with_allowed_args"/>
     <testcase time="0.00199999999999889" classname="check_ellipsis" name="check_ellipsis_with_allowed_args"/>
-    <testcase time="0.00200000000000244" classname="check_ellipsis" name="check_ellipsis_with_allowed_args"/>
+    <testcase time="0.00199999999999889" classname="check_ellipsis" name="check_ellipsis_with_allowed_args"/>
     <testcase time="0.00199999999999889" classname="check_ellipsis" name="check_ellipsis_with_allowed_args"/>
   </testsuite>
-  <testsuite name="check_simple_name" timestamp="2023-06-05T13:59:28Z" hostname="7326b90c2626" tests="15" skipped="0" failures="0" errors="0" time="0.048">
+  <testsuite name="check_simple_name" timestamp="2023-06-05T15:12:57Z" hostname="6876aea007b6" tests="15" skipped="0" failures="0" errors="0" time="0.049">
     <testcase time="0.00600000000000023" classname="check_simple_name" name="check_simple_name_behaves_as_expected"/>
-    <testcase time="0.00199999999999889" classname="check_simple_name" name="check_simple_name_behaves_as_expected"/>
-    <testcase time="0.00100000000000122" classname="check_simple_name" name="check_simple_name_behaves_as_expected"/>
-    <testcase time="0.00199999999999889" classname="check_simple_name" name="check_simple_name_behaves_as_expected"/>
-    <testcase time="0.00199999999999889" classname="check_simple_name" name="check_simple_name_behaves_as_expected"/>
     <testcase time="0.00200000000000244" classname="check_simple_name" name="check_simple_name_behaves_as_expected"/>
     <testcase time="0.00199999999999889" classname="check_simple_name" name="check_simple_name_behaves_as_expected"/>
     <testcase time="0.00199999999999889" classname="check_simple_name" name="check_simple_name_behaves_as_expected"/>
-    <testcase time="0.00100000000000122" classname="check_simple_name" name="check_simple_name_behaves_as_expected"/>
+    <testcase time="0.00200000000000244" classname="check_simple_name" name="check_simple_name_behaves_as_expected"/>
+    <testcase time="0.000999999999997669" classname="check_simple_name" name="check_simple_name_behaves_as_expected"/>
+    <testcase time="0.00200000000000244" classname="check_simple_name" name="check_simple_name_behaves_as_expected"/>
     <testcase time="0.00199999999999889" classname="check_simple_name" name="check_simple_name_behaves_as_expected"/>
-    <testcase time="0.00500000000000256" classname="check_simple_name" name="check_simple_name_behaves_as_expected"/>
-    <testcase time="0.00599999999999667" classname="check_simple_name" name="check_simple_name_behaves_as_expected"/>
-    <testcase time="0.00500000000000256" classname="check_simple_name" name="check_simple_name_behaves_as_expected"/>
+    <testcase time="0.00199999999999889" classname="check_simple_name" name="check_simple_name_behaves_as_expected"/>
+    <testcase time="0.00200000000000244" classname="check_simple_name" name="check_simple_name_behaves_as_expected"/>
     <testcase time="0.00499999999999901" classname="check_simple_name" name="check_simple_name_behaves_as_expected"/>
     <testcase time="0.00499999999999901" classname="check_simple_name" name="check_simple_name_behaves_as_expected"/>
+    <testcase time="0.00499999999999901" classname="check_simple_name" name="check_simple_name_behaves_as_expected"/>
+    <testcase time="0.00600000000000023" classname="check_simple_name" name="check_simple_name_behaves_as_expected"/>
+    <testcase time="0.00500000000000256" classname="check_simple_name" name="check_simple_name_behaves_as_expected"/>
   </testsuite>
-  <testsuite name="filter_panel_api" timestamp="2023-06-05T13:59:28Z" hostname="7326b90c2626" tests="14" skipped="0" failures="0" errors="0" time="0.333">
-    <testcase time="0.0160000000000018" classname="filter_panel_api" name="FilterPanelAPI_constructor_accepts_a_FilteredData_object"/>
+  <testsuite name="filter_panel_api" timestamp="2023-06-05T15:12:57Z" hostname="6876aea007b6" tests="14" skipped="0" failures="0" errors="0" time="0.338">
+    <testcase time="0.0159999999999982" classname="filter_panel_api" name="FilterPanelAPI_constructor_accepts_a_FilteredData_object"/>
+    <testcase time="0.00700000000000145" classname="filter_panel_api" name="FilterPanelAPI_constructor_throws_error_with_a_non_FilteredData_object"/>
     <testcase time="0.00600000000000023" classname="filter_panel_api" name="FilterPanelAPI_constructor_throws_error_with_a_non_FilteredData_object"/>
-    <testcase time="0.00600000000000023" classname="filter_panel_api" name="FilterPanelAPI_constructor_throws_error_with_a_non_FilteredData_object"/>
-    <testcase time="0.0169999999999995" classname="filter_panel_api" name="FilterPanelAPI_set_filter_state_sets_filters_specified_by_the_named_list"/>
-    <testcase time="0.0129999999999981" classname="filter_panel_api" name="FilterPanelAPI_get_filter_state_returns_list_identical_to_input_without_attribute"/>
+    <testcase time="0.0179999999999971" classname="filter_panel_api" name="FilterPanelAPI_set_filter_state_sets_filters_specified_by_the_named_list"/>
+    <testcase time="0.0130000000000017" classname="filter_panel_api" name="FilterPanelAPI_get_filter_state_returns_list_identical_to_input_without_attribute"/>
     <testcase time="0.0100000000000016" classname="filter_panel_api" name="FilterPanelAPI_remove_filter_state_removes_filter_states_defined_in_the_list"/>
-    <testcase time="0.0120000000000005" classname="filter_panel_api" name="FilterPanelAPI_remove_all_filter_states_removes_all_filters_of_datasets_in_FilterPanelAPI"/>
-    <testcase time="0.0249999999999986" classname="filter_panel_api" name="FilterPanelAPI_remove_all_filter_states_remove_the_filters_of_the_desired_dataset_only"/>
-    <testcase time="0.0549999999999997" classname="filter_panel_api" name="filter_panel_api_neutral_when_filter_panel_is_disabled"/>
-    <testcase time="0.00200000000000244" classname="filter_panel_api" name="filter_panel_api_neutral_when_filter_panel_is_disabled"/>
+    <testcase time="0.0129999999999981" classname="filter_panel_api" name="FilterPanelAPI_remove_all_filter_states_removes_all_filters_of_datasets_in_FilterPanelAPI"/>
+    <testcase time="0.0259999999999998" classname="filter_panel_api" name="FilterPanelAPI_remove_all_filter_states_remove_the_filters_of_the_desired_dataset_only"/>
+    <testcase time="0.054000000000002" classname="filter_panel_api" name="filter_panel_api_neutral_when_filter_panel_is_disabled"/>
+    <testcase time="0.00199999999999889" classname="filter_panel_api" name="filter_panel_api_neutral_when_filter_panel_is_disabled"/>
     <testcase time="0.00300000000000011" classname="filter_panel_api" name="filter_panel_api_neutral_when_filter_panel_is_disabled"/>
-    <testcase time="0.146999999999998" classname="filter_panel_api" name="filter_panel_api_under_disable_enable_filter_panel"/>
+    <testcase time="0.149000000000001" classname="filter_panel_api" name="filter_panel_api_under_disable_enable_filter_panel"/>
     <testcase time="0.00199999999999889" classname="filter_panel_api" name="filter_panel_api_under_disable_enable_filter_panel"/>
-    <testcase time="0.0190000000000019" classname="filter_panel_api" name="filter_panel_api_under_disable_enable_filter_panel"/>
+    <testcase time="0.0189999999999984" classname="filter_panel_api" name="filter_panel_api_under_disable_enable_filter_panel"/>
   </testsuite>
-  <testsuite name="get_supported_filter_varnames" timestamp="2023-06-05T13:59:28Z" hostname="7326b90c2626" tests="5" skipped="0" failures="0" errors="0" time="0.018">
-    <testcase time="0.00799999999999912" classname="get_supported_filter_varnames" name="get_supported_filter_varnames_returns_character_0_for_an_empty_matrix"/>
-    <testcase time="0.00199999999999889" classname="get_supported_filter_varnames" name="get_supported_filter_varnames_returns_character_0_for_an_empty_data.frame"/>
-    <testcase time="0.00300000000000011" classname="get_supported_filter_varnames" name="get_supported_filter_varnames_returns_character_0_for_a_single_column_numeric_matrix"/>
-    <testcase time="0.00200000000000244" classname="get_supported_filter_varnames" name="get_supported_filter_varnames_returns_character_0_for_a_single_column_of_NA_values"/>
-    <testcase time="0.00300000000000011" classname="get_supported_filter_varnames" name="get_supported_filter_varnames_returns_column_names_for_a_non_empty_data.frame"/>
+  <testsuite name="get_supported_filter_varnames" timestamp="2023-06-05T15:12:58Z" hostname="6876aea007b6" tests="5" skipped="0" failures="0" errors="0" time="0.018">
+    <testcase time="0.00800000000000267" classname="get_supported_filter_varnames" name="get_supported_filter_varnames_returns_character_0_for_an_empty_matrix"/>
+    <testcase time="0.00300000000000011" classname="get_supported_filter_varnames" name="get_supported_filter_varnames_returns_character_0_for_an_empty_data.frame"/>
+    <testcase time="0.00199999999999889" classname="get_supported_filter_varnames" name="get_supported_filter_varnames_returns_character_0_for_a_single_column_numeric_matrix"/>
+    <testcase time="0.00300000000000011" classname="get_supported_filter_varnames" name="get_supported_filter_varnames_returns_character_0_for_a_single_column_of_NA_values"/>
+    <testcase time="0.00199999999999889" classname="get_supported_filter_varnames" name="get_supported_filter_varnames_returns_column_names_for_a_non_empty_data.frame"/>
   </testsuite>
-  <testsuite name="init_filter_state" timestamp="2023-06-05T13:59:28Z" hostname="7326b90c2626" tests="28" skipped="0" failures="0" errors="0" time="3.731">
-    <testcase time="0.00899999999999679" classname="init_filter_state" name="init_filter_state_accepts_a_string_not_name_as_varname"/>
-    <testcase time="0.00500000000000256" classname="init_filter_state" name="init_filter_state_accepts_a_string_not_name_as_varname"/>
-    <testcase time="0.00499999999999901" classname="init_filter_state" name="init_filter_state_accepts_a_character_vector_of_length_0_or_1_as_varlabel"/>
-    <testcase time="0.00400000000000134" classname="init_filter_state" name="init_filter_state_accepts_a_character_vector_of_length_0_or_1_as_varlabel"/>
-    <testcase time="3.601" classname="init_filter_state" name="dataname_must_be_specified_if_extract_type_is_specified"/>
+  <testsuite name="init_filter_state" timestamp="2023-06-05T15:12:58Z" hostname="6876aea007b6" tests="28" skipped="0" failures="0" errors="0" time="3.608">
+    <testcase time="0.00900000000000034" classname="init_filter_state" name="init_filter_state_accepts_a_string_not_name_as_varname"/>
+    <testcase time="0.00499999999999901" classname="init_filter_state" name="init_filter_state_accepts_a_string_not_name_as_varname"/>
+    <testcase time="0.00500000000000256" classname="init_filter_state" name="init_filter_state_accepts_a_character_vector_of_length_0_or_1_as_varlabel"/>
+    <testcase time="0.00300000000000011" classname="init_filter_state" name="init_filter_state_accepts_a_character_vector_of_length_0_or_1_as_varlabel"/>
+    <testcase time="3.471" classname="init_filter_state" name="dataname_must_be_specified_if_extract_type_is_specified"/>
     <testcase time="0.00600000000000023" classname="init_filter_state" name="init_filter_state_accepts_character_as_extract_type"/>
-    <testcase time="0.00300000000000011" classname="init_filter_state" name="init_filter_state_accepts_character_as_extract_type"/>
+    <testcase time="0.00400000000000134" classname="init_filter_state" name="init_filter_state_accepts_character_as_extract_type"/>
     <testcase time="0.00399999999999778" classname="init_filter_state" name="init_filter_state_accepts_character_as_extract_type"/>
     <testcase time="0.00500000000000256" classname="init_filter_state" name="init_filter_state_provides_default_values_for_varlabel_and_dataname"/>
     <testcase time="0.00199999999999889" classname="init_filter_state" name="init_filter_state_provides_default_values_for_varlabel_and_dataname"/>
     <testcase time="0.00700000000000145" classname="init_filter_state" name="init_filter_state_returns_an_EmptyFilterState_if_all_values_provided_are_NA"/>
-    <testcase time="0.00399999999999778" classname="init_filter_state" name="init_filter_state_returns_a_ChoicesFilterState_if_passed_a_longer_numeric"/>
+    <testcase time="0.00499999999999901" classname="init_filter_state" name="init_filter_state_returns_a_ChoicesFilterState_if_passed_a_longer_numeric"/>
     <testcase time="0.00600000000000023" classname="init_filter_state" name="init_filter_state_returns_a_ChoicesFilterState_if_passed_a_longer_numeric"/>
-    <testcase time="0.00499999999999901" classname="init_filter_state" name="init_filter_state_returns_a_ChoicesFilterState_object_if_passed_a_Date_object_of_length_1"/>
-    <testcase time="0.00500000000000256" classname="init_filter_state" name="init_filter_state_returns_a_DateFilterState_object_if_passed_longer_a_Date_object"/>
-    <testcase time="0.00499999999999901" classname="init_filter_state" name="init_filter_state_returns_a_DatetimeFilterState_object_if_passed_a_POSIXct_or_POSIXlt_of_length_1"/>
+    <testcase time="0.00600000000000023" classname="init_filter_state" name="init_filter_state_returns_a_ChoicesFilterState_object_if_passed_a_Date_object_of_length_1"/>
+    <testcase time="0.00399999999999778" classname="init_filter_state" name="init_filter_state_returns_a_DateFilterState_object_if_passed_longer_a_Date_object"/>
+    <testcase time="0.00600000000000023" classname="init_filter_state" name="init_filter_state_returns_a_DatetimeFilterState_object_if_passed_a_POSIXct_or_POSIXlt_of_length_1"/>
     <testcase time="0.00400000000000134" classname="init_filter_state" name="init_filter_state_returns_a_DatetimeFilterState_object_if_passed_a_POSIXct_or_POSIXlt_of_length_1"/>
     <testcase time="0.00499999999999901" classname="init_filter_state" name="init_filter_state_returns_a_DatetimeFilterState_object_if_passed_a_longer_POSIXct_or_POSIXlt"/>
-    <testcase time="0.00400000000000134" classname="init_filter_state" name="init_filter_state_returns_a_DatetimeFilterState_object_if_passed_a_longer_POSIXct_or_POSIXlt"/>
-    <testcase time="0.00600000000000023" classname="init_filter_state" name="init_filter_state_returns_a_RangeFilterState_if_passed_a_numeric_array_containing_Inf"/>
-    <testcase time="0.00399999999999778" classname="init_filter_state" name="init_filter_state_returns_a_RangeFilterState_if_passed_a_numeric_array_containing_Inf"/>
-    <testcase time="0.00499999999999901" classname="init_filter_state" name="init_filter_state_returns_a_ChoicesFilterState_if_passed_fewer_than_five_non_NA_elements"/>
+    <testcase time="0.00500000000000256" classname="init_filter_state" name="init_filter_state_returns_a_DatetimeFilterState_object_if_passed_a_longer_POSIXct_or_POSIXlt"/>
+    <testcase time="0.00599999999999667" classname="init_filter_state" name="init_filter_state_returns_a_RangeFilterState_if_passed_a_numeric_array_containing_Inf"/>
+    <testcase time="0.00400000000000134" classname="init_filter_state" name="init_filter_state_returns_a_RangeFilterState_if_passed_a_numeric_array_containing_Inf"/>
+    <testcase time="0.00600000000000023" classname="init_filter_state" name="init_filter_state_returns_a_ChoicesFilterState_if_passed_fewer_than_five_non_NA_elements"/>
     <testcase time="0.00400000000000134" classname="init_filter_state" name="init_filter_state_returns_a_ChoicesFilterState_if_passed_fewer_than_five_non_NA_elements"/>
-    <testcase time="0.00400000000000134" classname="init_filter_state" name="init_filter_state_returns_a_ChoicesFilterState_if_passed_a_character_array"/>
+    <testcase time="0.00600000000000023" classname="init_filter_state" name="init_filter_state_returns_a_ChoicesFilterState_if_passed_a_character_array"/>
     <testcase time="0.00399999999999778" classname="init_filter_state" name="init_filter_state_returns_a_ChoicesFilterState_if_passed_a_character_array"/>
+    <testcase time="0.00499999999999901" classname="init_filter_state" name="init_filter_state_return_a_LogicalFilterState_if_passed_a_logical_array"/>
     <testcase time="0.00500000000000256" classname="init_filter_state" name="init_filter_state_return_a_LogicalFilterState_if_passed_a_logical_array"/>
-    <testcase time="0.00399999999999778" classname="init_filter_state" name="init_filter_state_return_a_LogicalFilterState_if_passed_a_logical_array"/>
     <testcase time="0.00600000000000023" classname="init_filter_state" name="init_filter_state_default_accepts_a_list"/>
   </testsuite>
-  <testsuite name="init_filter_states" timestamp="2023-06-05T13:59:32Z" hostname="7326b90c2626" tests="8" skipped="0" failures="0" errors="0" time="0.033">
-    <testcase time="0.00799999999999912" classname="init_filter_states" name="init_filter_states_returns_a_DFFilterStates_object_if_passed_an_empty_data.frame"/>
+  <testsuite name="init_filter_states" timestamp="2023-06-05T15:13:01Z" hostname="6876aea007b6" tests="8" skipped="0" failures="0" errors="0" time="0.034">
+    <testcase time="0.00700000000000145" classname="init_filter_states" name="init_filter_states_returns_a_DFFilterStates_object_if_passed_an_empty_data.frame"/>
     <testcase time="0.00400000000000134" classname="init_filter_states" name="init_filter_states_returns_a_DFFilterStates_object_if_passed_an_empty_data.frame"/>
     <testcase time="0.00300000000000011" classname="init_filter_states" name="init_filter_states_returns_a_MatrixFilterStates_object_if_passed_an_empty_matrix"/>
-    <testcase time="0.00300000000000011" classname="init_filter_states" name="init_filter_states_returns_a_MatrixFilterStates_object_if_passed_an_empty_matrix"/>
-    <testcase time="0.00300000000000011" classname="init_filter_states" name="init_filter_states_returns_an_MAEFilterStates_object_if_passed_an_object_of_class_MAE"/>
-    <testcase time="0.00499999999999901" classname="init_filter_states" name="init_filter_states_returns_an_MAEFilterStates_object_if_passed_an_object_of_class_MAE"/>
-    <testcase time="0.00300000000000011" classname="init_filter_states" name="init_filter_states_returns_an_SEFilterStates_object_if_passed_an_object_of_class_SE"/>
+    <testcase time="0.00399999999999778" classname="init_filter_states" name="init_filter_states_returns_a_MatrixFilterStates_object_if_passed_an_empty_matrix"/>
+    <testcase time="0.00400000000000134" classname="init_filter_states" name="init_filter_states_returns_an_MAEFilterStates_object_if_passed_an_object_of_class_MAE"/>
+    <testcase time="0.00399999999999778" classname="init_filter_states" name="init_filter_states_returns_an_MAEFilterStates_object_if_passed_an_object_of_class_MAE"/>
+    <testcase time="0.00400000000000134" classname="init_filter_states" name="init_filter_states_returns_an_SEFilterStates_object_if_passed_an_object_of_class_SE"/>
     <testcase time="0.00400000000000134" classname="init_filter_states" name="init_filter_states_returns_an_SEFilterStates_object_if_passed_an_object_of_class_SE"/>
   </testsuite>
-  <testsuite name="init_filtered_data" timestamp="2023-06-05T13:59:32Z" hostname="7326b90c2626" tests="10" skipped="0" failures="0" errors="0" time="0.078">
+  <testsuite name="init_filtered_data" timestamp="2023-06-05T15:13:01Z" hostname="6876aea007b6" tests="10" skipped="0" failures="0" errors="0" time="0.084">
     <testcase time="0.0129999999999981" classname="init_filtered_data" name="init_filtered_data_accepts_a_TealData_object"/>
-    <testcase time="0.0160000000000018" classname="init_filtered_data" name="init_filtered_data_accepts_a_CDISCTealData_with_mixed_CDISC_and_Dataset"/>
-    <testcase time="0.00499999999999901" classname="init_filtered_data" name="init_filtered_data_accepts_a_list_of_data.frame_objects"/>
-    <testcase time="0.00600000000000023" classname="init_filtered_data" name="init_filtered_data.default_asserts_x_has_unique_names"/>
-    <testcase time="0.00700000000000145" classname="init_filtered_data" name="init_filtered_data.default_asserts_code_is_CodeClass_"/>
-    <testcase time="0.00499999999999901" classname="init_filtered_data" name="init_filtered_data.default_accepts_NULL_passed_to_code"/>
-    <testcase time="0.0069999999999979" classname="init_filtered_data" name="init_filtered_data.default_asserts_join_keys_is_JoinKeys_"/>
-    <testcase time="0.00500000000000256" classname="init_filtered_data" name="init_filtered_data.default_accepts_NULL_passed_to_join_keys"/>
-    <testcase time="0.00799999999999912" classname="init_filtered_data" name="init_filtered_data.default_asserts_cdisc_is_logical_1_"/>
-    <testcase time="0.00600000000000023" classname="init_filtered_data" name="init_filtered_data.default_asserts_check_is_logical_1_"/>
+    <testcase time="0.0159999999999982" classname="init_filtered_data" name="init_filtered_data_accepts_a_CDISCTealData_with_mixed_CDISC_and_Dataset"/>
+    <testcase time="0.00600000000000023" classname="init_filtered_data" name="init_filtered_data_accepts_a_list_of_data.frame_objects"/>
+    <testcase time="0.00700000000000145" classname="init_filtered_data" name="init_filtered_data.default_asserts_x_has_unique_names"/>
+    <testcase time="0.0069999999999979" classname="init_filtered_data" name="init_filtered_data.default_asserts_code_is_CodeClass_"/>
+    <testcase time="0.00600000000000023" classname="init_filtered_data" name="init_filtered_data.default_accepts_NULL_passed_to_code"/>
+    <testcase time="0.00700000000000145" classname="init_filtered_data" name="init_filtered_data.default_asserts_join_keys_is_JoinKeys_"/>
+    <testcase time="0.00600000000000023" classname="init_filtered_data" name="init_filtered_data.default_accepts_NULL_passed_to_join_keys"/>
+    <testcase time="0.00900000000000034" classname="init_filtered_data" name="init_filtered_data.default_asserts_cdisc_is_logical_1_"/>
+    <testcase time="0.0069999999999979" classname="init_filtered_data" name="init_filtered_data.default_asserts_check_is_logical_1_"/>
   </testsuite>
-  <testsuite name="init_filtered_dataset" timestamp="2023-06-05T13:59:32Z" hostname="7326b90c2626" tests="4" skipped="0" failures="0" errors="0" time="0.082">
-    <testcase time="0.00799999999999912" classname="init_filtered_dataset" name="init_filtered_dataset_returns_a_DefaultFilteredDataset_when_passed_a_data.frame"/>
-    <testcase time="0.00400000000000134" classname="init_filtered_dataset" name="init_filtered_dataset_returns_a_DefaultFilteredDataset_when_passed_a_data.frame"/>
-    <testcase time="0.0659999999999989" classname="init_filtered_dataset" name="init_filtered_dataset_returns_an_MAEFilteredDataset_when_passed_an_MAE"/>
-    <testcase time="0.00400000000000134" classname="init_filtered_dataset" name="init_filtered_dataset_returns_an_MAEFilteredDataset_when_passed_an_MAE"/>
+  <testsuite name="init_filtered_dataset" timestamp="2023-06-05T15:13:01Z" hostname="6876aea007b6" tests="4" skipped="0" failures="0" errors="0" time="0.088">
+    <testcase time="0.00800000000000267" classname="init_filtered_dataset" name="init_filtered_dataset_returns_a_DefaultFilteredDataset_when_passed_a_data.frame"/>
+    <testcase time="0.00399999999999778" classname="init_filtered_dataset" name="init_filtered_dataset_returns_a_DefaultFilteredDataset_when_passed_a_data.frame"/>
+    <testcase time="0.0710000000000015" classname="init_filtered_dataset" name="init_filtered_dataset_returns_an_MAEFilteredDataset_when_passed_an_MAE"/>
+    <testcase time="0.00499999999999901" classname="init_filtered_dataset" name="init_filtered_dataset_returns_an_MAEFilteredDataset_when_passed_an_MAE"/>
   </testsuite>
-  <testsuite name="resolve_state" timestamp="2023-06-05T13:59:32Z" hostname="7326b90c2626" tests="11" skipped="0" failures="0" errors="0" time="0.036">
-    <testcase time="0.00499999999999901" classname="resolve_state" name="resolve_state_returns_an_identical_list_if_all_fields_are_named"/>
+  <testsuite name="resolve_state" timestamp="2023-06-05T15:13:02Z" hostname="6876aea007b6" tests="11" skipped="0" failures="0" errors="0" time="0.038">
+    <testcase time="0.00600000000000023" classname="resolve_state" name="resolve_state_returns_an_identical_list_if_all_fields_are_named"/>
     <testcase time="0.00199999999999889" classname="resolve_state" name="resolve_state_returns_a_list_regardless_of_names"/>
     <testcase time="0.00300000000000011" classname="resolve_state" name="resolve_state_do_not_change_the_class_of_any_named_field"/>
     <testcase time="0.00200000000000244" classname="resolve_state" name="resolve_state_changes_a_single_unnamed_field_into_selected"/>
-    <testcase time="0.00600000000000023" classname="resolve_state" name="resolve_state_throws_when_passed_a_list_with_one_unnamed_element_and_a_selected_element"/>
-    <testcase time="0.00300000000000011" classname="resolve_state" name="resolve_state_returns_list_with_selected_when_vectors_is_provided"/>
+    <testcase time="0.0069999999999979" classname="resolve_state" name="resolve_state_throws_when_passed_a_list_with_one_unnamed_element_and_a_selected_element"/>
+    <testcase time="0.00200000000000244" classname="resolve_state" name="resolve_state_returns_list_with_selected_when_vectors_is_provided"/>
     <testcase time="0.00199999999999889" classname="resolve_state" name="resolve_state_returns_keep_na_TRUE_if_any_element_of_the_vector_has_NA"/>
-    <testcase time="0.00199999999999889" classname="resolve_state" name="resolve_state_returns_keep_inf_TRUE_if_any_element_of_the_vector_has_Inf"/>
+    <testcase time="0.00300000000000011" classname="resolve_state" name="resolve_state_returns_keep_inf_TRUE_if_any_element_of_the_vector_has_Inf"/>
     <testcase time="0.00199999999999889" classname="resolve_state" name="resolve_state_for_default_filter_results_in_empty_list"/>
-    <testcase time="0.00200000000000244" classname="resolve_state" name="resolve_state_for_empty_list_results_in_empty_list"/>
-    <testcase time="0.0069999999999979" classname="resolve_state" name="resolve_state_throws_when_passed_a_list_with_more_than_one_unnamed_element"/>
+    <testcase time="0.00199999999999889" classname="resolve_state" name="resolve_state_for_empty_list_results_in_empty_list"/>
+    <testcase time="0.00700000000000145" classname="resolve_state" name="resolve_state_throws_when_passed_a_list_with_more_than_one_unnamed_element"/>
   </testsuite>
-  <testsuite name="utils" timestamp="2023-06-05T13:59:32Z" hostname="7326b90c2626" tests="2" skipped="0" failures="0" errors="0" time="0.031">
-    <testcase time="0.00700000000000145" classname="utils" name="get_teal_bs_theme"/>
+  <testsuite name="utils" timestamp="2023-06-05T15:13:02Z" hostname="6876aea007b6" tests="2" skipped="0" failures="0" errors="0" time="0.032">
+    <testcase time="0.00799999999999912" classname="utils" name="get_teal_bs_theme"/>
     <testcase time="0.0240000000000009" classname="utils" name="get_teal_bs_theme"/>
   </testsuite>
 </testsuites>
