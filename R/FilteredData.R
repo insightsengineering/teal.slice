@@ -555,7 +555,7 @@ FilteredData <- R6::R6Class( # nolint
 
       state <- state[state_ids %in% names(locked[!locked])]
 
-      if(length(state) > 0) {
+      if (length(state) > 0) {
         datanames <- slices_field(state, "dataname")
         logger::log_trace(
           "{ class(self)[1] }$remove_filter_state removing filter(s), dataname: { private$dataname }"
