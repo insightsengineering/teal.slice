@@ -141,7 +141,7 @@ MAEFilteredDataset <- R6::R6Class( # nolint
       current_states <- shiny::isolate(self$get_filter_state())
 
       lapply(varnames, function(varname) {
-        slice <- Filter(function(x) identical(x$varname, varname))
+        slice <- Filter(function(x) identical(x$varname, varname), state)
         private$get_filter_states()[[slice[[1]]$datalabel]]$remove_filter_state(slice)
       })
 

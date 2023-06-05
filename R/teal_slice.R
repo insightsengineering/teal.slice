@@ -534,5 +534,5 @@ slices_which <- function(tss, expr) {
 #' @keywords internal
 #'
 str_to_shiny_ns <- function(x) {
-  gsub("[[:punct:][:space:]]+", "_", x)
+  gsub("[^[:alnum:]]+", "_", x)
 }

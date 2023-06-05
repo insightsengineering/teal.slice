@@ -211,7 +211,7 @@ DefaultFilteredDataset <- R6::R6Class( # nolint
 
       varnames <- slices_field(state, "varname")
       lapply(varnames, function(varname) {
-        slices <- Filter(function(x) identical(x$varname, varname))
+        slices <- Filter(function(x) identical(x$varname, varname), state)
         private$get_filter_states()[[1]]$remove_filter_state(slices)
       })
 

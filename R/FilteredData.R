@@ -548,7 +548,7 @@ FilteredData <- R6::R6Class( # nolint
       )
 
       lapply(datanames, function(dataname) {
-        slices <- Filter(function(x) identical(x$dataname, dataname))
+        slices <- Filter(function(x) identical(x$dataname, dataname), state)
         private$get_filtered_dataset(dataname)$remove_filter_state(slices)
       })
 
@@ -615,6 +615,19 @@ FilteredData <- R6::R6Class( # nolint
     },
 
     # shiny modules -----
+
+    #' Set external `teal_slice`
+    #'
+    #' Unlike adding new filter from the column, these filters can be added with some pre-specified
+    #' settings.
+    #' @param teal_slices (`reactive`)\cr
+    #'  should return `teal_slices`
+    #' @return invisible `NULL`
+    set_external_teal_slices = function(x) {
+      checkmate::assert_class(x, "reactive")
+      private$external_teal_slices <- x
+      invisible(NULL)
+    },
 
     #' Module for the right filter panel in the teal app
     #' with a filter overview panel and a filter variable panel.
@@ -691,6 +704,7 @@ FilteredData <- R6::R6Class( # nolint
             inline = TRUE,
             width = 30
           ),
+          private$ui_available_filters(ns("available_filters")),
           actionLink(
             ns("minimise_filter_active"),
             label = NULL,
@@ -738,6 +752,9 @@ FilteredData <- R6::R6Class( # nolint
       checkmate::assert_class(active_datanames, "reactive")
       shiny::moduleServer(id, function(input, output, session) {
         logger::log_trace("FilteredData$srv_active initializing")
+
+        private$srv_available_filters("available_filters")
+
         shiny::observeEvent(input$minimise_filter_active, {
           shinyjs::toggle("filter_active_vars_contents")
           shinyjs::toggle("filters_active_count")
@@ -1042,6 +1059,8 @@ FilteredData <- R6::R6Class( # nolint
     # preprocessing code used to generate the unfiltered datasets as a string
     code = NULL,
 
+    external_teal_slices = NULL,
+
     # keys used for joining/filtering data a JoinKeys object (see teal.data)
     join_keys = NULL,
 
@@ -1140,6 +1159,58 @@ FilteredData <- R6::R6Class( # nolint
       }
 
       invisible(NULL)
+    },
+
+    ui_available_filters = function(id) {
+      ns <- NS(id)
+
+      active_slices_id <- shiny::isolate(vapply(self$get_filter_state(), `[[`, character(1), "id"))
+      shinyWidgets::dropMenu(
+        actionLink(
+          ns("show"),
+          label = NULL,
+          icon = icon("plus", lib = "font-awesome"),
+          title = "Available filters",
+          class = "remove pull-right"
+        ),
+        uiOutput(ns("checkbox"))
+      )
+    },
+    srv_available_filters = function(id) {
+      moduleServer(id, function(input, output, session) {
+        available_slices_id <- reactive(vapply(private$external_teal_slices(), `[[`, character(1), "id"))
+        active_slices_id <- reactive(vapply(self$get_filter_state(), `[[`, character(1), "id"))
+
+
+        output$checkbox <- renderUI({
+          shiny::checkboxGroupInput(
+            session$ns("available_slices_id"),
+            label = "Available filters",
+            choices = available_slices_id(),
+            selected = active_slices_id()
+          )
+        })
+
+        observeEvent(input$available_slices_id, ignoreNULL = FALSE, ignoreInit = TRUE, {
+          new_slices_id <- setdiff(input$available_slices_id, active_slices_id())
+          removed_slices_id <- setdiff(active_slices_id(), input$available_slices_id)
+          if (length(new_slices_id)) {
+            new_teal_slices <- Filter(
+              function(slice) slice$id %in% new_slices_id,
+              private$external_teal_slices()
+            )
+            self$set_filter_state(new_teal_slices)
+          }
+
+          if (length(removed_slices_id)) {
+            removed_teal_slices <- Filter(
+              function(slice) slice$id %in% removed_slices_id,
+              private$external_teal_slices()
+            )
+            self$remove_filter_state(removed_teal_slices)
+          }
+        })
+      })
     }
   )
 )
