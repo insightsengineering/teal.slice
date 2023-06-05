@@ -117,7 +117,7 @@ testthat::test_that("set_state cannot set mutable fields in a fixed FilterState"
   testthat::expect_identical(shiny::isolate(filter_state$get_state()), old_state)
 })
 
-testthat::test_that("set_state cannot set mutable fields in a locked FilterState", {
+testthat::test_that("set_state can set mutable fields in a locked FilterState", {
   filter_state <- FilterState$new(c("a", NA_character_), dataname = "data", varname = "variable", locked = TRUE)
   old_state <- shiny::isolate(filter_state$get_state())
   new_state <- filter_var(
@@ -126,10 +126,25 @@ testthat::test_that("set_state cannot set mutable fields in a locked FilterState
     selected = "a",
     keep_na = TRUE,
     keep_inf = FALSE,
-    disabled = FALSE
+    disable = FALSE,
+    locked = TRUE
   )
   testthat::expect_output(filter_state$set_state(new_state), "WARN.+attempt to disable a locked filter aborted")
-  testthat::expect_identical(shiny::isolate(filter_state$get_state()), old_state)
+  testthat::expect_identical(shiny::isolate(filter_state$get_state()), new_state)
+})
+
+testthat::test_that("set_state cannot set disabled field in a locked FilterState", {
+  filter_state <- FilterState$new(c("a", NA_character_), dataname = "data", varname = "variable", locked = TRUE)
+  new_state <- filter_var(
+    dataname = "data",
+    varname = "variable",
+    selected = "a",
+    keep_na = TRUE,
+    keep_inf = FALSE,
+    disable = FALSE,
+    locked = TRUE
+  )
+  testthat::expect_output(filter_state$set_state(new_state), "WARN.+attempt to disable a locked filter aborted")
 })
 
 testthat::test_that("set_state cannot set mutable fields in a disabled FilterState", {
