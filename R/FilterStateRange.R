@@ -207,8 +207,10 @@ RangeFilterState <- R6::R6Class( # nolint
         ggplot2::theme_void() +
         ggplot2::coord_cartesian(
           expand = FALSE,
-          xlim = c(private$choices[1L], private$choices[2L])
-        )
+          xlim = private$choices
+        ) +
+        ggplot2::theme(axis.text.x = ggplot2::element_text()) +
+        ggplot2::scale_x_continuous(n.breaks = 10)
 
       invisible(self)
     },
@@ -394,12 +396,8 @@ RangeFilterState <- R6::R6Class( # nolint
         min = private$choices[1L],
         max = private$choices[2L],
         value = shiny::isolate(private$selected()),
+        tooltips = FALSE,
         color = fetch_bs_color("primary"),
-        pips = list(
-          mode = "values",
-          values = as.list(private$choices),
-          density = 10
-        ),
         format = shinyWidgets::wNumbFormat(
           decimals = 4
         )
@@ -420,19 +418,6 @@ RangeFilterState <- R6::R6Class( # nolint
       }
 
       tagList(
-        tags$style(HTML(paste(
-          ".noUi-tooltip {",
-          "display: block;",
-          "position: absolute;",
-          "border: 1px solid #D9D9D9;",
-          "border-radius: 3px;",
-          "background: #fff7;",
-          "color: #000;",
-          "padding: 0.1em;",
-          "text-align: center;",
-          "white-space: nowrap;",
-          "font-size: 0.7em;",
-          "}"))),
         div(
           class = "choices_state",
           div(
