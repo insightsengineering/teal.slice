@@ -5,6 +5,7 @@ on:
   push:
     branches:
       - main
+      - filter_panel_refactor@main
     paths:
       - "inst/templates/**"
       - "_pkgdown.y[a]ml"
@@ -22,6 +23,7 @@ on:
       - ready_for_review
     branches:
       - main
+      - filter_panel_refactor@main
     paths:
       - "inst/templates/**"
       - "_pkgdown.y[a]ml"
@@ -38,6 +40,6 @@ jobs:
     name: Pkgdown Docs 📚
     uses: insightsengineering/r.pkg.template/.github/workflows/pkgdown.yaml@main
     secrets:
-      REPO_GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      REPO_GITHUB_TOKEN: ${{ secrets.REPO_GITHUB_TOKEN }}
     with:
       default-landing-page: latest-tag
