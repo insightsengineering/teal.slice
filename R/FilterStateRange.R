@@ -391,20 +391,10 @@ RangeFilterState <- R6::R6Class( # nolint
     cast_and_validate = function(values) {
       if (!is.atomic(values)) stop("Values to set must be an atomic vector.")
       values <- as.numeric(values)
-      if (any(is.na(values))) stop("The array of set values must contain values coercible to numeric.")
-      if (length(values) != 2) stop("The array of set values must have length two.")
+      if (any(is.na(values))) stop("Vector of set values must contain values coercible to numeric.")
+      if (length(values) != 2) stop("Vector of set values must have length two.")
+      if (values[1L] > values[2L]) stop("Vector of set values must be sorted.")
 
-      # values_adjusted <- contain_interval(values, private$slider_ticks)
-      # if (!isTRUE(all.equal(values, values_adjusted))) {
-      #   logger::log_warn(sprintf(
-      #     paste(
-      #       "Programmatic range specification on %s was adjusted to existing slider ticks.",
-      #       "It is now broader in order to contain the specified values."
-      #     ),
-      #     private$varname
-      #   ))
-      # }
-      # values_adjusted
       values
     },
     # Trim selection to limits imposed by private$choices
@@ -572,14 +562,7 @@ RangeFilterState <- R6::R6Class( # nolint
             ignoreInit = TRUE,
             eventExpr = input$selection_manual,
             handlerExpr = {
-              # 2 separate checks are required here to prevent errors
-              #
-              # if the user sets either input to 'e' it will return NA
-              # this NA would cause the lower > upper check to return NA
-              #  and the if(lower > upper) check would throw an error
-              #
-              # if lower > manual, contain_interval() will error because it
-              #  expects it's input to be sorted
+              # Abort and reset if non-numeric values is entered.
               if (any(is.na(input$selection_manual))) {
                 showNotification(
                   "Numeric range values must be numbers.",
@@ -592,6 +575,7 @@ RangeFilterState <- R6::R6Class( # nolint
                 )
                 return(NULL)
               }
+              # Abort and reset if reversed choices are specified.
               if (input$selection_manual[1] > input$selection_manual[2]) {
                 showNotification(
                   "Numeric range start value must be less than end value.",
@@ -613,8 +597,6 @@ RangeFilterState <- R6::R6Class( # nolint
               )
               selection <- input$selection_manual
               if (!isTRUE(all.equal(input$selection_manual, private$get_selected()))) {
-                if (selection[1L] < private$choices[1L]) selection[1L] <- private$choices[1L]
-                if (selection[2L] > private$choices[2L]) selection[2L] <- private$choices[2L]
                 private$set_selected(selection)
               }
             }
