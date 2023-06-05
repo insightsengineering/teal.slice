@@ -10,7 +10,7 @@ testthat::test_that("constructor accepts numerical values", {
 
 testthat::test_that("constructor accepts infinite values but not infinite only", {
   testthat::expect_no_error(
-    RangeFilterState$new(c(nums, Inf, -Inf), dataname = "data", varname = "variable")
+    RangeFilterState$new(c(nums, Inf), dataname = "data", varname = "variable")
   )
   testthat::expect_error(
     RangeFilterState$new(Inf, dataname = "data", varname = "variable"),
@@ -29,23 +29,12 @@ testthat::test_that("constructor initializes keep_inf = TRUE by default if x con
   testthat::expect_true(shiny::isolate(filter_state$get_state())$keep_inf)
 })
 
-testthat::test_that("constructor raises error when selected is not sorted", {
-  skip("no longer necessary(?)")
-  testthat::expect_error(
-    RangeFilterState$new(
-      nums,
-      dataname = "data", varname = "variable", selected = nums[c(10, 1)]
-    ),
-    "Assertion on 'x' failed: Must be sorted"
-  )
-})
-
 testthat::test_that("constructor raises error when selection is not numeric or coercible", {
   testthat::expect_error(
     suppressWarnings(
       RangeFilterState$new(nums, dataname = "data", varname = "variable", selected = c("a", "b"))
     ),
-    "The array of set values must contain values coercible to numeric"
+    "Vector of set values must contain values coercible to numeric"
   )
 })
 
@@ -88,7 +77,7 @@ testthat::test_that("set_state: selected accepts vector of two numbers or coerci
   )
   testthat::expect_error(
     filter_state$set_state(filter_var(dataname = "data", varname = "variable", selected = nums[1])),
-    "The array of set values must have length two"
+    "Vector of set values must have length two"
   )
   testthat::expect_no_error(
     filter_state$set_state(filter_var(dataname = "data", varname = "variable", selected = as.character(1:2)))
@@ -97,7 +86,7 @@ testthat::test_that("set_state: selected accepts vector of two numbers or coerci
     suppressWarnings(
       filter_state$set_state(filter_var(dataname = "data", varname = "variable", selected = as.character("a", "b")))
     ),
-    "The array of set values must contain values coercible to numeric"
+    "Vector of set values must contain values coercible to numeric"
   )
   testthat::expect_error(
     filter_state$set_state(filter_var(dataname = "data", varname = "variable", selected = c(print))),
@@ -106,7 +95,6 @@ testthat::test_that("set_state: selected accepts vector of two numbers or coerci
 })
 
 
-# set_state ----
 testthat::test_that("set_state: selected accepts numeric vector of length 2", {
   filter_state <- RangeFilterState$new(nums, dataname = "data", varname = "variable")
   testthat::expect_no_error(
@@ -114,63 +102,42 @@ testthat::test_that("set_state: selected accepts numeric vector of length 2", {
   )
   testthat::expect_error(
     filter_state$set_state(filter_var(selected = nums[1], dataname = "data", varname = "variable")),
-    "The array of set values must have length two"
+    "Vector of set values must have length two"
   )
 
   testthat::expect_error(
     suppressWarnings(
       filter_state$set_state(filter_var(selected = c("a", "b"), dataname = "data", varname = "variable"))
     ),
-    "The array of set values must contain values coercible to numeric"
+    "Vector of set values must contain values coercible to numeric"
   )
 })
 
-testthat::test_that("set_state: selected raises `logger` warning when selection is not within the possible range", {
-  filter_state <- RangeFilterState$new(nums, dataname = "data", varname = "variable")
 
-  skip("no longer guarded")
-  testthat::expect_output(
-    filter_state$set_state(
-      filter_var(nums, dataname = "data", varname = "variable", selected = c(nums[1] - 1, nums[10]))
+testthat::test_that("set_state: selected raises error when selected is not sorted", {
+  testthat::expect_error(
+    RangeFilterState$new(
+      nums,
+      dataname = "data", varname = "variable", selected = nums[c(10, 1)]
     ),
-    "Programmatic range specification"
-  )
-  testthat::expect_output(
-    filter_state$set_state(
-      filter_var(nums, dataname = "data", varname = "variable", selected = c(nums[1], nums[10] + 1))
-    ),
-    "Programmatic range"
-  )
-  testthat::expect_output(
-    filter_state$set_state(
-      filter_var(nums, dataname = "data", varname = "variable", selected = c(nums[1] - 1, nums[10] + 1))
-    ),
-    "Programmatic range"
+    "Vector of set values must be sorted"
   )
 })
 
 testthat::test_that("set_state: selected range is limited to lower and upper bound of possible range", {
-  skip("hmm")
   filter_state <- RangeFilterState$new(nums, dataname = "data", varname = "variable")
-  testthat::expect_output(
-    filter_state$set_state(
-      filter_var(dataname = "data", varname = "variable", selected = c(nums[1] - 1, nums[10]))
-    ),
-    "Programmatic range"
+  filter_state$set_state(
+    filter_var(dataname = "data", varname = "variable", selected = c(nums[1] - 1, nums[10]))
   )
   testthat::expect_equal(shiny::isolate(filter_state$get_state()$selected), c(nums[1], nums[10]))
-  testthat::expect_output(
-    filter_state$set_state(
-      filter_var(dataname = "data", varname = "variable", selected = c(nums[1], nums[10] + 1))
-    ),
-    "Programmatic range"
+
+  filter_state$set_state(
+    filter_var(dataname = "data", varname = "variable", selected = c(nums[1], nums[10] + 1))
   )
   testthat::expect_equal(shiny::isolate(filter_state$get_state()$selected), c(nums[1], nums[10]))
-  testthat::expect_output(
-    filter_state$set_state(
-      filter_var(dataname = "data", varname = "variable", selected = c(nums[1] - 1, nums[10] + 1))
-    ),
-    "Programmatic range"
+
+  filter_state$set_state(
+    filter_var(dataname = "data", varname = "variable", selected = c(nums[1] - 1, nums[10] + 1))
   )
   testthat::expect_equal(shiny::isolate(filter_state$get_state()$selected), c(nums[1], nums[10]))
 })
@@ -181,7 +148,7 @@ testthat::test_that("set_state: selected raises error when selection is not coer
     suppressWarnings(
       filter_state$set_state(filter_var(dataname = "data", varname = "variable", selected = c("a", "b")))
     ),
-    "The array of set values must contain values coercible to numeric"
+    "Vector of set values must contain values coercible to numeric"
   )
 })
 
