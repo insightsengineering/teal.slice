@@ -226,7 +226,7 @@ RangeFilterState <- R6::R6Class( # nolint
             nticks = 10
           ),
           yaxis = list(showgrid = FALSE, showticklabels = FALSE),
-          margin = list(b = 17, l = 5, r = 5, t = 0, autoexpand = FALSE),
+          margin = list(b = 17, l = 0, r = 0, t = 0, autoexpand = FALSE),
           plot_bgcolor = "#FFFFFF00",
           paper_bgcolor = "#FFFFFF00",
           shapes = shapes
