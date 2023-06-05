@@ -92,11 +92,7 @@ FilteredDataset <- R6::R6Class( # nolint
       logger::log_trace("Removing all non-locked filters from FilteredDataset: { deparse1(self$get_dataname()) }")
       lapply(
         private$get_filter_states(),
-        function(filter_states) {
-          if(!filter_states$locked) {
-            filter_states$clear_filter_states()
-          }
-        }
+        function(filter_states) filter_states$clear_filter_states()
       )
       logger::log_trace("Removed all non-locked filters from FilteredDataset: { deparse1(self$get_dataname()) }")
       NULL
