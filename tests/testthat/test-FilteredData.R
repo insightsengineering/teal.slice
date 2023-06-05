@@ -482,7 +482,7 @@ testthat::test_that("set_filter_state accepts `teal_slices` and nested list and 
     filter_var(dataname = "iris", varname = "Petal.Length"),
     filter_var(
       dataname = "mae", varname = "years_to_birth", datalabel = "subjects",
-      selected = c(30, 50), , keep_na = TRUE, keep_inf = FALSE
+      selected = c(30, 50), keep_na = TRUE, keep_inf = FALSE
     ),
     filter_var(
       dataname = "mae", varname = "vital_status", datalabel = "subjects",
