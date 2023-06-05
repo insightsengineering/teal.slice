@@ -10,11 +10,11 @@ on:
       - ready_for_review
     branches:
       - main
-      - filter_panel_refactor
+      - filter_panel_refactor@main
   push:
     branches:
       - main
-      - filter_panel_refactor
+      - filter_panel_refactor@main
   workflow_dispatch:
 
   # Rerun workflows once pkgdown has finished running, to add coverage
