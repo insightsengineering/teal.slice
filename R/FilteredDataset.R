@@ -329,7 +329,7 @@ FilteredDataset <- R6::R6Class( # nolint
           })
 
           observeEvent(input$remove_filters, {
-            logger::log_trace("FilteredDataset$srv_active@1 removing non-locked filters, dataname: { dataname }")
+            logger::log_trace("FilteredDataset$srv_active@1 removing all non-locked filters, dataname: { dataname }")
             self$clear_filter_states()
             logger::log_trace("FilteredDataset$srv_active@1 removed all non-locked filters, dataname: { dataname }")
           })
