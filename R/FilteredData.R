@@ -544,19 +544,37 @@ FilteredData <- R6::R6Class( # nolint
       datanames <- slices_field(state, "dataname")
       checkmate::assert_subset(datanames, self$datanames())
 
-      logger::log_trace(
-        "{ class(self)[1] }$remove_filter_state removing filter(s), dataname: { private$dataname }"
+      current <- shiny::isolate(self$get_filter_state())
+
+      locked <- setNames(
+        sapply(current, function(x) x$locked),
+        sapply(current, get_teal_slice_id)
       )
 
-      lapply(datanames, function(x) {
-        private$get_filtered_dataset(x)$remove_filter_state(
-          slices_which(state, sprintf("dataname == \"%s\"", x))
+      state_ids <- sapply(state, get_teal_slice_id)
+
+      state <- state[state_ids %in% names(locked[!locked])]
+
+      if(length(state) > 0) {
+        datanames <- slices_field(state, "dataname")
+        logger::log_trace(
+          "{ class(self)[1] }$remove_filter_state removing filter(s), dataname: { private$dataname }"
         )
-      })
 
-      logger::log_trace(
-        "{ class(self)[1] }$remove_filter_state removed filter(s), dataname: { private$dataname }"
-      )
+        lapply(datanames, function(x) {
+          private$get_filtered_dataset(x)$remove_filter_state(
+            slices_which(state, sprintf("dataname == \"%s\"", x))
+          )
+        })
+
+        logger::log_trace(
+          "{ class(self)[1] }$remove_filter_state removed filter(s), dataname: { private$dataname }"
+        )
+      } else {
+        logger::log_trace(
+          "{ class(self)[1] }$remove_filter_state did not remove any filter(s), dataname: { private$dataname }"
+        )
+      }
 
       invisible(NULL)
     },
@@ -595,7 +613,7 @@ FilteredData <- R6::R6Class( # nolint
 
       logger::log_trace(
         paste(
-          "FilteredData$clear_filter_states removed all FilterStates,",
+          "FilteredData$clear_filter_states removed all non-locked FilterStates,",
           "datanames: { toString(datanames) }"
         )
       )
