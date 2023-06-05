@@ -817,9 +817,9 @@ FilteredData <- R6::R6Class( # nolint
         )
 
         observeEvent(input$remove_all_filters, {
-          logger::log_trace("FilteredData$srv_filter_panel@1 removing all filters")
+          logger::log_trace("FilteredData$srv_filter_panel@1 removing all non-locked filters")
           self$clear_filter_states()
-          logger::log_trace("FilteredData$srv_filter_panel@1 removed all filters")
+          logger::log_trace("FilteredData$srv_filter_panel@1 removed all non-locked filters")
         })
         logger::log_trace("FilteredData$srv_active initialized")
         NULL
