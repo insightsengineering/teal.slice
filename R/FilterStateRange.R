@@ -199,6 +199,7 @@ RangeFilterState <- R6::R6Class( # nolint
 
       private$plot_data <- list(
         type = "histogram",
+        nbinsx = 50,
         x = Filter(Negate(is.na), Filter(is.finite, private$x)),
         color = I(fetch_bs_color("secondary")),
         alpha = 0.2,
