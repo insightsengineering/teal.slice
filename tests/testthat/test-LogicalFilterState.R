@@ -19,8 +19,9 @@ testthat::test_that("constructor raises error when selection is not logical", {
 
 testthat::test_that("constructor forces single selected when multiple is FALSE", {
   testthat::expect_no_error(
-    state <- LogicalFilterState$new(logs, dataname = "data", varname = "var", selected = c(TRUE, FALSE),
-                                    multiple = FALSE
+    state <- LogicalFilterState$new(logs,
+      dataname = "data", varname = "var", selected = c(TRUE, FALSE),
+      multiple = FALSE
     )
   )
   testthat::expect_identical(
