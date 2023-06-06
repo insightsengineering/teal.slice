@@ -53,8 +53,8 @@
 #' @param choices optional vector specifying allowed choices;
 #'  possibly a subset of values in data; type and size depends on variable type
 #' @param multiple (`logical(1)`)\cr
-    #'   flag specifying whether the `FilterState` more than one value can be selected;
-    #'   only applicable to `FilterStateChoices` and `FilterStateLogical`
+#'   flag specifying whether the `FilterState` more than one value can be selected;
+#'   only applicable to `FilterStateChoices` and `FilterStateLogical`
 #' @param selected optional vector specifying selection;
 #'  type and size depends on variable type
 #' @param keep_na `logical(1)` or `NULL` optional logical flag specifying whether to keep missing values

@@ -57,7 +57,6 @@ testthat::test_that("set_state: multiple parameters accepting boolean and null v
   testthat::expect_warning(
     filter_state$set_state(filter_var(dataname = "data", varname = "variable", selected = c(TRUE, TRUE)))
   )
-
 })
 
 # get_call ----

@@ -361,10 +361,12 @@ ChoicesFilterState <- R6::R6Class( # nolint
       values <- values[in_choices_mask]
 
       if (length(values) != 1 && !private$multiple) {
-        warning(sprintf("Values: %s are not a vector of length one.The first value will be selected by default.
+        warning(sprintf(
+          "Values: %s are not a vector of length one.The first value will be selected by default.
                         Setting defaults. Varname: %s, dataname: %s.",
-                        strtrim(paste(values, collapse = ", "), 360),
-                        private$varname, private$dataname))
+          strtrim(paste(values, collapse = ", "), 360),
+          private$varname, private$dataname
+        ))
         values <- shiny::isolate(private$get_selected())
       }
       values
@@ -549,7 +551,7 @@ ChoicesFilterState <- R6::R6Class( # nolint
                 } else {
                   updateRadioButtons(
                     inputId = "selection",
-                    selected =  private$get_selected()
+                    selected = private$get_selected()
                   )
                 }
               } else {

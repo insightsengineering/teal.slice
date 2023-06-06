@@ -254,10 +254,12 @@ LogicalFilterState <- R6::R6Class( # nolint
     },
     remove_out_of_bound_values = function(values) {
       if (length(values) != 1 && !private$multiple) {
-        warning(sprintf("Values: %s are not a vector of length one. The first value will be selected by default.
+        warning(sprintf(
+          "Values: %s are not a vector of length one. The first value will be selected by default.
                         Setting defaults. Varname: %s, dataname: %s.",
-                        strtrim(paste(values, collapse = ", "), 360),
-                        private$varname, private$dataname))
+          strtrim(paste(values, collapse = ", "), 360),
+          private$varname, private$dataname
+        ))
         values <- shiny::isolate(private$get_selected())
       }
       values
@@ -273,7 +275,7 @@ LogicalFilterState <- R6::R6Class( # nolint
       } else if (all(private$choices_counts > 0)) {
         TRUE
       } else if (setequal(private$get_selected(), private$choices) &&
-                 !anyNA(private$get_selected(), private$choices)) {
+        !anyNA(private$get_selected(), private$choices)) {
         TRUE
       } else if (!isTRUE(private$get_keep_na()) && private$na_count > 0) {
         TRUE
@@ -386,7 +388,7 @@ LogicalFilterState <- R6::R6Class( # nolint
                 } else {
                   updateRadioButtons(
                     inputId = "selection",
-                    selected =  private$get_selected()
+                    selected = private$get_selected()
                   )
                 }
 
