@@ -10,9 +10,7 @@ Manages choosing a logical state
 \examples{
 filter_state <- teal.slice:::LogicalFilterState$new(
   x = sample(c(TRUE, FALSE, NA), 10, replace = TRUE),
-  varname = "x",
-  dataname = "data",
-  extract_type = character(0)
+  slice = filter_var(varname = "x", dataname = "data")
 )
 shiny::isolate(filter_state$get_call())
 filter_state$set_state(
@@ -28,10 +26,7 @@ library(shinyjs)
 data_logical <- c(sample(c(TRUE, FALSE), 10, replace = TRUE), NA)
 fs <- teal.slice:::LogicalFilterState$new(
   x = data_logical,
-  dataname = "data",
-  varname = "x",
-  selected = FALSE,
-  keep_na = TRUE
+  slice = filter_var(dataname = "data", varname = "x", selected = FALSE, keep_na = TRUE)
 )
 
 ui <- fluidPage(
@@ -126,16 +121,8 @@ Initialize a \code{FilterState} object
 \if{html}{\out{<div class="r">}}\preformatted{LogicalFilterState$new(
   x,
   x_reactive = reactive(NULL),
-  dataname,
-  varname,
-  choices = NULL,
-  selected = NULL,
-  keep_na = NULL,
-  keep_inf = NULL,
-  fixed = FALSE,
-  disabled = FALSE,
   extract_type = character(0),
-  ...
+  slice
 )}\if{html}{\out{</div>}}
 }
 
@@ -151,31 +138,6 @@ counts following the change in values of the filtered dataset.
 If it is set to \code{reactive(NULL)} then counts based on filtered
 dataset are not shown.}
 
-\item{\code{dataname}}{(\code{character(1)})\cr
-optional name of dataset where \code{x} is taken from. Must be specified
-if \code{extract_type} argument is not empty.}
-
-\item{\code{varname}}{(\code{character(1)})\cr
-name of the variable.}
-
-\item{\code{choices}}{(\code{atomic}, \code{NULL})\cr
-vector specifying allowed selection values}
-
-\item{\code{selected}}{(\code{atomic}, \code{NULL})\cr
-vector specifying selection}
-
-\item{\code{keep_na}}{(\code{logical(1)}, \code{NULL})\cr
-flag specifying whether to keep missing values}
-
-\item{\code{keep_inf}}{(\code{logical(1)}, \code{NULL})\cr
-flag specifying whether to keep infinite values}
-
-\item{\code{fixed}}{(\code{logical(1)})\cr
-flag specifying whether the \code{FilterState} is initiated fixed}
-
-\item{\code{disabled}}{(\code{logical(1)})\cr
-flag specifying whether the \code{FilterState} is initiated disabled}
-
 \item{\code{extract_type}}{(\code{character(0)}, \code{character(1)})\cr
 whether condition calls should be prefixed by dataname. Possible values:
 \itemize{
@@ -183,6 +145,13 @@ whether condition calls should be prefixed by dataname. Possible values:
 \item{\code{"list"}}{ \code{varname} in the condition call will be returned as \verb{<dataname>$<varname>}}
 \item{\code{"matrix"}}{ \code{varname} in the condition call will be returned as \verb{<dataname>[, <varname>]}}
 }}
+
+\item{\code{slice}}{(\code{teal_slice})\cr
+object created using \code{\link[=filter_var]{filter_var()}}. \code{teal_slice} is stored
+in the class and \code{set_state} directly manipulates values within \code{teal_slice}. \code{get_state}
+returns \code{teal_slice} object which can be reused in other places. Beware, that \code{teal_slice}
+is an immutable object which means that changes in particular object are automatically
+reflected in all places which refer to the same \code{teal_slice}.}
 
 \item{\code{...}}{additional arguments to be saved as a list in \code{private$extras} field}
 }
@@ -203,7 +172,7 @@ For \code{LogicalFilterState} it's a \verb{!<varname>} or \verb{<varname>} and o
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
-\item{\code{dataname}}{name of data set; defaults to \code{private$dataname}}
+\item{\code{dataname}}{name of data set; defaults to \code{private$get_dataname()}}
 }
 \if{html}{\out{</div>}}
 }

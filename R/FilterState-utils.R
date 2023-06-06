@@ -78,8 +78,8 @@ init_filter_state <- function(x,
 #' @export
 init_filter_state.default <- function(x,
                                       x_reactive = reactive(NULL),
-                                      extract_type = character(0),
-                                      slice) {
+                                      slice,
+                                      extract_type = character(0)) {
   args <- list(
     x = x,
     x_reactive = x_reactive,

@@ -108,7 +108,7 @@ FilterState <- R6::R6Class( # nolint
           varlabel
         }
 
-      logger::log_trace("Instantiated FilterState object")
+      logger::log_trace("Instantiated FilterState object id: { private$get_id() }")
 
       invisible(self)
     },
@@ -147,9 +147,9 @@ FilterState <- R6::R6Class( # nolint
     set_state = function(state) {
       checkmate::assert_class(state, "teal_slice")
       if (private$is_fixed()) {
-          logger::log_warn("attempt to set state on fixed filter aborted: { private$get_dataname() } { private$get_varname() }")
+        logger::log_warn("attempt to set state on fixed filter aborted id: { private$get_id() }")
       } else {
-        logger::log_trace("{ class(self)[1] }$set_state setting state of variable: { private$get_varname() }")
+        logger::log_trace("{ class(self)[1] }$set_state setting state of filter id: { private$get_id() }")
         shiny::isolate({
           if (!is.null(state$selected)) {
             private$set_selected(state$selected)
@@ -167,8 +167,6 @@ FilterState <- R6::R6Class( # nolint
             private$get_keep_inf()
           )
         })
-
-        logger::log_trace("state of variable: { private$get_varname() } set to: { current_state }")
       }
 
       invisible(self)
@@ -215,20 +213,14 @@ FilterState <- R6::R6Class( # nolint
           }
 
           private$destroy_shiny <- function() {
-            logger::log_trace("Destroying FilterState inputs and observers; variable: { deparse1(private$get_varname()) }")
+            logger::log_trace("Destroying FilterState inputs and observers; id: { private$get_id() }")
             # remove values from the input list
             lapply(session$ns(names(input)), .subset2(input, "impl")$.values$remove)
 
             # remove observers
             lapply(private$observers, function(x) x$destroy())
 
-            logger::log_trace(
-              sprintf(
-                "Destroyed FilterState inputs and observers; variable %s; %s inputs remained.",
-                deparse1(private$get_varname()),
-                length(reactiveValuesToList(input))
-              )
-            )
+            logger::log_trace("Destroyed FilterState inputs and observers; id: { private$get_id() }")
           }
 
           reactive(input$remove)
@@ -347,10 +339,9 @@ FilterState <- R6::R6Class( # nolint
     set_selected = function(value) {
       logger::log_trace(
         sprintf(
-          "%s$set_selected setting selection of variable %s, dataname: %s.",
+          "%s$set_selected setting selection of id: %s",
           class(self)[1],
-          private$get_varname(),
-          private$get_dataname()
+          private$get_id()
         )
       )
       shiny::isolate({
@@ -362,10 +353,9 @@ FilterState <- R6::R6Class( # nolint
       })
       logger::log_trace(
         sprintf(
-          "%s$set_selected selection of variable %s set, dataname: %s",
+          "%s$set_selected selection of id: %s",
           class(self)[1],
-          private$get_varname(),
-          private$get_dataname()
+          private$get_id()
         )
       )
 
@@ -387,9 +377,9 @@ FilterState <- R6::R6Class( # nolint
       private$teal_slice$keep_na <- value
       logger::log_trace(
         sprintf(
-          "%s$set_keep_na set for variable %s to %s.",
+          "%s$set_keep_na set for filter %s to %s.",
           class(self)[1],
-          private$get_varname(),
+          private$get_id(),
           value
         )
       )
@@ -410,11 +400,10 @@ FilterState <- R6::R6Class( # nolint
       private$teal_slice$keep_inf <- value
       logger::log_trace(
         sprintf(
-          "%s$set_keep_inf of variable %s set to %s, dataname: %s.",
+          "%s$set_keep_inf of filter %s set to %s",
           class(self)[1],
-          private$get_varname(),
-          value,
-          private$get_dataname()
+          private$get_id(),
+          value
         )
       )
 
@@ -452,6 +441,13 @@ FilterState <- R6::R6Class( # nolint
     # @return `character(1)`
     get_varname = function() {
       shiny::isolate(private$teal_slice$varname)
+    },
+
+    # @description
+    # Get id of the teal_slice.
+    # @return `character(1)`
+    get_id = function() {
+      shiny::isolate(private$teal_slice$id)
     },
 
     # @description
@@ -695,6 +691,7 @@ FilterState <- R6::R6Class( # nolint
           ignoreInit = TRUE, # ignoreInit: should not matter because we set the UI with the desired initial state
           handlerExpr = {
             if (!setequal(private$get_keep_na(), input$value)) {
+              logger::log_trace("FilterState$keep_na_srv@1 changed reactive value")
               updateCheckboxInput(
                 inputId = "value",
                 label = sprintf("Keep NA (%s/%s)", private$filtered_na_count(), private$na_count),
@@ -708,21 +705,13 @@ FilterState <- R6::R6Class( # nolint
           ignoreInit = TRUE, # ignoreInit: should not matter because we set the UI with the desired initial state
           eventExpr = input$value,
           handlerExpr = {
+            logger::log_trace("FilterState$keep_na_srv@2 changed input")
             keep_na <- if (is.null(input$value)) {
               FALSE
             } else {
               input$value
             }
             private$set_keep_na(keep_na)
-            logger::log_trace(
-              sprintf(
-                "%s$server keep_na of variable %s set to: %s, dataname: %s",
-                class(self)[1],
-                private$get_varname(),
-                input$value,
-                private$get_dataname()
-              )
-            )
           }
         )
         invisible(NULL)

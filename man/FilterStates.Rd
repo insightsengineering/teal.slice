@@ -18,23 +18,7 @@ classes of the underlying data object and \code{FilterStates} subclasses.
 Currently implemented for \code{data.frame}, \code{matrix},
 \code{SummarizedExperiment}, and \code{MultiAssayExperiment}.
 }
-\keyword{(from}
-\keyword{Calls}
-\keyword{Server}
-\keyword{`FilterState`}
-\keyword{`ReactiveQueue`)}
-\keyword{a}
-\keyword{and}
-\keyword{button}
-\keyword{for}
-\keyword{from}
 \keyword{internal}
-\keyword{module}
-\keyword{observes}
-\keyword{remove}
-\keyword{server}
-\keyword{single}
-\keyword{the}
 \section{Methods}{
 \subsection{Public methods}{
 \itemize{
@@ -354,11 +338,6 @@ an ID string that corresponds with the ID used to call the module's UI function.
 }
 \subsection{Returns}{
 \code{moduleServer} function which returns \code{NULL}
-UI wrapping a single \code{FilterState}
-
-This module contains a single \code{FilterState} card and remove (from the \code{ReactiveQueue}) button.
-
-return \code{moduleServer} function which returns \code{NULL}
 }
 }
 \if{html}{\out{<hr>}}

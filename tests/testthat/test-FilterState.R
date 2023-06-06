@@ -126,10 +126,10 @@ testthat::test_that("add_keep_na_call modifies call if keep_na set to TRUE", {
     quote(TRUE)
   )
 
-  shiny::isolate(filter_state$set_state(filter_var(dataname = "data", varname = "variable", keep_na = TRUE)))
+  filter_state$set_state(filter_var(dataname = "data", varname = "var", keep_na = TRUE))
   testthat::expect_identical(
     shiny::isolate(filter_state$test_add_keep_na_call()),
-    quote(is.na(variable) | TRUE)
+    quote(is.na(var) | TRUE)
   )
 })
 

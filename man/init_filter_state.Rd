@@ -7,16 +7,8 @@
 init_filter_state(
   x,
   x_reactive = reactive(NULL),
-  dataname,
-  varname,
-  choices = NULL,
-  selected = NULL,
-  keep_na = NULL,
-  keep_inf = NULL,
-  fixed = FALSE,
-  disabled = FALSE,
-  extract_type = character(0),
-  ...
+  slice,
+  extract_type = character(0)
 )
 }
 \arguments{
@@ -29,30 +21,10 @@ counts following the change in values of the filtered dataset.
 If it is set to \code{reactive(NULL)} then counts based on filtered
 dataset are not shown.}
 
-\item{dataname}{(\code{character(1)})\cr
-optional name of dataset where \code{x} is taken from. Must be specified
-if \code{extract_type} argument is not empty.}
-
-\item{varname}{(\code{character(1)})\cr
-name of the variable.}
-
-\item{choices}{(\code{atomic})\cr
-vector specifying allowed selection values}
-
-\item{selected}{(\code{atomic}, \code{NULL})\cr
-vector specifying selection}
-
-\item{keep_na}{(\code{logical(1)}, \code{NULL})\cr
-flag specifying whether to keep missing values}
-
-\item{keep_inf}{(\code{logical(1)}, \code{NULL})\cr
-flag specifying whether to keep infinite values}
-
-\item{fixed}{(\code{logical(1)})\cr
-flag specifying whether the \code{FilterState} is initiated fixed}
-
-\item{disabled}{(\code{logical(1)})\cr
-flag specifying whether the \code{FilterState} is initiated disabled}
+\item{slice}{(\code{teal_slice})\cr
+object created using \code{\link[=filter_var]{filter_var()}} or \code{\link[=filter_expr]{filter_expr()}}. \code{slice} is kept within the
+class and can be shared in other places. Shared \code{teal_slice} object behaves in the
+way that changes in one place are reflected in other places.}
 
 \item{extract_type}{(\code{character(0)}, \code{character(1)})\cr
 whether condition calls should be prefixed by dataname. Possible values:
@@ -71,11 +43,13 @@ whether condition calls should be prefixed by dataname. Possible values:
 Initializes \code{FilterState} depending on a variable class.\cr
 }
 \examples{
-filter_state <- teal.slice:::RangeFilterState$new(
+filter_state <- teal.slice:::init_filter_state(
   x = c(1:10, NA, Inf),
   x_reactive = reactive(c(1:10, NA, Inf)),
-  varname = "x",
-  dataname = "dataname",
+  slice = filter_var(
+    varname = "x",
+    dataname = "dataname"
+  ),
   extract_type = "matrix"
 )
 

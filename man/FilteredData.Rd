@@ -135,6 +135,7 @@ shiny::isolate(datasets$get_filter_state())
 \item \href{#method-FilteredData-clear_filter_states}{\code{FilteredData$clear_filter_states()}}
 \item \href{#method-FilteredData-get_filter_panel_active}{\code{FilteredData$get_filter_panel_active()}}
 \item \href{#method-FilteredData-get_filter_panel_ui_id}{\code{FilteredData$get_filter_panel_ui_id()}}
+\item \href{#method-FilteredData-set_external_teal_slices}{\code{FilteredData$set_external_teal_slices()}}
 \item \href{#method-FilteredData-ui_filter_panel}{\code{FilteredData$ui_filter_panel()}}
 \item \href{#method-FilteredData-srv_filter_panel}{\code{FilteredData$srv_filter_panel()}}
 \item \href{#method-FilteredData-ui_active}{\code{FilteredData$ui_active()}}
@@ -736,15 +737,39 @@ Gets the state of filter panel, if activated.
 \if{latex}{\out{\hypertarget{method-FilteredData-get_filter_panel_ui_id}{}}}
 \subsection{Method \code{get_filter_panel_ui_id()}}{
 Gets the id of the filter panel UI.
+Set external \code{teal_slice}
+
+Unlike adding new filter from the column, these filters can be added with some pre-specified
+settings.
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{FilteredData$get_filter_panel_ui_id()}\if{html}{\out{</div>}}
+}
+
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-FilteredData-set_external_teal_slices"></a>}}
+\if{latex}{\out{\hypertarget{method-FilteredData-set_external_teal_slices}{}}}
+\subsection{Method \code{set_external_teal_slices()}}{
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{FilteredData$set_external_teal_slices(x)}\if{html}{\out{</div>}}
+}
+
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{teal_slices}}{(\code{reactive})\cr
+should return \code{teal_slices}}
+}
+\if{html}{\out{</div>}}
+}
+\subsection{Returns}{
+invisible \code{NULL}
 Module for the right filter panel in the teal app
 with a filter overview panel and a filter variable panel.
 
 This panel contains info about the number of observations left in
 the (active) datasets and allows to filter the datasets.
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{FilteredData$get_filter_panel_ui_id()}\if{html}{\out{</div>}}
 }
-
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-FilteredData-ui_filter_panel"></a>}}

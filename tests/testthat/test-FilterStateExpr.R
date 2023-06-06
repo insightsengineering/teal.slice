@@ -39,8 +39,8 @@ testthat::test_that("set_state ignores every attribute", {
   state$set_state(
     filter_expr(id = "id2", title = "title2", dataname = "x2", expr = "x2 == 'x2'")
   )
-  testthat::expect_identical(
-    shiny::isolate(state$get_state()),
+  expect_identical_slice(
+    state$get_state(),
     filter_expr(id = "id", title = "testtitle", dataname = "x", expr = "x == 'x'")
   )
 })

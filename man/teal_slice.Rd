@@ -17,7 +17,6 @@
 \alias{format.teal_slices}
 \alias{print.teal_slices}
 \alias{slices_field}
-\alias{slices_which}
 \title{Manage filter state(s).}
 \usage{
 filter_var(
@@ -28,11 +27,11 @@ filter_var(
   keep_na = NULL,
   keep_inf = NULL,
   fixed = FALSE,
-  disabled = FALSE,
+  id,
   ...
 )
 
-filter_expr(dataname, id, title, expr, disabled = FALSE, ...)
+filter_expr(dataname, id, title, expr, ...)
 
 filter_settings(
   ...,
@@ -64,8 +63,6 @@ as.teal_slices(x)
 \method{print}{teal_slices}(x, ...)
 
 slices_field(tss, field)
-
-slices_which(tss, expr)
 }
 \arguments{
 \item{dataname}{\code{character(1)} name of data set}
@@ -84,15 +81,12 @@ type and size depends on variable type}
 
 \item{fixed}{\code{logical(1)} logical flag specifying whether to fix this filter state (i.e. forbid setting state)}
 
-\item{disabled}{(\code{logical(1)})\cr
-flag specifying whether the \code{FilterState} is initiated disabled}
+\item{id}{(\code{character(1)})\cr
+identifier of the filter}
 
 \item{...}{for \code{filter_var} any number of additional fields given as \code{name:value} pairs\cr
 for \code{filter_settings} any number of \code{teal_slice} objects\cr
 for other functions arguments passed to other methods}
-
-\item{id}{(\code{character(1)})\cr
-identifier of the filter}
 
 \item{title}{(\code{reactive})\cr
 title of the filter (used by \code{filter_expr})}
@@ -154,11 +148,11 @@ as \code{name:value} pairs. These are collated into a list and stored in the
 All \code{teal_slice} fields can be passed as arguments to \code{FilterState} constructors.
 A \code{teal_slice} can be passed to \code{FilterState$set_state}, which will modify the state.
 However, once a \code{FilterState} is created, only the \strong{mutable} features can be set with a \code{teal_slice}:
-\code{selected}, \code{keep_na}, \code{keep_inf}, and \code{disabled}.
+\code{selected}, \code{keep_na} and \code{keep_inf}.
 
 Special consideration is given to the \code{fixed} field. This is always a logical flag that defaults to FALSE.
 In a \code{FilterState} instantiated with \code{fixed = TRUE} the features \code{selected}, \code{keep_na}, \code{keep_inf}
-cannot be changed but the\code{disabled} can.
+cannot be changed.
 
 \code{filter_var} creates a \code{teal_slice} object, which specifies a filter for a single variable,
 passed to and resolved by \code{FilterState} objects.
@@ -200,11 +194,6 @@ all_filters <- filter_settings(
     "dataname1" = "varname2"
   )
 )
-
-teal.slice:::slices_which(all_filters, 'dataname == "dataname2"')
-x <- "dataname2"
-teal.slice:::slices_which(all_filters, sprintf('dataname == "\%s"', x))
-teal.slice:::slices_field(all_filters, "dataname")
 
 filter_expr(
   dataname = "data",

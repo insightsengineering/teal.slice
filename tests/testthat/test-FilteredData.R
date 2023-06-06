@@ -505,10 +505,7 @@ testthat::test_that("set_filter_state accepts `teal_slices` and nested list and 
   testthat::expect_warning(datasets1$set_filter_state(fs1), "deprecated")
   datasets2$set_filter_state(fs2)
 
-  testthat::expect_identical(
-    shiny::isolate(datasets1$get_filter_state()),
-    shiny::isolate(datasets2$get_filter_state())
-  )
+  expect_identical_slices(datasets1$get_filter_state(), datasets2$get_filter_state())
 })
 
 

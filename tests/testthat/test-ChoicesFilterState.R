@@ -8,13 +8,12 @@ posixlt <- as.POSIXlt(as.POSIXct("2000-01-01 12:00:00", tz = "GMT") + 0:2)
 
 # constructor ----
 testthat::test_that("constructor accepts all data classes", {
-  slice <- filter_var(dataname = "data", varname = "var")
-  testthat::expect_no_error(ChoicesFilterState$new(chars, slice = slice))
-  testthat::expect_no_error(ChoicesFilterState$new(facts, slice = slice))
-  testthat::expect_no_error(ChoicesFilterState$new(nums, slice = slice))
-  testthat::expect_no_error(ChoicesFilterState$new(dates, slice = slice))
-  testthat::expect_no_error(ChoicesFilterState$new(posixct, slice = slice))
-  testthat::expect_no_error(ChoicesFilterState$new(posixlt, slice = slice))
+  testthat::expect_no_error(ChoicesFilterState$new(chars, slice = filter_var(dataname = "data", varname = "var")))
+  testthat::expect_no_error(ChoicesFilterState$new(facts, slice = filter_var(dataname = "data", varname = "var")))
+  testthat::expect_no_error(ChoicesFilterState$new(nums, slice = filter_var(dataname = "data", varname = "var")))
+  testthat::expect_no_error(ChoicesFilterState$new(dates, slice = filter_var(dataname = "data", varname = "var")))
+  testthat::expect_no_error(ChoicesFilterState$new(posixct, slice = filter_var(dataname = "data", varname = "var")))
+  testthat::expect_no_error(ChoicesFilterState$new(posixlt, slice = filter_var(dataname = "data", varname = "var")))
 })
 
 testthat::test_that("constructor raises warning if choices out of range", {
@@ -382,16 +381,16 @@ testthat::test_that("format shortens names if strings are too long", {
   filter_state <- ChoicesFilterState$new(values, slice = filter_var(dataname = "data", varname = "variable"))
   filter_state$set_state(filter_var(selected = values, dataname = "data", varname = "variable"))
   testthat::expect_equal(
-    shiny::isolate(filter_state$format()) |> cat(),
+    shiny::isolate(filter_state$format()),
     paste(
       "ChoicesFilterState:",
       "teal_slice",
       " $ dataname: data",
       " $ varname : variable",
-      " $ choices : exceedingly long value nam...",
-      " $ selected: exceedinglylongvaluenameex...",
       " $ fixed   : FALSE",
       " $ id      : data variable",
+      " $ choices : exceedingly long value nam...",
+      " $ selected: exceedinglylongvaluenameex...\n",
       sep = "\n"
     )
   )

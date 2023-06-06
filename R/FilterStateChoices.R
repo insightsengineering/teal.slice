@@ -6,7 +6,6 @@
 #'
 #'
 #' @examples
-#' pkgload::load_all("teal.slice")
 #' filter_state <- teal.slice:::ChoicesFilterState$new(
 #'   x = c(LETTERS, NA),
 #'   slice = filter_var(varname = "x", dataname = "data")
@@ -31,7 +30,9 @@
 #' attr(data_choices, "label") <- "lowercase letters"
 #' fs <- ChoicesFilterState$new(
 #'   x = data_choices,
-#'   slice = filter_var(dataname = "data", varname = "variable", selected = c("a", "b"), keep_na = TRUE)
+#'   slice = filter_var(
+#'     dataname = "data", varname = "variable", selected = c("a", "b"), keep_na = TRUE
+#'   )
 #' )
 #'
 #' ui <- fluidPage(

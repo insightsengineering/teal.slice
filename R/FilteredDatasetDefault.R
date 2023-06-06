@@ -216,10 +216,7 @@ DefaultFilteredDataset <- R6::R6Class( # nolint
         logger::log_trace("{ class(self)[1] }$remove_filter_state removing filter(s), dataname: { private$dataname }")
 
         varnames <- slices_field(state, "varname")
-        lapply(varnames, function(varname) {
-          slices <- Filter(function(x) identical(x$varname, varname), state)
-          private$get_filter_states()[[1]]$remove_filter_state(slices)
-        })
+        private$get_filter_states()[[1]]$remove_filter_state(state)
 
         logger::log_trace("{ class(self)[1] }$remove_filter_state removed filter(s), dataname: { private$dataname }")
 

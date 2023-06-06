@@ -1042,7 +1042,6 @@ FilteredData <- R6::R6Class( # nolint
 
     # preprocessing code used to generate the unfiltered datasets as a string
     code = NULL,
-
     external_teal_slices = NULL,
 
     # keys used for joining/filtering data a JoinKeys object (see teal.data)
@@ -1081,7 +1080,6 @@ FilteredData <- R6::R6Class( # nolint
     get_filter_count = function() {
       length(self$get_filter_state())
     },
-
     ui_available_filters = function(id) {
       ns <- NS(id)
 
@@ -1098,7 +1096,6 @@ FilteredData <- R6::R6Class( # nolint
           ),
           uiOutput(ns("checkbox"))
         )
-
       )
     },
     srv_available_filters = function(id) {

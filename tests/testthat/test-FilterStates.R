@@ -334,7 +334,6 @@ testthat::test_that("Selecting a new variable initializes a new filter state wit
       session$setInputs(var_to_add = "Sepal.Length")
     }
   )
-
   expect_identical_slices(
     filter_states$get_filter_state(),
     filter_settings(
