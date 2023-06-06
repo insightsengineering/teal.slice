@@ -17,7 +17,17 @@ testthat::test_that("constructor raises error when selection is not logical", {
   )
 })
 
-
+testthat::test_that("constructor forces single selected when multiple is FALSE", {
+  testthat::expect_no_error(
+    state <- LogicalFilterState$new(logs, dataname = "data", varname = "var", selected = c(TRUE, FALSE),
+                                    multiple = FALSE
+    )
+  )
+  testthat::expect_identical(
+    shiny::isolate(state$get_state()$selected),
+    TRUE
+  )
+})
 
 # set_state ----
 testthat::test_that("set_state: selected accepts a logical (or coercible) of length <=2", {
