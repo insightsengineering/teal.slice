@@ -50,32 +50,34 @@ SEFilterStates <- R6::R6Class( # nolint
     #' @return `NULL` invisibly
     #'
     set_filter_state = function(state) {
-      logger::log_trace("{ class(self)[1] }$set_filter_state initializing, dataname: { private$dataname }")
-      checkmate::assert_class(state, "teal_slices")
-      lapply(state, function(x) {
-        checkmate::assert_choice(x$arg, choices = c("subset", "select"), null.ok = TRUE, .var.name = "teal_slice$arg")
+      shiny::isolate({
+        logger::log_trace("{ class(self)[1] }$set_filter_state initializing, dataname: { private$dataname }")
+        checkmate::assert_class(state, "teal_slices")
+        lapply(state, function(x) {
+          checkmate::assert_choice(x$arg, choices = c("subset", "select"), null.ok = TRUE, .var.name = "teal_slice$arg")
+        })
+        count_type <- attr(state, "count_type")
+        if (length(count_type)) {
+          private$count_type <- count_type
+        }
+
+        subset_states <- Filter(function(x) x$arg == "subset", state)
+        private$set_filter_state_impl(
+          state = subset_states,
+          data = SummarizedExperiment::rowData(private$data),
+          data_reactive = function(sid = "") SummarizedExperiment::rowData(private$data_reactive())
+        )
+
+        select_states <- Filter(function(x) x$arg == "select", state)
+        private$set_filter_state_impl(
+          state = select_states,
+          data = SummarizedExperiment::colData(private$data),
+          data_reactive = function(sid = "") SummarizedExperiment::colData(private$data_reactive())
+        )
+
+        logger::log_trace("{ class(self)[1] }$set_filter_state initialized, dataname: { private$dataname }")
+        invisible(NULL)
       })
-      count_type <- attr(state, "count_type")
-      if (length(count_type)) {
-        private$count_type <- count_type
-      }
-
-      subset_states <- Filter(function(x) x$arg == "subset", state)
-      private$set_filter_state_impl(
-        state = subset_states,
-        data = SummarizedExperiment::rowData(private$data),
-        data_reactive = function(sid = "") SummarizedExperiment::rowData(private$data_reactive())
-      )
-
-      select_states <- Filter(function(x) x$arg == "select", state)
-      private$set_filter_state_impl(
-        state = select_states,
-        data = SummarizedExperiment::colData(private$data),
-        data_reactive = function(sid = "") SummarizedExperiment::colData(private$data_reactive())
-      )
-
-      logger::log_trace("{ class(self)[1] }$set_filter_state initialized, dataname: { private$dataname }")
-      invisible(NULL)
     },
 
     #' @description

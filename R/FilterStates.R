@@ -198,20 +198,22 @@ FilterStates <- R6::R6Class( # nolint
     #' @return `NULL` invisibly
     #'
     remove_filter_state = function(state) {
-      checkmate::assert_class(state, "teal_slices")
+      shiny::isolate({
+        checkmate::assert_class(state, "teal_slices")
 
-      lapply(state, function(x) {
-        state_id <- x$id
-        logger::log_trace(
-          "{ class(self)[1] }$remove_filter_state removing filter, dataname: { x$dataname }; state_id: { state_id }"
-        )
-        private$state_list_remove(state_id = state_id)
-        logger::log_trace(
-          "{ class(self)[1] }$remove_filter_state removed filter, dataname: { x$dataname }; state_id: { state_id }"
-        )
+        lapply(state, function(x) {
+          state_id <- x$id
+          logger::log_trace(
+            "{ class(self)[1] }$remove_filter_state removing filter, dataname: { x$dataname }; state_id: { state_id }"
+          )
+          private$state_list_remove(state_id = state_id)
+          logger::log_trace(
+            "{ class(self)[1] }$remove_filter_state removed filter, dataname: { x$dataname }; state_id: { state_id }"
+          )
+        })
+
+        invisible(NULL)
       })
-
-      invisible(NULL)
     },
 
     #' @description
@@ -256,41 +258,45 @@ FilterStates <- R6::R6Class( # nolint
     #'   column in `data`.
     #' @return function which throws an error
     set_filter_state = function(state) {
-      logger::log_trace("{ class(self)[1] }$set_filter_state initializing, dataname: { private$dataname }")
-      checkmate::assert_class(state, "teal_slices")
-      lapply(state, function(x) {
-        checkmate::assert_true(x$dataname == private$dataname, .var.name = "dataname matches private$dataname")
-      })
+      shiny::isolate({
+        logger::log_trace("{ class(self)[1] }$set_filter_state initializing, dataname: { private$dataname }")
+        checkmate::assert_class(state, "teal_slices")
+        lapply(state, function(x) {
+          checkmate::assert_true(
+            x$dataname == private$dataname,
+            .var.name = "dataname matches private$dataname"
+          )
+        })
 
-      private$set_filterable_varnames(
-        include_varnames = attr(state, "include_varnames")[[private$dataname]],
-        exclude_varnames = attr(state, "exclude_varnames")[[private$dataname]]
-      )
-
-      count_type <- attr(state, "count_type")
-      if (length(count_type)) {
-        private$count_type <- count_type
-      }
-
-      # Drop teal_slices that refer to excluded variables.
-      varnames <- slices_field(state, "varname")
-      excluded_varnames <- setdiff(varnames, private$get_filterable_varnames())
-      if (length(excluded_varnames)) {
-        state <- Filter(function(x) !x$varname %in% excluded_varnames, state)
-        logger::log_warn("filters for columns: { toString(excluded_varnames) } excluded from { private$dataname }")
-      }
-
-      if (length(state) > 0) {
-        private$set_filter_state_impl(
-          state = state,
-          data = private$data,
-          data_reactive = private$data_reactive
+        private$set_filterable_varnames(
+          include_varnames = attr(state, "include_varnames")[[private$dataname]],
+          exclude_varnames = attr(state, "exclude_varnames")[[private$dataname]]
         )
-      }
 
-      logger::log_trace("{ class(self)[1] }$set_filter_state initialized, dataname: { private$dataname }")
+        count_type <- attr(state, "count_type")
+        if (length(count_type)) {
+          private$count_type <- count_type
+        }
 
-      invisible(NULL)
+        # Drop teal_slices that refer to excluded variables.
+        varnames <- slices_field(state, "varname")
+        excluded_varnames <- setdiff(varnames, private$get_filterable_varnames())
+        if (length(excluded_varnames)) {
+          state <- Filter(function(x) !x$varname %in% excluded_varnames, state)
+          logger::log_warn("filters for columns: { toString(excluded_varnames) } excluded from { private$dataname }")
+        }
+
+        if (length(state) > 0) {
+          private$set_filter_state_impl(
+            state = state,
+            data = private$data,
+            data_reactive = private$data_reactive
+          )
+        }
+        logger::log_trace("{ class(self)[1] }$set_filter_state initialized, dataname: { private$dataname }")
+
+        invisible(NULL)
+      })
     },
 
     #' @description

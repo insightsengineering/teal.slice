@@ -7,10 +7,20 @@ compare_slices <- function(ts1, ts2, fields) {
 
 
 # compare two reactiveValues
-expect_identical_rv <- function(x, y) {
+expect_identical_slice <- function(x, y) {
   shiny::isolate(
     testthat::expect_identical(
       reactiveValuesToList(x),
       reactiveValuesToList(y))
   )
+}
+
+expect_identical_slices <- function(x, y) {
+  shiny::isolate({
+    x2 <- lapply(x, reactiveValuesToList)
+    y2 <- lapply(y, reactiveValuesToList)
+    attributes(x2) <- attributes(x)
+    attributes(y2) <- attributes(y)
+    testthat::expect_identical(x2, y2)
+  })
 }

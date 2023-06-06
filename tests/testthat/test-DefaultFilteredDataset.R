@@ -50,10 +50,7 @@ testthat::test_that("set_filter_state sets `teal_slice`", {
     include_varnames = list(iris = colnames(iris))
   )
   dataset$set_filter_state(fs)
-  testthat::expect_equal(
-    shiny::isolate(dataset$get_filter_state()),
-    fs
-  )
+  expect_identical_slices(dataset$get_filter_state(), fs)
 })
 
 # format ---

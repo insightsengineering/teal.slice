@@ -628,9 +628,11 @@ testthat::test_that("remove_filter_state removes states specified by `teal_slice
       filter_var(dataname = "mtcars", varname = "disp")
     )
   )
-  testthat::expect_identical(slices_field(shiny::isolate(datasets$get_filter_state()), "varname"), "Species")
+  testthat::expect_identical(
+    shiny::isolate(slices_field(datasets$get_filter_state(), "varname")),
+    "Species"
+  )
 })
-
 
 # clear_filter_states ----
 testthat::test_that("clear_filter_states removes all filters of all datasets in FilteredData", {
@@ -668,7 +670,7 @@ testthat::test_that("clear_filter_states removes filters of desired dataset only
   datasets$set_filter_state(state = fs)
   datasets$clear_filter_states(datanames = "iris")
 
-  testthat::expect_identical(slices_field(shiny::isolate(datasets$get_filter_state()), "dataname"), "mtcars")
+  testthat::expect_identical(shiny::isolate(slices_field(datasets$get_filter_state(), "dataname")), "mtcars")
 })
 
 

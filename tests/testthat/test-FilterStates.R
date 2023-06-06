@@ -59,10 +59,7 @@ testthat::test_that("set_filter_state and get_filter_state, sets and returns the
     count_type = "none"
   )
   filter_states$set_filter_state(fs)
-  testthat::expect_equal(
-    shiny::isolate(filter_states$get_filter_state()),
-    fs
-  )
+  expect_identical_slices(filter_states$get_filter_state(), fs)
 })
 
 testthat::test_that("set_filter_state updates FilterState when dataname and varname are matched between teal_slice and
@@ -78,10 +75,7 @@ existing filter", {
   filter_states$set_filter_state(fs)
   fs[[1]]$selected <- c(1, 5)
   filter_states$set_filter_state(fs)
-  testthat::expect_equal(
-    shiny::isolate(filter_states$get_filter_state()),
-    fs
-  )
+  expect_identical_slices(filter_states$get_filter_state(), fs)
 })
 
 testthat::test_that("set_filter_state doesn't allow to create two filters on the same variable", {
@@ -119,7 +113,7 @@ testthat::test_that("set_filter_state creates a new FilterStateExpr", {
     count_type = "none"
   )
   filter_states$set_filter_state(fs)
-  testthat::expect_equal(shiny::isolate(filter_states$get_filter_state()), fs)
+  expect_identical_slices(filter_states$get_filter_state(), fs)
 })
 
 testthat::test_that("remove_filter_state of inexistent FilterState raiser warning", {
@@ -341,8 +335,8 @@ testthat::test_that("Selecting a new variable initializes a new filter state wit
     }
   )
 
-  testthat::expect_equal(
-    shiny::isolate(filter_states$get_filter_state()),
+  expect_identical_slices(
+    filter_states$get_filter_state(),
     filter_settings(
       filter_var(
         dataname = "iris",
@@ -375,8 +369,8 @@ testthat::test_that("Adding 'var_to_add' adds another filter state", {
     }
   )
 
-  testthat::expect_equal(
-    shiny::isolate(filter_states$get_filter_state()),
+  expect_identical_slices(
+    filter_states$get_filter_state(),
     filter_settings(
       filter_var(
         dataname = "iris", varname = "Sepal.Length", choices = c(4.3, 7.9), selected = c(5.1, 6.4),

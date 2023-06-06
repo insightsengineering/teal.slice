@@ -63,7 +63,7 @@ testthat::test_that("constructor raises warning if selected out of range", {
 
 testthat::test_that("constructor sets default state", {
   fs <- ChoicesFilterState$new(letters, slice = filter_var(dataname = "data", varname = "variable"))
-  expect_identical_rv(
+  expect_identical_slice(
     fs$get_state(),
     filter_var(
       dataname = "data",

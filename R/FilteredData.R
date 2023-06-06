@@ -492,31 +492,33 @@ FilteredData <- R6::R6Class( # nolint
     #' shiny::isolate(datasets$get_filter_state())
     #'
     set_filter_state = function(state) {
-      logger::log_trace("{ class(self)[1] }$set_filter_state initializing")
-      if (!is.teal_slices(state)) {
-        warning(
-          paste(
-            "From FilteredData$set_filter_state:",
-            "Specifying filters as lists is obsolete and will be deprecated in the next release.",
-            "Please see ?set_filter_state and ?filter_settings for details."
-          ),
-          call. = FALSE
-        )
-        state <- as.teal_slices(state)
-      }
+      shiny::isolate({
+        logger::log_trace("{ class(self)[1] }$set_filter_state initializing")
+        if (!is.teal_slices(state)) {
+          warning(
+            paste(
+              "From FilteredData$set_filter_state:",
+              "Specifying filters as lists is obsolete and will be deprecated in the next release.",
+              "Please see ?set_filter_state and ?filter_settings for details."
+            ),
+            call. = FALSE
+          )
+          state <- as.teal_slices(state)
+        }
 
-      checkmate::assert_class(state, "teal_slices")
-      datanames <- slices_field(state, "dataname")
-      checkmate::assert_subset(datanames, self$datanames())
+        checkmate::assert_class(state, "teal_slices")
+        datanames <- slices_field(state, "dataname")
+        checkmate::assert_subset(datanames, self$datanames())
 
-      lapply(datanames, function(dataname) {
-        states <- Filter(function(x) identical(x$dataname, dataname), state)
-        private$get_filtered_dataset(dataname)$set_filter_state(states)
+        lapply(datanames, function(dataname) {
+          states <- Filter(function(x) identical(x$dataname, dataname), state)
+          private$get_filtered_dataset(dataname)$set_filter_state(states)
+        })
+
+        logger::log_trace("{ class(self)[1] }$set_filter_state initialized")
+
+        invisible(NULL)
       })
-
-      logger::log_trace("{ class(self)[1] }$set_filter_state initialized")
-
-      invisible(NULL)
     },
 
     #' @description
@@ -529,36 +531,38 @@ FilteredData <- R6::R6Class( # nolint
     #' @return `NULL` invisibly
     #'
     remove_filter_state = function(state) {
-      if (!is.teal_slices(state)) {
-        warning(
-          paste(
-            "From FilteredData$remove_filter_state:",
-            "Specifying filters as lists is obsolete and will be deprecated in the next release.",
-            "Please see ?set_filter_state and ?filter_settings for details."
-          ),
-          call. = FALSE
+      shiny::isolate({
+        if (!is.teal_slices(state)) {
+          warning(
+            paste(
+              "From FilteredData$remove_filter_state:",
+              "Specifying filters as lists is obsolete and will be deprecated in the next release.",
+              "Please see ?set_filter_state and ?filter_settings for details."
+            ),
+            call. = FALSE
+          )
+          state <- as.teal_slices(state)
+        }
+
+        checkmate::assert_class(state, "teal_slices")
+        datanames <- slices_field(state, "dataname")
+        checkmate::assert_subset(datanames, self$datanames())
+
+        logger::log_trace(
+          "{ class(self)[1] }$remove_filter_state removing filter(s), dataname: { private$dataname }"
         )
-        state <- as.teal_slices(state)
-      }
 
-      checkmate::assert_class(state, "teal_slices")
-      datanames <- slices_field(state, "dataname")
-      checkmate::assert_subset(datanames, self$datanames())
+        lapply(datanames, function(dataname) {
+          slices <- Filter(function(x) identical(x$dataname, dataname), state)
+          private$get_filtered_dataset(dataname)$remove_filter_state(slices)
+        })
 
-      logger::log_trace(
-        "{ class(self)[1] }$remove_filter_state removing filter(s), dataname: { private$dataname }"
-      )
+        logger::log_trace(
+          "{ class(self)[1] }$remove_filter_state removed filter(s), dataname: { private$dataname }"
+        )
 
-      lapply(datanames, function(dataname) {
-        slices <- Filter(function(x) identical(x$dataname, dataname), state)
-        private$get_filtered_dataset(dataname)$remove_filter_state(slices)
+        invisible(NULL)
       })
-
-      logger::log_trace(
-        "{ class(self)[1] }$remove_filter_state removed filter(s), dataname: { private$dataname }"
-      )
-
-      invisible(NULL)
     },
 
     #' @description

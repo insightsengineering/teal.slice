@@ -35,7 +35,7 @@ testthat::test_that("get_state returns a `teal_slice` identical to set_state inp
   filter_state <- FilterState$new(c("a", NA_character_), slice = filter_var(dataname = "data", varname = "var"))
   state <- filter_var(dataname = "data", varname = "var", selected = "a", keep_na = TRUE, keep_inf = FALSE)
   filter_state$set_state(state)
-  expect_identical_rv(shiny::isolate(filter_state$get_state()), state)
+  expect_identical_slice(shiny::isolate(filter_state$get_state()), state)
 })
 
 # set_state, ctd. ----
@@ -66,7 +66,7 @@ testthat::test_that("set_state cannot set mutable fields in a fixed FilterState"
     keep_inf = FALSE
   )
   testthat::expect_output(filter_state$set_state(new_state), "WARN.+attempt to set state on fixed filter")
-  expect_identical_rv(shiny::isolate(filter_state$get_state()), old_state)
+  expect_identical_slice(shiny::isolate(filter_state$get_state()), old_state)
 })
 
 # initialize, ctd. ----

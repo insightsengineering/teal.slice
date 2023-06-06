@@ -23,7 +23,7 @@ testthat::test_that("get_state returns list of state values", {
     title = "testtitle",
     expr = "x == 'x'"
   ))
-  expect_identical_rv(
+  expect_identical_slice(
     shiny::isolate(state$get_state()),
     filter_expr(id = "id", title = "testtitle", dataname = "x", expr = "x == 'x'")
   )

@@ -67,7 +67,7 @@ testthat::test_that("constructor raises error when selection is not Date", {
 
 testthat::test_that("constructor sets default state", {
   fs <- DateFilterState$new(dates, slice = filter_var(dataname = "data", varname = "variable"))
-  expect_identical_rv(
+  expect_identical_slice(
     fs$get_state(),
     filter_var(
       dataname = "data",
