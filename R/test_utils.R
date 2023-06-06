@@ -4,3 +4,13 @@
 compare_slices <- function(ts1, ts2, fields) {
   all(vapply(fields, function(x) identical(ts1[[x]], ts2[[x]]), logical(1L)))
 }
+
+
+# compare two reactiveValues
+expect_identical_rv <- function(x, y) {
+  shiny::isolate(
+    testthat::expect_identical(
+      reactiveValuesToList(x),
+      reactiveValuesToList(y))
+  )
+}

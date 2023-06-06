@@ -1,50 +1,21 @@
 # initialize ----
 testthat::test_that("constructor checks arguments", {
-  testthat::expect_error(FilterState$new(), "argument \"dataname\" is missing")
-  testthat::expect_error(FilterState$new(dataname = "data"), "argument \"varname\" is missing")
-  testthat::expect_error(FilterState$new(dataname = "data", varname = "variable"), "argument \"x\" is missing")
+  testthat::expect_error(FilterState$new(), "argument \"slice\" is missing")
 
   testthat::expect_error(
-    FilterState$new(7, dataname = quote(pi), varname = "variable"),
-    "Assertion on 'dataname' failed"
-  )
-  testthat::expect_error(
-    FilterState$new(7, dataname = call("data"), varname = "variable"),
-    "Assertion on 'dataname' failed"
-  )
-  testthat::expect_error(
-    FilterState$new(7, dataname = "data", varname = quote(pi)),
-    "Assertion on 'varname' failed"
-  )
-  testthat::expect_error(
-    FilterState$new(7, dataname = "data", varname = call("test")),
-    "Assertion on 'varname' failed"
-  )
-  testthat::expect_error(
-    FilterState$new(x = 7, dataname = "data", varname = "variable", x_reactive = NULL),
+    FilterState$new(x = 7, slice = filter_var(dataname = "data", varname = "var"), x_reactive = NULL),
     "Assertion on 'x_reactive' failed"
   )
+
   testthat::expect_error(
-    FilterState$new(x = 7, dataname = "data", varname = "variable", keep_na = "TRUE"),
-    "Assertion on 'keep_na' failed"
-  )
-  testthat::expect_error(
-    FilterState$new(x = 7, dataname = "data", varname = "variable", keep_inf = "TRUE"),
-    "Assertion on 'keep_inf' failed"
-  )
-  testthat::expect_error(
-    FilterState$new(x = 7, dataname = "data", varname = "variable", fixed = NULL),
-    "Assertion on 'fixed' failed"
-  )
-  testthat::expect_error(
-    FilterState$new(x = 7, dataname = "data", varname = "variable", extract_type = "other"),
+    FilterState$new(x = 7, slice = filter_var(dataname = "data", varname = "var"), extract_type = "other"),
     "Assertion on 'extract_type' failed"
   )
 })
 
 # set_state ----
 testthat::test_that("set_state can set mutable fields", {
-  filter_state <- FilterState$new(x = 7, dataname = "data", varname = "variable")
+  filter_state <- FilterState$new(x = 7, slice = filter_var(dataname = "data", varname = "var"))
   state <- filter_var("data", "varname", selected = 7)
   testthat::expect_no_error(shiny::isolate(filter_state$set_state(state)))
   state <- filter_var("data", "varname", keep_na = TRUE)
@@ -54,46 +25,38 @@ testthat::test_that("set_state can set mutable fields", {
 })
 
 # get_state ----
-testthat::test_that("get_state returns a `teal_slice` object", {
-  filter_state <- FilterState$new(7, dataname = "data", varname = "variable")
-  state <- shiny::isolate(filter_state$get_state())
-  testthat::expect_s3_class(state, "teal_slice")
-  testthat::expect_identical(shiny::isolate(filter_state$get_state()), state)
+testthat::test_that("get_state returns a `teal_slice` object passed via constructor", {
+  slice <- filter_var(dataname = "data", varname = "var")
+  filter_state <- FilterState$new(7, slice = slice)
+  testthat::expect_identical(shiny::isolate(filter_state$get_state()), slice)
 })
 
 testthat::test_that("get_state returns a `teal_slice` identical to set_state input", {
-  filter_state <- FilterState$new(c("a", NA_character_), dataname = "data", varname = "variable")
-  state <- filter_var(dataname = "data", varname = "variable", selected = "a", keep_na = TRUE, keep_inf = FALSE)
+  filter_state <- FilterState$new(c("a", NA_character_), slice = filter_var(dataname = "data", varname = "var"))
+  state <- filter_var(dataname = "data", varname = "var", selected = "a", keep_na = TRUE, keep_inf = FALSE)
   filter_state$set_state(state)
-  testthat::expect_identical(shiny::isolate(filter_state$get_state()), state)
+  expect_identical_rv(shiny::isolate(filter_state$get_state()), state)
 })
 
 # set_state, ctd. ----
 testthat::test_that("set_state only sets properties defined in `teal_slice", {
-  filter_state <- FilterState$new(x = 7, dataname = "data", varname = "variable")
+  filter_state <- FilterState$new(x = 7, slice = filter_var(dataname = "data", varname = "var"))
+  filter_state$set_state(filter_var(dataname = "data", varname = "var", selected = 7))
   testthat::expect_identical(
-    shiny::isolate(filter_state$get_state())[c("selected", "keep_na", "keep_inf")],
-    list(selected = NULL, keep_na = NULL, keep_inf = NULL)
+    shiny::isolate(filter_state$get_state()$selected),
+    7
   )
-  filter_state$set_state(filter_var(dataname = "data", varname = "variable", selected = 7))
-  testthat::expect_identical(
-    shiny::isolate(filter_state$get_state())[c("selected", "keep_na", "keep_inf")],
-    list(selected = 7, keep_na = NULL, keep_inf = NULL)
-  )
-  filter_state$set_state(filter_var(dataname = "data", varname = "variable", keep_na = FALSE))
-  testthat::expect_identical(
-    shiny::isolate(filter_state$get_state())[c("selected", "keep_na", "keep_inf")],
-    list(selected = 7, keep_na = FALSE, keep_inf = NULL)
-  )
-  filter_state$set_state(filter_var(dataname = "data", varname = "variable", keep_inf = FALSE))
-  testthat::expect_identical(
-    shiny::isolate(filter_state$get_state())[c("selected", "keep_na", "keep_inf")],
-    list(selected = 7, keep_na = FALSE, keep_inf = FALSE)
-  )
+  filter_state$set_state(filter_var(dataname = "data", varname = "var", keep_na = FALSE))
+  testthat::expect_false(shiny::isolate(filter_state$get_state()$keep_na))
+  filter_state$set_state(filter_var(dataname = "data", varname = "var", keep_inf = FALSE))
+  testthat::expect_false(shiny::isolate(filter_state$get_state()$keep_inf))
 })
 
 testthat::test_that("set_state cannot set mutable fields in a fixed FilterState", {
-  filter_state <- FilterState$new(c("a", NA_character_), dataname = "data", varname = "variable", fixed = TRUE)
+  filter_state <- FilterState$new(
+    x = c("a", NA_character_),
+    slice = filter_var(dataname = "data", varname = "var", fixed = TRUE)
+  )
   old_state <- shiny::isolate(filter_state$get_state())
   new_state <- filter_var(
     dataname = "data",
@@ -103,40 +66,25 @@ testthat::test_that("set_state cannot set mutable fields in a fixed FilterState"
     keep_inf = FALSE
   )
   testthat::expect_output(filter_state$set_state(new_state), "WARN.+attempt to set state on fixed filter")
-  testthat::expect_identical(shiny::isolate(filter_state$get_state()), old_state)
-})
-
-# get_state: dataname ----
-testthat::test_that("get_state returns the dataname passed to constructor", {
-  filter_state <- FilterState$new("7", dataname = "data", varname = "7")
-  testthat::expect_equal(shiny::isolate(filter_state$get_state()$dataname), "data")
-})
-
-# get_state: varname ----
-testthat::test_that("get_state returns varname passed to constructor", {
-  testthat::expect_error(FilterState$new(7, dataname = "data", varname = 7), "Assertion on 'varname' failed")
-  testthat::expect_no_error(FilterState$new(7, dataname = "data", varname = "7"))
-
-  filter_state <- FilterState$new(7, dataname = "data", varname = "7")
-  testthat::expect_equal(shiny::isolate(filter_state$get_state()$varname), "7")
+  expect_identical_rv(shiny::isolate(filter_state$get_state()), old_state)
 })
 
 # initialize, ctd. ----
 testthat::test_that("constructor initializes selected = NULL by default", {
-  filter_state <- FilterState$new(7, dataname = "data", varname = "7")
+  filter_state <- FilterState$new(7, slice = filter_var(dataname = "data", varname = "var"))
   testthat::expect_null(shiny::isolate(filter_state$get_state()$selected))
 })
 
 testthat::test_that("constructor initializes keep_na = TRUE by default if data contains NAs", {
-  filter_state <- FilterState$new(7, dataname = "data", varname = "7")
-  testthat::expect_null(shiny::isolate(filter_state$get_state())$keep_na)
-  filter_state <- FilterState$new(c(7, NA), dataname = "data", varname = "7")
-  testthat::expect_true(shiny::isolate(filter_state$get_state())$keep_na)
+  filter_state <- FilterState$new(7, slice = filter_var(dataname = "data", varname = "var"))
+  testthat::expect_null(shiny::isolate(filter_state$get_state()$keep_na))
+  filter_state <- FilterState$new(c(7, NA), slice = filter_var(dataname = "data", varname = "var"))
+  testthat::expect_true(shiny::isolate(filter_state$get_state()$keep_na))
 })
 
 # get_call ----
 testthat::test_that("get_call raises error", {
-  filter_state <- FilterState$new(7, dataname = "data", varname = "7")
+  filter_state <- FilterState$new(7, slice = filter_var(dataname = "data", varname = "var"))
   testthat::expect_error(filter_state$get_call(), "this is a virtual method")
 })
 
@@ -152,7 +100,7 @@ testthat::test_that("set_selected sets value, get_selected returns the same valu
       get_selected = function() private$get_selected()
     )
   )
-  filter_state <- test_class$new(7L, dataname = "data", varname = "7")
+  filter_state <- test_class$new(7L, slice = filter_var(dataname = "data", varname = "var"))
   selection <- 7
   filter_state$set_selected(selection)
   testthat::expect_identical(
@@ -172,7 +120,7 @@ testthat::test_that("add_keep_na_call modifies call if keep_na set to TRUE", {
       }
     )
   )
-  filter_state <- test_class$new(c(1, NA), dataname = "data", varname = "variable", keep_na = FALSE)
+  filter_state <- test_class$new(c(1, NA), slice = filter_var(dataname = "data", varname = "var", keep_na = FALSE))
   testthat::expect_identical(
     shiny::isolate(filter_state$test_add_keep_na_call()),
     quote(TRUE)
@@ -200,7 +148,7 @@ testthat::test_that("setting private$na_rm to TRUE adds `!is.na` before conditio
       }
     )
   )
-  filter_state <- test_class$new(c(1, NA), dataname = "data", varname = "variable", keep_na = FALSE)
+  filter_state <- test_class$new(c(1, NA), slice = filter_var(dataname = "data", varname = "variable", keep_na = FALSE))
   filter_state$set_na_rm(TRUE)
 
   testthat::expect_identical(
@@ -227,7 +175,7 @@ testthat::test_that(
         }
       )
     )
-    filter_state <- test_class$new(c(1), dataname = "data", varname = "variable", keep_na = FALSE)
+    filter_state <- test_class$new(c(1), slice = filter_var(dataname = "data", varname = "variable", keep_na = FALSE))
     filter_state$set_na_rm(TRUE)
 
     testthat::expect_identical(
@@ -250,22 +198,22 @@ testthat::test_that("get_varlabel returns a string if x has the label attribute 
   )
 
   seven <- c(7)
-  filter_state <- test_class$new(seven, dataname = "data", varname = "7")
+  filter_state <- test_class$new(seven, slice = filter_var(dataname = "data", varname = "7"))
   testthat::expect_equal(shiny::isolate(filter_state$get_varlabel()), character(0))
 
   seven <- c(7)
   attr(seven, "label") <- "7"
-  filter_state <- test_class$new(seven, dataname = "data", varname = "7")
+  filter_state <- test_class$new(seven, slice = filter_var(dataname = "data", varname = "7"))
   testthat::expect_equal(shiny::isolate(filter_state$get_varlabel()), character(0))
 
   attr(seven, "label") <- "test"
-  filter_state <- test_class$new(seven, dataname = "data", varname = "7")
+  filter_state <- test_class$new(seven, slice = filter_var(dataname = "data", varname = "7"))
   testthat::expect_equal(shiny::isolate(filter_state$get_varlabel()), "test")
 })
 
 # format ---
 testthat::test_that("format accepts logical show_all", {
-  filter_state <- FilterState$new(7, dataname = "data", varname = "7")
+  filter_state <- FilterState$new(7, slice = filter_var(dataname = "data", varname = "7"))
   testthat::expect_no_error(shiny::isolate(filter_state$format(show_all = TRUE)))
   testthat::expect_no_error(shiny::isolate(filter_state$format(show_all = FALSE)))
   testthat::expect_error(
@@ -284,7 +232,7 @@ testthat::test_that("format accepts logical show_all", {
 
 
 testthat::test_that("format returns a properly formatted string representation", {
-  filter_state <- FilterState$new(7, dataname = "data", varname = "7")
+  filter_state <- FilterState$new(7, slice = filter_var(dataname = "data", varname = "7"))
   testthat::expect_equal(
     shiny::isolate(filter_state$format()),
     paste0(
@@ -303,7 +251,7 @@ testthat::test_that("format returns a properly formatted string representation",
 
 # print ---
 testthat::test_that("print returns a properly formatted string representation", {
-  filter_state <- FilterState$new(7, dataname = "data", varname = "7")
+  filter_state <- FilterState$new(7, slice = filter_var(dataname = "data", varname = "7"))
   testthat::expect_equal(
     utils::capture.output(cat(filter_state$print())),
     c(

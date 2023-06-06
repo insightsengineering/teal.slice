@@ -3,25 +3,25 @@ logs <- as.logical(c(1, 0, 0, 0, 1, 1, 0, 1, 0, 1, NA))
 # initialize ----
 testthat::test_that("constructor accepts logical values", {
   testthat::expect_no_error(
-    LogicalFilterState$new(logs, dataname = "data", varname = "variable")
+    LogicalFilterState$new(logs, slice = filter_var(dataname = "data", varname = "variable"))
   )
   testthat::expect_error(
-    LogicalFilterState$new(0:1, dataname = "data", varname = "variable"), "Assertion on 'x' failed"
+    LogicalFilterState$new(0:1, slice = filter_var(dataname = "data", varname = "variable")),
+    "Assertion on 'x' failed"
   )
 })
 
 testthat::test_that("constructor raises error when selection is not logical", {
   testthat::expect_error(
-    LogicalFilterState$new(logs, dataname = "data", varname = "variable", selected = "TRUE"),
-    "Assertion on 'selected' failed"
+    LogicalFilterState$new(logs, slice = filter_var(dataname = "data", varname = "variable", selected = "TRUE")),
+    "Must be of type 'logical flag'"
   )
 })
 
 
-
 # set_state ----
 testthat::test_that("set_state: selected accepts a logical (or coercible) of length 1", {
-  filter_state <- LogicalFilterState$new(logs, dataname = "data", varname = "variable")
+  filter_state <- LogicalFilterState$new(logs, slice = filter_var(dataname = "data", varname = "variable"))
   testthat::expect_no_error(
     filter_state$set_state(filter_var(dataname = "data", varname = "variable", selected = TRUE))
   )
@@ -41,15 +41,14 @@ testthat::test_that("set_state: selected accepts a logical (or coercible) of len
 
 # get_call ----
 testthat::test_that("get_call of default LogicalFilterState object returns variable name", {
-  filter_state <- LogicalFilterState$new(logs[1:10], dataname = "data", varname = "variable")
+  filter_state <- LogicalFilterState$new(logs[1:10], slice = filter_var(dataname = "data", varname = "variable"))
   expect_identical(shiny::isolate(filter_state$get_call()), quote(variable))
 })
 
 testthat::test_that("get_call returns call selected different than choices", {
   filter_state <- LogicalFilterState$new(
     logs[1:10],
-    dataname = "data", varname = "variable",
-    choices = c(TRUE, FALSE), selected = FALSE
+    slice = filter_var(dataname = "data", varname = "variable", choices = c(TRUE, FALSE), selected = FALSE)
   )
   testthat::expect_identical(
     shiny::isolate(filter_state$get_call()),
@@ -60,7 +59,7 @@ testthat::test_that("get_call returns call selected different than choices", {
 testthat::test_that("get_call returns call always if choices are limited - regardless of selected", {
   filter_state <- LogicalFilterState$new(
     logs[1:10],
-    dataname = "data", varname = "variable", choices = FALSE
+    slice = filter_var(dataname = "data", varname = "variable", choices = FALSE)
   )
   testthat::expect_identical(
     shiny::isolate(filter_state$get_call()),
@@ -71,7 +70,8 @@ testthat::test_that("get_call returns call always if choices are limited - regar
 testthat::test_that("get_call prefixes varname by dataname$varname if extract_type='list'", {
   filter_state <- LogicalFilterState$new(
     logs[1:10],
-    dataname = "data", varname = "variable", selected = FALSE, extract_type = "list"
+    slice = filter_var(dataname = "data", varname = "variable", selected = FALSE),
+    extract_type = "list"
   )
   testthat::expect_identical(
     shiny::isolate(filter_state$get_call(dataname = "dataname")),
@@ -82,7 +82,8 @@ testthat::test_that("get_call prefixes varname by dataname$varname if extract_ty
 testthat::test_that("get_call prefixes varname by dataname[, 'varname'] if extract_type='matrix'", {
   filter_state <- LogicalFilterState$new(
     logs[1:10],
-    dataname = "data", varname = "variable", selected = FALSE, extract_type = "matrix"
+    slice = filter_var(dataname = "data", varname = "variable", selected = FALSE),
+    extract_type = "matrix"
   )
   testthat::expect_identical(
     shiny::isolate(filter_state$get_call(dataname = "dataname")),
@@ -93,7 +94,7 @@ testthat::test_that("get_call prefixes varname by dataname[, 'varname'] if extra
 testthat::test_that("get_call adds is.na(variable) to returned call if keep_na is true", {
   filter_state <- LogicalFilterState$new(
     logs,
-    dataname = "data", varname = "variable", selected = FALSE, keep_na = TRUE
+    slice = filter_var(dataname = "data", varname = "variable", selected = FALSE, keep_na = TRUE)
   )
   testthat::expect_identical(
     shiny::isolate(filter_state$get_call()),
@@ -103,7 +104,7 @@ testthat::test_that("get_call adds is.na(variable) to returned call if keep_na i
 
 # format ----
 testthat::test_that("format accepts logical show_all", {
-  filter_state <- LogicalFilterState$new(logs, dataname = "data", varname = "variable")
+  filter_state <- LogicalFilterState$new(logs, slice = filter_var(dataname = "data", varname = "variable"))
   testthat::expect_no_error(shiny::isolate(filter_state$format(show_all = TRUE)))
   testthat::expect_no_error(shiny::isolate(filter_state$format(show_all = FALSE)))
   testthat::expect_error(
@@ -121,7 +122,7 @@ testthat::test_that("format accepts logical show_all", {
 })
 
 testthat::test_that("format returns a properly formatted string representation", {
-  filter_state <- LogicalFilterState$new(logs, dataname = "data", varname = "variable")
+  filter_state <- LogicalFilterState$new(logs, slice = filter_var(dataname = "data", varname = "variable"))
   filter_state$set_state(filter_var(dataname = "data", varname = "variable", keep_na = FALSE))
   testthat::expect_equal(
     shiny::isolate(filter_state$format()),
@@ -141,7 +142,7 @@ testthat::test_that("format returns a properly formatted string representation",
 
 # print ---
 testthat::test_that("print returns a properly formatted string representation", {
-  filter_state <- LogicalFilterState$new(logs, dataname = "data", varname = "variable")
+  filter_state <- LogicalFilterState$new(logs, slice = filter_var(dataname = "data", varname = "variable"))
   filter_state$set_state(filter_var(dataname = "data", varname = "variable", keep_na = FALSE))
   testthat::expect_equal(
     utils::capture.output(cat(filter_state$print())),

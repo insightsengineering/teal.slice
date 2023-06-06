@@ -1,11 +1,11 @@
 # get_call ----
 testthat::test_that("get_call of default EmptyFilterState returns NULL by default", {
-  filter_state <- EmptyFilterState$new(NA, dataname = "data", varname = "variable")
+  filter_state <- EmptyFilterState$new(NA, slice = filter_var(dataname = "data", varname = "variable"))
   testthat::expect_null(shiny::isolate(filter_state$get_call()))
 })
 
 testthat::test_that("get_call of default EmptyFilterState returns !is.na() call if keep_na is FALSE", {
-  filter_state <- EmptyFilterState$new(NA, dataname = "data", varname = "variable", keep_na = FALSE)
+  filter_state <- EmptyFilterState$new(NA, slice = filter_var(dataname = "data", varname = "variable", keep_na = FALSE))
   testthat::expect_identical(
     shiny::isolate(filter_state$get_call()),
     quote(!is.na(variable))
@@ -15,7 +15,7 @@ testthat::test_that("get_call of default EmptyFilterState returns !is.na() call 
 
 # format ---
 testthat::test_that("format accepts logical show_all", {
-  filter_state <- EmptyFilterState$new(NA, dataname = "data", varname = "variable", keep_na = FALSE)
+  filter_state <- EmptyFilterState$new(NA, slice = filter_var(dataname = "data", varname = "variable", keep_na = FALSE))
   testthat::expect_no_error(shiny::isolate(filter_state$format(show_all = TRUE)))
   testthat::expect_no_error(shiny::isolate(filter_state$format(show_all = FALSE)))
   testthat::expect_error(
@@ -33,7 +33,7 @@ testthat::test_that("format accepts logical show_all", {
 })
 
 testthat::test_that("format returns a properly formatted string representation", {
-  filter_state <- EmptyFilterState$new(NA, dataname = "data", varname = "variable", keep_na = FALSE)
+  filter_state <- EmptyFilterState$new(NA, slice = filter_var(dataname = "data", varname = "variable", keep_na = FALSE))
   testthat::expect_equal(
     shiny::isolate(filter_state$format()),
     paste0(
@@ -53,7 +53,7 @@ testthat::test_that("format returns a properly formatted string representation",
 # print ---
 
 testthat::test_that("print returns a properly formatted string representation", {
-  filter_state <- EmptyFilterState$new(NA, dataname = "data", varname = "variable", keep_na = FALSE)
+  filter_state <- EmptyFilterState$new(NA, slice = filter_var(dataname = "data", varname = "variable", keep_na = FALSE))
   testthat::expect_equal(
     utils::capture.output(cat(filter_state$print())),
     c(

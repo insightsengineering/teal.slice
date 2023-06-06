@@ -479,3 +479,40 @@ testthat::test_that("slices_which works", {
   testthat::expect_identical(slices_which(fs, "varname == \"var1\""), fs[1])
   testthat::expect_identical(slices_which(fs, "dataname == \"dataa\""), filter_settings())
 })
+
+
+testthat::test_that("filter_expr id has to be a string", {
+  testthat::expect_no_error(filter_expr(dataname = "x", id = "x", title = "x", expr = "x == 'x'"))
+  testthat::expect_error(filter_expr(dataname = "x", id = 1, title = "x", expr = "x == 'x'"), "string")
+  testthat::expect_error(filter_expr(dataname = "x", id = NULL, title = "x", expr = "x == 'x'"), "string")
+  testthat::expect_error(
+    filter_expr(dataname = "x", id = character(0), title = "x", expr = "x == 'x'"), "length"
+  )
+})
+
+testthat::test_that("filter_expr title has to be a string", {
+  testthat::expect_no_error(filter_expr(dataname = "x", id = "x", title = "x", expr = "x == 'x'"))
+  testthat::expect_error(filter_expr(dataname = "x", id = "x", title = 1, expr = "x == 'x'"), "string")
+  testthat::expect_error(filter_expr(dataname = "x", id = "x", title = NULL, expr = "x == 'x'"), "string")
+  testthat::expect_error(
+    filter_expr(dataname = "x", id = "x", title = character(0), expr = "x == 'x'"), "length"
+  )
+})
+
+testthat::test_that("filter_expr dataname has to be a string", {
+  testthat::expect_no_error(filter_expr(dataname = "x", id = "x", title = "x", expr = "x == 'x'"))
+  testthat::expect_error(filter_expr(dataname = 1, id = "x", title = "x", expr = "x == 'x'"), "string")
+  testthat::expect_error(filter_expr(dataname = NULL, id = "x", title = "x", expr = "x == 'x'"), "string")
+  testthat::expect_error(
+    filter_expr(dataname = character(0), id = "x", title = "x", expr = "x == 'x'"), "length"
+  )
+})
+
+testthat::test_that("filter_expr expr has to be a string", {
+  testthat::expect_no_error(filter_expr(dataname = "x", id = "x", title = "x", expr = "x == FALSE"))
+  testthat::expect_no_error(filter_expr(dataname = "x", id = "x", title = "x", expr = "x <- 1")) # Ouch!
+  testthat::expect_error(
+    filter_expr(dataname = "x", id = "x", title = "x", expr = TRUE),
+    "Assertion on 'expr' failed"
+  )
+})
