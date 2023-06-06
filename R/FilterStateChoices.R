@@ -206,6 +206,12 @@ ChoicesFilterState <- R6::R6Class( # nolint
         selected <- private$choices
       } else if (is.null(selected)) {
         selected <- private$choices[1]
+      } else if (length(selected) > 1 && !multiple) {
+        warning(
+          "FilterStateChoices allows selected to be length=1 when multiple is FALSE. ",
+          "Only first value is taken."
+        )
+        selected <- selected[1]
       }
       private$set_selected(selected)
 
