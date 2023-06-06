@@ -362,7 +362,7 @@ ChoicesFilterState <- R6::R6Class( # nolint
 
       if (length(values) != 1 && !private$multiple) {
         warning(sprintf(
-          "Values: %s are not a vector of length one.The first value will be selected by default.
+          "Values: %s are not a vector of length one. The first value will be selected by default.
                         Setting defaults. Varname: %s, dataname: %s.",
           strtrim(toString(values), 360),
           private$varname, private$dataname
