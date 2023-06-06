@@ -170,7 +170,7 @@ LogicalFilterState <- R6::R6Class( # nolint
       private$set_choices(choices)
       if (is.null(selected) && multiple) {
         selected <- private$choices
-      } else if (is.null(selected)) {
+      } else if (length(selected) != 1 && !multiple) {
         selected <- TRUE
       }
       private$set_selected(selected)
