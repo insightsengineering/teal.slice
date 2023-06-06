@@ -44,7 +44,7 @@ testthat::test_that("set_state: selected accepts a logical (or coercible) of len
 })
 
 testthat::test_that("set_state: multiple parameters accepting boolean and null values", {
-  testthat::expect_warning(
+  testthat::expect_no_warning(
     filter_state <- LogicalFilterState$new(logs, dataname = "data", varname = "variable", multiple = FALSE)
   )
 

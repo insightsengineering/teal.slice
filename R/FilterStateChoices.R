@@ -201,6 +201,12 @@ ChoicesFilterState <- R6::R6Class( # nolint
       do.call(super$initialize, args)
 
       private$set_choices(choices)
+
+      if (is.null(selected) && multiple) {
+        selected <- private$choices
+      } else if (is.null(selected)) {
+        selected <- private$choices[1]
+      }
       private$set_selected(selected)
 
       private$data_class <- class(x)[1L]
@@ -359,7 +365,7 @@ ChoicesFilterState <- R6::R6Class( # nolint
                         Setting defaults. Varname: %s, dataname: %s.",
                         strtrim(paste(values, collapse = ", "), 360),
                         private$varname, private$dataname))
-        values <- private$choices[1]
+        values <- shiny::isolate(private$get_selected())
       }
       values
     },

@@ -168,6 +168,11 @@ LogicalFilterState <- R6::R6Class( # nolint
       do.call(super$initialize, args)
 
       private$set_choices(choices)
+      if (is.null(selected) && multiple) {
+        selected <- private$choices
+      } else if (is.null(selected)) {
+        selected <- TRUE
+      }
       private$set_selected(selected)
 
       df <- factor(x, levels = c(TRUE, FALSE))
@@ -249,11 +254,11 @@ LogicalFilterState <- R6::R6Class( # nolint
     },
     remove_out_of_bound_values = function(values) {
       if (length(values) != 1 && !private$multiple) {
-        warning(sprintf("Values: %s are not a vector of length one. TRUE will be selected by default.
+        warning(sprintf("Values: %s are not a vector of length one. The first value will be selected by default.
                         Setting defaults. Varname: %s, dataname: %s.",
                         strtrim(paste(values, collapse = ", "), 360),
                         private$varname, private$dataname))
-        values <- TRUE
+        values <- shiny::isolate(private$get_selected())
       }
       values
     },
