@@ -1143,35 +1143,3 @@ FilteredData <- R6::R6Class( # nolint
     }
   )
 )
-
-# Wrapper functions for `FilteredData` class ----
-
-
-#' Gets filter expression for multiple datanames taking into account its order.
-#'
-#' @description `r lifecycle::badge("stable")`
-#' To be used in show R code button.
-#'
-#' @param datasets (`FilteredData`)
-#' @param datanames (`character`) vector of dataset names
-#'
-#' @export
-#'
-#' @return (`expression`)
-get_filter_expr <- function(datasets, datanames = datasets$datanames()) {
-  checkmate::assert_character(datanames, min.len = 1, any.missing = FALSE)
-  stopifnot(
-    is(datasets, "FilteredData"),
-    all(datanames %in% datasets$datanames())
-  )
-
-  paste(
-    unlist(lapply(
-      datanames,
-      function(dataname) {
-        datasets$get_call(dataname)
-      }
-    )),
-    collapse = "\n"
-  )
-}

@@ -493,16 +493,3 @@ slices_field <- function(tss, field) {
   checkmate::assert_class(tss, "teal_slices")
   unique(unlist(lapply(tss, function(x) x[[field]])))
 }
-
-
-#' String to valid shiny `ns` identifier
-#'
-#' Returns name with punctation and white spaces replaced by underscore.
-#'
-#' @param x (`character`) character
-#' @return `character(1)`
-#' @keywords internal
-#'
-str_to_shiny_ns <- function(x) {
-  gsub("[^[:alnum:]]+", "_", x)
-}

@@ -350,6 +350,10 @@ FilterStates <- R6::R6Class( # nolint
           previous_state <- reactiveVal(character(0))
           added_state_name <- reactiveVal(character(0))
 
+          str_to_shiny_ns <- function(x) {
+            gsub("[^[:alnum:]]+", "_", x)
+          }
+
           observeEvent(current_state(), {
             logger::log_trace("FilterStates$srv_active@1 determining added and removed filter states")
             added_state_name(setdiff(names(current_state()), names(previous_state())))
