@@ -73,6 +73,7 @@ Initialize a \code{FilterState} object
   x_reactive = reactive(NULL),
   dataname,
   varname,
+  multiple = NULL,
   keep_na = NULL,
   keep_inf = NULL,
   fixed = FALSE,
@@ -100,6 +101,10 @@ if \code{extract_type} argument is not empty.}
 
 \item{\code{varname}}{(\code{character(1)})\cr
 name of the variable.}
+
+\item{\code{multiple}}{(\code{logical(1)})\cr
+flag specifying whether the \code{FilterState} more than one value can be selected;
+only applicable to \code{FilterStateChoices} and \code{FilterStateLogical}}
 
 \item{\code{keep_na}}{(\code{logical(1)}, \code{NULL})\cr
 flag specifying whether to keep missing values}
