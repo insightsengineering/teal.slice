@@ -59,6 +59,18 @@ testthat::test_that("constructor sets default state", {
   )
 })
 
+testthat::test_that("constructor forces single selected when multiple is FALSE", {
+  testthat::expect_warning(
+    state <- ChoicesFilterState$new(
+      x = letters, dataname = "data", varname = "var", selected = c("b", "c"), multiple = FALSE
+    )
+  )
+  testthat::expect_identical(
+    shiny::isolate(state$get_state()$selected),
+    "b"
+  )
+})
+
 # get_call ----
 testthat::test_that("method get_call of default ChoicesFilterState object returns NULL", {
   filter_state <- ChoicesFilterState$new(letters, dataname = "data", varname = "variable")
