@@ -120,7 +120,6 @@ testthat::test_that("filter_var checks arguments", {
     filter_var(dataname = "data", varname = "var", locked = "TRUE"),
     "Assertion on 'locked' failed"
   )
-
 })
 
 

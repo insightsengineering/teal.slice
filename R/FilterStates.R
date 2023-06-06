@@ -768,7 +768,7 @@ FilterStates <- R6::R6Class( # nolint
       state_list <- shiny::isolate(private$state_list())
       for (state_id in names(state_list)) {
         is_locked <- shiny::isolate(private$state_list()[[state_id]]$get_state()$locked)
-        if(is_locked) {
+        if (is_locked) {
           logger::log_trace(
             "{ class(self)[1] }$state_list_empty aborted removing (locked) filter, dataname: { private$dataname }; state_id: { state_id }"
           )

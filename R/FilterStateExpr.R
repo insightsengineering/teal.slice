@@ -302,7 +302,6 @@ FilterStateExpr <- R6::R6Class( # nolint
         shiny::isolate(isTRUE(private$disabled()))
       }
     },
-
     content_summary = function() {
       private$expr
     },
