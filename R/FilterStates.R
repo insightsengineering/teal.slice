@@ -763,14 +763,19 @@ FilterStates <- R6::R6Class( # nolint
     # @return invisible NULL
     #
     state_list_empty = function() {
-      logger::log_trace("{ class(self)[1] }$state_list_empty removing all non-locked filters for dataname: { private$dataname }")
+      logger::log_trace(
+        "{ class(self)[1] }$state_list_empty removing all non-locked filters for dataname: { private$dataname }"
+      )
 
       state_list <- shiny::isolate(private$state_list())
       for (state_id in names(state_list)) {
         is_locked <- shiny::isolate(private$state_list()[[state_id]]$get_state()$locked)
         if (is_locked) {
           logger::log_trace(
-            "{ class(self)[1] }$state_list_empty aborted removing (locked) filter, dataname: { private$dataname }; state_id: { state_id }"
+            paste0(
+              "{ class(self)[1] }$state_list_empty aborted removing (locked) filter, ",
+              "dataname: { private$dataname }; state_id: { state_id }"
+            )
           )
         } else {
           logger::log_trace(
@@ -780,7 +785,9 @@ FilterStates <- R6::R6Class( # nolint
         }
       }
 
-      logger::log_trace("{ class(self)[1] }$state_list_empty removed all non-locked filters for dataname: { private$dataname }")
+      logger::log_trace(
+        "{ class(self)[1] }$state_list_empty removed all non-locked filters for dataname: { private$dataname }"
+      )
       invisible(NULL)
     },
 
