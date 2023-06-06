@@ -546,12 +546,12 @@ FilteredData <- R6::R6Class( # nolint
 
       current <- shiny::isolate(self$get_filter_state())
 
-      locked <- setNames(
-        sapply(current, function(x) x$locked),
-        sapply(current, get_teal_slice_id)
+      locked <- stats::setNames(
+        vapply(current, function(x) x$locked, logical(1)),
+        vapply(current, get_teal_slice_id, character(1))
       )
 
-      state_ids <- sapply(state, get_teal_slice_id)
+      state_ids <- vapply(state, get_teal_slice_id, character(1))
 
       state <- state[state_ids %in% names(locked[!locked])]
 
