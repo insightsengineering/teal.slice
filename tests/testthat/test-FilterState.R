@@ -149,7 +149,8 @@ testthat::test_that("set_state cannot set disabled field in a locked FilterState
 
 testthat::test_that("set_state overrides disabled field to FALSE when filter changes to locked at FilterState", {
   filter_state <- FilterState$new(
-    c("a", NA_character_), dataname = "data", varname = "variable",
+    c("a", NA_character_),
+    dataname = "data", varname = "variable",
     locked = FALSE, disabled = TRUE
   )
   new_state <- filter_var(
