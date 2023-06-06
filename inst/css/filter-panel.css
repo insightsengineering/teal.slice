@@ -189,6 +189,10 @@ a.remove_all:hover {
   font-size: small;
 }
 
+.filter-card-controls > div.form-group {
+  margin: 0em;
+}
+
 .checkbox label {
   margin: 0;
 }
@@ -373,8 +377,4 @@ a.remove_all:hover {
 
 .filter_datelike_input  input {
   font-size: 1em !important;
-}
-
-.filter-card-controls > div.form-group {
-  margin: 0em;
 }
