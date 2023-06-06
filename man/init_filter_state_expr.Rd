@@ -27,6 +27,9 @@ can be written without prefixing \code{var1 == "x" & var2 > 0}.}
 flag specifying whether the \code{FilterState} is initiated disabled}
 
 \item{...}{additional arguments to be saved as a list in \code{private$extras} field}
+
+\item{locked}{(\code{logical(1)})\cr
+flag specifying whether the \code{FilterState} is initiated locked}
 }
 \value{
 \code{FilterStateExpr} object
