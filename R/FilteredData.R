@@ -1110,6 +1110,7 @@ FilteredData <- R6::R6Class( # nolint
       private$filter_panel_active <- FALSE
       fp_id <- self$get_filter_panel_ui_id()
       shinyjs::disable(paste0(fp_id, "-add"), asis = TRUE)
+      shinyjs::disable("filter_active_vars_contents")
       slices <- self$get_filter_state()
       if (!is.null(slices)) {
         private$cached_states <- slices
@@ -1132,6 +1133,7 @@ FilteredData <- R6::R6Class( # nolint
       private$filter_panel_active <- TRUE
       fp_id <- self$get_filter_panel_ui_id()
       shinyjs::enable(paste0(fp_id, "-add"), asis = TRUE)
+      shinyjs::enable("filter_active_vars_contents")
       slices <- private$cached_states
       # If no states were cached, use existing ones.
       # This is necessary because this method is called on start-up.
