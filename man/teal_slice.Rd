@@ -27,12 +27,13 @@ filter_var(
   selected = NULL,
   keep_na = NULL,
   keep_inf = NULL,
-  fixed = FALSE,
   disabled = FALSE,
+  fixed = FALSE,
+  locked = FALSE,
   ...
 )
 
-filter_expr(dataname, id, title, expr, disabled = FALSE, ...)
+filter_expr(dataname, id, title, expr, disabled = FALSE, locked = FALSE, ...)
 
 filter_settings(
   ...,
@@ -82,12 +83,14 @@ type and size depends on variable type}
 
 \item{keep_inf}{\code{logical(1)} or \code{NULL} optional logical flag specifying whether to keep infinite values}
 
-\item{fixed}{\code{logical(1)} logical flag specifying whether to fix this filter state (i.e. forbid setting state)}
-
 \item{disabled}{(\code{logical(1)})\cr
 flag specifying whether the \code{FilterState} is initiated disabled}
 
-\item{...}{for \code{filter_var} any number of additional fields given as \code{name:value} pairs\cr
+\item{fixed}{\code{logical(1)} logical flag specifying whether to fix this filter state (forbid setting state)}
+
+\item{locked}{\code{logical(1)} logical flag specifying whether to lock this filter state (forbid disabling and removing)}
+
+\item{...}{for \code{filter_var} and \code{filter_expr} any number of additional fields given as \code{name:value} pairs\cr
 for \code{filter_settings} any number of \code{teal_slice} objects\cr
 for other functions arguments passed to other methods}
 
@@ -98,21 +101,16 @@ identifier of the filter}
 title of the filter (used by \code{filter_expr})}
 
 \item{expr}{(\code{language})\cr
-logical expression written in executable way. By "executable" means
-that \code{subset} call should be able to evaluate this without failure. For
+logical expression written in executable way, see \code{Details}
+where "executable" means
+that a \code{subset} call should be able to evaluate this without failure. For
 example \code{MultiAssayExperiment::subsetByColData} requires variable names prefixed
-by dataname (e.g. \code{data$var1 == "x" & data$var2 > 0}). For \code{data.frame} call
+by \code{dataname} (e.g. \code{data$var1 == "x" & data$var2 > 0}). For \code{data.frame} call
 can be written without prefixing \code{var1 == "x" & var2 > 0}.}
 
-\item{exclude_varnames}{\verb{named list} of \code{character} vectors where list names match names of data sets
-and vector elements match variable names in respective data sets;
-specifies which variables are not allowed to be filtered.
-Both \code{include_varnames} and \code{exclude_varnames} can't be specified for the same dataset in the same call.}
-
-\item{include_varnames}{\verb{named list} of \code{character} vectors where list names match names of data sets
-and vector elements match variable names in respective data sets;
-specifies which variables are not allowed to be filtered.
-Both \code{include_varnames} and \code{exclude_varnames} can't be specified for the same dataset in the same call.}
+\item{include_varnames, exclude_varnames}{\verb{named list}s of \code{character} vectors where list names
+match names of data sets and vector elements match variable names in respective data sets;
+specify which variables are allowed to be filtered; see \code{Details}}
 
 \item{count_type}{\code{character(1)} string specifying how observations are tallied by these filter states.
 Possible options:
@@ -130,6 +128,7 @@ and unfiltered dataset.
 }
 \value{
 \code{filter_var} returns object of class \code{teal_slice}, which is a named list.
+\code{filter_expr} returns object of class \code{teal_slice_expr}, which inherits from \code{teal_slice}.
 \code{filter_settings} returns object of class \code{teal_slices}, which is an unnamed list of \code{teal_slice} objects.
 }
 \description{
@@ -140,25 +139,29 @@ These functions create and manage filter state specifications.
 A single filter state can be fully described by a \code{teal_slice} object and such
 objects will be used to create, modify, and delete a filter state.
 
-A \code{teal_slice} contains a number of common fields (all named arguments of \code{filter_var})
-but only \code{dataname} and \code{varname} are mandatory, while the others have default values.
-Setting any of the other values to NULL means that these parameters will not be modified
+A \code{teal_slice} contains a number of common fields (all named arguments of \code{filter_var}),
+some of which are mandatroy, but only \code{dataname} and \code{varname} must be specified,
+while the others have default values.
+Setting any of the other values to NULL means that those properties will not be modified
 (when setting an existing state) or that they will be determined by data (when creating new a new one).
 Each of the common fields corresponds to one private field in \code{FilterState}
 where it is stored and from where it is retrieved when calling \code{FiterState$get_state}.
 
 A \code{teal_slice} can also contain any number of additional fields, passed to \code{...}
 as \code{name:value} pairs. These are collated into a list and stored in the
-\code{private$extras} field.
+\code{private$extras} field in \code{FilterState}.
 
 All \code{teal_slice} fields can be passed as arguments to \code{FilterState} constructors.
 A \code{teal_slice} can be passed to \code{FilterState$set_state}, which will modify the state.
 However, once a \code{FilterState} is created, only the \strong{mutable} features can be set with a \code{teal_slice}:
 \code{selected}, \code{keep_na}, \code{keep_inf}, and \code{disabled}.
 
-Special consideration is given to the \code{fixed} field. This is always a logical flag that defaults to FALSE.
+Special consideration is given to two fields: \code{fixed} and \code{locked}.
+These are always immutable logical flags that default to FALSE.
 In a \code{FilterState} instantiated with \code{fixed = TRUE} the features \code{selected}, \code{keep_na}, \code{keep_inf}
-cannot be changed but the\code{disabled} can.
+cannot be changed but the \code{disabled} feature can.
+A \code{FilterState} instantiated with \code{locked = TRUE} cannot be disabled or removed.
+Any combination of \code{fixed} and \code{locked} is permitted.
 
 \code{filter_var} creates a \code{teal_slice} object, which specifies a filter for a single variable,
 passed to and resolved by \code{FilterState} objects.
@@ -167,6 +170,11 @@ a complete filter specification. This is used by all classes above \code{FilterS
 as well as \code{filter_panel_api} wrapper functions.
 \code{teal_slices} also specifies which variables cannot be filtered
 and how observations are tallied, which is resolved by \code{FilterStates}.
+
+\code{include_varnames} and \code{exclude_varnames} in attributes in \code{teal_slices}
+determine which variables can have filters assigned.
+The former enumerates allowed variables, the latter enumerates forbidden values.
+Since these can be mutually exclusive in some cases, they cannot both be set in one \code{teal_slices} object.
 }
 \section{Filters in \code{SumarizedExperiment} and \code{MultiAssayExperiment} objects}{
 
