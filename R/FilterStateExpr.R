@@ -184,7 +184,7 @@ FilterStateExpr <- R6::R6Class( # nolint
     #'
     destroy_observers = function() {
       lapply(private$observers, function(x) x$destroy())
-      return(invisible(NULL))
+      invisible(NULL)
     },
 
     # public shiny modules ----
