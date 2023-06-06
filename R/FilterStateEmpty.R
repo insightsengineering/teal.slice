@@ -86,6 +86,9 @@ EmptyFilterState <- R6::R6Class( # nolint
       do.call(super$initialize, args)
 
       private$set_choices(choices)
+      if (is.null(selected)) {
+        selected <- private$choices
+      }
       private$set_selected(selected)
 
       invisible(self)
