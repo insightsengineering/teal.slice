@@ -149,7 +149,7 @@ LogicalFilterState <- R6::R6Class( # nolint
                           ...) {
       checkmate::assert_logical(x)
       checkmate::assert_class(x_reactive, "reactive")
-      checkmate::assert_flag(selected, null.ok = TRUE)
+      checkmate::assert_logical(selected, null.ok = TRUE)
 
       if (is.null(multiple)) multiple <- TRUE # Set default behavior of multiple variable to TRUE.
       args <- list(
