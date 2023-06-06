@@ -8,8 +8,7 @@
 #' @examples
 #' filter_state <- teal.slice:::DateFilterState$new(
 #'   x = c(Sys.Date() + seq(1:10), NA),
-#'   varname = "x",
-#'   dataname = "data",
+#'   slice = filter_var(varname = "x", dataname = "data"),
 #'   extract_type = character(0)
 #' )
 #' shiny::isolate(filter_state$get_call())
@@ -32,10 +31,9 @@
 #' data_date <- c(seq(from = dates[1], to = dates[2], length.out = 100), NA)
 #' fs <- DateFilterState$new(
 #'   x = data_date,
-#'   dataname = "data",
-#'   varname = "x",
-#'   selected = data_date[c(47, 98)],
-#'   keep_na = TRUE
+#'   slice = filter_var(
+#'     dataname = "data", varname = "x", selected = data_date[c(47, 98)], keep_na = TRUE
+#'   )
 #' )
 #'
 #' ui <- fluidPage(
@@ -137,18 +135,20 @@ DateFilterState <- R6::R6Class( # nolint
                           x_reactive = reactive(NULL),
                           slice,
                           extract_type = character(0)) {
-      checkmate::assert_date(x)
-      checkmate::assert_class(x_reactive, "reactive")
+      shiny::isolate({
+        checkmate::assert_date(x)
+        checkmate::assert_class(x_reactive, "reactive")
 
-      super$initialize(
-        x = x,
-        x_reactive = x_reactive,
-        slice = slice,
-        extract_type = extract_type
-      )
-      checkmate::assert_date(slice$choices, null.ok = TRUE)
-      private$set_choices(slice$choices)
-      private$set_selected(slice$selected)
+        super$initialize(
+          x = x,
+          x_reactive = x_reactive,
+          slice = slice,
+          extract_type = extract_type
+        )
+        checkmate::assert_date(slice$choices, null.ok = TRUE)
+        private$set_choices(slice$choices)
+        private$set_selected(slice$selected)
+      })
 
       invisible(self)
     },
@@ -284,36 +284,38 @@ DateFilterState <- R6::R6Class( # nolint
     #  id of shiny element
     ui_inputs = function(id) {
       ns <- NS(id)
-      div(
+      shiny::isolate({
         div(
-          class = "flex",
-          actionButton(
-            class = "date_reset_button",
-            inputId = ns("start_date_reset"),
-            label = NULL,
-            icon = icon("fas fa-undo")
-          ),
           div(
-            class = "w-80 filter_datelike_input",
-            dateRangeInput(
-              inputId = ns("selection"),
+            class = "flex",
+            actionButton(
+              class = "date_reset_button",
+              inputId = ns("start_date_reset"),
               label = NULL,
-              start = shiny::isolate(private$get_selected())[1],
-              end = shiny::isolate(private$get_selected())[2],
-              min = private$get_choices()[1L],
-              max = private$get_choices()[2L],
-              width = "100%"
+              icon = icon("fas fa-undo")
+            ),
+            div(
+              class = "w-80 filter_datelike_input",
+              dateRangeInput(
+                inputId = ns("selection"),
+                label = NULL,
+                start = private$get_selected()[1],
+                end = private$get_selected()[2],
+                min = private$get_choices()[1L],
+                max = private$get_choices()[2L],
+                width = "100%"
+              )
+            ),
+            actionButton(
+              class = "date_reset_button",
+              inputId = ns("end_date_reset"),
+              label = NULL,
+              icon = icon("fas fa-undo")
             )
           ),
-          actionButton(
-            class = "date_reset_button",
-            inputId = ns("end_date_reset"),
-            label = NULL,
-            icon = icon("fas fa-undo")
-          )
-        ),
-        private$keep_na_ui(ns("keep_na"))
-      )
+          private$keep_na_ui(ns("keep_na"))
+        )
+      })
     },
 
     # @description

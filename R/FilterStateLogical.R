@@ -8,9 +8,7 @@
 #' @examples
 #' filter_state <- teal.slice:::LogicalFilterState$new(
 #'   x = sample(c(TRUE, FALSE, NA), 10, replace = TRUE),
-#'   varname = "x",
-#'   dataname = "data",
-#'   extract_type = character(0)
+#'   slice = filter_var(varname = "x", dataname = "data")
 #' )
 #' shiny::isolate(filter_state$get_call())
 #' filter_state$set_state(
@@ -26,10 +24,7 @@
 #' data_logical <- c(sample(c(TRUE, FALSE), 10, replace = TRUE), NA)
 #' fs <- teal.slice:::LogicalFilterState$new(
 #'   x = data_logical,
-#'   dataname = "data",
-#'   varname = "x",
-#'   selected = FALSE,
-#'   keep_na = TRUE
+#'   slice = filter_var(dataname = "data", varname = "x", selected = FALSE, keep_na = TRUE)
 #' )
 #'
 #' ui <- fluidPage(
@@ -125,24 +120,26 @@ LogicalFilterState <- R6::R6Class( # nolint
                           x_reactive = reactive(NULL),
                           extract_type = character(0),
                           slice) {
-      checkmate::assert_logical(x)
-      super$initialize(
-        x = x,
-        x_reactive = x_reactive,
-        slice = slice,
-        extract_type = extract_type
-      )
-      checkmate::assert_flag(slice$selected, null.ok = TRUE)
-      private$set_choices(slice$choices)
-      if (is.null(slice$selected)) {
-        private$set_selected(TRUE)
-      } else {
-        private$set_selected(slice$selected)
-      }
+      shiny::isolate({
+        checkmate::assert_logical(x)
+        super$initialize(
+          x = x,
+          x_reactive = x_reactive,
+          slice = slice,
+          extract_type = extract_type
+        )
+        checkmate::assert_flag(slice$selected, null.ok = TRUE)
+        private$set_choices(slice$choices)
+        if (is.null(slice$selected)) {
+          private$set_selected(TRUE)
+        } else {
+          private$set_selected(slice$selected)
+        }
 
-      df <- factor(x, levels = c(TRUE, FALSE))
-      tbl <- table(df)
-      private$set_choices_counts(tbl)
+        df <- factor(x, levels = c(TRUE, FALSE))
+        tbl <- table(df)
+        private$set_choices_counts(tbl)
+      })
 
       invisible(self)
     },
@@ -241,35 +238,37 @@ LogicalFilterState <- R6::R6Class( # nolint
     ui_inputs = function(id) {
       ns <- NS(id)
 
-      countsmax <- private$choices_counts
-      countsnow <- countsnow <- if (!is.null(shiny::isolate(private$x_reactive()))) {
-        shiny::isolate(unname(table(factor(private$x_reactive(), levels = private$get_choices()))))
-      } else {
-        NULL
-      }
+      shiny::isolate({
+        countsmax <- private$choices_counts
+        countsnow <- countsnow <- if (!is.null(private$x_reactive())) {
+          unname(table(factor(private$x_reactive(), levels = private$get_choices())))
+        } else {
+          NULL
+        }
 
-      labels <- countBars(
-        inputId = ns("labels"),
-        choices = as.character(private$get_choices()),
-        countsnow = countsnow,
-        countsmax = countsmax
-      )
-      ui_input <- radioButtons(
-        ns("selection"),
-        label = NULL,
-        choiceNames = labels,
-        choiceValues = as.character(private$get_choices()),
-        selected = shiny::isolate(as.character(private$get_selected())),
-        width = "100%"
-      )
-      div(
+        labels <- countBars(
+          inputId = ns("labels"),
+          choices = as.character(private$get_choices()),
+          countsnow = countsnow,
+          countsmax = countsmax
+        )
+        ui_input <- radioButtons(
+          ns("selection"),
+          label = NULL,
+          choiceNames = labels,
+          choiceValues = as.character(private$get_choices()),
+          selected = as.character(private$get_selected()),
+          width = "100%"
+        )
         div(
-          class = "choices_state",
-          uiOutput(ns("trigger_visible"), inline = TRUE),
-          ui_input
-        ),
-        private$keep_na_ui(ns("keep_na"))
-      )
+          div(
+            class = "choices_state",
+            uiOutput(ns("trigger_visible"), inline = TRUE),
+            ui_input
+          ),
+          private$keep_na_ui(ns("keep_na"))
+        )
+      })
     },
 
     # @description

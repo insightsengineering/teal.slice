@@ -6,20 +6,18 @@
 #'
 #'
 #' @examples
+#' pkgload::load_all("teal.slice")
 #' filter_state <- teal.slice:::ChoicesFilterState$new(
 #'   x = c(LETTERS, NA),
-#'   varname = "x",
-#'   dataname = "data"
+#'   slice = filter_var(varname = "x", dataname = "data")
 #' )
 #' shiny::isolate(filter_state$get_call())
-#' shiny::isolate(
-#'   filter_state$set_state(
-#'     filter_var(
-#'       dataname = "data",
-#'       varname = "x",
-#'       selected = "A",
-#'       keep_na = TRUE
-#'     )
+#' filter_state$set_state(
+#'   filter_var(
+#'     dataname = "data",
+#'     varname = "x",
+#'     selected = "A",
+#'     keep_na = TRUE
 #'   )
 #' )
 #' shiny::isolate(filter_state$get_call())
@@ -33,10 +31,7 @@
 #' attr(data_choices, "label") <- "lowercase letters"
 #' fs <- ChoicesFilterState$new(
 #'   x = data_choices,
-#'   dataname = "data",
-#'   varname = "variable",
-#'   selected = c("a", "b"),
-#'   keep_na = TRUE
+#'   slice = filter_var(dataname = "data", varname = "variable", selected = c("a", "b"), keep_na = TRUE)
 #' )
 #'
 #' ui <- fluidPage(
@@ -145,39 +140,37 @@ ChoicesFilterState <- R6::R6Class( # nolint
                           x_reactive = reactive(NULL),
                           slice,
                           extract_type = character(0)) {
-      checkmate::assert(
-        is.character(x),
-        is.factor(x),
-        length(unique(x[!is.na(x)])) < getOption("teal.threshold_slider_vs_checkboxgroup"),
-        combine = "or"
-      )
-
-      x_factor <- if (!is.factor(x)) {
-        structure(
-          factor(as.character(x), levels = as.character(sort(unique(x)))),
-          label = attr(x, "label")
+      shiny::isolate({
+        checkmate::assert(
+          is.character(x),
+          is.factor(x),
+          length(unique(x[!is.na(x)])) < getOption("teal.threshold_slider_vs_checkboxgroup"),
+          combine = "or"
         )
-      } else {
-        x
-      }
 
-      super$initialize(
-        x = x_factor,
-        x_reactive = x_reactive,
-        slice = slice,
-        extract_type = extract_type
-      )
+        private$data_class <- class(x)[1L]
+        if (inherits(x, "POSIXt")) {
+          private$tzone <- Find(function(x) x != "", attr(as.POSIXlt(x), "tzone"))
+        }
+        x_factor <- if (!is.factor(x)) {
+          structure(
+            factor(as.character(x), levels = as.character(sort(unique(x)))),
+            label = attr(x, "label")
+          )
+        } else {
+          x
+        }
+        private$set_choices_counts(unname(table(x_factor)))
 
-      private$set_choices(slice$choices)
-      private$set_selected(slice$selected)
-
-      private$data_class <- class(x)[1L]
-      if (inherits(x, "POSIXt")) {
-        private$tzone <- Find(function(x) x != "", attr(as.POSIXlt(x), "tzone"))
-      }
-
-      private$set_choices_counts(unname(table(x_factor)))
-
+        super$initialize(
+          x = x_factor,
+          x_reactive = x_reactive,
+          slice = slice,
+          extract_type = extract_type
+        )
+        private$set_choices(slice$choices)
+        private$set_selected(slice$selected)
+      })
       invisible(self)
     },
 
@@ -346,56 +339,59 @@ ChoicesFilterState <- R6::R6Class( # nolint
     ui_inputs = function(id) {
       ns <- NS(id)
 
-      countsmax <- private$choices_counts
-      countsnow <- if (!is.null(shiny::isolate(private$x_reactive()))) {
-        isolate(unname(table(factor(shiny::isolate(private$x_reactive()), levels = private$get_choices()))))
-      } else {
-        NULL
-      }
+      # we need to isolate UI to not rettrigger renderUI
+      shiny::isolate({
+        countsmax <- private$choices_counts
+        countsnow <- if (!is.null(private$x_reactive())) {
+          unname(table(factor(private$x_reactive(), levels = private$get_choices())))
+        } else {
+          NULL
+        }
 
-      ui_input <- if (private$is_checkboxgroup()) {
-        labels <- countBars(
-          inputId = ns("labels"),
-          choices = private$get_choices(),
-          countsnow = countsnow,
-          countsmax = countsmax
-        )
-        div(
-          class = "choices_state",
-          checkboxGroupInput(
+        ui_input <- if (private$is_checkboxgroup()) {
+          labels <- countBars(
+            inputId = ns("labels"),
+            choices = private$get_choices(),
+            countsnow = countsnow,
+            countsmax = countsmax
+          )
+          div(
+            class = "choices_state",
+            checkboxGroupInput(
+              inputId = ns("selection"),
+              label = NULL,
+              selected = private$get_selected(),
+              choiceNames = labels,
+              choiceValues = private$get_choices(),
+              width = "100%"
+            )
+          )
+        } else {
+          labels <- mapply(
+            FUN = make_count_text,
+            label = private$get_choices(),
+            countnow = if (is.null(countsnow)) rep(list(NULL), length(private$get_choices())) else countsnow,
+            countmax = countsmax
+          )
+
+          teal.widgets::optionalSelectInput(
             inputId = ns("selection"),
-            label = NULL,
+            choices = stats::setNames(private$get_choices(), labels),
             selected = private$get_selected(),
-            choiceNames = labels,
-            choiceValues = private$get_choices(),
-            width = "100%"
+            multiple = TRUE,
+            options = shinyWidgets::pickerOptions(
+              actionsBox = TRUE,
+              liveSearch = length(private$get_choices() > 10),
+              noneSelectedText = "Select a value"
+            )
           )
+        }
+        div(
+          uiOutput(ns("trigger_visible")),
+          ui_input,
+          private$keep_na_ui(ns("keep_na"))
         )
-      } else {
-        labels <- mapply(
-          FUN = make_count_text,
-          label = private$get_choices(),
-          countnow = if (is.null(countsnow)) rep(list(NULL), length(private$get_choices())) else countsnow,
-          countmax = countsmax
-        )
-
-        teal.widgets::optionalSelectInput(
-          inputId = ns("selection"),
-          choices = stats::setNames(private$get_choices(), labels),
-          selected = shiny::isolate(private$get_selected()),
-          multiple = TRUE,
-          options = shinyWidgets::pickerOptions(
-            actionsBox = TRUE,
-            liveSearch = (length(private$get_choices()) > 10),
-            noneSelectedText = "Select a value"
-          )
-        )
-      }
-      div(
-        uiOutput(ns("trigger_visible")),
-        ui_input,
-        private$keep_na_ui(ns("keep_na"))
-      )
+      })
     },
 
     # @description

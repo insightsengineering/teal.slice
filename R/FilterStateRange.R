@@ -8,9 +8,7 @@
 #' @examples
 #' filter_state <- teal.slice:::RangeFilterState$new(
 #'   x = c(NA, Inf, seq(1:10)),
-#'   varname = "x",
-#'   dataname = "data",
-#'   extract_type = character(0)
+#'   slice = filter_var(varname = "x", dataname = "data")
 #' )
 #' shiny::isolate(filter_state$get_call())
 #' filter_state$set_state(
@@ -32,11 +30,13 @@
 #' data_range <- c(runif(100, 0, 1), NA, Inf)
 #' fs <- teal.slice:::RangeFilterState$new(
 #'   x = data_range,
-#'   dataname = "data",
-#'   varname = "x",
-#'   selected = c(0.15, 0.93),
-#'   keep_na = TRUE,
-#'   keep_inf = TRUE
+#'   slice = filter_var(
+#'     dataname = "data",
+#'     varname = "x",
+#'     selected = c(0.15, 0.93),
+#'     keep_na = TRUE,
+#'     keep_inf = TRUE
+#'   )
 #' )
 #'
 #' ui <- fluidPage(
@@ -148,38 +148,40 @@ RangeFilterState <- R6::R6Class( # nolint
                           x_reactive = reactive(NULL),
                           extract_type = character(0),
                           slice) {
-      checkmate::assert_numeric(x, all.missing = FALSE)
-      if (!any(is.finite(x))) stop("\"x\" contains no finite values")
-      super$initialize(
-        x = x,
-        x_reactive = x_reactive,
-        slice = slice,
-        extract_type = extract_type
-      )
-      checkmate::assert_numeric(slice$choices, null.ok = TRUE)
-      slice$keep_inf <- if (is.null(slice$keep_inf) && any(is.infinite(x))) TRUE else slice$keep_inf
-      private$is_integer <- checkmate::test_integerish(x)
-      private$inf_filtered_count <- reactive(
-        if (!is.null(private$x_reactive())) sum(is.infinite(private$x_reactive()))
-      )
-      private$inf_count <- sum(is.infinite(x))
-
-      private$set_choices(slice$choices)
-      private$set_selected(slice$selected)
-
-      private$unfiltered_histogram <- ggplot2::ggplot(data.frame(x = Filter(is.finite, private$x))) +
-        ggplot2::geom_histogram(
-          ggplot2::aes(x = Filter(is.finite, private$x)),
-          bins = 100,
-          fill = grDevices::rgb(211 / 255, 211 / 255, 211 / 255),
-          color = grDevices::rgb(211 / 255, 211 / 255, 211 / 255)
-        ) +
-        ggplot2::theme_void() +
-        ggplot2::coord_cartesian(
-          expand = FALSE,
-          xlim = c(private$get_choices()[1L], private$get_choices()[2L])
+      shiny::isolate({
+        checkmate::assert_numeric(x, all.missing = FALSE)
+        if (!any(is.finite(x))) stop("\"x\" contains no finite values")
+        super$initialize(
+          x = x,
+          x_reactive = x_reactive,
+          slice = slice,
+          extract_type = extract_type
+        )
+        private$is_integer <- checkmate::test_integerish(x)
+        private$inf_count <- sum(is.infinite(x))
+        private$inf_filtered_count <- reactive(
+          if (!is.null(private$x_reactive())) sum(is.infinite(private$x_reactive()))
         )
 
+        checkmate::assert_numeric(slice$choices, null.ok = TRUE)
+        if (is.null(slice$keep_inf) && any(is.infinite(x))) slice$keep_inf <- TRUE
+
+        private$set_choices(slice$choices)
+        private$set_selected(slice$selected)
+
+        private$unfiltered_histogram <- ggplot2::ggplot(data.frame(x = Filter(is.finite, private$x))) +
+          ggplot2::geom_histogram(
+            ggplot2::aes(x = Filter(is.finite, private$x)),
+            bins = 100,
+            fill = grDevices::rgb(211 / 255, 211 / 255, 211 / 255),
+            color = grDevices::rgb(211 / 255, 211 / 255, 211 / 255)
+          ) +
+          ggplot2::theme_void() +
+          ggplot2::coord_cartesian(
+            expand = FALSE,
+            xlim = c(private$get_choices()[1L], private$get_choices()[2L])
+          )
+      })
       invisible(self)
     },
 
@@ -367,60 +369,61 @@ RangeFilterState <- R6::R6Class( # nolint
     #  id of shiny element
     ui_inputs = function(id) {
       ns <- NS(id)
-
-      ui_input_slider <- teal.widgets::optionalSliderInput(
-        inputId = ns("selection"),
-        label = NULL,
-        min = private$get_choices()[1L],
-        max = private$get_choices()[2L],
-        value = shiny::isolate(private$get_selected()),
-        step = private$slider_step,
-        width = "100%"
-      )
-      ui_input_manual <- shinyWidgets::numericRangeInput(
-        inputId = ns("selection_manual"),
-        label = NULL,
-        min = private$get_choices()[1L],
-        max = private$get_choices()[2L],
-        value = shiny::isolate(private$get_selected()),
-        step = private$slider_step,
-        width = "100%"
-      )
-
-      tagList(
-        shinyWidgets::switchInput(
-          ns("manual"),
-          label = "Enter manually",
-          size = "small",
-          labelWidth = "100px",
-          onLabel = "Yes",
-          offLabel = "No",
-          onStatus = "info",
-          offStatus = "info"
-        ),
-        conditionalPanel(
-          ns = ns,
-          condition = "input.manual === false",
-          div(
-            class = "choices_state",
-            div(
-              class = "filterPlotOverlayRange",
-              plotOutput(ns("plot"), height = "100%"),
-            ),
-            div(class = "filterRangeSlider", ui_input_slider)
-          )
-        ),
-        conditionalPanel(
-          ns = ns,
-          condition = "input.manual === true",
-          ui_input_manual
-        ),
-        div(
-          class = "filter-card-body-keep-na-inf",
-          private$keep_inf_ui(ns("keep_inf")),
-          private$keep_na_ui(ns("keep_na"))
+      shiny::isolate({
+        ui_input_slider <- teal.widgets::optionalSliderInput(
+          inputId = ns("selection"),
+          label = NULL,
+          min = private$get_choices()[1L],
+          max = private$get_choices()[2L],
+          value = private$get_selected(),
+          step = private$slider_step,
+          width = "100%"
         )
-      )
+        ui_input_manual <- shinyWidgets::numericRangeInput(
+          inputId = ns("selection_manual"),
+          label = NULL,
+          min = private$get_choices()[1L],
+          max = private$get_choices()[2L],
+          value = private$get_selected(),
+          step = private$slider_step,
+          width = "100%"
+        )
+
+        tagList(
+          shinyWidgets::switchInput(
+            ns("manual"),
+            label = "Enter manually",
+            size = "small",
+            labelWidth = "100px",
+            onLabel = "Yes",
+            offLabel = "No",
+            onStatus = "info",
+            offStatus = "info"
+          ),
+          conditionalPanel(
+            ns = ns,
+            condition = "input.manual === false",
+            div(
+              class = "choices_state",
+              div(
+                class = "filterPlotOverlayRange",
+                plotOutput(ns("plot"), height = "100%"),
+              ),
+              div(class = "filterRangeSlider", ui_input_slider)
+            )
+          ),
+          conditionalPanel(
+            ns = ns,
+            condition = "input.manual === true",
+            ui_input_manual
+          ),
+          div(
+            class = "filter-card-body-keep-na-inf",
+            private$keep_inf_ui(ns("keep_inf")),
+            private$keep_na_ui(ns("keep_na"))
+          )
+        )
+      })
     },
 
     # @description

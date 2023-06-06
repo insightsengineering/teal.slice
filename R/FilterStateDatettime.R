@@ -8,8 +8,7 @@
 #' @examples
 #' filter_state <- teal.slice:::DatetimeFilterState$new(
 #'   x = c(Sys.time() + seq(0, by = 3600, length.out = 10), NA),
-#'   varname = "x",
-#'   dataname = "data",
+#'   slice = filter_var(varname = "x", dataname = "data"),
 #'   extract_type = character(0)
 #' )
 #' shiny::isolate(filter_state$get_call())
@@ -32,10 +31,9 @@
 #' data_datetime <- c(seq(from = datetimes[1], to = datetimes[2], length.out = 100), NA)
 #' fs <- teal.slice:::DatetimeFilterState$new(
 #'   x = data_datetime,
-#'   varname = "x",
-#'   dataname = "data",
-#'   selected = data_datetime[c(47, 98)],
-#'   keep_na = TRUE
+#'   slice = filter_var(
+#'     varname = "x", dataname = "data", selected = data_datetime[c(47, 98)], keep_na = TRUE
+#'   )
 #' )
 #'
 #' ui <- fluidPage(
@@ -147,18 +145,20 @@ DatetimeFilterState <- R6::R6Class( # nolint
                           x_reactive = reactive(NULL),
                           extract_type = character(0),
                           slice) {
-      checkmate::assert_multi_class(x, c("POSIXct", "POSIXlt"))
-      checkmate::assert_class(x_reactive, "reactive")
+      shiny::isolate({
+        checkmate::assert_multi_class(x, c("POSIXct", "POSIXlt"))
+        checkmate::assert_class(x_reactive, "reactive")
 
-      super$initialize(
-        x = x,
-        x_reactive = x_reactive,
-        slice = slice,
-        extract_type = extract_type
-      )
-      checkmate::assert_multi_class(slice$choices, c("POSIXct", "POSIXlt"), null.ok = TRUE)
-      private$set_choices(slice$choices)
-      private$set_selected(slice$selected)
+        super$initialize(
+          x = x,
+          x_reactive = x_reactive,
+          slice = slice,
+          extract_type = extract_type
+        )
+        checkmate::assert_multi_class(slice$choices, c("POSIXct", "POSIXlt"), null.ok = TRUE)
+        private$set_choices(slice$choices)
+        private$set_selected(slice$selected)
+      })
 
       invisible(self)
     },
@@ -323,62 +323,63 @@ DatetimeFilterState <- R6::R6Class( # nolint
     ui_inputs = function(id) {
       ns <- NS(id)
 
+      shiny::isolate({
+        ui_input_1 <- shinyWidgets::airDatepickerInput(
+          inputId = ns("selection_start"),
+          value = private$get_selected()[1],
+          startView = private$get_selected()[1],
+          timepicker = TRUE,
+          minDate = private$get_choices()[1L],
+          maxDate = private$get_choices()[2L],
+          update_on = "close",
+          addon = "none",
+          position = "bottom right"
+        )
+        ui_input_2 <- shinyWidgets::airDatepickerInput(
+          inputId = ns("selection_end"),
+          value = private$get_selected()[2],
+          startView = private$get_selected()[2],
+          timepicker = TRUE,
+          minDate = private$get_choices()[1L],
+          maxDate = private$get_choices()[2L],
+          update_on = "close",
+          addon = "none",
+          position = "bottom right"
+        )
+        ui_reset_1 <- actionButton(
+          class = "date_reset_button",
+          inputId = ns("start_date_reset"),
+          label = NULL,
+          icon = icon("fas fa-undo")
+        )
+        ui_reset_2 <- actionButton(
+          class = "date_reset_button",
+          inputId = ns("end_date_reset"),
+          label = NULL,
+          icon = icon("fas fa-undo")
+        )
+        ui_input_1$children[[2]]$attribs <- c(ui_input_1$children[[2]]$attribs, list(class = "input-sm"))
+        ui_input_2$children[[2]]$attribs <- c(ui_input_2$children[[2]]$attribs, list(class = "input-sm"))
 
-      ui_input_1 <- shinyWidgets::airDatepickerInput(
-        inputId = ns("selection_start"),
-        value = shiny::isolate(private$get_selected())[1],
-        startView = shiny::isolate(private$get_selected())[1],
-        timepicker = TRUE,
-        minDate = private$get_choices()[1L],
-        maxDate = private$get_choices()[2L],
-        update_on = "close",
-        addon = "none",
-        position = "bottom right"
-      )
-      ui_input_2 <- shinyWidgets::airDatepickerInput(
-        inputId = ns("selection_end"),
-        value = shiny::isolate(private$get_selected())[2],
-        startView = shiny::isolate(private$get_selected())[2],
-        timepicker = TRUE,
-        minDate = private$get_choices()[1L],
-        maxDate = private$get_choices()[2L],
-        update_on = "close",
-        addon = "none",
-        position = "bottom right"
-      )
-      ui_reset_1 <- actionButton(
-        class = "date_reset_button",
-        inputId = ns("start_date_reset"),
-        label = NULL,
-        icon = icon("fas fa-undo")
-      )
-      ui_reset_2 <- actionButton(
-        class = "date_reset_button",
-        inputId = ns("end_date_reset"),
-        label = NULL,
-        icon = icon("fas fa-undo")
-      )
-      ui_input_1$children[[2]]$attribs <- c(ui_input_1$children[[2]]$attribs, list(class = "input-sm"))
-      ui_input_2$children[[2]]$attribs <- c(ui_input_2$children[[2]]$attribs, list(class = "input-sm"))
-
-      div(
         div(
-          class = "flex",
-          ui_reset_1,
           div(
-            class = "flex w-80 filter_datelike_input",
-            div(class = "w-45 text-center", ui_input_1),
-            span(
-              class = "input-group-addon w-10",
-              span(class = "input-group-text w-100 justify-content-center", "to"),
-              title = "Times are displayed in the local timezone and are converted to UTC in the analysis"
+            class = "flex",
+            ui_reset_1,
+            div(
+              class = "flex w-80 filter_datelike_input",
+              div(class = "w-45 text-center", ui_input_1),
+              span(
+                class = "input-group-addon w-10",
+                span(class = "input-group-text w-100 justify-content-center", "to"),
+                title = "Times are displayed in the local timezone and are converted to UTC in the analysis"
+              ),
+              div(class = "w-45 text-center", ui_input_2)
             ),
-            div(class = "w-45 text-center", ui_input_2)
+            ui_reset_2
           ),
-          ui_reset_2
-        ),
-        private$keep_na_ui(ns("keep_na"))
-      )
+          private$keep_na_ui(ns("keep_na"))
+        )
+      })
     },
 
     # @description

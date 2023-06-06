@@ -7,9 +7,8 @@
 #'
 #' @examples
 #' filter_state <- teal.slice:::EmptyFilterState$new(
-#'   NA,
-#'   varname = "x",
-#'   dataname = "data",
+#'   x = NA,
+#'   slice = filter_var(varname = "x", dataname = "data"),
 #'   extract_type = character(0)
 #' )
 #' shiny::isolate(filter_state$get_call())
@@ -52,14 +51,16 @@ EmptyFilterState <- R6::R6Class( # nolint
                           x_reactive = reactive(NULL),
                           extract_type = character(0),
                           slice) {
-      super$initialize(
-        x = x,
-        x_reactive = x_reactive,
-        slice = slice,
-        extract_type = extract_type
-      )
-      private$set_choices(slice$choices)
-      private$set_selected(slice$selected)
+      shiny::isolate({
+        super$initialize(
+          x = x,
+          x_reactive = x_reactive,
+          slice = slice,
+          extract_type = extract_type
+        )
+        private$set_choices(slice$choices)
+        private$set_selected(slice$selected)
+      })
 
       invisible(self)
     },
@@ -122,15 +123,17 @@ EmptyFilterState <- R6::R6Class( # nolint
     #
     ui_inputs = function(id) {
       ns <- NS(id)
-      fluidRow(
-        div(
-          class = "relative",
+      shiny::isolate({
+        fluidRow(
           div(
-            span("Variable contains missing values only"),
-            private$keep_na_ui(ns("keep_na"))
+            class = "relative",
+            div(
+              span("Variable contains missing values only"),
+              private$keep_na_ui(ns("keep_na"))
+            )
           )
         )
-      )
+      })
     },
 
     # @description

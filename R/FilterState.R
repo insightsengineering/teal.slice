@@ -96,7 +96,7 @@ FilterState <- R6::R6Class( # nolint
       private$extract_type <- extract_type
 
       # Set state properties.
-      slice$keep_na <- if (is.null(slice$keep_na) && anyNA(x)) TRUE else slice$keep_na
+      if (is.null(shiny::isolate(slice$keep_na)) && anyNA(x)) slice$keep_na <- TRUE
       private$teal_slice <- slice
       # Obtain variable label.
       varlabel <- attr(x, "label")
@@ -150,22 +150,24 @@ FilterState <- R6::R6Class( # nolint
           logger::log_warn("attempt to set state on fixed filter aborted: { private$get_dataname() } { private$get_varname() }")
       } else {
         logger::log_trace("{ class(self)[1] }$set_state setting state of variable: { private$get_varname() }")
-        if (!is.null(state$selected)) {
-          private$set_selected(state$selected)
-        }
-        if (!is.null(state$keep_na)) {
-          private$set_keep_na(state$keep_na)
-        }
-        if (!is.null(state$keep_inf)) {
-          private$set_keep_inf(state$keep_inf)
-        }
+        shiny::isolate({
+          if (!is.null(state$selected)) {
+            private$set_selected(state$selected)
+          }
+          if (!is.null(state$keep_na)) {
+            private$set_keep_na(state$keep_na)
+          }
+          if (!is.null(state$keep_inf)) {
+            private$set_keep_inf(state$keep_inf)
+          }
+          current_state <- sprintf(
+            "selected: %s; keep_na: %s; keep_inf: %s",
+            toString(private$get_selected()),
+            private$get_keep_na(),
+            private$get_keep_inf()
+          )
+        })
 
-        current_state <- sprintf(
-          "selected: %s; keep_na: %s; keep_inf: %s",
-          toString(shiny::isolate(private$get_selected())),
-          shiny::isolate(private$get_keep_na()),
-          shiny::isolate(private$get_keep_inf())
-        )
         logger::log_trace("state of variable: { private$get_varname() } set to: { current_state }")
       }
 
@@ -351,11 +353,13 @@ FilterState <- R6::R6Class( # nolint
           private$get_dataname()
         )
       )
-      if (is.null(value)) value <- private$get_choices()
-      value <- private$cast_and_validate(value)
-      value <- private$remove_out_of_bound_values(value)
-      private$validate_selection(value)
-      private$teal_slice$selected <- value
+      shiny::isolate({
+        if (is.null(value)) value <- private$get_choices()
+        value <- private$cast_and_validate(value)
+        value <- private$remove_out_of_bound_values(value)
+        private$validate_selection(value)
+        private$teal_slice$selected <- value
+      })
       logger::log_trace(
         sprintf(
           "%s$set_selected selection of variable %s set, dataname: %s",
@@ -440,21 +444,21 @@ FilterState <- R6::R6Class( # nolint
     # Returns dataname.
     # @return `character(1)`
     get_dataname = function() {
-      private$teal_slice$dataname
+      shiny::isolate(private$teal_slice$dataname)
     },
 
     # @description
     # Get variable name.
     # @return `character(1)`
     get_varname = function() {
-      private$teal_slice$varname
+      shiny::isolate(private$teal_slice$varname)
     },
 
     # @description
     # Get allowed values from `FilterState`.
     # @return class of the returned object depends of class of the `FilterState`
     get_choices = function() {
-      private$teal_slice$choices
+      shiny::isolate(private$teal_slice$choices)
     },
 
     # @description
@@ -481,11 +485,7 @@ FilterState <- R6::R6Class( # nolint
     # Check whether this filter is fixed
     # @return `logical(1)`
     is_fixed = function() {
-      if (shiny::isRunning()) {
-        private$teal_slice$fixed
-      } else {
-        shiny::isolate(private$teal_slice$fixed)
-      }
+      shiny::isolate(private$teal_slice$fixed)
     },
 
     ## other ----
@@ -640,24 +640,26 @@ FilterState <- R6::R6Class( # nolint
     keep_na_ui = function(id) {
       ns <- NS(id)
       if (private$na_count > 0) {
-        countmax <- private$na_count
-        countnow <- shiny::isolate(private$filtered_na_count())
-        ui_input <- checkboxInput(
-          inputId = ns("value"),
-          label = tags$span(
-            id = ns("count_label"),
-            make_count_text(
-              label = "Keep NA",
-              countmax = countmax,
-              countnow = countnow
-            )
-          ),
-          value = shiny::isolate(private$get_keep_na())
-        )
-        div(
-          uiOutput(ns("trigger_visible"), inline = TRUE),
-          ui_input
-        )
+        shiny::isolate({
+          countmax <- private$na_count
+          countnow <- private$filtered_na_count()
+          ui_input <- checkboxInput(
+            inputId = ns("value"),
+            label = tags$span(
+              id = ns("count_label"),
+              make_count_text(
+                label = "Keep NA",
+                countmax = countmax,
+                countnow = countnow
+              )
+            ),
+            value = private$get_keep_na()
+          )
+          div(
+            uiOutput(ns("trigger_visible"), inline = TRUE),
+            ui_input
+          )
+        })
       } else {
         NULL
       }
