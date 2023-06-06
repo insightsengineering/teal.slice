@@ -141,7 +141,7 @@ testthat::test_that("set_state cannot set disabled field in a locked FilterState
     selected = "a",
     keep_na = TRUE,
     keep_inf = FALSE,
-    disable = FALSE,
+    disabled = FALSE,
     locked = TRUE
   )
   testthat::expect_output(filter_state$set_state(new_state), "WARN.+attempt to disable a locked filter aborted")
