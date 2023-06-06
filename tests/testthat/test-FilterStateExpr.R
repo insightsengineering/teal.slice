@@ -48,21 +48,9 @@ testthat::test_that("get_call returns call identical to one passed in the constr
     dataname = "x",
     id = "id",
     title = "testtitle",
-    expr = "x == 'x'",
-    disabled = FALSE
+    expr = "x == 'x'"
   )
   testthat::expect_identical(shiny::isolate(state$get_call()), quote(x == "x"))
-})
-
-testthat::test_that("get_call returns NULL when disabled", {
-  state <- FilterStateExpr$new(
-    dataname = "x",
-    id = "id",
-    title = "testtitle",
-    expr = "x == 'x'",
-    disabled = TRUE
-  )
-  testthat::expect_null(shiny::isolate(state$get_call()))
 })
 
 # set/get_state -----
@@ -76,46 +64,24 @@ testthat::test_that("get_state returns list of state values", {
   testthat::expect_identical(
     shiny::isolate(state$get_state()),
     filter_expr(
-      id = "id", title = "testtitle", dataname = "x", expr = "x == 'x'", disabled = FALSE
+      id = "id", title = "testtitle", dataname = "x", expr = "x == 'x'"
     )
   )
 })
 
-testthat::test_that("set_state accepts only filter_state_expr", {
-  state <- FilterStateExpr$new(
-    dataname = "x",
-    id = "id",
-    title = "testtitle",
-    expr = "x == 'x'",
-    disabled = FALSE
-  )
-
-  testthat::expect_error(
-    state$set_state(
-      filter_var(
-        dataname = "x2", varname = "x", id = "id2", title = "title2", expr = "x2 == 'x2'", disabled = TRUE
-      )
-    )
-  )
-  testthat::expect_error(state$set_state(NULL))
-})
-
-testthat::test_that("set_state ignores every attribute except disabled", {
+testthat::test_that("set_state ignores every attribute", {
   state <- FilterStateExpr$new(
     id = "id",
     title = "testtitle",
     dataname = "x",
-    expr = "x == 'x'",
-    disabled = FALSE
+    expr = "x == 'x'"
   )
   state$set_state(
-    filter_expr(id = "id2", title = "title2", dataname = "x2", expr = "x2 == 'x2'", disabled = TRUE)
+    filter_expr(id = "id2", title = "title2", dataname = "x2", expr = "x2 == 'x2'")
   )
   testthat::expect_identical(
     shiny::isolate(state$get_state()),
-    filter_expr(
-      id = "id", title = "testtitle", dataname = "x", expr = "x == 'x'", disabled = TRUE
-    )
+    filter_expr(id = "id", title = "testtitle", dataname = "x", expr = "x == 'x'")
   )
 })
 
@@ -125,11 +91,7 @@ testthat::test_that("format returns a properly formatted string representation",
     id = "id",
     title = "testtitle",
     dataname = "x",
-    expr = "x == 'x'",
-    disabled = FALSE
-  )
-  state$set_state(
-    filter_expr(id = "id2", title = "title2", dataname = "x2", expr = "x2 == 'x2'", disabled = TRUE)
+    expr = "x == 'x'"
   )
   testthat::expect_equal(
     shiny::isolate(state$format()),
@@ -146,11 +108,7 @@ testthat::test_that("print returns a properly formatted string representation", 
     id = "id",
     title = "testtitle",
     dataname = "x",
-    expr = "x == 'x'",
-    disabled = FALSE
-  )
-  state$set_state(
-    filter_expr(id = "id2", title = "title2", dataname = "x2", expr = "x2 == 'x2'", disabled = TRUE)
+    expr = "x == 'x'"
   )
   testthat::expect_equal(
     utils::capture.output(cat(state$print())),

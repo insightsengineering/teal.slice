@@ -129,23 +129,12 @@ RangeFilterState <- R6::R6Class( # nolint
     #'   counts following the change in values of the filtered dataset.
     #'   If it is set to `reactive(NULL)` then counts based on filtered
     #'   dataset are not shown.
-    #' @param dataname (`character(1)`)\cr
-    #'   optional name of dataset where `x` is taken from. Must be specified
-    #'   if `extract_type` argument is not empty.
-    #' @param varname (`character(1)`)\cr
-    #'   name of the variable.
-    #' @param choices (`atomic`, `NULL`)\cr
-    #'   vector specifying allowed selection values
-    #' @param selected (`atomic`, `NULL`)\cr
-    #'   vector specifying selection
-    #' @param keep_na (`logical(1)`, `NULL`)\cr
-    #'   flag specifying whether to keep missing values
-    #' @param keep_inf (`logical(1)`, `NULL`)\cr
-    #'   flag specifying whether to keep infinite values
-    #' @param fixed (`logical(1)`)\cr
-    #'   flag specifying whether the `FilterState` is initiated fixed
-    #' @param disabled (`logical(1)`)\cr
-    #'   flag specifying whether the `FilterState` is initiated disabled
+    #' @param slice (`teal_slice`)\cr
+    #'   object created using [filter_var()]. `teal_slice` is stored
+    #'   in the class and `set_state` directly manipulates values within `teal_slice`. `get_state`
+    #'   returns `teal_slice` object which can be reused in other places. Beware, that `teal_slice`
+    #'   is an immutable object which means that changes in particular object are automatically
+    #'   reflected in all places which refer to the same `teal_slice`.
     #' @param extract_type (`character(0)`, `character(1)`)\cr
     #' whether condition calls should be prefixed by dataname. Possible values:
     #' \itemize{
@@ -160,20 +149,15 @@ RangeFilterState <- R6::R6Class( # nolint
                           extract_type = character(0),
                           slice) {
       checkmate::assert_numeric(x, all.missing = FALSE)
-      checkmate::assert_numeric(slice$choices, null.ok = TRUE)
-      checkmate::assert_class(x_reactive, "reactive")
       if (!any(is.finite(x))) stop("\"x\" contains no finite values")
-
-      slice$keep_inf <- if (is.null(slice$keep_inf) && any(is.infinite(x))) TRUE else slice$keep_inf
-
-      args <- list(
+      super$initialize(
         x = x,
         x_reactive = x_reactive,
-        extract_type = extract_type,
-        slice = slice
+        slice = slice,
+        extract_type = extract_type
       )
-      do.call(super$initialize, args)
-
+      checkmate::assert_numeric(slice$choices, null.ok = TRUE)
+      slice$keep_inf <- if (is.null(slice$keep_inf) && any(is.infinite(x))) TRUE else slice$keep_inf
       private$is_integer <- checkmate::test_integerish(x)
       private$inf_filtered_count <- reactive(
         if (!is.null(private$x_reactive())) sum(is.infinite(private$x_reactive()))
@@ -361,9 +345,7 @@ RangeFilterState <- R6::R6Class( # nolint
     # Answers the question of whether the current settings and values selected actually filters out any values.
     # @return logical scalar
     is_any_filtered = function() {
-      if (private$is_disabled()) {
-        FALSE
-      } else if (private$is_choice_limited) {
+      if (private$is_choice_limited) {
         TRUE
       } else if (!isTRUE(all.equal(private$get_selected(), private$get_choices()))) {
         TRUE
@@ -405,11 +387,6 @@ RangeFilterState <- R6::R6Class( # nolint
         width = "100%"
       )
 
-      if (shiny::isolate(private$is_disabled())) {
-        ui_input_slider <- shinyjs::disabled(ui_input_slider)
-        ui_input_manual <- shinyjs::disabled(ui_input_manual)
-      }
-
       tagList(
         shinyWidgets::switchInput(
           ns("manual"),
@@ -419,8 +396,7 @@ RangeFilterState <- R6::R6Class( # nolint
           onLabel = "Yes",
           offLabel = "No",
           onStatus = "info",
-          offStatus = "info",
-          disabled = shiny::isolate(private$is_disabled())
+          offStatus = "info"
         ),
         conditionalPanel(
           ns = ns,
@@ -596,14 +572,6 @@ RangeFilterState <- R6::R6Class( # nolint
           private$keep_inf_srv("keep_inf")
           private$keep_na_srv("keep_na")
 
-          observeEvent(private$is_disabled(), {
-            shinyWidgets::updateSwitchInput(
-              session = session,
-              inputId = "manual",
-              disabled = private$is_disabled()
-            )
-          })
-
           observeEvent(input$manual,
             {
               if (input$manual) {
@@ -740,7 +708,6 @@ RangeFilterState <- R6::R6Class( # nolint
           ),
           value = isolate(private$get_keep_inf())
         )
-        if (shiny::isolate(private$is_disabled())) ui_input <- shinyjs::disabled(ui_input)
         div(
           uiOutput(ns("trigger_visible"), inline = TRUE),
           ui_input

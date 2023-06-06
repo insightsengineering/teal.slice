@@ -39,12 +39,12 @@ testthat::test_that("set_filter_state sets `teal_slice`", {
   fs <- filter_settings(
     filter_var(
       dataname = "iris", varname = "Sepal.Length", choices = c(4.3, 7.9), selected = c(5.1, 6.4),
-      keep_na = FALSE, keep_inf = FALSE, fixed = FALSE, disabled = FALSE
+      keep_na = FALSE, keep_inf = FALSE, fixed = FALSE
     ),
     filter_var(
       dataname = "iris", varname = "Species",
       choices = c("setosa", "versicolor", "virginica"), selected = c("setosa", "versicolor"),
-      keep_na = FALSE, keep_inf = FALSE, fixed = FALSE, disabled = FALSE
+      keep_na = FALSE, keep_inf = FALSE, fixed = FALSE
     ),
     count_type = "all",
     include_varnames = list(iris = colnames(iris))
@@ -62,12 +62,12 @@ testthat::test_that("format returns a properly formatted string representation",
   fs <- filter_settings(
     filter_var(
       dataname = "iris", varname = "Sepal.Length", choices = c(4.3, 7.9), selected = c(5.1, 6.4),
-      keep_inf = FALSE, fixed = FALSE, disabled = FALSE
+      keep_inf = FALSE, fixed = FALSE
     ),
     filter_var(
       dataname = "iris", varname = "Species",
       choices = c("setosa", "versicolor", "virginica"), selected = c("setosa", "versicolor"),
-      keep_na = FALSE, fixed = FALSE, disabled = FALSE
+      keep_na = FALSE, fixed = FALSE
     ),
     count_type = "all",
     include_varnames = list(iris = colnames(iris))
@@ -95,12 +95,12 @@ testthat::test_that("print returns a properly formatted string representation", 
   fs <- filter_settings(
     filter_var(
       dataname = "iris", varname = "Sepal.Length", choices = c(4.3, 7.9), selected = c(5.1, 6.4),
-      keep_inf = FALSE, fixed = FALSE, disabled = FALSE
+      keep_inf = FALSE, fixed = FALSE
     ),
     filter_var(
       dataname = "iris", varname = "Species",
       choices = c("setosa", "versicolor", "virginica"), selected = c("setosa", "versicolor"),
-      keep_na = FALSE, fixed = FALSE, disabled = FALSE
+      keep_na = FALSE, fixed = FALSE
     ),
     count_type = "all",
     include_varnames = list(iris = colnames(iris))

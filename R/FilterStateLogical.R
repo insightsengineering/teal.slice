@@ -106,23 +106,12 @@ LogicalFilterState <- R6::R6Class( # nolint
     #'   counts following the change in values of the filtered dataset.
     #'   If it is set to `reactive(NULL)` then counts based on filtered
     #'   dataset are not shown.
-    #' @param dataname (`character(1)`)\cr
-    #'   optional name of dataset where `x` is taken from. Must be specified
-    #'   if `extract_type` argument is not empty.
-    #' @param varname (`character(1)`)\cr
-    #'   name of the variable.
-    #' @param choices (`atomic`, `NULL`)\cr
-    #'   vector specifying allowed selection values
-    #' @param selected (`atomic`, `NULL`)\cr
-    #'   vector specifying selection
-    #' @param keep_na (`logical(1)`, `NULL`)\cr
-    #'   flag specifying whether to keep missing values
-    #' @param keep_inf (`logical(1)`, `NULL`)\cr
-    #'   flag specifying whether to keep infinite values
-    #' @param fixed (`logical(1)`)\cr
-    #'   flag specifying whether the `FilterState` is initiated fixed
-    #' @param disabled (`logical(1)`)\cr
-    #'   flag specifying whether the `FilterState` is initiated disabled
+    #' @param slice (`teal_slice`)\cr
+    #'   object created using [filter_var()]. `teal_slice` is stored
+    #'   in the class and `set_state` directly manipulates values within `teal_slice`. `get_state`
+    #'   returns `teal_slice` object which can be reused in other places. Beware, that `teal_slice`
+    #'   is an immutable object which means that changes in particular object are automatically
+    #'   reflected in all places which refer to the same `teal_slice`.
     #' @param extract_type (`character(0)`, `character(1)`)\cr
     #' whether condition calls should be prefixed by dataname. Possible values:
     #' \itemize{
@@ -137,17 +126,13 @@ LogicalFilterState <- R6::R6Class( # nolint
                           extract_type = character(0),
                           slice) {
       checkmate::assert_logical(x)
-      checkmate::assert_class(x_reactive, "reactive")
-      checkmate::assert_flag(slice$selected, null.ok = TRUE)
-
-      args <- list(
+      super$initialize(
         x = x,
         x_reactive = x_reactive,
-        extract_type = extract_type,
-        slice
+        slice = slice,
+        extract_type = extract_type
       )
-      do.call(super$initialize, args)
-
+      checkmate::assert_flag(slice$selected, null.ok = TRUE)
       private$set_choices(slice$choices)
       if (is.null(slice$selected)) {
         private$set_selected(TRUE)
@@ -230,9 +215,7 @@ LogicalFilterState <- R6::R6Class( # nolint
     # Answers the question of whether the current settings and values selected actually filters out any values.
     # @return logical scalar
     is_any_filtered = function() {
-      if (private$is_disabled()) {
-        FALSE
-      } else if (private$is_choice_limited) {
+      if (private$is_choice_limited) {
         TRUE
       } else if (!isTRUE(private$get_keep_na()) && private$na_count > 0) {
         TRUE
@@ -279,7 +262,6 @@ LogicalFilterState <- R6::R6Class( # nolint
         selected = shiny::isolate(as.character(private$get_selected())),
         width = "100%"
       )
-      if (shiny::isolate(private$is_disabled())) ui_input <- shinyjs::disabled(ui_input)
       div(
         div(
           class = "choices_state",

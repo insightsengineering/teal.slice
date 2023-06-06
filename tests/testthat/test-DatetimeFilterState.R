@@ -158,14 +158,6 @@ testthat::test_that("get_call returns call selected different than choices", {
   )
 })
 
-testthat::test_that("get_call returns NULL if disabled", {
-  filter_state <- DatetimeFilterState$new(
-    posixct,
-    dataname = "data", varname = "variable", selected = posixct[c(1, 3)], disabled = TRUE
-  )
-  testthat::expect_null(shiny::isolate(filter_state$get_call()))
-})
-
 testthat::test_that("get_call returns call always if choices are limited - regardless of selected", {
   filter_state <- DatetimeFilterState$new(
     posixct,

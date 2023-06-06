@@ -37,10 +37,6 @@ testthat::test_that("init_filter_state checks arguments", {
     "Assertion on 'fixed' failed"
   )
   testthat::expect_error(
-    init_filter_state(x = 7, dataname = "data", varname = "variable", disabled = NULL),
-    "Assertion on 'disabled' failed"
-  )
-  testthat::expect_error(
     init_filter_state(x = 7, dataname = "data", varname = "variable", extract_type = "other"),
     "Assertion on 'extract_type' failed"
   )

@@ -10,8 +10,7 @@ testthat::test_that("filter_var checks arguments", {
       selected = NULL,
       keep_na = NULL,
       keep_inf = NULL,
-      fixed = FALSE,
-      disabled = FALSE
+      fixed = FALSE
     )
   )
 
@@ -71,15 +70,6 @@ testthat::test_that("filter_var checks arguments", {
   testthat::expect_error(
     filter_var(dataname = "data", varname = "var", fixed = "TRUE"),
     "Assertion on 'fixed' failed"
-  )
-
-  testthat::expect_error(
-    filter_var(dataname = "data", varname = "var", disabled = NULL),
-    "Assertion on 'disabled' failed"
-  )
-  testthat::expect_error(
-    filter_var(dataname = "data", varname = "var", disabled = "TRUE"),
-    "Assertion on 'disabled' failed"
   )
 })
 

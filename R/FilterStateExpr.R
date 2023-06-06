@@ -18,20 +18,12 @@ FilterStateExpr <- R6::R6Class( # nolint
   public = list(
     #' @description
     #' Initialize a `FilterStateExpr` object
-    #' @param dataname (`character(1)`)\cr
-    #'   name of the dataset where `expr` could be executed on.
-    #' @param expr (`character(1)`)\cr
-    #' @param id (`character(1)`)\cr
-    #'   identifier of the filter
-    #' @param title (`character(1)`)\cr
-    #'   title of the filter
-    #'   logical expression written in executable way. By "executable" means
-    #'   that `subset` call should be able to evaluate this without failure. For
-    #'   example `MultiAssayExperiment::subsetByColData` requires variable names prefixed
-    #'   by dataname (e.g. `data$var1 == "x" & data$var2 > 0`). For `data.frame` call
-    #'   can be written without prefixing `var1 == "x" & var2 > 0`.
-    #' @param disabled (`logical(1)`)\cr
-    #'   flag specifying whether the `FilterState` is initiated disabled
+    #' @param slice (`teal_slice_expr`)\cr
+    #'   object created using [filter_expr()] functions. `teal_slice` is stored
+    #'   in the class and `set_state` directly manipulates values within `teal_slice`. `get_state`
+    #'   returns `teal_slice` object which can be reused in other places. Beware, that `teal_slice`
+    #'   is an immutable object which means that changes in particular object are automatically
+    #'   reflected in all places which refer to the same `teal_slice`.
     #' @param ... additional arguments to be saved as a list in `private$extras` field
     #' @examples
     #' filter_state <- teal.slice:::FilterStateExpr$new(
@@ -79,6 +71,7 @@ FilterStateExpr <- R6::R6Class( # nolint
     #'
     #' @return `FilterStateExpr`
     initialize = function(slice) {
+      checkmate::assert_class(slice, "teal_slice_expr")
       private$teal_slice <- slice
       invisible(self)
     },
@@ -124,8 +117,6 @@ FilterStateExpr <- R6::R6Class( # nolint
     #'
     set_state = function(state) {
       checkmate::assert_class(state, "teal_slice_expr")
-      if (isTRUE(state$disabled) && isFALSE(private$is_disabled())) private$teal_slice$disabled(TRUE)
-      if (isFALSE(state$disabled) && isTRUE(private$is_disabled())) private$teal_slice$disabled(FALSE)
       invisible(NULL)
     },
 
@@ -140,9 +131,6 @@ FilterStateExpr <- R6::R6Class( # nolint
     #' and must be executed in reactive or isolated context.
     #' @return `language`
     get_call = function(dataname) {
-      if (isTRUE(private$is_disabled())) {
-        return(NULL)
-      }
       str2lang(private$teal_slice$expr)
     },
 
@@ -160,29 +148,6 @@ FilterStateExpr <- R6::R6Class( # nolint
         id = id,
         function(input, output, session) {
           private$server_summary("summary")
-
-          # Disable/enable this filter state in response to switch flip.
-          private$observers$is_disabled <- observeEvent(input$enable,
-            {
-              if (isTRUE(input$enable)) {
-                private$teal_slice$disabled <- FALSE
-              } else {
-                private$teal_slice$disabled <- TRUE
-              }
-            },
-            ignoreInit = TRUE
-          )
-
-          # Update disable switch according to disabled state.
-          # This is necessary to react to the global disable action.
-          private$observers$is_disabled <- observeEvent(private$is_disabled(), {
-            if (isTRUE(private$is_disabled())) {
-              shinyWidgets::updateSwitchInput(inputId = "enable", value = FALSE)
-            }
-            if (isFALSE(private$is_disabled())) {
-              shinyWidgets::updateSwitchInput(inputId = "enable", value = TRUE)
-            }
-          })
           out <- reactive(input$remove) # back to parent to remove self
           out
         }
@@ -213,14 +178,6 @@ FilterStateExpr <- R6::R6Class( # nolint
           ),
           tags$div(
             class = "filter-card-controls",
-            shinyWidgets::prettySwitch(
-              ns("enable"),
-              label = "",
-              status = "success",
-              fill = TRUE,
-              value = shiny::isolate(!private$is_disabled()),
-              width = 30
-            ),
             actionLink(
               inputId = ns("remove"),
               label = icon("circle-xmark", lib = "font-awesome"),
@@ -248,16 +205,6 @@ FilterStateExpr <- R6::R6Class( # nolint
     observers = NULL, # stores observers
     teal_slice = NULL, # stores reactiveValues
 
-    # Check whether this filter is disabled
-    # @return `logical(1)`
-    is_disabled = function() {
-      if (shiny::isRunning()) {
-        isTRUE(private$teal_slice$disabled)
-      } else {
-        shiny::isolate(isTRUE(private$teal_slice$disabled))
-      }
-    },
-
     # @description
     # Server module to display filter summary
     # @param id `shiny` id parameter
@@ -274,13 +221,7 @@ FilterStateExpr <- R6::R6Class( # nolint
       moduleServer(
         id = id,
         function(input, output, session) {
-          output$summary <- renderUI({
-            if (private$is_disabled()) {
-              tags$span("Disabled")
-            } else {
-              private$content_summary()
-            }
-          })
+          private$content_summary()
         }
       )
     },

@@ -120,6 +120,8 @@ FilteredData <- R6::R6Class( # nolint
         }
       }
 
+      self$set_external_teal_slices(x = reactive(NULL))
+
       invisible(self)
     },
 
@@ -695,15 +697,6 @@ FilteredData <- R6::R6Class( # nolint
         tags$div(
           class = "filter-panel-active-header",
           tags$span("Active Filter Variables", class = "text-primary mb-4"),
-          shinyWidgets::prettySwitch(
-            ns("filter_panel_active"),
-            label = "",
-            status = "success",
-            fill = TRUE,
-            value = TRUE,
-            inline = TRUE,
-            width = 30
-          ),
           private$ui_available_filters(ns("available_filters")),
           actionLink(
             ns("minimise_filter_active"),
@@ -799,19 +792,6 @@ FilteredData <- R6::R6Class( # nolint
             ifelse(n_filters_active == 1, "", "s")
           )
         })
-
-        observeEvent(
-          eventExpr = input$filter_panel_active,
-          handlerExpr = {
-            if (isTRUE(input$filter_panel_active)) {
-              private$filter_panel_enable()
-              logger::log_trace("Enable the Filtered Panel with the filter_panel_enable method")
-            } else {
-              private$filter_panel_disable()
-              logger::log_trace("Disable the Filtered Panel with the filter_panel_enable method")
-            }
-          }, ignoreNULL = TRUE
-        )
 
         observeEvent(input$remove_all_filters, {
           logger::log_trace("FilteredData$srv_filter_panel@1 removing all filters")
@@ -1098,82 +1078,23 @@ FilteredData <- R6::R6Class( # nolint
       length(self$get_filter_state())
     },
 
-    # @description
-    # Disable the filter panel.
-    #
-    # Adds `disable` class to `filter_add_vars` `filter_panel_active_vars` and `filter_active_vars_contents` divs.
-    # Existing filter states are stored in `cached_states` private field
-    # so their individual disabled status can be recalled.
-    #
-    filter_panel_disable = function() {
-      private$filter_panel_active <- FALSE
-      fp_id <- self$get_filter_panel_ui_id()
-      shinyjs::disable(paste0(fp_id, "-add"), asis = TRUE)
-      shinyjs::disable("filter_active_vars_contents")
-      slices <- self$get_filter_state()
-      if (!is.null(slices)) {
-        private$cached_states <- slices
-        for (i in seq_along(slices)) {
-          slices[[i]]$disabled <- TRUE
-        }
-        self$set_filter_state(slices)
-      }
-
-      invisible(NULL)
-    },
-
-    # @description
-    # Enable the filter panel.
-    #
-    # Adds `disable` class to `filter_add_vars` `filter_panel_active_vars` and `filter_active_vars_contents` divs.
-    # Existing filter states are stored in `cached_states` private field
-    # so their individual disabled status can be recalled.
-    #
-    filter_panel_enable = function() {
-      private$filter_panel_active <- TRUE
-      fp_id <- self$get_filter_panel_ui_id()
-      shinyjs::enable(paste0(fp_id, "-add"), asis = TRUE)
-      shinyjs::enable("filter_active_vars_contents")
-      slices <- private$cached_states
-      # If no states were cached, use existing ones.
-      # This is necessary because this method is called on start-up.
-      if (is.null(slices)) {
-        slices <- self$get_filter_state()
-      }
-      # If states were cached, drop ones that don't match current ones.
-      # This is necessary because the user may remove some states while the panel is disabled.
-      if (!is.null(slices)) {
-        slices_cashed_hashed <- vapply(slices, `[[`, character(1L), "id")
-        slices_present_hashed <- vapply(self$get_filter_state(), `[[`, character(1L), "id")
-        slices <- slices[slices_cashed_hashed %in% slices_present_hashed]
-
-        # TODO: this can be removed, leaving just in case needed back as is complicated
-        # slices <- Filter(
-        #   function(x) {
-        #     id_vars <- intersect(names(x), c("dataname", "varname", "varlabel", "target"))
-        #     any(vapply(self$get_filter_state(), function(y) identical(x[id_vars], y[id_vars]), logical(1L)))
-        #   },
-        #   slices
-        # )
-        self$set_filter_state(slices)
-      }
-
-      invisible(NULL)
-    },
-
     ui_available_filters = function(id) {
       ns <- NS(id)
 
       active_slices_id <- shiny::isolate(vapply(self$get_filter_state(), `[[`, character(1), "id"))
-      shinyWidgets::dropMenu(
-        actionLink(
-          ns("show"),
-          label = NULL,
-          icon = icon("plus", lib = "font-awesome"),
-          title = "Available filters",
-          class = "remove pull-right"
-        ),
-        uiOutput(ns("checkbox"))
+      div(
+        id = ns("available_menu"),
+        shinyWidgets::dropMenu(
+          actionLink(
+            ns("show"),
+            label = NULL,
+            icon = icon("plus", lib = "font-awesome"),
+            title = "Available filters",
+            class = "remove pull-right"
+          ),
+          uiOutput(ns("checkbox"))
+        )
+
       )
     },
     srv_available_filters = function(id) {
@@ -1181,6 +1102,13 @@ FilteredData <- R6::R6Class( # nolint
         available_slices_id <- reactive(vapply(private$external_teal_slices(), `[[`, character(1), "id"))
         active_slices_id <- reactive(vapply(self$get_filter_state(), `[[`, character(1), "id"))
 
+        observeEvent(private$external_teal_slices(), ignoreNULL = FALSE, {
+          if (is.null(private$external_teal_slices())) {
+            shinyjs::hide("available_menu")
+          } else {
+            shinyjs::show("available_menu")
+          }
+        })
 
         output$checkbox <- renderUI({
           shiny::checkboxGroupInput(

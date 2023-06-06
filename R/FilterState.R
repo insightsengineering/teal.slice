@@ -54,19 +54,12 @@ FilterState <- R6::R6Class( # nolint
     #'   counts following the change in values of the filtered dataset.
     #'   If it is set to `reactive(NULL)` then counts based on filtered
     #'   dataset are not shown.
-    #' @param dataname (`character(1)`)\cr
-    #'   optional name of dataset where `x` is taken from. Must be specified
-    #'   if `extract_type` argument is not empty.
-    #' @param varname (`character(1)`)\cr
-    #'   name of the variable.
-    #' @param keep_na (`logical(1)`, `NULL`)\cr
-    #'   flag specifying whether to keep missing values
-    #' @param keep_inf (`logical(1)`, `NULL`)\cr
-    #'   flag specifying whether to keep infinite values
-    #' @param fixed (`logical(1)`)\cr
-    #'   flag specifying whether the `FilterState` is initiated fixed
-    #' @param disabled (`logical(1)`)\cr
-    #'   flag specifying whether the `FilterState` is initiated disabled
+    #' @param slice (`teal_slice`)\cr
+    #'   object created using [filter_var()]. `teal_slice` is stored
+    #'   in the class and `set_state` directly manipulates values within `teal_slice`. `get_state`
+    #'   returns `teal_slice` object which can be reused in other places. Beware, that `teal_slice`
+    #'   is an immutable object which means that changes in particular object are automatically
+    #'   reflected in all places which refer to the same `teal_slice`.
     #' @param extract_type (`character(0)`, `character(1)`)\cr
     #' whether condition calls should be prefixed by dataname. Possible values:
     #' \itemize{
@@ -80,14 +73,14 @@ FilterState <- R6::R6Class( # nolint
     #'
     initialize = function(x,
                           x_reactive = reactive(NULL),
-                          extract_type = character(0),
-                          slice) {
+                          slice,
+                          extract_type = character(0)) {
       checkmate::assert_class(x_reactive, "reactive")
+      checkmate::assert_class(slice, "teal_slice")
       checkmate::assert_character(extract_type, max.len = 1, any.missing = FALSE)
       if (length(extract_type) == 1) {
         checkmate::assert_choice(extract_type, choices = c("list", "matrix"))
       }
-      checkmate::assert_class(slice, "teal_slice")
 
       # Set data properties.
       private$x <- x
@@ -153,39 +146,27 @@ FilterState <- R6::R6Class( # nolint
     #'
     set_state = function(state) {
       checkmate::assert_class(state, "teal_slice")
-
-      # Allow for enabling a filter state before altering state.
-      if (isTRUE(state$disabled) && isFALSE(private$is_disabled())) private$teal_slice$disabled <- TRUE
-      if (isFALSE(state$disabled) && isTRUE(private$is_disabled())) private$teal_slice$disabled <- FALSE
-
-      if (private$is_disabled()) {
-        mutables <- reactiveValuesToList(state)[c("selected", "keep_na", "keep_inf")]
-        if (any(!vapply(mutables, is.null, logical(1L)))) {
-          logger::log_warn("attempt to set state on disabled filter aborted: { private$get_dataname() } { private$get_varname() }")
-        }
-      } else {
-        if (private$is_fixed()) {
+      if (private$is_fixed()) {
           logger::log_warn("attempt to set state on fixed filter aborted: { private$get_dataname() } { private$get_varname() }")
-        } else {
-          logger::log_trace("{ class(self)[1] }$set_state setting state of variable: { private$get_varname() }")
-          if (!is.null(state$selected)) {
-            private$set_selected(state$selected)
-          }
-          if (!is.null(state$keep_na)) {
-            private$set_keep_na(state$keep_na)
-          }
-          if (!is.null(state$keep_inf)) {
-            private$set_keep_inf(state$keep_inf)
-          }
-
-          current_state <- sprintf(
-            "selected: %s; keep_na: %s; keep_inf: %s",
-            toString(shiny::isolate(private$get_selected())),
-            shiny::isolate(private$get_keep_na()),
-            shiny::isolate(private$get_keep_inf())
-          )
-          logger::log_trace("state of variable: { private$get_varname() } set to: { current_state }")
+      } else {
+        logger::log_trace("{ class(self)[1] }$set_state setting state of variable: { private$get_varname() }")
+        if (!is.null(state$selected)) {
+          private$set_selected(state$selected)
         }
+        if (!is.null(state$keep_na)) {
+          private$set_keep_na(state$keep_na)
+        }
+        if (!is.null(state$keep_inf)) {
+          private$set_keep_inf(state$keep_inf)
+        }
+
+        current_state <- sprintf(
+          "selected: %s; keep_na: %s; keep_inf: %s",
+          toString(shiny::isolate(private$get_selected())),
+          shiny::isolate(private$get_keep_na()),
+          shiny::isolate(private$get_keep_inf())
+        )
+        logger::log_trace("state of variable: { private$get_varname() } set to: { current_state }")
       }
 
       invisible(self)
@@ -230,24 +211,6 @@ FilterState <- R6::R6Class( # nolint
           } else {
             private$server_inputs("inputs")
           }
-
-          # Disable/enable this filter state in response to switch flip.
-          private$observers$is_disabled <- observeEvent(input$enable,
-            {
-              if (isTRUE(input$enable)) {
-                private$teal_slice$disabled <- FALSE
-              } else {
-                private$teal_slice$disabled <- TRUE
-              }
-            },
-            ignoreInit = TRUE
-          )
-
-          # Update disable switch according to disabled state.
-          # This is necessary to react to the global disable action.
-          private$observers$is_disabled <- observeEvent(private$is_disabled(), {
-            shinyjs::toggleState(id = "body", condition = isFALSE(private$is_disabled()))
-          })
 
           private$destroy_shiny <- function() {
             logger::log_trace("Destroying FilterState inputs and observers; variable: { deparse1(private$get_varname()) }")
@@ -300,14 +263,6 @@ FilterState <- R6::R6Class( # nolint
           ),
           tags$div(
             class = "filter-card-controls",
-            shinyWidgets::prettySwitch(
-              ns("enable"),
-              label = "",
-              status = "success",
-              fill = TRUE,
-              value = !shiny::isolate(private$is_disabled()),
-              width = 30
-            ),
             actionLink(
               inputId = ns("remove"),
               label = icon("circle-xmark", lib = "font-awesome"),
@@ -523,16 +478,6 @@ FilterState <- R6::R6Class( # nolint
       private$teal_slice$keep_inf
     },
 
-    # Check whether this filter is disabled
-    # @return `logical(1)`
-    is_disabled = function() {
-      if (shiny::isRunning()) {
-        private$teal_slice$disabled
-      } else {
-        shiny::isolate(private$teal_slice$disabled)
-      }
-    },
-
     # Check whether this filter is fixed
     # @return `logical(1)`
     is_fixed = function() {
@@ -623,9 +568,7 @@ FilterState <- R6::R6Class( # nolint
     # Answers the question of whether the current settings and values selected actually filters out any values.
     # @return logical scalar
     is_any_filtered = function() {
-      if (private$is_disabled()) {
-        FALSE
-      } else if (private$is_choice_limited) {
+      if (private$is_choice_limited) {
         TRUE
       } else if (!setequal(private$get_selected(), private$get_choices())) {
         TRUE
@@ -654,13 +597,7 @@ FilterState <- R6::R6Class( # nolint
       moduleServer(
         id = id,
         function(input, output, session) {
-          output$summary <- renderUI({
-            if (private$is_disabled()) {
-              tags$span("Disabled")
-            } else {
-              private$content_summary()
-            }
-          })
+          output$summary <- renderUI(private$content_summary())
         }
       )
     },
@@ -717,7 +654,6 @@ FilterState <- R6::R6Class( # nolint
           ),
           value = shiny::isolate(private$get_keep_na())
         )
-        if (shiny::isolate(private$is_disabled())) ui_input <- shinyjs::disabled(ui_input)
         div(
           uiOutput(ns("trigger_visible"), inline = TRUE),
           ui_input
@@ -787,13 +723,6 @@ FilterState <- R6::R6Class( # nolint
             )
           }
         )
-
-        private$observers$disabled_toggle_na <- observeEvent(private$is_disabled(), {
-          shinyjs::toggleState(
-            id = "value",
-            condition = !private$is_disabled()
-          )
-        })
         invisible(NULL)
       })
     }

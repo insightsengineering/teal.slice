@@ -693,20 +693,20 @@ FilterStates <- R6::R6Class( # nolint
       ### END QUESTION
 
       state_list <- shiny::isolate(private$state_list_get())
-      lapply(state, function(x) {
-        state_id <- x$id
+      lapply(state, function(slice) {
+        state_id <- slice$id
         if (state_id %in% names(state_list)) {
           # Modify existing filter states.
-          state_list[[state_id]]$set_state(x)
+          state_list[[state_id]]$set_state(slice)
         } else {
-          if (inherits(x, "teal_slice_expr")) {
+          if (inherits(slice, "teal_slice_expr")) {
             # create a new FilterStateExpr
-            fstate <- init_filter_state_expr(x)
+            fstate <- init_filter_state_expr(slice)
             private$state_list_push(x = fstate, state_id = state_id)
           } else {
             # create a new FilterState
-            arg_list <- list(
-              x = data[, x$varname, drop = TRUE],
+            fstate <- init_filter_state(
+              x = data[, slice$varname, drop = TRUE],
               # data_reactive is a function which eventually calls get_call(sid).
               # This chain of calls returns column from the data filtered by everything
               # but filter identified by the sid argument. FilterState then get x_reactive
@@ -716,12 +716,11 @@ FilterStates <- R6::R6Class( # nolint
               x_reactive = if (private$count_type == "none") {
                 reactive(NULL)
               } else {
-                reactive(data_reactive(state_id)[, x$varname, drop = TRUE])
+                reactive(data_reactive(state_id)[, slice$varname, drop = TRUE])
               },
+              slice = slice,
               extract_type = private$extract_type
             )
-            arg_list <- c(arg_list, list(slice = x))
-            fstate <- do.call(init_filter_state, arg_list)
             private$state_list_push(x = fstate, state_id = state_id)
           }
         }
