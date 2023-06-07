@@ -129,6 +129,7 @@ Initialize a \code{FilterState} object
   dataname,
   varname,
   choices = NULL,
+  multiple = NULL,
   selected = NULL,
   keep_na = NULL,
   keep_inf = NULL,
@@ -160,6 +161,9 @@ name of the variable.}
 
 \item{\code{choices}}{(\code{atomic}, \code{NULL})\cr
 vector specifying allowed selection values}
+
+\item{\code{multiple}}{(\code{logical(1)})\cr
+flag specifying whether the \code{FilterState} more than one value can be selected}
 
 \item{\code{selected}}{(\code{atomic}, \code{NULL})\cr
 vector specifying selection}

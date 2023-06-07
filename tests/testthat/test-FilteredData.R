@@ -573,12 +573,12 @@ testthat::test_that("print returns properly formatted string representing `teal_
     ),
     filter_var(
       dataname = "iris", varname = "Species",
-      choices = c("setosa", "versicolor", "virginica"), selected = c("setosa", "versicolor"),
+      choices = c("setosa", "versicolor", "virginica"), multiple = TRUE, selected = c("setosa", "versicolor"),
       keep_na = FALSE
     ),
     filter_var(
       dataname = "mtcars", varname = "cyl",
-      choices = c("4", "6", "8"), selected = c("4", "6"),
+      choices = c("4", "6", "8"), multiple = TRUE, selected = c("4", "6"),
       keep_na = FALSE, keep_inf = FALSE
     ),
     count_type = "none",
