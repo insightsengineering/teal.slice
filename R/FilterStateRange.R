@@ -197,18 +197,57 @@ RangeFilterState <- R6::R6Class( # nolint
       private$set_choices(choices)
       private$set_selected(selected)
 
-      private$unfiltered_histogram <- ggplot2::ggplot(data.frame(x = Filter(is.finite, private$x))) +
-        ggplot2::geom_histogram(
-          ggplot2::aes(x = Filter(is.finite, private$x)),
-          bins = 100,
-          fill = grDevices::rgb(211 / 255, 211 / 255, 211 / 255),
-          color = grDevices::rgb(211 / 255, 211 / 255, 211 / 255)
-        ) +
-        ggplot2::theme_void() +
-        ggplot2::coord_cartesian(
-          expand = FALSE,
-          xlim = c(private$choices[1L], private$choices[2L])
+      private$plot_data <- list(
+        type = "histogram",
+        nbinsx = 50,
+        x = Filter(Negate(is.na), Filter(is.finite, private$x)),
+        color = I(fetch_bs_color("secondary")),
+        alpha = 0.2,
+        bingroup = 1,
+        showlegend = FALSE,
+        hoverinfo = "none"
+      )
+      private$plot_mask <- list(list(
+        type = "rect", fillcolor = rgb(1, 1, 1, .65), line = list(width = 0),
+        x0 = -0.5, x1 = 1.5, y0 = -0.5, y1 = 1.5, xref = "paper", yref = "paper"
+      ))
+      private$plot_layout <- reactive({
+        shapes <- private$get_shape_properties(private$get_selected())
+        if (private$is_disabled()) shapes <- c(shapes, private$plot_mask)
+        list(
+          barmode = "overlay",
+          xaxis = list(
+            range = private$choices,
+            rangeslider = list(thickness = 0),
+            showticklabels = TRUE,
+            ticks = "outside",
+            ticklen = 2,
+            tickmode = "auto",
+            nticks = 10
+          ),
+          yaxis = list(showgrid = FALSE, showticklabels = FALSE),
+          margin = list(b = 17, l = 0, r = 0, t = 0, autoexpand = FALSE),
+          plot_bgcolor = "#FFFFFF00",
+          paper_bgcolor = "#FFFFFF00",
+          shapes = shapes
         )
+      })
+      private$plot_config <- reactive({
+        list(
+          displayModeBar = FALSE,
+          edits = list(shapePosition = TRUE),
+          staticPlot = private$is_disabled()
+        )
+      })
+      private$plot_filtered <- reactive({
+        finite_values <- Filter(is.finite, private$x_reactive())
+        list(
+          x = finite_values,
+          bingroup = 1,
+          color = I(fetch_bs_color("primary"))
+        )
+      })
+
 
       invisible(self)
     },
@@ -245,12 +284,15 @@ RangeFilterState <- R6::R6Class( # nolint
 
   # private fields----
   private = list(
-    unfiltered_histogram = NULL, # ggplot object
     inf_count = integer(0),
     inf_filtered_count = NULL,
     is_integer = logical(0),
-    slider_step = numeric(0), # step for the slider input widget, calculated from input data (x)
-    slider_ticks = numeric(0), # allowed values for the slider input widget, calculated from input data (x)
+    numeric_step = numeric(0), # step for the slider input widget, calculated from input data (x)
+    plot_data = NULL,
+    plot_mask = list(),
+    plot_layout = NULL,
+    plot_config = NULL,
+    plot_filtered = NULL,
 
     # private methods ----
 
@@ -287,13 +329,10 @@ RangeFilterState <- R6::R6Class( # nolint
       # Required for displaying ticks on the slider, can modify choices!
       if (identical(diff(x_range), 0)) {
         choices <- x_range
-        private$slider_ticks <- signif(x_range, digits = 10)
-        private$slider_step <- NULL
       } else {
-        x_pretty <- pretty(x_range, 100L)
+        x_pretty <- pretty(x_range, 10000L)
         choices <- range(x_pretty)
-        private$slider_ticks <- signif(x_pretty, digits = 10)
-        private$slider_step <- signif(private$get_pretty_range_step(x_pretty), digits = 10)
+        private$numeric_step <- signif(private$get_pretty_range_step(x_pretty), digits = 10)
       }
       private$choices <- choices
       invisible(NULL)
@@ -352,23 +391,16 @@ RangeFilterState <- R6::R6Class( # nolint
     cast_and_validate = function(values) {
       if (!is.atomic(values)) stop("Values to set must be an atomic vector.")
       values <- as.numeric(values)
-      if (any(is.na(values))) stop("The array of set values must contain values coercible to numeric.")
-      if (length(values) != 2) stop("The array of set values must have length two.")
+      if (any(is.na(values))) stop("Vector of set values must contain values coercible to numeric.")
+      if (length(values) != 2) stop("Vector of set values must have length two.")
+      if (values[1L] > values[2L]) stop("Vector of set values must be sorted.")
 
-      values_adjusted <- contain_interval(values, private$slider_ticks)
-      if (!isTRUE(all.equal(values, values_adjusted))) {
-        logger::log_warn(sprintf(
-          paste(
-            "Programmatic range specification on %s was adjusted to existing slider ticks.",
-            "It is now broader in order to contain the specified values."
-          ),
-          private$varname
-        ))
-      }
-      values_adjusted
+      values
     },
-    # for numeric ranges selecting out of bound values is allowed
+    # Trim selection to limits imposed by private$choices
     remove_out_of_bound_values = function(values) {
+      if (values[1L] < private$choices[1L]) values[1L] <- private$choices[1L]
+      if (values[2L] > private$choices[2L]) values[2L] <- private$choices[2L]
       values
     },
 
@@ -390,6 +422,15 @@ RangeFilterState <- R6::R6Class( # nolint
       }
     },
 
+    # obtain shape determination for histogram
+    # returns a list that is passed to plotly's layout.shapes property
+    get_shape_properties = function(values) {
+      list(
+        list(type = "line", x0 = values[1], x1 = values[1], y0 = -100, y1 = 100, yref = "paper"),
+        list(type = "line", x0 = values[2], x1 = values[2], y0 = -100, y1 = 100, yref = "paper")
+      )
+    },
+
     # shiny modules ----
 
     # UI Module for `RangeFilterState`.
@@ -400,59 +441,33 @@ RangeFilterState <- R6::R6Class( # nolint
     ui_inputs = function(id) {
       ns <- NS(id)
 
-      ui_input_slider <- teal.widgets::optionalSliderInput(
-        inputId = ns("selection"),
-        label = NULL,
-        min = private$choices[1L],
-        max = private$choices[2L],
-        value = shiny::isolate(private$selected()),
-        step = private$slider_step,
-        width = "100%"
-      )
-      ui_input_manual <- shinyWidgets::numericRangeInput(
+      ui_input <- shinyWidgets::numericRangeInput(
         inputId = ns("selection_manual"),
         label = NULL,
         min = private$choices[1L],
         max = private$choices[2L],
         value = shiny::isolate(private$selected()),
-        step = private$slider_step,
+        step = private$numeric_step,
         width = "100%"
       )
 
-      if (shiny::isolate(private$is_disabled())) {
-        ui_input_slider <- shinyjs::disabled(ui_input_slider)
-        ui_input_manual <- shinyjs::disabled(ui_input_manual)
-      }
+      if (shiny::isolate(private$is_disabled())) ui_input <- shinyjs::disabled(ui_input)
 
       tagList(
-        shinyWidgets::switchInput(
-          ns("manual"),
-          label = "Enter manually",
-          size = "small",
-          labelWidth = "100px",
-          onLabel = "Yes",
-          offLabel = "No",
-          onStatus = "info",
-          offStatus = "info",
-          disabled = shiny::isolate(private$is_disabled())
-        ),
-        conditionalPanel(
-          ns = ns,
-          condition = "input.manual === false",
+        div(
+          class = "choices_state",
           div(
-            class = "choices_state",
-            div(
-              class = "filterPlotOverlayRange",
-              plotOutput(ns("plot"), height = "100%"),
-            ),
-            div(class = "filterRangeSlider", ui_input_slider)
+            actionLink(ns("plotly_info"), label = NULL, icon = icon("question-circle")),
+            style = "text-align: right; font-size: 0.7em; margin-bottom: -0.7em;"
+          ),
+          shinycssloaders::withSpinner(
+            plotly::plotlyOutput(ns("plot"), height = "50px"),
+            type = 4,
+            size = 0.25,
+            hide.ui = FALSE
           )
         ),
-        conditionalPanel(
-          ns = ns,
-          condition = "input.manual === true",
-          ui_input_manual
-        ),
+        ui_input,
         div(
           class = "filter-card-body-keep-na-inf",
           private$keep_inf_ui(ns("keep_inf")),
@@ -472,86 +487,82 @@ RangeFilterState <- R6::R6Class( # nolint
         function(input, output, session) {
           logger::log_trace("RangeFilterState$server initializing, dataname: { private$dataname }")
 
-          finite_values <- reactive(Filter(is.finite, private$x_reactive()))
-          output$plot <- bindCache(
-            finite_values(),
-            cache = "session",
-            x = renderPlot(
-              bg = "transparent",
-              height = 25,
-              expr = {
-                private$unfiltered_histogram +
-                  if (!is.null(finite_values())) {
-                    ggplot2::geom_histogram(
-                      data = data.frame(x = finite_values()),
-                      ggplot2::aes(x = x),
-                      bins = 100,
-                      fill = grDevices::rgb(173 / 255, 216 / 255, 230 / 255),
-                      color = grDevices::rgb(173 / 255, 216 / 255, 230 / 255)
-                    )
-                  } else {
-                    NULL
+          plot_data <- c(private$plot_data, source = session$ns("histogram_plot"))
+
+          # display histogram, adding a second trace that contains filtered data
+          output$plot <- plotly::renderPlotly({
+            histogram <- do.call(plotly::plot_ly, plot_data)
+            histogram <- do.call(plotly::layout, c(list(p = histogram), private$plot_layout()))
+            histogram <- do.call(plotly::config, c(list(p = histogram), private$plot_config()))
+            histogram <- do.call(plotly::add_histogram, c(list(p = histogram), private$plot_filtered()))
+            histogram
+          })
+
+          # dragging shapes (lines) on plot updates selection
+          private$observers$relayout <-
+            observeEvent(
+              ignoreNULL = FALSE,
+              ignoreInit = TRUE,
+              eventExpr = plotly::event_data("plotly_relayout", source = session$ns("histogram_plot")),
+              handlerExpr = {
+                event <- plotly::event_data("plotly_relayout", source = session$ns("histogram_plot"))
+                if (any(grepl("shapes", names(event)))) {
+                  line_positions <- private$get_selected()
+                  if (any(grepl("shapes[0]", names(event), fixed = TRUE))) {
+                    line_positions[1] <- event[["shapes[0].x0"]]
+                  } else if (any(grepl("shapes[1]", names(event), fixed = TRUE))) {
+                    line_positions[2] <- event[["shapes[1].x0"]]
                   }
+                  # If one line was dragged past the other, abort action and reset lines.
+                  if (line_positions[1] > line_positions[2]) {
+                    showNotification(
+                      "Numeric range start value must be less than end value.",
+                      type = "warning"
+                    )
+                    plotly::plotlyProxyInvoke(
+                      plotly::plotlyProxy("plot"),
+                      "relayout",
+                      shapes = private$get_shape_properties(private$get_selected())
+                    )
+                    return(NULL)
+                  }
+
+                  private$set_selected(signif(line_positions, digits = 4L))
+                }
               }
             )
-          )
 
-          # this observer is needed in the situation when private$selected has been
-          # changed directly by the api - then it's needed to rerender UI element
-          # to show relevant values
-          private$observers$selection_api <- observeEvent(
-            ignoreNULL = FALSE,
-            ignoreInit = TRUE,
-            eventExpr = private$get_selected(),
-            handlerExpr = {
-              logger::log_trace(
-                sprintf(
-                  "RangeFilterState$server@2 state of %s changed, dataname: %s",
-                  private$get_varname(),
-                  private$dataname
+          # change in selection updates shapes (lines) on plot and numeric input
+          private$observers$selection_api <-
+            observeEvent(
+              ignoreNULL = FALSE,
+              ignoreInit = TRUE,
+              eventExpr = private$get_selected(),
+              handlerExpr = {
+                logger::log_trace(
+                  sprintf(
+                    "RangeFilterState$server@2 state of %s changed, dataname: %s",
+                    private$get_varname(),
+                    private$dataname
+                  )
                 )
-              )
-              if (!isTRUE(all.equal(input$selection, private$get_selected()))) {
-                updateSliderInput(
-                  session = session,
-                  inputId = "selection",
-                  value = private$selected()
-                )
+                if (!isTRUE(all.equal(private$get_selected(), input$selection_manual))) {
+                  shinyWidgets::updateNumericRangeInput(
+                    session = session,
+                    inputId = "selection_manual",
+                    value = private$get_selected()
+                  )
+                }
               }
-            }
-          )
+            )
 
-          private$observers$selection <- observeEvent(
-            ignoreNULL = FALSE, # ignoreNULL: we don't want to ignore NULL when nothing is selected in `selectInput`
-            ignoreInit = TRUE, # ignoreInit: should not matter because we set the UI with the desired initial state
-            eventExpr = input$selection,
-            handlerExpr = {
-              logger::log_trace(
-                sprintf(
-                  "RangeFilterState$server@3 selection of variable %s changed, dataname: %s",
-                  private$varname,
-                  private$dataname
-                )
-              )
-              if (!isTRUE(all.equal(input$selection, private$get_selected()))) {
-                private$set_selected(input$selection)
-              }
-            }
-          )
-
+          # manual input updates selection
           private$observers$selection_manual <- observeEvent(
             ignoreNULL = FALSE,
             ignoreInit = TRUE,
             eventExpr = input$selection_manual,
             handlerExpr = {
-              # 3 separate checks are required here to prevent errors
-              #
-              # if the user sets either input to 'e' it will return NA
-              # this NA would cause the lower > upper check to return NA
-              #  and the if(lower > upper) check would throw an error
-              #
-              # if lower > manual, contain_interval() will error because it
-              #  expects it's input to be sorted
+              # Abort and reset if non-numeric values is entered.
               if (any(is.na(input$selection_manual))) {
                 showNotification(
                   "Numeric range values must be numbers.",
@@ -564,27 +575,10 @@ RangeFilterState <- R6::R6Class( # nolint
                 )
                 return(NULL)
               }
+              # Abort and reset if reversed choices are specified.
               if (input$selection_manual[1] > input$selection_manual[2]) {
                 showNotification(
                   "Numeric range start value must be less than end value.",
-                  type = "warning"
-                )
-                shinyWidgets::updateNumericRangeInput(
-                  session = session,
-                  inputId = "selection_manual",
-                  value = private$get_selected()
-                )
-                return(NULL)
-              }
-              # all.equal not enough here b/c tolerance
-              # all.equal(0.000000001, 0) is TRUE
-              out_of_range <- isFALSE(identical(
-                input$selection_manual,
-                contain_interval(input$selection_manual, private$slider_ticks)
-              ))
-              if (out_of_range) {
-                showNotification(
-                  "Numeric range values should correspond to slider values.",
                   type = "warning"
                 )
                 shinyWidgets::updateNumericRangeInput(
@@ -601,8 +595,9 @@ RangeFilterState <- R6::R6Class( # nolint
                   private$dataname
                 )
               )
+              selection <- input$selection_manual
               if (!isTRUE(all.equal(input$selection_manual, private$get_selected()))) {
-                private$set_selected(input$selection_manual)
+                private$set_selected(selection)
               }
             }
           )
@@ -611,71 +606,59 @@ RangeFilterState <- R6::R6Class( # nolint
           private$keep_na_srv("keep_na")
 
           observeEvent(private$is_disabled(), {
-            shinyWidgets::updateSwitchInput(
-              session = session,
-              inputId = "manual",
-              disabled = private$is_disabled()
+            shinyjs::toggleState(
+              id = "selection_manual",
+              condition = !private$is_disabled()
             )
           })
 
-          observeEvent(input$manual,
-            {
-              if (input$manual) {
-                private$set_selected(input$selection)
-                shinyWidgets::updateNumericRangeInput(
-                  session = session,
-                  inputId = "selection_manual",
-                  value = input$selection
-                )
-              } else {
-                private$set_selected(input$selection_manual)
-                updateSliderInput(
-                  session = session,
-                  inputId = "selection",
-                  value = input$selection_manual
-                )
-              }
-            },
-            ignoreInit = TRUE
-          )
+          private$observers$plotly_info <- observeEvent(input$plotly_info, {
+            showModal(
+              modalDialog(
+                div(
+                  class = "plotly_actions_info",
+                  "drag vertical lines to set selection", br(),
+                  "drag across plot to zoom in", br(),
+                  "drag axis to pan", br(),
+                  "double click to zoom out", br()
+                ),
+                title = "Plot actions",
+                footer = NULL,
+                size = "s",
+                easyClose = TRUE
+              )
+            )
+          })
 
           logger::log_trace("RangeFilterState$server initialized, dataname: { private$dataname }")
           NULL
         }
       )
     },
+
     server_inputs_fixed = function(id) {
       moduleServer(
         id = id,
         function(input, output, session) {
           logger::log_trace("RangeFilterState$server initializing, dataname: { private$dataname }")
 
-          finite_values <- reactive(Filter(is.finite, private$x_reactive()))
-          output$plot <- bindCache(
-            finite_values(),
-            cache = "session",
-            x = renderPlot(
-              bg = "transparent",
-              height = 25,
-              expr = {
-                private$unfiltered_histogram +
-                  if (!is.null(finite_values())) {
-                    ggplot2::geom_histogram(
-                      data = data.frame(x = finite_values()),
-                      ggplot2::aes(x = x),
-                      bins = 100,
-                      fill = grDevices::rgb(173 / 255, 216 / 255, 230 / 255),
-                      color = grDevices::rgb(173 / 255, 216 / 255, 230 / 255)
-                    )
-                  } else {
-                    NULL
-                  }
-              }
-            )
-          )
+          plot_config <- private$plot_config()
+          plot_config$staticPlot <- TRUE
+
+          output$plot <- plotly::renderPlotly({
+            histogram <- do.call(plotly::plot_ly, private$plot_data)
+            histogram <- do.call(plotly::layout, c(list(p = histogram), private$plot_layout()))
+            histogram <- do.call(plotly::config, c(list(p = histogram), plot_config))
+            histogram <- do.call(plotly::add_histogram, c(list(p = histogram), private$plot_filtered()))
+            histogram
+          })
 
           output$selection <- renderUI({
-            plotOutput(session$ns("plot"), height = "2em")
+            shinycssloaders::withSpinner(
+              plotly::plotlyOutput(session$ns("plot"), height = "50px"),
+              type = 4,
+              size = 0.25
+            )
           })
 
           logger::log_trace("RangeFilterState$server initialized, dataname: { private$dataname }")
