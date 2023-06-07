@@ -253,10 +253,9 @@ LogicalFilterState <- R6::R6Class( # nolint
     #  id of shiny element
     ui_inputs = function(id) {
       ns <- NS(id)
-
       shiny::isolate({
         countsmax <- private$choices_counts
-        countsnow <- countsnow <- if (!is.null(private$x_reactive())) {
+        countsnow <- if (!is.null(private$x_reactive())) {
           unname(table(factor(private$x_reactive(), levels = private$get_choices())))
         } else {
           NULL
@@ -287,7 +286,6 @@ LogicalFilterState <- R6::R6Class( # nolint
             width = "100%"
           )
         }
-        if (shiny::isolate(private$is_disabled())) ui_input <- shinyjs::disabled(ui_input)
         div(
           div(
             class = "choices_state",
