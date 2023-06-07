@@ -740,7 +740,8 @@ Gets the id of the filter panel UI.
 Set external \code{teal_slice}
 
 Unlike adding new filter from the column, these filters can be added with some pre-specified
-settings.
+settings. List of \code{teal_slices} should be a reactive so one can make this list to be dynamic.
+List is accessible in \code{ui/srv_active} through \code{ui/srv_available_filters}.
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{FilteredData$get_filter_panel_ui_id()}\if{html}{\out{</div>}}
 }
