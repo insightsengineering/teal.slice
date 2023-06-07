@@ -134,10 +134,10 @@ include_js_files <- function(pattern) {
 #' @return A `c` call.
 #'
 #' @examples
-#' make_c_call(1:3)
+#' teal.slice:::make_c_call(1:3)
 #' # [1] 1 2 3
 #'
-#' make_c_call(1)
+#' teal.slice:::make_c_call(1)
 #' # [1] 1
 #' @keywords internal
 make_c_call <- function(choices) {
