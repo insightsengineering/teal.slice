@@ -23,6 +23,7 @@ filter_var(
   dataname,
   varname,
   choices = NULL,
+  multiple = NULL,
   selected = NULL,
   keep_na = NULL,
   keep_inf = NULL,
@@ -71,6 +72,10 @@ slices_field(tss, field)
 
 \item{choices}{optional vector specifying allowed choices;
 possibly a subset of values in data; type and size depends on variable type}
+
+\item{multiple}{(\code{logical(1)})\cr
+flag specifying whether the \code{FilterState} more than one value can be selected;
+only applicable to \code{FilterStateChoices} and \code{FilterStateLogical}}
 
 \item{selected}{optional vector specifying selection;
 type and size depends on variable type}

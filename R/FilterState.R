@@ -345,7 +345,6 @@ FilterState <- R6::R6Class( # nolint
         )
       )
       shiny::isolate({
-        if (is.null(value)) value <- private$get_choices()
         value <- private$cast_and_validate(value)
         value <- private$remove_out_of_bound_values(value)
         private$validate_selection(value)
@@ -383,7 +382,7 @@ FilterState <- R6::R6Class( # nolint
           value
         )
       )
-
+      private$set_na_rm(!value)
       invisible(NULL)
     },
 

@@ -68,8 +68,21 @@ testthat::test_that("constructor sets default state", {
       dataname = "data",
       varname = "variable",
       choices = letters,
+      multiple = TRUE,
       selected = letters
     )
+  )
+})
+
+testthat::test_that("constructor forces single selected when multiple is FALSE", {
+  testthat::expect_warning(
+    state <- ChoicesFilterState$new(
+      x = letters, dataname = "data", varname = "var", selected = c("b", "c"), multiple = FALSE
+    )
+  )
+  testthat::expect_identical(
+    shiny::isolate(state$get_state()$selected),
+    "b"
   )
 })
 
@@ -336,6 +349,25 @@ testthat::test_that("set_state sets intersection of choices and passed values", 
     )
   )
   testthat::expect_identical(shiny::isolate(filter_state$get_state()$selected), "2000-01-01 12:00:00")
+})
+
+testthat::test_that("set_state sets multiple option", {
+  filter_state <- ChoicesFilterState$new(chars, dataname = "data", varname = "variable", multiple = TRUE)
+  testthat::expect_no_error(
+    filter_state$set_state(filter_var(dataname = "data", varname = "variable", selected = c("item1", "item3")))
+  )
+
+  testthat::expect_warning({
+    filter_state <- ChoicesFilterState$new(chars, dataname = "data", varname = "variable", multiple = FALSE)
+    shiny::isolate(
+      filter_state$set_state(filter_var(dataname = "data", varname = "variable", selected = c("item1", "item3")))
+    )
+  })
+
+  filter_state <- ChoicesFilterState$new(facts, dataname = "data", varname = "variable", multiple = TRUE)
+  testthat::expect_no_error(
+    filter_state$set_state(filter_var(dataname = "data", varname = "variable", selected = "item1"))
+  )
 })
 
 # format ----
