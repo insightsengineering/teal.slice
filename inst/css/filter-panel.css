@@ -156,7 +156,7 @@ a.remove_all:hover {
 
 .choices_state_label {
   background-color:lightblue;
-  height:2rem;
+  height: 2rem;
   display:inline-block;
   position:absolute;
   margin-top: -3px;
@@ -171,17 +171,11 @@ a.remove_all:hover {
 }
 
 .filterPlotOverlayRange {
-  margin: 10px 0px -25px;
-  height: 25px;
+  margin: 10px 0px 0px;
+  height: 35px;
   animation: 0.75s ease-out 0s 1 shinyDataFilterEnlargeY,
     0.5s ease-in 0s 1 shinyDataFilterFadeIn;
   transform-origin: bottom;
-  width: 100%;
-  max-width: 100%;
-}
-
-/* Needed for bs4 */
-.filterRangeSlider {
   width: 100%;
   max-width: 100%;
 }

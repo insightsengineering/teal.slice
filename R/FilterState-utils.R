@@ -556,41 +556,43 @@ format_range_for_summary <- function(values, threshold = 4) {
   checkmate::assert_numeric(values, min.len = 1)
   checkmate::assert_number(threshold, lower = 1, finite = TRUE)
 
-  ops <- options(scipen = 9999)
-  on.exit(options(ops))
+  sprintf(sprintf("%%.%ig", threshold), values)
 
-  # convert to a string representation
-  values_str <- vapply(
-    values,
-    FUN.VALUE = character(1),
-    USE.NAMES = FALSE,
-    FUN = function(value) {
-      if (is.na(value) || is.finite(value)) {
-        format(value)
-      } else {
-        as.character(value)
-      }
-    })
-
-  n_digits <- n_sig_digits(values_str)
-
-  mapply(
-    values_str,
-    n_digits,
-    USE.NAMES = FALSE,
-    MoreArgs = list(threshold = threshold),
-    FUN = function(value, digits, threshold) {
-      if (digits == -1) { # special case for Inf, -Inf, NA
-        value
-      } else if (digits > threshold) {
-        val <- format(as.numeric(value), digits = threshold, scientific = TRUE)
-        val <- sub("e", "E", val)
-        val
-      } else {
-        value
-      }
-    }
-  )
+  # ops <- options(scipen = 9999)
+  # on.exit(options(ops))
+  #
+  # # convert to a string representation
+  # values_str <- vapply(
+  #   values,
+  #   FUN.VALUE = character(1),
+  #   USE.NAMES = FALSE,
+  #   FUN = function(value) {
+  #     if (is.na(value) || is.finite(value)) {
+  #       format(value)
+  #     } else {
+  #       as.character(value)
+  #     }
+  #   })
+  #
+  # n_digits <- n_sig_digits(values_str)
+  #
+  # mapply(
+  #   values_str,
+  #   n_digits,
+  #   USE.NAMES = FALSE,
+  #   MoreArgs = list(threshold = threshold),
+  #   FUN = function(value, digits, threshold) {
+  #     if (digits == -1) { # special case for Inf, -Inf, NA
+  #       value
+  #     } else if (digits > threshold) {
+  #       val <- format(as.numeric(value), digits = threshold, scientific = TRUE)
+  #       val <- sub("e", "E", val)
+  #       val
+  #     } else {
+  #       value
+  #     }
+  #   }
+  # )
 }
 
 #' Count the number of significant digits in a number.
@@ -651,4 +653,65 @@ n_sig_digits <- function(nums) {
 
     return(sig_digits)
   })
+}
+
+
+#' Get hex code of the current Bootstrap theme color.
+#'
+#' Determines the color specification for the currently active Bootstrap color theme and returns one queried color.
+#'
+#' @param color `character(1)` naming one of the available theme colors
+#' @param alpha either a `numeric(1)` or `character(1)` specifying transparency
+#'              in the range of `0-1` or a hexadecimal value `00-ff`, respectively;
+#'              set to NULL to omit adding the alpha channel
+#'
+#' @return Named `character(1)` containing a hexadecimal color representation.
+#'
+#' @examples
+#' teal.slice:::fetch_bs_color("primary")
+#' teal.slice:::fetch_bs_color("danger", 0.35)
+#' teal.slice:::fetch_bs_color("danger", "80")
+#'
+#' @keywords internal
+#'
+fetch_bs_color <- function(color, alpha = NULL) {
+  checkmate::assert_string(color)
+  checkmate::assert(
+    checkmate::check_number(alpha, lower = 0, upper = 1, null.ok = TRUE),
+    checkmate::check_string(alpha, pattern = "[0-9a-f]{2}", null.ok = TRUE)
+  )
+
+  # locate file that describes the current theme
+  ## TODO this is not ideal
+  sass_file <- bslib::bs_theme()[["layers"]][[2]][["defaults"]][[1]]
+  sass_file <- attr(sass_file, "sass_file_path")
+
+  # load scss file that encodes variables
+  variables_file <- readLines(sass_file)
+  # locate theme color variables
+  ind <- grep("// scss-docs-(start|end) theme-color-variables", variables_file)
+  color_definitions <- variables_file[(ind[1]+1L):(ind[2]-1L)]
+
+  # extract colors names
+  color_names <- sub("(\\$)(\\w.+)(:.+)", "\\2", color_definitions)
+
+  # verify that an available color was requested
+  checkmate::assert_choice(color, color_names)
+
+  # extract color references
+  color_references <- sub("(\\$)(\\w.+)(:\\s.+\\$)(\\w.+)(\\s.+)", "\\4", color_definitions)
+
+  # translate references to color codes
+  color_specification <- structure(color_references, names = color_names)
+  color_specification <- vapply(color_specification, function(x) {
+    line <- grep(sprintf("^\\$%s:\\s+#\\w{6}\\s+!default", x), variables_file, value = TRUE)
+    code <- sub("(.+)(#\\w{6})(\\s+.+)", "\\2", line)
+    code
+  }, character(1L))
+
+  if (!is.null(alpha)) {
+    if (is.numeric(alpha)) alpha <- as.hexmode(ceiling(255 * alpha))
+  }
+
+  paste0(color_specification[color], alpha)
 }

@@ -207,8 +207,10 @@ RangeFilterState <- R6::R6Class( # nolint
         ggplot2::theme_void() +
         ggplot2::coord_cartesian(
           expand = FALSE,
-          xlim = c(private$choices[1L], private$choices[2L])
-        )
+          xlim = private$choices
+        ) +
+        ggplot2::theme(axis.text.x = ggplot2::element_text()) +
+        ggplot2::scale_x_continuous(n.breaks = 10)
 
       invisible(self)
     },
@@ -249,8 +251,7 @@ RangeFilterState <- R6::R6Class( # nolint
     inf_count = integer(0),
     inf_filtered_count = NULL,
     is_integer = logical(0),
-    slider_step = numeric(0), # step for the slider input widget, calculated from input data (x)
-    slider_ticks = numeric(0), # allowed values for the slider input widget, calculated from input data (x)
+    numeric_step = numeric(0), # step for the slider input widget, calculated from input data (x)
 
     # private methods ----
 
@@ -287,13 +288,10 @@ RangeFilterState <- R6::R6Class( # nolint
       # Required for displaying ticks on the slider, can modify choices!
       if (identical(diff(x_range), 0)) {
         choices <- x_range
-        private$slider_ticks <- signif(x_range, digits = 10)
-        private$slider_step <- NULL
       } else {
-        x_pretty <- pretty(x_range, 100L)
+        x_pretty <- pretty(x_range, 10000L)
         choices <- range(x_pretty)
-        private$slider_ticks <- signif(x_pretty, digits = 10)
-        private$slider_step <- signif(private$get_pretty_range_step(x_pretty), digits = 10)
+        private$numeric_step <- signif(private$get_pretty_range_step(x_pretty), digits = 10)
       }
       private$choices <- choices
       invisible(NULL)
@@ -355,20 +353,12 @@ RangeFilterState <- R6::R6Class( # nolint
       if (any(is.na(values))) stop("The array of set values must contain values coercible to numeric.")
       if (length(values) != 2) stop("The array of set values must have length two.")
 
-      values_adjusted <- contain_interval(values, private$slider_ticks)
-      if (!isTRUE(all.equal(values, values_adjusted))) {
-        logger::log_warn(sprintf(
-          paste(
-            "Programmatic range specification on %s was adjusted to existing slider ticks.",
-            "It is now broader in order to contain the specified values."
-          ),
-          private$varname
-        ))
-      }
-      values_adjusted
+      signif(values, digits = 4L)
     },
-    # for numeric ranges selecting out of bound values is allowed
+    # Trim selection to limits imposed by private$choices
     remove_out_of_bound_values = function(values) {
+      if (values[1L] < private$choices[1L]) values[1L] <- private$choices[1L]
+      if (values[2L] > private$choices[2L]) values[2L] <- private$choices[2L]
       values
     },
 
@@ -400,14 +390,17 @@ RangeFilterState <- R6::R6Class( # nolint
     ui_inputs = function(id) {
       ns <- NS(id)
 
-      ui_input_slider <- teal.widgets::optionalSliderInput(
-        inputId = ns("selection"),
+      ui_input_slider <- shinyWidgets::noUiSliderInput(
+        inputId = ns("selection_slider"),
         label = NULL,
         min = private$choices[1L],
         max = private$choices[2L],
         value = shiny::isolate(private$selected()),
-        step = private$slider_step,
-        width = "100%"
+        tooltips = FALSE,
+        color = fetch_bs_color("primary"),
+        format = shinyWidgets::wNumbFormat(
+          decimals = 4
+        )
       )
       ui_input_manual <- shinyWidgets::numericRangeInput(
         inputId = ns("selection_manual"),
@@ -415,7 +408,7 @@ RangeFilterState <- R6::R6Class( # nolint
         min = private$choices[1L],
         max = private$choices[2L],
         value = shiny::isolate(private$selected()),
-        step = private$slider_step,
+        step = private$numeric_step,
         width = "100%"
       )
 
@@ -425,34 +418,15 @@ RangeFilterState <- R6::R6Class( # nolint
       }
 
       tagList(
-        shinyWidgets::switchInput(
-          ns("manual"),
-          label = "Enter manually",
-          size = "small",
-          labelWidth = "100px",
-          onLabel = "Yes",
-          offLabel = "No",
-          onStatus = "info",
-          offStatus = "info",
-          disabled = shiny::isolate(private$is_disabled())
-        ),
-        conditionalPanel(
-          ns = ns,
-          condition = "input.manual === false",
+        div(
+          class = "choices_state",
           div(
-            class = "choices_state",
-            div(
-              class = "filterPlotOverlayRange",
-              plotOutput(ns("plot"), height = "100%"),
-            ),
-            div(class = "filterRangeSlider", ui_input_slider)
-          )
+            class = "filterPlotOverlayRange",
+            plotOutput(ns("plot"), height = "100%"),
+          ),
+          div(class = "filterRangeSlider", ui_input_slider)
         ),
-        conditionalPanel(
-          ns = ns,
-          condition = "input.manual === true",
-          ui_input_manual
-        ),
+        ui_input_manual,
         div(
           class = "filter-card-body-keep-na-inf",
           private$keep_inf_ui(ns("keep_inf")),
@@ -478,14 +452,13 @@ RangeFilterState <- R6::R6Class( # nolint
             cache = "session",
             x = renderPlot(
               bg = "transparent",
-              height = 25,
               expr = {
                 private$unfiltered_histogram +
                   if (!is.null(finite_values())) {
                     ggplot2::geom_histogram(
                       data = data.frame(x = finite_values()),
                       ggplot2::aes(x = x),
-                      bins = 100,
+                      bins = 50,
                       fill = grDevices::rgb(173 / 255, 216 / 255, 230 / 255),
                       color = grDevices::rgb(173 / 255, 216 / 255, 230 / 255)
                     )
@@ -511,20 +484,28 @@ RangeFilterState <- R6::R6Class( # nolint
                   private$dataname
                 )
               )
-              if (!isTRUE(all.equal(input$selection, private$get_selected()))) {
-                updateSliderInput(
+              new_selection <- private$get_selected()
+              if (!identical(new_selection, input$selection_slider)) {
+                shinyWidgets::updateNoUiSliderInput(
                   session = session,
-                  inputId = "selection",
-                  value = private$selected()
+                  inputId = "selection_slider",
+                  value = new_selection
+                )
+              }
+              if (!identical(new_selection, input$selection_manual)) {
+                shinyWidgets::updateNumericRangeInput(
+                  session = session,
+                  inputId = "selection_manual",
+                  value = new_selection
                 )
               }
             }
           )
 
-          private$observers$selection <- observeEvent(
+          private$observers$selection_slider <- observeEvent(
             ignoreNULL = FALSE, # ignoreNULL: we don't want to ignore NULL when nothing is selected in `selectInput`
             ignoreInit = TRUE, # ignoreInit: should not matter because we set the UI with the desired initial state
-            eventExpr = input$selection,
+            eventExpr = input$selection_slider,
             handlerExpr = {
               logger::log_trace(
                 sprintf(
@@ -533,8 +514,9 @@ RangeFilterState <- R6::R6Class( # nolint
                   private$dataname
                 )
               )
-              if (!isTRUE(all.equal(input$selection, private$get_selected()))) {
-                private$set_selected(input$selection)
+              new_selection <- input$selection_slider
+              if (!identical(new_selection, input$selection_manual)) {
+                private$set_selected(new_selection)
               }
             }
           )
@@ -544,14 +526,11 @@ RangeFilterState <- R6::R6Class( # nolint
             ignoreInit = TRUE,
             eventExpr = input$selection_manual,
             handlerExpr = {
-              # 3 separate checks are required here to prevent errors
+              # 2 separate checks are required here to prevent errors
               #
               # if the user sets either input to 'e' it will return NA
               # this NA would cause the lower > upper check to return NA
               #  and the if(lower > upper) check would throw an error
-              #
-              # if lower > manual, contain_interval() will error because it
-              #  expects it's input to be sorted
               if (any(is.na(input$selection_manual))) {
                 showNotification(
                   "Numeric range values must be numbers.",
@@ -576,24 +555,6 @@ RangeFilterState <- R6::R6Class( # nolint
                 )
                 return(NULL)
               }
-              # all.equal not enough here b/c tolerance
-              # all.equal(0.000000001, 0) is TRUE
-              out_of_range <- isFALSE(identical(
-                input$selection_manual,
-                contain_interval(input$selection_manual, private$slider_ticks)
-              ))
-              if (out_of_range) {
-                showNotification(
-                  "Numeric range values should correspond to slider values.",
-                  type = "warning"
-                )
-                shinyWidgets::updateNumericRangeInput(
-                  session = session,
-                  inputId = "selection_manual",
-                  value = private$get_selected()
-                )
-                return(NULL)
-              }
               logger::log_trace(
                 sprintf(
                   "RangeFilterState$server@3 selection of variable %s changed, dataname: %s",
@@ -601,8 +562,9 @@ RangeFilterState <- R6::R6Class( # nolint
                   private$dataname
                 )
               )
-              if (!isTRUE(all.equal(input$selection_manual, private$get_selected()))) {
-                private$set_selected(input$selection_manual)
+              new_selection <- input$selection_manual
+              if (!identical(new_selection, input$selection_slider)) {
+                private$set_selected(new_selection)
               }
             }
           )
@@ -610,40 +572,12 @@ RangeFilterState <- R6::R6Class( # nolint
           private$keep_inf_srv("keep_inf")
           private$keep_na_srv("keep_na")
 
-          observeEvent(private$is_disabled(), {
-            shinyWidgets::updateSwitchInput(
-              session = session,
-              inputId = "manual",
-              disabled = private$is_disabled()
-            )
-          })
-
-          observeEvent(input$manual,
-            {
-              if (input$manual) {
-                private$set_selected(input$selection)
-                shinyWidgets::updateNumericRangeInput(
-                  session = session,
-                  inputId = "selection_manual",
-                  value = input$selection
-                )
-              } else {
-                private$set_selected(input$selection_manual)
-                updateSliderInput(
-                  session = session,
-                  inputId = "selection",
-                  value = input$selection_manual
-                )
-              }
-            },
-            ignoreInit = TRUE
-          )
-
           logger::log_trace("RangeFilterState$server initialized, dataname: { private$dataname }")
           NULL
         }
       )
     },
+
     server_inputs_fixed = function(id) {
       moduleServer(
         id = id,
@@ -656,14 +590,13 @@ RangeFilterState <- R6::R6Class( # nolint
             cache = "session",
             x = renderPlot(
               bg = "transparent",
-              height = 25,
               expr = {
                 private$unfiltered_histogram +
                   if (!is.null(finite_values())) {
                     ggplot2::geom_histogram(
                       data = data.frame(x = finite_values()),
                       ggplot2::aes(x = x),
-                      bins = 100,
+                      bins = 50,
                       fill = grDevices::rgb(173 / 255, 216 / 255, 230 / 255),
                       color = grDevices::rgb(173 / 255, 216 / 255, 230 / 255)
                     )
