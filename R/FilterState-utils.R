@@ -8,25 +8,10 @@
 #'   counts following the change in values of the filtered dataset.
 #'   If it is set to `reactive(NULL)` then counts based on filtered
 #'   dataset are not shown.
-#' @param dataname (`character(1)`)\cr
-#'   optional name of dataset where `x` is taken from. Must be specified
-#'   if `extract_type` argument is not empty.
-#' @param varname (`character(1)`)\cr
-#'   name of the variable.
-#' @param choices (`atomic`)\cr
-#'   vector specifying allowed selection values
-#' @param multiple (`logical(1)`)\cr
-#'   flag specifying whether the `FilterState` more than one value can be selected
-#' @param selected (`atomic`, `NULL`)\cr
-#'   vector specifying selection
-#' @param keep_na (`logical(1)`, `NULL`)\cr
-#'   flag specifying whether to keep missing values
-#' @param keep_inf (`logical(1)`, `NULL`)\cr
-#'   flag specifying whether to keep infinite values
-#' @param fixed (`logical(1)`)\cr
-#'   flag specifying whether the `FilterState` is initiated fixed
-#' @param disabled (`logical(1)`)\cr
-#'   flag specifying whether the `FilterState` is initiated disabled
+#' @param slice (`teal_slice`)\cr
+#'   object created using [filter_var()] or [filter_expr()]. `slice` is kept within the
+#'   class and can be shared in other places. Shared `teal_slice` object behaves in the
+#'   way that changes in one place are reflected in other places.
 #' @param extract_type (`character(0)`, `character(1)`)\cr
 #' whether condition calls should be prefixed by dataname. Possible values:
 #' \itemize{
@@ -39,11 +24,13 @@
 #' @keywords internal
 #'
 #' @examples
-#' filter_state <- teal.slice:::RangeFilterState$new(
+#' filter_state <- teal.slice:::init_filter_state(
 #'   x = c(1:10, NA, Inf),
 #'   x_reactive = reactive(c(1:10, NA, Inf)),
-#'   varname = "x",
-#'   dataname = "dataname",
+#'   slice = filter_var(
+#'     varname = "x",
+#'     dataname = "dataname"
+#'   ),
 #'   extract_type = "matrix"
 #' )
 #'
@@ -66,48 +53,22 @@
 #' @return `FilterState` object
 init_filter_state <- function(x,
                               x_reactive = reactive(NULL),
-                              dataname,
-                              varname,
-                              choices = NULL,
-                              multiple = NULL,
-                              selected = NULL,
-                              keep_na = NULL,
-                              keep_inf = NULL,
-                              fixed = FALSE,
-                              disabled = FALSE,
-                              extract_type = character(0),
-                              ...) {
+                              slice,
+                              extract_type = character(0)) {
   checkmate::assert_class(x_reactive, "reactive")
-  checkmate::assert_string(dataname)
-  checkmate::assert_string(varname)
-  checkmate::assert_flag(multiple, null.ok = TRUE)
-  checkmate::assert_flag(keep_na, null.ok = TRUE)
-  checkmate::assert_flag(keep_inf, null.ok = TRUE)
-  checkmate::assert_flag(fixed)
-  checkmate::assert_flag(disabled)
   checkmate::assert_character(extract_type, max.len = 1, any.missing = FALSE)
+  checkmate::assert_class(slice, "teal_slice")
   if (length(extract_type) == 1) {
     checkmate::assert_choice(extract_type, choices = c("list", "matrix"))
   }
 
   if (all(is.na(x))) {
-    args <- list(
+    EmptyFilterState$new(
       x = x,
       x_reactive = x_reactive,
-      dataname = dataname,
-      varname = varname,
-      choices = choices,
-      multiple = multiple,
-      selected = selected,
-      keep_na = keep_na,
-      keep_inf = keep_inf,
-      fixed = fixed,
-      disabled = disabled,
+      slice = slice,
       extract_type = extract_type
     )
-    args <- append(args, list(...))
-
-    do.call(EmptyFilterState$new, args)
   } else {
     UseMethod("init_filter_state")
   }
@@ -117,32 +78,14 @@ init_filter_state <- function(x,
 #' @export
 init_filter_state.default <- function(x,
                                       x_reactive = reactive(NULL),
-                                      dataname,
-                                      varname,
-                                      choices = NULL,
-                                      multiple = NULL,
-                                      selected = NULL,
-                                      keep_na = NULL,
-                                      keep_inf = NULL,
-                                      fixed = FALSE,
-                                      disabled = FALSE,
-                                      extract_type = character(0),
-                                      ...) {
+                                      slice,
+                                      extract_type = character(0)) {
   args <- list(
     x = x,
     x_reactive = x_reactive,
-    dataname = dataname,
-    varname = varname,
-    choices = choices,
-    multiple = multiple,
-    selected = selected,
-    keep_na = keep_na,
-    keep_inf = keep_inf,
-    fixed = fixed,
-    disabled = disabled,
-    extract_type = extract_type
+    extract_type = extract_type,
+    slice
   )
-  args <- append(args, list(...))
 
   do.call(FilterState$new, args)
 }
@@ -151,66 +94,28 @@ init_filter_state.default <- function(x,
 #' @export
 init_filter_state.logical <- function(x,
                                       x_reactive = reactive(NULL),
-                                      dataname,
-                                      varname,
-                                      choices = NULL,
-                                      multiple = NULL,
-                                      selected = NULL,
-                                      keep_na = NULL,
-                                      keep_inf = NULL,
-                                      fixed = FALSE,
-                                      disabled = FALSE,
-                                      extract_type = character(0),
-                                      ...) {
-  args <- list(
+                                      slice,
+                                      extract_type = character(0)) {
+  LogicalFilterState$new(
     x = x,
     x_reactive = x_reactive,
-    dataname = dataname,
-    varname = varname,
-    choices = choices,
-    multiple = multiple,
-    selected = selected,
-    keep_na = keep_na,
-    keep_inf = keep_inf,
-    fixed = fixed,
-    disabled = disabled,
+    slice = slice,
     extract_type = extract_type
   )
-  args <- append(args, list(...))
-
-  do.call(LogicalFilterState$new, args)
 }
 
 #' @keywords internal
 #' @export
 init_filter_state.numeric <- function(x,
                                       x_reactive = reactive(NULL),
-                                      dataname,
-                                      varname,
-                                      choices = NULL,
-                                      multiple = NULL,
-                                      selected = NULL,
-                                      keep_na = NULL,
-                                      keep_inf = NULL,
-                                      fixed = FALSE,
-                                      disabled = FALSE,
-                                      extract_type = character(0),
-                                      ...) {
+                                      slice,
+                                      extract_type = character(0)) {
   args <- list(
     x = x,
     x_reactive = x_reactive,
-    dataname = dataname,
-    varname = varname,
-    choices = choices,
-    multiple = multiple,
-    selected = selected,
-    keep_na = keep_na,
-    keep_inf = keep_inf,
-    fixed = fixed,
-    disabled = disabled,
+    slice = slice,
     extract_type = extract_type
   )
-  args <- append(args, list(...))
 
   if (length(unique(x[!is.na(x)])) < getOption("teal.threshold_slider_vs_checkboxgroup")) {
     do.call(ChoicesFilterState$new, args)
@@ -223,100 +128,42 @@ init_filter_state.numeric <- function(x,
 #' @export
 init_filter_state.factor <- function(x,
                                      x_reactive = reactive(NULL),
-                                     dataname,
-                                     varname,
-                                     choices = NULL,
-                                     multiple = NULL,
-                                     selected = NULL,
-                                     keep_na = NULL,
-                                     keep_inf = NULL,
-                                     fixed = FALSE,
-                                     disabled = FALSE,
-                                     extract_type = character(0),
-                                     ...) {
-  args <- list(
+                                     slice,
+                                     extract_type = character(0)) {
+  ChoicesFilterState$new(
     x = x,
     x_reactive = x_reactive,
-    dataname = dataname,
-    varname = varname,
-    choices = choices,
-    multiple = multiple,
-    selected = selected,
-    keep_na = keep_na,
-    keep_inf = keep_inf,
-    fixed = fixed,
-    disabled = disabled,
+    slice = slice,
     extract_type = extract_type
   )
-  args <- append(args, list(...))
-
-  do.call(ChoicesFilterState$new, args)
 }
 
 #' @keywords internal
 #' @export
 init_filter_state.character <- function(x,
                                         x_reactive = reactive(NULL),
-                                        dataname,
-                                        varname,
-                                        choices = NULL,
-                                        multiple = NULL,
-                                        selected = NULL,
-                                        keep_na = NULL,
-                                        keep_inf = NULL,
-                                        fixed = FALSE,
-                                        disabled = FALSE,
-                                        extract_type = character(0),
-                                        ...) {
-  args <- list(
+                                        slice,
+                                        extract_type = character(0)) {
+  ChoicesFilterState$new(
     x = x,
     x_reactive = x_reactive,
-    dataname = dataname,
-    varname = varname,
-    choices = choices,
-    multiple = multiple,
-    selected = selected,
-    keep_na = keep_na,
-    keep_inf = keep_inf,
-    fixed = fixed,
-    disabled = disabled,
+    slice = slice,
     extract_type = extract_type
   )
-  args <- append(args, list(...))
-
-  do.call(ChoicesFilterState$new, args)
 }
 
 #' @keywords internal
 #' @export
 init_filter_state.Date <- function(x,
                                    x_reactive = reactive(NULL),
-                                   dataname,
-                                   varname,
-                                   choices = NULL,
-                                   multiple = NULL,
-                                   selected = NULL,
-                                   keep_na = NULL,
-                                   keep_inf = NULL,
-                                   fixed = FALSE,
-                                   disabled = FALSE,
-                                   extract_type = character(0),
-                                   ...) {
+                                   slice,
+                                   extract_type = character(0)) {
   args <- list(
     x = x,
     x_reactive = x_reactive,
-    dataname = dataname,
-    varname = varname,
-    choices = choices,
-    multiple = multiple,
-    selected = selected,
-    keep_na = keep_na,
-    keep_inf = keep_inf,
-    fixed = fixed,
-    disabled = disabled,
+    slice = slice,
     extract_type = extract_type
   )
-  args <- append(args, list(...))
 
   if (length(unique(x[!is.na(x)])) < getOption("teal.threshold_slider_vs_checkboxgroup")) {
     do.call(ChoicesFilterState$new, args)
@@ -329,32 +176,14 @@ init_filter_state.Date <- function(x,
 #' @export
 init_filter_state.POSIXct <- function(x,
                                       x_reactive = reactive(NULL),
-                                      dataname,
-                                      varname,
-                                      choices = NULL,
-                                      multiple = NULL,
-                                      selected = NULL,
-                                      keep_na = NULL,
-                                      keep_inf = NULL,
-                                      fixed = FALSE,
-                                      disabled = FALSE,
-                                      extract_type = character(0),
-                                      ...) {
+                                      slice,
+                                      extract_type = character(0)) {
   args <- list(
     x = x,
     x_reactive = x_reactive,
-    dataname = dataname,
-    varname = varname,
-    choices = choices,
-    multiple = multiple,
-    selected = selected,
-    keep_na = keep_na,
-    keep_inf = keep_inf,
-    fixed = fixed,
-    disabled = disabled,
+    slice = slice,
     extract_type = extract_type
   )
-  args <- append(args, list(...))
 
   if (length(unique(x[!is.na(x)])) < getOption("teal.threshold_slider_vs_checkboxgroup")) {
     do.call(ChoicesFilterState$new, args)
@@ -367,34 +196,14 @@ init_filter_state.POSIXct <- function(x,
 #' @export
 init_filter_state.POSIXlt <- function(x,
                                       x_reactive = reactive(NULL),
-                                      dataname,
-                                      varname,
-                                      choices = NULL,
-                                      multiple = NULL,
-                                      selected = NULL,
-                                      keep_na = NULL,
-                                      keep_inf = NULL,
-                                      fixed = FALSE,
-                                      disabled = FALSE,
-                                      extract_type = character(0),
-                                      ...) {
+                                      slice,
+                                      extract_type = character(0)) {
   args <- list(
     x = x,
     x_reactive = x_reactive,
-    dataname = dataname,
-    varname = varname,
-    choices = choices,
-    multiple = multiple,
-    selected = selected,
-    keep_na = keep_na,
-    keep_inf = keep_inf,
-    fixed = fixed,
-    disabled = disabled,
+    slice = slice,
     extract_type = extract_type
   )
-  args <- append(args, list(...))
-
-  do.call(FilterState$new, args)
 
   if (length(unique(x[!is.na(x)])) < getOption("teal.threshold_slider_vs_checkboxgroup")) {
     do.call(ChoicesFilterState$new, args)
@@ -407,26 +216,17 @@ init_filter_state.POSIXlt <- function(x,
 #' Initialize a `FilterStateExpr` object
 #'
 #' Initialize a `FilterStateExpr` object
-#' @param id (`character(1)`)\cr
-#'   identifier of the filter
-#' @param title (`character(1)`)\cr
-#'   title of the filter
-#' @param dataname (`character(1)`)\cr
-#'   name of the dataset where `expr` could be executed on.
-#' @param expr (`character(1)`)\cr
-#'   logical expression written in executable way. By "executable" means
-#'   that `subset` call should be able to evaluate this without failure. For
-#'   example `MultiAssayExperiment::subsetByColData` requires variable names prefixed
-#'   by dataname (e.g. `data$var1 == "x" & data$var2 > 0`). For `data.frame` call
-#'   can be written without prefixing `var1 == "x" & var2 > 0`.
-#' @param disabled (`logical(1)`)\cr
-#'   flag specifying whether the `FilterState` is initiated disabled
-#' @param ... additional arguments to be saved as a list in `private$extras` field
+#' @param slice (`teal_slice_expr`)\cr
+#'   object created using [filter_expr()]. `teal_slice` is stored
+#'   in the class and `set_state` directly manipulates values within `teal_slice`. `get_state`
+#'   returns `teal_slice` object which can be reused in other places. Beware, that `teal_slice`
+#'   is an immutable object which means that changes in particular object are automatically
+#'   reflected in all places which refer to the same `teal_slice`.
 #'
 #' @return `FilterStateExpr` object
 #' @keywords internal
-init_filter_state_expr <- function(id, title, dataname, expr, disabled, ...) {
-  FilterStateExpr$new(id = id, title = title, dataname = dataname, expr = expr, disabled = disabled, ...)
+init_filter_state_expr <- function(slice) {
+  FilterStateExpr$new(slice)
 }
 
 #' Check that a given range is valid
@@ -523,7 +323,7 @@ check_in_subset <- function(subset, choices, pre_msg = "") {
 #'
 #' Regardless of the underlying numeric data, the slider always presents 100 steps.
 #' The ticks on the slider do not represent actual observations but rather borders between virtual bins.
-#' Since the value selected on the slider is passed to `private$selected` and that in turn
+#' Since the value selected on the slider is passed to `teal_slice$selected` and that in turn
 #' updates the slider selection, programmatic selection of arbitrary values may inadvertently shift
 #' the selection to the closest tick, thereby dropping the actual value set (if it exists in the data).
 #'

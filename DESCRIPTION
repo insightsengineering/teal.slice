@@ -27,7 +27,6 @@ Imports:
     logger (>= 0.2.0),
     methods,
     R6,
-    rlang,
     shinyjs,
     shinyWidgets (>= 0.5.0),
     stats,

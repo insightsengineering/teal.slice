@@ -20,11 +20,11 @@
 #' All `teal_slice` fields can be passed as arguments to `FilterState` constructors.
 #' A `teal_slice` can be passed to `FilterState$set_state`, which will modify the state.
 #' However, once a `FilterState` is created, only the **mutable** features can be set with a `teal_slice`:
-#' `selected`, `keep_na`, `keep_inf`, and `disabled`.
+#' `selected`, `keep_na` and `keep_inf`.
 #'
 #' Special consideration is given to the `fixed` field. This is always a logical flag that defaults to FALSE.
 #' In a `FilterState` instantiated with `fixed = TRUE` the features `selected`, `keep_na`, `keep_inf`
-#' cannot be changed but the`disabled` can.
+#' cannot be changed.
 #'
 #' `filter_var` creates a `teal_slice` object, which specifies a filter for a single variable,
 #' passed to and resolved by `FilterState` objects.
@@ -52,15 +52,14 @@
 #' @param varname `character(1)` name of variable
 #' @param choices optional vector specifying allowed choices;
 #'  possibly a subset of values in data; type and size depends on variable type
+#' @param selected optional vector specifying selection;
+#'  type and size depends on variable type
 #' @param multiple (`logical(1)`)\cr
 #'   flag specifying whether the `FilterState` more than one value can be selected;
 #'   only applicable to `FilterStateChoices` and `FilterStateLogical`
-#' @param selected optional vector specifying selection;
-#'  type and size depends on variable type
 #' @param keep_na `logical(1)` or `NULL` optional logical flag specifying whether to keep missing values
 #' @param keep_inf `logical(1)` or `NULL` optional logical flag specifying whether to keep infinite values
 #' @param fixed `logical(1)` logical flag specifying whether to fix this filter state (i.e. forbid setting state)
-#' @param disabled `logical(1)`logical flag specifying whether to disable this filter state
 #' @param include_varnames `named list` of `character` vectors where list names match names of data sets
 #'  and vector elements match variable names in respective data sets;
 #'  specifies which variables are not allowed to be filtered.
@@ -84,8 +83,6 @@
 #'   example `MultiAssayExperiment::subsetByColData` requires variable names prefixed
 #'   by dataname (e.g. `data$var1 == "x" & data$var2 > 0`). For `data.frame` call
 #'   can be written without prefixing `var1 == "x" & var2 > 0`.
-#' @param disabled (`logical(1)`)\cr
-#'   flag specifying whether the `FilterState` is initiated disabled
 #' @param ... additional arguments to be saved as a list in `private$extras` field
 #' @param show_all `logical(1)` specifying whether NULL elements should also be printed
 #' @param tss `teal_slices`
@@ -114,11 +111,6 @@
 #'   )
 #' )
 #'
-#' teal.slice:::slices_which(all_filters, 'dataname == "dataname2"')
-#' x <- "dataname2"
-#' teal.slice:::slices_which(all_filters, sprintf('dataname == "%s"', x))
-#' teal.slice:::slices_field(all_filters, "dataname")
-#'
 #' @name teal_slice
 NULL
 
@@ -129,12 +121,12 @@ NULL
 filter_var <- function(dataname,
                        varname,
                        choices = NULL,
-                       multiple = NULL,
                        selected = NULL,
                        keep_na = NULL,
                        keep_inf = NULL,
+                       multiple = NULL,
                        fixed = FALSE,
-                       disabled = FALSE,
+                       id,
                        ...) {
   checkmate::assert_string(dataname)
   checkmate::assert_string(varname)
@@ -144,21 +136,12 @@ filter_var <- function(dataname,
   checkmate::assert_flag(keep_na, null.ok = TRUE)
   checkmate::assert_flag(keep_inf, null.ok = TRUE)
   checkmate::assert_flag(fixed)
-  checkmate::assert_flag(disabled)
-
-  ans <- list(
-    dataname = dataname,
-    varname = varname,
-    choices = choices,
-    multiple = multiple,
-    selected = selected,
-    keep_na = keep_na,
-    keep_inf = keep_inf,
-    fixed = fixed,
-    disabled = disabled
-  )
-  ans <- append(ans, list(...))
-
+  ans <- c(as.list(environment()), list(...))
+  ans <- Filter(Negate(is.null), ans)
+  if (missing(id)) {
+    ans$id <- paste(Filter(length, ans[c("dataname", "varname", "datalabel", "arg")]), collapse = " ")
+  }
+  ans <- do.call(shiny::reactiveValues, ans)
   class(ans) <- c("teal_slice", class(ans))
   ans
 }
@@ -172,20 +155,15 @@ filter_var <- function(dataname,
 #'   title = "Female adults",
 #'   expr = "SEX == 'F' & AGE >= 18"
 #' )
-filter_expr <- function(dataname, id, title, expr, disabled = FALSE, ...) {
+filter_expr <- function(dataname, id, title, expr, ...) {
   checkmate::assert_string(dataname)
   checkmate::assert_string(id)
   checkmate::assert_string(title)
   checkmate::assert_string(expr)
-  checkmate::assert_flag(disabled)
-  ans <- list(
-    id = id,
-    title = title,
-    dataname = dataname,
-    expr = expr,
-    disabled = disabled
-  )
-  ans <- append(ans, list(...))
+  ans <- c(as.list(environment()), list(...))
+  ans <- Filter(Negate(is.null), ans)
+  ans <- do.call(shiny::reactiveValues, ans)
+
   class(ans) <- c("teal_slice_expr", "teal_slice", class(ans))
   ans
 }
@@ -257,6 +235,13 @@ c.teal_slice <- function(...) {
 #'
 format.teal_slice <- function(x, show_all = FALSE, ...) {
   checkmate::assert_flag(show_all)
+
+  x <- if (shiny::isRunning()) {
+    rev(shiny::reactiveValuesToList(x))
+  } else {
+    rev(shiny::isolate(shiny::reactiveValuesToList(x)))
+  }
+
   name_width <- max(nchar(names(x)))
   format_value <- function(v) {
     if (is.null(v)) {
@@ -447,7 +432,7 @@ c.teal_slices <- function(...) {
   do.call(
     filter_settings,
     c(
-      unlist(x, recursive = FALSE),
+      unique(unlist(x, recursive = FALSE)),
       list(
         include_varnames = includes,
         exclude_varnames = excludes,
@@ -512,31 +497,4 @@ slices_field <- function(tss, field) {
   checkmate::assert_string(field)
   checkmate::assert_class(tss, "teal_slices")
   unique(unlist(lapply(tss, function(x) x[[field]])))
-}
-
-
-# get slices where logical predicate is TRUE
-#' @rdname teal_slice
-#' @keywords internal
-#'
-slices_which <- function(tss, expr) {
-  checkmate::assert_class(tss, "teal_slices")
-  checkmate::assert_string(expr)
-  expr <- str2lang(expr)
-  Filter(function(x) isTRUE(eval(expr, x)), tss)
-}
-
-
-#' Get hash identifier of `teal_slice`
-#'
-#' Returns hash of `teal_slice` object which uniquely identifies object.
-#' Hash is obtained from fields which determines single filter-state.
-#' @param x (`teal_slice`, `teal_slice_expr`) single `teal_slice` object
-#' @return `character(1)`
-#' @keywords internal
-#'
-get_teal_slice_id <- function(x) {
-  rlang::hash(
-    x[c("dataname", "datalabel", "arg", "id", "varname")]
-  )
 }

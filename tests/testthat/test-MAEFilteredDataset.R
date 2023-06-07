@@ -272,7 +272,7 @@ testthat::test_that(
     fs <- filter_settings(
       filter_var(
         dataname = "miniacc", varname = "years_to_birth", choices = c(14, 83), selected = c(30, 50),
-        keep_na = FALSE, keep_inf = FALSE, fixed = FALSE, disabled = FALSE, datalabel = "subjects", arg = "y"
+        keep_na = FALSE, keep_inf = FALSE, fixed = FALSE, datalabel = "subjects", arg = "y"
       ),
       filter_var(
         dataname = "miniacc", varname = "vital_status", choices = c("0", "1"), multiple = TRUE, selected = "1",
@@ -291,10 +291,7 @@ testthat::test_that(
     )
 
     dataset$set_filter_state(state = fs)
-    testthat::expect_equal(
-      shiny::isolate(dataset$get_filter_state()),
-      fs
-    )
+    expect_identical_slices(dataset$get_filter_state(), fs)
   }
 )
 
@@ -306,15 +303,15 @@ testthat::test_that(
     fs <- filter_settings(
       filter_var(
         dataname = "miniacc", varname = "years_to_birth", selected = c(30, 50),
-        keep_na = TRUE, keep_inf = FALSE, datalabel = "subjects", arg = "y"
+        keep_na = TRUE, keep_inf = FALSE, datalabel = "subjects"
       ),
       filter_var(
         dataname = "miniacc", varname = "vital_status", selected = "1",
-        keep_na = FALSE, datalabel = "subjects", arg = "y"
+        keep_na = FALSE, datalabel = "subjects"
       ),
       filter_var(
         dataname = "miniacc", varname = "gender", selected = "female",
-        keep_na = FALSE, datalabel = "subjects", arg = "y"
+        keep_na = FALSE, datalabel = "subjects"
       ),
       filter_var(
         dataname = "miniacc", varname = "ARRAY_TYPE", selected = "",
@@ -322,11 +319,12 @@ testthat::test_that(
       )
     )
     dataset$set_filter_state(state = fs)
-    dataset$remove_filter_state(filter_settings(filter_var(dataname = "miniacc", varname = "years_to_birth")))
-
+    dataset$remove_filter_state(
+      filter_settings(filter_var(dataname = "miniacc", varname = "years_to_birth", datalabel = "subjects"))
+    )
 
     testthat::expect_equal(
-      sapply(shiny::isolate(dataset$get_filter_state()), `[[`, "varname"),
+      shiny::isolate(sapply(dataset$get_filter_state(), `[[`, "varname")),
       c("vital_status", "gender", "ARRAY_TYPE")
     )
   }

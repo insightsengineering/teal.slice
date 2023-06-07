@@ -10,18 +10,15 @@ Manages choosing elements from a set
 \examples{
 filter_state <- teal.slice:::ChoicesFilterState$new(
   x = c(LETTERS, NA),
-  varname = "x",
-  dataname = "data"
+  slice = filter_var(varname = "x", dataname = "data")
 )
 shiny::isolate(filter_state$get_call())
-shiny::isolate(
-  filter_state$set_state(
-    filter_var(
-      dataname = "data",
-      varname = "x",
-      selected = "A",
-      keep_na = TRUE
-    )
+filter_state$set_state(
+  filter_var(
+    dataname = "data",
+    varname = "x",
+    selected = "A",
+    keep_na = TRUE
   )
 )
 shiny::isolate(filter_state$get_call())
@@ -35,10 +32,9 @@ data_choices <- c(sample(letters[1:4], 100, replace = TRUE), NA)
 attr(data_choices, "label") <- "lowercase letters"
 fs <- ChoicesFilterState$new(
   x = data_choices,
-  dataname = "data",
-  varname = "variable",
-  selected = c("a", "b"),
-  keep_na = TRUE
+  slice = filter_var(
+    dataname = "data", varname = "variable", selected = c("a", "b"), keep_na = TRUE
+  )
 )
 
 ui <- fluidPage(
@@ -145,17 +141,8 @@ Initialize a \code{InteractiveFilterState} object
 \if{html}{\out{<div class="r">}}\preformatted{ChoicesFilterState$new(
   x,
   x_reactive = reactive(NULL),
-  dataname,
-  varname,
-  choices = NULL,
-  multiple = NULL,
-  selected = NULL,
-  keep_na = NULL,
-  keep_inf = NULL,
-  fixed = FALSE,
-  disabled = FALSE,
-  extract_type = character(0),
-  ...
+  slice,
+  extract_type = character(0)
 )}\if{html}{\out{</div>}}
 }
 
@@ -171,33 +158,12 @@ counts following the change in values of the filtered dataset.
 If it is set to \code{reactive(NULL)} then counts based on filtered
 dataset are not shown.}
 
-\item{\code{dataname}}{(\code{character(1)})\cr
-optional name of dataset where \code{x} is taken from. Must be specified
-if \code{extract_type} argument is not empty.}
-
-\item{\code{varname}}{(\code{character(1)})\cr
-name of the variable.}
-
-\item{\code{choices}}{(\code{atomic}, \code{NULL})\cr
-vector specifying allowed selection values}
-
-\item{\code{multiple}}{(\code{logical(1)})\cr
-flag specifying whether the \code{FilterState} more than one value can be selected}
-
-\item{\code{selected}}{(\code{atomic}, \code{NULL})\cr
-vector specifying selection}
-
-\item{\code{keep_na}}{(\code{logical(1)}, \code{NULL})\cr
-flag specifying whether to keep missing values}
-
-\item{\code{keep_inf}}{(\code{logical(1)}, \code{NULL})\cr
-flag specifying whether to keep infinite values}
-
-\item{\code{fixed}}{(\code{logical(1)})\cr
-flag specifying whether the \code{FilterState} is initiated fixed}
-
-\item{\code{disabled}}{(\code{logical(1)})\cr
-flag specifying whether the \code{FilterState} is initiated disabled}
+\item{\code{slice}}{(\code{teal_slice})\cr
+object created using \code{\link[=filter_var]{filter_var()}}. \code{teal_slice} is stored
+in the class and \code{set_state} directly manipulates values within \code{teal_slice}. \code{get_state}
+returns \code{teal_slice} object which can be reused in other places. Beware, that \code{teal_slice}
+is an immutable object which means that changes in particular object are automatically
+reflected in all places which refer to the same \code{teal_slice}.}
 
 \item{\code{extract_type}}{(\code{character(0)}, \code{character(1)})\cr
 whether condition calls should be prefixed by dataname. Possible values:
@@ -227,7 +193,7 @@ optional \verb{is.na(<varname>)}.
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
-\item{\code{dataname}}{name of data set; defaults to \code{private$dataname}}
+\item{\code{dataname}}{name of data set; defaults to \code{private$get_dataname()}}
 }
 \if{html}{\out{</div>}}
 }

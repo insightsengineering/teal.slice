@@ -120,6 +120,8 @@ FilteredData <- R6::R6Class( # nolint
         }
       }
 
+      self$set_available_teal_slices(x = reactive(NULL))
+
       invisible(self)
     },
 
@@ -490,32 +492,33 @@ FilteredData <- R6::R6Class( # nolint
     #' shiny::isolate(datasets$get_filter_state())
     #'
     set_filter_state = function(state) {
-      logger::log_trace("{ class(self)[1] }$set_filter_state initializing")
-      if (!is.teal_slices(state)) {
-        warning(
-          paste(
-            "From FilteredData$set_filter_state:",
-            "Specifying filters as lists is obsolete and will be deprecated in the next release.",
-            "Please see ?set_filter_state and ?filter_settings for details."
-          ),
-          call. = FALSE
-        )
-        state <- as.teal_slices(state)
-      }
+      shiny::isolate({
+        logger::log_trace("{ class(self)[1] }$set_filter_state initializing")
+        if (!is.teal_slices(state)) {
+          warning(
+            paste(
+              "From FilteredData$set_filter_state:",
+              "Specifying filters as lists is obsolete and will be deprecated in the next release.",
+              "Please see ?set_filter_state and ?filter_settings for details."
+            ),
+            call. = FALSE
+          )
+          state <- as.teal_slices(state)
+        }
 
-      checkmate::assert_class(state, "teal_slices")
-      datanames <- slices_field(state, "dataname")
-      checkmate::assert_subset(datanames, self$datanames())
+        checkmate::assert_class(state, "teal_slices")
+        datanames <- slices_field(state, "dataname")
+        checkmate::assert_subset(datanames, self$datanames())
 
-      lapply(datanames, function(x) {
-        private$get_filtered_dataset(x)$set_filter_state(
-          slices_which(state, sprintf("dataname == \"%s\"", x))
-        )
+        lapply(datanames, function(dataname) {
+          states <- Filter(function(x) identical(x$dataname, dataname), state)
+          private$get_filtered_dataset(dataname)$set_filter_state(states)
+        })
+
+        logger::log_trace("{ class(self)[1] }$set_filter_state initialized")
+
+        invisible(NULL)
       })
-
-      logger::log_trace("{ class(self)[1] }$set_filter_state initialized")
-
-      invisible(NULL)
     },
 
     #' @description
@@ -528,37 +531,38 @@ FilteredData <- R6::R6Class( # nolint
     #' @return `NULL` invisibly
     #'
     remove_filter_state = function(state) {
-      if (!is.teal_slices(state)) {
-        warning(
-          paste(
-            "From FilteredData$remove_filter_state:",
-            "Specifying filters as lists is obsolete and will be deprecated in the next release.",
-            "Please see ?set_filter_state and ?filter_settings for details."
-          ),
-          call. = FALSE
+      shiny::isolate({
+        if (!is.teal_slices(state)) {
+          warning(
+            paste(
+              "From FilteredData$remove_filter_state:",
+              "Specifying filters as lists is obsolete and will be deprecated in the next release.",
+              "Please see ?set_filter_state and ?filter_settings for details."
+            ),
+            call. = FALSE
+          )
+          state <- as.teal_slices(state)
+        }
+
+        checkmate::assert_class(state, "teal_slices")
+        datanames <- slices_field(state, "dataname")
+        checkmate::assert_subset(datanames, self$datanames())
+
+        logger::log_trace(
+          "{ class(self)[1] }$remove_filter_state removing filter(s), dataname: { private$dataname }"
         )
-        state <- as.teal_slices(state)
-      }
 
-      checkmate::assert_class(state, "teal_slices")
-      datanames <- slices_field(state, "dataname")
-      checkmate::assert_subset(datanames, self$datanames())
+        lapply(datanames, function(dataname) {
+          slices <- Filter(function(x) identical(x$dataname, dataname), state)
+          private$get_filtered_dataset(dataname)$remove_filter_state(slices)
+        })
 
-      logger::log_trace(
-        "{ class(self)[1] }$remove_filter_state removing filter(s), dataname: { private$dataname }"
-      )
-
-      lapply(datanames, function(x) {
-        private$get_filtered_dataset(x)$remove_filter_state(
-          slices_which(state, sprintf("dataname == \"%s\"", x))
+        logger::log_trace(
+          "{ class(self)[1] }$remove_filter_state removed filter(s), dataname: { private$dataname }"
         )
+
+        invisible(NULL)
       })
-
-      logger::log_trace(
-        "{ class(self)[1] }$remove_filter_state removed filter(s), dataname: { private$dataname }"
-      )
-
-      invisible(NULL)
     },
 
     #' @description
@@ -617,6 +621,20 @@ FilteredData <- R6::R6Class( # nolint
     },
 
     # shiny modules -----
+
+    #' Set external `teal_slice`
+    #'
+    #' Unlike adding new filter from the column, these filters can be added with some pre-specified
+    #' settings. List of `teal_slices` should be a reactive so one can make this list to be dynamic.
+    #' List is accessible in `ui/srv_active` through `ui/srv_available_filters`.
+    #' @param x (`reactive`)\cr
+    #'  should return `teal_slices`
+    #' @return invisible `NULL`
+    set_available_teal_slices = function(x) {
+      checkmate::assert_class(x, "reactive")
+      private$external_teal_slices <- x
+      invisible(NULL)
+    },
 
     #' Module for the right filter panel in the teal app
     #' with a filter overview panel and a filter variable panel.
@@ -684,15 +702,7 @@ FilteredData <- R6::R6Class( # nolint
         tags$div(
           class = "filter-panel-active-header",
           tags$span("Active Filter Variables", class = "text-primary mb-4"),
-          shinyWidgets::prettySwitch(
-            ns("filter_panel_active"),
-            label = "",
-            status = "success",
-            fill = TRUE,
-            value = TRUE,
-            inline = TRUE,
-            width = 30
-          ),
+          private$ui_available_filters(ns("available_filters")),
           actionLink(
             ns("minimise_filter_active"),
             label = NULL,
@@ -740,6 +750,9 @@ FilteredData <- R6::R6Class( # nolint
       checkmate::assert_class(active_datanames, "reactive")
       shiny::moduleServer(id, function(input, output, session) {
         logger::log_trace("FilteredData$srv_active initializing")
+
+        private$srv_available_filters("available_filters")
+
         shiny::observeEvent(input$minimise_filter_active, {
           shinyjs::toggle("filter_active_vars_contents")
           shinyjs::toggle("filters_active_count")
@@ -784,19 +797,6 @@ FilteredData <- R6::R6Class( # nolint
             ifelse(n_filters_active == 1, "", "s")
           )
         })
-
-        observeEvent(
-          eventExpr = input$filter_panel_active,
-          handlerExpr = {
-            if (isTRUE(input$filter_panel_active)) {
-              private$filter_panel_enable()
-              logger::log_trace("Enable the Filtered Panel with the filter_panel_enable method")
-            } else {
-              private$filter_panel_disable()
-              logger::log_trace("Disable the Filtered Panel with the filter_panel_enable method")
-            }
-          }, ignoreNULL = TRUE
-        )
 
         observeEvent(input$remove_all_filters, {
           logger::log_trace("FilteredData$srv_filter_panel@1 removing all filters")
@@ -1043,6 +1043,7 @@ FilteredData <- R6::R6Class( # nolint
 
     # preprocessing code used to generate the unfiltered datasets as a string
     code = NULL,
+    external_teal_slices = NULL,
 
     # keys used for joining/filtering data a JoinKeys object (see teal.data)
     join_keys = NULL,
@@ -1082,93 +1083,75 @@ FilteredData <- R6::R6Class( # nolint
     },
 
     # @description
-    # Disable the filter panel.
-    #
-    # Adds `disable` class to `filter_add_vars` `filter_panel_active_vars` and `filter_active_vars_contents` divs.
-    # Existing filter states are stored in `cached_states` private field
-    # so their individual disabled status can be recalled.
-    #
-    filter_panel_disable = function() {
-      private$filter_panel_active <- FALSE
-      fp_id <- self$get_filter_panel_ui_id()
-      shinyjs::disable(paste0(fp_id, "-add"), asis = TRUE)
-      shinyjs::disable("filter_active_vars_contents")
-      slices <- self$get_filter_state()
-      if (!is.null(slices)) {
-        private$cached_states <- slices
-        for (i in seq_along(slices)) {
-          slices[[i]]$disabled <- TRUE
-        }
-        self$set_filter_state(slices)
-      }
+    # Activate available filters.
+    # Module is composed from plus button and dropdown menu. Menu is shown when
+    # the button is clicked. Menu contains available/active filters list
+    # passed via `set_available_teal_slice`.
+    ui_available_filters = function(id) {
+      ns <- NS(id)
 
-      invisible(NULL)
+      active_slices_id <- shiny::isolate(vapply(self$get_filter_state(), `[[`, character(1), "id"))
+      div(
+        id = ns("available_menu"),
+        shinyWidgets::dropMenu(
+          actionLink(
+            ns("show"),
+            label = NULL,
+            icon = icon("plus", lib = "font-awesome"),
+            title = "Available filters",
+            class = "remove pull-right"
+          ),
+          uiOutput(ns("checkbox"))
+        )
+      )
     },
 
     # @description
-    # Enable the filter panel.
-    #
-    # Adds `disable` class to `filter_add_vars` `filter_panel_active_vars` and `filter_active_vars_contents` divs.
-    # Existing filter states are stored in `cached_states` private field
-    # so their individual disabled status can be recalled.
-    #
-    filter_panel_enable = function() {
-      private$filter_panel_active <- TRUE
-      fp_id <- self$get_filter_panel_ui_id()
-      shinyjs::enable(paste0(fp_id, "-add"), asis = TRUE)
-      shinyjs::enable("filter_active_vars_contents")
-      slices <- private$cached_states
-      # If no states were cached, use existing ones.
-      # This is necessary because this method is called on start-up.
-      if (is.null(slices)) {
-        slices <- self$get_filter_state()
-      }
-      # If states were cached, drop ones that don't match current ones.
-      # This is necessary because the user may remove some states while the panel is disabled.
-      if (!is.null(slices)) {
-        slices <- Filter(
-          function(x) {
-            id_vars <- intersect(names(x), c("dataname", "varname", "varlabel", "target"))
-            any(vapply(self$get_filter_state(), function(y) identical(x[id_vars], y[id_vars]), logical(1L)))
-          },
-          slices
-        )
-        self$set_filter_state(slices)
-      }
+    # Activate available filters. When the filter is selected or removed
+    # then `set_filter_state` or `remove_filter_state` is executed for
+    # appropriate filter (identified by it's id)
+    srv_available_filters = function(id) {
+      moduleServer(id, function(input, output, session) {
+        available_slices_id <- reactive(vapply(private$external_teal_slices(), `[[`, character(1), "id"))
+        active_slices_id <- reactive(vapply(self$get_filter_state(), `[[`, character(1), "id"))
 
-      invisible(NULL)
+        observeEvent(private$external_teal_slices(), ignoreNULL = FALSE, {
+          if (is.null(private$external_teal_slices())) {
+            shinyjs::hide("available_menu")
+          } else {
+            shinyjs::show("available_menu")
+          }
+        })
+
+        output$checkbox <- renderUI({
+          shiny::checkboxGroupInput(
+            session$ns("available_slices_id"),
+            label = "Available filters",
+            choices = available_slices_id(),
+            selected = active_slices_id()
+          )
+        })
+
+        observeEvent(input$available_slices_id, ignoreNULL = FALSE, ignoreInit = TRUE, {
+          new_slices_id <- setdiff(input$available_slices_id, active_slices_id())
+          removed_slices_id <- setdiff(active_slices_id(), input$available_slices_id)
+          if (length(new_slices_id)) {
+            new_teal_slices <- Filter(
+              function(slice) slice$id %in% new_slices_id,
+              private$external_teal_slices()
+            )
+            self$set_filter_state(new_teal_slices)
+          }
+
+          if (length(removed_slices_id)) {
+            removed_teal_slices <- Filter(
+              function(slice) slice$id %in% removed_slices_id,
+              private$external_teal_slices()
+            )
+            self$remove_filter_state(removed_teal_slices)
+          }
+        })
+      })
     }
   )
 )
-
-# Wrapper functions for `FilteredData` class ----
-
-
-#' Gets filter expression for multiple datanames taking into account its order.
-#'
-#' @description `r lifecycle::badge("stable")`
-#' To be used in show R code button.
-#'
-#' @param datasets (`FilteredData`)
-#' @param datanames (`character`) vector of dataset names
-#'
-#' @export
-#'
-#' @return (`expression`)
-get_filter_expr <- function(datasets, datanames = datasets$datanames()) {
-  checkmate::assert_character(datanames, min.len = 1, any.missing = FALSE)
-  stopifnot(
-    is(datasets, "FilteredData"),
-    all(datanames %in% datasets$datanames())
-  )
-
-  paste(
-    unlist(lapply(
-      datanames,
-      function(dataname) {
-        datasets$get_call(dataname)
-      }
-    )),
-    collapse = "\n"
-  )
-}
