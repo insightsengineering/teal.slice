@@ -12,7 +12,6 @@ testthat::test_that("filter_var checks arguments", {
       keep_inf = NULL,
       fixed = FALSE,
       locked = FALSE
-
     )
   )
 

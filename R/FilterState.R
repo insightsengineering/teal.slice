@@ -484,7 +484,6 @@ FilterState <- R6::R6Class( # nolint
     is_fixed = function() {
       shiny::isolate(isTRUE(private$teal_slice$fixed))
     },
-
     is_locked = function() {
       shiny::isolate(isTRUE(private$teal_slice$locked))
     },
