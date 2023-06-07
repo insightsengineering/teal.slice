@@ -140,8 +140,7 @@ FilterState <- R6::R6Class( # nolint
     #' @description
     #' Sets filtering state.
     #' - `fixed` state is prevented from changing state
-    #' - `disabled` state is prevented from changing state, but may be enabled and changed in one operation
-    #' - `locked` state is prevented from changing `disabled` status
+    #' - `locked` state is prevented from removing state
     #'
     #' @param state a `teal_slice` object
     #'
@@ -254,17 +253,16 @@ FilterState <- R6::R6Class( # nolint
             `data-bs-toggle` = "collapse",
             href = paste0("#", ns("body")),
             # header elements
-            if (private$is_fixed()) icon("lock") else NULL,
-            if (private$fixed) icon("burst") else NULL,
+            if (private$is_locked()) icon("lock") else NULL,
+            if (private$is_fixed()) icon("burst") else NULL,
             tags$span(tags$strong(private$get_varname())),
             tags$span(private$get_varlabel(), class = "filter-card-varlabel")
           ),
-          if (isFALSE(private$locked)) {
-              actionLink(
-                inputId = ns("remove"),
-                label = icon("circle-xmark", lib = "font-awesome"),
-                class = "filter-card-remove"
-              )
+          if (isFALSE(private$is_locked())) {
+            actionLink(
+              inputId = ns("remove"),
+              label = icon("circle-xmark", lib = "font-awesome"),
+              class = "filter-card-remove"
             )
           },
           tags$div(
@@ -484,7 +482,11 @@ FilterState <- R6::R6Class( # nolint
     # Check whether this filter is fixed
     # @return `logical(1)`
     is_fixed = function() {
-      shiny::isolate(private$teal_slice$fixed)
+      shiny::isolate(isTRUE(private$teal_slice$fixed))
+    },
+
+    is_locked = function() {
+      shiny::isolate(isTRUE(private$teal_slice$locked))
     },
 
     ## other ----

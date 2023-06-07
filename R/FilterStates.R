@@ -642,6 +642,9 @@ FilterStates <- R6::R6Class( # nolint
       checkmate::assert_character(state_id)
       new_state_list <- shiny::isolate(private$state_list())
       if (is.element(state_id, names(new_state_list))) {
+        if (shiny::isolate(new_state_list[[state_id]]$get_state()$locked)) {
+          return(invisible(NULL))
+        }
         new_state_list[[state_id]]$destroy_observers()
         new_state_list[[state_id]] <- NULL
         shiny::isolate(private$state_list(new_state_list))
@@ -665,20 +668,7 @@ FilterStates <- R6::R6Class( # nolint
 
       state_list <- shiny::isolate(private$state_list())
       for (state_id in names(state_list)) {
-        is_locked <- shiny::isolate(private$state_list()[[state_id]]$get_state()$locked)
-        if (is_locked) {
-          logger::log_trace(
-            paste0(
-              "{ class(self)[1] }$state_list_empty aborted removing (locked) filter, ",
-              "dataname: { private$dataname }; state_id: { state_id }"
-            )
-          )
-        } else {
-          logger::log_trace(
-            "{ class(self)[1] }$state_list_empty removed filter, dataname: { private$dataname }; state_id: { state_id }"
-          )
-          private$state_list_remove(state_id)
-        }
+        private$state_list_remove(state_id)
       }
 
       logger::log_trace(

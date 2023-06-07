@@ -67,7 +67,6 @@
 #'   only applicable to `FilterStateChoices` and `FilterStateLogical`
 #' @param keep_na `logical(1)` or `NULL` optional logical flag specifying whether to keep missing values
 #' @param keep_inf `logical(1)` or `NULL` optional logical flag specifying whether to keep infinite values
-#' @param disabled `logical(1)` logical flag specifying whether to disable this filter state
 #' @param fixed `logical(1)` logical flag specifying whether to fix this filter state (forbid setting state)
 #' @param locked `logical(1)` logical flag specifying whether to lock this filter state (forbid disabling and removing)
 #' @param include_varnames,exclude_varnames `named list`s of `character` vectors where list names
@@ -131,20 +130,20 @@ filter_var <- function(dataname,
                        selected = NULL,
                        keep_na = NULL,
                        keep_inf = NULL,
-                       disabled = FALSE,
                        fixed = FALSE,
                        locked = FALSE,
+                       multiple = TRUE,
                        id,
                        ...) {
   checkmate::assert_string(dataname)
   checkmate::assert_string(varname)
   checkmate::assert_multi_class(choices, .filterable_class, null.ok = TRUE)
-  checkmate::assert_flag(multiple, null.ok = TRUE)
   checkmate::assert_multi_class(selected, .filterable_class, null.ok = TRUE)
   checkmate::assert_flag(keep_na, null.ok = TRUE)
   checkmate::assert_flag(keep_inf, null.ok = TRUE)
-  checkmate::assert_flag(disabled)
   checkmate::assert_flag(fixed)
+  checkmate::assert_flag(locked)
+  checkmate::assert_flag(multiple, null.ok = TRUE)
   ans <- c(as.list(environment()), list(...))
   ans <- Filter(Negate(is.null), ans)
   if (missing(id)) {
@@ -164,7 +163,7 @@ filter_var <- function(dataname,
 #'   title = "Female adults",
 #'   expr = "SEX == 'F' & AGE >= 18"
 #' )
-filter_expr <- function(dataname, id, title, expr, disabled = FALSE, locked = FALSE, ...) {
+filter_expr <- function(dataname, id, title, expr, locked = FALSE, ...) {
   checkmate::assert_string(dataname)
   checkmate::assert_string(id)
   checkmate::assert_string(title)
@@ -408,7 +407,7 @@ as.teal_slices <- function(x) { # nolint
   y <- NextMethod("[")
   attrs <- attributes(x)
   attrs$names <- attrs$names[i]
-  datanames <- unique(unlist(vapply(y, function(ts) ts[["dataname"]], character(1L))))
+  datanames <- unique(unlist(vapply(y, function(ts) shiny::isolate(ts[["dataname"]]), character(1L))))
   attrs[["exclude_varnames"]] <- Filter(Negate(is.null), attr(x, "exclude_varnames")[datanames])
   attrs[["include_varnames"]] <- Filter(Negate(is.null), attr(x, "include_varnames")[datanames])
   attributes(y) <- attrs

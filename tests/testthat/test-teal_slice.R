@@ -11,8 +11,8 @@ testthat::test_that("filter_var checks arguments", {
       keep_na = NULL,
       keep_inf = NULL,
       fixed = FALSE,
-      locked = FALSE,
-      disabled = FALSE
+      locked = FALSE
+
     )
   )
 
@@ -25,8 +25,7 @@ testthat::test_that("filter_var checks arguments", {
       keep_na = NULL,
       keep_inf = NULL,
       fixed = FALSE,
-      locked = TRUE,
-      disabled = FALSE
+      locked = TRUE
     )
   )
 
@@ -40,8 +39,7 @@ testthat::test_that("filter_var checks arguments", {
       keep_na = NULL,
       keep_inf = NULL,
       fixed = TRUE,
-      locked = TRUE,
-      disabled = TRUE
+      locked = TRUE
     )
   )
 
@@ -95,15 +93,6 @@ testthat::test_that("filter_var checks arguments", {
   )
 
   testthat::expect_error(
-    filter_var(dataname = "data", varname = "var", disabled = NULL),
-    "Assertion on 'disabled' failed"
-  )
-  testthat::expect_error(
-    filter_var(dataname = "data", varname = "var", disabled = "TRUE"),
-    "Assertion on 'disabled' failed"
-  )
-
-  testthat::expect_error(
     filter_var(dataname = "data", varname = "var", fixed = NULL),
     "Assertion on 'fixed' failed"
   )
@@ -134,7 +123,7 @@ testthat::test_that("filter_var returns `teal_slice`", {
   testthat::expect_failure(
     testthat::expect_s3_class(fs1, "teal_slices")
   )
-  testthat::expect_length(shiny::reactiveValuesToList(fs1), 4L)
+  testthat::expect_length(shiny::reactiveValuesToList(fs1), 6L)
 })
 
 
@@ -547,7 +536,6 @@ testthat::test_that("slices_field works", {
   testthat::expect_identical(slices_field(fs, "dataname"), "data")
   testthat::expect_identical(slices_field(fs, "varname"), c("var1", "var2"))
   testthat::expect_identical(slices_field(fs, "choices"), NULL)
-  testthat::expect_identical(slices_field(fs, "disabled"), FALSE)
   testthat::expect_identical(slices_field(fs, "fixed"), FALSE)
   testthat::expect_identical(slices_field(fs, "locked"), FALSE)
 })

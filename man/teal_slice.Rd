@@ -26,23 +26,14 @@ filter_var(
   selected = NULL,
   keep_na = NULL,
   keep_inf = NULL,
-<<<<<<< HEAD
-  multiple = NULL,
   fixed = FALSE,
+  locked = FALSE,
+  multiple = TRUE,
   id,
   ...
 )
 
-filter_expr(dataname, id, title, expr, ...)
-=======
-  disabled = FALSE,
-  fixed = FALSE,
-  locked = FALSE,
-  ...
-)
-
-filter_expr(dataname, id, title, expr, disabled = FALSE, locked = FALSE, ...)
->>>>>>> filter_panel_refactor@main
+filter_expr(dataname, id, title, expr, locked = FALSE, ...)
 
 filter_settings(
   ...,
@@ -90,23 +81,16 @@ type and size depends on variable type}
 
 \item{keep_inf}{\code{logical(1)} or \code{NULL} optional logical flag specifying whether to keep infinite values}
 
-<<<<<<< HEAD
+\item{fixed}{\code{logical(1)} logical flag specifying whether to fix this filter state (forbid setting state)}
+
+\item{locked}{\code{logical(1)} logical flag specifying whether to lock this filter state (forbid disabling and removing)}
+
 \item{multiple}{(\code{logical(1)})\cr
 flag specifying whether the \code{FilterState} more than one value can be selected;
 only applicable to \code{FilterStateChoices} and \code{FilterStateLogical}}
 
-\item{fixed}{\code{logical(1)} logical flag specifying whether to fix this filter state (i.e. forbid setting state)}
-
 \item{id}{(\code{character(1)})\cr
 identifier of the filter}
-=======
-\item{disabled}{(\code{logical(1)})\cr
-flag specifying whether the \code{FilterState} is initiated disabled}
->>>>>>> filter_panel_refactor@main
-
-\item{fixed}{\code{logical(1)} logical flag specifying whether to fix this filter state (forbid setting state)}
-
-\item{locked}{\code{logical(1)} logical flag specifying whether to lock this filter state (forbid disabling and removing)}
 
 \item{...}{for \code{filter_var} and \code{filter_expr} any number of additional fields given as \code{name:value} pairs\cr
 for \code{filter_settings} any number of \code{teal_slice} objects\cr
@@ -174,13 +158,7 @@ However, once a \code{FilterState} is created, only the \strong{mutable} feature
 Special consideration is given to two fields: \code{fixed} and \code{locked}.
 These are always immutable logical flags that default to FALSE.
 In a \code{FilterState} instantiated with \code{fixed = TRUE} the features \code{selected}, \code{keep_na}, \code{keep_inf}
-<<<<<<< HEAD
 cannot be changed.
-=======
-cannot be changed but the \code{disabled} feature can.
-A \code{FilterState} instantiated with \code{locked = TRUE} cannot be disabled or removed.
-Any combination of \code{fixed} and \code{locked} is permitted.
->>>>>>> filter_panel_refactor@main
 
 \code{filter_var} creates a \code{teal_slice} object, which specifies a filter for a single variable,
 passed to and resolved by \code{FilterState} objects.

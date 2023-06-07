@@ -653,14 +653,11 @@ testthat::test_that("remove_filter_state does not remove locked filters", {
     )
   )
   datasets$set_filter_state(state = fs)
-
-  state <- fs[1:2]
-
-  datasets$remove_filter_state(state)
+  datasets$remove_filter_state(fs)
 
   testthat::expect_length(shiny::isolate(datasets$get_filter_state()), 2)
   testthat::expect_true(
-    teal.slice:::slices_field(shiny::isolate(datasets$get_filter_state()), "locked")
+    shiny::isolate(teal.slice:::slices_field(datasets$get_filter_state(), "locked"))
   )
 })
 
@@ -731,7 +728,7 @@ testthat::test_that("clear_filter_states does not remove locked filters", {
 
   testthat::expect_length(shiny::isolate(datasets$get_filter_state()), 2)
   testthat::expect_true(
-    teal.slice:::slices_field(shiny::isolate(datasets$get_filter_state()), "locked")
+    shiny::isolate(teal.slice:::slices_field(datasets$get_filter_state(), "locked"))
   )
 })
 

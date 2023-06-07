@@ -172,8 +172,8 @@ LogicalFilterState <- R6::R6Class( # nolint
 
   private = list(
     choices_counts = integer(0),
-    get_multiple = function() {
-      shiny::isolate(private$teal_slice$multiple)
+    is_multiple = function() {
+      shiny::isolate(isTRUE(private$teal_slice$multiple))
     },
     set_choices = function(choices) {
       private$teal_slice$choices <- c(TRUE, FALSE)
@@ -214,7 +214,7 @@ LogicalFilterState <- R6::R6Class( # nolint
       values_logical
     },
     remove_out_of_bound_values = function(values) {
-      if (length(values) != 1 && !private$get_multiple()) {
+      if (length(values) != 1 && !private$is_multiple()) {
         warning(sprintf(
           "Values: %s are not a vector of length one. The first value will be selected by default.
                         Setting defaults. Varname: %s, dataname: %s.",
@@ -267,7 +267,7 @@ LogicalFilterState <- R6::R6Class( # nolint
           countsnow = countsnow,
           countsmax = countsmax
         )
-        ui_input <- if (private$get_multiple()) {
+        ui_input <- if (private$is_multiple()) {
           checkboxGroupInput(
             inputId = ns("selection"),
             label = NULL,
@@ -334,12 +334,12 @@ LogicalFilterState <- R6::R6Class( # nolint
           })
 
           private$observers$seleted_api <- observeEvent(
-            ignoreNULL = !private$get_multiple(),
+            ignoreNULL = !private$is_multiple(),
             ignoreInit = TRUE,
             eventExpr = private$get_selected(),
             handlerExpr = {
               if (!setequal(private$get_selected(), input$selection)) {
-                if (private$get_multiple()) {
+                if (private$is_multiple()) {
                   updateCheckboxGroupInput(
                     inputId = "selection",
                     selected = private$get_selected()
@@ -372,8 +372,8 @@ LogicalFilterState <- R6::R6Class( # nolint
                   private$get_dataname()
                 )
               )
-              # for private$get_multiple() == TRUE input$selection will always have value
-              if (is.null(input$selection) && isFALSE(private$get_multiple())) {
+              # for private$is_multiple() == TRUE input$selection will always have value
+              if (is.null(input$selection) && isFALSE(private$is_multiple())) {
                 selection_state <- private$get_selected()
               } else {
                 selection_state <- as.logical(input$selection)

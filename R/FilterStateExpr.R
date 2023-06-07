@@ -203,15 +203,6 @@ FilterStateExpr <- R6::R6Class( # nolint
           )
         )
       })
-    },
-    #' @description
-    #' Destroy observers stored in `private$observers`.
-    #'
-    #' @return NULL invisibly
-    #'
-    destroy_observers = function() {
-      lapply(private$observers, function(x) x$destroy())
-      return(invisible(NULL))
     }
   ),
 

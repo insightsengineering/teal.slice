@@ -41,9 +41,9 @@ testthat::test_that("set_state: selected accepts a logical (or coercible) of len
     filter_state$set_state(filter_var(dataname = "data", varname = "variable", selected = "TRUE"))
   )
   testthat::expect_no_error(filter_state$set_state(filter_var(dataname = "data", varname = "variable", selected = 1)))
-  testthat::expect_warning(
+  testthat::expect_error(
     filter_state$set_state(filter_var(dataname = "data", varname = "variable", selected = c(TRUE, TRUE))),
-    "are not a vector of length one"
+    "should be a logical vector of length <= 2"
   )
   testthat::expect_error(
     filter_state$set_state(filter_var(dataname = "data", varname = "variable", selected = "a")),
@@ -71,8 +71,11 @@ testthat::test_that("set_state: multiple parameters accepting boolean and null v
 })
 
 # get_call ----
-testthat::test_that("get_call of default LogicalFilterState object returns variable name", {
-  filter_state <- LogicalFilterState$new(logs[1:10], slice = filter_var(dataname = "data", varname = "variable"))
+testthat::test_that("LogicalFilterState$get_call returns variable name when !multiple", {
+  filter_state <- LogicalFilterState$new(
+    logs[1:10],
+    slice = filter_var(dataname = "data", varname = "variable", multiple = FALSE)
+  )
   expect_identical(shiny::isolate(filter_state$get_call()), quote(variable))
 })
 
@@ -92,9 +95,11 @@ testthat::test_that("get_call returns call always if choices are limited - regar
     logs[1:10],
     slice = filter_var(dataname = "data", varname = "variable", choices = FALSE)
   )
+
+  # todo: what should this really return?
   testthat::expect_identical(
     shiny::isolate(filter_state$get_call()),
-    quote(variable)
+    quote(variable %in% c(TRUE, FALSE))
   )
 })
 

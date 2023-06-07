@@ -165,8 +165,6 @@ ChoicesFilterState <- R6::R6Class( # nolint
           extract_type = extract_type
         )
         private$set_choices(slice$choices)
-        if (is.null(slice$multiple)) slice$multiple <- TRUE # Set default behavior of multiple variable to TRUE.
-
         if (is.null(slice$selected) && slice$multiple) {
           slice$selected <- private$get_choices()
         } else if (is.null(slice$selected)) {
@@ -243,8 +241,8 @@ ChoicesFilterState <- R6::R6Class( # nolint
 
     # private methods ----
 
-    get_multiple = function() {
-      shiny::isolate(private$teal_slice$multiple)
+    is_multiple = function() {
+      shiny::isolate(isTRUE(private$teal_slice$multiple))
     },
     # @description
     # Checks validity of the choices, adjust if neccessary and sets the flag for the case where choices
@@ -334,7 +332,7 @@ ChoicesFilterState <- R6::R6Class( # nolint
       }
       values <- values[in_choices_mask]
 
-      if (length(values) != 1 && !private$get_multiple()) {
+      if (length(values) != 1 && !private$is_multiple()) {
         warning(sprintf(
           "Values: %s are not a vector of length one. The first value will be selected by default.
                         Setting defaults. Varname: %s, dataname: %s.",
@@ -378,7 +376,7 @@ ChoicesFilterState <- R6::R6Class( # nolint
           )
           div(
             class = "choices_state",
-            if (private$get_multiple()) {
+            if (private$is_multiple()) {
               checkboxGroupInput(
                 inputId = ns("selection"),
                 label = NULL,
@@ -410,7 +408,7 @@ ChoicesFilterState <- R6::R6Class( # nolint
             inputId = ns("selection"),
             choices = stats::setNames(private$get_choices(), labels),
             selected = private$get_selected(),
-            multiple = private$get_multiple(),
+            multiple = private$is_multiple(),
             options = shinyWidgets::pickerOptions(
               actionsBox = TRUE,
               liveSearch = (length(private$get_choices()) > 10),
@@ -489,9 +487,9 @@ ChoicesFilterState <- R6::R6Class( # nolint
                 private$get_dataname()
               ))
 
-              selection <- if (is.null(input$selection) && private$get_multiple()) {
+              selection <- if (is.null(input$selection) && private$is_multiple()) {
                 character(0)
-              } else if (isTRUE(length(input$selection) != 1) && !private$get_multiple()) {
+              } else if (isTRUE(length(input$selection) != 1) && !private$is_multiple()) {
                 showNotification(paste(
                   "This filter exclusively supports single selection.",
                   "Any additional choices made will be disregarded."
@@ -526,7 +524,7 @@ ChoicesFilterState <- R6::R6Class( # nolint
                 private$get_dataname()
               ))
               if (private$is_checkboxgroup()) {
-                if (private$get_multiple()) {
+                if (private$is_multiple()) {
                   updateCheckboxGroupInput(
                     inputId = "selection",
                     selected = private$get_selected()

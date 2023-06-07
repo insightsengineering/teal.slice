@@ -8,28 +8,7 @@ testthat::test_that("init_filter_state checks arguments", {
   )
 
   testthat::expect_error(
-    init_filter_state(x = 7, slice = filter_var(dataname = "data", varname = "var"), extract_type = "other"),
-    init_filter_state(x = 7, dataname = "data", varname = "variable", keep_na = "TRUE"),
-    "Assertion on 'keep_na' failed"
-  )
-  testthat::expect_error(
-    init_filter_state(x = 7, dataname = "data", varname = "variable", keep_inf = "TRUE"),
-    "Assertion on 'keep_inf' failed"
-  )
-  testthat::expect_error(
-    init_filter_state(x = 7, dataname = "data", varname = "variable", disabled = NULL),
-    "Assertion on 'disabled' failed"
-  )
-  testthat::expect_error(
-    init_filter_state(x = 7, dataname = "data", varname = "variable", fixed = NULL),
-    "Assertion on 'fixed' failed"
-  )
-  testthat::expect_error(
-    init_filter_state(x = 7, dataname = "data", varname = "variable", locked = NULL),
-    "Assertion on 'locked' failed"
-  )
-  testthat::expect_error(
-    init_filter_state(x = 7, dataname = "data", varname = "variable", extract_type = "other"),
+    init_filter_state(x = 7, slice = filter_var(dataname = "data", varname = "variable"), extract_type = "other"),
     "Assertion on 'extract_type' failed"
   )
 })
