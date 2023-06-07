@@ -23,10 +23,10 @@ filter_var(
   dataname,
   varname,
   choices = NULL,
-  multiple = NULL,
   selected = NULL,
   keep_na = NULL,
   keep_inf = NULL,
+  multiple = NULL,
   fixed = FALSE,
   id,
   ...
@@ -73,16 +73,16 @@ slices_field(tss, field)
 \item{choices}{optional vector specifying allowed choices;
 possibly a subset of values in data; type and size depends on variable type}
 
-\item{multiple}{(\code{logical(1)})\cr
-flag specifying whether the \code{FilterState} more than one value can be selected;
-only applicable to \code{FilterStateChoices} and \code{FilterStateLogical}}
-
 \item{selected}{optional vector specifying selection;
 type and size depends on variable type}
 
 \item{keep_na}{\code{logical(1)} or \code{NULL} optional logical flag specifying whether to keep missing values}
 
 \item{keep_inf}{\code{logical(1)} or \code{NULL} optional logical flag specifying whether to keep infinite values}
+
+\item{multiple}{(\code{logical(1)})\cr
+flag specifying whether the \code{FilterState} more than one value can be selected;
+only applicable to \code{FilterStateChoices} and \code{FilterStateLogical}}
 
 \item{fixed}{\code{logical(1)} logical flag specifying whether to fix this filter state (i.e. forbid setting state)}
 

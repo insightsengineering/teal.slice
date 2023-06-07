@@ -7,22 +7,8 @@
 init_filter_state(
   x,
   x_reactive = reactive(NULL),
-<<<<<<< HEAD
   slice,
   extract_type = character(0)
-=======
-  dataname,
-  varname,
-  choices = NULL,
-  multiple = NULL,
-  selected = NULL,
-  keep_na = NULL,
-  keep_inf = NULL,
-  fixed = FALSE,
-  disabled = FALSE,
-  extract_type = character(0),
-  ...
->>>>>>> filter_panel_refactor@main
 )
 }
 \arguments{
@@ -35,40 +21,10 @@ counts following the change in values of the filtered dataset.
 If it is set to \code{reactive(NULL)} then counts based on filtered
 dataset are not shown.}
 
-<<<<<<< HEAD
 \item{slice}{(\code{teal_slice})\cr
 object created using \code{\link[=filter_var]{filter_var()}} or \code{\link[=filter_expr]{filter_expr()}}. \code{slice} is kept within the
 class and can be shared in other places. Shared \code{teal_slice} object behaves in the
 way that changes in one place are reflected in other places.}
-=======
-\item{dataname}{(\code{character(1)})\cr
-optional name of dataset where \code{x} is taken from. Must be specified
-if \code{extract_type} argument is not empty.}
-
-\item{varname}{(\code{character(1)})\cr
-name of the variable.}
-
-\item{choices}{(\code{atomic})\cr
-vector specifying allowed selection values}
-
-\item{multiple}{(\code{logical(1)})\cr
-flag specifying whether the \code{FilterState} more than one value can be selected}
-
-\item{selected}{(\code{atomic}, \code{NULL})\cr
-vector specifying selection}
-
-\item{keep_na}{(\code{logical(1)}, \code{NULL})\cr
-flag specifying whether to keep missing values}
-
-\item{keep_inf}{(\code{logical(1)}, \code{NULL})\cr
-flag specifying whether to keep infinite values}
-
-\item{fixed}{(\code{logical(1)})\cr
-flag specifying whether the \code{FilterState} is initiated fixed}
-
-\item{disabled}{(\code{logical(1)})\cr
-flag specifying whether the \code{FilterState} is initiated disabled}
->>>>>>> filter_panel_refactor@main
 
 \item{extract_type}{(\code{character(0)}, \code{character(1)})\cr
 whether condition calls should be prefixed by dataname. Possible values:

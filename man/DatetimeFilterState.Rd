@@ -145,18 +145,6 @@ and is set only if object is initialized in \code{shiny}.
 \if{html}{\out{<div class="r">}}\preformatted{DatetimeFilterState$new(
   x,
   x_reactive = reactive(NULL),
-<<<<<<< HEAD
-=======
-  dataname,
-  varname,
-  choices = NULL,
-  multiple = NULL,
-  selected = NULL,
-  keep_na = NULL,
-  keep_inf = NULL,
-  fixed = FALSE,
-  disabled = FALSE,
->>>>>>> filter_panel_refactor@main
   extract_type = character(0),
   slice
 )}\if{html}{\out{</div>}}
@@ -174,38 +162,6 @@ counts following the change in values of the filtered dataset.
 If it is set to \code{reactive(NULL)} then counts based on filtered
 dataset are not shown.}
 
-<<<<<<< HEAD
-=======
-\item{\code{dataname}}{(\code{character(1)})\cr
-optional name of dataset where \code{x} is taken from. Must be specified
-if \code{extract_type} argument is not empty.}
-
-\item{\code{varname}}{(\code{character(1)})\cr
-name of the variable.}
-
-\item{\code{choices}}{(\code{atomic}, \code{NULL})\cr
-vector specifying allowed selection values}
-
-\item{\code{multiple}}{(\code{logical(1)})\cr
-flag specifying whether the \code{FilterState} more than one value can be selected;
-only applicable to \code{FilterStateChoices} and \code{FilterStateLogical}}
-
-\item{\code{selected}}{(\code{atomic}, \code{NULL})\cr
-vector specifying selection}
-
-\item{\code{keep_na}}{(\code{logical(1)}, \code{NULL})\cr
-flag specifying whether to keep missing values}
-
-\item{\code{keep_inf}}{(\code{logical(1)}, \code{NULL})\cr
-flag specifying whether to keep infinite values}
-
-\item{\code{fixed}}{(\code{logical(1)})\cr
-flag specifying whether the \code{FilterState} is initiated fixed}
-
-\item{\code{disabled}}{(\code{logical(1)})\cr
-flag specifying whether the \code{FilterState} is initiated disabled}
-
->>>>>>> filter_panel_refactor@main
 \item{\code{extract_type}}{(\code{character(0)}, \code{character(1)})\cr
 whether condition calls should be prefixed by dataname. Possible values:
 \itemize{

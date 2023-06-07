@@ -332,8 +332,8 @@ FilterState <- R6::R6Class( # nolint
     # @param value (`vector`)\cr
     #   value(s) that come from filter selection; values are set in the
     #   module server after a selection is made in the app interface;
-    #   values are stored in `private$selected` which is reactive;
-    #   value types have to be the same as `private$choices`
+    #   values are stored in `teal_slice$selected` which is reactive;
+    #   value types have to be the same as `private$get_choices()`
     #
     # @return NULL invisibly
     set_selected = function(value) {

@@ -151,12 +151,7 @@ RangeFilterState <- R6::R6Class( # nolint
       shiny::isolate({
         checkmate::assert_numeric(x, all.missing = FALSE)
         if (!any(is.finite(x))) stop("\"x\" contains no finite values")
-        super$initialize(
-          x = x,
-          x_reactive = x_reactive,
-          slice = slice,
-          extract_type = extract_type
-        )
+        super$initialize(x = x, x_reactive = x_reactive, slice = slice, extract_type = extract_type)
         private$is_integer <- checkmate::test_integerish(x)
         private$inf_count <- sum(is.infinite(x))
         private$inf_filtered_count <- reactive(
@@ -167,6 +162,7 @@ RangeFilterState <- R6::R6Class( # nolint
         if (is.null(slice$keep_inf) && any(is.infinite(x))) slice$keep_inf <- TRUE
 
         private$set_choices(slice$choices)
+        if (is.null(slice$selected)) slice$selected <- slice$choices
         private$set_selected(slice$selected)
 
         private$unfiltered_histogram <- ggplot2::ggplot(data.frame(x = Filter(is.finite, private$x))) +
@@ -461,7 +457,7 @@ RangeFilterState <- R6::R6Class( # nolint
             )
           )
 
-          # this observer is needed in the situation when private$selected has been
+          # this observer is needed in the situation when teal_slice$selected has been
           # changed directly by the api - then it's needed to rerender UI element
           # to show relevant values
           private$observers$selection_api <- observeEvent(

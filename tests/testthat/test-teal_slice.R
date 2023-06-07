@@ -315,14 +315,32 @@ testthat::test_that("c.teal_slices handles attributes", {
 
 # format.teal_slice ----
 testthat::test_that("format.teal_slice returns a character string", {
-  fs <- filter_var("dataname2", "varname3", 1:10 / 10, TRUE, 0.2, TRUE, extra1 = "extraone", extra2 = "extratwo")
+  fs <- filter_var(
+    dataname = "dataname2",
+    varname = "varname3",
+    choices = 1:10 / 10,
+    selected = 0.2,
+    multiple = TRUE,
+    keep_na = TRUE,
+    extra1 = "extraone",
+    extra2 = "extratwo"
+  )
   testthat::expect_true(checkmate::check_string(format(fs)))
   testthat::expect_true(checkmate::check_string(format(fs, show_all = TRUE)))
 })
 
 
 testthat::test_that("format.teal_slice prints 'teal_slice' header", {
-  fs <- filter_var("dataname2", "varname3", 1:10 / 10, TRUE, 0.2, TRUE, extra1 = "extraone", extra2 = "extratwo")
+  fs <- filter_var(
+    dataname = "dataname2",
+    varname = "varname3",
+    choices = 1:10 / 10,
+    selected = 0.2,
+    multiple = TRUE,
+    keep_na = TRUE,
+    extra1 = "extraone",
+    extra2 = "extratwo"
+  )
   ffs <- strsplit(format(fs), "\n")[[1]]
   testthat::expect_identical(ffs[1], "teal_slice")
 })
@@ -349,7 +367,17 @@ testthat::test_that("format.teal_slice skips empty mandatory fields show_all is 
 
 
 testthat::test_that("format.teal_slice prints additional information header", {
-  fs <- filter_var("dataname2", "varname3", 1:10 / 10, TRUE, 0.2, TRUE, FALSE, extra1 = "extraone", extra2 = "extratwo")
+  fs <- filter_var(
+    dataname = "dataname2",
+    varname = "varname3",
+    choices = 1:10 / 10,
+    selected = 0.2,
+    multiple = TRUE,
+    keep_na = TRUE,
+    fixed = FALSE,
+    extra1 = "extraone",
+    extra2 = "extratwo"
+  )
   ffs <- strsplit(format(fs), "\n")[[1]]
   testthat::expect_true(any(grepl(" .. additional information", ffs)))
 })
@@ -358,14 +386,22 @@ testthat::test_that("format.teal_slice prints additional information header", {
 testthat::test_that("format.teal_slice prints optional fields with prefix", {
   shiny::reactiveConsole(TRUE)
   on.exit(shiny::reactiveConsole(FALSE))
-  fs <- filter_var("dataname2", "varname3", 1:10 / 10, 0.2, TRUE, FALSE, extra1 = "extraone", extra2 = "extratwo")
+  fs <- filter_var(
+    dataname = "dataname2",
+    varname = "varname3",
+    chices = 1:10 / 10,
+    selected = 0.2,
+    multiple = TRUE,
+    keep_na = FALSE,
+    extra1 = "extraone",
+    extra2 = "extratwo"
+  )
   ffs <- strsplit(format(fs), "\n")[[1]]
   optional <- setdiff(names(shiny::reactiveValuesToList(fs)), names(formals(filter_var)))
   lapply(optional, function(x) {
     testthat::expect_true(any(grepl(sprintf("     \\$ %s.*:", x), ffs)))
   })
 })
-
 
 # format.teal_slices ----
 testthat::test_that("format.teal_slices returns a character string", {

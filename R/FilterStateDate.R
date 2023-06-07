@@ -147,6 +147,7 @@ DateFilterState <- R6::R6Class( # nolint
         )
         checkmate::assert_date(slice$choices, null.ok = TRUE)
         private$set_choices(slice$choices)
+        if (is.null(slice$selected)) slice$selected <- slice$choices
         private$set_selected(slice$selected)
       })
 
@@ -329,7 +330,7 @@ DateFilterState <- R6::R6Class( # nolint
         function(input, output, session) {
           logger::log_trace("DateFilterState$server initializing, dataname: { private$get_dataname() }")
 
-          # this observer is needed in the situation when private$selected has been
+          # this observer is needed in the situation when teal_slice$selected has been
           # changed directly by the api - then it's needed to rerender UI element
           # to show relevant values
           private$observers$seletion_api <- observeEvent(
@@ -404,7 +405,7 @@ DateFilterState <- R6::R6Class( # nolint
             ))
           })
 
-          logger::log_trace("DateFilterState$server initialized, dataname: { private$dataname }")
+          logger::log_trace("DateFilterState$server initialized, dataname: { private$get_dataname() }")
           NULL
         }
       )

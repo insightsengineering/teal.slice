@@ -14,15 +14,15 @@ testthat::test_that("constructor accepts logical values", {
 testthat::test_that("constructor raises error when selection is not logical", {
   testthat::expect_error(
     LogicalFilterState$new(logs, slice = filter_var(dataname = "data", varname = "variable", selected = "TRUE")),
-    "Must be of type 'logical flag'"
+    "Must be of type 'logical'"
   )
 })
 
 testthat::test_that("constructor forces single selected when multiple is FALSE", {
   testthat::expect_no_error(
-    state <- LogicalFilterState$new(logs,
-      dataname = "data", varname = "var", selected = c(TRUE, FALSE),
-      multiple = FALSE
+    state <- LogicalFilterState$new(
+      x = logs,
+      slice = filter_var(dataname = "data", varname = "var", selected = c(TRUE, FALSE), multiple = FALSE)
     )
   )
   testthat::expect_identical(
@@ -41,13 +41,9 @@ testthat::test_that("set_state: selected accepts a logical (or coercible) of len
     filter_state$set_state(filter_var(dataname = "data", varname = "variable", selected = "TRUE"))
   )
   testthat::expect_no_error(filter_state$set_state(filter_var(dataname = "data", varname = "variable", selected = 1)))
-  testthat::expect_error(
+  testthat::expect_warning(
     filter_state$set_state(filter_var(dataname = "data", varname = "variable", selected = c(TRUE, TRUE))),
-    "should be a logical vector of length <= 2"
-  )
-  testthat::expect_error(
-    filter_state$set_state(filter_var(dataname = "data", varname = "variable", selected = c(TRUE, TRUE, FALSE))),
-    "should be a logical vector of length <= 2"
+    "are not a vector of length one"
   )
   testthat::expect_error(
     filter_state$set_state(filter_var(dataname = "data", varname = "variable", selected = "a")),
@@ -57,7 +53,10 @@ testthat::test_that("set_state: selected accepts a logical (or coercible) of len
 
 testthat::test_that("set_state: multiple parameters accepting boolean and null values", {
   testthat::expect_no_warning(
-    filter_state <- LogicalFilterState$new(logs, dataname = "data", varname = "variable", multiple = FALSE)
+    filter_state <- LogicalFilterState$new(
+      x = logs,
+      slice = filter_var(dataname = "data", varname = "variable", multiple = FALSE)
+    )
   )
 
   testthat::expect_no_error(
@@ -95,7 +94,7 @@ testthat::test_that("get_call returns call always if choices are limited - regar
   )
   testthat::expect_identical(
     shiny::isolate(filter_state$get_call()),
-    quote(variable %in% c(TRUE, FALSE))
+    quote(variable)
   )
 })
 

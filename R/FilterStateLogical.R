@@ -122,38 +122,21 @@ LogicalFilterState <- R6::R6Class( # nolint
                           slice) {
       shiny::isolate({
         checkmate::assert_logical(x)
-        super$initialize(
-          x = x,
-          x_reactive = x_reactive,
-          slice = slice,
-          extract_type = extract_type
-        )
-        checkmate::assert_flag(slice$selected, null.ok = TRUE)
+        checkmate::assert_logical(slice$selected, null.ok = TRUE)
+        super$initialize(x = x, x_reactive = x_reactive, slice = slice, extract_type = extract_type)
+
         private$set_choices(slice$choices)
-
-      args <- list(
-        x = x,
-        x_reactive = x_reactive,
-        dataname = dataname,
-        varname = varname,
-        keep_na = keep_na,
-        keep_inf = keep_inf,
-        fixed = fixed,
-        disabled = disabled,
-        extract_type = extract_type
-      )
-      args <- append(args, list(...))
-      do.call(super$initialize, args)
-
-      if (is.null(selected) && multiple) {
-        selected <- private$choices
-      } else if (length(selected) != 1 && !multiple) {
-        selected <- TRUE
-      }
-      private$set_selected(selected)
-      df <- factor(x, levels = c(TRUE, FALSE))
-      tbl <- table(df)
-      private$set_choices_counts(tbl)
+        if (is.null(slice$multiple)) slice$multiple <- FALSE
+        if (is.null(slice$selected) && slice$multiple) {
+          slice$selected <- private$get_choices()
+        } else if (length(slice$selected) != 1 && !slice$multiple) {
+          slice$selected <- TRUE
+        }
+        private$set_selected(slice$selected)
+        df <- factor(x, levels = c(TRUE, FALSE))
+        tbl <- table(df)
+        private$set_choices_counts(tbl)
+      })
       invisible(self)
     },
 
@@ -189,6 +172,11 @@ LogicalFilterState <- R6::R6Class( # nolint
 
   private = list(
     choices_counts = integer(0),
+
+    get_multiple = function() {
+      shiny::isolate(private$teal_slice$multiple)
+    },
+
     set_choices = function(choices) {
       private$teal_slice$choices <- c(TRUE, FALSE)
       invisible(NULL)
@@ -228,12 +216,12 @@ LogicalFilterState <- R6::R6Class( # nolint
       values_logical
     },
     remove_out_of_bound_values = function(values) {
-      if (length(values) != 1 && !private$multiple) {
+      if (length(values) != 1 && !private$get_multiple()) {
         warning(sprintf(
           "Values: %s are not a vector of length one. The first value will be selected by default.
                         Setting defaults. Varname: %s, dataname: %s.",
           strtrim(paste(values, collapse = ", "), 360),
-          private$varname, private$dataname
+          private$get_varname(), private$get_dataname()
         ))
         values <- shiny::isolate(private$get_selected())
       }
@@ -247,8 +235,8 @@ LogicalFilterState <- R6::R6Class( # nolint
         TRUE
       } else if (all(private$choices_counts > 0)) {
         TRUE
-      } else if (setequal(private$get_selected(), private$choices) &&
-        !anyNA(private$get_selected(), private$choices)) {
+      } else if (setequal(private$get_selected(), private$get_choices()) &&
+        !anyNA(private$get_selected(), private$get_choices())) {
         TRUE
       } else if (!isTRUE(private$get_keep_na()) && private$na_count > 0) {
         TRUE
@@ -282,13 +270,13 @@ LogicalFilterState <- R6::R6Class( # nolint
           countsnow = countsnow,
           countsmax = countsmax
         )
-      ui_input <- if (private$multiple) {
+      ui_input <- if (private$get_multiple()) {
         checkboxGroupInput(
           inputId = ns("selection"),
           label = NULL,
           selected = shiny::isolate(as.character(private$get_selected())),
           choiceNames = labels,
-          choiceValues = factor(as.character(private$choices), levels = c("TRUE", "FALSE")),
+          choiceValues = factor(as.character(private$get_choices()), levels = c("TRUE", "FALSE")),
           width = "100%"
         )
       } else {
@@ -297,7 +285,7 @@ LogicalFilterState <- R6::R6Class( # nolint
           label = NULL,
           selected = shiny::isolate(as.character(private$get_selected())),
           choiceNames = labels,
-          choiceValues = factor(as.character(private$choices), levels = c("TRUE", "FALSE")),
+          choiceValues = factor(as.character(private$get_choices()), levels = c("TRUE", "FALSE")),
           width = "100%"
         )
       }
@@ -323,7 +311,7 @@ LogicalFilterState <- R6::R6Class( # nolint
       moduleServer(
         id = id,
         function(input, output, session) {
-          # this observer is needed in the situation when private$selected has been
+          # this observer is needed in the situation when teal_slice$selected has been
           # changed directly by the api - then it's needed to rerender UI element
           # to show relevant values
           non_missing_values <- reactive(Filter(Negate(is.na), private$x_reactive()))
@@ -350,12 +338,12 @@ LogicalFilterState <- R6::R6Class( # nolint
           })
 
           private$observers$seleted_api <- observeEvent(
-            ignoreNULL = !private$multiple,
+            ignoreNULL = !private$get_multiple(),
             ignoreInit = TRUE,
             eventExpr = private$get_selected(),
             handlerExpr = {
               if (!setequal(private$get_selected(), input$selection)) {
-                if (private$multiple) {
+                if (private$get_multiple()) {
                   updateCheckboxGroupInput(
                     inputId = "selection",
                     selected = private$get_selected()
@@ -388,8 +376,8 @@ LogicalFilterState <- R6::R6Class( # nolint
                   private$get_dataname()
                 )
               )
-              # for private$multiple == TRUE input$selection will always have value
-              if (is.null(input$selection) && isFALSE(private$multiple)) {
+              # for private$get_multiple() == TRUE input$selection will always have value
+              if (is.null(input$selection) && isFALSE(private$get_multiple())) {
                 selection_state <- private$get_selected()
               } else {
                 selection_state <- as.logical(input$selection)
@@ -404,7 +392,7 @@ LogicalFilterState <- R6::R6Class( # nolint
 
           private$keep_na_srv("keep_na")
 
-          logger::log_trace("LogicalFilterState$server initialized, dataname: { private$dataname }")
+          logger::log_trace("LogicalFilterState$server initialized, dataname: { private$get_dataname() }")
           NULL
         }
       )

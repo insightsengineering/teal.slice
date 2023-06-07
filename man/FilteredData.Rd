@@ -758,7 +758,7 @@ List is accessible in \code{ui/srv_active} through \code{ui/srv_available_filter
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
-\item{\code{teal_slices}}{(\code{reactive})\cr
+\item{\code{x}}{(\code{reactive})\cr
 should return \code{teal_slices}}
 }
 \if{html}{\out{</div>}}

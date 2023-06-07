@@ -52,11 +52,11 @@
 #' @param varname `character(1)` name of variable
 #' @param choices optional vector specifying allowed choices;
 #'  possibly a subset of values in data; type and size depends on variable type
+#' @param selected optional vector specifying selection;
+#'  type and size depends on variable type
 #' @param multiple (`logical(1)`)\cr
 #'   flag specifying whether the `FilterState` more than one value can be selected;
 #'   only applicable to `FilterStateChoices` and `FilterStateLogical`
-#' @param selected optional vector specifying selection;
-#'  type and size depends on variable type
 #' @param keep_na `logical(1)` or `NULL` optional logical flag specifying whether to keep missing values
 #' @param keep_inf `logical(1)` or `NULL` optional logical flag specifying whether to keep infinite values
 #' @param fixed `logical(1)` logical flag specifying whether to fix this filter state (i.e. forbid setting state)
@@ -121,10 +121,10 @@ NULL
 filter_var <- function(dataname,
                        varname,
                        choices = NULL,
-                       multiple = NULL,
                        selected = NULL,
                        keep_na = NULL,
                        keep_inf = NULL,
+                       multiple = NULL,
                        fixed = FALSE,
                        id,
                        ...) {

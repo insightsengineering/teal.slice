@@ -627,7 +627,7 @@ FilteredData <- R6::R6Class( # nolint
     #' Unlike adding new filter from the column, these filters can be added with some pre-specified
     #' settings. List of `teal_slices` should be a reactive so one can make this list to be dynamic.
     #' List is accessible in `ui/srv_active` through `ui/srv_available_filters`.
-    #' @param teal_slices (`reactive`)\cr
+    #' @param x (`reactive`)\cr
     #'  should return `teal_slices`
     #' @return invisible `NULL`
     set_available_teal_slices = function(x) {

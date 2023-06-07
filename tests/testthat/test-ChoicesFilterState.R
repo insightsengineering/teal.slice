@@ -77,7 +77,8 @@ testthat::test_that("constructor sets default state", {
 testthat::test_that("constructor forces single selected when multiple is FALSE", {
   testthat::expect_warning(
     state <- ChoicesFilterState$new(
-      x = letters, dataname = "data", varname = "var", selected = c("b", "c"), multiple = FALSE
+      x = letters,
+      slice = filter_var(dataname = "data", varname = "var", selected = c("b", "c"), multiple = FALSE)
     )
   )
   testthat::expect_identical(
@@ -352,19 +353,26 @@ testthat::test_that("set_state sets intersection of choices and passed values", 
 })
 
 testthat::test_that("set_state sets multiple option", {
-  filter_state <- ChoicesFilterState$new(chars, dataname = "data", varname = "variable", multiple = TRUE)
+  filter_state <- ChoicesFilterState$new(
+    x = chars,
+    slice = filter_var(dataname = "data", varname = "variable", multiple = TRUE)
+  )
   testthat::expect_no_error(
     filter_state$set_state(filter_var(dataname = "data", varname = "variable", selected = c("item1", "item3")))
   )
 
   testthat::expect_warning({
-    filter_state <- ChoicesFilterState$new(chars, dataname = "data", varname = "variable", multiple = FALSE)
-    shiny::isolate(
-      filter_state$set_state(filter_var(dataname = "data", varname = "variable", selected = c("item1", "item3")))
+    filter_state <- ChoicesFilterState$new(
+      x = chars,
+      slice = filter_var(dataname = "data", varname = "variable", multiple = FALSE)
     )
+    filter_state$set_state(filter_var(dataname = "data", varname = "variable", selected = c("item1", "item3")))
   })
 
-  filter_state <- ChoicesFilterState$new(facts, dataname = "data", varname = "variable", multiple = TRUE)
+  filter_state <- ChoicesFilterState$new(
+    facts,
+    slice = filter_var(dataname = "data", varname = "variable", multiple = TRUE)
+  )
   testthat::expect_no_error(
     filter_state$set_state(filter_var(dataname = "data", varname = "variable", selected = "item1"))
   )
@@ -422,6 +430,7 @@ testthat::test_that("format shortens names if strings are too long", {
       " $ fixed   : FALSE",
       " $ id      : data variable",
       " $ choices : exceedingly long value nam...",
+      " $ multiple: TRUE",
       " $ selected: exceedinglylongvaluenameex...\n",
       sep = "\n"
     )
