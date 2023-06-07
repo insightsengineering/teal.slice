@@ -172,11 +172,9 @@ LogicalFilterState <- R6::R6Class( # nolint
 
   private = list(
     choices_counts = integer(0),
-
     get_multiple = function() {
       shiny::isolate(private$teal_slice$multiple)
     },
-
     set_choices = function(choices) {
       private$teal_slice$choices <- c(TRUE, FALSE)
       invisible(NULL)
@@ -270,26 +268,26 @@ LogicalFilterState <- R6::R6Class( # nolint
           countsnow = countsnow,
           countsmax = countsmax
         )
-      ui_input <- if (private$get_multiple()) {
-        checkboxGroupInput(
-          inputId = ns("selection"),
-          label = NULL,
-          selected = shiny::isolate(as.character(private$get_selected())),
-          choiceNames = labels,
-          choiceValues = factor(as.character(private$get_choices()), levels = c("TRUE", "FALSE")),
-          width = "100%"
-        )
-      } else {
-        radioButtons(
-          inputId = ns("selection"),
-          label = NULL,
-          selected = shiny::isolate(as.character(private$get_selected())),
-          choiceNames = labels,
-          choiceValues = factor(as.character(private$get_choices()), levels = c("TRUE", "FALSE")),
-          width = "100%"
-        )
-      }
-      if (shiny::isolate(private$is_disabled())) ui_input <- shinyjs::disabled(ui_input)
+        ui_input <- if (private$get_multiple()) {
+          checkboxGroupInput(
+            inputId = ns("selection"),
+            label = NULL,
+            selected = shiny::isolate(as.character(private$get_selected())),
+            choiceNames = labels,
+            choiceValues = factor(as.character(private$get_choices()), levels = c("TRUE", "FALSE")),
+            width = "100%"
+          )
+        } else {
+          radioButtons(
+            inputId = ns("selection"),
+            label = NULL,
+            selected = shiny::isolate(as.character(private$get_selected())),
+            choiceNames = labels,
+            choiceValues = factor(as.character(private$get_choices()), levels = c("TRUE", "FALSE")),
+            width = "100%"
+          )
+        }
+        if (shiny::isolate(private$is_disabled())) ui_input <- shinyjs::disabled(ui_input)
         div(
           div(
             class = "choices_state",
