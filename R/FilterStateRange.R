@@ -136,6 +136,9 @@ RangeFilterState <- R6::R6Class( # nolint
     #'   name of the variable.
     #' @param choices (`atomic`, `NULL`)\cr
     #'   vector specifying allowed selection values
+    #' @param multiple (`logical(1)`)\cr
+    #'   flag specifying whether the `FilterState` more than one value can be selected;
+    #'   only applicable to `FilterStateChoices` and `FilterStateLogical`
     #' @param selected (`atomic`, `NULL`)\cr
     #'   vector specifying selection
     #' @param keep_na (`logical(1)`, `NULL`)\cr
@@ -160,6 +163,7 @@ RangeFilterState <- R6::R6Class( # nolint
                           dataname,
                           varname,
                           choices = NULL,
+                          multiple = NULL,
                           selected = NULL,
                           keep_na = NULL,
                           keep_inf = NULL,
@@ -179,6 +183,7 @@ RangeFilterState <- R6::R6Class( # nolint
         x_reactive = x_reactive,
         dataname = dataname,
         varname = varname,
+        multiple = multiple,
         keep_na = keep_na,
         keep_inf = keep_inf,
         fixed = fixed,
@@ -195,6 +200,9 @@ RangeFilterState <- R6::R6Class( # nolint
       private$inf_count <- sum(is.infinite(x))
 
       private$set_choices(choices)
+      if (is.null(selected)) {
+        selected <- private$choices
+      }
       private$set_selected(selected)
 
       private$unfiltered_histogram <- ggplot2::ggplot(data.frame(x = Filter(is.finite, private$x))) +
