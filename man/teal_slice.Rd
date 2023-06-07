@@ -17,24 +17,23 @@
 \alias{format.teal_slices}
 \alias{print.teal_slices}
 \alias{slices_field}
-\alias{slices_which}
 \title{Manage filter state(s).}
 \usage{
 filter_var(
   dataname,
   varname,
   choices = NULL,
-  multiple = NULL,
   selected = NULL,
   keep_na = NULL,
   keep_inf = NULL,
-  disabled = FALSE,
   fixed = FALSE,
   locked = FALSE,
+  multiple = TRUE,
+  id,
   ...
 )
 
-filter_expr(dataname, id, title, expr, disabled = FALSE, locked = FALSE, ...)
+filter_expr(dataname, id, title, expr, locked = FALSE, ...)
 
 filter_settings(
   ...,
@@ -66,8 +65,6 @@ as.teal_slices(x)
 \method{print}{teal_slices}(x, ...)
 
 slices_field(tss, field)
-
-slices_which(tss, expr)
 }
 \arguments{
 \item{dataname}{\code{character(1)} name of data set}
@@ -77,10 +74,6 @@ slices_which(tss, expr)
 \item{choices}{optional vector specifying allowed choices;
 possibly a subset of values in data; type and size depends on variable type}
 
-\item{multiple}{(\code{logical(1)})\cr
-flag specifying whether the \code{FilterState} more than one value can be selected;
-only applicable to \code{FilterStateChoices} and \code{FilterStateLogical}}
-
 \item{selected}{optional vector specifying selection;
 type and size depends on variable type}
 
@@ -88,19 +81,20 @@ type and size depends on variable type}
 
 \item{keep_inf}{\code{logical(1)} or \code{NULL} optional logical flag specifying whether to keep infinite values}
 
-\item{disabled}{(\code{logical(1)})\cr
-flag specifying whether the \code{FilterState} is initiated disabled}
-
 \item{fixed}{\code{logical(1)} logical flag specifying whether to fix this filter state (forbid setting state)}
 
 \item{locked}{\code{logical(1)} logical flag specifying whether to lock this filter state (forbid disabling and removing)}
 
-\item{...}{for \code{filter_var} and \code{filter_expr} any number of additional fields given as \code{name:value} pairs\cr
-for \code{filter_settings} any number of \code{teal_slice} objects\cr
-for other functions arguments passed to other methods}
+\item{multiple}{(\code{logical(1)})\cr
+flag specifying whether the \code{FilterState} more than one value can be selected;
+only applicable to \code{FilterStateChoices} and \code{FilterStateLogical}}
 
 \item{id}{(\code{character(1)})\cr
 identifier of the filter}
+
+\item{...}{for \code{filter_var} and \code{filter_expr} any number of additional fields given as \code{name:value} pairs\cr
+for \code{filter_settings} any number of \code{teal_slice} objects\cr
+for other functions arguments passed to other methods}
 
 \item{title}{(\code{reactive})\cr
 title of the filter (used by \code{filter_expr})}
@@ -159,14 +153,12 @@ as \code{name:value} pairs. These are collated into a list and stored in the
 All \code{teal_slice} fields can be passed as arguments to \code{FilterState} constructors.
 A \code{teal_slice} can be passed to \code{FilterState$set_state}, which will modify the state.
 However, once a \code{FilterState} is created, only the \strong{mutable} features can be set with a \code{teal_slice}:
-\code{selected}, \code{keep_na}, \code{keep_inf}, and \code{disabled}.
+\code{selected}, \code{keep_na} and \code{keep_inf}.
 
 Special consideration is given to two fields: \code{fixed} and \code{locked}.
 These are always immutable logical flags that default to FALSE.
 In a \code{FilterState} instantiated with \code{fixed = TRUE} the features \code{selected}, \code{keep_na}, \code{keep_inf}
-cannot be changed but the \code{disabled} feature can.
-A \code{FilterState} instantiated with \code{locked = TRUE} cannot be disabled or removed.
-Any combination of \code{fixed} and \code{locked} is permitted.
+cannot be changed.
 
 \code{filter_var} creates a \code{teal_slice} object, which specifies a filter for a single variable,
 passed to and resolved by \code{FilterState} objects.
@@ -213,11 +205,6 @@ all_filters <- filter_settings(
     "dataname1" = "varname2"
   )
 )
-
-teal.slice:::slices_which(all_filters, 'dataname == "dataname2"')
-x <- "dataname2"
-teal.slice:::slices_which(all_filters, sprintf('dataname == "\%s"', x))
-teal.slice:::slices_field(all_filters, "dataname")
 
 filter_expr(
   dataname = "data",

@@ -10,8 +10,7 @@ Manages choosing a range of Dates
 \examples{
 filter_state <- teal.slice:::DateFilterState$new(
   x = c(Sys.Date() + seq(1:10), NA),
-  varname = "x",
-  dataname = "data",
+  slice = filter_var(varname = "x", dataname = "data"),
   extract_type = character(0)
 )
 shiny::isolate(filter_state$get_call())
@@ -34,10 +33,9 @@ dates <- c(Sys.Date() - 100, Sys.Date())
 data_date <- c(seq(from = dates[1], to = dates[2], length.out = 100), NA)
 fs <- DateFilterState$new(
   x = data_date,
-  dataname = "data",
-  varname = "x",
-  selected = data_date[c(47, 98)],
-  keep_na = TRUE
+  slice = filter_var(
+    dataname = "data", varname = "x", selected = data_date[c(47, 98)], keep_na = TRUE
+  )
 )
 
 ui <- fluidPage(
@@ -137,17 +135,8 @@ Initialize a \code{FilterState} object
 \if{html}{\out{<div class="r">}}\preformatted{DateFilterState$new(
   x,
   x_reactive = reactive(NULL),
-  dataname,
-  varname,
-  choices = NULL,
-  multiple = NULL,
-  selected = NULL,
-  keep_na = NULL,
-  keep_inf = NULL,
-  fixed = FALSE,
-  disabled = FALSE,
-  extract_type = character(0),
-  ...
+  slice,
+  extract_type = character(0)
 )}\if{html}{\out{</div>}}
 }
 
@@ -163,34 +152,12 @@ counts following the change in values of the filtered dataset.
 If it is set to \code{reactive(NULL)} then counts based on filtered
 dataset are not shown.}
 
-\item{\code{dataname}}{(\code{character(1)})\cr
-optional name of dataset where \code{x} is taken from. Must be specified
-if \code{extract_type} argument is not empty.}
-
-\item{\code{varname}}{(\code{character(1)})\cr
-name of the variable.}
-
-\item{\code{choices}}{(\code{atomic}, \code{NULL})\cr
-vector specifying allowed selection values}
-
-\item{\code{multiple}}{(\code{logical(1)})\cr
-flag specifying whether the \code{FilterState} more than one value can be selected;
-only applicable to \code{FilterStateChoices} and \code{FilterStateLogical}}
-
-\item{\code{selected}}{(\code{atomic}, \code{NULL})\cr
-vector specifying selection}
-
-\item{\code{keep_na}}{(\code{logical(1)}, \code{NULL})\cr
-flag specifying whether to keep missing values}
-
-\item{\code{keep_inf}}{(\code{logical(1)}, \code{NULL})\cr
-flag specifying whether to keep infinite values}
-
-\item{\code{fixed}}{(\code{logical(1)})\cr
-flag specifying whether the \code{FilterState} is initiated fixed}
-
-\item{\code{disabled}}{(\code{logical(1)})\cr
-flag specifying whether the \code{FilterState} is initiated disabled}
+\item{\code{slice}}{(\code{teal_slice})\cr
+object created using \code{\link[=filter_var]{filter_var()}}. \code{teal_slice} is stored
+in the class and \code{set_state} directly manipulates values within \code{teal_slice}. \code{get_state}
+returns \code{teal_slice} object which can be reused in other places. Beware, that \code{teal_slice}
+is an immutable object which means that changes in particular object are automatically
+reflected in all places which refer to the same \code{teal_slice}.}
 
 \item{\code{extract_type}}{(\code{character(0)}, \code{character(1)})\cr
 whether condition calls should be prefixed by dataname. Possible values:
