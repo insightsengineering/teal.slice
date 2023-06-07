@@ -85,12 +85,16 @@ test_that("check_simple_name behaves as expected", {
   testthat::expect_error(check_simple_name("_A_b"), "name '.+' must only contain alphanumeric characters")
 })
 
-
-
 # get_teal_bs_theme ----
 testthat::test_that("get_teal_bs_theme", {
   testthat::expect_true(is.null(get_teal_bs_theme()))
   withr::with_options(list("teal.bs_theme" = bslib::bs_theme(version = "5")), {
     testthat::expect_s3_class(get_teal_bs_theme(), "bs_theme")
   })
+})
+
+# make_c_call ----
+testthat::test_that("make_c_call", {
+  testthat::expect_identical(teal.slice:::make_c_call(1:3), quote(c(1L, 2L, 3L)))
+  testthat::expect_identical(teal.slice:::make_c_call(1), 1)
 })

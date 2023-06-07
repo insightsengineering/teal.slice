@@ -107,9 +107,9 @@
 #' `filter_settings` returns object of class `teal_slices`, which is an unnamed list of `teal_slice` objects.
 #'
 #' @examples
-#' filter_1 <- filter_var("dataname1", "varname1", letters, "b", FALSE, extra1 = "extraone")
-#' filter_2 <- filter_var("dataname1", "varname2", 1:10, 2, TRUE, FALSE, extra2 = "extratwo")
-#' filter_3 <- filter_var("dataname2", "varname3", 1:10 / 10, 0.2, TRUE, FALSE,
+#' filter_1 <- filter_var("dataname1", "varname1", letters, TRUE, "b", FALSE, extra1 = "extraone")
+#' filter_2 <- filter_var("dataname1", "varname2", 1:10, TRUE, 2, TRUE, FALSE, extra2 = "extratwo")
+#' filter_3 <- filter_var("dataname2", "varname3", 1:10 / 10, TRUE, 0.2, TRUE, FALSE,
 #'   extra1 = "extraone", extra2 = "extratwo"
 #' )
 #'
