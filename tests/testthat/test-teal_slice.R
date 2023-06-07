@@ -10,7 +10,38 @@ testthat::test_that("filter_var checks arguments", {
       selected = NULL,
       keep_na = NULL,
       keep_inf = NULL,
-      fixed = FALSE
+      fixed = FALSE,
+      locked = FALSE,
+      disabled = FALSE
+    )
+  )
+
+  testthat::expect_no_error(
+    filter_var(
+      dataname = "data",
+      varname = "var",
+      choices = NULL,
+      selected = NULL,
+      keep_na = NULL,
+      keep_inf = NULL,
+      fixed = FALSE,
+      locked = TRUE,
+      disabled = FALSE
+    )
+  )
+
+
+  testthat::expect_no_error(
+    filter_var(
+      dataname = "data",
+      varname = "var",
+      choices = NULL,
+      selected = NULL,
+      keep_na = NULL,
+      keep_inf = NULL,
+      fixed = TRUE,
+      locked = TRUE,
+      disabled = TRUE
     )
   )
 
@@ -64,12 +95,30 @@ testthat::test_that("filter_var checks arguments", {
   )
 
   testthat::expect_error(
+    filter_var(dataname = "data", varname = "var", disabled = NULL),
+    "Assertion on 'disabled' failed"
+  )
+  testthat::expect_error(
+    filter_var(dataname = "data", varname = "var", disabled = "TRUE"),
+    "Assertion on 'disabled' failed"
+  )
+
+  testthat::expect_error(
     filter_var(dataname = "data", varname = "var", fixed = NULL),
     "Assertion on 'fixed' failed"
   )
   testthat::expect_error(
     filter_var(dataname = "data", varname = "var", fixed = "TRUE"),
     "Assertion on 'fixed' failed"
+  )
+
+  testthat::expect_error(
+    filter_var(dataname = "data", varname = "var", locked = NULL),
+    "Assertion on 'locked' failed"
+  )
+  testthat::expect_error(
+    filter_var(dataname = "data", varname = "var", locked = "TRUE"),
+    "Assertion on 'locked' failed"
   )
 })
 
@@ -498,7 +547,9 @@ testthat::test_that("slices_field works", {
   testthat::expect_identical(slices_field(fs, "dataname"), "data")
   testthat::expect_identical(slices_field(fs, "varname"), c("var1", "var2"))
   testthat::expect_identical(slices_field(fs, "choices"), NULL)
+  testthat::expect_identical(slices_field(fs, "disabled"), FALSE)
   testthat::expect_identical(slices_field(fs, "fixed"), FALSE)
+  testthat::expect_identical(slices_field(fs, "locked"), FALSE)
 })
 
 testthat::test_that("filter_expr id has to be a string", {

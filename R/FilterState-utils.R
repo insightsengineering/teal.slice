@@ -13,7 +13,7 @@
 #'   class and can be shared in other places. Shared `teal_slice` object behaves in the
 #'   way that changes in one place are reflected in other places.
 #' @param extract_type (`character(0)`, `character(1)`)\cr
-#' whether condition calls should be prefixed by dataname. Possible values:
+#'   specifying whether condition calls should be prefixed by `dataname`. Possible values:
 #' \itemize{
 #' \item{`character(0)` (default)}{ `varname` in the condition call will not be prefixed}
 #' \item{`"list"`}{ `varname` in the condition call will be returned as `<dataname>$<varname>`}

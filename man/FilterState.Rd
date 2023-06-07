@@ -71,8 +71,21 @@ Initialize a \code{FilterState} object
 \if{html}{\out{<div class="r">}}\preformatted{FilterState$new(
   x,
   x_reactive = reactive(NULL),
+<<<<<<< HEAD
   slice,
   extract_type = character(0)
+=======
+  dataname,
+  varname,
+  multiple = NULL,
+  keep_na = NULL,
+  keep_inf = NULL,
+  disabled = FALSE,
+  fixed = FALSE,
+  locked = FALSE,
+  extract_type = character(0),
+  ...
+>>>>>>> filter_panel_refactor@main
 )}\if{html}{\out{</div>}}
 }
 
@@ -88,15 +101,43 @@ counts following the change in values of the filtered dataset.
 If it is set to \code{reactive(NULL)} then counts based on filtered
 dataset are not shown.}
 
+<<<<<<< HEAD
 \item{\code{slice}}{(\code{teal_slice})\cr
 object created using \code{\link[=filter_var]{filter_var()}}. \code{teal_slice} is stored
 in the class and \code{set_state} directly manipulates values within \code{teal_slice}. \code{get_state}
 returns \code{teal_slice} object which can be reused in other places. Beware, that \code{teal_slice}
 is an immutable object which means that changes in particular object are automatically
 reflected in all places which refer to the same \code{teal_slice}.}
+=======
+\item{\code{dataname}}{(\code{character(1)})\cr
+optional name of dataset where \code{x} is taken from. Must be specified
+if \code{extract_type} argument is not empty.}
+
+\item{\code{varname}}{(\code{character(1)})\cr
+name of the variable.}
+
+\item{\code{multiple}}{(\code{logical(1)})\cr
+flag specifying whether the \code{FilterState} more than one value can be selected;
+only applicable to \code{FilterStateChoices} and \code{FilterStateLogical}}
+
+\item{\code{keep_na}}{(\code{logical(1)}, \code{NULL})\cr
+flag specifying whether to keep missing values}
+
+\item{\code{keep_inf}}{(\code{logical(1)}, \code{NULL})\cr
+flag specifying whether to keep infinite values}
+
+\item{\code{disabled}}{(\code{logical(1)})\cr
+flag specifying whether the \code{FilterState} is initiated disabled}
+
+\item{\code{fixed}}{(\code{logical(1)})\cr
+flag specifying whether the \code{FilterState} is initiated fixed}
+
+\item{\code{locked}}{(\code{logical(1)}) \cr
+flag specifying whether to lock this filter state (forbid disabling and removing)}
+>>>>>>> filter_panel_refactor@main
 
 \item{\code{extract_type}}{(\code{character(0)}, \code{character(1)})\cr
-whether condition calls should be prefixed by dataname. Possible values:
+specifying whether condition calls should be prefixed by \code{dataname}. Possible values:
 \itemize{
 \item{\code{character(0)} (default)}{ \code{varname} in the condition call will not be prefixed}
 \item{\code{"list"}}{ \code{varname} in the condition call will be returned as \verb{<dataname>$<varname>}}
@@ -153,6 +194,11 @@ Prints this \code{FilterState} object.
 \if{latex}{\out{\hypertarget{method-FilterState-set_state}{}}}
 \subsection{Method \code{set_state()}}{
 Sets filtering state.
+\itemize{
+\item \code{fixed} state is prevented from changing state
+\item \code{disabled} state is prevented from changing state, but may be enabled and changed in one operation
+\item \code{locked} state is prevented from changing \code{disabled} status
+}
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{FilterState$set_state(state)}\if{html}{\out{</div>}}
 }

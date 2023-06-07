@@ -631,6 +631,40 @@ testthat::test_that("remove_filter_state removes states specified by `teal_slice
   )
 })
 
+testthat::test_that("remove_filter_state does not remove locked filters", {
+  datasets <- teal.slice:::FilteredData$new(
+    list(
+      iris = list(dataset = iris),
+      mtcars = list(dataset = mtcars, metadata = list(type = "training"))
+    )
+  )
+  fs <- filter_settings(
+    filter_var(
+      dataname = "iris", varname = "Sepal.Length", selected = c(5.1, 6.4),
+      keep_na = FALSE, keep_inf = FALSE
+    ),
+    filter_var(
+      dataname = "iris", varname = "Species", selected = c("setosa", "versicolor"),
+      keep_na = FALSE, locked = TRUE
+    ),
+    filter_var(
+      dataname = "iris", varname = "Sepal.Width", selected = c(2.5, 3.3),
+      keep_na = FALSE, keep_inf = FALSE, locked = TRUE
+    )
+  )
+  datasets$set_filter_state(state = fs)
+
+  state <- fs[1:2]
+
+  datasets$remove_filter_state(state)
+
+  testthat::expect_length(shiny::isolate(datasets$get_filter_state()), 2)
+  testthat::expect_true(
+    teal.slice:::slices_field(shiny::isolate(datasets$get_filter_state()), "locked")
+  )
+})
+
+
 # clear_filter_states ----
 testthat::test_that("clear_filter_states removes all filters of all datasets in FilteredData", {
   datasets <- FilteredData$new(
@@ -670,6 +704,36 @@ testthat::test_that("clear_filter_states removes filters of desired dataset only
   testthat::expect_identical(shiny::isolate(slices_field(datasets$get_filter_state(), "dataname")), "mtcars")
 })
 
+testthat::test_that("clear_filter_states does not remove locked filters", {
+  datasets <- teal.slice:::FilteredData$new(
+    list(
+      iris = list(dataset = iris),
+      mtcars = list(dataset = mtcars, metadata = list(type = "training"))
+    )
+  )
+  fs <- filter_settings(
+    filter_var(
+      dataname = "iris", varname = "Sepal.Length", selected = c(5.1, 6.4),
+      keep_na = FALSE, keep_inf = FALSE
+    ),
+    filter_var(
+      dataname = "iris", varname = "Species", selected = c("setosa", "versicolor"),
+      keep_na = FALSE, locked = TRUE
+    ),
+    filter_var(
+      dataname = "iris", varname = "Sepal.Width", selected = c(2.5, 3.3),
+      keep_na = FALSE, keep_inf = FALSE, locked = TRUE
+    )
+  )
+  datasets$set_filter_state(state = fs)
+
+  datasets$clear_filter_states()
+
+  testthat::expect_length(shiny::isolate(datasets$get_filter_state()), 2)
+  testthat::expect_true(
+    teal.slice:::slices_field(shiny::isolate(datasets$get_filter_state()), "locked")
+  )
+})
 
 # get_filter_overview ----
 testthat::test_that("get_filter_overview checks arguments", {

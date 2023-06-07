@@ -6,23 +6,25 @@
 #' A single filter state can be fully described by a `teal_slice` object and such
 #' objects will be used to create, modify, and delete a filter state.
 #'
-#' A `teal_slice` contains a number of common fields (all named arguments of `filter_var`)
-#' but only `dataname` and `varname` are mandatory, while the others have default values.
-#' Setting any of the other values to NULL means that these parameters will not be modified
+#' A `teal_slice` contains a number of common fields (all named arguments of `filter_var`),
+#' some of which are mandatory, but only `dataname` and `varname` must be specified,
+#' while the others have default values.
+#' Setting any of the other values to NULL means that those properties will not be modified
 #' (when setting an existing state) or that they will be determined by data (when creating new a new one).
 #' Each of the common fields corresponds to one private field in `FilterState`
 #' where it is stored and from where it is retrieved when calling `FiterState$get_state`.
 #'
 #' A `teal_slice` can also contain any number of additional fields, passed to `...`
 #' as `name:value` pairs. These are collated into a list and stored in the
-#' `private$extras` field.
+#' `private$extras` field in `FilterState`.
 #'
 #' All `teal_slice` fields can be passed as arguments to `FilterState` constructors.
 #' A `teal_slice` can be passed to `FilterState$set_state`, which will modify the state.
 #' However, once a `FilterState` is created, only the **mutable** features can be set with a `teal_slice`:
 #' `selected`, `keep_na` and `keep_inf`.
 #'
-#' Special consideration is given to the `fixed` field. This is always a logical flag that defaults to FALSE.
+#' Special consideration is given to two fields: `fixed` and `locked`.
+#' These are always immutable logical flags that default to FALSE.
 #' In a `FilterState` instantiated with `fixed = TRUE` the features `selected`, `keep_na`, `keep_inf`
 #' cannot be changed.
 #'
@@ -33,6 +35,11 @@
 #' as well as `filter_panel_api` wrapper functions.
 #' `teal_slices` also specifies which variables cannot be filtered
 #' and how observations are tallied, which is resolved by `FilterStates`.
+#'
+#' `include_varnames` and `exclude_varnames` in attributes in `teal_slices`
+#' determine which variables can have filters assigned.
+#' The former enumerates allowed variables, the latter enumerates forbidden values.
+#' Since these can be mutually exclusive in some cases, they cannot both be set in one `teal_slices` object.
 #'
 #' @section Filters in `SumarizedExperiment` and `MultiAssayExperiment` objects:
 #'
@@ -48,6 +55,7 @@
 #' that names either an experiment (as listed in `experimentList(<MAE>)`) or "subjects"
 #' if it refers to the `MultiAssaysExperiment` `colData`. They must **also** specify `arg` as "subset" or "select"
 #' for experiments and as "y" for `colData`.
+#'
 #' @param dataname `character(1)` name of data set
 #' @param varname `character(1)` name of variable
 #' @param choices optional vector specifying allowed choices;
@@ -59,15 +67,12 @@
 #'   only applicable to `FilterStateChoices` and `FilterStateLogical`
 #' @param keep_na `logical(1)` or `NULL` optional logical flag specifying whether to keep missing values
 #' @param keep_inf `logical(1)` or `NULL` optional logical flag specifying whether to keep infinite values
-#' @param fixed `logical(1)` logical flag specifying whether to fix this filter state (i.e. forbid setting state)
-#' @param include_varnames `named list` of `character` vectors where list names match names of data sets
-#'  and vector elements match variable names in respective data sets;
-#'  specifies which variables are not allowed to be filtered.
-#'  Both `include_varnames` and `exclude_varnames` can't be specified for the same dataset in the same call.
-#' @param exclude_varnames `named list` of `character` vectors where list names match names of data sets
-#'  and vector elements match variable names in respective data sets;
-#'  specifies which variables are not allowed to be filtered.
-#'  Both `include_varnames` and `exclude_varnames` can't be specified for the same dataset in the same call.
+#' @param disabled `logical(1)` logical flag specifying whether to disable this filter state
+#' @param fixed `logical(1)` logical flag specifying whether to fix this filter state (forbid setting state)
+#' @param locked `logical(1)` logical flag specifying whether to lock this filter state (forbid disabling and removing)
+#' @param include_varnames,exclude_varnames `named list`s of `character` vectors where list names
+#'  match names of data sets and vector elements match variable names in respective data sets;
+#'  specify which variables are allowed to be filtered; see `Details`
 #' @param count_type `character(1)` string specifying how observations are tallied by these filter states.
 #'  Possible options:
 #'  - `"all"` to have counts of single `FilterState` to show number of observation in filtered
@@ -78,21 +83,23 @@
 #' @param title (`reactive`)\cr
 #'   title of the filter (used by `filter_expr`)
 #' @param expr (`language`)\cr
-#'   logical expression written in executable way. By "executable" means
-#'   that `subset` call should be able to evaluate this without failure. For
+#'   logical expression written in executable way, see `Details`
+#'   where "executable" means
+#'   that a `subset` call should be able to evaluate this without failure. For
 #'   example `MultiAssayExperiment::subsetByColData` requires variable names prefixed
-#'   by dataname (e.g. `data$var1 == "x" & data$var2 > 0`). For `data.frame` call
+#'   by `dataname` (e.g. `data$var1 == "x" & data$var2 > 0`). For `data.frame` call
 #'   can be written without prefixing `var1 == "x" & var2 > 0`.
 #' @param ... additional arguments to be saved as a list in `private$extras` field
 #' @param show_all `logical(1)` specifying whether NULL elements should also be printed
 #' @param tss `teal_slices`
 #' @param field `character(1)` name of `teal_slice` element
-#' @param ... for `filter_var` any number of additional fields given as `name:value` pairs\cr
+#' @param ... for `filter_var` and `filter_expr` any number of additional fields given as `name:value` pairs\cr
 #'            for `filter_settings` any number of `teal_slice` objects\cr
 #'            for other functions arguments passed to other methods
 #'
 #' @return
 #' `filter_var` returns object of class `teal_slice`, which is a named list.
+#' `filter_expr` returns object of class `teal_slice_expr`, which inherits from `teal_slice`.
 #' `filter_settings` returns object of class `teal_slices`, which is an unnamed list of `teal_slice` objects.
 #'
 #' @examples
@@ -124,8 +131,9 @@ filter_var <- function(dataname,
                        selected = NULL,
                        keep_na = NULL,
                        keep_inf = NULL,
-                       multiple = NULL,
+                       disabled = FALSE,
                        fixed = FALSE,
+                       locked = FALSE,
                        id,
                        ...) {
   checkmate::assert_string(dataname)
@@ -135,6 +143,7 @@ filter_var <- function(dataname,
   checkmate::assert_multi_class(selected, .filterable_class, null.ok = TRUE)
   checkmate::assert_flag(keep_na, null.ok = TRUE)
   checkmate::assert_flag(keep_inf, null.ok = TRUE)
+  checkmate::assert_flag(disabled)
   checkmate::assert_flag(fixed)
   ans <- c(as.list(environment()), list(...))
   ans <- Filter(Negate(is.null), ans)
@@ -155,7 +164,7 @@ filter_var <- function(dataname,
 #'   title = "Female adults",
 #'   expr = "SEX == 'F' & AGE >= 18"
 #' )
-filter_expr <- function(dataname, id, title, expr, ...) {
+filter_expr <- function(dataname, id, title, expr, disabled = FALSE, locked = FALSE, ...) {
   checkmate::assert_string(dataname)
   checkmate::assert_string(id)
   checkmate::assert_string(title)

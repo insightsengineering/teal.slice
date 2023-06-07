@@ -55,6 +55,8 @@ testthat::test_that("set_filter_state and get_filter_state, sets and returns the
     filter_var(
       dataname = "test", varname = "a", choices = c(1, 5), selected = c(1, 4), keep_na = FALSE, keep_inf = FALSE,
       fixed = FALSE, any_attribute = "a", another_attribute = "b"
+      disabled = FALSE, fixed = FALSE, locked = FALSE,
+      any_attribute = "a", another_attribute = "b"
     ),
     count_type = "none"
   )
@@ -68,7 +70,7 @@ existing filter", {
   fs <- filter_settings(
     filter_var(
       dataname = "test", varname = "a", choices = c(1, 5), selected = c(1, 4), keep_na = FALSE, keep_inf = FALSE,
-      fixed = FALSE, any_attribute = "a", another_attribute = "b"
+      disabled = FALSE, fixed = FALSE, locked = FALSE, any_attribute = "a", another_attribute = "b"
     ),
     count_type = "none"
   )
@@ -373,16 +375,16 @@ testthat::test_that("Adding 'var_to_add' adds another filter state", {
     filter_settings(
       filter_var(
         dataname = "iris", varname = "Sepal.Length", choices = c(4.3, 7.9), selected = c(5.1, 6.4),
-        keep_na = FALSE, keep_inf = FALSE, fixed = FALSE
+        keep_na = FALSE, keep_inf = FALSE, disabled = FALSE, fixed = FALSE, locked = FALSE
       ),
       filter_var(
         dataname = "iris", varname = "Petal.Length", choices = c(1.0, 6.9), selected = c(1.0, 6.9),
-        keep_na = NULL, keep_inf = NULL, fixed = FALSE
+        keep_na = NULL, keep_inf = NULL, disabled = FALSE, fixed = FALSE, locked = FALSE
       ),
       filter_var(
         dataname = "iris", varname = "Species", choices = c("setosa", "versicolor", "virginica"),
-        selected = c("setosa", "versicolor", "virginica"), keep_na = NULL, keep_inf = NULL,
-        fixed = FALSE, multiple = TRUE
+        multiple = TRUE, selected = c("setosa", "versicolor", "virginica"), keep_na = NULL, keep_inf = NULL,
+        disabled = FALSE, fixed = FALSE, locked = FALSE
       ),
       count_type = "all"
     )
