@@ -389,7 +389,7 @@ testthat::test_that("Adding 'var_to_add' adds another filter state", {
       ),
       filter_var(
         dataname = "iris", varname = "Species", choices = c("setosa", "versicolor", "virginica"),
-        selected = c("setosa", "versicolor", "virginica"), keep_na = NULL, keep_inf = NULL,
+        multiple = TRUE, selected = c("setosa", "versicolor", "virginica"), keep_na = NULL, keep_inf = NULL,
         disabled = FALSE, fixed = FALSE, locked = FALSE
       ),
       count_type = "all"

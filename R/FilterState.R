@@ -59,6 +59,9 @@ FilterState <- R6::R6Class( # nolint
     #'   if `extract_type` argument is not empty.
     #' @param varname (`character(1)`)\cr
     #'   name of the variable.
+    #' @param multiple (`logical(1)`)\cr
+    #'   flag specifying whether the `FilterState` more than one value can be selected;
+    #'   only applicable to `FilterStateChoices` and `FilterStateLogical`
     #' @param keep_na (`logical(1)`, `NULL`)\cr
     #'   flag specifying whether to keep missing values
     #' @param keep_inf (`logical(1)`, `NULL`)\cr
@@ -84,6 +87,7 @@ FilterState <- R6::R6Class( # nolint
                           x_reactive = reactive(NULL),
                           dataname,
                           varname,
+                          multiple = NULL,
                           keep_na = NULL,
                           keep_inf = NULL,
                           disabled = FALSE,
@@ -93,6 +97,7 @@ FilterState <- R6::R6Class( # nolint
                           ...) {
       checkmate::assert_class(x_reactive, "reactive")
       checkmate::assert_string(dataname)
+      checkmate::assert_flag(multiple, null.ok = TRUE)
       checkmate::assert_string(varname)
       checkmate::assert_flag(keep_na, null.ok = TRUE)
       checkmate::assert_flag(keep_inf, null.ok = TRUE)
@@ -117,6 +122,7 @@ FilterState <- R6::R6Class( # nolint
       # Set state properties.
       private$dataname <- dataname
       private$varname <- varname
+      private$multiple <- multiple
       private$selected <- reactiveVal()
       private$keep_na <- if (is.null(keep_na) && anyNA(x)) reactiveVal(TRUE) else reactiveVal(keep_na)
       private$keep_inf <- reactiveVal(keep_inf)
@@ -231,6 +237,7 @@ FilterState <- R6::R6Class( # nolint
         dataname = private$get_dataname(),
         varname = private$get_varname(),
         choices = private$choices,
+        multiple = private$multiple,
         selected = private$get_selected(),
         keep_na = private$get_keep_na(),
         keep_inf = private$get_keep_inf(),
@@ -391,6 +398,7 @@ FilterState <- R6::R6Class( # nolint
     dataname = character(0),
     varname = character(0),
     choices = NULL, # because each class has different choices type
+    multiple = logical(0),
     selected = NULL, # reactiveVal holding vector of choices (depends on class)
     keep_na = NULL, # reactiveVal holding a logical(1)
     keep_inf = NULL, # reactiveVal holding a logical(1)
@@ -431,7 +439,6 @@ FilterState <- R6::R6Class( # nolint
           private$dataname
         )
       )
-      if (is.null(value)) value <- private$choices
       value <- private$cast_and_validate(value)
       value <- private$remove_out_of_bound_values(value)
       private$validate_selection(value)
@@ -469,7 +476,7 @@ FilterState <- R6::R6Class( # nolint
           value
         )
       )
-
+      private$set_na_rm(!value)
       invisible(NULL)
     },
 
