@@ -486,6 +486,10 @@ ChoicesFilterState <- R6::R6Class( # nolint
           # changed directly by the api - then it's needed to rerender UI element
           # to show relevant values
           private$observers$selection_api <- observeEvent(private$get_selected(), {
+            # todo: change observeEvent to renderUI - it observes teal_slice$selected
+            #       do it triggers when selected changes in other (invisible) tabs
+            #       this should be triggered when the tab is active only
+            #       same should be done with keep_na and keep_inf observer
             if (!isTRUE(all.equal(input$selection, private$get_selected()))) {
               logger::log_trace(sprintf(
                 "ChoicesFilterState$server@2 state of variable %s changed, dataname: %s",

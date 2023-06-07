@@ -120,7 +120,7 @@ FilteredData <- R6::R6Class( # nolint
         }
       }
 
-      self$set_external_teal_slices(x = reactive(NULL))
+      self$set_available_teal_slices(x = reactive(NULL))
 
       invisible(self)
     },
@@ -625,11 +625,12 @@ FilteredData <- R6::R6Class( # nolint
     #' Set external `teal_slice`
     #'
     #' Unlike adding new filter from the column, these filters can be added with some pre-specified
-    #' settings.
+    #' settings. List of `teal_slices` should be a reactive so one can make this list to be dynamic.
+    #' List is accessible in `ui/srv_active` through `ui/srv_available_filters`.
     #' @param teal_slices (`reactive`)\cr
     #'  should return `teal_slices`
     #' @return invisible `NULL`
-    set_external_teal_slices = function(x) {
+    set_available_teal_slices = function(x) {
       checkmate::assert_class(x, "reactive")
       private$external_teal_slices <- x
       invisible(NULL)
@@ -1080,6 +1081,12 @@ FilteredData <- R6::R6Class( # nolint
     get_filter_count = function() {
       length(self$get_filter_state())
     },
+
+    # @description
+    # Activate available filters.
+    # Module is composed from plus button and dropdown menu. Menu is shown when
+    # the button is clicked. Menu contains available/active filters list
+    # passed via `set_available_teal_slice`.
     ui_available_filters = function(id) {
       ns <- NS(id)
 
@@ -1098,6 +1105,11 @@ FilteredData <- R6::R6Class( # nolint
         )
       )
     },
+
+    # @description
+    # Activate available filters. When the filter is selected or removed
+    # then `set_filter_state` or `remove_filter_state` is executed for
+    # appropriate filter (identified by it's id)
     srv_available_filters = function(id) {
       moduleServer(id, function(input, output, session) {
         available_slices_id <- reactive(vapply(private$external_teal_slices(), `[[`, character(1), "id"))
