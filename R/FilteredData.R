@@ -544,19 +544,37 @@ FilteredData <- R6::R6Class( # nolint
       datanames <- slices_field(state, "dataname")
       checkmate::assert_subset(datanames, self$datanames())
 
-      logger::log_trace(
-        "{ class(self)[1] }$remove_filter_state removing filter(s), dataname: { private$dataname }"
+      current <- shiny::isolate(self$get_filter_state())
+
+      locked <- stats::setNames(
+        vapply(current, function(x) x$locked, logical(1)),
+        vapply(current, get_teal_slice_id, character(1))
       )
 
-      lapply(datanames, function(x) {
-        private$get_filtered_dataset(x)$remove_filter_state(
-          slices_which(state, sprintf("dataname == \"%s\"", x))
+      state_ids <- vapply(state, get_teal_slice_id, character(1))
+
+      state <- state[state_ids %in% names(locked[!locked])]
+
+      if (length(state) > 0) {
+        datanames <- slices_field(state, "dataname")
+        logger::log_trace(
+          "{ class(self)[1] }$remove_filter_state removing filter(s), dataname: { private$dataname }"
         )
-      })
 
-      logger::log_trace(
-        "{ class(self)[1] }$remove_filter_state removed filter(s), dataname: { private$dataname }"
-      )
+        lapply(datanames, function(x) {
+          private$get_filtered_dataset(x)$remove_filter_state(
+            slices_which(state, sprintf("dataname == \"%s\"", x))
+          )
+        })
+
+        logger::log_trace(
+          "{ class(self)[1] }$remove_filter_state removed filter(s), dataname: { private$dataname }"
+        )
+      } else {
+        logger::log_trace(
+          "{ class(self)[1] }$remove_filter_state did not remove any filter(s), dataname: { private$dataname }"
+        )
+      }
 
       invisible(NULL)
     },
@@ -595,7 +613,7 @@ FilteredData <- R6::R6Class( # nolint
 
       logger::log_trace(
         paste(
-          "FilteredData$clear_filter_states removed all FilterStates,",
+          "FilteredData$clear_filter_states removed all non-locked FilterStates,",
           "datanames: { toString(datanames) }"
         )
       )
@@ -799,9 +817,9 @@ FilteredData <- R6::R6Class( # nolint
         )
 
         observeEvent(input$remove_all_filters, {
-          logger::log_trace("FilteredData$srv_filter_panel@1 removing all filters")
+          logger::log_trace("FilteredData$srv_filter_panel@1 removing all non-locked filters")
           self$clear_filter_states()
-          logger::log_trace("FilteredData$srv_filter_panel@1 removed all filters")
+          logger::log_trace("FilteredData$srv_filter_panel@1 removed all non-locked filters")
         })
         logger::log_trace("FilteredData$srv_active initialized")
         NULL
@@ -1084,7 +1102,7 @@ FilteredData <- R6::R6Class( # nolint
     # @description
     # Disable the filter panel.
     #
-    # Adds `disable` class to `filter_add_vars` `filter_panel_active_vars` and `filter_active_vars_contents` divs.
+    # Adds `disable` class to `filter_add_vars` div.
     # Existing filter states are stored in `cached_states` private field
     # so their individual disabled status can be recalled.
     #
@@ -1108,9 +1126,8 @@ FilteredData <- R6::R6Class( # nolint
     # @description
     # Enable the filter panel.
     #
-    # Adds `disable` class to `filter_add_vars` `filter_panel_active_vars` and `filter_active_vars_contents` divs.
-    # Existing filter states are stored in `cached_states` private field
-    # so their individual disabled status can be recalled.
+    # Removes `disable` class from `filter_add_vars` div.
+    # Cached filter states stored in `cached_states` private field are restored.
     #
     filter_panel_enable = function() {
       private$filter_panel_active <- TRUE

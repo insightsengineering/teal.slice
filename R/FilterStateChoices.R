@@ -521,8 +521,11 @@ ChoicesFilterState <- R6::R6Class( # nolint
 
               selection <- if (is.null(input$selection) && private$multiple) {
                 character(0)
-              } else if (isTRUE(length(input$selection) != 1) && !private$multiple) { # for length of input$selection other then 1 previous input is restored
-                showNotification("This filter exclusively supports single selection. Any additional choices made will be disregarded.")
+              } else if (isTRUE(length(input$selection) != 1) && !private$multiple) {
+                # for length of input$selection other then 1 previous input is restored
+                showNotification(
+                  "This filter exclusively supports single selection. Any additional choices made will be disregarded."
+                )
                 teal.widgets::updateOptionalSelectInput(
                   session, "selection",
                   selected = private$get_selected()

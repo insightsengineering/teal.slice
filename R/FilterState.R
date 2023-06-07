@@ -66,12 +66,14 @@ FilterState <- R6::R6Class( # nolint
     #'   flag specifying whether to keep missing values
     #' @param keep_inf (`logical(1)`, `NULL`)\cr
     #'   flag specifying whether to keep infinite values
-    #' @param fixed (`logical(1)`)\cr
-    #'   flag specifying whether the `FilterState` is initiated fixed
     #' @param disabled (`logical(1)`)\cr
     #'   flag specifying whether the `FilterState` is initiated disabled
+    #' @param fixed (`logical(1)`)\cr
+    #'   flag specifying whether the `FilterState` is initiated fixed
+    #' @param locked (`logical(1)`) \cr
+    #'   flag specifying whether to lock this filter state (forbid disabling and removing)
     #' @param extract_type (`character(0)`, `character(1)`)\cr
-    #' whether condition calls should be prefixed by dataname. Possible values:
+    #'   specifying whether condition calls should be prefixed by `dataname`. Possible values:
     #' \itemize{
     #' \item{`character(0)` (default)}{ `varname` in the condition call will not be prefixed}
     #' \item{`"list"`}{ `varname` in the condition call will be returned as `<dataname>$<varname>`}
@@ -88,8 +90,9 @@ FilterState <- R6::R6Class( # nolint
                           multiple = NULL,
                           keep_na = NULL,
                           keep_inf = NULL,
-                          fixed = FALSE,
                           disabled = FALSE,
+                          fixed = FALSE,
+                          locked = FALSE,
                           extract_type = character(0),
                           ...) {
       checkmate::assert_class(x_reactive, "reactive")
@@ -98,8 +101,9 @@ FilterState <- R6::R6Class( # nolint
       checkmate::assert_string(varname)
       checkmate::assert_flag(keep_na, null.ok = TRUE)
       checkmate::assert_flag(keep_inf, null.ok = TRUE)
-      checkmate::assert_flag(fixed)
       checkmate::assert_flag(disabled)
+      checkmate::assert_flag(fixed)
+      checkmate::assert_flag(locked)
       checkmate::assert_character(extract_type, max.len = 1, any.missing = FALSE)
       if (length(extract_type) == 1) {
         checkmate::assert_choice(extract_type, choices = c("list", "matrix"))
@@ -122,8 +126,9 @@ FilterState <- R6::R6Class( # nolint
       private$selected <- reactiveVal()
       private$keep_na <- if (is.null(keep_na) && anyNA(x)) reactiveVal(TRUE) else reactiveVal(keep_na)
       private$keep_inf <- reactiveVal(keep_inf)
+      private$disabled <- if (isTRUE(locked)) reactiveVal(FALSE) else reactiveVal(disabled)
       private$fixed <- fixed
-      private$disabled <- reactiveVal(disabled)
+      private$locked <- locked
       private$extras <- list(...)
       # Set extract type.
       private$extract_type <- extract_type
@@ -168,6 +173,9 @@ FilterState <- R6::R6Class( # nolint
 
     #' @description
     #' Sets filtering state.
+    #' - `fixed` state is prevented from changing state
+    #' - `disabled` state is prevented from changing state, but may be enabled and changed in one operation
+    #' - `locked` state is prevented from changing `disabled` status
     #'
     #' @param state a `teal_slice` object
     #'
@@ -176,9 +184,14 @@ FilterState <- R6::R6Class( # nolint
     set_state = function(state) {
       checkmate::assert_class(state, "teal_slice")
 
-      # Allow for enabling a filter state before altering state.
-      if (isTRUE(state$disabled) && isFALSE(private$is_disabled())) private$disabled(TRUE)
+      # Allow for enabling filter state before altering state.
       if (isFALSE(state$disabled) && isTRUE(private$is_disabled())) private$disabled(FALSE)
+      # Unless locked, allow for disabling filter state before.
+      if (isFALSE(private$locked)) {
+        if (isTRUE(state$disabled) && isFALSE(private$is_disabled())) private$disabled(TRUE)
+      } else {
+        logger::log_warn("attempt to disable a locked filter aborted: { private$dataname } { private$varname }")
+      }
 
       if (private$is_disabled()) {
         mutables <- state[c("selected", "keep_na", "keep_inf")]
@@ -228,8 +241,9 @@ FilterState <- R6::R6Class( # nolint
         selected = private$get_selected(),
         keep_na = private$get_keep_na(),
         keep_inf = private$get_keep_inf(),
+        disabled = private$is_disabled(),
         fixed = private$fixed,
-        disabled = private$is_disabled()
+        locked = private$locked
       )
       args <- append(args, private$extras)
       args <- Filter(Negate(is.null), args)
@@ -267,7 +281,7 @@ FilterState <- R6::R6Class( # nolint
           }
 
           # Disable/enable this filter state in response to switch flip.
-          private$observers$is_disabled <- observeEvent(input$enable,
+          private$observers$enable <- observeEvent(input$enable,
             {
               if (isTRUE(input$enable)) {
                 private$disabled(FALSE)
@@ -312,26 +326,29 @@ FilterState <- R6::R6Class( # nolint
             `data-bs-toggle` = "collapse",
             href = paste0("#", ns("body")),
             # header elements
-            if (private$fixed) icon("lock") else NULL,
+            if (private$locked) icon("lock") else NULL,
+            if (private$fixed) icon("burst") else NULL,
             tags$span(tags$strong(private$get_varname())),
             tags$span(private$get_varlabel(), class = "filter-card-varlabel")
           ),
-          tags$div(
-            class = "filter-card-controls",
-            shinyWidgets::prettySwitch(
-              ns("enable"),
-              label = "",
-              status = "success",
-              fill = TRUE,
-              value = !shiny::isolate(private$is_disabled()),
-              width = 30
-            ),
-            actionLink(
-              inputId = ns("remove"),
-              label = icon("circle-xmark", lib = "font-awesome"),
-              class = "filter-card-remove"
+          if (isFALSE(private$locked)) {
+            tags$div(
+              class = "filter-card-controls",
+              shinyWidgets::prettySwitch(
+                ns("enable"),
+                label = "",
+                status = "success",
+                fill = TRUE,
+                value = !shiny::isolate(private$is_disabled()),
+                width = 30
+              ),
+              actionLink(
+                inputId = ns("remove"),
+                label = icon("circle-xmark", lib = "font-awesome"),
+                class = "filter-card-remove"
+              )
             )
-          ),
+          },
           tags$div(
             class = "filter-card-summary",
             `data-toggle` = "collapse",
@@ -385,8 +402,9 @@ FilterState <- R6::R6Class( # nolint
     selected = NULL, # reactiveVal holding vector of choices (depends on class)
     keep_na = NULL, # reactiveVal holding a logical(1)
     keep_inf = NULL, # reactiveVal holding a logical(1)
-    fixed = logical(0), # logical flag whether this filter state is fixed/locked
     disabled = NULL, # reactiveVal holding a logical(1)
+    fixed = logical(0), # logical flag whether this filter state is fixed
+    locked = logical(0), # logical flag whether this filter state is locked
     extras = list(), # additional information passed in teal_slice (product of filter_var)
     ##
     # other
