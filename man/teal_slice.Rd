@@ -145,7 +145,7 @@ A single filter state can be fully described by a \code{teal_slice} object and s
 objects will be used to create, modify, and delete a filter state.
 
 A \code{teal_slice} contains a number of common fields (all named arguments of \code{filter_var}),
-some of which are mandatroy, but only \code{dataname} and \code{varname} must be specified,
+some of which are mandatory, but only \code{dataname} and \code{varname} must be specified,
 while the others have default values.
 Setting any of the other values to NULL means that those properties will not be modified
 (when setting an existing state) or that they will be determined by data (when creating new a new one).

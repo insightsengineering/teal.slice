@@ -131,7 +131,7 @@ testthat::test_that("filter_var returns `teal_slice`", {
   testthat::expect_failure(
     testthat::expect_s3_class(fs1, "teal_slices")
   )
-  testthat::expect_length(fs1, 9L)
+  testthat::expect_length(fs1, 10L)
 })
 
 
