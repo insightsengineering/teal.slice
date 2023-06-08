@@ -133,6 +133,8 @@ ChoicesFilterState <- R6::R6Class( # nolint
     #'   name of the variable.
     #' @param choices (`atomic`, `NULL`)\cr
     #'   vector specifying allowed selection values
+    #' @param multiple (`logical(1)`)\cr
+    #'   flag specifying whether the `FilterState` more than one value can be selected
     #' @param selected (`atomic`, `NULL`)\cr
     #'   vector specifying selection
     #' @param keep_na (`logical(1)`, `NULL`)\cr
@@ -157,6 +159,7 @@ ChoicesFilterState <- R6::R6Class( # nolint
                           dataname,
                           varname,
                           choices = NULL,
+                          multiple = NULL,
                           selected = NULL,
                           keep_na = NULL,
                           keep_inf = NULL,
@@ -180,11 +183,14 @@ ChoicesFilterState <- R6::R6Class( # nolint
         x
       }
 
+      if (is.null(multiple)) multiple <- TRUE # Set default behavior of multiple variable to TRUE.
+
       args <- list(
         x = x_factor,
         x_reactive = x_reactive,
         dataname = dataname,
         varname = varname,
+        multiple = multiple,
         keep_na = keep_na,
         keep_inf = keep_inf,
         fixed = fixed,
@@ -195,6 +201,18 @@ ChoicesFilterState <- R6::R6Class( # nolint
       do.call(super$initialize, args)
 
       private$set_choices(choices)
+
+      if (is.null(selected) && multiple) {
+        selected <- private$choices
+      } else if (is.null(selected)) {
+        selected <- private$choices[1]
+      } else if (length(selected) > 1 && !multiple) {
+        warning(
+          "FilterStateChoices allows selected to be length=1 when multiple is FALSE. ",
+          "Only first value is taken."
+        )
+        selected <- selected[1]
+      }
       private$set_selected(selected)
 
       private$data_class <- class(x)[1L]
@@ -226,15 +244,6 @@ ChoicesFilterState <- R6::R6Class( # nolint
         choices <- do.call(sprintf("as.%s", private$data_class), list(x = choices))
       }
       fun_compare <- if (length(choices) == 1L) "==" else "%in%"
-
-      # to return `c` call instead of a vector
-      make_c_call <- function(choices) {
-        if (length(choices) > 1) {
-          do.call("call", append(list("c"), choices))
-        } else {
-          choices
-        }
-      }
 
       filter_call <-
         if (inherits(choices, "Date")) {
@@ -355,7 +364,18 @@ ChoicesFilterState <- R6::R6Class( # nolint
           "are not in choices of column", private$varname, "in dataset", private$dataname, "."
         ))
       }
-      values[in_choices_mask]
+      values <- values[in_choices_mask]
+
+      if (length(values) != 1 && !private$multiple) {
+        warning(sprintf(
+          "Values: %s are not a vector of length one. The first value will be selected by default.
+                        Setting defaults. Varname: %s, dataname: %s.",
+          strtrim(toString(values), 360),
+          private$varname, private$dataname
+        ))
+        values <- shiny::isolate(private$get_selected())
+      }
+      values
     },
     is_checkboxgroup = function() {
       length(private$choices) <= getOption("teal.threshold_slider_vs_checkboxgroup")
@@ -388,14 +408,25 @@ ChoicesFilterState <- R6::R6Class( # nolint
         )
         div(
           class = "choices_state",
-          checkboxGroupInput(
-            inputId = ns("selection"),
-            label = NULL,
-            selected = shiny::isolate(private$selected()),
-            choiceNames = labels,
-            choiceValues = private$choices,
-            width = "100%"
-          )
+          if (private$multiple) {
+            checkboxGroupInput(
+              inputId = ns("selection"),
+              label = NULL,
+              selected = shiny::isolate(private$get_selected()),
+              choiceNames = labels,
+              choiceValues = private$choices,
+              width = "100%"
+            )
+          } else {
+            radioButtons(
+              inputId = ns("selection"),
+              label = NULL,
+              selected = shiny::isolate(private$get_selected()),
+              choiceNames = labels,
+              choiceValues = private$choices,
+              width = "100%"
+            )
+          }
         )
       } else {
         labels <- mapply(
@@ -409,7 +440,7 @@ ChoicesFilterState <- R6::R6Class( # nolint
           inputId = ns("selection"),
           choices = stats::setNames(private$choices, labels),
           selected = shiny::isolate(private$get_selected()),
-          multiple = TRUE,
+          multiple = private$multiple,
           options = shinyWidgets::pickerOptions(
             actionsBox = TRUE,
             liveSearch = (length(private$choices) > 10),
@@ -477,39 +508,37 @@ ChoicesFilterState <- R6::R6Class( # nolint
             NULL
           })
 
-          if (private$is_checkboxgroup()) {
-            private$observers$selection <- observeEvent(
-              ignoreNULL = FALSE, # it's possible that nothing is selected
-              ignoreInit = TRUE, # ignoreInit: should not matter because we set the UI with the desired initial state
-              eventExpr = input$selection,
-              handlerExpr = {
-                logger::log_trace(sprintf(
-                  "ChoicesFilterState$server@2 selection of variable %s changed, dataname: %s",
-                  private$varname,
-                  private$dataname
-                ))
-                selection <- if (is.null(input$selection)) character(0) else input$selection
-                private$set_selected(selection)
+          private$observers$selection <- observeEvent(
+            ignoreNULL = FALSE,
+            ignoreInit = TRUE, # ignoreInit: should not matter because we set the UI with the desired initial state
+            eventExpr = input$selection,
+            handlerExpr = {
+              logger::log_trace(sprintf(
+                "ChoicesFilterState$server@2 selection of variable %s changed, dataname: %s",
+                private$varname,
+                private$dataname
+              ))
+
+              selection <- if (is.null(input$selection) && private$multiple) {
+                character(0)
+              } else if (isTRUE(length(input$selection) != 1) && !private$multiple) {
+                # for length of input$selection other then 1 previous input is restored
+                showNotification(
+                  "This filter exclusively supports single selection. Any additional choices made will be disregarded."
+                )
+                teal.widgets::updateOptionalSelectInput(
+                  session, "selection",
+                  selected = private$get_selected()
+                )
+                return(NULL)
+              } else {
+                input$selection
               }
-            )
-          } else {
-            private$observers$selection <- observeEvent(
-              ignoreNULL = FALSE, # it's possible that nothing is selected
-              ignoreInit = TRUE, # ignoreInit: should not matter because we set the UI with the desired initial state
-              eventExpr = input$selection_open,
-              handlerExpr = {
-                if (!isTRUE(input$selection_open)) {
-                  logger::log_trace(sprintf(
-                    "ChoicesFilterState$server@2 selection of variable %s changed, dataname: %s",
-                    private$varname,
-                    private$dataname
-                  ))
-                  selection <- if (is.null(input$selection)) character(0) else input$selection
-                  private$set_selected(selection)
-                }
-              }
-            )
-          }
+
+              private$set_selected(selection)
+            }
+          )
+
           private$keep_na_srv("keep_na")
 
           # this observer is needed in the situation when private$selected has been
@@ -523,14 +552,21 @@ ChoicesFilterState <- R6::R6Class( # nolint
                 private$dataname
               ))
               if (private$is_checkboxgroup()) {
-                updateCheckboxGroupInput(
-                  inputId = "selection",
-                  selected = private$selected()
-                )
+                if (private$multiple) {
+                  updateCheckboxGroupInput(
+                    inputId = "selection",
+                    selected = private$get_selected()
+                  )
+                } else {
+                  updateRadioButtons(
+                    inputId = "selection",
+                    selected = private$get_selected()
+                  )
+                }
               } else {
                 teal.widgets::updateOptionalSelectInput(
                   session, "selection",
-                  selected = private$selected()
+                  selected = private$get_selected()
                 )
               }
             }

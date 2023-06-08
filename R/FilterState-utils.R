@@ -15,18 +15,22 @@
 #'   name of the variable.
 #' @param choices (`atomic`)\cr
 #'   vector specifying allowed selection values
+#' @param multiple (`logical(1)`)\cr
+#'   flag specifying whether the `FilterState` more than one value can be selected
 #' @param selected (`atomic`, `NULL`)\cr
 #'   vector specifying selection
 #' @param keep_na (`logical(1)`, `NULL`)\cr
 #'   flag specifying whether to keep missing values
 #' @param keep_inf (`logical(1)`, `NULL`)\cr
 #'   flag specifying whether to keep infinite values
-#' @param fixed (`logical(1)`)\cr
-#'   flag specifying whether the `FilterState` is initiated fixed
 #' @param disabled (`logical(1)`)\cr
 #'   flag specifying whether the `FilterState` is initiated disabled
+#' @param fixed (`logical(1)`)\cr
+#'   flag specifying whether the `FilterState` is initiated fixed
+#' @param locked (`logical(1)`)\cr
+#'   flag specifying whether the `FilterState` is initiated locked
 #' @param extract_type (`character(0)`, `character(1)`)\cr
-#' whether condition calls should be prefixed by dataname. Possible values:
+#'   specifying whether condition calls should be prefixed by `dataname`. Possible values:
 #' \itemize{
 #' \item{`character(0)` (default)}{ `varname` in the condition call will not be prefixed}
 #' \item{`"list"`}{ `varname` in the condition call will be returned as `<dataname>$<varname>`}
@@ -67,20 +71,24 @@ init_filter_state <- function(x,
                               dataname,
                               varname,
                               choices = NULL,
+                              multiple = NULL,
                               selected = NULL,
                               keep_na = NULL,
                               keep_inf = NULL,
-                              fixed = FALSE,
                               disabled = FALSE,
+                              fixed = FALSE,
+                              locked = FALSE,
                               extract_type = character(0),
                               ...) {
   checkmate::assert_class(x_reactive, "reactive")
   checkmate::assert_string(dataname)
   checkmate::assert_string(varname)
+  checkmate::assert_flag(multiple, null.ok = TRUE)
   checkmate::assert_flag(keep_na, null.ok = TRUE)
   checkmate::assert_flag(keep_inf, null.ok = TRUE)
-  checkmate::assert_flag(fixed)
   checkmate::assert_flag(disabled)
+  checkmate::assert_flag(fixed)
+  checkmate::assert_flag(locked)
   checkmate::assert_character(extract_type, max.len = 1, any.missing = FALSE)
   if (length(extract_type) == 1) {
     checkmate::assert_choice(extract_type, choices = c("list", "matrix"))
@@ -93,11 +101,13 @@ init_filter_state <- function(x,
       dataname = dataname,
       varname = varname,
       choices = choices,
+      multiple = multiple,
       selected = selected,
       keep_na = keep_na,
       keep_inf = keep_inf,
-      fixed = fixed,
       disabled = disabled,
+      fixed = fixed,
+      locked = locked,
       extract_type = extract_type
     )
     args <- append(args, list(...))
@@ -115,11 +125,13 @@ init_filter_state.default <- function(x,
                                       dataname,
                                       varname,
                                       choices = NULL,
+                                      multiple = NULL,
                                       selected = NULL,
                                       keep_na = NULL,
                                       keep_inf = NULL,
-                                      fixed = FALSE,
                                       disabled = FALSE,
+                                      fixed = FALSE,
+                                      locked = FALSE,
                                       extract_type = character(0),
                                       ...) {
   args <- list(
@@ -128,11 +140,13 @@ init_filter_state.default <- function(x,
     dataname = dataname,
     varname = varname,
     choices = choices,
+    multiple = multiple,
     selected = selected,
     keep_na = keep_na,
     keep_inf = keep_inf,
-    fixed = fixed,
     disabled = disabled,
+    fixed = fixed,
+    locked = locked,
     extract_type = extract_type
   )
   args <- append(args, list(...))
@@ -147,11 +161,13 @@ init_filter_state.logical <- function(x,
                                       dataname,
                                       varname,
                                       choices = NULL,
+                                      multiple = NULL,
                                       selected = NULL,
                                       keep_na = NULL,
                                       keep_inf = NULL,
-                                      fixed = FALSE,
                                       disabled = FALSE,
+                                      fixed = FALSE,
+                                      locked = FALSE,
                                       extract_type = character(0),
                                       ...) {
   args <- list(
@@ -160,11 +176,13 @@ init_filter_state.logical <- function(x,
     dataname = dataname,
     varname = varname,
     choices = choices,
+    multiple = multiple,
     selected = selected,
     keep_na = keep_na,
     keep_inf = keep_inf,
-    fixed = fixed,
     disabled = disabled,
+    fixed = fixed,
+    locked = locked,
     extract_type = extract_type
   )
   args <- append(args, list(...))
@@ -179,11 +197,13 @@ init_filter_state.numeric <- function(x,
                                       dataname,
                                       varname,
                                       choices = NULL,
+                                      multiple = NULL,
                                       selected = NULL,
                                       keep_na = NULL,
                                       keep_inf = NULL,
-                                      fixed = FALSE,
                                       disabled = FALSE,
+                                      fixed = FALSE,
+                                      locked = FALSE,
                                       extract_type = character(0),
                                       ...) {
   args <- list(
@@ -192,11 +212,13 @@ init_filter_state.numeric <- function(x,
     dataname = dataname,
     varname = varname,
     choices = choices,
+    multiple = multiple,
     selected = selected,
     keep_na = keep_na,
     keep_inf = keep_inf,
-    fixed = fixed,
     disabled = disabled,
+    fixed = fixed,
+    locked = locked,
     extract_type = extract_type
   )
   args <- append(args, list(...))
@@ -215,11 +237,13 @@ init_filter_state.factor <- function(x,
                                      dataname,
                                      varname,
                                      choices = NULL,
+                                     multiple = NULL,
                                      selected = NULL,
                                      keep_na = NULL,
                                      keep_inf = NULL,
-                                     fixed = FALSE,
                                      disabled = FALSE,
+                                     fixed = FALSE,
+                                     locked = FALSE,
                                      extract_type = character(0),
                                      ...) {
   args <- list(
@@ -228,11 +252,13 @@ init_filter_state.factor <- function(x,
     dataname = dataname,
     varname = varname,
     choices = choices,
+    multiple = multiple,
     selected = selected,
     keep_na = keep_na,
     keep_inf = keep_inf,
-    fixed = fixed,
     disabled = disabled,
+    fixed = fixed,
+    locked = locked,
     extract_type = extract_type
   )
   args <- append(args, list(...))
@@ -247,11 +273,13 @@ init_filter_state.character <- function(x,
                                         dataname,
                                         varname,
                                         choices = NULL,
+                                        multiple = NULL,
                                         selected = NULL,
                                         keep_na = NULL,
                                         keep_inf = NULL,
-                                        fixed = FALSE,
                                         disabled = FALSE,
+                                        fixed = FALSE,
+                                        locked = FALSE,
                                         extract_type = character(0),
                                         ...) {
   args <- list(
@@ -260,11 +288,13 @@ init_filter_state.character <- function(x,
     dataname = dataname,
     varname = varname,
     choices = choices,
+    multiple = multiple,
     selected = selected,
     keep_na = keep_na,
     keep_inf = keep_inf,
-    fixed = fixed,
     disabled = disabled,
+    fixed = fixed,
+    locked = locked,
     extract_type = extract_type
   )
   args <- append(args, list(...))
@@ -279,11 +309,13 @@ init_filter_state.Date <- function(x,
                                    dataname,
                                    varname,
                                    choices = NULL,
+                                   multiple = NULL,
                                    selected = NULL,
                                    keep_na = NULL,
                                    keep_inf = NULL,
-                                   fixed = FALSE,
                                    disabled = FALSE,
+                                   fixed = FALSE,
+                                   locked = FALSE,
                                    extract_type = character(0),
                                    ...) {
   args <- list(
@@ -292,11 +324,13 @@ init_filter_state.Date <- function(x,
     dataname = dataname,
     varname = varname,
     choices = choices,
+    multiple = multiple,
     selected = selected,
     keep_na = keep_na,
     keep_inf = keep_inf,
-    fixed = fixed,
     disabled = disabled,
+    fixed = fixed,
+    locked = locked,
     extract_type = extract_type
   )
   args <- append(args, list(...))
@@ -315,11 +349,13 @@ init_filter_state.POSIXct <- function(x,
                                       dataname,
                                       varname,
                                       choices = NULL,
+                                      multiple = NULL,
                                       selected = NULL,
                                       keep_na = NULL,
                                       keep_inf = NULL,
-                                      fixed = FALSE,
                                       disabled = FALSE,
+                                      fixed = FALSE,
+                                      locked = FALSE,
                                       extract_type = character(0),
                                       ...) {
   args <- list(
@@ -328,11 +364,13 @@ init_filter_state.POSIXct <- function(x,
     dataname = dataname,
     varname = varname,
     choices = choices,
+    multiple = multiple,
     selected = selected,
     keep_na = keep_na,
     keep_inf = keep_inf,
-    fixed = fixed,
     disabled = disabled,
+    fixed = fixed,
+    locked = locked,
     extract_type = extract_type
   )
   args <- append(args, list(...))
@@ -351,11 +389,13 @@ init_filter_state.POSIXlt <- function(x,
                                       dataname,
                                       varname,
                                       choices = NULL,
+                                      multiple = NULL,
                                       selected = NULL,
                                       keep_na = NULL,
                                       keep_inf = NULL,
-                                      fixed = FALSE,
                                       disabled = FALSE,
+                                      fixed = FALSE,
+                                      locked = FALSE,
                                       extract_type = character(0),
                                       ...) {
   args <- list(
@@ -364,11 +404,13 @@ init_filter_state.POSIXlt <- function(x,
     dataname = dataname,
     varname = varname,
     choices = choices,
+    multiple = multiple,
     selected = selected,
     keep_na = keep_na,
     keep_inf = keep_inf,
-    fixed = fixed,
     disabled = disabled,
+    fixed = fixed,
+    locked = locked,
     extract_type = extract_type
   )
   args <- append(args, list(...))
@@ -400,6 +442,8 @@ init_filter_state.POSIXlt <- function(x,
 #'   can be written without prefixing `var1 == "x" & var2 > 0`.
 #' @param disabled (`logical(1)`)\cr
 #'   flag specifying whether the `FilterState` is initiated disabled
+#' @param locked (`logical(1)`)\cr
+#'   flag specifying whether the `FilterState` is initiated locked
 #' @param ... additional arguments to be saved as a list in `private$extras` field
 #'
 #' @return `FilterStateExpr` object
