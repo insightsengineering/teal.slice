@@ -245,7 +245,7 @@ toggle_title <- function(input_id, titles, one_way = FALSE) {
 #' Graph is a list which for each node contains a vector of child nodes
 #' in the returned list, parents appear before their children.
 #'
-#' Implementation of Kahn algorithm with a modification to maintain the order of input elements.
+#' Implementation of `Kahn` algorithm with a modification to maintain the order of input elements.
 #'
 #' @param graph (named `list`) list with node vector elements
 #' @keywords internal
