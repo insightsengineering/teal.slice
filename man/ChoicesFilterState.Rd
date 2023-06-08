@@ -90,13 +90,13 @@ server <- function(input, output, session) {
   observeEvent(
     input$button4_choices,
     fs$set_state(
-      filter_var("data", "variable", selected = character(0), keep_na = TRUE)
+      filter_var(dataname = "data", varname = "variable", selected = character(0), keep_na = TRUE)
     )
   )
   observeEvent(
     input$button0_choices,
     fs$set_state(
-      filter_var("data", "variable", selected = c("a", "c"), keep_na = TRUE)
+      filter_var(dataname = "data", varname = "variable", selected = c("a", "c"), keep_na = TRUE)
     )
   )
 }
