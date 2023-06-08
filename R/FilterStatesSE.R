@@ -1,4 +1,4 @@
-#' @title `FilterStates` subclass for SummarizedExperiments
+#' @title `FilterStates` subclass for `SummarizedExperiments`
 #' @description Handles filter states in a `SummaryExperiment`
 #' @keywords internal
 #'

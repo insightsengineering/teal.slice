@@ -264,7 +264,7 @@ Shiny module UI.
 shiny element (module instance) id;
 the UI for this class contains simple message stating that it is not supported}
 
-\item{\code{parent_id}}{(\code{character(1)}) id of the FilterStates card container}
+\item{\code{parent_id}}{(\code{character(1)}) id of the \code{FilterStates} card container}
 }
 \if{html}{\out{</div>}}
 }
