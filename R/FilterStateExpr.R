@@ -28,7 +28,7 @@ FilterStateExpr <- R6::R6Class( # nolint
     #'   logical expression written in executable way. By "executable" means
     #'   that `subset` call should be able to evaluate this without failure. For
     #'   example `MultiAssayExperiment::subsetByColData` requires variable names prefixed
-    #'   by dataname (e.g. `data$var1 == "x" & data$var2 > 0`). For `data.frame` call
+    #'   by `dataname` (e.g. `data$var1 == "x" & data$var2 > 0`). For `data.frame` call
     #'   can be written without prefixing `var1 == "x" & var2 > 0`.
     #' @param disabled (`logical(1)`)\cr
     #'   flag specifying whether the `FilterState` is initiated disabled
@@ -238,7 +238,7 @@ FilterStateExpr <- R6::R6Class( # nolint
     #' @param id (`character(1)`)\cr
     #'  shiny element (module instance) id;
     #'  the UI for this class contains simple message stating that it is not supported
-    #' @param parent_id (`character(1)`) id of the FilterStates card container
+    #' @param parent_id (`character(1)`) id of the `FilterStates` card container
     ui = function(id, parent_id = "cards") {
       ns <- NS(id)
 

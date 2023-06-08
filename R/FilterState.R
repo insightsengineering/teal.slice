@@ -309,7 +309,7 @@ FilterState <- R6::R6Class( # nolint
     #' @param id (`character(1)`)\cr
     #'  shiny element (module instance) id;
     #'  the UI for this class contains simple message stating that it is not supported
-    #' @param parent_id (`character(1)`) id of the FilterStates card container
+    #' @param parent_id (`character(1)`) id of the `FilterStates` card container
     ui = function(id, parent_id = "cards") {
       ns <- NS(id)
 
@@ -564,7 +564,7 @@ FilterState <- R6::R6Class( # nolint
     },
 
     # @description
-    # Return variable name prefixed by dataname to be evaluated as extracted object,
+    # Return variable name prefixed by `dataname` to be evaluated as extracted object,
     # for example `data$var`
     # @return a character string representation of a subset call
     #         that extracts the variable from the dataset

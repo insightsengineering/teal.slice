@@ -1,4 +1,4 @@
-#' @title `FilterStates` subclass for MultiAssayExperiments
+#' @title `FilterStates` subclass for `MultiAssayExperiments`
 #' @description Handles filter states in a `MultiAssayExperiment`
 #' @keywords internal
 #'

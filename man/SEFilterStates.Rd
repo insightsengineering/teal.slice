@@ -2,7 +2,7 @@
 % Please edit documentation in R/FilterStatesSE.R
 \name{SEFilterStates}
 \alias{SEFilterStates}
-\title{\code{FilterStates} subclass for SummarizedExperiments}
+\title{\code{FilterStates} subclass for \code{SummarizedExperiments}}
 \description{
 Handles filter states in a \code{SummaryExperiment}
 }

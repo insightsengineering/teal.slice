@@ -126,7 +126,7 @@ eval_expr_with_msg <- function(expr, env) {
 #' `removeClass` and `addClass` methods (when `one_way = TRUE`) to change icons.
 #' `toggle_title` calls the `attr` method to modify the `Title` attribute of the button.
 #'
-#' @param input_id `character(1)` (namespaced) id of the button
+#' @param input_id `character(1)` (name-spaced) id of the button
 #' @param icons,titles `character(2)` vector specifying values between which to toggle
 #' @param one_way `logical(1)` flag specifying whether to keep toggling;
 #'                if TRUE, the target will be changed
@@ -245,7 +245,7 @@ toggle_title <- function(input_id, titles, one_way = FALSE) {
 #' Graph is a list which for each node contains a vector of child nodes
 #' in the returned list, parents appear before their children.
 #'
-#' Implementation of Kahn algorithm with a modification to maintain the order of input elements.
+#' Implementation of `Kahn` algorithm with a modification to maintain the order of input elements.
 #'
 #' @param graph (named `list`) list with node vector elements
 #' @keywords internal

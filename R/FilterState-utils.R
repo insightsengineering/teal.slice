@@ -438,7 +438,7 @@ init_filter_state.POSIXlt <- function(x,
 #'   logical expression written in executable way. By "executable" means
 #'   that `subset` call should be able to evaluate this without failure. For
 #'   example `MultiAssayExperiment::subsetByColData` requires variable names prefixed
-#'   by dataname (e.g. `data$var1 == "x" & data$var2 > 0`). For `data.frame` call
+#'   by `dataname` (e.g. `data$var1 == "x" & data$var2 > 0`). For `data.frame` call
 #'   can be written without prefixing `var1 == "x" & var2 > 0`.
 #' @param disabled (`logical(1)`)\cr
 #'   flag specifying whether the `FilterState` is initiated disabled

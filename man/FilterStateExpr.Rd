@@ -107,7 +107,7 @@ title of the filter
 logical expression written in executable way. By "executable" means
 that \code{subset} call should be able to evaluate this without failure. For
 example \code{MultiAssayExperiment::subsetByColData} requires variable names prefixed
-by dataname (e.g. \code{data$var1 == "x" & data$var2 > 0}). For \code{data.frame} call
+by \code{dataname} (e.g. \code{data$var1 == "x" & data$var2 > 0}). For \code{data.frame} call
 can be written without prefixing \code{var1 == "x" & var2 > 0}.}
 
 \item{\code{expr}}{(\code{character(1)})\cr}
@@ -322,7 +322,7 @@ Shiny module UI.
 shiny element (module instance) id;
 the UI for this class contains simple message stating that it is not supported}
 
-\item{\code{parent_id}}{(\code{character(1)}) id of the FilterStates card container}
+\item{\code{parent_id}}{(\code{character(1)}) id of the \code{FilterStates} card container}
 }
 \if{html}{\out{</div>}}
 }

@@ -2,7 +2,7 @@
 % Please edit documentation in R/FilterStatesMAE.R
 \name{MAEFilterStates}
 \alias{MAEFilterStates}
-\title{\code{FilterStates} subclass for MultiAssayExperiments}
+\title{\code{FilterStates} subclass for \code{MultiAssayExperiments}}
 \description{
 Handles filter states in a \code{MultiAssayExperiment}
 }
