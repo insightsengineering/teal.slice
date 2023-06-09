@@ -1016,8 +1016,6 @@ FilteredData <- R6::R6Class( # nolint
             logger::log_trace("FilteredData$srv_filter_overview@1 updated counts")
             table_html
           })
-
-          shiny::outputOptions(output, "table", suspendWhenHidden = FALSE)
           logger::log_trace("FilteredData$srv_filter_overview initialized")
           NULL
         }
@@ -1116,10 +1114,10 @@ FilteredData <- R6::R6Class( # nolint
         active_slices_id <- reactive(vapply(self$get_filter_state(), `[[`, character(1), "id"))
 
         observeEvent(private$external_teal_slices(), ignoreNULL = FALSE, {
-          if (is.null(private$external_teal_slices())) {
-            shinyjs::hide("available_menu")
-          } else {
+          if (length(private$external_teal_slices())) {
             shinyjs::show("available_menu")
+          } else {
+            shinyjs::hide("available_menu")
           }
         })
 

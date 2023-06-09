@@ -637,23 +637,24 @@ FilterStates <- R6::R6Class( # nolint
     #
     # @return NULL
     #
-    state_list_remove = function(state_id) { # todo: state_id as vector
-      logger::log_trace("{ class(self)[1] } removing a filter, state_id: { state_id }")
-      checkmate::assert_character(state_id)
-      new_state_list <- shiny::isolate(private$state_list())
-      if (is.element(state_id, names(new_state_list))) {
-        if (shiny::isolate(new_state_list[[state_id]]$get_state()$locked)) {
-          return(invisible(NULL))
+    state_list_remove = function(state_id) {
+      shiny::isolate({
+        logger::log_trace("{ class(self)[1] } removing a filter, state_id: { state_id }")
+        checkmate::assert_character(state_id)
+        new_state_list <- private$state_list()
+        if (is.element(state_id, names(new_state_list))) {
+          if (new_state_list[[state_id]]$get_state()$locked) {
+            return(invisible(NULL))
+          }
+          new_state_list[[state_id]]$destroy_observers()
+          new_state_list[[state_id]] <- NULL
+          private$state_list(new_state_list)
+          logger::log_trace("{ class(self)[1] } removed a filter, state_id: { state_id }")
+        } else {
+          warning(sprintf("\"%s\" not found in state list", state_id))
         }
-        new_state_list[[state_id]]$destroy_observers()
-        new_state_list[[state_id]] <- NULL
-        shiny::isolate(private$state_list(new_state_list))
-        logger::log_trace("{ class(self)[1] } removed a filter, state_id: { state_id }")
-      } else {
-        warning(sprintf("\"%s\" not found in state list", state_id))
-      }
-
-      invisible(NULL)
+        invisible(NULL)
+      })
     },
 
     # @description
@@ -662,19 +663,19 @@ FilterStates <- R6::R6Class( # nolint
     # @return invisible NULL
     #
     state_list_empty = function() {
-      logger::log_trace(
-        "{ class(self)[1] }$state_list_empty removing all non-locked filters for dataname: { private$dataname }"
-      )
-
-      state_list <- shiny::isolate(private$state_list())
-      for (state_id in names(state_list)) {
-        private$state_list_remove(state_id)
-      }
-
-      logger::log_trace(
-        "{ class(self)[1] }$state_list_empty removed all non-locked filters for dataname: { private$dataname }"
-      )
-      invisible(NULL)
+      shiny::isolate({
+        logger::log_trace(
+          "{ class(self)[1] }$state_list_empty removing all non-locked filters for dataname: { private$dataname }"
+        )
+        state_list <- private$state_list()
+        for (state_id in names(state_list)) {
+          private$state_list_remove(state_id)
+        }
+        logger::log_trace(
+          "{ class(self)[1] }$state_list_empty removed all non-locked filters for dataname: { private$dataname }"
+        )
+        invisible(NULL)
+      })
     },
 
     # @description
@@ -699,7 +700,7 @@ FilterStates <- R6::R6Class( # nolint
         return(invisible(NULL))
       }
 
-      ### QUESTION: move this check to filter_settings?
+      ### todo: move this check to filter_settings?
       slices_hashed <- vapply(state, `[[`, character(1L), "id")
       if (any(duplicated(slices_hashed))) {
         stop(
@@ -707,7 +708,6 @@ FilterStates <- R6::R6Class( # nolint
           "Please specify different 'id' when calling filter_var or filter_expr"
         )
       }
-      ### END QUESTION
 
       state_list <- shiny::isolate(private$state_list_get())
       lapply(state, function(slice) {
