@@ -19,7 +19,7 @@ Depends:
     R (>= 4.0),
     shiny
 Imports:
-    checkmate,
+    checkmate (>= 2.0.0),
     dplyr,
     ggplot2,
     grDevices,
@@ -55,6 +55,29 @@ Remotes:
     insightsengineering/teal.data@*release,
     insightsengineering/teal.logger@*release,
     insightsengineering/teal.widgets@*release
+Config/Needs/verdepcheck:
+    rstudio/shiny,
+    mllg/checkmate,
+    tidyverse/dplyr,
+    tidyverse/ggplot2,
+    r-lib/lifecycle,
+    daroczig/logger,
+    r-lib/R6,
+    daattali/shinyjs,
+    dreamRs/shinyWidgets,
+    insightsengineering/teal.data,
+    insightsengineering/teal.logger,
+    insightsengineering/teal.widgets,
+    rstudio/bslib,
+    insightsengineering/formatters,
+    yihui/knitr,
+    bioc::MultiAssayExperiment,
+    rstudio/rmarkdown,
+    insightsengineering/scda,
+    insightsengineering/scda.2022,
+    bioc::SummarizedExperiment,
+    r-lib/testthat,
+    r-lib/withr
 Config/Needs/website: insightsengineering/nesttemplate
 Encoding: UTF-8
 Language: en-US
