@@ -140,6 +140,7 @@ Initialize a \code{FilterState} object
   dataname,
   varname,
   choices = NULL,
+  multiple = NULL,
   selected = NULL,
   keep_na = NULL,
   keep_inf = NULL,
@@ -172,6 +173,10 @@ name of the variable.}
 \item{\code{choices}}{(\code{atomic}, \code{NULL})\cr
 vector specifying allowed selection values}
 
+\item{\code{multiple}}{(\code{logical(1)})\cr
+flag specifying whether the \code{FilterState} more than one value can be selected;
+only applicable to \code{FilterStateChoices} and \code{FilterStateLogical}}
+
 \item{\code{selected}}{(\code{atomic}, \code{NULL})\cr
 vector specifying selection}
 
@@ -188,7 +193,7 @@ flag specifying whether the \code{FilterState} is initiated fixed}
 flag specifying whether the \code{FilterState} is initiated disabled}
 
 \item{\code{extract_type}}{(\code{character(0)}, \code{character(1)})\cr
-whether condition calls should be prefixed by dataname. Possible values:
+whether condition calls should be prefixed by \code{dataname}. Possible values:
 \itemize{
 \item{\code{character(0)} (default)}{ \code{varname} in the condition call will not be prefixed}
 \item{\code{"list"}}{ \code{varname} in the condition call will be returned as \verb{<dataname>$<varname>}}

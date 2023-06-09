@@ -70,9 +70,9 @@ if (interactive()) {
 \item \href{#method-FilterStateExpr-get_state}{\code{FilterStateExpr$get_state()}}
 \item \href{#method-FilterStateExpr-set_state}{\code{FilterStateExpr$set_state()}}
 \item \href{#method-FilterStateExpr-get_call}{\code{FilterStateExpr$get_call()}}
+\item \href{#method-FilterStateExpr-destroy_observers}{\code{FilterStateExpr$destroy_observers()}}
 \item \href{#method-FilterStateExpr-server}{\code{FilterStateExpr$server()}}
 \item \href{#method-FilterStateExpr-ui}{\code{FilterStateExpr$ui()}}
-\item \href{#method-FilterStateExpr-destroy_observers}{\code{FilterStateExpr$destroy_observers()}}
 \item \href{#method-FilterStateExpr-clone}{\code{FilterStateExpr$clone()}}
 }
 }
@@ -82,7 +82,15 @@ if (interactive()) {
 \subsection{Method \code{new()}}{
 Initialize a \code{FilterStateExpr} object
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{FilterStateExpr$new(dataname, id, title, expr, disabled = FALSE, ...)}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{FilterStateExpr$new(
+  dataname,
+  id,
+  title,
+  expr,
+  disabled = FALSE,
+  locked = FALSE,
+  ...
+)}\if{html}{\out{</div>}}
 }
 
 \subsection{Arguments}{
@@ -99,13 +107,16 @@ title of the filter
 logical expression written in executable way. By "executable" means
 that \code{subset} call should be able to evaluate this without failure. For
 example \code{MultiAssayExperiment::subsetByColData} requires variable names prefixed
-by dataname (e.g. \code{data$var1 == "x" & data$var2 > 0}). For \code{data.frame} call
+by \code{dataname} (e.g. \code{data$var1 == "x" & data$var2 > 0}). For \code{data.frame} call
 can be written without prefixing \code{var1 == "x" & var2 > 0}.}
 
 \item{\code{expr}}{(\code{character(1)})\cr}
 
 \item{\code{disabled}}{(\code{logical(1)})\cr
 flag specifying whether the \code{FilterState} is initiated disabled}
+
+\item{\code{locked}}{(\code{logical(1)}) \cr
+flag specifying whether the \code{FilterState} is initiated locked}
 
 \item{\code{...}}{additional arguments to be saved as a list in \code{private$extras} field}
 }
@@ -261,6 +272,19 @@ and must be executed in reactive or isolated context.}
 }
 }
 \if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-FilterStateExpr-destroy_observers"></a>}}
+\if{latex}{\out{\hypertarget{method-FilterStateExpr-destroy_observers}{}}}
+\subsection{Method \code{destroy_observers()}}{
+Destroy observers stored in \code{private$observers}.
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{FilterStateExpr$destroy_observers()}\if{html}{\out{</div>}}
+}
+
+\subsection{Returns}{
+NULL invisibly
+}
+}
+\if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-FilterStateExpr-server"></a>}}
 \if{latex}{\out{\hypertarget{method-FilterStateExpr-server}{}}}
 \subsection{Method \code{server()}}{
@@ -298,22 +322,9 @@ Shiny module UI.
 shiny element (module instance) id;
 the UI for this class contains simple message stating that it is not supported}
 
-\item{\code{parent_id}}{(\code{character(1)}) id of the FilterStates card container}
+\item{\code{parent_id}}{(\code{character(1)}) id of the \code{FilterStates} card container}
 }
 \if{html}{\out{</div>}}
-}
-}
-\if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-FilterStateExpr-destroy_observers"></a>}}
-\if{latex}{\out{\hypertarget{method-FilterStateExpr-destroy_observers}{}}}
-\subsection{Method \code{destroy_observers()}}{
-Destroy observers stored in \code{private$observers}.
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{FilterStateExpr$destroy_observers()}\if{html}{\out{</div>}}
-}
-
-\subsection{Returns}{
-NULL invisibly
 }
 }
 \if{html}{\out{<hr>}}

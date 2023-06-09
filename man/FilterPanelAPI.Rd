@@ -142,7 +142,7 @@ Remove all \code{FilterStates} of the \code{FilteredData} object.
 \if{html}{\out{<div class="arguments">}}
 \describe{
 \item{\code{datanames}}{(\code{character})\cr
-datanames to remove their \code{FilterStates};
+\code{datanames} to remove their \code{FilterStates};
 omit to remove all \code{FilterStates} in the \code{FilteredData} object}
 }
 \if{html}{\out{</div>}}

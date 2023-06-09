@@ -29,7 +29,7 @@
 #' data_df <- rbind(data_df, data_na)
 #'
 #'
-#' # initiate FilterStates object
+#' # initiate `FilterStates` object
 #' filter_states_df <- init_filter_states(
 #'   data = data_df,
 #'   dataname = "dataset",
