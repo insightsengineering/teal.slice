@@ -18,7 +18,7 @@ to the filter state. The data itself can be obtained through \code{get_data}.
 
 The datasets are filtered lazily, i.e. only when requested / needed in a Shiny app.
 
-By design, any dataname set through \code{set_dataset} cannot be removed because
+By design, any \code{dataname} set through \code{set_dataset} cannot be removed because
 other code may already depend on it. As a workaround, the underlying
 data can be set to \code{NULL}.
 
@@ -166,7 +166,7 @@ Initialize a \code{FilteredData} object
 \describe{
 \item{\code{data_objects}}{(\code{list})
 should named elements containing \code{data.frame} or \code{MultiAssayExperiment}.
-Names of the list will serve as dataname.}
+Names of the list will serve as \code{dataname}.}
 
 \item{\code{join_keys}}{(\code{JoinKeys} or NULL) see \code{\link[teal.data:join_keys]{teal.data::join_keys()}}.}
 
@@ -181,16 +181,16 @@ Names of the list will serve as dataname.}
 \if{html}{\out{<a id="method-FilteredData-datanames"></a>}}
 \if{latex}{\out{\hypertarget{method-FilteredData-datanames}{}}}
 \subsection{Method \code{datanames()}}{
-Gets datanames
+Gets \code{datanames}
 
-The datanames are returned in the order in which they must be
+The \code{datanames} are returned in the order in which they must be
 evaluated (in case of dependencies).
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{FilteredData$datanames()}\if{html}{\out{</div>}}
 }
 
 \subsection{Returns}{
-(\code{character} vector) of datanames
+(\code{character} vector) of \code{datanames}
 Gets data label for the dataset
 
 Useful to display in \verb{Show R Code}.
@@ -220,8 +220,8 @@ Useful to display in \verb{Show R Code}.
 \if{latex}{\out{\hypertarget{method-FilteredData-get_filterable_datanames}{}}}
 \subsection{Method \code{get_filterable_datanames()}}{
 Get names of datasets available for filtering.
-Returned datanames depending on the relationship type.
-If input \code{dataname} has parent, then parent dataname will be also
+Returned \code{datanames} depending on the relationship type.
+If input \code{dataname} has parent, then parent \code{dataname} will be also
 returned in the output vector.
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{FilteredData$get_filterable_datanames(dataname = "all")}\if{html}{\out{</div>}}
@@ -231,7 +231,7 @@ returned in the output vector.
 \if{html}{\out{<div class="arguments">}}
 \describe{
 \item{\code{dataname}}{(\code{character}) names of the dataset. Default \code{"all"}
-returns all datanames set in \code{FilteredData}}
+returns all \code{datanames} set in \code{FilteredData}}
 }
 \if{html}{\out{</div>}}
 }
@@ -713,7 +713,7 @@ of a \code{FilteredData} object.
 \if{html}{\out{<div class="arguments">}}
 \describe{
 \item{\code{datanames}}{(\code{character})\cr
-datanames to remove their \code{FilterStates} or empty which removes
+\code{datanames} to remove their \code{FilterStates} or empty which removes
 all \code{FilterStates} in the \code{FilteredData} object}
 }
 \if{html}{\out{</div>}}
@@ -739,7 +739,7 @@ Gets the state of filter panel, if activated.
 Gets the id of the filter panel UI.
 Set external \code{teal_slice}
 
-Unlike adding new filter from the column, these filters can be added with some pre-specified
+Unlike adding new filter from the column, these filters can be added with some prespecified
 settings. List of \code{teal_slices} should be a reactive so one can make this list to be dynamic.
 List is accessible in \code{ui/srv_active} through \code{ui/srv_available_filters}.
 \subsection{Usage}{
@@ -807,7 +807,7 @@ Server function for filter panel
 \item{\code{id}}{(\code{character(1)})\cr
 an ID string that corresponds with the ID used to call the module's UI function.}
 
-\item{\code{active_datanames}}{\verb{function / reactive} returning datanames that
+\item{\code{active_datanames}}{\verb{function / reactive} returning \code{datanames} that
 should be shown on the filter panel,
 must be a subset of the \code{datanames} argument provided to \code{ui_filter_panel};
 if the function returns \code{NULL} (as opposed to \code{character(0)}), the filter
@@ -868,7 +868,7 @@ defining subset of \code{self$datanames()} to be displayed.}
 \if{html}{\out{<a id="method-FilteredData-ui_add"></a>}}
 \if{latex}{\out{\hypertarget{method-FilteredData-ui_add}{}}}
 \subsection{Method \code{ui_add()}}{
-Server module responsible for displaying dropdowns with variables to add a filter.
+Server module responsible for displaying drop-downs with variables to add a filter.
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{FilteredData$ui_add(id)}\if{html}{\out{</div>}}
 }
@@ -889,7 +889,7 @@ an ID string that corresponds with the ID used to call the module's UI function.
 \if{html}{\out{<a id="method-FilteredData-srv_add"></a>}}
 \if{latex}{\out{\hypertarget{method-FilteredData-srv_add}{}}}
 \subsection{Method \code{srv_add()}}{
-Server module responsible for displaying dropdowns with variables to add a filter.
+Server module responsible for displaying drop-downs with variables to add a filter.
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{FilteredData$srv_add(id, active_datanames = reactive(self$datanames()))}\if{html}{\out{</div>}}
 }
@@ -948,7 +948,7 @@ data}
 an ID string that corresponds with the ID used to call the module's UI function.}
 
 \item{\code{active_datanames}}{(\code{reactive})\cr
-returning datanames that should be shown on the filter panel,
+returning \code{datanames} that should be shown on the filter panel,
 must be a subset of the \code{datanames} argument provided to \code{ui_filter_panel};
 if the function returns \code{NULL} (as opposed to \code{character(0)}), the filter
 panel will be hidden.}

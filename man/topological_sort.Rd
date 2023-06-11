@@ -14,7 +14,7 @@ Graph is a list which for each node contains a vector of child nodes
 in the returned list, parents appear before their children.
 }
 \details{
-Implementation of Kahn algorithm with a modification to maintain the order of input elements.
+Implementation of \code{Kahn} algorithm with a modification to maintain the order of input elements.
 }
 \examples{
 \dontrun{

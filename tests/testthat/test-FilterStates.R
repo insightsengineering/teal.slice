@@ -155,7 +155,7 @@ testthat::test_that("remove_filter_state removes FilterState objects identified 
   testthat::expect_length(shiny::isolate(filter_states$get_filter_state()), 0)
 })
 
-testthat::test_that("clearing empty FilterStates does not raise errors", {
+testthat::test_that("clearing empty `FilterStates` does not raise errors", {
   filter_states <- FilterStates$new(data = NULL, dataname = "test")
   testthat::expect_no_error(filter_states$clear_filter_states())
 })

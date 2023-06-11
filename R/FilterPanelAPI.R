@@ -98,7 +98,7 @@ FilterPanelAPI <- R6::R6Class( # nolint
     #' @description Remove all `FilterStates` of the `FilteredData` object.
     #'
     #' @param datanames (`character`)\cr
-    #'  datanames to remove their `FilterStates`;
+    #'  `datanames` to remove their `FilterStates`;
     #'  omit to remove all `FilterStates` in the `FilteredData` object
     #'
     #' @return `NULL` invisibly
