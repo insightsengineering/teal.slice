@@ -174,6 +174,7 @@ filter_var <- function(dataname,
   if (missing(id)) {
     ans$id <- paste(Filter(length, ans[c("dataname", "varname", "datalabel", "arg")]), collapse = " ")
   }
+  checkmate::assert_string(ans$id, .var.name = "id")
   ans <- do.call(shiny::reactiveValues, ans)
   class(ans) <- c("teal_slice", class(ans))
   ans

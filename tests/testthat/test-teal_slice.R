@@ -11,34 +11,9 @@ testthat::test_that("filter_var checks arguments", {
       keep_na = NULL,
       keep_inf = NULL,
       fixed = FALSE,
-      locked = FALSE
-    )
-  )
-
-  testthat::expect_no_error(
-    filter_var(
-      dataname = "data",
-      varname = "var",
-      choices = NULL,
-      selected = NULL,
-      keep_na = NULL,
-      keep_inf = NULL,
-      fixed = FALSE,
-      locked = TRUE
-    )
-  )
-
-
-  testthat::expect_no_error(
-    filter_var(
-      dataname = "data",
-      varname = "var",
-      choices = NULL,
-      selected = NULL,
-      keep_na = NULL,
-      keep_inf = NULL,
-      fixed = TRUE,
-      locked = TRUE
+      locked = FALSE,
+      id = "filter",
+      extra = "extra"
     )
   )
 
@@ -107,6 +82,21 @@ testthat::test_that("filter_var checks arguments", {
   testthat::expect_error(
     filter_var(dataname = "data", varname = "var", locked = "TRUE"),
     "Assertion on 'locked' failed"
+  )
+
+  testthat::expect_error(
+    filter_var(dataname = "data", varname = "var", id = NULL),
+    "Assertion on 'id' failed"
+  )
+
+  testthat::expect_error(
+    filter_var(dataname = "data", varname = "var", id = c("a", "b")),
+    "Assertion on 'id' failed"
+  )
+
+  testthat::expect_error(
+    filter_var(dataname = "data", varname = "var", id = 1L),
+    "Assertion on 'id' failed"
   )
 })
 
