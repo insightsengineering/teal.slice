@@ -700,7 +700,6 @@ FilterStates <- R6::R6Class( # nolint
         return(invisible(NULL))
       }
 
-      ### todo: move this check to filter_settings?
       slices_hashed <- vapply(state, `[[`, character(1L), "id")
       if (any(duplicated(slices_hashed))) {
         stop(

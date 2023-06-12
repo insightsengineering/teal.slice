@@ -134,6 +134,8 @@ testthat::test_that("filter_settings checks arguments", {
   testthat::expect_error(filter_settings(fs1, fs2, count_type = c("a", "b")), "Must have length 1")
 
   testthat::expect_error(filter_settings(fs1, fs2, count_type = c("all", "none")))
+
+  testthat::expect_error(filter_settings(fs1, fs1, fs2), "Some teal_slice objects have the same id")
 })
 
 testthat::test_that("filter_settings returns `teal_slices`", {

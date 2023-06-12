@@ -1110,11 +1110,13 @@ FilteredData <- R6::R6Class( # nolint
     # appropriate filter (identified by it's id)
     srv_available_filters = function(id) {
       moduleServer(id, function(input, output, session) {
-        available_slices_id <- reactive(vapply(private$external_teal_slices(), `[[`, character(1), "id"))
+        # todo: is it okey to ommit locked or should they be visible but disabled?
+        slices <- reactive(Filter(function(slice) !isTRUE(slice$locked), private$external_teal_slices()))
+        available_slices_id <- reactive(vapply(slices(), `[[`, character(1), "id"))
         active_slices_id <- reactive(vapply(self$get_filter_state(), `[[`, character(1), "id"))
 
-        observeEvent(private$external_teal_slices(), ignoreNULL = FALSE, {
-          if (length(private$external_teal_slices())) {
+        observeEvent(slices(), ignoreNULL = FALSE, {
+          if (length(slices())) {
             shinyjs::show("available_menu")
           } else {
             shinyjs::hide("available_menu")
@@ -1122,7 +1124,7 @@ FilteredData <- R6::R6Class( # nolint
         })
 
         output$checkbox <- renderUI({
-          shiny::checkboxGroupInput(
+          shinyWidgets::prettyCheckboxGroup(
             session$ns("available_slices_id"),
             label = "Available filters",
             choices = available_slices_id(),
@@ -1136,7 +1138,7 @@ FilteredData <- R6::R6Class( # nolint
           if (length(new_slices_id)) {
             new_teal_slices <- Filter(
               function(slice) slice$id %in% new_slices_id,
-              private$external_teal_slices()
+              slices()
             )
             self$set_filter_state(new_teal_slices)
           }
@@ -1144,7 +1146,7 @@ FilteredData <- R6::R6Class( # nolint
           if (length(removed_slices_id)) {
             removed_teal_slices <- Filter(
               function(slice) slice$id %in% removed_slices_id,
-              private$external_teal_slices()
+              slices()
             )
             self$remove_filter_state(removed_teal_slices)
           }

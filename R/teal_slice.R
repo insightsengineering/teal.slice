@@ -212,6 +212,13 @@ filter_settings <- function(...,
                             count_type = NULL) {
   slices <- list(...)
   checkmate::assert_list(slices, types = "teal_slice", any.missing = FALSE)
+  slices_id <- shiny::isolate(vapply(slices, `[[`, character(1L), "id"))
+  if (any(duplicated(slices_id))) {
+    stop(
+      "Some teal_slice objects have the same id:\n",
+      toString(unique(slices_id[duplicated(slices_id)]))
+    )
+  }
   checkmate::assert_list(exclude_varnames, names = "named", types = "character", null.ok = TRUE, min.len = 1)
   checkmate::assert_list(include_varnames, names = "named", types = "character", null.ok = TRUE, min.len = 1)
   checkmate::assert_character(count_type, len = 1, null.ok = TRUE)
