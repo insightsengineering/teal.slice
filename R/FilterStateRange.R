@@ -470,7 +470,7 @@ RangeFilterState <- R6::R6Class( # nolint
               "data-toggle" = "popover",
               "data-html" = "true",
               "data-placement" = "left",
-              "data-trigger" = "hover",
+              "data-trigger" = "click",
               "data-content" = '<p>Drag vertical lines to set selection.<br>
                               Drag across plot to zoom in.<br>
                               Drag axis to pan.<br>
