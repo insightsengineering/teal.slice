@@ -456,6 +456,12 @@ RangeFilterState <- R6::R6Class( # nolint
       tagList(
         div(
           class = "choices_state",
+          tags$head(tags$script(
+            HTML(
+              '$(document).ready(function() {
+                      $("[data-toggle=\'popover\']").popover();});'
+            )
+          )),
           div(
             actionLink(
               ns("plotly_info"),
@@ -472,6 +478,7 @@ RangeFilterState <- R6::R6Class( # nolint
             ),
             style = "text-align: right; font-size: 0.7em; margin-bottom: -0.7em;"
           ),
+
           shinycssloaders::withSpinner(
             plotly::plotlyOutput(ns("plot"), height = "50px"),
             type = 4,
