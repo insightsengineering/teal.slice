@@ -459,7 +459,16 @@ RangeFilterState <- R6::R6Class( # nolint
           tags$head(tags$script(
             HTML(
               '$(document).ready(function() {
-                      $("[data-toggle=\'popover\']").popover();});'
+                 $("[data-toggle=\'popover\']").popover();
+
+                 $(document).on("click", function (e) {
+                   if (!$("[data-toggle=\'popover\']").is(e.target) &&
+                       $("[data-toggle=\'popover\']").has(e.target).length === 0 &&
+                       $(".popover").has(e.target).length === 0) {
+                     $("[data-toggle=\'popover\']").popover("hide");
+                   }
+                 });
+               });'
             )
           )),
           div(
@@ -471,8 +480,8 @@ RangeFilterState <- R6::R6Class( # nolint
               "data-html" = "true",
               "data-placement" = "left",
               "data-trigger" = "click",
+              "data-title"   = "Plot actions",
               "data-content" = '<p>
-                                <h5> Plot actions </h5>
                                 Drag vertical lines to set selection.<br>
                                 Drag across plot to zoom in.<br>
                                 Drag axis to pan.<br>
