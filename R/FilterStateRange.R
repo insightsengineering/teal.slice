@@ -464,6 +464,12 @@ RangeFilterState <- R6::R6Class( # nolint
       tagList(
         div(
           class = "choices_state",
+          tags$head(tags$script(
+            HTML(
+              '$(document).ready(function() {
+                      $("[data-toggle=\'popover\']").popover();});'
+            )
+          )),
           div(
             actionLink(
               ns("plotly_info"),
