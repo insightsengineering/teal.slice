@@ -457,7 +457,19 @@ RangeFilterState <- R6::R6Class( # nolint
         div(
           class = "choices_state",
           div(
-            actionLink(ns("plotly_info"), label = NULL, icon = icon("question-circle")),
+            actionLink(
+              ns("plotly_info"),
+              label = NULL,
+              icon = icon("question-circle"),
+              "data-toggle" = "popover",
+              "data-html" = "true",
+              "data-placement" = "left",
+              "data-trigger" = "hover",
+              "data-content" = '<p>Drag vertical lines to set selection.<br>
+                              Drag across plot to zoom in.<br>
+                              Drag axis to pan.<br>
+                              Double click to zoom out.</p>'
+            ),
             style = "text-align: right; font-size: 0.7em; margin-bottom: -0.7em;"
           ),
           shinycssloaders::withSpinner(
@@ -488,6 +500,9 @@ RangeFilterState <- R6::R6Class( # nolint
           logger::log_trace("RangeFilterState$server initializing, dataname: { private$dataname }")
 
           plot_data <- c(private$plot_data, source = session$ns("histogram_plot"))
+          # Add debounce function
+          reactive_selection_manual <- reactive(input$selection_manual)
+          debounced_selection_manual <- debounce(reactive_selection_manual, 500)
 
           # display histogram, adding a second trace that contains filtered data
           output$plot <- plotly::renderPlotly({
@@ -546,7 +561,7 @@ RangeFilterState <- R6::R6Class( # nolint
                     private$dataname
                   )
                 )
-                if (!isTRUE(all.equal(private$get_selected(), input$selection_manual))) {
+                if (!isTRUE(all.equal(private$get_selected(), debounced_selection_manual()))) {
                   shinyWidgets::updateNumericRangeInput(
                     session = session,
                     inputId = "selection_manual",
@@ -560,10 +575,10 @@ RangeFilterState <- R6::R6Class( # nolint
           private$observers$selection_manual <- observeEvent(
             ignoreNULL = FALSE,
             ignoreInit = TRUE,
-            eventExpr = input$selection_manual,
+            eventExpr = debounced_selection_manual(),
             handlerExpr = {
               # Abort and reset if non-numeric values is entered.
-              if (any(is.na(input$selection_manual))) {
+              if (any(is.na(debounced_selection_manual()))) {
                 showNotification(
                   "Numeric range values must be numbers.",
                   type = "warning"
@@ -576,7 +591,7 @@ RangeFilterState <- R6::R6Class( # nolint
                 return(NULL)
               }
               # Abort and reset if reversed choices are specified.
-              if (input$selection_manual[1] > input$selection_manual[2]) {
+              if (debounced_selection_manual()[1] > debounced_selection_manual()[2]) {
                 showNotification(
                   "Numeric range start value must be less than end value.",
                   type = "warning"
@@ -595,8 +610,8 @@ RangeFilterState <- R6::R6Class( # nolint
                   private$dataname
                 )
               )
-              selection <- input$selection_manual
-              if (!isTRUE(all.equal(input$selection_manual, private$get_selected()))) {
+              selection <- debounced_selection_manual()
+              if (!isTRUE(all.equal(selection, private$get_selected()))) {
                 private$set_selected(selection)
               }
             }
@@ -609,24 +624,6 @@ RangeFilterState <- R6::R6Class( # nolint
             shinyjs::toggleState(
               id = "selection_manual",
               condition = !private$is_disabled()
-            )
-          })
-
-          private$observers$plotly_info <- observeEvent(input$plotly_info, {
-            showModal(
-              modalDialog(
-                div(
-                  class = "plotly_actions_info",
-                  "drag vertical lines to set selection", br(),
-                  "drag across plot to zoom in", br(),
-                  "drag axis to pan", br(),
-                  "double click to zoom out", br()
-                ),
-                title = "Plot actions",
-                footer = NULL,
-                size = "s",
-                easyClose = TRUE
-              )
             )
           })
 
