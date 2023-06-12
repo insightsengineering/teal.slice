@@ -234,6 +234,7 @@ RangeFilterState <- R6::R6Class( # nolint
       })
       private$plot_config <- reactive({
         list(
+          doubleClick = "reset",
           displayModeBar = FALSE,
           edits = list(shapePosition = TRUE),
           staticPlot = private$is_disabled()
