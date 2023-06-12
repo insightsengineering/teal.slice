@@ -563,8 +563,10 @@ RangeFilterState <- R6::R6Class( # nolint
             ignoreInit = TRUE,
             eventExpr = input$selection_manual,
             handlerExpr = {
+              selection <- input$selection_manual
+
               # Abort and reset if non-numeric values is entered.
-              if (any(is.na(input$selection_manual))) {
+              if (any(is.na(selection))) {
                 showNotification(
                   "Numeric range values must be numbers.",
                   type = "warning"
@@ -577,7 +579,7 @@ RangeFilterState <- R6::R6Class( # nolint
                 return(NULL)
               }
               # Abort and reset if reversed choices are specified.
-              if (input$selection_manual[1] > input$selection_manual[2]) {
+              if (selection[1] > selection[2]) {
                 showNotification(
                   "Numeric range start value must be less than end value.",
                   type = "warning"
@@ -596,8 +598,8 @@ RangeFilterState <- R6::R6Class( # nolint
                   private$dataname
                 )
               )
-              selection <- input$selection_manual
-              if (!isTRUE(all.equal(input$selection_manual, private$get_selected()))) {
+
+              if (!isTRUE(all.equal(selection, private$get_selected()))) {
                 private$set_selected(selection)
               }
             }
