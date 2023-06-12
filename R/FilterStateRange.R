@@ -465,9 +465,22 @@ RangeFilterState <- R6::R6Class( # nolint
         div(
           class = "choices_state",
           div(
-            actionLink(ns("plotly_info"), label = NULL, icon = icon("question-circle")),
+            actionLink(
+              ns("plotly_info"),
+              label = NULL,
+              icon = icon("question-circle"),
+              "data-toggle" = "popover",
+              "data-html" = "true",
+              "data-placement" = "left",
+              "data-trigger" = "hover",
+              "data-content" = '<p>Drag vertical lines to set selection.<br>
+                              Drag across plot to zoom in.<br>
+                              Drag axis to pan.<br>
+                              Double click to zoom out.</p>'
+            ),
             style = "text-align: right; font-size: 0.7em; margin-bottom: -0.7em;"
           ),
+
           shinycssloaders::withSpinner(
             plotly::plotlyOutput(ns("plot"), height = "50px"),
             type = 4,
@@ -622,24 +635,6 @@ RangeFilterState <- R6::R6Class( # nolint
             shinyjs::toggleState(
               id = "selection_manual",
               condition = !private$is_disabled()
-            )
-          })
-
-          private$observers$plotly_info <- observeEvent(input$plotly_info, {
-            showModal(
-              modalDialog(
-                div(
-                  class = "plotly_actions_info",
-                  "drag vertical lines to set selection", br(),
-                  "drag across plot to zoom in", br(),
-                  "drag axis to pan", br(),
-                  "double click to zoom out", br()
-                ),
-                title = "Plot actions",
-                footer = NULL,
-                size = "s",
-                easyClose = TRUE
-              )
             )
           })
 
