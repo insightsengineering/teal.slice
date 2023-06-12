@@ -471,10 +471,12 @@ RangeFilterState <- R6::R6Class( # nolint
               "data-html" = "true",
               "data-placement" = "left",
               "data-trigger" = "click",
-              "data-content" = '<p>Drag vertical lines to set selection.<br>
-                              Drag across plot to zoom in.<br>
-                              Drag axis to pan.<br>
-                              Double click to zoom out.</p>'
+              "data-content" = '<p>
+                                <h5> Plot actions </h5>
+                                Drag vertical lines to set selection.<br>
+                                Drag across plot to zoom in.<br>
+                                Drag axis to pan.<br>
+                                Double click to zoom out.'
             ),
             style = "text-align: right; font-size: 0.7em; margin-bottom: -0.7em;"
           ),
