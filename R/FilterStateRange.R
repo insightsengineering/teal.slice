@@ -497,6 +497,10 @@ RangeFilterState <- R6::R6Class( # nolint
 
           plot_data <- c(private$plot_data, source = session$ns("histogram_plot"))
 
+          # Add debounce function
+          reactive_selection_manual <- reactive(input$selection_manual)
+          debounced_selection_manual <- debounce(reactive_selection_manual, 500)
+
           # display histogram, adding a second trace that contains filtered data
           output$plot <- plotly::renderPlotly({
             histogram <- do.call(plotly::plot_ly, plot_data)
@@ -554,7 +558,7 @@ RangeFilterState <- R6::R6Class( # nolint
                     private$dataname
                   )
                 )
-                if (!isTRUE(all.equal(private$get_selected(), input$selection_manual))) {
+                if (!isTRUE(all.equal(private$get_selected(), debounced_selection_manual()))) {
                   shinyWidgets::updateNumericRangeInput(
                     session = session,
                     inputId = "selection_manual",
@@ -568,10 +572,11 @@ RangeFilterState <- R6::R6Class( # nolint
           private$observers$selection_manual <- observeEvent(
             ignoreNULL = FALSE,
             ignoreInit = TRUE,
-            eventExpr = input$selection_manual,
+            eventExpr = debounced_selection_manual(),
             handlerExpr = {
+
               # Abort and reset if non-numeric values is entered.
-              if (any(is.na(input$selection_manual))) {
+              if (any(is.na(debounced_selection_manual()))) {
                 showNotification(
                   "Numeric range values must be numbers.",
                   type = "warning"
@@ -584,7 +589,7 @@ RangeFilterState <- R6::R6Class( # nolint
                 return(NULL)
               }
               # Abort and reset if reversed choices are specified.
-              if (input$selection_manual[1] > input$selection_manual[2]) {
+              if (debounced_selection_manual()[1] > debounced_selection_manual()[2]) {
                 showNotification(
                   "Numeric range start value must be less than end value.",
                   type = "warning"
@@ -603,8 +608,8 @@ RangeFilterState <- R6::R6Class( # nolint
                   private$dataname
                 )
               )
-              selection <- input$selection_manual
-              if (!isTRUE(all.equal(input$selection_manual, private$get_selected()))) {
+              selection <- debounced_selection_manual()
+              if (!isTRUE(all.equal(selection, private$get_selected()))) {
                 private$set_selected(selection)
               }
             }
