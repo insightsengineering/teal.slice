@@ -672,7 +672,6 @@ RangeFilterState <- R6::R6Class( # nolint
         }
       )
     },
-
     server_inputs_fixed = function(id) {
       moduleServer(
         id = id,
