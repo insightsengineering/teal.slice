@@ -18,3 +18,21 @@
 
 
 ### END GLOBAL VARIABLES ###
+
+
+### ENSURE CHECK PASSES
+
+# this function is necessary for check to properly process code dependencies within R6 classes
+.rectify_dependencies_check <- function() {
+  dplyr::filter
+  grDevices::rgb
+  lifecycle::badge
+  logger::log_trace
+  plotly::plot_ly
+  shinycssloaders::withSpinner
+  shinyWidgets::pickerOptions
+  teal.widgets::optionalSelectInput
+}
+
+
+### END ENSURE CHECK PASSES
