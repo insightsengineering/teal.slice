@@ -466,12 +466,12 @@ RangeFilterState <- R6::R6Class( # nolint
         div(
           class = "choices_state",
           tags$head(tags$script(
-             # Adding the script here because when a separate JS file is created and initialized
-             # with include_js_file() in filterState.R,
-             # it only affects the first info_button initialization, and the rest do not show the popover on click.
-             # That's why we're keeping the JS code inline for now.
+            # Adding the script here because when a separate JS file is created and initialized
+            # with include_js_file() in filterState.R,
+            # it only affects the first info_button initialization, and the rest do not show the popover on click.
+            # That's why we're keeping the JS code inline for now.
 
-             # Inline JS code for popover functionality
+            # Inline JS code for popover functionality
             HTML(
               '$(document).ready(function() {
                  $("[data-toggle=\'popover\']").popover();
@@ -495,16 +495,15 @@ RangeFilterState <- R6::R6Class( # nolint
               "data-html" = "true",
               "data-placement" = "left",
               "data-trigger" = "click",
-              "data-title"   = "Plot actions",
-              "data-content" = '<p>
+              "data-title" = "Plot actions",
+              "data-content" = "<p>
                                 Drag vertical lines to set selection.<br>
                                 Drag across plot to zoom in.<br>
                                 Drag axis to pan.<br>
-                                Double click to zoom out.'
+                                Double click to zoom out."
             ),
             style = "text-align: right; font-size: 0.7em; margin-bottom: -1em; position: relative; z-index: 9;"
           ),
-
           shinycssloaders::withSpinner(
             plotly::plotlyOutput(ns("plot"), height = "50px"),
             type = 4,
