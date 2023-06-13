@@ -402,7 +402,7 @@ FilteredDataset <- R6::R6Class( # nolint
     add_filter_states = function(filter_states, id) {
       checkmate::assert_class(filter_states, "FilterStates")
       checkmate::assert_string(id)
-      x <- setNames(list(filter_states), id)
+      x <- stats::setNames(list(filter_states), id)
       private$filter_states <- c(private$get_filter_states(), x)
     },
 

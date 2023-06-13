@@ -22,7 +22,6 @@ Imports:
     bslib (>= 0.4.0),
     checkmate,
     dplyr,
-    ggplot2,
     grDevices,
     lifecycle,
     logger (>= 0.2.0),
@@ -33,7 +32,6 @@ Imports:
     shinycssloaders,
     shinyjs,
     shinyWidgets (>= 0.6.2),
-    stats,
     teal.data (>= 0.1.2.9011),
     teal.logger (>= 0.1.1),
     teal.widgets (>= 0.2.0)
