@@ -552,6 +552,13 @@ RangeFilterState <- R6::R6Class( # nolint
               ignoreInit = TRUE,
               eventExpr = plotly::event_data("plotly_relayout", source = session$ns("histogram_plot")),
               handlerExpr = {
+                logger::log_trace(
+                  sprintf(
+                    "RangeFilterState$server@1 selection of variable %s changed, dataname: %s",
+                    private$varname,
+                    private$dataname
+                  )
+                )
                 event <- plotly::event_data("plotly_relayout", source = session$ns("histogram_plot"))
                 if (any(grepl("shapes", names(event)))) {
                   line_positions <- private$get_selected()
