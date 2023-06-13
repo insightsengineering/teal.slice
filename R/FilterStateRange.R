@@ -466,12 +466,9 @@ RangeFilterState <- R6::R6Class( # nolint
         div(
           class = "choices_state",
           tags$head(tags$script(
-            # Adding the script here because when a separate JS file is created and initialized
-            # with include_js_file() in filterState.R,
-            # it only affects the first info_button initialization, and the rest do not show the popover on click.
-            # That's why we're keeping the JS code inline for now.
-
-            # Inline JS code for popover functionality
+            # Inline JS code for popover functionality.
+            # Adding the script inline because when added from a file with include_js_files(),
+            # it only works in the first info_button instance and not others.
             HTML(
               '$(document).ready(function() {
                  $("[data-toggle=\'popover\']").popover();
@@ -531,12 +528,13 @@ RangeFilterState <- R6::R6Class( # nolint
         function(input, output, session) {
           logger::log_trace("RangeFilterState$server initializing, dataname: { private$dataname }")
 
-          plot_data <- c(private$plot_data, source = session$ns("histogram_plot"))
-
           # Capture manual input with debounce.
           selection_manual <- debounce(reactive(input$selection_manual), 200)
 
-          # display histogram, adding a second trace that contains filtered data
+          # Prepare for histogram construction.
+          plot_data <- c(private$plot_data, source = session$ns("histogram_plot"))
+
+          # Display histogram, adding a second trace that contains filtered data.
           output$plot <- plotly::renderPlotly({
             histogram <- do.call(plotly::plot_ly, plot_data)
             histogram <- do.call(plotly::layout, c(list(p = histogram), private$plot_layout()))
@@ -545,7 +543,7 @@ RangeFilterState <- R6::R6Class( # nolint
             histogram
           })
 
-          # dragging shapes (lines) on plot updates selection
+          # Dragging shapes (lines) on plot updates selection.
           private$observers$relayout <-
             observeEvent(
               ignoreNULL = FALSE,
@@ -586,7 +584,7 @@ RangeFilterState <- R6::R6Class( # nolint
               }
             )
 
-          # change in selection updates shapes (lines) on plot and numeric input
+          # Change in selection updates shapes (lines) on plot and numeric input.
           private$observers$selection_api <-
             observeEvent(
               ignoreNULL = FALSE,
@@ -610,7 +608,7 @@ RangeFilterState <- R6::R6Class( # nolint
               }
             )
 
-          # manual input updates selection
+          # Manual input updates selection.
           private$observers$selection_manual <- observeEvent(
             ignoreNULL = FALSE,
             ignoreInit = TRUE,
@@ -631,8 +629,8 @@ RangeFilterState <- R6::R6Class( # nolint
                 )
                 return(NULL)
               }
-              # Abort and reset if reversed choices are specified.
 
+              # Abort and reset if reversed choices are specified.
               if (selection[1] > selection[2]) {
                 showNotification(
                   "Numeric range start value must be less than end value.",
@@ -645,6 +643,7 @@ RangeFilterState <- R6::R6Class( # nolint
                 )
                 return(NULL)
               }
+
               logger::log_trace(
                 sprintf(
                   "RangeFilterState$server@3 selection of variable %s changed, dataname: %s",
@@ -673,6 +672,7 @@ RangeFilterState <- R6::R6Class( # nolint
         }
       )
     },
+
     server_inputs_fixed = function(id) {
       moduleServer(
         id = id,
