@@ -23,7 +23,7 @@
 ### ENSURE CHECK PASSES
 
 # this function is necessary for check to properly process code dependencies within R6 classes
-.rectify_import_control_during_dependencies_check <- function() {
+.rectify_dependencies_check <- function() {
   dplyr::filter
   grDevices::rgb
   lifecycle::badge
