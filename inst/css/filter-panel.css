@@ -368,3 +368,9 @@ a.remove_all:hover {
     border-top-right-radius: calc(.3rem - 1px);
     margin-top: 0em;
 }
+
+.popover-body {
+    padding: 0.5rem 0.75rem;
+    color: #212529;
+    margin-bottom: -1rem;
+}
