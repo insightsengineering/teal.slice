@@ -359,7 +359,7 @@ a.remove_all:hover {
   overflow: visible;
   text-align: left;
   white-space: nowrap;
-  font-size: 1em;
+  font-size: small;
 }
 
 .progress-bar.state-count-bar-unfiltered {
