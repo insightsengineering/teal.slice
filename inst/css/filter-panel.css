@@ -357,3 +357,11 @@ a.remove_all:hover {
 .choices_state {
   margin-bottom: .45rem;
 }
+
+.popover-header {
+    margin-top: 0em;
+}
+
+.popover-body {
+    margin-bottom: -1rem;
+}
