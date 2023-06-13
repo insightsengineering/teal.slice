@@ -359,18 +359,9 @@ a.remove_all:hover {
 }
 
 .popover-header {
-    padding: .5rem .75rem;
-    margin-bottom: 0;
-    font-size: 1rem;
-    background-color: #f7f7f7;
-    border-bottom: 1px solid #ebebeb;
-    border-top-left-radius: calc(.3rem - 1px);
-    border-top-right-radius: calc(.3rem - 1px);
     margin-top: 0em;
 }
 
 .popover-body {
-    padding: 0.5rem 0.75rem;
-    color: #212529;
     margin-bottom: -1rem;
 }
