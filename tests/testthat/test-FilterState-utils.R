@@ -43,23 +43,3 @@ testthat::test_that("check_in_subset prepends error message", {
     "^premessage.*not in valid choices"
   )
 })
-
-
-testthat::test_that("formatting of range filter state for card summary", {
-  values <- c(
-    -10.000000235,
-    -4.5,
-    0.00,
-    0.00412,
-    pi,
-    12.01,
-    20.0,
-    14328948789,
-    -Inf,
-    Inf,
-    NA
-  )
-  expected <- sprintf("%.4g", values)
-
-  testthat::expect_equal(format_range_for_summary(values), expected)
-})

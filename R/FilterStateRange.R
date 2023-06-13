@@ -488,7 +488,7 @@ RangeFilterState <- R6::R6Class( # nolint
                                 Drag axis to pan.<br>
                                 Double click to zoom out.'
             ),
-            style = "text-align: right; font-size: 0.7em; margin-bottom: -0.7em;"
+            style = "text-align: right; font-size: 0.7em; margin-bottom: -1em; position: relative; z-index: 9;"
           ),
 
           shinycssloaders::withSpinner(
@@ -519,9 +519,9 @@ RangeFilterState <- R6::R6Class( # nolint
           logger::log_trace("RangeFilterState$server initializing, dataname: { private$dataname }")
 
           plot_data <- c(private$plot_data, source = session$ns("histogram_plot"))
-          # Add debounce function
-          reactive_selection_manual <- reactive(input$selection_manual)
-          debounced_selection_manual <- debounce(reactive_selection_manual, 500)
+
+          # Capture manual input with debounce.
+          selection_manual <- debounce(reactive(input$selection_manual), 200)
 
           # display histogram, adding a second trace that contains filtered data
           output$plot <- plotly::renderPlotly({
@@ -580,7 +580,7 @@ RangeFilterState <- R6::R6Class( # nolint
                     private$dataname
                   )
                 )
-                if (!isTRUE(all.equal(private$get_selected(), debounced_selection_manual()))) {
+                if (!isTRUE(all.equal(private$get_selected(), selection_manual()))) {
                   shinyWidgets::updateNumericRangeInput(
                     session = session,
                     inputId = "selection_manual",
@@ -594,9 +594,9 @@ RangeFilterState <- R6::R6Class( # nolint
           private$observers$selection_manual <- observeEvent(
             ignoreNULL = FALSE,
             ignoreInit = TRUE,
-            eventExpr = debounced_selection_manual(),
+            eventExpr = selection_manual(),
             handlerExpr = {
-              selection <- debounced_selection_manual()
+              selection <- selection_manual()
 
               # Abort and reset if non-numeric values is entered.
               if (any(is.na(selection))) {
@@ -632,7 +632,6 @@ RangeFilterState <- R6::R6Class( # nolint
                   private$dataname
                 )
               )
-              selection <- debounced_selection_manual()
               if (!isTRUE(all.equal(selection, private$get_selected()))) {
                 private$set_selected(selection)
               }
@@ -691,11 +690,9 @@ RangeFilterState <- R6::R6Class( # nolint
     #  if NA or Inf are included also
     # @return `shiny.tag` to include in the `ui_summary`
     content_summary = function() {
-      fmt_selected <- format_range_for_summary(private$get_selected())
-      min <- fmt_selected[1]
-      max <- fmt_selected[2]
+      selection <- private$get_selected()
       tagList(
-        tags$span(shiny::HTML(min, "&ndash;", max), class = "filter-card-summary-value"),
+        tags$span(shiny::HTML(selection[1], "&ndash;", selection[2]), class = "filter-card-summary-value"),
         tags$span(
           class = "filter-card-summary-controls",
           if (isTRUE(private$get_keep_na()) && private$na_count > 0) {
