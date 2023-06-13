@@ -475,8 +475,8 @@ c.teal_slices <- function(...) {
     c(
       unique(unlist(x, recursive = FALSE)),
       list(
-        include_varnames = includes,
-        exclude_varnames = excludes,
+        include_varnames = if (length(includes)) includes,
+        exclude_varnames = if (length(excludes)) excludes,
         count_type = count_types
       )
     )
