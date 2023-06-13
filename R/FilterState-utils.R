@@ -493,30 +493,6 @@ check_in_subset <- function(subset, choices, pre_msg = "") {
 }
 
 
-#' Formats selected values of a RangeFilterState for display in the header summary.
-#'
-#' If a number has more significant digits than the threshhold, it will be
-#'  formatted in scientific notation. The resulting number will have 'threshold'
-#'  significant digits. If any `NA`s are present, they will be converted to the
-#'  character "NA". Similarly `Inf` and `-Inf` will be converted to the strings
-#'  "Inf" and "-Inf" respectively.
-#'
-#'
-#' @param values `numeric` vector of values to format, may include NAs and Infs
-#' @param threshold `numeric(1) ` number of significant digits above which the number will be
-#'  formatted in scientific notation
-#'
-#' @return Vector of `length(values)` as a string suitable for display.
-#' @keywords internal
-#' @noRd
-format_range_for_summary <- function(values, threshold = 4) {
-  checkmate::assert_numeric(values, min.len = 1)
-  checkmate::assert_number(threshold, lower = 1, finite = TRUE)
-
-  sprintf(sprintf("%%.%sg", threshold), values)
-}
-
-
 #' Get hex code of the current Bootstrap theme color.
 #'
 #' Determines the color specification for the currently active Bootstrap color theme and returns one queried color.
