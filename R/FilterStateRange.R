@@ -234,6 +234,7 @@ RangeFilterState <- R6::R6Class( # nolint
       })
       private$plot_config <- reactive({
         list(
+          doubleClick = "reset",
           displayModeBar = FALSE,
           edits = list(shapePosition = TRUE),
           staticPlot = private$is_disabled()
@@ -595,8 +596,10 @@ RangeFilterState <- R6::R6Class( # nolint
             ignoreInit = TRUE,
             eventExpr = debounced_selection_manual(),
             handlerExpr = {
+              selection <- debounced_selection_manual()
+
               # Abort and reset if non-numeric values is entered.
-              if (any(is.na(debounced_selection_manual()))) {
+              if (any(is.na(selection))) {
                 showNotification(
                   "Numeric range values must be numbers.",
                   type = "warning"
@@ -609,7 +612,8 @@ RangeFilterState <- R6::R6Class( # nolint
                 return(NULL)
               }
               # Abort and reset if reversed choices are specified.
-              if (debounced_selection_manual()[1] > debounced_selection_manual()[2]) {
+
+              if (selection[1] > selection[2]) {
                 showNotification(
                   "Numeric range start value must be less than end value.",
                   type = "warning"
