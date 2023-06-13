@@ -519,9 +519,9 @@ RangeFilterState <- R6::R6Class( # nolint
           logger::log_trace("RangeFilterState$server initializing, dataname: { private$dataname }")
 
           plot_data <- c(private$plot_data, source = session$ns("histogram_plot"))
-          # Add debounce function
-          reactive_selection_manual <- reactive(input$selection_manual)
-          debounced_selection_manual <- debounce(reactive_selection_manual, 500)
+
+          # Capture manual input with debounce.
+          selection_manual <- debounce(reactive(input$selection_manual), 200)
 
           # display histogram, adding a second trace that contains filtered data
           output$plot <- plotly::renderPlotly({
@@ -580,7 +580,7 @@ RangeFilterState <- R6::R6Class( # nolint
                     private$dataname
                   )
                 )
-                if (!isTRUE(all.equal(private$get_selected(), debounced_selection_manual()))) {
+                if (!isTRUE(all.equal(private$get_selected(), selection_manual()))) {
                   shinyWidgets::updateNumericRangeInput(
                     session = session,
                     inputId = "selection_manual",
@@ -594,9 +594,9 @@ RangeFilterState <- R6::R6Class( # nolint
           private$observers$selection_manual <- observeEvent(
             ignoreNULL = FALSE,
             ignoreInit = TRUE,
-            eventExpr = debounced_selection_manual(),
+            eventExpr = selection_manual(),
             handlerExpr = {
-              selection <- debounced_selection_manual()
+              selection <- selection_manual()
 
               # Abort and reset if non-numeric values is entered.
               if (any(is.na(selection))) {
@@ -632,7 +632,6 @@ RangeFilterState <- R6::R6Class( # nolint
                   private$dataname
                 )
               )
-              selection <- debounced_selection_manual()
               if (!isTRUE(all.equal(selection, private$get_selected()))) {
                 private$set_selected(selection)
               }
