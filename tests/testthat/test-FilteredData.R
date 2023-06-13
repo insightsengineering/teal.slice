@@ -1004,3 +1004,64 @@ testthat::test_that("get_filter_count properly tallies active filter states for 
   datasets$set_filter_state(state = fs)
   shiny::isolate(testthat::expect_equal(datasets$get_filter_count(), 4L))
 })
+
+
+
+test_class <- R6::R6Class(
+  classname = "test_class",
+  inherit = FilteredData,
+  public = list(
+    srv_available_filters = function(id) {
+      private$srv_available_filters(id)
+    },
+    ui_available_filters = function(id) {
+      private$ui_available_filters(id)
+    }
+  )
+)
+datasets <- test_class$new(list(iris = list(dataset = iris)))
+fs <- filter_settings(
+  filter_var(dataname = "iris", varname = "Sepal.Length", locked = TRUE),
+  filter_var(dataname = "iris", varname = "Sepal.Width"),
+  filter_var(dataname = "iris", varname = "Petal.Length"),
+  filter_var(dataname = "iris", varname = "Petal.Width")
+)
+fs_rv <- reactiveVal(fs)
+datasets$set_available_teal_slices(reactive(fs_rv()))
+datasets$set_filter_state(fs[1:2])
+shiny::testServer(
+  datasets$srv_available_filters,
+  expr = {
+
+    testthat::test_that("FilteredData$srv_available_slices locked slices ommited", {
+      testthat::expect_identical(slices(), fs[-1])
+    })
+
+    testthat::test_that("FilteredData$srv_available_slices new state in external list reflected in available slices", {
+      species_slice <- filter_var(dataname = "iris", varname = "Species")
+      fs_rv(c(fs_rv(), filter_settings(species_slice)))
+      testthat::expect_identical(
+        available_slices_id(),
+        c("iris Sepal.Width", "iris Petal.Length", "iris Petal.Width", "iris Species")
+      )
+    })
+
+    testthat::test_that("active_slices_id returns list of currently active filters", {
+      testthat::expect_identical(active_slices_id(), c("iris Sepal.Length", "iris Sepal.Width"))
+    })
+
+    testthat::test_that("FilteredData$srv_available_slices changing input values de/activate states", {
+      session$setInputs(available_slices_id = c("iris Sepal.Length", "iris Sepal.Width"))
+      session$setInputs(available_slices_id = c("iris Sepal.Length"))
+      testthat::expect_identical(active_slices_id(), c("iris Sepal.Length"))
+
+      session$setInputs(available_slices_id = c("iris Sepal.Length", "iris Sepal.Width", "iris Species"))
+      testthat::expect_identical(active_slices_id(), c("iris Sepal.Length", "iris Sepal.Width", "iris Species"))
+    })
+
+    testthat::test_that("FilteredData$srv_available_slices deactivating all keeps locked states", {
+      session$setInputs(available_slices_id = NULL)
+      testthat::expect_identical(active_slices_id(), "iris Sepal.Length")
+    })
+  }
+)

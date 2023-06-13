@@ -632,7 +632,7 @@ FilteredData <- R6::R6Class( # nolint
     #' @return invisible `NULL`
     set_available_teal_slices = function(x) {
       checkmate::assert_class(x, "reactive")
-      private$external_teal_slices <- x
+      private$available_teal_slices <- x
       invisible(NULL)
     },
 
@@ -1041,7 +1041,7 @@ FilteredData <- R6::R6Class( # nolint
 
     # preprocessing code used to generate the unfiltered datasets as a string
     code = NULL,
-    external_teal_slices = NULL,
+    available_teal_slices = NULL,
 
     # keys used for joining/filtering data a JoinKeys object (see teal.data)
     join_keys = NULL,
@@ -1111,7 +1111,8 @@ FilteredData <- R6::R6Class( # nolint
     srv_available_filters = function(id) {
       moduleServer(id, function(input, output, session) {
         # todo: is it okey to ommit locked or should they be visible but disabled?
-        slices <- reactive(Filter(function(slice) !isTRUE(slice$locked), private$external_teal_slices()))
+
+        slices <- reactive(Filter(function(slice) !isTRUE(slice$locked), private$available_teal_slices()))
         available_slices_id <- reactive(vapply(slices(), `[[`, character(1), "id"))
         active_slices_id <- reactive(vapply(self$get_filter_state(), `[[`, character(1), "id"))
 
