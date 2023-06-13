@@ -527,7 +527,7 @@ fetch_bs_color <- function(color, alpha = NULL) {
   variables_file <- readLines(sass_file)
   # locate theme color variables
   ind <- grep("// scss-docs-(start|end) theme-color-variables", variables_file)
-  color_definitions <- variables_file[(ind[1]+1L):(ind[2]-1L)]
+  color_definitions <- variables_file[(ind[1] + 1L):(ind[2] - 1L)]
 
   # extract colors names
   color_names <- sub("(\\$)(\\w.+)(:.+)", "\\2", color_definitions)
@@ -552,4 +552,3 @@ fetch_bs_color <- function(color, alpha = NULL) {
 
   paste0(color_specification[color], alpha)
 }
-
