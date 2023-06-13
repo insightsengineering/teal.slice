@@ -488,7 +488,7 @@ RangeFilterState <- R6::R6Class( # nolint
                                 Drag axis to pan.<br>
                                 Double click to zoom out.'
             ),
-            style = "text-align: right; font-size: 0.7em; margin-bottom: -0.7em;"
+            style = "text-align: right; font-size: 0.7em; margin-bottom: -1em; position: relative; z-index: 9;"
           ),
 
           shinycssloaders::withSpinner(
@@ -690,11 +690,9 @@ RangeFilterState <- R6::R6Class( # nolint
     #  if NA or Inf are included also
     # @return `shiny.tag` to include in the `ui_summary`
     content_summary = function() {
-      fmt_selected <- format_range_for_summary(private$get_selected())
-      min <- fmt_selected[1]
-      max <- fmt_selected[2]
+      selection <- private$get_selected()
       tagList(
-        tags$span(shiny::HTML(min, "&ndash;", max), class = "filter-card-summary-value"),
+        tags$span(shiny::HTML(selection[1], "&ndash;", selection[2]), class = "filter-card-summary-value"),
         tags$span(
           class = "filter-card-summary-controls",
           if (isTRUE(private$get_keep_na()) && private$na_count > 0) {
