@@ -11,7 +11,7 @@
 #' This expression is hereafter referred to as \emph{subset expression}.
 #'
 #' The \emph{subset expression} is constructed differently for different
-#' classes of the underlying data object and `FilterStates` subclasses.
+#' classes of the underlying data object and `FilterStates` sub-classes.
 #' Currently implemented for `data.frame`, `matrix`,
 #' `SummarizedExperiment`, and `MultiAssayExperiment`.
 #'
@@ -607,9 +607,9 @@ FilterStates <- R6::R6Class( # nolint
 
           # card_id of inserted card must be saved in private$card_ids as
           # it might be removed by the several events:
-          #   - remove button in FilterStates module
-          #   - remove button in FilteredDataset module
-          #   - remove button in FilteredData module
+          #   - remove button in `FilterStates` module
+          #   - remove button in `FilteredDataset` module
+          #   - remove button in `FilteredData` module
           #   - API call remove_filter_state
           card_id <- session$ns("card")
           private$card_ids[state_id] <- card_id
@@ -763,14 +763,31 @@ FilterStates <- R6::R6Class( # nolint
     # @return invisible NULL
     #
     state_list_empty = function() {
-      logger::log_trace("{ class(self)[1] }$state_list_empty removing all filters for dataname: { private$dataname }")
+      logger::log_trace(
+        "{ class(self)[1] }$state_list_empty removing all non-locked filters for dataname: { private$dataname }"
+      )
 
       state_list <- shiny::isolate(private$state_list())
       for (state_id in names(state_list)) {
-        private$state_list_remove(state_id)
+        is_locked <- shiny::isolate(private$state_list()[[state_id]]$get_state()$locked)
+        if (is_locked) {
+          logger::log_trace(
+            paste0(
+              "{ class(self)[1] }$state_list_empty aborted removing (locked) filter, ",
+              "dataname: { private$dataname }; state_id: { state_id }"
+            )
+          )
+        } else {
+          logger::log_trace(
+            "{ class(self)[1] }$state_list_empty removed filter, dataname: { private$dataname }; state_id: { state_id }"
+          )
+          private$state_list_remove(state_id)
+        }
       }
 
-      logger::log_trace("{ class(self)[1] }$state_list_empty removed all filters for dataname: { private$dataname }")
+      logger::log_trace(
+        "{ class(self)[1] }$state_list_empty removed all non-locked filters for dataname: { private$dataname }"
+      )
       invisible(NULL)
     },
 

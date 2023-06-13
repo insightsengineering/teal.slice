@@ -10,11 +10,13 @@ init_filter_state(
   dataname,
   varname,
   choices = NULL,
+  multiple = NULL,
   selected = NULL,
   keep_na = NULL,
   keep_inf = NULL,
-  fixed = FALSE,
   disabled = FALSE,
+  fixed = FALSE,
+  locked = FALSE,
   extract_type = character(0),
   ...
 )
@@ -39,6 +41,9 @@ name of the variable.}
 \item{choices}{(\code{atomic})\cr
 vector specifying allowed selection values}
 
+\item{multiple}{(\code{logical(1)})\cr
+flag specifying whether the \code{FilterState} more than one value can be selected}
+
 \item{selected}{(\code{atomic}, \code{NULL})\cr
 vector specifying selection}
 
@@ -48,14 +53,17 @@ flag specifying whether to keep missing values}
 \item{keep_inf}{(\code{logical(1)}, \code{NULL})\cr
 flag specifying whether to keep infinite values}
 
-\item{fixed}{(\code{logical(1)})\cr
-flag specifying whether the \code{FilterState} is initiated fixed}
-
 \item{disabled}{(\code{logical(1)})\cr
 flag specifying whether the \code{FilterState} is initiated disabled}
 
+\item{fixed}{(\code{logical(1)})\cr
+flag specifying whether the \code{FilterState} is initiated fixed}
+
+\item{locked}{(\code{logical(1)})\cr
+flag specifying whether the \code{FilterState} is initiated locked}
+
 \item{extract_type}{(\code{character(0)}, \code{character(1)})\cr
-whether condition calls should be prefixed by dataname. Possible values:
+specifying whether condition calls should be prefixed by \code{dataname}. Possible values:
 \itemize{
 \item{\code{character(0)} (default)}{ \code{varname} in the condition call will not be prefixed}
 \item{\code{"list"}}{ \code{varname} in the condition call will be returned as \verb{<dataname>$<varname>}}

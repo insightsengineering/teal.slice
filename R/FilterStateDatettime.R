@@ -135,6 +135,9 @@ DatetimeFilterState <- R6::R6Class( # nolint
     #'   name of the variable.
     #' @param choices (`atomic`, `NULL`)\cr
     #'   vector specifying allowed selection values
+    #' @param multiple (`logical(1)`)\cr
+    #'   flag specifying whether the `FilterState` more than one value can be selected;
+    #'   only applicable to `FilterStateChoices` and `FilterStateLogical`
     #' @param selected (`atomic`, `NULL`)\cr
     #'   vector specifying selection
     #' @param keep_na (`logical(1)`, `NULL`)\cr
@@ -146,7 +149,7 @@ DatetimeFilterState <- R6::R6Class( # nolint
     #' @param disabled (`logical(1)`)\cr
     #'   flag specifying whether the `FilterState` is initiated disabled
     #' @param extract_type (`character(0)`, `character(1)`)\cr
-    #' whether condition calls should be prefixed by dataname. Possible values:
+    #' whether condition calls should be prefixed by `dataname`. Possible values:
     #' \itemize{
     #' \item{`character(0)` (default)}{ `varname` in the condition call will not be prefixed}
     #' \item{`"list"`}{ `varname` in the condition call will be returned as `<dataname>$<varname>`}
@@ -159,6 +162,7 @@ DatetimeFilterState <- R6::R6Class( # nolint
                           dataname,
                           varname,
                           choices = NULL,
+                          multiple = NULL,
                           selected = NULL,
                           keep_na = NULL,
                           keep_inf = NULL,
@@ -174,6 +178,7 @@ DatetimeFilterState <- R6::R6Class( # nolint
         x = x,
         x_reactive = x_reactive,
         dataname = dataname,
+        multiple = multiple,
         varname = varname,
         keep_na = keep_na,
         keep_inf = keep_inf,
@@ -185,6 +190,9 @@ DatetimeFilterState <- R6::R6Class( # nolint
       do.call(super$initialize, args)
 
       private$set_choices(choices)
+      if (is.null(selected)) {
+        selected <- private$choices
+      }
       private$set_selected(selected)
 
       invisible(self)

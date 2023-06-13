@@ -20,13 +20,16 @@ name of the dataset where \code{expr} could be executed on.}
 logical expression written in executable way. By "executable" means
 that \code{subset} call should be able to evaluate this without failure. For
 example \code{MultiAssayExperiment::subsetByColData} requires variable names prefixed
-by dataname (e.g. \code{data$var1 == "x" & data$var2 > 0}). For \code{data.frame} call
+by \code{dataname} (e.g. \code{data$var1 == "x" & data$var2 > 0}). For \code{data.frame} call
 can be written without prefixing \code{var1 == "x" & var2 > 0}.}
 
 \item{disabled}{(\code{logical(1)})\cr
 flag specifying whether the \code{FilterState} is initiated disabled}
 
 \item{...}{additional arguments to be saved as a list in \code{private$extras} field}
+
+\item{locked}{(\code{logical(1)})\cr
+flag specifying whether the \code{FilterState} is initiated locked}
 }
 \value{
 \code{FilterStateExpr} object

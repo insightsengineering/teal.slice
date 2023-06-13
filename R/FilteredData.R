@@ -12,7 +12,7 @@
 #'
 #' The datasets are filtered lazily, i.e. only when requested / needed in a Shiny app.
 #'
-#' By design, any dataname set through `set_dataset` cannot be removed because
+#' By design, any `dataname` set through `set_dataset` cannot be removed because
 #' other code may already depend on it. As a workaround, the underlying
 #' data can be set to `NULL`.
 #'
@@ -73,7 +73,7 @@ FilteredData <- R6::R6Class( # nolint
     #' Initialize a `FilteredData` object
     #' @param data_objects (`list`)
     #'   should named elements containing `data.frame` or `MultiAssayExperiment`.
-    #'   Names of the list will serve as dataname.
+    #'   Names of the list will serve as `dataname`.
     #' @param join_keys (`JoinKeys` or NULL) see [`teal.data::join_keys()`].
     #' @param code (`CodeClass` or `NULL`) see [`teal.data::CodeClass`].
     #' @param check (`logical(1)`) whether data has been check against reproducibility.
@@ -124,11 +124,11 @@ FilteredData <- R6::R6Class( # nolint
     },
 
     #' @description
-    #' Gets datanames
+    #' Gets `datanames`
     #'
-    #' The datanames are returned in the order in which they must be
+    #' The `datanames` are returned in the order in which they must be
     #' evaluated (in case of dependencies).
-    #' @return (`character` vector) of datanames
+    #' @return (`character` vector) of `datanames`
     datanames = function() {
       names(private$filtered_datasets)
     },
@@ -145,12 +145,12 @@ FilteredData <- R6::R6Class( # nolint
 
     #' @description
     #' Get names of datasets available for filtering.
-    #' Returned datanames depending on the relationship type.
-    #' If input `dataname` has parent, then parent dataname will be also
+    #' Returned `datanames` depending on the relationship type.
+    #' If input `dataname` has parent, then parent `dataname` will be also
     #' returned in the output vector.
     #'
     #' @param dataname (`character`) names of the dataset. Default `"all"`
-    #'   returns all datanames set in `FilteredData`
+    #'   returns all `datanames` set in `FilteredData`
     #'
     #' @return (`character`) of dataset names
     get_filterable_datanames = function(dataname = "all") {
@@ -347,7 +347,7 @@ FilteredData <- R6::R6Class( # nolint
     set_dataset = function(data, dataname, metadata, label) {
       logger::log_trace("FilteredData$set_dataset setting dataset, name: { dataname }")
       # to include it nicely in the Show R Code;
-      # the UI also uses datanames in ids, so no whitespaces allowed
+      # the UI also uses `datanames` in ids, so no whitespaces allowed
       check_simple_name(dataname)
 
       join_keys <- self$get_join_keys()
@@ -544,19 +544,37 @@ FilteredData <- R6::R6Class( # nolint
       datanames <- slices_field(state, "dataname")
       checkmate::assert_subset(datanames, self$datanames())
 
-      logger::log_trace(
-        "{ class(self)[1] }$remove_filter_state removing filter(s), dataname: { private$dataname }"
+      current <- shiny::isolate(self$get_filter_state())
+
+      locked <- stats::setNames(
+        vapply(current, function(x) x$locked, logical(1)),
+        vapply(current, get_teal_slice_id, character(1))
       )
 
-      lapply(datanames, function(x) {
-        private$get_filtered_dataset(x)$remove_filter_state(
-          slices_which(state, sprintf("dataname == \"%s\"", x))
+      state_ids <- vapply(state, get_teal_slice_id, character(1))
+
+      state <- state[state_ids %in% names(locked[!locked])]
+
+      if (length(state) > 0) {
+        datanames <- slices_field(state, "dataname")
+        logger::log_trace(
+          "{ class(self)[1] }$remove_filter_state removing filter(s), dataname: { private$dataname }"
         )
-      })
 
-      logger::log_trace(
-        "{ class(self)[1] }$remove_filter_state removed filter(s), dataname: { private$dataname }"
-      )
+        lapply(datanames, function(x) {
+          private$get_filtered_dataset(x)$remove_filter_state(
+            slices_which(state, sprintf("dataname == \"%s\"", x))
+          )
+        })
+
+        logger::log_trace(
+          "{ class(self)[1] }$remove_filter_state removed filter(s), dataname: { private$dataname }"
+        )
+      } else {
+        logger::log_trace(
+          "{ class(self)[1] }$remove_filter_state did not remove any filter(s), dataname: { private$dataname }"
+        )
+      }
 
       invisible(NULL)
     },
@@ -578,7 +596,7 @@ FilteredData <- R6::R6Class( # nolint
     #' of a `FilteredData` object.
     #'
     #' @param datanames (`character`)\cr
-    #'   datanames to remove their `FilterStates` or empty which removes
+    #'   `datanames` to remove their `FilterStates` or empty which removes
     #'   all `FilterStates` in the `FilteredData` object
     #'
     #' @return `NULL` invisibly
@@ -595,7 +613,7 @@ FilteredData <- R6::R6Class( # nolint
 
       logger::log_trace(
         paste(
-          "FilteredData$clear_filter_states removed all FilterStates,",
+          "FilteredData$clear_filter_states removed all non-locked FilterStates,",
           "datanames: { toString(datanames) }"
         )
       )
@@ -642,7 +660,7 @@ FilteredData <- R6::R6Class( # nolint
     #'
     #' @param id (`character(1)`)\cr
     #'   an ID string that corresponds with the ID used to call the module's UI function.
-    #' @param active_datanames `function / reactive` returning datanames that
+    #' @param active_datanames `function / reactive` returning `datanames` that
     #'   should be shown on the filter panel,
     #'   must be a subset of the `datanames` argument provided to `ui_filter_panel`;
     #'   if the function returns `NULL` (as opposed to `character(0)`), the filter
@@ -799,9 +817,9 @@ FilteredData <- R6::R6Class( # nolint
         )
 
         observeEvent(input$remove_all_filters, {
-          logger::log_trace("FilteredData$srv_filter_panel@1 removing all filters")
+          logger::log_trace("FilteredData$srv_filter_panel@1 removing all non-locked filters")
           self$clear_filter_states()
-          logger::log_trace("FilteredData$srv_filter_panel@1 removed all filters")
+          logger::log_trace("FilteredData$srv_filter_panel@1 removed all non-locked filters")
         })
         logger::log_trace("FilteredData$srv_active initialized")
         NULL
@@ -809,7 +827,7 @@ FilteredData <- R6::R6Class( # nolint
     },
 
     #' @description
-    #' Server module responsible for displaying dropdowns with variables to add a filter.
+    #' Server module responsible for displaying drop-downs with variables to add a filter.
     #' @param id (`character(1)`)\cr
     #'   an ID string that corresponds with the ID used to call the module's UI function.
     #' @return `shiny.tag`
@@ -851,7 +869,7 @@ FilteredData <- R6::R6Class( # nolint
     },
 
     #' @description
-    #' Server module responsible for displaying dropdowns with variables to add a filter.
+    #' Server module responsible for displaying drop-downs with variables to add a filter.
     #' @param id (`character(1)`)\cr
     #'   an ID string that corresponds with the ID used to call the module's UI function.
     #' @param active_datanames (`reactive`)\cr
@@ -938,7 +956,7 @@ FilteredData <- R6::R6Class( # nolint
     #' @param id (`character(1)`)\cr
     #'   an ID string that corresponds with the ID used to call the module's UI function.
     #' @param active_datanames (`reactive`)\cr
-    #'   returning datanames that should be shown on the filter panel,
+    #'   returning `datanames` that should be shown on the filter panel,
     #'   must be a subset of the `datanames` argument provided to `ui_filter_panel`;
     #'   if the function returns `NULL` (as opposed to `character(0)`), the filter
     #'   panel will be hidden.
@@ -1084,7 +1102,7 @@ FilteredData <- R6::R6Class( # nolint
     # @description
     # Disable the filter panel.
     #
-    # Adds `disable` class to `filter_add_vars` `filter_panel_active_vars` and `filter_active_vars_contents` divs.
+    # Adds `disable` class to `filter_add_vars` div.
     # Existing filter states are stored in `cached_states` private field
     # so their individual disabled status can be recalled.
     #
@@ -1108,9 +1126,8 @@ FilteredData <- R6::R6Class( # nolint
     # @description
     # Enable the filter panel.
     #
-    # Adds `disable` class to `filter_add_vars` `filter_panel_active_vars` and `filter_active_vars_contents` divs.
-    # Existing filter states are stored in `cached_states` private field
-    # so their individual disabled status can be recalled.
+    # Removes `disable` class from `filter_add_vars` div.
+    # Cached filter states stored in `cached_states` private field are restored.
     #
     filter_panel_enable = function() {
       private$filter_panel_active <- TRUE
@@ -1144,7 +1161,7 @@ FilteredData <- R6::R6Class( # nolint
 # Wrapper functions for `FilteredData` class ----
 
 
-#' Gets filter expression for multiple datanames taking into account its order.
+#' Gets filter expression for multiple `datanames` taking into account its order.
 #'
 #' @description `r lifecycle::badge("stable")`
 #' To be used in show R code button.

@@ -136,6 +136,9 @@ RangeFilterState <- R6::R6Class( # nolint
     #'   name of the variable.
     #' @param choices (`atomic`, `NULL`)\cr
     #'   vector specifying allowed selection values
+    #' @param multiple (`logical(1)`)\cr
+    #'   flag specifying whether the `FilterState` more than one value can be selected;
+    #'   only applicable to `FilterStateChoices` and `FilterStateLogical`
     #' @param selected (`atomic`, `NULL`)\cr
     #'   vector specifying selection
     #' @param keep_na (`logical(1)`, `NULL`)\cr
@@ -147,7 +150,7 @@ RangeFilterState <- R6::R6Class( # nolint
     #' @param disabled (`logical(1)`)\cr
     #'   flag specifying whether the `FilterState` is initiated disabled
     #' @param extract_type (`character(0)`, `character(1)`)\cr
-    #' whether condition calls should be prefixed by dataname. Possible values:
+    #' whether condition calls should be prefixed by `dataname`. Possible values:
     #' \itemize{
     #' \item{`character(0)` (default)}{ `varname` in the condition call will not be prefixed}
     #' \item{`"list"`}{ `varname` in the condition call will be returned as `<dataname>$<varname>`}
@@ -160,6 +163,7 @@ RangeFilterState <- R6::R6Class( # nolint
                           dataname,
                           varname,
                           choices = NULL,
+                          multiple = NULL,
                           selected = NULL,
                           keep_na = NULL,
                           keep_inf = NULL,
@@ -179,6 +183,7 @@ RangeFilterState <- R6::R6Class( # nolint
         x_reactive = x_reactive,
         dataname = dataname,
         varname = varname,
+        multiple = multiple,
         keep_na = keep_na,
         keep_inf = keep_inf,
         fixed = fixed,
@@ -195,6 +200,9 @@ RangeFilterState <- R6::R6Class( # nolint
       private$inf_count <- sum(is.infinite(x))
 
       private$set_choices(choices)
+      if (is.null(selected)) {
+        selected <- private$choices
+      }
       private$set_selected(selected)
 
       private$plot_data <- list(
@@ -457,8 +465,43 @@ RangeFilterState <- R6::R6Class( # nolint
       tagList(
         div(
           class = "choices_state",
+          tags$head(tags$script(
+            # Adding the script here because when a separate JS file is created and initialized
+            # with include_js_file() in filterState.R,
+            # it only affects the first info_button initialization, and the rest do not show the popover on click.
+            # That's why we're keeping the JS code inline for now.
+
+            # Inline JS code for popover functionality
+            HTML(
+              '$(document).ready(function() {
+                 $("[data-toggle=\'popover\']").popover();
+
+                 $(document).on("click", function (e) {
+                   if (!$("[data-toggle=\'popover\']").is(e.target) &&
+                       $("[data-toggle=\'popover\']").has(e.target).length === 0 &&
+                       $(".popover").has(e.target).length === 0) {
+                     $("[data-toggle=\'popover\']").popover("hide");
+                   }
+                 });
+               });'
+            )
+          )),
           div(
-            actionLink(ns("plotly_info"), label = NULL, icon = icon("question-circle")),
+            actionLink(
+              ns("plotly_info"),
+              label = NULL,
+              icon = icon("question-circle"),
+              "data-toggle" = "popover",
+              "data-html" = "true",
+              "data-placement" = "left",
+              "data-trigger" = "click",
+              "data-title" = "Plot actions",
+              "data-content" = "<p>
+                                Drag vertical lines to set selection.<br>
+                                Drag across plot to zoom in.<br>
+                                Drag axis to pan.<br>
+                                Double click to zoom out."
+            ),
             style = "text-align: right; font-size: 0.7em; margin-bottom: -1em; position: relative; z-index: 9;"
           ),
           shinycssloaders::withSpinner(
@@ -489,6 +532,9 @@ RangeFilterState <- R6::R6Class( # nolint
           logger::log_trace("RangeFilterState$server initializing, dataname: { private$dataname }")
 
           plot_data <- c(private$plot_data, source = session$ns("histogram_plot"))
+
+          # Capture manual input with debounce.
+          selection_manual <- debounce(reactive(input$selection_manual), 200)
 
           # display histogram, adding a second trace that contains filtered data
           output$plot <- plotly::renderPlotly({
@@ -547,7 +593,7 @@ RangeFilterState <- R6::R6Class( # nolint
                     private$dataname
                   )
                 )
-                if (!isTRUE(all.equal(private$get_selected(), input$selection_manual))) {
+                if (!isTRUE(all.equal(private$get_selected(), selection_manual()))) {
                   shinyWidgets::updateNumericRangeInput(
                     session = session,
                     inputId = "selection_manual",
@@ -561,9 +607,9 @@ RangeFilterState <- R6::R6Class( # nolint
           private$observers$selection_manual <- observeEvent(
             ignoreNULL = FALSE,
             ignoreInit = TRUE,
-            eventExpr = input$selection_manual,
+            eventExpr = selection_manual(),
             handlerExpr = {
-              selection <- input$selection_manual
+              selection <- selection_manual()
 
               # Abort and reset if non-numeric values is entered.
               if (any(is.na(selection))) {
@@ -579,6 +625,7 @@ RangeFilterState <- R6::R6Class( # nolint
                 return(NULL)
               }
               # Abort and reset if reversed choices are specified.
+
               if (selection[1] > selection[2]) {
                 showNotification(
                   "Numeric range start value must be less than end value.",
@@ -598,7 +645,6 @@ RangeFilterState <- R6::R6Class( # nolint
                   private$dataname
                 )
               )
-
               if (!isTRUE(all.equal(selection, private$get_selected()))) {
                 private$set_selected(selection)
               }
@@ -612,24 +658,6 @@ RangeFilterState <- R6::R6Class( # nolint
             shinyjs::toggleState(
               id = "selection_manual",
               condition = !private$is_disabled()
-            )
-          })
-
-          private$observers$plotly_info <- observeEvent(input$plotly_info, {
-            showModal(
-              modalDialog(
-                div(
-                  class = "plotly_actions_info",
-                  "drag vertical lines to set selection", br(),
-                  "drag across plot to zoom in", br(),
-                  "drag axis to pan", br(),
-                  "double click to zoom out", br()
-                ),
-                title = "Plot actions",
-                footer = NULL,
-                size = "s",
-                easyClose = TRUE
-              )
             )
           })
 
