@@ -19,6 +19,7 @@ Depends:
     R (>= 4.0),
     shiny
 Imports:
+    bslib (>= 0.4.0),
     checkmate,
     dplyr,
     ggplot2,
@@ -26,16 +27,17 @@ Imports:
     lifecycle,
     logger (>= 0.2.0),
     methods,
+    plotly,
     R6,
     rlang,
+    shinycssloaders,
     shinyjs,
-    shinyWidgets (>= 0.5.0),
+    shinyWidgets (>= 0.6.2),
     stats,
     teal.data (>= 0.1.2.9011),
     teal.logger (>= 0.1.1),
     teal.widgets (>= 0.2.0)
 Suggests:
-    bslib,
     formatters (>= 0.3.1),
     knitr,
     MultiAssayExperiment,

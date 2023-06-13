@@ -536,163 +536,63 @@ check_in_subset <- function(subset, choices, pre_msg = "") {
   return(invisible(NULL))
 }
 
-#' Find containing limits for interval.
+
+#' Get hex code of the current Bootstrap theme color.
 #'
-#' Given an interval and a numeric vector,
-#' find the smallest interval within the numeric vector that contains the interval.
+#' Determines the color specification for the currently active Bootstrap color theme and returns one queried color.
 #'
-#' This is a helper function for `RangeFilterState` that modifies slider selection
-#' so that the _subsetting call_ includes the value specified by the filter API call.
+#' @param color `character(1)` naming one of the available theme colors
+#' @param alpha either a `numeric(1)` or `character(1)` specifying transparency
+#'              in the range of `0-1` or a hexadecimal value `00-ff`, respectively;
+#'              set to NULL to omit adding the alpha channel
 #'
-#' Regardless of the underlying numeric data, the slider always presents 100 steps.
-#' The ticks on the slider do not represent actual observations but rather borders between virtual bins.
-#' Since the value selected on the slider is passed to `private$selected` and that in turn
-#' updates the slider selection, programmatic selection of arbitrary values may inadvertently shift
-#' the selection to the closest tick, thereby dropping the actual value set (if it exists in the data).
-#'
-#' This function purposely shifts the selection to the closest ticks whose values form an interval
-#' that will contain the interval defined by the filter API call.
-#'
-#' @param x `numeric(2)` interval to contain
-#' @param range `numeric(>=2)` vector of values to contain `x` in
-#'
-#' @return Numeric vector of length 2 that lies within `range`.
-#'
-#' @keywords internal
+#' @return Named `character(1)` containing a hexadecimal color representation.
 #'
 #' @examples
-#' \donttest{
-#' ticks <- 1:10
-#' values1 <- c(3, 5)
-#' teal.slice:::contain_interval(values1, ticks)
-#' values2 <- c(3.1, 5.7)
-#' teal.slice:::contain_interval(values2, ticks)
-#' values3 <- c(0, 20)
-#' teal.slice:::contain_interval(values3, ticks)
-#'}
-contain_interval <- function(x, range) {
-  checkmate::assert_numeric(x, len = 2L, any.missing = FALSE, sorted = TRUE)
-  checkmate::assert_numeric(range, min.len = 2L, any.missing = FALSE, sorted = TRUE)
-
-  x[1] <- Find(function(i) i <= x[1], range, nomatch = min(range), right = TRUE)
-  x[2] <- Find(function(i) i >= x[2], range, nomatch = max(range))
-  x
-}
-
-
-#' Formats selected values of a RangeFilterState for display in the header summary.
+#' teal.slice:::fetch_bs_color("primary")
+#' teal.slice:::fetch_bs_color("danger", 0.35)
+#' teal.slice:::fetch_bs_color("danger", "80")
 #'
-#' If a number has more significant digits than the threshhold, it will be
-#'  formatted in scientific notation. The resulting number will have 'threshold'
-#'  significant digits. If any `NA`s are present, they will be converted to the
-#'  character "NA". Similarly `Inf` and `-Inf` will be converted to the strings
-#'  "Inf" and "-Inf" respectively.
-#'
-#'
-#' @param values Vector of values to format. Can contain `NA`, `Inf`, `-Inf`.
-#' @param threshold Number of significant digits above which the number will be
-#'  formatted in scientific notation.
-#'
-#' @return Vector of `length(values)` as a string suitable for display.
 #' @keywords internal
-#' @noRd
-format_range_for_summary <- function(values, threshold = 4) {
-  checkmate::assert_numeric(values, min.len = 1)
-  checkmate::assert_number(threshold, lower = 1, finite = TRUE)
-
-  ops <- options(scipen = 9999)
-  on.exit(options(ops))
-
-  # convert to a string representation
-  values_str <- vapply(
-    values,
-    FUN.VALUE = character(1),
-    USE.NAMES = FALSE,
-    FUN = function(value) {
-      if (is.na(value) || is.finite(value)) {
-        format(value)
-      } else {
-        as.character(value)
-      }
-    })
-
-  n_digits <- n_sig_digits(values_str)
-
-  mapply(
-    values_str,
-    n_digits,
-    USE.NAMES = FALSE,
-    MoreArgs = list(threshold = threshold),
-    FUN = function(value, digits, threshold) {
-      if (digits == -1) { # special case for Inf, -Inf, NA
-        value
-      } else if (digits > threshold) {
-        val <- format(as.numeric(value), digits = threshold, scientific = TRUE)
-        val <- sub("e", "E", val)
-        val
-      } else {
-        value
-      }
-    }
+#'
+fetch_bs_color <- function(color, alpha = NULL) {
+  checkmate::assert_string(color)
+  checkmate::assert(
+    checkmate::check_number(alpha, lower = 0, upper = 1, null.ok = TRUE),
+    checkmate::check_string(alpha, pattern = "[0-9a-f]{2}", null.ok = TRUE)
   )
-}
 
-#' Count the number of significant digits in a number.
-#'
-#' Adapted from https://www.r-bloggers.com/2010/04/significant-figures-in-r-and-info-zeros/
-#'  The supplied vector should be numbers represented as a character. `NA`, `Inf`,
-#'  and `-Inf` should be coded as the strings "NA", "Inf", and "-Inf". In these
-#'  cases, a count of -1 is returned.
-#'
-#' @param nums A vector of numbers that have been converted to character.
-#'
-#' @return Vector of `length(nums)` with counts of significant digits.
-#' @keywords internal
-#' @noRd
-n_sig_digits <- function(nums) {
-  checkmate::assert_character(nums, any.missing = FALSE)
+  # locate file that describes the current theme
+  ## TODO this is not ideal
+  sass_file <- bslib::bs_theme()[["layers"]][[2]][["defaults"]][[1]]
+  sass_file <- attr(sass_file, "sass_file_path")
 
-  vapply(nums, FUN.VALUE = numeric(1), USE.NAMES = FALSE, FUN = function(num) {
+  # load scss file that encodes variables
+  variables_file <- readLines(sass_file)
+  # locate theme color variables
+  ind <- grep("// scss-docs-(start|end) theme-color-variables", variables_file)
+  color_definitions <- variables_file[(ind[1] + 1L):(ind[2] - 1L)]
 
-    if (grepl("e", num)) return(-1)
-    if (num == "NA") return(-1)
-    if (num == "Inf" || num == "-Inf") return(-1)
+  # extract colors names
+  color_names <- sub("(\\$)(\\w.+)(:.+)", "\\2", color_definitions)
 
-    sig_digits <- 1
-    i <- 0
+  # verify that an available color was requested
+  checkmate::assert_choice(color, color_names)
 
-    if (grepl("\\.", num)) {
+  # extract color references
+  color_references <- sub("(\\$)(\\w.+)(:\\s.+\\$)(\\w.+)(\\s.+)", "\\4", color_definitions)
 
-      num_split <- unlist(strsplit(num, "\\."))
-      num_str <- paste(num_split[1], num_split[2], sep = "")
-      current_n_digits <- nchar(num_str)
+  # translate references to color codes
+  color_specification <- structure(color_references, names = color_names)
+  color_specification <- vapply(color_specification, function(x) {
+    line <- grep(sprintf("^\\$%s:\\s+#\\w{6}\\s+!default", x), variables_file, value = TRUE)
+    code <- sub("(.+)(#\\w{6})(\\s+.+)", "\\2", line)
+    code
+  }, character(1L))
 
-      while (i < current_n_digits) {
+  if (!is.null(alpha)) {
+    if (is.numeric(alpha)) alpha <- as.hexmode(ceiling(255 * alpha))
+  }
 
-        if (substr(num_str, i + 1, i + 1) == "0") {
-          i <- i + 1
-          next
-        } else {
-          sig_digits <- current_n_digits - i
-          break
-        }
-      }
-    } else {
-
-      num_str <- num
-      current_n_digits <- nchar(num_str)
-
-      while (i < current_n_digits) {
-        if (substr(num_str, current_n_digits - i, current_n_digits - i) == "0") {
-          i <- i + 1
-          next
-        } else {
-          sig_digits <- current_n_digits - i
-          break
-        }
-      }
-    }
-
-    return(sig_digits)
-  })
+  paste0(color_specification[color], alpha)
 }
