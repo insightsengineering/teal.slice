@@ -1032,7 +1032,6 @@ datasets$set_filter_state(fs[1:2])
 shiny::testServer(
   datasets$srv_available_filters,
   expr = {
-
     testthat::test_that("FilteredData$srv_available_slices locked slices ommited", {
       testthat::expect_identical(slices(), fs[-1])
     })
