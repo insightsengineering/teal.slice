@@ -458,6 +458,12 @@ RangeFilterState <- R6::R6Class( # nolint
         div(
           class = "choices_state",
           tags$head(tags$script(
+             # Adding the script here because when a separate JS file is created and initialized
+             # with include_js_file() in filterState.R,
+             # it only affects the first info_button initialization, and the rest do not show the popover on click.
+             # That's why we're keeping the JS code inline for now.
+
+             # Inline JS code for popover functionality
             HTML(
               '$(document).ready(function() {
                  $("[data-toggle=\'popover\']").popover();
