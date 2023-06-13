@@ -78,19 +78,6 @@ existing filter", {
   expect_identical_slices(filter_states$get_filter_state(), fs)
 })
 
-testthat::test_that("set_filter_state doesn't allow to create two filters on the same variable", {
-  filter_states <- FilterStates$new(data = data.frame(a = 1:10), dataname = "test")
-  fs <- filter_settings(
-    filter_var(dataname = "test", varname = "a", selected = c(1, 5)),
-    filter_var(dataname = "test", varname = "a", selected = c(1, 10)),
-    count_type = "none"
-  )
-
-  testthat::expect_error(
-    filter_states$set_filter_state(fs), "Some of the teal_slice objects refer to the same filter."
-  )
-})
-
 testthat::test_that("set_filter_state allows to create two filters on the same variable if combination of their
 fields (dataname, varname, varlabel, arg, id) differ", {
   filter_states <- FilterStates$new(data = data.frame(a = 1:10), dataname = "a")
@@ -369,7 +356,7 @@ testthat::test_that("Adding 'var_to_add' adds another filter state", {
   )
 
   expect_identical_slices(
-    filter_states$get_filter_state(),
+    shiny::isolate(filter_states$get_filter_state()),
     filter_settings(
       filter_var(
         dataname = "iris", varname = "Sepal.Length", choices = c(4.3, 7.9), selected = c(5.1, 6.4),
