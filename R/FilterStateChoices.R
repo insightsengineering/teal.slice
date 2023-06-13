@@ -8,18 +8,15 @@
 #' @examples
 #' filter_state <- teal.slice:::ChoicesFilterState$new(
 #'   x = c(LETTERS, NA),
-#'   varname = "x",
-#'   dataname = "data"
+#'   slice = filter_var(varname = "x", dataname = "data")
 #' )
 #' shiny::isolate(filter_state$get_call())
-#' shiny::isolate(
-#'   filter_state$set_state(
-#'     filter_var(
-#'       dataname = "data",
-#'       varname = "x",
-#'       selected = "A",
-#'       keep_na = TRUE
-#'     )
+#' filter_state$set_state(
+#'   filter_var(
+#'     dataname = "data",
+#'     varname = "x",
+#'     selected = "A",
+#'     keep_na = TRUE
 #'   )
 #' )
 #' shiny::isolate(filter_state$get_call())
@@ -33,10 +30,9 @@
 #' attr(data_choices, "label") <- "lowercase letters"
 #' fs <- ChoicesFilterState$new(
 #'   x = data_choices,
-#'   dataname = "data",
-#'   varname = "variable",
-#'   selected = c("a", "b"),
-#'   keep_na = TRUE
+#'   slice = filter_var(
+#'     dataname = "data", varname = "variable", selected = c("a", "b"), keep_na = TRUE
+#'   )
 #' )
 #'
 #' ui <- fluidPage(
@@ -92,13 +88,13 @@
 #'   observeEvent(
 #'     input$button4_choices,
 #'     fs$set_state(
-#'       filter_var("data", "variable", selected = character(0), keep_na = TRUE)
+#'       filter_var(dataname = "data", varname = "variable", selected = character(0), keep_na = TRUE)
 #'     )
 #'   )
 #'   observeEvent(
 #'     input$button0_choices,
 #'     fs$set_state(
-#'       filter_var("data", "variable", selected = c("a", "c"), keep_na = TRUE)
+#'       filter_var(dataname = "data", varname = "variable", selected = c("a", "c"), keep_na = TRUE)
 #'     )
 #'   )
 #' }
@@ -126,25 +122,12 @@ ChoicesFilterState <- R6::R6Class( # nolint
     #'   counts following the change in values of the filtered dataset.
     #'   If it is set to `reactive(NULL)` then counts based on filtered
     #'   dataset are not shown.
-    #' @param dataname (`character(1)`)\cr
-    #'   optional name of dataset where `x` is taken from. Must be specified
-    #'   if `extract_type` argument is not empty.
-    #' @param varname (`character(1)`)\cr
-    #'   name of the variable.
-    #' @param choices (`atomic`, `NULL`)\cr
-    #'   vector specifying allowed selection values
-    #' @param multiple (`logical(1)`)\cr
-    #'   flag specifying whether the `FilterState` more than one value can be selected
-    #' @param selected (`atomic`, `NULL`)\cr
-    #'   vector specifying selection
-    #' @param keep_na (`logical(1)`, `NULL`)\cr
-    #'   flag specifying whether to keep missing values
-    #' @param keep_inf (`logical(1)`, `NULL`)\cr
-    #'   flag specifying whether to keep infinite values
-    #' @param fixed (`logical(1)`)\cr
-    #'   flag specifying whether the `FilterState` is initiated fixed
-    #' @param disabled (`logical(1)`)\cr
-    #'   flag specifying whether the `FilterState` is initiated disabled
+    #' @param slice (`teal_slice`)\cr
+    #'   object created using [filter_var()]. `teal_slice` is stored
+    #'   in the class and `set_state` directly manipulates values within `teal_slice`. `get_state`
+    #'   returns `teal_slice` object which can be reused in other places. Beware, that `teal_slice`
+    #'   is an immutable object which means that changes in particular object are automatically
+    #'   reflected in all places which refer to the same `teal_slice`.
     #' @param extract_type (`character(0)`, `character(1)`)\cr
     #' whether condition calls should be prefixed by `dataname`. Possible values:
     #' \itemize{
@@ -156,72 +139,51 @@ ChoicesFilterState <- R6::R6Class( # nolint
     #'
     initialize = function(x,
                           x_reactive = reactive(NULL),
-                          dataname,
-                          varname,
-                          choices = NULL,
-                          multiple = NULL,
-                          selected = NULL,
-                          keep_na = NULL,
-                          keep_inf = NULL,
-                          fixed = FALSE,
-                          disabled = FALSE,
-                          extract_type = character(0),
-                          ...) {
-      checkmate::assert(
-        is.character(x),
-        is.factor(x),
-        length(unique(x[!is.na(x)])) < getOption("teal.threshold_slider_vs_checkboxgroup"),
-        combine = "or"
-      )
-
-      x_factor <- if (!is.factor(x)) {
-        structure(
-          factor(as.character(x), levels = as.character(sort(unique(x)))),
-          label = attr(x, "label")
+                          slice,
+                          extract_type = character(0)) {
+      shiny::isolate({
+        checkmate::assert(
+          is.character(x),
+          is.factor(x),
+          length(unique(x[!is.na(x)])) < getOption("teal.threshold_slider_vs_checkboxgroup"),
+          combine = "or"
         )
-      } else {
-        x
-      }
 
-      if (is.null(multiple)) multiple <- TRUE # Set default behavior of multiple variable to TRUE.
+        x_factor <- if (!is.factor(x)) {
+          structure(
+            factor(as.character(x), levels = as.character(sort(unique(x)))),
+            label = attr(x, "label")
+          )
+        } else {
+          x
+        }
 
-      args <- list(
-        x = x_factor,
-        x_reactive = x_reactive,
-        dataname = dataname,
-        varname = varname,
-        multiple = multiple,
-        keep_na = keep_na,
-        keep_inf = keep_inf,
-        fixed = fixed,
-        disabled = disabled,
-        extract_type = extract_type
-      )
-      args <- append(args, list(...))
-      do.call(super$initialize, args)
-
-      private$set_choices(choices)
-
-      if (is.null(selected) && multiple) {
-        selected <- private$choices
-      } else if (is.null(selected)) {
-        selected <- private$choices[1]
-      } else if (length(selected) > 1 && !multiple) {
-        warning(
-          "FilterStateChoices allows selected to be length=1 when multiple is FALSE. ",
-          "Only first value is taken."
+        super$initialize(
+          x = x_factor,
+          x_reactive = x_reactive,
+          slice = slice,
+          extract_type = extract_type
         )
-        selected <- selected[1]
-      }
-      private$set_selected(selected)
+        private$set_choices(slice$choices)
+        if (is.null(slice$selected) && slice$multiple) {
+          slice$selected <- private$get_choices()
+        } else if (is.null(slice$selected)) {
+          slice$selected <- private$get_choices()[1]
+        } else if (length(slice$selected) > 1 && !slice$multiple) {
+          warning(
+            "FilterStateChoices allows selected to be length=1 when multiple is FALSE. ",
+            "Only first value is taken."
+          )
+          slice$selected <- slice$selected[1]
+        }
+        private$set_selected(slice$selected)
+        private$data_class <- class(x)[1L]
+        if (inherits(x, "POSIXt")) {
+          private$tzone <- Find(function(x) x != "", attr(as.POSIXlt(x), "tzone"))
+        }
 
-      private$data_class <- class(x)[1L]
-      if (inherits(x, "POSIXt")) {
-        private$tzone <- Find(function(x) x != "", attr(as.POSIXlt(x), "tzone"))
-      }
-
-      private$set_choices_counts(unname(table(x_factor)))
-
+        private$set_choices_counts(unname(table(x_factor)))
+      })
       invisible(self)
     },
 
@@ -230,14 +192,14 @@ ChoicesFilterState <- R6::R6Class( # nolint
     #' For this class returned call looks like
     #' `<varname> %in%  c(<values selected>)` with
     #' optional `is.na(<varname>)`.
-    #' @param dataname name of data set; defaults to `private$dataname`
+    #' @param dataname name of data set; defaults to `private$get_dataname()`
     #' @return (`call`) or `NULL`
     #'
     get_call = function(dataname) {
       if (isFALSE(private$is_any_filtered())) {
         return(NULL)
       }
-      if (missing(dataname)) dataname <- private$dataname
+      if (missing(dataname)) dataname <- private$get_dataname()
       varname <- private$get_varname_prefixed(dataname)
       choices <- private$get_selected()
       if (private$data_class != "factor") {
@@ -278,6 +240,10 @@ ChoicesFilterState <- R6::R6Class( # nolint
     tzone = character(0), # if x is a datetime, stores time zone so that it can be restored in $get_call
 
     # private methods ----
+
+    is_multiple = function() {
+      shiny::isolate(isTRUE(private$teal_slice$multiple))
+    },
     # @description
     # Checks validity of the choices, adjust if neccessary and sets the flag for the case where choices
     #  are limited by default from the start.
@@ -290,7 +256,7 @@ ChoicesFilterState <- R6::R6Class( # nolint
         if (length(setdiff(choices, choices_adjusted)) > 0L) {
           warning(sprintf(
             "Some of the choices not within variable values, adjusting. Varname: %s, dataname: %s.",
-            private$varname, private$dataname
+            private$get_varname(), private$get_dataname()
           ))
           choices <- choices_adjusted
         }
@@ -298,14 +264,14 @@ ChoicesFilterState <- R6::R6Class( # nolint
           warning(sprintf(
             "Invalid choices: none of them within the values in the variable.
             Setting defaults. Varname: %s, dataname: %s.",
-            private$varname, private$dataname
+            private$get_varname(), private$get_dataname()
           ))
           choices <- levels(private$x)
         }
       }
       private$set_is_choice_limited(private$x, choices)
-      private$choices <- choices
-      private$x <- private$x[(private$x %in% private$choices) | is.na(private$x)]
+      private$teal_slice$choices <- choices
+      private$x <- private$x[(private$x %in% private$get_choices()) | is.na(private$x)]
       private$x <- droplevels(private$x)
       invisible(NULL)
     },
@@ -324,7 +290,7 @@ ChoicesFilterState <- R6::R6Class( # nolint
     },
     get_choices_counts = function() {
       if (!is.null(private$x_reactive)) {
-        table(factor(private$x_reactive(), levels = private$choices))
+        table(factor(private$x_reactive(), levels = private$get_choices()))
       } else {
         NULL
       }
@@ -344,7 +310,7 @@ ChoicesFilterState <- R6::R6Class( # nolint
         private$get_dataname(),
         private$get_varname()
       )
-      check_in_subset(value, private$choices, pre_msg = pre_msg)
+      check_in_subset(value, private$get_choices(), pre_msg = pre_msg)
     },
     cast_and_validate = function(values) {
       tryCatch(
@@ -357,28 +323,28 @@ ChoicesFilterState <- R6::R6Class( # nolint
       values
     },
     remove_out_of_bound_values = function(values) {
-      in_choices_mask <- values %in% private$choices
+      in_choices_mask <- values %in% private$get_choices()
       if (length(values[!in_choices_mask]) > 0) {
         warning(paste(
           "Values:", strtrim(paste(values[!in_choices_mask], collapse = ", "), 360),
-          "are not in choices of column", private$varname, "in dataset", private$dataname, "."
+          "are not in choices of column", private$get_varname(), "in dataset", private$get_dataname(), "."
         ))
       }
       values <- values[in_choices_mask]
 
-      if (length(values) != 1 && !private$multiple) {
+      if (length(values) != 1 && !private$is_multiple()) {
         warning(sprintf(
           "Values: %s are not a vector of length one. The first value will be selected by default.
                         Setting defaults. Varname: %s, dataname: %s.",
           strtrim(toString(values), 360),
-          private$varname, private$dataname
+          private$get_varname(), private$get_dataname()
         ))
         values <- shiny::isolate(private$get_selected())
       }
       values
     },
     is_checkboxgroup = function() {
-      length(private$choices) <= getOption("teal.threshold_slider_vs_checkboxgroup")
+      length(private$get_choices()) <= getOption("teal.threshold_slider_vs_checkboxgroup")
     },
 
     # shiny modules ----
@@ -392,68 +358,70 @@ ChoicesFilterState <- R6::R6Class( # nolint
     ui_inputs = function(id) {
       ns <- NS(id)
 
-      countsmax <- private$choices_counts
-      countsnow <- if (!is.null(shiny::isolate(private$x_reactive()))) {
-        isolate(unname(table(factor(shiny::isolate(private$x_reactive()), levels = private$choices))))
-      } else {
-        NULL
-      }
+      # we need to isolate UI to not rettrigger renderUI
+      shiny::isolate({
+        countsmax <- private$choices_counts
+        countsnow <- if (!is.null(private$x_reactive())) {
+          unname(table(factor(private$x_reactive(), levels = private$get_choices())))
+        } else {
+          NULL
+        }
 
-      ui_input <- if (private$is_checkboxgroup()) {
-        labels <- countBars(
-          inputId = ns("labels"),
-          choices = private$choices,
-          countsnow = countsnow,
-          countsmax = countsmax
-        )
-        div(
-          class = "choices_state",
-          if (private$multiple) {
-            checkboxGroupInput(
-              inputId = ns("selection"),
-              label = NULL,
-              selected = shiny::isolate(private$get_selected()),
-              choiceNames = labels,
-              choiceValues = private$choices,
-              width = "100%"
-            )
-          } else {
-            radioButtons(
-              inputId = ns("selection"),
-              label = NULL,
-              selected = shiny::isolate(private$get_selected()),
-              choiceNames = labels,
-              choiceValues = private$choices,
-              width = "100%"
-            )
-          }
-        )
-      } else {
-        labels <- mapply(
-          FUN = make_count_text,
-          label = private$choices,
-          countnow = if (is.null(countsnow)) rep(list(NULL), length(private$choices)) else countsnow,
-          countmax = countsmax
-        )
-
-        teal.widgets::optionalSelectInput(
-          inputId = ns("selection"),
-          choices = stats::setNames(private$choices, labels),
-          selected = shiny::isolate(private$get_selected()),
-          multiple = private$multiple,
-          options = shinyWidgets::pickerOptions(
-            actionsBox = TRUE,
-            liveSearch = (length(private$choices) > 10),
-            noneSelectedText = "Select a value"
+        ui_input <- if (private$is_checkboxgroup()) {
+          labels <- countBars(
+            inputId = ns("labels"),
+            choices = private$get_choices(),
+            countsnow = countsnow,
+            countsmax = countsmax
           )
+          div(
+            class = "choices_state",
+            if (private$is_multiple()) {
+              checkboxGroupInput(
+                inputId = ns("selection"),
+                label = NULL,
+                selected = private$get_selected(),
+                choiceNames = labels,
+                choiceValues = private$get_choices(),
+                width = "100%"
+              )
+            } else {
+              radioButtons(
+                inputId = ns("selection"),
+                label = NULL,
+                selected = private$get_selected(),
+                choiceNames = labels,
+                choiceValues = private$get_choices(),
+                width = "100%"
+              )
+            }
+          )
+        } else {
+          labels <- mapply(
+            FUN = make_count_text,
+            label = private$get_choices(),
+            countnow = if (is.null(countsnow)) rep(list(NULL), length(private$get_choices())) else countsnow,
+            countmax = countsmax
+          )
+
+          teal.widgets::optionalSelectInput(
+            inputId = ns("selection"),
+            choices = stats::setNames(private$get_choices(), labels),
+            selected = private$get_selected(),
+            multiple = private$is_multiple(),
+            options = shinyWidgets::pickerOptions(
+              actionsBox = TRUE,
+              liveSearch = (length(private$get_choices()) > 10),
+              noneSelectedText = "Select a value"
+            )
+          )
+        }
+        div(
+          uiOutput(ns("trigger_visible")),
+          ui_input,
+          private$keep_na_ui(ns("keep_na"))
         )
-      }
-      if (shiny::isolate(private$is_disabled())) ui_input <- shinyjs::disabled(ui_input)
-      div(
-        uiOutput(ns("trigger_visible")),
-        ui_input,
-        private$keep_na_ui(ns("keep_na"))
-      )
+      })
     },
 
     # @description
@@ -465,7 +433,7 @@ ChoicesFilterState <- R6::R6Class( # nolint
       moduleServer(
         id = id,
         function(input, output, session) {
-          logger::log_trace("ChoicesFilterState$server initializing, dataname: { private$dataname }")
+          logger::log_trace("ChoicesFilterState$server initializing, dataname: { private$get_dataname() }")
 
           # 1. renderUI is used here as an observer which triggers only if output is visible
           #  and if the reactive changes - reactive triggers only if the output is visible.
@@ -474,12 +442,12 @@ ChoicesFilterState <- R6::R6Class( # nolint
           output$trigger_visible <- renderUI({
             logger::log_trace(sprintf(
               "ChoicesFilterState$server@1 updating count labels in variable: %s , dataname: %s",
-              private$varname,
-              private$dataname
+              private$get_varname(),
+              private$get_dataname()
             ))
 
             countsnow <- if (!is.null(private$x_reactive())) {
-              unname(table(factor(non_missing_values(), levels = private$choices)))
+              unname(table(factor(non_missing_values(), levels = private$get_choices())))
             } else {
               NULL
             }
@@ -487,21 +455,21 @@ ChoicesFilterState <- R6::R6Class( # nolint
             if (private$is_checkboxgroup()) {
               updateCountBars(
                 inputId = "labels",
-                choices = private$choices,
+                choices = private$get_choices(),
                 countsmax = private$choices_counts,
                 countsnow = countsnow
               )
             } else {
               labels <- mapply(
                 FUN = make_count_text,
-                label = private$choices,
-                countnow = if (is.null(countsnow)) rep(list(NULL), length(private$choices)) else countsnow,
+                label = private$get_choices(),
+                countnow = if (is.null(countsnow)) rep(list(NULL), length(private$get_choices())) else countsnow,
                 countmax = private$choices_counts
               )
               teal.widgets::updateOptionalSelectInput(
                 session = session,
                 inputId = "selection",
-                choices = stats::setNames(private$choices, labels),
+                choices = stats::setNames(private$get_choices(), labels),
                 selected = private$get_selected()
               )
             }
@@ -515,17 +483,17 @@ ChoicesFilterState <- R6::R6Class( # nolint
             handlerExpr = {
               logger::log_trace(sprintf(
                 "ChoicesFilterState$server@2 selection of variable %s changed, dataname: %s",
-                private$varname,
-                private$dataname
+                private$get_varname(),
+                private$get_dataname()
               ))
 
-              selection <- if (is.null(input$selection) && private$multiple) {
+              selection <- if (is.null(input$selection) && private$is_multiple()) {
                 character(0)
-              } else if (isTRUE(length(input$selection) != 1) && !private$multiple) {
-                # for length of input$selection other then 1 previous input is restored
-                showNotification(
-                  "This filter exclusively supports single selection. Any additional choices made will be disregarded."
-                )
+              } else if (isTRUE(length(input$selection) != 1) && !private$is_multiple()) {
+                showNotification(paste(
+                  "This filter exclusively supports single selection.",
+                  "Any additional choices made will be disregarded."
+                ))
                 teal.widgets::updateOptionalSelectInput(
                   session, "selection",
                   selected = private$get_selected()
@@ -541,18 +509,18 @@ ChoicesFilterState <- R6::R6Class( # nolint
 
           private$keep_na_srv("keep_na")
 
-          # this observer is needed in the situation when private$selected has been
+          # this observer is needed in the situation when teal_slice$selected has been
           # changed directly by the api - then it's needed to rerender UI element
           # to show relevant values
-          private$observers$selection_api <- observeEvent(private$selected(), {
-            if (!isTRUE(all.equal(input$selection, private$get_selected()))) {
+          private$observers$selection_api <- observeEvent(private$get_selected(), {
+            if (!setequal(input$selection, private$get_selected())) {
               logger::log_trace(sprintf(
                 "ChoicesFilterState$server@2 state of variable %s changed, dataname: %s",
-                private$varname,
-                private$dataname
+                private$get_varname(),
+                private$get_dataname()
               ))
               if (private$is_checkboxgroup()) {
-                if (private$multiple) {
+                if (private$is_multiple()) {
                   updateCheckboxGroupInput(
                     inputId = "selection",
                     selected = private$get_selected()
@@ -572,7 +540,7 @@ ChoicesFilterState <- R6::R6Class( # nolint
             }
           })
 
-          logger::log_trace("ChoicesFilterState$server initialized, dataname: { private$dataname }")
+          logger::log_trace("ChoicesFilterState$server initialized, dataname: { private$get_dataname() }")
           NULL
         }
       )
@@ -581,22 +549,22 @@ ChoicesFilterState <- R6::R6Class( # nolint
       moduleServer(
         id = id,
         function(input, output, session) {
-          logger::log_trace("ChoicesFilterState$server initializing, dataname: { private$dataname }")
+          logger::log_trace("ChoicesFilterState$server initializing, dataname: { private$get_dataname() }")
 
           output$selection <- renderUI({
-            countsnow <- unname(table(factor(private$x_reactive(), levels = private$choices)))
+            countsnow <- unname(table(factor(private$x_reactive(), levels = private$get_choices())))
             countsmax <- private$choices_counts
 
-            ind <- private$choices %in% shiny::isolate(private$selected())
+            ind <- private$get_choices() %in% shiny::isolate(private$get_selected())
             countBars(
               inputId = session$ns("labels"),
-              choices = shiny::isolate(private$selected()),
+              choices = shiny::isolate(private$get_selected()),
               countsnow = countsnow[ind],
               countsmax = countsmax[ind]
             )
           })
 
-          logger::log_trace("ChoicesFilterState$server initialized, dataname: { private$dataname }")
+          logger::log_trace("ChoicesFilterState$server initialized, dataname: { private$get_dataname() }")
           NULL
         }
       )

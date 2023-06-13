@@ -198,20 +198,22 @@ FilterStates <- R6::R6Class( # nolint
     #' @return `NULL` invisibly
     #'
     remove_filter_state = function(state) {
-      checkmate::assert_class(state, "teal_slices")
+      shiny::isolate({
+        checkmate::assert_class(state, "teal_slices")
 
-      lapply(state, function(x) {
-        state_id <- get_teal_slice_id(x)
-        logger::log_trace(
-          "{ class(self)[1] }$remove_filter_state removing filter, dataname: { x$dataname }; state_id: { state_id }"
-        )
-        private$state_list_remove(state_id = state_id)
-        logger::log_trace(
-          "{ class(self)[1] }$remove_filter_state removed filter, dataname: { x$dataname }; state_id: { state_id }"
-        )
+        lapply(state, function(x) {
+          state_id <- x$id
+          logger::log_trace(
+            "{ class(self)[1] }$remove_filter_state removing filter, dataname: { x$dataname }; state_id: { state_id }"
+          )
+          private$state_list_remove(state_id = state_id)
+          logger::log_trace(
+            "{ class(self)[1] }$remove_filter_state removed filter, dataname: { x$dataname }; state_id: { state_id }"
+          )
+        })
+
+        invisible(NULL)
       })
-
-      invisible(NULL)
     },
 
     #' @description
@@ -256,44 +258,45 @@ FilterStates <- R6::R6Class( # nolint
     #'   column in `data`.
     #' @return function which throws an error
     set_filter_state = function(state) {
-      logger::log_trace("{ class(self)[1] }$set_filter_state initializing, dataname: { private$dataname }")
-      checkmate::assert_class(state, "teal_slices")
-      lapply(state, function(x) {
-        checkmate::assert_true(x$dataname == private$dataname, .var.name = "dataname matches private$dataname")
+      shiny::isolate({
+        logger::log_trace("{ class(self)[1] }$set_filter_state initializing, dataname: { private$dataname }")
+        checkmate::assert_class(state, "teal_slices")
+        lapply(state, function(x) {
+          checkmate::assert_true(
+            x$dataname == private$dataname,
+            .var.name = "dataname matches private$dataname"
+          )
+        })
+
+        private$set_filterable_varnames(
+          include_varnames = attr(state, "include_varnames")[[private$dataname]],
+          exclude_varnames = attr(state, "exclude_varnames")[[private$dataname]]
+        )
+
+        count_type <- attr(state, "count_type")
+        if (length(count_type)) {
+          private$count_type <- count_type
+        }
+
+        # Drop teal_slices that refer to excluded variables.
+        varnames <- slices_field(state, "varname")
+        excluded_varnames <- setdiff(varnames, private$get_filterable_varnames())
+        if (length(excluded_varnames)) {
+          state <- Filter(function(x) !x$varname %in% excluded_varnames, state)
+          logger::log_warn("filters for columns: { toString(excluded_varnames) } excluded from { private$dataname }")
+        }
+
+        if (length(state) > 0) {
+          private$set_filter_state_impl(
+            state = state,
+            data = private$data,
+            data_reactive = private$data_reactive
+          )
+        }
+        logger::log_trace("{ class(self)[1] }$set_filter_state initialized, dataname: { private$dataname }")
+
+        invisible(NULL)
       })
-
-      private$set_filterable_varnames(
-        include_varnames = attr(state, "include_varnames")[[private$dataname]],
-        exclude_varnames = attr(state, "exclude_varnames")[[private$dataname]]
-      )
-
-      count_type <- attr(state, "count_type")
-      if (length(count_type)) {
-        private$count_type <- count_type
-      }
-
-      # Drop teal_slices that refer to excluded variables.
-      varnames <- slices_field(state, "varname")
-      excluded_varnames <- setdiff(varnames, private$get_filterable_varnames())
-      if (length(excluded_varnames)) {
-        state <- slices_which(
-          state,
-          sprintf("!varname %%in%% c(%s)", toString(dQuote(excluded_varnames, q = FALSE)))
-        )
-        logger::log_warn("filters for columns: { toString(excluded_varnames) } excluded from { private$dataname }")
-      }
-
-      if (length(state) > 0) {
-        private$set_filter_state_impl(
-          state = state,
-          data = private$data,
-          data_reactive = private$data_reactive
-        )
-      }
-
-      logger::log_trace("{ class(self)[1] }$set_filter_state initialized, dataname: { private$dataname }")
-
-      invisible(NULL)
     },
 
     #' @description
@@ -320,13 +323,12 @@ FilterStates <- R6::R6Class( # nolint
     #'
     ui_active = function(id) {
       ns <- NS(id)
-      private$cards_container_id <- ns("cards")
       tagList(
         include_css_files(pattern = "filter-panel"),
-        tags$div(
-          id = private$cards_container_id,
+        uiOutput(
+          ns("cards"),
           class = "accordion",
-          `data-label` = ifelse(identical(private$datalabel, character(0)), "", paste0("> ", private$datalabel))
+          `data-label` = ifelse(length(private$datalabel), "", paste0("> ", private$datalabel)),
         )
       )
     },
@@ -343,40 +345,47 @@ FilterStates <- R6::R6Class( # nolint
       moduleServer(
         id = id,
         function(input, output, session) {
-          logger::log_trace("FilterStates$srv_add initializing, dataname: { private$dataname }")
+          logger::log_trace("FilterState$srv_active initializing, dataname: { private$dataname }")
           current_state <- reactive(private$state_list_get())
           previous_state <- reactiveVal(character(0))
           added_state_name <- reactiveVal(character(0))
-          removed_state_name <- reactiveVal(character(0))
+
+          str_to_shiny_ns <- function(x) {
+            gsub("[^[:alnum:]]+", "_", x)
+          }
 
           observeEvent(current_state(), {
             logger::log_trace("FilterStates$srv_active@1 determining added and removed filter states")
             added_state_name(setdiff(names(current_state()), names(previous_state())))
-            removed_state_name(setdiff(names(previous_state()), names(current_state())))
             previous_state(current_state())
           })
 
-          observeEvent(added_state_name(), ignoreNULL = TRUE, {
-            logger::log_trace("FilterStates$srv_active@2 inserting a new filter state card")
-            fstates <- current_state()
-            for (fname in added_state_name()) {
-              private$insert_filter_state_ui(
-                id = fname,
-                filter_state = fstates[[fname]],
-                state_id = fname
+          output[["cards"]] <- shiny::renderUI({
+            fstates <- current_state() # rerenders when queue changes / not when the state changes
+            lapply(names(fstates), function(fname) {
+              shiny::isolate(
+                fstates[[fname]]$ui(id = session$ns(str_to_shiny_ns(fname)), parent_id = session$ns("cards"))
               )
-            }
-            added_state_name(character(0))
+            })
           })
 
-          observeEvent(removed_state_name(), ignoreNULL = TRUE, {
-            logger::log_trace("FilterStates$srv_active@3 removing filter state card")
-            for (fname in removed_state_name()) {
-              private$remove_filter_state_ui(fname, .input = input)
+          observeEvent(
+            added_state_name(), # we want to call FilterState module only once when it's added
+            ignoreNULL = TRUE,
+            {
+              fstates <- current_state()
+              lapply(added_state_name(), function(fname) {
+                fs_callback <- fstates[[fname]]$server(id = str_to_shiny_ns(fname))
+                observeEvent(
+                  eventExpr = fs_callback(), # when remove button is clicked in the FilterState ui
+                  once = TRUE, # remove button can be called once, should be destroyed afterwards
+                  handlerExpr = private$state_list_remove(fname)
+                )
+              })
+              added_state_name(character(0))
             }
-            removed_state_name(character(0))
-          })
-          logger::log_trace("FilterStates$srv_add initialized, dataname: { private$dataname }")
+          )
+
           NULL
         }
       )
@@ -502,8 +511,6 @@ FilterStates <- R6::R6Class( # nolint
   ),
   private = list(
     # private fields ----
-    cards_container_id = character(0),
-    card_ids = character(0),
     count_type = "all", # specifies how observation numbers are displayed in filter cards,
     data = NULL, # data.frame, MAE, SE or matrix
     data_reactive = NULL, # reactive
@@ -573,116 +580,6 @@ FilterStates <- R6::R6Class( # nolint
       }
     },
 
-    # Module to insert/remove `FilterState` UI
-    #
-    # This module adds the shiny UI of the `FilterState` object newly added
-    # to state_list to the Active Filter Variables,
-    # calls `FilterState` modules and creates an observer to remove state
-    # parameter filter_state (`FilterState`).
-    #
-    # @param id (`character(1)`)\cr
-    #   shiny module instance id
-    # @param filter_state (`named list`)\cr
-    #   should contain values of initial selections in the `FilterState`;
-    #   `list` names must correspond to column names in `data`
-    # @param state_id (`character(1)`)\cr
-    #   name of element in a filter state (which is a `reactiveVal` containing a list)
-    #
-    # @return `moduleServer` function which returns `NULL`
-    #
-    insert_filter_state_ui = function(id, filter_state, state_id) {
-      checkmate::assert_multi_class(filter_state, c("FilterState", "FilterStateExpr"))
-      checkmate::assert_character(state_id, len = 1)
-      moduleServer(
-        id = id,
-        function(input, output, session) {
-          logger::log_trace(
-            sprintf(
-              "%s$insert_filter_state_ui, adding FilterState UI of state_id: %s; dataname: %s",
-              class(self)[1],
-              state_id,
-              private$dataname
-            )
-          )
-
-          # card_id of inserted card must be saved in private$card_ids as
-          # it might be removed by the several events:
-          #   - remove button in `FilterStates` module
-          #   - remove button in `FilteredDataset` module
-          #   - remove button in `FilteredData` module
-          #   - API call remove_filter_state
-          card_id <- session$ns("card")
-          private$card_ids[state_id] <- card_id
-
-          insertUI(
-            selector = sprintf("#%s", private$cards_container_id),
-            where = "beforeEnd",
-            ui = filter_state$ui(card_id, private$cards_container_id)
-          )
-          # signal sent from filter_state when it is marked for removal
-          remove_fs <- filter_state$server(id = "card")
-
-          private$observers[[state_id]] <- observeEvent(
-            ignoreInit = TRUE,
-            ignoreNULL = TRUE,
-            eventExpr = remove_fs(),
-            handlerExpr = {
-              logger::log_trace(paste(
-                "{ class(self)[1] }$insert_filter_state_ui@1",
-                "removing FilterState state_id: '{ state_id }',",
-                "dataname: { private$dataname }"
-              ))
-              private$state_list_remove(state_id)
-              logger::log_trace(paste(
-                "{ class(self)[1] }$insert_filter_state_ui@1",
-                "removed FilterState, state_id: '{ state_id }',",
-                "dataname: { private$dataname }"
-              ))
-            }
-          )
-
-          logger::log_trace(
-            sprintf(
-              "%s$insert_filter_state_ui, added FilterState UI of state_id: %s; dataname: %s",
-              class(self)[1],
-              state_id,
-              private$dataname
-            )
-          )
-          NULL
-        }
-      )
-    },
-
-    # Remove shiny element. Method can be called from reactive session where
-    # `observeEvent` for remove-filter-state is set and also from `FilteredDataset`
-    # level, where shiny-session-namespace is different. That is why it's important
-    # to remove shiny elements from anywhere. In `add_filter_state` `session$ns(NULL)`
-    # is equivalent to `private$ns(state_id)`.
-    # In addition, an unused reactive is being removed from input:
-    # method searches input for the unique matches with the filter name
-    # and then removes objects constructed with current card id + filter name.
-    #
-    remove_filter_state_ui = function(state_id, .input) {
-      removeUI(selector = sprintf("#%s", private$card_ids[state_id]))
-      private$card_ids <- private$card_ids[names(private$card_ids) != state_id]
-      if (length(private$observers[[state_id]]) > 0) {
-        private$observers[[state_id]]$destroy()
-        private$observers[[state_id]] <- NULL
-      }
-      # Remove unused reactive from shiny input (leftover of removeUI).
-      # This default behavior may change in the future, making this part obsolete.
-      prefix <- paste0(gsub("cards$", "", private$cards_container_id))
-      invisible(
-        lapply(
-          unique(grep(state_id, names(.input), value = TRUE)),
-          function(i) {
-            .subset2(.input, "impl")$.values$remove(paste0(prefix, i))
-          }
-        )
-      )
-    },
-
     # state_list methods ----
 
     # @description
@@ -740,21 +637,24 @@ FilterStates <- R6::R6Class( # nolint
     #
     # @return NULL
     #
-    state_list_remove = function(state_id) { # todo: state_id as vector
-      logger::log_trace("{ class(self)[1] } removing a filter, state_id: { state_id }")
-      checkmate::assert_character(state_id)
-      new_state_list <- shiny::isolate(private$state_list())
-      if (is.element(state_id, names(new_state_list))) {
-        new_state_list[[state_id]]$destroy_observers()
-        new_state_list[[state_id]] <- NULL
-        shiny::isolate(private$state_list(new_state_list))
-
-        logger::log_trace("{ class(self)[1] } removed a filter, state_id: { state_id }")
-      } else {
-        warning(sprintf("\"%s\" not found in state list", state_id))
-      }
-
-      invisible(NULL)
+    state_list_remove = function(state_id) {
+      shiny::isolate({
+        logger::log_trace("{ class(self)[1] } removing a filter, state_id: { state_id }")
+        checkmate::assert_character(state_id)
+        new_state_list <- private$state_list()
+        if (is.element(state_id, names(new_state_list))) {
+          if (new_state_list[[state_id]]$get_state()$locked) {
+            return(invisible(NULL))
+          }
+          new_state_list[[state_id]]$destroy_observers()
+          new_state_list[[state_id]] <- NULL
+          private$state_list(new_state_list)
+          logger::log_trace("{ class(self)[1] } removed a filter, state_id: { state_id }")
+        } else {
+          warning(sprintf("\"%s\" not found in state list", state_id))
+        }
+        invisible(NULL)
+      })
     },
 
     # @description
@@ -763,32 +663,19 @@ FilterStates <- R6::R6Class( # nolint
     # @return invisible NULL
     #
     state_list_empty = function() {
-      logger::log_trace(
-        "{ class(self)[1] }$state_list_empty removing all non-locked filters for dataname: { private$dataname }"
-      )
-
-      state_list <- shiny::isolate(private$state_list())
-      for (state_id in names(state_list)) {
-        is_locked <- shiny::isolate(private$state_list()[[state_id]]$get_state()$locked)
-        if (is_locked) {
-          logger::log_trace(
-            paste0(
-              "{ class(self)[1] }$state_list_empty aborted removing (locked) filter, ",
-              "dataname: { private$dataname }; state_id: { state_id }"
-            )
-          )
-        } else {
-          logger::log_trace(
-            "{ class(self)[1] }$state_list_empty removed filter, dataname: { private$dataname }; state_id: { state_id }"
-          )
+      shiny::isolate({
+        logger::log_trace(
+          "{ class(self)[1] }$state_list_empty removing all non-locked filters for dataname: { private$dataname }"
+        )
+        state_list <- private$state_list()
+        for (state_id in names(state_list)) {
           private$state_list_remove(state_id)
         }
-      }
-
-      logger::log_trace(
-        "{ class(self)[1] }$state_list_empty removed all non-locked filters for dataname: { private$dataname }"
-      )
-      invisible(NULL)
+        logger::log_trace(
+          "{ class(self)[1] }$state_list_empty removed all non-locked filters for dataname: { private$dataname }"
+        )
+        invisible(NULL)
+      })
     },
 
     # @description
@@ -813,45 +700,45 @@ FilterStates <- R6::R6Class( # nolint
         return(invisible(NULL))
       }
 
-      states_id <- vapply(state, get_teal_slice_id, character(1))
-      state_list <- shiny::isolate(private$state_list_get())
-      if (any(duplicated(states_id))) {
+      slices_hashed <- vapply(state, `[[`, character(1L), "id")
+      if (any(duplicated(slices_hashed))) {
         stop(
           "Some of the teal_slice objects refer to the same filter. ",
           "Please specify different 'id' when calling filter_var or filter_expr"
         )
       }
 
-
-      lapply(seq_along(state), function(i) {
-        state_id <- states_id[i]
+      state_list <- shiny::isolate(private$state_list_get())
+      lapply(state, function(slice) {
+        state_id <- slice$id
         if (state_id %in% names(state_list)) {
           # Modify existing filter states.
-          state_list[[state_id]]$set_state(state[[i]])
-        } else if (inherits(state[[i]], "teal_slice_expr")) {
-          # create a new FilterStateExpr
-          fstate <- do.call(init_filter_state_expr, state[[i]])
-          private$state_list_push(x = fstate, state_id = state_id)
+          state_list[[state_id]]$set_state(slice)
         } else {
-          # create a new FilterState
-          arg_list <- list(
-            x = data[, state[[i]]$varname, drop = TRUE],
-            # data_reactive is a function which eventually calls get_call(sid).
-            # This chain of calls returns column from the data filtered by everything
-            # but filter identified by the sid argument. FilterState then get x_reactive
-            # and this no longer needs to be a function to pass sid. reactive in the FilterState
-            # is also beneficial as it can be cached and retriger filter counts only if
-            # returned vector is different.
-            x_reactive = if (private$count_type == "none") {
-              reactive(NULL)
-            } else {
-              reactive(data_reactive(state_id)[, state[[i]]$varname, drop = TRUE])
-            },
-            extract_type = private$extract_type
-          )
-          arg_list <- append(arg_list, state[[i]])
-          fstate <- do.call(init_filter_state, arg_list)
-          private$state_list_push(x = fstate, state_id = state_id)
+          if (inherits(slice, "teal_slice_expr")) {
+            # create a new FilterStateExpr
+            fstate <- init_filter_state_expr(slice)
+            private$state_list_push(x = fstate, state_id = state_id)
+          } else {
+            # create a new FilterState
+            fstate <- init_filter_state(
+              x = data[, slice$varname, drop = TRUE],
+              # data_reactive is a function which eventually calls get_call(sid).
+              # This chain of calls returns column from the data filtered by everything
+              # but filter identified by the sid argument. FilterState then get x_reactive
+              # and this no longer needs to be a function to pass sid. reactive in the FilterState
+              # is also beneficial as it can be cached and retriger filter counts only if
+              # returned vector is different.
+              x_reactive = if (private$count_type == "none") {
+                reactive(NULL)
+              } else {
+                reactive(data_reactive(state_id)[, slice$varname, drop = TRUE])
+              },
+              slice = slice,
+              extract_type = private$extract_type
+            )
+            private$state_list_push(x = fstate, state_id = state_id)
+          }
         }
       })
 
