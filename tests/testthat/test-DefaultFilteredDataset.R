@@ -39,21 +39,18 @@ testthat::test_that("set_filter_state sets `teal_slice`", {
   fs <- filter_settings(
     filter_var(
       dataname = "iris", varname = "Sepal.Length", choices = c(4.3, 7.9), selected = c(5.1, 6.4),
-      keep_na = FALSE, keep_inf = FALSE, disabled = FALSE, fixed = FALSE, locked = FALSE
+      keep_na = FALSE, keep_inf = FALSE, fixed = FALSE, locked = FALSE
     ),
     filter_var(
       dataname = "iris", varname = "Species",
       choices = c("setosa", "versicolor", "virginica"), multiple = TRUE, selected = c("setosa", "versicolor"),
-      keep_na = FALSE, keep_inf = FALSE, disabled = FALSE, fixed = FALSE, locked = FALSE
+      keep_na = FALSE, keep_inf = FALSE, fixed = FALSE, locked = FALSE
     ),
     count_type = "all",
     include_varnames = list(iris = colnames(iris))
   )
   dataset$set_filter_state(fs)
-  testthat::expect_equal(
-    shiny::isolate(dataset$get_filter_state()),
-    fs
-  )
+  expect_identical_slices(dataset$get_filter_state(), fs)
 })
 
 
@@ -63,12 +60,12 @@ testthat::test_that("format returns a properly formatted string representation",
   fs <- filter_settings(
     filter_var(
       dataname = "iris", varname = "Sepal.Length", choices = c(4.3, 7.9), selected = c(5.1, 6.4),
-      keep_inf = FALSE, disabled = FALSE, fixed = FALSE, locked = FALSE
+      keep_inf = FALSE, fixed = FALSE, locked = FALSE
     ),
     filter_var(
       dataname = "iris", varname = "Species",
       choices = c("setosa", "versicolor", "virginica"), selected = c("setosa", "versicolor"),
-      keep_na = FALSE, disabled = FALSE, fixed = FALSE, locked = FALSE
+      keep_na = FALSE, fixed = FALSE, locked = FALSE
     ),
     count_type = "all",
     include_varnames = list(iris = colnames(iris))
@@ -96,12 +93,12 @@ testthat::test_that("print returns a properly formatted string representation", 
   fs <- filter_settings(
     filter_var(
       dataname = "iris", varname = "Sepal.Length", choices = c(4.3, 7.9), selected = c(5.1, 6.4),
-      keep_inf = FALSE, disabled = FALSE, fixed = FALSE, locked = FALSE
+      keep_inf = FALSE, fixed = FALSE, locked = FALSE
     ),
     filter_var(
       dataname = "iris", varname = "Species",
       choices = c("setosa", "versicolor", "virginica"), selected = c("setosa", "versicolor"),
-      keep_na = FALSE, disabled = FALSE, fixed = FALSE, locked = FALSE
+      keep_na = FALSE, fixed = FALSE, locked = FALSE
     ),
     count_type = "all",
     include_varnames = list(iris = colnames(iris))

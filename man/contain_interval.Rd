@@ -24,7 +24,7 @@ so that the \emph{subsetting call} includes the value specified by the filter AP
 
 Regardless of the underlying numeric data, the slider always presents 100 steps.
 The ticks on the slider do not represent actual observations but rather borders between virtual bins.
-Since the value selected on the slider is passed to \code{private$selected} and that in turn
+Since the value selected on the slider is passed to \code{teal_slice$selected} and that in turn
 updates the slider selection, programmatic selection of arbitrary values may inadvertently shift
 the selection to the closest tick, thereby dropping the actual value set (if it exists in the data).
 

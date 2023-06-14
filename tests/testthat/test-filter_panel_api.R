@@ -46,7 +46,7 @@ testthat::test_that("get_filter_state returns `teal_slices` with features identi
     filter_var(dataname = "df1", varname = "fact", selected = c("a", "b"), keep_na = FALSE),
     filter_var(dataname = "df2", varname = "int", selected = c(52, 65), keep_na = FALSE, keep_inf = FALSE)
   )
-  shiny::isolate(datasets$set_filter_state(fs))
+  datasets$set_filter_state(fs)
 
   fs_out <- unname(shiny::isolate(datasets$get_filter_state()))
   testthat::expect_true(compare_slices(
@@ -71,11 +71,11 @@ testthat::test_that("FilterPanelAPI$remove_filter_state removes filter states sp
     filter_var(dataname = "df1", varname = "fact", selected = c("a", "b"), keep_na = FALSE),
     filter_var(dataname = "df2", varname = "int", selected = c(52, 65), keep_na = FALSE, keep_inf = FALSE)
   )
-  shiny::isolate(datasets$set_filter_state(fs))
-  shiny::isolate(datasets$remove_filter_state(filter_settings(filter_var(dataname = "df1", varname = "num"))))
+  datasets$set_filter_state(fs)
+  datasets$remove_filter_state(filter_settings(filter_var(dataname = "df1", varname = "num")))
 
   testthat::expect_identical(
-    slices_field(shiny::isolate(datasets$get_filter_state()), "varname"),
+    shiny::isolate(slices_field(datasets$get_filter_state(), "varname")),
     c("fact", "int")
   )
 })
@@ -88,11 +88,11 @@ testthat::test_that("FilterPanelAPI$clear_filter_states removes all filters of d
     filter_var(dataname = "df1", varname = "fact", selected = c("a", "b"), keep_na = FALSE),
     filter_var(dataname = "df2", varname = "int", selected = c(52, 65), keep_na = FALSE, keep_inf = FALSE)
   )
-  shiny::isolate(datasets$set_filter_state(fs))
+  datasets$set_filter_state(fs)
 
   testthat::expect_length(shiny::isolate(datasets$get_filter_state()), 3)
 
-  shiny::isolate(datasets$clear_filter_states())
+  datasets$clear_filter_states()
 
   testthat::expect_length(shiny::isolate(datasets$get_filter_state()), 0)
 })
@@ -104,15 +104,15 @@ testthat::test_that("FilterPanelAPI$clear_filter_states remove the filters of th
     filter_var(dataname = "df1", varname = "fact", selected = c("a", "b"), keep_na = FALSE),
     filter_var(dataname = "df2", varname = "int", selected = c(52, 65), keep_na = FALSE, keep_inf = FALSE)
   )
-  shiny::isolate(datasets$set_filter_state(fs))
+  datasets$set_filter_state(fs)
 
   testthat::expect_length(shiny::isolate(datasets$get_filter_state()), 3)
 
-  shiny::isolate(datasets$clear_filter_states(datanames = "df1"))
+  datasets$clear_filter_states(datanames = "df1")
 
   testthat::expect_length(shiny::isolate(datasets$get_filter_state()), 1)
 
-  testthat::expect_identical(slices_field(shiny::isolate(datasets$get_filter_state()), "varname"), "int")
+  testthat::expect_identical(shiny::isolate(slices_field(datasets$get_filter_state(), "varname")), "int")
 })
 
 
@@ -193,7 +193,7 @@ testthat::test_that("remove_filter_state removes filter state specified by `teal
     remove_filter_state(datasets, filter_settings(filter_var(dataname = "iris", varname = "Species")))
   )
   testthat::expect_identical(
-    slices_field(shiny::isolate(get_filter_state(datasets)), "varname"),
+    shiny::isolate(slices_field(get_filter_state(datasets), "varname")),
     c("Sepal.Length", "years_to_birth", "vital_status", "gender", "ARRAY_TYPE")
   )
 })

@@ -50,35 +50,35 @@ SEFilterStates <- R6::R6Class( # nolint
     #' @return `NULL` invisibly
     #'
     set_filter_state = function(state) {
-      logger::log_trace("{ class(self)[1] }$set_filter_state initializing, dataname: { private$dataname }")
-      checkmate::assert_class(state, "teal_slices")
-      lapply(state, function(x) {
-        checkmate::assert_choice(x$arg, choices = c("subset", "select"), null.ok = TRUE, .var.name = "teal_slice$arg")
+      shiny::isolate({
+        logger::log_trace("{ class(self)[1] }$set_filter_state initializing, dataname: { private$dataname }")
+        checkmate::assert_class(state, "teal_slices")
+        lapply(state, function(x) {
+          checkmate::assert_choice(x$arg, choices = c("subset", "select"), null.ok = TRUE, .var.name = "teal_slice$arg")
+        })
+        count_type <- attr(state, "count_type")
+        if (length(count_type)) {
+          private$count_type <- count_type
+        }
+
+        subset_states <- Filter(function(x) x$arg == "subset", state)
+        private$set_filter_state_impl(
+          state = subset_states,
+          data = SummarizedExperiment::rowData(private$data),
+          data_reactive = function(sid = "") SummarizedExperiment::rowData(private$data_reactive())
+        )
+
+        select_states <- Filter(function(x) x$arg == "select", state)
+        private$set_filter_state_impl(
+          state = select_states,
+          data = SummarizedExperiment::colData(private$data),
+          data_reactive = function(sid = "") SummarizedExperiment::colData(private$data_reactive())
+        )
+
+        logger::log_trace("{ class(self)[1] }$set_filter_state initialized, dataname: { private$dataname }")
+        invisible(NULL)
       })
-      count_type <- attr(state, "count_type")
-      if (length(count_type)) {
-        private$count_type <- count_type
-      }
-
-      subset_states <- Filter(function(x) x$arg == "subset", state)
-      private$set_filter_state_impl(
-        state = subset_states,
-        data = SummarizedExperiment::rowData(private$data),
-        data_reactive = function(sid = "") SummarizedExperiment::rowData(private$data_reactive())
-      )
-
-      select_states <- Filter(function(x) x$arg == "select", state)
-      private$set_filter_state_impl(
-        state = select_states,
-        data = SummarizedExperiment::colData(private$data),
-        data_reactive = function(sid = "") SummarizedExperiment::colData(private$data_reactive())
-      )
-
-      logger::log_trace("{ class(self)[1] }$set_filter_state initialized, dataname: { private$dataname }")
-      invisible(NULL)
     },
-
-    # shiny modules ----
 
     #' @description
     #' Shiny UI module to add filter variable
@@ -88,9 +88,7 @@ SEFilterStates <- R6::R6Class( # nolint
     ui_add = function(id) {
       data <- private$data
       checkmate::assert_string(id)
-
       ns <- NS(id)
-
       row_input <- if (ncol(SummarizedExperiment::rowData(data)) == 0) {
         div("no sample variables available")
       } else if (nrow(SummarizedExperiment::rowData(data)) == 0) {
@@ -150,7 +148,6 @@ SEFilterStates <- R6::R6Class( # nolint
           row_data <- SummarizedExperiment::rowData(data)
           col_data <- SummarizedExperiment::colData(data)
 
-          # available choices to display
           avail_row_data_choices <- reactive({
             slices_for_subset <- Filter(function(x) x$arg == "subset", self$get_filter_state())
             active_filter_row_vars <- slices_field(slices_for_subset, "varname")
@@ -167,6 +164,7 @@ SEFilterStates <- R6::R6Class( # nolint
               keys = NULL
             )
           })
+
           avail_col_data_choices <- reactive({
             slices_for_select <- Filter(function(x) x$arg == "select", self$get_filter_state())
             active_filter_col_vars <- slices_field(slices_for_select, "varname")
@@ -183,7 +181,6 @@ SEFilterStates <- R6::R6Class( # nolint
               keys = NULL
             )
           })
-
 
           observeEvent(
             avail_row_data_choices(),
