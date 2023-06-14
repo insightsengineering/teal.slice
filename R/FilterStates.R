@@ -325,6 +325,7 @@ FilterStates <- R6::R6Class( # nolint
       ns <- NS(id)
       tagList(
         include_css_files(pattern = "filter-panel"),
+        uiOutput(ns("trigger_visible_state_change"), inline = TRUE),
         uiOutput(
           ns("cards"),
           class = "accordion",
@@ -354,10 +355,14 @@ FilterStates <- R6::R6Class( # nolint
             gsub("[^[:alnum:]]+", "_", x)
           }
 
-          observeEvent(current_state(), {
-            logger::log_trace("FilterStates$srv_active@1 determining added and removed filter states")
-            added_state_name(setdiff(names(current_state()), names(previous_state())))
-            previous_state(current_state())
+          output$trigger_visible_state_change <- renderUI({
+            current_state <- current_state()
+            isolate({
+              logger::log_trace("FilterStates$srv_active@1 determining added and removed filter states")
+              added_state_name(setdiff(names(current_state()), names(previous_state())))
+              previous_state(current_state())
+              NULL
+            })
           })
 
           output[["cards"]] <- shiny::renderUI({
@@ -373,6 +378,7 @@ FilterStates <- R6::R6Class( # nolint
             added_state_name(), # we want to call FilterState module only once when it's added
             ignoreNULL = TRUE,
             {
+              logger::log_trace("FilterStates$srv_active@2")
               fstates <- current_state()
               lapply(added_state_name(), function(fname) {
                 fs_callback <- fstates[[fname]]$server(id = str_to_shiny_ns(fname))
@@ -410,16 +416,7 @@ FilterStates <- R6::R6Class( # nolint
       } else if (nrow(data) == 0) {
         div("no samples available")
       } else {
-        div(
-          teal.widgets::optionalSelectInput(
-            ns("var_to_add"),
-            choices = NULL,
-            options = shinyWidgets::pickerOptions(
-              liveSearch = TRUE,
-              noneSelectedText = "Select variable to filter"
-            )
-          )
-        )
+        uiOutput(ns("add_filter"))
       }
     },
 
@@ -455,28 +452,28 @@ FilterStates <- R6::R6Class( # nolint
               keys = private$keys
             )
           })
-          observeEvent(
-            avail_column_choices(),
-            ignoreNULL = TRUE,
-            handlerExpr = {
-              logger::log_trace(
-                "FilterStates$srv_add@1 updating available column choices, dataname: { private$dataname }"
-              )
-              if (is.null(avail_column_choices())) {
-                shinyjs::hide("var_to_add")
-              } else {
-                shinyjs::show("var_to_add")
-              }
-              teal.widgets::updateOptionalSelectInput(
-                session,
-                "var_to_add",
-                choices = avail_column_choices()
-              )
-              logger::log_trace(
-                "FilterStates$srv_add@1 updated available column choices, dataname: { private$dataname }"
+
+
+          output$add_filter <- renderUI({
+            logger::log_trace(
+              "FilterStates$srv_add@1 updating available column choices, dataname: { private$dataname }"
+            )
+            if (is.null(avail_column_choices())) {
+              span("No available columns to add.")
+            } else {
+              div(
+                teal.widgets::optionalSelectInput(
+                  session$ns("var_to_add"),
+                  choices = avail_column_choices(),
+                  selected = NULL,
+                  options = shinyWidgets::pickerOptions(
+                    liveSearch = TRUE,
+                    noneSelectedText = "Select variable to filter"
+                  )
+                )
               )
             }
-          )
+          })
 
           observeEvent(
             eventExpr = input$var_to_add,

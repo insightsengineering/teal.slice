@@ -207,6 +207,8 @@ FilterState <- R6::R6Class( # nolint
       moduleServer(
         id = id,
         function(input, output, session) {
+          logger::log_trace("FilterState$server initializing module for slice: { private$get_id() } ")
+
           private$server_summary("summary")
           if (private$is_fixed()) {
             private$server_inputs_fixed("inputs")
@@ -221,8 +223,6 @@ FilterState <- R6::R6Class( # nolint
 
             # remove observers
             lapply(private$observers, function(x) x$destroy())
-
-            logger::log_trace("Destroyed FilterState inputs and observers; id: { private$get_id() }")
           }
 
           reactive(input$remove)
