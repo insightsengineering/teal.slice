@@ -168,15 +168,13 @@ a.remove_all:hover {
 
 .choices_state_label_unfiltered {
   background-color:lightgray;
-  height:2rem;
+  height: 2rem;
   margin-top: -3px;
   display:inline-block;
   position: absolute;
 }
 
 .filterPlotOverlayRange {
-  margin: 10px 0px -25px;
-  height: 25px;
   animation: 0.75s ease-out 0s 1 shinyDataFilterEnlargeY,
     0.5s ease-in 0s 1 shinyDataFilterFadeIn;
   transform-origin: bottom;
@@ -184,6 +182,7 @@ a.remove_all:hover {
   max-width: 100%;
 }
 
+<<<<<<< HEAD
 .filter-card-body div.form-group {
   margin: 0em;
   font-size: small;
@@ -203,6 +202,8 @@ a.remove_all:hover {
   max-width: 100%;
 }
 
+=======
+>>>>>>> filter_panel_refactor@main
 .irs.irs--shiny.js-irs-0.irs-with-grid * {
   font-size: 0.85em;
 }
@@ -386,4 +387,16 @@ a.remove_all:hover {
 
 .form-group .checkbox label span span {
   margin-left: 1.5em;
+}
+
+.choices_state {
+  margin-bottom: .45rem;
+}
+
+.popover-header {
+    margin-top: 0em;
+}
+
+.popover-body {
+    margin-bottom: -1rem;
 }

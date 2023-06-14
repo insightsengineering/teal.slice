@@ -200,7 +200,7 @@ testthat::test_that("get_filter_overview_info returns overview matrix for MAEFil
 })
 
 testthat::test_that(
-  "MAEFilteredDataset$set_filter_state sets filters in FilterStates specified by `teal_slices",
+  "MAEFilteredDataset$set_filter_state sets filters in `FilterStates` specified by `teal_slices",
   code = {
     utils::data(miniACC, package = "MultiAssayExperiment")
     dataset <- MAEFilteredDataset$new(dataset = miniACC, dataname = "miniacc")

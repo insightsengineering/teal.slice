@@ -7,7 +7,7 @@ testthat::test_that("constructor accepts data.frame object with a dataname", {
   testthat::expect_error(DefaultFilteredDataset$new(dataset = iris, dataname = iris), "Assertion on 'name' failed")
 })
 
-testthat::test_that("filter_states list is initialized with single FilterStates element named filter", {
+testthat::test_that("filter_states list is initialized with single `FilterStates` element named filter", {
   testfd <- R6::R6Class(
     "testfd",
     inherit = DefaultFilteredDataset,

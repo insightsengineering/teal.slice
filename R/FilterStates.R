@@ -11,7 +11,7 @@
 #' This expression is hereafter referred to as \emph{subset expression}.
 #'
 #' The \emph{subset expression} is constructed differently for different
-#' classes of the underlying data object and `FilterStates` subclasses.
+#' classes of the underlying data object and `FilterStates` sub-classes.
 #' Currently implemented for `data.frame`, `matrix`,
 #' `SummarizedExperiment`, and `MultiAssayExperiment`.
 #'
@@ -607,9 +607,9 @@ FilterStates <- R6::R6Class( # nolint
 
           # card_id of inserted card must be saved in private$card_ids as
           # it might be removed by the several events:
-          #   - remove button in FilterStates module
-          #   - remove button in FilteredDataset module
-          #   - remove button in FilteredData module
+          #   - remove button in `FilterStates` module
+          #   - remove button in `FilteredDataset` module
+          #   - remove button in `FilteredData` module
           #   - API call remove_filter_state
           card_id <- session$ns("card")
           private$card_ids[state_id] <- card_id

@@ -14,7 +14,7 @@ that will assign a subset of the original data to a new variable.
 This expression is hereafter referred to as \emph{subset expression}.
 
 The \emph{subset expression} is constructed differently for different
-classes of the underlying data object and \code{FilterStates} subclasses.
+classes of the underlying data object and \code{FilterStates} sub-classes.
 Currently implemented for \code{data.frame}, \code{matrix},
 \code{SummarizedExperiment}, and \code{MultiAssayExperiment}.
 }

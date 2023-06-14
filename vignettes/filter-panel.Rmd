@@ -45,7 +45,7 @@ knitr::include_graphics("./images/filter_panel/filtered_data_init.jpg")
 ```
 
 `FilteredData` is initialized in `srv_teal` when `TealData$is_pulled()` returns `TRUE`.
-`FilteredData` is dispatched on type of `TealData`, and if DDL is `CDISCTealData` then
+`FilteredData` is dispatched on type of `TealData`, and if `DDL` is `CDISCTealData` then
 `CDISCFilteredData` is initialized. Each `TealDataset` from `CDISCTealData` determines the type of the
 `FilteredDataset`. In the above diagram `CDISCTealDataset` initializes `CDISCFilteredDataset` and
 `MAETealDataset` initializes `MAEFilteredDataset`.
@@ -76,13 +76,13 @@ knitr::include_graphics("./images/filter_panel/class_details_filtered_data.jpg")
 `FilteredData` manages filter panel by returning filtered data, combining reproducible filter calls
 from `FilteredDatasets`. `FilteredData` also contains all shiny modules displayed on the right panel
 in teal apps. `FilteredData` is a single object which is initialized in `srv_teal` module and its
-variant depends on `TealData`. If DDL returns `CDISCTealData` then `CDISCFilteredData` is
+variant depends on `TealData`. If `DDL` returns `CDISCTealData` then `CDISCFilteredData` is
 initialized, otherwise `FilteredData`.
 
 In the analytical modules `datasets` can be used to:
 
 - obtain filtered and unfiltered data using `datasets$get_data(<dataname>, filtered = <TRUE/FALSE>)`.
-- get available datanames using `datasets$datanames()`
+- get available `datanames` using `datasets$datanames()`
 - get reproducible filter call using `datasets$get_call(<dataname>)`
 - get reproducible data loading call `datasets$get_code(<dataname>)`
 - get `JoinKeys` between two datasets using `datasets$get_join_keys(<dataname1>, <dataname2>)`
@@ -188,9 +188,9 @@ knitr::include_graphics("./images/filter_panel/get_call_example.jpg")
 Calling `datasets$get_call(<dataname>)` in teal modules executes a chain of calls in all filter panel
 classes. Consider a scenario in which:
 
-(1) `FilteredData` has three `FilteredDataset`(s) ADSL , ADTTE, MAE
+(1) `FilteredData` has three `FilteredDataset`(s) `ADSL` , `ADTTE`, `MAE`
 
-(2) `CDISCFilteredDataset` contains `data.frame` (ADSL) which can be filtered only in one way
+(2) `CDISCFilteredDataset` contains `data.frame` (`ADSL`) which can be filtered only in one way
 executing single `dplyr::filter` call (this is why `CDISCFilteredDataset` has a single `FilterStates`)
 
 (3) `FilterStates` construct `dplyr::filter` call is based on the `FilterState` objects added to the
@@ -216,7 +216,7 @@ keys available parent.
 
 (7) `FilteredDatasetMAE` is based on `MAETealDataset` where `raw_data` contains multiple objects which can
 be filtered on. In general `MultiAssayExperiment` contains `colData(MAE)` which is a `DataFrame`
-with ADSL-like patient data. `MAE` contains also multiple experiments which can be extracted using
+with `ADSL`-like patient data. `MAE` contains also multiple experiments which can be extracted using
 `MAE[["experiment name"]]` and they can also be filtered in filter-panel. This means that
 `FilteredDatasetMAE` has multiple `FilterStates` objects: one for subjects data and one for each
 experiment.
