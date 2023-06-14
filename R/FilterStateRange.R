@@ -339,7 +339,7 @@ RangeFilterState <- R6::R6Class( # nolint
       if (identical(diff(x_range), 0)) {
         choices <- x_range
       } else {
-        x_pretty <- pretty(x_range, 10000L)
+        x_pretty <- pretty(x_range, 100L)
         choices <- range(x_pretty)
         private$numeric_step <- signif(private$get_pretty_range_step(x_pretty), digits = 10)
       }
