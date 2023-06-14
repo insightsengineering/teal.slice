@@ -347,7 +347,6 @@ LogicalFilterState <- R6::R6Class( # nolint
                     selected = private$get_selected()
                   )
                 }
-
               }
             }
           )
