@@ -182,7 +182,6 @@ a.remove_all:hover {
   max-width: 100%;
 }
 
-<<<<<<< HEAD
 .filter-card-body div.form-group {
   margin: 0em;
   font-size: small;
@@ -202,8 +201,6 @@ a.remove_all:hover {
   max-width: 100%;
 }
 
-=======
->>>>>>> filter_panel_refactor@main
 .irs.irs--shiny.js-irs-0.irs-with-grid * {
   font-size: 0.85em;
 }
