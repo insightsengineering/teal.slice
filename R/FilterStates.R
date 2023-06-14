@@ -203,13 +203,9 @@ FilterStates <- R6::R6Class( # nolint
 
         lapply(state, function(x) {
           state_id <- x$id
-          logger::log_trace(
-            "{ class(self)[1] }$remove_filter_state removing filter, dataname: { x$dataname }; state_id: { state_id }"
-          )
+          logger::log_trace("{ class(self)[1] }$remove_filter_state removing filter, state_id: { state_id }")
           private$state_list_remove(state_id = state_id)
-          logger::log_trace(
-            "{ class(self)[1] }$remove_filter_state removed filter, dataname: { x$dataname }; state_id: { state_id }"
-          )
+          logger::log_trace("{ class(self)[1] }$remove_filter_state removed filter, state_id: { state_id }")
         })
 
         invisible(NULL)
@@ -378,7 +374,7 @@ FilterStates <- R6::R6Class( # nolint
             added_state_name(), # we want to call FilterState module only once when it's added
             ignoreNULL = TRUE,
             {
-              logger::log_trace("FilterStates$srv_active@2")
+              logger::log_trace("FilterStates$srv_active@2 triggered by added states: { toString(added_state_name()) }")
               fstates <- current_state()
               lapply(added_state_name(), function(fname) {
                 fs_callback <- fstates[[fname]]$server(id = str_to_shiny_ns(fname))

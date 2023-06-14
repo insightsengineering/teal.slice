@@ -63,10 +63,10 @@ DefaultFilteredDataset <- R6::R6Class( # nolint
 
         private$data_filtered_fun <- function(sid = "") {
           checkmate::assert_character(sid)
-          if (identical(sid, integer(0))) {
-            logger::log_trace("filtering data dataname: { private$dataname }")
-          } else {
+          if (length(sid)) {
             logger::log_trace("filtering data dataname: { dataname }, sid: { sid }")
+          } else {
+            logger::log_trace("filtering data dataname: { private$dataname }")
           }
           env <- new.env(parent = parent.env(globalenv()))
           env[[dataname]] <- private$dataset
@@ -182,20 +182,16 @@ DefaultFilteredDataset <- R6::R6Class( # nolint
     #'
     set_filter_state = function(state) {
       shiny::isolate({
+        logger::log_trace("{ class(self)[1] }$set_filter_state initializing, dataname: { private$dataname }")
         checkmate::assert_class(state, "teal_slices")
         lapply(state, function(x) {
           checkmate::assert_true(
             shiny::isolate(x$dataname) == private$dataname,
             .var.name = "dataname matches private$dataname"
           )
+          private$get_filter_states()[[1L]]$set_filter_state(state = state)
+          logger::log_trace("{ class(self)[1] }$set_filter_state initialized, dataname: { private$dataname }")
         })
-
-        logger::log_trace("{ class(self)[1] }$set_filter_state initializing, dataname: { private$dataname }")
-
-        private$get_filter_states()[[1L]]$set_filter_state(state = state)
-
-        logger::log_trace("{ class(self)[1] }$set_filter_state initialized, dataname: { private$dataname }")
-
         invisible(NULL)
       })
     },
@@ -211,9 +207,8 @@ DefaultFilteredDataset <- R6::R6Class( # nolint
     #'
     remove_filter_state = function(state) {
       shiny::isolate({
-        checkmate::assert_class(state, "teal_slices")
-
         logger::log_trace("{ class(self)[1] }$remove_filter_state removing filter(s), dataname: { private$dataname }")
+        checkmate::assert_class(state, "teal_slices")
 
         varnames <- slices_field(state, "varname")
         private$get_filter_states()[[1]]$remove_filter_state(state)

@@ -695,7 +695,7 @@ FilterState <- R6::R6Class( # nolint
           ignoreInit = TRUE, # ignoreInit: should not matter because we set the UI with the desired initial state
           handlerExpr = {
             if (!setequal(private$get_keep_na(), input$value)) {
-              logger::log_trace("FilterState$keep_na_srv@1 changed reactive value")
+              logger::log_trace("FilterState$keep_na_srv@1 changed reactive value, id: { private$get_id() }")
               updateCheckboxInput(
                 inputId = "value",
                 label = sprintf("Keep NA (%s/%s)", private$filtered_na_count(), private$na_count),
@@ -709,7 +709,7 @@ FilterState <- R6::R6Class( # nolint
           ignoreInit = TRUE, # ignoreInit: should not matter because we set the UI with the desired initial state
           eventExpr = input$value,
           handlerExpr = {
-            logger::log_trace("FilterState$keep_na_srv@2 changed input")
+            logger::log_trace("FilterState$keep_na_srv@2 changed input, id: { private$get_id() }")
             keep_na <- if (is.null(input$value)) {
               FALSE
             } else {

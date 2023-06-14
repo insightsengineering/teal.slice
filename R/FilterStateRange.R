@@ -327,10 +327,10 @@ RangeFilterState <- R6::R6Class( # nolint
       if (!isTRUE(all.equal(values, values_adjusted))) {
         logger::log_warn(sprintf(
           paste(
-            "Programmatic range specification on %s was adjusted to existing slider ticks.",
+            "Programmatic range specification on '%s' was adjusted to existing slider ticks.",
             "It is now broader in order to contain the specified values."
           ),
-          private$get_varname()
+          private$get_id()
         ))
       }
       values_adjusted
@@ -431,7 +431,7 @@ RangeFilterState <- R6::R6Class( # nolint
       moduleServer(
         id = id,
         function(input, output, session) {
-          logger::log_trace("RangeFilterState$server initializing, dataname: { private$get_dataname() }")
+          logger::log_trace("RangeFilterState$server initializing, id: { private$get_id() }")
 
           finite_values <- reactive(Filter(is.finite, private$x_reactive()))
           output$plot <- bindCache(
@@ -465,14 +465,8 @@ RangeFilterState <- R6::R6Class( # nolint
             ignoreInit = TRUE,
             eventExpr = private$get_selected(),
             handlerExpr = {
-              logger::log_trace(
-                sprintf(
-                  "RangeFilterState$server@2 state of %s changed, dataname: %s",
-                  private$get_varname(),
-                  private$get_dataname()
-                )
-              )
               if (!isTRUE(all.equal(input$selection, private$get_selected()))) {
+                logger::log_trace("RangeFilterState$server@1 state changed, id: { private$get_id() }")
                 updateSliderInput(
                   session = session,
                   inputId = "selection",
@@ -487,14 +481,8 @@ RangeFilterState <- R6::R6Class( # nolint
             ignoreInit = TRUE, # ignoreInit: should not matter because we set the UI with the desired initial state
             eventExpr = input$selection,
             handlerExpr = {
-              logger::log_trace(
-                sprintf(
-                  "RangeFilterState$server@3 selection of variable %s changed, dataname: %s",
-                  private$get_varname(),
-                  private$get_dataname()
-                )
-              )
               if (!isTRUE(all.equal(input$selection, private$get_selected()))) {
+                logger::log_trace("RangeFilterState$server@2 selection changed: { private$get_id() }")
                 private$set_selected(input$selection)
               }
             }
@@ -592,7 +580,7 @@ RangeFilterState <- R6::R6Class( # nolint
             ignoreInit = TRUE
           )
 
-          logger::log_trace("RangeFilterState$server initialized, dataname: { private$get_dataname() }")
+          logger::log_trace("RangeFilterState$server initialized, id: { private$get_id() }")
           NULL
         }
       )
@@ -601,7 +589,7 @@ RangeFilterState <- R6::R6Class( # nolint
       moduleServer(
         id = id,
         function(input, output, session) {
-          logger::log_trace("RangeFilterState$server initializing, dataname: { private$get_dataname() }")
+          logger::log_trace("RangeFilterState$server initializing, id: { private$get_id() }")
 
           finite_values <- reactive(Filter(is.finite, private$x_reactive()))
           output$plot <- bindCache(
@@ -631,7 +619,7 @@ RangeFilterState <- R6::R6Class( # nolint
             plotOutput(session$ns("plot"), height = "2em")
           })
 
-          logger::log_trace("RangeFilterState$server initialized, dataname: { private$get_dataname() }")
+          logger::log_trace("RangeFilterState$server initialized, id: { private$get_id() }")
           NULL
         }
       )
@@ -746,6 +734,7 @@ RangeFilterState <- R6::R6Class( # nolint
           eventExpr = private$get_keep_inf(),
           handlerExpr = {
             if (!setequal(private$get_keep_inf(), input$value)) {
+              logger::log_trace("RangeFilterState$keep_inf_srv@1 changed reactive value, id: { private$get_id() }")
               updateCheckboxInput(
                 inputId = "value",
                 value = private$get_keep_inf()
@@ -759,17 +748,9 @@ RangeFilterState <- R6::R6Class( # nolint
           ignoreInit = TRUE, # ignoreInit: should not matter because we set the UI with the desired initial state
           eventExpr = input$value,
           handlerExpr = {
+            logger::log_trace("FilterState$keep_na_srv@2 changed input, id: { private$get_id() }")
             keep_inf <- input$value
             private$set_keep_inf(keep_inf)
-            logger::log_trace(
-              sprintf(
-                "%s$server keep_inf of variable %s set to: %s, dataname: %s",
-                class(self)[1],
-                private$get_varname(),
-                input$value,
-                private$get_dataname()
-              )
-            )
           }
         )
 

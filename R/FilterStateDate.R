@@ -328,7 +328,7 @@ DateFilterState <- R6::R6Class( # nolint
       moduleServer(
         id = id,
         function(input, output, session) {
-          logger::log_trace("DateFilterState$server initializing, dataname: { private$get_dataname() }")
+          logger::log_trace("DateFilterState$server initializing, id: { private$get_id() }")
 
           # this observer is needed in the situation when teal_slice$selected has been
           # changed directly by the api - then it's needed to rerender UI element
@@ -339,17 +339,13 @@ DateFilterState <- R6::R6Class( # nolint
             eventExpr = private$get_selected(),
             handlerExpr = {
               if (!setequal(private$get_selected(), input$selection)) {
+                logger::log_trace("DateFilterState$server@1 state changed, id: { private$get_id() }")
                 updateDateRangeInput(
                   session = session,
                   inputId = "selection",
                   start = private$get_selected()[1],
                   end = private$get_selected()[2]
                 )
-                logger::log_trace(sprintf(
-                  "DateFilterState$server@1 selection of variable %s changed, dataname: %s",
-                  private$get_varname(),
-                  private$get_dataname()
-                ))
               }
             }
           )
@@ -359,6 +355,7 @@ DateFilterState <- R6::R6Class( # nolint
             ignoreInit = TRUE, # ignoreInit: should not matter because we set the UI with the desired initial state
             eventExpr = input$selection,
             handlerExpr = {
+              logger::log_trace("DateFilterState$server@2 selection changed, id: { private$get_id() }")
               start_date <- input$selection[1]
               end_date <- input$selection[2]
               if (start_date > end_date) {
@@ -368,11 +365,6 @@ DateFilterState <- R6::R6Class( # nolint
                 )
               }
               private$set_selected(c(start_date, end_date))
-              logger::log_trace(sprintf(
-                "DateFilterState$server@2 selection of variable %s changed, dataname: %s",
-                private$get_varname(),
-                private$get_dataname()
-              ))
             }
           )
 
@@ -380,32 +372,24 @@ DateFilterState <- R6::R6Class( # nolint
           private$keep_na_srv("keep_na")
 
           private$observers$reset1 <- observeEvent(input$start_date_reset, {
+            logger::log_trace("DateFilterState$server@3 reset start date, id: { private$get_id() }")
             updateDateRangeInput(
               session = session,
               inputId = "selection",
               start = private$get_choices()[1L]
             )
-            logger::log_trace(sprintf(
-              "DateFilterState$server@3 reset start date of variable %s, dataname: %s",
-              private$get_varname(),
-              private$get_dataname()
-            ))
           })
 
           private$observers$reset2 <- observeEvent(input$end_date_reset, {
+            logger::log_trace("DateFilterState$server@4 reset end date, id: { private$get_id() }")
             updateDateRangeInput(
               session = session,
               inputId = "selection",
               end = private$get_choices()[2L]
             )
-            logger::log_trace(sprintf(
-              "DateFilterState$server@4 reset end date of variable %s, dataname: %s",
-              private$get_varname(),
-              private$get_dataname()
-            ))
           })
 
-          logger::log_trace("DateFilterState$server initialized, dataname: { private$get_dataname() }")
+          logger::log_trace("DateFilterState$server initialized, id: { private$get_id() }")
           NULL
         }
       )
@@ -414,7 +398,7 @@ DateFilterState <- R6::R6Class( # nolint
       moduleServer(
         id = id,
         function(input, output, session) {
-          logger::log_trace("DateFilterState$server initializing, dataname: { private$get_dataname() }")
+          logger::log_trace("DateFilterState$server initializing, id: { private$get_id() }")
 
           output$selection <- renderUI({
             vals <- format(private$get_selected(), nsmall = 3)
@@ -424,7 +408,7 @@ DateFilterState <- R6::R6Class( # nolint
             )
           })
 
-          logger::log_trace("DateFilterState$server initialized, dataname: { private$get_dataname() }")
+          logger::log_trace("DateFilterState$server initialized, id: { private$get_id() }")
           NULL
         }
       )
