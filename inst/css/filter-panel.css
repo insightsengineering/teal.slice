@@ -373,14 +373,22 @@ a.remove_all:hover {
 
 .form-group .checkbox label .shiny-bound-input {
   position: absolute;
-  margin-top: 0.3rem;
+  margin-top: 0.4em;
 }
 
 .form-group .checkbox label span span {
   margin-left: 1.5em;
 }
 
+.shiny-options-group .checkbox label input {
+  margin-top: 0.4em;
+}
+
 .choices_state {
+  margin-bottom: 0rem;
+}
+
+.range_choices_state {
   margin-bottom: .45rem;
 }
 
