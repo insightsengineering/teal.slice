@@ -36,7 +36,7 @@ testthat::test_that("constructor raises error when selected is not sorted", {
       nums,
       slice = filter_var(dataname = "data", varname = "var", selected = nums[c(10, 1)])
     ),
-    "Assertion on 'x' failed: Must be sorted"
+    "Vector of set values must be sorted"
   )
 })
 
@@ -124,19 +124,18 @@ testthat::test_that("set_state: selected accepts numeric vector of length 2", {
   )
 })
 
-
 testthat::test_that("set_state: selected raises error when selected is not sorted", {
   testthat::expect_error(
     RangeFilterState$new(
       nums,
-      dataname = "data", varname = "variable", selected = nums[c(10, 1)]
+      slice = filter_var(dataname = "data", varname = "variable", selected = nums[c(10, 1)])
     ),
     "Vector of set values must be sorted"
   )
 })
 
 testthat::test_that("set_state: selected range is limited to lower and upper bound of possible range", {
-  filter_state <- RangeFilterState$new(nums, dataname = "data", varname = "variable")
+  filter_state <- RangeFilterState$new(nums, slice = filter_var(dataname = "data", varname = "variable"))
   filter_state$set_state(
     filter_var(dataname = "data", varname = "variable", selected = c(nums[1] - 1, nums[10]))
   )
