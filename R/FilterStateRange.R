@@ -220,10 +220,8 @@ RangeFilterState <- R6::R6Class( # nolint
             color = I(fetch_bs_color("primary"))
           )
         })
-      invisible(self)
+        invisible(self)
       })
-
-
     },
 
     #' @description
