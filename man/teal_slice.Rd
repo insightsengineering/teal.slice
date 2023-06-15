@@ -5,7 +5,6 @@
 \alias{filter_var}
 \alias{filter_expr}
 \alias{filter_settings}
-\alias{store}
 \alias{is.teal_slice}
 \alias{as.teal_slice}
 \alias{c.teal_slice}
@@ -15,7 +14,7 @@
 \alias{as.teal_slices}
 \alias{[.teal_slices}
 \alias{c.teal_slices}
-\alias{store.teal_slices}
+\alias{store_filters}
 \alias{format.teal_slices}
 \alias{print.teal_slices}
 \alias{slices_field}
@@ -44,15 +43,13 @@ filter_settings(
   count_type = NULL
 )
 
-store(x, file, ...)
-
 is.teal_slice(x)
 
 as.teal_slice(x)
 
 \method{c}{teal_slice}(...)
 
-\method{format}{teal_slice}(x, show_all = FALSE, ...)
+\method{format}{teal_slice}(x, show_all = FALSE, pretty = TRUE, ...)
 
 \method{print}{teal_slice}(x, ...)
 
@@ -64,9 +61,9 @@ as.teal_slices(x)
 
 \method{c}{teal_slices}(...)
 
-\method{store}{teal_slices}(x, file = NULL, ...)
+store_filters(x, file = NULL, ...)
 
-\method{format}{teal_slices}(x, show_all = FALSE, ...)
+\method{format}{teal_slices}(x, show_all = FALSE, pretty = TRUE, ...)
 
 \method{print}{teal_slices}(x, ...)
 
@@ -127,9 +124,9 @@ and unfiltered dataset.
 
 \item{x}{\code{teal_slices} object}
 
-\item{file}{a \code{character(1)} with the storage destination name}
-
 \item{show_all}{\code{logical(1)} should parameters set to NULL be returned}
+
+\item{file}{a \code{character(1)} with the storage destination name}
 
 \item{tss}{\code{teal_slices}}
 

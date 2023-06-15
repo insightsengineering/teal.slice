@@ -235,15 +235,6 @@ filter_settings <- function(...,
 }
 
 
-# store -----------------------------------------------------------------------------------------------------------
-
-#' @param x object to be stored
-#' @param file storage file name
-#' @export
-#' @rdname teal_slice
-#' @keywords internal
-store <- function(x, file, ...) UseMethod("store")
-
 # teal_slice ------------------------------------------------------------------------------------------------------
 
 # check for teal_slice
@@ -537,7 +528,7 @@ c.teal_slices <- function(...) {
 #' @rdname teal_slice
 #' @keywords internal
 #'
-store.teal_slices <- function(x, file = NULL, ...) {
+store_filters <- function(x, file = NULL, ...) {
   checkmate::assert_character(file, len = 1, null.ok = TRUE)
 
   cat(format(x, show_all = TRUE, pretty = FALSE), file = file)
