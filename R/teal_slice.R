@@ -273,7 +273,7 @@ c.teal_slice <- function(...) {
 
 #' @param x `teal_slice` object
 #' @keywords internal
-to_list <- function(x) {
+as.list.teal_slice <- function(x) {
   checkmate::assert_class(x, "teal_slice")
 
   x <- if (shiny::isRunning()) {
@@ -284,22 +284,13 @@ to_list <- function(x) {
 
   formals_names <- setdiff(names(formals(filter_var)), '...')
 
-  extra_names   <- setdiff(names(x), formals_names)
-  missing_names <- setdiff(formals_names, names(x))
+  extra_args <-     setdiff(names(x), formals_names)
+  miss_args  <- rev(setdiff(formals_names, names(x)))
 
+  x <- c(x, formals(filter_var)[miss_args])
 
-  x <- c(x, formals(filter_var)[missing_names])
+  x[c(formals_names, extra_args)]
 
-  x[c(formals_names, extra_names)]
-
-}
-
-#' @param x `list` object
-#' @param ... further arguments passed to [jsonlite::toJSON]
-#' @keywords internal
-to_json <- function(x, ...) {
-  checkmate::assert_class(x, "list")
-  jsonlite::toJSON(x, pretty = TRUE, auto_unbox = TRUE, digits = 16, ...)
 }
 
 # format method for teal_slice
@@ -313,22 +304,22 @@ format.teal_slice <- function(x, show_all = FALSE, pretty = TRUE, ...) {
   checkmate::assert_flag(show_all)
   checkmate::assert_flag(pretty)
 
-  x_json <- to_json(to_list(x))
+  x_json <- jsonlite::toJSON(as.list(x), pretty = TRUE, auto_unbox = TRUE, digits = 16)
   x_json_c <- capture.output(print(x_json))
 
   if (!show_all) x_json_c <- grep('{}', x_json_c, fixed = TRUE, invert = TRUE, value = TRUE)
   if (!pretty) return(x_json_c)
 
-  x_p_json <- pretty_json(x_json_c)
+  x_p_json <- center_json(x_json_c)
 
   paste(c("teal_slice", x_p_json), collapse = "\n")
 }
 
 # centering of json output for `teal_slices` object JSON representation
-#' @param x a result of `to_json(to_list(teal_slice))`
+#' @param x a result of `toJSON(as.list(teal_slice), pretty = TRUE, auto_unbox = TRUE)`
 #' @keywords internal
 #'
-pretty_json <- function(x){
+center_json <- function(x){
   x_s <- strsplit(x, split = ":", fixed = TRUE)
 
   name_width <- max(unlist(lapply(x_s, function(x) nchar(x[1]))))
@@ -552,7 +543,10 @@ format.teal_slices <- function(x, show_all = FALSE, pretty = TRUE, ...) {
 extract_attrs <- function(x){
   attributes <- attributes(x)
   attributes$class <- NULL
-  paste0('attributes\n', to_json(attributes))
+  paste0(
+    'attributes\n',
+    jsonlite::toJSON(attributes, pretty = TRUE, auto_unbox = TRUE)
+  )
 }
 
 
