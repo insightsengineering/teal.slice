@@ -916,28 +916,6 @@ testthat::test_that("srv_active - clicking remove_all button clears filters", {
   )
 })
 
-# other ----
-testthat::test_that("turn filed by default equal to TRUE", {
-  filtered_data <- FilteredData$new(data_objects = list("iris" = list(dataset = iris)))
-  testthat::expect_true(filtered_data$get_filter_panel_active())
-})
-
-testthat::test_that("get_filter_panel_ui_id - empty when no shiny session", {
-  filtered_data <- FilteredData$new(data_objects = list("iris" = list(dataset = iris)))
-  testthat::expect_length(filtered_data$get_filter_panel_ui_id(), 0)
-})
-
-testthat::test_that("get_filter_panel_ui_id - non-empty when in shiny session", {
-  filtered_data <- FilteredData$new(data_objects = list("iris" = list(dataset = iris)))
-  shiny::testServer(
-    filtered_data$srv_filter_panel,
-    expr = {
-      testthat::expect_length(filtered_data$get_filter_panel_ui_id(), 1)
-    }
-  )
-})
-
-
 # get_filter_count
 testthat::test_that("get_filter_count properly tallies active filter states", {
   test_class <- R6::R6Class(

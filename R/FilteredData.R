@@ -607,19 +607,6 @@ FilteredData <- R6::R6Class( # nolint
       invisible(NULL)
     },
 
-    #' @description
-    #' Gets the state of filter panel, if activated.
-    #'
-    get_filter_panel_active = function() {
-      private$filter_panel_active
-    },
-
-    #' @description
-    #' Gets the id of the filter panel UI.
-    get_filter_panel_ui_id = function() {
-      private$filter_panel_ui_id
-    },
-
     # shiny modules -----
 
     #' Set external `teal_slice`
@@ -680,8 +667,6 @@ FilteredData <- R6::R6Class( # nolint
           self$srv_overview("overview", active_datanames_resolved)
           self$srv_active("active", active_datanames_resolved)
           self$srv_add("add", active_datanames_resolved)
-
-          private$filter_panel_ui_id <- session$ns(NULL)
 
           logger::log_trace("FilteredData$srv_filter_panel initialized")
           NULL
@@ -1032,9 +1017,6 @@ FilteredData <- R6::R6Class( # nolint
 
     # activate/deactivate filter panel
     filter_panel_active = TRUE,
-
-    # filter panel ui id
-    filter_panel_ui_id = character(0),
 
     # whether the datasets had a reproducibility check
     .check = FALSE,

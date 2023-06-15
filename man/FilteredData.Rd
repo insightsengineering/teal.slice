@@ -133,8 +133,6 @@ shiny::isolate(datasets$get_filter_state())
 \item \href{#method-FilteredData-remove_filter_state}{\code{FilteredData$remove_filter_state()}}
 \item \href{#method-FilteredData-remove_all_filter_states}{\code{FilteredData$remove_all_filter_states()}}
 \item \href{#method-FilteredData-clear_filter_states}{\code{FilteredData$clear_filter_states()}}
-\item \href{#method-FilteredData-get_filter_panel_active}{\code{FilteredData$get_filter_panel_active()}}
-\item \href{#method-FilteredData-get_filter_panel_ui_id}{\code{FilteredData$get_filter_panel_ui_id()}}
 \item \href{#method-FilteredData-set_available_teal_slices}{\code{FilteredData$set_available_teal_slices()}}
 \item \href{#method-FilteredData-ui_filter_panel}{\code{FilteredData$ui_filter_panel()}}
 \item \href{#method-FilteredData-srv_filter_panel}{\code{FilteredData$srv_filter_panel()}}
@@ -720,32 +718,13 @@ all \code{FilterStates} in the \code{FilteredData} object}
 }
 \subsection{Returns}{
 \code{NULL} invisibly
-}
-}
-\if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-FilteredData-get_filter_panel_active"></a>}}
-\if{latex}{\out{\hypertarget{method-FilteredData-get_filter_panel_active}{}}}
-\subsection{Method \code{get_filter_panel_active()}}{
-Gets the state of filter panel, if activated.
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{FilteredData$get_filter_panel_active()}\if{html}{\out{</div>}}
-}
 
-}
-\if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-FilteredData-get_filter_panel_ui_id"></a>}}
-\if{latex}{\out{\hypertarget{method-FilteredData-get_filter_panel_ui_id}{}}}
-\subsection{Method \code{get_filter_panel_ui_id()}}{
-Gets the id of the filter panel UI.
 Set external \code{teal_slice}
 
 Unlike adding new filter from the column, these filters can be added with some prespecified
 settings. List of \code{teal_slices} should be a reactive so one can make this list to be dynamic.
 List is accessible in \code{ui/srv_active} through \code{ui/srv_available_filters}.
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{FilteredData$get_filter_panel_ui_id()}\if{html}{\out{</div>}}
 }
-
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-FilteredData-set_available_teal_slices"></a>}}
