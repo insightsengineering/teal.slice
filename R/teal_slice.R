@@ -272,8 +272,10 @@ c.teal_slice <- function(...) {
 }
 
 #' @param x `teal_slice` object
+#' @param use_missing `logical(1)` should fields missing from `filter_var` call be added as NULLs?
 #' @keywords internal
-as.list.teal_slice <- function(x) {
+#' @export
+as.list.teal_slice <- function(x, use_missing = TRUE) {
   checkmate::assert_class(x, "teal_slice")
 
   x <- if (shiny::isRunning()) {
@@ -282,14 +284,26 @@ as.list.teal_slice <- function(x) {
     shiny::isolate(shiny::reactiveValuesToList(x))
   }
 
-  formals_names <- setdiff(names(formals(filter_var)), '...')
+  formals <-
+    if ('expr' %in% names(x)) {
+      formals(filter_expr)
+    } else {
+      formals(filter_var)
+    }
 
-  extra_args <-     setdiff(names(x), formals_names)
-  miss_args  <- rev(setdiff(formals_names, names(x)))
+  formals_names <- setdiff(names(formals), '...')
+  extra_args <- setdiff(names(x), formals_names)
 
-  x <- c(x, formals(filter_var)[miss_args])
+  if (use_missing) {
+    missing_args  <- rev(setdiff(formals_names, names(x)))
+    x <- c(x, formals[missing_args])
+    x[c(formals_names, extra_args)]
+  } else {
+    main_args <- formals_names[formals_names %in% names(x)] # gives order
+    x[c(main_args, extra_args)]
+  }
 
-  x[c(formals_names, extra_args)]
+
 
 }
 
@@ -305,10 +319,10 @@ format.teal_slice <- function(x, show_all = FALSE, center = TRUE, ...) {
   checkmate::assert_flag(show_all)
   checkmate::assert_flag(center)
 
-  x_json <- jsonlite::toJSON(as.list(x), pretty = TRUE, auto_unbox = TRUE, digits = 16)
+  x_json <- jsonlite::toJSON(as.list(x, use_missing = show_all), pretty = TRUE, auto_unbox = TRUE, digits = 16)
   x_json_c <- capture.output(print(x_json))
 
-  if (!show_all) x_json_c <- grep('{}', x_json_c, fixed = TRUE, invert = TRUE, value = TRUE)
+  #if (!show_all) x_json_c <- grep('{}', x_json_c, fixed = TRUE, invert = TRUE, value = TRUE)
   if (!center) return(x_json_c)
 
   x_p_json <- center_json(x_json_c)

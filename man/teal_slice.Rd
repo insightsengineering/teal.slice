@@ -49,7 +49,7 @@ as.teal_slice(x)
 
 \method{c}{teal_slice}(...)
 
-\method{format}{teal_slice}(x, show_all = FALSE, pretty = TRUE, ...)
+\method{format}{teal_slice}(x, show_all = FALSE, center = TRUE, ...)
 
 \method{print}{teal_slice}(x, ...)
 
@@ -63,7 +63,7 @@ as.teal_slices(x)
 
 store_filters(x, file, ...)
 
-\method{format}{teal_slices}(x, show_all = FALSE, pretty = TRUE, ...)
+\method{format}{teal_slices}(x, show_all = FALSE, center = TRUE, ...)
 
 \method{print}{teal_slices}(x, ...)
 
@@ -122,9 +122,11 @@ and unfiltered dataset.
 \item \code{"none"} to have counts of single \code{FilterState} to show unfiltered number only.
 }}
 
-\item{x}{\code{teal_slices} object}
+\item{x}{\code{teal_slice} object}
 
 \item{show_all}{\code{logical(1)} should parameters set to NULL be returned}
+
+\item{center}{\code{logical(1)} should the output be centered and trimmed}
 
 \item{file}{a \code{character(1)} with the storage destination name}
 
