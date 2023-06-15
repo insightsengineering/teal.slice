@@ -61,7 +61,7 @@ as.teal_slices(x)
 
 \method{c}{teal_slices}(...)
 
-store_filters(x, file = NULL, ...)
+store_filters(x, file, ...)
 
 \method{format}{teal_slices}(x, show_all = FALSE, pretty = TRUE, ...)
 

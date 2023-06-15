@@ -541,27 +541,17 @@ store_filters <- function(x, file, ...) {
 #' @keywords internal
 #'
 format.teal_slices <- function(x, show_all = FALSE, pretty = TRUE, ...) {
-
   x_format <- lapply(x, format, show_all = show_all, pretty = pretty)
-
-  attributes <- extract_attrs(x, show_all = show_all)
-
-  paste0(c(unlist(x_format), attributes), collapse = '\n')
-
+  paste0(c(unlist(x_format), extract_attrs(x)), collapse = '\n')
 }
 
 # attributes extraction for `teal_slices` object
 #' @param x `teal_slice` object
-#' @param show_all should NULL attributes be shown
 #' @keywords internal
 #'
-extract_attrs <- function(x, show_all = FALSE){
-  attributes <- list(
-    include_varnames = attr(x, "include_varnames"),
-    exclude_varnames = attr(x, "exclude_varnames"),
-          count_type = attr(x, "count_type")
-  )
-  if(!show_all) attributes <- Filter(Negate(is.null), attributes)
+extract_attrs <- function(x){
+  attributes <- attributes(x)
+  attributes$class <- NULL
   paste0('attributes\n', to_json(attributes))
 }
 
