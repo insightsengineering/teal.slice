@@ -93,35 +93,36 @@ MAEFilteredDataset <- R6::R6Class( # nolint
     #' @return `NULL` invisibly
     #'
     set_filter_state = function(state) {
-      logger::log_trace("{ class(self)[1] }$set_filter_state initializing, dataname: { private$dataname }")
-      checkmate::assert_class(state, "teal_slices")
-      lapply(state, function(x) {
-        checkmate::assert_true(x$dataname == private$dataname, .var.name = "dataname matches private$dataname")
+      shiny::isolate({
+        logger::log_trace("{ class(self)[1] }$set_filter_state initializing, dataname: { private$dataname }")
+        checkmate::assert_class(state, "teal_slices")
+        lapply(state, function(x) {
+          checkmate::assert_true(x$dataname == private$dataname, .var.name = "dataname matches private$dataname")
+        })
+
+        # determine target datalabels (defined in teal_slices)
+        datalabels <- slices_field(state, "datalabel")
+        slot_names <- names(private$get_filter_states())
+        excluded_filters <- setdiff(datalabels, slot_names)
+        if (length(excluded_filters)) {
+          stop(sprintf(
+            "%s doesn't contain elements soecified in 'datalabel': %s\n'datalabel' should be a subset of: %s",
+            private$dataname,
+            paste(excluded_filters, collapse = ", "),
+            paste(slot_names, collapse = ", ")
+          ))
+        }
+
+        # set states on state_lists with corresponding datalabels
+        lapply(datalabels, function(datalabel) {
+          slices <- Filter(function(x) identical(x$datalabel, datalabel), state)
+          private$get_filter_states()[[datalabel]]$set_filter_state(slices)
+        })
+
+        logger::log_trace("{ class(self)[1] }$set_filter_state initialized, dataname: { private$dataname }")
+
+        invisible(NULL)
       })
-
-      # determine target datalabels (defined in teal_slices)
-      datalabels <- slices_field(state, "datalabel")
-      slot_names <- names(private$get_filter_states())
-      excluded_filters <- setdiff(datalabels, slot_names)
-      if (length(excluded_filters)) {
-        stop(sprintf(
-          "%s doesn't contain elements soecified in 'datalabel': %s\n'datalabel' should be a subset of: %s",
-          private$dataname,
-          paste(excluded_filters, collapse = ", "),
-          paste(slot_names, collapse = ", ")
-        ))
-      }
-
-      # set states on state_lists with corresponding datalabels
-      lapply(datalabels, function(x) {
-        private$get_filter_states()[[x]]$set_filter_state(
-          slices_which(state, sprintf("datalabel == \"%s\"", x))
-        )
-      })
-
-      logger::log_trace("{ class(self)[1] }$set_filter_state initialized, dataname: { private$dataname }")
-
-      invisible(NULL)
     },
 
     #' @description
@@ -134,21 +135,23 @@ MAEFilteredDataset <- R6::R6Class( # nolint
     #' @return `NULL` invisibly
     #'
     remove_filter_state = function(state) {
-      checkmate::assert_class(state, "teal_slices")
+      shiny::isolate({
+        checkmate::assert_class(state, "teal_slices")
 
-      logger::log_trace("{ class(self)[1] }$remove_filter_state removing filter(s), dataname: { private$dataname }")
+        logger::log_trace("{ class(self)[1] }$remove_filter_state removing filter(s), dataname: { private$dataname }")
 
-      varnames <- slices_field(state, "varname")
-      current_states <- shiny::isolate(self$get_filter_state())
+        datalabels <- slices_field(state, "datalabel")
+        current_states <- shiny::isolate(self$get_filter_state())
 
-      lapply(varnames, function(x) {
-        slice <- slices_which(current_states, sprintf("varname  == \"%s\"", x))
-        private$get_filter_states()[[slice[[1]]$datalabel]]$remove_filter_state(slice)
+        lapply(datalabels, function(datalabel) {
+          slice <- Filter(function(x) identical(x$datalabel, datalabel), state)
+          private$get_filter_states()[[datalabel]]$remove_filter_state(slice)
+        })
+
+        logger::log_trace("{ class(self)[1] }$remove_filter_state removed filter(s), dataname: { private$dataname }")
+
+        invisible(NULL)
       })
-
-      logger::log_trace("{ class(self)[1] }$remove_filter_state removed filter(s), dataname: { private$dataname }")
-
-      invisible(NULL)
     },
 
     #' @description

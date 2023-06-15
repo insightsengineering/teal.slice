@@ -241,7 +241,7 @@ a.remove_all:hover {
   border: 1px solid var(--bs-gray-300, #dee2e6);
   border-radius: 0.25em;
   display: grid;
-  grid-template-columns: 85% 15%;
+  grid-template-columns: 95% 5%;
   grid-template-areas:
   "title controls"
   "summary summary"
