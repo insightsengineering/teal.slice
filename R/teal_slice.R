@@ -538,7 +538,8 @@ c.teal_slices <- function(...) {
 #' @keywords internal
 #'
 store.teal_slices <- function(x, file = NULL, ...) {
-  checkmate::assert_character(file, len = 1, null.ok = TRUE)
+  checkmate::assert_class(x, "teal_slices")
+  checkmate::assert_path_for_output(file, overwrite = TRUE, extension = "json")
 
   cat(format(x, show_all = TRUE, pretty = FALSE), file = file)
 }
