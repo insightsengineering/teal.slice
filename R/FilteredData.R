@@ -1110,8 +1110,6 @@ FilteredData <- R6::R6Class( # nolint
     # appropriate filter (identified by it's id)
     srv_available_filters = function(id) {
       moduleServer(id, function(input, output, session) {
-        # todo: is it okey to ommit locked or should they be visible but disabled?
-
         slices <- reactive(Filter(function(slice) !isTRUE(slice$locked), private$available_teal_slices()))
         available_slices_id <- reactive(vapply(slices(), `[[`, character(1), "id"))
         active_slices_id <- reactive(vapply(self$get_filter_state(), `[[`, character(1), "id"))

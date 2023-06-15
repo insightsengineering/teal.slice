@@ -18,3 +18,32 @@
 
 
 ### END GLOBAL VARIABLES ###
+
+
+### ENSURE CHECK PASSES
+
+# This function is necessary for check to properly process code dependencies within R6 classes.
+# If `package` is listed in `Imports` in `DESCRIPTION`,
+# (1) check goes through `NAMESPACE` looking for any `importFrom(package,<foo>)` statements
+# or an `import(package)` statement. If none are found,
+# (2) check looks for `package::*` calls in the code. If none are found again,
+# (3) check throws a NOTE;
+# #  Namespaces in Imports field not imported from:
+# #    'package'
+# #  All declared Imports should be used.
+# This note is banned by our CI.
+# When package::* statements are made within an R6 class, they are not registered.
+# This function provides single references to the imported namespaces for check to notice.
+.rectify_dependencies_check <- function() {
+  dplyr::filter
+  grDevices::rgb
+  lifecycle::badge
+  logger::log_trace
+  plotly::plot_ly
+  shinycssloaders::withSpinner
+  shinyWidgets::pickerOptions
+  teal.widgets::optionalSelectInput
+}
+
+
+### END ENSURE CHECK PASSES
