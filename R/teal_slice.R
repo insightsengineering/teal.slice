@@ -297,18 +297,19 @@ as.list.teal_slice <- function(x) {
 #' @export
 #' @param x `teal_slice` object
 #' @param show_all `logical(1)` should parameters set to NULL be returned
+#' @param center `logical(1)` should the output be centered and trimmed
 #' @rdname teal_slice
 #' @keywords internal
 #'
-format.teal_slice <- function(x, show_all = FALSE, pretty = TRUE, ...) {
+format.teal_slice <- function(x, show_all = FALSE, center = TRUE, ...) {
   checkmate::assert_flag(show_all)
-  checkmate::assert_flag(pretty)
+  checkmate::assert_flag(center)
 
   x_json <- jsonlite::toJSON(as.list(x), pretty = TRUE, auto_unbox = TRUE, digits = 16)
   x_json_c <- capture.output(print(x_json))
 
   if (!show_all) x_json_c <- grep('{}', x_json_c, fixed = TRUE, invert = TRUE, value = TRUE)
-  if (!pretty) return(x_json_c)
+  if (!center) return(x_json_c)
 
   x_p_json <- center_json(x_json_c)
 
@@ -523,16 +524,22 @@ store_filters <- function(x, file, ...) {
   checkmate::assert_class(x, "teal_slices")
   checkmate::assert_path_for_output(file, overwrite = TRUE, extension = "json")
 
-  cat(format(x, show_all = TRUE, pretty = FALSE), file = file)
+  cat(format(x, show_all = TRUE, center = FALSE), file = file)
 }
 
 # format method for `teal_slices`
+#' @param x `teal_slice` object
+#' @param show_all `logical(1)` should parameters set to NULL be returned
+#' @param center `logical(1)` should the output be centered and trimmed
 #' @export
 #' @rdname teal_slice
 #' @keywords internal
 #'
-format.teal_slices <- function(x, show_all = FALSE, pretty = TRUE, ...) {
-  x_format <- lapply(x, format, show_all = show_all, pretty = pretty)
+format.teal_slices <- function(x, show_all = FALSE, center = TRUE, ...) {
+  checkmate::assert_flag(show_all)
+  checkmate::assert_flag(center)
+
+  x_format <- lapply(x, format, show_all = show_all, center = center)
   paste0(c(unlist(x_format), extract_attrs(x)), collapse = '\n')
 }
 
