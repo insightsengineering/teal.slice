@@ -23,6 +23,7 @@ Imports:
     dplyr,
     ggplot2,
     grDevices,
+    jsonlite,
     lifecycle,
     logger (>= 0.2.0),
     methods,

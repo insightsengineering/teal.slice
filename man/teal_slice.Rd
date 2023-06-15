@@ -5,6 +5,7 @@
 \alias{filter_var}
 \alias{filter_expr}
 \alias{filter_settings}
+\alias{store}
 \alias{is.teal_slice}
 \alias{as.teal_slice}
 \alias{c.teal_slice}
@@ -14,6 +15,7 @@
 \alias{as.teal_slices}
 \alias{[.teal_slices}
 \alias{c.teal_slices}
+\alias{store.teal_slices}
 \alias{format.teal_slices}
 \alias{print.teal_slices}
 \alias{slices_field}
@@ -42,6 +44,8 @@ filter_settings(
   count_type = NULL
 )
 
+store(x, file, ...)
+
 is.teal_slice(x)
 
 as.teal_slice(x)
@@ -59,6 +63,8 @@ as.teal_slices(x)
 \method{[}{teal_slices}(x, i)
 
 \method{c}{teal_slices}(...)
+
+\method{store}{teal_slices}(x, file = NULL, ...)
 
 \method{format}{teal_slices}(x, show_all = FALSE, ...)
 
@@ -119,7 +125,11 @@ and unfiltered dataset.
 \item \code{"none"} to have counts of single \code{FilterState} to show unfiltered number only.
 }}
 
-\item{show_all}{\code{logical(1)} specifying whether NULL elements should also be printed}
+\item{x}{\code{teal_slices} object}
+
+\item{file}{a \code{character(1)} with the storage destination name}
+
+\item{show_all}{\code{logical(1)} should parameters set to NULL be returned}
 
 \item{tss}{\code{teal_slices}}
 
