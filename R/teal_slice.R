@@ -282,7 +282,7 @@ c.teal_slice <- function(...) {
 
 #' @param x `teal_slice` object
 #' @keywords internal
-to_list <- function(x){
+to_list <- function(x) {
   checkmate::assert_class(x, "teal_slice")
 
   x <- if (shiny::isRunning()) {
