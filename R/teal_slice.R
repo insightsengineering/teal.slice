@@ -306,7 +306,7 @@ format.teal_slice <- function(x, show_all = FALSE, center = TRUE, ...) {
   x_list <- as.list(x)
   if(!show_all) x_list <- Filter(Negate(is.null), x_list)
 
-  x_json <- jsonlite::toJSON(x_list, pretty = TRUE, auto_unbox = TRUE, digits = 16)
+  x_json <- jsonlite::toJSON(x_list, pretty = TRUE, auto_unbox = TRUE, digits = 16, null = "null")
   x_json_s <- strsplit(x_json, split = '\n')[[1]]
 
   if (center) x_json_s <- center_json(x_json_s)
@@ -541,7 +541,7 @@ restore_slices <- function(file) {
   tss_elements <-
     lapply(tss_l, function(x) {
 
-      omit <- unlist(lapply(x, function(xx) identical(xx, structure(list(), names = character(0)))))
+      x <- Filter(Negate(is.null), x)
 
       fun <- if ('expr' %in% names(x)) {
         filter_expr
@@ -549,7 +549,7 @@ restore_slices <- function(file) {
         filter_var
       }
 
-      do.call(fun, x[!omit])
+      do.call(fun, x)
     })
 
   tss <- do.call(filter_settings, c(`...` = tss_elements, attributes))
