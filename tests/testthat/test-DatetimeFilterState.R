@@ -287,18 +287,10 @@ testthat::test_that("print returns a properly formatted string representation", 
   filter_state <- DatetimeFilterState$new(posixct, slice = filter_var(dataname = "data", varname = "variable"))
   testthat::expect_equal(
     utils::capture.output(cat(filter_state$print())),
-    c(
-      "DatetimeFilterState:",
-      utils::capture.output(print(shiny::isolate(filter_state$get_state()))),
-      " "
-    )
+    c("DatetimeFilterState:", utils::capture.output(print(shiny::isolate(filter_state$get_state()))))
   )
   testthat::expect_equal(
     utils::capture.output(cat(filter_state$print(show_all = TRUE))),
-    c(
-      "DatetimeFilterState:",
-      utils::capture.output(print(shiny::isolate(filter_state$get_state()), show_all = TRUE)),
-      " "
-    )
+    c("DatetimeFilterState:", utils::capture.output(print(shiny::isolate(filter_state$get_state()), show_all = TRUE)))
   )
 })
