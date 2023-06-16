@@ -289,7 +289,6 @@ as.list.teal_slice <- function(x) {
   extra_args <- setdiff(names(x), formal_args)
 
   x[c(formal_args, extra_args)]
-
 }
 
 
