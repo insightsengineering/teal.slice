@@ -294,7 +294,6 @@ as.list.teal_slice <- function(x) {
 
 
 #' @export
-#' @param x `teal_slice` object
 #' @param show_all `logical(1)` should parameters set to NULL be returned
 #' @param center `logical(1)` should the output be centered and trimmed
 #' @rdname teal_slice
