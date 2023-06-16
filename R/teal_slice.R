@@ -288,7 +288,7 @@ as.list.teal_slice <- function(x, show_all = TRUE) {
       formals(filter_var)
     }
 
-  formals_names <- setdiff(names(formals), '...')
+  formal_args <- setdiff(names(formals), '...')
   extra_args <- setdiff(names(x), formals_names)
 
   if (!show_all) {
