@@ -1066,6 +1066,7 @@ FilteredData <- R6::R6Class( # nolint
     srv_available_filters = function(id) {
       moduleServer(id, function(input, output, session) {
         slices <- reactive(Filter(function(slice) !isTRUE(slice$locked), private$available_teal_slices()))
+        slices_locked <- reactive(Filter(function(slice) isTRUE(slice$locked), private$available_teal_slices()))
         available_slices_id <- reactive(vapply(slices(), `[[`, character(1), "id"))
         active_slices_id <- reactive(vapply(self$get_filter_state(), `[[`, character(1), "id"))
 
@@ -1078,11 +1079,35 @@ FilteredData <- R6::R6Class( # nolint
         })
 
         output$checkbox <- renderUI({
-          shinyWidgets::prettyCheckboxGroup(
+          checkbox <- checkboxGroupInput(
             session$ns("available_slices_id"),
             label = "Available filters",
             choices = available_slices_id(),
             selected = active_slices_id()
+          )
+          locked_choices_mock <- lapply(
+            slices_locked(),
+            function(slice) {
+              shiny::isolate({
+                tags$div(
+                  class = "checkbox",
+                  tags$label(
+                    tags$input(
+                      type = "checkbox",
+                      disabled = "disabled",
+                      checked = if (slice$id %in% active_slices_id()) "checked"
+                    ),
+                    tags$span(slice$id, disabled = "disabled")
+                  )
+                )
+              })
+            }
+          )
+          htmltools::tagInsertChildren(
+            checkbox,
+            locked_choices_mock,
+            .cssSelector = "div.shiny-options-group",
+            after = 0
           )
         })
 
