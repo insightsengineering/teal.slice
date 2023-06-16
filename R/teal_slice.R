@@ -273,17 +273,17 @@ c.teal_slice <- function(...) {
 as.list.teal_slice <- function(x) {
   checkmate::assert_class(x, "teal_slice")
 
+  formals <- if (inherits(x, "teal_slice_expr")) {
+    formals(filter_expr)
+  } else {
+    formals(filter_var)
+  }
+
   x <- if (shiny::isRunning()) {
     shiny::reactiveValuesToList(x)
   } else {
     shiny::isolate(shiny::reactiveValuesToList(x))
   }
-
-  formals <- if (inherits(x, "teal_slice_expr")) {
-      formals(filter_expr)
-    } else {
-      formals(filter_var)
-    }
 
   formal_args <- setdiff(names(formals), '...')
   extra_args <- setdiff(names(x), formal_args)
@@ -309,9 +309,7 @@ format.teal_slice <- function(x, show_all = FALSE, center = TRUE, ...) {
   x_json <- jsonlite::toJSON(x_list, pretty = TRUE, auto_unbox = TRUE, digits = 16)
   x_json_s <- strsplit(x_json, split = '\n')[[1]]
 
-  if (!center) return(x_json_s)
-
-  x_json_s <- center_json(x_json_s)
+  if (center) x_json_s <- center_json(x_json_s)
 
   paste(c("teal_slice", x_json_s), collapse = "\n")
 }
@@ -512,19 +510,54 @@ c.teal_slices <- function(...) {
   )
 }
 
-# store method for `teal_slices` object
 #' @param x `teal_slices` object
 #' @param file `character(1)` specifying path to save to
 #' @export
 #' @rdname teal_slice
 #' @keywords internal
 #'
-store_slices <- function(x, file, ...) {
+store_slices <- function(x, file) {
   checkmate::assert_class(x, "teal_slices")
   checkmate::assert_path_for_output(file, overwrite = TRUE, extension = "json")
 
-  cat(format(x, show_all = TRUE, center = FALSE), file = file)
+  cat(format(x, show_all = TRUE, center = FALSE), "\n", file = file)
 }
+
+#' @param file `character(1)` specifying path to read from
+#' @export
+#' @rdname teal_slice
+#' @keywords internal
+#'
+restore_slices <- function(file) {
+  checkmate::assert_file(file, extension = "json")
+
+  tss_txt <- paste0(readLines(file), collapse = "")
+  tss_txt_split <- strsplit(tss_txt, split = 'attributes')[[1]]
+
+  attributes <- jsonlite::fromJSON(tss_txt_split[2])
+  tss_s <- strsplit(tss_txt_split[1], split = 'teal_slice')[[1]][-1]
+  tss_l <- lapply(tss_s, jsonlite::fromJSON)
+
+  tss_elements <-
+    lapply(tss_l, function(x) {
+
+      omit <- unlist(lapply(x, function(xx) identical(xx, structure(list(), names = character(0)))))
+
+      fun <- if ('expr' %in% names(x)) {
+        filter_expr
+      } else {
+        filter_var
+      }
+
+      do.call(fun, x[!omit])
+    })
+
+  tss <- do.call(filter_settings, c(`...` = tss_elements, attributes))
+  names(tss) <- NULL
+  tss
+}
+
+
 
 #' @param x `teal_slice` object
 #' @param show_all `logical(1)` should parameters set to NULL be returned
