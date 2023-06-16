@@ -145,34 +145,6 @@ FilteredData <- R6::R6Class( # nolint
       private$get_filtered_dataset(dataname)$get_dataset_label()
     },
 
-    #' @description
-    #' Get names of datasets available for filtering.
-    #' Returned `datanames` depending on the relationship type.
-    #' If input `dataname` has parent, then parent `dataname` will be also
-    #' returned in the output vector.
-    #'
-    #' @param dataname (`character`) names of the dataset. Default `"all"`
-    #'   returns all `datanames` set in `FilteredData`
-    #'
-    #' @return (`character`) of dataset names
-    get_filterable_datanames = function(dataname = "all") {
-      if (identical(dataname, "all")) {
-        dataname <- self$datanames()
-      }
-      checkmate::assert_subset(dataname, self$datanames())
-
-      parents <- character(0)
-      for (i in dataname) {
-        while (length(i) > 0) {
-          parent_i <- self$get_join_keys()$get_parent(i)
-          parents <- c(parent_i, parents)
-          i <- parent_i
-        }
-      }
-
-      return(unique(c(parents, dataname)))
-    },
-
     # datasets methods ----
     #' @description
     #' Gets a `call` to filter the dataset according to the filter state.
@@ -274,7 +246,7 @@ FilteredData <- R6::R6Class( # nolint
     #'
     get_filter_overview = function(datanames) {
       rows <- lapply(
-        self$get_filterable_datanames(datanames),
+        datanames,
         function(dataname) {
           private$get_filtered_dataset(dataname)$get_filter_overview()
         }
@@ -607,19 +579,6 @@ FilteredData <- R6::R6Class( # nolint
       invisible(NULL)
     },
 
-    #' @description
-    #' Gets the state of filter panel, if activated.
-    #'
-    get_filter_panel_active = function() {
-      private$filter_panel_active
-    },
-
-    #' @description
-    #' Gets the id of the filter panel UI.
-    get_filter_panel_ui_id = function() {
-      private$filter_panel_ui_id
-    },
-
     # shiny modules -----
 
     #' Set external `teal_slice`
@@ -632,7 +591,7 @@ FilteredData <- R6::R6Class( # nolint
     #' @return invisible `NULL`
     set_available_teal_slices = function(x) {
       checkmate::assert_class(x, "reactive")
-      private$external_teal_slices <- x
+      private$available_teal_slices <- x
       invisible(NULL)
     },
 
@@ -666,22 +625,21 @@ FilteredData <- R6::R6Class( # nolint
     #'   if the function returns `NULL` (as opposed to `character(0)`), the filter
     #'   panel will be hidden
     #' @return `moduleServer` function which returns `NULL`
-    srv_filter_panel = function(id, active_datanames = function() "all") {
+    srv_filter_panel = function(id, active_datanames = self$datanames) {
       checkmate::assert_function(active_datanames)
       moduleServer(
         id = id,
         function(input, output, session) {
           logger::log_trace("FilteredData$srv_filter_panel initializing")
 
-          active_datanames_resolved <- eventReactive(req(active_datanames()), {
-            self$get_filterable_datanames(active_datanames())
+          active_datanames_resolved <- reactive({
+            checkmate::assert_subset(active_datanames(), self$datanames())
+            active_datanames()
           })
 
           self$srv_overview("overview", active_datanames_resolved)
           self$srv_active("active", active_datanames_resolved)
           self$srv_add("add", active_datanames_resolved)
-
-          private$filter_panel_ui_id <- session$ns(NULL)
 
           logger::log_trace("FilteredData$srv_filter_panel initialized")
           NULL
@@ -746,8 +704,8 @@ FilteredData <- R6::R6Class( # nolint
     #' @param active_datanames (`reactive`)\cr
     #'   defining subset of `self$datanames()` to be displayed.
     #' @return `moduleServer` returning `NULL`
-    srv_active = function(id, active_datanames = reactive(self$datanames())) {
-      checkmate::assert_class(active_datanames, "reactive")
+    srv_active = function(id, active_datanames = self$datanames) {
+      checkmate::assert_function(active_datanames)
       shiny::moduleServer(id, function(input, output, session) {
         logger::log_trace("FilteredData$srv_active initializing")
 
@@ -943,7 +901,7 @@ FilteredData <- R6::R6Class( # nolint
     #'   if the function returns `NULL` (as opposed to `character(0)`), the filter
     #'   panel will be hidden.
     #' @return `moduleServer` function which returns `NULL`
-    srv_overview = function(id, active_datanames = reactive(self$datanames())) {
+    srv_overview = function(id, active_datanames = self$datanames) {
       checkmate::assert_class(active_datanames, "reactive")
       moduleServer(
         id = id,
@@ -1033,15 +991,12 @@ FilteredData <- R6::R6Class( # nolint
     # activate/deactivate filter panel
     filter_panel_active = TRUE,
 
-    # filter panel ui id
-    filter_panel_ui_id = character(0),
-
     # whether the datasets had a reproducibility check
     .check = FALSE,
 
     # preprocessing code used to generate the unfiltered datasets as a string
     code = NULL,
-    external_teal_slices = NULL,
+    available_teal_slices = NULL,
 
     # keys used for joining/filtering data a JoinKeys object (see teal.data)
     join_keys = NULL,
@@ -1110,8 +1065,7 @@ FilteredData <- R6::R6Class( # nolint
     # appropriate filter (identified by it's id)
     srv_available_filters = function(id) {
       moduleServer(id, function(input, output, session) {
-        # todo: is it okey to ommit locked or should they be visible but disabled?
-        slices <- reactive(Filter(function(slice) !isTRUE(slice$locked), private$external_teal_slices()))
+        slices <- reactive(Filter(function(slice) !isTRUE(slice$locked), private$available_teal_slices()))
         available_slices_id <- reactive(vapply(slices(), `[[`, character(1), "id"))
         active_slices_id <- reactive(vapply(self$get_filter_state(), `[[`, character(1), "id"))
 

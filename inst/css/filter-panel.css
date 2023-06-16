@@ -164,24 +164,16 @@ a.remove_all:hover {
 
 .choices_state_label_unfiltered {
   background-color:lightgray;
-  height:2rem;
+  height: 2rem;
   margin-top: -3px;
   display:inline-block;
   position: absolute;
 }
 
 .filterPlotOverlayRange {
-  margin: 10px 0px -25px;
-  height: 25px;
   animation: 0.75s ease-out 0s 1 shinyDataFilterEnlargeY,
     0.5s ease-in 0s 1 shinyDataFilterFadeIn;
   transform-origin: bottom;
-  width: 100%;
-  max-width: 100%;
-}
-
-/* Needed for bs4 */
-.filterRangeSlider {
   width: 100%;
   max-width: 100%;
 }
@@ -360,4 +352,16 @@ a.remove_all:hover {
 
 .filter_datelike_input  input {
   font-size: 1em !important;
+}
+
+.choices_state {
+  margin-bottom: .45rem;
+}
+
+.popover-header {
+    margin-top: 0em;
+}
+
+.popover-body {
+    margin-bottom: -1rem;
 }

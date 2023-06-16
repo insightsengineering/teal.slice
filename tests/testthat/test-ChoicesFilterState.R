@@ -416,28 +416,6 @@ testthat::test_that("format returns properly formatted string representation", {
   )
 })
 
-testthat::test_that("format shortens names if strings are too long", {
-  values <- c("exceedinglylongvaluenameexample", "exceedingly long value name example with spaces")
-  filter_state <- ChoicesFilterState$new(values, slice = filter_var(dataname = "data", varname = "var"))
-  filter_state$set_state(filter_var(selected = values, dataname = "data", varname = "var"))
-  testthat::expect_equal(
-    shiny::isolate(filter_state$format()),
-    paste(
-      "ChoicesFilterState:",
-      "teal_slice",
-      " $ dataname: data",
-      " $ varname : var",
-      " $ fixed   : FALSE",
-      " $ locked  : FALSE",
-      " $ multiple: TRUE",
-      " $ id      : data var",
-      " $ choices : exceedingly long value nam...",
-      " $ selected: exceedinglylongvaluenameex...\n",
-      sep = "\n"
-    )
-  )
-})
-
 # print ---
 testthat::test_that("print returns properly formatted string representation", {
   values <- paste("value", 1:3, sep = "_")

@@ -205,7 +205,7 @@ data_choices_labeled <- function(data,
   if (length(choices) == 0) {
     return(character(0))
   }
-  choice_types <- setNames(variable_types(data = data, columns = choices), choices)
+  choice_types <- stats::setNames(variable_types(data = data, columns = choices), choices)
   choice_types[keys] <- "primary_key"
 
   choices_labeled(
