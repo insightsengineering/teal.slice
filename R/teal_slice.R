@@ -527,7 +527,7 @@ c.teal_slices <- function(...) {
 #' @rdname teal_slice
 #' @keywords internal
 #'
-store_filters <- function(x, file, ...) {
+store_slices <- function(x, file, ...) {
   checkmate::assert_class(x, "teal_slices")
   checkmate::assert_path_for_output(file, overwrite = TRUE, extension = "json")
 

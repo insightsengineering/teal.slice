@@ -14,7 +14,7 @@
 \alias{as.teal_slices}
 \alias{[.teal_slices}
 \alias{c.teal_slices}
-\alias{store_filters}
+\alias{store_slices}
 \alias{format.teal_slices}
 \alias{print.teal_slices}
 \alias{slices_field}
@@ -61,7 +61,7 @@ as.teal_slices(x)
 
 \method{c}{teal_slices}(...)
 
-store_filters(x, file, ...)
+store_slices(x, file, ...)
 
 \method{format}{teal_slices}(x, show_all = FALSE, center = TRUE, ...)
 
