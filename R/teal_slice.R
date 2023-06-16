@@ -268,11 +268,9 @@ c.teal_slice <- function(...) {
   ans
 }
 
-# convert teal_slice to list
-#' @param show_all `logical(1)` should NULL fields be returned?
 #' @keywords internal
 #' @export
-as.list.teal_slice <- function(x, show_all = TRUE) {
+as.list.teal_slice <- function(x) {
   checkmate::assert_class(x, "teal_slice")
 
   x <- if (shiny::isRunning()) {
@@ -281,24 +279,17 @@ as.list.teal_slice <- function(x, show_all = TRUE) {
     shiny::isolate(shiny::reactiveValuesToList(x))
   }
 
-  formals <-
-    if (inherits(x, "teal_slice_expr")) {
+  formals <- if (inherits(x, "teal_slice_expr")) {
       formals(filter_expr)
     } else {
       formals(filter_var)
     }
 
   formal_args <- setdiff(names(formals), '...')
-  extra_args <- setdiff(names(x), formals_names)
+  extra_args <- setdiff(names(x), formal_args)
 
-  if (!show_all) {
-    x <- Filter(Negate(is.null), x)
-    main_args <- formals_names[formals_names %in% names(x)] # gives order
-    x <- x[c(main_args, extra_args)]
-  } else{
-    x <- x[c(formals_names, extra_args)]
-  }
-  return(x)
+  x[c(formal_args, extra_args)]
+
 }
 
 
@@ -313,7 +304,12 @@ format.teal_slice <- function(x, show_all = FALSE, center = TRUE, ...) {
   checkmate::assert_flag(show_all)
   checkmate::assert_flag(center)
 
-  x_json <- jsonlite::toJSON(as.list(x, show_all = show_all), pretty = TRUE, auto_unbox = TRUE, digits = 16)
+  x_list <- as.list(x)
+  if(!show_all){
+    x_list <- Filter(Negate(is.null), x_list)
+  }
+
+  x_json <- jsonlite::toJSON(x_list, pretty = TRUE, auto_unbox = TRUE, digits = 16)
   x_json_c <- strsplit(x_json, split = '\n')[[1]]
 
   if (!center) return(x_json_c)
