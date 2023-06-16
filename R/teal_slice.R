@@ -285,7 +285,7 @@ as.list.teal_slice <- function(x) {
     shiny::isolate(shiny::reactiveValuesToList(x))
   }
 
-  formal_args <- setdiff(names(formals), '...')
+  formal_args <- setdiff(names(formals), "...")
   extra_args <- setdiff(names(x), formal_args)
 
   x[c(formal_args, extra_args)]
@@ -306,7 +306,7 @@ format.teal_slice <- function(x, show_all = FALSE, center = TRUE, ...) {
   if (!show_all) x_list <- Filter(Negate(is.null), x_list)
 
   x_json <- jsonlite::toJSON(x_list, pretty = TRUE, auto_unbox = TRUE, digits = 16, null = "null")
-  x_json_s <- strsplit(x_json, split = '\n')[[1]]
+  x_json_s <- strsplit(x_json, split = "\n")[[1]]
 
   if (center) x_json_s <- center_json(x_json_s)
 
@@ -339,11 +339,11 @@ center_json <- function(json) {
   ints <- setdiff(seq_along(json_s), c(1, length(json_s)))
 
   for (i in ints) {
-    json_s[[i]][1] <- paste0(format(json_s[[i]][1], width = name_width), ':')
+    json_s[[i]][1] <- paste0(format(json_s[[i]][1], width = name_width), ":")
     json_s[[i]][2] <- format_value(json_s[[i]][2])
   }
 
-  unlist(lapply(json_s, paste0, collapse = ''))
+  unlist(lapply(json_s, paste0, collapse = ""))
 }
 
 
@@ -531,18 +531,17 @@ restore_slices <- function(file) {
   checkmate::assert_file(file, extension = "json")
 
   tss_txt <- paste0(readLines(file), collapse = "")
-  tss_txt_split <- strsplit(tss_txt, split = 'attributes')[[1]]
+  tss_txt_split <- strsplit(tss_txt, split = "attributes")[[1]]
 
   attributes <- jsonlite::fromJSON(tss_txt_split[2])
-  tss_s <- strsplit(tss_txt_split[1], split = 'teal_slice')[[1]][-1]
+  tss_s <- strsplit(tss_txt_split[1], split = "teal_slice")[[1]][-1]
   tss_l <- lapply(tss_s, jsonlite::fromJSON)
 
   tss_elements <-
     lapply(tss_l, function(x) {
-
       x <- Filter(Negate(is.null), x)
 
-      fun <- if ('expr' %in% names(x)) {
+      fun <- if ("expr" %in% names(x)) {
         filter_expr
       } else {
         filter_var
@@ -573,9 +572,9 @@ format.teal_slices <- function(x, show_all = FALSE, center = TRUE, ...) {
 
   attributes <- attributes(x)
   attributes$class <- NULL
-  attributes <- paste0('attributes\n', jsonlite::toJSON(attributes, pretty = TRUE, auto_unbox = TRUE))
+  attributes <- paste0("attributes\n", jsonlite::toJSON(attributes, pretty = TRUE, auto_unbox = TRUE))
 
-  paste0(c(unlist(x_format), attributes), collapse = '\n')
+  paste0(c(unlist(x_format), attributes), collapse = "\n")
 }
 
 #' @export
