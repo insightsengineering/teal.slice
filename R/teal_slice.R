@@ -327,7 +327,7 @@ format.teal_slice <- function(x, show_all = FALSE, center = TRUE, ...) {
 #' @param x a result of `toJSON(as.list(teal_slice), pretty = TRUE, auto_unbox = TRUE)`
 #' @keywords internal
 #'
-center_json <- function(x){
+center_json <- function(x) {
   x_s <- strsplit(x, split = ":", fixed = TRUE)
 
   name_width <- max(unlist(lapply(x_s, function(x) nchar(x[1]))))
