@@ -145,34 +145,6 @@ FilteredData <- R6::R6Class( # nolint
       private$get_filtered_dataset(dataname)$get_dataset_label()
     },
 
-    #' @description
-    #' Get names of datasets available for filtering.
-    #' Returned `datanames` depending on the relationship type.
-    #' If input `dataname` has parent, then parent `dataname` will be also
-    #' returned in the output vector.
-    #'
-    #' @param dataname (`character`) names of the dataset. Default `"all"`
-    #'   returns all `datanames` set in `FilteredData`
-    #'
-    #' @return (`character`) of dataset names
-    get_filterable_datanames = function(dataname = "all") {
-      if (identical(dataname, "all")) {
-        dataname <- self$datanames()
-      }
-      checkmate::assert_subset(dataname, self$datanames())
-
-      parents <- character(0)
-      for (i in dataname) {
-        while (length(i) > 0) {
-          parent_i <- self$get_join_keys()$get_parent(i)
-          parents <- c(parent_i, parents)
-          i <- parent_i
-        }
-      }
-
-      return(unique(c(parents, dataname)))
-    },
-
     # datasets methods ----
     #' @description
     #' Gets a `call` to filter the dataset according to the filter state.
@@ -274,7 +246,7 @@ FilteredData <- R6::R6Class( # nolint
     #'
     get_filter_overview = function(datanames) {
       rows <- lapply(
-        self$get_filterable_datanames(datanames),
+        datanames,
         function(dataname) {
           private$get_filtered_dataset(dataname)$get_filter_overview()
         }
@@ -653,15 +625,16 @@ FilteredData <- R6::R6Class( # nolint
     #'   if the function returns `NULL` (as opposed to `character(0)`), the filter
     #'   panel will be hidden
     #' @return `moduleServer` function which returns `NULL`
-    srv_filter_panel = function(id, active_datanames = function() "all") {
+    srv_filter_panel = function(id, active_datanames = self$datanames) {
       checkmate::assert_function(active_datanames)
       moduleServer(
         id = id,
         function(input, output, session) {
           logger::log_trace("FilteredData$srv_filter_panel initializing")
 
-          active_datanames_resolved <- eventReactive(req(active_datanames()), {
-            self$get_filterable_datanames(active_datanames())
+          active_datanames_resolved <- reactive({
+            checkmate::assert_subset(active_datanames(), self$datanames())
+            active_datanames()
           })
 
           self$srv_overview("overview", active_datanames_resolved)
@@ -731,8 +704,8 @@ FilteredData <- R6::R6Class( # nolint
     #' @param active_datanames (`reactive`)\cr
     #'   defining subset of `self$datanames()` to be displayed.
     #' @return `moduleServer` returning `NULL`
-    srv_active = function(id, active_datanames = reactive(self$datanames())) {
-      checkmate::assert_class(active_datanames, "reactive")
+    srv_active = function(id, active_datanames = self$datanames) {
+      checkmate::assert_function(active_datanames)
       shiny::moduleServer(id, function(input, output, session) {
         logger::log_trace("FilteredData$srv_active initializing")
 
@@ -928,7 +901,7 @@ FilteredData <- R6::R6Class( # nolint
     #'   if the function returns `NULL` (as opposed to `character(0)`), the filter
     #'   panel will be hidden.
     #' @return `moduleServer` function which returns `NULL`
-    srv_overview = function(id, active_datanames = reactive(self$datanames())) {
+    srv_overview = function(id, active_datanames = self$datanames) {
       checkmate::assert_class(active_datanames, "reactive")
       moduleServer(
         id = id,

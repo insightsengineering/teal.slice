@@ -111,7 +111,6 @@ shiny::isolate(datasets$get_filter_state())
 \item \href{#method-FilteredData-new}{\code{FilteredData$new()}}
 \item \href{#method-FilteredData-datanames}{\code{FilteredData$datanames()}}
 \item \href{#method-FilteredData-get_datalabel}{\code{FilteredData$get_datalabel()}}
-\item \href{#method-FilteredData-get_filterable_datanames}{\code{FilteredData$get_filterable_datanames()}}
 \item \href{#method-FilteredData-get_call}{\code{FilteredData$get_call()}}
 \item \href{#method-FilteredData-get_code}{\code{FilteredData$get_code()}}
 \item \href{#method-FilteredData-get_data}{\code{FilteredData$get_data()}}
@@ -211,30 +210,6 @@ Useful to display in \verb{Show R Code}.
 }
 \subsection{Returns}{
 (\code{character}) keys of dataset
-}
-}
-\if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-FilteredData-get_filterable_datanames"></a>}}
-\if{latex}{\out{\hypertarget{method-FilteredData-get_filterable_datanames}{}}}
-\subsection{Method \code{get_filterable_datanames()}}{
-Get names of datasets available for filtering.
-Returned \code{datanames} depending on the relationship type.
-If input \code{dataname} has parent, then parent \code{dataname} will be also
-returned in the output vector.
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{FilteredData$get_filterable_datanames(dataname = "all")}\if{html}{\out{</div>}}
-}
-
-\subsection{Arguments}{
-\if{html}{\out{<div class="arguments">}}
-\describe{
-\item{\code{dataname}}{(\code{character}) names of the dataset. Default \code{"all"}
-returns all \code{datanames} set in \code{FilteredData}}
-}
-\if{html}{\out{</div>}}
-}
-\subsection{Returns}{
-(\code{character}) of dataset names
 }
 }
 \if{html}{\out{<hr>}}
@@ -777,7 +752,7 @@ Server function for filter panel
 \if{latex}{\out{\hypertarget{method-FilteredData-srv_filter_panel}{}}}
 \subsection{Method \code{srv_filter_panel()}}{
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{FilteredData$srv_filter_panel(id, active_datanames = function() "all")}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{FilteredData$srv_filter_panel(id, active_datanames = self$datanames)}\if{html}{\out{</div>}}
 }
 
 \subsection{Arguments}{
@@ -825,7 +800,7 @@ an ID string that corresponds with the ID used to call the module's UI function.
 \subsection{Method \code{srv_active()}}{
 Server module responsible for displaying active filters.
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{FilteredData$srv_active(id, active_datanames = reactive(self$datanames()))}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{FilteredData$srv_active(id, active_datanames = self$datanames)}\if{html}{\out{</div>}}
 }
 
 \subsection{Arguments}{
@@ -917,7 +892,7 @@ data}
 \if{latex}{\out{\hypertarget{method-FilteredData-srv_overview}{}}}
 \subsection{Method \code{srv_overview()}}{
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{FilteredData$srv_overview(id, active_datanames = reactive(self$datanames()))}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{FilteredData$srv_overview(id, active_datanames = self$datanames)}\if{html}{\out{</div>}}
 }
 
 \subsection{Arguments}{
