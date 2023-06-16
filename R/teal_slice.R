@@ -355,7 +355,7 @@ center_json <- function(x) {
 #' @keywords internal
 #'
 print.teal_slice <- function(x, ...) {
-  cat(format(x, ...))
+  cat(format(x, ...), "\n")
 }
 
 
@@ -551,7 +551,7 @@ format.teal_slices <- function(x, show_all = FALSE, center = TRUE, ...) {
 #' @keywords internal
 #'
 print.teal_slices <- function(x, ...) {
-  cat(format(x, ...))
+  cat(format(x, ...), "\n")
 }
 
 
