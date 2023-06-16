@@ -111,7 +111,6 @@ shiny::isolate(datasets$get_filter_state())
 \item \href{#method-FilteredData-new}{\code{FilteredData$new()}}
 \item \href{#method-FilteredData-datanames}{\code{FilteredData$datanames()}}
 \item \href{#method-FilteredData-get_datalabel}{\code{FilteredData$get_datalabel()}}
-\item \href{#method-FilteredData-get_filterable_datanames}{\code{FilteredData$get_filterable_datanames()}}
 \item \href{#method-FilteredData-get_call}{\code{FilteredData$get_call()}}
 \item \href{#method-FilteredData-get_code}{\code{FilteredData$get_code()}}
 \item \href{#method-FilteredData-get_data}{\code{FilteredData$get_data()}}
@@ -133,8 +132,7 @@ shiny::isolate(datasets$get_filter_state())
 \item \href{#method-FilteredData-remove_filter_state}{\code{FilteredData$remove_filter_state()}}
 \item \href{#method-FilteredData-remove_all_filter_states}{\code{FilteredData$remove_all_filter_states()}}
 \item \href{#method-FilteredData-clear_filter_states}{\code{FilteredData$clear_filter_states()}}
-\item \href{#method-FilteredData-get_filter_panel_active}{\code{FilteredData$get_filter_panel_active()}}
-\item \href{#method-FilteredData-get_filter_panel_ui_id}{\code{FilteredData$get_filter_panel_ui_id()}}
+\item \href{#method-FilteredData-set_available_teal_slices}{\code{FilteredData$set_available_teal_slices()}}
 \item \href{#method-FilteredData-ui_filter_panel}{\code{FilteredData$ui_filter_panel()}}
 \item \href{#method-FilteredData-srv_filter_panel}{\code{FilteredData$srv_filter_panel()}}
 \item \href{#method-FilteredData-ui_active}{\code{FilteredData$ui_active()}}
@@ -212,30 +210,6 @@ Useful to display in \verb{Show R Code}.
 }
 \subsection{Returns}{
 (\code{character}) keys of dataset
-}
-}
-\if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-FilteredData-get_filterable_datanames"></a>}}
-\if{latex}{\out{\hypertarget{method-FilteredData-get_filterable_datanames}{}}}
-\subsection{Method \code{get_filterable_datanames()}}{
-Get names of datasets available for filtering.
-Returned \code{datanames} depending on the relationship type.
-If input \code{dataname} has parent, then parent \code{dataname} will be also
-returned in the output vector.
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{FilteredData$get_filterable_datanames(dataname = "all")}\if{html}{\out{</div>}}
-}
-
-\subsection{Arguments}{
-\if{html}{\out{<div class="arguments">}}
-\describe{
-\item{\code{dataname}}{(\code{character}) names of the dataset. Default \code{"all"}
-returns all \code{datanames} set in \code{FilteredData}}
-}
-\if{html}{\out{</div>}}
-}
-\subsection{Returns}{
-(\code{character}) of dataset names
 }
 }
 \if{html}{\out{<hr>}}
@@ -719,32 +693,38 @@ all \code{FilterStates} in the \code{FilteredData} object}
 }
 \subsection{Returns}{
 \code{NULL} invisibly
+
+Set external \code{teal_slice}
+
+Unlike adding new filter from the column, these filters can be added with some prespecified
+settings. List of \code{teal_slices} should be a reactive so one can make this list to be dynamic.
+List is accessible in \code{ui/srv_active} through \code{ui/srv_available_filters}.
 }
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-FilteredData-get_filter_panel_active"></a>}}
-\if{latex}{\out{\hypertarget{method-FilteredData-get_filter_panel_active}{}}}
-\subsection{Method \code{get_filter_panel_active()}}{
-Gets the state of filter panel, if activated.
+\if{html}{\out{<a id="method-FilteredData-set_available_teal_slices"></a>}}
+\if{latex}{\out{\hypertarget{method-FilteredData-set_available_teal_slices}{}}}
+\subsection{Method \code{set_available_teal_slices()}}{
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{FilteredData$get_filter_panel_active()}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{FilteredData$set_available_teal_slices(x)}\if{html}{\out{</div>}}
 }
 
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{x}}{(\code{reactive})\cr
+should return \code{teal_slices}}
 }
-\if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-FilteredData-get_filter_panel_ui_id"></a>}}
-\if{latex}{\out{\hypertarget{method-FilteredData-get_filter_panel_ui_id}{}}}
-\subsection{Method \code{get_filter_panel_ui_id()}}{
-Gets the id of the filter panel UI.
+\if{html}{\out{</div>}}
+}
+\subsection{Returns}{
+invisible \code{NULL}
 Module for the right filter panel in the teal app
 with a filter overview panel and a filter variable panel.
 
 This panel contains info about the number of observations left in
 the (active) datasets and allows to filter the datasets.
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{FilteredData$get_filter_panel_ui_id()}\if{html}{\out{</div>}}
 }
-
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-FilteredData-ui_filter_panel"></a>}}
@@ -772,7 +752,7 @@ Server function for filter panel
 \if{latex}{\out{\hypertarget{method-FilteredData-srv_filter_panel}{}}}
 \subsection{Method \code{srv_filter_panel()}}{
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{FilteredData$srv_filter_panel(id, active_datanames = function() "all")}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{FilteredData$srv_filter_panel(id, active_datanames = self$datanames)}\if{html}{\out{</div>}}
 }
 
 \subsection{Arguments}{
@@ -820,7 +800,7 @@ an ID string that corresponds with the ID used to call the module's UI function.
 \subsection{Method \code{srv_active()}}{
 Server module responsible for displaying active filters.
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{FilteredData$srv_active(id, active_datanames = reactive(self$datanames()))}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{FilteredData$srv_active(id, active_datanames = self$datanames)}\if{html}{\out{</div>}}
 }
 
 \subsection{Arguments}{
@@ -912,7 +892,7 @@ data}
 \if{latex}{\out{\hypertarget{method-FilteredData-srv_overview}{}}}
 \subsection{Method \code{srv_overview()}}{
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{FilteredData$srv_overview(id, active_datanames = reactive(self$datanames()))}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{FilteredData$srv_overview(id, active_datanames = self$datanames)}\if{html}{\out{</div>}}
 }
 
 \subsection{Arguments}{

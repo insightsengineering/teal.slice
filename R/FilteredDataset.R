@@ -44,10 +44,10 @@ FilteredDataset <- R6::R6Class( # nolint
       # function executing reactive call and returning data
       private$data_filtered_fun <- function(sid = "") {
         checkmate::assert_character(sid)
-        if (identical(sid, integer(0))) {
-          logger::log_trace("filtering data dataname: { private$dataname }")
-        } else {
+        if (length(sid)) {
           logger::log_trace("filtering data dataname: { dataname }, sid: { sid }")
+        } else {
+          logger::log_trace("filtering data dataname: { private$dataname }")
         }
         env <- new.env(parent = parent.env(globalenv()))
         env[[dataname]] <- private$dataset

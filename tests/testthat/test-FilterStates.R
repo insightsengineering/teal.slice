@@ -54,16 +54,12 @@ testthat::test_that("set_filter_state and get_filter_state, sets and returns the
   fs <- filter_settings(
     filter_var(
       dataname = "test", varname = "a", choices = c(1, 5), selected = c(1, 4), keep_na = FALSE, keep_inf = FALSE,
-      disabled = FALSE, fixed = FALSE, locked = FALSE,
-      any_attribute = "a", another_attribute = "b"
+      fixed = FALSE, any_attribute = "a", another_attribute = "b"
     ),
     count_type = "none"
   )
   filter_states$set_filter_state(fs)
-  testthat::expect_equal(
-    shiny::isolate(filter_states$get_filter_state()),
-    fs
-  )
+  expect_identical_slices(filter_states$get_filter_state(), fs)
 })
 
 testthat::test_that("set_filter_state updates FilterState when dataname and varname are matched between teal_slice and
@@ -72,30 +68,14 @@ existing filter", {
   fs <- filter_settings(
     filter_var(
       dataname = "test", varname = "a", choices = c(1, 5), selected = c(1, 4), keep_na = FALSE, keep_inf = FALSE,
-      disabled = FALSE, fixed = FALSE, locked = FALSE, any_attribute = "a", another_attribute = "b"
+      fixed = FALSE, locked = FALSE, any_attribute = "a", another_attribute = "b"
     ),
     count_type = "none"
   )
   filter_states$set_filter_state(fs)
   fs[[1]]$selected <- c(1, 5)
   filter_states$set_filter_state(fs)
-  testthat::expect_equal(
-    shiny::isolate(filter_states$get_filter_state()),
-    fs
-  )
-})
-
-testthat::test_that("set_filter_state doesn't allow to create two filters on the same variable", {
-  filter_states <- FilterStates$new(data = data.frame(a = 1:10), dataname = "test")
-  fs <- filter_settings(
-    filter_var(dataname = "test", varname = "a", selected = c(1, 5)),
-    filter_var(dataname = "test", varname = "a", selected = c(1, 10)),
-    count_type = "none"
-  )
-
-  testthat::expect_error(
-    filter_states$set_filter_state(fs), "Some of the teal_slice objects refer to the same filter."
-  )
+  expect_identical_slices(filter_states$get_filter_state(), fs)
 })
 
 testthat::test_that("set_filter_state allows to create two filters on the same variable if combination of their
@@ -120,7 +100,7 @@ testthat::test_that("set_filter_state creates a new FilterStateExpr", {
     count_type = "none"
   )
   filter_states$set_filter_state(fs)
-  testthat::expect_equal(shiny::isolate(filter_states$get_filter_state()), fs)
+  expect_identical_slices(filter_states$get_filter_state(), fs)
 })
 
 testthat::test_that("remove_filter_state of inexistent FilterState raiser warning", {
@@ -341,9 +321,8 @@ testthat::test_that("Selecting a new variable initializes a new filter state wit
       session$setInputs(var_to_add = "Sepal.Length")
     }
   )
-
-  testthat::expect_equal(
-    shiny::isolate(filter_states$get_filter_state()),
+  expect_identical_slices(
+    filter_states$get_filter_state(),
     filter_settings(
       filter_var(
         dataname = "iris",
@@ -376,21 +355,21 @@ testthat::test_that("Adding 'var_to_add' adds another filter state", {
     }
   )
 
-  testthat::expect_equal(
+  expect_identical_slices(
     shiny::isolate(filter_states$get_filter_state()),
     filter_settings(
       filter_var(
         dataname = "iris", varname = "Sepal.Length", choices = c(4.3, 7.9), selected = c(5.1, 6.4),
-        keep_na = FALSE, keep_inf = FALSE, disabled = FALSE, fixed = FALSE, locked = FALSE
+        keep_na = FALSE, keep_inf = FALSE, fixed = FALSE, locked = FALSE
       ),
       filter_var(
         dataname = "iris", varname = "Petal.Length", choices = c(1.0, 6.9), selected = c(1.0, 6.9),
-        keep_na = NULL, keep_inf = NULL, disabled = FALSE, fixed = FALSE, locked = FALSE
+        keep_na = NULL, keep_inf = NULL, fixed = FALSE, locked = FALSE
       ),
       filter_var(
         dataname = "iris", varname = "Species", choices = c("setosa", "versicolor", "virginica"),
         multiple = TRUE, selected = c("setosa", "versicolor", "virginica"), keep_na = NULL, keep_inf = NULL,
-        disabled = FALSE, fixed = FALSE, locked = FALSE
+        fixed = FALSE, locked = FALSE
       ),
       count_type = "all"
     )
