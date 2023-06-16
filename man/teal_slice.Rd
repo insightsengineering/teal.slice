@@ -15,6 +15,7 @@
 \alias{[.teal_slices}
 \alias{c.teal_slices}
 \alias{store_slices}
+\alias{restore_slices}
 \alias{format.teal_slices}
 \alias{print.teal_slices}
 \alias{slices_field}
@@ -61,7 +62,9 @@ as.teal_slices(x)
 
 \method{c}{teal_slices}(...)
 
-store_slices(x, file, ...)
+store_slices(tss, file)
+
+restore_slices(file)
 
 \method{format}{teal_slices}(x, show_all = FALSE, center = TRUE, ...)
 
@@ -128,9 +131,9 @@ and unfiltered dataset.
 
 \item{center}{\code{logical(1)} should the output be centered and trimmed}
 
-\item{file}{\code{character(1)} specifying path to save to}
+\item{tss}{\code{teal_slices} object}
 
-\item{tss}{\code{teal_slices}}
+\item{file}{\code{character(1)} specifying path to read from}
 
 \item{field}{\code{character(1)} name of \code{teal_slice} element}
 }
