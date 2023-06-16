@@ -268,6 +268,7 @@ c.teal_slice <- function(...) {
   ans
 }
 
+# convert teal_slice to list
 #' @param x `teal_slice` object
 #' @param show_all `logical(1)` should NULL fields be returned?
 #' @keywords internal
@@ -301,7 +302,7 @@ as.list.teal_slice <- function(x, show_all = TRUE) {
   return(x)
 }
 
-# format method for teal_slice
+
 #' @export
 #' @param x `teal_slice` object
 #' @param show_all `logical(1)` should parameters set to NULL be returned
@@ -357,7 +358,6 @@ center_json <- function(x){
 }
 
 
-# print method for teal_slice
 #' @export
 #' @rdname teal_slice
 #' @keywords internal
@@ -534,7 +534,6 @@ store_filters <- function(x, file, ...) {
   cat(format(x, show_all = TRUE, center = FALSE), file = file)
 }
 
-# format method for `teal_slices`
 #' @param x `teal_slice` object
 #' @param show_all `logical(1)` should parameters set to NULL be returned
 #' @param center `logical(1)` should the output be centered and trimmed
@@ -564,7 +563,6 @@ extract_attrs <- function(x){
 }
 
 
-# print method for `teal_slices`
 #' @export
 #' @rdname teal_slice
 #' @keywords internal
