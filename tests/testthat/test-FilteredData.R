@@ -118,55 +118,6 @@ testthat::test_that("datanames are ordered topologically from parent to child", 
   testthat::expect_identical(filtered_data$datanames(), c("parent", "child"))
 })
 
-
-# get_filterable_dataname ----
-testthat::test_that("get_filterable_dataname returns all datasets by default", {
-  dataset <- list(dataset = iris)
-  filtered_data <- FilteredData$new(list(iris = dataset, iris2 = dataset))
-  testthat::expect_identical(filtered_data$get_filterable_datanames(), c("iris", "iris2"))
-})
-
-testthat::test_that("get_filterable_dataname('all') returns all datasets", {
-  dataset <- list(dataset = iris)
-  filtered_data <- FilteredData$new(list(iris = dataset, iris2 = dataset))
-  testthat::expect_identical(filtered_data$get_filterable_datanames("all"), c("iris", "iris2"))
-})
-
-testthat::test_that("get_filterable_dataname raises error when dataname not subset of current datanames", {
-  dataset <- list(dataset = iris)
-  filtered_data <- FilteredData$new(list(iris = dataset))
-  testthat::expect_error(filtered_data$get_filterable_datanames("idontexist"))
-})
-
-testthat::test_that("get_filterable_dataname returns dataname same as input", {
-  dataset <- list(dataset = iris)
-  filtered_data <- FilteredData$new(list(iris = dataset))
-  testthat::expect_identical(filtered_data$get_filterable_datanames("iris"), "iris")
-})
-
-testthat::test_that("get_filterable_datanames returns all ancestors if parents are specified in join_keys", {
-  jk <- teal.data::join_keys(
-    teal.data::join_key("child", "parent", c("Species" = "Species")),
-    teal.data::join_key("grandchild", "child", c("Species" = "Species"))
-  )
-  jk$set_parents(list(child = "parent"))
-  jk$set_parents(list(grandchild = "child"))
-  iris2 <- transform(iris, id = seq_len(nrow(iris)))
-  filtered_data <- FilteredData$new(
-    list(
-      grandchild = list(dataset = head(iris2)),
-      child = list(dataset = head(iris2)),
-      parent = list(dataset = head(iris2))
-    ),
-    join_keys = jk
-  )
-
-  testthat::expect_identical(filtered_data$get_filterable_datanames("parent"), "parent")
-  testthat::expect_identical(filtered_data$get_filterable_datanames("child"), c("parent", "child"))
-  testthat::expect_identical(filtered_data$get_filterable_datanames("grandchild"), c("parent", "child", "grandchild"))
-})
-
-
 # set_dataset ----
 testthat::test_that("set_dataset accepts data being `data.frame`", {
   filtered_data <- FilteredData$new(data_objects = list())
@@ -505,10 +456,7 @@ testthat::test_that("set_filter_state accepts `teal_slices` and nested list and 
   testthat::expect_warning(datasets1$set_filter_state(fs1), "deprecated")
   datasets2$set_filter_state(fs2)
 
-  testthat::expect_identical(
-    shiny::isolate(datasets1$get_filter_state()),
-    shiny::isolate(datasets2$get_filter_state())
-  )
+  expect_identical_slices(datasets1$get_filter_state(), datasets2$get_filter_state())
 })
 
 
@@ -628,7 +576,10 @@ testthat::test_that("remove_filter_state removes states specified by `teal_slice
       filter_var(dataname = "mtcars", varname = "disp")
     )
   )
-  testthat::expect_identical(slices_field(shiny::isolate(datasets$get_filter_state()), "varname"), "Species")
+  testthat::expect_identical(
+    shiny::isolate(slices_field(datasets$get_filter_state(), "varname")),
+    "Species"
+  )
 })
 
 testthat::test_that("remove_filter_state does not remove locked filters", {
@@ -653,14 +604,11 @@ testthat::test_that("remove_filter_state does not remove locked filters", {
     )
   )
   datasets$set_filter_state(state = fs)
-
-  state <- fs[1:2]
-
-  datasets$remove_filter_state(state)
+  datasets$remove_filter_state(fs)
 
   testthat::expect_length(shiny::isolate(datasets$get_filter_state()), 2)
   testthat::expect_true(
-    teal.slice:::slices_field(shiny::isolate(datasets$get_filter_state()), "locked")
+    shiny::isolate(teal.slice:::slices_field(datasets$get_filter_state(), "locked"))
   )
 })
 
@@ -701,7 +649,7 @@ testthat::test_that("clear_filter_states removes filters of desired dataset only
   datasets$set_filter_state(state = fs)
   datasets$clear_filter_states(datanames = "iris")
 
-  testthat::expect_identical(slices_field(shiny::isolate(datasets$get_filter_state()), "dataname"), "mtcars")
+  testthat::expect_identical(shiny::isolate(slices_field(datasets$get_filter_state(), "dataname")), "mtcars")
 })
 
 testthat::test_that("clear_filter_states does not remove locked filters", {
@@ -731,7 +679,7 @@ testthat::test_that("clear_filter_states does not remove locked filters", {
 
   testthat::expect_length(shiny::isolate(datasets$get_filter_state()), 2)
   testthat::expect_true(
-    teal.slice:::slices_field(shiny::isolate(datasets$get_filter_state()), "locked")
+    shiny::isolate(teal.slice:::slices_field(datasets$get_filter_state(), "locked"))
   )
 })
 
@@ -745,13 +693,12 @@ testthat::test_that("get_filter_overview checks arguments", {
   )
   testthat::expect_no_error(shiny::isolate(datasets$get_filter_overview("iris")))
   testthat::expect_no_error(shiny::isolate(datasets$get_filter_overview("mtcars")))
-  testthat::expect_no_error(shiny::isolate(datasets$get_filter_overview("all")))
   testthat::expect_error(
     shiny::isolate(datasets$get_filter_overview()), "argument \"datanames\" is missing, with no default"
   )
-  testthat::expect_error(shiny::isolate(datasets$get_filter_overview("AA")), "Must be a subset of")
-  testthat::expect_error(shiny::isolate(datasets$get_filter_overview("")), "Must be a subset of")
-  testthat::expect_error(shiny::isolate(datasets$get_filter_overview(23)), "Must be a subset of")
+  testthat::expect_error(shiny::isolate(datasets$get_filter_overview("AA")))
+  testthat::expect_error(shiny::isolate(datasets$get_filter_overview("")))
+  testthat::expect_error(shiny::isolate(datasets$get_filter_overview(23)))
 })
 
 testthat::test_that("get_filter_overview returns overview data.frame with obs counts if the keys are not specified", {
@@ -823,119 +770,16 @@ testthat::test_that("get_filter_overview return counts based on reactive filteri
   testthat::expect_equal(
     shiny::isolate(filtered_data$get_filter_overview(c("child", "parent"))),
     data.frame(
-      dataname = c("parent", "child"),
+      dataname = c("child", "parent"),
       obs = c(6, 6),
       obs_filtered = c(2, 2),
-      subjects = c(NA, 6),
-      subjects_filtered = c(NA, 2)
+      subjects = c(6, NA),
+      subjects_filtered = c(2, NA)
     )
   )
 })
-
-
-# filter_panel_disable/enable ----
-testthat::test_that("filter_panel_disable/enable disables and restores all filter_states", {
-  test_class <- R6::R6Class(
-    classname = "test_class",
-    inherit = FilteredData,
-    public = list(
-      filter_panel_disable = function() private$filter_panel_disable(),
-      filter_panel_enable = function() private$filter_panel_enable()
-    )
-  )
-  filtered_data <- test_class$new(data_objects = list("iris" = list(dataset = iris)))
-  filtered_data$set_filter_state(
-    filter_settings(
-      filter_var(dataname = "iris", varname = "Sepal.Width", selected = c(3, 4)),
-      filter_var(dataname = "iris", varname = "Species", selected = "setosa", disabled = TRUE)
-    )
-  )
-
-  shiny::testServer(
-    filtered_data$srv_filter_panel,
-    expr = {
-      testthat::expect_identical(
-        slices_field(shiny::isolate(filtered_data$get_filter_state()), "disabled"),
-        c(FALSE, TRUE)
-      )
-
-      testthat::expect_output(
-        filtered_data$filter_panel_disable(),
-        "WARN.+attempt to set state on disabled filter"
-      )
-      testthat::expect_identical(
-        slices_field(shiny::isolate(filtered_data$get_filter_state()), "disabled"),
-        TRUE
-      )
-
-      testthat::expect_output(
-        filtered_data$filter_panel_enable(),
-        "WARN.+attempt to set state on disabled filter"
-      )
-      testthat::expect_identical(
-        slices_field(shiny::isolate(filtered_data$get_filter_state()), "disabled"),
-        c(FALSE, TRUE)
-      )
-    }
-  )
-})
-
-testthat::test_that("switching disable/enable button caches and restores state", {
-  filtered_data <- FilteredData$new(
-    list(
-      iris = list(dataset = iris),
-      mtcars = list(dataset = mtcars)
-    )
-  )
-  fs <- filter_settings(
-    filter_var(dataname = "iris", varname = "Sepal.Length", selected = c(5.1, 6.4), keep_na = TRUE, keep_inf = FALSE),
-    filter_var(dataname = "iris", varname = "Species", selected = c("setosa", "versicolor"), keep_na = FALSE),
-    filter_var(dataname = "mtcars", varname = "cyl", selected = c(4, 6), keep_na = FALSE, keep_inf = FALSE),
-    filter_var(dataname = "mtcars", varname = "disp", keep_na = FALSE, keep_inf = FALSE)
-  )
-  filtered_data$set_filter_state(fs)
-  shiny::testServer(
-    filtered_data$srv_active,
-    expr = {
-      cached <- filtered_data$get_filter_state()
-      testthat::expect_true(filtered_data$get_filter_panel_active())
-      testthat::expect_output(
-        session$setInputs(filter_panel_active = FALSE),
-        "WARN.+attempt to set state on disabled"
-      )
-      testthat::expect_false(filtered_data$get_filter_panel_active())
-      session$setInputs(filter_panel_active = TRUE)
-      testthat::expect_true(filtered_data$get_filter_panel_active())
-      testthat::expect_identical(filtered_data$get_filter_state(), cached)
-    }
-  )
-})
-
 
 # active_datanames ----
-testthat::test_that("active_datanames in srv_filter_panel gets resolved to valid datanames", {
-  filtered_data <- FilteredData$new(
-    list(
-      iris = list(dataset = iris),
-      mtcars = list(dataset = mtcars)
-    )
-  )
-  shiny::testServer(
-    filtered_data$srv_filter_panel,
-    args = list(active_datanames = function() "all"),
-    expr = {
-      testthat::expect_identical(active_datanames_resolved(), c("iris", "mtcars"))
-    }
-  )
-  shiny::testServer(
-    filtered_data$srv_filter_panel,
-    args = list(active_datanames = function() "iris"),
-    expr = {
-      testthat::expect_identical(active_datanames_resolved(), c("iris"))
-    }
-  )
-})
-
 testthat::test_that("active_datanames fails if returns dataname which isn't a subset of available datanames", {
   filtered_data <- FilteredData$new(
     list(
@@ -998,28 +842,6 @@ testthat::test_that("srv_active - clicking remove_all button clears filters", {
     }
   )
 })
-
-# other ----
-testthat::test_that("turn filed by default equal to TRUE", {
-  filtered_data <- FilteredData$new(data_objects = list("iris" = list(dataset = iris)))
-  testthat::expect_true(filtered_data$get_filter_panel_active())
-})
-
-testthat::test_that("get_filter_panel_ui_id - empty when no shiny session", {
-  filtered_data <- FilteredData$new(data_objects = list("iris" = list(dataset = iris)))
-  testthat::expect_length(filtered_data$get_filter_panel_ui_id(), 0)
-})
-
-testthat::test_that("get_filter_panel_ui_id - non-empty when in shiny session", {
-  filtered_data <- FilteredData$new(data_objects = list("iris" = list(dataset = iris)))
-  shiny::testServer(
-    filtered_data$srv_filter_panel,
-    expr = {
-      testthat::expect_length(filtered_data$get_filter_panel_ui_id(), 1)
-    }
-  )
-})
-
 
 # get_filter_count
 testthat::test_that("get_filter_count properly tallies active filter states", {
@@ -1087,3 +909,63 @@ testthat::test_that("get_filter_count properly tallies active filter states for 
   datasets$set_filter_state(state = fs)
   shiny::isolate(testthat::expect_equal(datasets$get_filter_count(), 4L))
 })
+
+
+
+test_class <- R6::R6Class(
+  classname = "test_class",
+  inherit = FilteredData,
+  public = list(
+    srv_available_filters = function(id) {
+      private$srv_available_filters(id)
+    },
+    ui_available_filters = function(id) {
+      private$ui_available_filters(id)
+    }
+  )
+)
+datasets <- test_class$new(list(iris = list(dataset = iris)))
+fs <- filter_settings(
+  filter_var(dataname = "iris", varname = "Sepal.Length", locked = TRUE),
+  filter_var(dataname = "iris", varname = "Sepal.Width"),
+  filter_var(dataname = "iris", varname = "Petal.Length"),
+  filter_var(dataname = "iris", varname = "Petal.Width")
+)
+fs_rv <- reactiveVal(fs)
+datasets$set_available_teal_slices(reactive(fs_rv()))
+datasets$set_filter_state(fs[1:2])
+shiny::testServer(
+  datasets$srv_available_filters,
+  expr = {
+    testthat::test_that("FilteredData$srv_available_slices locked slices ommited", {
+      testthat::expect_identical(slices(), fs[-1])
+    })
+
+    testthat::test_that("FilteredData$srv_available_slices new state in external list reflected in available slices", {
+      species_slice <- filter_var(dataname = "iris", varname = "Species")
+      fs_rv(c(fs_rv(), filter_settings(species_slice)))
+      testthat::expect_identical(
+        available_slices_id(),
+        c("iris Sepal.Width", "iris Petal.Length", "iris Petal.Width", "iris Species")
+      )
+    })
+
+    testthat::test_that("active_slices_id returns list of currently active filters", {
+      testthat::expect_identical(active_slices_id(), c("iris Sepal.Length", "iris Sepal.Width"))
+    })
+
+    testthat::test_that("FilteredData$srv_available_slices changing input values de/activate states", {
+      session$setInputs(available_slices_id = c("iris Sepal.Length", "iris Sepal.Width"))
+      session$setInputs(available_slices_id = c("iris Sepal.Length"))
+      testthat::expect_identical(active_slices_id(), c("iris Sepal.Length"))
+
+      session$setInputs(available_slices_id = c("iris Sepal.Length", "iris Sepal.Width", "iris Species"))
+      testthat::expect_identical(active_slices_id(), c("iris Sepal.Length", "iris Sepal.Width", "iris Species"))
+    })
+
+    testthat::test_that("FilteredData$srv_available_slices deactivating all keeps locked states", {
+      session$setInputs(available_slices_id = NULL)
+      testthat::expect_identical(active_slices_id(), "iris Sepal.Length")
+    })
+  }
+)

@@ -69,11 +69,7 @@ FilterPanelAPI <- R6::R6Class( # nolint
     #' @return `NULL` invisibly
     #'
     set_filter_state = function(filter) {
-      if (private$filtered_data$get_filter_panel_active()) {
-        private$filtered_data$set_filter_state(filter)
-      } else {
-        warning(private$deactivated_msg)
-      }
+      private$filtered_data$set_filter_state(filter)
       invisible(NULL)
     },
 
@@ -87,11 +83,7 @@ FilterPanelAPI <- R6::R6Class( # nolint
     #' @return `NULL` invisibly
     #'
     remove_filter_state = function(filter) {
-      if (private$filtered_data$get_filter_panel_active()) {
-        private$filtered_data$remove_filter_state(filter)
-      } else {
-        warning(private$deactivated_msg)
-      }
+      private$filtered_data$remove_filter_state(filter)
       invisible(NULL)
     },
 
@@ -104,37 +96,13 @@ FilterPanelAPI <- R6::R6Class( # nolint
     #' @return `NULL` invisibly
     #'
     clear_filter_states = function(datanames) {
-      if (private$filtered_data$get_filter_panel_active()) {
-        datanames_to_remove <- if (missing(datanames)) private$filtered_data$datanames() else datanames
-        private$filtered_data$clear_filter_states(datanames = datanames_to_remove)
-      } else {
-        warning(private$deactivated_msg)
-      }
-      invisible(NULL)
-    },
-
-    #' @description
-    #' Toggle the state of the global Filter Panel button by running `javascript` code
-    #' to click the toggle button with the `filter_panel_active` id suffix.
-    #' The button id is prefixed with the Filter Panel shiny namespace.
-    #' This button is observed in `srv_filter_panel` method that executes
-    #' `filter_panel_enable()` or `filter_panel_disable()` method depending on the toggle state.
-    #'
-    #' @return `NULL` invisibly
-    #'
-    filter_panel_toggle = function() {
-      shinyjs::runjs(
-        sprintf(
-          '$("#%s-filter_turn_onoff").click();',
-          private$filtered_data$get_filter_panel_ui_id()
-        )
-      )
+      datanames_to_remove <- if (missing(datanames)) private$filtered_data$datanames() else datanames
+      private$filtered_data$clear_filter_states(datanames = datanames_to_remove)
       invisible(NULL)
     }
   ),
   ## __Private Methods ====
   private = list(
-    filtered_data = NULL,
-    deactivated_msg = "Filter Panel is deactivated so the action can not be applied with api."
+    filtered_data = NULL
   )
 )

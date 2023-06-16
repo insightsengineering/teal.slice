@@ -7,9 +7,8 @@
 #'
 #' @examples
 #' filter_state <- teal.slice:::EmptyFilterState$new(
-#'   NA,
-#'   varname = "x",
-#'   dataname = "data",
+#'   x = NA,
+#'   slice = filter_var(varname = "x", dataname = "data"),
 #'   extract_type = character(0)
 #' )
 #' shiny::isolate(filter_state$get_call())
@@ -33,23 +32,12 @@ EmptyFilterState <- R6::R6Class( # nolint
     #'   counts following the change in values of the filtered dataset.
     #'   If it is set to `reactive(NULL)` then counts based on filtered
     #'   dataset are not shown.
-    #' @param dataname (`character(1)`)\cr
-    #'   optional name of dataset where `x` is taken from. Must be specified
-    #'   if `extract_type` argument is not empty.
-    #' @param varname (`character(1)`)\cr
-    #'   name of the variable.
-    #' @param choices (`atomic`, `NULL`)\cr
-    #'   vector specifying allowed selection values
-    #' @param selected (`atomic`, `NULL`)\cr
-    #'   vector specifying selection
-    #' @param keep_na (`logical(1)`, `NULL`)\cr
-    #'   flag specifying whether to keep missing values
-    #' @param keep_inf (`logical(1)`, `NULL`)\cr
-    #'   flag specifying whether to keep infinite values
-    #' @param fixed (`logical(1)`)\cr
-    #'   flag specifying whether the `FilterState` is initiated fixed
-    #' @param disabled (`logical(1)`)\cr
-    #'   flag specifying whether the `FilterState` is initiated disabled
+    #' @param slice (`teal_slice`)\cr
+    #'   object created using [filter_var()]. `teal_slice` is stored
+    #'   in the class and `set_state` directly manipulates values within `teal_slice`. `get_state`
+    #'   returns `teal_slice` object which can be reused in other places. Beware, that `teal_slice`
+    #'   is an immutable object which means that changes in particular object are automatically
+    #'   reflected in all places which refer to the same `teal_slice`.
     #' @param extract_type (`character(0)`, `character(1)`)\cr
     #' whether condition calls should be prefixed by `dataname`. Possible values:
     #' \itemize{
@@ -61,35 +49,18 @@ EmptyFilterState <- R6::R6Class( # nolint
     #'
     initialize = function(x,
                           x_reactive = reactive(NULL),
-                          dataname,
-                          varname,
-                          choices = NULL,
-                          selected = NULL,
-                          keep_na = NULL,
-                          keep_inf = NULL,
-                          fixed = FALSE,
-                          disabled = FALSE,
                           extract_type = character(0),
-                          ...) {
-      args <- list(
-        x = x,
-        x_reactive = x_reactive,
-        dataname = dataname,
-        varname = varname,
-        keep_na = keep_na,
-        keep_inf = keep_inf,
-        fixed = fixed,
-        disabled = disabled,
-        extract_type = extract_type
-      )
-      args <- append(args, list(...))
-      do.call(super$initialize, args)
-
-      private$set_choices(choices)
-      if (is.null(selected)) {
-        selected <- private$choices
-      }
-      private$set_selected(selected)
+                          slice) {
+      shiny::isolate({
+        super$initialize(
+          x = x,
+          x_reactive = x_reactive,
+          slice = slice,
+          extract_type = extract_type
+        )
+        private$set_choices(slice$choices)
+        private$set_selected(slice$selected)
+      })
 
       invisible(self)
     },
@@ -99,14 +70,14 @@ EmptyFilterState <- R6::R6Class( # nolint
     #' for selected variable type.
     #' Uses internal reactive values, hence must be called
     #' in reactive or isolated context.
-    #' @param dataname name of data set; defaults to `private$dataname`
+    #' @param dataname name of data set; defaults to `private$get_dataname()`
     #' @return `logical(1)`
     #'
     get_call = function(dataname) {
       if (isFALSE(private$is_any_filtered())) {
         return(NULL)
       }
-      if (missing(dataname)) dataname <- private$dataname
+      if (missing(dataname)) dataname <- private$get_dataname()
       filter_call <- if (isTRUE(private$get_keep_na())) {
         call("is.na", private$get_varname_prefixed(dataname))
       } else {
@@ -126,7 +97,7 @@ EmptyFilterState <- R6::R6Class( # nolint
       )
     },
     set_choices = function(choices) {
-      private$choices <- choices
+      private$teal_slice$choices <- choices
       invisible(NULL)
     },
 
@@ -136,9 +107,7 @@ EmptyFilterState <- R6::R6Class( # nolint
     # @return `logical(1)`
     #
     is_any_filtered = function() {
-      if (private$is_disabled()) {
-        FALSE
-      } else if (private$is_choice_limited) {
+      if (private$is_choice_limited) {
         TRUE
       } else {
         !isTRUE(private$get_keep_na())
@@ -154,15 +123,17 @@ EmptyFilterState <- R6::R6Class( # nolint
     #
     ui_inputs = function(id) {
       ns <- NS(id)
-      fluidRow(
-        div(
-          class = "relative",
+      shiny::isolate({
+        fluidRow(
           div(
-            span("Variable contains missing values only"),
-            private$keep_na_ui(ns("keep_na"))
+            class = "relative",
+            div(
+              span("Variable contains missing values only"),
+              private$keep_na_ui(ns("keep_na"))
+            )
           )
         )
-      )
+      })
     },
 
     # @description
