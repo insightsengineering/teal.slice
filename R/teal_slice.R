@@ -145,6 +145,7 @@
 #' @name teal_slice
 NULL
 
+# filter ----------------------------------------------------------------------------------------------------------
 
 #' @export
 #' @rdname teal_slice
@@ -170,7 +171,6 @@ filter_var <- function(dataname,
   checkmate::assert_flag(locked)
   checkmate::assert_flag(multiple, null.ok = TRUE)
   ans <- c(as.list(environment()), list(...))
-  ans <- Filter(Negate(is.null), ans)
   if (missing(id)) {
     ans$id <- paste(Filter(length, ans[c("dataname", "varname", "datalabel", "arg")]), collapse = " ")
   }
@@ -195,9 +195,7 @@ filter_expr <- function(dataname, id, title, expr, locked = FALSE, ...) {
   checkmate::assert_string(title)
   checkmate::assert_string(expr)
   ans <- c(as.list(environment()), list(...))
-  ans <- Filter(Negate(is.null), ans)
   ans <- do.call(shiny::reactiveValues, ans)
-
   class(ans) <- c("teal_slice_expr", "teal_slice", class(ans))
   ans
 }
@@ -234,6 +232,8 @@ filter_settings <- function(...,
 }
 
 
+# teal_slice ------------------------------------------------------------------------------------------------------
+
 # check for teal_slice
 #' @rdname teal_slice
 #' @keywords internal
@@ -268,22 +268,59 @@ c.teal_slice <- function(...) {
   ans
 }
 
-
-# format method for teal_slice
+#' @keywords internal
 #' @export
+as.list.teal_slice <- function(x) {
+
+  formals <- if (inherits(x, "teal_slice_expr")) {
+    formals(filter_expr)
+  } else {
+    formals(filter_var)
+  }
+
+  x <- if (shiny::isRunning()) {
+    shiny::reactiveValuesToList(x)
+  } else {
+    shiny::isolate(shiny::reactiveValuesToList(x))
+  }
+
+  formal_args <- setdiff(names(formals), "...")
+  extra_args <- setdiff(names(x), formal_args)
+
+  x[c(formal_args, extra_args)]
+}
+
+
+#' @export
+#' @param show_all `logical(1)` should parameters set to NULL be returned
+#' @param center `logical(1)` should the output be centered and trimmed
 #' @rdname teal_slice
 #' @keywords internal
 #'
-format.teal_slice <- function(x, show_all = FALSE, ...) {
+format.teal_slice <- function(x, show_all = FALSE, center = TRUE, ...) {
   checkmate::assert_flag(show_all)
+  checkmate::assert_flag(center)
 
-  x <- if (shiny::isRunning()) {
-    rev(shiny::reactiveValuesToList(x))
-  } else {
-    rev(shiny::isolate(shiny::reactiveValuesToList(x)))
-  }
+  x_list <- as.list(x)
+  if (!show_all) x_list <- Filter(Negate(is.null), x_list)
 
-  name_width <- max(nchar(names(x)))
+  x_json <- jsonlite::toJSON(x_list, pretty = TRUE, auto_unbox = TRUE, digits = 16, null = "null")
+  x_json_s <- strsplit(x_json, split = "\n")[[1]]
+
+  if (center) x_json_s <- center_json(x_json_s)
+
+  paste(c("teal_slice", x_json_s), collapse = "\n")
+}
+
+# centering of json output for `teal_slices` object JSON representation
+#' @param json a result of `jsonlite::toJSON(as.list(teal_slice), pretty = TRUE, auto_unbox = TRUE)`
+#' @keywords internal
+#'
+center_json <- function(json) {
+  json_s <- strsplit(json, split = ":", fixed = TRUE)
+
+  name_width <- max(unlist(lapply(json_s, function(x) nchar(x[1]))))
+
   format_value <- function(v) {
     if (is.null(v)) {
       return("NULL")
@@ -297,37 +334,24 @@ format.teal_slice <- function(x, show_all = FALSE, ...) {
     }
     v
   }
-  ind <- intersect(names(x), names(formals(filter_var)))
-  xx <- x[ind]
-  hm <- "teal_slice"
-  for (i in seq_along(xx)) {
-    element_name <- format(names(xx)[i], width = name_width)
-    if (is.null(xx[[i]]) && !show_all) next
-    element_value <- format_value(xx[[i]])
-    hm <- append(hm, sprintf(" $ %s: %s", element_name, element_value))
+
+  ints <- setdiff(seq_along(json_s), c(1, length(json_s)))
+
+  for (i in ints) {
+    json_s[[i]][1] <- paste0(format(json_s[[i]][1], width = name_width), ":")
+    json_s[[i]][2] <- format_value(json_s[[i]][2])
   }
 
-  ind <- setdiff(names(x), names(formals(filter_var)))
-  if (length(ind) != 0L) {
-    xx <- x[ind]
-    hm <- append(hm, " .. additional information")
-    for (i in seq_along(xx)) {
-      element_name <- format(names(xx)[i], width = name_width)
-      element_value <- format_value(xx[[i]])
-      hm <- append(hm, sprintf("     $ %s: %s", element_name, element_value))
-    }
-  }
-  paste(c(hm, ""), collapse = "\n")
+  unlist(lapply(json_s, paste0, collapse = ""))
 }
 
 
-# print method for teal_slice
 #' @export
 #' @rdname teal_slice
 #' @keywords internal
 #'
 print.teal_slice <- function(x, ...) {
-  cat(format(x, ...))
+  cat(format(x, ...), "\n")
 }
 
 
@@ -340,6 +364,7 @@ is.teal_slices <- function(x) { # nolint
 }
 
 
+# teal_slices -----------------------------------------------------------------------------------------------------
 
 # convert nested list to teal_slices
 # this function is not overly robust, it covers cases that are encountered in teal at this time
@@ -420,7 +445,7 @@ as.teal_slices <- function(x) { # nolint
 }
 
 
-# subset method for teal_slices
+# subset method for `teal_slices`
 #' @export
 #' @rdname teal_slice
 #' @keywords internal
@@ -448,7 +473,7 @@ as.teal_slices <- function(x) { # nolint
 }
 
 
-# concatenate method for teal_slices
+# concatenate method for `teal_slices`
 #' @export
 #' @rdname teal_slice
 #' @keywords internal
@@ -483,50 +508,80 @@ c.teal_slices <- function(...) {
   )
 }
 
-
-# format method for teal_slices
+#' @param tss `teal_slices` object
+#' @param file `character(1)` specifying path to save to
 #' @export
 #' @rdname teal_slice
 #' @keywords internal
 #'
-format.teal_slices <- function(x, show_all = FALSE, ...) {
-  res <- character(0)
-  for (i in seq_along(x)) {
-    ind <- names(x)[i]
-    if (is.null(ind)) ind <- sprintf("[[%d]]", i)
-    res <- append(res, ind)
-    res <- append(res, format(x[[i]], show_all = show_all, ...))
-  }
+store_slices <- function(tss, file) {
+  checkmate::assert_class(tss, "teal_slices")
+  checkmate::assert_path_for_output(file, overwrite = TRUE, extension = "json")
 
-  includes <- attr(x, "include_varnames")
-  if (length(includes) > 0L) {
-    res <- append(res, "\nfilterable variables:")
-    for (i in seq_along(includes)) {
-      res <- append(res, sprintf(" $ %s: %s", names(includes)[i], toString(includes[[i]])))
-    }
-  }
+  cat(format(x, show_all = TRUE, center = FALSE), "\n", file = file)
+}
 
-  excludes <- attr(x, "exclude_varnames")
-  if (length(excludes) > 0L) {
-    res <- append(res, "\nnon-filterable variables:")
-    for (i in seq_along(excludes)) {
-      res <- append(res, sprintf(" $ %s: %s", names(excludes)[i], toString(excludes[[i]])))
-    }
-  }
+#' @param file `character(1)` specifying path to read from
+#' @export
+#' @rdname teal_slice
+#' @keywords internal
+#'
+restore_slices <- function(file) {
+  checkmate::assert_file_exists(file, access = "r", extension = "json")
 
-  ct <- attr(x, "count_type")
-  res <- append(res, sprintf("\ncount type: %s", ct))
-  paste(c(res, ""), collapse = "\n")
+  tss_txt <- paste0(readLines(file), collapse = "")
+  tss_txt_split <- strsplit(tss_txt, split = "attributes")[[1]]
+
+  attributes <- jsonlite::fromJSON(tss_txt_split[2])
+  tss_s <- strsplit(tss_txt_split[1], split = "teal_slice")[[1]][-1]
+  tss_l <- lapply(tss_s, jsonlite::fromJSON)
+
+  tss_elements <-
+    lapply(tss_l, function(x) {
+      x <- Filter(Negate(is.null), x)
+
+      fun <- if ("expr" %in% names(x)) {
+        filter_expr
+      } else {
+        filter_var
+      }
+
+      do.call(fun, x)
+    })
+
+  tss <- do.call(filter_settings, c(`...` = tss_elements, attributes))
+  names(tss) <- NULL
+  tss
 }
 
 
-# print method for teal_slices
+
+#' @param x `teal_slice` object
+#' @param show_all `logical(1)` should parameters set to NULL be returned
+#' @param center `logical(1)` should the output be centered and trimmed
+#' @export
+#' @rdname teal_slice
+#' @keywords internal
+#'
+format.teal_slices <- function(x, show_all = FALSE, center = TRUE, ...) {
+  checkmate::assert_flag(show_all)
+  checkmate::assert_flag(center)
+
+  x_format <- lapply(x, format, show_all = show_all, center = center)
+
+  attributes <- attributes(x)
+  attributes$class <- NULL
+  attributes <- paste0("attributes\n", jsonlite::toJSON(attributes, pretty = TRUE, auto_unbox = TRUE))
+
+  paste0(c(unlist(x_format), attributes), collapse = "\n")
+}
+
 #' @export
 #' @rdname teal_slice
 #' @keywords internal
 #'
 print.teal_slices <- function(x, ...) {
-  cat(format(x, ...))
+  cat(format(x, ...), "\n")
 }
 
 
