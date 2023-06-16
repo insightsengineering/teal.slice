@@ -521,7 +521,7 @@ c.teal_slices <- function(...) {
 
 # store method for `teal_slices` object
 #' @param x `teal_slices` object
-#' @param file a `character(1)` with the storage destination name
+#' @param file `character(1)` specifying path to save to
 #' @export
 #' @rdname teal_slice
 #' @keywords internal
