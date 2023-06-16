@@ -282,7 +282,7 @@ as.list.teal_slice <- function(x, show_all = TRUE) {
   }
 
   formals <-
-    if ('expr' %in% names(x)) {
+    if (inherits(x, "teal_slice_expr")) {
       formals(filter_expr)
     } else {
       formals(filter_var)
