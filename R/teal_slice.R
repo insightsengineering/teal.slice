@@ -269,7 +269,6 @@ c.teal_slice <- function(...) {
 }
 
 # convert teal_slice to list
-#' @param x `teal_slice` object
 #' @param show_all `logical(1)` should NULL fields be returned?
 #' @keywords internal
 #' @export
