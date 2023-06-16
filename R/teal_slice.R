@@ -171,7 +171,6 @@ filter_var <- function(dataname,
   checkmate::assert_flag(locked)
   checkmate::assert_flag(multiple, null.ok = TRUE)
   ans <- c(as.list(environment()), list(...))
-  ans <- Filter(Negate(is.null), ans)
   if (missing(id)) {
     ans$id <- paste(Filter(length, ans[c("dataname", "varname", "datalabel", "arg")]), collapse = " ")
   }
@@ -196,9 +195,7 @@ filter_expr <- function(dataname, id, title, expr, locked = FALSE, ...) {
   checkmate::assert_string(title)
   checkmate::assert_string(expr)
   ans <- c(as.list(environment()), list(...))
-  ans <- Filter(Negate(is.null), ans)
   ans <- do.call(shiny::reactiveValues, ans)
-
   class(ans) <- c("teal_slice_expr", "teal_slice", class(ans))
   ans
 }
@@ -272,10 +269,10 @@ c.teal_slice <- function(...) {
 }
 
 #' @param x `teal_slice` object
-#' @param use_missing `logical(1)` should fields missing from `filter_var` call be added as NULLs?
+#' @param show_all `logical(1)` should NULL fields be returned?
 #' @keywords internal
 #' @export
-as.list.teal_slice <- function(x, use_missing = TRUE) {
+as.list.teal_slice <- function(x, show_all = TRUE) {
   checkmate::assert_class(x, "teal_slice")
 
   x <- if (shiny::isRunning()) {
@@ -294,17 +291,14 @@ as.list.teal_slice <- function(x, use_missing = TRUE) {
   formals_names <- setdiff(names(formals), '...')
   extra_args <- setdiff(names(x), formals_names)
 
-  if (use_missing) {
-    missing_args  <- rev(setdiff(formals_names, names(x)))
-    x <- c(x, formals[missing_args])
-    x[c(formals_names, extra_args)]
-  } else {
+  if (!show_all) {
+    x <- Filter(Negate(is.null), x)
     main_args <- formals_names[formals_names %in% names(x)] # gives order
-    x[c(main_args, extra_args)]
+    x <- x[c(main_args, extra_args)]
+  } else{
+    x <- x[c(formals_names, extra_args)]
   }
-
-
-
+  return(x)
 }
 
 # format method for teal_slice
@@ -319,10 +313,9 @@ format.teal_slice <- function(x, show_all = FALSE, center = TRUE, ...) {
   checkmate::assert_flag(show_all)
   checkmate::assert_flag(center)
 
-  x_json <- jsonlite::toJSON(as.list(x, use_missing = show_all), pretty = TRUE, auto_unbox = TRUE, digits = 16)
+  x_json <- jsonlite::toJSON(as.list(x, show_all = show_all), pretty = TRUE, auto_unbox = TRUE, digits = 16)
   x_json_c <- capture.output(print(x_json))
 
-  #if (!show_all) x_json_c <- grep('{}', x_json_c, fixed = TRUE, invert = TRUE, value = TRUE)
   if (!center) return(x_json_c)
 
   x_p_json <- center_json(x_json_c)
