@@ -128,7 +128,7 @@ and unfiltered dataset.
 
 \item{center}{\code{logical(1)} should the output be centered and trimmed}
 
-\item{file}{a \code{character(1)} with the storage destination name}
+\item{file}{\code{character(1)} specifying path to save to}
 
 \item{tss}{\code{teal_slices}}
 
