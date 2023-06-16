@@ -315,7 +315,7 @@ format.teal_slice <- function(x, show_all = FALSE, center = TRUE, ...) {
   checkmate::assert_flag(center)
 
   x_json <- jsonlite::toJSON(as.list(x, show_all = show_all), pretty = TRUE, auto_unbox = TRUE, digits = 16)
-  x_json_c <- capture.output(print(x_json))
+  x_json_c <- strsplit(x_json, split = '\n')[[1]]
 
   if (!center) return(x_json_c)
 
