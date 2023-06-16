@@ -314,13 +314,13 @@ format.teal_slice <- function(x, show_all = FALSE, center = TRUE, ...) {
 }
 
 # centering of json output for `teal_slices` object JSON representation
-#' @param x a result of `toJSON(as.list(teal_slice), pretty = TRUE, auto_unbox = TRUE)`
+#' @param json a result of `jsonlite::toJSON(as.list(teal_slice), pretty = TRUE, auto_unbox = TRUE)`
 #' @keywords internal
 #'
-center_json <- function(x) {
-  x_s <- strsplit(x, split = ":", fixed = TRUE)
+center_json <- function(json) {
+  json_s <- strsplit(json, split = ":", fixed = TRUE)
 
-  name_width <- max(unlist(lapply(x_s, function(x) nchar(x[1]))))
+  name_width <- max(unlist(lapply(json_s, function(x) nchar(x[1]))))
 
   format_value <- function(v) {
     if (is.null(v)) {
@@ -336,14 +336,14 @@ center_json <- function(x) {
     v
   }
 
-  ints <- setdiff(seq_along(x_s), c(1, length(x_s)))
+  ints <- setdiff(seq_along(json_s), c(1, length(json_s)))
 
   for (i in ints) {
-    x_s[[i]][1] <- paste0(format(x_s[[i]][1], width = name_width), ':')
-    x_s[[i]][2] <- format_value(x_s[[i]][2])
+    json_s[[i]][1] <- paste0(format(json_s[[i]][1], width = name_width), ':')
+    json_s[[i]][2] <- format_value(json_s[[i]][2])
   }
 
-  unlist(lapply(x_s, paste0, collapse = ''))
+  unlist(lapply(json_s, paste0, collapse = ''))
 }
 
 
@@ -509,14 +509,14 @@ c.teal_slices <- function(...) {
   )
 }
 
-#' @param x `teal_slices` object
+#' @param tss `teal_slices` object
 #' @param file `character(1)` specifying path to save to
 #' @export
 #' @rdname teal_slice
 #' @keywords internal
 #'
-store_slices <- function(x, file) {
-  checkmate::assert_class(x, "teal_slices")
+store_slices <- function(tss, file) {
+  checkmate::assert_class(tss, "teal_slices")
   checkmate::assert_path_for_output(file, overwrite = TRUE, extension = "json")
 
   cat(format(x, show_all = TRUE, center = FALSE), "\n", file = file)
