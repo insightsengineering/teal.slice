@@ -464,7 +464,7 @@ RangeFilterState <- R6::R6Class( # nolint
 
       tagList(
         div(
-          class = "choices_state range_choices_state",
+          class = "choices_state",
           tags$head(tags$script(
             # Inline JS code for popover functionality.
             # Adding the script inline because when added from a file with include_js_files(),
@@ -506,9 +506,9 @@ RangeFilterState <- R6::R6Class( # nolint
             type = 4,
             size = 0.25,
             hide.ui = FALSE
-          )
+          ),
+          ui_input
         ),
-        ui_input,
         div(
           class = "filter-card-body-keep-na-inf",
           private$keep_inf_ui(ns("keep_inf")),
