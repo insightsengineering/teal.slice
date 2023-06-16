@@ -269,7 +269,6 @@ c.teal_slice <- function(...) {
 }
 
 # convert teal_slice to list
-#' @param x `teal_slice` object
 #' @param show_all `logical(1)` should NULL fields be returned?
 #' @keywords internal
 #' @export
@@ -289,7 +288,7 @@ as.list.teal_slice <- function(x, show_all = TRUE) {
       formals(filter_var)
     }
 
-  formals_names <- setdiff(names(formals), '...')
+  formal_args <- setdiff(names(formals), '...')
   extra_args <- setdiff(names(x), formals_names)
 
   if (!show_all) {
@@ -328,7 +327,7 @@ format.teal_slice <- function(x, show_all = FALSE, center = TRUE, ...) {
 #' @param x a result of `toJSON(as.list(teal_slice), pretty = TRUE, auto_unbox = TRUE)`
 #' @keywords internal
 #'
-center_json <- function(x){
+center_json <- function(x) {
   x_s <- strsplit(x, split = ":", fixed = TRUE)
 
   name_width <- max(unlist(lapply(x_s, function(x) nchar(x[1]))))
@@ -522,7 +521,7 @@ c.teal_slices <- function(...) {
 
 # store method for `teal_slices` object
 #' @param x `teal_slices` object
-#' @param file a `character(1)` with the storage destination name
+#' @param file `character(1)` specifying path to save to
 #' @export
 #' @rdname teal_slice
 #' @keywords internal
@@ -546,22 +545,13 @@ format.teal_slices <- function(x, show_all = FALSE, center = TRUE, ...) {
   checkmate::assert_flag(center)
 
   x_format <- lapply(x, format, show_all = show_all, center = center)
-  paste0(c(unlist(x_format), extract_attrs(x)), collapse = '\n')
-}
 
-# attributes extraction for `teal_slices` object
-#' @param x `teal_slice` object
-#' @keywords internal
-#'
-extract_attrs <- function(x){
   attributes <- attributes(x)
   attributes$class <- NULL
-  paste0(
-    'attributes\n',
-    jsonlite::toJSON(attributes, pretty = TRUE, auto_unbox = TRUE)
-  )
-}
+  attributes <- paste0('attributes\n', jsonlite::toJSON(attributes, pretty = TRUE, auto_unbox = TRUE))
 
+  paste0(c(unlist(x_format), attributes), collapse = '\n')
+}
 
 #' @export
 #' @rdname teal_slice
