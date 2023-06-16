@@ -289,7 +289,6 @@ as.list.teal_slice <- function(x) {
   extra_args <- setdiff(names(x), formal_args)
 
   x[c(formal_args, extra_args)]
-
 }
 
 
@@ -304,7 +303,7 @@ format.teal_slice <- function(x, show_all = FALSE, center = TRUE, ...) {
   checkmate::assert_flag(center)
 
   x_list <- as.list(x)
-  if(!show_all) x_list <- Filter(Negate(is.null), x_list)
+  if (!show_all) x_list <- Filter(Negate(is.null), x_list)
 
   x_json <- jsonlite::toJSON(x_list, pretty = TRUE, auto_unbox = TRUE, digits = 16, null = "null")
   x_json_s <- strsplit(x_json, split = '\n')[[1]]
