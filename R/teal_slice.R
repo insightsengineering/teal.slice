@@ -304,18 +304,16 @@ format.teal_slice <- function(x, show_all = FALSE, center = TRUE, ...) {
   checkmate::assert_flag(center)
 
   x_list <- as.list(x)
-  if(!show_all){
-    x_list <- Filter(Negate(is.null), x_list)
-  }
+  if(!show_all) x_list <- Filter(Negate(is.null), x_list)
 
   x_json <- jsonlite::toJSON(x_list, pretty = TRUE, auto_unbox = TRUE, digits = 16)
-  x_json_c <- strsplit(x_json, split = '\n')[[1]]
+  x_json_s <- strsplit(x_json, split = '\n')[[1]]
 
-  if (!center) return(x_json_c)
+  if (!center) return(x_json_s)
 
-  x_p_json <- center_json(x_json_c)
+  x_json_s <- center_json(x_json_s)
 
-  paste(c("teal_slice", x_p_json), collapse = "\n")
+  paste(c("teal_slice", x_json_s), collapse = "\n")
 }
 
 # centering of json output for `teal_slices` object JSON representation
