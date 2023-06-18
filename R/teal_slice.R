@@ -303,8 +303,12 @@ format.teal_slice <- function(x, show_all = FALSE, center = TRUE, ...) {
   x_list <- as.list(x)
   if (!show_all) x_list <- Filter(Negate(is.null), x_list)
 
-  x_list$selected <- I(x_list$selected) # so it is not unboxed
-  x_list$choices <- I(x_list$choices) # so it is not unboxed
+  if(!is.null(x_list$selected)) {
+    x_list$selected <- I(x_list$selected) # so it is not unboxed
+  }
+  if(!is.null(x_list$choices)) {
+    x_list$choices <- I(x_list$choices) # so it is not unboxed
+  }
   x_json <- jsonlite::toJSON(x_list, pretty = TRUE, auto_unbox = TRUE, digits = 16, null = "null")
   x_json_s <- strsplit(x_json, split = "\n")[[1]]
 
