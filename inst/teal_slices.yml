@@ -1,6 +1,8 @@
 schemas:
   teal_slices:
     type: object
+    required: # this part of the response is always returned, attributes object is optional
+      - slices
     properties:
       slices:
         type: array

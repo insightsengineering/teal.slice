@@ -314,7 +314,7 @@ format.teal_slice <- function(x, show_all = FALSE, center = TRUE, ...) {
 
   if (center) x_json_s <- center_json(x_json_s)
 
-  paste(c("teal_slice", x_json_s), collapse = "\n")
+  x_json_s
 }
 
 # centering of json output for `teal_slices` object JSON representation
@@ -356,7 +356,7 @@ center_json <- function(json) {
 #' @keywords internal
 #'
 print.teal_slice <- function(x, ...) {
-  cat(format(x, ...), "\n")
+  cat(format(x, ...), sep = "\n")
 }
 
 
@@ -523,7 +523,7 @@ store_slices <- function(tss, file) {
   checkmate::assert_class(tss, "teal_slices")
   checkmate::assert_path_for_output(file, overwrite = TRUE, extension = "json")
 
-  cat(format(x, show_all = TRUE, center = FALSE), "\n", file = file)
+  cat(format(tss, show_all = TRUE, center = FALSE), "\n", file = file)
 }
 
 #' @param file `character(1)` specifying path to read from
@@ -534,15 +534,10 @@ store_slices <- function(tss, file) {
 restore_slices <- function(file) {
   checkmate::assert_file_exists(file, access = "r", extension = "json")
 
-  tss_txt <- paste0(readLines(file), collapse = "")
-  tss_txt_split <- strsplit(tss_txt, split = "attributes")[[1]]
-
-  attributes <- jsonlite::fromJSON(tss_txt_split[2])
-  tss_s <- strsplit(tss_txt_split[1], split = "teal_slice")[[1]][-1]
-  tss_l <- lapply(tss_s, jsonlite::fromJSON)
+  tss_j <- jsonlite::fromJSON(file, simplifyDataFrame = FALSE)
 
   tss_elements <-
-    lapply(tss_l, function(x) {
+    lapply(tss_j$slices, function(x) {
       x <- Filter(Negate(is.null), x)
 
       fun <- if ("expr" %in% names(x)) {
@@ -554,7 +549,7 @@ restore_slices <- function(file) {
       do.call(fun, x)
     })
 
-  tss <- do.call(filter_settings, c(`...` = tss_elements, attributes))
+  tss <- do.call(filter_settings, c(`...` = tss_elements, tss_j$attributes))
   names(tss) <- NULL
   tss
 }
@@ -572,13 +567,28 @@ format.teal_slices <- function(x, show_all = FALSE, center = TRUE, ...) {
   checkmate::assert_flag(show_all)
   checkmate::assert_flag(center)
 
-  x_format <- lapply(x, format, show_all = show_all, center = center)
+  # elements in JSON array are separated by ","
+  x_f <- lapply(x, format, show_all = show_all, center = center)
+  if (length(x_f) > 1) {
+    x_f <- unlist(x_f)
+    x_f <- gsub("}", "},", x_f, fixed = TRUE)
+    x_f[length(x_f)] <- "}"
+  } else {
+    x_f <- unlist(x_f)
+  }
+  x_f <- paste0("    ", x_f)
 
-  attributes <- attributes(x)
-  attributes$class <- NULL
-  attributes <- paste0("attributes\n", jsonlite::toJSON(attributes, pretty = TRUE, auto_unbox = TRUE))
+  # packing back elements so they align with schema in inst/teal_slices.yml
+  attrs <- attributes(unclass(x))
+  if(!is.null(attrs)) {
+    attributes <- jsonlite::toJSON(attrs, pretty = TRUE, auto_unbox = TRUE)
+    attributes <- gsub("\n", "\n  ", attributes)
+    attributes <- paste("  \"attributes\":", attributes)
+    paste(c("{\n  \"slices\": [", x_f, "  ],", attributes, "}"), collapse = "\n")
+  } else {
+    paste(c("{\n  \"slices\": [", x_f, "  ]\n}"), collapse = "\n")
+  }
 
-  paste0(c(unlist(x_format), attributes), collapse = "\n")
 }
 
 #' @export
