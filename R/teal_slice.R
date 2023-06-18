@@ -271,8 +271,6 @@ c.teal_slice <- function(...) {
 #' @keywords internal
 #' @export
 as.list.teal_slice <- function(x) {
-  checkmate::assert_class(x, "teal_slice")
-
   formals <- if (inherits(x, "teal_slice_expr")) {
     formals(filter_expr)
   } else {
@@ -530,7 +528,7 @@ store_slices <- function(tss, file) {
 #' @keywords internal
 #'
 restore_slices <- function(file) {
-  checkmate::assert_file(file, extension = "json")
+  checkmate::assert_file_exists(file, access = "r", extension = "json")
 
   tss_txt <- paste0(readLines(file), collapse = "")
   tss_txt_split <- strsplit(tss_txt, split = "attributes")[[1]]
