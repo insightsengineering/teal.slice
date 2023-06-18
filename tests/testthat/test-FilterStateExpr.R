@@ -72,10 +72,6 @@ testthat::test_that("print returns a properly formatted string representation", 
   ))
   testthat::expect_equal(
     utils::capture.output(cat(state$print())),
-    c(
-      "FilterStateExpr:",
-      utils::capture.output(print(shiny::isolate(state$get_state()))),
-      " "
-    )
+    c("FilterStateExpr:", utils::capture.output(print(shiny::isolate(state$get_state()))))
   )
 })

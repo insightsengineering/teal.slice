@@ -422,19 +422,11 @@ testthat::test_that("print returns properly formatted string representation", {
   filter_state <- ChoicesFilterState$new(values, slice = filter_var(dataname = "data", varname = "var"))
   filter_state$set_state(filter_var(dataname = "data", varname = "var", selected = values, keep_na = FALSE))
   testthat::expect_equal(
-    utils::capture.output(cat(filter_state$print())),
-    c(
-      "ChoicesFilterState:",
-      utils::capture.output(print(shiny::isolate(filter_state$get_state()))),
-      " "
-    )
+    utils::capture.output(filter_state$print()),
+    c("ChoicesFilterState:", utils::capture.output(print(shiny::isolate(filter_state$get_state()))))
   )
   testthat::expect_equal(
     utils::capture.output(cat(filter_state$print(show_all = TRUE))),
-    c(
-      "ChoicesFilterState:",
-      utils::capture.output(print(shiny::isolate(filter_state$get_state()), show_all = TRUE)),
-      " "
-    )
+    c("ChoicesFilterState:", utils::capture.output(print(shiny::isolate(filter_state$get_state()), show_all = TRUE)))
   )
 })
