@@ -1,0 +1,52 @@
+schemas:
+  teal_slices:
+    type: object
+    properties:
+      slices:
+        type: array
+        items:
+          type: object
+          required: # those 3 fields below are always returned, the other are optional in the response
+            - dataname
+            - id
+            - locked
+          properties:
+            dataname:
+              type: string
+            varname:
+              type: string
+            choices:
+              type: array
+              items:
+                type: string
+            selected:
+              type: array
+              items:
+                type: string
+            keep_na:
+              type: ['null', boolean]
+            keep_inf:
+              type: ['null', boolean]
+            fixed:
+              type: boolean
+            locked:
+              type: boolean
+            locked:
+              type: boolean
+            multiple:
+              type: boolean
+            id:
+              type: string
+            title:
+              type: string
+            expr:
+              type: string
+      attributes:
+        type: object
+        properties:
+          exclude_varnames:
+            type: object
+          include_varnames:
+            type: object
+          count_type:
+            type: string
