@@ -276,18 +276,10 @@ testthat::test_that("print returns a properly formatted string representation", 
   filter_state <- FilterState$new(7, slice = filter_var(dataname = "data", varname = "7"))
   testthat::expect_equal(
     utils::capture.output(cat(filter_state$print())),
-    c(
-      "FilterState:",
-      utils::capture.output(print(shiny::isolate(filter_state$get_state()))),
-      " "
-    )
+    c("FilterState:", utils::capture.output(print(shiny::isolate(filter_state$get_state()))))
   )
   testthat::expect_equal(
     utils::capture.output(cat(filter_state$print(show_all = TRUE))),
-    c(
-      "FilterState:",
-      utils::capture.output(print(shiny::isolate(filter_state$get_state()), show_all = TRUE)),
-      " "
-    )
+    c("FilterState:", utils::capture.output(print(shiny::isolate(filter_state$get_state()), show_all = TRUE)))
   )
 })
