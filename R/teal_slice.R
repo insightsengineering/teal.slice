@@ -314,7 +314,7 @@ format.teal_slice <- function(x, show_all = FALSE, center = TRUE, ...) {
 
   if (center) x_json_s <- center_json(x_json_s)
 
-  x_json_s
+  paste(x_json_s, collapse = "\n")
 }
 
 # centering of json output for `teal_slices` object JSON representation
@@ -356,7 +356,7 @@ center_json <- function(json) {
 #' @keywords internal
 #'
 print.teal_slice <- function(x, ...) {
-  cat(format(x, ...), sep = "\n")
+  cat(format(x, ...))
 }
 
 
@@ -567,22 +567,19 @@ format.teal_slices <- function(x, show_all = FALSE, center = TRUE, ...) {
   checkmate::assert_flag(show_all)
   checkmate::assert_flag(center)
 
+  x_f <- unlist(lapply(x, format, show_all = show_all, center = center))
   # elements in JSON array are separated by ","
-  x_f <- lapply(x, format, show_all = show_all, center = center)
-  if (length(x_f) > 1) {
-    x_f <- unlist(x_f)
-    x_f <- gsub("}", "},", x_f, fixed = TRUE)
-    x_f[length(x_f)] <- "}"
-  } else {
-    x_f <- unlist(x_f)
-  }
-  x_f <- paste0("    ", x_f)
+  x_f <- paste(x_f, collapse = ",\n")
+  # indentation for JSON
+  x_f <- paste("   ",   x_f, collapse = "")
+  x_f <- gsub("\n", "\n    ", x_f, fixed = TRUE)
 
   # packing back elements so they align with schema in inst/teal_slices.yml
   attrs <- attributes(unclass(x))
   if(!is.null(attrs)) {
     attributes <- jsonlite::toJSON(attrs, pretty = TRUE, auto_unbox = TRUE)
     attributes <- gsub("\n", "\n  ", attributes)
+    # indentation for JSON
     attributes <- paste("  \"attributes\":", attributes)
     paste(c("{\n  \"slices\": [", x_f, "  ],", attributes, "}"), collapse = "\n")
   } else {
