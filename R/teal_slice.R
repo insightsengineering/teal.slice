@@ -571,7 +571,7 @@ format.teal_slices <- function(x, show_all = FALSE, center = TRUE, ...) {
   # elements in JSON array are separated by ","
   x_f <- paste(x_f, collapse = ",\n")
   # indentation for JSON
-  x_f <- paste("   ",   x_f, collapse = "")
+  x_f <- paste("   ", x_f, collapse = "")
   x_f <- gsub("\n", "\n    ", x_f, fixed = TRUE)
 
   # packing back elements so they align with schema in inst/teal_slices.yml
