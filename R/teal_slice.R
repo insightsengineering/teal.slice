@@ -576,7 +576,7 @@ format.teal_slices <- function(x, show_all = FALSE, center = TRUE, ...) {
 
   # packing back elements so they align with schema in inst/teal_slices.yml
   attrs <- attributes(unclass(x))
-  if(!is.null(attrs)) {
+  if (!is.null(attrs)) {
     attributes <- jsonlite::toJSON(attrs, pretty = TRUE, auto_unbox = TRUE)
     attributes <- gsub("\n", "\n  ", attributes)
     # indentation for JSON
@@ -585,7 +585,6 @@ format.teal_slices <- function(x, show_all = FALSE, center = TRUE, ...) {
   } else {
     paste(c("{\n  \"slices\": [", x_f, "  ]\n}"), collapse = "\n")
   }
-
 }
 
 #' @export
