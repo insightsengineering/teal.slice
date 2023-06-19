@@ -232,7 +232,6 @@ ChoicesFilterState <- R6::R6Class( # nolint
   ),
 
   # private members ----
-
   private = list(
     x = NULL,
     choices_counts = integer(0),
@@ -241,9 +240,6 @@ ChoicesFilterState <- R6::R6Class( # nolint
 
     # private methods ----
 
-    is_multiple = function() {
-      shiny::isolate(isTRUE(private$teal_slice$multiple))
-    },
     # @description
     # Checks validity of the choices, adjust if neccessary and sets the flag for the case where choices
     #  are limited by default from the start.

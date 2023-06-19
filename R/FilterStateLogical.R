@@ -168,13 +168,11 @@ LogicalFilterState <- R6::R6Class( # nolint
     }
   ),
 
-  # private fields ----
-
+  # private members ----
   private = list(
     choices_counts = integer(0),
-    is_multiple = function() {
-      shiny::isolate(isTRUE(private$teal_slice$multiple))
-    },
+
+    # private methods ----
     set_choices = function(choices) {
       private$teal_slice$choices <- c(TRUE, FALSE)
       invisible(NULL)

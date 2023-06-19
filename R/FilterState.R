@@ -303,12 +303,12 @@ FilterState <- R6::R6Class( # nolint
     # set by constructor
     x = NULL, # the filtered variable
     x_reactive = NULL, # reactive containing the filtered variable, used for updating counts and histograms
+    teal_slice = shiny::reactiveValues(), # stores all transferable properties of this filter state
     extract_type = character(0), # used by private$get_varname_prefixed
     na_count = integer(0),
     filtered_na_count = NULL, # reactive containing the count of NA in the filtered dataset
     varlabel = character(0), # taken from variable labels in data; displayed in filter cards
     destroy_shiny = NULL, # function is set in server
-    teal_slice = shiny::reactiveValues(), # stores all transferable properties of this filter state
     # other
     is_choice_limited = FALSE, # flag whether number of possible choices was limited when specifying filter
     na_rm = FALSE,
@@ -475,13 +475,22 @@ FilterState <- R6::R6Class( # nolint
       private$teal_slice$keep_inf
     },
 
-    # Check whether this filter is fixed
+    # Check whether this filter is fixed (cannot be changed).
     # @return `logical(1)`
     is_fixed = function() {
       shiny::isolate(isTRUE(private$teal_slice$fixed))
     },
+
+    # Check whether this filter is locked (cannot be removed).
+    # @return `logical(1)`
     is_locked = function() {
       shiny::isolate(isTRUE(private$teal_slice$locked))
+    },
+
+    # Check whether this filter is capable of selecting multiple values.
+    # @return `logical(1)`
+    is_multiple = function() {
+      shiny::isolate(isTRUE(private$teal_slice$multiple))
     },
 
     ## other ----
