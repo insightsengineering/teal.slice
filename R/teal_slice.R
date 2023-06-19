@@ -313,7 +313,7 @@ format.teal_slice <- function(x, show_all = FALSE, nchar = 40, ...) {
   x_json <- to_json(x_list)
   x_json_c <- center_json(x_json)
 
-  if(!is.null(nchar)) x_json_c <- trim_json(x_json_c, nchar)
+  if (!is.null(nchar)) x_json_c <- trim_json(x_json_c, nchar)
 
   paste(x_json_c, collapse = "\n")
 }
@@ -349,7 +349,7 @@ to_json <- function(x) {
 
 trim_json <- function(json, nchar) {
   json_t <- substr(json, 1, nchar)
-  substr(json_t, nchar-2, 40) <- '...'
+  substr(json_t, nchar - 2, 40) <- "..."
   json_t
 }
 
@@ -358,12 +358,12 @@ center_json <- function(json) {
     if (nchar(n) == 1) {
       return(n)
     } else {
-      paste(format(n, width = name_width), ':')
+      paste(format(n, width = name_width), ":")
     }
   }
 
   json_s <- strsplit(json, split = ":", fixed = TRUE)
-  name_width <- max(unlist(gregexpr(':', json)))-1
+  name_width <- max(unlist(gregexpr(":", json))) - 1
 
   vapply(json_s, function(x) paste0(format_name(x[1]), na.omit(x[2])), character(1))
 }
