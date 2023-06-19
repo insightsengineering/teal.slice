@@ -347,10 +347,10 @@ to_json <- function(x) {
   strsplit(x_json, split = "\n")[[1]]
 }
 
-trim_json <- function(json, nchar) {
-  json_t <- substr(json, 1, nchar)
-  substr(json_t, nchar - 2, 40) <- "..."
-  json_t
+trim_character <- function(x, nchar) {
+  json_t <- substr(x, 1, nchar)
+  substr(x, nchar - 2, 40) <- "..."
+  x
 }
 
 center_json <- function(json) {
