@@ -254,18 +254,20 @@ ChoicesFilterState <- R6::R6Class( # nolint
         choices <- as.character(choices)
         choices_adjusted <- choices[choices %in% private$x]
         if (length(setdiff(choices, choices_adjusted)) > 0L) {
-          warning(sprintf(
-            "Some of the choices not within variable values, adjusting. Varname: %s, dataname: %s.",
-            private$get_varname(), private$get_dataname()
-          ))
+          warning(
+            sprintf(
+              "Some choices not not found in data. Adjusting. Varname: %s, dataname: %s.",
+              private$get_varname(), private$get_dataname()
+            )
+          )
           choices <- choices_adjusted
         }
         if (length(choices) == 0) {
-          warning(sprintf(
-            "Invalid choices: none of them within the values in the variable.
-            Setting defaults. Varname: %s, dataname: %s.",
-            private$get_varname(), private$get_dataname()
-          ))
+          warning(
+            sprintf("Choices not within values found in data. Setting defaults. Varname: %s, dataname: %s.",
+                    private$get_varname(), private$get_dataname()
+            )
+          )
           choices <- levels(private$x)
         }
       }
@@ -318,11 +320,10 @@ ChoicesFilterState <- R6::R6Class( # nolint
     check_multiple = function(value) {
       if (!private$is_multiple() && length(value) > 1) {
         warning(
-          sprintf("Values: %s are not a vector of length one. ", strtrim(paste(value, collapse = ", "), 360)),
-          "The first value will be selected by default. ",
-          sprintf("Setting defaults. Varname: %s, dataname: %s.", private$get_varname(), private$get_dataname())
+          sprintf("Selection: %s is not a vector of length one. ", strtrim(paste(value, collapse = ", "), 360)),
+          "Maintaining previous selection."
         )
-        value <- value[1L]
+        value <- shiny::isolate(private$get_selected())
       }
       value
     },

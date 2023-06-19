@@ -195,8 +195,18 @@ LogicalFilterState <- R6::R6Class( # nolint
       )
       values_logical
     },
+    check_multiple = function(value) {
+      if (!private$is_multiple() && length(value) > 1) {
+        warning(
+          sprintf("Selection: %s is not a vector of length one. ", strtrim(paste(value, collapse = ", "), 360)),
+          "Maintaining previous selection."
+        )
+        value <- shiny::isolate(private$get_selected())
+      }
+      value
+    },
     validate_selection = function(value) {
-      if (!(checkmate::test_logical(value, any.missing = FALSE, unique = TRUE))) {
+      if (!is.logical(value)) {
         stop(
           sprintf(
             "value of the selection for `%s` in `%s` should be a logical vector of length <= 2",
@@ -205,17 +215,6 @@ LogicalFilterState <- R6::R6Class( # nolint
           )
         )
       }
-    },
-    check_multiple = function(value) {
-      if (!private$is_multiple() && length(value) > 1) {
-        warning(
-          sprintf("Values: %s are not a vector of length one. ", strtrim(paste(value, collapse = ", "), 360)),
-          "The first value will be selected by default. ",
-          sprintf("Setting defaults. Varname: %s, dataname: %s.", private$get_varname(), private$get_dataname())
-        )
-        value <- value[1L]
-      }
-      value
     },
 
     # Answers the question of whether the current settings and values selected actually filters out any values.
