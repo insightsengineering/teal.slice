@@ -349,8 +349,8 @@ teal_slice_to_json <- function(x) {
 
 trim_character <- function(x, nchar) {
   json_t <- substr(x, 1, nchar)
-  substr(x, nchar - 2, 40) <- "..."
-  x
+  substr(json_t, nchar - 2, 40) <- "..."
+  json_t
 }
 
 center_json <- function(json) {
