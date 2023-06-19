@@ -22,9 +22,7 @@ If it is set to \code{reactive(NULL)} then counts based on filtered
 dataset are not shown.}
 
 \item{slice}{(\code{teal_slice})\cr
-object created using \code{\link[=filter_var]{filter_var()}} or \code{\link[=filter_expr]{filter_expr()}}. \code{slice} is kept within the
-class and can be shared in other places. Shared \code{teal_slice} object behaves in the
-way that changes in one place are reflected in other places.}
+object created using \code{\link[=filter_var]{filter_var()}} or \code{\link[=filter_expr]{filter_expr()}}.}
 
 \item{extract_type}{(\code{character(0)}, \code{character(1)})\cr
 specifying whether condition calls should be prefixed by \code{dataname}. Possible values:
