@@ -330,8 +330,7 @@ a.remove_all:hover {
 
 .filter-card-body-keep-na-inf {
   display: flex;
-  justify-content: space-between;
-  margin-right: 8em;
+  justify-content: space-evenly;
 }
 
 .progress.state-count-container {
