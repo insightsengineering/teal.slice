@@ -214,8 +214,8 @@ ChoicesFilterState <- R6::R6Class( # nolint
           class <- class(choices)[1L]
           date_fun <- as.name(
             switch(class,
-              "POSIXct" = "as.POSIXct",
-              "POSIXlt" = "as.POSIXlt"
+                   "POSIXct" = "as.POSIXct",
+                   "POSIXlt" = "as.POSIXlt"
             )
           )
           call(
