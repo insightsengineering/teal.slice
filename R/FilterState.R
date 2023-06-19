@@ -349,7 +349,7 @@ FilterState <- R6::R6Class( # nolint
       shiny::isolate({
         value <- private$cast_and_validate(value)
         value <- private$remove_out_of_bound_values(value)
-        private$check_multiple(value)
+        value <- private$check_multiple(value)
         private$validate_selection(value)
         private$teal_slice$selected <- value
       })
