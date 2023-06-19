@@ -64,11 +64,7 @@ FilterStateExpr <- R6::R6Class( # nolint
     #' @description
     #' Initialize a `FilterStateExpr` object
     #' @param slice (`teal_slice_expr`)\cr
-    #'   object created using [filter_expr()] functions. `teal_slice` is stored
-    #'   in the class and `set_state` directly manipulates values within `teal_slice`. `get_state`
-    #'   returns `teal_slice` object which can be reused in other places. Beware, that `teal_slice`
-    #'   is an immutable object which means that changes in particular object are automatically
-    #'   reflected in all places which refer to the same `teal_slice`.
+    #'   object created by [filter_expr()]
     #' @return `FilterStateExpr`
     initialize = function(slice) {
       checkmate::assert_class(slice, "teal_slice_expr")

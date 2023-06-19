@@ -55,11 +55,7 @@ FilterState <- R6::R6Class( # nolint
     #'   If it is set to `reactive(NULL)` then counts based on filtered
     #'   dataset are not shown.
     #' @param slice (`teal_slice`)\cr
-    #'   object created using [filter_var()]. `teal_slice` is stored
-    #'   in the class and `set_state` directly manipulates values within `teal_slice`. `get_state`
-    #'   returns `teal_slice` object which can be reused in other places. Beware, that `teal_slice`
-    #'   is an immutable object which means that changes in particular object are automatically
-    #'   reflected in all places which refer to the same `teal_slice`.
+    #'   object created by [filter_var()]
     #' @param extract_type (`character(0)`, `character(1)`)\cr
     #'   specifying whether condition calls should be prefixed by `dataname`. Possible values:
     #' \itemize{
