@@ -414,7 +414,7 @@ testthat::test_that("format.teal_slices contains literal formatted representatio
   ffs <- format(fs, show_all = TRUE)
   slices <- lapply(fs, format, show_all = TRUE)
   lapply(slices, function(x) {
-    testthat::expect_true(any(grepl(gsub(' ', '', x), gsub(' ', '', ffs), fixed = TRUE)))
+    testthat::expect_true(any(grepl(gsub(" ", "", x), gsub(" ", "", ffs), fixed = TRUE)))
   })
 })
 
