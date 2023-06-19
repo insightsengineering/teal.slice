@@ -50,7 +50,7 @@ as.teal_slice(x)
 
 \method{c}{teal_slice}(...)
 
-\method{format}{teal_slice}(x, show_all = FALSE, center = TRUE, ...)
+\method{format}{teal_slice}(x, show_all = FALSE, nchar = 40, ...)
 
 \method{print}{teal_slice}(x, ...)
 
@@ -66,7 +66,7 @@ store_slices(tss, file)
 
 restore_slices(file)
 
-\method{format}{teal_slices}(x, show_all = FALSE, center = TRUE, ...)
+\method{format}{teal_slices}(x, show_all = FALSE, nchar = 40, ...)
 
 \method{print}{teal_slices}(x, ...)
 
@@ -129,7 +129,7 @@ and unfiltered dataset.
 
 \item{show_all}{\code{logical(1)} should parameters set to NULL be returned}
 
-\item{center}{\code{logical(1)} should the output be centered and trimmed}
+\item{nchar}{\code{integer(1)} or \code{NULL} indicating the number of character of the output width}
 
 \item{tss}{\code{teal_slices} object}
 
