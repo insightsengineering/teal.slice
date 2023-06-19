@@ -279,17 +279,24 @@ ChoicesFilterState <- R6::R6Class( # nolint
       invisible(NULL)
     },
     # @description
-    # Sets choices_counts private field
+    # Sets choices_counts private field.
     set_choices_counts = function(choices_counts) {
       private$choices_counts <- choices_counts
       invisible(NULL)
     },
+    # @description
+    # Checks how many counts of each choice is present in the data.
     get_choices_counts = function() {
       if (!is.null(private$x_reactive)) {
         table(factor(private$x_reactive(), levels = private$get_choices()))
       } else {
         NULL
       }
+    },
+    # @description
+    # Checks whether the input should be rendered as a checkboxgroup/radiobutton or a drop-down.
+    is_checkboxgroup = function() {
+      length(private$get_choices()) <= getOption("teal.threshold_slider_vs_checkboxgroup")
     },
     validate_selection = function(value) {
       if (!is.character(value)) {
@@ -338,9 +345,6 @@ ChoicesFilterState <- R6::R6Class( # nolint
         values <- shiny::isolate(private$get_selected())
       }
       values
-    },
-    is_checkboxgroup = function() {
-      length(private$get_choices()) <= getOption("teal.threshold_slider_vs_checkboxgroup")
     },
 
     # shiny modules ----
