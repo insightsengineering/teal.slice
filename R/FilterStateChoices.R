@@ -214,8 +214,8 @@ ChoicesFilterState <- R6::R6Class( # nolint
           class <- class(choices)[1L]
           date_fun <- as.name(
             switch(class,
-              "POSIXct" = "as.POSIXct",
-              "POSIXlt" = "as.POSIXlt"
+                   "POSIXct" = "as.POSIXct",
+                   "POSIXlt" = "as.POSIXlt"
             )
           )
           call(
@@ -254,20 +254,18 @@ ChoicesFilterState <- R6::R6Class( # nolint
         choices <- as.character(choices)
         choices_adjusted <- choices[choices %in% private$x]
         if (length(setdiff(choices, choices_adjusted)) > 0L) {
-          warning(
-            sprintf(
-              "Some choices not not found in data. Adjusting. Varname: %s, dataname: %s.",
-              private$get_varname(), private$get_dataname()
-            )
-          )
+          warning(sprintf(
+            "Some of the choices not within variable values, adjusting. Varname: %s, dataname: %s.",
+            private$get_varname(), private$get_dataname()
+          ))
           choices <- choices_adjusted
         }
         if (length(choices) == 0) {
-          warning(
-            sprintf("Choices not within values found in data. Setting defaults. Varname: %s, dataname: %s.",
-                    private$get_varname(), private$get_dataname()
-            )
-          )
+          warning(sprintf(
+            "Invalid choices: none of them within the values in the variable.
+            Setting defaults. Varname: %s, dataname: %s.",
+            private$get_varname(), private$get_dataname()
+          ))
           choices <- levels(private$x)
         }
       }
@@ -297,6 +295,23 @@ ChoicesFilterState <- R6::R6Class( # nolint
         NULL
       }
     },
+    validate_selection = function(value) {
+      if (!is.character(value)) {
+        stop(
+          sprintf(
+            "Values of the selection for `%s` in `%s` should be an array of character.",
+            private$get_varname(),
+            private$get_dataname()
+          )
+        )
+      }
+      pre_msg <- sprintf(
+        "data '%s', variable '%s': ",
+        private$get_dataname(),
+        private$get_varname()
+      )
+      check_in_subset(value, private$get_choices(), pre_msg = pre_msg)
+    },
     cast_and_validate = function(values) {
       tryCatch(
         expr = {
@@ -315,34 +330,18 @@ ChoicesFilterState <- R6::R6Class( # nolint
           "are not in choices of column", private$get_varname(), "in dataset", private$get_dataname(), "."
         ))
       }
-      values[in_choices_mask]
-    },
-    check_multiple = function(value) {
-      if (!private$is_multiple() && length(value) > 1) {
-        warning(
-          sprintf("Selection: %s is not a vector of length one. ", strtrim(paste(value, collapse = ", "), 360)),
-          "Maintaining previous selection."
-        )
-        value <- shiny::isolate(private$get_selected())
+      values <- values[in_choices_mask]
+
+      if (length(values) != 1 && !private$is_multiple()) {
+        warning(sprintf(
+          "Values: %s are not a vector of length one. The first value will be selected by default.
+                        Setting defaults. Varname: %s, dataname: %s.",
+          strtrim(toString(values), 360),
+          private$get_varname(), private$get_dataname()
+        ))
+        values <- shiny::isolate(private$get_selected())
       }
-      value
-    },
-    validate_selection = function(value) {
-      if (!is.character(value)) {
-        stop(
-          sprintf(
-            "Values of the selection for `%s` in `%s` should be an array of character.",
-            private$get_varname(),
-            private$get_dataname()
-          )
-        )
-      }
-      pre_msg <- sprintf(
-        "data '%s', variable '%s': ",
-        private$get_dataname(),
-        private$get_varname()
-      )
-      check_in_subset(value, private$get_choices(), pre_msg = pre_msg)
+      values
     },
     is_checkboxgroup = function() {
       length(private$get_choices()) <= getOption("teal.threshold_slider_vs_checkboxgroup")

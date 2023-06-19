@@ -32,7 +32,7 @@ testthat::test_that("constructor forces single selected when multiple is FALSE",
 })
 
 # set_state ----
-testthat::test_that("set_state: selected accepts a logical vector (or coercible)", {
+testthat::test_that("set_state: selected accepts a logical (or coercible) of length <=2", {
   filter_state <- LogicalFilterState$new(logs, slice = filter_var(dataname = "data", varname = "variable"))
   testthat::expect_no_error(
     filter_state$set_state(filter_var(dataname = "data", varname = "variable", selected = TRUE))
@@ -40,11 +40,10 @@ testthat::test_that("set_state: selected accepts a logical vector (or coercible)
   testthat::expect_no_error(
     filter_state$set_state(filter_var(dataname = "data", varname = "variable", selected = "TRUE"))
   )
-  testthat::expect_no_error(
-    filter_state$set_state(filter_var(dataname = "data", varname = "variable", selected = 1))
-  )
-  testthat::expect_no_error(
-    filter_state$set_state(filter_var(dataname = "data", varname = "variable", selected = c(TRUE, FALSE)))
+  testthat::expect_no_error(filter_state$set_state(filter_var(dataname = "data", varname = "variable", selected = 1)))
+  testthat::expect_error(
+    filter_state$set_state(filter_var(dataname = "data", varname = "variable", selected = c(TRUE, TRUE))),
+    "should be a logical vector of length <= 2"
   )
   testthat::expect_error(
     filter_state$set_state(filter_var(dataname = "data", varname = "variable", selected = "a")),
@@ -52,22 +51,22 @@ testthat::test_that("set_state: selected accepts a logical vector (or coercible)
   )
 })
 
-testthat::test_that("set_state: multiple selection is aborted when multiple = FALSE", {
-  filter_state <- LogicalFilterState$new(
-    x = logs,
-    slice = filter_var(dataname = "data", varname = "variable", multiple = FALSE)
+testthat::test_that("set_state: multiple parameters accepting boolean and null values", {
+  testthat::expect_no_warning(
+    filter_state <- LogicalFilterState$new(
+      x = logs,
+      slice = filter_var(dataname = "data", varname = "variable", multiple = FALSE)
+    )
   )
 
-  fs <- filter_var(dataname = "data", varname = "variable", selected = TRUE)
   testthat::expect_no_error(
-    filter_state$set_state(fs)
+    filter_state$set_state(filter_var(dataname = "data", varname = "variable", selected = TRUE))
+  )
+  testthat::expect_no_error(
+    filter_state$set_state(filter_var(dataname = "data", varname = "variable", selected = NULL))
   )
   testthat::expect_warning(
-    filter_state$set_state(filter_var(dataname = "data", varname = "variable", selected = c(FALSE, TRUE))),
-    "Maintaining previous selection"
-  )
-  testthat::expect_identical(
-    shiny::isolate(filter_state$get_state()$selected), TRUE
+    filter_state$set_state(filter_var(dataname = "data", varname = "variable", selected = c(TRUE, TRUE)))
   )
 })
 

@@ -22,18 +22,35 @@ testthat::test_that("constructor raises warning if choices out of range", {
       chars,
       slice = filter_var(dataname = "data", varname = "var", choices = c(chars, "item4"))
     ),
-    "Some choices not not found in data. Adjusting."
+    "Some of the choices not within variable values, adjusting"
+  )
+})
+
+testthat::test_that("constructor raises warning if choices out of range", {
+  testthat::expect_warning(
+    ChoicesFilterState$new(
+      chars,
+      slice = filter_var(dataname = "data", varname = "var", choices = "item4")
+    ),
+    "Some of the choices not within variable values, adjusting"
   )
   testthat::expect_warning(
     ChoicesFilterState$new(
       chars,
       slice = filter_var(dataname = "data", varname = "var", choices = "item4")
     ),
-    "Some choices not not found in data. Adjusting.|Choices not within values found in data. Setting defaults."
+    "Invalid choices: none of them within the values in the variable"
   )
 })
 
 testthat::test_that("constructor raises warning if selected out of range", {
+  testthat::expect_warning(
+    ChoicesFilterState$new(
+      chars,
+      slice = filter_var(dataname = "data", varname = "var", selected = c(chars, "item4"))
+    ),
+    "not in choices"
+  )
   testthat::expect_warning(
     ChoicesFilterState$new(
       chars,
@@ -335,29 +352,29 @@ testthat::test_that("set_state sets intersection of choices and passed values", 
   testthat::expect_identical(shiny::isolate(filter_state$get_state()$selected), "2000-01-01 12:00:00")
 })
 
-testthat::test_that("set_state aborts multiple selection is aborted when multiple = FALSE", {
+testthat::test_that("set_state sets multiple option", {
   filter_state <- ChoicesFilterState$new(
     x = chars,
     slice = filter_var(dataname = "data", varname = "var", multiple = TRUE)
   )
-  testthat::expect_no_warning(
+  testthat::expect_no_error(
     filter_state$set_state(filter_var(dataname = "data", varname = "var", selected = c("item1", "item3")))
   )
 
+  testthat::expect_warning({
+    filter_state <- ChoicesFilterState$new(
+      x = chars,
+      slice = filter_var(dataname = "data", varname = "var", multiple = FALSE)
+    )
+    filter_state$set_state(filter_var(dataname = "data", varname = "var", selected = c("item1", "item3")))
+  })
+
   filter_state <- ChoicesFilterState$new(
-    x = chars,
-    slice = filter_var(dataname = "data", varname = "var", multiple = FALSE)
+    facts,
+    slice = filter_var(dataname = "data", varname = "var", multiple = TRUE)
   )
-  testthat::expect_no_warning(
-    filter_state$set_state(filter_var(dataname = "data", varname = "var", selected = "item3"))
-  )
-  testthat::expect_warning(
-    filter_state$set_state(filter_var(dataname = "data", varname = "var", selected = c("item1", "item3"))),
-    "Maintaining previous selection."
-  )
-  testthat::expect_equal(
-    shiny::isolate(filter_state$get_state()$selected),
-    "item3"
+  testthat::expect_no_error(
+    filter_state$set_state(filter_var(dataname = "data", varname = "var", selected = "item1"))
   )
 })
 

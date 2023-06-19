@@ -349,7 +349,6 @@ FilterState <- R6::R6Class( # nolint
       shiny::isolate({
         value <- private$cast_and_validate(value)
         value <- private$remove_out_of_bound_values(value)
-        value <- private$check_multiple(value)
         private$validate_selection(value)
         private$teal_slice$selected <- value
       })
@@ -536,37 +535,33 @@ FilterState <- R6::R6Class( # nolint
       }
     },
 
-    # Converts values to the type fitting this `FilterState` and validates
-    # whether the elements of the resulting vector satisfy the requirements of this `FilterState`.
-    # Raises error if casting does not execute successfully.
-    #
-    # @param values vector of values
-    #
-    # @return vector converted to appropriate class
-    cast_and_validate = function(values) {
-      values
+    # Checks if the selection is valid in terms of class and length.
+    # It should not return anything but throw an error if selection
+    # has a wrong class or is outside of possible choices
+    validate_selection = function(value) {
+      invisible(NULL)
     },
 
-    # Filters out erroneous values from vector.
+    # Filters out erroneous values from an array.
     #
-    # @param values vector of values
+    # @param values the array of values
     #
-    # @return vector in which values that cannot be set in this FilterState have been dropped
+    # @return the array of values without elements, which are outside of
+    # the accepted set for this FilterState
     remove_out_of_bound_values = function(values) {
       values
     },
 
-    # Checks whether multiple choices are allowed.
-    # If not value is of length 2 or more, drops all but first item with a warning.
-    check_multiple = function(value) {
-      value
-    },
-
-    # Checks if the selection is valid in terms of class and length.
-    # It should not return anything but raise an error if selection
-    # has a wrong class or is outside of possible choices
-    validate_selection = function(value) {
-      invisible(NULL)
+    # Converts values to the type fitting this `FilterState` and validates
+    # whether the elements of the resulting vector satisfy the requirements of this `FilterState`.
+    #
+    # @param values the array of values
+    #
+    # @return the casted array
+    #
+    # @note throws an error if the casting did not execute successfully.
+    cast_and_validate = function(values) {
+      values
     },
 
     # @description
