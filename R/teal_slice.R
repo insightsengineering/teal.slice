@@ -310,7 +310,7 @@ format.teal_slice <- function(x, show_all = FALSE, nchar = 40, ...) {
   x_list <- as.list(x)
   if (!show_all) x_list <- Filter(Negate(is.null), x_list)
 
-  x_json <- to_json(x_list)
+  x_json <- teal_slice_to_json(x_list)
   x_json_c <- center_json(x_json)
 
   if (!is.null(nchar)) x_json_c <- trim_json(x_json_c, nchar)
@@ -339,7 +339,7 @@ is.teal_slices <- function(x) { # nolint
 
 # JSON utils ------------------------------------------------------------------------------------------------------
 
-to_json <- function(x) {
+teal_slice_to_json <- function(x) {
   if (!is.null(x$selected)) x$selected <- I(x$selected)
   if (!is.null(x$choices)) x$choices <- I(x$choices)
 
