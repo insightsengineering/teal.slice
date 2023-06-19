@@ -185,24 +185,6 @@ LogicalFilterState <- R6::R6Class( # nolint
       private$choices_counts <- choices_counts
       invisible(NULL)
     },
-    validate_selection = function(value) {
-      if (!(checkmate::test_logical(value, any.missing = FALSE, unique = TRUE))) {
-        stop(
-          sprintf(
-            "value of the selection for `%s` in `%s` should be a logical vector of length <= 2",
-            private$get_varname(),
-            private$get_dataname()
-          )
-        )
-      }
-
-      pre_msg <- sprintf(
-        "dataset '%s', variable '%s': ",
-        private$get_dataname(),
-        private$get_varname()
-      )
-      check_in_subset(value, private$get_choices(), pre_msg = pre_msg)
-    },
     cast_and_validate = function(values) {
       tryCatch(
         expr = {
@@ -213,17 +195,27 @@ LogicalFilterState <- R6::R6Class( # nolint
       )
       values_logical
     },
-    remove_out_of_bound_values = function(values) {
-      if (length(values) != 1 && !private$is_multiple()) {
-        warning(sprintf(
-          "Values: %s are not a vector of length one. The first value will be selected by default.
-                        Setting defaults. Varname: %s, dataname: %s.",
-          strtrim(paste(values, collapse = ", "), 360),
-          private$get_varname(), private$get_dataname()
-        ))
-        values <- shiny::isolate(private$get_selected())
+    validate_selection = function(value) {
+      if (!(checkmate::test_logical(value, any.missing = FALSE, unique = TRUE))) {
+        stop(
+          sprintf(
+            "value of the selection for `%s` in `%s` should be a logical vector of length <= 2",
+            private$get_varname(),
+            private$get_dataname()
+          )
+        )
       }
-      values
+    },
+    check_multiple = function(value) {
+      if (!private$is_multiple() && length(value) > 1) {
+        warning(
+          sprintf("Values: %s are not a vector of length one. ", strtrim(paste(value, collapse = ", "), 360)),
+          "The first value will be selected by default. ",
+          sprintf("Setting defaults. Varname: %s, dataname: %s.", private$get_varname(), private$get_dataname())
+        )
+        value <- value[1L]
+      }
+      value
     },
 
     # Answers the question of whether the current settings and values selected actually filters out any values.
