@@ -187,10 +187,6 @@ a.remove_all:hover {
   font-size: small;
 }
 
-.filter-card-controls > div.form-group {
-  margin: 0em;
-}
-
 .checkbox label {
   margin: 0em;
 }
@@ -334,7 +330,8 @@ a.remove_all:hover {
 
 .filter-card-body-keep-na-inf {
   display: flex;
-  justify-content: space-evenly;
+  justify-content: space-between;
+  margin-right: 8em;
 }
 
 .progress.state-count-container {
@@ -372,17 +369,10 @@ a.remove_all:hover {
 }
 
 .form-group .checkbox label .shiny-bound-input {
-  position: absolute;
-  margin-top: 0.4em;
+  margin-top: 0.1em;
 }
 
-.form-group .checkbox label span span {
-  margin-left: 1.5em;
-}
 
-.shiny-options-group .checkbox label input {
-  margin-top: 0.4em;
-}
 
 .choices_state {
   margin-bottom: .45rem;
