@@ -300,23 +300,6 @@ ChoicesFilterState <- R6::R6Class( # nolint
     is_checkboxgroup = function() {
       length(private$get_choices()) <= getOption("teal.threshold_slider_vs_checkboxgroup")
     },
-    validate_selection = function(value) {
-      if (!is.character(value)) {
-        stop(
-          sprintf(
-            "Values of the selection for `%s` in `%s` should be an array of character.",
-            private$get_varname(),
-            private$get_dataname()
-          )
-        )
-      }
-      pre_msg <- sprintf(
-        "data '%s', variable '%s': ",
-        private$get_dataname(),
-        private$get_varname()
-      )
-      check_in_subset(value, private$get_choices(), pre_msg = pre_msg)
-    },
     cast_and_validate = function(values) {
       tryCatch(
         expr = {
