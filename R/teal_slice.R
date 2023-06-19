@@ -62,9 +62,8 @@
 #'  possibly a subset of values in data; type and size depends on variable type
 #' @param selected optional vector specifying selection;
 #'  type and size depends on variable type
-#' @param multiple (`logical(1)`)\cr
-#'   flag specifying whether the `FilterState` more than one value can be selected;
-#'   only applicable to `FilterStateChoices` and `FilterStateLogical`
+#' @param multiple `logical(1)` logical flag specifying whether more than one value can be selected;
+#'   only applicable to `ChoicesFilterState` and `LogicalFilterState`
 #' @param keep_na `logical(1)` or `NULL` optional logical flag specifying whether to keep missing values
 #' @param keep_inf `logical(1)` or `NULL` optional logical flag specifying whether to keep infinite values
 #' @param fixed `logical(1)` logical flag specifying whether to fix this filter state (forbid setting state)
@@ -163,7 +162,7 @@ filter_var <- function(dataname,
   checkmate::assert_flag(keep_inf, null.ok = TRUE)
   checkmate::assert_flag(fixed)
   checkmate::assert_flag(locked)
-  checkmate::assert_flag(multiple, null.ok = TRUE)
+  checkmate::assert_flag(multiple)
   ans <- c(as.list(environment()), list(...))
   ans <- Filter(Negate(is.null), ans)
   if (missing(id)) {
