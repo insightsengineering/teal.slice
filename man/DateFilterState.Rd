@@ -7,40 +7,44 @@
 \description{
 Manages choosing a range of Dates
 }
-\note{
-Casts the passed object to \code{Date} before validating the input
-making it possible to pass any object coercible to \code{Date} to this method.
-}
 \examples{
 filter_state <- teal.slice:::DateFilterState$new(
-  c(Sys.Date() + seq(1:10), NA),
-  varname = "x",
-  dataname = "data",
+  x = c(Sys.Date() + seq(1:10), NA),
+  slice = filter_var(varname = "x", dataname = "data"),
   extract_type = character(0)
 )
-isolate(filter_state$get_call())
-
-isolate(filter_state$set_selected(c(Sys.Date() + 3L, Sys.Date() + 8L)))
-isolate(filter_state$set_keep_na(TRUE))
-isolate(filter_state$get_call())
+shiny::isolate(filter_state$get_call())
+filter_state$set_state(
+  filter_var(
+    dataname = "data",
+    varname = "x",
+    selected = c(Sys.Date() + 3L, Sys.Date() + 8L),
+    keep_na = TRUE
+  )
+)
+shiny::isolate(filter_state$get_call())
 
 \dontrun{
 # working filter in an app
 library(shiny)
+library(shinyjs)
 
 dates <- c(Sys.Date() - 100, Sys.Date())
 data_date <- c(seq(from = dates[1], to = dates[2], length.out = 100), NA)
-filter_state_date <- DateFilterState$new(
+fs <- DateFilterState$new(
   x = data_date,
-  varname = "variable",
-  varlabel = "label"
+  slice = filter_var(
+    dataname = "data", varname = "x", selected = data_date[c(47, 98)], keep_na = TRUE
+  )
 )
-filter_state_date$set_state(list(selected = data_date[c(47, 98)], keep_na = TRUE))
 
 ui <- fluidPage(
+  useShinyjs(),
+  include_css_files(pattern = "filter-panel"),
+  include_js_files(pattern = "count-bar-labels"),
   column(4, div(
     h4("DateFilterState"),
-    isolate(filter_state_date$ui("fs"))
+    fs$ui("fs")
   )),
   column(4, div(
     id = "outputs", # div id is needed for toggling the element
@@ -62,21 +66,32 @@ ui <- fluidPage(
 )
 
 server <- function(input, output, session) {
-  filter_state_date$server("fs")
-  output$condition_date <- renderPrint(filter_state_date$get_call())
-  output$formatted_date <- renderText(filter_state_date$format())
-  output$unformatted_date <- renderPrint(filter_state_date$get_state())
+  fs$server("fs")
+  output$condition_date <- renderPrint(fs$get_call())
+  output$formatted_date <- renderText(fs$format())
+  output$unformatted_date <- renderPrint(fs$get_state())
   # modify filter state programmatically
-  observeEvent(input$button1_date, filter_state_date$set_keep_na(FALSE))
-  observeEvent(input$button2_date, filter_state_date$set_keep_na(TRUE))
+  observeEvent(
+    input$button1_date,
+    fs$set_state(filter_var(dataname = "data", varname = "x", keep_na = FALSE))
+  )
+  observeEvent(
+    input$button2_date,
+    fs$set_state(filter_var(dataname = "data", varname = "x", keep_na = TRUE))
+  )
   observeEvent(
     input$button3_date,
-    filter_state_date$set_selected(data_date[c(34, 56)])
+    fs$set_state(filter_var(dataname = "data", varname = "x", selected = data_date[c(34, 56)]))
   )
-  observeEvent(input$button4_date, filter_state_date$set_selected(dates))
+  observeEvent(
+    input$button4_date,
+    fs$set_state(filter_var(dataname = "data", varname = "x", selected = dates))
+  )
   observeEvent(
     input$button0_date,
-    filter_state_date$set_state(list(selected = data_date[c(47, 98)], keep_na = TRUE))
+    fs$set_state(
+      filter_var("data", "variable", selected = data_date[c(47, 98)], keep_na = TRUE)
+    )
   )
 }
 
@@ -85,17 +100,6 @@ if (interactive()) {
 }
 }
 
-
-## ------------------------------------------------
-## Method `DateFilterState$set_selected`
-## ------------------------------------------------
-
-date <- as.Date("13/09/2021")
-filter <- teal.slice:::DateFilterState$new(
-  c(date, date + 1, date + 2, date + 3),
-  varname = "name"
-)
-filter$set_selected(c(date + 1, date + 2))
 }
 \keyword{internal}
 \section{Super class}{
@@ -105,10 +109,7 @@ filter$set_selected(c(date + 1, date + 2))
 \subsection{Public methods}{
 \itemize{
 \item \href{#method-DateFilterState-new}{\code{DateFilterState$new()}}
-\item \href{#method-DateFilterState-format}{\code{DateFilterState$format()}}
-\item \href{#method-DateFilterState-is_any_filtered}{\code{DateFilterState$is_any_filtered()}}
 \item \href{#method-DateFilterState-get_call}{\code{DateFilterState$get_call()}}
-\item \href{#method-DateFilterState-set_selected}{\code{DateFilterState$set_selected()}}
 \item \href{#method-DateFilterState-clone}{\code{DateFilterState$clone()}}
 }
 }
@@ -116,16 +117,10 @@ filter$set_selected(c(date + 1, date + 2))
 <details><summary>Inherited methods</summary>
 <ul>
 <li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilterState" data-id="destroy_observers"><a href='../../teal.slice/html/FilterState.html#method-FilterState-destroy_observers'><code>teal.slice::FilterState$destroy_observers()</code></a></span></li>
-<li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilterState" data-id="get_dataname"><a href='../../teal.slice/html/FilterState.html#method-FilterState-get_dataname'><code>teal.slice::FilterState$get_dataname()</code></a></span></li>
-<li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilterState" data-id="get_keep_na"><a href='../../teal.slice/html/FilterState.html#method-FilterState-get_keep_na'><code>teal.slice::FilterState$get_keep_na()</code></a></span></li>
-<li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilterState" data-id="get_selected"><a href='../../teal.slice/html/FilterState.html#method-FilterState-get_selected'><code>teal.slice::FilterState$get_selected()</code></a></span></li>
+<li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilterState" data-id="format"><a href='../../teal.slice/html/FilterState.html#method-FilterState-format'><code>teal.slice::FilterState$format()</code></a></span></li>
 <li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilterState" data-id="get_state"><a href='../../teal.slice/html/FilterState.html#method-FilterState-get_state'><code>teal.slice::FilterState$get_state()</code></a></span></li>
-<li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilterState" data-id="get_varlabel"><a href='../../teal.slice/html/FilterState.html#method-FilterState-get_varlabel'><code>teal.slice::FilterState$get_varlabel()</code></a></span></li>
-<li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilterState" data-id="get_varname"><a href='../../teal.slice/html/FilterState.html#method-FilterState-get_varname'><code>teal.slice::FilterState$get_varname()</code></a></span></li>
 <li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilterState" data-id="print"><a href='../../teal.slice/html/FilterState.html#method-FilterState-print'><code>teal.slice::FilterState$print()</code></a></span></li>
 <li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilterState" data-id="server"><a href='../../teal.slice/html/FilterState.html#method-FilterState-server'><code>teal.slice::FilterState$server()</code></a></span></li>
-<li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilterState" data-id="set_keep_na"><a href='../../teal.slice/html/FilterState.html#method-FilterState-set_keep_na'><code>teal.slice::FilterState$set_keep_na()</code></a></span></li>
-<li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilterState" data-id="set_na_rm"><a href='../../teal.slice/html/FilterState.html#method-FilterState-set_na_rm'><code>teal.slice::FilterState$set_na_rm()</code></a></span></li>
 <li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilterState" data-id="set_state"><a href='../../teal.slice/html/FilterState.html#method-FilterState-set_state'><code>teal.slice::FilterState$set_state()</code></a></span></li>
 <li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilterState" data-id="ui"><a href='../../teal.slice/html/FilterState.html#method-FilterState-ui'><code>teal.slice::FilterState$ui()</code></a></span></li>
 </ul>
@@ -139,9 +134,8 @@ Initialize a \code{FilterState} object
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{DateFilterState$new(
   x,
-  varname,
-  varlabel = character(0),
-  dataname = NULL,
+  x_reactive = reactive(NULL),
+  slice,
   extract_type = character(0)
 )}\if{html}{\out{</div>}}
 }
@@ -152,58 +146,30 @@ Initialize a \code{FilterState} object
 \item{\code{x}}{(\code{Date})\cr
 values of the variable used in filter}
 
-\item{\code{varname}}{(\code{character}, \code{name})\cr
-name of the variable}
+\item{\code{x_reactive}}{(\code{reactive})\cr
+returning vector of the same type as \code{x}. Is used to update
+counts following the change in values of the filtered dataset.
+If it is set to \code{reactive(NULL)} then counts based on filtered
+dataset are not shown.}
 
-\item{\code{varlabel}}{(\code{character(1)})\cr
-label of the variable (optional).}
-
-\item{\code{dataname}}{(\code{character(1)})\cr
-optional name of dataset where \code{x} is taken from}
+\item{\code{slice}}{(\code{teal_slice})\cr
+object created using \code{\link[=filter_var]{filter_var()}}. \code{teal_slice} is stored
+in the class and \code{set_state} directly manipulates values within \code{teal_slice}. \code{get_state}
+returns \code{teal_slice} object which can be reused in other places. Beware, that \code{teal_slice}
+is an immutable object which means that changes in particular object are automatically
+reflected in all places which refer to the same \code{teal_slice}.}
 
 \item{\code{extract_type}}{(\code{character(0)}, \code{character(1)})\cr
-whether condition calls should be prefixed by dataname. Possible values:
+whether condition calls should be prefixed by \code{dataname}. Possible values:
 \itemize{
 \item{\code{character(0)} (default)}{ \code{varname} in the condition call will not be prefixed}
 \item{\code{"list"}}{ \code{varname} in the condition call will be returned as \verb{<dataname>$<varname>}}
 \item{\code{"matrix"}}{ \code{varname} in the condition call will be returned as \verb{<dataname>[, <varname>]}}
 }}
+
+\item{\code{...}}{additional arguments to be saved as a list in \code{private$extras} field}
 }
 \if{html}{\out{</div>}}
-}
-}
-\if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-DateFilterState-format"></a>}}
-\if{latex}{\out{\hypertarget{method-DateFilterState-format}{}}}
-\subsection{Method \code{format()}}{
-Returns a formatted string representing this \code{DateFilterState}.
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{DateFilterState$format(indent = 0)}\if{html}{\out{</div>}}
-}
-
-\subsection{Arguments}{
-\if{html}{\out{<div class="arguments">}}
-\describe{
-\item{\code{indent}}{(\code{numeric(1)}) the number of spaces before after each new line character of the formatted string.
-Default: 0}
-}
-\if{html}{\out{</div>}}
-}
-\subsection{Returns}{
-\code{character(1)} the formatted string
-}
-}
-\if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-DateFilterState-is_any_filtered"></a>}}
-\if{latex}{\out{\hypertarget{method-DateFilterState-is_any_filtered}{}}}
-\subsection{Method \code{is_any_filtered()}}{
-Answers the question of whether the current settings and values selected actually filters out any values.
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{DateFilterState$is_any_filtered()}\if{html}{\out{</div>}}
-}
-
-\subsection{Returns}{
-logical scalar
 }
 }
 \if{html}{\out{<hr>}}
@@ -215,46 +181,19 @@ For this class returned call looks like
 \verb{<varname> >= <min value> & <varname> <= <max value>} with
 optional \verb{is.na(<varname>)}.
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{DateFilterState$get_call()}\if{html}{\out{</div>}}
-}
-
-\subsection{Returns}{
-(\code{call})
-}
-}
-\if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-DateFilterState-set_selected"></a>}}
-\if{latex}{\out{\hypertarget{method-DateFilterState-set_selected}{}}}
-\subsection{Method \code{set_selected()}}{
-Sets the selected time frame of this \code{DateFilterState}.
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{DateFilterState$set_selected(value)}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{DateFilterState$get_call(dataname)}\if{html}{\out{</div>}}
 }
 
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
-\item{\code{value}}{(\code{Date(2)}) the lower and the upper bound of the selected
-time frame. Must not contain NA values.}
+\item{\code{dataname}}{\code{character(1)} containing possibly prefixed name of data set}
 }
 \if{html}{\out{</div>}}
 }
 \subsection{Returns}{
-invisibly \code{NULL}.
+(\code{call})
 }
-\subsection{Examples}{
-\if{html}{\out{<div class="r example copy">}}
-\preformatted{date <- as.Date("13/09/2021")
-filter <- teal.slice:::DateFilterState$new(
-  c(date, date + 1, date + 2, date + 3),
-  varname = "name"
-)
-filter$set_selected(c(date + 1, date + 2))
-}
-\if{html}{\out{</div>}}
-
-}
-
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-DateFilterState-clone"></a>}}

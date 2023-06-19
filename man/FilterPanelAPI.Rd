@@ -25,10 +25,10 @@ fpa <- FilterPanelAPI$new(fd)
 isolate(fpa$get_filter_state())
 
 # set a filter state
-isolate(
-  set_filter_state(
-    fpa,
-    list(iris = list(Species = list(selected = "setosa", keep_na = TRUE)))
+set_filter_state(
+  fpa,
+  filter_settings(
+    filter_var(dataname = "iris", varname = "Species", selected = "setosa", keep_na = TRUE)
   )
 )
 
@@ -36,7 +36,7 @@ isolate(
 isolate(fpa$get_filter_state())
 
 # remove all_filter_states
-fpa$remove_all_filter_states()
+fpa$clear_filter_states()
 
 # get the actual filter state --> empty named list
 isolate(fpa$get_filter_state())
@@ -49,8 +49,7 @@ isolate(fpa$get_filter_state())
 \item \href{#method-FilterPanelAPI-get_filter_state}{\code{FilterPanelAPI$get_filter_state()}}
 \item \href{#method-FilterPanelAPI-set_filter_state}{\code{FilterPanelAPI$set_filter_state()}}
 \item \href{#method-FilterPanelAPI-remove_filter_state}{\code{FilterPanelAPI$remove_filter_state()}}
-\item \href{#method-FilterPanelAPI-remove_all_filter_states}{\code{FilterPanelAPI$remove_all_filter_states()}}
-\item \href{#method-FilterPanelAPI-filter_panel_toggle}{\code{FilterPanelAPI$filter_panel_toggle()}}
+\item \href{#method-FilterPanelAPI-clear_filter_states}{\code{FilterPanelAPI$clear_filter_states()}}
 \item \href{#method-FilterPanelAPI-clone}{\code{FilterPanelAPI$clone()}}
 }
 }
@@ -99,13 +98,12 @@ Sets active filter states.
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
-\item{\code{filter}}{(\verb{named list})\cr
-nested list of filter selections applied to datasets.}
+\item{\code{filter}}{(\code{teal_slices})}
 }
 \if{html}{\out{</div>}}
 }
 \subsection{Returns}{
-\code{NULL}
+\code{NULL} invisibly
 }
 }
 \if{html}{\out{<hr>}}
@@ -120,52 +118,36 @@ Remove one or more \code{FilterState} of a \code{FilteredDataset} in the \code{F
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
-\item{\code{filter}}{(\verb{named list})\cr
-nested list of filter selections applied to datasets.}
+\item{\code{filter}}{(\code{teal_slices})\cr
+specifying \code{FilterState} objects to remove;
+\code{teal_slice}s may contain only \code{dataname} and \code{varname}, other elements are ignored}
 }
 \if{html}{\out{</div>}}
 }
 \subsection{Returns}{
-\code{NULL}
+\code{NULL} invisibly
 }
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-FilterPanelAPI-remove_all_filter_states"></a>}}
-\if{latex}{\out{\hypertarget{method-FilterPanelAPI-remove_all_filter_states}{}}}
-\subsection{Method \code{remove_all_filter_states()}}{
+\if{html}{\out{<a id="method-FilterPanelAPI-clear_filter_states"></a>}}
+\if{latex}{\out{\hypertarget{method-FilterPanelAPI-clear_filter_states}{}}}
+\subsection{Method \code{clear_filter_states()}}{
 Remove all \code{FilterStates} of the \code{FilteredData} object.
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{FilterPanelAPI$remove_all_filter_states(datanames)}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{FilterPanelAPI$clear_filter_states(datanames)}\if{html}{\out{</div>}}
 }
 
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
 \item{\code{datanames}}{(\code{character})\cr
-datanames to remove their \code{FilterStates};
+\code{datanames} to remove their \code{FilterStates};
 omit to remove all \code{FilterStates} in the \code{FilteredData} object}
 }
 \if{html}{\out{</div>}}
 }
 \subsection{Returns}{
-\code{NULL}
-}
-}
-\if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-FilterPanelAPI-filter_panel_toggle"></a>}}
-\if{latex}{\out{\hypertarget{method-FilterPanelAPI-filter_panel_toggle}{}}}
-\subsection{Method \code{filter_panel_toggle()}}{
-Toggle the state of the global Filter Panel button by running \code{javascript} code
-to click the toggle button with the \code{filter_panel_active} id suffix.
-The button id is prefixed with the Filter Panel shiny namespace.
-This button is observed in \code{srv_filter_panel} method that executes
-\code{filter_panel_enable()} or \code{filter_panel_disable()} method depending on the toggle state.
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{FilterPanelAPI$filter_panel_toggle()}\if{html}{\out{</div>}}
-}
-
-\subsection{Returns}{
-\code{NULL}
+\code{NULL} invisibly
 }
 }
 \if{html}{\out{<hr>}}

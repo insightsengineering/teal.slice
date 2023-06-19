@@ -45,7 +45,7 @@ knitr::include_graphics("./images/filter_panel/filtered_data_init.jpg")
 ```
 
 `FilteredData` is initialized in `srv_teal` when `TealData$is_pulled()` returns `TRUE`.
-`FilteredData` is dispatched on type of `TealData`, and if DDL is `CDISCTealData` then
+`FilteredData` is dispatched on type of `TealData`, and if `DDL` is `CDISCTealData` then
 `CDISCFilteredData` is initialized. Each `TealDataset` from `CDISCTealData` determines the type of the
 `FilteredDataset`. In the above diagram `CDISCTealDataset` initializes `CDISCFilteredDataset` and
 `MAETealDataset` initializes `MAEFilteredDataset`.
@@ -76,13 +76,13 @@ knitr::include_graphics("./images/filter_panel/class_details_filtered_data.jpg")
 `FilteredData` manages filter panel by returning filtered data, combining reproducible filter calls
 from `FilteredDatasets`. `FilteredData` also contains all shiny modules displayed on the right panel
 in teal apps. `FilteredData` is a single object which is initialized in `srv_teal` module and its
-variant depends on `TealData`. If DDL returns `CDISCTealData` then `CDISCFilteredData` is
+variant depends on `TealData`. If `DDL` returns `CDISCTealData` then `CDISCFilteredData` is
 initialized, otherwise `FilteredData`.
 
 In the analytical modules `datasets` can be used to:
 
 - obtain filtered and unfiltered data using `datasets$get_data(<dataname>, filtered = <TRUE/FALSE>)`.
-- get available datanames using `datasets$datanames()`
+- get available `datanames` using `datasets$datanames()`
 - get reproducible filter call using `datasets$get_call(<dataname>)`
 - get reproducible data loading call `datasets$get_code(<dataname>)`
 - get `JoinKeys` between two datasets using `datasets$get_join_keys(<dataname1>, <dataname2>)`
@@ -137,7 +137,7 @@ Currently following variants are possible:
 
 `FilterStates` serves two Shiny related purposes:
 
-- `ui/srv_add_filter_state` allow to add `FilterState` for selected variable. Variables included
+- `ui/srv_add` allow to add `FilterState` for selected variable. Variables included
   in the module are the filterable colnames of the provided dataset. Variable selection adds `FilterState` to
   `reactiveVal` (stored in list `private$state_list[[state_list_id]]`). `FilterState` is dispatched
   automatically on a selected column class.
@@ -188,9 +188,9 @@ knitr::include_graphics("./images/filter_panel/get_call_example.jpg")
 Calling `datasets$get_call(<dataname>)` in teal modules executes a chain of calls in all filter panel
 classes. Consider a scenario in which:
 
-(1) `FilteredData` has three `FilteredDataset`(s) ADSL , ADTTE, MAE
+(1) `FilteredData` has three `FilteredDataset`(s) `ADSL` , `ADTTE`, `MAE`
 
-(2) `CDISCFilteredDataset` contains `data.frame` (ADSL) which can be filtered only in one way
+(2) `CDISCFilteredDataset` contains `data.frame` (`ADSL`) which can be filtered only in one way
 executing single `dplyr::filter` call (this is why `CDISCFilteredDataset` has a single `FilterStates`)
 
 (3) `FilterStates` construct `dplyr::filter` call is based on the `FilterState` objects added to the
@@ -216,7 +216,7 @@ keys available parent.
 
 (7) `FilteredDatasetMAE` is based on `MAETealDataset` where `raw_data` contains multiple objects which can
 be filtered on. In general `MultiAssayExperiment` contains `colData(MAE)` which is a `DataFrame`
-with ADSL-like patient data. `MAE` contains also multiple experiments which can be extracted using
+with `ADSL`-like patient data. `MAE` contains also multiple experiments which can be extracted using
 `MAE[["experiment name"]]` and they can also be filtered in filter-panel. This means that
 `FilteredDatasetMAE` has multiple `FilterStates` objects: one for subjects data and one for each
 experiment.
@@ -284,22 +284,20 @@ The above list structure is applied in `get_filter_state`, `set_filter_state` an
 ```{r, message=FALSE, warning=FALSE}
 library(teal.slice)
 
-datasets <- shiny::isolate(
-  init_filtered_data(
-    list(
-      iris = list(dataset = iris),
-      mtcars = list(dataset = mtcars)
-    )
+datasets <- init_filtered_data(
+  list(
+    iris = list(dataset = iris),
+    mtcars = list(dataset = mtcars)
   )
 )
 
-shiny::isolate(
-  set_filter_state(
-    datasets = datasets,
-    filter = list(
-      iris = list(Species = list(selected = "virginica", keep_na = FALSE)),
-      mtcars = list(mpg = list(selected = c(20.0, 25.0), keep_na = FALSE, keep_inf = FALSE))
-    )
+set_filter_state(
+  datasets = datasets,
+  filter = filter_settings(
+    filter_var(dataname = "iris", varname = "Species", selected = "virginica", keep_na = FALSE),
+    filter_var(dataname = "mtcars", varname = "mpg", selected = c(20.0, 25.0), keep_na = FALSE, keep_inf = FALSE),
+    include_varnames = list(iris = c("Species", "Sepal.Length")),
+    exclude_varnames = list(mtcars = "cyl")
   )
 )
 ```
@@ -311,22 +309,20 @@ get_filter_state(datasets)
 
 3. Removing filter states
 ```{r, message=FALSE, warning=FALSE}
-shiny::isolate(
-  remove_filter_state(
-    datasets = datasets,
-    filter = list(iris = c("Species"))
+remove_filter_state(
+  datasets = datasets,
+  filter = filter_settings(
+    filter_var(dataname = "iris", varname = "Species")
   )
 )
 ```
 
 4. Updating filter states. *Works only in the shiny reactive context.
 ```{r, message=FALSE, warning=FALSE}
-shiny::isolate(
-  set_filter_state(
-    datasets = datasets,
-    filter = list(
-      mtcars = list(mpg = list(selected = c(22.0, 25.0)))
-    )
+set_filter_state(
+  datasets = datasets,
+  filter = filter_settings(
+    filter_var(dataname = "mtcars", varname = "mpg", selected = c(22.0, 25.0))
   )
 )
 ```
@@ -351,6 +347,7 @@ datasets <- init_filtered_data(
 
 app <- shinyApp(
   ui = fluidPage(
+    shinyjs::useShinyjs(),
     fluidRow(
       column(
         width = 9,
@@ -382,14 +379,18 @@ app <- shinyApp(
     observeEvent(input$add_species_filter, {
       set_filter_state(
         datasets,
-        list(iris = list(Species = list(selected = c("setosa", "versicolor"))))
+        filter_settings(
+          filter_var(dataname = "iris", varname = "Species", selected = c("setosa", "versicolor"))
+        )
       )
     })
     observeEvent(input$remove_species_filter, {
-      states <- get_filter_state(datasets)
-      if (!is.null(states$iris$Species)) {
-        remove_filter_state(datasets, list(iris = "Species"))
-      }
+      remove_filter_state(
+        datasets,
+        filter_settings(
+          filter_var(dataname = "iris", varname = "Species")
+        )
+      )
     })
     observeEvent(input$remove_all_filters, clear_filter_states(datasets))
   }

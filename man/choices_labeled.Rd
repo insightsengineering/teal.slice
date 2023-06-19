@@ -23,9 +23,10 @@ a named character vector
 }
 \description{
 \ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#stable}{\figure{lifecycle-stable.svg}{options: alt='[Stable]'}}}{\strong{[Stable]}}
-This is often useful for as it marks up the dropdown boxes for \code{\link[shiny:selectInput]{shiny::selectInput()}}.
+This is often useful for as it marks up the drop-down boxes for \code{\link[shiny:selectInput]{shiny::selectInput()}}.
 }
 \details{
 If either \code{choices} or \code{labels} are factors, they are coerced to character.
 Duplicated elements from \code{choices} get removed.
 }
+\keyword{internal}

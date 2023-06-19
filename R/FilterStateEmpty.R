@@ -7,15 +7,13 @@
 #'
 #' @examples
 #' filter_state <- teal.slice:::EmptyFilterState$new(
-#'   NA,
-#'   varname = "x",
-#'   dataname = "data",
+#'   x = NA,
+#'   slice = filter_var(varname = "x", dataname = "data"),
 #'   extract_type = character(0)
 #' )
-#' isolate(filter_state$get_call())
-#' isolate(filter_state$set_selected(TRUE))
-#' isolate(filter_state$set_keep_na(TRUE))
-#' isolate(filter_state$get_call())
+#' shiny::isolate(filter_state$get_call())
+#' filter_state$set_state(filter_var(dataname = "data", varname = "x", keep_na = TRUE))
+#' shiny::isolate(filter_state$get_call())
 #'
 EmptyFilterState <- R6::R6Class( # nolint
   "EmptyFilterState",
@@ -23,44 +21,48 @@ EmptyFilterState <- R6::R6Class( # nolint
 
   # public methods ----
   public = list(
+
     #' @description
     #' Initialize `EmptyFilterState` object.
     #'
     #' @param x (`vector`)\cr
     #'   values of the variable used in filter
-    #' @param varname (`character`, `name`)\cr
-    #'   name of the variable
-    #' @param varlabel (`character(1)`)\cr
-    #'   label of the variable (optional).
-    #' @param dataname (`character(1)`)\cr
-    #'   optional name of dataset where `x` is taken from
+    #' @param x_reactive (`reactive`)\cr
+    #'   returning vector of the same type as `x`. Is used to update
+    #'   counts following the change in values of the filtered dataset.
+    #'   If it is set to `reactive(NULL)` then counts based on filtered
+    #'   dataset are not shown.
+    #' @param slice (`teal_slice`)\cr
+    #'   object created using [filter_var()]. `teal_slice` is stored
+    #'   in the class and `set_state` directly manipulates values within `teal_slice`. `get_state`
+    #'   returns `teal_slice` object which can be reused in other places. Beware, that `teal_slice`
+    #'   is an immutable object which means that changes in particular object are automatically
+    #'   reflected in all places which refer to the same `teal_slice`.
     #' @param extract_type (`character(0)`, `character(1)`)\cr
-    #'   whether condition calls should be prefixed by dataname. Possible values:
+    #' whether condition calls should be prefixed by `dataname`. Possible values:
     #' \itemize{
     #' \item{`character(0)` (default)}{ `varname` in the condition call will not be prefixed}
     #' \item{`"list"`}{ `varname` in the condition call will be returned as `<dataname>$<varname>`}
     #' \item{`"matrix"`}{ `varname` in the condition call will be returned as `<dataname>[, <varname>]`}
     #' }
+    #' @param ... additional arguments to be saved as a list in `private$extras` field
     #'
     initialize = function(x,
-                          varname,
-                          varlabel = character(0),
-                          dataname = NULL,
-                          extract_type = character(0)) {
-      super$initialize(x, varname, varlabel, dataname, extract_type)
-      private$set_choices(list())
-      self$set_selected(list())
+                          x_reactive = reactive(NULL),
+                          extract_type = character(0),
+                          slice) {
+      shiny::isolate({
+        super$initialize(
+          x = x,
+          x_reactive = x_reactive,
+          slice = slice,
+          extract_type = extract_type
+        )
+        private$set_choices(slice$choices)
+        private$set_selected(slice$selected)
+      })
 
-      return(invisible(self))
-    },
-
-    #' @description
-    #' Reports whether the current state filters out any values.(?)
-    #'
-    #' @return `logical(1)`
-    #'
-    is_any_filtered = function() {
-      !isTRUE(self$get_keep_na())
+      invisible(self)
     },
 
     #' @description
@@ -68,59 +70,50 @@ EmptyFilterState <- R6::R6Class( # nolint
     #' for selected variable type.
     #' Uses internal reactive values, hence must be called
     #' in reactive or isolated context.
-    #'
+    #' @param dataname name of data set; defaults to `private$get_dataname()`
     #' @return `logical(1)`
     #'
-    get_call = function() {
-      filter_call <- if (isTRUE(self$get_keep_na())) {
-        call("is.na", private$get_varname_prefixed())
+    get_call = function(dataname) {
+      if (isFALSE(private$is_any_filtered())) {
+        return(NULL)
+      }
+      if (missing(dataname)) dataname <- private$get_dataname()
+      filter_call <- if (isTRUE(private$get_keep_na())) {
+        call("is.na", private$get_varname_prefixed(dataname))
       } else {
-        FALSE
+        substitute(!is.na(varname), list(varname = private$get_varname_prefixed(dataname)))
       }
-    },
-
-    #' @description
-    #' Returns the filtering state.
-    #'
-    #' @return `list` containing values taken from the reactive fields:
-    #' * `keep_na` (`logical(1)`) whether `NA` should be kept.
-    #'
-    get_state = function() {
-      list(
-        keep_na = self$get_keep_na()
-      )
-    },
-
-    #' @description
-    #' Set state.
-    #'
-    #' @param state (`list`)\cr
-    #'  contains fields relevant for specific class:
-    #' \itemize{
-    #' \item{`keep_na` (`logical`)}{ defines whether to keep or remove `NA` values}
-    #' }
-    #'
-    #' @return NULL invisibly
-    set_state = function(state) {
-      if (!is.null(state$selected)) {
-        stop(
-          sprintf(
-            "All values in variable '%s' are `NA`. Unable to apply filter values \n  %s",
-            private$varname,
-            paste(state$selected, collapse = ", ")
-          )
-        )
-      }
-      stopifnot(is.list(state) && all(names(state) == "keep_na"))
-      if (!is.null(state$keep_na)) {
-        self$set_keep_na(state$keep_na)
-      }
-      invisible(NULL)
     }
   ),
 
   # private members ----
   private = list(
+    cache_state = function() {
+      private$cache <- private$get_state()
+      self$set_state(
+        list(
+          keep_na = NULL
+        )
+      )
+    },
+    set_choices = function(choices) {
+      private$teal_slice$choices <- choices
+      invisible(NULL)
+    },
+
+
+    # Reports whether the current state filters out any values.(?)
+    #
+    # @return `logical(1)`
+    #
+    is_any_filtered = function() {
+      if (private$is_choice_limited) {
+        TRUE
+      } else {
+        !isTRUE(private$get_keep_na())
+      }
+    },
+
     # @description
     # UI Module for `EmptyFilterState`.
     # This UI element contains a checkbox input to filter or keep missing values.
@@ -130,15 +123,17 @@ EmptyFilterState <- R6::R6Class( # nolint
     #
     ui_inputs = function(id) {
       ns <- NS(id)
-      fluidRow(
-        div(
-          class = "relative",
+      shiny::isolate({
+        fluidRow(
           div(
-            span("Variable contains missing values only"),
-            private$keep_na_ui(ns("keep_na"))
+            class = "relative",
+            div(
+              span("Variable contains missing values only"),
+              private$keep_na_ui(ns("keep_na"))
+            )
           )
         )
-      )
+      })
     },
 
     # @description
@@ -156,6 +151,29 @@ EmptyFilterState <- R6::R6Class( # nolint
           private$keep_na_srv("keep_na")
         }
       )
+    },
+    server_inputs_fixed = function(id) {
+      moduleServer(
+        id = id,
+        function(input, output, session) {
+          output$selection <- renderUI({
+            div(
+              class = "relative",
+              div(
+                span("Variable contains missing values only")
+              )
+            )
+          })
+          NULL
+        }
+      )
+    },
+
+    # @description
+    # Server module to display filter summary
+    # Doesn't render anything
+    content_summary = function(id) {
+      tags$span("All empty")
     }
   )
 )

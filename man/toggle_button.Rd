@@ -11,7 +11,7 @@ toggle_icon(input_id, icons, one_way = FALSE)
 toggle_title(input_id, titles, one_way = FALSE)
 }
 \arguments{
-\item{input_id}{\code{character(1)} (namespaced) id of the button}
+\item{input_id}{\code{character(1)} (name-spaced) id of the button}
 
 \item{icons, titles}{\code{character(2)} vector specifying values between which to toggle}
 
@@ -37,13 +37,6 @@ which may contain a child \verb{<i>} tag that specifies an icon to be displayed.
 \examples{
 \dontrun{
 
-# continuously switch between right- and down-pointing chevrons
-toggle_icon("toggle_element", c("fa-angle-right", "fa-angle-down"))
-
-# switch right- to down-pointing chevron
-toggle_icon("toggle_element", c("fa-angle-right", "fa-angle-down"), one_way = TRUE)
-}
-
 library(shiny)
 
 ui <- fluidPage(
@@ -59,30 +52,37 @@ ui <- fluidPage(
 )
 
 server <- function(input, output, session) {
+  observeEvent(input$hide_content,
+    {
+      shinyjs::hide("content")
+      toggle_icon("toggle_content", c("fa-angle-down", "fa-angle-right"), one_way = TRUE)
+    },
+    ignoreInit = TRUE
+  )
 
-  observeEvent(input$hide_content, {
-    shinyjs::hide("content")
-    toggle_icon("toggle_content", c("fa-angle-down", "fa-angle-right"), one_way = TRUE)
-  }, ignoreInit = TRUE)
+  observeEvent(input$show_content,
+    {
+      shinyjs::show("content")
+      toggle_icon("toggle_content", c("fa-angle-right", "fa-angle-down"), one_way = TRUE)
+    },
+    ignoreInit = TRUE
+  )
 
-  observeEvent(input$show_content, {
-    shinyjs::show("content")
-    toggle_icon("toggle_content", c("fa-angle-right", "fa-angle-down"), one_way = TRUE)
-  }, ignoreInit = TRUE)
-
-  observeEvent(input$toggle_content, {
-    shinyjs::toggle("content")
-    toggle_icon("toggle_content", c("fa-angle-right", "fa-angle-down"))
-  }, ignoreInit = TRUE)
+  observeEvent(input$toggle_content,
+    {
+      shinyjs::toggle("content")
+      toggle_icon("toggle_content", c("fa-angle-right", "fa-angle-down"))
+    },
+    ignoreInit = TRUE
+  )
 
   output$printout <- renderPrint({
     head(faithful, 10)
   })
-
 }
-
 if (interactive()) {
   shinyApp(ui, server)
+}
 }
 
 }

@@ -7,7 +7,6 @@ MAEFilteredDataset <- R6::R6Class( # nolint
 
   # public methods ----
   public = list(
-
     #' @description
     #' Initialize `MAEFilteredDataset` object
     #'
@@ -35,8 +34,8 @@ MAEFilteredDataset <- R6::R6Class( # nolint
       private$add_filter_states(
         filter_states = init_filter_states(
           data = dataset,
+          data_reactive = private$data_filtered_fun,
           dataname = dataname,
-          varlabels = self$get_varlabels(),
           datalabel = "subjects",
           keys = self$get_keys()
         ),
@@ -48,105 +47,18 @@ MAEFilteredDataset <- R6::R6Class( # nolint
       lapply(
         experiment_names,
         function(experiment_name) {
+          data_reactive <- function(sid = "") private$data_filtered_fun(sid)[[experiment_name]]
           private$add_filter_states(
             filter_states = init_filter_states(
               data = dataset[[experiment_name]],
-              dataname = sprintf('%s[["%s"]]', dataname, experiment_name),
+              data_reactive = data_reactive,
+              dataname = dataname,
               datalabel = experiment_name
             ),
             id = experiment_name
           )
         }
       )
-    },
-
-    #' @description
-    #' Get filter expression
-    #'
-    #' This functions returns filter calls equivalent to selected items
-    #' within each of `filter_states`. Configuration of the calls is constant and
-    #' depends on `filter_states` type and order which are set during initialization.
-    #' This class contains multiple `FilterStates`:
-    #' \itemize{
-    #'   \item{`colData(dataset)`}{for this object single `MAEFilterStates`
-    #'   which returns `subsetByColData` call}
-    #'   \item{experiments}{for each experiment single `SEFilterStates` and
-    #'   `FilterStates_matrix`, both returns `subset` call}
-    #' }
-    #' @return filter `call` or `list` of filter calls
-    get_call = function() {
-      filter_call <- Filter(
-        f = Negate(is.null),
-        x = lapply(
-          self$get_filter_states(),
-          function(x) x$get_call()
-        )
-      )
-      if (length(filter_call) == 0) {
-        return(NULL)
-      }
-      filter_call
-    },
-
-    #' @description
-    #' Gets labels of variables in the data
-    #'
-    #' Variables are the column names of the data.
-    #' Either, all labels must have been provided for all variables
-    #' in `set_data` or `NULL`.
-    #'
-    #' @param variables (`character` vector) variables to get labels for;
-    #'   if `NULL`, for all variables in data
-    #' @return (`character` or `NULL`) variable labels, `NULL` if `column_labels`
-    #'   attribute does not exist for the data
-    get_varlabels = function(variables = NULL) {
-      checkmate::assert_character(variables, null.ok = TRUE, any.missing = FALSE)
-
-      labels <- vapply(
-        X = SummarizedExperiment::colData(private$dataset),
-        FUN.VALUE = character(1),
-        FUN = function(x) {
-          label <- attr(x, "label")
-          if (length(label) != 1) {
-            NA_character_
-          } else {
-            label
-          }
-        }
-      )
-
-      if (is.null(labels)) {
-        return(NULL)
-      }
-      if (!is.null(variables)) labels <- labels[names(labels) %in% variables]
-      labels
-    },
-
-    #' @description
-    #' Get filter overview rows of a dataset
-    #' @param filtered_dataset (`MultiAssayExperiment`) object to calculate filter overview statistics on.
-    #' @return (`matrix`) matrix of observations and subjects
-    get_filter_overview_info = function(filtered_dataset = self$get_dataset()) {
-      names_exps <- paste0("- ", names(self$get_dataset()))
-      mae_and_exps <- c(self$get_dataname(), names_exps)
-
-      df <- cbind(
-        private$get_filter_overview_nobs(filtered_dataset),
-        self$get_filter_overview_nsubjs(filtered_dataset)
-      )
-
-      rownames(df) <- mae_and_exps
-      colnames(df) <- c("Obs", "Subjects")
-
-      df
-    },
-
-    #' @description
-    #' Gets variable names for the filtering.
-    #'
-    #' @return (`character(0)`)
-    get_filterable_varnames = function() {
-      character(0)
     },
 
     #' @description
@@ -157,86 +69,89 @@ MAEFilteredDataset <- R6::R6Class( # nolint
     #'  kept in `private$filter_states`. For this object they are `"subjects"` and
     #'  names of the experiments. Values of initial state should be relevant
     #'  to the referred column.
-    #' @param ... ignored.
+    #'
     #' @examples
     #' utils::data(miniACC, package = "MultiAssayExperiment")
     #' dataset <- teal.slice:::MAEFilteredDataset$new(miniACC, "MAE")
-    #' fs <- list(
-    #'   subjects = list(
-    #'     years_to_birth = list(selected = c(30, 50), keep_na = TRUE, keep_inf = FALSE),
-    #'     vital_status = list(selected = "1", keep_na = FALSE),
-    #'     gender = list(selected = "female", keep_na = TRUE)
+    #' fs <- filter_settings(
+    #'   filter_var(
+    #'     dataname = "MAE", varname = "years_to_birth", selected = c(30, 50), keep_na = TRUE
     #'   ),
-    #'   RPPAArray = list(
-    #'     subset = list(ARRAY_TYPE = list(selected = "", keep_na = TRUE))
+    #'   filter_var(
+    #'     dataname = "MAE", varname = "vital_status", selected = "1", keep_na = FALSE
+    #'   ),
+    #'   filter_var(
+    #'     dataname = "MAE", varname = "gender", selected = "female", keep_na = TRUE
+    #'   ),
+    #'   filter_var(
+    #'     dataname = "MAE", varname = "ARRAY_TYPE", selected = "", keep_na = TRUE
     #'   )
     #' )
-    #' shiny::isolate(dataset$set_filter_state(state = fs))
+    #' dataset$set_filter_state(state = fs)
     #' shiny::isolate(dataset$get_filter_state())
-    #' @return `NULL`
-    set_filter_state = function(state, ...) {
-      checkmate::assert_list(state)
-      checkmate::assert_subset(names(state), c(names(self$get_filter_states())))
+    #'
+    #' @return `NULL` invisibly
+    #'
+    set_filter_state = function(state) {
+      shiny::isolate({
+        logger::log_trace("{ class(self)[1] }$set_filter_state initializing, dataname: { private$dataname }")
+        checkmate::assert_class(state, "teal_slices")
+        lapply(state, function(x) {
+          checkmate::assert_true(x$dataname == private$dataname, .var.name = "dataname matches private$dataname")
+        })
 
-      logger::log_trace(
-        sprintf(
-          "MAEFilteredDataset$set_filter_state setting up filters of variable %s, dataname: %s",
-          paste(names(state), collapse = ", "),
-          self$get_dataname()
-        )
-      )
-      data <- self$get_dataset()
-      for (fs_name in names(state)) {
-        fs <- self$get_filter_states()[[fs_name]]
-        fs$set_filter_state(
-          state = state[[fs_name]],
-          data = `if`(fs_name == "subjects", data, data[[fs_name]])
-        )
-      }
+        # determine target datalabels (defined in teal_slices)
+        datalabels <- slices_field(state, "datalabel")
+        slot_names <- names(private$get_filter_states())
+        excluded_filters <- setdiff(datalabels, slot_names)
+        if (length(excluded_filters)) {
+          stop(sprintf(
+            "%s doesn't contain elements soecified in 'datalabel': %s\n'datalabel' should be a subset of: %s",
+            private$dataname,
+            paste(excluded_filters, collapse = ", "),
+            paste(slot_names, collapse = ", ")
+          ))
+        }
 
-      logger::log_trace(
-        sprintf(
-          "MAEFilteredDataset$set_filter_state done setting filters of variable %s, dataname: %s",
-          paste(names(state), collapse = ", "),
-          self$get_dataname()
-        )
-      )
-      NULL
+        # set states on state_lists with corresponding datalabels
+        lapply(datalabels, function(datalabel) {
+          slices <- Filter(function(x) identical(x$datalabel, datalabel), state)
+          private$get_filter_states()[[datalabel]]$set_filter_state(slices)
+        })
+
+        logger::log_trace("{ class(self)[1] }$set_filter_state initialized, dataname: { private$dataname }")
+
+        invisible(NULL)
+      })
     },
 
-    #' @description Remove one or more `FilterState` of a `MAEFilteredDataset`
+    #' @description
+    #' Remove one or more `FilterState` of a `MAEFilteredDataset`
     #'
-    #' @param state_id (`list`)\cr
-    #'  Named list of variables to remove their `FilterState`.
+    #' @param state (`teal_slices`)\cr
+    #'   specifying `FilterState` objects to remove;
+    #'   `teal_slice`s may contain only `dataname` and `varname`, other elements are ignored
     #'
-    #' @return `NULL`
+    #' @return `NULL` invisibly
     #'
-    remove_filter_state = function(state_id) {
-      checkmate::assert_list(state_id, names = "unique")
-      checkmate::assert_subset(names(state_id), c(names(self$get_filter_states())))
+    remove_filter_state = function(state) {
+      shiny::isolate({
+        checkmate::assert_class(state, "teal_slices")
 
-      logger::log_trace(
-        sprintf(
-          "MAEFilteredDataset$remove_filter_state removing filters of variable %s, dataname: %s",
-          state_id,
-          self$get_dataname()
-        )
-      )
+        logger::log_trace("{ class(self)[1] }$remove_filter_state removing filter(s), dataname: { private$dataname }")
 
-      for (fs_name in names(state_id)) {
-        fdata_filter_state <- self$get_filter_states()[[fs_name]]
-        fdata_filter_state$remove_filter_state(
-          `if`(fs_name == "subjects", state_id[[fs_name]][[1]], state_id[[fs_name]])
-        )
-      }
-      logger::log_trace(
-        sprintf(
-          "MAEFilteredDataset$remove_filter_state done removing filters of variable %s, dataname: %s",
-          state_id,
-          self$get_dataname()
-        )
-      )
-      invisible(NULL)
+        datalabels <- slices_field(state, "datalabel")
+        current_states <- shiny::isolate(self$get_filter_state())
+
+        lapply(datalabels, function(datalabel) {
+          slice <- Filter(function(x) identical(x$datalabel, datalabel), state)
+          private$get_filter_states()[[datalabel]]$remove_filter_state(slice)
+        })
+
+        logger::log_trace("{ class(self)[1] }$remove_filter_state removed filter(s), dataname: { private$dataname }")
+
+        invisible(NULL)
+      })
     },
 
     #' @description
@@ -247,7 +162,8 @@ MAEFilteredDataset <- R6::R6Class( # nolint
     #'  identifier of the element - preferably containing dataset name
     #'
     #' @return function - shiny UI module
-    ui_add_filter_state = function(id) {
+    #'
+    ui_add = function(id) {
       ns <- NS(id)
       data <- self$get_dataset()
       experiment_names <- names(data)
@@ -257,10 +173,7 @@ MAEFilteredDataset <- R6::R6Class( # nolint
         br(),
         HTML("&#9658;"),
         tags$label("Add subjects filter"),
-        self$get_filter_states("subjects")$ui_add_filter_state(
-          id = ns("subjects"),
-          data = data
-        ),
+        private$get_filter_states()[["subjects"]]$ui_add(id = ns("subjects")),
         tagList(
           lapply(
             experiment_names,
@@ -268,10 +181,7 @@ MAEFilteredDataset <- R6::R6Class( # nolint
               tagList(
                 HTML("&#9658;"),
                 tags$label("Add", tags$code(experiment_name), "filter"),
-                self$get_filter_states(experiment_name)$ui_add_filter_state(
-                  id = ns(experiment_name),
-                  data = data[[experiment_name]]
-                )
+                private$get_filter_states()[[experiment_name]]$ui_add(id = ns(experiment_name))
               )
             }
           )
@@ -280,116 +190,47 @@ MAEFilteredDataset <- R6::R6Class( # nolint
     },
 
     #' @description
-    #' Server module to add filter variable for this dataset
-    #'
-    #' Server module to add filter variable for this dataset.
-    #' For this class `srv_add_filter_state` calls multiple modules
-    #' of the same name from `FilterStates` as `MAEFilteredDataset`
-    #' contains one `FilterStates` object for `colData` and one for each
-    #' experiment.
-    #'
-    #' @param id (`character(1)`)\cr
-    #'   an ID string that corresponds with the ID used to call the module's UI function.
-    #' @param ... ignored.
-    #' @return `moduleServer` function which returns `NULL`
-    srv_add_filter_state = function(id, ...) {
-      moduleServer(
-        id = id,
-        function(input, output, session) {
-          logger::log_trace(paste(
-            "MAEFilteredDataset$srv_add_filter_state initializing,",
-            "dataname: { deparse1(self$get_dataname()) }"
-          ))
-          data <- self$get_dataset()
-          self$get_filter_states("subjects")$srv_add_filter_state(
-            id = "subjects",
-            data = data # MultiAssayExperiment
-            # ignoring vars_include
-          )
+    #' Get filter overview rows of a dataset
+    #' @return (`matrix`) matrix of observations and subjects
+    get_filter_overview = function() {
+      data <- self$get_dataset()
+      data_filtered <- self$get_dataset(TRUE)
+      experiment_names <- names(data)
 
-          experiment_names <- names(data)
-          lapply(
-            experiment_names,
-            function(experiment_name) {
-              self$get_filter_states(experiment_name)$srv_add_filter_state(
-                id = experiment_name,
-                data = data[[experiment_name]] # SummarizedExperiment or matrix
-                # ignoring vars_include
-              )
-            }
-          )
-          logger::log_trace(paste(
-            "MAEFilteredDataset$srv_add_filter_state initialized,",
-            "dataname: { deparse1(self$get_dataname()) }"
-          ))
-          NULL
-        }
+      mae_info <- data.frame(
+        dataname = private$dataname,
+        subjects = nrow(SummarizedExperiment::colData(data)),
+        subjects_filtered = nrow(SummarizedExperiment::colData(data_filtered()))
       )
-    },
 
-    #' @description
-    #' Gets filter overview subjects number
-    #' @param filtered_dataset (`MultiAssayExperiment`) object to calculate filter overview statistics on.
-    #' @param subject_keys (unused) in `MultiAssayExperiment` unique subjects are the rows of `colData` slot.
-    #' @return `list` with the number of subjects of filtered/non-filtered datasets.
-    get_filter_overview_nsubjs = function(filtered_dataset = self$get_dataset(), subject_keys) {
-      data_f <- filtered_dataset
-      data_nf <- self$get_dataset()
-      experiment_names <- names(data_nf)
+      experiment_obs_info <- do.call("rbind", lapply(
+        experiment_names,
+        function(experiment_name) {
+          data.frame(
+            dataname = sprintf("- %s", experiment_name),
+            obs = ncol(data[[experiment_name]]),
+            obs_filtered = ncol(data_filtered()[[experiment_name]])
+          )
+        }
+      ))
 
-      data_f_subjects_info <- nrow(SummarizedExperiment::colData(data_f))
-      data_nf_subjects_info <- nrow(SummarizedExperiment::colData(data_nf))
-      mae_total_subjects_info <- paste0(data_f_subjects_info, "/", data_nf_subjects_info)
-
-      get_experiment_rows <- function(mae, experiment) {
+      get_experiment_keys <- function(mae, experiment) {
         sample_subset <- subset(MultiAssayExperiment::sampleMap(mae), colname %in% colnames(experiment))
         length(unique(sample_subset$primary))
       }
 
-      subjects_info <- lapply(
+      experiment_subjects_info <- do.call("rbind", lapply(
         experiment_names,
         function(experiment_name) {
-          subjects_f_rows <- get_experiment_rows(data_f, data_f[[experiment_name]])
-          subjects_nf_rows <- get_experiment_rows(data_nf, data_nf[[experiment_name]])
-
-          subjects_info <- paste0(subjects_f_rows, "/", subjects_nf_rows)
-          subjects_info
+          data.frame(
+            subjects = get_experiment_keys(data, data[[experiment_name]]),
+            subjects_filtered = get_experiment_keys(data_filtered(), data_filtered()[[experiment_name]])
+          )
         }
-      )
+      ))
 
-      append(
-        list(mae_total_subjects_info),
-        subjects_info
-      )
-    }
-  ),
-
-  # private members ----
-  private = list(
-
-    # Gets filter overview observations number and returns a
-    # list of the number of observations of filtered/non-filtered datasets
-    get_filter_overview_nobs = function(filtered_dataset) {
-      data_f <- filtered_dataset
-      data_nf <- self$get_dataset()
-      experiment_names <- names(data_nf)
-      mae_total_data_info <- ""
-
-      data_info <- lapply(
-        experiment_names,
-        function(experiment_name) {
-          data_f_rows <- ncol(data_f[[experiment_name]])
-          data_nf_rows <- ncol(data_nf[[experiment_name]])
-
-          data_info <- paste0(data_f_rows, "/", data_nf_rows)
-          data_info
-        }
-      )
-
-      append(
-        list(mae_total_data_info),
-        data_info
-      )
+      experiment_info <- cbind(experiment_obs_info, experiment_subjects_info)
+      dplyr::bind_rows(mae_info, experiment_info)
     }
   )
 )

@@ -7,33 +7,45 @@
 #'
 #' @examples
 #' filter_state <- teal.slice:::RangeFilterState$new(
-#'   c(NA, Inf, seq(1:10)),
-#'   varname = "x",
-#'   dataname = "data",
-#'   extract_type = character(0)
+#'   x = c(NA, Inf, seq(1:10)),
+#'   slice = filter_var(varname = "x", dataname = "data")
 #' )
-#' isolate(filter_state$get_call())
-#' isolate(filter_state$set_selected(c(3L, 8L)))
-#' isolate(filter_state$set_keep_na(TRUE))
-#' isolate(filter_state$set_keep_inf(TRUE))
-#' isolate(filter_state$get_call())
+#' shiny::isolate(filter_state$get_call())
+#' filter_state$set_state(
+#'   filter_var(
+#'     dataname = "data",
+#'     varname = "x",
+#'     selected = c(3L, 8L),
+#'     keep_na = TRUE,
+#'     keep_inf = TRUE
+#'   )
+#' )
+#' shiny::isolate(filter_state$get_call())
 #'
 #' \dontrun{
 #' # working filter in an app
 #' library(shiny)
+#' library(shinyjs)
 #'
 #' data_range <- c(runif(100, 0, 1), NA, Inf)
-#' filter_state_range <- RangeFilterState$new(
+#' fs <- teal.slice:::RangeFilterState$new(
 #'   x = data_range,
-#'   varname = "variable",
-#'   varlabel = "label"
+#'   slice = filter_var(
+#'     dataname = "data",
+#'     varname = "x",
+#'     selected = c(0.15, 0.93),
+#'     keep_na = TRUE,
+#'     keep_inf = TRUE
+#'   )
 #' )
-#' filter_state_range$set_state(list(selected = c(0.15, 0.93), keep_na = TRUE, keep_inf = TRUE))
 #'
 #' ui <- fluidPage(
+#'   useShinyjs(),
+#'   include_css_files(pattern = "filter-panel"),
+#'   include_js_files(pattern = "count-bar-labels"),
 #'   column(4, div(
 #'     h4("RangeFilterState"),
-#'     isolate(filter_state_range$ui("fs"))
+#'     fs$ui("fs")
 #'   )),
 #'   column(4, div(
 #'     id = "outputs", # div id is needed for toggling the element
@@ -57,20 +69,42 @@
 #' )
 #'
 #' server <- function(input, output, session) {
-#'   filter_state_range$server("fs")
-#'   output$condition_range <- renderPrint(filter_state_range$get_call())
-#'   output$formatted_range <- renderText(filter_state_range$format())
-#'   output$unformatted_range <- renderPrint(filter_state_range$get_state())
+#'   fs$server("fs")
+#'   output$condition_range <- renderPrint(fs$get_call())
+#'   output$formatted_range <- renderText(fs$format())
+#'   output$unformatted_range <- renderPrint(fs$get_state())
 #'   # modify filter state programmatically
-#'   observeEvent(input$button1_range, filter_state_range$set_keep_na(FALSE))
-#'   observeEvent(input$button2_range, filter_state_range$set_keep_na(TRUE))
-#'   observeEvent(input$button3_range, filter_state_range$set_keep_inf(FALSE))
-#'   observeEvent(input$button4_range, filter_state_range$set_keep_inf(TRUE))
-#'   observeEvent(input$button5_range, filter_state_range$set_selected(c(0.2, 0.74)))
-#'   observeEvent(input$button6_range, filter_state_range$set_selected(c(0, 1)))
+#'   observeEvent(
+#'     input$button1_range,
+#'     fs$set_state(filter_var(dataname = "data", varname = "x", keep_na = FALSE))
+#'   )
+#'   observeEvent(
+#'     input$button2_range,
+#'     fs$set_state(filter_var(dataname = "data", varname = "x", keep_na = TRUE))
+#'   )
+#'   observeEvent(
+#'     input$button3_range,
+#'     fs$set_state(filter_var(dataname = "data", varname = "x", keep_inf = FALSE))
+#'   )
+#'   observeEvent(
+#'     input$button4_range,
+#'     fs$set_state(filter_var(dataname = "data", varname = "x", keep_inf = TRUE))
+#'   )
+#'   observeEvent(
+#'     input$button5_range,
+#'     fs$set_state(
+#'       filter_var(dataname = "data", varname = "x", selected = c(0.2, 0.74))
+#'     )
+#'   )
+#'   observeEvent(
+#'     input$button6_range,
+#'     fs$set_state(filter_var(dataname = "data", varname = "x", selected = c(0, 1)))
+#'   )
 #'   observeEvent(
 #'     input$button0_range,
-#'     filter_state_range$set_state(list(selected = c(0.15, 0.93), keep_na = TRUE, keep_inf = TRUE))
+#'     fs$set_state(
+#'       filter_var("data", "variable", selected = c(0.15, 0.93), keep_na = TRUE, keep_inf = TRUE)
+#'     )
 #'   )
 #' }
 #'
@@ -87,96 +121,107 @@ RangeFilterState <- R6::R6Class( # nolint
   public = list(
 
     #' @description
-    #' Initialize a `FilterState` object
+    #' Initialize a `FilterState` object for range selection
     #' @param x (`numeric`)\cr
     #'   values of the variable used in filter
-    #' @param varname (`character`, `name`)\cr
-    #'   name of the variable
-    #' @param varlabel (`character(1)`)\cr
-    #'   label of the variable (optional).
-    #' @param dataname (`character(1)`)\cr
-    #'   optional name of dataset where `x` is taken from
+    #' @param x_reactive (`reactive`)\cr
+    #'   returning vector of the same type as `x`. Is used to update
+    #'   counts following the change in values of the filtered dataset.
+    #'   If it is set to `reactive(NULL)` then counts based on filtered
+    #'   dataset are not shown.
+    #' @param slice (`teal_slice`)\cr
+    #'   object created using [filter_var()]. `teal_slice` is stored
+    #'   in the class and `set_state` directly manipulates values within `teal_slice`. `get_state`
+    #'   returns `teal_slice` object which can be reused in other places. Beware, that `teal_slice`
+    #'   is an immutable object which means that changes in particular object are automatically
+    #'   reflected in all places which refer to the same `teal_slice`.
     #' @param extract_type (`character(0)`, `character(1)`)\cr
-    #' whether condition calls should be prefixed by dataname. Possible values:
+    #' whether condition calls should be prefixed by `dataname`. Possible values:
     #' \itemize{
     #' \item{`character(0)` (default)}{ `varname` in the condition call will not be prefixed}
     #' \item{`"list"`}{ `varname` in the condition call will be returned as `<dataname>$<varname>`}
     #' \item{`"matrix"`}{ `varname` in the condition call will be returned as `<dataname>[, <varname>]`}
     #' }
+    #' @param ... additional arguments to be saved as a list in `private$extras` field
+    #'
     initialize = function(x,
-                          varname,
-                          varlabel = character(0),
-                          dataname = NULL,
-                          extract_type = character(0)) {
-      checkmate::assert_numeric(x, all.missing = FALSE)
-      if (!any(is.finite(x))) stop("\"x\" contains no finite values")
-
-      super$initialize(x, varname, varlabel, dataname, extract_type)
-      private$inf_count <- sum(is.infinite(x))
-      private$is_integer <- checkmate::test_integerish(x)
-      private$keep_inf <- reactiveVal(FALSE)
-
-      x_range <- range(x, finite = TRUE)
-      x_pretty <- pretty(x_range, 100L)
-
-      if (identical(diff(x_range), 0)) {
-        private$set_choices(x_range)
-        private$slider_ticks <- signif(x_range, digits = 10)
-        private$slider_step <- NULL
-        self$set_selected(x_range)
-      } else {
-        private$set_choices(range(x_pretty))
-        private$slider_ticks <- signif(x_pretty, digits = 10)
-        private$slider_step <- signif(private$get_pretty_range_step(x_pretty), digits = 10)
-        self$set_selected(range(x_pretty))
-      }
-
-      private$histogram_data <- if (sum(is.finite(x)) >= 2) {
-        as.data.frame(
-          stats::density(x, na.rm = TRUE, n = 100)[c("x", "y")] # 100 bins only
+                          x_reactive = reactive(NULL),
+                          extract_type = character(0),
+                          slice) {
+      shiny::isolate({
+        checkmate::assert_numeric(x, all.missing = FALSE)
+        if (!any(is.finite(x))) stop("\"x\" contains no finite values")
+        super$initialize(x = x, x_reactive = x_reactive, slice = slice, extract_type = extract_type)
+        private$is_integer <- checkmate::test_integerish(x)
+        private$inf_count <- sum(is.infinite(x))
+        private$inf_filtered_count <- reactive(
+          if (!is.null(private$x_reactive())) sum(is.infinite(private$x_reactive()))
         )
-      } else {
-        data.frame(x = NA_real_, y = NA_real_)
-      }
 
-      return(invisible(self))
-    },
+        checkmate::assert_numeric(slice$choices, null.ok = TRUE)
+        if (is.null(slice$keep_inf) && any(is.infinite(x))) slice$keep_inf <- TRUE
 
-    #' @description
-    #' Returns a formatted string representing this `RangeFilterState`.
-    #'
-    #' @param indent (`numeric(1)`)
-    #'        the number of spaces before after each new line character of the formatted string.
-    #'        Default: 0
-    #' @return `character(1)` the formatted string
-    #'
-    format = function(indent = 0) {
-      checkmate::assert_number(indent, finite = TRUE, lower = 0)
+        private$set_choices(slice$choices)
+        if (is.null(slice$selected)) slice$selected <- slice$choices
+        private$set_selected(slice$selected)
 
-      vals <- self$get_selected()
-      sprintf(
-        "%sFiltering on: %s\n%1$s  Selected range: %s - %s\n%1$s  Include missing values: %s",
-        format("", width = indent),
-        private$varname,
-        format(vals[1], nsmall = 3),
-        format(vals[2], nsmall = 3),
-        format(self$get_keep_na())
-      )
-    },
+        private$is_integer <- checkmate::test_integerish(x)
+        private$inf_filtered_count <- reactive(
+          if (!is.null(private$x_reactive())) sum(is.infinite(private$x_reactive()))
+        )
+        private$inf_count <- sum(is.infinite(x))
 
-    #' @description
-    #' Answers the question of whether the current settings and values selected actually filters out any values.
-    #' @return logical scalar
-    is_any_filtered = function() {
-      if (!isTRUE(all.equal(self$get_selected(), private$choices))) {
-        TRUE
-      } else if (!isTRUE(self$get_keep_inf()) && private$inf_count > 0) {
-        TRUE
-      } else if (!isTRUE(self$get_keep_na()) && private$na_count > 0) {
-        TRUE
-      } else {
-        FALSE
-      }
+        private$plot_data <- list(
+          type = "histogram",
+          nbinsx = 50,
+          x = Filter(Negate(is.na), Filter(is.finite, private$x)),
+          color = I(fetch_bs_color("secondary")),
+          alpha = 0.2,
+          bingroup = 1,
+          showlegend = FALSE,
+          hoverinfo = "none"
+        )
+        private$plot_mask <- list(list(
+          type = "rect", fillcolor = rgb(1, 1, 1, .65), line = list(width = 0),
+          x0 = -0.5, x1 = 1.5, y0 = -0.5, y1 = 1.5, xref = "paper", yref = "paper"
+        ))
+        private$plot_layout <- reactive({
+          shapes <- private$get_shape_properties(private$get_selected())
+          list(
+            barmode = "overlay",
+            xaxis = list(
+              range = private$get_choices(),
+              rangeslider = list(thickness = 0),
+              showticklabels = TRUE,
+              ticks = "outside",
+              ticklen = 2,
+              tickmode = "auto",
+              nticks = 10
+            ),
+            yaxis = list(showgrid = FALSE, showticklabels = FALSE),
+            margin = list(b = 17, l = 0, r = 0, t = 0, autoexpand = FALSE),
+            plot_bgcolor = "#FFFFFF00",
+            paper_bgcolor = "#FFFFFF00",
+            shapes = shapes
+          )
+        })
+        private$plot_config <- reactive({
+          list(
+            doubleClick = "reset",
+            displayModeBar = FALSE,
+            edits = list(shapePosition = TRUE)
+          )
+        })
+        private$plot_filtered <- reactive({
+          finite_values <- Filter(is.finite, private$x_reactive())
+          list(
+            x = finite_values,
+            bingroup = 1,
+            color = I(fetch_bs_color("primary"))
+          )
+        })
+        invisible(self)
+      })
     },
 
     #' @description
@@ -184,112 +229,101 @@ RangeFilterState <- R6::R6Class( # nolint
     #' For this class returned call looks like
     #' `<varname> >= <min value> & <varname> <= <max value>` with
     #' optional `is.na(<varname>)` and `is.finite(<varname>)`.
+    #' @param dataname name of data set; defaults to `private$get_dataname()`
     #' @return (`call`)
-    get_call = function() {
+    #'
+    get_call = function(dataname) {
+      if (isFALSE(private$is_any_filtered())) {
+        return(NULL)
+      }
+      if (missing(dataname)) dataname <- private$get_dataname()
       filter_call <-
         call(
           "&",
-          call(">=", private$get_varname_prefixed(), self$get_selected()[1L]),
-          call("<=", private$get_varname_prefixed(), self$get_selected()[2L])
+          call(">=", private$get_varname_prefixed(dataname), private$get_selected()[1L]),
+          call("<=", private$get_varname_prefixed(dataname), private$get_selected()[2L])
         )
-      private$add_keep_na_call(private$add_keep_inf_call(filter_call))
+      private$add_keep_na_call(private$add_keep_inf_call(filter_call, dataname), dataname)
     },
 
     #' @description
     #' Returns current `keep_inf` selection
     #' @return (`logical(1)`)
     get_keep_inf = function() {
-      private$keep_inf()
-    },
-
-    #' @description
-    #' Returns the filtering state.
-    #'
-    #' @return `list` containing values taken from the reactive fields:
-    #' * `selected` (`numeric(2)`) range of the filter.
-    #' * `keep_na` (`logical(1)`) whether `NA` should be kept.
-    #' * `keep_inf` (`logical(1)`)  whether `Inf` should be kept.
-    get_state = function() {
-      list(
-        selected = self$get_selected(),
-        keep_na = self$get_keep_na(),
-        keep_inf = self$get_keep_inf()
-      )
-    },
-
-    #' @description
-    #' Set if `Inf` should be kept
-    #' @param value (`logical(1)`)\cr
-    #'  Value(s) which come from the filter selection. Value is set in `server`
-    #'  modules after selecting check-box-input in the shiny interface. Values are set to
-    #'  `private$keep_inf` which is reactive.
-    set_keep_inf = function(value) {
-      checkmate::assert_flag(value)
-      private$keep_inf(value)
-      logger::log_trace(
-        sprintf(
-          "%s$set_keep_inf of variable %s set to %s, dataname: %s.",
-          class(self)[1],
-          private$varname,
-          value,
-          private$dataname
-        )
-      )
-    },
-
-    #' @description
-    #' Set state
-    #' @param state (`list`)\cr
-    #'  contains fields relevant for a specific class
-    #' \itemize{
-    #' \item{`selected`}{ defines initial selection}
-    #' \item{`keep_na` (`logical`)}{ defines whether to keep or remove `NA` values}
-    #' \item{`keep_inf` (`logical`)}{ defines whether to keep or remove `Inf` values}
-    #' }
-    set_state = function(state) {
-      stopifnot(is.list(state) && all(names(state) %in% c("selected", "keep_na", "keep_inf")))
-      if (!is.null(state$keep_inf)) {
-        self$set_keep_inf(state$keep_inf)
-      }
-      super$set_state(state[names(state) %in% c("selected", "keep_na")])
-      invisible(NULL)
-    },
-
-    #' @description
-    #' Sets the selected values of this `RangeFilterState`.
-    #'
-    #' @param value (`numeric(2)`) the two-elements array of the lower and upper bound
-    #'   of the selected range. Must not contain NA values.
-    #'
-    #' @returns invisibly `NULL`
-    #'
-    #' @note Casts the passed object to `numeric` before validating the input
-    #' making it possible to pass any object coercible to `numeric` to this method.
-    #'
-    #' @examples
-    #' filter <- teal.slice:::RangeFilterState$new(c(1, 2, 3, 4), varname = "name")
-    #' filter$set_selected(c(2, 3))
-    #'
-    set_selected = function(value) {
-      super$set_selected(value)
+      private$teal_slice$keep_inf
     }
   ),
 
   # private fields----
   private = list(
-    histogram_data = data.frame(),
-    keep_inf = NULL, # because it holds reactiveVal
     inf_count = integer(0),
+    inf_filtered_count = NULL,
     is_integer = logical(0),
-    slider_step = numeric(0), # step for the slider input widget, calculated from input data (x)
-    slider_ticks = numeric(0), # allowed values for the slider input widget, calculated from input data (x)
+    numeric_step = numeric(0), # step for the slider input widget, calculated from input data (x)
+    plot_data = NULL,
+    plot_mask = list(),
+    plot_layout = NULL,
+    plot_config = NULL,
+    plot_filtered = NULL,
 
     # private methods ----
+
+    set_choices = function(choices) {
+      x <- private$x[is.finite(private$x)]
+      if (is.null(choices)) {
+        choices <- range(x)
+      } else {
+        choices_adjusted <- c(max(choices[1L], min(x)), min(choices[2L], max(x)))
+        if (any(choices != choices_adjusted)) {
+          warning(sprintf(
+            "Choices adjusted (some values outside of variable range). Varname: %s, dataname: %s.",
+            private$get_varname(), private$get_dataname()
+          ))
+          choices <- choices_adjusted
+        }
+        if (choices[1L] > choices[2L]) {
+          warning(sprintf(
+            "Invalid choices: lower is higher / equal to upper, or not in range of variable values.
+            Setting defaults. Varname: %s, dataname: %s.",
+            private$get_varname(), private$get_dataname()
+          ))
+          choices <- range(x)
+        }
+      }
+
+      private$set_is_choice_limited(private$x, choices)
+      private$x <- private$x[
+        (private$x >= choices[1L] & private$x <= choices[2L]) | is.na(private$x) | !is.finite(private$x)
+      ]
+
+      x_range <- range(private$x, finite = TRUE)
+
+      # Required for displaying ticks on the slider, can modify choices!
+      if (identical(diff(x_range), 0)) {
+        choices <- x_range
+      } else {
+        x_pretty <- pretty(x_range, 100L)
+        choices <- range(x_pretty)
+        private$numeric_step <- signif(private$get_pretty_range_step(x_pretty), digits = 10)
+      }
+      private$teal_slice$choices <- choices
+      invisible(NULL)
+    },
+
+    # @description
+    # Check whether the initial choices filter out some values of x and set the flag in case.
+    set_is_choice_limited = function(xl, choices) {
+      xl <- xl[!is.na(xl)]
+      xl <- xl[is.finite(xl)]
+      private$is_choice_limited <- (any(xl < choices[1L]) | any(xl > choices[2L]))
+      invisible(NULL)
+    },
+
     # Adds is.infinite(varname) before existing condition calls if keep_inf is selected
     # returns a call
-    add_keep_inf_call = function(filter_call) {
-      if (isTRUE(self$get_keep_inf())) {
-        call("|", call("is.infinite", private$get_varname_prefixed()), filter_call)
+    add_keep_inf_call = function(filter_call, dataname) {
+      if (isTRUE(private$get_keep_inf())) {
+        call("|", call("is.infinite", private$get_varname_prefixed(dataname)), filter_call)
       } else {
         filter_call
       }
@@ -316,8 +350,8 @@ RangeFilterState <- R6::R6Class( # nolint
         stop(
           sprintf(
             "value of the selection for `%s` in `%s` should be a numeric",
-            self$get_varname(),
-            self$get_dataname()
+            private$get_varname(),
+            private$get_dataname()
           )
         )
       }
@@ -329,24 +363,42 @@ RangeFilterState <- R6::R6Class( # nolint
     cast_and_validate = function(values) {
       if (!is.atomic(values)) stop("Values to set must be an atomic vector.")
       values <- as.numeric(values)
-      if (any(is.na(values))) stop("The array of set values must contain values coercible to numeric.")
-      if (length(values) != 2) stop("The array of set values must have length two.")
+      if (any(is.na(values))) stop("Vector of set values must contain values coercible to numeric.")
+      if (length(values) != 2) stop("Vector of set values must have length two.")
+      if (values[1L] > values[2L]) stop("Vector of set values must be sorted.")
 
-      values_adjusted <- contain_interval(values, private$slider_ticks)
-      if (!isTRUE(all.equal(values, values_adjusted))) {
-        logger::log_warn(sprintf(
-          paste(
-            "Programmatic range specification on %s was adjusted to existing slider ticks.",
-            "It is now broader in order to contain the specified values."
-          ),
-          private$varname
-        ))
-      }
-      values_adjusted
-    },
-    # for numeric ranges selecting out of bound values is allowed
-    remove_out_of_bound_values = function(values) {
       values
+    },
+    # Trim selection to limits imposed by private$get_choices()
+    remove_out_of_bound_values = function(values) {
+      if (values[1L] < private$get_choices()[1L]) values[1L] <- private$get_choices()[1L]
+      if (values[2L] > private$get_choices()[2L]) values[2L] <- private$get_choices()[2L]
+      values
+    },
+
+    # Answers the question of whether the current settings and values selected actually filters out any values.
+    # @return logical scalar
+    is_any_filtered = function() {
+      if (private$is_choice_limited) {
+        TRUE
+      } else if (!isTRUE(all.equal(private$get_selected(), private$get_choices()))) {
+        TRUE
+      } else if (!isTRUE(private$get_keep_inf()) && private$inf_count > 0) {
+        TRUE
+      } else if (!isTRUE(private$get_keep_na()) && private$na_count > 0) {
+        TRUE
+      } else {
+        FALSE
+      }
+    },
+
+    # obtain shape determination for histogram
+    # returns a list that is passed to plotly's layout.shapes property
+    get_shape_properties = function(values) {
+      list(
+        list(type = "line", x0 = values[1], x1 = values[1], y0 = -100, y1 = 100, yref = "paper"),
+        list(type = "line", x0 = values[2], x1 = values[2], y0 = -100, y1 = 100, yref = "paper")
+      )
     },
 
     # shiny modules ----
@@ -358,26 +410,70 @@ RangeFilterState <- R6::R6Class( # nolint
     #  id of shiny element
     ui_inputs = function(id) {
       ns <- NS(id)
-      fluidRow(
-        div(
-          class = "filterPlotOverlayRange",
-          plotOutput(ns("plot"), height = "100%")
-        ),
-        div(
-          class = "filterRangeSlider",
-          teal.widgets::optionalSliderInput(
-            inputId = ns("selection"),
-            label = NULL,
-            min = private$choices[1],
-            max = private$choices[2],
-            value = isolate(private$selected()),
-            step = private$slider_step,
-            width = "100%"
+      shiny::isolate({
+        ui_input <- shinyWidgets::numericRangeInput(
+          inputId = ns("selection_manual"),
+          label = NULL,
+          min = private$get_choices()[1L],
+          max = private$get_choices()[2L],
+          value = private$get_selected(),
+          step = private$numeric_step,
+          width = "100%"
+        )
+        tagList(
+          div(
+            class = "choices_state",
+            tags$head(tags$script(
+              # Inline JS code for popover functionality.
+              # Adding the script inline because when added from a file with include_js_files(),
+              # it only works in the first info_button instance and not others.
+              HTML(
+                '$(document).ready(function() {
+                  $("[data-toggle=\'popover\']").popover();
+
+                  $(document).on("click", function (e) {
+                    if (!$("[data-toggle=\'popover\']").is(e.target) &&
+                        $("[data-toggle=\'popover\']").has(e.target).length === 0 &&
+                        $(".popover").has(e.target).length === 0) {
+                      $("[data-toggle=\'popover\']").popover("hide");
+                    }
+                  });
+                });'
+              )
+            )),
+            div(
+              actionLink(
+                ns("plotly_info"),
+                label = NULL,
+                icon = icon("question-circle"),
+                "data-toggle" = "popover",
+                "data-html" = "true",
+                "data-placement" = "left",
+                "data-trigger" = "click",
+                "data-title" = "Plot actions",
+                "data-content" = "<p>
+                                  Drag vertical lines to set selection.<br>
+                                  Drag across plot to zoom in.<br>
+                                  Drag axis to pan.<br>
+                                  Double click to zoom out."
+              ),
+              style = "text-align: right; font-size: 0.7em; margin-bottom: -1em; position: relative; z-index: 9;"
+            ),
+            shinycssloaders::withSpinner(
+              plotly::plotlyOutput(ns("plot"), height = "50px"),
+              type = 4,
+              size = 0.25,
+              hide.ui = FALSE
+            )
+          ),
+          ui_input,
+          div(
+            class = "filter-card-body-keep-na-inf",
+            private$keep_inf_ui(ns("keep_inf")),
+            private$keep_na_ui(ns("keep_na"))
           )
-        ),
-        private$keep_inf_ui(ns("keep_inf")),
-        private$keep_na_ui(ns("keep_na"))
-      )
+        )
+      })
     },
 
     # @description
@@ -389,67 +485,200 @@ RangeFilterState <- R6::R6Class( # nolint
       moduleServer(
         id = id,
         function(input, output, session) {
-          logger::log_trace("RangeFilterState$server initializing, dataname: { private$dataname }")
+          logger::log_trace("RangeFilterState$server initializing, id: { private$get_id() }")
 
-          output$plot <- renderPlot(
-            bg = "transparent",
-            height = 25,
-            expr = {
-              ggplot2::ggplot(private$histogram_data) +
-                ggplot2::aes_string(x = "x", y = "y") +
-                ggplot2::geom_area(
-                  fill = grDevices::rgb(66 / 255, 139 / 255, 202 / 255),
-                  color = NA,
-                  alpha = 0.2
-                ) +
-                ggplot2::theme_void() +
-                ggplot2::scale_y_continuous(expand = c(0, 0)) +
-                ggplot2::scale_x_continuous(expand = c(0, 0))
-            }
-          )
+          # Capture manual input with debounce.
+          selection_manual <- debounce(reactive(input$selection_manual), 200)
 
-          # this observer is needed in the situation when private$selected has been
-          # changed directly by the api - then it's needed to rerender UI element
-          # to show relevant values
-          private$observers$selection_api <- observeEvent(
+          # Prepare for histogram construction.
+          plot_data <- c(private$plot_data, source = session$ns("histogram_plot"))
+
+          # Display histogram, adding a second trace that contains filtered data.
+          output$plot <- plotly::renderPlotly({
+            histogram <- do.call(plotly::plot_ly, plot_data)
+            histogram <- do.call(plotly::layout, c(list(p = histogram), private$plot_layout()))
+            histogram <- do.call(plotly::config, c(list(p = histogram), private$plot_config()))
+            histogram <- do.call(plotly::add_histogram, c(list(p = histogram), private$plot_filtered()))
+            histogram
+          })
+
+          # Dragging shapes (lines) on plot updates selection.
+          private$observers$relayout <-
+            observeEvent(
+              ignoreNULL = FALSE,
+              ignoreInit = TRUE,
+              eventExpr = plotly::event_data("plotly_relayout", source = session$ns("histogram_plot")),
+              handlerExpr = {
+                logger::log_trace("RangeFilterState$server@1 selection changed, id: { private$get_id() }")
+                event <- plotly::event_data("plotly_relayout", source = session$ns("histogram_plot"))
+                if (any(grepl("shapes", names(event)))) {
+                  line_positions <- private$get_selected()
+                  if (any(grepl("shapes[0]", names(event), fixed = TRUE))) {
+                    line_positions[1] <- event[["shapes[0].x0"]]
+                  } else if (any(grepl("shapes[1]", names(event), fixed = TRUE))) {
+                    line_positions[2] <- event[["shapes[1].x0"]]
+                  }
+                  # If one line was dragged past the other, abort action and reset lines.
+                  if (line_positions[1] > line_positions[2]) {
+                    showNotification(
+                      "Numeric range start value must be less than end value.",
+                      type = "warning"
+                    )
+                    plotly::plotlyProxyInvoke(
+                      plotly::plotlyProxy("plot"),
+                      "relayout",
+                      shapes = private$get_shape_properties(private$get_selected())
+                    )
+                    return(NULL)
+                  }
+
+                  private$set_selected(signif(line_positions, digits = 4L))
+                }
+              }
+            )
+
+          # Change in selection updates shapes (lines) on plot and numeric input.
+          private$observers$selection_api <-
+            observeEvent(
+              ignoreNULL = FALSE,
+              ignoreInit = TRUE,
+              eventExpr = private$get_selected(),
+              handlerExpr = {
+                logger::log_trace("RangeFilterState$server@2 state changed, id: {private$get_id() }")
+                if (!isTRUE(all.equal(private$get_selected(), selection_manual()))) {
+                  shinyWidgets::updateNumericRangeInput(
+                    session = session,
+                    inputId = "selection_manual",
+                    value = private$get_selected()
+                  )
+                }
+              }
+            )
+
+          # Manual input updates selection.
+          private$observers$selection_manual <- observeEvent(
             ignoreNULL = FALSE,
             ignoreInit = TRUE,
-            eventExpr = self$get_selected(),
+            eventExpr = selection_manual(),
             handlerExpr = {
-              if (!isTRUE(all.equal(input$selection, self$get_selected()))) {
-                updateSliderInput(
+              selection <- selection_manual()
+              # Abort and reset if non-numeric values is entered.
+              if (any(is.na(selection))) {
+                showNotification(
+                  "Numeric range values must be numbers.",
+                  type = "warning"
+                )
+                shinyWidgets::updateNumericRangeInput(
                   session = session,
-                  inputId = "selection",
-                  value = private$selected()
+                  inputId = "selection_manual",
+                  value = private$get_selected()
                 )
+                return(NULL)
               }
-            }
-          )
 
-          private$observers$selection <- observeEvent(
-            ignoreNULL = FALSE, # ignoreNULL: we don't want to ignore NULL when nothing is selected in `selectInput`
-            ignoreInit = TRUE, # ignoreInit: should not matter because we set the UI with the desired initial state
-            eventExpr = input$selection,
-            handlerExpr = {
-              if (!isTRUE(all.equal(input$selection, self$get_selected()))) {
-                self$set_selected(input$selection)
-              }
-              logger::log_trace(
-                sprintf(
-                  "RangeFilterState$server@3 selection of variable %s changed, dataname: %s",
-                  private$varname,
-                  private$dataname
+              # Abort and reset if reversed choices are specified.
+              if (selection[1] > selection[2]) {
+                showNotification(
+                  "Numeric range start value must be less than end value.",
+                  type = "warning"
                 )
-              )
+                shinyWidgets::updateNumericRangeInput(
+                  session = session,
+                  inputId = "selection_manual",
+                  value = private$get_selected()
+                )
+                return(NULL)
+              }
+
+
+              if (!isTRUE(all.equal(selection, private$get_selected()))) {
+                logger::log_trace("RangeFilterState$server@3 manual selection changed, id: { private$get_id() }")
+                private$set_selected(selection)
+              }
             }
           )
 
           private$keep_inf_srv("keep_inf")
           private$keep_na_srv("keep_na")
 
-          logger::log_trace("RangeFilterState$server initialized, dataname: { private$dataname }")
+          logger::log_trace("RangeFilterState$server initialized, id: { private$get_id() }")
           NULL
         }
+      )
+    },
+    server_inputs_fixed = function(id) {
+      moduleServer(
+        id = id,
+        function(input, output, session) {
+          logger::log_trace("RangeFilterState$server initializing, id: { private$get_id() }")
+
+          plot_config <- private$plot_config()
+          plot_config$staticPlot <- TRUE
+
+          output$plot <- plotly::renderPlotly({
+            histogram <- do.call(plotly::plot_ly, private$plot_data)
+            histogram <- do.call(plotly::layout, c(list(p = histogram), private$plot_layout()))
+            histogram <- do.call(plotly::config, c(list(p = histogram), plot_config))
+            histogram <- do.call(plotly::add_histogram, c(list(p = histogram), private$plot_filtered()))
+            histogram
+          })
+
+          output$selection <- renderUI({
+            shinycssloaders::withSpinner(
+              plotly::plotlyOutput(session$ns("plot"), height = "50px"),
+              type = 4,
+              size = 0.25
+            )
+          })
+
+          logger::log_trace("RangeFilterState$server initialized, id: { private$get_id() }")
+          NULL
+        }
+      )
+    },
+
+    # @description
+    # Server module to display filter summary
+    #  renders text describing selected range and
+    #  if NA or Inf are included also
+    # @return `shiny.tag` to include in the `ui_summary`
+    content_summary = function() {
+      selection <- private$get_selected()
+      tagList(
+        tags$span(shiny::HTML(selection[1], "&ndash;", selection[2]), class = "filter-card-summary-value"),
+        tags$span(
+          class = "filter-card-summary-controls",
+          if (isTRUE(private$get_keep_na()) && private$na_count > 0) {
+            tags$span(
+              class = "filter-card-summary-na",
+              "NA",
+              shiny::icon("check")
+            )
+          } else if (isFALSE(private$get_keep_na()) && private$na_count > 0) {
+            tags$span(
+              class = "filter-card-summary-na",
+              "NA",
+              shiny::icon("xmark")
+            )
+          } else {
+            NULL
+          },
+          if (isTRUE(private$get_keep_inf()) && private$inf_count > 0) {
+            tags$span(
+              class = "filter-card-summary-inf",
+              "Inf",
+              shiny::icon("check")
+            )
+          } else if (isFALSE(private$get_keep_inf()) && private$inf_count > 0) {
+            tags$span(
+              class = "filter-card-summary-inf",
+              "Inf",
+              shiny::icon("xmark")
+            )
+          } else {
+            NULL
+          }
+        )
       )
     },
 
@@ -460,11 +689,25 @@ RangeFilterState <- R6::R6Class( # nolint
     #  been created has some Inf values.
     keep_inf_ui = function(id) {
       ns <- NS(id)
+
       if (private$inf_count > 0) {
-        checkboxInput(
-          ns("value"),
-          sprintf("Keep Inf (%s)", private$inf_count),
-          value = self$get_keep_inf()
+        countmax <- private$na_count
+        countnow <- isolate(private$filtered_na_count())
+        ui_input <- checkboxInput(
+          inputId = ns("value"),
+          label = tags$span(
+            id = ns("count_label"),
+            make_count_text(
+              label = "Keep Inf",
+              countmax = countmax,
+              countnow = countnow
+            )
+          ),
+          value = isolate(private$get_keep_inf())
+        )
+        div(
+          uiOutput(ns("trigger_visible"), inline = TRUE),
+          ui_input
         )
       } else {
         NULL
@@ -474,45 +717,53 @@ RangeFilterState <- R6::R6Class( # nolint
     # @description
     # module to handle Inf values in the FilterState
     # @param shiny `id` parametr passed to moduleServer
-    #  module sets `private$keep_inf` according to the selection.
-    #  Module also updates a UI element if the `private$keep_inf` has been
+    #  module sets `private$teal_slice$keep_inf` according to the selection.
+    #  Module also updates a UI element if the `private$teal_slice$keep_inf` has been
     #  changed through the api
     keep_inf_srv = function(id) {
       moduleServer(id, function(input, output, session) {
-        # this observer is needed in the situation when private$keep_na has been
+        # 1. renderUI is used here as an observer which triggers only if output is visible
+        #  and if the reactive changes - reactive triggers only if the output is visible.
+        # 2. We want to trigger change of the labels only if reactive count changes (not underlying data)
+        output$trigger_visible <- renderUI({
+          updateCountText(
+            inputId = "count_label",
+            label = "Keep Inf",
+            countmax = private$inf_count,
+            countnow = private$inf_filtered_count()
+          )
+          NULL
+        })
+
+        # this observer is needed in the situation when private$teal_slice$keep_inf has been
         # changed directly by the api - then it's needed to rerender UI element
         # to show relevant values
         private$observers$keep_inf_api <- observeEvent(
           ignoreNULL = TRUE, # its not possible for range that NULL is selected
           ignoreInit = TRUE, # ignoreInit: should not matter because we set the UI with the desired initial state
-          eventExpr = self$get_keep_inf(),
+          eventExpr = private$get_keep_inf(),
           handlerExpr = {
-            if (!setequal(self$get_keep_inf(), input$value)) {
+            if (!setequal(private$get_keep_inf(), input$value)) {
+              logger::log_trace("RangeFilterState$keep_inf_srv@1 changed reactive value, id: { private$get_id() }")
               updateCheckboxInput(
                 inputId = "value",
-                value = self$get_keep_inf()
+                value = private$get_keep_inf()
               )
             }
           }
         )
+
         private$observers$keep_inf <- observeEvent(
           ignoreNULL = TRUE, # it's not possible for range that NULL is selected
           ignoreInit = TRUE, # ignoreInit: should not matter because we set the UI with the desired initial state
           eventExpr = input$value,
           handlerExpr = {
+            logger::log_trace("FilterState$keep_na_srv@2 changed input, id: { private$get_id() }")
             keep_inf <- input$value
-            self$set_keep_inf(keep_inf)
-            logger::log_trace(
-              sprintf(
-                "%s$server keep_inf of variable %s set to: %s, dataname: %s",
-                class(self)[1],
-                private$varname,
-                deparse1(input$value),
-                private$dataname
-              )
-            )
+            private$set_keep_inf(keep_inf)
           }
         )
+
         invisible(NULL)
       })
     }

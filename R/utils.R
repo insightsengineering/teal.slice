@@ -104,3 +104,46 @@ get_teal_bs_theme <- function() {
     bs_theme
   }
 }
+
+#' Include `JS` files from `/inst/js/` package directory to application header
+#'
+#' `system.file` should not be used to access files in other packages, it does
+#' not work with `devtools`. Therefore, we redefine this method in each package
+#' as needed. Thus, we do not export this method
+#'
+#' @param pattern (`character`) pattern of files to be included, passed to `system.file`
+#' @param except (`character`) vector of basename filenames to be excluded
+#'
+#' @return HTML code that includes `JS` files
+#' @keywords internal
+include_js_files <- function(pattern) {
+  checkmate::assert_character(pattern, min.len = 1, null.ok = TRUE)
+  js_files <- list.files(
+    system.file("js", package = "teal.slice", mustWork = TRUE),
+    pattern = pattern,
+    full.names = TRUE
+  )
+  return(singleton(lapply(js_files, includeScript)))
+}
+
+#' This function takes a vector of values and returns a `c` call. If the vector
+#' has only one element, the element is returned directly.
+#'
+#' @param choices A vector of values.
+#'
+#' @return A `c` call.
+#'
+#' @examples
+#' teal.slice:::make_c_call(1:3)
+#' # [1] 1 2 3
+#'
+#' teal.slice:::make_c_call(1)
+#' # [1] 1
+#' @keywords internal
+make_c_call <- function(choices) {
+  if (length(choices) > 1) {
+    do.call("call", append(list("c"), choices))
+  } else {
+    choices
+  }
+}

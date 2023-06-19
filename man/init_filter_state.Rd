@@ -6,9 +6,8 @@
 \usage{
 init_filter_state(
   x,
-  varname,
-  varlabel = attr(x, "label"),
-  dataname = NULL,
+  x_reactive = reactive(NULL),
+  slice,
   extract_type = character(0)
 )
 }
@@ -16,23 +15,26 @@ init_filter_state(
 \item{x}{(\code{vector})\cr
 values of the variable used in filter}
 
-\item{varname}{(\code{character(1)})\cr
-name of the variable.}
+\item{x_reactive}{(\code{reactive})\cr
+returning vector of the same type as \code{x}. Is used to update
+counts following the change in values of the filtered dataset.
+If it is set to \code{reactive(NULL)} then counts based on filtered
+dataset are not shown.}
 
-\item{varlabel}{(\code{character(0)}, \code{character(1)} or \code{NULL})\cr
-label of the variable (optional).}
-
-\item{dataname}{(\code{character(1)})\cr
-optional name of dataset where \code{x} is taken from. Must be specified
-if \code{extract_type} argument is not empty.}
+\item{slice}{(\code{teal_slice})\cr
+object created using \code{\link[=filter_var]{filter_var()}} or \code{\link[=filter_expr]{filter_expr()}}. \code{slice} is kept within the
+class and can be shared in other places. Shared \code{teal_slice} object behaves in the
+way that changes in one place are reflected in other places.}
 
 \item{extract_type}{(\code{character(0)}, \code{character(1)})\cr
-whether condition calls should be prefixed by dataname. Possible values:
+specifying whether condition calls should be prefixed by \code{dataname}. Possible values:
 \itemize{
 \item{\code{character(0)} (default)}{ \code{varname} in the condition call will not be prefixed}
 \item{\code{"list"}}{ \code{varname} in the condition call will be returned as \verb{<dataname>$<varname>}}
 \item{\code{"matrix"}}{ \code{varname} in the condition call will be returned as \verb{<dataname>[, <varname>]}}
 }}
+
+\item{...}{additional arguments to be saved as a list in \code{private$extras} field}
 }
 \value{
 \code{FilterState} object
@@ -41,21 +43,21 @@ whether condition calls should be prefixed by dataname. Possible values:
 Initializes \code{FilterState} depending on a variable class.\cr
 }
 \examples{
-filter_state <- teal.slice:::RangeFilterState$new(
-  c(1:10, NA, Inf),
-  varname = "x",
-  varlabel = "Pretty name",
-  dataname = "dataname",
+filter_state <- teal.slice:::init_filter_state(
+  x = c(1:10, NA, Inf),
+  x_reactive = reactive(c(1:10, NA, Inf)),
+  slice = filter_var(
+    varname = "x",
+    dataname = "dataname"
+  ),
   extract_type = "matrix"
 )
 
-filter_state$get_varname()
-filter_state$get_varlabel()
-isolate(filter_state$get_call())
+shiny::isolate(filter_state$get_call())
 \dontrun{
 shinyApp(
   ui = fluidPage(
-    isolate(filter_state$ui(id = "app")),
+    filter_state$ui(id = "app"),
     verbatimTextOutput("call")
   ),
   server = function(input, output, session) {
