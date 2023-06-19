@@ -281,19 +281,11 @@ testthat::test_that("print returns a properly formatted string representation", 
   filter_state$set_state(filter_var(dataname = "data", varname = "var"))
   testthat::expect_equal(
     utils::capture.output(cat(filter_state$print())),
-    c(
-      "RangeFilterState:",
-      utils::capture.output(print(shiny::isolate(filter_state$get_state()))),
-      " "
-    )
+    c("RangeFilterState:", utils::capture.output(print(shiny::isolate(filter_state$get_state()))))
   )
   testthat::expect_equal(
     utils::capture.output(cat(filter_state$print(show_all = TRUE))),
-    c(
-      "RangeFilterState:",
-      utils::capture.output(print(shiny::isolate(filter_state$get_state()), show_all = TRUE)),
-      " "
-    )
+    c("RangeFilterState:", utils::capture.output(print(shiny::isolate(filter_state$get_state()), show_all = TRUE)))
   )
 })
 

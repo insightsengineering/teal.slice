@@ -538,19 +538,11 @@ testthat::test_that("print returns properly formatted string representing `teal_
 
   testthat::expect_identical(
     utils::capture.output(shiny::isolate(datasets$print())),
-    c(
-      "FilteredData:",
-      utils::capture.output(print(fs)),
-      " "
-    )
+    c("FilteredData:", utils::capture.output(print(fs)))
   )
   testthat::expect_identical(
     utils::capture.output(shiny::isolate(datasets$print(show_all = TRUE))),
-    c(
-      "FilteredData:",
-      utils::capture.output(print(fs, show_all = TRUE)),
-      " "
-    )
+    c("FilteredData:", utils::capture.output(print(fs, show_all = TRUE)))
   )
 })
 

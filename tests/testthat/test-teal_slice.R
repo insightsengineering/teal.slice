@@ -112,7 +112,7 @@ testthat::test_that("filter_var returns `teal_slice`", {
   testthat::expect_failure(
     testthat::expect_s3_class(fs1, "teal_slices")
   )
-  testthat::expect_length(shiny::reactiveValuesToList(fs1), 6L)
+  testthat::expect_length(shiny::reactiveValuesToList(fs1), 10L)
 })
 
 
@@ -359,22 +359,6 @@ testthat::test_that("format.teal_slice returns a character string", {
 })
 
 
-testthat::test_that("format.teal_slice prints 'teal_slice' header", {
-  fs <- filter_var(
-    dataname = "dataname2",
-    varname = "varname3",
-    choices = 1:10 / 10,
-    selected = 0.2,
-    multiple = TRUE,
-    keep_na = TRUE,
-    extra1 = "extraone",
-    extra2 = "extratwo"
-  )
-  ffs <- strsplit(format(fs), "\n")[[1]]
-  testthat::expect_identical(ffs[1], "teal_slice")
-})
-
-
 testthat::test_that("format.teal_slice skips empty mandatory fields show_all is FALSE", {
   shiny::reactiveConsole(TRUE)
   on.exit(shiny::reactiveConsole(FALSE))
@@ -394,25 +378,7 @@ testthat::test_that("format.teal_slice skips empty mandatory fields show_all is 
   })
 })
 
-
-testthat::test_that("format.teal_slice prints additional information header", {
-  fs <- filter_var(
-    dataname = "dataname2",
-    varname = "varname3",
-    choices = 1:10 / 10,
-    selected = 0.2,
-    multiple = TRUE,
-    keep_na = TRUE,
-    fixed = FALSE,
-    extra1 = "extraone",
-    extra2 = "extratwo"
-  )
-  ffs <- strsplit(format(fs), "\n")[[1]]
-  testthat::expect_true(any(grepl(" .. additional information", ffs)))
-})
-
-
-testthat::test_that("format.teal_slice prints optional fields with prefix", {
+testthat::test_that("format.teal_slice prints optional fields", {
   shiny::reactiveConsole(TRUE)
   on.exit(shiny::reactiveConsole(FALSE))
   fs <- filter_var(
@@ -428,7 +394,7 @@ testthat::test_that("format.teal_slice prints optional fields with prefix", {
   ffs <- strsplit(format(fs), "\n")[[1]]
   optional <- setdiff(names(shiny::reactiveValuesToList(fs)), names(formals(filter_var)))
   lapply(optional, function(x) {
-    testthat::expect_true(any(grepl(sprintf("     \\$ %s.*:", x), ffs)))
+    testthat::expect_true(any(grepl(x, ffs)))
   })
 })
 
@@ -441,29 +407,6 @@ testthat::test_that("format.teal_slices returns a character string", {
   testthat::expect_true(checkmate::check_string(format(fs, show_all = TRUE)))
 })
 
-testthat::test_that("format.teal_slices prints names of `tesl_slice`s, if any", {
-  fs1 <- filter_var("data", "var1")
-  fs2 <- filter_var("data", "var2")
-  fs <- filter_settings(fs1, fs2)
-  names(fs) <- c("one", "two")
-  ffs <- format(fs, show_all = TRUE)
-  nms <- names(fs)
-  lapply(nms, function(x) {
-    testthat::expect_true(any(grepl(sprintf("%s\nteal_slice", x), ffs)))
-  })
-})
-
-testthat::test_that("format.teal_slices prints numerical indices of `tesl_slice`s, if no names", {
-  fs1 <- filter_var("data", "var1")
-  fs2 <- filter_var("data", "var2")
-  fs <- filter_settings(fs1, fs2)
-  ffs <- format(fs, show_all = TRUE)
-  nms <- c("\\[\\[1]]", "\\[\\[2]]")
-  lapply(nms, function(x) {
-    testthat::expect_true(any(grepl(sprintf("%s\nteal_slice", x), ffs)))
-  })
-})
-
 testthat::test_that("format.teal_slices contains literal formatted representations of all included `teal_slice`s", {
   fs1 <- filter_var("data", "var1")
   fs2 <- filter_var("data", "var2")
@@ -471,7 +414,7 @@ testthat::test_that("format.teal_slices contains literal formatted representatio
   ffs <- format(fs, show_all = TRUE)
   slices <- lapply(fs, format, show_all = TRUE)
   lapply(slices, function(x) {
-    testthat::expect_true(any(grepl(x, ffs, fixed = TRUE)))
+    testthat::expect_true(any(grepl(gsub(' ', '', x), gsub(' ', '', ffs), fixed = TRUE)))
   })
 })
 
@@ -480,21 +423,21 @@ testthat::test_that("format.teal_slices prints include_varnames attribute if not
   fs2 <- filter_var("data", "var2")
   fs <- filter_settings(fs1, fs2)
   ffs <- format(fs, show_all = TRUE)
-  testthat::expect_true(!grepl("filterable variables:", ffs))
+  testthat::expect_true(!grepl("include_varnames", ffs))
   fs <- filter_settings(fs1, fs2, include_varnames = list(data = "var2"))
   ffs <- format(fs, show_all = TRUE)
-  testthat::expect_true(grepl("filterable variables:\n \\$ data: var2", ffs))
+  testthat::expect_true(grepl("include_varnames", ffs))
 })
 
-testthat::test_that("format.teal_slices prints include_varnames attribute if not empty", {
+testthat::test_that("format.teal_slices prints exclude_varnames attribute if not empty", {
   fs1 <- filter_var("data", "var1")
   fs2 <- filter_var("data", "var2")
   fs <- filter_settings(fs1, fs2)
   ffs <- format(fs, show_all = TRUE)
-  testthat::expect_true(!grepl("non-filterable variables:", ffs))
+  testthat::expect_true(!all(grepl("exclude_varnames", ffs)))
   fs <- filter_settings(fs1, fs2, exclude_varnames = list(data = "var2"))
   ffs <- format(fs, show_all = TRUE)
-  testthat::expect_true(grepl("non-filterable variables:\n \\$ data: var2", ffs))
+  testthat::expect_true(grepl("exclude_varnames", ffs))
 })
 
 testthat::test_that("format.teal_slices prints count_type attribute if not empty", {
@@ -502,7 +445,7 @@ testthat::test_that("format.teal_slices prints count_type attribute if not empty
   fs2 <- filter_var("data", "var2")
   fs <- filter_settings(fs1, fs2)
   ffs <- format(fs, show_all = TRUE)
-  testthat::expect_true(!grepl("count type:", ffs))
+  testthat::expect_true(!grepl("count_type", ffs))
 })
 
 

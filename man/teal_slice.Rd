@@ -14,6 +14,8 @@
 \alias{as.teal_slices}
 \alias{[.teal_slices}
 \alias{c.teal_slices}
+\alias{store_slices}
+\alias{restore_slices}
 \alias{format.teal_slices}
 \alias{print.teal_slices}
 \alias{slices_field}
@@ -48,7 +50,7 @@ as.teal_slice(x)
 
 \method{c}{teal_slice}(...)
 
-\method{format}{teal_slice}(x, show_all = FALSE, ...)
+\method{format}{teal_slice}(x, show_all = FALSE, nchar = 40, ...)
 
 \method{print}{teal_slice}(x, ...)
 
@@ -60,7 +62,11 @@ as.teal_slices(x)
 
 \method{c}{teal_slices}(...)
 
-\method{format}{teal_slices}(x, show_all = FALSE, ...)
+store_slices(tss, file)
+
+restore_slices(file)
+
+\method{format}{teal_slices}(x, show_all = FALSE, nchar = 40, ...)
 
 \method{print}{teal_slices}(x, ...)
 
@@ -119,9 +125,15 @@ and unfiltered dataset.
 \item \code{"none"} to have counts of single \code{FilterState} to show unfiltered number only.
 }}
 
-\item{show_all}{\code{logical(1)} specifying whether NULL elements should also be printed}
+\item{x}{\code{teal_slice} object}
 
-\item{tss}{\code{teal_slices}}
+\item{show_all}{\code{logical(1)} should parameters set to NULL be returned}
+
+\item{nchar}{\code{integer(1)} or \code{NULL} indicating the number of character of the output width}
+
+\item{tss}{\code{teal_slices} object}
+
+\item{file}{\code{character(1)} specifying path to read from}
 
 \item{field}{\code{character(1)} name of \code{teal_slice} element}
 }
