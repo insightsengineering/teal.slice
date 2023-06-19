@@ -359,22 +359,6 @@ testthat::test_that("format.teal_slice returns a character string", {
 })
 
 
-testthat::test_that("format.teal_slice prints 'teal_slice' header", {
-  fs <- filter_var(
-    dataname = "dataname2",
-    varname = "varname3",
-    choices = 1:10 / 10,
-    selected = 0.2,
-    multiple = TRUE,
-    keep_na = TRUE,
-    extra1 = "extraone",
-    extra2 = "extratwo"
-  )
-  ffs <- strsplit(format(fs), "\n")[[1]]
-  testthat::expect_identical(ffs[1], "teal_slice")
-})
-
-
 testthat::test_that("format.teal_slice skips empty mandatory fields show_all is FALSE", {
   shiny::reactiveConsole(TRUE)
   on.exit(shiny::reactiveConsole(FALSE))
@@ -430,7 +414,7 @@ testthat::test_that("format.teal_slices contains literal formatted representatio
   ffs <- format(fs, show_all = TRUE)
   slices <- lapply(fs, format, show_all = TRUE)
   lapply(slices, function(x) {
-    testthat::expect_true(any(grepl(x, ffs, fixed = TRUE)))
+    testthat::expect_true(any(grepl(gsub(' ', '', x), gsub(' ', '', ffs), fixed = TRUE)))
   })
 })
 

@@ -303,7 +303,7 @@ as.list.teal_slice <- function(x) {
 #' @rdname teal_slice
 #' @keywords internal
 #'
-format.teal_slice <- function(x, show_all = FALSE, nchar = NULL, ...) {
+format.teal_slice <- function(x, show_all = FALSE, nchar = 40, ...) {
   checkmate::assert_flag(show_all)
   checkmate::assert_integerish(nchar, null.ok = TRUE)
 
@@ -323,8 +323,8 @@ format.teal_slice <- function(x, show_all = FALSE, nchar = NULL, ...) {
 #' @rdname teal_slice
 #' @keywords internal
 #'
-print.teal_slice <- function(x, nchar = 40, ...) {
-  cat(format(x, nchar = nchar, ...))
+print.teal_slice <- function(x, ...) {
+  cat(format(x, ...))
 }
 
 
@@ -522,7 +522,7 @@ store_slices <- function(tss, file) {
   checkmate::assert_class(tss, "teal_slices")
   checkmate::assert_path_for_output(file, overwrite = TRUE, extension = "json")
 
-  cat(format(tss, show_all = TRUE), "\n", file = file)
+  cat(format(tss, show_all = TRUE, nchar = NULL), "\n", file = file)
 }
 
 #' @param file `character(1)` specifying path to read from
@@ -552,7 +552,7 @@ restore_slices <- function(file) {
 #' @rdname teal_slice
 #' @keywords internal
 #'
-format.teal_slices <- function(x, show_all = FALSE, nchar = NULL, ...) {
+format.teal_slices <- function(x, show_all = FALSE, nchar = 40, ...) {
   checkmate::assert_flag(show_all)
   checkmate::assert_integerish(nchar, null.ok = TRUE)
 
@@ -580,8 +580,8 @@ format.teal_slices <- function(x, show_all = FALSE, nchar = NULL, ...) {
 #' @rdname teal_slice
 #' @keywords internal
 #'
-print.teal_slices <- function(x, nchar = 40, ...) {
-  cat(format(x, nchar = nchar, ...), "\n")
+print.teal_slices <- function(x, ...) {
+  cat(format(x, ...), "\n")
 }
 
 
