@@ -260,8 +260,9 @@ ChoicesFilterState <- R6::R6Class( # nolint
         }
         if (length(choices) == 0) {
           warning(
-            sprintf("Choices not within values found in data. Setting defaults. Varname: %s, dataname: %s.",
-                    private$get_varname(), private$get_dataname()
+            sprintf(
+              "Choices not within values found in data. Setting defaults. Varname: %s, dataname: %s.",
+              private$get_varname(), private$get_dataname()
             )
           )
           choices <- levels(private$x)
