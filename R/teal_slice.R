@@ -310,7 +310,7 @@ format.teal_slice <- function(x, show_all = FALSE, nchar = 40, ...) {
 
   x_json <- slice_list_to_json(x_list)
   x_json_s <- strsplit(x_json, split = "\n")[[1]]
-  x_json_c <- justify_slice_json_split(x_json_s)
+  x_json_c <- justify_json_split(x_json_s, slice_format_name)
 
   if (!is.null(nchar)) x_json_c <- trim_character(x_json_c, nchar)
 
@@ -344,6 +344,12 @@ trim_character <- function(x, nchar) {
   x_t
 }
 
+justify_json_split <- function(json, format_fun) {
+  json_s <- strsplit(json, split = ":", fixed = TRUE)
+  name_width <- max(unlist(gregexpr(":", json))) - 1
+  vapply(json_s, function(x) paste0(format_fun(x[1], name_width), na.omit(x[2])), character(1))
+}
+
 # JSON utils for teal_slice ---------------------------------------------------------------------------------------
 
 slice_list_to_json <- function(x) {
@@ -354,22 +360,13 @@ slice_list_to_json <- function(x) {
   jsonlite::toJSON(x, pretty = TRUE, auto_unbox = TRUE, digits = 16, null = "null")
 }
 
-justify_slice_json_split <- function(json) {
-  format_name <- function(n) {
-    if (nchar(n) == 1) {
-      return(n)
-    } else {
-      paste(format(n, width = name_width), ":")
-    }
+slice_format_name <- function(n, name_width) {
+  if (nchar(n) == 1) {
+    return(n)
+  } else {
+    paste(format(n, width = name_width), ":")
   }
-
-  json_s <- strsplit(json, split = ":", fixed = TRUE)
-  name_width <- max(unlist(gregexpr(":", json))) - 1
-
-  vapply(json_s, function(x) paste0(format_name(x[1]), na.omit(x[2])), character(1))
 }
-
-
 
 # JSON utils for teal_slices --------------------------------------------------------------------------------------
 
@@ -385,22 +382,16 @@ slices_list_to_json <- function(x) {
   jsonlite::toJSON(x, pretty = TRUE, auto_unbox = TRUE, digits = 16, null = "null")
 }
 
-justify_slices_json_split <- function(json) {
-  format_name <- function(n) {
-    if (nchar(gsub("\\s", "", n)) <= 2) {
-      return(n)
-    } else if (grepl('slices|attributes', n)) {
-      paste0(n, ":")
-    } else {
-      paste(format(n, width = name_width), ":")
-    }
+slices_format_name <- function(n, name_width) {
+  if (nchar(gsub("\\s", "", n)) <= 2) {
+    return(n)
+  } else if (grepl('slices|attributes', n)) {
+    paste0(n, ":")
+  } else {
+    paste(format(n, width = name_width), ":")
   }
-
-  json_s <- strsplit(json, split = ":", fixed = TRUE)
-  name_width <- max(unlist(gregexpr(":", json))) - 1
-
-  vapply(json_s, function(x) paste0(format_name(x[1]), na.omit(x[2])), character(1))
 }
+
 
 # teal_slices -----------------------------------------------------------------------------------------------------
 
@@ -592,7 +583,7 @@ format.teal_slices <- function(x, show_all = FALSE, nchar = 40, ...) {
 
   slices_json <- slices_list_to_json(as.list(x))
   slices_json_s <- strsplit(slices_json, '\n')[[1]]
-  slices_json_s_c <- justify_slices_json_split(slices_json_s)
+  slices_json_s_c <- justify_json_split(slices_json_s, slices_format_name)
 
   if (!is.null(nchar)) slices_json_s_c <- trim_character(slices_json_s_c, nchar)
 
