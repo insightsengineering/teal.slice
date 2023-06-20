@@ -339,9 +339,9 @@ is.teal_slices <- function(x) { # nolint
 # utils -----------------------------------------------------------------------------------------------------------
 
 trim_character <- function(x, nchar) {
-  json_t <- substr(x, 1, nchar)
-  substr(json_t, nchar - 2, nchar) <- "..."
-  json_t
+  x_t <- substr(x, 1, nchar)
+  substr(x_t, nchar - 2, nchar) <- "..."
+  x_t
 }
 
 # JSON utils for teal_slice ---------------------------------------------------------------------------------------
