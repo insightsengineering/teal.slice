@@ -33,8 +33,6 @@ schemas:
               type: boolean
             locked:
               type: boolean
-            locked:
-              type: boolean
             multiple:
               type: boolean
             id:
