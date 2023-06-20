@@ -98,7 +98,7 @@ for other functions arguments passed to other methods}
 
 \item{expr}{\code{character(1)} string providing a logical expression;
 must be able to be evaluated without error by the appropriate subsetting function:
-for a \code{data.frame.} var1 == "x" & var2 > 0\verb{is sufficient but}MultiAssayExperiment::subsetByColData\code{requires }data$var1 == "x" & data$var2 > 0`}
+for a \code{data.frame.} var1 == "x" & var2 > 0\verb{is sufficient but}MultiAssayExperiment::subsetByColData\code{requires}data$var1 == "x" & data$var2 > 0`}
 
 \item{include_varnames, exclude_varnames}{\verb{named list}s of \code{character} vectors where list names
 match names of data sets and vector elements match variable names in respective data sets;
