@@ -919,9 +919,10 @@ test_class <- R6::R6Class(
 datasets <- test_class$new(list(iris = list(dataset = iris)))
 fs <- filter_settings(
   filter_var(dataname = "iris", varname = "Sepal.Length", locked = TRUE),
-  filter_var(dataname = "iris", varname = "Sepal.Width"),
+  filter_var(dataname = "iris", varname = "Sepal.Width", fixed = TRUE),
   filter_var(dataname = "iris", varname = "Petal.Length"),
-  filter_var(dataname = "iris", varname = "Petal.Width")
+  filter_var(dataname = "iris", varname = "Petal.Width"),
+  filter_expr(dataname = "iris", title = "test", id = "test", expr = "!is.na(Species)")
 )
 fs_rv <- reactiveVal(fs)
 datasets$set_available_teal_slices(reactive(fs_rv()))
@@ -929,6 +930,12 @@ datasets$set_filter_state(fs[1:2])
 shiny::testServer(
   datasets$srv_available_filters,
   expr = {
+    testthat::test_that("slices_interactive() reactive returns interactive filters", {
+      expect_identical_slices(slices_interactive(), fs[c(1, 3, 4)])
+    })
+    testthat::test_that("slices_fixed() reactive returns fixed filters and teal_slice_expr", {
+      expect_identical_slices(slices_fixed(), fs[c(2, 5)])
+    })
     testthat::test_that("FilteredData$srv_available_slices locked slices ommited", {
       testthat::expect_identical(slices(), fs[-1])
     })
@@ -938,7 +945,7 @@ shiny::testServer(
       fs_rv(c(fs_rv(), filter_settings(species_slice)))
       testthat::expect_identical(
         available_slices_id(),
-        c("iris Sepal.Width", "iris Petal.Length", "iris Petal.Width", "iris Species")
+        c("iris Sepal.Width", "iris Petal.Length", "iris Petal.Width", "test", "iris Species")
       )
     })
 
