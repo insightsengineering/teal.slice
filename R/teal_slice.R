@@ -538,9 +538,7 @@ restore_slices <- function(file) {
       as.teal_slice(Filter(Negate(is.null), x))
     })
 
-  tss <- do.call(filter_settings, c(`...` = tss_elements, tss_j$attributes))
-  names(tss) <- NULL
-  tss
+do.call(filter_settings, c(tss_elements, tss_j$attributes))
 }
 
 #' @param show_all `logical(1)` should parameters set to NULL be returned
