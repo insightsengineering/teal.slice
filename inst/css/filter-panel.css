@@ -148,6 +148,10 @@ a.remove_all:hover {
   flex-grow: 4;
 }
 
+.choices_state > div.form-group {
+  margin: 0em;
+}
+
 .choices_state_label_text {
   position: absolute;
   padding: 2px;
@@ -176,6 +180,15 @@ a.remove_all:hover {
   transform-origin: bottom;
   width: 100%;
   max-width: 100%;
+}
+
+.filter-card-body div.form-group {
+  margin: 0em;
+  font-size: small;
+}
+
+.checkbox label {
+  margin: 0em;
 }
 
 .irs.irs--shiny.js-irs-0.irs-with-grid * {
@@ -232,7 +245,7 @@ a.remove_all:hover {
   border: none;
   border-radius: 0;
   box-shadow: none;
-  margin: 0;
+  margin: 0em;
 }
 
 .filter-card-header {
@@ -324,7 +337,7 @@ a.remove_all:hover {
   height: 1.75em;
   width: 90%;
   background-color: white;
-  margin: 0px;
+  margin: 0em;
   border-radius: 0px;
 }
 
@@ -334,7 +347,7 @@ a.remove_all:hover {
   overflow: visible;
   text-align: left;
   white-space: nowrap;
-  font-size: 1em;
+  font-size: small;
 }
 
 .progress-bar.state-count-bar-unfiltered {
@@ -353,6 +366,12 @@ a.remove_all:hover {
 .filter_datelike_input  input {
   font-size: 1em !important;
 }
+
+.form-group .checkbox label .shiny-bound-input {
+  margin-top: 0.1em;
+}
+
+
 
 .choices_state {
   margin-bottom: .45rem;

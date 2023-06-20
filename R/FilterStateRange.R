@@ -464,9 +464,9 @@ RangeFilterState <- R6::R6Class( # nolint
               type = 4,
               size = 0.25,
               hide.ui = FALSE
-            )
+            ),
+            ui_input
           ),
-          ui_input,
           div(
             class = "filter-card-body-keep-na-inf",
             private$keep_inf_ui(ns("keep_inf")),
