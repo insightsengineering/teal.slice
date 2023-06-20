@@ -107,19 +107,11 @@ testthat::test_that("print returns a properly formatted string representation", 
 
   testthat::expect_equal(
     utils::capture.output(cat(dataset$print())),
-    c(
-      "DefaultFilteredDataset:",
-      utils::capture.output(print(shiny::isolate(dataset$get_filter_state()))),
-      " "
-    )
+    c("DefaultFilteredDataset:", utils::capture.output(print(shiny::isolate(dataset$get_filter_state()))))
   )
   testthat::expect_equal(
     utils::capture.output(cat(dataset$print(show_all = TRUE))),
-    c(
-      "DefaultFilteredDataset:",
-      utils::capture.output(print(shiny::isolate(dataset$get_filter_state()), show_all = TRUE)),
-      " "
-    )
+    c("DefaultFilteredDataset:", utils::capture.output(print(shiny::isolate(dataset$get_filter_state()), show_all = TRUE)))
   )
 })
 
