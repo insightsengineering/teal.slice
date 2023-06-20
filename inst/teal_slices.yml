@@ -20,11 +20,11 @@ schemas:
             choices:
               type: array
               items:
-                type: string
+                type: ['null', string, boolean, number]
             selected:
               type: array
               items:
-                type: string
+                type: ['null', string, boolean, number]
             keep_na:
               type: ['null', boolean]
             keep_inf:
