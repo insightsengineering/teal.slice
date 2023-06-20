@@ -545,7 +545,6 @@ restore_slices <- function(file) {
   tss
 }
 
-#' @param x `teal_slice` object
 #' @param show_all `logical(1)` should parameters set to NULL be returned
 #' @param nchar `integer(1)` or `NULL` indicating the number of character of the output width
 #' @export
