@@ -308,10 +308,11 @@ format.teal_slice <- function(x, show_all = FALSE, nchar = 40, ...) {
   x_list <- as.list(x)
   if (!show_all) x_list <- Filter(Negate(is.null), x_list)
 
-  x_json <- teal_slice_to_json(x_list)
-  x_json_c <- center_json(x_json)
+  x_json <- slice_to_json(x_list)
+  x_json_s <- strsplit(x_json, split = "\n")[[1]]
+  x_json_c <- center_json_split(x_json_s)
 
-  if (!is.null(nchar)) x_json_c <- trim_json(x_json_c, nchar)
+  if (!is.null(nchar)) x_json_c <- trim_character(x_json_c, nchar)
 
   paste(x_json_c, collapse = "\n")
 }
@@ -337,12 +338,11 @@ is.teal_slices <- function(x) { # nolint
 
 # JSON utils ------------------------------------------------------------------------------------------------------
 
-teal_slice_to_json <- function(x) {
+slice_to_json <- function(x) {
   if (!is.null(x$selected)) x$selected <- I(x$selected)
   if (!is.null(x$choices)) x$choices <- I(x$choices)
 
-  x_json <- jsonlite::toJSON(x, pretty = TRUE, auto_unbox = TRUE, digits = 16, null = "null")
-  strsplit(x_json, split = "\n")[[1]]
+  jsonlite::toJSON(x, pretty = TRUE, auto_unbox = TRUE, digits = 16, null = "null")
 }
 
 trim_character <- function(x, nchar) {
@@ -351,7 +351,7 @@ trim_character <- function(x, nchar) {
   json_t
 }
 
-center_json <- function(json) {
+center_json_split <- function(json) {
   format_name <- function(n) {
     if (nchar(n) == 1) {
       return(n)
