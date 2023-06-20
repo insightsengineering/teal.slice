@@ -359,9 +359,13 @@ a.remove_all:hover {
 }
 
 .popover-header {
-    margin-top: 0em;
+  margin-top: 0em;
 }
 
 .popover-body {
-    margin-bottom: -1rem;
+  margin-bottom: -1rem;
+}
+
+.available-filters {
+  margin-top: 0em;
 }

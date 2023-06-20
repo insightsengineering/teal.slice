@@ -37,6 +37,7 @@
 .rectify_dependencies_check <- function() {
   dplyr::filter
   grDevices::rgb
+  htmltools::tagInsertChildren
   lifecycle::badge
   logger::log_trace
   plotly::plot_ly
