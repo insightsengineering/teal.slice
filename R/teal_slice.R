@@ -310,7 +310,7 @@ format.teal_slice <- function(x, show_all = FALSE, nchar = 40, ...) {
 
   x_json <- slice_list_to_json(x_list)
   x_json_s <- strsplit(x_json, split = "\n")[[1]]
-  x_json_c <- center_slice_json_split(x_json_s)
+  x_json_c <- justify_slice_json_split(x_json_s)
 
   if (!is.null(nchar)) x_json_c <- trim_character(x_json_c, nchar)
 
@@ -354,7 +354,7 @@ slice_list_to_json <- function(x) {
   jsonlite::toJSON(x, pretty = TRUE, auto_unbox = TRUE, digits = 16, null = "null")
 }
 
-center_slice_json_split <- function(json) {
+justify_slice_json_split <- function(json) {
   format_name <- function(n) {
     if (nchar(n) == 1) {
       return(n)
@@ -385,7 +385,7 @@ slices_list_to_json <- function(x) {
   jsonlite::toJSON(x, pretty = TRUE, auto_unbox = TRUE, digits = 16, null = "null")
 }
 
-center_slices_json_split <- function(json) {
+justify_slices_json_split <- function(json) {
   format_name <- function(n) {
     if (nchar(gsub("\\s", "", n)) <= 2) {
       return(n)
@@ -556,9 +556,9 @@ slices_store <- function(tss, file) {
   checkmate::assert_class(tss, "teal_slices")
   checkmate::assert_path_for_output(file, overwrite = TRUE, extension = "json")
 
-  # no centering
+  # no justifying
   # cat(slices_list_to_json(as.list(tss)), "\n", file = file)
-  # or with centering
+  # or with justifying
   cat(format(tss, nchar = NULL), "\n", file = file)
 }
 
@@ -592,7 +592,7 @@ format.teal_slices <- function(x, show_all = FALSE, nchar = 40, ...) {
 
   slices_json <- slices_list_to_json(as.list(x))
   slices_json_s <- strsplit(slices_json, '\n')[[1]]
-  slices_json_s_c <- center_slices_json_split(slices_json_s)
+  slices_json_s_c <- justify_slices_json_split(slices_json_s)
 
   if (!is.null(nchar)) slices_json_s_c <- trim_character(slices_json_s_c, nchar)
 
