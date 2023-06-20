@@ -80,7 +80,7 @@
 #' @param title `character(1)` title of the filter
 #' @param expr `character(1)` string providing a logical expression;
 #'   must be able to be evaluated without error by the appropriate subsetting function:
-#'   for a `data.frame.` var1 == "x" & var2 > 0` is sufficient but
+#'   for a `data.frame.` `var1 == "x" & var2 > 0` is sufficient but
 #'   `MultiAssayExperiment::subsetByColData` requires `data$var1 == "x" & data$var2 > 0`
 #' @param ... additional arguments to be saved as a list in `private$extras` field
 #' @param show_all `logical(1)` specifying whether NULL elements should also be printed
