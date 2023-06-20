@@ -340,7 +340,7 @@ is.teal_slices <- function(x) { # nolint
 
 trim_character <- function(x, nchar) {
   json_t <- substr(x, 1, nchar)
-  substr(json_t, nchar - 2, 40) <- "..."
+  substr(json_t, nchar - 2, nchar) <- "..."
   json_t
 }
 
