@@ -308,9 +308,9 @@ format.teal_slice <- function(x, show_all = FALSE, nchar = 40, ...) {
   x_list <- as.list(x)
   if (!show_all) x_list <- Filter(Negate(is.null), x_list)
 
-  x_json <- slice_to_json(x_list)
+  x_json <- slice_list_to_json(x_list)
   x_json_s <- strsplit(x_json, split = "\n")[[1]]
-  x_json_c <- center_json_split(x_json_s)
+  x_json_c <- center_slice_json_split(x_json_s)
 
   if (!is.null(nchar)) x_json_c <- trim_character(x_json_c, nchar)
 
@@ -336,14 +336,7 @@ is.teal_slices <- function(x) { # nolint
 }
 
 
-# JSON utils ------------------------------------------------------------------------------------------------------
-
-slice_to_json <- function(x) {
-  if (!is.null(x$selected)) x$selected <- I(x$selected)
-  if (!is.null(x$choices)) x$choices <- I(x$choices)
-
-  jsonlite::toJSON(x, pretty = TRUE, auto_unbox = TRUE, digits = 16, null = "null")
-}
+# utils -----------------------------------------------------------------------------------------------------------
 
 trim_character <- function(x, nchar) {
   json_t <- substr(x, 1, nchar)
@@ -351,10 +344,53 @@ trim_character <- function(x, nchar) {
   json_t
 }
 
-center_json_split <- function(json) {
+# JSON utils for teal_slice ---------------------------------------------------------------------------------------
+
+slice_list_to_json <- function(x) {
+  # selected and choices should remain arrays
+  if (!is.null(x$selected)) x$selected <- I(x$selected)
+  if (!is.null(x$choices)) x$choices <- I(x$choices)
+
+  jsonlite::toJSON(x, pretty = TRUE, auto_unbox = TRUE, digits = 16, null = "null")
+}
+
+center_slice_json_split <- function(json) {
   format_name <- function(n) {
     if (nchar(n) == 1) {
       return(n)
+    } else {
+      paste(format(n, width = name_width), ":")
+    }
+  }
+
+  json_s <- strsplit(json, split = ":", fixed = TRUE)
+  name_width <- max(unlist(gregexpr(":", json))) - 1
+
+  vapply(json_s, function(x) paste0(format_name(x[1]), na.omit(x[2])), character(1))
+}
+
+
+
+# JSON utils for teal_slices --------------------------------------------------------------------------------------
+
+slices_list_to_json <- function(tss) {
+
+  # selected and choices should remain arrays
+  tss$slices <- lapply(tss$slices, function(x) {
+    if (!is.null(x$selected)) x$selected <- I(x$selected)
+    if (!is.null(x$choices)) x$choices <- I(x$choices)
+    x
+  })
+
+  jsonlite::toJSON(tss, pretty = TRUE, auto_unbox = TRUE, digits = 16, null = "null")
+}
+
+center_slices_json_split <- function(json) {
+  format_name <- function(n) {
+    if (nchar(gsub("\\s", "", n)) <= 2) {
+      return(n)
+    } else if (grepl('slices|attributes', n)) {
+      paste0(n, ":")
     } else {
       paste(format(n, width = name_width), ":")
     }
@@ -516,11 +552,14 @@ c.teal_slices <- function(...) {
 #' @rdname teal_slice
 #' @keywords internal
 #'
-store_slices <- function(tss, file) {
+slices_store <- function(tss, file) {
   checkmate::assert_class(tss, "teal_slices")
   checkmate::assert_path_for_output(file, overwrite = TRUE, extension = "json")
 
-  cat(format(tss, show_all = TRUE, nchar = NULL), "\n", file = file)
+  # no centering
+  # cat(slices_list_to_json(slices_to_list(tss)), "\n", file = file)
+  # or with centering
+  cat(format(tss, nchar = NULL), "\n", file = file)
 }
 
 #' @param file `character(1)` specifying path to read from
@@ -528,7 +567,7 @@ store_slices <- function(tss, file) {
 #' @rdname teal_slice
 #' @keywords internal
 #'
-restore_slices <- function(file) {
+slices_restore <- function(file) {
   checkmate::assert_file_exists(file, access = "r", extension = "json")
 
   tss_j <- jsonlite::fromJSON(file, simplifyDataFrame = FALSE)
@@ -551,24 +590,13 @@ format.teal_slices <- function(x, show_all = FALSE, nchar = 40, ...) {
   checkmate::assert_flag(show_all)
   checkmate::assert_integerish(nchar, null.ok = TRUE)
 
-  x_f <- unlist(lapply(x, format, show_all = show_all, nchar = nchar))
-  # elements in JSON array are separated by ","
-  x_f <- paste(x_f, collapse = ",\n")
-  # indentation for JSON
-  x_f <- paste("   ", x_f, collapse = "")
-  x_f <- gsub("\n", "\n    ", x_f, fixed = TRUE)
+  slices_json <- slices_list_to_json(slices_to_list(x))
+  slices_json_s <- strsplit(slices_json, '\n')[[1]]
+  slices_json_s_c <- center_slices_json_split(slices_json_s)
 
-  # packing back elements so they align with schema in inst/teal_slices.yml
-  attrs <- attributes(unclass(x))
-  if (!is.null(attrs)) {
-    attributes <- jsonlite::toJSON(attrs, pretty = TRUE, auto_unbox = TRUE)
-    attributes <- gsub("\n", "\n  ", attributes)
-    # indentation for JSON
-    attributes <- paste("  \"attributes\":", attributes)
-    paste(c("{\n  \"slices\": [", x_f, "  ],", attributes, "}"), collapse = "\n")
-  } else {
-    paste(c("{\n  \"slices\": [", x_f, "  ]\n}"), collapse = "\n")
-  }
+  if (!is.null(nchar)) slices_json_s_c <- trim_character(slices_json_s_c, nchar)
+
+  paste(slices_json_s_c, collapse = "\n")
 }
 
 #' @export
@@ -588,4 +616,15 @@ slices_field <- function(tss, field) {
   checkmate::assert_string(field)
   checkmate::assert_class(tss, "teal_slices")
   unique(unlist(lapply(tss, function(x) x[[field]])))
+}
+
+#' @rdname teal_slice
+#' @keywords internal
+#'
+slices_to_list <- function(tss) {
+  checkmate::assert_class(tss, "teal_slices")
+  slices_list <- lapply(tss, as.list)
+  attrs <- attributes(unclass(tss))
+  tss_list <- list(slices = slices_list, attributes = attrs)
+  Filter(Negate(is.null), tss_list) # drop attributes if empty
 }
