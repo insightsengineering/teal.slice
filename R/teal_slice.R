@@ -557,7 +557,7 @@ slices_store <- function(tss, file) {
   checkmate::assert_path_for_output(file, overwrite = TRUE, extension = "json")
 
   # no centering
-  # cat(slices_list_to_json(slices_to_list(tss)), "\n", file = file)
+  # cat(slices_list_to_json(as.list(tss)), "\n", file = file)
   # or with centering
   cat(format(tss, nchar = NULL), "\n", file = file)
 }
@@ -590,7 +590,7 @@ format.teal_slices <- function(x, show_all = FALSE, nchar = 40, ...) {
   checkmate::assert_flag(show_all)
   checkmate::assert_integerish(nchar, null.ok = TRUE)
 
-  slices_json <- slices_list_to_json(slices_to_list(x))
+  slices_json <- slices_list_to_json(as.list(x))
   slices_json_s <- strsplit(slices_json, '\n')[[1]]
   slices_json_s_c <- center_slices_json_split(slices_json_s)
 
@@ -620,11 +620,18 @@ slices_field <- function(tss, field) {
 
 #' @rdname teal_slice
 #' @keywords internal
+#' @export
 #'
-slices_to_list <- function(tss) {
-  checkmate::assert_class(tss, "teal_slices")
-  slices_list <- lapply(tss, as.list)
-  attrs <- attributes(unclass(tss))
+as.list.teal_slices <- function(x, ...) {
+
+  # Below substitutes slices_list <- lapply(x, as.list), that can not be
+  # executed because lapply uses as.list and we get into an infinite loop of recursion.
+  slices_list <- vector("list", length(x))
+  for (s in seq_along(slices_list)) {
+    slices_list[[s]] <- as.list(x[[s]])
+  }
+
+  attrs <- attributes(unclass(x))
   tss_list <- list(slices = slices_list, attributes = attrs)
   Filter(Negate(is.null), tss_list) # drop attributes if empty
 }

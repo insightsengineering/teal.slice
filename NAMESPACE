@@ -2,6 +2,7 @@
 
 S3method("[",teal_slices)
 S3method(as.list,teal_slice)
+S3method(as.list,teal_slices)
 S3method(c,teal_slice)
 S3method(c,teal_slices)
 S3method(format,teal_slice)

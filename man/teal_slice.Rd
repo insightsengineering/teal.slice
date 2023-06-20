@@ -19,7 +19,7 @@
 \alias{format.teal_slices}
 \alias{print.teal_slices}
 \alias{slices_field}
-\alias{slices_to_list}
+\alias{as.list.teal_slices}
 \title{Manage filter state(s).}
 \usage{
 filter_var(
@@ -73,7 +73,7 @@ slices_restore(file)
 
 slices_field(tss, field)
 
-slices_to_list(tss)
+\method{as.list}{teal_slices}(x, ...)
 }
 \arguments{
 \item{dataname}{\code{character(1)} name of data set}
