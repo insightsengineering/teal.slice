@@ -373,16 +373,16 @@ center_slice_json_split <- function(json) {
 
 # JSON utils for teal_slices --------------------------------------------------------------------------------------
 
-slices_list_to_json <- function(tss) {
+slices_list_to_json <- function(x) {
 
   # selected and choices should remain arrays
-  tss$slices <- lapply(tss$slices, function(x) {
+  x$slices <- lapply(x$slices, function(x) {
     if (!is.null(x$selected)) x$selected <- I(x$selected)
     if (!is.null(x$choices)) x$choices <- I(x$choices)
     x
   })
 
-  jsonlite::toJSON(tss, pretty = TRUE, auto_unbox = TRUE, digits = 16, null = "null")
+  jsonlite::toJSON(x, pretty = TRUE, auto_unbox = TRUE, digits = 16, null = "null")
 }
 
 center_slices_json_split <- function(json) {
