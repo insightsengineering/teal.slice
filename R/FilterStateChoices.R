@@ -252,8 +252,8 @@ ChoicesFilterState <- R6::R6Class( # nolint
         if (length(setdiff(choices, choices_adjusted)) > 0L) {
           warning(
             sprintf(
-              "Some choices not not found in data. Adjusting. Varname: %s, dataname: %s.",
-              private$get_varname(), private$get_dataname()
+              "Some choices not found in data. Adjusting. Filter id: %s.",
+              private$get_id()
             )
           )
           choices <- choices_adjusted
@@ -261,8 +261,8 @@ ChoicesFilterState <- R6::R6Class( # nolint
         if (length(choices) == 0) {
           warning(
             sprintf(
-              "Choices not within values found in data. Setting defaults. Varname: %s, dataname: %s.",
-              private$get_varname(), private$get_dataname()
+              "None of the choices were found in data. Setting defaults. Filter id: %s.",
+              private$get_id()
             )
           )
           choices <- levels(private$x)

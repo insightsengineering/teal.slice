@@ -22,14 +22,14 @@ testthat::test_that("constructor raises warning if choices out of range", {
       chars,
       slice = filter_var(dataname = "data", varname = "var", choices = c(chars, "item4"))
     ),
-    "Some choices not not found in data. Adjusting."
+    "Some choices not found in data. Adjusting."
   )
   testthat::expect_warning(
     ChoicesFilterState$new(
       chars,
       slice = filter_var(dataname = "data", varname = "var", choices = "item4")
     ),
-    "Some choices not not found in data. Adjusting.|Choices not within values found in data. Setting defaults."
+    "Some choices not found in data. Adjusting.|None of the choices were found in data. Setting defaults."
   )
 })
 
