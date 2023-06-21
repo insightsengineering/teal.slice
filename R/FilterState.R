@@ -108,6 +108,8 @@ FilterState <- R6::R6Class( # nolint
           varlabel
         }
 
+      private$state_history <- reactiveVal(list(reactiveValuesToList(slice))) # this will be as.list
+
       logger::log_trace("Instantiated FilterState object id: { private$get_id() }")
 
       invisible(self)
@@ -317,6 +319,7 @@ FilterState <- R6::R6Class( # nolint
     is_choice_limited = FALSE, # flag whether number of possible choices was limited when specifying filter
     na_rm = FALSE,
     observers = list(), # stores observers
+    state_history = NULL, # reactiveVal storing states this FilterState has had since instantiation
 
     # private methods ----
 
