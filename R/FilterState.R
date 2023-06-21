@@ -313,16 +313,14 @@ FilterState <- R6::R6Class( # nolint
               actionLink(
                 inputId = ns("back"),
                 label = icon("circle-arrow-left", lib = "font-awesome"),
-                class = sprintf("filter-card-back%s", ifelse(length(private$state_history()) > 1L, "", " disabled"))
-                # class = "filter-card-back"
+                class = "filter-card-back disabled"
               )
             },
             if (isFALSE(private$is_fixed())) {
               actionLink(
                 inputId = ns("reset"),
                 label = icon("circle-arrow-up", lib = "font-awesome"),
-                class = sprintf("filter-card-back%s", ifelse(length(private$state_history()) > 1L, "", " disabled"))
-                # class = "filter-card-back"
+                class = "filter-card-back disabled"
               )
             },
             if (isFALSE(private$is_locked())) {
