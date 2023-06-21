@@ -240,6 +240,10 @@ FilterStates <- R6::R6Class( # nolint
         )
       }
 
+      if (!is.null(private$module_add)) {
+        attr(fs, "module_add") <- private$module_add
+      }
+
       return(fs)
     },
 
@@ -272,6 +276,10 @@ FilterStates <- R6::R6Class( # nolint
         count_type <- attr(state, "count_type")
         if (length(count_type)) {
           private$count_type <- count_type
+        }
+        module_add <- attr(state, "module_add")
+        if (!is.null(module_add)) {
+          private$module_add <- module_add
         }
 
         # Drop teal_slices that refer to excluded variables.
@@ -518,6 +526,7 @@ FilterStates <- R6::R6Class( # nolint
     ns = NULL, # shiny ns()
     observers = list(), # observers
     state_list = NULL, # list of `reactiveVal`s initialized by init methods of child classes,
+    module_add = TRUE,
 
     # private methods ----
 

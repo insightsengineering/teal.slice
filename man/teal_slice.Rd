@@ -39,7 +39,8 @@ filter_settings(
   ...,
   exclude_varnames = NULL,
   include_varnames = NULL,
-  count_type = NULL
+  count_type = NULL,
+  module_add = TRUE
 )
 
 is.teal_slice(x)
@@ -111,7 +112,9 @@ can be written without prefixing \code{var1 == "x" & var2 > 0}.}
 match names of data sets and vector elements match variable names in respective data sets;
 specify which variables are allowed to be filtered; see \code{Details}}
 
-\item{count_type}{\code{character(1)} string specifying how observations are tallied by these filter states.
+\item{count_type}{\code{character(1)} string specifying how observations are tallied by these filter states.}
+
+\item{module_add}{\code{logical(1)} logical flag specifying whether to allow user to add filters (forbid filter addition).
 Possible options:
 \itemize{
 \item \code{"all"} to have counts of single \code{FilterState} to show number of observation in filtered
