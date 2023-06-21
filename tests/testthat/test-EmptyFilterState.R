@@ -56,18 +56,10 @@ testthat::test_that("print returns a properly formatted string representation", 
   filter_state <- EmptyFilterState$new(NA, slice = filter_var(dataname = "data", varname = "variable", keep_na = FALSE))
   testthat::expect_equal(
     utils::capture.output(cat(filter_state$print())),
-    c(
-      "EmptyFilterState:",
-      utils::capture.output(print(shiny::isolate(filter_state$get_state()))),
-      " "
-    )
+    c("EmptyFilterState:", utils::capture.output(print(shiny::isolate(filter_state$get_state()))))
   )
   testthat::expect_equal(
     utils::capture.output(cat(filter_state$print(show_all = TRUE))),
-    c(
-      "EmptyFilterState:",
-      utils::capture.output(print(shiny::isolate(filter_state$get_state()), show_all = TRUE)),
-      " "
-    )
+    c("EmptyFilterState:", utils::capture.output(print(shiny::isolate(filter_state$get_state()), show_all = TRUE)))
   )
 })

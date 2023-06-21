@@ -14,9 +14,12 @@
 \alias{as.teal_slices}
 \alias{[.teal_slices}
 \alias{c.teal_slices}
+\alias{slices_store}
+\alias{slices_restore}
 \alias{format.teal_slices}
 \alias{print.teal_slices}
 \alias{slices_field}
+\alias{as.list.teal_slices}
 \title{Manage filter state(s).}
 \usage{
 filter_var(
@@ -48,7 +51,7 @@ as.teal_slice(x)
 
 \method{c}{teal_slice}(...)
 
-\method{format}{teal_slice}(x, show_all = FALSE, ...)
+\method{format}{teal_slice}(x, show_all = FALSE, nchar = 40, ...)
 
 \method{print}{teal_slice}(x, ...)
 
@@ -60,11 +63,17 @@ as.teal_slices(x)
 
 \method{c}{teal_slices}(...)
 
-\method{format}{teal_slices}(x, show_all = FALSE, ...)
+slices_store(tss, file)
+
+slices_restore(file)
+
+\method{format}{teal_slices}(x, show_all = FALSE, nchar = 40, ...)
 
 \method{print}{teal_slices}(x, ...)
 
 slices_field(tss, field)
+
+\method{as.list}{teal_slices}(x, ...)
 }
 \arguments{
 \item{dataname}{\code{character(1)} name of data set}
@@ -113,9 +122,13 @@ and unfiltered dataset.
 \item \code{"none"} to have counts of single \code{FilterState} to show unfiltered number only.
 }}
 
-\item{show_all}{\code{logical(1)} specifying whether NULL elements should also be printed}
+\item{show_all}{\code{logical(1)} should parameters set to NULL be returned}
 
-\item{tss}{\code{teal_slices}}
+\item{nchar}{\code{integer(1)} or \code{NULL} indicating the number of character of the output width}
+
+\item{tss}{\code{teal_slices} object}
+
+\item{file}{\code{character(1)} specifying path to read from}
 
 \item{field}{\code{character(1)} name of \code{teal_slice} element}
 }
