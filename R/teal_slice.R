@@ -298,6 +298,14 @@ format.teal_slice <- function(x, show_all = FALSE, nchar = 40, ...) {
   checkmate::assert_flag(show_all)
   checkmate::assert_integerish(nchar, null.ok = TRUE)
 
+  slice_format_name <- function(n, name_width) {
+    if (nchar(n) == 1) {
+      return(n)
+    } else {
+      paste(format(n, width = name_width), ":")
+    }
+  }
+
   x_list <- as.list(x)
   if (!show_all) x_list <- Filter(Negate(is.null), x_list)
 
@@ -343,8 +351,6 @@ justify_json_split <- function(json, format_fun) {
   vapply(json_s, function(x) paste0(format_fun(x[1], name_width), stats::na.omit(x[2])), character(1))
 }
 
-# JSON utils for teal_slice ---------------------------------------------------------------------------------------
-
 to_json <- function(x) {
   no_unbox <- function(x) {
     nms <- c("selected", "choices")
@@ -360,27 +366,6 @@ to_json <- function(x) {
 
   jsonlite::toJSON(no_unbox(x), pretty = TRUE, auto_unbox = TRUE, digits = 16, null = "null")
 }
-
-slice_format_name <- function(n, name_width) {
-  if (nchar(n) == 1) {
-    return(n)
-  } else {
-    paste(format(n, width = name_width), ":")
-  }
-}
-
-# JSON utils for teal_slices --------------------------------------------------------------------------------------
-
-slices_format_name <- function(n, name_width) {
-  if (nchar(gsub("\\s", "", n)) <= 2) {
-    return(n)
-  } else if (grepl("slices|attributes", n)) {
-    paste0(n, ":")
-  } else {
-    paste(format(n, width = name_width), ":")
-  }
-}
-
 
 # teal_slices -----------------------------------------------------------------------------------------------------
 
@@ -526,35 +511,15 @@ c.teal_slices <- function(...) {
   )
 }
 
-#' @param tss `teal_slices` object
-#' @param file `character(1)` specifying path to save to
-#' @export
 #' @rdname teal_slice
 #' @keywords internal
-#'
-slices_store <- function(tss, file) {
-  checkmate::assert_class(tss, "teal_slices")
-  checkmate::assert_path_for_output(file, overwrite = TRUE, extension = "json")
-
-  cat(format(tss, nchar = NULL), "\n", file = file)
-}
-
-#' @param file `character(1)` specifying path to read from
 #' @export
-#' @rdname teal_slice
-#' @keywords internal
 #'
-slices_restore <- function(file) {
-  checkmate::assert_file_exists(file, access = "r", extension = "json")
-
-  tss_j <- jsonlite::fromJSON(file, simplifyDataFrame = FALSE)
-
-  tss_elements <-
-    lapply(tss_j$slices, function(x) {
-      as.teal_slice(Filter(Negate(is.null), x))
-    })
-
-  do.call(filter_settings, c(tss_elements, tss_j$attributes))
+as.list.teal_slices <- function(x, ...) {
+  slices_list <- lapply(unclass(x), as.list)
+  attrs <- attributes(unclass(x))
+  tss_list <- list(slices = slices_list, attributes = attrs)
+  Filter(Negate(is.null), tss_list) # drop attributes if empty
 }
 
 #' @param show_all `logical(1)` should parameters set to NULL be returned
@@ -566,6 +531,16 @@ slices_restore <- function(file) {
 format.teal_slices <- function(x, show_all = FALSE, nchar = 40, ...) {
   checkmate::assert_flag(show_all)
   checkmate::assert_integerish(nchar, null.ok = TRUE)
+
+  slices_format_name <- function(n, name_width) {
+    if (nchar(gsub("\\s", "", n)) <= 2) {
+      return(n)
+    } else if (grepl("slices|attributes", n)) {
+      paste0(n, ":")
+    } else {
+      paste(format(n, width = name_width), ":")
+    }
+  }
 
   slices_json <- to_json(as.list(x))
   slices_json_s <- strsplit(slices_json, "\n")[[1]]
@@ -595,13 +570,33 @@ slices_field <- function(tss, field) {
   unique(unlist(lapply(tss, function(x) x[[field]])))
 }
 
+#' @param tss `teal_slices` object
+#' @param file `character(1)` specifying path to save to
+#' @export
 #' @rdname teal_slice
 #' @keywords internal
-#' @export
 #'
-as.list.teal_slices <- function(x, ...) {
-  slices_list <- lapply(unclass(x), as.list)
-  attrs <- attributes(unclass(x))
-  tss_list <- list(slices = slices_list, attributes = attrs)
-  Filter(Negate(is.null), tss_list) # drop attributes if empty
+slices_store <- function(tss, file) {
+  checkmate::assert_class(tss, "teal_slices")
+  checkmate::assert_path_for_output(file, overwrite = TRUE, extension = "json")
+
+  cat(format(tss, nchar = NULL), "\n", file = file)
+}
+
+#' @param file `character(1)` specifying path to read from
+#' @export
+#' @rdname teal_slice
+#' @keywords internal
+#'
+slices_restore <- function(file) {
+  checkmate::assert_file_exists(file, access = "r", extension = "json")
+
+  tss_j <- jsonlite::fromJSON(file, simplifyDataFrame = FALSE)
+
+  tss_elements <-
+    lapply(tss_j$slices, function(x) {
+      as.teal_slice(Filter(Negate(is.null), x))
+    })
+
+  do.call(filter_settings, c(tss_elements, tss_j$attributes))
 }
