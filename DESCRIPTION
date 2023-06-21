@@ -23,6 +23,7 @@ Imports:
     checkmate,
     dplyr,
     grDevices,
+    jsonlite,
     htmltools,
     lifecycle,
     logger (>= 0.2.0),
