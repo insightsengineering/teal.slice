@@ -318,7 +318,8 @@ FilterState <- R6::R6Class( # nolint
             if (isFALSE(private$is_fixed())) {
               actionLink(
                 inputId = ns("back"),
-                label = icon("circle-arrow-left", lib = "font-awesome"),
+                label = NULL,
+                icon = icon("circle-arrow-left", lib = "font-awesome"),
                 class = "filter-card-back",
                 style = "display: none"
               )
@@ -326,7 +327,8 @@ FilterState <- R6::R6Class( # nolint
             if (isFALSE(private$is_fixed())) {
               actionLink(
                 inputId = ns("reset"),
-                label = icon("circle-arrow-up", lib = "font-awesome"),
+                label = NULL,
+                icon = icon("circle-arrow-up", lib = "font-awesome"),
                 class = "filter-card-back",
                 style = "display: none"
               )
