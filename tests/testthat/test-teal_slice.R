@@ -122,7 +122,11 @@ testthat::test_that("filter_settings checks arguments", {
   fs2 <- filter_var("data", "var2")
 
   testthat::expect_no_error(filter_settings(fs1, fs2))
-  testthat::expect_no_error(filter_settings(fs1, fs2, exclude_varnames = list(data = "var1"), count_type = "all"))
+  testthat::expect_no_error(filter_settings(fs1, fs2,
+    exclude_varnames = list(data = "var1"),
+    count_type = "all",
+    module_add = FALSE
+  ))
 
   testthat::expect_error(filter_settings(fs1, fs2, "fs1"), "Assertion on 'slices' failed")
 
@@ -134,6 +138,8 @@ testthat::test_that("filter_settings checks arguments", {
   testthat::expect_error(filter_settings(fs1, fs2, count_type = c("a", "b")), "Must have length 1")
 
   testthat::expect_error(filter_settings(fs1, fs2, count_type = c("all", "none")))
+
+  testthat::expect_error(filter_settings(fs1, fs2, module_add = NULL), "Assertion on 'module_add' failed")
 
   testthat::expect_error(filter_settings(fs1, fs1, fs2), "Some teal_slice objects have the same id")
 })
@@ -153,6 +159,8 @@ testthat::test_that("filter_settings returns `teal_slices`", {
   testthat::expect_null(attr(fs, "exclude"))
 
   testthat::expect_null(attr(fs, "count_type"))
+  testthat::expect_true(attr(fs, "module_add"))
+
   testthat::expect_length(filter_settings(fs1, fs2), 2L)
 })
 
