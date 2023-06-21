@@ -14,12 +14,12 @@
 \alias{as.teal_slices}
 \alias{[.teal_slices}
 \alias{c.teal_slices}
-\alias{slices_store}
-\alias{slices_restore}
+\alias{as.list.teal_slices}
 \alias{format.teal_slices}
 \alias{print.teal_slices}
 \alias{slices_field}
-\alias{as.list.teal_slices}
+\alias{slices_store}
+\alias{slices_restore}
 \title{Manage filter state(s).}
 \usage{
 filter_var(
@@ -63,9 +63,7 @@ as.teal_slices(x)
 
 \method{c}{teal_slices}(...)
 
-slices_store(tss, file)
-
-slices_restore(file)
+\method{as.list}{teal_slices}(x, ...)
 
 \method{format}{teal_slices}(x, show_all = FALSE, nchar = 40, ...)
 
@@ -73,7 +71,9 @@ slices_restore(file)
 
 slices_field(tss, field)
 
-\method{as.list}{teal_slices}(x, ...)
+slices_store(tss, file)
+
+slices_restore(file)
 }
 \arguments{
 \item{dataname}{\code{character(1)} name of data set}
@@ -128,9 +128,9 @@ and unfiltered dataset.
 
 \item{tss}{\code{teal_slices} object}
 
-\item{file}{\code{character(1)} specifying path to read from}
-
 \item{field}{\code{character(1)} name of \code{teal_slice} element}
+
+\item{file}{\code{character(1)} specifying path to read from}
 }
 \value{
 \code{filter_var} returns object of class \code{teal_slice}, which is a named list.
