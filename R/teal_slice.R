@@ -270,7 +270,7 @@ c.teal_slice <- function(...) {
 
 #' @keywords internal
 #' @export
-as.list.teal_slice <- function(x) {
+as.list.teal_slice <- function(x, ...) {
   formals <- if (inherits(x, "teal_slice_expr")) {
     formals(filter_expr)
   } else {
