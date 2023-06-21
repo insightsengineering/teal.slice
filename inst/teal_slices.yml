@@ -1,14 +1,15 @@
+---
 schemas:
   teal_slices:
     type: object
-    required: # this part of the response is always returned, attributes object is optional
+    required:
       - slices
     properties:
       slices:
         type: array
         items:
           type: object
-          required: # those 3 fields below are always returned, the other are optional in the response
+          required:
             - dataname
             - id
             - locked
