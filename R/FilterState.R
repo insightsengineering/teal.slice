@@ -218,6 +218,16 @@ FilterState <- R6::R6Class( # nolint
             private$server_inputs("inputs")
           }
 
+          private$observers$state_history <- observeEvent(
+            ignoreNULL = TRUE,
+            ignoreInit = TRUE,
+            eventExpr = private$state_history(),
+            handlerExpr = {
+              shinyjs::toggleState(id = "undo", condition = length(private$state_history()) > 1L)
+              shinyjs::toggleState(id = "reset", condition = length(private$state_history()) > 1L)
+            }
+          )
+
           private$destroy_shiny <- function() {
             logger::log_trace("Destroying FilterState inputs and observers; id: { private$get_id() }")
             # remove values from the input list
