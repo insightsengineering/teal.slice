@@ -346,9 +346,8 @@ justify_json_split <- function(json, format_fun) {
 # JSON utils for teal_slice ---------------------------------------------------------------------------------------
 
 to_json <- function(x) {
-
   no_unbox <- function(x) {
-    nms <- c('selected', 'choices')
+    nms <- c("selected", "choices")
     if (is.list(x)) {
       for (nm in nms) {
         if (!is.null(x[[nm]])) x[[nm]] <- I(x[[nm]])
@@ -375,7 +374,7 @@ slice_format_name <- function(n, name_width) {
 slices_format_name <- function(n, name_width) {
   if (nchar(gsub("\\s", "", n)) <= 2) {
     return(n)
-  } else if (grepl('slices|attributes', n)) {
+  } else if (grepl("slices|attributes", n)) {
     paste0(n, ":")
   } else {
     paste(format(n, width = name_width), ":")
@@ -569,7 +568,7 @@ format.teal_slices <- function(x, show_all = FALSE, nchar = 40, ...) {
   checkmate::assert_integerish(nchar, null.ok = TRUE)
 
   slices_json <- to_json(as.list(x))
-  slices_json_s <- strsplit(slices_json, '\n')[[1]]
+  slices_json_s <- strsplit(slices_json, "\n")[[1]]
   slices_json_s_c <- justify_json_split(slices_json_s, slices_format_name)
 
   if (!is.null(nchar)) slices_json_s_c <- trim_character(slices_json_s_c, nchar)
@@ -606,4 +605,3 @@ as.list.teal_slices <- function(x, ...) {
   tss_list <- list(slices = slices_list, attributes = attrs)
   Filter(Negate(is.null), tss_list) # drop attributes if empty
 }
-
