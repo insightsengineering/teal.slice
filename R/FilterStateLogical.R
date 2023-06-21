@@ -196,7 +196,7 @@ LogicalFilterState <- R6::R6Class( # nolint
     check_multiple = function(value) {
       if (!private$is_multiple() && length(value) > 1) {
         warning(
-          sprintf("Selection: %s is not a vector of length one. ", strtrim(paste(value, collapse = ", "), 360)),
+          sprintf("Selection: %s is not a vector of length one. ", toString(value, width = 360)),
           "Maintaining previous selection."
         )
         value <- shiny::isolate(private$get_selected())

@@ -315,7 +315,7 @@ ChoicesFilterState <- R6::R6Class( # nolint
       in_choices_mask <- values %in% private$get_choices()
       if (length(values[!in_choices_mask]) > 0) {
         warning(paste(
-          "Values:", strtrim(paste(values[!in_choices_mask], collapse = ", "), 360),
+          "Values:", toString(values[!in_choices_mask], width = 360),
           "are not in choices of column", private$get_varname(), "in dataset", private$get_dataname(), "."
         ))
       }
@@ -324,7 +324,7 @@ ChoicesFilterState <- R6::R6Class( # nolint
     check_multiple = function(value) {
       if (!private$is_multiple() && length(value) > 1) {
         warning(
-          sprintf("Selection: %s is not a vector of length one. ", strtrim(paste(value, collapse = ", "), 360)),
+          sprintf("Selection: %s is not a vector of length one. ", toString(value, width = 360)),
           "Maintaining previous selection."
         )
         value <- shiny::isolate(private$get_selected())
