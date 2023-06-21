@@ -9,9 +9,7 @@
 #'   If it is set to `reactive(NULL)` then counts based on filtered
 #'   dataset are not shown.
 #' @param slice (`teal_slice`)\cr
-#'   object created using [filter_var()] or [filter_expr()]. `slice` is kept within the
-#'   class and can be shared in other places. Shared `teal_slice` object behaves in the
-#'   way that changes in one place are reflected in other places.
+#'   object created using [filter_var()] or [filter_expr()].
 #' @param extract_type (`character(0)`, `character(1)`)\cr
 #'   specifying whether condition calls should be prefixed by `dataname`. Possible values:
 #' \itemize{

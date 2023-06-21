@@ -86,27 +86,21 @@ type and size depends on variable type}
 
 \item{locked}{\code{logical(1)} logical flag specifying whether to lock this filter state (forbid disabling and removing)}
 
-\item{multiple}{(\code{logical(1)})\cr
-flag specifying whether the \code{FilterState} more than one value can be selected;
-only applicable to \code{FilterStateChoices} and \code{FilterStateLogical}}
+\item{multiple}{\code{logical(1)} logical flag specifying whether more than one value can be selected;
+only applicable to \code{ChoicesFilterState} and \code{LogicalFilterState}}
 
-\item{id}{(\code{character(1)})\cr
-identifier of the filter}
+\item{id}{\code{character(1)} identifier of the filter}
 
 \item{...}{for \code{filter_var} and \code{filter_expr} any number of additional fields given as \code{name:value} pairs\cr
 for \code{filter_settings} any number of \code{teal_slice} objects\cr
 for other functions arguments passed to other methods}
 
-\item{title}{(\code{reactive})\cr
-title of the filter (used by \code{filter_expr})}
+\item{title}{\code{character(1)} title of the filter}
 
-\item{expr}{(\code{language})\cr
-logical expression written in executable way, see \code{Details}
-where "executable" means
-that a \code{subset} call should be able to evaluate this without failure. For
-example \code{MultiAssayExperiment::subsetByColData} requires variable names prefixed
-by \code{dataname} (e.g. \code{data$var1 == "x" & data$var2 > 0}). For \code{data.frame} call
-can be written without prefixing \code{var1 == "x" & var2 > 0}.}
+\item{expr}{\code{character(1)} string providing a logical expression;
+must be able to be evaluated without error by the appropriate subsetting function:
+for a \code{data.frame} \code{var1 == "x" & var2 > 0} is sufficient but
+\code{MultiAssayExperiment::subsetByColData} requires \code{data$var1 == "x" & data$var2 > 0}}
 
 \item{include_varnames, exclude_varnames}{\verb{named list}s of \code{character} vectors where list names
 match names of data sets and vector elements match variable names in respective data sets;
@@ -114,7 +108,7 @@ specify which variables are allowed to be filtered; see \code{Details}}
 
 \item{count_type}{\code{character(1)} string specifying how observations are tallied by these filter states.}
 
-\item{module_add}{\code{logical(1)} logical flag specifying whether to allow user to add filters (forbid filter addition).
+\item{module_add}{\code{logical(1)} logical flag specifying whether the user will be able to add new filters
 Possible options:
 \itemize{
 \item \code{"all"} to have counts of single \code{FilterState} to show number of observation in filtered

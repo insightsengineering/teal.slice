@@ -171,8 +171,8 @@ ChoicesFilterState <- R6::R6Class( # nolint
           slice$selected <- private$get_choices()[1]
         } else if (length(slice$selected) > 1 && !slice$multiple) {
           warning(
-            "FilterStateChoices allows selected to be length=1 when multiple is FALSE. ",
-            "Only first value is taken."
+            "ChoicesFilterState allows \"selected\" to be of length 1 when \"multiple\" is FALSE. ",
+            "Only the first value will be used."
           )
           slice$selected <- slice$selected[1]
         }
@@ -232,7 +232,6 @@ ChoicesFilterState <- R6::R6Class( # nolint
   ),
 
   # private members ----
-
   private = list(
     x = NULL,
     choices_counts = integer(0),
@@ -241,9 +240,6 @@ ChoicesFilterState <- R6::R6Class( # nolint
 
     # private methods ----
 
-    is_multiple = function() {
-      shiny::isolate(isTRUE(private$teal_slice$multiple))
-    },
     # @description
     # Checks validity of the choices, adjust if neccessary and sets the flag for the case where choices
     #  are limited by default from the start.
@@ -254,18 +250,21 @@ ChoicesFilterState <- R6::R6Class( # nolint
         choices <- as.character(choices)
         choices_adjusted <- choices[choices %in% private$x]
         if (length(setdiff(choices, choices_adjusted)) > 0L) {
-          warning(sprintf(
-            "Some of the choices not within variable values, adjusting. Varname: %s, dataname: %s.",
-            private$get_varname(), private$get_dataname()
-          ))
+          warning(
+            sprintf(
+              "Some choices not found in data. Adjusting. Filter id: %s.",
+              private$get_id()
+            )
+          )
           choices <- choices_adjusted
         }
         if (length(choices) == 0) {
-          warning(sprintf(
-            "Invalid choices: none of them within the values in the variable.
-            Setting defaults. Varname: %s, dataname: %s.",
-            private$get_varname(), private$get_dataname()
-          ))
+          warning(
+            sprintf(
+              "None of the choices were found in data. Setting defaults. Filter id: %s.",
+              private$get_id()
+            )
+          )
           choices <- levels(private$x)
         }
       }
@@ -283,17 +282,54 @@ ChoicesFilterState <- R6::R6Class( # nolint
       invisible(NULL)
     },
     # @description
-    # Sets choices_counts private field
+    # Sets choices_counts private field.
     set_choices_counts = function(choices_counts) {
       private$choices_counts <- choices_counts
       invisible(NULL)
     },
+    # @description
+    # Checks how many counts of each choice is present in the data.
     get_choices_counts = function() {
       if (!is.null(private$x_reactive)) {
         table(factor(private$x_reactive(), levels = private$get_choices()))
       } else {
         NULL
       }
+    },
+    # @description
+    # Checks whether the input should be rendered as a checkboxgroup/radiobutton or a drop-down.
+    is_checkboxgroup = function() {
+      length(private$get_choices()) <= getOption("teal.threshold_slider_vs_checkboxgroup")
+    },
+    cast_and_validate = function(values) {
+      tryCatch(
+        expr = {
+          values <- as.character(values)
+          if (any(is.na(values))) stop()
+        },
+        error = function(error) stop("The array of set values must contain values coercible to character.")
+      )
+      values
+    },
+    remove_out_of_bound_values = function(values) {
+      in_choices_mask <- values %in% private$get_choices()
+      if (length(values[!in_choices_mask]) > 0) {
+        warning(paste(
+          "Values:", toString(values[!in_choices_mask], width = 360),
+          "are not in choices of column", private$get_varname(), "in dataset", private$get_dataname(), "."
+        ))
+      }
+      values[in_choices_mask]
+    },
+    check_multiple = function(value) {
+      if (!private$is_multiple() && length(value) > 1) {
+        warning(
+          sprintf("Selection: %s is not a vector of length one. ", toString(value, width = 360)),
+          "Maintaining previous selection."
+        )
+        value <- shiny::isolate(private$get_selected())
+      }
+      value
     },
     validate_selection = function(value) {
       if (!is.character(value)) {
@@ -311,40 +347,6 @@ ChoicesFilterState <- R6::R6Class( # nolint
         private$get_varname()
       )
       check_in_subset(value, private$get_choices(), pre_msg = pre_msg)
-    },
-    cast_and_validate = function(values) {
-      tryCatch(
-        expr = {
-          values <- as.character(values)
-          if (any(is.na(values))) stop()
-        },
-        error = function(error) stop("The array of set values must contain values coercible to character.")
-      )
-      values
-    },
-    remove_out_of_bound_values = function(values) {
-      in_choices_mask <- values %in% private$get_choices()
-      if (length(values[!in_choices_mask]) > 0) {
-        warning(paste(
-          "Values:", strtrim(paste(values[!in_choices_mask], collapse = ", "), 360),
-          "are not in choices of column", private$get_varname(), "in dataset", private$get_dataname(), "."
-        ))
-      }
-      values <- values[in_choices_mask]
-
-      if (length(values) != 1 && !private$is_multiple()) {
-        warning(sprintf(
-          "Values: %s are not a vector of length one. The first value will be selected by default.
-                        Setting defaults. Varname: %s, dataname: %s.",
-          strtrim(toString(values), 360),
-          private$get_varname(), private$get_dataname()
-        ))
-        values <- shiny::isolate(private$get_selected())
-      }
-      values
-    },
-    is_checkboxgroup = function() {
-      length(private$get_choices()) <= getOption("teal.threshold_slider_vs_checkboxgroup")
     },
 
     # shiny modules ----

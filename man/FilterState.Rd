@@ -89,11 +89,7 @@ If it is set to \code{reactive(NULL)} then counts based on filtered
 dataset are not shown.}
 
 \item{\code{slice}}{(\code{teal_slice})\cr
-object created using \code{\link[=filter_var]{filter_var()}}. \code{teal_slice} is stored
-in the class and \code{set_state} directly manipulates values within \code{teal_slice}. \code{get_state}
-returns \code{teal_slice} object which can be reused in other places. Beware, that \code{teal_slice}
-is an immutable object which means that changes in particular object are automatically
-reflected in all places which refer to the same \code{teal_slice}.}
+object created by \code{\link[=filter_var]{filter_var()}}}
 
 \item{\code{extract_type}}{(\code{character(0)}, \code{character(1)})\cr
 specifying whether condition calls should be prefixed by \code{dataname}. Possible values:

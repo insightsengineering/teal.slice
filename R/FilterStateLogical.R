@@ -168,13 +168,11 @@ LogicalFilterState <- R6::R6Class( # nolint
     }
   ),
 
-  # private fields ----
-
+  # private members ----
   private = list(
     choices_counts = integer(0),
-    is_multiple = function() {
-      shiny::isolate(isTRUE(private$teal_slice$multiple))
-    },
+
+    # private methods ----
     set_choices = function(choices) {
       private$teal_slice$choices <- c(TRUE, FALSE)
       invisible(NULL)
@@ -184,24 +182,6 @@ LogicalFilterState <- R6::R6Class( # nolint
     set_choices_counts = function(choices_counts) {
       private$choices_counts <- choices_counts
       invisible(NULL)
-    },
-    validate_selection = function(value) {
-      if (!(checkmate::test_logical(value, any.missing = FALSE, unique = TRUE))) {
-        stop(
-          sprintf(
-            "value of the selection for `%s` in `%s` should be a logical vector of length <= 2",
-            private$get_varname(),
-            private$get_dataname()
-          )
-        )
-      }
-
-      pre_msg <- sprintf(
-        "dataset '%s', variable '%s': ",
-        private$get_dataname(),
-        private$get_varname()
-      )
-      check_in_subset(value, private$get_choices(), pre_msg = pre_msg)
     },
     cast_and_validate = function(values) {
       tryCatch(
@@ -213,17 +193,26 @@ LogicalFilterState <- R6::R6Class( # nolint
       )
       values_logical
     },
-    remove_out_of_bound_values = function(values) {
-      if (length(values) != 1 && !private$is_multiple()) {
-        warning(sprintf(
-          "Values: %s are not a vector of length one. The first value will be selected by default.
-                        Setting defaults. Varname: %s, dataname: %s.",
-          strtrim(paste(values, collapse = ", "), 360),
-          private$get_varname(), private$get_dataname()
-        ))
-        values <- shiny::isolate(private$get_selected())
+    check_multiple = function(value) {
+      if (!private$is_multiple() && length(value) > 1) {
+        warning(
+          sprintf("Selection: %s is not a vector of length one. ", toString(value, width = 360)),
+          "Maintaining previous selection."
+        )
+        value <- shiny::isolate(private$get_selected())
       }
-      values
+      value
+    },
+    validate_selection = function(value) {
+      if (!is.logical(value)) {
+        stop(
+          sprintf(
+            "value of the selection for `%s` in `%s` should be a logical vector of length <= 2",
+            private$get_varname(),
+            private$get_dataname()
+          )
+        )
+      }
     },
 
     # Answers the question of whether the current settings and values selected actually filters out any values.
