@@ -230,10 +230,10 @@ FilterState <- R6::R6Class( # nolint
             }
           )
 
-          private$observers$undo <- observeEvent(
+          private$observers$back <- observeEvent(
             ignoreNULL = TRUE,
             ignoreInit = TRUE,
-            eventExpr = input$undo,
+            eventExpr = input$back,
             handlerExpr = {
               history <- rev(private$state_history())
               slice <- history[[2L]]
@@ -260,7 +260,7 @@ FilterState <- R6::R6Class( # nolint
             ignoreInit = TRUE,
             eventExpr = private$state_history(),
             handlerExpr = {
-              shinyjs::toggleState(id = "undo", condition = length(private$state_history()) > 1L)
+              shinyjs::toggleState(id = "back", condition = length(private$state_history()) > 1L)
               shinyjs::toggleState(id = "reset", condition = length(private$state_history()) > 1L)
             }
           )
@@ -311,18 +311,18 @@ FilterState <- R6::R6Class( # nolint
             class  = "filter-card-controls",
             if (isFALSE(private$is_fixed())) {
               actionLink(
-                inputId = ns("undo"),
+                inputId = ns("back"),
                 label = icon("circle-arrow-left", lib = "font-awesome"),
-                class = sprintf("filter-card-undo%s", ifelse(length(private$state_history()) > 1L, "", " disabled"))
-                # class = "filter-card-undo"
+                class = sprintf("filter-card-back%s", ifelse(length(private$state_history()) > 1L, "", " disabled"))
+                # class = "filter-card-back"
               )
             },
             if (isFALSE(private$is_fixed())) {
               actionLink(
                 inputId = ns("reset"),
                 label = icon("circle-arrow-up", lib = "font-awesome"),
-                class = sprintf("filter-card-undo%s", ifelse(length(private$state_history()) > 1L, "", " disabled"))
-                # class = "filter-card-undo"
+                class = sprintf("filter-card-back%s", ifelse(length(private$state_history()) > 1L, "", " disabled"))
+                # class = "filter-card-back"
               )
             },
             if (isFALSE(private$is_locked())) {
