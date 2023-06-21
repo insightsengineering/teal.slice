@@ -260,13 +260,32 @@ FilterState <- R6::R6Class( # nolint
             tags$span(tags$strong(private$get_varname())),
             tags$span(private$get_varlabel(), class = "filter-card-varlabel")
           ),
-          if (isFALSE(private$is_locked())) {
-            actionLink(
-              inputId = ns("remove"),
-              label = icon("circle-xmark", lib = "font-awesome"),
-              class = "filter-card-remove"
-            )
-          },
+          div(
+            class  = "filter-card-controls",
+            if (isFALSE(private$is_fixed())) {
+              actionLink(
+                inputId = ns("undo"),
+                label = icon("circle-arrow-left", lib = "font-awesome"),
+                class = sprintf("filter-card-undo%s", ifelse(length(private$state_history()) > 1L, "", " disabled"))
+                # class = "filter-card-undo"
+              )
+            },
+            if (isFALSE(private$is_fixed())) {
+              actionLink(
+                inputId = ns("reset"),
+                label = icon("circle-arrow-up", lib = "font-awesome"),
+                class = sprintf("filter-card-undo%s", ifelse(length(private$state_history()) > 1L, "", " disabled"))
+                # class = "filter-card-undo"
+              )
+            },
+            if (isFALSE(private$is_locked())) {
+              actionLink(
+                inputId = ns("remove"),
+                label = icon("circle-xmark", lib = "font-awesome"),
+                class = "filter-card-remove"
+              )
+            }
+          ),
           tags$div(
             class = "filter-card-summary",
             `data-toggle` = "collapse",
