@@ -260,8 +260,14 @@ FilterState <- R6::R6Class( # nolint
             ignoreInit = TRUE,
             eventExpr = private$state_history(),
             handlerExpr = {
-              shinyjs::toggleState(id = "back", condition = length(private$state_history()) > 1L)
-              shinyjs::toggleState(id = "reset", condition = length(private$state_history()) > 1L)
+              shinyjs::delay(
+                ms = 100,
+                expr = shinyjs::toggleElement(id = "back", condition = length(private$state_history()) > 1L)
+              )
+              shinyjs::delay(
+                ms = 100,
+                expr = shinyjs::toggleElement(id = "reset", condition = length(private$state_history()) > 1L)
+              )
             }
           )
 
@@ -313,14 +319,16 @@ FilterState <- R6::R6Class( # nolint
               actionLink(
                 inputId = ns("back"),
                 label = icon("circle-arrow-left", lib = "font-awesome"),
-                class = "filter-card-back disabled"
+                class = "filter-card-back",
+                style = "display: none"
               )
             },
             if (isFALSE(private$is_fixed())) {
               actionLink(
                 inputId = ns("reset"),
                 label = icon("circle-arrow-up", lib = "font-awesome"),
-                class = "filter-card-back disabled"
+                class = "filter-card-back",
+                style = "display: none"
               )
             },
             if (isFALSE(private$is_locked())) {
