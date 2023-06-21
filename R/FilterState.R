@@ -218,6 +218,43 @@ FilterState <- R6::R6Class( # nolint
             private$server_inputs("inputs")
           }
 
+          private$observers$selected <- observeEvent(
+            ignoreNULL = TRUE,
+            ignoreInit = TRUE,
+            eventExpr = private$get_selected(),
+            handlerExpr = {
+              current_state <- reactiveValuesToList(self$get_state()) # this will be as.list
+              history <- private$state_history()
+              history_update <- c(history, list(current_state))
+              private$state_history(history_update)
+            }
+          )
+
+          private$observers$undo <- observeEvent(
+            ignoreNULL = TRUE,
+            ignoreInit = TRUE,
+            eventExpr = input$undo,
+            handlerExpr = {
+              history <- rev(private$state_history())
+              slice <- history[[2L]]
+              history_update <- rev(history[-(1:2)])
+              private$state_history(history_update)
+              state <- do.call(filter_var, slice)
+              self$set_state(state)
+            }
+          )
+
+          private$observers$reset <- observeEvent(
+            ignoreNULL = TRUE,
+            ignoreInit = TRUE,
+            eventExpr = input$reset,
+            handlerExpr = {
+              slice <- private$state_history()[[1L]]
+              state <- do.call(filter_var, slice)
+              self$set_state(state)
+            }
+          )
+
           private$observers$state_history <- observeEvent(
             ignoreNULL = TRUE,
             ignoreInit = TRUE,
