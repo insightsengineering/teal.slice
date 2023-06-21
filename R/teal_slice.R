@@ -200,7 +200,6 @@ filter_expr <- function(dataname, id, title, expr, locked = FALSE, ...) {
   ans
 }
 
-
 #' @export
 #' @rdname teal_slice
 #'
@@ -308,7 +307,7 @@ format.teal_slice <- function(x, show_all = FALSE, nchar = 40, ...) {
   x_list <- as.list(x)
   if (!show_all) x_list <- Filter(Negate(is.null), x_list)
 
-  x_json <- slice_list_to_json(x_list)
+  x_json <- to_json(x_list)
   x_json_s <- strsplit(x_json, split = "\n")[[1]]
   x_json_c <- justify_json_split(x_json_s, slice_format_name)
 
@@ -352,12 +351,21 @@ justify_json_split <- function(json, format_fun) {
 
 # JSON utils for teal_slice ---------------------------------------------------------------------------------------
 
-slice_list_to_json <- function(x) {
-  # selected and choices should remain arrays
-  if (!is.null(x$selected)) x$selected <- I(x$selected)
-  if (!is.null(x$choices)) x$choices <- I(x$choices)
+to_json <- function(x) {
 
-  jsonlite::toJSON(x, pretty = TRUE, auto_unbox = TRUE, digits = 16, null = "null")
+  no_unbox <- function(x) {
+    nms <- c('selected', 'choices')
+    if (is.list(x)) {
+      for (nm in nms) {
+        if (!is.null(x[[nm]])) x[[nm]] <- I(x[[nm]])
+      }
+      lapply(x, no_unbox)
+    } else {
+      x
+    }
+  }
+
+  jsonlite::toJSON(no_unbox(x), pretty = TRUE, auto_unbox = TRUE, digits = 16, null = "null")
 }
 
 slice_format_name <- function(n, name_width) {
@@ -369,18 +377,6 @@ slice_format_name <- function(n, name_width) {
 }
 
 # JSON utils for teal_slices --------------------------------------------------------------------------------------
-
-slices_list_to_json <- function(x) {
-
-  # selected and choices should remain arrays
-  x$slices <- lapply(x$slices, function(x) {
-    if (!is.null(x$selected)) x$selected <- I(x$selected)
-    if (!is.null(x$choices)) x$choices <- I(x$choices)
-    x
-  })
-
-  jsonlite::toJSON(x, pretty = TRUE, auto_unbox = TRUE, digits = 16, null = "null")
-}
 
 slices_format_name <- function(n, name_width) {
   if (nchar(gsub("\\s", "", n)) <= 2) {
@@ -548,7 +544,7 @@ slices_store <- function(tss, file) {
   checkmate::assert_path_for_output(file, overwrite = TRUE, extension = "json")
 
   # no justifying
-  # cat(slices_list_to_json(as.list(tss)), "\n", file = file)
+  # cat(to_json(as.list(tss)), "\n", file = file)
   # or with justifying
   cat(format(tss, nchar = NULL), "\n", file = file)
 }
@@ -581,7 +577,7 @@ format.teal_slices <- function(x, show_all = FALSE, nchar = 40, ...) {
   checkmate::assert_flag(show_all)
   checkmate::assert_integerish(nchar, null.ok = TRUE)
 
-  slices_json <- slices_list_to_json(as.list(x))
+  slices_json <- to_json(as.list(x))
   slices_json_s <- strsplit(slices_json, '\n')[[1]]
   slices_json_s_c <- justify_json_split(slices_json_s, slices_format_name)
 
@@ -614,15 +610,9 @@ slices_field <- function(tss, field) {
 #' @export
 #'
 as.list.teal_slices <- function(x, ...) {
-
-  # Below substitutes slices_list <- lapply(x, as.list), that can not be
-  # executed because lapply uses as.list and we get into an infinite loop of recursion.
-  slices_list <- vector("list", length(x))
-  for (s in seq_along(slices_list)) {
-    slices_list[[s]] <- as.list(x[[s]])
-  }
-
+  slices_list <- lapply(unclass(x), as.list)
   attrs <- attributes(unclass(x))
   tss_list <- list(slices = slices_list, attributes = attrs)
   Filter(Negate(is.null), tss_list) # drop attributes if empty
 }
+
