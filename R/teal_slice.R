@@ -170,7 +170,7 @@ filter_var <- function(dataname,
   checkmate::assert_flag(locked)
   checkmate::assert_flag(multiple, null.ok = TRUE)
   ans <- c(as.list(environment()), list(...))
-  ans <- Filter(Negate(is.null), ans)
+  # ans <- Filter(Negate(is.null), ans) # this will be removed by issue #339
   if (missing(id)) {
     ans$id <- paste(Filter(length, ans[c("dataname", "varname", "datalabel", "arg")]), collapse = " ")
   }
@@ -195,7 +195,7 @@ filter_expr <- function(dataname, id, title, expr, locked = FALSE, ...) {
   checkmate::assert_string(title)
   checkmate::assert_string(expr)
   ans <- c(as.list(environment()), list(...))
-  ans <- Filter(Negate(is.null), ans)
+  # ans <- Filter(Negate(is.null), ans) # this will be removed by issue #339
   ans <- do.call(shiny::reactiveValues, ans)
 
   class(ans) <- c("teal_slice_expr", "teal_slice", class(ans))
