@@ -108,7 +108,7 @@ specify which variables are allowed to be filtered; see \code{Details}}
 
 \item{count_type}{\code{character(1)} string specifying how observations are tallied by these filter states.}
 
-\item{module_add}{\code{logical(1)} logical flag specifying whether to allow user to add filters (forbid filter addition).
+\item{module_add}{\code{logical(1)} logical flag specifying whether to allow user to create new filters from available columns (forbid filter addition).
 Possible options:
 \itemize{
 \item \code{"all"} to have counts of single \code{FilterState} to show number of observation in filtered
