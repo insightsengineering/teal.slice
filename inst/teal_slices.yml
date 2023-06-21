@@ -18,13 +18,23 @@ schemas:
             varname:
               type: string
             choices:
-              type: array
-              items:
-                type: ['null', string, boolean, number]
+              anyOf:
+                - 'null'
+                - string
+                - boolean
+                - number
+                - array
+                  items:
+                    type: ['null', string, boolean, number]
             selected:
-              type: array
-              items:
-                type: ['null', string, boolean, number]
+              anyOf:
+                - 'null'
+                - string
+                - boolean
+                - number
+                - array
+                  items:
+                    type: ['null', string, boolean, number]
             keep_na:
               type: ['null', boolean]
             keep_inf:
@@ -49,4 +59,4 @@ schemas:
           include_varnames:
             type: object
           count_type:
-            type: string
+            type: ['null', string]

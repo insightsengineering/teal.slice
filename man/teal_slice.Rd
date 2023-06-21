@@ -14,11 +14,12 @@
 \alias{as.teal_slices}
 \alias{[.teal_slices}
 \alias{c.teal_slices}
-\alias{store_slices}
-\alias{restore_slices}
+\alias{slices_store}
+\alias{slices_restore}
 \alias{format.teal_slices}
 \alias{print.teal_slices}
 \alias{slices_field}
+\alias{as.list.teal_slices}
 \title{Manage filter state(s).}
 \usage{
 filter_var(
@@ -62,15 +63,17 @@ as.teal_slices(x)
 
 \method{c}{teal_slices}(...)
 
-store_slices(tss, file)
+slices_store(tss, file)
 
-restore_slices(file)
+slices_restore(file)
 
 \method{format}{teal_slices}(x, show_all = FALSE, nchar = 40, ...)
 
 \method{print}{teal_slices}(x, ...)
 
 slices_field(tss, field)
+
+\method{as.list}{teal_slices}(x, ...)
 }
 \arguments{
 \item{dataname}{\code{character(1)} name of data set}
@@ -124,8 +127,6 @@ Possible options:
 and unfiltered dataset.
 \item \code{"none"} to have counts of single \code{FilterState} to show unfiltered number only.
 }}
-
-\item{x}{\code{teal_slice} object}
 
 \item{show_all}{\code{logical(1)} should parameters set to NULL be returned}
 
