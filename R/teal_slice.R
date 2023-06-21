@@ -543,9 +543,6 @@ slices_store <- function(tss, file) {
   checkmate::assert_class(tss, "teal_slices")
   checkmate::assert_path_for_output(file, overwrite = TRUE, extension = "json")
 
-  # no justifying
-  # cat(to_json(as.list(tss)), "\n", file = file)
-  # or with justifying
   cat(format(tss, nchar = NULL), "\n", file = file)
 }
 
