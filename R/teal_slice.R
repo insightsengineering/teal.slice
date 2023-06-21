@@ -72,6 +72,7 @@
 #'  match names of data sets and vector elements match variable names in respective data sets;
 #'  specify which variables are allowed to be filtered; see `Details`
 #' @param count_type `character(1)` string specifying how observations are tallied by these filter states.
+#' @param module_add `logical(1)` logical flag specifying whether to allow user to add filters (forbid filter addition).
 #'  Possible options:
 #'  - `"all"` to have counts of single `FilterState` to show number of observation in filtered
 #'   and unfiltered dataset.
@@ -203,7 +204,8 @@ filter_expr <- function(dataname, id, title, expr, locked = FALSE, ...) {
 filter_settings <- function(...,
                             exclude_varnames = NULL,
                             include_varnames = NULL,
-                            count_type = NULL) {
+                            count_type = NULL,
+                            module_add = TRUE) {
   slices <- list(...)
   checkmate::assert_list(slices, types = "teal_slice", any.missing = FALSE)
   slices_id <- shiny::isolate(vapply(slices, `[[`, character(1L), "id"))
@@ -217,12 +219,14 @@ filter_settings <- function(...,
   checkmate::assert_list(include_varnames, names = "named", types = "character", null.ok = TRUE, min.len = 1)
   checkmate::assert_character(count_type, len = 1, null.ok = TRUE)
   checkmate::assert_subset(count_type, choices = c("all", "none"), empty.ok = TRUE)
+  checkmate::assert_logical(module_add)
 
   structure(
     slices,
     exclude_varnames = exclude_varnames,
     include_varnames = include_varnames,
     count_type = count_type,
+    module_add = module_add,
     class = c("teal_slices", class(slices))
   )
 }
