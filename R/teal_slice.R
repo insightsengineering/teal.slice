@@ -340,7 +340,7 @@ trim_character <- function(x, nchar) {
 justify_json_split <- function(json, format_fun) {
   json_s <- strsplit(json, split = ":", fixed = TRUE)
   name_width <- max(unlist(gregexpr(":", json))) - 1
-  vapply(json_s, function(x) paste0(format_fun(x[1], name_width), na.omit(x[2])), character(1))
+  vapply(json_s, function(x) paste0(format_fun(x[1], name_width), stats::na.omit(x[2])), character(1))
 }
 
 # JSON utils for teal_slice ---------------------------------------------------------------------------------------
