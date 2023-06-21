@@ -122,7 +122,10 @@ testthat::test_that("filter_settings checks arguments", {
   fs2 <- filter_var("data", "var2")
 
   testthat::expect_no_error(filter_settings(fs1, fs2))
-  testthat::expect_no_error(filter_settings(fs1, fs2, exclude_varnames = list(data = "var1"), count_type = "all", module_add = FALSE))
+  testthat::expect_no_error(filter_settings(fs1, fs2,
+                                            exclude_varnames = list(data = "var1"),
+                                            count_type = "all",
+                                            module_add = FALSE))
 
   testthat::expect_error(filter_settings(fs1, fs2, "fs1"), "Assertion on 'slices' failed")
 
