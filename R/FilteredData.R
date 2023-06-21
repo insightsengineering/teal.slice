@@ -401,11 +401,11 @@ FilteredData <- R6::R6Class( # nolint
     get_filter_state = function() {
       states <- unname(lapply(private$filtered_datasets, function(x) x$get_filter_state()))
       slices <- Filter(Negate(is.null), states)
-      fs <- do.call(c, slices)
-      if (!is.null(private$module_add)) {
-        attr(fs, "module_add") <- private$module_add
+      slices <- do.call(c, slices)
+      if (!is.null(slices)) {
+        attr(slices, "module_add") <- private$module_add
       }
-      fs
+      slices
     },
 
     #' @description
