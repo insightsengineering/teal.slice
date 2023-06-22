@@ -122,6 +122,8 @@ FilteredData <- R6::R6Class( # nolint
 
       self$set_available_teal_slices(x = reactive(NULL))
 
+      private$state_history <- reactiveVal(list())
+
       invisible(self)
     },
 
@@ -1003,7 +1005,9 @@ FilteredData <- R6::R6Class( # nolint
 
     # reactive i.e. filtered data
     reactive_data = list(),
-    cached_states = NULL,
+
+    # reactiveVal storing history of filter states
+    state_history = NULL,
 
     # private methods ----
 
