@@ -72,11 +72,11 @@
 #'  match names of data sets and vector elements match variable names in respective data sets;
 #'  specify which variables are allowed to be filtered; see `Details`
 #' @param count_type `character(1)` string specifying how observations are tallied by these filter states.
-#' @param module_add `logical(1)` logical flag specifying whether the user will be able to add new filters
 #'  Possible options:
 #'  - `"all"` to have counts of single `FilterState` to show number of observation in filtered
 #'   and unfiltered dataset.
 #'  - `"none"` to have counts of single `FilterState` to show unfiltered number only.
+#' @param module_add `logical(1)` logical flag specifying whether the user will be able to add new filters
 #' @param id `character(1)` identifier of the filter
 #' @param title `character(1)` title of the filter
 #' @param expr `character(1)` string providing a logical expression;

@@ -106,15 +106,15 @@ for a \code{data.frame} \code{var1 == "x" & var2 > 0} is sufficient but
 match names of data sets and vector elements match variable names in respective data sets;
 specify which variables are allowed to be filtered; see \code{Details}}
 
-\item{count_type}{\code{character(1)} string specifying how observations are tallied by these filter states.}
-
-\item{module_add}{\code{logical(1)} logical flag specifying whether the user will be able to add new filters
+\item{count_type}{\code{character(1)} string specifying how observations are tallied by these filter states.
 Possible options:
 \itemize{
 \item \code{"all"} to have counts of single \code{FilterState} to show number of observation in filtered
 and unfiltered dataset.
 \item \code{"none"} to have counts of single \code{FilterState} to show unfiltered number only.
 }}
+
+\item{module_add}{\code{logical(1)} logical flag specifying whether the user will be able to add new filters}
 
 \item{show_all}{\code{logical(1)} specifying whether NULL elements should also be printed}
 
