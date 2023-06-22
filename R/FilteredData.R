@@ -725,14 +725,43 @@ FilteredData <- R6::R6Class( # nolint
 
         private$srv_available_filters("available_filters")
 
-        shiny::observeEvent(input$minimise_filter_active, {
+        observeEvent(private$get_filter_count(), { # replace get_filter_count with a trigger on state itself
+          current_state <- lapply(unclass(self$get_filter_state()), reactiveValuesToList) # this will use as.list
+          history <- private$state_history()
+          history_update <- c(history, list(current_state))
+          private$state_history(history_update)
+        })
+
+        observeEvent(input$filter_state_back, {
+          history <- rev(private$state_history())
+          slices <- history[[2L]]
+          history_update <- rev(history[-(1:2)])
+          private$state_history(history_update)
+          state <- do.call(filter_settings, lapply(slices, do.call, what = filter_var))
+          self$remove_filter_state(slices_diff(self$get_filter_state(), state))
+          self$set_filter_state(state)
+        })
+
+        observeEvent(input$filter_state_reset, {
+          slices <- private$state_history()[[1L]]
+          state <- do.call(filter_settings, lapply(slices, do.call, what = filter_var))
+          self$remove_filter_state(slices_diff(self$get_filter_state(), state))
+          self$set_filter_state(state)
+        })
+
+        observeEvent(private$state_history(), {
+          shinyjs::toggleState(id = "filter_state_back", condition = length(private$state_history()) > 1L)
+          shinyjs::toggleState(id = "filter_state_reset", condition = length(private$state_history()) > 1L)
+        })
+
+        observeEvent(input$minimise_filter_active, {
           shinyjs::toggle("filter_active_vars_contents")
           shinyjs::toggle("filters_active_count")
           toggle_icon(session$ns("minimise_filter_active"), c("fa-angle-right", "fa-angle-down"))
           toggle_title(session$ns("minimise_filter_active"), c("Restore panel", "Minimise Panel"))
         })
 
-        shiny::observeEvent(private$get_filter_count(), {
+        observeEvent(private$get_filter_count(), {
           shinyjs::toggle("remove_all_filters", condition = private$get_filter_count() != 0)
           shinyjs::show("filter_active_vars_contents")
           shinyjs::hide("filters_active_count")
