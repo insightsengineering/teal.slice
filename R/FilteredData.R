@@ -725,6 +725,8 @@ FilteredData <- R6::R6Class( # nolint
 
         private$srv_available_filters("available_filters")
 
+        # This is a naked observer because observeEvent listening on self$get_filter_state()
+        # only registers changes in the number of `teal_slice`s and not their content.
         observe({
           current_state <- lapply(unclass(self$get_filter_state()), reactiveValuesToList) # this will use as.list
           history <- isolate(private$state_history())
