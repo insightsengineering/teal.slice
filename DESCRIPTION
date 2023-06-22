@@ -48,8 +48,6 @@ VignetteBuilder:
 RdMacros:
     lifecycle
 Remotes:
-    insightsengineering/scda.2022@*release,
-    insightsengineering/scda@*release,
     insightsengineering/teal.data@*release,
     insightsengineering/teal.logger@*release,
     insightsengineering/teal.widgets@*release
