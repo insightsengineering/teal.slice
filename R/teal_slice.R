@@ -358,7 +358,7 @@ justify_json_split <- function(json, format_fun) {
   vapply(json_split, function(x) paste0(format_fun(x[1], name_width), stats::na.omit(x[2])), character(1))
 }
 
-max_collon_position <- function(x){
+max_collon_position <- function(x) {
   max(unlist(gregexpr(":", x))) - 1
 }
 
