@@ -725,9 +725,9 @@ FilteredData <- R6::R6Class( # nolint
 
         private$srv_available_filters("available_filters")
 
-        observeEvent(private$get_filter_count(), { # replace get_filter_count with a trigger on state itself
+        observe({
           current_state <- lapply(unclass(self$get_filter_state()), reactiveValuesToList) # this will use as.list
-          history <- private$state_history()
+          history <- isolate(private$state_history())
           history_update <- c(history, list(current_state))
           private$state_history(history_update)
         })
