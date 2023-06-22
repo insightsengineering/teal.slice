@@ -515,8 +515,8 @@ c.teal_slices <- function(...) {
 #' @keywords internal
 #' @export
 #'
-as.list.teal_slices <- function(x, ...) {
-  slices_list <- lapply(unclass(x), as.list)
+slices_to_list <- function(x) {
+  slices_list <- lapply(x, as.list)
   attrs <- attributes(unclass(x))
   tss_list <- list(slices = slices_list, attributes = attrs)
   Filter(Negate(is.null), tss_list) # drop attributes if empty
@@ -542,7 +542,11 @@ format.teal_slices <- function(x, show_all = FALSE, nchar = 40, ...) {
     }
   }
 
-  slices_json <- to_json(as.list(x))
+  slices_list <- slices_to_list(x)
+
+  if (!show_all) slices_list$slices <- lapply(slices_list$slices, function(slice) Filter(Negate(is.null), slice))
+
+  slices_json <- to_json(slices_list)
   slices_json_split <- strsplit(slices_json, "\n")[[1]]
   slices_json_split_justified <- justify_json_split(slices_json_split, slices_format_name)
 

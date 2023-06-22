@@ -14,7 +14,7 @@
 \alias{as.teal_slices}
 \alias{[.teal_slices}
 \alias{c.teal_slices}
-\alias{as.list.teal_slices}
+\alias{slices_to_list}
 \alias{format.teal_slices}
 \alias{print.teal_slices}
 \alias{slices_field}
@@ -63,7 +63,7 @@ as.teal_slices(x)
 
 \method{c}{teal_slices}(...)
 
-\method{as.list}{teal_slices}(x, ...)
+slices_to_list(x)
 
 \method{format}{teal_slices}(x, show_all = FALSE, nchar = 40, ...)
 
