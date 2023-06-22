@@ -595,12 +595,13 @@ slices_store <- function(tss, file) {
 slices_restore <- function(file) {
   checkmate::assert_file_exists(file, access = "r", extension = "json")
 
-  tss_j <- jsonlite::fromJSON(file, simplifyDataFrame = FALSE)
+  tss_json <- jsonlite::fromJSON(file, simplifyDataFrame = FALSE)
 
   tss_elements <-
-    lapply(tss_j$slices, function(x) {
-      as.teal_slice(Filter(Negate(is.null), x))
-    })
+    lapply(tss_json$slices, as.teal_slice)
+  # function(x) {
+  #     as.teal_slice(Filter(Negate(is.null), x))
+  #   })
 
-  do.call(filter_settings, c(tss_elements, tss_j$attributes))
+  do.call(filter_settings, c(tss_elements, tss_json$attributes))
 }
