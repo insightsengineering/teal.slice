@@ -539,3 +539,27 @@ slices_field <- function(tss, field) {
   checkmate::assert_class(tss, "teal_slices")
   unique(unlist(lapply(tss, function(x) x[[field]])))
 }
+
+
+
+# get difference between `teal_slices` objects
+# accepts any number of `teal_slices`
+# subtracts second from first, then third from the difference and so on
+#' @rdname teal_slice
+#' @keywords internal
+#'
+slices_diff <- function(...) {
+  args <- list(...)
+  lapply(args, checkmate::assert_class, classes = "teal_slices")
+  foo <- function(x, y) {
+    ids_x <- vapply(x, function(x) x$id, character(1L))
+    ids_y <- vapply(y, function(x) x$id, character(1L))
+    ids_diff <- setdiff(ids_x, ids_y)
+    if (identical(ids_diff, character(0L))) {
+      x
+    } else {
+      Filter(function(x) x$id %in% ids_diff, x)
+    }
+  }
+  Reduce(foo, args)
+}
