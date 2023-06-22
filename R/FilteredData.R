@@ -664,14 +664,26 @@ FilteredData <- R6::R6Class( # nolint
           tags$span("Active Filter Variables", class = "text-primary mb-4"),
           private$ui_available_filters(ns("available_filters")),
           actionLink(
-            ns("minimise_filter_active"),
+            inputId = ns("filter_state_back"),
+            label = NULL,
+            icon = icon("circle-arrow-left", lib = "font-awesome"),
+            class = "back pull-right disabled"
+          ),
+          actionLink(
+            inputId = ns("filter_state_reset"),
+            label = NULL,
+            icon = icon("circle-arrow-up", lib = "font-awesome"),
+            class = "reset pull-right disabled"
+          ),
+          actionLink(
+            inputId = ns("minimise_filter_active"),
             label = NULL,
             icon = icon("angle-down", lib = "font-awesome"),
             title = "Minimise panel",
-            class = "remove pull-right"
+            class = "collapse_all pull-right"
           ),
           actionLink(
-            ns("remove_all_filters"),
+            inputId = ns("remove_all_filters"),
             label = "",
             icon("circle-xmark", lib = "font-awesome"),
             title = "Remove active filters",
