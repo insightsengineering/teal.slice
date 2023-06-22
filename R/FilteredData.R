@@ -1024,11 +1024,10 @@ FilteredData <- R6::R6Class( # nolint
     }
   ),
 
-  ## __Private Methods ====
+  ## __Private Members ====
   private = list(
     # selectively hide / show to only show `active_datanames` out of all datanames
 
-    # private attributes ----
     filtered_datasets = list(),
 
     # activate/deactivate filter panel
