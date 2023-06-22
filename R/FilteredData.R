@@ -1043,10 +1043,7 @@ FilteredData <- R6::R6Class( # nolint
     # keys used for joining/filtering data a JoinKeys object (see teal.data)
     join_keys = NULL,
 
-    # reactive i.e. filtered data
-    reactive_data = list(),
-
-    # reactiveVal storing history of filter states
+    # reactiveVal that stores filter state history, i.e. every state of the filter panel since instantiation
     state_history = NULL,
 
     # private methods ----
