@@ -19,23 +19,13 @@ schemas:
             varname:
               type: string
             choices:
-              anyOf:
-                - 'null'
-                - string
-                - boolean
-                - number
-                - array
-                  items:
-                    type: ['null', string, boolean, number]
+              type: array
+                items:
+                  type: ['null', string, boolean, number]
             selected:
-              anyOf:
-                - 'null'
-                - string
-                - boolean
-                - number
-                - array
-                  items:
-                    type: ['null', string, boolean, number]
+              type: array
+                items:
+                  type: ['null', string, boolean, number]
             keep_na:
               type: ['null', boolean]
             keep_inf:
