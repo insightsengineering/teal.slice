@@ -454,7 +454,7 @@ FilterStates <- R6::R6Class( # nolint
             logger::log_trace(
               "FilterStates$srv_add@1 updating available column choices, dataname: { private$dataname }"
             )
-            if (is.null(avail_column_choices())) {
+            if (length(avail_column_choices()) == 0) {
               span("No available columns to add.")
             } else {
               div(

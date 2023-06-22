@@ -55,11 +55,7 @@ FilterState <- R6::R6Class( # nolint
     #'   If it is set to `reactive(NULL)` then counts based on filtered
     #'   dataset are not shown.
     #' @param slice (`teal_slice`)\cr
-    #'   object created using [filter_var()]. `teal_slice` is stored
-    #'   in the class and `set_state` directly manipulates values within `teal_slice`. `get_state`
-    #'   returns `teal_slice` object which can be reused in other places. Beware, that `teal_slice`
-    #'   is an immutable object which means that changes in particular object are automatically
-    #'   reflected in all places which refer to the same `teal_slice`.
+    #'   object created by [filter_var()]
     #' @param extract_type (`character(0)`, `character(1)`)\cr
     #'   specifying whether condition calls should be prefixed by `dataname`. Possible values:
     #' \itemize{
@@ -383,12 +379,12 @@ FilterState <- R6::R6Class( # nolint
     # set by constructor
     x = NULL, # the filtered variable
     x_reactive = NULL, # reactive containing the filtered variable, used for updating counts and histograms
+    teal_slice = shiny::reactiveValues(), # stores all transferable properties of this filter state
     extract_type = character(0), # used by private$get_varname_prefixed
     na_count = integer(0),
     filtered_na_count = NULL, # reactive containing the count of NA in the filtered dataset
     varlabel = character(0), # taken from variable labels in data; displayed in filter cards
     destroy_shiny = NULL, # function is set in server
-    teal_slice = shiny::reactiveValues(), # stores all transferable properties of this filter state
     # other
     is_choice_limited = FALSE, # flag whether number of possible choices was limited when specifying filter
     na_rm = FALSE,
@@ -426,6 +422,7 @@ FilterState <- R6::R6Class( # nolint
       shiny::isolate({
         value <- private$cast_and_validate(value)
         value <- private$remove_out_of_bound_values(value)
+        value <- private$check_multiple(value)
         private$validate_selection(value)
         private$teal_slice$selected <- value
       })
@@ -556,13 +553,22 @@ FilterState <- R6::R6Class( # nolint
       private$teal_slice$keep_inf
     },
 
-    # Check whether this filter is fixed
+    # Check whether this filter is fixed (cannot be changed).
     # @return `logical(1)`
     is_fixed = function() {
       shiny::isolate(isTRUE(private$teal_slice$fixed))
     },
+
+    # Check whether this filter is locked (cannot be removed).
+    # @return `logical(1)`
     is_locked = function() {
       shiny::isolate(isTRUE(private$teal_slice$locked))
+    },
+
+    # Check whether this filter is capable of selecting multiple values.
+    # @return `logical(1)`
+    is_multiple = function() {
+      shiny::isolate(isTRUE(private$teal_slice$multiple))
     },
 
     ## other ----
@@ -612,33 +618,37 @@ FilterState <- R6::R6Class( # nolint
       }
     },
 
-    # Checks if the selection is valid in terms of class and length.
-    # It should not return anything but throw an error if selection
-    # has a wrong class or is outside of possible choices
-    validate_selection = function(value) {
-      invisible(NULL)
+    # Converts values to the type fitting this `FilterState` and validates
+    # whether the elements of the resulting vector satisfy the requirements of this `FilterState`.
+    # Raises error if casting does not execute successfully.
+    #
+    # @param values vector of values
+    #
+    # @return vector converted to appropriate class
+    cast_and_validate = function(values) {
+      values
     },
 
-    # Filters out erroneous values from an array.
+    # Filters out erroneous values from vector.
     #
-    # @param values the array of values
+    # @param values vector of values
     #
-    # @return the array of values without elements, which are outside of
-    # the accepted set for this FilterState
+    # @return vector in which values that cannot be set in this FilterState have been dropped
     remove_out_of_bound_values = function(values) {
       values
     },
 
-    # Converts values to the type fitting this `FilterState` and validates
-    # whether the elements of the resulting vector satisfy the requirements of this `FilterState`.
-    #
-    # @param values the array of values
-    #
-    # @return the casted array
-    #
-    # @note throws an error if the casting did not execute successfully.
-    cast_and_validate = function(values) {
-      values
+    # Checks whether multiple choices are allowed.
+    # If not value is of length 2 or more, drops all but first item with a warning.
+    check_multiple = function(value) {
+      value
+    },
+
+    # Checks if the selection is valid in terms of class and length.
+    # It should not return anything but raise an error if selection
+    # has a wrong class or is outside of possible choices
+    validate_selection = function(value) {
+      invisible(NULL)
     },
 
     # @description

@@ -62,9 +62,8 @@
 #'  possibly a subset of values in data; type and size depends on variable type
 #' @param selected optional vector specifying selection;
 #'  type and size depends on variable type
-#' @param multiple (`logical(1)`)\cr
-#'   flag specifying whether the `FilterState` more than one value can be selected;
-#'   only applicable to `FilterStateChoices` and `FilterStateLogical`
+#' @param multiple `logical(1)` logical flag specifying whether more than one value can be selected;
+#'   only applicable to `ChoicesFilterState` and `LogicalFilterState`
 #' @param keep_na `logical(1)` or `NULL` optional logical flag specifying whether to keep missing values
 #' @param keep_inf `logical(1)` or `NULL` optional logical flag specifying whether to keep infinite values
 #' @param fixed `logical(1)` logical flag specifying whether to fix this filter state (forbid setting state)
@@ -77,17 +76,13 @@
 #'  - `"all"` to have counts of single `FilterState` to show number of observation in filtered
 #'   and unfiltered dataset.
 #'  - `"none"` to have counts of single `FilterState` to show unfiltered number only.
-#' @param id (`character(1)`)\cr
-#'   identifier of the filter
-#' @param title (`reactive`)\cr
-#'   title of the filter (used by `filter_expr`)
-#' @param expr (`language`)\cr
-#'   logical expression written in executable way, see `Details`
-#'   where "executable" means
-#'   that a `subset` call should be able to evaluate this without failure. For
-#'   example `MultiAssayExperiment::subsetByColData` requires variable names prefixed
-#'   by `dataname` (e.g. `data$var1 == "x" & data$var2 > 0`). For `data.frame` call
-#'   can be written without prefixing `var1 == "x" & var2 > 0`.
+#' @param module_add `logical(1)` logical flag specifying whether the user will be able to add new filters
+#' @param id `character(1)` identifier of the filter
+#' @param title `character(1)` title of the filter
+#' @param expr `character(1)` string providing a logical expression;
+#'   must be able to be evaluated without error by the appropriate subsetting function:
+#'   for a `data.frame` `var1 == "x" & var2 > 0` is sufficient but
+#'   `MultiAssayExperiment::subsetByColData` requires `data$var1 == "x" & data$var2 > 0`
 #' @param ... additional arguments to be saved as a list in `private$extras` field
 #' @param show_all `logical(1)` specifying whether NULL elements should also be printed
 #' @param tss `teal_slices`
@@ -168,7 +163,7 @@ filter_var <- function(dataname,
   checkmate::assert_flag(keep_inf, null.ok = TRUE)
   checkmate::assert_flag(fixed)
   checkmate::assert_flag(locked)
-  checkmate::assert_flag(multiple, null.ok = TRUE)
+  checkmate::assert_flag(multiple)
   ans <- c(as.list(environment()), list(...))
   # ans <- Filter(Negate(is.null), ans) # this will be removed by issue #339
   if (missing(id)) {
@@ -209,7 +204,8 @@ filter_expr <- function(dataname, id, title, expr, locked = FALSE, ...) {
 filter_settings <- function(...,
                             exclude_varnames = NULL,
                             include_varnames = NULL,
-                            count_type = NULL) {
+                            count_type = NULL,
+                            module_add = TRUE) {
   slices <- list(...)
   checkmate::assert_list(slices, types = "teal_slice", any.missing = FALSE)
   slices_id <- shiny::isolate(vapply(slices, `[[`, character(1L), "id"))
@@ -223,12 +219,14 @@ filter_settings <- function(...,
   checkmate::assert_list(include_varnames, names = "named", types = "character", null.ok = TRUE, min.len = 1)
   checkmate::assert_character(count_type, len = 1, null.ok = TRUE)
   checkmate::assert_subset(count_type, choices = c("all", "none"), empty.ok = TRUE)
+  checkmate::assert_logical(module_add)
 
   structure(
     slices,
     exclude_varnames = exclude_varnames,
     include_varnames = include_varnames,
     count_type = count_type,
+    module_add = module_add,
     class = c("teal_slices", class(slices))
   )
 }

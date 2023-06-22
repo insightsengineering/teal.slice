@@ -85,11 +85,7 @@ Initialize a \code{FilterStateExpr} object
 \if{html}{\out{<div class="arguments">}}
 \describe{
 \item{\code{slice}}{(\code{teal_slice_expr})\cr
-object created using \code{\link[=filter_expr]{filter_expr()}} functions. \code{teal_slice} is stored
-in the class and \code{set_state} directly manipulates values within \code{teal_slice}. \code{get_state}
-returns \code{teal_slice} object which can be reused in other places. Beware, that \code{teal_slice}
-is an immutable object which means that changes in particular object are automatically
-reflected in all places which refer to the same \code{teal_slice}.}
+object created by \code{\link[=filter_expr]{filter_expr()}}}
 }
 \if{html}{\out{</div>}}
 }
