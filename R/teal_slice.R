@@ -313,7 +313,10 @@ format.teal_slice <- function(x, show_all = FALSE, nchars = 40, ...) {
   x_json_split <- strsplit(x_json, split = "\n")[[1]]
   x_json_justified <- justify_json_split(x_json_split, slice_format_name)
 
-  if (!is.null(nchars)) x_json_justified <- trim_character(x_json_justified, nchars)
+  if (!is.null(nchars)) {
+    nchars <- max(nchars, max_collon_position(x_json_justified) + 5)
+    x_json_justified <- trim_character(x_json_justified, nchars)
+  }
 
   paste(x_json_justified, collapse = "\n")
 }
@@ -347,8 +350,12 @@ trim_character <- function(x, nchars) {
 
 justify_json_split <- function(json, format_fun) {
   json_split <- strsplit(json, split = ":", fixed = TRUE)
-  name_width <- max(unlist(gregexpr(":", json))) - 1
+  name_width <- max_collon_position(json)
   vapply(json_split, function(x) paste0(format_fun(x[1], name_width), stats::na.omit(x[2])), character(1))
+}
+
+max_collon_position <- function(x){
+  max(unlist(gregexpr(":", x))) - 1
 }
 
 to_json <- function(x) {
@@ -550,7 +557,10 @@ format.teal_slices <- function(x, show_all = FALSE, nchars = 40, ...) {
   slices_json_split <- strsplit(slices_json, "\n")[[1]]
   slices_json_split_justified <- justify_json_split(slices_json_split, slices_format_name)
 
-  if (!is.null(nchars)) slices_json_split_justified <- trim_character(slices_json_split_justified, nchars)
+  if (!is.null(nchars)) {
+    nchars <- max(nchars, max_collon_position(slices_json_split_justified) + 5)
+    slices_json_split_justified <- trim_character(slices_json_split_justified, nchars)
+  }
 
   paste(slices_json_split_justified, collapse = "\n")
 }
