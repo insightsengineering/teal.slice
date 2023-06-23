@@ -11,7 +11,7 @@ resolve_state(x)
 
 \method{resolve_state}{default}(x)
 
-\method{resolve_state}{default_filter}(x, filter_state)
+\method{resolve_state}{default_filter}(x)
 
 \method{resolve_state}{list}(x)
 }

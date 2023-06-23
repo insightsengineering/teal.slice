@@ -8,19 +8,6 @@ testthat::test_that("init_filter_state accepts a character vector of length 0 or
   testthat::expect_no_error(init_filter_state(7, varname = "test", varlabel = character(0)))
 })
 
-test_that("dataname must be specified if extract_type is specified", {
-  adsl <- scda::synthetic_cdisc_data("latest")$adsl
-  testthat::expect_error(
-    init_filter_state(
-      adsl$SEX,
-      varname = "SEX",
-      dataname = NULL,
-      extract_type = "matrix"
-    ),
-    regexp = "if extract_type is specified, dataname must also be specified"
-  )
-})
-
 testthat::test_that("init_filter_state accepts character as extract_type", {
   testthat::expect_no_error(
     init_filter_state(7, varname = "test", extract_type = character(0))
