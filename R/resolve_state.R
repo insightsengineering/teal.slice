@@ -62,7 +62,7 @@ resolve_state.default <- function(x) {
 #' @rdname resolve_state
 #' @keywords internal
 #' @export
-resolve_state.default_filter <- function(x, filter_state) { # nolint
+resolve_state.default_filter <- function(x) { # nolint
   list()
 }
 
