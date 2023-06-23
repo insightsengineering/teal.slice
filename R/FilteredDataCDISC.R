@@ -14,43 +14,6 @@
 #' data (e.g. `iris`).
 #'
 #' @seealso `FilteredData` class
-#'
-#' @examples
-#' library(scda)
-#' library(teal.data)
-#'
-#' ADSL <- synthetic_cdisc_data("latest")$adsl
-#' ADTTE <- synthetic_cdisc_data("latest")$adtte
-#' datasets <- teal.slice:::CDISCFilteredData$new(
-#'   list(
-#'     ADSL = list(dataset = ADSL, keys = c("STUDYID", "USUBJID")),
-#'     ADTTE = list(dataset = ADTTE, keys = c("STUDYID", "USUBJID", "PARAMCD"), parent = "ADSL")
-#'   ),
-#'   check = FALSE,
-#'   join_keys = join_keys(join_key("ADSL", "ADTTE", c("STUDYID", "USUBJID")))
-#' )
-#'
-#' # to avoid using isolate(), you can provide a default isolate context by calling
-#' # options(shiny.suppressMissingContextError = TRUE) #nolint
-#' # don't forget to deactivate this option at the end
-#' # options(shiny.suppressMissingContextError = FALSE) #nolint
-#'
-#' isolate({
-#'   datasets$datanames()
-#'
-#'   # number observations and subjects of filtered/non-filtered dataset
-#'   datasets$get_filter_overview("ADSL")
-#'
-#'   print(datasets$get_call("ADSL"))
-#'   print(datasets$get_call("ADTTE"))
-#'
-#'   df <- datasets$get_data("ADSL", filtered = FALSE)
-#'   print(df)
-#' })
-#'
-#'
-#' isolate(datasets$set_filter_state(list(ADTTE = list(PARAMCD = "OS"))))
-#' isolate(datasets$get_filter_state())
 CDISCFilteredData <- R6::R6Class( # nolint
   "CDISCFilteredData",
   inherit = FilteredData,
