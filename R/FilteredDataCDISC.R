@@ -28,7 +28,6 @@
 #'   PARAMCD = rep(c("P1", "P2", "P3"), each = 10),
 #'   AVAL = runif(30)
 #' )
-#' formatters::var_labels(ADSL) <- colnames(ADSL)
 #' datasets <- teal.slice:::CDISCFilteredData$new(
 #'   list(
 #'     ADSL = list(dataset = ADSL, keys = c("STUDYID", "USUBJID")),
