@@ -42,7 +42,8 @@ filter_settings(
   ...,
   exclude_varnames = NULL,
   include_varnames = NULL,
-  count_type = NULL
+  count_type = NULL,
+  module_add = TRUE
 )
 
 is.teal_slice(x)
@@ -122,7 +123,9 @@ and unfiltered dataset.
 \item \code{"none"} to have counts of single \code{FilterState} to show unfiltered number only.
 }}
 
-\item{show_all}{\code{logical(1)} should parameters set to NULL be returned}
+\item{module_add}{\code{logical(1)} logical flag specifying whether the user will be able to add new filters}
+
+\item{show_all}{\code{logical(1)} specifying whether NULL elements should also be printed}
 
 \item{nchar}{\code{integer(1)} or \code{NULL} indicating the number of character of the output width}
 
