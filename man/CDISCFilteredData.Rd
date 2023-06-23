@@ -18,7 +18,6 @@ The teal UI works with objects of class \code{FilteredData} which may mix CDISC 
 data (e.g. \code{iris}).
 }
 \examples{
-library(scda)
 library(teal.data)
 ADSL <- data.frame(
   STUDYID = 1,

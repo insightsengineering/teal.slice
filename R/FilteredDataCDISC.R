@@ -16,7 +16,6 @@
 #' @seealso `FilteredData` class
 #'
 #' @examples
-#' library(scda)
 #' library(teal.data)
 #' ADSL <- data.frame(
 #'   STUDYID = 1,
