@@ -14,9 +14,12 @@
 \alias{as.teal_slices}
 \alias{[.teal_slices}
 \alias{c.teal_slices}
+\alias{slices_to_list}
 \alias{format.teal_slices}
 \alias{print.teal_slices}
 \alias{slices_field}
+\alias{slices_store}
+\alias{slices_restore}
 \title{Manage filter state(s).}
 \usage{
 filter_var(
@@ -49,7 +52,7 @@ as.teal_slice(x)
 
 \method{c}{teal_slice}(...)
 
-\method{format}{teal_slice}(x, show_all = FALSE, ...)
+\method{format}{teal_slice}(x, show_all = FALSE, nchars = 40, ...)
 
 \method{print}{teal_slice}(x, ...)
 
@@ -61,11 +64,17 @@ as.teal_slices(x)
 
 \method{c}{teal_slices}(...)
 
-\method{format}{teal_slices}(x, show_all = FALSE, ...)
+slices_to_list(tss)
+
+\method{format}{teal_slices}(x, show_all = FALSE, nchars = 40, ...)
 
 \method{print}{teal_slices}(x, ...)
 
 slices_field(tss, field)
+
+slices_store(tss, file)
+
+slices_restore(file)
 }
 \arguments{
 \item{dataname}{\code{character(1)} name of data set}
@@ -116,11 +125,15 @@ and unfiltered dataset.
 
 \item{module_add}{\code{logical(1)} logical flag specifying whether the user will be able to add new filters}
 
-\item{show_all}{\code{logical(1)} specifying whether NULL elements should also be printed}
+\item{show_all}{\code{logical(1)} should parameters set to NULL be returned}
 
-\item{tss}{\code{teal_slices}}
+\item{nchars}{\code{integer(1)} or \code{NULL} indicating the number of character of the output width}
+
+\item{tss}{\code{teal_slices} object}
 
 \item{field}{\code{character(1)} name of \code{teal_slice} element}
+
+\item{file}{\code{character(1)} specifying path to read from}
 }
 \value{
 \code{filter_var} returns object of class \code{teal_slice}, which is a named list.
