@@ -348,7 +348,7 @@ is.teal_slices <- function(x) { # nolint
 trim_character <- function(x, nchars, min = 0) {
   end <- min + nchars
   x_trim <- substr(x, 1, end)
-  substr(x_trim, end - min(2, nchars-1), end) <- substr('...', 1, nchars)
+  substr(x_trim, end - min(2, nchars - 1), end) <- substr("...", 1, nchars)
   x_trim
 }
 
