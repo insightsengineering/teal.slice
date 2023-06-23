@@ -7,6 +7,7 @@
 \alias{filter_settings}
 \alias{is.teal_slice}
 \alias{as.teal_slice}
+\alias{as.teal_slice_expr}
 \alias{c.teal_slice}
 \alias{format.teal_slice}
 \alias{print.teal_slice}
@@ -50,9 +51,11 @@ is.teal_slice(x)
 
 as.teal_slice(x)
 
+as.teal_slice_expr(x)
+
 \method{c}{teal_slice}(...)
 
-\method{format}{teal_slice}(x, show_all = FALSE, nchars = 40, ...)
+\method{format}{teal_slice}(x, show_all = FALSE, nchars = 15, ...)
 
 \method{print}{teal_slice}(x, ...)
 
@@ -66,7 +69,7 @@ as.teal_slices(x)
 
 slices_to_list(tss)
 
-\method{format}{teal_slices}(x, show_all = FALSE, nchars = 40, ...)
+\method{format}{teal_slices}(x, show_all = FALSE, nchars = 15, ...)
 
 \method{print}{teal_slices}(x, ...)
 
