@@ -246,14 +246,16 @@ is.teal_slice <- function(x) { # nolint
 #'
 as.teal_slice <- function(x) { # nolint
   checkmate::assert_list(x, names = "named")
+  do.call(filter_var, x)
+}
 
-  fun <- if ("expr" %in% names(x)) {
-    filter_expr
-  } else {
-    filter_var
-  }
 
-  do.call(fun, x)
+#' @rdname teal_slice
+#' @keywords internal
+#'
+as.teal_slice_expr <- function(x) {
+  checkmate::assert_list(x, names = "named")
+  do.call(filter_expr, x)
 }
 
 
@@ -610,7 +612,15 @@ slices_restore <- function(file) {
 
   tss_json <- jsonlite::fromJSON(file, simplifyDataFrame = FALSE)
 
-  tss_elements <- lapply(tss_json$slices, as.teal_slice)
+  tss_elements <-
+    lapply(tss_json$slices, function(slice) {
+      fun <- if ("expr" %in% names(slice)) {
+        filter_expr
+      } else {
+        filter_var
+      }
+      do.call(fun, slice)
+    })
 
   do.call(filter_settings, c(tss_elements, tss_json$attributes))
 }
