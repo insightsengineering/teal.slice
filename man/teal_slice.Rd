@@ -52,7 +52,7 @@ as.teal_slice(x)
 
 \method{c}{teal_slice}(...)
 
-\method{format}{teal_slice}(x, show_all = FALSE, nchar = 40, ...)
+\method{format}{teal_slice}(x, show_all = FALSE, nchars = 40, ...)
 
 \method{print}{teal_slice}(x, ...)
 
@@ -64,9 +64,9 @@ as.teal_slices(x)
 
 \method{c}{teal_slices}(...)
 
-slices_to_list(x)
+slices_to_list(tss)
 
-\method{format}{teal_slices}(x, show_all = FALSE, nchar = 40, ...)
+\method{format}{teal_slices}(x, show_all = FALSE, nchars = 40, ...)
 
 \method{print}{teal_slices}(x, ...)
 
@@ -125,9 +125,9 @@ and unfiltered dataset.
 
 \item{module_add}{\code{logical(1)} logical flag specifying whether the user will be able to add new filters}
 
-\item{show_all}{\code{logical(1)} specifying whether NULL elements should also be printed}
+\item{show_all}{\code{logical(1)} should parameters set to NULL be returned}
 
-\item{nchar}{\code{integer(1)} or \code{NULL} indicating the number of character of the output width}
+\item{nchars}{\code{integer(1)} or \code{NULL} indicating the number of character of the output width}
 
 \item{tss}{\code{teal_slices} object}
 

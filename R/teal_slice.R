@@ -524,7 +524,6 @@ c.teal_slices <- function(...) {
 
 #' @rdname teal_slice
 #' @keywords internal
-#' @export
 #'
 slices_to_list <- function(tss) {
   slices_list <- lapply(tss, as.list)
