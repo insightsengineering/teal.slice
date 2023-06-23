@@ -18,9 +18,17 @@
 #' @examples
 #' library(scda)
 #' library(teal.data)
-#' ADSL <- as.data.frame(as.list(setNames(nm = teal.data::get_cdisc_keys("ADSL"))))
-#' ADSL$sex <- "F"
-#' ADTTE <- as.data.frame(as.list(setNames(nm = teal.data::get_cdisc_keys("ADTTE"))))
+#' ADSL <- data.frame(
+#'   STUDYID = 1,
+#'   USUBJID = letters[1:10],
+#'   SEX = sample(c("F", "M"), 10, replace = TRUE)
+#' )
+#' ADTTE <- data.frame(
+#'   STUDYID = 1,
+#'   USUBJID = rep(letters[1:10], each = 3),
+#'   PARAMCD = rep(c("P1", "P2", "P3"), each = 10),
+#'   AVAL = runif(30)
+#' )
 #' formatters::var_labels(ADSL) <- colnames(ADSL)
 #' datasets <- teal.slice:::CDISCFilteredData$new(
 #'   list(
