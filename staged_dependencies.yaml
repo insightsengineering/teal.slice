@@ -12,12 +12,6 @@ upstream_repos:
   insightsengineering/teal.data:
     repo: insightsengineering/teal.data
     host: https://github.com
-  insightsengineering/scda:
-    repo: insightsengineering/scda
-    host: https://github.com
-  insightsengineering/scda.2022:
-    repo: insightsengineering/scda.2022
-    host: https://github.com
   insightsengineering/formatters:
     repo: insightsengineering/formatters
     host: https://github.com
