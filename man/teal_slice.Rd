@@ -7,7 +7,6 @@
 \alias{filter_settings}
 \alias{is.teal_slice}
 \alias{as.teal_slice}
-\alias{as.teal_slice_expr}
 \alias{c.teal_slice}
 \alias{format.teal_slice}
 \alias{print.teal_slice}
@@ -50,8 +49,6 @@ filter_settings(
 is.teal_slice(x)
 
 as.teal_slice(x)
-
-as.teal_slice_expr(x)
 
 \method{c}{teal_slice}(...)
 
