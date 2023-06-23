@@ -1,4 +1,4 @@
-# teal.slice 0.3.0.9003
+# teal.slice 0.3.0.9004
 
 * Remove `scda` from dependencies.
 
