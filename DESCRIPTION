@@ -2,7 +2,7 @@ Type: Package
 Package: teal.slice
 Title: Filter Module for `teal` Applications
 Version: 0.3.0.9003
-Date: 2023-06-22
+Date: 2023-06-23
 Authors@R: c(
     person("Dawid", "Kaledkowski", , "dawid.kaledkowski@roche.com", role = c("aut", "cre")),
     person("Pawel", "Rucki", , "pawel.rucki@roche.com", role = "aut"),
@@ -40,8 +40,6 @@ Suggests:
     knitr,
     MultiAssayExperiment,
     rmarkdown,
-    scda (>= 0.1.5),
-    scda.2022 (>= 0.1.3),
     SummarizedExperiment,
     testthat (>= 3.1.5),
     utils,
@@ -51,8 +49,6 @@ VignetteBuilder:
 RdMacros:
     lifecycle
 Remotes:
-    insightsengineering/scda.2022@*release,
-    insightsengineering/scda@*release,
     insightsengineering/teal.data@*release,
     insightsengineering/teal.logger@*release,
     insightsengineering/teal.widgets@*release
