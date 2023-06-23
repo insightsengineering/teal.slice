@@ -17,6 +17,44 @@ dataset.
 The teal UI works with objects of class \code{FilteredData} which may mix CDISC and other
 data (e.g. \code{iris}).
 }
+\examples{
+library(scda)
+library(teal.data)
+ADSL <- as.data.frame(as.list(setNames(nm = teal.data::get_cdisc_keys("ADSL"))))
+ADSL$sex <- "F"
+ADTTE <- as.data.frame(as.list(setNames(nm = teal.data::get_cdisc_keys("ADTTE"))))
+formatters::var_labels(ADSL) <- colnames(ADSL)
+datasets <- teal.slice:::CDISCFilteredData$new(
+  list(
+    ADSL = list(dataset = ADSL, keys = c("STUDYID", "USUBJID")),
+    ADTTE = list(dataset = ADTTE, keys = c("STUDYID", "USUBJID", "PARAMCD"), parent = "ADSL")
+  ),
+  check = FALSE,
+  join_keys = join_keys(join_key("ADSL", "ADTTE", c("STUDYID", "USUBJID")))
+)
+
+# to avoid using isolate(), you can provide a default isolate context by calling
+# options(shiny.suppressMissingContextError = TRUE) #nolint
+# don't forget to deactivate this option at the end
+# options(shiny.suppressMissingContextError = FALSE) #nolint
+
+isolate({
+  datasets$datanames()
+
+  # number observations and subjects of filtered/non-filtered dataset
+  datasets$get_filter_overview("ADSL")
+
+  print(datasets$get_call("ADSL"))
+  print(datasets$get_call("ADTTE"))
+
+  df <- datasets$get_data("ADSL", filtered = FALSE)
+  print(df)
+})
+
+
+isolate(datasets$set_filter_state(list(ADTTE = list(PARAMCD = "OS"))))
+isolate(datasets$get_filter_state())
+}
 \seealso{
 \code{FilteredData} class
 }
