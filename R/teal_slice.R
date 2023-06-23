@@ -522,9 +522,9 @@ c.teal_slices <- function(...) {
 #' @keywords internal
 #' @export
 #'
-slices_to_list <- function(x) {
-  slices_list <- lapply(x, as.list)
-  attrs <- attributes(unclass(x))
+slices_to_list <- function(tss) {
+  slices_list <- lapply(tss, as.list)
+  attrs <- attributes(unclass(tss))
   tss_list <- list(slices = slices_list, attributes = attrs)
   Filter(Negate(is.null), tss_list) # drop attributes if empty
 }
