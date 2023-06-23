@@ -1,6 +1,7 @@
 # teal.slice 0.3.0.9003
 
 * Remove `scda` from dependencies.
+
 # teal.slice 0.3.0
 
 * Examples now use `scda.2022` instead of `scda.2021`.
