@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE coverage SYSTEM "https://raw.githubusercontent.com/cobertura/cobertura/master/cobertura/src/site/htdocs/xml/coverage-04.dtd">
-<coverage line-rate="0.660098522167488" branch-rate="0" lines-covered="2948" lines-valid="4466" branches-covered="0" branches-valid="0" complexity="0" version="3.6.2" timestamp="2023-06-22 12:52:36">
+<coverage line-rate="0.660098522167488" branch-rate="0" lines-covered="2948" lines-valid="4466" branches-covered="0" branches-valid="0" complexity="0" version="3.6.2" timestamp="2023-06-23 08:03:51.65428">
   <sources>
     <source>/__w/teal.slice/teal.slice/teal.slice</source>
   </sources>
@@ -29200,16 +29200,17 @@
             </method>
             <method name="slices_to_list" signature="" line-rate="1" branch-rate="0" complexity="0">
               <lines>
+                <line number="529" hits="39" branch="false"/>
                 <line number="530" hits="39" branch="false"/>
                 <line number="531" hits="39" branch="false"/>
                 <line number="532" hits="39" branch="false"/>
-                <line number="533" hits="39" branch="false"/>
               </lines>
             </method>
             <method name="format.teal_slices" signature="" line-rate="1" branch-rate="0" complexity="0">
               <lines>
+                <line number="542" hits="39" branch="false"/>
                 <line number="543" hits="39" branch="false"/>
-                <line number="544" hits="39" branch="false"/>
+                <line number="545" hits="39" branch="false"/>
                 <line number="546" hits="39" branch="false"/>
                 <line number="547" hits="39" branch="false"/>
                 <line number="548" hits="39" branch="false"/>
@@ -29218,43 +29219,42 @@
                 <line number="551" hits="39" branch="false"/>
                 <line number="552" hits="39" branch="false"/>
                 <line number="553" hits="39" branch="false"/>
-                <line number="554" hits="39" branch="false"/>
-                <line number="556" hits="39" branch="false"/>
-                <line number="558" hits="16" branch="false"/>
+                <line number="555" hits="39" branch="false"/>
+                <line number="557" hits="16" branch="false"/>
+                <line number="559" hits="39" branch="false"/>
                 <line number="560" hits="39" branch="false"/>
                 <line number="561" hits="39" branch="false"/>
-                <line number="562" hits="39" branch="false"/>
+                <line number="563" hits="39" branch="false"/>
                 <line number="564" hits="39" branch="false"/>
                 <line number="565" hits="39" branch="false"/>
-                <line number="566" hits="39" branch="false"/>
-                <line number="569" hits="39" branch="false"/>
+                <line number="568" hits="39" branch="false"/>
               </lines>
             </method>
             <method name="print.teal_slices" signature="" line-rate="1" branch-rate="0" complexity="0">
               <lines>
-                <line number="577" hits="4" branch="false"/>
+                <line number="576" hits="4" branch="false"/>
               </lines>
             </method>
             <method name="slices_field" signature="" line-rate="1" branch-rate="0" complexity="0">
               <lines>
-                <line number="586" hits="224" branch="false"/>
+                <line number="585" hits="224" branch="false"/>
+                <line number="586" hits="223" branch="false"/>
                 <line number="587" hits="223" branch="false"/>
-                <line number="588" hits="223" branch="false"/>
               </lines>
             </method>
             <method name="slices_store" signature="" line-rate="0" branch-rate="0" complexity="0">
               <lines>
+                <line number="597" hits="0" branch="false"/>
                 <line number="598" hits="0" branch="false"/>
-                <line number="599" hits="0" branch="false"/>
-                <line number="601" hits="0" branch="false"/>
+                <line number="600" hits="0" branch="false"/>
               </lines>
             </method>
             <method name="slices_restore" signature="" line-rate="0" branch-rate="0" complexity="0">
               <lines>
-                <line number="610" hits="0" branch="false"/>
-                <line number="612" hits="0" branch="false"/>
-                <line number="614" hits="0" branch="false"/>
-                <line number="616" hits="0" branch="false"/>
+                <line number="609" hits="0" branch="false"/>
+                <line number="611" hits="0" branch="false"/>
+                <line number="613" hits="0" branch="false"/>
+                <line number="615" hits="0" branch="false"/>
               </lines>
             </method>
           </methods>
@@ -29465,12 +29465,13 @@
             <line number="520" hits="149" branch="false"/>
             <line number="521" hits="149" branch="false"/>
             <line number="522" hits="149" branch="false"/>
+            <line number="529" hits="39" branch="false"/>
             <line number="530" hits="39" branch="false"/>
             <line number="531" hits="39" branch="false"/>
             <line number="532" hits="39" branch="false"/>
-            <line number="533" hits="39" branch="false"/>
+            <line number="542" hits="39" branch="false"/>
             <line number="543" hits="39" branch="false"/>
-            <line number="544" hits="39" branch="false"/>
+            <line number="545" hits="39" branch="false"/>
             <line number="546" hits="39" branch="false"/>
             <line number="547" hits="39" branch="false"/>
             <line number="548" hits="39" branch="false"/>
@@ -29479,27 +29480,26 @@
             <line number="551" hits="39" branch="false"/>
             <line number="552" hits="39" branch="false"/>
             <line number="553" hits="39" branch="false"/>
-            <line number="554" hits="39" branch="false"/>
-            <line number="556" hits="39" branch="false"/>
-            <line number="558" hits="16" branch="false"/>
+            <line number="555" hits="39" branch="false"/>
+            <line number="557" hits="16" branch="false"/>
+            <line number="559" hits="39" branch="false"/>
             <line number="560" hits="39" branch="false"/>
             <line number="561" hits="39" branch="false"/>
-            <line number="562" hits="39" branch="false"/>
+            <line number="563" hits="39" branch="false"/>
             <line number="564" hits="39" branch="false"/>
             <line number="565" hits="39" branch="false"/>
-            <line number="566" hits="39" branch="false"/>
-            <line number="569" hits="39" branch="false"/>
-            <line number="577" hits="4" branch="false"/>
-            <line number="586" hits="224" branch="false"/>
+            <line number="568" hits="39" branch="false"/>
+            <line number="576" hits="4" branch="false"/>
+            <line number="585" hits="224" branch="false"/>
+            <line number="586" hits="223" branch="false"/>
             <line number="587" hits="223" branch="false"/>
-            <line number="588" hits="223" branch="false"/>
+            <line number="597" hits="0" branch="false"/>
             <line number="598" hits="0" branch="false"/>
-            <line number="599" hits="0" branch="false"/>
-            <line number="601" hits="0" branch="false"/>
-            <line number="610" hits="0" branch="false"/>
-            <line number="612" hits="0" branch="false"/>
-            <line number="614" hits="0" branch="false"/>
-            <line number="616" hits="0" branch="false"/>
+            <line number="600" hits="0" branch="false"/>
+            <line number="609" hits="0" branch="false"/>
+            <line number="611" hits="0" branch="false"/>
+            <line number="613" hits="0" branch="false"/>
+            <line number="615" hits="0" branch="false"/>
           </lines>
         </class>
         <class name="test_utils.R" filename="R/test_utils.R" line-rate="1" branch-rate="0" complexity="0">
