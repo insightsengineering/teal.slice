@@ -298,7 +298,7 @@ as.list.teal_slice <- function(x, ...) {
 #' @rdname teal_slice
 #' @keywords internal
 #'
-format.teal_slice <- function(x, show_all = FALSE, nchars = 40, ...) {
+format.teal_slice <- function(x, show_all = FALSE, nchars = 15, ...) {
   checkmate::assert_flag(show_all)
   checkmate::assert_integerish(nchars, null.ok = TRUE)
 
@@ -318,8 +318,7 @@ format.teal_slice <- function(x, show_all = FALSE, nchars = 40, ...) {
   x_json_justified <- justify_json_split(x_json_split, slice_format_name)
 
   if (!is.null(nchars)) {
-    nchars <- max(nchars, max_collon_position(x_json_justified) + 5)
-    x_json_justified <- trim_character(x_json_justified, nchars)
+    x_json_justified <- trim_character(x_json_justified, nchars, max_collon_position(x_json_justified) + 2)
   }
 
   paste(x_json_justified, collapse = "\n")
@@ -346,9 +345,10 @@ is.teal_slices <- function(x) { # nolint
 
 # utils -----------------------------------------------------------------------------------------------------------
 
-trim_character <- function(x, nchars) {
-  x_trim <- substr(x, 1, nchars)
-  substr(x_trim, nchars - 2, nchars) <- "..."
+trim_character <- function(x, nchars, min = 0) {
+  end <- min + nchars
+  x_trim <- substr(x, 1, end)
+  substr(x_trim, end - min(2, nchars-1), end) <- substr('...', 1, nchars)
   x_trim
 }
 
@@ -538,7 +538,7 @@ slices_to_list <- function(tss) {
 #' @rdname teal_slice
 #' @keywords internal
 #'
-format.teal_slices <- function(x, show_all = FALSE, nchars = 40, ...) {
+format.teal_slices <- function(x, show_all = FALSE, nchars = 15, ...) {
   checkmate::assert_flag(show_all)
   checkmate::assert_integerish(nchars, null.ok = TRUE)
 
@@ -561,8 +561,8 @@ format.teal_slices <- function(x, show_all = FALSE, nchars = 40, ...) {
   slices_json_split_justified <- justify_json_split(slices_json_split, slices_format_name)
 
   if (!is.null(nchars)) {
-    nchars <- max(nchars, max_collon_position(slices_json_split_justified) + 5)
-    slices_json_split_justified <- trim_character(slices_json_split_justified, nchars)
+    slices_json_split_justified <-
+      trim_character(slices_json_split_justified, nchars, max_collon_position(slices_json_split_justified) + 2)
   }
 
   paste(slices_json_split_justified, collapse = "\n")
