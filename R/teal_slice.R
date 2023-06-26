@@ -301,20 +301,11 @@ format.teal_slice <- function(x, show_all = FALSE, nchars = 15, ...) {
   checkmate::assert_flag(show_all)
   checkmate::assert_integerish(nchars, null.ok = TRUE)
 
-  slice_format_name <- function(n, name_width) {
-    if (nchar(n) == 1) {
-      return(n)
-    } else {
-      paste(format(n, width = name_width), ":")
-    }
-  }
-
   x_list <- as.list(x)
   if (!show_all) x_list <- Filter(Negate(is.null), x_list)
 
   x_json <- to_json(x_list)
-  x_json_split <- strsplit(x_json, split = "\n")[[1]]
-  x_json_justified <- justify_json_split(x_json_split, slice_format_name)
+  x_json_justified <- justify_json(x_json)
 
   if (!is.null(nchars)) {
     x_json_justified <- trim_character(x_json_justified, nchars, max_collon_position(x_json_justified) + 2)
@@ -351,10 +342,21 @@ trim_character <- function(x, nchars, min = 0) {
   x_trim
 }
 
-justify_json_split <- function(json, format_fun) {
-  json_split <- strsplit(json, split = ":", fixed = TRUE)
-  name_width <- max_collon_position(json)
-  vapply(json_split, function(x) paste0(format_fun(x[1], name_width), stats::na.omit(x[2])), character(1))
+justify_json <- function(json) {
+  format_name <- function(name, name_width) {
+    if (nchar(name) == 1 || nchar(gsub("\\s", "", name)) <= 2) {
+      return(name)
+    } else if (grepl("slices|attributes", name)) {
+      paste0(name, ":")
+    } else {
+      paste(format(name, width = name_width), ":")
+    }
+  }
+
+  json_lines <- strsplit(json, "\n")[[1]]
+  json_lines_split <- strsplit(json_lines, split = ":", fixed = TRUE)
+  name_width <- max_collon_position(json_lines)
+  vapply(json_lines_split, function(x) paste0(format_name(x[1], name_width), stats::na.omit(x[2])), character(1))
 }
 
 max_collon_position <- function(x) {
@@ -539,30 +541,19 @@ format.teal_slices <- function(x, show_all = FALSE, nchars = 15, ...) {
   checkmate::assert_flag(show_all)
   checkmate::assert_integerish(nchars, null.ok = TRUE)
 
-  slices_format_name <- function(name, name_width) {
-    if (nchar(gsub("\\s", "", name)) <= 2) {
-      return(name)
-    } else if (grepl("slices|attributes", name)) {
-      paste0(name, ":")
-    } else {
-      paste(format(name, width = name_width), ":")
-    }
-  }
-
   slices_list <- slices_to_list(x)
 
   if (!show_all) slices_list$slices <- lapply(slices_list$slices, function(slice) Filter(Negate(is.null), slice))
 
   slices_json <- to_json(slices_list)
-  slices_json_split <- strsplit(slices_json, "\n")[[1]]
-  slices_json_split_justified <- justify_json_split(slices_json_split, slices_format_name)
+  json_justified <- justify_json(slices_json)
 
   if (!is.null(nchars)) {
-    slices_json_split_justified <-
-      trim_character(slices_json_split_justified, nchars, max_collon_position(slices_json_split_justified) + 2)
+    json_justified <-
+      trim_character(json_justified, nchars, max_collon_position(json_justified) + 2)
   }
 
-  paste(slices_json_split_justified, collapse = "\n")
+  paste(json_justified, collapse = "\n")
 }
 
 #' @export
