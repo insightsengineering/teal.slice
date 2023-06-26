@@ -304,12 +304,7 @@ format.teal_slice <- function(x, show_all = FALSE, trim_lines = TRUE, ...) {
   x_list <- as.list(x)
   if (!show_all) x_list <- Filter(Negate(is.null), x_list)
 
-  x_json <- to_json(x_list)
-  x_json_justified <- justify_json(x_json)
-
-  if (trim_lines) x_json_justified <- trim_lines(x_json_justified)
-
-  paste(x_json_justified, collapse = "\n")
+  jsonify(x_list, trim_lines)
 }
 
 
@@ -545,12 +540,7 @@ format.teal_slices <- function(x, show_all = FALSE, trim_lines = TRUE, ...) {
 
   if (!show_all) slices_list$slices <- lapply(slices_list$slices, function(slice) Filter(Negate(is.null), slice))
 
-  slices_json <- to_json(slices_list)
-  json_justified <- justify_json(slices_json)
-
-  if (trim_lines) json_justified <- trim_lines(json_justified)
-
-  paste(json_justified, collapse = "\n")
+  jsonify(slices_list, trim_lines)
 }
 
 #' @export
@@ -599,4 +589,13 @@ slices_restore <- function(file) {
     lapply(tss_json$slices, as.teal_slice)
 
   do.call(filter_settings, c(tss_elements, tss_json$attributes))
+}
+
+
+jsonify <- function(x, trim_lines) {
+  checkmate::assert_list(x)
+  x_json <- to_json(x)
+  x_json_justified <- justify_json(x_json)
+  if (trim_lines) x_json_justified <- trim_lines(x_json_justified)
+  paste(x_json_justified, collapse = "\n")
 }
