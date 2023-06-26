@@ -214,10 +214,10 @@ FilterState <- R6::R6Class( # nolint
             private$server_inputs("inputs")
           }
 
-          private$observers$selected <- observeEvent(
+          private$observers$state <- observeEvent(
             ignoreNULL = TRUE,
             ignoreInit = TRUE,
-            eventExpr = private$get_selected(),
+            eventExpr = list(private$get_selected(), private$get_keep_na(), private$get_keep_inf()),
             handlerExpr = {
               current_state <- reactiveValuesToList(self$get_state()) # this will be as.list
               history <- private$state_history()
