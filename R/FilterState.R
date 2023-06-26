@@ -229,8 +229,7 @@ FilterState <- R6::R6Class( # nolint
               slice <- history[[2L]]
               history_update <- rev(history[-(1:2)])
               private$state_history(history_update)
-              state <- do.call(filter_var, slice)
-              self$set_state(state)
+              self$set_state(as.teal_slice(slice))
             }
           )
 
@@ -240,8 +239,7 @@ FilterState <- R6::R6Class( # nolint
             eventExpr = input$reset,
             handlerExpr = {
               slice <- private$state_history()[[1L]]
-              state <- do.call(filter_var, slice)
-              self$set_state(state)
+              self$set_state(as.teal_slice(slice))
             }
           )
 

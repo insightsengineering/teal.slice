@@ -1110,7 +1110,6 @@ FilteredData <- R6::R6Class( # nolint
     ui_available_filters = function(id) {
       ns <- NS(id)
 
-      active_slices_id <- shiny::isolate(vapply(self$get_filter_state(), `[[`, character(1), "id"))
       div(
         id = ns("available_menu"),
         shinyWidgets::dropMenu(
@@ -1127,26 +1126,28 @@ FilteredData <- R6::R6Class( # nolint
     },
 
     # @description
-    # Activate available filters. When the filter is selected or removed
-    # then `set_filter_state` or `remove_filter_state` is executed for
-    # appropriate filter (identified by it's id)
+    # Activate available filters. When a filter is selected or removed,
+    # `set_filter_state` or `remove_filter_state` is executed for
+    # the appropriate filter state id.
     srv_available_filters = function(id) {
       moduleServer(id, function(input, output, session) {
-        slices <- reactive(Filter(function(slice) !isTRUE(slice$locked), private$available_teal_slices()))
-        slices_interactive <- reactive(
-          Filter(
-            function(slice) !isTRUE(slice$fixed) && !inherits(slice, "teal_slice_expr"),
-            private$available_teal_slices()
-          )
-        )
-        slices_fixed <- reactive(
-          Filter(
-            function(slice) isTRUE(slice$fixed) || inherits(slice, "teal_slice_expr"),
-            private$available_teal_slices()
-          )
-        )
-        available_slices_id <- reactive(vapply(slices(), `[[`, character(1), "id"))
-        active_slices_id <- reactive(vapply(self$get_filter_state(), `[[`, character(1), "id"))
+
+        slices_nonlocked <- reactive({
+          Filter(function(slice) isFALSE(slice$locked), private$available_teal_slices())
+        })
+        slices_interactive <- reactive({
+          Filter(function(slice) isFALSE(slice$fixed), private$available_teal_slices())
+        })
+        slices_fixed <- reactive({
+          Filter(function(slice) isTRUE(slice$fixed), private$available_teal_slices())
+        })
+
+        available_slices_id <- reactive({
+          slices_field(slices_nonlocked(), "id")
+        })
+        active_slices_id <- reactive({
+          slices_field(self$get_filter_state(), "id")
+        })
 
         checkbox_group_element <- function(name, value, label, checked, disabled = FALSE) {
           tags$div(
@@ -1216,30 +1217,20 @@ FilteredData <- R6::R6Class( # nolint
 
         observeEvent(input$available_slices_id, ignoreNULL = FALSE, ignoreInit = TRUE, {
           new_slices_id <- setdiff(input$available_slices_id, active_slices_id())
-          removed_slices_id <- setdiff(active_slices_id(), input$available_slices_id)
           if (length(new_slices_id)) {
-            new_teal_slices <- Filter(
-              function(slice) slice$id %in% new_slices_id,
-              slices()
-            )
+            new_teal_slices <- Filter(function(slice) slice$id %in% new_slices_id, slices_nonlocked())
             self$set_filter_state(new_teal_slices)
           }
 
+          removed_slices_id <- setdiff(active_slices_id(), input$available_slices_id)
           if (length(removed_slices_id)) {
-            removed_teal_slices <- Filter(
-              function(slice) slice$id %in% removed_slices_id,
-              slices()
-            )
+            removed_teal_slices <- Filter(function(slice) slice$id %in% removed_slices_id, slices_nonlocked())
             self$remove_filter_state(removed_teal_slices)
           }
         })
 
-        observeEvent(slices(), ignoreNULL = FALSE, {
-          if (length(slices())) {
-            shinyjs::show("available_menu")
-          } else {
-            shinyjs::hide("available_menu")
-          }
+        observeEvent(slices_nonlocked(), ignoreNULL = FALSE, {
+          shinyjs::toggleElement("available_menu", condition = length(slices_nonlocked()) != 0L)
         })
       })
     }
