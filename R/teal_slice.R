@@ -88,6 +88,7 @@
 #' @param trim_lines `logical(1)` specifying whether to trim lines when printing
 #' @param tss `teal_slices`
 #' @param field `character(1)` name of `teal_slice` element
+#' @param file `character(1)` path to `teal_slices` save to or load `teal_slices` from
 #' @param ... for `filter_var` and `filter_expr` any number of additional fields given as `name:value` pairs\cr
 #'            for `filter_settings` any number of `teal_slice` objects\cr
 #'            for other functions arguments passed to other methods
@@ -141,7 +142,7 @@
 #' @name teal_slice
 NULL
 
-# filter ----------------------------------------------------------------------------------------------------------
+# constructors ----
 
 #' @export
 #' @rdname teal_slice
@@ -230,7 +231,7 @@ filter_settings <- function(...,
 }
 
 
-# teal_slice ------------------------------------------------------------------------------------------------------
+# teal_slice methods ----
 
 # check for teal_slice
 #' @rdname teal_slice
@@ -326,50 +327,7 @@ is.teal_slices <- function(x) { # nolint
 }
 
 
-# utils -----------------------------------------------------------------------------------------------------------
-
-trim_lines <- function(x) {
-  name_width <- max(unlist(gregexpr(":", x))) - 1
-  trim_position <- name_width + 17L
-  x_trim <- substr(x, 1, trim_position)
-  substr(x_trim, trim_position - 3, trim_position) <- "..."
-  x_trim
-}
-
-justify_json <- function(json) {
-  format_name <- function(name, name_width) {
-    if (nchar(name) == 1 || nchar(gsub("\\s", "", name)) <= 2) {
-      return(name)
-    } else if (grepl("slices|attributes", name)) {
-      paste0(name, ":")
-    } else {
-      paste(format(name, width = name_width), ":")
-    }
-  }
-
-  json_lines <- strsplit(json, "\n")[[1]]
-  json_lines_split <- strsplit(json_lines, split = ":", fixed = TRUE)
-  name_width <- max(unlist(gregexpr(":", json_lines))) - 1
-  vapply(json_lines_split, function(x) paste0(format_name(x[1], name_width), stats::na.omit(x[2])), character(1))
-}
-
-to_json <- function(x) {
-  no_unbox <- function(x) {
-    vars <- c("selected", "choices")
-    if (is.list(x)) {
-      for (var in vars) {
-        if (!is.null(x[[var]])) x[[var]] <- I(x[[var]])
-      }
-      lapply(x, no_unbox)
-    } else {
-      x
-    }
-  }
-
-  jsonlite::toJSON(no_unbox(x), pretty = TRUE, auto_unbox = TRUE, digits = 16, null = "null")
-}
-
-# teal_slices -----------------------------------------------------------------------------------------------------
+# teal_slices methods ----
 
 # convert nested list to teal_slices
 # this function is not overly robust, it covers cases that are encountered in teal at this time
@@ -547,6 +505,8 @@ print.teal_slices <- function(x, ...) {
 }
 
 
+# helpers ----
+
 # get field from all slices
 #' @rdname teal_slice
 #' @keywords internal
@@ -557,8 +517,9 @@ slices_field <- function(tss, field) {
   unique(unlist(lapply(tss, function(x) x[[field]])))
 }
 
-#' @param tss `teal_slices` object
-#' @param file `character(1)` specifying path to save to
+
+# save/load ----
+
 #' @export
 #' @rdname teal_slice
 #' @keywords internal
@@ -570,7 +531,6 @@ slices_store <- function(tss, file) {
   cat(format(tss, trim_lines = FALSE), "\n", file = file)
 }
 
-#' @param file `character(1)` specifying path to read from
 #' @export
 #' @rdname teal_slice
 #' @keywords internal
@@ -580,19 +540,64 @@ slices_restore <- function(file) {
 
   tss_json <- jsonlite::fromJSON(file, simplifyDataFrame = FALSE)
 
-  tss_elements <-
-    lapply(tss_json$slices, as.teal_slice)
+  tss_elements <- lapply(tss_json$slices, as.teal_slice)
 
   do.call(filter_settings, c(tss_elements, tss_json$attributes))
 }
 
 
+# utils ----
+
+# wrapper for terminal stages of both `format` methods
 jsonify <- function(x, trim_lines) {
   checkmate::assert_list(x)
 
-  name_width <- max_collon_position(json_lines)
   x_json <- to_json(x)
   x_json_justified <- justify_json(x_json)
   if (trim_lines) x_json_justified <- trim_lines(x_json_justified)
   paste(x_json_justified, collapse = "\n")
+}
+
+#' converts list to JSON with no unboxing of elements that can be vectors of length 1 or more
+to_json <- function(x) {
+  no_unbox <- function(x) {
+    vars <- c("selected", "choices")
+    if (is.list(x)) {
+      for (var in vars) {
+        if (!is.null(x[[var]])) x[[var]] <- I(x[[var]])
+      }
+      lapply(x, no_unbox)
+    } else {
+      x
+    }
+  }
+
+  jsonlite::toJSON(no_unbox(x), pretty = TRUE, auto_unbox = TRUE, digits = 16, null = "null")
+}
+
+# justifies colons in lines of json string
+justify_json <- function(json) {
+  format_name <- function(name, name_width) {
+    if (nchar(name) == 1 || nchar(gsub("\\s", "", name)) <= 2) {
+      return(name)
+    } else if (grepl("slices|attributes", name)) {
+      paste0(name, ":")
+    } else {
+      paste(format(name, width = name_width), ":")
+    }
+  }
+
+  json_lines <- strsplit(json, "\n")[[1]]
+  json_lines_split <- strsplit(json_lines, split = ":", fixed = TRUE)
+  name_width <- max(unlist(gregexpr(":", json_lines))) - 1
+  vapply(json_lines_split, function(x) paste0(format_name(x[1], name_width), stats::na.omit(x[2])), character(1))
+}
+
+# trims lines of json strings for pretty printing
+trim_lines <- function(x) {
+  name_width <- max(unlist(gregexpr(":", x))) - 1
+  trim_position <- name_width + 17L
+  x_trim <- substr(x, 1, trim_position)
+  substr(x_trim, trim_position - 3, trim_position) <- "..."
+  x_trim
 }
