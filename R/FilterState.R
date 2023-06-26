@@ -160,12 +160,6 @@ FilterState <- R6::R6Class( # nolint
           if (!is.null(state$keep_inf)) {
             private$set_keep_inf(state$keep_inf)
           }
-          current_state <- sprintf(
-            "selected: %s; keep_na: %s; keep_inf: %s",
-            toString(private$get_selected()),
-            private$get_keep_na(),
-            private$get_keep_inf()
-          )
         })
       }
 
