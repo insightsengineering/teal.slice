@@ -596,6 +596,6 @@ trim_lines <- function(x) {
   name_width <- max(unlist(gregexpr(":", x))) - 1
   trim_position <- name_width + 17L
   x_trim <- substr(x, 1, trim_position)
-  substr(x_trim, trim_position - 3, trim_position) <- "..."
+  substr(x_trim, trim_position - 2, trim_position) <- "..."
   x_trim
 }
