@@ -224,7 +224,7 @@ FilterStateExpr <- R6::R6Class( # nolint
       moduleServer(
         id = id,
         function(input, output, session) {
-          private$content_summary()
+          output$summary <- renderUI(private$content_summary())
         }
       )
     },
