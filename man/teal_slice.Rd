@@ -14,10 +14,10 @@
 \alias{as.teal_slices}
 \alias{[.teal_slices}
 \alias{c.teal_slices}
-\alias{slices_to_list}
 \alias{format.teal_slices}
 \alias{print.teal_slices}
 \alias{slices_field}
+\alias{slices_to_list}
 \alias{slices_store}
 \alias{slices_restore}
 \title{Manage filter state(s).}
@@ -64,13 +64,13 @@ as.teal_slices(x)
 
 \method{c}{teal_slices}(...)
 
-slices_to_list(tss)
-
 \method{format}{teal_slices}(x, show_all = FALSE, trim_lines = TRUE, ...)
 
 \method{print}{teal_slices}(x, ...)
 
 slices_field(tss, field)
+
+slices_to_list(tss)
 
 slices_store(tss, file)
 
