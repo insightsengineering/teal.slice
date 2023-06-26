@@ -558,7 +558,7 @@ jsonify <- function(x, trim_lines) {
   paste(x_json_justified, collapse = "\n")
 }
 
-#' converts list to JSON with no unboxing of elements that can be vectors of length 1 or more
+# converts list to JSON with no unboxing of elements that can be vectors of length 1 or more
 to_json <- function(x) {
   no_unbox <- function(x) {
     vars <- c("selected", "choices")
