@@ -308,7 +308,6 @@ format.teal_slice <- function(x, show_all = FALSE, trim_lines = TRUE, ...) {
   jsonify(x_list, trim_lines)
 }
 
-
 #' @export
 #' @rdname teal_slice
 #' @keywords internal
@@ -318,6 +317,8 @@ print.teal_slice <- function(x, ...) {
 }
 
 
+# teal_slices methods ----
+
 # check for teal_slices
 #' @rdname teal_slice
 #' @keywords internal
@@ -325,9 +326,6 @@ print.teal_slice <- function(x, ...) {
 is.teal_slices <- function(x) { # nolint
   inherits(x, "teal_slices")
 }
-
-
-# teal_slices methods ----
 
 # convert nested list to teal_slices
 # this function is not overly robust, it covers cases that are encountered in teal at this time
@@ -471,16 +469,6 @@ c.teal_slices <- function(...) {
   )
 }
 
-#' @rdname teal_slice
-#' @keywords internal
-#'
-slices_to_list <- function(tss) {
-  slices_list <- lapply(tss, as.list)
-  attrs <- attributes(unclass(tss))
-  tss_list <- list(slices = slices_list, attributes = attrs)
-  Filter(Negate(is.null), tss_list) # drop attributes if empty
-}
-
 #' @export
 #' @rdname teal_slice
 #' @keywords internal
@@ -515,6 +503,16 @@ slices_field <- function(tss, field) {
   checkmate::assert_string(field)
   checkmate::assert_class(tss, "teal_slices")
   unique(unlist(lapply(tss, function(x) x[[field]])))
+}
+
+#' @rdname teal_slice
+#' @keywords internal
+#'
+slices_to_list <- function(tss) {
+  slices_list <- lapply(tss, as.list)
+  attrs <- attributes(unclass(tss))
+  tss_list <- list(slices = slices_list, attributes = attrs)
+  Filter(Negate(is.null), tss_list) # drop attributes if empty
 }
 
 
