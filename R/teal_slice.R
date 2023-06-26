@@ -85,7 +85,7 @@
 #'   `MultiAssayExperiment::subsetByColData` requires `data$var1 == "x" & data$var2 > 0`
 #' @param ... additional arguments to be saved as a list in `private$extras` field
 #' @param show_all `logical(1)` specifying whether NULL elements should also be printed
-#' @param nchars `integer(1)` or `NULL` indicating the number of character of the output width
+#' @param trim_lines `logical(1)` specifying whether to trim lines when printing
 #' @param tss `teal_slices`
 #' @param field `character(1)` name of `teal_slice` element
 #' @param ... for `filter_var` and `filter_expr` any number of additional fields given as `name:value` pairs\cr
@@ -297,9 +297,9 @@ as.list.teal_slice <- function(x, ...) {
 #' @rdname teal_slice
 #' @keywords internal
 #'
-format.teal_slice <- function(x, show_all = FALSE, nchars = 15, ...) {
+format.teal_slice <- function(x, show_all = FALSE, trim_lines = TRUE, ...) {
   checkmate::assert_flag(show_all)
-  checkmate::assert_integerish(nchars, null.ok = TRUE)
+  checkmate::assert_flag(trim_lines)
 
   x_list <- as.list(x)
   if (!show_all) x_list <- Filter(Negate(is.null), x_list)
@@ -307,9 +307,7 @@ format.teal_slice <- function(x, show_all = FALSE, nchars = 15, ...) {
   x_json <- to_json(x_list)
   x_json_justified <- justify_json(x_json)
 
-  if (!is.null(nchars)) {
-    x_json_justified <- trim_character(x_json_justified, nchars, max_collon_position(x_json_justified) + 2)
-  }
+  if (trim_lines) x_json_justified <- trim_lines(x_json_justified)
 
   paste(x_json_justified, collapse = "\n")
 }
@@ -335,12 +333,14 @@ is.teal_slices <- function(x) { # nolint
 
 # utils -----------------------------------------------------------------------------------------------------------
 
-trim_character <- function(x, nchars, min = 0) {
-  end <- min + nchars
-  x_trim <- substr(x, 1, end)
-  substr(x_trim, end - min(2, nchars - 1), end) <- substr("...", 1, nchars)
+trim_lines <- function(x) {
+  name_width <- max_collon_position(x)
+  trim_position <- name_width + 17L
+  x_trim <- substr(x, 1, trim_position)
+  substr(x_trim, trim_position - 3, trim_position) <- "..."
   x_trim
 }
+
 
 justify_json <- function(json) {
   format_name <- function(name, name_width) {
@@ -537,9 +537,9 @@ slices_to_list <- function(tss) {
 #' @rdname teal_slice
 #' @keywords internal
 #'
-format.teal_slices <- function(x, show_all = FALSE, nchars = 15, ...) {
+format.teal_slices <- function(x, show_all = FALSE, trim_lines = TRUE, ...) {
   checkmate::assert_flag(show_all)
-  checkmate::assert_integerish(nchars, null.ok = TRUE)
+  checkmate::assert_flag(trim_lines)
 
   slices_list <- slices_to_list(x)
 
@@ -548,10 +548,7 @@ format.teal_slices <- function(x, show_all = FALSE, nchars = 15, ...) {
   slices_json <- to_json(slices_list)
   json_justified <- justify_json(slices_json)
 
-  if (!is.null(nchars)) {
-    json_justified <-
-      trim_character(json_justified, nchars, max_collon_position(json_justified) + 2)
-  }
+  if (trim_lines) json_justified <- trim_lines(json_justified)
 
   paste(json_justified, collapse = "\n")
 }
@@ -585,7 +582,7 @@ slices_store <- function(tss, file) {
   checkmate::assert_class(tss, "teal_slices")
   checkmate::assert_path_for_output(file, overwrite = TRUE, extension = "json")
 
-  cat(format(tss, nchars = NULL), "\n", file = file)
+  cat(format(tss, trim_lines = FALSE), "\n", file = file)
 }
 
 #' @param file `character(1)` specifying path to read from
