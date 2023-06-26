@@ -191,6 +191,7 @@ filter_expr <- function(dataname, id, title, expr, locked = FALSE, ...) {
   checkmate::assert_string(expr)
   ans <- c(as.list(environment()), list(...))
   # ans <- Filter(Negate(is.null), ans) # this will be removed by issue #339
+  ans$fixed <- TRUE
   ans <- do.call(shiny::reactiveValues, ans)
 
   class(ans) <- c("teal_slice_expr", "teal_slice", class(ans))
