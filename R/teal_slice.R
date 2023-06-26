@@ -329,13 +329,12 @@ is.teal_slices <- function(x) { # nolint
 # utils -----------------------------------------------------------------------------------------------------------
 
 trim_lines <- function(x) {
-  name_width <- max_collon_position(x)
+  name_width <- max(unlist(gregexpr(":", x))) - 1
   trim_position <- name_width + 17L
   x_trim <- substr(x, 1, trim_position)
   substr(x_trim, trim_position - 3, trim_position) <- "..."
   x_trim
 }
-
 
 justify_json <- function(json) {
   format_name <- function(name, name_width) {
@@ -350,12 +349,8 @@ justify_json <- function(json) {
 
   json_lines <- strsplit(json, "\n")[[1]]
   json_lines_split <- strsplit(json_lines, split = ":", fixed = TRUE)
-  name_width <- max_collon_position(json_lines)
+  name_width <- max(unlist(gregexpr(":", json_lines))) - 1
   vapply(json_lines_split, function(x) paste0(format_name(x[1], name_width), stats::na.omit(x[2])), character(1))
-}
-
-max_collon_position <- function(x) {
-  max(unlist(gregexpr(":", x))) - 1
 }
 
 to_json <- function(x) {
@@ -594,6 +589,8 @@ slices_restore <- function(file) {
 
 jsonify <- function(x, trim_lines) {
   checkmate::assert_list(x)
+
+  name_width <- max_collon_position(json_lines)
   x_json <- to_json(x)
   x_json_justified <- justify_json(x_json)
   if (trim_lines) x_json_justified <- trim_lines(x_json_justified)
