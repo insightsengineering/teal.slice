@@ -85,6 +85,7 @@
 #'   `MultiAssayExperiment::subsetByColData` requires `data$var1 == "x" & data$var2 > 0`
 #' @param ... additional arguments to be saved as a list in `private$extras` field
 #' @param show_all `logical(1)` specifying whether NULL elements should also be printed
+#' @param nchars `integer(1)` or `NULL` indicating the number of character of the output width
 #' @param tss `teal_slices`
 #' @param field `character(1)` name of `teal_slice` element
 #' @param ... for `filter_var` and `filter_expr` any number of additional fields given as `name:value` pairs\cr
@@ -530,8 +531,6 @@ slices_to_list <- function(tss) {
   Filter(Negate(is.null), tss_list) # drop attributes if empty
 }
 
-#' @param show_all `logical(1)` should parameters set to NULL be returned
-#' @param nchars `integer(1)` or `NULL` indicating the number of character of the output width
 #' @export
 #' @rdname teal_slice
 #' @keywords internal

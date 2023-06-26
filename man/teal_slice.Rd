@@ -7,7 +7,6 @@
 \alias{filter_settings}
 \alias{is.teal_slice}
 \alias{as.teal_slice}
-\alias{as.teal_slice_expr}
 \alias{c.teal_slice}
 \alias{format.teal_slice}
 \alias{print.teal_slice}
@@ -50,8 +49,6 @@ filter_settings(
 is.teal_slice(x)
 
 as.teal_slice(x)
-
-as.teal_slice_expr(x)
 
 \method{c}{teal_slice}(...)
 
@@ -128,7 +125,7 @@ and unfiltered dataset.
 
 \item{module_add}{\code{logical(1)} logical flag specifying whether the user will be able to add new filters}
 
-\item{show_all}{\code{logical(1)} should parameters set to NULL be returned}
+\item{show_all}{\code{logical(1)} specifying whether NULL elements should also be printed}
 
 \item{nchars}{\code{integer(1)} or \code{NULL} indicating the number of character of the output width}
 
