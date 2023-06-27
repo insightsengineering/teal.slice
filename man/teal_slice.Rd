@@ -17,6 +17,9 @@
 \alias{format.teal_slices}
 \alias{print.teal_slices}
 \alias{slices_field}
+\alias{slices_to_list}
+\alias{slices_store}
+\alias{slices_restore}
 \title{Manage filter state(s).}
 \usage{
 filter_var(
@@ -49,7 +52,7 @@ as.teal_slice(x)
 
 \method{c}{teal_slice}(...)
 
-\method{format}{teal_slice}(x, show_all = FALSE, ...)
+\method{format}{teal_slice}(x, show_all = FALSE, trim_lines = TRUE, ...)
 
 \method{print}{teal_slice}(x, ...)
 
@@ -61,11 +64,17 @@ as.teal_slices(x)
 
 \method{c}{teal_slices}(...)
 
-\method{format}{teal_slices}(x, show_all = FALSE, ...)
+\method{format}{teal_slices}(x, show_all = FALSE, trim_lines = TRUE, ...)
 
 \method{print}{teal_slices}(x, ...)
 
 slices_field(tss, field)
+
+slices_to_list(tss)
+
+slices_store(tss, file)
+
+slices_restore(file)
 }
 \arguments{
 \item{dataname}{\code{character(1)} name of data set}
@@ -118,9 +127,13 @@ and unfiltered dataset.
 
 \item{show_all}{\code{logical(1)} specifying whether NULL elements should also be printed}
 
+\item{trim_lines}{\code{logical(1)} specifying whether to trim lines when printing}
+
 \item{tss}{\code{teal_slices}}
 
 \item{field}{\code{character(1)} name of \code{teal_slice} element}
+
+\item{file}{\code{character(1)} path to \code{teal_slices} save to or load \code{teal_slices} from}
 }
 \value{
 \code{filter_var} returns object of class \code{teal_slice}, which is a named list.
