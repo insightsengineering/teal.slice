@@ -169,7 +169,7 @@ filter_var <- function(dataname,
   checkmate::assert_flag(multiple)
   ans <- c(as.list(environment()), list(...))
   if (missing(id)) {
-    ans$id <- paste(Filter(length, ans[c("dataname", "varname", "datalabel", "arg")]), collapse = " ")
+    ans$id <- paste(Filter(length, ans[c("dataname", "varname", "experiment", "arg")]), collapse = " ")
   }
   checkmate::assert_string(ans$id, .var.name = "id")
   ans <- do.call(shiny::reactiveValues, ans)
@@ -339,13 +339,13 @@ as.teal_slices <- function(x) { # nolint
       identical(x, list()) ||
       is.atomic(x)
   }
-  make_args <- function(object, dataname, varname, datalabel, arg = NULL) {
+  make_args <- function(object, dataname, varname, experiment = NULL, arg = NULL) {
     args <- list(
       dataname = dataname,
       varname = varname
     )
-    if (!missing(datalabel)) args$datalabel <- datalabel
-    if (!missing(arg)) args$arg <- arg
+    if (!is.null(experiment)) args$experiment <- experiment
+    if (!is.null(arg)) args$arg <- arg
     if (is.list(object)) {
       args <- c(args, object)
     } else if (is.atomic(object)) {
@@ -374,7 +374,7 @@ as.teal_slices <- function(x) { # nolint
             args <- make_args(
               subsubitem,
               dataname = dataname,
-              datalabel = name_i,
+              experiment = if (name_i != "subjects") name_i,
               varname = name_ii
             )
             slices <- c(slices, list(as.teal_slice(args)))
@@ -385,7 +385,7 @@ as.teal_slices <- function(x) { # nolint
                 args <- make_args(
                   subsubsubitem,
                   dataname = dataname,
-                  datalabel = name_i,
+                  experiment = name_i,
                   arg = name_ii,
                   varname = name_iii
                 )

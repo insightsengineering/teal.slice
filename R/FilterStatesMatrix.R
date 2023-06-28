@@ -24,7 +24,7 @@ MatrixFilterStates <- R6::R6Class( # nolint
     #'   name of the data used in the expression
     #'   specified to the function argument attached to this `FilterStates`.
     #' @param datalabel (`NULL` or `character(1)`)\cr
-    #'   text label value.
+    #'   text label value. Should be a name of experiment.
     #'
     initialize = function(data,
                           data_reactive = function(sid = "") NULL,
