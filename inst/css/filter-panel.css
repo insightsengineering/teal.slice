@@ -389,12 +389,6 @@ a.remove_all:hover {
   margin-top: 0em;
 }
 
-.drop-menu-input .tippy-popper{ margin: 0;
-    left: unset !important;
-    transform: translate3d(0, 42px, 0) !important;
-    right: 0px;
-}
-
-.tippy-tooltip .tippy-arrow{
-  left: 8.8em !important;
+.menu_content {
+  width: 15em;
 }
