@@ -390,5 +390,5 @@ a.remove_all:hover {
 }
 
 .menu-content {
-  width: 15em;
+  min-width: 15em;
 }
