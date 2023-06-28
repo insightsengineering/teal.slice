@@ -325,7 +325,7 @@ FilterStates <- R6::R6Class( # nolint
         uiOutput(
           ns("cards"),
           class = "accordion",
-          `data-label` = ifelse(length(private$datalabel), "", paste0("> ", private$datalabel)),
+          `data-label` = ifelse(length(private$datalabel), paste0("> ", private$datalabel), ""),
         )
       )
     },
