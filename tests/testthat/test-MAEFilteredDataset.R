@@ -35,7 +35,8 @@ testthat::test_that("format returns properly formatted string", {
   fs <- filter_settings(
     filter_var(
       dataname = "miniacc", varname = "years_to_birth", selected = c(30, 50),
-      keep_na = TRUE, keep_inf = FALSE),
+      keep_na = TRUE, keep_inf = FALSE
+    ),
     filter_var(dataname = "miniacc", varname = "vital_status", selected = "1", keep_na = FALSE),
     filter_var(dataname = "miniacc", varname = "gender", selected = "female", keep_na = TRUE),
     filter_var(
@@ -63,7 +64,8 @@ testthat::test_that("print returns properly formatted string", {
   fs <- filter_settings(
     filter_var(
       dataname = "miniacc", varname = "years_to_birth", selected = c(30, 50),
-      keep_na = TRUE, keep_inf = FALSE),
+      keep_na = TRUE, keep_inf = FALSE
+    ),
     filter_var(dataname = "miniacc", varname = "vital_status", selected = "1", keep_na = FALSE),
     filter_var(dataname = "miniacc", varname = "gender", selected = "female", keep_na = TRUE),
     filter_var(
@@ -150,7 +152,8 @@ testthat::test_that("get_filter_overview_info returns overview matrix for MAEFil
   fs <- filter_settings(
     filter_var(
       dataname = "miniacc", varname = "years_to_birth", selected = c(30, 50),
-      keep_na = TRUE, keep_inf = FALSE),
+      keep_na = TRUE, keep_inf = FALSE
+    ),
     filter_var(dataname = "miniacc", varname = "vital_status", selected = "1", keep_na = FALSE),
     filter_var(dataname = "miniacc", varname = "gender", selected = "female", keep_na = TRUE),
     filter_var(
@@ -180,7 +183,8 @@ testthat::test_that(
     fs <- filter_settings(
       filter_var(
         dataname = "miniacc", varname = "years_to_birth", selected = c(30, 50),
-        keep_na = FALSE, keep_inf = FALSE),
+        keep_na = FALSE, keep_inf = FALSE
+      ),
       filter_var(dataname = "miniacc", varname = "vital_status", selected = "1", keep_na = FALSE),
       filter_var(dataname = "miniacc", varname = "gender", selected = "female", keep_na = FALSE),
       filter_var(
@@ -299,7 +303,8 @@ testthat::test_that(
     fs <- filter_settings(
       filter_var(
         dataname = "miniacc", varname = "years_to_birth", selected = c(30, 50),
-        keep_na = TRUE, keep_inf = FALSE),
+        keep_na = TRUE, keep_inf = FALSE
+      ),
       filter_var(dataname = "miniacc", varname = "vital_status", selected = "1", keep_na = FALSE),
       filter_var(dataname = "miniacc", varname = "gender", selected = "female", keep_na = FALSE),
       filter_var(

@@ -39,7 +39,8 @@ testthat::test_that("get_call returns subsetByColData call with varnames prefixe
   testthat::expect_equal(
     shiny::isolate(filter_states$get_call()),
     quote(
-      miniacc <- MultiAssayExperiment::subsetByColData(miniacc,
+      miniacc <- MultiAssayExperiment::subsetByColData(
+        miniacc,
         miniacc$years_to_birth >= 18 & miniacc$years_to_birth <= 60
       )
     )
