@@ -48,7 +48,7 @@ testthat::test_that("set_state: selected accepts a logical vector (or coercible)
   )
   testthat::expect_error(
     filter_state$set_state(filter_var(dataname = "data", varname = "variable", selected = "a")),
-    "The array of set values must contain values coercible to logical"
+    "The vector of set values must contain values coercible to logical"
   )
 })
 

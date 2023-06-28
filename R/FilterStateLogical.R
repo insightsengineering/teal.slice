@@ -189,7 +189,7 @@ LogicalFilterState <- R6::R6Class( # nolint
           values_logical <- as.logical(values)
           if (any(is.na(values_logical))) stop()
         },
-        error = function(cond) stop("The array of set values must contain values coercible to logical.")
+        error = function(cond) stop("The vector of set values must contain values coercible to logical.")
       )
       values_logical
     },

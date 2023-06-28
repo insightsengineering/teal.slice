@@ -11,11 +11,11 @@ get_supported_filter_varnames(data)
 the R object containing elements which class can be checked through \code{vapply} or \code{apply}.}
 }
 \value{
-\code{character} the array of the matched element names
+\code{character} the vector of the matched element names
 }
 \description{
 Gets filterable variable names from a given object. The names match variables
-of classes in an array \code{teal.slice:::.filterable_class}.
+of classes in a vector  \code{teal.slice:::.filterable_class}.
 }
 \examples{
 df <- data.frame(

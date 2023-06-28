@@ -41,7 +41,7 @@ testthat::test_that("constructor raises error when selection is not Datetime or 
       posixct,
       slice = filter_var(dataname = "data", varname = "variable", selected = c("a", "b"))
     ),
-    "The array of set values must contain values coercible to POSIX"
+    "The vector of set values must contain values coercible to POSIX"
   )
 })
 
@@ -91,11 +91,11 @@ testthat::test_that("set_state: selected accepts vector of two POSIXct objects o
   )
   testthat::expect_error(
     filter_state$set_state(filter_var(dataname = "data", varname = "variable", selected = posixct[1])),
-    "The array of set values must have length two"
+    "The vector of set values must have length two"
   )
   testthat::expect_error(
     filter_state$set_state(filter_var(dataname = "data", varname = "variable", selected = c("a", "b"))),
-    "The array of set values must contain values coercible to POSIX"
+    "The vector of set values must contain values coercible to POSIX"
   )
 })
 
@@ -145,7 +145,7 @@ testthat::test_that("set_state: selected raises error when selection is not a Da
   filter_state <- DatetimeFilterState$new(posixct, slice = filter_var(dataname = "data", varname = "variable"))
   testthat::expect_error(
     filter_state$set_state(filter_var(dataname = "data", varname = "variable", selected = c("a", "b"))),
-    "The array of set values must contain values coercible to POSIX"
+    "The vector of set values must contain values coercible to POSIX"
   )
 })
 

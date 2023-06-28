@@ -274,9 +274,9 @@ DatetimeFilterState <- R6::R6Class( # nolint
           values <- as.POSIXct(values, origin = "1970-01-01 00:00:00")
           if (any(is.na(values))) stop()
         },
-        error = function(error) stop("The array of set values must contain values coercible to POSIX.")
+        error = function(error) stop("The vector of set values must contain values coercible to POSIX.")
       )
-      if (length(values) != 2) stop("The array of set values must have length two.")
+      if (length(values) != 2) stop("The vector of set values must have length two.")
       values
     },
     remove_out_of_bound_values = function(values) {

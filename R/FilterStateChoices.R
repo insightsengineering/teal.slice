@@ -307,7 +307,7 @@ ChoicesFilterState <- R6::R6Class( # nolint
           values <- as.character(values)
           if (any(is.na(values))) stop()
         },
-        error = function(error) stop("The array of set values must contain values coercible to character.")
+        error = function(error) stop("The vector of set values must contain values coercible to character.")
       )
       values
     },
@@ -335,7 +335,7 @@ ChoicesFilterState <- R6::R6Class( # nolint
       if (!is.character(value)) {
         stop(
           sprintf(
-            "Values of the selection for `%s` in `%s` should be an array of character.",
+            "Values of the selection for `%s` in `%s` should be a vector of character.",
             private$get_varname(),
             private$get_dataname()
           )
