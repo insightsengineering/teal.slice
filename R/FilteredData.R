@@ -1067,7 +1067,7 @@ FilteredData <- R6::R6Class( # nolint
             title = "Available filters",
             class = "remove pull-right"
           ),
-          div(class = "menu_content",
+          div(class = "menu-content",
               uiOutput(ns("checkbox")))
         )
       )
