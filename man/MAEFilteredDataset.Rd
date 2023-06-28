@@ -17,16 +17,16 @@
 utils::data(miniACC, package = "MultiAssayExperiment")
 dataset <- teal.slice:::MAEFilteredDataset$new(miniACC, "MAE")
 fs <- filter_settings(
-  filter_var(
+  filter_conf(
     dataname = "MAE", varname = "years_to_birth", selected = c(30, 50), keep_na = TRUE
   ),
-  filter_var(
+  filter_conf(
     dataname = "MAE", varname = "vital_status", selected = "1", keep_na = FALSE
   ),
-  filter_var(
+  filter_conf(
     dataname = "MAE", varname = "gender", selected = "female", keep_na = TRUE
   ),
-  filter_var(
+  filter_conf(
     dataname = "MAE", varname = "ARRAY_TYPE", selected = "", keep_na = TRUE
   )
 )
@@ -134,16 +134,16 @@ to the referred column.}
 \preformatted{utils::data(miniACC, package = "MultiAssayExperiment")
 dataset <- teal.slice:::MAEFilteredDataset$new(miniACC, "MAE")
 fs <- filter_settings(
-  filter_var(
+  filter_conf(
     dataname = "MAE", varname = "years_to_birth", selected = c(30, 50), keep_na = TRUE
   ),
-  filter_var(
+  filter_conf(
     dataname = "MAE", varname = "vital_status", selected = "1", keep_na = FALSE
   ),
-  filter_var(
+  filter_conf(
     dataname = "MAE", varname = "gender", selected = "female", keep_na = TRUE
   ),
-  filter_var(
+  filter_conf(
     dataname = "MAE", varname = "ARRAY_TYPE", selected = "", keep_na = TRUE
   )
 )

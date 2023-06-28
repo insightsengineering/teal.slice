@@ -45,21 +45,21 @@ datasets <- init_filtered_data(
   )
 )
 fs <- filter_settings(
-  filter_var(dataname = "iris", varname = "Species", selected = c("setosa", "versicolor")),
-  filter_var(dataname = "iris", varname = "Sepal.Length", selected = c(5.1, 6.4)),
-  filter_var(
+  filter_conf(dataname = "iris", varname = "Species", selected = c("setosa", "versicolor")),
+  filter_conf(dataname = "iris", varname = "Sepal.Length", selected = c(5.1, 6.4)),
+  filter_conf(
     dataname = "mae", varname = "years_to_birth", selected = c(30, 50),
     keep_na = TRUE, keep_inf = FALSE
   ),
-  filter_var(
+  filter_conf(
     dataname = "mae", varname = "vital_status", selected = "1",
     keep_na = FALSE
   ),
-  filter_var(
+  filter_conf(
     dataname = "mae", varname = "gender", selected = "female",
     keep_na = TRUE
   ),
-  filter_var(
+  filter_conf(
     dataname = "mae", varname = "ARRAY_TYPE", selected = "",
     keep_na = TRUE, experiment = "RPPAArray", arg = "subset"
   )
@@ -75,7 +75,7 @@ get_filter_state(datasets)
 set_filter_state(
   datasets,
   filter_settings(
-    filter_var(dataname = "iris", varname = "Species", selected = "setosa", keep_na = TRUE)
+    filter_conf(dataname = "iris", varname = "Species", selected = "setosa", keep_na = TRUE)
   )
 )
 
@@ -83,9 +83,9 @@ set_filter_state(
 remove_filter_state(
   datasets,
   filter_settings(
-    filter_var(dataname = "iris", varname = "Species"),
-    filter_var(dataname = "mae", varname = "years_to_birth"),
-    filter_var(dataname = "mae", varname = "vital_status")
+    filter_conf(dataname = "iris", varname = "Species"),
+    filter_conf(dataname = "mae", varname = "years_to_birth"),
+    filter_conf(dataname = "mae", varname = "vital_status")
   )
 )
 

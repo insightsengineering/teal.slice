@@ -8,11 +8,11 @@
 #' @examples
 #' filter_state <- teal.slice:::EmptyFilterState$new(
 #'   x = NA,
-#'   slice = filter_var(varname = "x", dataname = "data"),
+#'   slice = filter_conf(varname = "x", dataname = "data"),
 #'   extract_type = character(0)
 #' )
 #' shiny::isolate(filter_state$get_call())
-#' filter_state$set_state(filter_var(dataname = "data", varname = "x", keep_na = TRUE))
+#' filter_state$set_state(filter_conf(dataname = "data", varname = "x", keep_na = TRUE))
 #' shiny::isolate(filter_state$get_call())
 #'
 EmptyFilterState <- R6::R6Class( # nolint
@@ -33,7 +33,7 @@ EmptyFilterState <- R6::R6Class( # nolint
     #'   If it is set to `reactive(NULL)` then counts based on filtered
     #'   dataset are not shown.
     #' @param slice (`teal_slice`)\cr
-    #'   object created using [filter_var()]. `teal_slice` is stored
+    #'   object created using [filter_conf()]. `teal_slice` is stored
     #'   in the class and `set_state` directly manipulates values within `teal_slice`. `get_state`
     #'   returns `teal_slice` object which can be reused in other places. Beware, that `teal_slice`
     #'   is an immutable object which means that changes in particular object are automatically

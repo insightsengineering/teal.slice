@@ -244,7 +244,7 @@ SEFilterStates <- R6::R6Class( # nolint
               )
               varname <- input$col_to_add
               self$set_filter_state(filter_settings(
-                filter_var(private$dataname, varname, experiment = private$datalabel, arg = "select")
+                filter_conf(private$dataname, varname, experiment = private$datalabel, arg = "select")
               ))
 
               logger::log_trace(
@@ -270,7 +270,7 @@ SEFilterStates <- R6::R6Class( # nolint
               )
               varname <- input$row_to_add
               self$set_filter_state(filter_settings(
-                filter_var(private$dataname, varname, experiment = private$datalabel, arg = "subset")
+                filter_conf(private$dataname, varname, experiment = private$datalabel, arg = "subset")
               ))
 
               logger::log_trace(

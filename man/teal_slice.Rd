@@ -2,8 +2,6 @@
 % Please edit documentation in R/teal_slice.R
 \name{teal_slice}
 \alias{teal_slice}
-\alias{filter_var}
-\alias{filter_expr}
 \alias{filter_settings}
 \alias{is.teal_slice}
 \alias{as.teal_slice}
@@ -22,22 +20,6 @@
 \alias{slices_restore}
 \title{Manage filter state(s).}
 \usage{
-filter_var(
-  dataname,
-  varname,
-  choices = NULL,
-  selected = NULL,
-  keep_na = NULL,
-  keep_inf = NULL,
-  fixed = FALSE,
-  locked = FALSE,
-  multiple = TRUE,
-  id,
-  ...
-)
-
-filter_expr(dataname, id, title, expr, locked = FALSE, ...)
-
 filter_settings(
   ...,
   exclude_varnames = NULL,
@@ -77,39 +59,9 @@ slices_store(tss, file)
 slices_restore(file)
 }
 \arguments{
-\item{dataname}{\code{character(1)} name of data set}
-
-\item{varname}{\code{character(1)} name of variable}
-
-\item{choices}{optional vector specifying allowed choices;
-possibly a subset of values in data; type and size depends on variable type}
-
-\item{selected}{optional vector specifying selection;
-type and size depends on variable type}
-
-\item{keep_na}{\code{logical(1)} or \code{NULL} optional logical flag specifying whether to keep missing values}
-
-\item{keep_inf}{\code{logical(1)} or \code{NULL} optional logical flag specifying whether to keep infinite values}
-
-\item{fixed}{\code{logical(1)} logical flag specifying whether to fix this filter state (forbid setting state)}
-
-\item{locked}{\code{logical(1)} logical flag specifying whether to lock this filter state (forbid disabling and removing)}
-
-\item{multiple}{\code{logical(1)} logical flag specifying whether more than one value can be selected;
-only applicable to \code{ChoicesFilterState} and \code{LogicalFilterState}}
-
-\item{id}{\code{character(1)} identifier of the filter}
-
-\item{...}{for \code{filter_var} and \code{filter_expr} any number of additional fields given as \code{name:value} pairs\cr
+\item{...}{for \code{filter_conf} any number of additional fields given as \code{name:value} pairs\cr
 for \code{filter_settings} any number of \code{teal_slice} objects\cr
 for other functions arguments passed to other methods}
-
-\item{title}{\code{character(1)} title of the filter}
-
-\item{expr}{\code{character(1)} string providing a logical expression;
-must be able to be evaluated without error by the appropriate subsetting function:
-for a \code{data.frame} \code{var1 == "x" & var2 > 0} is sufficient but
-\code{MultiAssayExperiment::subsetByColData} requires \code{data$var1 == "x" & data$var2 > 0}}
 
 \item{include_varnames, exclude_varnames}{\verb{named list}s of \code{character} vectors where list names
 match names of data sets and vector elements match variable names in respective data sets;
@@ -134,10 +86,39 @@ and unfiltered dataset.
 \item{field}{\code{character(1)} name of \code{teal_slice} element}
 
 \item{file}{\code{character(1)} path to \code{teal_slices} save to or load \code{teal_slices} from}
+
+\item{dataname}{\code{character(1)} name of data set}
+
+\item{varname}{\code{character(1)} name of variable}
+
+\item{choices}{optional vector specifying allowed choices;
+possibly a subset of values in data; type and size depends on variable type}
+
+\item{selected}{optional vector specifying selection;
+type and size depends on variable type}
+
+\item{multiple}{\code{logical(1)} logical flag specifying whether more than one value can be selected;
+only applicable to \code{ChoicesFilterState} and \code{LogicalFilterState}}
+
+\item{keep_na}{\code{logical(1)} or \code{NULL} optional logical flag specifying whether to keep missing values}
+
+\item{keep_inf}{\code{logical(1)} or \code{NULL} optional logical flag specifying whether to keep infinite values}
+
+\item{fixed}{\code{logical(1)} logical flag specifying whether to fix this filter state (forbid setting state)}
+
+\item{locked}{\code{logical(1)} logical flag specifying whether to lock this filter state (forbid disabling and removing)}
+
+\item{id}{\code{character(1)} identifier of the filter}
+
+\item{title}{\code{character(1)} title of the filter}
+
+\item{expr}{\code{character(1)} string providing a logical expression;
+must be able to be evaluated without error by the appropriate subsetting function:
+for a \code{data.frame} \code{var1 == "x" & var2 > 0} is sufficient but
+\code{MultiAssayExperiment::subsetByColData} requires \code{data$var1 == "x" & data$var2 > 0}}
 }
 \value{
-\code{filter_var} returns object of class \code{teal_slice}, which is a named list.
-\code{filter_expr} returns object of class \code{teal_slice_expr}, which inherits from \code{teal_slice}.
+\code{filter_conf} returns object of class \code{teal_slice}, which is a named list.
 \code{filter_settings} returns object of class \code{teal_slices}, which is an unnamed list of \code{teal_slice} objects.
 }
 \description{
@@ -148,7 +129,7 @@ These functions create and manage filter state specifications.
 A single filter state can be fully described by a \code{teal_slice} object and such
 objects will be used to create, modify, and delete a filter state.
 
-A \code{teal_slice} contains a number of common fields (all named arguments of \code{filter_var}),
+A \code{teal_slice} contains a number of common fields (all named arguments of \code{filter_conf}),
 some of which are mandatory, but only \code{dataname} and \code{varname} must be specified,
 while the others have default values.
 Setting any of the other values to NULL means that those properties will not be modified
@@ -170,7 +151,7 @@ These are always immutable logical flags that default to FALSE.
 In a \code{FilterState} instantiated with \code{fixed = TRUE} the features \code{selected}, \code{keep_na}, \code{keep_inf}
 cannot be changed.
 
-\code{filter_var} creates a \code{teal_slice} object, which specifies a filter for a single variable,
+\code{filter_conf} creates a \code{teal_slice} object, which specifies a filter for a single variable,
 passed to and resolved by \code{FilterState} objects.
 \code{filter_settings} collates multiple \code{teal_slice} objects into \code{teal_slices},
 a complete filter specification. This is used by all classes above \code{FilterState}
@@ -201,7 +182,7 @@ for experiments and as "y" for \code{colData}.
 }
 
 \examples{
-filter_1 <- filter_var(
+filter_1 <- filter_conf(
   dataname = "dataname1",
   varname = "varname1",
   choices = letters,
@@ -210,7 +191,7 @@ filter_1 <- filter_var(
   fixed = FALSE,
   extra1 = "extraone"
 )
-filter_2 <- filter_var(
+filter_2 <- filter_conf(
   dataname = "dataname1",
   varname = "varname2",
   choices = 1:10,
@@ -220,7 +201,7 @@ filter_2 <- filter_var(
   locked = FALSE,
   extra2 = "extratwo"
 )
-filter_3 <- filter_var(
+filter_3 <- filter_conf(
   dataname = "dataname2",
   varname = "varname3",
   choices = 1:10 / 10,
@@ -241,11 +222,5 @@ all_filters <- filter_settings(
   )
 )
 
-filter_expr(
-  dataname = "data",
-  id = "FA",
-  title = "Female adults",
-  expr = "SEX == 'F' & AGE >= 18"
-)
 }
 \keyword{internal}

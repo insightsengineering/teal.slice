@@ -294,8 +294,8 @@ datasets <- init_filtered_data(
 set_filter_state(
   datasets = datasets,
   filter = filter_settings(
-    filter_var(dataname = "iris", varname = "Species", selected = "virginica", keep_na = FALSE),
-    filter_var(dataname = "mtcars", varname = "mpg", selected = c(20.0, 25.0), keep_na = FALSE, keep_inf = FALSE),
+    filter_conf(dataname = "iris", varname = "Species", selected = "virginica", keep_na = FALSE),
+    filter_conf(dataname = "mtcars", varname = "mpg", selected = c(20.0, 25.0), keep_na = FALSE, keep_inf = FALSE),
     include_varnames = list(iris = c("Species", "Sepal.Length")),
     exclude_varnames = list(mtcars = "cyl")
   )
@@ -312,7 +312,7 @@ get_filter_state(datasets)
 remove_filter_state(
   datasets = datasets,
   filter = filter_settings(
-    filter_var(dataname = "iris", varname = "Species")
+    filter_conf(dataname = "iris", varname = "Species")
   )
 )
 ```
@@ -322,7 +322,7 @@ remove_filter_state(
 set_filter_state(
   datasets = datasets,
   filter = filter_settings(
-    filter_var(dataname = "mtcars", varname = "mpg", selected = c(22.0, 25.0))
+    filter_conf(dataname = "mtcars", varname = "mpg", selected = c(22.0, 25.0))
   )
 )
 ```
@@ -380,7 +380,7 @@ app <- shinyApp(
       set_filter_state(
         datasets,
         filter_settings(
-          filter_var(dataname = "iris", varname = "Species", selected = c("setosa", "versicolor"))
+          filter_conf(dataname = "iris", varname = "Species", selected = c("setosa", "versicolor"))
         )
       )
     })
@@ -388,7 +388,7 @@ app <- shinyApp(
       remove_filter_state(
         datasets,
         filter_settings(
-          filter_var(dataname = "iris", varname = "Species")
+          filter_conf(dataname = "iris", varname = "Species")
         )
       )
     })

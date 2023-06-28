@@ -6,8 +6,8 @@
 #' ds <- teal.slice:::DefaultFilteredDataset$new(iris, "iris")
 #' ds$set_filter_state(
 #'   filter_settings(
-#'     filter_var(dataname = "iris", varname = "Species", selected = "virginica"),
-#'     filter_var(dataname = "iris", varname = "Petal.Length", selected = c(2.0, 5))
+#'     filter_conf(dataname = "iris", varname = "Species", selected = "virginica"),
+#'     filter_conf(dataname = "iris", varname = "Petal.Length", selected = c(2.0, 5))
 #'   )
 #' )
 #' isolate(ds$get_filter_state())
@@ -172,8 +172,8 @@ DefaultFilteredDataset <- R6::R6Class( # nolint
     #' @examples
     #' dataset <- teal.slice:::DefaultFilteredDataset$new(iris, "iris")
     #' fs <- filter_settings(
-    #'   filter_var(dataname = "iris", varname = "Species", selected = "virginica"),
-    #'   filter_var(dataname = "iris", varname = "Petal.Length", selected = c(2.0, 5))
+    #'   filter_conf(dataname = "iris", varname = "Species", selected = "virginica"),
+    #'   filter_conf(dataname = "iris", varname = "Petal.Length", selected = c(2.0, 5))
     #' )
     #' dataset$set_filter_state(state = fs)
     #' shiny::isolate(dataset$get_filter_state())

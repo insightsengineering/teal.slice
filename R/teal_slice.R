@@ -6,7 +6,7 @@
 #' A single filter state can be fully described by a `teal_slice` object and such
 #' objects will be used to create, modify, and delete a filter state.
 #'
-#' A `teal_slice` contains a number of common fields (all named arguments of `filter_var`),
+#' A `teal_slice` contains a number of common fields (all named arguments of `filter_conf`),
 #' some of which are mandatory, but only `dataname` and `varname` must be specified,
 #' while the others have default values.
 #' Setting any of the other values to NULL means that those properties will not be modified
@@ -28,7 +28,7 @@
 #' In a `FilterState` instantiated with `fixed = TRUE` the features `selected`, `keep_na`, `keep_inf`
 #' cannot be changed.
 #'
-#' `filter_var` creates a `teal_slice` object, which specifies a filter for a single variable,
+#' `filter_conf` creates a `teal_slice` object, which specifies a filter for a single variable,
 #' passed to and resolved by `FilterState` objects.
 #' `filter_settings` collates multiple `teal_slice` objects into `teal_slices`,
 #' a complete filter specification. This is used by all classes above `FilterState`
@@ -89,17 +89,16 @@
 #' @param tss `teal_slices`
 #' @param field `character(1)` name of `teal_slice` element
 #' @param file `character(1)` path to `teal_slices` save to or load `teal_slices` from
-#' @param ... for `filter_var` and `filter_expr` any number of additional fields given as `name:value` pairs\cr
+#' @param ... for `filter_conf` any number of additional fields given as `name:value` pairs\cr
 #'            for `filter_settings` any number of `teal_slice` objects\cr
 #'            for other functions arguments passed to other methods
 #'
 #' @return
-#' `filter_var` returns object of class `teal_slice`, which is a named list.
-#' `filter_expr` returns object of class `teal_slice_expr`, which inherits from `teal_slice`.
+#' `filter_conf` returns object of class `teal_slice`, which is a named list.
 #' `filter_settings` returns object of class `teal_slices`, which is an unnamed list of `teal_slice` objects.
 #'
 #' @examples
-#' filter_1 <- filter_var(
+#' filter_1 <- filter_conf(
 #'   dataname = "dataname1",
 #'   varname = "varname1",
 #'   choices = letters,
@@ -108,7 +107,7 @@
 #'   fixed = FALSE,
 #'   extra1 = "extraone"
 #' )
-#' filter_2 <- filter_var(
+#' filter_2 <- filter_conf(
 #'   dataname = "dataname1",
 #'   varname = "varname2",
 #'   choices = 1:10,
@@ -118,7 +117,7 @@
 #'   locked = FALSE,
 #'   extra2 = "extratwo"
 #' )
-#' filter_3 <- filter_var(
+#' filter_3 <- filter_conf(
 #'   dataname = "dataname2",
 #'   varname = "varname3",
 #'   choices = 1:10 / 10,
@@ -144,57 +143,100 @@ NULL
 
 # constructors ----
 
-#' @export
-#' @rdname teal_slice
+#' Create a `teal_slice`
 #'
-filter_var <- function(dataname,
-                       varname,
-                       choices = NULL,
-                       selected = NULL,
-                       keep_na = NULL,
-                       keep_inf = NULL,
-                       fixed = FALSE,
-                       locked = FALSE,
-                       multiple = TRUE,
-                       id,
-                       ...) {
+#' @param dataname `character(1)` name of data set
+#' @param varname `character(1)` name of variable
+#' @param id `character(1)` identifier of the filter
+#' @param title `character(1)` title of the filter
+#' @param expr `character(1)` string providing a logical expression;
+#' @param choices optional vector specifying allowed choices;
+#' possibly a subset of values in data; type and size depends on variable type
+#' @param selected optional vector specifying selection;
+#' type and size depends on variable type
+#' @param multiple `logical(1)` logical flag specifying whether more than one value can be selected;
+#' only applicable to `ChoicesFilterState` and `LogicalFilterState`
+#' @param keep_na `logical(1)` or `NULL` optional logical flag specifying whether to keep missing values
+#' @param keep_inf `logical(1)` or `NULL` optional logical flag specifying whether to keep infinite values
+#' @param fixed `logical(1)` logical flag specifying whether to fix this filter state (forbid setting state)
+#' @param locked `logical(1)` logical flag specifying whether to lock this filter state (forbid disabling and removing)
+#' @param ... additional arguments which can be handled by extensions of `teal.slice` classes.
+#'  For `MultiAssayExperiment` objects app developers should specify following:
+#' - `experiment` (`character(1)`) to refer to the particular experiment in the `MultiAssayExperiment` object.
+#' - `arg` (`"subset"  or `"select`) to refer to the particular argument in the [SummarizedExperiment::subset] function.
+#' @examples
+#' filter_conf(
+#'   dataname = "data",
+#'   id = "Female adults",
+#'   expr = "SEX == 'F' & AGE >= 18",
+#'   title = "Female adults"
+#' )
+#' filter_conf(
+#'  dataname = "data",
+#'  varname = "var",
+#'  choices = c("F", "M", "U"),
+#'  selected = "F",
+#'  keep_na = TRUE,
+#'  keep_inf = TRUE,
+#'  fixed = FALSE,
+#'  locked = FALSE,
+#'  multiple = TRUE,
+#'  id = "Gender",
+#'  extra_arg = "extra"
+#' )
+#' @export
+filter_conf <- function(dataname,
+                        varname,
+                        id,
+                        expr,
+                        choices = NULL,
+                        selected = NULL,
+                        keep_na = NULL,
+                        keep_inf = NULL,
+                        fixed = if (!missing(expr)) TRUE else FALSE,
+                        locked = FALSE,
+                        multiple = TRUE,
+                        title = NULL,
+                        ...) {
   checkmate::assert_string(dataname)
-  checkmate::assert_string(varname)
-  checkmate::assert_multi_class(choices, .filterable_class, null.ok = TRUE)
-  checkmate::assert_multi_class(selected, .filterable_class, null.ok = TRUE)
-  checkmate::assert_flag(keep_na, null.ok = TRUE)
-  checkmate::assert_flag(keep_inf, null.ok = TRUE)
   checkmate::assert_flag(fixed)
   checkmate::assert_flag(locked)
-  checkmate::assert_flag(multiple)
-  ans <- c(as.list(environment()), list(...))
-  if (missing(id)) {
-    ans$id <- paste(Filter(length, ans[c("dataname", "varname", "experiment", "arg")]), collapse = " ")
-  }
-  checkmate::assert_string(ans$id, .var.name = "id")
-  ans <- do.call(shiny::reactiveValues, ans)
-  class(ans) <- c("teal_slice", class(ans))
-  ans
-}
 
-#' @export
-#' @rdname teal_slice
-#' @examples
-#' filter_expr(
-#'   dataname = "data",
-#'   id = "FA",
-#'   title = "Female adults",
-#'   expr = "SEX == 'F' & AGE >= 18"
-#' )
-filter_expr <- function(dataname, id, title, expr, locked = FALSE, ...) {
-  checkmate::assert_string(dataname)
-  checkmate::assert_string(id)
-  checkmate::assert_string(title)
-  checkmate::assert_string(expr)
-  ans <- c(as.list(environment()), list(...))
-  ans <- do.call(shiny::reactiveValues, ans)
-  class(ans) <- c("teal_slice_expr", "teal_slice", class(ans))
-  ans
+  formal_args <- as.list(environment())
+  if (!missing(expr)) {
+    ts_expr_args <- c("dataname", "id", "expr", "fixed", "locked", "title")
+    formal_args <- formal_args[ts_expr_args]
+    checkmate::assert_string(id)
+    checkmate::assert_string(title)
+    checkmate::assert_string(expr)
+    ans <- do.call(shiny::reactiveValues, c(formal_args, list(...)))
+    class(ans) <- c("teal_slice_expr", "teal_slice", class(ans))
+    ans
+  } else if (!missing(varname)) {
+    ts_var_args <- c("dataname", "varname", "id", "choices", "selected", "keep_na", "keep_inf",
+                      "fixed", "locked", "multiple")
+    formal_args <- formal_args[ts_var_args]
+    args <- c(formal_args, list(...))
+    checkmate::assert_string(varname)
+    checkmate::assert_multi_class(choices, .filterable_class, null.ok = TRUE)
+    checkmate::assert_multi_class(selected, .filterable_class, null.ok = TRUE)
+    checkmate::assert_flag(keep_na, null.ok = TRUE)
+    checkmate::assert_flag(keep_inf, null.ok = TRUE)
+    checkmate::assert_flag(multiple)
+    if (missing(id)) {
+      args$id <- paste(
+        Filter(length, args[c("dataname", "varname", "experiment", "arg")]),
+        collapse = " "
+      )
+    } else {
+      checkmate::assert_string(id)
+    }
+    ans <- do.call(shiny::reactiveValues, args)
+    class(ans) <- c("teal_slice", class(ans))
+    ans
+  } else {
+    stop("Must provide either `expr` or `varname`.")
+  }
 }
 
 #' @export
@@ -248,12 +290,7 @@ is.teal_slice <- function(x) { # nolint
 #'
 as.teal_slice <- function(x) { # nolint
   checkmate::assert_list(x, names = "named")
-
-  fun <- if ("expr" %in% names(x)) {
-    filter_expr
-  } else {
-    filter_var
-  }
+  fun <- filter_conf
   do.call(fun, x)
 }
 
@@ -275,11 +312,7 @@ c.teal_slice <- function(...) {
 #' @keywords internal
 #' @export
 as.list.teal_slice <- function(x, ...) {
-  formals <- if (inherits(x, "teal_slice_expr")) {
-    formals(filter_expr)
-  } else {
-    formals(filter_var)
-  }
+  formals <- formals(filter_conf)
 
   x <- if (shiny::isRunning()) {
     shiny::reactiveValuesToList(x)

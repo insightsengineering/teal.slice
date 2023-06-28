@@ -267,8 +267,8 @@ testthat::test_that("get_call return a list of calls when filter applied", {
     )
   )
   fs <- filter_settings(
-    filter_var(dataname = "iris", varname = "Sepal.Length", selected = c(5.1, 6.4), keep_na = FALSE, keep_inf = FALSE),
-    filter_var(dataname = "mtcars", varname = "cyl", selected = c(4, 6), keep_na = FALSE, keep_inf = FALSE)
+    filter_conf(dataname = "iris", varname = "Sepal.Length", selected = c(5.1, 6.4), keep_na = FALSE, keep_inf = FALSE),
+    filter_conf(dataname = "mtcars", varname = "cyl", selected = c(4, 6), keep_na = FALSE, keep_inf = FALSE)
   )
   datasets$set_filter_state(state = fs)
   testthat::expect_identical(
@@ -311,8 +311,8 @@ testthat::test_that("get_filter_expr returns all filter calls as character", {
     )
   )
   fs <- filter_settings(
-    filter_var(dataname = "iris", varname = "Sepal.Length", selected = c(5.1, 6.4), keep_na = FALSE, keep_inf = FALSE),
-    filter_var(dataname = "mtcars", varname = "cyl", selected = c(4, 6), keep_na = FALSE, keep_inf = FALSE)
+    filter_conf(dataname = "iris", varname = "Sepal.Length", selected = c(5.1, 6.4), keep_na = FALSE, keep_inf = FALSE),
+    filter_conf(dataname = "mtcars", varname = "cyl", selected = c(4, 6), keep_na = FALSE, keep_inf = FALSE)
   )
 
   datasets$set_filter_state(state = fs)
@@ -359,7 +359,7 @@ testthat::test_that("get_data returns an object filtered by set filters", {
     )
   )
   fs <- filter_settings(
-    filter_var(dataname = "iris", varname = "Sepal.Length", selected = c(5.1, 6.4), keep_na = FALSE, keep_inf = FALSE)
+    filter_conf(dataname = "iris", varname = "Sepal.Length", selected = c(5.1, 6.4), keep_na = FALSE, keep_inf = FALSE)
   )
 
   datasets$set_filter_state(state = fs)
@@ -386,7 +386,7 @@ testthat::test_that("get_data of the child is dependent on the ancestor filter",
     join_keys = jk
   )
   filtered_data$set_filter_state(filter_settings(
-    filter_var(dataname = "parent", varname = "id", selected = c(1, 1), keep_na = FALSE, keep_inf = FALSE)
+    filter_conf(dataname = "parent", varname = "id", selected = c(1, 1), keep_na = FALSE, keep_inf = FALSE)
   ))
 
   testthat::expect_identical(
@@ -428,13 +428,13 @@ testthat::test_that("set_filter_state accepts `teal_slices` and nested list and 
   )
 
   fs2 <- filter_settings(
-    filter_var(dataname = "iris", varname = "Species", selected = c("setosa", "versicolor")),
-    filter_var(dataname = "iris", varname = "Sepal.Length", selected = c(5.1, 6.4)),
-    filter_var(dataname = "iris", varname = "Petal.Length"),
-    filter_var(dataname = "mae", varname = "years_to_birth", selected = c(30, 50), keep_na = TRUE, keep_inf = FALSE),
-    filter_var(dataname = "mae", varname = "vital_status", selected = "1", keep_na = FALSE),
-    filter_var(dataname = "mae", varname = "gender", selected = "female", keep_na = TRUE),
-    filter_var(
+    filter_conf(dataname = "iris", varname = "Species", selected = c("setosa", "versicolor")),
+    filter_conf(dataname = "iris", varname = "Sepal.Length", selected = c(5.1, 6.4)),
+    filter_conf(dataname = "iris", varname = "Petal.Length"),
+    filter_conf(dataname = "mae", varname = "years_to_birth", selected = c(30, 50), keep_na = TRUE, keep_inf = FALSE),
+    filter_conf(dataname = "mae", varname = "vital_status", selected = "1", keep_na = FALSE),
+    filter_conf(dataname = "mae", varname = "gender", selected = "female", keep_na = TRUE),
+    filter_conf(
       dataname = "mae", varname = "ARRAY_TYPE", experiment = "RPPAArray", arg = "subset",
       selected = "", keep_na = TRUE
     ),
@@ -461,17 +461,17 @@ testthat::test_that("get_filter_state returns `teal_slices` with features identi
   )
 
   fs <- filter_settings(
-    filter_var(
+    filter_conf(
       dataname = "iris", varname = "Sepal.Length",
       choices = c(4.3, 7.9), selected = c(5.1, 6.4),
       keep_na = FALSE, keep_inf = FALSE
     ),
-    filter_var(
+    filter_conf(
       dataname = "iris", varname = "Species",
       choices = c("setosa", "versicolor", "virginica"), selected = c("setosa", "versicolor"),
       keep_na = FALSE
     ),
-    filter_var(
+    filter_conf(
       dataname = "mtcars", varname = "cyl",
       choices = c("4", "6", "8"), selected = c("4", "6"),
       keep_na = FALSE, keep_inf = FALSE
@@ -505,17 +505,17 @@ testthat::test_that("print returns properly formatted string representing `teal_
   )
 
   fs <- filter_settings(
-    filter_var(
+    filter_conf(
       dataname = "iris", varname = "Sepal.Length",
       choices = c(4.3, 7.9), selected = c(5.1, 6.4),
       keep_na = FALSE, keep_inf = FALSE
     ),
-    filter_var(
+    filter_conf(
       dataname = "iris", varname = "Species",
       choices = c("setosa", "versicolor", "virginica"), multiple = TRUE, selected = c("setosa", "versicolor"),
       keep_na = FALSE
     ),
-    filter_var(
+    filter_conf(
       dataname = "mtcars", varname = "cyl",
       choices = c("4", "6", "8"), multiple = TRUE, selected = c("4", "6"),
       keep_na = FALSE, keep_inf = FALSE
@@ -546,17 +546,17 @@ testthat::test_that("remove_filter_state removes states specified by `teal_slice
     )
   )
   fs <- filter_settings(
-    filter_var(dataname = "iris", varname = "Sepal.Length", selected = c(5.1, 6.4), keep_na = FALSE, keep_inf = FALSE),
-    filter_var(dataname = "iris", varname = "Species", selected = c("setosa", "versicolor"), keep_na = FALSE),
-    filter_var(dataname = "mtcars", varname = "cyl", selected = c(4, 6), keep_na = FALSE, keep_inf = FALSE),
-    filter_var(dataname = "mtcars", varname = "disp", keep_na = FALSE, keep_inf = FALSE)
+    filter_conf(dataname = "iris", varname = "Sepal.Length", selected = c(5.1, 6.4), keep_na = FALSE, keep_inf = FALSE),
+    filter_conf(dataname = "iris", varname = "Species", selected = c("setosa", "versicolor"), keep_na = FALSE),
+    filter_conf(dataname = "mtcars", varname = "cyl", selected = c(4, 6), keep_na = FALSE, keep_inf = FALSE),
+    filter_conf(dataname = "mtcars", varname = "disp", keep_na = FALSE, keep_inf = FALSE)
   )
   datasets$set_filter_state(state = fs)
   datasets$remove_filter_state(
     filter_settings(
-      filter_var(dataname = "iris", varname = "Sepal.Length"),
-      filter_var(dataname = "mtcars", varname = "cyl"),
-      filter_var(dataname = "mtcars", varname = "disp")
+      filter_conf(dataname = "iris", varname = "Sepal.Length"),
+      filter_conf(dataname = "mtcars", varname = "cyl"),
+      filter_conf(dataname = "mtcars", varname = "disp")
     )
   )
   testthat::expect_identical(
@@ -573,15 +573,15 @@ testthat::test_that("remove_filter_state does not remove locked filters", {
     )
   )
   fs <- filter_settings(
-    filter_var(
+    filter_conf(
       dataname = "iris", varname = "Sepal.Length", selected = c(5.1, 6.4),
       keep_na = FALSE, keep_inf = FALSE
     ),
-    filter_var(
+    filter_conf(
       dataname = "iris", varname = "Species", selected = c("setosa", "versicolor"),
       keep_na = FALSE, locked = TRUE
     ),
-    filter_var(
+    filter_conf(
       dataname = "iris", varname = "Sepal.Width", selected = c(2.5, 3.3),
       keep_na = FALSE, keep_inf = FALSE, locked = TRUE
     )
@@ -605,10 +605,10 @@ testthat::test_that("clear_filter_states removes all filters of all datasets in 
     )
   )
   fs <- filter_settings(
-    filter_var(dataname = "iris", varname = "Sepal.Length", selected = c(5.1, 6.4), keep_na = FALSE, keep_inf = FALSE),
-    filter_var(dataname = "iris", varname = "Species", selected = c("setosa", "versicolor"), keep_na = FALSE),
-    filter_var(dataname = "mtcars", varname = "cyl", selected = c(4, 6), keep_na = FALSE, keep_inf = FALSE),
-    filter_var(dataname = "mtcars", varname = "disp", keep_na = FALSE, keep_inf = FALSE)
+    filter_conf(dataname = "iris", varname = "Sepal.Length", selected = c(5.1, 6.4), keep_na = FALSE, keep_inf = FALSE),
+    filter_conf(dataname = "iris", varname = "Species", selected = c("setosa", "versicolor"), keep_na = FALSE),
+    filter_conf(dataname = "mtcars", varname = "cyl", selected = c(4, 6), keep_na = FALSE, keep_inf = FALSE),
+    filter_conf(dataname = "mtcars", varname = "disp", keep_na = FALSE, keep_inf = FALSE)
   )
   datasets$set_filter_state(state = fs)
   datasets$clear_filter_states()
@@ -624,10 +624,10 @@ testthat::test_that("clear_filter_states removes filters of desired dataset only
     )
   )
   fs <- filter_settings(
-    filter_var(dataname = "iris", varname = "Sepal.Length", selected = c(5.1, 6.4), keep_na = TRUE, keep_inf = FALSE),
-    filter_var(dataname = "iris", varname = "Species", selected = c("setosa", "versicolor"), keep_na = FALSE),
-    filter_var(dataname = "mtcars", varname = "cyl", selected = c(4, 6), keep_na = FALSE, keep_inf = FALSE),
-    filter_var(dataname = "mtcars", varname = "disp", keep_na = FALSE, keep_inf = FALSE)
+    filter_conf(dataname = "iris", varname = "Sepal.Length", selected = c(5.1, 6.4), keep_na = TRUE, keep_inf = FALSE),
+    filter_conf(dataname = "iris", varname = "Species", selected = c("setosa", "versicolor"), keep_na = FALSE),
+    filter_conf(dataname = "mtcars", varname = "cyl", selected = c(4, 6), keep_na = FALSE, keep_inf = FALSE),
+    filter_conf(dataname = "mtcars", varname = "disp", keep_na = FALSE, keep_inf = FALSE)
   )
   datasets$set_filter_state(state = fs)
   datasets$clear_filter_states(datanames = "iris")
@@ -643,15 +643,15 @@ testthat::test_that("clear_filter_states does not remove locked filters", {
     )
   )
   fs <- filter_settings(
-    filter_var(
+    filter_conf(
       dataname = "iris", varname = "Sepal.Length", selected = c(5.1, 6.4),
       keep_na = FALSE, keep_inf = FALSE
     ),
-    filter_var(
+    filter_conf(
       dataname = "iris", varname = "Species", selected = c("setosa", "versicolor"),
       keep_na = FALSE, locked = TRUE
     ),
-    filter_var(
+    filter_conf(
       dataname = "iris", varname = "Sepal.Width", selected = c(2.5, 3.3),
       keep_na = FALSE, keep_inf = FALSE, locked = TRUE
     )
@@ -710,11 +710,11 @@ testthat::test_that("get_filter_overview returns overview data.frame with filter
   )
   datasets$set_filter_state(
     filter_settings(
-      filter_var(
+      filter_conf(
         dataname = "iris", varname = "Sepal.Length", selected = c(5.1, 5.1),
         keep_na = TRUE, keep_inf = FALSE
       ),
-      filter_var(
+      filter_conf(
         dataname = "mtcars", varname = "cyl", selected = 6,
         keep_na = FALSE, keep_inf = FALSE
       )
@@ -748,7 +748,7 @@ testthat::test_that("get_filter_overview return counts based on reactive filteri
     join_keys = jk
   )
   filtered_data$set_filter_state(
-    filter_settings(filter_var(dataname = "parent", varname = "id", selected = c(1, 2)))
+    filter_settings(filter_conf(dataname = "parent", varname = "id", selected = c(1, 2)))
   )
   testthat::expect_equal(
     shiny::isolate(filtered_data$get_filter_overview(c("child", "parent"))),
@@ -788,10 +788,10 @@ testthat::test_that("srv_active - output$teal_filters_count returns (reactive) n
     )
   )
   fs <- filter_settings(
-    filter_var(dataname = "iris", varname = "Sepal.Length", selected = c(5.1, 6.4), keep_na = TRUE, keep_inf = FALSE),
-    filter_var(dataname = "iris", varname = "Species", selected = c("setosa", "versicolor"), keep_na = FALSE),
-    filter_var(dataname = "mtcars", varname = "cyl", selected = c(4, 6), keep_na = FALSE, keep_inf = FALSE),
-    filter_var(dataname = "mtcars", varname = "disp", keep_na = FALSE, keep_inf = FALSE)
+    filter_conf(dataname = "iris", varname = "Sepal.Length", selected = c(5.1, 6.4), keep_na = TRUE, keep_inf = FALSE),
+    filter_conf(dataname = "iris", varname = "Species", selected = c("setosa", "versicolor"), keep_na = FALSE),
+    filter_conf(dataname = "mtcars", varname = "cyl", selected = c(4, 6), keep_na = FALSE, keep_inf = FALSE),
+    filter_conf(dataname = "mtcars", varname = "disp", keep_na = FALSE, keep_inf = FALSE)
   )
   filtered_data$set_filter_state(fs)
   shiny::testServer(
@@ -810,10 +810,10 @@ testthat::test_that("srv_active - clicking remove_all button clears filters", {
     )
   )
   fs <- filter_settings(
-    filter_var(dataname = "iris", varname = "Sepal.Length", selected = c(5.1, 6.4), keep_na = TRUE, keep_inf = FALSE),
-    filter_var(dataname = "iris", varname = "Species", selected = c("setosa", "versicolor"), keep_na = FALSE),
-    filter_var(dataname = "mtcars", varname = "cyl", selected = c(4, 6), keep_na = FALSE, keep_inf = FALSE),
-    filter_var(dataname = "mtcars", varname = "disp", keep_na = FALSE, keep_inf = FALSE)
+    filter_conf(dataname = "iris", varname = "Sepal.Length", selected = c(5.1, 6.4), keep_na = TRUE, keep_inf = FALSE),
+    filter_conf(dataname = "iris", varname = "Species", selected = c("setosa", "versicolor"), keep_na = FALSE),
+    filter_conf(dataname = "mtcars", varname = "cyl", selected = c(4, 6), keep_na = FALSE, keep_inf = FALSE),
+    filter_conf(dataname = "mtcars", varname = "disp", keep_na = FALSE, keep_inf = FALSE)
   )
   filtered_data$set_filter_state(fs)
   shiny::testServer(
@@ -842,10 +842,10 @@ testthat::test_that("get_filter_count properly tallies active filter states", {
     )
   )
   fs <- filter_settings(
-    filter_var(dataname = "iris", varname = "Sepal.Length", selected = c(5.1, 6.4), keep_na = TRUE, keep_inf = FALSE),
-    filter_var(dataname = "iris", varname = "Species", selected = c("setosa", "versicolor"), keep_na = FALSE),
-    filter_var(dataname = "mtcars", varname = "cyl", selected = c(4, 6), keep_na = FALSE, keep_inf = FALSE),
-    filter_var(dataname = "mtcars", varname = "disp", keep_na = FALSE, keep_inf = FALSE)
+    filter_conf(dataname = "iris", varname = "Sepal.Length", selected = c(5.1, 6.4), keep_na = TRUE, keep_inf = FALSE),
+    filter_conf(dataname = "iris", varname = "Species", selected = c("setosa", "versicolor"), keep_na = FALSE),
+    filter_conf(dataname = "mtcars", varname = "cyl", selected = c(4, 6), keep_na = FALSE, keep_inf = FALSE),
+    filter_conf(dataname = "mtcars", varname = "disp", keep_na = FALSE, keep_inf = FALSE)
   )
   shiny::isolate(testthat::expect_equal(datasets$get_filter_count(), 0L))
   datasets$set_filter_state(state = fs)
@@ -870,10 +870,10 @@ testthat::test_that("get_filter_count properly tallies active filter states for 
     )
   )
   fs <- filter_settings(
-    filter_var(dataname = "mae", varname = "years_to_birth", selected = c(30, 50), keep_na = TRUE, keep_inf = FALSE),
-    filter_var(dataname = "mae", varname = "vital_status", selected = "1", keep_na = FALSE),
-    filter_var(dataname = "mae", varname = "gender", selected = "female", keep_na = TRUE),
-    filter_var(
+    filter_conf(dataname = "mae", varname = "years_to_birth", selected = c(30, 50), keep_na = TRUE, keep_inf = FALSE),
+    filter_conf(dataname = "mae", varname = "vital_status", selected = "1", keep_na = FALSE),
+    filter_conf(dataname = "mae", varname = "gender", selected = "female", keep_na = TRUE),
+    filter_conf(
       dataname = "mae", varname = "ARRAY_TYPE",
       selected = "", keep_na = TRUE, experiment = "RPPAArray", arg = "subset"
     )
@@ -899,11 +899,11 @@ test_class <- R6::R6Class(
 )
 datasets <- test_class$new(list(iris = list(dataset = iris)))
 fs <- filter_settings(
-  filter_var(dataname = "iris", varname = "Sepal.Length", locked = TRUE),
-  filter_var(dataname = "iris", varname = "Sepal.Width", fixed = TRUE),
-  filter_var(dataname = "iris", varname = "Petal.Length"),
-  filter_var(dataname = "iris", varname = "Petal.Width"),
-  filter_expr(dataname = "iris", title = "test", id = "test", expr = "!is.na(Species)")
+  filter_conf(dataname = "iris", varname = "Sepal.Length", locked = TRUE),
+  filter_conf(dataname = "iris", varname = "Sepal.Width", fixed = TRUE),
+  filter_conf(dataname = "iris", varname = "Petal.Length"),
+  filter_conf(dataname = "iris", varname = "Petal.Width"),
+  filter_conf(dataname = "iris", title = "test", id = "test", expr = "!is.na(Species)")
 )
 fs_rv <- reactiveVal(fs)
 datasets$set_available_teal_slices(reactive(fs_rv()))
@@ -922,7 +922,7 @@ shiny::testServer(
     })
 
     testthat::test_that("FilteredData$srv_available_slices new state in external list reflected in available slices", {
-      species_slice <- filter_var(dataname = "iris", varname = "Species")
+      species_slice <- filter_conf(dataname = "iris", varname = "Species")
       fs_rv(c(fs_rv(), filter_settings(species_slice)))
       testthat::expect_identical(
         available_slices_id(),

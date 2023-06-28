@@ -51,12 +51,12 @@
 #' datasets$get_metadata("mtcars")
 #'
 #' datasets$set_filter_state(
-#'   filter_settings(filter_var(dataname = "iris", varname = "Species", selected = "virginica"))
+#'   filter_settings(filter_conf(dataname = "iris", varname = "Species", selected = "virginica"))
 #' )
 #' isolate(datasets$get_call("iris"))
 #'
 #' datasets$set_filter_state(
-#'   filter_settings(filter_var(dataname = "mtcars", varname = "mpg", selected = c(15, 20)))
+#'   filter_settings(filter_conf(dataname = "mtcars", varname = "mpg", selected = c(15, 20)))
 #' )
 #'
 #' isolate(datasets$get_filter_state())
@@ -451,15 +451,15 @@ FilteredData <- R6::R6Class( # nolint
     #' )
     #' fs <-
     #'   filter_settings(
-    #'     filter_var(dataname = "iris", varname = "Sepal.Length", selected = c(5.1, 6.4),
+    #'     filter_conf(dataname = "iris", varname = "Sepal.Length", selected = c(5.1, 6.4),
     #'                keep_na = TRUE, keep_inf = FALSE),
-    #'     filter_var(dataname = "iris", varname = "Species", selected = c("setosa", "versicolor"),
+    #'     filter_conf(dataname = "iris", varname = "Species", selected = c("setosa", "versicolor"),
     #'                keep_na = FALSE),
-    #'     filter_var(dataname = "mae", varname = "years_to_birth", selected = c(30, 50),
+    #'     filter_conf(dataname = "mae", varname = "years_to_birth", selected = c(30, 50),
     #'                keep_na = TRUE, keep_inf = FALSE),
-    #'     filter_var(dataname = "mae", varname = "vital_status", selected = "1", keep_na = FALSE),
-    #'     filter_var(dataname = "mae", varname = "gender", selected = "female", keep_na = TRUE),
-    #'     filter_var(dataname = "mae", varname = "ARRAY_TYPE",
+    #'     filter_conf(dataname = "mae", varname = "vital_status", selected = "1", keep_na = FALSE),
+    #'     filter_conf(dataname = "mae", varname = "gender", selected = "female", keep_na = TRUE),
+    #'     filter_conf(dataname = "mae", varname = "ARRAY_TYPE",
     #'                selected = "", keep_na = TRUE, datalabel = "RPPAArray", arg = "subset")
     #'   )
     #' datasets$set_filter_state(state = fs)
