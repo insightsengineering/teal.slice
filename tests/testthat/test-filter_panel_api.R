@@ -130,13 +130,10 @@ testthat::test_that("get_filter_state returns `teal_slices` with features identi
   fs <- filter_settings(
     filter_var("iris", "Species", selected = c("setosa", "versicolor")),
     filter_var("iris", "Sepal.Length", selected = c(5.1, 6.4)),
-    filter_var("mae", "years_to_birth",
-      selected = c(30, 50),
-      keep_na = TRUE, keep_inf = FALSE, datalabel = "subjects", arg = "y"
-    ),
-    filter_var("mae", "vital_status", selected = "1", keep_na = FALSE, datalabel = "subjects", arg = "y"),
-    filter_var("mae", "gender", selected = "female", keep_na = TRUE, datalabel = "subjects", arg = "y"),
-    filter_var("mae", "ARRAY_TYPE", selected = "", keep_na = TRUE, datalabel = "RPPAArray", arg = "subset")
+    filter_var("mae", "years_to_birth", selected = c(30, 50), keep_na = TRUE, keep_inf = FALSE),
+    filter_var("mae", "vital_status", selected = "1", keep_na = FALSE),
+    filter_var("mae", "gender", selected = "female", keep_na = TRUE),
+    filter_var("mae", "ARRAY_TYPE", selected = "", keep_na = TRUE, experiment = "RPPAArray", arg = "subset")
   )
   set_filter_state(datasets, filter = fs)
 
@@ -152,19 +149,19 @@ testthat::test_that("get_filter_state returns `teal_slices` with features identi
   ))
   testthat::expect_true(compare_slices(
     fs[[3]], fs_out[[3]],
-    fields = c("dataname", "varname", "selected", "keep_na", "keep_inf", "datalebel", "target")
+    fields = c("dataname", "varname", "selected", "keep_na", "keep_inf", "experiment", "target")
   ))
   testthat::expect_true(compare_slices(
     fs[[4]], fs_out[[4]],
-    fields = c("dataname", "varname", "selected", "keep_na", "datalebel", "target")
+    fields = c("dataname", "varname", "selected", "keep_na", "experiment", "target")
   ))
   testthat::expect_true(compare_slices(
     fs[[5]], fs_out[[5]],
-    fields = c("dataname", "varname", "selected", "keep_na", "datalebel", "target")
+    fields = c("dataname", "varname", "selected", "keep_na", "experiment", "target")
   ))
   testthat::expect_true(compare_slices(
     fs[[6]], fs_out[[6]],
-    fields = c("dataname", "varname", "selected", "keep_na", "datalebel", "target")
+    fields = c("dataname", "varname", "selected", "keep_na", "experiment", "target")
   ))
 })
 
@@ -180,13 +177,10 @@ testthat::test_that("remove_filter_state removes filter state specified by `teal
   fs <- filter_settings(
     filter_var("iris", "Species", selected = c("setosa", "versicolor")),
     filter_var("iris", "Sepal.Length", selected = c(5.1, 6.4)),
-    filter_var("mae", "years_to_birth",
-      selected = c(30, 50),
-      keep_na = TRUE, keep_inf = FALSE, datalabel = "subjects", arg = "y"
-    ),
-    filter_var("mae", "vital_status", selected = "1", keep_na = FALSE, datalabel = "subjects", arg = "y"),
-    filter_var("mae", "gender", selected = "female", keep_na = TRUE, datalabel = "subjects", arg = "y"),
-    filter_var("mae", "ARRAY_TYPE", selected = "", keep_na = TRUE, datalabel = "RPPAArray", arg = "subset")
+    filter_var("mae", "years_to_birth", selected = c(30, 50), keep_na = TRUE, keep_inf = FALSE),
+    filter_var("mae", "vital_status", selected = "1", keep_na = FALSE),
+    filter_var("mae", "gender", selected = "female", keep_na = TRUE),
+    filter_var("mae", "ARRAY_TYPE", selected = "", keep_na = TRUE, experiment = "RPPAArray", arg = "subset")
   )
   set_filter_state(datasets, fs)
   testthat::expect_no_error(
@@ -210,13 +204,10 @@ testthat::test_that("clear_filter_states removes all filter states", {
   fs <- filter_settings(
     filter_var("iris", "Species", selected = c("setosa", "versicolor")),
     filter_var("iris", "Sepal.Length", selected = c(5.1, 6.4)),
-    filter_var("mae", "years_to_birth",
-      selected = c(30, 50),
-      keep_na = TRUE, keep_inf = FALSE, datalabel = "subjects", arg = "y"
-    ),
-    filter_var("mae", "vital_status", selected = "1", keep_na = FALSE, datalabel = "subjects", arg = "y"),
-    filter_var("mae", "gender", selected = "female", keep_na = TRUE, datalabel = "subjects", arg = "y"),
-    filter_var("mae", "ARRAY_TYPE", selected = "", keep_na = TRUE, datalabel = "RPPAArray", arg = "subset")
+    filter_var("mae", "years_to_birth", selected = c(30, 50), keep_na = TRUE, keep_inf = FALSE),
+    filter_var("mae", "vital_status", selected = "1", keep_na = FALSE),
+    filter_var("mae", "gender", selected = "female", keep_na = TRUE),
+    filter_var("mae", "ARRAY_TYPE", selected = "", keep_na = TRUE, experiment = "RPPAArray", arg = "subset")
   )
   set_filter_state(datasets, fs)
   testthat::expect_no_error(

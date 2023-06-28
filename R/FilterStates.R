@@ -483,7 +483,7 @@ FilterStates <- R6::R6Class( # nolint
               )
               self$set_filter_state(
                 filter_settings(
-                  filter_var(dataname = private$dataname, varname = input$var_to_add, datalabel = private$datalabel)
+                  filter_var(dataname = private$dataname, varname = input$var_to_add)
                 )
               )
               logger::log_trace(
