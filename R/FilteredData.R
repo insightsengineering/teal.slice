@@ -1067,8 +1067,10 @@ FilteredData <- R6::R6Class( # nolint
             title = "Available filters",
             class = "remove pull-right"
           ),
-          div(class = "menu-content",
-              uiOutput(ns("checkbox")))
+          div(
+            class = "menu-content",
+            uiOutput(ns("checkbox"))
+          )
         )
       )
     },
@@ -1118,47 +1120,46 @@ FilteredData <- R6::R6Class( # nolint
             choices = NULL,
             selected = NULL
           )
+          active_slices_ids <- active_slices_id()
 
-          interactive_choice_mock <- lapply(
-            slices_interactive(),
-            function(slice) {
-              shiny::isolate({
+          shiny::isolate({
+            interactive_choice_mock <- lapply(
+              slices_interactive(),
+              function(slice) {
                 checkbox_group_element(
                   name = session$ns("available_slices_id"),
                   value = slice$id,
                   label = slice$id,
-                  checked = if (slice$id %in% active_slices_id()) "checked",
+                  checked = if (slice$id %in% active_slices_ids) "checked",
                   disabled = slice$locked
                 )
-              })
-            }
-          )
+              }
+            )
 
-          non_interactive_choice_mock <- lapply(
-            slices_fixed(),
-            function(slice) {
-              shiny::isolate({
+            non_interactive_choice_mock <- lapply(
+              slices_fixed(),
+              function(slice) {
                 checkbox_group_element(
                   name = session$ns("available_slices_id"),
                   value = slice$id,
                   label = slice$id,
-                  checked = if (slice$id %in% active_slices_id()) "checked",
+                  checked = if (slice$id %in% active_slices_ids) "checked",
                   disabled = slice$locked
                 )
-              })
-            }
-          )
+              }
+            )
 
-          htmltools::tagInsertChildren(
-            checkbox,
-            br(),
-            tags$strong("Fixed filters"),
-            non_interactive_choice_mock,
-            tags$strong("Iteractive filters"),
-            interactive_choice_mock,
-            .cssSelector = "div.shiny-options-group",
-            after = 0
-          )
+            htmltools::tagInsertChildren(
+              checkbox,
+              br(),
+              tags$strong("Fixed filters"),
+              non_interactive_choice_mock,
+              tags$strong("Iteractive filters"),
+              interactive_choice_mock,
+              .cssSelector = "div.shiny-options-group",
+              after = 0
+            )
+          })
         })
 
         observeEvent(input$available_slices_id, ignoreNULL = FALSE, ignoreInit = TRUE, {
