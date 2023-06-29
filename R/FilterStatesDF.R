@@ -80,30 +80,30 @@
 #'   output$formatted_df <- renderText(filter_states_df$format())
 #'
 #'   observeEvent(input$button1_df, {
-#'     filter_state <- filter_settings(filter_conf("dataset", "NUM1", selected = c(0, 30)))
+#'     filter_state <- teal_slices(teal_slice("dataset", "NUM1", selected = c(0, 30)))
 #'     filter_states_df$set_filter_state(state = filter_state)
 #'   })
 #'   observeEvent(input$button2_df, {
-#'     filter_state <- filter_settings(filter_conf("dataset", "NUM2", selected = c(20, 21)))
+#'     filter_state <- teal_slices(teal_slice("dataset", "NUM2", selected = c(20, 21)))
 #'     filter_states_df$set_filter_state(state = filter_state)
 #'   })
 #'   observeEvent(input$button3_df, {
-#'     filter_state <- filter_settings(filter_conf("dataset", "CHAR1", selected = c("B", "C", "D")))
+#'     filter_state <- teal_slices(teal_slice("dataset", "CHAR1", selected = c("B", "C", "D")))
 #'     filter_states_df$set_filter_state(state = filter_state)
 #'   })
 #'   observeEvent(input$button4_df, {
-#'     filter_state <- filter_settings(filter_conf("dataset", "CHAR2", selected = c("F")))
+#'     filter_state <- teal_slices(teal_slice("dataset", "CHAR2", selected = c("F")))
 #'     filter_states_df$set_filter_state(state = filter_state)
 #'   })
 #'   observeEvent(input$button5_df, {
-#'     filter_state <- filter_settings(
-#'       filter_conf("dataset", "DATE", selected = c("2020-01-01", "2020-02-02"))
+#'     filter_state <- teal_slices(
+#'       teal_slice("dataset", "DATE", selected = c("2020-01-01", "2020-02-02"))
 #'     )
 #'     filter_states_df$set_filter_state(state = filter_state)
 #'   })
 #'   observeEvent(input$button6_df, {
-#'     filter_state <- filter_settings(
-#'       filter_conf("dataset", "DATETIME", selected = as.POSIXct(c("2020-01-01", "2020-02-02")))
+#'     filter_state <- teal_slices(
+#'       teal_slice("dataset", "DATETIME", selected = as.POSIXct(c("2020-01-01", "2020-02-02")))
 #'     )
 #'     filter_states_df$set_filter_state(state = filter_state)
 #'   })

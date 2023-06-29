@@ -28,9 +28,9 @@ testthat::test_that("FilterPanelAPI constructor accepts a FilteredData object", 
 # set_filter_state ----
 testthat::test_that("FilterPanelAPI$set_filter_state adds filter states", {
   datasets <- FilterPanelAPI$new(filtered_data)
-  fs <- filter_settings(
-    filter_conf(dataname = "df1", varname = "num", selected = c(5.1, 6.4), keep_na = FALSE, keep_inf = FALSE),
-    filter_conf(dataname = "df1", varname = "fact", selected = c("a", "b"), keep_na = FALSE)
+  fs <- teal_slices(
+    teal_slice(dataname = "df1", varname = "num", selected = c(5.1, 6.4), keep_na = FALSE, keep_inf = FALSE),
+    teal_slice(dataname = "df1", varname = "fact", selected = c("a", "b"), keep_na = FALSE)
   )
   shiny::isolate(datasets$set_filter_state(fs))
 
@@ -41,10 +41,10 @@ testthat::test_that("FilterPanelAPI$set_filter_state adds filter states", {
 testthat::test_that("get_filter_state returns `teal_slices` with features identical those in input, adds format", {
   datasets <- FilterPanelAPI$new(filtered_data)
 
-  fs <- filter_settings(
-    filter_conf(dataname = "df1", varname = "num", selected = c(5.1, 6.4), keep_na = FALSE, keep_inf = FALSE),
-    filter_conf(dataname = "df1", varname = "fact", selected = c("a", "b"), keep_na = FALSE),
-    filter_conf(dataname = "df2", varname = "int", selected = c(52, 65), keep_na = FALSE, keep_inf = FALSE)
+  fs <- teal_slices(
+    teal_slice(dataname = "df1", varname = "num", selected = c(5.1, 6.4), keep_na = FALSE, keep_inf = FALSE),
+    teal_slice(dataname = "df1", varname = "fact", selected = c("a", "b"), keep_na = FALSE),
+    teal_slice(dataname = "df2", varname = "int", selected = c(52, 65), keep_na = FALSE, keep_inf = FALSE)
   )
   datasets$set_filter_state(fs)
 
@@ -66,13 +66,13 @@ testthat::test_that("get_filter_state returns `teal_slices` with features identi
 # remove_filter_state ----
 testthat::test_that("FilterPanelAPI$remove_filter_state removes filter states specified by `teal_slices`", {
   datasets <- FilterPanelAPI$new(filtered_data)
-  fs <- filter_settings(
-    filter_conf(dataname = "df1", varname = "num", selected = c(5.1, 6.4), keep_na = FALSE, keep_inf = FALSE),
-    filter_conf(dataname = "df1", varname = "fact", selected = c("a", "b"), keep_na = FALSE),
-    filter_conf(dataname = "df2", varname = "int", selected = c(52, 65), keep_na = FALSE, keep_inf = FALSE)
+  fs <- teal_slices(
+    teal_slice(dataname = "df1", varname = "num", selected = c(5.1, 6.4), keep_na = FALSE, keep_inf = FALSE),
+    teal_slice(dataname = "df1", varname = "fact", selected = c("a", "b"), keep_na = FALSE),
+    teal_slice(dataname = "df2", varname = "int", selected = c(52, 65), keep_na = FALSE, keep_inf = FALSE)
   )
   datasets$set_filter_state(fs)
-  datasets$remove_filter_state(filter_settings(filter_conf(dataname = "df1", varname = "num")))
+  datasets$remove_filter_state(teal_slices(teal_slice(dataname = "df1", varname = "num")))
 
   testthat::expect_identical(
     shiny::isolate(slices_field(datasets$get_filter_state(), "varname")),
@@ -83,10 +83,10 @@ testthat::test_that("FilterPanelAPI$remove_filter_state removes filter states sp
 # clear_filter_states ----
 testthat::test_that("FilterPanelAPI$clear_filter_states removes all filters of datasets in FilterPanelAPI", {
   datasets <- FilterPanelAPI$new(filtered_data)
-  fs <- filter_settings(
-    filter_conf(dataname = "df1", varname = "num", selected = c(5.1, 6.4), keep_na = FALSE, keep_inf = FALSE),
-    filter_conf(dataname = "df1", varname = "fact", selected = c("a", "b"), keep_na = FALSE),
-    filter_conf(dataname = "df2", varname = "int", selected = c(52, 65), keep_na = FALSE, keep_inf = FALSE)
+  fs <- teal_slices(
+    teal_slice(dataname = "df1", varname = "num", selected = c(5.1, 6.4), keep_na = FALSE, keep_inf = FALSE),
+    teal_slice(dataname = "df1", varname = "fact", selected = c("a", "b"), keep_na = FALSE),
+    teal_slice(dataname = "df2", varname = "int", selected = c(52, 65), keep_na = FALSE, keep_inf = FALSE)
   )
   datasets$set_filter_state(fs)
 
@@ -99,10 +99,10 @@ testthat::test_that("FilterPanelAPI$clear_filter_states removes all filters of d
 
 testthat::test_that("FilterPanelAPI$clear_filter_states remove the filters of the desired dataset only", {
   datasets <- FilterPanelAPI$new(filtered_data)
-  fs <- filter_settings(
-    filter_conf(dataname = "df1", varname = "num", selected = c(5.1, 6.4), keep_na = FALSE, keep_inf = FALSE),
-    filter_conf(dataname = "df1", varname = "fact", selected = c("a", "b"), keep_na = FALSE),
-    filter_conf(dataname = "df2", varname = "int", selected = c(52, 65), keep_na = FALSE, keep_inf = FALSE)
+  fs <- teal_slices(
+    teal_slice(dataname = "df1", varname = "num", selected = c(5.1, 6.4), keep_na = FALSE, keep_inf = FALSE),
+    teal_slice(dataname = "df1", varname = "fact", selected = c("a", "b"), keep_na = FALSE),
+    teal_slice(dataname = "df2", varname = "int", selected = c(52, 65), keep_na = FALSE, keep_inf = FALSE)
   )
   datasets$set_filter_state(fs)
 
@@ -127,13 +127,13 @@ testthat::test_that("get_filter_state returns `teal_slices` with features identi
       mae = list(dataset = miniACC)
     )
   )
-  fs <- filter_settings(
-    filter_conf("iris", "Species", selected = c("setosa", "versicolor")),
-    filter_conf("iris", "Sepal.Length", selected = c(5.1, 6.4)),
-    filter_conf("mae", "years_to_birth", selected = c(30, 50), keep_na = TRUE, keep_inf = FALSE),
-    filter_conf("mae", "vital_status", selected = "1", keep_na = FALSE),
-    filter_conf("mae", "gender", selected = "female", keep_na = TRUE),
-    filter_conf("mae", "ARRAY_TYPE", selected = "", keep_na = TRUE, experiment = "RPPAArray", arg = "subset")
+  fs <- teal_slices(
+    teal_slice("iris", "Species", selected = c("setosa", "versicolor")),
+    teal_slice("iris", "Sepal.Length", selected = c(5.1, 6.4)),
+    teal_slice("mae", "years_to_birth", selected = c(30, 50), keep_na = TRUE, keep_inf = FALSE),
+    teal_slice("mae", "vital_status", selected = "1", keep_na = FALSE),
+    teal_slice("mae", "gender", selected = "female", keep_na = TRUE),
+    teal_slice("mae", "ARRAY_TYPE", selected = "", keep_na = TRUE, experiment = "RPPAArray", arg = "subset")
   )
   set_filter_state(datasets, filter = fs)
 
@@ -174,17 +174,17 @@ testthat::test_that("remove_filter_state removes filter state specified by `teal
       mae = list(dataset = miniACC)
     )
   )
-  fs <- filter_settings(
-    filter_conf("iris", "Species", selected = c("setosa", "versicolor")),
-    filter_conf("iris", "Sepal.Length", selected = c(5.1, 6.4)),
-    filter_conf("mae", "years_to_birth", selected = c(30, 50), keep_na = TRUE, keep_inf = FALSE),
-    filter_conf("mae", "vital_status", selected = "1", keep_na = FALSE),
-    filter_conf("mae", "gender", selected = "female", keep_na = TRUE),
-    filter_conf("mae", "ARRAY_TYPE", selected = "", keep_na = TRUE, experiment = "RPPAArray", arg = "subset")
+  fs <- teal_slices(
+    teal_slice("iris", "Species", selected = c("setosa", "versicolor")),
+    teal_slice("iris", "Sepal.Length", selected = c(5.1, 6.4)),
+    teal_slice("mae", "years_to_birth", selected = c(30, 50), keep_na = TRUE, keep_inf = FALSE),
+    teal_slice("mae", "vital_status", selected = "1", keep_na = FALSE),
+    teal_slice("mae", "gender", selected = "female", keep_na = TRUE),
+    teal_slice("mae", "ARRAY_TYPE", selected = "", keep_na = TRUE, experiment = "RPPAArray", arg = "subset")
   )
   set_filter_state(datasets, fs)
   testthat::expect_no_error(
-    remove_filter_state(datasets, filter_settings(filter_conf(dataname = "iris", varname = "Species")))
+    remove_filter_state(datasets, teal_slices(teal_slice(dataname = "iris", varname = "Species")))
   )
   testthat::expect_identical(
     shiny::isolate(slices_field(get_filter_state(datasets), "varname")),
@@ -201,13 +201,13 @@ testthat::test_that("clear_filter_states removes all filter states", {
       mae = list(dataset = miniACC)
     )
   )
-  fs <- filter_settings(
-    filter_conf("iris", "Species", selected = c("setosa", "versicolor")),
-    filter_conf("iris", "Sepal.Length", selected = c(5.1, 6.4)),
-    filter_conf("mae", "years_to_birth", selected = c(30, 50), keep_na = TRUE, keep_inf = FALSE),
-    filter_conf("mae", "vital_status", selected = "1", keep_na = FALSE),
-    filter_conf("mae", "gender", selected = "female", keep_na = TRUE),
-    filter_conf("mae", "ARRAY_TYPE", selected = "", keep_na = TRUE, experiment = "RPPAArray", arg = "subset")
+  fs <- teal_slices(
+    teal_slice("iris", "Species", selected = c("setosa", "versicolor")),
+    teal_slice("iris", "Sepal.Length", selected = c(5.1, 6.4)),
+    teal_slice("mae", "years_to_birth", selected = c(30, 50), keep_na = TRUE, keep_inf = FALSE),
+    teal_slice("mae", "vital_status", selected = "1", keep_na = FALSE),
+    teal_slice("mae", "gender", selected = "female", keep_na = TRUE),
+    teal_slice("mae", "ARRAY_TYPE", selected = "", keep_na = TRUE, experiment = "RPPAArray", arg = "subset")
   )
   set_filter_state(datasets, fs)
   testthat::expect_no_error(

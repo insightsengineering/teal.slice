@@ -9,7 +9,7 @@
 \arguments{
 \item{x}{\code{teal_slice} object}
 
-\item{...}{additional arguments to the \code{filter_conf} function}
+\item{...}{additional arguments to the \code{teal_slice} function}
 }
 \value{
 A list representation of the \code{teal_slice} object

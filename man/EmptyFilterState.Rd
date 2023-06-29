@@ -10,11 +10,11 @@
 \examples{
 filter_state <- teal.slice:::EmptyFilterState$new(
   x = NA,
-  slice = filter_conf(varname = "x", dataname = "data"),
+  slice = teal_slice(varname = "x", dataname = "data"),
   extract_type = character(0)
 )
 shiny::isolate(filter_state$get_call())
-filter_state$set_state(filter_conf(dataname = "data", varname = "x", keep_na = TRUE))
+filter_state$set_state(teal_slice(dataname = "data", varname = "x", keep_na = TRUE))
 shiny::isolate(filter_state$get_call())
 
 }
@@ -78,7 +78,7 @@ whether condition calls should be prefixed by \code{dataname}. Possible values:
 }}
 
 \item{\code{slice}}{(\code{teal_slice})\cr
-object created using \code{\link[=filter_conf]{filter_conf()}}. \code{teal_slice} is stored
+object created using \code{\link[=teal_slice]{teal_slice()}}. \code{teal_slice} is stored
 in the class and \code{set_state} directly manipulates values within \code{teal_slice}. \code{get_state}
 returns \code{teal_slice} object which can be reused in other places. Beware, that \code{teal_slice}
 is an immutable object which means that changes in particular object are automatically

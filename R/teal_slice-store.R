@@ -14,9 +14,9 @@
 #' @examples
 #' \dontrun{
 #' # Create a teal_slices object
-#' tss <- filter_settings(
-#'   filter_conf(dataname = "data", varname = "var"),
-#'   filter_conf(dataname = "data", expr = "x > 0", id = "positive_x", title = "Positive x"),
+#' tss <- teal_slices(
+#'   teal_slice(dataname = "data", varname = "var"),
+#'   teal_slice(dataname = "data", expr = "x > 0", id = "positive_x", title = "Positive x"),
 #' )
 #'
 #' # Store the teal_slices object to a file
@@ -52,7 +52,7 @@ slices_restore <- function(file) {
 
   tss_elements <- lapply(tss_json$slices, as.teal_slice)
 
-  do.call(filter_settings, c(tss_elements, tss_json$attributes))
+  do.call(teal_slices, c(tss_elements, tss_json$attributes))
 }
 
 

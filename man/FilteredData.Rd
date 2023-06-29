@@ -59,12 +59,12 @@ print(df)
 datasets$get_metadata("mtcars")
 
 datasets$set_filter_state(
-  filter_settings(filter_conf(dataname = "iris", varname = "Species", selected = "virginica"))
+  teal_slices(teal_slice(dataname = "iris", varname = "Species", selected = "virginica"))
 )
 isolate(datasets$get_call("iris"))
 
 datasets$set_filter_state(
-  filter_settings(filter_conf(dataname = "mtcars", varname = "mpg", selected = c(15, 20)))
+  teal_slices(teal_slice(dataname = "mtcars", varname = "mpg", selected = c(15, 20)))
 )
 
 isolate(datasets$get_filter_state())
@@ -86,16 +86,16 @@ datasets <- teal.slice:::FilteredData$new(
   )
 )
 fs <-
-  filter_settings(
-    filter_conf(dataname = "iris", varname = "Sepal.Length", selected = c(5.1, 6.4),
+  teal_slices(
+    teal_slice(dataname = "iris", varname = "Sepal.Length", selected = c(5.1, 6.4),
                keep_na = TRUE, keep_inf = FALSE),
-    filter_conf(dataname = "iris", varname = "Species", selected = c("setosa", "versicolor"),
+    teal_slice(dataname = "iris", varname = "Species", selected = c("setosa", "versicolor"),
                keep_na = FALSE),
-    filter_conf(dataname = "mae", varname = "years_to_birth", selected = c(30, 50),
+    teal_slice(dataname = "mae", varname = "years_to_birth", selected = c(30, 50),
                keep_na = TRUE, keep_inf = FALSE),
-    filter_conf(dataname = "mae", varname = "vital_status", selected = "1", keep_na = FALSE),
-    filter_conf(dataname = "mae", varname = "gender", selected = "female", keep_na = TRUE),
-    filter_conf(dataname = "mae", varname = "ARRAY_TYPE",
+    teal_slice(dataname = "mae", varname = "vital_status", selected = "1", keep_na = FALSE),
+    teal_slice(dataname = "mae", varname = "gender", selected = "female", keep_na = TRUE),
+    teal_slice(dataname = "mae", varname = "ARRAY_TYPE",
                selected = "", keep_na = TRUE, datalabel = "RPPAArray", arg = "subset")
   )
 datasets$set_filter_state(state = fs)
@@ -605,16 +605,16 @@ datasets <- teal.slice:::FilteredData$new(
   )
 )
 fs <-
-  filter_settings(
-    filter_conf(dataname = "iris", varname = "Sepal.Length", selected = c(5.1, 6.4),
+  teal_slices(
+    teal_slice(dataname = "iris", varname = "Sepal.Length", selected = c(5.1, 6.4),
                keep_na = TRUE, keep_inf = FALSE),
-    filter_conf(dataname = "iris", varname = "Species", selected = c("setosa", "versicolor"),
+    teal_slice(dataname = "iris", varname = "Species", selected = c("setosa", "versicolor"),
                keep_na = FALSE),
-    filter_conf(dataname = "mae", varname = "years_to_birth", selected = c(30, 50),
+    teal_slice(dataname = "mae", varname = "years_to_birth", selected = c(30, 50),
                keep_na = TRUE, keep_inf = FALSE),
-    filter_conf(dataname = "mae", varname = "vital_status", selected = "1", keep_na = FALSE),
-    filter_conf(dataname = "mae", varname = "gender", selected = "female", keep_na = TRUE),
-    filter_conf(dataname = "mae", varname = "ARRAY_TYPE",
+    teal_slice(dataname = "mae", varname = "vital_status", selected = "1", keep_na = FALSE),
+    teal_slice(dataname = "mae", varname = "gender", selected = "female", keep_na = TRUE),
+    teal_slice(dataname = "mae", varname = "ARRAY_TYPE",
                selected = "", keep_na = TRUE, datalabel = "RPPAArray", arg = "subset")
   )
 datasets$set_filter_state(state = fs)

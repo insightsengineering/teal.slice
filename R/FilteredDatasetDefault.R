@@ -5,9 +5,9 @@
 #' library(shiny)
 #' ds <- teal.slice:::DefaultFilteredDataset$new(iris, "iris")
 #' ds$set_filter_state(
-#'   filter_settings(
-#'     filter_conf(dataname = "iris", varname = "Species", selected = "virginica"),
-#'     filter_conf(dataname = "iris", varname = "Petal.Length", selected = c(2.0, 5))
+#'   teal_slices(
+#'     teal_slice(dataname = "iris", varname = "Species", selected = "virginica"),
+#'     teal_slice(dataname = "iris", varname = "Petal.Length", selected = c(2.0, 5))
 #'   )
 #' )
 #' isolate(ds$get_filter_state())
@@ -89,7 +89,7 @@ DefaultFilteredDataset <- R6::R6Class( # nolint
 
       # todo: Should we make these defaults? It could be handled by the app developer
       if (!is.null(parent)) {
-        fs <- filter_settings(
+        fs <- teal_slices(
           exclude_varnames = structure(
             list(intersect(colnames(dataset), colnames(isolate(parent())))),
             names = private$dataname
@@ -171,9 +171,9 @@ DefaultFilteredDataset <- R6::R6Class( # nolint
     #'
     #' @examples
     #' dataset <- teal.slice:::DefaultFilteredDataset$new(iris, "iris")
-    #' fs <- filter_settings(
-    #'   filter_conf(dataname = "iris", varname = "Species", selected = "virginica"),
-    #'   filter_conf(dataname = "iris", varname = "Petal.Length", selected = c(2.0, 5))
+    #' fs <- teal_slices(
+    #'   teal_slice(dataname = "iris", varname = "Species", selected = "virginica"),
+    #'   teal_slice(dataname = "iris", varname = "Petal.Length", selected = c(2.0, 5))
     #' )
     #' dataset$set_filter_state(state = fs)
     #' shiny::isolate(dataset$get_filter_state())

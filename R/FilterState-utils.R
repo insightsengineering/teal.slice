@@ -9,7 +9,7 @@
 #'   If it is set to `reactive(NULL)` then counts based on filtered
 #'   dataset are not shown.
 #' @param slice (`teal_slice`)\cr
-#'   object created using [filter_conf()] or [filter_conf()].
+#'   object created using [teal_slice()] or [teal_slice()].
 #' @param extract_type (`character(0)`, `character(1)`)\cr
 #'   specifying whether condition calls should be prefixed by `dataname`. Possible values:
 #' \itemize{
@@ -25,7 +25,7 @@
 #' filter_state <- teal.slice:::init_filter_state(
 #'   x = c(1:10, NA, Inf),
 #'   x_reactive = reactive(c(1:10, NA, Inf)),
-#'   slice = filter_conf(
+#'   slice = teal_slice(
 #'     varname = "x",
 #'     dataname = "dataname"
 #'   ),
@@ -215,7 +215,7 @@ init_filter_state.POSIXlt <- function(x,
 #'
 #' Initialize a `FilterStateExpr` object
 #' @param slice (`teal_slice_expr`)\cr
-#'   object created using [filter_conf()]. `teal_slice` is stored
+#'   object created using [teal_slice()]. `teal_slice` is stored
 #'   in the class and `set_state` directly manipulates values within `teal_slice`. `get_state`
 #'   returns `teal_slice` object which can be reused in other places. Beware, that `teal_slice`
 #'   is an immutable object which means that changes in particular object are automatically

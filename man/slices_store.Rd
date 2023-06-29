@@ -23,9 +23,9 @@ be later loaded using the \code{slices_restore} function.
 \examples{
 \dontrun{
 # Create a teal_slices object
-tss <- filter_settings(
-  filter_conf(dataname = "data", varname = "var"),
-  filter_conf(dataname = "data", expr = "x > 0", id = "positive_x", title = "Positive x"),
+tss <- teal_slices(
+  teal_slice(dataname = "data", varname = "var"),
+  teal_slice(dataname = "data", expr = "x > 0", id = "positive_x", title = "Positive x"),
 )
 
 # Store the teal_slices object to a file

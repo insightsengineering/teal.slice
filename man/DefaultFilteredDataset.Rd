@@ -12,9 +12,9 @@ The \code{DefaultFilteredDataset} R6 class
 library(shiny)
 ds <- teal.slice:::DefaultFilteredDataset$new(iris, "iris")
 ds$set_filter_state(
-  filter_settings(
-    filter_conf(dataname = "iris", varname = "Species", selected = "virginica"),
-    filter_conf(dataname = "iris", varname = "Petal.Length", selected = c(2.0, 5))
+  teal_slices(
+    teal_slice(dataname = "iris", varname = "Species", selected = "virginica"),
+    teal_slice(dataname = "iris", varname = "Petal.Length", selected = c(2.0, 5))
   )
 )
 isolate(ds$get_filter_state())
@@ -25,9 +25,9 @@ isolate(ds$get_call())
 ## ------------------------------------------------
 
 dataset <- teal.slice:::DefaultFilteredDataset$new(iris, "iris")
-fs <- filter_settings(
-  filter_conf(dataname = "iris", varname = "Species", selected = "virginica"),
-  filter_conf(dataname = "iris", varname = "Petal.Length", selected = c(2.0, 5))
+fs <- teal_slices(
+  teal_slice(dataname = "iris", varname = "Species", selected = "virginica"),
+  teal_slice(dataname = "iris", varname = "Petal.Length", selected = c(2.0, 5))
 )
 dataset$set_filter_state(state = fs)
 shiny::isolate(dataset$get_filter_state())
@@ -172,9 +172,9 @@ Set filter state
 \subsection{Examples}{
 \if{html}{\out{<div class="r example copy">}}
 \preformatted{dataset <- teal.slice:::DefaultFilteredDataset$new(iris, "iris")
-fs <- filter_settings(
-  filter_conf(dataname = "iris", varname = "Species", selected = "virginica"),
-  filter_conf(dataname = "iris", varname = "Petal.Length", selected = c(2.0, 5))
+fs <- teal_slices(
+  teal_slice(dataname = "iris", varname = "Species", selected = "virginica"),
+  teal_slice(dataname = "iris", varname = "Petal.Length", selected = c(2.0, 5))
 )
 dataset$set_filter_state(state = fs)
 shiny::isolate(dataset$get_filter_state())

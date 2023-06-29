@@ -21,7 +21,7 @@ is.teal_slice <- function(x) { # nolint
 #'
 as.teal_slice <- function(x) { # nolint
   checkmate::assert_list(x, names = "named")
-  fun <- filter_conf
+  fun <- teal_slice
   do.call(fun, x)
 }
 
@@ -48,13 +48,13 @@ c.teal_slice <- function(...) {
 #'
 #' Convert a `teal_slice` object to a list
 #' @param x `teal_slice` object
-#' @param ... additional arguments to the `filter_conf` function
+#' @param ... additional arguments to the `teal_slice` function
 #' @return A list representation of the `teal_slice` object
 #' @export
 #' @keywords internal
 #'
 as.list.teal_slice <- function(x, ...) {
-  formals <- formals(filter_conf)
+  formals <- formals(teal_slice)
 
   x <- if (shiny::isRunning()) {
     shiny::reactiveValuesToList(x)
@@ -192,7 +192,7 @@ as.teal_slices <- function(x) { # nolint
     stop("conversion to filter_slices failed")
   }
 
-  do.call(filter_settings, c(slices, list(include_varnames = attr(x, "filterable"))))
+  do.call(teal_slices, c(slices, list(include_varnames = attr(x, "filterable"))))
 }
 
 
@@ -251,7 +251,7 @@ c.teal_slices <- function(...) {
   count_types <- unique(unlist(count_types))
 
   do.call(
-    filter_settings,
+    teal_slices,
     c(
       unique(unlist(x, recursive = FALSE)),
       list(

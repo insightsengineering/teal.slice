@@ -1,8 +1,8 @@
-#' Create a `teal_slice`
+#' Create a `teal_slice` object
 #'
 #' `teal_slice` object fully describes filter state and can be used to create,
 #' modify, and delete a filter state. A `teal_slice` contains a number of common fields
-#' (all named arguments of `filter_conf`), some of which are mandatory, but only
+#' (all named arguments of `teal_slice`), some of which are mandatory, but only
 #' `dataname` and  either `varname` or `expr` must be specified, while the others have default
 #' values.
 #'
@@ -10,7 +10,7 @@
 #' (when setting an existing state) or that they will be determined by data (when creating new a new one).
 #' Entire object is `FilterState` class member and can be accessed with `FilterState$get_state()`.
 #'
-#' `filter_conf` returns two types of `teal_slice` objects:
+#' `teal_slice()` returns two types of `teal_slice` objects:
 #' 1. `teal_slice_var` - returned when `varname` is set. The object keep information about the
 #' variable name, possible choices, and selected values and is used to create an interactive
 #' filter.
@@ -20,7 +20,7 @@
 #' are ignored.
 #'
 #' All `teal_slice` fields can be passed as arguments to `FilterState` constructors.
-#' A `teal_slice` can be passed to `FilterState$set_state`, which will modify the state.
+#' A `teal_slice` object can be passed to `FilterState$set_state`, which will modify the state.
 #' However, once a `FilterState` is created, only the **mutable** features can be set with a `teal_slice`:
 #' `selected`, `keep_na` and `keep_inf`.
 #'
@@ -64,13 +64,13 @@
 #' @return `teal.slice` object
 #'
 #' @examples
-#' filter_conf(
+#' teal_slice(
 #'   dataname = "data",
 #'   id = "Female adults",
 #'   expr = "SEX == 'F' & AGE >= 18",
 #'   title = "Female adults"
 #' )
-#' filter_conf(
+#' teal_slice(
 #'  dataname = "data",
 #'  varname = "var",
 #'  choices = c("F", "M", "U"),
@@ -84,7 +84,7 @@
 #'  extra_arg = "extra"
 #' )
 #' @export
-filter_conf <- function(dataname,
+teal_slice <- function(dataname,
                         varname,
                         id,
                         expr,
@@ -142,7 +142,7 @@ filter_conf <- function(dataname,
 
 #' Manage filter state(s).
 #'
-#' `filter_settings` collates multiple `teal_slice` objects into `teal_slices`,
+#' `teal_slices()` collates multiple `teal_slice` objects into `teal_slices`,
 #' a complete filter specification. This is used by all classes above `FilterState`
 #' as well as `filter_panel_api` wrapper functions.
 #' `teal_slices` also specifies which variables cannot be filtered
@@ -163,15 +163,11 @@ filter_conf <- function(dataname,
 #'   and unfiltered dataset.
 #'  - `"none"` to have counts of single `FilterState` to show unfiltered number only.
 #' @param module_add `logical(1)` logical flag specifying whether the user will be able to add new filters
-#' @param show_all `logical(1)` specifying whether NULL elements should also be printed
-#' @param trim_lines `logical(1)` specifying whether to trim lines when printing
-#' @param field `character(1)` name of `teal_slice` element
-#' @param file `character(1)` path to `teal_slices` save to or load `teal_slices` from
 #' @return
 #' `teal_slices`, which is an unnamed list of `teal_slice` objects.
 #'
 #' @examples
-#' filter_1 <- filter_conf(
+#' filter_1 <- teal_slice(
 #'   dataname = "dataname1",
 #'   varname = "varname1",
 #'   choices = letters,
@@ -180,7 +176,7 @@ filter_conf <- function(dataname,
 #'   fixed = FALSE,
 #'   extra1 = "extraone"
 #' )
-#' filter_2 <- filter_conf(
+#' filter_2 <- teal_slice(
 #'   dataname = "dataname1",
 #'   varname = "varname2",
 #'   choices = 1:10,
@@ -190,7 +186,7 @@ filter_conf <- function(dataname,
 #'   locked = FALSE,
 #'   extra2 = "extratwo"
 #' )
-#' filter_3 <- filter_conf(
+#' filter_3 <- teal_slice(
 #'   dataname = "dataname2",
 #'   varname = "varname3",
 #'   choices = 1:10 / 10,
@@ -202,7 +198,7 @@ filter_conf <- function(dataname,
 #'   extra2 = "extratwo"
 #' )
 #'
-#' all_filters <- filter_settings(
+#' all_filters <- teal_slices(
 #'   filter_1,
 #'   filter_2,
 #'   filter_3,
@@ -211,7 +207,7 @@ filter_conf <- function(dataname,
 #'   )
 #' )
 #' @export
-filter_settings <- function(...,
+teal_slices <- function(...,
                             exclude_varnames = NULL,
                             include_varnames = NULL,
                             count_type = NULL,

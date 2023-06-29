@@ -10,12 +10,12 @@ Manages choosing a range of date-times
 \examples{
 filter_state <- teal.slice:::DatetimeFilterState$new(
   x = c(Sys.time() + seq(0, by = 3600, length.out = 10), NA),
-  slice = filter_conf(varname = "x", dataname = "data"),
+  slice = teal_slice(varname = "x", dataname = "data"),
   extract_type = character(0)
 )
 shiny::isolate(filter_state$get_call())
 filter_state$set_state(
-  filter_conf(
+  teal_slice(
     dataname = "data",
     varname = "x",
     selected = c(Sys.time() + 3L, Sys.time() + 8L),
@@ -33,7 +33,7 @@ datetimes <- as.POSIXct(c("2012-01-01 12:00:00", "2020-01-01 12:00:00"))
 data_datetime <- c(seq(from = datetimes[1], to = datetimes[2], length.out = 100), NA)
 fs <- teal.slice:::DatetimeFilterState$new(
   x = data_datetime,
-  slice = filter_conf(
+  slice = teal_slice(
     varname = "x", dataname = "data", selected = data_datetime[c(47, 98)], keep_na = TRUE
   )
 )
@@ -73,28 +73,28 @@ server <- function(input, output, session) {
   # modify filter state programmatically
   observeEvent(
     input$button1_datetime,
-    fs$set_state(filter_conf(dataname = "data", varname = "x", keep_na = FALSE))
+    fs$set_state(teal_slice(dataname = "data", varname = "x", keep_na = FALSE))
   )
   observeEvent(
     input$button2_datetime,
-    fs$set_state(filter_conf(dataname = "data", varname = "x", keep_na = TRUE))
+    fs$set_state(teal_slice(dataname = "data", varname = "x", keep_na = TRUE))
   )
   observeEvent(
     input$button3_datetime,
     fs$set_state(
-      filter_conf(dataname = "data", varname = "x", selected = data_datetime[c(34, 56)])
+      teal_slice(dataname = "data", varname = "x", selected = data_datetime[c(34, 56)])
     )
   )
   observeEvent(
     input$button4_datetime,
     fs$set_state(
-      filter_conf(dataname = "data", varname = "x", selected = datetimes)
+      teal_slice(dataname = "data", varname = "x", selected = datetimes)
     )
   )
   observeEvent(
     input$button0_datetime,
     fs$set_state(
-      filter_conf(
+      teal_slice(
         dataname = "data", varname = "x", selected = data_datetime[c(47, 98)], keep_na = TRUE
       )
     )
@@ -171,7 +171,7 @@ whether condition calls should be prefixed by \code{dataname}. Possible values:
 }}
 
 \item{\code{slice}}{(\code{teal_slice})\cr
-object created using \code{\link[=filter_conf]{filter_conf()}}. \code{teal_slice} is stored
+object created using \code{\link[=teal_slice]{teal_slice()}}. \code{teal_slice} is stored
 in the class and \code{set_state} directly manipulates values within \code{teal_slice}. \code{get_state}
 returns \code{teal_slice} object which can be reused in other places. Beware, that \code{teal_slice}
 is an immutable object which means that changes in particular object are automatically

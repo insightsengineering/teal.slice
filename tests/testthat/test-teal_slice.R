@@ -1,9 +1,9 @@
-# filter_conf ----
-testthat::test_that("filter_conf checks arguments", {
-  testthat::expect_no_error(filter_conf(dataname = "data", varname = "var"))
-  testthat::expect_no_error(filter_conf(dataname = "data", varname = "var", extra = "extra"))
+# teal_slice ----
+testthat::test_that("teal_slice checks arguments", {
+  testthat::expect_no_error(teal_slice(dataname = "data", varname = "var"))
+  testthat::expect_no_error(teal_slice(dataname = "data", varname = "var", extra = "extra"))
   testthat::expect_no_error(
-    filter_conf(
+    teal_slice(
       dataname = "data",
       varname = "var",
       choices = NULL,
@@ -17,95 +17,95 @@ testthat::test_that("filter_conf checks arguments", {
     )
   )
 
-  testthat::expect_error(filter_conf(dataname = "data"), "Must provide either `expr` or `varname`")
+  testthat::expect_error(teal_slice(dataname = "data"), "Must provide either `expr` or `varname`")
 
-  testthat::expect_error(filter_conf(varname = "var"), "argument \"dataname\" is missing, with no default")
+  testthat::expect_error(teal_slice(varname = "var"), "argument \"dataname\" is missing, with no default")
 
   testthat::expect_error(
-    filter_conf(dataname = NULL, varname = "var"),
+    teal_slice(dataname = NULL, varname = "var"),
     "Assertion on 'dataname' failed"
   )
   testthat::expect_error(
-    filter_conf(dataname = 1, varname = "var"),
+    teal_slice(dataname = 1, varname = "var"),
     "Assertion on 'dataname' failed"
   )
   testthat::expect_error(
-    filter_conf(dataname = c("data1", "data2"), varname = "variable"),
+    teal_slice(dataname = c("data1", "data2"), varname = "variable"),
     "Assertion on 'dataname' failed"
   )
 
   testthat::expect_error(
-    filter_conf(dataname = "data", varname = NULL),
+    teal_slice(dataname = "data", varname = NULL),
     "Assertion on 'varname' failed"
   )
   testthat::expect_error(
-    filter_conf(dataname = "data", varname = 1),
+    teal_slice(dataname = "data", varname = 1),
     "Assertion on 'varname' failed"
   )
   testthat::expect_error(
-    filter_conf(dataname = "data", varname = c("var1", "var2")),
+    teal_slice(dataname = "data", varname = c("var1", "var2")),
     "Assertion on 'varname' failed"
   )
 
   testthat::expect_error(
-    filter_conf(dataname = "data", varname = "var", choices = list()),
+    teal_slice(dataname = "data", varname = "var", choices = list()),
     "Assertion on 'choices' failed"
   )
   testthat::expect_error(
-    filter_conf(dataname = "data", varname = "var", selected = list()),
+    teal_slice(dataname = "data", varname = "var", selected = list()),
     "Assertion on 'selected' failed"
   )
 
   testthat::expect_error(
-    filter_conf(dataname = "data", varname = "var", keep_na = "TRUE"),
+    teal_slice(dataname = "data", varname = "var", keep_na = "TRUE"),
     "Assertion on 'keep_na' failed"
   )
 
   testthat::expect_error(
-    filter_conf(dataname = "data", varname = "var", keep_inf = "TRUE"),
+    teal_slice(dataname = "data", varname = "var", keep_inf = "TRUE"),
     "Assertion on 'keep_inf' failed"
   )
 
   testthat::expect_error(
-    filter_conf(dataname = "data", varname = "var", fixed = NULL),
+    teal_slice(dataname = "data", varname = "var", fixed = NULL),
     "Assertion on 'fixed' failed"
   )
   testthat::expect_error(
-    filter_conf(dataname = "data", varname = "var", fixed = "TRUE"),
+    teal_slice(dataname = "data", varname = "var", fixed = "TRUE"),
     "Assertion on 'fixed' failed"
   )
 
   testthat::expect_error(
-    filter_conf(dataname = "data", varname = "var", locked = NULL),
+    teal_slice(dataname = "data", varname = "var", locked = NULL),
     "Assertion on 'locked' failed"
   )
   testthat::expect_error(
-    filter_conf(dataname = "data", varname = "var", locked = "TRUE"),
+    teal_slice(dataname = "data", varname = "var", locked = "TRUE"),
     "Assertion on 'locked' failed"
   )
 
   testthat::expect_error(
-    filter_conf(dataname = "data", varname = "var", id = NULL),
+    teal_slice(dataname = "data", varname = "var", id = NULL),
     "Assertion on 'id' failed"
   )
 
   testthat::expect_error(
-    filter_conf(dataname = "data", varname = "var", id = c("a", "b")),
+    teal_slice(dataname = "data", varname = "var", id = c("a", "b")),
     "Assertion on 'id' failed"
   )
 
   testthat::expect_error(
-    filter_conf(dataname = "data", varname = "var", id = 1L),
+    teal_slice(dataname = "data", varname = "var", id = 1L),
     "Assertion on 'id' failed"
   )
 })
 
 
-testthat::test_that("filter_conf returns `teal_slice`", {
+testthat::test_that("teal_slice returns `teal_slice`", {
   shiny::reactiveConsole(TRUE)
   on.exit(shiny::reactiveConsole(FALSE))
 
-  fs1 <- filter_conf(dataname = "data", varname = "var1")
+  fs1 <- teal_slice(dataname = "data", varname = "var1")
 
   testthat::expect_s3_class(fs1, "teal_slice")
   testthat::expect_s3_class(fs1, "reactivevalues")
@@ -116,38 +116,38 @@ testthat::test_that("filter_conf returns `teal_slice`", {
 })
 
 
-# filter_settings ----
-testthat::test_that("filter_settings checks arguments", {
-  fs1 <- filter_conf("data", "var1")
-  fs2 <- filter_conf("data", "var2")
+# teal_slices ----
+testthat::test_that("teal_slices checks arguments", {
+  fs1 <- teal_slice("data", "var1")
+  fs2 <- teal_slice("data", "var2")
 
-  testthat::expect_no_error(filter_settings(fs1, fs2))
-  testthat::expect_no_error(filter_settings(fs1, fs2,
+  testthat::expect_no_error(teal_slices(fs1, fs2))
+  testthat::expect_no_error(teal_slices(fs1, fs2,
     exclude_varnames = list(data = "var1"),
     count_type = "all",
     module_add = FALSE
   ))
 
-  testthat::expect_error(filter_settings(fs1, fs2, "fs1"), "Assertion on 'slices' failed")
+  testthat::expect_error(teal_slices(fs1, fs2, "fs1"), "Assertion on 'slices' failed")
 
-  testthat::expect_error(filter_settings(fs1, fs2, exclude_varnames = "fs1"), "Assertion on 'exclude_varnames' failed")
-  testthat::expect_error(filter_settings(fs1, fs2, include_varnames = "fs1"), "Assertion on 'include_varnames' failed")
+  testthat::expect_error(teal_slices(fs1, fs2, exclude_varnames = "fs1"), "Assertion on 'exclude_varnames' failed")
+  testthat::expect_error(teal_slices(fs1, fs2, include_varnames = "fs1"), "Assertion on 'include_varnames' failed")
 
-  testthat::expect_error(filter_settings(fs1, fs2, count_type = "fs1"), "Must be a subset")
+  testthat::expect_error(teal_slices(fs1, fs2, count_type = "fs1"), "Must be a subset")
 
-  testthat::expect_error(filter_settings(fs1, fs2, count_type = c("a", "b")), "Must have length 1")
+  testthat::expect_error(teal_slices(fs1, fs2, count_type = c("a", "b")), "Must have length 1")
 
-  testthat::expect_error(filter_settings(fs1, fs2, count_type = c("all", "none")))
+  testthat::expect_error(teal_slices(fs1, fs2, count_type = c("all", "none")))
 
-  testthat::expect_error(filter_settings(fs1, fs2, module_add = NULL), "Assertion on 'module_add' failed")
+  testthat::expect_error(teal_slices(fs1, fs2, module_add = NULL), "Assertion on 'module_add' failed")
 
-  testthat::expect_error(filter_settings(fs1, fs1, fs2), "Some teal_slice objects have the same id")
+  testthat::expect_error(teal_slices(fs1, fs1, fs2), "Some teal_slice objects have the same id")
 })
 
-testthat::test_that("filter_settings returns `teal_slices`", {
-  fs1 <- filter_conf("data", "var1")
-  fs2 <- filter_conf("data", "var2")
-  fs <- filter_settings(fs1, fs2)
+testthat::test_that("teal_slices returns `teal_slices`", {
+  fs1 <- teal_slice("data", "var1")
+  fs2 <- teal_slice("data", "var2")
+  fs <- teal_slices(fs1, fs2)
 
   testthat::expect_s3_class(fs, "teal_slices")
   testthat::expect_s3_class(fs, "list")
@@ -161,15 +161,15 @@ testthat::test_that("filter_settings returns `teal_slices`", {
   testthat::expect_null(attr(fs, "count_type"))
   testthat::expect_true(attr(fs, "module_add"))
 
-  testthat::expect_length(filter_settings(fs1, fs2), 2L)
+  testthat::expect_length(teal_slices(fs1, fs2), 2L)
 })
 
 
 # is.teal_slice(s) ----
 testthat::test_that("is* functions work", {
-  fs1 <- filter_conf("data", "var1")
-  fs2 <- filter_conf("data", "var2")
-  fs <- filter_settings(fs1, fs2)
+  fs1 <- teal_slice("data", "var1")
+  fs2 <- teal_slice("data", "var2")
+  fs <- teal_slices(fs1, fs2)
 
   testthat::expect_no_error(is.teal_slice(fs1))
 
@@ -187,9 +187,9 @@ testthat::test_that("[.teal_slices accepts various types of indices", {
   shiny::reactiveConsole(TRUE)
   on.exit(shiny::reactiveConsole(FALSE))
 
-  fs1 <- filter_conf("data", "var1")
-  fs2 <- filter_conf("data", "var2")
-  fs <- filter_settings(fs1, fs2)
+  fs1 <- teal_slice("data", "var1")
+  fs2 <- teal_slice("data", "var2")
+  fs <- teal_slices(fs1, fs2)
   names(fs) <- c("one", "two")
 
   testthat::expect_no_error(fs[])
@@ -217,12 +217,12 @@ testthat::test_that("[.teal_slices subsets properly", {
   shiny::reactiveConsole(TRUE)
   on.exit(shiny::reactiveConsole(FALSE))
 
-  fs1 <- filter_conf("data", "var1")
-  fs2 <- filter_conf("data", "var2")
-  fs <- filter_settings(fs1, fs2)
+  fs1 <- teal_slice("data", "var1")
+  fs2 <- teal_slice("data", "var2")
+  fs <- teal_slices(fs1, fs2)
   names(fs) <- c("one", "two")
 
-  fss1 <- filter_settings(fs1)
+  fss1 <- teal_slices(fs1)
   names(fss1) <- "one"
 
   # return class
@@ -251,11 +251,11 @@ testthat::test_that("[.teal_slices also subsets the exclude_varnames attribute",
   shiny::reactiveConsole(TRUE)
   on.exit(shiny::reactiveConsole(FALSE))
 
-  fs1 <- filter_conf("data1", "var1")
-  fs2 <- filter_conf("data1", "var2")
-  fs3 <- filter_conf("data2", "var1")
-  fs4 <- filter_conf("data2", "var2")
-  fs <- filter_settings(fs1, fs2, fs3, fs4, exclude_varnames = list(data1 = "var1", data2 = "var1"))
+  fs1 <- teal_slice("data1", "var1")
+  fs2 <- teal_slice("data1", "var2")
+  fs3 <- teal_slice("data2", "var1")
+  fs4 <- teal_slice("data2", "var2")
+  fs <- teal_slices(fs1, fs2, fs3, fs4, exclude_varnames = list(data1 = "var1", data2 = "var1"))
 
   testthat::expect_identical(
     attr(fs[1], "exclude_varnames"),
@@ -292,9 +292,9 @@ testthat::test_that("[.teal_slices preserves count_type", {
   shiny::reactiveConsole(TRUE)
   on.exit(shiny::reactiveConsole(FALSE))
 
-  fs1 <- filter_conf("data", "var1")
-  fs2 <- filter_conf("data", "var2")
-  fs <- filter_settings(fs1, fs2)
+  fs1 <- teal_slice("data", "var1")
+  fs2 <- teal_slice("data", "var2")
+  fs <- teal_slices(fs1, fs2)
 
   testthat::expect_identical(
     attr(fs, "count_type"),
@@ -307,12 +307,12 @@ testthat::test_that("c.teal_slices concatenates `teal_slices` objects", {
   shiny::reactiveConsole(TRUE)
   on.exit(shiny::reactiveConsole(FALSE))
 
-  fs1 <- filter_conf("data1", "var1")
-  fs2 <- filter_conf("data1", "var2")
-  fs3 <- filter_conf("data2", "var1")
-  fs4 <- filter_conf("data2", "var2")
-  fss1 <- filter_settings(fs1, fs2)
-  fss2 <- filter_settings(fs3, fs4)
+  fs1 <- teal_slice("data1", "var1")
+  fs2 <- teal_slice("data1", "var2")
+  fs3 <- teal_slice("data2", "var1")
+  fs4 <- teal_slice("data2", "var2")
+  fss1 <- teal_slices(fs1, fs2)
+  fss2 <- teal_slices(fs3, fs4)
 
   testthat::expect_no_error(c(fss1, fss2))
   testthat::expect_error(c(fss1, fs1), "Assertion on 'all arguments are teal_slices' failed")
@@ -323,13 +323,13 @@ testthat::test_that("c.teal_slices concatenates `teal_slices` objects", {
 
 
 testthat::test_that("c.teal_slices handles attributes", {
-  fs1 <- filter_conf("data1", "var1")
-  fs2 <- filter_conf("data1", "var2")
-  fs3 <- filter_conf("data2", "var1")
-  fs4 <- filter_conf("data2", "var2")
-  fss1 <- filter_settings(fs1, fs2, exclude_varnames = list(data1 = "var1"))
-  fss2 <- filter_settings(fs3, fs4, exclude_varnames = list(data2 = "var1"))
-  fss3 <- filter_settings(fs3, fs4, exclude_varnames = list(data2 = "var1"), count_type = "none")
+  fs1 <- teal_slice("data1", "var1")
+  fs2 <- teal_slice("data1", "var2")
+  fs3 <- teal_slice("data2", "var1")
+  fs4 <- teal_slice("data2", "var2")
+  fss1 <- teal_slices(fs1, fs2, exclude_varnames = list(data1 = "var1"))
+  fss2 <- teal_slices(fs3, fs4, exclude_varnames = list(data2 = "var1"))
+  fss3 <- teal_slices(fs3, fs4, exclude_varnames = list(data2 = "var1"), count_type = "none")
 
   # teal_slices with different exclude attributes
   testthat::expect_no_error(c(fss1, fss2))
@@ -352,7 +352,7 @@ testthat::test_that("c.teal_slices handles attributes", {
 
 # format.teal_slice ----
 testthat::test_that("format.teal_slice returns a character string", {
-  fs <- filter_conf(
+  fs <- teal_slice(
     dataname = "dataname2",
     varname = "varname3",
     choices = 1:10 / 10,
@@ -370,7 +370,7 @@ testthat::test_that("format.teal_slice returns a character string", {
 testthat::test_that("format.teal_slice skips empty mandatory fields show_all is FALSE", {
   shiny::reactiveConsole(TRUE)
   on.exit(shiny::reactiveConsole(FALSE))
-  fs <- filter_conf(
+  fs <- teal_slice(
     dataname = "dataname2",
     varname = "varname3",
     choices = 1:10 / 10,
@@ -389,7 +389,7 @@ testthat::test_that("format.teal_slice skips empty mandatory fields show_all is 
 testthat::test_that("format.teal_slice prints optional fields", {
   shiny::reactiveConsole(TRUE)
   on.exit(shiny::reactiveConsole(FALSE))
-  fs <- filter_conf(
+  fs <- teal_slice(
     dataname = "dataname2",
     varname = "varname3",
     chices = 1:10 / 10,
@@ -400,7 +400,7 @@ testthat::test_that("format.teal_slice prints optional fields", {
     extra2 = "extratwo"
   )
   ffs <- strsplit(format(fs), "\n")[[1]]
-  optional <- setdiff(names(shiny::reactiveValuesToList(fs)), names(formals(filter_conf)))
+  optional <- setdiff(names(shiny::reactiveValuesToList(fs)), names(formals(teal_slice)))
   lapply(optional, function(x) {
     testthat::expect_true(any(grepl(x, ffs)))
   })
@@ -408,17 +408,17 @@ testthat::test_that("format.teal_slice prints optional fields", {
 
 # format.teal_slices ----
 testthat::test_that("format.teal_slices returns a character string", {
-  fs1 <- filter_conf("data", "var1")
-  fs2 <- filter_conf("data", "var2")
-  fs <- filter_settings(fs1, fs2)
+  fs1 <- teal_slice("data", "var1")
+  fs2 <- teal_slice("data", "var2")
+  fs <- teal_slices(fs1, fs2)
   names(fs) <- c("one", "two")
   testthat::expect_true(checkmate::check_string(format(fs, show_all = TRUE)))
 })
 
 testthat::test_that("format.teal_slices contains literal formatted representations of all included `teal_slice`s", {
-  fs1 <- filter_conf("data", "var1")
-  fs2 <- filter_conf("data", "var2")
-  fs <- filter_settings(fs1, fs2)
+  fs1 <- teal_slice("data", "var1")
+  fs2 <- teal_slice("data", "var2")
+  fs <- teal_slices(fs1, fs2)
   ffs <- format(fs, show_all = TRUE)
   slices <- lapply(fs, format, show_all = TRUE)
   lapply(slices, function(x) {
@@ -427,31 +427,31 @@ testthat::test_that("format.teal_slices contains literal formatted representatio
 })
 
 testthat::test_that("format.teal_slices prints include_varnames attribute if not empty", {
-  fs1 <- filter_conf("data", "var1")
-  fs2 <- filter_conf("data", "var2")
-  fs <- filter_settings(fs1, fs2)
+  fs1 <- teal_slice("data", "var1")
+  fs2 <- teal_slice("data", "var2")
+  fs <- teal_slices(fs1, fs2)
   ffs <- format(fs, show_all = TRUE)
   testthat::expect_true(!grepl("include_varnames", ffs))
-  fs <- filter_settings(fs1, fs2, include_varnames = list(data = "var2"))
+  fs <- teal_slices(fs1, fs2, include_varnames = list(data = "var2"))
   ffs <- format(fs, show_all = TRUE)
   testthat::expect_true(grepl("include_varnames", ffs))
 })
 
 testthat::test_that("format.teal_slices prints exclude_varnames attribute if not empty", {
-  fs1 <- filter_conf("data", "var1")
-  fs2 <- filter_conf("data", "var2")
-  fs <- filter_settings(fs1, fs2)
+  fs1 <- teal_slice("data", "var1")
+  fs2 <- teal_slice("data", "var2")
+  fs <- teal_slices(fs1, fs2)
   ffs <- format(fs, show_all = TRUE)
   testthat::expect_true(!all(grepl("exclude_varnames", ffs)))
-  fs <- filter_settings(fs1, fs2, exclude_varnames = list(data = "var2"))
+  fs <- teal_slices(fs1, fs2, exclude_varnames = list(data = "var2"))
   ffs <- format(fs, show_all = TRUE)
   testthat::expect_true(grepl("exclude_varnames", ffs))
 })
 
 testthat::test_that("format.teal_slices prints count_type attribute if not empty", {
-  fs1 <- filter_conf("data", "var1")
-  fs2 <- filter_conf("data", "var2")
-  fs <- filter_settings(fs1, fs2)
+  fs1 <- teal_slice("data", "var1")
+  fs2 <- teal_slice("data", "var2")
+  fs <- teal_slices(fs1, fs2)
   ffs <- format(fs, show_all = TRUE)
   testthat::expect_true(!grepl("count_type", ffs))
 })
@@ -462,9 +462,9 @@ testthat::test_that("slices_field works", {
   shiny::reactiveConsole(TRUE)
   on.exit(shiny::reactiveConsole(FALSE))
 
-  fs1 <- filter_conf(dataname = "data", varname = "var1")
-  fs2 <- filter_conf(dataname = "data", varname = "var2")
-  fs <- filter_settings(fs1, fs2)
+  fs1 <- teal_slice(dataname = "data", varname = "var1")
+  fs2 <- teal_slice(dataname = "data", varname = "var2")
+  fs <- teal_slices(fs1, fs2)
 
   # argument checks
   testthat::expect_no_error(slices_field(fs, "dataname"))
@@ -483,37 +483,37 @@ testthat::test_that("slices_field works", {
 })
 
 testthat::test_that("filter_expr id has to be a string", {
-  testthat::expect_no_error(filter_conf(dataname = "x", id = "x", title = "x", expr = "x == 'x'"))
-  testthat::expect_error(filter_conf(dataname = "x", id = 1, title = "x", expr = "x == 'x'"), "string")
-  testthat::expect_error(filter_conf(dataname = "x", id = NULL, title = "x", expr = "x == 'x'"), "string")
+  testthat::expect_no_error(teal_slice(dataname = "x", id = "x", title = "x", expr = "x == 'x'"))
+  testthat::expect_error(teal_slice(dataname = "x", id = 1, title = "x", expr = "x == 'x'"), "string")
+  testthat::expect_error(teal_slice(dataname = "x", id = NULL, title = "x", expr = "x == 'x'"), "string")
   testthat::expect_error(
-    filter_conf(dataname = "x", id = character(0), title = "x", expr = "x == 'x'"), "length"
+    teal_slice(dataname = "x", id = character(0), title = "x", expr = "x == 'x'"), "length"
   )
 })
 
 testthat::test_that("filter_expr title has to be a string", {
-  testthat::expect_no_error(filter_conf(dataname = "x", id = "x", title = "x", expr = "x == 'x'"))
-  testthat::expect_error(filter_conf(dataname = "x", id = "x", title = 1, expr = "x == 'x'"), "string")
-  testthat::expect_error(filter_conf(dataname = "x", id = "x", title = NULL, expr = "x == 'x'"), "string")
+  testthat::expect_no_error(teal_slice(dataname = "x", id = "x", title = "x", expr = "x == 'x'"))
+  testthat::expect_error(teal_slice(dataname = "x", id = "x", title = 1, expr = "x == 'x'"), "string")
+  testthat::expect_error(teal_slice(dataname = "x", id = "x", title = NULL, expr = "x == 'x'"), "string")
   testthat::expect_error(
-    filter_conf(dataname = "x", id = "x", title = character(0), expr = "x == 'x'"), "length"
+    teal_slice(dataname = "x", id = "x", title = character(0), expr = "x == 'x'"), "length"
   )
 })
 
 testthat::test_that("filter_expr dataname has to be a string", {
-  testthat::expect_no_error(filter_conf(dataname = "x", id = "x", title = "x", expr = "x == 'x'"))
-  testthat::expect_error(filter_conf(dataname = 1, id = "x", title = "x", expr = "x == 'x'"), "string")
-  testthat::expect_error(filter_conf(dataname = NULL, id = "x", title = "x", expr = "x == 'x'"), "string")
+  testthat::expect_no_error(teal_slice(dataname = "x", id = "x", title = "x", expr = "x == 'x'"))
+  testthat::expect_error(teal_slice(dataname = 1, id = "x", title = "x", expr = "x == 'x'"), "string")
+  testthat::expect_error(teal_slice(dataname = NULL, id = "x", title = "x", expr = "x == 'x'"), "string")
   testthat::expect_error(
-    filter_conf(dataname = character(0), id = "x", title = "x", expr = "x == 'x'"), "length"
+    teal_slice(dataname = character(0), id = "x", title = "x", expr = "x == 'x'"), "length"
   )
 })
 
 testthat::test_that("filter_expr expr has to be a string", {
-  testthat::expect_no_error(filter_conf(dataname = "x", id = "x", title = "x", expr = "x == FALSE"))
-  testthat::expect_no_error(filter_conf(dataname = "x", id = "x", title = "x", expr = "x <- 1")) # Ouch!
+  testthat::expect_no_error(teal_slice(dataname = "x", id = "x", title = "x", expr = "x == FALSE"))
+  testthat::expect_no_error(teal_slice(dataname = "x", id = "x", title = "x", expr = "x <- 1")) # Ouch!
   testthat::expect_error(
-    filter_conf(dataname = "x", id = "x", title = "x", expr = TRUE),
+    teal_slice(dataname = "x", id = "x", title = "x", expr = TRUE),
     "Assertion on 'expr' failed"
   )
 })

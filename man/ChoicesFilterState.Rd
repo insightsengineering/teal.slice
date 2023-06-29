@@ -10,11 +10,11 @@ Manages choosing elements from a set
 \examples{
 filter_state <- teal.slice:::ChoicesFilterState$new(
   x = c(LETTERS, NA),
-  slice = filter_conf(varname = "x", dataname = "data")
+  slice = teal_slice(varname = "x", dataname = "data")
 )
 shiny::isolate(filter_state$get_call())
 filter_state$set_state(
-  filter_conf(
+  teal_slice(
     dataname = "data",
     varname = "x",
     selected = "A",
@@ -32,7 +32,7 @@ data_choices <- c(sample(letters[1:4], 100, replace = TRUE), NA)
 attr(data_choices, "label") <- "lowercase letters"
 fs <- ChoicesFilterState$new(
   x = data_choices,
-  slice = filter_conf(
+  slice = teal_slice(
     dataname = "data", varname = "variable", selected = c("a", "b"), keep_na = TRUE
   )
 )
@@ -72,31 +72,31 @@ server <- function(input, output, session) {
   observeEvent(
     input$button1_choices,
     fs$set_state(
-      filter_conf(dataname = "data", varname = "variable", keep_na = FALSE)
+      teal_slice(dataname = "data", varname = "variable", keep_na = FALSE)
     )
   )
   observeEvent(
     input$button2_choices,
     fs$set_state(
-      filter_conf(dataname = "data", varname = "variable", keep_na = TRUE)
+      teal_slice(dataname = "data", varname = "variable", keep_na = TRUE)
     )
   )
   observeEvent(
     input$button3_choices,
     fs$set_state(
-      filter_conf(dataname = "data", varname = "variable", selected = c("a", "b"))
+      teal_slice(dataname = "data", varname = "variable", selected = c("a", "b"))
     )
   )
   observeEvent(
     input$button4_choices,
     fs$set_state(
-      filter_conf(dataname = "data", varname = "variable", selected = character(0), keep_na = TRUE)
+      teal_slice(dataname = "data", varname = "variable", selected = character(0), keep_na = TRUE)
     )
   )
   observeEvent(
     input$button0_choices,
     fs$set_state(
-      filter_conf(dataname = "data", varname = "variable", selected = c("a", "c"), keep_na = TRUE)
+      teal_slice(dataname = "data", varname = "variable", selected = c("a", "c"), keep_na = TRUE)
     )
   )
 }
@@ -159,7 +159,7 @@ If it is set to \code{reactive(NULL)} then counts based on filtered
 dataset are not shown.}
 
 \item{\code{slice}}{(\code{teal_slice})\cr
-object created using \code{\link[=filter_conf]{filter_conf()}}. \code{teal_slice} is stored
+object created using \code{\link[=teal_slice]{teal_slice()}}. \code{teal_slice} is stored
 in the class and \code{set_state} directly manipulates values within \code{teal_slice}. \code{get_state}
 returns \code{teal_slice} object which can be reused in other places. Beware, that \code{teal_slice}
 is an immutable object which means that changes in particular object are automatically

@@ -1,12 +1,12 @@
 testthat::test_that("initialize require teal_slice_expr", {
   testthat::expect_no_error(FilterStateExpr$new(
-    filter_conf(dataname = "x", id = "x", title = "x", expr = "x == 'x'")
+    teal_slice(dataname = "x", id = "x", title = "x", expr = "x == 'x'")
   ))
-  testthat::expect_error(FilterStateExpr$new(filter_conf(dataname = "x", varname = "x")), "slice")
+  testthat::expect_error(FilterStateExpr$new(teal_slice(dataname = "x", varname = "x")), "slice")
 })
 
 testthat::test_that("get_call returns call identical to one passed in the constructor", {
-  state <- FilterStateExpr$new(filter_conf(
+  state <- FilterStateExpr$new(teal_slice(
     dataname = "x",
     id = "id",
     title = "testtitle",
@@ -17,7 +17,7 @@ testthat::test_that("get_call returns call identical to one passed in the constr
 
 # set/get_state -----
 testthat::test_that("get_state returns list of state values", {
-  state <- FilterStateExpr$new(filter_conf(
+  state <- FilterStateExpr$new(teal_slice(
     dataname = "x",
     id = "id",
     title = "testtitle",
@@ -25,29 +25,29 @@ testthat::test_that("get_state returns list of state values", {
   ))
   expect_identical_slice(
     shiny::isolate(state$get_state()),
-    filter_conf(id = "id", title = "testtitle", dataname = "x", expr = "x == 'x'")
+    teal_slice(id = "id", title = "testtitle", dataname = "x", expr = "x == 'x'")
   )
 })
 
 testthat::test_that("set_state ignores every attribute", {
-  state <- FilterStateExpr$new(filter_conf(
+  state <- FilterStateExpr$new(teal_slice(
     id = "id",
     title = "testtitle",
     dataname = "x",
     expr = "x == 'x'"
   ))
   state$set_state(
-    filter_conf(id = "id2", title = "title2", dataname = "x2", expr = "x2 == 'x2'")
+    teal_slice(id = "id2", title = "title2", dataname = "x2", expr = "x2 == 'x2'")
   )
   expect_identical_slice(
     state$get_state(),
-    filter_conf(id = "id", title = "testtitle", dataname = "x", expr = "x == 'x'")
+    teal_slice(id = "id", title = "testtitle", dataname = "x", expr = "x == 'x'")
   )
 })
 
 # format ---
 testthat::test_that("format returns a properly formatted string representation", {
-  state <- FilterStateExpr$new(filter_conf(
+  state <- FilterStateExpr$new(teal_slice(
     id = "id",
     title = "testtitle",
     dataname = "x",
@@ -64,7 +64,7 @@ testthat::test_that("format returns a properly formatted string representation",
 
 # print ---
 testthat::test_that("print returns a properly formatted string representation", {
-  state <- FilterStateExpr$new(filter_conf(
+  state <- FilterStateExpr$new(teal_slice(
     id = "id",
     title = "testtitle",
     dataname = "x",

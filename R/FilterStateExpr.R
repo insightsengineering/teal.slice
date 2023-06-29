@@ -14,7 +14,7 @@
 #'
 #' @examples
 #' filter_state <- teal.slice:::FilterStateExpr$new(
-#'   slice = filter_conf(
+#'   slice = teal_slice(
 #'     dataname = "x",
 #'     id = "FA",
 #'     title = "Adult females",
@@ -64,7 +64,7 @@ FilterStateExpr <- R6::R6Class( # nolint
     #' @description
     #' Initialize a `FilterStateExpr` object
     #' @param slice (`teal_slice_expr`)\cr
-    #'   object created by [filter_conf()]
+    #'   object created by [teal_slice()]
     #' @return `FilterStateExpr`
     initialize = function(slice) {
       checkmate::assert_class(slice, "teal_slice_expr")

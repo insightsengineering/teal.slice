@@ -8,11 +8,11 @@
 #' @examples
 #' filter_state <- teal.slice:::RangeFilterState$new(
 #'   x = c(NA, Inf, seq(1:10)),
-#'   slice = filter_conf(varname = "x", dataname = "data")
+#'   slice = teal_slice(varname = "x", dataname = "data")
 #' )
 #' shiny::isolate(filter_state$get_call())
 #' filter_state$set_state(
-#'   filter_conf(
+#'   teal_slice(
 #'     dataname = "data",
 #'     varname = "x",
 #'     selected = c(3L, 8L),
@@ -30,7 +30,7 @@
 #' data_range <- c(runif(100, 0, 1), NA, Inf)
 #' fs <- teal.slice:::RangeFilterState$new(
 #'   x = data_range,
-#'   slice = filter_conf(
+#'   slice = teal_slice(
 #'     dataname = "data",
 #'     varname = "x",
 #'     selected = c(0.15, 0.93),
@@ -76,34 +76,34 @@
 #'   # modify filter state programmatically
 #'   observeEvent(
 #'     input$button1_range,
-#'     fs$set_state(filter_conf(dataname = "data", varname = "x", keep_na = FALSE))
+#'     fs$set_state(teal_slice(dataname = "data", varname = "x", keep_na = FALSE))
 #'   )
 #'   observeEvent(
 #'     input$button2_range,
-#'     fs$set_state(filter_conf(dataname = "data", varname = "x", keep_na = TRUE))
+#'     fs$set_state(teal_slice(dataname = "data", varname = "x", keep_na = TRUE))
 #'   )
 #'   observeEvent(
 #'     input$button3_range,
-#'     fs$set_state(filter_conf(dataname = "data", varname = "x", keep_inf = FALSE))
+#'     fs$set_state(teal_slice(dataname = "data", varname = "x", keep_inf = FALSE))
 #'   )
 #'   observeEvent(
 #'     input$button4_range,
-#'     fs$set_state(filter_conf(dataname = "data", varname = "x", keep_inf = TRUE))
+#'     fs$set_state(teal_slice(dataname = "data", varname = "x", keep_inf = TRUE))
 #'   )
 #'   observeEvent(
 #'     input$button5_range,
 #'     fs$set_state(
-#'       filter_conf(dataname = "data", varname = "x", selected = c(0.2, 0.74))
+#'       teal_slice(dataname = "data", varname = "x", selected = c(0.2, 0.74))
 #'     )
 #'   )
 #'   observeEvent(
 #'     input$button6_range,
-#'     fs$set_state(filter_conf(dataname = "data", varname = "x", selected = c(0, 1)))
+#'     fs$set_state(teal_slice(dataname = "data", varname = "x", selected = c(0, 1)))
 #'   )
 #'   observeEvent(
 #'     input$button0_range,
 #'     fs$set_state(
-#'       filter_conf("data", "variable", selected = c(0.15, 0.93), keep_na = TRUE, keep_inf = TRUE)
+#'       teal_slice("data", "variable", selected = c(0.15, 0.93), keep_na = TRUE, keep_inf = TRUE)
 #'     )
 #'   )
 #' }
@@ -130,7 +130,7 @@ RangeFilterState <- R6::R6Class( # nolint
     #'   If it is set to `reactive(NULL)` then counts based on filtered
     #'   dataset are not shown.
     #' @param slice (`teal_slice`)\cr
-    #'   object created using [filter_conf()]. `teal_slice` is stored
+    #'   object created using [teal_slice()]. `teal_slice` is stored
     #'   in the class and `set_state` directly manipulates values within `teal_slice`. `get_state`
     #'   returns `teal_slice` object which can be reused in other places. Beware, that `teal_slice`
     #'   is an immutable object which means that changes in particular object are automatically
