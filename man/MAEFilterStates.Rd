@@ -14,7 +14,6 @@ Handles filter states in a \code{MultiAssayExperiment}
 \subsection{Public methods}{
 \itemize{
 \item \href{#method-MAEFilterStates-new}{\code{MAEFilterStates$new()}}
-\item \href{#method-MAEFilterStates-ui_add}{\code{MAEFilterStates$ui_add()}}
 \item \href{#method-MAEFilterStates-clone}{\code{MAEFilterStates$clone()}}
 }
 }
@@ -31,6 +30,7 @@ Handles filter states in a \code{MultiAssayExperiment}
 <li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilterStates" data-id="srv_active"><a href='../../teal.slice/html/FilterStates.html#method-FilterStates-srv_active'><code>teal.slice::FilterStates$srv_active()</code></a></span></li>
 <li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilterStates" data-id="srv_add"><a href='../../teal.slice/html/FilterStates.html#method-FilterStates-srv_add'><code>teal.slice::FilterStates$srv_add()</code></a></span></li>
 <li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilterStates" data-id="ui_active"><a href='../../teal.slice/html/FilterStates.html#method-FilterStates-ui_active'><code>teal.slice::FilterStates$ui_active()</code></a></span></li>
+<li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilterStates" data-id="ui_add"><a href='../../teal.slice/html/FilterStates.html#method-FilterStates-ui_add'><code>teal.slice::FilterStates$ui_add()</code></a></span></li>
 </ul>
 </details>
 }}
@@ -77,27 +77,6 @@ key columns names}
 labels of the variables used in this object}
 }
 \if{html}{\out{</div>}}
-}
-}
-\if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-MAEFilterStates-ui_add"></a>}}
-\if{latex}{\out{\hypertarget{method-MAEFilterStates-ui_add}{}}}
-\subsection{Method \code{ui_add()}}{
-Shiny UI module to add filter variable
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{MAEFilterStates$ui_add(id)}\if{html}{\out{</div>}}
-}
-
-\subsection{Arguments}{
-\if{html}{\out{<div class="arguments">}}
-\describe{
-\item{\code{id}}{(\code{character(1)})\cr
-id of shiny module}
-}
-\if{html}{\out{</div>}}
-}
-\subsection{Returns}{
-shiny.tag
 }
 }
 \if{html}{\out{<hr>}}

@@ -211,7 +211,7 @@ a.remove_all:hover {
   color: rgb(122, 122, 122);
 }
 
-.parent-hideable-list-group > div.hideable-list-group:not([data-label=""]):before {
+.parent-hideable-list-group > .accordion:not([data-label=""]):before {
   padding: 2px 4px;
   font-size: 90%;
   color: #c7254e;

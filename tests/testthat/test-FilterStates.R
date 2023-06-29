@@ -83,9 +83,9 @@ fields (dataname, varname, varlabel, arg, id) differ", {
   filter_states <- FilterStates$new(data = data.frame(a = 1:10), dataname = "a")
   fs <- filter_settings(
     filter_var(dataname = "a", varname = "a"),
-    filter_var(dataname = "a", varname = "a", datalabel = "a"),
-    filter_var(dataname = "a", varname = "a", datalabel = "a", arg = "a"),
-    filter_var(dataname = "a", varname = "a", datalabel = "a", arg = "a", id = "a"),
+    filter_var(dataname = "a", varname = "a", experiment = "a"),
+    filter_var(dataname = "a", varname = "a", experiment = "a", arg = "a"),
+    filter_var(dataname = "a", varname = "a", experiment = "a", arg = "a", id = "a"),
     count_type = "none"
   )
   filter_states$set_filter_state(fs)
@@ -111,14 +111,14 @@ testthat::test_that("remove_filter_state of inexistent FilterState raiser warnin
   )
 })
 
-testthat::test_that("remove_filter_state removes FilterState objects identified by 'dataname', 'datalabel',
+testthat::test_that("remove_filter_state removes FilterState objects identified by 'dataname', 'experiment',
 'varname', 'arg' and/or 'id'", {
   filter_states <- FilterStates$new(data = data.frame(a = 1:5), dataname = "a")
   fs <- filter_settings(
     filter_var(dataname = "a", varname = "a"),
-    filter_var(dataname = "a", varname = "a", datalabel = "a"),
-    filter_var(dataname = "a", varname = "a", datalabel = "a", arg = "a"),
-    filter_var(dataname = "a", varname = "a", datalabel = "a", arg = "a", id = "a"),
+    filter_var(dataname = "a", varname = "a", experiment = "a"),
+    filter_var(dataname = "a", varname = "a", experiment = "a", arg = "a"),
+    filter_var(dataname = "a", varname = "a", experiment = "a", arg = "a", id = "a"),
     count_type = "none"
   )
   filter_states$set_filter_state(fs)
@@ -127,17 +127,17 @@ testthat::test_that("remove_filter_state removes FilterState objects identified 
   testthat::expect_length(shiny::isolate(filter_states$get_filter_state()), 3)
 
   filter_states$remove_filter_state(filter_settings(
-    filter_var(dataname = "a", varname = "a", datalabel = "a")
+    filter_var(dataname = "a", varname = "a", experiment = "a")
   ))
   testthat::expect_length(shiny::isolate(filter_states$get_filter_state()), 2)
 
   filter_states$remove_filter_state(filter_settings(
-    filter_var(dataname = "a", varname = "a", datalabel = "a", arg = "a")
+    filter_var(dataname = "a", varname = "a", experiment = "a", arg = "a")
   ))
   testthat::expect_length(shiny::isolate(filter_states$get_filter_state()), 1)
 
   filter_states$remove_filter_state(filter_settings(
-    filter_var(dataname = "a", varname = "a", datalabel = "a", arg = "a", id = "a")
+    filter_var(dataname = "a", varname = "a", experiment = "a", arg = "a", id = "a")
   ))
   testthat::expect_length(shiny::isolate(filter_states$get_filter_state()), 0)
 })
@@ -152,9 +152,9 @@ testthat::test_that("clear_filter_state empties the state_list", {
   filter_states <- FilterStates$new(data = data.frame(a = 1:5), dataname = "a")
   fs <- filter_settings(
     filter_var(dataname = "a", varname = "a"),
-    filter_var(dataname = "a", varname = "a", datalabel = "a"),
-    filter_var(dataname = "a", varname = "a", datalabel = "a", arg = "a"),
-    filter_var(dataname = "a", varname = "a", datalabel = "a", arg = "a", id = "a"),
+    filter_var(dataname = "a", varname = "a", experiment = "a"),
+    filter_var(dataname = "a", varname = "a", experiment = "a", arg = "a"),
+    filter_var(dataname = "a", varname = "a", experiment = "a", arg = "a", id = "a"),
     count_type = "none"
   )
   filter_states$set_filter_state(fs)
@@ -172,7 +172,7 @@ testthat::test_that("get_call returns NULL after initialization if no filter app
 testthat::test_that("get_call returns subset call with dataname and logical expressions by default", {
   fs <- FilterStates$new(data = data.frame(a = 1:10), dataname = "test", datalabel = "1")
   fs$set_filter_state(filter_settings(
-    filter_var(dataname = "test", varname = "a", datalabel = "1", selected = c(1, 9))
+    filter_var(dataname = "test", varname = "a", experiment = "1", selected = c(1, 9))
   ))
   testthat::expect_identical(
     shiny::isolate(fs$get_call()),
@@ -190,7 +190,7 @@ testthat::test_that("get_call returns custom fun call", {
   )
   fs <- test$new(data = data.frame(a = 1:10), dataname = "test", datalabel = "1")
   fs$set_filter_state(filter_settings(
-    filter_var(dataname = "test", varname = "a", datalabel = "1", selected = c(1, 9))
+    filter_var(dataname = "test", varname = "a", experiment = "1", selected = c(1, 9))
   ))
 
   testthat::expect_identical(
@@ -212,7 +212,7 @@ testthat::test_that("get_call returns subset call on custom dataname_prefixed", 
   )
   fs <- test$new(data = data.frame(a = 1:10), dataname = "test")
   fs$set_filter_state(filter_settings(
-    filter_var(dataname = "test", varname = "a", datalabel = "1", selected = c(1, 9))
+    filter_var(dataname = "test", varname = "a", experiment = "1", selected = c(1, 9))
   ))
 
   testthat::expect_identical(
@@ -231,7 +231,7 @@ testthat::test_that("get_call returns subset with varnames prefixed depending on
   )
   fs <- test$new(data = data.frame(a = 1:10), dataname = "test")
   fs$set_filter_state(filter_settings(
-    filter_var(dataname = "test", varname = "a", datalabel = "1", selected = c(1, 9))
+    filter_var(dataname = "test", varname = "a", experiment = "1", selected = c(1, 9))
   ))
 
   testthat::expect_identical(
@@ -243,7 +243,7 @@ testthat::test_that("get_call returns subset with varnames prefixed depending on
 testthat::test_that("get_call returns subset with multiple filter expressions combined by '&' operator", {
   fs <- FilterStates$new(data = data.frame(a = 1:10, b = 1:10, c = 1:10), dataname = "test")
   fs$set_filter_state(filter_settings(
-    filter_var(dataname = "test", varname = "a", datalabel = "1", selected = c(1, 9)),
+    filter_var(dataname = "test", varname = "a", experiment = "1", selected = c(1, 9)),
     filter_expr(id = "a", dataname = "test", title = "a", expr = "b > 5 | a > 5")
   ))
 

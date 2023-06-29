@@ -456,11 +456,9 @@ FilteredData <- R6::R6Class( # nolint
     #'     filter_var(dataname = "iris", varname = "Species", selected = c("setosa", "versicolor"),
     #'                keep_na = FALSE),
     #'     filter_var(dataname = "mae", varname = "years_to_birth", selected = c(30, 50),
-    #'                keep_na = TRUE, keep_inf = FALSE, datalabel = "subjects", arg = "y"),
-    #'     filter_var(dataname = "mae", varname = "vital_status",
-    #'                selected = "1", keep_na = FALSE, datalabel = "subjects", arg = "y"),
-    #'     filter_var(dataname = "mae", varname = "gender",
-    #'                selected = "female", keep_na = TRUE, datalabel = "subjects", arg = "y"),
+    #'                keep_na = TRUE, keep_inf = FALSE),
+    #'     filter_var(dataname = "mae", varname = "vital_status", selected = "1", keep_na = FALSE),
+    #'     filter_var(dataname = "mae", varname = "gender", selected = "female", keep_na = TRUE),
     #'     filter_var(dataname = "mae", varname = "ARRAY_TYPE",
     #'                selected = "", keep_na = TRUE, datalabel = "RPPAArray", arg = "subset")
     #'   )

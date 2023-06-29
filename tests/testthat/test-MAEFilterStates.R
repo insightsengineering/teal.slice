@@ -31,8 +31,7 @@ testthat::test_that("get_call returns subsetByColData call with varnames prefixe
   filter_states$set_filter_state(
     filter_settings(
       filter_var(
-        dataname = "miniacc", varname = "years_to_birth", selected = c(18, 60),
-        keep_na = FALSE, keep_inf = FALSE, datalabel = "subjects", arg = "y"
+        dataname = "miniacc", varname = "years_to_birth", selected = c(18, 60), keep_na = FALSE, keep_inf = FALSE
       )
     )
   )
@@ -40,8 +39,9 @@ testthat::test_that("get_call returns subsetByColData call with varnames prefixe
   testthat::expect_equal(
     shiny::isolate(filter_states$get_call()),
     quote(
-      miniacc <- MultiAssayExperiment::subsetByColData(miniacc,
-        y = miniacc$years_to_birth >= 18 & miniacc$years_to_birth <= 60
+      miniacc <- MultiAssayExperiment::subsetByColData(
+        miniacc,
+        miniacc$years_to_birth >= 18 & miniacc$years_to_birth <= 60
       )
     )
   )

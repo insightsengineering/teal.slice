@@ -325,7 +325,7 @@ FilterStates <- R6::R6Class( # nolint
         uiOutput(
           ns("cards"),
           class = "accordion",
-          `data-label` = ifelse(length(private$datalabel), "", paste0("> ", private$datalabel)),
+          `data-label` = ifelse(length(private$datalabel), paste0("> ", private$datalabel), ""),
         )
       )
     },
@@ -483,7 +483,7 @@ FilterStates <- R6::R6Class( # nolint
               )
               self$set_filter_state(
                 filter_settings(
-                  filter_var(dataname = private$dataname, varname = input$var_to_add, datalabel = private$datalabel)
+                  filter_var(dataname = private$dataname, varname = input$var_to_add)
                 )
               )
               logger::log_trace(
