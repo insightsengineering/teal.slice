@@ -22,7 +22,7 @@ If it is set to \code{reactive(NULL)} then counts based on filtered
 dataset are not shown.}
 
 \item{slice}{(\code{teal_slice})\cr
-object created using \code{\link[=filter_var]{filter_var()}} or \code{\link[=filter_expr]{filter_expr()}}.}
+object created using \code{\link[=filter_conf]{filter_conf()}} or \code{\link[=filter_conf]{filter_conf()}}.}
 
 \item{extract_type}{(\code{character(0)}, \code{character(1)})\cr
 specifying whether condition calls should be prefixed by \code{dataname}. Possible values:
@@ -44,7 +44,7 @@ Initializes \code{FilterState} depending on a variable class.\cr
 filter_state <- teal.slice:::init_filter_state(
   x = c(1:10, NA, Inf),
   x_reactive = reactive(c(1:10, NA, Inf)),
-  slice = filter_var(
+  slice = filter_conf(
     varname = "x",
     dataname = "dataname"
   ),

@@ -30,7 +30,7 @@ testthat::test_that("get_call returns subsetByColData call with varnames prefixe
   filter_states <- MAEFilterStates$new(data = miniACC, dataname = "miniacc")
   filter_states$set_filter_state(
     filter_settings(
-      filter_var(
+      filter_conf(
         dataname = "miniacc", varname = "years_to_birth", selected = c(18, 60), keep_na = FALSE, keep_inf = FALSE
       )
     )

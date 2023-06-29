@@ -55,7 +55,7 @@ FilterState <- R6::R6Class( # nolint
     #'   If it is set to `reactive(NULL)` then counts based on filtered
     #'   dataset are not shown.
     #' @param slice (`teal_slice`)\cr
-    #'   object created by [filter_var()]
+    #'   object created by [filter_conf()]
     #' @param extract_type (`character(0)`, `character(1)`)\cr
     #'   specifying whether condition calls should be prefixed by `dataname`. Possible values:
     #' \itemize{

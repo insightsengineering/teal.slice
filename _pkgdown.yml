@@ -30,8 +30,7 @@ reference:
       - remove_filter_state
       - clear_filter_states
       - filter_settings
-      - filter_var
-      - filter_expr
+      - filter_conf
       - get_filter_expr
   - title: For Developers
     subtitle: R6 Classes
