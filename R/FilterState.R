@@ -132,7 +132,7 @@ FilterState <- R6::R6Class( # nolint
     #' @param ... additional arguments
     #'
     print = function(...) {
-      cat(shiny::isolate(self$format(...)), "\n")
+      cat(shiny::isolate(self$format(...)))
     },
 
     #' @description

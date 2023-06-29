@@ -2,7 +2,7 @@ Type: Package
 Package: teal.slice
 Title: Filter Module for `teal` Applications
 Version: 0.3.0.9004
-Date: 2023-06-23
+Date: 2023-06-29
 Authors@R: c(
     person("Dawid", "Kaledkowski", , "dawid.kaledkowski@roche.com", role = c("aut", "cre")),
     person("Pawel", "Rucki", , "pawel.rucki@roche.com", role = "aut"),
@@ -23,6 +23,7 @@ Imports:
     checkmate,
     dplyr,
     grDevices,
+    jsonlite,
     htmltools,
     lifecycle,
     logger (>= 0.2.0),

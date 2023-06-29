@@ -388,3 +388,7 @@ a.remove_all:hover {
 .available-filters {
   margin-top: 0em;
 }
+
+.menu-content {
+  min-width: 15em;
+}
