@@ -617,7 +617,7 @@ justify_json <- function(json) {
 # trims lines of json strings for pretty printing
 trim_lines <- function(x) {
   name_width <- max(unlist(regexpr(":", x))) - 1
-  trim_position <- name_width + 17L
+  trim_position <- name_width + 37L
   x_trim <- substr(x, 1, trim_position)
   substr(x_trim, trim_position - 2, trim_position) <- "..."
   x_trim
