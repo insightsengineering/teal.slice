@@ -101,8 +101,8 @@ MAEFilteredDataset <- R6::R6Class( # nolint
         })
 
         # set state on subjects
-        subject_state <- Filter(function(x) is.null(x$experiment), state)
-        private$get_filter_states()[["subjects"]]$set_filter_state(subject_state)
+        state_subjects <- Filter(function(x) is.null(x$experiment), state)
+        private$get_filter_states()[["subjects"]]$set_filter_state(state_subjects)
 
         # set state on experiments
         # determine target experiments (defined in teal_slices)
@@ -145,8 +145,8 @@ MAEFilteredDataset <- R6::R6Class( # nolint
 
         logger::log_trace("{ class(self)[1] }$remove_filter_state removing filter(s), dataname: { private$dataname }")
         # remove state on subjects
-        subject_state <- Filter(function(x) is.null(x$experiment), state)
-        private$get_filter_states()[["subjects"]]$remove_filter_state(subject_state)
+        state_subjects <- Filter(function(x) is.null(x$experiment), state)
+        private$get_filter_states()[["subjects"]]$remove_filter_state(state_subjects)
 
         # remove state on experiments
         # determine target experiments (defined in teal_slices)
