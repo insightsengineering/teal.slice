@@ -46,17 +46,12 @@ library(shiny)
 datasets <- teal.slice:::FilteredData$new(
   list(
     iris = list(dataset = iris),
-    mtcars = list(dataset = mtcars, metadata = list(type = "training"))
+    mtcars = list(dataset = mtcars)
   )
 )
 
 # get datanames
 datasets$datanames()
-
-df <- datasets$get_data("iris", filtered = FALSE)
-print(df)
-
-datasets$get_metadata("mtcars")
 
 datasets$set_filter_state(
   teal_slices(teal_slice(dataname = "iris", varname = "Species", selected = "virginica"))
@@ -68,8 +63,6 @@ datasets$set_filter_state(
 )
 
 isolate(datasets$get_filter_state())
-isolate(datasets$get_filter_overview("iris"))
-isolate(datasets$get_filter_overview("mtcars"))
 isolate(datasets$get_call("iris"))
 isolate(datasets$get_call("mtcars"))
 
