@@ -4,7 +4,6 @@
 #' This method checks whether an object belongs to the class "teal_slice".
 #' @param x An R object to be checked.
 #' @return A logical value indicating whether the object belongs to the class "teal_slice".
-#' @export
 #' @keywords internal
 #'
 is.teal_slice <- function(x) { # nolint
@@ -16,7 +15,6 @@ is.teal_slice <- function(x) { # nolint
 #' This method converts a list to a "teal_slice" object.
 #' @param x (`list`) to be converted.
 #' @return A "teal_slice" object.
-#' @export
 #' @keywords internal
 #'
 as.teal_slice <- function(x) { # nolint
