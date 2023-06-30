@@ -609,14 +609,14 @@ justify_json <- function(json) {
   }
 
   json_lines <- strsplit(json, "\n")[[1]]
-  json_lines_split <- strsplit(json_lines, split = ":", fixed = TRUE)
-  name_width <- max(unlist(gregexpr(":", json_lines))) - 1
+  json_lines_split <- regmatches(json_lines, regexpr(":", json_lines), invert = TRUE)
+  name_width <- max(unlist(regexpr(":", json_lines))) - 1
   vapply(json_lines_split, function(x) paste0(format_name(x[1], name_width), stats::na.omit(x[2])), character(1))
 }
 
 # trims lines of json strings for pretty printing
 trim_lines <- function(x) {
-  name_width <- max(unlist(gregexpr(":", x))) - 1
+  name_width <- max(unlist(regexpr(":", x))) - 1
   trim_position <- name_width + 17L
   x_trim <- substr(x, 1, trim_position)
   substr(x_trim, trim_position - 2, trim_position) <- "..."
