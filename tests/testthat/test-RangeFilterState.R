@@ -231,7 +231,7 @@ testthat::test_that("get_call returns call if all selected but NA exists", {
     c(nums, NA),
     slice = filter_var(dataname = "data", varname = "var", keep_na = FALSE)
   )
-  testthat::expect_identical(
+  testthat::expect_equal(
     shiny::isolate(filter_state$get_call()),
     quote(var >= 1 & var <= 10)
   )

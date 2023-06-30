@@ -100,23 +100,28 @@ MAEFilteredDataset <- R6::R6Class( # nolint
           checkmate::assert_true(x$dataname == private$dataname, .var.name = "dataname matches private$dataname")
         })
 
-        # determine target datalabels (defined in teal_slices)
-        datalabels <- slices_field(state, "datalabel")
-        slot_names <- names(private$get_filter_states())
-        excluded_filters <- setdiff(datalabels, slot_names)
+        # set state on subjects
+        state_subjects <- Filter(function(x) is.null(x$experiment), state)
+        private$get_filter_states()[["subjects"]]$set_filter_state(state_subjects)
+
+        # set state on experiments
+        # determine target experiments (defined in teal_slices)
+        experiments <- slices_field(state, "experiment")
+        available_experiments <- setdiff(names(private$get_filter_states()), "subjects")
+        excluded_filters <- setdiff(experiments, available_experiments)
         if (length(excluded_filters)) {
           stop(sprintf(
-            "%s doesn't contain elements soecified in 'datalabel': %s\n'datalabel' should be a subset of: %s",
+            "%s doesn't contain elements specified in 'experiment': %s\n'experiment' should be a subset of: %s",
             private$dataname,
-            paste(excluded_filters, collapse = ", "),
-            paste(slot_names, collapse = ", ")
+            toString(excluded_filters),
+            toString(available_experiments)
           ))
         }
 
-        # set states on state_lists with corresponding datalabels
-        lapply(datalabels, function(datalabel) {
-          slices <- Filter(function(x) identical(x$datalabel, datalabel), state)
-          private$get_filter_states()[[datalabel]]$set_filter_state(slices)
+        # set states on state_lists with corresponding experiments
+        lapply(experiments, function(experiment) {
+          slices <- Filter(function(x) identical(x$experiment, experiment), state)
+          private$get_filter_states()[[experiment]]$set_filter_state(slices)
         })
 
         logger::log_trace("{ class(self)[1] }$set_filter_state initialized, dataname: { private$dataname }")
@@ -139,14 +144,29 @@ MAEFilteredDataset <- R6::R6Class( # nolint
         checkmate::assert_class(state, "teal_slices")
 
         logger::log_trace("{ class(self)[1] }$remove_filter_state removing filter(s), dataname: { private$dataname }")
+        # remove state on subjects
+        state_subjects <- Filter(function(x) is.null(x$experiment), state)
+        private$get_filter_states()[["subjects"]]$remove_filter_state(state_subjects)
 
-        datalabels <- slices_field(state, "datalabel")
-        current_states <- shiny::isolate(self$get_filter_state())
-
-        lapply(datalabels, function(datalabel) {
-          slice <- Filter(function(x) identical(x$datalabel, datalabel), state)
-          private$get_filter_states()[[datalabel]]$remove_filter_state(slice)
+        # remove state on experiments
+        # determine target experiments (defined in teal_slices)
+        experiments <- slices_field(state, "experiment")
+        available_experiments <- setdiff(names(private$get_filter_states()), "subjects")
+        excluded_filters <- setdiff(experiments, available_experiments)
+        if (length(excluded_filters)) {
+          stop(sprintf(
+            "%s doesn't contain elements specified in 'experiment': %s\n'experiment' should be a subset of: %s",
+            private$dataname,
+            toString(excluded_filters),
+            toString(available_experiments)
+          ))
+        }
+        # remove states on state_lists with corresponding experiments
+        lapply(experiments, function(experiment) {
+          slices <- Filter(function(x) identical(x$experiment, experiment), state)
+          private$get_filter_states()[[experiment]]$remove_filter_state(slices)
         })
+
 
         logger::log_trace("{ class(self)[1] }$remove_filter_state removed filter(s), dataname: { private$dataname }")
 

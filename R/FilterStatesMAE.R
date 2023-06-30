@@ -46,35 +46,6 @@ MAEFilterStates <- R6::R6Class( # nolint
       private$keys <- keys
       private$set_filterable_varnames(include_varnames = colnames(data))
       return(invisible(self))
-    },
-
-    # shiny modules ----
-
-    #' @description
-    #' Shiny UI module to add filter variable
-    #' @param id (`character(1)`)\cr
-    #'  id of shiny module
-    #' @return shiny.tag
-    ui_add = function(id) {
-      data <- private$data
-      checkmate::assert_string(id)
-
-      ns <- NS(id)
-
-      if (ncol(data) == 0) {
-        div("no sample variables available")
-      } else if (nrow(data) == 0) {
-        div("no samples available")
-      } else {
-        teal.widgets::optionalSelectInput(
-          ns("var_to_add"),
-          choices = NULL,
-          options = shinyWidgets::pickerOptions(
-            liveSearch = TRUE,
-            noneSelectedText = "Select subject variable"
-          )
-        )
-      }
     }
   ),
 
