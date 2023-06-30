@@ -236,3 +236,4 @@ teal_slices <- function(...,
     class = c("teal_slices", class(slices))
   )
 }
+
