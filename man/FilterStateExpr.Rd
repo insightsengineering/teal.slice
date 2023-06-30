@@ -12,7 +12,7 @@ This class is responsible for displaying filter card and returning filter expres
 }
 \examples{
 filter_state <- teal.slice:::FilterStateExpr$new(
-  slice = filter_expr(
+  slice = teal_slice(
     dataname = "x",
     id = "FA",
     title = "Adult females",
@@ -85,7 +85,7 @@ Initialize a \code{FilterStateExpr} object
 \if{html}{\out{<div class="arguments">}}
 \describe{
 \item{\code{slice}}{(\code{teal_slice_expr})\cr
-object created by \code{\link[=filter_expr]{filter_expr()}}}
+object created by \code{\link[=teal_slice]{teal_slice()}}}
 }
 \if{html}{\out{</div>}}
 }

@@ -8,11 +8,11 @@
 #' @examples
 #' filter_state <- teal.slice:::LogicalFilterState$new(
 #'   x = sample(c(TRUE, FALSE, NA), 10, replace = TRUE),
-#'   slice = filter_var(varname = "x", dataname = "data")
+#'   slice = teal_slice(varname = "x", dataname = "data")
 #' )
 #' shiny::isolate(filter_state$get_call())
 #' filter_state$set_state(
-#'   filter_var(dataname = "data", varname = "x", selected = TRUE, keep_na = TRUE)
+#'   teal_slice(dataname = "data", varname = "x", selected = TRUE, keep_na = TRUE)
 #' )
 #' shiny::isolate(filter_state$get_call())
 #'
@@ -24,7 +24,7 @@
 #' data_logical <- c(sample(c(TRUE, FALSE), 10, replace = TRUE), NA)
 #' fs <- teal.slice:::LogicalFilterState$new(
 #'   x = data_logical,
-#'   slice = filter_var(dataname = "data", varname = "x", selected = FALSE, keep_na = TRUE)
+#'   slice = teal_slice(dataname = "data", varname = "x", selected = FALSE, keep_na = TRUE)
 #' )
 #'
 #' ui <- fluidPage(
@@ -61,20 +61,20 @@
 #'   # modify filter state programmatically
 #'   observeEvent(
 #'     input$button1_logical,
-#'     fs$set_state(filter_var(dataname = "data", varname = "x", keep_na = FALSE))
+#'     fs$set_state(teal_slice(dataname = "data", varname = "x", keep_na = FALSE))
 #'   )
 #'   observeEvent(
 #'     input$button2_logical,
-#'     fs$set_state(filter_var(dataname = "data", varname = "x", keep_na = TRUE))
+#'     fs$set_state(teal_slice(dataname = "data", varname = "x", keep_na = TRUE))
 #'   )
 #'   observeEvent(
 #'     input$button3_logical,
-#'     fs$set_state(filter_var(dataname = "data", varname = "x", selected = TRUE))
+#'     fs$set_state(teal_slice(dataname = "data", varname = "x", selected = TRUE))
 #'   )
 #'   observeEvent(
 #'     input$button0_logical,
 #'     fs$set_state(
-#'       filter_var(dataname = "data", varname = "x", selected = FALSE, keep_na = TRUE)
+#'       teal_slice(dataname = "data", varname = "x", selected = FALSE, keep_na = TRUE)
 #'     )
 #'   )
 #' }
@@ -102,7 +102,7 @@ LogicalFilterState <- R6::R6Class( # nolint
     #'   If it is set to `reactive(NULL)` then counts based on filtered
     #'   dataset are not shown.
     #' @param slice (`teal_slice`)\cr
-    #'   object created using [filter_var()]. `teal_slice` is stored
+    #'   object created using [teal_slice()]. `teal_slice` is stored
     #'   in the class and `set_state` directly manipulates values within `teal_slice`. `get_state`
     #'   returns `teal_slice` object which can be reused in other places. Beware, that `teal_slice`
     #'   is an immutable object which means that changes in particular object are automatically

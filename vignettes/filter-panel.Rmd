@@ -293,9 +293,9 @@ datasets <- init_filtered_data(
 
 set_filter_state(
   datasets = datasets,
-  filter = filter_settings(
-    filter_var(dataname = "iris", varname = "Species", selected = "virginica", keep_na = FALSE),
-    filter_var(dataname = "mtcars", varname = "mpg", selected = c(20.0, 25.0), keep_na = FALSE, keep_inf = FALSE),
+  filter = teal_slices(
+    teal_slice(dataname = "iris", varname = "Species", selected = "virginica", keep_na = FALSE),
+    teal_slice(dataname = "mtcars", varname = "mpg", selected = c(20.0, 25.0), keep_na = FALSE, keep_inf = FALSE),
     include_varnames = list(iris = c("Species", "Sepal.Length")),
     exclude_varnames = list(mtcars = "cyl")
   )
@@ -311,8 +311,8 @@ get_filter_state(datasets)
 ```{r, message=FALSE, warning=FALSE}
 remove_filter_state(
   datasets = datasets,
-  filter = filter_settings(
-    filter_var(dataname = "iris", varname = "Species")
+  filter = teal_slices(
+    teal_slice(dataname = "iris", varname = "Species")
   )
 )
 ```
@@ -321,8 +321,8 @@ remove_filter_state(
 ```{r, message=FALSE, warning=FALSE}
 set_filter_state(
   datasets = datasets,
-  filter = filter_settings(
-    filter_var(dataname = "mtcars", varname = "mpg", selected = c(22.0, 25.0))
+  filter = teal_slices(
+    teal_slice(dataname = "mtcars", varname = "mpg", selected = c(22.0, 25.0))
   )
 )
 ```
@@ -379,16 +379,16 @@ app <- shinyApp(
     observeEvent(input$add_species_filter, {
       set_filter_state(
         datasets,
-        filter_settings(
-          filter_var(dataname = "iris", varname = "Species", selected = c("setosa", "versicolor"))
+        teal_slices(
+          teal_slice(dataname = "iris", varname = "Species", selected = c("setosa", "versicolor"))
         )
       )
     })
     observeEvent(input$remove_species_filter, {
       remove_filter_state(
         datasets,
-        filter_settings(
-          filter_var(dataname = "iris", varname = "Species")
+        teal_slices(
+          teal_slice(dataname = "iris", varname = "Species")
         )
       )
     })

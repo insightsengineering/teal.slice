@@ -46,12 +46,12 @@
 #' datasets$datanames()
 #'
 #' datasets$set_filter_state(
-#'   filter_settings(filter_var(dataname = "iris", varname = "Species", selected = "virginica"))
+#'   teal_slices(teal_slice(dataname = "iris", varname = "Species", selected = "virginica"))
 #' )
 #' isolate(datasets$get_call("iris"))
 #'
 #' datasets$set_filter_state(
-#'   filter_settings(filter_var(dataname = "mtcars", varname = "mpg", selected = c(15, 20)))
+#'   teal_slices(teal_slice(dataname = "mtcars", varname = "mpg", selected = c(15, 20)))
 #' )
 #'
 #' isolate(datasets$get_filter_state())
@@ -443,16 +443,16 @@ FilteredData <- R6::R6Class( # nolint
     #'   )
     #' )
     #' fs <-
-    #'   filter_settings(
-    #'     filter_var(dataname = "iris", varname = "Sepal.Length", selected = c(5.1, 6.4),
+    #'   teal_slices(
+    #'     teal_slice(dataname = "iris", varname = "Sepal.Length", selected = c(5.1, 6.4),
     #'                keep_na = TRUE, keep_inf = FALSE),
-    #'     filter_var(dataname = "iris", varname = "Species", selected = c("setosa", "versicolor"),
+    #'     teal_slice(dataname = "iris", varname = "Species", selected = c("setosa", "versicolor"),
     #'                keep_na = FALSE),
-    #'     filter_var(dataname = "mae", varname = "years_to_birth", selected = c(30, 50),
+    #'     teal_slice(dataname = "mae", varname = "years_to_birth", selected = c(30, 50),
     #'                keep_na = TRUE, keep_inf = FALSE),
-    #'     filter_var(dataname = "mae", varname = "vital_status", selected = "1", keep_na = FALSE),
-    #'     filter_var(dataname = "mae", varname = "gender", selected = "female", keep_na = TRUE),
-    #'     filter_var(dataname = "mae", varname = "ARRAY_TYPE",
+    #'     teal_slice(dataname = "mae", varname = "vital_status", selected = "1", keep_na = FALSE),
+    #'     teal_slice(dataname = "mae", varname = "gender", selected = "female", keep_na = TRUE),
+    #'     teal_slice(dataname = "mae", varname = "ARRAY_TYPE",
     #'                selected = "", keep_na = TRUE, datalabel = "RPPAArray", arg = "subset")
     #'   )
     #' datasets$set_filter_state(state = fs)
@@ -466,7 +466,7 @@ FilteredData <- R6::R6Class( # nolint
             paste(
               "From FilteredData$set_filter_state:",
               "Specifying filters as lists is obsolete and will be deprecated in the next release.",
-              "Please see ?set_filter_state and ?filter_settings for details."
+              "Please see ?set_filter_state and ?teal_slices for details."
             ),
             call. = FALSE
           )
@@ -508,7 +508,7 @@ FilteredData <- R6::R6Class( # nolint
             paste(
               "From FilteredData$remove_filter_state:",
               "Specifying filters as lists is obsolete and will be deprecated in the next release.",
-              "Please see ?set_filter_state and ?filter_settings for details."
+              "Please see ?set_filter_state and ?teal_slices for details."
             ),
             call. = FALSE
           )

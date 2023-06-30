@@ -13,7 +13,7 @@ testthat::test_that("constructor accepts a matrix", {
 testthat::test_that("get_filter_state returns `teal_slices` with default include_varnames", {
   test <- matrix(1:100, ncol = 10, dimnames = list(NULL, letters[1:10]))
   filter_states <- MatrixFilterStates$new(data = test, dataname = "test")
-  fs <- filter_settings(
+  fs <- teal_slices(
     include_varnames = list(test = colnames(test)),
     count_type = "all"
   )
@@ -28,8 +28,8 @@ testthat::test_that("get_filter_state returns `teal_slices` with default include
 testthat::test_that("get_call returns executable call filtering a matrix with numeric values", {
   test <- matrix(1:100, ncol = 10, dimnames = list(NULL, letters[1:10]))
   filter_states <- MatrixFilterStates$new(data = test, dataname = "test")
-  fs <- filter_settings(
-    filter_var(dataname = "test", varname = "a", selected = c(1, 3))
+  fs <- teal_slices(
+    teal_slice(dataname = "test", varname = "a", selected = c(1, 3))
   )
   filter_states$set_filter_state(fs)
   testthat::expect_identical(

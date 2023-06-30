@@ -222,7 +222,7 @@ FilterStates <- R6::R6Class( # nolint
     #'
     get_filter_state = function() {
       slices <- unname(lapply(private$state_list(), function(x) x$get_state()))
-      fs <- do.call(filter_settings, c(slices, list(count_type = private$count_type)))
+      fs <- do.call(teal_slices, c(slices, list(count_type = private$count_type)))
 
       include_varnames <- private$include_varnames
       if (length(include_varnames)) {
@@ -482,8 +482,8 @@ FilterStates <- R6::R6Class( # nolint
                 )
               )
               self$set_filter_state(
-                filter_settings(
-                  filter_var(dataname = private$dataname, varname = input$var_to_add)
+                teal_slices(
+                  teal_slice(dataname = private$dataname, varname = input$var_to_add)
                 )
               )
               logger::log_trace(
@@ -507,7 +507,7 @@ FilterStates <- R6::R6Class( # nolint
     count_type = "all", # specifies how observation numbers are displayed in filter cards,
     data = NULL, # data.frame, MAE, SE or matrix
     data_reactive = NULL, # reactive
-    datalabel = NULL, # to follow default `datalabel = NULL` in `filter_var`
+    datalabel = NULL, # to follow default `experiment = NULL` in `teal_slice`
     dataname = NULL, # because it holds object of class name
     dataname_prefixed = character(0), # name used in call returned from get_call
     exclude_varnames = character(0), # holds column names
@@ -697,7 +697,7 @@ FilterStates <- R6::R6Class( # nolint
       if (any(duplicated(slices_hashed))) {
         stop(
           "Some of the teal_slice objects refer to the same filter. ",
-          "Please specify different 'id' when calling filter_var or filter_expr"
+          "Please specify different 'id' when calling teal_slice"
         )
       }
 

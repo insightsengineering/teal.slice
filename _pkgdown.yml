@@ -29,9 +29,8 @@ reference:
       - set_filter_state
       - remove_filter_state
       - clear_filter_states
-      - filter_settings
-      - filter_var
-      - filter_expr
+      - teal_slices
+      - teal_slice
       - get_filter_expr
   - title: For Developers
     subtitle: R6 Classes

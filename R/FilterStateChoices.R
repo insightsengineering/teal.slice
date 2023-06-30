@@ -8,11 +8,11 @@
 #' @examples
 #' filter_state <- teal.slice:::ChoicesFilterState$new(
 #'   x = c(LETTERS, NA),
-#'   slice = filter_var(varname = "x", dataname = "data")
+#'   slice = teal_slice(varname = "x", dataname = "data")
 #' )
 #' shiny::isolate(filter_state$get_call())
 #' filter_state$set_state(
-#'   filter_var(
+#'   teal_slice(
 #'     dataname = "data",
 #'     varname = "x",
 #'     selected = "A",
@@ -30,7 +30,7 @@
 #' attr(data_choices, "label") <- "lowercase letters"
 #' fs <- ChoicesFilterState$new(
 #'   x = data_choices,
-#'   slice = filter_var(
+#'   slice = teal_slice(
 #'     dataname = "data", varname = "variable", selected = c("a", "b"), keep_na = TRUE
 #'   )
 #' )
@@ -70,31 +70,31 @@
 #'   observeEvent(
 #'     input$button1_choices,
 #'     fs$set_state(
-#'       filter_var(dataname = "data", varname = "variable", keep_na = FALSE)
+#'       teal_slice(dataname = "data", varname = "variable", keep_na = FALSE)
 #'     )
 #'   )
 #'   observeEvent(
 #'     input$button2_choices,
 #'     fs$set_state(
-#'       filter_var(dataname = "data", varname = "variable", keep_na = TRUE)
+#'       teal_slice(dataname = "data", varname = "variable", keep_na = TRUE)
 #'     )
 #'   )
 #'   observeEvent(
 #'     input$button3_choices,
 #'     fs$set_state(
-#'       filter_var(dataname = "data", varname = "variable", selected = c("a", "b"))
+#'       teal_slice(dataname = "data", varname = "variable", selected = c("a", "b"))
 #'     )
 #'   )
 #'   observeEvent(
 #'     input$button4_choices,
 #'     fs$set_state(
-#'       filter_var(dataname = "data", varname = "variable", selected = character(0), keep_na = TRUE)
+#'       teal_slice(dataname = "data", varname = "variable", selected = character(0), keep_na = TRUE)
 #'     )
 #'   )
 #'   observeEvent(
 #'     input$button0_choices,
 #'     fs$set_state(
-#'       filter_var(dataname = "data", varname = "variable", selected = c("a", "c"), keep_na = TRUE)
+#'       teal_slice(dataname = "data", varname = "variable", selected = c("a", "c"), keep_na = TRUE)
 #'     )
 #'   )
 #' }
@@ -123,7 +123,7 @@ ChoicesFilterState <- R6::R6Class( # nolint
     #'   If it is set to `reactive(NULL)` then counts based on filtered
     #'   dataset are not shown.
     #' @param slice (`teal_slice`)\cr
-    #'   object created using [filter_var()]. `teal_slice` is stored
+    #'   object created using [teal_slice()]. `teal_slice` is stored
     #'   in the class and `set_state` directly manipulates values within `teal_slice`. `get_state`
     #'   returns `teal_slice` object which can be reused in other places. Beware, that `teal_slice`
     #'   is an immutable object which means that changes in particular object are automatically
