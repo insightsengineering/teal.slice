@@ -1142,7 +1142,7 @@ FilteredData <- R6::R6Class( # nolint
           slices_field(slices_nonlocked(), "id")
         })
         active_slices_id <- reactive({
-          slices_field(self$get_filter_state(), "id")
+          try(slices_field(self$get_filter_state(), "id"), silent = TRUE)
         })
 
         checkbox_group_element <- function(name, value, label, checked, disabled = FALSE) {
