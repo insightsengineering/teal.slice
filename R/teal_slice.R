@@ -505,8 +505,8 @@ print.teal_slices <- function(x, ...) {
 #' @keywords internal
 #'
 slices_field <- function(tss, field) {
+  checkmate::assert_class(tss, "teal_slices", null.ok = TRUE)
   checkmate::assert_string(field)
-  checkmate::assert_class(tss, "teal_slices")
   unique(unlist(lapply(tss, function(x) x[[field]])))
 }
 
