@@ -118,10 +118,10 @@ justify_json <- function(json) {
       paste(format(name, width = name_width), ":")
     }
   }
-
+  browser()
   json_lines <- strsplit(json, "\n")[[1]]
-  json_lines_split <- strsplit(json_lines, split = ":", fixed = TRUE)
-  name_width <- max(unlist(gregexpr(":", json_lines))) - 1
+  json_lines_split <- regmatches(json_lines, regexpr(":", json_lines), invert = TRUE)
+  name_width <- max(unlist(regexpr(":", json_lines))) - 1
   vapply(json_lines_split, function(x) paste0(format_name(x[1], name_width), stats::na.omit(x[2])), character(1))
 }
 
