@@ -1,5 +1,3 @@
-
-
 #' Method to Check if an Object is of Class "teal_slice"
 #' This method checks whether an object belongs to the class "teal_slice".
 #' @param x An R object to be checked.

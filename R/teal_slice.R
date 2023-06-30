@@ -71,32 +71,32 @@
 #'   title = "Female adults"
 #' )
 #' teal_slice(
-#'  dataname = "data",
-#'  varname = "var",
-#'  choices = c("F", "M", "U"),
-#'  selected = "F",
-#'  keep_na = TRUE,
-#'  keep_inf = TRUE,
-#'  fixed = FALSE,
-#'  locked = FALSE,
-#'  multiple = TRUE,
-#'  id = "Gender",
-#'  extra_arg = "extra"
+#'   dataname = "data",
+#'   varname = "var",
+#'   choices = c("F", "M", "U"),
+#'   selected = "F",
+#'   keep_na = TRUE,
+#'   keep_inf = TRUE,
+#'   fixed = FALSE,
+#'   locked = FALSE,
+#'   multiple = TRUE,
+#'   id = "Gender",
+#'   extra_arg = "extra"
 #' )
 #' @export
 teal_slice <- function(dataname,
-                        varname,
-                        id,
-                        expr,
-                        choices = NULL,
-                        selected = NULL,
-                        keep_na = NULL,
-                        keep_inf = NULL,
-                        fixed = if (!missing(expr)) TRUE else FALSE,
-                        locked = FALSE,
-                        multiple = TRUE,
-                        title = NULL,
-                        ...) {
+                       varname,
+                       id,
+                       expr,
+                       choices = NULL,
+                       selected = NULL,
+                       keep_na = NULL,
+                       keep_inf = NULL,
+                       fixed = if (!missing(expr)) TRUE else FALSE,
+                       locked = FALSE,
+                       multiple = TRUE,
+                       title = NULL,
+                       ...) {
   checkmate::assert_string(dataname)
   checkmate::assert_flag(fixed)
   checkmate::assert_flag(locked)
@@ -114,8 +114,10 @@ teal_slice <- function(dataname,
     class(ans) <- c("teal_slice_expr", "teal_slice", class(ans))
     ans
   } else if (!missing(varname)) {
-    ts_var_args <- c("dataname", "varname", "id", "choices", "selected", "keep_na", "keep_inf",
-                      "fixed", "locked", "multiple")
+    ts_var_args <- c(
+      "dataname", "varname", "id", "choices", "selected", "keep_na", "keep_inf",
+      "fixed", "locked", "multiple"
+    )
     formal_args <- formal_args[ts_var_args]
     args <- c(formal_args, list(...))
     checkmate::assert_string(varname)
@@ -208,10 +210,10 @@ teal_slice <- function(dataname,
 #' )
 #' @export
 teal_slices <- function(...,
-                            exclude_varnames = NULL,
-                            include_varnames = NULL,
-                            count_type = NULL,
-                            module_add = TRUE) {
+                        exclude_varnames = NULL,
+                        include_varnames = NULL,
+                        count_type = NULL,
+                        module_add = TRUE) {
   slices <- list(...)
   checkmate::assert_list(slices, types = "teal_slice", any.missing = FALSE)
   slices_id <- shiny::isolate(vapply(slices, `[[`, character(1L), "id"))

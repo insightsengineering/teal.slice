@@ -1,4 +1,3 @@
-
 #' Store teal_slices object to a file
 #'
 #' This function takes a teal_slices object and saves it to a file in JSON format. The teal_slices object contains
