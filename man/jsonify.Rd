@@ -2,21 +2,21 @@
 % Please edit documentation in R/teal_slice.R
 \name{jsonify}
 \alias{jsonify}
-\title{Convert a list to a justified JSON string}
+\title{Convert a list to a justified \code{JSON} string}
 \usage{
 jsonify(x, trim_lines)
 }
 \arguments{
-\item{x}{\code{list} containing JSON strings.}
+\item{x}{\code{list} containing \code{JSON} strings.}
 
-\item{trim_lines}{(\code{function}) or not to trim lines of the JSON string (default is FALSE).}
+\item{trim_lines}{(\code{function}) or not to trim lines of the \code{JSON} string (default is \code{FALSE}).}
 }
 \value{
-A justified JSON string representation of the input list.
+A justified \code{JSON} string representation of the input list.
 }
 \description{
-This function takes a list and converts it to a JSON string. The resulting JSON string is then
+This function takes a list and converts it to a \code{JSON} string. The resulting \code{JSON} string is then
 justified to improve readability. Additionally, the function has an option to trim the lines of
-the JSON string.
+the \code{JSON} string.
 }
 \keyword{internal}

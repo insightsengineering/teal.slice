@@ -10,15 +10,16 @@ slices_store(tss, file)
 \item{tss}{(\code{teal_slices}) object to be stored.}
 
 \item{file}{(\code{character(1)}) The file path where \code{teal_slices} object will be saved.
-The file extension should be ".json".}
+The file extension should be \code{".json"}.}
 }
 \value{
 None
 }
 \description{
-This function takes a teal_slices object and saves it to a file in JSON format. The teal_slices object contains
-information about filter states and can be used to create, modify, and delete filter states. The saved file can
-be later loaded using the \code{slices_restore} function.
+This function takes a teal_slices object and saves it to a file in \code{JSON} format.
+The teal_slices object contains information about filter states and can be used to
+create, modify, and delete filter states. The saved file can be later loaded using
+the \code{slices_restore} function.
 }
 \examples{
 \dontrun{

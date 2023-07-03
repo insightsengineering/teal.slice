@@ -2,7 +2,7 @@
 % Please edit documentation in R/teal_slice.R
 \name{to_json}
 \alias{to_json}
-\title{Converts a list to a JSON string}
+\title{Converts a list to a \code{JSON} string}
 \usage{
 to_json(x)
 }
@@ -10,7 +10,7 @@ to_json(x)
 \item{x}{(\code{list}) representation of \code{teal_slices} object.}
 }
 \description{
-Converts a list representation of \code{teal_slices} into a JSON string. This function is used by the
+Converts a list representation of \code{teal_slices} into a \code{JSON} string. This function is used by the
 \code{format} method for \code{teal_slices} objects.
 }
 \keyword{internal}

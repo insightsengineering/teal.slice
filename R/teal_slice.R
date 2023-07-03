@@ -16,7 +16,7 @@
 #' filter.
 #' 2. `teal_slice_expr` - returned when `expr` is set. The object keeps information about the
 #' expression and is used to create a static filter which evaluates always the same expression.
-#' When `expr` is specified `varname`, `choices`, `selected`, `multiple`, keep_na`, `keep_inf`
+#' When `expr` is specified `varname`, `choices`, `selected`, `multiple`, `keep_na`, `keep_inf`
 #' are ignored.
 #'
 #' All `teal_slice` fields can be passed as arguments to `FilterState` constructors.
@@ -25,18 +25,18 @@
 #' `selected`, `keep_na` and `keep_inf`.
 #'
 #' Special consideration is given to two fields: `fixed` and `locked`.
-#' These are always immutable logical flags that default to FALSE.
+#' These are always immutable logical flags that default to `FALSE`.
 #' In a `FilterState` instantiated with `fixed = TRUE` the features
 #' `selected`, `keep_na`, `keep_inf` cannot be changed.
 #'
 #' @section Filters in `SumarizedExperiment` and `MultiAssayExperiment` objects:
 #'
 #' To establish a filter on a column in a `data.frame`, `dataname` and `varname` are sufficient.
-#' For filters refering to `colData` of `MultiAssayExperiment` object (subjects filter) no extra arguments are needed.
+#' For filters referring to `colData` of `MultiAssayExperiment` object (subjects filter) no extra arguments are needed.
 #' Filter states  created for `experiments` require more information as each variable is either located in
 #' the specific `ExperimentList` slot. To correctly specify filter for an `SummarizedExperiment` one must set:
 #' - `experiment` (`character(1)`) name of the experiment in `MultiAssayExperiment` object.
-#' - `arg` (`"subset"  or `"select`) to refer to the particular argument in the [subset()] function for
+#' - `arg` (`"subset"`  or `"select`) to refer to the particular argument in the [subset()] function for
 #' `SummarizedExperiment`.
 #'
 #' @param dataname (`character(1)`) name of data set
@@ -216,15 +216,15 @@ print.teal_slice <- function(x, ...) {
 
 # format utils -----
 
-#' Convert a list to a justified JSON string
+#' Convert a list to a justified `JSON` string
 #'
-#' This function takes a list and converts it to a JSON string. The resulting JSON string is then
+#' This function takes a list and converts it to a `JSON` string. The resulting `JSON` string is then
 #' justified to improve readability. Additionally, the function has an option to trim the lines of
-#' the JSON string.
+#' the `JSON` string.
 #'
-#' @param x `list` containing JSON strings.
-#' @param trim_lines (`function`) or not to trim lines of the JSON string (default is FALSE).
-#' @return A justified JSON string representation of the input list.
+#' @param x `list` containing `JSON` strings.
+#' @param trim_lines (`function`) or not to trim lines of the `JSON` string (default is `FALSE`).
+#' @return A justified `JSON` string representation of the input list.
 #' @keywords internal
 #'
 jsonify <- function(x, trim_lines) {
@@ -236,9 +236,9 @@ jsonify <- function(x, trim_lines) {
   paste(x_json_justified, collapse = "\n")
 }
 
-#' Converts a list to a JSON string
+#' Converts a list to a `JSON` string
 #'
-#' Converts a list representation of `teal_slices` into a JSON string. This function is used by the
+#' Converts a list representation of `teal_slices` into a `JSON` string. This function is used by the
 #' `format` method for `teal_slices` objects.
 #' @param x (`list`) representation of `teal_slices` object.
 #' @keywords internal
@@ -259,13 +259,13 @@ to_json <- function(x) {
   jsonlite::toJSON(no_unbox(x), pretty = TRUE, auto_unbox = TRUE, digits = 16, null = "null")
 }
 
-#' Justify Colons in JSON String
+#' Justify Colons in `JSON` String
 #'
-#' This function takes a JSON string as input and returns a modified version of the input where colons are justified in each line.
+#' This function takes a `JSON` string as input and returns a modified version of the input where colons are justified in each line.
 #'
-#' @param json (`character(1)`) representing the input JSON.
+#' @param json (`character(1)`) representing the input `JSON`.
 #'
-#' @return A character string with justified colons in each line of the JSON.
+#' @return A character string with justified colons in each line of the `JSON`.
 #' @keywords internal
 #'
 justify_json <- function(json) {
@@ -284,13 +284,13 @@ justify_json <- function(json) {
   vapply(json_lines_split, function(x) paste0(format_name(x[1], name_width), stats::na.omit(x[2])), character(1))
 }
 
-#' Justify Colons in JSON String
+#' Justify Colons in `JSON` String
 #'
-#' This function takes a JSON string as input and returns a modified version of the input where colons are justified in each line.
+#' This function takes a `JSON` string as input and returns a modified version of the input where colons are justified in each line.
 #'
-#' @param json A character string representing the input JSON.
+#' @param json A character string representing the input `JSON`.
 #'
-#' @return A character string with justified colons in each line of the JSON.
+#' @return A character string with justified colons in each line of the `JSON`.
 #' @keywords internal
 #'
 trim_lines <- function(x) {

@@ -2,17 +2,17 @@
 % Please edit documentation in R/teal_slice.R
 \name{justify_json}
 \alias{justify_json}
-\title{Justify Colons in JSON String}
+\title{Justify Colons in \code{JSON} String}
 \usage{
 justify_json(json)
 }
 \arguments{
-\item{json}{(\code{character(1)}) representing the input JSON.}
+\item{json}{(\code{character(1)}) representing the input \code{JSON}.}
 }
 \value{
-A character string with justified colons in each line of the JSON.
+A character string with justified colons in each line of the \code{JSON}.
 }
 \description{
-This function takes a JSON string as input and returns a modified version of the input where colons are justified in each line.
+This function takes a \code{JSON} string as input and returns a modified version of the input where colons are justified in each line.
 }
 \keyword{internal}

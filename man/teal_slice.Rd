@@ -101,7 +101,7 @@ variable name, possible choices, and selected values and is used to create an in
 filter.
 \item \code{teal_slice_expr} - returned when \code{expr} is set. The object keeps information about the
 expression and is used to create a static filter which evaluates always the same expression.
-When \code{expr} is specified \code{varname}, \code{choices}, \code{selected}, \code{multiple}, keep_na\verb{, }keep_inf`
+When \code{expr} is specified \code{varname}, \code{choices}, \code{selected}, \code{multiple}, \code{keep_na}, \code{keep_inf}
 are ignored.
 }
 
@@ -111,7 +111,7 @@ However, once a \code{FilterState} is created, only the \strong{mutable} feature
 \code{selected}, \code{keep_na} and \code{keep_inf}.
 
 Special consideration is given to two fields: \code{fixed} and \code{locked}.
-These are always immutable logical flags that default to FALSE.
+These are always immutable logical flags that default to \code{FALSE}.
 In a \code{FilterState} instantiated with \code{fixed = TRUE} the features
 \code{selected}, \code{keep_na}, \code{keep_inf} cannot be changed.
 }
@@ -119,12 +119,13 @@ In a \code{FilterState} instantiated with \code{fixed = TRUE} the features
 
 
 To establish a filter on a column in a \code{data.frame}, \code{dataname} and \code{varname} are sufficient.
-For filters refering to \code{colData} of \code{MultiAssayExperiment} object (subjects filter) no extra arguments are needed.
+For filters referring to \code{colData} of \code{MultiAssayExperiment} object (subjects filter) no extra arguments are needed.
 Filter states  created for \code{experiments} require more information as each variable is either located in
 the specific \code{ExperimentList} slot. To correctly specify filter for an \code{SummarizedExperiment} one must set:
 \itemize{
 \item \code{experiment} (\code{character(1)}) name of the experiment in \code{MultiAssayExperiment} object.
-\item \code{arg} (\verb{"subset"  or }"select\verb{) to refer to the particular argument in the [subset()] function for }SummarizedExperiment`.
+\item \code{arg} (\code{"subset"}  or \verb{"select}) to refer to the particular argument in the \code{\link[=subset]{subset()}} function for
+\code{SummarizedExperiment}.
 }
 }
 

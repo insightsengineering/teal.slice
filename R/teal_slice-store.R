@@ -1,12 +1,13 @@
 #' Store teal_slices object to a file
 #'
-#' This function takes a teal_slices object and saves it to a file in JSON format. The teal_slices object contains
-#' information about filter states and can be used to create, modify, and delete filter states. The saved file can
-#' be later loaded using the `slices_restore` function.
+#' This function takes a teal_slices object and saves it to a file in `JSON` format.
+#' The teal_slices object contains information about filter states and can be used to
+#' create, modify, and delete filter states. The saved file can be later loaded using
+#' the `slices_restore` function.
 #'
 #' @param tss (`teal_slices`) object to be stored.
 #' @param file (`character(1)`) The file path where `teal_slices` object will be saved.
-#'  The file extension should be ".json".
+#'  The file extension should be `".json"`.
 #'
 #' @return None
 #'
@@ -32,9 +33,12 @@ slices_store <- function(tss, file) {
 
 #' Restore teal_slices object from a file
 #'
-#' This function takes a file path to a JSON file containing a teal_slices object and restores it to its original form. The restored teal_slices object can be used to access filter states and their corresponding attributes.
+#' This function takes a file path to a `JSON` file containing a teal_slices object
+#' and restores it to its original form. The restored teal_slices object can be used
+#' to access filter states and their corresponding attributes.
 #'
-#' @param file The file path where the teal_slices object is stored. The file should be in JSON format and have a ".json" extension.
+#' @param file The file path where the teal_slices object is stored.
+#' The file should be in `JSON` format and have a `".json"` extension.
 #'
 #' @return A teal_slices object restored from the file.
 #'

@@ -7,13 +7,16 @@
 slices_restore(file)
 }
 \arguments{
-\item{file}{The file path where the teal_slices object is stored. The file should be in JSON format and have a ".json" extension.}
+\item{file}{The file path where the teal_slices object is stored.
+The file should be in \code{JSON} format and have a \code{".json"} extension.}
 }
 \value{
 A teal_slices object restored from the file.
 }
 \description{
-This function takes a file path to a JSON file containing a teal_slices object and restores it to its original form. The restored teal_slices object can be used to access filter states and their corresponding attributes.
+This function takes a file path to a \code{JSON} file containing a teal_slices object
+and restores it to its original form. The restored teal_slices object can be used
+to access filter states and their corresponding attributes.
 }
 \examples{
 \dontrun{
