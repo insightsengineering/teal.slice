@@ -13,6 +13,7 @@ trim_lines(x)
 A character string with justified colons in each line of the \code{JSON}.
 }
 \description{
-This function takes a \code{JSON} string as input and returns a modified version of the input where colons are justified in each line.
+This function takes a \code{JSON} string as input and returns a modified version of the
+input where colons are justified in each line.
 }
 \keyword{internal}

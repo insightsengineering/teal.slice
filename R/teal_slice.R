@@ -261,7 +261,8 @@ to_json <- function(x) {
 
 #' Justify Colons in `JSON` String
 #'
-#' This function takes a `JSON` string as input and returns a modified version of the input where colons are justified in each line.
+#' This function takes a `JSON` string as input and returns a modified version of the
+#' input where colons are justified in each line.
 #'
 #' @param json (`character(1)`) representing the input `JSON`.
 #'
@@ -286,7 +287,8 @@ justify_json <- function(json) {
 
 #' Justify Colons in `JSON` String
 #'
-#' This function takes a `JSON` string as input and returns a modified version of the input where colons are justified in each line.
+#' This function takes a `JSON` string as input and returns a modified version of the
+#'  input where colons are justified in each line.
 #'
 #' @param json A character string representing the input `JSON`.
 #'
