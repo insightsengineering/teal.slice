@@ -176,7 +176,7 @@ as.teal_slice <- function(x) { # nolint
 #' @keywords internal
 #'
 as.list.teal_slice <- function(x, ...) {
-  formals <- formals(teal_slice)
+  formal_args <- setdiff(names(formals(teal_slice)), "...")
 
   x <- if (shiny::isRunning()) {
     shiny::reactiveValuesToList(x)
@@ -184,7 +184,7 @@ as.list.teal_slice <- function(x, ...) {
     shiny::isolate(shiny::reactiveValuesToList(x))
   }
 
-  formal_args <- setdiff(names(formals), "...")
+  formal_args <- intersect(formal_args, names(x))
   extra_args <- setdiff(names(x), formal_args)
 
   x[c(formal_args, extra_args)]
