@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE coverage SYSTEM "https://raw.githubusercontent.com/cobertura/cobertura/master/cobertura/src/site/htdocs/xml/coverage-04.dtd">
-<coverage line-rate="0.660834454912517" branch-rate="0" lines-covered="2946" lines-valid="4458" branches-covered="0" branches-valid="0" complexity="0" version="3.6.2" timestamp="2023-07-03 10:32:21.855481">
+<coverage line-rate="0.660834454912517" branch-rate="0" lines-covered="2946" lines-valid="4458" branches-covered="0" branches-valid="0" complexity="0" version="3.6.2" timestamp="2023-07-03 10:49:59.528312">
   <sources>
     <source>/__w/teal.slice/teal.slice/teal.slice</source>
   </sources>
@@ -28950,12 +28950,11 @@
             </method>
             <method name="justify_json" signature="" line-rate="1" branch-rate="0" complexity="0">
               <lines>
-                <line number="272" hits="119" branch="false"/>
                 <line number="273" hits="119" branch="false"/>
                 <line number="274" hits="119" branch="false"/>
                 <line number="275" hits="119" branch="false"/>
-                <line number="276" hits="78" branch="false"/>
-                <line number="277" hits="119" branch="false"/>
+                <line number="276" hits="119" branch="false"/>
+                <line number="277" hits="78" branch="false"/>
                 <line number="278" hits="119" branch="false"/>
                 <line number="279" hits="119" branch="false"/>
                 <line number="280" hits="119" branch="false"/>
@@ -28963,15 +28962,16 @@
                 <line number="282" hits="119" branch="false"/>
                 <line number="283" hits="119" branch="false"/>
                 <line number="284" hits="119" branch="false"/>
+                <line number="285" hits="119" branch="false"/>
               </lines>
             </method>
             <method name="trim_lines" signature="" line-rate="1" branch-rate="0" complexity="0">
               <lines>
-                <line number="297" hits="119" branch="false"/>
-                <line number="298" hits="119" branch="false"/>
                 <line number="299" hits="119" branch="false"/>
                 <line number="300" hits="119" branch="false"/>
                 <line number="301" hits="119" branch="false"/>
+                <line number="302" hits="119" branch="false"/>
+                <line number="303" hits="119" branch="false"/>
               </lines>
             </method>
           </methods>
@@ -29050,12 +29050,11 @@
             <line number="256" hits="119" branch="false"/>
             <line number="257" hits="119" branch="false"/>
             <line number="259" hits="119" branch="false"/>
-            <line number="272" hits="119" branch="false"/>
             <line number="273" hits="119" branch="false"/>
             <line number="274" hits="119" branch="false"/>
             <line number="275" hits="119" branch="false"/>
-            <line number="276" hits="78" branch="false"/>
-            <line number="277" hits="119" branch="false"/>
+            <line number="276" hits="119" branch="false"/>
+            <line number="277" hits="78" branch="false"/>
             <line number="278" hits="119" branch="false"/>
             <line number="279" hits="119" branch="false"/>
             <line number="280" hits="119" branch="false"/>
@@ -29063,11 +29062,12 @@
             <line number="282" hits="119" branch="false"/>
             <line number="283" hits="119" branch="false"/>
             <line number="284" hits="119" branch="false"/>
-            <line number="297" hits="119" branch="false"/>
-            <line number="298" hits="119" branch="false"/>
+            <line number="285" hits="119" branch="false"/>
             <line number="299" hits="119" branch="false"/>
             <line number="300" hits="119" branch="false"/>
             <line number="301" hits="119" branch="false"/>
+            <line number="302" hits="119" branch="false"/>
+            <line number="303" hits="119" branch="false"/>
           </lines>
         </class>
         <class name="teal_slices.R" filename="R/teal_slices.R" line-rate="0.992307692307692" branch-rate="0" complexity="0">
