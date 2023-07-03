@@ -103,7 +103,7 @@ teal_slice <- function(dataname,
                        selected = NULL,
                        keep_na = NULL,
                        keep_inf = NULL,
-                       fixed = if (!missing(expr)) TRUE else FALSE,
+                       fixed = FALSE,
                        locked = FALSE,
                        multiple = TRUE,
                        title = NULL,
@@ -116,6 +116,7 @@ teal_slice <- function(dataname,
   if (!missing(expr) && !missing(varname)) {
     stop("Must provide either `expr` or `varname`.")
   } else if (!missing(expr)) {
+    fixed <- TRUE
     ts_expr_args <- c("dataname", "id", "expr", "fixed", "locked", "title")
     formal_args <- formal_args[ts_expr_args]
     checkmate::assert_string(id)
@@ -167,8 +168,7 @@ is.teal_slice <- function(x) { # nolint
 #'
 as.teal_slice <- function(x) { # nolint
   checkmate::assert_list(x, names = "named")
-  fun <- teal_slice
-  do.call(fun, x)
+  do.call(teal_slice, x)
 }
 
 #' @rdname teal_slice

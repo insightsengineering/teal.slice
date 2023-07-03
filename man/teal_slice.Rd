@@ -18,7 +18,7 @@ teal_slice(
   selected = NULL,
   keep_na = NULL,
   keep_inf = NULL,
-  fixed = if (!missing(expr)) TRUE else FALSE,
+  fixed = FALSE,
   locked = FALSE,
   multiple = TRUE,
   title = NULL,
