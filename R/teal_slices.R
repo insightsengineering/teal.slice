@@ -1,121 +1,121 @@
-#' Method to Check if an Object is of Class "teal_slice"
-#' This method checks whether an object belongs to the class "teal_slice".
-#' @param x An R object to be checked.
-#' @return A logical value indicating whether the object belongs to the class "teal_slice".
-#' @keywords internal
+#' Filter configuration.
 #'
-is.teal_slice <- function(x) { # nolint
-  inherits(x, "teal_slice")
-}
-
-#' Method to Convert a List to a "teal_slice" Object
+#' @details
+#' `teal_slices()` collates multiple `teal_slice` objects into `teal_slices`,
+#' a complete filter specification. This is used by all classes above `FilterState`
+#' as well as `filter_panel_api` wrapper functions.
+#' `teal_slices` also specifies which variables cannot be filtered
+#' and how observations are tallied, which is resolved by `FilterStates`.
 #'
-#' This method converts a list to a "teal_slice" object.
-#' @param x (`list`) to be converted.
-#' @return A "teal_slice" object.
-#' @keywords internal
+#' `include_varnames` and `exclude_varnames` in attributes in `teal_slices`
+#' determine which variables can have filters assigned.
+#' The former enumerates allowed variables, the latter enumerates forbidden values.
+#' Since these can be mutually exclusive in some cases, they cannot both be set in one `teal_slices` object.
 #'
-as.teal_slice <- function(x) { # nolint
-  checkmate::assert_list(x, names = "named")
-  fun <- teal_slice
-  do.call(fun, x)
-}
-
-# concatenate method for teal_slice
-#' Concatenate "teal_slice" Objects
+#' @param ... any number of `teal_slice` objects. In `print` and `format` `...` is used as other
+#' arguments passed to respective method of [teal_slice].
+#' @param include_varnames,exclude_varnames (`named list`s of `character`) where list names
+#'  match names of data sets and vector elements match variable names in respective data sets;
+#'  specify which variables are allowed to be filtered; see `Details`
+#' @param count_type (`character(1)`) string specifying how observations are tallied by these filter states.
+#'  Possible options:
+#'  - `"all"` to have counts of single `FilterState` to show number of observation in filtered
+#'   and unfiltered dataset.
+#'  - `"none"` to have counts of single `FilterState` to show unfiltered number only.
+#' @param module_add (`logical(1)`) logical flag specifying whether the user will be able to add new filters
+#' @return
+#' `teal_slices`, which is an unnamed list of `teal_slice` objects.
 #'
-#' This method concatenates "teal_slice" objects.
-#' @param ... (`teal_slice`) objects to be concatenated.
-#' @return A "teal_slice" object.
+#' @examples
+#' filter_1 <- teal_slice(
+#'   dataname = "dataname1",
+#'   varname = "varname1",
+#'   choices = letters,
+#'   selected = "b",
+#'   keep_na = TRUE,
+#'   fixed = FALSE,
+#'   extra1 = "extraone"
+#' )
+#' filter_2 <- teal_slice(
+#'   dataname = "dataname1",
+#'   varname = "varname2",
+#'   choices = 1:10,
+#'   keep_na = TRUE,
+#'   selected = 2,
+#'   fixed = TRUE,
+#'   locked = FALSE,
+#'   extra2 = "extratwo"
+#' )
+#' filter_3 <- teal_slice(
+#'   dataname = "dataname2",
+#'   varname = "varname3",
+#'   choices = 1:10 / 10,
+#'   keep_na = TRUE,
+#'   selected = 0.2,
+#'   fixed = TRUE,
+#'   locked = FALSE,
+#'   extra1 = "extraone",
+#'   extra2 = "extratwo"
+#' )
+#'
+#' all_filters <- teal_slices(
+#'   filter_1,
+#'   filter_2,
+#'   filter_3,
+#'   exclude_varnames = list(
+#'     "dataname1" = "varname2"
+#'   )
+#' )
+#'
+#' is.teal_slices(all_filters)
+#' all_filters[1:2]
+#' c(all_filters[1], all_filters[2])
+#' print(all_filters)
 #' @export
-#' @keywords internal
 #'
-c.teal_slice <- function(...) {
-  ans <- unlist(list(...), recursive = FALSE)
-  if (anyDuplicated(names(ans))) {
-    ans <- ans[!duplicated(names(ans))]
-    warning("duplicate field names were discarded")
+teal_slices <- function(...,
+                        exclude_varnames = NULL,
+                        include_varnames = NULL,
+                        count_type = NULL,
+                        module_add = TRUE) {
+  slices <- list(...)
+  checkmate::assert_list(slices, types = "teal_slice", any.missing = FALSE)
+  slices_id <- shiny::isolate(vapply(slices, `[[`, character(1L), "id"))
+  if (any(duplicated(slices_id))) {
+    stop(
+      "Some teal_slice objects have the same id:\n",
+      toString(unique(slices_id[duplicated(slices_id)]))
+    )
   }
-  class(ans) <- c("teal_slice", class(ans))
-  ans
+  checkmate::assert_list(exclude_varnames, names = "named", types = "character", null.ok = TRUE, min.len = 1)
+  checkmate::assert_list(include_varnames, names = "named", types = "character", null.ok = TRUE, min.len = 1)
+  checkmate::assert_character(count_type, len = 1, null.ok = TRUE)
+  checkmate::assert_subset(count_type, choices = c("all", "none"), empty.ok = TRUE)
+  checkmate::assert_logical(module_add)
+
+  structure(
+    slices,
+    exclude_varnames = exclude_varnames,
+    include_varnames = include_varnames,
+    count_type = count_type,
+    module_add = module_add,
+    class = c("teal_slices", class(slices))
+  )
 }
 
-#' Convert a `teal_slice` object to a list
-#'
-#' Convert a `teal_slice` object to a list
-#' @param x `teal_slice` object
-#' @param ... additional arguments to the `teal_slice` function
-#' @return A list representation of the `teal_slice` object
+
+
+#' @rdname teal_slices
 #' @export
-#' @keywords internal
-#'
-as.list.teal_slice <- function(x, ...) {
-  formals <- formals(teal_slice)
-
-  x <- if (shiny::isRunning()) {
-    shiny::reactiveValuesToList(x)
-  } else {
-    shiny::isolate(shiny::reactiveValuesToList(x))
-  }
-
-  formal_args <- setdiff(names(formals), "...")
-  extra_args <- setdiff(names(x), formal_args)
-
-  x[c(formal_args, extra_args)]
-}
-
-
-#' Format `teal_slice` object for printing
-#'
-#' Format `teal_slice` object for printing
-#' @param x (`teal_slice`) object
-#' @param show_all (`logical(1)`) indicating whether to show all fields
-#' @param trim_lines (`logical(1)`) indicating whether to trim lines
-#' @param ... additional arguments to the [jsonify()] function
-#' @export
-#' @keywords internal
-#'
-format.teal_slice <- function(x, show_all = FALSE, trim_lines = TRUE, ...) {
-  checkmate::assert_flag(show_all)
-  checkmate::assert_flag(trim_lines)
-
-  x_list <- as.list(x)
-  if (!show_all) x_list <- Filter(Negate(is.null), x_list)
-
-  jsonify(x_list, trim_lines)
-}
-
-#' Print `teal_slice` object
-#'
-#' Print `teal_slice` object
-#' @param x (`teal_slice`) object
-#' @param ... additional arguments to the [format()] function
-#' @export
-#' @keywords internal
-#'
-print.teal_slice <- function(x, ...) {
-  cat(format(x, ...))
-}
-
-# teal_slices methods ----
-
-#' Method to Check if an Object is of Class `"teal_slices"`
-#'
-#' This method checks whether an object belongs to the class `"teal_slices"`.
-#' @param x An R object to be checked.
-#' @return A logical value indicating whether the object belongs to the class `"teal_slices"`.
 #' @keywords internal
 #'
 is.teal_slices <- function(x) { # nolint
   inherits(x, "teal_slices")
 }
 
-#' Convert a nested list to a `"teal_slices"` object
-#'
-#' This function is not overly robust, it covers cases that are encountered in teal at this time.
-#' @param x (`list`) to be converted
-#' @return A `"teal_slices"` object
-#'
+#' @rdname teal_slices
+#' @param x (`teal_slices`) object.
+#' @export
 #' @keywords internal
 #'
 as.teal_slices <- function(x) { # nolint
@@ -192,10 +192,8 @@ as.teal_slices <- function(x) { # nolint
 }
 
 
-#' Extract or Replace Parts of a `teal_slices` Object
-#' @param x (`teal_slices`) object
+#' @rdname teal_slices
 #' @param i (`character` or `numeric` or `logical`) indicating which elements to extract
-#' @return A `teal_slices` object
 #' @export
 #' @keywords internal
 #'
@@ -222,10 +220,7 @@ as.teal_slices <- function(x) { # nolint
 }
 
 
-# concatenate method for `teal_slices`
-#' Concatenate `teal_slices` Objects
-#' @param ... (`teal_slices`) objects to be concatenated
-#' @return A `teal_slices` object
+#' @rdname teal_slices
 #' @export
 #' @keywords internal
 #'
@@ -259,12 +254,10 @@ c.teal_slices <- function(...) {
   )
 }
 
-#' Format `teal_slices` Objects
-#' @param x (`teal_slices`) object
+
+#' @rdname teal_slices
 #' @param show_all (`logical(1)`) whether to show all slices
 #' @param trim_lines (`logical(1)`) whether to trim lines
-#' @param ... additional arguments passed to `jsonify`
-#' @return A `character` vector
 #' @export
 #' @keywords internal
 #'
@@ -279,9 +272,7 @@ format.teal_slices <- function(x, show_all = FALSE, trim_lines = TRUE, ...) {
   jsonify(slices_list, trim_lines)
 }
 
-#' Print `teal_slices` Objects
-#' @param x (`teal_slices`) object
-#' @param ... additional arguments passed to `format`
+#' @rdname teal_slices
 #' @export
 #' @keywords internal
 #'
@@ -289,9 +280,6 @@ print.teal_slices <- function(x, ...) {
   cat(format(x, ...), "\n")
 }
 
-# helpers ----
-
-# get field from all slices
 #' Extract unique values from field of `teal_slice` Objects.
 #' @param tss (`teal_slices`) object
 #' @param field (`character(1)`) `teal_slice` field name

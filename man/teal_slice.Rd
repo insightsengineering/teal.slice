@@ -2,7 +2,12 @@
 % Please edit documentation in R/teal_slice.R
 \name{teal_slice}
 \alias{teal_slice}
-\title{Create a \code{teal_slice} object}
+\alias{is.teal_slice}
+\alias{as.teal_slice}
+\alias{as.list.teal_slice}
+\alias{format.teal_slice}
+\alias{print.teal_slice}
+\title{Filter metadata}
 \usage{
 teal_slice(
   dataname,
@@ -19,6 +24,16 @@ teal_slice(
   title = NULL,
   ...
 )
+
+is.teal_slice(x)
+
+as.teal_slice(x)
+
+\method{as.list}{teal_slice}(x, ...)
+
+\method{format}{teal_slice}(x, show_all = FALSE, trim_lines = TRUE, ...)
+
+\method{print}{teal_slice}(x, ...)
 }
 \arguments{
 \item{dataname}{(\code{character(1)}) name of data set}
@@ -53,19 +68,28 @@ only applicable to \code{ChoicesFilterState} and \code{LogicalFilterState}}
 
 \item{title}{(optional \code{character(1)}) title of the filter. Ignored when \code{varname} is set.}
 
-\item{...}{additional arguments which can be handled by extensions of \code{teal.slice} classes.}
+\item{...}{in \code{teal_slice} method these are additional arguments which can be handled by extensions
+of \code{teal.slice} classes. In other methods these are further arguments passed to or from other methods.}
+
+\item{x}{(\code{teal.slice}) object.}
+
+\item{show_all}{(\code{logical(1)}) in \code{format}, \code{print} - indicating whether to show all fields.}
+
+\item{trim_lines}{(\code{logical(1)}) in \code{format}, \code{print} - indicating whether to trim lines.}
 }
 \value{
 \code{teal.slice} object
 }
 \description{
+Filter metadata
+}
+\details{
 \code{teal_slice} object fully describes filter state and can be used to create,
 modify, and delete a filter state. A \code{teal_slice} contains a number of common fields
 (all named arguments of \code{teal_slice}), some of which are mandatory, but only
 \code{dataname} and  either \code{varname} or \code{expr} must be specified, while the others have default
 values.
-}
-\details{
+
 Setting any of the other values to NULL means that those properties will not be modified
 (when setting an existing state) or that they will be determined by data (when creating new a new one).
 Entire object is \code{FilterState} class member and can be accessed with \code{FilterState$get_state()}.
@@ -105,23 +129,31 @@ the specific \code{ExperimentList} slot. To correctly specify filter for an \cod
 }
 
 \examples{
-teal_slice(
+x <- teal_slice(
   dataname = "data",
   id = "Female adults",
   expr = "SEX == 'F' & AGE >= 18",
   title = "Female adults"
 )
-teal_slice(
- dataname = "data",
- varname = "var",
- choices = c("F", "M", "U"),
- selected = "F",
- keep_na = TRUE,
- keep_inf = TRUE,
- fixed = FALSE,
- locked = FALSE,
- multiple = TRUE,
- id = "Gender",
- extra_arg = "extra"
+x2 <- teal_slice(
+  dataname = "data",
+  varname = "var",
+  choices = c("F", "M", "U"),
+  selected = "F",
+  keep_na = TRUE,
+  keep_inf = TRUE,
+  fixed = FALSE,
+  locked = FALSE,
+  multiple = TRUE,
+  id = "Gender",
+  extra_arg = "extra"
 )
+
+is.teal_slice(x)
+as.list(x)
+as.teal_slice(list(dataname = "a", varname = "var"))
+format(x, show_all = FALSE, trim_lines = TRUE)
+print(x, show_all = FALSE, trim_lines = TRUE)
+
 }
+\keyword{internal}

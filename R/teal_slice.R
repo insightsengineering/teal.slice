@@ -1,6 +1,6 @@
-#' Create a `teal_slice` object
+#' Filter metadata
 #'
-#' `teal_slice` object fully describes filter state and can be used to create,
+#' @details `teal_slice` object fully describes filter state and can be used to create,
 #' modify, and delete a filter state. A `teal_slice` contains a number of common fields
 #' (all named arguments of `teal_slice`), some of which are mandatory, but only
 #' `dataname` and  either `varname` or `expr` must be specified, while the others have default
@@ -59,18 +59,22 @@
 #' @param fixed (`logical(1)`) flag specifying whether to fix this filter state (forbid setting state)
 #' @param locked (`logical(1)`) flag specifying whether to lock this filter state (forbid disabling and removing)
 #' @param title (optional `character(1)`) title of the filter. Ignored when `varname` is set.
-#' @param ... additional arguments which can be handled by extensions of `teal.slice` classes.
+#' @param ... in `teal_slice` method these are additional arguments which can be handled by extensions
+#'  of `teal.slice` classes. In other methods these are further arguments passed to or from other methods.
+#' @param x (`teal.slice`) object.
+#' @param show_all (`logical(1)`) in `format`, `print` - indicating whether to show all fields.
+#' @param trim_lines (`logical(1)`) in `format`, `print` - indicating whether to trim lines.
 #'
 #' @return `teal.slice` object
 #'
 #' @examples
-#' teal_slice(
+#' x <- teal_slice(
 #'   dataname = "data",
 #'   id = "Female adults",
 #'   expr = "SEX == 'F' & AGE >= 18",
 #'   title = "Female adults"
 #' )
-#' teal_slice(
+#' x2 <- teal_slice(
 #'   dataname = "data",
 #'   varname = "var",
 #'   choices = c("F", "M", "U"),
@@ -83,6 +87,13 @@
 #'   id = "Gender",
 #'   extra_arg = "extra"
 #' )
+#'
+#' is.teal_slice(x)
+#' as.list(x)
+#' as.teal_slice(list(dataname = "a", varname = "var"))
+#' format(x, show_all = FALSE, trim_lines = TRUE)
+#' print(x, show_all = FALSE, trim_lines = TRUE)
+#'
 #' @export
 teal_slice <- function(dataname,
                        varname,
@@ -142,99 +153,150 @@ teal_slice <- function(dataname,
   }
 }
 
-#' Manage filter state(s).
-#'
-#' `teal_slices()` collates multiple `teal_slice` objects into `teal_slices`,
-#' a complete filter specification. This is used by all classes above `FilterState`
-#' as well as `filter_panel_api` wrapper functions.
-#' `teal_slices` also specifies which variables cannot be filtered
-#' and how observations are tallied, which is resolved by `FilterStates`.
-#'
-#' `include_varnames` and `exclude_varnames` in attributes in `teal_slices`
-#' determine which variables can have filters assigned.
-#' The former enumerates allowed variables, the latter enumerates forbidden values.
-#' Since these can be mutually exclusive in some cases, they cannot both be set in one `teal_slices` object.
-#'
-#' @param ... any number of `teal_slice` objects
-#' @param include_varnames,exclude_varnames `named list`s of `character` vectors where list names
-#'  match names of data sets and vector elements match variable names in respective data sets;
-#'  specify which variables are allowed to be filtered; see `Details`
-#' @param count_type `character(1)` string specifying how observations are tallied by these filter states.
-#'  Possible options:
-#'  - `"all"` to have counts of single `FilterState` to show number of observation in filtered
-#'   and unfiltered dataset.
-#'  - `"none"` to have counts of single `FilterState` to show unfiltered number only.
-#' @param module_add `logical(1)` logical flag specifying whether the user will be able to add new filters
-#' @return
-#' `teal_slices`, which is an unnamed list of `teal_slice` objects.
-#'
-#' @examples
-#' filter_1 <- teal_slice(
-#'   dataname = "dataname1",
-#'   varname = "varname1",
-#'   choices = letters,
-#'   selected = "b",
-#'   keep_na = TRUE,
-#'   fixed = FALSE,
-#'   extra1 = "extraone"
-#' )
-#' filter_2 <- teal_slice(
-#'   dataname = "dataname1",
-#'   varname = "varname2",
-#'   choices = 1:10,
-#'   keep_na = TRUE,
-#'   selected = 2,
-#'   fixed = TRUE,
-#'   locked = FALSE,
-#'   extra2 = "extratwo"
-#' )
-#' filter_3 <- teal_slice(
-#'   dataname = "dataname2",
-#'   varname = "varname3",
-#'   choices = 1:10 / 10,
-#'   keep_na = TRUE,
-#'   selected = 0.2,
-#'   fixed = TRUE,
-#'   locked = FALSE,
-#'   extra1 = "extraone",
-#'   extra2 = "extratwo"
-#' )
-#'
-#' all_filters <- teal_slices(
-#'   filter_1,
-#'   filter_2,
-#'   filter_3,
-#'   exclude_varnames = list(
-#'     "dataname1" = "varname2"
-#'   )
-#' )
+#' @rdname teal_slice
 #' @export
-teal_slices <- function(...,
-                        exclude_varnames = NULL,
-                        include_varnames = NULL,
-                        count_type = NULL,
-                        module_add = TRUE) {
-  slices <- list(...)
-  checkmate::assert_list(slices, types = "teal_slice", any.missing = FALSE)
-  slices_id <- shiny::isolate(vapply(slices, `[[`, character(1L), "id"))
-  if (any(duplicated(slices_id))) {
-    stop(
-      "Some teal_slice objects have the same id:\n",
-      toString(unique(slices_id[duplicated(slices_id)]))
-    )
-  }
-  checkmate::assert_list(exclude_varnames, names = "named", types = "character", null.ok = TRUE, min.len = 1)
-  checkmate::assert_list(include_varnames, names = "named", types = "character", null.ok = TRUE, min.len = 1)
-  checkmate::assert_character(count_type, len = 1, null.ok = TRUE)
-  checkmate::assert_subset(count_type, choices = c("all", "none"), empty.ok = TRUE)
-  checkmate::assert_logical(module_add)
+#' @keywords internal
+#'
+is.teal_slice <- function(x) { # nolint
+  inherits(x, "teal_slice")
+}
 
-  structure(
-    slices,
-    exclude_varnames = exclude_varnames,
-    include_varnames = include_varnames,
-    count_type = count_type,
-    module_add = module_add,
-    class = c("teal_slices", class(slices))
-  )
+#' @rdname teal_slice
+#' @export
+#' @keywords internal
+#'
+as.teal_slice <- function(x) { # nolint
+  checkmate::assert_list(x, names = "named")
+  fun <- teal_slice
+  do.call(fun, x)
+}
+
+#' @rdname teal_slice
+#' @export
+#' @keywords internal
+#'
+as.list.teal_slice <- function(x, ...) {
+  formals <- formals(teal_slice)
+
+  x <- if (shiny::isRunning()) {
+    shiny::reactiveValuesToList(x)
+  } else {
+    shiny::isolate(shiny::reactiveValuesToList(x))
+  }
+
+  formal_args <- setdiff(names(formals), "...")
+  extra_args <- setdiff(names(x), formal_args)
+
+  x[c(formal_args, extra_args)]
+}
+
+
+#' @rdname teal_slice
+#' @export
+#' @keywords internal
+#'
+format.teal_slice <- function(x, show_all = FALSE, trim_lines = TRUE, ...) {
+  checkmate::assert_flag(show_all)
+  checkmate::assert_flag(trim_lines)
+
+  x_list <- as.list(x)
+  if (!show_all) x_list <- Filter(Negate(is.null), x_list)
+
+  jsonify(x_list, trim_lines)
+}
+
+#' @rdname teal_slice
+#' @export
+#' @keywords internal
+#'
+print.teal_slice <- function(x, ...) {
+  cat(format(x, ...))
+}
+
+
+# format utils -----
+
+#' Convert a list to a justified JSON string
+#'
+#' This function takes a list and converts it to a JSON string. The resulting JSON string is then
+#' justified to improve readability. Additionally, the function has an option to trim the lines of
+#' the JSON string.
+#'
+#' @param x `list` containing JSON strings.
+#' @param trim_lines (`function`) or not to trim lines of the JSON string (default is FALSE).
+#' @return A justified JSON string representation of the input list.
+#' @keywords internal
+#'
+jsonify <- function(x, trim_lines) {
+  checkmate::assert_list(x)
+
+  x_json <- to_json(x)
+  x_json_justified <- justify_json(x_json)
+  if (trim_lines) x_json_justified <- trim_lines(x_json_justified)
+  paste(x_json_justified, collapse = "\n")
+}
+
+#' Converts a list to a JSON string
+#'
+#' Converts a list representation of `teal_slices` into a JSON string. This function is used by the
+#' `format` method for `teal_slices` objects.
+#' @param x (`list`) representation of `teal_slices` object.
+#' @keywords internal
+#'
+to_json <- function(x) {
+  no_unbox <- function(x) {
+    vars <- c("selected", "choices")
+    if (is.list(x)) {
+      for (var in vars) {
+        if (!is.null(x[[var]])) x[[var]] <- I(x[[var]])
+      }
+      lapply(x, no_unbox)
+    } else {
+      x
+    }
+  }
+
+  jsonlite::toJSON(no_unbox(x), pretty = TRUE, auto_unbox = TRUE, digits = 16, null = "null")
+}
+
+#' Justify Colons in JSON String
+#'
+#' This function takes a JSON string as input and returns a modified version of the input where colons are justified in each line.
+#'
+#' @param json (`character(1)`) representing the input JSON.
+#'
+#' @return A character string with justified colons in each line of the JSON.
+#' @keywords internal
+#'
+justify_json <- function(json) {
+  format_name <- function(name, name_width) {
+    if (nchar(name) == 1 || nchar(gsub("\\s", "", name)) <= 2) {
+      return(name)
+    } else if (grepl("slices|attributes", name)) {
+      paste0(name, ":")
+    } else {
+      paste(format(name, width = name_width), ":")
+    }
+  }
+  json_lines <- strsplit(json, "\n")[[1]]
+  json_lines_split <- regmatches(json_lines, regexpr(":", json_lines), invert = TRUE)
+  name_width <- max(unlist(regexpr(":", json_lines))) - 1
+  vapply(json_lines_split, function(x) paste0(format_name(x[1], name_width), stats::na.omit(x[2])), character(1))
+}
+
+#' Justify Colons in JSON String
+#'
+#' This function takes a JSON string as input and returns a modified version of the input where colons are justified in each line.
+#'
+#' @param json A character string representing the input JSON.
+#'
+#' @return A character string with justified colons in each line of the JSON.
+#' @keywords internal
+#'
+trim_lines <- function(x) {
+  name_width <- max(unlist(gregexpr(":", x))) - 1
+  trim_position <- name_width + 17L
+  x_trim <- substr(x, 1, trim_position)
+  substr(x_trim, trim_position - 2, trim_position) <- "..."
+  x_trim
 }
