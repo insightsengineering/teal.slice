@@ -9,7 +9,7 @@
 #'   If it is set to `reactive(NULL)` then counts based on filtered
 #'   dataset are not shown.
 #' @param slice (`teal_slice`)\cr
-#'   object created using [teal_slice()] or [teal_slice()].
+#'   object created using [teal_slice()].
 #' @param extract_type (`character(0)`, `character(1)`)\cr
 #'   specifying whether condition calls should be prefixed by `dataname`. Possible values:
 #' \itemize{
