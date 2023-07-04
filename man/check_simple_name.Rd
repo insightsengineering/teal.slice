@@ -23,10 +23,10 @@ teal.slice:::check_simple_name("ADSL_modified")
 teal.slice:::check_simple_name("ADSL_2")
 teal.slice:::check_simple_name("a1")
 # the following fail
-\dontrun{
-teal.slice:::check_simple_name("1a")
-teal.slice:::check_simple_name("ADSL.modified")
-teal.slice:::check_simple_name("a1...")
+if (interactive()) {
+  teal.slice:::check_simple_name("1a")
+  teal.slice:::check_simple_name("ADSL.modified")
+  teal.slice:::check_simple_name("a1...")
 }
 }
 \keyword{internal}

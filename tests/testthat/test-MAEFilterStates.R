@@ -14,7 +14,7 @@ testthat::test_that("constructor accepts a MultiAssayExperiment", {
 # get_filter_state ----
 testthat::test_that("get_filter_state returns `teal_slices` with include_varname by default and count_type=all", {
   filter_states <- MAEFilterStates$new(data = miniACC, dataname = "miniACC")
-  fs <- filter_settings(
+  fs <- teal_slices(
     count_type = "all",
     include_varnames = list(miniACC = colnames(SummarizedExperiment::colData(miniACC)))
   )
@@ -29,8 +29,8 @@ testthat::test_that("get_filter_state returns `teal_slices` with include_varname
 testthat::test_that("get_call returns subsetByColData call with varnames prefixed by dataname$", {
   filter_states <- MAEFilterStates$new(data = miniACC, dataname = "miniacc")
   filter_states$set_filter_state(
-    filter_settings(
-      filter_var(
+    teal_slices(
+      teal_slice(
         dataname = "miniacc", varname = "years_to_birth", selected = c(18, 60), keep_na = FALSE, keep_inf = FALSE
       )
     )

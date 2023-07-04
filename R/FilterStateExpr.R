@@ -14,7 +14,7 @@
 #'
 #' @examples
 #' filter_state <- teal.slice:::FilterStateExpr$new(
-#'   slice = filter_expr(
+#'   slice = teal_slice(
 #'     dataname = "x",
 #'     id = "FA",
 #'     title = "Adult females",
@@ -23,15 +23,14 @@
 #' )
 #' filter_state$get_call()
 #'
-#' \dontrun{
 #' # working filter in an app
 #' library(shiny)
 #' library(shinyjs)
 #'
 #' ui <- fluidPage(
 #'   useShinyjs(),
-#'   include_css_files(pattern = "filter-panel"),
-#'   include_js_files(pattern = "count-bar-labels"),
+#'   teal.slice:::include_css_files(pattern = "filter-panel"),
+#'   teal.slice:::include_js_files(pattern = "count-bar-labels"),
 #'   column(4, div(
 #'     h4("ChoicesFilterState"),
 #'     filter_state$ui("fs")
@@ -56,7 +55,6 @@
 #' if (interactive()) {
 #'   shinyApp(ui, server)
 #' }
-#' }
 FilterStateExpr <- R6::R6Class( # nolint
   classname = "FilterStateExpr",
   # public methods ----
@@ -64,7 +62,7 @@ FilterStateExpr <- R6::R6Class( # nolint
     #' @description
     #' Initialize a `FilterStateExpr` object
     #' @param slice (`teal_slice_expr`)\cr
-    #'   object created by [filter_expr()]
+    #'   object created by [teal_slice()]
     #' @return `FilterStateExpr`
     initialize = function(slice) {
       checkmate::assert_class(slice, "teal_slice_expr")

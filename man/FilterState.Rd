@@ -89,7 +89,7 @@ If it is set to \code{reactive(NULL)} then counts based on filtered
 dataset are not shown.}
 
 \item{\code{slice}}{(\code{teal_slice})\cr
-object created by \code{\link[=filter_var]{filter_var()}}}
+object created by \code{\link[=teal_slice]{teal_slice()}}}
 
 \item{\code{extract_type}}{(\code{character(0)}, \code{character(1)})\cr
 specifying whether condition calls should be prefixed by \code{dataname}. Possible values:

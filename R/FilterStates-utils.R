@@ -31,8 +31,7 @@
 #'   data = df,
 #'   dataname = "DF"
 #' )
-#' \dontrun{
-#' shinyApp(
+#' app <- shinyApp(
 #'   ui = fluidPage(
 #'     actionButton("clear", span(icon("xmark"), "Remove all filters")),
 #'     rf$ui_add(id = "add"),
@@ -48,6 +47,8 @@
 #'     observeEvent(input$clear, rf$state_list_empty())
 #'   }
 #' )
+#' if (interactive()) {
+#'   runApp(app)
 #' }
 init_filter_states <- function(data,
                                data_reactive = reactive(NULL),

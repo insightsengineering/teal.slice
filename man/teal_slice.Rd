@@ -2,29 +2,18 @@
 % Please edit documentation in R/teal_slice.R
 \name{teal_slice}
 \alias{teal_slice}
-\alias{filter_var}
-\alias{filter_expr}
-\alias{filter_settings}
 \alias{is.teal_slice}
 \alias{as.teal_slice}
-\alias{c.teal_slice}
+\alias{as.list.teal_slice}
 \alias{format.teal_slice}
 \alias{print.teal_slice}
-\alias{is.teal_slices}
-\alias{as.teal_slices}
-\alias{[.teal_slices}
-\alias{c.teal_slices}
-\alias{format.teal_slices}
-\alias{print.teal_slices}
-\alias{slices_field}
-\alias{slices_to_list}
-\alias{slices_store}
-\alias{slices_restore}
-\title{Manage filter state(s).}
+\title{Filter metadata}
 \usage{
-filter_var(
+teal_slice(
   dataname,
   varname,
+  id,
+  expr,
   choices = NULL,
   selected = NULL,
   keep_na = NULL,
@@ -32,220 +21,141 @@ filter_var(
   fixed = FALSE,
   locked = FALSE,
   multiple = TRUE,
-  id,
+  title = NULL,
   ...
-)
-
-filter_expr(dataname, id, title, expr, locked = FALSE, ...)
-
-filter_settings(
-  ...,
-  exclude_varnames = NULL,
-  include_varnames = NULL,
-  count_type = NULL,
-  module_add = TRUE
 )
 
 is.teal_slice(x)
 
 as.teal_slice(x)
 
-\method{c}{teal_slice}(...)
+\method{as.list}{teal_slice}(x, ...)
 
 \method{format}{teal_slice}(x, show_all = FALSE, trim_lines = TRUE, ...)
 
 \method{print}{teal_slice}(x, ...)
-
-is.teal_slices(x)
-
-as.teal_slices(x)
-
-\method{[}{teal_slices}(x, i)
-
-\method{c}{teal_slices}(...)
-
-\method{format}{teal_slices}(x, show_all = FALSE, trim_lines = TRUE, ...)
-
-\method{print}{teal_slices}(x, ...)
-
-slices_field(tss, field)
-
-slices_to_list(tss)
-
-slices_store(tss, file)
-
-slices_restore(file)
 }
 \arguments{
-\item{dataname}{\code{character(1)} name of data set}
+\item{dataname}{(\code{character(1)}) name of data set}
 
-\item{varname}{\code{character(1)} name of variable}
+\item{varname}{(\code{character(1)}) name of variable}
 
-\item{choices}{optional vector specifying allowed choices;
-possibly a subset of values in data; type and size depends on variable type}
+\item{id}{(\code{character(1)}) identifier of the filter. Must be specified when \code{expr} is set.
+When \code{varname} is specified then \code{id} is set to a \code{"{dataname} {varname}"} by default.}
 
-\item{selected}{optional vector specifying selection;
-type and size depends on variable type}
+\item{expr}{(\code{character(1)}) string providing a logical expression.
+Must be a valid R expression which can be evaluated in the context of the data set.
+For a \code{data.frame} \code{var == "x"} is sufficient, but \code{MultiAssayExperiment::subsetByColData}
+requires \code{dataname} prefix, \emph{e.g.} \code{data$var == "x"}.}
 
-\item{keep_na}{\code{logical(1)} or \code{NULL} optional logical flag specifying whether to keep missing values}
+\item{choices}{(optional \code{vector}) specifying allowed choices;
+When specified it should be a subset of values in variable denoted by \code{varname};
+Type and size depends on variable type.}
 
-\item{keep_inf}{\code{logical(1)} or \code{NULL} optional logical flag specifying whether to keep infinite values}
+\item{selected}{(optional \code{vector}) of selected values from \code{choices};
+Type and size depends on variable type.}
 
-\item{fixed}{\code{logical(1)} logical flag specifying whether to fix this filter state (forbid setting state)}
+\item{keep_na}{(optional \code{logical(1)}) flag specifying whether to keep missing values}
 
-\item{locked}{\code{logical(1)} logical flag specifying whether to lock this filter state (forbid disabling and removing)}
+\item{keep_inf}{(optional \code{logical(1)}) flag specifying whether to keep infinite values}
 
-\item{multiple}{\code{logical(1)} logical flag specifying whether more than one value can be selected;
+\item{fixed}{(\code{logical(1)}) flag specifying whether to fix this filter state (forbid setting state)}
+
+\item{locked}{(\code{logical(1)}) flag specifying whether to lock this filter state (forbid disabling and removing)}
+
+\item{multiple}{(optional \code{logical(1)}) flag specifying whether more than one value can be selected;
 only applicable to \code{ChoicesFilterState} and \code{LogicalFilterState}}
 
-\item{id}{\code{character(1)} identifier of the filter}
+\item{title}{(optional \code{character(1)}) title of the filter. Ignored when \code{varname} is set.}
 
-\item{...}{for \code{filter_var} and \code{filter_expr} any number of additional fields given as \code{name:value} pairs\cr
-for \code{filter_settings} any number of \code{teal_slice} objects\cr
-for other functions arguments passed to other methods}
+\item{...}{in \code{teal_slice} method these are additional arguments which can be handled by extensions
+of \code{teal.slice} classes. In other methods these are further arguments passed to or from other methods.}
 
-\item{title}{\code{character(1)} title of the filter}
+\item{x}{(\code{teal.slice}) object.}
 
-\item{expr}{\code{character(1)} string providing a logical expression;
-must be able to be evaluated without error by the appropriate subsetting function:
-for a \code{data.frame} \code{var1 == "x" & var2 > 0} is sufficient but
-\code{MultiAssayExperiment::subsetByColData} requires \code{data$var1 == "x" & data$var2 > 0}}
+\item{show_all}{(\code{logical(1)}) indicating whether to show all fields. If set to \code{FALSE},
+only non-NULL elements will be printed.}
 
-\item{include_varnames, exclude_varnames}{\verb{named list}s of \code{character} vectors where list names
-match names of data sets and vector elements match variable names in respective data sets;
-specify which variables are allowed to be filtered; see \code{Details}}
-
-\item{count_type}{\code{character(1)} string specifying how observations are tallied by these filter states.
-Possible options:
-\itemize{
-\item \code{"all"} to have counts of single \code{FilterState} to show number of observation in filtered
-and unfiltered dataset.
-\item \code{"none"} to have counts of single \code{FilterState} to show unfiltered number only.
-}}
-
-\item{module_add}{\code{logical(1)} logical flag specifying whether the user will be able to add new filters}
-
-\item{show_all}{\code{logical(1)} specifying whether NULL elements should also be printed}
-
-\item{trim_lines}{\code{logical(1)} specifying whether to trim lines when printing}
-
-\item{tss}{\code{teal_slices}}
-
-\item{field}{\code{character(1)} name of \code{teal_slice} element}
-
-\item{file}{\code{character(1)} path to \code{teal_slices} save to or load \code{teal_slices} from}
+\item{trim_lines}{(\code{logical(1)}) in \code{format}, \code{print} - indicating whether to trim lines.}
 }
 \value{
-\code{filter_var} returns object of class \code{teal_slice}, which is a named list.
-\code{filter_expr} returns object of class \code{teal_slice_expr}, which inherits from \code{teal_slice}.
-\code{filter_settings} returns object of class \code{teal_slices}, which is an unnamed list of \code{teal_slice} objects.
+\code{teal.slice} object
 }
 \description{
-Functions for passing filter state information between objects.
+Filter metadata
 }
 \details{
-These functions create and manage filter state specifications.
-A single filter state can be fully described by a \code{teal_slice} object and such
-objects will be used to create, modify, and delete a filter state.
+\code{teal_slice} object fully describes filter state and can be used to create,
+modify, and delete a filter state. A \code{teal_slice} contains a number of common fields
+(all named arguments of \code{teal_slice}), some of which are mandatory, but only
+\code{dataname} and  either \code{varname} or \code{expr} must be specified, while the others have default
+values.
 
-A \code{teal_slice} contains a number of common fields (all named arguments of \code{filter_var}),
-some of which are mandatory, but only \code{dataname} and \code{varname} must be specified,
-while the others have default values.
 Setting any of the other values to NULL means that those properties will not be modified
 (when setting an existing state) or that they will be determined by data (when creating new a new one).
-Each of the common fields corresponds to one private field in \code{FilterState}
-where it is stored and from where it is retrieved when calling \code{FiterState$get_state}.
+Entire object is \code{FilterState} class member and can be accessed with \code{FilterState$get_state()}.
 
-A \code{teal_slice} can also contain any number of additional fields, passed to \code{...}
-as \code{name:value} pairs. These are collated into a list and stored in the
-\code{private$extras} field in \code{FilterState}.
+\code{teal_slice()} returns two types of \code{teal_slice} objects:
+\enumerate{
+\item \code{teal_slice_var} - returned when \code{varname} is set. The object keep information about the
+variable name, possible choices, and selected values and is used to create an interactive
+filter.
+\item \code{teal_slice_expr} - returned when \code{expr} is set. The object keeps information about the
+expression and is used to create a static filter which evaluates always the same expression.
+When \code{expr} is specified \code{varname}, \code{choices}, \code{selected}, \code{multiple}, \code{keep_na}, \code{keep_inf}
+are ignored.
+}
 
 All \code{teal_slice} fields can be passed as arguments to \code{FilterState} constructors.
-A \code{teal_slice} can be passed to \code{FilterState$set_state}, which will modify the state.
+A \code{teal_slice} object can be passed to \code{FilterState$set_state}, which will modify the state.
 However, once a \code{FilterState} is created, only the \strong{mutable} features can be set with a \code{teal_slice}:
 \code{selected}, \code{keep_na} and \code{keep_inf}.
 
 Special consideration is given to two fields: \code{fixed} and \code{locked}.
-These are always immutable logical flags that default to FALSE.
-In a \code{FilterState} instantiated with \code{fixed = TRUE} the features \code{selected}, \code{keep_na}, \code{keep_inf}
-cannot be changed.
-
-\code{filter_var} creates a \code{teal_slice} object, which specifies a filter for a single variable,
-passed to and resolved by \code{FilterState} objects.
-\code{filter_settings} collates multiple \code{teal_slice} objects into \code{teal_slices},
-a complete filter specification. This is used by all classes above \code{FilterState}
-as well as \code{filter_panel_api} wrapper functions.
-\code{teal_slices} also specifies which variables cannot be filtered
-and how observations are tallied, which is resolved by \code{FilterStates}.
-
-\code{include_varnames} and \code{exclude_varnames} in attributes in \code{teal_slices}
-determine which variables can have filters assigned.
-The former enumerates allowed variables, the latter enumerates forbidden values.
-Since these can be mutually exclusive in some cases, they cannot both be set in one \code{teal_slices} object.
+These are always immutable logical flags that default to \code{FALSE}.
+In a \code{FilterState} instantiated with \code{fixed = TRUE} the features
+\code{selected}, \code{keep_na}, \code{keep_inf} cannot be changed.
 }
 \section{Filters in \code{SumarizedExperiment} and \code{MultiAssayExperiment} objects}{
 
 
 To establish a filter on a column in a \code{data.frame}, \code{dataname} and \code{varname} are sufficient.
-Filter states created created for \code{SummarizedExperiments} require more information
-as each variable is either located in the \code{rowData} or \code{colData} slots.
-Thus, \code{teal_slice} objects that refer to such filter states must also contain the field \code{arg}
-that specifies "subset" for variables in \code{rowData} and "select" for those in \code{colData}.
-
-Likewise, observations in a \code{MultiAssayExpeeiment} can be filtered based on the content of the \code{colData} slot
-or based on the contents of \code{rowData} and \code{colData} of any of its experiments. Hence, another field is necessary.
-\code{teal_slice} objects referring to \code{MultiAssayExperiment} objects must contain the field \code{datalabel}
-that names either an experiment (as listed in \verb{experimentList(<MAE>)}) or "subjects"
-if it refers to the \code{MultiAssaysExperiment} \code{colData}. They must \strong{also} specify \code{arg} as "subset" or "select"
-for experiments and as "y" for \code{colData}.
+For filters referring to \code{colData} of \code{MultiAssayExperiment} object (subjects filter) no extra arguments are needed.
+Filter states  created for \code{experiments} require more information as each variable is either located in
+the specific \code{ExperimentList} slot. To correctly specify filter for an \code{SummarizedExperiment} one must set:
+\itemize{
+\item \code{experiment} (\code{character(1)}) name of the experiment in \code{MultiAssayExperiment} object.
+\item \code{arg} (\code{"subset"}  or \verb{"select}) to refer to the particular argument in the \code{\link[=subset]{subset()}} function for
+\code{SummarizedExperiment}.
+}
 }
 
 \examples{
-filter_1 <- filter_var(
-  dataname = "dataname1",
-  varname = "varname1",
-  choices = letters,
-  selected = "b",
-  keep_na = TRUE,
-  fixed = FALSE,
-  extra1 = "extraone"
-)
-filter_2 <- filter_var(
-  dataname = "dataname1",
-  varname = "varname2",
-  choices = 1:10,
-  keep_na = TRUE,
-  selected = 2,
-  fixed = TRUE,
-  locked = FALSE,
-  extra2 = "extratwo"
-)
-filter_3 <- filter_var(
-  dataname = "dataname2",
-  varname = "varname3",
-  choices = 1:10 / 10,
-  keep_na = TRUE,
-  selected = 0.2,
-  fixed = TRUE,
-  locked = FALSE,
-  extra1 = "extraone",
-  extra2 = "extratwo"
-)
-
-all_filters <- filter_settings(
-  filter_1,
-  filter_2,
-  filter_3,
-  exclude_varnames = list(
-    "dataname1" = "varname2"
-  )
-)
-
-filter_expr(
+x1 <- teal_slice(
   dataname = "data",
-  id = "FA",
-  title = "Female adults",
-  expr = "SEX == 'F' & AGE >= 18"
+  id = "Female adults",
+  expr = "SEX == 'F' & AGE >= 18",
+  title = "Female adults"
 )
+x2 <- teal_slice(
+  dataname = "data",
+  varname = "var",
+  choices = c("F", "M", "U"),
+  selected = "F",
+  keep_na = TRUE,
+  keep_inf = TRUE,
+  fixed = FALSE,
+  locked = FALSE,
+  multiple = TRUE,
+  id = "Gender",
+  extra_arg = "extra"
+)
+
+is.teal_slice(x1)
+as.list(x1)
+as.teal_slice(list(dataname = "a", varname = "var"))
+format(x1, show_all = FALSE, trim_lines = TRUE)
+print(x1, show_all = FALSE, trim_lines = TRUE)
+
 }
 \keyword{internal}

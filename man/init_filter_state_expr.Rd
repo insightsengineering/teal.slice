@@ -8,10 +8,10 @@ init_filter_state_expr(slice)
 }
 \arguments{
 \item{slice}{(\code{teal_slice_expr})\cr
-object created using \code{\link[=filter_expr]{filter_expr()}}. \code{teal_slice} is stored
+object created using \code{\link[=teal_slice]{teal_slice()}}. \code{teal_slice} is stored
 in the class and \code{set_state} directly manipulates values within \code{teal_slice}. \code{get_state}
 returns \code{teal_slice} object which can be reused in other places. Beware, that \code{teal_slice}
-is an immutable object which means that changes in particular object are automatically
+is a \code{reactiveValues} which means that changes in particular object are automatically
 reflected in all places which refer to the same \code{teal_slice}.}
 }
 \value{

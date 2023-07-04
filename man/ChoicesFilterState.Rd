@@ -10,11 +10,11 @@ Manages choosing elements from a set
 \examples{
 filter_state <- teal.slice:::ChoicesFilterState$new(
   x = c(LETTERS, NA),
-  slice = filter_var(varname = "x", dataname = "data")
+  slice = teal_slice(varname = "x", dataname = "data")
 )
 shiny::isolate(filter_state$get_call())
 filter_state$set_state(
-  filter_var(
+  teal_slice(
     dataname = "data",
     varname = "x",
     selected = "A",
@@ -23,24 +23,23 @@ filter_state$set_state(
 )
 shiny::isolate(filter_state$get_call())
 
-\dontrun{
 # working filter in an app
 library(shiny)
 library(shinyjs)
 
 data_choices <- c(sample(letters[1:4], 100, replace = TRUE), NA)
 attr(data_choices, "label") <- "lowercase letters"
-fs <- ChoicesFilterState$new(
+fs <- teal.slice:::ChoicesFilterState$new(
   x = data_choices,
-  slice = filter_var(
+  slice = teal_slice(
     dataname = "data", varname = "variable", selected = c("a", "b"), keep_na = TRUE
   )
 )
 
 ui <- fluidPage(
   useShinyjs(),
-  include_css_files(pattern = "filter-panel"),
-  include_js_files(pattern = "count-bar-labels"),
+  teal.slice:::include_css_files(pattern = "filter-panel"),
+  teal.slice:::include_js_files(pattern = "count-bar-labels"),
   column(4, div(
     h4("ChoicesFilterState"),
     fs$ui("fs")
@@ -72,38 +71,37 @@ server <- function(input, output, session) {
   observeEvent(
     input$button1_choices,
     fs$set_state(
-      filter_var(dataname = "data", varname = "variable", keep_na = FALSE)
+      teal_slice(dataname = "data", varname = "variable", keep_na = FALSE)
     )
   )
   observeEvent(
     input$button2_choices,
     fs$set_state(
-      filter_var(dataname = "data", varname = "variable", keep_na = TRUE)
+      teal_slice(dataname = "data", varname = "variable", keep_na = TRUE)
     )
   )
   observeEvent(
     input$button3_choices,
     fs$set_state(
-      filter_var(dataname = "data", varname = "variable", selected = c("a", "b"))
+      teal_slice(dataname = "data", varname = "variable", selected = c("a", "b"))
     )
   )
   observeEvent(
     input$button4_choices,
     fs$set_state(
-      filter_var(dataname = "data", varname = "variable", selected = character(0), keep_na = TRUE)
+      teal_slice(dataname = "data", varname = "variable", selected = character(0), keep_na = TRUE)
     )
   )
   observeEvent(
     input$button0_choices,
     fs$set_state(
-      filter_var(dataname = "data", varname = "variable", selected = c("a", "c"), keep_na = TRUE)
+      teal_slice(dataname = "data", varname = "variable", selected = c("a", "c"), keep_na = TRUE)
     )
   )
 }
 
 if (interactive()) {
   shinyApp(ui, server)
-}
 }
 
 }
@@ -159,10 +157,10 @@ If it is set to \code{reactive(NULL)} then counts based on filtered
 dataset are not shown.}
 
 \item{\code{slice}}{(\code{teal_slice})\cr
-object created using \code{\link[=filter_var]{filter_var()}}. \code{teal_slice} is stored
+object created using \code{\link[=teal_slice]{teal_slice()}}. \code{teal_slice} is stored
 in the class and \code{set_state} directly manipulates values within \code{teal_slice}. \code{get_state}
 returns \code{teal_slice} object which can be reused in other places. Beware, that \code{teal_slice}
-is an immutable object which means that changes in particular object are automatically
+is a \code{reactiveValues} which means that changes in particular object are automatically
 reflected in all places which refer to the same \code{teal_slice}.}
 
 \item{\code{extract_type}}{(\code{character(0)}, \code{character(1)})\cr
