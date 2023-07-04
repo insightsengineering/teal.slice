@@ -19,7 +19,7 @@ to access filter states and their corresponding attributes.
 }
 \examples{
 if (interactive()) {
-# Restore a teal_slices object from a file
-tss_restored <- slices_restore("path/to/file.json")
+  # Restore a teal_slices object from a file
+  tss_restored <- slices_restore("path/to/file.json")
 }
 }

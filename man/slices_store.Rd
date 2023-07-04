@@ -29,8 +29,8 @@ tss <- teal_slices(
 )
 
 if (interactive()) {
- # Store the teal_slices object to a file
- slices_store(tss, "path/to/file.json")
+  # Store the teal_slices object to a file
+  slices_store(tss, "path/to/file.json")
 }
 
 }

@@ -18,9 +18,9 @@ Raises an error message if not and says which elements are not in the allowed \c
 \donttest{
 teal.slice:::check_in_subset(c("a", "b"), c("a", "b", "c"))
 if (interactive()) {
-teal.slice:::check_in_subset(c("a", "b"), c("b", "c"), pre_msg = "Error: ")
-# truncated because too long
-teal.slice:::check_in_subset("a", LETTERS, pre_msg = "Error: ")
+  teal.slice:::check_in_subset(c("a", "b"), c("b", "c"), pre_msg = "Error: ")
+  # truncated because too long
+  teal.slice:::check_in_subset("a", LETTERS, pre_msg = "Error: ")
 }
 }
 }

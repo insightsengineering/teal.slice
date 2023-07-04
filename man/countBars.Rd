@@ -77,7 +77,7 @@ app <- shinyApp(
   }
 )
 if (interactive()) {
- runApp(app)
+  runApp(app)
 }
 }
 \keyword{internal}

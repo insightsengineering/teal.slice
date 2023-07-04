@@ -10,7 +10,8 @@
 #' The former enumerates allowed variables, the latter enumerates forbidden values.
 #' Since these can be mutually exclusive in some cases, they cannot both be set in one `teal_slices` object.
 #'
-#' @param ... any number of `teal_slice` objects. For `print` and `format`, additional arguments passed to other functions.
+#' @param ... any number of `teal_slice` objects. For `print` and `format`,
+#'  additional arguments passed to other functions.
 #' @param include_varnames,exclude_varnames (`named list`s of `character`) where list names
 #'  match names of data sets and vector elements match variable names in respective data sets;
 #'  specify which variables are allowed to be filtered; see `Details`
@@ -292,7 +293,8 @@ slices_field <- function(tss, field) {
 
 #' Convert `teal_slices` to list
 #' @param tss (`teal_slices`) object
-#' @return A list of length 2, the first element holding all `teal_slice` contained in `tss` (converted to list) and the second element holding the all non-NULL attributes of `tss`.
+#' @return A list of length 2, the first element holding all `teal_slice` contained in `tss`
+#'  (converted to list) and the second element holding the all non-NULL attributes of `tss`.
 #' @keywords internal
 #'
 slices_to_list <- function(tss) {
