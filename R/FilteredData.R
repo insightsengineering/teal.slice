@@ -481,16 +481,21 @@ FilteredData <- R6::R6Class( # nolint
 
         checkmate::assert_class(state, "teal_slices")
         datanames <- slices_field(state, "dataname")
-        checkmate::assert_subset(datanames, self$datanames())
-        module_add <- attr(state, "module_add")
-        if (!is.null(module_add)) {
-          private$module_add <- module_add
+        if (!checkmate::test_subset(datanames, self$datanames())) {
+          logger::log_warn("Some teal_slices are meant for different data sets and will be ignored")
+          state <- Filter(function(x) x$dataname %in% self$datanames(), state)
+          datanames <- intersect(slices_field(state, "dataname"), self$datanames())
         }
 
         lapply(datanames, function(dataname) {
           states <- Filter(function(x) identical(x$dataname, dataname), state)
           private$get_filtered_dataset(dataname)$set_filter_state(states)
         })
+
+        module_add <- attr(state, "module_add")
+        if (!is.null(module_add)) {
+          private$module_add <- module_add
+        }
 
         logger::log_trace("{ class(self)[1] }$set_filter_state initialized")
 
