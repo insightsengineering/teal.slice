@@ -12,7 +12,7 @@ slices_field(tss, field)
 \item{field}{(\code{character(1)}) \code{teal_slice} field name}
 }
 \value{
-A vector of unique values
+A vector of unique values. Type conversion may occur (silently).
 }
 \description{
 Extract unique values from field of \code{teal_slice} Objects.

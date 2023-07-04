@@ -31,8 +31,7 @@ as.teal_slices(x)
 \method{print}{teal_slices}(x, ...)
 }
 \arguments{
-\item{...}{any number of \code{teal_slice} objects. In \code{print} and \code{format} \code{...} is used as other
-arguments passed to respective method of \link{teal_slice}.}
+\item{...}{any number of \code{teal_slice} objects. For \code{print} and \code{format}, additional arguments passed to other functions.}
 
 \item{include_varnames, exclude_varnames}{(\verb{named list}s of \code{character}) where list names
 match names of data sets and vector elements match variable names in respective data sets;
@@ -52,7 +51,7 @@ and unfiltered dataset.
 
 \item{i}{(\code{character} or \code{numeric} or \code{logical}) indicating which elements to extract}
 
-\item{show_all}{(\code{logical(1)}) whether to show all slices}
+\item{show_all}{(\code{logical(1)}) whether to display non-null elements of constituent \code{teal_slice} objects}
 
 \item{trim_lines}{(\code{logical(1)}) whether to trim lines}
 }
@@ -63,14 +62,12 @@ and unfiltered dataset.
 Filter configuration.
 }
 \details{
-\code{teal_slices()} collates multiple \code{teal_slice} objects into \code{teal_slices},
+\code{teal_slices()} collates multiple \code{teal_slice} objects into a \code{teal_slices} object,
 a complete filter specification. This is used by all classes above \code{FilterState}
 as well as \code{filter_panel_api} wrapper functions.
-\code{teal_slices} also specifies which variables cannot be filtered
-and how observations are tallied, which is resolved by \code{FilterStates}.
+\code{teal_slices} has attributes that modify the behavior of the filter panel, which are resolved by different classes.
 
-\code{include_varnames} and \code{exclude_varnames} in attributes in \code{teal_slices}
-determine which variables can have filters assigned.
+\code{include_varnames} and \code{exclude_varnames} determine which variables can have filters assigned.
 The former enumerates allowed variables, the latter enumerates forbidden values.
 Since these can be mutually exclusive in some cases, they cannot both be set in one \code{teal_slices} object.
 }
@@ -119,5 +116,6 @@ is.teal_slices(all_filters)
 all_filters[1:2]
 c(all_filters[1], all_filters[2])
 print(all_filters)
+print(all_filters, trim_lines = FALSE)
 }
 \keyword{internal}

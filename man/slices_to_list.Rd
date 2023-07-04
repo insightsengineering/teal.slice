@@ -10,7 +10,7 @@ slices_to_list(tss)
 \item{tss}{(\code{teal_slices}) object}
 }
 \value{
-A list
+A list of length 2, the first element holding all \code{teal_slice} contained in \code{tss} (converted to list) and the second element holding the all non-NULL attributes of \code{tss}.
 }
 \description{
 Convert \code{teal_slices} to list

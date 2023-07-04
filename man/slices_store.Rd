@@ -13,11 +13,11 @@ slices_store(tss, file)
 The file extension should be \code{".json"}.}
 }
 \value{
-None
+\code{NULL}, invisibly.
 }
 \description{
-This function takes a teal_slices object and saves it to a file in \code{JSON} format.
-The teal_slices object contains information about filter states and can be used to
+This function takes a \code{teal_slices} object and saves it to a file in \code{JSON} format.
+The \code{teal_slices} object contains information about filter states and can be used to
 create, modify, and delete filter states. The saved file can be later loaded using
 the \code{slices_restore} function.
 }
