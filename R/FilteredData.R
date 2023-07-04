@@ -561,17 +561,19 @@ FilteredData <- R6::R6Class( # nolint
     #' @param datanames (`character`)\cr
     #'   `datanames` to remove their `FilterStates` or empty which removes
     #'   all `FilterStates` in the `FilteredData` object
+    #' @param force (`logical(1)`)\cr
+    #'   include locked filter states
     #'
     #' @return `NULL` invisibly
     #'
-    clear_filter_states = function(datanames = self$datanames()) {
+    clear_filter_states = function(datanames = self$datanames(), force = FALSE) {
       logger::log_trace(
         "FilteredData$clear_filter_states called, datanames: { toString(datanames) }"
       )
 
       for (dataname in datanames) {
         fdataset <- private$get_filtered_dataset(dataname = dataname)
-        fdataset$clear_filter_states()
+        fdataset$clear_filter_states(force)
       }
 
       logger::log_trace(

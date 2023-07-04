@@ -298,10 +298,13 @@ FilterStates <- R6::R6Class( # nolint
     #' @description
     #' Remove all `FilterState` objects from this `FilterStates` object.
     #'
+    #' @param force (`logical(1)`)\cr
+    #'   include locked filter states
+    #'
     #' @return NULL
     #'
-    clear_filter_states = function() {
-      private$state_list_empty()
+    clear_filter_states = function(force = FALSE) {
+      private$state_list_empty(force)
     },
 
     # shiny modules ----
@@ -627,16 +630,18 @@ FilterStates <- R6::R6Class( # nolint
     #
     # @param state_id (`character`)\cr
     #   names of element in a filter state (which is a `reactiveVal` containing a list)
+    # @param force (`logical(1)`)\cr
+    #   include locked filter states
     #
     # @return NULL
     #
-    state_list_remove = function(state_id) {
+    state_list_remove = function(state_id, force = FALSE) {
       shiny::isolate({
         logger::log_trace("{ class(self)[1] } removing a filter, state_id: { state_id }")
         checkmate::assert_character(state_id)
         new_state_list <- private$state_list()
         if (is.element(state_id, names(new_state_list))) {
-          if (new_state_list[[state_id]]$get_state()$locked) {
+          if (new_state_list[[state_id]]$get_state()$locked & !force) {
             return(invisible(NULL))
           }
           new_state_list[[state_id]]$destroy_observers()
@@ -652,20 +657,21 @@ FilterStates <- R6::R6Class( # nolint
 
     # @description
     # Remove all `FilterState` objects from this `FilterStates` object.
-    #
+    # @param force (`logical(1)`)\cr
+    #   include locked filter states
     # @return invisible NULL
     #
-    state_list_empty = function() {
+    state_list_empty = function(force = FALSE) {
       shiny::isolate({
         logger::log_trace(
-          "{ class(self)[1] }$state_list_empty removing all non-locked filters for dataname: { private$dataname }"
+          "{ class(self)[1] }$state_list_empty removing filters for dataname: { private$dataname }"
         )
         state_list <- private$state_list()
         for (state_id in names(state_list)) {
-          private$state_list_remove(state_id)
+          private$state_list_remove(state_id, force)
         }
         logger::log_trace(
-          "{ class(self)[1] }$state_list_empty removed all non-locked filters for dataname: { private$dataname }"
+          "{ class(self)[1] }$state_list_empty removed filters for dataname: { private$dataname }"
         )
         invisible(NULL)
       })

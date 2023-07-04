@@ -12,6 +12,9 @@
 #' @param filter (`teal_slices`)\cr
 #'   specify filters in place on app start-up
 #'
+#' @param force (`logical(1)`)\cr
+#'   include locked filter states
+#'
 #' @return
 #' - `set_*`, `remove_*` and `clear_filter_state` return `NULL` invisibly
 #' - `get_filter_state` returns a named `teal_slices` object
@@ -119,9 +122,9 @@ remove_filter_state <- function(datasets, filter) {
 
 #' @rdname filter_state_api
 #' @export
-clear_filter_states <- function(datasets) {
+clear_filter_states <- function(datasets, force = FALSE) {
   checkmate::assert_multi_class(datasets, c("FilteredData", "FilterPanelAPI"))
-  datasets$clear_filter_states()
+  datasets$clear_filter_states(force)
   invisible(NULL)
 }
 
