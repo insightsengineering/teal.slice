@@ -288,9 +288,9 @@ check_in_range <- function(subinterval, range, pre_msg = "") {
 #' \donttest{
 #' teal.slice:::check_in_subset(c("a", "b"), c("a", "b", "c"))
 #' if (interactive()) {
-#' teal.slice:::check_in_subset(c("a", "b"), c("b", "c"), pre_msg = "Error: ")
-#' # truncated because too long
-#' teal.slice:::check_in_subset("a", LETTERS, pre_msg = "Error: ")
+#'   teal.slice:::check_in_subset(c("a", "b"), c("b", "c"), pre_msg = "Error: ")
+#'   # truncated because too long
+#'   teal.slice:::check_in_subset("a", LETTERS, pre_msg = "Error: ")
 #' }
 #' }
 check_in_subset <- function(subset, choices, pre_msg = "") {

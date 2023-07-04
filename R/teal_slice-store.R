@@ -19,8 +19,8 @@
 #' )
 #'
 #' if (interactive()) {
-#'  # Store the teal_slices object to a file
-#'  slices_store(tss, "path/to/file.json")
+#'   # Store the teal_slices object to a file
+#'   slices_store(tss, "path/to/file.json")
 #' }
 #'
 #' @export
@@ -43,8 +43,8 @@ slices_store <- function(tss, file) {
 #'
 #' @examples
 #' if (interactive()) {
-#' # Restore a teal_slices object from a file
-#' tss_restored <- slices_restore("path/to/file.json")
+#'   # Restore a teal_slices object from a file
+#'   tss_restored <- slices_restore("path/to/file.json")
 #' }
 #' @export
 slices_restore <- function(file) {

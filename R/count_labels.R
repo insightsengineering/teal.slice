@@ -52,7 +52,7 @@
 #'   }
 #' )
 #' if (interactive()) {
-#'  runApp(app)
+#'   runApp(app)
 #' }
 #' @keywords internal
 countBars <- function(inputId, choices, countsmax, countsnow = NULL) { # nolint
