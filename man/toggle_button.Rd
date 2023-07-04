@@ -35,8 +35,6 @@ which may contain a child \verb{<i>} tag that specifies an icon to be displayed.
 \code{toggle_title} calls the \code{attr} method to modify the \code{Title} attribute of the button.
 }
 \examples{
-\dontrun{
-
 library(shiny)
 
 ui <- fluidPage(
@@ -82,7 +80,6 @@ server <- function(input, output, session) {
 }
 if (interactive()) {
   shinyApp(ui, server)
-}
 }
 
 }

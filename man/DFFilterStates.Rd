@@ -118,10 +118,8 @@ server <- function(input, output, session) {
   observeEvent(input$button12_df, filter_states_df$remove_filter_state(state_id = "DATETIME"))
   observeEvent(input$button0_df, filter_states_df$clear_filter_states())
 }
-\dontrun{
 if (interactive()) {
   shinyApp(ui, server)
-}
 }
 
 }

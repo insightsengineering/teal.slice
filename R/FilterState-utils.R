@@ -33,8 +33,7 @@
 #' )
 #'
 #' shiny::isolate(filter_state$get_call())
-#' \dontrun{
-#' shinyApp(
+#' app <- shinyApp(
 #'   ui = fluidPage(
 #'     filter_state$ui(id = "app"),
 #'     verbatimTextOutput("call")
@@ -47,6 +46,8 @@
 #'     )
 #'   }
 #' )
+#' if (interactive()) {
+#'   runApp(app)
 #' }
 #' @return `FilterState` object
 init_filter_state <- function(x,
@@ -237,13 +238,13 @@ init_filter_state_expr <- function(slice) {
 #' @keywords internal
 #'
 #' @examples
-#' \dontrun{
-#' teal.slice:::check_in_range(c(3, 1), c(1, 3))
-#' teal.slice:::check_in_range(c(0, 3), c(1, 3))
-#' teal.slice:::check_in_range(
-#'   c(as.Date("2020-01-01"), as.Date("2020-01-20")),
-#'   c(as.Date("2020-01-01"), as.Date("2020-01-02"))
-#' )
+#' if (interactive()) {
+#'   teal.slice:::check_in_range(c(3, 1), c(1, 3))
+#'   teal.slice:::check_in_range(c(0, 3), c(1, 3))
+#'   teal.slice:::check_in_range(
+#'     c(as.Date("2020-01-01"), as.Date("2020-01-20")),
+#'     c(as.Date("2020-01-01"), as.Date("2020-01-02"))
+#'   )
 #' }
 check_in_range <- function(subinterval, range, pre_msg = "") {
   epsilon <- .Machine$double.eps^0.5 # needed for floating point arithmetic; same value as in base::all.equal()
@@ -286,7 +287,7 @@ check_in_range <- function(subinterval, range, pre_msg = "") {
 #' @examples
 #' \donttest{
 #' teal.slice:::check_in_subset(c("a", "b"), c("a", "b", "c"))
-#' \dontrun{
+#' if (interactive()) {
 #' teal.slice:::check_in_subset(c("a", "b"), c("b", "c"), pre_msg = "Error: ")
 #' # truncated because too long
 #' teal.slice:::check_in_subset("a", LETTERS, pre_msg = "Error: ")

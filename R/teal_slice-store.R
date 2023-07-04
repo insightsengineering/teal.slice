@@ -12,15 +12,15 @@
 #' @return `NULL`, invisibly.
 #'
 #' @examples
-#' \dontrun{
 #' # Create a teal_slices object
 #' tss <- teal_slices(
 #'   teal_slice(dataname = "data", varname = "var"),
-#'   teal_slice(dataname = "data", expr = "x > 0", id = "positive_x", title = "Positive x"),
+#'   teal_slice(dataname = "data", expr = "x > 0", id = "positive_x", title = "Positive x")
 #' )
 #'
-#' # Store the teal_slices object to a file
-#' slices_store(tss, "path/to/file.json")
+#' if (interactive()) {
+#'  # Store the teal_slices object to a file
+#'  slices_store(tss, "path/to/file.json")
 #' }
 #'
 #' @export
@@ -42,7 +42,7 @@ slices_store <- function(tss, file) {
 #' @return A teal_slices object restored from the file.
 #'
 #' @examples
-#' \dontrun{
+#' if (interactive()) {
 #' # Restore a teal_slices object from a file
 #' tss_restored <- slices_restore("path/to/file.json")
 #' }

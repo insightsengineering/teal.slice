@@ -21,14 +21,13 @@
 #' )
 #' shiny::isolate(filter_state$get_call())
 #'
-#' \dontrun{
 #' # working filter in an app
 #' library(shiny)
 #' library(shinyjs)
 #'
 #' data_choices <- c(sample(letters[1:4], 100, replace = TRUE), NA)
 #' attr(data_choices, "label") <- "lowercase letters"
-#' fs <- ChoicesFilterState$new(
+#' fs <- teal.slice:::ChoicesFilterState$new(
 #'   x = data_choices,
 #'   slice = teal_slice(
 #'     dataname = "data", varname = "variable", selected = c("a", "b"), keep_na = TRUE
@@ -37,8 +36,8 @@
 #'
 #' ui <- fluidPage(
 #'   useShinyjs(),
-#'   include_css_files(pattern = "filter-panel"),
-#'   include_js_files(pattern = "count-bar-labels"),
+#'   teal.slice:::include_css_files(pattern = "filter-panel"),
+#'   teal.slice:::include_js_files(pattern = "count-bar-labels"),
 #'   column(4, div(
 #'     h4("ChoicesFilterState"),
 #'     fs$ui("fs")
@@ -101,7 +100,6 @@
 #'
 #' if (interactive()) {
 #'   shinyApp(ui, server)
-#' }
 #' }
 #'
 ChoicesFilterState <- R6::R6Class( # nolint

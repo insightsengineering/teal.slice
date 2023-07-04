@@ -52,8 +52,7 @@ filter_state <- teal.slice:::init_filter_state(
 )
 
 shiny::isolate(filter_state$get_call())
-\dontrun{
-shinyApp(
+app <- shinyApp(
   ui = fluidPage(
     filter_state$ui(id = "app"),
     verbatimTextOutput("call")
@@ -66,6 +65,8 @@ shinyApp(
     )
   }
 )
+if (interactive()) {
+  runApp(app)
 }
 }
 \keyword{internal}

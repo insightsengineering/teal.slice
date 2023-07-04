@@ -24,7 +24,6 @@ filter_state$set_state(
 )
 shiny::isolate(filter_state$get_call())
 
-\dontrun{
 # working filter in an app
 library(shiny)
 library(shinyjs)
@@ -43,8 +42,8 @@ fs <- teal.slice:::RangeFilterState$new(
 
 ui <- fluidPage(
   useShinyjs(),
-  include_css_files(pattern = "filter-panel"),
-  include_js_files(pattern = "count-bar-labels"),
+  teal.slice:::include_css_files(pattern = "filter-panel"),
+  teal.slice:::include_js_files(pattern = "count-bar-labels"),
   column(4, div(
     h4("RangeFilterState"),
     fs$ui("fs")
@@ -112,7 +111,6 @@ server <- function(input, output, session) {
 
 if (interactive()) {
   shinyApp(ui, server)
-}
 }
 
 }

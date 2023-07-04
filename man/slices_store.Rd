@@ -22,15 +22,15 @@ create, modify, and delete filter states. The saved file can be later loaded usi
 the \code{slices_restore} function.
 }
 \examples{
-\dontrun{
 # Create a teal_slices object
 tss <- teal_slices(
   teal_slice(dataname = "data", varname = "var"),
-  teal_slice(dataname = "data", expr = "x > 0", id = "positive_x", title = "Positive x"),
+  teal_slice(dataname = "data", expr = "x > 0", id = "positive_x", title = "Positive x")
 )
 
-# Store the teal_slices object to a file
-slices_store(tss, "path/to/file.json")
+if (interactive()) {
+ # Store the teal_slices object to a file
+ slices_store(tss, "path/to/file.json")
 }
 
 }

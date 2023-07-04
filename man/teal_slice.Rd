@@ -41,12 +41,12 @@ as.teal_slice(x)
 \item{varname}{(\code{character(1)}) name of variable}
 
 \item{id}{(\code{character(1)}) identifier of the filter. Must be specified when \code{expr} is set.
-When \code{varname} is specified then \code{id} is set to a \code{"{dataname} {varname}"} .}
+When \code{varname} is specified then \code{id} is set to a \code{"{dataname} {varname}"} by default.}
 
-\item{expr}{(\code{character(1)}) string providing a logical expression;
-Must be a valid R expression which can be evaluated in the context of the data set;
+\item{expr}{(\code{character(1)}) string providing a logical expression.
+Must be a valid R expression which can be evaluated in the context of the data set.
 For a \code{data.frame} \code{var == "x"} is sufficient, but \code{MultiAssayExperiment::subsetByColData}
-requires \code{dataname} prefix \code{data$var == "x"}.}
+requires \code{dataname} prefix, \emph{e.g.} \code{data$var == "x"}.}
 
 \item{choices}{(optional \code{vector}) specifying allowed choices;
 When specified it should be a subset of values in variable denoted by \code{varname};
@@ -55,9 +55,9 @@ Type and size depends on variable type.}
 \item{selected}{(optional \code{vector}) of selected values from \code{choices};
 Type and size depends on variable type.}
 
-\item{keep_na}{(optional \code{logical(1)} or \code{NULL}) flag specifying whether to keep missing values}
+\item{keep_na}{(optional \code{logical(1)}) flag specifying whether to keep missing values}
 
-\item{keep_inf}{(optional \code{logical(1)} or \code{NULL}) flag specifying whether to keep infinite values}
+\item{keep_inf}{(optional \code{logical(1)}) flag specifying whether to keep infinite values}
 
 \item{fixed}{(\code{logical(1)}) flag specifying whether to fix this filter state (forbid setting state)}
 
@@ -73,7 +73,8 @@ of \code{teal.slice} classes. In other methods these are further arguments passe
 
 \item{x}{(\code{teal.slice}) object.}
 
-\item{show_all}{(\code{logical(1)}) in \code{format}, \code{print} - indicating whether to show all fields.}
+\item{show_all}{(\code{logical(1)}) indicating whether to show all fields. If set to \code{FALSE},
+only non-NULL elements will be printed.}
 
 \item{trim_lines}{(\code{logical(1)}) in \code{format}, \code{print} - indicating whether to trim lines.}
 }
@@ -130,7 +131,7 @@ the specific \code{ExperimentList} slot. To correctly specify filter for an \cod
 }
 
 \examples{
-x <- teal_slice(
+x1 <- teal_slice(
   dataname = "data",
   id = "Female adults",
   expr = "SEX == 'F' & AGE >= 18",
@@ -150,11 +151,11 @@ x2 <- teal_slice(
   extra_arg = "extra"
 )
 
-is.teal_slice(x)
-as.list(x)
+is.teal_slice(x1)
+as.list(x1)
 as.teal_slice(list(dataname = "a", varname = "var"))
-format(x, show_all = FALSE, trim_lines = TRUE)
-print(x, show_all = FALSE, trim_lines = TRUE)
+format(x1, show_all = FALSE, trim_lines = TRUE)
+print(x1, show_all = FALSE, trim_lines = TRUE)
 
 }
 \keyword{internal}

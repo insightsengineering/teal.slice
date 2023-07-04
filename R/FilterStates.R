@@ -320,7 +320,7 @@ FilterStates <- R6::R6Class( # nolint
     ui_active = function(id) {
       ns <- NS(id)
       tagList(
-        include_css_files(pattern = "filter-panel"),
+        teal.slice:::include_css_files(pattern = "filter-panel"),
         uiOutput(ns("trigger_visible_state_change"), inline = TRUE),
         uiOutput(
           ns("cards"),

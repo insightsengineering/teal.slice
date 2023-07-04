@@ -22,14 +22,13 @@
 #' )
 #' shiny::isolate(filter_state$get_call())
 #'
-#' \dontrun{
 #' # working filter in an app
 #' library(shiny)
 #' library(shinyjs)
 #'
 #' dates <- c(Sys.Date() - 100, Sys.Date())
 #' data_date <- c(seq(from = dates[1], to = dates[2], length.out = 100), NA)
-#' fs <- DateFilterState$new(
+#' fs <- teal.slice:::DateFilterState$new(
 #'   x = data_date,
 #'   slice = teal_slice(
 #'     dataname = "data", varname = "x", selected = data_date[c(47, 98)], keep_na = TRUE
@@ -38,8 +37,8 @@
 #'
 #' ui <- fluidPage(
 #'   useShinyjs(),
-#'   include_css_files(pattern = "filter-panel"),
-#'   include_js_files(pattern = "count-bar-labels"),
+#'   teal.slice:::include_css_files(pattern = "filter-panel"),
+#'   teal.slice:::include_js_files(pattern = "count-bar-labels"),
 #'   column(4, div(
 #'     h4("DateFilterState"),
 #'     fs$ui("fs")
@@ -95,7 +94,6 @@
 #'
 #' if (interactive()) {
 #'   shinyApp(ui, server)
-#' }
 #' }
 #'
 DateFilterState <- R6::R6Class( # nolint
