@@ -23,7 +23,6 @@
 #' `dataname` and `locked` are retained, `fixed` is set to `TRUE`, `id` becomes mandatory, `title`
 #' remains optional, while other arguments are disregarded.
 #'
-#' All `teal_slice` fields can be passed as arguments to `FilterState` constructors.
 #' A teal_slice can be passed `FilterState`/`FilterStateExpr` constructors to instantiate an object.
 #' It can also be passed to `FilterState$set_state` to modify the state.
 #' However, once a `FilterState` is created, only the mutable features can be set with a teal_slice:
@@ -34,6 +33,7 @@
 #' In a `FilterState` instantiated with `fixed = TRUE` the features
 #' `selected`, `keep_na`, `keep_inf` cannot be changed.
 #' Note that a `FilterStateExpr` is always considered to have `fixed = TRUE`.
+#' A `FilterState` instantiated with `locked = TRUE` cannot be removed.
 #'
 #' @section Filters in `SumarizedExperiment` and `MultiAssayExperiment` objects:
 #'
@@ -42,14 +42,14 @@
 #' or on their experiments, which are stored in the `experimentList` slot.
 #' For filters referring to `colData` no extra arguments are needed.
 #' If a filter state is created for an experiment, that experiment name must be specified in the `experiment` argument.
-#' Furthermore, specify filter for an `SummarizedExperiment` one must also set `arg`
+#' Furthermore, to specify filter for an `SummarizedExperiment` one must also set `arg`
 #' (`"subset"`  or `"select`, arguments in the [subset()] function for `SummarizedExperiment`)
-#' in order to specify if the filter refers to the `SE`'s `rowData` or `colData`.
+#' in order to determine whether the filter refers to the `SE`'s `rowData` or `colData`.
 #'
 #' @param dataname (`character(1)`) name of data set
 #' @param varname (`character(1)`) name of variable
 #' @param id (`character(1)`) identifier of the filter. Must be specified when `expr` is set.
-#'  When `varname` is specified then `id` is set to a `"{dataname} {varname}"` by default.
+#'  When `varname` is specified then `id` is set to `"{dataname} {varname}"` by default.
 #' @param expr (`character(1)`) string providing a logical expression.
 #'  Must be a valid R expression which can be evaluated in the context of the data set.
 #'  For a `data.frame` `var == "x"` is sufficient, but `MultiAssayExperiment::subsetByColData`
@@ -64,7 +64,7 @@
 #' @param keep_na (optional `logical(1)`) flag specifying whether to keep missing values
 #' @param keep_inf (optional `logical(1)`) flag specifying whether to keep infinite values
 #' @param fixed (`logical(1)`) flag specifying whether to fix this filter state (forbid setting state)
-#' @param locked (`logical(1)`) flag specifying whether to lock this filter state (forbid disabling and removing)
+#' @param locked (`logical(1)`) flag specifying whether to lock this filter state (forbid removing and inactivating)
 #' @param title (optional `character(1)`) title of the filter. Ignored when `varname` is set.
 #' @param ... in `teal_slice` method these are additional arguments which can be handled by extensions
 #'  of `teal.slice` classes. In other methods these are further arguments passed to or from other methods.
