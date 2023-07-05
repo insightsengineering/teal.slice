@@ -7,7 +7,7 @@
 \alias{as.list.teal_slice}
 \alias{format.teal_slice}
 \alias{print.teal_slice}
-\title{Filter metadata}
+\title{Filter specification}
 \usage{
 teal_slice(
   dataname,
@@ -76,13 +76,14 @@ of \code{teal.slice} classes. In other methods these are further arguments passe
 \item{show_all}{(\code{logical(1)}) indicating whether to show all fields. If set to \code{FALSE},
 only non-NULL elements will be printed.}
 
-\item{trim_lines}{(\code{logical(1)}) in \code{format}, \code{print} - indicating whether to trim lines.}
+\item{trim_lines}{(\code{logical(1)}) indicating whether to trim lines when printing.}
 }
 \value{
-\code{teal.slice} object
+A \code{teal.slice} object. Depending on whether \code{varname} or \code{expr} was specified, the resulting
+\code{teal_slice} also receives class \code{teal_slice_var} or \code{teal_slice_expr}, respectively.
 }
 \description{
-Filter metadata
+Filter specification
 }
 \details{
 \code{teal_slice} object fully describes filter state and can be used to create,
@@ -95,39 +96,42 @@ Setting any of the other values to NULL means that those properties will not be 
 (when setting an existing state) or that they will be determined by data (when creating new a new one).
 Entire object is \code{FilterState} class member and can be accessed with \code{FilterState$get_state()}.
 
-\code{teal_slice()} returns two types of \code{teal_slice} objects:
+A \code{teal_slice} can come in two flavors:
 \enumerate{
-\item \code{teal_slice_var} - returned when \code{varname} is set. The object keep information about the
-variable name, possible choices, and selected values and is used to create an interactive
-filter.
-\item \code{teal_slice_expr} - returned when \code{expr} is set. The object keeps information about the
-expression and is used to create a static filter which evaluates always the same expression.
-When \code{expr} is specified \code{varname}, \code{choices}, \code{selected}, \code{multiple}, \code{keep_na}, \code{keep_inf}
-are ignored.
+\item \code{teal_slice_var} -
+this describes a typical interactive filter that refers to a single variable, managed by the \code{FilterState} class.
+This class is created when \verb{varname is specified. The object retains all fields specified in the call. }id` can be created by default and need not be specified.
+\item \code{teal_slice_expr} -
+this describes a filter state that refers to an expression, which can potentially include multiple variables,
+managed by the \code{FilterStateExpr} class.
+This class is created when \code{expr} is specified.
+\code{dataname} and \code{locked} are retained, \code{fixed} is set to \code{TRUE}, \code{id} becomes mandatory, \code{title}
+remains optional, while other arguments are disregarded.
 }
 
 All \code{teal_slice} fields can be passed as arguments to \code{FilterState} constructors.
-A \code{teal_slice} object can be passed to \code{FilterState$set_state}, which will modify the state.
-However, once a \code{FilterState} is created, only the \strong{mutable} features can be set with a \code{teal_slice}:
+A teal_slice can be passed \code{FilterState}/\code{FilterStateExpr} constructors to instantiate an object.
+It can also be passed to \code{FilterState$set_state} to modify the state.
+However, once a \code{FilterState} is created, only the mutable features can be set with a teal_slice:
 \code{selected}, \code{keep_na} and \code{keep_inf}.
 
 Special consideration is given to two fields: \code{fixed} and \code{locked}.
 These are always immutable logical flags that default to \code{FALSE}.
 In a \code{FilterState} instantiated with \code{fixed = TRUE} the features
 \code{selected}, \code{keep_na}, \code{keep_inf} cannot be changed.
+Note that a \code{FilterStateExpr} is always considered to have \code{fixed = TRUE}.
 }
 \section{Filters in \code{SumarizedExperiment} and \code{MultiAssayExperiment} objects}{
 
 
 To establish a filter on a column in a \code{data.frame}, \code{dataname} and \code{varname} are sufficient.
-For filters referring to \code{colData} of \code{MultiAssayExperiment} object (subjects filter) no extra arguments are needed.
-Filter states  created for \code{experiments} require more information as each variable is either located in
-the specific \code{ExperimentList} slot. To correctly specify filter for an \code{SummarizedExperiment} one must set:
-\itemize{
-\item \code{experiment} (\code{character(1)}) name of the experiment in \code{MultiAssayExperiment} object.
-\item \code{arg} (\code{"subset"}  or \verb{"select}) to refer to the particular argument in the \code{\link[=subset]{subset()}} function for
-\code{SummarizedExperiment}.
-}
+\code{MultiAssayExperiment} objects can be filtered either on their \code{colData} slot (which contains subject information)
+or on their experiments, which are stored in the \code{experimentList} slot.
+For filters referring to \code{colData} no extra arguments are needed.
+If a filter state is created for an experiment, that experiment name must be specified in the \code{experiment} argument.
+Furthermore, specify filter for an \code{SummarizedExperiment} one must also set \code{arg}
+(\code{"subset"}  or \verb{"select}, arguments in the \code{\link[=subset]{subset()}} function for \code{SummarizedExperiment})
+in order to specify if the filter refers to the \code{SE}'s \code{rowData} or \code{colData}.
 }
 
 \examples{

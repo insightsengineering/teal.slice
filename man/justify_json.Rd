@@ -7,13 +7,12 @@
 justify_json(json)
 }
 \arguments{
-\item{json}{(\code{character(1)}) representing the input \code{JSON}.}
+\item{json}{(\code{character(1)}) a \code{JSON} string.}
 }
 \value{
-A character string with justified colons in each line of the \code{JSON}.
+A list of character strings, which can be collapsed into a \code{JSON} string.
 }
 \description{
-This function takes a \code{JSON} string as input and returns a modified version of the
-input where colons are justified in each line.
+This function takes a \code{JSON} string as input, splits it into lines, and pads element names
+with spaces so that colons are justified between lines.
 }
-\keyword{internal}

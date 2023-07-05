@@ -1,4 +1,4 @@
-#' Filter configuration.
+#' Filters specification
 #'
 #' @details
 #' `teal_slices()` collates multiple `teal_slice` objects into a `teal_slices` object,
@@ -21,6 +21,8 @@
 #'   and unfiltered dataset.
 #'  - `"none"` to have counts of single `FilterState` to show unfiltered number only.
 #' @param module_add (`logical(1)`) logical flag specifying whether the user will be able to add new filters
+#' @param i (`character` or `numeric` or `logical`) indicating which elements to extract
+#' @param x (`teal_slices`) object.
 #' @return
 #' `teal_slices`, which is an unnamed list of `teal_slice` objects.
 #'
@@ -113,7 +115,6 @@ is.teal_slices <- function(x) { # nolint
 }
 
 #' @rdname teal_slices
-#' @param x (`teal_slices`) object.
 #' @export
 #' @keywords internal
 #'
@@ -192,7 +193,6 @@ as.teal_slices <- function(x) { # nolint
 
 
 #' @rdname teal_slices
-#' @param i (`character` or `numeric` or `logical`) indicating which elements to extract
 #' @export
 #' @keywords internal
 #'

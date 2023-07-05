@@ -2,18 +2,18 @@
 % Please edit documentation in R/teal_slice.R
 \name{trim_lines}
 \alias{trim_lines}
-\title{Justify Colons in \code{JSON} String}
+\title{Trim Lines in \code{JSON} String}
 \usage{
 trim_lines(x)
 }
 \arguments{
-\item{json}{A character string representing the input \code{JSON}.}
+\item{x}{A character string.}
 }
 \value{
-A character string with justified colons in each line of the \code{JSON}.
+A character string trimmed after a certain hard-coded number of characters in the value portion.
 }
 \description{
 This function takes a \code{JSON} string as input and returns a modified version of the
-input where colons are justified in each line.
+input where the values portion of each line is trimmed for a less messy console output.
 }
 \keyword{internal}

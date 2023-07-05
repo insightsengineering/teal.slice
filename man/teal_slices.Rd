@@ -8,7 +8,7 @@
 \alias{c.teal_slices}
 \alias{format.teal_slices}
 \alias{print.teal_slices}
-\title{Filter configuration.}
+\title{Filters specification}
 \usage{
 teal_slices(
   ...,
@@ -60,7 +60,7 @@ and unfiltered dataset.
 \code{teal_slices}, which is an unnamed list of \code{teal_slice} objects.
 }
 \description{
-Filter configuration.
+Filters specification
 }
 \details{
 \code{teal_slices()} collates multiple \code{teal_slice} objects into a \code{teal_slices} object,

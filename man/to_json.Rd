@@ -9,8 +9,12 @@ to_json(x)
 \arguments{
 \item{x}{(\code{list}) representation of \code{teal_slices} object.}
 }
+\value{
+A \code{JSON} string.
+}
 \description{
-Converts a list representation of \code{teal_slices} into a \code{JSON} string. This function is used by the
-\code{format} method for \code{teal_slices} objects.
+Converts a list representation of \code{teal_slice} or \code{teal_slices} into a \code{JSON} string.
+Ensures proper unboxing of list elements.
+This function is used by the \code{format} methods for \code{teal_slice} and \code{teal_slices}.
 }
 \keyword{internal}
