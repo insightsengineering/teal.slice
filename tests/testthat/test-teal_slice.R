@@ -219,4 +219,3 @@ testthat::test_that("teal_slice dataname has to be a string when expr is specifi
     teal_slice(dataname = character(0), id = "x", title = "x", expr = "x == 'x'"), "length"
   )
 })
-
