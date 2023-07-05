@@ -194,7 +194,7 @@ as.list.teal_slice <- function(x, ...) {
   }
 
   formal_args <- intersect(formal_args, names(x))
-  extra_args <- setdiff(names(x), formal_args)
+  extra_args <- rev(setdiff(names(x), formal_args))
 
   x[c(formal_args, extra_args)]
 }
@@ -227,12 +227,12 @@ print.teal_slice <- function(x, ...) {
 
 #' Convert a list to a justified `JSON` string
 #'
-#' This function takes a list and converts it to a `JSON` string. The resulting `JSON` string is then
-#' justified to improve readability. Additionally, the function has an option to trim the lines of
-#' the `JSON` string.
+#' This function takes a list and converts it to a `JSON` string.
+#' The resulting `JSON` string is then optionally justified to improve readability
+#' and trimmed to easier fit in the console when printing.
 #'
 #' @param x (`list`), possibly recursive, obtained from `teal_slice` or `teal_slices`.
-#' @param trim_lines (`function`) or not to trim lines of the `JSON` string (default is `FALSE`).
+#' @param trim_lines (`logical(1)`) flag specifying whether to trim lines of the `JSON` string.
 #' @return A `JSON` string representation of the input list.
 #' @keywords internal
 #'

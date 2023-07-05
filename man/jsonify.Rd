@@ -9,14 +9,14 @@ jsonify(x, trim_lines)
 \arguments{
 \item{x}{(\code{list}), possibly recursive, obtained from \code{teal_slice} or \code{teal_slices}.}
 
-\item{trim_lines}{(\code{function}) or not to trim lines of the \code{JSON} string (default is \code{FALSE}).}
+\item{trim_lines}{(\code{logical(1)}) flag specifying whether to trim lines of the \code{JSON} string.}
 }
 \value{
 A \code{JSON} string representation of the input list.
 }
 \description{
-This function takes a list and converts it to a \code{JSON} string. The resulting \code{JSON} string is then
-justified to improve readability. Additionally, the function has an option to trim the lines of
-the \code{JSON} string.
+This function takes a list and converts it to a \code{JSON} string.
+The resulting \code{JSON} string is then optionally justified to improve readability
+and trimmed to easier fit in the console when printing.
 }
 \keyword{internal}
