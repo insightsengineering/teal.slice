@@ -241,7 +241,7 @@ jsonify <- function(x, trim_lines) {
 
   x_json <- to_json(x)
   x_json_justified <- justify_json(x_json)
-  if (trim_lines) x_json_justified <- trim_lines(x_json_justified)
+  if (trim_lines) x_json_justified <- trim_lines_json(x_json_justified)
   paste(x_json_justified, collapse = "\n")
 }
 
@@ -309,7 +309,7 @@ justify_json <- function(json) {
 #'
 #' @keywords internal
 #'
-trim_lines <- function(x) {
+trim_lines_json <- function(x) {
   name_width <- max(unlist(gregexpr(":", x))) - 1
   trim_position <- name_width + 17L
   x_trim <- substr(x, 1, trim_position)
