@@ -39,7 +39,7 @@ slices_store <- function(tss, file) {
 #'
 #' @param file Path to file where `teal_slices` is stored. Must have a `.json` extension and read access.
 #'
-#' @return A teal_slices object restored from the file.
+#' @return A `teal_slices` object restored from the file.
 #'
 #' @examples
 #' if (interactive()) {
