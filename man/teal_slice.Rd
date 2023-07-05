@@ -41,7 +41,7 @@ as.teal_slice(x)
 \item{varname}{(\code{character(1)}) name of variable}
 
 \item{id}{(\code{character(1)}) identifier of the filter. Must be specified when \code{expr} is set.
-When \code{varname} is specified then \code{id} is set to a \code{"{dataname} {varname}"} by default.}
+When \code{varname} is specified then \code{id} is set to \code{"{dataname} {varname}"} by default.}
 
 \item{expr}{(\code{character(1)}) string providing a logical expression.
 Must be a valid R expression which can be evaluated in the context of the data set.
@@ -61,7 +61,7 @@ Type and size depends on variable type.}
 
 \item{fixed}{(\code{logical(1)}) flag specifying whether to fix this filter state (forbid setting state)}
 
-\item{locked}{(\code{logical(1)}) flag specifying whether to lock this filter state (forbid disabling and removing)}
+\item{locked}{(\code{logical(1)}) flag specifying whether to lock this filter state (forbid removing and inactivating)}
 
 \item{multiple}{(optional \code{logical(1)}) flag specifying whether more than one value can be selected;
 only applicable to \code{ChoicesFilterState} and \code{LogicalFilterState}}
@@ -109,7 +109,6 @@ This class is created when \code{expr} is specified.
 remains optional, while other arguments are disregarded.
 }
 
-All \code{teal_slice} fields can be passed as arguments to \code{FilterState} constructors.
 A teal_slice can be passed \code{FilterState}/\code{FilterStateExpr} constructors to instantiate an object.
 It can also be passed to \code{FilterState$set_state} to modify the state.
 However, once a \code{FilterState} is created, only the mutable features can be set with a teal_slice:
@@ -120,6 +119,7 @@ These are always immutable logical flags that default to \code{FALSE}.
 In a \code{FilterState} instantiated with \code{fixed = TRUE} the features
 \code{selected}, \code{keep_na}, \code{keep_inf} cannot be changed.
 Note that a \code{FilterStateExpr} is always considered to have \code{fixed = TRUE}.
+A \code{FilterState} instantiated with \code{locked = TRUE} cannot be removed.
 }
 \section{Filters in \code{SumarizedExperiment} and \code{MultiAssayExperiment} objects}{
 
@@ -129,9 +129,9 @@ To establish a filter on a column in a \code{data.frame}, \code{dataname} and \c
 or on their experiments, which are stored in the \code{experimentList} slot.
 For filters referring to \code{colData} no extra arguments are needed.
 If a filter state is created for an experiment, that experiment name must be specified in the \code{experiment} argument.
-Furthermore, specify filter for an \code{SummarizedExperiment} one must also set \code{arg}
+Furthermore, to specify filter for an \code{SummarizedExperiment} one must also set \code{arg}
 (\code{"subset"}  or \verb{"select}, arguments in the \code{\link[=subset]{subset()}} function for \code{SummarizedExperiment})
-in order to specify if the filter refers to the \code{SE}'s \code{rowData} or \code{colData}.
+in order to determine whether the filter refers to the \code{SE}'s \code{rowData} or \code{colData}.
 }
 
 \examples{

@@ -32,7 +32,7 @@ attr(data_choices, "label") <- "lowercase letters"
 fs <- teal.slice:::ChoicesFilterState$new(
   x = data_choices,
   slice = teal_slice(
-    dataname = "data", varname = "variable", selected = c("a", "b"), keep_na = TRUE
+    dataname = "data", varname = "variable", selected = c("a", "c"), keep_na = TRUE
   )
 )
 

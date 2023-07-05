@@ -10,7 +10,7 @@ slices_restore(file)
 \item{file}{Path to file where \code{teal_slices} is stored. Must have a \code{.json} extension and read access.}
 }
 \value{
-A teal_slices object restored from the file.
+A \code{teal_slices} object restored from the file.
 }
 \description{
 This function takes a file path to a \code{JSON} file containing a \code{teal_slices} object
