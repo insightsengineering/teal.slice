@@ -9,7 +9,7 @@
 #'   If it is set to `reactive(NULL)` then counts based on filtered
 #'   dataset are not shown.
 #' @param slice (`teal_slice`)\cr
-#'   object created using [filter_var()] or [filter_expr()].
+#'   object created using [teal_slice()].
 #' @param extract_type (`character(0)`, `character(1)`)\cr
 #'   specifying whether condition calls should be prefixed by `dataname`. Possible values:
 #' \itemize{
@@ -25,7 +25,7 @@
 #' filter_state <- teal.slice:::init_filter_state(
 #'   x = c(1:10, NA, Inf),
 #'   x_reactive = reactive(c(1:10, NA, Inf)),
-#'   slice = filter_var(
+#'   slice = teal_slice(
 #'     varname = "x",
 #'     dataname = "dataname"
 #'   ),
@@ -33,8 +33,7 @@
 #' )
 #'
 #' shiny::isolate(filter_state$get_call())
-#' \dontrun{
-#' shinyApp(
+#' app <- shinyApp(
 #'   ui = fluidPage(
 #'     filter_state$ui(id = "app"),
 #'     verbatimTextOutput("call")
@@ -47,6 +46,8 @@
 #'     )
 #'   }
 #' )
+#' if (interactive()) {
+#'   runApp(app)
 #' }
 #' @return `FilterState` object
 init_filter_state <- function(x,
@@ -215,10 +216,10 @@ init_filter_state.POSIXlt <- function(x,
 #'
 #' Initialize a `FilterStateExpr` object
 #' @param slice (`teal_slice_expr`)\cr
-#'   object created using [filter_expr()]. `teal_slice` is stored
+#'   object created using [teal_slice()]. `teal_slice` is stored
 #'   in the class and `set_state` directly manipulates values within `teal_slice`. `get_state`
 #'   returns `teal_slice` object which can be reused in other places. Beware, that `teal_slice`
-#'   is an immutable object which means that changes in particular object are automatically
+#'   is a `reactiveValues` which means that changes in particular object are automatically
 #'   reflected in all places which refer to the same `teal_slice`.
 #'
 #' @return `FilterStateExpr` object
@@ -237,13 +238,13 @@ init_filter_state_expr <- function(slice) {
 #' @keywords internal
 #'
 #' @examples
-#' \dontrun{
-#' teal.slice:::check_in_range(c(3, 1), c(1, 3))
-#' teal.slice:::check_in_range(c(0, 3), c(1, 3))
-#' teal.slice:::check_in_range(
-#'   c(as.Date("2020-01-01"), as.Date("2020-01-20")),
-#'   c(as.Date("2020-01-01"), as.Date("2020-01-02"))
-#' )
+#' if (interactive()) {
+#'   teal.slice:::check_in_range(c(3, 1), c(1, 3))
+#'   teal.slice:::check_in_range(c(0, 3), c(1, 3))
+#'   teal.slice:::check_in_range(
+#'     c(as.Date("2020-01-01"), as.Date("2020-01-20")),
+#'     c(as.Date("2020-01-01"), as.Date("2020-01-02"))
+#'   )
 #' }
 check_in_range <- function(subinterval, range, pre_msg = "") {
   epsilon <- .Machine$double.eps^0.5 # needed for floating point arithmetic; same value as in base::all.equal()
@@ -286,10 +287,10 @@ check_in_range <- function(subinterval, range, pre_msg = "") {
 #' @examples
 #' \donttest{
 #' teal.slice:::check_in_subset(c("a", "b"), c("a", "b", "c"))
-#' \dontrun{
-#' teal.slice:::check_in_subset(c("a", "b"), c("b", "c"), pre_msg = "Error: ")
-#' # truncated because too long
-#' teal.slice:::check_in_subset("a", LETTERS, pre_msg = "Error: ")
+#' if (interactive()) {
+#'   teal.slice:::check_in_subset(c("a", "b"), c("b", "c"), pre_msg = "Error: ")
+#'   # truncated because too long
+#'   teal.slice:::check_in_subset("a", LETTERS, pre_msg = "Error: ")
 #' }
 #' }
 check_in_subset <- function(subset, choices, pre_msg = "") {

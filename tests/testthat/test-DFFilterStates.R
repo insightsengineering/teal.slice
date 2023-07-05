@@ -8,7 +8,7 @@ testthat::test_that("contructor accepts keys as string", {
 # get_filter_state ----
 testthat::test_that("get_filter_state return `teal_slices` with include_varnames by default", {
   filter_states <- DFFilterStates$new(data = iris, dataname = "iris")
-  fs <- filter_settings(
+  fs <- teal_slices(
     count_type = "all",
     include_varnames = list(iris = colnames(iris))
   )
@@ -21,9 +21,9 @@ testthat::test_that("get_filter_state return `teal_slices` with include_varnames
 # get_call ----
 testthat::test_that("get_call returns filter call on dataname with unprefixed variables in logical expression", {
   filter_states <- DFFilterStates$new(data = iris, dataname = "iris")
-  fs <- filter_settings(
-    filter_var(dataname = "iris", varname = "Sepal.Length", selected = c(5.1, 6.4)),
-    filter_var(dataname = "iris", varname = "Species", selected = c("setosa", "versicolor"))
+  fs <- teal_slices(
+    teal_slice(dataname = "iris", varname = "Sepal.Length", selected = c(5.1, 6.4)),
+    teal_slice(dataname = "iris", varname = "Species", selected = c("setosa", "versicolor"))
   )
   filter_states$set_filter_state(fs)
   testthat::expect_equal(

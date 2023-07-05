@@ -44,22 +44,22 @@ datasets <- init_filtered_data(
     mae = list(dataset = miniACC)
   )
 )
-fs <- filter_settings(
-  filter_var(dataname = "iris", varname = "Species", selected = c("setosa", "versicolor")),
-  filter_var(dataname = "iris", varname = "Sepal.Length", selected = c(5.1, 6.4)),
-  filter_var(
+fs <- teal_slices(
+  teal_slice(dataname = "iris", varname = "Species", selected = c("setosa", "versicolor")),
+  teal_slice(dataname = "iris", varname = "Sepal.Length", selected = c(5.1, 6.4)),
+  teal_slice(
     dataname = "mae", varname = "years_to_birth", selected = c(30, 50),
     keep_na = TRUE, keep_inf = FALSE
   ),
-  filter_var(
+  teal_slice(
     dataname = "mae", varname = "vital_status", selected = "1",
     keep_na = FALSE
   ),
-  filter_var(
+  teal_slice(
     dataname = "mae", varname = "gender", selected = "female",
     keep_na = TRUE
   ),
-  filter_var(
+  teal_slice(
     dataname = "mae", varname = "ARRAY_TYPE", selected = "",
     keep_na = TRUE, experiment = "RPPAArray", arg = "subset"
   )
@@ -74,18 +74,18 @@ get_filter_state(datasets)
 # modify filter state
 set_filter_state(
   datasets,
-  filter_settings(
-    filter_var(dataname = "iris", varname = "Species", selected = "setosa", keep_na = TRUE)
+  teal_slices(
+    teal_slice(dataname = "iris", varname = "Species", selected = "setosa", keep_na = TRUE)
   )
 )
 
 # remove specific filters
 remove_filter_state(
   datasets,
-  filter_settings(
-    filter_var(dataname = "iris", varname = "Species"),
-    filter_var(dataname = "mae", varname = "years_to_birth"),
-    filter_var(dataname = "mae", varname = "vital_status")
+  teal_slices(
+    teal_slice(dataname = "iris", varname = "Species"),
+    teal_slice(dataname = "mae", varname = "years_to_birth"),
+    teal_slice(dataname = "mae", varname = "vital_status")
   )
 )
 

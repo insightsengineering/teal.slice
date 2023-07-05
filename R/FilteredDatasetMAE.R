@@ -73,17 +73,17 @@ MAEFilteredDataset <- R6::R6Class( # nolint
     #' @examples
     #' utils::data(miniACC, package = "MultiAssayExperiment")
     #' dataset <- teal.slice:::MAEFilteredDataset$new(miniACC, "MAE")
-    #' fs <- filter_settings(
-    #'   filter_var(
+    #' fs <- teal_slices(
+    #'   teal_slice(
     #'     dataname = "MAE", varname = "years_to_birth", selected = c(30, 50), keep_na = TRUE
     #'   ),
-    #'   filter_var(
+    #'   teal_slice(
     #'     dataname = "MAE", varname = "vital_status", selected = "1", keep_na = FALSE
     #'   ),
-    #'   filter_var(
+    #'   teal_slice(
     #'     dataname = "MAE", varname = "gender", selected = "female", keep_na = TRUE
     #'   ),
-    #'   filter_var(
+    #'   teal_slice(
     #'     dataname = "MAE", varname = "ARRAY_TYPE", selected = "", keep_na = TRUE
     #'   )
     #' )
@@ -101,8 +101,8 @@ MAEFilteredDataset <- R6::R6Class( # nolint
         })
 
         # set state on subjects
-        state_subjects <- Filter(function(x) is.null(x$experiment), state)
-        private$get_filter_states()[["subjects"]]$set_filter_state(state_subjects)
+        subject_state <- Filter(function(x) is.null(x$experiment), state)
+        private$get_filter_states()[["subjects"]]$set_filter_state(subject_state)
 
         # set state on experiments
         # determine target experiments (defined in teal_slices)
@@ -145,8 +145,8 @@ MAEFilteredDataset <- R6::R6Class( # nolint
 
         logger::log_trace("{ class(self)[1] }$remove_filter_state removing filter(s), dataname: { private$dataname }")
         # remove state on subjects
-        state_subjects <- Filter(function(x) is.null(x$experiment), state)
-        private$get_filter_states()[["subjects"]]$remove_filter_state(state_subjects)
+        subject_state <- Filter(function(x) is.null(x$experiment), state)
+        private$get_filter_states()[["subjects"]]$remove_filter_state(subject_state)
 
         # remove state on experiments
         # determine target experiments (defined in teal_slices)

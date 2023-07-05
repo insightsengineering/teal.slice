@@ -48,8 +48,7 @@ labels <- teal.slice:::countBars(
   countsnow = unname(counts)
 )
 
-\dontrun{
-shinyApp(
+app <- shinyApp(
   ui = fluidPage(
     div(
       class = "choices_state",
@@ -77,6 +76,8 @@ shinyApp(
     })
   }
 )
+if (interactive()) {
+  runApp(app)
 }
 }
 \keyword{internal}

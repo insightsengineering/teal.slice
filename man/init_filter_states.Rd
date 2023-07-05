@@ -49,8 +49,7 @@ rf <- teal.slice:::init_filter_states(
   data = df,
   dataname = "DF"
 )
-\dontrun{
-shinyApp(
+app <- shinyApp(
   ui = fluidPage(
     actionButton("clear", span(icon("xmark"), "Remove all filters")),
     rf$ui_add(id = "add"),
@@ -66,6 +65,8 @@ shinyApp(
     observeEvent(input$clear, rf$state_list_empty())
   }
 )
+if (interactive()) {
+  runApp(app)
 }
 }
 \keyword{internal}

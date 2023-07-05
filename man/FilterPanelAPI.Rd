@@ -27,8 +27,8 @@ isolate(fpa$get_filter_state())
 # set a filter state
 set_filter_state(
   fpa,
-  filter_settings(
-    filter_var(dataname = "iris", varname = "Species", selected = "setosa", keep_na = TRUE)
+  teal_slices(
+    teal_slice(dataname = "iris", varname = "Species", selected = "setosa", keep_na = TRUE)
   )
 )
 

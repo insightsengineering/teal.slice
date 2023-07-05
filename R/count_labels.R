@@ -23,8 +23,7 @@
 #'   countsnow = unname(counts)
 #' )
 #'
-#' \dontrun{
-#' shinyApp(
+#' app <- shinyApp(
 #'   ui = fluidPage(
 #'     div(
 #'       class = "choices_state",
@@ -52,6 +51,8 @@
 #'     })
 #'   }
 #' )
+#' if (interactive()) {
+#'   runApp(app)
 #' }
 #' @keywords internal
 countBars <- function(inputId, choices, countsmax, countsnow = NULL) { # nolint
