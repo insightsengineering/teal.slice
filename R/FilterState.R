@@ -371,7 +371,7 @@ FilterState <- R6::R6Class( # nolint
     # set by constructor
     x = NULL, # the filtered variable
     x_reactive = NULL, # reactive containing the filtered variable, used for updating counts and histograms
-    teal_slice = shiny::reactiveValues(), # stores all transferable properties of this filter state
+    teal_slice = NULL, # stores all transferable properties of this filter state
     extract_type = character(0), # used by private$get_varname_prefixed
     na_count = integer(0),
     filtered_na_count = NULL, # reactive containing the count of NA in the filtered dataset
