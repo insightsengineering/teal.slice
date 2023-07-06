@@ -123,7 +123,7 @@ teal_slice <- function(dataname,
 
   formal_args <- as.list(environment())
 
-  if (!missing(expr) & !missing(varname)) {
+  if (!missing(expr) && !missing(varname)) {
     stop("Must provide either `expr` or `varname`.")
   } else if (!missing(expr)) {
     checkmate::assert_string(id)
