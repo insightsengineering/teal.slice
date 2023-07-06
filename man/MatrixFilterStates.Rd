@@ -67,7 +67,7 @@ name of the data used in the expression
 specified to the function argument attached to this \code{FilterStates}.}
 
 \item{\code{datalabel}}{(\code{NULL} or \code{character(1)})\cr
-text label value.}
+text label value. Should be a name of experiment.}
 }
 \if{html}{\out{</div>}}
 }

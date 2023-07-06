@@ -24,9 +24,9 @@ testthat::test_that("filter_states list is initialized with single `FilterStates
 testthat::test_that("set_filter_state accepts `teal_slices`", {
   dataset <- DefaultFilteredDataset$new(dataset = iris, dataname = "iris")
 
-  fs <- filter_settings(
-    filter_var(dataname = "iris", varname = "Sepal.Length", selected = c(5.1, 6.4), keep_na = FALSE, keep_inf = FALSE),
-    filter_var(dataname = "iris", varname = "Species", selected = c("setosa", "versicolor"), keep_na = FALSE)
+  fs <- teal_slices(
+    teal_slice(dataname = "iris", varname = "Sepal.Length", selected = c(5.1, 6.4), keep_na = FALSE, keep_inf = FALSE),
+    teal_slice(dataname = "iris", varname = "Species", selected = c("setosa", "versicolor"), keep_na = FALSE)
   )
   testthat::expect_no_error(dataset$set_filter_state(state = fs))
   testthat::expect_error(dataset$set_filter_state(state = list(fs[[1]], fs[[2]])), "Assertion on 'state' failed")
@@ -36,12 +36,12 @@ testthat::test_that("set_filter_state accepts `teal_slices`", {
 # get_filter_state ----
 testthat::test_that("set_filter_state sets `teal_slice`", {
   dataset <- DefaultFilteredDataset$new(dataset = iris, dataname = "iris")
-  fs <- filter_settings(
-    filter_var(
+  fs <- teal_slices(
+    teal_slice(
       dataname = "iris", varname = "Sepal.Length", choices = c(4.3, 7.9), selected = c(5.1, 6.4),
       keep_na = FALSE, keep_inf = FALSE, fixed = FALSE, locked = FALSE
     ),
-    filter_var(
+    teal_slice(
       dataname = "iris", varname = "Species",
       choices = c("setosa", "versicolor", "virginica"), multiple = TRUE, selected = c("setosa", "versicolor"),
       keep_na = FALSE, keep_inf = FALSE, fixed = FALSE, locked = FALSE
@@ -57,12 +57,12 @@ testthat::test_that("set_filter_state sets `teal_slice`", {
 # format ---
 testthat::test_that("format returns a properly formatted string representation", {
   dataset <- DefaultFilteredDataset$new(dataset = iris, dataname = "iris")
-  fs <- filter_settings(
-    filter_var(
+  fs <- teal_slices(
+    teal_slice(
       dataname = "iris", varname = "Sepal.Length", choices = c(4.3, 7.9), selected = c(5.1, 6.4),
       keep_inf = FALSE, fixed = FALSE, locked = FALSE
     ),
-    filter_var(
+    teal_slice(
       dataname = "iris", varname = "Species",
       choices = c("setosa", "versicolor", "virginica"), selected = c("setosa", "versicolor"),
       keep_na = FALSE, fixed = FALSE, locked = FALSE
@@ -90,12 +90,12 @@ testthat::test_that("format returns a properly formatted string representation",
 # print ---
 testthat::test_that("print returns a properly formatted string representation", {
   dataset <- DefaultFilteredDataset$new(dataset = iris, dataname = "iris")
-  fs <- filter_settings(
-    filter_var(
+  fs <- teal_slices(
+    teal_slice(
       dataname = "iris", varname = "Sepal.Length", choices = c(4.3, 7.9), selected = c(5.1, 6.4),
       keep_inf = FALSE, fixed = FALSE, locked = FALSE
     ),
-    filter_var(
+    teal_slice(
       dataname = "iris", varname = "Species",
       choices = c("setosa", "versicolor", "virginica"), selected = c("setosa", "versicolor"),
       keep_na = FALSE, fixed = FALSE, locked = FALSE
@@ -121,26 +121,26 @@ testthat::test_that("print returns a properly formatted string representation", 
 # remove_filter_state ----
 testthat::test_that("remove_filter_state removes desired filter", {
   dataset <- DefaultFilteredDataset$new(dataset = iris, dataname = "iris")
-  fs <- filter_settings(
-    filter_var(dataname = "iris", varname = "Sepal.Length", selected = c(5.1, 6.4), keep_na = FALSE, keep_inf = FALSE),
-    filter_var(dataname = "iris", varname = "Species", selected = c("setosa", "versicolor"), keep_na = FALSE)
+  fs <- teal_slices(
+    teal_slice(dataname = "iris", varname = "Sepal.Length", selected = c(5.1, 6.4), keep_na = FALSE, keep_inf = FALSE),
+    teal_slice(dataname = "iris", varname = "Species", selected = c("setosa", "versicolor"), keep_na = FALSE)
   )
   dataset$set_filter_state(state = fs)
-  dataset$remove_filter_state(filter_settings(filter_var(dataname = "iris", varname = "Species")))
+  dataset$remove_filter_state(teal_slices(teal_slice(dataname = "iris", varname = "Species")))
   testthat::expect_length(shiny::isolate(dataset$get_filter_state()), 1)
 })
 
 testthat::test_that("remove_filter_state can remove multiple filters", {
   dataset <- DefaultFilteredDataset$new(dataset = iris, dataname = "iris")
-  fs <- filter_settings(
-    filter_var(dataname = "iris", varname = "Sepal.Length", selected = c(5.1, 6.4), keep_na = FALSE, keep_inf = FALSE),
-    filter_var(dataname = "iris", varname = "Species", selected = c("setosa", "versicolor"), keep_na = FALSE)
+  fs <- teal_slices(
+    teal_slice(dataname = "iris", varname = "Sepal.Length", selected = c(5.1, 6.4), keep_na = FALSE, keep_inf = FALSE),
+    teal_slice(dataname = "iris", varname = "Species", selected = c("setosa", "versicolor"), keep_na = FALSE)
   )
   dataset$set_filter_state(state = fs)
   dataset$remove_filter_state(
-    filter_settings(
-      filter_var(dataname = "iris", varname = "Sepal.Length"),
-      filter_var(dataname = "iris", varname = "Species")
+    teal_slices(
+      teal_slice(dataname = "iris", varname = "Sepal.Length"),
+      teal_slice(dataname = "iris", varname = "Species")
     )
   )
 
@@ -159,8 +159,8 @@ testthat::test_that("get_filter_overview returns overview data.frame with obs fi
 
 testthat::test_that("get_filter_overview returns overview data.frame with obs filter counts", {
   dataset_iris <- DefaultFilteredDataset$new(dataset = head(iris), dataname = "iris")
-  fs <- filter_settings(
-    filter_var(dataname = "iris", varname = "Sepal.Length", selected = c(5.1, 5.1), keep_na = FALSE, keep_inf = FALSE)
+  fs <- teal_slices(
+    teal_slice(dataname = "iris", varname = "Sepal.Length", selected = c(5.1, 5.1), keep_na = FALSE, keep_inf = FALSE)
   )
   dataset_iris$set_filter_state(fs)
   testthat::expect_equal(
@@ -171,8 +171,8 @@ testthat::test_that("get_filter_overview returns overview data.frame with obs fi
 
 testthat::test_that("get_filter_overview returns overview data.frame with obs and subject filter counts  ", {
   dataset_iris <- DefaultFilteredDataset$new(dataset = head(iris), dataname = "iris", keys = "Species")
-  fs <- filter_settings(
-    filter_var(dataname = "iris", varname = "Sepal.Length", selected = c(5.1, 5.1), keep_na = FALSE, keep_inf = FALSE)
+  fs <- teal_slices(
+    teal_slice(dataname = "iris", varname = "Sepal.Length", selected = c(5.1, 5.1), keep_na = FALSE, keep_inf = FALSE)
   )
   dataset_iris$set_filter_state(fs)
   testthat::expect_equal(
@@ -188,9 +188,9 @@ testthat::test_that("get_call returns a list of `<-` calls or NULL", {
     dataset = iris, dataname = "iris"
   )
   testthat::expect_null(shiny::isolate(filtered_dataset$get_call()))
-  fs <- filter_settings(
-    filter_var(dataname = "iris", varname = "Sepal.Length", selected = c(5.1, 6.4), keep_na = FALSE, keep_inf = FALSE),
-    filter_var(dataname = "iris", varname = "Species", selected = c("setosa", "versicolor"), keep_na = FALSE)
+  fs <- teal_slices(
+    teal_slice(dataname = "iris", varname = "Sepal.Length", selected = c(5.1, 6.4), keep_na = FALSE, keep_inf = FALSE),
+    teal_slice(dataname = "iris", varname = "Species", selected = c("setosa", "versicolor"), keep_na = FALSE)
   )
   filtered_dataset$set_filter_state(state = fs)
 

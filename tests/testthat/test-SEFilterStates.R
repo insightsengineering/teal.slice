@@ -46,7 +46,7 @@ testthat::test_that("constructor accepts a SummarizedExperiment", {
 # set_filter_state ----
 testthat::test_that("set_filter_state only accepts `teal_slices`", {
   filter_states <- SEFilterStates$new(data = get_test_data(), dataname = "test")
-  fs <- filter_settings()
+  fs <- teal_slices()
   testthat::expect_error(
     filter_states$set_filter_state("anything"),
     "Assertion on 'state' failed"
@@ -56,9 +56,9 @@ testthat::test_that("set_filter_state only accepts `teal_slices`", {
 
 testthat::test_that("set_filter_state arg - ", {
   filter_states <- SEFilterStates$new(data = get_test_data(), dataname = "test")
-  fs <- filter_settings(
-    filter_var(dataname = "test", varname = "feature_id", selected = c("ID001", "ID002"), arg = "subset"),
-    filter_var(dataname = "test", varname = "Treatment", selected = c("ChIP", "Input"), arg = "select")
+  fs <- teal_slices(
+    teal_slice(dataname = "test", varname = "feature_id", selected = c("ID001", "ID002"), arg = "subset"),
+    teal_slice(dataname = "test", varname = "Treatment", selected = c("ChIP", "Input"), arg = "select")
   )
   testthat::expect_error(
     filter_states$set_filter_state(fs[[1]]),
@@ -71,9 +71,9 @@ testthat::test_that("set_filter_state arg - ", {
 testthat::test_that("get_call returns executable subset call ", {
   test <- get_test_data()
   filter_states <- SEFilterStates$new(data = test, dataname = "test")
-  fs <- filter_settings(
-    filter_var(dataname = "test", varname = "feature_id", selected = c("ID001", "ID002"), arg = "subset"),
-    filter_var(dataname = "test", varname = "Treatment", selected = "ChIP", arg = "select")
+  fs <- teal_slices(
+    teal_slice(dataname = "test", varname = "feature_id", selected = c("ID001", "ID002"), arg = "subset"),
+    teal_slice(dataname = "test", varname = "Treatment", selected = "ChIP", arg = "select")
   )
   filter_states$set_filter_state(fs)
 

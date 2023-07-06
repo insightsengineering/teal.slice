@@ -58,8 +58,7 @@ iris_fd <- teal.slice:::init_filtered_dataset(
   dataname = "iris",
   metadata = list(type = "teal")
 )
-\dontrun{
-shinyApp(
+app <- shinyApp(
   ui = fluidPage(
     iris_fd$ui_add(id = "add"),
     iris_fd$ui_active("dataset"),
@@ -82,14 +81,15 @@ shinyApp(
     })
   }
 )
+if (interactive()) {
+  runApp(app)
 }
 
 # MAEFilteredDataset example
 library(MultiAssayExperiment)
 data(miniACC)
 MAE_fd <- teal.slice:::init_filtered_dataset(miniACC, "MAE", metadata = list(type = "MAE"))
-\dontrun{
-shinyApp(
+app <- shinyApp(
   ui = fluidPage(
     MAE_fd$ui_add(id = "add"),
     MAE_fd$ui_active("dataset"),
@@ -110,6 +110,8 @@ shinyApp(
     })
   }
 )
+if (interactive()) {
+  runApp(app)
 }
 }
 \keyword{internal}

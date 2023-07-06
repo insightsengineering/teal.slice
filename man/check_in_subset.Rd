@@ -17,10 +17,10 @@ Raises an error message if not and says which elements are not in the allowed \c
 \examples{
 \donttest{
 teal.slice:::check_in_subset(c("a", "b"), c("a", "b", "c"))
-\dontrun{
-teal.slice:::check_in_subset(c("a", "b"), c("b", "c"), pre_msg = "Error: ")
-# truncated because too long
-teal.slice:::check_in_subset("a", LETTERS, pre_msg = "Error: ")
+if (interactive()) {
+  teal.slice:::check_in_subset(c("a", "b"), c("b", "c"), pre_msg = "Error: ")
+  # truncated because too long
+  teal.slice:::check_in_subset("a", LETTERS, pre_msg = "Error: ")
 }
 }
 }

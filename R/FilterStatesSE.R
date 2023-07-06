@@ -24,7 +24,7 @@ SEFilterStates <- R6::R6Class( # nolint
     #'   name of the data used in the expression
     #'   specified to the function argument attached to this `FilterStates`.
     #' @param datalabel (`character(0)` or `character(1)`)\cr
-    #'   text label value.
+    #'   text label value. Should be a name of experiment
     #'
     initialize = function(data,
                           data_reactive = function(sid = "") NULL,
@@ -243,7 +243,9 @@ SEFilterStates <- R6::R6Class( # nolint
                 )
               )
               varname <- input$col_to_add
-              self$set_filter_state(filter_settings(filter_var(private$dataname, varname, arg = "select")))
+              self$set_filter_state(teal_slices(
+                teal_slice(private$dataname, varname, experiment = private$datalabel, arg = "select")
+              ))
 
               logger::log_trace(
                 sprintf(
@@ -267,7 +269,9 @@ SEFilterStates <- R6::R6Class( # nolint
                 )
               )
               varname <- input$row_to_add
-              self$set_filter_state(filter_settings(filter_var(private$dataname, varname, arg = "subset")))
+              self$set_filter_state(teal_slices(
+                teal_slice(private$dataname, varname, experiment = private$datalabel, arg = "subset")
+              ))
 
               logger::log_trace(
                 sprintf(
