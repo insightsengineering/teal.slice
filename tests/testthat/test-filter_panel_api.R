@@ -213,5 +213,6 @@ testthat::test_that("clear_filter_states removes all filter states", {
   testthat::expect_no_error(
     clear_filter_states(datasets)
   )
-  testthat::expect_null(shiny::isolate(get_filter_state(datasets)))
+  testthat::expect_s3_class(shiny::isolate(get_filter_state(datasets)), "teal_slices")
+  testthat::expect_length(shiny::isolate(get_filter_state(datasets)), 0)
 })

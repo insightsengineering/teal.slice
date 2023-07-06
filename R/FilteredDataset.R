@@ -131,7 +131,6 @@ FilteredDataset <- R6::R6Class( # nolint
     #'
     get_filter_state = function() {
       states <- unname(lapply(private$get_filter_states(), function(x) x$get_filter_state()))
-      states <- Filter(function(x) length(x) != 0L, states)
       do.call(c, states)
     },
 

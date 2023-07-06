@@ -119,7 +119,7 @@ MAEFilteredDataset <- R6::R6Class( # nolint
         }
 
         # set states on state_lists with corresponding experiments
-        lapply(experiments, function(experiment) {
+        lapply(available_experiments, function(experiment) {
           slices <- Filter(function(x) identical(x$experiment, experiment), state)
           private$get_filter_states()[[experiment]]$set_filter_state(slices)
         })

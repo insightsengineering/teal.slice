@@ -613,7 +613,8 @@ testthat::test_that("clear_filter_states removes all filters of all datasets in 
   datasets$set_filter_state(state = fs)
   datasets$clear_filter_states()
 
-  testthat::expect_null(shiny::isolate(datasets$get_filter_state()))
+  testthat::expect_s3_class(shiny::isolate(datasets$get_filter_state()), "teal_slices")
+  testthat::expect_length(shiny::isolate(datasets$get_filter_state()), 0)
 })
 
 testthat::test_that("clear_filter_states removes filters of desired dataset only", {
@@ -820,7 +821,8 @@ testthat::test_that("srv_active - clicking remove_all button clears filters", {
     filtered_data$srv_active,
     expr = {
       session$setInputs(remove_all_filters = TRUE)
-      testthat::expect_null(filtered_data$get_filter_state())
+      testthat::expect_s3_class(filtered_data$get_filter_state(), "teal_slices")
+      testthat::expect_length(filtered_data$get_filter_state(), 0)
     }
   )
 })
