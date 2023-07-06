@@ -104,6 +104,8 @@ FilterState <- R6::R6Class( # nolint
           varlabel
         }
 
+      private$state_history <- reactiveVal(list(as.list(slice)))
+
       logger::log_trace("Instantiated FilterState object id: { private$get_id() }")
 
       invisible(self)
@@ -158,12 +160,6 @@ FilterState <- R6::R6Class( # nolint
           if (!is.null(state$keep_inf)) {
             private$set_keep_inf(state$keep_inf)
           }
-          current_state <- sprintf(
-            "selected: %s; keep_na: %s; keep_inf: %s",
-            toString(private$get_selected()),
-            private$get_keep_na(),
-            private$get_keep_inf()
-          )
         })
       }
 
@@ -212,6 +208,57 @@ FilterState <- R6::R6Class( # nolint
             private$server_inputs("inputs")
           }
 
+          private$observers$state <- observeEvent(
+            ignoreNULL = TRUE,
+            ignoreInit = TRUE,
+            eventExpr = list(private$get_selected(), private$get_keep_na(), private$get_keep_inf()),
+            handlerExpr = {
+              current_state <- as.list(self$get_state())
+              history <- private$state_history()
+              history_update <- c(history, list(current_state))
+              private$state_history(history_update)
+            }
+          )
+
+          private$observers$back <- observeEvent(
+            ignoreNULL = TRUE,
+            ignoreInit = TRUE,
+            eventExpr = input$back,
+            handlerExpr = {
+              history <- rev(private$state_history())
+              slice <- history[[2L]]
+              history_update <- rev(history[-(1:2)])
+              private$state_history(history_update)
+              self$set_state(as.teal_slice(slice))
+            }
+          )
+
+          private$observers$reset <- observeEvent(
+            ignoreNULL = TRUE,
+            ignoreInit = TRUE,
+            eventExpr = input$reset,
+            handlerExpr = {
+              slice <- private$state_history()[[1L]]
+              self$set_state(as.teal_slice(slice))
+            }
+          )
+
+          private$observers$state_history <- observeEvent(
+            ignoreNULL = TRUE,
+            ignoreInit = TRUE,
+            eventExpr = private$state_history(),
+            handlerExpr = {
+              shinyjs::delay(
+                ms = 100,
+                expr = shinyjs::toggleElement(id = "back", condition = length(private$state_history()) > 1L)
+              )
+              shinyjs::delay(
+                ms = 100,
+                expr = shinyjs::toggleElement(id = "reset", condition = length(private$state_history()) > 1L)
+              )
+            }
+          )
+
           private$destroy_shiny <- function() {
             logger::log_trace("Destroying FilterState inputs and observers; id: { private$get_id() }")
             # remove values from the input list
@@ -254,13 +301,34 @@ FilterState <- R6::R6Class( # nolint
             tags$span(tags$strong(private$get_varname())),
             tags$span(private$get_varlabel(), class = "filter-card-varlabel")
           ),
-          if (isFALSE(private$is_locked())) {
-            actionLink(
-              inputId = ns("remove"),
-              label = icon("circle-xmark", lib = "font-awesome"),
-              class = "filter-card-remove"
-            )
-          },
+          div(
+            class  = "filter-card-controls",
+            if (isFALSE(private$is_fixed())) {
+              actionLink(
+                inputId = ns("back"),
+                label = NULL,
+                icon = icon("circle-arrow-left", lib = "font-awesome"),
+                class = "filter-card-back",
+                style = "display: none"
+              )
+            },
+            if (isFALSE(private$is_fixed())) {
+              actionLink(
+                inputId = ns("reset"),
+                label = NULL,
+                icon = icon("circle-arrow-up", lib = "font-awesome"),
+                class = "filter-card-back",
+                style = "display: none"
+              )
+            },
+            if (isFALSE(private$is_locked())) {
+              actionLink(
+                inputId = ns("remove"),
+                label = icon("circle-xmark", lib = "font-awesome"),
+                class = "filter-card-remove"
+              )
+            }
+          ),
           tags$div(
             class = "filter-card-summary",
             `data-toggle` = "collapse",
@@ -303,7 +371,7 @@ FilterState <- R6::R6Class( # nolint
     # set by constructor
     x = NULL, # the filtered variable
     x_reactive = NULL, # reactive containing the filtered variable, used for updating counts and histograms
-    teal_slice = shiny::reactiveValues(), # stores all transferable properties of this filter state
+    teal_slice = NULL, # stores all transferable properties of this filter state
     extract_type = character(0), # used by private$get_varname_prefixed
     na_count = integer(0),
     filtered_na_count = NULL, # reactive containing the count of NA in the filtered dataset
@@ -313,6 +381,7 @@ FilterState <- R6::R6Class( # nolint
     is_choice_limited = FALSE, # flag whether number of possible choices was limited when specifying filter
     na_rm = FALSE,
     observers = list(), # stores observers
+    state_history = NULL, # reactiveVal storing states this FilterState has had since instantiation
 
     # private methods ----
 

@@ -87,14 +87,17 @@ FilteredDataset <- R6::R6Class( # nolint
 
     #' @description
     #' Removes all active filter items applied to this dataset
+    #' @param force (`logical(1)`)\cr
+    #'   include locked filter states
+    #'
     #' @return NULL
-    clear_filter_states = function() {
-      logger::log_trace("Removing all non-locked filters from FilteredDataset: { deparse1(self$get_dataname()) }")
+    clear_filter_states = function(force = FALSE) {
+      logger::log_trace("Removing filters from FilteredDataset: { deparse1(self$get_dataname()) }")
       lapply(
         private$get_filter_states(),
-        function(filter_states) filter_states$clear_filter_states()
+        function(filter_states) filter_states$clear_filter_states(force)
       )
-      logger::log_trace("Removed all non-locked filters from FilteredDataset: { deparse1(self$get_dataname()) }")
+      logger::log_trace("Removed filters from FilteredDataset: { deparse1(self$get_dataname()) }")
       NULL
     },
 
