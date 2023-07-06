@@ -115,10 +115,6 @@ FilteredData <- R6::R6Class( # nolint
 
       self$set_available_teal_slices(x = reactive(NULL))
 
-      # ### ABANDON ###
-      # private$state_history <- reactiveVal(list())
-      # ### END ABANDON ###
-
       invisible(self)
     },
 
@@ -677,22 +673,6 @@ FilteredData <- R6::R6Class( # nolint
           class = "filter-panel-active-header",
           tags$span("Active Filter Variables", class = "text-primary mb-4"),
           private$ui_available_filters(ns("available_filters")),
-          # ### ABANDON ###
-          # actionLink(
-          #   inputId = ns("filter_state_back"),
-          #   label = NULL,
-          #   title = "Rewind filter state",
-          #   icon = icon("circle-arrow-left", lib = "font-awesome"),
-          #   class = "back pull-right disabled"
-          # ),
-          # actionLink(
-          #   inputId = ns("filter_state_reset"),
-          #   label = NULL,
-          #   icon = icon("circle-arrow-up", lib = "font-awesome"),
-          #   title = "Reset filter state",
-          #   class = "reset pull-right disabled"
-          # ),
-          # ### END ABANDON ###
           actionLink(
             inputId = ns("minimise_filter_active"),
             label = NULL,
@@ -742,40 +722,6 @@ FilteredData <- R6::R6Class( # nolint
         logger::log_trace("FilteredData$srv_active initializing")
 
         private$srv_available_filters("available_filters")
-
-        # ### ABANDON ###
-        # This is a naked observer because observeEvent listening on self$get_filter_state()
-        # only registers changes in the number of `teal_slice`s and not their content.
-        # observe({
-        #   current_state <- lapply(unclass(self$get_filter_state()), reactiveValuesToList) # this will use as.list
-        #   history <- isolate(private$state_history())
-        #   history_update <- c(history, list(current_state))
-        #   private$state_history(history_update)
-        # })
-        #
-        # observeEvent(input$filter_state_back, {
-        #   history <- rev(private$state_history())
-        #   slices <- history[[2L]]
-        #   history_update <- rev(history[-(1:2)])
-        #   private$state_history(history_update)
-        #   state <- do.call(filter_settings, lapply(slices, do.call, what = filter_var))
-        #   self$remove_filter_state(slices_diff(self$get_filter_state(), state))
-        #   self$set_filter_state(state)
-        # })
-        #
-        # observeEvent(input$filter_state_reset, {
-        #   slices <- private$state_history()[[1L]]
-        #   state <- do.call(filter_settings, lapply(slices, do.call, what = filter_var))
-        #   diff <- slices_diff(self$get_filter_state(), state)
-        #   self$remove_filter_state(diff)
-        #   self$set_filter_state(state)
-        # })
-        #
-        # observeEvent(private$state_history(), {
-        #   shinyjs::toggleState(id = "filter_state_back", condition = length(private$state_history()) > 1L)
-        #   shinyjs::toggleState(id = "filter_state_reset", condition = length(private$state_history()) > 1L)
-        # })
-        # ### END ABANDON ###
 
         observeEvent(input$minimise_filter_active, {
           shinyjs::toggle("filter_active_vars_contents")
