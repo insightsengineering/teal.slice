@@ -135,7 +135,6 @@ teal_slice <- function(dataname,
     formal_args <- formal_args[ts_expr_args]
     ans <- do.call(shiny::reactiveValues, c(formal_args, list(...)))
     class(ans) <- c("teal_slice_expr", "teal_slice", class(ans))
-
   } else if (!missing(varname)) {
     checkmate::assert_string(varname)
     checkmate::assert_multi_class(choices, .filterable_class, null.ok = TRUE)
@@ -160,7 +159,6 @@ teal_slice <- function(dataname,
     }
     ans <- do.call(shiny::reactiveValues, args)
     class(ans) <- c("teal_slice_var", "teal_slice", class(ans))
-
   } else {
     stop("Must provide either `expr` or `varname`.")
   }

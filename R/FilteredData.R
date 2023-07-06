@@ -994,7 +994,6 @@ FilteredData <- R6::R6Class( # nolint
   ## __Private Members ====
   private = list(
     # selectively hide / show to only show `active_datanames` out of all datanames
-
     filtered_datasets = list(),
 
     # activate/deactivate filter panel
@@ -1078,7 +1077,6 @@ FilteredData <- R6::R6Class( # nolint
     # the appropriate filter state id.
     srv_available_filters = function(id) {
       moduleServer(id, function(input, output, session) {
-
         slices_nonlocked <- reactive({
           Filter(function(slice) isFALSE(slice$locked), private$available_teal_slices())
         })

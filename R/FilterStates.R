@@ -739,7 +739,7 @@ FilterStates <- R6::R6Class( # nolint
               extract_type = private$extract_type
             )
           }
-            private$state_list_push(x = fstate, state_id = state_id)
+          private$state_list_push(x = fstate, state_id = state_id)
         }
       })
 

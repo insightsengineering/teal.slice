@@ -305,12 +305,12 @@ slices_to_list <- function(tss) {
 }
 
 #' `setdiff` method for `teal_slices`
-#' 
+#'
 #' Compare two teal slices objects and return `teal_slices` containing slices present in `x` but not in `y`.
 #' @param x,y `teal_slices` objects
 #' @return `teal_slices`
 #' @keywords internal
-#' 
+#'
 setdiff_teal_slices <- function(x, y) {
   Filter(
     function(xx) {

@@ -302,7 +302,7 @@ FilterState <- R6::R6Class( # nolint
             tags$span(private$get_varlabel(), class = "filter-card-varlabel")
           ),
           div(
-            class  = "filter-card-controls",
+            class = "filter-card-controls",
             if (isFALSE(private$is_fixed())) {
               actionLink(
                 inputId = ns("back"),
