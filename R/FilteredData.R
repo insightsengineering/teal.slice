@@ -476,7 +476,7 @@ FilteredData <- R6::R6Class( # nolint
         checkmate::assert_class(state, "teal_slices")
         datanames <- slices_field(state, "dataname")
         if (!checkmate::test_subset(datanames, self$datanames())) {
-          logger::log_warn("Some teal_slices are meant for different data sets and will be ignored")
+          logger::log_warn("Some teal_slices are meant for different data sets and will be ignored.")
           state <- Filter(function(x) x$dataname %in% self$datanames(), state)
           datanames <- intersect(slices_field(state, "dataname"), self$datanames())
         }
