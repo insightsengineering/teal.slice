@@ -104,7 +104,7 @@ FilterState <- R6::R6Class( # nolint
           varlabel
         }
 
-      private$state_history <- reactiveVal(list(reactiveValuesToList(slice))) # this will be as.list
+      private$state_history <- reactiveVal(list(as.list(slice)))
 
       logger::log_trace("Instantiated FilterState object id: { private$get_id() }")
 
@@ -213,7 +213,7 @@ FilterState <- R6::R6Class( # nolint
             ignoreInit = TRUE,
             eventExpr = list(private$get_selected(), private$get_keep_na(), private$get_keep_inf()),
             handlerExpr = {
-              current_state <- reactiveValuesToList(self$get_state()) # this will be as.list
+              current_state <- as.list(self$get_state())
               history <- private$state_history()
               history_update <- c(history, list(current_state))
               private$state_history(history_update)
