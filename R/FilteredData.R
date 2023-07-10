@@ -676,7 +676,7 @@ FilteredData <- R6::R6Class( # nolint
             label = NULL,
             icon = icon("angle-down", lib = "font-awesome"),
             title = "Minimise panel",
-            class = "collapse_all pull-right"
+            class = "remove_all pull-right"
           ),
           actionLink(
             inputId = ns("remove_all_filters"),
