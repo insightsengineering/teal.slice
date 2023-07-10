@@ -200,14 +200,9 @@ FilterStates <- R6::R6Class( # nolint
     remove_filter_state = function(state) {
       shiny::isolate({
         checkmate::assert_class(state, "teal_slices")
-
-        lapply(state, function(x) {
-          state_id <- x$id
-          logger::log_trace("{ class(self)[1] }$remove_filter_state removing filter, state_id: { state_id }")
-          private$state_list_remove(state_id = state_id)
-          logger::log_trace("{ class(self)[1] }$remove_filter_state removed filter, state_id: { state_id }")
-        })
-
+        state_ids <- vapply(state, `[[`, character(1), "id")
+        logger::log_trace("{ class(self)[1] }$remove_filter_state removing filters, state_id: { toString(state_ids) }")
+        private$state_list_remove(state_ids)
         invisible(NULL)
       })
     },
@@ -635,14 +630,21 @@ FilterStates <- R6::R6Class( # nolint
         logger::log_trace("{ class(self)[1] } removing a filter, state_id: { state_id }")
         checkmate::assert_character(state_id)
         new_state_list <- private$state_list()
-        if (is.element(state_id, names(new_state_list))) {
-          if (new_state_list[[state_id]]$get_state()$locked) {
-            return(invisible(NULL))
-          }
-          new_state_list[[state_id]]$destroy_observers()
-          new_state_list[[state_id]] <- NULL
+        current_state_ids <- vapply(private$state_list(), function(x) x$get_state()$id, character(1))
+        to_remove <- state_id %in% current_state_ids
+        if (any(to_remove)) {
+          new_state_list <- Filter(
+            function(state) {
+              if (state$get_state()$id %in% state_id && !state$get_state()$locked) {
+                state$destroy_observers()
+                FALSE
+              } else {
+                TRUE
+              }
+            },
+            private$state_list()
+          )
           private$state_list(new_state_list)
-          logger::log_trace("{ class(self)[1] } removed a filter, state_id: { state_id }")
         } else {
           warning(sprintf("\"%s\" not found in state list", state_id))
         }
@@ -660,13 +662,12 @@ FilterStates <- R6::R6Class( # nolint
         logger::log_trace(
           "{ class(self)[1] }$state_list_empty removing all non-locked filters for dataname: { private$dataname }"
         )
+
         state_list <- private$state_list()
-        for (state_id in names(state_list)) {
-          private$state_list_remove(state_id)
+        if (length(state_list)) {
+          state_list_ids <- vapply(state_list, function(x) x$get_state()$id, character(1))
+          private$state_list_remove(state_list_ids)
         }
-        logger::log_trace(
-          "{ class(self)[1] }$state_list_empty removed all non-locked filters for dataname: { private$dataname }"
-        )
         invisible(NULL)
       })
     },

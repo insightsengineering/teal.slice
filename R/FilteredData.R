@@ -481,7 +481,7 @@ FilteredData <- R6::R6Class( # nolint
           private$module_add <- module_add
         }
 
-        lapply(datanames, function(dataname) {
+        lapply(self$datanames(), function(dataname) {
           states <- Filter(function(x) identical(x$dataname, dataname), state)
           private$get_filtered_dataset(dataname)$set_filter_state(states)
         })
@@ -590,7 +590,10 @@ FilteredData <- R6::R6Class( # nolint
     #' @return invisible `NULL`
     set_available_teal_slices = function(x) {
       checkmate::assert_class(x, "reactive")
-      private$available_teal_slices <- x
+      private$available_teal_slices <- reactive({
+        # we want to limit the available filters to the ones that are relevant for this FilteredData
+        Filter(function(x) x$dataname %in% self$datanames(), x())
+      })
       invisible(NULL)
     },
 
@@ -1072,7 +1075,6 @@ FilteredData <- R6::R6Class( # nolint
     # appropriate filter (identified by it's id)
     srv_available_filters = function(id) {
       moduleServer(id, function(input, output, session) {
-        slices <- reactive(Filter(function(slice) !isTRUE(slice$locked), private$available_teal_slices()))
         slices_interactive <- reactive(
           Filter(
             function(slice) !isTRUE(slice$fixed) && !inherits(slice, "teal_slice_expr"),
@@ -1085,8 +1087,16 @@ FilteredData <- R6::R6Class( # nolint
             private$available_teal_slices()
           )
         )
-        available_slices_id <- reactive(vapply(slices(), `[[`, character(1), "id"))
+        available_slices_id <- reactive(vapply(private$available_teal_slices(), `[[`, character(1), "id"))
         active_slices_id <- reactive(vapply(self$get_filter_state(), `[[`, character(1), "id"))
+        duplicated_slice_references <- reactive({
+          # slice refers to a particular column
+          slice_reference <- vapply(private$available_teal_slices(), get_default_slice_id, character(1))
+          is_duplicated_reference <- duplicated(slice_reference) | duplicated(slice_reference, fromLast = TRUE)
+          is_active <- available_slices_id() %in% active_slices_id()
+          is_not_expr <- vapply(private$available_teal_slices(), inherits, logical(1), "teal_slice_expr")
+          slice_reference[is_duplicated_reference & is_active & !is_not_expr]
+        })
 
         checkbox_group_element <- function(name, value, label, checked, disabled = FALSE) {
           tags$div(
@@ -1112,45 +1122,53 @@ FilteredData <- R6::R6Class( # nolint
             selected = NULL
           )
           active_slices_ids <- active_slices_id()
-
-          shiny::isolate({
-            interactive_choice_mock <- lapply(
-              slices_interactive(),
-              function(slice) {
+          duplicated_slice_refs <- duplicated_slice_references()
+          interactive_choice_mock <- lapply(
+            slices_interactive(),
+            function(slice) {
+              # we need to isolate changes in the fields of the slice (teal_slice)
+              shiny::isolate({
                 checkbox_group_element(
                   name = session$ns("available_slices_id"),
                   value = slice$id,
                   label = slice$id,
                   checked = if (slice$id %in% active_slices_ids) "checked",
-                  disabled = slice$locked
+                  disabled = slice$locked ||
+                    get_default_slice_id(slice) %in% duplicated_slice_refs &&
+                    !slice$id %in% active_slices_ids
                 )
-              }
-            )
+              })
+            }
+          )
 
-            non_interactive_choice_mock <- lapply(
-              slices_fixed(),
-              function(slice) {
+          non_interactive_choice_mock <- lapply(
+            slices_fixed(),
+            function(slice) {
+              # we need to isolate changes in the fields of the slice (teal_slice)
+              isolate(
                 checkbox_group_element(
                   name = session$ns("available_slices_id"),
                   value = slice$id,
                   label = slice$id,
                   checked = if (slice$id %in% active_slices_ids) "checked",
-                  disabled = slice$locked
+                  disabled = slice$locked ||
+                    get_default_slice_id(slice) %in% duplicated_slice_refs &&
+                    !slice$id %in% active_slices_ids
                 )
-              }
-            )
+              )
+            }
+          )
 
-            htmltools::tagInsertChildren(
-              checkbox,
-              br(),
-              tags$strong("Fixed filters"),
-              non_interactive_choice_mock,
-              tags$strong("Iteractive filters"),
-              interactive_choice_mock,
-              .cssSelector = "div.shiny-options-group",
-              after = 0
-            )
-          })
+          htmltools::tagInsertChildren(
+            checkbox,
+            br(),
+            tags$strong("Fixed filters"),
+            non_interactive_choice_mock,
+            tags$strong("Iteractive filters"),
+            interactive_choice_mock,
+            .cssSelector = "div.shiny-options-group",
+            after = 0
+          )
         })
 
         observeEvent(input$available_slices_id, ignoreNULL = FALSE, ignoreInit = TRUE, {
@@ -1159,7 +1177,7 @@ FilteredData <- R6::R6Class( # nolint
           if (length(new_slices_id)) {
             new_teal_slices <- Filter(
               function(slice) slice$id %in% new_slices_id,
-              slices()
+              private$available_teal_slices()
             )
             self$set_filter_state(new_teal_slices)
           }
@@ -1167,14 +1185,14 @@ FilteredData <- R6::R6Class( # nolint
           if (length(removed_slices_id)) {
             removed_teal_slices <- Filter(
               function(slice) slice$id %in% removed_slices_id,
-              slices()
+              self$get_filter_state()
             )
             self$remove_filter_state(removed_teal_slices)
           }
         })
 
-        observeEvent(slices(), ignoreNULL = FALSE, {
-          if (length(slices())) {
+        observeEvent(private$available_teal_slices(), ignoreNULL = FALSE, {
+          if (length(private$available_teal_slices())) {
             shinyjs::show("available_menu")
           } else {
             shinyjs::hide("available_menu")
