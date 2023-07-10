@@ -138,7 +138,22 @@ FilteredData <- R6::R6Class( # nolint
       private$get_filtered_dataset(dataname)$get_dataset_label()
     },
 
+    #' Set external `teal_slice`
+    #'
+    #' Unlike adding new filter from the column, these filters can be added with some pre-specified
+    #' settings. List of `teal_slices` should be a reactive so one can make this list to be dynamic.
+    #' List is accessible in `ui/srv_active` through `ui/srv_available_filters`.
+    #' @param x (`reactive`)\cr
+    #'  should return `teal_slices`
+    #' @return invisible `NULL`
+    set_available_teal_slices = function(x) {
+      checkmate::assert_class(x, "reactive")
+      private$available_teal_slices <- x
+      invisible(NULL)
+    },
+
     # datasets methods ----
+
     #' @description
     #' Gets a `call` to filter the dataset according to the filter state.
     #'
@@ -585,21 +600,8 @@ FilteredData <- R6::R6Class( # nolint
       invisible(NULL)
     },
 
-    # shiny modules -----
 
-    #' Set external `teal_slice`
-    #'
-    #' Unlike adding new filter from the column, these filters can be added with some prespecified
-    #' settings. List of `teal_slices` should be a reactive so one can make this list to be dynamic.
-    #' List is accessible in `ui/srv_active` through `ui/srv_available_filters`.
-    #' @param x (`reactive`)\cr
-    #'  should return `teal_slices`
-    #' @return invisible `NULL`
-    set_available_teal_slices = function(x) {
-      checkmate::assert_class(x, "reactive")
-      private$available_teal_slices <- x
-      invisible(NULL)
-    },
+    # shiny modules -----
 
     #' Module for the right filter panel in the teal app
     #' with a filter overview panel and a filter variable panel.
