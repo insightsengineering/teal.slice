@@ -1135,7 +1135,7 @@ FilteredData <- R6::R6Class( # nolint
                   checked = if (slice$id %in% active_slices_ids) "checked",
                   disabled = slice$locked ||
                     get_default_slice_id(slice) %in% duplicated_slice_refs &&
-                    !slice$id %in% active_slices_ids
+                      !slice$id %in% active_slices_ids
                 )
               })
             }
@@ -1153,7 +1153,7 @@ FilteredData <- R6::R6Class( # nolint
                   checked = if (slice$id %in% active_slices_ids) "checked",
                   disabled = slice$locked ||
                     get_default_slice_id(slice) %in% duplicated_slice_refs &&
-                    !slice$id %in% active_slices_ids
+                      !slice$id %in% active_slices_ids
                 )
               )
             }

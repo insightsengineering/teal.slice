@@ -925,8 +925,10 @@ shiny::testServer(
       fs_rv(c(fs_rv(), teal_slices(species_slice)))
       testthat::expect_identical(
         available_slices_id(),
-        c("iris Sepal.Length", "iris Sepal.Width", "iris Petal.Length",
-          "iris Petal.Width", "duplicated", "test", "iris Species")
+        c(
+          "iris Sepal.Length", "iris Sepal.Width", "iris Petal.Length",
+          "iris Petal.Width", "duplicated", "test", "iris Species"
+        )
       )
     })
 
