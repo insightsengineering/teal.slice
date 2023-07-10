@@ -102,6 +102,8 @@ shiny::isolate(datasets$get_filter_state())
 \item \href{#method-FilteredData-new}{\code{FilteredData$new()}}
 \item \href{#method-FilteredData-datanames}{\code{FilteredData$datanames()}}
 \item \href{#method-FilteredData-get_datalabel}{\code{FilteredData$get_datalabel()}}
+\item \href{#method-FilteredData-set_available_teal_slices}{\code{FilteredData$set_available_teal_slices()}}
+\item \href{#method-FilteredData-set_is_module_specific}{\code{FilteredData$set_is_module_specific()}}
 \item \href{#method-FilteredData-get_call}{\code{FilteredData$get_call()}}
 \item \href{#method-FilteredData-get_code}{\code{FilteredData$get_code()}}
 \item \href{#method-FilteredData-get_data}{\code{FilteredData$get_data()}}
@@ -123,7 +125,6 @@ shiny::isolate(datasets$get_filter_state())
 \item \href{#method-FilteredData-remove_filter_state}{\code{FilteredData$remove_filter_state()}}
 \item \href{#method-FilteredData-remove_all_filter_states}{\code{FilteredData$remove_all_filter_states()}}
 \item \href{#method-FilteredData-clear_filter_states}{\code{FilteredData$clear_filter_states()}}
-\item \href{#method-FilteredData-set_available_teal_slices}{\code{FilteredData$set_available_teal_slices()}}
 \item \href{#method-FilteredData-ui_filter_panel}{\code{FilteredData$ui_filter_panel()}}
 \item \href{#method-FilteredData-srv_filter_panel}{\code{FilteredData$srv_filter_panel()}}
 \item \href{#method-FilteredData-ui_active}{\code{FilteredData$ui_active()}}
@@ -201,6 +202,55 @@ Useful to display in \verb{Show R Code}.
 }
 \subsection{Returns}{
 (\code{character}) keys of dataset
+Set external \code{teal_slice}
+
+Unlike adding new filter from the column, these filters can be added with some pre-specified
+settings. List of \code{teal_slices} should be a reactive so one can make this list to be dynamic.
+List is accessible in \code{ui/srv_active} through \code{ui/srv_available_filters}.
+}
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-FilteredData-set_available_teal_slices"></a>}}
+\if{latex}{\out{\hypertarget{method-FilteredData-set_available_teal_slices}{}}}
+\subsection{Method \code{set_available_teal_slices()}}{
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{FilteredData$set_available_teal_slices(x)}\if{html}{\out{</div>}}
+}
+
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{x}}{(\code{reactive})\cr
+should return \code{teal_slices}}
+}
+\if{html}{\out{</div>}}
+}
+\subsection{Returns}{
+invisible \code{NULL}
+Set module specific flag.
+
+The snapshot manager functionality is used in both module-specific and global mode
+but the mechanics is slightly different. In the latter case the manager is run by this class
+rather than \code{teal}. This flag specifies if the global snapshot manager should be started.
+}
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-FilteredData-set_is_module_specific"></a>}}
+\if{latex}{\out{\hypertarget{method-FilteredData-set_is_module_specific}{}}}
+\subsection{Method \code{set_is_module_specific()}}{
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{FilteredData$set_is_module_specific(x)}\if{html}{\out{</div>}}
+}
+
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{x}}{(\code{logical(1)}) flag}
+}
+\if{html}{\out{</div>}}
+}
+\subsection{Returns}{
+invisible \code{NULL}
 }
 }
 \if{html}{\out{<hr>}}
@@ -688,31 +738,6 @@ include locked filter states}
 \subsection{Returns}{
 \code{NULL} invisibly
 
-Set external \code{teal_slice}
-
-Unlike adding new filter from the column, these filters can be added with some prespecified
-settings. List of \code{teal_slices} should be a reactive so one can make this list to be dynamic.
-List is accessible in \code{ui/srv_active} through \code{ui/srv_available_filters}.
-}
-}
-\if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-FilteredData-set_available_teal_slices"></a>}}
-\if{latex}{\out{\hypertarget{method-FilteredData-set_available_teal_slices}{}}}
-\subsection{Method \code{set_available_teal_slices()}}{
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{FilteredData$set_available_teal_slices(x)}\if{html}{\out{</div>}}
-}
-
-\subsection{Arguments}{
-\if{html}{\out{<div class="arguments">}}
-\describe{
-\item{\code{x}}{(\code{reactive})\cr
-should return \code{teal_slices}}
-}
-\if{html}{\out{</div>}}
-}
-\subsection{Returns}{
-invisible \code{NULL}
 Module for the right filter panel in the teal app
 with a filter overview panel and a filter variable panel.
 
