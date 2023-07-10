@@ -20,23 +20,23 @@ create a `TealData` object see `help(init_filtered_data)` for more details.
 
 ## Overview
 
-Filter panel is located in the right side of the teal apps and is responsible for filtering data
-globally for the whole application. Filter panel is entirely encapsulated within `FilteredData` class,
-which manages filter states, data filtering and reproducible filter code. Filter panel is composed
-of several classes but `FilteredData` is the only class which the app developer will face directly.
-`FilteredData` is accessible in teal modules as a `dataset` argument.
+`teal.slice` is composed of multiple class objects which main purpose is to provide shiny module
+responsible to display and manage filters. On top of the class structure sits `FilteredData` which 
+other modules can use to obtain filtered data and filter calls. 
+
 
 ```{r echo=FALSE, out.width='75%'}
 knitr::include_graphics("./images/filter_panel/filter_panel_uml_all.jpg")
 ```
 
-`FilteredData` contains one-to-many `FilteredDataset` objects which contain `TealDataset` passed from
-`TealData` after all datasets are loaded. While `FilteredData` manages whole filter panel,
+
+`FilteredData` contains one-to-many `FilteredDataset`. While `FilteredData` manages whole filter panel,
 `FilteredDataset` is responsible for single dataset filtering. Depending on a variant of
-`FilteredDataset` it can contain one or many `FilterStates`. `FilterStates` class object has one or
-two `reactiveVal` objects where `FilterState` objects are stored. `FilterState` is a single filter applied
-to one variable/column while `FilterStates` is a collection of filters combined within single filter
-call.
+`FilteredDataset` it can contain one or many `FilterStates`. `FilterStates` is a collection of `FilterState` objects. 
+`FilterState` is a single filter condition applied on a column (`FilterState`) or on one-to-many variables 
+(`FilterStateExpr`). Each `FilterState` objects contain one `teal_slice` object
+which is a `reactiveValuse` and stores all necessary information to define a filter. `teal_slice` object
+unlike other classes it has no methods nor shiny modules, it's only purpose is to store filter information.
 
 ## Initialization
 
