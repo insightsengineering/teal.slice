@@ -114,6 +114,7 @@ FilteredData <- R6::R6Class( # nolint
       }
 
       self$set_available_teal_slices(x = reactive(NULL))
+      self$set_is_module_specific(FALSE)
 
       invisible(self)
     },
@@ -151,6 +152,20 @@ FilteredData <- R6::R6Class( # nolint
       private$available_teal_slices <- x
       invisible(NULL)
     },
+
+    #' Set module specific flag.
+    #'
+    #' The snapshot manager functionality is used in both module-specific and global mode
+    #' but the mechanics is slightly different. In the latter case the manager is run by this class
+    #' rather than `teal`. This flag specifies if the global snapshot manager should be started.
+    #' @param x (`logical(1)`) flag
+    #' @return invisible `NULL`
+    set_is_module_specific = function(x) {
+      checkmate::assert_flag(x)
+      private$is_module_specific <- x
+      invisible(NULL)
+    },
+
 
     # datasets methods ----
 
@@ -673,6 +688,15 @@ FilteredData <- R6::R6Class( # nolint
           class = "filter-panel-active-header",
           tags$span("Active Filter Variables", class = "text-primary mb-4"),
           private$ui_available_filters(ns("available_filters")),
+          if (isFALSE(private$is_module_specific)) {
+            actionLink(
+              ns("show_snapshot_manager"),
+              label = NULL,
+              icon = icon("cog"),
+              title = "Open snapshot manager",
+              class = "remove_all pull-right"
+            )
+          },
           actionLink(
             inputId = ns("minimise_filter_active"),
             label = NULL,
@@ -767,6 +791,19 @@ FilteredData <- R6::R6Class( # nolint
             ifelse(n_filters_active == 1, "", "s")
           )
         })
+
+        observeEvent(input$show_snapshot_manager, {
+          logger::log_trace("FilteredData$srv_filter_panel@1 showing snapshot manager")
+          showModal(
+            modalDialog(
+              private$ui_snapshot_manager(session$ns("snapshot_manager")),
+              footer = NULL,
+              easyClose = TRUE,
+              size = "m"
+            )
+          )
+        })
+        if (isFALSE(private$is_module_specific)) private$srv_snapshot_manager("snapshot_manager")
 
         observeEvent(input$remove_all_filters, {
           logger::log_trace("FilteredData$srv_filter_panel@1 removing all non-locked filters")
@@ -1006,16 +1043,18 @@ FilteredData <- R6::R6Class( # nolint
 
     # preprocessing code used to generate the unfiltered datasets as a string
     code = NULL,
+
+    # `reactive` containing teal_slices that can be selected; only active in module-specific mode
     available_teal_slices = NULL,
 
     # keys used for joining/filtering data a JoinKeys object (see teal.data)
     join_keys = NULL,
 
-    # reactiveVal that stores filter state history, i.e. every state of the filter panel since instantiation
-    state_history = NULL,
-
     # flag specifying whether the user may add filters
     module_add = TRUE,
+
+    # flag specifying if snapshot manager should be available
+    is_module_specific = logical(0L),
 
     # private methods ----
 
