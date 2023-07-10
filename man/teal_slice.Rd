@@ -158,8 +158,10 @@ x2 <- teal_slice(
 is.teal_slice(x1)
 as.list(x1)
 as.teal_slice(list(dataname = "a", varname = "var"))
-format(x1, show_all = FALSE, trim_lines = TRUE)
-print(x1, show_all = FALSE, trim_lines = TRUE)
+format(x1)
+format(x1, show_all = TRUE, trim_lines = FALSE)
+print(x1)
+print(x1, show_all = TRUE, trim_lines = FALSE)
 
 }
 \keyword{internal}

@@ -113,14 +113,15 @@ FilterState <- R6::R6Class( # nolint
     #' Returns a formatted string representing this `FilterState` object.
     #'
     #' @param show_all `logical(1)` passed to `format.teal_slice`
+    #' @param trim_lines `logical(1)` passed to `format.teal_slice`
     #'
     #' @return `character(1)` the formatted string
     #'
-    format = function(show_all = FALSE) {
+    format = function(show_all = FALSE, trim_lines = TRUE) {
       sprintf(
         "%s:\n%s",
         class(self)[1],
-        format(self$get_state(), show_all = show_all)
+        format(self$get_state(), show_all = show_all, trim_lines = trim_lines)
       )
     },
 
