@@ -252,6 +252,24 @@ testthat::test_that("format accepts logical show_all", {
   )
 })
 
+testthat::test_that("format accepts logical trim_lines", {
+  filter_state <- FilterState$new(7, slice = teal_slice(dataname = "data", varname = "7"))
+  testthat::expect_no_error(shiny::isolate(filter_state$format(trim_lines = TRUE)))
+  testthat::expect_no_error(shiny::isolate(filter_state$format(trim_lines = FALSE)))
+  testthat::expect_error(
+    shiny::isolate(filter_state$format(trim_lines = 1)),
+    "Assertion on 'trim_lines' failed: Must be of type 'logical flag', not 'double'"
+  )
+  testthat::expect_error(
+    shiny::isolate(filter_state$format(trim_lines = 0)),
+    "Assertion on 'trim_lines' failed: Must be of type 'logical flag', not 'double'"
+  )
+  testthat::expect_error(
+    shiny::isolate(filter_state$format(trim_lines = "TRUE")),
+    "Assertion on 'trim_lines' failed"
+  )
+})
+
 
 testthat::test_that("format returns a properly formatted string representation", {
   filter_state <- FilterState$new(7, slice = teal_slice(dataname = "data", varname = "7"))
