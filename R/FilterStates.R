@@ -299,10 +299,13 @@ FilterStates <- R6::R6Class( # nolint
     #' @description
     #' Remove all `FilterState` objects from this `FilterStates` object.
     #'
+    #' @param force (`logical(1)`)\cr
+    #'   include locked filter states
+    #'
     #' @return NULL
     #'
-    clear_filter_states = function() {
-      private$state_list_empty()
+    clear_filter_states = function(force = FALSE) {
+      private$state_list_empty(force)
     },
 
     # shiny modules ----
@@ -346,7 +349,7 @@ FilterStates <- R6::R6Class( # nolint
           logger::log_trace("FilterState$srv_active initializing, dataname: { private$dataname }")
           current_state <- reactive(private$state_list_get())
           previous_state <- reactiveVal(character(0))
-          added_state_name <- reactiveVal(character(0))
+          added_states <- reactiveVal(NULL)
 
           str_to_shiny_ns <- function(x) {
             gsub("[^[:alnum:]]+", "_", x)
@@ -356,7 +359,8 @@ FilterStates <- R6::R6Class( # nolint
             current_state <- current_state()
             isolate({
               logger::log_trace("FilterStates$srv_active@1 determining added and removed filter states")
-              added_state_name(setdiff(names(current_state()), names(previous_state())))
+              # Be aware this returns a list because `current_state` is a list and not `teal_slices`.
+              added_states(setdiff_teal_slices(current_state(), previous_state()))
               previous_state(current_state())
               NULL
             })
@@ -372,20 +376,22 @@ FilterStates <- R6::R6Class( # nolint
           })
 
           observeEvent(
-            added_state_name(), # we want to call FilterState module only once when it's added
+            added_states(), # we want to call FilterState module only once when it's added
             ignoreNULL = TRUE,
             {
-              logger::log_trace("FilterStates$srv_active@2 triggered by added states: { toString(added_state_name()) }")
-              fstates <- current_state()
-              lapply(added_state_name(), function(fname) {
-                fs_callback <- fstates[[fname]]$server(id = str_to_shiny_ns(fname))
+              added_state_names <- vapply(added_states(), function(x) x$get_state()$id, character(1L))
+              logger::log_trace("FilterStates$srv_active@2 triggered by added states: { toString(added_state_names) }")
+              # fstates <- current_state() # this doesn't seem to do anything
+              lapply(added_states(), function(state) {
+                fname <- state$get_state()$id
+                fs_callback <- state$server(id = str_to_shiny_ns(fname))
                 observeEvent(
                   eventExpr = fs_callback(), # when remove button is clicked in the FilterState ui
                   once = TRUE, # remove button can be called once, should be destroyed afterwards
                   handlerExpr = private$state_list_remove(fname)
                 )
               })
-              added_state_name(character(0))
+              added_states(NULL)
             }
           )
 
@@ -628,16 +634,18 @@ FilterStates <- R6::R6Class( # nolint
     #
     # @param state_id (`character`)\cr
     #   names of element in a filter state (which is a `reactiveVal` containing a list)
+    # @param force (`logical(1)`)\cr
+    #   include locked filter states
     #
     # @return NULL
     #
-    state_list_remove = function(state_id) {
+    state_list_remove = function(state_id, force = FALSE) {
       shiny::isolate({
         logger::log_trace("{ class(self)[1] } removing a filter, state_id: { state_id }")
         checkmate::assert_character(state_id)
         new_state_list <- private$state_list()
         if (is.element(state_id, names(new_state_list))) {
-          if (new_state_list[[state_id]]$get_state()$locked) {
+          if (new_state_list[[state_id]]$get_state()$locked & !force) {
             return(invisible(NULL))
           }
           new_state_list[[state_id]]$destroy_observers()
@@ -653,20 +661,21 @@ FilterStates <- R6::R6Class( # nolint
 
     # @description
     # Remove all `FilterState` objects from this `FilterStates` object.
-    #
+    # @param force (`logical(1)`)\cr
+    #   include locked filter states
     # @return invisible NULL
     #
-    state_list_empty = function() {
+    state_list_empty = function(force = FALSE) {
       shiny::isolate({
         logger::log_trace(
-          "{ class(self)[1] }$state_list_empty removing all non-locked filters for dataname: { private$dataname }"
+          "{ class(self)[1] }$state_list_empty removing filters for dataname: { private$dataname }"
         )
         state_list <- private$state_list()
         for (state_id in names(state_list)) {
-          private$state_list_remove(state_id)
+          private$state_list_remove(state_id, force)
         }
         logger::log_trace(
-          "{ class(self)[1] }$state_list_empty removed all non-locked filters for dataname: { private$dataname }"
+          "{ class(self)[1] }$state_list_empty removed filters for dataname: { private$dataname }"
         )
         invisible(NULL)
       })
@@ -712,7 +721,6 @@ FilterStates <- R6::R6Class( # nolint
           if (inherits(slice, "teal_slice_expr")) {
             # create a new FilterStateExpr
             fstate <- init_filter_state_expr(slice)
-            private$state_list_push(x = fstate, state_id = state_id)
           } else {
             # create a new FilterState
             fstate <- init_filter_state(
@@ -731,8 +739,8 @@ FilterStates <- R6::R6Class( # nolint
               slice = slice,
               extract_type = private$extract_type
             )
-            private$state_list_push(x = fstate, state_id = state_id)
           }
+          private$state_list_push(x = fstate, state_id = state_id)
         }
       })
 

@@ -244,9 +244,17 @@ function which throws an error
 \subsection{Method \code{clear_filter_states()}}{
 Remove all \code{FilterState} objects from this \code{FilterStates} object.
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{FilterStates$clear_filter_states()}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{FilterStates$clear_filter_states(force = FALSE)}\if{html}{\out{</div>}}
 }
 
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{force}}{(\code{logical(1)})\cr
+include locked filter states}
+}
+\if{html}{\out{</div>}}
+}
 \subsection{Returns}{
 NULL
 }

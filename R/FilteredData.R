@@ -114,6 +114,7 @@ FilteredData <- R6::R6Class( # nolint
       }
 
       self$set_available_teal_slices(x = reactive(NULL))
+      self$set_is_module_specific(FALSE)
 
       invisible(self)
     },
@@ -138,7 +139,36 @@ FilteredData <- R6::R6Class( # nolint
       private$get_filtered_dataset(dataname)$get_dataset_label()
     },
 
+    #' Set external `teal_slice`
+    #'
+    #' Unlike adding new filter from the column, these filters can be added with some pre-specified
+    #' settings. List of `teal_slices` should be a reactive so one can make this list to be dynamic.
+    #' List is accessible in `ui/srv_active` through `ui/srv_available_filters`.
+    #' @param x (`reactive`)\cr
+    #'  should return `teal_slices`
+    #' @return invisible `NULL`
+    set_available_teal_slices = function(x) {
+      checkmate::assert_class(x, "reactive")
+      private$available_teal_slices <- x
+      invisible(NULL)
+    },
+
+    #' Set module specific flag.
+    #'
+    #' The snapshot manager functionality is used in both module-specific and global mode
+    #' but the mechanics is slightly different. In the latter case the manager is run by this class
+    #' rather than `teal`. This flag specifies if the global snapshot manager should be started.
+    #' @param x (`logical(1)`) flag
+    #' @return invisible `NULL`
+    set_is_module_specific = function(x) {
+      checkmate::assert_flag(x)
+      private$is_module_specific <- x
+      invisible(NULL)
+    },
+
+
     # datasets methods ----
+
     #' @description
     #' Gets a `call` to filter the dataset according to the filter state.
     #'
@@ -476,16 +506,21 @@ FilteredData <- R6::R6Class( # nolint
 
         checkmate::assert_class(state, "teal_slices")
         datanames <- slices_field(state, "dataname")
-        checkmate::assert_subset(datanames, self$datanames())
-        module_add <- attr(state, "module_add")
-        if (!is.null(module_add)) {
-          private$module_add <- module_add
+        if (!checkmate::test_subset(datanames, self$datanames())) {
+          logger::log_warn("Some teal_slices are meant for different data sets and will be ignored.")
+          state <- Filter(function(x) x$dataname %in% self$datanames(), state)
+          datanames <- intersect(slices_field(state, "dataname"), self$datanames())
         }
 
         lapply(datanames, function(dataname) {
           states <- Filter(function(x) identical(x$dataname, dataname), state)
           private$get_filtered_dataset(dataname)$set_filter_state(states)
         })
+
+        module_add <- attr(state, "module_add")
+        if (!is.null(module_add)) {
+          private$module_add <- module_add
+        }
 
         logger::log_trace("{ class(self)[1] }$set_filter_state initialized")
 
@@ -556,17 +591,19 @@ FilteredData <- R6::R6Class( # nolint
     #' @param datanames (`character`)\cr
     #'   `datanames` to remove their `FilterStates` or empty which removes
     #'   all `FilterStates` in the `FilteredData` object
+    #' @param force (`logical(1)`)\cr
+    #'   include locked filter states
     #'
     #' @return `NULL` invisibly
     #'
-    clear_filter_states = function(datanames = self$datanames()) {
+    clear_filter_states = function(datanames = self$datanames(), force = FALSE) {
       logger::log_trace(
         "FilteredData$clear_filter_states called, datanames: { toString(datanames) }"
       )
 
       for (dataname in datanames) {
         fdataset <- private$get_filtered_dataset(dataname = dataname)
-        fdataset$clear_filter_states()
+        fdataset$clear_filter_states(force)
       }
 
       logger::log_trace(
@@ -579,21 +616,8 @@ FilteredData <- R6::R6Class( # nolint
       invisible(NULL)
     },
 
-    # shiny modules -----
 
-    #' Set external `teal_slice`
-    #'
-    #' Unlike adding new filter from the column, these filters can be added with some prespecified
-    #' settings. List of `teal_slices` should be a reactive so one can make this list to be dynamic.
-    #' List is accessible in `ui/srv_active` through `ui/srv_available_filters`.
-    #' @param x (`reactive`)\cr
-    #'  should return `teal_slices`
-    #' @return invisible `NULL`
-    set_available_teal_slices = function(x) {
-      checkmate::assert_class(x, "reactive")
-      private$available_teal_slices <- x
-      invisible(NULL)
-    },
+    # shiny modules -----
 
     #' Module for the right filter panel in the teal app
     #' with a filter overview panel and a filter variable panel.
@@ -665,15 +689,24 @@ FilteredData <- R6::R6Class( # nolint
           class = "filter-panel-active-header",
           tags$span("Active Filter Variables", class = "text-primary mb-4"),
           private$ui_available_filters(ns("available_filters")),
+          if (isFALSE(private$is_module_specific)) {
+            actionLink(
+              ns("show_snapshot_manager"),
+              label = NULL,
+              icon = icon("cog"),
+              title = "Open snapshot manager",
+              class = "remove_all pull-right"
+            )
+          },
           actionLink(
-            ns("minimise_filter_active"),
+            inputId = ns("minimise_filter_active"),
             label = NULL,
             icon = icon("angle-down", lib = "font-awesome"),
             title = "Minimise panel",
-            class = "remove pull-right"
+            class = "remove_all pull-right"
           ),
           actionLink(
-            ns("remove_all_filters"),
+            inputId = ns("remove_all_filters"),
             label = "",
             icon("circle-xmark", lib = "font-awesome"),
             title = "Remove active filters",
@@ -715,14 +748,14 @@ FilteredData <- R6::R6Class( # nolint
 
         private$srv_available_filters("available_filters")
 
-        shiny::observeEvent(input$minimise_filter_active, {
+        observeEvent(input$minimise_filter_active, {
           shinyjs::toggle("filter_active_vars_contents")
           shinyjs::toggle("filters_active_count")
           toggle_icon(session$ns("minimise_filter_active"), c("fa-angle-right", "fa-angle-down"))
           toggle_title(session$ns("minimise_filter_active"), c("Restore panel", "Minimise Panel"))
         })
 
-        shiny::observeEvent(private$get_filter_count(), {
+        observeEvent(private$get_filter_count(), {
           shinyjs::toggle("remove_all_filters", condition = private$get_filter_count() != 0)
           shinyjs::show("filter_active_vars_contents")
           shinyjs::hide("filters_active_count")
@@ -759,6 +792,19 @@ FilteredData <- R6::R6Class( # nolint
             ifelse(n_filters_active == 1, "", "s")
           )
         })
+
+        observeEvent(input$show_snapshot_manager, {
+          logger::log_trace("FilteredData$srv_filter_panel@1 showing snapshot manager")
+          showModal(
+            modalDialog(
+              private$ui_snapshot_manager(session$ns("snapshot_manager")),
+              footer = NULL,
+              easyClose = TRUE,
+              size = "m"
+            )
+          )
+        })
+        if (isFALSE(private$is_module_specific)) private$srv_snapshot_manager("snapshot_manager")
 
         observeEvent(input$remove_all_filters, {
           logger::log_trace("FilteredData$srv_filter_panel@1 removing all non-locked filters")
@@ -985,11 +1031,9 @@ FilteredData <- R6::R6Class( # nolint
     }
   ),
 
-  ## __Private Methods ====
+  ## __Private Members ====
   private = list(
     # selectively hide / show to only show `active_datanames` out of all datanames
-
-    # private attributes ----
     filtered_datasets = list(),
 
     # activate/deactivate filter panel
@@ -1000,15 +1044,18 @@ FilteredData <- R6::R6Class( # nolint
 
     # preprocessing code used to generate the unfiltered datasets as a string
     code = NULL,
+
+    # `reactive` containing teal_slices that can be selected; only active in module-specific mode
     available_teal_slices = NULL,
 
     # keys used for joining/filtering data a JoinKeys object (see teal.data)
     join_keys = NULL,
 
-    # reactive i.e. filtered data
-    reactive_data = list(),
-    cached_states = NULL,
+    # flag specifying whether the user may add filters
     module_add = TRUE,
+
+    # flag specifying if snapshot manager should be available
+    is_module_specific = logical(0L),
 
     # private methods ----
 
@@ -1048,7 +1095,6 @@ FilteredData <- R6::R6Class( # nolint
     ui_available_filters = function(id) {
       ns <- NS(id)
 
-      active_slices_id <- shiny::isolate(vapply(self$get_filter_state(), `[[`, character(1), "id"))
       div(
         id = ns("available_menu"),
         shinyWidgets::dropMenu(
@@ -1068,26 +1114,27 @@ FilteredData <- R6::R6Class( # nolint
     },
 
     # @description
-    # Activate available filters. When the filter is selected or removed
-    # then `set_filter_state` or `remove_filter_state` is executed for
-    # appropriate filter (identified by it's id)
+    # Activate available filters. When a filter is selected or removed,
+    # `set_filter_state` or `remove_filter_state` is executed for
+    # the appropriate filter state id.
     srv_available_filters = function(id) {
       moduleServer(id, function(input, output, session) {
-        slices <- reactive(Filter(function(slice) !isTRUE(slice$locked), private$available_teal_slices()))
-        slices_interactive <- reactive(
-          Filter(
-            function(slice) !isTRUE(slice$fixed) && !inherits(slice, "teal_slice_expr"),
-            private$available_teal_slices()
-          )
-        )
-        slices_fixed <- reactive(
-          Filter(
-            function(slice) isTRUE(slice$fixed) || inherits(slice, "teal_slice_expr"),
-            private$available_teal_slices()
-          )
-        )
-        available_slices_id <- reactive(vapply(slices(), `[[`, character(1), "id"))
-        active_slices_id <- reactive(vapply(self$get_filter_state(), `[[`, character(1), "id"))
+        slices_nonlocked <- reactive({
+          Filter(function(slice) isFALSE(slice$locked), private$available_teal_slices())
+        })
+        slices_interactive <- reactive({
+          Filter(function(slice) isFALSE(slice$fixed), private$available_teal_slices())
+        })
+        slices_fixed <- reactive({
+          Filter(function(slice) isTRUE(slice$fixed), private$available_teal_slices())
+        })
+
+        available_slices_id <- reactive({
+          slices_field(slices_nonlocked(), "id")
+        })
+        active_slices_id <- reactive({
+          slices_field(self$get_filter_state(), "id")
+        })
 
         checkbox_group_element <- function(name, value, label, checked, disabled = FALSE) {
           tags$div(
@@ -1156,32 +1203,144 @@ FilteredData <- R6::R6Class( # nolint
 
         observeEvent(input$available_slices_id, ignoreNULL = FALSE, ignoreInit = TRUE, {
           new_slices_id <- setdiff(input$available_slices_id, active_slices_id())
-          removed_slices_id <- setdiff(active_slices_id(), input$available_slices_id)
           if (length(new_slices_id)) {
-            new_teal_slices <- Filter(
-              function(slice) slice$id %in% new_slices_id,
-              slices()
-            )
+            new_teal_slices <- Filter(function(slice) slice$id %in% new_slices_id, slices_nonlocked())
             self$set_filter_state(new_teal_slices)
           }
 
+          removed_slices_id <- setdiff(active_slices_id(), input$available_slices_id)
           if (length(removed_slices_id)) {
-            removed_teal_slices <- Filter(
-              function(slice) slice$id %in% removed_slices_id,
-              slices()
-            )
+            removed_teal_slices <- Filter(function(slice) slice$id %in% removed_slices_id, slices_nonlocked())
             self$remove_filter_state(removed_teal_slices)
           }
         })
 
-        observeEvent(slices(), ignoreNULL = FALSE, {
-          if (length(slices())) {
-            shinyjs::show("available_menu")
-          } else {
-            shinyjs::hide("available_menu")
-          }
+        observeEvent(slices_nonlocked(), ignoreNULL = FALSE, {
+          shinyjs::toggleElement("available_menu", condition = length(slices_nonlocked()) != 0L)
         })
       })
+    },
+
+    srv_snapshot_manager = function(id) {
+      moduleServer(id, function(input, output, session) {
+
+        ns <- session$ns
+
+        # Store global filter states.
+        snapshot_history <- reactiveVal({
+          list(
+            "Initial application state" = disassemble_slices(isolate(self$get_filter_state()))
+          )
+        })
+
+        # Snapshot current application state - name snaphsot.
+        observeEvent(input$snapshot_add, {
+          showModal(
+            modalDialog(
+              textInput(
+                session$ns("snapshot_name"),
+                "Name the snapshot",
+                width = "100%",
+                placeholder = "Meaningful, unique name"
+              ),
+              footer = tagList(
+                actionButton(session$ns("snapshot_name_accept"), "Accept", icon = icon("thumbs-up")),
+                modalButton(label = "Cancel", icon = icon("thumbs-down"))
+              ),
+              size = "s"
+            )
+          )
+        })
+        # Snapshot current application state - store snaphsot.
+        observeEvent(input$snapshot_name_accept, {
+          snapshot_name <- trimws(input$snapshot_name)
+          if (identical(snapshot_name, "")) {
+            showNotification(
+              "Please name the snapshot.",
+              type = "message"
+            )
+            updateTextInput(inputId = "snapshot_name", value = "", placeholder = "Meaningful, unique name")
+          } else if (is.element(make.names(snapshot_name), make.names(names(snapshot_history())))) {
+            showNotification(
+              "This name is in conflict with other snapshot names. Please choose a different one.",
+              type = "message"
+            )
+            updateTextInput(inputId = "snapshot_name", value = , placeholder = "Meaningful, unique name")
+          } else {
+            snapshot <- disassemble_slices(self$get_filter_state())
+            snapshot_update <- c(snapshot_history(), list(snapshot))
+            names(snapshot_update)[length(snapshot_update)] <- snapshot_name
+            snapshot_history(snapshot_update)
+            removeModal()
+          }
+        })
+
+        # Restore initial state.
+        observeEvent(input$snapshot_reset, {
+          s <- "Initial application state"
+          ### Begin restore procedure. ###
+          snapshot <- snapshot_history()[[s]]
+          snapshot_state <- reassemble_slices(snapshot)
+          self$clear_filter_states(force = TRUE)
+          self$set_filter_state(snapshot_state)
+          ### End restore procedure. ###
+        })
+
+        # Create table to display list of snapshots and their actions.
+        output$snapshot_list <- renderUI({
+          lapply(names(snapshot_history())[-1L], function(s) {
+            id_pickme <- sprintf("pickme_%s", make.names(s))
+            id_saveme <- sprintf("saveme_%s", make.names(s))
+
+            # Restore snapshot.
+            observeEvent(input[[id_pickme]], {
+              ### Begin restore procedure. ###
+              snapshot <- snapshot_history()[[s]]
+              snapshot_state <- reassemble_slices(snapshot)
+              self$clear_filter_states(force = TRUE)
+              self$set_filter_state(snapshot_state)
+              ### End restore procedure. ###
+            })
+
+            # Save snapshot.
+            output[[id_saveme]] <- downloadHandler(
+              filename = function() {
+                sprintf("teal_snapshot %s.json", s)
+              },
+              content = function(file) {
+                snapshot <- snapshot_history()[[s]]
+                snapshot_state <- reassemble_slices(snapshot)
+                teal.slice::slices_store(tss = snapshot_state, file = file)
+              }
+            )
+
+            # Create a row for the snapshot table.
+            div(
+              class = "snapshot_table_row",
+              span(h5(s)),
+              actionLink(inputId = session$ns(id_pickme), label = icon("circle-check"), title = "select"),
+              downloadLink(outputId = session$ns(id_saveme), label = icon("save"), title = "save to file")
+            )
+          })
+        })
+
+      })
+    },
+
+    ui_snapshot_manager = function(id) {
+      ns <- NS(id)
+      div(
+        class = "snapshot_manager_content",
+        div(
+          class = "snapshot_table_row",
+          span(tags$b("Snapshot manager")),
+          actionLink(ns("snapshot_add"), label = NULL, icon = icon("camera"), title = "add snapshot"),
+          actionLink(ns("snapshot_reset"), label = NULL, icon = icon("undo"), title = "reset initial state"),
+          NULL
+        ),
+        uiOutput(ns("snapshot_list"))
+      )
     }
+
   )
 )

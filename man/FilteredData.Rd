@@ -670,7 +670,7 @@ Deprecated - please use \code{clear_filter_states} method.
 Remove all \code{FilterStates} of a \code{FilteredDataset} or all \code{FilterStates}
 of a \code{FilteredData} object.
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{FilteredData$clear_filter_states(datanames = self$datanames())}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{FilteredData$clear_filter_states(datanames = self$datanames(), force = FALSE)}\if{html}{\out{</div>}}
 }
 
 \subsection{Arguments}{
@@ -679,6 +679,9 @@ of a \code{FilteredData} object.
 \item{\code{datanames}}{(\code{character})\cr
 \code{datanames} to remove their \code{FilterStates} or empty which removes
 all \code{FilterStates} in the \code{FilteredData} object}
+
+\item{\code{force}}{(\code{logical(1)})\cr
+include locked filter states}
 }
 \if{html}{\out{</div>}}
 }
