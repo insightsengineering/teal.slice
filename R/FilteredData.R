@@ -1220,10 +1220,8 @@ FilteredData <- R6::R6Class( # nolint
         })
       })
     },
-
     srv_snapshot_manager = function(id) {
       moduleServer(id, function(input, output, session) {
-
         ns <- session$ns
 
         # Store global filter states.
@@ -1323,10 +1321,8 @@ FilteredData <- R6::R6Class( # nolint
             )
           })
         })
-
       })
     },
-
     ui_snapshot_manager = function(id) {
       ns <- NS(id)
       div(
@@ -1341,6 +1337,5 @@ FilteredData <- R6::R6Class( # nolint
         uiOutput(ns("snapshot_list"))
       )
     }
-
   )
 )
