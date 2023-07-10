@@ -148,10 +148,7 @@ teal_slice <- function(dataname,
     checkmate::assert_flag(keep_inf, null.ok = TRUE)
     checkmate::assert_flag(multiple)
     if (missing(id)) {
-      args$id <- paste(
-        Filter(length, args[c("dataname", "varname", "experiment", "arg")]),
-        collapse = " "
-      )
+      args$id <- get_default_slice_id(args)
     } else {
       checkmate::assert_string(id)
     }
@@ -315,4 +312,30 @@ trim_lines_json <- function(x) {
   x_trim <- substr(x, 1, trim_position)
   substr(x_trim, trim_position - 2, trim_position) <- "..."
   x_trim
+}
+
+#' Default `teal_slice` id
+#'
+#' Function returns a default `id` for a `teal_slice` object which needs
+#' to be distinct from other `teal_slice` objects created for any
+#' `FilterStates` object. Returned `id` can be treated as a location of
+#' a vector on which `FilterState` is built:
+#' - for a `data.frame` `id` concatenates `dataname` and `varname`.
+#' - for a `MultiAssayExperiment` `id` concatenates `dataname`, `varname`,
+#' `experiment` and `arg`, so that one can add `teal_slice` for a `varname`
+#' which exists in multiple `SummarizedExperiment`s or exists in both `colData`
+#' and `rowData` of given experiment.
+#' @param x (`teal_slice` or `list`)
+#' @return (`character(1)`) `id` for a `teal_slice` object.
+#' @keywords internal
+get_default_slice_id <- function(x) {
+  shiny::isolate({
+    paste(
+      Filter(
+        length,
+        as.list(x)[c("dataname", "varname", "experiment", "arg")]
+      ),
+      collapse = " "
+    )
+  })
 }
