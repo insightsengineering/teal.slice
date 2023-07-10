@@ -1179,6 +1179,128 @@ FilteredData <- R6::R6Class( # nolint
           shinyjs::toggleElement("available_menu", condition = length(slices_nonlocked()) != 0L)
         })
       })
+    },
+
+    srv_snapshot_manager = function(id) {
+      moduleServer(id, function(input, output, session) {
+
+        ns <- session$ns
+
+        # Store global filter states.
+        snapshot_history <- reactiveVal({
+          list(
+            "Initial application state" = disassemble_slices(isolate(self$get_filter_state()))
+          )
+        })
+
+        # Snapshot current application state - name snaphsot.
+        observeEvent(input$snapshot_add, {
+          showModal(
+            modalDialog(
+              textInput(
+                session$ns("snapshot_name"),
+                "Name the snapshot",
+                width = "100%",
+                placeholder = "Meaningful, unique name"
+              ),
+              footer = tagList(
+                actionButton(session$ns("snapshot_name_accept"), "Accept", icon = icon("thumbs-up")),
+                modalButton(label = "Cancel", icon = icon("thumbs-down"))
+              ),
+              size = "s"
+            )
+          )
+        })
+        # Snapshot current application state - store snaphsot.
+        observeEvent(input$snapshot_name_accept, {
+          snapshot_name <- trimws(input$snapshot_name)
+          if (identical(snapshot_name, "")) {
+            showNotification(
+              "Please name the snapshot.",
+              type = "message"
+            )
+            updateTextInput(inputId = "snapshot_name", value = "", placeholder = "Meaningful, unique name")
+          } else if (is.element(make.names(snapshot_name), make.names(names(snapshot_history())))) {
+            showNotification(
+              "This name is in conflict with other snapshot names. Please choose a different one.",
+              type = "message"
+            )
+            updateTextInput(inputId = "snapshot_name", value = , placeholder = "Meaningful, unique name")
+          } else {
+            snapshot <- disassemble_slices(self$get_filter_state())
+            snapshot_update <- c(snapshot_history(), list(snapshot))
+            names(snapshot_update)[length(snapshot_update)] <- snapshot_name
+            snapshot_history(snapshot_update)
+            removeModal()
+          }
+        })
+
+        # Restore initial state.
+        observeEvent(input$snapshot_reset, {
+          s <- "Initial application state"
+          ### Begin restore procedure. ###
+          snapshot <- snapshot_history()[[s]]
+          snapshot_state <- reassemble_slices(snapshot)
+          self$clear_filter_states(force = TRUE)
+          self$set_filter_state(snapshot_state)
+          ### End restore procedure. ###
+        })
+
+        # Create table to display list of snapshots and their actions.
+        output$snapshot_list <- renderUI({
+          lapply(names(snapshot_history())[-1L], function(s) {
+            id_pickme <- sprintf("pickme_%s", make.names(s))
+            id_saveme <- sprintf("saveme_%s", make.names(s))
+
+            # Restore snapshot.
+            observeEvent(input[[id_pickme]], {
+              ### Begin restore procedure. ###
+              snapshot <- snapshot_history()[[s]]
+              snapshot_state <- reassemble_slices(snapshot)
+              self$clear_filter_states(force = TRUE)
+              self$set_filter_state(snapshot_state)
+              ### End restore procedure. ###
+            })
+
+            # Save snapshot.
+            output[[id_saveme]] <- downloadHandler(
+              filename = function() {
+                sprintf("teal_snapshot %s.json", s)
+              },
+              content = function(file) {
+                snapshot <- snapshot_history()[[s]]
+                snapshot_state <- reassemble_slices(snapshot)
+                teal.slice::slices_store(tss = snapshot_state, file = file)
+              }
+            )
+
+            # Create a row for the snapshot table.
+            div(
+              class = "snapshot_table_row",
+              span(h5(s)),
+              actionLink(inputId = session$ns(id_pickme), label = icon("circle-check"), title = "select"),
+              downloadLink(outputId = session$ns(id_saveme), label = icon("save"), title = "save to file")
+            )
+          })
+        })
+
+      })
+    },
+
+    ui_snapshot_manager = function(id) {
+      ns <- NS(id)
+      div(
+        class = "snapshot_manager_content",
+        div(
+          class = "snapshot_table_row",
+          span(tags$b("Snapshot manager")),
+          actionLink(ns("snapshot_add"), label = NULL, icon = icon("camera"), title = "add snapshot"),
+          actionLink(ns("snapshot_reset"), label = NULL, icon = icon("undo"), title = "reset initial state"),
+          NULL
+        ),
+        uiOutput(ns("snapshot_list"))
+      )
     }
+
   )
 )
