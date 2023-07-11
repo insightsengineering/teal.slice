@@ -475,8 +475,6 @@ FilteredData <- R6::R6Class( # nolint
         }
 
         checkmate::assert_class(state, "teal_slices")
-        datanames <- slices_field(state, "dataname")
-        checkmate::assert_subset(datanames, self$datanames())
         module_add <- attr(state, "module_add")
         if (!is.null(module_add)) {
           private$module_add <- module_add
@@ -1095,8 +1093,8 @@ FilteredData <- R6::R6Class( # nolint
           slice_reference <- vapply(private$available_teal_slices(), get_default_slice_id, character(1))
           is_duplicated_reference <- duplicated(slice_reference) | duplicated(slice_reference, fromLast = TRUE)
           is_active <- available_slices_id() %in% active_slices_id()
-          is_not_expr <- vapply(private$available_teal_slices(), inherits, logical(1), "teal_slice_expr")
-          slice_reference[is_duplicated_reference & is_active & !is_not_expr]
+          is_not_expr <- !vapply(private$available_teal_slices(), inherits, logical(1), "teal_slice_expr")
+          slice_reference[is_duplicated_reference & is_active & is_not_expr]
         })
 
         checkbox_group_element <- function(name, value, label, checked, disabled = FALSE) {
@@ -1124,48 +1122,31 @@ FilteredData <- R6::R6Class( # nolint
           )
           active_slices_ids <- active_slices_id()
           duplicated_slice_refs <- duplicated_slice_references()
-          interactive_choice_mock <- lapply(
-            slices_interactive(),
-            function(slice) {
-              # we need to isolate changes in the fields of the slice (teal_slice)
-              shiny::isolate({
-                checkbox_group_element(
-                  name = session$ns("available_slices_id"),
-                  value = slice$id,
-                  label = slice$id,
-                  checked = if (slice$id %in% active_slices_ids) "checked",
-                  disabled = slice$locked ||
-                    get_default_slice_id(slice) %in% duplicated_slice_refs &&
-                      !slice$id %in% active_slices_ids
-                )
-              })
-            }
-          )
 
-          non_interactive_choice_mock <- lapply(
-            slices_fixed(),
-            function(slice) {
-              # we need to isolate changes in the fields of the slice (teal_slice)
-              isolate(
-                checkbox_group_element(
-                  name = session$ns("available_slices_id"),
-                  value = slice$id,
-                  label = slice$id,
-                  checked = if (slice$id %in% active_slices_ids) "checked",
-                  disabled = slice$locked ||
-                    get_default_slice_id(slice) %in% duplicated_slice_refs &&
-                      !slice$id %in% active_slices_ids
-                )
+          checkbox_group_slice <- function(slice) {
+            # we need to isolate changes in the fields of the slice (teal_slice)
+            shiny::isolate({
+              checkbox_group_element(
+                name = session$ns("available_slices_id"),
+                value = slice$id,
+                label = slice$id,
+                checked = if (slice$id %in% active_slices_ids) "checked",
+                disabled = slice$locked ||
+                  get_default_slice_id(slice) %in% duplicated_slice_refs &&
+                    !slice$id %in% active_slices_ids
               )
-            }
-          )
+            })
+          }
+
+          interactive_choice_mock <- lapply(slices_interactive(), checkbox_group_slice)
+          non_interactive_choice_mock <- lapply(slices_fixed(), checkbox_group_slice)
 
           htmltools::tagInsertChildren(
             checkbox,
             br(),
             tags$strong("Fixed filters"),
             non_interactive_choice_mock,
-            tags$strong("Iteractive filters"),
+            tags$strong("Interactive filters"),
             interactive_choice_mock,
             .cssSelector = "div.shiny-options-group",
             after = 0

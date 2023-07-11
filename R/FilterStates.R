@@ -340,47 +340,52 @@ FilterStates <- R6::R6Class( # nolint
         function(input, output, session) {
           logger::log_trace("FilterState$srv_active initializing, dataname: { private$dataname }")
           current_state <- reactive(private$state_list_get())
-          previous_state <- reactiveVal(character(0))
-          added_state_name <- reactiveVal(character(0))
+          previous_state <- reactiveVal(NULL) # FilterState list
+          added_states <- reactiveVal(NULL) # FilterState list
 
-          str_to_shiny_ns <- function(x) {
-            gsub("[^[:alnum:]]+", "_", x)
+          # gives a valid shiny ns based on a default slice id
+          fs_to_shiny_ns <- function(x) {
+            checkmate::assert_multi_class(x, c("FilterState", "FilterStateExpr"))
+            gsub("[^[:alnum:]]+", "_", get_default_slice_id(x$get_state()))
           }
 
           output$trigger_visible_state_change <- renderUI({
-            current_state <- current_state()
+            current_state()
             isolate({
               logger::log_trace("FilterStates$srv_active@1 determining added and removed filter states")
-              added_state_name(setdiff(names(current_state()), names(previous_state())))
+              # Be aware this returns a list because `current_state` is a list and not `teal_slices`.
+              added_states(setdiff_teal_slices(current_state(), previous_state()))
               previous_state(current_state())
               NULL
             })
           })
 
           output[["cards"]] <- shiny::renderUI({
-            fstates <- current_state() # rerenders when queue changes / not when the state changes
-            lapply(names(fstates), function(fname) {
-              shiny::isolate(
-                fstates[[fname]]$ui(id = session$ns(str_to_shiny_ns(fname)), parent_id = session$ns("cards"))
-              )
-            })
+            lapply(
+              current_state(), # observes only if added/removed
+              function(state) {
+                shiny::isolate( # isolates when existing state changes
+                  state$ui(id = session$ns(fs_to_shiny_ns(state)), parent_id = session$ns("cards"))
+                )
+              }
+            )
           })
 
           observeEvent(
-            added_state_name(), # we want to call FilterState module only once when it's added
+            added_states(), # we want to call FilterState module only once when it's added
             ignoreNULL = TRUE,
             {
-              logger::log_trace("FilterStates$srv_active@2 triggered by added states: { toString(added_state_name()) }")
-              fstates <- current_state()
-              lapply(added_state_name(), function(fname) {
-                fs_callback <- fstates[[fname]]$server(id = str_to_shiny_ns(fname))
+              added_state_names <- vapply(added_states(), function(x) x$get_state()$id, character(1L))
+              logger::log_trace("FilterStates$srv_active@2 triggered by added states: { toString(added_state_names) }")
+              lapply(added_states(), function(state) {
+                fs_callback <- state$server(id = fs_to_shiny_ns(state))
                 observeEvent(
                   eventExpr = fs_callback(), # when remove button is clicked in the FilterState ui
                   once = TRUE, # remove button can be called once, should be destroyed afterwards
-                  handlerExpr = private$state_list_remove(fname)
+                  handlerExpr = private$state_list_remove(state$get_state()$id)
                 )
               })
-              added_state_name(character(0))
+              added_states(NULL)
             }
           )
 
