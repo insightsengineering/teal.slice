@@ -103,7 +103,7 @@ shiny::isolate(datasets$get_filter_state())
 \item \href{#method-FilteredData-datanames}{\code{FilteredData$datanames()}}
 \item \href{#method-FilteredData-get_datalabel}{\code{FilteredData$get_datalabel()}}
 \item \href{#method-FilteredData-set_available_teal_slices}{\code{FilteredData$set_available_teal_slices()}}
-\item \href{#method-FilteredData-set_is_module_specific}{\code{FilteredData$set_is_module_specific()}}
+\item \href{#method-FilteredData-activate_snapshot_manager}{\code{FilteredData$activate_snapshot_manager()}}
 \item \href{#method-FilteredData-get_call}{\code{FilteredData$get_call()}}
 \item \href{#method-FilteredData-get_code}{\code{FilteredData$get_code()}}
 \item \href{#method-FilteredData-get_data}{\code{FilteredData$get_data()}}
@@ -227,19 +227,18 @@ should return \code{teal_slices}}
 }
 \subsection{Returns}{
 invisible \code{NULL}
-Set module specific flag.
+Activate snapshot manager.
 
-The snapshot manager functionality is used in both module-specific and global mode
-but the mechanics is slightly different. In the latter case the manager is run by this class
-rather than \code{teal}. This flag specifies if the global snapshot manager should be started.
+Activate snapshot manager module to allow capturing, saving, and restoring
+snapshots of the global application filter state.
 }
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-FilteredData-set_is_module_specific"></a>}}
-\if{latex}{\out{\hypertarget{method-FilteredData-set_is_module_specific}{}}}
-\subsection{Method \code{set_is_module_specific()}}{
+\if{html}{\out{<a id="method-FilteredData-activate_snapshot_manager"></a>}}
+\if{latex}{\out{\hypertarget{method-FilteredData-activate_snapshot_manager}{}}}
+\subsection{Method \code{activate_snapshot_manager()}}{
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{FilteredData$set_is_module_specific(x)}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{FilteredData$activate_snapshot_manager(x)}\if{html}{\out{</div>}}
 }
 
 \subsection{Arguments}{
