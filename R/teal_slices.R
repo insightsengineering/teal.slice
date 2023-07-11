@@ -211,9 +211,6 @@ as.teal_slices <- function(x) { # nolint
   y <- NextMethod("[")
   attrs <- attributes(x)
   attrs$names <- attrs$names[i]
-  datanames <- unique(unlist(vapply(y, function(ts) shiny::isolate(ts[["dataname"]]), character(1L))))
-  attrs[["exclude_varnames"]] <- Filter(Negate(is.null), attr(x, "exclude_varnames")[datanames])
-  attrs[["include_varnames"]] <- Filter(Negate(is.null), attr(x, "include_varnames")[datanames])
   attributes(y) <- attrs
   y
 }
