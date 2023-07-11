@@ -78,13 +78,15 @@ should be atomic and length one.}
 \subsection{Method \code{format()}}{
 Returns a formatted string representing this \code{FilteredDataset} object.
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{FilteredDataset$format(show_all = FALSE)}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{FilteredDataset$format(show_all = FALSE, trim_lines = TRUE)}\if{html}{\out{</div>}}
 }
 
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
 \item{\code{show_all}}{\code{logical(1)} passed to \code{format.teal_slice}}
+
+\item{\code{trim_lines}}{\code{logical(1)} passed to \code{format.teal_slice}}
 }
 \if{html}{\out{</div>}}
 }
