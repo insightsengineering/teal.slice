@@ -143,7 +143,6 @@ MAEFilteredDataset <- R6::R6Class( # nolint
       checkmate::assert_class(state, "teal_slices")
 
       shiny::isolate({
-
         logger::log_trace("{ class(self)[1] }$remove_filter_state removing filter(s), dataname: { private$dataname }")
         # remove state on subjects
         subject_state <- Filter(function(x) is.null(x$experiment), state)
