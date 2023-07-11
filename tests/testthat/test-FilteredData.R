@@ -670,7 +670,6 @@ testthat::test_that("clear_filter_states does not remove locked filters", {
     )
   )
   datasets$set_filter_state(state = fs)
-
   datasets$clear_filter_states()
 
   testthat::expect_length(shiny::isolate(datasets$get_filter_state()), 2)
@@ -917,6 +916,7 @@ fs <- teal_slices(
   teal_slice(dataname = "iris", varname = "Sepal.Width", fixed = TRUE),
   teal_slice(dataname = "iris", varname = "Petal.Length"),
   teal_slice(dataname = "iris", varname = "Petal.Width"),
+  teal_slice(dataname = "iris", varname = "Petal.Width", id = "duplicated"),
   teal_slice(dataname = "iris", title = "test", id = "test", expr = "!is.na(Species)")
 )
 fs_rv <- reactiveVal(fs)
@@ -926,13 +926,10 @@ shiny::testServer(
   datasets$srv_available_filters,
   expr = {
     testthat::test_that("slices_interactive() reactive returns interactive filters", {
-      expect_identical_slices(slices_interactive(), fs[c(1, 3, 4)])
+      expect_identical_slices(slices_interactive(), fs[c(1, 3, 4, 5)])
     })
     testthat::test_that("slices_fixed() reactive returns fixed filters and teal_slice_expr", {
-      expect_identical_slices(slices_fixed(), fs[c(2, 5)])
-    })
-    testthat::test_that("FilteredData$srv_available_slices locked slices ommited", {
-      testthat::expect_identical(slices(), fs[-1])
+      expect_identical_slices(slices_fixed(), fs[c(2, 6)])
     })
 
     testthat::test_that("FilteredData$srv_available_slices new state in external list reflected in available slices", {
@@ -940,7 +937,10 @@ shiny::testServer(
       fs_rv(c(fs_rv(), teal_slices(species_slice)))
       testthat::expect_identical(
         available_slices_id(),
-        c("iris Sepal.Width", "iris Petal.Length", "iris Petal.Width", "test", "iris Species")
+        c(
+          "iris Sepal.Length", "iris Sepal.Width", "iris Petal.Length",
+          "iris Petal.Width", "duplicated", "test", "iris Species"
+        )
       )
     })
 
@@ -961,5 +961,18 @@ shiny::testServer(
       session$setInputs(available_slices_id = NULL)
       testthat::expect_identical(active_slices_id(), "iris Sepal.Length")
     })
+
+    testthat::test_that("duplicated_slice_references() returns character(0) if none of duplicated filters is active", {
+      session$setInputs(available_slices_id = "Sepal.Length")
+      testthat::expect_identical(duplicated_slice_references(), character(0))
+    })
+
+    testthat::test_that(
+      "duplicated_slice_references() returns variable reference when any of duplicated filters is on",
+      {
+        session$setInputs(available_slices_id = "duplicated")
+        testthat::expect_identical(duplicated_slice_references(), "iris Petal.Width")
+      }
+    )
   }
 )
