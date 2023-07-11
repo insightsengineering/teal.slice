@@ -493,6 +493,14 @@ testthat::test_that("get_filter_state returns `teal_slices` with features identi
     shiny::isolate(datasets$format(show_all = TRUE)),
     paste0("FilteredData:\n", format(fs_out, show_all = TRUE))
   )
+  testthat::expect_identical(
+    shiny::isolate(datasets$format(trim_lines = FALSE)),
+    paste0("FilteredData:\n", format(fs_out, trim_lines = FALSE))
+  )
+  testthat::expect_identical(
+    shiny::isolate(datasets$format(show_all = TRUE, trim_lines = FALSE)),
+    paste0("FilteredData:\n", format(fs_out, show_all = TRUE, trim_lines = FALSE))
+  )
 })
 
 # print ---
@@ -534,6 +542,10 @@ testthat::test_that("print returns properly formatted string representing `teal_
   testthat::expect_identical(
     utils::capture.output(shiny::isolate(datasets$print(show_all = TRUE))),
     c("FilteredData:", utils::capture.output(print(fs, show_all = TRUE)))
+  )
+  testthat::expect_identical(
+    utils::capture.output(shiny::isolate(datasets$print(trim_lines = FALSE))),
+    c("FilteredData:", utils::capture.output(print(fs, trim_lines = FALSE)))
   )
 })
 

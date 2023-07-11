@@ -71,6 +71,14 @@ testthat::test_that("format returns a string representation of filters", {
     shiny::isolate(dataset$format(show_all = TRUE)),
     shiny::isolate(format(dataset, show_all = TRUE))
   )
+  testthat::expect_equal(
+    shiny::isolate(dataset$format(trim_lines = FALSE)),
+    shiny::isolate(format(dataset, trim_lines = FALSE))
+  )
+  testthat::expect_equal(
+    shiny::isolate(dataset$format(show_all = TRUE, trim_lines = FALSE)),
+    shiny::isolate(format(dataset, show_all = TRUE, trim_lines = FALSE))
+  )
 })
 
 # print ---
