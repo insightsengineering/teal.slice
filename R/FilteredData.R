@@ -793,18 +793,20 @@ FilteredData <- R6::R6Class( # nolint
           )
         })
 
-        observeEvent(input$show_snapshot_manager, {
-          logger::log_trace("FilteredData$srv_filter_panel@1 showing snapshot manager")
-          showModal(
-            modalDialog(
-              private$ui_snapshot_manager(session$ns("snapshot_manager")),
-              footer = NULL,
-              easyClose = TRUE,
-              size = "m"
+        if (isFALSE(private$snapshot_manager_active)) {
+          observeEvent(input$show_snapshot_manager, {
+            logger::log_trace("FilteredData$srv_filter_panel@1 showing snapshot manager")
+            showModal(
+              modalDialog(
+                private$ui_snapshot_manager(session$ns("snapshot_manager")),
+                footer = NULL,
+                easyClose = TRUE,
+                size = "m"
+              )
             )
-          )
-        })
-        if (isFALSE(private$snapshot_manager_active)) private$srv_snapshot_manager("snapshot_manager")
+          })
+          private$srv_snapshot_manager("snapshot_manager")
+        }
 
         observeEvent(input$remove_all_filters, {
           logger::log_trace("FilteredData$srv_filter_panel@1 removing all non-locked filters")
@@ -1270,6 +1272,7 @@ FilteredData <- R6::R6Class( # nolint
             names(snapshot_update)[length(snapshot_update)] <- snapshot_name
             snapshot_history(snapshot_update)
             removeModal()
+            shinyjs::click(id = "teal-main_ui-filter_panel-active-show_snapshot_manager", asis = TRUE)
           }
         })
 
