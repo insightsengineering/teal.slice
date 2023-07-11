@@ -9,46 +9,63 @@ vignette: >
   %\VignetteEncoding{UTF-8}
 ---
 
-## Filter-panel API
+## Filter Panel API
 
 ### Getting and setting filter states
 
 All filter panel classes have dedicated methods to set and get current filter state.
 These methods include:
-- `get_filter_state` - returns current state of filters in form of `teal_slices` object.
-- `set_filter_state` - adds or modifies state of filters based on `teal_slices` object.
-- `remove_filter_state` - removes particular filter states based on `teal_slices` object.
-- `clear_filter_states` - removes all filter states.
 
-Setting and getting filter states are done through `teal_slices` object which is a collection of
-`teal_slice` objects. Each `teal_slice` object contains a necessary information to:
-1. Determine column in the object on which filter expression should be applied on. This includes:
-   - `dataname` - name of the dataset
+- `get_filter_state` - returns the current state of filters in form of `teal_slices` object
+- `set_filter_state` - adds or modifies the filters based on `teal_slices` object
+- `remove_filter_state` - removes particular filter states based on `teal_slices` object
+- `clear_filter_states` - removes all filter states
+
+Setting and getting filter states are done through `teal_slices` object which is a collection of `teal_slice` objects. 
+Think of a `teal_slice` as a quantum of information that fully describes the filter state of one variable.
+
+In order to tell `FilteredData` to set a filter for a specific variable, 
+one must call the `set_filter_state` method with a `teal_slices` object containing a `teal_slice` 
+that refers to the variable of interest.
+To remove a particular `FilterState` object, one must call the `remove_filter_state` method 
+using a `teal_slices` containing a `teal_slice` that refers to the respective variable.
+
+Each `teal_slice` object contains all the information necessary to:
+
+1. Determine the column in the data set on which to apply the filter expression:
+
+   - `dataname` - name of the data set
    - `varname` - name of the column
-   - `experiment` - only for `MultiAssayExperiment` objects, name of the experiment.
-   - `arg` - only for `MultiAssayExperiment` objects, name of the argument in `subset` call.
-2. Control behavior and appearance of the `FilterState` module:
-   - `choices` - determines set of values from which user can select from.
-   - `multiple` - determines if multiple values can be selected (only for `ChoiceFilterState`).
-   - `fixed` - determines if values of `teal_slice` can be changed.
-   - `locked` - determines of `teal_slice` can be removed.
-   - `title` - displayed title of the filter card.
-3. Store current filter state values. This includes:
-   - `selected` - current values selection
-   - `keep_inf` - determines if `Inf` values should be kept in the dataset.
-   - `keep_na` - determines if `NA` values should be kept in the dataset.
-   - `expr` - explicit logical expression.
+   - `experiment` (only for `MultiAssayExperiment` objects) - name of the experiment
+   - `arg` (only for `SummarizedExperiment` objects, e.g within a `MultiAssayExperiment`) - 
+   name of the argument in the call to `subset` (`subset` of `select`)
 
-Additionally all `teal_slice` objects have unique `id`. It's not possible to initialize more than 
-one `FilterState` objects with duplicated `teal_slice` `id`.
+2. Express or store the current selection state:
 
-To tell `FilteredData` to set a filter for a specific column, then `set_filter_state` method should be
-called with `teal_slices` object containing `teal_slice` referring to variable of interest.
-To remove particular `FilterState` object then `remove_filter_state` method should be called with
-the same `teal_slices` settings.
+   - `selected` - selected values or limits of the selected range
+   - `keep_inf` - determines if `Inf` values should be dropped
+   - `keep_na` - determines if `NA` values should be dropped
+   - `expr` - explicit logical expression
+
+3. Control the behavior and appearance of the `FilterState` object:
+
+   - `choices` - determines the set of values or the range that can be selected from
+   - `multiple` (only for `ChoiceFilterState`) - allows multiple values to be selected 
+   - `fixed` - forbids changing state of the `FilterState`
+   - `locked` - forbids removal of the `FilterState`
+   - `title` - displayed title of the filter card
+
+In addition, every `teal_slice` object has an `id`. 
+
+It is impossible to create `FilteredData` with slices with duplicated `id`s.
+This is because filter states are both created and modified with the `set_filter_state` method
+so if two consecutive calls to `set_filter_state` are passed a `teal_slice` with the same id, 
+the first call will instantiate a `FilterState`, and the second call will modify it.
+
+Creating `teal_slices` with slices with duplicated `id`s is forbidden and will raise an error.
 
 
-1. Setting the filter state
+#### 1. Setting the filter state
 ```{r, message=FALSE, warning=FALSE}
 library(teal.slice)
 
@@ -71,22 +88,7 @@ set_filter_state(
 )
 ```
 
-1. Getting the filter state
-```{r, message=FALSE, warning=FALSE}
-get_filter_state(datasets)
-```
-
-1. Removing filter states
-```{r, message=FALSE, warning=FALSE}
-remove_filter_state(
-  datasets = datasets,
-  filter = teal_slices(
-    teal_slice(dataname = "iris", varname = "Species")
-  )
-)
-```
-
-1. Updating filter states. *Works only in the shiny reactive context.
+#### 2. Updating filter states. *Works only in the shiny reactive context.
 ```{r, message=FALSE, warning=FALSE}
 set_filter_state(
   datasets = datasets,
@@ -96,18 +98,34 @@ set_filter_state(
 )
 ```
 
-1. Clear the filter state
+#### 3. Getting the filter state
+```{r, message=FALSE, warning=FALSE}
+get_filter_state(datasets)
+```
+
+#### 4. Removing filter states
+```{r, message=FALSE, warning=FALSE}
+remove_filter_state(
+  datasets = datasets,
+  filter = teal_slices(
+    teal_slice(dataname = "iris", varname = "Species")
+  )
+)
+```
+
+#### 5. Clearing the filter state
 ```{r, message=FALSE, warning=FALSE}
 clear_filter_states(datasets)
 ```
 
 ### Controlling settings of the filter panel
 
-Except controlling individual filter states through `set_filter_state`, one can also set some general settings
-of the whole filter panel. This can be done by specific arguments of the `teal_slices` function:
+In addition to controlling individual filter states through `set_filter_state`, 
+one can also manage some general behaviors of the whole filter panel. 
+This can be done with arguments of the `teal_slices` function:
 
-1. `include_varnames` to define which columns from used datasets are allowed to be filtered. In following example
-only two columns from `iris` and two columns from `mtcars` will be possible to use as filters. 
+1. `include_varnames` defines which columns in the used data sets are allowed to be filtered on. 
+In the following example only two columns of `iris` and two columns of `mtcars` will be able to have filters set. 
 ```{r}
 set_filter_state(
   datasets,
@@ -120,8 +138,8 @@ set_filter_state(
 )
 ```
 
-2. `exclude_varnames` to define which columns from used datasets are excluded from possible to filter variables.
-In following example all variables except these four will be available to choose from.
+2. `exclude_varnames` defines which columns in the used data sets are **not** allowed to be filtered on.
+In following example all variables except the four will be available to choose from.
 ```{r}
 set_filter_state(
   datasets,
@@ -133,20 +151,22 @@ set_filter_state(
   )
 )
 ```
-3. `count_type` to define type of the counts displayed in a filter card
+
+3. `count_type` defines how observations counts displayed in filter cards
 
 | "none" | "all" |
 |--------|-------|
-| Distribution in unfiltered data | Unfiltered vs. filtered distribution  |
+| Distribution in unfiltered data | Filtered vs. unfiltered distribution  |
 | ![](./images/filter_panel/count_type_none.jpeg){width=300} | ![](./images/filter_panel/count_type_all.jpeg){width=300} |
 
-1. `module_add` determines whether "Add Filter Variables" module will be displayed - user won't be able to new filters.
+4. `module_add` determines whether the "Add Filter Variables" module will be displayed 
+to allow the user to add new filters.
 
 
 
 ## Filter panel as a module
 
-All instructions described in this vignette can be utilized to build a shiny app.
+All the instructions herein can be utilized to build a shiny app.
 
 ```{r}
 library(shiny)
