@@ -646,18 +646,19 @@ FilterStates <- R6::R6Class( # nolint
         if (any(to_remove)) {
           new_state_list <- Filter(
             function(state) {
-              if (state$get_state()$id %in% state_id && !state$get_state()$locked) {
-                state$destroy_observers()
-                FALSE
+              if (state$get_state()$id %in% state_id) {
+                if (state$get_state()$locked && !force) {
+                  return(TRUE)
+                } else {
+                  state$destroy_observers()
+                  FALSE
+                }
               } else {
                 TRUE
               }
             },
             private$state_list()
           )
-          if (new_state_list[[state_id]]$get_state()$locked & !force) {
-            return(invisible(NULL))
-          }
           private$state_list(new_state_list)
         } else {
           warning(sprintf("\"%s\" not found in state list", state_id))
@@ -680,8 +681,8 @@ FilterStates <- R6::R6Class( # nolint
 
         state_list <- private$state_list()
         if (length(state_list)) {
-          state_list_ids <- vapply(state_list, function(x) x$get_state()$id, character(1))
-          private$state_list_remove(state_id, force)
+          state_ids <- vapply(state_list, function(x) x$get_state()$id, character(1))
+          private$state_list_remove(state_ids, force)
         }
         invisible(NULL)
       })

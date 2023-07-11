@@ -149,7 +149,10 @@ FilteredData <- R6::R6Class( # nolint
     #' @return invisible `NULL`
     set_available_teal_slices = function(x) {
       checkmate::assert_class(x, "reactive")
-      private$available_teal_slices <- x
+      private$available_teal_slices <- reactive({
+        # we want to limit the available filters to the ones that are relevant for this FilteredData
+        Filter(function(x) x$dataname %in% self$datanames(), x())
+      })
       invisible(NULL)
     },
 
@@ -505,16 +508,6 @@ FilteredData <- R6::R6Class( # nolint
         }
 
         checkmate::assert_class(state, "teal_slices")
-        module_add <- attr(state, "module_add")
-        if (!is.null(module_add)) {
-          private$module_add <- module_add
-        datanames <- slices_field(state, "dataname")
-        if (!checkmate::test_subset(datanames, self$datanames())) {
-          logger::log_warn("Some teal_slices are meant for different data sets and will be ignored.")
-          state <- Filter(function(x) x$dataname %in% self$datanames(), state)
-          datanames <- intersect(slices_field(state, "dataname"), self$datanames())
-        }
-
         lapply(self$datanames(), function(dataname) {
           states <- Filter(function(x) identical(x$dataname, dataname), state)
           private$get_filtered_dataset(dataname)$set_filter_state(states)
@@ -1117,28 +1110,33 @@ FilteredData <- R6::R6Class( # nolint
         )
       )
     },
-
     # @description
     # Activate available filters. When a filter is selected or removed,
     # `set_filter_state` or `remove_filter_state` is executed for
     # the appropriate filter state id.
     srv_available_filters = function(id) {
       moduleServer(id, function(input, output, session) {
-        slices_nonlocked <- reactive({
-          Filter(function(slice) isFALSE(slice$locked), private$available_teal_slices())
-        })
-        slices_interactive <- reactive({
-          Filter(function(slice) isFALSE(slice$fixed), private$available_teal_slices())
-        })
-        slices_fixed <- reactive({
-          Filter(function(slice) isTRUE(slice$fixed), private$available_teal_slices())
-        })
-
-        available_slices_id <- reactive({
-          slices_field(slices_nonlocked(), "id")
-        })
-        active_slices_id <- reactive({
-          slices_field(self$get_filter_state(), "id")
+        slices_interactive <- reactive(
+          Filter(
+            function(slice) !isTRUE(slice$fixed) && !inherits(slice, "teal_slice_expr"),
+            private$available_teal_slices()
+          )
+        )
+        slices_fixed <- reactive(
+          Filter(
+            function(slice) isTRUE(slice$fixed) || inherits(slice, "teal_slice_expr"),
+            private$available_teal_slices()
+          )
+        )
+        available_slices_id <- reactive(vapply(private$available_teal_slices(), `[[`, character(1), "id"))
+        active_slices_id <- reactive(vapply(self$get_filter_state(), `[[`, character(1), "id"))
+        duplicated_slice_references <- reactive({
+          # slice refers to a particular column
+          slice_reference <- vapply(private$available_teal_slices(), get_default_slice_id, character(1))
+          is_duplicated_reference <- duplicated(slice_reference) | duplicated(slice_reference, fromLast = TRUE)
+          is_active <- available_slices_id() %in% active_slices_id()
+          is_not_expr <- !vapply(private$available_teal_slices(), inherits, logical(1), "teal_slice_expr")
+          slice_reference[is_duplicated_reference & is_active & is_not_expr]
         })
 
         checkbox_group_element <- function(name, value, label, checked, disabled = FALSE) {
@@ -1199,20 +1197,30 @@ FilteredData <- R6::R6Class( # nolint
 
         observeEvent(input$available_slices_id, ignoreNULL = FALSE, ignoreInit = TRUE, {
           new_slices_id <- setdiff(input$available_slices_id, active_slices_id())
+          removed_slices_id <- setdiff(active_slices_id(), input$available_slices_id)
           if (length(new_slices_id)) {
-            new_teal_slices <- Filter(function(slice) slice$id %in% new_slices_id, slices_nonlocked())
+            new_teal_slices <- Filter(
+              function(slice) slice$id %in% new_slices_id,
+              private$available_teal_slices()
+            )
             self$set_filter_state(new_teal_slices)
           }
 
-          removed_slices_id <- setdiff(active_slices_id(), input$available_slices_id)
           if (length(removed_slices_id)) {
-            removed_teal_slices <- Filter(function(slice) slice$id %in% removed_slices_id, slices_nonlocked())
+            removed_teal_slices <- Filter(
+              function(slice) slice$id %in% removed_slices_id,
+              self$get_filter_state()
+            )
             self$remove_filter_state(removed_teal_slices)
           }
         })
 
-        observeEvent(slices_nonlocked(), ignoreNULL = FALSE, {
-          shinyjs::toggleElement("available_menu", condition = length(slices_nonlocked()) != 0L)
+        observeEvent(private$available_teal_slices(), ignoreNULL = FALSE, {
+          if (length(private$available_teal_slices())) {
+            shinyjs::show("available_menu")
+          } else {
+            shinyjs::hide("available_menu")
+          }
         })
       })
     },
