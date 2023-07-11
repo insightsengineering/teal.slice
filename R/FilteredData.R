@@ -114,7 +114,7 @@ FilteredData <- R6::R6Class( # nolint
       }
 
       self$set_available_teal_slices(x = reactive(NULL))
-      self$set_is_module_specific(FALSE)
+      self$activate_snapshot_manager(FALSE)
 
       invisible(self)
     },
@@ -153,16 +153,16 @@ FilteredData <- R6::R6Class( # nolint
       invisible(NULL)
     },
 
-    #' Set module specific flag.
+    #' Activate snapshot manager.
     #'
-    #' The snapshot manager functionality is used in both module-specific and global mode
-    #' but the mechanics is slightly different. In the latter case the manager is run by this class
-    #' rather than `teal`. This flag specifies if the global snapshot manager should be started.
+    #' Activate snapshot manager module to allow capturing, saving, and restoring
+    #' snapshots of the global application filter state.
+    #'
     #' @param x (`logical(1)`) flag
     #' @return invisible `NULL`
-    set_is_module_specific = function(x) {
+    activate_snapshot_manager = function(x) {
       checkmate::assert_flag(x)
-      private$is_module_specific <- x
+      private$snapshot_manager_active <- x
       invisible(NULL)
     },
 
@@ -689,7 +689,7 @@ FilteredData <- R6::R6Class( # nolint
           class = "filter-panel-active-header",
           tags$span("Active Filter Variables", class = "text-primary mb-4"),
           private$ui_available_filters(ns("available_filters")),
-          if (isFALSE(private$is_module_specific)) {
+          if (isFALSE(private$snapshot_manager_active)) {
             actionLink(
               ns("show_snapshot_manager"),
               label = NULL,
@@ -804,7 +804,7 @@ FilteredData <- R6::R6Class( # nolint
             )
           )
         })
-        if (isFALSE(private$is_module_specific)) private$srv_snapshot_manager("snapshot_manager")
+        if (isFALSE(private$snapshot_manager_active)) private$srv_snapshot_manager("snapshot_manager")
 
         observeEvent(input$remove_all_filters, {
           logger::log_trace("FilteredData$srv_filter_panel@1 removing all non-locked filters")
@@ -1055,7 +1055,7 @@ FilteredData <- R6::R6Class( # nolint
     module_add = TRUE,
 
     # flag specifying if snapshot manager should be available
-    is_module_specific = logical(0L),
+    snapshot_manager_active = logical(0L),
 
     # private methods ----
 
