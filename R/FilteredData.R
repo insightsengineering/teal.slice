@@ -1117,16 +1117,10 @@ FilteredData <- R6::R6Class( # nolint
     srv_available_filters = function(id) {
       moduleServer(id, function(input, output, session) {
         slices_interactive <- reactive(
-          Filter(
-            function(slice) !isTRUE(slice$fixed) && !inherits(slice, "teal_slice_expr"),
-            private$available_teal_slices()
-          )
+          Filter(function(slice) isFALSE(slice$fixed), private$available_teal_slices())
         )
         slices_fixed <- reactive(
-          Filter(
-            function(slice) isTRUE(slice$fixed) || inherits(slice, "teal_slice_expr"),
-            private$available_teal_slices()
-          )
+          Filter(function(slice) isTRUE(slice$fixed), private$available_teal_slices())
         )
         available_slices_id <- reactive(vapply(private$available_teal_slices(), `[[`, character(1), "id"))
         active_slices_id <- reactive(vapply(self$get_filter_state(), `[[`, character(1), "id"))
