@@ -124,31 +124,33 @@ teal_slice <- function(dataname,
   checkmate::assert_flag(locked)
 
   formal_args <- as.list(environment())
+
   if (!missing(expr) && !missing(varname)) {
     stop("Must provide either `expr` or `varname`.")
   } else if (!missing(expr)) {
-    fixed <- TRUE
-    ts_expr_args <- c("dataname", "id", "expr", "fixed", "locked", "title")
-    formal_args <- formal_args[ts_expr_args]
     checkmate::assert_string(id)
     checkmate::assert_string(title)
     checkmate::assert_string(expr)
+
+    fixed <- TRUE
+    ts_expr_args <- c("dataname", "id", "expr", "fixed", "locked", "title")
+    formal_args <- formal_args[ts_expr_args]
     ans <- do.call(shiny::reactiveValues, c(formal_args, list(...)))
     class(ans) <- c("teal_slice_expr", "teal_slice", class(ans))
-    ans
   } else if (!missing(varname)) {
-    ts_var_args <- c(
-      "dataname", "varname", "id", "choices", "selected", "keep_na", "keep_inf",
-      "fixed", "locked", "multiple"
-    )
-    formal_args <- formal_args[ts_var_args]
-    args <- c(formal_args, list(...))
     checkmate::assert_string(varname)
     checkmate::assert_multi_class(choices, .filterable_class, null.ok = TRUE)
     checkmate::assert_multi_class(selected, .filterable_class, null.ok = TRUE)
     checkmate::assert_flag(keep_na, null.ok = TRUE)
     checkmate::assert_flag(keep_inf, null.ok = TRUE)
     checkmate::assert_flag(multiple)
+
+    ts_var_args <- c(
+      "dataname", "varname", "id", "choices", "selected", "keep_na", "keep_inf",
+      "fixed", "locked", "multiple"
+    )
+    formal_args <- formal_args[ts_var_args]
+    args <- c(formal_args, list(...))
     if (missing(id)) {
       args$id <- get_default_slice_id(args)
     } else {
@@ -156,10 +158,11 @@ teal_slice <- function(dataname,
     }
     ans <- do.call(shiny::reactiveValues, args)
     class(ans) <- c("teal_slice_var", "teal_slice", class(ans))
-    ans
   } else {
     stop("Must provide either `expr` or `varname`.")
   }
+
+  ans
 }
 
 #' @rdname teal_slice
@@ -310,7 +313,7 @@ justify_json <- function(json) {
 #'
 trim_lines_json <- function(x) {
   name_width <- max(unlist(gregexpr(":", x))) - 1
-  trim_position <- name_width + 17L
+  trim_position <- name_width + 37L
   x_trim <- substr(x, 1, trim_position)
   substr(x_trim, trim_position - 2, trim_position) <- "..."
   x_trim

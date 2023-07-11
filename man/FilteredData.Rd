@@ -102,6 +102,8 @@ shiny::isolate(datasets$get_filter_state())
 \item \href{#method-FilteredData-new}{\code{FilteredData$new()}}
 \item \href{#method-FilteredData-datanames}{\code{FilteredData$datanames()}}
 \item \href{#method-FilteredData-get_datalabel}{\code{FilteredData$get_datalabel()}}
+\item \href{#method-FilteredData-set_available_teal_slices}{\code{FilteredData$set_available_teal_slices()}}
+\item \href{#method-FilteredData-activate_snapshot_manager}{\code{FilteredData$activate_snapshot_manager()}}
 \item \href{#method-FilteredData-get_call}{\code{FilteredData$get_call()}}
 \item \href{#method-FilteredData-get_code}{\code{FilteredData$get_code()}}
 \item \href{#method-FilteredData-get_data}{\code{FilteredData$get_data()}}
@@ -123,7 +125,6 @@ shiny::isolate(datasets$get_filter_state())
 \item \href{#method-FilteredData-remove_filter_state}{\code{FilteredData$remove_filter_state()}}
 \item \href{#method-FilteredData-remove_all_filter_states}{\code{FilteredData$remove_all_filter_states()}}
 \item \href{#method-FilteredData-clear_filter_states}{\code{FilteredData$clear_filter_states()}}
-\item \href{#method-FilteredData-set_available_teal_slices}{\code{FilteredData$set_available_teal_slices()}}
 \item \href{#method-FilteredData-ui_filter_panel}{\code{FilteredData$ui_filter_panel()}}
 \item \href{#method-FilteredData-srv_filter_panel}{\code{FilteredData$srv_filter_panel()}}
 \item \href{#method-FilteredData-ui_active}{\code{FilteredData$ui_active()}}
@@ -201,6 +202,54 @@ Useful to display in \verb{Show R Code}.
 }
 \subsection{Returns}{
 (\code{character}) keys of dataset
+Set external \code{teal_slice}
+
+Unlike adding new filter from the column, these filters can be added with some pre-specified
+settings. List of \code{teal_slices} should be a reactive so one can make this list to be dynamic.
+List is accessible in \code{ui/srv_active} through \code{ui/srv_available_filters}.
+}
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-FilteredData-set_available_teal_slices"></a>}}
+\if{latex}{\out{\hypertarget{method-FilteredData-set_available_teal_slices}{}}}
+\subsection{Method \code{set_available_teal_slices()}}{
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{FilteredData$set_available_teal_slices(x)}\if{html}{\out{</div>}}
+}
+
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{x}}{(\code{reactive})\cr
+should return \code{teal_slices}}
+}
+\if{html}{\out{</div>}}
+}
+\subsection{Returns}{
+invisible \code{NULL}
+Activate snapshot manager.
+
+Activate snapshot manager module to allow capturing, saving, and restoring
+snapshots of the global application filter state.
+}
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-FilteredData-activate_snapshot_manager"></a>}}
+\if{latex}{\out{\hypertarget{method-FilteredData-activate_snapshot_manager}{}}}
+\subsection{Method \code{activate_snapshot_manager()}}{
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{FilteredData$activate_snapshot_manager(x)}\if{html}{\out{</div>}}
+}
+
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{x}}{(\code{logical(1)}) flag}
+}
+\if{html}{\out{</div>}}
+}
+\subsection{Returns}{
+invisible \code{NULL}
 }
 }
 \if{html}{\out{<hr>}}
@@ -670,7 +719,7 @@ Deprecated - please use \code{clear_filter_states} method.
 Remove all \code{FilterStates} of a \code{FilteredDataset} or all \code{FilterStates}
 of a \code{FilteredData} object.
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{FilteredData$clear_filter_states(datanames = self$datanames())}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{FilteredData$clear_filter_states(datanames = self$datanames(), force = FALSE)}\if{html}{\out{</div>}}
 }
 
 \subsection{Arguments}{
@@ -679,37 +728,15 @@ of a \code{FilteredData} object.
 \item{\code{datanames}}{(\code{character})\cr
 \code{datanames} to remove their \code{FilterStates} or empty which removes
 all \code{FilterStates} in the \code{FilteredData} object}
+
+\item{\code{force}}{(\code{logical(1)})\cr
+include locked filter states}
 }
 \if{html}{\out{</div>}}
 }
 \subsection{Returns}{
 \code{NULL} invisibly
 
-Set external \code{teal_slice}
-
-Unlike adding new filter from the column, these filters can be added with some prespecified
-settings. List of \code{teal_slices} should be a reactive so one can make this list to be dynamic.
-List is accessible in \code{ui/srv_active} through \code{ui/srv_available_filters}.
-}
-}
-\if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-FilteredData-set_available_teal_slices"></a>}}
-\if{latex}{\out{\hypertarget{method-FilteredData-set_available_teal_slices}{}}}
-\subsection{Method \code{set_available_teal_slices()}}{
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{FilteredData$set_available_teal_slices(x)}\if{html}{\out{</div>}}
-}
-
-\subsection{Arguments}{
-\if{html}{\out{<div class="arguments">}}
-\describe{
-\item{\code{x}}{(\code{reactive})\cr
-should return \code{teal_slices}}
-}
-\if{html}{\out{</div>}}
-}
-\subsection{Returns}{
-invisible \code{NULL}
 Module for the right filter panel in the teal app
 with a filter overview panel and a filter variable panel.
 
