@@ -199,13 +199,13 @@ FilterStates <- R6::R6Class( # nolint
     #' @return `NULL` invisibly
     #'
     remove_filter_state = function(state) {
+      checkmate::assert_class(state, "teal_slices")
       shiny::isolate({
-        checkmate::assert_class(state, "teal_slices")
         state_ids <- vapply(state, `[[`, character(1), "id")
         logger::log_trace("{ class(self)[1] }$remove_filter_state removing filters, state_id: { toString(state_ids) }")
         private$state_list_remove(state_ids)
-        invisible(NULL)
       })
+      invisible(NULL)
     },
 
     #' @description
@@ -286,9 +286,9 @@ FilterStates <- R6::R6Class( # nolint
           )
         }
         logger::log_trace("{ class(self)[1] }$set_filter_state initialized, dataname: { private$dataname }")
-
-        invisible(NULL)
       })
+
+      invisible(NULL)
     },
 
     #' @description
@@ -637,10 +637,10 @@ FilterStates <- R6::R6Class( # nolint
     # @return NULL
     #
     state_list_remove = function(state_id, force = FALSE) {
+      checkmate::assert_character(state_id)
+      logger::log_trace("{ class(self)[1] } removing a filter, state_id: { toString(state_id) }")
+
       shiny::isolate({
-        logger::log_trace("{ class(self)[1] } removing a filter, state_id: { state_id }")
-        checkmate::assert_character(state_id)
-        new_state_list <- private$state_list()
         current_state_ids <- vapply(private$state_list(), function(x) x$get_state()$id, character(1))
         to_remove <- state_id %in% current_state_ids
         if (any(to_remove)) {
@@ -663,8 +663,9 @@ FilterStates <- R6::R6Class( # nolint
         } else {
           warning(sprintf("\"%s\" not found in state list", state_id))
         }
-        invisible(NULL)
       })
+
+      invisible(NULL)
     },
 
     # @description
@@ -684,8 +685,9 @@ FilterStates <- R6::R6Class( # nolint
           state_ids <- vapply(state_list, function(x) x$get_state()$id, character(1))
           private$state_list_remove(state_ids, force)
         }
-        invisible(NULL)
       })
+
+      invisible(NULL)
     },
 
     # @description
