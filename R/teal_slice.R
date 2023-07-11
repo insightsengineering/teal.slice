@@ -283,7 +283,7 @@ to_json <- function(x) {
 #' @param json (`character(1)`) a `JSON` string.
 #'
 #' @return A list of character strings, which can be collapsed into a `JSON` string.
-#'
+#' @keywords internal
 justify_json <- function(json) {
   format_name <- function(name, name_width) {
     if (nchar(name) == 1 || nchar(gsub("\\s", "", name)) <= 2) {

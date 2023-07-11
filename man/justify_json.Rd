@@ -16,3 +16,4 @@ A list of character strings, which can be collapsed into a \code{JSON} string.
 This function takes a \code{JSON} string as input, splits it into lines, and pads element names
 with spaces so that colons are justified between lines.
 }
+\keyword{internal}
