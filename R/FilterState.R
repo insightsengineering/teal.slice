@@ -309,6 +309,7 @@ FilterState <- R6::R6Class( # nolint
                 inputId = ns("back"),
                 label = NULL,
                 icon = icon("circle-arrow-left", lib = "font-awesome"),
+                title = "Rewind state",
                 class = "filter-card-back",
                 style = "display: none"
               )
@@ -318,6 +319,7 @@ FilterState <- R6::R6Class( # nolint
                 inputId = ns("reset"),
                 label = NULL,
                 icon = icon("circle-arrow-up", lib = "font-awesome"),
+                title = "Restore original state",
                 class = "filter-card-back",
                 style = "display: none"
               )
@@ -326,6 +328,7 @@ FilterState <- R6::R6Class( # nolint
               actionLink(
                 inputId = ns("remove"),
                 label = icon("circle-xmark", lib = "font-awesome"),
+                title = "Remove filter",
                 class = "filter-card-remove"
               )
             }
