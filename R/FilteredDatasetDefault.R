@@ -184,14 +184,10 @@ DefaultFilteredDataset <- R6::R6Class( # nolint
       shiny::isolate({
         logger::log_trace("{ class(self)[1] }$set_filter_state initializing, dataname: { private$dataname }")
         checkmate::assert_class(state, "teal_slices")
-        lapply(state, function(x) {
-          checkmate::assert_true(
-            shiny::isolate(x$dataname) == private$dataname,
-            .var.name = "dataname matches private$dataname"
-          )
-          private$get_filter_states()[[1L]]$set_filter_state(state = state)
-          logger::log_trace("{ class(self)[1] }$set_filter_state initialized, dataname: { private$dataname }")
+        lapply(state, function(slice) {
+          checkmate::assert_true(slice$dataname == private$dataname)
         })
+        private$get_filter_states()[[1L]]$set_filter_state(state = state)
         invisible(NULL)
       })
     },

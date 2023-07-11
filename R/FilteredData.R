@@ -505,6 +505,9 @@ FilteredData <- R6::R6Class( # nolint
         }
 
         checkmate::assert_class(state, "teal_slices")
+        module_add <- attr(state, "module_add")
+        if (!is.null(module_add)) {
+          private$module_add <- module_add
         datanames <- slices_field(state, "dataname")
         if (!checkmate::test_subset(datanames, self$datanames())) {
           logger::log_warn("Some teal_slices are meant for different data sets and will be ignored.")
@@ -512,7 +515,7 @@ FilteredData <- R6::R6Class( # nolint
           datanames <- intersect(slices_field(state, "dataname"), self$datanames())
         }
 
-        lapply(datanames, function(dataname) {
+        lapply(self$datanames(), function(dataname) {
           states <- Filter(function(x) identical(x$dataname, dataname), state)
           private$get_filtered_dataset(dataname)$set_filter_state(states)
         })
@@ -1162,45 +1165,36 @@ FilteredData <- R6::R6Class( # nolint
             selected = NULL
           )
           active_slices_ids <- active_slices_id()
+          duplicated_slice_refs <- duplicated_slice_references()
 
-          shiny::isolate({
-            interactive_choice_mock <- lapply(
-              slices_interactive(),
-              function(slice) {
-                checkbox_group_element(
-                  name = session$ns("available_slices_id"),
-                  value = slice$id,
-                  label = slice$id,
-                  checked = if (slice$id %in% active_slices_ids) "checked",
-                  disabled = slice$locked
-                )
-              }
-            )
+          checkbox_group_slice <- function(slice) {
+            # we need to isolate changes in the fields of the slice (teal_slice)
+            shiny::isolate({
+              checkbox_group_element(
+                name = session$ns("available_slices_id"),
+                value = slice$id,
+                label = slice$id,
+                checked = if (slice$id %in% active_slices_ids) "checked",
+                disabled = slice$locked ||
+                  get_default_slice_id(slice) %in% duplicated_slice_refs &&
+                    !slice$id %in% active_slices_ids
+              )
+            })
+          }
 
-            non_interactive_choice_mock <- lapply(
-              slices_fixed(),
-              function(slice) {
-                checkbox_group_element(
-                  name = session$ns("available_slices_id"),
-                  value = slice$id,
-                  label = slice$id,
-                  checked = if (slice$id %in% active_slices_ids) "checked",
-                  disabled = slice$locked
-                )
-              }
-            )
+          interactive_choice_mock <- lapply(slices_interactive(), checkbox_group_slice)
+          non_interactive_choice_mock <- lapply(slices_fixed(), checkbox_group_slice)
 
-            htmltools::tagInsertChildren(
-              checkbox,
-              br(),
-              tags$strong("Fixed filters"),
-              non_interactive_choice_mock,
-              tags$strong("Iteractive filters"),
-              interactive_choice_mock,
-              .cssSelector = "div.shiny-options-group",
-              after = 0
-            )
-          })
+          htmltools::tagInsertChildren(
+            checkbox,
+            br(),
+            tags$strong("Fixed filters"),
+            non_interactive_choice_mock,
+            tags$strong("Interactive filters"),
+            interactive_choice_mock,
+            .cssSelector = "div.shiny-options-group",
+            after = 0
+          )
         })
 
         observeEvent(input$available_slices_id, ignoreNULL = FALSE, ignoreInit = TRUE, {

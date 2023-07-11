@@ -109,39 +109,39 @@ testthat::test_that("[.teal_slices subsets properly", {
 })
 
 
-testthat::test_that("[.teal_slices also subsets the exclude_varnames attribute", {
+testthat::test_that("[.teal_slices doesn't subset the exclude_varnames attribute according to available teal_slice", {
   shiny::reactiveConsole(TRUE)
   on.exit(shiny::reactiveConsole(FALSE))
 
-  fs1 <- teal_slice("data1", "var1")
-  fs2 <- teal_slice("data1", "var2")
-  fs3 <- teal_slice("data2", "var1")
-  fs4 <- teal_slice("data2", "var2")
+  fs1 <- teal_slice(dataname = "data1", varname = "var1")
+  fs2 <- teal_slice(dataname = "data1", varname = "var2")
+  fs3 <- teal_slice(dataname = "data2", varname = "var1")
+  fs4 <- teal_slice(dataname = "data2", varname = "var2")
   fs <- teal_slices(fs1, fs2, fs3, fs4, exclude_varnames = list(data1 = "var1", data2 = "var1"))
 
   testthat::expect_identical(
     attr(fs[1], "exclude_varnames"),
-    list(data1 = "var1")
+    list(data1 = "var1", data2 = "var1")
   )
   testthat::expect_identical(
     attr(fs[2], "exclude_varnames"),
-    list(data1 = "var1")
+    list(data1 = "var1", data2 = "var1")
   )
   testthat::expect_identical(
     attr(fs[1:2], "exclude_varnames"),
-    list(data1 = "var1")
+    list(data1 = "var1", data2 = "var1")
   )
   testthat::expect_identical(
     attr(fs[3], "exclude_varnames"),
-    list(data2 = "var1")
+    list(data1 = "var1", data2 = "var1")
   )
   testthat::expect_identical(
     attr(fs[4], "exclude_varnames"),
-    list(data2 = "var1")
+    list(data1 = "var1", data2 = "var1")
   )
   testthat::expect_identical(
     attr(fs[3:4], "exclude_varnames"),
-    list(data2 = "var1")
+    list(data1 = "var1", data2 = "var1")
   )
   testthat::expect_identical(
     attr(fs[], "exclude_varnames"),
@@ -149,6 +149,45 @@ testthat::test_that("[.teal_slices also subsets the exclude_varnames attribute",
   )
 })
 
+testthat::test_that("[.teal_slices doesn't subset the include_varnames attribute according to available teal_slice", {
+  shiny::reactiveConsole(TRUE)
+  on.exit(shiny::reactiveConsole(FALSE))
+
+  fs1 <- teal_slice(dataname = "data1", varname = "var1")
+  fs2 <- teal_slice(dataname = "data1", varname = "var2")
+  fs3 <- teal_slice(dataname = "data2", varname = "var1")
+  fs4 <- teal_slice(dataname = "data2", varname = "var2")
+  fs <- teal_slices(fs1, fs2, fs3, fs4, include_varnames = list(data1 = "var1", data2 = "var1"))
+
+  testthat::expect_identical(
+    attr(fs[1], "include_varnames"),
+    list(data1 = "var1", data2 = "var1")
+  )
+  testthat::expect_identical(
+    attr(fs[2], "include_varnames"),
+    list(data1 = "var1", data2 = "var1")
+  )
+  testthat::expect_identical(
+    attr(fs[1:2], "include_varnames"),
+    list(data1 = "var1", data2 = "var1")
+  )
+  testthat::expect_identical(
+    attr(fs[3], "include_varnames"),
+    list(data1 = "var1", data2 = "var1")
+  )
+  testthat::expect_identical(
+    attr(fs[4], "include_varnames"),
+    list(data1 = "var1", data2 = "var1")
+  )
+  testthat::expect_identical(
+    attr(fs[3:4], "include_varnames"),
+    list(data1 = "var1", data2 = "var1")
+  )
+  testthat::expect_identical(
+    attr(fs[], "include_varnames"),
+    list(data1 = "var1", data2 = "var1")
+  )
+})
 
 testthat::test_that("[.teal_slices preserves count_type", {
   shiny::reactiveConsole(TRUE)

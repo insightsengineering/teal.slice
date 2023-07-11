@@ -201,14 +201,9 @@ FilterStates <- R6::R6Class( # nolint
     remove_filter_state = function(state) {
       shiny::isolate({
         checkmate::assert_class(state, "teal_slices")
-
-        lapply(state, function(x) {
-          state_id <- x$id
-          logger::log_trace("{ class(self)[1] }$remove_filter_state removing filter, state_id: { state_id }")
-          private$state_list_remove(state_id = state_id)
-          logger::log_trace("{ class(self)[1] }$remove_filter_state removed filter, state_id: { state_id }")
-        })
-
+        state_ids <- vapply(state, `[[`, character(1), "id")
+        logger::log_trace("{ class(self)[1] }$remove_filter_state removing filters, state_id: { toString(state_ids) }")
+        private$state_list_remove(state_ids)
         invisible(NULL)
       })
     },
@@ -348,15 +343,17 @@ FilterStates <- R6::R6Class( # nolint
         function(input, output, session) {
           logger::log_trace("FilterState$srv_active initializing, dataname: { private$dataname }")
           current_state <- reactive(private$state_list_get())
-          previous_state <- reactiveVal(character(0))
-          added_states <- reactiveVal(NULL)
+          previous_state <- reactiveVal(NULL) # FilterState list
+          added_states <- reactiveVal(NULL) # FilterState list
 
-          str_to_shiny_ns <- function(x) {
-            gsub("[^[:alnum:]]+", "_", x)
+          # gives a valid shiny ns based on a default slice id
+          fs_to_shiny_ns <- function(x) {
+            checkmate::assert_multi_class(x, c("FilterState", "FilterStateExpr"))
+            gsub("[^[:alnum:]]+", "_", get_default_slice_id(x$get_state()))
           }
 
           output$trigger_visible_state_change <- renderUI({
-            current_state <- current_state()
+            current_state()
             isolate({
               logger::log_trace("FilterStates$srv_active@1 determining added and removed filter states")
               # Be aware this returns a list because `current_state` is a list and not `teal_slices`.
@@ -367,12 +364,14 @@ FilterStates <- R6::R6Class( # nolint
           })
 
           output[["cards"]] <- shiny::renderUI({
-            fstates <- current_state() # rerenders when queue changes / not when the state changes
-            lapply(names(fstates), function(fname) {
-              shiny::isolate(
-                fstates[[fname]]$ui(id = session$ns(str_to_shiny_ns(fname)), parent_id = session$ns("cards"))
-              )
-            })
+            lapply(
+              current_state(), # observes only if added/removed
+              function(state) {
+                shiny::isolate( # isolates when existing state changes
+                  state$ui(id = session$ns(fs_to_shiny_ns(state)), parent_id = session$ns("cards"))
+                )
+              }
+            )
           })
 
           observeEvent(
@@ -381,14 +380,12 @@ FilterStates <- R6::R6Class( # nolint
             {
               added_state_names <- vapply(added_states(), function(x) x$get_state()$id, character(1L))
               logger::log_trace("FilterStates$srv_active@2 triggered by added states: { toString(added_state_names) }")
-              # fstates <- current_state() # this doesn't seem to do anything
               lapply(added_states(), function(state) {
-                fname <- state$get_state()$id
-                fs_callback <- state$server(id = str_to_shiny_ns(fname))
+                fs_callback <- state$server(id = fs_to_shiny_ns(state))
                 observeEvent(
                   eventExpr = fs_callback(), # when remove button is clicked in the FilterState ui
                   once = TRUE, # remove button can be called once, should be destroyed afterwards
-                  handlerExpr = private$state_list_remove(fname)
+                  handlerExpr = private$state_list_remove(state$get_state()$id)
                 )
               })
               added_states(NULL)
@@ -644,14 +641,24 @@ FilterStates <- R6::R6Class( # nolint
         logger::log_trace("{ class(self)[1] } removing a filter, state_id: { state_id }")
         checkmate::assert_character(state_id)
         new_state_list <- private$state_list()
-        if (is.element(state_id, names(new_state_list))) {
+        current_state_ids <- vapply(private$state_list(), function(x) x$get_state()$id, character(1))
+        to_remove <- state_id %in% current_state_ids
+        if (any(to_remove)) {
+          new_state_list <- Filter(
+            function(state) {
+              if (state$get_state()$id %in% state_id && !state$get_state()$locked) {
+                state$destroy_observers()
+                FALSE
+              } else {
+                TRUE
+              }
+            },
+            private$state_list()
+          )
           if (new_state_list[[state_id]]$get_state()$locked & !force) {
             return(invisible(NULL))
           }
-          new_state_list[[state_id]]$destroy_observers()
-          new_state_list[[state_id]] <- NULL
           private$state_list(new_state_list)
-          logger::log_trace("{ class(self)[1] } removed a filter, state_id: { state_id }")
         } else {
           warning(sprintf("\"%s\" not found in state list", state_id))
         }
@@ -670,13 +677,12 @@ FilterStates <- R6::R6Class( # nolint
         logger::log_trace(
           "{ class(self)[1] }$state_list_empty removing filters for dataname: { private$dataname }"
         )
+
         state_list <- private$state_list()
-        for (state_id in names(state_list)) {
+        if (length(state_list)) {
+          state_list_ids <- vapply(state_list, function(x) x$get_state()$id, character(1))
           private$state_list_remove(state_id, force)
         }
-        logger::log_trace(
-          "{ class(self)[1] }$state_list_empty removed filters for dataname: { private$dataname }"
-        )
         invisible(NULL)
       })
     },

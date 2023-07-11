@@ -201,7 +201,6 @@ FilterState <- R6::R6Class( # nolint
         id = id,
         function(input, output, session) {
           logger::log_trace("FilterState$server initializing module for slice: { private$get_id() } ")
-
           private$server_summary("summary")
           if (private$is_fixed()) {
             private$server_inputs_fixed("inputs")
