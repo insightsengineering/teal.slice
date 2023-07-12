@@ -2,7 +2,9 @@
 title: "Introduction to teal.slice"
 author: "NEST Core Dev Team"
 date: "01/07/2022"
-output: rmarkdown::html_vignette
+output: 
+  rmarkdown::html_vignette:
+    toc: true
 vignette: >
   %\VignetteIndexEntry{Introduction to teal.slice}
   %\VignetteEngine{knitr::rmarkdown}
@@ -11,24 +13,24 @@ vignette: >
 
 ## Introduction
 
-`teal.slice` provides a *filter panel* for `shiny` application.
-The `teal.slice` lets create a filter panel module and interactively filter data. Filter panel module
-displays filtered and unfiltered counts, gives possibility to filter `data.frame` and `MultiAssayExperiment`
-objects.
+The `teal.slice` package provides a *filter panel* for `shiny` applications. 
+`teal.slice` creates a filter panel module that allows for interactive filtering of data stored in `data.frame` and `MultiAssayExperiment` objects. 
+It also displays filtered and unfiltered observation counts.
 
 ## Information for users of the filter panel in applications
 
 The filter panel contains three panels:
 
-1) top panel showing the number of records (observations) remaining after the filters have been applied. For `CDISC` data, the number of unique subjects remaining in the filtered dataset is also shown. 
-2) middle panel showing the current active filters and these can be changed/removed here
-3) bottom panel to allow new columns of the datasets to be added as filters
+1) The top panel displays the number of records (observations) that remain after the filters have been applied.
+For relational data (where `join_keys` is specified), the number of unique subjects remaining in the filtered data set is also shown. 
+2) The middle panel displays the current active filters and allows the user to change their state.
+3) The bottom panel allows to add new filters on columns of the data sets in the app.
 
-Note that multiple filters for the same dataset are combined using `AND` and there is no ability to apply hierarchical filters.
+Note that multiple filters for the same data set are combined with the `AND` operator and it is not possible to apply hierarchical filters.
 
-An example of the filter panel in use is shown in the image below.
-The `iris` dataset has the 50 `versicolor` records removed leaving 100 observations.
-The `mtcars` dataset has filtered out all records other than those with `(gear = 3 or gear = 5) and (disp in [205, 295])`.  
+An example of the filter panel in use is shown in the image below. 
+The `iris` data set has the 50 `versicolor` records removed, leaving 100 observations. 
+The `mtcars` data set has filtered out all records other than those with `(gear = 3 or gear = 5) and (disp in [205, 295])`.  
 
 ```{r echo=FALSE, out.width='60%'}
 knitr::include_graphics("./images/teal-slice/filter-panel.png")
@@ -36,19 +38,29 @@ knitr::include_graphics("./images/teal-slice/filter-panel.png")
 
 Depending on the data type of the selected variable, different filters are shown, for example date pickers, range sliders, checkbox inputs.
 
-For relational data (when `join_keys` are specified), filtering records in a parent dataset (i.e. `ADSL`) will also apply the same filter to all child datasets and in child datasets it is only possible to filter columns not found in its parent's dataset. For general relational data the filter panel treats each dataset independently irrespective of relationships between datasets.
-The filter panel also supports filtering `MultiAssayExperiment` data where filters can be applied on the
-subjects data level `(colData(MAE))` and on each experiment level `(MAE[["experiment name"]])`.
+For relational data (when `join_keys` are specified), filters specified on a parent data set (i.e. `ADSL`) will apply to all child data sets, whereas filters for a child data set can only be specified on columns not found in that data set's parent. 
+For general relational data the filter panel treats each data set independently, irrespective of relationships between data sets.
+
+The filter panel also supports filtering `MultiAssayExperiment` objects, where filters can be applied to the subject data, which is stored in the `colData` slot and accessed with `colData(MAE)`, as well as to experiments, which are stored in the `ExperimentList` slot and accessed with `MAE[["experiment name"]]`.
 
 
 ## Information for R developers using the filter panel
 
 The example app below shows how to embed the filter panel inside a shiny application.
 
-Note if you are using the `teal` package to create a `teal` application then the `FilteredData` object (`datasets`) does not need to be explicitly created, nor its UI explicitly added and it is automatically available inside `teal` module server functions. Additionally, we are using `shiny::dataTableOutput` and `shiny::renderDataTable` for this example. This can lead to issues with Bootstrap, especially version 4. We recommend using `DT::dataTableOutput` and `DT::renderDataTable` if possible. See the `shiny` and `DT` documentation for more information.
+The filter panel is entirely contained within a `FilteredData` object. 
+`FilteredData` is an `R6` class that stores data sets, tracks filter states, constructs and applies filter calls, and can output filtered data. 
+It also contains `shiny` modules (both UI and server functions) that make up the panel itself.
 
-Communication with `FilteredData` from external modules can be done via filter panel API. In the example below `set_filter_state` is used along with `teal_slices`. For more details please see *Filter panel for developers* 
-vignette.
+In a `teal` application the `FilteredData` object (`datasets`) is created automatically by `teal`'s `init` function and filter panel components are automatically placed on the right hand side of the page.
+
+Note that this example uses `shiny::dataTableOutput` and `shiny::renderDataTable`. 
+This can lead to issues with Bootstrap, especially version 4.
+We recommend using `DT::dataTableOutput` and `DT::renderDataTable` if possible. See the `shiny` and `DT` documentation for more information.
+
+To facilitate communication with `FilteredData`, we provide the filter panel API. 
+The example below uses the `set_filter_state` function to set state and the state is specified with `teal_slices` and `teal_slice` functions. 
+For details please see the *Filter panel for developers* vignette.
 
 ```{r}
 library(teal.slice)
