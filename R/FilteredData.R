@@ -1280,6 +1280,7 @@ FilteredData <- R6::R6Class( # nolint
           snapshot_state <- reassemble_slices(snapshot)
           self$clear_filter_states(force = TRUE)
           self$set_filter_state(snapshot_state)
+          removeModal()
           ### End restore procedure. ###
         })
 
@@ -1296,6 +1297,7 @@ FilteredData <- R6::R6Class( # nolint
               snapshot_state <- reassemble_slices(snapshot)
               self$clear_filter_states(force = TRUE)
               self$set_filter_state(snapshot_state)
+              removeModal()
               ### End restore procedure. ###
             })
 
