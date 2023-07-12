@@ -1302,7 +1302,7 @@ FilteredData <- R6::R6Class( # nolint
             # Save snapshot.
             output[[id_saveme]] <- downloadHandler(
               filename = function() {
-                sprintf("teal_snapshot %s.json", s)
+                sprintf("teal_snapshot_%s_%s.json", s, Sys.Date())
               },
               content = function(file) {
                 snapshot <- snapshot_history()[[s]]
