@@ -180,7 +180,7 @@ are combined with `&` operator and put to `dplyr::filter`. `CDISCFilteredDataset
 call and return to `FilteredData` as a list.
 
 (5) Second `FilteredDataset` for `ADTTE` works the same way as `ADSL` with one difference -
-`dplyr::filter` for `ADTTE` is followed by the merge call with paren dataset (`ADSL`) to keep key columns consistent.
+`dplyr::filter` for `ADTTE` is followed by the merge call with a parent dataset (`ADSL`) to keep key columns consistent.
 Note, that this specific relationship is available only when selecting `join_keys`, otherwise `ADTTE` 
 would be filtered independently, without `inner_join` call.
 
