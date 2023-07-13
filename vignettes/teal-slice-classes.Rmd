@@ -164,8 +164,8 @@ classes. Consider a scenario in which:
 
 (1) `FilteredData` has three `FilteredDataset`(s) `ADSL` , `ADTTE`, `MAE`
 
-(2) `CDISCFilteredDataset` contains `data.frame` (`ADSL`) which can be filtered only in one way
-executing single `dplyr::filter` call (this is why `CDISCFilteredDataset` has a single `FilterStates`)
+(2) `DefaultFilteredDataset` contains `data.frame` (`ADSL`) which can be filtered only in one way
+executing single `dplyr::filter` call (this is why `DefaultFilteredDataset` has a single `FilterStates`)
 
 (3) `FilterStates` construct `dplyr::filter` call is based on the `FilterState` objects added to the
 `private$state_list`.
@@ -180,7 +180,7 @@ are combined with `&` operator and put to `dplyr::filter`. `CDISCFilteredDataset
 call and return to `FilteredData` as a list.
 
 (5) Second `FilteredDataset` for `ADTTE` works the same way as `ADSL` with one difference -
-`dplyr::filter` for `ADTTE` is followed by the merge call with to keep keys which are available in parent.
+`dplyr::filter` for `ADTTE` is followed by the merge call with paren dataset (`ADSL`) to keep key columns consistent.
 Note, that this specific relationship is available only when selecting `join_keys`, otherwise `ADTTE` 
 would be filtered independently, without `inner_join` call.
 

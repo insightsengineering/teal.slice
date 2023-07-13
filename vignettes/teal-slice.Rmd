@@ -20,7 +20,7 @@ objects.
 
 The filter panel contains three panels:
 
-1) top panel showing the number of records (observations) remaining after the filters have been applied. For `CDISC` data, the number of unique subjects remaining in the filtered dataset is also shown. 
+1) top panel showing the number of records (observations) remaining after the filters have been applied. For relationship data (`join_keys` specified), the number of unique subjects remaining in the filtered dataset is also shown. 
 2) middle panel showing the current active filters and these can be changed/removed here
 3) bottom panel to allow new columns of the datasets to be added as filters
 
