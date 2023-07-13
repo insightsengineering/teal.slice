@@ -259,35 +259,6 @@ FilteredData <- R6::R6Class( # nolint
     },
 
     #' @description
-    #' Gets labels of variables in the data.
-    #'
-    #' Variables are the column names of the data.
-    #' Either, all labels must have been provided for all variables
-    #' in `set_data` or `NULL`.
-    #'
-    #' @param dataname (`character(1)`) name of the dataset
-    #' @param variables (`character`) variables to get labels for;
-    #'   if `NULL`, for all variables in data
-    #'
-    #' @return (`character` or `NULL`) variable labels, `NULL` if `column_labels`
-    #'   attribute does not exist for the data
-    #'
-    get_varlabels = function(dataname, variables = NULL) {
-      stop("Please extract varlabels directly from the data.")
-    },
-
-    #' @description
-    #' Gets variable names.
-    #'
-    #' @param dataname (`character`) the name of the dataset
-    #'
-    #' @return (`character` vector) of variable names
-    #'
-    get_varnames = function(dataname) {
-      stop("Please extract varnames directly from the data")
-    },
-
-    #' @description
     #' Adds a dataset to this `FilteredData`.
     #'
     #' @details
@@ -475,14 +446,12 @@ FilteredData <- R6::R6Class( # nolint
         }
 
         checkmate::assert_class(state, "teal_slices")
-        datanames <- slices_field(state, "dataname")
-        checkmate::assert_subset(datanames, self$datanames())
         module_add <- attr(state, "module_add")
         if (!is.null(module_add)) {
           private$module_add <- module_add
         }
 
-        lapply(datanames, function(dataname) {
+        lapply(self$datanames(), function(dataname) {
           states <- Filter(function(x) identical(x$dataname, dataname), state)
           private$get_filtered_dataset(dataname)$set_filter_state(states)
         })
@@ -538,18 +507,6 @@ FilteredData <- R6::R6Class( # nolint
     },
 
     #' @description
-    #' Deprecated - please use `clear_filter_states` method.
-    #'
-    #' @param datanames (`character`)
-    #'
-    #' @return `NULL` invisibly
-    #'
-    remove_all_filter_states = function(datanames) {
-      warning("FilteredData$remove_all_filter_states is deprecated, please use FilteredData$clear_filter_states.")
-      self$clear_filter_states(dataname)
-    },
-
-    #' @description
     #' Remove all `FilterStates` of a `FilteredDataset` or all `FilterStates`
     #' of a `FilteredData` object.
     #'
@@ -591,7 +548,10 @@ FilteredData <- R6::R6Class( # nolint
     #' @return invisible `NULL`
     set_available_teal_slices = function(x) {
       checkmate::assert_class(x, "reactive")
-      private$available_teal_slices <- x
+      private$available_teal_slices <- reactive({
+        # we want to limit the available filters to the ones that are relevant for this FilteredData
+        Filter(function(x) x$dataname %in% self$datanames(), x())
+      })
       invisible(NULL)
     },
 
@@ -982,6 +942,89 @@ FilteredData <- R6::R6Class( # nolint
           NULL
         }
       )
+    },
+
+    # deprecated - to remove after release --------------------------------------
+
+    #' @description
+    #' Method is deprecated. Provide resolved `active_datanames` to `srv_filter_panel`
+    #'
+    #' @param datanames `character vector` `datanames` to pick
+    #'
+    #' @return the intersection of `self$datanames()` and `datanames`
+    #'
+    handle_active_datanames = function(datanames) {
+      stop("Deprecated with teal.slice 0.4.0")
+    },
+
+    #' @description
+    #' Method is deprecated. Please extract column labels directly from the data.
+    #'
+    #' @param dataname (`character(1)`) name of the dataset
+    #' @param variables (`character`) variables to get labels for;
+    #'   if `NULL`, for all variables in data
+    #'
+    get_varlabels = function(dataname, variables = NULL) {
+      stop("Deprecated with 0.4.0 - please extract column labels directly from the data.")
+    },
+
+    #' @description
+    #' Method is deprecated, Please extract variable names directly from the data instead
+    #'
+    #' @param dataname (`character`) the name of the dataset
+    #'
+    get_varnames = function(dataname) {
+      stop("Deprecated with 0.4.0 - please extract varniable names directly from the data")
+    },
+
+    #' @description
+    #' Method is deprecated, please use `self$datanames()` instead
+    #'
+    #' @param dataname (`character` vector) names of the dataset
+    #'
+    get_filterable_datanames = function() {
+      stop("Deprecated with 0.4.0 - please use self$datanames() instead")
+    },
+
+    #' @description
+    #' Method is deprecated, please use `self$get_filter_state()` and retain `attr(, "filterable_varnames")` instead.
+    #'
+    #' @param dataname (`character(1)`) name of the dataset
+    #'
+    get_filterable_varnames = function(dataname) {
+      stop("Deprecated with teal.slice 0.4.0 - see help(teal_slices) and description of include_varnames argument.")
+    },
+
+    #' @description
+    #' Method is deprecated, please use `self$set_filter_state` and [teal_slices()] with `include_varnames` instead.
+    #'
+    #' @param dataname (`character(1)`) name of the dataset
+    #' @param varnames (`character` or `NULL`)
+    #'   variables which users can choose to filter the data;
+    #'   see `self$get_filterable_varnames` for more details
+    #'
+    #'
+    set_filterable_varnames = function(dataname, varnames) {
+      stop("Deprecated with teal.slice 0.4.0 - see help(teal_slices) and description of include_varnames argument.")
+    },
+
+    #' @description
+    #' Method is deprecated, please use `format.teal_slices` on object returned from `self$get_filter_state()`
+    #'
+    get_formatted_filter_state = function() {
+      stop("Deprecated with teal.slice 0.4.0 - get_filter_state returns teal_slice which has dedicated format method")
+    },
+
+    #' @description
+    #' Deprecated - please use `clear_filter_states` method.
+    #'
+    #' @param datanames (`character`)
+    #'
+    #' @return `NULL` invisibly
+    #'
+    remove_all_filter_states = function(datanames) {
+      warning("FilteredData$remove_all_filter_states is deprecated, please use FilteredData$clear_filter_states.")
+      self$clear_filter_states(dataname)
     }
   ),
 
@@ -1073,7 +1116,6 @@ FilteredData <- R6::R6Class( # nolint
     # appropriate filter (identified by it's id)
     srv_available_filters = function(id) {
       moduleServer(id, function(input, output, session) {
-        slices <- reactive(Filter(function(slice) !isTRUE(slice$locked), private$available_teal_slices()))
         slices_interactive <- reactive(
           Filter(
             function(slice) !isTRUE(slice$fixed) && !inherits(slice, "teal_slice_expr"),
@@ -1086,8 +1128,16 @@ FilteredData <- R6::R6Class( # nolint
             private$available_teal_slices()
           )
         )
-        available_slices_id <- reactive(vapply(slices(), `[[`, character(1), "id"))
+        available_slices_id <- reactive(vapply(private$available_teal_slices(), `[[`, character(1), "id"))
         active_slices_id <- reactive(vapply(self$get_filter_state(), `[[`, character(1), "id"))
+        duplicated_slice_references <- reactive({
+          # slice refers to a particular column
+          slice_reference <- vapply(private$available_teal_slices(), get_default_slice_id, character(1))
+          is_duplicated_reference <- duplicated(slice_reference) | duplicated(slice_reference, fromLast = TRUE)
+          is_active <- available_slices_id() %in% active_slices_id()
+          is_not_expr <- !vapply(private$available_teal_slices(), inherits, logical(1), "teal_slice_expr")
+          slice_reference[is_duplicated_reference & is_active & is_not_expr]
+        })
 
         checkbox_group_element <- function(name, value, label, checked, disabled = FALSE) {
           tags$div(
@@ -1113,45 +1163,36 @@ FilteredData <- R6::R6Class( # nolint
             selected = NULL
           )
           active_slices_ids <- active_slices_id()
+          duplicated_slice_refs <- duplicated_slice_references()
 
-          shiny::isolate({
-            interactive_choice_mock <- lapply(
-              slices_interactive(),
-              function(slice) {
-                checkbox_group_element(
-                  name = session$ns("available_slices_id"),
-                  value = slice$id,
-                  label = slice$id,
-                  checked = if (slice$id %in% active_slices_ids) "checked",
-                  disabled = slice$locked
-                )
-              }
-            )
+          checkbox_group_slice <- function(slice) {
+            # we need to isolate changes in the fields of the slice (teal_slice)
+            shiny::isolate({
+              checkbox_group_element(
+                name = session$ns("available_slices_id"),
+                value = slice$id,
+                label = slice$id,
+                checked = if (slice$id %in% active_slices_ids) "checked",
+                disabled = slice$locked ||
+                  get_default_slice_id(slice) %in% duplicated_slice_refs &&
+                    !slice$id %in% active_slices_ids
+              )
+            })
+          }
 
-            non_interactive_choice_mock <- lapply(
-              slices_fixed(),
-              function(slice) {
-                checkbox_group_element(
-                  name = session$ns("available_slices_id"),
-                  value = slice$id,
-                  label = slice$id,
-                  checked = if (slice$id %in% active_slices_ids) "checked",
-                  disabled = slice$locked
-                )
-              }
-            )
+          interactive_choice_mock <- lapply(slices_interactive(), checkbox_group_slice)
+          non_interactive_choice_mock <- lapply(slices_fixed(), checkbox_group_slice)
 
-            htmltools::tagInsertChildren(
-              checkbox,
-              br(),
-              tags$strong("Fixed filters"),
-              non_interactive_choice_mock,
-              tags$strong("Iteractive filters"),
-              interactive_choice_mock,
-              .cssSelector = "div.shiny-options-group",
-              after = 0
-            )
-          })
+          htmltools::tagInsertChildren(
+            checkbox,
+            br(),
+            tags$strong("Fixed filters"),
+            non_interactive_choice_mock,
+            tags$strong("Interactive filters"),
+            interactive_choice_mock,
+            .cssSelector = "div.shiny-options-group",
+            after = 0
+          )
         })
 
         observeEvent(input$available_slices_id, ignoreNULL = FALSE, ignoreInit = TRUE, {
@@ -1160,7 +1201,7 @@ FilteredData <- R6::R6Class( # nolint
           if (length(new_slices_id)) {
             new_teal_slices <- Filter(
               function(slice) slice$id %in% new_slices_id,
-              slices()
+              private$available_teal_slices()
             )
             self$set_filter_state(new_teal_slices)
           }
@@ -1168,14 +1209,14 @@ FilteredData <- R6::R6Class( # nolint
           if (length(removed_slices_id)) {
             removed_teal_slices <- Filter(
               function(slice) slice$id %in% removed_slices_id,
-              slices()
+              self$get_filter_state()
             )
             self$remove_filter_state(removed_teal_slices)
           }
         })
 
-        observeEvent(slices(), ignoreNULL = FALSE, {
-          if (length(slices())) {
+        observeEvent(private$available_teal_slices(), ignoreNULL = FALSE, {
+          if (length(private$available_teal_slices())) {
             shinyjs::show("available_menu")
           } else {
             shinyjs::hide("available_menu")

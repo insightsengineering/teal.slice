@@ -65,14 +65,24 @@ SEFilterStates <- R6::R6Class( # nolint
         private$set_filter_state_impl(
           state = subset_states,
           data = SummarizedExperiment::rowData(private$data),
-          data_reactive = function(sid = "") SummarizedExperiment::rowData(private$data_reactive())
+          data_reactive = function(sid = "") {
+            data <- private$data_reactive()
+            if (!is.null(data)) {
+              SummarizedExperiment::rowData(data)
+            }
+          }
         )
 
         select_states <- Filter(function(x) x$arg == "select", state)
         private$set_filter_state_impl(
           state = select_states,
           data = SummarizedExperiment::colData(private$data),
-          data_reactive = function(sid = "") SummarizedExperiment::colData(private$data_reactive())
+          data_reactive = function(sid = "") {
+            data <- private$data_reactive()
+            if (!is.null(data)) {
+              SummarizedExperiment::colData(data)
+            }
+          }
         )
 
         logger::log_trace("{ class(self)[1] }$set_filter_state initialized, dataname: { private$dataname }")
@@ -145,6 +155,7 @@ SEFilterStates <- R6::R6Class( # nolint
         id = id,
         function(input, output, session) {
           logger::log_trace("SEFilterState$srv_add initializing, dataname: { private$dataname }")
+
           row_data <- SummarizedExperiment::rowData(data)
           col_data <- SummarizedExperiment::colData(data)
 
