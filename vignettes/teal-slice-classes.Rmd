@@ -68,7 +68,7 @@ Therefore, subclasses of `FilterStates` exist to handle different kinds of data 
 
 ## Class Description
 
-This section provides a detailed description of all class that make up the filter panel structure.
+This section provides a detailed description of all classes that make up the filter panel structure.
 
 ### `FilteredData`
 
