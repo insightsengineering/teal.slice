@@ -6,10 +6,10 @@ testthat::test_that("contructor accepts keys as string", {
 })
 
 # get_filter_state ----
-testthat::test_that("get_filter_state return `teal_slices` with include_varnames by default", {
+testthat::test_that("get_filter_state return `teal_slices` with include_varnames and count_type by default", {
   filter_states <- DFFilterStates$new(data = iris, dataname = "iris")
   fs <- teal_slices(
-    count_type = "all",
+    count_type = "none",
     include_varnames = list(iris = colnames(iris))
   )
   testthat::expect_identical(

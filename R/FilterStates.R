@@ -505,7 +505,7 @@ FilterStates <- R6::R6Class( # nolint
   ),
   private = list(
     # private fields ----
-    count_type = "all", # specifies how observation numbers are displayed in filter cards,
+    count_type = "none", # specifies how observation numbers are displayed in filter cards,
     data = NULL, # data.frame, MAE, SE or matrix
     data_reactive = NULL, # reactive
     datalabel = NULL, # to follow default `experiment = NULL` in `teal_slice`

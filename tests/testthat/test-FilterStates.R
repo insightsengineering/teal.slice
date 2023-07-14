@@ -6,11 +6,11 @@ testthat::test_that("constructor accepts only a string as dataname", {
 })
 
 # filter states api -----
-testthat::test_that("get_filter_state returns default count_type = 'all'", {
+testthat::test_that("get_filter_state returns default count_type = 'none'", {
   filter_states <- FilterStates$new(data = NULL, dataname = "test")
   testthat::expect_identical(
     shiny::isolate(filter_states$get_filter_state()),
-    teal_slices(count_type = "all")
+    teal_slices(count_type = "none")
   )
 })
 
@@ -27,7 +27,7 @@ testthat::test_that("set_filter_state sets include_variables by excluding unsupp
     shiny::isolate(filter_states$get_filter_state()),
     teal_slices(
       include_varnames = list(test = c("Species", "Sepal.Length")),
-      count_type = "all"
+      count_type = "none"
     )
   )
 })
@@ -330,7 +330,7 @@ testthat::test_that("Selecting a new variable initializes a new filter state wit
         choices = c(4.3, 7.9),
         selected = c(4.3, 7.9)
       ),
-      count_type = "all"
+      count_type = "none"
     )
   )
 })
@@ -371,7 +371,7 @@ testthat::test_that("Adding 'var_to_add' adds another filter state", {
         multiple = TRUE, selected = c("setosa", "versicolor", "virginica"), keep_na = NULL, keep_inf = NULL,
         fixed = FALSE, locked = FALSE
       ),
-      count_type = "all"
+      count_type = "none"
     )
   )
 })
