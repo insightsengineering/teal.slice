@@ -134,7 +134,7 @@ A `FilterState` is created as follows:
 
 1. `FilterStates` creates `teal_slice` with `dataname` based on the parent data set and `varname` based on the selected variable
 2. the `teal_slice` is wrapped in `teal_slices` and passed to `FilterStates$set_filter_state`
-3. `FilterStates$set_filter_state_impl` is calls
+3. `FilterStates$set_filter_state_impl` is called
 4. `FilterStates$set_filter_state_impl` calls `init_filter_state`, passing the appropriate variable as `x`
 5. `init_filter_states` is a generic function that dispatches `x`, `teal_slice` and other arguments to the respective child class constructor:
 
