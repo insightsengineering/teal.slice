@@ -2,15 +2,20 @@ Type: Package
 Package: teal.slice
 Title: Filter Module for `teal` Applications
 Version: 0.3.0.9005
-Date: 2023-06-29
+Date: 2023-07-14
 Authors@R: c(
-    person("Dawid", "Kaledkowski", , "dawid.kaledkowski@roche.com", role = c("aut", "cre")),
-    person("Pawel", "Rucki", , "pawel.rucki@roche.com", role = "aut"),
-    person("Nikolas", "Burkoff", , "nikolas.burkoff@roche.com", role = "aut"),
-    person("Mahmoud", "Hallal", , "mahmoud.hallal@roche.com", role = "aut"),
-    person("Maciej", "Nasinski", , "maciej.nasinski@contractors.roche.com", role = "aut"),
-    person("Konrad", "Pagacz", , "konrad.pagacz@contractors.roche.com", role = "aut"),
-    person("Junlue", "Zhao", , "zhaoj88@gene.com", role = "aut"),
+    person("Dawid", "Kaledkowski", email = "dawid.kaledkowski@roche.com", role = c("aut", "cre")),
+    person("Pawel", "Rucki", email = "pawel.rucki@roche.com", role = "aut"),
+    person("Aleksander", "Chlebowski", email = "aleksander.chlebowski@contractors.roche.com", role = "aut"),
+    person("Kartikeya", "Kirar", email = "kartikeya.kirar@businesspartner.roche.com", role = "aut"),
+    person("Marcin", "Kosinski", email = "marcin.kosinski.mk1@roche.com", role = "aut"),
+    person("Chendi", "Liao", email = "chendi.liao@roche.com", role = "rev"),
+    person("Dony", "Unardi", email = "unardid@gene.com", role = "rev"),
+    person("Mahmoud", "Hallal", role = "aut"),
+    person("Nikolas", "Burkoff", role = "aut"),
+    person("Maciej", "Nasinski", role = "aut"),
+    person("Konrad", "Pagacz", role = "aut"),
+    person("Junlue", "Zhao", role = "aut"),
     person("F. Hoffmann-La Roche AG", role = c("cph", "fnd"))
   )
 Description: Filter module for teal applications.
@@ -19,22 +24,24 @@ Depends:
     R (>= 4.0),
     shiny
 Imports:
+    bslib (>= 0.4.0),
     checkmate,
     dplyr,
-    ggplot2,
     grDevices,
+    jsonlite,
+    htmltools,
     lifecycle,
     logger (>= 0.2.0),
     methods,
+    plotly,
     R6,
+    shinycssloaders,
     shinyjs,
-    shinyWidgets (>= 0.5.0),
-    stats,
+    shinyWidgets (>= 0.6.2),
     teal.data (>= 0.1.2.9011),
     teal.logger (>= 0.1.1),
     teal.widgets (>= 0.2.0)
 Suggests:
-    bslib,
     formatters (>= 0.3.1),
     knitr,
     MultiAssayExperiment,

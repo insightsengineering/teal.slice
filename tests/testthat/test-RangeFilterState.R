@@ -1,225 +1,293 @@
+nums <- 1:10
+
 # initialize ----
-testthat::test_that("The constructor accepts numerical values", {
-  testthat::expect_no_error(RangeFilterState$new(c(1), varname = "test"))
-})
-
-testthat::test_that("The constructor accepts infinite values but not infinite only", {
-  testthat::expect_no_error(RangeFilterState$new(c(1, Inf, -Inf), varname = "test"))
-  testthat::expect_error(RangeFilterState$new(Inf, varname = "test"), "\"x\" contains no finite values")
-  testthat::expect_error(RangeFilterState$new(c(Inf, NA), varname = "test"), "\"x\" contains no finite values")
-})
-
-# get_selected ----
-testthat::test_that("get_selected returns range computed on a vector containing c(1, Inf, -Inf, NA)", {
-  test <- c(1, Inf, -Inf, NA)
-  filter_state <- RangeFilterState$new(test, varname = "test")
-  expect_identical(
-    shiny::isolate(filter_state$get_selected()),
-    c(1, 1)
-  )
-})
-
-testthat::test_that("set_selected raises error when the passed values are not coercible to numeric", {
-  filter_state <- RangeFilterState$new(7, varname = "test")
+testthat::test_that("constructor accepts numerical values", {
+  testthat::expect_no_error(RangeFilterState$new(nums, slice = teal_slice(dataname = "data", varname = "var")))
   testthat::expect_error(
-    filter_state$set_selected(c(print)),
-    "Values to set must be an atomic vector."
+    RangeFilterState$new(as.character(nums), slice = teal_slice(dataname = "data", varname = "var")),
+    "Assertion on 'x' failed"
   )
 })
 
-testthat::test_that("set_selected accepts an array with two numerical elements", {
-  filter_state <- RangeFilterState$new(7, varname = "test")
-  testthat::expect_no_error(filter_state$set_selected(c(7, 7)))
+testthat::test_that("constructor accepts infinite values but not infinite only", {
+  testthat::expect_no_error(
+    RangeFilterState$new(c(nums, Inf, -Inf), slice = teal_slice(dataname = "data", varname = "var"))
+  )
+  testthat::expect_error(
+    RangeFilterState$new(Inf, slice = teal_slice(dataname = "data", varname = "var")),
+    "\"x\" contains no finite values"
+  )
+  testthat::expect_error(
+    RangeFilterState$new(c(Inf, NA), slice = teal_slice(dataname = "data", varname = "var")),
+    "\"x\" contains no finite values"
+  )
 })
 
-# get_call ----
-testthat::test_that("get_call returns call encompassing all values passed to constructor", {
-  filter_state <- RangeFilterState$new(7, varname = "test")
-  testthat::expect_equal(shiny::isolate(filter_state$get_call()), quote(test >= 7 & test <= 7))
-  filter_state <- RangeFilterState$new(c(1, 2, 3), varname = "test")
-  testthat::expect_equal(shiny::isolate(filter_state$get_call()), quote(test >= 1 & test <= 3))
+testthat::test_that("constructor initializes keep_inf = TRUE by default if x contains Infs", {
+  filter_state <- RangeFilterState$new(7, slice = teal_slice(dataname = "data", varname = "7"))
+  testthat::expect_null(shiny::isolate(filter_state$get_state()$keep_inf))
+  filter_state <- RangeFilterState$new(c(7, Inf), slice = teal_slice(dataname = "data", varname = "7"))
+  testthat::expect_true(shiny::isolate(filter_state$get_state()$keep_inf))
 })
 
-testthat::test_that("get_call returns valid call after unsuccessfull set_selected", {
-  filter_state <- RangeFilterState$new(7, varname = "test")
-  testthat::expect_no_error(filter_state$set_selected(c(1, 3)))
-  testthat::expect_equal(shiny::isolate(filter_state$get_call()), quote(test >= 7 & test <= 7))
+testthat::test_that("constructor raises error when selected is not sorted", {
+  testthat::expect_error(
+    RangeFilterState$new(
+      nums,
+      slice = teal_slice(dataname = "data", varname = "var", selected = nums[c(10, 1)])
+    ),
+    "Vector of set values must be sorted"
+  )
 })
 
-testthat::test_that("get_call returns call with values passed in set_selected", {
-  filter_state <- RangeFilterState$new(c(1, 8), varname = "test")
-  filter_state$set_selected(c(3, 4))
-  testthat::expect_equal(shiny::isolate(filter_state$get_call()), quote(test >= 3 & test <= 4))
+testthat::test_that("constructor raises error when selection is not numeric or coercible", {
+  testthat::expect_error(
+    suppressWarnings(
+      RangeFilterState$new(nums, slice = teal_slice(dataname = "data", varname = "var", selected = c("a", "b")))
+    ),
+    "Vector of set values must contain values coercible to numeric"
+  )
 })
 
-testthat::test_that(
-  "get_call returns call that evaluates to TRUE for values within range passed to set_selected",
-  code = {
-    filter_state <- RangeFilterState$new(c(3, 5), varname = "test")
-    filter_state$set_selected(c(3, 5))
-    test <- c(2:6)
-    eval(shiny::isolate(filter_state$get_call()))
-    testthat::expect_equal(eval(shiny::isolate(filter_state$get_call())), c(FALSE, TRUE, TRUE, TRUE, FALSE))
-  }
-)
-
-testthat::test_that("set_keep_inf switches get_call returning call that allows infinite values", {
-  filter_state <- RangeFilterState$new(c(1, 8), varname = "test")
-  test <- Inf
-  testthat::expect_false(eval(shiny::isolate(filter_state$get_call())))
-  filter_state$set_keep_inf(TRUE)
-  testthat::expect_true(eval(shiny::isolate(filter_state$get_call())))
+testthat::test_that("constructor raises error when choices is out of range", {
+  testthat::expect_warning(
+    RangeFilterState$new(
+      nums,
+      slice = teal_slice(dataname = "data", varname = "var", choices = range(nums) + c(-1, 1))
+    ),
+    "Choices adjusted"
+  )
 })
 
-testthat::test_that("set_keep_na switches get_call returning call that allows NAs", {
-  filter_state <- RangeFilterState$new(c(1, 8), varname = "test")
-  test <- NA
-  testthat::expect_identical(eval(shiny::isolate(filter_state$get_call())), NA)
-  filter_state$set_keep_na(TRUE)
-  testthat::expect_true(eval(shiny::isolate(filter_state$get_call())))
+testthat::test_that("constructor raises warning when choices is not sorted", {
+  testthat::expect_warning(
+    RangeFilterState$new(
+      nums,
+      slice = teal_slice(dataname = "data", varname = "var", choices = nums[c(10, 1)])
+    ),
+    "Invalid choices"
+  )
 })
 
-testthat::test_that("NA and Inf can bothe be included by call returned by get_call", {
-  filter_state <- RangeFilterState$new(c(1, 8), varname = "test")
-  test <- c(NA, Inf)
-  testthat::expect_identical(eval(shiny::isolate(filter_state$get_call())), c(NA, FALSE))
-  filter_state$set_keep_na(TRUE)
-  filter_state$set_keep_inf(TRUE)
-  testthat::expect_identical(eval(shiny::isolate(filter_state$get_call())), c(TRUE, TRUE))
+testthat::test_that("constructor raises error when choices is not numeric or coercible", {
+  testthat::expect_error(
+    suppressWarnings(
+      RangeFilterState$new(nums, slice = teal_slice(dataname = "data", varname = "var", choices = c("a", "b")))
+    ),
+    "Must be of type 'numeric'"
+  )
 })
 
-# get_state ----
-testthat::test_that("get_state returns a list identical to set_state input", {
-  filter_state <- RangeFilterState$new(c(1.0, 8.0, NA_real_, Inf), varname = "test")
-  state <- list(selected = c(2.0, 7.0), keep_na = TRUE, keep_inf = TRUE)
-  filter_state$set_state(state)
-  testthat::expect_identical(shiny::isolate(filter_state$get_state()), state)
-})
 
 # set_state ----
-testthat::test_that("set_state needs a named list with selected, keep_na and keep_inf elements", {
-  filter_state <- RangeFilterState$new(c(1, 8, NA_real_, Inf), varname = "test")
-  testthat::expect_no_error(filter_state$set_state(list(selected = c(1, 2), keep_na = TRUE, keep_inf = TRUE)))
-  testthat::expect_error(filter_state$set_state(list(selected = c(1, 2), unknown = TRUE)), "all\\(names\\(state\\)")
+testthat::test_that("set_state: selected accepts vector of two numbers or coercible", {
+  filter_state <- RangeFilterState$new(nums, slice = teal_slice(dataname = "data", varname = "var"))
+
+  testthat::expect_no_error(
+    filter_state$set_state(teal_slice(dataname = "data", varname = "var", selected = nums[1:2]))
+  )
+  testthat::expect_error(
+    filter_state$set_state(teal_slice(dataname = "data", varname = "variable", selected = nums[1])),
+    "Vector of set values must have length two"
+  )
+  testthat::expect_no_error(
+    filter_state$set_state(teal_slice(dataname = "data", varname = "var", selected = as.character(1:2)))
+  )
+  testthat::expect_error(
+    suppressWarnings(
+      filter_state$set_state(teal_slice(dataname = "data", varname = "var", selected = as.character("a", "b")))
+    ),
+    "Vector of set values must contain values coercible to numeric"
+  )
+  testthat::expect_error(
+    filter_state$set_state(teal_slice(dataname = "data", varname = "var", selected = c(print))),
+    "Assertion on 'selected' failed"
+  )
 })
 
-testthat::test_that("set_state sets values of selected and keep_na as provided in the list", {
-  filter_state <- RangeFilterState$new(c(1, 8, NA_real_, Inf), varname = "test")
-  filter_state$set_state(list(selected = c(1, 2), keep_na = TRUE, keep_inf = TRUE))
-  testthat::expect_identical(shiny::isolate(filter_state$get_selected()), c(1, 2))
-  testthat::expect_true(shiny::isolate(filter_state$get_keep_na()))
-  testthat::expect_true(shiny::isolate(filter_state$get_keep_inf()))
+
+testthat::test_that("set_state: selected accepts numeric vector of length 2", {
+  filter_state <- RangeFilterState$new(nums, slice = teal_slice(dataname = "data", varname = "var"))
+  testthat::expect_no_error(
+    filter_state$set_state(teal_slice(selected = nums[c(1, 10)], dataname = "data", varname = "var"))
+  )
+  testthat::expect_error(
+    filter_state$set_state(teal_slice(selected = nums[1], dataname = "data", varname = "variable")),
+    "Vector of set values must have length two"
+  )
+
+  testthat::expect_error(
+    suppressWarnings(
+      filter_state$set_state(teal_slice(selected = c("a", "b"), dataname = "data", varname = "var"))
+    ),
+    "Vector of set values must contain values coercible to numeric"
+  )
 })
 
-testthat::test_that("set_state overwrites fields included in the input only", {
-  filter_state <- RangeFilterState$new(c(1, 8, NA_real_, Inf), varname = "test")
-  filter_state$set_state(list(selected = c(1, 2), keep_na = TRUE, keep_inf = TRUE))
-  testthat::expect_no_error(filter_state$set_state(list(selected = c(5, 6), keep_na = TRUE, keep_inf = TRUE)))
-  testthat::expect_identical(shiny::isolate(filter_state$get_selected()), c(5, 6))
-  testthat::expect_true(shiny::isolate(filter_state$get_keep_na()))
-  testthat::expect_true(shiny::isolate(filter_state$get_keep_inf()))
+testthat::test_that("set_state: selected raises error when selected is not sorted", {
+  testthat::expect_error(
+    RangeFilterState$new(
+      nums,
+      slice = teal_slice(dataname = "data", varname = "variable", selected = nums[c(10, 1)])
+    ),
+    "Vector of set values must be sorted"
+  )
 })
 
-# is_any_filtered ----
-testthat::test_that(
-  "RangeFilterState$is_any_filtered works properly when NA and Inf are present in data",
-  code = {
-    filter_state <- teal.slice:::RangeFilterState$new(
-      c(NA, Inf, seq(1:10)),
-      varname = "x",
-      dataname = "data",
-      extract_type = character(0)
-    )
+testthat::test_that("set_state: selected range is limited to lower and upper bound of possible range", {
+  filter_state <- RangeFilterState$new(nums, slice = teal_slice(dataname = "data", varname = "variable"))
+  filter_state$set_state(
+    teal_slice(dataname = "data", varname = "variable", selected = c(nums[1] - 1, nums[10]))
+  )
+  testthat::expect_equal(shiny::isolate(filter_state$get_state()$selected), c(nums[1], nums[10]))
 
-    shiny::isolate(filter_state$set_keep_na(FALSE))
-    shiny::isolate(filter_state$set_keep_inf(TRUE))
-    testthat::expect_true(
-      shiny::isolate(filter_state$is_any_filtered())
-    )
+  filter_state$set_state(
+    teal_slice(dataname = "data", varname = "variable", selected = c(nums[1], nums[10] + 1))
+  )
+  testthat::expect_equal(shiny::isolate(filter_state$get_state()$selected), c(nums[1], nums[10]))
 
-    shiny::isolate(filter_state$set_keep_na(FALSE))
-    shiny::isolate(filter_state$set_keep_inf(FALSE))
-    testthat::expect_true(
-      shiny::isolate(filter_state$is_any_filtered())
-    )
+  filter_state$set_state(
+    teal_slice(dataname = "data", varname = "variable", selected = c(nums[1] - 1, nums[10] + 1))
+  )
+  testthat::expect_equal(shiny::isolate(filter_state$get_state()$selected), c(nums[1], nums[10]))
+})
 
-    shiny::isolate(filter_state$set_keep_na(TRUE))
-    shiny::isolate(filter_state$set_keep_inf(TRUE))
-    testthat::expect_false(
-      shiny::isolate(filter_state$is_any_filtered())
-    )
+testthat::test_that("set_state: selected raises error when selection is not coercible to numeric", {
+  filter_state <- RangeFilterState$new(nums, slice = teal_slice(dataname = "data", varname = "var"))
+  testthat::expect_error(
+    suppressWarnings(
+      filter_state$set_state(teal_slice(dataname = "data", varname = "var", selected = c("a", "b")))
+    ),
+    "Vector of set values must contain values coercible to numeric"
+  )
+})
 
-    shiny::isolate(filter_state$set_keep_na(TRUE))
-    shiny::isolate(filter_state$set_keep_inf(FALSE))
-    testthat::expect_true(
-      shiny::isolate(filter_state$is_any_filtered())
-    )
 
-    shiny::isolate(filter_state$set_selected(c(2, 10)))
-    shiny::isolate(filter_state$set_keep_na(TRUE))
-    shiny::isolate(filter_state$set_keep_inf(TRUE))
-    testthat::expect_true(
-      shiny::isolate(filter_state$is_any_filtered())
-    )
+# get_call ----
+testthat::test_that("method get_call of default RangeFilterState object returns NULL", {
+  filter_state <- RangeFilterState$new(nums, slice = teal_slice(dataname = "data", varname = "nums"))
+  testthat::expect_null(shiny::isolate(filter_state$get_call()))
+})
 
-    shiny::isolate(filter_state$set_selected(c(1, 9)))
-    shiny::isolate(filter_state$set_keep_na(TRUE))
-    shiny::isolate(filter_state$set_keep_inf(TRUE))
-    testthat::expect_true(
-      shiny::isolate(filter_state$is_any_filtered())
-    )
+testthat::test_that("get_call returns call selected different than choices", {
+  filter_state <- RangeFilterState$new(
+    x = nums,
+    slice = teal_slice(dataname = "data", varname = "var", selected = nums[c(1, 3)])
+  )
+  testthat::expect_identical(
+    shiny::isolate(filter_state$get_call()),
+    quote(var >= 1 & var <= 3)
+  )
+})
 
-    shiny::isolate(filter_state$set_selected(c(1, 10)))
-    shiny::isolate(filter_state$set_keep_na(TRUE))
-    shiny::isolate(filter_state$set_keep_inf(TRUE))
-    testthat::expect_false(
-      shiny::isolate(filter_state$is_any_filtered())
-    )
-  }
-)
+testthat::test_that("get_call returns call always if choices are limited - regardless of selected", {
+  filter_state <- RangeFilterState$new(
+    nums,
+    slice = teal_slice(dataname = "data", varname = "var", choices = nums[c(1, 3)], selected = nums[c(1, 3)])
+  )
+  testthat::expect_identical(
+    shiny::isolate(filter_state$get_call()),
+    quote(var >= 1 & var <= 3)
+  )
+})
 
+testthat::test_that("get_call prefixes varname by dataname$var if extract_type='list'", {
+  filter_state <- RangeFilterState$new(
+    nums,
+    slice = teal_slice(dataname = "data", varname = "var", selected = nums[c(1, 3)]),
+    extract_type = "list"
+  )
+  testthat::expect_identical(
+    shiny::isolate(filter_state$get_call(dataname = "dataname")),
+    quote(dataname$var >= 1 & dataname$var <= 3)
+  )
+})
+
+testthat::test_that("get_call prefixes varname by dataname[, 'var'] if extract_type='matrix'", {
+  filter_state <- RangeFilterState$new(
+    nums,
+    slice = teal_slice(dataname = "data", varname = "var", selected = nums[c(1, 3)]),
+    extract_type = "matrix"
+  )
+  testthat::expect_identical(
+    shiny::isolate(filter_state$get_call(dataname = "dataname")),
+    quote(dataname[, "var"] >= 1 & dataname[, "var"] <= 3)
+  )
+})
+
+testthat::test_that("get_call adds is.na(var) to returned call if keep_na is true", {
+  filter_state <- RangeFilterState$new(
+    c(nums, NA),
+    slice = teal_slice(dataname = "data", varname = "var", selected = nums[c(1, 3)], keep_na = TRUE)
+  )
+  testthat::expect_identical(
+    shiny::isolate(filter_state$get_call()),
+    quote(is.na(var) | var >= 1 & var <= 3)
+  )
+})
+
+testthat::test_that("get_call returns call if all selected but NA exists", {
+  filter_state <- RangeFilterState$new(
+    c(nums, NA),
+    slice = teal_slice(dataname = "data", varname = "var", keep_na = FALSE)
+  )
+  testthat::expect_equal(
+    shiny::isolate(filter_state$get_call()),
+    quote(var >= 1 & var <= 10)
+  )
+})
 
 # format ----
-testthat::test_that("$format() is a FilterStates's method that accepts indent", {
-  filter_state <- RangeFilterState$new(7, varname = "test")
-  testthat::expect_no_error(shiny::isolate(filter_state$format(indent = 0)))
-})
-
-testthat::test_that("$format() asserts that indent is numeric", {
+testthat::test_that("format accepts logical show_all", {
+  filter_state <- RangeFilterState$new(nums, slice = teal_slice(dataname = "data", varname = "var"))
+  testthat::expect_no_error(shiny::isolate(filter_state$format(show_all = TRUE)))
+  testthat::expect_no_error(shiny::isolate(filter_state$format(show_all = FALSE)))
   testthat::expect_error(
-    RangeFilterState$new(c(7), varname = "test")$format(indent = "wrong type"),
-    regexp = "Assertion on 'indent' failed: Must be of type 'number'"
+    shiny::isolate(filter_state$format(show_all = 1)),
+    "Assertion on 'show_all' failed: Must be of type 'logical flag', not 'double'"
+  )
+  testthat::expect_error(
+    shiny::isolate(filter_state$format(show_all = 0)),
+    "Assertion on 'show_all' failed: Must be of type 'logical flag', not 'double'"
+  )
+  testthat::expect_error(
+    shiny::isolate(filter_state$format(show_all = "TRUE")),
+    "Assertion on 'show_all' failed"
   )
 })
 
-testthat::test_that("$format() returns a string representation the FilterState object", {
-  filter_state <- RangeFilterState$new(c(7), varname = "test")
-  filter_state$set_state(list(selected = c(7, 7)))
+testthat::test_that("format returns a properly formatted string representation", {
+  filter_state <- RangeFilterState$new(nums, slice = teal_slice(dataname = "data", varname = "var"))
+  filter_state$set_state(teal_slice(dataname = "data", varname = "var"))
   testthat::expect_equal(
-    shiny::isolate(filter_state$format(indent = 0)),
-    paste(
-      "Filtering on: test",
-      "  Selected range: 7.000 - 7.000",
-      "  Include missing values: FALSE",
-      sep = "\n"
+    shiny::isolate(filter_state$format()),
+    paste0(
+      "RangeFilterState:\n",
+      format(shiny::isolate(filter_state$get_state()))
+    )
+  )
+  testthat::expect_equal(
+    shiny::isolate(filter_state$format(show_all = TRUE)),
+    paste0(
+      "RangeFilterState:\n",
+      format(shiny::isolate(filter_state$get_state()), show_all = TRUE)
     )
   )
 })
 
-testthat::test_that("$format() prepends spaces to every line of the returned string", {
-  filter_state <- RangeFilterState$new(c(7), varname = "test")
-  filter_state$set_state(list(selected = c(7, 7)))
-  for (i in 1:3) {
-    testthat::expect_equal(
-      shiny::isolate(filter_state$format(indent = !!(i))),
-      sprintf(
-        "%sFiltering on: test\n%1$s  Selected range: 7.000 - 7.000\n%1$s  Include missing values: FALSE",
-        format("", width = i)
-      )
-    )
-  }
+# print ---
+testthat::test_that("print returns a properly formatted string representation", {
+  filter_state <- RangeFilterState$new(nums, slice = teal_slice(dataname = "data", varname = "var"))
+  filter_state$set_state(teal_slice(dataname = "data", varname = "var"))
+  testthat::expect_equal(
+    utils::capture.output(cat(filter_state$print())),
+    c("RangeFilterState:", utils::capture.output(print(shiny::isolate(filter_state$get_state()))))
+  )
+  testthat::expect_equal(
+    utils::capture.output(cat(filter_state$print(show_all = TRUE))),
+    c("RangeFilterState:", utils::capture.output(print(shiny::isolate(filter_state$get_state()), show_all = TRUE)))
+  )
 })
-
 
 # get_pretty_range_step ----
 testthat::test_that("private$get_pretty_range_step returns pretty step size", {
@@ -234,13 +302,13 @@ testthat::test_that("private$get_pretty_range_step returns pretty step size", {
   )
 
   pretty_sepal_length <- pretty(iris$Sepal.Length, n = 100)
-  filter_state <- test_class$new(pretty_sepal_length, varname = "test")
+  filter_state <- test_class$new(pretty_sepal_length, slice = teal_slice(dataname = "data", varname = "var"))
   step <- filter_state$test_get_pretty_range_step(pretty_sepal_length)
   testthat::expect_identical(step, 0.05)
 
   pretty_mpg <- pretty(mtcars$mpg, n = 100)
 
-  filter_state <- test_class$new(pretty_mpg, varname = "test")
+  filter_state <- test_class$new(pretty_mpg, slice = teal_slice(dataname = "data", varname = "var"))
   step <- filter_state$test_get_pretty_range_step(pretty_mpg)
   testthat::expect_identical(step, 0.2)
 })

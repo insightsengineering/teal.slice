@@ -7,7 +7,7 @@
 data_choices_labeled(
   data,
   choices,
-  varlabels = character(0),
+  varlabels = formatters::var_labels(data, fill = TRUE),
   keys = character(0)
 )
 }

@@ -12,10 +12,10 @@ navbar:
     reports:
       text: Reports
       menu:
-      - text: Coverage report
-        href: coverage-report/
-      - text: Unit test report
-        href: unit-test-report/
+        - text: Coverage report
+          href: coverage-report/
+        - text: Unit test report
+          href: unit-test-report/
     github:
       icon: fa-github
       href: https://github.com/insightsengineering/teal.slice
@@ -24,22 +24,20 @@ reference:
   - title: Teal filter-panel API
     desc: Functions used initialize filter-panel and to modify its states.
     contents:
-      - init_filtered_data
-      - get_filter_state
-      - set_filter_state
-      - remove_filter_state
       - clear_filter_states
-  - title: Helpers
-    desc: Other useful functions for users and developers.
-    contents:
-      - choices_labeled
       - get_filter_expr
-      - toggle_button
+      - get_filter_state
+      - init_filtered_data
+      - remove_filter_state
+      - set_filter_state
+      - slices_restore
+      - slices_store
+      - teal_slices
+      - teal_slice
   - title: For Developers
     subtitle: R6 Classes
     desc: Abstract and concrete classes used to build teal functionality.
     contents:
-      - CDISCFilteredData
       - DefaultFilteredDataset
       - FilteredData
       - FilteredDataset

@@ -21,10 +21,10 @@
 #' isolate(fpa$get_filter_state())
 #'
 #' # set a filter state
-#' isolate(
-#'   set_filter_state(
-#'     fpa,
-#'     list(iris = list(Species = list(selected = "setosa", keep_na = TRUE)))
+#' set_filter_state(
+#'   fpa,
+#'   teal_slices(
+#'     teal_slice(dataname = "iris", varname = "Species", selected = "setosa", keep_na = TRUE)
 #'   )
 #' )
 #'
@@ -32,7 +32,7 @@
 #' isolate(fpa$get_filter_state())
 #'
 #' # remove all_filter_states
-#' fpa$remove_all_filter_states()
+#' fpa$clear_filter_states()
 #'
 #' # get the actual filter state --> empty named list
 #' isolate(fpa$get_filter_state())
@@ -44,6 +44,7 @@ FilterPanelAPI <- R6::R6Class( # nolint
     #' @description
     #' Initialize a `FilterPanelAPI` object
     #' @param datasets (`FilteredData`) object.
+    #'
     initialize = function(datasets) {
       checkmate::assert_class(datasets, "FilteredData")
       private$filtered_data <- datasets
@@ -56,78 +57,52 @@ FilterPanelAPI <- R6::R6Class( # nolint
     #' The output list is a compatible input to `set_filter_state`.
     #'
     #' @return `list` with named elements corresponding to `FilteredDataset` objects with active filters.
+    #'
     get_filter_state = function() {
       private$filtered_data$get_filter_state()
     },
 
     #' @description
     #' Sets active filter states.
-    #' @param filter (`named list`)\cr
-    #' nested list of filter selections applied to datasets.
+    #' @param filter (`teal_slices`)
     #'
-    #' @return `NULL`
+    #' @return `NULL` invisibly
+    #'
     set_filter_state = function(filter) {
-      if (private$filtered_data$get_filter_panel_active()) {
-        private$filtered_data$set_filter_state(filter)
-      } else {
-        warning(private$deactivated_msg)
-      }
+      private$filtered_data$set_filter_state(filter)
       invisible(NULL)
     },
 
     #' @description
     #' Remove one or more `FilterState` of a `FilteredDataset` in the `FilteredData` object.
-    #' @param filter (`named list`)\cr
-    #'  nested list of filter selections applied to datasets.
     #'
-    #' @return `NULL`
+    #' @param filter (`teal_slices`)\cr
+    #'   specifying `FilterState` objects to remove;
+    #'   `teal_slice`s may contain only `dataname` and `varname`, other elements are ignored
+    #'
+    #' @return `NULL` invisibly
+    #'
     remove_filter_state = function(filter) {
-      if (private$filtered_data$get_filter_panel_active()) {
-        private$filtered_data$remove_filter_state(filter)
-      } else {
-        warning(private$deactivated_msg)
-      }
+      private$filtered_data$remove_filter_state(filter)
       invisible(NULL)
     },
 
     #' @description Remove all `FilterStates` of the `FilteredData` object.
     #'
     #' @param datanames (`character`)\cr
-    #'  datanames to remove their `FilterStates`;
+    #'  `datanames` to remove their `FilterStates`;
     #'  omit to remove all `FilterStates` in the `FilteredData` object
     #'
-    #' @return `NULL`
+    #' @return `NULL` invisibly
     #'
-    remove_all_filter_states = function(datanames) {
-      if (private$filtered_data$get_filter_panel_active()) {
-        datanames_to_remove <- if (missing(datanames)) private$filtered_data$datanames() else datanames
-        private$filtered_data$remove_all_filter_states(datanames = datanames_to_remove)
-      } else {
-        warning(private$deactivated_msg)
-      }
-      invisible(NULL)
-    },
-    #' @description
-    #' Toggle the state of the global Filter Panel button by running `javascript` code
-    #' to click the toggle button with the `filter_panel_active` id suffix.
-    #' The button id is prefixed with the Filter Panel shiny namespace.
-    #' This button is observed in `srv_filter_panel` method that executes
-    #' `filter_panel_enable()` or `filter_panel_disable()` method depending on the toggle state.
-    #'
-    #' @return `NULL`
-    filter_panel_toggle = function() {
-      shinyjs::runjs(
-        sprintf(
-          '$("#%s-filter_turn_onoff").click();',
-          private$filtered_data$get_filter_panel_ui_id()
-        )
-      )
+    clear_filter_states = function(datanames) {
+      datanames_to_remove <- if (missing(datanames)) private$filtered_data$datanames() else datanames
+      private$filtered_data$clear_filter_states(datanames = datanames_to_remove)
       invisible(NULL)
     }
   ),
   ## __Private Methods ====
   private = list(
-    filtered_data = NULL,
-    deactivated_msg = "Filter Panel is deactivated so the action can not be applied with api."
+    filtered_data = NULL
   )
 )

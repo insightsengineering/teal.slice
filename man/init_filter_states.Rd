@@ -4,11 +4,25 @@
 \alias{init_filter_states}
 \title{Initialize \code{FilterStates} object}
 \usage{
-init_filter_states(data, dataname, datalabel = character(0), ...)
+init_filter_states(
+  data,
+  data_reactive = reactive(NULL),
+  dataname,
+  datalabel = NULL,
+  ...
+)
 }
 \arguments{
 \item{data}{(\code{data.frame}, \code{MultiAssayExperiment}, \code{SummarizedExperiment}, \code{matrix})\cr
 the R object which \code{subset} function is applied on.}
+
+\item{data_reactive}{(\verb{function(sid)})\cr
+should return an object of the same type as \code{data} or \code{NULL}.
+This object is needed for the \code{FilterState} shiny module to update
+counts if filtered data changes.
+If function returns \code{NULL} then filtered counts
+are not shown. Function has to have \code{sid} argument being a character which
+is related to \code{sid} argument in the \code{get_call} method.}
 
 \item{dataname}{(\code{character(1)})\cr
 name of the data used in the expression
@@ -18,12 +32,13 @@ specified to the function argument attached to this \code{FilterStates}.}
 text label value.}
 
 \item{...}{(optional)
-additional arguments for specific classes: keys}
+additional arguments for specific classes: keys.}
 }
 \description{
 Initialize \code{FilterStates} object
 }
 \examples{
+library(shiny)
 df <- data.frame(
   character = letters,
   numeric = seq_along(letters),
@@ -32,28 +47,26 @@ df <- data.frame(
 )
 rf <- teal.slice:::init_filter_states(
   data = df,
-  dataname = "DF",
-  varlabels = c(
-    "character variable", "numeric variable", "date variable", "datetime variable"
-  )
+  dataname = "DF"
 )
-\dontrun{
-shinyApp(
+app <- shinyApp(
   ui = fluidPage(
     actionButton("clear", span(icon("xmark"), "Remove all filters")),
-    rf$ui_add_filter_state(id = "add", data = df),
-    rf$ui("states"),
+    rf$ui_add(id = "add"),
+    rf$ui_active("states"),
     verbatimTextOutput("expr"),
   ),
   server = function(input, output, session) {
-    rf$srv_add_filter_state(id = "add", data = df)
-    rf$server(id = "states")
+    rf$srv_add(id = "add")
+    rf$srv_active(id = "states")
     output$expr <- renderText({
       deparse1(rf$get_call(), collapse = "\n")
     })
     observeEvent(input$clear, rf$state_list_empty())
   }
 )
+if (interactive()) {
+  runApp(app)
 }
 }
 \keyword{internal}

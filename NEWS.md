@@ -1,6 +1,23 @@
 # teal.slice 0.3.0.9005
 
-* Remove `scda` from dependencies.
+### New features
+
+* API is based now on `teal_slices` and `teal_slice` objects.
+* Implemented reactive counts of single filter card to compare filtered and unfiltered variable distributions. See `count_type` in `teal_slices`.
+* Possible now to specify filter based on arbitrary logical expression. See `expr` argument in `teal_slice`. 
+* Possible now to limit choices in single filter card. See `choices` argument in `teal_slice`.
+* Possible now to initialize filter panel without "Add filter variables" panel through `module_add` in `teal_slices`.
+* Possible now to set filter which can't be removed by app user. See `anchored` argument in `teal_slice`.
+* Possible now to set filter which selection remains the same. See `fixed` argument in `teal_slice`.
+* Possible now to limit variable by single level only. See `multuple` argument in `teal_slice`  
+* Changed appearance of filter cards to collapsible accordion.
+* Replaced `sliderInput` with interactive `plotly` to be able to zoom variable distribution.
+
+### Breaking changes
+
+* Setting filters using a list is now deprecated. Use `teal_slices` and `teal_slice` instead.
+* Removed `CDISCFilteredData` and `CDISCFilteredDataset` and implementing `JoinKeys` handling in their parent classes (`FilteredData` and `DefaultFilteredDataset`).
+* Specifying set of filterable columns is done through `include_varnames` and `exclude_varnames`. Specifying `attr(, "filterable")` is hard deprecated.
 
 # teal.slice 0.3.0
 
@@ -13,6 +30,7 @@
 * Added a global turn on/off button for the Filter Panel.
 * Added ability to collapse Active Filter Display panel.
 * Added ability to collapse all filters of an individual dataset.
+* Added fixed filter states.
 
 ### Enhancements
 
@@ -22,12 +40,14 @@
 
 * Fixed an error where the `RangeFilterState` produced an error when using `bootstrap 4`.
 * Fixed a bug that caused the range slider to omit values selected programmatically through the filter API.
+* Fixed a bug where setting incorrect values for Date and Date time ranges caused the app to crash.
 
 ### Miscellaneous
 
 * Calculation of step in slider for `RangeFilterState` now uses `checkmate::test_integerish` instead of `is.integer`.
 * Updated `init_filtered_data` to take into account the removal of `CDISCTealData` from `teal.data` package.
-* Added examples apps for `ChoicesFilterState` and `DFFilterStates`.
+* Added `shinyvalidate` validation for Date and Date time ranges.
+* Added examples apps for `FilterState` child classes and `DFFilterStates`.
 
 # teal.slice 0.2.0
 
@@ -47,10 +67,10 @@
 ### Enhancements
 
 * Redesigned the count bars for filter panel check box inputs.
-* Redesigned the filter panel input for dates to use CSS flexbox.
+* Redesigned the filter panel input for dates to use `CSS flexbox`.
 * Update icons to be compatible with Font Awesome 6.
 * Updates the `FilteredData` method `get_formatted_filter_state` so it no longer appends empty filters.
-* Added clearer installation instructions to README.
+* Added clearer installation instructions to `README`.
 
 ### Breaking changes
 

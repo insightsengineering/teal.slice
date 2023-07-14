@@ -7,33 +7,32 @@
 #'
 #' @examples
 #' filter_state <- teal.slice:::LogicalFilterState$new(
-#'   sample(c(TRUE, FALSE, NA), 10, replace = TRUE),
-#'   varname = "x",
-#'   dataname = "data",
-#'   extract_type = character(0)
+#'   x = sample(c(TRUE, FALSE, NA), 10, replace = TRUE),
+#'   slice = teal_slice(varname = "x", dataname = "data")
 #' )
-#' isolate(filter_state$get_call())
+#' shiny::isolate(filter_state$get_call())
+#' filter_state$set_state(
+#'   teal_slice(dataname = "data", varname = "x", selected = TRUE, keep_na = TRUE)
+#' )
+#' shiny::isolate(filter_state$get_call())
 #'
-#' isolate(filter_state$set_selected(TRUE))
-#' isolate(filter_state$set_keep_na(TRUE))
-#' isolate(filter_state$get_call())
-#'
-#' \dontrun{
 #' # working filter in an app
 #' library(shiny)
+#' library(shinyjs)
 #'
 #' data_logical <- c(sample(c(TRUE, FALSE), 10, replace = TRUE), NA)
-#' filter_state_logical <- LogicalFilterState$new(
+#' fs <- teal.slice:::LogicalFilterState$new(
 #'   x = data_logical,
-#'   varname = "variable",
-#'   varlabel = "label"
+#'   slice = teal_slice(dataname = "data", varname = "x", selected = FALSE, keep_na = TRUE)
 #' )
-#' filter_state_logical$set_state(list(selected = FALSE, keep_na = TRUE))
 #'
 #' ui <- fluidPage(
+#'   useShinyjs(),
+#'   teal.slice:::include_css_files(pattern = "filter-panel"),
+#'   teal.slice:::include_js_files(pattern = "count-bar-labels"),
 #'   column(4, div(
 #'     h4("LogicalFilterState"),
-#'     isolate(filter_state_logical$ui("fs"))
+#'     fs$ui("fs")
 #'   )),
 #'   column(4, div(
 #'     id = "outputs", # div id is needed for toggling the element
@@ -54,23 +53,33 @@
 #' )
 #'
 #' server <- function(input, output, session) {
-#'   filter_state_logical$server("fs")
-#'   output$condition_logical <- renderPrint(filter_state_logical$get_call())
-#'   output$formatted_logical <- renderText(filter_state_logical$format())
-#'   output$unformatted_logical <- renderPrint(filter_state_logical$get_state())
+#'   fs$server("fs")
+#'   output$condition_logical <- renderPrint(fs$get_call())
+#'   output$formatted_logical <- renderText(fs$format())
+#'   output$unformatted_logical <- renderPrint(fs$get_state())
 #'   # modify filter state programmatically
-#'   observeEvent(input$button1_logical, filter_state_logical$set_keep_na(FALSE))
-#'   observeEvent(input$button2_logical, filter_state_logical$set_keep_na(TRUE))
-#'   observeEvent(input$button3_logical, filter_state_logical$set_selected(TRUE))
+#'   observeEvent(
+#'     input$button1_logical,
+#'     fs$set_state(teal_slice(dataname = "data", varname = "x", keep_na = FALSE))
+#'   )
+#'   observeEvent(
+#'     input$button2_logical,
+#'     fs$set_state(teal_slice(dataname = "data", varname = "x", keep_na = TRUE))
+#'   )
+#'   observeEvent(
+#'     input$button3_logical,
+#'     fs$set_state(teal_slice(dataname = "data", varname = "x", selected = TRUE))
+#'   )
 #'   observeEvent(
 #'     input$button0_logical,
-#'     filter_state_logical$set_state(list(selected = FALSE, keep_na = TRUE))
+#'     fs$set_state(
+#'       teal_slice(dataname = "data", varname = "x", selected = FALSE, keep_na = TRUE)
+#'     )
 #'   )
 #' }
 #'
 #' if (interactive()) {
 #'   shinyApp(ui, server)
-#' }
 #' }
 #'
 LogicalFilterState <- R6::R6Class( # nolint
@@ -82,128 +91,95 @@ LogicalFilterState <- R6::R6Class( # nolint
 
     #' @description
     #' Initialize a `FilterState` object
+    #'
     #' @param x (`logical`)\cr
     #'   values of the variable used in filter
-    #' @param varname (`character`, `name`)\cr
-    #'   label of the variable (optional).
-    #' @param varlabel (`character(1)`)\cr
-    #'   label of the variable (optional).
-    #' @param dataname (`character(1)`)\cr
-    #'   optional name of dataset where `x` is taken from
+    #' @param x_reactive (`reactive`)\cr
+    #'   returning vector of the same type as `x`. Is used to update
+    #'   counts following the change in values of the filtered dataset.
+    #'   If it is set to `reactive(NULL)` then counts based on filtered
+    #'   dataset are not shown.
+    #' @param slice (`teal_slice`)\cr
+    #'   object created using [teal_slice()]. `teal_slice` is stored
+    #'   in the class and `set_state` directly manipulates values within `teal_slice`. `get_state`
+    #'   returns `teal_slice` object which can be reused in other places. Beware, that `teal_slice`
+    #'   is a `reactiveValues` which means that changes in particular object are automatically
+    #'   reflected in all places which refer to the same `teal_slice`.
     #' @param extract_type (`character(0)`, `character(1)`)\cr
-    #' whether condition calls should be prefixed by dataname. Possible values:
+    #' whether condition calls should be prefixed by `dataname`. Possible values:
     #' \itemize{
     #' \item{`character(0)` (default)}{ `varname` in the condition call will not be prefixed}
     #' \item{`"list"`}{ `varname` in the condition call will be returned as `<dataname>$<varname>`}
     #' \item{`"matrix"`}{ `varname` in the condition call will be returned as `<dataname>[, <varname>]`}
     #' }
+    #' @param ... additional arguments to be saved as a list in `private$extras` field
+    #'
     initialize = function(x,
-                          varname,
-                          varlabel = character(0),
-                          dataname = NULL,
-                          extract_type = character(0)) {
-      stopifnot(is.logical(x))
-      super$initialize(x, varname, varlabel, dataname, extract_type)
-      df <- as.factor(x)
-      if (length(levels(df)) != 2) {
-        if (levels(df) %in% c(TRUE, FALSE)) {
-          choices_not_included <- c(TRUE, FALSE)[!c(TRUE, FALSE) %in% levels(df)]
-          levels(df) <- c(levels(df), choices_not_included)
+                          x_reactive = reactive(NULL),
+                          extract_type = character(0),
+                          slice) {
+      shiny::isolate({
+        checkmate::assert_logical(x)
+        checkmate::assert_logical(slice$selected, null.ok = TRUE)
+        super$initialize(x = x, x_reactive = x_reactive, slice = slice, extract_type = extract_type)
+
+        private$set_choices(slice$choices)
+        if (is.null(slice$multiple)) slice$multiple <- FALSE
+        if (is.null(slice$selected) && slice$multiple) {
+          slice$selected <- private$get_choices()
+        } else if (length(slice$selected) != 1 && !slice$multiple) {
+          slice$selected <- TRUE
         }
-      }
-
-      tbl <- table(df)
-
-      choices <- as.logical(names(tbl))
-      names(choices) <- tbl
-      private$set_choices(as.list(choices))
-      self$set_selected(unname(choices)[1])
-      private$histogram_data <- data.frame(
-        x = sprintf(
-          "%s (%s)",
-          choices,
-          names(choices)
-        ),
-        y = as.vector(tbl)
-      )
-
+        private$set_selected(slice$selected)
+        df <- factor(x, levels = c(TRUE, FALSE))
+        tbl <- table(df)
+        private$set_choices_counts(tbl)
+      })
       invisible(self)
-    },
-
-    #' @description
-    #' Answers the question of whether the current settings and values selected actually filters out any values.
-    #' @return logical scalar
-    is_any_filtered = function() {
-      if (!isTRUE(self$get_keep_na()) && private$na_count > 0) {
-        TRUE
-      } else if (all(private$histogram_data$y > 0)) {
-        TRUE
-      } else if (self$get_selected() == FALSE && "FALSE (0)" %in% private$histogram_data$x) {
-        TRUE
-      } else if (self$get_selected() == TRUE && "TRUE (0)" %in% private$histogram_data$x) {
-        TRUE
-      } else {
-        FALSE
-      }
     },
 
     #' @description
     #' Returns reproducible condition call for current selection.
     #' For `LogicalFilterState` it's a `!<varname>` or `<varname>` and optionally
     #' `is.na(<varname>)`
-    get_call = function() {
-      filter_call <-
-        if (self$get_selected()) {
-          private$get_varname_prefixed()
-        } else {
-          call("!", private$get_varname_prefixed())
-        }
-      private$add_keep_na_call(filter_call)
-    },
+    #' @param dataname name of data set; defaults to `private$get_dataname()`
+    #' @return (`call`)
+    #'
+    get_call = function(dataname) {
+      if (isFALSE(private$is_any_filtered())) {
+        return(NULL)
+      }
+      if (missing(dataname)) dataname <- private$get_dataname()
+      varname <- private$get_varname_prefixed(dataname)
+      choices <- private$get_selected()
+      n_choices <- length(choices)
 
-    #' @description
-    #' Sets the selected values of this `LogicalFilterState`.
-    #'
-    #' @param value (`logical(1)`)\cr
-    #'  the value to set. Must not contain the NA value.
-    #'
-    #' @returns invisibly `NULL`.
-    #'
-    #' @note Casts the passed object to `logical` before validating the input
-    #' making it possible to pass any object coercible to `logical` to this method.
-    #'
-    #' @examples
-    #' filter <- teal.slice:::LogicalFilterState$new(c(TRUE), varname = "name")
-    #' filter$set_selected(TRUE)
-    set_selected = function(value) {
-      super$set_selected(value)
+      filter_call <-
+        if (n_choices == 1 && choices) {
+          private$get_varname_prefixed(dataname)
+        } else if (n_choices == 1 && !choices) {
+          call("!", private$get_varname_prefixed(dataname))
+        } else {
+          call("%in%", private$get_varname_prefixed(dataname), make_c_call(choices))
+        }
+      private$add_keep_na_call(filter_call, dataname)
     }
   ),
 
-  # private fields ----
-
+  # private members ----
   private = list(
-    histogram_data = data.frame(),
+    choices_counts = integer(0),
 
     # private methods ----
-
-    validate_selection = function(value) {
-      if (!(checkmate::test_logical(value, max.len = 1, any.missing = FALSE))) {
-        stop(
-          sprintf(
-            "value of the selection for `%s` in `%s` should be a logical scalar (TRUE or FALSE)",
-            self$get_varname(),
-            self$get_dataname()
-          )
-        )
-      }
-
-      pre_msg <- sprintf(
-        "dataset '%s', variable '%s': ",
-        self$get_dataname(),
-        self$get_varname()
-      )
-      check_in_subset(value, private$choices, pre_msg = pre_msg)
+    set_choices = function(choices) {
+      private$teal_slice$choices <- c(TRUE, FALSE)
+      invisible(NULL)
+    },
+    # @description
+    # Sets choices_counts private field
+    set_choices_counts = function(choices_counts) {
+      private$choices_counts <- choices_counts
+      invisible(NULL)
     },
     cast_and_validate = function(values) {
       tryCatch(
@@ -214,6 +190,44 @@ LogicalFilterState <- R6::R6Class( # nolint
         error = function(cond) stop("The array of set values must contain values coercible to logical.")
       )
       values_logical
+    },
+    check_multiple = function(value) {
+      if (!private$is_multiple() && length(value) > 1) {
+        warning(
+          sprintf("Selection: %s is not a vector of length one. ", toString(value, width = 360)),
+          "Maintaining previous selection."
+        )
+        value <- shiny::isolate(private$get_selected())
+      }
+      value
+    },
+    validate_selection = function(value) {
+      if (!is.logical(value)) {
+        stop(
+          sprintf(
+            "value of the selection for `%s` in `%s` should be a logical vector of length <= 2",
+            private$get_varname(),
+            private$get_dataname()
+          )
+        )
+      }
+    },
+
+    # Answers the question of whether the current settings and values selected actually filters out any values.
+    # @return logical scalar
+    is_any_filtered = function() {
+      if (private$is_choice_limited) {
+        TRUE
+      } else if (all(private$choices_counts > 0)) {
+        TRUE
+      } else if (setequal(private$get_selected(), private$get_choices()) &&
+        !anyNA(private$get_selected(), private$get_choices())) {
+        TRUE
+      } else if (!isTRUE(private$get_keep_na()) && private$na_count > 0) {
+        TRUE
+      } else {
+        FALSE
+      }
     },
 
     # shiny modules ----
@@ -226,37 +240,48 @@ LogicalFilterState <- R6::R6Class( # nolint
     #  id of shiny element
     ui_inputs = function(id) {
       ns <- NS(id)
-      l_counts <- as.numeric(names(private$choices))
-      l_counts[is.na(l_counts)] <- 0
-      l_freqs <- l_counts / sum(l_counts)
-      labels <- lapply(seq_along(private$choices), function(i) {
-        div(
-          class = "choices_state_label",
-          style = sprintf("width:%s%%", l_freqs[i] * 100),
-          span(
-            class = "choices_state_label_text",
-            sprintf(
-              "%s (%s)",
-              private$choices[i],
-              l_counts[i]
-            )
-          )
+      shiny::isolate({
+        countsmax <- private$choices_counts
+        countsnow <- if (!is.null(private$x_reactive())) {
+          unname(table(factor(private$x_reactive(), levels = private$get_choices())))
+        } else {
+          NULL
+        }
+
+        labels <- countBars(
+          inputId = ns("labels"),
+          choices = as.character(private$get_choices()),
+          countsnow = countsnow,
+          countsmax = countsmax
         )
-      })
-      div(
-        div(
-          class = "choices_state",
-          radioButtons(
-            ns("selection"),
+        ui_input <- if (private$is_multiple()) {
+          checkboxGroupInput(
+            inputId = ns("selection"),
             label = NULL,
+            selected = shiny::isolate(as.character(private$get_selected())),
             choiceNames = labels,
-            choiceValues = as.character(private$choices),
-            selected = as.character(self$get_selected()),
+            choiceValues = factor(as.character(private$get_choices()), levels = c("TRUE", "FALSE")),
             width = "100%"
           )
-        ),
-        private$keep_na_ui(ns("keep_na"))
-      )
+        } else {
+          radioButtons(
+            inputId = ns("selection"),
+            label = NULL,
+            selected = shiny::isolate(as.character(private$get_selected())),
+            choiceNames = labels,
+            choiceValues = factor(as.character(private$get_choices()), levels = c("TRUE", "FALSE")),
+            width = "100%"
+          )
+        }
+        div(
+          div(
+            class = "choices_state",
+            uiOutput(ns("trigger_visible"), inline = TRUE),
+            ui_input
+          ),
+          private$keep_na_ui(ns("keep_na"))
+        )
+      })
     },
 
     # @description
@@ -269,54 +294,130 @@ LogicalFilterState <- R6::R6Class( # nolint
       moduleServer(
         id = id,
         function(input, output, session) {
-          # this observer is needed in the situation when private$selected has been
+          # this observer is needed in the situation when teal_slice$selected has been
           # changed directly by the api - then it's needed to rerender UI element
           # to show relevant values
+          non_missing_values <- reactive(Filter(Negate(is.na), private$x_reactive()))
+          output$trigger_visible <- renderUI({
+            logger::log_trace("LogicalFilterState$server@1 updating count labels, id: { private$get_id() }")
+
+            countsnow <- if (!is.null(private$x_reactive())) {
+              unname(table(factor(non_missing_values(), levels = private$get_choices())))
+            } else {
+              NULL
+            }
+
+            updateCountBars(
+              inputId = "labels",
+              choices = as.character(private$get_choices()),
+              countsmax = private$choices_counts,
+              countsnow = countsnow
+            )
+            NULL
+          })
+
           private$observers$seleted_api <- observeEvent(
-            ignoreNULL = TRUE, # this is radio button so something have to be selected
+            ignoreNULL = !private$is_multiple(),
             ignoreInit = TRUE,
-            eventExpr = self$get_selected(),
+            eventExpr = private$get_selected(),
             handlerExpr = {
-              if (!setequal(self$get_selected(), input$selection)) {
-                updateRadioButtons(
-                  session = session,
-                  inputId = "selection",
-                  selected =  self$get_selected()
-                )
-                logger::log_trace(sprintf(
-                  "LogicalFilterState$server@1 selection of variable %s changed, dataname: %s",
-                  private$varname,
-                  private$dataname
-                ))
+              if (!setequal(private$get_selected(), input$selection)) {
+                logger::log_trace("LogicalFilterState$server@1 state changed, id: { private$get_id() }")
+                if (private$is_multiple()) {
+                  updateCheckboxGroupInput(
+                    inputId = "selection",
+                    selected = private$get_selected()
+                  )
+                } else {
+                  updateRadioButtons(
+                    inputId = "selection",
+                    selected = private$get_selected()
+                  )
+                }
               }
             }
           )
 
           private$observers$selection <- observeEvent(
-            ignoreNULL = TRUE, # in radio button something has to be selected to input$selection can't be NULL
+            ignoreNULL = FALSE,
             ignoreInit = TRUE,
             eventExpr = input$selection,
             handlerExpr = {
-              selection_state <- as.logical(input$selection)
+              logger::log_trace("LogicalFilterState$server@2 selection changed, id: { private$get_id() }")
+              # for private$is_multiple() == TRUE input$selection will always have value
+              if (is.null(input$selection) && isFALSE(private$is_multiple())) {
+                selection_state <- private$get_selected()
+              } else {
+                selection_state <- as.logical(input$selection)
+              }
+
               if (is.null(selection_state)) {
                 selection_state <- logical(0)
               }
-              self$set_selected(selection_state)
-              logger::log_trace(
-                sprintf(
-                  "LogicalFilterState$server@2 selection of variable %s changed, dataname: %s",
-                  private$varname,
-                  private$dataname
-                )
-              )
+              private$set_selected(selection_state)
             }
           )
 
           private$keep_na_srv("keep_na")
 
-          logger::log_trace("LogicalFilterState$server initialized, dataname: { private$dataname }")
+          logger::log_trace("LogicalFilterState$server initialized, id: { private$get_id() }")
           NULL
         }
+      )
+    },
+    server_inputs_fixed = function(id) {
+      moduleServer(
+        id = id,
+        function(input, output, session) {
+          logger::log_trace("LogicalFilterState$server initializing, id: { private$get_id() }")
+
+          output$selection <- renderUI({
+            countsnow <- unname(table(factor(private$x_reactive(), levels = private$get_choices())))
+            countsmax <- private$choices_counts
+
+            ind <- private$get_choices() %in% private$get_selected()
+            countBars(
+              inputId = session$ns("labels"),
+              choices = private$get_selected(),
+              countsnow = countsnow[ind],
+              countsmax = countsmax[ind]
+            )
+          })
+
+          logger::log_trace("LogicalFilterState$server initialized, id: { private$get_id() }")
+          NULL
+        }
+      )
+    },
+
+    # @description
+    # Server module to display filter summary
+    #  renders text describing whether TRUE or FALSE is selected
+    #  and if NA are included also
+    content_summary = function(id) {
+      tagList(
+        tags$span(
+          class = "filter-card-summary-value",
+          toString(private$get_selected())
+        ),
+        tags$span(
+          class = "filter-card-summary-controls",
+          if (isTRUE(private$get_keep_na()) && private$na_count > 0) {
+            tags$span(
+              class = "filter-card-summary-na",
+              "NA",
+              shiny::icon("check")
+            )
+          } else if (isFALSE(private$get_keep_na()) && private$na_count > 0) {
+            tags$span(
+              class = "filter-card-summary-na",
+              "NA",
+              shiny::icon("xmark")
+            )
+          } else {
+            NULL
+          }
+        )
       )
     }
   )

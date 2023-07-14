@@ -20,13 +20,13 @@ check_in_range(subinterval, range, pre_msg = "")
 Check that a given range is valid
 }
 \examples{
-\dontrun{
-check_in_range(c(3, 1), c(1, 3))
-check_in_range(c(0, 3), c(1, 3))
-check_in_range(
-  c(as.Date("2020-01-01"), as.Date("2020-01-20")),
-  c(as.Date("2020-01-01"), as.Date("2020-01-02"))
-)
+if (interactive()) {
+  teal.slice:::check_in_range(c(3, 1), c(1, 3))
+  teal.slice:::check_in_range(c(0, 3), c(1, 3))
+  teal.slice:::check_in_range(
+    c(as.Date("2020-01-01"), as.Date("2020-01-20")),
+    c(as.Date("2020-01-01"), as.Date("2020-01-02"))
+  )
 }
 }
 \keyword{internal}

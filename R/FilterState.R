@@ -2,9 +2,9 @@
 #' @docType class
 #'
 #'
-#' @title FilterState Abstract Class
+#' @title `FilterState` Abstract Class
 #'
-#' @description Abstract class to encapsulate filter states
+#' @description Abstract class to encapsulate single filter state
 #'
 #' @details
 #' This class is responsible for managing single filter item within
@@ -26,18 +26,17 @@
 #' variable type specific fields (`keep_inf`, `inf_count`, `timezone`).
 #' Object contains also shiny module (`ui` and `server`) which manages
 #' state of the filter through reactive values `selected`, `keep_na`, `keep_inf`
-#' which trigger `get_call()` and every R function call up in reactive
-#' chain.
+#' which trigger `get_call()` and every R function call up in reactive chain.
 #' \cr
 #' \cr
 #' @section Modifying state:
 #' Modifying a `FilterState` object is possible in three scenarios:
-#' * In the interactive session by directly specifying values of `selected`,
-#'   `keep_na` or `keep_inf` using `set_state` method (to update all at once),
-#'   or using `set_selected`, `set_keep_na` or `set_keep_inf`
-#' * In a running application by changing appropriate inputs
-#' * In a running application by using [filter_state_api] which directly uses `set_state` method
-#'  of the `FilterState` object.
+#' * In the interactive session by passing an appropriate `teal_slice`
+#'   to the `set_state` method, or using
+#'   `set_selected`, `set_keep_na` or `set_keep_inf` methods.
+#' * In a running application by changing appropriate inputs.
+#' * In a running application by using [filter_state_api] which directly uses
+#' `set_state` method of the `InteractiveFilterState` object.
 #'
 #' @keywords internal
 FilterState <- R6::R6Class( # nolint
@@ -45,113 +44,141 @@ FilterState <- R6::R6Class( # nolint
 
   # public methods ----
   public = list(
+
     #' @description
     #' Initialize a `FilterState` object
     #' @param x (`vector`)\cr
     #'   values of the variable used in filter
-    #' @param varname (`character`)\cr
-    #'   name of the variable
-    #' @param varlabel (`character(1)`)\cr
-    #'   label of the variable (optional).
-    #' @param dataname (`character(1)`)\cr
-    #'   name of dataset where `x` is taken from. Must be specified if `extract_type` argument
-    #'   is not empty.
+    #' @param x_reactive (`reactive`)\cr
+    #'   returning vector of the same type as `x`. Is used to update
+    #'   counts following the change in values of the filtered dataset.
+    #'   If it is set to `reactive(NULL)` then counts based on filtered
+    #'   dataset are not shown.
+    #' @param slice (`teal_slice`)\cr
+    #'   object created by [teal_slice()]
     #' @param extract_type (`character(0)`, `character(1)`)\cr
-    #' whether condition calls should be prefixed by dataname. Possible values:
+    #'   specifying whether condition calls should be prefixed by `dataname`. Possible values:
     #' \itemize{
     #' \item{`character(0)` (default)}{ `varname` in the condition call will not be prefixed}
     #' \item{`"list"`}{ `varname` in the condition call will be returned as `<dataname>$<varname>`}
     #' \item{`"matrix"`}{ `varname` in the condition call will be returned as `<dataname>[, <varname>]`}
     #' }
+    #' @param ... additional arguments to be saved as a list in `private$extras` field
     #'
     #' @return self invisibly
     #'
     initialize = function(x,
-                          varname,
-                          varlabel = character(0),
-                          dataname = NULL,
+                          x_reactive = reactive(NULL),
+                          slice,
                           extract_type = character(0)) {
-      checkmate::assert_string(varname)
-      checkmate::assert_character(varlabel, max.len = 1, any.missing = FALSE)
-      checkmate::assert_string(dataname, null.ok = TRUE)
+      checkmate::assert_class(x_reactive, "reactive")
+      checkmate::assert_class(slice, "teal_slice")
       checkmate::assert_character(extract_type, max.len = 1, any.missing = FALSE)
       if (length(extract_type) == 1) {
         checkmate::assert_choice(extract_type, choices = c("list", "matrix"))
       }
-      if (length(extract_type) == 1 && is.null(dataname)) {
-        stop("if extract_type is specified, dataname must also be specified")
-      }
 
-      private$dataname <- dataname
-      private$varname <- varname
-      private$varlabel <- if (identical(varlabel, as.character(varname))) {
-        # to not display duplicated label
-        character(0)
-      } else {
-        varlabel
-      }
-      private$extract_type <- extract_type
-      private$selected <- reactiveVal(NULL)
+      # Set data properties.
+      private$x <- x
+      private$x_reactive <- x_reactive
+      # Set derived data properties.
       private$na_count <- sum(is.na(x))
-      private$keep_na <- reactiveVal(FALSE)
-      logger::log_trace(
-        sprintf(
-          "Instantiated %s with variable %s, dataname: %s",
-          class(self)[1],
-          private$varname,
-          private$dataname
-        )
+      private$filtered_na_count <- reactive(
+        if (!is.null(private$x_reactive())) {
+          sum(is.na(private$x_reactive()))
+        }
       )
+      # Set extract type.
+      private$extract_type <- extract_type
+
+      # Set state properties.
+      if (is.null(shiny::isolate(slice$keep_na)) && anyNA(x)) slice$keep_na <- TRUE
+      private$teal_slice <- slice
+      # Obtain variable label.
+      varlabel <- attr(x, "label")
+      # Display only when different from varname.
+      private$varlabel <-
+        if (is.null(varlabel) || identical(varlabel, private$get_varname())) {
+          character(0)
+        } else {
+          varlabel
+        }
+
+      logger::log_trace("Instantiated FilterState object id: { private$get_id() }")
+
       invisible(self)
     },
 
     #' @description
-    #' Destroy observers stored in `private$observers`.
+    #' Returns a formatted string representing this `FilterState` object.
     #'
-    #' @return NULL invisibly
-    #'
-    destroy_observers = function() {
-      lapply(private$observers, function(x) x$destroy())
-      return(invisible(NULL))
-    },
-
-    #' @description
-    #' Returns a formatted string representing this `FilterState`.
-    #'
-    #' @param indent (`numeric(1)`)
-    #'   number of spaces before after each new line character of the formatted string;
-    #'   defaults to 0
-    #' @param wrap_width (`numeric(1)`)
-    #'   number of characters to wrap lines at in the printed output;
-    #'   allowed range is 30 to 120; defaults to 76
+    #' @param show_all `logical(1)` passed to `format.teal_slice`
+    #' @param trim_lines `logical(1)` passed to `format.teal_slice`
     #'
     #' @return `character(1)` the formatted string
     #'
-    format = function(indent = 0L, wrap_width = 76L) {
-      checkmate::assert_number(indent, finite = TRUE, lower = 0L)
-      checkmate::assert_number(wrap_width, finite = TRUE, lower = 30L, upper = 120L)
+    format = function(show_all = FALSE, trim_lines = TRUE) {
+      sprintf(
+        "%s:\n%s",
+        class(self)[1],
+        format(self$get_state(), show_all = show_all, trim_lines = trim_lines)
+      )
+    },
 
-      # List all selected values separated by commas.
-      values <- paste(format(self$get_selected(), nsmall = 3L, justify = "none"), collapse = ", ")
-      paste(c(
-        strwrap(
-          sprintf("Filtering on: %s", private$varname),
-          width = wrap_width,
-          indent = indent
-        ),
-        # Add wrapping and progressive indent to values enumeration as it is likely to be long.
-        strwrap(
-          sprintf("Selected values: %s", values),
-          width = wrap_width,
-          indent = indent + 2L,
-          exdent = indent + 4L
-        ),
-        strwrap(
-          sprintf("Include missing values: %s", self$get_keep_na()),
-          width = wrap_width,
-          indent = indent + 2L
-        )
-      ), collapse = "\n")
+    #' @description
+    #' Prints this `FilterState` object.
+    #'
+    #' @param ... additional arguments
+    #'
+    print = function(...) {
+      cat(shiny::isolate(self$format(...)))
+    },
+
+    #' @description
+    #' Sets filtering state.
+    #' - `fixed` state is prevented from changing state
+    #' - `locked` state is prevented from removing state
+    #'
+    #' @param state a `teal_slice` object
+    #'
+    #' @return `self` invisibly
+    #'
+    set_state = function(state) {
+      checkmate::assert_class(state, "teal_slice")
+      if (private$is_fixed()) {
+        logger::log_warn("attempt to set state on fixed filter aborted id: { private$get_id() }")
+      } else {
+        logger::log_trace("{ class(self)[1] }$set_state setting state of filter id: { private$get_id() }")
+        shiny::isolate({
+          if (!is.null(state$selected)) {
+            private$set_selected(state$selected)
+          }
+          if (!is.null(state$keep_na)) {
+            private$set_keep_na(state$keep_na)
+          }
+          if (!is.null(state$keep_inf)) {
+            private$set_keep_inf(state$keep_inf)
+          }
+          current_state <- sprintf(
+            "selected: %s; keep_na: %s; keep_inf: %s",
+            toString(private$get_selected()),
+            private$get_keep_na(),
+            private$get_keep_inf()
+          )
+        })
+      }
+
+      invisible(self)
+    },
+
+
+    #' @description
+    #' Returns filtering state.
+    #'
+    #' @return A `teal_slice` object.
+    #'
+    get_state = function() {
+      private$teal_slice
     },
 
     #' @description
@@ -161,192 +188,7 @@ FilterState <- R6::R6Class( # nolint
     #' and must be executed in reactive or isolated context.
     #'
     get_call = function() {
-      NULL
-    },
-
-    #' @description
-    #' Returns dataname or "NULL" if dataname is NULL.
-    #'
-    #' @return `character(1)`
-    #'
-    get_dataname = function() {
-      if (!is.null(private$dataname)) {
-        private$dataname
-      } else {
-        character(1)
-      }
-    },
-
-    #' @description
-    #' Returns current `keep_na` selection.
-    #'
-    #' @return `logical(1)`
-    #'
-    get_keep_na = function() {
-      private$keep_na()
-    },
-
-    #' @description
-    #' Returns variable label.
-    #'
-    #' @return `character(1)`
-    #'
-    get_varlabel = function() {
-      private$varlabel
-    },
-
-    #' @description
-    #' Get variable name.
-    #'
-    #' @return `character(1)`
-    #'
-    get_varname = function() {
-      private$varname
-    },
-
-    #' @description
-    #' Get selected values from `FilterState`.
-    #'
-    #' @return class of the returned object depends of class of the `FilterState`
-    #'
-    get_selected = function() {
-      private$selected()
-    },
-
-    #' @description
-    #' Returns the filtering state.
-    #'
-    #' @return `list` containing values taken from the reactive fields:
-    #' * `selected` (`atomic`) length depends on a `FilterState` variant.
-    #' * `keep_na` (`logical(1)`) whether `NA` should be kept.
-    #'
-    get_state = function() {
-      list(
-        selected = self$get_selected(),
-        keep_na = self$get_keep_na()
-      )
-    },
-
-    #' @description
-    #' Prints this `FilterState` object.
-    #'
-    #' @param ... additional arguments to this method
-    #'
-    print = function(...) {
-      cat(shiny::isolate(self$format()), "\n")
-    },
-
-    #' @description
-    #' Set whether to keep NAs.
-    #'
-    #' @param value `logical(1)`\cr
-    #'   value(s) which come from the filter selection. Value is set in `server`
-    #'   modules after selecting check-box-input in the shiny interface. Values are set to
-    #'   `private$keep_na` which is reactive.
-    #'
-    #' @return NULL invisibly
-    #'
-    set_keep_na = function(value) {
-      checkmate::assert_flag(value)
-      private$keep_na(value)
-      logger::log_trace(
-        sprintf(
-          "%s$set_keep_na set for variable %s to %s.",
-          class(self)[1],
-          private$varname,
-          value
-        )
-      )
-      invisible(NULL)
-    },
-
-    #' @description
-    #' Some methods need an additional `!is.na(varame)` condition to drop
-    #' missing values. When `private$na_rm = TRUE`, `self$get_call` returns
-    #' condition extended by `!is.na`.
-    #'
-    #' @param value `logical(1)`\cr
-    #'   when `TRUE`, `FilterState$get_call` appends an expression
-    #'   removing `NA` values to the filter expression returned by `get_call`
-    #'
-    #' @return NULL invisibly
-    #'
-    set_na_rm = function(value) {
-      checkmate::assert_flag(value)
-      private$na_rm <- value
-      invisible(NULL)
-    },
-
-    #' @description
-    #' Set selection.
-    #'
-    #' @param value (`vector`)\cr
-    #'   value(s) that come from filter selection; values are set in the
-    #'   module server after a selection is made in the app interface;
-    #'   values are stored in `private$selected` which is reactive;
-    #'   value types have to be the same as `private$choices`
-    #'
-    #' @return NULL invisibly
-    #'
-    set_selected = function(value) {
-      logger::log_trace(
-        sprintf(
-          "%s$set_selected setting selection of variable %s, dataname: %s.",
-          class(self)[1],
-          private$varname,
-          private$dataname
-        )
-      )
-      value <- private$cast_and_validate(value)
-      value <- private$remove_out_of_bound_values(value)
-      private$validate_selection(value)
-      private$selected(value)
-      logger::log_trace(sprintf(
-        "%s$set_selected selection of variable %s set, dataname: %s",
-        class(self)[1],
-        private$varname,
-        private$dataname
-      ))
-      invisible(NULL)
-    },
-
-    #' @description
-    #' Set state.
-    #'
-    #' @param state (`list`)\cr
-    #'  contains fields relevant for a specific class:
-    #' \itemize{
-    #' \item{`selected`}{ defines initial selection}
-    #' \item{`keep_na` (`logical`)}{ defines whether to keep or remove `NA` values}
-    #' }
-    #'
-    #' @return NULL invisibly
-    #'
-    set_state = function(state) {
-      logger::log_trace(sprintf(
-        "%s$set_state, dataname: %s setting state of variable %s to: selected=%s, keep_na=%s",
-        class(self)[1],
-        private$dataname,
-        private$varname,
-        paste(state$selected, collapse = " "),
-        state$keep_na
-      ))
-      stopifnot(is.list(state) && all(names(state) %in% c("selected", "keep_na")))
-      if (!is.null(state$keep_na)) {
-        self$set_keep_na(state$keep_na)
-      }
-      if (!is.null(state$selected)) {
-        self$set_selected(state$selected)
-      }
-      logger::log_trace(
-        sprintf(
-          "%s$set_state, dataname: %s done setting state for variable %s",
-          class(self)[1],
-          private$dataname,
-          private$varname
-        )
-      )
-      invisible(NULL)
+      stop("this is a virtual method")
     },
 
     #' @description
@@ -362,8 +204,24 @@ FilterState <- R6::R6Class( # nolint
       moduleServer(
         id = id,
         function(input, output, session) {
-          private$server_inputs("inputs")
-          reactive(input$remove) # back to parent to remove self
+          logger::log_trace("FilterState$server initializing module for slice: { private$get_id() } ")
+          private$server_summary("summary")
+          if (private$is_fixed()) {
+            private$server_inputs_fixed("inputs")
+          } else {
+            private$server_inputs("inputs")
+          }
+
+          private$destroy_shiny <- function() {
+            logger::log_trace("Destroying FilterState inputs and observers; id: { private$get_id() }")
+            # remove values from the input list
+            lapply(session$ns(names(input)), .subset2(input, "impl")$.values$remove)
+
+            # remove observers
+            lapply(private$observers, function(x) x$destroy())
+          }
+
+          reactive(input$remove)
         }
       )
     },
@@ -374,85 +232,308 @@ FilterState <- R6::R6Class( # nolint
     #' @param id (`character(1)`)\cr
     #'  shiny element (module instance) id;
     #'  the UI for this class contains simple message stating that it is not supported
-    #'
-    ui = function(id) {
+    #' @param parent_id (`character(1)`) id of the `FilterStates` card container
+    ui = function(id, parent_id = "cards") {
       ns <- NS(id)
-      fluidPage(
-        theme = get_teal_bs_theme(),
-        fluidRow(
-          column(
-            width = 10,
-            class = "no-left-right-padding",
-            tags$div(
-              tags$span(private$varname,
-                class = "filter_panel_varname"
-              ),
-              if (checkmate::test_character(self$get_varlabel(), min.len = 1) &&
-                tolower(private$varname) != tolower(self$get_varlabel())) {
-                tags$span(self$get_varlabel(), class = "filter_panel_varlabel")
-              }
-            )
+
+      tags$div(
+        id = id,
+        class = "panel filter-card",
+        include_js_files("count-bar-labels.js"),
+        tags$div(
+          class = "filter-card-header",
+          tags$div(
+            # header properties
+            class = "filter-card-title",
+            `data-toggle` = "collapse",
+            `data-bs-toggle` = "collapse",
+            href = paste0("#", ns("body")),
+            # header elements
+            if (private$is_locked()) icon("lock") else NULL,
+            if (private$is_fixed()) icon("burst") else NULL,
+            tags$span(tags$strong(private$get_varname())),
+            tags$span(private$get_varlabel(), class = "filter-card-varlabel")
           ),
-          column(
-            width = 2,
-            class = "no-left-right-padding",
+          if (isFALSE(private$is_locked())) {
             actionLink(
-              ns("remove"),
-              label = "",
-              icon = icon("circle-xmark", lib = "font-awesome"),
-              class = "remove pull-right"
+              inputId = ns("remove"),
+              label = icon("circle-xmark", lib = "font-awesome"),
+              class = "filter-card-remove"
             )
+          },
+          tags$div(
+            class = "filter-card-summary",
+            `data-toggle` = "collapse",
+            `data-bs-toggle` = "collapse",
+            href = paste0("#", ns("body")),
+            private$ui_summary(ns("summary"))
           )
         ),
-        private$ui_inputs(ns("inputs"))
+        tags$div(
+          id = ns("body"),
+          class = "collapse out",
+          `data-parent` = paste0("#", parent_id),
+          `data-bs-parent` = paste0("#", parent_id),
+          tags$div(
+            class = "filter-card-body",
+            if (private$is_fixed()) {
+              private$ui_inputs_fixed(ns("inputs"))
+            } else {
+              private$ui_inputs(ns("inputs"))
+            }
+          )
+        )
       )
+    },
+
+    #' @description
+    #' Destroy observers stored in `private$observers`.
+    #'
+    #' @return NULL invisibly
+    #'
+    destroy_observers = function() {
+      if (!is.null(private$destroy_shiny)) {
+        private$destroy_shiny()
+      }
     }
   ),
 
   # private members ----
   private = list(
-    choices = NULL, # because each class has different choices type
-    dataname = character(0),
-    keep_na = NULL, # reactiveVal logical()
+    # set by constructor
+    x = NULL, # the filtered variable
+    x_reactive = NULL, # reactive containing the filtered variable, used for updating counts and histograms
+    teal_slice = shiny::reactiveValues(), # stores all transferable properties of this filter state
+    extract_type = character(0), # used by private$get_varname_prefixed
     na_count = integer(0),
-    na_rm = FALSE, # it's logical(1)
-    observers = NULL, # here observers are stored
-    selected = NULL, # because it holds reactiveVal and each class has different choices type
-    varname = character(0),
-    varlabel = character(0),
-    extract_type = logical(0),
+    filtered_na_count = NULL, # reactive containing the count of NA in the filtered dataset
+    varlabel = character(0), # taken from variable labels in data; displayed in filter cards
+    destroy_shiny = NULL, # function is set in server
+    # other
+    is_choice_limited = FALSE, # flag whether number of possible choices was limited when specifying filter
+    na_rm = FALSE,
+    observers = list(), # stores observers
 
     # private methods ----
 
+    ## setters for state features ----
+
     # @description
-    # Return variable name prefixed by dataname to be evaluated as extracted object,
+    # Set values that can be selected from.
+    set_choices = function(choices) {
+      stop("this is a virtual method")
+    },
+
+    # @description
+    # Set selection.
+    #
+    # @param value (`vector`)\cr
+    #   value(s) that come from filter selection; values are set in the
+    #   module server after a selection is made in the app interface;
+    #   values are stored in `teal_slice$selected` which is reactive;
+    #   value types have to be the same as `private$get_choices()`
+    #
+    # @return NULL invisibly
+    set_selected = function(value) {
+      logger::log_trace(
+        sprintf(
+          "%s$set_selected setting selection of id: %s",
+          class(self)[1],
+          private$get_id()
+        )
+      )
+      shiny::isolate({
+        value <- private$cast_and_validate(value)
+        value <- private$remove_out_of_bound_values(value)
+        value <- private$check_multiple(value)
+        private$validate_selection(value)
+        private$teal_slice$selected <- value
+      })
+      logger::log_trace(
+        sprintf(
+          "%s$set_selected selection of id: %s",
+          class(self)[1],
+          private$get_id()
+        )
+      )
+
+      invisible(NULL)
+    },
+
+    # @description
+    # Set whether to keep NAs.
+    #
+    # @param value `logical(1)`\cr
+    #   value(s) which come from the filter selection. Value is set in `server`
+    #   modules after selecting check-box-input in the shiny interface. Values are set to
+    #   `private$teal_slice$keep_na`
+    #
+    # @return NULL invisibly
+    #
+    set_keep_na = function(value) {
+      checkmate::assert_flag(value)
+      private$teal_slice$keep_na <- value
+      logger::log_trace(
+        sprintf(
+          "%s$set_keep_na set for filter %s to %s.",
+          class(self)[1],
+          private$get_id(),
+          value
+        )
+      )
+      private$set_na_rm(!value)
+      invisible(NULL)
+    },
+
+    # @description
+    # Set whether to keep Infs
+    #
+    # @param value (`logical(1)`)\cr
+    #  Value(s) which come from the filter selection. Value is set in `server`
+    #  modules after selecting check-box-input in the shiny interface. Values are set to
+    #  `private$teal_slice$keep_inf`
+    #
+    set_keep_inf = function(value) {
+      checkmate::assert_flag(value)
+      private$teal_slice$keep_inf <- value
+      logger::log_trace(
+        sprintf(
+          "%s$set_keep_inf of filter %s set to %s",
+          class(self)[1],
+          private$get_id(),
+          value
+        )
+      )
+
+      invisible(NULL)
+    },
+
+    # @description
+    # Some methods need an additional `!is.na(varame)` condition to drop
+    # missing values. When `private$na_rm = TRUE`, `self$get_call` returns
+    # condition extended by `!is.na`.
+    #
+    # @param value `logical(1)`\cr
+    #   when `TRUE`, `FilterState$get_call` appends an expression
+    #   removing `NA` values to the filter expression returned by `get_call`
+    #
+    # @return NULL invisibly
+    #
+    set_na_rm = function(value) {
+      checkmate::assert_flag(value)
+      private$na_rm <- value
+      invisible(NULL)
+    },
+
+    ## getters for state features ----
+
+    # @description
+    # Returns dataname.
+    # @return `character(1)`
+    get_dataname = function() {
+      shiny::isolate(private$teal_slice$dataname)
+    },
+
+    # @description
+    # Get variable name.
+    # @return `character(1)`
+    get_varname = function() {
+      shiny::isolate(private$teal_slice$varname)
+    },
+
+    # @description
+    # Get id of the teal_slice.
+    # @return `character(1)`
+    get_id = function() {
+      shiny::isolate(private$teal_slice$id)
+    },
+
+    # @description
+    # Get allowed values from `FilterState`.
+    # @return class of the returned object depends of class of the `FilterState`
+    get_choices = function() {
+      shiny::isolate(private$teal_slice$choices)
+    },
+
+    # @description
+    # Get selected values from `FilterState`.
+    # @return class of the returned object depends of class of the `FilterState`
+    get_selected = function() {
+      private$teal_slice$selected
+    },
+
+    # @description
+    # Returns current `keep_na` selection.
+    # @return `logical(1)`
+    get_keep_na = function() {
+      private$teal_slice$keep_na
+    },
+
+    # @description
+    # Returns current `keep_inf` selection.
+    # @return (`logical(1)`)
+    get_keep_inf = function() {
+      private$teal_slice$keep_inf
+    },
+
+    # Check whether this filter is fixed (cannot be changed).
+    # @return `logical(1)`
+    is_fixed = function() {
+      shiny::isolate(isTRUE(private$teal_slice$fixed))
+    },
+
+    # Check whether this filter is locked (cannot be removed).
+    # @return `logical(1)`
+    is_locked = function() {
+      shiny::isolate(isTRUE(private$teal_slice$locked))
+    },
+
+    # Check whether this filter is capable of selecting multiple values.
+    # @return `logical(1)`
+    is_multiple = function() {
+      shiny::isolate(isTRUE(private$teal_slice$multiple))
+    },
+
+    ## other ----
+
+    # @description
+    # Returns variable label.
+    # @return `character(1)`
+    get_varlabel = function() {
+      private$varlabel
+    },
+
+    # @description
+    # Return variable name prefixed by `dataname` to be evaluated as extracted object,
     # for example `data$var`
     # @return a character string representation of a subset call
     #         that extracts the variable from the dataset
-    get_varname_prefixed = function() {
+    get_varname_prefixed = function(dataname) {
       ans <-
         if (isTRUE(private$extract_type == "list")) {
-          sprintf("%s$%s", private$dataname, private$varname)
+          sprintf("%s$%s", dataname, private$get_varname())
         } else if (isTRUE(private$extract_type == "matrix")) {
-          sprintf("%s[, \"%s\"]", private$dataname, private$varname)
+          sprintf("%s[, \"%s\"]", dataname, private$get_varname())
         } else {
-          private$varname
+          private$get_varname()
         }
       str2lang(ans)
     },
 
     # @description
     # Adds `is.na(varname)` before existing condition calls if `keep_na` is selected.
-    # Otherwise, if missings are found in the variable `!is.na` will be added
+    # Otherwise, if missing values are found in the variable `!is.na` will be added
     # only if `private$na_rm = TRUE`
+    # @param filter_call `call` raw filter call, as defined by selection
+    # @param dataname `character(1)` name of data set to prepend to variables
     # @return a `call`
-    add_keep_na_call = function(filter_call) {
-      if (isTRUE(self$get_keep_na())) {
-        call("|", call("is.na", private$get_varname_prefixed()), filter_call)
+    add_keep_na_call = function(filter_call, dataname) {
+      if (isTRUE(private$get_keep_na())) {
+        call("|", call("is.na", private$get_varname_prefixed(dataname)), filter_call)
       } else if (isTRUE(private$na_rm) && private$na_count > 0L) {
         call(
           "&",
-          call("!", call("is.na", private$get_varname_prefixed())),
+          call("!", call("is.na", private$get_varname_prefixed(dataname))),
           filter_call
         )
       } else {
@@ -460,61 +541,104 @@ FilterState <- R6::R6Class( # nolint
       }
     },
 
-    # Sets `keep_na` field according to observed `input$keep_na`
-    # If `keep_na = TRUE` `is.na(varname)` is added to the returned call.
-    # Otherwise returned call excludes `NA` when executed.
-    observe_keep_na = function(input) {
-
+    # Converts values to the type fitting this `FilterState` and validates
+    # whether the elements of the resulting vector satisfy the requirements of this `FilterState`.
+    # Raises error if casting does not execute successfully.
+    #
+    # @param values vector of values
+    #
+    # @return vector converted to appropriate class
+    cast_and_validate = function(values) {
+      values
     },
 
-    # @description
-    # Set choices is supposed to be executed once in the constructor
-    # to define set/range which selection is made from.
-    # parameter choices (`vector`)\cr
-    #  class of the vector depends on the `FilterState` class.
-    # @return `NULL`
-    set_choices = function(choices) {
-      private$choices <- choices
-      invisible(NULL)
+    # Filters out erroneous values from vector.
+    #
+    # @param values vector of values
+    #
+    # @return vector in which values that cannot be set in this FilterState have been dropped
+    remove_out_of_bound_values = function(values) {
+      values
+    },
+
+    # Checks whether multiple choices are allowed.
+    # If not value is of length 2 or more, drops all but first item with a warning.
+    check_multiple = function(value) {
+      value
     },
 
     # Checks if the selection is valid in terms of class and length.
-    # It should not return anything but throw an error if selection
+    # It should not return anything but raise an error if selection
     # has a wrong class or is outside of possible choices
     validate_selection = function(value) {
       invisible(NULL)
     },
 
-    # Filters out erroneous values from an array.
-    #
-    # @param values the array of values
-    #
-    # @return the array of values without elements, which are outside of
-    # the accepted set for this FilterState
-    remove_out_of_bound_values = function(values) {
-      values
+    # @description
+    # Answers the question of whether the current settings and values selected actually filters out any values.
+    # @return logical scalar
+    is_any_filtered = function() {
+      if (private$is_choice_limited) {
+        TRUE
+      } else if (!setequal(private$get_selected(), private$get_choices())) {
+        TRUE
+      } else if (!isTRUE(private$get_keep_na()) && private$na_count > 0) {
+        TRUE
+      } else {
+        FALSE
+      }
     },
 
-    # Casts an array of values to the type fitting this `FilterState`
-    # and validates the elements of the casted array
-    # satisfy the requirements of this `FilterState`.
-    #
-    # @param values the array of values
-    #
-    # @return the casted array
-    #
-    # @note throws an error if the casting did not execute successfully.
-    cast_and_validate = function(values) {
-      values
+    ## shiny modules -----
+
+    # @description
+    # Server module to display filter summary
+    # @param id `shiny` id parameter
+    ui_summary = function(id) {
+      ns <- NS(id)
+      uiOutput(ns("summary"), class = "filter-card-summary")
     },
 
-    # shiny modules -----
+    # @description
+    # UI module to display filter summary
+    # @param shiny `id` parameter passed to `moduleServer`
+    #  renders text describing current state
+    server_summary = function(id) {
+      moduleServer(
+        id = id,
+        function(input, output, session) {
+          output$summary <- renderUI(private$content_summary())
+        }
+      )
+    },
+
     # module with inputs
     ui_inputs = function(id) {
       stop("abstract class")
     },
     # module with inputs
     server_inputs = function(id) {
+      stop("abstract class")
+    },
+
+    # @description
+    # module displaying inputs in a fixed filter state
+    # there are no input widgets, only selection visualizations
+    # @param id
+    #   character string specifying this `shiny` module instance
+    ui_inputs_fixed = function(id) {
+      ns <- NS(id)
+      div(
+        class = "choices_state",
+        uiOutput(ns("selection"))
+      )
+    },
+
+    # @description
+    # module creating the display of a fixed filter state
+    # @param id
+    #   character string specifying this `shiny` module instance
+    server_inputs_fixed = function(id) {
       stop("abstract class")
     },
 
@@ -526,11 +650,26 @@ FilterState <- R6::R6Class( # nolint
     keep_na_ui = function(id) {
       ns <- NS(id)
       if (private$na_count > 0) {
-        checkboxInput(
-          ns("value"),
-          sprintf("Keep NA (%s)", private$na_count),
-          value = self$get_keep_na()
-        )
+        shiny::isolate({
+          countmax <- private$na_count
+          countnow <- private$filtered_na_count()
+          ui_input <- checkboxInput(
+            inputId = ns("value"),
+            label = tags$span(
+              id = ns("count_label"),
+              make_count_text(
+                label = "Keep NA",
+                countmax = countmax,
+                countnow = countnow
+              )
+            ),
+            value = private$get_keep_na()
+          )
+          div(
+            uiOutput(ns("trigger_visible"), inline = TRUE),
+            ui_input
+          )
+        })
       } else {
         NULL
       }
@@ -544,18 +683,33 @@ FilterState <- R6::R6Class( # nolint
     #  changed through the api
     keep_na_srv = function(id) {
       moduleServer(id, function(input, output, session) {
+        # 1. renderUI is used here as an observer which triggers only if output is visible
+        #  and if the reactive changes - reactive triggers only if the output is visible.
+        # 2. We want to trigger change of the labels only if reactive count changes (not underlying data)
+        output$trigger_visible <- renderUI({
+          updateCountText(
+            inputId = "count_label",
+            label = "Keep NA",
+            countmax = private$na_count,
+            countnow = private$filtered_na_count()
+          )
+          NULL
+        })
+
         # this observer is needed in the situation when private$keep_inf has been
         # changed directly by the api - then it's needed to rerender UI element
         # to show relevant values
         private$observers$keep_na_api <- observeEvent(
+          eventExpr = private$get_keep_na(),
           ignoreNULL = FALSE, # nothing selected is possible for NA
           ignoreInit = TRUE, # ignoreInit: should not matter because we set the UI with the desired initial state
-          eventExpr = self$get_keep_na(),
           handlerExpr = {
-            if (!setequal(self$get_keep_na(), input$value)) {
+            if (!setequal(private$get_keep_na(), input$value)) {
+              logger::log_trace("FilterState$keep_na_srv@1 changed reactive value, id: { private$get_id() }")
               updateCheckboxInput(
                 inputId = "value",
-                value = self$get_keep_na()
+                label = sprintf("Keep NA (%s/%s)", private$filtered_na_count(), private$na_count),
+                value = private$get_keep_na()
               )
             }
           }
@@ -565,21 +719,13 @@ FilterState <- R6::R6Class( # nolint
           ignoreInit = TRUE, # ignoreInit: should not matter because we set the UI with the desired initial state
           eventExpr = input$value,
           handlerExpr = {
+            logger::log_trace("FilterState$keep_na_srv@2 changed input, id: { private$get_id() }")
             keep_na <- if (is.null(input$value)) {
               FALSE
             } else {
               input$value
             }
-            self$set_keep_na(keep_na)
-            logger::log_trace(
-              sprintf(
-                "%s$server keep_na of variable %s set to: %s, dataname: %s",
-                class(self)[1],
-                private$varname,
-                deparse1(input$value),
-                private$dataname
-              )
-            )
+            private$set_keep_na(keep_na)
           }
         )
         invisible(NULL)
