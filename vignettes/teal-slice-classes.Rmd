@@ -119,7 +119,7 @@ The following `FilteredDataset` child classes are currently implemented:
 
 - `ui/srv_add` allows adding a `FilterState` for a selected variable. The variables included in the module are the filterable column names of the provided data set. Selecting a variable adds a `FilterState` to the `reactiveVal` stored in the `private$state_list` private field. The subtype of the created `FilterState` automatically determined based on the class of the selected column.
 
-- `ui/srv_active` displays cards of the currently existing `FilterState` objects. Every `FilterState` object serves a remove button and `FilterStates` and reacts to clicking that button by removing the respective`FilterState` from `private$state_list` and destroying it's observers. `ui/srv_active` also contains a remove button that removes all `FilterState` objects within this `FilterStates`.
+- `ui/srv_active` displays cards of the currently existing `FilterState` objects. Every `FilterState` object serves a remove button and `FilterStates` and reacts to clicking that button by removing the respective `FilterState` from `private$state_list` and destroying it's observers. `ui/srv_active` also contains a remove button that removes all `FilterState` objects within this `FilterStates`.
 
 ### `FilterState`
 
