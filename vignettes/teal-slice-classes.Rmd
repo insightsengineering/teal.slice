@@ -80,7 +80,7 @@ knitr::include_graphics("./images/filter_panel/class_details_filtered_data.jpg")
 It sits on top of the class structure and handles the shiny modules of the sub-classes.
 
 `FilteredData` provides several API methods that can be used to access reproducible subsetting calls and the resulting filtered data. 
-It also allows external modules to manage filter states through functions such as `get_filter_state`, `set_filter_state`, `remove_filter_state`, and `clear_filter_state`.
+It also allows external modules to manage filter states through methods such as `get_filter_state`, `set_filter_state`, `remove_filter_state`, and `clear_filter_state`.
 
 ### `FilteredDataset`
 
