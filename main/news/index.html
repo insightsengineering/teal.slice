@@ -10,7 +10,7 @@
     
     <a class="navbar-brand me-2" href="../index.html">teal.slice</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.3.0.9004</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.3.0.9005</small>
 
     <div style="width: 140px; margin-left: 0.5rem;"> <small class="nav-text text-muted me-auto">part of</small> <img src="https://github.com/insightsengineering/hex-stickers/blob/main/PNG/nest.png?raw=true" alt="NEST" style="height: 30px;"><a href="https://pharmaverse.org/" class="external-link"><img src="https://github.com/insightsengineering/hex-stickers/blob/main/PNG/pharmaverse.png?raw=true" alt="pharmaverse" style="height: 28px;"></a> </div>
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -27,21 +27,13 @@
 <li class="nav-item dropdown">
   <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown" role="button" aria-expanded="false" aria-haspopup="true" id="dropdown-articles">Articles</a>
   <div class="dropdown-menu" aria-labelledby="dropdown-articles">
-    <a class="dropdown-item" href="../articles/filter-panel.html">Filter panel for NEST developers</a>
+    <a class="dropdown-item" href="../articles/filter-panel-for-developers.html">Filter panel for developers</a>
+    <a class="dropdown-item" href="../articles/teal-slice-classes.html">teal.slice classes</a>
   </div>
 </li>
 <li class="active nav-item">
   <a class="nav-link" href="../news/index.html">Changelog</a>
 </li>
-<!-- start dropdown for versions --> <li class="nav-item dropdown">
-        <a href="#" class="nav-link dropdown-toggle"
-          data-bs-toggle="dropdown" role="button"
-          aria-expanded="false" aria-haspopup="true"
-          id="dropdown-versions">Versions</a> <div class="dropdown-menu" aria-labelledby="dropdown-versions"> <a class="dropdown-item" data-toggle="tooltip" title="" href="https://insightsengineering.github.io/teal.slice/main">main</a>
-<a class="dropdown-item" data-toggle="tooltip" title="" href="https://insightsengineering.github.io/teal.slice/latest-tag">latest-tag</a>
-<a class="dropdown-item" data-toggle="tooltip" title="" href="https://insightsengineering.github.io/teal.slice/v0.3.0">v0.3.0</a>
-<a class="dropdown-item" data-toggle="tooltip" title="" href="https://insightsengineering.github.io/teal.slice/v0.2.0">v0.2.0</a> </div></li>
-<!-- end dropdown for versions -->
 <li class="nav-item dropdown">
   <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown" role="button" aria-expanded="false" aria-haspopup="true" id="dropdown-reports">Reports</a>
   <div class="dropdown-menu" aria-labelledby="dropdown-reports">
@@ -70,9 +62,27 @@
     </div>
 
     <div class="section level2">
-<h2 class="pkg-version" data-toc-text="0.3.0.9004" id="tealslice-0309004">teal.slice 0.3.0.9004<a class="anchor" aria-label="anchor" href="#tealslice-0309004"></a></h2>
-<ul><li>Remove <code>scda</code> from dependencies.</li>
+<h2 class="pkg-version" data-toc-text="0.3.0.9005" id="tealslice-0309005">teal.slice 0.3.0.9005<a class="anchor" aria-label="anchor" href="#tealslice-0309005"></a></h2>
+<div class="section level4">
+<h4 id="new-features-0-3-0-9005">New features<a class="anchor" aria-label="anchor" href="#new-features-0-3-0-9005"></a></h4>
+<ul><li>API is based now on <code>teal_slices</code> and <code>teal_slice</code> objects.</li>
+<li>Implemented reactive counts of single filter card to compare filtered and unfiltered variable distributions. See <code>count_type</code> in <code>teal_slices</code>.</li>
+<li>Possible now to specify filter based on arbitrary logical expression. See <code>expr</code> argument in <code>teal_slice</code>.</li>
+<li>Possible now to limit choices in single filter card. See <code>choices</code> argument in <code>teal_slice</code>.</li>
+<li>Possible now to initialize filter panel without “Add filter variables” panel through <code>module_add</code> in <code>teal_slices</code>.</li>
+<li>Possible now to set filter which can’t be removed by app user. See <code>anchored</code> argument in <code>teal_slice</code>.</li>
+<li>Possible now to set filter which selection remains the same. See <code>fixed</code> argument in <code>teal_slice</code>.</li>
+<li>Possible now to limit variable by single level only. See <code>multuple</code> argument in <code>teal_slice</code><br></li>
+<li>Changed appearance of filter cards to collapsible accordion.</li>
+<li>Replaced <code>sliderInput</code> with interactive <code>plotly</code> to be able to zoom variable distribution.</li>
 </ul></div>
+<div class="section level4">
+<h4 id="breaking-changes-0-3-0-9005">Breaking changes<a class="anchor" aria-label="anchor" href="#breaking-changes-0-3-0-9005"></a></h4>
+<ul><li>Setting filters using a list is now deprecated. Use <code>teal_slices</code> and <code>teal_slice</code> instead.</li>
+<li>Removed <code>CDISCFilteredData</code> and <code>CDISCFilteredDataset</code> and implementing <code>JoinKeys</code> handling in their parent classes (<code>FilteredData</code> and <code>DefaultFilteredDataset</code>).</li>
+<li>Specifying set of filterable columns is done through <code>include_varnames</code> and <code>exclude_varnames</code>. Specifying <code>attr(, "filterable")</code> is hard deprecated.</li>
+</ul></div>
+</div>
     <div class="section level2">
 <h2 class="pkg-version" data-toc-text="0.3.0" id="tealslice-030">teal.slice 0.3.0<a class="anchor" aria-label="anchor" href="#tealslice-030"></a></h2>
 <ul><li>Examples now use <code>scda.2022</code> instead of <code>scda.2021</code>.</li>
@@ -83,6 +93,7 @@
 <ul><li>Added a global turn on/off button for the Filter Panel.</li>
 <li>Added ability to collapse Active Filter Display panel.</li>
 <li>Added ability to collapse all filters of an individual dataset.</li>
+<li>Added fixed filter states.</li>
 </ul></div>
 <div class="section level4">
 <h4 id="enhancements-0-3-0">Enhancements<a class="anchor" aria-label="anchor" href="#enhancements-0-3-0"></a></h4>
@@ -92,12 +103,14 @@
 <h4 id="bug-fixes-0-3-0">Bug fixes<a class="anchor" aria-label="anchor" href="#bug-fixes-0-3-0"></a></h4>
 <ul><li>Fixed an error where the <code>RangeFilterState</code> produced an error when using <code>bootstrap 4</code>.</li>
 <li>Fixed a bug that caused the range slider to omit values selected programmatically through the filter API.</li>
+<li>Fixed a bug where setting incorrect values for Date and Date time ranges caused the app to crash.</li>
 </ul></div>
 <div class="section level4">
 <h4 id="miscellaneous-0-3-0">Miscellaneous<a class="anchor" aria-label="anchor" href="#miscellaneous-0-3-0"></a></h4>
 <ul><li>Calculation of step in slider for <code>RangeFilterState</code> now uses <code><a href="https://mllg.github.io/checkmate/reference/checkIntegerish.html" class="external-link">checkmate::test_integerish</a></code> instead of <code>is.integer</code>.</li>
 <li>Updated <code>init_filtered_data</code> to take into account the removal of <code>CDISCTealData</code> from <code>teal.data</code> package.</li>
-<li>Added examples apps for <code>ChoicesFilterState</code> and <code>DFFilterStates</code>.</li>
+<li>Added <code>shinyvalidate</code> validation for Date and Date time ranges.</li>
+<li>Added examples apps for <code>FilterState</code> child classes and <code>DFFilterStates</code>.</li>
 </ul></div>
 </div>
     <div class="section level2">
@@ -118,10 +131,10 @@
 <div class="section level4">
 <h4 id="enhancements-0-2-0">Enhancements<a class="anchor" aria-label="anchor" href="#enhancements-0-2-0"></a></h4>
 <ul><li>Redesigned the count bars for filter panel check box inputs.</li>
-<li>Redesigned the filter panel input for dates to use CSS flexbox.</li>
+<li>Redesigned the filter panel input for dates to use <code>CSS flexbox</code>.</li>
 <li>Update icons to be compatible with Font Awesome 6.</li>
 <li>Updates the <code>FilteredData</code> method <code>get_formatted_filter_state</code> so it no longer appends empty filters.</li>
-<li>Added clearer installation instructions to README.</li>
+<li>Added clearer installation instructions to <code>README</code>.</li>
 </ul></div>
 <div class="section level4">
 <h4 id="breaking-changes-0-2-0">Breaking changes<a class="anchor" aria-label="anchor" href="#breaking-changes-0-2-0"></a></h4>

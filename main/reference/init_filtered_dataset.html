@@ -10,7 +10,7 @@
     
     <a class="navbar-brand me-2" href="../index.html">teal.slice</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.3.0.9004</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.3.0.9005</small>
 
     <div style="width: 140px; margin-left: 0.5rem;"> <small class="nav-text text-muted me-auto">part of</small> <img src="https://github.com/insightsengineering/hex-stickers/blob/main/PNG/nest.png?raw=true" alt="NEST" style="height: 30px;"><a href="https://pharmaverse.org/" class="external-link"><img src="https://github.com/insightsengineering/hex-stickers/blob/main/PNG/pharmaverse.png?raw=true" alt="pharmaverse" style="height: 28px;"></a> </div>
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -27,21 +27,13 @@
 <li class="nav-item dropdown">
   <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown" role="button" aria-expanded="false" aria-haspopup="true" id="dropdown-articles">Articles</a>
   <div class="dropdown-menu" aria-labelledby="dropdown-articles">
-    <a class="dropdown-item" href="../articles/filter-panel.html">Filter panel for NEST developers</a>
+    <a class="dropdown-item" href="../articles/filter-panel-for-developers.html">Filter panel for developers</a>
+    <a class="dropdown-item" href="../articles/teal-slice-classes.html">teal.slice classes</a>
   </div>
 </li>
 <li class="nav-item">
   <a class="nav-link" href="../news/index.html">Changelog</a>
 </li>
-<!-- start dropdown for versions --> <li class="nav-item dropdown">
-        <a href="#" class="nav-link dropdown-toggle"
-          data-bs-toggle="dropdown" role="button"
-          aria-expanded="false" aria-haspopup="true"
-          id="dropdown-versions">Versions</a> <div class="dropdown-menu" aria-labelledby="dropdown-versions"> <a class="dropdown-item" data-toggle="tooltip" title="" href="https://insightsengineering.github.io/teal.slice/main">main</a>
-<a class="dropdown-item" data-toggle="tooltip" title="" href="https://insightsengineering.github.io/teal.slice/latest-tag">latest-tag</a>
-<a class="dropdown-item" data-toggle="tooltip" title="" href="https://insightsengineering.github.io/teal.slice/v0.3.0">v0.3.0</a>
-<a class="dropdown-item" data-toggle="tooltip" title="" href="https://insightsengineering.github.io/teal.slice/v0.2.0">v0.2.0</a> </div></li>
-<!-- end dropdown for versions -->
 <li class="nav-item dropdown">
   <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown" role="button" aria-expanded="false" aria-haspopup="true" id="dropdown-reports">Reports</a>
   <div class="dropdown-menu" aria-labelledby="dropdown-reports">
@@ -80,6 +72,9 @@
 <span>  <span class="va">dataset</span>,</span>
 <span>  <span class="va">dataname</span>,</span>
 <span>  keys <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/character.html" class="external-link">character</a></span><span class="op">(</span><span class="fl">0</span><span class="op">)</span>,</span>
+<span>  parent_name <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/character.html" class="external-link">character</a></span><span class="op">(</span><span class="fl">0</span><span class="op">)</span>,</span>
+<span>  parent <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/pkg/shiny/man/reactive.html" class="external-link">reactive</a></span><span class="op">(</span><span class="va">dataset</span><span class="op">)</span>,</span>
+<span>  join_keys <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/character.html" class="external-link">character</a></span><span class="op">(</span><span class="fl">0</span><span class="op">)</span>,</span>
 <span>  label <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/attr.html" class="external-link">attr</a></span><span class="op">(</span><span class="va">dataset</span>, <span class="st">"label"</span><span class="op">)</span>,</span>
 <span>  metadata <span class="op">=</span> <span class="cn">NULL</span></span>
 <span><span class="op">)</span></span></code></pre></div>
@@ -99,6 +94,25 @@ A given name for the dataset it may not contain spaces</p></dd>
 <dt>keys</dt>
 <dd><p>optional, (<code>character</code>)<br>
 Vector with primary keys</p></dd>
+
+
+<dt>parent_name</dt>
+<dd><p>(<code>character(1)</code>)<br>
+Name of the parent dataset</p></dd>
+
+
+<dt>parent</dt>
+<dd><p>(<code>reactive</code>)<br>
+object returned by this reactive is a filtered <code>data.frame</code> from other <code>FilteredDataset</code>
+named <code>parent_name</code>. Consequence of passing <code>parent</code> is a <code>reactive</code> link which causes
+causing re-filtering of this <code>dataset</code> based on the changes in <code>parent</code>.</p></dd>
+
+
+<dt>join_keys</dt>
+<dd><p>(<code>character</code>)<br>
+Name of the columns in this dataset to join with <code>parent</code>
+dataset. If the column names are different if both datasets
+then the names of the vector define the <code>parent</code> columns.</p></dd>
 
 
 <dt>label</dt>
@@ -126,17 +140,16 @@ at which point any code which relies on this exported function will need to be c
 <span class="r-in"><span>  dataname <span class="op">=</span> <span class="st">"iris"</span>,</span></span>
 <span class="r-in"><span>  metadata <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>type <span class="op">=</span> <span class="st">"teal"</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="op">)</span></span></span>
-<span class="r-in"><span><span class="kw">if</span> <span class="op">(</span><span class="cn">FALSE</span><span class="op">)</span> <span class="op">{</span></span></span>
-<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/pkg/shiny/man/shinyApp.html" class="external-link">shinyApp</a></span><span class="op">(</span></span></span>
+<span class="r-in"><span><span class="va">app</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/shiny/man/shinyApp.html" class="external-link">shinyApp</a></span><span class="op">(</span></span></span>
 <span class="r-in"><span>  ui <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/pkg/shiny/man/fluidPage.html" class="external-link">fluidPage</a></span><span class="op">(</span></span></span>
-<span class="r-in"><span>    <span class="va">iris_fd</span><span class="op">$</span><span class="fu">ui_add_filter_state</span><span class="op">(</span>id <span class="op">=</span> <span class="st">"add"</span><span class="op">)</span>,</span></span>
-<span class="r-in"><span>    <span class="va">iris_fd</span><span class="op">$</span><span class="fu">ui</span><span class="op">(</span><span class="st">"dataset"</span><span class="op">)</span>,</span></span>
+<span class="r-in"><span>    <span class="va">iris_fd</span><span class="op">$</span><span class="fu">ui_add</span><span class="op">(</span>id <span class="op">=</span> <span class="st">"add"</span><span class="op">)</span>,</span></span>
+<span class="r-in"><span>    <span class="va">iris_fd</span><span class="op">$</span><span class="fu">ui_active</span><span class="op">(</span><span class="st">"dataset"</span><span class="op">)</span>,</span></span>
 <span class="r-in"><span>    <span class="fu"><a href="https://rdrr.io/pkg/shiny/man/textOutput.html" class="external-link">verbatimTextOutput</a></span><span class="op">(</span><span class="st">"call"</span><span class="op">)</span>,</span></span>
 <span class="r-in"><span>    <span class="fu"><a href="https://rdrr.io/pkg/shiny/man/textOutput.html" class="external-link">verbatimTextOutput</a></span><span class="op">(</span><span class="st">"metadata"</span><span class="op">)</span></span></span>
 <span class="r-in"><span>  <span class="op">)</span>,</span></span>
 <span class="r-in"><span>  server <span class="op">=</span> <span class="kw">function</span><span class="op">(</span><span class="va">input</span>, <span class="va">output</span>, <span class="va">session</span><span class="op">)</span> <span class="op">{</span></span></span>
-<span class="r-in"><span>    <span class="va">iris_fd</span><span class="op">$</span><span class="fu">srv_add_filter_state</span><span class="op">(</span>id <span class="op">=</span> <span class="st">"add"</span><span class="op">)</span></span></span>
-<span class="r-in"><span>    <span class="va">iris_fd</span><span class="op">$</span><span class="fu">server</span><span class="op">(</span>id <span class="op">=</span> <span class="st">"dataset"</span><span class="op">)</span></span></span>
+<span class="r-in"><span>    <span class="va">iris_fd</span><span class="op">$</span><span class="fu">srv_add</span><span class="op">(</span>id <span class="op">=</span> <span class="st">"add"</span><span class="op">)</span></span></span>
+<span class="r-in"><span>    <span class="va">iris_fd</span><span class="op">$</span><span class="fu">srv_active</span><span class="op">(</span>id <span class="op">=</span> <span class="st">"dataset"</span><span class="op">)</span></span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span>    <span class="va">output</span><span class="op">$</span><span class="va">metadata</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/shiny/man/renderPrint.html" class="external-link">renderText</a></span><span class="op">(</span><span class="op">{</span></span></span>
 <span class="r-in"><span>      <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste</a></span><span class="op">(</span><span class="st">"Type ="</span>, <span class="va">iris_fd</span><span class="op">$</span><span class="fu">get_metadata</span><span class="op">(</span><span class="op">)</span><span class="op">$</span><span class="va">type</span><span class="op">)</span></span></span>
@@ -150,23 +163,24 @@ at which point any code which relies on this exported function will need to be c
 <span class="r-in"><span>    <span class="op">}</span><span class="op">)</span></span></span>
 <span class="r-in"><span>  <span class="op">}</span></span></span>
 <span class="r-in"><span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="kw">if</span> <span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/interactive.html" class="external-link">interactive</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span> <span class="op">{</span></span></span>
+<span class="r-in"><span>  <span class="fu"><a href="https://rdrr.io/pkg/shiny/man/runApp.html" class="external-link">runApp</a></span><span class="op">(</span><span class="va">app</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="op">}</span></span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># MAEFilteredDataset example</span></span></span>
 <span class="r-in"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="http://waldronlab.io/MultiAssayExperiment/" class="external-link">MultiAssayExperiment</a></span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="va">miniACC</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="va">MAE_fd</span> <span class="op">&lt;-</span> <span class="fu">teal.slice</span><span class="fu">:::</span><span class="fu">init_filtered_dataset</span><span class="op">(</span><span class="va">miniACC</span>, <span class="st">"MAE"</span>, metadata <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>type <span class="op">=</span> <span class="st">"MAE"</span><span class="op">)</span><span class="op">)</span></span></span>
-<span class="r-in"><span><span class="kw">if</span> <span class="op">(</span><span class="cn">FALSE</span><span class="op">)</span> <span class="op">{</span></span></span>
-<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/pkg/shiny/man/shinyApp.html" class="external-link">shinyApp</a></span><span class="op">(</span></span></span>
+<span class="r-in"><span><span class="va">app</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/shiny/man/shinyApp.html" class="external-link">shinyApp</a></span><span class="op">(</span></span></span>
 <span class="r-in"><span>  ui <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/pkg/shiny/man/fluidPage.html" class="external-link">fluidPage</a></span><span class="op">(</span></span></span>
-<span class="r-in"><span>    <span class="va">MAE_fd</span><span class="op">$</span><span class="fu">ui_add_filter_state</span><span class="op">(</span>id <span class="op">=</span> <span class="st">"add"</span><span class="op">)</span>,</span></span>
-<span class="r-in"><span>    <span class="va">MAE_fd</span><span class="op">$</span><span class="fu">ui</span><span class="op">(</span><span class="st">"dataset"</span><span class="op">)</span>,</span></span>
+<span class="r-in"><span>    <span class="va">MAE_fd</span><span class="op">$</span><span class="fu">ui_add</span><span class="op">(</span>id <span class="op">=</span> <span class="st">"add"</span><span class="op">)</span>,</span></span>
+<span class="r-in"><span>    <span class="va">MAE_fd</span><span class="op">$</span><span class="fu">ui_active</span><span class="op">(</span><span class="st">"dataset"</span><span class="op">)</span>,</span></span>
 <span class="r-in"><span>    <span class="fu"><a href="https://rdrr.io/pkg/shiny/man/textOutput.html" class="external-link">verbatimTextOutput</a></span><span class="op">(</span><span class="st">"call"</span><span class="op">)</span>,</span></span>
 <span class="r-in"><span>    <span class="fu"><a href="https://rdrr.io/pkg/shiny/man/textOutput.html" class="external-link">verbatimTextOutput</a></span><span class="op">(</span><span class="st">"metadata"</span><span class="op">)</span></span></span>
 <span class="r-in"><span>  <span class="op">)</span>,</span></span>
 <span class="r-in"><span>  server <span class="op">=</span> <span class="kw">function</span><span class="op">(</span><span class="va">input</span>, <span class="va">output</span>, <span class="va">session</span><span class="op">)</span> <span class="op">{</span></span></span>
-<span class="r-in"><span>    <span class="va">MAE_fd</span><span class="op">$</span><span class="fu">srv_add_filter_state</span><span class="op">(</span>id <span class="op">=</span> <span class="st">"add"</span><span class="op">)</span></span></span>
-<span class="r-in"><span>    <span class="va">MAE_fd</span><span class="op">$</span><span class="fu">server</span><span class="op">(</span>id <span class="op">=</span> <span class="st">"dataset"</span><span class="op">)</span></span></span>
+<span class="r-in"><span>    <span class="va">MAE_fd</span><span class="op">$</span><span class="fu">srv_add</span><span class="op">(</span>id <span class="op">=</span> <span class="st">"add"</span><span class="op">)</span></span></span>
+<span class="r-in"><span>    <span class="va">MAE_fd</span><span class="op">$</span><span class="fu">srv_active</span><span class="op">(</span>id <span class="op">=</span> <span class="st">"dataset"</span><span class="op">)</span></span></span>
 <span class="r-in"><span>    <span class="va">output</span><span class="op">$</span><span class="va">metadata</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/shiny/man/renderPrint.html" class="external-link">renderText</a></span><span class="op">(</span><span class="op">{</span></span></span>
 <span class="r-in"><span>      <span class="fu"><a href="https://rdrr.io/r/base/paste.html" class="external-link">paste</a></span><span class="op">(</span><span class="st">"Type ="</span>, <span class="va">MAE_fd</span><span class="op">$</span><span class="fu">get_metadata</span><span class="op">(</span><span class="op">)</span><span class="op">$</span><span class="va">type</span><span class="op">)</span></span></span>
 <span class="r-in"><span>    <span class="op">}</span><span class="op">)</span></span></span>
@@ -178,6 +192,8 @@ at which point any code which relies on this exported function will need to be c
 <span class="r-in"><span>    <span class="op">}</span><span class="op">)</span></span></span>
 <span class="r-in"><span>  <span class="op">}</span></span></span>
 <span class="r-in"><span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="kw">if</span> <span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/interactive.html" class="external-link">interactive</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span> <span class="op">{</span></span></span>
+<span class="r-in"><span>  <span class="fu"><a href="https://rdrr.io/pkg/shiny/man/runApp.html" class="external-link">runApp</a></span><span class="op">(</span><span class="va">app</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="op">}</span></span></span>
 </code></pre></div>
     </div>

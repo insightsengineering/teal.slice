@@ -7,7 +7,7 @@ and composes them into a single reproducible R expression
 that will assign a subset of the original data to a new variable.
 This expression is hereafter referred to as subset expression.
 The subset expression is constructed differently for different
-classes of the underlying data object and FilterStates subclasses.
+classes of the underlying data object and FilterStates sub-classes.
 Currently implemented for data.frame, matrix,
 SummarizedExperiment, and MultiAssayExperiment."><title>FilterStates R6 class — FilterStates • teal.slice</title><script src="../deps/jquery-3.6.0/jquery-3.6.0.min.js"></script><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"><link href="../deps/bootstrap-5.2.2/bootstrap.min.css" rel="stylesheet"><script src="../deps/bootstrap-5.2.2/bootstrap.bundle.min.js"></script><!-- Font Awesome icons --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/all.min.css" integrity="sha256-mmgLkCYLUQbXn0B1SRqzHar6dCnv9oZFPEC1g1cwlkk=" crossorigin="anonymous"><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/v4-shims.min.css" integrity="sha256-wZjR52fzng1pJHwx4aV2AO3yyTOXrcDW7jBpJtTwVxw=" crossorigin="anonymous"><!-- bootstrap-toc --><script src="https://cdn.jsdelivr.net/gh/afeld/bootstrap-toc@v1.0.1/dist/bootstrap-toc.min.js" integrity="sha256-4veVQbu7//Lk5TSmc7YV48MxtMy98e26cf5MrgZYnwo=" crossorigin="anonymous"></script><!-- headroom.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/headroom.min.js" integrity="sha256-AsUX4SJE1+yuDu5+mAVzJbuYNPHj/WroHuZ8Ir/CkE0=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/jQuery.headroom.min.js" integrity="sha256-ZX/yNShbjqsohH1k95liqY9Gd8uOiE1S4vZc+9KQ1K4=" crossorigin="anonymous"></script><!-- clipboard.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.6/clipboard.min.js" integrity="sha256-inc5kl9MA1hkeYUt+EC3BhlIgyp/2jDIyBLS6k3UxPI=" crossorigin="anonymous"></script><!-- search --><script src="https://cdnjs.cloudflare.com/ajax/libs/fuse.js/6.4.6/fuse.js" integrity="sha512-zv6Ywkjyktsohkbp9bb45V6tEMoWhzFzXis+LrMehmJZZSys19Yxf1dopHx7WzIKxr5tK2dVcYmaCk2uqdjF4A==" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/autocomplete.js/0.38.0/autocomplete.jquery.min.js" integrity="sha512-GU9ayf+66Xx2TmpxqJpliWbT5PiGYxpaG8rfnBEk1LL8l1KGkRShhngwdXK1UgqhAzWpZHSiYPc09/NwDQIGyg==" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/mark.js/8.11.1/mark.min.js" integrity="sha512-5CYOlHXGh6QpOFA/TeTylKLWfB3ftPsde7AnmhuitiTX4K5SqCLBeKro6sPS8ilsz1Q4NRx3v8Ko2IBiszzdww==" crossorigin="anonymous"></script><!-- pkgdown --><script src="../pkgdown.js"></script><meta property="og:title" content="FilterStates R6 class — FilterStates"><meta property="og:description" content="Abstract class that manages adding and removing FilterState objects
 and builds a subset expression.
@@ -17,7 +17,7 @@ and composes them into a single reproducible R expression
 that will assign a subset of the original data to a new variable.
 This expression is hereafter referred to as subset expression.
 The subset expression is constructed differently for different
-classes of the underlying data object and FilterStates subclasses.
+classes of the underlying data object and FilterStates sub-classes.
 Currently implemented for data.frame, matrix,
 SummarizedExperiment, and MultiAssayExperiment."><!-- mathjax --><script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js" integrity="sha256-nvJJv9wWKEm88qvoQl9ekL2J+k/RWIsaSScxxlsrv8k=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/config/TeX-AMS-MML_HTMLorMML.js" integrity="sha256-84DKXVJXs0/F8OTMzX4UR909+jtl4G7SPypPavF+GfA=" crossorigin="anonymous"></script><!--[if lt IE 9]>
 <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
@@ -30,7 +30,7 @@ SummarizedExperiment, and MultiAssayExperiment."><!-- mathjax --><script src="ht
     
     <a class="navbar-brand me-2" href="../index.html">teal.slice</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.3.0.9004</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.3.0.9005</small>
 
     <div style="width: 140px; margin-left: 0.5rem;"> <small class="nav-text text-muted me-auto">part of</small> <img src="https://github.com/insightsengineering/hex-stickers/blob/main/PNG/nest.png?raw=true" alt="NEST" style="height: 30px;"><a href="https://pharmaverse.org/" class="external-link"><img src="https://github.com/insightsengineering/hex-stickers/blob/main/PNG/pharmaverse.png?raw=true" alt="pharmaverse" style="height: 28px;"></a> </div>
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -47,21 +47,13 @@ SummarizedExperiment, and MultiAssayExperiment."><!-- mathjax --><script src="ht
 <li class="nav-item dropdown">
   <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown" role="button" aria-expanded="false" aria-haspopup="true" id="dropdown-articles">Articles</a>
   <div class="dropdown-menu" aria-labelledby="dropdown-articles">
-    <a class="dropdown-item" href="../articles/filter-panel.html">Filter panel for NEST developers</a>
+    <a class="dropdown-item" href="../articles/filter-panel-for-developers.html">Filter panel for developers</a>
+    <a class="dropdown-item" href="../articles/teal-slice-classes.html">teal.slice classes</a>
   </div>
 </li>
 <li class="nav-item">
   <a class="nav-link" href="../news/index.html">Changelog</a>
 </li>
-<!-- start dropdown for versions --> <li class="nav-item dropdown">
-        <a href="#" class="nav-link dropdown-toggle"
-          data-bs-toggle="dropdown" role="button"
-          aria-expanded="false" aria-haspopup="true"
-          id="dropdown-versions">Versions</a> <div class="dropdown-menu" aria-labelledby="dropdown-versions"> <a class="dropdown-item" data-toggle="tooltip" title="" href="https://insightsengineering.github.io/teal.slice/main">main</a>
-<a class="dropdown-item" data-toggle="tooltip" title="" href="https://insightsengineering.github.io/teal.slice/latest-tag">latest-tag</a>
-<a class="dropdown-item" data-toggle="tooltip" title="" href="https://insightsengineering.github.io/teal.slice/v0.3.0">v0.3.0</a>
-<a class="dropdown-item" data-toggle="tooltip" title="" href="https://insightsengineering.github.io/teal.slice/v0.2.0">v0.2.0</a> </div></li>
-<!-- end dropdown for versions -->
 <li class="nav-item dropdown">
   <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown" role="button" aria-expanded="false" aria-haspopup="true" id="dropdown-reports">Reports</a>
   <div class="dropdown-menu" aria-labelledby="dropdown-reports">
@@ -99,7 +91,7 @@ and composes them into a single reproducible R expression
 that will assign a subset of the original data to a new variable.
 This expression is hereafter referred to as <em>subset expression</em>.</p>
 <p>The <em>subset expression</em> is constructed differently for different
-classes of the underlying data object and <code>FilterStates</code> subclasses.
+classes of the underlying data object and <code>FilterStates</code> sub-classes.
 Currently implemented for <code>data.frame</code>, <code>matrix</code>,
 <code>SummarizedExperiment</code>, and <code>MultiAssayExperiment</code>.</p>
     </div>
@@ -112,22 +104,17 @@ Currently implemented for <code>data.frame</code>, <code>matrix</code>,
 <h3 id="public-methods">Public methods<a class="anchor" aria-label="anchor" href="#public-methods"></a></h3>
 
 <ul><li><p><a href="#method-FilterStates-new"><code>FilterStates$new()</code></a></p></li>
-<li><p><a href="#method-FilterStates-get_datalabel"><code>FilterStates$get_datalabel()</code></a></p></li>
 <li><p><a href="#method-FilterStates-format"><code>FilterStates$format()</code></a></p></li>
 <li><p><a href="#method-FilterStates-get_call"><code>FilterStates$get_call()</code></a></p></li>
 <li><p><a href="#method-FilterStates-print"><code>FilterStates$print()</code></a></p></li>
-<li><p><a href="#method-FilterStates-get_fun"><code>FilterStates$get_fun()</code></a></p></li>
-<li><p><a href="#method-FilterStates-state_list_get"><code>FilterStates$state_list_get()</code></a></p></li>
-<li><p><a href="#method-FilterStates-state_list_push"><code>FilterStates$state_list_push()</code></a></p></li>
-<li><p><a href="#method-FilterStates-state_list_remove"><code>FilterStates$state_list_remove()</code></a></p></li>
-<li><p><a href="#method-FilterStates-state_list_empty"><code>FilterStates$state_list_empty()</code></a></p></li>
-<li><p><a href="#method-FilterStates-get_filter_count"><code>FilterStates$get_filter_count()</code></a></p></li>
 <li><p><a href="#method-FilterStates-remove_filter_state"><code>FilterStates$remove_filter_state()</code></a></p></li>
-<li><p><a href="#method-FilterStates-ui"><code>FilterStates$ui()</code></a></p></li>
 <li><p><a href="#method-FilterStates-get_filter_state"><code>FilterStates$get_filter_state()</code></a></p></li>
 <li><p><a href="#method-FilterStates-set_filter_state"><code>FilterStates$set_filter_state()</code></a></p></li>
-<li><p><a href="#method-FilterStates-ui_add_filter_state"><code>FilterStates$ui_add_filter_state()</code></a></p></li>
-<li><p><a href="#method-FilterStates-srv_add_filter_state"><code>FilterStates$srv_add_filter_state()</code></a></p></li>
+<li><p><a href="#method-FilterStates-clear_filter_states"><code>FilterStates$clear_filter_states()</code></a></p></li>
+<li><p><a href="#method-FilterStates-ui_active"><code>FilterStates$ui_active()</code></a></p></li>
+<li><p><a href="#method-FilterStates-srv_active"><code>FilterStates$srv_active()</code></a></p></li>
+<li><p><a href="#method-FilterStates-ui_add"><code>FilterStates$ui_add()</code></a></p></li>
+<li><p><a href="#method-FilterStates-srv_add"><code>FilterStates$srv_add()</code></a></p></li>
 <li><p><a href="#method-FilterStates-clone"><code>FilterStates$clone()</code></a></p></li>
 </ul></div><p></p><hr><a id="method-FilterStates-new"></a><div class="section">
 <h3 id="method-new-">Method <code><a href="https://rdrr.io/r/methods/new.html" class="external-link">new()</a></code><a class="anchor" aria-label="anchor" href="#method-new-"></a></h3>
@@ -135,19 +122,37 @@ Currently implemented for <code>data.frame</code>, <code>matrix</code>,
 <p>Initializes <code>FilterStates</code> object by setting
 <code>dataname</code>, and <code>datalabel</code>.</p><div class="section">
 <h4 id="usage">Usage<a class="anchor" aria-label="anchor" href="#usage"></a></h4>
-<p></p><div class="r"><div class="sourceCode"><pre><code><span><span class="va"><a href="../reference/FilterStates.html">FilterStates</a></span><span class="op">$</span><span class="fu">new</span><span class="op">(</span><span class="va">dataname</span>, <span class="va">datalabel</span><span class="op">)</span></span></code></pre></div><p></p></div>
+<p></p><div class="r"><div class="sourceCode"><pre><code><span><span class="va"><a href="../reference/FilterStates.html">FilterStates</a></span><span class="op">$</span><span class="fu">new</span><span class="op">(</span></span>
+<span>  <span class="va">data</span>,</span>
+<span>  data_reactive <span class="op">=</span> <span class="kw">function</span><span class="op">(</span><span class="va">sid</span> <span class="op">=</span> <span class="st">""</span><span class="op">)</span> <span class="cn">NULL</span>,</span>
+<span>  <span class="va">dataname</span>,</span>
+<span>  datalabel <span class="op">=</span> <span class="cn">NULL</span></span>
+<span><span class="op">)</span></span></code></pre></div><p></p></div>
 </div>
 
 <div class="section">
 <h4 id="arguments">Arguments<a class="anchor" aria-label="anchor" href="#arguments"></a></h4>
-<p></p><div class="arguments"><dl><dt><code>dataname</code></dt>
+<p></p><div class="arguments"><dl><dt><code>data</code></dt>
+<dd><p>(<code>data.frame</code>, <code>MultiAssayExperiment</code>, <code>SummarizedExperiment</code>, <code>matrix</code>)<br>
+the R object which <code>subset</code> function is applied on.</p></dd>
+
+
+<dt><code>data_reactive</code></dt>
+<dd><p>(<code>function(sid)</code>)<br>
+should return an object of the same type as <code>data</code> object or <code>NULL</code>.
+This object is needed for the <code>FilterState</code> counts being updated
+on a change in filters. If function returns <code>NULL</code> then filtered counts are not shown.
+Function has to have <code>sid</code> argument being a character.</p></dd>
+
+
+<dt><code>dataname</code></dt>
 <dd><p>(<code>character(1)</code>)<br>
 name of the data used in the expression
 specified to the function argument attached to this <code>FilterStates</code></p></dd>
 
 
 <dt><code>datalabel</code></dt>
-<dd><p>(<code>character(0)</code> or <code>character(1)</code>)<br>
+<dd><p>(<code>NULL</code> or <code>character(1)</code>)<br>
 text label value</p></dd>
 
 
@@ -158,240 +163,114 @@ text label value</p></dd>
 <p>self invisibly</p>
 </div>
 
-</div><p></p><hr><a id="method-FilterStates-get_datalabel"></a><div class="section">
-<h3 id="method-get-datalabel-">Method <code>get_datalabel()</code><a class="anchor" aria-label="anchor" href="#method-get-datalabel-"></a></h3>
-<p>Returns the label of the dataset.</p><div class="section">
-<h4 id="usage-1">Usage<a class="anchor" aria-label="anchor" href="#usage-1"></a></h4>
-<p></p><div class="r"><div class="sourceCode"><pre><code><span><span class="va">FilterStates</span><span class="op">$</span><span class="fu">get_datalabel</span><span class="op">(</span><span class="op">)</span></span></code></pre></div><p></p></div>
-</div>
-
-<div class="section">
-<h4 id="returns-1">Returns<a class="anchor" aria-label="anchor" href="#returns-1"></a></h4>
-<p><code>character(1)</code> the data label</p>
-</div>
-
 </div><p></p><hr><a id="method-FilterStates-format"></a><div class="section">
 <h3 id="method-format-">Method <code><a href="https://rdrr.io/r/base/format.html" class="external-link">format()</a></code><a class="anchor" aria-label="anchor" href="#method-format-"></a></h3>
 <p>Returns a formatted string representing this <code>FilterStates</code> object.</p><div class="section">
-<h4 id="usage-2">Usage<a class="anchor" aria-label="anchor" href="#usage-2"></a></h4>
-<p></p><div class="r"><div class="sourceCode"><pre><code><span><span class="va">FilterStates</span><span class="op">$</span><span class="fu">format</span><span class="op">(</span><span class="va">indent</span><span class="op">)</span></span></code></pre></div><p></p></div>
+<h4 id="usage-1">Usage<a class="anchor" aria-label="anchor" href="#usage-1"></a></h4>
+<p></p><div class="r"><div class="sourceCode"><pre><code><span><span class="va">FilterStates</span><span class="op">$</span><span class="fu">format</span><span class="op">(</span>show_all <span class="op">=</span> <span class="cn">FALSE</span>, trim_lines <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></code></pre></div><p></p></div>
 </div>
 
 <div class="section">
 <h4 id="arguments-1">Arguments<a class="anchor" aria-label="anchor" href="#arguments-1"></a></h4>
-<p></p><div class="arguments"><dl><dt><code>indent</code></dt>
-<dd><p>(<code>numeric(1)</code>) the number of spaces prepended to each line of the output</p></dd>
+<p></p><div class="arguments"><dl><dt><code>show_all</code></dt>
+<dd><p><code>logical(1)</code> passed to <code>format.teal_slices</code></p></dd>
+
+
+<dt><code>trim_lines</code></dt>
+<dd><p><code>logical(1)</code> passed to <code>format.teal_slices</code></p></dd>
 
 
 </dl><p></p></div>
 </div>
 <div class="section">
-<h4 id="returns-2">Returns<a class="anchor" aria-label="anchor" href="#returns-2"></a></h4>
+<h4 id="returns-1">Returns<a class="anchor" aria-label="anchor" href="#returns-1"></a></h4>
 <p><code>character(1)</code> the formatted string</p>
 </div>
 
 </div><p></p><hr><a id="method-FilterStates-get_call"></a><div class="section">
 <h3 id="method-get-call-">Method <code>get_call()</code><a class="anchor" aria-label="anchor" href="#method-get-call-"></a></h3>
 <p>Filter call</p>
-<p>Builds <em>subset expression</em> from condition calls stored in <code>FilterState</code>
-objects selection. The <code>lhs</code> of the expression is <code>private$dataname</code>.
-The <code>rhs</code> is a call to <code>self$get_fun()</code> with <code>private$dataname</code>
-as argument and a list of condition calls from <code>FilterState</code> objects
-stored in <code>private$state_list</code>.
-If no filters are applied,
-<code>NULL</code> is returned to avoid no-op calls such as <code>x &lt;- x</code>.</p><div class="section">
-<h4 id="usage-3">Usage<a class="anchor" aria-label="anchor" href="#usage-3"></a></h4>
-<p></p><div class="r"><div class="sourceCode"><pre><code><span><span class="va">FilterStates</span><span class="op">$</span><span class="fu">get_call</span><span class="op">(</span><span class="op">)</span></span></code></pre></div><p></p></div>
+<p>Builds <em>subset expression</em> from condition calls generated by <code>FilterState</code>.
+The <code>lhs</code> of the expression is a <code>dataname_prefixed</code>, where word prefixed refers to
+situation when call is evaluated on elements of the original data, for example <code>dataname[[x]]</code>.
+By default <code>dataname_prefixed = dataname</code> and it's not alterable through class methods.
+Customization of <code>private$dataname_prefixed</code> is done through inheriting classes.</p>
+<p>The <code>rhs</code> is a call to <code>private$fun</code> with following arguments:</p><ul><li><p><code>dataname_prefixed</code></p></li>
+<li><p>list of logical expressions generated by <code>FilterState</code> objects
+stored in <code>private$state_list</code>. Each logical predicate is combined with <code>&amp;</code> operator.
+Variables in these logical expressions by default are not prefixed but this can be changed
+by setting <code>private$extract_type</code> (change in the similar way as <code>dataname_prefixed</code>)
+Possible call outputs depending on a custom fields/options:</p></li>
+</ul><p></p><div class="sourceCode"><pre><code><span id="cb1-1"><a href="#cb1-1" tabindex="-1"></a><span class="co"># default</span></span>
+<span id="cb1-2"><a href="#cb1-2" tabindex="-1"></a>dataname <span class="ot">&lt;-</span> <span class="fu">subset</span>(dataname, col <span class="sc">==</span> <span class="st">"x"</span>)</span>
+<span id="cb1-3"><a href="#cb1-3" tabindex="-1"></a></span>
+<span id="cb1-4"><a href="#cb1-4" tabindex="-1"></a><span class="co"># fun = dplyr::filter</span></span>
+<span id="cb1-5"><a href="#cb1-5" tabindex="-1"></a>dataname <span class="ot">&lt;-</span> dplyr<span class="sc">::</span><span class="fu">filter</span>(dataname, col <span class="sc">==</span> <span class="st">"x"</span>)</span>
+<span id="cb1-6"><a href="#cb1-6" tabindex="-1"></a></span>
+<span id="cb1-7"><a href="#cb1-7" tabindex="-1"></a><span class="co"># fun = MultiAssayExperiment::subsetByColData; extract_type = "list"</span></span>
+<span id="cb1-8"><a href="#cb1-8" tabindex="-1"></a>dataname <span class="ot">&lt;-</span> MultiAssayExperiment<span class="sc">::</span><span class="fu">subsetByColData</span>(dataname, dataname<span class="sc">$</span>col <span class="sc">==</span> <span class="st">"x"</span>)</span>
+<span id="cb1-9"><a href="#cb1-9" tabindex="-1"></a></span>
+<span id="cb1-10"><a href="#cb1-10" tabindex="-1"></a><span class="co"># teal_slice objects having `arg = "subset"` and `arg = "select"`</span></span>
+<span id="cb1-11"><a href="#cb1-11" tabindex="-1"></a>dataname <span class="ot">&lt;-</span> <span class="fu">subset</span>(dataname, <span class="at">subset =</span> row_col <span class="sc">==</span> <span class="st">"x"</span>, <span class="at">select =</span> col_col <span class="sc">==</span> <span class="st">"x"</span>)</span>
+<span id="cb1-12"><a href="#cb1-12" tabindex="-1"></a></span>
+<span id="cb1-13"><a href="#cb1-13" tabindex="-1"></a><span class="co"># dataname = dataname[[element]]</span></span>
+<span id="cb1-14"><a href="#cb1-14" tabindex="-1"></a>dataname[[element]] <span class="ot">&lt;-</span> <span class="fu">subset</span>(dataname[[element]], <span class="at">subset =</span> col <span class="sc">==</span> <span class="st">"x"</span>)</span></code></pre><p></p></div>
+<p>If no filters are applied, <code>NULL</code> is returned to avoid no-op calls such as <code>dataname &lt;- dataname</code>.</p><div class="section">
+<h4 id="usage-2">Usage<a class="anchor" aria-label="anchor" href="#usage-2"></a></h4>
+<p></p><div class="r"><div class="sourceCode"><pre><code><span><span class="va">FilterStates</span><span class="op">$</span><span class="fu">get_call</span><span class="op">(</span>sid <span class="op">=</span> <span class="st">""</span><span class="op">)</span></span></code></pre></div><p></p></div>
 </div>
 
 <div class="section">
-<h4 id="returns-3">Returns<a class="anchor" aria-label="anchor" href="#returns-3"></a></h4>
+<h4 id="arguments-2">Arguments<a class="anchor" aria-label="anchor" href="#arguments-2"></a></h4>
+<p></p><div class="arguments"><dl><dt><code>sid</code></dt>
+<dd><p>(<code>character</code>)<br>
+when specified then method returns code containing filter conditions of
+<code>FilterState</code> objects which <code>"sid"</code> attribute is different than this <code>sid</code> argument.</p></dd>
+
+
+</dl><p></p></div>
+</div>
+<div class="section">
+<h4 id="returns-2">Returns<a class="anchor" aria-label="anchor" href="#returns-2"></a></h4>
 <p><code>call</code> or <code>NULL</code></p>
 </div>
 
 </div><p></p><hr><a id="method-FilterStates-print"></a><div class="section">
 <h3 id="method-print-">Method <code><a href="https://rdrr.io/r/base/print.html" class="external-link">print()</a></code><a class="anchor" aria-label="anchor" href="#method-print-"></a></h3>
 <p>Prints this <code>FilterStates</code> object.</p><div class="section">
-<h4 id="usage-4">Usage<a class="anchor" aria-label="anchor" href="#usage-4"></a></h4>
+<h4 id="usage-3">Usage<a class="anchor" aria-label="anchor" href="#usage-3"></a></h4>
 <p></p><div class="r"><div class="sourceCode"><pre><code><span><span class="va">FilterStates</span><span class="op">$</span><span class="fu">print</span><span class="op">(</span><span class="va">...</span><span class="op">)</span></span></code></pre></div><p></p></div>
 </div>
 
 <div class="section">
-<h4 id="arguments-2">Arguments<a class="anchor" aria-label="anchor" href="#arguments-2"></a></h4>
-<p></p><div class="arguments"><dl><dt><code>...</code></dt>
-<dd><p>additional arguments to this method</p></dd>
-
-
-</dl><p></p></div>
-</div>
-
-</div><p></p><hr><a id="method-FilterStates-get_fun"></a><div class="section">
-<h3 id="method-get-fun-">Method <code>get_fun()</code><a class="anchor" aria-label="anchor" href="#method-get-fun-"></a></h3>
-<p>Gets the name of the function used to filter the data in this <code>FilterStates</code>.</p>
-<p>Get name of function used to create the <em>subset expression</em>.
-Defaults to "subset" but can be overridden by child class method.</p><div class="section">
-<h4 id="usage-5">Usage<a class="anchor" aria-label="anchor" href="#usage-5"></a></h4>
-<p></p><div class="r"><div class="sourceCode"><pre><code><span><span class="va">FilterStates</span><span class="op">$</span><span class="fu">get_fun</span><span class="op">(</span><span class="op">)</span></span></code></pre></div><p></p></div>
-</div>
-
-<div class="section">
-<h4 id="returns-4">Returns<a class="anchor" aria-label="anchor" href="#returns-4"></a></h4>
-<p><code>character(1)</code> the name of the function</p>
-</div>
-
-</div><p></p><hr><a id="method-FilterStates-state_list_get"></a><div class="section">
-<h3 id="method-state-list-get-">Method <code>state_list_get()</code><a class="anchor" aria-label="anchor" href="#method-state-list-get-"></a></h3>
-<p>Returns a list of <code>FilterState</code> objects stored in this <code>FilterStates</code>.</p><div class="section">
-<h4 id="usage-6">Usage<a class="anchor" aria-label="anchor" href="#usage-6"></a></h4>
-<p></p><div class="r"><div class="sourceCode"><pre><code><span><span class="va">FilterStates</span><span class="op">$</span><span class="fu">state_list_get</span><span class="op">(</span><span class="va">state_list_index</span>, state_id <span class="op">=</span> <span class="cn">NULL</span><span class="op">)</span></span></code></pre></div><p></p></div>
-</div>
-
-<div class="section">
 <h4 id="arguments-3">Arguments<a class="anchor" aria-label="anchor" href="#arguments-3"></a></h4>
-<p></p><div class="arguments"><dl><dt><code>state_list_index</code></dt>
-<dd><p>(<code>character(1)</code>, <code>integer(1)</code>)<br>
-index on the list in <code>private$state_list</code> where filter states are kept</p></dd>
-
-
-<dt><code>state_id</code></dt>
-<dd><p>(<code>character(1)</code>)<br>
-name of element in a filter state (which is a <code>reactiveVal</code> containing a list)</p></dd>
+<p></p><div class="arguments"><dl><dt><code>...</code></dt>
+<dd><p>additional arguments</p></dd>
 
 
 </dl><p></p></div>
-</div>
-<div class="section">
-<h4 id="returns-5">Returns<a class="anchor" aria-label="anchor" href="#returns-5"></a></h4>
-<p><code>list</code> of <code>FilterState</code> objects</p>
-</div>
-
-</div><p></p><hr><a id="method-FilterStates-state_list_push"></a><div class="section">
-<h3 id="method-state-list-push-">Method <code>state_list_push()</code><a class="anchor" aria-label="anchor" href="#method-state-list-push-"></a></h3>
-<p>Adds a new <code>FilterState</code> object to this <code>FilterStates</code>.<br>
-Raises error if the length of <code>x</code> does not match the length of <code>state_id</code>.</p><div class="section">
-<h4 id="usage-7">Usage<a class="anchor" aria-label="anchor" href="#usage-7"></a></h4>
-<p></p><div class="r"><div class="sourceCode"><pre><code><span><span class="va">FilterStates</span><span class="op">$</span><span class="fu">state_list_push</span><span class="op">(</span><span class="va">x</span>, <span class="va">state_list_index</span>, <span class="va">state_id</span><span class="op">)</span></span></code></pre></div><p></p></div>
-</div>
-
-<div class="section">
-<h4 id="arguments-4">Arguments<a class="anchor" aria-label="anchor" href="#arguments-4"></a></h4>
-<p></p><div class="arguments"><dl><dt><code>x</code></dt>
-<dd><p>(<code>FilterState</code>)<br>
-object to be added to filter state list</p></dd>
-
-
-<dt><code>state_list_index</code></dt>
-<dd><p>(<code>character(1)</code>, <code>integer(1)</code>)<br>
-index on the list in <code>private$state_list</code> where filter states are kept</p></dd>
-
-
-<dt><code>state_id</code></dt>
-<dd><p>(<code>character(1)</code>)<br>
-name of element in a filter state (which is a <code>reactiveVal</code> containing a list)</p></dd>
-
-
-</dl><p></p></div>
-</div>
-<div class="section">
-<h4 id="returns-6">Returns<a class="anchor" aria-label="anchor" href="#returns-6"></a></h4>
-<p>NULL</p>
-</div>
-
-</div><p></p><hr><a id="method-FilterStates-state_list_remove"></a><div class="section">
-<h3 id="method-state-list-remove-">Method <code>state_list_remove()</code><a class="anchor" aria-label="anchor" href="#method-state-list-remove-"></a></h3>
-<p>Removes a single filter state with all associated shiny elements:<br></p><ul><li><p>specified <code>FilterState</code> from <code>private$state_list</code></p></li>
-<li><p>UI card created for this filter</p></li>
-<li><p>observers tracking the selection and remove button</p></li>
-</ul><div class="section">
-<h4 id="usage-8">Usage<a class="anchor" aria-label="anchor" href="#usage-8"></a></h4>
-<p></p><div class="r"><div class="sourceCode"><pre><code><span><span class="va">FilterStates</span><span class="op">$</span><span class="fu">state_list_remove</span><span class="op">(</span><span class="va">state_list_index</span>, <span class="va">state_id</span><span class="op">)</span></span></code></pre></div><p></p></div>
-</div>
-
-<div class="section">
-<h4 id="arguments-5">Arguments<a class="anchor" aria-label="anchor" href="#arguments-5"></a></h4>
-<p></p><div class="arguments"><dl><dt><code>state_list_index</code></dt>
-<dd><p>(<code>character(1)</code>, <code>integer(1)</code>)<br>
-index on the list in <code>private$state_list</code> where filter states are kept</p></dd>
-
-
-<dt><code>state_id</code></dt>
-<dd><p>(<code>character(1)</code>)<br>
-name of element in a filter state (which is a <code>reactiveVal</code> containing a list)</p></dd>
-
-
-</dl><p></p></div>
-</div>
-<div class="section">
-<h4 id="returns-7">Returns<a class="anchor" aria-label="anchor" href="#returns-7"></a></h4>
-<p>NULL</p>
-</div>
-
-</div><p></p><hr><a id="method-FilterStates-state_list_empty"></a><div class="section">
-<h3 id="method-state-list-empty-">Method <code>state_list_empty()</code><a class="anchor" aria-label="anchor" href="#method-state-list-empty-"></a></h3>
-<p>Remove all <code>FilterState</code> objects from this <code>FilterStates</code> object.</p><div class="section">
-<h4 id="usage-9">Usage<a class="anchor" aria-label="anchor" href="#usage-9"></a></h4>
-<p></p><div class="r"><div class="sourceCode"><pre><code><span><span class="va">FilterStates</span><span class="op">$</span><span class="fu">state_list_empty</span><span class="op">(</span><span class="op">)</span></span></code></pre></div><p></p></div>
-</div>
-
-<div class="section">
-<h4 id="returns-8">Returns<a class="anchor" aria-label="anchor" href="#returns-8"></a></h4>
-<p>NULL</p>
-</div>
-
-</div><p></p><hr><a id="method-FilterStates-get_filter_count"></a><div class="section">
-<h3 id="method-get-filter-count-">Method <code>get_filter_count()</code><a class="anchor" aria-label="anchor" href="#method-get-filter-count-"></a></h3>
-<p>Gets the number of active <code>FilterState</code> objects in this <code>FilterStates</code> object.</p><div class="section">
-<h4 id="usage-10">Usage<a class="anchor" aria-label="anchor" href="#usage-10"></a></h4>
-<p></p><div class="r"><div class="sourceCode"><pre><code><span><span class="va">FilterStates</span><span class="op">$</span><span class="fu">get_filter_count</span><span class="op">(</span><span class="op">)</span></span></code></pre></div><p></p></div>
-</div>
-
-<div class="section">
-<h4 id="returns-9">Returns<a class="anchor" aria-label="anchor" href="#returns-9"></a></h4>
-<p><code>integer(1)</code></p>
 </div>
 
 </div><p></p><hr><a id="method-FilterStates-remove_filter_state"></a><div class="section">
 <h3 id="method-remove-filter-state-">Method <code><a href="filter_state_api.html">remove_filter_state()</a></code><a class="anchor" aria-label="anchor" href="#method-remove-filter-state-"></a></h3>
-<p>Remove a single <code>FilterState</code> from <code>state_list</code>.</p><div class="section">
-<h4 id="usage-11">Usage<a class="anchor" aria-label="anchor" href="#usage-11"></a></h4>
-<p></p><div class="r"><div class="sourceCode"><pre><code><span><span class="va">FilterStates</span><span class="op">$</span><span class="fu">remove_filter_state</span><span class="op">(</span><span class="va">state_id</span><span class="op">)</span></span></code></pre></div><p></p></div>
+<p>Remove one or more <code>FilterState</code>s from the <code>state_list</code> along with their UI elements.</p><div class="section">
+<h4 id="usage-4">Usage<a class="anchor" aria-label="anchor" href="#usage-4"></a></h4>
+<p></p><div class="r"><div class="sourceCode"><pre><code><span><span class="va">FilterStates</span><span class="op">$</span><span class="fu">remove_filter_state</span><span class="op">(</span><span class="va">state</span><span class="op">)</span></span></code></pre></div><p></p></div>
 </div>
 
 <div class="section">
-<h4 id="arguments-6">Arguments<a class="anchor" aria-label="anchor" href="#arguments-6"></a></h4>
-<p></p><div class="arguments"><dl><dt><code>state_id</code></dt>
-<dd><p>(<code>character</code>)<br>
-name of variable for which to remove <code>FilterState</code></p></dd>
+<h4 id="arguments-4">Arguments<a class="anchor" aria-label="anchor" href="#arguments-4"></a></h4>
+<p></p><div class="arguments"><dl><dt><code>state</code></dt>
+<dd><p>(<code>teal_slices</code>)<br>
+specifying <code>FilterState</code> objects to remove;
+<code>teal_slice</code>s may contain only <code>dataname</code> and <code>varname</code>, other elements are ignored</p></dd>
 
 
 </dl><p></p></div>
 </div>
 <div class="section">
-<h4 id="returns-10">Returns<a class="anchor" aria-label="anchor" href="#returns-10"></a></h4>
-<p><code>NULL</code></p>
-</div>
-
-</div><p></p><hr><a id="method-FilterStates-ui"></a><div class="section">
-<h3 id="method-ui-">Method <code>ui()</code><a class="anchor" aria-label="anchor" href="#method-ui-"></a></h3>
-<p>Shiny module UI</p>
-<p>Shiny UI element that stores <code>FilterState</code> UI elements.
-Populated with elements created with <code>renderUI</code> in the module server.</p><div class="section">
-<h4 id="usage-12">Usage<a class="anchor" aria-label="anchor" href="#usage-12"></a></h4>
-<p></p><div class="r"><div class="sourceCode"><pre><code><span><span class="va">FilterStates</span><span class="op">$</span><span class="fu">ui</span><span class="op">(</span><span class="va">id</span><span class="op">)</span></span></code></pre></div><p></p></div>
-</div>
-
-<div class="section">
-<h4 id="arguments-7">Arguments<a class="anchor" aria-label="anchor" href="#arguments-7"></a></h4>
-<p></p><div class="arguments"><dl><dt><code>id</code></dt>
-<dd><p>(<code>character(1)</code>)<br>
-shiny element (module instance) id</p></dd>
-
-
-</dl><p></p></div>
-</div>
-<div class="section">
-<h4 id="returns-11">Returns<a class="anchor" aria-label="anchor" href="#returns-11"></a></h4>
-<p><code>shiny.tag</code></p>
+<h4 id="returns-3">Returns<a class="anchor" aria-label="anchor" href="#returns-3"></a></h4>
+<p><code>NULL</code> invisibly</p>
 </div>
 
 </div><p></p><hr><a id="method-FilterStates-get_filter_state"></a><div class="section">
@@ -399,107 +278,153 @@ shiny element (module instance) id</p></dd>
 <p>Gets reactive values from active <code>FilterState</code> objects.</p>
 <p>Get active filter state from <code>FilterState</code> objects stored in <code>state_list</code>(s).
 The output is a list compatible with input to <code>self$set_filter_state</code>.</p><div class="section">
-<h4 id="usage-13">Usage<a class="anchor" aria-label="anchor" href="#usage-13"></a></h4>
+<h4 id="usage-5">Usage<a class="anchor" aria-label="anchor" href="#usage-5"></a></h4>
 <p></p><div class="r"><div class="sourceCode"><pre><code><span><span class="va">FilterStates</span><span class="op">$</span><span class="fu">get_filter_state</span><span class="op">(</span><span class="op">)</span></span></code></pre></div><p></p></div>
 </div>
 
 <div class="section">
-<h4 id="returns-12">Returns<a class="anchor" aria-label="anchor" href="#returns-12"></a></h4>
+<h4 id="returns-4">Returns<a class="anchor" aria-label="anchor" href="#returns-4"></a></h4>
 <p><code>list</code> containing <code>list</code> per <code>FilterState</code> in the <code>state_list</code></p>
 </div>
 
 </div><p></p><hr><a id="method-FilterStates-set_filter_state"></a><div class="section">
 <h3 id="method-set-filter-state-">Method <code><a href="filter_state_api.html">set_filter_state()</a></code><a class="anchor" aria-label="anchor" href="#method-set-filter-state-"></a></h3>
 <p>Sets active <code>FilterState</code> objects.</p><div class="section">
-<h4 id="usage-14">Usage<a class="anchor" aria-label="anchor" href="#usage-14"></a></h4>
-<p></p><div class="r"><div class="sourceCode"><pre><code><span><span class="va">FilterStates</span><span class="op">$</span><span class="fu">set_filter_state</span><span class="op">(</span><span class="va">data</span>, <span class="va">state</span>, <span class="va">filtered_dataset</span><span class="op">)</span></span></code></pre></div><p></p></div>
+<h4 id="usage-6">Usage<a class="anchor" aria-label="anchor" href="#usage-6"></a></h4>
+<p></p><div class="r"><div class="sourceCode"><pre><code><span><span class="va">FilterStates</span><span class="op">$</span><span class="fu">set_filter_state</span><span class="op">(</span><span class="va">state</span><span class="op">)</span></span></code></pre></div><p></p></div>
 </div>
 
 <div class="section">
-<h4 id="arguments-8">Arguments<a class="anchor" aria-label="anchor" href="#arguments-8"></a></h4>
-<p></p><div class="arguments"><dl><dt><code>data</code></dt>
-<dd><p>(<code>data.frame</code>)<br>
-data object for which to define a subset</p></dd>
-
-
-<dt><code>state</code></dt>
+<h4 id="arguments-5">Arguments<a class="anchor" aria-label="anchor" href="#arguments-5"></a></h4>
+<p></p><div class="arguments"><dl><dt><code>state</code></dt>
 <dd><p>(<code>named list</code>)<br>
-should contain values of initial selections in the <code>FilterState</code>;
-<code>list</code> names must correspond to column names in <code>data</code></p></dd>
+should contain values which are initial selection in the <code>FilterState</code>.
+Names of the <code>list</code> element should correspond to the name of the
+column in <code>data</code>.</p></dd>
 
 
-<dt><code>filtered_dataset</code></dt>
-<dd><p>data object for which to define a subset(?)</p></dd>
+<dt><code>data</code></dt>
+<dd><p>(<code>data.frame</code>)<br>
+data which are supposed to be filtered</p></dd>
 
 
 </dl><p></p></div>
 </div>
+<div class="section">
+<h4 id="returns-5">Returns<a class="anchor" aria-label="anchor" href="#returns-5"></a></h4>
+<p>function which throws an error</p>
+</div>
 
-</div><p></p><hr><a id="method-FilterStates-ui_add_filter_state"></a><div class="section">
-<h3 id="method-ui-add-filter-state-">Method <code>ui_add_filter_state()</code><a class="anchor" aria-label="anchor" href="#method-ui-add-filter-state-"></a></h3>
-<p>Shiny module UI that adds a filter variable.</p><div class="section">
-<h4 id="usage-15">Usage<a class="anchor" aria-label="anchor" href="#usage-15"></a></h4>
-<p></p><div class="r"><div class="sourceCode"><pre><code><span><span class="va">FilterStates</span><span class="op">$</span><span class="fu">ui_add_filter_state</span><span class="op">(</span><span class="va">id</span>, <span class="va">data</span><span class="op">)</span></span></code></pre></div><p></p></div>
+</div><p></p><hr><a id="method-FilterStates-clear_filter_states"></a><div class="section">
+<h3 id="method-clear-filter-states-">Method <code><a href="filter_state_api.html">clear_filter_states()</a></code><a class="anchor" aria-label="anchor" href="#method-clear-filter-states-"></a></h3>
+<p>Remove all <code>FilterState</code> objects from this <code>FilterStates</code> object.</p><div class="section">
+<h4 id="usage-7">Usage<a class="anchor" aria-label="anchor" href="#usage-7"></a></h4>
+<p></p><div class="r"><div class="sourceCode"><pre><code><span><span class="va">FilterStates</span><span class="op">$</span><span class="fu">clear_filter_states</span><span class="op">(</span><span class="op">)</span></span></code></pre></div><p></p></div>
+</div>
+
+<div class="section">
+<h4 id="returns-6">Returns<a class="anchor" aria-label="anchor" href="#returns-6"></a></h4>
+<p>NULL</p>
+</div>
+
+</div><p></p><hr><a id="method-FilterStates-ui_active"></a><div class="section">
+<h3 id="method-ui-active-">Method <code>ui_active()</code><a class="anchor" aria-label="anchor" href="#method-ui-active-"></a></h3>
+<p>Shiny module UI</p>
+<p>Shiny UI element that stores <code>FilterState</code> UI elements.
+Populated with elements created with <code>renderUI</code> in the module server.</p><div class="section">
+<h4 id="usage-8">Usage<a class="anchor" aria-label="anchor" href="#usage-8"></a></h4>
+<p></p><div class="r"><div class="sourceCode"><pre><code><span><span class="va">FilterStates</span><span class="op">$</span><span class="fu">ui_active</span><span class="op">(</span><span class="va">id</span><span class="op">)</span></span></code></pre></div><p></p></div>
+</div>
+
+<div class="section">
+<h4 id="arguments-6">Arguments<a class="anchor" aria-label="anchor" href="#arguments-6"></a></h4>
+<p></p><div class="arguments"><dl><dt><code>id</code></dt>
+<dd><p>(<code>character(1)</code>)<br>
+shiny element (module instance) id</p></dd>
+
+
+</dl><p></p></div>
+</div>
+<div class="section">
+<h4 id="returns-7">Returns<a class="anchor" aria-label="anchor" href="#returns-7"></a></h4>
+<p><code>shiny.tag</code></p>
+</div>
+
+</div><p></p><hr><a id="method-FilterStates-srv_active"></a><div class="section">
+<h3 id="method-srv-active-">Method <code>srv_active()</code><a class="anchor" aria-label="anchor" href="#method-srv-active-"></a></h3>
+<p>Shiny server module.</p><div class="section">
+<h4 id="usage-9">Usage<a class="anchor" aria-label="anchor" href="#usage-9"></a></h4>
+<p></p><div class="r"><div class="sourceCode"><pre><code><span><span class="va">FilterStates</span><span class="op">$</span><span class="fu">srv_active</span><span class="op">(</span><span class="va">id</span><span class="op">)</span></span></code></pre></div><p></p></div>
+</div>
+
+<div class="section">
+<h4 id="arguments-7">Arguments<a class="anchor" aria-label="anchor" href="#arguments-7"></a></h4>
+<p></p><div class="arguments"><dl><dt><code>id</code></dt>
+<dd><p>(<code>character(1)</code>)<br>
+shiny module instance id</p></dd>
+
+
+</dl><p></p></div>
+</div>
+<div class="section">
+<h4 id="returns-8">Returns<a class="anchor" aria-label="anchor" href="#returns-8"></a></h4>
+<p><code>moduleServer</code> function which returns <code>NULL</code></p>
+</div>
+
+</div><p></p><hr><a id="method-FilterStates-ui_add"></a><div class="section">
+<h3 id="method-ui-add-">Method <code>ui_add()</code><a class="anchor" aria-label="anchor" href="#method-ui-add-"></a></h3>
+<p>Shiny UI module to add filter variable.</p><div class="section">
+<h4 id="usage-10">Usage<a class="anchor" aria-label="anchor" href="#usage-10"></a></h4>
+<p></p><div class="r"><div class="sourceCode"><pre><code><span><span class="va">FilterStates</span><span class="op">$</span><span class="fu">ui_add</span><span class="op">(</span><span class="va">id</span><span class="op">)</span></span></code></pre></div><p></p></div>
+</div>
+
+<div class="section">
+<h4 id="arguments-8">Arguments<a class="anchor" aria-label="anchor" href="#arguments-8"></a></h4>
+<p></p><div class="arguments"><dl><dt><code>id</code></dt>
+<dd><p>(<code>character(1)</code>)<br>
+shiny element (module instance) id</p></dd>
+
+
+</dl><p></p></div>
+</div>
+<div class="section">
+<h4 id="returns-9">Returns<a class="anchor" aria-label="anchor" href="#returns-9"></a></h4>
+<p><code>shiny.tag</code></p>
+</div>
+
+</div><p></p><hr><a id="method-FilterStates-srv_add"></a><div class="section">
+<h3 id="method-srv-add-">Method <code>srv_add()</code><a class="anchor" aria-label="anchor" href="#method-srv-add-"></a></h3>
+<p>Shiny server module to add filter variable.</p>
+<p>This module controls available choices to select as a filter variable.
+Once selected, a variable is removed from available choices.
+Removing a filter variable adds it back to available choices.</p><div class="section">
+<h4 id="usage-11">Usage<a class="anchor" aria-label="anchor" href="#usage-11"></a></h4>
+<p></p><div class="r"><div class="sourceCode"><pre><code><span><span class="va">FilterStates</span><span class="op">$</span><span class="fu">srv_add</span><span class="op">(</span><span class="va">id</span><span class="op">)</span></span></code></pre></div><p></p></div>
 </div>
 
 <div class="section">
 <h4 id="arguments-9">Arguments<a class="anchor" aria-label="anchor" href="#arguments-9"></a></h4>
 <p></p><div class="arguments"><dl><dt><code>id</code></dt>
 <dd><p>(<code>character(1)</code>)<br>
-shiny element (module instance) id</p></dd>
-
-
-<dt><code>data</code></dt>
-<dd><p>(<code>data.frame</code>, <code>MultiAssayExperiment</code>, <code>SummarizedExperiment</code>, <code>matrix</code>)<br>
-data object for which to define a subset</p></dd>
+an ID string that corresponds with the ID used to call the module's UI function.</p></dd>
 
 
 </dl><p></p></div>
 </div>
 <div class="section">
-<h4 id="returns-13">Returns<a class="anchor" aria-label="anchor" href="#returns-13"></a></h4>
-<p><code>shiny.tag</code></p>
-</div>
-
-</div><p></p><hr><a id="method-FilterStates-srv_add_filter_state"></a><div class="section">
-<h3 id="method-srv-add-filter-state-">Method <code>srv_add_filter_state()</code><a class="anchor" aria-label="anchor" href="#method-srv-add-filter-state-"></a></h3>
-<p>Shiny module server that adds a filter variable.</p><div class="section">
-<h4 id="usage-16">Usage<a class="anchor" aria-label="anchor" href="#usage-16"></a></h4>
-<p></p><div class="r"><div class="sourceCode"><pre><code><span><span class="va">FilterStates</span><span class="op">$</span><span class="fu">srv_add_filter_state</span><span class="op">(</span><span class="va">id</span>, <span class="va">data</span>, <span class="va">...</span><span class="op">)</span></span></code></pre></div><p></p></div>
-</div>
-
-<div class="section">
-<h4 id="arguments-10">Arguments<a class="anchor" aria-label="anchor" href="#arguments-10"></a></h4>
-<p></p><div class="arguments"><dl><dt><code>id</code></dt>
-<dd><p>(<code>character(1)</code>)<br>
-shiny module instance id</p></dd>
-
-
-<dt><code>data</code></dt>
-<dd><p>(<code>data.frame</code>, <code>MultiAssayExperiment</code>, <code>SummarizedExperiment</code>, <code>matrix</code>)<br>
-data object for which to define a subset</p></dd>
-
-
-<dt><code>...</code></dt>
-<dd><p>ignored</p></dd>
-
-
-</dl><p></p></div>
-</div>
-<div class="section">
-<h4 id="returns-14">Returns<a class="anchor" aria-label="anchor" href="#returns-14"></a></h4>
+<h4 id="returns-10">Returns<a class="anchor" aria-label="anchor" href="#returns-10"></a></h4>
 <p><code>moduleServer</code> function which returns <code>NULL</code></p>
 </div>
 
 </div><p></p><hr><a id="method-FilterStates-clone"></a><div class="section">
 <h3 id="method-clone-">Method <code>clone()</code><a class="anchor" aria-label="anchor" href="#method-clone-"></a></h3>
 <p>The objects of this class are cloneable with this method.</p><div class="section">
-<h4 id="usage-17">Usage<a class="anchor" aria-label="anchor" href="#usage-17"></a></h4>
+<h4 id="usage-12">Usage<a class="anchor" aria-label="anchor" href="#usage-12"></a></h4>
 <p></p><div class="r"><div class="sourceCode"><pre><code><span><span class="va">FilterStates</span><span class="op">$</span><span class="fu">clone</span><span class="op">(</span>deep <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span></code></pre></div><p></p></div>
 </div>
 
 <div class="section">
-<h4 id="arguments-11">Arguments<a class="anchor" aria-label="anchor" href="#arguments-11"></a></h4>
+<h4 id="arguments-10">Arguments<a class="anchor" aria-label="anchor" href="#arguments-10"></a></h4>
 <p></p><div class="arguments"><dl><dt><code>deep</code></dt>
 <dd><p>Whether to make a deep clone.</p></dd>
 
@@ -511,36 +436,6 @@ data object for which to define a subset</p></dd>
 
     </div>
 
-    <div class="section level2">
-    <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://shiny.rstudio.com/" class="external-link">shiny</a></span><span class="op">)</span></span></span>
-<span class="r-in"><span><span class="va">filter_states</span> <span class="op">&lt;-</span> <span class="fu">teal.slice</span><span class="fu">:::</span><span class="va"><a href="DFFilterStates.html">DFFilterStates</a></span><span class="op">$</span><span class="fu">new</span><span class="op">(</span></span></span>
-<span class="r-in"><span>  dataname <span class="op">=</span> <span class="st">"data"</span>,</span></span>
-<span class="r-in"><span>  varlabels <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span>x <span class="op">=</span> <span class="st">"x variable"</span>, SEX <span class="op">=</span> <span class="st">"Sex"</span><span class="op">)</span>,</span></span>
-<span class="r-in"><span>  datalabel <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/character.html" class="external-link">character</a></span><span class="op">(</span><span class="fl">0</span><span class="op">)</span>,</span></span>
-<span class="r-in"><span>  keys <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/character.html" class="external-link">character</a></span><span class="op">(</span><span class="fl">0</span><span class="op">)</span></span></span>
-<span class="r-in"><span><span class="op">)</span></span></span>
-<span class="r-in"><span><span class="va">filter_state</span> <span class="op">&lt;-</span> <span class="fu">teal.slice</span><span class="fu">:::</span><span class="va"><a href="RangeFilterState.html">RangeFilterState</a></span><span class="op">$</span><span class="fu">new</span><span class="op">(</span></span></span>
-<span class="r-in"><span>  <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="cn">NA</span>, <span class="cn">Inf</span>, <span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq</a></span><span class="op">(</span><span class="fl">1</span><span class="op">:</span><span class="fl">10</span><span class="op">)</span><span class="op">)</span>,</span></span>
-<span class="r-in"><span>  varname <span class="op">=</span> <span class="st">"x"</span>,</span></span>
-<span class="r-in"><span>  varlabel <span class="op">=</span> <span class="st">"x variable"</span>,</span></span>
-<span class="r-in"><span>  dataname <span class="op">=</span> <span class="st">"data"</span>,</span></span>
-<span class="r-in"><span>  extract_type <span class="op">=</span> <span class="st">"list"</span></span></span>
-<span class="r-in"><span><span class="op">)</span></span></span>
-<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/pkg/shiny/man/isolate.html" class="external-link">isolate</a></span><span class="op">(</span><span class="va">filter_state</span><span class="op">$</span><span class="fu">set_selected</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">3L</span>, <span class="fl">8L</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span></span>
-<span class="r-in"><span></span></span>
-<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/pkg/shiny/man/isolate.html" class="external-link">isolate</a></span><span class="op">(</span></span></span>
-<span class="r-in"><span>  <span class="va">filter_states</span><span class="op">$</span><span class="fu">state_list_push</span><span class="op">(</span></span></span>
-<span class="r-in"><span>    x <span class="op">=</span> <span class="va">filter_state</span>,</span></span>
-<span class="r-in"><span>    state_list_index <span class="op">=</span> <span class="fl">1L</span>,</span></span>
-<span class="r-in"><span>    state_id <span class="op">=</span> <span class="st">"x"</span></span></span>
-<span class="r-in"><span>  <span class="op">)</span></span></span>
-<span class="r-in"><span><span class="op">)</span></span></span>
-<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/pkg/shiny/man/isolate.html" class="external-link">isolate</a></span><span class="op">(</span><span class="va">filter_states</span><span class="op">$</span><span class="fu">get_call</span><span class="op">(</span><span class="op">)</span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> data &lt;- dplyr::filter(data, data$x &gt;= 3 &amp; data$x &lt;= 8)</span>
-<span class="r-in"><span></span></span>
-</code></pre></div>
-    </div>
   </main><aside class="col-md-3"><nav id="toc"><h2>On this page</h2>
     </nav></aside></div>
 

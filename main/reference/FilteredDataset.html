@@ -18,7 +18,7 @@ components of the dataset."><!-- mathjax --><script src="https://cdnjs.cloudflar
     
     <a class="navbar-brand me-2" href="../index.html">teal.slice</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.3.0.9004</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.3.0.9005</small>
 
     <div style="width: 140px; margin-left: 0.5rem;"> <small class="nav-text text-muted me-auto">part of</small> <img src="https://github.com/insightsengineering/hex-stickers/blob/main/PNG/nest.png?raw=true" alt="NEST" style="height: 30px;"><a href="https://pharmaverse.org/" class="external-link"><img src="https://github.com/insightsengineering/hex-stickers/blob/main/PNG/pharmaverse.png?raw=true" alt="pharmaverse" style="height: 28px;"></a> </div>
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -35,21 +35,13 @@ components of the dataset."><!-- mathjax --><script src="https://cdnjs.cloudflar
 <li class="nav-item dropdown">
   <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown" role="button" aria-expanded="false" aria-haspopup="true" id="dropdown-articles">Articles</a>
   <div class="dropdown-menu" aria-labelledby="dropdown-articles">
-    <a class="dropdown-item" href="../articles/filter-panel.html">Filter panel for NEST developers</a>
+    <a class="dropdown-item" href="../articles/filter-panel-for-developers.html">Filter panel for developers</a>
+    <a class="dropdown-item" href="../articles/teal-slice-classes.html">teal.slice classes</a>
   </div>
 </li>
 <li class="nav-item">
   <a class="nav-link" href="../news/index.html">Changelog</a>
 </li>
-<!-- start dropdown for versions --> <li class="nav-item dropdown">
-        <a href="#" class="nav-link dropdown-toggle"
-          data-bs-toggle="dropdown" role="button"
-          aria-expanded="false" aria-haspopup="true"
-          id="dropdown-versions">Versions</a> <div class="dropdown-menu" aria-labelledby="dropdown-versions"> <a class="dropdown-item" data-toggle="tooltip" title="" href="https://insightsengineering.github.io/teal.slice/main">main</a>
-<a class="dropdown-item" data-toggle="tooltip" title="" href="https://insightsengineering.github.io/teal.slice/latest-tag">latest-tag</a>
-<a class="dropdown-item" data-toggle="tooltip" title="" href="https://insightsengineering.github.io/teal.slice/v0.3.0">v0.3.0</a>
-<a class="dropdown-item" data-toggle="tooltip" title="" href="https://insightsengineering.github.io/teal.slice/v0.2.0">v0.2.0</a> </div></li>
-<!-- end dropdown for versions -->
 <li class="nav-item dropdown">
   <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown" role="button" aria-expanded="false" aria-haspopup="true" id="dropdown-reports">Reports</a>
   <div class="dropdown-menu" aria-labelledby="dropdown-reports">
@@ -94,26 +86,23 @@ components of the dataset.</p>
 <h3 id="public-methods">Public methods<a class="anchor" aria-label="anchor" href="#public-methods"></a></h3>
 
 <ul><li><p><a href="#method-FilteredDataset-new"><code>FilteredDataset$new()</code></a></p></li>
-<li><p><a href="#method-FilteredDataset-get_formatted_filter_state"><code>FilteredDataset$get_formatted_filter_state()</code></a></p></li>
-<li><p><a href="#method-FilteredDataset-state_lists_empty"><code>FilteredDataset$state_lists_empty()</code></a></p></li>
+<li><p><a href="#method-FilteredDataset-format"><code>FilteredDataset$format()</code></a></p></li>
+<li><p><a href="#method-FilteredDataset-print"><code>FilteredDataset$print()</code></a></p></li>
+<li><p><a href="#method-FilteredDataset-clear_filter_states"><code>FilteredDataset$clear_filter_states()</code></a></p></li>
 <li><p><a href="#method-FilteredDataset-get_call"><code>FilteredDataset$get_call()</code></a></p></li>
 <li><p><a href="#method-FilteredDataset-get_filter_state"><code>FilteredDataset$get_filter_state()</code></a></p></li>
-<li><p><a href="#method-FilteredDataset-get_filter_states"><code>FilteredDataset$get_filter_states()</code></a></p></li>
+<li><p><a href="#method-FilteredDataset-set_filter_state"><code>FilteredDataset$set_filter_state()</code></a></p></li>
 <li><p><a href="#method-FilteredDataset-get_filter_count"><code>FilteredDataset$get_filter_count()</code></a></p></li>
 <li><p><a href="#method-FilteredDataset-get_dataname"><code>FilteredDataset$get_dataname()</code></a></p></li>
 <li><p><a href="#method-FilteredDataset-get_dataset"><code>FilteredDataset$get_dataset()</code></a></p></li>
 <li><p><a href="#method-FilteredDataset-get_metadata"><code>FilteredDataset$get_metadata()</code></a></p></li>
-<li><p><a href="#method-FilteredDataset-get_filter_overview_info"><code>FilteredDataset$get_filter_overview_info()</code></a></p></li>
+<li><p><a href="#method-FilteredDataset-get_filter_overview"><code>FilteredDataset$get_filter_overview()</code></a></p></li>
 <li><p><a href="#method-FilteredDataset-get_keys"><code>FilteredDataset$get_keys()</code></a></p></li>
-<li><p><a href="#method-FilteredDataset-get_varlabels"><code>FilteredDataset$get_varlabels()</code></a></p></li>
 <li><p><a href="#method-FilteredDataset-get_dataset_label"><code>FilteredDataset$get_dataset_label()</code></a></p></li>
-<li><p><a href="#method-FilteredDataset-get_varnames"><code>FilteredDataset$get_varnames()</code></a></p></li>
-<li><p><a href="#method-FilteredDataset-get_filterable_varnames"><code>FilteredDataset$get_filterable_varnames()</code></a></p></li>
-<li><p><a href="#method-FilteredDataset-set_filterable_varnames"><code>FilteredDataset$set_filterable_varnames()</code></a></p></li>
-<li><p><a href="#method-FilteredDataset-ui"><code>FilteredDataset$ui()</code></a></p></li>
-<li><p><a href="#method-FilteredDataset-server"><code>FilteredDataset$server()</code></a></p></li>
-<li><p><a href="#method-FilteredDataset-ui_add_filter_state"><code>FilteredDataset$ui_add_filter_state()</code></a></p></li>
-<li><p><a href="#method-FilteredDataset-srv_add_filter_state"><code>FilteredDataset$srv_add_filter_state()</code></a></p></li>
+<li><p><a href="#method-FilteredDataset-ui_active"><code>FilteredDataset$ui_active()</code></a></p></li>
+<li><p><a href="#method-FilteredDataset-srv_active"><code>FilteredDataset$srv_active()</code></a></p></li>
+<li><p><a href="#method-FilteredDataset-ui_add"><code>FilteredDataset$ui_add()</code></a></p></li>
+<li><p><a href="#method-FilteredDataset-srv_add"><code>FilteredDataset$srv_add()</code></a></p></li>
 <li><p><a href="#method-FilteredDataset-clone"><code>FilteredDataset$clone()</code></a></p></li>
 </ul></div><p></p><hr><a id="method-FilteredDataset-new"></a><div class="section">
 <h3 id="method-new-">Method <code><a href="https://rdrr.io/r/methods/new.html" class="external-link">new()</a></code><a class="anchor" aria-label="anchor" href="#method-new-"></a></h3>
@@ -159,24 +148,51 @@ should be atomic and length one.</p></dd>
 </dl><p></p></div>
 </div>
 
-</div><p></p><hr><a id="method-FilteredDataset-get_formatted_filter_state"></a><div class="section">
-<h3 id="method-get-formatted-filter-state-">Method <code>get_formatted_filter_state()</code><a class="anchor" aria-label="anchor" href="#method-get-formatted-filter-state-"></a></h3>
-<p>Returns a string representation of the filter state in this <code>FilteredDataset</code>.</p><div class="section">
+</div><p></p><hr><a id="method-FilteredDataset-format"></a><div class="section">
+<h3 id="method-format-">Method <code><a href="https://rdrr.io/r/base/format.html" class="external-link">format()</a></code><a class="anchor" aria-label="anchor" href="#method-format-"></a></h3>
+<p>Returns a formatted string representing this <code>FilteredDataset</code> object.</p><div class="section">
 <h4 id="usage-1">Usage<a class="anchor" aria-label="anchor" href="#usage-1"></a></h4>
-<p></p><div class="r"><div class="sourceCode"><pre><code><span><span class="va">FilteredDataset</span><span class="op">$</span><span class="fu">get_formatted_filter_state</span><span class="op">(</span><span class="op">)</span></span></code></pre></div><p></p></div>
+<p></p><div class="r"><div class="sourceCode"><pre><code><span><span class="va">FilteredDataset</span><span class="op">$</span><span class="fu">format</span><span class="op">(</span>show_all <span class="op">=</span> <span class="cn">FALSE</span>, trim_lines <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></code></pre></div><p></p></div>
 </div>
 
 <div class="section">
+<h4 id="arguments-1">Arguments<a class="anchor" aria-label="anchor" href="#arguments-1"></a></h4>
+<p></p><div class="arguments"><dl><dt><code>show_all</code></dt>
+<dd><p><code>logical(1)</code> passed to <code>format.teal_slice</code></p></dd>
+
+
+<dt><code>trim_lines</code></dt>
+<dd><p><code>logical(1)</code> passed to <code>format.teal_slice</code></p></dd>
+
+
+</dl><p></p></div>
+</div>
+<div class="section">
 <h4 id="returns">Returns<a class="anchor" aria-label="anchor" href="#returns"></a></h4>
-<p><code>character(1)</code> the formatted string representing the filter state or
-<code>NULL</code> if no filter state is present.</p>
+<p><code>character(1)</code> the formatted string</p>
 </div>
 
-</div><p></p><hr><a id="method-FilteredDataset-state_lists_empty"></a><div class="section">
-<h3 id="method-state-lists-empty-">Method <code>state_lists_empty()</code><a class="anchor" aria-label="anchor" href="#method-state-lists-empty-"></a></h3>
-<p>Removes all active filter items applied to this dataset</p><div class="section">
+</div><p></p><hr><a id="method-FilteredDataset-print"></a><div class="section">
+<h3 id="method-print-">Method <code><a href="https://rdrr.io/r/base/print.html" class="external-link">print()</a></code><a class="anchor" aria-label="anchor" href="#method-print-"></a></h3>
+<p>Prints this <code>FilteredDataset</code> object.</p><div class="section">
 <h4 id="usage-2">Usage<a class="anchor" aria-label="anchor" href="#usage-2"></a></h4>
-<p></p><div class="r"><div class="sourceCode"><pre><code><span><span class="va">FilteredDataset</span><span class="op">$</span><span class="fu">state_lists_empty</span><span class="op">(</span><span class="op">)</span></span></code></pre></div><p></p></div>
+<p></p><div class="r"><div class="sourceCode"><pre><code><span><span class="va">FilteredDataset</span><span class="op">$</span><span class="fu">print</span><span class="op">(</span><span class="va">...</span><span class="op">)</span></span></code></pre></div><p></p></div>
+</div>
+
+<div class="section">
+<h4 id="arguments-2">Arguments<a class="anchor" aria-label="anchor" href="#arguments-2"></a></h4>
+<p></p><div class="arguments"><dl><dt><code>...</code></dt>
+<dd><p>additional arguments</p></dd>
+
+
+</dl><p></p></div>
+</div>
+
+</div><p></p><hr><a id="method-FilteredDataset-clear_filter_states"></a><div class="section">
+<h3 id="method-clear-filter-states-">Method <code><a href="filter_state_api.html">clear_filter_states()</a></code><a class="anchor" aria-label="anchor" href="#method-clear-filter-states-"></a></h3>
+<p>Removes all active filter items applied to this dataset</p><div class="section">
+<h4 id="usage-3">Usage<a class="anchor" aria-label="anchor" href="#usage-3"></a></h4>
+<p></p><div class="r"><div class="sourceCode"><pre><code><span><span class="va">FilteredDataset</span><span class="op">$</span><span class="fu">clear_filter_states</span><span class="op">(</span><span class="op">)</span></span></code></pre></div><p></p></div>
 </div>
 
 <div class="section">
@@ -190,57 +206,61 @@ should be atomic and length one.</p></dd>
 <p>This functions returns filter calls equivalent to selected items
 within each of <code>filter_states</code>. Configuration of the calls is constant and
 depends on <code>filter_states</code> type and order which are set during initialization.</p><div class="section">
-<h4 id="usage-3">Usage<a class="anchor" aria-label="anchor" href="#usage-3"></a></h4>
-<p></p><div class="r"><div class="sourceCode"><pre><code><span><span class="va">FilteredDataset</span><span class="op">$</span><span class="fu">get_call</span><span class="op">(</span><span class="op">)</span></span></code></pre></div><p></p></div>
+<h4 id="usage-4">Usage<a class="anchor" aria-label="anchor" href="#usage-4"></a></h4>
+<p></p><div class="r"><div class="sourceCode"><pre><code><span><span class="va">FilteredDataset</span><span class="op">$</span><span class="fu">get_call</span><span class="op">(</span>sid <span class="op">=</span> <span class="st">""</span><span class="op">)</span></span></code></pre></div><p></p></div>
 </div>
 
 <div class="section">
+<h4 id="arguments-3">Arguments<a class="anchor" aria-label="anchor" href="#arguments-3"></a></h4>
+<p></p><div class="arguments"><dl><dt><code>sid</code></dt>
+<dd><p>(<code>character</code>)<br>
+when specified then method returns code containing filter conditions of
+<code>FilterState</code> objects which <code>"sid"</code> attribute is different than this <code>sid</code> argument.</p></dd>
+
+
+</dl><p></p></div>
+</div>
+<div class="section">
 <h4 id="returns-2">Returns<a class="anchor" aria-label="anchor" href="#returns-2"></a></h4>
-<p>filter <code>call</code> or <code>list</code> of filter calls
-Gets the reactive values from the active <code>FilterState</code> objects.</p>
-<p>Get all active filters from this dataset in form of the nested list.
-The output list is a compatible input to <code>self$set_filter_state</code>.</p>
+<p>filter <code>call</code> or <code>list</code> of filter calls</p>
 </div>
 
 </div><p></p><hr><a id="method-FilteredDataset-get_filter_state"></a><div class="section">
 <h3 id="method-get-filter-state-">Method <code><a href="filter_state_api.html">get_filter_state()</a></code><a class="anchor" aria-label="anchor" href="#method-get-filter-state-"></a></h3>
-
-<div class="section">
-<h4 id="usage-4">Usage<a class="anchor" aria-label="anchor" href="#usage-4"></a></h4>
+<p>Gets states of all active <code>FilterState</code> objects</p><div class="section">
+<h4 id="usage-5">Usage<a class="anchor" aria-label="anchor" href="#usage-5"></a></h4>
 <p></p><div class="r"><div class="sourceCode"><pre><code><span><span class="va">FilteredDataset</span><span class="op">$</span><span class="fu">get_filter_state</span><span class="op">(</span><span class="op">)</span></span></code></pre></div><p></p></div>
 </div>
 
 <div class="section">
 <h4 id="returns-3">Returns<a class="anchor" aria-label="anchor" href="#returns-3"></a></h4>
-<p><code>list</code> with named elements corresponding to <code>FilterStates</code> objects
-with active filters.</p>
+<p>A <code>teal_slices</code> object.</p>
 </div>
 
-</div><p></p><hr><a id="method-FilteredDataset-get_filter_states"></a><div class="section">
-<h3 id="method-get-filter-states-">Method <code>get_filter_states()</code><a class="anchor" aria-label="anchor" href="#method-get-filter-states-"></a></h3>
-<p>Gets the active <code>FilterStates</code> objects.</p><div class="section">
-<h4 id="usage-5">Usage<a class="anchor" aria-label="anchor" href="#usage-5"></a></h4>
-<p></p><div class="r"><div class="sourceCode"><pre><code><span><span class="va">FilteredDataset</span><span class="op">$</span><span class="fu">get_filter_states</span><span class="op">(</span>id <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/character.html" class="external-link">character</a></span><span class="op">(</span><span class="fl">0</span><span class="op">)</span><span class="op">)</span></span></code></pre></div><p></p></div>
+</div><p></p><hr><a id="method-FilteredDataset-set_filter_state"></a><div class="section">
+<h3 id="method-set-filter-state-">Method <code><a href="filter_state_api.html">set_filter_state()</a></code><a class="anchor" aria-label="anchor" href="#method-set-filter-state-"></a></h3>
+<p>Set filter state</p><div class="section">
+<h4 id="usage-6">Usage<a class="anchor" aria-label="anchor" href="#usage-6"></a></h4>
+<p></p><div class="r"><div class="sourceCode"><pre><code><span><span class="va">FilteredDataset</span><span class="op">$</span><span class="fu">set_filter_state</span><span class="op">(</span><span class="va">state</span><span class="op">)</span></span></code></pre></div><p></p></div>
 </div>
 
 <div class="section">
-<h4 id="arguments-1">Arguments<a class="anchor" aria-label="anchor" href="#arguments-1"></a></h4>
-<p></p><div class="arguments"><dl><dt><code>id</code></dt>
-<dd><p>(<code>character(1)</code>, <code>character(0)</code>)<br>
-the id of the <code>private$filter_states</code> list element where <code>FilterStates</code> is kept.</p></dd>
+<h4 id="arguments-4">Arguments<a class="anchor" aria-label="anchor" href="#arguments-4"></a></h4>
+<p></p><div class="arguments"><dl><dt><code>state</code></dt>
+<dd><p>(<code>teal_slice</code>) object</p></dd>
 
 
 </dl><p></p></div>
 </div>
 <div class="section">
 <h4 id="returns-4">Returns<a class="anchor" aria-label="anchor" href="#returns-4"></a></h4>
-<p><code>FilterStates</code> or <code>list</code> of <code>FilterStates</code> objects.</p>
+<p><code>NULL</code> invisibly</p>
 </div>
 
 </div><p></p><hr><a id="method-FilteredDataset-get_filter_count"></a><div class="section">
 <h3 id="method-get-filter-count-">Method <code>get_filter_count()</code><a class="anchor" aria-label="anchor" href="#method-get-filter-count-"></a></h3>
 <p>Gets the number of active <code>FilterState</code> objects in all <code>FilterStates</code> in this <code>FilteredDataset</code>.</p><div class="section">
-<h4 id="usage-6">Usage<a class="anchor" aria-label="anchor" href="#usage-6"></a></h4>
+<h4 id="usage-7">Usage<a class="anchor" aria-label="anchor" href="#usage-7"></a></h4>
 <p></p><div class="r"><div class="sourceCode"><pre><code><span><span class="va">FilteredDataset</span><span class="op">$</span><span class="fu">get_filter_count</span><span class="op">(</span><span class="op">)</span></span></code></pre></div><p></p></div>
 </div>
 
@@ -250,10 +270,9 @@ the id of the <code>private$filter_states</code> list element where <code>Filter
 </div>
 
 </div><p></p><hr><a id="method-FilteredDataset-get_dataname"></a><div class="section">
-<h3 id="method-get-dataname-">Method <code><a href="https://rdrr.io/pkg/teal.data/man/get_dataname.html" class="external-link">get_dataname()</a></code><a class="anchor" aria-label="anchor" href="#method-get-dataname-"></a></h3>
-<p>Get name of the dataset</p>
-<p>Get name of the dataset</p><div class="section">
-<h4 id="usage-7">Usage<a class="anchor" aria-label="anchor" href="#usage-7"></a></h4>
+<h3 id="method-get-dataname-">Method <code>get_dataname()</code><a class="anchor" aria-label="anchor" href="#method-get-dataname-"></a></h3>
+<p>Gets the name of the dataset</p><div class="section">
+<h4 id="usage-8">Usage<a class="anchor" aria-label="anchor" href="#usage-8"></a></h4>
 <p></p><div class="r"><div class="sourceCode"><pre><code><span><span class="va">FilteredDataset</span><span class="op">$</span><span class="fu">get_dataname</span><span class="op">(</span><span class="op">)</span></span></code></pre></div><p></p></div>
 </div>
 
@@ -263,21 +282,30 @@ the id of the <code>private$filter_states</code> list element where <code>Filter
 </div>
 
 </div><p></p><hr><a id="method-FilteredDataset-get_dataset"></a><div class="section">
-<h3 id="method-get-dataset-">Method <code><a href="https://rdrr.io/pkg/teal.data/man/get_dataset.html" class="external-link">get_dataset()</a></code><a class="anchor" aria-label="anchor" href="#method-get-dataset-"></a></h3>
+<h3 id="method-get-dataset-">Method <code>get_dataset()</code><a class="anchor" aria-label="anchor" href="#method-get-dataset-"></a></h3>
 <p>Gets the dataset object in this <code>FilteredDataset</code></p><div class="section">
-<h4 id="usage-8">Usage<a class="anchor" aria-label="anchor" href="#usage-8"></a></h4>
-<p></p><div class="r"><div class="sourceCode"><pre><code><span><span class="va">FilteredDataset</span><span class="op">$</span><span class="fu">get_dataset</span><span class="op">(</span><span class="op">)</span></span></code></pre></div><p></p></div>
+<h4 id="usage-9">Usage<a class="anchor" aria-label="anchor" href="#usage-9"></a></h4>
+<p></p><div class="r"><div class="sourceCode"><pre><code><span><span class="va">FilteredDataset</span><span class="op">$</span><span class="fu">get_dataset</span><span class="op">(</span>filtered <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span></code></pre></div><p></p></div>
 </div>
 
 <div class="section">
+<h4 id="arguments-5">Arguments<a class="anchor" aria-label="anchor" href="#arguments-5"></a></h4>
+<p></p><div class="arguments"><dl><dt><code>filtered</code></dt>
+<dd><p>(<code>logical(1)</code>)<br></p></dd>
+
+
+</dl><p></p></div>
+</div>
+<div class="section">
 <h4 id="returns-7">Returns<a class="anchor" aria-label="anchor" href="#returns-7"></a></h4>
-<p><code>data.frame</code> or <code>MultiAssayExperiment</code></p>
+<p><code>data.frame</code> or <code>MultiAssayExperiment</code>, either raw
+or as a reactive with current filters applied</p>
 </div>
 
 </div><p></p><hr><a id="method-FilteredDataset-get_metadata"></a><div class="section">
 <h3 id="method-get-metadata-">Method <code>get_metadata()</code><a class="anchor" aria-label="anchor" href="#method-get-metadata-"></a></h3>
 <p>Gets the metadata for the dataset in this <code>FilteredDataset</code></p><div class="section">
-<h4 id="usage-9">Usage<a class="anchor" aria-label="anchor" href="#usage-9"></a></h4>
+<h4 id="usage-10">Usage<a class="anchor" aria-label="anchor" href="#usage-10"></a></h4>
 <p></p><div class="r"><div class="sourceCode"><pre><code><span><span class="va">FilteredDataset</span><span class="op">$</span><span class="fu">get_metadata</span><span class="op">(</span><span class="op">)</span></span></code></pre></div><p></p></div>
 </div>
 
@@ -286,17 +314,17 @@ the id of the <code>private$filter_states</code> list element where <code>Filter
 <p>named <code>list</code> or <code>NULL</code></p>
 </div>
 
-</div><p></p><hr><a id="method-FilteredDataset-get_filter_overview_info"></a><div class="section">
-<h3 id="method-get-filter-overview-info-">Method <code>get_filter_overview_info()</code><a class="anchor" aria-label="anchor" href="#method-get-filter-overview-info-"></a></h3>
+</div><p></p><hr><a id="method-FilteredDataset-get_filter_overview"></a><div class="section">
+<h3 id="method-get-filter-overview-">Method <code>get_filter_overview()</code><a class="anchor" aria-label="anchor" href="#method-get-filter-overview-"></a></h3>
 <p>Get filter overview rows of a dataset
 The output shows the comparison between <code>filtered_dataset</code>
 function parameter and the dataset inside self</p><div class="section">
-<h4 id="usage-10">Usage<a class="anchor" aria-label="anchor" href="#usage-10"></a></h4>
-<p></p><div class="r"><div class="sourceCode"><pre><code><span><span class="va">FilteredDataset</span><span class="op">$</span><span class="fu">get_filter_overview_info</span><span class="op">(</span>filtered_dataset <span class="op">=</span> <span class="va">self</span><span class="op">$</span><span class="fu">get_dataset</span><span class="op">(</span><span class="op">)</span><span class="op">)</span></span></code></pre></div><p></p></div>
+<h4 id="usage-11">Usage<a class="anchor" aria-label="anchor" href="#usage-11"></a></h4>
+<p></p><div class="r"><div class="sourceCode"><pre><code><span><span class="va">FilteredDataset</span><span class="op">$</span><span class="fu">get_filter_overview</span><span class="op">(</span><span class="op">)</span></span></code></pre></div><p></p></div>
 </div>
 
 <div class="section">
-<h4 id="arguments-2">Arguments<a class="anchor" aria-label="anchor" href="#arguments-2"></a></h4>
+<h4 id="arguments-6">Arguments<a class="anchor" aria-label="anchor" href="#arguments-6"></a></h4>
 <p></p><div class="arguments"><dl><dt><code>filtered_dataset</code></dt>
 <dd><p>comparison object, of the same class
 as <code>self$get_dataset()</code>, if <code>NULL</code> then <code>self$get_dataset()</code>
@@ -307,13 +335,13 @@ is used.</p></dd>
 </div>
 <div class="section">
 <h4 id="returns-9">Returns<a class="anchor" aria-label="anchor" href="#returns-9"></a></h4>
-<p>(<code>matrix</code>) matrix of observations and subjects</p>
+<p>(<code>data.frame</code>) matrix of observations and subjects</p>
 </div>
 
 </div><p></p><hr><a id="method-FilteredDataset-get_keys"></a><div class="section">
-<h3 id="method-get-keys-">Method <code><a href="https://rdrr.io/pkg/teal.data/man/get_keys.html" class="external-link">get_keys()</a></code><a class="anchor" aria-label="anchor" href="#method-get-keys-"></a></h3>
+<h3 id="method-get-keys-">Method <code>get_keys()</code><a class="anchor" aria-label="anchor" href="#method-get-keys-"></a></h3>
 <p>Gets the keys for the dataset of this <code>FilteredDataset</code></p><div class="section">
-<h4 id="usage-11">Usage<a class="anchor" aria-label="anchor" href="#usage-11"></a></h4>
+<h4 id="usage-12">Usage<a class="anchor" aria-label="anchor" href="#usage-12"></a></h4>
 <p></p><div class="r"><div class="sourceCode"><pre><code><span><span class="va">FilteredDataset</span><span class="op">$</span><span class="fu">get_keys</span><span class="op">(</span><span class="op">)</span></span></code></pre></div><p></p></div>
 </div>
 
@@ -322,149 +350,25 @@ is used.</p></dd>
 <p>(<code>character</code>) the keys of dataset</p>
 </div>
 
-</div><p></p><hr><a id="method-FilteredDataset-get_varlabels"></a><div class="section">
-<h3 id="method-get-varlabels-">Method <code>get_varlabels()</code><a class="anchor" aria-label="anchor" href="#method-get-varlabels-"></a></h3>
-<p>Gets labels of variables in the data</p>
-<p>Variables are the column names of the data.
-Either, all labels must have been provided for all variables
-in <code>set_data</code> or <code>NULL</code>.</p><div class="section">
-<h4 id="usage-12">Usage<a class="anchor" aria-label="anchor" href="#usage-12"></a></h4>
-<p></p><div class="r"><div class="sourceCode"><pre><code><span><span class="va">FilteredDataset</span><span class="op">$</span><span class="fu">get_varlabels</span><span class="op">(</span>variables <span class="op">=</span> <span class="cn">NULL</span><span class="op">)</span></span></code></pre></div><p></p></div>
-</div>
-
-<div class="section">
-<h4 id="arguments-3">Arguments<a class="anchor" aria-label="anchor" href="#arguments-3"></a></h4>
-<p></p><div class="arguments"><dl><dt><code>variables</code></dt>
-<dd><p>(<code>character</code> vector) variables to get labels for;
-if <code>NULL</code>, for all variables in data</p></dd>
-
-
-</dl><p></p></div>
-</div>
-<div class="section">
-<h4 id="returns-11">Returns<a class="anchor" aria-label="anchor" href="#returns-11"></a></h4>
-<p>(<code>character</code> or <code>NULL</code>) variable labels, <code>NULL</code> if <code>column_labels</code>
-attribute does not exist for the data</p>
-</div>
-
 </div><p></p><hr><a id="method-FilteredDataset-get_dataset_label"></a><div class="section">
-<h3 id="method-get-dataset-label-">Method <code><a href="https://rdrr.io/pkg/teal.data/man/get_dataset_label.html" class="external-link">get_dataset_label()</a></code><a class="anchor" aria-label="anchor" href="#method-get-dataset-label-"></a></h3>
+<h3 id="method-get-dataset-label-">Method <code>get_dataset_label()</code><a class="anchor" aria-label="anchor" href="#method-get-dataset-label-"></a></h3>
 <p>Gets the dataset label</p><div class="section">
 <h4 id="usage-13">Usage<a class="anchor" aria-label="anchor" href="#usage-13"></a></h4>
 <p></p><div class="r"><div class="sourceCode"><pre><code><span><span class="va">FilteredDataset</span><span class="op">$</span><span class="fu">get_dataset_label</span><span class="op">(</span><span class="op">)</span></span></code></pre></div><p></p></div>
 </div>
 
 <div class="section">
-<h4 id="returns-12">Returns<a class="anchor" aria-label="anchor" href="#returns-12"></a></h4>
+<h4 id="returns-11">Returns<a class="anchor" aria-label="anchor" href="#returns-11"></a></h4>
 <p>(<code>character</code>) the dataset label</p>
 </div>
 
-</div><p></p><hr><a id="method-FilteredDataset-get_varnames"></a><div class="section">
-<h3 id="method-get-varnames-">Method <code>get_varnames()</code><a class="anchor" aria-label="anchor" href="#method-get-varnames-"></a></h3>
-<p>Gets variable names from dataset</p><div class="section">
-<h4 id="usage-14">Usage<a class="anchor" aria-label="anchor" href="#usage-14"></a></h4>
-<p></p><div class="r"><div class="sourceCode"><pre><code><span><span class="va">FilteredDataset</span><span class="op">$</span><span class="fu">get_varnames</span><span class="op">(</span><span class="op">)</span></span></code></pre></div><p></p></div>
-</div>
-
-<div class="section">
-<h4 id="returns-13">Returns<a class="anchor" aria-label="anchor" href="#returns-13"></a></h4>
-<p><code>character</code> the variable names</p>
-</div>
-
-</div><p></p><hr><a id="method-FilteredDataset-get_filterable_varnames"></a><div class="section">
-<h3 id="method-get-filterable-varnames-">Method <code>get_filterable_varnames()</code><a class="anchor" aria-label="anchor" href="#method-get-filterable-varnames-"></a></h3>
-<p>Gets variable names for the filtering.</p>
-<p>It takes the intersection of the column names
-of the data and <code>private$filterable_varnames</code> if
-<code>private$filterable_varnames</code> has positive length</p><div class="section">
-<h4 id="usage-15">Usage<a class="anchor" aria-label="anchor" href="#usage-15"></a></h4>
-<p></p><div class="r"><div class="sourceCode"><pre><code><span><span class="va">FilteredDataset</span><span class="op">$</span><span class="fu">get_filterable_varnames</span><span class="op">(</span><span class="op">)</span></span></code></pre></div><p></p></div>
-</div>
-
-<div class="section">
-<h4 id="returns-14">Returns<a class="anchor" aria-label="anchor" href="#returns-14"></a></h4>
-<p>(<code>character</code> vector) of variable names</p>
-</div>
-
-</div><p></p><hr><a id="method-FilteredDataset-set_filterable_varnames"></a><div class="section">
-<h3 id="method-set-filterable-varnames-">Method <code>set_filterable_varnames()</code><a class="anchor" aria-label="anchor" href="#method-set-filterable-varnames-"></a></h3>
-<p>Set the allowed filterable variables</p><div class="section">
-<h4 id="usage-16">Usage<a class="anchor" aria-label="anchor" href="#usage-16"></a></h4>
-<p></p><div class="r"><div class="sourceCode"><pre><code><span><span class="va">FilteredDataset</span><span class="op">$</span><span class="fu">set_filterable_varnames</span><span class="op">(</span><span class="va">varnames</span><span class="op">)</span></span></code></pre></div><p></p></div>
-</div>
-
-<div class="section">
-<h4 id="arguments-4">Arguments<a class="anchor" aria-label="anchor" href="#arguments-4"></a></h4>
-<p></p><div class="arguments"><dl><dt><code>varnames</code></dt>
-<dd><p>(<code>character</code> or <code>NULL</code>) The variables which can be filtered
-See <code>self$get_filterable_varnames</code> for more details</p></dd>
-
-
-</dl><p></p></div>
-</div>
-<div class="section">
-<h4 id="details">Details<a class="anchor" aria-label="anchor" href="#details"></a></h4>
-<p>When retrieving the filtered variables only
-those which have filtering supported (i.e. are of the permitted types)
-are included.</p>
-</div>
-
-<div class="section">
-<h4 id="returns-15">Returns<a class="anchor" aria-label="anchor" href="#returns-15"></a></h4>
-<p>invisibly this <code>FilteredDataset</code></p>
-</div>
-
-</div><p></p><hr><a id="method-FilteredDataset-ui"></a><div class="section">
-<h3 id="method-ui-">Method <code>ui()</code><a class="anchor" aria-label="anchor" href="#method-ui-"></a></h3>
+</div><p></p><hr><a id="method-FilteredDataset-ui_active"></a><div class="section">
+<h3 id="method-ui-active-">Method <code>ui_active()</code><a class="anchor" aria-label="anchor" href="#method-ui-active-"></a></h3>
 <p>UI module for dataset active filters</p>
 <p>UI module containing dataset active filters along with
 title and remove button.</p><div class="section">
-<h4 id="usage-17">Usage<a class="anchor" aria-label="anchor" href="#usage-17"></a></h4>
-<p></p><div class="r"><div class="sourceCode"><pre><code><span><span class="va">FilteredDataset</span><span class="op">$</span><span class="fu">ui</span><span class="op">(</span><span class="va">id</span><span class="op">)</span></span></code></pre></div><p></p></div>
-</div>
-
-<div class="section">
-<h4 id="arguments-5">Arguments<a class="anchor" aria-label="anchor" href="#arguments-5"></a></h4>
-<p></p><div class="arguments"><dl><dt><code>id</code></dt>
-<dd><p>(<code>character(1)</code>)<br>
-identifier of the element - preferably containing dataset name</p></dd>
-
-
-</dl><p></p></div>
-</div>
-<div class="section">
-<h4 id="returns-16">Returns<a class="anchor" aria-label="anchor" href="#returns-16"></a></h4>
-<p>function - shiny UI module</p>
-</div>
-
-</div><p></p><hr><a id="method-FilteredDataset-server"></a><div class="section">
-<h3 id="method-server-">Method <code>server()</code><a class="anchor" aria-label="anchor" href="#method-server-"></a></h3>
-<p>Server module for a dataset active filters</p>
-<p>Server module managing a  active filters.</p><div class="section">
-<h4 id="usage-18">Usage<a class="anchor" aria-label="anchor" href="#usage-18"></a></h4>
-<p></p><div class="r"><div class="sourceCode"><pre><code><span><span class="va">FilteredDataset</span><span class="op">$</span><span class="fu">server</span><span class="op">(</span><span class="va">id</span><span class="op">)</span></span></code></pre></div><p></p></div>
-</div>
-
-<div class="section">
-<h4 id="arguments-6">Arguments<a class="anchor" aria-label="anchor" href="#arguments-6"></a></h4>
-<p></p><div class="arguments"><dl><dt><code>id</code></dt>
-<dd><p>(<code>character(1)</code>)<br>
-an ID string that corresponds with the ID used to call the module's UI function.</p></dd>
-
-
-</dl><p></p></div>
-</div>
-<div class="section">
-<h4 id="returns-17">Returns<a class="anchor" aria-label="anchor" href="#returns-17"></a></h4>
-<p><code>moduleServer</code> function which returns <code>NULL</code></p>
-</div>
-
-</div><p></p><hr><a id="method-FilteredDataset-ui_add_filter_state"></a><div class="section">
-<h3 id="method-ui-add-filter-state-">Method <code>ui_add_filter_state()</code><a class="anchor" aria-label="anchor" href="#method-ui-add-filter-state-"></a></h3>
-<p>UI module to add filter variable for this dataset</p>
-<p>UI module to add filter variable for this dataset</p><div class="section">
-<h4 id="usage-19">Usage<a class="anchor" aria-label="anchor" href="#usage-19"></a></h4>
-<p></p><div class="r"><div class="sourceCode"><pre><code><span><span class="va">FilteredDataset</span><span class="op">$</span><span class="fu">ui_add_filter_state</span><span class="op">(</span><span class="va">id</span><span class="op">)</span></span></code></pre></div><p></p></div>
+<h4 id="usage-14">Usage<a class="anchor" aria-label="anchor" href="#usage-14"></a></h4>
+<p></p><div class="r"><div class="sourceCode"><pre><code><span><span class="va">FilteredDataset</span><span class="op">$</span><span class="fu">ui_active</span><span class="op">(</span><span class="va">id</span><span class="op">)</span></span></code></pre></div><p></p></div>
 </div>
 
 <div class="section">
@@ -477,16 +381,16 @@ identifier of the element - preferably containing dataset name</p></dd>
 </dl><p></p></div>
 </div>
 <div class="section">
-<h4 id="returns-18">Returns<a class="anchor" aria-label="anchor" href="#returns-18"></a></h4>
+<h4 id="returns-12">Returns<a class="anchor" aria-label="anchor" href="#returns-12"></a></h4>
 <p>function - shiny UI module</p>
 </div>
 
-</div><p></p><hr><a id="method-FilteredDataset-srv_add_filter_state"></a><div class="section">
-<h3 id="method-srv-add-filter-state-">Method <code>srv_add_filter_state()</code><a class="anchor" aria-label="anchor" href="#method-srv-add-filter-state-"></a></h3>
-<p>Server module to add filter variable for this dataset</p>
-<p>Server module to add filter variable for this dataset</p><div class="section">
-<h4 id="usage-20">Usage<a class="anchor" aria-label="anchor" href="#usage-20"></a></h4>
-<p></p><div class="r"><div class="sourceCode"><pre><code><span><span class="va">FilteredDataset</span><span class="op">$</span><span class="fu">srv_add_filter_state</span><span class="op">(</span><span class="va">id</span>, <span class="va">...</span><span class="op">)</span></span></code></pre></div><p></p></div>
+</div><p></p><hr><a id="method-FilteredDataset-srv_active"></a><div class="section">
+<h3 id="method-srv-active-">Method <code>srv_active()</code><a class="anchor" aria-label="anchor" href="#method-srv-active-"></a></h3>
+<p>Server module for a dataset active filters</p>
+<p>Server module managing a  active filters.</p><div class="section">
+<h4 id="usage-15">Usage<a class="anchor" aria-label="anchor" href="#usage-15"></a></h4>
+<p></p><div class="r"><div class="sourceCode"><pre><code><span><span class="va">FilteredDataset</span><span class="op">$</span><span class="fu">srv_active</span><span class="op">(</span><span class="va">id</span><span class="op">)</span></span></code></pre></div><p></p></div>
 </div>
 
 <div class="section">
@@ -496,26 +400,70 @@ identifier of the element - preferably containing dataset name</p></dd>
 an ID string that corresponds with the ID used to call the module's UI function.</p></dd>
 
 
-<dt><code>...</code></dt>
-<dd><p>ignored</p></dd>
+</dl><p></p></div>
+</div>
+<div class="section">
+<h4 id="returns-13">Returns<a class="anchor" aria-label="anchor" href="#returns-13"></a></h4>
+<p><code>moduleServer</code> function which returns <code>NULL</code></p>
+</div>
+
+</div><p></p><hr><a id="method-FilteredDataset-ui_add"></a><div class="section">
+<h3 id="method-ui-add-">Method <code>ui_add()</code><a class="anchor" aria-label="anchor" href="#method-ui-add-"></a></h3>
+<p>UI module to add filter variable for this dataset</p>
+<p>UI module to add filter variable for this dataset</p><div class="section">
+<h4 id="usage-16">Usage<a class="anchor" aria-label="anchor" href="#usage-16"></a></h4>
+<p></p><div class="r"><div class="sourceCode"><pre><code><span><span class="va">FilteredDataset</span><span class="op">$</span><span class="fu">ui_add</span><span class="op">(</span><span class="va">id</span><span class="op">)</span></span></code></pre></div><p></p></div>
+</div>
+
+<div class="section">
+<h4 id="arguments-9">Arguments<a class="anchor" aria-label="anchor" href="#arguments-9"></a></h4>
+<p></p><div class="arguments"><dl><dt><code>id</code></dt>
+<dd><p>(<code>character(1)</code>)<br>
+identifier of the element - preferably containing dataset name</p></dd>
 
 
 </dl><p></p></div>
 </div>
 <div class="section">
-<h4 id="returns-19">Returns<a class="anchor" aria-label="anchor" href="#returns-19"></a></h4>
-<p><code>moduleServer</code> function.</p>
+<h4 id="returns-14">Returns<a class="anchor" aria-label="anchor" href="#returns-14"></a></h4>
+<p>function - shiny UI module</p>
+</div>
+
+</div><p></p><hr><a id="method-FilteredDataset-srv_add"></a><div class="section">
+<h3 id="method-srv-add-">Method <code>srv_add()</code><a class="anchor" aria-label="anchor" href="#method-srv-add-"></a></h3>
+<p>Server module to add filter variable for this dataset</p>
+<p>Server module to add filter variable for this dataset.
+For this class <code>srv_add</code> calls multiple modules
+of the same name from <code>FilterStates</code> as <code>MAEFilteredDataset</code>
+contains one <code>FilterStates</code> object for <code>colData</code> and one for each
+experiment.</p><div class="section">
+<h4 id="usage-17">Usage<a class="anchor" aria-label="anchor" href="#usage-17"></a></h4>
+<p></p><div class="r"><div class="sourceCode"><pre><code><span><span class="va">FilteredDataset</span><span class="op">$</span><span class="fu">srv_add</span><span class="op">(</span><span class="va">id</span><span class="op">)</span></span></code></pre></div><p></p></div>
+</div>
+
+<div class="section">
+<h4 id="arguments-10">Arguments<a class="anchor" aria-label="anchor" href="#arguments-10"></a></h4>
+<p></p><div class="arguments"><dl><dt><code>id</code></dt>
+<dd><p>(<code>character(1)</code>)<br>
+an ID string that corresponds with the ID used to call the module's UI function.</p></dd>
+
+
+</dl><p></p></div>
+</div>
+<div class="section">
+<h4 id="returns-15">Returns<a class="anchor" aria-label="anchor" href="#returns-15"></a></h4>
+<p><code>moduleServer</code> function which returns <code>NULL</code></p>
 </div>
 
 </div><p></p><hr><a id="method-FilteredDataset-clone"></a><div class="section">
 <h3 id="method-clone-">Method <code>clone()</code><a class="anchor" aria-label="anchor" href="#method-clone-"></a></h3>
 <p>The objects of this class are cloneable with this method.</p><div class="section">
-<h4 id="usage-21">Usage<a class="anchor" aria-label="anchor" href="#usage-21"></a></h4>
+<h4 id="usage-18">Usage<a class="anchor" aria-label="anchor" href="#usage-18"></a></h4>
 <p></p><div class="r"><div class="sourceCode"><pre><code><span><span class="va">FilteredDataset</span><span class="op">$</span><span class="fu">clone</span><span class="op">(</span>deep <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span></code></pre></div><p></p></div>
 </div>
 
 <div class="section">
-<h4 id="arguments-9">Arguments<a class="anchor" aria-label="anchor" href="#arguments-9"></a></h4>
+<h4 id="arguments-11">Arguments<a class="anchor" aria-label="anchor" href="#arguments-11"></a></h4>
 <p></p><div class="arguments"><dl><dt><code>deep</code></dt>
 <dd><p>Whether to make a deep clone.</p></dd>
 
