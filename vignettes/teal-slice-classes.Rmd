@@ -40,7 +40,7 @@ The expression can refer to one or several variables.
 
 Each `FilterState`/`FilterStateExpr` object contains one `teal_slice` object.
 `teal_slice` stores all information necessary to define a filter.
-It is not an `R6` class. It does not have behaviors and does not produce any `shiny` modules.
+It is not an `R6` class. It does not have any behaviors and does not produce any `shiny` modules.
 Its sole purpose is to store filter information.
 
 
