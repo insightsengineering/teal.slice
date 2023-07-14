@@ -2,7 +2,9 @@
 title: "teal.slice classes"
 author: "NEST Core Dev Team"
 date: "10/07/2023"
-output: rmarkdown::html_vignette
+output: 
+  rmarkdown::html_vignette:
+    toc: true
 vignette: >
   %\VignetteIndexEntry{teal.slice classes}
   %\VignetteEngine{knitr::rmarkdown}
@@ -10,25 +12,37 @@ vignette: >
 ---
 
 
-This vignette is dedicated to everyone who is interested in the design of `teal_slice`. This document is for very 
-advanced developers. If you want to use `teal.slice` as is, we recommend to delve into *Filter panel for developers*
-vignette.
+This vignette is provides a deep dive into the design of the `teal.slice` package.
+It is intended for advanced developers.
+If you want to merely use `teal.slice`, the *Filter panel for developers* vignette, it should satisfy all your needs.
 
-## Overview
 
-The `teal.slice` package is composed of multiple class objects that serve the main purpose of providing a shiny module. This module is responsible for displaying and managing filters. At the top of the class structure is the `FilteredData` class, which other modules can utilize to obtain filtered data and make filter calls.
+## Introduction
 
+The `teal.slice` package is composed of of multiple classes, whose primary purpose is to provide a `shiny` module for managing and displaying filters.
+The highest class in the structure is `FilteredData`.
+Other modules in the app can interact with `FilteredData` to make filter calls and obtain filtered data.
 
 ```{r echo=FALSE, out.width='100%'}
 knitr::include_graphics("./images/filter_panel/filter_panel_uml_all.jpg")
 ```
 
+The `FilteredData` object contains one or more `FilteredDataset` objects.
+While `FilteredData` manages the entire filter panel, each `FilteredDataset` is responsible for filtering a single data set.
+`FilteredDataset` contains one or more `FilterStates` objects, each corresponding to one data structure like a `data.frame`, a `SummarizedExperiment`, or a `MultiAssayExperiment`.
+`FilterStates` holds a collection of `FilterState` objects, each representing a single filter condition applied on one variable.
 
-The `FilteredData` class contains one-to-many `FilteredDataset` objects. While `FilteredData` manages the entire filter panel, each `FilteredDataset` is responsible for filtering a single dataset. Depending on the variant of `FilteredDataset`, it can contain one or many `FilterStates`. 
+`FilterStates` can also hold `FilterStateExpr` objects.
+This is a variation of `FilterStates` that focuses on the filter expression regardless of the underlying data.
+The expression can refer to one or several variables.
 
-`FilterStates` is a collection of `FilterState` objects. `FilterState` represents a single filter condition applied on a column (`FilterState`) or on one-to-many variables (`FilterStateExpr`). Each `FilterState` object contains a `teal_slice` object, which is a `reactiveValue` and stores all the necessary information to define a filter. 
+`FilteredData`, `FilteredDataset`, `FilterStates`, and `FilterState`/`FilterStateExpr` are all `R6` classes and objects of those classes form a hierarchy but there is no inheritance between them.
 
-Unlike other classes, the `teal_slice` object does not have any methods or shiny modules. Its sole purpose is to store filter information.
+Each `FilterState`/`FilterStateExpr` object contains one `teal_slice` object.
+`teal_slice` stores all information necessary to define a filter.
+It is not an `R6` class, it does not have behaviors and does not produce any `shiny` modules.
+Its sole purpose is to store filter information.
+
 
 ## Initialization
 
@@ -36,15 +50,25 @@ Unlike other classes, the `teal_slice` object does not have any methods or shiny
 knitr::include_graphics("./images/filter_panel/filtered_data_init.jpg")
 ```
 
-As part of the teal workflow, the `FilteredData` class is initialized on `TealData`. All datasets from `TealData` are passed to `FilteredData`, and for each dataset, a `FilteredDataset` is initialized. The specific type of `FilteredDataset` depends on the type of dataset being used. For a `data.frame `object, a `DefaultFilteredDataset` is initialized, while for a `MultiAssayExperiment` object, an `MAEFilteredDataset` is initialized.
 
-The key mechanism in the new filter panel is in `FilterStates` class. `FilterStates` are initialized within `FilteredDataset`. The type and number of `FilterStates` depend on the dataset stored in the `FilteredDataset`. One can think of `FilterStates` as equivalent to a single subset call. In the case of a `data.frame` (`DFFilteredDataset`), a single `dplyr::filter call` is sufficient to subset the rows. However, in the case of a `MultiAssayExperiment` object, which contains patient data in the `@colData` slot and multiple experiments in the `@ExperimentList` slot, multiple `FilterStates` objects are required for `MAEFilteredDataset`. This is because each object within the `MultiAssayExperiment` needs to be filtered separately.
+As part of the teal workflow, `FilteredData`, `FilteredDataset`, and `FilterStates` are created instantly when the data is loaded and remain unchanged. 
+One `FilteredData` object is initialized on `TealData`. 
+A `FilteredDataset` is initialized for each data set. One or more `FilterStates` are initialized, depending on the type of data set.
 
-The described objects are created instantly when the data is loaded and remain unchanged. On the other hand, a `FilterState` is initialized each time a new filter is added. The values of the `FilterState` can be changed, and it can also be removed and added again.
+On the other hand, a `FilterState` is initialized each time a new filter is added. 
+The values of the `FilterState` can be changed, and it can also be removed and added again.
 
-## Classes description
+The key mechanism in the new filter panel is in `FilterStates` class. 
+One can think of `FilterStates` as equivalent to a single, possibly compound, subset call made on one data structure. 
+While `FilterState` represents a logical predicate on one vector, e.g `SEX == "F"`, `FilterStates` will compose all predicates of its member `FilterState` objects into a call to a subsetting function, e.g. `data <- subset(data, SEX == "F" & RACE == "CAUCASIAN")`.
 
-This section describes in detail each class managing filter panel.
+In the case of a `data.frame`, a single `dplyr::filter` call is sufficient to subset the whole data set, however, a `MultiAssayExperiment` contains patient data in the `@colData` slot and multiple experiments in the `@ExperimentList` slot, and all of these objects have to be filtered by separate subsetting calls. 
+Therefore, subclasses of `FilterStates` exist to handle different kinds of data structures and they use different subsetting functions.
+
+
+## Class Description
+
+This section provides a detailed description of all class that make up the filter panel structure.
 
 ### `FilteredData`
 
@@ -52,9 +76,11 @@ This section describes in detail each class managing filter panel.
 knitr::include_graphics("./images/filter_panel/class_details_filtered_data.jpg")
 ```
 
-`FilteredData` is an object responsible for managing the filter panel. It sits on top of the class structure and handles the shiny modules of the sub-classes.
+`FilteredData` is an object responsible for managing the filter panel. 
+It sits on top of the class structure and handles the shiny modules of the sub-classes.
 
-`FilteredData` provides several API methods that can be used to access filtered data and their reproducible calls. It also allows external modules to manage filter states through methods such as `get_filter_state`, `set_filter_state`, `remove_filter_state`, and `clear_filter_state`.
+`FilteredData` provides several API methods that can be used to access reproducible subsetting calls and the resulting filtered data. 
+It also allows external modules to manage filter states through functions such as `get_filter_state`, `set_filter_state`, `remove_filter_state`, and `clear_filter_state`.
 
 ### `FilteredDataset`
 
@@ -62,12 +88,15 @@ knitr::include_graphics("./images/filter_panel/class_details_filtered_data.jpg")
 knitr::include_graphics("./images/filter_panel/class_details_filtered_dataset.jpg")
 ```
 
-`FilteredDataset` is a class which keeps unfiltered data and returns filtered data based on the filter call derived from `FilterStates`. `FilteredDataset` class objects are initialized by `FilteredData`, one for each dataset. `FilteredDataset` contains a single `TealDataset` object and one-to-many `FilterStates` depending on the type of object. `FilteredDataset` stores dataset attributes, joins keys to other datasets, and also combines and executes the code taken from `FilterStates`.
+`FilteredDataset` is a class that keeps unfiltered data and returns filtered data based on the filter call derived from the contained `FilterStates`. 
+`FilteredDataset` class objects are initialized by `FilteredData`, one for each data set. 
+`FilteredDataset` contains a single `TealDataset` object and one-to-many `FilterStates` depending on the type of that object.
+`FilteredDataset` stores data set attributes, joins keys to other data sets, and also combines and executes the subsetting calls taken from `FilterStates`.
 
-Following `FilteredDataset` derived classes are already implemented:
+The following `FilteredDataset` child classes are currently implemented:
 
-- `DefaultFilteredDataset` dispatched by `data.frame`.
-- `MAEFilteredDataset` dispatched by `MultiAssayExperiment`.
+- `DefaultFilteredDataset` for `data.frame`.
+- `MAEFilteredDataset` for `MultiAssayExperiment`.
 
 ### `FilterStates`
 
@@ -75,23 +104,22 @@ Following `FilteredDataset` derived classes are already implemented:
 knitr::include_graphics("./images/filter_panel/class_details_filter_states.jpg")
 ```
 
-`FilterStates` are initialized by the `FilteredDataset` when the teal app starts. The type and number of `FilterStates` depend on the type of object being part of `FilteredDataset`. If the dataset in `FilteredDataset` is composed of multiple objects, then the equivalent number of `FilterStates` is initialized. One `FilterStates` object is responsible for making one subset call.
+When the app starts, `FilteredDataset` initializes one or more `FilterStates` objects, one for each component of the underlying data set. Every `FilterStates` object is responsible for making one subset call. 
+For example, a `MAEFilteredDataset` will create one `FilterStates` for its `colData` and one `FilterStates` for each of its experiments. 
+Every `FilterStates` will return a separate subsetting call, which will be used to subset the entire `MultiAssayExperiment`
 
-Consider the case of a `MultiAssayExperiment` object which contains multiple experiments and subjects' data stored in separate slots. Each of the objects within the `MultiAssayExperiment` can be filtered separately by making separate calls to `FilterStates`.
+The following `FilteredDataset` child classes are currently implemented:
 
-Currently, the following variants are possible:
-
-- `DFFilterStates`: Dispatched by `data.frame`, uses data.frame columns for filtering.
-- `MAEFilterStates`: Dispatched by `MultiAssayExperiment`, uses columns of the object kept in the `@colData` slot for filtering.
-- `SEFilterStates`: Dispatched by `SummarizedExperiment`, uses columns of objects kept in both the `@colData` and `@rowData` for filtering.
-- `MatrixFilterStates`: Dispatched by `matrix`, uses `matrix` columns for filtering.
+- `DFFilterStates` for `data.frame`; uses `dplyr::filter` to filter on columns.
+- `MAEFilterStates` for`MultiAssayExperiment`; uses `MultiAssayExperiment::subsetByColData` to filter on columns of the `DataFrame` in the `@colData` slot.
+- `SEFilterStates` for `SummarizedExperiment`; uses the `subset` method for `SummarizedExperiment` to filter on columns of `DataFrames` in the `@colData` and `@rowData` slots. 
+- `MatrixFilterStates` for `matrix`; uses the `[` operator to filter on columns.
 
 `FilterStates` serves two `shiny`-related purposes:
 
-- `ui/srv_add` allows adding a `FilterState` for a selected variable. The variables included in the module are the filterable column names of the provided dataset. Variable selection adds a `FilterState` to the `reactiveVal` (stored in the list `private$state_list[[state_list_id]]`). The `FilterState` is automatically dispatched based on the selected column class.
+- `ui/srv_add` allows adding a `FilterState` for a selected variable. The variables included in the module are the filterable column names of the provided data set. Selecting a variable adds a `FilterState` to the `reactiveVal` stored in the `private$state_list` private field. The subtype of the created `FilterState` automatically determined based on the class of the selected column.
 
-- `ui/srv_active` displays current `FilterState`s cards and responds to clicking a remove button, by removing 
-`FilterState` from a `private$state_list` and destroying it's observers.
+- `ui/srv_active` displays cards of the currently existing `FilterState` objects. Every `FilterState` object serves a remove button and `FilterStates` and reacts to clicking that button by removing the respective`FilterState` from `private$state_list` and destroying it's observers. `ui/srv_active` also contains a remove button that removes all `FilterState` objects within this `FilterStates`.
 
 ### `FilterState`
 
@@ -99,21 +127,27 @@ Currently, the following variants are possible:
 knitr::include_graphics("./images/filter_panel/class_details_filter_state.jpg")
 ```
 
-This class controls single filter card and returns condition call depending on what is selected.
-`FilterState` is initialized each time when `FilterStates$set_filter_state` adds a new filter.
-This mechanism is specific and is explained in [Filter panel API](#filter-panel-api) 
+This class controls a single filter card and returns a condition call that depends on the selection state. 
+A `FilterState` is initialized each time `FilterStates` adds a new filter. 
+Different classes of data require different handling of choices so several `FilterState` subclasses exist and each of them presents a different user interface and generates a different subsetting call. 
+A `FilterState` is created as follows:
 
-`FilterState`'s dispatch is based on the type of the variable specified in `set_filter_state` 
-(through `teal_slice` object). Depending on the type of the filter state, there are different user interface 
-displayed and different call is generated. For example `FilterState` based on character variable will generate a 
-condition `x %in% selected`, while `FilterState` based on numeric variable will generate 
-`x >= selected[1] & x <= selected[2]`. `Inf` and `NA` values are also handled.
+1. `FilterStates` creates `teal_slice` with `dataname` based on the parent data set and `varname` based on the selected variable
+2. the `teal_slice` is wrapped in `teal_slices` and passed to `FilterStates$set_filter_state`
+3. `FilterStates$set_filter_state_impl` is calls
+4. `FilterStates$set_filter_state_impl` calls `init_filter_state`, passing the appropriate variable as `x`
+5. `init_filter_states` is a generic function that dispatches `x`, `teal_slice` and other arguments to the respective child class constructor:
 
-The constructor of `FilterState` has `extract_type` argument which impacts returned call. `extract_type`
-can be unspecified, `"matrix"` or `"list"` and its value corresponds to the type of the variable prefix
-in the returned condition call. For example if `FilterState` is initialized with
-`extract_type = "matrix"` then the variable in the condition call looks like
-`<dataname>[, "<varname>"]`.
+- `LogicalFilterState` for `logical` variables. Presents a checkbox group. Call example: `!variable`.
+- `RangeFilterState` for `numeric` variables. Presents an interactive plot as well as two numeric inputs. Selection is always two values that represent inclusive interval limits. Call example: `variable >= selection[1] & variable <= selection[2]`
+- `DateFilterState` for `Date` variables. Presents two date inputs. Selection is two values that determine inclusive interval limits. Call example: `variable >= selection[1] & variable <= selection[2]`.
+- `DatetimeFilterState` for `POSIXct` and `POSIXlt` variables. Similar to `DateFilterState`.
+- `ChoicesFilterState` for `character` and `factor` values. Additionally, all classes will be passed to `ChoicesFilterState` if their number of unique values is lower than that in `getOption("teal.threshold_slider_vs_checkboxgroup")`. Presents either a checkbox group or a drop-down menu. Depending on settings, allows either only one or any number of values to be selected. Call examples: `variable == selection`, `variable %in% selection`.
+- `EmptyFilterState` for variables that contain only missing values. Does not return calls.
+
+All child classes handle missing values, and `RangedFilterState` also handles infinite values.
+
+The `FilterState` constructor also takes the `extract_type` argument, which determines how the call is constructed `extract_type` can be unspecified, `"matrix"` or `"list"` and its value corresponds to the type of the variable prefix in the returned condition call. If `extract_type` is `"list"`, the variable in the condition call is `<dataname>$<varname>`, for `"matrix"` it would be `<dataname>[, "<varname>"]`.
 
 ### `FilterStateExpr`
 
@@ -122,7 +156,7 @@ knitr::include_graphics("./images/filter_panel/class_details_filter_state_expr.j
 ```
 
 Similarly to `FilterState`, `FilterStateExpr` controls a single filter card and returns logical expression. 
-In `FilterState` call is generated automatically based on the `selected` and other attributes, but in `FilterStateExpr` call needs to be specified manually and it must to be a valid R expression.
+However, while `FilterState` generates the call based on the selection state, in `FilterStateExpr` the call must be specified manually and it must be a valid R expression.
 
 ### `teal_slice`
 
@@ -130,11 +164,20 @@ In `FilterState` call is generated automatically based on the `selected` and oth
 knitr::include_graphics("./images/filter_panel/class_details_teal_slice.jpg")
 ```
 
-`teal_slice` is a `reactiveValues` object storing filter informations. `teal_slice` object is passed directly 
-to `FilterState$initialize` and is stored inside of the `FilterState`  to keep the current state of the filter. Technically, all values used used to generate a call are in `teal_slice`. `FilterState` can be described as 
-a wrapper around `teal_slice` which provides additional methods to handle filter state.
 
-## Making reproducible filter call
+`teal_slice` is a simple object for storing filter information. 
+It can be thought of as a quantum of information. 
+A `teal_slice` object is passed directly to `FilterState$initialize` and is stored inside of the `FilterState` to keep the current state of the filter. 
+Technically, all values used used to generate a call are in `teal_slice`. 
+`FilterState` can be described as a wrapper around `teal_slice` that provides additional methods to handle filter state. 
+It also contains the actual data (a single column).
+
+While `teal_slice` is not an `R6` object and does not encode any behaviors, it is implemented around a `reactiveValues` object to allow shared state in advanced `teal` applications.
+
+See `?teal_slice` for a detailed explanation.
+
+
+## Making a reproducible filter call
 
 ### Overview
 
@@ -142,16 +185,18 @@ a wrapper around `teal_slice` which provides additional methods to handle filter
 knitr::include_graphics("./images/filter_panel/get_call_overview.jpg")
 ```
 
-Above diagram presents the filter panel classes and their responsibilities when composing filter calls.
-From code perspective, code generation is handled by nested execution of `get_call`. `FilteredData$get_call`
-calls `FilteredDataset$get_call` which calls `FilterStates$get_call` which calls `FilterState$get_call`. 
-Executed functions return:
+The diagram above presents the filter panel classes and their responsibilities when composing filter calls. 
+Code is generated by nested execution of `get_call` methods. 
 
-- `FilterState$get_call()` returns a logical expression.
-- `FilterStates$get_call()` returns a single filter call by gathering logical expressions returned 
-from `FilterState` and combining them by `&` operator grouped by argument name.
-- `FilteredDataset$get_call()` returns the list of calls taken from `FilterStates` object(s).
-- `FilteredData$get_call(<dataname>)` returns the list of calls from specified `FilteredDataset`.
+`FilteredData$get_call` calls `FilteredDataset$get_call`, which calls `FilterStates$get_call` which in turn calls `FilterState$get_call`. 
+
+`FilterState$get_call()` returns a single subsetting expression (logical predicate).
+
+`FilterStates$get_call()` returns a single complete subsetting call by extracting expressions from all `FilterState` objects and combining them with the `&` operator. 
+
+`FilteredDataset$get_call()` returns a list of calls extracted from all `FilterStates` objects.
+
+`FilteredData$get_call(<dataname>)` returns a list of calls extracted from the specified `FilteredDataset`.
 
 ### Example
 
@@ -159,71 +204,58 @@ from `FilterState` and combining them by `&` operator grouped by argument name.
 knitr::include_graphics("./images/filter_panel/get_call_example.jpg")
 ```
 
-Calling `datasets$get_call(<dataname>)` in teal modules executes a chain of calls in all filter panel
-classes. Consider a scenario in which:
+Calling `datasets$get_call(<dataname>)` in `teal` modules executes a chain of calls in all filter panel classes. 
+Consider the following scenario:
 
-(1) `FilteredData` has three `FilteredDataset`(s) `ADSL` , `ADTTE`, `MAE`
+(1) `FilteredData` contains three data sets: `ADSL`, `ADTTE`, `MAE`, each stored in its own `FiteredDataset` object
 
-(2) `CDISCFilteredDataset` contains `data.frame` (`ADSL`) which can be filtered only in one way
-executing single `dplyr::filter` call (this is why `CDISCFilteredDataset` has a single `FilterStates`)
+(2) `ADSL` is a `data.frame` so it can be filtered with a single `dplyr::filter` call. This data set is stored in `DefaultFilteredDataset`, which holds a single `FilterStates` object.
 
-(3) `FilterStates` construct `dplyr::filter` call is based on the `FilterState` objects added to the
-`private$state_list`.
+(3) `FilterStates` constructs a `dplyr::filter` call based on the `FilterState` objects present in its `private$state_list`.
 
-(4) When `FilterStates$set_filter_state` adds a new `teal_slice`, then `FilterState` is created and 
-kept in `FilterStates`. `FilterStates` gathers logical expressions from `FilterState` objects and 
-puts them in `dplyr::filter(ADSL, ...)` call.
-Let's imagine that two new filters has been set (e.g. `SEX` and `AGE`) filters are being set. 
-This causes initialization of respective `FilterState` class (`ChoiceFilterState` and `RangeFilterState`).
-Both `FilterState` produce logical expressions (e.g. `SEX == "F"` and `AGE >= 20 & AGE <= 60`), they 
-are combined with `&` operator and put to `dplyr::filter`. `CDISCFilteredDataset` takes this combined 
-call and return to `FilteredData` as a list.
+(4) When `FilterStates$set_filter_state` adds a new `teal_slice`, a `FilterState` is created and added to `private$state_list` in `FilterStates`.
+`FilterStates` gathers logical expressions from all of its `FilterState` objects and composes them into a `dplyr::filter(ADSL, ...)` call.
 
-(5) Second `FilteredDataset` for `ADTTE` works the same way as `ADSL` with one difference -
-`dplyr::filter` for `ADTTE` is followed by the merge call with to keep keys which are available in parent.
-Note, that this specific relationship is available only when selecting `join_keys`, otherwise `ADTTE` 
-would be filtered independently, without `inner_join` call.
+(5) Two new filters have been added: `SEX` and `AGE`. This causes initialization of appropriate `FilterState` subclasses: `ChoiceFilterState` and `RangeFilterState`. 
+Each `FilterState` produces a subsetting expression: `SEX == "F"` and `AGE >= 20 & AGE <= 60`.
+The expressions are combined with `&` and passed to `dplyr::filter`, producing `ADSL <- dplyr::filter(ADSL, SEX == "F" & AGE >= 20 & AGE <= 60)`. `DefaultFilteredDataset` puts this call in a list and returns it to `FilteredData`.
 
-(6) `FilteredDatasetMAE` is based on `MultiAssayExperiment` which contains multiple sub-objects which can
-be filtered on. In general `MultiAssayExperiment` contains `colData(MAE)` which is a `DataFrame`
-with `ADSL`-like patient data. `MAE` contains also multiple experiments which can be extracted using
-`MAE[["experiment name"]]` and they can also be filtered in filter-panel. This means that
-`FilteredDatasetMAE` has multiple `FilterStates` objects: one for subjects data and one for each
-experiment.
+(6) `ADTTE` is also a `data.frame` so the `FilteredDataset` that stores it works much the same as the one for `ADSL`. 
+The one difference is that the `dplyr::filter` call for `ADTTE` is followed by an `dplyr::inner_join` call to merge the filtering result with the parent data set (`ADSL`) so that key columns remain consistent. 
+Note that this only done when `join_keys` is specified - otherwise `ADTTE` would be treated as a separate data set and filtered independently.
 
-(7) `MAEFilterStates` object is initialized for subjects data and for this object
-`SummarizedExperiment::subsetByColData` function is applied. `SummarizedExperiment::subsetByColData`
-has two arguments `x` (data) and `y` (conditions). `MAEFilterStates` similar to `DFFilterStates`
-has one because there is only one argument in the `subsetByColData` function where combined logical 
-expression should be specified. Adding new `FilterStates` triggers returning of the code similar to (3) and (4)
+(7) The `MAE` data set is a `MultiAssayExperiment`, which contains multiple sub-objects which can be filtered on. 
+One of them is `ADSL`-like patient data, stored as a `DataFrame` in `MAE@colData`, and others are experiments, typically `SummarizedExperiment` objects, stored in `MAE@ExperimentList`, which can be extracted using `MAE[["experiment name"]]`. 
+Therefore, `FilteredDatasetMAE` has multiple `FilterStates` objects: one for subject data and one for each experiment.
 
-(8) `SEFilterStates` is initialized per one experiment in the MAE data. This class is specific
-as `SummarizedExperiment` consists of `@colData` and `@rowData` slots which correspond to `select` and
-`subset` arguments in `subset.SummarizedExperiment` function. `SEFilterStates` gathers all logical 
-expressions returned from `FilterState` and group them by `arg` attribute (kept in `teal_slice`) and 
-includes combined logical expressions in `subset` and `select` respectively.
+(7) A `MAEFilterStates` object is initialized for subject data and for this object `MultiAssayExperiment::subsetByColData` function is applied. 
+`MultiAssayExperiment::subsetByColData` has two arguments: `x` (data) and `y` (conditions). 
+Since all filter expressions are passed to one argument, `MAEFilterStates` only has one `state_list`, just like `DFFilterStates`. 
+Adding new filters triggers the same actions as described in (4).
 
-Similar to `subset.data.frame`
-`subset` refers to the rows in the object, and `select` refers to the columns - but the call
-execution is little different because subsetting and selecting call refers to columns in `@colData`
-and `@rowData` (objects attached to this experiment).
+(8) A `SummarizedExperiment` is more complicated as observations can be filtered based on its `rowData` and `colData` slots, both contain `DataFrame`s.
+Subsetting is done by a dedicated S4 `subset` method, which takes two key arguments: `subset` takes logical expressions that will be applied to `rowData` and `select` takes logical expressions that will be applied to `colData`.
+`teal_slice` objects that specify filters in a `SummarizedExperiment` must contain an `arg` element, either `"subset"` or `"select"`, to reflect which slot of the experiment they refer to.
+The `SEFilterStates` gathers logical expressions its member `FilterState` objects, groups them by the `arg` element, and builds a call so `subset` with two combined logical expressions passed to the `subset` and `select` arguments.
+
 
 ## Filter panel modules 
 
-`FilteredData` object contains a methods `filter_panel_ui` and `filter_panel_srv` which can be used to include
-filter panel in any application. Filter panel module is designed in a way that it doesn't return anything, but 
-data, reproducible call and filter states are returned through using specific methods (`get_data`, `get_call`, `get_filter_state`). Typically, filter panel consists of three modules: 
-- `ui/srv_overview` to display counts of filtered vs unfiltered data
-- `ui/srv_active` to display and control active filters
-- `ui/srv_add` to add a new filter
+The `FilteredData` object uses the `filter_panel_ui` and `filter_panel_srv` methods to put up a filter panel that can be used in any application. 
+In `teal` applications it will be placed on the right hand side.
+The filter panel module does not return anything. 
+Data, subsetting calls and filter states are accessible by specific public methods: `get_data`, `get_call`, and `get_filter_state`, respectively. 
+Typically, the filter panel consists of three modules: 
 
-Because `FilteredData` don't know exactly how to handle datasets (as they might have different class), it calls
-respective modules in lower level class. 
+- `ui/srv_overview` displays observation counts filtered vs unfiltered data
+- `ui/srv_active` displays active filter cards, which are created by `FilterState` objects
+- `ui/srv_add` allows for adding filters
 
-In `FilterStates` when new filter is added from "Add Filter Variable" module, then new `FilterState` is initialized 
-and populated to `private$state_list`. `srv_active` observes `private$state_list` (`reactiveVal`) and triggers whenever
-state of the list changes (added or removed), calls `FilterState$server` and renders `FilterState$ui` (using
- `renderUI`).
+`FilteredData` does not handle data sets directly because they may be of different types, rather, it calls
+respective methods in lower level classes. 
+
+When a new filter is added using the "Add Filter Variable" module in `FilterStates`, a new `FilterState` object is initialized and added to `private$state_list`.
+`FilterStates$srv_active` observes `private$state_list` (which is a `reactiveVal`) and when the state of the list changes (a filter is added added or removed), it calls `FilterState$server` and uses `renderUI` to display `FilterState$ui`.
 
 ```{r echo=FALSE, out.width='33%'}
 knitr::include_graphics("./images/filter_panel/filter_panel_modules_call.jpg")
