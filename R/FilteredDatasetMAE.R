@@ -228,8 +228,8 @@ MAEFilteredDataset <- R6::R6Class( # nolint
         function(experiment_name) {
           data.frame(
             dataname = sprintf("- %s", experiment_name),
-            obs = ncol(data[[experiment_name]]),
-            obs_filtered = ncol(data_filtered()[[experiment_name]])
+            obs = nrow(data[[experiment_name]]),
+            obs_filtered = nrow(data_filtered()[[experiment_name]])
           )
         }
       ))
@@ -248,7 +248,6 @@ MAEFilteredDataset <- R6::R6Class( # nolint
           )
         }
       ))
-
       experiment_info <- cbind(experiment_obs_info, experiment_subjects_info)
       dplyr::bind_rows(mae_info, experiment_info)
     }
