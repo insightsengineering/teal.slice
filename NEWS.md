@@ -1,4 +1,4 @@
-# teal.slice 0.3.0.9005
+# teal.slice 0.3.0.9006
 
 ### New features
 
