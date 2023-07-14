@@ -19,7 +19,7 @@ If you want to merely use `teal.slice`, the *Filter panel for developers* vignet
 
 ## Introduction
 
-The `teal.slice` package is composed of of multiple classes, whose primary purpose is to provide a `shiny` module for managing and displaying filters.
+The `teal.slice` package is composed of multiple classes, whose primary purpose is to provide a `shiny` module for managing and displaying filters.
 The highest class in the structure is `FilteredData`.
 Other modules in the app can interact with `FilteredData` to make filter calls and obtain filtered data.
 
