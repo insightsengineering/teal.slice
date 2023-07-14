@@ -166,7 +166,7 @@ knitr::include_graphics("./images/filter_panel/class_details_teal_slice.jpg")
 ```
 
 
-`teal_slice` is a simple object for storing filter information. 
+`teal_slice` is a simple S3 object for storing filter information. 
 It can be thought of as a quantum of information. 
 A `teal_slice` object is passed directly to `FilterState$initialize` and is stored inside of the `FilterState` to keep the current state of the filter. 
 Technically, all values used used to generate a call are in `teal_slice`. 
