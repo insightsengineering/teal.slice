@@ -20,7 +20,7 @@ If you want to merely use `teal.slice`, the *Filter panel for developers* vignet
 ## Introduction
 
 The `teal.slice` package is composed of multiple classes, whose primary purpose is to provide a `shiny` module for managing and displaying filters.
-The highest class in the structure is `FilteredData`.
+The top class in the structure is `FilteredData`.
 Other modules in the app can interact with `FilteredData` to make filter calls and obtain filtered data.
 
 ```{r echo=FALSE, out.width='100%'}
@@ -36,11 +36,11 @@ While `FilteredData` manages the entire filter panel, each `FilteredDataset` is 
 This is a variation of `FilterStates` that focuses on the filter expression regardless of the underlying data.
 The expression can refer to one or several variables.
 
-`FilteredData`, `FilteredDataset`, `FilterStates`, and `FilterState`/`FilterStateExpr` are all `R6` classes and objects of those classes form a hierarchy but there is no inheritance between them.
+`FilteredData`, `FilteredDataset`, `FilterStates`, and `FilterState`/`FilterStateExpr` are all `R6` class objects. Those objects form a hierarchy, but there is no inheritance between them.
 
 Each `FilterState`/`FilterStateExpr` object contains one `teal_slice` object.
 `teal_slice` stores all information necessary to define a filter.
-It is not an `R6` class, it does not have behaviors and does not produce any `shiny` modules.
+It is not an `R6` class. It does not have behaviors and does not produce any `shiny` modules.
 Its sole purpose is to store filter information.
 
 
@@ -51,7 +51,7 @@ knitr::include_graphics("./images/filter_panel/filtered_data_init.jpg")
 ```
 
 
-As part of the teal workflow, `FilteredData`, `FilteredDataset`, and `FilterStates` are created instantly when the data is loaded and remain unchanged. 
+As part of the `teal` workflow, `FilteredData`, `FilteredDataset`, and `FilterStates` are created instantly when the data is loaded and remain unchanged. 
 One `FilteredData` object is initialized on `TealData`. 
 A `FilteredDataset` is initialized for each data set. One or more `FilterStates` are initialized, depending on the type of data set.
 
@@ -59,7 +59,7 @@ On the other hand, a `FilterState` is initialized each time a new filter is adde
 The values of the `FilterState` can be changed, and it can also be removed and added again.
 
 The key mechanism in the new filter panel is in `FilterStates` class. 
-One can think of `FilterStates` as equivalent to a single, possibly compound, subset call made on one data structure. 
+One can think of `FilterStates` as an equivalent to a single, possibly compound, subset call made on one data structure. 
 While `FilterState` represents a logical predicate on one vector, e.g `SEX == "F"`, `FilterStates` will compose all predicates of its member `FilterState` objects into a call to a subsetting function, e.g. `data <- subset(data, SEX == "F" & RACE == "CAUCASIAN")`.
 
 In the case of a `data.frame`, a single `dplyr::filter` call is sufficient to subset the whole data set, however, a `MultiAssayExperiment` contains patient data in the `@colData` slot and multiple experiments in the `@ExperimentList` slot, and all of these objects have to be filtered by separate subsetting calls. 
