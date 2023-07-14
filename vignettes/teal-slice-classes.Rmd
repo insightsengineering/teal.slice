@@ -14,7 +14,7 @@ vignette: >
 
 This vignette provides a deep dive into the design of the `teal.slice` package.
 It is intended for advanced developers.
-If you want to merely use `teal.slice`, the *Filter panel for developers* vignette, it should satisfy all your needs.
+If you want to merely use `teal.slice`, the *Filter panel for developers* vignette should satisfy all your needs.
 
 
 ## Introduction
