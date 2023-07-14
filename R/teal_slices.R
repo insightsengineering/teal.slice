@@ -216,9 +216,6 @@ as.teal_slices <- function(x) { # nolint
   y <- NextMethod("[")
   attrs <- attributes(x)
   attrs$names <- attrs$names[i]
-  datanames <- unique(unlist(vapply(y, function(ts) shiny::isolate(ts[["dataname"]]), character(1L))))
-  attrs[["exclude_varnames"]] <- Filter(Negate(is.null), attr(x, "exclude_varnames")[datanames])
-  attrs[["include_varnames"]] <- Filter(Negate(is.null), attr(x, "include_varnames")[datanames])
   attributes(y) <- attrs
   y
 }
@@ -307,4 +304,20 @@ slices_to_list <- function(tss) {
   attrs <- attributes(unclass(tss))
   tss_list <- list(slices = slices_list, attributes = attrs)
   Filter(Negate(is.null), tss_list) # drop attributes if empty
+}
+
+#' `setdiff` method for `teal_slices`
+#'
+#' Compare two teal slices objects and return `teal_slices` containing slices present in `x` but not in `y`.
+#' @param x,y `teal_slices` objects
+#' @return `teal_slices`
+#' @keywords internal
+#'
+setdiff_teal_slices <- function(x, y) {
+  Filter(
+    function(xx) {
+      !any(vapply(y, function(yy) identical(yy, xx), logical(1)))
+    },
+    x
+  )
 }
