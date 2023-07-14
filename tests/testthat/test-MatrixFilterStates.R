@@ -15,7 +15,7 @@ testthat::test_that("get_filter_state returns `teal_slices` with default include
   filter_states <- MatrixFilterStates$new(data = test, dataname = "test")
   fs <- teal_slices(
     include_varnames = list(test = colnames(test)),
-    count_type = "all"
+    count_type = "none"
   )
 
   testthat::expect_identical(

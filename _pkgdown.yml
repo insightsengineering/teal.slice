@@ -24,14 +24,16 @@ reference:
   - title: Teal filter-panel API
     desc: Functions used initialize filter-panel and to modify its states.
     contents:
-      - init_filtered_data
-      - get_filter_state
-      - set_filter_state
-      - remove_filter_state
       - clear_filter_states
+      - get_filter_expr
+      - get_filter_state
+      - init_filtered_data
+      - remove_filter_state
+      - set_filter_state
+      - slices_restore
+      - slices_store
       - teal_slices
       - teal_slice
-      - get_filter_expr
   - title: For Developers
     subtitle: R6 Classes
     desc: Abstract and concrete classes used to build teal functionality.

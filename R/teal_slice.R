@@ -1,4 +1,6 @@
-#' Filter specification
+#' Specify single filter.
+#'
+#' Create a `teal_slice` object that holds complete information on filtering one variable.
 #'
 #' @details
 #' `teal_slice` object fully describes filter state and can be used to create,
@@ -39,7 +41,7 @@
 #'
 #' To establish a filter on a column in a `data.frame`, `dataname` and `varname` are sufficient.
 #' `MultiAssayExperiment` objects can be filtered either on their `colData` slot (which contains subject information)
-#' or on their experiments, which are stored in the `experimentList` slot.
+#' or on their experiments, which are stored in the `ExperimentList` slot.
 #' For filters referring to `colData` no extra arguments are needed.
 #' If a filter state is created for an experiment, that experiment name must be specified in the `experiment` argument.
 #' Furthermore, to specify filter for an `SummarizedExperiment` one must also set `arg`
@@ -104,6 +106,8 @@
 #' format(x1, show_all = TRUE, trim_lines = FALSE)
 #' print(x1)
 #' print(x1, show_all = TRUE, trim_lines = FALSE)
+#'
+#' @seealso [`teal_slices`]
 #'
 #' @export
 teal_slice <- function(dataname,
@@ -280,7 +284,7 @@ to_json <- function(x) {
 #' @param json (`character(1)`) a `JSON` string.
 #'
 #' @return A list of character strings, which can be collapsed into a `JSON` string.
-#'
+#' @keywords internal
 justify_json <- function(json) {
   format_name <- function(name, name_width) {
     if (nchar(name) == 1 || nchar(gsub("\\s", "", name)) <= 2) {
