@@ -106,7 +106,7 @@ knitr::include_graphics("./images/filter_panel/class_details_filter_states.jpg")
 
 When the app starts, `FilteredDataset` initializes one or more `FilterStates` objects, one for each component of the underlying data set. Every `FilterStates` object is responsible for making one subset call. 
 For example, a `MAEFilteredDataset` will create one `FilterStates` for its `colData` and one `FilterStates` for each of its experiments. 
-Every `FilterStates` will return a separate subsetting call, which will be used to subset the entire `MultiAssayExperiment`
+Every `FilterStates` will return a separate subsetting call, which will be used to subset the entire `MultiAssayExperiment`.
 
 The following `FilteredDataset` child classes are currently implemented:
 
