@@ -138,16 +138,17 @@ A `FilterState` is created as follows:
 4. `FilterStates$set_filter_state_impl` calls `init_filter_state`, passing the appropriate variable as `x`
 5. `init_filter_states` is a generic function that dispatches `x`, `teal_slice` and other arguments to the respective child class constructor:
 
-- `LogicalFilterState` for `logical` variables. Presents a checkbox group. Call example: `!variable`.
-- `RangeFilterState` for `numeric` variables. Presents an interactive plot as well as two numeric inputs. Selection is always two values that represent inclusive interval limits. Call example: `variable >= selection[1] & variable <= selection[2]`
-- `DateFilterState` for `Date` variables. Presents two date inputs. Selection is two values that determine inclusive interval limits. Call example: `variable >= selection[1] & variable <= selection[2]`.
+Below are listed `FilterState` subclasses:
+- `LogicalFilterState` for `logical` variables. Presents a checkbox group. Example: `!variable`.
+- `RangeFilterState` for `numeric` variables. Presents an interactive plot as well as two numeric inputs. Selection are always two values that represent inclusive interval limits. Example: `variable >= selection[1] & variable <= selection[2]`
+- `DateFilterState` for `Date` variables. Presents two date inputs. Selection is two values that determine inclusive interval limits. Example: `variable >= selection[1] & variable <= selection[2]`.
 - `DatetimeFilterState` for `POSIXct` and `POSIXlt` variables. Similar to `DateFilterState`.
-- `ChoicesFilterState` for `character` and `factor` values. Additionally, all classes will be passed to `ChoicesFilterState` if their number of unique values is lower than that in `getOption("teal.threshold_slider_vs_checkboxgroup")`. Presents either a checkbox group or a drop-down menu. Depending on settings, allows either only one or any number of values to be selected. Call examples: `variable == selection`, `variable %in% selection`.
+- `ChoicesFilterState` for `character` and `factor` values. Additionally, all classes will be passed to `ChoicesFilterState` if their number of unique values is lower than that in `getOption("teal.threshold_slider_vs_checkboxgroup")`. Presents either a checkbox group or a drop-down menu. Depending on settings, allows either only one or any number of values to be selected. Examples: `variable == selection`, `variable %in% selection`.
 - `EmptyFilterState` for variables that contain only missing values. Does not return calls.
 
 All child classes handle missing values, and `RangedFilterState` also handles infinite values.
 
-The `FilterState` constructor also takes the `extract_type` argument, which determines how the call is constructed `extract_type` can be unspecified, `"matrix"` or `"list"` and its value corresponds to the type of the variable prefix in the returned condition call. If `extract_type` is `"list"`, the variable in the condition call is `<dataname>$<varname>`, for `"matrix"` it would be `<dataname>[, "<varname>"]`.
+The `FilterState` constructor also takes the `extract_type` argument, which determines how the call is constructed `extract_type` can be unspecified, `"matrix"` or `"list"` and its value corresponds to the type of the variable prefix in the returned condition call. If `extract_type` is `"list"`, the variable in the condition call is `<dataname>$<varname>`, where for `"matrix"` it would be `<dataname>[, "<varname>"]`.
 
 ### `FilterStateExpr`
 
