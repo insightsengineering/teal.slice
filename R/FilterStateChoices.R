@@ -448,56 +448,83 @@ ChoicesFilterState <- R6::R6Class( # nolint
               NULL
             }
 
-            if (private$is_checkboxgroup()) {
-              updateCountBars(
-                inputId = "labels",
-                choices = private$get_choices(),
-                countsmax = private$choices_counts,
-                countsnow = countsnow
-              )
-            } else {
-              labels <- mapply(
-                FUN = make_count_text,
-                label = private$get_choices(),
-                countnow = if (is.null(countsnow)) rep(list(NULL), length(private$get_choices())) else countsnow,
-                countmax = private$choices_counts
-              )
-              teal.widgets::updateOptionalSelectInput(
-                session = session,
-                inputId = "selection",
-                choices = stats::setNames(private$get_choices(), labels),
-                selected = private$get_selected()
-              )
-            }
-            NULL
-          })
-
-          private$observers$selection <- observeEvent(
-            ignoreNULL = FALSE,
-            ignoreInit = TRUE, # ignoreInit: should not matter because we set the UI with the desired initial state
-            eventExpr = input$selection,
-            handlerExpr = {
-              logger::log_trace("ChoicesFilterState$server_inputs@2 changed selection, id: { private$get_id() }")
-
-              selection <- if (is.null(input$selection) && private$is_multiple()) {
-                character(0)
-              } else if (isTRUE(length(input$selection) != 1) && !private$is_multiple()) {
-                showNotification(paste(
-                  "This filter exclusively supports single selection.",
-                  "Any additional choices made will be disregarded."
-                ))
+            # update should be based on a change of counts only
+            shiny::isolate({
+              if (private$is_checkboxgroup()) {
+                updateCountBars(
+                  inputId = "labels",
+                  choices = private$get_choices(),
+                  countsmax = private$choices_counts,
+                  countsnow = countsnow
+                )
+              } else {
+                labels <- mapply(
+                  FUN = make_count_text,
+                  label = private$get_choices(),
+                  countnow = if (is.null(countsnow)) rep(list(NULL), length(private$get_choices())) else countsnow,
+                  countmax = private$choices_counts
+                )
                 teal.widgets::updateOptionalSelectInput(
-                  session, "selection",
+                  session = session,
+                  inputId = "selection",
+                  choices = stats::setNames(private$get_choices(), labels),
                   selected = private$get_selected()
                 )
-                return(NULL)
-              } else {
-                input$selection
               }
+              NULL
+            })
+          })
 
-              private$set_selected(selection)
-            }
-          )
+          if (private$is_checkboxgroup()) {
+            private$observers$selection <- observeEvent(
+              ignoreNULL = FALSE,
+              ignoreInit = TRUE, # ignoreInit: should not matter because we set the UI with the desired initial state
+              eventExpr = input$selection,
+              handlerExpr = {
+                logger::log_trace("ChoicesFilterState$server_inputs@2 changed selection, id: { private$get_id() }")
+
+                selection <- if (is.null(input$selection) && private$is_multiple()) {
+                  character(0)
+                } else {
+                  input$selection
+                }
+
+                private$set_selected(selection)
+              }
+            )
+          } else {
+            private$observers$selection <- observeEvent(
+              ignoreNULL = FALSE,
+              ignoreInit = TRUE, # ignoreInit: should not matter because we set the UI with the desired initial state
+              eventExpr = input$selection_open, # observe click on a dropdown
+              handlerExpr = {
+                if (!isTRUE(input$selection_open)) { # only when the dropdown got closed
+                  logger::log_trace("ChoicesFilterState$server_inputs@2 changed selection, id: { private$get_id() }")
+
+                  selection <- if (is.null(input$selection) && private$is_multiple()) {
+                    character(0)
+                  } else if (isTRUE(length(input$selection) != 1) && !private$is_multiple()) {
+                    # In optionalSelectInput user is able to select mutliple options. But if FilterState is not multiple
+                    # we should prevent this selection to be processed further.
+                    # This is why notification is thrown and dropdown is changed back to latest selected.
+                    showNotification(paste(
+                      "This filter exclusively supports single selection.",
+                      "Any additional choices made will be disregarded."
+                    ))
+                    teal.widgets::updateOptionalSelectInput(
+                      session, "selection",
+                      selected = private$get_selected()
+                    )
+                    return(NULL)
+                  } else {
+                    input$selection
+                  }
+                  private$set_selected(selection)
+                }
+              }
+            )
+          }
+
 
           private$keep_na_srv("keep_na")
 
@@ -505,6 +532,8 @@ ChoicesFilterState <- R6::R6Class( # nolint
           # changed directly by the api - then it's needed to rerender UI element
           # to show relevant values
           private$observers$selection_api <- observeEvent(private$get_selected(), {
+            # it's important to not retrigger when the input$selection is the same as reactive values
+            # kept in the teal_slice$selected
             if (!setequal(input$selection, private$get_selected())) {
               logger::log_trace("ChoicesFilterState$server@1 state changed, id: { private$get_id() }")
               if (private$is_checkboxgroup()) {
