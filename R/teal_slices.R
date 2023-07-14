@@ -1,4 +1,6 @@
-#' Filters specification
+#' Complete filter specification.
+#'
+#' Create `teal_slices` object to package multiple filters and additional settings.
 #'
 #' @details
 #' `teal_slices()` collates multiple `teal_slice` objects into a `teal_slices` object,
@@ -72,6 +74,9 @@
 #' c(all_filters[1], all_filters[2])
 #' print(all_filters)
 #' print(all_filters, trim_lines = FALSE)
+#'
+#' @seealso [`teal_slice`]
+#'
 #' @export
 #'
 teal_slices <- function(...,

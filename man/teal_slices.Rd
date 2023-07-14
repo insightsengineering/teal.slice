@@ -8,7 +8,7 @@
 \alias{c.teal_slices}
 \alias{format.teal_slices}
 \alias{print.teal_slices}
-\title{Filters specification}
+\title{Complete filter specification.}
 \usage{
 teal_slices(
   ...,
@@ -60,7 +60,7 @@ and unfiltered dataset.
 \code{teal_slices}, which is an unnamed list of \code{teal_slice} objects.
 }
 \description{
-Filters specification
+Create \code{teal_slices} object to package multiple filters and additional settings.
 }
 \details{
 \code{teal_slices()} collates multiple \code{teal_slice} objects into a \code{teal_slices} object,
@@ -118,5 +118,9 @@ all_filters[1:2]
 c(all_filters[1], all_filters[2])
 print(all_filters)
 print(all_filters, trim_lines = FALSE)
+
+}
+\seealso{
+\code{\link{teal_slice}}
 }
 \keyword{internal}

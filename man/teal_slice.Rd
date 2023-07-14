@@ -7,7 +7,7 @@
 \alias{as.list.teal_slice}
 \alias{format.teal_slice}
 \alias{print.teal_slice}
-\title{Filter specification}
+\title{Specify single filter.}
 \usage{
 teal_slice(
   dataname,
@@ -83,7 +83,7 @@ A \code{teal.slice} object. Depending on whether \code{varname} or \code{expr} w
 \code{teal_slice} also receives class \code{teal_slice_var} or \code{teal_slice_expr}, respectively.
 }
 \description{
-Filter specification
+Create a \code{teal_slice} object that holds complete information on filtering one variable.
 }
 \details{
 \code{teal_slice} object fully describes filter state and can be used to create,
@@ -126,7 +126,7 @@ A \code{FilterState} instantiated with \code{locked = TRUE} cannot be removed.
 
 To establish a filter on a column in a \code{data.frame}, \code{dataname} and \code{varname} are sufficient.
 \code{MultiAssayExperiment} objects can be filtered either on their \code{colData} slot (which contains subject information)
-or on their experiments, which are stored in the \code{experimentList} slot.
+or on their experiments, which are stored in the \code{ExperimentList} slot.
 For filters referring to \code{colData} no extra arguments are needed.
 If a filter state is created for an experiment, that experiment name must be specified in the \code{experiment} argument.
 Furthermore, to specify filter for an \code{SummarizedExperiment} one must also set \code{arg}
@@ -163,5 +163,8 @@ format(x1, show_all = TRUE, trim_lines = FALSE)
 print(x1)
 print(x1, show_all = TRUE, trim_lines = FALSE)
 
+}
+\seealso{
+\code{\link{teal_slices}}
 }
 \keyword{internal}
