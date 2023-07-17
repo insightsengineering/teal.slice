@@ -218,7 +218,7 @@ DateFilterState <- R6::R6Class( # nolint
           if (any(is.na(values))) stop()
           values
         },
-        error = function(error) stop("The array of set values must contain values coercible to Date.")
+        error = function(e) stop("The array of set values must contain values coercible to Date.")
       )
     },
     check_length = function(values) {

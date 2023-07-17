@@ -344,15 +344,18 @@ RangeFilterState <- R6::R6Class( # nolint
 
     # overwrites superclass method
     cast_and_validate = function(values) {
-      if (!is.atomic(values)) stop("Values to set must be an atomic vector.")
-      values <- as.numeric(values)
-      if (any(is.na(values))) stop("Vector of set values must contain values coercible to numeric.")
-      if (values[1L] > values[2L]) stop("Vector of set values must be sorted.")
-
-      values
+      tryCatch(
+        expr = {
+          values <- as.numeric(values)
+          if (any(is.na(values_logical))) stop()
+          values
+        },
+        error = function(e) stop("The array of set values must contain values coercible to numeric")
+      )
     },
     check_length = function(values) {
-      if (length(values) != 2) stop("Vector of set values must have length two.")
+      if (length(values) != 2L) stop("Vector of set values must have length two.")
+      if (values[1L] > values[2L]) stop("Vector of set values must be sorted.")
       values
     }
     # Trim selection to limits imposed by private$get_choices()

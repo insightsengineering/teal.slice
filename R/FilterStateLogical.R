@@ -188,7 +188,7 @@ LogicalFilterState <- R6::R6Class( # nolint
           if (any(is.na(values_logical))) stop()
           values
         },
-        error = function(cond) stop("The array of set values must contain values coercible to logical.")
+        error = function(e) stop("The array of set values must contain values coercible to logical.")
       )
     },
     # If multiple forbidden but selected, restores previous selection with warning.

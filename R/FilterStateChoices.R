@@ -305,7 +305,7 @@ ChoicesFilterState <- R6::R6Class( # nolint
           values <- as.character(values)
           if (any(is.na(values))) stop()
         },
-        error = function(error) stop("The array of set values must contain values coercible to character.")
+        error = function(e) stop("The array of set values must contain values coercible to character.")
       )
       values
     },
