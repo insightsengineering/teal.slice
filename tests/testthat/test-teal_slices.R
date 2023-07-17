@@ -6,7 +6,7 @@ testthat::test_that("teal_slices checks arguments", {
   testthat::expect_no_error(teal_slices(fs1, fs2,
     exclude_varnames = list(data = "var1"),
     count_type = "all",
-    module_add = FALSE
+    allow_add = FALSE
   ))
 
   testthat::expect_error(teal_slices(fs1, fs2, "fs1"), "Assertion on 'slices' failed")
@@ -20,7 +20,7 @@ testthat::test_that("teal_slices checks arguments", {
 
   testthat::expect_error(teal_slices(fs1, fs2, count_type = c("all", "none")))
 
-  testthat::expect_error(teal_slices(fs1, fs2, module_add = NULL), "Assertion on 'module_add' failed")
+  testthat::expect_error(teal_slices(fs1, fs2, allow_add = NULL), "Assertion on 'allow_add' failed")
 
   testthat::expect_error(teal_slices(fs1, fs1, fs2), "Some teal_slice objects have the same id")
 })
@@ -40,7 +40,7 @@ testthat::test_that("teal_slices returns `teal_slices`", {
   testthat::expect_null(attr(fs, "exclude"))
 
   testthat::expect_null(attr(fs, "count_type"))
-  testthat::expect_true(attr(fs, "module_add"))
+  testthat::expect_true(attr(fs, "allow_add"))
 
   testthat::expect_length(teal_slices(fs1, fs2), 2L)
 })

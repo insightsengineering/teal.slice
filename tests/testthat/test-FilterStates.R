@@ -304,7 +304,7 @@ testthat::test_that("get_call skips conditions form FilterState which are identi
 # todo: test srv_active - we probably need shinytest2
 # todo: format
 
-# module_add ----
+# allow_add ----
 testthat::test_that("ui_add returns a message inside a div when data has no columns or no rows", {
   filter_states <- FilterStates$new(data = data.frame(), dataname = "iris")
   testthat::expect_identical(
