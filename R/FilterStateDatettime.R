@@ -252,10 +252,10 @@ DatetimeFilterState <- R6::R6Class( # nolint
       tryCatch(
         expr = {
           values <- as.POSIXct(values, origin = "1970-01-01 00:00:00")
-          if (any(is.na(values))) stop()
+          if (anyNA(values)) stop()
           values
         },
-        error = function(e) stop("The vector of set values must contain values coercible to POSIX.")
+        error = function(e) stop("Vector of set values must contain values coercible to POSIX.")
       )
     },
     check_length = function(values) {

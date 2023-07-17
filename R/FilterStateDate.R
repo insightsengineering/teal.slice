@@ -215,10 +215,10 @@ DateFilterState <- R6::R6Class( # nolint
       tryCatch(
         expr = {
           values <- as.Date(values, origin = "1970-01-01")
-          if (any(is.na(values))) stop()
+          if (anyNA(values)) stop()
           values
         },
-        error = function(e) stop("The vector of set values must contain values coercible to Date.")
+        error = function(e) stop("Vector of set values must contain values coercible to Date.")
       )
     },
     check_length = function(values) {

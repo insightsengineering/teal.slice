@@ -345,10 +345,10 @@ RangeFilterState <- R6::R6Class( # nolint
       tryCatch(
         expr = {
           values <- as.numeric(values)
-          if (any(is.na(values_logical))) stop()
+          if (anyNA(values)) stop()
           values
         },
-        error = function(e) stop("The vector of set values must contain values coercible to numeric")
+        error = function(e) stop("Vector of set values must contain values coercible to numeric")
       )
     },
     # Also validates that selection is sorted.

@@ -303,7 +303,7 @@ ChoicesFilterState <- R6::R6Class( # nolint
       tryCatch(
         expr = {
           values <- as.character(values)
-          if (any(is.na(values))) stop()
+          if (anyNA(values)) stop()
         },
         error = function(e) stop("The vactor of set values must contain values coercible to character.")
       )
@@ -311,7 +311,7 @@ ChoicesFilterState <- R6::R6Class( # nolint
     },
     # If multiple forbidden but selected, restores previous selection with warning.
     check_length = function(values) {
-      if (!private$is_multiple() && length(value) > 1) {
+      if (!private$is_multiple() && length(values) > 1) {
         warning(
           sprintf("Selection: %s is not a vector of length one. ", toString(values, width = 360)),
           "Maintaining previous selection."

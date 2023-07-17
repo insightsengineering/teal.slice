@@ -185,15 +185,15 @@ LogicalFilterState <- R6::R6Class( # nolint
       tryCatch(
         expr = {
           values <- as.logical(values)
-          if (any(is.na(values_logical))) stop()
+          if (anyNA(values)) stop()
           values
         },
-        error = function(e) stop("The vector of set values must contain values coercible to logical.")
+        error = function(e) stop("Vector of set values must contain values coercible to logical.")
       )
     },
     # If multiple forbidden but selected, restores previous selection with warning.
     check_length = function(values) {
-      if (!private$is_multiple() && length(value) > 1) {
+      if (!private$is_multiple() && length(values) > 1) {
         warning(
           sprintf("Selection: %s is not a vector of length one. ", toString(values, width = 360)),
           "Maintaining previous selection."
