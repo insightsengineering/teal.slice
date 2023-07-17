@@ -1263,6 +1263,28 @@ FilteredData <- R6::R6Class( # nolint
         })
       })
     },
+
+    # Snapshot manager module.
+    # @description
+    # Controls capturing, restoring, and saving filter state snapshots.
+    ui_snapshot_manager = function(id) {
+      ns <- NS(id)
+      div(
+        class = "snapshot_manager_content",
+        div(
+          class = "snapshot_table_row",
+          span(tags$b("Snapshot manager")),
+          actionLink(ns("snapshot_add"), label = NULL, icon = icon("camera"), title = "add snapshot"),
+          actionLink(ns("snapshot_reset"), label = NULL, icon = icon("undo"), title = "reset initial state"),
+          NULL
+        ),
+        uiOutput(ns("snapshot_list"))
+      )
+    },
+    # Snapshot manager module.
+    # @description
+    # Captures, stores, restores, and saves filter state snapshots.
+    # Creates UI elements for each captured snapshot.
     srv_snapshot_manager = function(id) {
       moduleServer(id, function(input, output, session) {
         ns <- session$ns
@@ -1368,20 +1390,7 @@ FilteredData <- R6::R6Class( # nolint
           })
         })
       })
-    },
-    ui_snapshot_manager = function(id) {
-      ns <- NS(id)
-      div(
-        class = "snapshot_manager_content",
-        div(
-          class = "snapshot_table_row",
-          span(tags$b("Snapshot manager")),
-          actionLink(ns("snapshot_add"), label = NULL, icon = icon("camera"), title = "add snapshot"),
-          actionLink(ns("snapshot_reset"), label = NULL, icon = icon("undo"), title = "reset initial state"),
-          NULL
-        ),
-        uiOutput(ns("snapshot_list"))
-      )
     }
+
   )
 )
