@@ -73,10 +73,10 @@ testthat::test_that("set_state cannot set mutable fields in a fixed FilterState"
   expect_identical_slice(shiny::isolate(filter_state$get_state()), old_state)
 })
 
-testthat::test_that("set_state can set mutable fields in a locked FilterState", {
+testthat::test_that("set_state can set mutable fields in a anchored FilterState", {
   filter_state <- FilterState$new(
     x = c("a", NA_character_),
-    slice = teal_slice(dataname = "data", varname = "variable", locked = TRUE)
+    slice = teal_slice(dataname = "data", varname = "variable", anchored = TRUE)
   )
   old_state <- shiny::isolate(filter_state$get_state())
   new_state <- teal_slice(
@@ -85,7 +85,7 @@ testthat::test_that("set_state can set mutable fields in a locked FilterState", 
     selected = "a",
     keep_na = TRUE,
     keep_inf = FALSE,
-    locked = TRUE
+    anchored = TRUE
   )
   filter_state$set_state(new_state)
   expect_identical_slice(shiny::isolate(filter_state$get_state()), new_state)

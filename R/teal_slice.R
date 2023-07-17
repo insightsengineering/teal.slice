@@ -22,7 +22,7 @@
 #' this describes a filter state that refers to an expression, which can potentially include multiple variables,
 #' managed by the `FilterStateExpr` class.
 #' This class is created when `expr` is specified.
-#' `dataname` and `locked` are retained, `fixed` is set to `TRUE`, `id` becomes mandatory, `title`
+#' `dataname` and `anchored` are retained, `fixed` is set to `TRUE`, `id` becomes mandatory, `title`
 #' remains optional, while other arguments are disregarded.
 #'
 #' A teal_slice can be passed `FilterState`/`FilterStateExpr` constructors to instantiate an object.
@@ -30,12 +30,12 @@
 #' However, once a `FilterState` is created, only the mutable features can be set with a teal_slice:
 #' `selected`, `keep_na` and `keep_inf`.
 #'
-#' Special consideration is given to two fields: `fixed` and `locked`.
+#' Special consideration is given to two fields: `fixed` and `anchored`.
 #' These are always immutable logical flags that default to `FALSE`.
 #' In a `FilterState` instantiated with `fixed = TRUE` the features
 #' `selected`, `keep_na`, `keep_inf` cannot be changed.
 #' Note that a `FilterStateExpr` is always considered to have `fixed = TRUE`.
-#' A `FilterState` instantiated with `locked = TRUE` cannot be removed.
+#' A `FilterState` instantiated with `anchored = TRUE` cannot be removed.
 #'
 #' @section Filters in `SumarizedExperiment` and `MultiAssayExperiment` objects:
 #'
@@ -66,7 +66,7 @@
 #' @param keep_na (optional `logical(1)`) flag specifying whether to keep missing values
 #' @param keep_inf (optional `logical(1)`) flag specifying whether to keep infinite values
 #' @param fixed (`logical(1)`) flag specifying whether to fix this filter state (forbid setting state)
-#' @param locked (`logical(1)`) flag specifying whether to lock this filter state (forbid removing and inactivating)
+#' @param anchored (`logical(1)`) flag specifying whether to lock this filter state (forbid removing and inactivating)
 #' @param title (optional `character(1)`) title of the filter. Ignored when `varname` is set.
 #' @param ... in `teal_slice` method these are additional arguments which can be handled by extensions
 #'  of `teal.slice` classes. In other methods these are further arguments passed to or from other methods.
@@ -93,7 +93,7 @@
 #'   keep_na = TRUE,
 #'   keep_inf = TRUE,
 #'   fixed = FALSE,
-#'   locked = FALSE,
+#'   anchored = FALSE,
 #'   multiple = TRUE,
 #'   id = "Gender",
 #'   extra_arg = "extra"
@@ -119,13 +119,13 @@ teal_slice <- function(dataname,
                        keep_na = NULL,
                        keep_inf = NULL,
                        fixed = FALSE,
-                       locked = FALSE,
+                       anchored = FALSE,
                        multiple = TRUE,
                        title = NULL,
                        ...) {
   checkmate::assert_string(dataname)
   checkmate::assert_flag(fixed)
-  checkmate::assert_flag(locked)
+  checkmate::assert_flag(anchored)
 
   formal_args <- as.list(environment())
 

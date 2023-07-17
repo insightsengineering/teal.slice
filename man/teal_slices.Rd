@@ -15,7 +15,7 @@ teal_slices(
   exclude_varnames = NULL,
   include_varnames = NULL,
   count_type = NULL,
-  module_add = TRUE
+  allow_add = TRUE
 )
 
 is.teal_slices(x)
@@ -47,7 +47,7 @@ and unfiltered dataset. Note, that issues were reported when using this option w
 Please make sure that adding new filters doesn't fail on target platform before deploying for production.
 }}
 
-\item{module_add}{(\code{logical(1)}) logical flag specifying whether the user will be able to add new filters}
+\item{allow_add}{(\code{logical(1)}) logical flag specifying whether the user will be able to add new filters}
 
 \item{x}{(\code{teal_slices}) object.}
 
@@ -90,7 +90,7 @@ filter_2 <- teal_slice(
   keep_na = TRUE,
   selected = 2,
   fixed = TRUE,
-  locked = FALSE,
+  anchored = FALSE,
   extra2 = "extratwo"
 )
 filter_3 <- teal_slice(
@@ -100,7 +100,7 @@ filter_3 <- teal_slice(
   keep_na = TRUE,
   selected = 0.2,
   fixed = TRUE,
-  locked = FALSE,
+  anchored = FALSE,
   extra1 = "extraone",
   extra2 = "extratwo"
 )

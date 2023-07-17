@@ -400,7 +400,7 @@ FilteredData <- R6::R6Class( # nolint
       slices <- Filter(Negate(is.null), states)
       slices <- do.call(c, slices)
       if (!is.null(slices)) {
-        attr(slices, "module_add") <- private$module_add
+        attr(slices, "allow_add") <- private$allow_add
       }
       slices
     },
@@ -479,9 +479,9 @@ FilteredData <- R6::R6Class( # nolint
         }
 
         checkmate::assert_class(state, "teal_slices")
-        module_add <- attr(state, "module_add")
-        if (!is.null(module_add)) {
-          private$module_add <- module_add
+        allow_add <- attr(state, "allow_add")
+        if (!is.null(allow_add)) {
+          private$allow_add <- allow_add
         }
 
         lapply(self$datanames(), function(dataname) {
@@ -490,9 +490,9 @@ FilteredData <- R6::R6Class( # nolint
         })
 
         logger::log_trace("{ class(self)[1] }$set_filter_state initialized")
-
-        invisible(NULL)
       })
+
+      invisible(NULL)
     },
 
     #' @description
@@ -563,7 +563,7 @@ FilteredData <- R6::R6Class( # nolint
 
       logger::log_trace(
         paste(
-          "FilteredData$clear_filter_states removed all non-locked FilterStates,",
+          "FilteredData$clear_filter_states removed all non-anchored FilterStates,",
           "datanames: { toString(datanames) }"
         )
       )
@@ -590,7 +590,7 @@ FilteredData <- R6::R6Class( # nolint
         include_css_files(pattern = "filter-panel"),
         self$ui_overview(ns("overview")),
         self$ui_active(ns("active")),
-        if (private$module_add) {
+        if (private$allow_add) {
           self$ui_add(ns("add"))
         }
       )
@@ -620,7 +620,7 @@ FilteredData <- R6::R6Class( # nolint
 
           self$srv_overview("overview", active_datanames_resolved)
           self$srv_active("active", active_datanames_resolved)
-          if (private$module_add) {
+          if (private$allow_add) {
             self$srv_add("add", active_datanames_resolved)
           }
 
@@ -764,9 +764,9 @@ FilteredData <- R6::R6Class( # nolint
         }
 
         observeEvent(input$remove_all_filters, {
-          logger::log_trace("FilteredData$srv_filter_panel@1 removing all non-locked filters")
+          logger::log_trace("FilteredData$srv_filter_panel@1 removing all non-anchored filters")
           self$clear_filter_states()
-          logger::log_trace("FilteredData$srv_filter_panel@1 removed all non-locked filters")
+          logger::log_trace("FilteredData$srv_filter_panel@1 removed all non-anchored filters")
         })
         logger::log_trace("FilteredData$srv_active initialized")
         NULL
@@ -1094,7 +1094,7 @@ FilteredData <- R6::R6Class( # nolint
     join_keys = NULL,
 
     # flag specifying whether the user may add filters
-    module_add = TRUE,
+    allow_add = TRUE,
 
     # flag specifying if snapshot manager should be available
     snapshot_manager_active = logical(0L),
@@ -1212,7 +1212,7 @@ FilteredData <- R6::R6Class( # nolint
                 value = slice$id,
                 label = slice$id,
                 checked = if (slice$id %in% active_slices_ids) "checked",
-                disabled = slice$locked ||
+                disabled = slice$anchored ||
                   get_default_slice_id(slice) %in% duplicated_slice_refs &&
                     !slice$id %in% active_slices_ids
               )

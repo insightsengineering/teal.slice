@@ -52,7 +52,7 @@ Each `teal_slice` object contains all the information necessary to:
    - `choices` - determines the set of values or the range that can be selected from
    - `multiple` (only for `ChoiceFilterState`) - allows multiple values to be selected 
    - `fixed` - forbids changing state of the `FilterState`
-   - `locked` - forbids removal of the `FilterState`
+   - `anchored` - forbids removal of the `FilterState`
    - `title` - displayed title of the filter card
 
 In addition, every `teal_slice` object has an `id`. 
@@ -159,7 +159,7 @@ set_filter_state(
 | Distribution in unfiltered data | Filtered vs. unfiltered distribution  |
 | ![](./images/filter_panel/count_type_none.jpeg){width=300} | ![](./images/filter_panel/count_type_all.jpeg){width=300} |
 
-4. `module_add` determines whether the "Add Filter Variables" module will be displayed 
+4. `allow_add` determines whether the "Add Filter Variables" module will be displayed 
 to allow the user to add new filters.
 
 
@@ -189,7 +189,7 @@ set_filter_state(
     include_varnames = list(iris = c("Species", "Sepal.Length")),
     exclude_varnames = list(mtcars = "cyl"),
     count_type = "all",
-    module_add = TRUE
+    allow_add = TRUE
   )
 )
 

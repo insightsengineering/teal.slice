@@ -19,7 +19,7 @@ teal_slice(
   keep_na = NULL,
   keep_inf = NULL,
   fixed = FALSE,
-  locked = FALSE,
+  anchored = FALSE,
   multiple = TRUE,
   title = NULL,
   ...
@@ -61,7 +61,7 @@ Type and size depends on variable type.}
 
 \item{fixed}{(\code{logical(1)}) flag specifying whether to fix this filter state (forbid setting state)}
 
-\item{locked}{(\code{logical(1)}) flag specifying whether to lock this filter state (forbid removing and inactivating)}
+\item{anchored}{(\code{logical(1)}) flag specifying whether to lock this filter state (forbid removing and inactivating)}
 
 \item{multiple}{(optional \code{logical(1)}) flag specifying whether more than one value can be selected;
 only applicable to \code{ChoicesFilterState} and \code{LogicalFilterState}}
@@ -105,7 +105,7 @@ This class is created when \verb{varname is specified. The object retains all fi
 this describes a filter state that refers to an expression, which can potentially include multiple variables,
 managed by the \code{FilterStateExpr} class.
 This class is created when \code{expr} is specified.
-\code{dataname} and \code{locked} are retained, \code{fixed} is set to \code{TRUE}, \code{id} becomes mandatory, \code{title}
+\code{dataname} and \code{anchored} are retained, \code{fixed} is set to \code{TRUE}, \code{id} becomes mandatory, \code{title}
 remains optional, while other arguments are disregarded.
 }
 
@@ -114,12 +114,12 @@ It can also be passed to \code{FilterState$set_state} to modify the state.
 However, once a \code{FilterState} is created, only the mutable features can be set with a teal_slice:
 \code{selected}, \code{keep_na} and \code{keep_inf}.
 
-Special consideration is given to two fields: \code{fixed} and \code{locked}.
+Special consideration is given to two fields: \code{fixed} and \code{anchored}.
 These are always immutable logical flags that default to \code{FALSE}.
 In a \code{FilterState} instantiated with \code{fixed = TRUE} the features
 \code{selected}, \code{keep_na}, \code{keep_inf} cannot be changed.
 Note that a \code{FilterStateExpr} is always considered to have \code{fixed = TRUE}.
-A \code{FilterState} instantiated with \code{locked = TRUE} cannot be removed.
+A \code{FilterState} instantiated with \code{anchored = TRUE} cannot be removed.
 }
 \section{Filters in \code{SumarizedExperiment} and \code{MultiAssayExperiment} objects}{
 
@@ -149,7 +149,7 @@ x2 <- teal_slice(
   keep_na = TRUE,
   keep_inf = TRUE,
   fixed = FALSE,
-  locked = FALSE,
+  anchored = FALSE,
   multiple = TRUE,
   id = "Gender",
   extra_arg = "extra"

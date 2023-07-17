@@ -1,7 +1,7 @@
 Type: Package
 Package: teal.slice
 Title: Filter Module for `teal` Applications
-Version: 0.3.0.9007
+Version: 0.3.0.9009
 Date: 2023-07-17
 Authors@R: c(
     person("Dawid", "Kaledkowski", , "dawid.kaledkowski@roche.com", role = c("aut", "cre")),

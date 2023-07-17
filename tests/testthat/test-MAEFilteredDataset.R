@@ -242,19 +242,19 @@ testthat::test_that(
     fs <- teal_slices(
       teal_slice(
         dataname = "miniacc", varname = "years_to_birth", choices = c(14, 83), selected = c(30, 50),
-        keep_na = FALSE, keep_inf = FALSE, fixed = FALSE, locked = FALSE
+        keep_na = FALSE, keep_inf = FALSE, fixed = FALSE, anchored = FALSE
       ),
       teal_slice(
         dataname = "miniacc", varname = "vital_status", choices = c("0", "1"), multiple = TRUE, selected = "1",
-        keep_na = FALSE, keep_inf = NULL, fixed = FALSE, locked = FALSE
+        keep_na = FALSE, keep_inf = NULL, fixed = FALSE, anchored = FALSE
       ),
       teal_slice(
         dataname = "miniacc", varname = "gender", choices = c("female", "male"), multiple = TRUE, selected = "female",
-        keep_na = FALSE, keep_inf = FALSE, fixed = FALSE, locked = FALSE
+        keep_na = FALSE, keep_inf = FALSE, fixed = FALSE, anchored = FALSE
       ),
       teal_slice(
         dataname = "miniacc", varname = "ARRAY_TYPE", choices = c("", "protein_level"), multiple = TRUE, selected = "",
-        keep_na = FALSE, keep_inf = NULL, fixed = FALSE, locked = FALSE,
+        keep_na = FALSE, keep_inf = NULL, fixed = FALSE, anchored = FALSE,
         experiment = "RPPAArray", arg = "subset"
       ),
       count_type = "none",

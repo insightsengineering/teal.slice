@@ -39,12 +39,12 @@ testthat::test_that("set_filter_state sets `teal_slice`", {
   fs <- teal_slices(
     teal_slice(
       dataname = "iris", varname = "Sepal.Length", choices = c(4.3, 7.9), selected = c(5.1, 6.4),
-      keep_na = FALSE, keep_inf = FALSE, fixed = FALSE, locked = FALSE
+      keep_na = FALSE, keep_inf = FALSE, fixed = FALSE, anchored = FALSE
     ),
     teal_slice(
       dataname = "iris", varname = "Species",
       choices = c("setosa", "versicolor", "virginica"), multiple = TRUE, selected = c("setosa", "versicolor"),
-      keep_na = FALSE, keep_inf = FALSE, fixed = FALSE, locked = FALSE
+      keep_na = FALSE, keep_inf = FALSE, fixed = FALSE, anchored = FALSE
     ),
     count_type = "all",
     include_varnames = list(iris = colnames(iris))
@@ -60,12 +60,12 @@ testthat::test_that("format returns a properly formatted string representation",
   fs <- teal_slices(
     teal_slice(
       dataname = "iris", varname = "Sepal.Length", choices = c(4.3, 7.9), selected = c(5.1, 6.4),
-      keep_inf = FALSE, fixed = FALSE, locked = FALSE
+      keep_inf = FALSE, fixed = FALSE, anchored = FALSE
     ),
     teal_slice(
       dataname = "iris", varname = "Species",
       choices = c("setosa", "versicolor", "virginica"), selected = c("setosa", "versicolor"),
-      keep_na = FALSE, fixed = FALSE, locked = FALSE
+      keep_na = FALSE, fixed = FALSE, anchored = FALSE
     ),
     count_type = "all",
     include_varnames = list(iris = colnames(iris))
@@ -93,12 +93,12 @@ testthat::test_that("print returns a properly formatted string representation", 
   fs <- teal_slices(
     teal_slice(
       dataname = "iris", varname = "Sepal.Length", choices = c(4.3, 7.9), selected = c(5.1, 6.4),
-      keep_inf = FALSE, fixed = FALSE, locked = FALSE
+      keep_inf = FALSE, fixed = FALSE, anchored = FALSE
     ),
     teal_slice(
       dataname = "iris", varname = "Species",
       choices = c("setosa", "versicolor", "virginica"), selected = c("setosa", "versicolor"),
-      keep_na = FALSE, fixed = FALSE, locked = FALSE
+      keep_na = FALSE, fixed = FALSE, anchored = FALSE
     ),
     count_type = "all",
     include_varnames = list(iris = colnames(iris))

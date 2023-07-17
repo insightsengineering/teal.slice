@@ -648,7 +648,7 @@ FilterStates <- R6::R6Class( # nolint
           new_state_list <- Filter(
             function(state) {
               if (state$get_state()$id %in% state_id) {
-                if (state$get_state()$locked && !force) {
+                if (state$get_state()$anchored && !force) {
                   return(TRUE)
                 } else {
                   state$destroy_observers()
@@ -678,7 +678,7 @@ FilterStates <- R6::R6Class( # nolint
     state_list_empty = function(force = FALSE) {
       shiny::isolate({
         logger::log_trace(
-          "{ class(self)[1] }$state_list_empty removing filters for dataname: { private$dataname }"
+          "{ class(self)[1] }$state_list_empty removing all non-anchored filters for dataname: { private$dataname }"
         )
 
         state_list <- private$state_list()

@@ -577,7 +577,7 @@ testthat::test_that("remove_filter_state removes states specified by `teal_slice
   )
 })
 
-testthat::test_that("remove_filter_state does not remove locked filters", {
+testthat::test_that("remove_filter_state does not remove anchored filters", {
   datasets <- teal.slice:::FilteredData$new(
     list(
       iris = list(dataset = iris),
@@ -591,11 +591,11 @@ testthat::test_that("remove_filter_state does not remove locked filters", {
     ),
     teal_slice(
       dataname = "iris", varname = "Species", selected = c("setosa", "versicolor"),
-      keep_na = FALSE, locked = TRUE
+      keep_na = FALSE, anchored = TRUE
     ),
     teal_slice(
       dataname = "iris", varname = "Sepal.Width", selected = c(2.5, 3.3),
-      keep_na = FALSE, keep_inf = FALSE, locked = TRUE
+      keep_na = FALSE, keep_inf = FALSE, anchored = TRUE
     )
   )
   datasets$set_filter_state(state = fs)
@@ -603,7 +603,7 @@ testthat::test_that("remove_filter_state does not remove locked filters", {
 
   testthat::expect_length(shiny::isolate(datasets$get_filter_state()), 2)
   testthat::expect_true(
-    shiny::isolate(teal.slice:::slices_field(datasets$get_filter_state(), "locked"))
+    shiny::isolate(teal.slice:::slices_field(datasets$get_filter_state(), "anchored"))
   )
 })
 
@@ -648,7 +648,7 @@ testthat::test_that("clear_filter_states removes filters of desired dataset only
   testthat::expect_identical(shiny::isolate(slices_field(datasets$get_filter_state(), "dataname")), "mtcars")
 })
 
-testthat::test_that("clear_filter_states does not remove locked filters", {
+testthat::test_that("clear_filter_states does not remove anchored filters", {
   datasets <- teal.slice:::FilteredData$new(
     list(
       iris = list(dataset = iris),
@@ -662,11 +662,11 @@ testthat::test_that("clear_filter_states does not remove locked filters", {
     ),
     teal_slice(
       dataname = "iris", varname = "Species", selected = c("setosa", "versicolor"),
-      keep_na = FALSE, locked = TRUE
+      keep_na = FALSE, anchored = TRUE
     ),
     teal_slice(
       dataname = "iris", varname = "Sepal.Width", selected = c(2.5, 3.3),
-      keep_na = FALSE, keep_inf = FALSE, locked = TRUE
+      keep_na = FALSE, keep_inf = FALSE, anchored = TRUE
     )
   )
   datasets$set_filter_state(state = fs)
@@ -674,7 +674,7 @@ testthat::test_that("clear_filter_states does not remove locked filters", {
 
   testthat::expect_length(shiny::isolate(datasets$get_filter_state()), 2)
   testthat::expect_true(
-    shiny::isolate(teal.slice:::slices_field(datasets$get_filter_state(), "locked"))
+    shiny::isolate(teal.slice:::slices_field(datasets$get_filter_state(), "anchored"))
   )
 })
 
@@ -912,7 +912,7 @@ test_class <- R6::R6Class(
 )
 datasets <- test_class$new(list(iris = list(dataset = iris)))
 fs <- teal_slices(
-  teal_slice(dataname = "iris", varname = "Sepal.Length", locked = TRUE),
+  teal_slice(dataname = "iris", varname = "Sepal.Length", anchored = TRUE),
   teal_slice(dataname = "iris", varname = "Sepal.Width", fixed = TRUE),
   teal_slice(dataname = "iris", varname = "Petal.Length"),
   teal_slice(dataname = "iris", varname = "Petal.Width"),
@@ -957,7 +957,7 @@ shiny::testServer(
       testthat::expect_identical(active_slices_id(), c("iris Sepal.Length", "iris Sepal.Width", "iris Species"))
     })
 
-    testthat::test_that("FilteredData$srv_available_slices deactivating all keeps locked states", {
+    testthat::test_that("FilteredData$srv_available_slices deactivating all keeps anchored states", {
       session$setInputs(available_slices_id = NULL)
       testthat::expect_identical(active_slices_id(), "iris Sepal.Length")
     })
