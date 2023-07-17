@@ -249,16 +249,12 @@ FilterState <- R6::R6Class( # nolint
             `data-bs-toggle` = "collapse",
             href = paste0("#", ns("body")),
             # header elements
-            if (private$is_anchored()) {
-              if (private$is_fixed()) {
-                icon("anchor-lock")
-              } else {
-                icon("anchor")
-              }
-            } else if (private$is_fixed()) {
+            if (private$is_anchored() && private$is_fixed()) {
+              icon("anchor-lock")
+            } else if (private$is_anchored() && !private$is_fixed()) {
+              icon("anchor")
+            } else if (!private$is_anchored() && private$is_fixed()) {
               icon("lock")
-            } else {
-              NULL
             },
             tags$span(tags$strong(private$get_varname())),
             tags$span(private$get_varlabel(), class = "filter-card-varlabel")
