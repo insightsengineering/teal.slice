@@ -126,7 +126,7 @@ A \code{FilterState} instantiated with \code{anchored = TRUE} cannot be removed.
 
 To establish a filter on a column in a \code{data.frame}, \code{dataname} and \code{varname} are sufficient.
 \code{MultiAssayExperiment} objects can be filtered either on their \code{colData} slot (which contains subject information)
-or on their experiments, which are stored in the \code{ExperimentList} slot.
+or on their experiments, which are stored in the \code{experimentList} slot.
 For filters referring to \code{colData} no extra arguments are needed.
 If a filter state is created for an experiment, that experiment name must be specified in the \code{experiment} argument.
 Furthermore, to specify filter for an \code{SummarizedExperiment} one must also set \code{arg}
