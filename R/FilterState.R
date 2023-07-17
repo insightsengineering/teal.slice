@@ -567,7 +567,7 @@ FilterState <- R6::R6Class( # nolint
     },
 
     # Checks whether multiple choices are allowed.
-    # If not value is of length 2 or more, drops all but first item with a warning.
+    # If not and more than one values is selected, restores previous selection with warning.
     check_multiple = function(value) {
       value
     },
