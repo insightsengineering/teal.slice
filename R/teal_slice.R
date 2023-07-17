@@ -136,7 +136,7 @@ teal_slice <- function(dataname,
     checkmate::assert_string(title)
     checkmate::assert_string(expr)
 
-    fixed <- TRUE
+    formal_args$fixed <- TRUE
     ts_expr_args <- c("dataname", "id", "expr", "fixed", "anchored", "title")
     formal_args <- formal_args[ts_expr_args]
     ans <- do.call(shiny::reactiveValues, c(formal_args, list(...)))
