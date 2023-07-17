@@ -545,8 +545,7 @@ FilterState <- R6::R6Class( # nolint
       }
     },
 
-    # Converts values to the type fitting this `FilterState` and validates
-    # whether the elements of the resulting vector satisfy the requirements of this `FilterState`.
+    # Converts values to the type fitting this `FilterState` and validates the conversion.
     # Raises error if casting does not execute successfully.
     #
     # @param values vector of values

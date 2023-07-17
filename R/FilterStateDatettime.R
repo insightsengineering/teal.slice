@@ -255,7 +255,7 @@ DatetimeFilterState <- R6::R6Class( # nolint
           if (any(is.na(values))) stop()
           values
         },
-        error = function(e) stop("The array of set values must contain values coercible to POSIX.")
+        error = function(e) stop("The vector of set values must contain values coercible to POSIX.")
       )
     },
     check_length = function(values) {

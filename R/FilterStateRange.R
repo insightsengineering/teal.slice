@@ -341,8 +341,6 @@ RangeFilterState <- R6::R6Class( # nolint
         )
       }
     },
-
-    # overwrites superclass method
     cast_and_validate = function(values) {
       tryCatch(
         expr = {
@@ -350,14 +348,15 @@ RangeFilterState <- R6::R6Class( # nolint
           if (any(is.na(values_logical))) stop()
           values
         },
-        error = function(e) stop("The array of set values must contain values coercible to numeric")
+        error = function(e) stop("The vector of set values must contain values coercible to numeric")
       )
     },
+    # Also validates that selection is sorted.
     check_length = function(values) {
       if (length(values) != 2L) stop("Vector of set values must have length two.")
       if (values[1L] > values[2L]) stop("Vector of set values must be sorted.")
       values
-    }
+    },
     # Trim selection to limits imposed by private$get_choices()
     remove_out_of_bound_values = function(values) {
       if (values[1L] < private$get_choices()[1L]) values[1L] <- private$get_choices()[1L]
