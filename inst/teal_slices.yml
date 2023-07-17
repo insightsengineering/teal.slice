@@ -12,7 +12,7 @@ schemas:
           required:
             - dataname
             - id
-            - locked
+            - anchored
           properties:
             dataname:
               type: string
@@ -32,7 +32,7 @@ schemas:
               type: ['null', boolean]
             fixed:
               type: boolean
-            locked:
+            anchored:
               type: boolean
             multiple:
               type: boolean

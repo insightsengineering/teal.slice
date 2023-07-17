@@ -137,7 +137,7 @@ FilterState <- R6::R6Class( # nolint
     #' @description
     #' Sets filtering state.
     #' - `fixed` state is prevented from changing state
-    #' - `locked` state is prevented from removing state
+    #' - `anchored` state is prevented from removing state
     #'
     #' @param state a `teal_slice` object
     #'
@@ -249,12 +249,17 @@ FilterState <- R6::R6Class( # nolint
             `data-bs-toggle` = "collapse",
             href = paste0("#", ns("body")),
             # header elements
-            if (private$is_locked()) icon("lock") else NULL,
-            if (private$is_fixed()) icon("burst") else NULL,
+            if (private$is_anchored() && private$is_fixed()) {
+              icon("anchor-lock")
+            } else if (private$is_anchored() && !private$is_fixed()) {
+              icon("anchor")
+            } else if (!private$is_anchored() && private$is_fixed()) {
+              icon("lock")
+            },
             tags$span(tags$strong(private$get_varname())),
             tags$span(private$get_varlabel(), class = "filter-card-varlabel")
           ),
-          if (isFALSE(private$is_locked())) {
+          if (isFALSE(private$is_anchored())) {
             actionLink(
               inputId = ns("remove"),
               label = icon("circle-xmark", lib = "font-awesome"),
@@ -482,10 +487,10 @@ FilterState <- R6::R6Class( # nolint
       shiny::isolate(isTRUE(private$teal_slice$fixed))
     },
 
-    # Check whether this filter is locked (cannot be removed).
+    # Check whether this filter is anchored (cannot be removed).
     # @return `logical(1)`
-    is_locked = function() {
-      shiny::isolate(isTRUE(private$teal_slice$locked))
+    is_anchored = function() {
+      shiny::isolate(isTRUE(private$teal_slice$anchored))
     },
 
     # Check whether this filter is capable of selecting multiple values.

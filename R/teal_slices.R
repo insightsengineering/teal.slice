@@ -46,7 +46,7 @@
 #'   keep_na = TRUE,
 #'   selected = 2,
 #'   fixed = TRUE,
-#'   locked = FALSE,
+#'   anchored = FALSE,
 #'   extra2 = "extratwo"
 #' )
 #' filter_3 <- teal_slice(
@@ -56,7 +56,7 @@
 #'   keep_na = TRUE,
 #'   selected = 0.2,
 #'   fixed = TRUE,
-#'   locked = FALSE,
+#'   anchored = FALSE,
 #'   extra1 = "extraone",
 #'   extra2 = "extratwo"
 #' )

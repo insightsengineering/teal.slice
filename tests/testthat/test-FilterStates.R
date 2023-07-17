@@ -68,7 +68,7 @@ existing filter", {
   fs <- teal_slices(
     teal_slice(
       dataname = "test", varname = "a", choices = c(1, 5), selected = c(1, 4), keep_na = FALSE, keep_inf = FALSE,
-      fixed = FALSE, locked = FALSE, any_attribute = "a", another_attribute = "b"
+      fixed = FALSE, anchored = FALSE, any_attribute = "a", another_attribute = "b"
     ),
     count_type = "none"
   )
@@ -360,16 +360,16 @@ testthat::test_that("Adding 'var_to_add' adds another filter state", {
     teal_slices(
       teal_slice(
         dataname = "iris", varname = "Sepal.Length", choices = c(4.3, 7.9), selected = c(5.1, 6.4),
-        keep_na = FALSE, keep_inf = FALSE, fixed = FALSE, locked = FALSE
+        keep_na = FALSE, keep_inf = FALSE, fixed = FALSE, anchored = FALSE
       ),
       teal_slice(
         dataname = "iris", varname = "Petal.Length", choices = c(1.0, 6.9), selected = c(1.0, 6.9),
-        keep_na = NULL, keep_inf = NULL, fixed = FALSE, locked = FALSE
+        keep_na = NULL, keep_inf = NULL, fixed = FALSE, anchored = FALSE
       ),
       teal_slice(
         dataname = "iris", varname = "Species", choices = c("setosa", "versicolor", "virginica"),
         multiple = TRUE, selected = c("setosa", "versicolor", "virginica"), keep_na = NULL, keep_inf = NULL,
-        fixed = FALSE, locked = FALSE
+        fixed = FALSE, anchored = FALSE
       ),
       count_type = "none"
     )

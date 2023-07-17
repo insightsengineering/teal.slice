@@ -153,7 +153,7 @@ Prints this \code{FilterState} object.
 Sets filtering state.
 \itemize{
 \item \code{fixed} state is prevented from changing state
-\item \code{locked} state is prevented from removing state
+\item \code{anchored} state is prevented from removing state
 }
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{FilterState$set_state(state)}\if{html}{\out{</div>}}
