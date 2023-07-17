@@ -84,7 +84,7 @@ set_filter_state(
     include_varnames = list(iris = c("Species", "Sepal.Length")),
     exclude_varnames = list(mtcars = "cyl"),
     count_type = "all",
-    module_add = TRUE
+    allow_add = TRUE
   )
 )
 

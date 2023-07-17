@@ -6,7 +6,7 @@
 * Implemented reactive counts of single filter card to compare filtered and unfiltered variable distributions. See `count_type` in `teal_slices`.
 * Possible now to specify filter based on arbitrary logical expression. See `expr` argument in `teal_slice`. 
 * Possible now to limit choices in single filter card. See `choices` argument in `teal_slice`.
-* Possible now to initialize filter panel without "Add filter variables" panel through `module_add` in `teal_slices`.
+* Possible now to initialize filter panel without "Add filter variables" panel through `allow_add` in `teal_slices`.
 * Possible now to set filter which can't be removed by app user. See `anchored` argument in `teal_slice`.
 * Possible now to set filter which selection remains the same. See `fixed` argument in `teal_slice`.
 * Possible now to limit variable by single level only. See `multuple` argument in `teal_slice`  
