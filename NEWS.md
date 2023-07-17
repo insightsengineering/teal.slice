@@ -1,6 +1,23 @@
-# teal.slice 0.3.0.9005
+# teal.slice 0.3.0.9007
 
-* Remove `scda` from dependencies.
+### New features
+
+* Filter panel API is now based on `teal_slice` and `teal_slices` objects.
+* It is now possible to specify a filter based on an arbitrary logical expression. See `expr` argument in `teal_slice`. 
+* It is now possible to limit choices in a single filter card. See `choices` argument in `teal_slice`.
+* It is now possible to initialize the filter panel without the "Add filter variables" panel through `allow_add` in `teal_slices`.
+* It is now possible to set a filter that cannot be removed by the app user. See `anchored` argument in `teal_slice`.
+* It is now possible to set a filter whose selection cannot be changed. See `fixed` argument in `teal_slice`.
+* It is now possible to limit choices within a variable to a single value only. See `multuple` argument in `teal_slice`  .
+* Changed appearance of filter cards to a collapsible accordion.
+* Replaced `sliderInput` with interactive `plotly` chart to allow the user to zoom in on the variable distribution.
+* Implemented reactive counts in single filter cards to compare filtered and unfiltered variable distributions. See `count_type` argument in `teal_slices`.
+
+### Breaking changes
+
+* Setting filters using a list is now deprecated. Use `teal_slices` and `teal_slice` instead.
+* Removed `CDISCFilteredData` and `CDISCFilteredDataset` and implementing `JoinKeys` handling in their parent classes (`FilteredData` and `DefaultFilteredDataset`).
+* Specifying set of filterable columns is done through `include_varnames` and `exclude_varnames` in `teal_slices`. Specifying `attr(, "filterable")` is hard deprecated.
 
 # teal.slice 0.3.0
 

@@ -140,8 +140,8 @@ testthat::test_that("get_filter_overview_info returns overview matrix for MAEFil
       dataname = c("miniACC", sprintf("- %s", names(miniACC))),
       subjects = c(92, 79, 90, 46, 90, 80),
       subjects_filtered = c(92, 79, 90, 46, 90, 80),
-      obs = c(NA_real_, 79, 90, 46, 90, 80),
-      obs_filtered = c(NA_real_, 79, 90, 46, 90, 80)
+      obs = c(NA_real_, 198, 198, 33, 97, 471),
+      obs_filtered = c(NA_real_, 198, 198, 33, 97, 471)
     )
   )
 })
@@ -169,8 +169,8 @@ testthat::test_that("get_filter_overview_info returns overview matrix for MAEFil
       dataname = c("miniacc", sprintf("- %s", names(miniACC))),
       subjects = c(92, 79, 90, 46, 90, 80),
       subjects_filtered = c(6, 5, 6, 4, 5, 5),
-      obs = c(NA_real_, 79, 90, 46, 90, 80),
-      obs_filtered = c(NA_real_, 5, 6, 4, 5, 5)
+      obs = c(NA_real_, 198, 198, 33, 97, 471),
+      obs_filtered = c(NA_real_, 198, 198, 26, 97, 471)
     )
   )
 })

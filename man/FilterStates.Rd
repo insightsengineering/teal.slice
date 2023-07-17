@@ -256,7 +256,7 @@ include locked filter states}
 \if{html}{\out{</div>}}
 }
 \subsection{Returns}{
-NULL
+\code{NULL}, invisibly
 }
 }
 \if{html}{\out{<hr>}}

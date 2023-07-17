@@ -7,7 +7,7 @@
 \alias{as.list.teal_slice}
 \alias{format.teal_slice}
 \alias{print.teal_slice}
-\title{Filter specification}
+\title{Specify single filter.}
 \usage{
 teal_slice(
   dataname,
@@ -83,7 +83,7 @@ A \code{teal.slice} object. Depending on whether \code{varname} or \code{expr} w
 \code{teal_slice} also receives class \code{teal_slice_var} or \code{teal_slice_expr}, respectively.
 }
 \description{
-Filter specification
+Create a \code{teal_slice} object that holds complete information on filtering one variable.
 }
 \details{
 \code{teal_slice} object fully describes filter state and can be used to create,
@@ -163,5 +163,8 @@ format(x1, show_all = TRUE, trim_lines = FALSE)
 print(x1)
 print(x1, show_all = TRUE, trim_lines = FALSE)
 
+}
+\seealso{
+\code{\link{teal_slices}}
 }
 \keyword{internal}

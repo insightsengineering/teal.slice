@@ -297,10 +297,11 @@ FilterStates <- R6::R6Class( # nolint
     #' @param force (`logical(1)`)\cr
     #'   include locked filter states
     #'
-    #' @return NULL
+    #' @return `NULL`, invisibly
     #'
     clear_filter_states = function(force = FALSE) {
       private$state_list_empty(force)
+      invisible(NULL)
     },
 
     # shiny modules ----
@@ -508,7 +509,7 @@ FilterStates <- R6::R6Class( # nolint
   ),
   private = list(
     # private fields ----
-    count_type = "all", # specifies how observation numbers are displayed in filter cards,
+    count_type = "none", # specifies how observation numbers are displayed in filter cards,
     data = NULL, # data.frame, MAE, SE or matrix
     data_reactive = NULL, # reactive
     datalabel = NULL, # to follow default `experiment = NULL` in `teal_slice`

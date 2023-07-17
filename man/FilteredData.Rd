@@ -112,8 +112,6 @@ shiny::isolate(datasets$get_filter_state())
 \item \href{#method-FilteredData-get_join_keys}{\code{FilteredData$get_join_keys()}}
 \item \href{#method-FilteredData-get_filter_overview}{\code{FilteredData$get_filter_overview()}}
 \item \href{#method-FilteredData-get_keys}{\code{FilteredData$get_keys()}}
-\item \href{#method-FilteredData-get_varlabels}{\code{FilteredData$get_varlabels()}}
-\item \href{#method-FilteredData-get_varnames}{\code{FilteredData$get_varnames()}}
 \item \href{#method-FilteredData-set_dataset}{\code{FilteredData$set_dataset()}}
 \item \href{#method-FilteredData-set_join_keys}{\code{FilteredData$set_join_keys()}}
 \item \href{#method-FilteredData-set_check}{\code{FilteredData$set_check()}}
@@ -123,7 +121,6 @@ shiny::isolate(datasets$get_filter_state())
 \item \href{#method-FilteredData-print}{\code{FilteredData$print()}}
 \item \href{#method-FilteredData-set_filter_state}{\code{FilteredData$set_filter_state()}}
 \item \href{#method-FilteredData-remove_filter_state}{\code{FilteredData$remove_filter_state()}}
-\item \href{#method-FilteredData-remove_all_filter_states}{\code{FilteredData$remove_all_filter_states()}}
 \item \href{#method-FilteredData-clear_filter_states}{\code{FilteredData$clear_filter_states()}}
 \item \href{#method-FilteredData-ui_filter_panel}{\code{FilteredData$ui_filter_panel()}}
 \item \href{#method-FilteredData-srv_filter_panel}{\code{FilteredData$srv_filter_panel()}}
@@ -133,6 +130,14 @@ shiny::isolate(datasets$get_filter_state())
 \item \href{#method-FilteredData-srv_add}{\code{FilteredData$srv_add()}}
 \item \href{#method-FilteredData-ui_overview}{\code{FilteredData$ui_overview()}}
 \item \href{#method-FilteredData-srv_overview}{\code{FilteredData$srv_overview()}}
+\item \href{#method-FilteredData-handle_active_datanames}{\code{FilteredData$handle_active_datanames()}}
+\item \href{#method-FilteredData-get_varlabels}{\code{FilteredData$get_varlabels()}}
+\item \href{#method-FilteredData-get_varnames}{\code{FilteredData$get_varnames()}}
+\item \href{#method-FilteredData-get_filterable_datanames}{\code{FilteredData$get_filterable_datanames()}}
+\item \href{#method-FilteredData-get_filterable_varnames}{\code{FilteredData$get_filterable_varnames()}}
+\item \href{#method-FilteredData-set_filterable_varnames}{\code{FilteredData$set_filterable_varnames()}}
+\item \href{#method-FilteredData-get_formatted_filter_state}{\code{FilteredData$get_formatted_filter_state()}}
+\item \href{#method-FilteredData-remove_all_filter_states}{\code{FilteredData$remove_all_filter_states()}}
 \item \href{#method-FilteredData-clone}{\code{FilteredData$clone()}}
 }
 }
@@ -202,10 +207,10 @@ Useful to display in \verb{Show R Code}.
 }
 \subsection{Returns}{
 (\code{character}) keys of dataset
-Set external \code{teal_slice}
+Set list of external filter states available for activation.
 
-Unlike adding new filter from the column, these filters can be added with some pre-specified
-settings. List of \code{teal_slices} should be a reactive so one can make this list to be dynamic.
+Unlike adding new filter from the column, these filters can come with some pre-specified
+settings. \code{teal_slices} are wrapped in a \code{reactive} so one it can be updated from elsewhere in the app.
 List is accessible in \code{ui/srv_active} through \code{ui/srv_available_filters}.
 }
 }
@@ -416,54 +421,6 @@ Get keys for the dataset.
 }
 \subsection{Returns}{
 (\code{character}) keys of dataset
-}
-}
-\if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-FilteredData-get_varlabels"></a>}}
-\if{latex}{\out{\hypertarget{method-FilteredData-get_varlabels}{}}}
-\subsection{Method \code{get_varlabels()}}{
-Gets labels of variables in the data.
-
-Variables are the column names of the data.
-Either, all labels must have been provided for all variables
-in \code{set_data} or \code{NULL}.
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{FilteredData$get_varlabels(dataname, variables = NULL)}\if{html}{\out{</div>}}
-}
-
-\subsection{Arguments}{
-\if{html}{\out{<div class="arguments">}}
-\describe{
-\item{\code{dataname}}{(\code{character(1)}) name of the dataset}
-
-\item{\code{variables}}{(\code{character}) variables to get labels for;
-if \code{NULL}, for all variables in data}
-}
-\if{html}{\out{</div>}}
-}
-\subsection{Returns}{
-(\code{character} or \code{NULL}) variable labels, \code{NULL} if \code{column_labels}
-attribute does not exist for the data
-}
-}
-\if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-FilteredData-get_varnames"></a>}}
-\if{latex}{\out{\hypertarget{method-FilteredData-get_varnames}{}}}
-\subsection{Method \code{get_varnames()}}{
-Gets variable names.
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{FilteredData$get_varnames(dataname)}\if{html}{\out{</div>}}
-}
-
-\subsection{Arguments}{
-\if{html}{\out{<div class="arguments">}}
-\describe{
-\item{\code{dataname}}{(\code{character}) the name of the dataset}
-}
-\if{html}{\out{</div>}}
-}
-\subsection{Returns}{
-(\code{character} vector) of variable names
 }
 }
 \if{html}{\out{<hr>}}
@@ -693,26 +650,6 @@ specifying \code{FilterState} objects to remove;
 }
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-FilteredData-remove_all_filter_states"></a>}}
-\if{latex}{\out{\hypertarget{method-FilteredData-remove_all_filter_states}{}}}
-\subsection{Method \code{remove_all_filter_states()}}{
-Deprecated - please use \code{clear_filter_states} method.
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{FilteredData$remove_all_filter_states(datanames)}\if{html}{\out{</div>}}
-}
-
-\subsection{Arguments}{
-\if{html}{\out{<div class="arguments">}}
-\describe{
-\item{\code{datanames}}{(\code{character})}
-}
-\if{html}{\out{</div>}}
-}
-\subsection{Returns}{
-\code{NULL} invisibly
-}
-}
-\if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-FilteredData-clear_filter_states"></a>}}
 \if{latex}{\out{\hypertarget{method-FilteredData-clear_filter_states}{}}}
 \subsection{Method \code{clear_filter_states()}}{
@@ -929,6 +866,148 @@ panel will be hidden.}
 }
 \subsection{Returns}{
 \code{moduleServer} function which returns \code{NULL}
+}
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-FilteredData-handle_active_datanames"></a>}}
+\if{latex}{\out{\hypertarget{method-FilteredData-handle_active_datanames}{}}}
+\subsection{Method \code{handle_active_datanames()}}{
+Method is deprecated. Provide resolved \code{active_datanames} to \code{srv_filter_panel}
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{FilteredData$handle_active_datanames(datanames)}\if{html}{\out{</div>}}
+}
+
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{datanames}}{\verb{character vector} \code{datanames} to pick}
+}
+\if{html}{\out{</div>}}
+}
+\subsection{Returns}{
+the intersection of \code{self$datanames()} and \code{datanames}
+}
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-FilteredData-get_varlabels"></a>}}
+\if{latex}{\out{\hypertarget{method-FilteredData-get_varlabels}{}}}
+\subsection{Method \code{get_varlabels()}}{
+Method is deprecated. Please extract column labels directly from the data.
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{FilteredData$get_varlabels(dataname, variables = NULL)}\if{html}{\out{</div>}}
+}
+
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{dataname}}{(\code{character(1)}) name of the dataset}
+
+\item{\code{variables}}{(\code{character}) variables to get labels for;
+if \code{NULL}, for all variables in data}
+}
+\if{html}{\out{</div>}}
+}
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-FilteredData-get_varnames"></a>}}
+\if{latex}{\out{\hypertarget{method-FilteredData-get_varnames}{}}}
+\subsection{Method \code{get_varnames()}}{
+Method is deprecated, Please extract variable names directly from the data instead
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{FilteredData$get_varnames(dataname)}\if{html}{\out{</div>}}
+}
+
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{dataname}}{(\code{character}) the name of the dataset}
+}
+\if{html}{\out{</div>}}
+}
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-FilteredData-get_filterable_datanames"></a>}}
+\if{latex}{\out{\hypertarget{method-FilteredData-get_filterable_datanames}{}}}
+\subsection{Method \code{get_filterable_datanames()}}{
+Method is deprecated, please use \code{self$datanames()} instead
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{FilteredData$get_filterable_datanames()}\if{html}{\out{</div>}}
+}
+
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{dataname}}{(\code{character} vector) names of the dataset}
+}
+\if{html}{\out{</div>}}
+}
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-FilteredData-get_filterable_varnames"></a>}}
+\if{latex}{\out{\hypertarget{method-FilteredData-get_filterable_varnames}{}}}
+\subsection{Method \code{get_filterable_varnames()}}{
+Method is deprecated, please use \code{self$get_filter_state()} and retain \code{attr(, "filterable_varnames")} instead.
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{FilteredData$get_filterable_varnames(dataname)}\if{html}{\out{</div>}}
+}
+
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{dataname}}{(\code{character(1)}) name of the dataset}
+}
+\if{html}{\out{</div>}}
+}
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-FilteredData-set_filterable_varnames"></a>}}
+\if{latex}{\out{\hypertarget{method-FilteredData-set_filterable_varnames}{}}}
+\subsection{Method \code{set_filterable_varnames()}}{
+Method is deprecated, please use \code{self$set_filter_state} and \code{\link[=teal_slices]{teal_slices()}} with \code{include_varnames} instead.
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{FilteredData$set_filterable_varnames(dataname, varnames)}\if{html}{\out{</div>}}
+}
+
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{dataname}}{(\code{character(1)}) name of the dataset}
+
+\item{\code{varnames}}{(\code{character} or \code{NULL})
+variables which users can choose to filter the data;
+see \code{self$get_filterable_varnames} for more details}
+}
+\if{html}{\out{</div>}}
+}
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-FilteredData-get_formatted_filter_state"></a>}}
+\if{latex}{\out{\hypertarget{method-FilteredData-get_formatted_filter_state}{}}}
+\subsection{Method \code{get_formatted_filter_state()}}{
+Method is deprecated, please use \code{format.teal_slices} on object returned from \code{self$get_filter_state()}
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{FilteredData$get_formatted_filter_state()}\if{html}{\out{</div>}}
+}
+
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-FilteredData-remove_all_filter_states"></a>}}
+\if{latex}{\out{\hypertarget{method-FilteredData-remove_all_filter_states}{}}}
+\subsection{Method \code{remove_all_filter_states()}}{
+Deprecated - please use \code{clear_filter_states} method.
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{FilteredData$remove_all_filter_states(datanames)}\if{html}{\out{</div>}}
+}
+
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{datanames}}{(\code{character})}
+}
+\if{html}{\out{</div>}}
+}
+\subsection{Returns}{
+\code{NULL} invisibly
 }
 }
 \if{html}{\out{<hr>}}

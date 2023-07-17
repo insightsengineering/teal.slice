@@ -12,10 +12,10 @@ testthat::test_that("constructor accepts a MultiAssayExperiment", {
 })
 
 # get_filter_state ----
-testthat::test_that("get_filter_state returns `teal_slices` with include_varname by default and count_type=all", {
+testthat::test_that("get_filter_state returns `teal_slices` with include_varname by default and count_type=none", {
   filter_states <- MAEFilterStates$new(data = miniACC, dataname = "miniACC")
   fs <- teal_slices(
-    count_type = "all",
+    count_type = "none",
     include_varnames = list(miniACC = colnames(SummarizedExperiment::colData(miniACC)))
   )
 

@@ -1,4 +1,6 @@
-#' Filter specification
+#' Specify single filter.
+#'
+#' Create a `teal_slice` object that holds complete information on filtering one variable.
 #'
 #' @details
 #' `teal_slice` object fully describes filter state and can be used to create,
@@ -104,6 +106,8 @@
 #' format(x1, show_all = TRUE, trim_lines = FALSE)
 #' print(x1)
 #' print(x1, show_all = TRUE, trim_lines = FALSE)
+#'
+#' @seealso [`teal_slices`]
 #'
 #' @export
 teal_slice <- function(dataname,
@@ -284,6 +288,7 @@ to_json <- function(x) {
 #'
 #' @return A list of character strings, which can be collapsed into a `JSON` string.
 #'
+#' @keywords internal
 justify_json <- function(json) {
   format_name <- function(name, name_width) {
     if (nchar(name) == 1 || nchar(gsub("\\s", "", name)) <= 2) {

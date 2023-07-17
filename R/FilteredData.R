@@ -139,10 +139,10 @@ FilteredData <- R6::R6Class( # nolint
       private$get_filtered_dataset(dataname)$get_dataset_label()
     },
 
-    #' Set external `teal_slice`
+    #' Set list of external filter states available for activation.
     #'
-    #' Unlike adding new filter from the column, these filters can be added with some pre-specified
-    #' settings. List of `teal_slices` should be a reactive so one can make this list to be dynamic.
+    #' Unlike adding new filter from the column, these filters can come with some pre-specified
+    #' settings. `teal_slices` are wrapped in a `reactive` so one it can be updated from elsewhere in the app.
     #' List is accessible in `ui/srv_active` through `ui/srv_available_filters`.
     #' @param x (`reactive`)\cr
     #'  should return `teal_slices`
@@ -150,7 +150,7 @@ FilteredData <- R6::R6Class( # nolint
     set_available_teal_slices = function(x) {
       checkmate::assert_class(x, "reactive")
       private$available_teal_slices <- reactive({
-        # we want to limit the available filters to the ones that are relevant for this FilteredData
+        # Available filters should be limited to the ones relevant for this FilteredData.
         Filter(function(x) x$dataname %in% self$datanames(), x())
       })
       invisible(NULL)
@@ -289,35 +289,6 @@ FilteredData <- R6::R6Class( # nolint
     #'
     get_keys = function(dataname) {
       private$get_filtered_dataset(dataname)$get_keys()
-    },
-
-    #' @description
-    #' Gets labels of variables in the data.
-    #'
-    #' Variables are the column names of the data.
-    #' Either, all labels must have been provided for all variables
-    #' in `set_data` or `NULL`.
-    #'
-    #' @param dataname (`character(1)`) name of the dataset
-    #' @param variables (`character`) variables to get labels for;
-    #'   if `NULL`, for all variables in data
-    #'
-    #' @return (`character` or `NULL`) variable labels, `NULL` if `column_labels`
-    #'   attribute does not exist for the data
-    #'
-    get_varlabels = function(dataname, variables = NULL) {
-      stop("Please extract varlabels directly from the data.")
-    },
-
-    #' @description
-    #' Gets variable names.
-    #'
-    #' @param dataname (`character`) the name of the dataset
-    #'
-    #' @return (`character` vector) of variable names
-    #'
-    get_varnames = function(dataname) {
-      stop("Please extract varnames directly from the data")
     },
 
     #' @description
@@ -508,20 +479,20 @@ FilteredData <- R6::R6Class( # nolint
         }
 
         checkmate::assert_class(state, "teal_slices")
-        lapply(self$datanames(), function(dataname) {
-          states <- Filter(function(x) identical(x$dataname, dataname), state)
-          private$get_filtered_dataset(dataname)$set_filter_state(states)
-        })
-
         module_add <- attr(state, "module_add")
         if (!is.null(module_add)) {
           private$module_add <- module_add
         }
 
-        logger::log_trace("{ class(self)[1] }$set_filter_state initialized")
-      })
+        lapply(self$datanames(), function(dataname) {
+          states <- Filter(function(x) identical(x$dataname, dataname), state)
+          private$get_filtered_dataset(dataname)$set_filter_state(states)
+        })
 
-      invisible(NULL)
+        logger::log_trace("{ class(self)[1] }$set_filter_state initialized")
+
+        invisible(NULL)
+      })
     },
 
     #' @description
@@ -566,18 +537,6 @@ FilteredData <- R6::R6Class( # nolint
       })
 
       invisible(NULL)
-    },
-
-    #' @description
-    #' Deprecated - please use `clear_filter_states` method.
-    #'
-    #' @param datanames (`character`)
-    #'
-    #' @return `NULL` invisibly
-    #'
-    remove_all_filter_states = function(datanames) {
-      warning("FilteredData$remove_all_filter_states is deprecated, please use FilteredData$clear_filter_states.")
-      self$clear_filter_states(dataname)
     },
 
     #' @description
@@ -1026,12 +985,97 @@ FilteredData <- R6::R6Class( # nolint
           NULL
         }
       )
+    },
+
+    # deprecated - to remove after release --------------------------------------
+
+    #' @description
+    #' Method is deprecated. Provide resolved `active_datanames` to `srv_filter_panel`
+    #'
+    #' @param datanames `character vector` `datanames` to pick
+    #'
+    #' @return the intersection of `self$datanames()` and `datanames`
+    #'
+    handle_active_datanames = function(datanames) {
+      stop("Deprecated with teal.slice 0.4.0")
+    },
+
+    #' @description
+    #' Method is deprecated. Please extract column labels directly from the data.
+    #'
+    #' @param dataname (`character(1)`) name of the dataset
+    #' @param variables (`character`) variables to get labels for;
+    #'   if `NULL`, for all variables in data
+    #'
+    get_varlabels = function(dataname, variables = NULL) {
+      stop("Deprecated with 0.4.0 - please extract column labels directly from the data.")
+    },
+
+    #' @description
+    #' Method is deprecated, Please extract variable names directly from the data instead
+    #'
+    #' @param dataname (`character`) the name of the dataset
+    #'
+    get_varnames = function(dataname) {
+      stop("Deprecated with 0.4.0 - please extract varniable names directly from the data")
+    },
+
+    #' @description
+    #' Method is deprecated, please use `self$datanames()` instead
+    #'
+    #' @param dataname (`character` vector) names of the dataset
+    #'
+    get_filterable_datanames = function() {
+      stop("Deprecated with 0.4.0 - please use self$datanames() instead")
+    },
+
+    #' @description
+    #' Method is deprecated, please use `self$get_filter_state()` and retain `attr(, "filterable_varnames")` instead.
+    #'
+    #' @param dataname (`character(1)`) name of the dataset
+    #'
+    get_filterable_varnames = function(dataname) {
+      stop("Deprecated with teal.slice 0.4.0 - see help(teal_slices) and description of include_varnames argument.")
+    },
+
+    #' @description
+    #' Method is deprecated, please use `self$set_filter_state` and [teal_slices()] with `include_varnames` instead.
+    #'
+    #' @param dataname (`character(1)`) name of the dataset
+    #' @param varnames (`character` or `NULL`)
+    #'   variables which users can choose to filter the data;
+    #'   see `self$get_filterable_varnames` for more details
+    #'
+    #'
+    set_filterable_varnames = function(dataname, varnames) {
+      stop("Deprecated with teal.slice 0.4.0 - see help(teal_slices) and description of include_varnames argument.")
+    },
+
+    #' @description
+    #' Method is deprecated, please use `format.teal_slices` on object returned from `self$get_filter_state()`
+    #'
+    get_formatted_filter_state = function() {
+      stop("Deprecated with teal.slice 0.4.0 - get_filter_state returns teal_slice which has dedicated format method")
+    },
+
+    #' @description
+    #' Deprecated - please use `clear_filter_states` method.
+    #'
+    #' @param datanames (`character`)
+    #'
+    #' @return `NULL` invisibly
+    #'
+    remove_all_filter_states = function(datanames) {
+      warning("FilteredData$remove_all_filter_states is deprecated, please use FilteredData$clear_filter_states.")
+      self$clear_filter_states(dataname)
     }
   ),
 
   ## __Private Members ====
   private = list(
     # selectively hide / show to only show `active_datanames` out of all datanames
+
+    # private attributes ----
     filtered_datasets = list(),
 
     # activate/deactivate filter panel
@@ -1093,6 +1137,7 @@ FilteredData <- R6::R6Class( # nolint
     ui_available_filters = function(id) {
       ns <- NS(id)
 
+      active_slices_id <- shiny::isolate(vapply(self$get_filter_state(), `[[`, character(1), "id"))
       div(
         id = ns("available_menu"),
         shinyWidgets::dropMenu(
