@@ -351,7 +351,6 @@ FilterState <- R6::R6Class( # nolint
         value <- private$cast_and_validate(value)
         value <- private$remove_out_of_bound_values(value)
         value <- private$check_multiple(value)
-        private$validate_selection(value)
         private$teal_slice$selected <- value
       })
       logger::log_trace(

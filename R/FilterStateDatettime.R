@@ -292,24 +292,6 @@ DatetimeFilterState <- R6::R6Class( # nolint
       }
       values
     },
-    validate_selection = function(value) {
-      if (!(is(value, "POSIXct") || is(value, "POSIXlt"))) {
-        stop(
-          sprintf(
-            "value of the selection for `%s` in `%s` should be a POSIXct or POSIXlt",
-            private$get_varname(),
-            private$get_dataname()
-          )
-        )
-      }
-
-      pre_msg <- sprintf(
-        "dataset '%s', variable '%s': ",
-        private$get_dataname(),
-        private$get_varname()
-      )
-      check_in_range(value, private$get_choices(), pre_msg = pre_msg)
-    },
 
     # shiny modules ----
 

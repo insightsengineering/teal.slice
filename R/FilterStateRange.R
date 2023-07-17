@@ -358,19 +358,6 @@ RangeFilterState <- R6::R6Class( # nolint
       if (values[2L] > private$get_choices()[2L]) values[2L] <- private$get_choices()[2L]
       values
     },
-    # overwrites superclass method
-    validate_selection = function(value) {
-      if (!is.numeric(value)) {
-        stop(
-          sprintf(
-            "value of the selection for `%s` in `%s` should be a numeric",
-            private$get_varname(),
-            private$get_dataname()
-          )
-        )
-      }
-      invisible(NULL)
-    },
 
     # Answers the question of whether the current settings and values selected actually filters out any values.
     # @return logical scalar

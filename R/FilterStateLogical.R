@@ -201,17 +201,6 @@ LogicalFilterState <- R6::R6Class( # nolint
       }
       value
     },
-    validate_selection = function(value) {
-      if (!is.logical(value)) {
-        stop(
-          sprintf(
-            "value of the selection for `%s` in `%s` should be a logical vector of length <= 2",
-            private$get_varname(),
-            private$get_dataname()
-          )
-        )
-      }
-    },
 
     # Answers the question of whether the current settings and values selected actually filters out any values.
     # @return logical scalar
