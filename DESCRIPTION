@@ -11,6 +11,7 @@ Authors@R: c(
     person("Marcin", "Kosinski", , "marcin.kosinski.mk1@roche.com", role = "aut"),
     person("Chendi", "Liao", , "chendi.liao@roche.com", role = "rev"),
     person("Dony", "Unardi", , "unardid@gene.com", role = "rev"),
+    person("Andrew", "Bates", role = "aut"),
     person("Mahmoud", "Hallal", role = "aut"),
     person("Nikolas", "Burkoff", role = "aut"),
     person("Maciej", "Nasinski", role = "aut"),

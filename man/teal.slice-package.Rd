@@ -17,6 +17,7 @@ Authors:
   \item Aleksander Chlebowski \email{aleksander.chlebowski@contractors.roche.com}
   \item Kartikeya Kirar \email{kartikeya.kirar@businesspartner.roche.com}
   \item Marcin Kosinski \email{marcin.kosinski.mk1@roche.com}
+  \item Andrew Bates
   \item Mahmoud Hallal
   \item Nikolas Burkoff
   \item Maciej Nasinski
