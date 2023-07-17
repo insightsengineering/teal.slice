@@ -309,6 +309,17 @@ ChoicesFilterState <- R6::R6Class( # nolint
       )
       values
     },
+    # If multiple forbidden but selected, restores previous selection with warning.
+    check_length = function(values) {
+      if (!private$is_multiple() && length(value) > 1) {
+        warning(
+          sprintf("Selection: %s is not a vector of length one. ", toString(values, width = 360)),
+          "Maintaining previous selection."
+        )
+        values <- shiny::isolate(private$get_selected())
+      }
+      values
+    },
     remove_out_of_bound_values = function(values) {
       in_choices_mask <- values %in% private$get_choices()
       if (length(values[!in_choices_mask]) > 0) {
@@ -318,16 +329,6 @@ ChoicesFilterState <- R6::R6Class( # nolint
         ))
       }
       values[in_choices_mask]
-    },
-    check_multiple = function(value) {
-      if (!private$is_multiple() && length(value) > 1) {
-        warning(
-          sprintf("Selection: %s is not a vector of length one. ", toString(value, width = 360)),
-          "Maintaining previous selection."
-        )
-        value <- shiny::isolate(private$get_selected())
-      }
-      value
     },
 
     # shiny modules ----

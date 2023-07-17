@@ -216,10 +216,13 @@ DateFilterState <- R6::R6Class( # nolint
         expr = {
           values <- as.Date(values, origin = "1970-01-01")
           if (any(is.na(values))) stop()
+          values
         },
         error = function(error) stop("The array of set values must contain values coercible to Date.")
       )
-      if (length(values) != 2) stop("The array of set values must have length two.")
+    },
+    check_length = function(values) {
+      if (length(values) != 2) stop("Vector of set values must have length two.")
       values
     },
     remove_out_of_bound_values = function(values) {

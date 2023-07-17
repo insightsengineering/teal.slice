@@ -347,11 +347,14 @@ RangeFilterState <- R6::R6Class( # nolint
       if (!is.atomic(values)) stop("Values to set must be an atomic vector.")
       values <- as.numeric(values)
       if (any(is.na(values))) stop("Vector of set values must contain values coercible to numeric.")
-      if (length(values) != 2) stop("Vector of set values must have length two.")
       if (values[1L] > values[2L]) stop("Vector of set values must be sorted.")
 
       values
     },
+    check_length = function(values) {
+      if (length(values) != 2) stop("Vector of set values must have length two.")
+      values
+    }
     # Trim selection to limits imposed by private$get_choices()
     remove_out_of_bound_values = function(values) {
       if (values[1L] < private$get_choices()[1L]) values[1L] <- private$get_choices()[1L]
