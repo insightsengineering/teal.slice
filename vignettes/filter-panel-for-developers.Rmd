@@ -159,7 +159,7 @@ set_filter_state(
 | Distribution in unfiltered data | Filtered vs. unfiltered distribution  |
 | ![](./images/filter_panel/count_type_none.jpeg){width=300} | ![](./images/filter_panel/count_type_all.jpeg){width=300} |
 
-4. `module_add` determines whether the "Add Filter Variables" module will be displayed 
+4. `allow_add` determines whether the "Add Filter Variables" module will be displayed 
 to allow the user to add new filters.
 
 
@@ -189,7 +189,7 @@ set_filter_state(
     include_varnames = list(iris = c("Species", "Sepal.Length")),
     exclude_varnames = list(mtcars = "cyl"),
     count_type = "all",
-    module_add = TRUE
+    allow_add = TRUE
   )
 )
 

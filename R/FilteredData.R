@@ -367,7 +367,7 @@ FilteredData <- R6::R6Class( # nolint
       slices <- Filter(Negate(is.null), states)
       slices <- do.call(c, slices)
       if (!is.null(slices)) {
-        attr(slices, "module_add") <- private$module_add
+        attr(slices, "allow_add") <- private$allow_add
       }
       slices
     },
@@ -446,9 +446,9 @@ FilteredData <- R6::R6Class( # nolint
         }
 
         checkmate::assert_class(state, "teal_slices")
-        module_add <- attr(state, "module_add")
-        if (!is.null(module_add)) {
-          private$module_add <- module_add
+        allow_add <- attr(state, "allow_add")
+        if (!is.null(allow_add)) {
+          private$allow_add <- allow_add
         }
 
         lapply(self$datanames(), function(dataname) {
@@ -571,7 +571,7 @@ FilteredData <- R6::R6Class( # nolint
         include_css_files(pattern = "filter-panel"),
         self$ui_overview(ns("overview")),
         self$ui_active(ns("active")),
-        if (private$module_add) {
+        if (private$allow_add) {
           self$ui_add(ns("add"))
         }
       )
@@ -601,7 +601,7 @@ FilteredData <- R6::R6Class( # nolint
 
           self$srv_overview("overview", active_datanames_resolved)
           self$srv_active("active", active_datanames_resolved)
-          if (private$module_add) {
+          if (private$allow_add) {
             self$srv_add("add", active_datanames_resolved)
           }
 
@@ -1051,7 +1051,7 @@ FilteredData <- R6::R6Class( # nolint
     # reactive i.e. filtered data
     reactive_data = list(),
     cached_states = NULL,
-    module_add = TRUE,
+    allow_add = TRUE,
 
     # private methods ----
 
