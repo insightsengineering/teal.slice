@@ -334,7 +334,7 @@ FilterState <- R6::R6Class( # nolint
                 style = "display: none"
               )
             },
-            if (isFALSE(private$is_locked())) {
+            if (isFALSE(private$is_anchored())) {
               actionLink(
                 inputId = ns("remove"),
                 label = icon("circle-xmark", lib = "font-awesome"),
