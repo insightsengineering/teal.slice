@@ -211,23 +211,6 @@ DateFilterState <- R6::R6Class( # nolint
       private$is_choice_limited <- (any(xl < choices[1L], na.rm = TRUE) | any(xl > choices[2L], na.rm = TRUE))
       invisible(NULL)
     },
-    validate_selection = function(value) {
-      if (!is(value, "Date")) {
-        stop(
-          sprintf(
-            "value of the selection for `%s` in `%s` should be a Date",
-            private$get_varname(),
-            private$get_dataname()
-          )
-        )
-      }
-      pre_msg <- sprintf(
-        "dataset '%s', variable '%s': ",
-        private$get_dataname(),
-        private$get_varname()
-      )
-      check_in_range(value, private$get_choices(), pre_msg = pre_msg)
-    },
     cast_and_validate = function(values) {
       tryCatch(
         expr = {
@@ -271,6 +254,23 @@ DateFilterState <- R6::R6Class( # nolint
         values <- c(choices[1L], choices[2L])
       }
       values
+    },
+    validate_selection = function(value) {
+      if (!is(value, "Date")) {
+        stop(
+          sprintf(
+            "value of the selection for `%s` in `%s` should be a Date",
+            private$get_varname(),
+            private$get_dataname()
+          )
+        )
+      }
+      pre_msg <- sprintf(
+        "dataset '%s', variable '%s': ",
+        private$get_dataname(),
+        private$get_varname()
+      )
+      check_in_range(value, private$get_choices(), pre_msg = pre_msg)
     },
 
     # shiny modules ----

@@ -343,21 +343,6 @@ RangeFilterState <- R6::R6Class( # nolint
     },
 
     # overwrites superclass method
-    validate_selection = function(value) {
-      if (!is.numeric(value)) {
-        stop(
-          sprintf(
-            "value of the selection for `%s` in `%s` should be a numeric",
-            private$get_varname(),
-            private$get_dataname()
-          )
-        )
-      }
-      invisible(NULL)
-    },
-
-    # overwrites superclass method
-    # additionally adjusts progtammatic selection to existing slider ticks
     cast_and_validate = function(values) {
       if (!is.atomic(values)) stop("Values to set must be an atomic vector.")
       values <- as.numeric(values)
@@ -372,6 +357,19 @@ RangeFilterState <- R6::R6Class( # nolint
       if (values[1L] < private$get_choices()[1L]) values[1L] <- private$get_choices()[1L]
       if (values[2L] > private$get_choices()[2L]) values[2L] <- private$get_choices()[2L]
       values
+    },
+    # overwrites superclass method
+    validate_selection = function(value) {
+      if (!is.numeric(value)) {
+        stop(
+          sprintf(
+            "value of the selection for `%s` in `%s` should be a numeric",
+            private$get_varname(),
+            private$get_dataname()
+          )
+        )
+      }
+      invisible(NULL)
     },
 
     # Answers the question of whether the current settings and values selected actually filters out any values.
