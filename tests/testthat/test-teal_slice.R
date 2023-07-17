@@ -11,7 +11,7 @@ testthat::test_that("teal_slice checks arguments", {
       keep_na = NULL,
       keep_inf = NULL,
       fixed = FALSE,
-      locked = FALSE,
+      anchored = FALSE,
       id = "filter",
       extra = "extra"
     )
@@ -76,12 +76,12 @@ testthat::test_that("teal_slice checks arguments", {
   )
 
   testthat::expect_error(
-    teal_slice(dataname = "data", varname = "var", locked = NULL),
-    "Assertion on 'locked' failed"
+    teal_slice(dataname = "data", varname = "var", anchored = NULL),
+    "Assertion on 'anchored' failed"
   )
   testthat::expect_error(
-    teal_slice(dataname = "data", varname = "var", locked = "TRUE"),
-    "Assertion on 'locked' failed"
+    teal_slice(dataname = "data", varname = "var", anchored = "TRUE"),
+    "Assertion on 'anchored' failed"
   )
 
   testthat::expect_error(

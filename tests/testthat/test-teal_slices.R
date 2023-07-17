@@ -320,5 +320,5 @@ testthat::test_that("slices_field works", {
   testthat::expect_identical(slices_field(fs, "varname"), c("var1", "var2"))
   testthat::expect_identical(slices_field(fs, "choices"), NULL)
   testthat::expect_identical(slices_field(fs, "fixed"), FALSE)
-  testthat::expect_identical(slices_field(fs, "locked"), FALSE)
+  testthat::expect_identical(slices_field(fs, "anchored"), FALSE)
 })

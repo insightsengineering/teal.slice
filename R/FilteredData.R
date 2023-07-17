@@ -528,7 +528,7 @@ FilteredData <- R6::R6Class( # nolint
 
       logger::log_trace(
         paste(
-          "FilteredData$clear_filter_states removed all non-locked FilterStates,",
+          "FilteredData$clear_filter_states removed all non-anchored FilterStates,",
           "datanames: { toString(datanames) }"
         )
       )
@@ -721,9 +721,9 @@ FilteredData <- R6::R6Class( # nolint
         })
 
         observeEvent(input$remove_all_filters, {
-          logger::log_trace("FilteredData$srv_filter_panel@1 removing all non-locked filters")
+          logger::log_trace("FilteredData$srv_filter_panel@1 removing all non-anchored filters")
           self$clear_filter_states()
-          logger::log_trace("FilteredData$srv_filter_panel@1 removed all non-locked filters")
+          logger::log_trace("FilteredData$srv_filter_panel@1 removed all non-anchored filters")
         })
         logger::log_trace("FilteredData$srv_active initialized")
         NULL
@@ -1173,7 +1173,7 @@ FilteredData <- R6::R6Class( # nolint
                 value = slice$id,
                 label = slice$id,
                 checked = if (slice$id %in% active_slices_ids) "checked",
-                disabled = slice$locked ||
+                disabled = slice$anchored ||
                   get_default_slice_id(slice) %in% duplicated_slice_refs &&
                     !slice$id %in% active_slices_ids
               )
