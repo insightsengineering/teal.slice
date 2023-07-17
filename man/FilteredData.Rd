@@ -209,7 +209,7 @@ Useful to display in \verb{Show R Code}.
 (\code{character}) keys of dataset
 Set list of external filter states available for activation.
 
-Unlike adding new filter from the column, these filters can come with some pre-specified
+Unlike adding new filter from the column, these filters can come with some prespecified
 settings. \code{teal_slices} are wrapped in a \code{reactive} so one it can be updated from elsewhere in the app.
 List is accessible in \code{ui/srv_active} through \code{ui/srv_available_filters}.
 }

@@ -141,7 +141,7 @@ FilteredData <- R6::R6Class( # nolint
 
     #' Set list of external filter states available for activation.
     #'
-    #' Unlike adding new filter from the column, these filters can come with some pre-specified
+    #' Unlike adding new filter from the column, these filters can come with some prespecified
     #' settings. `teal_slices` are wrapped in a `reactive` so one it can be updated from elsewhere in the app.
     #' List is accessible in `ui/srv_active` through `ui/srv_available_filters`.
     #' @param x (`reactive`)\cr
