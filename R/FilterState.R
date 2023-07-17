@@ -350,7 +350,7 @@ FilterState <- R6::R6Class( # nolint
       shiny::isolate({
         value <- private$cast_and_validate(value)
         value <- private$check_length(value)
-        value <- private$remove_out_of_bound_values(value)
+        value <- private$remove_out_of_bounds_values(value)
         private$teal_slice$selected <- value
       })
       logger::log_trace(
@@ -565,7 +565,7 @@ FilterState <- R6::R6Class( # nolint
     # @param values vector of values
     #
     # @return vector in which values that cannot be set in this FilterState have been dropped
-    remove_out_of_bound_values = function(values) {
+    remove_out_of_bounds_values = function(values) {
       values
     },
 

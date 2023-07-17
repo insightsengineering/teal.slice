@@ -358,7 +358,7 @@ RangeFilterState <- R6::R6Class( # nolint
       values
     },
     # Trim selection to limits imposed by private$get_choices()
-    remove_out_of_bound_values = function(values) {
+    remove_out_of_bounds_values = function(values) {
       if (values[1L] < private$get_choices()[1L]) values[1L] <- private$get_choices()[1L]
       if (values[2L] > private$get_choices()[2L]) values[2L] <- private$get_choices()[2L]
       values

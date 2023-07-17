@@ -260,9 +260,18 @@ DatetimeFilterState <- R6::R6Class( # nolint
     },
     check_length = function(values) {
       if (length(values) != 2) stop("Vector of set values must have length two.")
+      if (values[1] > values[2]) {
+        warning(
+          sprintf(
+            "Start date '%s' is set after the end date '%s', the values will be replaced by a default datetime range.",
+            values[1], values[2]
+          )
+        )
+        values <- isolate(private$get_choices())
+      }
       values
     },
-    remove_out_of_bound_values = function(values) {
+    remove_out_of_bounds_values = function(values) {
       choices <- private$get_choices()
       if (values[1] < choices[1L] || values[1] > choices[2L]) {
         warning(
@@ -284,15 +293,6 @@ DatetimeFilterState <- R6::R6Class( # nolint
         values[2] <- choices[2L]
       }
 
-      if (values[1] > values[2]) {
-        warning(
-          sprintf(
-            "Start date '%s' is set after the end date '%s', the values will be replaced by a default datetime range.",
-            values[1], values[2]
-          )
-        )
-        values <- c(choices[1L], choices[2L])
-      }
       values
     },
 

@@ -320,7 +320,7 @@ ChoicesFilterState <- R6::R6Class( # nolint
       }
       values
     },
-    remove_out_of_bound_values = function(values) {
+    remove_out_of_bounds_values = function(values) {
       in_choices_mask <- values %in% private$get_choices()
       if (length(values[!in_choices_mask]) > 0) {
         warning(paste(
