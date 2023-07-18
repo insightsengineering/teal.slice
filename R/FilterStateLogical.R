@@ -184,33 +184,23 @@ LogicalFilterState <- R6::R6Class( # nolint
     cast_and_validate = function(values) {
       tryCatch(
         expr = {
-          values_logical <- as.logical(values)
-          if (any(is.na(values_logical))) stop()
+          values <- as.logical(values)
+          if (anyNA(values)) stop()
+          values
         },
-        error = function(cond) stop("The array of set values must contain values coercible to logical.")
+        error = function(e) stop("Vector of set values must contain values coercible to logical.")
       )
-      values_logical
     },
-    check_multiple = function(value) {
-      if (!private$is_multiple() && length(value) > 1) {
+    # If multiple forbidden but selected, restores previous selection with warning.
+    check_length = function(values) {
+      if (!private$is_multiple() && length(values) > 1) {
         warning(
-          sprintf("Selection: %s is not a vector of length one. ", toString(value, width = 360)),
+          sprintf("Selection: %s is not a vector of length one. ", toString(values, width = 360)),
           "Maintaining previous selection."
         )
-        value <- shiny::isolate(private$get_selected())
+        values <- shiny::isolate(private$get_selected())
       }
-      value
-    },
-    validate_selection = function(value) {
-      if (!is.logical(value)) {
-        stop(
-          sprintf(
-            "value of the selection for `%s` in `%s` should be a logical vector of length <= 2",
-            private$get_varname(),
-            private$get_dataname()
-          )
-        )
-      }
+      values
     },
 
     # Answers the question of whether the current settings and values selected actually filters out any values.

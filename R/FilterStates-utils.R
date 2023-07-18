@@ -131,7 +131,7 @@ init_filter_states.SummarizedExperiment <- function(data, # nolint
 #' Gets supported filterable variable names
 #'
 #' Gets filterable variable names from a given object. The names match variables
-#' of classes in an array `teal.slice:::.filterable_class`.
+#' of classes in an vector `teal.slice:::.filterable_class`.
 #' @param data (`object`)\cr
 #'   the R object containing elements which class can be checked through `vapply` or `apply`.
 #'
@@ -144,7 +144,7 @@ init_filter_states.SummarizedExperiment <- function(data, # nolint
 #'   z = complex(3)
 #' )
 #' teal.slice:::get_supported_filter_varnames(df)
-#' @return `character` the array of the matched element names
+#' @return `character` vector of matched element names
 #' @keywords internal
 get_supported_filter_varnames <- function(data) {
   UseMethod("get_supported_filter_varnames")
@@ -192,7 +192,7 @@ get_supported_filter_varnames.MultiAssayExperiment <- function(data) { # nolint
 #'   where labels can be taken from in case when `varlabels` is not specified.
 #'   `data` must be specified if `varlabels` is not specified.
 #' @param choices (`character`)\cr
-#'  the array of chosen variables
+#'  the vector of chosen variables
 #' @param varlabels (`character`)\cr
 #'  the labels of variables in data
 #' @param keys (`character`)\cr

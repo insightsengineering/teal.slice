@@ -248,36 +248,30 @@ DatetimeFilterState <- R6::R6Class( # nolint
       private$is_choice_limited <- (any(xl < choices[1L], na.rm = TRUE) | any(xl > choices[2L], na.rm = TRUE))
       invisible(NULL)
     },
-    validate_selection = function(value) {
-      if (!(is(value, "POSIXct") || is(value, "POSIXlt"))) {
-        stop(
-          sprintf(
-            "value of the selection for `%s` in `%s` should be a POSIXct or POSIXlt",
-            private$get_varname(),
-            private$get_dataname()
-          )
-        )
-      }
-
-      pre_msg <- sprintf(
-        "dataset '%s', variable '%s': ",
-        private$get_dataname(),
-        private$get_varname()
-      )
-      check_in_range(value, private$get_choices(), pre_msg = pre_msg)
-    },
     cast_and_validate = function(values) {
       tryCatch(
         expr = {
           values <- as.POSIXct(values, origin = "1970-01-01 00:00:00")
-          if (any(is.na(values))) stop()
+          if (anyNA(values)) stop()
+          values
         },
-        error = function(error) stop("The array of set values must contain values coercible to POSIX.")
+        error = function(e) stop("Vector of set values must contain values coercible to POSIX.")
       )
-      if (length(values) != 2) stop("The array of set values must have length two.")
+    },
+    check_length = function(values) {
+      if (length(values) != 2) stop("Vector of set values must have length two.")
+      if (values[1] > values[2]) {
+        warning(
+          sprintf(
+            "Start date '%s' is set after the end date '%s', the values will be replaced by a default datetime range.",
+            values[1], values[2]
+          )
+        )
+        values <- isolate(private$get_choices())
+      }
       values
     },
-    remove_out_of_bound_values = function(values) {
+    remove_out_of_bounds_values = function(values) {
       choices <- private$get_choices()
       if (values[1] < choices[1L] || values[1] > choices[2L]) {
         warning(
@@ -299,15 +293,6 @@ DatetimeFilterState <- R6::R6Class( # nolint
         values[2] <- choices[2L]
       }
 
-      if (values[1] > values[2]) {
-        warning(
-          sprintf(
-            "Start date '%s' is set after the end date '%s', the values will be replaced by a default datetime range.",
-            values[1], values[2]
-          )
-        )
-        values <- c(choices[1L], choices[2L])
-      }
       values
     },
 

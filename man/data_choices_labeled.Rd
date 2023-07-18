@@ -17,7 +17,7 @@ where labels can be taken from in case when \code{varlabels} is not specified.
 \code{data} must be specified if \code{varlabels} is not specified.}
 
 \item{choices}{(\code{character})\cr
-the array of chosen variables}
+the vector of chosen variables}
 
 \item{varlabels}{(\code{character})\cr
 the labels of variables in data}
