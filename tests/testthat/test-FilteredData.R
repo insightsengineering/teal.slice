@@ -647,7 +647,8 @@ testthat::test_that("clear_filter_states removes filters of desired dataset only
 
   testthat::expect_identical(
     shiny::isolate(unique(vapply(datasets$get_filter_state(), "[[", character(1L), "dataname"))),
-    "mtcars")
+    "mtcars"
+  )
 })
 
 testthat::test_that("clear_filter_states does not remove anchored filters", {
