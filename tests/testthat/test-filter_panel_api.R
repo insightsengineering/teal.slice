@@ -112,8 +112,10 @@ testthat::test_that("FilterPanelAPI$clear_filter_states remove the filters of th
 
   testthat::expect_length(shiny::isolate(datasets$get_filter_state()), 1)
 
-  testthat::expect_identical(shiny::isolate(unique(unlist(lapply(datasets$get_filter_state(), function(x) x[["varname"]])))),
-                             "int")
+  testthat::expect_identical(
+    shiny::isolate(unique(unlist(lapply(datasets$get_filter_state(), function(x) x[["varname"]])))),
+    "int"
+  )
 })
 
 
