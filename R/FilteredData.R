@@ -1285,6 +1285,15 @@ FilteredData <- R6::R6Class( # nolint
     # @description
     # Captures, stores, restores, and saves filter state snapshots.
     # Creates UI elements for each captured snapshot.
+    # @details
+    # Snapshot is a `teal_slices` converted to a list of list of lists.
+    # Attributes other than class remain unchanged.
+    # Snapshots are added on user request and stored in a `reactiveVal`.
+    # Initial state application is the first snapshot.
+    # Snapshots are displayed in a table that shows the name, an select button and a save button.
+    # Selecting rebuilds `teal_slices` from snapshot, clears filter states and sets new state.
+    # Saving rebuilds `teal_slices` from snapshot and saves it to json file.
+    # Initial state is not explicitly enumerated in table, has separate reset button.
     srv_snapshot_manager = function(id) {
       moduleServer(id, function(input, output, session) {
         ns <- session$ns
