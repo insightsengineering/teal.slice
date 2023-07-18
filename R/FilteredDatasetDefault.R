@@ -207,7 +207,7 @@ DefaultFilteredDataset <- R6::R6Class( # nolint
       shiny::isolate({
         logger::log_trace("{ class(self)[1] }$remove_filter_state removing filter(s), dataname: { private$dataname }")
 
-        varnames <- slices_field(state, "varname")
+        varnames <- unique(unlist(lapply(state, "[[", "varname")))
         private$get_filter_states()[[1]]$remove_filter_state(state)
 
         logger::log_trace("{ class(self)[1] }$remove_filter_state removed filter(s), dataname: { private$dataname }")

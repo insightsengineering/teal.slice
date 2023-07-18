@@ -519,7 +519,7 @@ FilteredData <- R6::R6Class( # nolint
         }
 
         checkmate::assert_class(state, "teal_slices")
-        datanames <- slices_field(state, "dataname")
+        datanames <- unique(vapply(state, "[[", character(1L), "dataname"))
         checkmate::assert_subset(datanames, self$datanames())
 
         logger::log_trace(
