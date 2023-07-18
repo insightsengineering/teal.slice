@@ -303,13 +303,24 @@ ChoicesFilterState <- R6::R6Class( # nolint
       tryCatch(
         expr = {
           values <- as.character(values)
-          if (any(is.na(values))) stop()
+          if (anyNA(values)) stop()
         },
-        error = function(error) stop("The array of set values must contain values coercible to character.")
+        error = function(e) stop("The vactor of set values must contain values coercible to character.")
       )
       values
     },
-    remove_out_of_bound_values = function(values) {
+    # If multiple forbidden but selected, restores previous selection with warning.
+    check_length = function(values) {
+      if (!private$is_multiple() && length(values) > 1) {
+        warning(
+          sprintf("Selection: %s is not a vector of length one. ", toString(values, width = 360)),
+          "Maintaining previous selection."
+        )
+        values <- shiny::isolate(private$get_selected())
+      }
+      values
+    },
+    remove_out_of_bounds_values = function(values) {
       in_choices_mask <- values %in% private$get_choices()
       if (length(values[!in_choices_mask]) > 0) {
         warning(paste(
@@ -318,33 +329,6 @@ ChoicesFilterState <- R6::R6Class( # nolint
         ))
       }
       values[in_choices_mask]
-    },
-    check_multiple = function(value) {
-      if (!private$is_multiple() && length(value) > 1) {
-        warning(
-          sprintf("Selection: %s is not a vector of length one. ", toString(value, width = 360)),
-          "Maintaining previous selection."
-        )
-        value <- shiny::isolate(private$get_selected())
-      }
-      value
-    },
-    validate_selection = function(value) {
-      if (!is.character(value)) {
-        stop(
-          sprintf(
-            "Values of the selection for `%s` in `%s` should be an array of character.",
-            private$get_varname(),
-            private$get_dataname()
-          )
-        )
-      }
-      pre_msg <- sprintf(
-        "data '%s', variable '%s': ",
-        private$get_dataname(),
-        private$get_varname()
-      )
-      check_in_subset(value, private$get_choices(), pre_msg = pre_msg)
     },
 
     # shiny modules ----
