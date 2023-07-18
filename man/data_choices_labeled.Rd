@@ -7,7 +7,7 @@
 data_choices_labeled(
   data,
   choices,
-  varlabels = formatters_var_labels(data, fill = TRUE),
+  varlabels = teal.widgets::formatters_var_labels(data, fill = TRUE),
   keys = character(0)
 )
 }
