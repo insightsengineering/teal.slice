@@ -298,27 +298,3 @@ testthat::test_that("format.teal_slices prints count_type attribute if not empty
   ffs <- format(fs, show_all = TRUE)
   testthat::expect_true(!grepl("count_type", ffs))
 })
-
-testthat::test_that("slices_field works", {
-  shiny::reactiveConsole(TRUE)
-  on.exit(shiny::reactiveConsole(FALSE))
-
-  fs1 <- teal_slice(dataname = "data", varname = "var1")
-  fs2 <- teal_slice(dataname = "data", varname = "var2")
-  fs <- teal_slices(fs1, fs2)
-
-  # argument checks
-  testthat::expect_no_error(slices_field(fs, "dataname"))
-  testthat::expect_error(slices_field(fs), "argument \"field\" is missing")
-
-  # vector is returned when non-empty fields are queried
-  testthat::expect_vector(slices_field(fs, "dataname"))
-  testthat::expect_vector(slices_field(fs, "varname"))
-
-  # proper content is returned
-  testthat::expect_identical(slices_field(fs, "dataname"), "data")
-  testthat::expect_identical(slices_field(fs, "varname"), c("var1", "var2"))
-  testthat::expect_identical(slices_field(fs, "choices"), NULL)
-  testthat::expect_identical(slices_field(fs, "fixed"), FALSE)
-  testthat::expect_identical(slices_field(fs, "anchored"), FALSE)
-})
