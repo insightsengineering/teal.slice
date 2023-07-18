@@ -271,7 +271,7 @@ FilterStates <- R6::R6Class( # nolint
         }
 
         # Drop teal_slices that refer to excluded variables.
-        varnames <- slices_field(state, "varname")
+        varnames <- unique(unlist(lapply(state, "[[", "varname")))
         excluded_varnames <- setdiff(varnames, private$get_filterable_varnames())
         if (length(excluded_varnames)) {
           state <- Filter(function(x) !x$varname %in% excluded_varnames, state)
@@ -438,7 +438,7 @@ FilterStates <- R6::R6Class( # nolint
           avail_column_choices <- reactive({
             data <- private$data
             vars_include <- private$get_filterable_varnames()
-            active_filter_vars <- slices_field(self$get_filter_state(), "varname")
+            active_filter_vars <- unique(unlist(lapply(self$get_filter_state(), "[[", "varname")))
             choices <- setdiff(vars_include, active_filter_vars)
             varlabels <- get_varlabels(data)
 

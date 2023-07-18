@@ -282,18 +282,6 @@ print.teal_slices <- function(x, ...) {
   cat(format(x, ...), "\n")
 }
 
-#' Extract unique values from field of `teal_slice` Objects.
-#' @param tss (`teal_slices`) object
-#' @param field (`character(1)`) `teal_slice` field name
-#' @return A vector of unique values. Type conversion may occur (silently).
-#' @keywords internal
-#'
-slices_field <- function(tss, field) {
-  checkmate::assert_string(field)
-  checkmate::assert_class(tss, "teal_slices")
-  unique(unlist(lapply(tss, function(x) x[[field]])))
-}
-
 #' Convert `teal_slices` to list
 #' @param tss (`teal_slices`) object
 #' @return A list of length 2, the first element holding all `teal_slice` contained in `tss`
