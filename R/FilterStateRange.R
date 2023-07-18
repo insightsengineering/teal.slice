@@ -341,34 +341,24 @@ RangeFilterState <- R6::R6Class( # nolint
         )
       }
     },
-
-    # overwrites superclass method
-    validate_selection = function(value) {
-      if (!is.numeric(value)) {
-        stop(
-          sprintf(
-            "value of the selection for `%s` in `%s` should be a numeric",
-            private$get_varname(),
-            private$get_dataname()
-          )
-        )
-      }
-      invisible(NULL)
-    },
-
-    # overwrites superclass method
-    # additionally adjusts progtammatic selection to existing slider ticks
     cast_and_validate = function(values) {
-      if (!is.atomic(values)) stop("Values to set must be an atomic vector.")
-      values <- as.numeric(values)
-      if (any(is.na(values))) stop("Vector of set values must contain values coercible to numeric.")
-      if (length(values) != 2) stop("Vector of set values must have length two.")
+      tryCatch(
+        expr = {
+          values <- as.numeric(values)
+          if (anyNA(values)) stop()
+          values
+        },
+        error = function(e) stop("Vector of set values must contain values coercible to numeric")
+      )
+    },
+    # Also validates that selection is sorted.
+    check_length = function(values) {
+      if (length(values) != 2L) stop("Vector of set values must have length two.")
       if (values[1L] > values[2L]) stop("Vector of set values must be sorted.")
-
       values
     },
     # Trim selection to limits imposed by private$get_choices()
-    remove_out_of_bound_values = function(values) {
+    remove_out_of_bounds_values = function(values) {
       if (values[1L] < private$get_choices()[1L]) values[1L] <- private$get_choices()[1L]
       if (values[2L] > private$get_choices()[2L]) values[2L] <- private$get_choices()[2L]
       values

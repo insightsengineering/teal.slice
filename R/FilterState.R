@@ -427,9 +427,8 @@ FilterState <- R6::R6Class( # nolint
       )
       shiny::isolate({
         value <- private$cast_and_validate(value)
-        value <- private$remove_out_of_bound_values(value)
-        value <- private$check_multiple(value)
-        private$validate_selection(value)
+        value <- private$check_length(value)
+        value <- private$remove_out_of_bounds_values(value)
         private$teal_slice$selected <- value
       })
       logger::log_trace(
@@ -624,8 +623,7 @@ FilterState <- R6::R6Class( # nolint
       }
     },
 
-    # Converts values to the type fitting this `FilterState` and validates
-    # whether the elements of the resulting vector satisfy the requirements of this `FilterState`.
+    # Converts values to the type fitting this `FilterState` and validates the conversion.
     # Raises error if casting does not execute successfully.
     #
     # @param values vector of values
@@ -635,19 +633,18 @@ FilterState <- R6::R6Class( # nolint
       values
     },
 
+    # Checks length of selection.
+    check_length = function(values) {
+      values
+    },
+
     # Filters out erroneous values from vector.
     #
     # @param values vector of values
     #
     # @return vector in which values that cannot be set in this FilterState have been dropped
-    remove_out_of_bound_values = function(values) {
+    remove_out_of_bounds_values = function(values) {
       values
-    },
-
-    # Checks whether multiple choices are allowed.
-    # If not value is of length 2 or more, drops all but first item with a warning.
-    check_multiple = function(value) {
-      value
     },
 
     # Checks if the selection is valid in terms of class and length.

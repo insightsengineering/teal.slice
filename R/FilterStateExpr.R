@@ -179,18 +179,21 @@ FilterStateExpr <- R6::R6Class( # nolint
             class = "filter-card-header",
             tags$div(
               class = "filter-card-title",
-              icon("lock"),
+              if (private$is_anchored()) {
+                icon("anchor-lock")
+              } else {
+                icon("lock")
+              },
               tags$span(tags$strong(private$teal_slice$id)),
               tags$span(private$teal_slice$title, class = "filter-card-varlabel")
             ),
-            tags$div(
-              class = "filter-card-controls",
+            if (isFALSE(private$is_anchored())) {
               actionLink(
                 inputId = ns("remove"),
                 label = icon("circle-xmark", lib = "font-awesome"),
                 class = "filter-card-remove"
               )
-            ),
+            },
             tags$div(
               class = "filter-card-summary",
               private$ui_summary(ns("summary"))
@@ -206,6 +209,12 @@ FilterStateExpr <- R6::R6Class( # nolint
   private = list(
     observers = NULL, # stores observers
     teal_slice = NULL, # stores reactiveValues
+
+    # Check whether this filter is anchored (cannot be removed).
+    # @return `logical(1)`
+    is_anchored = function() {
+      shiny::isolate(isTRUE(private$teal_slice$anchored))
+    },
 
     # @description
     # Server module to display filter summary
