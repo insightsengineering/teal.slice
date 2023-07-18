@@ -1351,43 +1351,62 @@ FilteredData <- R6::R6Class( # nolint
           ### End restore procedure. ###
         })
 
-        # Create table to display list of snapshots and their actions.
-        output$snapshot_list <- renderUI({
+        # Create UI elements and server logic for the snapshot table.
+        # Observers must be tracked to avoid duplication and excess reactivity.
+        # Remaining elements are tracked likewise for consistency and a slight speed margin.
+        observers <- reactiveValues()
+        handlers <- reactiveValues()
+        divs <- reactiveValues()
+
+        observeEvent(snapshot_history(), {
           lapply(names(snapshot_history())[-1L], function(s) {
             id_pickme <- sprintf("pickme_%s", make.names(s))
             id_saveme <- sprintf("saveme_%s", make.names(s))
+            id_rowme <- sprintf("rowme_%s", make.names(s))
 
-            # Restore snapshot.
-            observeEvent(input[[id_pickme]], {
-              ### Begin restore procedure. ###
-              snapshot <- snapshot_history()[[s]]
-              snapshot_state <- reassemble_slices(snapshot)
-              self$clear_filter_states(force = TRUE)
-              self$set_filter_state(snapshot_state)
-              removeModal()
-              ### End restore procedure. ###
-            })
-
-            # Save snapshot.
-            output[[id_saveme]] <- downloadHandler(
-              filename = function() {
-                sprintf("teal_snapshot_%s_%s.json", s, Sys.Date())
-              },
-              content = function(file) {
+            # Create observer for restoring snapshot.
+            if (!is.element(id_pickme, names(observers))) {
+              observeEvent(input[[id_pickme]], {
+                ### Begin restore procedure. ###
                 snapshot <- snapshot_history()[[s]]
                 snapshot_state <- reassemble_slices(snapshot)
-                teal.slice::slices_store(tss = snapshot_state, file = file)
-              }
-            )
+                self$clear_filter_states(force = TRUE)
+                self$set_filter_state(snapshot_state)
+                removeModal()
+                ### End restore procedure. ###
+              })
+            }
+
+            # Create handler for downloading snapshot.
+            if (!is.element(id_saveme, names(handlers))) {
+              output[[id_saveme]] <- downloadHandler(
+                filename = function() {
+                  sprintf("teal_snapshot_%s_%s.json", s, Sys.Date())
+                },
+                content = function(file) {
+                  snapshot <- snapshot_history()[[s]]
+                  snapshot_state <- reassemble_slices(snapshot)
+                  teal.slice::slices_store(tss = snapshot_state, file = file)
+                }
+              )
+              handlers[[id_saveme]] <- id_saveme
+            }
 
             # Create a row for the snapshot table.
-            div(
-              class = "snapshot_table_row",
-              span(h5(s)),
-              actionLink(inputId = session$ns(id_pickme), label = icon("circle-check"), title = "select"),
-              downloadLink(outputId = session$ns(id_saveme), label = icon("save"), title = "save to file")
-            )
+            if (!is.element(id_rowme, names(divs))) {
+              div(
+                class = "snapshot_table_row",
+                span(h5(s)),
+                actionLink(inputId = session$ns(id_pickme), label = icon("circle-check"), title = "select"),
+                downloadLink(outputId = session$ns(id_saveme), label = icon("save"), title = "save to file")
+              )
+            }
           })
+        })
+
+        # Create table to display list of snapshots and their actions.
+        output$snapshot_list <- renderUI({
+          lapply(rev(reactiveValuesToList(divs)), function(d) d)
         })
       })
     }
