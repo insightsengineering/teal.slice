@@ -572,7 +572,7 @@ testthat::test_that("remove_filter_state removes states specified by `teal_slice
     )
   )
   testthat::expect_identical(
-    shiny::isolate(unique(unlist(lapply(datasets$get_filter_state(), function(x) x[["varname"]])))),
+    shiny::isolate(unique(unlist(lapply(datasets$get_filter_state(), "[[", "varname")))),
     "Species"
   )
 })
@@ -603,7 +603,7 @@ testthat::test_that("remove_filter_state does not remove anchored filters", {
 
   testthat::expect_length(shiny::isolate(datasets$get_filter_state()), 2)
   testthat::expect_true(
-    shiny::isolate(unique(unlist(lapply(datasets$get_filter_state(), function(x) x[["anchored"]]))))
+    shiny::isolate(unique(unlist(lapply(datasets$get_filter_state(), "[[", "anchored"))))
   )
 })
 
@@ -646,7 +646,7 @@ testthat::test_that("clear_filter_states removes filters of desired dataset only
   datasets$clear_filter_states(datanames = "iris")
 
   testthat::expect_identical(
-    shiny::isolate(unique(unlist(lapply(datasets$get_filter_state(), function(x) x[["dataname"]])))),
+    shiny::isolate(unique(vapply(datasets$get_filter_state(), "[[", character(1L), "dataname"))),
     "mtcars")
 })
 
@@ -676,7 +676,7 @@ testthat::test_that("clear_filter_states does not remove anchored filters", {
 
   testthat::expect_length(shiny::isolate(datasets$get_filter_state()), 2)
   testthat::expect_true(
-    shiny::isolate(unique(unlist(lapply(datasets$get_filter_state(), function(x) x[["anchored"]]))))
+    shiny::isolate(unique(unlist(lapply(datasets$get_filter_state(), "[[", "anchored"))))
   )
 })
 

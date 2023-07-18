@@ -106,7 +106,7 @@ MAEFilteredDataset <- R6::R6Class( # nolint
 
         # set state on experiments
         # determine target experiments (defined in teal_slices)
-        experiments <- unique(unlist(lapply(state, function(x) x[["experiment"]])))
+        experiments <- unique(unlist(lapply(state, "[[", "experiment")))
         available_experiments <- setdiff(names(private$get_filter_states()), "subjects")
         excluded_filters <- setdiff(experiments, available_experiments)
         if (length(excluded_filters)) {
@@ -150,7 +150,7 @@ MAEFilteredDataset <- R6::R6Class( # nolint
 
         # remove state on experiments
         # determine target experiments (defined in teal_slices)
-        experiments <- unique(unlist(lapply(state, function(x) x[["experiment"]])))
+        experiments <- unique(unlist(lapply(state, "[[", "experiment")))
         available_experiments <- setdiff(names(private$get_filter_states()), "subjects")
         excluded_filters <- setdiff(experiments, available_experiments)
         if (length(excluded_filters)) {

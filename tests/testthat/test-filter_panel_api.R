@@ -75,7 +75,7 @@ testthat::test_that("FilterPanelAPI$remove_filter_state removes filter states sp
   datasets$remove_filter_state(teal_slices(teal_slice(dataname = "df1", varname = "num")))
 
   testthat::expect_identical(
-    shiny::isolate(unique(unlist(lapply(datasets$get_filter_state(), function(x) x[["varname"]])))),
+    shiny::isolate(unique(unlist(lapply(datasets$get_filter_state(), "[[", "varname")))),
     c("fact", "int")
   )
 })
@@ -112,7 +112,7 @@ testthat::test_that("FilterPanelAPI$clear_filter_states remove the filters of th
 
   testthat::expect_length(shiny::isolate(datasets$get_filter_state()), 1)
 
-  testthat::expect_identical(shiny::isolate(unique(unlist(lapply(datasets$get_filter_state(), function(x) x[["varname"]])))),
+  testthat::expect_identical(shiny::isolate(unique(unlist(lapply(datasets$get_filter_state(), "[[", "varname")))),
                              "int")
 })
 
@@ -188,7 +188,7 @@ testthat::test_that("remove_filter_state removes filter state specified by `teal
     remove_filter_state(datasets, teal_slices(teal_slice(dataname = "iris", varname = "Species")))
   )
   testthat::expect_identical(
-    shiny::isolate(unique(unlist(lapply(get_filter_state(datasets), function(x) x[["varname"]])))),
+    shiny::isolate(unique(unlist(lapply(get_filter_state(datasets), "[[", "varname")))),
     c("Sepal.Length", "years_to_birth", "vital_status", "gender", "ARRAY_TYPE")
   )
 })
