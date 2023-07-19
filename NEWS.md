@@ -12,6 +12,7 @@
 * Changed appearance of filter cards to a collapsible accordion.
 * Replaced `sliderInput` with interactive `plotly` chart to allow the user to zoom in on the variable distribution.
 * Implemented reactive counts in single filter cards to compare filtered and unfiltered variable distributions. See `count_type` argument in `teal_slices`.
+* Added state history: individual filter states track changes so the user can rewind them or reset the initial state.
 * Added snapshot manager module to enable capturing, restoring, and saving application filter state.
 
 ### Breaking changes
