@@ -1310,13 +1310,13 @@ FilteredData <- R6::R6Class( # nolint
           showModal(
             modalDialog(
               textInput(
-                session$ns("snapshot_name"),
+                ns("snapshot_name"),
                 "Name the snapshot",
                 width = "100%",
                 placeholder = "Meaningful, unique name"
               ),
               footer = tagList(
-                actionButton(session$ns("snapshot_name_accept"), "Accept", icon = icon("thumbs-up")),
+                actionButton(ns("snapshot_name_accept"), "Accept", icon = icon("thumbs-up")),
                 modalButton(label = "Cancel", icon = icon("thumbs-down"))
               ),
               size = "s"
@@ -1375,7 +1375,7 @@ FilteredData <- R6::R6Class( # nolint
 
             # Create observer for restoring snapshot.
             if (!is.element(id_pickme, names(observers))) {
-              observeEvent(input[[id_pickme]], {
+              observers[[id_pickme]] <- observeEvent(input[[id_pickme]], {
                 ### Begin restore procedure. ###
                 snapshot <- snapshot_history()[[s]]
                 snapshot_state <- reassemble_slices(snapshot)
@@ -1403,11 +1403,11 @@ FilteredData <- R6::R6Class( # nolint
 
             # Create a row for the snapshot table.
             if (!is.element(id_rowme, names(divs))) {
-              div(
+              divs[[id_rowme]] <- div(
                 class = "snapshot_table_row",
                 span(h5(s)),
-                actionLink(inputId = session$ns(id_pickme), label = icon("circle-check"), title = "select"),
-                downloadLink(outputId = session$ns(id_saveme), label = icon("save"), title = "save to file")
+                actionLink(inputId = ns(id_pickme), label = icon("circle-check"), title = "select"),
+                downloadLink(outputId = ns(id_saveme), label = icon("save"), title = "save to file")
               )
             }
           })
