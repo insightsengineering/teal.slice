@@ -23,6 +23,10 @@ a vector on which \code{FilterState} is built:
 \code{experiment} and \code{arg}, so that one can add \code{teal_slice} for a \code{varname}
 which exists in multiple \code{SummarizedExperiment}s or exists in both \code{colData}
 and \code{rowData} of given experiment.
+For such a vector \code{teal.slice} doesn't allow to activate more than one filters.
 }
+}
+\details{
+In case of \code{teal_slice_expr} \code{id} is mandatory and must be unique.
 }
 \keyword{internal}
