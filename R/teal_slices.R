@@ -66,7 +66,7 @@
 #'   filter_2,
 #'   filter_3,
 #'   exclude_varnames = list(
-#'     "dataname1" = "varname2"
+#'     "dataname1" = "varname3"
 #'   )
 #' )
 #'
@@ -94,8 +94,35 @@ teal_slices <- function(...,
       toString(unique(slices_id[duplicated(slices_id)]))
     )
   }
+
+  shiny::isolate({
+    varnames <- list()
+    for (slice in slices) {
+      dataname <- slice[["dataname"]]
+      if (dataname %in% names(varnames)) {
+        varnames[[dataname]] <- c(varnames[[dataname]], slice[["varname"]])
+      } else {
+        varnames[[dataname]] <- slice[["varname"]]
+      }
+    }
+  })
+
   checkmate::assert_list(exclude_varnames, names = "named", types = "character", null.ok = TRUE, min.len = 1)
+  datanames_exclude <- unlist(intersect(names(varnames), names(exclude_varnames)))
+  if (length(datanames_exclude) > 0) {
+    lapply(datanames_exclude, function(name) {
+      checkmate::assert_disjunct(varnames[[name]], exclude_varnames[[name]])
+    })
+  }
+
   checkmate::assert_list(include_varnames, names = "named", types = "character", null.ok = TRUE, min.len = 1)
+  datanames_include <- unlist(intersect(names(varnames), names(include_varnames)))
+  if (length(datanames_include) > 0) {
+    lapply(datanames_include, function(name) {
+      checkmate::assert_subset(varnames[[name]], include_varnames[[name]])
+    })
+  }
+
   checkmate::assert_character(count_type, len = 1, null.ok = TRUE)
   checkmate::assert_subset(count_type, choices = c("all", "none"), empty.ok = TRUE)
   checkmate::assert_logical(allow_add)

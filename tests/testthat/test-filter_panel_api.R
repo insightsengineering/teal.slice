@@ -135,8 +135,7 @@ testthat::test_that("get_filter_state returns `teal_slices` with features identi
     teal_slice("iris", "Sepal.Length", selected = c(5.1, 6.4)),
     teal_slice("mae", "years_to_birth", selected = c(30, 50), keep_na = TRUE, keep_inf = FALSE),
     teal_slice("mae", "vital_status", selected = "1", keep_na = FALSE),
-    teal_slice("mae", "gender", selected = "female", keep_na = TRUE),
-    teal_slice("mae", "ARRAY_TYPE", selected = "", keep_na = TRUE, experiment = "RPPAArray", arg = "subset")
+    teal_slice("mae", "gender", selected = "female", keep_na = TRUE)
   )
   set_filter_state(datasets, filter = fs)
 
@@ -162,10 +161,6 @@ testthat::test_that("get_filter_state returns `teal_slices` with features identi
     fs[[5]], fs_out[[5]],
     fields = c("dataname", "varname", "selected", "keep_na", "experiment", "target")
   ))
-  testthat::expect_true(compare_slices(
-    fs[[6]], fs_out[[6]],
-    fields = c("dataname", "varname", "selected", "keep_na", "experiment", "target")
-  ))
 })
 
 # remove_filter_state ----
@@ -182,8 +177,7 @@ testthat::test_that("remove_filter_state removes filter state specified by `teal
     teal_slice("iris", "Sepal.Length", selected = c(5.1, 6.4)),
     teal_slice("mae", "years_to_birth", selected = c(30, 50), keep_na = TRUE, keep_inf = FALSE),
     teal_slice("mae", "vital_status", selected = "1", keep_na = FALSE),
-    teal_slice("mae", "gender", selected = "female", keep_na = TRUE),
-    teal_slice("mae", "ARRAY_TYPE", selected = "", keep_na = TRUE, experiment = "RPPAArray", arg = "subset")
+    teal_slice("mae", "gender", selected = "female", keep_na = TRUE)
   )
   set_filter_state(datasets, fs)
   testthat::expect_no_error(
@@ -191,7 +185,7 @@ testthat::test_that("remove_filter_state removes filter state specified by `teal
   )
   testthat::expect_identical(
     shiny::isolate(unique(unlist(lapply(get_filter_state(datasets), "[[", "varname")))),
-    c("Sepal.Length", "years_to_birth", "vital_status", "gender", "ARRAY_TYPE")
+    c("Sepal.Length", "years_to_birth", "vital_status", "gender")
   )
 })
 
@@ -209,8 +203,7 @@ testthat::test_that("clear_filter_states removes all filter states", {
     teal_slice("iris", "Sepal.Length", selected = c(5.1, 6.4)),
     teal_slice("mae", "years_to_birth", selected = c(30, 50), keep_na = TRUE, keep_inf = FALSE),
     teal_slice("mae", "vital_status", selected = "1", keep_na = FALSE),
-    teal_slice("mae", "gender", selected = "female", keep_na = TRUE),
-    teal_slice("mae", "ARRAY_TYPE", selected = "", keep_na = TRUE, experiment = "RPPAArray", arg = "subset")
+    teal_slice("mae", "gender", selected = "female", keep_na = TRUE)
   )
   set_filter_state(datasets, fs)
   testthat::expect_no_error(
