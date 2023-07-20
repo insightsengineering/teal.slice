@@ -331,17 +331,25 @@ trim_lines_json <- function(x) {
 #' `experiment` and `arg`, so that one can add `teal_slice` for a `varname`
 #' which exists in multiple `SummarizedExperiment`s or exists in both `colData`
 #' and `rowData` of given experiment.
+#' For such a vector `teal.slice` doesn't allow to activate more than one filters.
+#'
+#' In case of `teal_slice_expr` `id` is mandatory and must be unique.
 #' @param x (`teal_slice` or `list`)
 #' @return (`character(1)`) `id` for a `teal_slice` object.
 #' @keywords internal
 get_default_slice_id <- function(x) {
+  checkmate::assert_multi_class(x, c("teal_slice", "list"))
   shiny::isolate({
-    paste(
-      Filter(
-        length,
-        as.list(x)[c("dataname", "varname", "experiment", "arg")]
-      ),
-      collapse = " "
-    )
+    if (inherits(x, "teal_slice_expr") || is.null(x$varname)) {
+      x$id
+    } else {
+      paste(
+        Filter(
+          length,
+          as.list(x)[c("dataname", "varname", "experiment", "arg")]
+        ),
+        collapse = " "
+      )
+    }
   })
 }
