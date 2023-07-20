@@ -94,6 +94,12 @@ teal_slices <- function(...,
       toString(unique(slices_id[duplicated(slices_id)]))
     )
   }
+
+  varnames <- shiny::isolate(unique(unlist(lapply(slices, "[[", "varname"))))
+  excluded_varnames <- unlist(intersect(varnames, exclude_varnames))
+  if (!is.null(excluded_varnames) && length(excluded_varnames)) {
+    checkmate::assert_disjunct(excluded_varnames, varnames)
+  }
   checkmate::assert_list(exclude_varnames, names = "named", types = "character", null.ok = TRUE, min.len = 1)
   checkmate::assert_list(include_varnames, names = "named", types = "character", null.ok = TRUE, min.len = 1)
   checkmate::assert_character(count_type, len = 1, null.ok = TRUE)

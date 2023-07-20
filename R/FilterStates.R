@@ -270,14 +270,6 @@ FilterStates <- R6::R6Class( # nolint
           private$count_type <- count_type
         }
 
-        # Drop teal_slices that refer to excluded variables.
-        varnames <- unique(unlist(lapply(state, "[[", "varname")))
-        excluded_varnames <- setdiff(varnames, private$get_filterable_varnames())
-        if (length(excluded_varnames)) {
-          state <- Filter(function(x) !x$varname %in% excluded_varnames, state)
-          logger::log_warn("filters for columns: { toString(excluded_varnames) } excluded from { private$dataname }")
-        }
-
         if (length(state) > 0) {
           private$set_filter_state_impl(
             state = state,
