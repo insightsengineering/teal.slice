@@ -66,7 +66,7 @@
 #'   filter_2,
 #'   filter_3,
 #'   exclude_varnames = list(
-#'     "dataname1" = "varname2"
+#'     "dataname1" = "varname3"
 #'   )
 #' )
 #'
@@ -93,6 +93,17 @@ teal_slices <- function(...,
       "Some teal_slice objects have the same id:\n",
       toString(unique(slices_id[duplicated(slices_id)]))
     )
+  }
+
+  varnames <- shiny::isolate(setNames(
+    lapply(slices, function(slice) slice$varname),
+    sapply(slices, function(slice) slice$dataname)
+  ))
+  excluded_datanames <- unlist(intersect(names(varnames), names(exclude_varnames)))
+  if (!is.null(excluded_datanames) && length(excluded_datanames) > 0 ) {
+    lapply(excluded_datanames, function(name) {
+      checkmate::assert_disjunct(exclude_varnames[[name]], varnames[[name]])
+    })
   }
   checkmate::assert_list(exclude_varnames, names = "named", types = "character", null.ok = TRUE, min.len = 1)
   checkmate::assert_list(include_varnames, names = "named", types = "character", null.ok = TRUE, min.len = 1)
