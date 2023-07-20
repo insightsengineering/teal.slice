@@ -100,7 +100,7 @@ teal_slices <- function(...,
     sapply(slices, function(slice) slice$dataname)
   ))
   excluded_datanames <- unlist(intersect(names(varnames), names(exclude_varnames)))
-  if (!is.null(excluded_datanames) && length(excluded_datanames) > 0 ) {
+  if (!is.null(excluded_datanames) && length(excluded_datanames) > 0) {
     lapply(excluded_datanames, function(name) {
       checkmate::assert_disjunct(exclude_varnames[[name]], varnames[[name]])
     })
