@@ -114,7 +114,6 @@ FilteredData <- R6::R6Class( # nolint
       }
 
       self$set_available_teal_slices(x = reactive(NULL))
-      self$activate_snapshot_manager(FALSE)
 
       invisible(self)
     },
@@ -155,20 +154,6 @@ FilteredData <- R6::R6Class( # nolint
       })
       invisible(NULL)
     },
-
-    #' Activate snapshot manager.
-    #'
-    #' Activate snapshot manager module to allow capturing, saving, and restoring
-    #' snapshots of the global application filter state.
-    #'
-    #' @param x (`logical(1)`) flag
-    #' @return invisible `NULL`
-    activate_snapshot_manager = function(x) {
-      checkmate::assert_flag(x)
-      private$snapshot_manager_active <- x
-      invisible(NULL)
-    },
-
 
     # datasets methods ----
 
@@ -644,15 +629,6 @@ FilteredData <- R6::R6Class( # nolint
           class = "filter-panel-active-header",
           tags$span("Active Filter Variables", class = "text-primary mb-4"),
           private$ui_available_filters(ns("available_filters")),
-          if (isFALSE(private$snapshot_manager_active)) {
-            actionLink(
-              ns("show_snapshot_manager"),
-              label = NULL,
-              icon = icon("cog"),
-              title = "Open snapshot manager",
-              class = "remove_all pull-right"
-            )
-          },
           actionLink(
             inputId = ns("minimise_filter_active"),
             label = NULL,
@@ -747,21 +723,6 @@ FilteredData <- R6::R6Class( # nolint
             ifelse(n_filters_active == 1, "", "s")
           )
         })
-
-        if (isFALSE(private$snapshot_manager_active)) {
-          observeEvent(input$show_snapshot_manager, {
-            logger::log_trace("FilteredData$srv_filter_panel@1 showing snapshot manager")
-            showModal(
-              modalDialog(
-                private$ui_snapshot_manager(session$ns("snapshot_manager")),
-                footer = NULL,
-                easyClose = TRUE,
-                size = "m"
-              )
-            )
-          })
-          private$srv_snapshot_manager("snapshot_manager")
-        }
 
         observeEvent(input$remove_all_filters, {
           logger::log_trace("FilteredData$srv_filter_panel@1 removing all non-anchored filters")
@@ -1096,9 +1057,6 @@ FilteredData <- R6::R6Class( # nolint
     # flag specifying whether the user may add filters
     allow_add = TRUE,
 
-    # flag specifying if snapshot manager should be available
-    snapshot_manager_active = logical(0L),
-
     # private methods ----
 
     # @description
@@ -1260,162 +1218,6 @@ FilteredData <- R6::R6Class( # nolint
           } else {
             shinyjs::hide("available_menu")
           }
-        })
-      })
-    },
-
-    # Snapshot manager module.
-    # @description
-    # Controls capturing, restoring, and saving filter state snapshots.
-    ui_snapshot_manager = function(id) {
-      ns <- NS(id)
-      div(
-        class = "snapshot_manager_content",
-        div(
-          class = "snapshot_table_row",
-          span(tags$b("Snapshot manager")),
-          actionLink(ns("snapshot_add"), label = NULL, icon = icon("camera"), title = "add snapshot"),
-          actionLink(ns("snapshot_reset"), label = NULL, icon = icon("undo"), title = "reset initial state"),
-          NULL
-        ),
-        uiOutput(ns("snapshot_list"))
-      )
-    },
-    # Snapshot manager module.
-    # @description
-    # Captures, stores, restores, and saves filter state snapshots.
-    # Creates UI elements for each captured snapshot.
-    # @details
-    # Snapshot is a `teal_slices` converted to a list of list of lists.
-    # Attributes other than class remain unchanged.
-    # Snapshots are added on user request and stored in a `reactiveVal`.
-    # Initial state application is the first snapshot.
-    # Snapshots are displayed in a table that shows the name, an select button and a save button.
-    # Selecting rebuilds `teal_slices` from snapshot, clears filter states and sets new state.
-    # Saving rebuilds `teal_slices` from snapshot and saves it to json file.
-    # Initial state is not explicitly enumerated in table, has separate reset button.
-    srv_snapshot_manager = function(id) {
-      moduleServer(id, function(input, output, session) {
-        ns <- session$ns
-
-        # Store global filter states.
-        snapshot_history <- reactiveVal({
-          list(
-            "Initial application state" = disassemble_slices(isolate(self$get_filter_state()))
-          )
-        })
-
-        # Snapshot current application state - name snaphsot.
-        observeEvent(input$snapshot_add, {
-          showModal(
-            modalDialog(
-              textInput(
-                ns("snapshot_name"),
-                "Name the snapshot",
-                width = "100%",
-                placeholder = "Meaningful, unique name"
-              ),
-              footer = tagList(
-                actionButton(ns("snapshot_name_accept"), "Accept", icon = icon("thumbs-up")),
-                modalButton(label = "Cancel", icon = icon("thumbs-down"))
-              ),
-              size = "s"
-            )
-          )
-        })
-        # Snapshot current application state - store snaphsot.
-        observeEvent(input$snapshot_name_accept, {
-          snapshot_name <- trimws(input$snapshot_name)
-          if (identical(snapshot_name, "")) {
-            showNotification(
-              "Please name the snapshot.",
-              type = "message"
-            )
-            updateTextInput(inputId = "snapshot_name", value = "", placeholder = "Meaningful, unique name")
-          } else if (is.element(make.names(snapshot_name), make.names(names(snapshot_history())))) {
-            showNotification(
-              "This name is in conflict with other snapshot names. Please choose a different one.",
-              type = "message"
-            )
-            updateTextInput(inputId = "snapshot_name", value = , placeholder = "Meaningful, unique name")
-          } else {
-            snapshot <- disassemble_slices(self$get_filter_state())
-            snapshot_update <- c(snapshot_history(), list(snapshot))
-            names(snapshot_update)[length(snapshot_update)] <- snapshot_name
-            snapshot_history(snapshot_update)
-            removeModal()
-            shinyjs::click(id = "teal-main_ui-filter_panel-active-show_snapshot_manager", asis = TRUE)
-          }
-        })
-
-        # Restore initial state.
-        observeEvent(input$snapshot_reset, {
-          s <- "Initial application state"
-          ### Begin restore procedure. ###
-          snapshot <- snapshot_history()[[s]]
-          snapshot_state <- reassemble_slices(snapshot)
-          self$clear_filter_states(force = TRUE)
-          self$set_filter_state(snapshot_state)
-          removeModal()
-          ### End restore procedure. ###
-        })
-
-        # Create UI elements and server logic for the snapshot table.
-        # Observers must be tracked to avoid duplication and excess reactivity.
-        # Remaining elements are tracked likewise for consistency and a slight speed margin.
-        observers <- reactiveValues()
-        handlers <- reactiveValues()
-        divs <- reactiveValues()
-
-        observeEvent(snapshot_history(), {
-          lapply(names(snapshot_history())[-1L], function(s) {
-            id_pickme <- sprintf("pickme_%s", make.names(s))
-            id_saveme <- sprintf("saveme_%s", make.names(s))
-            id_rowme <- sprintf("rowme_%s", make.names(s))
-
-            # Create observer for restoring snapshot.
-            if (!is.element(id_pickme, names(observers))) {
-              observers[[id_pickme]] <- observeEvent(input[[id_pickme]], {
-                ### Begin restore procedure. ###
-                snapshot <- snapshot_history()[[s]]
-                snapshot_state <- reassemble_slices(snapshot)
-                self$clear_filter_states(force = TRUE)
-                self$set_filter_state(snapshot_state)
-                removeModal()
-                ### End restore procedure. ###
-              })
-            }
-
-            # Create handler for downloading snapshot.
-            if (!is.element(id_saveme, names(handlers))) {
-              output[[id_saveme]] <- downloadHandler(
-                filename = function() {
-                  sprintf("teal_snapshot_%s_%s.json", s, Sys.Date())
-                },
-                content = function(file) {
-                  snapshot <- snapshot_history()[[s]]
-                  snapshot_state <- reassemble_slices(snapshot)
-                  teal.slice::slices_store(tss = snapshot_state, file = file)
-                }
-              )
-              handlers[[id_saveme]] <- id_saveme
-            }
-
-            # Create a row for the snapshot table.
-            if (!is.element(id_rowme, names(divs))) {
-              divs[[id_rowme]] <- div(
-                class = "snapshot_table_row",
-                span(h5(s)),
-                actionLink(inputId = ns(id_pickme), label = icon("circle-check"), title = "select"),
-                downloadLink(outputId = ns(id_saveme), label = icon("save"), title = "save to file")
-              )
-            }
-          })
-        })
-
-        # Create table to display list of snapshots and their actions.
-        output$snapshot_list <- renderUI({
-          lapply(rev(reactiveValuesToList(divs)), function(d) d)
         })
       })
     }
