@@ -95,7 +95,7 @@ teal_slices <- function(...,
     )
   }
 
-  varnames <- shiny::isolate(setNames(
+  varnames <- shiny::isolate(stats::setNames(
     lapply(slices, function(slice) slice$varname),
     sapply(slices, function(slice) slice$dataname)
   ))
