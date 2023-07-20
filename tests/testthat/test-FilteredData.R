@@ -413,11 +413,6 @@ testthat::test_that("set_filter_state accepts `teal_slices` and nested list and 
           years_to_birth = list(selected = c(30, 50), keep_na = TRUE, keep_inf = FALSE),
           vital_status = list(selected = "1", keep_na = FALSE),
           gender = list(selected = "female", keep_na = TRUE)
-        ),
-        RPPAArray = list(
-          subset = list(
-            ARRAY_TYPE = list(selected = "", keep_na = TRUE)
-          )
         )
       )
     ),
@@ -434,10 +429,6 @@ testthat::test_that("set_filter_state accepts `teal_slices` and nested list and 
     teal_slice(dataname = "mae", varname = "years_to_birth", selected = c(30, 50), keep_na = TRUE, keep_inf = FALSE),
     teal_slice(dataname = "mae", varname = "vital_status", selected = "1", keep_na = FALSE),
     teal_slice(dataname = "mae", varname = "gender", selected = "female", keep_na = TRUE),
-    teal_slice(
-      dataname = "mae", varname = "ARRAY_TYPE", experiment = "RPPAArray", arg = "subset",
-      selected = "", keep_na = TRUE
-    ),
     include_varnames = list(
       iris = c("Species", "Sepal.Length", "Petal.Length"),
       mae = c("years_to_birth", "vital_status", "gender")
@@ -888,18 +879,12 @@ testthat::test_that("get_filter_count properly tallies active filter states for 
   fs <- teal_slices(
     teal_slice(dataname = "mae", varname = "years_to_birth", selected = c(30, 50), keep_na = TRUE, keep_inf = FALSE),
     teal_slice(dataname = "mae", varname = "vital_status", selected = "1", keep_na = FALSE),
-    teal_slice(dataname = "mae", varname = "gender", selected = "female", keep_na = TRUE),
-    teal_slice(
-      dataname = "mae", varname = "ARRAY_TYPE",
-      selected = "", keep_na = TRUE, experiment = "RPPAArray", arg = "subset"
-    )
+    teal_slice(dataname = "mae", varname = "gender", selected = "female", keep_na = TRUE)
   )
   shiny::isolate(testthat::expect_equal(datasets$get_filter_count(), 0L))
   datasets$set_filter_state(state = fs)
-  shiny::isolate(testthat::expect_equal(datasets$get_filter_count(), 4L))
+  shiny::isolate(testthat::expect_equal(datasets$get_filter_count(), 3L))
 })
-
-
 
 test_class <- R6::R6Class(
   classname = "test_class",
@@ -979,3 +964,4 @@ shiny::testServer(
     )
   }
 )
+
