@@ -104,7 +104,7 @@ FilterState <- R6::R6Class( # nolint
           varlabel
         }
 
-      private$state_history <- reactiveVal(list(as.list(slice)))
+      private$state_history <- reactiveVal(list())
 
       logger::log_trace("Instantiated FilterState object id: { private$get_id() }")
 
@@ -215,8 +215,6 @@ FilterState <- R6::R6Class( # nolint
           }
 
           private$observers$state <- observeEvent(
-            ignoreNULL = TRUE,
-            ignoreInit = TRUE,
             eventExpr = list(private$get_selected(), private$get_keep_na(), private$get_keep_inf()),
             handlerExpr = {
               current_state <- as.list(self$get_state())
@@ -227,8 +225,6 @@ FilterState <- R6::R6Class( # nolint
           )
 
           private$observers$back <- observeEvent(
-            ignoreNULL = TRUE,
-            ignoreInit = TRUE,
             eventExpr = input$back,
             handlerExpr = {
               history <- rev(private$state_history())
@@ -240,8 +236,6 @@ FilterState <- R6::R6Class( # nolint
           )
 
           private$observers$reset <- observeEvent(
-            ignoreNULL = TRUE,
-            ignoreInit = TRUE,
             eventExpr = input$reset,
             handlerExpr = {
               slice <- private$state_history()[[1L]]
@@ -250,8 +244,6 @@ FilterState <- R6::R6Class( # nolint
           )
 
           private$observers$state_history <- observeEvent(
-            ignoreNULL = TRUE,
-            ignoreInit = TRUE,
             eventExpr = private$state_history(),
             handlerExpr = {
               shinyjs::delay(
@@ -395,7 +387,7 @@ FilterState <- R6::R6Class( # nolint
     is_choice_limited = FALSE, # flag whether number of possible choices was limited when specifying filter
     na_rm = FALSE,
     observers = list(), # stores observers
-    state_history = NULL, # reactiveVal storing states this FilterState has had since instantiation
+    state_history = NULL, # reactiveVal holding a list storing states this FilterState has had since instantiation
 
     # private methods ----
 
