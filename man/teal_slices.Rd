@@ -24,7 +24,7 @@ is.teal_slices(x)
 
 as.teal_slices(x)
 
-\method{as.list}{teal_slices}(x, recursive = FALSE)
+\method{as.list}{teal_slices}(x, recursive = FALSE, ...)
 
 \method{[}{teal_slices}(x, i)
 

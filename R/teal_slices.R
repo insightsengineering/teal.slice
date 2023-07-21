@@ -139,7 +139,7 @@ as.teal_slices <- function(x) { # nolint
 #' @export
 #' @keywords internal
 #'
-as.list.teal_slices <- function(x, recursive = FALSE) { # nolint
+as.list.teal_slices <- function(x, recursive = FALSE, ...) { # nolint
   ans <- unclass(x)
   if (recursive) ans[] <- lapply(ans, as.list)
   ans
