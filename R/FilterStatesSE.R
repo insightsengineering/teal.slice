@@ -178,7 +178,7 @@ SEFilterStates <- R6::R6Class( # nolint
 
           avail_col_data_choices <- reactive({
             slices_for_select <- Filter(function(x) x$arg == "select", self$get_filter_state())
-            active_filter_col_vars <- unique(unlist(lapply(slices_for_subset, "[[", "varname")))
+            active_filter_col_vars <- unique(unlist(lapply(slices_for_select, "[[", "varname")))
 
             choices <- setdiff(
               get_supported_filter_varnames(data = col_data),
