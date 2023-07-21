@@ -111,7 +111,6 @@ teal_slices <- function(...,
 }
 
 
-
 #' @rdname teal_slices
 #' @export
 #' @keywords internal
@@ -120,81 +119,26 @@ is.teal_slices <- function(x) { # nolint
   inherits(x, "teal_slices")
 }
 
+
 #' @rdname teal_slices
 #' @export
 #' @keywords internal
 #'
-as.teal_slices <- function(x) { # nolint
-  checkmate::assert_list(x, names = "named")
-  is_bottom <- function(x) {
-    isTRUE(is.list(x) && any(names(x) %in% c("selected", "keep_na", "keep_inf"))) ||
-      identical(x, list()) ||
-      is.atomic(x)
-  }
-  make_args <- function(object, dataname, varname, experiment = NULL, arg = NULL) {
-    args <- list(
-      dataname = dataname,
-      varname = varname
-    )
-    if (!is.null(experiment)) args$experiment <- experiment
-    if (!is.null(arg)) args$arg <- arg
-    if (is.list(object)) {
-      args <- c(args, object)
-    } else if (is.atomic(object)) {
-      args$selected <- object
-    }
-    args
-  }
-  slices <- vector("list")
+as.teal_slices <- function(x) {
+  attrs <- attributes(unclass(x))
+  ans <- lapply(x, as.teal_slice)
+  do.call(teal_slices, c(ans, attrs))
+}
 
-  for (dataname in names(x)) {
-    item <- x[[dataname]]
-    for (name_i in names(item)) {
-      subitem <- item[[name_i]]
-      if (is_bottom(subitem)) {
-        args <- make_args(
-          subitem,
-          dataname = dataname,
-          varname = name_i
-        )
-        slices <- c(slices, list(as.teal_slice(args)))
-      } else {
-        # MAE zone
-        for (name_ii in names(subitem)) {
-          subsubitem <- subitem[[name_ii]]
-          if (is_bottom(subsubitem)) {
-            args <- make_args(
-              subsubitem,
-              dataname = dataname,
-              experiment = if (name_i != "subjects") name_i,
-              varname = name_ii
-            )
-            slices <- c(slices, list(as.teal_slice(args)))
-          } else {
-            for (name_iii in names(subsubitem)) {
-              subsubsubitem <- subsubitem[[name_iii]]
-              if (is_bottom(subsubsubitem)) {
-                args <- make_args(
-                  subsubsubitem,
-                  dataname = dataname,
-                  experiment = name_i,
-                  arg = name_ii,
-                  varname = name_iii
-                )
-                slices <- c(slices, list(as.teal_slice(args)))
-              }
-            }
-          }
-        }
-      }
-    }
-  }
 
-  if (length(slices) == 0L && length(x) != 0L) {
-    stop("conversion to filter_slices failed")
-  }
-
-  do.call(teal_slices, c(slices, list(include_varnames = attr(x, "filterable"))))
+#' @rdname teal_slices
+#' @export
+#' @keywords internal
+#'
+as.list.teal_slices <- function(x) {
+  ans <- unclass(x)
+  ans[] <- lapply(ans, as.list)
+  ans
 }
 
 
@@ -311,29 +255,80 @@ setdiff_teal_slices <- function(x, y) {
   )
 }
 
-#' Convert teal_slices and to list of lists (drop classes), while maintaining attributes.
-#' Adds special class so that the reverse action can have assertion on argument type.
-#' @param tss (`teal_slices`)
-#' @return Object of class `teal_slices_snapshot`, which is a list of the same length as `tss`,
-#'         where each `teal_slice` has been converted to a list.
-#' @keywords internal
-#'
-disassemble_slices <- function(tss) {
-  checkmate::assert_class(tss, "teal_slices")
-  ans <- unclass(tss)
-  ans[] <- lapply(ans, as.list)
-  class(ans) <- "teal_slices_snapshot"
-  ans
-}
 
-#' Rebuild `teal_slices` from `teal_slices_snapshot`.
-#' @param x (`teal_slices_snapshot`)
-#' @return A `teal_slices` object.
+#' @rdname teal_slices
+#' @export
 #' @keywords internal
 #'
-reassemble_slices <- function(x) {
-  checkmate::assert_class(x, "teal_slices_snapshot")
-  attrs <- attributes(unclass(x))
-  ans <- lapply(x, as.teal_slice)
-  do.call(teal_slices, c(ans, attrs))
+list_to_teal_slices <- function(x) { # nolint
+  checkmate::assert_list(x, names = "named")
+  is_bottom <- function(x) {
+    isTRUE(is.list(x) && any(names(x) %in% c("selected", "keep_na", "keep_inf"))) ||
+      identical(x, list()) ||
+      is.atomic(x)
+  }
+  make_args <- function(object, dataname, varname, experiment = NULL, arg = NULL) {
+    args <- list(
+      dataname = dataname,
+      varname = varname
+    )
+    if (!is.null(experiment)) args$experiment <- experiment
+    if (!is.null(arg)) args$arg <- arg
+    if (is.list(object)) {
+      args <- c(args, object)
+    } else if (is.atomic(object)) {
+      args$selected <- object
+    }
+    args
+  }
+  slices <- vector("list")
+
+  for (dataname in names(x)) {
+    item <- x[[dataname]]
+    for (name_i in names(item)) {
+      subitem <- item[[name_i]]
+      if (is_bottom(subitem)) {
+        args <- make_args(
+          subitem,
+          dataname = dataname,
+          varname = name_i
+        )
+        slices <- c(slices, list(as.teal_slice(args)))
+      } else {
+        # MAE zone
+        for (name_ii in names(subitem)) {
+          subsubitem <- subitem[[name_ii]]
+          if (is_bottom(subsubitem)) {
+            args <- make_args(
+              subsubitem,
+              dataname = dataname,
+              experiment = if (name_i != "subjects") name_i,
+              varname = name_ii
+            )
+            slices <- c(slices, list(as.teal_slice(args)))
+          } else {
+            for (name_iii in names(subsubitem)) {
+              subsubsubitem <- subsubitem[[name_iii]]
+              if (is_bottom(subsubsubitem)) {
+                args <- make_args(
+                  subsubsubitem,
+                  dataname = dataname,
+                  experiment = name_i,
+                  arg = name_ii,
+                  varname = name_iii
+                )
+                slices <- c(slices, list(as.teal_slice(args)))
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+
+  if (length(slices) == 0L && length(x) != 0L) {
+    stop("conversion to filter_slices failed")
+  }
+
+  do.call(teal_slices, c(slices, list(include_varnames = attr(x, "filterable"))))
 }

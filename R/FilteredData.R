@@ -460,7 +460,7 @@ FilteredData <- R6::R6Class( # nolint
             ),
             call. = FALSE
           )
-          state <- as.teal_slices(state)
+          state <- list_to_teal_slices(state)
         }
 
         checkmate::assert_class(state, "teal_slices")
@@ -500,7 +500,7 @@ FilteredData <- R6::R6Class( # nolint
             ),
             call. = FALSE
           )
-          state <- as.teal_slices(state)
+          state <- list_to_teal_slices(state)
         }
 
         checkmate::assert_class(state, "teal_slices")
