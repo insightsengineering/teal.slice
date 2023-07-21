@@ -87,6 +87,12 @@ teal_slices <- function(...,
                         allow_add = TRUE) {
   slices <- list(...)
   checkmate::assert_list(slices, types = "teal_slice", any.missing = FALSE)
+  checkmate::assert_list(exclude_varnames, names = "named", types = "character", null.ok = TRUE, min.len = 1)
+  checkmate::assert_list(include_varnames, names = "named", types = "character", null.ok = TRUE, min.len = 1)
+  checkmate::assert_character(count_type, len = 1, null.ok = TRUE)
+  checkmate::assert_subset(count_type, choices = c("all", "none"), empty.ok = TRUE)
+  checkmate::assert_logical(allow_add)
+
   slices_id <- shiny::isolate(vapply(slices, `[[`, character(1L), "id"))
   if (any(duplicated(slices_id))) {
     stop(
@@ -95,37 +101,23 @@ teal_slices <- function(...,
     )
   }
 
-  shiny::isolate({
-    varnames <- list()
-    for (slice in slices) {
-      dataname <- slice[["dataname"]]
-      if (dataname %in% names(varnames)) {
-        varnames[[dataname]] <- c(varnames[[dataname]], slice[["varname"]])
-      } else {
-        varnames[[dataname]] <- slice[["varname"]]
-      }
-    }
+  datanames <- vapply(slices, `[[`, character(1L), "dataname")
+  varnames <- lapply(structure(datanames, names = datanames), function(x) {
+    unique(unlist(lapply(Filter(function(xx) xx$dataname == x, slices), `[[`, "varname")))
   })
 
-  checkmate::assert_list(exclude_varnames, names = "named", types = "character", null.ok = TRUE, min.len = 1)
-  datanames_exclude <- unlist(intersect(names(varnames), names(exclude_varnames)))
-  if (length(datanames_exclude) > 0) {
-    lapply(datanames_exclude, function(name) {
-      checkmate::assert_disjunct(varnames[[name]], exclude_varnames[[name]])
-    })
-  }
-
-  checkmate::assert_list(include_varnames, names = "named", types = "character", null.ok = TRUE, min.len = 1)
-  datanames_include <- unlist(intersect(names(varnames), names(include_varnames)))
-  if (length(datanames_include) > 0) {
-    lapply(datanames_include, function(name) {
-      checkmate::assert_subset(varnames[[name]], include_varnames[[name]])
-    })
-  }
-
-  checkmate::assert_character(count_type, len = 1, null.ok = TRUE)
-  checkmate::assert_subset(count_type, choices = c("all", "none"), empty.ok = TRUE)
-  checkmate::assert_logical(allow_add)
+  lapply(intersect(names(varnames), names(include_varnames)), function(n) {
+    if (!all(varnames[[n]] %in% include_varnames[[n]])) {
+      varnames_not_allowed <- setdiff(varnames[[n]], include_varnames[[n]])
+      stop(sprintf("filters for %s not allowed in %s", toString(varnames_not_allowed), n), call. = FALSE)
+    }
+  })
+  lapply(intersect(names(varnames), names(exclude_varnames)), function(n) {
+    if (any(varnames[[n]] %in% exclude_varnames[[n]])) {
+      varnames_forbidden <- intersect(varnames[[n]], exclude_varnames[[n]])
+    }
+      stop(sprintf("filters for %s forbidden in %s", toString(varnames_forbidden), n), call. = FALSE)
+  })
 
   structure(
     slices,
