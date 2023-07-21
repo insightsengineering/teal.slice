@@ -87,9 +87,7 @@ fs <-
     teal_slice(dataname = "mae", varname = "years_to_birth", selected = c(30, 50),
                keep_na = TRUE, keep_inf = FALSE),
     teal_slice(dataname = "mae", varname = "vital_status", selected = "1", keep_na = FALSE),
-    teal_slice(dataname = "mae", varname = "gender", selected = "female", keep_na = TRUE),
-    teal_slice(dataname = "mae", varname = "ARRAY_TYPE",
-               selected = "", keep_na = TRUE, datalabel = "RPPAArray", arg = "subset")
+    teal_slice(dataname = "mae", varname = "gender", selected = "female", keep_na = TRUE)
   )
 datasets$set_filter_state(state = fs)
 shiny::isolate(datasets$get_filter_state())
@@ -590,9 +588,7 @@ fs <-
     teal_slice(dataname = "mae", varname = "years_to_birth", selected = c(30, 50),
                keep_na = TRUE, keep_inf = FALSE),
     teal_slice(dataname = "mae", varname = "vital_status", selected = "1", keep_na = FALSE),
-    teal_slice(dataname = "mae", varname = "gender", selected = "female", keep_na = TRUE),
-    teal_slice(dataname = "mae", varname = "ARRAY_TYPE",
-               selected = "", keep_na = TRUE, datalabel = "RPPAArray", arg = "subset")
+    teal_slice(dataname = "mae", varname = "gender", selected = "female", keep_na = TRUE)
   )
 datasets$set_filter_state(state = fs)
 shiny::isolate(datasets$get_filter_state())

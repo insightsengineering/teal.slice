@@ -110,7 +110,7 @@ all_filters <- teal_slices(
   filter_2,
   filter_3,
   exclude_varnames = list(
-    "dataname1" = "varname2"
+    "dataname1" = "varname3"
   )
 )
 

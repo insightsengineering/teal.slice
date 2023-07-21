@@ -38,11 +38,7 @@ testthat::test_that("format returns properly formatted string", {
       keep_na = TRUE, keep_inf = FALSE
     ),
     teal_slice(dataname = "miniacc", varname = "vital_status", selected = "1", keep_na = FALSE),
-    teal_slice(dataname = "miniacc", varname = "gender", selected = "female", keep_na = TRUE),
-    teal_slice(
-      dataname = "miniacc", varname = "ARRAY_TYPE", selected = "",
-      keep_na = TRUE, experiment = "RPPAArray", arg = "subset"
-    )
+    teal_slice(dataname = "miniacc", varname = "gender", selected = "female", keep_na = TRUE)
   )
   filtered_dataset$set_filter_state(fs)
 
@@ -67,11 +63,7 @@ testthat::test_that("print returns properly formatted string", {
       keep_na = TRUE, keep_inf = FALSE
     ),
     teal_slice(dataname = "miniacc", varname = "vital_status", selected = "1", keep_na = FALSE),
-    teal_slice(dataname = "miniacc", varname = "gender", selected = "female", keep_na = TRUE),
-    teal_slice(
-      dataname = "miniacc", varname = "ARRAY_TYPE", selected = "",
-      keep_na = TRUE, experiment = "RPPAArray", arg = "subset"
-    )
+    teal_slice(dataname = "miniacc", varname = "gender", selected = "female", keep_na = TRUE)
   )
   filtered_dataset$set_filter_state(fs)
 
@@ -103,11 +95,7 @@ testthat::test_that("get_call returns a call with applying filter", {
       keep_na = TRUE, keep_inf = FALSE
     ),
     teal_slice(dataname = "miniacc", varname = "vital_status", selected = "1", keep_na = FALSE),
-    teal_slice(dataname = "miniacc", varname = "gender", selected = "female", keep_na = TRUE),
-    teal_slice(
-      dataname = "miniacc", varname = "ARRAY_TYPE", selected = "",
-      keep_na = TRUE, experiment = "RPPAArray", arg = "subset"
-    )
+    teal_slice(dataname = "miniacc", varname = "gender", selected = "female", keep_na = TRUE)
   )
   filtered_dataset$set_filter_state(fs)
   get_call_output <- shiny::isolate(filtered_dataset$get_call())
@@ -122,9 +110,6 @@ testthat::test_that("get_call returns a call with applying filter", {
             miniacc$vital_status == 1L &
             (is.na(miniacc$gender) | miniacc$gender == "female")
         )
-      ),
-      RPPAArray = quote(
-        miniacc[["RPPAArray"]] <- subset(miniacc[["RPPAArray"]], subset = is.na(ARRAY_TYPE) | ARRAY_TYPE == "")
       )
     )
   )
@@ -252,11 +237,6 @@ testthat::test_that(
         dataname = "miniacc", varname = "gender", choices = c("female", "male"), multiple = TRUE, selected = "female",
         keep_na = FALSE, keep_inf = FALSE, fixed = FALSE, anchored = FALSE
       ),
-      teal_slice(
-        dataname = "miniacc", varname = "ARRAY_TYPE", choices = c("", "protein_level"), multiple = TRUE, selected = "",
-        keep_na = FALSE, keep_inf = NULL, fixed = FALSE, anchored = FALSE,
-        experiment = "RPPAArray", arg = "subset"
-      ),
       count_type = "none",
       include_varnames = list(miniacc = colnames(SummarizedExperiment::colData(miniACC)))
     )
@@ -277,11 +257,7 @@ testthat::test_that(
         keep_na = TRUE, keep_inf = FALSE
       ),
       teal_slice(dataname = "miniacc", varname = "vital_status", selected = "1", keep_na = FALSE),
-      teal_slice(dataname = "miniacc", varname = "gender", selected = "female", keep_na = FALSE),
-      teal_slice(
-        dataname = "miniacc", varname = "ARRAY_TYPE", selected = "",
-        keep_na = FALSE, experiment = "RPPAArray", arg = "subset"
-      )
+      teal_slice(dataname = "miniacc", varname = "gender", selected = "female", keep_na = FALSE)
     )
     dataset$set_filter_state(state = fs)
     dataset$remove_filter_state(
@@ -290,7 +266,7 @@ testthat::test_that(
 
     testthat::expect_equal(
       shiny::isolate(sapply(dataset$get_filter_state(), `[[`, "varname")),
-      c("vital_status", "gender", "ARRAY_TYPE")
+      c("vital_status", "gender")
     )
   }
 )
@@ -306,11 +282,7 @@ testthat::test_that(
         keep_na = TRUE, keep_inf = FALSE
       ),
       teal_slice(dataname = "miniacc", varname = "vital_status", selected = "1", keep_na = FALSE),
-      teal_slice(dataname = "miniacc", varname = "gender", selected = "female", keep_na = FALSE),
-      teal_slice(
-        dataname = "miniacc", varname = "ARRAY_TYPE", selected = "",
-        keep_na = FALSE, experiment = "RPPAArray", arg = "subset"
-      )
+      teal_slice(dataname = "miniacc", varname = "gender", selected = "female", keep_na = FALSE)
     )
     dataset$set_filter_state(state = fs)
     testthat::expect_error(dataset$remove_filter_state(state_id = list("years_to_birth")))
@@ -327,16 +299,12 @@ testthat::test_that("remove_filters button removes all filters", {
     ),
     teal_slice(dataname = "miniacc", varname = "vital_status", selected = 1, keep_na = FALSE),
     teal_slice(dataname = "miniacc", varname = "gender", selected = "female", keep_na = FALSE),
-    teal_slice(
-      dataname = "miniacc", varname = "ARRAY_TYPE", selected = "",
-      keep_na = FALSE, experiment = "RPPAArray", arg = "subset"
-    ),
     count_type = "none"
   )
 
   shiny::isolate(filtered_dataset$set_filter_state(state = fs))
 
-  testthat::expect_length(shiny::isolate(filtered_dataset$get_filter_state()), 4)
+  testthat::expect_length(shiny::isolate(filtered_dataset$get_filter_state()), 3)
 
   shiny::testServer(
     filtered_dataset$srv_active,

@@ -3,7 +3,7 @@ testthat::test_that("teal_slices checks arguments", {
   fs2 <- teal_slice("data", "var2")
 
   testthat::expect_no_error(teal_slices(fs1, fs2))
-  testthat::expect_no_error(teal_slices(fs1, fs2,
+  testthat::expect_error(teal_slices(fs1, fs2,
     exclude_varnames = list(data = "var1"),
     count_type = "all",
     allow_add = FALSE
@@ -11,9 +11,10 @@ testthat::test_that("teal_slices checks arguments", {
 
   testthat::expect_error(teal_slices(fs1, fs2, "fs1"), "Assertion on 'slices' failed")
 
+  testthat::expect_error(teal_slices(fs1, fs2, exclude_varnames = list(data = "var1")))
   testthat::expect_error(teal_slices(fs1, fs2, exclude_varnames = "fs1"), "Assertion on 'exclude_varnames' failed")
   testthat::expect_error(teal_slices(fs1, fs2, include_varnames = "fs1"), "Assertion on 'include_varnames' failed")
-
+  testthat::expect_error(teal_slices(fs1, fs2, include_varnames = list(data = "fs1")))
   testthat::expect_error(teal_slices(fs1, fs2, count_type = "fs1"), "Must be a subset")
 
   testthat::expect_error(teal_slices(fs1, fs2, count_type = c("a", "b")), "Must have length 1")
@@ -117,35 +118,35 @@ testthat::test_that("[.teal_slices doesn't subset the exclude_varnames attribute
   fs2 <- teal_slice(dataname = "data1", varname = "var2")
   fs3 <- teal_slice(dataname = "data2", varname = "var1")
   fs4 <- teal_slice(dataname = "data2", varname = "var2")
-  fs <- teal_slices(fs1, fs2, fs3, fs4, exclude_varnames = list(data1 = "var1", data2 = "var1"))
+  fs <- teal_slices(fs1, fs2, fs3, fs4, exclude_varnames = list(data1 = "var3", data2 = "var3"))
 
   testthat::expect_identical(
     attr(fs[1], "exclude_varnames"),
-    list(data1 = "var1", data2 = "var1")
+    list(data1 = "var3", data2 = "var3")
   )
   testthat::expect_identical(
     attr(fs[2], "exclude_varnames"),
-    list(data1 = "var1", data2 = "var1")
+    list(data1 = "var3", data2 = "var3")
   )
   testthat::expect_identical(
     attr(fs[1:2], "exclude_varnames"),
-    list(data1 = "var1", data2 = "var1")
+    list(data1 = "var3", data2 = "var3")
   )
   testthat::expect_identical(
     attr(fs[3], "exclude_varnames"),
-    list(data1 = "var1", data2 = "var1")
+    list(data1 = "var3", data2 = "var3")
   )
   testthat::expect_identical(
     attr(fs[4], "exclude_varnames"),
-    list(data1 = "var1", data2 = "var1")
+    list(data1 = "var3", data2 = "var3")
   )
   testthat::expect_identical(
     attr(fs[3:4], "exclude_varnames"),
-    list(data1 = "var1", data2 = "var1")
+    list(data1 = "var3", data2 = "var3")
   )
   testthat::expect_identical(
     attr(fs[], "exclude_varnames"),
-    list(data1 = "var1", data2 = "var1")
+    list(data1 = "var3", data2 = "var3")
   )
 })
 
@@ -157,35 +158,35 @@ testthat::test_that("[.teal_slices doesn't subset the include_varnames attribute
   fs2 <- teal_slice(dataname = "data1", varname = "var2")
   fs3 <- teal_slice(dataname = "data2", varname = "var1")
   fs4 <- teal_slice(dataname = "data2", varname = "var2")
-  fs <- teal_slices(fs1, fs2, fs3, fs4, include_varnames = list(data1 = "var1", data2 = "var1"))
+  fs <- teal_slices(fs1, fs2, fs3, fs4, include_varnames = list(data1 = c("var1", "var2"), data2 = c("var1", "var2")))
 
   testthat::expect_identical(
     attr(fs[1], "include_varnames"),
-    list(data1 = "var1", data2 = "var1")
+    list(data1 = c("var1", "var2"), data2 = c("var1", "var2"))
   )
   testthat::expect_identical(
     attr(fs[2], "include_varnames"),
-    list(data1 = "var1", data2 = "var1")
+    list(data1 = c("var1", "var2"), data2 = c("var1", "var2"))
   )
   testthat::expect_identical(
     attr(fs[1:2], "include_varnames"),
-    list(data1 = "var1", data2 = "var1")
+    list(data1 = c("var1", "var2"), data2 = c("var1", "var2"))
   )
   testthat::expect_identical(
     attr(fs[3], "include_varnames"),
-    list(data1 = "var1", data2 = "var1")
+    list(data1 = c("var1", "var2"), data2 = c("var1", "var2"))
   )
   testthat::expect_identical(
     attr(fs[4], "include_varnames"),
-    list(data1 = "var1", data2 = "var1")
+    list(data1 = c("var1", "var2"), data2 = c("var1", "var2"))
   )
   testthat::expect_identical(
     attr(fs[3:4], "include_varnames"),
-    list(data1 = "var1", data2 = "var1")
+    list(data1 = c("var1", "var2"), data2 = c("var1", "var2"))
   )
   testthat::expect_identical(
     attr(fs[], "include_varnames"),
-    list(data1 = "var1", data2 = "var1")
+    list(data1 = c("var1", "var2"), data2 = c("var1", "var2"))
   )
 })
 
@@ -228,9 +229,9 @@ testthat::test_that("c.teal_slices handles attributes", {
   fs2 <- teal_slice("data1", "var2")
   fs3 <- teal_slice("data2", "var1")
   fs4 <- teal_slice("data2", "var2")
-  fss1 <- teal_slices(fs1, fs2, exclude_varnames = list(data1 = "var1"))
-  fss2 <- teal_slices(fs3, fs4, exclude_varnames = list(data2 = "var1"))
-  fss3 <- teal_slices(fs3, fs4, exclude_varnames = list(data2 = "var1"), count_type = "none")
+  fss1 <- teal_slices(fs1, fs2, exclude_varnames = list(data1 = "var3"))
+  fss2 <- teal_slices(fs3, fs4, exclude_varnames = list(data2 = "var3"))
+  fss3 <- teal_slices(fs3, fs4, exclude_varnames = list(data2 = "var4"), count_type = "none")
 
   # teal_slices with different exclude attributes
   testthat::expect_no_error(c(fss1, fss2))
@@ -240,7 +241,7 @@ testthat::test_that("c.teal_slices handles attributes", {
   # exclude attributes are combined
   testthat::expect_identical(
     attr(fsss, "exclude_varnames"),
-    list(data1 = "var1", data2 = "var1")
+    list(data1 = "var3", data2 = "var3")
   )
 
   # count_type attribute is preserved
@@ -275,7 +276,7 @@ testthat::test_that("format.teal_slices prints include_varnames attribute if not
   fs <- teal_slices(fs1, fs2)
   ffs <- format(fs, show_all = TRUE)
   testthat::expect_true(!grepl("include_varnames", ffs))
-  fs <- teal_slices(fs1, fs2, include_varnames = list(data = "var2"))
+  fs <- teal_slices(fs1, fs2, include_varnames = list(data = c("var1", "var2")))
   ffs <- format(fs, show_all = TRUE)
   testthat::expect_true(grepl("include_varnames", ffs))
 })
@@ -286,7 +287,7 @@ testthat::test_that("format.teal_slices prints exclude_varnames attribute if not
   fs <- teal_slices(fs1, fs2)
   ffs <- format(fs, show_all = TRUE)
   testthat::expect_true(!all(grepl("exclude_varnames", ffs)))
-  fs <- teal_slices(fs1, fs2, exclude_varnames = list(data = "var2"))
+  fs <- teal_slices(fs1, fs2, exclude_varnames = list(data = "var3"))
   ffs <- format(fs, show_all = TRUE)
   testthat::expect_true(grepl("exclude_varnames", ffs))
 })
