@@ -213,12 +213,17 @@ format.teal_slices <- function(x, show_all = FALSE, trim_lines = TRUE, ...) {
   checkmate::assert_flag(show_all)
   checkmate::assert_flag(trim_lines)
 
-  slices_list <- slices_to_list(x)
+  x <- as.list(x)
+  attrs <- attributes(x)
+  attributes(x) <- NULL
+  slices_list <- list(slices = x, attributes = attrs)
+  Filter(Negate(is.null), slices_list) # drop attributes if empty
 
   if (!show_all) slices_list$slices <- lapply(slices_list$slices, function(slice) Filter(Negate(is.null), slice))
 
   jsonify(slices_list, trim_lines)
 }
+
 
 #' @rdname teal_slices
 #' @export
@@ -228,18 +233,6 @@ print.teal_slices <- function(x, ...) {
   cat(format(x, ...), "\n")
 }
 
-#' Convert `teal_slices` to list
-#' @param tss (`teal_slices`) object
-#' @return A list of length 2, the first element holding all `teal_slice` contained in `tss`
-#'  (converted to list) and the second element holding the all non-NULL attributes of `tss`.
-#' @keywords internal
-#'
-slices_to_list <- function(tss) {
-  slices_list <- lapply(tss, as.list)
-  attrs <- attributes(unclass(tss))
-  tss_list <- list(slices = slices_list, attributes = attrs)
-  Filter(Negate(is.null), tss_list) # drop attributes if empty
-}
 
 #' `setdiff` method for `teal_slices`
 #'
