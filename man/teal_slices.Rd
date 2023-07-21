@@ -24,7 +24,7 @@ is.teal_slices(x)
 
 as.teal_slices(x)
 
-\method{as.list}{teal_slices}(x)
+\method{as.list}{teal_slices}(x, total = FALSE)
 
 \method{[}{teal_slices}(x, i)
 
@@ -56,6 +56,8 @@ Please make sure that adding new filters doesn't fail on target platform before 
 \item{allow_add}{(\code{logical(1)}) logical flag specifying whether the user will be able to add new filters}
 
 \item{x}{object to test for \code{teal_slices}, object to convert to \code{teal_slices} or a \code{teal_slices} object}
+
+\item{total}{(\code{logical(1)}) flag specifying whether to also convert to list the elements of this \code{teal_slices}}
 
 \item{i}{(\code{character} or \code{numeric} or \code{logical}) indicating which elements to extract}
 
