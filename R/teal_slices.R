@@ -125,7 +125,7 @@ is.teal_slices <- function(x) { # nolint
 #' @export
 #' @keywords internal
 #'
-as.teal_slices <- function(x) {
+as.teal_slices <- function(x) { # nolint
   checkmate::assert_list(x)
   lapply(x, checkmate::assert_list, names = "named", .var.name = "list element")
 
@@ -139,7 +139,7 @@ as.teal_slices <- function(x) {
 #' @export
 #' @keywords internal
 #'
-as.list.teal_slices <- function(x, recursive = FALSE) {
+as.list.teal_slices <- function(x, recursive = FALSE) { # nolint
   ans <- unclass(x)
   if (recursive) ans[] <- lapply(ans, as.list)
   ans
