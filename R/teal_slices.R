@@ -116,7 +116,7 @@ teal_slices <- function(...,
     if (any(varnames[[n]] %in% exclude_varnames[[n]])) {
       varnames_forbidden <- intersect(varnames[[n]], exclude_varnames[[n]])
     }
-      stop(sprintf("filters for %s forbidden in %s", toString(varnames_forbidden), n), call. = FALSE)
+    stop(sprintf("filters for %s forbidden in %s", toString(varnames_forbidden), n), call. = FALSE)
   })
 
   structure(
