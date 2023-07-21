@@ -12,7 +12,7 @@ MAEFilteredDataset R6 class"><!-- mathjax --><script src="https://cdnjs.cloudfla
     
     <a class="navbar-brand me-2" href="../index.html">teal.slice</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.3.0.9013</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.3.0.9015</small>
 
     <div style="width: 140px; margin-left: 0.5rem;"> <small class="nav-text text-muted me-auto">part of</small> <img src="https://github.com/insightsengineering/hex-stickers/blob/main/PNG/nest.png?raw=true" alt="NEST" style="height: 30px;"><a href="https://pharmaverse.org/" class="external-link"><img src="https://github.com/insightsengineering/hex-stickers/blob/main/PNG/pharmaverse.png?raw=true" alt="pharmaverse" style="height: 28px;"></a> </div>
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -36,15 +36,6 @@ MAEFilteredDataset R6 class"><!-- mathjax --><script src="https://cdnjs.cloudfla
 <li class="nav-item">
   <a class="nav-link" href="../news/index.html">Changelog</a>
 </li>
-<!-- start dropdown for versions --> <li class="nav-item dropdown">
-        <a href="#" class="nav-link dropdown-toggle"
-          data-bs-toggle="dropdown" role="button"
-          aria-expanded="false" aria-haspopup="true"
-          id="dropdown-versions">Versions</a> <div class="dropdown-menu" aria-labelledby="dropdown-versions"> <a class="dropdown-item" data-toggle="tooltip" title="" href="https://insightsengineering.github.io/teal.slice/main">main</a>
-<a class="dropdown-item" data-toggle="tooltip" title="" href="https://insightsengineering.github.io/teal.slice/latest-tag">latest-tag</a>
-<a class="dropdown-item" data-toggle="tooltip" title="" href="https://insightsengineering.github.io/teal.slice/v0.3.0">v0.3.0</a>
-<a class="dropdown-item" data-toggle="tooltip" title="" href="https://insightsengineering.github.io/teal.slice/v0.2.0">v0.2.0</a> </div></li>
-<!-- end dropdown for versions -->
 <li class="nav-item dropdown">
   <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown" role="button" aria-expanded="false" aria-haspopup="true" id="dropdown-reports">Reports</a>
   <div class="dropdown-menu" aria-labelledby="dropdown-reports">
@@ -300,14 +291,14 @@ identifier of the element - preferably containing dataset name</p></dd>
 <span class="r-in"><span>  <span class="op">)</span></span></span>
 <span class="r-in"><span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="va">dataset</span><span class="op">$</span><span class="fu">set_filter_state</span><span class="op">(</span>state <span class="op">=</span> <span class="va">fs</span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [WARN] 2023-07-20 13:50:40.8958 pid:755 token:[] teal.slice filters for columns: ARRAY_TYPE excluded from MAE</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [WARN] 2023-07-21 08:35:46.6910 pid:754 token:[] teal.slice filters for columns: ARRAY_TYPE excluded from MAE</span>
 <span class="r-in"><span><span class="fu">shiny</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/shiny/man/isolate.html" class="external-link">isolate</a></span><span class="op">(</span><span class="va">dataset</span><span class="op">$</span><span class="fu">get_filter_state</span><span class="op">(</span><span class="op">)</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> {</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   "slices": [</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     {</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>       "dataname"       : "MAE",</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>       "varname"        : "years_to_bi...</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>       "id"             : "MAE years_t...</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>       "varname"        : "years_to_birth",</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>       "id"             : "MAE years_to_birth",</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>       "choices"        : [14, 83],</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>       "selected"       : [30, 50],</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>       "keep_na"        : true,</span>
@@ -317,8 +308,8 @@ identifier of the element - preferably containing dataset name</p></dd>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     },</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     {</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>       "dataname"       : "MAE",</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>       "varname"        : "vital_statu...</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>       "id"             : "MAE vital_s...</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>       "varname"        : "vital_status",</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>       "id"             : "MAE vital_status",</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>       "choices"        : ["0", "1"],</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>       "selected"       : ["1"],</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>       "keep_na"        : false,</span>
@@ -329,8 +320,8 @@ identifier of the element - preferably containing dataset name</p></dd>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     {</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>       "dataname"       : "MAE",</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>       "varname"        : "gender",</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>       "id"             : "MAE gender".</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>       "choices"        : ["female", "...</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>       "id"             : "MAE gender",</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>       "choices"        : ["female", "male"],</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>       "selected"       : ["female"],</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>       "keep_na"        : true,</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>       "fixed"          : false,</span>
@@ -340,7 +331,7 @@ identifier of the element - preferably containing dataset name</p></dd>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   ],</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   "attributes": {</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     "include_varnames" : {</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>       "MAE"            : ["patientID"...</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>       "MAE"            : ["patientID", "years_to_birth", ...</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     },</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     "count_type"       : "none",</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     "allow_add"        : true</span>

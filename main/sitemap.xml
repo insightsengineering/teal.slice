@@ -115,6 +115,9 @@
     <loc>https://insightsengineering.github.io/teal.slice/main/reference/data_choices_labeled.html</loc>
   </url>
   <url>
+    <loc>https://insightsengineering.github.io/teal.slice/main/reference/disassemble_slices.html</loc>
+  </url>
+  <url>
     <loc>https://insightsengineering.github.io/teal.slice/main/reference/eval_expr_with_msg.html</loc>
   </url>
   <url>
@@ -170,6 +173,9 @@
   </url>
   <url>
     <loc>https://insightsengineering.github.io/teal.slice/main/reference/make_count_text.html</loc>
+  </url>
+  <url>
+    <loc>https://insightsengineering.github.io/teal.slice/main/reference/reassemble_slices.html</loc>
   </url>
   <url>
     <loc>https://insightsengineering.github.io/teal.slice/main/reference/setdiff_teal_slices.html</loc>

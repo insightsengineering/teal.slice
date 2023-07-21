@@ -12,7 +12,7 @@ Set, get and remove filter states of FilteredData object"><!-- mathjax --><scrip
     
     <a class="navbar-brand me-2" href="../index.html">teal.slice</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.3.0.9013</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.3.0.9015</small>
 
     <div style="width: 140px; margin-left: 0.5rem;"> <small class="nav-text text-muted me-auto">part of</small> <img src="https://github.com/insightsengineering/hex-stickers/blob/main/PNG/nest.png?raw=true" alt="NEST" style="height: 30px;"><a href="https://pharmaverse.org/" class="external-link"><img src="https://github.com/insightsengineering/hex-stickers/blob/main/PNG/pharmaverse.png?raw=true" alt="pharmaverse" style="height: 28px;"></a> </div>
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -36,15 +36,6 @@ Set, get and remove filter states of FilteredData object"><!-- mathjax --><scrip
 <li class="nav-item">
   <a class="nav-link" href="../news/index.html">Changelog</a>
 </li>
-<!-- start dropdown for versions --> <li class="nav-item dropdown">
-        <a href="#" class="nav-link dropdown-toggle"
-          data-bs-toggle="dropdown" role="button"
-          aria-expanded="false" aria-haspopup="true"
-          id="dropdown-versions">Versions</a> <div class="dropdown-menu" aria-labelledby="dropdown-versions"> <a class="dropdown-item" data-toggle="tooltip" title="" href="https://insightsengineering.github.io/teal.slice/main">main</a>
-<a class="dropdown-item" data-toggle="tooltip" title="" href="https://insightsengineering.github.io/teal.slice/latest-tag">latest-tag</a>
-<a class="dropdown-item" data-toggle="tooltip" title="" href="https://insightsengineering.github.io/teal.slice/v0.3.0">v0.3.0</a>
-<a class="dropdown-item" data-toggle="tooltip" title="" href="https://insightsengineering.github.io/teal.slice/v0.2.0">v0.2.0</a> </div></li>
-<!-- end dropdown for versions -->
 <li class="nav-item dropdown">
   <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown" role="button" aria-expanded="false" aria-haspopup="true" id="dropdown-reports">Reports</a>
   <div class="dropdown-menu" aria-labelledby="dropdown-reports">
@@ -86,7 +77,7 @@ Set, get and remove filter states of <code>FilteredData</code> object</p>
 <span></span>
 <span><span class="fu">remove_filter_state</span><span class="op">(</span><span class="va">datasets</span>, <span class="va">filter</span><span class="op">)</span></span>
 <span></span>
-<span><span class="fu">clear_filter_states</span><span class="op">(</span><span class="va">datasets</span><span class="op">)</span></span></code></pre></div>
+<span><span class="fu">clear_filter_states</span><span class="op">(</span><span class="va">datasets</span>, force <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div class="section level2">
@@ -100,6 +91,11 @@ see <code><a href="FilteredData.html">FilteredData</a></code> for details</p></d
 <dt>filter</dt>
 <dd><p>(<code>teal_slices</code>)<br>
 specify filters in place on app start-up</p></dd>
+
+
+<dt>force</dt>
+<dd><p>(<code>logical(1)</code>)<br>
+include locked filter states</p></dd>
 
 </dl></div>
     <div class="section level2">
@@ -156,27 +152,27 @@ containing a <code>teal_slice</code> for every existing <code>FilterState</code>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     {</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>       "dataname"       : "iris",</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>       "varname"        : "Species",</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>       "id"             : "iris Specie...</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>       "choices"        : ["setosa", "...</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>       "selected"       : ["setosa", "...</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>       "id"             : "iris Species",</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>       "choices"        : ["setosa", "versicolor", "virgin...</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>       "selected"       : ["setosa", "versicolor"],</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>       "fixed"          : false,</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>       "anchored"       : false,</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>       "multiple"       : true</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     },</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     {</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>       "dataname"       : "iris",</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>       "varname"        : "Sepal.Lengt...</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>       "id"             : "iris Sepal....</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>       "choices"        : [4.299999999...</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>       "selected"       : [5.099999999...</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>       "varname"        : "Sepal.Length",</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>       "id"             : "iris Sepal.Length",</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>       "choices"        : [4.2999999999999998, 7.900000000...</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>       "selected"       : [5.0999999999999996, 6.400000000...</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>       "fixed"          : false,</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>       "anchored"       : false,</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>       "multiple"       : true</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     },</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     {</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>       "dataname"       : "mae",</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>       "varname"        : "years_to_bi...</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>       "id"             : "mae years_t...</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>       "varname"        : "years_to_birth",</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>       "id"             : "mae years_to_birth",</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>       "choices"        : [14, 83],</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>       "selected"       : [30, 50],</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>       "keep_na"        : true,</span>
@@ -187,8 +183,8 @@ containing a <code>teal_slice</code> for every existing <code>FilterState</code>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     },</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     {</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>       "dataname"       : "mae",</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>       "varname"        : "vital_statu...</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>       "id"             : "mae vital_s...</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>       "varname"        : "vital_status",</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>       "id"             : "mae vital_status",</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>       "choices"        : ["0", "1"],</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>       "selected"       : ["1"],</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>       "keep_na"        : false,</span>
@@ -199,8 +195,8 @@ containing a <code>teal_slice</code> for every existing <code>FilterState</code>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     {</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>       "dataname"       : "mae",</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>       "varname"        : "gender",</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>       "id"             : "mae gender".</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>       "choices"        : ["female", "...</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>       "id"             : "mae gender",</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>       "choices"        : ["female", "male"],</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>       "selected"       : ["female"],</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>       "keep_na"        : true,</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>       "fixed"          : false,</span>
@@ -209,9 +205,9 @@ containing a <code>teal_slice</code> for every existing <code>FilterState</code>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     },</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     {</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>       "dataname"       : "mae",</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>       "varname"        : "ARRAY_TYPE".</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>       "id"             : "mae ARRAY_T...</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>       "choices"        : ["", "protei...</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>       "varname"        : "ARRAY_TYPE",</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>       "id"             : "mae ARRAY_TYPE RPPAArray subset..</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>       "choices"        : ["", "protein_level"],</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>       "selected"       : [""],</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>       "keep_na"        : true,</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>       "fixed"          : false,</span>
@@ -223,8 +219,8 @@ containing a <code>teal_slice</code> for every existing <code>FilterState</code>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   ],</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   "attributes": {</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     "include_varnames" : {</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>       "iris"           : ["Sepal.Leng...</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>       "mae"            : ["patientID"...</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>       "iris"           : ["Sepal.Length", "Sepal.Width", ...</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>       "mae"            : ["patientID", "years_to_birth", ...</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     },</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     "count_type"       : "none",</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     "allow_add"        : true</span>

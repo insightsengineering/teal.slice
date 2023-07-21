@@ -12,7 +12,7 @@ Class to encapsulate filtered datasets"><!-- mathjax --><script src="https://cdn
     
     <a class="navbar-brand me-2" href="../index.html">teal.slice</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.3.0.9013</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.3.0.9015</small>
 
     <div style="width: 140px; margin-left: 0.5rem;"> <small class="nav-text text-muted me-auto">part of</small> <img src="https://github.com/insightsengineering/hex-stickers/blob/main/PNG/nest.png?raw=true" alt="NEST" style="height: 30px;"><a href="https://pharmaverse.org/" class="external-link"><img src="https://github.com/insightsengineering/hex-stickers/blob/main/PNG/pharmaverse.png?raw=true" alt="pharmaverse" style="height: 28px;"></a> </div>
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -36,15 +36,6 @@ Class to encapsulate filtered datasets"><!-- mathjax --><script src="https://cdn
 <li class="nav-item">
   <a class="nav-link" href="../news/index.html">Changelog</a>
 </li>
-<!-- start dropdown for versions --> <li class="nav-item dropdown">
-        <a href="#" class="nav-link dropdown-toggle"
-          data-bs-toggle="dropdown" role="button"
-          aria-expanded="false" aria-haspopup="true"
-          id="dropdown-versions">Versions</a> <div class="dropdown-menu" aria-labelledby="dropdown-versions"> <a class="dropdown-item" data-toggle="tooltip" title="" href="https://insightsengineering.github.io/teal.slice/main">main</a>
-<a class="dropdown-item" data-toggle="tooltip" title="" href="https://insightsengineering.github.io/teal.slice/latest-tag">latest-tag</a>
-<a class="dropdown-item" data-toggle="tooltip" title="" href="https://insightsengineering.github.io/teal.slice/v0.3.0">v0.3.0</a>
-<a class="dropdown-item" data-toggle="tooltip" title="" href="https://insightsengineering.github.io/teal.slice/v0.2.0">v0.2.0</a> </div></li>
-<!-- end dropdown for versions -->
 <li class="nav-item dropdown">
   <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown" role="button" aria-expanded="false" aria-haspopup="true" id="dropdown-reports">Reports</a>
   <div class="dropdown-menu" aria-labelledby="dropdown-reports">
@@ -110,6 +101,7 @@ Other variables cannot be used for filtering the data in this class.</p></li>
 <ul><li><p><a href="#method-FilteredData-new"><code>FilteredData$new()</code></a></p></li>
 <li><p><a href="#method-FilteredData-datanames"><code>FilteredData$datanames()</code></a></p></li>
 <li><p><a href="#method-FilteredData-get_datalabel"><code>FilteredData$get_datalabel()</code></a></p></li>
+<li><p><a href="#method-FilteredData-set_available_teal_slices"><code>FilteredData$set_available_teal_slices()</code></a></p></li>
 <li><p><a href="#method-FilteredData-get_call"><code>FilteredData$get_call()</code></a></p></li>
 <li><p><a href="#method-FilteredData-get_code"><code>FilteredData$get_code()</code></a></p></li>
 <li><p><a href="#method-FilteredData-get_data"><code>FilteredData$get_data()</code></a></p></li>
@@ -128,7 +120,6 @@ Other variables cannot be used for filtering the data in this class.</p></li>
 <li><p><a href="#method-FilteredData-set_filter_state"><code>FilteredData$set_filter_state()</code></a></p></li>
 <li><p><a href="#method-FilteredData-remove_filter_state"><code>FilteredData$remove_filter_state()</code></a></p></li>
 <li><p><a href="#method-FilteredData-clear_filter_states"><code>FilteredData$clear_filter_states()</code></a></p></li>
-<li><p><a href="#method-FilteredData-set_available_teal_slices"><code>FilteredData$set_available_teal_slices()</code></a></p></li>
 <li><p><a href="#method-FilteredData-ui_filter_panel"><code>FilteredData$ui_filter_panel()</code></a></p></li>
 <li><p><a href="#method-FilteredData-srv_filter_panel"><code>FilteredData$srv_filter_panel()</code></a></p></li>
 <li><p><a href="#method-FilteredData-ui_active"><code>FilteredData$ui_active()</code></a></p></li>
@@ -215,7 +206,33 @@ Gets data label for the dataset</p>
 </div>
 <div class="section">
 <h4 id="returns-1">Returns<a class="anchor" aria-label="anchor" href="#returns-1"></a></h4>
-<p>(<code>character</code>) keys of dataset</p>
+<p>(<code>character</code>) keys of dataset
+Set list of external filter states available for activation.</p>
+<p>Unlike adding new filter from the column, these filters can come with some prespecified
+settings. <code>teal_slices</code> are wrapped in a <code>reactive</code> so one it can be updated from elsewhere in the app.
+List is accessible in <code>ui/srv_active</code> through <code>ui/srv_available_filters</code>.</p>
+</div>
+
+</div><p></p><hr><a id="method-FilteredData-set_available_teal_slices"></a><div class="section">
+<h3 id="method-set-available-teal-slices-">Method <code>set_available_teal_slices()</code><a class="anchor" aria-label="anchor" href="#method-set-available-teal-slices-"></a></h3>
+
+<div class="section">
+<h4 id="usage-3">Usage<a class="anchor" aria-label="anchor" href="#usage-3"></a></h4>
+<p></p><div class="r"><div class="sourceCode"><pre><code><span><span class="va">FilteredData</span><span class="op">$</span><span class="fu">set_available_teal_slices</span><span class="op">(</span><span class="va">x</span><span class="op">)</span></span></code></pre></div><p></p></div>
+</div>
+
+<div class="section">
+<h4 id="arguments-2">Arguments<a class="anchor" aria-label="anchor" href="#arguments-2"></a></h4>
+<p></p><div class="arguments"><dl><dt><code>x</code></dt>
+<dd><p>(<code>reactive</code>)<br>
+should return <code>teal_slices</code></p></dd>
+
+
+</dl><p></p></div>
+</div>
+<div class="section">
+<h4 id="returns-2">Returns<a class="anchor" aria-label="anchor" href="#returns-2"></a></h4>
+<p>invisible <code>NULL</code></p>
 </div>
 
 </div><p></p><hr><a id="method-FilteredData-get_call"></a><div class="section">
@@ -231,12 +248,12 @@ return type, both for base R expressions and calls (single expression,
 capturing a function call).</p>
 <p>The filtered dataset has the name given by <code>self$filtered_dataname(dataname)</code></p>
 <p>This can be used for the <code>Show R Code</code> generation.</p><div class="section">
-<h4 id="usage-3">Usage<a class="anchor" aria-label="anchor" href="#usage-3"></a></h4>
+<h4 id="usage-4">Usage<a class="anchor" aria-label="anchor" href="#usage-4"></a></h4>
 <p></p><div class="r"><div class="sourceCode"><pre><code><span><span class="va">FilteredData</span><span class="op">$</span><span class="fu">get_call</span><span class="op">(</span><span class="va">dataname</span><span class="op">)</span></span></code></pre></div><p></p></div>
 </div>
 
 <div class="section">
-<h4 id="arguments-2">Arguments<a class="anchor" aria-label="anchor" href="#arguments-2"></a></h4>
+<h4 id="arguments-3">Arguments<a class="anchor" aria-label="anchor" href="#arguments-3"></a></h4>
 <p></p><div class="arguments"><dl><dt><code>dataname</code></dt>
 <dd><p>(<code>character(1)</code>) name of the dataset</p></dd>
 
@@ -244,19 +261,19 @@ capturing a function call).</p>
 </dl><p></p></div>
 </div>
 <div class="section">
-<h4 id="returns-2">Returns<a class="anchor" aria-label="anchor" href="#returns-2"></a></h4>
+<h4 id="returns-3">Returns<a class="anchor" aria-label="anchor" href="#returns-3"></a></h4>
 <p>(<code>call</code> or <code>list</code> of calls) to filter dataset calls</p>
 </div>
 
 </div><p></p><hr><a id="method-FilteredData-get_code"></a><div class="section">
 <h3 id="method-get-code-">Method <code>get_code()</code><a class="anchor" aria-label="anchor" href="#method-get-code-"></a></h3>
 <p>Gets the R preprocessing code string that generates the unfiltered datasets.</p><div class="section">
-<h4 id="usage-4">Usage<a class="anchor" aria-label="anchor" href="#usage-4"></a></h4>
+<h4 id="usage-5">Usage<a class="anchor" aria-label="anchor" href="#usage-5"></a></h4>
 <p></p><div class="r"><div class="sourceCode"><pre><code><span><span class="va">FilteredData</span><span class="op">$</span><span class="fu">get_code</span><span class="op">(</span>dataname <span class="op">=</span> <span class="va">self</span><span class="op">$</span><span class="fu">datanames</span><span class="op">(</span><span class="op">)</span><span class="op">)</span></span></code></pre></div><p></p></div>
 </div>
 
 <div class="section">
-<h4 id="arguments-3">Arguments<a class="anchor" aria-label="anchor" href="#arguments-3"></a></h4>
+<h4 id="arguments-4">Arguments<a class="anchor" aria-label="anchor" href="#arguments-4"></a></h4>
 <p></p><div class="arguments"><dl><dt><code>dataname</code></dt>
 <dd><p>(<code>character(1)</code>) name(s) of dataset(s)</p></dd>
 
@@ -264,7 +281,7 @@ capturing a function call).</p>
 </dl><p></p></div>
 </div>
 <div class="section">
-<h4 id="returns-3">Returns<a class="anchor" aria-label="anchor" href="#returns-3"></a></h4>
+<h4 id="returns-4">Returns<a class="anchor" aria-label="anchor" href="#returns-4"></a></h4>
 <p>(<code>character(1)</code>) deparsed code</p>
 </div>
 
@@ -273,12 +290,12 @@ capturing a function call).</p>
 <p>Gets filtered or unfiltered dataset.</p>
 <p>For <code>filtered = FALSE</code>, the original data set with
 <code>set_data</code> is returned including all attributes.</p><div class="section">
-<h4 id="usage-5">Usage<a class="anchor" aria-label="anchor" href="#usage-5"></a></h4>
+<h4 id="usage-6">Usage<a class="anchor" aria-label="anchor" href="#usage-6"></a></h4>
 <p></p><div class="r"><div class="sourceCode"><pre><code><span><span class="va">FilteredData</span><span class="op">$</span><span class="fu">get_data</span><span class="op">(</span><span class="va">dataname</span>, filtered <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></code></pre></div><p></p></div>
 </div>
 
 <div class="section">
-<h4 id="arguments-4">Arguments<a class="anchor" aria-label="anchor" href="#arguments-4"></a></h4>
+<h4 id="arguments-5">Arguments<a class="anchor" aria-label="anchor" href="#arguments-5"></a></h4>
 <p></p><div class="arguments"><dl><dt><code>dataname</code></dt>
 <dd><p>(<code>character(1)</code>) name of the dataset</p></dd>
 
@@ -293,24 +310,24 @@ capturing a function call).</p>
 </div><p></p><hr><a id="method-FilteredData-get_check"></a><div class="section">
 <h3 id="method-get-check-">Method <code>get_check()</code><a class="anchor" aria-label="anchor" href="#method-get-check-"></a></h3>
 <p>Returns whether the datasets in the object has undergone a reproducibility check.</p><div class="section">
-<h4 id="usage-6">Usage<a class="anchor" aria-label="anchor" href="#usage-6"></a></h4>
+<h4 id="usage-7">Usage<a class="anchor" aria-label="anchor" href="#usage-7"></a></h4>
 <p></p><div class="r"><div class="sourceCode"><pre><code><span><span class="va">FilteredData</span><span class="op">$</span><span class="fu">get_check</span><span class="op">(</span><span class="op">)</span></span></code></pre></div><p></p></div>
 </div>
 
 <div class="section">
-<h4 id="returns-4">Returns<a class="anchor" aria-label="anchor" href="#returns-4"></a></h4>
+<h4 id="returns-5">Returns<a class="anchor" aria-label="anchor" href="#returns-5"></a></h4>
 <p><code>logical</code></p>
 </div>
 
 </div><p></p><hr><a id="method-FilteredData-get_metadata"></a><div class="section">
 <h3 id="method-get-metadata-">Method <code>get_metadata()</code><a class="anchor" aria-label="anchor" href="#method-get-metadata-"></a></h3>
 <p>Gets metadata for a given dataset.</p><div class="section">
-<h4 id="usage-7">Usage<a class="anchor" aria-label="anchor" href="#usage-7"></a></h4>
+<h4 id="usage-8">Usage<a class="anchor" aria-label="anchor" href="#usage-8"></a></h4>
 <p></p><div class="r"><div class="sourceCode"><pre><code><span><span class="va">FilteredData</span><span class="op">$</span><span class="fu">get_metadata</span><span class="op">(</span><span class="va">dataname</span><span class="op">)</span></span></code></pre></div><p></p></div>
 </div>
 
 <div class="section">
-<h4 id="arguments-5">Arguments<a class="anchor" aria-label="anchor" href="#arguments-5"></a></h4>
+<h4 id="arguments-6">Arguments<a class="anchor" aria-label="anchor" href="#arguments-6"></a></h4>
 <p></p><div class="arguments"><dl><dt><code>dataname</code></dt>
 <dd><p>(<code>character(1)</code>) name of the dataset</p></dd>
 
@@ -318,19 +335,19 @@ capturing a function call).</p>
 </dl><p></p></div>
 </div>
 <div class="section">
-<h4 id="returns-5">Returns<a class="anchor" aria-label="anchor" href="#returns-5"></a></h4>
+<h4 id="returns-6">Returns<a class="anchor" aria-label="anchor" href="#returns-6"></a></h4>
 <p>value of metadata for given data (or <code>NULL</code> if it does not exist)</p>
 </div>
 
 </div><p></p><hr><a id="method-FilteredData-get_join_keys"></a><div class="section">
 <h3 id="method-get-join-keys-">Method <code>get_join_keys()</code><a class="anchor" aria-label="anchor" href="#method-get-join-keys-"></a></h3>
 <p>Get join keys between two datasets.</p><div class="section">
-<h4 id="usage-8">Usage<a class="anchor" aria-label="anchor" href="#usage-8"></a></h4>
+<h4 id="usage-9">Usage<a class="anchor" aria-label="anchor" href="#usage-9"></a></h4>
 <p></p><div class="r"><div class="sourceCode"><pre><code><span><span class="va">FilteredData</span><span class="op">$</span><span class="fu">get_join_keys</span><span class="op">(</span><span class="op">)</span></span></code></pre></div><p></p></div>
 </div>
 
 <div class="section">
-<h4 id="returns-6">Returns<a class="anchor" aria-label="anchor" href="#returns-6"></a></h4>
+<h4 id="returns-7">Returns<a class="anchor" aria-label="anchor" href="#returns-7"></a></h4>
 <p>(<code>JoinKeys</code>)</p>
 </div>
 
@@ -339,12 +356,12 @@ capturing a function call).</p>
 <p>Get filter overview table in form of X (filtered) / Y (non-filtered).</p>
 <p>This is intended to be presented in the application.
 The content for each of the data names is defined in <code>get_filter_overview_info</code> method.</p><div class="section">
-<h4 id="usage-9">Usage<a class="anchor" aria-label="anchor" href="#usage-9"></a></h4>
+<h4 id="usage-10">Usage<a class="anchor" aria-label="anchor" href="#usage-10"></a></h4>
 <p></p><div class="r"><div class="sourceCode"><pre><code><span><span class="va">FilteredData</span><span class="op">$</span><span class="fu">get_filter_overview</span><span class="op">(</span><span class="va">datanames</span><span class="op">)</span></span></code></pre></div><p></p></div>
 </div>
 
 <div class="section">
-<h4 id="arguments-6">Arguments<a class="anchor" aria-label="anchor" href="#arguments-6"></a></h4>
+<h4 id="arguments-7">Arguments<a class="anchor" aria-label="anchor" href="#arguments-7"></a></h4>
 <p></p><div class="arguments"><dl><dt><code>datanames</code></dt>
 <dd><p>(<code>character</code> vector) names of the dataset</p></dd>
 
@@ -352,19 +369,19 @@ The content for each of the data names is defined in <code>get_filter_overview_i
 </dl><p></p></div>
 </div>
 <div class="section">
-<h4 id="returns-7">Returns<a class="anchor" aria-label="anchor" href="#returns-7"></a></h4>
+<h4 id="returns-8">Returns<a class="anchor" aria-label="anchor" href="#returns-8"></a></h4>
 <p>(<code>matrix</code>) matrix of observations and subjects of all datasets</p>
 </div>
 
 </div><p></p><hr><a id="method-FilteredData-get_keys"></a><div class="section">
 <h3 id="method-get-keys-">Method <code>get_keys()</code><a class="anchor" aria-label="anchor" href="#method-get-keys-"></a></h3>
 <p>Get keys for the dataset.</p><div class="section">
-<h4 id="usage-10">Usage<a class="anchor" aria-label="anchor" href="#usage-10"></a></h4>
+<h4 id="usage-11">Usage<a class="anchor" aria-label="anchor" href="#usage-11"></a></h4>
 <p></p><div class="r"><div class="sourceCode"><pre><code><span><span class="va">FilteredData</span><span class="op">$</span><span class="fu">get_keys</span><span class="op">(</span><span class="va">dataname</span><span class="op">)</span></span></code></pre></div><p></p></div>
 </div>
 
 <div class="section">
-<h4 id="arguments-7">Arguments<a class="anchor" aria-label="anchor" href="#arguments-7"></a></h4>
+<h4 id="arguments-8">Arguments<a class="anchor" aria-label="anchor" href="#arguments-8"></a></h4>
 <p></p><div class="arguments"><dl><dt><code>dataname</code></dt>
 <dd><p>(<code>character(1)</code>) name of the dataset</p></dd>
 
@@ -372,19 +389,19 @@ The content for each of the data names is defined in <code>get_filter_overview_i
 </dl><p></p></div>
 </div>
 <div class="section">
-<h4 id="returns-8">Returns<a class="anchor" aria-label="anchor" href="#returns-8"></a></h4>
+<h4 id="returns-9">Returns<a class="anchor" aria-label="anchor" href="#returns-9"></a></h4>
 <p>(<code>character</code>) keys of dataset</p>
 </div>
 
 </div><p></p><hr><a id="method-FilteredData-set_dataset"></a><div class="section">
 <h3 id="method-set-dataset-">Method <code>set_dataset()</code><a class="anchor" aria-label="anchor" href="#method-set-dataset-"></a></h3>
 <p>Adds a dataset to this <code>FilteredData</code>.</p><div class="section">
-<h4 id="usage-11">Usage<a class="anchor" aria-label="anchor" href="#usage-11"></a></h4>
+<h4 id="usage-12">Usage<a class="anchor" aria-label="anchor" href="#usage-12"></a></h4>
 <p></p><div class="r"><div class="sourceCode"><pre><code><span><span class="va">FilteredData</span><span class="op">$</span><span class="fu">set_dataset</span><span class="op">(</span><span class="va">data</span>, <span class="va">dataname</span>, <span class="va">metadata</span>, <span class="va">label</span><span class="op">)</span></span></code></pre></div><p></p></div>
 </div>
 
 <div class="section">
-<h4 id="arguments-8">Arguments<a class="anchor" aria-label="anchor" href="#arguments-8"></a></h4>
+<h4 id="arguments-9">Arguments<a class="anchor" aria-label="anchor" href="#arguments-9"></a></h4>
 <p></p><div class="arguments"><dl><dt><code>data</code></dt>
 <dd><p>(<code>data.frame</code>, <code>MultiAssayExperiment</code>)<br>
 data to be filtered.</p></dd>
@@ -418,19 +435,19 @@ then created <code>FilteredDataset</code> (child) gets linked with other <code>F
 </div>
 
 <div class="section">
-<h4 id="returns-9">Returns<a class="anchor" aria-label="anchor" href="#returns-9"></a></h4>
+<h4 id="returns-10">Returns<a class="anchor" aria-label="anchor" href="#returns-10"></a></h4>
 <p>(<code>self</code>) invisibly this <code>FilteredData</code></p>
 </div>
 
 </div><p></p><hr><a id="method-FilteredData-set_join_keys"></a><div class="section">
 <h3 id="method-set-join-keys-">Method <code>set_join_keys()</code><a class="anchor" aria-label="anchor" href="#method-set-join-keys-"></a></h3>
 <p>Set the <code>join_keys</code>.</p><div class="section">
-<h4 id="usage-12">Usage<a class="anchor" aria-label="anchor" href="#usage-12"></a></h4>
+<h4 id="usage-13">Usage<a class="anchor" aria-label="anchor" href="#usage-13"></a></h4>
 <p></p><div class="r"><div class="sourceCode"><pre><code><span><span class="va">FilteredData</span><span class="op">$</span><span class="fu">set_join_keys</span><span class="op">(</span><span class="va">join_keys</span><span class="op">)</span></span></code></pre></div><p></p></div>
 </div>
 
 <div class="section">
-<h4 id="arguments-9">Arguments<a class="anchor" aria-label="anchor" href="#arguments-9"></a></h4>
+<h4 id="arguments-10">Arguments<a class="anchor" aria-label="anchor" href="#arguments-10"></a></h4>
 <p></p><div class="arguments"><dl><dt><code>join_keys</code></dt>
 <dd><p>(<code>JoinKeys</code>) join_key (converted to a nested list)</p></dd>
 
@@ -438,42 +455,21 @@ then created <code>FilteredDataset</code> (child) gets linked with other <code>F
 </dl><p></p></div>
 </div>
 <div class="section">
-<h4 id="returns-10">Returns<a class="anchor" aria-label="anchor" href="#returns-10"></a></h4>
+<h4 id="returns-11">Returns<a class="anchor" aria-label="anchor" href="#returns-11"></a></h4>
 <p>(<code>self</code>) invisibly this <code>FilteredData</code></p>
 </div>
 
 </div><p></p><hr><a id="method-FilteredData-set_check"></a><div class="section">
 <h3 id="method-set-check-">Method <code>set_check()</code><a class="anchor" aria-label="anchor" href="#method-set-check-"></a></h3>
 <p>Sets whether the datasets in the object have undergone a reproducibility check.</p><div class="section">
-<h4 id="usage-13">Usage<a class="anchor" aria-label="anchor" href="#usage-13"></a></h4>
+<h4 id="usage-14">Usage<a class="anchor" aria-label="anchor" href="#usage-14"></a></h4>
 <p></p><div class="r"><div class="sourceCode"><pre><code><span><span class="va">FilteredData</span><span class="op">$</span><span class="fu">set_check</span><span class="op">(</span><span class="va">check</span><span class="op">)</span></span></code></pre></div><p></p></div>
 </div>
 
 <div class="section">
-<h4 id="arguments-10">Arguments<a class="anchor" aria-label="anchor" href="#arguments-10"></a></h4>
+<h4 id="arguments-11">Arguments<a class="anchor" aria-label="anchor" href="#arguments-11"></a></h4>
 <p></p><div class="arguments"><dl><dt><code>check</code></dt>
 <dd><p>(<code>logical</code>) whether datasets have undergone reproducibility check</p></dd>
-
-
-</dl><p></p></div>
-</div>
-<div class="section">
-<h4 id="returns-11">Returns<a class="anchor" aria-label="anchor" href="#returns-11"></a></h4>
-<p>(<code>self</code>)</p>
-</div>
-
-</div><p></p><hr><a id="method-FilteredData-set_code"></a><div class="section">
-<h3 id="method-set-code-">Method <code>set_code()</code><a class="anchor" aria-label="anchor" href="#method-set-code-"></a></h3>
-<p>Sets the R preprocessing code for single dataset.</p><div class="section">
-<h4 id="usage-14">Usage<a class="anchor" aria-label="anchor" href="#usage-14"></a></h4>
-<p></p><div class="r"><div class="sourceCode"><pre><code><span><span class="va">FilteredData</span><span class="op">$</span><span class="fu">set_code</span><span class="op">(</span><span class="va">code</span><span class="op">)</span></span></code></pre></div><p></p></div>
-</div>
-
-<div class="section">
-<h4 id="arguments-11">Arguments<a class="anchor" aria-label="anchor" href="#arguments-11"></a></h4>
-<p></p><div class="arguments"><dl><dt><code>code</code></dt>
-<dd><p>(<code>CodeClass</code>)<br>
-preprocessing code that can be parsed to generate the unfiltered datasets</p></dd>
 
 
 </dl><p></p></div>
@@ -483,27 +479,48 @@ preprocessing code that can be parsed to generate the unfiltered datasets</p></d
 <p>(<code>self</code>)</p>
 </div>
 
+</div><p></p><hr><a id="method-FilteredData-set_code"></a><div class="section">
+<h3 id="method-set-code-">Method <code>set_code()</code><a class="anchor" aria-label="anchor" href="#method-set-code-"></a></h3>
+<p>Sets the R preprocessing code for single dataset.</p><div class="section">
+<h4 id="usage-15">Usage<a class="anchor" aria-label="anchor" href="#usage-15"></a></h4>
+<p></p><div class="r"><div class="sourceCode"><pre><code><span><span class="va">FilteredData</span><span class="op">$</span><span class="fu">set_code</span><span class="op">(</span><span class="va">code</span><span class="op">)</span></span></code></pre></div><p></p></div>
+</div>
+
+<div class="section">
+<h4 id="arguments-12">Arguments<a class="anchor" aria-label="anchor" href="#arguments-12"></a></h4>
+<p></p><div class="arguments"><dl><dt><code>code</code></dt>
+<dd><p>(<code>CodeClass</code>)<br>
+preprocessing code that can be parsed to generate the unfiltered datasets</p></dd>
+
+
+</dl><p></p></div>
+</div>
+<div class="section">
+<h4 id="returns-13">Returns<a class="anchor" aria-label="anchor" href="#returns-13"></a></h4>
+<p>(<code>self</code>)</p>
+</div>
+
 </div><p></p><hr><a id="method-FilteredData-get_filter_state"></a><div class="section">
 <h3 id="method-get-filter-state-">Method <code><a href="filter_state_api.html">get_filter_state()</a></code><a class="anchor" aria-label="anchor" href="#method-get-filter-state-"></a></h3>
 <p>Gets states of all active <code>FilterState</code> objects.</p><div class="section">
-<h4 id="usage-15">Usage<a class="anchor" aria-label="anchor" href="#usage-15"></a></h4>
+<h4 id="usage-16">Usage<a class="anchor" aria-label="anchor" href="#usage-16"></a></h4>
 <p></p><div class="r"><div class="sourceCode"><pre><code><span><span class="va">FilteredData</span><span class="op">$</span><span class="fu">get_filter_state</span><span class="op">(</span><span class="op">)</span></span></code></pre></div><p></p></div>
 </div>
 
 <div class="section">
-<h4 id="returns-13">Returns<a class="anchor" aria-label="anchor" href="#returns-13"></a></h4>
+<h4 id="returns-14">Returns<a class="anchor" aria-label="anchor" href="#returns-14"></a></h4>
 <p>A <code>teal_slices</code> object.</p>
 </div>
 
 </div><p></p><hr><a id="method-FilteredData-format"></a><div class="section">
 <h3 id="method-format-">Method <code><a href="https://rdrr.io/r/base/format.html" class="external-link">format()</a></code><a class="anchor" aria-label="anchor" href="#method-format-"></a></h3>
 <p>Returns a formatted string representing this <code>FilteredData</code> object.</p><div class="section">
-<h4 id="usage-16">Usage<a class="anchor" aria-label="anchor" href="#usage-16"></a></h4>
+<h4 id="usage-17">Usage<a class="anchor" aria-label="anchor" href="#usage-17"></a></h4>
 <p></p><div class="r"><div class="sourceCode"><pre><code><span><span class="va">FilteredData</span><span class="op">$</span><span class="fu">format</span><span class="op">(</span>show_all <span class="op">=</span> <span class="cn">FALSE</span>, trim_lines <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></code></pre></div><p></p></div>
 </div>
 
 <div class="section">
-<h4 id="arguments-12">Arguments<a class="anchor" aria-label="anchor" href="#arguments-12"></a></h4>
+<h4 id="arguments-13">Arguments<a class="anchor" aria-label="anchor" href="#arguments-13"></a></h4>
 <p></p><div class="arguments"><dl><dt><code>show_all</code></dt>
 <dd><p><code>logical(1)</code> passed to <code>format.teal_slice</code></p></dd>
 
@@ -515,19 +532,19 @@ preprocessing code that can be parsed to generate the unfiltered datasets</p></d
 </dl><p></p></div>
 </div>
 <div class="section">
-<h4 id="returns-14">Returns<a class="anchor" aria-label="anchor" href="#returns-14"></a></h4>
+<h4 id="returns-15">Returns<a class="anchor" aria-label="anchor" href="#returns-15"></a></h4>
 <p><code>character(1)</code> the formatted string</p>
 </div>
 
 </div><p></p><hr><a id="method-FilteredData-print"></a><div class="section">
 <h3 id="method-print-">Method <code><a href="https://rdrr.io/r/base/print.html" class="external-link">print()</a></code><a class="anchor" aria-label="anchor" href="#method-print-"></a></h3>
 <p>Prints this <code>FilteredData</code> object.</p><div class="section">
-<h4 id="usage-17">Usage<a class="anchor" aria-label="anchor" href="#usage-17"></a></h4>
+<h4 id="usage-18">Usage<a class="anchor" aria-label="anchor" href="#usage-18"></a></h4>
 <p></p><div class="r"><div class="sourceCode"><pre><code><span><span class="va">FilteredData</span><span class="op">$</span><span class="fu">print</span><span class="op">(</span><span class="va">...</span><span class="op">)</span></span></code></pre></div><p></p></div>
 </div>
 
 <div class="section">
-<h4 id="arguments-13">Arguments<a class="anchor" aria-label="anchor" href="#arguments-13"></a></h4>
+<h4 id="arguments-14">Arguments<a class="anchor" aria-label="anchor" href="#arguments-14"></a></h4>
 <p></p><div class="arguments"><dl><dt><code>...</code></dt>
 <dd><p>additional arguments</p></dd>
 
@@ -538,12 +555,12 @@ preprocessing code that can be parsed to generate the unfiltered datasets</p></d
 </div><p></p><hr><a id="method-FilteredData-set_filter_state"></a><div class="section">
 <h3 id="method-set-filter-state-">Method <code><a href="filter_state_api.html">set_filter_state()</a></code><a class="anchor" aria-label="anchor" href="#method-set-filter-state-"></a></h3>
 <p>Sets active filter states.</p><div class="section">
-<h4 id="usage-18">Usage<a class="anchor" aria-label="anchor" href="#usage-18"></a></h4>
+<h4 id="usage-19">Usage<a class="anchor" aria-label="anchor" href="#usage-19"></a></h4>
 <p></p><div class="r"><div class="sourceCode"><pre><code><span><span class="va">FilteredData</span><span class="op">$</span><span class="fu">set_filter_state</span><span class="op">(</span><span class="va">state</span><span class="op">)</span></span></code></pre></div><p></p></div>
 </div>
 
 <div class="section">
-<h4 id="arguments-14">Arguments<a class="anchor" aria-label="anchor" href="#arguments-14"></a></h4>
+<h4 id="arguments-15">Arguments<a class="anchor" aria-label="anchor" href="#arguments-15"></a></h4>
 <p></p><div class="arguments"><dl><dt><code>state</code></dt>
 <dd><p>either a <code>named list</code> list of filter selections
 or a <code>teal_slices</code> object<br>
@@ -553,7 +570,7 @@ specification by list will be deprecated soon</p></dd>
 </dl><p></p></div>
 </div>
 <div class="section">
-<h4 id="returns-15">Returns<a class="anchor" aria-label="anchor" href="#returns-15"></a></h4>
+<h4 id="returns-16">Returns<a class="anchor" aria-label="anchor" href="#returns-16"></a></h4>
 <p><code>NULL</code> invisibly</p>
 </div>
 <div class="section">
@@ -587,12 +604,12 @@ specification by list will be deprecated soon</p></dd>
 </div><p></p><hr><a id="method-FilteredData-remove_filter_state"></a><div class="section">
 <h3 id="method-remove-filter-state-">Method <code><a href="filter_state_api.html">remove_filter_state()</a></code><a class="anchor" aria-label="anchor" href="#method-remove-filter-state-"></a></h3>
 <p>Removes one or more <code>FilterState</code> from a <code>FilteredData</code> object.</p><div class="section">
-<h4 id="usage-19">Usage<a class="anchor" aria-label="anchor" href="#usage-19"></a></h4>
+<h4 id="usage-20">Usage<a class="anchor" aria-label="anchor" href="#usage-20"></a></h4>
 <p></p><div class="r"><div class="sourceCode"><pre><code><span><span class="va">FilteredData</span><span class="op">$</span><span class="fu">remove_filter_state</span><span class="op">(</span><span class="va">state</span><span class="op">)</span></span></code></pre></div><p></p></div>
 </div>
 
 <div class="section">
-<h4 id="arguments-15">Arguments<a class="anchor" aria-label="anchor" href="#arguments-15"></a></h4>
+<h4 id="arguments-16">Arguments<a class="anchor" aria-label="anchor" href="#arguments-16"></a></h4>
 <p></p><div class="arguments"><dl><dt><code>state</code></dt>
 <dd><p>(<code>teal_slices</code>)<br>
 specifying <code>FilterState</code> objects to remove;
@@ -602,7 +619,7 @@ specifying <code>FilterState</code> objects to remove;
 </dl><p></p></div>
 </div>
 <div class="section">
-<h4 id="returns-16">Returns<a class="anchor" aria-label="anchor" href="#returns-16"></a></h4>
+<h4 id="returns-17">Returns<a class="anchor" aria-label="anchor" href="#returns-17"></a></h4>
 <p><code>NULL</code> invisibly</p>
 </div>
 
@@ -610,49 +627,28 @@ specifying <code>FilterState</code> objects to remove;
 <h3 id="method-clear-filter-states-">Method <code><a href="filter_state_api.html">clear_filter_states()</a></code><a class="anchor" aria-label="anchor" href="#method-clear-filter-states-"></a></h3>
 <p>Remove all <code>FilterStates</code> of a <code>FilteredDataset</code> or all <code>FilterStates</code>
 of a <code>FilteredData</code> object.</p><div class="section">
-<h4 id="usage-20">Usage<a class="anchor" aria-label="anchor" href="#usage-20"></a></h4>
-<p></p><div class="r"><div class="sourceCode"><pre><code><span><span class="va">FilteredData</span><span class="op">$</span><span class="fu">clear_filter_states</span><span class="op">(</span>datanames <span class="op">=</span> <span class="va">self</span><span class="op">$</span><span class="fu">datanames</span><span class="op">(</span><span class="op">)</span><span class="op">)</span></span></code></pre></div><p></p></div>
+<h4 id="usage-21">Usage<a class="anchor" aria-label="anchor" href="#usage-21"></a></h4>
+<p></p><div class="r"><div class="sourceCode"><pre><code><span><span class="va">FilteredData</span><span class="op">$</span><span class="fu">clear_filter_states</span><span class="op">(</span>datanames <span class="op">=</span> <span class="va">self</span><span class="op">$</span><span class="fu">datanames</span><span class="op">(</span><span class="op">)</span>, force <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span></code></pre></div><p></p></div>
 </div>
 
 <div class="section">
-<h4 id="arguments-16">Arguments<a class="anchor" aria-label="anchor" href="#arguments-16"></a></h4>
+<h4 id="arguments-17">Arguments<a class="anchor" aria-label="anchor" href="#arguments-17"></a></h4>
 <p></p><div class="arguments"><dl><dt><code>datanames</code></dt>
 <dd><p>(<code>character</code>)<br><code>datanames</code> to remove their <code>FilterStates</code> or empty which removes
 all <code>FilterStates</code> in the <code>FilteredData</code> object</p></dd>
 
 
-</dl><p></p></div>
-</div>
-<div class="section">
-<h4 id="returns-17">Returns<a class="anchor" aria-label="anchor" href="#returns-17"></a></h4>
-<p><code>NULL</code> invisibly</p>
-<p>Set external <code>teal_slice</code></p>
-<p>Unlike adding new filter from the column, these filters can be added with some prespecified
-settings. List of <code>teal_slices</code> should be a reactive so one can make this list to be dynamic.
-List is accessible in <code>ui/srv_active</code> through <code>ui/srv_available_filters</code>.</p>
-</div>
-
-</div><p></p><hr><a id="method-FilteredData-set_available_teal_slices"></a><div class="section">
-<h3 id="method-set-available-teal-slices-">Method <code>set_available_teal_slices()</code><a class="anchor" aria-label="anchor" href="#method-set-available-teal-slices-"></a></h3>
-
-<div class="section">
-<h4 id="usage-21">Usage<a class="anchor" aria-label="anchor" href="#usage-21"></a></h4>
-<p></p><div class="r"><div class="sourceCode"><pre><code><span><span class="va">FilteredData</span><span class="op">$</span><span class="fu">set_available_teal_slices</span><span class="op">(</span><span class="va">x</span><span class="op">)</span></span></code></pre></div><p></p></div>
-</div>
-
-<div class="section">
-<h4 id="arguments-17">Arguments<a class="anchor" aria-label="anchor" href="#arguments-17"></a></h4>
-<p></p><div class="arguments"><dl><dt><code>x</code></dt>
-<dd><p>(<code>reactive</code>)<br>
-should return <code>teal_slices</code></p></dd>
+<dt><code>force</code></dt>
+<dd><p>(<code>logical(1)</code>)<br>
+include locked filter states</p></dd>
 
 
 </dl><p></p></div>
 </div>
 <div class="section">
 <h4 id="returns-18">Returns<a class="anchor" aria-label="anchor" href="#returns-18"></a></h4>
-<p>invisible <code>NULL</code>
-Module for the right filter panel in the teal app
+<p><code>NULL</code> invisibly</p>
+<p>Module for the right filter panel in the teal app
 with a filter overview panel and a filter variable panel.</p>
 <p>This panel contains info about the number of observations left in
 the (active) datasets and allows to filter the datasets.</p>
@@ -1050,9 +1046,9 @@ see <code>self$get_filterable_varnames</code> for more details</p></dd>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     {</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>       "dataname"       : "iris",</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>       "varname"        : "Species",</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>       "id"             : "iris Specie...</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>       "choices"        : ["setosa", "...</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>       "selected"       : ["virginica"..</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>       "id"             : "iris Species",</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>       "choices"        : ["setosa", "versicolor", "virgin...</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>       "selected"       : ["virginica"],</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>       "fixed"          : false,</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>       "anchored"       : false,</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>       "multiple"       : true</span>
@@ -1060,7 +1056,7 @@ see <code>self$get_filterable_varnames</code> for more details</p></dd>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     {</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>       "dataname"       : "mtcars",</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>       "varname"        : "mpg",</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>       "id"             : "mtcars mpg".</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>       "id"             : "mtcars mpg",</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>       "choices"        : [10.4, 34],</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>       "selected"       : [15, 20],</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>       "fixed"          : false,</span>
@@ -1070,8 +1066,8 @@ see <code>self$get_filterable_varnames</code> for more details</p></dd>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   ],</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   "attributes": {</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     "include_varnames" : {</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>       "iris"           : ["Sepal.Leng...</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>       "mtcars"         : ["mpg", "cyl...</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>       "iris"           : ["Sepal.Length", "Sepal.Width", ...</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>       "mtcars"         : ["mpg", "cyl", "disp", "hp", "dr...</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     },</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     "count_type"       : "none",</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     "allow_add"        : true</span>
@@ -1176,16 +1172,16 @@ see <code>self$get_filterable_varnames</code> for more details</p></dd>
 <span class="r-in"><span>               selected <span class="op">=</span> <span class="st">""</span>, keep_na <span class="op">=</span> <span class="cn">TRUE</span>, datalabel <span class="op">=</span> <span class="st">"RPPAArray"</span>, arg <span class="op">=</span> <span class="st">"subset"</span><span class="op">)</span></span></span>
 <span class="r-in"><span>  <span class="op">)</span></span></span>
 <span class="r-in"><span><span class="va">datasets</span><span class="op">$</span><span class="fu">set_filter_state</span><span class="op">(</span>state <span class="op">=</span> <span class="va">fs</span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [WARN] 2023-07-20 13:50:35.4884 pid:755 token:[] teal.slice filters for columns: ARRAY_TYPE excluded from mae</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [WARN] 2023-07-21 08:35:40.5410 pid:754 token:[] teal.slice filters for columns: ARRAY_TYPE excluded from mae</span>
 <span class="r-in"><span><span class="fu">shiny</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/shiny/man/isolate.html" class="external-link">isolate</a></span><span class="op">(</span><span class="va">datasets</span><span class="op">$</span><span class="fu">get_filter_state</span><span class="op">(</span><span class="op">)</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> {</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   "slices": [</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     {</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>       "dataname"       : "iris",</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>       "varname"        : "Sepal.Lengt...</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>       "id"             : "iris Sepal....</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>       "choices"        : [4.299999999...</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>       "selected"       : [5.099999999...</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>       "varname"        : "Sepal.Length",</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>       "id"             : "iris Sepal.Length",</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>       "choices"        : [4.2999999999999998, 7.900000000...</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>       "selected"       : [5.0999999999999996, 6.400000000...</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>       "keep_na"        : true,</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>       "keep_inf"       : false,</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>       "fixed"          : false,</span>
@@ -1195,9 +1191,9 @@ see <code>self$get_filterable_varnames</code> for more details</p></dd>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     {</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>       "dataname"       : "iris",</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>       "varname"        : "Species",</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>       "id"             : "iris Specie...</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>       "choices"        : ["setosa", "...</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>       "selected"       : ["setosa", "...</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>       "id"             : "iris Species",</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>       "choices"        : ["setosa", "versicolor", "virgin...</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>       "selected"       : ["setosa", "versicolor"],</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>       "keep_na"        : false,</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>       "fixed"          : false,</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>       "anchored"       : false,</span>
@@ -1205,8 +1201,8 @@ see <code>self$get_filterable_varnames</code> for more details</p></dd>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     },</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     {</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>       "dataname"       : "mae",</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>       "varname"        : "years_to_bi...</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>       "id"             : "mae years_t...</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>       "varname"        : "years_to_birth",</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>       "id"             : "mae years_to_birth",</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>       "choices"        : [14, 83],</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>       "selected"       : [30, 50],</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>       "keep_na"        : true,</span>
@@ -1217,8 +1213,8 @@ see <code>self$get_filterable_varnames</code> for more details</p></dd>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     },</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     {</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>       "dataname"       : "mae",</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>       "varname"        : "vital_statu...</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>       "id"             : "mae vital_s...</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>       "varname"        : "vital_status",</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>       "id"             : "mae vital_status",</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>       "choices"        : ["0", "1"],</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>       "selected"       : ["1"],</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>       "keep_na"        : false,</span>
@@ -1229,8 +1225,8 @@ see <code>self$get_filterable_varnames</code> for more details</p></dd>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     {</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>       "dataname"       : "mae",</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>       "varname"        : "gender",</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>       "id"             : "mae gender".</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>       "choices"        : ["female", "...</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>       "id"             : "mae gender",</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>       "choices"        : ["female", "male"],</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>       "selected"       : ["female"],</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>       "keep_na"        : true,</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>       "fixed"          : false,</span>
@@ -1240,8 +1236,8 @@ see <code>self$get_filterable_varnames</code> for more details</p></dd>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   ],</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   "attributes": {</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     "include_varnames" : {</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>       "iris"           : ["Sepal.Leng...</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span>       "mae"            : ["patientID"...</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>       "iris"           : ["Sepal.Length", "Sepal.Width", ...</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span>       "mae"            : ["patientID", "years_to_birth", ...</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     },</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     "count_type"       : "none",</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>     "allow_add"        : true</span>
