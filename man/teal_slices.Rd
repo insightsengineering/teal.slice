@@ -55,7 +55,7 @@ Please make sure that adding new filters doesn't fail on target platform before 
 
 \item{allow_add}{(\code{logical(1)}) logical flag specifying whether the user will be able to add new filters}
 
-\item{x}{(\code{teal_slices}) object.}
+\item{x}{object to test for \code{teal_slices}, object to convert to \code{teal_slices} or a \code{teal_slices} object}
 
 \item{i}{(\code{character} or \code{numeric} or \code{logical}) indicating which elements to extract}
 
