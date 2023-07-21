@@ -337,3 +337,30 @@ setdiff_teal_slices <- function(x, y) {
     x
   )
 }
+
+#' Convert teal_slices and to list of lists (drop classes), while maintaining attributes.
+#' Adds special class so that the reverse action can have assertion on argument type.
+#' @param tss (`teal_slices`)
+#' @return Object of class `teal_slices_snapshot`, which is a list of the same length as `tss`,
+#'         where each `teal_slice` has been converted to a list.
+#' @keywords internal
+#'
+disassemble_slices <- function(tss) {
+  checkmate::assert_class(tss, "teal_slices")
+  ans <- unclass(tss)
+  ans[] <- lapply(ans, as.list)
+  class(ans) <- "teal_slices_snapshot"
+  ans
+}
+
+#' Rebuild `teal_slices` from `teal_slices_snapshot`.
+#' @param x (`teal_slices_snapshot`)
+#' @return A `teal_slices` object.
+#' @keywords internal
+#'
+reassemble_slices <- function(x) {
+  checkmate::assert_class(x, "teal_slices_snapshot")
+  attrs <- attributes(unclass(x))
+  ans <- lapply(x, as.teal_slice)
+  do.call(teal_slices, c(ans, attrs))
+}

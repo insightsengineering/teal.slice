@@ -14,7 +14,7 @@ get_filter_state(datasets)
 
 remove_filter_state(datasets, filter)
 
-clear_filter_states(datasets)
+clear_filter_states(datasets, force = FALSE)
 }
 \arguments{
 \item{datasets}{(\code{FilteredData})\cr
@@ -23,6 +23,9 @@ see \code{\link{FilteredData}} for details}
 
 \item{filter}{(\code{teal_slices})\cr
 specify filters in place on app start-up}
+
+\item{force}{(\code{logical(1)})\cr
+include locked filter states}
 }
 \value{
 \itemize{
