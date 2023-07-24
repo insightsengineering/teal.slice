@@ -4,10 +4,12 @@
 \alias{teal_slices}
 \alias{is.teal_slices}
 \alias{as.teal_slices}
+\alias{as.list.teal_slices}
 \alias{[.teal_slices}
 \alias{c.teal_slices}
 \alias{format.teal_slices}
 \alias{print.teal_slices}
+\alias{list_to_teal_slices}
 \title{Complete filter specification.}
 \usage{
 teal_slices(
@@ -22,6 +24,8 @@ is.teal_slices(x)
 
 as.teal_slices(x)
 
+\method{as.list}{teal_slices}(x, recursive = FALSE, ...)
+
 \method{[}{teal_slices}(x, i)
 
 \method{c}{teal_slices}(...)
@@ -29,6 +33,8 @@ as.teal_slices(x)
 \method{format}{teal_slices}(x, show_all = FALSE, trim_lines = TRUE, ...)
 
 \method{print}{teal_slices}(x, ...)
+
+list_to_teal_slices(x)
 }
 \arguments{
 \item{...}{any number of \code{teal_slice} objects. For \code{print} and \code{format},
@@ -49,7 +55,9 @@ Please make sure that adding new filters doesn't fail on target platform before 
 
 \item{allow_add}{(\code{logical(1)}) logical flag specifying whether the user will be able to add new filters}
 
-\item{x}{(\code{teal_slices}) object.}
+\item{x}{object to test for \code{teal_slices}, object to convert to \code{teal_slices} or a \code{teal_slices} object}
+
+\item{recursive}{(\code{logical(1)}) flag specifying whether to also convert to list the elements of this \code{teal_slices}}
 
 \item{i}{(\code{character} or \code{numeric} or \code{logical}) indicating which elements to extract}
 
