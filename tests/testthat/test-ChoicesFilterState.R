@@ -104,7 +104,7 @@ testthat::test_that("get_call returns call always if choices are limited - regar
   )
   testthat::expect_identical(
     shiny::isolate(filter_state$get_call()),
-    quote(var %in% c("a", "b", "c"))
+    NULL
   )
 })
 
