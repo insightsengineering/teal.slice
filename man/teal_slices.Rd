@@ -79,7 +79,8 @@ as well as \code{filter_panel_api} wrapper functions.
 
 \code{include_varnames} and \code{exclude_varnames} determine which variables can have filters assigned.
 The former enumerates allowed variables, the latter enumerates forbidden values.
-Since these can be mutually exclusive in some cases, they cannot both be set in one \code{teal_slices} object.
+Since these could be mutually exclusive, it is impossible to set both allowed and forbidden
+variables for one data set in one \code{teal_slices}.
 }
 \examples{
 filter_1 <- teal_slice(
