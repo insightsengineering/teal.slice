@@ -604,12 +604,14 @@ FilterState <- R6::R6Class( # nolint
     add_keep_na_call = function(filter_call, dataname) {
       if (isTRUE(private$get_keep_na())) {
         call("|", call("is.na", private$get_varname_prefixed(dataname)), filter_call)
-      } else if (isTRUE(private$na_rm) && private$na_count > 0L) {
+      } else if (isTRUE(private$na_rm) && private$na_count > 0L & length(filter_call) > 0) {
         call(
           "&",
           call("!", call("is.na", private$get_varname_prefixed(dataname))),
           filter_call
         )
+      } else if (isTRUE(private$na_rm) && private$na_count > 0L & length(filter_call) == 0) {
+        call("!", call("is.na", private$get_varname_prefixed(dataname)))
       } else {
         filter_call
       }
