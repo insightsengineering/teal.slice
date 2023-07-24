@@ -161,7 +161,7 @@ testthat::test_that("get_call returns call if all selected but NA exists", {
   )
   testthat::expect_identical(
     shiny::isolate(filter_state$get_call()),
-    quote(var %in% c("item1", "item2", "item3"))
+    quote(!is.na(var))
   )
 })
 
