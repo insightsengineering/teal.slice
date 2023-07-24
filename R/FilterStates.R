@@ -251,7 +251,6 @@ FilterStates <- R6::R6Class( # nolint
     #' @return function which throws an error
     set_filter_state = function(state) {
       shiny::isolate({
-        if (private$dataname == "ADSL") browser()
         logger::log_trace("{ class(self)[1] }$set_filter_state initializing, dataname: { private$dataname }")
         checkmate::assert_class(state, "teal_slices")
         lapply(state, function(x) {
