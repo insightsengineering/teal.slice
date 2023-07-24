@@ -10,8 +10,8 @@
 #'
 #' `include_varnames` and `exclude_varnames` determine which variables can have filters assigned.
 #' The former enumerates allowed variables, the latter enumerates forbidden values.
-#' Since these can be mutually exclusive, they cannot both be set in one `teal_slices` object for one
-#' data set.
+#' Since these could be mutually exclusive, it is impossible to set both allowed and forbidden
+#' variables for one data set in one `teal_slices`.
 #'
 #' @param ... any number of `teal_slice` objects. For `print` and `format`,
 #'  additional arguments passed to other functions.
