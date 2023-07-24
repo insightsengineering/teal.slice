@@ -10,7 +10,8 @@
 #'
 #' `include_varnames` and `exclude_varnames` determine which variables can have filters assigned.
 #' The former enumerates allowed variables, the latter enumerates forbidden values.
-#' Since these can be mutually exclusive in some cases, they cannot both be set in one `teal_slices` object.
+#' Since these could be mutually exclusive, it is impossible to set both allowed and forbidden
+#' variables for one data set in one `teal_slices`.
 #'
 #' @param ... any number of `teal_slice` objects. For `print` and `format`,
 #'  additional arguments passed to other functions.
@@ -100,6 +101,14 @@ teal_slices <- function(...,
   checkmate::assert_character(count_type, len = 1, null.ok = TRUE)
   checkmate::assert_subset(count_type, choices = c("all", "none"), empty.ok = TRUE)
   checkmate::assert_logical(allow_add)
+
+  duplicated_datasets <- intersect(names(include_varnames), names(exclude_varnames))
+  if (length(duplicated_datasets)) {
+    stop(
+      "Some datasets are specified in both, include_varnames and exclude_varnames:\n",
+      toString(duplicated_datasets)
+    )
+  }
 
   structure(
     slices,
