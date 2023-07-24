@@ -203,6 +203,15 @@ testthat::test_that("[.teal_slices preserves count_type", {
   )
 })
 
+testthat::test_that("teal_slices throws when include_varnames and exclude_varnames specified for the same dataset", {
+  testthat::expect_error(
+    teal_slices(
+      include_varnames = list(data1 = "var1"),
+      exclude_varnames = list(data1 = "var2")
+    ),
+    "Some datasets are specified in both, include_varnames and exclude_varnames"
+  )
+})
 
 testthat::test_that("c.teal_slices concatenates `teal_slices` objects", {
   shiny::reactiveConsole(TRUE)
