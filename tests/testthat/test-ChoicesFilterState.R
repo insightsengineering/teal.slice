@@ -223,36 +223,36 @@ testthat::test_that("get_call returns calls appropriate for posixlt var", {
 # get_call table ----
 # Scenarios
 #      NAs in data | keep_na | selected |    class    | result
-#  1.      Yes     |   NULL  |  'all'   | 'character' |
-#  2.       No     |   NULL  |  'all'   | 'character' |
-#  3.      Yes     |   TRUE  |  'all'   | 'character' |
-#  4.       No     |   TRUE  |  'all'   | 'character' |
-#  5.      Yes     |  FALSE  |  'all'   | 'character' |
-#  6.       No     |  FALSE  |  'all'   | 'character' |
-#  7.      Yes     |   NULL  |'limited' | 'character' |
-#  8.       No     |   NULL  |'limited' | 'character' |
-#  9.      Yes     |   TRUE  |'limited' | 'character' |
-# 10.       No     |   TRUE  |'limited' | 'character' |
-# 11.      Yes     |  FALSE  |'limited' | 'character' |
-# 12.       No     |  FALSE  |'limited' | 'character' |
-# 13.      Yes     |   NULL  | 'single' | 'character' |
-# 14.       No     |   NULL  | 'single' | 'character' |
-# 15.      Yes     |   TRUE  | 'single' | 'character' |
-# 16.       No     |   TRUE  | 'single' | 'character' |
-# 17.      Yes     |  FALSE  | 'single' | 'character' |
-# 18.       No     |  FALSE  | 'single' | 'character' |
+#  1.      Yes     |   NULL  |  'all'   | 'character' | NULL
+#  2.       No     |   NULL  |  'all'   | 'character' | NULL
+#  3.      Yes     |   TRUE  |  'all'   | 'character' | NULL
+#  4.       No     |   TRUE  |  'all'   | 'character' | NULL
+#  5.      Yes     |  FALSE  |  'all'   | 'character' | !is.na(x)
+#  6.       No     |  FALSE  |  'all'   | 'character' | NULL
+#  7.      Yes     |   NULL  |'limited' | 'character' | x %in% c('a', 'b')
+#  8.       No     |   NULL  |'limited' | 'character' | x %in% c('a', 'b')
+#  9.      Yes     |   TRUE  |'limited' | 'character' | is.na(x) | x %in% c('a', 'b')
+# 10.       No     |   TRUE  |'limited' | 'character' | x %in% c('a', 'b')
+# 11.      Yes     |  FALSE  |'limited' | 'character' | x %in% c('a', 'b')
+# 12.       No     |  FALSE  |'limited' | 'character' | x %in% c('a', 'b')
+# 13.      Yes     |   NULL  | 'single' | 'character' | x == 'a'
+# 14.       No     |   NULL  | 'single' | 'character' | x == 'a'
+# 15.      Yes     |   TRUE  | 'single' | 'character' | is.na(x) | x == 'a'
+# 16.       No     |   TRUE  | 'single' | 'character' | x == 'a'
+# 17.      Yes     |  FALSE  | 'single' | 'character' | x == 'a'
+# 18.       No     |  FALSE  | 'single' | 'character' | x == 'a'
 # 19.      Yes     |   NULL  |  'none'  | 'character' |
 # 20.       No     |   NULL  |  'none'  | 'character' |
 # 21.      Yes     |   TRUE  |  'none'  | 'character' |
 # 22.       No     |   TRUE  |  'none'  | 'character' |
 # 23.      Yes     |  FALSE  |  'none'  | 'character' |
 # 24.       No     |  FALSE  |  'none'  | 'character' |
-# 25.      Yes     |   NULL  |  'all'   |  'numeric'  |
-# 26.       No     |   NULL  |  'all'   |  'numeric'  |
-# 27.      Yes     |   TRUE  |  'all'   |  'numeric'  |
-# 28.       No     |   TRUE  |  'all'   |  'numeric'  |
-# 29.      Yes     |  FALSE  |  'all'   |  'numeric'  |
-# 30.       No     |  FALSE  |  'all'   |  'numeric'  |
+# 25.      Yes     |   NULL  |  'all'   |  'numeric'  | NULL
+# 26.       No     |   NULL  |  'all'   |  'numeric'  | NULL
+# 27.      Yes     |   TRUE  |  'all'   |  'numeric'  | NULL
+# 28.       No     |   TRUE  |  'all'   |  'numeric'  | NULL
+# 29.      Yes     |  FALSE  |  'all'   |  'numeric'  | !is.na(x)
+# 30.       No     |  FALSE  |  'all'   |  'numeric'  | NULL
 # 31.      Yes     |   NULL  |'limited' |  'numeric'  |
 # 32.       No     |   NULL  |'limited' |  'numeric'  |
 # 33.      Yes     |   TRUE  |'limited' |  'numeric'  |
