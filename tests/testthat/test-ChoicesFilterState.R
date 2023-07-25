@@ -220,6 +220,83 @@ testthat::test_that("get_call returns calls appropriate for posixlt var", {
   )
 })
 
+# get_call table ----
+# Scenarios
+#      NAs in data | keep_na | selected |    class    | result
+#  1.      Yes     |   NULL  |  'all'   | 'character' |
+#  2.       No     |   NULL  |  'all'   | 'character' |
+#  3.      Yes     |   TRUE  |  'all'   | 'character' |
+#  4.       No     |   TRUE  |  'all'   | 'character' |
+#  5.      Yes     |  FALSE  |  'all'   | 'character' |
+#  6.       No     |  FALSE  |  'all'   | 'character' |
+#  7.      Yes     |   NULL  |'limited' | 'character' |
+#  8.       No     |   NULL  |'limited' | 'character' |
+#  9.      Yes     |   TRUE  |'limited' | 'character' |
+# 10.       No     |   TRUE  |'limited' | 'character' |
+# 11.      Yes     |  FALSE  |'limited' | 'character' |
+# 12.       No     |  FALSE  |'limited' | 'character' |
+# 13.      Yes     |   NULL  | 'single' | 'character' |
+# 14.       No     |   NULL  | 'single' | 'character' |
+# 15.      Yes     |   TRUE  | 'single' | 'character' |
+# 16.       No     |   TRUE  | 'single' | 'character' |
+# 17.      Yes     |  FALSE  | 'single' | 'character' |
+# 18.       No     |  FALSE  | 'single' | 'character' |
+# 19.      Yes     |   NULL  |  'none'  | 'character' |
+# 20.       No     |   NULL  |  'none'  | 'character' |
+# 21.      Yes     |   TRUE  |  'none'  | 'character' |
+# 22.       No     |   TRUE  |  'none'  | 'character' |
+# 23.      Yes     |  FALSE  |  'none'  | 'character' |
+# 24.       No     |  FALSE  |  'none'  | 'character' |
+# 25.      Yes     |   NULL  |  'all'   |  'numeric'  |
+# 26.       No     |   NULL  |  'all'   |  'numeric'  |
+# 27.      Yes     |   TRUE  |  'all'   |  'numeric'  |
+# 28.       No     |   TRUE  |  'all'   |  'numeric'  |
+# 29.      Yes     |  FALSE  |  'all'   |  'numeric'  |
+# 30.       No     |  FALSE  |  'all'   |  'numeric'  |
+# 31.      Yes     |   NULL  |'limited' |  'numeric'  |
+# 32.       No     |   NULL  |'limited' |  'numeric'  |
+# 33.      Yes     |   TRUE  |'limited' |  'numeric'  |
+# 34.       No     |   TRUE  |'limited' |  'numeric'  |
+# 35.      Yes     |  FALSE  |'limited' |  'numeric'  |
+# 36.       No     |  FALSE  |'limited' |  'numeric'  |
+# 37.      Yes     |   NULL  | 'single' |  'numeric'  |
+# 38.       No     |   NULL  | 'single' |  'numeric'  |
+# 39.      Yes     |   TRUE  | 'single' |  'numeric'  |
+# 40.       No     |   TRUE  | 'single' |  'numeric'  |
+# 41.      Yes     |  FALSE  | 'single' |  'numeric'  |
+# 42.       No     |  FALSE  | 'single' |  'numeric'  |
+# 43.      Yes     |   NULL  |  'none'  |  'numeric'  |
+# 44.       No     |   NULL  |  'none'  |  'numeric'  |
+# 45.      Yes     |   TRUE  |  'none'  |  'numeric'  |
+# 46.       No     |   TRUE  |  'none'  |  'numeric'  |
+# 47.      Yes     |  FALSE  |  'none'  |  'numeric'  |
+# 48.       No     |  FALSE  |  'none'  |  'numeric'  |
+# 49.      Yes     |   NULL  |  'all'   |   'dates'   |
+# 50.       No     |   NULL  |  'all'   |   'dates'   |
+# 51.      Yes     |   TRUE  |  'all'   |   'dates'   |
+# 52.       No     |   TRUE  |  'all'   |   'dates'   |
+# 53.      Yes     |  FALSE  |  'all'   |   'dates'   |
+# 54.       No     |  FALSE  |  'all'   |   'dates'   |
+# 55.      Yes     |   NULL  |'limited' |   'dates'   |
+# 56.       No     |   NULL  |'limited' |   'dates'   |
+# 57.      Yes     |   TRUE  |'limited' |   'dates'   |
+# 58.       No     |   TRUE  |'limited' |   'dates'   |
+# 59.      Yes     |  FALSE  |'limited' |   'dates'   |
+# 60.       No     |  FALSE  |'limited' |   'dates'   |
+# 61.      Yes     |   NULL  | 'single' |   'dates'   |
+# 62.       No     |   NULL  | 'single' |   'dates'   |
+# 63.      Yes     |   TRUE  | 'single' |   'dates'   |
+# 64.       No     |   TRUE  | 'single' |   'dates'   |
+# 65.      Yes     |  FALSE  | 'single' |   'dates'   |
+# 66.       No     |  FALSE  | 'single' |   'dates'   |
+# 67.      Yes     |   NULL  |  'none'  |   'dates'   |
+# 68.       No     |   NULL  |  'none'  |   'dates'   |
+# 69.      Yes     |   TRUE  |  'none'  |   'dates'   |
+# 70.       No     |   TRUE  |  'none'  |   'dates'   |
+# 71.      Yes     |  FALSE  |  'none'  |   'dates'   |
+# 72.       No     |  FALSE  |  'none'  |   'dates'   |
+
+
 # set_state ----
 testthat::test_that("set_state raises warning when selection not within allowed choices", {
   filter_state <- ChoicesFilterState$new(x = chars, slice = teal_slice(dataname = "data", varname = "var"))
