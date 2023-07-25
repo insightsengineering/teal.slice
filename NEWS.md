@@ -22,6 +22,10 @@
 * Removed `CDISCFilteredData` and `CDISCFilteredDataset` and implementing `JoinKeys` handling in their parent classes (`FilteredData` and `DefaultFilteredDataset`).
 * Specifying set of filterable columns is done through `include_varnames` and `exclude_varnames` in `teal_slices`. Specifying `attr(, "filterable")` is hard deprecated.
 
+### Miscellaneous
+
+* Specify minimal version of dependent packages.
+
 # teal.slice 0.3.0
 
 * Examples now use `scda.2022` instead of `scda.2021`.
