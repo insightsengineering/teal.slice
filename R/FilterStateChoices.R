@@ -197,7 +197,7 @@ ChoicesFilterState <- R6::R6Class( # nolint
       if (isFALSE(private$is_any_filtered())) {
         return(NULL)
       }
-      if (setequal(na.omit(private$x), choices)) {
+      if (setequal(na.omit(private$x), private$choices)) {
         return(NULL)
       }
 
