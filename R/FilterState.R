@@ -583,8 +583,9 @@ FilterState <- R6::R6Class( # nolint
     # @param dataname `character(1)` name of data set to prepend to variables
     # @return a `call`
     add_keep_na_call = function(filter_call, dataname) {
-
-      if (private$na_count == 0L) return(filter_call)
+      if (private$na_count == 0L) {
+        return(filter_call)
+      }
 
       if (is.null(filter_call) && isFALSE(private$get_keep_na())) {
         call("!", call("is.na", private$get_varname_prefixed(dataname)))
