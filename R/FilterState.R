@@ -385,7 +385,6 @@ FilterState <- R6::R6Class( # nolint
     destroy_shiny = NULL, # function is set in server
     # other
     is_choice_limited = FALSE, # flag whether number of possible choices was limited when specifying filter
-    na_rm = FALSE,
     observers = list(), # stores observers
     state_history = NULL, # reactiveVal holding a list storing states this FilterState has had since instantiation
 
@@ -455,7 +454,6 @@ FilterState <- R6::R6Class( # nolint
           value
         )
       )
-      private$set_na_rm(!value)
       invisible(NULL)
     },
 
@@ -479,23 +477,6 @@ FilterState <- R6::R6Class( # nolint
         )
       )
 
-      invisible(NULL)
-    },
-
-    # @description
-    # Some methods need an additional `!is.na(varame)` condition to drop
-    # missing values. When `private$na_rm = TRUE`, `self$get_call` returns
-    # condition extended by `!is.na`.
-    #
-    # @param value `logical(1)`\cr
-    #   when `TRUE`, `FilterState$get_call` appends an expression
-    #   removing `NA` values to the filter expression returned by `get_call`
-    #
-    # @return NULL invisibly
-    #
-    set_na_rm = function(value) {
-      checkmate::assert_flag(value)
-      private$na_rm <- value
       invisible(NULL)
     },
 
