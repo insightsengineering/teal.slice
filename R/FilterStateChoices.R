@@ -194,9 +194,9 @@ ChoicesFilterState <- R6::R6Class( # nolint
     #' @return (`call`) or `NULL`
     #'
     get_call = function(dataname) {
-      if (isFALSE(private$is_any_filtered())) {
-        return(NULL)
-      }
+      if (isFALSE(private$is_any_filtered())) return(NULL)
+      if (setequal(na.omit(private$x), choices)) return(NULL)
+
       if (missing(dataname)) dataname <- private$get_dataname()
       varname <- private$get_varname_prefixed(dataname)
       choices <- private$get_selected()
@@ -223,11 +223,7 @@ ChoicesFilterState <- R6::R6Class( # nolint
           )
         } else {
           # This handles numerics, characters, and factors.
-          if (!setequal(na.omit(private$x), choices)) {
-            call(fun_compare, varname, make_c_call(choices))
-          } else {
-            NULL
-          }
+          call(fun_compare, varname, make_c_call(choices))
         }
       private$add_keep_na_call(filter_call, dataname)
     }
