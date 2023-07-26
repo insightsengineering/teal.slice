@@ -223,7 +223,11 @@ ChoicesFilterState <- R6::R6Class( # nolint
           )
         } else {
           # This handles numerics, characters, and factors.
-          call(fun_compare, varname, make_c_call(choices))
+          if (!setequal(na.omit(private$x), choices)) {
+            call(fun_compare, varname, make_c_call(choices))
+          } else {
+            NULL
+          }
         }
       private$add_keep_na_call(filter_call, dataname)
     }

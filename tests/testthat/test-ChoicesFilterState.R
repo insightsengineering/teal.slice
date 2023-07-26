@@ -104,7 +104,7 @@ testthat::test_that("get_call returns call always if choices are limited - regar
   )
   testthat::expect_identical(
     shiny::isolate(filter_state$get_call()),
-    quote(var %in% c("a", "b", "c"))
+    NULL
   )
 })
 
@@ -161,7 +161,7 @@ testthat::test_that("get_call returns call if all selected but NA exists", {
   )
   testthat::expect_identical(
     shiny::isolate(filter_state$get_call()),
-    quote(var %in% c("item1", "item2", "item3"))
+    quote(!is.na(var))
   )
 })
 
@@ -219,6 +219,107 @@ testthat::test_that("get_call returns calls appropriate for posixlt var", {
     quote(var == as.POSIXlt("2000-01-01 12:00:00", tz = "GMT"))
   )
 })
+
+# get_call table ----
+# Scenarios
+#      NAs in data | keep_na | selected |    class    | result
+#  1.      Yes     |   NULL  |  'all'   | 'character' | NULL
+#  2.       No     |   NULL  |  'all'   | 'character' | NULL
+#  3.      Yes     |   TRUE  |  'all'   | 'character' | NULL
+#  4.       No     |   TRUE  |  'all'   | 'character' | NULL
+#  5.      Yes     |  FALSE  |  'all'   | 'character' | !is.na(x)
+#  6.       No     |  FALSE  |  'all'   | 'character' | NULL
+#  7.      Yes     |   NULL  |'limited' | 'character' | x %in% c('2000-01-01', 'b')
+#  8.       No     |   NULL  |'limited' | 'character' | x %in% c('2000-01-01', 'b')
+#  9.      Yes     |   TRUE  |'limited' | 'character' | is.na(x) | x %in% c('2000-01-01', 'b')
+# 10.       No     |   TRUE  |'limited' | 'character' | x %in% c('2000-01-01', 'b')
+# 11.      Yes     |  FALSE  |'limited' | 'character' | x %in% c('2000-01-01', 'b')
+# 12.       No     |  FALSE  |'limited' | 'character' | x %in% c('2000-01-01', 'b')
+# 13.      Yes     |   NULL  | 'single' | 'character' | x == '2000-01-01'
+# 14.       No     |   NULL  | 'single' | 'character' | x == '2000-01-01'
+# 15.      Yes     |   TRUE  | 'single' | 'character' | is.na(x) | x == '2000-01-01'
+# 16.       No     |   TRUE  | 'single' | 'character' | x == '2000-01-01'
+# 17.      Yes     |  FALSE  | 'single' | 'character' | x == '2000-01-01'
+# 18.       No     |  FALSE  | 'single' | 'character' | x == '2000-01-01'
+# 19.      Yes     |   NULL  |  'none'  | 'character' |
+# 20.       No     |   NULL  |  'none'  | 'character' |
+# 21.      Yes     |   TRUE  |  'none'  | 'character' |
+# 22.       No     |   TRUE  |  'none'  | 'character' |
+# 23.      Yes     |  FALSE  |  'none'  | 'character' |
+# 24.       No     |  FALSE  |  'none'  | 'character' |
+# 25.      Yes     |   NULL  |  'all'   |  'numeric'  | NULL
+# 26.       No     |   NULL  |  'all'   |  'numeric'  | NULL
+# 27.      Yes     |   TRUE  |  'all'   |  'numeric'  | NULL
+# 28.       No     |   TRUE  |  'all'   |  'numeric'  | NULL
+# 29.      Yes     |  FALSE  |  'all'   |  'numeric'  | !is.na(x)
+# 30.       No     |  FALSE  |  'all'   |  'numeric'  | NULL
+# 31.      Yes     |   NULL  |'limited' |  'numeric'  | x %in% c(1, 2)
+# 32.       No     |   NULL  |'limited' |  'numeric'  | x %in% c(1, 2)
+# 33.      Yes     |   TRUE  |'limited' |  'numeric'  | is.na(x) | x %in% c(1, 2)
+# 34.       No     |   TRUE  |'limited' |  'numeric'  | x %in% c(1, 2)
+# 35.      Yes     |  FALSE  |'limited' |  'numeric'  | x %in% c(1, 2)
+# 36.       No     |  FALSE  |'limited' |  'numeric'  | x %in% c(1, 2)
+# 37.      Yes     |   NULL  | 'single' |  'numeric'  | x == 1
+# 38.       No     |   NULL  | 'single' |  'numeric'  | x == 1
+# 39.      Yes     |   TRUE  | 'single' |  'numeric'  | is.na(x) | x == 1
+# 40.       No     |   TRUE  | 'single' |  'numeric'  | x == 1
+# 41.      Yes     |  FALSE  | 'single' |  'numeric'  | x == 1
+# 42.       No     |  FALSE  | 'single' |  'numeric'  | x == 1
+# 43.      Yes     |   NULL  |  'none'  |  'numeric'  |
+# 44.       No     |   NULL  |  'none'  |  'numeric'  |
+# 45.      Yes     |   TRUE  |  'none'  |  'numeric'  |
+# 46.       No     |   TRUE  |  'none'  |  'numeric'  |
+# 47.      Yes     |  FALSE  |  'none'  |  'numeric'  |
+# 48.       No     |  FALSE  |  'none'  |  'numeric'  |
+# 49.      Yes     |   NULL  |  'all'   |   'dates'   | NULL
+# 50.       No     |   NULL  |  'all'   |   'dates'   | NULL
+# 51.      Yes     |   TRUE  |  'all'   |   'dates'   | NULL
+# 52.       No     |   TRUE  |  'all'   |   'dates'   | NULL
+# 53.      Yes     |  FALSE  |  'all'   |   'dates'   | !is.na(x)
+# 54.       No     |  FALSE  |  'all'   |   'dates'   | NULL
+# 55.      Yes     |   NULL  |'limited' |   'dates'   | x %in% c('2000-01-01', '2000-01-02')
+# 56.       No     |   NULL  |'limited' |   'dates'   | x %in% c('2000-01-01', '2000-01-02')
+# 57.      Yes     |   TRUE  |'limited' |   'dates'   | is.na(x) | x %in% c('2000-01-01', '2000-01-02')
+# 58.       No     |   TRUE  |'limited' |   'dates'   | x %in% c('2000-01-01', '2000-01-02')
+# 59.      Yes     |  FALSE  |'limited' |   'dates'   | x %in% c('2000-01-01', '2000-01-02')
+# 60.       No     |  FALSE  |'limited' |   'dates'   | x %in% c('2000-01-01', '2000-01-02')
+# 61.      Yes     |   NULL  | 'single' |   'dates'   | x == '2000-01-01'
+# 62.       No     |   NULL  | 'single' |   'dates'   | x == '2000-01-01'
+# 63.      Yes     |   TRUE  | 'single' |   'dates'   | is.na(x) | x == '2000-01-01'
+# 64.       No     |   TRUE  | 'single' |   'dates'   | x == '2000-01-01'
+# 65.      Yes     |  FALSE  | 'single' |   'dates'   | x == '2000-01-01'
+# 66.       No     |  FALSE  | 'single' |   'dates'   | x == '2000-01-01'
+# 67.      Yes     |   NULL  |  'none'  |   'dates'   |
+# 68.       No     |   NULL  |  'none'  |   'dates'   |
+# 69.      Yes     |   TRUE  |  'none'  |   'dates'   |
+# 70.       No     |   TRUE  |  'none'  |   'dates'   |
+# 71.      Yes     |  FALSE  |  'none'  |   'dates'   |
+# 72.       No     |  FALSE  |  'none'  |   'dates'   |
+# 73.      Yes     |   NULL  |  'all'   |  'POSIXct'  | NULL
+# 74.       No     |   NULL  |  'all'   |  'POSIXct'  | NULL
+# 75.      Yes     |   TRUE  |  'all'   |  'POSIXct'  | NULL
+# 76.       No     |   TRUE  |  'all'   |  'POSIXct'  | NULL
+# 77.      Yes     |  FALSE  |  'all'   |  'POSIXct'  | !is.na(x)
+# 78.       No     |  FALSE  |  'all'   |  'POSIXct'  | NULL
+# 79.      Yes     |   NULL  |'limited' |  'POSIXct'  | x %in% c("2000-01-01 12:00:00 GMT", "2000-01-01 12:00:01 GMT")
+# 80.       No     |   NULL  |'limited' |  'POSIXct'  | x %in% c("2000-01-01 12:00:00 GMT", "2000-01-01 12:00:01 GMT")
+# 81.      Yes     |   TRUE  |'limited' |  'POSIXct'  | is.na(x) | x %in% c("2000-01-01 12:00:00 GMT", "2000-01-01 12:00:01 GMT")
+# 82.       No     |   TRUE  |'limited' |  'POSIXct'  | x %in% c("2000-01-01 12:00:00 GMT", "2000-01-01 12:00:01 GMT")
+# 83.      Yes     |  FALSE  |'limited' |  'POSIXct'  | x %in% c("2000-01-01 12:00:00 GMT", "2000-01-01 12:00:01 GMT")
+# 84.       No     |  FALSE  |'limited' |  'POSIXct'  | x %in% c("2000-01-01 12:00:00 GMT", "2000-01-01 12:00:01 GMT")
+# 85.      Yes     |   NULL  | 'single' |  'POSIXct'  | x == "2000-01-01 12:00:00 GMT"
+# 86.       No     |   NULL  | 'single' |  'POSIXct'  | x == "2000-01-01 12:00:00 GMT"
+# 87.      Yes     |   TRUE  | 'single' |  'POSIXct'  | is.na(x) | x == "2000-01-01 12:00:00 GMT"
+# 88.       No     |   TRUE  | 'single' |  'POSIXct'  | x == "2000-01-01 12:00:00 GMT"
+# 89.      Yes     |  FALSE  | 'single' |  'POSIXct'  | x == "2000-01-01 12:00:00 GMT"
+# 90.       No     |  FALSE  | 'single' |  'POSIXct'  | x == "2000-01-01 12:00:00 GMT"
+# 91.      Yes     |   NULL  |  'none'  |  'POSIXct'  |
+# 92.       No     |   NULL  |  'none'  |  'POSIXct'  |
+# 93.      Yes     |   TRUE  |  'none'  |  'POSIXct'  |
+# 94.       No     |   TRUE  |  'none'  |  'POSIXct'  |
+# 95.      Yes     |  FALSE  |  'none'  |  'POSIXct'  |
+# 96.       No     |  FALSE  |  'none'  |  'POSIXct'  |
+
 
 # set_state ----
 testthat::test_that("set_state raises warning when selection not within allowed choices", {
