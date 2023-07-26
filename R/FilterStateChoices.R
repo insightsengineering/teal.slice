@@ -194,8 +194,12 @@ ChoicesFilterState <- R6::R6Class( # nolint
     #' @return (`call`) or `NULL`
     #'
     get_call = function(dataname) {
-      if (isFALSE(private$is_any_filtered())) return(NULL)
-      if (setequal(na.omit(private$x), choices)) return(NULL)
+      if (isFALSE(private$is_any_filtered())) {
+        return(NULL)
+      }
+      if (setequal(na.omit(private$x), choices)) {
+        return(NULL)
+      }
 
       if (missing(dataname)) dataname <- private$get_dataname()
       varname <- private$get_varname_prefixed(dataname)
