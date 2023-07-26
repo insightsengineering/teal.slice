@@ -78,9 +78,9 @@ Config/Needs/verdepcheck:
     insightsengineering/teal.logger,
     insightsengineering/teal.widgets,
     yihui/knitr,
-    bioc::MultiAssayExperiment,
+    MultiAssayExperiment=bioc::MultiAssayExperiment,
     rstudio/rmarkdown,
-    bioc::SummarizedExperiment,
+    SummarizedExperiment=bioc::SummarizedExperiment,
     r-lib/testthat,
     r-lib/withr
 Config/Needs/website: insightsengineering/nesttemplate
