@@ -197,33 +197,38 @@ ChoicesFilterState <- R6::R6Class( # nolint
       if (isFALSE(private$is_any_filtered())) {
         return(NULL)
       }
-      if (missing(dataname)) dataname <- private$get_dataname()
-      varname <- private$get_varname_prefixed(dataname)
       choices <- private$get_selected()
-      if (private$data_class != "factor") {
-        choices <- do.call(sprintf("as.%s", private$data_class), list(x = choices))
-      }
-      fun_compare <- if (length(choices) == 1L) "==" else "%in%"
+      if (setequal(na.omit(private$x), choices)) {
+        filter_call <- NULL
+      } else {
+        if (missing(dataname)) dataname <- private$get_dataname()
+        varname <- private$get_varname_prefixed(dataname)
 
-      filter_call <-
-        if (inherits(choices, "Date")) {
-          call(fun_compare, varname, call("as.Date", make_c_call(as.character(choices))))
-        } else if (inherits(choices, c("POSIXct", "POSIXlt"))) {
-          class <- class(choices)[1L]
-          date_fun <- as.name(
-            switch(class,
-              "POSIXct" = "as.POSIXct",
-              "POSIXlt" = "as.POSIXlt"
+        if (private$data_class != "factor") {
+          choices <- do.call(sprintf("as.%s", private$data_class), list(x = choices))
+        }
+        fun_compare <- if (length(choices) == 1L) "==" else "%in%"
+
+        filter_call <-
+          if (inherits(choices, "Date")) {
+            call(fun_compare, varname, call("as.Date", make_c_call(as.character(choices))))
+          } else if (inherits(choices, c("POSIXct", "POSIXlt"))) {
+            class <- class(choices)[1L]
+            date_fun <- as.name(
+              switch(class,
+                "POSIXct" = "as.POSIXct",
+                "POSIXlt" = "as.POSIXlt"
+              )
             )
-          )
-          call(
-            fun_compare,
-            varname,
-            as.call(list(date_fun, make_c_call(as.character(choices)), tz = private$tzone))
-          )
-        } else {
-          # This handles numerics, characters, and factors.
-          call(fun_compare, varname, make_c_call(choices))
+            call(
+              fun_compare,
+              varname,
+              as.call(list(date_fun, make_c_call(as.character(choices)), tz = private$tzone))
+            )
+          } else {
+            # This handles numerics, characters, and factors.
+            call(fun_compare, varname, make_c_call(choices))
+          }
         }
       private$add_keep_na_call(filter_call, dataname)
     }
