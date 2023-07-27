@@ -229,7 +229,7 @@ ChoicesFilterState <- R6::R6Class( # nolint
             # This handles numerics, characters, and factors.
             call(fun_compare, varname, make_c_call(choices))
           }
-        }
+      }
       private$add_keep_na_call(filter_call, dataname)
     }
   ),
