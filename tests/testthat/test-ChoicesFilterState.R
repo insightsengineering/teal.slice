@@ -221,14 +221,51 @@ testthat::test_that("get_call returns calls appropriate for posixlt var", {
 })
 
 # get_call table ----
+
+testthat::test_that("get_call works for various combinations", {
 # Scenarios
 #      NAs in data | keep_na | selected |    class    | result
 #  1.      Yes     |   NULL  |  'all'   | 'character' | NULL
+  filter_state <- ChoicesFilterState$new(
+    x = c(letters[1:8], NA_character_),
+    slice = teal_slice(dataname = "data", varname = "x", selected = letters[1:8])
+  )
+  testthat::expect_equal(shiny::isolate(filter_state$get_call()), NULL)
+#      NAs in data | keep_na | selected |    class    | result
 #  2.       No     |   NULL  |  'all'   | 'character' | NULL
+  filter_state <- ChoicesFilterState$new(
+    x = c(letters[1:8]),
+    slice = teal_slice(dataname = "data", varname = "x", selected = letters[1:8])
+  )
+  testthat::expect_equal(shiny::isolate(filter_state$get_call()), NULL)
+#      NAs in data | keep_na | selected |    class    | result
 #  3.      Yes     |   TRUE  |  'all'   | 'character' | NULL
+  filter_state <- ChoicesFilterState$new(
+    x = c(letters[1:8], NA_character_),
+    slice = teal_slice(dataname = "data", varname = "x", selected = letters[1:8], keep_na = TRUE)
+  )
+  testthat::expect_equal(shiny::isolate(filter_state$get_call()), NULL)
+#      NAs in data | keep_na | selected |    class    | result
 #  4.       No     |   TRUE  |  'all'   | 'character' | NULL
+  filter_state <- ChoicesFilterState$new(
+    x = c(letters[1:8]),
+    slice = teal_slice(dataname = "data", varname = "x", selected = letters[1:8], keep_na = TRUE)
+  )
+  testthat::expect_equal(shiny::isolate(filter_state$get_call()), NULL)
+#      NAs in data | keep_na | selected |    class    | result
 #  5.      Yes     |  FALSE  |  'all'   | 'character' | !is.na(x)
+  filter_state <- ChoicesFilterState$new(
+    x = c(letters[1:8], NA_character_),
+    slice = teal_slice(dataname = "data", varname = "x", selected = letters[1:8], keep_na = FALSE)
+  )
+  testthat::expect_equal(shiny::isolate(filter_state$get_call()), quote(!is.na(x)))
+#      NAs in data | keep_na | selected |    class    | result
 #  6.       No     |  FALSE  |  'all'   | 'character' | NULL
+  filter_state <- ChoicesFilterState$new(
+    x = c(letters[1:8]),
+    slice = teal_slice(dataname = "data", varname = "x", selected = letters[1:8], keep_na = FALSE)
+  )
+  testthat::expect_equal(shiny::isolate(filter_state$get_call()), NULL)
 #  7.      Yes     |   NULL  |'limited' | 'character' | x %in% c('2000-01-01', 'b')
 #  8.       No     |   NULL  |'limited' | 'character' | x %in% c('2000-01-01', 'b')
 #  9.      Yes     |   TRUE  |'limited' | 'character' | is.na(x) | x %in% c('2000-01-01', 'b')
@@ -319,7 +356,7 @@ testthat::test_that("get_call returns calls appropriate for posixlt var", {
 # 94.       No     |   TRUE  |  'none'  |  'POSIXct'  |
 # 95.      Yes     |  FALSE  |  'none'  |  'POSIXct'  |
 # 96.       No     |  FALSE  |  'none'  |  'POSIXct'  |
-
+})
 
 # set_state ----
 testthat::test_that("set_state raises warning when selection not within allowed choices", {
