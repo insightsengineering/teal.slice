@@ -649,7 +649,7 @@ testthat::test_that("get_call works for various combinations", {
   # 78.       No     |  FALSE  |  'all'   |  'POSIXct'  | NULL
   # 79.      Yes     |   NULL  |'limited' |  'POSIXct'  | x %in% c("2000-01-01 12:00:00 GMT", "2000-01-01 12:00:01 GMT")
   # 80.       No     |   NULL  |'limited' |  'POSIXct'  | x %in% c("2000-01-01 12:00:00 GMT", "2000-01-01 12:00:01 GMT")
-  # 81.      Yes     |   TRUE  |'limited' |  'POSIXct'  | is.na(x) | x %in% c("2000-01-01 12:00:00 GMT", "2000-01-01 12:00:01 GMT")
+  # 81.      Yes     |   TRUE  |'limited' |  'POSIXct'  | is.na(x) | x %in% c("2000-01-01 12:00:00 GMT", "2000-01-01 12:00:01 GMT") # nolint
   # 82.       No     |   TRUE  |'limited' |  'POSIXct'  | x %in% c("2000-01-01 12:00:00 GMT", "2000-01-01 12:00:01 GMT")
   # 83.      Yes     |  FALSE  |'limited' |  'POSIXct'  | x %in% c("2000-01-01 12:00:00 GMT", "2000-01-01 12:00:01 GMT")
   # 84.       No     |  FALSE  |'limited' |  'POSIXct'  | x %in% c("2000-01-01 12:00:00 GMT", "2000-01-01 12:00:01 GMT")
