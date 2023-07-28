@@ -156,13 +156,13 @@ LogicalFilterState <- R6::R6Class( # nolint
 
       filter_call <-
         if (n_choices == 1 && choices) {
-          private$get_varname_prefixed(dataname)
+          varname
         } else if (n_choices == 1 && !choices) {
-          call("!", private$get_varname_prefixed(dataname))
+          call("!", varname)
         } else {
-          call("%in%", private$get_varname_prefixed(dataname), make_c_call(choices))
+          call("%in%", varname, make_c_call(choices))
         }
-      private$add_keep_na_call(filter_call, dataname)
+      private$add_keep_na_call(filter_call, varname)
     }
   ),
 
