@@ -140,9 +140,9 @@ MAEFilteredDataset <- R6::R6Class( # nolint
     #' @return `NULL` invisibly
     #'
     remove_filter_state = function(state) {
-      shiny::isolate({
-        checkmate::assert_class(state, "teal_slices")
+      checkmate::assert_class(state, "teal_slices")
 
+      shiny::isolate({
         logger::log_trace("{ class(self)[1] }$remove_filter_state removing filter(s), dataname: { private$dataname }")
         # remove state on subjects
         subject_state <- Filter(function(x) is.null(x$experiment), state)
@@ -169,9 +169,9 @@ MAEFilteredDataset <- R6::R6Class( # nolint
 
 
         logger::log_trace("{ class(self)[1] }$remove_filter_state removed filter(s), dataname: { private$dataname }")
-
-        invisible(NULL)
       })
+
+      invisible(NULL)
     },
 
     #' @description
@@ -248,6 +248,7 @@ MAEFilteredDataset <- R6::R6Class( # nolint
           )
         }
       ))
+
       experiment_info <- cbind(experiment_obs_info, experiment_subjects_info)
       dplyr::bind_rows(mae_info, experiment_info)
     }

@@ -138,7 +138,25 @@ FilteredData <- R6::R6Class( # nolint
       private$get_filtered_dataset(dataname)$get_dataset_label()
     },
 
+    #' Set list of external filter states available for activation.
+    #'
+    #' Unlike adding new filter from the column, these filters can come with some prespecified
+    #' settings. `teal_slices` are wrapped in a `reactive` so one it can be updated from elsewhere in the app.
+    #' List is accessible in `ui/srv_active` through `ui/srv_available_filters`.
+    #' @param x (`reactive`)\cr
+    #'  should return `teal_slices`
+    #' @return invisible `NULL`
+    set_available_teal_slices = function(x) {
+      checkmate::assert_class(x, "reactive")
+      private$available_teal_slices <- reactive({
+        # Available filters should be limited to the ones relevant for this FilteredData.
+        Filter(function(x) x$dataname %in% self$datanames(), x())
+      })
+      invisible(NULL)
+    },
+
     # datasets methods ----
+
     #' @description
     #' Gets a `call` to filter the dataset according to the filter state.
     #'
@@ -442,7 +460,7 @@ FilteredData <- R6::R6Class( # nolint
             ),
             call. = FALSE
           )
-          state <- as.teal_slices(state)
+          state <- list_to_teal_slices(state)
         }
 
         checkmate::assert_class(state, "teal_slices")
@@ -457,9 +475,9 @@ FilteredData <- R6::R6Class( # nolint
         })
 
         logger::log_trace("{ class(self)[1] }$set_filter_state initialized")
-
-        invisible(NULL)
       })
+
+      invisible(NULL)
     },
 
     #' @description
@@ -482,7 +500,7 @@ FilteredData <- R6::R6Class( # nolint
             ),
             call. = FALSE
           )
-          state <- as.teal_slices(state)
+          state <- list_to_teal_slices(state)
         }
 
         checkmate::assert_class(state, "teal_slices")
@@ -501,9 +519,9 @@ FilteredData <- R6::R6Class( # nolint
         logger::log_trace(
           "{ class(self)[1] }$remove_filter_state removed filter(s), dataname: { private$dataname }"
         )
-
-        invisible(NULL)
       })
+
+      invisible(NULL)
     },
 
     #' @description
@@ -513,17 +531,19 @@ FilteredData <- R6::R6Class( # nolint
     #' @param datanames (`character`)\cr
     #'   `datanames` to remove their `FilterStates` or empty which removes
     #'   all `FilterStates` in the `FilteredData` object
+    #' @param force (`logical(1)`)\cr
+    #'   include locked filter states
     #'
     #' @return `NULL` invisibly
     #'
-    clear_filter_states = function(datanames = self$datanames()) {
+    clear_filter_states = function(datanames = self$datanames(), force = FALSE) {
       logger::log_trace(
         "FilteredData$clear_filter_states called, datanames: { toString(datanames) }"
       )
 
       for (dataname in datanames) {
         fdataset <- private$get_filtered_dataset(dataname = dataname)
-        fdataset$clear_filter_states()
+        fdataset$clear_filter_states(force)
       }
 
       logger::log_trace(
@@ -536,24 +556,8 @@ FilteredData <- R6::R6Class( # nolint
       invisible(NULL)
     },
 
-    # shiny modules -----
 
-    #' Set external `teal_slice`
-    #'
-    #' Unlike adding new filter from the column, these filters can be added with some prespecified
-    #' settings. List of `teal_slices` should be a reactive so one can make this list to be dynamic.
-    #' List is accessible in `ui/srv_active` through `ui/srv_available_filters`.
-    #' @param x (`reactive`)\cr
-    #'  should return `teal_slices`
-    #' @return invisible `NULL`
-    set_available_teal_slices = function(x) {
-      checkmate::assert_class(x, "reactive")
-      private$available_teal_slices <- reactive({
-        # we want to limit the available filters to the ones that are relevant for this FilteredData
-        Filter(function(x) x$dataname %in% self$datanames(), x())
-      })
-      invisible(NULL)
-    },
+    # shiny modules -----
 
     #' Module for the right filter panel in the teal app
     #' with a filter overview panel and a filter variable panel.
@@ -626,14 +630,14 @@ FilteredData <- R6::R6Class( # nolint
           tags$span("Active Filter Variables", class = "text-primary mb-4"),
           private$ui_available_filters(ns("available_filters")),
           actionLink(
-            ns("minimise_filter_active"),
+            inputId = ns("minimise_filter_active"),
             label = NULL,
             icon = icon("angle-down", lib = "font-awesome"),
             title = "Minimise panel",
-            class = "remove pull-right"
+            class = "remove_all pull-right"
           ),
           actionLink(
-            ns("remove_all_filters"),
+            inputId = ns("remove_all_filters"),
             label = "",
             icon("circle-xmark", lib = "font-awesome"),
             title = "Remove active filters",
@@ -675,14 +679,14 @@ FilteredData <- R6::R6Class( # nolint
 
         private$srv_available_filters("available_filters")
 
-        shiny::observeEvent(input$minimise_filter_active, {
+        observeEvent(input$minimise_filter_active, {
           shinyjs::toggle("filter_active_vars_contents")
           shinyjs::toggle("filters_active_count")
           toggle_icon(session$ns("minimise_filter_active"), c("fa-angle-right", "fa-angle-down"))
           toggle_title(session$ns("minimise_filter_active"), c("Restore panel", "Minimise Panel"))
         })
 
-        shiny::observeEvent(private$get_filter_count(), {
+        observeEvent(private$get_filter_count(), {
           shinyjs::toggle("remove_all_filters", condition = private$get_filter_count() != 0)
           shinyjs::show("filter_active_vars_contents")
           shinyjs::hide("filters_active_count")
@@ -1028,7 +1032,7 @@ FilteredData <- R6::R6Class( # nolint
     }
   ),
 
-  ## __Private Methods ====
+  ## __Private Members ====
   private = list(
     # selectively hide / show to only show `active_datanames` out of all datanames
 
@@ -1043,14 +1047,14 @@ FilteredData <- R6::R6Class( # nolint
 
     # preprocessing code used to generate the unfiltered datasets as a string
     code = NULL,
+
+    # `reactive` containing teal_slices that can be selected; only active in module-specific mode
     available_teal_slices = NULL,
 
     # keys used for joining/filtering data a JoinKeys object (see teal.data)
     join_keys = NULL,
 
-    # reactive i.e. filtered data
-    reactive_data = list(),
-    cached_states = NULL,
+    # flag specifying whether the user may add filters
     allow_add = TRUE,
 
     # private methods ----
@@ -1109,24 +1113,17 @@ FilteredData <- R6::R6Class( # nolint
         )
       )
     },
-
     # @description
-    # Activate available filters. When the filter is selected or removed
-    # then `set_filter_state` or `remove_filter_state` is executed for
-    # appropriate filter (identified by it's id)
+    # Activate available filters. When a filter is selected or removed,
+    # `set_filter_state` or `remove_filter_state` is executed for
+    # the appropriate filter state id.
     srv_available_filters = function(id) {
       moduleServer(id, function(input, output, session) {
         slices_interactive <- reactive(
-          Filter(
-            function(slice) !isTRUE(slice$fixed) && !inherits(slice, "teal_slice_expr"),
-            private$available_teal_slices()
-          )
+          Filter(function(slice) isFALSE(slice$fixed), private$available_teal_slices())
         )
         slices_fixed <- reactive(
-          Filter(
-            function(slice) isTRUE(slice$fixed) || inherits(slice, "teal_slice_expr"),
-            private$available_teal_slices()
-          )
+          Filter(function(slice) isTRUE(slice$fixed), private$available_teal_slices())
         )
         available_slices_id <- reactive(vapply(private$available_teal_slices(), `[[`, character(1), "id"))
         active_slices_id <- reactive(vapply(self$get_filter_state(), `[[`, character(1), "id"))

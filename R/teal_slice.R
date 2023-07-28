@@ -41,7 +41,7 @@
 #'
 #' To establish a filter on a column in a `data.frame`, `dataname` and `varname` are sufficient.
 #' `MultiAssayExperiment` objects can be filtered either on their `colData` slot (which contains subject information)
-#' or on their experiments, which are stored in the `ExperimentList` slot.
+#' or on their experiments, which are stored in the `experimentList` slot.
 #' For filters referring to `colData` no extra arguments are needed.
 #' If a filter state is created for an experiment, that experiment name must be specified in the `experiment` argument.
 #' Furthermore, to specify filter for an `SummarizedExperiment` one must also set `arg`
@@ -128,31 +128,33 @@ teal_slice <- function(dataname,
   checkmate::assert_flag(anchored)
 
   formal_args <- as.list(environment())
+
   if (!missing(expr) && !missing(varname)) {
     stop("Must provide either `expr` or `varname`.")
   } else if (!missing(expr)) {
-    fixed <- TRUE
-    ts_expr_args <- c("dataname", "id", "expr", "fixed", "anchored", "title")
-    formal_args <- formal_args[ts_expr_args]
     checkmate::assert_string(id)
     checkmate::assert_string(title)
     checkmate::assert_string(expr)
+
+    formal_args$fixed <- TRUE
+    ts_expr_args <- c("dataname", "id", "expr", "fixed", "anchored", "title")
+    formal_args <- formal_args[ts_expr_args]
     ans <- do.call(shiny::reactiveValues, c(formal_args, list(...)))
     class(ans) <- c("teal_slice_expr", "teal_slice", class(ans))
-    ans
   } else if (!missing(varname)) {
-    ts_var_args <- c(
-      "dataname", "varname", "id", "choices", "selected", "keep_na", "keep_inf",
-      "fixed", "anchored", "multiple"
-    )
-    formal_args <- formal_args[ts_var_args]
-    args <- c(formal_args, list(...))
     checkmate::assert_string(varname)
     checkmate::assert_multi_class(choices, .filterable_class, null.ok = TRUE)
     checkmate::assert_multi_class(selected, .filterable_class, null.ok = TRUE)
     checkmate::assert_flag(keep_na, null.ok = TRUE)
     checkmate::assert_flag(keep_inf, null.ok = TRUE)
     checkmate::assert_flag(multiple)
+
+    ts_var_args <- c(
+      "dataname", "varname", "id", "choices", "selected", "keep_na", "keep_inf",
+      "fixed", "anchored", "multiple"
+    )
+    formal_args <- formal_args[ts_var_args]
+    args <- c(formal_args, list(...))
     if (missing(id)) {
       args$id <- get_default_slice_id(args)
     } else {
@@ -160,10 +162,11 @@ teal_slice <- function(dataname,
     }
     ans <- do.call(shiny::reactiveValues, args)
     class(ans) <- c("teal_slice_var", "teal_slice", class(ans))
-    ans
   } else {
     stop("Must provide either `expr` or `varname`.")
   }
+
+  ans
 }
 
 #' @rdname teal_slice
@@ -284,6 +287,7 @@ to_json <- function(x) {
 #' @param json (`character(1)`) a `JSON` string.
 #'
 #' @return A list of character strings, which can be collapsed into a `JSON` string.
+#'
 #' @keywords internal
 justify_json <- function(json) {
   format_name <- function(name, name_width) {
@@ -314,7 +318,7 @@ justify_json <- function(json) {
 #'
 trim_lines_json <- function(x) {
   name_width <- max(unlist(gregexpr(":", x))) - 1
-  trim_position <- name_width + 17L
+  trim_position <- name_width + 37L
   x_trim <- substr(x, 1, trim_position)
   substr(x_trim, trim_position - 2, trim_position) <- "..."
   x_trim
@@ -331,17 +335,25 @@ trim_lines_json <- function(x) {
 #' `experiment` and `arg`, so that one can add `teal_slice` for a `varname`
 #' which exists in multiple `SummarizedExperiment`s or exists in both `colData`
 #' and `rowData` of given experiment.
+#' For such a vector `teal.slice` doesn't allow to activate more than one filters.
+#'
+#' In case of `teal_slice_expr` `id` is mandatory and must be unique.
 #' @param x (`teal_slice` or `list`)
 #' @return (`character(1)`) `id` for a `teal_slice` object.
 #' @keywords internal
 get_default_slice_id <- function(x) {
+  checkmate::assert_multi_class(x, c("teal_slice", "list"))
   shiny::isolate({
-    paste(
-      Filter(
-        length,
-        as.list(x)[c("dataname", "varname", "experiment", "arg")]
-      ),
-      collapse = " "
-    )
+    if (inherits(x, "teal_slice_expr") || is.null(x$varname)) {
+      x$id
+    } else {
+      paste(
+        Filter(
+          length,
+          as.list(x)[c("dataname", "varname", "experiment", "arg")]
+        ),
+        collapse = " "
+      )
+    }
   })
 }
