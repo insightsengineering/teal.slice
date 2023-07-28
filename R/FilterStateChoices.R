@@ -163,11 +163,7 @@ ChoicesFilterState <- R6::R6Class( # nolint
           extract_type = extract_type
         )
         private$set_choices(slice$choices)
-        if (is.null(slice$selected) && slice$multiple) {
-          slice$selected <- private$get_choices()
-        } else if (is.null(slice$selected)) {
-          slice$selected <- private$get_choices()[1]
-        } else if (length(slice$selected) > 1 && !slice$multiple) {
+        if (length(slice$selected) > 1 && !slice$multiple) {
           warning(
             "ChoicesFilterState allows \"selected\" to be of length 1 when \"multiple\" is FALSE. ",
             "Only the first value will be used."
@@ -200,32 +196,41 @@ ChoicesFilterState <- R6::R6Class( # nolint
       if (missing(dataname)) dataname <- private$get_dataname()
       varname <- private$get_varname_prefixed(dataname)
       choices <- private$get_selected()
-      if (private$data_class != "factor") {
-        choices <- do.call(sprintf("as.%s", private$data_class), list(x = choices))
-      }
-      fun_compare <- if (length(choices) == 1L) "==" else "%in%"
-
-      filter_call <-
-        if (inherits(choices, "Date")) {
-          call(fun_compare, varname, call("as.Date", make_c_call(as.character(choices))))
-        } else if (inherits(choices, c("POSIXct", "POSIXlt"))) {
-          class <- class(choices)[1L]
-          date_fun <- as.name(
-            switch(class,
-              "POSIXct" = "as.POSIXct",
-              "POSIXlt" = "as.POSIXlt"
-            )
-          )
-          call(
-            fun_compare,
-            varname,
-            as.call(list(date_fun, make_c_call(as.character(choices)), tz = private$tzone))
-          )
+      if (length(choices) == 0) {
+        filter_call <- FALSE
+      } else {
+        if (setequal(na.omit(private$x), choices)) {
+          filter_call <- NULL
         } else {
-          # This handles numerics, characters, and factors.
-          call(fun_compare, varname, make_c_call(choices))
+
+          if (private$data_class != "factor") {
+            choices <- do.call(sprintf("as.%s", private$data_class), list(x = choices))
+          }
+          fun_compare <- if (length(choices) == 1L) "==" else "%in%"
+
+          filter_call <-
+            if (inherits(choices, "Date")) {
+              call(fun_compare, varname, call("as.Date", make_c_call(as.character(choices))))
+            } else if (inherits(choices, c("POSIXct", "POSIXlt"))) {
+              class <- class(choices)[1L]
+              date_fun <- as.name(
+                switch(class,
+                  "POSIXct" = "as.POSIXct",
+                  "POSIXlt" = "as.POSIXlt"
+                )
+              )
+              call(
+                fun_compare,
+                varname,
+                as.call(list(date_fun, make_c_call(as.character(choices)), tz = private$tzone))
+              )
+            } else {
+              # This handles numerics, characters, and factors.
+              call(fun_compare, varname, make_c_call(choices))
+            }
         }
-      private$add_keep_na_call(filter_call, dataname)
+      }
+      private$add_keep_na_call(filter_call, varname)
     }
   ),
 

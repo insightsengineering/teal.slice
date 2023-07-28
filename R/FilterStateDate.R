@@ -165,13 +165,14 @@ DateFilterState <- R6::R6Class( # nolint
         return(NULL)
       }
       choices <- as.character(private$get_selected())
+      varname <- private$get_varname_prefixed(dataname)
       filter_call <-
         call(
           "&",
-          call(">=", private$get_varname_prefixed(dataname), call("as.Date", choices[1L])),
-          call("<=", private$get_varname_prefixed(dataname), call("as.Date", choices[2L]))
+          call(">=", varname, call("as.Date", choices[1L])),
+          call("<=", varname, call("as.Date", choices[2L]))
         )
-      private$add_keep_na_call(filter_call)
+      private$add_keep_na_call(filter_call, varname)
     }
   ),
 
