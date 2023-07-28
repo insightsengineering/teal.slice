@@ -580,23 +580,25 @@ FilterState <- R6::R6Class( # nolint
     # Otherwise, if missing values are found in the variable `!is.na` will be added
     # only if `private$na_rm = TRUE`
     # @param filter_call `call` raw filter call, as defined by selection
-    # @param dataname `character(1)` name of data set to prepend to variables
+    # @param varname `character(1)` name of a variable
     # @return a `call`
-    add_keep_na_call = function(filter_call, dataname) {
-      if (private$na_count == 0L) {
+    add_keep_na_call = function(filter_call, varname) {
+      # Deal with empty selection (filter_call == FALSE).
+      if (isFALSE(filter_call) && isTRUE(private$get_keep_na()) && private$na_count > 0L) {
+        return(call("is.na", varname))
+      } else if (isFALSE(filter_call)) {
         return(filter_call)
       }
 
+      # No need to deal with NAs.
+      if (private$na_count == 0L || (!is.null(filter_call) && isFALSE(private$get_keep_na()))) {
+        return(filter_call)
+      }
+      # Deal with NAs.
       if (is.null(filter_call) && isFALSE(private$get_keep_na())) {
-        call("!", call("is.na", private$get_varname_prefixed(dataname)))
+        call("!", call("is.na", varname))
       } else if (!is.null(filter_call) && isTRUE(private$get_keep_na())) {
-        call("|", call("is.na", private$get_varname_prefixed(dataname)), filter_call)
-      } else if (!is.null(filter_call) && isFALSE(private$get_keep_na())) {
-        call(
-          "&",
-          call("!", call("is.na", private$get_varname_prefixed(dataname))),
-          filter_call
-        )
+        call("|", call("is.na", varname), filter_call)
       }
     },
 
