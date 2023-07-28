@@ -235,13 +235,14 @@ RangeFilterState <- R6::R6Class( # nolint
         return(NULL)
       }
       if (missing(dataname)) dataname <- private$get_dataname()
+      varname <- private$get_varname_prefixed(dataname)
       filter_call <-
         call(
           "&",
-          call(">=", private$get_varname_prefixed(dataname), private$get_selected()[1L]),
-          call("<=", private$get_varname_prefixed(dataname), private$get_selected()[2L])
+          call(">=", varname, private$get_selected()[1L]),
+          call("<=", varname, private$get_selected()[2L])
         )
-      private$add_keep_na_call(private$add_keep_inf_call(filter_call, dataname), dataname)
+      private$add_keep_na_call(private$add_keep_inf_call(filter_call, dataname), varname)
     },
 
     #' @description
