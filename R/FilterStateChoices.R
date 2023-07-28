@@ -163,7 +163,11 @@ ChoicesFilterState <- R6::R6Class( # nolint
           extract_type = extract_type
         )
         private$set_choices(slice$choices)
-        if (length(slice$selected) > 1 && !slice$multiple) {
+        if (is.null(slice$selected) && slice$multiple) {
+          slice$selected <- private$get_choices()
+        } else if (is.null(slice$selected)) {
+          slice$selected <- private$get_choices()[1]
+        } else if (length(slice$selected) > 1 && !slice$multiple) {
           warning(
             "ChoicesFilterState allows \"selected\" to be of length 1 when \"multiple\" is FALSE. ",
             "Only the first value will be used."
