@@ -202,7 +202,6 @@ ChoicesFilterState <- R6::R6Class( # nolint
         if (setequal(na.omit(private$x), choices)) {
           filter_call <- NULL
         } else {
-
           if (private$data_class != "factor") {
             choices <- do.call(sprintf("as.%s", private$data_class), list(x = choices))
           }
