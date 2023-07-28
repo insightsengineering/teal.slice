@@ -118,13 +118,12 @@ testthat::test_that("get_call returns a call with applying filter", {
       subjects = quote(
         miniacc <- MultiAssayExperiment::subsetByColData(
           miniacc,
-          (is.na(miniacc$years_to_birth) | miniacc$years_to_birth >= 30 & miniacc$years_to_birth <= 50) &
-            miniacc$vital_status == 1L &
-            (is.na(miniacc$gender) | miniacc$gender == "female")
+          miniacc$years_to_birth >= 30 & miniacc$years_to_birth <= 50 &
+            miniacc$vital_status == 1L & miniacc$gender == "female"
         )
       ),
       RPPAArray = quote(
-        miniacc[["RPPAArray"]] <- subset(miniacc[["RPPAArray"]], subset = is.na(ARRAY_TYPE) | ARRAY_TYPE == "")
+        miniacc[["RPPAArray"]] <- subset(miniacc[["RPPAArray"]], subset = ARRAY_TYPE == "")
       )
     )
   )
