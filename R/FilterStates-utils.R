@@ -201,7 +201,7 @@ get_supported_filter_varnames.MultiAssayExperiment <- function(data) { # nolint
 #' @keywords internal
 data_choices_labeled <- function(data,
                                  choices,
-                                 varlabels = teal.widgets::formatters_var_labels(data, fill = TRUE),
+                                 varlabels = teal.data::formatters_var_labels(data, fill = TRUE),
                                  keys = character(0)) {
   if (length(choices) == 0) {
     return(character(0))
