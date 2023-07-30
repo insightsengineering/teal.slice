@@ -103,6 +103,7 @@ shiny::isolate(datasets$get_filter_state())
 \item \href{#method-FilteredData-datanames}{\code{FilteredData$datanames()}}
 \item \href{#method-FilteredData-get_datalabel}{\code{FilteredData$get_datalabel()}}
 \item \href{#method-FilteredData-set_available_teal_slices}{\code{FilteredData$set_available_teal_slices()}}
+\item \href{#method-FilteredData-get_available_teal_slices}{\code{FilteredData$get_available_teal_slices()}}
 \item \href{#method-FilteredData-get_call}{\code{FilteredData$get_call()}}
 \item \href{#method-FilteredData-get_code}{\code{FilteredData$get_code()}}
 \item \href{#method-FilteredData-get_data}{\code{FilteredData$get_data()}}
@@ -231,6 +232,23 @@ should return \code{teal_slices}}
 }
 \subsection{Returns}{
 invisible \code{NULL}
+Get list of filter states available for this object.
+
+All \code{teal_slice} objects that have been created since the beginning of the app session
+are stored in one \code{teal_slices} object. This returns a subset of that \code{teal_slices},
+describing filter states that can be set for this object.
+}
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-FilteredData-get_available_teal_slices"></a>}}
+\if{latex}{\out{\hypertarget{method-FilteredData-get_available_teal_slices}{}}}
+\subsection{Method \code{get_available_teal_slices()}}{
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{FilteredData$get_available_teal_slices()}\if{html}{\out{</div>}}
+}
+
+\subsection{Returns}{
+\code{teal_slices}
 }
 }
 \if{html}{\out{<hr>}}
