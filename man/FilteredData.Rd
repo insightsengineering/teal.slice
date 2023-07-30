@@ -248,7 +248,7 @@ describing filter states that can be set for this object.
 }
 
 \subsection{Returns}{
-\code{teal_slices}
+\code{reactive} that returns \code{teal_slices}
 }
 }
 \if{html}{\out{<hr>}}

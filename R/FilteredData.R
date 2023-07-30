@@ -160,9 +160,9 @@ FilteredData <- R6::R6Class( # nolint
     #' All `teal_slice` objects that have been created since the beginning of the app session
     #' are stored in one `teal_slices` object. This returns a subset of that `teal_slices`,
     #' describing filter states that can be set for this object.
-    #' @return `teal_slices`
+    #' @return `reactive` that returns `teal_slices`
     get_available_teal_slices = function() {
-      (private$available_teal_slices)()
+      private$available_teal_slices
     },
 
     # datasets methods ----
@@ -1131,19 +1131,19 @@ FilteredData <- R6::R6Class( # nolint
       moduleServer(id, function(input, output, session) {
         slices_available <- self$get_available_teal_slices()
         slices_interactive <- reactive(
-          Filter(function(slice) isFALSE(slice$fixed), slices_available)
+          Filter(function(slice) isFALSE(slice$fixed), slices_available())
         )
         slices_fixed <- reactive(
-          Filter(function(slice) isTRUE(slice$fixed), slices_available)
+          Filter(function(slice) isTRUE(slice$fixed), slices_available())
         )
-        available_slices_id <- reactive(vapply(slices_available, `[[`, character(1), "id"))
+        available_slices_id <- reactive(vapply(slices_available(), `[[`, character(1), "id"))
         active_slices_id <- reactive(vapply(self$get_filter_state(), `[[`, character(1), "id"))
         duplicated_slice_references <- reactive({
           # slice refers to a particular column
-          slice_reference <- vapply(slices_available, get_default_slice_id, character(1))
+          slice_reference <- vapply(slices_available(), get_default_slice_id, character(1))
           is_duplicated_reference <- duplicated(slice_reference) | duplicated(slice_reference, fromLast = TRUE)
           is_active <- available_slices_id() %in% active_slices_id()
-          is_not_expr <- !vapply(slices_available, inherits, logical(1), "teal_slice_expr")
+          is_not_expr <- !vapply(slices_available(), inherits, logical(1), "teal_slice_expr")
           slice_reference[is_duplicated_reference & is_active & is_not_expr]
         })
 
