@@ -155,6 +155,16 @@ FilteredData <- R6::R6Class( # nolint
       invisible(NULL)
     },
 
+    #' Get list of filter states available for this object.
+    #'
+    #' All `teal_slice` objects that have been created since the beginning of the app session
+    #' are stored in one `teal_slices` object. This returns a subset of that `teal_slices`,
+    #' describing filter states that can be set for this object.
+    #' @return `teal_slices`
+    get_available_teal_slices = function() {
+      (private$available_teal_slices)()
+    },
+
     # datasets methods ----
 
     #' @description
