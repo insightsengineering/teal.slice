@@ -489,12 +489,12 @@ testthat::test_that("get_call works for various combinations", {
   )
   testthat::expect_equal(shiny::isolate(filter_state$get_call()), quote(x %in% c("a", "b")))
   #      NAs in data | keep_na | selected |    class    | result
-  ## 11.      Yes     |  FALSE  |'limited' | 'character' | x %in% c('a', 'b') ----
+  ## 11.      Yes     |  FALSE  |'limited' | 'character' | !is.na(x) & x %in% c("a", "b") ----
   filter_state <- ChoicesFilterState$new(
     x = c(letters[1:8], NA_character_),
     slice = teal_slice(dataname = "data", varname = "x", selected = letters[1:2], keep_na = FALSE)
   )
-  testthat::expect_equal(shiny::isolate(filter_state$get_call()), quote(x %in% c("a", "b")))
+  testthat::expect_equal(shiny::isolate(filter_state$get_call()), quote(!is.na(x) & x %in% c("a", "b")))
   #      NAs in data | keep_na | selected |    class    | result
   ## 12.       No     |  FALSE  |'limited' | 'character' | x %in% c('a', 'b') ----
   filter_state <- ChoicesFilterState$new(
@@ -531,12 +531,12 @@ testthat::test_that("get_call works for various combinations", {
   )
   testthat::expect_equal(shiny::isolate(filter_state$get_call()), quote(x == "a"))
   #      NAs in data | keep_na | selected |    class    | result
-  ## 17.      Yes     |  FALSE  | 'single' | 'character' | x == 'a' ----
+  ## 17.      Yes     |  FALSE  | 'single' | 'character' | !is.na(x) & x == "a" ----
   filter_state <- ChoicesFilterState$new(
     x = c(letters[1:8], NA_character_),
     slice = teal_slice(dataname = "data", varname = "x", selected = letters[1], keep_na = FALSE)
   )
-  testthat::expect_equal(shiny::isolate(filter_state$get_call()), quote(x == "a"))
+  testthat::expect_equal(shiny::isolate(filter_state$get_call()), quote(!is.na(x) & x == "a"))
   #      NAs in data | keep_na | selected |    class    | result
   ## 18.       No     |  FALSE  | 'single' | 'character' | x == 'a' ----
   filter_state <- ChoicesFilterState$new(
@@ -593,30 +593,179 @@ testthat::test_that("get_call works for various combinations", {
   filter_state$set_state(teal_slice(dataname = "data", varname = "x", selected = character()))
   testthat::expect_equal(shiny::isolate(filter_state$get_call()), FALSE)
   #      NAs in data | keep_na | selected |    class    | result
-  # 25.      Yes     |   NULL  |  'all'   |  'numeric'  | NULL
-  # 26.       No     |   NULL  |  'all'   |  'numeric'  | NULL
-  # 27.      Yes     |   TRUE  |  'all'   |  'numeric'  | NULL
-  # 28.       No     |   TRUE  |  'all'   |  'numeric'  | NULL
-  # 29.      Yes     |  FALSE  |  'all'   |  'numeric'  | !is.na(x)
-  # 30.       No     |  FALSE  |  'all'   |  'numeric'  | NULL
-  # 31.      Yes     |   NULL  |'limited' |  'numeric'  | x %in% c(1, 2)
-  # 32.       No     |   NULL  |'limited' |  'numeric'  | x %in% c(1, 2)
-  # 33.      Yes     |   TRUE  |'limited' |  'numeric'  | is.na(x) | x %in% c(1, 2)
-  # 34.       No     |   TRUE  |'limited' |  'numeric'  | x %in% c(1, 2)
-  # 35.      Yes     |  FALSE  |'limited' |  'numeric'  | x %in% c(1, 2)
-  # 36.       No     |  FALSE  |'limited' |  'numeric'  | x %in% c(1, 2)
-  # 37.      Yes     |   NULL  | 'single' |  'numeric'  | x == 1
-  # 38.       No     |   NULL  | 'single' |  'numeric'  | x == 1
-  # 39.      Yes     |   TRUE  | 'single' |  'numeric'  | is.na(x) | x == 1
-  # 40.       No     |   TRUE  | 'single' |  'numeric'  | x == 1
-  # 41.      Yes     |  FALSE  | 'single' |  'numeric'  | x == 1
-  # 42.       No     |  FALSE  | 'single' |  'numeric'  | x == 1
-  # 43.      Yes     |   NULL  |  'none'  |  'numeric'  |
-  # 44.       No     |   NULL  |  'none'  |  'numeric'  |
-  # 45.      Yes     |   TRUE  |  'none'  |  'numeric'  |
-  # 46.       No     |   TRUE  |  'none'  |  'numeric'  |
-  # 47.      Yes     |  FALSE  |  'none'  |  'numeric'  |
-  # 48.       No     |  FALSE  |  'none'  |  'numeric'  |
+  ## 25.      Yes     |   NULL  |  'all'   | "numeric" | NULL ----
+  filter_state <- ChoicesFilterState$new(
+    x = c(1:4, NA_real_),
+    slice = teal_slice(dataname = "data", varname = "x", selected = 1:4)
+  )
+  testthat::expect_equal(shiny::isolate(filter_state$get_call()), NULL)
+  #      NAs in data | keep_na | selected |    class    | result
+  ## 26.       No     |   NULL  |  'all'   | "numeric" | NULL ----
+  filter_state <- ChoicesFilterState$new(
+    x = c(1:4),
+    slice = teal_slice(dataname = "data", varname = "x", selected = 1:4)
+  )
+  testthat::expect_equal(shiny::isolate(filter_state$get_call()), NULL)
+  #      NAs in data | keep_na | selected |    class    | result
+  ## 27.      Yes     |   TRUE  |  'all'   | "numeric" | NULL ----
+  filter_state <- ChoicesFilterState$new(
+    x = c(1:4, NA_real_),
+    slice = teal_slice(dataname = "data", varname = "x", selected = 1:4, keep_na = TRUE)
+  )
+  testthat::expect_equal(shiny::isolate(filter_state$get_call()), NULL)
+  #      NAs in data | keep_na | selected |    class    | result
+  ## 28.       No     |   TRUE  |  'all'   | "numeric" | NULL ----
+  filter_state <- ChoicesFilterState$new(
+    x = c(1:4),
+    slice = teal_slice(dataname = "data", varname = "x", selected = 1:4, keep_na = TRUE)
+  )
+  testthat::expect_equal(shiny::isolate(filter_state$get_call()), NULL)
+  #      NAs in data | keep_na | selected |    class    | result
+  ## 29.      Yes     |  FALSE  |  'all'   | "numeric" | !is.na(x) ----
+  filter_state <- ChoicesFilterState$new(
+    x = c(1:4, NA_real_),
+    slice = teal_slice(dataname = "data", varname = "x", selected = 1:4, keep_na = FALSE)
+  )
+  testthat::expect_equal(shiny::isolate(filter_state$get_call()), quote(!is.na(x)))
+  #      NAs in data | keep_na | selected |    class    | result
+  ## 30.       No     |  FALSE  |  'all'   | "numeric" | NULL ----
+  filter_state <- ChoicesFilterState$new(
+    x = c(1:4),
+    slice = teal_slice(dataname = "data", varname = "x", selected = 1:4, keep_na = FALSE)
+  )
+  testthat::expect_equal(shiny::isolate(filter_state$get_call()), NULL)
+  #      NAs in data | keep_na | selected |    class    | result
+  ## 31.      Yes     |   NULL  |'limited' | "numeric" | is.na(x) | x %in% c(1, 2) ----
+  filter_state <- ChoicesFilterState$new(
+    x = c(1:4, NA_real_),
+    slice = teal_slice(dataname = "data", varname = "x", selected = 1:2)
+  )
+  testthat::expect_equal(shiny::isolate(filter_state$get_call()), quote(is.na(x) | x %in% c(1, 2)))
+  #      NAs in data | keep_na | selected |    class    | result
+  ## 32.       No     |   NULL  |'limited' | "numeric" | x %in% c(1, 2) ----
+  filter_state <- ChoicesFilterState$new(
+    x = c(1:4),
+    slice = teal_slice(dataname = "data", varname = "x", selected = 1:2)
+  )
+  testthat::expect_equal(shiny::isolate(filter_state$get_call()), quote(x %in% c(1L, 2L)))
+  #      NAs in data | keep_na | selected |    class    | result
+  ## 33.      Yes     |   TRUE  |'limited' | "numeric" | is.na(x) | x %in% c(1, 2) ----
+  filter_state <- ChoicesFilterState$new(
+    x = c(1:4, NA_real_),
+    slice = teal_slice(dataname = "data", varname = "x", selected = 1:2, keep_na = TRUE)
+  )
+  testthat::expect_equal(shiny::isolate(filter_state$get_call()), quote(is.na(x) | x %in% c(1, 2)))
+  #      NAs in data | keep_na | selected |    class    | result
+  ## 34.       No     |   TRUE  |'limited' | "numeric" | x %in% c(1, 2) ----
+  filter_state <- ChoicesFilterState$new(
+    x = c(1:4),
+    slice = teal_slice(dataname = "data", varname = "x", selected = 1:2, keep_na = TRUE)
+  )
+  testthat::expect_equal(shiny::isolate(filter_state$get_call()), quote(x %in% c(1L, 2L)))
+  #      NAs in data | keep_na | selected |    class    | result
+  ## 35.      Yes     |  FALSE  |'limited' | "numeric" | !is.na(x) & x %in% c(1, 2) ----
+  filter_state <- ChoicesFilterState$new(
+    x = c(1:4, NA_real_),
+    slice = teal_slice(dataname = "data", varname = "x", selected = 1:2, keep_na = FALSE)
+  )
+  testthat::expect_equal(shiny::isolate(filter_state$get_call()), quote(!is.na(x) & x %in% c(1, 2)))
+  #      NAs in data | keep_na | selected |    class    | result
+  ## 36.       No     |  FALSE  |'limited' | "numeric" | x %in% c(1, 2) ----
+  filter_state <- ChoicesFilterState$new(
+    x = c(1:4),
+    slice = teal_slice(dataname = "data", varname = "x", selected = 1:2, keep_na = FALSE)
+  )
+  testthat::expect_equal(shiny::isolate(filter_state$get_call()), quote(x %in% c(1L, 2L)))
+  #      NAs in data | keep_na | selected |    class    | result
+  ## 37.      Yes     |   NULL  | 'single' | "numeric" | is.na(x) | x == 1 ----
+  filter_state <- ChoicesFilterState$new(
+    x = c(1:4, NA_real_),
+    slice = teal_slice(dataname = "data", varname = "x", selected = 1)
+  )
+  testthat::expect_equal(shiny::isolate(filter_state$get_call()), quote(is.na(x) | x == 1))
+  #      NAs in data | keep_na | selected |    class    | result
+  ## 38.       No     |   NULL  | 'single' | "numeric" | x == 1 ----
+  filter_state <- ChoicesFilterState$new(
+    x = c(1:4),
+    slice = teal_slice(dataname = "data", varname = "x", selected = 1)
+  )
+  testthat::expect_equal(shiny::isolate(filter_state$get_call()), quote(x == 1L))
+  #      NAs in data | keep_na | selected |    class    | result
+  ## 39.      Yes     |   TRUE  | 'single' | "numeric" | is.na(x) | x == 1 ----
+  filter_state <- ChoicesFilterState$new(
+    x = c(1:4, NA_real_),
+    slice = teal_slice(dataname = "data", varname = "x", selected = 1, keep_na = TRUE)
+  )
+  testthat::expect_equal(shiny::isolate(filter_state$get_call()), quote(is.na(x) | x == 1))
+  #      NAs in data | keep_na | selected |    class    | result
+  ## 40.       No     |   TRUE  | 'single' | "numeric" | x == 1 ----
+  filter_state <- ChoicesFilterState$new(
+    x = c(1:4),
+    slice = teal_slice(dataname = "data", varname = "x", selected = 1, keep_na = TRUE)
+  )
+  testthat::expect_equal(shiny::isolate(filter_state$get_call()), quote(x == 1L))
+  #      NAs in data | keep_na | selected |    class    | result
+  ## 41.      Yes     |  FALSE  | 'single' | "numeric" | !is.na(x) & x == 1 ----
+  filter_state <- ChoicesFilterState$new(
+    x = c(1:4, NA_real_),
+    slice = teal_slice(dataname = "data", varname = "x", selected = 1, keep_na = FALSE)
+  )
+  testthat::expect_equal(shiny::isolate(filter_state$get_call()), quote(!is.na(x) & x == 1))
+  #      NAs in data | keep_na | selected |    class    | result
+  ## 42.       No     |  FALSE  | 'single' | "numeric" | x == 1 ----
+  filter_state <- ChoicesFilterState$new(
+    x = c(1:4),
+    slice = teal_slice(dataname = "data", varname = "x", selected = 1, keep_na = FALSE)
+  )
+  testthat::expect_equal(shiny::isolate(filter_state$get_call()), quote(x == 1L))
+  #      NAs in data | keep_na | selected |    class    | result
+  ## 43.      Yes     |   NULL  |  'none'  | "numeric" | is.na(x) ----
+  filter_state <- ChoicesFilterState$new(
+    x = c(1:4, NA_real_),
+    slice = teal_slice(dataname = "data", varname = "x")
+  )
+  filter_state$set_state(teal_slice(dataname = "data", varname = "x", selected = character()))
+  testthat::expect_equal(shiny::isolate(filter_state$get_call()), quote(is.na(x)))
+  #      NAs in data | keep_na | selected |    class    | result
+  ## 44.       No     |   NULL  |  'none'  | "numeric" | FALSE ----
+  filter_state <- ChoicesFilterState$new(
+    x = c(1:4),
+    slice = teal_slice(dataname = "data", varname = "x")
+  )
+  filter_state$set_state(teal_slice(dataname = "data", varname = "x", selected = character()))
+  testthat::expect_equal(shiny::isolate(filter_state$get_call()), FALSE)
+  #      NAs in data | keep_na | selected |    class    | result
+  ## 45.      Yes     |   TRUE  |  'none'  | "numeric" | is.na(x) ----
+  filter_state <- ChoicesFilterState$new(
+    x = c(1:4, NA_real_),
+    slice = teal_slice(dataname = "data", varname = "x", keep_na = TRUE)
+  )
+  filter_state$set_state(teal_slice(dataname = "data", varname = "x", selected = character()))
+  testthat::expect_equal(shiny::isolate(filter_state$get_call()), quote(is.na(x)))
+  #      NAs in data | keep_na | selected |    class    | result
+  ## 46.       No     |   TRUE  |  'none'  | "numeric" | FALSE ----
+  filter_state <- ChoicesFilterState$new(
+    x = c(1:4),
+    slice = teal_slice(dataname = "data", varname = "x", keep_na = TRUE)
+  )
+  filter_state$set_state(teal_slice(dataname = "data", varname = "x", selected = character()))
+  testthat::expect_equal(shiny::isolate(filter_state$get_call()), FALSE)
+  #      NAs in data | keep_na | selected |    class    | result
+  ## 47.      Yes     |  FALSE  |  'none'  | "numeric" | FALSE ----
+  filter_state <- ChoicesFilterState$new(
+    x = c(1:4, NA_real_),
+    slice = teal_slice(dataname = "data", varname = "x", keep_na = FALSE)
+  )
+  filter_state$set_state(teal_slice(dataname = "data", varname = "x", selected = character()))
+  testthat::expect_equal(shiny::isolate(filter_state$get_call()), FALSE)
+  #      NAs in data | keep_na | selected |    class    | result
+  ## 48.       No     |  FALSE  |  'none'  | "numeric" | FALSE ----
+  filter_state <- ChoicesFilterState$new(
+    x = c(1:4),
+    slice = teal_slice(dataname = "data", varname = "x", keep_na = FALSE)
+  )
+  filter_state$set_state(teal_slice(dataname = "data", varname = "x", selected = character()))
+  testthat::expect_equal(shiny::isolate(filter_state$get_call()), FALSE)
   # 49.      Yes     |   NULL  |  'all'   |   'dates'   | NULL
   # 50.       No     |   NULL  |  'all'   |   'dates'   | NULL
   # 51.      Yes     |   TRUE  |  'all'   |   'dates'   | NULL

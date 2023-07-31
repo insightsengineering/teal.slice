@@ -216,7 +216,7 @@ testthat::test_that("get_call returns call if all selected but NA exists", {
   )
   testthat::expect_identical(
     shiny::isolate(filter_state$get_call()),
-    quote(variable >= as.Date("2000-01-01") & variable <= as.Date("2000-01-10"))
+    quote(!is.na(variable) & (variable >= as.Date("2000-01-01") & variable <= as.Date("2000-01-10")))
   )
 })
 

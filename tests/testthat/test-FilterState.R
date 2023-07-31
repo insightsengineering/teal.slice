@@ -146,7 +146,7 @@ testthat::test_that("add_keep_na_call modifies call if keep_na set to TRUE", {
   filter_state <- test_class$new(c(1, NA), slice = teal_slice(dataname = "data", varname = "var", keep_na = FALSE))
   testthat::expect_identical(
     shiny::isolate(filter_state$test_add_keep_na_call()),
-    quote(TRUE)
+    quote(!is.na(var) & TRUE)
   )
 
   filter_state$set_state(teal_slice(dataname = "data", varname = "var", keep_na = TRUE))
