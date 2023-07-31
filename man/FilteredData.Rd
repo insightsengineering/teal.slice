@@ -209,8 +209,10 @@ Useful to display in \verb{Show R Code}.
 (\code{character}) keys of dataset
 Set list of external filter states available for activation.
 
-Unlike adding new filter from the column, these filters can come with some prespecified
-settings. \code{teal_slices} are wrapped in a \code{reactive} so one it can be updated from elsewhere in the app.
+Unlike adding new filter from the column, these filters can come with some prespecified settings.
+\code{teal_slices} are wrapped in a \code{reactive} so they can be updated from elsewhere in the app.
+Filters passed in \code{x} are limited to those that can be set for this \code{FilteredData},
+i.e. they have the correct \code{dataname} and \code{varname} (waived \code{teal_slice_fixed} as they do not have \code{varname}).
 List is accessible in \code{ui/srv_active} through \code{ui/srv_available_filters}.
 }
 }

@@ -140,8 +140,10 @@ FilteredData <- R6::R6Class( # nolint
 
     #' Set list of external filter states available for activation.
     #'
-    #' Unlike adding new filter from the column, these filters can come with some prespecified
-    #' settings. `teal_slices` are wrapped in a `reactive` so one it can be updated from elsewhere in the app.
+    #' Unlike adding new filter from the column, these filters can come with some prespecified settings.
+    #' `teal_slices` are wrapped in a `reactive` so they can be updated from elsewhere in the app.
+    #' Filters passed in `x` are limited to those that can be set for this `FilteredData`,
+    #' i.e. they have the correct `dataname` and `varname` (waived `teal_slice_fixed` as they do not have `varname`).
     #' List is accessible in `ui/srv_active` through `ui/srv_available_filters`.
     #' @param x (`reactive`)\cr
     #'  should return `teal_slices`
@@ -150,7 +152,21 @@ FilteredData <- R6::R6Class( # nolint
       checkmate::assert_class(x, "reactive")
       private$available_teal_slices <- reactive({
         # Available filters should be limited to the ones relevant for this FilteredData.
-        Filter(function(x) x$dataname %in% self$datanames(), x())
+        allowed <- attr(self$get_filter_state(), "include_varnames")
+        forbidden <- attr(self$get_filter_state(), "exclude_varnames")
+        foo <- function(slice) {
+          if (slice$dataname %in% self$datanames()) {
+            if (slice$fixed) {
+              TRUE
+            } else {
+              isTRUE(slice$varname %in% allowed[[slice$dataname]]) ||
+                isFALSE(slice$varname %in% forbidden[[slice$dataname]])
+            }
+          } else {
+            FALSE
+          }
+        }
+        Filter(foo, x())
       })
       invisible(NULL)
     },
