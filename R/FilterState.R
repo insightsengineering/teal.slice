@@ -601,7 +601,7 @@ FilterState <- R6::R6Class( # nolint
         call("|", call("is.na", varname), filter_call)
       } else if (!is.null(filter_call) && isFALSE(private$get_keep_na() && private$na_count > 0L)) {
         call("&", call("!", call("is.na", varname)), filter_call)
-      } else if (!is.null(filter_call) && isFALSE(private$get_keep_na() && private$na_count == 0L)){
+      } else if (!is.null(filter_call) && isFALSE(private$get_keep_na() && private$na_count == 0L)) {
         filter_call
       }
     },
