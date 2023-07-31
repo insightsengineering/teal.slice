@@ -175,6 +175,7 @@ DatetimeFilterState <- R6::R6Class( # nolint
         return(NULL)
       }
       if (missing(dataname)) dataname <- private$get_dataname()
+      varname <- private$get_varname_prefixed(dataname)
       choices <- private$get_selected()
       tzone <- Find(function(x) x != "", attr(as.POSIXlt(choices), "tzone"))
       class <- class(choices)[1L]
@@ -190,16 +191,16 @@ DatetimeFilterState <- R6::R6Class( # nolint
           "&",
           call(
             ">=",
-            private$get_varname_prefixed(dataname),
+            varname,
             as.call(list(date_fun, choices[1L], tz = tzone))
           ),
           call(
             "<",
-            private$get_varname_prefixed(dataname),
+            varname,
             as.call(list(date_fun, choices[2L], tz = tzone))
           )
         )
-      private$add_keep_na_call(filter_call, dataname)
+      private$add_keep_na_call(filter_call, varname)
     }
   ),
 
