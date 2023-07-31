@@ -12,9 +12,6 @@ upstream_repos:
   insightsengineering/teal.data:
     repo: insightsengineering/teal.data
     host: https://github.com
-  insightsengineering/formatters:
-    repo: insightsengineering/formatters
-    host: https://github.com
 downstream_repos:
   insightsengineering/teal:
     repo: insightsengineering/teal

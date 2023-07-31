@@ -1,8 +1,8 @@
 Type: Package
 Package: teal.slice
 Title: Filter Module for `teal` Applications
-Version: 0.3.0.9020
-Date: 2023-07-27
+Version: 0.3.0.9021
+Date: 2023-07-31
 Authors@R: c(
     person("Dawid", "Kaledkowski", , "dawid.kaledkowski@roche.com", role = c("aut", "cre")),
     person("Pawel", "Rucki", , "pawel.rucki@roche.com", role = "aut"),
@@ -43,7 +43,6 @@ Imports:
     teal.logger (>= 0.1.1),
     teal.widgets (>= 0.2.0)
 Suggests:
-    formatters (>= 0.3.1),
     knitr,
     MultiAssayExperiment,
     rmarkdown,
