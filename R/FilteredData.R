@@ -152,8 +152,9 @@ FilteredData <- R6::R6Class( # nolint
       checkmate::assert_class(x, "reactive")
       private$available_teal_slices <- reactive({
         # Available filters should be limited to the ones relevant for this FilteredData.
-        allowed <- attr(self$get_filter_state(), "include_varnames")
-        forbidden <- attr(self$get_filter_state(), "exclude_varnames")
+        current_state <- isolate(self$get_filter_state())
+        allowed <- attr(current_state, "include_varnames")
+        forbidden <- attr(current_state, "exclude_varnames")
         foo <- function(slice) {
           if (slice$dataname %in% self$datanames()) {
             if (slice$fixed) {
