@@ -140,8 +140,10 @@ FilteredData <- R6::R6Class( # nolint
 
     #' Set list of external filter states available for activation.
     #'
-    #' Unlike adding new filter from the column, these filters can come with some prespecified
-    #' settings. `teal_slices` are wrapped in a `reactive` so one it can be updated from elsewhere in the app.
+    #' Unlike adding new filter from the column, these filters can come with some prespecified settings.
+    #' `teal_slices` are wrapped in a `reactive` so they can be updated from elsewhere in the app.
+    #' Filters passed in `x` are limited to those that can be set for this `FilteredData`,
+    #' i.e. they have the correct `dataname` and `varname` (waived `teal_slice_fixed` as they do not have `varname`).
     #' List is accessible in `ui/srv_active` through `ui/srv_available_filters`.
     #' @param x (`reactive`)\cr
     #'  should return `teal_slices`
@@ -150,9 +152,34 @@ FilteredData <- R6::R6Class( # nolint
       checkmate::assert_class(x, "reactive")
       private$available_teal_slices <- reactive({
         # Available filters should be limited to the ones relevant for this FilteredData.
-        Filter(function(x) x$dataname %in% self$datanames(), x())
+        current_state <- isolate(self$get_filter_state())
+        allowed <- attr(current_state, "include_varnames")
+        forbidden <- attr(current_state, "exclude_varnames")
+        foo <- function(slice) {
+          if (slice$dataname %in% self$datanames()) {
+            if (slice$fixed) {
+              TRUE
+            } else {
+              isTRUE(slice$varname %in% allowed[[slice$dataname]]) ||
+                isFALSE(slice$varname %in% forbidden[[slice$dataname]])
+            }
+          } else {
+            FALSE
+          }
+        }
+        Filter(foo, x())
       })
       invisible(NULL)
+    },
+
+    #' Get list of filter states available for this object.
+    #'
+    #' All `teal_slice` objects that have been created since the beginning of the app session
+    #' are stored in one `teal_slices` object. This returns a subset of that `teal_slices`,
+    #' describing filter states that can be set for this object.
+    #' @return `reactive` that returns `teal_slices`
+    get_available_teal_slices = function() {
+      private$available_teal_slices
     },
 
     # datasets methods ----
@@ -1119,20 +1146,21 @@ FilteredData <- R6::R6Class( # nolint
     # the appropriate filter state id.
     srv_available_filters = function(id) {
       moduleServer(id, function(input, output, session) {
+        slices_available <- self$get_available_teal_slices()
         slices_interactive <- reactive(
-          Filter(function(slice) isFALSE(slice$fixed), private$available_teal_slices())
+          Filter(function(slice) isFALSE(slice$fixed), slices_available())
         )
         slices_fixed <- reactive(
-          Filter(function(slice) isTRUE(slice$fixed), private$available_teal_slices())
+          Filter(function(slice) isTRUE(slice$fixed), slices_available())
         )
-        available_slices_id <- reactive(vapply(private$available_teal_slices(), `[[`, character(1), "id"))
+        available_slices_id <- reactive(vapply(slices_available(), `[[`, character(1), "id"))
         active_slices_id <- reactive(vapply(self$get_filter_state(), `[[`, character(1), "id"))
         duplicated_slice_references <- reactive({
           # slice refers to a particular column
-          slice_reference <- vapply(private$available_teal_slices(), get_default_slice_id, character(1))
+          slice_reference <- vapply(slices_available(), get_default_slice_id, character(1))
           is_duplicated_reference <- duplicated(slice_reference) | duplicated(slice_reference, fromLast = TRUE)
           is_active <- available_slices_id() %in% active_slices_id()
-          is_not_expr <- !vapply(private$available_teal_slices(), inherits, logical(1), "teal_slice_expr")
+          is_not_expr <- !vapply(slices_available(), inherits, logical(1), "teal_slice_expr")
           slice_reference[is_duplicated_reference & is_active & is_not_expr]
         })
 
