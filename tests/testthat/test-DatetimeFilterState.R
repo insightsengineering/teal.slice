@@ -237,10 +237,9 @@ testthat::test_that("get_call returns call if all selected but NA exists", {
   )
   testthat::expect_identical(
     shiny::isolate(filter_state$get_call()),
-    quote(
-      variable >= as.POSIXct("2000-01-01 12:00:00", tz = "GMT") &
-        variable < as.POSIXct("2000-01-01 12:00:10", tz = "GMT")
-    )
+    quote(!is.na(variable) &
+      (variable >= as.POSIXct("2000-01-01 12:00:00", tz = "GMT") &
+        variable < as.POSIXct("2000-01-01 12:00:10", tz = "GMT")))
   )
 })
 

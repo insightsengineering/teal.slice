@@ -385,7 +385,6 @@ FilterState <- R6::R6Class( # nolint
     destroy_shiny = NULL, # function is set in server
     # other
     is_choice_limited = FALSE, # flag whether number of possible choices was limited when specifying filter
-    na_rm = FALSE,
     observers = list(), # stores observers
     state_history = NULL, # reactiveVal holding a list storing states this FilterState has had since instantiation
 
@@ -455,7 +454,6 @@ FilterState <- R6::R6Class( # nolint
           value
         )
       )
-      private$set_na_rm(!value)
       invisible(NULL)
     },
 
@@ -479,23 +477,6 @@ FilterState <- R6::R6Class( # nolint
         )
       )
 
-      invisible(NULL)
-    },
-
-    # @description
-    # Some methods need an additional `!is.na(varame)` condition to drop
-    # missing values. When `private$na_rm = TRUE`, `self$get_call` returns
-    # condition extended by `!is.na`.
-    #
-    # @param value `logical(1)`\cr
-    #   when `TRUE`, `FilterState$get_call` appends an expression
-    #   removing `NA` values to the filter expression returned by `get_call`
-    #
-    # @return NULL invisibly
-    #
-    set_na_rm = function(value) {
-      checkmate::assert_flag(value)
-      private$na_rm <- value
       invisible(NULL)
     },
 
@@ -599,20 +580,30 @@ FilterState <- R6::R6Class( # nolint
     # Otherwise, if missing values are found in the variable `!is.na` will be added
     # only if `private$na_rm = TRUE`
     # @param filter_call `call` raw filter call, as defined by selection
-    # @param dataname `character(1)` name of data set to prepend to variables
+    # @param varname `character(1)` name of a variable
     # @return a `call`
-    add_keep_na_call = function(filter_call, dataname) {
-      if (isTRUE(private$get_keep_na())) {
-        call("|", call("is.na", private$get_varname_prefixed(dataname)), filter_call)
-      } else if (isTRUE(private$na_rm) && private$na_count > 0L) {
-        call(
-          "&",
-          call("!", call("is.na", private$get_varname_prefixed(dataname))),
-          filter_call
-        )
-      } else {
-        filter_call
+    add_keep_na_call = function(filter_call, varname) {
+
+      # No need to deal with NAs.
+      if (private$na_count == 0L) {
+        return(filter_call)
       }
+
+      # Deal with empty selection (filter_call == FALSE).
+      if (isFALSE(filter_call) && isTRUE(private$get_keep_na())) {
+        call("is.na", varname)
+      } else if (isFALSE(filter_call) && isFALSE(private$get_keep_na())) {
+        filter_call
+
+      # Deal with NAs.
+      } else if (is.null(filter_call) && isFALSE(private$get_keep_na())) {
+        call("!", call("is.na", varname))
+      } else if (!is.null(filter_call) && isTRUE(private$get_keep_na())) {
+        call("|", call("is.na", varname), filter_call)
+      } else if (!is.null(filter_call) && isFALSE(private$get_keep_na())) {
+        call("&", call("!", call("is.na", varname)), filter_call)
+      }
+
     },
 
     # Converts values to the type fitting this `FilterState` and validates the conversion.
