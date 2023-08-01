@@ -583,7 +583,6 @@ FilterState <- R6::R6Class( # nolint
     # @param varname `character(1)` name of a variable
     # @return a `call`
     add_keep_na_call = function(filter_call, varname) {
-
       # No need to deal with NAs.
       if (private$na_count == 0L) {
         return(filter_call)
@@ -595,7 +594,7 @@ FilterState <- R6::R6Class( # nolint
       } else if (isFALSE(filter_call) && isFALSE(private$get_keep_na())) {
         filter_call
 
-      # Deal with NAs.
+        # Deal with NAs.
       } else if (is.null(filter_call) && isFALSE(private$get_keep_na())) {
         call("!", call("is.na", varname))
       } else if (!is.null(filter_call) && isTRUE(private$get_keep_na())) {
@@ -603,7 +602,6 @@ FilterState <- R6::R6Class( # nolint
       } else if (!is.null(filter_call) && isFALSE(private$get_keep_na())) {
         call("&", call("!", call("is.na", varname)), filter_call)
       }
-
     },
 
     # Converts values to the type fitting this `FilterState` and validates the conversion.
