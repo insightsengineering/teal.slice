@@ -214,7 +214,7 @@ testthat::test_that("get_call returns call if all selected but NA exists", {
     x = c(dates, NA),
     slice = teal_slice(dataname = "data", varname = "variable", keep_na = FALSE)
   )
-  testthat::expect_identical(
+  testthat::expect_equal(
     shiny::isolate(filter_state$get_call()),
     quote(!is.na(variable) & (variable >= as.Date("2000-01-01") & variable <= as.Date("2000-01-10")))
   )
