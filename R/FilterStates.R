@@ -264,7 +264,6 @@ FilterStates <- R6::R6Class( # nolint
           include_varnames = attr(state, "include_varnames")[[private$dataname]],
           exclude_varnames = attr(state, "exclude_varnames")[[private$dataname]]
         )
-
         count_type <- attr(state, "count_type")
         if (length(count_type)) {
           private$count_type <- count_type
@@ -274,7 +273,7 @@ FilterStates <- R6::R6Class( # nolint
         varnames <- unique(unlist(lapply(state, "[[", "varname")))
         excluded_varnames <- setdiff(varnames, private$get_filterable_varnames())
         if (length(excluded_varnames)) {
-          state <- Filter(function(x) !x$varname %in% excluded_varnames, state)
+          state <- Filter(function(x) !isTRUE(x$varname %in% excluded_varnames), state)
           logger::log_warn("filters for columns: { toString(excluded_varnames) } excluded from { private$dataname }")
         }
 
