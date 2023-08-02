@@ -1135,7 +1135,11 @@ FilteredData <- R6::R6Class( # nolint
           ),
           div(
             class = "menu-content",
-            uiOutput(ns("checkbox"))
+            shinycssloaders::withSpinner(
+              uiOutput(ns("checkbox")),
+              type = 4,
+              size = 0.25
+            )
           )
         )
       )
