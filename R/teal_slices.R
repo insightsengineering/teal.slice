@@ -18,7 +18,8 @@
 #' @param include_varnames,exclude_varnames (`named list`s of `character`) where list names
 #'  match names of data sets and vector elements match variable names in respective data sets;
 #'  specify which variables are allowed to be filtered; see `Details`
-#' @param count_type (`character(1)`) string specifying how observations are tallied by these filter states.
+#' @param count_type `r lifecycle::badge("experimental")` _This is a new feature. Do kindly share your opinions.\cr_
+#'  (`character(1)`) string specifying how observations are tallied by these filter states.
 #'  Possible options:
 #'  - `"none"` (default) to have counts of single `FilterState` to show unfiltered number only.
 #'  - `"all"` to have counts of single `FilterState` to show number of observation in filtered
