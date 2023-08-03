@@ -27,8 +27,9 @@
 #'   Please make sure that adding new filters doesn't fail on target platform before deploying for production.
 #' @param allow_add (`logical(1)`) logical flag specifying whether the user will be able to add new filters
 #' @param x object to test for `teal_slices`, object to convert to `teal_slices` or a `teal_slices` object
-#' @param recursive (`logical(1)`) flag specifying whether to also convert to list the elements of this `teal_slices`
 #' @param i (`character` or `numeric` or `logical`) indicating which elements to extract
+#' @param recursive (`logical(1)`) flag specifying whether to also convert to list the elements of this `teal_slices`
+#'
 #' @return
 #' `teal_slices`, which is an unnamed list of `teal_slice` objects.
 #'
