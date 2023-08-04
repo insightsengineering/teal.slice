@@ -188,7 +188,7 @@ RangeFilterState <- R6::R6Class( # nolint
           list(
             barmode = "overlay",
             xaxis = list(
-              range = private$get_choices(),
+              range = private$get_choices() * c(0.995, 1.005),
               rangeslider = list(thickness = 0),
               showticklabels = TRUE,
               ticks = "outside",

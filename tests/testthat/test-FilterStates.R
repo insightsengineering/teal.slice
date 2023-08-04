@@ -103,6 +103,39 @@ testthat::test_that("set_filter_state creates a new FilterStateExpr", {
   expect_identical_slices(filter_states$get_filter_state(), fs)
 })
 
+
+testthat::test_that("set_filter_state doesn't set slices listed in exclude_varnames", {
+  filter_states <- FilterStates$new(data = mtcars, dataname = "mtcars")
+  tss <- teal_slices(
+    teal_slice(dataname = "mtcars", varname = "cyl"),
+    teal_slice(dataname = "mtcars", expr = "qsec > 17", id = "high quartermile time", title = "QH"),
+    teal_slice(dataname = "mtcars", expr = "disp < 120", id = "low displacememt", title = "LD"),
+    exclude_varnames = list("mtcars" = c("cyl", "disp"))
+  )
+  filter_states$set_filter_state(tss)
+
+  expected <- tss[-1]
+  attributes(expected) <- attributes(shiny::isolate(filter_states$get_filter_state()))
+  expect_identical_slices(filter_states$get_filter_state(), expected)
+})
+
+testthat::test_that("set_filter_state set only slices listed in include_varnames and teal_slice_expr", {
+  filter_states <- FilterStates$new(data = mtcars, dataname = "mtcars")
+  tss <- teal_slices(
+    teal_slice(dataname = "mtcars", varname = "cyl"),
+    teal_slice(dataname = "mtcars", varname = "mpg"),
+    teal_slice(dataname = "mtcars", expr = "qsec > 17", id = "high quartermile time", title = "QH"),
+    teal_slice(dataname = "mtcars", expr = "disp < 120", id = "low displacememt", title = "LD"),
+    include_varnames = list("mtcars" = c("cyl", "disp"))
+  )
+  filter_states$set_filter_state(tss)
+
+  expected <- tss[-2]
+  attributes(expected) <- attributes(shiny::isolate(filter_states$get_filter_state()))
+  expect_identical_slices(filter_states$get_filter_state(), expected)
+})
+
+
 testthat::test_that("remove_filter_state of inexistent FilterState raiser warning", {
   filter_states <- FilterStates$new(data = data.frame(a = 1:5), dataname = "a")
   testthat::expect_warning(

@@ -254,7 +254,7 @@ ChoicesFilterState <- R6::R6Class( # nolint
         choices <- levels(private$x)
       } else {
         choices <- as.character(choices)
-        choices_adjusted <- choices[choices %in% private$x]
+        choices_adjusted <- choices[choices %in% levels(private$x)]
         if (length(setdiff(choices, choices_adjusted)) > 0L) {
           warning(
             sprintf(

@@ -1135,7 +1135,11 @@ FilteredData <- R6::R6Class( # nolint
           ),
           div(
             class = "menu-content",
-            uiOutput(ns("checkbox"))
+            shinycssloaders::withSpinner(
+              uiOutput(ns("checkbox")),
+              type = 4,
+              size = 0.25
+            )
           )
         )
       )
@@ -1211,9 +1215,9 @@ FilteredData <- R6::R6Class( # nolint
           htmltools::tagInsertChildren(
             checkbox,
             br(),
-            tags$strong("Fixed filters"),
+            if (length(non_interactive_choice_mock)) tags$strong("Fixed filters"),
             non_interactive_choice_mock,
-            tags$strong("Interactive filters"),
+            if (length(interactive_choice_mock)) tags$strong("Interactive filters"),
             interactive_choice_mock,
             .cssSelector = "div.shiny-options-group",
             after = 0
