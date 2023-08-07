@@ -44,7 +44,8 @@ additional arguments passed to other functions.}
 match names of data sets and vector elements match variable names in respective data sets;
 specify which variables are allowed to be filtered; see \code{Details}}
 
-\item{count_type}{(\code{character(1)}) string specifying how observations are tallied by these filter states.
+\item{count_type}{\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#experimental}{\figure{lifecycle-experimental.svg}{options: alt='[Experimental]'}}}{\strong{[Experimental]}} \emph{This is a new feature. Do kindly share your opinions.\cr}
+(\code{character(1)}) string specifying how observations are tallied by these filter states.
 Possible options:
 \itemize{
 \item \code{"none"} (default) to have counts of single \code{FilterState} to show unfiltered number only.
