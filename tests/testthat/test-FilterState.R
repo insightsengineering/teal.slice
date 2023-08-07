@@ -137,15 +137,16 @@ testthat::test_that("add_keep_na_call modifies call if keep_na set to TRUE", {
     classname = "TestClass",
     inherit = FilterState,
     public = list(
-      test_add_keep_na_call = function() {
-        private$add_keep_na_call(TRUE)
+      test_add_keep_na_call = function(dataname) {
+        if (missing(dataname)) dataname <- private$get_dataname()
+        private$add_keep_na_call(TRUE, private$get_varname_prefixed(dataname))
       }
     )
   )
   filter_state <- test_class$new(c(1, NA), slice = teal_slice(dataname = "data", varname = "var", keep_na = FALSE))
   testthat::expect_identical(
     shiny::isolate(filter_state$test_add_keep_na_call()),
-    quote(TRUE)
+    quote(!is.na(var) & TRUE)
   )
 
   filter_state$set_state(teal_slice(dataname = "data", varname = "var", keep_na = TRUE))
@@ -154,58 +155,6 @@ testthat::test_that("add_keep_na_call modifies call if keep_na set to TRUE", {
     quote(is.na(var) | TRUE)
   )
 })
-
-testthat::test_that("setting private$na_rm to TRUE adds `!is.na` before condition via add_keep_na_call", {
-  test_class <- R6::R6Class(
-    classname = "TestClass",
-    inherit = FilterState,
-    public = list(
-      test_add_keep_na_call = function() {
-        private$add_keep_na_call(TRUE)
-      },
-      set_na_rm = function(value) {
-        checkmate::assert_flag(value)
-        private$na_rm <- value
-        invisible(NULL)
-      }
-    )
-  )
-  filter_state <- test_class$new(c(1, NA), slice = teal_slice(dataname = "data", varname = "variable", keep_na = FALSE))
-  filter_state$set_na_rm(TRUE)
-
-  testthat::expect_identical(
-    shiny::isolate(filter_state$test_add_keep_na_call()),
-    quote(!is.na(variable) & TRUE)
-  )
-})
-
-testthat::test_that(
-  "setting private$na_rm to TRUE doesn't add `!is.na` before condition
-  via add_keep_na_call when variable has no NAs",
-  {
-    test_class <- R6::R6Class(
-      classname = "TestClass",
-      inherit = FilterState,
-      public = list(
-        test_add_keep_na_call = function() {
-          private$add_keep_na_call(TRUE)
-        },
-        set_na_rm = function(value) {
-          checkmate::assert_flag(value)
-          private$na_rm <- value
-          invisible(NULL)
-        }
-      )
-    )
-    filter_state <- test_class$new(c(1), slice = teal_slice(dataname = "data", varname = "variable", keep_na = FALSE))
-    filter_state$set_na_rm(TRUE)
-
-    testthat::expect_identical(
-      shiny::isolate(filter_state$test_add_keep_na_call()),
-      quote(TRUE)
-    )
-  }
-)
 
 # get_varlabel ----
 testthat::test_that("get_varlabel returns a string if x has the label attribute different to varname", {
