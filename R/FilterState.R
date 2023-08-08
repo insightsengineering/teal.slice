@@ -588,14 +588,8 @@ FilterState <- R6::R6Class( # nolint
         return(filter_call)
       }
 
-      # Deal with empty selection (filter_call == FALSE).
-      if (isFALSE(filter_call) && isTRUE(private$get_keep_na())) {
-        call("is.na", varname)
-      } else if (isFALSE(filter_call) && isFALSE(private$get_keep_na())) {
-        filter_call
-
         # Deal with NAs.
-      } else if (is.null(filter_call) && isFALSE(private$get_keep_na())) {
+      if (is.null(filter_call) && isFALSE(private$get_keep_na())) {
         call("!", call("is.na", varname))
       } else if (!is.null(filter_call) && isTRUE(private$get_keep_na())) {
         call("|", call("is.na", varname), filter_call)
