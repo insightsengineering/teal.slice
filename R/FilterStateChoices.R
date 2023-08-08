@@ -201,7 +201,9 @@ ChoicesFilterState <- R6::R6Class( # nolint
       varname <- private$get_varname_prefixed(dataname)
       selected <- private$get_selected()
       if (length(selected) == 0) {
-        filter_call <- FALSE
+        choices <- private$get_choices()
+        fun_compare <- if (length(choices) == 1L) "==" else "%in%"
+        filter_call <- call("!", call(fun_compare, varname, make_c_call(as.character(choices))))
       } else {
         if (setequal(na.omit(private$x), selected)) {
           filter_call <- NULL
