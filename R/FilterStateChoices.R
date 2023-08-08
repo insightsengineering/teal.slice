@@ -199,23 +199,23 @@ ChoicesFilterState <- R6::R6Class( # nolint
       }
       if (missing(dataname)) dataname <- private$get_dataname()
       varname <- private$get_varname_prefixed(dataname)
-      choices <- private$get_selected()
-      if (length(choices) == 0) {
+      selected <- private$get_selected()
+      if (length(selected) == 0) {
         filter_call <- FALSE
       } else {
-        if (setequal(na.omit(private$x), choices)) {
+        if (setequal(na.omit(private$x), selected)) {
           filter_call <- NULL
         } else {
           if (private$data_class != "factor") {
-            choices <- do.call(sprintf("as.%s", private$data_class), list(x = choices))
+            selected <- do.call(sprintf("as.%s", private$data_class), list(x = selected))
           }
-          fun_compare <- if (length(choices) == 1L) "==" else "%in%"
+          fun_compare <- if (length(selected) == 1L) "==" else "%in%"
 
           filter_call <-
-            if (inherits(choices, "Date")) {
-              call(fun_compare, varname, call("as.Date", make_c_call(as.character(choices))))
-            } else if (inherits(choices, c("POSIXct", "POSIXlt"))) {
-              class <- class(choices)[1L]
+            if (inherits(selected, "Date")) {
+              call(fun_compare, varname, call("as.Date", make_c_call(as.character(selected))))
+            } else if (inherits(selected, c("POSIXct", "POSIXlt"))) {
+              class <- class(selected)[1L]
               date_fun <- as.name(
                 switch(class,
                   "POSIXct" = "as.POSIXct",
@@ -225,11 +225,11 @@ ChoicesFilterState <- R6::R6Class( # nolint
               call(
                 fun_compare,
                 varname,
-                as.call(list(date_fun, make_c_call(as.character(choices)), tz = private$tzone))
+                as.call(list(date_fun, make_c_call(as.character(selected)), tz = private$tzone))
               )
             } else {
               # This handles numerics, characters, and factors.
-              call(fun_compare, varname, make_c_call(choices))
+              call(fun_compare, varname, make_c_call(selected))
             }
         }
       }
