@@ -874,7 +874,6 @@ FilteredData <- R6::R6Class( # nolint
             )
           )
         ),
-        tags$br(),
         div(
           id = ns("filters_overview_contents"),
           div(
