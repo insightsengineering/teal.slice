@@ -344,30 +344,18 @@ DateFilterState <- R6::R6Class( # nolint
               start_date <- input$selection[1]
               end_date <- input$selection[2]
 
-              if (is.na(start_date)) {
-                start_date <- private$get_selected()[1]
+              if (is.na(start_date) || is.na(end_date) || start_date > end_date) {
                 updateDateRangeInput(
                   session = session,
                   inputId = "selection",
-                  start = start_date
+                  start = private$get_selected()[1],
+                  end = private$get_selected()[2]
                 )
-                showNotification("Start date must be selected. Setting back to previous value.", type = "warning")
-              }
-
-              if (is.na(end_date)) {
-                end_date <- private$get_selected()[2]
-                updateDateRangeInput(
-                  session = session,
-                  inputId = "selection",
-                  end = end_date
-                )
-                showNotification("End date must be selected. Setting back to previous value.", type = "warning")
-              }
-
-              if (start_date > end_date) {
-                showNotification("Start date must not be greater than the end date. Setting back to default values.",
+                showNotification(
+                  "Start date must not be greater than the end date. Setting back to previous value.",
                   type = "warning"
                 )
+                return(NULL)
               }
 
               private$set_selected(c(start_date, end_date))
