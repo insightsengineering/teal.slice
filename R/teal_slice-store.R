@@ -54,7 +54,7 @@ slices_restore <- function(file) {
 
   tss_json$slices <-
     lapply(tss_json$slices, function(slice) {
-      if(!is.null(slice$selected)) {
+      if (!is.null(slice$selected)) {
         slice$selected <-
           if(all(grepl('[0-9]{4}-[0-9]{2}-[0-9]{2}', slice$selected))) {
             if(all(grepl('[0-9]{2}:[0-9]{2}:[0-9]{2}', slice$selected))) {
