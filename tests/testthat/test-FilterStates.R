@@ -286,6 +286,19 @@ testthat::test_that("get_call returns subset with multiple filter expressions co
   )
 })
 
+testthat::test_that("get_call returns subset with FALSE when any predicate is FALSE", {
+  fs <- FilterStates$new(data = data.frame(a = 1:10, b = letters[1:10]), dataname = "test")
+  fs$set_filter_state(teal_slices(
+    teal_slice(dataname = "test", varname = "a", selected = c(1, 9)),
+    teal_slice(dataname = "test", varname = "b", selected = character(0)),
+    teal_slice(id = "a", dataname = "test", title = "a", expr = "b > 5 | a > 5")
+  ))
+
+  testthat::expect_equal(
+    shiny::isolate(fs$get_call()),
+    quote(test <- subset(test, FALSE))
+  )
+})
 
 testthat::test_that("get_call skips conditions form FilterState which are identified by sid", {
   shiny::reactiveConsole(TRUE)
