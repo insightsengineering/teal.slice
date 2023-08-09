@@ -343,12 +343,21 @@ DateFilterState <- R6::R6Class( # nolint
               logger::log_trace("DateFilterState$server@2 selection changed, id: { private$get_id() }")
               start_date <- input$selection[1]
               end_date <- input$selection[2]
-              if (start_date > end_date) {
+
+              if (is.na(start_date) || is.na(end_date) || start_date > end_date) {
+                updateDateRangeInput(
+                  session = session,
+                  inputId = "selection",
+                  start = private$get_selected()[1],
+                  end = private$get_selected()[2]
+                )
                 showNotification(
-                  "Start date must not be greater than the end date. Setting back to default values.",
+                  "Start date must not be greater than the end date. Setting back to previous value.",
                   type = "warning"
                 )
+                return(NULL)
               }
+
               private$set_selected(c(start_date, end_date))
             }
           )
