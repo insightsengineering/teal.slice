@@ -158,7 +158,11 @@ FilterStates <- R6::R6Class( # nolint
               }
             )
           )
-          calls_combine_by(calls, operator = "&")
+          if (any(vapply(calls, isFALSE, logical(1)))) {
+            FALSE
+          } else {
+            calls_combine_by(calls, operator = "&")
+          }
         }
       )
       filter_items <- Filter(
