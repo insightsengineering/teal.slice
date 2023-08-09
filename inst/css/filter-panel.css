@@ -64,6 +64,10 @@
   height: 3rem;
 }
 
+.text-primary.mb-4 {
+  font-weight: 700;
+}
+
 .filter_datelike_input input {
   height: 3rem !important;
   text-align: center !important;
