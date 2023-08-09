@@ -366,7 +366,8 @@ DateFilterState <- R6::R6Class( # nolint
 
               if (start_date > end_date) {
                 showNotification("Start date must not be greater than the end date. Setting back to default values.",
-                  type = "warning")
+                  type = "warning"
+                )
               }
 
               private$set_selected(c(start_date, end_date))
