@@ -56,8 +56,8 @@ slices_restore <- function(file) {
     lapply(tss_json$slices, function(slice) {
       if (!is.null(slice$selected)) {
         slice$selected <-
-          if(all(grepl('[0-9]{4}-[0-9]{2}-[0-9]{2}', slice$selected))) {
-            if(all(grepl('[0-9]{2}:[0-9]{2}:[0-9]{2}', slice$selected))) {
+          if (all(grepl('[0-9]{4}-[0-9]{2}-[0-9]{2}', slice$selected))) {
+            if (all(grepl('[0-9]{2}:[0-9]{2}:[0-9]{2}', slice$selected))) {
               as.POSIXct(slice$selected, tz = 'UTC')
             } else {
               as.Date(slice$selected)
