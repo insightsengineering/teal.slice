@@ -555,7 +555,10 @@ testthat::test_that("get_call works for various combinations", {
     slice = teal_slice(dataname = "data", varname = "x")
   )
   filter_state$set_state(teal_slice(dataname = "data", varname = "x", selected = character()))
-  testthat::expect_equal(shiny::isolate(filter_state$get_call()), quote(is.na(x)))
+  testthat::expect_equal(
+    shiny::isolate(filter_state$get_call()),
+    quote(is.na(x) | !x %in% c("a", "b", "c", "d", "e", "f", "g", "h"))
+  )
 
   #### 20. NA=F | keep_na=NULL | FALSE ----
   filter_state <- ChoicesFilterState$new(
@@ -563,7 +566,10 @@ testthat::test_that("get_call works for various combinations", {
     slice = teal_slice(dataname = "data", varname = "x")
   )
   filter_state$set_state(teal_slice(dataname = "data", varname = "x", selected = character()))
-  testthat::expect_equal(shiny::isolate(filter_state$get_call()), FALSE)
+  testthat::expect_equal(
+    shiny::isolate(filter_state$get_call()),
+    quote(!x %in% c("a", "b", "c", "d", "e", "f", "g", "h"))
+  )
 
   #### 21. NA=T | keep_na=TRUE | is.na(x) ----
   filter_state <- ChoicesFilterState$new(
@@ -571,7 +577,10 @@ testthat::test_that("get_call works for various combinations", {
     slice = teal_slice(dataname = "data", varname = "x", keep_na = TRUE)
   )
   filter_state$set_state(teal_slice(dataname = "data", varname = "x", selected = character()))
-  testthat::expect_equal(shiny::isolate(filter_state$get_call()), quote(is.na(x)))
+  testthat::expect_equal(
+    shiny::isolate(filter_state$get_call()),
+    quote(is.na(x) | !x %in% c("a", "b", "c", "d", "e", "f", "g", "h"))
+  )
 
   #### 22. NA=F | keep_na=TRUE | FALSE ----
   filter_state <- ChoicesFilterState$new(
@@ -579,7 +588,10 @@ testthat::test_that("get_call works for various combinations", {
     slice = teal_slice(dataname = "data", varname = "x", keep_na = TRUE)
   )
   filter_state$set_state(teal_slice(dataname = "data", varname = "x", selected = character()))
-  testthat::expect_equal(shiny::isolate(filter_state$get_call()), FALSE)
+  testthat::expect_equal(
+    shiny::isolate(filter_state$get_call()),
+    quote(!x %in% c("a", "b", "c", "d", "e", "f", "g", "h"))
+  )
 
   #### 23. NA=T | keep_na=FALSE | FALSE ----
   filter_state <- ChoicesFilterState$new(
@@ -587,7 +599,10 @@ testthat::test_that("get_call works for various combinations", {
     slice = teal_slice(dataname = "data", varname = "x", keep_na = FALSE)
   )
   filter_state$set_state(teal_slice(dataname = "data", varname = "x", selected = character()))
-  testthat::expect_equal(shiny::isolate(filter_state$get_call()), FALSE)
+  testthat::expect_equal(
+    shiny::isolate(filter_state$get_call()),
+    quote(!is.na(x) & !x %in% c("a", "b", "c", "d", "e", "f", "g", "h"))
+  )
 
   #### 24. NA=F | keep_na=FALSE | FALSE ----
   filter_state <- ChoicesFilterState$new(
@@ -595,5 +610,8 @@ testthat::test_that("get_call works for various combinations", {
     slice = teal_slice(dataname = "data", varname = "x", keep_na = FALSE)
   )
   filter_state$set_state(teal_slice(dataname = "data", varname = "x", selected = character()))
-  testthat::expect_equal(shiny::isolate(filter_state$get_call()), FALSE)
+  testthat::expect_equal(
+    shiny::isolate(filter_state$get_call()),
+    quote(!x %in% c("a", "b", "c", "d", "e", "f", "g", "h"))
+  )
 })
