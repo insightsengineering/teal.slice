@@ -355,7 +355,7 @@ DateFilterState <- R6::R6Class( # nolint
               }
 
               if (is.na(end_date)) {
-                end_date <- private$get_selected()[1]
+                end_date <- private$get_selected()[2]
                 updateDateRangeInput(
                   session = session,
                   inputId = "selection",
