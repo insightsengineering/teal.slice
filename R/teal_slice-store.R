@@ -52,6 +52,23 @@ slices_restore <- function(file) {
 
   tss_json <- jsonlite::fromJSON(file, simplifyDataFrame = FALSE)
 
+  tss_json$slices <-
+    lapply(tss_json$slices, function(slice) {
+      if(!is.null(slice$selected)) {
+        slice$selected <-
+          if(all(grepl('[0-9]{4}-[0-9]{2}-[0-9]{2}', slice$selected))) {
+            if(all(grepl('[0-9]{1,2}:[0-9]{2}:[0-9]{2}', slice$selected))) {
+              as.POSIXct(slice$selected)
+            } else {
+              as.Date(slice$selected)
+            }
+          } else {
+            slice$selected
+          }
+      }
+      slice
+    })
+
   tss_elements <- lapply(tss_json$slices, as.teal_slice)
 
   do.call(teal_slices, c(tss_elements, tss_json$attributes))
