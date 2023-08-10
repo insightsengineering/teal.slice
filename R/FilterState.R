@@ -564,13 +564,15 @@ FilterState <- R6::R6Class( # nolint
     # @return a character string representation of a subset call
     #         that extracts the variable from the dataset
     get_varname_prefixed = function(dataname) {
+      varname <- private$get_varname()
+      varname_backticked <- sprintf("`%s`", varname)
       ans <-
         if (isTRUE(private$extract_type == "list")) {
-          sprintf("%s$%s", dataname, private$get_varname())
+          sprintf("%s$%s", dataname, varname_backticked)
         } else if (isTRUE(private$extract_type == "matrix")) {
-          sprintf("%s[, \"%s\"]", dataname, private$get_varname())
+          sprintf("%s[, \"%s\"]", dataname, varname)
         } else {
-          private$get_varname()
+          varname_backticked
         }
       str2lang(ans)
     },
