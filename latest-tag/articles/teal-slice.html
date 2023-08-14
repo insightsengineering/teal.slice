@@ -27,7 +27,7 @@
     
     <a class="navbar-brand me-2" href="../index.html">teal.slice</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.3.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.4.0</small>
 
     <div style="width: 140px; margin-left: 0.5rem;"> <small class="nav-text text-muted me-auto">part of</small> <img src="https://github.com/insightsengineering/hex-stickers/blob/main/PNG/nest.png?raw=true" alt="NEST" style="height: 30px;"><a href="https://pharmaverse.org/" class="external-link"><img src="https://github.com/insightsengineering/hex-stickers/blob/main/PNG/pharmaverse.png?raw=true" alt="pharmaverse" style="height: 28px;"></a> </div>
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -45,7 +45,8 @@
 <li class="nav-item dropdown">
   <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown" role="button" aria-expanded="false" aria-haspopup="true" id="dropdown-articles">Articles</a>
   <div class="dropdown-menu" aria-labelledby="dropdown-articles">
-    <a class="dropdown-item" href="../articles/filter-panel.html">Filter panel for NEST developers</a>
+    <a class="dropdown-item" href="../articles/filter-panel-for-developers.html">Filter panel for developers</a>
+    <a class="dropdown-item" href="../articles/teal-slice-classes.html">teal.slice classes</a>
   </div>
 </li>
 <li class="nav-item">
@@ -57,6 +58,7 @@
           aria-expanded="false" aria-haspopup="true"
           id="dropdown-versions">Versions</a> <div class="dropdown-menu" aria-labelledby="dropdown-versions"> <a class="dropdown-item" data-toggle="tooltip" title="" href="https://insightsengineering.github.io/teal.slice/main">main</a>
 <a class="dropdown-item" data-toggle="tooltip" title="" href="https://insightsengineering.github.io/teal.slice/latest-tag">latest-tag</a>
+<a class="dropdown-item" data-toggle="tooltip" title="" href="https://insightsengineering.github.io/teal.slice/v0.4.0">v0.4.0</a>
 <a class="dropdown-item" data-toggle="tooltip" title="" href="https://insightsengineering.github.io/teal.slice/v0.3.0">v0.3.0</a>
 <a class="dropdown-item" data-toggle="tooltip" title="" href="https://insightsengineering.github.io/teal.slice/v0.2.0">v0.2.0</a> </div></li>
 <!-- end dropdown for versions -->
@@ -106,76 +108,105 @@ Team</h4>
 <div class="section level2">
 <h2 id="introduction">Introduction<a class="anchor" aria-label="anchor" href="#introduction"></a>
 </h2>
-<p><code>teal.slice</code> provides a <em>filter panel</em> for the
-<code>teal</code> framework. The filter panel lets application users add
-simple filters to <code>teal</code> applications enabling them to choose
-which data is to be considered for further analysis and it includes a
-summary showing the number of records being kept after applying the
-filters.</p>
+<p>The <code>teal.slice</code> package provides a <em>filter panel</em>
+for <code>shiny</code> applications. <code>teal.slice</code> creates a
+filter panel module that allows for interactive filtering of data stored
+in <code>data.frame</code> and <code>MultiAssayExperiment</code>
+objects. It also displays filtered and unfiltered observation
+counts.</p>
 </div>
 <div class="section level2">
 <h2 id="information-for-users-of-the-filter-panel-in-applications">Information for users of the filter panel in applications<a class="anchor" aria-label="anchor" href="#information-for-users-of-the-filter-panel-in-applications"></a>
 </h2>
 <p>The filter panel contains three panels:</p>
 <ol style="list-style-type: decimal">
-<li>top panel showing the number of records (observations) remaining
-after the filters have been applied. For <code>CDISC</code> data, the
-number of unique subjects remaining in the filtered dataset is also
-shown.</li>
-<li>middle panel showing the current active filters and these can be
-changed/removed here</li>
-<li>bottom panel to allow new columns of the datasets to be added as
-filters</li>
+<li>The top panel displays the number of records (observations) that
+remain after the filters have been applied. For relational data (where
+<code>join_keys</code> is specified), the number of unique subjects
+remaining in the filtered data set is also shown.</li>
+<li>The middle panel displays the current active filters and allows the
+user to change their state.</li>
+<li>The bottom panel allows to add new filters on columns of the data
+sets in the app.</li>
 </ol>
-<p>Note that multiple filters for the same dataset are combined using
-<code>AND</code> and there is no ability to apply hierarchical
-filters.</p>
+<p>Note that multiple filters for the same data set are combined with
+the <code>AND</code> operator and it is not possible to apply
+hierarchical filters.</p>
 <p>An example of the filter panel in use is shown in the image below.
-The <code>iris</code> dataset has the 50 <code>versicolor</code> records
-removed leaving 100 observations. The <code>mtcars</code> dataset has
-filtered out all records other than those with
+The <code>iris</code> data set has the 50 <code>versicolor</code>
+records removed, leaving 100 observations. The <code>mtcars</code> data
+set has filtered out all records other than those with
 <code>(gear = 3 or gear = 5) and (disp in [205, 295])</code>.</p>
 <p><img src="images/teal-slice/filter-panel.png" width="60%"></p>
 <p>Depending on the data type of the selected variable, different
 filters are shown, for example date pickers, range sliders, checkbox
 inputs.</p>
-<p>For <code>CDISC</code> data, filtering records in a parent dataset
-(i.e. <code>ADSL</code>) will also apply the same filter to all child
-datasets and in child datasets it is only possible to filter columns not
-found in its parent’s dataset. For general relational data the filter
-panel treats each dataset independently irrespective of relationships
-between datasets. The filter panel also supports filtering
-<code>MultiAssayExperiment</code> data where filters can be applied on
-the subjects data level <code>(colData(MAE))</code> and on each
-experiment level <code>(MAE[["experiment name"]])</code>.</p>
+<p>For relational data (when <code>join_keys</code> are specified),
+filters specified on a parent data set (i.e. <code>ADSL</code>) will
+apply to all child data sets, whereas filters for a child data set can
+only be specified on columns not found in that data set’s parent. For
+general relational data the filter panel treats each data set
+independently, irrespective of relationships between data sets.</p>
+<p>The filter panel also supports filtering
+<code>MultiAssayExperiment</code> objects, where filters can be applied
+to the subject data, which is stored in the <code>colData</code> slot
+and accessed with <code>colData(MAE)</code>, as well as to experiments,
+which are stored in the <code>ExperimentList</code> slot and accessed
+with <code>MAE[["experiment name"]]</code>.</p>
 </div>
 <div class="section level2">
 <h2 id="information-for-r-developers-using-the-filter-panel">Information for R developers using the filter panel<a class="anchor" aria-label="anchor" href="#information-for-r-developers-using-the-filter-panel"></a>
 </h2>
 <p>The example app below shows how to embed the filter panel inside a
 shiny application.</p>
-<p>Note if you are using the <code>teal</code> package to create a
-<code>teal</code> application then the <code>FilteredData</code> object
-(<code>datasets</code>) does not need to be explicitly created, nor its
-UI explicitly added and it is automatically available inside
-<code>teal</code> module server functions. Additionally, we are using
-<code><a href="https://rdrr.io/pkg/shiny/man/renderDataTable.html" class="external-link">shiny::dataTableOutput</a></code> and
-<code><a href="https://rdrr.io/pkg/shiny/man/renderDataTable.html" class="external-link">shiny::renderDataTable</a></code> for this example. This can lead to
-issues with Bootstrap, especially version 4. We recommend using
+<p>The filter panel is entirely contained within a
+<code>FilteredData</code> object. <code>FilteredData</code> is an
+<code>R6</code> class that stores data sets, tracks filter states,
+constructs and applies filter calls, and can output filtered data. It
+also contains <code>shiny</code> modules (both UI and server functions)
+that make up the panel itself.</p>
+<p>In a <code>teal</code> application the <code>FilteredData</code>
+object (<code>datasets</code>) is created automatically by
+<code>teal</code>’s <code>init</code> function and filter panel
+components are automatically placed on the right hand side of the
+page.</p>
+<p>Note that this example uses <code><a href="https://rdrr.io/pkg/shiny/man/renderDataTable.html" class="external-link">shiny::dataTableOutput</a></code> and
+<code><a href="https://rdrr.io/pkg/shiny/man/renderDataTable.html" class="external-link">shiny::renderDataTable</a></code>. This can lead to issues with
+Bootstrap, especially version 4. We recommend using
 <code><a href="https://rdrr.io/pkg/DT/man/dataTableOutput.html" class="external-link">DT::dataTableOutput</a></code> and <code><a href="https://rdrr.io/pkg/DT/man/dataTableOutput.html" class="external-link">DT::renderDataTable</a></code> if
 possible. See the <code>shiny</code> and <code>DT</code> documentation
 for more information.</p>
+<p>To facilitate communication with <code>FilteredData</code>, we
+provide the filter panel API. The example below uses the
+<code>set_filter_state</code> function to set state and the state is
+specified with <code>teal_slices</code> and <code>teal_slice</code>
+functions. For details please see the <em>Filter panel for
+developers</em> vignette.</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va">teal.slice</span><span class="op">)</span></span></code></pre></div>
 <pre><code><span><span class="co">## Loading required package: shiny</span></span></code></pre>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://shiny.rstudio.com/" class="external-link">shiny</a></span><span class="op">)</span></span>
+<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://shiny.posit.co/" class="external-link">shiny</a></span><span class="op">)</span></span>
 <span></span>
 <span><span class="co"># create a FilteredData object</span></span>
 <span><span class="va">datasets</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/init_filtered_data.html">init_filtered_data</a></span><span class="op">(</span></span>
 <span>  <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span></span>
 <span>    iris <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>dataset <span class="op">=</span> <span class="va">iris</span><span class="op">)</span>,</span>
 <span>    mtcars <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>dataset <span class="op">=</span> <span class="va">mtcars</span><span class="op">)</span></span>
+<span>  <span class="op">)</span></span>
+<span><span class="op">)</span></span>
+<span></span>
+<span><span class="co"># setting initial state</span></span>
+<span><span class="fu"><a href="../reference/filter_state_api.html">set_filter_state</a></span><span class="op">(</span></span>
+<span>  datasets <span class="op">=</span> <span class="va">datasets</span>,</span>
+<span>  filter <span class="op">=</span> <span class="fu"><a href="../reference/teal_slices.html">teal_slices</a></span><span class="op">(</span></span>
+<span>    <span class="fu"><a href="../reference/teal_slice.html">teal_slice</a></span><span class="op">(</span>dataname <span class="op">=</span> <span class="st">"iris"</span>, varname <span class="op">=</span> <span class="st">"Species"</span>, selected <span class="op">=</span> <span class="st">"virginica"</span>, keep_na <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span>,</span>
+<span>    <span class="fu"><a href="../reference/teal_slice.html">teal_slice</a></span><span class="op">(</span>dataname <span class="op">=</span> <span class="st">"mtcars"</span>, id <span class="op">=</span> <span class="st">"4 cyl"</span>, title <span class="op">=</span> <span class="st">"4 Cylinders"</span>, expr <span class="op">=</span> <span class="st">"cyl == 4"</span><span class="op">)</span>,</span>
+<span>    <span class="fu"><a href="../reference/teal_slice.html">teal_slice</a></span><span class="op">(</span>dataname <span class="op">=</span> <span class="st">"mtcars"</span>, varname <span class="op">=</span> <span class="st">"mpg"</span>, selected <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">20.0</span>, <span class="fl">25.0</span><span class="op">)</span>, keep_na <span class="op">=</span> <span class="cn">FALSE</span>, keep_inf <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span>,</span>
+<span>    include_varnames <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>iris <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Species"</span>, <span class="st">"Sepal.Length"</span><span class="op">)</span><span class="op">)</span>,</span>
+<span>    exclude_varnames <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>mtcars <span class="op">=</span> <span class="st">"cyl"</span><span class="op">)</span>,</span>
+<span>    count_type <span class="op">=</span> <span class="st">"all"</span>,</span>
+<span>    allow_add <span class="op">=</span> <span class="cn">TRUE</span></span>
 <span>  <span class="op">)</span></span>
 <span><span class="op">)</span></span>
 <span></span>
@@ -209,22 +240,6 @@ for more information.</p>
 <span><span class="kw">if</span> <span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/interactive.html" class="external-link">interactive</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span> <span class="op">{</span></span>
 <span>  <span class="fu"><a href="https://rdrr.io/pkg/shiny/man/runApp.html" class="external-link">runApp</a></span><span class="op">(</span><span class="va">app</span><span class="op">)</span></span>
 <span><span class="op">}</span></span></code></pre></div>
-<p>The <code>FilteredData</code> object (<code>datasets</code> above)
-provides additional methods (such as
-<code>datasets$get_call(&lt;dataname&gt;)</code> to get the code used to
-filter the data) and is also possible to programmatically set the state
-of the filter panel using the <code>set_filter_state</code> function for
-example:</p>
-<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu">shiny</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/shiny/man/isolate.html" class="external-link">isolate</a></span><span class="op">(</span></span>
-<span>  <span class="fu"><a href="../reference/filter_state_api.html">set_filter_state</a></span><span class="op">(</span></span>
-<span>    <span class="va">datasets</span>,</span>
-<span>    <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>iris <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>Species <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>selected <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"setosa"</span>, <span class="st">"versicolor"</span><span class="op">)</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span>
-<span>  <span class="op">)</span></span>
-<span><span class="op">)</span></span></code></pre></div>
-<p>For details about these and other advanced functionality see the
-function documentation and the example application toward the end of the
-“Filter panel for NEST developers” vignette.</p>
 </div>
   </main><aside class="col-md-3"><nav id="toc"><h2>On this page</h2>
     </nav></aside>

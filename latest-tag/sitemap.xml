@@ -1,168 +1,210 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
-    <loc>https://insightsengineering.github.io/teal.slice/v0.3.0/404.html</loc>
+    <loc>https://insightsengineering.github.io/teal.slice/404.html</loc>
   </url>
   <url>
-    <loc>https://insightsengineering.github.io/teal.slice/v0.3.0/CODE_OF_CONDUCT.html</loc>
+    <loc>https://insightsengineering.github.io/teal.slice/CODE_OF_CONDUCT.html</loc>
   </url>
   <url>
-    <loc>https://insightsengineering.github.io/teal.slice/v0.3.0/CONTRIBUTING.html</loc>
+    <loc>https://insightsengineering.github.io/teal.slice/CONTRIBUTING.html</loc>
   </url>
   <url>
-    <loc>https://insightsengineering.github.io/teal.slice/v0.3.0/LICENSE-text.html</loc>
+    <loc>https://insightsengineering.github.io/teal.slice/LICENSE-text.html</loc>
   </url>
   <url>
-    <loc>https://insightsengineering.github.io/teal.slice/v0.3.0/SECURITY.html</loc>
+    <loc>https://insightsengineering.github.io/teal.slice/SECURITY.html</loc>
   </url>
   <url>
-    <loc>https://insightsengineering.github.io/teal.slice/v0.3.0/articles/filter-panel.html</loc>
+    <loc>https://insightsengineering.github.io/teal.slice/articles/filter-panel-for-developers.html</loc>
   </url>
   <url>
-    <loc>https://insightsengineering.github.io/teal.slice/v0.3.0/articles/index.html</loc>
+    <loc>https://insightsengineering.github.io/teal.slice/articles/index.html</loc>
   </url>
   <url>
-    <loc>https://insightsengineering.github.io/teal.slice/v0.3.0/articles/teal-slice.html</loc>
+    <loc>https://insightsengineering.github.io/teal.slice/articles/teal-slice-classes.html</loc>
   </url>
   <url>
-    <loc>https://insightsengineering.github.io/teal.slice/v0.3.0/authors.html</loc>
+    <loc>https://insightsengineering.github.io/teal.slice/articles/teal-slice.html</loc>
   </url>
   <url>
-    <loc>https://insightsengineering.github.io/teal.slice/v0.3.0/index.html</loc>
+    <loc>https://insightsengineering.github.io/teal.slice/authors.html</loc>
   </url>
   <url>
-    <loc>https://insightsengineering.github.io/teal.slice/v0.3.0/news/index.html</loc>
+    <loc>https://insightsengineering.github.io/teal.slice/index.html</loc>
   </url>
   <url>
-    <loc>https://insightsengineering.github.io/teal.slice/v0.3.0/pull_request_template.html</loc>
+    <loc>https://insightsengineering.github.io/teal.slice/news/index.html</loc>
   </url>
   <url>
-    <loc>https://insightsengineering.github.io/teal.slice/v0.3.0/reference/CDISCFilteredData.html</loc>
+    <loc>https://insightsengineering.github.io/teal.slice/pull_request_template.html</loc>
   </url>
   <url>
-    <loc>https://insightsengineering.github.io/teal.slice/v0.3.0/reference/ChoicesFilterState.html</loc>
+    <loc>https://insightsengineering.github.io/teal.slice/reference/ChoicesFilterState.html</loc>
   </url>
   <url>
-    <loc>https://insightsengineering.github.io/teal.slice/v0.3.0/reference/DFFilterStates.html</loc>
+    <loc>https://insightsengineering.github.io/teal.slice/reference/DFFilterStates.html</loc>
   </url>
   <url>
-    <loc>https://insightsengineering.github.io/teal.slice/v0.3.0/reference/DateFilterState.html</loc>
+    <loc>https://insightsengineering.github.io/teal.slice/reference/DateFilterState.html</loc>
   </url>
   <url>
-    <loc>https://insightsengineering.github.io/teal.slice/v0.3.0/reference/DatetimeFilterState.html</loc>
+    <loc>https://insightsengineering.github.io/teal.slice/reference/DatetimeFilterState.html</loc>
   </url>
   <url>
-    <loc>https://insightsengineering.github.io/teal.slice/v0.3.0/reference/DefaultFilteredDataset.html</loc>
+    <loc>https://insightsengineering.github.io/teal.slice/reference/DefaultFilteredDataset.html</loc>
   </url>
   <url>
-    <loc>https://insightsengineering.github.io/teal.slice/v0.3.0/reference/EmptyFilterState.html</loc>
+    <loc>https://insightsengineering.github.io/teal.slice/reference/EmptyFilterState.html</loc>
   </url>
   <url>
-    <loc>https://insightsengineering.github.io/teal.slice/v0.3.0/reference/FilterPanelAPI.html</loc>
+    <loc>https://insightsengineering.github.io/teal.slice/reference/FilterPanelAPI.html</loc>
   </url>
   <url>
-    <loc>https://insightsengineering.github.io/teal.slice/v0.3.0/reference/FilterState.html</loc>
+    <loc>https://insightsengineering.github.io/teal.slice/reference/FilterState.html</loc>
   </url>
   <url>
-    <loc>https://insightsengineering.github.io/teal.slice/v0.3.0/reference/FilterStates.html</loc>
+    <loc>https://insightsengineering.github.io/teal.slice/reference/FilterStateExpr.html</loc>
   </url>
   <url>
-    <loc>https://insightsengineering.github.io/teal.slice/v0.3.0/reference/FilteredData.html</loc>
+    <loc>https://insightsengineering.github.io/teal.slice/reference/FilterStates.html</loc>
   </url>
   <url>
-    <loc>https://insightsengineering.github.io/teal.slice/v0.3.0/reference/FilteredDataset.html</loc>
+    <loc>https://insightsengineering.github.io/teal.slice/reference/FilteredData.html</loc>
   </url>
   <url>
-    <loc>https://insightsengineering.github.io/teal.slice/v0.3.0/reference/LogicalFilterState.html</loc>
+    <loc>https://insightsengineering.github.io/teal.slice/reference/FilteredDataset.html</loc>
   </url>
   <url>
-    <loc>https://insightsengineering.github.io/teal.slice/v0.3.0/reference/MAEFilterStates.html</loc>
+    <loc>https://insightsengineering.github.io/teal.slice/reference/LogicalFilterState.html</loc>
   </url>
   <url>
-    <loc>https://insightsengineering.github.io/teal.slice/v0.3.0/reference/MAEFilteredDataset.html</loc>
+    <loc>https://insightsengineering.github.io/teal.slice/reference/MAEFilterStates.html</loc>
   </url>
   <url>
-    <loc>https://insightsengineering.github.io/teal.slice/v0.3.0/reference/MatrixFilterStates.html</loc>
+    <loc>https://insightsengineering.github.io/teal.slice/reference/MAEFilteredDataset.html</loc>
   </url>
   <url>
-    <loc>https://insightsengineering.github.io/teal.slice/v0.3.0/reference/RangeFilterState.html</loc>
+    <loc>https://insightsengineering.github.io/teal.slice/reference/MatrixFilterStates.html</loc>
   </url>
   <url>
-    <loc>https://insightsengineering.github.io/teal.slice/v0.3.0/reference/SEFilterStates.html</loc>
+    <loc>https://insightsengineering.github.io/teal.slice/reference/RangeFilterState.html</loc>
   </url>
   <url>
-    <loc>https://insightsengineering.github.io/teal.slice/v0.3.0/reference/calls_combine_by.html</loc>
+    <loc>https://insightsengineering.github.io/teal.slice/reference/SEFilterStates.html</loc>
   </url>
   <url>
-    <loc>https://insightsengineering.github.io/teal.slice/v0.3.0/reference/check_ellipsis.html</loc>
+    <loc>https://insightsengineering.github.io/teal.slice/reference/calls_combine_by.html</loc>
   </url>
   <url>
-    <loc>https://insightsengineering.github.io/teal.slice/v0.3.0/reference/check_in_range.html</loc>
+    <loc>https://insightsengineering.github.io/teal.slice/reference/check_ellipsis.html</loc>
   </url>
   <url>
-    <loc>https://insightsengineering.github.io/teal.slice/v0.3.0/reference/check_in_subset.html</loc>
+    <loc>https://insightsengineering.github.io/teal.slice/reference/check_simple_name.html</loc>
   </url>
   <url>
-    <loc>https://insightsengineering.github.io/teal.slice/v0.3.0/reference/check_simple_name.html</loc>
+    <loc>https://insightsengineering.github.io/teal.slice/reference/choices_labeled.html</loc>
   </url>
   <url>
-    <loc>https://insightsengineering.github.io/teal.slice/v0.3.0/reference/choices_labeled.html</loc>
+    <loc>https://insightsengineering.github.io/teal.slice/reference/countBar.html</loc>
   </url>
   <url>
-    <loc>https://insightsengineering.github.io/teal.slice/v0.3.0/reference/contain_interval.html</loc>
+    <loc>https://insightsengineering.github.io/teal.slice/reference/countBars.html</loc>
   </url>
   <url>
-    <loc>https://insightsengineering.github.io/teal.slice/v0.3.0/reference/data_choices_labeled.html</loc>
+    <loc>https://insightsengineering.github.io/teal.slice/reference/data_choices_labeled.html</loc>
   </url>
   <url>
-    <loc>https://insightsengineering.github.io/teal.slice/v0.3.0/reference/eval_expr_with_msg.html</loc>
+    <loc>https://insightsengineering.github.io/teal.slice/reference/eval_expr_with_msg.html</loc>
   </url>
   <url>
-    <loc>https://insightsengineering.github.io/teal.slice/v0.3.0/reference/filter_state_api.html</loc>
+    <loc>https://insightsengineering.github.io/teal.slice/reference/fetch_bs_color.html</loc>
   </url>
   <url>
-    <loc>https://insightsengineering.github.io/teal.slice/v0.3.0/reference/get_filter_expr.html</loc>
+    <loc>https://insightsengineering.github.io/teal.slice/reference/filter_state_api.html</loc>
   </url>
   <url>
-    <loc>https://insightsengineering.github.io/teal.slice/v0.3.0/reference/get_supported_filter_varnames.html</loc>
+    <loc>https://insightsengineering.github.io/teal.slice/reference/get_default_slice_id.html</loc>
   </url>
   <url>
-    <loc>https://insightsengineering.github.io/teal.slice/v0.3.0/reference/get_teal_bs_theme.html</loc>
+    <loc>https://insightsengineering.github.io/teal.slice/reference/get_filter_expr.html</loc>
   </url>
   <url>
-    <loc>https://insightsengineering.github.io/teal.slice/v0.3.0/reference/include_css_files.html</loc>
+    <loc>https://insightsengineering.github.io/teal.slice/reference/get_supported_filter_varnames.html</loc>
   </url>
   <url>
-    <loc>https://insightsengineering.github.io/teal.slice/v0.3.0/reference/index.html</loc>
+    <loc>https://insightsengineering.github.io/teal.slice/reference/get_teal_bs_theme.html</loc>
   </url>
   <url>
-    <loc>https://insightsengineering.github.io/teal.slice/v0.3.0/reference/init_filter_state.html</loc>
+    <loc>https://insightsengineering.github.io/teal.slice/reference/include_css_files.html</loc>
   </url>
   <url>
-    <loc>https://insightsengineering.github.io/teal.slice/v0.3.0/reference/init_filter_states.html</loc>
+    <loc>https://insightsengineering.github.io/teal.slice/reference/include_js_files.html</loc>
   </url>
   <url>
-    <loc>https://insightsengineering.github.io/teal.slice/v0.3.0/reference/init_filtered_data.html</loc>
+    <loc>https://insightsengineering.github.io/teal.slice/reference/index.html</loc>
   </url>
   <url>
-    <loc>https://insightsengineering.github.io/teal.slice/v0.3.0/reference/init_filtered_dataset.html</loc>
+    <loc>https://insightsengineering.github.io/teal.slice/reference/init_filter_state.html</loc>
   </url>
   <url>
-    <loc>https://insightsengineering.github.io/teal.slice/v0.3.0/reference/resolve_state.html</loc>
+    <loc>https://insightsengineering.github.io/teal.slice/reference/init_filter_state_expr.html</loc>
   </url>
   <url>
-    <loc>https://insightsengineering.github.io/teal.slice/v0.3.0/reference/teal.slice-package.html</loc>
+    <loc>https://insightsengineering.github.io/teal.slice/reference/init_filter_states.html</loc>
   </url>
   <url>
-    <loc>https://insightsengineering.github.io/teal.slice/v0.3.0/reference/toggle_button.html</loc>
+    <loc>https://insightsengineering.github.io/teal.slice/reference/init_filtered_data.html</loc>
   </url>
   <url>
-    <loc>https://insightsengineering.github.io/teal.slice/v0.3.0/reference/topological_sort.html</loc>
+    <loc>https://insightsengineering.github.io/teal.slice/reference/init_filtered_dataset.html</loc>
   </url>
   <url>
-    <loc>https://insightsengineering.github.io/teal.slice/v0.3.0/reference/validate_dataset_args.html</loc>
+    <loc>https://insightsengineering.github.io/teal.slice/reference/jsonify.html</loc>
   </url>
   <url>
-    <loc>https://insightsengineering.github.io/teal.slice/v0.3.0/reference/variable_types.html</loc>
+    <loc>https://insightsengineering.github.io/teal.slice/reference/justify_json.html</loc>
+  </url>
+  <url>
+    <loc>https://insightsengineering.github.io/teal.slice/reference/make_c_call.html</loc>
+  </url>
+  <url>
+    <loc>https://insightsengineering.github.io/teal.slice/reference/make_count_text.html</loc>
+  </url>
+  <url>
+    <loc>https://insightsengineering.github.io/teal.slice/reference/setdiff_teal_slices.html</loc>
+  </url>
+  <url>
+    <loc>https://insightsengineering.github.io/teal.slice/reference/slices_restore.html</loc>
+  </url>
+  <url>
+    <loc>https://insightsengineering.github.io/teal.slice/reference/slices_store.html</loc>
+  </url>
+  <url>
+    <loc>https://insightsengineering.github.io/teal.slice/reference/teal.slice-package.html</loc>
+  </url>
+  <url>
+    <loc>https://insightsengineering.github.io/teal.slice/reference/teal_slice.html</loc>
+  </url>
+  <url>
+    <loc>https://insightsengineering.github.io/teal.slice/reference/teal_slices.html</loc>
+  </url>
+  <url>
+    <loc>https://insightsengineering.github.io/teal.slice/reference/to_json.html</loc>
+  </url>
+  <url>
+    <loc>https://insightsengineering.github.io/teal.slice/reference/toggle_button.html</loc>
+  </url>
+  <url>
+    <loc>https://insightsengineering.github.io/teal.slice/reference/topological_sort.html</loc>
+  </url>
+  <url>
+    <loc>https://insightsengineering.github.io/teal.slice/reference/trim_lines_json.html</loc>
+  </url>
+  <url>
+    <loc>https://insightsengineering.github.io/teal.slice/reference/validate_dataset_args.html</loc>
+  </url>
+  <url>
+    <loc>https://insightsengineering.github.io/teal.slice/reference/variable_types.html</loc>
   </url>
 </urlset>

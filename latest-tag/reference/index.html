@@ -10,7 +10,7 @@
     
     <a class="navbar-brand me-2" href="../index.html">teal.slice</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.3.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.4.0</small>
 
     <div style="width: 140px; margin-left: 0.5rem;"> <small class="nav-text text-muted me-auto">part of</small> <img src="https://github.com/insightsengineering/hex-stickers/blob/main/PNG/nest.png?raw=true" alt="NEST" style="height: 30px;"><a href="https://pharmaverse.org/" class="external-link"><img src="https://github.com/insightsengineering/hex-stickers/blob/main/PNG/pharmaverse.png?raw=true" alt="pharmaverse" style="height: 28px;"></a> </div>
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -27,7 +27,8 @@
 <li class="nav-item dropdown">
   <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown" role="button" aria-expanded="false" aria-haspopup="true" id="dropdown-articles">Articles</a>
   <div class="dropdown-menu" aria-labelledby="dropdown-articles">
-    <a class="dropdown-item" href="../articles/filter-panel.html">Filter panel for NEST developers</a>
+    <a class="dropdown-item" href="../articles/filter-panel-for-developers.html">Filter panel for developers</a>
+    <a class="dropdown-item" href="../articles/teal-slice-classes.html">teal.slice classes</a>
   </div>
 </li>
 <li class="nav-item">
@@ -39,6 +40,7 @@
           aria-expanded="false" aria-haspopup="true"
           id="dropdown-versions">Versions</a> <div class="dropdown-menu" aria-labelledby="dropdown-versions"> <a class="dropdown-item" data-toggle="tooltip" title="" href="https://insightsengineering.github.io/teal.slice/main">main</a>
 <a class="dropdown-item" data-toggle="tooltip" title="" href="https://insightsengineering.github.io/teal.slice/latest-tag">latest-tag</a>
+<a class="dropdown-item" data-toggle="tooltip" title="" href="https://insightsengineering.github.io/teal.slice/v0.4.0">v0.4.0</a>
 <a class="dropdown-item" data-toggle="tooltip" title="" href="https://insightsengineering.github.io/teal.slice/v0.3.0">v0.3.0</a>
 <a class="dropdown-item" data-toggle="tooltip" title="" href="https://insightsengineering.github.io/teal.slice/v0.2.0">v0.2.0</a> </div></li>
 <!-- end dropdown for versions -->
@@ -89,32 +91,31 @@
           <code><a href="filter_state_api.html">set_filter_state()</a></code> <code><a href="filter_state_api.html">get_filter_state()</a></code> <code><a href="filter_state_api.html">remove_filter_state()</a></code> <code><a href="filter_state_api.html">clear_filter_states()</a></code> 
         </dt>
         <dd>Managing <code>FilteredData</code> states</dd>
-      </dl></div><div class="section level2">
-      <h2 id="helpers">Helpers<a class="anchor" aria-label="anchor" href="#helpers"></a></h2>
-      
-      <p class="section-desc"></p><p>Other useful functions for users and developers.</p>
-
-      
-    </div><div id="" class="section level2">
-      
-      
-      
-
-      <dl><dt>
-          
-          <code><a href="choices_labeled.html">choices_labeled()</a></code> 
-        </dt>
-        <dd>Set "<code>&lt;choice&gt;:&lt;label&gt;</code>" type of Names</dd>
       </dl><dl><dt>
           
           <code><a href="get_filter_expr.html">get_filter_expr()</a></code> 
         </dt>
-        <dd>Gets filter expression for multiple datanames taking into account its order.</dd>
+        <dd>Gets filter expression for multiple <code>datanames</code> taking into account its order.</dd>
       </dl><dl><dt>
           
-          <code><a href="toggle_button.html">toggle_icon()</a></code> <code><a href="toggle_button.html">toggle_title()</a></code> 
+          <code><a href="teal_slice.html">teal_slice()</a></code> <code><a href="teal_slice.html">is.teal_slice()</a></code> <code><a href="teal_slice.html">as.teal_slice()</a></code> <code><a href="teal_slice.html">as.list(<i>&lt;teal_slice&gt;</i>)</a></code> <code><a href="teal_slice.html">format(<i>&lt;teal_slice&gt;</i>)</a></code> <code><a href="teal_slice.html">print(<i>&lt;teal_slice&gt;</i>)</a></code> 
         </dt>
-        <dd>Toggle button properties.</dd>
+        <dd>Specify single filter.</dd>
+      </dl><dl><dt>
+          
+          <code><a href="teal_slices.html">teal_slices()</a></code> <code><a href="teal_slices.html">is.teal_slices()</a></code> <code><a href="teal_slices.html">as.teal_slices()</a></code> <code><a href="teal_slices.html">as.list(<i>&lt;teal_slices&gt;</i>)</a></code> <code><a href="teal_slices.html">`[`(<i>&lt;teal_slices&gt;</i>)</a></code> <code><a href="teal_slices.html">c(<i>&lt;teal_slices&gt;</i>)</a></code> <code><a href="teal_slices.html">format(<i>&lt;teal_slices&gt;</i>)</a></code> <code><a href="teal_slices.html">print(<i>&lt;teal_slices&gt;</i>)</a></code> <code><a href="teal_slices.html">list_to_teal_slices()</a></code> 
+        </dt>
+        <dd>Complete filter specification.</dd>
+      </dl><dl><dt>
+          
+          <code><a href="slices_store.html">slices_store()</a></code> 
+        </dt>
+        <dd>Store teal_slices object to a file</dd>
+      </dl><dl><dt>
+          
+          <code><a href="slices_restore.html">slices_restore()</a></code> 
+        </dt>
+        <dd>Restore teal_slices object from a file</dd>
       </dl></div><div class="section level2">
       <h2 id="for-developers">For Developers<a class="anchor" aria-label="anchor" href="#for-developers"></a></h2>
       
@@ -133,11 +134,6 @@
       
 
       <dl><dt>
-          
-          <code><a href="CDISCFilteredData.html">CDISCFilteredData</a></code> 
-        </dt>
-        <dd>Class to encapsulate relational filtered datasets with its parents.</dd>
-      </dl><dl><dt>
           
           <code><a href="DefaultFilteredDataset.html">DefaultFilteredDataset</a></code> 
         </dt>

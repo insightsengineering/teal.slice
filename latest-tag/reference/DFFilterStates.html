@@ -10,7 +10,7 @@
     
     <a class="navbar-brand me-2" href="../index.html">teal.slice</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.3.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.4.0</small>
 
     <div style="width: 140px; margin-left: 0.5rem;"> <small class="nav-text text-muted me-auto">part of</small> <img src="https://github.com/insightsengineering/hex-stickers/blob/main/PNG/nest.png?raw=true" alt="NEST" style="height: 30px;"><a href="https://pharmaverse.org/" class="external-link"><img src="https://github.com/insightsengineering/hex-stickers/blob/main/PNG/pharmaverse.png?raw=true" alt="pharmaverse" style="height: 28px;"></a> </div>
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -27,7 +27,8 @@
 <li class="nav-item dropdown">
   <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown" role="button" aria-expanded="false" aria-haspopup="true" id="dropdown-articles">Articles</a>
   <div class="dropdown-menu" aria-labelledby="dropdown-articles">
-    <a class="dropdown-item" href="../articles/filter-panel.html">Filter panel for NEST developers</a>
+    <a class="dropdown-item" href="../articles/filter-panel-for-developers.html">Filter panel for developers</a>
+    <a class="dropdown-item" href="../articles/teal-slice-classes.html">teal.slice classes</a>
   </div>
 </li>
 <li class="nav-item">
@@ -39,6 +40,7 @@
           aria-expanded="false" aria-haspopup="true"
           id="dropdown-versions">Versions</a> <div class="dropdown-menu" aria-labelledby="dropdown-versions"> <a class="dropdown-item" data-toggle="tooltip" title="" href="https://insightsengineering.github.io/teal.slice/main">main</a>
 <a class="dropdown-item" data-toggle="tooltip" title="" href="https://insightsengineering.github.io/teal.slice/latest-tag">latest-tag</a>
+<a class="dropdown-item" data-toggle="tooltip" title="" href="https://insightsengineering.github.io/teal.slice/v0.4.0">v0.4.0</a>
 <a class="dropdown-item" data-toggle="tooltip" title="" href="https://insightsengineering.github.io/teal.slice/v0.3.0">v0.3.0</a>
 <a class="dropdown-item" data-toggle="tooltip" title="" href="https://insightsengineering.github.io/teal.slice/v0.2.0">v0.2.0</a> </div></li>
 <!-- end dropdown for versions -->
@@ -86,24 +88,18 @@
 <h3 id="public-methods">Public methods<a class="anchor" aria-label="anchor" href="#public-methods"></a></h3>
 
 <ul><li><p><a href="#method-DFFilterStates-new"><code>DFFilterStates$new()</code></a></p></li>
-<li><p><a href="#method-DFFilterStates-format"><code>DFFilterStates$format()</code></a></p></li>
-<li><p><a href="#method-DFFilterStates-get_fun"><code>DFFilterStates$get_fun()</code></a></p></li>
-<li><p><a href="#method-DFFilterStates-server"><code>DFFilterStates$server()</code></a></p></li>
-<li><p><a href="#method-DFFilterStates-get_filter_state"><code>DFFilterStates$get_filter_state()</code></a></p></li>
-<li><p><a href="#method-DFFilterStates-set_filter_state"><code>DFFilterStates$set_filter_state()</code></a></p></li>
-<li><p><a href="#method-DFFilterStates-remove_filter_state"><code>DFFilterStates$remove_filter_state()</code></a></p></li>
-<li><p><a href="#method-DFFilterStates-ui_add_filter_state"><code>DFFilterStates$ui_add_filter_state()</code></a></p></li>
-<li><p><a href="#method-DFFilterStates-srv_add_filter_state"><code>DFFilterStates$srv_add_filter_state()</code></a></p></li>
 <li><p><a href="#method-DFFilterStates-clone"><code>DFFilterStates$clone()</code></a></p></li>
-</ul></div><p><details><summary>Inherited methods</summary><ul><li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilterStates" data-id="get_call"><a href="FilterStates.html#method-get_call"><code>teal.slice::FilterStates$get_call()</code></a></span></li>
-<li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilterStates" data-id="get_datalabel"><a href="FilterStates.html#method-get_datalabel"><code>teal.slice::FilterStates$get_datalabel()</code></a></span></li>
-<li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilterStates" data-id="get_filter_count"><a href="FilterStates.html#method-get_filter_count"><code>teal.slice::FilterStates$get_filter_count()</code></a></span></li>
+</ul></div><p><details><summary>Inherited methods</summary><ul><li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilterStates" data-id="clear_filter_states"><a href="FilterStates.html#method-clear_filter_states"><code>teal.slice::FilterStates$clear_filter_states()</code></a></span></li>
+<li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilterStates" data-id="format"><a href="FilterStates.html#method-format"><code>teal.slice::FilterStates$format()</code></a></span></li>
+<li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilterStates" data-id="get_call"><a href="FilterStates.html#method-get_call"><code>teal.slice::FilterStates$get_call()</code></a></span></li>
+<li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilterStates" data-id="get_filter_state"><a href="FilterStates.html#method-get_filter_state"><code>teal.slice::FilterStates$get_filter_state()</code></a></span></li>
 <li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilterStates" data-id="print"><a href="FilterStates.html#method-print"><code>teal.slice::FilterStates$print()</code></a></span></li>
-<li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilterStates" data-id="state_list_empty"><a href="FilterStates.html#method-state_list_empty"><code>teal.slice::FilterStates$state_list_empty()</code></a></span></li>
-<li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilterStates" data-id="state_list_get"><a href="FilterStates.html#method-state_list_get"><code>teal.slice::FilterStates$state_list_get()</code></a></span></li>
-<li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilterStates" data-id="state_list_push"><a href="FilterStates.html#method-state_list_push"><code>teal.slice::FilterStates$state_list_push()</code></a></span></li>
-<li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilterStates" data-id="state_list_remove"><a href="FilterStates.html#method-state_list_remove"><code>teal.slice::FilterStates$state_list_remove()</code></a></span></li>
-<li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilterStates" data-id="ui"><a href="FilterStates.html#method-ui"><code>teal.slice::FilterStates$ui()</code></a></span></li>
+<li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilterStates" data-id="remove_filter_state"><a href="FilterStates.html#method-remove_filter_state"><code>teal.slice::FilterStates$remove_filter_state()</code></a></span></li>
+<li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilterStates" data-id="set_filter_state"><a href="FilterStates.html#method-set_filter_state"><code>teal.slice::FilterStates$set_filter_state()</code></a></span></li>
+<li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilterStates" data-id="srv_active"><a href="FilterStates.html#method-srv_active"><code>teal.slice::FilterStates$srv_active()</code></a></span></li>
+<li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilterStates" data-id="srv_add"><a href="FilterStates.html#method-srv_add"><code>teal.slice::FilterStates$srv_add()</code></a></span></li>
+<li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilterStates" data-id="ui_active"><a href="FilterStates.html#method-ui_active"><code>teal.slice::FilterStates$ui_active()</code></a></span></li>
+<li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilterStates" data-id="ui_add"><a href="FilterStates.html#method-ui_add"><code>teal.slice::FilterStates$ui_add()</code></a></span></li>
 </ul></details></p><hr><a id="method-DFFilterStates-new"></a><div class="section">
 <h3 id="method-new-">Method <code><a href="https://rdrr.io/r/methods/new.html" class="external-link">new()</a></code><a class="anchor" aria-label="anchor" href="#method-new-"></a></h3>
 <p>Initializes <code>DFFilterStates</code> object.</p>
@@ -113,25 +109,39 @@ This class contains a single <code>state_list</code> with no specified name,
 which means that when calling the subset function associated with this class
 (<code><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">dplyr::filter</a></code>), a list of conditions is passed to unnamed arguments (<code>...</code>).</p><div class="section">
 <h4 id="usage">Usage<a class="anchor" aria-label="anchor" href="#usage"></a></h4>
-<p></p><div class="r"><div class="sourceCode"><pre><code><span><span class="va"><a href="../reference/DFFilterStates.html">DFFilterStates</a></span><span class="op">$</span><span class="fu">new</span><span class="op">(</span><span class="va">dataname</span>, <span class="va">datalabel</span>, <span class="va">varlabels</span>, <span class="va">keys</span><span class="op">)</span></span></code></pre></div><p></p></div>
+<p></p><div class="r"><div class="sourceCode"><pre><code><span><span class="va"><a href="../reference/DFFilterStates.html">DFFilterStates</a></span><span class="op">$</span><span class="fu">new</span><span class="op">(</span></span>
+<span>  <span class="va">data</span>,</span>
+<span>  data_reactive <span class="op">=</span> <span class="kw">function</span><span class="op">(</span><span class="va">sid</span> <span class="op">=</span> <span class="st">""</span><span class="op">)</span> <span class="cn">NULL</span>,</span>
+<span>  <span class="va">dataname</span>,</span>
+<span>  datalabel <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  keys <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/character.html" class="external-link">character</a></span><span class="op">(</span><span class="fl">0</span><span class="op">)</span></span>
+<span><span class="op">)</span></span></code></pre></div><p></p></div>
 </div>
 
 <div class="section">
 <h4 id="arguments">Arguments<a class="anchor" aria-label="anchor" href="#arguments"></a></h4>
-<p></p><div class="arguments"><dl><dt><code>dataname</code></dt>
-<dd><p>(<code>character(1)</code>)<br>
+<p></p><div class="arguments"><dl><dt><code>data</code></dt>
+<dd><p>(<code>data.frame</code>)<br>
+the R object which <code><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">dplyr::filter</a></code> function is applied on.</p></dd>
+
+
+<dt><code>data_reactive</code></dt>
+<dd><p>(<code>function(sid)</code>)<br>
+should return a <code>data.frame</code> object or <code>NULL</code>.
+This object is needed for the <code>FilterState</code> counts being updated
+on a change in filters. If function returns <code>NULL</code> then filtered counts are not shown.
+Function has to have <code>sid</code> argument being a character.</p></dd>
+
+
+<dt><code>dataname</code></dt>
+<dd><p>(<code>character</code>)<br>
 name of the data used in the <em>subset expression</em>
 specified to the function argument attached to this <code>FilterStates</code></p></dd>
 
 
 <dt><code>datalabel</code></dt>
-<dd><p>(<code>character(0)</code> or <code>character(1)</code>)<br>
+<dd><p>(<code>NULL</code> or <code>character(1)</code>)<br>
 text label value</p></dd>
-
-
-<dt><code>varlabels</code></dt>
-<dd><p>(<code>character</code>)<br>
-labels of the variables used in this object</p></dd>
 
 
 <dt><code>keys</code></dt>
@@ -142,231 +152,15 @@ key columns names</p></dd>
 </dl><p></p></div>
 </div>
 
-</div><p></p><hr><a id="method-DFFilterStates-format"></a><div class="section">
-<h3 id="method-format-">Method <code><a href="https://rdrr.io/r/base/format.html" class="external-link">format()</a></code><a class="anchor" aria-label="anchor" href="#method-format-"></a></h3>
-<p>Returns a formatted string representing this <code>FilterStates</code> object.</p><div class="section">
-<h4 id="usage-1">Usage<a class="anchor" aria-label="anchor" href="#usage-1"></a></h4>
-<p></p><div class="r"><div class="sourceCode"><pre><code><span><span class="va">DFFilterStates</span><span class="op">$</span><span class="fu">format</span><span class="op">(</span>indent <span class="op">=</span> <span class="fl">0</span><span class="op">)</span></span></code></pre></div><p></p></div>
-</div>
-
-<div class="section">
-<h4 id="arguments-1">Arguments<a class="anchor" aria-label="anchor" href="#arguments-1"></a></h4>
-<p></p><div class="arguments"><dl><dt><code>indent</code></dt>
-<dd><p>(<code>numeric(1)</code>) the number of spaces prepended to each line of the output</p></dd>
-
-
-</dl><p></p></div>
-</div>
-<div class="section">
-<h4 id="returns">Returns<a class="anchor" aria-label="anchor" href="#returns"></a></h4>
-<p><code>character(1)</code> the formatted string</p>
-</div>
-
-</div><p></p><hr><a id="method-DFFilterStates-get_fun"></a><div class="section">
-<h3 id="method-get-fun-">Method <code>get_fun()</code><a class="anchor" aria-label="anchor" href="#method-get-fun-"></a></h3>
-<p>Gets the name of the function used to filter the data in this <code>FilterStates</code>.</p>
-<p>Get name of  function used to create the <em>subset expression</em>.
-For <code>DFFilterStates</code> this is <code><a href="https://dplyr.tidyverse.org/reference/filter.html" class="external-link">dplyr::filter</a></code>.</p><div class="section">
-<h4 id="usage-2">Usage<a class="anchor" aria-label="anchor" href="#usage-2"></a></h4>
-<p></p><div class="r"><div class="sourceCode"><pre><code><span><span class="va">DFFilterStates</span><span class="op">$</span><span class="fu">get_fun</span><span class="op">(</span><span class="op">)</span></span></code></pre></div><p></p></div>
-</div>
-
-<div class="section">
-<h4 id="returns-1">Returns<a class="anchor" aria-label="anchor" href="#returns-1"></a></h4>
-<p><code>character(1)</code></p>
-</div>
-
-</div><p></p><hr><a id="method-DFFilterStates-server"></a><div class="section">
-<h3 id="method-server-">Method <code>server()</code><a class="anchor" aria-label="anchor" href="#method-server-"></a></h3>
-<p>Shiny server module.</p><div class="section">
-<h4 id="usage-3">Usage<a class="anchor" aria-label="anchor" href="#usage-3"></a></h4>
-<p></p><div class="r"><div class="sourceCode"><pre><code><span><span class="va">DFFilterStates</span><span class="op">$</span><span class="fu">server</span><span class="op">(</span><span class="va">id</span><span class="op">)</span></span></code></pre></div><p></p></div>
-</div>
-
-<div class="section">
-<h4 id="arguments-2">Arguments<a class="anchor" aria-label="anchor" href="#arguments-2"></a></h4>
-<p></p><div class="arguments"><dl><dt><code>id</code></dt>
-<dd><p>(<code>character(1)</code>)<br>
-shiny module instance id</p></dd>
-
-
-</dl><p></p></div>
-</div>
-<div class="section">
-<h4 id="returns-2">Returns<a class="anchor" aria-label="anchor" href="#returns-2"></a></h4>
-<p><code>moduleServer</code> function which returns <code>NULL</code></p>
-</div>
-
-</div><p></p><hr><a id="method-DFFilterStates-get_filter_state"></a><div class="section">
-<h3 id="method-get-filter-state-">Method <code><a href="filter_state_api.html">get_filter_state()</a></code><a class="anchor" aria-label="anchor" href="#method-get-filter-state-"></a></h3>
-<p>Gets the reactive values from the active <code>FilterState</code> objects.</p>
-<p>Get active filter state from the <code>FilterState</code> objects kept in <code>state_list</code>.
-The output list is a compatible input to <code>self$set_filter_state</code>.</p><div class="section">
-<h4 id="usage-4">Usage<a class="anchor" aria-label="anchor" href="#usage-4"></a></h4>
-<p></p><div class="r"><div class="sourceCode"><pre><code><span><span class="va">DFFilterStates</span><span class="op">$</span><span class="fu">get_filter_state</span><span class="op">(</span><span class="op">)</span></span></code></pre></div><p></p></div>
-</div>
-
-<div class="section">
-<h4 id="returns-3">Returns<a class="anchor" aria-label="anchor" href="#returns-3"></a></h4>
-<p><code>list</code> with named elements corresponding to <code>FilterState</code> in the <code>state_list</code>.</p>
-</div>
-
-</div><p></p><hr><a id="method-DFFilterStates-set_filter_state"></a><div class="section">
-<h3 id="method-set-filter-state-">Method <code><a href="filter_state_api.html">set_filter_state()</a></code><a class="anchor" aria-label="anchor" href="#method-set-filter-state-"></a></h3>
-<p>Set filter state.</p><div class="section">
-<h4 id="usage-5">Usage<a class="anchor" aria-label="anchor" href="#usage-5"></a></h4>
-<p></p><div class="r"><div class="sourceCode"><pre><code><span><span class="va">DFFilterStates</span><span class="op">$</span><span class="fu">set_filter_state</span><span class="op">(</span></span>
-<span>  <span class="va">data</span>,</span>
-<span>  <span class="va">state</span>,</span>
-<span>  vars_include <span class="op">=</span> <span class="fu"><a href="../reference/get_supported_filter_varnames.html">get_supported_filter_varnames</a></span><span class="op">(</span>data <span class="op">=</span> <span class="va">data</span><span class="op">)</span>,</span>
-<span>  <span class="va">...</span></span>
-<span><span class="op">)</span></span></code></pre></div><p></p></div>
-</div>
-
-<div class="section">
-<h4 id="arguments-3">Arguments<a class="anchor" aria-label="anchor" href="#arguments-3"></a></h4>
-<p></p><div class="arguments"><dl><dt><code>data</code></dt>
-<dd><p>(<code>data.frame</code>)<br>
-data object for which to define a subset</p></dd>
-
-
-<dt><code>state</code></dt>
-<dd><p>(<code>named list</code>)<br>
-should contain values of initial selections in the <code>FilterState</code>;
-<code>list</code> names must correspond to column names in <code>data</code></p></dd>
-
-
-<dt><code>vars_include</code></dt>
-<dd><p>(<code>character(n)</code>)<br>
-optional, vector of column names to be included</p></dd>
-
-
-<dt><code>...</code></dt>
-<dd><p>ignored</p></dd>
-
-
-</dl><p></p></div>
-</div>
-<div class="section">
-<h4 id="returns-4">Returns<a class="anchor" aria-label="anchor" href="#returns-4"></a></h4>
-<p><code>NULL</code></p>
-</div>
-<div class="section">
-<h4 id="examples">Examples<a class="anchor" aria-label="anchor" href="#examples"></a></h4>
-<p></p><div class="r example copy"><div class="sourceCode"><pre><code><span><span class="va">dffs</span> <span class="op">&lt;-</span> <span class="fu">teal.slice</span><span class="fu">:::</span><span class="va"><a href="../reference/DFFilterStates.html">DFFilterStates</a></span><span class="op">$</span><span class="fu">new</span><span class="op">(</span></span>
-<span>  dataname <span class="op">=</span> <span class="st">"iris"</span>,</span>
-<span>  datalabel <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/character.html" class="external-link">character</a></span><span class="op">(</span><span class="fl">0</span><span class="op">)</span>,</span>
-<span>  varlabels <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/character.html" class="external-link">character</a></span><span class="op">(</span><span class="fl">0</span><span class="op">)</span>,</span>
-<span>  keys <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/character.html" class="external-link">character</a></span><span class="op">(</span><span class="fl">0</span><span class="op">)</span></span>
-<span><span class="op">)</span></span>
-<span><span class="va">fs</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span></span>
-<span>  Sepal.Length <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>selected <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">5.1</span>, <span class="fl">6.4</span><span class="op">)</span>, keep_na <span class="op">=</span> <span class="cn">TRUE</span>, keep_inf <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span>,</span>
-<span>  Species <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>selected <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"setosa"</span>, <span class="st">"versicolor"</span><span class="op">)</span>, keep_na <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span>
-<span><span class="op">)</span></span>
-<span><span class="fu">shiny</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/shiny/man/isolate.html" class="external-link">isolate</a></span><span class="op">(</span><span class="va">dffs</span><span class="op">$</span><span class="fu">set_filter_state</span><span class="op">(</span>state <span class="op">=</span> <span class="va">fs</span>, data <span class="op">=</span> <span class="va">iris</span><span class="op">)</span><span class="op">)</span></span>
-<span><span class="fu">shiny</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/shiny/man/isolate.html" class="external-link">isolate</a></span><span class="op">(</span><span class="va">dffs</span><span class="op">$</span><span class="fu">get_filter_state</span><span class="op">(</span><span class="op">)</span><span class="op">)</span></span>
-<span></span></code></pre></div><p></p></div>
-</div>
-
-
-</div><p></p><hr><a id="method-DFFilterStates-remove_filter_state"></a><div class="section">
-<h3 id="method-remove-filter-state-">Method <code><a href="filter_state_api.html">remove_filter_state()</a></code><a class="anchor" aria-label="anchor" href="#method-remove-filter-state-"></a></h3>
-<p>Remove a <code>FilterState</code> from the <code>state_list</code>.</p><div class="section">
-<h4 id="usage-6">Usage<a class="anchor" aria-label="anchor" href="#usage-6"></a></h4>
-<p></p><div class="r"><div class="sourceCode"><pre><code><span><span class="va">DFFilterStates</span><span class="op">$</span><span class="fu">remove_filter_state</span><span class="op">(</span><span class="va">state_id</span><span class="op">)</span></span></code></pre></div><p></p></div>
-</div>
-
-<div class="section">
-<h4 id="arguments-4">Arguments<a class="anchor" aria-label="anchor" href="#arguments-4"></a></h4>
-<p></p><div class="arguments"><dl><dt><code>state_id</code></dt>
-<dd><p>(<code>character(1)</code>)<br> name of <code>state_list</code> element</p></dd>
-
-
-</dl><p></p></div>
-</div>
-<div class="section">
-<h4 id="returns-5">Returns<a class="anchor" aria-label="anchor" href="#returns-5"></a></h4>
-<p><code>NULL</code></p>
-</div>
-
-</div><p></p><hr><a id="method-DFFilterStates-ui_add_filter_state"></a><div class="section">
-<h3 id="method-ui-add-filter-state-">Method <code>ui_add_filter_state()</code><a class="anchor" aria-label="anchor" href="#method-ui-add-filter-state-"></a></h3>
-<p>Shiny UI module to add filter variable.</p><div class="section">
-<h4 id="usage-7">Usage<a class="anchor" aria-label="anchor" href="#usage-7"></a></h4>
-<p></p><div class="r"><div class="sourceCode"><pre><code><span><span class="va">DFFilterStates</span><span class="op">$</span><span class="fu">ui_add_filter_state</span><span class="op">(</span><span class="va">id</span>, <span class="va">data</span><span class="op">)</span></span></code></pre></div><p></p></div>
-</div>
-
-<div class="section">
-<h4 id="arguments-5">Arguments<a class="anchor" aria-label="anchor" href="#arguments-5"></a></h4>
-<p></p><div class="arguments"><dl><dt><code>id</code></dt>
-<dd><p>(<code>character(1)</code>)<br>
-shiny element (module instance) id</p></dd>
-
-
-<dt><code>data</code></dt>
-<dd><p>(<code>data.frame</code>)<br>
-data object for which to define a subset</p></dd>
-
-
-</dl><p></p></div>
-</div>
-<div class="section">
-<h4 id="returns-6">Returns<a class="anchor" aria-label="anchor" href="#returns-6"></a></h4>
-<p><code>shiny.tag</code></p>
-</div>
-
-</div><p></p><hr><a id="method-DFFilterStates-srv_add_filter_state"></a><div class="section">
-<h3 id="method-srv-add-filter-state-">Method <code>srv_add_filter_state()</code><a class="anchor" aria-label="anchor" href="#method-srv-add-filter-state-"></a></h3>
-<p>Shiny server module to add filter variable.</p>
-<p>This module controls available choices to select as a filter variable.
-Once selected, a variable is removed from available choices.
-Removing a filter variable adds it back to available choices.</p><div class="section">
-<h4 id="usage-8">Usage<a class="anchor" aria-label="anchor" href="#usage-8"></a></h4>
-<p></p><div class="r"><div class="sourceCode"><pre><code><span><span class="va">DFFilterStates</span><span class="op">$</span><span class="fu">srv_add_filter_state</span><span class="op">(</span></span>
-<span>  <span class="va">id</span>,</span>
-<span>  <span class="va">data</span>,</span>
-<span>  vars_include <span class="op">=</span> <span class="fu"><a href="../reference/get_supported_filter_varnames.html">get_supported_filter_varnames</a></span><span class="op">(</span>data <span class="op">=</span> <span class="va">data</span><span class="op">)</span>,</span>
-<span>  <span class="va">...</span></span>
-<span><span class="op">)</span></span></code></pre></div><p></p></div>
-</div>
-
-<div class="section">
-<h4 id="arguments-6">Arguments<a class="anchor" aria-label="anchor" href="#arguments-6"></a></h4>
-<p></p><div class="arguments"><dl><dt><code>id</code></dt>
-<dd><p>(<code>character(1)</code>)<br>
-shiny module instance id</p></dd>
-
-
-<dt><code>data</code></dt>
-<dd><p>(<code>data.frame</code>)<br>
-data object for which to define a subset</p></dd>
-
-
-<dt><code>vars_include</code></dt>
-<dd><p>(<code>character(n)</code>)<br>
-optional, vector of column names to be included</p></dd>
-
-
-<dt><code>...</code></dt>
-<dd><p>ignored</p></dd>
-
-
-</dl><p></p></div>
-</div>
-<div class="section">
-<h4 id="returns-7">Returns<a class="anchor" aria-label="anchor" href="#returns-7"></a></h4>
-<p><code>moduleServer</code> function which returns <code>NULL</code></p>
-</div>
-
 </div><p></p><hr><a id="method-DFFilterStates-clone"></a><div class="section">
 <h3 id="method-clone-">Method <code>clone()</code><a class="anchor" aria-label="anchor" href="#method-clone-"></a></h3>
 <p>The objects of this class are cloneable with this method.</p><div class="section">
-<h4 id="usage-9">Usage<a class="anchor" aria-label="anchor" href="#usage-9"></a></h4>
+<h4 id="usage-1">Usage<a class="anchor" aria-label="anchor" href="#usage-1"></a></h4>
 <p></p><div class="r"><div class="sourceCode"><pre><code><span><span class="va">DFFilterStates</span><span class="op">$</span><span class="fu">clone</span><span class="op">(</span>deep <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span></code></pre></div><p></p></div>
 </div>
 
 <div class="section">
-<h4 id="arguments-7">Arguments<a class="anchor" aria-label="anchor" href="#arguments-7"></a></h4>
+<h4 id="arguments-1">Arguments<a class="anchor" aria-label="anchor" href="#arguments-1"></a></h4>
 <p></p><div class="arguments"><dl><dt><code>deep</code></dt>
 <dd><p>Whether to make a deep clone.</p></dd>
 
@@ -380,10 +174,10 @@ optional, vector of column names to be included</p></dd>
 
     <div class="section level2">
     <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="kw">if</span> <span class="op">(</span><span class="cn">FALSE</span><span class="op">)</span> <span class="op">{</span></span></span>
-<span class="r-in"><span><span class="co"># working filters in an app</span></span></span>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="co"># working filters in an app</span></span></span>
 <span class="r-in"><span></span></span>
-<span class="r-in"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://shiny.rstudio.com/" class="external-link">shiny</a></span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://shiny.posit.co/" class="external-link">shiny</a></span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://deanattali.com/shinyjs/" class="external-link">shinyjs</a></span><span class="op">)</span></span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># create data frame to filter</span></span></span>
 <span class="r-in"><span><span class="va">data_df</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a></span><span class="op">(</span></span></span>
@@ -405,22 +199,24 @@ optional, vector of column names to be included</p></dd>
 <span class="r-in"><span><span class="va">data_df</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/cbind.html" class="external-link">rbind</a></span><span class="op">(</span><span class="va">data_df</span>, <span class="va">data_na</span><span class="op">)</span></span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span></span></span>
-<span class="r-in"><span><span class="co"># initiate FilterStates object</span></span></span>
+<span class="r-in"><span><span class="co"># initiate `FilterStates` object</span></span></span>
 <span class="r-in"><span><span class="va">filter_states_df</span> <span class="op">&lt;-</span> <span class="fu"><a href="init_filter_states.html">init_filter_states</a></span><span class="op">(</span></span></span>
 <span class="r-in"><span>  data <span class="op">=</span> <span class="va">data_df</span>,</span></span>
 <span class="r-in"><span>  dataname <span class="op">=</span> <span class="st">"dataset"</span>,</span></span>
-<span class="r-in"><span>  datalabel <span class="op">=</span> <span class="op">(</span><span class="st">"label"</span><span class="op">)</span>,</span></span>
-<span class="r-in"><span>  varlabels <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"long"</span>, <span class="st">"short"</span>, <span class="st">"long"</span>, <span class="st">"short"</span>, <span class="st">"long"</span>, <span class="st">"long"</span><span class="op">)</span></span></span>
+<span class="r-in"><span>  datalabel <span class="op">=</span> <span class="op">(</span><span class="st">"label"</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="op">)</span></span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="va">ui</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/shiny/man/fluidPage.html" class="external-link">fluidPage</a></span><span class="op">(</span></span></span>
+<span class="r-in"><span>  <span class="fu"><a href="https://rdrr.io/pkg/shinyjs/man/useShinyjs.html" class="external-link">useShinyjs</a></span><span class="op">(</span><span class="op">)</span>,</span></span>
+<span class="r-in"><span>  <span class="fu">teal.slice</span><span class="fu">:::</span><span class="fu"><a href="include_css_files.html">include_css_files</a></span><span class="op">(</span>pattern <span class="op">=</span> <span class="st">"filter-panel"</span><span class="op">)</span>,</span></span>
+<span class="r-in"><span>  <span class="fu">teal.slice</span><span class="fu">:::</span><span class="fu"><a href="include_js_files.html">include_js_files</a></span><span class="op">(</span>pattern <span class="op">=</span> <span class="st">"count-bar-labels"</span><span class="op">)</span>,</span></span>
 <span class="r-in"><span>  <span class="fu"><a href="https://rdrr.io/pkg/shiny/man/column.html" class="external-link">column</a></span><span class="op">(</span><span class="fl">4</span>, <span class="fu"><a href="https://rstudio.github.io/htmltools/reference/builder.html" class="external-link">div</a></span><span class="op">(</span></span></span>
 <span class="r-in"><span>    <span class="fu"><a href="https://rstudio.github.io/htmltools/reference/builder.html" class="external-link">h4</a></span><span class="op">(</span><span class="st">"Active filters"</span><span class="op">)</span>,</span></span>
-<span class="r-in"><span>    <span class="va">filter_states_df</span><span class="op">$</span><span class="fu">ui</span><span class="op">(</span><span class="st">"fsdf"</span><span class="op">)</span></span></span>
+<span class="r-in"><span>    <span class="va">filter_states_df</span><span class="op">$</span><span class="fu">ui_active</span><span class="op">(</span><span class="st">"fsdf"</span><span class="op">)</span></span></span>
 <span class="r-in"><span>  <span class="op">)</span><span class="op">)</span>,</span></span>
 <span class="r-in"><span>  <span class="fu"><a href="https://rdrr.io/pkg/shiny/man/column.html" class="external-link">column</a></span><span class="op">(</span><span class="fl">4</span>, <span class="fu"><a href="https://rstudio.github.io/htmltools/reference/builder.html" class="external-link">div</a></span><span class="op">(</span></span></span>
 <span class="r-in"><span>    <span class="fu"><a href="https://rstudio.github.io/htmltools/reference/builder.html" class="external-link">h4</a></span><span class="op">(</span><span class="st">"Manual filter control"</span><span class="op">)</span>,</span></span>
-<span class="r-in"><span>    <span class="va">filter_states_df</span><span class="op">$</span><span class="fu">ui_add_filter_state</span><span class="op">(</span><span class="st">"add_filters"</span>, <span class="va">data_df</span><span class="op">)</span>, <span class="fu"><a href="https://rstudio.github.io/htmltools/reference/builder.html" class="external-link">br</a></span><span class="op">(</span><span class="op">)</span>,</span></span>
+<span class="r-in"><span>    <span class="va">filter_states_df</span><span class="op">$</span><span class="fu">ui_add</span><span class="op">(</span><span class="st">"add_filters"</span><span class="op">)</span>, <span class="fu"><a href="https://rstudio.github.io/htmltools/reference/builder.html" class="external-link">br</a></span><span class="op">(</span><span class="op">)</span>,</span></span>
 <span class="r-in"><span>    <span class="fu"><a href="https://rstudio.github.io/htmltools/reference/builder.html" class="external-link">h4</a></span><span class="op">(</span><span class="st">"Condition (i.e. call)"</span><span class="op">)</span>, <span class="co"># display the subsetting call generated by this FilterStates</span></span></span>
 <span class="r-in"><span>    <span class="fu"><a href="https://rdrr.io/pkg/shiny/man/textOutput.html" class="external-link">textOutput</a></span><span class="op">(</span><span class="st">"call_df"</span><span class="op">)</span>, <span class="fu"><a href="https://rstudio.github.io/htmltools/reference/builder.html" class="external-link">br</a></span><span class="op">(</span><span class="op">)</span>,</span></span>
 <span class="r-in"><span>    <span class="fu"><a href="https://rstudio.github.io/htmltools/reference/builder.html" class="external-link">h4</a></span><span class="op">(</span><span class="st">"Formatted state"</span><span class="op">)</span>, <span class="co"># display human readable filter state</span></span></span>
@@ -447,87 +243,51 @@ optional, vector of column names to be included</p></dd>
 <span class="r-in"><span><span class="op">)</span></span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="va">server</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">input</span>, <span class="va">output</span>, <span class="va">session</span><span class="op">)</span> <span class="op">{</span></span></span>
-<span class="r-in"><span>  <span class="va">filter_states_df</span><span class="op">$</span><span class="fu">srv_add_filter_state</span><span class="op">(</span><span class="st">"add_filters"</span>, <span class="va">data_df</span><span class="op">)</span></span></span>
-<span class="r-in"><span>  <span class="va">filter_states_df</span><span class="op">$</span><span class="fu">server</span><span class="op">(</span><span class="st">"fsdf"</span><span class="op">)</span></span></span>
+<span class="r-in"><span>  <span class="va">filter_states_df</span><span class="op">$</span><span class="fu">srv_add</span><span class="op">(</span><span class="st">"add_filters"</span><span class="op">)</span></span></span>
+<span class="r-in"><span>  <span class="va">filter_states_df</span><span class="op">$</span><span class="fu">srv_active</span><span class="op">(</span><span class="st">"fsdf"</span><span class="op">)</span></span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span>  <span class="va">output</span><span class="op">$</span><span class="va">call_df</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/shiny/man/renderPrint.html" class="external-link">renderPrint</a></span><span class="op">(</span><span class="va">filter_states_df</span><span class="op">$</span><span class="fu">get_call</span><span class="op">(</span><span class="op">)</span><span class="op">)</span></span></span>
 <span class="r-in"><span>  <span class="va">output</span><span class="op">$</span><span class="va">formatted_df</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/shiny/man/renderPrint.html" class="external-link">renderText</a></span><span class="op">(</span><span class="va">filter_states_df</span><span class="op">$</span><span class="fu">format</span><span class="op">(</span><span class="op">)</span><span class="op">)</span></span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span>  <span class="fu"><a href="https://rdrr.io/pkg/shiny/man/observeEvent.html" class="external-link">observeEvent</a></span><span class="op">(</span><span class="va">input</span><span class="op">$</span><span class="va">button1_df</span>, <span class="op">{</span></span></span>
-<span class="r-in"><span>    <span class="va">filter_state</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>NUM1 <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>selected <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">30</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span></span>
-<span class="r-in"><span>    <span class="va">filter_states_df</span><span class="op">$</span><span class="fu">set_filter_state</span><span class="op">(</span>data <span class="op">=</span> <span class="va">data_df</span>, state <span class="op">=</span> <span class="va">filter_state</span><span class="op">)</span></span></span>
+<span class="r-in"><span>    <span class="va">filter_state</span> <span class="op">&lt;-</span> <span class="fu"><a href="teal_slices.html">teal_slices</a></span><span class="op">(</span><span class="fu"><a href="teal_slice.html">teal_slice</a></span><span class="op">(</span><span class="st">"dataset"</span>, <span class="st">"NUM1"</span>, selected <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">30</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span></span>
+<span class="r-in"><span>    <span class="va">filter_states_df</span><span class="op">$</span><span class="fu">set_filter_state</span><span class="op">(</span>state <span class="op">=</span> <span class="va">filter_state</span><span class="op">)</span></span></span>
 <span class="r-in"><span>  <span class="op">}</span><span class="op">)</span></span></span>
 <span class="r-in"><span>  <span class="fu"><a href="https://rdrr.io/pkg/shiny/man/observeEvent.html" class="external-link">observeEvent</a></span><span class="op">(</span><span class="va">input</span><span class="op">$</span><span class="va">button2_df</span>, <span class="op">{</span></span></span>
-<span class="r-in"><span>    <span class="va">filter_state</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>NUM2 <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>selected <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">20</span>, <span class="fl">21</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span></span>
-<span class="r-in"><span>    <span class="va">filter_states_df</span><span class="op">$</span><span class="fu">set_filter_state</span><span class="op">(</span>data <span class="op">=</span> <span class="va">data_df</span>, state <span class="op">=</span> <span class="va">filter_state</span><span class="op">)</span></span></span>
+<span class="r-in"><span>    <span class="va">filter_state</span> <span class="op">&lt;-</span> <span class="fu"><a href="teal_slices.html">teal_slices</a></span><span class="op">(</span><span class="fu"><a href="teal_slice.html">teal_slice</a></span><span class="op">(</span><span class="st">"dataset"</span>, <span class="st">"NUM2"</span>, selected <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">20</span>, <span class="fl">21</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span></span>
+<span class="r-in"><span>    <span class="va">filter_states_df</span><span class="op">$</span><span class="fu">set_filter_state</span><span class="op">(</span>state <span class="op">=</span> <span class="va">filter_state</span><span class="op">)</span></span></span>
 <span class="r-in"><span>  <span class="op">}</span><span class="op">)</span></span></span>
 <span class="r-in"><span>  <span class="fu"><a href="https://rdrr.io/pkg/shiny/man/observeEvent.html" class="external-link">observeEvent</a></span><span class="op">(</span><span class="va">input</span><span class="op">$</span><span class="va">button3_df</span>, <span class="op">{</span></span></span>
-<span class="r-in"><span>    <span class="va">filter_state</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>CHAR1 <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>selected <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"B"</span>, <span class="st">"C"</span>, <span class="st">"D"</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span></span>
-<span class="r-in"><span>    <span class="va">filter_states_df</span><span class="op">$</span><span class="fu">set_filter_state</span><span class="op">(</span>data <span class="op">=</span> <span class="va">data_df</span>, state <span class="op">=</span> <span class="va">filter_state</span><span class="op">)</span></span></span>
+<span class="r-in"><span>    <span class="va">filter_state</span> <span class="op">&lt;-</span> <span class="fu"><a href="teal_slices.html">teal_slices</a></span><span class="op">(</span><span class="fu"><a href="teal_slice.html">teal_slice</a></span><span class="op">(</span><span class="st">"dataset"</span>, <span class="st">"CHAR1"</span>, selected <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"B"</span>, <span class="st">"C"</span>, <span class="st">"D"</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span></span>
+<span class="r-in"><span>    <span class="va">filter_states_df</span><span class="op">$</span><span class="fu">set_filter_state</span><span class="op">(</span>state <span class="op">=</span> <span class="va">filter_state</span><span class="op">)</span></span></span>
 <span class="r-in"><span>  <span class="op">}</span><span class="op">)</span></span></span>
 <span class="r-in"><span>  <span class="fu"><a href="https://rdrr.io/pkg/shiny/man/observeEvent.html" class="external-link">observeEvent</a></span><span class="op">(</span><span class="va">input</span><span class="op">$</span><span class="va">button4_df</span>, <span class="op">{</span></span></span>
-<span class="r-in"><span>    <span class="va">filter_state</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>CHAR2 <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>selected <span class="op">=</span> <span class="st">"F"</span><span class="op">)</span><span class="op">)</span></span></span>
-<span class="r-in"><span>    <span class="va">filter_states_df</span><span class="op">$</span><span class="fu">set_filter_state</span><span class="op">(</span>data <span class="op">=</span> <span class="va">data_df</span>, state <span class="op">=</span> <span class="va">filter_state</span><span class="op">)</span></span></span>
+<span class="r-in"><span>    <span class="va">filter_state</span> <span class="op">&lt;-</span> <span class="fu"><a href="teal_slices.html">teal_slices</a></span><span class="op">(</span><span class="fu"><a href="teal_slice.html">teal_slice</a></span><span class="op">(</span><span class="st">"dataset"</span>, <span class="st">"CHAR2"</span>, selected <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"F"</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span></span>
+<span class="r-in"><span>    <span class="va">filter_states_df</span><span class="op">$</span><span class="fu">set_filter_state</span><span class="op">(</span>state <span class="op">=</span> <span class="va">filter_state</span><span class="op">)</span></span></span>
 <span class="r-in"><span>  <span class="op">}</span><span class="op">)</span></span></span>
 <span class="r-in"><span>  <span class="fu"><a href="https://rdrr.io/pkg/shiny/man/observeEvent.html" class="external-link">observeEvent</a></span><span class="op">(</span><span class="va">input</span><span class="op">$</span><span class="va">button5_df</span>, <span class="op">{</span></span></span>
-<span class="r-in"><span>    <span class="va">filter_state</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>DATE <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>selected <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"2020-01-01"</span>, <span class="st">"2020-02-02"</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span></span>
-<span class="r-in"><span>    <span class="va">filter_states_df</span><span class="op">$</span><span class="fu">set_filter_state</span><span class="op">(</span>data <span class="op">=</span> <span class="va">data_df</span>, state <span class="op">=</span> <span class="va">filter_state</span><span class="op">)</span></span></span>
+<span class="r-in"><span>    <span class="va">filter_state</span> <span class="op">&lt;-</span> <span class="fu"><a href="teal_slices.html">teal_slices</a></span><span class="op">(</span></span></span>
+<span class="r-in"><span>      <span class="fu"><a href="teal_slice.html">teal_slice</a></span><span class="op">(</span><span class="st">"dataset"</span>, <span class="st">"DATE"</span>, selected <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"2020-01-01"</span>, <span class="st">"2020-02-02"</span><span class="op">)</span><span class="op">)</span></span></span>
+<span class="r-in"><span>    <span class="op">)</span></span></span>
+<span class="r-in"><span>    <span class="va">filter_states_df</span><span class="op">$</span><span class="fu">set_filter_state</span><span class="op">(</span>state <span class="op">=</span> <span class="va">filter_state</span><span class="op">)</span></span></span>
 <span class="r-in"><span>  <span class="op">}</span><span class="op">)</span></span></span>
 <span class="r-in"><span>  <span class="fu"><a href="https://rdrr.io/pkg/shiny/man/observeEvent.html" class="external-link">observeEvent</a></span><span class="op">(</span><span class="va">input</span><span class="op">$</span><span class="va">button6_df</span>, <span class="op">{</span></span></span>
-<span class="r-in"><span>    <span class="va">filter_state</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>DATETIME <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>selected <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/as.POSIXlt.html" class="external-link">as.POSIXct</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"2020-01-01"</span>, <span class="st">"2020-02-02"</span><span class="op">)</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span></span>
-<span class="r-in"><span>    <span class="va">filter_states_df</span><span class="op">$</span><span class="fu">set_filter_state</span><span class="op">(</span>data <span class="op">=</span> <span class="va">data_df</span>, state <span class="op">=</span> <span class="va">filter_state</span><span class="op">)</span></span></span>
+<span class="r-in"><span>    <span class="va">filter_state</span> <span class="op">&lt;-</span> <span class="fu"><a href="teal_slices.html">teal_slices</a></span><span class="op">(</span></span></span>
+<span class="r-in"><span>      <span class="fu"><a href="teal_slice.html">teal_slice</a></span><span class="op">(</span><span class="st">"dataset"</span>, <span class="st">"DATETIME"</span>, selected <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/as.POSIXlt.html" class="external-link">as.POSIXct</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"2020-01-01"</span>, <span class="st">"2020-02-02"</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span></span>
+<span class="r-in"><span>    <span class="op">)</span></span></span>
+<span class="r-in"><span>    <span class="va">filter_states_df</span><span class="op">$</span><span class="fu">set_filter_state</span><span class="op">(</span>state <span class="op">=</span> <span class="va">filter_state</span><span class="op">)</span></span></span>
 <span class="r-in"><span>  <span class="op">}</span><span class="op">)</span></span></span>
-<span class="r-in"><span>  <span class="fu"><a href="https://rdrr.io/pkg/shiny/man/observeEvent.html" class="external-link">observeEvent</a></span><span class="op">(</span><span class="va">input</span><span class="op">$</span><span class="va">button7_df</span>, <span class="va">filter_states_df</span><span class="op">$</span><span class="fu">state_list_remove</span><span class="op">(</span><span class="fl">1</span>, state_id <span class="op">=</span> <span class="st">"NUM1"</span><span class="op">)</span><span class="op">)</span></span></span>
-<span class="r-in"><span>  <span class="fu"><a href="https://rdrr.io/pkg/shiny/man/observeEvent.html" class="external-link">observeEvent</a></span><span class="op">(</span><span class="va">input</span><span class="op">$</span><span class="va">button8_df</span>, <span class="va">filter_states_df</span><span class="op">$</span><span class="fu">state_list_remove</span><span class="op">(</span><span class="fl">1</span>, state_id <span class="op">=</span> <span class="st">"NUM2"</span><span class="op">)</span><span class="op">)</span></span></span>
-<span class="r-in"><span>  <span class="fu"><a href="https://rdrr.io/pkg/shiny/man/observeEvent.html" class="external-link">observeEvent</a></span><span class="op">(</span><span class="va">input</span><span class="op">$</span><span class="va">button9_df</span>, <span class="va">filter_states_df</span><span class="op">$</span><span class="fu">state_list_remove</span><span class="op">(</span><span class="fl">1</span>, state_id <span class="op">=</span> <span class="st">"CHAR1"</span><span class="op">)</span><span class="op">)</span></span></span>
-<span class="r-in"><span>  <span class="fu"><a href="https://rdrr.io/pkg/shiny/man/observeEvent.html" class="external-link">observeEvent</a></span><span class="op">(</span><span class="va">input</span><span class="op">$</span><span class="va">button10_df</span>, <span class="va">filter_states_df</span><span class="op">$</span><span class="fu">state_list_remove</span><span class="op">(</span><span class="fl">1</span>, state_id <span class="op">=</span> <span class="st">"CHAR2"</span><span class="op">)</span><span class="op">)</span></span></span>
-<span class="r-in"><span>  <span class="fu"><a href="https://rdrr.io/pkg/shiny/man/observeEvent.html" class="external-link">observeEvent</a></span><span class="op">(</span><span class="va">input</span><span class="op">$</span><span class="va">button11_df</span>, <span class="va">filter_states_df</span><span class="op">$</span><span class="fu">state_list_remove</span><span class="op">(</span><span class="fl">1</span>, state_id <span class="op">=</span> <span class="st">"DATE"</span><span class="op">)</span><span class="op">)</span></span></span>
-<span class="r-in"><span>  <span class="fu"><a href="https://rdrr.io/pkg/shiny/man/observeEvent.html" class="external-link">observeEvent</a></span><span class="op">(</span><span class="va">input</span><span class="op">$</span><span class="va">button12_df</span>, <span class="va">filter_states_df</span><span class="op">$</span><span class="fu">state_list_remove</span><span class="op">(</span><span class="fl">1</span>, state_id <span class="op">=</span> <span class="st">"DATETIME"</span><span class="op">)</span><span class="op">)</span></span></span>
-<span class="r-in"><span>  <span class="fu"><a href="https://rdrr.io/pkg/shiny/man/observeEvent.html" class="external-link">observeEvent</a></span><span class="op">(</span><span class="va">input</span><span class="op">$</span><span class="va">button0_df</span>, <span class="va">filter_states_df</span><span class="op">$</span><span class="fu">state_list_empty</span><span class="op">(</span><span class="op">)</span><span class="op">)</span></span></span>
+<span class="r-in"><span>  <span class="fu"><a href="https://rdrr.io/pkg/shiny/man/observeEvent.html" class="external-link">observeEvent</a></span><span class="op">(</span><span class="va">input</span><span class="op">$</span><span class="va">button7_df</span>, <span class="va">filter_states_df</span><span class="op">$</span><span class="fu">remove_filter_state</span><span class="op">(</span>state_id <span class="op">=</span> <span class="st">"NUM1"</span><span class="op">)</span><span class="op">)</span></span></span>
+<span class="r-in"><span>  <span class="fu"><a href="https://rdrr.io/pkg/shiny/man/observeEvent.html" class="external-link">observeEvent</a></span><span class="op">(</span><span class="va">input</span><span class="op">$</span><span class="va">button8_df</span>, <span class="va">filter_states_df</span><span class="op">$</span><span class="fu">remove_filter_state</span><span class="op">(</span>state_id <span class="op">=</span> <span class="st">"NUM2"</span><span class="op">)</span><span class="op">)</span></span></span>
+<span class="r-in"><span>  <span class="fu"><a href="https://rdrr.io/pkg/shiny/man/observeEvent.html" class="external-link">observeEvent</a></span><span class="op">(</span><span class="va">input</span><span class="op">$</span><span class="va">button9_df</span>, <span class="va">filter_states_df</span><span class="op">$</span><span class="fu">remove_filter_state</span><span class="op">(</span>state_id <span class="op">=</span> <span class="st">"CHAR1"</span><span class="op">)</span><span class="op">)</span></span></span>
+<span class="r-in"><span>  <span class="fu"><a href="https://rdrr.io/pkg/shiny/man/observeEvent.html" class="external-link">observeEvent</a></span><span class="op">(</span><span class="va">input</span><span class="op">$</span><span class="va">button10_df</span>, <span class="va">filter_states_df</span><span class="op">$</span><span class="fu">remove_filter_state</span><span class="op">(</span>state_id <span class="op">=</span> <span class="st">"CHAR2"</span><span class="op">)</span><span class="op">)</span></span></span>
+<span class="r-in"><span>  <span class="fu"><a href="https://rdrr.io/pkg/shiny/man/observeEvent.html" class="external-link">observeEvent</a></span><span class="op">(</span><span class="va">input</span><span class="op">$</span><span class="va">button11_df</span>, <span class="va">filter_states_df</span><span class="op">$</span><span class="fu">remove_filter_state</span><span class="op">(</span>state_id <span class="op">=</span> <span class="st">"DATE"</span><span class="op">)</span><span class="op">)</span></span></span>
+<span class="r-in"><span>  <span class="fu"><a href="https://rdrr.io/pkg/shiny/man/observeEvent.html" class="external-link">observeEvent</a></span><span class="op">(</span><span class="va">input</span><span class="op">$</span><span class="va">button12_df</span>, <span class="va">filter_states_df</span><span class="op">$</span><span class="fu">remove_filter_state</span><span class="op">(</span>state_id <span class="op">=</span> <span class="st">"DATETIME"</span><span class="op">)</span><span class="op">)</span></span></span>
+<span class="r-in"><span>  <span class="fu"><a href="https://rdrr.io/pkg/shiny/man/observeEvent.html" class="external-link">observeEvent</a></span><span class="op">(</span><span class="va">input</span><span class="op">$</span><span class="va">button0_df</span>, <span class="va">filter_states_df</span><span class="op">$</span><span class="fu">clear_filter_states</span><span class="op">(</span><span class="op">)</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="op">}</span></span></span>
-<span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="kw">if</span> <span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/interactive.html" class="external-link">interactive</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span> <span class="op">{</span></span></span>
 <span class="r-in"><span>  <span class="fu"><a href="https://rdrr.io/pkg/shiny/man/shinyApp.html" class="external-link">shinyApp</a></span><span class="op">(</span><span class="va">ui</span>, <span class="va">server</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="op">}</span></span></span>
-<span class="r-in"><span><span class="op">}</span></span></span>
-<span class="r-in"><span></span></span>
-<span class="r-in"><span></span></span>
-<span class="r-in"><span><span class="co">## ------------------------------------------------</span></span></span>
-<span class="r-in"><span><span class="co">## Method `DFFilterStates$set_filter_state`</span></span></span>
-<span class="r-in"><span><span class="co">## ------------------------------------------------</span></span></span>
-<span class="r-in"><span></span></span>
-<span class="r-in"><span><span class="va">dffs</span> <span class="op">&lt;-</span> <span class="fu">teal.slice</span><span class="fu">:::</span><span class="va">DFFilterStates</span><span class="op">$</span><span class="fu">new</span><span class="op">(</span></span></span>
-<span class="r-in"><span>  dataname <span class="op">=</span> <span class="st">"iris"</span>,</span></span>
-<span class="r-in"><span>  datalabel <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/character.html" class="external-link">character</a></span><span class="op">(</span><span class="fl">0</span><span class="op">)</span>,</span></span>
-<span class="r-in"><span>  varlabels <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/character.html" class="external-link">character</a></span><span class="op">(</span><span class="fl">0</span><span class="op">)</span>,</span></span>
-<span class="r-in"><span>  keys <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/character.html" class="external-link">character</a></span><span class="op">(</span><span class="fl">0</span><span class="op">)</span></span></span>
-<span class="r-in"><span><span class="op">)</span></span></span>
-<span class="r-in"><span><span class="va">fs</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span></span></span>
-<span class="r-in"><span>  Sepal.Length <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>selected <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">5.1</span>, <span class="fl">6.4</span><span class="op">)</span>, keep_na <span class="op">=</span> <span class="cn">TRUE</span>, keep_inf <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span>,</span></span>
-<span class="r-in"><span>  Species <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>selected <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"setosa"</span>, <span class="st">"versicolor"</span><span class="op">)</span>, keep_na <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span></span>
-<span class="r-in"><span><span class="op">)</span></span></span>
-<span class="r-in"><span><span class="fu">shiny</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/shiny/man/isolate.html" class="external-link">isolate</a></span><span class="op">(</span><span class="va">dffs</span><span class="op">$</span><span class="fu">set_filter_state</span><span class="op">(</span>state <span class="op">=</span> <span class="va">fs</span>, data <span class="op">=</span> <span class="va">iris</span><span class="op">)</span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> NULL</span>
-<span class="r-in"><span><span class="fu">shiny</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/shiny/man/isolate.html" class="external-link">isolate</a></span><span class="op">(</span><span class="va">dffs</span><span class="op">$</span><span class="fu">get_filter_state</span><span class="op">(</span><span class="op">)</span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> $Sepal.Length</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> $Sepal.Length$selected</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] 5.1 6.4</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> $Sepal.Length$keep_na</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] TRUE</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> $Sepal.Length$keep_inf</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] TRUE</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> $Species</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> $Species$selected</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] "setosa"     "versicolor"</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> $Species$keep_na</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [1] FALSE</span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> </span>
 <span class="r-in"><span></span></span>
 </code></pre></div>
     </div>

@@ -10,7 +10,7 @@
     
     <a class="navbar-brand me-2" href="../index.html">teal.slice</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.3.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.4.0</small>
 
     <div style="width: 140px; margin-left: 0.5rem;"> <small class="nav-text text-muted me-auto">part of</small> <img src="https://github.com/insightsengineering/hex-stickers/blob/main/PNG/nest.png?raw=true" alt="NEST" style="height: 30px;"><a href="https://pharmaverse.org/" class="external-link"><img src="https://github.com/insightsengineering/hex-stickers/blob/main/PNG/pharmaverse.png?raw=true" alt="pharmaverse" style="height: 28px;"></a> </div>
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -27,7 +27,8 @@
 <li class="nav-item dropdown">
   <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown" role="button" aria-expanded="false" aria-haspopup="true" id="dropdown-articles">Articles</a>
   <div class="dropdown-menu" aria-labelledby="dropdown-articles">
-    <a class="dropdown-item" href="../articles/filter-panel.html">Filter panel for NEST developers</a>
+    <a class="dropdown-item" href="../articles/filter-panel-for-developers.html">Filter panel for developers</a>
+    <a class="dropdown-item" href="../articles/teal-slice-classes.html">teal.slice classes</a>
   </div>
 </li>
 <li class="nav-item">
@@ -39,6 +40,7 @@
           aria-expanded="false" aria-haspopup="true"
           id="dropdown-versions">Versions</a> <div class="dropdown-menu" aria-labelledby="dropdown-versions"> <a class="dropdown-item" data-toggle="tooltip" title="" href="https://insightsengineering.github.io/teal.slice/main">main</a>
 <a class="dropdown-item" data-toggle="tooltip" title="" href="https://insightsengineering.github.io/teal.slice/latest-tag">latest-tag</a>
+<a class="dropdown-item" data-toggle="tooltip" title="" href="https://insightsengineering.github.io/teal.slice/v0.4.0">v0.4.0</a>
 <a class="dropdown-item" data-toggle="tooltip" title="" href="https://insightsengineering.github.io/teal.slice/v0.3.0">v0.3.0</a>
 <a class="dropdown-item" data-toggle="tooltip" title="" href="https://insightsengineering.github.io/teal.slice/v0.2.0">v0.2.0</a> </div></li>
 <!-- end dropdown for versions -->
@@ -76,11 +78,6 @@
 
 
     <div class="section level2">
-    <h2 id="note">Note<a class="anchor" aria-label="anchor" href="#note"></a></h2>
-    <p>Casts the passed object to <code>character</code> before validating the input
-making it possible to pass any object coercible to <code>character</code> to this method.</p>
-    </div>
-    <div class="section level2">
     <h2 id="super-class">Super class<a class="anchor" aria-label="anchor" href="#super-class"></a></h2>
     <p><code><a href="FilterState.html">teal.slice::FilterState</a></code> -&gt; <code>ChoicesFilterState</code></p>
     </div>
@@ -91,33 +88,23 @@ making it possible to pass any object coercible to <code>character</code> to thi
 <h3 id="public-methods">Public methods<a class="anchor" aria-label="anchor" href="#public-methods"></a></h3>
 
 <ul><li><p><a href="#method-ChoicesFilterState-new"><code>ChoicesFilterState$new()</code></a></p></li>
-<li><p><a href="#method-ChoicesFilterState-is_any_filtered"><code>ChoicesFilterState$is_any_filtered()</code></a></p></li>
 <li><p><a href="#method-ChoicesFilterState-get_call"><code>ChoicesFilterState$get_call()</code></a></p></li>
-<li><p><a href="#method-ChoicesFilterState-set_state"><code>ChoicesFilterState$set_state()</code></a></p></li>
-<li><p><a href="#method-ChoicesFilterState-set_selected"><code>ChoicesFilterState$set_selected()</code></a></p></li>
 <li><p><a href="#method-ChoicesFilterState-clone"><code>ChoicesFilterState$clone()</code></a></p></li>
 </ul></div><p><details><summary>Inherited methods</summary><ul><li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilterState" data-id="destroy_observers"><a href="FilterState.html#method-destroy_observers"><code>teal.slice::FilterState$destroy_observers()</code></a></span></li>
 <li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilterState" data-id="format"><a href="FilterState.html#method-format"><code>teal.slice::FilterState$format()</code></a></span></li>
-<li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilterState" data-id="get_dataname"><a href="FilterState.html#method-get_dataname"><code>teal.slice::FilterState$get_dataname()</code></a></span></li>
-<li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilterState" data-id="get_keep_na"><a href="FilterState.html#method-get_keep_na"><code>teal.slice::FilterState$get_keep_na()</code></a></span></li>
-<li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilterState" data-id="get_selected"><a href="FilterState.html#method-get_selected"><code>teal.slice::FilterState$get_selected()</code></a></span></li>
 <li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilterState" data-id="get_state"><a href="FilterState.html#method-get_state"><code>teal.slice::FilterState$get_state()</code></a></span></li>
-<li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilterState" data-id="get_varlabel"><a href="FilterState.html#method-get_varlabel"><code>teal.slice::FilterState$get_varlabel()</code></a></span></li>
-<li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilterState" data-id="get_varname"><a href="FilterState.html#method-get_varname"><code>teal.slice::FilterState$get_varname()</code></a></span></li>
 <li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilterState" data-id="print"><a href="FilterState.html#method-print"><code>teal.slice::FilterState$print()</code></a></span></li>
 <li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilterState" data-id="server"><a href="FilterState.html#method-server"><code>teal.slice::FilterState$server()</code></a></span></li>
-<li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilterState" data-id="set_keep_na"><a href="FilterState.html#method-set_keep_na"><code>teal.slice::FilterState$set_keep_na()</code></a></span></li>
-<li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilterState" data-id="set_na_rm"><a href="FilterState.html#method-set_na_rm"><code>teal.slice::FilterState$set_na_rm()</code></a></span></li>
+<li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilterState" data-id="set_state"><a href="FilterState.html#method-set_state"><code>teal.slice::FilterState$set_state()</code></a></span></li>
 <li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilterState" data-id="ui"><a href="FilterState.html#method-ui"><code>teal.slice::FilterState$ui()</code></a></span></li>
 </ul></details></p><hr><a id="method-ChoicesFilterState-new"></a><div class="section">
 <h3 id="method-new-">Method <code><a href="https://rdrr.io/r/methods/new.html" class="external-link">new()</a></code><a class="anchor" aria-label="anchor" href="#method-new-"></a></h3>
-<p>Initialize a <code>FilterState</code> object</p><div class="section">
+<p>Initialize a <code>InteractiveFilterState</code> object</p><div class="section">
 <h4 id="usage">Usage<a class="anchor" aria-label="anchor" href="#usage"></a></h4>
 <p></p><div class="r"><div class="sourceCode"><pre><code><span><span class="va"><a href="../reference/ChoicesFilterState.html">ChoicesFilterState</a></span><span class="op">$</span><span class="fu">new</span><span class="op">(</span></span>
 <span>  <span class="va">x</span>,</span>
-<span>  <span class="va">varname</span>,</span>
-<span>  varlabel <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/character.html" class="external-link">character</a></span><span class="op">(</span><span class="fl">0</span><span class="op">)</span>,</span>
-<span>  dataname <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  x_reactive <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/pkg/shiny/man/reactive.html" class="external-link">reactive</a></span><span class="op">(</span><span class="cn">NULL</span><span class="op">)</span>,</span>
+<span>  <span class="va">slice</span>,</span>
 <span>  extract_type <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/character.html" class="external-link">character</a></span><span class="op">(</span><span class="fl">0</span><span class="op">)</span></span>
 <span><span class="op">)</span></span></code></pre></div><p></p></div>
 </div>
@@ -125,46 +112,40 @@ making it possible to pass any object coercible to <code>character</code> to thi
 <div class="section">
 <h4 id="arguments">Arguments<a class="anchor" aria-label="anchor" href="#arguments"></a></h4>
 <p></p><div class="arguments"><dl><dt><code>x</code></dt>
-<dd><p>(<code>character</code> or <code>factor</code>)<br>
+<dd><p>(<code>vector</code>)<br>
 values of the variable used in filter</p></dd>
 
 
-<dt><code>varname</code></dt>
-<dd><p>(<code>character</code>)<br>
-name of the variable</p></dd>
+<dt><code>x_reactive</code></dt>
+<dd><p>(<code>reactive</code>)<br>
+returning vector of the same type as <code>x</code>. Is used to update
+counts following the change in values of the filtered dataset.
+If it is set to <code>reactive(NULL)</code> then counts based on filtered
+dataset are not shown.</p></dd>
 
 
-<dt><code>varlabel</code></dt>
-<dd><p>(<code>character(1)</code>)<br>
-label of the variable (optional).</p></dd>
-
-
-<dt><code>dataname</code></dt>
-<dd><p>(<code>character(1)</code>)<br>
-optional name of dataset where <code>x</code> is taken from</p></dd>
+<dt><code>slice</code></dt>
+<dd><p>(<code>teal_slice</code>)<br>
+object created using <code><a href="teal_slice.html">teal_slice()</a></code>. <code>teal_slice</code> is stored
+in the class and <code>set_state</code> directly manipulates values within <code>teal_slice</code>. <code>get_state</code>
+returns <code>teal_slice</code> object which can be reused in other places. Beware, that <code>teal_slice</code>
+is a <code>reactiveValues</code> which means that changes in particular object are automatically
+reflected in all places which refer to the same <code>teal_slice</code>.</p></dd>
 
 
 <dt><code>extract_type</code></dt>
 <dd><p>(<code>character(0)</code>, <code>character(1)</code>)<br>
-whether condition calls should be prefixed by dataname. Possible values:</p><ul><li><p><code>character(0)</code> (default) <code>varname</code> in the condition call will not be prefixed</p></li>
+whether condition calls should be prefixed by <code>dataname</code>. Possible values:</p><ul><li><p><code>character(0)</code> (default) <code>varname</code> in the condition call will not be prefixed</p></li>
 <li><p><code>"list"</code> <code>varname</code> in the condition call will be returned as <code>&lt;dataname&gt;$&lt;varname&gt;</code></p></li>
 <li><p><code>"matrix"</code> <code>varname</code> in the condition call will be returned as <code>&lt;dataname&gt;[, &lt;varname&gt;]</code></p></li>
 </ul></dd>
 
 
+<dt><code>...</code></dt>
+<dd><p>additional arguments to be saved as a list in <code>private$extras</code> field</p></dd>
+
+
 </dl><p></p></div>
-</div>
-
-</div><p></p><hr><a id="method-ChoicesFilterState-is_any_filtered"></a><div class="section">
-<h3 id="method-is-any-filtered-">Method <code>is_any_filtered()</code><a class="anchor" aria-label="anchor" href="#method-is-any-filtered-"></a></h3>
-<p>Answers the question of whether the current settings and values selected actually filters out any values.</p><div class="section">
-<h4 id="usage-1">Usage<a class="anchor" aria-label="anchor" href="#usage-1"></a></h4>
-<p></p><div class="r"><div class="sourceCode"><pre><code><span><span class="va">ChoicesFilterState</span><span class="op">$</span><span class="fu">is_any_filtered</span><span class="op">(</span><span class="op">)</span></span></code></pre></div><p></p></div>
-</div>
-
-<div class="section">
-<h4 id="returns">Returns<a class="anchor" aria-label="anchor" href="#returns"></a></h4>
-<p>logical scalar</p>
 </div>
 
 </div><p></p><hr><a id="method-ChoicesFilterState-get_call"></a><div class="section">
@@ -173,70 +154,32 @@ whether condition calls should be prefixed by dataname. Possible values:</p><ul>
 For this class returned call looks like
 <code>&lt;varname&gt; %in%  c(&lt;values selected&gt;)</code> with
 optional <code>is.na(&lt;varname&gt;)</code>.</p><div class="section">
-<h4 id="usage-2">Usage<a class="anchor" aria-label="anchor" href="#usage-2"></a></h4>
-<p></p><div class="r"><div class="sourceCode"><pre><code><span><span class="va">ChoicesFilterState</span><span class="op">$</span><span class="fu">get_call</span><span class="op">(</span><span class="op">)</span></span></code></pre></div><p></p></div>
-</div>
-
-<div class="section">
-<h4 id="returns-1">Returns<a class="anchor" aria-label="anchor" href="#returns-1"></a></h4>
-<p>(<code>call</code>)</p>
-</div>
-
-</div><p></p><hr><a id="method-ChoicesFilterState-set_state"></a><div class="section">
-<h3 id="method-set-state-">Method <code>set_state()</code><a class="anchor" aria-label="anchor" href="#method-set-state-"></a></h3>
-<p>Set state</p><div class="section">
-<h4 id="usage-3">Usage<a class="anchor" aria-label="anchor" href="#usage-3"></a></h4>
-<p></p><div class="r"><div class="sourceCode"><pre><code><span><span class="va">ChoicesFilterState</span><span class="op">$</span><span class="fu">set_state</span><span class="op">(</span><span class="va">state</span><span class="op">)</span></span></code></pre></div><p></p></div>
+<h4 id="usage-1">Usage<a class="anchor" aria-label="anchor" href="#usage-1"></a></h4>
+<p></p><div class="r"><div class="sourceCode"><pre><code><span><span class="va">ChoicesFilterState</span><span class="op">$</span><span class="fu">get_call</span><span class="op">(</span><span class="va">dataname</span><span class="op">)</span></span></code></pre></div><p></p></div>
 </div>
 
 <div class="section">
 <h4 id="arguments-1">Arguments<a class="anchor" aria-label="anchor" href="#arguments-1"></a></h4>
-<p></p><div class="arguments"><dl><dt><code>state</code></dt>
-<dd><p>(<code>list</code>)<br>
-contains fields relevant for a specific class</p><ul><li><p><code>selected</code> defines initial selection</p></li>
-<li><p><code>keep_na</code> (<code>logical</code>) defines whether to keep or remove <code>NA</code> values</p></li>
-</ul></dd>
-
-
-</dl><p></p></div>
-</div>
-
-</div><p></p><hr><a id="method-ChoicesFilterState-set_selected"></a><div class="section">
-<h3 id="method-set-selected-">Method <code>set_selected()</code><a class="anchor" aria-label="anchor" href="#method-set-selected-"></a></h3>
-<p>Sets the selected values of this <code>ChoicesFilterState</code>.</p><div class="section">
-<h4 id="usage-4">Usage<a class="anchor" aria-label="anchor" href="#usage-4"></a></h4>
-<p></p><div class="r"><div class="sourceCode"><pre><code><span><span class="va">ChoicesFilterState</span><span class="op">$</span><span class="fu">set_selected</span><span class="op">(</span><span class="va">value</span><span class="op">)</span></span></code></pre></div><p></p></div>
-</div>
-
-<div class="section">
-<h4 id="arguments-2">Arguments<a class="anchor" aria-label="anchor" href="#arguments-2"></a></h4>
-<p></p><div class="arguments"><dl><dt><code>value</code></dt>
-<dd><p>(<code>character</code>) the array of the selected choices.
-Must not contain NA values.</p></dd>
+<p></p><div class="arguments"><dl><dt><code>dataname</code></dt>
+<dd><p>name of data set; defaults to <code>private$get_dataname()</code></p></dd>
 
 
 </dl><p></p></div>
 </div>
 <div class="section">
-<h4 id="returns-2">Returns<a class="anchor" aria-label="anchor" href="#returns-2"></a></h4>
-<p>invisibly <code>NULL</code></p>
+<h4 id="returns">Returns<a class="anchor" aria-label="anchor" href="#returns"></a></h4>
+<p>(<code>call</code>) or <code>NULL</code></p>
 </div>
-<div class="section">
-<h4 id="examples">Examples<a class="anchor" aria-label="anchor" href="#examples"></a></h4>
-<p></p><div class="r example copy"><div class="sourceCode"><pre><code><span><span class="va">filter</span> <span class="op">&lt;-</span> <span class="fu">teal.slice</span><span class="fu">:::</span><span class="va"><a href="../reference/ChoicesFilterState.html">ChoicesFilterState</a></span><span class="op">$</span><span class="fu">new</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"a"</span>, <span class="st">"b"</span>, <span class="st">"c"</span><span class="op">)</span>, varname <span class="op">=</span> <span class="st">"name"</span><span class="op">)</span></span>
-<span><span class="va">filter</span><span class="op">$</span><span class="fu">set_selected</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"c"</span>, <span class="st">"a"</span><span class="op">)</span><span class="op">)</span></span></code></pre></div><p></p></div>
-</div>
-
 
 </div><p></p><hr><a id="method-ChoicesFilterState-clone"></a><div class="section">
 <h3 id="method-clone-">Method <code>clone()</code><a class="anchor" aria-label="anchor" href="#method-clone-"></a></h3>
 <p>The objects of this class are cloneable with this method.</p><div class="section">
-<h4 id="usage-5">Usage<a class="anchor" aria-label="anchor" href="#usage-5"></a></h4>
+<h4 id="usage-2">Usage<a class="anchor" aria-label="anchor" href="#usage-2"></a></h4>
 <p></p><div class="r"><div class="sourceCode"><pre><code><span><span class="va">ChoicesFilterState</span><span class="op">$</span><span class="fu">clone</span><span class="op">(</span>deep <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span></code></pre></div><p></p></div>
 </div>
 
 <div class="section">
-<h4 id="arguments-3">Arguments<a class="anchor" aria-label="anchor" href="#arguments-3"></a></h4>
+<h4 id="arguments-2">Arguments<a class="anchor" aria-label="anchor" href="#arguments-2"></a></h4>
 <p></p><div class="arguments"><dl><dt><code>deep</code></dt>
 <dd><p>Whether to make a deep clone.</p></dd>
 
@@ -251,36 +194,50 @@ Must not contain NA values.</p></dd>
     <div class="section level2">
     <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>
     <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="va">filter_state</span> <span class="op">&lt;-</span> <span class="fu">teal.slice</span><span class="fu">:::</span><span class="va">ChoicesFilterState</span><span class="op">$</span><span class="fu">new</span><span class="op">(</span></span></span>
-<span class="r-in"><span>  <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="va">LETTERS</span>, <span class="cn">NA</span><span class="op">)</span>,</span></span>
-<span class="r-in"><span>  varname <span class="op">=</span> <span class="st">"x"</span>,</span></span>
-<span class="r-in"><span>  dataname <span class="op">=</span> <span class="st">"data"</span>,</span></span>
-<span class="r-in"><span>  extract_type <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/character.html" class="external-link">character</a></span><span class="op">(</span><span class="fl">0</span><span class="op">)</span></span></span>
+<span class="r-in"><span>  x <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="va">LETTERS</span>, <span class="cn">NA</span><span class="op">)</span>,</span></span>
+<span class="r-in"><span>  slice <span class="op">=</span> <span class="fu"><a href="teal_slice.html">teal_slice</a></span><span class="op">(</span>varname <span class="op">=</span> <span class="st">"x"</span>, dataname <span class="op">=</span> <span class="st">"data"</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="op">)</span></span></span>
-<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/pkg/shiny/man/isolate.html" class="external-link">isolate</a></span><span class="op">(</span><span class="va">filter_state</span><span class="op">$</span><span class="fu">get_call</span><span class="op">(</span><span class="op">)</span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> x %in% c("A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> "L", "M", "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", </span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> "Y", "Z")</span>
-<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/pkg/shiny/man/isolate.html" class="external-link">isolate</a></span><span class="op">(</span><span class="va">filter_state</span><span class="op">$</span><span class="fu">set_selected</span><span class="op">(</span><span class="st">"B"</span><span class="op">)</span><span class="op">)</span></span></span>
-<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/pkg/shiny/man/isolate.html" class="external-link">isolate</a></span><span class="op">(</span><span class="va">filter_state</span><span class="op">$</span><span class="fu">set_keep_na</span><span class="op">(</span><span class="cn">TRUE</span><span class="op">)</span><span class="op">)</span></span></span>
-<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/pkg/shiny/man/isolate.html" class="external-link">isolate</a></span><span class="op">(</span><span class="va">filter_state</span><span class="op">$</span><span class="fu">get_call</span><span class="op">(</span><span class="op">)</span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> is.na(x) | x == "B"</span>
+<span class="r-in"><span><span class="fu">shiny</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/shiny/man/isolate.html" class="external-link">isolate</a></span><span class="op">(</span><span class="va">filter_state</span><span class="op">$</span><span class="fu">get_call</span><span class="op">(</span><span class="op">)</span><span class="op">)</span></span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> NULL</span>
+<span class="r-in"><span><span class="va">filter_state</span><span class="op">$</span><span class="fu">set_state</span><span class="op">(</span></span></span>
+<span class="r-in"><span>  <span class="fu"><a href="teal_slice.html">teal_slice</a></span><span class="op">(</span></span></span>
+<span class="r-in"><span>    dataname <span class="op">=</span> <span class="st">"data"</span>,</span></span>
+<span class="r-in"><span>    varname <span class="op">=</span> <span class="st">"x"</span>,</span></span>
+<span class="r-in"><span>    selected <span class="op">=</span> <span class="st">"A"</span>,</span></span>
+<span class="r-in"><span>    keep_na <span class="op">=</span> <span class="cn">TRUE</span></span></span>
+<span class="r-in"><span>  <span class="op">)</span></span></span>
+<span class="r-in"><span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="fu">shiny</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/shiny/man/isolate.html" class="external-link">isolate</a></span><span class="op">(</span><span class="va">filter_state</span><span class="op">$</span><span class="fu">get_call</span><span class="op">(</span><span class="op">)</span><span class="op">)</span></span></span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> is.na(x) | x == "A"</span>
 <span class="r-in"><span></span></span>
-<span class="r-in"><span><span class="kw">if</span> <span class="op">(</span><span class="cn">FALSE</span><span class="op">)</span> <span class="op">{</span></span></span>
 <span class="r-in"><span><span class="co"># working filter in an app</span></span></span>
-<span class="r-in"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://shiny.rstudio.com/" class="external-link">shiny</a></span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://shiny.posit.co/" class="external-link">shiny</a></span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://deanattali.com/shinyjs/" class="external-link">shinyjs</a></span><span class="op">)</span></span></span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> Attaching package: ‘shinyjs’</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> The following object is masked from ‘package:shiny’:</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span>     runExample</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> The following objects are masked from ‘package:methods’:</span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span> </span>
+<span class="r-msg co"><span class="r-pr">#&gt;</span>     removeClass, show</span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="va">data_choices</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/sample.html" class="external-link">sample</a></span><span class="op">(</span><span class="va">letters</span><span class="op">[</span><span class="fl">1</span><span class="op">:</span><span class="fl">4</span><span class="op">]</span>, <span class="fl">100</span>, replace <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span>, <span class="cn">NA</span><span class="op">)</span></span></span>
-<span class="r-in"><span><span class="va">filter_state_choices</span> <span class="op">&lt;-</span> <span class="va">ChoicesFilterState</span><span class="op">$</span><span class="fu">new</span><span class="op">(</span></span></span>
+<span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/attr.html" class="external-link">attr</a></span><span class="op">(</span><span class="va">data_choices</span>, <span class="st">"label"</span><span class="op">)</span> <span class="op">&lt;-</span> <span class="st">"lowercase letters"</span></span></span>
+<span class="r-in"><span><span class="va">fs</span> <span class="op">&lt;-</span> <span class="fu">teal.slice</span><span class="fu">:::</span><span class="va">ChoicesFilterState</span><span class="op">$</span><span class="fu">new</span><span class="op">(</span></span></span>
 <span class="r-in"><span>  x <span class="op">=</span> <span class="va">data_choices</span>,</span></span>
-<span class="r-in"><span>  varname <span class="op">=</span> <span class="st">"variable"</span>,</span></span>
-<span class="r-in"><span>  varlabel <span class="op">=</span> <span class="st">"label"</span></span></span>
+<span class="r-in"><span>  slice <span class="op">=</span> <span class="fu"><a href="teal_slice.html">teal_slice</a></span><span class="op">(</span></span></span>
+<span class="r-in"><span>    dataname <span class="op">=</span> <span class="st">"data"</span>, varname <span class="op">=</span> <span class="st">"variable"</span>, selected <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"a"</span>, <span class="st">"c"</span><span class="op">)</span>, keep_na <span class="op">=</span> <span class="cn">TRUE</span></span></span>
+<span class="r-in"><span>  <span class="op">)</span></span></span>
 <span class="r-in"><span><span class="op">)</span></span></span>
-<span class="r-in"><span><span class="va">filter_state_choices</span><span class="op">$</span><span class="fu">set_state</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>selected <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"a"</span>, <span class="st">"c"</span><span class="op">)</span>, keep_na <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span><span class="op">)</span></span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="va">ui</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/shiny/man/fluidPage.html" class="external-link">fluidPage</a></span><span class="op">(</span></span></span>
+<span class="r-in"><span>  <span class="fu"><a href="https://rdrr.io/pkg/shinyjs/man/useShinyjs.html" class="external-link">useShinyjs</a></span><span class="op">(</span><span class="op">)</span>,</span></span>
+<span class="r-in"><span>  <span class="fu">teal.slice</span><span class="fu">:::</span><span class="fu"><a href="include_css_files.html">include_css_files</a></span><span class="op">(</span>pattern <span class="op">=</span> <span class="st">"filter-panel"</span><span class="op">)</span>,</span></span>
+<span class="r-in"><span>  <span class="fu">teal.slice</span><span class="fu">:::</span><span class="fu"><a href="include_js_files.html">include_js_files</a></span><span class="op">(</span>pattern <span class="op">=</span> <span class="st">"count-bar-labels"</span><span class="op">)</span>,</span></span>
 <span class="r-in"><span>  <span class="fu"><a href="https://rdrr.io/pkg/shiny/man/column.html" class="external-link">column</a></span><span class="op">(</span><span class="fl">4</span>, <span class="fu"><a href="https://rstudio.github.io/htmltools/reference/builder.html" class="external-link">div</a></span><span class="op">(</span></span></span>
 <span class="r-in"><span>    <span class="fu"><a href="https://rstudio.github.io/htmltools/reference/builder.html" class="external-link">h4</a></span><span class="op">(</span><span class="st">"ChoicesFilterState"</span><span class="op">)</span>,</span></span>
-<span class="r-in"><span>    <span class="fu"><a href="https://rdrr.io/pkg/shiny/man/isolate.html" class="external-link">isolate</a></span><span class="op">(</span><span class="va">filter_state_choices</span><span class="op">$</span><span class="fu">ui</span><span class="op">(</span><span class="st">"fs"</span><span class="op">)</span><span class="op">)</span></span></span>
+<span class="r-in"><span>    <span class="va">fs</span><span class="op">$</span><span class="fu">ui</span><span class="op">(</span><span class="st">"fs"</span><span class="op">)</span></span></span>
 <span class="r-in"><span>  <span class="op">)</span><span class="op">)</span>,</span></span>
 <span class="r-in"><span>  <span class="fu"><a href="https://rdrr.io/pkg/shiny/man/column.html" class="external-link">column</a></span><span class="op">(</span><span class="fl">4</span>, <span class="fu"><a href="https://rstudio.github.io/htmltools/reference/builder.html" class="external-link">div</a></span><span class="op">(</span></span></span>
 <span class="r-in"><span>    <span class="fu"><a href="https://rstudio.github.io/htmltools/reference/builder.html" class="external-link">h4</a></span><span class="op">(</span><span class="st">"Condition (i.e. call)"</span><span class="op">)</span>, <span class="co"># display the subsetting call generated by this FilterState</span></span></span>
@@ -294,43 +251,54 @@ Must not contain NA values.</p></dd>
 <span class="r-in"><span>    <span class="fu"><a href="https://rstudio.github.io/htmltools/reference/builder.html" class="external-link">h4</a></span><span class="op">(</span><span class="st">"Programmatic filter control"</span><span class="op">)</span>,</span></span>
 <span class="r-in"><span>    <span class="fu"><a href="https://rdrr.io/pkg/shiny/man/actionButton.html" class="external-link">actionButton</a></span><span class="op">(</span><span class="st">"button1_choices"</span>, <span class="st">"set drop NA"</span>, width <span class="op">=</span> <span class="st">"100%"</span><span class="op">)</span>, <span class="fu"><a href="https://rstudio.github.io/htmltools/reference/builder.html" class="external-link">br</a></span><span class="op">(</span><span class="op">)</span>,</span></span>
 <span class="r-in"><span>    <span class="fu"><a href="https://rdrr.io/pkg/shiny/man/actionButton.html" class="external-link">actionButton</a></span><span class="op">(</span><span class="st">"button2_choices"</span>, <span class="st">"set keep NA"</span>, width <span class="op">=</span> <span class="st">"100%"</span><span class="op">)</span>, <span class="fu"><a href="https://rstudio.github.io/htmltools/reference/builder.html" class="external-link">br</a></span><span class="op">(</span><span class="op">)</span>,</span></span>
-<span class="r-in"><span>    <span class="fu"><a href="https://rdrr.io/pkg/shiny/man/actionButton.html" class="external-link">actionButton</a></span><span class="op">(</span><span class="st">"button3_choices"</span>, <span class="st">"set a selection"</span>, width <span class="op">=</span> <span class="st">"100%"</span><span class="op">)</span>, <span class="fu"><a href="https://rstudio.github.io/htmltools/reference/builder.html" class="external-link">br</a></span><span class="op">(</span><span class="op">)</span>,</span></span>
+<span class="r-in"><span>    <span class="fu"><a href="https://rdrr.io/pkg/shiny/man/actionButton.html" class="external-link">actionButton</a></span><span class="op">(</span><span class="st">"button3_choices"</span>, <span class="st">"set selection: a, b"</span>, width <span class="op">=</span> <span class="st">"100%"</span><span class="op">)</span>, <span class="fu"><a href="https://rstudio.github.io/htmltools/reference/builder.html" class="external-link">br</a></span><span class="op">(</span><span class="op">)</span>,</span></span>
 <span class="r-in"><span>    <span class="fu"><a href="https://rdrr.io/pkg/shiny/man/actionButton.html" class="external-link">actionButton</a></span><span class="op">(</span><span class="st">"button4_choices"</span>, <span class="st">"deselect all"</span>, width <span class="op">=</span> <span class="st">"100%"</span><span class="op">)</span>, <span class="fu"><a href="https://rstudio.github.io/htmltools/reference/builder.html" class="external-link">br</a></span><span class="op">(</span><span class="op">)</span>,</span></span>
 <span class="r-in"><span>    <span class="fu"><a href="https://rdrr.io/pkg/shiny/man/actionButton.html" class="external-link">actionButton</a></span><span class="op">(</span><span class="st">"button0_choices"</span>, <span class="st">"set initial state"</span>, width <span class="op">=</span> <span class="st">"100%"</span><span class="op">)</span>, <span class="fu"><a href="https://rstudio.github.io/htmltools/reference/builder.html" class="external-link">br</a></span><span class="op">(</span><span class="op">)</span></span></span>
 <span class="r-in"><span>  <span class="op">)</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="op">)</span></span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="va">server</span> <span class="op">&lt;-</span> <span class="kw">function</span><span class="op">(</span><span class="va">input</span>, <span class="va">output</span>, <span class="va">session</span><span class="op">)</span> <span class="op">{</span></span></span>
-<span class="r-in"><span>  <span class="va">filter_state_choices</span><span class="op">$</span><span class="fu">server</span><span class="op">(</span><span class="st">"fs"</span><span class="op">)</span></span></span>
-<span class="r-in"><span>  <span class="va">output</span><span class="op">$</span><span class="va">condition_choices</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/shiny/man/renderPrint.html" class="external-link">renderPrint</a></span><span class="op">(</span><span class="va">filter_state_choices</span><span class="op">$</span><span class="fu">get_call</span><span class="op">(</span><span class="op">)</span><span class="op">)</span></span></span>
-<span class="r-in"><span>  <span class="va">output</span><span class="op">$</span><span class="va">formatted_choices</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/shiny/man/renderPrint.html" class="external-link">renderText</a></span><span class="op">(</span><span class="va">filter_state_choices</span><span class="op">$</span><span class="fu">format</span><span class="op">(</span><span class="op">)</span><span class="op">)</span></span></span>
-<span class="r-in"><span>  <span class="va">output</span><span class="op">$</span><span class="va">unformatted_choices</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/shiny/man/renderPrint.html" class="external-link">renderPrint</a></span><span class="op">(</span><span class="va">filter_state_choices</span><span class="op">$</span><span class="fu">get_state</span><span class="op">(</span><span class="op">)</span><span class="op">)</span></span></span>
+<span class="r-in"><span>  <span class="va">fs</span><span class="op">$</span><span class="fu">server</span><span class="op">(</span><span class="st">"fs"</span><span class="op">)</span></span></span>
+<span class="r-in"><span>  <span class="va">output</span><span class="op">$</span><span class="va">condition_choices</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/shiny/man/renderPrint.html" class="external-link">renderPrint</a></span><span class="op">(</span><span class="va">fs</span><span class="op">$</span><span class="fu">get_call</span><span class="op">(</span><span class="op">)</span><span class="op">)</span></span></span>
+<span class="r-in"><span>  <span class="va">output</span><span class="op">$</span><span class="va">formatted_choices</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/shiny/man/renderPrint.html" class="external-link">renderText</a></span><span class="op">(</span><span class="va">fs</span><span class="op">$</span><span class="fu">format</span><span class="op">(</span><span class="op">)</span><span class="op">)</span></span></span>
+<span class="r-in"><span>  <span class="va">output</span><span class="op">$</span><span class="va">unformatted_choices</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/shiny/man/renderPrint.html" class="external-link">renderPrint</a></span><span class="op">(</span><span class="va">fs</span><span class="op">$</span><span class="fu">get_state</span><span class="op">(</span><span class="op">)</span><span class="op">)</span></span></span>
 <span class="r-in"><span>  <span class="co"># modify filter state programmatically</span></span></span>
-<span class="r-in"><span>  <span class="fu"><a href="https://rdrr.io/pkg/shiny/man/observeEvent.html" class="external-link">observeEvent</a></span><span class="op">(</span><span class="va">input</span><span class="op">$</span><span class="va">button1_choices</span>, <span class="va">filter_state_choices</span><span class="op">$</span><span class="fu">set_keep_na</span><span class="op">(</span><span class="cn">FALSE</span><span class="op">)</span><span class="op">)</span></span></span>
-<span class="r-in"><span>  <span class="fu"><a href="https://rdrr.io/pkg/shiny/man/observeEvent.html" class="external-link">observeEvent</a></span><span class="op">(</span><span class="va">input</span><span class="op">$</span><span class="va">button2_choices</span>, <span class="va">filter_state_choices</span><span class="op">$</span><span class="fu">set_keep_na</span><span class="op">(</span><span class="cn">TRUE</span><span class="op">)</span><span class="op">)</span></span></span>
+<span class="r-in"><span>  <span class="fu"><a href="https://rdrr.io/pkg/shiny/man/observeEvent.html" class="external-link">observeEvent</a></span><span class="op">(</span></span></span>
+<span class="r-in"><span>    <span class="va">input</span><span class="op">$</span><span class="va">button1_choices</span>,</span></span>
+<span class="r-in"><span>    <span class="va">fs</span><span class="op">$</span><span class="fu">set_state</span><span class="op">(</span></span></span>
+<span class="r-in"><span>      <span class="fu"><a href="teal_slice.html">teal_slice</a></span><span class="op">(</span>dataname <span class="op">=</span> <span class="st">"data"</span>, varname <span class="op">=</span> <span class="st">"variable"</span>, keep_na <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span></span>
+<span class="r-in"><span>    <span class="op">)</span></span></span>
+<span class="r-in"><span>  <span class="op">)</span></span></span>
+<span class="r-in"><span>  <span class="fu"><a href="https://rdrr.io/pkg/shiny/man/observeEvent.html" class="external-link">observeEvent</a></span><span class="op">(</span></span></span>
+<span class="r-in"><span>    <span class="va">input</span><span class="op">$</span><span class="va">button2_choices</span>,</span></span>
+<span class="r-in"><span>    <span class="va">fs</span><span class="op">$</span><span class="fu">set_state</span><span class="op">(</span></span></span>
+<span class="r-in"><span>      <span class="fu"><a href="teal_slice.html">teal_slice</a></span><span class="op">(</span>dataname <span class="op">=</span> <span class="st">"data"</span>, varname <span class="op">=</span> <span class="st">"variable"</span>, keep_na <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></span>
+<span class="r-in"><span>    <span class="op">)</span></span></span>
+<span class="r-in"><span>  <span class="op">)</span></span></span>
 <span class="r-in"><span>  <span class="fu"><a href="https://rdrr.io/pkg/shiny/man/observeEvent.html" class="external-link">observeEvent</a></span><span class="op">(</span></span></span>
 <span class="r-in"><span>    <span class="va">input</span><span class="op">$</span><span class="va">button3_choices</span>,</span></span>
-<span class="r-in"><span>    <span class="va">filter_state_choices</span><span class="op">$</span><span class="fu">set_selected</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"b"</span>, <span class="st">"c"</span><span class="op">)</span><span class="op">)</span></span></span>
+<span class="r-in"><span>    <span class="va">fs</span><span class="op">$</span><span class="fu">set_state</span><span class="op">(</span></span></span>
+<span class="r-in"><span>      <span class="fu"><a href="teal_slice.html">teal_slice</a></span><span class="op">(</span>dataname <span class="op">=</span> <span class="st">"data"</span>, varname <span class="op">=</span> <span class="st">"variable"</span>, selected <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"a"</span>, <span class="st">"b"</span><span class="op">)</span><span class="op">)</span></span></span>
+<span class="r-in"><span>    <span class="op">)</span></span></span>
 <span class="r-in"><span>  <span class="op">)</span></span></span>
-<span class="r-in"><span>  <span class="fu"><a href="https://rdrr.io/pkg/shiny/man/observeEvent.html" class="external-link">observeEvent</a></span><span class="op">(</span><span class="va">input</span><span class="op">$</span><span class="va">button4_choices</span>, <span class="va">filter_state_choices</span><span class="op">$</span><span class="fu">set_selected</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span></span>
+<span class="r-in"><span>  <span class="fu"><a href="https://rdrr.io/pkg/shiny/man/observeEvent.html" class="external-link">observeEvent</a></span><span class="op">(</span></span></span>
+<span class="r-in"><span>    <span class="va">input</span><span class="op">$</span><span class="va">button4_choices</span>,</span></span>
+<span class="r-in"><span>    <span class="va">fs</span><span class="op">$</span><span class="fu">set_state</span><span class="op">(</span></span></span>
+<span class="r-in"><span>      <span class="fu"><a href="teal_slice.html">teal_slice</a></span><span class="op">(</span>dataname <span class="op">=</span> <span class="st">"data"</span>, varname <span class="op">=</span> <span class="st">"variable"</span>, selected <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/character.html" class="external-link">character</a></span><span class="op">(</span><span class="fl">0</span><span class="op">)</span>, keep_na <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></span>
+<span class="r-in"><span>    <span class="op">)</span></span></span>
+<span class="r-in"><span>  <span class="op">)</span></span></span>
 <span class="r-in"><span>  <span class="fu"><a href="https://rdrr.io/pkg/shiny/man/observeEvent.html" class="external-link">observeEvent</a></span><span class="op">(</span></span></span>
 <span class="r-in"><span>    <span class="va">input</span><span class="op">$</span><span class="va">button0_choices</span>,</span></span>
-<span class="r-in"><span>    <span class="va">filter_state_choices</span><span class="op">$</span><span class="fu">set_state</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>selected <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"a"</span>, <span class="st">"c"</span><span class="op">)</span>, keep_na <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span><span class="op">)</span></span></span>
+<span class="r-in"><span>    <span class="va">fs</span><span class="op">$</span><span class="fu">set_state</span><span class="op">(</span></span></span>
+<span class="r-in"><span>      <span class="fu"><a href="teal_slice.html">teal_slice</a></span><span class="op">(</span>dataname <span class="op">=</span> <span class="st">"data"</span>, varname <span class="op">=</span> <span class="st">"variable"</span>, selected <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"a"</span>, <span class="st">"c"</span><span class="op">)</span>, keep_na <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span></span>
+<span class="r-in"><span>    <span class="op">)</span></span></span>
 <span class="r-in"><span>  <span class="op">)</span></span></span>
 <span class="r-in"><span><span class="op">}</span></span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="kw">if</span> <span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/interactive.html" class="external-link">interactive</a></span><span class="op">(</span><span class="op">)</span><span class="op">)</span> <span class="op">{</span></span></span>
 <span class="r-in"><span>  <span class="fu"><a href="https://rdrr.io/pkg/shiny/man/shinyApp.html" class="external-link">shinyApp</a></span><span class="op">(</span><span class="va">ui</span>, <span class="va">server</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="op">}</span></span></span>
-<span class="r-in"><span><span class="op">}</span></span></span>
 <span class="r-in"><span></span></span>
-<span class="r-in"><span></span></span>
-<span class="r-in"><span><span class="co">## ------------------------------------------------</span></span></span>
-<span class="r-in"><span><span class="co">## Method `ChoicesFilterState$set_selected`</span></span></span>
-<span class="r-in"><span><span class="co">## ------------------------------------------------</span></span></span>
-<span class="r-in"><span></span></span>
-<span class="r-in"><span><span class="va">filter</span> <span class="op">&lt;-</span> <span class="fu">teal.slice</span><span class="fu">:::</span><span class="va">ChoicesFilterState</span><span class="op">$</span><span class="fu">new</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"a"</span>, <span class="st">"b"</span>, <span class="st">"c"</span><span class="op">)</span>, varname <span class="op">=</span> <span class="st">"name"</span><span class="op">)</span></span></span>
-<span class="r-in"><span><span class="va">filter</span><span class="op">$</span><span class="fu">set_selected</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"c"</span>, <span class="st">"a"</span><span class="op">)</span><span class="op">)</span></span></span>
 </code></pre></div>
     </div>
   </main><aside class="col-md-3"><nav id="toc"><h2>On this page</h2>
