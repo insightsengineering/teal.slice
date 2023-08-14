@@ -10,7 +10,7 @@
     
     <a class="navbar-brand me-2" href="../index.html">teal.slice</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.3.0.9028</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.4.0</small>
 
     <div style="width: 140px; margin-left: 0.5rem;"> <small class="nav-text text-muted me-auto">part of</small> <img src="https://github.com/insightsengineering/hex-stickers/blob/main/PNG/nest.png?raw=true" alt="NEST" style="height: 30px;"><a href="https://pharmaverse.org/" class="external-link"><img src="https://github.com/insightsengineering/hex-stickers/blob/main/PNG/pharmaverse.png?raw=true" alt="pharmaverse" style="height: 28px;"></a> </div>
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -34,15 +34,6 @@
 <li class="active nav-item">
   <a class="nav-link" href="../news/index.html">Changelog</a>
 </li>
-<!-- start dropdown for versions --> <li class="nav-item dropdown">
-        <a href="#" class="nav-link dropdown-toggle"
-          data-bs-toggle="dropdown" role="button"
-          aria-expanded="false" aria-haspopup="true"
-          id="dropdown-versions">Versions</a> <div class="dropdown-menu" aria-labelledby="dropdown-versions"> <a class="dropdown-item" data-toggle="tooltip" title="" href="https://insightsengineering.github.io/teal.slice/main">main</a>
-<a class="dropdown-item" data-toggle="tooltip" title="" href="https://insightsengineering.github.io/teal.slice/latest-tag">latest-tag</a>
-<a class="dropdown-item" data-toggle="tooltip" title="" href="https://insightsengineering.github.io/teal.slice/v0.3.0">v0.3.0</a>
-<a class="dropdown-item" data-toggle="tooltip" title="" href="https://insightsengineering.github.io/teal.slice/v0.2.0">v0.2.0</a> </div></li>
-<!-- end dropdown for versions -->
 <li class="nav-item dropdown">
   <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown" role="button" aria-expanded="false" aria-haspopup="true" id="dropdown-reports">Reports</a>
   <div class="dropdown-menu" aria-labelledby="dropdown-reports">
@@ -71,9 +62,9 @@
     </div>
 
     <div class="section level2">
-<h2 class="pkg-version" data-toc-text="0.3.0.9028" id="tealslice-0309028">teal.slice 0.3.0.9028<a class="anchor" aria-label="anchor" href="#tealslice-0309028"></a></h2>
+<h2 class="pkg-version" data-toc-text="0.4.0" id="tealslice-040">teal.slice 0.4.0<a class="anchor" aria-label="anchor" href="#tealslice-040"></a></h2>
 <div class="section level4">
-<h4 id="new-features-0-3-0-9028">New features<a class="anchor" aria-label="anchor" href="#new-features-0-3-0-9028"></a></h4>
+<h4 id="new-features-0-4-0">New features<a class="anchor" aria-label="anchor" href="#new-features-0-4-0"></a></h4>
 <ul><li>Filter panel API is now based on <code>teal_slice</code> and <code>teal_slices</code> objects.</li>
 <li>It is now possible to specify a filter based on an arbitrary logical expression. See <code>expr</code> argument in <code>teal_slice</code>.</li>
 <li>It is now possible to limit choices in a single filter card. See <code>choices</code> argument in <code>teal_slice</code>.</li>
@@ -87,7 +78,7 @@
 <li>Added state history: individual filter states track changes so the user can rewind them or reset the initial state.</li>
 </ul></div>
 <div class="section level4">
-<h4 id="breaking-changes-0-3-0-9028">Breaking changes<a class="anchor" aria-label="anchor" href="#breaking-changes-0-3-0-9028"></a></h4>
+<h4 id="breaking-changes-0-4-0">Breaking changes<a class="anchor" aria-label="anchor" href="#breaking-changes-0-4-0"></a></h4>
 <ul><li>Setting filters using a list is now deprecated. Use <code>teal_slices</code> and <code>teal_slice</code> instead.</li>
 <li>Removed <code>CDISCFilteredData</code> and <code>CDISCFilteredDataset</code> and implementing <code>JoinKeys</code> handling in their parent classes (<code>FilteredData</code> and <code>DefaultFilteredDataset</code>).</li>
 <li>Specifying set of filterable columns is done through <code>include_varnames</code> and <code>exclude_varnames</code> in <code>teal_slices</code>. Specifying <code>attr(, "filterable")</code> is hard deprecated.</li>
