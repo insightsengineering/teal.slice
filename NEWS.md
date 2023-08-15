@@ -1,9 +1,11 @@
-# teal.slice 0.3.0.9034
+# teal.slice 0.4.0.9000
+
+# teal.slice 0.4.0
 
 ### New features
 
 * Filter panel API is now based on `teal_slice` and `teal_slices` objects.
-* It is now possible to specify a filter based on an arbitrary logical expression. See `expr` argument in `teal_slice`. 
+* It is now possible to specify a filter based on an arbitrary logical expression. See `expr` argument in `teal_slice`.
 * It is now possible to limit choices in a single filter card. See `choices` argument in `teal_slice`.
 * It is now possible to initialize the filter panel without the "Add filter variables" panel through `allow_add` in `teal_slices`.
 * It is now possible to set a filter that cannot be removed by the app user. See `anchored` argument in `teal_slice`.

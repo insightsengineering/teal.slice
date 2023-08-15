@@ -1,8 +1,8 @@
 Type: Package
 Package: teal.slice
 Title: Filter Module for `teal` Applications
-Version: 0.3.0.9034
-Date: 2023-08-10
+Version: 0.4.0.9000
+Date: 2023-08-14
 Authors@R: c(
     person("Dawid", "Kaledkowski", , "dawid.kaledkowski@roche.com", role = c("aut", "cre")),
     person("Pawel", "Rucki", , "pawel.rucki@roche.com", role = "aut"),
@@ -39,9 +39,9 @@ Imports:
     shinycssloaders,
     shinyjs,
     shinyWidgets (>= 0.6.2),
-    teal.data (>= 0.1.2.9011),
+    teal.data (>= 0.3.0),
     teal.logger (>= 0.1.1),
-    teal.widgets (>= 0.2.0)
+    teal.widgets (>= 0.4.0)
 Suggests:
     knitr,
     MultiAssayExperiment,
