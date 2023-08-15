@@ -425,7 +425,12 @@ Get keys for the dataset.
 \subsection{Method \code{set_dataset()}}{
 Adds a dataset to this \code{FilteredData}.
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{FilteredData$set_dataset(data, dataname, metadata, label)}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{FilteredData$set_dataset(
+  data,
+  dataname,
+  metadata = attr(data, "metadata"),
+  label = attr(data, "label")
+)}\if{html}{\out{</div>}}
 }
 
 \subsection{Arguments}{
