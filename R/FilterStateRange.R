@@ -192,7 +192,7 @@ RangeFilterState <- R6::R6Class( # nolint
               rangeslider = list(thickness = 0),
               showticklabels = TRUE,
               ticks = "outside",
-              ticklen = 2,
+              ticklen = 1.5,
               tickmode = "auto",
               nticks = 10
             ),
