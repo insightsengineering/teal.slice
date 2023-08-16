@@ -283,9 +283,9 @@ FilterState <- R6::R6Class( # nolint
 
       # Filter card consists of header and body, arranged in a single column.
       # Body is hidden and is toggled by clicking on header.
-      # Header consists of title and summary, arranged in a column.
-      # Title consists of conditional icon, varname, conditional varlabel, and controls, arranged in a row.
-      # Summary consists of value and controls, arranged in a row.
+      ## Header consists of title and summary, arranged in a column.
+      ### Title consists of conditional icon, varname, conditional varlabel, and controls, arranged in a row.
+      ### Summary consists of value and controls, arranged in a row.
 
       div(
         id = id,
