@@ -637,35 +637,11 @@ RangeFilterState <- R6::R6Class( # nolint
         tags$span(shiny::HTML(selection[1], "&ndash;", selection[2]), class = "filter-card-summary-value"),
         tags$span(
           class = "filter-card-summary-controls",
-          if (isTRUE(private$get_keep_na()) && private$na_count > 0) {
-            tags$span(
-              class = "filter-card-summary-na",
-              "NA",
-              shiny::icon("check")
-            )
-          } else if (isFALSE(private$get_keep_na()) && private$na_count > 0) {
-            tags$span(
-              class = "filter-card-summary-na",
-              "NA",
-              shiny::icon("xmark")
-            )
-          } else {
-            NULL
+          if (private$na_count > 0) {
+            tags$span("NA", if (isTRUE(private$get_keep_na())) icon("check") else icon("xmark"))
           },
-          if (isTRUE(private$get_keep_inf()) && private$inf_count > 0) {
-            tags$span(
-              class = "filter-card-summary-inf",
-              "Inf",
-              shiny::icon("check")
-            )
-          } else if (isFALSE(private$get_keep_inf()) && private$inf_count > 0) {
-            tags$span(
-              class = "filter-card-summary-inf",
-              "Inf",
-              shiny::icon("xmark")
-            )
-          } else {
-            NULL
+          if (private$inf_count > 0) {
+            tags$span("Inf", if (isTRUE(private$get_keep_inf())) icon("check") else icon("xmark"))
           }
         )
       )
