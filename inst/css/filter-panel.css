@@ -281,7 +281,7 @@ a.remove_all:hover {
   padding-right: 0.25em;
 }
 .filter-card-varname {
-  flex: 0 0.1 auto;
+  flex: 0 0.4 auto;
   justify-self: flex-start;
 
   overflow: hidden;
