@@ -226,7 +226,7 @@ FilterStateExpr <- R6::R6Class( # nolint
 
     # @description
     # UI module to display filter summary
-    # @param shiny `id` parametr passed to moduleServer
+    # @param shiny `id` parameter passed to moduleServer
     #  renders text describing current state
     server_summary = function(id) {
       moduleServer(
