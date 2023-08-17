@@ -33,7 +33,10 @@ init_filtered_data.tdata <- function(x, join_keys = teal.data::join_keys(), code
   FilteredData$new(
     as.list(x@env),
     join_keys = x@join_keys,
-    code = teal.data:::CodeClass$new(code = teal.code::get_code(x), dataname = teal.data::get_dataname(x)),
+    code = teal.data:::CodeClass$new(
+      code = paste(teal.code::get_code(x), collapse = "\n"),
+      dataname = teal.data::get_dataname(x)
+    ),
     check = check
   )
 }
