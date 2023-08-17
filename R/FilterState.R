@@ -243,16 +243,26 @@ FilterState <- R6::R6Class( # nolint
             }
           )
 
+          # Buttons for rewind/reset are disabled upon change in history to prevent double-clicking.
+          # Re-enabling occurs after 100 ms, after they are potentially hidden when no history is present.
           private$observers$state_history <- observeEvent(
             eventExpr = private$state_history(),
             handlerExpr = {
+              shinyjs::disable(id = "back")
+              shinyjs::disable(id = "reset")
               shinyjs::delay(
                 ms = 100,
-                expr = shinyjs::toggleElement(id = "back", condition = length(private$state_history()) > 1L)
+                expr = {
+                  shinyjs::toggleElement(id = "back", condition = length(private$state_history()) > 1L)
+                  shinyjs::enable(id = "back")
+                }
               )
               shinyjs::delay(
                 ms = 100,
-                expr = shinyjs::toggleElement(id = "reset", condition = length(private$state_history()) > 1L)
+                expr = {
+                  shinyjs::toggleElement(id = "reset", condition = length(private$state_history()) > 1L)
+                  shinyjs::enable(id = "reset")
+                }
               )
             }
           )
