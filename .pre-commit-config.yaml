@@ -10,29 +10,29 @@ repos:
     hooks:
       - id: style-files
         name: Style code with `styler`
-        args:
-          [--style_pkg=styler, --style_fun=tidyverse_style, --cache-root=styler]
+        args: [--style_pkg=styler, --style_fun=tidyverse_style,
+              --cache-root=styler]
       - id: roxygenize
         name: Regenerate package documentation
         additional_dependencies:
+          - bslib
           - checkmate
           - dplyr
-          - ggplot2
-          - glue
           - grDevices
+          - htmltools
+          - jsonlite
           - lifecycle
           - logger
-          - magrittr
           - methods
-          - bioc::MultiAssayExperiment
+          - plotly
           - R6
-          - rtables
+          - shiny
+          - shinycssloaders
           - shinyjs
           - shinyWidgets
-          - stats
-          - bioc::SummarizedExperiment
-          - utils
-          - yaml
+          - insightsengineering/teal.data
+          - insightsengineering/teal.logger
+          - insightsengineering/teal.widgets
       - id: spell-check
         name: Check spelling with `spelling`
         exclude: >
