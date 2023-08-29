@@ -102,6 +102,7 @@ testthat::test_that("print returns a string representation of filters", {
 
 # get_call ----
 testthat::test_that("get_call returns the filter call of the dataset", {
+  iris[1, 1] <- Inf
   dataset <- DefaultFilteredDataset$new(dataset = iris, dataname = "iris")
   fs <- teal_slices(
     teal_slice(dataname = "iris", varname = "Sepal.Length", selected = c(5.1, 6.4), keep_na = TRUE, keep_inf = TRUE),
@@ -116,6 +117,27 @@ testthat::test_that("get_call returns the filter call of the dataset", {
       iris <- dplyr::filter(
         iris,
         (is.infinite(Sepal.Length) | Sepal.Length >= 5.1 & Sepal.Length <= 6.4) &
+          Species %in% c("setosa", "versicolor")
+      )
+    )
+  )
+})
+
+testthat::test_that("get_call returns the filter call of the dataset without is.infinite if there are no Inf values", {
+  dataset <- DefaultFilteredDataset$new(dataset = iris, dataname = "iris")
+  fs <- teal_slices(
+    teal_slice(dataname = "iris", varname = "Sepal.Length", selected = c(5.1, 6.4), keep_na = TRUE, keep_inf = TRUE),
+    teal_slice(dataname = "iris", varname = "Species", selected = c("setosa", "versicolor"), keep_na = FALSE)
+  )
+  shiny::isolate(dataset$set_filter_state(state = fs))
+  filter_call <- shiny::isolate(dataset$get_call())$filter
+
+  testthat::expect_equal(
+    filter_call,
+    quote(
+      iris <- dplyr::filter(
+        iris,
+        Sepal.Length >= 5.1 & Sepal.Length <= 6.4 &
           Species %in% c("setosa", "versicolor")
       )
     )

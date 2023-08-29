@@ -158,6 +158,7 @@ RangeFilterState <- R6::R6Class( # nolint
 
         checkmate::assert_numeric(slice$choices, null.ok = TRUE)
         if (is.null(slice$keep_inf) && any(is.infinite(x))) slice$keep_inf <- TRUE
+        if (isTRUE(slice$keep_inf) && !any(is.infinite(x))) slice$keep_inf <- FALSE
 
         private$set_choices(slice$choices)
         if (is.null(slice$selected)) slice$selected <- slice$choices
