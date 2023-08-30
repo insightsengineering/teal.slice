@@ -383,10 +383,10 @@ FilterStates <- R6::R6Class( # nolint
               lapply(added_states(), function(state) {
                 fs_callback <- state$server(id = fs_to_shiny_ns(state))
                 observeEvent(
-                  eventExpr = fs_callback(), # when remove button is clicked in the FilterState ui
                   once = TRUE, # remove button can be called once, should be destroyed afterwards
-                  handlerExpr = private$state_list_remove(state$get_state()$id),
-                  ignoreInit = TRUE
+                  ignoreInit = TRUE, # ignoreInit: should not matter because we destroy the previous input set of the UI
+                  eventExpr = fs_callback(), # when remove button is clicked in the FilterState ui
+                  handlerExpr = private$state_list_remove(state$get_state()$id)
                 )
               })
               added_states(NULL)

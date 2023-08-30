@@ -772,9 +772,9 @@ FilterState <- R6::R6Class( # nolint
         # changed directly by the api - then it's needed to rerender UI element
         # to show relevant values
         private$observers$keep_na_api <- observeEvent(
-          eventExpr = private$get_keep_na(),
           ignoreNULL = FALSE, # nothing selected is possible for NA
           ignoreInit = TRUE, # ignoreInit: should not matter because we set the UI with the desired initial state
+          eventExpr = private$get_keep_na(),
           handlerExpr = {
             if (!setequal(private$get_keep_na(), input$value)) {
               logger::log_trace("FilterState$keep_na_srv@1 changed reactive value, id: { private$get_id() }")
