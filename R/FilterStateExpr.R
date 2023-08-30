@@ -136,6 +136,10 @@ FilterStateExpr <- R6::R6Class( # nolint
     #'
     destroy_observers = function() {
       lapply(private$observers, function(x) x$destroy())
+
+      if (!is.null(private$destroy_shiny)) {
+        private$destroy_shiny()
+      }
       invisible(NULL)
     },
 
@@ -156,14 +160,11 @@ FilterStateExpr <- R6::R6Class( # nolint
         function(input, output, session) {
           private$server_summary("summary")
 
-          new_observer <- list(
-            destroy = function() {
-              logger::log_trace("Destroying FilterStateExpr inputs; id: { private$get_id() }")
-              # remove values from the input list
-              lapply(session$ns(names(input)), .subset2(input, "impl")$.values$remove)
-            }
-          )
-          private$append_observer(new_observer)
+          private$destroy_shiny <- function() {
+            logger::log_trace("Destroying FilterStateExpr inputs; id: { private$get_id() }")
+            # remove values from the input list
+            lapply(session$ns(names(input)), .subset2(input, "impl")$.values$remove)
+          }
 
           reactive(input$remove) # back to parent to remove self
         }
@@ -223,19 +224,6 @@ FilterStateExpr <- R6::R6Class( # nolint
     observers = NULL, # stores observers
     teal_slice = NULL, # stores reactiveValues
     destroy_shiny = NULL, # function is set in server
-
-    append_observer = function(new_observer) {
-      checkmate::assert_list(new_observer, names = "named")
-      checkmate::assert_subset(names(new_observer), "destroy")
-      checkmate::assert_function(new_observer[["destroy"]])
-
-      private$observers <- if (is.null(private$observers)) {
-        list(new_observer)
-      } else {
-        append(private$observers, new_observer)
-      }
-      invisible(NULL)
-    },
 
     # @description
     # Get id of the teal_slice.
