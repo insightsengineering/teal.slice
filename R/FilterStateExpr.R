@@ -158,7 +158,7 @@ FilterStateExpr <- R6::R6Class( # nolint
 
           new_observer <- list(
             destroy = function() {
-              logger::log_trace("Destroying FilterStateExpr inputs and observers; id: { private$get_id() }")
+              logger::log_trace("Destroying FilterStateExpr inputs; id: { private$get_id() }")
               # remove values from the input list
               lapply(session$ns(names(input)), .subset2(input, "impl")$.values$remove)
             }
@@ -225,6 +225,10 @@ FilterStateExpr <- R6::R6Class( # nolint
     destroy_shiny = NULL, # function is set in server
 
     append_observer = function(new_observer) {
+      checkmate::assert_list(new_observer, names = "named")
+      checkmate::assert_subset(names(new_observer), "destroy")
+      checkmate::assert_function(new_observer[["destroy"]])
+
       private$observers <- if (is.null(private$observers)) {
         list(new_observer)
       } else {
