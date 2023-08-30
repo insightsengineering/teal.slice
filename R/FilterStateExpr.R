@@ -180,20 +180,23 @@ FilterStateExpr <- R6::R6Class( # nolint
             tags$div(
               class = "filter-card-title",
               if (private$is_anchored()) {
-                icon("anchor-lock")
+                icon("anchor-lock", class = "filter-card-icon")
               } else {
-                icon("lock")
+                icon("lock", class = "filter-card-icon")
               },
-              tags$span(tags$strong(private$teal_slice$id)),
-              tags$span(private$teal_slice$title, class = "filter-card-varlabel")
-            ),
-            if (isFALSE(private$is_anchored())) {
-              actionLink(
-                inputId = ns("remove"),
-                label = icon("circle-xmark", lib = "font-awesome"),
-                class = "filter-card-remove"
+              div(class = "filter-card-varname", tags$strong(private$teal_slice$id)),
+              div(class = "filter-card-varlabel", private$teal_slice$title),
+              div(
+                class = "filter-card-controls",
+                if (isFALSE(private$is_anchored())) {
+                  actionLink(
+                    inputId = ns("remove"),
+                    label = icon("circle-xmark", lib = "font-awesome"),
+                    class = "filter-card-remove"
+                  )
+                }
               )
-            },
+            ),
             tags$div(
               class = "filter-card-summary",
               private$ui_summary(ns("summary"))
