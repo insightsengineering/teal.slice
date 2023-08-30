@@ -385,7 +385,8 @@ FilterStates <- R6::R6Class( # nolint
                 observeEvent(
                   eventExpr = fs_callback(), # when remove button is clicked in the FilterState ui
                   once = TRUE, # remove button can be called once, should be destroyed afterwards
-                  handlerExpr = private$state_list_remove(state$get_state()$id)
+                  handlerExpr = private$state_list_remove(state$get_state()$id),
+                  ignoreInit = TRUE
                 )
               })
               added_states(NULL)
