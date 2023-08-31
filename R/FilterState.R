@@ -320,7 +320,7 @@ FilterState <- R6::R6Class( # nolint
             div(
               class = "filter-card-controls",
               # Suppress toggling body when clicking on this div.
-              # This is for bootstrap 3 and 4.
+              # This is for bootstrap 3 and 4. Causes page to scroll to top, prevented by setting href on buttons.
               onclick = "event.stopPropagation();",
               # This is for bootstrap 5.
               `data-bs-toggle` = "collapse",
@@ -332,7 +332,8 @@ FilterState <- R6::R6Class( # nolint
                   icon = icon("circle-arrow-left", lib = "font-awesome"),
                   title = "Rewind state",
                   class = "filter-card-back",
-                  style = "display: none"
+                  style = "display: none",
+                  href = "href"
                 )
               },
               if (isFALSE(private$is_fixed())) {
@@ -342,7 +343,8 @@ FilterState <- R6::R6Class( # nolint
                   icon = icon("circle-arrow-up", lib = "font-awesome"),
                   title = "Restore original state",
                   class = "filter-card-back",
-                  style = "display: none"
+                  style = "display: none",
+                  href = "href"
                 )
               },
               if (isFALSE(private$is_anchored())) {
@@ -350,7 +352,8 @@ FilterState <- R6::R6Class( # nolint
                   inputId = ns("remove"),
                   label = icon("circle-xmark", lib = "font-awesome"),
                   title = "Remove filter",
-                  class = "filter-card-remove"
+                  class = "filter-card-remove",
+                  href = "href"
                 )
               }
             )
