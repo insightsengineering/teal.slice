@@ -320,7 +320,11 @@ FilterState <- R6::R6Class( # nolint
             div(
               class = "filter-card-controls",
               # Suppress toggling body when clicking on this div.
+              # This is for bootstrap 3 and 4.
               onclick = "event.stopPropagation()",
+              # This is for bootstrap 5.
+              `data-bs-toggle` = "collapse",
+              `data-bs-target` = NULL,
               if (isFALSE(private$is_fixed())) {
                 actionLink(
                   inputId = ns("back"),
