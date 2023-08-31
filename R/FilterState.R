@@ -303,13 +303,11 @@ FilterState <- R6::R6Class( # nolint
         include_js_files("count-bar-labels.js"),
         div(
           class = "filter-card-header",
+          `data-toggle` = "collapse",
+          `data-bs-toggle` = "collapse",
+          href = paste0("#", ns("body")),
           div(
-            # title properties
             class = "filter-card-title",
-            `data-toggle` = "collapse",
-            `data-bs-toggle` = "collapse",
-            href = paste0("#", ns("body")),
-            # title elements
             if (private$is_anchored() && private$is_fixed()) {
               icon("anchor-lock", class = "filter-card-icon")
             } else if (private$is_anchored() && !private$is_fixed()) {
@@ -351,13 +349,7 @@ FilterState <- R6::R6Class( # nolint
               }
             )
           ),
-          div(
-            class = "filter-card-summary",
-            `data-toggle` = "collapse",
-            `data-bs-toggle` = "collapse",
-            href = paste0("#", ns("body")),
-            private$ui_summary(ns("summary"))
-          )
+          div(class = "filter-card-summary", private$ui_summary(ns("summary")))
         ),
         div(
           id = ns("body"),
