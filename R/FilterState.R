@@ -319,7 +319,8 @@ FilterState <- R6::R6Class( # nolint
             div(class = "filter-card-varlabel", private$get_varlabel()),
             div(
               class = "filter-card-controls",
-              onclick = "event.stopPropagation();", # prevents toggling body when clicking on this div
+              # Suppress toggling body when clicking on this div.
+              onclick = "event.stopPropagation()",
               if (isFALSE(private$is_fixed())) {
                 actionLink(
                   inputId = ns("back"),
