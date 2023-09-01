@@ -303,13 +303,11 @@ FilterState <- R6::R6Class( # nolint
         include_js_files("count-bar-labels.js"),
         div(
           class = "filter-card-header",
+          `data-toggle` = "collapse",
+          `data-bs-toggle` = "collapse",
+          href = paste0("#", ns("body")),
           div(
-            # title properties
             class = "filter-card-title",
-            `data-toggle` = "collapse",
-            `data-bs-toggle` = "collapse",
-            href = paste0("#", ns("body")),
-            # title elements
             if (private$is_anchored() && private$is_fixed()) {
               icon("anchor-lock", class = "filter-card-icon")
             } else if (private$is_anchored() && !private$is_fixed()) {
@@ -321,6 +319,12 @@ FilterState <- R6::R6Class( # nolint
             div(class = "filter-card-varlabel", private$get_varlabel()),
             div(
               class = "filter-card-controls",
+              # Suppress toggling body when clicking on this div.
+              # This is for bootstrap 3 and 4. Causes page to scroll to top, prevented by setting href on buttons.
+              onclick = "event.stopPropagation();",
+              # This is for bootstrap 5.
+              `data-bs-toggle` = "collapse",
+              `data-bs-target` = NULL,
               if (isFALSE(private$is_fixed())) {
                 actionLink(
                   inputId = ns("back"),
@@ -328,7 +332,8 @@ FilterState <- R6::R6Class( # nolint
                   icon = icon("circle-arrow-left", lib = "font-awesome"),
                   title = "Rewind state",
                   class = "filter-card-back",
-                  style = "display: none"
+                  style = "display: none",
+                  href = "href"
                 )
               },
               if (isFALSE(private$is_fixed())) {
@@ -338,7 +343,8 @@ FilterState <- R6::R6Class( # nolint
                   icon = icon("circle-arrow-up", lib = "font-awesome"),
                   title = "Restore original state",
                   class = "filter-card-back",
-                  style = "display: none"
+                  style = "display: none",
+                  href = "href"
                 )
               },
               if (isFALSE(private$is_anchored())) {
@@ -346,18 +352,13 @@ FilterState <- R6::R6Class( # nolint
                   inputId = ns("remove"),
                   label = icon("circle-xmark", lib = "font-awesome"),
                   title = "Remove filter",
-                  class = "filter-card-remove"
+                  class = "filter-card-remove",
+                  href = "href"
                 )
               }
             )
           ),
-          div(
-            class = "filter-card-summary",
-            `data-toggle` = "collapse",
-            `data-bs-toggle` = "collapse",
-            href = paste0("#", ns("body")),
-            private$ui_summary(ns("summary"))
-          )
+          div(class = "filter-card-summary", private$ui_summary(ns("summary")))
         ),
         div(
           id = ns("body"),
