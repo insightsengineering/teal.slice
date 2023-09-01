@@ -202,6 +202,9 @@ c.teal_slices <- function(...) {
   count_types <- lapply(x, attr, "count_type")
   count_types <- unique(unlist(count_types))
 
+  allow_adds <- lapply(x, attr, "allow_add")
+  allow_adds <- any(unlist(allow_adds))
+
   do.call(
     teal_slices,
     c(
@@ -209,7 +212,8 @@ c.teal_slices <- function(...) {
       list(
         include_varnames = if (length(includes)) includes,
         exclude_varnames = if (length(excludes)) excludes,
-        count_type = count_types
+        count_type = count_types,
+        allow_add = allow_adds
       )
     )
   )
