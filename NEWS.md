@@ -1,5 +1,9 @@
 # teal.slice 0.4.0.9013
 
+### Miscellaneous
+
+* Specify minimal version of dependent packages.
+
 # teal.slice 0.4.0
 
 ### New features
@@ -21,10 +25,6 @@
 * Setting filters using a list is now deprecated. Use `teal_slices` and `teal_slice` instead.
 * Removed `CDISCFilteredData` and `CDISCFilteredDataset` and implementing `JoinKeys` handling in their parent classes (`FilteredData` and `DefaultFilteredDataset`).
 * Specifying set of filterable columns is done through `include_varnames` and `exclude_varnames` in `teal_slices`. Specifying `attr(, "filterable")` is hard deprecated.
-
-### Miscellaneous
-
-* Specify minimal version of dependent packages.
 
 # teal.slice 0.3.0
 
