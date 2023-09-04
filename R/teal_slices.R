@@ -344,3 +344,28 @@ list_to_teal_slices <- function(x) { # nolint
 
   do.call(teal_slices, c(slices, list(include_varnames = attr(x, "filterable"))))
 }
+
+
+#' Recursively coalesce list elements.
+#'
+#' Returns first element of list that it not `NULL`, recursively.
+#'
+#' Given a list of lists, `x`, for every `names` found in any element of `x`,
+#' that element is coalesced across all elements of `x`, i.e. the first non-null item is returned.
+#'
+#' This function is used internally in `c.teal_slices` to manage `teal_slices` attributes.
+#'
+#' @param `list` of `named list`s
+#' @return
+#' Returns a `named list` where each element is the first-not-null element of the same name in all elements of `x`.
+#'
+#' @keywords internal
+#'
+coalesce_r <- function(x) {
+  checkmate::assert_list(x)
+  if (all(vapply(x, is.atomic, logical(1L)))) {
+    return(Filter(Negate(is.null), x)[[1L]])
+  }
+  lapply(x, checkmate::assert_list, any.missing = FALSE, names = "named")
+  all_names <- unique(unlist(lapply(x, names)))
+  sapply(all_names, function(nm) coalesce_r(lapply(x, `[[`, nm)), simplify = FALSE)
