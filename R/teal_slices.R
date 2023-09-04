@@ -333,17 +333,15 @@ list_to_teal_slices <- function(x) { # nolint
 #'
 #' Returns first element of list that it not `NULL`, recursively.
 #'
-#' Given a list of lists, `x`, for every `names` found in any element of `x`,
-#' that element is coalesced across all elements of `x`, i.e. the first non-null item is returned.
+#' Given a list of atomic vectors, the first non-null element is returned.
+#' Given a list of lists, for all `names` found in all elements of the list
+#' the first non-null element of a given name is returned.
 #'
 #' This function is used internally in `c.teal_slices` to manage `teal_slices` attributes.
 #'
-#' @param `list`, either of atomic vectors or of `list`s
+#' @param `list`, either of atomic vectors or of `named list`s
 #' @return
-#'
-#' Returns a `list` where each element is the first-not-null element of the same name in all elements of `x`.
-#' If `x` is a `list` of atomic vectors, returns a vector of the type of the first element.
-#' Names are preserved, if present.
+#' Either an atomic vector of length 1 or a (potentially nested) list.
 #'
 #' @keywords internal
 #'

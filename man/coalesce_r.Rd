@@ -7,19 +7,18 @@
 coalesce_r(x)
 }
 \arguments{
-\item{`list`, }{either of atomic vectors or of \code{list}s}
+\item{`list`, }{either of atomic vectors or of \verb{named list}s}
 }
 \value{
-Returns a \code{list} where each element is the first-not-null element of the same name in all elements of \code{x}.
-If \code{x} is a \code{list} of atomic vectors, returns a vector of the type of the first element.
-Names are preserved, if present.
+Either an atomic vector of length 1 or a (potentially nested) list.
 }
 \description{
 Returns first element of list that it not \code{NULL}, recursively.
 }
 \details{
-Given a list of lists, \code{x}, for every \code{names} found in any element of \code{x},
-that element is coalesced across all elements of \code{x}, i.e. the first non-null item is returned.
+Given a list of atomic vectors, the first non-null element is returned.
+Given a list of lists, for all \code{names} found in all elements of the list
+the first non-null element of a given name is returned.
 
 This function is used internally in \code{c.teal_slices} to manage \code{teal_slices} attributes.
 }
