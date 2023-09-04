@@ -352,7 +352,7 @@ coalesce_r <- function(x) {
   if (all(vapply(x, is.atomic, logical(1L)))) {
     return(Filter(Negate(is.null), x)[[1L]])
   }
-  lapply(x, checkmate::assert_list, any.missing = FALSE, null.ok = TRUE)
+  lapply(x, checkmate::assert_list, names = "named", null.ok = TRUE, .var.name = "list element")
   all_names <- unique(unlist(lapply(x, names)))
   sapply(all_names, function(nm) coalesce_r(lapply(x, `[[`, nm)), simplify = FALSE)
 }
