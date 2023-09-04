@@ -257,11 +257,9 @@ a.remove_all:hover {
   padding: 5px 10px;
   border: 1px solid var(--bs-gray-300, #dee2e6);
   border-radius: 0.25em;
-  display: grid;
-  grid-template-columns: 95% 5%;
-  grid-template-areas:
-  "title controls"
-  "summary summary"
+
+  display: flex;
+  flex-direction: column;
 }
 
 .filter-card-header:not(.collapsed) {
@@ -275,33 +273,63 @@ a.remove_all:hover {
 }
 
 .filter-card-title {
-  grid-area: title;
-}
-
-.filter-card-controls {
   display: flex;
+  flex-direction: row;
+  flex-wrap: nowrap;
+}
+.filter-card-icon {
+  padding-right: 0.25em;
+}
+.filter-card-varname {
+  flex: 0 0.4 auto;
+  justify-self: flex-start;
+
+  overflow: hidden;
+}
+.filter-card-varlabel {
+  flex: 1 1 auto;
+  justify-self: flex-start;
+
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  padding: 0 0.5em;
+
+  color: var(--bs-gray-500, var(--gray, darkgray));
+}
+.filter-card-controls {
+  flex: 0 0 auto;
+  justify-self: flex-end;
+
+  display: flex;
+  flex-direction: row;
   justify-content: flex-end;
-  gap: 1em;
-  grid-area: controls;
+  gap: 0.75em;
 }
 
 .filter-card-summary {
   width: 100%;
   display: flex;
-  grid-area: summary;
+  flex-direction: row;
 }
 
 .filter-card-summary-value {
-  max-width: 300px;
+  flex: 1 1 auto;
+  justify-content: space-between;
+
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
-}
 
+  padding-right: 0.5em
+}
 .filter-card-summary-controls {
-  margin-left: auto;
-  padding-left: 1em;
+  flex: 0 0 auto;
+
   display: flex;
+  flex-direction: row;
+  justify-content: flex-end;
+
   gap: 1em;
 }
 
@@ -311,12 +339,6 @@ a.remove_all:hover {
 
 .fa-xmark {
   color: var(--bs-danger, var(--danger, #a94442))
-}
-
-.filter-card-varlabel {
- color: var(--bs-gray-500, var(--gray, darkgray));
- margin-left: 0.5em;
- margin-right: auto;
 }
 
 .filter-card-remove,
