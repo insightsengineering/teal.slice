@@ -57,9 +57,6 @@ testthat::test_that("teal_slices raises error when include_varnames and exclude_
 
 
 testthat::test_that("[.teal_slices accepts various types of indices", {
-  shiny::reactiveConsole(TRUE)
-  on.exit(shiny::reactiveConsole(FALSE))
-
   fs1 <- teal_slice("data", "var1")
   fs2 <- teal_slice("data", "var2")
   fs <- teal_slices(fs1, fs2)
@@ -87,9 +84,6 @@ testthat::test_that("[.teal_slices accepts various types of indices", {
 
 
 testthat::test_that("[.teal_slices subsets properly", {
-  shiny::reactiveConsole(TRUE)
-  on.exit(shiny::reactiveConsole(FALSE))
-
   fs1 <- teal_slice("data", "var1")
   fs2 <- teal_slice("data", "var2")
   fs <- teal_slices(fs1, fs2)
@@ -121,9 +115,6 @@ testthat::test_that("[.teal_slices subsets properly", {
 
 
 testthat::test_that("[.teal_slices doesn't subset the exclude_varnames attribute according to available teal_slice", {
-  shiny::reactiveConsole(TRUE)
-  on.exit(shiny::reactiveConsole(FALSE))
-
   fs1 <- teal_slice(dataname = "data1", varname = "var1")
   fs2 <- teal_slice(dataname = "data1", varname = "var2")
   fs3 <- teal_slice(dataname = "data2", varname = "var1")
@@ -161,9 +152,6 @@ testthat::test_that("[.teal_slices doesn't subset the exclude_varnames attribute
 })
 
 testthat::test_that("[.teal_slices doesn't subset the include_varnames attribute according to available teal_slice", {
-  shiny::reactiveConsole(TRUE)
-  on.exit(shiny::reactiveConsole(FALSE))
-
   fs1 <- teal_slice(dataname = "data1", varname = "var1")
   fs2 <- teal_slice(dataname = "data1", varname = "var2")
   fs3 <- teal_slice(dataname = "data2", varname = "var1")
@@ -201,9 +189,6 @@ testthat::test_that("[.teal_slices doesn't subset the include_varnames attribute
 })
 
 testthat::test_that("[.teal_slices preserves count_type", {
-  shiny::reactiveConsole(TRUE)
-  on.exit(shiny::reactiveConsole(FALSE))
-
   fs1 <- teal_slice("data", "var1")
   fs2 <- teal_slice("data", "var2")
   fs <- teal_slices(fs1, fs2)
@@ -267,9 +252,6 @@ testthat::test_that("coalesce_r ignores NULL elements", {
 
 
 testthat::test_that("c.teal_slices concatenates `teal_slices` objects", {
-  shiny::reactiveConsole(TRUE)
-  on.exit(shiny::reactiveConsole(FALSE))
-
   fs1 <- teal_slice("data1", "var1")
   fs2 <- teal_slice("data1", "var2")
   fs3 <- teal_slice("data2", "var1")
