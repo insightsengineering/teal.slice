@@ -192,7 +192,7 @@ RangeFilterState <- R6::R6Class( # nolint
               rangeslider = list(thickness = 0),
               showticklabels = TRUE,
               ticks = "outside",
-              ticklen = 2,
+              ticklen = 1.5,
               tickmode = "auto",
               nticks = 10
             ),
@@ -212,11 +212,13 @@ RangeFilterState <- R6::R6Class( # nolint
         })
         private$plot_filtered <- reactive({
           finite_values <- Filter(is.finite, private$x_reactive())
-          list(
-            x = finite_values,
-            bingroup = 1,
-            color = I(fetch_bs_color("primary"))
-          )
+          if (!identical(finite_values, numeric(0))) {
+            list(
+              x = finite_values,
+              bingroup = 1,
+              color = I(fetch_bs_color("primary"))
+            )
+          }
         })
         invisible(self)
       })
@@ -637,35 +639,11 @@ RangeFilterState <- R6::R6Class( # nolint
         tags$span(shiny::HTML(selection[1], "&ndash;", selection[2]), class = "filter-card-summary-value"),
         tags$span(
           class = "filter-card-summary-controls",
-          if (isTRUE(private$get_keep_na()) && private$na_count > 0) {
-            tags$span(
-              class = "filter-card-summary-na",
-              "NA",
-              shiny::icon("check")
-            )
-          } else if (isFALSE(private$get_keep_na()) && private$na_count > 0) {
-            tags$span(
-              class = "filter-card-summary-na",
-              "NA",
-              shiny::icon("xmark")
-            )
-          } else {
-            NULL
+          if (private$na_count > 0) {
+            tags$span("NA", if (isTRUE(private$get_keep_na())) icon("check") else icon("xmark"))
           },
-          if (isTRUE(private$get_keep_inf()) && private$inf_count > 0) {
-            tags$span(
-              class = "filter-card-summary-inf",
-              "Inf",
-              shiny::icon("check")
-            )
-          } else if (isFALSE(private$get_keep_inf()) && private$inf_count > 0) {
-            tags$span(
-              class = "filter-card-summary-inf",
-              "Inf",
-              shiny::icon("xmark")
-            )
-          } else {
-            NULL
+          if (private$inf_count > 0) {
+            tags$span("Inf", if (isTRUE(private$get_keep_inf())) icon("check") else icon("xmark"))
           }
         )
       )

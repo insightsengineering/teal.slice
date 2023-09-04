@@ -243,16 +243,26 @@ FilterState <- R6::R6Class( # nolint
             }
           )
 
+          # Buttons for rewind/reset are disabled upon change in history to prevent double-clicking.
+          # Re-enabling occurs after 100 ms, after they are potentially hidden when no history is present.
           private$observers$state_history <- observeEvent(
             eventExpr = private$state_history(),
             handlerExpr = {
+              shinyjs::disable(id = "back")
+              shinyjs::disable(id = "reset")
               shinyjs::delay(
                 ms = 100,
-                expr = shinyjs::toggleElement(id = "back", condition = length(private$state_history()) > 1L)
+                expr = {
+                  shinyjs::toggleElement(id = "back", condition = length(private$state_history()) > 1L)
+                  shinyjs::enable(id = "back")
+                }
               )
               shinyjs::delay(
                 ms = 100,
-                expr = shinyjs::toggleElement(id = "reset", condition = length(private$state_history()) > 1L)
+                expr = {
+                  shinyjs::toggleElement(id = "reset", condition = length(private$state_history()) > 1L)
+                  shinyjs::enable(id = "reset")
+                }
               )
             }
           )
@@ -281,74 +291,81 @@ FilterState <- R6::R6Class( # nolint
     ui = function(id, parent_id = "cards") {
       ns <- NS(id)
 
-      tags$div(
+      # Filter card consists of header and body, arranged in a single column.
+      # Body is hidden and is toggled by clicking on header.
+      ## Header consists of title and summary, arranged in a column.
+      ### Title consists of conditional icon, varname, conditional varlabel, and controls, arranged in a row.
+      ### Summary consists of value and controls, arranged in a row.
+
+      div(
         id = id,
         class = "panel filter-card",
         include_js_files("count-bar-labels.js"),
-        tags$div(
+        div(
           class = "filter-card-header",
-          tags$div(
-            # header properties
-            class = "filter-card-title",
-            `data-toggle` = "collapse",
-            `data-bs-toggle` = "collapse",
-            href = paste0("#", ns("body")),
-            # header elements
-            if (private$is_anchored() && private$is_fixed()) {
-              icon("anchor-lock")
-            } else if (private$is_anchored() && !private$is_fixed()) {
-              icon("anchor")
-            } else if (!private$is_anchored() && private$is_fixed()) {
-              icon("lock")
-            },
-            tags$span(tags$strong(private$get_varname())),
-            tags$span(private$get_varlabel(), class = "filter-card-varlabel")
-          ),
+          `data-toggle` = "collapse",
+          `data-bs-toggle` = "collapse",
+          href = paste0("#", ns("body")),
           div(
-            class = "filter-card-controls",
-            if (isFALSE(private$is_fixed())) {
-              actionLink(
-                inputId = ns("back"),
-                label = NULL,
-                icon = icon("circle-arrow-left", lib = "font-awesome"),
-                title = "Rewind state",
-                class = "filter-card-back",
-                style = "display: none"
-              )
+            class = "filter-card-title",
+            if (private$is_anchored() && private$is_fixed()) {
+              icon("anchor-lock", class = "filter-card-icon")
+            } else if (private$is_anchored() && !private$is_fixed()) {
+              icon("anchor", class = "filter-card-icon")
+            } else if (!private$is_anchored() && private$is_fixed()) {
+              icon("lock", class = "filter-card-icon")
             },
-            if (isFALSE(private$is_fixed())) {
-              actionLink(
-                inputId = ns("reset"),
-                label = NULL,
-                icon = icon("circle-arrow-up", lib = "font-awesome"),
-                title = "Restore original state",
-                class = "filter-card-back",
-                style = "display: none"
-              )
-            },
-            if (isFALSE(private$is_anchored())) {
-              actionLink(
-                inputId = ns("remove"),
-                label = icon("circle-xmark", lib = "font-awesome"),
-                title = "Remove filter",
-                class = "filter-card-remove"
-              )
-            }
+            div(class = "filter-card-varname", strong(private$get_varname())),
+            div(class = "filter-card-varlabel", private$get_varlabel()),
+            div(
+              class = "filter-card-controls",
+              # Suppress toggling body when clicking on this div.
+              # This is for bootstrap 3 and 4. Causes page to scroll to top, prevented by setting href on buttons.
+              onclick = "event.stopPropagation();",
+              # This is for bootstrap 5.
+              `data-bs-toggle` = "collapse",
+              `data-bs-target` = NULL,
+              if (isFALSE(private$is_fixed())) {
+                actionLink(
+                  inputId = ns("back"),
+                  label = NULL,
+                  icon = icon("circle-arrow-left", lib = "font-awesome"),
+                  title = "Rewind state",
+                  class = "filter-card-back",
+                  style = "display: none",
+                  href = "href"
+                )
+              },
+              if (isFALSE(private$is_fixed())) {
+                actionLink(
+                  inputId = ns("reset"),
+                  label = NULL,
+                  icon = icon("circle-arrow-up", lib = "font-awesome"),
+                  title = "Restore original state",
+                  class = "filter-card-back",
+                  style = "display: none",
+                  href = "href"
+                )
+              },
+              if (isFALSE(private$is_anchored())) {
+                actionLink(
+                  inputId = ns("remove"),
+                  label = icon("circle-xmark", lib = "font-awesome"),
+                  title = "Remove filter",
+                  class = "filter-card-remove",
+                  href = "href"
+                )
+              }
+            )
           ),
-          tags$div(
-            class = "filter-card-summary",
-            `data-toggle` = "collapse",
-            `data-bs-toggle` = "collapse",
-            href = paste0("#", ns("body")),
-            private$ui_summary(ns("summary"))
-          )
+          div(class = "filter-card-summary", private$ui_summary(ns("summary")))
         ),
-        tags$div(
+        div(
           id = ns("body"),
           class = "collapse out",
           `data-parent` = paste0("#", parent_id),
           `data-bs-parent` = paste0("#", parent_id),
-          tags$div(
+          div(
             class = "filter-card-body",
             if (private$is_fixed()) {
               private$ui_inputs_fixed(ns("inputs"))
@@ -711,7 +728,7 @@ FilterState <- R6::R6Class( # nolint
           countnow <- private$filtered_na_count()
           ui_input <- checkboxInput(
             inputId = ns("value"),
-            label = tags$span(
+            label = span(
               id = ns("count_label"),
               make_count_text(
                 label = "Keep NA",
@@ -756,9 +773,9 @@ FilterState <- R6::R6Class( # nolint
         # changed directly by the api - then it's needed to rerender UI element
         # to show relevant values
         private$observers$keep_na_api <- observeEvent(
-          eventExpr = private$get_keep_na(),
           ignoreNULL = FALSE, # nothing selected is possible for NA
           ignoreInit = TRUE, # ignoreInit: should not matter because we set the UI with the desired initial state
+          eventExpr = private$get_keep_na(),
           handlerExpr = {
             if (!setequal(private$get_keep_na(), input$value)) {
               logger::log_trace("FilterState$keep_na_srv@1 changed reactive value, id: { private$get_id() }")
