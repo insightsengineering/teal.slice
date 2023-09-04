@@ -7,10 +7,12 @@
 coalesce_r(x)
 }
 \arguments{
-\item{`list`}{of \verb{named list}s}
+\item{`list`, }{either of atomic vectors or of \code{list}s}
 }
 \value{
-Returns a \verb{named list} where each element is the first-not-null element of the same name in all elements of \code{x}.
+Returns a \code{list} where each element is the first-not-null element of the same name in all elements of \code{x}.
+If \code{x} is a \code{list} of atomic vectors, returns a vector of the type of the first element.
+Names are preserved, if present.
 }
 \description{
 Returns first element of list that it not \code{NULL}, recursively.

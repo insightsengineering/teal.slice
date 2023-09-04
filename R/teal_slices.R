@@ -338,9 +338,12 @@ list_to_teal_slices <- function(x) { # nolint
 #'
 #' This function is used internally in `c.teal_slices` to manage `teal_slices` attributes.
 #'
-#' @param `list` of `named list`s
+#' @param `list`, either of atomic vectors or of `list`s
 #' @return
-#' Returns a `named list` where each element is the first-not-null element of the same name in all elements of `x`.
+#'
+#' Returns a `list` where each element is the first-not-null element of the same name in all elements of `x`.
+#' If `x` is a `list` of atomic vectors, returns a vector of the type of the first element.
+#' Names are preserved, if present.
 #'
 #' @keywords internal
 #'
