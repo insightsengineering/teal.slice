@@ -45,6 +45,17 @@ testthat::test_that("teal_slices returns `teal_slices`", {
   testthat::expect_length(teal_slices(fs1, fs2), 2L)
 })
 
+testthat::test_that("teal_slices raises error when include_varnames and exclude_varnames specified same dataset", {
+  testthat::expect_error(
+    teal_slices(
+      include_varnames = list(data1 = "var1"),
+      exclude_varnames = list(data1 = "var2")
+    ),
+    "Some datasets are specified in both, include_varnames and exclude_varnames"
+  )
+})
+
+
 testthat::test_that("[.teal_slices accepts various types of indices", {
   shiny::reactiveConsole(TRUE)
   on.exit(shiny::reactiveConsole(FALSE))
@@ -203,34 +214,6 @@ testthat::test_that("[.teal_slices preserves count_type", {
   )
 })
 
-testthat::test_that("teal_slices throws when include_varnames and exclude_varnames specified for the same dataset", {
-  testthat::expect_error(
-    teal_slices(
-      include_varnames = list(data1 = "var1"),
-      exclude_varnames = list(data1 = "var2")
-    ),
-    "Some datasets are specified in both, include_varnames and exclude_varnames"
-  )
-})
-
-testthat::test_that("c.teal_slices concatenates `teal_slices` objects", {
-  shiny::reactiveConsole(TRUE)
-  on.exit(shiny::reactiveConsole(FALSE))
-
-  fs1 <- teal_slice("data1", "var1")
-  fs2 <- teal_slice("data1", "var2")
-  fs3 <- teal_slice("data2", "var1")
-  fs4 <- teal_slice("data2", "var2")
-  fss1 <- teal_slices(fs1, fs2)
-  fss2 <- teal_slices(fs3, fs4)
-
-  testthat::expect_no_error(c(fss1, fss2))
-  testthat::expect_error(c(fss1, fs1), "Assertion on 'all arguments are teal_slices' failed")
-
-  testthat::expect_s3_class(c(fss1, fss2), "teal_slices")
-  testthat::expect_length(c(fss1, fss2), length(fss1) + length(fss2))
-})
-
 
 testthat::test_that("coalesce_r accepts list of atomics or list of lists", {
   testthat::expect_no_error(coalesce_r(list("a", "b")))
@@ -283,6 +266,23 @@ testthat::test_that("coalesce_r ignores NULL elements", {
 })
 
 
+testthat::test_that("c.teal_slices concatenates `teal_slices` objects", {
+  shiny::reactiveConsole(TRUE)
+  on.exit(shiny::reactiveConsole(FALSE))
+
+  fs1 <- teal_slice("data1", "var1")
+  fs2 <- teal_slice("data1", "var2")
+  fs3 <- teal_slice("data2", "var1")
+  fs4 <- teal_slice("data2", "var2")
+  fss1 <- teal_slices(fs1, fs2)
+  fss2 <- teal_slices(fs3, fs4)
+
+  testthat::expect_no_error(c(fss1, fss2))
+  testthat::expect_error(c(fss1, fs1), "Assertion on 'all arguments are teal_slices' failed")
+
+  testthat::expect_s3_class(c(fss1, fss2), "teal_slices")
+  testthat::expect_length(c(fss1, fss2), length(fss1) + length(fss2))
+})
 
 testthat::test_that("c.teal_slices coalesces attributes", {
   fs1 <- teal_slice("data1", "var1")
