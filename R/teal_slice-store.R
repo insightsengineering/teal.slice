@@ -53,14 +53,13 @@ slices_restore <- function(file) {
   checkmate::assert_file_exists(file, access = "r", extension = "json")
 
   tss_json <- jsonlite::fromJSON(file, simplifyDataFrame = FALSE)
-
   tss_json$slices <-
     lapply(tss_json$slices, function(slice) {
       if (!is.null(slice$selected)) {
         slice$selected <-
           if (all(grepl('[0-9]{4}-[0-9]{2}-[0-9]{2}', slice$selected))) {
             if (all(grepl('T[0-9]{2}:[0-9]{2}:[0-9]{2}', slice$selected))) {
-              as.POSIXct(slice$selected, tz = 'UTC')
+              as.POSIXct(gsub('T|Z', ' ', slice$selected), tz = 'UTC')
             } else {
               as.Date(slice$selected)
             }
