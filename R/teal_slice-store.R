@@ -9,6 +9,8 @@
 #' @param file (`character(1)`) The file path where `teal_slices` object will be saved.
 #'  The file extension should be `".json"`.
 #'
+#' @details `Date` and `POSIXt` classes are stored in `"ISO8601"` format and are converted to `UTC` timezone.
+#'
 #' @return `NULL`, invisibly.
 #'
 #' @examples
@@ -57,7 +59,7 @@ slices_restore <- function(file) {
       if (!is.null(slice$selected)) {
         slice$selected <-
           if (all(grepl('[0-9]{4}-[0-9]{2}-[0-9]{2}', slice$selected))) {
-            if (all(grepl('[0-9]{2}:[0-9]{2}:[0-9]{2}', slice$selected))) {
+            if (all(grepl('T[0-9]{2}:[0-9]{2}:[0-9]{2}', slice$selected))) {
               as.POSIXct(slice$selected, tz = 'UTC')
             } else {
               as.Date(slice$selected)

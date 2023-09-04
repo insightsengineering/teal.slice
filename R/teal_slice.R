@@ -276,7 +276,7 @@ to_json <- function(x) {
     }
   }
 
-  jsonlite::toJSON(no_unbox(x), pretty = TRUE, auto_unbox = TRUE, digits = 16, null = "null", UTC = TRUE)
+  jsonlite::toJSON(no_unbox(x), pretty = TRUE, auto_unbox = TRUE, digits = 16, null = "null", UTC = TRUE, POSIXt = "ISO8601")
 }
 
 #' Justify Colons in `JSON` String

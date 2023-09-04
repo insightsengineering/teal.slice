@@ -21,6 +21,9 @@ The \code{teal_slices} object contains information about filter states and can b
 create, modify, and delete filter states. The saved file can be later loaded using
 the \code{slices_restore} function.
 }
+\details{
+\code{Date} and \code{POSIXt} classes are stored in \code{"ISO8601"} format and are converted to \code{UTC} timezone.
+}
 \examples{
 # Create a teal_slices object
 tss <- teal_slices(
