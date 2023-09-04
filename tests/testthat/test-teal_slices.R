@@ -232,30 +232,114 @@ testthat::test_that("c.teal_slices concatenates `teal_slices` objects", {
 })
 
 
-testthat::test_that("c.teal_slices handles attributes", {
+testthat::test_that("coalesce_r accepts list of atomics or list of lists", {
+  testthat::expect_no_error(coalesce_r(list("a", "b")))
+  testthat::expect_no_error(coalesce_r(list(list(a = "A", b = "B"), list(c = "C", d = "D"))))
+  testthat::expect_error(coalesce_r(c("a", "b")), "Assertion on.+failed")
+  testthat::expect_error(coalesce_r(list("a", list("b"))), "Assertion on.+failed")
+})
+
+testthat::test_that("coalesce_r returns first non-null element of list of atomics", {
+  testthat::expect_identical(coalesce_r(list("a", "b")), "a")
+  testthat::expect_identical(coalesce_r(list("a", NULL)), "a")
+  testthat::expect_identical(coalesce_r(list(NULL, "b")), "b")
+  testthat::expect_identical(coalesce_r(list(2L, "b")), 2L)
+})
+
+testthat::test_that("coalesce_r combines non-overlapping lists", {
+  testthat::expect_identical(
+    coalesce_r(
+      list(
+        list(first = c("a", "b")),
+        list(second = c("a", "b"))
+      )
+    ),
+    list(first = c("a", "b"), second = c("a", "b"))
+  )
+})
+
+testthat::test_that("coalesce_r combines drops duplicated list elements", {
+  testthat::expect_identical(
+    coalesce_r(
+      list(
+        list(first = c("a", "b"), second = c("a", "b")),
+        list(first = c("A", "B"))
+      )
+    ),
+    list(first = c("a", "b"), second = c("a", "b"))
+  )
+})
+
+testthat::test_that("coalesce_r ignores NULL elements", {
+  testthat::expect_identical(
+    coalesce_r(
+      list(
+        list(first = NULL, second = c("a", "b")),
+        list(first = c("A", "B"))
+      )
+    ),
+    list(first = c("A", "B"), second = c("a", "b"))
+  )
+})
+
+
+
+testthat::test_that("c.teal_slices coalesces attributes", {
   fs1 <- teal_slice("data1", "var1")
   fs2 <- teal_slice("data1", "var2")
   fs3 <- teal_slice("data2", "var1")
   fs4 <- teal_slice("data2", "var2")
-  fss1 <- teal_slices(fs1, fs2, exclude_varnames = list(data1 = "var1"))
+
+  fss1 <- teal_slices(fs1, fs2, include_varnames = list(data1 = "var1"))
   fss2 <- teal_slices(fs3, fs4, exclude_varnames = list(data2 = "var1"))
-  fss3 <- teal_slices(fs3, fs4, exclude_varnames = list(data2 = "var1"), count_type = "none")
+  # teal_slices with include and exclude attributes
+  testthat::expect_no_error(fsss <- c(fss1, fss2))
+  # separate attributes are collated
+  testthat::expect_identical(
+    attr(fsss, "include_varnames"),
+    list(data1 = "var1")
+  )
+  testthat::expect_identical(
+    attr(fsss, "exclude_varnames"),
+    list(data2 = "var1")
+  )
 
+  fss3 <- teal_slices(fs1, fs2, exclude_varnames = list(data1 = "var1"))
+  fss4 <- teal_slices(fs3, fs4, exclude_varnames = list(data2 = "var1"))
   # teal_slices with different exclude attributes
-  testthat::expect_no_error(c(fss1, fss2))
-
-  fsss <- c(fss1, fss2)
-
-  # exclude attributes are combined
+  testthat::expect_no_error(fsss <- c(fss3, fss4))
+  # list attribute is combined
   testthat::expect_identical(
     attr(fsss, "exclude_varnames"),
     list(data1 = "var1", data2 = "var1")
   )
 
-  # count_type attribute is preserved
+  fss5 <- teal_slices(fs1, fs2, exclude_varnames = list(data1 = "var1"))
+  fss6 <- teal_slices(fs3, fs4, exclude_varnames = list(data1 = "var2"))
+  # teal_slices with conflicting exclude attributes
+  testthat::expect_no_error(fsss <- c(fss5, fss6))
+  # list attribute is coalesced
   testthat::expect_identical(
-    attr(fsss, "count_type"),
-    attr(fss1, "count_type")
+    attr(fsss, "exclude_varnames"),
+    list(data1 = "var1")
+  )
+
+  fss7 <- teal_slices(fs1, fs2, count_type = NULL, allow_add = TRUE)
+  fss8 <- teal_slices(fs3, fs4, count_type = "none", allow_add = FALSE)
+  # teal_slices with conflicting count_type and allow_add attributes
+  testthat::expect_no_error(fsss <- c(fss7, fss8))
+  # atomic attributes are coalesced
+  testthat::expect_identical(
+    attributes(fsss)[c("count_type", "allow_add")],
+    list(count_type = "none", allow_add = TRUE)
+  )
+
+  # teal_slices with conflicting exclude attributes - reversed order
+  testthat::expect_no_error(fsss <- c(fss8, fss7))
+  # list attribute is coalesced
+  testthat::expect_identical(
+    attributes(fsss)[c("count_type", "allow_add")],
+    list(count_type = "none", allow_add = FALSE)
   )
 })
 
