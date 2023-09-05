@@ -2,7 +2,7 @@
 
 ### Miscellaneous
 
-* Specify minimal version of dependent packages.
+* Specified minimal version of package dependencies.
 
 # teal.slice 0.4.0
 
