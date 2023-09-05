@@ -189,28 +189,15 @@ c.teal_slices <- function(...) {
   x <- list(...)
   checkmate::assert_true(all(vapply(x, is.teal_slices, logical(1L))), .var.name = "all arguments are teal_slices")
 
-  excludes <- lapply(x, attr, "exclude_varnames")
-  names(excludes) <- NULL
-  excludes <- unlist(excludes, recursive = FALSE)
-  excludes <- excludes[!duplicated(names(excludes))]
-
-  includes <- lapply(x, attr, "include_varnames")
-  names(includes) <- NULL
-  includes <- unlist(includes, recursive = FALSE)
-  includes <- includes[!duplicated(names(includes))]
-
-  count_types <- lapply(x, attr, "count_type")
-  count_types <- unique(unlist(count_types))
+  all_attributes <- lapply(x, attributes)
+  all_attributes <- coalesce_r(all_attributes)
+  all_attributes <- all_attributes[names(all_attributes) != "class"]
 
   do.call(
     teal_slices,
     c(
       unique(unlist(x, recursive = FALSE)),
-      list(
-        include_varnames = if (length(includes)) includes,
-        exclude_varnames = if (length(excludes)) excludes,
-        count_type = count_types
-      )
+      all_attributes
     )
   )
 }
@@ -339,4 +326,31 @@ list_to_teal_slices <- function(x) { # nolint
   }
 
   do.call(teal_slices, c(slices, list(include_varnames = attr(x, "filterable"))))
+}
+
+
+#' Recursively coalesce list elements.
+#'
+#' Returns first element of list that it not `NULL`, recursively.
+#'
+#' Given a list of atomic vectors, the first non-null element is returned.
+#' Given a list of lists, for all `names` found in all elements of the list
+#' the first non-null element of a given name is returned.
+#'
+#' This function is used internally in `c.teal_slices` to manage `teal_slices` attributes.
+#'
+#' @param `list`, either of atomic vectors or of `named list`s
+#' @return
+#' Either an atomic vector of length 1 or a (potentially nested) list.
+#'
+#' @keywords internal
+#'
+coalesce_r <- function(x) {
+  checkmate::assert_list(x)
+  if (all(vapply(x, is.atomic, logical(1L)))) {
+    return(Filter(Negate(is.null), x)[[1L]])
+  }
+  lapply(x, checkmate::assert_list, names = "named", null.ok = TRUE, .var.name = "list element")
+  all_names <- unique(unlist(lapply(x, names)))
+  sapply(all_names, function(nm) coalesce_r(lapply(x, `[[`, nm)), simplify = FALSE)
 }
