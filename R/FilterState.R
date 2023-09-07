@@ -333,6 +333,7 @@ FilterState <- R6::R6Class( # nolint
                   title = "Rewind state",
                   class = "filter-card-back",
                   style = "display: none",
+                  onclick = "event.preventDefault();",
                   href = "href"
                 )
               },
@@ -344,6 +345,7 @@ FilterState <- R6::R6Class( # nolint
                   title = "Restore original state",
                   class = "filter-card-back",
                   style = "display: none",
+                  onclick = "event.preventDefault();",
                   href = "href"
                 )
               },
@@ -353,6 +355,7 @@ FilterState <- R6::R6Class( # nolint
                   label = icon("circle-xmark", lib = "font-awesome"),
                   title = "Remove filter",
                   class = "filter-card-remove",
+                  onclick = "event.preventDefault();",
                   href = "href"
                 )
               }
