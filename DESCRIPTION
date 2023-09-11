@@ -1,6 +1,6 @@
 Type: Package
 Package: teal.slice
-Title: Filter Module for `teal` Applications
+Title: Filter Module for 'teal' Applications
 Version: 0.4.0.9012
 Date: 2023-09-08
 Authors@R: c(
@@ -19,8 +19,13 @@ Authors@R: c(
     person("Junlue", "Zhao", role = "aut"),
     person("F. Hoffmann-La Roche AG", role = c("cph", "fnd"))
   )
-Description: Filter module for teal applications.
-License: Apache License 2.0 | file LICENSE
+Description: 
+    Module containing filter panel for 'teal' applications. Allows for interactive filtering of data stored in 
+    'data.frame' and 'MultiAssayExperiment' objects. Also displays filtered and unfiltered observation counts.
+License: Apache License 2.0
+URL: https://insightsengineering.github.io/teal.slice/,
+    https://github.com/insightsengineering/teal.slice/
+BugReports: https://github.com/insightsengineering/teal.slice/issues
 Depends:
     R (>= 4.0),
     shiny

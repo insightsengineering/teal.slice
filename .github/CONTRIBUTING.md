@@ -94,17 +94,17 @@ This repository follows the standard [`tidyverse` style guide](https://style.tid
 
 ### Dependency management
 
-Lightweight is the right weight. This repository follows [tinyverse](https://www.tinyverse.org/) recommedations of limiting dependencies to minimum.
+Lightweight is the right weight. This repository follows [tinyverse](https://www.tinyverse.org/) recommendations of limiting dependencies to minimum.
 
 ### Dependency version management
 
-If the code is not compatible with all (!) historical versions of a given dependenct package, it is required to specify minimal version in the `DESCRIPTION` file. In particular: if the development version requires (imports) the development version of another package - it is required to put `abc (>= 1.2.3.9000)`.
+If the code is not compatible with all (!) historical versions of a given dependency package, it is required to specify minimal version in the `DESCRIPTION` file. In particular: if the development version requires (imports) the development version of another package - it is required to put `abc (>= 1.2.3.9000)`.
 
 ### Recommended development environment & tools
 
 #### R & package versions
 
-We continuously test our packages against the newest R version along with the most recent dependencies from CRAN and BioConductor. We recommend that your working environment is also set up in the same way. You can find the details about the R version and packages used in the `R CMD check` GitHub Action execution log - there is a step that prints out the R `sessionInfo()`.
+We continuously test our packages against the newest R version along with the most recent dependencies from CRAN and `BioConductor`. We recommend that your working environment is also set up in the same way. You can find the details about the R version and packages used in the `R CMD check` GitHub Action execution log - there is a step that prints out the R `sessionInfo()`.
 
 If you discover bugs on older R versions or with an older set of dependencies, please create the relevant bug reports.
 
@@ -130,7 +130,7 @@ The package maintainer also reserves the right to adjust the criteria to recogni
 If you have further questions regarding the contribution guidelines, please contact the package/repository maintainer.
 
 <!-- urls -->
-[docs]: https://insightsengineering.github.io/teal.slice/index.html
-[articles]: https://insightsengineering.github.io/teal.slice/main/articles/index.html
-[license]: https://insightsengineering.github.io/teal.slice/main/LICENSE-text.html
+[docs]: https://insightsengineering.github.io/teal.slice/latest-tag/index.html
+[articles]: https://insightsengineering.github.io/teal.slice/latest-tag/articles/index.html
+[license]: https://insightsengineering.github.io/teal.slice/latest-tag/LICENSE-text.html
 [insights]: https://github.com/insightsengineering/teal.slice/pulse

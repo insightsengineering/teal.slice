@@ -1,7 +1,6 @@
 ---
 title: "teal.slice classes"
 author: "NEST Core Dev Team"
-date: "10/07/2023"
 output: 
   rmarkdown::html_vignette:
     toc: true

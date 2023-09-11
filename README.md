@@ -27,17 +27,31 @@
 
 ## Installation
 
-From July 2023 `insightsengineering` packages are available on [r-universe](https://r-universe.dev/).
-
 ```r
 # stable versions
 install.packages('teal.slice', repos = c('https://insightsengineering.r-universe.dev', 'https://cloud.r-project.org'))
 
-# beta versions
-install.packages('teal.slice', repos = c('https://pharmaverse.r-universe.dev', 'https://cloud.r-project.org'))
+# install.packages("pak")
+pak::pak("insightsengineering/teal.slice@*release")
 ```
 
-See package vignettes `browseVignettes(package = "teal.slice")` for usage of this package.
+Alternatively, you might want to use the development version available on [r-universe](https://r-universe.dev/).
+
+```r
+# beta versions
+install.packages('teal.slice', repos = c('https://pharmaverse.r-universe.dev', 'https://cloud.r-project.org'))
+
+# install.packages("pak")
+pak::pak("insightsengineering/teal.slice")
+```
+
+## Usage
+
+To understand how to use this package, please refer to the [Introduction to teal.slice](https://insightsengineering.github.io/teal.slice/latest-tag/articles/teal-slice.html) article, which provides multiple examples of code implementation.
+
+## Getting help
+
+If you encounter a bug or you have a feature request - please file an issue. For questions, discussions and staying up to date, please use the "teal" channel in the [`pharmaverse` slack workspace](https://pharmaverse.slack.com).
 
 ## Stargazers and Forkers
 
