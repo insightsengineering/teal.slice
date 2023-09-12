@@ -29,7 +29,7 @@
 
 ```r
 # stable versions
-install.packages('teal.slice', repos = c('https://insightsengineering.r-universe.dev', 'https://cloud.r-project.org'))
+install.packages('teal.slice', repos = c('https://insightsengineering.r-universe.dev', getOption('repos')))
 
 # install.packages("pak")
 pak::pak("insightsengineering/teal.slice@*release")
@@ -39,7 +39,7 @@ Alternatively, you might want to use the development version available on [r-uni
 
 ```r
 # beta versions
-install.packages('teal.slice', repos = c('https://pharmaverse.r-universe.dev', 'https://cloud.r-project.org'))
+install.packages('teal.slice', repos = c('https://pharmaverse.r-universe.dev', getOption('repos')))
 
 # install.packages("pak")
 pak::pak("insightsengineering/teal.slice")
