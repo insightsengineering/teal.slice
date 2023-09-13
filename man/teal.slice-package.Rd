@@ -8,6 +8,15 @@
 \description{
 \code{teal.slice} is an R library used in the development of \code{teal} \code{shiny} modules.
 }
+\seealso{
+Useful links:
+\itemize{
+  \item \url{https://insightsengineering.github.io/teal.slice/}
+  \item \url{https://github.com/insightsengineering/teal.slice/}
+  \item Report bugs at \url{https://github.com/insightsengineering/teal.slice/issues}
+}
+
+}
 \author{
 \strong{Maintainer}: Dawid Kaledkowski \email{dawid.kaledkowski@roche.com}
 
