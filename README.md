@@ -49,6 +49,8 @@ pak::pak("insightsengineering/teal.slice")
 
 To understand how to use this package, please refer to the [Introduction to teal.slice](https://insightsengineering.github.io/teal.slice/latest-tag/articles/teal-slice.html) article, which provides multiple examples of code implementation.
 
+![Showcase](https://github.com/insightsengineering/teal.slice/blob/main/assets/img/showcase.gif)
+
 ## Getting help
 
 If you encounter a bug or you have a feature request - please file an issue. For questions, discussions and staying up to date, please use the "teal" channel in the [`pharmaverse` slack workspace](https://pharmaverse.slack.com).
