@@ -303,13 +303,11 @@ FilterState <- R6::R6Class( # nolint
         include_js_files("count-bar-labels.js"),
         div(
           class = "filter-card-header",
+          `data-toggle` = "collapse",
+          `data-bs-toggle` = "collapse",
+          href = paste0("#", ns("body")),
           div(
-            # title properties
             class = "filter-card-title",
-            `data-toggle` = "collapse",
-            `data-bs-toggle` = "collapse",
-            href = paste0("#", ns("body")),
-            # title elements
             if (private$is_anchored() && private$is_fixed()) {
               icon("anchor-lock", class = "filter-card-icon")
             } else if (private$is_anchored() && !private$is_fixed()) {
@@ -321,6 +319,12 @@ FilterState <- R6::R6Class( # nolint
             div(class = "filter-card-varlabel", private$get_varlabel()),
             div(
               class = "filter-card-controls",
+              # Suppress toggling body when clicking on this div.
+              # This is for bootstrap 3 and 4. Causes page to scroll to top, prevented by setting href on buttons.
+              onclick = "event.stopPropagation();event.preventDefault();",
+              # This is for bootstrap 5.
+              `data-bs-toggle` = "collapse",
+              `data-bs-target` = NULL,
               if (isFALSE(private$is_fixed())) {
                 actionLink(
                   inputId = ns("back"),
@@ -351,13 +355,7 @@ FilterState <- R6::R6Class( # nolint
               }
             )
           ),
-          div(
-            class = "filter-card-summary",
-            `data-toggle` = "collapse",
-            `data-bs-toggle` = "collapse",
-            href = paste0("#", ns("body")),
-            private$ui_summary(ns("summary"))
-          )
+          div(class = "filter-card-summary", private$ui_summary(ns("summary")))
         ),
         div(
           id = ns("body"),
@@ -772,9 +770,9 @@ FilterState <- R6::R6Class( # nolint
         # changed directly by the api - then it's needed to rerender UI element
         # to show relevant values
         private$observers$keep_na_api <- observeEvent(
-          eventExpr = private$get_keep_na(),
           ignoreNULL = FALSE, # nothing selected is possible for NA
           ignoreInit = TRUE, # ignoreInit: should not matter because we set the UI with the desired initial state
+          eventExpr = private$get_keep_na(),
           handlerExpr = {
             if (!setequal(private$get_keep_na(), input$value)) {
               logger::log_trace("FilterState$keep_na_srv@1 changed reactive value, id: { private$get_id() }")

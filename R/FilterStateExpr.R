@@ -112,7 +112,7 @@ FilterStateExpr <- R6::R6Class( # nolint
     #'
     set_state = function(state) {
       checkmate::assert_class(state, "teal_slice_expr")
-      invisible(NULL)
+      invisible(self)
     },
 
     #' @description
@@ -136,6 +136,10 @@ FilterStateExpr <- R6::R6Class( # nolint
     #'
     destroy_observers = function() {
       lapply(private$observers, function(x) x$destroy())
+
+      if (!is.null(private$destroy_shiny)) {
+        private$destroy_shiny()
+      }
       invisible(NULL)
     },
 
@@ -155,8 +159,14 @@ FilterStateExpr <- R6::R6Class( # nolint
         id = id,
         function(input, output, session) {
           private$server_summary("summary")
-          out <- reactive(input$remove) # back to parent to remove self
-          out
+
+          private$destroy_shiny <- function() {
+            logger::log_trace("Destroying FilterStateExpr inputs; id: { private$get_id() }")
+            # remove values from the input list
+            lapply(session$ns(names(input)), .subset2(input, "impl")$.values$remove)
+          }
+
+          reactive(input$remove) # back to parent to remove self
         }
       )
     },
@@ -180,20 +190,24 @@ FilterStateExpr <- R6::R6Class( # nolint
             tags$div(
               class = "filter-card-title",
               if (private$is_anchored()) {
-                icon("anchor-lock")
+                icon("anchor-lock", class = "filter-card-icon")
               } else {
-                icon("lock")
+                icon("lock", class = "filter-card-icon")
               },
-              tags$span(tags$strong(private$teal_slice$id)),
-              tags$span(private$teal_slice$title, class = "filter-card-varlabel")
-            ),
-            if (isFALSE(private$is_anchored())) {
-              actionLink(
-                inputId = ns("remove"),
-                label = icon("circle-xmark", lib = "font-awesome"),
-                class = "filter-card-remove"
+              div(class = "filter-card-varname", tags$strong(private$teal_slice$id)),
+              div(class = "filter-card-varlabel", private$teal_slice$title),
+              div(
+                class = "filter-card-controls",
+                if (isFALSE(private$is_anchored())) {
+                  actionLink(
+                    inputId = ns("remove"),
+                    label = icon("circle-xmark", lib = "font-awesome"),
+                    title = "Remove filter",
+                    class = "filter-card-remove"
+                  )
+                }
               )
-            },
+            ),
             tags$div(
               class = "filter-card-summary",
               private$ui_summary(ns("summary"))
@@ -209,6 +223,14 @@ FilterStateExpr <- R6::R6Class( # nolint
   private = list(
     observers = NULL, # stores observers
     teal_slice = NULL, # stores reactiveValues
+    destroy_shiny = NULL, # function is set in server
+
+    # @description
+    # Get id of the teal_slice.
+    # @return `character(1)`
+    get_id = function() {
+      shiny::isolate(private$teal_slice$id)
+    },
 
     # Check whether this filter is anchored (cannot be removed).
     # @return `logical(1)`

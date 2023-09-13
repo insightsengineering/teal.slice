@@ -212,11 +212,13 @@ RangeFilterState <- R6::R6Class( # nolint
         })
         private$plot_filtered <- reactive({
           finite_values <- Filter(is.finite, private$x_reactive())
-          list(
-            x = finite_values,
-            bingroup = 1,
-            color = I(fetch_bs_color("primary"))
-          )
+          if (!identical(finite_values, numeric(0))) {
+            list(
+              x = finite_values,
+              bingroup = 1,
+              color = I(fetch_bs_color("primary"))
+            )
+          }
         })
         invisible(self)
       })
