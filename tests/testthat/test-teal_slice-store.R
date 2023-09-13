@@ -53,7 +53,6 @@ test_that("teal_slice store/restore supports saving `Date` dates in selected", {
 })
 
 test_that("teal_slice store/restore supports saving `POSIXct` timestamps in choices", {
-  skip("Storing `POSIXct` on choices not yet supported")
   slices_path <- withr::local_file("slices.json")
 
   time_stamps <- Sys.time() + c(-10 * 60 * 60 * 24, -30, 0)
@@ -85,7 +84,6 @@ test_that("teal_slice store/restore supports saving `POSIXct` timestamps in choi
 })
 
 test_that("teal_slice store/restore supports saving `Date` timestamps in choices", {
-  skip("Storing `Date` on choices not yet supported")
   slices_path <- withr::local_file("slices.json")
 
   time_stamps <- Sys.Date() + c(-10 * 600, -30, 0)

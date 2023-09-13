@@ -55,17 +55,19 @@ slices_restore <- function(file) {
   tss_json <- jsonlite::fromJSON(file, simplifyDataFrame = FALSE)
   tss_json$slices <-
     lapply(tss_json$slices, function(slice) {
-      if (!is.null(slice$selected)) {
-        slice$selected <-
-          if (all(grepl("[0-9]{4}-[0-9]{2}-[0-9]{2}", slice$selected))) {
-            if (all(grepl("T[0-9]{2}:[0-9]{2}:[0-9]{2}", slice$selected))) {
-              as.POSIXct(gsub("T|Z", " ", slice$selected), tz = "UTC")
+      for (field in c("selected", "choices")) {
+        if (!is.null(slice[[field]])) {
+          slice[[field]] <-
+            if (all(grepl("[0-9]{4}-[0-9]{2}-[0-9]{2}", slice[[field]]))) {
+              if (all(grepl("T[0-9]{2}:[0-9]{2}:[0-9]{2}", slice[[field]]))) {
+                as.POSIXct(gsub("T|Z", " ", slice[[field]]), tz = "UTC")
+              } else {
+                as.Date(slice[[field]])
+              }
             } else {
-              as.Date(slice$selected)
+              slice[[field]]
             }
-          } else {
-            slice$selected
-          }
+        }
       }
       slice
     })
