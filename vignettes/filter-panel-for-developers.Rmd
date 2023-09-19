@@ -1,6 +1,6 @@
 ---
 title: "Filter panel for developers"
-author: "NEST Core Dev Team"
+author: "NEST CoreDev"
 output: rmarkdown::html_vignette
 vignette: >
   %\VignetteIndexEntry{Filter panel for developers}
