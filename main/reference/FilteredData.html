@@ -12,7 +12,7 @@ Class to encapsulate filtered datasets"><!-- mathjax --><script src="https://cdn
     
     <a class="navbar-brand me-2" href="../index.html">teal.slice</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.4.0.9010</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.4.0.9012</small>
 
     <div style="width: 140px; margin-left: 0.5rem;"> <small class="nav-text text-muted me-auto">part of</small> <img src="https://github.com/insightsengineering/hex-stickers/blob/main/PNG/nest.png?raw=true" alt="NEST" style="height: 30px;"><a href="https://pharmaverse.org/" class="external-link"><img src="https://github.com/insightsengineering/hex-stickers/blob/main/PNG/pharmaverse.png?raw=true" alt="pharmaverse" style="height: 28px;"></a> </div>
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -29,23 +29,13 @@ Class to encapsulate filtered datasets"><!-- mathjax --><script src="https://cdn
 <li class="nav-item dropdown">
   <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown" role="button" aria-expanded="false" aria-haspopup="true" id="dropdown-articles">Articles</a>
   <div class="dropdown-menu" aria-labelledby="dropdown-articles">
-    <a class="dropdown-item" href="../articles/filter-panel-for-developers.html">Filter panel for developers</a>
-    <a class="dropdown-item" href="../articles/teal-slice-classes.html">teal.slice classes</a>
+    <a class="dropdown-item" href="../articles/filter-panel-for-developers.html">Filter Panel for Developers</a>
+    <a class="dropdown-item" href="../articles/teal-slice-classes.html">teal.slice Classes</a>
   </div>
 </li>
 <li class="nav-item">
   <a class="nav-link" href="../news/index.html">Changelog</a>
 </li>
-<!-- start dropdown for versions --> <li class="nav-item dropdown">
-        <a href="#" class="nav-link dropdown-toggle"
-          data-bs-toggle="dropdown" role="button"
-          aria-expanded="false" aria-haspopup="true"
-          id="dropdown-versions">Versions</a> <div class="dropdown-menu" aria-labelledby="dropdown-versions"> <a class="dropdown-item" data-toggle="tooltip" title="" href="https://insightsengineering.github.io/teal.slice/main">main</a>
-<a class="dropdown-item" data-toggle="tooltip" title="" href="https://insightsengineering.github.io/teal.slice/latest-tag">latest-tag</a>
-<a class="dropdown-item" data-toggle="tooltip" title="" href="https://insightsengineering.github.io/teal.slice/v0.4.0">v0.4.0</a>
-<a class="dropdown-item" data-toggle="tooltip" title="" href="https://insightsengineering.github.io/teal.slice/v0.3.0">v0.3.0</a>
-<a class="dropdown-item" data-toggle="tooltip" title="" href="https://insightsengineering.github.io/teal.slice/v0.2.0">v0.2.0</a> </div></li>
-<!-- end dropdown for versions -->
 <li class="nav-item dropdown">
   <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown" role="button" aria-expanded="false" aria-haspopup="true" id="dropdown-reports">Reports</a>
   <div class="dropdown-menu" aria-labelledby="dropdown-reports">
@@ -70,7 +60,7 @@ Class to encapsulate filtered datasets"><!-- mathjax --><script src="https://cdn
 <div class="row">
   <main id="main" class="col-md-9"><div class="page-header">
       <img src="" class="logo" alt=""><h1>Class to encapsulate filtered datasets</h1>
-      
+      <small class="dont-index">Source: <a href="https://github.com/insightsengineering/teal.slice/blob/HEAD/R/FilteredData.R" class="external-link"><code>R/FilteredData.R</code></a></small>
       <div class="d-none name"><code>FilteredData.Rd</code></div>
     </div>
 
@@ -154,7 +144,7 @@ Other variables cannot be used for filtering the data in this class.</p></li>
 <h4 id="usage">Usage<a class="anchor" aria-label="anchor" href="#usage"></a></h4>
 <p></p><div class="r"><div class="sourceCode"><pre><code><span><span class="va"><a href="../reference/FilteredData.html">FilteredData</a></span><span class="op">$</span><span class="fu">new</span><span class="op">(</span></span>
 <span>  <span class="va">data_objects</span>,</span>
-<span>  join_keys <span class="op">=</span> <span class="fu">teal.data</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/teal.data/man/join_keys.html" class="external-link">join_keys</a></span><span class="op">(</span><span class="op">)</span>,</span>
+<span>  join_keys <span class="op">=</span> <span class="fu">teal.data</span><span class="fu">::</span><span class="fu"><a href="https://insightsengineering.github.io/teal.data/reference/join_keys.html" class="external-link">join_keys</a></span><span class="op">(</span><span class="op">)</span>,</span>
 <span>  code <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  check <span class="op">=</span> <span class="cn">FALSE</span></span>
 <span><span class="op">)</span></span></code></pre></div><p></p></div>
@@ -169,11 +159,11 @@ Names of the list will serve as <code>dataname</code>.</p></dd>
 
 
 <dt><code>join_keys</code></dt>
-<dd><p>(<code>JoinKeys</code> or NULL) see <code><a href="https://rdrr.io/pkg/teal.data/man/join_keys.html" class="external-link">teal.data::join_keys()</a></code>.</p></dd>
+<dd><p>(<code>JoinKeys</code> or NULL) see <code><a href="https://insightsengineering.github.io/teal.data/reference/join_keys.html" class="external-link">teal.data::join_keys()</a></code>.</p></dd>
 
 
 <dt><code>code</code></dt>
-<dd><p>(<code>CodeClass</code> or <code>NULL</code>) see <code><a href="https://rdrr.io/pkg/teal.data/man/CodeClass.html" class="external-link">teal.data::CodeClass</a></code>.</p></dd>
+<dd><p>(<code>CodeClass</code> or <code>NULL</code>) see <code><a href="https://insightsengineering.github.io/teal.data/reference/CodeClass.html" class="external-link">teal.data::CodeClass</a></code>.</p></dd>
 
 
 <dt><code>check</code></dt>
@@ -1202,7 +1192,7 @@ see <code>self$get_filterable_varnames</code> for more details</p></dd>
 <span class="r-in"><span>               selected <span class="op">=</span> <span class="st">""</span>, keep_na <span class="op">=</span> <span class="cn">TRUE</span>, datalabel <span class="op">=</span> <span class="st">"RPPAArray"</span>, arg <span class="op">=</span> <span class="st">"subset"</span><span class="op">)</span></span></span>
 <span class="r-in"><span>  <span class="op">)</span></span></span>
 <span class="r-in"><span><span class="va">datasets</span><span class="op">$</span><span class="fu">set_filter_state</span><span class="op">(</span>state <span class="op">=</span> <span class="va">fs</span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [WARN] 2023-09-05 13:05:52.8347 pid:644 token:[] teal.slice filters for columns: ARRAY_TYPE excluded from mae</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [WARN] 2023-09-19 19:05:43.5347 pid:651 token:[] teal.slice filters for columns: ARRAY_TYPE excluded from mae</span>
 <span class="r-in"><span><span class="fu">shiny</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/shiny/man/isolate.html" class="external-link">isolate</a></span><span class="op">(</span><span class="va">datasets</span><span class="op">$</span><span class="fu">get_filter_state</span><span class="op">(</span><span class="op">)</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> {</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   "slices": [</span>

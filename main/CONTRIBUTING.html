@@ -10,7 +10,7 @@
     
     <a class="navbar-brand me-2" href="index.html">teal.slice</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.4.0.9010</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.4.0.9012</small>
 
     <div style="width: 140px; margin-left: 0.5rem;"> <small class="nav-text text-muted me-auto">part of</small> <img src="https://github.com/insightsengineering/hex-stickers/blob/main/PNG/nest.png?raw=true" alt="NEST" style="height: 30px;"><a href="https://pharmaverse.org/" class="external-link"><img src="https://github.com/insightsengineering/hex-stickers/blob/main/PNG/pharmaverse.png?raw=true" alt="pharmaverse" style="height: 28px;"></a> </div>
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -27,23 +27,13 @@
 <li class="nav-item dropdown">
   <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown" role="button" aria-expanded="false" aria-haspopup="true" id="dropdown-articles">Articles</a>
   <div class="dropdown-menu" aria-labelledby="dropdown-articles">
-    <a class="dropdown-item" href="articles/filter-panel-for-developers.html">Filter panel for developers</a>
-    <a class="dropdown-item" href="articles/teal-slice-classes.html">teal.slice classes</a>
+    <a class="dropdown-item" href="articles/filter-panel-for-developers.html">Filter Panel for Developers</a>
+    <a class="dropdown-item" href="articles/teal-slice-classes.html">teal.slice Classes</a>
   </div>
 </li>
 <li class="nav-item">
   <a class="nav-link" href="news/index.html">Changelog</a>
 </li>
-<!-- start dropdown for versions --> <li class="nav-item dropdown">
-        <a href="#" class="nav-link dropdown-toggle"
-          data-bs-toggle="dropdown" role="button"
-          aria-expanded="false" aria-haspopup="true"
-          id="dropdown-versions">Versions</a> <div class="dropdown-menu" aria-labelledby="dropdown-versions"> <a class="dropdown-item" data-toggle="tooltip" title="" href="https://insightsengineering.github.io/teal.slice/main">main</a>
-<a class="dropdown-item" data-toggle="tooltip" title="" href="https://insightsengineering.github.io/teal.slice/latest-tag">latest-tag</a>
-<a class="dropdown-item" data-toggle="tooltip" title="" href="https://insightsengineering.github.io/teal.slice/v0.4.0">v0.4.0</a>
-<a class="dropdown-item" data-toggle="tooltip" title="" href="https://insightsengineering.github.io/teal.slice/v0.3.0">v0.3.0</a>
-<a class="dropdown-item" data-toggle="tooltip" title="" href="https://insightsengineering.github.io/teal.slice/v0.2.0">v0.2.0</a> </div></li>
-<!-- end dropdown for versions -->
 <li class="nav-item dropdown">
   <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown" role="button" aria-expanded="false" aria-haspopup="true" id="dropdown-reports">Reports</a>
   <div class="dropdown-menu" aria-labelledby="dropdown-reports">
@@ -68,7 +58,7 @@
 <div class="row">
   <main id="main" class="col-md-9"><div class="page-header">
       <img src="" class="logo" alt=""><h1>Contribution Guidelines</h1>
-      
+      <small class="dont-index">Source: <a href="https://github.com/insightsengineering/teal.slice/blob/HEAD/.github/CONTRIBUTING.md" class="external-link"><code>.github/CONTRIBUTING.md</code></a></small>
     </div>
 
 <div id="contribution-guidelines" class="section level1">
@@ -88,7 +78,7 @@
 </div>
 <div class="section level2">
 <h2 id="getting-started">Getting started<a class="anchor" aria-label="anchor" href="#getting-started"></a></h2>
-<p>Please refer the project <a href="https://insightsengineering.github.io/teal.slice/index.html">documentation</a> for a brief introduction. Please also see other <a href="https://insightsengineering.github.io/teal.slice/main/articles/index.html">articles</a> within the project documentation for additional information.</p>
+<p>Please refer the project <a href="https://insightsengineering.github.io/teal.slice/latest-tag/index.html">documentation</a> for a brief introduction. Please also see other <a href="https://insightsengineering.github.io/teal.slice/latest-tag/articles/index.html">articles</a> within the project documentation for additional information.</p>
 </div>
 <div class="section level2">
 <h2 id="code-of-conduct">Code of Conduct<a class="anchor" aria-label="anchor" href="#code-of-conduct"></a></h2>
@@ -96,7 +86,7 @@
 </div>
 <div class="section level2">
 <h2 id="license">License<a class="anchor" aria-label="anchor" href="#license"></a></h2>
-<p>All your contributions will be covered by this project’s <a href="https://insightsengineering.github.io/teal.slice/main/LICENSE-text.html">license</a>.</p>
+<p>All your contributions will be covered by this project’s <a href="https://insightsengineering.github.io/teal.slice/latest-tag/LICENSE-text.html">license</a>.</p>
 </div>
 <div class="section level2">
 <h2 id="issues">Issues<a class="anchor" aria-label="anchor" href="#issues"></a></h2>
@@ -155,17 +145,17 @@
 </div>
 <div class="section level3">
 <h3 id="dependency-management">Dependency management<a class="anchor" aria-label="anchor" href="#dependency-management"></a></h3>
-<p>Lightweight is the right weight. This repository follows <a href="https://www.tinyverse.org/" class="external-link">tinyverse</a> recommedations of limiting dependencies to minimum.</p>
+<p>Lightweight is the right weight. This repository follows <a href="https://www.tinyverse.org/" class="external-link">tinyverse</a> recommendations of limiting dependencies to minimum.</p>
 </div>
 <div class="section level3">
 <h3 id="dependency-version-management">Dependency version management<a class="anchor" aria-label="anchor" href="#dependency-version-management"></a></h3>
-<p>If the code is not compatible with all (!) historical versions of a given dependenct package, it is required to specify minimal version in the <code>DESCRIPTION</code> file. In particular: if the development version requires (imports) the development version of another package - it is required to put <code>abc (&gt;= 1.2.3.9000)</code>.</p>
+<p>If the code is not compatible with all (!) historical versions of a given dependency package, it is required to specify minimal version in the <code>DESCRIPTION</code> file. In particular: if the development version requires (imports) the development version of another package - it is required to put <code>abc (&gt;= 1.2.3.9000)</code>.</p>
 </div>
 <div class="section level3">
 <h3 id="recommended-development-environment--tools">Recommended development environment &amp; tools<a class="anchor" aria-label="anchor" href="#recommended-development-environment--tools"></a></h3>
 <div class="section level4">
 <h4 id="r--package-versions">R &amp; package versions<a class="anchor" aria-label="anchor" href="#r--package-versions"></a></h4>
-<p>We continuously test our packages against the newest R version along with the most recent dependencies from CRAN and BioConductor. We recommend that your working environment is also set up in the same way. You can find the details about the R version and packages used in the <code>R CMD check</code> GitHub Action execution log - there is a step that prints out the R <code><a href="https://rdrr.io/r/utils/sessionInfo.html" class="external-link">sessionInfo()</a></code>.</p>
+<p>We continuously test our packages against the newest R version along with the most recent dependencies from CRAN and <code>BioConductor</code>. We recommend that your working environment is also set up in the same way. You can find the details about the R version and packages used in the <code>R CMD check</code> GitHub Action execution log - there is a step that prints out the R <code><a href="https://rdrr.io/r/utils/sessionInfo.html" class="external-link">sessionInfo()</a></code>.</p>
 <p>If you discover bugs on older R versions or with an older set of dependencies, please create the relevant bug reports.</p>
 </div>
 <div class="section level4">
