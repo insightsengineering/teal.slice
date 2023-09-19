@@ -1,6 +1,6 @@
 ---
 title: "teal.slice classes"
-author: "NEST Core Dev Team"
+author: "NEST CoreDev"
 output: 
   rmarkdown::html_vignette:
     toc: true
