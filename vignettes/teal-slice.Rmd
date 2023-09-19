@@ -1,7 +1,6 @@
 ---
 title: "Introduction to teal.slice"
-author: "NEST Core Dev Team"
-date: "01/07/2022"
+author: "NEST CoreDev"
 output: 
   rmarkdown::html_vignette:
     toc: true
