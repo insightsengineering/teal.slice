@@ -1,3 +1,5 @@
+LICENSE
+^assets$
 ^renv$
 ^renv\.lock$
 CODE_OF_CONDUCT.md

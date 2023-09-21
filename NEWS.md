@@ -1,4 +1,8 @@
-# teal.slice 0.4.0.9012
+# teal.slice 0.4.0.9014
+
+### Miscellaneous
+
+* Specified minimal version of package dependencies.
 
 # teal.slice 0.4.0
 
