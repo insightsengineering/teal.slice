@@ -1,8 +1,8 @@
 Type: Package
 Package: teal.slice
 Title: Filter Module for 'teal' Applications
-Version: 0.4.0.9013
-Date: 2023-09-19
+Version: 0.4.0.9014
+Date: 2023-09-21
 Authors@R: c(
     person("Dawid", "Kaledkowski", , "dawid.kaledkowski@roche.com", role = c("aut", "cre")),
     person("Pawel", "Rucki", , "pawel.rucki@roche.com", role = "aut"),
@@ -59,27 +59,13 @@ VignetteBuilder:
     knitr
 RdMacros:
     lifecycle
-Config/Needs/verdepcheck:
-    rstudio/shiny,
-    rstudio/bslib,
-    mllg/checkmate,
-    tidyverse/dplyr,
-    rstudio/htmltools,
-    jeroen/jsonlite,
-    r-lib/lifecycle,
-    daroczig/logger,
-    plotly/plotly,
-    r-lib/R6,
-    daattali/shinycssloaders,
-    daattali/shinyjs,
-    dreamRs/shinyWidgets,
-    insightsengineering/teal.data,
-    insightsengineering/teal.logger,
-    insightsengineering/teal.widgets,
-    yihui/knitr,
-    MultiAssayExperiment=bioc::MultiAssayExperiment,
-    SummarizedExperiment=bioc::SummarizedExperiment,
-    r-lib/testthat,
+Config/Needs/verdepcheck: rstudio/shiny, rstudio/bslib, mllg/checkmate,
+    tidyverse/dplyr, rstudio/htmltools, jeroen/jsonlite, r-lib/lifecycle,
+    daroczig/logger, plotly/plotly, r-lib/R6, daattali/shinycssloaders,
+    daattali/shinyjs, dreamRs/shinyWidgets, insightsengineering/teal.data,
+    insightsengineering/teal.logger, insightsengineering/teal.widgets,
+    yihui/knitr, MultiAssayExperiment=bioc::MultiAssayExperiment,
+    SummarizedExperiment=bioc::SummarizedExperiment, r-lib/testthat,
     r-lib/withr
 Config/Needs/website: insightsengineering/nesttemplate
 Encoding: UTF-8
