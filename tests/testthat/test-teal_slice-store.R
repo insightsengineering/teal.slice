@@ -107,3 +107,24 @@ test_that("teal_slice store/restore supports saving `Date` timestamps in choices
 
   expect_identical_slice(tss[[1]], tss_restored[[1]])
 })
+
+
+test_that("teal_slice store/restore restores mixed `Date`-characters as characters in selected", {
+  slices_path <- withr::local_file("slices.json")
+  tss <- teal_slices(
+    teal_slice(
+      dataname = "ADSL",
+      varname = "EOSDTM",
+      selected = c(
+        "beta 2023-09-11",
+        "release candidate 2023-09-21",
+        "release 2023-09-21"
+      ),
+      fixed = TRUE
+    )
+  )
+
+  slices_store(tss, slices_path)
+  tss_restored <- slices_restore(slices_path)
+  expect_identical_slice(tss[[1]], tss_restored[[1]])
+})
