@@ -239,13 +239,14 @@ print.teal_slice <- function(x, ...) {
 #'
 #' @param x (`list`), possibly recursive, obtained from `teal_slice` or `teal_slices`.
 #' @param trim_lines (`logical(1)`) flag specifying whether to trim lines of the `JSON` string.
+#' @param add_levels (`logical(1)`) whether to add level values if `selected` or `choices` is a `factor`.
 #' @return A `JSON` string representation of the input list.
 #' @keywords internal
 #'
-jsonify <- function(x, trim_lines) {
+jsonify <- function(x, trim_lines, add_levels) {
   checkmate::assert_list(x)
 
-  x_json <- to_json(x)
+  x_json <- to_json(x, add_levels)
   x_json_justified <- justify_json(x_json)
   if (trim_lines) x_json_justified <- trim_lines_json(x_json_justified)
   paste(x_json_justified, collapse = "\n")
@@ -257,18 +258,20 @@ jsonify <- function(x, trim_lines) {
 #' Ensures proper unboxing of list elements.
 #' This function is used by the `format` methods for `teal_slice` and `teal_slices`.
 #' @param x `list`, possibly recursive, obtained from `teal_slice` or `teal_slices`.
+#' @param add_levels (`logical(1)`) whether to add level values if `selected` or `choices` is a `factor`.
 #' @return A `JSON` string.
 #' @keywords internal
 #
 #' @param x (`list`) representation of `teal_slices` object.
 #' @keywords internal
 #'
-to_json <- function(x) {
+to_json <- function(x, add_levels) {
   no_unbox <- function(x) {
     vars <- c("selected", "choices")
     if (is.list(x)) {
       for (var in vars) {
         if (!is.null(x[[var]])) x[[var]] <- I(x[[var]])
+        if (add_levels && is.factor(x[[var]])) x[[paste0(var, "_levels")]] <- I(levels(x[[var]]))
       }
       lapply(x, no_unbox)
     } else {

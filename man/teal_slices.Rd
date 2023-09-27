@@ -30,7 +30,7 @@ as.teal_slices(x)
 
 \method{c}{teal_slices}(...)
 
-\method{format}{teal_slices}(x, show_all = FALSE, trim_lines = TRUE, ...)
+\method{format}{teal_slices}(x, show_all = FALSE, trim_lines = TRUE, add_levels = FALSE, ...)
 
 \method{print}{teal_slices}(x, ...)
 
@@ -65,6 +65,8 @@ Please make sure that adding new filters doesn't fail on target platform before 
 \item{show_all}{(\code{logical(1)}) whether to display non-null elements of constituent \code{teal_slice} objects}
 
 \item{trim_lines}{(\code{logical(1)}) whether to trim lines}
+
+\item{add_levels}{(\code{logical(1)}) whether to add level values if \code{selected} or \code{choices} is a \code{factor}}
 }
 \value{
 \code{teal_slices}, which is an unnamed list of \code{teal_slice} objects.

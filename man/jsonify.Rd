@@ -4,12 +4,14 @@
 \alias{jsonify}
 \title{Convert a list to a justified \code{JSON} string}
 \usage{
-jsonify(x, trim_lines)
+jsonify(x, trim_lines, add_levels)
 }
 \arguments{
 \item{x}{(\code{list}), possibly recursive, obtained from \code{teal_slice} or \code{teal_slices}.}
 
 \item{trim_lines}{(\code{logical(1)}) flag specifying whether to trim lines of the \code{JSON} string.}
+
+\item{add_levels}{(\code{logical(1)}) whether to add level values if \code{selected} or \code{choices} is a \code{factor}.}
 }
 \value{
 A \code{JSON} string representation of the input list.

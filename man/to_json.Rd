@@ -4,10 +4,12 @@
 \alias{to_json}
 \title{Converts a list to a \code{JSON} string}
 \usage{
-to_json(x)
+to_json(x, add_levels)
 }
 \arguments{
 \item{x}{(\code{list}) representation of \code{teal_slices} object.}
+
+\item{add_levels}{(\code{logical(1)}) whether to add level values if \code{selected} or \code{choices} is a \code{factor}.}
 }
 \value{
 A \code{JSON} string.

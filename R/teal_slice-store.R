@@ -31,7 +31,7 @@ slices_store <- function(tss, file) {
   checkmate::assert_class(tss, "teal_slices")
   checkmate::assert_path_for_output(file, overwrite = TRUE, extension = "json")
 
-  cat(format(tss, trim_lines = FALSE), "\n", file = file)
+  cat(format(tss, trim_lines = FALSE, add_levels = TRUE), "\n", file = file)
 }
 
 #' Restore teal_slices object from a file
@@ -58,17 +58,22 @@ slices_restore <- function(file) {
     lapply(tss_json$slices, function(slice) {
       for (field in c("selected", "choices")) {
         if (!is.null(slice[[field]])) {
-          date_partial_regex <- "^[0-9]{4}-[0-9]{2}-[0-9]{2}"
-          time_stamp_regex <- paste0(date_partial_regex, "T[0-9]{2}:[0-9]{2}:[0-9]{2}Z$")
+          if (!is.null(slice[[paste0(field, "_levels")]])) {
+            slice[[field]] <- factor(slice[[field]], levels = slice[[paste0(field, "_levels")]])
+            slice[[paste0(field, "_levels")]] <- NULL
+          } else {
+            date_partial_regex <- "^[0-9]{4}-[0-9]{2}-[0-9]{2}"
+            time_stamp_regex <- paste0(date_partial_regex, "T[0-9]{2}:[0-9]{2}:[0-9]{2}Z$")
 
-          slice[[field]] <-
-            if (all(grepl(paste0(date_partial_regex, "$"), slice[[field]]))) {
-              as.Date(slice[[field]])
-            } else if (all(grepl(time_stamp_regex, slice[[field]]))) {
-              as.POSIXct(gsub("T|Z", " ", slice[[field]]), tz = "UTC")
-            } else {
-              slice[[field]]
-            }
+            slice[[field]] <-
+              if (all(grepl(paste0(date_partial_regex, "$"), slice[[field]]))) {
+                as.Date(slice[[field]])
+              } else if (all(grepl(time_stamp_regex, slice[[field]]))) {
+                as.POSIXct(gsub("T|Z", " ", slice[[field]]), tz = "UTC")
+              } else {
+                slice[[field]]
+              }
+          }
         }
       }
       slice

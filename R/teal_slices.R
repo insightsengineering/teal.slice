@@ -206,10 +206,11 @@ c.teal_slices <- function(...) {
 #' @rdname teal_slices
 #' @param show_all (`logical(1)`) whether to display non-null elements of constituent `teal_slice` objects
 #' @param trim_lines (`logical(1)`) whether to trim lines
+#' @param add_levels (`logical(1)`) whether to add level values if `selected` or `choices` is a `factor`
 #' @export
 #' @keywords internal
 #'
-format.teal_slices <- function(x, show_all = FALSE, trim_lines = TRUE, ...) {
+format.teal_slices <- function(x, show_all = FALSE, trim_lines = TRUE, add_levels = FALSE, ...) {
   checkmate::assert_flag(show_all)
   checkmate::assert_flag(trim_lines)
 
@@ -221,7 +222,7 @@ format.teal_slices <- function(x, show_all = FALSE, trim_lines = TRUE, ...) {
 
   if (!show_all) slices_list$slices <- lapply(slices_list$slices, function(slice) Filter(Negate(is.null), slice))
 
-  jsonify(slices_list, trim_lines)
+  jsonify(slices_list, trim_lines, add_levels)
 }
 
 

@@ -26,6 +26,14 @@ schemas:
               type: array
               items:
                 type: ['null', string, boolean, number]
+            choices_levels:
+              type: array
+              items:
+                type: ['null', string]
+            selected_levels:
+              type: array
+              items:
+                type: ['null', string]
             keep_na:
               type: ['null', boolean]
             keep_inf:
