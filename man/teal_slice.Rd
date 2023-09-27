@@ -31,7 +31,7 @@ as.teal_slice(x)
 
 \method{as.list}{teal_slice}(x, ...)
 
-\method{format}{teal_slice}(x, show_all = FALSE, trim_lines = TRUE, ...)
+\method{format}{teal_slice}(x, show_all = FALSE, trim_lines = TRUE, add_levels = FALSE, ...)
 
 \method{print}{teal_slice}(x, ...)
 }
@@ -77,6 +77,8 @@ of \code{teal.slice} classes. In other methods these are further arguments passe
 only non-NULL elements will be printed.}
 
 \item{trim_lines}{(\code{logical(1)}) indicating whether to trim lines when printing.}
+
+\item{add_levels}{(\code{logical(1)}) whether to add level values if \code{selected} or \code{choices} is a \code{factor}.}
 }
 \value{
 A \code{teal.slice} object. Depending on whether \code{varname} or \code{expr} was specified, the resulting

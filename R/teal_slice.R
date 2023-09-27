@@ -74,6 +74,7 @@
 #' @param show_all (`logical(1)`) indicating whether to show all fields. If set to `FALSE`,
 #'  only non-NULL elements will be printed.
 #' @param trim_lines (`logical(1)`) indicating whether to trim lines when printing.
+#' @param add_levels (`logical(1)`) whether to add level values if `selected` or `choices` is a `factor`.
 #'
 #' @return A `teal.slice` object. Depending on whether `varname` or `expr` was specified, the resulting
 #' `teal_slice` also receives class `teal_slice_var` or `teal_slice_expr`, respectively.
@@ -210,14 +211,14 @@ as.list.teal_slice <- function(x, ...) {
 #' @export
 #' @keywords internal
 #'
-format.teal_slice <- function(x, show_all = FALSE, trim_lines = TRUE, ...) {
+format.teal_slice <- function(x, show_all = FALSE, trim_lines = TRUE, add_levels = FALSE, ...) {
   checkmate::assert_flag(show_all)
   checkmate::assert_flag(trim_lines)
 
   x_list <- as.list(x)
   if (!show_all) x_list <- Filter(Negate(is.null), x_list)
 
-  jsonify(x_list, trim_lines)
+  jsonify(x_list, trim_lines, add_levels)
 }
 
 #' @rdname teal_slice
