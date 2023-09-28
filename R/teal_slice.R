@@ -58,9 +58,9 @@
 #'  requires `dataname` prefix, *e.g.* `data$var == "x"`.
 #' @param choices (optional `vector`) specifying allowed choices;
 #' When specified it should be a subset of values in variable denoted by `varname`;
-#' Type and size depends on variable type. If specified as `factor`, it is converted to `character`.
+#' Type and size depends on variable type. Factors are coerced to character.
 #' @param selected (optional `vector`) of selected values from `choices`;
-#' Type and size depends on variable type. If specified as `factor`, it is converted to `character`.
+#' Type and size depends on variable type. Factors are coerced to character.
 #' @param multiple (optional `logical(1)`) flag specifying whether more than one value can be selected;
 #' only applicable to `ChoicesFilterState` and `LogicalFilterState`
 #' @param keep_na (optional `logical(1)`) flag specifying whether to keep missing values
