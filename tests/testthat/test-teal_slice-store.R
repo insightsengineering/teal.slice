@@ -128,3 +128,46 @@ test_that("teal_slice store/restore restores mixed `Date`-characters as characte
   tss_restored <- slices_restore(slices_path)
   expect_identical_slice(tss[[1]], tss_restored[[1]])
 })
+
+
+
+test_that(
+  "teal_slice store/restore restores factors as characters in selected and choices because they are converted",
+  {
+    slices_path <- withr::local_file("slices.json")
+    tss <- teal_slices(
+      teal_slice(
+        dataname = "ADSL",
+        varname = "EOSDTM",
+        choices = factor(c("a", "b", "c")),
+        selected = factor(c("a", "b"))
+      )
+    )
+
+    slices_store(tss, slices_path)
+    tss_restored <- slices_restore(slices_path)
+    expect_identical(class(shiny::isolate(tss_restored[[1]]$selected)), "character")
+    expect_identical(class(shiny::isolate(tss_restored[[1]]$choices)), "character")
+    expect_identical_slice(tss[[1]], tss_restored[[1]])
+  }
+)
+
+
+test_that("teal_slice store/restore restores characters as characters in selected and choices", {
+  slices_path <- withr::local_file("slices.json")
+  tss <- teal_slices(
+    teal_slice(
+      dataname = "ADSL",
+      varname = "EOSDTM",
+      choices = c("a", "b", "c"),
+      selected = c("a", "b")
+    )
+  )
+
+  slices_store(tss, slices_path)
+  tss_restored <- slices_restore(slices_path)
+
+  expect_identical(class(shiny::isolate(tss_restored[[1]]$selected)), "character")
+  expect_identical(class(shiny::isolate(tss_restored[[1]]$choices)), "character")
+  expect_identical_slice(tss[[1]], tss_restored[[1]])
+})

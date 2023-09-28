@@ -50,10 +50,10 @@ requires \code{dataname} prefix, \emph{e.g.} \code{data$var == "x"}.}
 
 \item{choices}{(optional \code{vector}) specifying allowed choices;
 When specified it should be a subset of values in variable denoted by \code{varname};
-Type and size depends on variable type.}
+Type and size depends on variable type. If specified as \code{factor}, it is converted to \code{character}.}
 
 \item{selected}{(optional \code{vector}) of selected values from \code{choices};
-Type and size depends on variable type.}
+Type and size depends on variable type. If specified as \code{factor}, it is converted to \code{character}.}
 
 \item{keep_na}{(optional \code{logical(1)}) flag specifying whether to keep missing values}
 
