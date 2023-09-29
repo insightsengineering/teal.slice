@@ -143,7 +143,7 @@ testthat::test_that("teal_slice store/restore restores characters as characters 
   slices_store(tss, slices_path)
   tss_restored <- slices_restore(slices_path)
 
-  testthat::expect_identical(class(shiny::isolate(tss_restored[[1]]$selected)), "character")
-  testthat::expect_identical(class(shiny::isolate(tss_restored[[1]]$choices)), "character")
+  testthat::expect_type(shiny::isolate(tss_restored[[1]]$selected), "character")
+  testthat::expect_type(shiny::isolate(tss_restored[[1]]$choices), "character")
   expect_identical_slice(tss[[1]], tss_restored[[1]])
 })
