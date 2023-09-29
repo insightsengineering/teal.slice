@@ -1,4 +1,4 @@
-test_that("teal_slice store/restore supports saving `POSIXct` timestamps in selected", {
+testthat::test_that("teal_slice store/restore supports saving `POSIXct` timestamps in selected", {
   slices_path <- withr::local_file("slices.json")
 
   time_stamps <- Sys.time() + c(-10 * 60 * 60 * 24, -30, 0)
@@ -23,12 +23,12 @@ test_that("teal_slice store/restore supports saving `POSIXct` timestamps in sele
   tss_restored <- slices_restore(slices_path)
 
   tss_restored_list <- shiny::isolate(shiny::reactiveValuesToList(tss_restored[[1]]))
-  expect_s3_class(tss_restored_list$selected, "POSIXct")
+  testthat::expect_s3_class(tss_restored_list$selected, "POSIXct")
 
   expect_identical_slice(tss[[1]], tss_restored[[1]])
 })
 
-test_that("teal_slice store/restore supports saving `Date` dates in selected", {
+testthat::test_that("teal_slice store/restore supports saving `Date` dates in selected", {
   slices_path <- withr::local_file("slices.json")
 
   time_stamps <- Sys.Date() + c(-10 * 600, -30, 0)
@@ -47,12 +47,12 @@ test_that("teal_slice store/restore supports saving `Date` dates in selected", {
   tss_restored <- slices_restore(slices_path)
 
   tss_restored_list <- shiny::isolate(shiny::reactiveValuesToList(tss_restored[[1]]))
-  expect_s3_class(tss_restored_list$selected, "Date")
+  testthat::expect_s3_class(tss_restored_list$selected, "Date")
 
   expect_identical_slice(tss[[1]], tss_restored[[1]])
 })
 
-test_that("teal_slice store/restore supports saving `POSIXct` timestamps in choices", {
+testthat::test_that("teal_slice store/restore supports saving `POSIXct` timestamps in choices", {
   slices_path <- withr::local_file("slices.json")
 
   time_stamps <- Sys.time() + c(-10 * 60 * 60 * 24, -30, 0)
@@ -78,12 +78,12 @@ test_that("teal_slice store/restore supports saving `POSIXct` timestamps in choi
   tss_restored <- slices_restore(slices_path)
 
   tss_restored_list <- shiny::isolate(shiny::reactiveValuesToList(tss_restored[[1]]))
-  expect_s3_class(tss_restored_list$choices, "POSIXct")
+  testthat::expect_s3_class(tss_restored_list$choices, "POSIXct")
 
   expect_identical_slice(tss[[1]], tss_restored[[1]])
 })
 
-test_that("teal_slice store/restore supports saving `Date` timestamps in choices", {
+testthat::test_that("teal_slice store/restore supports saving `Date` timestamps in choices", {
   slices_path <- withr::local_file("slices.json")
 
   time_stamps <- Sys.Date() + c(-10 * 600, -30, 0)
@@ -103,13 +103,13 @@ test_that("teal_slice store/restore supports saving `Date` timestamps in choices
   tss_restored <- slices_restore(slices_path)
 
   tss_restored_list <- shiny::isolate(shiny::reactiveValuesToList(tss_restored[[1]]))
-  expect_s3_class(tss_restored_list$choices, "Date")
+  testthat::expect_s3_class(tss_restored_list$choices, "Date")
 
   expect_identical_slice(tss[[1]], tss_restored[[1]])
 })
 
 
-test_that("teal_slice store/restore restores mixed `Date`-characters as characters in selected", {
+testthat::test_that("teal_slice store/restore restores mixed `Date`-characters as characters in selected", {
   slices_path <- withr::local_file("slices.json")
   tss <- teal_slices(
     teal_slice(
@@ -126,5 +126,24 @@ test_that("teal_slice store/restore restores mixed `Date`-characters as characte
 
   slices_store(tss, slices_path)
   tss_restored <- slices_restore(slices_path)
+  expect_identical_slice(tss[[1]], tss_restored[[1]])
+})
+
+testthat::test_that("teal_slice store/restore restores characters as characters in selected and choices", {
+  slices_path <- withr::local_file("slices.json")
+  tss <- teal_slices(
+    teal_slice(
+      dataname = "ADSL",
+      varname = "EOSDTM",
+      choices = c("a", "b", "c"),
+      selected = c("a", "b")
+    )
+  )
+
+  slices_store(tss, slices_path)
+  tss_restored <- slices_restore(slices_path)
+
+  testthat::expect_type(shiny::isolate(tss_restored[[1]]$selected), "character")
+  testthat::expect_type(shiny::isolate(tss_restored[[1]]$choices), "character")
   expect_identical_slice(tss[[1]], tss_restored[[1]])
 })
