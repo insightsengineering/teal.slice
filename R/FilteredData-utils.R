@@ -26,7 +26,7 @@ init_filtered_data <- function(x, join_keys, code, check) {
 
 #' @keywords internal
 #' @export
-init_filtered_data.tdata <- function(x, join_keys = teal.data::join_keys(), code = NULL, check = FALSE) { # nolint
+init_filtered_data.teal_data <- function(x, join_keys = teal.data::join_keys(), code = NULL, check = FALSE) { # nolint
   checkmate::assert_class(code, "CodeClass", null.ok = TRUE)
   checkmate::assert_class(join_keys, "JoinKeys")
   checkmate::assert_flag(check)
