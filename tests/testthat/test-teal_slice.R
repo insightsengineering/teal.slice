@@ -220,7 +220,7 @@ testthat::test_that("teal_slice dataname has to be a string when expr is specifi
   )
 })
 
-test_that(
+testthat::test_that(
   "teal_slice converts factors to characters for 'selected' and 'choices' parameters",
   {
     slices_path <- withr::local_file("slices.json")
@@ -233,7 +233,7 @@ test_that(
       )
     )
 
-    expect_identical(class(shiny::isolate(tss_restored[[1]]$selected)), "character")
-    expect_identical(class(shiny::isolate(tss_restored[[1]]$choices)), "character")
+    testthat::expect_type(shiny::isolate(tss[[1]]$selected), "character")
+    testthat::expect_type(shiny::isolate(tss[[1]]$choices), "character")
   }
 )
