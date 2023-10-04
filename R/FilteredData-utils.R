@@ -30,13 +30,17 @@ init_filtered_data.teal_data <- function(x, join_keys = teal.data::join_keys(), 
   checkmate::assert_class(code, "CodeClass", null.ok = TRUE)
   checkmate::assert_class(join_keys, "JoinKeys")
   checkmate::assert_flag(check)
+  datanames <- x@datanames
   FilteredData$new(
-    as.list(x@env),
+    as.list(x@env)[datanames],
     join_keys = x@join_keys,
+
+    # todo: to be removed soon https://github.com/insightsengineering/teal.slice/issues/471
     code = teal.data:::CodeClass$new(
       code = paste(teal.code::get_code(x), collapse = "\n"),
       dataname = teal.data::get_dataname(x)
     ),
+    # todo: to remove
     check = check
   )
 }
