@@ -26,6 +26,39 @@ init_filtered_data <- function(x, join_keys, code, check) {
 
 #' @keywords internal
 #' @export
+init_filtered_data.TealData <- function(x, # nolint
+                                        join_keys = x$get_join_keys(),
+                                        code = x$get_code_class(),
+                                        check = x$get_check()) {
+  lifecycle::deprecate_warn(
+    when = "0.4.1",
+    "init_filtered_data(
+        x = 'constructor based on TealData is deprecated and will be removed soon'
+    )"
+  )
+  data_objects <- lapply(
+    x$get_datanames(),
+    function(dataname) {
+      dataset <- x$get_dataset(dataname)
+      list(
+        dataset = dataset$get_raw_data(),
+        metadata = dataset$get_metadata(),
+        label = dataset$get_dataset_label()
+      )
+    }
+  )
+  names(data_objects) <- x$get_datanames()
+
+  init_filtered_data(
+    x = data_objects,
+    join_keys = join_keys,
+    code = code,
+    check = check
+  )
+}
+
+#' @keywords internal
+#' @export
 init_filtered_data.teal_data <- function(x, join_keys = teal.data::join_keys(), code = NULL, check = FALSE) { # nolint
   checkmate::assert_class(code, "CodeClass", null.ok = TRUE)
   checkmate::assert_class(join_keys, "JoinKeys")
