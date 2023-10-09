@@ -33,8 +33,8 @@ init_filtered_data.TealData <- function(x, # nolint
   lifecycle::deprecate_warn(
     when = "0.4.1",
     "init_filtered_data(
-        x = 'constructor based on TealData is deprecated and will be removed soon'.
-        Please use generic init_filtered_data and specify all arguments directly.
+        x = 'constructor based on TealData is deprecated and will be removed soon.
+        Please use generic init_filtered_data and specify all arguments directly.'
     )"
   )
   data_objects <- lapply(
