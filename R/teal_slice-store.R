@@ -66,7 +66,8 @@ slices_restore <- function(file) {
             if (all(grepl(paste0(date_partial_regex, "$"), slice[[field]]))) {
               as.Date(slice[[field]])
             } else if (all(grepl(time_stamp_regex, slice[[field]]))) {
-              as.POSIXct(substr(slice[[field]], 1, 19), tz = substr(slice[[field]], 21, nchar(slice[[field]]))[1])
+              as.POSIXlt(slice[[field]])
+              # as.POSIXct(substr(slice[[field]], 1, 19), tz = substr(slice[[field]], 21, nchar(slice[[field]]))[1])
             } else {
               slice[[field]]
             }
