@@ -9,8 +9,9 @@
 #' @param file (`character(1)`) The file path where `teal_slices` object will be saved.
 #'  The file extension should be `".json"`.
 #'
-#' @details `Date` and `POSIX*t` classes are stored in `"ISO8601"` format and are converted to `UTC` timezone
-#' (`YYYY-MM-DD` for `Date` and `YYYY-MM-DDT{N}{N}:{N}{N}:{N}{N}Z` for `POSIX*t`, where `{N} = [0-9]` is a number).
+#' @details `Date` classes is stored in `"ISO8601"` format (`YYYY-MM-DD`). `POSIX*t` classes are converted to a
+#' character with the usage of `format.POSIX*t(usetz = TRUE)` (`YYYY-MM-DD {N}{N}:{N}{N}:{N}{N} TZN`, where
+#' `{N} = [0-9]` is a number and `TZN` is the timezone short-code). This format is assumed during `slices_restore`.
 #'
 #' @return `NULL`, invisibly.
 #'
@@ -59,13 +60,13 @@ slices_restore <- function(file) {
       for (field in c("selected", "choices")) {
         if (!is.null(slice[[field]])) {
           date_partial_regex <- "^[0-9]{4}-[0-9]{2}-[0-9]{2}"
-          time_stamp_regex <- paste0(date_partial_regex, "T[0-9]{2}:[0-9]{2}:[0-9]{2}Z$")
+          time_stamp_regex <- paste0(date_partial_regex, "\\s[0-9]{2}:[0-9]{2}:[0-9]{2}\\s[A-Z]{2,4}$")
 
           slice[[field]] <-
             if (all(grepl(paste0(date_partial_regex, "$"), slice[[field]]))) {
               as.Date(slice[[field]])
             } else if (all(grepl(time_stamp_regex, slice[[field]]))) {
-              as.POSIXct(gsub("T|Z", " ", slice[[field]]), tz = "UTC")
+              as.POSIXct(substr(slice[[field]], 1, 19), tz = substr(slice[[field]], 21, nchar(slice[[field]]))[1])
             } else {
               slice[[field]]
             }

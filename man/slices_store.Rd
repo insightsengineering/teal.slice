@@ -22,8 +22,9 @@ create, modify, and delete filter states. The saved file can be later loaded usi
 the \code{slices_restore} function.
 }
 \details{
-\code{Date} and \code{POSIX*t} classes are stored in \code{"ISO8601"} format and are converted to \code{UTC} timezone
-(\code{YYYY-MM-DD} for \code{Date} and \verb{YYYY-MM-DDT\{N\}\{N\}:\{N\}\{N\}:\{N\}\{N\}Z} for \code{POSIX*t}, where \verb{\{N\} = [0-9]} is a number).
+\code{Date} classes is stored in \code{"ISO8601"} format (\code{YYYY-MM-DD}). \code{POSIX*t} classes are converted to a
+character with the usage of \code{format.POSIX*t(usetz = TRUE)} (\verb{YYYY-MM-DD \{N\}\{N\}:\{N\}\{N\}:\{N\}\{N\} TZN}, where
+\verb{\{N\} = [0-9]} is a number and \code{TZN} is the timezone short-code). This format is assumed during \code{slices_restore}.
 }
 \examples{
 # Create a teal_slices object

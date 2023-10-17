@@ -270,7 +270,7 @@ to_json <- function(x) {
     vars <- c("selected", "choices")
     if (is.list(x)) {
       for (var in vars) {
-        if (!is.null(x[[var]])) x[[var]] <- I(x[[var]])
+        if (!is.null(x[[var]])) x[[var]] <- I(format_time(x[[var]]))
       }
       lapply(x, no_unbox)
     } else {
@@ -278,10 +278,15 @@ to_json <- function(x) {
     }
   }
 
-  jsonlite::toJSON(
-    no_unbox(x),
-    pretty = TRUE, auto_unbox = TRUE, digits = 16, null = "null", UTC = TRUE, POSIXt = "ISO8601"
-  )
+  jsonlite::toJSON(no_unbox(x), pretty = TRUE, auto_unbox = TRUE, digits = 16, null = "null")
+}
+
+format_time <- function(x) {
+  if ("POSIXt" %in% class(x)) {
+    format(x, usetz = TRUE)
+  } else {
+    x
+  }
 }
 
 #' Justify Colons in `JSON` String
