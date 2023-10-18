@@ -6,7 +6,8 @@ testthat::test_that("teal_slice store/restore supports saving `POSIXct` timestam
   # ISO8601 does not keep milliseconds
   time_stamps <- as.POSIXct(
     ceiling(as.double(time_stamps)),
-    tz = "UTC"
+    tz = "UTC",
+    origin = "1970-01-01"
   )
 
   tss <- teal_slices(
@@ -60,7 +61,8 @@ testthat::test_that("teal_slice store/restore supports saving `POSIXct` timestam
   # ISO8601 does not keep milliseconds
   time_stamps <- as.POSIXct(
     ceiling(as.double(time_stamps)),
-    tz = "UTC"
+    tz = "UTC",
+    origin = "1970-01-01"
   )
 
   tss <- teal_slices(
