@@ -62,7 +62,7 @@ slices_restore <- function(file) {
       for (field in c("selected", "choices")) {
         if (!is.null(slice[[field]])) {
           date_partial_regex <- "^[0-9]{4}-[0-9]{2}-[0-9]{2}"
-          time_stamp_regex <- paste0(date_partial_regex, "\\s[0-9]{2}:[0-9]{2}:[0-9]{2}\\s\\+[0-9]{4}$")
+          time_stamp_regex <- paste0(date_partial_regex, "\\s[0-9]{2}:[0-9]{2}:[0-9]{2}\\sUTC$")
 
           slice[[field]] <-
             if (all(grepl(paste0(date_partial_regex, "$"), slice[[field]]))) {
