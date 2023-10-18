@@ -58,9 +58,9 @@
 #'  requires `dataname` prefix, *e.g.* `data$var == "x"`.
 #' @param choices (optional `vector`) specifying allowed choices;
 #' When specified it should be a subset of values in variable denoted by `varname`;
-#' Type and size depends on variable type.
+#' Type and size depends on variable type. Factors are coerced to character.
 #' @param selected (optional `vector`) of selected values from `choices`;
-#' Type and size depends on variable type.
+#' Type and size depends on variable type. Factors are coerced to character.
 #' @param multiple (optional `logical(1)`) flag specifying whether more than one value can be selected;
 #' only applicable to `ChoicesFilterState` and `LogicalFilterState`
 #' @param keep_na (optional `logical(1)`) flag specifying whether to keep missing values
@@ -77,6 +77,10 @@
 #'
 #' @return A `teal.slice` object. Depending on whether `varname` or `expr` was specified, the resulting
 #' `teal_slice` also receives class `teal_slice_var` or `teal_slice_expr`, respectively.
+#'
+#' @note When `teal_slice` is printed and contains a `POSIX*t` class in `selected` or `choices` fields, then those
+#' fields are converted to `UTC` timezone, for enhanced and unified storage and restoring with `slices_store()` and
+#' `slices_restore()`.
 #'
 #' @examples
 #' x1 <- teal_slice(
@@ -155,6 +159,8 @@ teal_slice <- function(dataname,
     )
     formal_args <- formal_args[ts_var_args]
     args <- c(formal_args, list(...))
+    args[c("choices", "selected")] <-
+      lapply(args[c("choices", "selected")], function(x) if (is.factor(x)) as.character(x) else x)
     if (missing(id)) {
       args$id <- get_default_slice_id(args)
     } else {
@@ -268,7 +274,7 @@ to_json <- function(x) {
     vars <- c("selected", "choices")
     if (is.list(x)) {
       for (var in vars) {
-        if (!is.null(x[[var]])) x[[var]] <- I(x[[var]])
+        if (!is.null(x[[var]])) x[[var]] <- I(format_time(x[[var]]))
       }
       lapply(x, no_unbox)
     } else {
@@ -277,6 +283,14 @@ to_json <- function(x) {
   }
 
   jsonlite::toJSON(no_unbox(x), pretty = TRUE, auto_unbox = TRUE, digits = 16, null = "null")
+}
+
+format_time <- function(x) {
+  if ("POSIXt" %in% class(x)) {
+    format(x, format = "%Y-%m-%d %H:%M:%S", usetz = TRUE, tz = "UTC")
+  } else {
+    x
+  }
 }
 
 #' Justify Colons in `JSON` String

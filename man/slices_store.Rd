@@ -21,6 +21,13 @@ The \code{teal_slices} object contains information about filter states and can b
 create, modify, and delete filter states. The saved file can be later loaded using
 the \code{slices_restore} function.
 }
+\details{
+\code{Date} classes is stored in \code{"ISO8601"} format (\code{YYYY-MM-DD}). \code{POSIX*t} classes are converted to a
+character with the usage of \code{format.POSIX*t(usetz = TRUE, tz = "UTC")} (\verb{YYYY-MM-DD \{N\}\{N\}:\{N\}\{N\}:\{N\}\{N\} UTC}, where
+\verb{\{N\} = [0-9]} is a number and \code{UTC} is \verb{Coordinated Universal Time} timezone short-code).
+This format is assumed during \code{slices_restore}. All \code{teal_slices} containing \code{teal_slice}s that have \code{selected} or
+\code{choices} fields of \code{POSIX*t} class are always converted to \code{UTC} timezone during \code{print} and \code{format} as well.
+}
 \examples{
 # Create a teal_slices object
 tss <- teal_slices(
