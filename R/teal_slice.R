@@ -283,7 +283,7 @@ to_json <- function(x) {
 
 format_time <- function(x) {
   if ("POSIXt" %in% class(x)) {
-    format(x, usetz = TRUE)
+    format(x, format = "%Y-%m-%d %H:%M:%S %z", usetz = FALSE)
   } else {
     x
   }

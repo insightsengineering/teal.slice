@@ -60,13 +60,13 @@ slices_restore <- function(file) {
       for (field in c("selected", "choices")) {
         if (!is.null(slice[[field]])) {
           date_partial_regex <- "^[0-9]{4}-[0-9]{2}-[0-9]{2}"
-          time_stamp_regex <- paste0(date_partial_regex, "\\s[0-9]{2}:[0-9]{2}:[0-9]{2}\\s[A-Z]{2,4}$")
+          time_stamp_regex <- paste0(date_partial_regex, "\\s[0-9]{2}:[0-9]{2}:[0-9]{2}\\s\\+[0-9]{4}$")
 
           slice[[field]] <-
             if (all(grepl(paste0(date_partial_regex, "$"), slice[[field]]))) {
               as.Date(slice[[field]])
             } else if (all(grepl(time_stamp_regex, slice[[field]]))) {
-              as.POSIXlt(slice[[field]])
+              as.POSIXct(slice[[field]], tryFormats = "%Y-%m-%d %H:%M:%S %z")
               # as.POSIXct(substr(slice[[field]], 1, 19), tz = substr(slice[[field]], 21, nchar(slice[[field]]))[1])
             } else {
               slice[[field]]
