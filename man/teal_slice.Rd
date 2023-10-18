@@ -121,6 +121,11 @@ In a \code{FilterState} instantiated with \code{fixed = TRUE} the features
 Note that a \code{FilterStateExpr} is always considered to have \code{fixed = TRUE}.
 A \code{FilterState} instantiated with \code{anchored = TRUE} cannot be removed.
 }
+\note{
+When \code{teal_slice} is printed and contains a \code{POSIX*t} class in \code{selected} or \code{choices} fields, then those
+fields are converted to \code{UTC} timezone, for enhanced and unified storage and restoring with \code{slices_store()} and
+\code{slices_restore()}.
+}
 \section{Filters in \code{SumarizedExperiment} and \code{MultiAssayExperiment} objects}{
 
 

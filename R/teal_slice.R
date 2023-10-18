@@ -78,6 +78,10 @@
 #' @return A `teal.slice` object. Depending on whether `varname` or `expr` was specified, the resulting
 #' `teal_slice` also receives class `teal_slice_var` or `teal_slice_expr`, respectively.
 #'
+#' @note When `teal_slice` is printed and contains a `POSIX*t` class in `selected` or `choices` fields, then those
+#' fields are converted to `UTC` timezone, for enhanced and unified storage and restoring with `slices_store()` and
+#' `slices_restore()`.
+#'
 #' @examples
 #' x1 <- teal_slice(
 #'   dataname = "data",
@@ -283,7 +287,7 @@ to_json <- function(x) {
 
 format_time <- function(x) {
   if ("POSIXt" %in% class(x)) {
-    format(x, format = "%Y-%m-%d %H:%M:%S %z", usetz = FALSE)
+    format(x, format = "%Y-%m-%d %H:%M:%S", usetz = TRUE, tz = "UTC")
   } else {
     x
   }

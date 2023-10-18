@@ -10,8 +10,10 @@
 #'  The file extension should be `".json"`.
 #'
 #' @details `Date` classes is stored in `"ISO8601"` format (`YYYY-MM-DD`). `POSIX*t` classes are converted to a
-#' character with the usage of `format.POSIX*t(usetz = TRUE)` (`YYYY-MM-DD {N}{N}:{N}{N}:{N}{N} TZN`, where
-#' `{N} = [0-9]` is a number and `TZN` is the timezone short-code). This format is assumed during `slices_restore`.
+#' character with the usage of `format.POSIX*t(usetz = TRUE, tz = "UTC")` (`YYYY-MM-DD {N}{N}:{N}{N}:{N}{N} UTC`, where
+#' `{N} = [0-9]` is a number and `UTC` is `Coordinated Universal Time` timezone short-code).
+#' This format is assumed during `slices_restore`. All `teal_slices` containing `teal_slice`s that have `selected` or
+#' `choices` fields of `POSIX*t` class are always converted to `UTC` timezone during `print` and `format` as well.
 #'
 #' @return `NULL`, invisibly.
 #'
@@ -66,8 +68,7 @@ slices_restore <- function(file) {
             if (all(grepl(paste0(date_partial_regex, "$"), slice[[field]]))) {
               as.Date(slice[[field]])
             } else if (all(grepl(time_stamp_regex, slice[[field]]))) {
-              as.POSIXct(slice[[field]], tryFormats = "%Y-%m-%d %H:%M:%S %z")
-              # as.POSIXct(substr(slice[[field]], 1, 19), tz = substr(slice[[field]], 21, nchar(slice[[field]]))[1])
+              as.POSIXct(slice[[field]], tz = "UTC")
             } else {
               slice[[field]]
             }

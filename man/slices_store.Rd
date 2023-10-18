@@ -23,8 +23,10 @@ the \code{slices_restore} function.
 }
 \details{
 \code{Date} classes is stored in \code{"ISO8601"} format (\code{YYYY-MM-DD}). \code{POSIX*t} classes are converted to a
-character with the usage of \code{format.POSIX*t(usetz = TRUE)} (\verb{YYYY-MM-DD \{N\}\{N\}:\{N\}\{N\}:\{N\}\{N\} TZN}, where
-\verb{\{N\} = [0-9]} is a number and \code{TZN} is the timezone short-code). This format is assumed during \code{slices_restore}.
+character with the usage of \code{format.POSIX*t(usetz = TRUE, tz = "UTC")} (\verb{YYYY-MM-DD \{N\}\{N\}:\{N\}\{N\}:\{N\}\{N\} UTC}, where
+\verb{\{N\} = [0-9]} is a number and \code{UTC} is \verb{Coordinated Universal Time} timezone short-code).
+This format is assumed during \code{slices_restore}. All \code{teal_slices} containing \code{teal_slice}s that have \code{selected} or
+\code{choices} fields of \code{POSIX*t} class are always converted to \code{UTC} timezone during \code{print} and \code{format} as well.
 }
 \examples{
 # Create a teal_slices object
