@@ -1,8 +1,9 @@
-# teal.slice 0.4.0.9016
+# teal.slice 0.4.0.9018
 
 ### Miscellaneous
 
 * Specified minimal version of package dependencies.
+* Removed storing and restoring of `teal_slices` objects.
 
 # teal.slice 0.4.0
 

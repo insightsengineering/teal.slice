@@ -50,10 +50,10 @@ requires \code{dataname} prefix, \emph{e.g.} \code{data$var == "x"}.}
 
 \item{choices}{(optional \code{vector}) specifying allowed choices;
 When specified it should be a subset of values in variable denoted by \code{varname};
-Type and size depends on variable type.}
+Type and size depends on variable type. Factors are coerced to character.}
 
 \item{selected}{(optional \code{vector}) of selected values from \code{choices};
-Type and size depends on variable type.}
+Type and size depends on variable type. Factors are coerced to character.}
 
 \item{keep_na}{(optional \code{logical(1)}) flag specifying whether to keep missing values}
 
@@ -120,6 +120,11 @@ In a \code{FilterState} instantiated with \code{fixed = TRUE} the features
 \code{selected}, \code{keep_na}, \code{keep_inf} cannot be changed.
 Note that a \code{FilterStateExpr} is always considered to have \code{fixed = TRUE}.
 A \code{FilterState} instantiated with \code{anchored = TRUE} cannot be removed.
+}
+\note{
+When \code{teal_slice} is printed and contains a \code{POSIX*t} class in \code{selected} or \code{choices} fields, then those
+fields are converted to \code{UTC} timezone, for enhanced and unified storage and restoring with \code{teal::slices_store()}
+and \code{teal::slices_restore()}.
 }
 \section{Filters in \code{SumarizedExperiment} and \code{MultiAssayExperiment} objects}{
 

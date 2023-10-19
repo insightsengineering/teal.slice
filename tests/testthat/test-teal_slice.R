@@ -219,3 +219,21 @@ testthat::test_that("teal_slice dataname has to be a string when expr is specifi
     teal_slice(dataname = character(0), id = "x", title = "x", expr = "x == 'x'"), "length"
   )
 })
+
+testthat::test_that(
+  "teal_slice converts factors to characters for 'selected' and 'choices' parameters",
+  {
+    slices_path <- withr::local_file("slices.json")
+    tss <- teal_slices(
+      teal_slice(
+        dataname = "ADSL",
+        varname = "EOSDTM",
+        choices = factor(c("a", "b", "c")),
+        selected = factor(c("a", "b"))
+      )
+    )
+
+    testthat::expect_type(shiny::isolate(tss[[1]]$selected), "character")
+    testthat::expect_type(shiny::isolate(tss[[1]]$choices), "character")
+  }
+)
