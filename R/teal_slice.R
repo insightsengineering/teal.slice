@@ -79,8 +79,8 @@
 #' `teal_slice` also receives class `teal_slice_var` or `teal_slice_expr`, respectively.
 #'
 #' @note When `teal_slice` is printed and contains a `POSIX*t` class in `selected` or `choices` fields, then those
-#' fields are converted to `UTC` timezone, for enhanced and unified storage and restoring with `slices_store()` and
-#' `slices_restore()`.
+#' fields are converted to `UTC` timezone, for enhanced and unified storage and restoring with `teal::slices_store()`
+#' and `teal::slices_restore()`.
 #'
 #' @examples
 #' x1 <- teal_slice(

@@ -86,7 +86,7 @@ variables for one data set in one \code{teal_slices}.
 \note{
 When \code{teal_slices} are printed and any of \code{teal_slice} elements contain a \code{POSIX*t} class in \code{selected} or
 \code{choices} fields, then those fields are converted to \code{UTC} timezone, for enhanced and unified storage and restoring
-with \code{slices_store()} and \code{slices_restore()}.
+with \code{teal::slices_store()} and \code{teal::slices_restore()}.
 }
 \examples{
 filter_1 <- teal_slice(

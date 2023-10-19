@@ -3,6 +3,7 @@
 ### Miscellaneous
 
 * Specified minimal version of package dependencies.
+* Removed storing and restoring of `teal_slices` objects.
 
 # teal.slice 0.4.0
 
