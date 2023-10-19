@@ -123,8 +123,8 @@ A \code{FilterState} instantiated with \code{anchored = TRUE} cannot be removed.
 }
 \note{
 When \code{teal_slice} is printed and contains a \code{POSIX*t} class in \code{selected} or \code{choices} fields, then those
-fields are converted to \code{UTC} timezone, for enhanced and unified storage and restoring with \code{slices_store()} and
-\code{slices_restore()}.
+fields are converted to \code{UTC} timezone, for enhanced and unified storage and restoring with \code{teal::slices_store()}
+and \code{teal::slices_restore()}.
 }
 \section{Filters in \code{SumarizedExperiment} and \code{MultiAssayExperiment} objects}{
 
