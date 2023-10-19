@@ -32,8 +32,6 @@ reference:
       - clear_filter_states
       - teal_slice
       - teal_slices
-      - slices_store
-      - slices_restore
   - title: For Developers
     subtitle: R6 Classes
     desc: Abstract and concrete classes used to build teal functionality.
