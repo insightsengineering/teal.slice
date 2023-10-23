@@ -31,7 +31,7 @@ Depends:
     R (>= 4.0),
     shiny (>= 1.6.0)
 Imports:
-    bslib (>= 0.5.1.9000),
+    bslib (>= 0.4.0),
     checkmate (>= 2.1.0),
     dplyr (>= 1.0.5),
     grDevices,
