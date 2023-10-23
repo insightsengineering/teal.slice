@@ -30,9 +30,9 @@
 #' @param i (`character` or `numeric` or `logical`) indicating which elements to extract
 #' @param recursive (`logical(1)`) flag specifying whether to also convert to list the elements of this `teal_slices`
 #'
-#' @note When `teal_slices` are printed and any of `teal_slice` elements contain a `POSIX*t` class in `selected` or
-#' `choices` fields, then those fields are converted to `UTC` timezone, for enhanced and unified storage and restoring
-#' with `teal::slices_store()` and `teal::slices_restore()`.
+#' @note
+#' The `teal` package contains robust utilities for saving and loading `teal_slices` in `JSON` format.
+#' See [`teal::slices_store`] and [`teal::slices_restore`].
 #'
 #' @return
 #' `teal_slices`, which is an unnamed list of `teal_slice` objects.
