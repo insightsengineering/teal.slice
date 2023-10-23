@@ -348,7 +348,7 @@ list_to_teal_slices <- function(x) { # nolint
 #'
 #' This function is used internally in `c.teal_slices` to manage `teal_slices` attributes.
 #'
-#' @param `list`, either of atomic vectors or of `named list`s
+#' @param x `list`, either of atomic vectors or of `named list`s
 #' @return
 #' Either an atomic vector of length 1 or a (potentially nested) list.
 #'
