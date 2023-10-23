@@ -84,9 +84,8 @@ Since these could be mutually exclusive, it is impossible to set both allowed an
 variables for one data set in one \code{teal_slices}.
 }
 \note{
-When \code{teal_slices} are printed and any of \code{teal_slice} elements contain a \code{POSIX*t} class in \code{selected} or
-\code{choices} fields, then those fields are converted to \code{UTC} timezone, for enhanced and unified storage and restoring
-with \code{teal::slices_store()} and \code{teal::slices_restore()}.
+The \code{teal} package contains robust utilities for saving and loading \code{teal_slices} in \code{JSON} format.
+See \code{\link[teal:slices_store]{teal::slices_store}} and \code{\link[teal:slices_restore]{teal::slices_restore}}.
 }
 \examples{
 filter_1 <- teal_slice(
