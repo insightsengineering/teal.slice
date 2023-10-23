@@ -255,7 +255,12 @@ setdiff_teal_slices <- function(x, y) {
 }
 
 
-#' @rdname teal_slices
+#' Convert nested list to `teal_slices`.
+#'
+#' Helper function for converting old style filter specification (nested list) to the new one (`teal_slices`).
+#'
+#' This function is used internally during deprecation of the old filter panel.
+#'
 #' @export
 #' @keywords internal
 #'
