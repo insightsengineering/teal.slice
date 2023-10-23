@@ -9,7 +9,6 @@
 \alias{c.teal_slices}
 \alias{format.teal_slices}
 \alias{print.teal_slices}
-\alias{list_to_teal_slices}
 \title{Complete filter specification.}
 \usage{
 teal_slices(
@@ -33,8 +32,6 @@ as.teal_slices(x)
 \method{format}{teal_slices}(x, show_all = FALSE, trim_lines = TRUE, ...)
 
 \method{print}{teal_slices}(x, ...)
-
-list_to_teal_slices(x)
 }
 \arguments{
 \item{...}{any number of \code{teal_slice} objects. For \code{print} and \code{format},
