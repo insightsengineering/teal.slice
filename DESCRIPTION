@@ -47,13 +47,13 @@ Imports:
     shinyWidgets (>= 0.6.2),
     teal.data (>= 0.3.0),
     teal.logger (>= 0.1.1),
-    teal.widgets (>= 0.4.0)
+    teal.widgets (>= 0.4.0),
+    utils
 Suggests:
     knitr (>= 1.42),
     MultiAssayExperiment,
     SummarizedExperiment,
     testthat (>= 3.1.5),
-    utils,
     withr (>= 2.1.0)
 VignetteBuilder:
     knitr
