@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE coverage SYSTEM "https://raw.githubusercontent.com/cobertura/cobertura/master/cobertura/src/site/htdocs/xml/coverage-04.dtd">
-<coverage line-rate="0.669957370428539" branch-rate="0" lines-covered="2986" lines-valid="4457" branches-covered="0" branches-valid="0" complexity="0" version="3.6.3" timestamp="2023-10-23 09:17:16.402982">
+<coverage line-rate="0.670029141448106" branch-rate="0" lines-covered="2989" lines-valid="4461" branches-covered="0" branches-valid="0" complexity="0" version="3.6.3" timestamp="2023-10-24 14:35:06.841179">
   <sources>
     <source>/__w/teal.slice/teal.slice/teal.slice</source>
   </sources>
   <packages>
-    <package name="teal.slice" line-rate="0.669957370428539" branch-rate="0" complexity="0">
+    <package name="teal.slice" line-rate="0.670029141448106" branch-rate="0" complexity="0">
       <classes>
         <class name="calls_combine_by.R" filename="R/calls_combine_by.R" line-rate="1" branch-rate="0" complexity="0">
           <methods>
@@ -8128,7 +8128,7 @@
             <line number="101" hits="2" branch="false"/>
           </lines>
         </class>
-        <class name="FilterState-utils.R" filename="R/FilterState-utils.R" line-rate="0.989690721649485" branch-rate="0" complexity="0">
+        <class name="FilterState-utils.R" filename="R/FilterState-utils.R" line-rate="0.98019801980198" branch-rate="0" complexity="0">
           <methods>
             <method name="init_filter_state" signature="" line-rate="1" branch-rate="0" complexity="0">
               <lines>
@@ -8245,7 +8245,7 @@
                 <line number="228" hits="6" branch="false"/>
               </lines>
             </method>
-            <method name="fetch_bs_color" signature="" line-rate="0.954545454545455" branch-rate="0" complexity="0">
+            <method name="fetch_bs_color" signature="" line-rate="0.923076923076923" branch-rate="0" complexity="0">
               <lines>
                 <line number="251" hits="124" branch="false"/>
                 <line number="252" hits="124" branch="false"/>
@@ -8254,21 +8254,25 @@
                 <line number="255" hits="124" branch="false"/>
                 <line number="259" hits="124" branch="false"/>
                 <line number="260" hits="124" branch="false"/>
+                <line number="261" hits="124" branch="false"/>
+                <line number="262" hits="0" branch="false"/>
                 <line number="263" hits="124" branch="false"/>
-                <line number="265" hits="124" branch="false"/>
-                <line number="266" hits="124" branch="false"/>
+                <line number="264" hits="124" branch="false"/>
+                <line number="267" hits="124" branch="false"/>
                 <line number="269" hits="124" branch="false"/>
-                <line number="272" hits="124" branch="false"/>
-                <line number="275" hits="124" branch="false"/>
-                <line number="278" hits="124" branch="false"/>
+                <line number="270" hits="124" branch="false"/>
+                <line number="273" hits="124" branch="false"/>
+                <line number="276" hits="124" branch="false"/>
                 <line number="279" hits="124" branch="false"/>
-                <line number="280" hits="124" branch="false"/>
-                <line number="281" hits="124" branch="false"/>
                 <line number="282" hits="124" branch="false"/>
                 <line number="283" hits="124" branch="false"/>
+                <line number="284" hits="124" branch="false"/>
                 <line number="285" hits="124" branch="false"/>
-                <line number="286" hits="0" branch="false"/>
+                <line number="286" hits="124" branch="false"/>
+                <line number="287" hits="124" branch="false"/>
                 <line number="289" hits="124" branch="false"/>
+                <line number="290" hits="0" branch="false"/>
+                <line number="293" hits="124" branch="false"/>
               </lines>
             </method>
           </methods>
@@ -8355,21 +8359,25 @@
             <line number="255" hits="124" branch="false"/>
             <line number="259" hits="124" branch="false"/>
             <line number="260" hits="124" branch="false"/>
+            <line number="261" hits="124" branch="false"/>
+            <line number="262" hits="0" branch="false"/>
             <line number="263" hits="124" branch="false"/>
-            <line number="265" hits="124" branch="false"/>
-            <line number="266" hits="124" branch="false"/>
+            <line number="264" hits="124" branch="false"/>
+            <line number="267" hits="124" branch="false"/>
             <line number="269" hits="124" branch="false"/>
-            <line number="272" hits="124" branch="false"/>
-            <line number="275" hits="124" branch="false"/>
-            <line number="278" hits="124" branch="false"/>
+            <line number="270" hits="124" branch="false"/>
+            <line number="273" hits="124" branch="false"/>
+            <line number="276" hits="124" branch="false"/>
             <line number="279" hits="124" branch="false"/>
-            <line number="280" hits="124" branch="false"/>
-            <line number="281" hits="124" branch="false"/>
             <line number="282" hits="124" branch="false"/>
             <line number="283" hits="124" branch="false"/>
+            <line number="284" hits="124" branch="false"/>
             <line number="285" hits="124" branch="false"/>
-            <line number="286" hits="0" branch="false"/>
+            <line number="286" hits="124" branch="false"/>
+            <line number="287" hits="124" branch="false"/>
             <line number="289" hits="124" branch="false"/>
+            <line number="290" hits="0" branch="false"/>
+            <line number="293" hits="124" branch="false"/>
           </lines>
         </class>
         <class name="FilterState.R" filename="R/FilterState.R" line-rate="0.831024930747922" branch-rate="0" complexity="0">
