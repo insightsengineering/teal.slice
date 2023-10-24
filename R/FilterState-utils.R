@@ -256,7 +256,11 @@ fetch_bs_color <- function(color, alpha = NULL) {
 
   # locate file that describes the current theme
   ## TODO this is not ideal
-  sass_file <- bslib::bs_theme()[["layers"]][[2]][["defaults"]][[1]]
+  sass_file <- if (utils::packageVersion("bslib") < as.package_version("0.5.1.9000")) {
+    bslib::bs_theme()[["layers"]][[2]][["defaults"]][[1]]
+  } else {
+    bslib::bs_theme()[["layers"]][[2]][["defaults"]][[1]][[1]]
+  }
   sass_file <- attr(sass_file, "sass_file_path")
 
   # load scss file that encodes variables
