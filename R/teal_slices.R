@@ -30,9 +30,9 @@
 #' @param i (`character` or `numeric` or `logical`) indicating which elements to extract
 #' @param recursive (`logical(1)`) flag specifying whether to also convert to list the elements of this `teal_slices`
 #'
-#' @note When `teal_slices` are printed and any of `teal_slice` elements contain a `POSIX*t` class in `selected` or
-#' `choices` fields, then those fields are converted to `UTC` timezone, for enhanced and unified storage and restoring
-#' with `teal::slices_store()` and `teal::slices_restore()`.
+#' @note
+#' The `teal` package contains robust utilities for saving and loading `teal_slices` in `JSON` format.
+#' See [`teal::slices_store`] and [`teal::slices_restore`].
 #'
 #' @return
 #' `teal_slices`, which is an unnamed list of `teal_slice` objects.
@@ -255,7 +255,12 @@ setdiff_teal_slices <- function(x, y) {
 }
 
 
-#' @rdname teal_slices
+#' Convert nested list to `teal_slices`.
+#'
+#' Helper function for converting old style filter specification (nested list) to the new one (`teal_slices`).
+#'
+#' This function is used internally during deprecation of the old filter panel.
+#'
 #' @export
 #' @keywords internal
 #'
@@ -343,7 +348,7 @@ list_to_teal_slices <- function(x) { # nolint
 #'
 #' This function is used internally in `c.teal_slices` to manage `teal_slices` attributes.
 #'
-#' @param `list`, either of atomic vectors or of `named list`s
+#' @param x `list`, either of atomic vectors or of `named list`s
 #' @return
 #' Either an atomic vector of length 1 or a (potentially nested) list.
 #'
