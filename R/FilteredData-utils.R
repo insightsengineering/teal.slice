@@ -86,7 +86,7 @@ validate_dataset_args <- function(dataset_args, dataname) {
 
   checkmate::assert_subset(names(dataset_args), choices = allowed_names)
   checkmate::assert_multi_class(dataset_args[["dataset"]], classes = c("data.frame", "MultiAssayExperiment"))
-  teal.data::validate_metadata(dataset_args[["metadata"]])
+  checkmate::assert_list(dataset_args[["metadata"]], names = "named")
   checkmate::assert_character(dataset_args[["label"]], null.ok = TRUE, min.len = 0, max.len = 1)
 }
 
