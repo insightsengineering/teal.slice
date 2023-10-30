@@ -30,6 +30,13 @@ init_filtered_data.TealData <- function(x, # nolint
                                         join_keys = x$get_join_keys(),
                                         code = x$get_code_class(),
                                         check = x$get_check()) {
+  lifecycle::deprecate_warn(
+    when = "0.4.1",
+    "init_filtered_data(
+        x = 'constructor based on TealData is deprecated and will be removed soon.
+        Please use generic init_filtered_data and specify all arguments directly.'
+    )"
+  )
   data_objects <- lapply(
     x$get_datanames(),
     function(dataname) {
@@ -55,7 +62,6 @@ init_filtered_data.TealData <- function(x, # nolint
 #' @export
 init_filtered_data.default <- function(x, join_keys = teal.data::join_keys(), code = NULL, check = FALSE) { # nolint
   checkmate::assert_list(x, any.missing = FALSE, names = "unique")
-  mapply(validate_dataset_args, x, names(x))
   checkmate::assert_class(code, "CodeClass", null.ok = TRUE)
   checkmate::assert_class(join_keys, "JoinKeys")
   checkmate::assert_flag(check)
@@ -80,7 +86,7 @@ validate_dataset_args <- function(dataset_args, dataname) {
 
   checkmate::assert_subset(names(dataset_args), choices = allowed_names)
   checkmate::assert_multi_class(dataset_args[["dataset"]], classes = c("data.frame", "MultiAssayExperiment"))
-  teal.data::validate_metadata(dataset_args[["metadata"]])
+  checkmate::assert_list(dataset_args[["metadata"]], names = "named", null.ok = TRUE)
   checkmate::assert_character(dataset_args[["label"]], null.ok = TRUE, min.len = 0, max.len = 1)
 }
 

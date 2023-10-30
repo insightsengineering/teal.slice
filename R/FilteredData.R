@@ -95,7 +95,6 @@ FilteredData <- R6::R6Class( # nolint
 
       for (dataname in ordered_datanames) {
         ds_object <- data_objects[[dataname]]
-        validate_dataset_args(ds_object, dataname)
         if (inherits(ds_object, c("data.frame", "MultiAssayExperiment"))) {
           self$set_dataset(
             data = ds_object,
@@ -104,6 +103,7 @@ FilteredData <- R6::R6Class( # nolint
         } else {
           # custom support for TealData object which pass metadata and label also
           # see init_filtered_data.TealData
+          validate_dataset_args(ds_object, dataname)
           self$set_dataset(
             data = ds_object$dataset,
             dataname = dataname,
@@ -327,7 +327,7 @@ FilteredData <- R6::R6Class( # nolint
     #'   Label to describe the dataset
     #' @return (`self`) invisibly this `FilteredData`
     #'
-    set_dataset = function(data, dataname, metadata, label) {
+    set_dataset = function(data, dataname, metadata = attr(data, "metadata"), label = attr(data, "label")) {
       logger::log_trace("FilteredData$set_dataset setting dataset, name: { dataname }")
       # to include it nicely in the Show R Code;
       # the UI also uses `datanames` in ids, so no whitespaces allowed
