@@ -32,7 +32,7 @@ FilteredDataset <- R6::R6Class( # nolint
       check_simple_name(dataname)
       checkmate::assert_character(keys, any.missing = FALSE)
       checkmate::assert_character(label, null.ok = TRUE)
-      checkmate::assert_list(dataset_args[["metadata"]], names = "named")
+      checkmate::assert_list(metadata, names = "named", null.ok = TRUE)
 
       logger::log_trace("Instantiating { class(self)[1] }, dataname: { dataname }")
       private$dataset <- dataset
