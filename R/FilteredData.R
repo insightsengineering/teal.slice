@@ -87,7 +87,7 @@ FilteredData <- R6::R6Class( # nolint
 
       child_parent <- sapply(
         names(data_objects),
-        function(i) join_keys$get_parent(i),
+        function(i) teal.data::parent(join_keys, i),
         USE.NAMES = TRUE,
         simplify = FALSE
       )
@@ -333,24 +333,23 @@ FilteredData <- R6::R6Class( # nolint
       # the UI also uses `datanames` in ids, so no whitespaces allowed
       check_simple_name(dataname)
 
-      join_keys <- self$get_join_keys()
-      parent_dataname <- join_keys$get_parent(dataname)
+      parent_dataname <- teal.data::parent(private$join_keys, dataname)
       if (length(parent_dataname) == 0) {
         private$filtered_datasets[[dataname]] <- init_filtered_dataset(
           dataset = data,
           dataname = dataname,
           metadata = metadata,
           label = label,
-          keys = self$get_join_keys()$get(dataname, dataname)
+          keys = private$join_keys[dataname, dataname]
         )
       } else {
         private$filtered_datasets[[dataname]] <- init_filtered_dataset(
           dataset = data,
           dataname = dataname,
-          keys = join_keys$get(dataname, dataname),
+          keys = private$join_keys[dataname, dataname],
           parent_name = parent_dataname,
           parent = reactive(self$get_data(parent_dataname, filtered = TRUE)),
-          join_keys = self$get_join_keys()$get(dataname, parent_dataname),
+          join_keys = private$join_keys[dataname, parent_dataname],
           label = label,
           metadata = metadata
         )

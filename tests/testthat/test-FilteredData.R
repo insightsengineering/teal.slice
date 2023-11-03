@@ -71,9 +71,9 @@ testthat::test_that("FilteredData forbids cyclic graphs of datasets relationship
     teal.data::join_key("grandchild", "child", c("id" = "id")),
     teal.data::join_key("grandchild", "parent", c("id" = "id"))
   )
-  jk$set_parents(list(child = "parent"))
-  jk$set_parents(list(grandchild = "child"))
-  jk$set_parents(list(parent = "grandchild"))
+  teal.data::parents(jk) <- list(child = "parent")
+  teal.data::parents(jk) <- list(grandchild = "child")
+  teal.data::parents(jk) <- list(parent = "grandchild")
   iris2 <- transform(iris, id = seq_len(nrow(iris)))
   testthat::expect_error(
     FilteredData$new(
@@ -98,7 +98,7 @@ testthat::test_that("filtered_data$datanames returns character vector of dataset
 
 testthat::test_that("datanames are ordered topologically from parent to child", {
   jk <- teal.data::join_keys(teal.data::join_key("parent", "child", c("id" = "id")))
-  jk$set_parents(list(child = "parent"))
+  teal.data::parents(jk) <- list(child = "parent")
   iris2 <- transform(iris, id = seq_len(nrow(iris)))
   filtered_data <- FilteredData$new(
     list(
@@ -157,7 +157,7 @@ testthat::test_that("set_datasets creates FilteredDataset object linked with par
     )
   )
   jk <- teal.data::join_keys(teal.data::join_key("parent", "child", c("id" = "id")))
-  jk$set_parents(list(child = "parent"))
+  teal.data::parents(jk) <- list(child = "parent")
   iris2 <- transform(iris, id = seq_len(nrow(iris)))
   filtered_data <- test_class$new(data_objects = list(), join_keys = jk)
   filtered_data$set_dataset(data = head(iris), dataname = "parent", label = NULL, metadata = NULL)
@@ -374,8 +374,8 @@ testthat::test_that("get_data of the child is dependent on the ancestor filter",
     teal.data::join_key("child", "parent", c("id" = "id")),
     teal.data::join_key("grandchild", "child", c("id" = "id"))
   )
-  jk$set_parents(list(child = "parent"))
-  jk$set_parents(list(grandchild = "child"))
+  teal.data::parents(jk) <- list(child = "parent")
+  teal.data::parents(jk) <- list(grandchild = "child")
   iris2 <- transform(iris, id = seq_len(nrow(iris)))
   filtered_data <- FilteredData$new(
     list(
@@ -751,8 +751,8 @@ testthat::test_that("get_filter_overview return counts based on reactive filteri
     teal.data::join_key("child", "parent", c("id" = "id")),
     teal.data::join_key("grandchild", "child", c("id" = "id"))
   )
-  jk$set_parents(list(child = "parent"))
-  jk$set_parents(list(grandchild = "child"))
+  teal.data::parents(jk) <- list(child = "parent")
+  teal.data::parents(jk) <- list(grandchild = "child")
   iris2 <- transform(iris, id = seq_len(nrow(iris)))
   filtered_data <- FilteredData$new(
     list(
