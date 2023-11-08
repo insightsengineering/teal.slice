@@ -10,7 +10,7 @@ testthat::test_that("constructor accepts call with only dataset specified", {
   testthat::expect_error(FilteredData$new(list(iris = dataset)), "Must inherit")
 })
 
-testthat::test_that("constructor accepts join_keys to be JoinKeys or NULL", {
+testthat::test_that("constructor accepts join_keys to be join_keys or NULL", {
   testthat::expect_no_error(
     FilteredData$new(list(iris = list(dataset = iris)), join_keys = teal.data::join_keys())
   )
@@ -170,9 +170,9 @@ testthat::test_that("set_datasets creates FilteredDataset object linked with par
 
 
 # get_keys ----
-testthat::test_that("get_join_keys returns empty JoinKeys object", {
+testthat::test_that("get_join_keys returns empty join_keys object", {
   filtered_data <- FilteredData$new(list(iris = list(dataset = head(iris))))
-  testthat::expect_s3_class(filtered_data$get_join_keys(), "JoinKeys")
+  testthat::expect_s3_class(filtered_data$get_join_keys(), "join_keys")
 })
 
 testthat::test_that("get_keys returns keys of the dataset specified via join_keys", {

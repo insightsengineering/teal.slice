@@ -8,7 +8,7 @@
 #' - `keys` (optional) primary keys.
 #' - `datalabel` (optional) label describing the `dataset`.
 #' - `parent` (optional) which `dataset` is a parent of this one.
-#' @param join_keys (`JoinKeys`) see [teal.data::join_keys()].
+#' @param join_keys (`join_keys`) see [teal.data::join_keys()].
 #' @param code (`CodeClass`) see [`teal.data::CodeClass`].
 #' @param check (`logical(1)`) whether data has been check against reproducibility.
 #' @examples
@@ -63,7 +63,7 @@ init_filtered_data.TealData <- function(x, # nolint
 init_filtered_data.default <- function(x, join_keys = teal.data::join_keys(), code = NULL, check = FALSE) { # nolint
   checkmate::assert_list(x, any.missing = FALSE, names = "unique")
   checkmate::assert_class(code, "CodeClass", null.ok = TRUE)
-  checkmate::assert_class(join_keys, "JoinKeys")
+  checkmate::assert_class(join_keys, "join_keys")
   checkmate::assert_flag(check)
   FilteredData$new(x, join_keys = join_keys, code = code, check = check)
 }
