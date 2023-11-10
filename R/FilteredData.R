@@ -333,22 +333,27 @@ FilteredData <- R6::R6Class( # nolint
       check_simple_name(dataname)
 
       parent_dataname <- teal.data::parent(private$join_keys, dataname)
+      keys <- private$join_keys[[dataname]][[dataname]]
+      if (is.null(keys)) keys <- character(0)
+
       if (length(parent_dataname) == 0) {
         private$filtered_datasets[[dataname]] <- init_filtered_dataset(
           dataset = data,
           dataname = dataname,
           metadata = metadata,
           label = label,
-          keys = private$join_keys[dataname, dataname]
+          keys = keys
         )
       } else {
+        join_keys <- private$join_keys[[dataname]][[parent_dataname]]
+        if (is.null(join_keys)) join_keys <- character(0)
         private$filtered_datasets[[dataname]] <- init_filtered_dataset(
           dataset = data,
           dataname = dataname,
-          keys = private$join_keys[dataname, dataname],
+          keys = keys,
           parent_name = parent_dataname,
           parent = reactive(self$get_data(parent_dataname, filtered = TRUE)),
-          join_keys = private$join_keys[dataname, parent_dataname],
+          join_keys = join_keys,
           label = label,
           metadata = metadata
         )
