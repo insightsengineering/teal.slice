@@ -105,17 +105,13 @@ shiny::isolate(datasets$get_filter_state())
 \item \href{#method-FilteredData-set_available_teal_slices}{\code{FilteredData$set_available_teal_slices()}}
 \item \href{#method-FilteredData-get_available_teal_slices}{\code{FilteredData$get_available_teal_slices()}}
 \item \href{#method-FilteredData-get_call}{\code{FilteredData$get_call()}}
-\item \href{#method-FilteredData-get_code}{\code{FilteredData$get_code()}}
 \item \href{#method-FilteredData-get_data}{\code{FilteredData$get_data()}}
-\item \href{#method-FilteredData-get_check}{\code{FilteredData$get_check()}}
 \item \href{#method-FilteredData-get_metadata}{\code{FilteredData$get_metadata()}}
 \item \href{#method-FilteredData-get_join_keys}{\code{FilteredData$get_join_keys()}}
 \item \href{#method-FilteredData-get_filter_overview}{\code{FilteredData$get_filter_overview()}}
 \item \href{#method-FilteredData-get_keys}{\code{FilteredData$get_keys()}}
 \item \href{#method-FilteredData-set_dataset}{\code{FilteredData$set_dataset()}}
 \item \href{#method-FilteredData-set_join_keys}{\code{FilteredData$set_join_keys()}}
-\item \href{#method-FilteredData-set_check}{\code{FilteredData$set_check()}}
-\item \href{#method-FilteredData-set_code}{\code{FilteredData$set_code()}}
 \item \href{#method-FilteredData-get_filter_state}{\code{FilteredData$get_filter_state()}}
 \item \href{#method-FilteredData-format}{\code{FilteredData$format()}}
 \item \href{#method-FilteredData-print}{\code{FilteredData$print()}}
@@ -147,12 +143,7 @@ shiny::isolate(datasets$get_filter_state())
 \subsection{Method \code{new()}}{
 Initialize a \code{FilteredData} object
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{FilteredData$new(
-  data_objects,
-  join_keys = teal.data::join_keys(),
-  code = NULL,
-  check = FALSE
-)}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{FilteredData$new(data_objects, join_keys = teal.data::join_keys())}\if{html}{\out{</div>}}
 }
 
 \subsection{Arguments}{
@@ -163,10 +154,6 @@ should named elements containing \code{data.frame} or \code{MultiAssayExperiment
 Names of the list will serve as \code{dataname}.}
 
 \item{\code{join_keys}}{(\code{JoinKeys} or NULL) see \code{\link[teal.data:join_keys]{teal.data::join_keys()}}.}
-
-\item{\code{code}}{(\code{CodeClass} or \code{NULL}) see \code{\link[teal.data:CodeClass]{teal.data::CodeClass}}.}
-
-\item{\code{check}}{(\code{logical(1)}) whether data has been check against reproducibility.}
 }
 \if{html}{\out{</div>}}
 }
@@ -289,26 +276,6 @@ This can be used for the \verb{Show R Code} generation.
 }
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-FilteredData-get_code"></a>}}
-\if{latex}{\out{\hypertarget{method-FilteredData-get_code}{}}}
-\subsection{Method \code{get_code()}}{
-Gets the R preprocessing code string that generates the unfiltered datasets.
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{FilteredData$get_code(dataname = self$datanames())}\if{html}{\out{</div>}}
-}
-
-\subsection{Arguments}{
-\if{html}{\out{<div class="arguments">}}
-\describe{
-\item{\code{dataname}}{(\code{character(1)}) name(s) of dataset(s)}
-}
-\if{html}{\out{</div>}}
-}
-\subsection{Returns}{
-(\code{character(1)}) deparsed code
-}
-}
-\if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-FilteredData-get_data"></a>}}
 \if{latex}{\out{\hypertarget{method-FilteredData-get_data}{}}}
 \subsection{Method \code{get_data()}}{
@@ -328,19 +295,6 @@ For \code{filtered = FALSE}, the original data set with
 \item{\code{filtered}}{(\code{logical}) whether to return a filtered or unfiltered dataset}
 }
 \if{html}{\out{</div>}}
-}
-}
-\if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-FilteredData-get_check"></a>}}
-\if{latex}{\out{\hypertarget{method-FilteredData-get_check}{}}}
-\subsection{Method \code{get_check()}}{
-Returns whether the datasets in the object has undergone a reproducibility check.
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{FilteredData$get_check()}\if{html}{\out{</div>}}
-}
-
-\subsection{Returns}{
-\code{logical}
 }
 }
 \if{html}{\out{<hr>}}
@@ -481,47 +435,6 @@ Set the \code{join_keys}.
 }
 \subsection{Returns}{
 (\code{self}) invisibly this \code{FilteredData}
-}
-}
-\if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-FilteredData-set_check"></a>}}
-\if{latex}{\out{\hypertarget{method-FilteredData-set_check}{}}}
-\subsection{Method \code{set_check()}}{
-Sets whether the datasets in the object have undergone a reproducibility check.
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{FilteredData$set_check(check)}\if{html}{\out{</div>}}
-}
-
-\subsection{Arguments}{
-\if{html}{\out{<div class="arguments">}}
-\describe{
-\item{\code{check}}{(\code{logical}) whether datasets have undergone reproducibility check}
-}
-\if{html}{\out{</div>}}
-}
-\subsection{Returns}{
-(\code{self})
-}
-}
-\if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-FilteredData-set_code"></a>}}
-\if{latex}{\out{\hypertarget{method-FilteredData-set_code}{}}}
-\subsection{Method \code{set_code()}}{
-Sets the R preprocessing code for single dataset.
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{FilteredData$set_code(code)}\if{html}{\out{</div>}}
-}
-
-\subsection{Arguments}{
-\if{html}{\out{<div class="arguments">}}
-\describe{
-\item{\code{code}}{(\code{CodeClass})\cr
-preprocessing code that can be parsed to generate the unfiltered datasets}
-}
-\if{html}{\out{</div>}}
-}
-\subsection{Returns}{
-(\code{self})
 }
 }
 \if{html}{\out{<hr>}}

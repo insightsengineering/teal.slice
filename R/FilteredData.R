@@ -68,20 +68,11 @@ FilteredData <- R6::R6Class( # nolint
     #'   should named elements containing `data.frame` or `MultiAssayExperiment`.
     #'   Names of the list will serve as `dataname`.
     #' @param join_keys (`JoinKeys` or NULL) see [`teal.data::join_keys()`].
-    #' @param code (`CodeClass` or `NULL`) see [`teal.data::CodeClass`].
-    #' @param check (`logical(1)`) whether data has been check against reproducibility.
     #'
-    initialize = function(data_objects, join_keys = teal.data::join_keys(), code = NULL, check = FALSE) {
+    initialize = function(data_objects, join_keys = teal.data::join_keys() ) {
       checkmate::assert_list(data_objects, any.missing = FALSE, min.len = 0, names = "unique")
       # Note the internals of data_objects are checked in set_dataset
       checkmate::assert_class(join_keys, "JoinKeys")
-      checkmate::assert_class(code, "CodeClass", null.ok = TRUE)
-      checkmate::assert_flag(check)
-
-      self$set_check(check)
-      if (!is.null(code)) {
-        self$set_code(code)
-      }
 
       self$set_join_keys(join_keys)
 
@@ -212,21 +203,6 @@ FilteredData <- R6::R6Class( # nolint
     },
 
     #' @description
-    #' Gets the R preprocessing code string that generates the unfiltered datasets.
-    #'
-    #' @param dataname (`character(1)`) name(s) of dataset(s)
-    #'
-    #' @return (`character(1)`) deparsed code
-    #'
-    get_code = function(dataname = self$datanames()) {
-      if (!is.null(private$code)) {
-        paste0(private$code$get_code(dataname), collapse = "\n")
-      } else {
-        paste0("# No pre-processing code provided")
-      }
-    },
-
-    #' @description
     #' Gets filtered or unfiltered dataset.
     #'
     #' For `filtered = FALSE`, the original data set with
@@ -240,15 +216,6 @@ FilteredData <- R6::R6Class( # nolint
       checkmate::assert_flag(filtered)
       data <- private$get_filtered_dataset(dataname)$get_dataset(filtered)
       if (filtered) data() else data
-    },
-
-    #' @description
-    #' Returns whether the datasets in the object has undergone a reproducibility check.
-    #'
-    #' @return `logical`
-    #'
-    get_check = function() {
-      private$.check
     },
 
     #' @description
@@ -369,34 +336,6 @@ FilteredData <- R6::R6Class( # nolint
     set_join_keys = function(join_keys) {
       checkmate::assert_class(join_keys, "JoinKeys")
       private$join_keys <- join_keys
-      invisible(self)
-    },
-
-    #' @description
-    #' Sets whether the datasets in the object have undergone a reproducibility check.
-    #'
-    #' @param check (`logical`) whether datasets have undergone reproducibility check
-    #'
-    #' @return (`self`)
-    #'
-    set_check = function(check) {
-      checkmate::assert_flag(check)
-      private$.check <- check
-      invisible(self)
-    },
-
-    #' @description
-    #' Sets the R preprocessing code for single dataset.
-    #'
-    #' @param code (`CodeClass`)\cr
-    #'   preprocessing code that can be parsed to generate the unfiltered datasets
-    #'
-    #' @return (`self`)
-    #'
-    set_code = function(code) {
-      checkmate::assert_class(code, "CodeClass")
-      logger::log_trace("FilteredData$set_code setting code")
-      private$code <- code
       invisible(self)
     },
 
@@ -1067,12 +1006,6 @@ FilteredData <- R6::R6Class( # nolint
 
     # activate/deactivate filter panel
     filter_panel_active = TRUE,
-
-    # whether the datasets had a reproducibility check
-    .check = FALSE,
-
-    # preprocessing code used to generate the unfiltered datasets as a string
-    code = NULL,
 
     # `reactive` containing teal_slices that can be selected; only active in module-specific mode
     available_teal_slices = NULL,
