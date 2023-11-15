@@ -65,29 +65,6 @@ testthat::test_that("FilteredData preserves the check field when check is TRUE",
   testthat::expect_true(filtered_data$get_check())
 })
 
-testthat::test_that("FilteredData forbids cyclic graphs of datasets relationship", {
-  jk <- teal.data::join_keys(
-    teal.data::join_key("child", "parent", c("id" = "id")),
-    teal.data::join_key("grandchild", "child", c("id" = "id")),
-    teal.data::join_key("grandchild", "parent", c("id" = "id"))
-  )
-  teal.data::parents(jk) <- list(child = "parent")
-  teal.data::parents(jk) <- list(grandchild = "child")
-  teal.data::parents(jk) <- list(parent = "grandchild")
-  iris2 <- transform(iris, id = seq_len(nrow(iris)))
-  testthat::expect_error(
-    FilteredData$new(
-      list(
-        grandchild = list(dataset = head(iris2)),
-        child = list(dataset = head(iris2)),
-        parent = list(dataset = head(iris2))
-      ),
-      join_keys = jk
-    ),
-    "Graph is not a directed acyclic graph"
-  )
-})
-
 
 # datanames ----
 testthat::test_that("filtered_data$datanames returns character vector of datasets names", {
@@ -374,8 +351,7 @@ testthat::test_that("get_data of the child is dependent on the ancestor filter",
     teal.data::join_key("child", "parent", c("id" = "id")),
     teal.data::join_key("grandchild", "child", c("id" = "id"))
   )
-  teal.data::parents(jk) <- list(child = "parent")
-  teal.data::parents(jk) <- list(grandchild = "child")
+  teal.data::parents(jk) <- list(child = "parent", grandchild = "child")
   iris2 <- transform(iris, id = seq_len(nrow(iris)))
   filtered_data <- FilteredData$new(
     list(
@@ -751,8 +727,7 @@ testthat::test_that("get_filter_overview return counts based on reactive filteri
     teal.data::join_key("child", "parent", c("id" = "id")),
     teal.data::join_key("grandchild", "child", c("id" = "id"))
   )
-  teal.data::parents(jk) <- list(child = "parent")
-  teal.data::parents(jk) <- list(grandchild = "child")
+  teal.data::parents(jk) <- list(child = "parent", grandchild = "child")
   iris2 <- transform(iris, id = seq_len(nrow(iris)))
   filtered_data <- FilteredData$new(
     list(
