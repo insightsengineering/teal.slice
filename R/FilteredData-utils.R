@@ -60,12 +60,10 @@ init_filtered_data.TealData <- function(x, # nolint
 
 #' @keywords internal
 #' @export
-init_filtered_data.default <- function(x, join_keys = teal.data::join_keys(), code = NULL, check = FALSE) { # nolint
+init_filtered_data.default <- function(x, join_keys = teal.data::join_keys()) { # nolint
   checkmate::assert_list(x, any.missing = FALSE, names = "unique")
-  checkmate::assert_class(code, "CodeClass", null.ok = TRUE)
   checkmate::assert_class(join_keys, "JoinKeys")
-  checkmate::assert_flag(check)
-  FilteredData$new(x, join_keys = join_keys, code = code, check = check)
+  FilteredData$new(x, join_keys = join_keys)
 }
 
 #' Validate dataset arguments
