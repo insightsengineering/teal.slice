@@ -333,7 +333,7 @@ FilteredData <- R6::R6Class( # nolint
       check_simple_name(dataname)
 
       parent_dataname <- teal.data::parent(private$join_keys, dataname)
-      keys <- private$join_keys[[dataname]][[dataname]]
+      keys <- private$join_keys[dataname, dataname]
       if (is.null(keys)) keys <- character(0)
 
       if (length(parent_dataname) == 0) {
