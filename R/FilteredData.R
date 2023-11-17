@@ -345,7 +345,7 @@ FilteredData <- R6::R6Class( # nolint
           keys = keys
         )
       } else {
-        join_keys <- private$join_keys[[dataname]][[parent_dataname]]
+        join_keys <- private$join_keys[dataname, parent_dataname]
         if (is.null(join_keys)) join_keys <- character(0)
         private$filtered_datasets[[dataname]] <- init_filtered_dataset(
           dataset = data,
