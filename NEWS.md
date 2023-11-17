@@ -4,7 +4,7 @@
 
 * Specified minimal version of package dependencies.
 * Removed storing and restoring of `teal_slices` objects.
-* Update documentation and code to reflect `teal.data::JoinKeys` class and logic change to `teal.data::join_keys`.
+* Update documentation and code to reflect the changes due to the refactor of `teal.data::JoinKeys` into `teal.data::join_keys`.
 
 # teal.slice 0.4.0
 
