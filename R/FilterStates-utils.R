@@ -48,7 +48,7 @@
 #'   }
 #' )
 #' if (interactive()) {
-#'   runApp(app)
+#'   shinyApp(app$ui, app$server)
 #' }
 init_filter_states <- function(data,
                                data_reactive = reactive(NULL),

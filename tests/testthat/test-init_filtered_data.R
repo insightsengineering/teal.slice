@@ -35,10 +35,10 @@ testthat::test_that("init_filtered_data.default accepts NULL passed to code", {
   testthat::expect_no_error(init_filtered_data(list("iris" = list(dataset = iris)), code = NULL))
 })
 
-testthat::test_that("init_filtered_data.default asserts join_keys is `JoinKeys`", {
+testthat::test_that("init_filtered_data.default asserts join_keys is `join_keys`", {
   testthat::expect_error(
     init_filtered_data(list("iris" = list(dataset = iris)), join_keys = "test"),
-    regexp = "Assertion on 'join_keys' failed: Must inherit from class 'JoinKeys', but has class 'character'."
+    regexp = "Assertion on 'join_keys' failed: Must inherit from class 'join_keys', but has class 'character'."
   )
 })
 

@@ -67,18 +67,17 @@ FilteredData <- R6::R6Class( # nolint
     #' @param data_objects (`list`)
     #'   should named elements containing `data.frame` or `MultiAssayExperiment`.
     #'   Names of the list will serve as `dataname`.
-    #' @param join_keys (`JoinKeys` or NULL) see [`teal.data::join_keys()`].
+    #' @param join_keys (`join_keys` or NULL) see [`teal.data::join_keys()`].
     #'
     initialize = function(data_objects, join_keys = teal.data::join_keys() ) {
       checkmate::assert_list(data_objects, any.missing = FALSE, min.len = 0, names = "unique")
       # Note the internals of data_objects are checked in set_dataset
-      checkmate::assert_class(join_keys, "JoinKeys")
+      checkmate::assert_class(join_keys, "join_keys")
 
       self$set_join_keys(join_keys)
-
       child_parent <- sapply(
         names(data_objects),
-        function(i) join_keys$get_parent(i),
+        function(i) teal.data::parent(join_keys, i),
         USE.NAMES = TRUE,
         simplify = FALSE
       )
@@ -233,7 +232,7 @@ FilteredData <- R6::R6Class( # nolint
     #' @description
     #' Get join keys between two datasets.
     #'
-    #' @return (`JoinKeys`)
+    #' @return (`join_keys`)
     #'
     get_join_keys = function() {
       return(private$join_keys)
@@ -275,7 +274,7 @@ FilteredData <- R6::R6Class( # nolint
     #'
     #' @details
     #' `set_dataset` creates a `FilteredDataset` object which keeps `dataset` for the filtering purpose.
-    #' If this data has a parent specified in the `JoinKeys` object stored in `private$join_keys`
+    #' If this data has a parent specified in the `join_keys` object stored in `private$join_keys`
     #' then created `FilteredDataset` (child) gets linked with other `FilteredDataset` (parent).
     #' "Child" dataset return filtered data then dependent on the reactive filtered data of the
     #' "parent". See more in documentation of `parent` argument in `FilteredDatasetDefault` constructor.
@@ -300,24 +299,28 @@ FilteredData <- R6::R6Class( # nolint
       # the UI also uses `datanames` in ids, so no whitespaces allowed
       check_simple_name(dataname)
 
-      join_keys <- self$get_join_keys()
-      parent_dataname <- join_keys$get_parent(dataname)
+      parent_dataname <- teal.data::parent(private$join_keys, dataname)
+      keys <- private$join_keys[dataname, dataname]
+      if (is.null(keys)) keys <- character(0)
+
       if (length(parent_dataname) == 0) {
         private$filtered_datasets[[dataname]] <- init_filtered_dataset(
           dataset = data,
           dataname = dataname,
           metadata = metadata,
           label = label,
-          keys = self$get_join_keys()$get(dataname, dataname)
+          keys = keys
         )
       } else {
+        join_keys <- private$join_keys[dataname, parent_dataname]
+        if (is.null(join_keys)) join_keys <- character(0)
         private$filtered_datasets[[dataname]] <- init_filtered_dataset(
           dataset = data,
           dataname = dataname,
-          keys = join_keys$get(dataname, dataname),
+          keys = keys,
           parent_name = parent_dataname,
           parent = reactive(self$get_data(parent_dataname, filtered = TRUE)),
-          join_keys = self$get_join_keys()$get(dataname, parent_dataname),
+          join_keys = join_keys,
           label = label,
           metadata = metadata
         )
@@ -329,12 +332,12 @@ FilteredData <- R6::R6Class( # nolint
     #' @description
     #' Set the `join_keys`.
     #'
-    #' @param join_keys (`JoinKeys`) join_key (converted to a nested list)
+    #' @param join_keys (`join_keys`) join_key (converted to a nested list)
     #'
     #' @return (`self`) invisibly this `FilteredData`
     #'
     set_join_keys = function(join_keys) {
-      checkmate::assert_class(join_keys, "JoinKeys")
+      checkmate::assert_class(join_keys, "join_keys")
       private$join_keys <- join_keys
       invisible(self)
     },
@@ -1010,7 +1013,7 @@ FilteredData <- R6::R6Class( # nolint
     # `reactive` containing teal_slices that can be selected; only active in module-specific mode
     available_teal_slices = NULL,
 
-    # keys used for joining/filtering data a JoinKeys object (see teal.data)
+    # keys used for joining/filtering data a join_keys object (see teal.data)
     join_keys = NULL,
 
     # flag specifying whether the user may add filters

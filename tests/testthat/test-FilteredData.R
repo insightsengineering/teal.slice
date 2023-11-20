@@ -10,7 +10,7 @@ testthat::test_that("constructor accepts call with only dataset specified", {
   testthat::expect_error(FilteredData$new(list(iris = dataset)), "Must inherit")
 })
 
-testthat::test_that("constructor accepts join_keys to be JoinKeys or NULL", {
+testthat::test_that("constructor accepts join_keys to be join_keys or NULL", {
   testthat::expect_no_error(
     FilteredData$new(list(iris = list(dataset = iris)), join_keys = teal.data::join_keys())
   )
@@ -65,29 +65,6 @@ testthat::test_that("FilteredData preserves the check field when check is TRUE",
   testthat::expect_true(filtered_data$get_check())
 })
 
-testthat::test_that("FilteredData forbids cyclic graphs of datasets relationship", {
-  jk <- teal.data::join_keys(
-    teal.data::join_key("child", "parent", c("id" = "id")),
-    teal.data::join_key("grandchild", "child", c("id" = "id")),
-    teal.data::join_key("grandchild", "parent", c("id" = "id"))
-  )
-  jk$set_parents(list(child = "parent"))
-  jk$set_parents(list(grandchild = "child"))
-  jk$set_parents(list(parent = "grandchild"))
-  iris2 <- transform(iris, id = seq_len(nrow(iris)))
-  testthat::expect_error(
-    FilteredData$new(
-      list(
-        grandchild = list(dataset = head(iris2)),
-        child = list(dataset = head(iris2)),
-        parent = list(dataset = head(iris2))
-      ),
-      join_keys = jk
-    ),
-    "Graph is not a directed acyclic graph"
-  )
-})
-
 
 # datanames ----
 testthat::test_that("filtered_data$datanames returns character vector of datasets names", {
@@ -98,7 +75,7 @@ testthat::test_that("filtered_data$datanames returns character vector of dataset
 
 testthat::test_that("datanames are ordered topologically from parent to child", {
   jk <- teal.data::join_keys(teal.data::join_key("parent", "child", c("id" = "id")))
-  jk$set_parents(list(child = "parent"))
+  teal.data::parents(jk) <- list(child = "parent")
   iris2 <- transform(iris, id = seq_len(nrow(iris)))
   filtered_data <- FilteredData$new(
     list(
@@ -157,7 +134,7 @@ testthat::test_that("set_datasets creates FilteredDataset object linked with par
     )
   )
   jk <- teal.data::join_keys(teal.data::join_key("parent", "child", c("id" = "id")))
-  jk$set_parents(list(child = "parent"))
+  teal.data::parents(jk) <- list(child = "parent")
   iris2 <- transform(iris, id = seq_len(nrow(iris)))
   filtered_data <- test_class$new(data_objects = list(), join_keys = jk)
   filtered_data$set_dataset(data = head(iris), dataname = "parent", label = NULL, metadata = NULL)
@@ -170,9 +147,9 @@ testthat::test_that("set_datasets creates FilteredDataset object linked with par
 
 
 # get_keys ----
-testthat::test_that("get_join_keys returns empty JoinKeys object", {
+testthat::test_that("get_join_keys returns empty join_keys object", {
   filtered_data <- FilteredData$new(list(iris = list(dataset = head(iris))))
-  testthat::expect_s3_class(filtered_data$get_join_keys(), "JoinKeys")
+  testthat::expect_s3_class(filtered_data$get_join_keys(), "join_keys")
 })
 
 testthat::test_that("get_keys returns keys of the dataset specified via join_keys", {
@@ -374,8 +351,7 @@ testthat::test_that("get_data of the child is dependent on the ancestor filter",
     teal.data::join_key("child", "parent", c("id" = "id")),
     teal.data::join_key("grandchild", "child", c("id" = "id"))
   )
-  jk$set_parents(list(child = "parent"))
-  jk$set_parents(list(grandchild = "child"))
+  teal.data::parents(jk) <- list(child = "parent", grandchild = "child")
   iris2 <- transform(iris, id = seq_len(nrow(iris)))
   filtered_data <- FilteredData$new(
     list(
@@ -751,8 +727,7 @@ testthat::test_that("get_filter_overview return counts based on reactive filteri
     teal.data::join_key("child", "parent", c("id" = "id")),
     teal.data::join_key("grandchild", "child", c("id" = "id"))
   )
-  jk$set_parents(list(child = "parent"))
-  jk$set_parents(list(grandchild = "child"))
+  teal.data::parents(jk) <- list(child = "parent", grandchild = "child")
   iris2 <- transform(iris, id = seq_len(nrow(iris)))
   filtered_data <- FilteredData$new(
     list(

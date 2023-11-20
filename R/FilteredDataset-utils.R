@@ -32,7 +32,7 @@
 #'   }
 #' )
 #' if (interactive()) {
-#'   runApp(app)
+#'   shinyApp(app$ui, app$server)
 #' }
 #'
 #' # MAEFilteredDataset example
@@ -61,7 +61,7 @@
 #'   }
 #' )
 #' if (interactive()) {
-#'   runApp(app)
+#'   shinyApp(app$ui, app$server)
 #' }
 #' @param dataset (`data.frame` or `MultiAssayExperiment`)\cr
 #' @param dataname (`character`)\cr

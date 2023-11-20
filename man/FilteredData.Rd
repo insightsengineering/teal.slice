@@ -153,7 +153,7 @@ Initialize a \code{FilteredData} object
 should named elements containing \code{data.frame} or \code{MultiAssayExperiment}.
 Names of the list will serve as \code{dataname}.}
 
-\item{\code{join_keys}}{(\code{JoinKeys} or NULL) see \code{\link[teal.data:join_keys]{teal.data::join_keys()}}.}
+\item{\code{join_keys}}{(\code{join_keys} or NULL) see \code{\link[teal.data:join_keys]{teal.data::join_keys()}}.}
 }
 \if{html}{\out{</div>}}
 }
@@ -327,7 +327,7 @@ Get join keys between two datasets.
 }
 
 \subsection{Returns}{
-(\code{JoinKeys})
+(\code{join_keys})
 }
 }
 \if{html}{\out{<hr>}}
@@ -407,7 +407,7 @@ Label to describe the dataset}
 }
 \subsection{Details}{
 \code{set_dataset} creates a \code{FilteredDataset} object which keeps \code{dataset} for the filtering purpose.
-If this data has a parent specified in the \code{JoinKeys} object stored in \code{private$join_keys}
+If this data has a parent specified in the \code{join_keys} object stored in \code{private$join_keys}
 then created \code{FilteredDataset} (child) gets linked with other \code{FilteredDataset} (parent).
 "Child" dataset return filtered data then dependent on the reactive filtered data of the
 "parent". See more in documentation of \code{parent} argument in \code{FilteredDatasetDefault} constructor.
@@ -429,7 +429,7 @@ Set the \code{join_keys}.
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
-\item{\code{join_keys}}{(\code{JoinKeys}) join_key (converted to a nested list)}
+\item{\code{join_keys}}{(\code{join_keys}) join_key (converted to a nested list)}
 }
 \if{html}{\out{</div>}}
 }
