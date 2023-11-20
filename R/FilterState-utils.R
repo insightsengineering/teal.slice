@@ -47,7 +47,7 @@
 #'   }
 #' )
 #' if (interactive()) {
-#'   runApp(app)
+#'   shinyApp(app$ui, app$server)
 #' }
 #' @return `FilterState` object
 init_filter_state <- function(x,

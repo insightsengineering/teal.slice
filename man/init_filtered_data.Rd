@@ -17,7 +17,7 @@ If the list is provided, it should contain \code{list}(s) containing following f
 \item \code{parent} (optional) which \code{dataset} is a parent of this one.
 }}
 
-\item{join_keys}{(\code{JoinKeys}) see \code{\link[teal.data:join_keys]{teal.data::join_keys()}}.}
+\item{join_keys}{(\code{join_keys}) see \code{\link[teal.data:join_keys]{teal.data::join_keys()}}.}
 
 \item{code}{(\code{CodeClass}) see \code{\link[teal.data:CodeClass]{teal.data::CodeClass}}.}
 
