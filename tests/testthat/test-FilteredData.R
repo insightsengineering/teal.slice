@@ -22,50 +22,6 @@ testthat::test_that("constructor accepts join_keys to be join_keys or NULL", {
   )
 })
 
-testthat::test_that("constructor accepts code to be CodeClass or NULL", {
-  mockcodeclass <- R6::R6Class(classname = "CodeClass")
-  testthat::expect_no_error(
-    FilteredData$new(list(iris = list(dataset = iris)), code = mockcodeclass$new())
-  )
-  testthat::expect_no_error(
-    FilteredData$new(list(iris = list(dataset = iris)), code = NULL)
-  )
-  testthat::expect_error(
-    FilteredData$new(list(iris = list(dataset = iris)), code = list(), "Assertion on 'code' failed")
-  )
-})
-
-testthat::test_that("constructor accepts check to be a flag", {
-  testthat::expect_no_error(
-    FilteredData$new(list(iris = list(dataset = iris)), check = TRUE)
-  )
-  testthat::expect_error(
-    FilteredData$new(list(iris = list(dataset = iris)), check = NULL, "Assertion on 'check' failed")
-  )
-  testthat::expect_error(
-    FilteredData$new(list(iris = list(dataset = iris)), check = logical(0), "Assertion on 'check' failed")
-  )
-})
-
-testthat::test_that("FilteredData preserves the check field when check is TRUE", {
-  code <- teal.data:::CodeClass$new()$set_code("df_1 <- data.frame(x = 1:10)")
-
-  filtered_data <- FilteredData$new(
-    list("df_1" = list(dataset = data.frame(x = 1:10))),
-    code = code,
-    check = FALSE
-  )
-  testthat::expect_false(filtered_data$get_check())
-
-  filtered_data <- FilteredData$new(
-    list("df_1" = list(dataset = data.frame(x = 1:10))),
-    code = code,
-    check = TRUE
-  )
-  testthat::expect_true(filtered_data$get_check())
-})
-
-
 # datanames ----
 testthat::test_that("filtered_data$datanames returns character vector of datasets names", {
   dataset <- list(dataset = iris)
@@ -204,23 +160,6 @@ testthat::test_that("get_metadata returns metadata if dataset exists", {
   )
   testthat::expect_equal(filtered_data$get_metadata("iris"), list(E = TRUE))
   testthat::expect_null(filtered_data$get_metadata("iris2"))
-})
-
-
-# get_code ----
-testthat::test_that("get_code returns the code passed to CodeClass$set_code", {
-  code <- teal.data:::CodeClass$new()
-  code$set_code("'preprocessing code'", "iris")
-  filtered_data <- FilteredData$new(
-    list(iris = list(dataset = head(iris))),
-    code = code
-  )
-  testthat::expect_equal(filtered_data$get_code(), "\"preprocessing code\"")
-})
-
-testthat::test_that("get_code returns a string when FilteredData has no code", {
-  filtered_data <- FilteredData$new(data_objects = list())
-  testthat::expect_identical(filtered_data$get_code(), "# No pre-processing code provided")
 })
 
 
