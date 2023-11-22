@@ -1,4 +1,4 @@
-# teal.slice 0.4.0.9022
+# teal.slice 0.4.0.9023
 
 ### Miscellaneous
 
@@ -27,6 +27,7 @@
 * Setting filters using a list is now deprecated. Use `teal_slices` and `teal_slice` instead.
 * Removed `CDISCFilteredData` and `CDISCFilteredDataset` and implementing `JoinKeys` handling in their parent classes (`FilteredData` and `DefaultFilteredDataset`).
 * Specifying set of filterable columns is done through `include_varnames` and `exclude_varnames` in `teal_slices`. Specifying `attr(, "filterable")` is hard deprecated.
+* Removed private fields `$code` and `$check` from `FilteredData` class and made appropriate changes to constructor and `init_filtered_data`.
 
 # teal.slice 0.3.0
 

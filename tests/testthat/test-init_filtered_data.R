@@ -24,27 +24,9 @@ testthat::test_that("init_filtered_data.default asserts x has unique names", {
   )
 })
 
-testthat::test_that("init_filtered_data.default asserts code is `CodeClass`", {
-  testthat::expect_error(
-    init_filtered_data(list("iris" = list(dataset = iris)), code = "test"),
-    regexp = "Assertion on 'code' failed: Must inherit from class 'CodeClass', but has class 'character'."
-  )
-})
-
-testthat::test_that("init_filtered_data.default accepts NULL passed to code", {
-  testthat::expect_no_error(init_filtered_data(list("iris" = list(dataset = iris)), code = NULL))
-})
-
 testthat::test_that("init_filtered_data.default asserts join_keys is `join_keys`", {
   testthat::expect_error(
     init_filtered_data(list("iris" = list(dataset = iris)), join_keys = "test"),
     regexp = "Assertion on 'join_keys' failed: Must inherit from class 'join_keys', but has class 'character'."
-  )
-})
-
-testthat::test_that("init_filtered_data.default asserts check is logical(1)", {
-  testthat::expect_error(
-    init_filtered_data(list("iris" = list(dataset = iris)), check = "test"),
-    regexp = "Assertion on 'check' failed: Must be of type 'logical flag', not 'character'."
   )
 })
