@@ -24,7 +24,6 @@ components of the dataset.
 \item \href{#method-FilteredDataset-get_filter_count}{\code{FilteredDataset$get_filter_count()}}
 \item \href{#method-FilteredDataset-get_dataname}{\code{FilteredDataset$get_dataname()}}
 \item \href{#method-FilteredDataset-get_dataset}{\code{FilteredDataset$get_dataset()}}
-\item \href{#method-FilteredDataset-get_metadata}{\code{FilteredDataset$get_metadata()}}
 \item \href{#method-FilteredDataset-get_filter_overview}{\code{FilteredDataset$get_filter_overview()}}
 \item \href{#method-FilteredDataset-get_keys}{\code{FilteredDataset$get_keys()}}
 \item \href{#method-FilteredDataset-get_dataset_label}{\code{FilteredDataset$get_dataset_label()}}
@@ -45,8 +44,7 @@ Initializes this \code{FilteredDataset} object
   dataset,
   dataname,
   keys = character(0),
-  label = attr(dataset, "label"),
-  metadata = NULL
+  label = attr(dataset, "label")
 )}\if{html}{\out{</div>}}
 }
 
@@ -63,10 +61,7 @@ A given name for the dataset it may not contain spaces}
 Vector with primary keys}
 
 \item{\code{label}}{(\code{character(1)})\cr
-Label to describe the dataset}
-
-\item{\code{metadata}}{(named \code{list} or \code{NULL}) \cr
-Field containing metadata about the dataset. Each element of the list
+Label to describe the dataset
 should be atomic and length one.}
 }
 \if{html}{\out{</div>}}
@@ -236,19 +231,6 @@ Gets the dataset object in this \code{FilteredDataset}
 \subsection{Returns}{
 \code{data.frame} or \code{MultiAssayExperiment}, either raw
 or as a reactive with current filters applied
-}
-}
-\if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-FilteredDataset-get_metadata"></a>}}
-\if{latex}{\out{\hypertarget{method-FilteredDataset-get_metadata}{}}}
-\subsection{Method \code{get_metadata()}}{
-Gets the metadata for the dataset in this \code{FilteredDataset}
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{FilteredDataset$get_metadata()}\if{html}{\out{</div>}}
-}
-
-\subsection{Returns}{
-named \code{list} or \code{NULL}
 }
 }
 \if{html}{\out{<hr>}}

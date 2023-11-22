@@ -1,12 +1,10 @@
 # initialize ----
 testthat::test_that("constructor accepts call with only dataset specified", {
   utils::data(miniACC, package = "MultiAssayExperiment")
-  df_dataset <- list(dataset = iris)
-  mae_dataset <- list(dataset = miniACC)
-  testthat::expect_no_error(FilteredData$new(list(iris = df_dataset)))
-  testthat::expect_no_error(FilteredData$new(list(iris = df_dataset, mae = mae_dataset)))
+  testthat::expect_no_error(FilteredData$new(list(iris = iris)))
+  testthat::expect_no_error(FilteredData$new(list(iris = iris, mae = miniACC)))
 
-  dataset <- list(dataset = structure(list(), class = "customclass"))
+  dataset <- structure(list(), class = "customclass")
   testthat::expect_error(FilteredData$new(list(iris = dataset)), "Must inherit")
 })
 
@@ -24,8 +22,7 @@ testthat::test_that("constructor accepts join_keys to be join_keys or NULL", {
 
 # datanames ----
 testthat::test_that("filtered_data$datanames returns character vector of datasets names", {
-  dataset <- list(dataset = iris)
-  filtered_data <- FilteredData$new(list(df1 = dataset, df2 = dataset))
+  filtered_data <- FilteredData$new(list(df1 = iris, df2 = iris))
   testthat::expect_identical(filtered_data$datanames(), c("df1", "df2"))
 })
 
@@ -54,13 +51,13 @@ testthat::test_that("datanames are ordered topologically from parent to child", 
 # set_dataset ----
 testthat::test_that("set_dataset accepts data being `data.frame`", {
   filtered_data <- FilteredData$new(data_objects = list())
-  testthat::expect_no_error(filtered_data$set_dataset(data = iris, dataname = "iris", label = NULL, metadata = NULL))
+  testthat::expect_no_error(filtered_data$set_dataset(data = iris, dataname = "iris"))
 })
 
 testthat::test_that("set_dataset returns self", {
   filtered_data <- FilteredData$new(data_objects = list())
   testthat::expect_identical(
-    filtered_data$set_dataset(data = iris, dataname = "iris", label = NULL, metadata = NULL),
+    filtered_data$set_dataset(data = iris, dataname = "iris"),
     filtered_data
   )
 })
@@ -74,7 +71,7 @@ testthat::test_that("set_dataset creates FilteredDataset object", {
     )
   )
   filtered_data <- test_class$new(data_objects = list())
-  filtered_data$set_dataset(data = iris, dataname = "iris", label = NULL, metadata = NULL)
+  filtered_data$set_dataset(data = iris, dataname = "iris")
   checkmate::expect_list(
     filtered_data$get_filtered_datasets(),
     types = "FilteredDataset"
@@ -93,8 +90,8 @@ testthat::test_that("set_datasets creates FilteredDataset object linked with par
   teal.data::parents(jk) <- list(child = "parent")
   iris2 <- transform(iris, id = seq_len(nrow(iris)))
   filtered_data <- test_class$new(data_objects = list(), join_keys = jk)
-  filtered_data$set_dataset(data = head(iris), dataname = "parent", label = NULL, metadata = NULL)
-  filtered_data$set_dataset(data = head(iris), dataname = "child", label = NULL, metadata = NULL)
+  filtered_data$set_dataset(data = head(iris), dataname = "parent")
+  filtered_data$set_dataset(data = head(iris), dataname = "child")
   testthat::expect_identical(
     shiny::isolate(filtered_data$get_call("child"))[[1]],
     quote(child <- dplyr::inner_join(x = child, y = parent[, c("id"), drop = FALSE], by = "id"))
@@ -135,33 +132,11 @@ testthat::test_that("get_join_keys returns join_keys object if it exists", {
 
 # get_datalabel ----
 testthat::test_that("get_datalabel returns character(0) for dataset with no label", {
-  filtered_data <- FilteredData$new(list(iris = list(dataset = head(iris))))
-  testthat::expect_equal(filtered_data$get_datalabel("iris"), character(0))
+  this_iris <- iris
+  attr(this_iris, "label") <- "Super iris"
+  filtered_data <- FilteredData$new(list(iris = this_iris))
+  testthat::expect_equal(filtered_data$get_datalabel("iris"), "Super iris")
 })
-
-testthat::test_that("get_datalabel returns the label of a passed dataset", {
-  filtered_data <- FilteredData$new(list(iris = list(dataset = head(iris), label = "test")))
-  testthat::expect_equal(filtered_data$get_datalabel("iris"), "test")
-})
-
-
-# get_metadata ----
-testthat::test_that("get_metadata raises error if dataset does not exist", {
-  filtered_data <- FilteredData$new(list(iris = list(dataset = head(iris))))
-  testthat::expect_error(filtered_data$get_metadata("mtcars"), "Assertion on 'dataname' failed")
-})
-
-testthat::test_that("get_metadata returns metadata if dataset exists", {
-  filtered_data <- FilteredData$new(
-    list(
-      iris = list(dataset = head(iris), metadata = list(E = TRUE)),
-      iris2 = list(dataset = head(iris))
-    )
-  )
-  testthat::expect_equal(filtered_data$get_metadata("iris"), list(E = TRUE))
-  testthat::expect_null(filtered_data$get_metadata("iris2"))
-})
-
 
 # get_call ----
 testthat::test_that("get_call returns a NULL if no filters applied", {
@@ -310,62 +285,6 @@ testthat::test_that("get_data of the child is dependent on the ancestor filter",
   )
 })
 
-# supporting previous api ----
-testthat::test_that("set_filter_state accepts `teal_slices` and nested list and both set identical settings", {
-  utils::data(miniACC, package = "MultiAssayExperiment")
-  x <- list(iris = list(dataset = iris), mae = list(dataset = miniACC))
-  datasets1 <- init_filtered_data(x)
-  datasets2 <- init_filtered_data(x)
-  fs1 <- structure(
-    list(
-      iris = list(
-        Species = list(selected = c("setosa", "versicolor")),
-        Sepal.Length = c(5.1, 6.4),
-        Petal.Length = list()
-      ),
-      mae = list(
-        subjects = list(
-          years_to_birth = list(selected = c(30, 50), keep_na = TRUE, keep_inf = FALSE),
-          vital_status = list(selected = "1", keep_na = FALSE),
-          gender = list(selected = "female", keep_na = TRUE)
-        ),
-        RPPAArray = list(
-          subset = list(
-            ARRAY_TYPE = list(selected = "", keep_na = TRUE)
-          )
-        )
-      )
-    ),
-    filterable = list(
-      iris = c("Species", "Sepal.Length", "Petal.Length"),
-      mae = c("years_to_birth", "vital_status", "gender")
-    )
-  )
-
-  fs2 <- teal_slices(
-    teal_slice(dataname = "iris", varname = "Species", selected = c("setosa", "versicolor")),
-    teal_slice(dataname = "iris", varname = "Sepal.Length", selected = c(5.1, 6.4)),
-    teal_slice(dataname = "iris", varname = "Petal.Length"),
-    teal_slice(dataname = "mae", varname = "years_to_birth", selected = c(30, 50), keep_na = TRUE, keep_inf = FALSE),
-    teal_slice(dataname = "mae", varname = "vital_status", selected = "1", keep_na = FALSE),
-    teal_slice(dataname = "mae", varname = "gender", selected = "female", keep_na = TRUE),
-    teal_slice(
-      dataname = "mae", varname = "ARRAY_TYPE", experiment = "RPPAArray", arg = "subset",
-      selected = "", keep_na = TRUE
-    ),
-    include_varnames = list(
-      iris = c("Species", "Sepal.Length", "Petal.Length"),
-      mae = c("years_to_birth", "vital_status", "gender")
-    )
-  )
-
-  testthat::expect_warning(datasets1$set_filter_state(fs1), "deprecated")
-  datasets2$set_filter_state(fs2)
-
-  expect_identical_slices(datasets1$get_filter_state(), datasets2$get_filter_state())
-})
-
-
 # get_filter_state / format ----
 testthat::test_that("get_filter_state returns `teal_slices` with features identical to those in input, adds format", {
   datasets <- FilteredData$new(
@@ -493,12 +412,7 @@ testthat::test_that("remove_filter_state removes states specified by `teal_slice
 })
 
 testthat::test_that("remove_filter_state does not remove anchored filters", {
-  datasets <- teal.slice:::FilteredData$new(
-    list(
-      iris = list(dataset = iris),
-      mtcars = list(dataset = mtcars, metadata = list(type = "training"))
-    )
-  )
+  datasets <- teal.slice:::FilteredData$new(list(iris = iris, mtcars = mtcars))
   fs <- teal_slices(
     teal_slice(
       dataname = "iris", varname = "Sepal.Length", selected = c(5.1, 6.4),
@@ -567,12 +481,7 @@ testthat::test_that("clear_filter_states removes filters of desired dataset only
 })
 
 testthat::test_that("clear_filter_states does not remove anchored filters", {
-  datasets <- teal.slice:::FilteredData$new(
-    list(
-      iris = list(dataset = iris),
-      mtcars = list(dataset = mtcars, metadata = list(type = "training"))
-    )
-  )
+  datasets <- teal.slice:::FilteredData$new(list(iris = iris, mtcars = mtcars))
   fs <- teal_slices(
     teal_slice(
       dataname = "iris", varname = "Sepal.Length", selected = c(5.1, 6.4),

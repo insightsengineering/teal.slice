@@ -41,19 +41,6 @@ testthat::test_that("get_keys returns the keys passed to the constructor", {
   testthat::expect_identical("Petal.length", filtered_dataset$get_keys())
 })
 
-# get_metadata ----
-testthat::test_that("get_metadata returns the metadata of the data passed to the constructor", {
-  filtered_dataset <- FilteredDataset$new(
-    dataset = head(iris), dataname = "iris", metadata = list(A = "A", B = TRUE, C = 5)
-  )
-  testthat::expect_equal(filtered_dataset$get_metadata(), list(A = "A", B = TRUE, C = 5))
-
-  filtered_dataset <- FilteredDataset$new(
-    dataset = head(iris), dataname = "iris"
-  )
-  testthat::expect_null(filtered_dataset$get_metadata())
-})
-
 # format ----
 testthat::test_that("format returns a string representation of filters", {
   dataset <- DefaultFilteredDataset$new(dataset = iris, dataname = "iris")

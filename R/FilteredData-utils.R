@@ -4,88 +4,32 @@
 #' @param x (named `list` or `TealData`) In case of `TealData` see [teal.data::teal_data()].
 #'  If the list is provided, it should contain `list`(s) containing following fields:
 #' - `dataset` data object object supported by [`FilteredDataset`].
-#' - `metatada` (optional) additional metadata attached to the `dataset`.
 #' - `keys` (optional) primary keys.
 #' - `datalabel` (optional) label describing the `dataset`.
 #' - `parent` (optional) which `dataset` is a parent of this one.
 #' @param join_keys (`join_keys`) see [teal.data::join_keys()].
-#' @param code (`CodeClass`) see [`teal.data::CodeClass`].
-#' @param check (`logical(1)`) whether data has been check against reproducibility.
+#' @param code (deprecated)
+#' @param check (deprecated)
 #' @examples
 #' library(shiny)
-#' datasets <- teal.slice::init_filtered_data(
-#'   x = list(
-#'     iris = list(dataset = iris),
-#'     mtcars = list(dataset = mtcars, metadata = list(type = "training"))
-#'   )
-#' )
+#' datasets <- teal.slice::init_filtered_data(list(iris = iris, mtcars = mtcars))
 #' @export
-init_filtered_data <- function(x, join_keys, code, check) {
-  UseMethod("init_filtered_data")
-}
-
-#' @keywords internal
-#' @export
-init_filtered_data.TealData <- function(x, # nolint
-                                        join_keys = x$get_join_keys(),
-                                        code = x$get_code_class(),
-                                        check = x$get_check()) {
-  lifecycle::deprecate_warn(
-    when = "0.4.1",
-    "init_filtered_data(
-        x = 'constructor based on TealData is deprecated and will be removed soon.
-        Please use generic init_filtered_data and specify all arguments directly.'
-    )"
-  )
-  data_objects <- lapply(
-    x$get_datanames(),
-    function(dataname) {
-      dataset <- x$get_dataset(dataname)
-      list(
-        dataset = dataset$get_raw_data(),
-        metadata = dataset$get_metadata(),
-        label = dataset$get_dataset_label()
-      )
-    }
-  )
-  names(data_objects) <- x$get_datanames()
-
-  init_filtered_data(
-    x = data_objects,
-    join_keys = join_keys,
-    code = code,
-    check = check
-  )
-}
-
-#' @keywords internal
-#' @export
-init_filtered_data.default <- function(x, join_keys = teal.data::join_keys(), code, check) { # nolint
+init_filtered_data <- function(x, join_keys = teal.data::join_keys(), code, check) { # nolint
   checkmate::assert_list(x, any.missing = FALSE, names = "unique")
   checkmate::assert_class(join_keys, "join_keys")
+  if (!missing(code)) {
+    lifecycle::deprecate_stop(
+      "0.4.1",
+      "init_filtered_data(code = 'No longer supported')"
+    )
+  }
+  if (!missing(check)) {
+    lifecycle::deprecate_stop(
+      "0.4.1",
+      "init_filtered_data(check = 'No longer supported')"
+    )
+  }
   FilteredData$new(x, join_keys = join_keys)
-}
-
-#' Validate dataset arguments
-#'
-#' Validate dataset arguments
-#' @param dataset_args (`list`)\cr
-#'   containing the arguments except (`dataname`)
-#'   needed by `init_filtered_dataset`
-#' @param dataname (`character(1)`)\cr
-#'   the name of the `dataset` to be added to this object
-#' @keywords internal
-#' @return (`NULL` or raises an error)
-validate_dataset_args <- function(dataset_args, dataname) {
-  check_simple_name(dataname)
-  checkmate::assert_list(dataset_args, names = "unique")
-
-  allowed_names <- c("dataset", "label", "metadata")
-
-  checkmate::assert_subset(names(dataset_args), choices = allowed_names)
-  checkmate::assert_multi_class(dataset_args[["dataset"]], classes = c("data.frame", "MultiAssayExperiment"))
-  checkmate::assert_list(dataset_args[["metadata"]], names = "named", null.ok = TRUE)
-  checkmate::assert_character(dataset_args[["label"]], null.ok = TRUE, min.len = 0, max.len = 1)
 }
 
 #' Evaluate expression with meaningful message

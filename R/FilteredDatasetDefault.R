@@ -39,19 +39,15 @@ DefaultFilteredDataset <- R6::R6Class( # nolint
     #'
     #' @param label (`character`)\cr
     #'   Label to describe the dataset
-    #' @param metadata (named `list` or `NULL`) \cr
-    #'   Field containing metadata about the dataset. Each element of the list
-    #'   should be atomic and length one.
     initialize = function(dataset,
                           dataname,
                           keys = character(0),
                           parent_name = character(0),
                           parent = NULL,
                           join_keys = character(0),
-                          label = character(0),
-                          metadata = NULL) {
+                          label = character(0)) {
       checkmate::assert_data_frame(dataset)
-      super$initialize(dataset, dataname, keys, label, metadata)
+      super$initialize(dataset, dataname, keys, label)
 
       # overwrite filtered_data if there is relationship with parent dataset
       if (!is.null(parent)) {

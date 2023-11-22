@@ -11,8 +11,7 @@ init_filtered_dataset(
   parent_name = character(0),
   parent = reactive(dataset),
   join_keys = character(0),
-  label = attr(dataset, "label"),
-  metadata = NULL
+  label = attr(dataset, "label")
 )
 }
 \arguments{
@@ -39,10 +38,6 @@ then the names of the vector define the \code{parent} columns.}
 
 \item{label}{(\code{character})\cr
 Label to describe the dataset}
-
-\item{metadata}{(named \code{list} or \code{NULL}) \cr
-Field containing metadata about the dataset. Each element of the list
-should be atomic and length one.}
 }
 \description{
 Initializes \code{FilteredDataset}
@@ -53,25 +48,16 @@ at which point any code which relies on this exported function will need to be c
 }
 \examples{
 # DefaultFilteredDataset example
-iris_fd <- teal.slice:::init_filtered_dataset(
-  iris,
-  dataname = "iris",
-  metadata = list(type = "teal")
-)
+iris_fd <- teal.slice:::init_filtered_dataset(iris, dataname = "iris")
 app <- shinyApp(
   ui = fluidPage(
     iris_fd$ui_add(id = "add"),
     iris_fd$ui_active("dataset"),
-    verbatimTextOutput("call"),
-    verbatimTextOutput("metadata")
+    verbatimTextOutput("call")
   ),
   server = function(input, output, session) {
     iris_fd$srv_add(id = "add")
     iris_fd$srv_active(id = "dataset")
-
-    output$metadata <- renderText({
-      paste("Type =", iris_fd$get_metadata()$type)
-    })
 
     output$call <- renderText({
       paste(
@@ -88,20 +74,16 @@ if (interactive()) {
 # MAEFilteredDataset example
 library(MultiAssayExperiment)
 data(miniACC)
-MAE_fd <- teal.slice:::init_filtered_dataset(miniACC, "MAE", metadata = list(type = "MAE"))
+MAE_fd <- teal.slice:::init_filtered_dataset(miniACC, "MAE")
 app <- shinyApp(
   ui = fluidPage(
     MAE_fd$ui_add(id = "add"),
     MAE_fd$ui_active("dataset"),
-    verbatimTextOutput("call"),
-    verbatimTextOutput("metadata")
+    verbatimTextOutput("call")
   ),
   server = function(input, output, session) {
     MAE_fd$srv_add(id = "add")
     MAE_fd$srv_active(id = "dataset")
-    output$metadata <- renderText({
-      paste("Type =", MAE_fd$get_metadata()$type)
-    })
     output$call <- renderText({
       paste(
         vapply(MAE_fd$get_call(), deparse1, character(1), collapse = "\n"),

@@ -35,12 +35,7 @@
 #'
 #' @examples
 #' library(shiny)
-#' datasets <- teal.slice:::FilteredData$new(
-#'   list(
-#'     iris = list(dataset = iris),
-#'     mtcars = list(dataset = mtcars)
-#'   )
-#' )
+#' datasets <- teal.slice:::FilteredData$new(list(iris = iris, mtcars = mtcars))
 #'
 #' # get datanames
 #' datasets$datanames()
@@ -71,9 +66,17 @@ FilteredData <- R6::R6Class( # nolint
     #'
     initialize = function(data_objects, join_keys = teal.data::join_keys()) {
       checkmate::assert_list(data_objects, any.missing = FALSE, min.len = 0, names = "unique")
+      # unpack data.object from the nested list
+      data_objects <- lapply(data_objects, function(dataset) {
+        if (is.list(dataset) && "dataset" %in% names(dataset)) {
+          dataset$dataset
+        } else {
+          dataset
+        }
+      })
+
       # Note the internals of data_objects are checked in set_dataset
       checkmate::assert_class(join_keys, "join_keys")
-
       self$set_join_keys(join_keys)
       child_parent <- sapply(
         names(data_objects),
@@ -82,25 +85,11 @@ FilteredData <- R6::R6Class( # nolint
         simplify = FALSE
       )
       ordered_datanames <- topological_sort(child_parent)
+      ordered_datanames <- intersect(ordered_datanames, names(data_objects))
 
       for (dataname in ordered_datanames) {
         ds_object <- data_objects[[dataname]]
-        if (inherits(ds_object, c("data.frame", "MultiAssayExperiment"))) {
-          self$set_dataset(
-            data = ds_object,
-            dataname = dataname
-          )
-        } else {
-          # custom support for TealData object which pass metadata and label also
-          # see init_filtered_data.TealData
-          validate_dataset_args(ds_object, dataname)
-          self$set_dataset(
-            data = ds_object$dataset,
-            dataname = dataname,
-            metadata = ds_object$metadata,
-            label = ds_object$label
-          )
-        }
+        self$set_dataset(data = ds_object, dataname = dataname)
       }
 
       self$set_available_teal_slices(x = reactive(NULL))
@@ -218,18 +207,6 @@ FilteredData <- R6::R6Class( # nolint
     },
 
     #' @description
-    #' Gets metadata for a given dataset.
-    #'
-    #' @param dataname (`character(1)`) name of the dataset
-    #'
-    #' @return value of metadata for given data (or `NULL` if it does not exist)
-    #'
-    get_metadata = function(dataname) {
-      checkmate::assert_subset(dataname, self$datanames())
-      private$get_filtered_dataset(dataname)$get_metadata()
-    },
-
-    #' @description
     #' Get join keys between two datasets.
     #'
     #' @return (`join_keys`)
@@ -285,15 +262,11 @@ FilteredData <- R6::R6Class( # nolint
     #' @param dataname (`string`)\cr
     #'   the name of the `dataset` to be added to this object
     #'
-    #' @param metadata (named `list` or `NULL`) \cr
-    #'   Field containing metadata about the dataset. Each element of the list
-    #'   should be atomic and length one.
-    #'
-    #' @param label (`character(1)`)\cr
-    #'   Label to describe the dataset
     #' @return (`self`) invisibly this `FilteredData`
     #'
-    set_dataset = function(data, dataname, metadata = attr(data, "metadata"), label = attr(data, "label")) {
+    set_dataset = function(data, dataname) {
+      checkmate::assert_multi_class(data, classes = c("data.frame", "MultiAssayExperiment"))
+      checkmate::assert_string(dataname)
       logger::log_trace("FilteredData$set_dataset setting dataset, name: { dataname }")
       # to include it nicely in the Show R Code;
       # the UI also uses `datanames` in ids, so no whitespaces allowed
@@ -307,8 +280,6 @@ FilteredData <- R6::R6Class( # nolint
         private$filtered_datasets[[dataname]] <- init_filtered_dataset(
           dataset = data,
           dataname = dataname,
-          metadata = metadata,
-          label = label,
           keys = keys
         )
       } else {
@@ -320,9 +291,7 @@ FilteredData <- R6::R6Class( # nolint
           keys = keys,
           parent_name = parent_dataname,
           parent = reactive(self$get_data(parent_dataname, filtered = TRUE)),
-          join_keys = join_keys,
-          label = label,
-          metadata = metadata
+          join_keys = join_keys
         )
       }
 
@@ -396,11 +365,8 @@ FilteredData <- R6::R6Class( # nolint
     #' @examples
     #' utils::data(miniACC, package = "MultiAssayExperiment")
     #'
-    #' datasets <- teal.slice:::FilteredData$new(
-    #'   list(iris = list(dataset = iris),
-    #'        mae = list(dataset = miniACC)
-    #'   )
-    #' )
+    #' datasets <- teal.slice:::FilteredData$new(list(iris = iris, mae = miniACC))
+    #'
     #' fs <-
     #'   teal_slices(
     #'     teal_slice(dataname = "iris", varname = "Sepal.Length", selected = c(5.1, 6.4),
@@ -420,18 +386,6 @@ FilteredData <- R6::R6Class( # nolint
     set_filter_state = function(state) {
       shiny::isolate({
         logger::log_trace("{ class(self)[1] }$set_filter_state initializing")
-        if (!is.teal_slices(state)) {
-          warning(
-            paste(
-              "From FilteredData$set_filter_state:",
-              "Specifying filters as lists is obsolete and will be deprecated in the next release.",
-              "Please see ?set_filter_state and ?teal_slices for details."
-            ),
-            call. = FALSE
-          )
-          state <- list_to_teal_slices(state)
-        }
-
         checkmate::assert_class(state, "teal_slices")
         allow_add <- attr(state, "allow_add")
         if (!is.null(allow_add)) {
@@ -460,18 +414,6 @@ FilteredData <- R6::R6Class( # nolint
     #'
     remove_filter_state = function(state) {
       shiny::isolate({
-        if (!is.teal_slices(state)) {
-          warning(
-            paste(
-              "From FilteredData$remove_filter_state:",
-              "Specifying filters as lists is obsolete and will be deprecated in the next release.",
-              "Please see ?set_filter_state and ?teal_slices for details."
-            ),
-            call. = FALSE
-          )
-          state <- list_to_teal_slices(state)
-        }
-
         checkmate::assert_class(state, "teal_slices")
         datanames <- unique(vapply(state, "[[", character(1L), "dataname"))
         checkmate::assert_subset(datanames, self$datanames())

@@ -22,24 +22,20 @@ FilteredDataset <- R6::R6Class( # nolint
     #'   Vector with primary keys
     #' @param label (`character(1)`)\cr
     #'   Label to describe the dataset
-    #' @param metadata (named `list` or `NULL`) \cr
-    #'   Field containing metadata about the dataset. Each element of the list
     #'   should be atomic and length one.
-    initialize = function(dataset, dataname, keys = character(0), label = attr(dataset, "label"), metadata = NULL) {
+    initialize = function(dataset, dataname, keys = character(0), label = attr(dataset, "label")) {
       logger::log_trace("Instantiating { class(self)[1] }, dataname: { dataname }")
 
       # dataset assertion in child classes
       check_simple_name(dataname)
       checkmate::assert_character(keys, any.missing = FALSE)
       checkmate::assert_character(label, null.ok = TRUE)
-      checkmate::assert_list(metadata, names = "named", null.ok = TRUE)
 
       logger::log_trace("Instantiating { class(self)[1] }, dataname: { dataname }")
       private$dataset <- dataset
       private$dataname <- dataname
       private$keys <- keys
       private$label <- if (is.null(label)) character(0) else label
-      private$metadata <- metadata
 
       # function executing reactive call and returning data
       private$data_filtered_fun <- function(sid = "") {
@@ -177,13 +173,6 @@ FilteredDataset <- R6::R6Class( # nolint
       } else {
         private$dataset
       }
-    },
-
-    #' @description
-    #' Gets the metadata for the dataset in this `FilteredDataset`
-    #' @return named `list` or `NULL`
-    get_metadata = function() {
-      private$metadata
     },
 
     #' @description
@@ -396,7 +385,6 @@ FilteredDataset <- R6::R6Class( # nolint
     dataname = character(0),
     keys = character(0),
     label = character(0),
-    metadata = NULL,
 
     # Adds `FilterStates` to the `private$filter_states`.
     # `FilterStates` is added once for each element of the dataset.

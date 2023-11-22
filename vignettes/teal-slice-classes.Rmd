@@ -51,7 +51,7 @@ knitr::include_graphics("./images/filter_panel/filtered_data_init.jpg")
 
 
 As part of the `teal` workflow, `FilteredData`, `FilteredDataset`, and `FilterStates` are created instantly when the data is loaded and remain unchanged.
-One `FilteredData` object is initialized on `TealData`.
+One `FilteredData` object is initialized on on a list containing supported data object (`data.frame`, `MAE`).
 A `FilteredDataset` is initialized for each data set. One or more `FilterStates` are initialized, depending on the type of data set.
 
 On the other hand, a `FilterState` is initialized each time a new filter is added.
@@ -90,7 +90,7 @@ knitr::include_graphics("./images/filter_panel/class_details_filtered_dataset.jp
 
 `FilteredDataset` is a class that keeps unfiltered data and returns filtered data based on the filter call derived from the contained `FilterStates`.
 `FilteredDataset` class objects are initialized by `FilteredData`, one for each data set.
-`FilteredDataset` contains a single `TealDataset` object and one-to-many `FilterStates` depending on the type of that object.
+`FilteredDataset` contains a single data object and one-to-many `FilterStates` depending on the type of that object.
 `FilteredDataset` stores data set attributes, joins keys to other data sets, and also combines and executes the subsetting calls taken from `FilterStates`.
 
 The following `FilteredDataset` child classes are currently implemented:
