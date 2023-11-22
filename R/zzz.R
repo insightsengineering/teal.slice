@@ -43,6 +43,7 @@
   plotly::plot_ly
   shinycssloaders::withSpinner
   shinyWidgets::pickerOptions
+  teal.data::datanames
   teal.widgets::optionalSelectInput
 }
 
