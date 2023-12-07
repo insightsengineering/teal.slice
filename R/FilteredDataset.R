@@ -21,8 +21,7 @@ FilteredDataset <- R6::R6Class( # nolint
     #' @param keys optional, (`character`)\cr
     #'   Vector with primary keys
     #' @param label (`character(1)`)\cr
-    #'   Label to describe the dataset
-    #'   should be atomic and length one.
+    #'   Label to describe the dataset.
     initialize = function(dataset, dataname, keys = character(0), label = attr(dataset, "label")) {
       logger::log_trace("Instantiating { class(self)[1] }, dataname: { dataname }")
 

@@ -61,8 +61,7 @@ A given name for the dataset it may not contain spaces}
 Vector with primary keys}
 
 \item{\code{label}}{(\code{character(1)})\cr
-Label to describe the dataset
-should be atomic and length one.}
+Label to describe the dataset.}
 }
 \if{html}{\out{</div>}}
 }
