@@ -2,7 +2,7 @@
 
 ### Enhancements
 
-* Simplified `init_filtered_data` to accept a named list of datasets. `init_filtered_data` doesn't support a list containing `dataset`, `metadata`, `datalabel` and `code` is no longer supported.
+* Simplified `init_filtered_data` to accept a named list of datasets. `init_filtered_data` does not currently handle a list containing `dataset`, `metadata`, `datalabel` and `code`.
 
 ### Breaking changes
 
