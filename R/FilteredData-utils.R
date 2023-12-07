@@ -1,12 +1,7 @@
 #' Initialize `FilteredData`
 #'
 #' Initialize `FilteredData`
-#' @param x (named `list` or `TealData`) In case of `TealData` see [teal.data::teal_data()].
-#'  If the list is provided, it should contain `list`(s) containing following fields:
-#' - `dataset` data object object supported by [`FilteredDataset`].
-#' - `keys` (optional) primary keys.
-#' - `datalabel` (optional) label describing the `dataset`.
-#' - `parent` (optional) which `dataset` is a parent of this one.
+#' @param x (named `list`) of datasets.
 #' @param join_keys (`join_keys`) see [teal.data::join_keys()].
 #' @param code (deprecated)
 #' @param check (deprecated)

@@ -7,14 +7,7 @@
 init_filtered_data(x, join_keys = teal.data::join_keys(), code, check)
 }
 \arguments{
-\item{x}{(named \code{list} or \code{TealData}) In case of \code{TealData} see \code{\link[teal.data:teal_data]{teal.data::teal_data()}}.
-If the list is provided, it should contain \code{list}(s) containing following fields:
-\itemize{
-\item \code{dataset} data object object supported by \code{\link{FilteredDataset}}.
-\item \code{keys} (optional) primary keys.
-\item \code{datalabel} (optional) label describing the \code{dataset}.
-\item \code{parent} (optional) which \code{dataset} is a parent of this one.
-}}
+\item{x}{(named \code{list}) of datasets.}
 
 \item{join_keys}{(\code{join_keys}) see \code{\link[teal.data:join_keys]{teal.data::join_keys()}}.}
 
