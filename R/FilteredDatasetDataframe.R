@@ -15,6 +15,8 @@
 DataframeFilteredDataset <- R6::R6Class( # nolint
   classname = "DataframeFilteredDataset",
   inherit = FilteredDataset,
+
+  ## Public Fields ----
   public = list(
 
     #' @description
@@ -262,6 +264,8 @@ DataframeFilteredDataset <- R6::R6Class( # nolint
       }
     }
   ),
+
+  ## Private Fields ----
   private = list(
     parent_name = character(0),
     join_keys = character(0)
