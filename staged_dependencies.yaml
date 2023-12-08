@@ -16,9 +16,6 @@ downstream_repos:
   insightsengineering/teal:
     repo: insightsengineering/teal
     host: https://github.com
-  insightsengineering/teal.transform:
-    repo: insightsengineering/teal.transform
-    host: https://github.com
   insightsengineering/teal.modules.general:
     repo: insightsengineering/teal.modules.general
     host: https://github.com
