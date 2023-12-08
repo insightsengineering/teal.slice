@@ -27,7 +27,7 @@
     
     <a class="navbar-brand me-2" href="../index.html">teal.slice</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.4.0.9025</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.4.0.9026</small>
 
     <div style="width: 140px; margin-left: 0.5rem;"> <small class="nav-text text-muted me-auto">part of</small> <img src="https://github.com/insightsengineering/hex-stickers/blob/main/PNG/nest.png?raw=true" alt="NEST" style="height: 30px;"><a href="https://pharmaverse.org/" class="external-link"><img src="https://github.com/insightsengineering/hex-stickers/blob/main/PNG/pharmaverse.png?raw=true" alt="pharmaverse" style="height: 28px;"></a> </div>
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -52,16 +52,6 @@
 <li class="nav-item">
   <a class="nav-link" href="../news/index.html">Changelog</a>
 </li>
-<!-- start dropdown for versions --> <li class="nav-item dropdown">
-        <a href="#" class="nav-link dropdown-toggle"
-          data-bs-toggle="dropdown" role="button"
-          aria-expanded="false" aria-haspopup="true"
-          id="dropdown-versions">Versions</a> <div class="dropdown-menu" aria-labelledby="dropdown-versions"> <a class="dropdown-item" data-toggle="tooltip" title="" href="https://insightsengineering.github.io/teal.slice/main">main</a>
-<a class="dropdown-item" data-toggle="tooltip" title="" href="https://insightsengineering.github.io/teal.slice/latest-tag">latest-tag</a>
-<a class="dropdown-item" data-toggle="tooltip" title="" href="https://insightsengineering.github.io/teal.slice/v0.4.0">v0.4.0</a>
-<a class="dropdown-item" data-toggle="tooltip" title="" href="https://insightsengineering.github.io/teal.slice/v0.3.0">v0.3.0</a>
-<a class="dropdown-item" data-toggle="tooltip" title="" href="https://insightsengineering.github.io/teal.slice/v0.2.0">v0.2.0</a> </div></li>
-<!-- end dropdown for versions -->
 <li class="nav-item dropdown">
   <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown" role="button" aria-expanded="false" aria-haspopup="true" id="dropdown-reports">Reports</a>
   <div class="dropdown-menu" aria-labelledby="dropdown-reports">
@@ -152,10 +142,11 @@ to store filter information.</p>
 <p>As part of the <code>teal</code> workflow, <code>FilteredData</code>,
 <code>FilteredDataset</code>, and <code>FilterStates</code> are created
 instantly when the data is loaded and remain unchanged. One
-<code>FilteredData</code> object is initialized on
-<code>TealData</code>. A <code>FilteredDataset</code> is initialized for
-each data set. One or more <code>FilterStates</code> are initialized,
-depending on the type of data set.</p>
+<code>FilteredData</code> object is initialized on on a list containing
+supported data object (<code>data.frame</code>, <code>MAE</code>). A
+<code>FilteredDataset</code> is initialized for each data set. One or
+more <code>FilterStates</code> are initialized, depending on the type of
+data set.</p>
 <p>On the other hand, a <code>FilterState</code> is initialized each
 time a new filter is added. The values of the <code>FilterState</code>
 can be changed, and it can also be removed and added again.</p>
@@ -206,12 +197,11 @@ functions such as <code>get_filter_state</code>,
 and returns filtered data based on the filter call derived from the
 contained <code>FilterStates</code>. <code>FilteredDataset</code> class
 objects are initialized by <code>FilteredData</code>, one for each data
-set. <code>FilteredDataset</code> contains a single
-<code>TealDataset</code> object and one-to-many
-<code>FilterStates</code> depending on the type of that object.
-<code>FilteredDataset</code> stores data set attributes, joins keys to
-other data sets, and also combines and executes the subsetting calls
-taken from <code>FilterStates</code>.</p>
+set. <code>FilteredDataset</code> contains a single data object and
+one-to-many <code>FilterStates</code> depending on the type of that
+object. <code>FilteredDataset</code> stores data set attributes, joins
+keys to other data sets, and also combines and executes the subsetting
+calls taken from <code>FilterStates</code>.</p>
 <p>The following <code>FilteredDataset</code> child classes are
 currently implemented:</p>
 <ul>

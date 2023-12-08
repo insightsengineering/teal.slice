@@ -169,9 +169,6 @@
     <loc>https://insightsengineering.github.io/teal.slice/reference/justify_json.html</loc>
   </url>
   <url>
-    <loc>https://insightsengineering.github.io/teal.slice/reference/list_to_teal_slices.html</loc>
-  </url>
-  <url>
     <loc>https://insightsengineering.github.io/teal.slice/reference/make_c_call.html</loc>
   </url>
   <url>
@@ -200,9 +197,6 @@
   </url>
   <url>
     <loc>https://insightsengineering.github.io/teal.slice/reference/trim_lines_json.html</loc>
-  </url>
-  <url>
-    <loc>https://insightsengineering.github.io/teal.slice/reference/validate_dataset_args.html</loc>
   </url>
   <url>
     <loc>https://insightsengineering.github.io/teal.slice/reference/variable_types.html</loc>
