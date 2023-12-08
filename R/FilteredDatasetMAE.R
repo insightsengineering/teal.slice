@@ -18,16 +18,12 @@ MAEFilteredDataset <- R6::R6Class( # nolint
     #'   vector with primary keys
     #' @param label (`character`)\cr
     #'   label to describe the dataset
-    #' @param metadata (named `list` or `NULL`) \cr
-    #'   field containing metadata about the dataset;
-    #'   each element of the list must be atomic and length one
-    #'
-    initialize = function(dataset, dataname, keys = character(0), label = character(0), metadata = NULL) {
+    initialize = function(dataset, dataname, keys = character(0), label = character(0)) {
       if (!requireNamespace("MultiAssayExperiment", quietly = TRUE)) {
         stop("Cannot load MultiAssayExperiment - please install the package or restart your session.")
       }
       checkmate::assert_class(dataset, "MultiAssayExperiment")
-      super$initialize(dataset, dataname, keys, label, metadata)
+      super$initialize(dataset, dataname, keys, label)
       experiment_names <- names(dataset)
 
       # subsetting by subjects means subsetting by colData(MAE)

@@ -88,10 +88,6 @@ set_filter_state <- function(datasets, filter) {
     checkmate::check_class(filter, "teal_slices"),
     checkmate::check_list(filter, min.len = 0, null.ok = TRUE)
   )
-  if (!is.teal_slices(filter)) {
-    filter <- list_to_teal_slices(filter)
-  }
-
   datasets$set_filter_state(filter)
   invisible(NULL)
 }

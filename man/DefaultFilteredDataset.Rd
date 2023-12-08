@@ -60,7 +60,6 @@ shiny::isolate(dataset$get_filter_state())
 <li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilteredDataset" data-id="get_filter_count"><a href='../../teal.slice/html/FilteredDataset.html#method-FilteredDataset-get_filter_count'><code>teal.slice::FilteredDataset$get_filter_count()</code></a></span></li>
 <li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilteredDataset" data-id="get_filter_state"><a href='../../teal.slice/html/FilteredDataset.html#method-FilteredDataset-get_filter_state'><code>teal.slice::FilteredDataset$get_filter_state()</code></a></span></li>
 <li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilteredDataset" data-id="get_keys"><a href='../../teal.slice/html/FilteredDataset.html#method-FilteredDataset-get_keys'><code>teal.slice::FilteredDataset$get_keys()</code></a></span></li>
-<li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilteredDataset" data-id="get_metadata"><a href='../../teal.slice/html/FilteredDataset.html#method-FilteredDataset-get_metadata'><code>teal.slice::FilteredDataset$get_metadata()</code></a></span></li>
 <li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilteredDataset" data-id="print"><a href='../../teal.slice/html/FilteredDataset.html#method-FilteredDataset-print'><code>teal.slice::FilteredDataset$print()</code></a></span></li>
 <li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilteredDataset" data-id="srv_active"><a href='../../teal.slice/html/FilteredDataset.html#method-FilteredDataset-srv_active'><code>teal.slice::FilteredDataset$srv_active()</code></a></span></li>
 <li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilteredDataset" data-id="srv_add"><a href='../../teal.slice/html/FilteredDataset.html#method-FilteredDataset-srv_add'><code>teal.slice::FilteredDataset$srv_add()</code></a></span></li>
@@ -81,8 +80,7 @@ Initializes this \code{DefaultFilteredDataset} object
   parent_name = character(0),
   parent = NULL,
   join_keys = character(0),
-  label = character(0),
-  metadata = NULL
+  label = character(0)
 )}\if{html}{\out{</div>}}
 }
 
@@ -113,10 +111,6 @@ then the names of the vector define the \code{parent} columns.}
 
 \item{\code{label}}{(\code{character})\cr
 Label to describe the dataset}
-
-\item{\code{metadata}}{(named \code{list} or \code{NULL}) \cr
-Field containing metadata about the dataset. Each element of the list
-should be atomic and length one.}
 }
 \if{html}{\out{</div>}}
 }

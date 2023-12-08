@@ -43,12 +43,7 @@ Common arguments are:
 }
 \examples{
 library(shiny)
-datasets <- teal.slice:::FilteredData$new(
-  list(
-    iris = list(dataset = iris),
-    mtcars = list(dataset = mtcars)
-  )
-)
+datasets <- teal.slice:::FilteredData$new(list(iris = iris, mtcars = mtcars))
 
 # get datanames
 datasets$datanames()
@@ -73,11 +68,8 @@ isolate(datasets$get_call("mtcars"))
 
 utils::data(miniACC, package = "MultiAssayExperiment")
 
-datasets <- teal.slice:::FilteredData$new(
-  list(iris = list(dataset = iris),
-       mae = list(dataset = miniACC)
-  )
-)
+datasets <- teal.slice:::FilteredData$new(list(iris = iris, mae = miniACC))
+
 fs <-
   teal_slices(
     teal_slice(dataname = "iris", varname = "Sepal.Length", selected = c(5.1, 6.4),
@@ -106,7 +98,6 @@ shiny::isolate(datasets$get_filter_state())
 \item \href{#method-FilteredData-get_available_teal_slices}{\code{FilteredData$get_available_teal_slices()}}
 \item \href{#method-FilteredData-get_call}{\code{FilteredData$get_call()}}
 \item \href{#method-FilteredData-get_data}{\code{FilteredData$get_data()}}
-\item \href{#method-FilteredData-get_metadata}{\code{FilteredData$get_metadata()}}
 \item \href{#method-FilteredData-get_join_keys}{\code{FilteredData$get_join_keys()}}
 \item \href{#method-FilteredData-get_filter_overview}{\code{FilteredData$get_filter_overview()}}
 \item \href{#method-FilteredData-get_keys}{\code{FilteredData$get_keys()}}
@@ -298,26 +289,6 @@ For \code{filtered = FALSE}, the original data set with
 }
 }
 \if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-FilteredData-get_metadata"></a>}}
-\if{latex}{\out{\hypertarget{method-FilteredData-get_metadata}{}}}
-\subsection{Method \code{get_metadata()}}{
-Gets metadata for a given dataset.
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{FilteredData$get_metadata(dataname)}\if{html}{\out{</div>}}
-}
-
-\subsection{Arguments}{
-\if{html}{\out{<div class="arguments">}}
-\describe{
-\item{\code{dataname}}{(\code{character(1)}) name of the dataset}
-}
-\if{html}{\out{</div>}}
-}
-\subsection{Returns}{
-value of metadata for given data (or \code{NULL} if it does not exist)
-}
-}
-\if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-FilteredData-get_join_keys"></a>}}
 \if{latex}{\out{\hypertarget{method-FilteredData-get_join_keys}{}}}
 \subsection{Method \code{get_join_keys()}}{
@@ -379,12 +350,7 @@ Get keys for the dataset.
 \subsection{Method \code{set_dataset()}}{
 Adds a dataset to this \code{FilteredData}.
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{FilteredData$set_dataset(
-  data,
-  dataname,
-  metadata = attr(data, "metadata"),
-  label = attr(data, "label")
-)}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{FilteredData$set_dataset(data, dataname)}\if{html}{\out{</div>}}
 }
 
 \subsection{Arguments}{
@@ -395,13 +361,6 @@ data to be filtered.}
 
 \item{\code{dataname}}{(\code{string})\cr
 the name of the \code{dataset} to be added to this object}
-
-\item{\code{metadata}}{(named \code{list} or \code{NULL}) \cr
-Field containing metadata about the dataset. Each element of the list
-should be atomic and length one.}
-
-\item{\code{label}}{(\code{character(1)})\cr
-Label to describe the dataset}
 }
 \if{html}{\out{</div>}}
 }
@@ -514,11 +473,8 @@ specification by list will be deprecated soon}
 \if{html}{\out{<div class="r example copy">}}
 \preformatted{utils::data(miniACC, package = "MultiAssayExperiment")
 
-datasets <- teal.slice:::FilteredData$new(
-  list(iris = list(dataset = iris),
-       mae = list(dataset = miniACC)
-  )
-)
+datasets <- teal.slice:::FilteredData$new(list(iris = iris, mae = miniACC))
+
 fs <-
   teal_slices(
     teal_slice(dataname = "iris", varname = "Sepal.Length", selected = c(5.1, 6.4),

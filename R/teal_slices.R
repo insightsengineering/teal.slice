@@ -228,7 +228,6 @@ format.teal_slices <- function(x, show_all = FALSE, trim_lines = TRUE, ...) {
   jsonify(slices_list, trim_lines)
 }
 
-
 #' @rdname teal_slices
 #' @export
 #' @keywords internal
@@ -253,90 +252,6 @@ setdiff_teal_slices <- function(x, y) {
     x
   )
 }
-
-
-#' Convert nested list to `teal_slices`.
-#'
-#' Helper function for converting old style filter specification (nested list) to the new one (`teal_slices`).
-#'
-#' This function is used internally during deprecation of the old filter panel.
-#'
-#' @export
-#' @keywords internal
-#'
-list_to_teal_slices <- function(x) { # nolint
-  checkmate::assert_list(x, names = "named")
-  is_bottom <- function(x) {
-    isTRUE(is.list(x) && any(names(x) %in% c("selected", "keep_na", "keep_inf"))) ||
-      identical(x, list()) ||
-      is.atomic(x)
-  }
-  make_args <- function(object, dataname, varname, experiment = NULL, arg = NULL) {
-    args <- list(
-      dataname = dataname,
-      varname = varname
-    )
-    if (!is.null(experiment)) args$experiment <- experiment
-    if (!is.null(arg)) args$arg <- arg
-    if (is.list(object)) {
-      args <- c(args, object)
-    } else if (is.atomic(object)) {
-      args$selected <- object
-    }
-    args
-  }
-  slices <- vector("list")
-
-  for (dataname in names(x)) {
-    item <- x[[dataname]]
-    for (name_i in names(item)) {
-      subitem <- item[[name_i]]
-      if (is_bottom(subitem)) {
-        args <- make_args(
-          subitem,
-          dataname = dataname,
-          varname = name_i
-        )
-        slices <- c(slices, list(as.teal_slice(args)))
-      } else {
-        # MAE zone
-        for (name_ii in names(subitem)) {
-          subsubitem <- subitem[[name_ii]]
-          if (is_bottom(subsubitem)) {
-            args <- make_args(
-              subsubitem,
-              dataname = dataname,
-              experiment = if (name_i != "subjects") name_i,
-              varname = name_ii
-            )
-            slices <- c(slices, list(as.teal_slice(args)))
-          } else {
-            for (name_iii in names(subsubitem)) {
-              subsubsubitem <- subsubitem[[name_iii]]
-              if (is_bottom(subsubsubitem)) {
-                args <- make_args(
-                  subsubsubitem,
-                  dataname = dataname,
-                  experiment = name_i,
-                  arg = name_ii,
-                  varname = name_iii
-                )
-                slices <- c(slices, list(as.teal_slice(args)))
-              }
-            }
-          }
-        }
-      }
-    }
-  }
-
-  if (length(slices) == 0L && length(x) != 0L) {
-    stop("conversion to filter_slices failed")
-  }
-
-  do.call(teal_slices, c(slices, list(include_varnames = attr(x, "filterable"))))
-}
-
 
 #' Recursively coalesce list elements.
 #'
