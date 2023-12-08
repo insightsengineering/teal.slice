@@ -938,7 +938,7 @@ FilteredData <- R6::R6Class( # nolint
     #'
     remove_all_filter_states = function(datanames) {
       warning("FilteredData$remove_all_filter_states is deprecated, please use FilteredData$clear_filter_states.")
-      self$clear_filter_states(dataname)
+      self$clear_filter_states(datanames)
     }
   ),
 
