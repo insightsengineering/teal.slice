@@ -254,7 +254,7 @@ FilteredData <- R6::R6Class( # nolint
     #' If this data has a parent specified in the `join_keys` object stored in `private$join_keys`
     #' then created `FilteredDataset` (child) gets linked with other `FilteredDataset` (parent).
     #' "Child" dataset return filtered data then dependent on the reactive filtered data of the
-    #' "parent". See more in documentation of `parent` argument in `FilteredDatasetDefault` constructor.
+    #' "parent". See more in documentation of `parent` argument in `DataframeFilteredDataset` constructor.
     #'
     #' @param data (`data.frame`, `MultiAssayExperiment`)\cr
     #'   data to be filtered.

@@ -2,7 +2,7 @@
 #'
 #' @keywords internal
 #' @examples
-#' # DefaultFilteredDataset example
+#' # DataframeFilteredDataset example
 #' iris_fd <- teal.slice:::init_filtered_dataset(iris, dataname = "iris")
 #' app <- shinyApp(
 #'   ui = fluidPage(
@@ -89,7 +89,7 @@ init_filtered_dataset.data.frame <- function(dataset, # nolint
                                              parent = NULL,
                                              join_keys = character(0),
                                              label = attr(dataset, "label")) {
-  DefaultFilteredDataset$new(
+  DataframeFilteredDataset$new(
     dataset = dataset,
     dataname = dataname,
     keys = keys,
