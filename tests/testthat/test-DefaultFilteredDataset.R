@@ -50,7 +50,7 @@ testthat::test_that("clear_filter_state returns NULL with a warning", {
   )
 })
 # get_filter_overview ----
-testthat::test_that("GET_FILTER_OVERVIEW returns NULL with a warning", {
+testthat::test_that("get_filter_overview returns NULL with a warning", {
   fds <- DefaultFilteredDataset$new(letters, "character")
   testthat::expect_null(
     fds$get_filter_overview()
