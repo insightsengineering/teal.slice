@@ -6,14 +6,8 @@ DefaultFilteredDataset <- R6::R6Class(
 
   public = list(
 
-    initialize = function(dataset,
-                          dataname,
-                          keys = character(0),
-                          parent_name = character(0),
-                          parent = NULL,
-                          join_keys = character(0),
-                          label = character(0)) {
-      super$initialize(dataset, dataname)
+    initialize = function(dataset, dataname, label = character(0)) {
+      super$initialize(dataset = dataset, dataname = dataname, label = label)
     },
 
     format = function(show_all, trim_lines) {

@@ -124,7 +124,7 @@ init_filtered_dataset.MultiAssayExperiment <- function(dataset, # nolint
 #' @export
 init_filtered_dataset.default <- function(dataset, # nolint
                                           dataname,
-                                          keys = character(0),
+                                          keys, # ignored
                                           parent_name, # ignored
                                           parent, # ignored
                                           join_keys, # ignored
@@ -132,10 +132,6 @@ init_filtered_dataset.default <- function(dataset, # nolint
   DefaultFilteredDataset$new(
     dataset = dataset,
     dataname = dataname,
-    keys = keys,
-    parent_name = parent_name,
-    parent = parent,
-    join_keys = join_keys,
     label = label
   )
 }
