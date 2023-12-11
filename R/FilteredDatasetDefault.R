@@ -53,7 +53,7 @@ DefaultFilteredDataset <- R6::R6Class(
     #' @param state (`teal_slices`) for method consistency, ignored
     #' @return `NULL`, invisibly.
     set_filter_state = function(state) {
-      warning("DefaultFilterState cannnot set state")
+      warning("DefaultFilterState cannot set state")
       invisible(NULL)
     },
     #' @param force (`logical`) for method consistency, ignored
