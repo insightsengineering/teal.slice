@@ -12,7 +12,7 @@ Class to encapsulate filtered datasets"><!-- mathjax --><script src="https://cdn
     
     <a class="navbar-brand me-2" href="../index.html">teal.slice</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.4.0.9026</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.4.0.9028</small>
 
     <div style="width: 140px; margin-left: 0.5rem;"> <small class="nav-text text-muted me-auto">part of</small> <img src="https://github.com/insightsengineering/hex-stickers/blob/main/PNG/nest.png?raw=true" alt="NEST" style="height: 30px;"><a href="https://pharmaverse.org/" class="external-link"><img src="https://github.com/insightsengineering/hex-stickers/blob/main/PNG/pharmaverse.png?raw=true" alt="pharmaverse" style="height: 28px;"></a> </div>
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -36,16 +36,6 @@ Class to encapsulate filtered datasets"><!-- mathjax --><script src="https://cdn
 <li class="nav-item">
   <a class="nav-link" href="../news/index.html">Changelog</a>
 </li>
-<!-- start dropdown for versions --> <li class="nav-item dropdown">
-        <a href="#" class="nav-link dropdown-toggle"
-          data-bs-toggle="dropdown" role="button"
-          aria-expanded="false" aria-haspopup="true"
-          id="dropdown-versions">Versions</a> <div class="dropdown-menu" aria-labelledby="dropdown-versions"> <a class="dropdown-item" data-toggle="tooltip" title="" href="https://insightsengineering.github.io/teal.slice/main">main</a>
-<a class="dropdown-item" data-toggle="tooltip" title="" href="https://insightsengineering.github.io/teal.slice/latest-tag">latest-tag</a>
-<a class="dropdown-item" data-toggle="tooltip" title="" href="https://insightsengineering.github.io/teal.slice/v0.4.0">v0.4.0</a>
-<a class="dropdown-item" data-toggle="tooltip" title="" href="https://insightsengineering.github.io/teal.slice/v0.3.0">v0.3.0</a>
-<a class="dropdown-item" data-toggle="tooltip" title="" href="https://insightsengineering.github.io/teal.slice/v0.2.0">v0.2.0</a> </div></li>
-<!-- end dropdown for versions -->
 <li class="nav-item dropdown">
   <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown" role="button" aria-expanded="false" aria-haspopup="true" id="dropdown-reports">Reports</a>
   <div class="dropdown-menu" aria-labelledby="dropdown-reports">
@@ -134,14 +124,6 @@ Other variables cannot be used for filtering the data in this class.</p></li>
 <li><p><a href="#method-FilteredData-srv_add"><code>FilteredData$srv_add()</code></a></p></li>
 <li><p><a href="#method-FilteredData-ui_overview"><code>FilteredData$ui_overview()</code></a></p></li>
 <li><p><a href="#method-FilteredData-srv_overview"><code>FilteredData$srv_overview()</code></a></p></li>
-<li><p><a href="#method-FilteredData-handle_active_datanames"><code>FilteredData$handle_active_datanames()</code></a></p></li>
-<li><p><a href="#method-FilteredData-get_varlabels"><code>FilteredData$get_varlabels()</code></a></p></li>
-<li><p><a href="#method-FilteredData-get_varnames"><code>FilteredData$get_varnames()</code></a></p></li>
-<li><p><a href="#method-FilteredData-get_filterable_datanames"><code>FilteredData$get_filterable_datanames()</code></a></p></li>
-<li><p><a href="#method-FilteredData-get_filterable_varnames"><code>FilteredData$get_filterable_varnames()</code></a></p></li>
-<li><p><a href="#method-FilteredData-set_filterable_varnames"><code>FilteredData$set_filterable_varnames()</code></a></p></li>
-<li><p><a href="#method-FilteredData-get_formatted_filter_state"><code>FilteredData$get_formatted_filter_state()</code></a></p></li>
-<li><p><a href="#method-FilteredData-remove_all_filter_states"><code>FilteredData$remove_all_filter_states()</code></a></p></li>
 <li><p><a href="#method-FilteredData-clone"><code>FilteredData$clone()</code></a></p></li>
 </ul></div><p></p><hr><a id="method-FilteredData-new"></a><div class="section">
 <h3 id="method-new-">Method <code><a href="https://rdrr.io/r/methods/new.html" class="external-link">new()</a></code><a class="anchor" aria-label="anchor" href="#method-new-"></a></h3>
@@ -470,9 +452,7 @@ then created <code>FilteredDataset</code> (child) gets linked with other <code>F
 <div class="section">
 <h4 id="arguments-11">Arguments<a class="anchor" aria-label="anchor" href="#arguments-11"></a></h4>
 <p></p><div class="arguments"><dl><dt><code>state</code></dt>
-<dd><p>either a <code>named list</code> list of filter selections
-or a <code>teal_slices</code> object<br>
-specification by list will be deprecated soon</p></dd>
+<dd><p>(<code>teal_slices</code>) object</p></dd>
 
 
 </dl><p></p></div>
@@ -760,154 +740,15 @@ panel will be hidden.</p></dd>
 <p><code>moduleServer</code> function which returns <code>NULL</code></p>
 </div>
 
-</div><p></p><hr><a id="method-FilteredData-handle_active_datanames"></a><div class="section">
-<h3 id="method-handle-active-datanames-">Method <code>handle_active_datanames()</code><a class="anchor" aria-label="anchor" href="#method-handle-active-datanames-"></a></h3>
-<p>Method is deprecated. Provide resolved <code>active_datanames</code> to <code>srv_filter_panel</code></p><div class="section">
-<h4 id="usage-26">Usage<a class="anchor" aria-label="anchor" href="#usage-26"></a></h4>
-<p></p><div class="r"><div class="sourceCode"><pre><code><span><span class="va">FilteredData</span><span class="op">$</span><span class="fu">handle_active_datanames</span><span class="op">(</span><span class="va">datanames</span><span class="op">)</span></span></code></pre></div><p></p></div>
-</div>
-
-<div class="section">
-<h4 id="arguments-22">Arguments<a class="anchor" aria-label="anchor" href="#arguments-22"></a></h4>
-<p></p><div class="arguments"><dl><dt><code>datanames</code></dt>
-<dd><p><code>character vector</code> <code>datanames</code> to pick</p></dd>
-
-
-</dl><p></p></div>
-</div>
-<div class="section">
-<h4 id="returns-22">Returns<a class="anchor" aria-label="anchor" href="#returns-22"></a></h4>
-<p>the intersection of <code>self$datanames()</code> and <code>datanames</code></p>
-</div>
-
-</div><p></p><hr><a id="method-FilteredData-get_varlabels"></a><div class="section">
-<h3 id="method-get-varlabels-">Method <code>get_varlabels()</code><a class="anchor" aria-label="anchor" href="#method-get-varlabels-"></a></h3>
-<p>Method is deprecated. Please extract column labels directly from the data.</p><div class="section">
-<h4 id="usage-27">Usage<a class="anchor" aria-label="anchor" href="#usage-27"></a></h4>
-<p></p><div class="r"><div class="sourceCode"><pre><code><span><span class="va">FilteredData</span><span class="op">$</span><span class="fu">get_varlabels</span><span class="op">(</span><span class="va">dataname</span>, variables <span class="op">=</span> <span class="cn">NULL</span><span class="op">)</span></span></code></pre></div><p></p></div>
-</div>
-
-<div class="section">
-<h4 id="arguments-23">Arguments<a class="anchor" aria-label="anchor" href="#arguments-23"></a></h4>
-<p></p><div class="arguments"><dl><dt><code>dataname</code></dt>
-<dd><p>(<code>character(1)</code>) name of the dataset</p></dd>
-
-
-<dt><code>variables</code></dt>
-<dd><p>(<code>character</code>) variables to get labels for;
-if <code>NULL</code>, for all variables in data</p></dd>
-
-
-</dl><p></p></div>
-</div>
-
-</div><p></p><hr><a id="method-FilteredData-get_varnames"></a><div class="section">
-<h3 id="method-get-varnames-">Method <code>get_varnames()</code><a class="anchor" aria-label="anchor" href="#method-get-varnames-"></a></h3>
-<p>Method is deprecated, Please extract variable names directly from the data instead</p><div class="section">
-<h4 id="usage-28">Usage<a class="anchor" aria-label="anchor" href="#usage-28"></a></h4>
-<p></p><div class="r"><div class="sourceCode"><pre><code><span><span class="va">FilteredData</span><span class="op">$</span><span class="fu">get_varnames</span><span class="op">(</span><span class="va">dataname</span><span class="op">)</span></span></code></pre></div><p></p></div>
-</div>
-
-<div class="section">
-<h4 id="arguments-24">Arguments<a class="anchor" aria-label="anchor" href="#arguments-24"></a></h4>
-<p></p><div class="arguments"><dl><dt><code>dataname</code></dt>
-<dd><p>(<code>character</code>) the name of the dataset</p></dd>
-
-
-</dl><p></p></div>
-</div>
-
-</div><p></p><hr><a id="method-FilteredData-get_filterable_datanames"></a><div class="section">
-<h3 id="method-get-filterable-datanames-">Method <code>get_filterable_datanames()</code><a class="anchor" aria-label="anchor" href="#method-get-filterable-datanames-"></a></h3>
-<p>Method is deprecated, please use <code>self$datanames()</code> instead</p><div class="section">
-<h4 id="usage-29">Usage<a class="anchor" aria-label="anchor" href="#usage-29"></a></h4>
-<p></p><div class="r"><div class="sourceCode"><pre><code><span><span class="va">FilteredData</span><span class="op">$</span><span class="fu">get_filterable_datanames</span><span class="op">(</span><span class="op">)</span></span></code></pre></div><p></p></div>
-</div>
-
-<div class="section">
-<h4 id="arguments-25">Arguments<a class="anchor" aria-label="anchor" href="#arguments-25"></a></h4>
-<p></p><div class="arguments"><dl><dt><code>dataname</code></dt>
-<dd><p>(<code>character</code> vector) names of the dataset</p></dd>
-
-
-</dl><p></p></div>
-</div>
-
-</div><p></p><hr><a id="method-FilteredData-get_filterable_varnames"></a><div class="section">
-<h3 id="method-get-filterable-varnames-">Method <code>get_filterable_varnames()</code><a class="anchor" aria-label="anchor" href="#method-get-filterable-varnames-"></a></h3>
-<p>Method is deprecated, please use <code>self$get_filter_state()</code> and retain <code>attr(, "filterable_varnames")</code> instead.</p><div class="section">
-<h4 id="usage-30">Usage<a class="anchor" aria-label="anchor" href="#usage-30"></a></h4>
-<p></p><div class="r"><div class="sourceCode"><pre><code><span><span class="va">FilteredData</span><span class="op">$</span><span class="fu">get_filterable_varnames</span><span class="op">(</span><span class="va">dataname</span><span class="op">)</span></span></code></pre></div><p></p></div>
-</div>
-
-<div class="section">
-<h4 id="arguments-26">Arguments<a class="anchor" aria-label="anchor" href="#arguments-26"></a></h4>
-<p></p><div class="arguments"><dl><dt><code>dataname</code></dt>
-<dd><p>(<code>character(1)</code>) name of the dataset</p></dd>
-
-
-</dl><p></p></div>
-</div>
-
-</div><p></p><hr><a id="method-FilteredData-set_filterable_varnames"></a><div class="section">
-<h3 id="method-set-filterable-varnames-">Method <code>set_filterable_varnames()</code><a class="anchor" aria-label="anchor" href="#method-set-filterable-varnames-"></a></h3>
-<p>Method is deprecated, please use <code>self$set_filter_state</code> and <code><a href="teal_slices.html">teal_slices()</a></code> with <code>include_varnames</code> instead.</p><div class="section">
-<h4 id="usage-31">Usage<a class="anchor" aria-label="anchor" href="#usage-31"></a></h4>
-<p></p><div class="r"><div class="sourceCode"><pre><code><span><span class="va">FilteredData</span><span class="op">$</span><span class="fu">set_filterable_varnames</span><span class="op">(</span><span class="va">dataname</span>, <span class="va">varnames</span><span class="op">)</span></span></code></pre></div><p></p></div>
-</div>
-
-<div class="section">
-<h4 id="arguments-27">Arguments<a class="anchor" aria-label="anchor" href="#arguments-27"></a></h4>
-<p></p><div class="arguments"><dl><dt><code>dataname</code></dt>
-<dd><p>(<code>character(1)</code>) name of the dataset</p></dd>
-
-
-<dt><code>varnames</code></dt>
-<dd><p>(<code>character</code> or <code>NULL</code>)
-variables which users can choose to filter the data;
-see <code>self$get_filterable_varnames</code> for more details</p></dd>
-
-
-</dl><p></p></div>
-</div>
-
-</div><p></p><hr><a id="method-FilteredData-get_formatted_filter_state"></a><div class="section">
-<h3 id="method-get-formatted-filter-state-">Method <code>get_formatted_filter_state()</code><a class="anchor" aria-label="anchor" href="#method-get-formatted-filter-state-"></a></h3>
-<p>Method is deprecated, please use <code>format.teal_slices</code> on object returned from <code>self$get_filter_state()</code></p><div class="section">
-<h4 id="usage-32">Usage<a class="anchor" aria-label="anchor" href="#usage-32"></a></h4>
-<p></p><div class="r"><div class="sourceCode"><pre><code><span><span class="va">FilteredData</span><span class="op">$</span><span class="fu">get_formatted_filter_state</span><span class="op">(</span><span class="op">)</span></span></code></pre></div><p></p></div>
-</div>
-
-
-</div><p></p><hr><a id="method-FilteredData-remove_all_filter_states"></a><div class="section">
-<h3 id="method-remove-all-filter-states-">Method <code>remove_all_filter_states()</code><a class="anchor" aria-label="anchor" href="#method-remove-all-filter-states-"></a></h3>
-<p>Deprecated - please use <code>clear_filter_states</code> method.</p><div class="section">
-<h4 id="usage-33">Usage<a class="anchor" aria-label="anchor" href="#usage-33"></a></h4>
-<p></p><div class="r"><div class="sourceCode"><pre><code><span><span class="va">FilteredData</span><span class="op">$</span><span class="fu">remove_all_filter_states</span><span class="op">(</span><span class="va">datanames</span><span class="op">)</span></span></code></pre></div><p></p></div>
-</div>
-
-<div class="section">
-<h4 id="arguments-28">Arguments<a class="anchor" aria-label="anchor" href="#arguments-28"></a></h4>
-<p></p><div class="arguments"><dl><dt><code>datanames</code></dt>
-<dd><p>(<code>character</code>)</p></dd>
-
-
-</dl><p></p></div>
-</div>
-<div class="section">
-<h4 id="returns-23">Returns<a class="anchor" aria-label="anchor" href="#returns-23"></a></h4>
-<p><code>NULL</code> invisibly</p>
-</div>
-
 </div><p></p><hr><a id="method-FilteredData-clone"></a><div class="section">
 <h3 id="method-clone-">Method <code>clone()</code><a class="anchor" aria-label="anchor" href="#method-clone-"></a></h3>
 <p>The objects of this class are cloneable with this method.</p><div class="section">
-<h4 id="usage-34">Usage<a class="anchor" aria-label="anchor" href="#usage-34"></a></h4>
+<h4 id="usage-26">Usage<a class="anchor" aria-label="anchor" href="#usage-26"></a></h4>
 <p></p><div class="r"><div class="sourceCode"><pre><code><span><span class="va">FilteredData</span><span class="op">$</span><span class="fu">clone</span><span class="op">(</span>deep <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span></code></pre></div><p></p></div>
 </div>
 
 <div class="section">
-<h4 id="arguments-29">Arguments<a class="anchor" aria-label="anchor" href="#arguments-29"></a></h4>
+<h4 id="arguments-22">Arguments<a class="anchor" aria-label="anchor" href="#arguments-22"></a></h4>
 <p></p><div class="arguments"><dl><dt><code>deep</code></dt>
 <dd><p>Whether to make a deep clone.</p></dd>
 
@@ -1069,7 +910,7 @@ see <code>self$get_filterable_varnames</code> for more details</p></dd>
 <span class="r-in"><span>               selected <span class="op">=</span> <span class="st">""</span>, keep_na <span class="op">=</span> <span class="cn">TRUE</span>, datalabel <span class="op">=</span> <span class="st">"RPPAArray"</span>, arg <span class="op">=</span> <span class="st">"subset"</span><span class="op">)</span></span></span>
 <span class="r-in"><span>  <span class="op">)</span></span></span>
 <span class="r-in"><span><span class="va">datasets</span><span class="op">$</span><span class="fu">set_filter_state</span><span class="op">(</span>state <span class="op">=</span> <span class="va">fs</span><span class="op">)</span></span></span>
-<span class="r-out co"><span class="r-pr">#&gt;</span> [WARN] 2023-12-08 12:34:54.5113 pid:791 token:[] teal.slice filters for columns: ARRAY_TYPE excluded from mae</span>
+<span class="r-out co"><span class="r-pr">#&gt;</span> [WARN] 2023-12-11 10:59:07.6938 pid:792 token:[] teal.slice filters for columns: ARRAY_TYPE excluded from mae</span>
 <span class="r-in"><span><span class="fu">shiny</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/shiny/man/isolate.html" class="external-link">isolate</a></span><span class="op">(</span><span class="va">datasets</span><span class="op">$</span><span class="fu">get_filter_state</span><span class="op">(</span><span class="op">)</span><span class="op">)</span></span></span>
 <span class="r-out co"><span class="r-pr">#&gt;</span> {</span>
 <span class="r-out co"><span class="r-pr">#&gt;</span>   "slices": [</span>
