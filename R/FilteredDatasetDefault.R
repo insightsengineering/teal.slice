@@ -36,7 +36,7 @@ DefaultFilteredDataset <- R6::R6Class(
     #' @return `character(1)` the formatted string
     #'
     format = function(show_all, trim_lines) {
-      sprintf("%s:\n\"%s\": %s", class(self)[1], private$dataname, toString(class(private$dataset)))
+      sprintf(" - unfiltered dataset:\t\"%s\":   %s", private$dataname, toString(class(private$dataset)))
     },
 
     #' @param sid (`character`) for method consistency, ignored

@@ -15,7 +15,7 @@ testthat::test_that("format dispalys object name and class", {
   fds <- DefaultFilteredDataset$new(letters, "character")
   testthat::expect_identical(
     fds$format(),
-    "DefaultFilteredDataset:\n\"character\": character"
+    " - unfiltered dataset:\t\"character\":   character"
   )
 })
 
