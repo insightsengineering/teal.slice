@@ -20,6 +20,12 @@ testthat::test_that("format dispalys object name and class", {
 })
 
 # get_call ----
+testthat::test_that("get_call returns NULL with a warning", {
+  fds <- DefaultFilteredDataset$new(letters, "character")
+  testthat::expect_null(
+    testthat::expect_warning(fds$get_call(), "does not create filter calls")
+  )
+})
 
 # get_filter_state ----
 testthat::test_that("get_filter_state returns NULL with a warning", {

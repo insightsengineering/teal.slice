@@ -42,7 +42,7 @@ DefaultFilteredDataset <- R6::R6Class(
     #' @param sid (`character`) for method consistency, ignored
     #' @return `NULL`, invisibly.
     get_call = function(sid) {
-      warning("DefaultFilterState does not have state to return")
+      warning("DefaultFilterState does not create filter calls")
       invisible(NULL)
     },
     #' @return `NULL`, invisibly.
