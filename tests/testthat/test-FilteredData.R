@@ -1,11 +1,18 @@
 # initialize ----
-testthat::test_that("constructor accepts call with only dataset specified", {
+testthat::test_that("constructor accepts all types of datasets", {
   utils::data(miniACC, package = "MultiAssayExperiment")
-  testthat::expect_no_error(FilteredData$new(list(iris = iris)))
-  testthat::expect_no_error(FilteredData$new(list(iris = iris, mae = miniACC)))
 
-  dataset <- structure(list(), class = "customclass")
-  testthat::expect_error(FilteredData$new(list(iris = dataset)), "Must inherit")
+  testthat::expect_no_error(FilteredData$new(list("logical" = c(TRUE, FALSE))))
+  testthat::expect_no_error(FilteredData$new(list("integer" = 1:10)))
+  testthat::expect_no_error(FilteredData$new(list("numeric" = 1:10 * 1)))
+  testthat::expect_no_error(FilteredData$new(list("character" = letters)))
+  testthat::expect_no_error(FilteredData$new(list("factor" = as.factor(letters))))
+  testthat::expect_no_error(FilteredData$new(list("list" = as.list(letters))))
+  testthat::expect_no_error(FilteredData$new(list("function" = function() letters)))
+
+  testthat::expect_no_error(FilteredData$new(list("array" = array(1:27, dim = c(3, 3, 3)))))
+  testthat::expect_no_error(FilteredData$new(list("dataframe" = iris)))
+  testthat::expect_no_error(FilteredData$new(list("mae" = miniACC)))
 })
 
 testthat::test_that("constructor accepts join_keys to be join_keys or NULL", {
