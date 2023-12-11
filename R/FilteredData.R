@@ -265,7 +265,6 @@ FilteredData <- R6::R6Class( # nolint
     #' @return (`self`) invisibly this `FilteredData`
     #'
     set_dataset = function(data, dataname) {
-      checkmate::assert_multi_class(data, classes = c("data.frame", "MultiAssayExperiment"))
       checkmate::assert_string(dataname)
       logger::log_trace("FilteredData$set_dataset setting dataset, name: { dataname }")
       # to include it nicely in the Show R Code;
