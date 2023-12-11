@@ -133,7 +133,7 @@ Initialize a \code{FilteredData} object
 \if{html}{\out{<div class="arguments">}}
 \describe{
 \item{\code{data_objects}}{(\code{list})
-should named elements containing \code{data.frame} or \code{MultiAssayExperiment}.
+Named list of data objects.
 Names of the list will serve as \code{dataname}.}
 
 \item{\code{join_keys}}{(\code{join_keys} or NULL) see \code{\link[teal.data:join_keys]{teal.data::join_keys()}}.}

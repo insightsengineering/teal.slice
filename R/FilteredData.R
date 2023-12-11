@@ -60,7 +60,7 @@ FilteredData <- R6::R6Class( # nolint
     #' @description
     #' Initialize a `FilteredData` object
     #' @param data_objects (`list`)
-    #'   should named elements containing `data.frame` or `MultiAssayExperiment`.
+    #'   Named list of data objects.
     #'   Names of the list will serve as `dataname`.
     #' @param join_keys (`join_keys` or NULL) see [`teal.data::join_keys()`].
     #'
