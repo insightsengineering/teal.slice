@@ -9,15 +9,6 @@
 * `TealData` object is no longer supported by `teal.slice`.
 * `set_filter_state` no longer accepts a nested list. Use `teal_slices()` and `teal_slice()` instead.
 
-### Enhancements
-
-* Simplified `init_filtered_data` to accept a named list of datasets. `init_filtered_data` does not currently handle a list containing `dataset`, `metadata`, `datalabel` and `code`.
-
-### Breaking changes
-
-* `TealData` object is no longer supported by `teal.slice`.
-* `set_filter_state` no longer accepts a nested list. Use `teal_slices()` and `teal_slice()` instead.
-
 ### Miscellaneous
 
 * Specified minimal version of package dependencies.
