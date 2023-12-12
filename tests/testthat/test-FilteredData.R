@@ -344,7 +344,7 @@ testthat::test_that("get_filter_state returns `teal_slices` with features identi
   )
 })
 
-# print ---
+# print ----
 testthat::test_that("print returns properly formatted string representing `teal_slices`", {
   datasets <- FilteredData$new(
     list(
