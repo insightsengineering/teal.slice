@@ -336,10 +336,17 @@ FilteredData <- R6::R6Class( # nolint
     #' @return `character(1)` the formatted string
     #'
     format = function(show_all = FALSE, trim_lines = TRUE) {
-      dataset_formats <- lapply(self$datanames(), function(dn) {
-        private$get_filtered_dataset(dn)$format(show_all = show_all, trim_lines = trim_lines)
-      })
-      paste(dataset_formats, collapse = "\n")
+      datasets <- lapply(self$datanames(), function(dn) private$get_filtered_dataset(dn))
+      ind <- vapply(datasets, function(x) inherits(x, "DefaultFilteredDataset"), logical(1L))
+      states <- do.call(c, lapply(datasets[!ind], function(ds) ds$get_filter_state()))
+      states_fmt <- format(states, show_all = show_all, trim_lines = trim_lines)
+      holders_fmt <- lapply(datasets[ind], function(ds) format(ds, show_all = show_all, trim_lines = trim_lines))
+
+      sprintf(
+        "%s:\n%s",
+        class(self)[1],
+        paste(c(states_fmt, holders_fmt), collapse = "\n")
+      )
     },
 
     #' @description
