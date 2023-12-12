@@ -8,7 +8,7 @@
 #' ds <- teal.slice:::DefaultFilteredDataset$new(letters, "letters")
 #' isolate(ds$get_filter_state())
 #' isolate(ds$get_call())
-DefaultFilteredDataset <- R6::R6Class(
+DefaultFilteredDataset <- R6::R6Class( #nolint
   classname = "DefaultFilteredDataset",
   inherit = FilteredDataset,
 
