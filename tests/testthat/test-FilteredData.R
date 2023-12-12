@@ -292,8 +292,8 @@ testthat::test_that("get_data of the child is dependent on the ancestor filter",
   )
 })
 
-# get_filter_state / format ----
-testthat::test_that("get_filter_state returns `teal_slices` with features identical to those in input, adds format", {
+# get_filter_state ----
+testthat::test_that("get_filter_state returns `teal_slices` with features identical to those in input", {
   datasets <- FilteredData$new(
     list(
       iris = list(dataset = iris),
@@ -326,26 +326,11 @@ testthat::test_that("get_filter_state returns `teal_slices` with features identi
 
   fs_out <- unname(shiny::isolate(datasets$get_filter_state()))
 
-  testthat::expect_identical(
-    shiny::isolate(datasets$format()),
-    paste0("FilteredData:\n", format(fs_out))
-  )
-  testthat::expect_identical(
-    shiny::isolate(datasets$format(show_all = TRUE)),
-    paste0("FilteredData:\n", format(fs_out, show_all = TRUE))
-  )
-  testthat::expect_identical(
-    shiny::isolate(datasets$format(trim_lines = FALSE)),
-    paste0("FilteredData:\n", format(fs_out, trim_lines = FALSE))
-  )
-  testthat::expect_identical(
-    shiny::isolate(datasets$format(show_all = TRUE, trim_lines = FALSE)),
-    paste0("FilteredData:\n", format(fs_out, show_all = TRUE, trim_lines = FALSE))
-  )
+  expect_identical_slices(fs, fs_out)
 })
 
-# print ----
-testthat::test_that("print returns properly formatted string representing `teal_slices`", {
+# format ----
+testthat::test_that("format returns properly formatted string representing `teal_slices` with class header", {
   datasets <- FilteredData$new(
     list(
       iris = list(dataset = iris),
@@ -377,16 +362,55 @@ testthat::test_that("print returns properly formatted string representing `teal_
   datasets$set_filter_state(state = fs)
 
   testthat::expect_identical(
-    utils::capture.output(shiny::isolate(datasets$print())),
-    c("FilteredData:", utils::capture.output(print(fs)))
+    shiny::isolate(datasets$format()),
+    paste0("FilteredData:\n", format(fs_out))
   )
   testthat::expect_identical(
-    utils::capture.output(shiny::isolate(datasets$print(show_all = TRUE))),
-    c("FilteredData:", utils::capture.output(print(fs, show_all = TRUE)))
+    shiny::isolate(datasets$format(show_all = TRUE)),
+    paste0("FilteredData:\n", format(fs_out, show_all = TRUE))
   )
   testthat::expect_identical(
-    utils::capture.output(shiny::isolate(datasets$print(trim_lines = FALSE))),
-    c("FilteredData:", utils::capture.output(print(fs, trim_lines = FALSE)))
+    shiny::isolate(datasets$format(trim_lines = FALSE)),
+    paste0("FilteredData:\n", format(fs_out, trim_lines = FALSE))
+  )
+  testthat::expect_identical(
+    shiny::isolate(datasets$format(show_all = TRUE, trim_lines = FALSE)),
+    paste0("FilteredData:\n", format(fs_out, show_all = TRUE, trim_lines = FALSE))
+  )
+})
+
+testthat::test_that("format lists unfiltered datasets at the end of the output", {
+  datasets <- FilteredData$new(
+    list(
+      iris = list(dataset = iris),
+      letters = list(dataset = letters),
+      mtcars = list(dataset = mtcars)
+    )
+  )
+
+  fs <- teal_slices(
+    teal_slice(
+      dataname = "iris", varname = "Species",
+      choices = c("setosa", "versicolor", "virginica"), multiple = TRUE, selected = c("setosa", "versicolor"),
+      keep_na = FALSE
+    ),
+    teal_slice(
+      dataname = "mtcars", varname = "cyl",
+      choices = c("4", "6", "8"), multiple = TRUE, selected = c("4", "6"),
+      keep_na = FALSE, keep_inf = FALSE
+    ),
+    count_type = "none",
+    include_varnames = list(mtcars = "cyl"),
+    exclude_varnames = list(iris = c("Petal.Length", "Petal.Width"))
+  )
+
+  testthat::expect_warning(datasets$set_filter_state(fs))
+
+  testthat::expect_warning(state_fmt <- shiny::isolate(format(datasets$get_filter_state())))
+
+  testthat::expect_identical(
+    shiny::isolate(datasets$format()),
+    paste0("FilteredData:\n", state_fmt, "\n - unfiltered dataset:\t\"letters\":   character")
   )
 })
 
