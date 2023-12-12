@@ -60,7 +60,7 @@ FilteredData <- R6::R6Class( # nolint
     #' @description
     #' Initialize a `FilteredData` object
     #' @param data_objects (`list`)
-    #'   should named elements containing `data.frame` or `MultiAssayExperiment`.
+    #'   Named list of data objects.
     #'   Names of the list will serve as `dataname`.
     #' @param join_keys (`join_keys` or NULL) see [`teal.data::join_keys()`].
     #'
@@ -254,7 +254,7 @@ FilteredData <- R6::R6Class( # nolint
     #' If this data has a parent specified in the `join_keys` object stored in `private$join_keys`
     #' then created `FilteredDataset` (child) gets linked with other `FilteredDataset` (parent).
     #' "Child" dataset return filtered data then dependent on the reactive filtered data of the
-    #' "parent". See more in documentation of `parent` argument in `FilteredDatasetDefault` constructor.
+    #' "parent". See more in documentation of `parent` argument in `DataframeFilteredDataset` constructor.
     #'
     #' @param data (`data.frame`, `MultiAssayExperiment`)\cr
     #'   data to be filtered.
@@ -265,7 +265,6 @@ FilteredData <- R6::R6Class( # nolint
     #' @return (`self`) invisibly this `FilteredData`
     #'
     set_dataset = function(data, dataname) {
-      checkmate::assert_multi_class(data, classes = c("data.frame", "MultiAssayExperiment"))
       checkmate::assert_string(dataname)
       logger::log_trace("FilteredData$set_dataset setting dataset, name: { dataname }")
       # to include it nicely in the Show R Code;
@@ -337,10 +336,16 @@ FilteredData <- R6::R6Class( # nolint
     #' @return `character(1)` the formatted string
     #'
     format = function(show_all = FALSE, trim_lines = TRUE) {
+      datasets <- lapply(self$datanames(), function(dn) private$get_filtered_dataset(dn))
+      ind <- vapply(datasets, function(x) inherits(x, "DefaultFilteredDataset"), logical(1L))
+      states <- do.call(c, lapply(datasets[!ind], function(ds) ds$get_filter_state()))
+      states_fmt <- format(states, show_all = show_all, trim_lines = trim_lines)
+      holders_fmt <- lapply(datasets[ind], function(ds) format(ds, show_all = show_all, trim_lines = trim_lines))
+
       sprintf(
         "%s:\n%s",
         class(self)[1],
-        format(self$get_filter_state(), show_all = show_all, trim_lines = trim_lines)
+        paste(c(states_fmt, holders_fmt), collapse = "\n")
       )
     },
 
