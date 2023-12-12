@@ -19,6 +19,20 @@ testthat::test_that("format dispalys object name and class", {
   )
 })
 
+testthat::test_that("format trims very long class names to 40 characters if trim_lines = TRUE", {
+  classes <- c("someclass1", "someclass2", "someclass3", "someclass4", "somanyclasses")
+  fds <- DefaultFilteredDataset$new(structure(letters, class = classes), "character")
+  testthat::expect_identical(
+    nchar(fds$format(trim_lines = FALSE)),
+    nchar(paste0(" - unfiltered dataset:\t\"character\":   ")) + nchar(toString(classes))
+  )
+
+  testthat::expect_identical(
+    nchar(fds$format(trim_lines = TRUE)),
+    nchar(paste0(" - unfiltered dataset:\t\"character\":   ")) + 37L
+  )
+})
+
 # get_call ----
 testthat::test_that("get_call returns NULL with a warning", {
   fds <- DefaultFilteredDataset$new(letters, "character")

@@ -31,12 +31,19 @@ DefaultFilteredDataset <- R6::R6Class(
     #' @description
     #' Returns a formatted string representing this `DefaultFilteredDataset` object.
     #'
-    #' @param show_all,trim_lines (`logical(1)`) for method consistency, ignored
+    #' @param show_all (`logical(1)`) for method consistency, ignored
+    #' @param trim_lines (`logical(1)`) flag specifying whether to trim lines if class names are too long
     #'
     #' @return `character(1)` the formatted string
     #'
-    format = function(show_all, trim_lines) {
-      sprintf(" - unfiltered dataset:\t\"%s\":   %s", private$dataname, toString(class(private$dataset)))
+    format = function(show_all, trim_lines= FALSE) {
+      class_string <- toString(class(private$dataset))
+      if (trim_lines) {
+        trim_position <- 37L
+        class_string <- strtrim(class_string, trim_position)
+        substr(class_string, 35L, 37L) <- "..."
+      }
+      sprintf(" - unfiltered dataset:\t\"%s\":   %s", private$dataname, class_string)
     },
 
     #' @param sid (`character`) for method consistency, ignored

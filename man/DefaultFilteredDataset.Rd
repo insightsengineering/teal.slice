@@ -74,13 +74,15 @@ Label to describe the dataset.}
 \subsection{Method \code{format()}}{
 Returns a formatted string representing this \code{DefaultFilteredDataset} object.
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{DefaultFilteredDataset$format(show_all, trim_lines)}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{DefaultFilteredDataset$format(show_all, trim_lines = FALSE)}\if{html}{\out{</div>}}
 }
 
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
-\item{\code{show_all, trim_lines}}{(\code{logical(1)}) for method consistency, ignored}
+\item{\code{show_all}}{(\code{logical(1)}) for method consistency, ignored}
+
+\item{\code{trim_lines}}{(\code{logical(1)}) flag specifying whether to trim lines if class names are too long}
 }
 \if{html}{\out{</div>}}
 }
