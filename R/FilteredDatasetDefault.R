@@ -100,7 +100,6 @@ DefaultFilteredDataset <- R6::R6Class( # nolint
       ns <- NS(id)
       div()
     }
-
   ),
   private = list(
     ## Private Methods ----
