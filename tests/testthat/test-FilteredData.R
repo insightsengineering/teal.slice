@@ -363,19 +363,19 @@ testthat::test_that("format returns properly formatted string representing `teal
 
   testthat::expect_identical(
     shiny::isolate(datasets$format()),
-    paste0("FilteredData:\n", format(fs_out))
+    paste0("FilteredData:\n", format(fs))
   )
   testthat::expect_identical(
     shiny::isolate(datasets$format(show_all = TRUE)),
-    paste0("FilteredData:\n", format(fs_out, show_all = TRUE))
+    paste0("FilteredData:\n", format(fs, show_all = TRUE))
   )
   testthat::expect_identical(
     shiny::isolate(datasets$format(trim_lines = FALSE)),
-    paste0("FilteredData:\n", format(fs_out, trim_lines = FALSE))
+    paste0("FilteredData:\n", format(fs, trim_lines = FALSE))
   )
   testthat::expect_identical(
     shiny::isolate(datasets$format(show_all = TRUE, trim_lines = FALSE)),
-    paste0("FilteredData:\n", format(fs_out, show_all = TRUE, trim_lines = FALSE))
+    paste0("FilteredData:\n", format(fs, show_all = TRUE, trim_lines = FALSE))
   )
 })
 
