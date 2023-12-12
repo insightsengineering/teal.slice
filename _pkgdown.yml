@@ -36,8 +36,8 @@ reference:
     subtitle: R6 Classes
     desc: Abstract and concrete classes used to build teal functionality.
     contents:
-      - DefaultFilteredDataset
       - FilteredData
       - FilteredDataset
       - FilterPanelAPI
+      - DataframeFilteredDataset
       - MAEFilteredDataset
