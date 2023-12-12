@@ -36,7 +36,7 @@ DefaultFilteredDataset <- R6::R6Class(
     #'
     #' @return `character(1)` the formatted string
     #'
-    format = function(show_all, trim_lines= FALSE) {
+    format = function(show_all, trim_lines = FALSE) {
       class_string <- toString(class(private$dataset))
       if (trim_lines) {
         trim_position <- 37L
@@ -74,9 +74,7 @@ DefaultFilteredDataset <- R6::R6Class(
     get_filter_overview = function() {
       invisible(NULL)
     }
-
   ),
-
   private = list(
     ## Private Methods ----
     add_filter_states = function(filter_states, id) {
