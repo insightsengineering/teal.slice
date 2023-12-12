@@ -72,6 +72,7 @@ DefaultFilteredDataset <- R6::R6Class(
 
     #' @return `NULL`, invisibly
     get_filter_overview = function() {
+      invisible(NULL)
     }
 
   ),
