@@ -47,7 +47,7 @@ Although this function is exported for use in other packages, it may be changed 
 at which point any code which relies on this exported function will need to be changed.
 }
 \examples{
-# DefaultFilteredDataset example
+# DataframeFilteredDataset example
 iris_fd <- teal.slice:::init_filtered_dataset(iris, dataname = "iris")
 app <- shinyApp(
   ui = fluidPage(
