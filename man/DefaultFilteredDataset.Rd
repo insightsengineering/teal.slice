@@ -26,6 +26,8 @@ isolate(ds$get_call())
 \item \href{#method-DefaultFilteredDataset-set_filter_state}{\code{DefaultFilteredDataset$set_filter_state()}}
 \item \href{#method-DefaultFilteredDataset-clear_filter_states}{\code{DefaultFilteredDataset$clear_filter_states()}}
 \item \href{#method-DefaultFilteredDataset-get_filter_overview}{\code{DefaultFilteredDataset$get_filter_overview()}}
+\item \href{#method-DefaultFilteredDataset-ui_active}{\code{DefaultFilteredDataset$ui_active()}}
+\item \href{#method-DefaultFilteredDataset-ui_add}{\code{DefaultFilteredDataset$ui_add()}}
 \item \href{#method-DefaultFilteredDataset-clone}{\code{DefaultFilteredDataset$clone()}}
 }
 }
@@ -40,8 +42,6 @@ isolate(ds$get_call())
 <li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilteredDataset" data-id="print"><a href='../../teal.slice/html/FilteredDataset.html#method-FilteredDataset-print'><code>teal.slice::FilteredDataset$print()</code></a></span></li>
 <li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilteredDataset" data-id="srv_active"><a href='../../teal.slice/html/FilteredDataset.html#method-FilteredDataset-srv_active'><code>teal.slice::FilteredDataset$srv_active()</code></a></span></li>
 <li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilteredDataset" data-id="srv_add"><a href='../../teal.slice/html/FilteredDataset.html#method-FilteredDataset-srv_add'><code>teal.slice::FilteredDataset$srv_add()</code></a></span></li>
-<li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilteredDataset" data-id="ui_active"><a href='../../teal.slice/html/FilteredDataset.html#method-FilteredDataset-ui_active'><code>teal.slice::FilteredDataset$ui_active()</code></a></span></li>
-<li><span class="pkg-link" data-pkg="teal.slice" data-topic="FilteredDataset" data-id="ui_add"><a href='../../teal.slice/html/FilteredDataset.html#method-FilteredDataset-ui_add'><code>teal.slice::FilteredDataset$ui_add()</code></a></span></li>
 </ul>
 </details>
 }}
@@ -169,6 +169,56 @@ Returns a formatted string representing this \code{DefaultFilteredDataset} objec
 
 \subsection{Returns}{
 \code{NULL}, invisibly
+}
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-DefaultFilteredDataset-ui_active"></a>}}
+\if{latex}{\out{\hypertarget{method-DefaultFilteredDataset-ui_active}{}}}
+\subsection{Method \code{ui_active()}}{
+Overwrites parent method.
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{DefaultFilteredDataset$ui_active(id)}\if{html}{\out{</div>}}
+}
+
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{id}}{(\code{character(1)})\cr
+\code{shiny} module id}
+}
+\if{html}{\out{</div>}}
+}
+\subsection{Details}{
+Blank module UI that would list active filter states for this dataset.
+}
+
+\subsection{Returns}{
+empty \code{div}
+}
+}
+\if{html}{\out{<hr>}}
+\if{html}{\out{<a id="method-DefaultFilteredDataset-ui_add"></a>}}
+\if{latex}{\out{\hypertarget{method-DefaultFilteredDataset-ui_add}{}}}
+\subsection{Method \code{ui_add()}}{
+Overwrites parent method.
+\subsection{Usage}{
+\if{html}{\out{<div class="r">}}\preformatted{DefaultFilteredDataset$ui_add(id)}\if{html}{\out{</div>}}
+}
+
+\subsection{Arguments}{
+\if{html}{\out{<div class="arguments">}}
+\describe{
+\item{\code{id}}{(\code{character(1)})\cr
+\code{shiny} module id}
+}
+\if{html}{\out{</div>}}
+}
+\subsection{Details}{
+Blank module UI that would list active filter states for this dataset.
+}
+
+\subsection{Returns}{
+empty \code{div}
 }
 }
 \if{html}{\out{<hr>}}

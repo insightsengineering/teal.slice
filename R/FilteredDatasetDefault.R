@@ -73,7 +73,34 @@ DefaultFilteredDataset <- R6::R6Class( # nolint
     #' @return `NULL`, invisibly
     get_filter_overview = function() {
       invisible(NULL)
+    },
+
+    ### shiny modules ----
+
+    #' @description
+    #' Overwrites parent method.
+    #' @details
+    #' Blank module UI that would list active filter states for this dataset.
+    #' @param id (`character(1)`)\cr
+    #'  `shiny` module id
+    #' @return empty `div`
+    ui_active = function(id) {
+      ns <- NS(id)
+      div()
+    },
+
+    #' @description
+    #' Overwrites parent method.
+    #' @details
+    #' Blank module UI that would list active filter states for this dataset.
+    #' @param id (`character(1)`)\cr
+    #'  `shiny` module id
+    #' @return empty `div`
+    ui_add = function(id) {
+      ns <- NS(id)
+      div()
     }
+
   ),
   private = list(
     ## Private Methods ----
