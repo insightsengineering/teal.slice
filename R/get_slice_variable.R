@@ -20,15 +20,14 @@ get_slice_variable.list <- function(data, slice) {
 
 #' @export
 get_slice_variable.MultiAssayExperiment <- function(data, slice) {
-  # todo: assert correct slice for MAE
   if (is.null(slice$experiment)) {
     # from colData
     SummarizedExperiment::colData(data)[[slice$varname]]
-  } else {
-    # todo: assert experiment exists in names(data)
-    # todo: fix to handle different types of experiments (like RaggedExperiment, SummarizedExperiment, Matrix)
+  } else if (slice$experiment %in% names(data)) {
     experiment <- data[[slice$experiment]]
     get_slice_variable(experiment, slice)
+  } else {
+    stop("Experiment ", experiment, " not found in ", slice$dataname, call. = FALSE)
   }
 }
 

@@ -279,7 +279,6 @@ srv_add.SummarizedExperiment <- function(id, data, filtered_data, dataname, ...)
           "srv_add.SummarizedExp@4 adding FilterState of variable { input$row_to_add } to row data, dataname: { id }"
         )
         varname <- input$row_to_add
-        # todo: dataname and experiment is needed
         filtered_data$set_filter_state(teal_slices(
           teal_slice(dataname = dataname, varname = varname, arg = "subset", ...)
         ))
