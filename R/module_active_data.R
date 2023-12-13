@@ -42,7 +42,7 @@ ui_active_data <- function(id, filtered_data) {
         lapply(
           filtered_data$datanames(), # this is reactive - any change in datanames will rerender filter-panel
           function(dataname) {
-            data <- filtered_data$get_data(dataname, filtered = TRUE)
+            data <- filtered_data$get_data(dataname, filtered = FALSE)
             ui_active_dataset(ns(dataname), data = data, dataname = dataname)
           }
         )
