@@ -76,9 +76,6 @@ srv_active_dataset <- function(id, filtered_data) {
         filtered_data$state_list_get()
       )
     })
-    clear_dataset_states <- reactive({
-      # todo:
-    })
 
     output$filter_count <- renderText(
       sprintf(
@@ -101,9 +98,10 @@ srv_active_dataset <- function(id, filtered_data) {
     })
 
     observeEvent(input$remove_filters, {
-      logger::log_trace("FilteredDataset$srv_active@1 removing all non-anchored filters, dataname: { dataname }")
-      clear_dataset_states()
-      logger::log_trace("FilteredDataset$srv_active@1 removed all non-anchored filters, dataname: { dataname }")
+      logger::log_trace("FilteredDataset$srv_active@1 removing all non-anchored filters, dataname: { id }")
+      slices_to_remove <- lapply(get_dataset_states(), function(state) state$get_state())
+      slices <- do.call(teal_slices, slices_to_remove)
+      filtered_data$remove_filter_state(slices)
     })
 
     data <- isolate(filtered_data$get_data(id, filtered = FALSE))

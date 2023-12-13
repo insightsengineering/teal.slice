@@ -71,7 +71,11 @@ srv_active.default <- function(id, data, reactive_state_list, remove_state_callb
       isolate({
         logger::log_trace("srv_active.default@1 determining added and removed filter states")
         # Be aware this returns a list because `current_state` is a list and not `teal_slices`.
-        added_states(setdiff_teal_slices(current_state(), previous_state()))
+        new_states <- setdiff_teal_slices(current_state(), previous_state())
+        if (length(new_states) > 0L) {
+          added_states(new_states)
+        }
+
         previous_state(current_state())
         NULL
       })
@@ -100,7 +104,7 @@ srv_active.default <- function(id, data, reactive_state_list, remove_state_callb
             once = TRUE, # remove button can be called once, should be destroyed afterwards
             ignoreInit = TRUE, # ignoreInit: should not matter because we destroy the previous input set of the UI
             eventExpr = fs_callback(), # when remove button is clicked in the FilterState ui
-            handlerExpr = remove_state_callback(state$get_state()$id)
+            handlerExpr = remove_state_callback(teal_slices(state$get_state()))
           )
         })
         added_states(NULL)
