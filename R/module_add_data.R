@@ -75,7 +75,7 @@ srv_add_data <- function(id, filtered_data, active_datanames = reactive(filtered
       filtered_data$datanames(),
       function(dataname) {
         data <- filtered_data$get_data(dataname, filtered = FALSE)
-        srv_add(session$ns(dataname), data, filtered_data = filtered_data)
+        srv_add(id = dataname, data = data, filtered_data = filtered_data, dataname = dataname)
       }
     )
     NULL

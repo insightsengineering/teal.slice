@@ -283,81 +283,83 @@ FilterState <- R6::R6Class( # nolint
       ### Title consists of conditional icon, varname, conditional varlabel, and controls, arranged in a row.
       ### Summary consists of value and controls, arranged in a row.
 
-      div(
-        id = id,
-        class = "panel filter-card",
-        include_js_files("count-bar-labels.js"),
+      shiny::isolate({
         div(
-          class = "filter-card-header",
-          `data-toggle` = "collapse",
-          `data-bs-toggle` = "collapse",
-          href = paste0("#", ns("body")),
+          id = id,
+          class = "panel filter-card",
+          include_js_files("count-bar-labels.js"),
           div(
-            class = "filter-card-title",
-            if (private$is_anchored() && private$is_fixed()) {
-              icon("anchor-lock", class = "filter-card-icon")
-            } else if (private$is_anchored() && !private$is_fixed()) {
-              icon("anchor", class = "filter-card-icon")
-            } else if (!private$is_anchored() && private$is_fixed()) {
-              icon("lock", class = "filter-card-icon")
-            },
-            div(class = "filter-card-varname", strong(private$get_varname())),
-            div(class = "filter-card-varlabel", private$get_varlabel()),
+            class = "filter-card-header",
+            `data-toggle` = "collapse",
+            `data-bs-toggle` = "collapse",
+            href = paste0("#", ns("body")),
             div(
-              class = "filter-card-controls",
-              # Suppress toggling body when clicking on this div.
-              # This is for bootstrap 3 and 4. Causes page to scroll to top, prevented by setting href on buttons.
-              onclick = "event.stopPropagation();event.preventDefault();",
-              # This is for bootstrap 5.
-              `data-bs-toggle` = "collapse",
-              `data-bs-target` = NULL,
-              if (isFALSE(private$is_fixed())) {
-                actionLink(
-                  inputId = ns("back"),
-                  label = NULL,
-                  icon = icon("circle-arrow-left", lib = "font-awesome"),
-                  title = "Rewind state",
-                  class = "filter-card-back",
-                  style = "display: none"
-                )
+              class = "filter-card-title",
+              if (private$is_anchored() && private$is_fixed()) {
+                icon("anchor-lock", class = "filter-card-icon")
+              } else if (private$is_anchored() && !private$is_fixed()) {
+                icon("anchor", class = "filter-card-icon")
+              } else if (!private$is_anchored() && private$is_fixed()) {
+                icon("lock", class = "filter-card-icon")
               },
-              if (isFALSE(private$is_fixed())) {
-                actionLink(
-                  inputId = ns("reset"),
-                  label = NULL,
-                  icon = icon("circle-arrow-up", lib = "font-awesome"),
-                  title = "Restore original state",
-                  class = "filter-card-back",
-                  style = "display: none"
-                )
-              },
-              if (isFALSE(private$is_anchored())) {
-                actionLink(
-                  inputId = ns("remove"),
-                  label = icon("circle-xmark", lib = "font-awesome"),
-                  title = "Remove filter",
-                  class = "filter-card-remove"
-                )
+              div(class = "filter-card-varname", strong(private$get_varname())),
+              div(class = "filter-card-varlabel", private$get_varlabel()),
+              div(
+                class = "filter-card-controls",
+                # Suppress toggling body when clicking on this div.
+                # This is for bootstrap 3 and 4. Causes page to scroll to top, prevented by setting href on buttons.
+                onclick = "event.stopPropagation();event.preventDefault();",
+                # This is for bootstrap 5.
+                `data-bs-toggle` = "collapse",
+                `data-bs-target` = NULL,
+                if (isFALSE(private$is_fixed())) {
+                  actionLink(
+                    inputId = ns("back"),
+                    label = NULL,
+                    icon = icon("circle-arrow-left", lib = "font-awesome"),
+                    title = "Rewind state",
+                    class = "filter-card-back",
+                    style = "display: none"
+                  )
+                },
+                if (isFALSE(private$is_fixed())) {
+                  actionLink(
+                    inputId = ns("reset"),
+                    label = NULL,
+                    icon = icon("circle-arrow-up", lib = "font-awesome"),
+                    title = "Restore original state",
+                    class = "filter-card-back",
+                    style = "display: none"
+                  )
+                },
+                if (isFALSE(private$is_anchored())) {
+                  actionLink(
+                    inputId = ns("remove"),
+                    label = icon("circle-xmark", lib = "font-awesome"),
+                    title = "Remove filter",
+                    class = "filter-card-remove"
+                  )
+                }
+              )
+            ),
+            div(class = "filter-card-summary", private$ui_summary(ns("summary")))
+          ),
+          div(
+            id = ns("body"),
+            class = "collapse out",
+            `data-parent` = paste0("#", parent_id),
+            `data-bs-parent` = paste0("#", parent_id),
+            div(
+              class = "filter-card-body",
+              if (private$is_fixed()) {
+                private$ui_inputs_fixed(ns("inputs"))
+              } else {
+                private$ui_inputs(ns("inputs"))
               }
             )
-          ),
-          div(class = "filter-card-summary", private$ui_summary(ns("summary")))
-        ),
-        div(
-          id = ns("body"),
-          class = "collapse out",
-          `data-parent` = paste0("#", parent_id),
-          `data-bs-parent` = paste0("#", parent_id),
-          div(
-            class = "filter-card-body",
-            if (private$is_fixed()) {
-              private$ui_inputs_fixed(ns("inputs"))
-            } else {
-              private$ui_inputs(ns("inputs"))
-            }
           )
         )
-      )
+      })
     },
 
     #' @description
