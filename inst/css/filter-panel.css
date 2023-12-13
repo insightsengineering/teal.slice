@@ -88,7 +88,7 @@
   margin-bottom: 10px;
 }
 
-#teal_filter_panel_whole > div.well div.form-group label {
+#teal_filter_panel_whole>div.well div.form-group label {
   width: 100%;
 }
 
@@ -144,15 +144,15 @@ a.remove_all:hover {
   gap: 5px;
 }
 
-.choices_state label > input {
+.choices_state label>input {
   flex-grow: 0;
 }
 
-.choices_state label > span {
+.choices_state label>span {
   flex-grow: 4;
 }
 
-.choices_state > div.form-group {
+.choices_state>div.form-group {
   margin: 0em;
 }
 
@@ -163,18 +163,18 @@ a.remove_all:hover {
 }
 
 .choices_state_label {
-  background-color:lightblue;
-  height:2rem;
-  display:inline-block;
-  position:absolute;
+  background-color: lightblue;
+  height: 2rem;
+  display: inline-block;
+  position: absolute;
   margin-top: -3px;
 }
 
 .choices_state_label_unfiltered {
-  background-color:lightgray;
+  background-color: lightgray;
   height: 2rem;
   margin-top: -3px;
-  display:inline-block;
+  display: inline-block;
   position: absolute;
 }
 
@@ -203,6 +203,16 @@ a.remove_all:hover {
   font-weight: bold;
 }
 
+.filter_panel_datalabel {
+  flex: 1 1 auto;
+
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+
+  color: var(--bs-gray-500, var(--gray, darkgray));
+}
+
 .filter_panel_varname {
   font-weight: bold;
   width: 100%;
@@ -215,7 +225,7 @@ a.remove_all:hover {
   color: rgb(122, 122, 122);
 }
 
-.parent-hideable-list-group > .accordion:not([data-label=""]):before {
+.parent-hideable-list-group>.accordion:not([data-label=""]):before {
   padding: 2px 4px;
   font-size: 90%;
   color: #c7254e;
@@ -277,15 +287,18 @@ a.remove_all:hover {
   flex-direction: row;
   flex-wrap: nowrap;
 }
+
 .filter-card-icon {
   padding-right: 0.25em;
 }
+
 .filter-card-varname {
   flex: 0 0.4 auto;
   justify-self: flex-start;
 
   overflow: hidden;
 }
+
 .filter-card-varlabel {
   flex: 1 1 auto;
   justify-self: flex-start;
@@ -297,6 +310,7 @@ a.remove_all:hover {
 
   color: var(--bs-gray-500, var(--gray, darkgray));
 }
+
 .filter-card-controls {
   flex: 0 0 auto;
   justify-self: flex-end;
@@ -323,6 +337,7 @@ a.remove_all:hover {
 
   padding-right: 0.5em
 }
+
 .filter-card-summary-controls {
   flex: 0 0 auto;
 
@@ -380,16 +395,17 @@ a.remove_all:hover {
   background-color: rgba(173, 216, 230, 0.439) !important;
 }
 
-.input-daterange > input {
+.input-daterange>input {
   font-size: 1em !important;
 }
 
 .input-group-prepend {
- font-size: 1em !important;;
+  font-size: 1em !important;
+  ;
 }
 
 
-.filter_datelike_input  input {
+.filter_datelike_input input {
   font-size: 1em !important;
 }
 
@@ -429,7 +445,7 @@ a.remove_all:hover {
   flex: 1 1 80%;
 }
 
-.snapshot_table_row * + * {
+.snapshot_table_row *+* {
   flex: 1 0 50px;
   padding: 0em 1em;
 }

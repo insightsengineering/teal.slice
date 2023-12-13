@@ -9,7 +9,7 @@
 #' library(shiny)
 #' datasets <- teal.slice::init_filtered_data(list(iris = iris, mtcars = mtcars))
 #' @export
-init_filtered_data <- function(x, join_keys = teal.data::join_keys(), code, check) { # nolint
+init_filtered_data <- function(x = list(), join_keys = teal.data::join_keys(), code, check) { # nolint
   checkmate::assert_list(x, any.missing = FALSE, names = "unique")
   checkmate::assert_class(join_keys, "join_keys")
   if (!missing(code)) {
@@ -24,7 +24,12 @@ init_filtered_data <- function(x, join_keys = teal.data::join_keys(), code, chec
       "init_filtered_data(check = 'No longer supported')"
     )
   }
-  FilteredData$new(x, join_keys = join_keys)
+  fd <- FilteredData$new()
+  for (dataname in names(x)) {
+    fd$set_dataset(dataname, x[[dataname]])
+  }
+  fd$set_join_keys(join_keys)
+  return(fd)
 }
 
 #' Evaluate expression with meaningful message
@@ -38,7 +43,7 @@ init_filtered_data <- function(x, join_keys = teal.data::join_keys(), code, chec
 #' @keywords internal
 eval_expr_with_msg <- function(expr, env) {
   lapply(
-    expr,
+    as.expression(expr),
     function(x) {
       tryCatch(
         eval(x, envir = env),
