@@ -105,23 +105,15 @@ LogicalFilterState <- R6::R6Class( # nolint
     #'   returns `teal_slice` object which can be reused in other places. Beware, that `teal_slice`
     #'   is a `reactiveValues` which means that changes in particular object are automatically
     #'   reflected in all places which refer to the same `teal_slice`.
-    #' @param extract_type (`character(0)`, `character(1)`)\cr
-    #' whether condition calls should be prefixed by `dataname`. Possible values:
-    #' \itemize{
-    #' \item{`character(0)` (default)}{ `varname` in the condition call will not be prefixed}
-    #' \item{`"list"`}{ `varname` in the condition call will be returned as `<dataname>$<varname>`}
-    #' \item{`"matrix"`}{ `varname` in the condition call will be returned as `<dataname>[, <varname>]`}
-    #' }
     #' @param ... additional arguments to be saved as a list in `private$extras` field
     #'
     initialize = function(x,
                           x_reactive = reactive(NULL),
-                          extract_type = character(0),
                           slice) {
       shiny::isolate({
         checkmate::assert_logical(x)
         checkmate::assert_logical(slice$selected, null.ok = TRUE)
-        super$initialize(x = x, x_reactive = x_reactive, slice = slice, extract_type = extract_type)
+        super$initialize(x = x, x_reactive = x_reactive, slice = slice)
 
         private$set_choices(slice$choices)
         if (is.null(slice$multiple)) slice$multiple <- FALSE
@@ -145,12 +137,12 @@ LogicalFilterState <- R6::R6Class( # nolint
     #' @param dataname name of data set; defaults to `private$get_dataname()`
     #' @return (`call`)
     #'
-    get_call = function(dataname) {
+    get_call = function(dataname, extract_type = character(0)) {
       if (isFALSE(private$is_any_filtered())) {
         return(NULL)
       }
       if (missing(dataname)) dataname <- private$get_dataname()
-      varname <- private$get_varname_prefixed(dataname)
+      varname <- private$get_varname_prefixed(dataname, extract_type)
       choices <- private$get_selected()
       n_choices <- length(choices)
 

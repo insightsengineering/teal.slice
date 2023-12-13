@@ -8,8 +8,7 @@
 #' @examples
 #' filter_state <- teal.slice:::EmptyFilterState$new(
 #'   x = NA,
-#'   slice = teal_slice(varname = "x", dataname = "data"),
-#'   extract_type = character(0)
+#'   slice = teal_slice(varname = "x", dataname = "data")
 #' )
 #' shiny::isolate(filter_state$get_call())
 #' filter_state$set_state(teal_slice(dataname = "data", varname = "x", keep_na = TRUE))
@@ -38,25 +37,17 @@ EmptyFilterState <- R6::R6Class( # nolint
     #'   returns `teal_slice` object which can be reused in other places. Beware, that `teal_slice`
     #'   is a `reactiveValues` which means that changes in particular object are automatically
     #'   reflected in all places which refer to the same `teal_slice`.
-    #' @param extract_type (`character(0)`, `character(1)`)\cr
-    #' whether condition calls should be prefixed by `dataname`. Possible values:
-    #' \itemize{
-    #' \item{`character(0)` (default)}{ `varname` in the condition call will not be prefixed}
-    #' \item{`"list"`}{ `varname` in the condition call will be returned as `<dataname>$<varname>`}
-    #' \item{`"matrix"`}{ `varname` in the condition call will be returned as `<dataname>[, <varname>]`}
-    #' }
+
     #' @param ... additional arguments to be saved as a list in `private$extras` field
     #'
     initialize = function(x,
                           x_reactive = reactive(NULL),
-                          extract_type = character(0),
                           slice) {
       shiny::isolate({
         super$initialize(
           x = x,
           x_reactive = x_reactive,
-          slice = slice,
-          extract_type = extract_type
+          slice = slice
         )
         private$set_choices(slice$choices)
         private$set_selected(slice$selected)
@@ -73,15 +64,15 @@ EmptyFilterState <- R6::R6Class( # nolint
     #' @param dataname name of data set; defaults to `private$get_dataname()`
     #' @return `logical(1)`
     #'
-    get_call = function(dataname) {
+    get_call = function(dataname, extract_type = character(0)) {
       if (isFALSE(private$is_any_filtered())) {
         return(NULL)
       }
       if (missing(dataname)) dataname <- private$get_dataname()
       filter_call <- if (isTRUE(private$get_keep_na())) {
-        call("is.na", private$get_varname_prefixed(dataname))
+        call("is.na", private$get_varname_prefixed(dataname, extract_type))
       } else {
-        substitute(!is.na(varname), list(varname = private$get_varname_prefixed(dataname)))
+        substitute(!is.na(varname), list(varname = private$get_varname_prefixed(dataname, extract_type)))
       }
     }
   ),

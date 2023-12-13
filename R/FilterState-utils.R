@@ -10,13 +10,6 @@
 #'   dataset are not shown.
 #' @param slice (`teal_slice`)\cr
 #'   object created using [teal_slice()].
-#' @param extract_type (`character(0)`, `character(1)`)\cr
-#'   specifying whether condition calls should be prefixed by `dataname`. Possible values:
-#' \itemize{
-#' \item{`character(0)` (default)}{ `varname` in the condition call will not be prefixed}
-#' \item{`"list"`}{ `varname` in the condition call will be returned as `<dataname>$<varname>`}
-#' \item{`"matrix"`}{ `varname` in the condition call will be returned as `<dataname>[, <varname>]`}
-#' }
 #' @param ... additional arguments to be saved as a list in `private$extras` field
 #'
 #' @keywords internal
@@ -28,8 +21,7 @@
 #'   slice = teal_slice(
 #'     varname = "x",
 #'     dataname = "dataname"
-#'   ),
-#'   extract_type = "matrix"
+#'   )
 #' )
 #'
 #' shiny::isolate(filter_state$get_call())
@@ -52,21 +44,15 @@
 #' @return `FilterState` object
 init_filter_state <- function(x,
                               x_reactive = reactive(NULL),
-                              slice,
-                              extract_type = character(0)) {
+                              slice) {
   checkmate::assert_class(x_reactive, "reactive")
-  checkmate::assert_character(extract_type, max.len = 1, any.missing = FALSE)
   checkmate::assert_class(slice, "teal_slice")
-  if (length(extract_type) == 1) {
-    checkmate::assert_choice(extract_type, choices = c("list", "matrix"))
-  }
 
   if (all(is.na(x))) {
     EmptyFilterState$new(
       x = x,
       x_reactive = x_reactive,
-      slice = slice,
-      extract_type = extract_type
+      slice = slice
     )
   } else {
     UseMethod("init_filter_state")
@@ -77,12 +63,10 @@ init_filter_state <- function(x,
 #' @export
 init_filter_state.default <- function(x,
                                       x_reactive = reactive(NULL),
-                                      slice,
-                                      extract_type = character(0)) {
+                                      slice) {
   args <- list(
     x = x,
     x_reactive = x_reactive,
-    extract_type = extract_type,
     slice
   )
 
@@ -93,13 +77,11 @@ init_filter_state.default <- function(x,
 #' @export
 init_filter_state.logical <- function(x,
                                       x_reactive = reactive(NULL),
-                                      slice,
-                                      extract_type = character(0)) {
+                                      slice) {
   LogicalFilterState$new(
     x = x,
     x_reactive = x_reactive,
-    slice = slice,
-    extract_type = extract_type
+    slice = slice
   )
 }
 
@@ -107,13 +89,11 @@ init_filter_state.logical <- function(x,
 #' @export
 init_filter_state.numeric <- function(x,
                                       x_reactive = reactive(NULL),
-                                      slice,
-                                      extract_type = character(0)) {
+                                      slice) {
   args <- list(
     x = x,
     x_reactive = x_reactive,
-    slice = slice,
-    extract_type = extract_type
+    slice = slice
   )
 
   if (length(unique(x[!is.na(x)])) < getOption("teal.threshold_slider_vs_checkboxgroup")) {
@@ -127,13 +107,11 @@ init_filter_state.numeric <- function(x,
 #' @export
 init_filter_state.factor <- function(x,
                                      x_reactive = reactive(NULL),
-                                     slice,
-                                     extract_type = character(0)) {
+                                     slice) {
   ChoicesFilterState$new(
     x = x,
     x_reactive = x_reactive,
-    slice = slice,
-    extract_type = extract_type
+    slice = slice
   )
 }
 
@@ -141,13 +119,11 @@ init_filter_state.factor <- function(x,
 #' @export
 init_filter_state.character <- function(x,
                                         x_reactive = reactive(NULL),
-                                        slice,
-                                        extract_type = character(0)) {
+                                        slice) {
   ChoicesFilterState$new(
     x = x,
     x_reactive = x_reactive,
-    slice = slice,
-    extract_type = extract_type
+    slice = slice
   )
 }
 
@@ -155,13 +131,11 @@ init_filter_state.character <- function(x,
 #' @export
 init_filter_state.Date <- function(x,
                                    x_reactive = reactive(NULL),
-                                   slice,
-                                   extract_type = character(0)) {
+                                   slice) {
   args <- list(
     x = x,
     x_reactive = x_reactive,
-    slice = slice,
-    extract_type = extract_type
+    slice = slice
   )
 
   if (length(unique(x[!is.na(x)])) < getOption("teal.threshold_slider_vs_checkboxgroup")) {
@@ -175,13 +149,11 @@ init_filter_state.Date <- function(x,
 #' @export
 init_filter_state.POSIXct <- function(x,
                                       x_reactive = reactive(NULL),
-                                      slice,
-                                      extract_type = character(0)) {
+                                      slice) {
   args <- list(
     x = x,
     x_reactive = x_reactive,
-    slice = slice,
-    extract_type = extract_type
+    slice = slice
   )
 
   if (length(unique(x[!is.na(x)])) < getOption("teal.threshold_slider_vs_checkboxgroup")) {
@@ -195,13 +167,11 @@ init_filter_state.POSIXct <- function(x,
 #' @export
 init_filter_state.POSIXlt <- function(x,
                                       x_reactive = reactive(NULL),
-                                      slice,
-                                      extract_type = character(0)) {
+                                      slice) {
   args <- list(
     x = x,
     x_reactive = x_reactive,
-    slice = slice,
-    extract_type = extract_type
+    slice = slice
   )
 
   if (length(unique(x[!is.na(x)])) < getOption("teal.threshold_slider_vs_checkboxgroup")) {

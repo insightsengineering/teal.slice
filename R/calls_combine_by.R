@@ -22,9 +22,9 @@
 #' @keywords internal
 calls_combine_by <- function(calls, operator) {
   checkmate::assert_list(calls)
-  if (length(calls) > 0L) checkmate::assert_list(calls, types = c("call", "name"))
   checkmate::assert_string(operator)
 
+  if (length(calls) > 0L) checkmate::assert_list(calls, types = c("call", "name", "NULL"))
   calls <- Filter(x = calls, f = Negate(is.null))
 
   Reduce(

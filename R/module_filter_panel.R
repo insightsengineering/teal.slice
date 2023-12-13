@@ -13,9 +13,6 @@
 #'   if the function returns `NULL` (as opposed to `character(0)`), the filter
 #'   panel will be hidden
 #' @return `shiny.tag` and `moduleServer`
-NULL
-
-#' @rdname module_filter_panel
 #' @export
 ui_filter_panel <- function(id) {
   ns <- NS(id)

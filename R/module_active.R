@@ -1,15 +1,14 @@
-#' @title Filterpanel module active
-#' @name module_active
+#' Filter panel module active
+#'
+#' Filter panel module active
 #' @export
 NULL
 
-#' @rdname module_active
 #' @export
 ui_active <- function(id, data, label = character(0)) {
   UseMethod("ui_active", data)
 }
 
-#' @rdname module_active
 #' @export
 ui_active.default <- function(id, data, label = character(0)) {
   ns <- NS(id)
@@ -24,9 +23,6 @@ ui_active.default <- function(id, data, label = character(0)) {
   )
 }
 
-
-
-#' @rdname module_active
 #' @export
 ui_active.MultiAssayExperiment <- function(id, data, label) {
   ns <- NS(id)
@@ -43,13 +39,11 @@ ui_active.MultiAssayExperiment <- function(id, data, label) {
   )
 }
 
-#' @rdname module_active
 #' @export
 srv_active <- function(id, data, reactive_state_list, remove_state_callback) {
   UseMethod("srv_active", data)
 }
 
-#' @rdname module_active
 #' @export
 srv_active.default <- function(id, data, reactive_state_list, remove_state_callback) {
   moduleServer(id, function(input, output, session) {
@@ -115,6 +109,7 @@ srv_active.default <- function(id, data, reactive_state_list, remove_state_callb
   })
 }
 
+#' @export
 srv_active.MultiAssayExperiment <- function(id, data, reactive_state_list, remove_state_callback) {
   moduleServer(id, function(input, output, session) {
     logger::log_trace("srv_active.MultiAssayExperiment initializing")

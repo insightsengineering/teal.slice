@@ -25,6 +25,7 @@ init_filtered_data <- function(x = list(), join_keys = teal.data::join_keys(), c
     )
   }
   fd <- FilteredData$new()
+  # todo: FIRST topological sort of datanames
   for (dataname in names(x)) {
     fd$set_dataset(dataname, x[[dataname]])
   }

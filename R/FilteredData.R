@@ -186,8 +186,7 @@ FilteredData <- R6::R6Class( # nolint
                 } else {
                   reactive(NULL)
                 },
-                slice = slice,
-                extract_type = private$extract_type
+                slice = slice
               )
             }
             self$state_list_push(x = fstate, state_id = state_id)
@@ -306,14 +305,14 @@ FilteredData <- R6::R6Class( # nolint
     #'
     set_dataset = function(dataname, dataset) {
       private$datasets[[dataname]] <- dataset
-      observeEvent(private$datasets[[dataname]], {
+      observe({
         env <- new.env()
         env[[dataname]] <- private$datasets[[dataname]]
         filter_call <- self$get_call(dataname)
         # add parent if exists
         parent_dataname <- teal.data::parent(private$join_keys, dataname)
         if (length(parent_dataname)) {
-          env[[parent_dataname]] <- private$datasets[[parent_dataname]]
+          env[[parent_dataname]] <- private$datasets_filtered[[parent_dataname]]
         }
         eval_expr_with_msg(filter_call, env)
         private$datasets_filtered[[dataname]] <- env[[dataname]]
@@ -364,50 +363,10 @@ FilteredData <- R6::R6Class( # nolint
         function(x) x$get_state()$dataname == dataname,
         self$state_list_get()
       )
-      if (length(states_list) == 0) {
-        return(NULL)
-      }
-      args <- vapply(
-        states_list,
-        function(x) {
-          arg <- x$get_state()$arg
-          `if`(is.null(arg), "", arg) # converting NULL -> "" to enable tapply.
-        },
-        character(1)
-      )
+      data <- isolate(private$datasets[[dataname]])
 
-      filter_items <- tapply(
-        X = states_list,
-        INDEX = args,
-        simplify = FALSE,
-        function(items) {
-          # removing filters identified by sid
-          other_filter_idx <- !names(items) %in% sid
-          filtered_items <- items[other_filter_idx]
+      filter_call <- get_filter_call(data, states_list)
 
-          calls <- Filter(
-            Negate(is.null),
-            lapply(
-              filtered_items,
-              function(state) {
-                state$get_call(dataname = private$dataname_prefixed)
-              }
-            )
-          )
-          calls_combine_by(calls, operator = "&")
-        }
-      )
-
-      filter_items <- Filter(
-        x = filter_items,
-        f = Negate(is.null)
-      )
-
-      filter_call <- get_filter_call(
-        data = isolate(private$datasets[[dataname]]),
-        dataname = dataname,
-        calls = filter_items
-      )
       parent_dataname <- teal.data::parent(private$join_keys, dataname)
       if (length(parent_dataname)) {
         merge_call <- call(
@@ -582,7 +541,6 @@ FilteredData <- R6::R6Class( # nolint
     datasets = NULL, # reactiveValues
     datasets_filtered = NULL, # reactiveValues
     count_type = "all",
-    extract_type = character(0),
     exclude_varnames = list(),
     include_varnames = list(),
     join_keys = teal.data::join_keys(),
