@@ -4,7 +4,7 @@
 \alias{init_filtered_data}
 \title{Initialize \code{FilteredData}}
 \usage{
-init_filtered_data(x, join_keys = teal.data::join_keys(), code, check)
+init_filtered_data(x = list(), join_keys = teal.data::join_keys(), code, check)
 }
 \arguments{
 \item{x}{(named \code{list}) of datasets.}
