@@ -163,12 +163,14 @@ Returns a formatted string representing this \code{DefaultFilteredDataset} objec
 \if{html}{\out{<a id="method-DefaultFilteredDataset-get_filter_overview"></a>}}
 \if{latex}{\out{\hypertarget{method-DefaultFilteredDataset-get_filter_overview}{}}}
 \subsection{Method \code{get_filter_overview()}}{
+Get \code{data.frame} to use in the filter-panel overview.
+Output of this function indicates unsupported dataset class.
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{DefaultFilteredDataset$get_filter_overview()}\if{html}{\out{</div>}}
 }
 
 \subsection{Returns}{
-\code{NULL}, invisibly
+\code{list} containing character \verb{#filtered/#not_filtered}
 }
 }
 \if{html}{\out{<hr>}}

@@ -61,5 +61,8 @@ testthat::test_that("clear_filter_state returns NULL", {
 # get_filter_overview ----
 testthat::test_that("get_filter_overview returns NULL", {
   fds <- DefaultFilteredDataset$new(letters, "character")
-  testthat::expect_null(fds$get_filter_overview())
+  testthat::expect_identical(
+    fds$get_filter_overview(),
+    data.frame(dataname = "character", obs = NA, obs_filtered = NA)
+  )
 })

@@ -69,9 +69,12 @@ DefaultFilteredDataset <- R6::R6Class( # nolint
       invisible(NULL)
     },
 
-    #' @return `NULL`, invisibly
+    #' @description
+    #' Get `data.frame` to use in the filter-panel overview.
+    #' Output of this function indicates unsupported dataset class.
+    #' @return `list` containing character `#filtered/#not_filtered`
     get_filter_overview = function() {
-      invisible(NULL)
+      data.frame(dataname = private$dataname, obs = NA, obs_filtered = NA)
     },
 
     ### shiny modules ----

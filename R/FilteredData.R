@@ -232,7 +232,8 @@ FilteredData <- R6::R6Class( # nolint
           private$get_filtered_dataset(dataname)$get_filter_overview()
         }
       )
-      dplyr::bind_rows(rows)
+      unssuported_idx <- vapply(rows, function(x) all(is.na(x[-1])), logical(1))
+      dplyr::bind_rows(c(rows[!unssuported_idx], rows[unssuported_idx]))
     },
 
     #' @description
@@ -835,7 +836,19 @@ FilteredData <- R6::R6Class( # nolint
               function(x) {
                 tags$tr(
                   tagList(
-                    lapply(x, tags$td)
+                    tags$td(
+                      if (all(x[-1] == "")) {
+                        icon(
+                          name = "exclamation-triangle",
+                          title = "Unsupported dataset",
+                          `data-container` = "body",
+                          `data-toggle` = "popover",
+                          `data-content` = "object not supported by the filter panel"
+                        )
+                      },
+                      x[1]
+                    ),
+                    lapply(x[-1], tags$td)
                   )
                 )
               }
