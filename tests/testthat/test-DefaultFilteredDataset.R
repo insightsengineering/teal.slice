@@ -34,39 +34,32 @@ testthat::test_that("format trims very long class names to 40 characters if trim
 })
 
 # get_call ----
-testthat::test_that("get_call returns NULL with a warning", {
+testthat::test_that("get_call returns NULL", {
   fds <- DefaultFilteredDataset$new(letters, "character")
-  testthat::expect_null(
-    testthat::expect_warning(fds$get_call(), "does not create filter calls")
-  )
+  testthat::expect_null(fds$get_call())
 })
-
 # get_filter_state ----
-testthat::test_that("get_filter_state returns NULL with a warning", {
+testthat::test_that("get_filter_state returns NULL", {
   fds <- DefaultFilteredDataset$new(letters, "character")
-  testthat::expect_null(
-    testthat::expect_warning(fds$get_filter_state(), "does not have state")
-  )
+  testthat::expect_null(fds$get_filter_state())
 })
 # set_filter_state ----
-testthat::test_that("set_filter_state returns NULL with a warning", {
+testthat::test_that("set_filter_state returns NULL, raises warning if `state` is not empty", {
   fds <- DefaultFilteredDataset$new(letters, "character")
-  tss <- teal_slices(teal_slice("letters", "letter"))
+  tss0 <- teal_slices()
+  tss1 <- teal_slices(teal_slice("letters", "letter"))
+  testthat::expect_null(fds$set_filter_state(tss0))
   testthat::expect_null(
-    testthat::expect_warning(fds$set_filter_state(tss), "cannot set state")
+    testthat::expect_warning(fds$set_filter_state(tss1), "cannot set state")
   )
 })
 # clear_filter_states ----
-testthat::test_that("clear_filter_state returns NULL with a warning", {
+testthat::test_that("clear_filter_state returns NULL", {
   fds <- DefaultFilteredDataset$new(letters, "character")
-  testthat::expect_null(
-    testthat::expect_warning(fds$clear_filter_states(), "does not have filter states")
-  )
+  testthat::expect_null(fds$clear_filter_states())
 })
 # get_filter_overview ----
-testthat::test_that("get_filter_overview returns NULL with a warning", {
+testthat::test_that("get_filter_overview returns NULL", {
   fds <- DefaultFilteredDataset$new(letters, "character")
-  testthat::expect_null(
-    fds$get_filter_overview()
-  )
+  testthat::expect_null(fds$get_filter_overview())
 })
