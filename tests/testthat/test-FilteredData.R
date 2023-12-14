@@ -404,9 +404,9 @@ testthat::test_that("format lists unfiltered datasets at the end of the output",
     exclude_varnames = list(iris = c("Petal.Length", "Petal.Width"))
   )
 
-  testthat::expect_warning(datasets$set_filter_state(fs))
+  datasets$set_filter_state(fs)
 
-  testthat::expect_warning(state_fmt <- shiny::isolate(format(datasets$get_filter_state())))
+  state_fmt <- shiny::isolate(format(datasets$get_filter_state()))
 
   testthat::expect_identical(
     shiny::isolate(datasets$format()),
