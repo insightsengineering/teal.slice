@@ -172,6 +172,14 @@ optional \verb{is.na(<varname>)}.
 \if{html}{\out{<div class="arguments">}}
 \describe{
 \item{\code{dataname}}{\code{character(1)} containing possibly prefixed name of data set}
+
+\item{\code{extract_type}}{(\code{character(0)}, \code{character(1)})\cr
+specifying whether condition calls should be prefixed by \code{dataname}. Possible values:
+\itemize{
+\item{\code{character(0)} (default)}{ \code{varname} in the condition call will not be prefixed}
+\item{\code{"list"}}{ \code{varname} in the condition call will be returned as \verb{<dataname>$<varname>}}
+\item{\code{"matrix"}}{ \code{varname} in the condition call will be returned as \verb{<dataname>[, <varname>]}}
+}}
 }
 \if{html}{\out{</div>}}
 }

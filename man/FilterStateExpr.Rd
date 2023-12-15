@@ -181,6 +181,9 @@ Returns reproducible condition call for current selection relevant
 for selected variable type.
 Method is using internal reactive values which makes it reactive
 and must be executed in reactive or isolated context.}
+
+\item{\code{extract_type}}{(\code{character(0)}, \code{character(1)})\cr
+ignored}
 }
 \if{html}{\out{</div>}}
 }

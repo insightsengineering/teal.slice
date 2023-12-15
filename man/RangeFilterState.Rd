@@ -189,6 +189,14 @@ optional \verb{is.na(<varname>)} and \verb{is.finite(<varname>)}.
 \if{html}{\out{<div class="arguments">}}
 \describe{
 \item{\code{dataname}}{name of data set; defaults to \code{private$get_dataname()}}
+
+\item{\code{extract_type}}{(\code{character(0)}, \code{character(1)})\cr
+specifying whether condition calls should be prefixed by \code{dataname}. Possible values:
+\itemize{
+\item{\code{character(0)} (default)}{ \code{varname} in the condition call will not be prefixed}
+\item{\code{"list"}}{ \code{varname} in the condition call will be returned as \verb{<dataname>$<varname>}}
+\item{\code{"matrix"}}{ \code{varname} in the condition call will be returned as \verb{<dataname>[, <varname>]}}
+}}
 }
 \if{html}{\out{</div>}}
 }

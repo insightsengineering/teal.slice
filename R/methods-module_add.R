@@ -2,35 +2,76 @@
 #'
 #' @description
 #' Server module responsible for displaying drop-downs with variables to add a filter.
+#'
 #' @name module_add
-#' @param id module id
-#' @param data data to be filtered
-#' @param filtered_data `FilteredData` object
-#' @param dataname name of the dataset or its subitem.
-#' @param ... (optional) additional arguments passed to `teal_slice`. Usefull when reusing
+#'
+#' @param ... (optional) additional arguments passed to `teal_slice`. Useful when reusing
 #'  `srv_add` for object nested inside of other object. For example `SummarizedExperiment` could be
 #'  a standalone dataset or a part of `MultiAssayExperiment`. In both cases added `teal_slice` should
 #' be configured in a different way.
+#' @inheritParams filter_panel_methods
+#' @inheritSection filter_panel_methods Supported data types
+#'
 NULL
 
 #' @rdname module_add
 #' @export
 ui_add <- function(id, data, dataname) {
-  UseMethod("ui_add", data)
+  ui <- UseMethod("ui_add", data)
+  if (!inherits(ui, c("shiny.tag", "shiny.tag.list", "character"))) {
+    # ui class is checked in case someone register ui_active.<custom_class>
+    stop("ui_active must return a shiny.tag or shiny.tag.list or a character")
+  }
+  ui
 }
 
 #' @rdname module_add
 #' @export
 ui_add.default <- function(id, data, dataname) {
-  tagList(
-    tags$label("Add", tags$code(dataname), "filter"),
-    div(sprintf("'%s' not supported", class(data)[1]))
-  )
+  if (inherits(data, "MultiAssayExperiment")) {
+    ui_add_MultiAssayExperiment(id, data, dataname)
+  } else if (inherits(data, "SummarizedExperiment")) {
+    ui_add_SummarizedExperiment(id, data, dataname)
+  } else if (inherits(data, c("data.frame", "DFrame", "array", "Matrix"))) {
+    ui_add_array(id, data, dataname)
+  } else {
+    ui_add_unsupported(id, data, dataname)
+  }
 }
 
 #' @rdname module_add
 #' @export
-ui_add.data.frame <- function(id, data, dataname) {
+srv_add <- function(id, data, filtered_data, dataname, ...) {
+  UseMethod("srv_add", data)
+}
+
+#' @rdname module_add
+#' @export
+srv_add.default <- function(id, data, filtered_data, dataname, ...) {
+  if (inherits(data, "MultiAssayExperiment")) {
+    srv_add_MultiAssayExperiment(id, data, filtered_data, dataname, ...)
+  } else if (inherits(data, "SummarizedExperiment")) {
+    srv_add_SummarizedExperiment(id, data, filtered_data, dataname, ...)
+  } else if (inherits(data, c("data.frame", "DFrame", "array", "Matrix"))) {
+    srv_add_array(id, data, filtered_data, dataname, ...)
+  } else {
+    srv_add_unsupported(id, data, filtered_data, dataname, ...)
+  }
+}
+
+#' @rdname default_filter_panel_internals
+#' @keywords internal
+ui_add_unsupported <- function(id, data, dataname) {
+  ns <- NS(id)
+  tagList(
+    tags$label("Add", tags$code(dataname), "filter"),
+    div("Unsupported data type")
+  )
+}
+
+#' @rdname default_filter_panel_internals
+#' @keywords internal
+ui_add_array <- function(id, data, dataname) {
   ns <- NS(id)
   tagList(
     tags$label("Add", tags$code(dataname), "filter"),
@@ -44,12 +85,12 @@ ui_add.data.frame <- function(id, data, dataname) {
   )
 }
 
-#' @rdname module_add
-#' @export
-ui_add.MultiAssayExperiment <- function(id, data, dataname) {
+#' @rdname default_filter_panel_internals
+#' @keywords internal
+ui_add_MultiAssayExperiment <- function(id, data, dataname) {
   ns <- NS(id)
   tagList(
-    ui_add.data.frame(ns(dataname), SummarizedExperiment::colData(data), dataname = "subjects"),
+    ui_add_array(ns(dataname), SummarizedExperiment::colData(data), dataname = "subjects"),
     lapply(
       names(data),
       function(experiment) {
@@ -62,9 +103,9 @@ ui_add.MultiAssayExperiment <- function(id, data, dataname) {
   )
 }
 
-#' @rdname module_add
-#' @export
-ui_add.SummarizedExperiment <- function(id, data, dataname) {
+#' @rdname default_filter_panel_internals
+#' @keywords internal
+ui_add_SummarizedExperiment <- function(id, data, dataname) {
   ns <- NS(id)
   row_input <- if (ncol(SummarizedExperiment::rowData(data)) == 0) {
     div("no sample variables available")
@@ -96,23 +137,18 @@ ui_add.SummarizedExperiment <- function(id, data, dataname) {
   )
 }
 
-
-#' @rdname module_add
-#' @export
-srv_add <- function(id, data, filtered_data, dataname, ...) {
-  UseMethod("srv_add", data)
+#' @rdname default_filter_panel_internals
+#' @keywords internal
+srv_add_unsupported <- function(id, data, filtered_data, dataname, ...) {
+  moduleServer(id, function(input, output, session) {
+    logger::log_trace("srv_add_unsupported initializing")
+    NULL
+  })
 }
 
-#' @rdname module_add
-#' @export
-srv_add.default <- function(id, data, filtered_data, dataname, ...) {
-  logger::log_trace("srv_add.default initializing")
-  NULL
-}
-
-#' @rdname module_add
-#' @export
-srv_add.data.frame <- function(id, data, filtered_data, dataname, ...) {
+#' @rdname default_filter_panel_internals
+#' @keywords internal
+srv_add_array <- function(id, data, filtered_data, dataname, ...) {
   moduleServer(id, function(input, output, session) {
     logger::log_trace("srv_add.data.frame initializing")
 
@@ -155,11 +191,11 @@ srv_add.data.frame <- function(id, data, filtered_data, dataname, ...) {
   })
 }
 
-#' @rdname module_add
-#' @export
-srv_add.MultiAssayExperiment <- function(id, data, filtered_data, dataname, ...) {
+#' @rdname default_filter_panel_internals
+#' @keywords internal
+srv_add_MultiAssayExperiment <- function(id, data, filtered_data, dataname, ...) {
   moduleServer(id, function(input, output, session) {
-    srv_add.data.frame(id, SummarizedExperiment::colData(data), filtered_data)
+    srv_add_array(id, SummarizedExperiment::colData(data), filtered_data)
     lapply(
       names(data),
       function(experiment) {
@@ -176,9 +212,9 @@ srv_add.MultiAssayExperiment <- function(id, data, filtered_data, dataname, ...)
   })
 }
 
-#' @rdname module_add
-#' @export
-srv_add.SummarizedExperiment <- function(id, data, filtered_data, dataname, ...) {
+#' @rdname default_filter_panel_internals
+#' @keywords internal
+srv_add_SummarizedExperiment <- function(id, data, filtered_data, dataname, ...) {
   moduleServer(id, function(input, output, session) {
     row_data <- SummarizedExperiment::rowData(data)
     col_data <- SummarizedExperiment::colData(data)

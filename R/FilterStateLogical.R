@@ -135,6 +135,13 @@ LogicalFilterState <- R6::R6Class( # nolint
     #' For `LogicalFilterState` it's a `!<varname>` or `<varname>` and optionally
     #' `is.na(<varname>)`
     #' @param dataname name of data set; defaults to `private$get_dataname()`
+    #' @param extract_type (`character(0)`, `character(1)`)\cr
+    #'   specifying whether condition calls should be prefixed by `dataname`. Possible values:
+    #' \itemize{
+    #' \item{`character(0)` (default)}{ `varname` in the condition call will not be prefixed}
+    #' \item{`"list"`}{ `varname` in the condition call will be returned as `<dataname>$<varname>`}
+    #' \item{`"matrix"`}{ `varname` in the condition call will be returned as `<dataname>[, <varname>]`}
+    #' }
     #' @return (`call`)
     #'
     get_call = function(dataname, extract_type = character(0)) {

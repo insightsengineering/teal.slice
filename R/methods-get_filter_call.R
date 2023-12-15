@@ -1,6 +1,8 @@
 #' Get filter call
 #'
 #' Get filter call
+#' @inheritParams filter_panel_methods
+#' @inheritSection filter_panel_methods Supported data types
 #' @export
 get_filter_call <- function(data, states_list) {
   if (length(states_list) > 0L) {
@@ -11,6 +13,22 @@ get_filter_call <- function(data, states_list) {
 #' @rdname get_filter_call
 #' @export
 get_filter_call.default <- function(data, states_list) {
+  if (inherits(data, "data.frame")) {
+    get_filter_call_data.frame(data, states_list)
+  } else if (inherits(data, c("array", "Matrix"))) {
+    get_filter_call_array(data, states_list)
+  } else if (inherits(data, "SummarizedExperiment")) {
+    get_filter_call_SummarizedExperiment(data, states_list)
+  } else if (inherits(data, "MultiAssayExperiment")) {
+    get_filter_call_MultiAssayExperiment(data, states_list)
+  } else {
+    stop("get_filter_call not implemented for class ", class(data), call. = FALSE)
+  }
+}
+
+#' @rdname default_filter_panel_internals
+#' @keywords internal
+get_filter_call_data.frame <- function(data, states_list) {
   dataname_lang <- str2lang(states_list[[1L]]$get_state()$dataname)
   states_predicate <- lapply(states_list, function(state) state$get_call())
   combined_predicate <- calls_combine_by(states_predicate, "&")
@@ -18,16 +36,31 @@ get_filter_call.default <- function(data, states_list) {
   substitute(
     env = list(
       lhs = dataname_lang,
-      rhs = as.call(c(quote(subset), c(list(dataname_lang), combined_predicate)))
+      rhs = as.call(c(str2lang("dplyr::filter"), c(list(dataname_lang), combined_predicate)))
     ),
     expr = lhs <- rhs
   )
 }
 
+#' @rdname default_filter_panel_internals
+#' @keywords internal
+get_filter_call_array <- function(data, states_list) {
+  dataname_lang <- str2lang(states_list[[1L]]$get_state()$dataname)
+  states_predicate <- lapply(states_list, function(state) state$get_call())
+  combined_predicate <- calls_combine_by(states_predicate, "&")
 
-#' @rdname get_filter_call
-#' @export
-get_filter_call.MultiAssayExperiment <- function(data, states_list) {
+  substitute(
+    env = list(
+      lhs = dataname_lang,
+      rhs = as.call(c(str2lang("subset"), c(list(dataname_lang), subset = combined_predicate)))
+    ),
+    expr = lhs <- rhs
+  )
+}
+
+#' @rdname default_filter_panel_internals
+#' @keywords internal
+get_filter_call_MultiAssayExperiment <- function(data, states_list) {
   states_grouped <- split(
     states_list,
     sapply(states_list, function(x) if (is.null(x$get_state()$experiment)) "_subjects_" else x$get_state()$experiment)
@@ -66,9 +99,9 @@ get_filter_call.MultiAssayExperiment <- function(data, states_list) {
   c(subject_call, experiment_calls)
 }
 
-#' @rdname get_filter_call
-#' @export
-get_filter_call.SummarizedExperiment <- function(data, states_list) {
+#' @rdname default_filter_panel_internals
+#' @keywords internal
+get_filter_call_SummarizedExperiment <- function(data, states_list) {
   state_list_grouped <- split(
     states_list,
     sapply(states_list, function(x) x$get_state()$arg)

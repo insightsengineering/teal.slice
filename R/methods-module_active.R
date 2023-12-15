@@ -1,16 +1,45 @@
 #' Filter panel module active
 #'
 #' Filter panel module active
-#' @export
+#' @name module_active
+#' @inheritParams filter_panel_methods
+#' @inheritSection filter_panel_methods Supported data types
+#' @return
+#' - `ui_active` returns `shiny.tag`
+#' - `srv_active` returns `moduleServer`
 NULL
 
+#' @rdname module_active
 #' @export
 ui_active <- function(id, data, label = character(0)) {
-  UseMethod("ui_active", data)
+  ui <- UseMethod("ui_active", data)
+  if (!inherits(ui, c("shiny.tag", "shiny.tag.list", "character"))) {
+    # ui class is checked in case someone register ui_active.<custom_class>
+    stop("ui_active must return a shiny.tag or shiny.tag.list or a character")
+  }
+  ui
 }
 
+#' @rdname module_active
+#' @export
+srv_active <- function(id, data, reactive_state_list, remove_state_callback) {
+  UseMethod("srv_active", data)
+}
+
+#' @rdname module_active
 #' @export
 ui_active.default <- function(id, data, label = character(0)) {
+  ns <- NS(id)
+  if (inherits(data, "MultiAssayExperiment")) {
+    ui_active_MultiAssayExperiment(ns("mae"), data, label)
+  } else {
+    ui_active_array(ns("array"), data, label)
+  }
+}
+
+#' @rdname default_filter_panel_internals
+#' @keywords internal
+ui_active_array <- function(id, data, label = character(0)) {
   ns <- NS(id)
   tagList(
     teal.slice:::include_css_files(pattern = "filter-panel"),
@@ -23,8 +52,9 @@ ui_active.default <- function(id, data, label = character(0)) {
   )
 }
 
-#' @export
-ui_active.MultiAssayExperiment <- function(id, data, label) {
+#' @rdname default_filter_panel_internals
+#' @keywords internal
+ui_active_MultiAssayExperiment <- function(id, data, label) {
   ns <- NS(id)
   tagList(
     ui_active(ns("subjects"), SummarizedExperiment::colData(data), label = "subjects"),
@@ -39,13 +69,19 @@ ui_active.MultiAssayExperiment <- function(id, data, label) {
   )
 }
 
-#' @export
-srv_active <- function(id, data, reactive_state_list, remove_state_callback) {
-  UseMethod("srv_active", data)
+#' @rdname default_filter_panel_internals
+#' @keywords internal
+srv_active.default <- function(id, data, reactive_state_list, remove_state_callback) {
+  if (inherits(data, "MultiAssayExperiment")) {
+    srv_active_MultiAssayExperiment("mae", data, reactive_state_list, remove_state_callback)
+  } else {
+    srv_active_array("array", data, reactive_state_list, remove_state_callback)
+  }
 }
 
-#' @export
-srv_active.default <- function(id, data, reactive_state_list, remove_state_callback) {
+#' @rdname default_filter_panel_internals
+#' @keywords internal
+srv_active_array <- function(id, data, reactive_state_list, remove_state_callback) {
   moduleServer(id, function(input, output, session) {
     logger::log_trace("srv_active.default initializing")
     output$filter_count <- renderText({
@@ -113,8 +149,9 @@ srv_active.default <- function(id, data, reactive_state_list, remove_state_callb
   })
 }
 
-#' @export
-srv_active.MultiAssayExperiment <- function(id, data, reactive_state_list, remove_state_callback) {
+#' @rdname default_filter_panel_internals
+#' @keywords internal
+srv_active_MultiAssayExperiment <- function(id, data, reactive_state_list, remove_state_callback) {
   moduleServer(id, function(input, output, session) {
     logger::log_trace("srv_active.MultiAssayExperiment initializing")
 
