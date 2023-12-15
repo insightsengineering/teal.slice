@@ -4,12 +4,7 @@
 \alias{init_filter_state}
 \title{Initializes \code{FilterState}}
 \usage{
-init_filter_state(
-  x,
-  x_reactive = reactive(NULL),
-  slice,
-  extract_type = character(0)
-)
+init_filter_state(x, x_reactive = reactive(NULL), slice)
 }
 \arguments{
 \item{x}{(\code{vector})\cr
@@ -23,14 +18,6 @@ dataset are not shown.}
 
 \item{slice}{(\code{teal_slice})\cr
 object created using \code{\link[=teal_slice]{teal_slice()}}.}
-
-\item{extract_type}{(\code{character(0)}, \code{character(1)})\cr
-specifying whether condition calls should be prefixed by \code{dataname}. Possible values:
-\itemize{
-\item{\code{character(0)} (default)}{ \code{varname} in the condition call will not be prefixed}
-\item{\code{"list"}}{ \code{varname} in the condition call will be returned as \verb{<dataname>$<varname>}}
-\item{\code{"matrix"}}{ \code{varname} in the condition call will be returned as \verb{<dataname>[, <varname>]}}
-}}
 
 \item{...}{additional arguments to be saved as a list in \code{private$extras} field}
 }
@@ -47,8 +34,7 @@ filter_state <- teal.slice:::init_filter_state(
   slice = teal_slice(
     varname = "x",
     dataname = "dataname"
-  ),
-  extract_type = "matrix"
+  )
 )
 
 shiny::isolate(filter_state$get_call())

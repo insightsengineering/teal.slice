@@ -331,7 +331,7 @@ data to be filtered.}
 If this data has a parent specified in the \code{join_keys} object stored in \code{private$join_keys}
 then created \code{FilteredDataset} (child) gets linked with other \code{FilteredDataset} (parent).
 "Child" dataset return filtered data then dependent on the reactive filtered data of the
-"parent". See more in documentation of \code{parent} argument in \code{DataframeFilteredDataset} constructor.
+"parent". See more in documentation of \code{parent} argument in \code{FilteredDatasetDefault} constructor.
 }
 
 \subsection{Returns}{

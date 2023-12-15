@@ -146,12 +146,7 @@ if (interactive()) {
 \subsection{Method \code{new()}}{
 Initialize a \code{FilterState} object for range selection
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{RangeFilterState$new(
-  x,
-  x_reactive = reactive(NULL),
-  extract_type = character(0),
-  slice
-)}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{RangeFilterState$new(x, x_reactive = reactive(NULL), slice)}\if{html}{\out{</div>}}
 }
 
 \subsection{Arguments}{
@@ -165,14 +160,6 @@ returning vector of the same type as \code{x}. Is used to update
 counts following the change in values of the filtered dataset.
 If it is set to \code{reactive(NULL)} then counts based on filtered
 dataset are not shown.}
-
-\item{\code{extract_type}}{(\code{character(0)}, \code{character(1)})\cr
-whether condition calls should be prefixed by \code{dataname}. Possible values:
-\itemize{
-\item{\code{character(0)} (default)}{ \code{varname} in the condition call will not be prefixed}
-\item{\code{"list"}}{ \code{varname} in the condition call will be returned as \verb{<dataname>$<varname>}}
-\item{\code{"matrix"}}{ \code{varname} in the condition call will be returned as \verb{<dataname>[, <varname>]}}
-}}
 
 \item{\code{slice}}{(\code{teal_slice})\cr
 object created using \code{\link[=teal_slice]{teal_slice()}}. \code{teal_slice} is stored
@@ -195,7 +182,7 @@ For this class returned call looks like
 \verb{<varname> >= <min value> & <varname> <= <max value>} with
 optional \verb{is.na(<varname>)} and \verb{is.finite(<varname>)}.
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{RangeFilterState$get_call(dataname)}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{RangeFilterState$get_call(dataname, extract_type = character(0))}\if{html}{\out{</div>}}
 }
 
 \subsection{Arguments}{

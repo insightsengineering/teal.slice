@@ -67,16 +67,17 @@ srv_overview_data <- function(id, filtered_data, active_datanames = filtered_dat
           return(NULL)
         }
 
-        datasets_df <- dplyr::bind_rows(
-          lapply(
-            active_datanames(),
-            function(dataname) {
-              data_unfiltered <- filtered_data$get_data(dataname, filtered = FALSE)
-              data_filtered <- filtered_data$get_data(dataname, filtered = TRUE)
-              get_filter_overview(data_unfiltered, data_filtered, dataname)
-            }
-          )
+        rows <- lapply(
+          active_datanames(),
+          function(dataname) {
+            data_unfiltered <- filtered_data$get_data(dataname, filtered = FALSE)
+            data_filtered <- filtered_data$get_data(dataname, filtered = TRUE)
+            get_filter_overview(data_unfiltered, data_filtered, dataname)
+          }
         )
+
+        unssuported_idx <- vapply(rows, function(x) all(is.na(x[-1])), logical(1))
+        datasets_df <- dplyr::bind_rows(c(rows[!unssuported_idx], rows[unssuported_idx]))
 
         if (!is.null(datasets_df$obs)) {
           # some datasets (MAE colData) doesn't return obs column
@@ -152,10 +153,38 @@ srv_overview_data <- function(id, filtered_data, active_datanames = filtered_dat
 #' Get filter overview
 #'
 #' Summary of the dataset in the filter panel
-#' @param data_unfiltered (`data.frame`)\cr
-#'  unfiltered data
-#' @param data_filtered (`data.frame`)\cr
-#' filtered data
+#' @details Supported data types
+#' `teal.slice` provide `get_filter_overview.default` method for:
+#' - `data.frame`
+#' - `DFrame`
+#' - `matrix`
+#' - `Matrix`
+#' - `SummarizedExperiment`
+#' - `MultiAssayExperiment`
+#' Datasets which don't inherit from these classes will return
+#' `data.frame(dataname = dataname, obs = NA, obs_filtered = NA))`
+#' and they will be denoted as "Unsupported dataset" in UI of the filter panel overview.
+#'
+#' To extend the `get_filter_overview` function to support custom data types,
+#' you need to define a new method for your custom class. This method should be named
+#' `get_filter_overview.your_class_name`.
+#'
+#' Here's a general example:
+#'
+#' ```
+#' get_filter_overview.your_class_name <- function(data_unfiltered, data_filtered, dataname) {
+#'   # Your implementation here.
+#'   # The function must return a data.frame with columns `dataname`, `obs`, and `obs_filtered`.
+#' }
+#' ```
+#' Replace your_class_name with the name of your custom class. Inside the function,
+#' implement the logic to generate the required data frame for your specific data type.
+#' Remember, the returned `data.frame` must have the columns `"dataname"`, `"obs"`, and `"obs_filtered"`.
+#' The `"dataname"` should be the name of the dataset, `"obs"` should be the number of observations in
+#' the `unfiltered_data`, and `"obs_filtered"` should be the number of observations in the `filtered_data`.
+#'
+#' @param data_unfiltered,data_filtered (`object`)\cr
+#' unfiltered and filtered data.
 #' @param dataname (`character`)\cr
 #' name of the dataset
 #' @return `data_frame` with columns `dataname` and usually `obs`, `obs_filtered`.
@@ -168,11 +197,10 @@ get_filter_overview <- function(data_unfiltered, data_filtered, dataname) {
   df
 }
 
+#' @rdname get_filter_overview
+#' @export
 get_filter_overview.default <- function(data_unfiltered, data_filtered, dataname) {
-  # Default methods for classes. They are not S3 methods. Reason for this is that anyone can define their own
-  # method for a class. If we register S3 mthods for these classes, user would have
-  # would have to change the class of their object and write a new method for this class.
-  if (inherits(data_unfiltered, "data.frame")) {
+  if (inherits(data_unfiltered, c("data.frame", "DFrame", "matrix", "Matrix"))) {
     get_filter_overview_data.frame(data_unfiltered, data_filtered, dataname)
   } else if (inherits(data_unfiltered, "SummarizedExperiment")) {
     get_filter_overview_SummarizedExperiment(data_unfiltered, data_filtered, dataname)
@@ -188,6 +216,20 @@ get_filter_overview.default <- function(data_unfiltered, data_filtered, dataname
 }
 
 
+#' Default methods for get_filter_overview
+#'
+#' @description
+#' Default methods for classes. They are not S3 methods. Reason for this is that anyone can define their own
+#' method for any class. If we register S3 methods for these classes, user wouldn't be able to override S3 methods
+#' for those classes as methods defined in `teal.slice` will have precedence over user defined methods.
+#' @name get_filter_overview_default
+#' @inheritParams get_filter_overview
+#' @return `data_frame` with columns `dataname` and usually `obs`, `obs_filtered`.
+#' @keywords internal
+NULL
+
+#' @rdname get_filter_overview_default
+#' @keywords internal
 get_filter_overview_data.frame <- function(data_unfiltered, data_filtered, dataname) {
   data.frame(
     dataname = dataname,
@@ -196,6 +238,8 @@ get_filter_overview_data.frame <- function(data_unfiltered, data_filtered, datan
   )
 }
 
+#' @rdname get_filter_overview_default
+#' @keywords internal
 get_filter_overview_MultiAssayExperiment <- function(data_unfiltered, data_filtered, dataname) {
   experiment_names <- names(data_unfiltered)
   mae_info <- data.frame(
@@ -237,6 +281,8 @@ get_filter_overview_MultiAssayExperiment <- function(data_unfiltered, data_filte
   dplyr::bind_rows(mae_info, experiment_info)
 }
 
+#' @rdname get_filter_overview_default
+#' @keywords internal
 get_filter_overview_SummarizedExperiment <- function(data_unfiltered, data_filtered, dataname) {
   get_filter_overview_data.frame(data_unfiltered, data_filtered, dataname)
 }

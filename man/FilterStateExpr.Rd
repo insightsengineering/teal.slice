@@ -169,7 +169,7 @@ Sets filtering state.
 \subsection{Method \code{get_call()}}{
 Get reproducible call
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{FilterStateExpr$get_call(dataname)}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{FilterStateExpr$get_call(dataname, extract_type = character(0))}\if{html}{\out{</div>}}
 }
 
 \subsection{Arguments}{

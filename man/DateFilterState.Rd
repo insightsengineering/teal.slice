@@ -10,8 +10,7 @@ Manages choosing a range of Dates
 \examples{
 filter_state <- teal.slice:::DateFilterState$new(
   x = c(Sys.Date() + seq(1:10), NA),
-  slice = teal_slice(varname = "x", dataname = "data"),
-  extract_type = character(0)
+  slice = teal_slice(varname = "x", dataname = "data")
 )
 shiny::isolate(filter_state$get_call())
 filter_state$set_state(
@@ -130,12 +129,7 @@ if (interactive()) {
 \subsection{Method \code{new()}}{
 Initialize a \code{FilterState} object
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{DateFilterState$new(
-  x,
-  x_reactive = reactive(NULL),
-  slice,
-  extract_type = character(0)
-)}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{DateFilterState$new(x, x_reactive = reactive(NULL), slice)}\if{html}{\out{</div>}}
 }
 
 \subsection{Arguments}{
@@ -157,14 +151,6 @@ returns \code{teal_slice} object which can be reused in other places. Beware, th
 is a \code{reactiveValues} which means that changes in particular object are automatically
 reflected in all places which refer to the same \code{teal_slice}.}
 
-\item{\code{extract_type}}{(\code{character(0)}, \code{character(1)})\cr
-whether condition calls should be prefixed by \code{dataname}. Possible values:
-\itemize{
-\item{\code{character(0)} (default)}{ \code{varname} in the condition call will not be prefixed}
-\item{\code{"list"}}{ \code{varname} in the condition call will be returned as \verb{<dataname>$<varname>}}
-\item{\code{"matrix"}}{ \code{varname} in the condition call will be returned as \verb{<dataname>[, <varname>]}}
-}}
-
 \item{\code{...}}{additional arguments to be saved as a list in \code{private$extras} field}
 }
 \if{html}{\out{</div>}}
@@ -179,7 +165,7 @@ For this class returned call looks like
 \verb{<varname> >= <min value> & <varname> <= <max value>} with
 optional \verb{is.na(<varname>)}.
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{DateFilterState$get_call(dataname)}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{DateFilterState$get_call(dataname, extract_type = character(0))}\if{html}{\out{</div>}}
 }
 
 \subsection{Arguments}{
