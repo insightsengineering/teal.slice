@@ -1,4 +1,4 @@
-# teal.slice 0.4.0.9030
+# teal.slice 0.4.0.9031
 
 ### Enhancements
 
@@ -8,6 +8,7 @@
 
 * `TealData` object is no longer supported by `teal.slice`.
 * `set_filter_state` no longer accepts a nested list. Use `teal_slices()` and `teal_slice()` instead.
+* Renamed `FilteredDataset` subclass that handles `data.frame`s from `DefaultFilteredDataset` to `DataframeFilteredDataset`. Added new class `DefaultFilteredDataset` that will store any type of object. Filtering will is not supported.
 
 ### Miscellaneous
 

@@ -109,11 +109,24 @@ srv_overview_data <- function(id, filtered_data, active_datanames = filtered_dat
           function(x) {
             tags$tr(
               tagList(
-                lapply(x, tags$td)
+                tags$td(
+                  if (all(x[-1] == "")) {
+                    icon(
+                      name = "exclamation-triangle",
+                      title = "Unsupported dataset",
+                      `data-container` = "body",
+                      `data-toggle` = "popover",
+                      `data-content` = "object not supported by the filter panel"
+                    )
+                  },
+                  x[1]
+                ),
+                lapply(x[-1], tags$td)
               )
             )
           }
         )
+
 
         header_html <- tags$tr(
           tagList(
@@ -136,19 +149,46 @@ srv_overview_data <- function(id, filtered_data, active_datanames = filtered_dat
 }
 
 
+#' Get filter overview
+#'
+#' Summary of the dataset in the filter panel
+#' @param data_unfiltered (`data.frame`)\cr
+#'  unfiltered data
+#' @param data_filtered (`data.frame`)\cr
+#' filtered data
+#' @param dataname (`character`)\cr
+#' name of the dataset
+#' @return `data_frame` with columns `dataname` and usually `obs`, `obs_filtered`.
+#' @keywords internal
 get_filter_overview <- function(data_unfiltered, data_filtered, dataname) {
-  UseMethod("get_filter_overview", data_unfiltered)
+  df <- UseMethod("get_filter_overview", data_unfiltered)
+  if (!inherits(df, "data.frame") || all(c("dataname", "obs", "obs_filtered") %in% colnames(df))) {
+    stop("get_filter_overview must return a data.frame with columns `dataname`, `obs`, `obs_filtered`", call. = FALSE)
+  }
+  df
 }
 
 get_filter_overview.default <- function(data_unfiltered, data_filtered, dataname) {
-  data.frame(
-    dataname = dataname,
-    obs = NA,
-    obs_filtered = NA
-  )
+  # Default methods for classes. They are not S3 methods. Reason for this is that anyone can define their own
+  # method for a class. If we register S3 mthods for these classes, user would have
+  # would have to change the class of their object and write a new method for this class.
+  if (inherits(data_unfiltered, "data.frame")) {
+    get_filter_overview_data.frame(data_unfiltered, data_filtered, dataname)
+  } else if (inherits(data_unfiltered, "SummarizedExperiment")) {
+    get_filter_overview_SummarizedExperiment(data_unfiltered, data_filtered, dataname)
+  } else if (inherits(data_unfiltered, "MultiAssayExperiment")) {
+    get_filter_overview_MultiAssayExperiment(data_unfiltered, data_filtered, dataname)
+  } else {
+    data.frame(
+      dataname = dataname,
+      obs = NA,
+      obs_filtered = NA
+    )
+  }
 }
 
-get_filter_overview.data.frame <- function(data_unfiltered, data_filtered, dataname) {
+
+get_filter_overview_data.frame <- function(data_unfiltered, data_filtered, dataname) {
   data.frame(
     dataname = dataname,
     obs = nrow(data_unfiltered),
@@ -156,9 +196,8 @@ get_filter_overview.data.frame <- function(data_unfiltered, data_filtered, datan
   )
 }
 
-get_filter_overview.MultiAssayExperiment <- function(data_unfiltered, data_filtered, dataname) {
+get_filter_overview_MultiAssayExperiment <- function(data_unfiltered, data_filtered, dataname) {
   experiment_names <- names(data_unfiltered)
-
   mae_info <- data.frame(
     dataname = dataname,
     subjects = nrow(SummarizedExperiment::colData(data_unfiltered)),
@@ -168,10 +207,13 @@ get_filter_overview.MultiAssayExperiment <- function(data_unfiltered, data_filte
   experiment_obs_info <- do.call("rbind", lapply(
     experiment_names,
     function(experiment_name) {
-      data.frame(
-        dataname = sprintf("- %s", experiment_name),
-        obs = nrow(data_unfiltered[[experiment_name]]),
-        obs_filtered = nrow(data_filtered[[experiment_name]])
+      transform(
+        get_filter_overview(
+          data_unfiltered[[experiment_name]],
+          data_filtered[[experiment_name]],
+          experiment_name
+        ),
+        dataname = paste0(" - ", dataname)
       )
     }
   ))
@@ -193,4 +235,8 @@ get_filter_overview.MultiAssayExperiment <- function(data_unfiltered, data_filte
 
   experiment_info <- cbind(experiment_obs_info, experiment_subjects_info)
   dplyr::bind_rows(mae_info, experiment_info)
+}
+
+get_filter_overview_SummarizedExperiment <- function(data_unfiltered, data_filtered, dataname) {
+  get_filter_overview_data.frame(data_unfiltered, data_filtered, dataname)
 }

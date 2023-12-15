@@ -127,7 +127,7 @@ Initialize a \code{FilteredData} object
 \if{html}{\out{<div class="arguments">}}
 \describe{
 \item{\code{data_objects}}{(\code{list})
-should named elements containing \code{data.frame} or \code{MultiAssayExperiment}.
+Named list of data objects.
 Names of the list will serve as \code{dataname}.}
 
 \item{\code{join_keys}}{(\code{join_keys} or NULL) see \code{\link[teal.data:join_keys]{teal.data::join_keys()}}.}
@@ -331,7 +331,7 @@ data to be filtered.}
 If this data has a parent specified in the \code{join_keys} object stored in \code{private$join_keys}
 then created \code{FilteredDataset} (child) gets linked with other \code{FilteredDataset} (parent).
 "Child" dataset return filtered data then dependent on the reactive filtered data of the
-"parent". See more in documentation of \code{parent} argument in \code{FilteredDatasetDefault} constructor.
+"parent". See more in documentation of \code{parent} argument in \code{DataframeFilteredDataset} constructor.
 }
 
 \subsection{Returns}{
