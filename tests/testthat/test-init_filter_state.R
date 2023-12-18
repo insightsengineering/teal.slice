@@ -6,11 +6,6 @@ testthat::test_that("init_filter_state checks arguments", {
     init_filter_state(x = 7, x_reactive = NULL, slice = teal_slice(dataname = "data", varname = "var")),
     "Assertion on 'x_reactive' failed"
   )
-
-  testthat::expect_error(
-    init_filter_state(x = 7, slice = teal_slice(dataname = "data", varname = "variable"), extract_type = "other"),
-    "Assertion on 'extract_type' failed"
-  )
 })
 
 # return type ----

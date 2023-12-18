@@ -194,11 +194,10 @@ testthat::test_that("get_call returns call always if choices are limited - regar
 testthat::test_that("get_call prefixes varname by dataname$var if extract_type='list'", {
   filter_state <- RangeFilterState$new(
     nums,
-    slice = teal_slice(dataname = "data", varname = "var", selected = nums[c(1, 3)]),
-    extract_type = "list"
+    slice = teal_slice(dataname = "data", varname = "var", selected = nums[c(1, 3)])
   )
   testthat::expect_identical(
-    shiny::isolate(filter_state$get_call(dataname = "dataname")),
+    shiny::isolate(filter_state$get_call(dataname = "dataname", extract_type = "list")),
     quote(dataname$var >= 1 & dataname$var <= 3)
   )
 })
@@ -206,11 +205,10 @@ testthat::test_that("get_call prefixes varname by dataname$var if extract_type='
 testthat::test_that("get_call prefixes varname by dataname[, 'var'] if extract_type='matrix'", {
   filter_state <- RangeFilterState$new(
     nums,
-    slice = teal_slice(dataname = "data", varname = "var", selected = nums[c(1, 3)]),
-    extract_type = "matrix"
+    slice = teal_slice(dataname = "data", varname = "var", selected = nums[c(1, 3)])
   )
   testthat::expect_identical(
-    shiny::isolate(filter_state$get_call(dataname = "dataname")),
+    shiny::isolate(filter_state$get_call(dataname = "dataname", extract_type = "matrix")),
     quote(dataname[, "var"] >= 1 & dataname[, "var"] <= 3)
   )
 })

@@ -10,7 +10,9 @@ df2 <- data.frame(
   fact = sample(rep_len(letters, 100)),
   stringsAsFactors = TRUE
 )
-filtered_data <- teal.slice:::init_filtered_data(list(df1 = list(dataset = df1), df2 = list(dataset = df2)))
+filtered_data <- teal.slice::init_filtered_data()
+filtered_data$set_dataset("df1", df1)
+filtered_data$set_dataset("df2", df2)
 
 # initialize ----
 testthat::test_that("FilterPanelAPI constructor accepts a FilteredData object", {
@@ -124,12 +126,10 @@ testthat::test_that("FilterPanelAPI$clear_filter_states remove the filters of th
 # get_filter_state ----
 testthat::test_that("get_filter_state returns `teal_slices` with features identical to those in input", {
   utils::data(miniACC, package = "MultiAssayExperiment")
-  datasets <- init_filtered_data(
-    x = list(
-      iris = list(dataset = iris),
-      mae = list(dataset = miniACC)
-    )
-  )
+  datasets <- init_filtered_data()
+  datasets$set_dataset("iris", iris)
+  datasets$set_dataset("mae", miniACC)
+
   fs <- teal_slices(
     teal_slice("iris", "Species", selected = c("setosa", "versicolor")),
     teal_slice("iris", "Sepal.Length", selected = c(5.1, 6.4)),
@@ -171,12 +171,10 @@ testthat::test_that("get_filter_state returns `teal_slices` with features identi
 # remove_filter_state ----
 testthat::test_that("remove_filter_state removes filter state specified by `teal_slices`", {
   utils::data(miniACC, package = "MultiAssayExperiment")
-  datasets <- init_filtered_data(
-    x = list(
-      iris = list(dataset = iris),
-      mae = list(dataset = miniACC)
-    )
-  )
+  datasets <- init_filtered_data()
+  datasets$set_dataset("iris", iris)
+  datasets$set_dataset("mae", miniACC)
+
   fs <- teal_slices(
     teal_slice("iris", "Species", selected = c("setosa", "versicolor")),
     teal_slice("iris", "Sepal.Length", selected = c(5.1, 6.4)),
@@ -198,12 +196,10 @@ testthat::test_that("remove_filter_state removes filter state specified by `teal
 # clear_filter_states ----
 testthat::test_that("clear_filter_states removes all filter states", {
   utils::data(miniACC, package = "MultiAssayExperiment")
-  datasets <- init_filtered_data(
-    x = list(
-      iris = list(dataset = iris),
-      mae = list(dataset = miniACC)
-    )
-  )
+  datasets <- init_filtered_data()
+  datasets$set_dataset("iris", iris)
+  datasets$set_dataset("mae", miniACC)
+
   fs <- teal_slices(
     teal_slice("iris", "Species", selected = c("setosa", "versicolor")),
     teal_slice("iris", "Sepal.Length", selected = c(5.1, 6.4)),
@@ -213,9 +209,7 @@ testthat::test_that("clear_filter_states removes all filter states", {
     teal_slice("mae", "ARRAY_TYPE", selected = "", keep_na = TRUE, experiment = "RPPAArray", arg = "subset")
   )
   set_filter_state(datasets, fs)
-  testthat::expect_no_error(
-    clear_filter_states(datasets)
-  )
+  testthat::expect_no_error(clear_filter_states(datasets))
   testthat::expect_s3_class(shiny::isolate(get_filter_state(datasets)), "teal_slices")
   testthat::expect_length(shiny::isolate(get_filter_state(datasets)), 0)
 })

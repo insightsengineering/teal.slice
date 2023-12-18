@@ -247,8 +247,18 @@ FilteredData <- R6::R6Class( # nolint
     #'
     #' @return `NULL` invisibly
     #'
-    clear_filter_states = function() {
-      isolate(self$state_list_empty())
+    clear_filter_states = function(datanames = self$datanames(), force = FALSE) {
+      isolate({
+        state_list <- Filter(
+          function(x) x$get_state()$dataname %in% datanames && (force || !isTRUE(x$get_state()$locked)),
+          self$state_list_get()
+        )
+
+        if (length(state_list)) {
+          state_ids <- vapply(state_list, function(x) x$get_state()$id, character(1))
+          self$state_list_remove(state_ids, force)
+        }
+      })
     },
 
     #' @description Get list of filter states available for this object.
@@ -303,7 +313,9 @@ FilteredData <- R6::R6Class( # nolint
     #' evaluated (in case of dependencies).
     #' @return (`character` vector) of `datanames`
     datanames = function() {
-      names(private$datasets)
+      datanames <- names(private$datasets)
+      sorted <- unlist(topological_sort(parents(self$get_join_keys()[datanames])))
+      union(sorted, datanames)
     },
     #' @description
     #' Adds a dataset to this `FilteredData`.
@@ -360,6 +372,7 @@ FilteredData <- R6::R6Class( # nolint
         } else {
           isolate(private$datasets[[dataname]](dataset))
         }
+        self
       })
     },
 
@@ -402,9 +415,6 @@ FilteredData <- R6::R6Class( # nolint
     #' @return (`call` or `list` of calls) to filter dataset calls
     #'
     get_call = function(dataname, sid = character(0)) {
-      # todo: state_list should be a reactiveValues with element per dataset
-      # this is because we want to trigger reactive filtering based on a change
-      # in one (observed) dataset (and not all datasets).
       states_list <- Filter(
         function(x) {
           x$get_state()$dataname == dataname && !identical(x$get_state()$id, sid)
@@ -535,26 +545,6 @@ FilteredData <- R6::R6Class( # nolint
           private$state_list(new_state_list)
         } else {
           warning(sprintf("\"%s\" not found in state list", state_id))
-        }
-      })
-
-      invisible(NULL)
-    },
-
-    #' @description
-    #' Remove all `FilterState` objects from this `FilterStates` object.
-    #' @param force (`logical(1)`)\cr
-    #'   include locked filter states
-    #' @return invisible NULL
-    #'
-    state_list_empty = function(force = FALSE) {
-      shiny::isolate({
-        logger::log_trace("{ class(self)[1] }$state_list_empty removing all non-anchored filters")
-
-        state_list <- self$state_list_get()
-        if (length(state_list)) {
-          state_ids <- vapply(state_list, function(x) x$get_state()$id, character(1))
-          self$state_list_remove(state_ids, force)
         }
       })
 

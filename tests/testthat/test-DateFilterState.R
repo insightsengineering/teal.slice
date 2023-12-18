@@ -177,11 +177,10 @@ testthat::test_that("get_call returns call always if choices are limited - regar
 testthat::test_that("get_call prefixes varname by dataname$varname if extract_type='list'", {
   filter_state <- DateFilterState$new(
     x = dates,
-    slice = teal_slice(dataname = "data", varname = "variable", selected = dates[c(1, 3)]),
-    extract_type = "list"
+    slice = teal_slice(dataname = "data", varname = "variable", selected = dates[c(1, 3)])
   )
   testthat::expect_identical(
-    shiny::isolate(filter_state$get_call(dataname = "dataname")),
+    shiny::isolate(filter_state$get_call(dataname = "dataname", extract_type = "list")),
     quote(dataname$variable >= as.Date("2000-01-01") & dataname$variable <= as.Date("2000-01-03"))
   )
 })
@@ -190,10 +189,9 @@ testthat::test_that("get_call prefixes varname by dataname[, 'varname'] if extra
   filter_state <- DateFilterState$new(
     x = dates,
     slice = teal_slice(dataname = "data", varname = "variable", selected = dates[c(1, 3)]),
-    extract_type = "matrix"
   )
   testthat::expect_identical(
-    shiny::isolate(filter_state$get_call(dataname = "dataname")),
+    shiny::isolate(filter_state$get_call(dataname = "dataname", extract_type = "matrix")),
     quote(dataname[, "variable"] >= as.Date("2000-01-01") & dataname[, "variable"] <= as.Date("2000-01-03"))
   )
 })

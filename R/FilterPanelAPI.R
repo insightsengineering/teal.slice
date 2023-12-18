@@ -96,9 +96,11 @@ FilterPanelAPI <- R6::R6Class( # nolint
     #' @return `NULL` invisibly
     #'
     clear_filter_states = function(datanames) {
-      datanames_to_remove <- if (missing(datanames)) private$filtered_data$datanames() else datanames
-      private$filtered_data$clear_filter_states(datanames = datanames_to_remove)
-      invisible(NULL)
+      isolate({
+        datanames_to_remove <- if (missing(datanames)) private$filtered_data$datanames() else datanames
+        private$filtered_data$clear_filter_states(datanames = datanames_to_remove)
+        invisible(NULL)
+      })
     }
   ),
   ## __Private Methods ====
