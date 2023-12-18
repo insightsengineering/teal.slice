@@ -73,13 +73,15 @@ srv_add_data <- function(id, filtered_data, active_datanames = reactive(filtered
 
     # should not use for-loop as variables are otherwise only bound by reference
     # and last dataname would be used
-    lapply(
-      filtered_data$datanames(),
-      function(dataname) {
-        data <- filtered_data$get_data(dataname, filtered = FALSE)
-        srv_add(id = dataname, data = data, filtered_data = filtered_data, dataname = dataname)
-      }
-    )
+    isolate({
+      lapply(
+        filtered_data$datanames(),
+        function(dataname) {
+          data <- filtered_data$get_data(dataname, filtered = FALSE)
+          srv_add(id = dataname, data = data, filtered_data = filtered_data, dataname = dataname)
+        }
+      )
+    })
     NULL
   })
 }

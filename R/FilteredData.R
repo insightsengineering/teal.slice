@@ -88,12 +88,13 @@ FilteredData <- R6::R6Class( # nolint
 
       include_varnames <- private$include_varnames
       if (length(include_varnames)) {
-        attr(fs, "include_varnames") <- setNames(list(include_varnames), names = private$dataname)
+        # todo:
+        # attr(fs, "include_varnames") <- setNames(list(include_varnames), names = private$dataname)
       }
 
       exclude_varnames <- private$exclude_varnames
       if (length(private$exclude_varnames)) {
-        attr(fs, "exclude_varnames") <- setNames(list(exclude_varnames), names = private$dataname)
+        # attr(fs, "exclude_varnames") <- setNames(list(exclude_varnames), names = private$dataname)
       }
 
       return(fs)
@@ -314,7 +315,7 @@ FilteredData <- R6::R6Class( # nolint
     #' @return (`character` vector) of `datanames`
     datanames = function() {
       datanames <- names(private$datasets)
-      sorted <- unlist(topological_sort(parents(self$get_join_keys()[datanames])))
+      sorted <- unlist(topological_sort(teal.data::parents(self$get_join_keys()[datanames])))
       union(sorted, datanames)
     },
     #' @description
@@ -372,7 +373,8 @@ FilteredData <- R6::R6Class( # nolint
         } else {
           isolate(private$datasets[[dataname]](dataset))
         }
-        self
+
+        invisible(self)
       })
     },
 

@@ -204,13 +204,13 @@ app <- shinyApp(
       column(
         width = 3,
         id = "teal_secondary_col",
-        datasets$ui_filter_panel("filter_panel")
+        ui_filter_panel("filter_panel")
       )
     )
   ),
   server = function(input, output, session) {
     # calling filter panel module
-    datasets$srv_filter_panel("filter_panel")
+    srv_filter_panel("filter_panel", datasets)
 
     # displaying actual filter states
     output$filter_state <- renderPrint(print(get_filter_state(datasets), trim = FALSE))
@@ -246,7 +246,7 @@ app <- shinyApp(
   }
 )
 if (interactive()) {
-  shinyApp(app$ui, app$server)
+  app
 }
 ```
 

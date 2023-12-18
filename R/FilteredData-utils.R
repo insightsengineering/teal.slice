@@ -251,7 +251,7 @@ get_ancestors <- function(join_keys, dataname) {
   checkmate::assert_character(dataname)
   checkmate::assert_class(join_keys, "join_keys")
 
-  parents <- parents(join_keys) # named list c(child = parent)
+  parents <- teal.data::parents(join_keys) # named list c(child = parent)
   if (length(parents) == 0) {
     return(character(0))
   }
