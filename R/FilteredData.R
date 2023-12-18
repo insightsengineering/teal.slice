@@ -67,8 +67,8 @@ FilteredData <- R6::R6Class( # nolint
     #' @param join_keys (`join_keys` or NULL) see [`teal.data::join_keys()`].
     #'
     initialize = function() {
-      private$datasets <- reactiveValues()
-      private$datasets_filtered <- reactiveValues()
+      private$datasets <- list()
+      private$datasets_filtered <- list()
       private$state_list <- reactiveVal(NULL)
       self$set_available_teal_slices(x = reactive(NULL))
       invisible(self)
@@ -83,7 +83,7 @@ FilteredData <- R6::R6Class( # nolint
     #' @return `list` containing `list` per `FilterState` in the `state_list`
     #'
     get_filter_state = function() {
-      slices <- unname(lapply(private$state_list(), function(x) x$get_state()))
+      slices <- unname(lapply(self$state_list_get(), function(x) x$get_state()))
       fs <- do.call(teal_slices, c(slices, list(count_type = private$count_type)))
 
       include_varnames <- private$include_varnames
@@ -158,6 +158,7 @@ FilteredData <- R6::R6Class( # nolint
         state_list <- self$state_list_get()
         lapply(state, function(slice) {
           state_id <- slice$id
+
           if (state_id %in% names(state_list)) {
             # Modify existing filter states.
             state_list[[state_id]]$set_state(slice)
@@ -166,23 +167,42 @@ FilteredData <- R6::R6Class( # nolint
               # create a new FilterStateExpr
               fstate <- init_filter_state_expr(slice)
             } else {
-              data <- isolate(private$datasets[[slice$dataname]])
-              data_reactive <- reactive(NULL)
-              # reactive(private$datasets_filtered[[slice$dataname]])
+              dataname <- slice$dataname
+              data <- self$get_data(dataname, filtered = FALSE)
+
+              reactive_env <- reactive({
+                env <- new.env()
+                env[[dataname]] <- self$get_data(dataname, filtered = FALSE)
+                for (ancestor in get_ancestors(self$get_join_keys(), dataname)) {
+                  env[[ancestor]] <- self$get_data(ancestor, filtered = TRUE)
+                }
+                env
+              })
+
+              reactive_env_addrs <- reactive(
+                vapply(reactive_env(), get_addr, character(1))
+              )
+
               # create a new FilterState
               fstate <- init_filter_state(
                 x = get_slice_variable(data, slice),
-                # data_reactive is a function which eventually calls get_call(sid).
-                # This chain of calls returns column from the data filtered by everything
-                # but filter identified by the sid argument. FilterState then get x_reactive
-                # and this no longer needs to be a function to pass sid. reactive in the FilterState
-                # is also beneficial as it can be cached and retriger filter counts only if
-                # returned vector is different.
                 x_reactive = if (identical(private$count_type, "all")) {
-                  reactive({
-                    # todo: data_reactive here should be a function
-                    get_slice_variable(data_reactive(state_id), slice)
-                  })
+                  bindCache(
+                    reactive({
+                      logger::log_trace(
+                        "FilteredData$set_filter_state recalculating x_reactive for visible filter counts: { state_id }"
+                      )
+                      env <- reactive_env()
+                      filter_call <- self$get_call(dataname, sid = state_id)
+                      eval_expr_with_msg(filter_call, env)
+                      get_slice_variable(env[[dataname]], slice)
+                    }),
+                    # call have to be cached because underneath $get_call uses the whole state_list
+                    # so it reacts to change in any filter state (in all datasets). Therefore we bind
+                    # reactive on a change of THIS dataset call
+                    self$get_call(dataname, sid = state_id),
+                    reactive_env_addrs()
+                  )
                 } else {
                   reactive(NULL)
                 },
@@ -206,8 +226,8 @@ FilteredData <- R6::R6Class( # nolint
     #' @return `NULL` invisibly
     #'
     remove_filter_state = function(state) {
-      checkmate::assert_class(state, "teal_slices")
       shiny::isolate({
+        checkmate::assert_class(state, "teal_slices")
         state_ids <- vapply(state, `[[`, character(1), "id")
         logger::log_trace("{ class(self)[1] }$remove_filter_state removing filters, state_id: { toString(state_ids) }")
         self$state_list_remove(state_ids)
@@ -228,7 +248,7 @@ FilteredData <- R6::R6Class( # nolint
     #' @return `NULL` invisibly
     #'
     clear_filter_states = function() {
-      self$state_list_empty()
+      isolate(self$state_list_empty())
     },
 
     #' @description Get list of filter states available for this object.
@@ -295,7 +315,7 @@ FilteredData <- R6::R6Class( # nolint
     #' "Child" dataset return filtered data then dependent on the reactive filtered data of the
     #' "parent". See more in documentation of `parent` argument in `FilteredDatasetDefault` constructor.
     #'
-    #' @param data (`data.frame`, `MultiAssayExperiment`)\cr
+    #' @param dataset (`data.frame`, `MultiAssayExperiment`)\cr
     #'   data to be filtered.
     #'
     #' @param dataname (`string`)\cr
@@ -304,20 +324,42 @@ FilteredData <- R6::R6Class( # nolint
     #' @return (`self`) invisibly this `FilteredData`
     #'
     set_dataset = function(dataname, dataset) {
-      # the UI also uses `datanames` in ids, so no whitespaces allowed
-      check_simple_name(dataname)
-      private$datasets[[dataname]] <- dataset
-      observe({
-        env <- new.env()
-        env[[dataname]] <- private$datasets[[dataname]]
-        filter_call <- self$get_call(dataname)
-        # add parent if exists
-        parent_dataname <- teal.data::parent(private$join_keys, dataname)
-        if (length(parent_dataname)) {
-          env[[parent_dataname]] <- private$datasets_filtered[[parent_dataname]]
+      shiny::isolate({
+        # the UI also uses `datanames` in ids, so no whitespaces allowed
+        check_simple_name(dataname)
+        reactive_env <- reactive({
+          data <- list()
+          data[[dataname]] <- self$get_data(dataname, filtered = FALSE)
+          for (ancestor in get_ancestors(self$get_join_keys(), dataname)) {
+            data[[ancestor]] <- self$get_data(ancestor, filtered = TRUE)
+          }
+          data
+        })
+
+        reactive_env_addrs <- reactive(
+          vapply(reactive_env(), get_addr, character(1))
+        )
+
+        if (!dataname %in% self$datanames()) {
+          # prepare slot for reactive dataset when initialized for the first time
+          private$datasets[[dataname]] <- reactiveVal(dataset)
+          private$datasets_filtered[[dataname]] <- bindCache(
+            reactive({
+              logger::log_trace("FilteredData$set_dataset@1 filtering dataset: { dataname }")
+              env <- list2env(reactive_env())
+              filter_call <- self$get_call(dataname)
+              eval_expr_with_msg(filter_call, env)
+              env[[dataname]]
+            }),
+            # call have to be cached because underneath $get_call uses the whole state_list
+            # so it reacts to change in any filter state (in all datasets). Therefore we bind
+            # reactive on a change of THIS dataset call
+            self$get_call(dataname),
+            reactive_env_addrs()
+          )
+        } else {
+          isolate(private$datasets[[dataname]](dataset))
         }
-        eval_expr_with_msg(filter_call, env)
-        private$datasets_filtered[[dataname]] <- env[[dataname]]
       })
     },
 
@@ -332,9 +374,9 @@ FilteredData <- R6::R6Class( # nolint
     #'
     get_data = function(dataname, filtered = TRUE) {
       if (filtered) {
-        private$datasets_filtered[[dataname]]
+        private$datasets_filtered[[dataname]]()
       } else {
-        private$datasets[[dataname]]
+        private$datasets[[dataname]]()
       }
     },
 
@@ -357,35 +399,22 @@ FilteredData <- R6::R6Class( # nolint
     #' This can be used for the `Show R Code` generation.
     #'
     #' @param dataname (`character(1)`) name of the dataset
-    #'
     #' @return (`call` or `list` of calls) to filter dataset calls
     #'
     get_call = function(dataname, sid = character(0)) {
+      # todo: state_list should be a reactiveValues with element per dataset
+      # this is because we want to trigger reactive filtering based on a change
+      # in one (observed) dataset (and not all datasets).
       states_list <- Filter(
-        function(x) x$get_state()$dataname == dataname,
-        self$state_list_get()
+        function(x) {
+          x$get_state()$dataname == dataname && !identical(x$get_state()$id, sid)
+        },
+        self$state_list_get() # this triggers reactive filtering for all datasets
       )
-      data <- isolate(private$datasets[[dataname]])
-
+      data <- isolate(self$get_data(dataname, filtered = FALSE))
       filter_call <- get_filter_call(data, states_list)
-
-      parent_dataname <- teal.data::parent(private$join_keys, dataname)
-      if (length(parent_dataname)) {
-        merge_call <- call(
-          "<-",
-          str2lang(dataname),
-          as.call(
-            c(
-              str2lang("dplyr::inner_join"),
-              x = str2lang(dataname),
-              y = str2lang(parent_dataname),
-              by = make_c_call(private$join_keys[dataname, parent_dataname])
-            )
-          )
-        )
-        filter_call <- c(filter_call, merge_call)
-      }
-      filter_call
+      merge_call <- get_merge_call(self$get_join_keys()[dataname, ])
+      c(filter_call, merge_call)
     },
 
     # join keys ------
@@ -417,7 +446,7 @@ FilteredData <- R6::R6Class( # nolint
     #' @return (`character`) keys of dataset
     #'
     get_keys = function(dataname) {
-      keys <- private$join_keys[dataname, dataname]
+      keys <- self$get_join_keys()[dataname, dataname]
       if (length(keys) == 0) {
         character(0)
       } else {
@@ -457,14 +486,12 @@ FilteredData <- R6::R6Class( # nolint
     #'
     state_list_push = function(x, state_id) {
       shiny::isolate({
-        logger::log_trace("{ class(self)[1] } pushing into state_list, dataname: { private$dataname }")
+        logger::log_trace("{ class(self)[1] } pushing into state_list, dataname: { x$get_state()$id }")
         checkmate::assert_string(state_id)
         checkmate::assert_multi_class(x, c("FilterState", "FilterStateExpr"))
         state <- stats::setNames(list(x), state_id)
-        new_state_list <- c(private$state_list(), state)
+        new_state_list <- c(self$state_list_get(), state)
         private$state_list(new_state_list)
-
-        logger::log_trace("{ class(self)[1] } pushed into queue, dataname: { private$dataname }")
       })
       invisible(NULL)
     },
@@ -487,7 +514,7 @@ FilteredData <- R6::R6Class( # nolint
       logger::log_trace("{ class(self)[1] } removing a filter, state_id: { toString(state_id) }")
 
       shiny::isolate({
-        current_state_ids <- vapply(private$state_list(), function(x) x$get_state()$id, character(1))
+        current_state_ids <- vapply(self$state_list_get(), function(x) x$get_state()$id, character(1))
         to_remove <- state_id %in% current_state_ids
         if (any(to_remove)) {
           new_state_list <- Filter(
@@ -503,7 +530,7 @@ FilteredData <- R6::R6Class( # nolint
                 TRUE
               }
             },
-            private$state_list()
+            self$state_list_get()
           )
           private$state_list(new_state_list)
         } else {
@@ -522,11 +549,9 @@ FilteredData <- R6::R6Class( # nolint
     #'
     state_list_empty = function(force = FALSE) {
       shiny::isolate({
-        logger::log_trace(
-          "{ class(self)[1] }$state_list_empty removing all non-anchored filters"
-        )
+        logger::log_trace("{ class(self)[1] }$state_list_empty removing all non-anchored filters")
 
-        state_list <- private$state_list()
+        state_list <- self$state_list_get()
         if (length(state_list)) {
           state_ids <- vapply(state_list, function(x) x$get_state()$id, character(1))
           self$state_list_remove(state_ids, force)
@@ -540,8 +565,9 @@ FilteredData <- R6::R6Class( # nolint
   private = list(
     allow_add = TRUE,
     available_teal_slices = NULL, # reactive
-    datasets = NULL, # reactiveValues
-    datasets_filtered = NULL, # reactiveValues
+    data_names = NULL, # reactiveVal
+    datasets = NULL, # list of reactiveVal
+    datasets_filtered = NULL, # list of reactiveVal
     count_type = "all",
     exclude_varnames = list(),
     include_varnames = list(),
@@ -549,3 +575,8 @@ FilteredData <- R6::R6Class( # nolint
     state_list = NULL # reactiveValues/reactives
   )
 )
+
+
+get_addr <- function(x) {
+  capture.output(.Internal(address(x)))
+}

@@ -20,6 +20,12 @@ get_filter_overview(data_unfiltered, data_filtered, dataname)
 \description{
 Summary of the dataset in the filter panel
 }
+\section{Registering custom methods}{
+If you want to change a displayed information in the filter panel overview for your custom data type,
+you can register S3 method \verb{get_filter_overview.<custom_class>}. Output of this function is checked
+in \code{teal.slice} and must be a \code{data.frame} with columns \code{dataname}, \code{obs}, \code{obs_filtered}.
+}
+
 \section{Supported data types}{
 \code{teal.slice} provide methods for:
 \itemize{

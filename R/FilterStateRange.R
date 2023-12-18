@@ -590,8 +590,6 @@ RangeFilterState <- R6::R6Class( # nolint
 
           private$keep_inf_srv("keep_inf")
           private$keep_na_srv("keep_na")
-
-          logger::log_trace("RangeFilterState$server initialized, id: { private$get_id() }")
           NULL
         }
       )
@@ -620,8 +618,6 @@ RangeFilterState <- R6::R6Class( # nolint
               size = 0.25
             )
           })
-
-          logger::log_trace("RangeFilterState$server initialized, id: { private$get_id() }")
           NULL
         }
       )

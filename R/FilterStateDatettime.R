@@ -490,8 +490,6 @@ DatetimeFilterState <- R6::R6Class( # nolint
               logger::log_trace("DatetimeFilterState$server@3 reset end date, id: { private$get_id() }")
             }
           )
-
-          logger::log_trace("DatetimeFilterState$server initialized, id: { private$get_id() }")
           NULL
         }
       )
@@ -509,8 +507,6 @@ DatetimeFilterState <- R6::R6Class( # nolint
               div(span(" - "), icon("clock"), vals[2])
             )
           })
-
-          logger::log_trace("DatetimeFilterState$server initialized, id: { private$get_id() }")
           NULL
         }
       )

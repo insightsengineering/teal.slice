@@ -1,3 +1,5 @@
+#' Add filter-state module
+#'
 #' @description
 #' Server module responsible for displaying drop-downs with variables to add a filter.
 #' @name module_add_data

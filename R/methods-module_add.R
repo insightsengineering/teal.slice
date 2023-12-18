@@ -120,14 +120,6 @@ ui_add_SummarizedExperiment <- function(id, data, dataname) {
   } else if (nrow(SummarizedExperiment::colData(data)) == 0) {
     div("no samples available")
   } else {
-    # teal.widgets::optionalSelectInput(
-    #   ns("col_to_add"),
-    #   choices = NULL,
-    #   options = shinyWidgets::pickerOptions(
-    #     liveSearch = TRUE,
-    #     noneSelectedText = "Select sample variable"
-    #   )
-    # )
     uiOutput(ns("col_to_add_ui"))
   }
 

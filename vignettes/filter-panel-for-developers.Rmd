@@ -35,9 +35,9 @@ Each `teal_slice` object contains all the information necessary to:
 
    - `dataname` - name of the data set
    - `varname` - name of the column
-   - `experiment` (only for `MultiAssayExperiment` objects) - name of the experiment
-   - `arg` (only for `SummarizedExperiment` objects, e.g within a `MultiAssayExperiment`) -
-   name of the argument in the call to `subset` (`subset` of `select`)
+   - `...` - (see [Extending filter panel](#extending-filter-panel)) additional arguments which can determine location 
+    of the column in the data set. 
+      
 
 2. Express or store the current selection state:
 
@@ -253,5 +253,119 @@ app <- shinyApp(
 )
 if (interactive()) {
   shinyApp(app$ui, app$server)
+}
+```
+
+
+## Extending filter panel
+
+`teal.slice` offers a way to extend the filter panel with new data types. If you want to add support for a new data 
+type you'll need to write a couple of methods for this data type. There are several data specific methods that need to be 
+implemented:
+- `ui_add` and `srv_add` modules to create a new `teal_slice`.
+- `get_slice_variable` extracts the variable from data based on the values in `teal_slice` object. It is necessary to create `FilterState` object after `teal_slice` is created.
+- `ui_active` and `srv_active` displays active filters 
+- `get_call` returns a filter cann for the data based on the list of `teal_slice` objects.
+- `get_filter_overview` returns a summary of the filter
+
+Methods are depicted on a diagram. Methods which could be overridden are marked with blue color. Other methods are 
+internal
+
+![](./images/filter_panel/extending_filter_panel.jpg)
+
+  
+
+### Use case of `data.frame`s
+
+Let's say we want to add support for `data.frame`s. We will need to implement the following methods:
+
+#### `get_slice_variable`
+
+This method extracts the variable from data based on the values in `teal_slice` object. 
+```{r}
+get_slice_variable.teal_slice.data.frame <- function(x, data) {
+  data[[x$varname]]
+}
+```
+
+#### `ui_add` and `srv_add`
+
+When selecting variable in the UI, we need to create a new `teal_slice` object and pass it to the 
+`filtered_data$set_filter_state` method.
+
+```{r}
+ui_add.data.frame <- function(id, data, dataname) {
+  ns <- NS(id)
+  tagList(
+    selectInput(
+      inputId = ns("varname"),
+      label = "Variable",
+      choices = names(choices),
+      selected = names(choices)[1]
+    )
+  )
+}
+
+srv_add.teal_slice.data.frame <- function(id, data, filtered_data, dataname, ...) {
+  moduleServer(
+    id,
+    function(input, output, session) {
+      observeEvent(input$varname, {
+        filtered_data$set_filter_state(
+          teal_slices(
+            teal_slice(dataname = dataname, varname = input$varname)
+          )
+        )
+      })
+    }
+  )
+}
+```
+
+
+
+#### `get_call`
+
+This method returns a filter call for the data based on the list of `teal_slice` objects.
+```{r}
+get_filter_call.teal_slice.data.frame <- function(data, states_list) {
+  states_predicate <- lapply(states_list, function(state) state$get_call())
+  combined_predicate <- calls_combine_by(states_predicate, "&")
+  substitute(
+    expr = dataname <- subset(dataname, combined_predicate),
+    env = list(
+      dataname = str2lang(states_list[[1L]]$get_state()$dataname),
+      combined_predicate = combined_predicate
+    )
+  )
+}
+```
+
+
+#### `ui_active` and `srv_active`
+
+These modules display active filters. 
+```{r}
+ui_active.data.frame <- function(id, data, label = character(0)) {
+  ns <- NS(id)
+  # ...
+}
+
+srv_active.data.frame <- function(id, data, reactive_state_list, remove_state_callback) {
+  moduleServer(
+    id,
+    function(input, output, session) {
+      # ...
+    }
+  )
+}
+```
+
+#### `get_filter_overview`
+
+This method returns a summary of the filter.
+```{r}
+get_filter_overview.data.frame <- function(x, data) {
+
 }
 ```

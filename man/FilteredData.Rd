@@ -321,7 +321,7 @@ Adds a dataset to this \code{FilteredData}.
 \item{\code{dataname}}{(\code{string})\cr
 the name of the \code{dataset} to be added to this object}
 
-\item{\code{data}}{(\code{data.frame}, \code{MultiAssayExperiment})\cr
+\item{\code{dataset}}{(\code{data.frame}, \code{MultiAssayExperiment})\cr
 data to be filtered.}
 }
 \if{html}{\out{</div>}}
@@ -388,6 +388,10 @@ This can be used for the \verb{Show R Code} generation.
 \if{html}{\out{<div class="arguments">}}
 \describe{
 \item{\code{dataname}}{(\code{character(1)}) name of the dataset}
+
+\item{\code{sid}}{(\code{character})\cr
+when specified then method returns code containing filter conditions of
+\code{FilterState} objects which \code{"sid"} attribute is different than this \code{sid} argument.}
 }
 \if{html}{\out{</div>}}
 }

@@ -128,3 +128,27 @@ get_filter_call_SummarizedExperiment <- function(data, states_list) {
     )
   }
 }
+
+
+#' @rdname default_filter_panel_internals
+#' @keywords internal
+get_merge_call <- function(join_keys) {
+  if (length(join_keys) > 0L) {
+    dataname <- names(join_keys)[1]
+    parent_dataname <- teal.data::parent(join_keys, dataname)
+    if (length(parent_dataname)) {
+      merge_call <- call(
+        "<-",
+        str2lang(dataname),
+        as.call(
+          c(
+            str2lang("dplyr::inner_join"),
+            x = str2lang(dataname),
+            y = str2lang(parent_dataname),
+            by = make_c_call(join_keys[dataname, parent_dataname])
+          )
+        )
+      )
+    }
+  }
+}

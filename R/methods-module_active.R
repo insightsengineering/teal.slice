@@ -31,9 +31,9 @@ srv_active <- function(id, data, reactive_state_list, remove_state_callback) {
 ui_active.default <- function(id, data, label = character(0)) {
   ns <- NS(id)
   if (inherits(data, "MultiAssayExperiment")) {
-    ui_active_MultiAssayExperiment(ns("mae"), data, label)
+    ui_active_MultiAssayExperiment(id, data, label)
   } else {
-    ui_active_array(ns("array"), data, label)
+    ui_active_array(id, data, label)
   }
 }
 
@@ -73,9 +73,9 @@ ui_active_MultiAssayExperiment <- function(id, data, label) {
 #' @keywords internal
 srv_active.default <- function(id, data, reactive_state_list, remove_state_callback) {
   if (inherits(data, "MultiAssayExperiment")) {
-    srv_active_MultiAssayExperiment("mae", data, reactive_state_list, remove_state_callback)
+    srv_active_MultiAssayExperiment(id, data, reactive_state_list, remove_state_callback)
   } else {
-    srv_active_array("array", data, reactive_state_list, remove_state_callback)
+    srv_active_array(id, data, reactive_state_list, remove_state_callback)
   }
 }
 

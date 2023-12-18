@@ -379,8 +379,6 @@ DateFilterState <- R6::R6Class( # nolint
               end = private$get_choices()[2L]
             )
           })
-
-          logger::log_trace("DateFilterState$server initialized, id: { private$get_id() }")
           NULL
         }
       )
@@ -398,8 +396,6 @@ DateFilterState <- R6::R6Class( # nolint
               div(span(" - "), icon("calendar-days"), vals[2])
             )
           })
-
-          logger::log_trace("DateFilterState$server initialized, id: { private$get_id() }")
           NULL
         }
       )

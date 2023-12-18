@@ -17,6 +17,22 @@
 \description{
 Methods for custom data class
 }
+\section{Overview}{
+\code{teal.slice} provides set of methods to manage filters for different data types.
+}
+
+\section{todo: write more about \code{\link[=srv_add]{srv_add()}} and consequences of creating \code{teal_slice} for certain dataset}{
+
+}
+
+\section{- how slice defines location of the variable}{
+
+}
+
+\section{- how slice is handled by different methods \code{\link[=srv_active]{srv_active()}}, \code{\link[=get_filter_call]{get_filter_call()}}, etc.}{
+
+}
+
 \section{Supported data types}{
 \code{teal.slice} provide methods for:
 \itemize{

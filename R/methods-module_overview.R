@@ -140,10 +140,8 @@ srv_overview_data <- function(id, filtered_data, active_datanames = filtered_dat
           tags$thead(header_html),
           tags$tbody(body_html)
         )
-        logger::log_trace("FilteredData$srv_filter_overview@1 updated counts")
         table_html
       })
-      logger::log_trace("FilteredData$srv_filter_overview initialized")
       NULL
     }
   )
@@ -155,11 +153,11 @@ srv_overview_data <- function(id, filtered_data, active_datanames = filtered_dat
 #' Summary of the dataset in the filter panel
 #' @inheritParams filter_panel_methods
 #' @details
-#' @inheritSection filter_panel_methods Supported data types
-#' @section Registering custom methods
+#' # Registering custom methods
 #' If you want to change a displayed information in the filter panel overview for your custom data type,
 #' you can register S3 method `get_filter_overview.<custom_class>`. Output of this function is checked
 #' in `teal.slice` and must be a `data.frame` with columns `dataname`, `obs`, `obs_filtered`.
+#' @inheritSection filter_panel_methods Supported data types
 #'
 #' @return `data_frame` with columns `dataname` and usually `obs`, `obs_filtered`.
 #' @keywords internal
