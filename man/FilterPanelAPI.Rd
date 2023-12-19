@@ -83,7 +83,7 @@ The output list is a compatible input to \code{set_filter_state}.
 }
 
 \subsection{Returns}{
-\code{list} with named elements corresponding to \code{FilteredDataset} objects with active filters.
+\code{teal_slices} of active filters.
 }
 }
 \if{html}{\out{<hr>}}
@@ -110,7 +110,7 @@ Sets active filter states.
 \if{html}{\out{<a id="method-FilterPanelAPI-remove_filter_state"></a>}}
 \if{latex}{\out{\hypertarget{method-FilterPanelAPI-remove_filter_state}{}}}
 \subsection{Method \code{remove_filter_state()}}{
-Remove one or more \code{FilterState} of a \code{FilteredDataset} in the \code{FilteredData} object.
+Remove one or more \code{FilterState} from the \code{FilteredData} object.
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{FilterPanelAPI$remove_filter_state(filter)}\if{html}{\out{</div>}}
 }

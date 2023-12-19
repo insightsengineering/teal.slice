@@ -33,10 +33,7 @@ srv_filter_panel <- function(id, filtered_data, active_datanames = filtered_data
       logger::log_trace("FilteredData$srv_filter_panel initializing")
 
       active_datanames_resolved <- reactive({
-        # todo: this can be relaxed to throw warnings instead of errors
-        # filter-panel can be built if some datanames are not available.
-        # inexisting datanames should be ignored in the loops for active, add and overview
-        # checkmate::assert_subset(active_datanames(), filtered_data$datanames())
+        checkmate::assert_subset(active_datanames(), filtered_data$datanames())
         active_datanames()
       })
 
@@ -49,7 +46,6 @@ srv_filter_panel <- function(id, filtered_data, active_datanames = filtered_data
           }
         )
       })
-
 
       srv_overview_data("overview", filtered_data, active_datanames = active_datanames_resolved)
       srv_active_data("active", filtered_data, active_datanames = active_datanames_resolved)

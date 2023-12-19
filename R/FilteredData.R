@@ -84,20 +84,9 @@ FilteredData <- R6::R6Class( # nolint
     #'
     get_filter_state = function() {
       slices <- unname(lapply(self$state_list_get(), function(x) x$get_state()))
-      fs <- do.call(teal_slices, c(slices, list(count_type = private$count_type)))
-
-      include_varnames <- private$include_varnames
-      if (length(include_varnames)) {
-        # todo:
-        # attr(fs, "include_varnames") <- setNames(list(include_varnames), names = private$dataname)
-      }
-
-      exclude_varnames <- private$exclude_varnames
-      if (length(private$exclude_varnames)) {
-        # attr(fs, "exclude_varnames") <- setNames(list(exclude_varnames), names = private$dataname)
-      }
-
-      return(fs)
+      slices <- do.call(teal_slices, slices)
+      attributes(slices) <- modifyList(attributes(slices), private$teal_slice_attrs)
+      slices
     },
 
     #' @description
@@ -130,19 +119,13 @@ FilteredData <- R6::R6Class( # nolint
     #'
     set_filter_state = function(state) {
       shiny::isolate({
+        # todo: asserts!
         checkmate::assert_class(state, "teal_slices")
-
-        if (length(attr(state, "count_type"))) {
-          private$count_type <- attr(state, "count_type")
-        }
-        if (length(attr(state, "extract_type"))) {
-          private$extract_type <- attr(state, "extract_type")
-        }
-        if (length(attr(state, "extract_type"))) {
-          private$allow_all <- attr(state, "allow_all")
-        }
-        private$include_varnames <- attr(state, "include_varnames")
-        private$exclude_varnames <- attr(state, "exclude_varnames")
+        teal_slice_attrs <- attributes(state)
+        private$teal_slice_attrs <- modifyList(
+          private$teal_slice_attrs,
+          teal_slice_attrs[!names(teal_slice_attrs) %in% c("names", "class")]
+        )
 
         if (length(state) == 0L) {
           return(invisible(NULL))
@@ -181,7 +164,7 @@ FilteredData <- R6::R6Class( # nolint
               })
 
               reactive_env_addrs <- reactive(
-                vapply(reactive_env(), get_addr, character(1))
+                vapply(reactive_env(), digest::digest, character(1))
               )
 
               # create a new FilterState
@@ -230,21 +213,19 @@ FilteredData <- R6::R6Class( # nolint
       shiny::isolate({
         checkmate::assert_class(state, "teal_slices")
         state_ids <- vapply(state, `[[`, character(1), "id")
-        logger::log_trace("{ class(self)[1] }$remove_filter_state removing filters, state_id: { toString(state_ids) }")
+        logger::log_trace("FilteredData$remove_filter_state removing filters, state_id: { toString(state_ids) }")
         self$state_list_remove(state_ids)
       })
       invisible(NULL)
     },
 
     #' @description
-    #' Remove all `FilterStates` of a `FilteredDataset` or all `FilterStates`
-    #' of a `FilteredData` object.
+    #' Remove all `FilterState`(s) from the `FilteredData` object.
     #'
     #' @param datanames (`character`)\cr
-    #'   `datanames` to remove their `FilterStates` or empty which removes
-    #'   all `FilterStates` in the `FilteredData` object
+    #'  `datanames` to remove their `FilterState`(s). By default all datasets are cleared.
     #' @param force (`logical(1)`)\cr
-    #'   include locked filter states
+    #'   to force removal of anchored filters.
     #'
     #' @return `NULL` invisibly
     #'
@@ -322,11 +303,10 @@ FilteredData <- R6::R6Class( # nolint
     #' Adds a dataset to this `FilteredData`.
     #'
     #' @details
-    #' `set_dataset` creates a `FilteredDataset` object which keeps `dataset` for the filtering purpose.
-    #' If this data has a parent specified in the `join_keys` object stored in `private$join_keys`
-    #' then created `FilteredDataset` (child) gets linked with other `FilteredDataset` (parent).
-    #' "Child" dataset return filtered data then dependent on the reactive filtered data of the
-    #' "parent". See more in documentation of `parent` argument in `FilteredDatasetDefault` constructor.
+    #' `set_dataset` adds a dataset to this `FilteredData` object and sets reactive components
+    #' for datasets' filtering. Data in the filter panel is filtered when:
+    #' - filter call changes. Filter call is a product of all active `FilterState`(s).
+    #' - When ancestors filtered data changes.
     #'
     #' @param dataset (`data.frame`, `MultiAssayExperiment`)\cr
     #'   data to be filtered.
@@ -350,7 +330,7 @@ FilteredData <- R6::R6Class( # nolint
         })
 
         reactive_env_addrs <- reactive(
-          vapply(reactive_env(), get_addr, character(1))
+          vapply(reactive_env(), digest::digest, character(1))
         )
 
         if (!dataname %in% self$datanames()) {
@@ -414,6 +394,7 @@ FilteredData <- R6::R6Class( # nolint
     #' This can be used for the `Show R Code` generation.
     #'
     #' @param dataname (`character(1)`) name of the dataset
+    #' @param sid (`character(1)`) id of the filter state to exclude from the call
     #' @return (`call` or `list` of calls) to filter dataset calls
     #'
     get_call = function(dataname, sid = character(0)) {
@@ -468,7 +449,7 @@ FilteredData <- R6::R6Class( # nolint
 
     # state list ------
     #' @description
-    #' Returns a list of `FilterState` objects stored in this `FilterStates`.
+    #' Returns a list of currently active `FilterState` objects.
     #'
     #' @param state_id (`character(1)`)\cr
     #'   name of element in a filter state (which is a `reactiveVal` containing a list)
@@ -498,7 +479,7 @@ FilteredData <- R6::R6Class( # nolint
     #'
     state_list_push = function(x, state_id) {
       shiny::isolate({
-        logger::log_trace("{ class(self)[1] } pushing into state_list, dataname: { x$get_state()$id }")
+        logger::log_trace("FilteredData pushing into state_list, state_id: { x$get_state()$id }")
         checkmate::assert_string(state_id)
         checkmate::assert_multi_class(x, c("FilterState", "FilterStateExpr"))
         state <- stats::setNames(list(x), state_id)
@@ -522,10 +503,10 @@ FilteredData <- R6::R6Class( # nolint
     #' @return NULL
     #'
     state_list_remove = function(state_id, force = FALSE) {
-      checkmate::assert_character(state_id)
-      logger::log_trace("{ class(self)[1] } removing a filter, state_id: { toString(state_id) }")
-
       shiny::isolate({
+        checkmate::assert_character(state_id)
+        logger::log_trace("FilteredData removing a filter, state_id: { toString(state_id) }")
+
         current_state_ids <- vapply(self$state_list_get(), function(x) x$get_state()$id, character(1))
         to_remove <- state_id %in% current_state_ids
         if (any(to_remove)) {
@@ -555,20 +536,11 @@ FilteredData <- R6::R6Class( # nolint
   ),
   ## __Private Methods ====
   private = list(
-    allow_add = TRUE,
     available_teal_slices = NULL, # reactive
-    data_names = NULL, # reactiveVal
     datasets = NULL, # list of reactiveVal
     datasets_filtered = NULL, # list of reactiveVal
-    count_type = "all",
-    exclude_varnames = list(),
-    include_varnames = list(),
     join_keys = teal.data::join_keys(),
+    teal_slice_attrs = list(),
     state_list = NULL # reactiveValues/reactives
   )
 )
-
-
-get_addr <- function(x) {
-  capture.output(.Internal(address(x)))
-}

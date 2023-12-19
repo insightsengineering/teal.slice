@@ -110,7 +110,6 @@ shiny::isolate(datasets$get_filter_state())
 \item \href{#method-FilteredData-state_list_get}{\code{FilteredData$state_list_get()}}
 \item \href{#method-FilteredData-state_list_push}{\code{FilteredData$state_list_push()}}
 \item \href{#method-FilteredData-state_list_remove}{\code{FilteredData$state_list_remove()}}
-\item \href{#method-FilteredData-state_list_empty}{\code{FilteredData$state_list_empty()}}
 \item \href{#method-FilteredData-clone}{\code{FilteredData$clone()}}
 }
 }
@@ -224,21 +223,19 @@ specifying \code{FilterState} objects to remove;
 \if{html}{\out{<a id="method-FilteredData-clear_filter_states"></a>}}
 \if{latex}{\out{\hypertarget{method-FilteredData-clear_filter_states}{}}}
 \subsection{Method \code{clear_filter_states()}}{
-Remove all \code{FilterStates} of a \code{FilteredDataset} or all \code{FilterStates}
-of a \code{FilteredData} object.
+Remove all \code{FilterState}(s) from the \code{FilteredData} object.
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{FilteredData$clear_filter_states()}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{FilteredData$clear_filter_states(datanames = self$datanames(), force = FALSE)}\if{html}{\out{</div>}}
 }
 
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
 \item{\code{datanames}}{(\code{character})\cr
-\code{datanames} to remove their \code{FilterStates} or empty which removes
-all \code{FilterStates} in the \code{FilteredData} object}
+\code{datanames} to remove their \code{FilterState}(s). By default all datasets are cleared.}
 
 \item{\code{force}}{(\code{logical(1)})\cr
-include locked filter states}
+to force removal of anchored filters.}
 }
 \if{html}{\out{</div>}}
 }
@@ -327,11 +324,12 @@ data to be filtered.}
 \if{html}{\out{</div>}}
 }
 \subsection{Details}{
-\code{set_dataset} creates a \code{FilteredDataset} object which keeps \code{dataset} for the filtering purpose.
-If this data has a parent specified in the \code{join_keys} object stored in \code{private$join_keys}
-then created \code{FilteredDataset} (child) gets linked with other \code{FilteredDataset} (parent).
-"Child" dataset return filtered data then dependent on the reactive filtered data of the
-"parent". See more in documentation of \code{parent} argument in \code{FilteredDatasetDefault} constructor.
+\code{set_dataset} adds a dataset to this \code{FilteredData} object and sets reactive components
+for datasets' filtering. Data in the filter panel is filtered when:
+\itemize{
+\item filter call changes. Filter call is a product of all active \code{FilterState}(s).
+\item When ancestors filtered data changes.
+}
 }
 
 \subsection{Returns}{
@@ -389,9 +387,7 @@ This can be used for the \verb{Show R Code} generation.
 \describe{
 \item{\code{dataname}}{(\code{character(1)}) name of the dataset}
 
-\item{\code{sid}}{(\code{character})\cr
-when specified then method returns code containing filter conditions of
-\code{FilterState} objects which \code{"sid"} attribute is different than this \code{sid} argument.}
+\item{\code{sid}}{(\code{character(1)}) id of the filter state to exclude from the call}
 }
 \if{html}{\out{</div>}}
 }
@@ -456,7 +452,7 @@ Get keys for the dataset.
 \if{html}{\out{<a id="method-FilteredData-state_list_get"></a>}}
 \if{latex}{\out{\hypertarget{method-FilteredData-state_list_get}{}}}
 \subsection{Method \code{state_list_get()}}{
-Returns a list of \code{FilterState} objects stored in this \code{FilterStates}.
+Returns a list of currently active \code{FilterState} objects.
 \subsection{Usage}{
 \if{html}{\out{<div class="r">}}\preformatted{FilteredData$state_list_get(state_id = NULL)}\if{html}{\out{</div>}}
 }
@@ -525,27 +521,6 @@ include locked filter states}
 }
 \subsection{Returns}{
 NULL
-}
-}
-\if{html}{\out{<hr>}}
-\if{html}{\out{<a id="method-FilteredData-state_list_empty"></a>}}
-\if{latex}{\out{\hypertarget{method-FilteredData-state_list_empty}{}}}
-\subsection{Method \code{state_list_empty()}}{
-Remove all \code{FilterState} objects from this \code{FilterStates} object.
-\subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{FilteredData$state_list_empty(force = FALSE)}\if{html}{\out{</div>}}
-}
-
-\subsection{Arguments}{
-\if{html}{\out{<div class="arguments">}}
-\describe{
-\item{\code{force}}{(\code{logical(1)})\cr
-include locked filter states}
-}
-\if{html}{\out{</div>}}
-}
-\subsection{Returns}{
-invisible NULL
 }
 }
 \if{html}{\out{<hr>}}

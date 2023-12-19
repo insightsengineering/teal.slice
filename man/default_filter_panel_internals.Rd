@@ -9,6 +9,7 @@
 \alias{get_filter_call_array}
 \alias{get_filter_call_MultiAssayExperiment}
 \alias{get_filter_call_SummarizedExperiment}
+\alias{get_merge_call}
 \alias{get_slice_variable_array}
 \alias{get_slice_variable_MultiAssayExperiment}
 \alias{get_slice_variable_SummarizedExperiment}
@@ -37,6 +38,8 @@ get_filter_call_array(data, states_list)
 get_filter_call_MultiAssayExperiment(data, states_list)
 
 get_filter_call_SummarizedExperiment(data, states_list)
+
+get_merge_call(join_keys)
 
 get_slice_variable_array(data, slice)
 

@@ -1,3 +1,33 @@
+#' @title Returns a `choices_labeled` object
+#'
+#' @param data (`data.frame`, `DFrame`, `list`)\cr
+#'   where labels can be taken from in case when `varlabels` is not specified.
+#'   `data` must be specified if `varlabels` is not specified.
+#' @param choices (`character`)\cr
+#'  the vector of chosen variables
+#' @param varlabels (`character`)\cr
+#'  the labels of variables in data
+#' @param keys (`character`)\cr
+#'  the names of the key columns in data
+#' @return `character(0)` if choices are empty; a `choices_labeled` object otherwise
+#' @keywords internal
+data_choices_labeled <- function(data,
+                                 choices,
+                                 varlabels = teal.data::col_labels(data, fill = TRUE),
+                                 keys = character(0)) {
+  if (length(choices) == 0) {
+    return(character(0))
+  }
+  choice_types <- stats::setNames(variable_types(data = data, columns = choices), choices)
+  choice_types[keys] <- "primary_key"
+
+  choices_labeled(
+    choices = choices,
+    labels = unname(varlabels[choices]),
+    types = choice_types[choices]
+  )
+}
+
 #' Set "`<choice>:<label>`" type of Names
 #'
 #' @description `r lifecycle::badge("stable")`

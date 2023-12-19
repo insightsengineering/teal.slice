@@ -117,23 +117,31 @@ srv_active_array <- function(id, data, reactive_state_list, remove_state_callbac
       })
     })
 
-    output[["cards"]] <- shiny::renderUI({
-      lapply(
-        current_state(), # observes only if added/removed
-        function(state) {
-          shiny::isolate( # isolates when existing state changes
-            state$ui(id = session$ns(fs_to_shiny_ns(state)), parent_id = session$ns("cards"))
-          )
-        }
-      )
+    current_state_ids <- reactive({
+      vapply(current_state(), function(x) x$get_state()$id, character(1L))
     })
+
+    output[["cards"]] <- shiny::bindCache(
+      shiny::renderUI({
+        logger::log_trace("srv_active.default@2 rendering filter cards")
+        lapply(
+          current_state(), # observes only if added/removed
+          function(state) {
+            shiny::isolate( # isolates when existing state changes
+              state$ui(id = session$ns(fs_to_shiny_ns(state)), parent_id = session$ns("cards"))
+            )
+          }
+        )
+      }),
+      current_state_ids()
+    )
 
     observeEvent(
       added_states(), # we want to call FilterState module only once when it's added
       ignoreNULL = TRUE,
       {
         added_state_names <- vapply(added_states(), function(x) x$get_state()$id, character(1L))
-        logger::log_trace("FilterStates$srv_active@2 triggered by added states: { toString(added_state_names) }")
+        logger::log_trace("srv_active_array@2 triggered by added states: { toString(added_state_names) }")
         lapply(added_states(), function(state) {
           fs_callback <- state$server(id = fs_to_shiny_ns(state))
           observeEvent(
@@ -153,7 +161,7 @@ srv_active_array <- function(id, data, reactive_state_list, remove_state_callbac
 #' @keywords internal
 srv_active_MultiAssayExperiment <- function(id, data, reactive_state_list, remove_state_callback) {
   moduleServer(id, function(input, output, session) {
-    logger::log_trace("srv_active.MultiAssayExperiment initializing")
+    logger::log_trace("srv_active_MultiAssayExperiment initializing")
 
     reactive_subject_state_list <- reactive({
       Filter(

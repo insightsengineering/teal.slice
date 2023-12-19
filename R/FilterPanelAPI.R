@@ -56,7 +56,7 @@ FilterPanelAPI <- R6::R6Class( # nolint
     #' Gets all active filters in the form of a nested list.
     #' The output list is a compatible input to `set_filter_state`.
     #'
-    #' @return `list` with named elements corresponding to `FilteredDataset` objects with active filters.
+    #' @return `teal_slices` of active filters.
     #'
     get_filter_state = function() {
       private$filtered_data$get_filter_state()
@@ -74,7 +74,7 @@ FilterPanelAPI <- R6::R6Class( # nolint
     },
 
     #' @description
-    #' Remove one or more `FilterState` of a `FilteredDataset` in the `FilteredData` object.
+    #' Remove one or more `FilterState` from the `FilteredData` object.
     #'
     #' @param filter (`teal_slices`)\cr
     #'   specifying `FilterState` objects to remove;

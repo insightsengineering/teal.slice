@@ -98,7 +98,7 @@ srv_active_dataset <- function(id, filtered_data) {
     })
 
     observeEvent(input$remove_filters, {
-      logger::log_trace("FilteredDataset$srv_active@1 removing all non-anchored filters, dataname: { id }")
+      logger::log_trace("srv_active_dataset@1 removing all non-anchored filters, dataname: { id }")
       slices_to_remove <- lapply(get_dataset_states(), function(state) state$get_state())
       slices <- do.call(teal_slices, slices_to_remove)
       filtered_data$remove_filter_state(slices)
