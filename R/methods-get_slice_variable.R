@@ -9,7 +9,12 @@
 #' experiment should be used to extract the variable. If such experiment is of class `SummarizedExperiment` then
 #' `slice$arg` property is used to indicate if variable should be extracted from the `rowData` or from the `colData`.
 #'
+#' @inheritParams filter_panel_methods
+#' @param slice (`teal_slice`)/cr
+#' contains fields which can determine a "location" oof the vector to filter on.
+#'
 get_slice_variable <- function(data, slice) {
+  checkmate::assert_class(slice, "teal_slice")
   UseMethod("get_slice_variable")
 }
 
@@ -41,7 +46,7 @@ get_slice_variable_MultiAssayExperiment <- function(data, slice) {
     SummarizedExperiment::colData(data)[[slice$varname]]
   } else if (slice$experiment %in% names(data)) {
     experiment <- data[[slice$experiment]]
-    get_slice_variable(experiment, slice)
+    get_slice_variable(data = experiment, slice = slice)
   } else {
     stop("Experiment ", experiment, " not found in ", slice$dataname, call. = FALSE)
   }

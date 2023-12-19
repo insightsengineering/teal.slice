@@ -4,6 +4,14 @@
 #' @name module_active
 #' @inheritParams filter_panel_methods
 #' @inheritSection filter_panel_methods Supported data types
+#' @param label (`character(1)`)\cr
+#'  Label of the dataset in the filter panel. Will be displayed along with dataname in the section with active filters.
+#' @param reactive_state_list (`reactive`)\cr
+#'  Should return a list of `FilterState` objects.
+#' @param remove_state_callback (`function(state)`)\cr
+#'  It should be a `FilteredData` function that removes a filter state from the `state_list`. When the remove button
+#'  is clicked this method fill be called. `state` argument in the function is a `teal_slices` object containing
+#' `teal_slice` to be removed.
 #' @return
 #' - `ui_active` returns `shiny.tag`
 #' - `srv_active` returns `moduleServer`

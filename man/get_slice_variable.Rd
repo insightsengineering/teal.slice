@@ -6,6 +6,12 @@
 \usage{
 get_slice_variable(data, slice)
 }
+\arguments{
+\item{data}{(\code{object}) Object of any class}
+
+\item{slice}{(\code{teal_slice})/cr
+contains fields which can determine a "location" oof the vector to filter on.}
+}
 \description{
 Returns a vector of values for given variable.
 \code{slice} object defines "location" of the variable in the dataset.

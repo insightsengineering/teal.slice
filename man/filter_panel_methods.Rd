@@ -4,6 +4,8 @@
 \alias{filter_panel_methods}
 \title{Methods for custom data class}
 \arguments{
+\item{id}{(\code{character}) Module id}
+
 \item{data}{(\code{object}) Object of any class}
 
 \item{data_filtered}{(\code{object}) Object of any class but must be the same class as \code{data}}
@@ -55,7 +57,7 @@ data types, say data.frame, you can register a new S3 methods \verb{<method>.dat
 }
 
 \seealso{
-\link{module_active}, \link{module_overview}, \link{get_filter_overview},
-\link{module_add}, \link{get_filter_call}, \link{get_slice_variable}
+\link{module_active}, \link{get_filter_overview}, \link{module_add}, \link{get_filter_call}, \link{get_slice_variable},
+\link{init_filter_state}
 }
 \keyword{internal}

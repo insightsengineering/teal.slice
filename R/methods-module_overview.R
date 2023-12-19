@@ -81,25 +81,19 @@ srv_overview_data <- function(id, filtered_data, active_datanames = filtered_dat
 
         if (!is.null(datasets_df$obs)) {
           # some datasets (MAE colData) doesn't return obs column
-          datasets_df <- transform(
-            datasets_df,
-            Obs = ifelse(
-              !is.na(obs),
-              sprintf("%s/%s", obs_filtered, obs),
-              ""
-            )
+          datasets_df$Obs <- ifelse(
+            !is.na(datasets_df$obs),
+            sprintf("%s/%s", datasets_df$obs_filtered, datasets_df$obs),
+            ""
           )
         }
 
         if (!is.null(datasets_df$subjects)) {
           # some datasets (without keys) doesn't return subjects
-          datasets_df <- transform(
-            datasets_df,
-            Subjects = ifelse(
-              !is.na(subjects),
-              sprintf("%s/%s", subjects_filtered, subjects),
-              ""
-            )
+          datasets_df$Subjects <- ifelse(
+            !is.na(datasets_df$subjects),
+            sprintf("%s/%s", datasets_df$subjects_filtered, datasets_df$subjects),
+            ""
           )
         }
         datasets_df <- datasets_df[, colnames(datasets_df) %in% c("dataname", "Obs", "Subjects")]
@@ -223,7 +217,7 @@ get_filter_overview_MultiAssayExperiment <- function(data_unfiltered, data_filte
   ))
 
   get_experiment_keys <- function(mae, experiment) {
-    sample_subset <- subset(MultiAssayExperiment::sampleMap(mae), colname %in% colnames(experiment))
+    sample_subset <- subset(MultiAssayExperiment::sampleMap(mae), subset = colname %in% colnames(experiment))
     length(unique(sample_subset$primary))
   }
 

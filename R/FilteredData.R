@@ -171,7 +171,7 @@ FilteredData <- R6::R6Class( # nolint
 
               # create a new FilterState
               fstate <- init_filter_state(
-                x = get_slice_variable(data, slice),
+                x = get_slice_variable(data = data, slice = slice),
                 x_reactive = if (identical(private$count_type, "all")) {
                   bindCache(
                     reactive({
@@ -181,7 +181,7 @@ FilteredData <- R6::R6Class( # nolint
                       env <- reactive_env()
                       filter_call <- self$get_call(dataname, sid = state_id)
                       eval_expr_with_msg(filter_call, env)
-                      get_slice_variable(env[[dataname]], slice)
+                      get_slice_variable(data = env[[dataname]], slice = slice)
                     }),
                     # call have to be cached because underneath $get_call uses the whole state_list
                     # so it reacts to change in any filter state (in all datasets). Therefore we bind

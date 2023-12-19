@@ -17,6 +17,8 @@ srv_add(id, data, filtered_data, dataname, ...)
 \method{srv_add}{default}(id, data, filtered_data, dataname, ...)
 }
 \arguments{
+\item{id}{(\code{character}) Module id}
+
 \item{data}{(\code{object}) Object of any class}
 
 \item{dataname}{(\code{character}) Name of the dataset}

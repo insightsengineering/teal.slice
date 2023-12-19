@@ -14,7 +14,20 @@ srv_active(id, data, reactive_state_list, remove_state_callback)
 \method{ui_active}{default}(id, data, label = character(0))
 }
 \arguments{
+\item{id}{(\code{character}) Module id}
+
 \item{data}{(\code{object}) Object of any class}
+
+\item{label}{(\code{character(1)})\cr
+Label of the dataset in the filter panel. Will be displayed along with dataname in the section with active filters.}
+
+\item{reactive_state_list}{(\code{reactive})\cr
+Should return a list of \code{FilterState} objects.}
+
+\item{remove_state_callback}{(\verb{function(state)})\cr
+It should be a \code{FilteredData} function that removes a filter state from the \code{state_list}. When the remove button
+is clicked this method fill be called. \code{state} argument in the function is a \code{teal_slices} object containing
+\code{teal_slice} to be removed.}
 }
 \value{
 \itemize{

@@ -5,6 +5,7 @@
 #'
 #' @name filter_panel_methods
 #'
+#' @param id (`character`) Module id
 #' @param data (`object`) Object of any class
 #' @param data_filtered (`object`) Object of any class but must be the same class as `data`
 #' @param dataname (`character`) Name of the dataset
@@ -40,8 +41,8 @@
 #' Same applies to supported data types. If you want to override default methods for any of the supported
 #' data types, say data.frame, you can register a new S3 methods `<method>.data.frame`.
 #'
-#' @seealso [module_active], [module_overview], [get_filter_overview],
-#' [module_add], [get_filter_call], [get_slice_variable]
+#' @seealso [module_active], [get_filter_overview], [module_add], [get_filter_call], [get_slice_variable],
+#' [init_filter_state]
 #'
 #' @keywords internal
 NULL
