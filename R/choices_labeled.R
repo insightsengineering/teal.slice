@@ -1,6 +1,6 @@
 #' @title Returns a `choices_labeled` object
 #'
-#' @param data (`data.frame`, `DFrame`, `list`)\cr
+#' @param data (`data.frame`, `DataFrame`, `list`)\cr
 #'   where labels can be taken from in case when `varlabels` is not specified.
 #'   `data` must be specified if `varlabels` is not specified.
 #' @param choices (`character`)\cr

@@ -15,7 +15,6 @@
 ### GLOBAL VARIABLES ###
 
 .filterable_class <- c("logical", "integer", "numeric", "factor", "character", "Date", "POSIXct", "POSIXlt")
-.filterable_data_class <- c("data.frame", "DFrame", "SummarizedExperiment", "MultiAssayExperiment")
 
 ### END GLOBAL VARIABLES ###
 

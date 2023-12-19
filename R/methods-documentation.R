@@ -25,7 +25,7 @@
 #'
 #' `teal.slice` provide methods for:
 #' - `data.frame`
-#' - `DFrame`
+#' - `DataFrame`
 #' - `matrix`
 #' - `Matrix`
 #' - `SummarizedExperiment`

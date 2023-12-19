@@ -32,13 +32,11 @@ get_filter_call_data.frame <- function(data, states_list) {
   dataname_lang <- str2lang(states_list[[1L]]$get_state()$dataname)
   states_predicate <- lapply(states_list, function(state) state$get_call())
   combined_predicate <- calls_combine_by(states_predicate, "&")
+  rhs <- as.call(c(str2lang("dplyr::filter"), c(list(dataname_lang), combined_predicate)))
 
   substitute(
-    env = list(
-      lhs = dataname_lang,
-      rhs = as.call(c(str2lang("dplyr::filter"), c(list(dataname_lang), combined_predicate)))
-    ),
-    expr = lhs <- rhs
+    expr = dataname_lang <- rhs,
+    env = list(dataname_lang = dataname_lang, rhs = rhs)
   )
 }
 
@@ -48,13 +46,11 @@ get_filter_call_array <- function(data, states_list) {
   dataname_lang <- str2lang(states_list[[1L]]$get_state()$dataname)
   states_predicate <- lapply(states_list, function(state) state$get_call())
   combined_predicate <- calls_combine_by(states_predicate, "&")
+  rhs <- as.call(c(str2lang("subset"), c(list(dataname_lang), subset = combined_predicate)))
 
   substitute(
-    env = list(
-      lhs = dataname_lang,
-      rhs = as.call(c(str2lang("subset"), c(list(dataname_lang), subset = combined_predicate)))
-    ),
-    expr = lhs <- rhs
+    expr = dataname_lang <- rhs,
+    env = list(dataname_lang = dataname_lang, rhs = rhs)
   )
 }
 
@@ -70,14 +66,14 @@ get_filter_call_MultiAssayExperiment <- function(data, states_list) {
     states_grouped[["_subjects_"]],
     function(state) state$get_call(extract_type = "list") # subsetByColData needs prefixed variables e.g. data$var
   )
-  call_subjects <- calls_combine_by(subject_predicates_list, "&")
+  call_subjects_predicate <- calls_combine_by(subject_predicates_list, "&")
 
-  subject_call <- if (length(call_subjects)) {
+  subject_call <- if (length(call_subjects_predicate)) {
     substitute(
-      dataname <- subsetByColData(x = dataname, y = calls),
+      dataname <- subsetByColData(x = dataname, y = call_subjects_predicate),
       list(
         dataname = str2lang(states_list[[1L]]$get_state()$dataname),
-        calls = call_subjects
+        call_subjects_predicate = call_subjects_predicate
       )
     )
   }
@@ -121,10 +117,10 @@ get_filter_call_SummarizedExperiment <- function(data, states_list) {
     dataname <- str2lang(states_list[[1]]$get_state()$dataname)
     substitute(
       env = list(
-        lhs = dataname,
-        rhs = as.call(c(quote(subset), c(list(dataname), state_list_calls)))
+        dataname = dataname,
+        state_list_calls = as.call(c(quote(subset), c(list(dataname), state_list_calls)))
       ),
-      expr = lhs <- rhs
+      expr = dataname <- state_list_calls
     )
   }
 }

@@ -70,7 +70,7 @@ variable_types.DataTable <- function(data, columns = NULL) {
 }
 
 #' @export
-variable_types.DFrame <- function(data, columns = NULL) {
+variable_types.DataFrame <- function(data, columns = NULL) {
   variable_types.default(data, columns)
 }
 

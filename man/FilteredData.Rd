@@ -70,7 +70,9 @@ isolate(datasets$get_call("mtcars"))
 
 utils::data(miniACC, package = "MultiAssayExperiment")
 
-datasets <- teal.slice:::FilteredData$new(list(iris = iris, mae = miniACC))
+datasets <- teal.slice:::FilteredData$new()
+datasets$set_dataset("iris", iris)
+datasets$set_dataset("mae", miniACC)
 
 fs <-
   teal_slices(
@@ -173,7 +175,9 @@ Sets active filter states.
 \if{html}{\out{<div class="r example copy">}}
 \preformatted{utils::data(miniACC, package = "MultiAssayExperiment")
 
-datasets <- teal.slice:::FilteredData$new(list(iris = iris, mae = miniACC))
+datasets <- teal.slice:::FilteredData$new()
+datasets$set_dataset("iris", iris)
+datasets$set_dataset("mae", miniACC)
 
 fs <-
   teal_slices(
@@ -454,17 +458,9 @@ Get keys for the dataset.
 \subsection{Method \code{state_list_get()}}{
 Returns a list of currently active \code{FilterState} objects.
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{FilteredData$state_list_get(state_id = NULL)}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{FilteredData$state_list_get()}\if{html}{\out{</div>}}
 }
 
-\subsection{Arguments}{
-\if{html}{\out{<div class="arguments">}}
-\describe{
-\item{\code{state_id}}{(\code{character(1)})\cr
-name of element in a filter state (which is a \code{reactiveVal} containing a list)}
-}
-\if{html}{\out{</div>}}
-}
 \subsection{Returns}{
 \code{list} of \code{FilterState} objects
 }
@@ -476,7 +472,7 @@ name of element in a filter state (which is a \code{reactiveVal} containing a li
 Adds a new \code{FilterState} object to this \code{FilterStates}.\cr
 Raises error if the length of \code{x} does not match the length of \code{state_id}.
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{FilteredData$state_list_push(x, state_id)}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{FilteredData$state_list_push(x)}\if{html}{\out{</div>}}
 }
 
 \subsection{Arguments}{
@@ -484,9 +480,6 @@ Raises error if the length of \code{x} does not match the length of \code{state_
 \describe{
 \item{\code{x}}{(\code{FilterState})\cr
 object to be added to filter state list}
-
-\item{\code{state_id}}{(\code{character(1)})\cr
-name of element in a filter state (which is a \code{reactiveVal} containing a list)}
 }
 \if{html}{\out{</div>}}
 }

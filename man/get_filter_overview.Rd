@@ -30,7 +30,7 @@ in \code{teal.slice} and must be a \code{data.frame} with columns \code{dataname
 \code{teal.slice} provide methods for:
 \itemize{
 \item \code{data.frame}
-\item \code{DFrame}
+\item \code{DataFrame}
 \item \code{matrix}
 \item \code{Matrix}
 \item \code{SummarizedExperiment}

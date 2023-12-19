@@ -7,7 +7,7 @@
 get_include_varnames(data, include_varnames = NULL, exclude_varnames = NULL)
 }
 \arguments{
-\item{data}{(\code{data.frame}, \code{array}, \code{MultiAssayExperiment}, \code{DFrame})\cr}
+\item{data}{(\code{data.frame}, \code{array}, \code{MultiAssayExperiment}, \code{DataFrame})\cr}
 
 \item{include_varnames}{(\code{character})\cr
 the names of variables that should be included in the choices}

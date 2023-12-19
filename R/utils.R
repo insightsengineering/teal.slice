@@ -97,7 +97,7 @@ make_c_call <- function(choices) {
 #' @description This function returns a vector of available choices for a given
 #'  data object and include/exclude variables.
 #'
-#' @param data (`data.frame`, `array`, `MultiAssayExperiment`, `DFrame`)\cr
+#' @param data (`data.frame`, `array`, `MultiAssayExperiment`, `DataFrame`)\cr
 #' @param include_varnames (`character`)\cr
 #' the names of variables that should be included in the choices
 #' @param exclude_varnames (`character`)\cr

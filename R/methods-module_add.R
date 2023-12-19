@@ -32,7 +32,7 @@ ui_add.default <- function(id, data, dataname) {
     ui_add_MultiAssayExperiment(id, data, dataname)
   } else if (inherits(data, "SummarizedExperiment")) {
     ui_add_SummarizedExperiment(id, data, dataname)
-  } else if (inherits(data, c("data.frame", "DFrame", "array", "Matrix"))) {
+  } else if (inherits(data, c("data.frame", "DataFrame", "array", "Matrix"))) {
     ui_add_array(id, data, dataname)
   } else {
     ui_add_unsupported(id, data, dataname)
@@ -52,7 +52,7 @@ srv_add.default <- function(id, data, filtered_data, dataname, ...) {
     srv_add_MultiAssayExperiment(id, data, filtered_data, dataname, ...)
   } else if (inherits(data, "SummarizedExperiment")) {
     srv_add_SummarizedExperiment(id, data, filtered_data, dataname, ...)
-  } else if (inherits(data, c("data.frame", "DFrame", "array", "Matrix"))) {
+  } else if (inherits(data, c("data.frame", "DataFrame", "array", "Matrix"))) {
     srv_add_array(id, data, filtered_data, dataname, ...)
   } else {
     srv_add_unsupported(id, data, filtered_data, dataname, ...)

@@ -35,7 +35,7 @@ Server module responsible for displaying drop-downs with variables to add a filt
 \code{teal.slice} provide methods for:
 \itemize{
 \item \code{data.frame}
-\item \code{DFrame}
+\item \code{DataFrame}
 \item \code{matrix}
 \item \code{Matrix}
 \item \code{SummarizedExperiment}

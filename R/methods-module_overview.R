@@ -172,7 +172,7 @@ get_filter_overview <- function(data_unfiltered, data_filtered, dataname) {
 #' @rdname get_filter_overview
 #' @export
 get_filter_overview.default <- function(data_unfiltered, data_filtered, dataname) {
-  if (inherits(data_unfiltered, c("data.frame", "DFrame", "array", "Matrix"))) {
+  if (inherits(data_unfiltered, c("data.frame", "DataFrame", "array", "Matrix"))) {
     get_filter_overview_array(data_unfiltered, data_filtered, dataname)
   } else if (inherits(data_unfiltered, "SummarizedExperiment")) {
     get_filter_overview_SummarizedExperiment(data_unfiltered, data_filtered, dataname)

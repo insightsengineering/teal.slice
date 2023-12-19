@@ -12,7 +12,7 @@ data_choices_labeled(
 )
 }
 \arguments{
-\item{data}{(\code{data.frame}, \code{DFrame}, \code{list})\cr
+\item{data}{(\code{data.frame}, \code{DataFrame}, \code{list})\cr
 where labels can be taken from in case when \code{varlabels} is not specified.
 \code{data} must be specified if \code{varlabels} is not specified.}
 

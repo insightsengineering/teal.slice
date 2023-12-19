@@ -16,7 +16,7 @@ get_slice_variable <- function(data, slice) {
 #' @export
 get_slice_variable.default <- function(data, slice) {
   # data.frame and matrix
-  if (inherits(data, c("data.frame", "DFrame", "array", "Matrix"))) {
+  if (inherits(data, c("data.frame", "DataFrame", "array", "Matrix"))) {
     get_slice_variable_array(data, slice)
   } else if (inherits(data, "SummarizedExperiment")) {
     get_slice_variable_SummarizedExperiment(data, slice)

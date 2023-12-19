@@ -99,7 +99,9 @@ FilteredData <- R6::R6Class( # nolint
     #' @examples
     #' utils::data(miniACC, package = "MultiAssayExperiment")
     #'
-    #' datasets <- teal.slice:::FilteredData$new(list(iris = iris, mae = miniACC))
+    #' datasets <- teal.slice:::FilteredData$new()
+    #' datasets$set_dataset("iris", iris)
+    #' datasets$set_dataset("mae", miniACC)
     #'
     #' fs <-
     #'   teal_slices(
@@ -193,7 +195,7 @@ FilteredData <- R6::R6Class( # nolint
                 slice = slice
               )
             }
-            self$state_list_push(x = fstate, state_id = state_id)
+            self$state_list_push(x = fstate)
           }
         })
       })
@@ -451,19 +453,10 @@ FilteredData <- R6::R6Class( # nolint
     #' @description
     #' Returns a list of currently active `FilterState` objects.
     #'
-    #' @param state_id (`character(1)`)\cr
-    #'   name of element in a filter state (which is a `reactiveVal` containing a list)
-    #'
     #' @return `list` of `FilterState` objects
     #'
-    state_list_get = function(state_id = NULL) {
-      checkmate::assert_string(state_id, null.ok = TRUE)
-
-      if (is.null(state_id)) {
-        private$state_list()
-      } else {
-        private$state_list()[[state_id]]
-      }
+    state_list_get = function() {
+      private$state_list()
     },
 
     #' @description
@@ -472,17 +465,14 @@ FilteredData <- R6::R6Class( # nolint
     #'
     #' @param x (`FilterState`)\cr
     #'   object to be added to filter state list
-    #' @param state_id (`character(1)`)\cr
-    #'   name of element in a filter state (which is a `reactiveVal` containing a list)
     #'
     #' @return NULL
     #'
-    state_list_push = function(x, state_id) {
+    state_list_push = function(x) {
       shiny::isolate({
         logger::log_trace("FilteredData pushing into state_list, state_id: { x$get_state()$id }")
-        checkmate::assert_string(state_id)
         checkmate::assert_multi_class(x, c("FilterState", "FilterStateExpr"))
-        state <- stats::setNames(list(x), state_id)
+        state <- stats::setNames(list(x), x$get_state()$id)
         new_state_list <- c(self$state_list_get(), state)
         private$state_list(new_state_list)
       })
@@ -541,6 +531,6 @@ FilteredData <- R6::R6Class( # nolint
     datasets_filtered = NULL, # list of reactiveVal
     join_keys = teal.data::join_keys(),
     teal_slice_attrs = list(),
-    state_list = NULL # reactiveValues/reactives
+    state_list = NULL # reactiveValues
   )
 )
