@@ -5,10 +5,10 @@
 %   R/methods-module_overview.R
 \name{default_filter_panel_internals}
 \alias{default_filter_panel_internals}
-\alias{get_filter_call_data.frame}
-\alias{get_filter_call_array}
-\alias{get_filter_call_MultiAssayExperiment}
-\alias{get_filter_call_SummarizedExperiment}
+\alias{get_filter_call.data.frame}
+\alias{get_filter_call.array.Matrix}
+\alias{get_filter_call.MultiAssayExperiment}
+\alias{get_filter_call.SummarizedExperiment}
 \alias{get_merge_call}
 \alias{get_slice_variable_array}
 \alias{get_slice_variable_MultiAssayExperiment}
@@ -31,13 +31,13 @@
 \alias{get_filter_overview_SummarizedExperiment}
 \title{Default methods for supported datasets}
 \usage{
-get_filter_call_data.frame(data, states_list)
+\method{get_filter_call}{data.frame}(data, states_list)
 
-get_filter_call_array(data, states_list)
+\method{get_filter_call}{array.Matrix}(data, states_list)
 
-get_filter_call_MultiAssayExperiment(data, states_list)
+\method{get_filter_call}{MultiAssayExperiment}(data, states_list)
 
-get_filter_call_SummarizedExperiment(data, states_list)
+\method{get_filter_call}{SummarizedExperiment}(data, states_list)
 
 get_merge_call(join_keys)
 
