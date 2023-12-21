@@ -44,7 +44,7 @@ get_filter_call_data.frame <- function(data, states_list) {
 #' @keywords internal
 get_filter_call_array <- function(data, states_list) {
   dataname_lang <- str2lang(states_list[[1L]]$get_state()$dataname)
-  states_predicate <- lapply(states_list, function(state) state$get_call())
+  states_predicate <- lapply(states_list, function(state) state$get_call(extract_type = "matrix"))
   combined_predicate <- calls_combine_by(states_predicate, "&")
   rhs <- as.call(c(str2lang("subset"), c(list(dataname_lang), subset = combined_predicate)))
 
