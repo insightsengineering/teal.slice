@@ -12,7 +12,7 @@ testthat::test_that("constructor checks arguments", {
   )
 
   testthat::expect_error(
-    FilterState$new(x = 7, slice = teal_slice(dataname = "data", varname = "variable"), extract_type = "other"),
+    FilterState$new(x = 7, slice = teal_slice(dataname = "data", varname = "variable")),
     "Assertion on 'extract_type' failed"
   )
 })

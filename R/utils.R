@@ -1,59 +1,3 @@
-#' Ensure the ellipsis, ..., in method arguments are empty
-#'
-#' Ellipsis, ..., are needed as part of method arguments to allow for its arguments to be different from its generic's
-#' arguments and for this to pass check(). Hence, ..., should always be empty. This function will check for this
-#' condition.
-#'
-#' @param ... it should literally just be ...
-#' @param stop TRUE to raise an error; FALSE will output warning message
-#' @param allowed_args character vector naming arguments that are allowed in the \code{...}.
-#'   to allow for unnamed arguments, let "" be one of the elements in this character vector.
-#'
-#' @return \code{NULL} if ... is empty
-#'
-#' @keywords internal
-#'
-#' @examples
-#' method.class <- function(a, b, c, ...) {
-#'   check_ellipsis(...)
-#' }
-#' method.class <- function(a, b, c, ...) {
-#'   check_ellipsis(..., allowed_args = c("y", "z"))
-#' }
-check_ellipsis <- function(..., stop = FALSE, allowed_args = character(0)) {
-  if (!missing(...)) {
-    checkmate::assert_flag(stop)
-    checkmate::assert_character(allowed_args, min.len = 0, null.ok = TRUE, any.missing = FALSE)
-    args <- list(...)
-    arg_names <- names(args)
-    if (is.null(arg_names)) {
-      arg_names <- rep("", length(args))
-    }
-    extra_args <- arg_names[!is.element(arg_names, allowed_args)]
-    if (length(extra_args) == 0) {
-      return(invisible(NULL))
-    }
-    message <- paste(length(extra_args), "total unused argument(s).")
-
-    named_extra_args <- extra_args[!vapply(extra_args, identical, logical(1), "")]
-    if (length(named_extra_args) > 0) {
-      message <- paste0(
-        message,
-        " ",
-        length(named_extra_args),
-        " with name(s): ",
-        paste(named_extra_args, collapse = ", "),
-        "."
-      )
-    }
-    if (stop) {
-      stop(message)
-    } else {
-      warning(message)
-    }
-  }
-}
-
 #' Whether the variable name is good to use within Show R Code
 #'
 #' Spaces are problematic because the variables must be escaped with backticks.
@@ -145,5 +89,85 @@ make_c_call <- function(choices) {
     do.call("call", append(list("c"), choices))
   } else {
     choices
+  }
+}
+
+#' Get supported variables
+#'
+#' @description This function returns a vector of available choices for a given
+#'  data object and include/exclude variables.
+#'
+#' @param data (`data.frame`, `array`, `MultiAssayExperiment`, `DataFrame`)\cr
+#' @param include_varnames (`character`)\cr
+#' the names of variables that should be included in the choices
+#' @param exclude_varnames (`character`)\cr
+#' the names of variables that should be excluded from the choices
+#' @return `character` vector of available choices
+#' @keywords internal
+get_include_varnames <- function(data, include_varnames = NULL, exclude_varnames = NULL) {
+  choices <- get_supported_filter_varnames(data)
+  if (length(include_varnames)) {
+    intersect(choices, include_varnames)
+  } else {
+    setdiff(choices, exclude_varnames)
+  }
+}
+
+
+#' Gets supported filterable variable names
+#'
+#' Gets filterable variable names from a given object. The names match variables
+#' of classes in an vector `teal.slice:::.filterable_class`.
+#' @param data (`object`)\cr
+#'   the R object containing elements which class can be checked through `vapply` or `apply`.
+#'
+#' @examples
+#' df <- data.frame(
+#'   a = letters[1:3],
+#'   b = 1:3,
+#'   c = Sys.Date() + 1:3,
+#'   d = Sys.time() + 1:3,
+#'   z = complex(3)
+#' )
+#' teal.slice:::get_supported_filter_varnames(df)
+#' @return `character` vector of matched element names
+#' @keywords internal
+get_supported_filter_varnames <- function(data) {
+  UseMethod("get_supported_filter_varnames")
+}
+
+#' @keywords internal
+#' @export
+get_supported_filter_varnames.default <- function(data) { # nolint
+  is_expected_class <- vapply(
+    X = data,
+    FUN = function(x) any(class(x) %in% .filterable_class),
+    FUN.VALUE = logical(1)
+  )
+  names(is_expected_class[is_expected_class])
+}
+
+#' @keywords internal
+#' @export
+get_supported_filter_varnames.array <- function(data) { # nolint
+  # all columns are the same type in matrix
+  is_expected_class <- class(data[, 1]) %in% .filterable_class
+  if (is_expected_class && !is.null(colnames(data))) {
+    colnames(data)
+  } else {
+    character(0)
+  }
+}
+
+#' @keywords internal
+#' @export
+get_supported_filter_varnames.MultiAssayExperiment <- function(data) { # nolint
+  data <- SummarizedExperiment::colData(data)
+  # all columns are the same type in matrix
+  is_expected_class <- class(data[, 1]) %in% .filterable_class
+  if (is_expected_class && !is.null(names(data))) {
+    names(data)
+  } else {
+    character(0)
   }
 }

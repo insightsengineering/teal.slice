@@ -1,68 +1,33 @@
-# initialize ----
-testthat::test_that("constructor accepts all types of datasets", {
-  utils::data(miniACC, package = "MultiAssayExperiment")
-
-  testthat::expect_no_error(FilteredData$new(list("logical" = c(TRUE, FALSE))))
-  testthat::expect_no_error(FilteredData$new(list("integer" = 1:10)))
-  testthat::expect_no_error(FilteredData$new(list("numeric" = 1:10 * 1)))
-  testthat::expect_no_error(FilteredData$new(list("character" = letters)))
-  testthat::expect_no_error(FilteredData$new(list("factor" = as.factor(letters))))
-  testthat::expect_no_error(FilteredData$new(list("list" = as.list(letters))))
-  testthat::expect_no_error(FilteredData$new(list("function" = function() letters)))
-
-  testthat::expect_no_error(FilteredData$new(list("array" = array(1:27, dim = c(3, 3, 3)))))
-  testthat::expect_no_error(FilteredData$new(list("dataframe" = iris)))
-  testthat::expect_no_error(FilteredData$new(list("mae" = miniACC)))
-})
-
-testthat::test_that("constructor accepts join_keys to be join_keys or NULL", {
-  testthat::expect_no_error(
-    FilteredData$new(list(iris = list(dataset = iris)), join_keys = teal.data::join_keys())
-  )
-  testthat::expect_no_error(
-    FilteredData$new(list(iris = list(dataset = iris)))
-  )
-  testthat::expect_error(
-    FilteredData$new(list(iris = list(dataset = iris)), join_keys = list())
-  )
-})
-
 # datanames ----
 testthat::test_that("filtered_data$datanames returns character vector of datasets names", {
-  filtered_data <- FilteredData$new(list(df1 = iris, df2 = iris))
+  filtered_data <- FilteredData$new()
+  filtered_data$set_dataset("df1", iris)
+  filtered_data$set_dataset("df2", iris)
   testthat::expect_identical(filtered_data$datanames(), c("df1", "df2"))
 })
 
 testthat::test_that("datanames are ordered topologically from parent to child", {
+  iris2 <- transform(iris, id = seq_len(nrow(iris)))
+  filtered_data <- FilteredData$new()
+  filtered_data$set_dataset("child", head(iris2))
+  filtered_data$set_dataset("parent", head(iris2))
   jk <- teal.data::join_keys(teal.data::join_key("parent", "child", c("id" = "id")))
   teal.data::parents(jk) <- list(child = "parent")
-  iris2 <- transform(iris, id = seq_len(nrow(iris)))
-  filtered_data <- FilteredData$new(
-    list(
-      child = list(dataset = head(iris2)),
-      parent = list(dataset = head(iris2))
-    ),
-    join_keys = jk
-  )
-  testthat::expect_identical(filtered_data$datanames(), c("parent", "child"))
-  filtered_data <- FilteredData$new(
-    list(
-      parent = list(dataset = head(iris2)),
-      child = list(dataset = head(iris2))
-    ),
-    join_keys = jk
-  )
+  filtered_data$set_join_keys(jk)
   testthat::expect_identical(filtered_data$datanames(), c("parent", "child"))
 })
 
 # set_dataset ----
-testthat::test_that("set_dataset accepts data being `data.frame`", {
-  filtered_data <- FilteredData$new(data_objects = list())
+testthat::test_that("set_dataset accepts any type of data", {
+  filtered_data <- FilteredData$new()
   testthat::expect_no_error(filtered_data$set_dataset(data = iris, dataname = "iris"))
+  testthat::expect_no_error(
+    filtered_data$set_dataset(data = structure(list(), class = "custom"), dataname = "iris")
+  )
 })
 
 testthat::test_that("set_dataset returns self", {
-  filtered_data <- FilteredData$new(data_objects = list())
+  filtered_data <- FilteredData$new()
   testthat::expect_identical(
     filtered_data$set_dataset(data = iris, dataname = "iris"),
     filtered_data

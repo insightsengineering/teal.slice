@@ -187,11 +187,10 @@ testthat::test_that("get_call returns call always if choices are limited - regar
 testthat::test_that("get_call prefixes varname by dataname$varname if extract_type='list'", {
   filter_state <- DatetimeFilterState$new(
     posixct,
-    slice = teal_slice(dataname = "data", varname = "variable", selected = posixct[c(1, 3)]),
-    extract_type = "list"
+    slice = teal_slice(dataname = "data", varname = "variable", selected = posixct[c(1, 3)])
   )
   testthat::expect_identical(
-    shiny::isolate(filter_state$get_call(dataname = "dataname")),
+    shiny::isolate(filter_state$get_call(dataname = "dataname", extract_type = "list")),
     quote(
       dataname$variable >= as.POSIXct("2000-01-01 12:00:00", tz = "GMT") &
         dataname$variable < as.POSIXct("2000-01-01 12:00:03", tz = "GMT")
@@ -202,11 +201,10 @@ testthat::test_that("get_call prefixes varname by dataname$varname if extract_ty
 testthat::test_that("get_call prefixes varname by dataname[, 'varname'] if extract_type='matrix'", {
   filter_state <- DatetimeFilterState$new(
     posixct,
-    slice = teal_slice(dataname = "data", varname = "variable", selected = posixct[c(1, 3)]),
-    extract_type = "matrix"
+    slice = teal_slice(dataname = "data", varname = "variable", selected = posixct[c(1, 3)])
   )
   testthat::expect_identical(
-    shiny::isolate(filter_state$get_call(dataname = "dataname")),
+    shiny::isolate(filter_state$get_call(dataname = "dataname", extract_type = "matrix")),
     quote(
       dataname[, "variable"] >= as.POSIXct("2000-01-01 12:00:00", tz = "GMT") &
         dataname[, "variable"] < as.POSIXct("2000-01-01 12:00:03", tz = "GMT")

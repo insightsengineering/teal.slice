@@ -68,8 +68,8 @@ library(shiny)
 # create a FilteredData object
 datasets <- init_filtered_data(
   list(
-    iris = list(dataset = iris),
-    mtcars = list(dataset = mtcars)
+    iris = iris,
+    mtcars = mtcars
   )
 )
 
@@ -98,13 +98,13 @@ app <- shinyApp(
         )
       ),
       # ui for the filter panel
-      column(width = 3, datasets$ui_filter_panel("filter_panel"))
+      column(width = 3, ui_filter_panel("filter_panel"))
     )
   ),
   server = function(input, output, session) {
     # this is the shiny server function for the filter panel and the datasets
     # object can now be used inside the application
-    datasets$srv_filter_panel("filter_panel")
+    srv_filter_panel("filter_panel", datasets)
 
     # get the filtered datasets and put them inside reactives for analysis
     iris_filtered_data <- reactive(datasets$get_data(dataname = "iris", filtered = TRUE))
@@ -115,6 +115,6 @@ app <- shinyApp(
   }
 )
 if (interactive()) {
-  shinyApp(app$ui, app$server)
+  app
 }
 ```

@@ -35,9 +35,9 @@ Each `teal_slice` object contains all the information necessary to:
 
    - `dataname` - name of the data set
    - `varname` - name of the column
-   - `experiment` (only for `MultiAssayExperiment` objects) - name of the experiment
-   - `arg` (only for `SummarizedExperiment` objects, e.g within a `MultiAssayExperiment`) -
-   name of the argument in the call to `subset` (`subset` of `select`)
+   - `...` - (see [Extending filter panel](#extending-filter-panel)) additional arguments which can determine location 
+    of the column in the data set. 
+      
 
 2. Express or store the current selection state:
 
@@ -68,12 +68,9 @@ Creating `teal_slices` with slices with duplicated `id`s is forbidden and will r
 ```{r, message=FALSE, warning=FALSE}
 library(teal.slice)
 
-datasets <- init_filtered_data(
-  list(
-    iris = list(dataset = iris),
-    mtcars = list(dataset = mtcars)
-  )
-)
+datasets <- init_filtered_data()
+datasets$set_dataset("iris", iris)
+datasets$set_dataset("mtcars", mtcars)
 
 set_filter_state(
   datasets = datasets,
@@ -171,12 +168,9 @@ All the instructions herein can be utilized to build a shiny app.
 library(shiny)
 
 # initializing FilteredData
-datasets <- init_filtered_data(
-  list(
-    iris = list(dataset = iris),
-    mtcars = list(dataset = mtcars)
-  )
-)
+datasets <- init_filtered_data()
+datasets$set_dataset("iris", iris)
+datasets$set_dataset("mtcars", mtcars)
 
 # setting initial filters
 set_filter_state(
@@ -210,13 +204,13 @@ app <- shinyApp(
       column(
         width = 3,
         id = "teal_secondary_col",
-        datasets$ui_filter_panel("filter_panel")
+        ui_filter_panel("filter_panel")
       )
     )
   ),
   server = function(input, output, session) {
     # calling filter panel module
-    datasets$srv_filter_panel("filter_panel")
+    srv_filter_panel("filter_panel", datasets)
 
     # displaying actual filter states
     output$filter_state <- renderPrint(print(get_filter_state(datasets), trim = FALSE))
@@ -252,6 +246,7 @@ app <- shinyApp(
   }
 )
 if (interactive()) {
-  shinyApp(app$ui, app$server)
+  app
 }
 ```
+

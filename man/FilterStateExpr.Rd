@@ -169,7 +169,7 @@ Sets filtering state.
 \subsection{Method \code{get_call()}}{
 Get reproducible call
 \subsection{Usage}{
-\if{html}{\out{<div class="r">}}\preformatted{FilterStateExpr$get_call(dataname)}\if{html}{\out{</div>}}
+\if{html}{\out{<div class="r">}}\preformatted{FilterStateExpr$get_call(dataname, extract_type = character(0))}\if{html}{\out{</div>}}
 }
 
 \subsection{Arguments}{
@@ -181,6 +181,9 @@ Returns reproducible condition call for current selection relevant
 for selected variable type.
 Method is using internal reactive values which makes it reactive
 and must be executed in reactive or isolated context.}
+
+\item{\code{extract_type}}{(\code{character(0)}, \code{character(1)})\cr
+ignored}
 }
 \if{html}{\out{</div>}}
 }

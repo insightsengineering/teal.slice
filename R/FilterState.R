@@ -56,27 +56,15 @@ FilterState <- R6::R6Class( # nolint
     #'   dataset are not shown.
     #' @param slice (`teal_slice`)\cr
     #'   object created by [teal_slice()]
-    #' @param extract_type (`character(0)`, `character(1)`)\cr
-    #'   specifying whether condition calls should be prefixed by `dataname`. Possible values:
-    #' \itemize{
-    #' \item{`character(0)` (default)}{ `varname` in the condition call will not be prefixed}
-    #' \item{`"list"`}{ `varname` in the condition call will be returned as `<dataname>$<varname>`}
-    #' \item{`"matrix"`}{ `varname` in the condition call will be returned as `<dataname>[, <varname>]`}
-    #' }
     #' @param ... additional arguments to be saved as a list in `private$extras` field
     #'
     #' @return self invisibly
     #'
     initialize = function(x,
                           x_reactive = reactive(NULL),
-                          slice,
-                          extract_type = character(0)) {
+                          slice) {
       checkmate::assert_class(x_reactive, "reactive")
       checkmate::assert_class(slice, "teal_slice")
-      checkmate::assert_character(extract_type, max.len = 1, any.missing = FALSE)
-      if (length(extract_type) == 1) {
-        checkmate::assert_choice(extract_type, choices = c("list", "matrix"))
-      }
 
       # Set data properties.
       private$x <- x
@@ -88,8 +76,6 @@ FilterState <- R6::R6Class( # nolint
           sum(is.na(private$x_reactive()))
         }
       )
-      # Set extract type.
-      private$extract_type <- extract_type
 
       # Set state properties.
       if (is.null(shiny::isolate(slice$keep_na)) && anyNA(x)) slice$keep_na <- TRUE
@@ -297,81 +283,83 @@ FilterState <- R6::R6Class( # nolint
       ### Title consists of conditional icon, varname, conditional varlabel, and controls, arranged in a row.
       ### Summary consists of value and controls, arranged in a row.
 
-      div(
-        id = id,
-        class = "panel filter-card",
-        include_js_files("count-bar-labels.js"),
+      shiny::isolate({
         div(
-          class = "filter-card-header",
-          `data-toggle` = "collapse",
-          `data-bs-toggle` = "collapse",
-          href = paste0("#", ns("body")),
+          id = id,
+          class = "panel filter-card",
+          include_js_files("count-bar-labels.js"),
           div(
-            class = "filter-card-title",
-            if (private$is_anchored() && private$is_fixed()) {
-              icon("anchor-lock", class = "filter-card-icon")
-            } else if (private$is_anchored() && !private$is_fixed()) {
-              icon("anchor", class = "filter-card-icon")
-            } else if (!private$is_anchored() && private$is_fixed()) {
-              icon("lock", class = "filter-card-icon")
-            },
-            div(class = "filter-card-varname", strong(private$get_varname())),
-            div(class = "filter-card-varlabel", private$get_varlabel()),
+            class = "filter-card-header",
+            `data-toggle` = "collapse",
+            `data-bs-toggle` = "collapse",
+            href = paste0("#", ns("body")),
             div(
-              class = "filter-card-controls",
-              # Suppress toggling body when clicking on this div.
-              # This is for bootstrap 3 and 4. Causes page to scroll to top, prevented by setting href on buttons.
-              onclick = "event.stopPropagation();event.preventDefault();",
-              # This is for bootstrap 5.
-              `data-bs-toggle` = "collapse",
-              `data-bs-target` = NULL,
-              if (isFALSE(private$is_fixed())) {
-                actionLink(
-                  inputId = ns("back"),
-                  label = NULL,
-                  icon = icon("circle-arrow-left", lib = "font-awesome"),
-                  title = "Rewind state",
-                  class = "filter-card-back",
-                  style = "display: none"
-                )
+              class = "filter-card-title",
+              if (private$is_anchored() && private$is_fixed()) {
+                icon("anchor-lock", class = "filter-card-icon")
+              } else if (private$is_anchored() && !private$is_fixed()) {
+                icon("anchor", class = "filter-card-icon")
+              } else if (!private$is_anchored() && private$is_fixed()) {
+                icon("lock", class = "filter-card-icon")
               },
-              if (isFALSE(private$is_fixed())) {
-                actionLink(
-                  inputId = ns("reset"),
-                  label = NULL,
-                  icon = icon("circle-arrow-up", lib = "font-awesome"),
-                  title = "Restore original state",
-                  class = "filter-card-back",
-                  style = "display: none"
-                )
-              },
-              if (isFALSE(private$is_anchored())) {
-                actionLink(
-                  inputId = ns("remove"),
-                  label = icon("circle-xmark", lib = "font-awesome"),
-                  title = "Remove filter",
-                  class = "filter-card-remove"
-                )
+              div(class = "filter-card-varname", strong(private$get_varname())),
+              div(class = "filter-card-varlabel", private$get_varlabel()),
+              div(
+                class = "filter-card-controls",
+                # Suppress toggling body when clicking on this div.
+                # This is for bootstrap 3 and 4. Causes page to scroll to top, prevented by setting href on buttons.
+                onclick = "event.stopPropagation();event.preventDefault();",
+                # This is for bootstrap 5.
+                `data-bs-toggle` = "collapse",
+                `data-bs-target` = NULL,
+                if (isFALSE(private$is_fixed())) {
+                  actionLink(
+                    inputId = ns("back"),
+                    label = NULL,
+                    icon = icon("circle-arrow-left", lib = "font-awesome"),
+                    title = "Rewind state",
+                    class = "filter-card-back",
+                    style = "display: none"
+                  )
+                },
+                if (isFALSE(private$is_fixed())) {
+                  actionLink(
+                    inputId = ns("reset"),
+                    label = NULL,
+                    icon = icon("circle-arrow-up", lib = "font-awesome"),
+                    title = "Restore original state",
+                    class = "filter-card-back",
+                    style = "display: none"
+                  )
+                },
+                if (isFALSE(private$is_anchored())) {
+                  actionLink(
+                    inputId = ns("remove"),
+                    label = icon("circle-xmark", lib = "font-awesome"),
+                    title = "Remove filter",
+                    class = "filter-card-remove"
+                  )
+                }
+              )
+            ),
+            div(class = "filter-card-summary", private$ui_summary(ns("summary")))
+          ),
+          div(
+            id = ns("body"),
+            class = "collapse out",
+            `data-parent` = paste0("#", parent_id),
+            `data-bs-parent` = paste0("#", parent_id),
+            div(
+              class = "filter-card-body",
+              if (private$is_fixed()) {
+                private$ui_inputs_fixed(ns("inputs"))
+              } else {
+                private$ui_inputs(ns("inputs"))
               }
             )
-          ),
-          div(class = "filter-card-summary", private$ui_summary(ns("summary")))
-        ),
-        div(
-          id = ns("body"),
-          class = "collapse out",
-          `data-parent` = paste0("#", parent_id),
-          `data-bs-parent` = paste0("#", parent_id),
-          div(
-            class = "filter-card-body",
-            if (private$is_fixed()) {
-              private$ui_inputs_fixed(ns("inputs"))
-            } else {
-              private$ui_inputs(ns("inputs"))
-            }
           )
         )
-      )
+      })
     },
 
     #' @description
@@ -392,7 +380,6 @@ FilterState <- R6::R6Class( # nolint
     x = NULL, # the filtered variable
     x_reactive = NULL, # reactive containing the filtered variable, used for updating counts and histograms
     teal_slice = NULL, # stores all transferable properties of this filter state
-    extract_type = character(0), # used by private$get_varname_prefixed
     na_count = integer(0),
     filtered_na_count = NULL, # reactive containing the count of NA in the filtered dataset
     varlabel = character(0), # taken from variable labels in data; displayed in filter cards
@@ -575,15 +562,17 @@ FilterState <- R6::R6Class( # nolint
     # @description
     # Return variable name prefixed by `dataname` to be evaluated as extracted object,
     # for example `data$var`
+    # @param dataname `character(1)` name of a dataset
+    # @param extract_type `character(1)` type of extraction, one of `character(0)`, `"list"`, `"matrix"`
     # @return a character string representation of a subset call
     #         that extracts the variable from the dataset
-    get_varname_prefixed = function(dataname) {
+    get_varname_prefixed = function(dataname, extract_type = character(0)) {
       varname <- private$get_varname()
       varname_backticked <- sprintf("`%s`", varname)
       ans <-
-        if (isTRUE(private$extract_type == "list")) {
+        if (isTRUE(extract_type == "list")) {
           sprintf("%s$%s", dataname, varname_backticked)
-        } else if (isTRUE(private$extract_type == "matrix")) {
+        } else if (isTRUE(extract_type == "matrix")) {
           sprintf("%s[, \"%s\"]", dataname, varname)
         } else {
           varname_backticked

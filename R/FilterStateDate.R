@@ -8,8 +8,7 @@
 #' @examples
 #' filter_state <- teal.slice:::DateFilterState$new(
 #'   x = c(Sys.Date() + seq(1:10), NA),
-#'   slice = teal_slice(varname = "x", dataname = "data"),
-#'   extract_type = character(0)
+#'   slice = teal_slice(varname = "x", dataname = "data")
 #' )
 #' shiny::isolate(filter_state$get_call())
 #' filter_state$set_state(
@@ -120,19 +119,11 @@ DateFilterState <- R6::R6Class( # nolint
     #'   returns `teal_slice` object which can be reused in other places. Beware, that `teal_slice`
     #'   is a `reactiveValues` which means that changes in particular object are automatically
     #'   reflected in all places which refer to the same `teal_slice`.
-    #' @param extract_type (`character(0)`, `character(1)`)\cr
-    #' whether condition calls should be prefixed by `dataname`. Possible values:
-    #' \itemize{
-    #' \item{`character(0)` (default)}{ `varname` in the condition call will not be prefixed}
-    #' \item{`"list"`}{ `varname` in the condition call will be returned as `<dataname>$<varname>`}
-    #' \item{`"matrix"`}{ `varname` in the condition call will be returned as `<dataname>[, <varname>]`}
-    #' }
     #' @param ... additional arguments to be saved as a list in `private$extras` field
     #'
     initialize = function(x,
                           x_reactive = reactive(NULL),
-                          slice,
-                          extract_type = character(0)) {
+                          slice) {
       shiny::isolate({
         checkmate::assert_date(x)
         checkmate::assert_class(x_reactive, "reactive")
@@ -140,8 +131,7 @@ DateFilterState <- R6::R6Class( # nolint
         super$initialize(
           x = x,
           x_reactive = x_reactive,
-          slice = slice,
-          extract_type = extract_type
+          slice = slice
         )
         checkmate::assert_date(slice$choices, null.ok = TRUE)
         private$set_choices(slice$choices)
@@ -158,14 +148,21 @@ DateFilterState <- R6::R6Class( # nolint
     #' `<varname> >= <min value> & <varname> <= <max value>` with
     #' optional `is.na(<varname>)`.
     #' @param dataname `character(1)` containing possibly prefixed name of data set
+    #' @param extract_type (`character(0)`, `character(1)`)\cr
+    #'   specifying whether condition calls should be prefixed by `dataname`. Possible values:
+    #' \itemize{
+    #' \item{`character(0)` (default)}{ `varname` in the condition call will not be prefixed}
+    #' \item{`"list"`}{ `varname` in the condition call will be returned as `<dataname>$<varname>`}
+    #' \item{`"matrix"`}{ `varname` in the condition call will be returned as `<dataname>[, <varname>]`}
+    #' }
     #' @return (`call`)
     #'
-    get_call = function(dataname) {
+    get_call = function(dataname, extract_type = character(0)) {
       if (isFALSE(private$is_any_filtered())) {
         return(NULL)
       }
       choices <- as.character(private$get_selected())
-      varname <- private$get_varname_prefixed(dataname)
+      varname <- private$get_varname_prefixed(dataname, extract_type)
       filter_call <-
         call(
           "&",
@@ -382,8 +379,6 @@ DateFilterState <- R6::R6Class( # nolint
               end = private$get_choices()[2L]
             )
           })
-
-          logger::log_trace("DateFilterState$server initialized, id: { private$get_id() }")
           NULL
         }
       )
@@ -401,8 +396,6 @@ DateFilterState <- R6::R6Class( # nolint
               div(span(" - "), icon("calendar-days"), vals[2])
             )
           })
-
-          logger::log_trace("DateFilterState$server initialized, id: { private$get_id() }")
           NULL
         }
       )

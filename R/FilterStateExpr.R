@@ -124,8 +124,10 @@ FilterStateExpr <- R6::R6Class( # nolint
     #' for selected variable type.
     #' Method is using internal reactive values which makes it reactive
     #' and must be executed in reactive or isolated context.
+    #' @param extract_type (`character(0)`, `character(1)`)\cr
+    #'  ignored
     #' @return `language`
-    get_call = function(dataname) {
+    get_call = function(dataname, extract_type = character(0)) {
       shiny::isolate(str2lang(private$teal_slice$expr))
     },
 
