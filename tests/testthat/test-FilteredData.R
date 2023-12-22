@@ -35,7 +35,6 @@ testthat::test_that("filtered_data$datanames returns character vector of dataset
 
 testthat::test_that("datanames are ordered topologically from parent to child", {
   jk <- teal.data::join_keys(teal.data::join_key("parent", "child", c("id" = "id")))
-  teal.data::parents(jk) <- list(child = "parent")
   iris2 <- transform(iris, id = seq_len(nrow(iris)))
   filtered_data <- FilteredData$new(
     list(
@@ -94,7 +93,6 @@ testthat::test_that("set_datasets creates FilteredDataset object linked with par
     )
   )
   jk <- teal.data::join_keys(teal.data::join_key("parent", "child", c("id" = "id")))
-  teal.data::parents(jk) <- list(child = "parent")
   iris2 <- transform(iris, id = seq_len(nrow(iris)))
   filtered_data <- test_class$new(data_objects = list(), join_keys = jk)
   filtered_data$set_dataset(data = head(iris), dataname = "parent")
@@ -269,10 +267,9 @@ testthat::test_that("get_data returns an object filtered by set filters", {
 
 testthat::test_that("get_data of the child is dependent on the ancestor filter", {
   jk <- teal.data::join_keys(
-    teal.data::join_key("child", "parent", c("id" = "id")),
-    teal.data::join_key("grandchild", "child", c("id" = "id"))
+    teal.data::join_key("parent", "child", c("id" = "id")),
+    teal.data::join_key("child", "grandchild", c("id" = "id"))
   )
-  teal.data::parents(jk) <- list(child = "parent", grandchild = "child")
   iris2 <- transform(iris, id = seq_len(nrow(iris)))
   filtered_data <- FilteredData$new(
     list(
@@ -284,6 +281,31 @@ testthat::test_that("get_data of the child is dependent on the ancestor filter",
   )
   filtered_data$set_filter_state(teal_slices(
     teal_slice(dataname = "parent", varname = "id", selected = c(1, 1), keep_na = FALSE, keep_inf = FALSE)
+  ))
+
+  testthat::expect_identical(
+    shiny::isolate(filtered_data$get_data("grandchild", filtered = TRUE)),
+    dplyr::filter(iris2, id == 1)
+  )
+})
+
+testthat::test_that("get_data of the child is dependent on the ancestor filter (mismatched columns)", {
+  jk <- teal.data::join_keys(
+    teal.data::join_key("parent", "child", c("pk" = "id")),
+    teal.data::join_key("child", "grandchild", c("id" = "id"))
+  )
+  iris2 <- transform(iris, id = seq_len(nrow(iris)))
+  iris_parent <- dplyr::rename(iris2, pk = "id")
+  filtered_data <- FilteredData$new(
+    list(
+      grandchild = list(dataset = head(iris2)),
+      child = list(dataset = head(iris2)),
+      parent = list(dataset = head(iris_parent))
+    ),
+    join_keys = jk
+  )
+  filtered_data$set_filter_state(teal_slices(
+    teal_slice(dataname = "parent", varname = "pk", selected = c(1, 1), keep_na = FALSE, keep_inf = FALSE)
   ))
 
   testthat::expect_identical(
@@ -603,10 +625,9 @@ testthat::test_that("get_filter_overview returns overview data.frame with filter
 
 testthat::test_that("get_filter_overview return counts based on reactive filtering by ancestors", {
   jk <- teal.data::join_keys(
-    teal.data::join_key("child", "parent", c("id" = "id")),
-    teal.data::join_key("grandchild", "child", c("id" = "id"))
+    teal.data::join_key("parent", "child", c("id" = "id")),
+    teal.data::join_key("child", "grandchild", c("id" = "id"))
   )
-  teal.data::parents(jk) <- list(child = "parent", grandchild = "child")
   iris2 <- transform(iris, id = seq_len(nrow(iris)))
   filtered_data <- FilteredData$new(
     list(

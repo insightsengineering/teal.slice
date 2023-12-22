@@ -122,8 +122,8 @@ DataframeFilteredDataset <- R6::R6Class( # nolint
 
       if (!identical(parent_dataname, character(0))) {
         join_keys <- private$join_keys
-        parent_keys <- names(join_keys)
-        dataset_keys <- unname(join_keys)
+        parent_keys <- unname(join_keys)
+        dataset_keys <- names(join_keys)
 
         y_arg <- if (length(parent_keys) == 0L) {
           parent_dataname
@@ -240,11 +240,10 @@ DataframeFilteredDataset <- R6::R6Class( # nolint
       # Gets filter overview subjects number and returns a list
       # of the number of subjects of filtered/non-filtered datasets
       subject_keys <- if (length(private$parent_name) > 0) {
-        private$join_keys
+        names(private$join_keys)
       } else {
         self$get_keys()
       }
-
       dataset <- self$get_dataset()
       data_filtered <- self$get_dataset(TRUE)
       if (length(subject_keys) == 0) {
