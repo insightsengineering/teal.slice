@@ -35,7 +35,6 @@ testthat::test_that("filtered_data$datanames returns character vector of dataset
 
 testthat::test_that("datanames are ordered topologically from parent to child", {
   jk <- teal.data::join_keys(teal.data::join_key("parent", "child", c("id" = "id")))
-  teal.data::parents(jk) <- list(child = "parent")
   iris2 <- transform(iris, id = seq_len(nrow(iris)))
   filtered_data <- FilteredData$new(
     list(
@@ -94,7 +93,6 @@ testthat::test_that("set_datasets creates FilteredDataset object linked with par
     )
   )
   jk <- teal.data::join_keys(teal.data::join_key("parent", "child", c("id" = "id")))
-  teal.data::parents(jk) <- list(child = "parent")
   iris2 <- transform(iris, id = seq_len(nrow(iris)))
   filtered_data <- test_class$new(data_objects = list(), join_keys = jk)
   filtered_data$set_dataset(data = head(iris), dataname = "parent")
@@ -627,10 +625,9 @@ testthat::test_that("get_filter_overview returns overview data.frame with filter
 
 testthat::test_that("get_filter_overview return counts based on reactive filtering by ancestors", {
   jk <- teal.data::join_keys(
-    teal.data::join_key("child", "parent", c("id" = "id")),
-    teal.data::join_key("grandchild", "child", c("id" = "id"))
+    teal.data::join_key("parent", "child", c("id" = "id")),
+    teal.data::join_key("child", "grandchild", c("id" = "id"))
   )
-  teal.data::parents(jk) <- list(child = "parent", grandchild = "child")
   iris2 <- transform(iris, id = seq_len(nrow(iris)))
   filtered_data <- FilteredData$new(
     list(
