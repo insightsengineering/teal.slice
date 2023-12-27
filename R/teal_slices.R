@@ -271,8 +271,9 @@ setdiff_teal_slices <- function(x, y) {
 #'
 coalesce_r <- function(x) {
   checkmate::assert_list(x)
-  if (all(vapply(x, is.atomic, logical(1L)))) {
-    return(Filter(Negate(is.null), x)[[1L]])
+  xnn <- Filter(Negate(is.null), x)
+  if (all(vapply(xnn, is.atomic, logical(1L)))) {
+    return(xnn[[1L]])
   }
   lapply(x, checkmate::assert_list, names = "named", null.ok = TRUE, .var.name = "list element")
   all_names <- unique(unlist(lapply(x, names)))
