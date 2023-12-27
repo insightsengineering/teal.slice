@@ -3,9 +3,16 @@
 \name{module_overview_data}
 \alias{module_overview_data}
 \alias{ui_overview_data}
+\alias{get_filter_overview}
+\alias{get_filter_overview-ANY-method}
+\alias{get_filter_overview-data.frame-method}
+\alias{get_filter_overview-DataFrame-method}
+\alias{get_filter_overview-array-method}
+\alias{get_filter_overview-Matrix-method}
+\alias{get_filter_overview-SummarizedExperiment-method}
+\alias{get_filter_overview-MultiAssayExperiment-method}
 \alias{srv_overview_data}
-\title{Server function to display the number of records in the filtered and unfiltered
-data}
+\title{Server function to display the number of records in the filtered and unfiltered data}
 \usage{
 ui_overview_data(id, filtered_data)
 
@@ -29,7 +36,6 @@ panel will be hidden.}
 \code{moduleServer} function which returns \code{NULL}
 }
 \description{
-Server function to display the number of records in the filtered and unfiltered
-data
+Server function to display the number of records in the filtered and unfiltered data
 }
 \keyword{internal}

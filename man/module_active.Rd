@@ -3,15 +3,22 @@
 \name{module_active}
 \alias{module_active}
 \alias{ui_active}
+\alias{ui_active-ANY-method}
+\alias{ui_active-data.frame-method}
+\alias{ui_active-DataFrame-method}
+\alias{ui_active-array-method}
+\alias{ui_active-Matrix-method}
+\alias{ui_active-MultiAssayExperiment-method}
 \alias{srv_active}
-\alias{ui_active.default}
+\alias{srv_active-ANY-method}
+\alias{srv_active-data.frame-method}
+\alias{srv_active-DataFrame-method}
+\alias{srv_active-array-method}
+\alias{srv_active-Matrix-method}
+\alias{srv_active-MultiAssayExperiment-method}
 \title{Filter panel module active}
 \usage{
 ui_active(id, data, label = character(0))
-
-srv_active(id, data, reactive_state_list, remove_state_callback)
-
-\method{ui_active}{default}(id, data, label = character(0))
 }
 \arguments{
 \item{id}{(\code{character}) Module id}

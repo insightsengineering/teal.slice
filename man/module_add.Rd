@@ -3,18 +3,24 @@
 \name{module_add}
 \alias{module_add}
 \alias{ui_add}
-\alias{ui_add.default}
+\alias{ui_add-ANY-method}
+\alias{ui_add-data.frame-method}
+\alias{ui_add-DataFrame-method}
+\alias{ui_add-array-method}
+\alias{ui_add-Matrix-method}
+\alias{ui_add-SummarizedExperiment-method}
+\alias{ui_add-MultiAssayExperiment-method}
 \alias{srv_add}
-\alias{srv_add.default}
+\alias{srv_add-ANY-method}
+\alias{srv_add-data.frame-method}
+\alias{srv_add-DataFrame-method}
+\alias{srv_add-array-method}
+\alias{srv_add-Matrix-method}
+\alias{srv_add-SummarizedExperiment-method}
+\alias{srv_add-MultiAssayExperiment-method}
 \title{Add a filter state module}
 \usage{
 ui_add(id, data, dataname)
-
-\method{ui_add}{default}(id, data, dataname)
-
-srv_add(id, data, filtered_data, dataname, ...)
-
-\method{srv_add}{default}(id, data, filtered_data, dataname, ...)
 }
 \arguments{
 \item{id}{(\code{character}) Module id}
@@ -22,8 +28,6 @@ srv_add(id, data, filtered_data, dataname, ...)
 \item{data}{(\code{object}) Object of any class}
 
 \item{dataname}{(\code{character}) Name of the dataset}
-
-\item{filtered_data}{(\code{FilteredData}) Object of class \code{FilteredData}.}
 
 \item{...}{(optional) additional arguments passed to \code{teal_slice}. Useful when reusing
 \code{srv_add} for object nested inside of other object. For example \code{SummarizedExperiment} could be

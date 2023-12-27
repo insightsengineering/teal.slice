@@ -2,6 +2,13 @@
 % Please edit documentation in R/methods-get_slice_variable.R
 \name{get_slice_variable}
 \alias{get_slice_variable}
+\alias{get_slice_variable-ANY,teal_slice-method}
+\alias{get_slice_variable-data.frame,teal_slice-method}
+\alias{get_slice_variable-DataFrame,teal_slice-method}
+\alias{get_slice_variable-array,teal_slice-method}
+\alias{get_slice_variable-Matrix,teal_slice-method}
+\alias{get_slice_variable-SummarizedExperiment,teal_slice-method}
+\alias{get_slice_variable-MultiAssayExperiment,teal_slice-method}
 \title{Get slice variable}
 \usage{
 get_slice_variable(data, slice)
@@ -10,7 +17,7 @@ get_slice_variable(data, slice)
 \item{data}{(\code{object}) Object of any class}
 
 \item{slice}{(\code{teal_slice})/cr
-contains fields which can determine a "location" oof the vector to filter on.}
+contains fields which can determine a "location" of the vector to filter on.}
 }
 \description{
 Returns a vector of values for given variable.
