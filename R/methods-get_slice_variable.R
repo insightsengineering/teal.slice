@@ -11,36 +11,66 @@
 #'
 #' @inheritParams filter_panel_methods
 #' @param slice (`teal_slice`)/cr
-#' contains fields which can determine a "location" oof the vector to filter on.
+#'  contains fields which can determine a "location" of the vector to filter on.
 #'
-get_slice_variable <- function(data, slice) {
-  checkmate::assert_class(slice, "teal_slice")
-  UseMethod("get_slice_variable")
-}
-
+#' @include teal_slice.R
+#'
+#' @name get_slice_variable
+#' @rdname get_slice_variable
+#' @aliases get_slice_variable-ANY,teal_slice-method
+#' @aliases get_slice_variable-data.frame,teal_slice-method
+#' @aliases get_slice_variable-DataFrame,teal_slice-method
+#' @aliases get_slice_variable-array,teal_slice-method
+#' @aliases get_slice_variable-Matrix,teal_slice-method
+#' @aliases get_slice_variable-SummarizedExperiment,teal_slice-method
+#' @aliases get_slice_variable-MultiAssayExperiment,teal_slice-method
+#'
 #' @export
-get_slice_variable.default <- function(data, slice) {
-  # data.frame and matrix
-  if (inherits(data, c("data.frame", "DataFrame", "array", "Matrix"))) {
-    get_slice_variable_array(data, slice)
-  } else if (inherits(data, "SummarizedExperiment")) {
-    get_slice_variable_SummarizedExperiment(data, slice)
-  } else if (inherits(data, "MultiAssayExperiment")) {
-    get_slice_variable_MultiAssayExperiment(data, slice)
-  } else {
-    stop("get_slice_variable not implemented for class ", class(data), call. = FALSE)
-  }
-}
+#'
+# get_slice_variable generic ----
+setGeneric("get_slice_variable", function(data, slice) {
+  NULL
+})
 
-#' @rdname default_filter_panel_internals
-#' @keywords internal
-get_slice_variable_array <- function(data, slice) {
+## default method ----
+setMethod("get_slice_variable", c("ANY", "teal_slice"), function(data, slice) {
+  stop("get_slice_variable not implemented for class ", toString(class(data)), call. = FALSE)
+})
+
+## data.frame method ----
+setMethod("get_slice_variable", c("data.frame", "teal_slice"), function(data, slice) {
   data[, slice$varname, drop = TRUE]
-}
+})
 
-#' @rdname default_filter_panel_internals
-#' @keywords internal
-get_slice_variable_MultiAssayExperiment <- function(data, slice) {
+## DataFrame method ----
+setMethod("get_slice_variable", c("DataFrame", "teal_slice"), function(data, slice) {
+  data[, slice$varname, drop = TRUE]
+})
+
+## array method ----
+setMethod("get_slice_variable", c("array", "teal_slice"), function(data, slice) {
+  data[, slice$varname, drop = TRUE]
+})
+
+## Matrix method ----
+setMethod("get_slice_variable", c("Matrix", "teal_slice"), function(data, slice) {
+  data[, slice$varname, drop = TRUE]
+})
+
+## SummarizedExperiment method ----
+setMethod("get_slice_variable", c("SummarizedExperiment", "teal_slice"), function(data, slice) {
+  if (identical(slice$arg, "subset")) {
+    # from rowData
+    SummarizedExperiment::rowData(data)[[slice$varname]]
+  } else if (identical(slice$arg, "select")) {
+    SummarizedExperiment::colData(data)[[slice$varname]]
+  } else {
+    stop("teal_slice for SummarizedExperiment must contain 'arg' property ('subset' or 'select')", call. = FALSE)
+  }
+})
+
+## MultiAssayExperiment method ----
+setMethod("get_slice_variable", c("MultiAssayExperiment", "teal_slice"), function(data, slice) {
   if (is.null(slice$experiment)) {
     # from colData
     SummarizedExperiment::colData(data)[[slice$varname]]
@@ -50,17 +80,4 @@ get_slice_variable_MultiAssayExperiment <- function(data, slice) {
   } else {
     stop("Experiment ", experiment, " not found in ", slice$dataname, call. = FALSE)
   }
-}
-
-#' @rdname default_filter_panel_internals
-#' @keywords internal
-get_slice_variable_SummarizedExperiment <- function(data, slice) {
-  if (identical(slice$arg, "subset")) {
-    # from rowData
-    SummarizedExperiment::rowData(data)[[slice$varname]]
-  } else if (identical(slice$arg, "select")) {
-    SummarizedExperiment::colData(data)[[slice$varname]]
-  } else {
-    stop("teal_slice for SummarizedExperiment must contain 'arg' property ('subset' or 'select')", call. = FALSE)
-  }
-}
+})

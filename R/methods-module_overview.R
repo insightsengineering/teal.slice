@@ -1,7 +1,5 @@
-#' Server function to display the number of records in the filtered and unfiltered
-#' data
+#' Server function to display the number of records in the filtered and unfiltered data
 #'
-#' @name module_overview_data
 #' @param id (`character(1)`)\cr
 #'   an ID string that corresponds with the ID used to call the module's UI function.
 #' @param active_datanames (`reactive`)\cr
@@ -10,9 +8,19 @@
 #'   if the function returns `NULL` (as opposed to `character(0)`), the filter
 #'   panel will be hidden.
 #' @return `moduleServer` function which returns `NULL`
-NULL
-
+#'
+#' @name module_overview_data
 #' @rdname module_overview_data
+#'
+#' @aliases get_filter_overview
+#' @aliases get_filter_overview-ANY-method
+#' @aliases get_filter_overview-data.frame-method
+#' @aliases get_filter_overview-DataFrame-method
+#' @aliases get_filter_overview-array-method
+#' @aliases get_filter_overview-Matrix-method
+#' @aliases get_filter_overview-SummarizedExperiment-method
+#' @aliases get_filter_overview-MultiAssayExperiment-method
+#'
 #' @keywords internal
 ui_overview_data <- function(id, filtered_data) {
   ns <- NS(id)
@@ -153,90 +161,129 @@ srv_overview_data <- function(id, filtered_data, active_datanames = filtered_dat
 #' in `teal.slice` and must be a `data.frame` with columns `dataname`, `obs`, `obs_filtered`.
 #' @inheritSection filter_panel_methods Supported data types
 #'
-#' @return `data_frame` with columns `dataname` and usually `obs`, `obs_filtered`.
-#' @keywords internal
-get_filter_overview <- function(data_unfiltered, data_filtered, dataname) {
-  df <- UseMethod("get_filter_overview", data_unfiltered)
-  if (!inherits(df, "data.frame") || all(c("dataname", "obs", "obs_filtered") %in% colnames(df))) {
-    stop("get_filter_overview must return a data.frame with columns `dataname`, `obs`, `obs_filtered`", call. = FALSE)
-  }
-  df
-}
-
-#' @rdname get_filter_overview
+#' @return `data.frame` with columns `dataname` and usually `obs`, `obs_filtered`.
+#'
 #' @export
-get_filter_overview.default <- function(data_unfiltered, data_filtered, dataname) {
-  if (inherits(data_unfiltered, c("data.frame", "DataFrame", "array", "Matrix"))) {
-    get_filter_overview_array(data_unfiltered, data_filtered, dataname)
-  } else if (inherits(data_unfiltered, "SummarizedExperiment")) {
-    get_filter_overview_SummarizedExperiment(data_unfiltered, data_filtered, dataname)
-  } else if (inherits(data_unfiltered, "MultiAssayExperiment")) {
-    get_filter_overview_MultiAssayExperiment(data_unfiltered, data_filtered, dataname)
-  } else {
-    data.frame(
-      dataname = dataname,
-      obs = NA,
-      obs_filtered = NA
-    )
-  }
-}
-
-
-#' @rdname default_filter_panel_internals
-#' @keywords internal
-get_filter_overview_array <- function(data_unfiltered, data_filtered, dataname) {
+#'
+# get_filter_overview generic ----
+setGeneric("get_filter_overview", function(data_unfiltered, data_filtered, dataname) {
   data.frame(
     dataname = dataname,
-    obs = nrow(data_unfiltered),
-    obs_filtered = nrow(data_filtered)
+    obs = NA,
+    obs_filtered = NA
   )
-}
+  # check out put somehow
+  # if (!inherits(df, "data.frame") || all(c("dataname", "obs", "obs_filtered") %in% colnames(df))) {
+  #   stop("get_filter_overview must return a data.frame with columns `dataname`, `obs`, `obs_filtered`", call. = FALSE)
+  # }
+})
 
-#' @rdname default_filter_panel_internals
+## data.frame method ----
+setMethod(
+  "get_filter_overview",
+  c(data_unfiltered = "data.frame"),
+  function(data_unfiltered, data_filtered, dataname) {
+    data.frame(
+      dataname = dataname,
+      obs = nrow(data_unfiltered),
+      obs_filtered = nrow(data_filtered)
+    )
+  })
+
+## DataFrame method ----
+setMethod(
+  "get_filter_overview",
+  c(data_unfiltered = "DataFrame"),
+  function(data_unfiltered, data_filtered, dataname) {
+    data.frame(
+      dataname = dataname,
+      obs = nrow(data_unfiltered),
+      obs_filtered = nrow(data_filtered)
+    )
+  })
+
+## array method ----
+setMethod(
+  "get_filter_overview",
+  c(data_unfiltered = "array"),
+  function(data_unfiltered, data_filtered, dataname) {
+    data.frame(
+      dataname = dataname,
+      obs = nrow(data_unfiltered),
+      obs_filtered = nrow(data_filtered)
+    )
+  })
+
+## Matrix method ----
+setMethod(
+  "get_filter_overview",
+  c(data_unfiltered = "Matrix"),
+  function(data_unfiltered, data_filtered, dataname) {
+    data.frame(
+      dataname = dataname,
+      obs = nrow(data_unfiltered),
+      obs_filtered = nrow(data_filtered)
+    )
+  })
+
+## SummarizedExperiment method ----
+setMethod(
+  "get_filter_overview",
+  c(data_unfiltered = "SummarizedExperiment"),
+  function(data_unfiltered, data_filtered, dataname) {
+    data.frame(
+      dataname = dataname,
+      obs = nrow(data_unfiltered),
+      obs_filtered = nrow(data_filtered)
+    )
+  })
+
+## MultiAssayExperiment method ----
+setMethod(
+  "get_filter_overview",
+  c(data_unfiltered = "MultiAssayExperiment"),
+  function(data_unfiltered, data_filtered, dataname) {
+    experiment_names <- names(data_unfiltered)
+    mae_info <- data.frame(
+      dataname = dataname,
+      subjects = nrow(SummarizedExperiment::colData(data_unfiltered)),
+      subjects_filtered = nrow(SummarizedExperiment::colData(data_filtered))
+    )
+
+    experiment_obs_info <- do.call("rbind", lapply(
+      experiment_names,
+      function(experiment_name) {
+        transform(
+          get_filter_overview(
+            data_unfiltered[[experiment_name]],
+            data_filtered[[experiment_name]],
+            experiment_name
+          ),
+          dataname = paste0(" - ", dataname)
+        )
+      }
+    ))
+
+    experiment_subjects_info <- do.call("rbind", lapply(
+      experiment_names,
+      function(experiment_name) {
+        data.frame(
+          subjects = get_experiment_keys(data_filtered, data_unfiltered[[experiment_name]]),
+          subjects_filtered = get_experiment_keys(data_filtered, data_filtered[[experiment_name]])
+        )
+      }
+    ))
+
+    experiment_info <- cbind(experiment_obs_info, experiment_subjects_info)
+    dplyr::bind_rows(mae_info, experiment_info)
+  })
+
+
+
+# utils ----
+
 #' @keywords internal
-get_filter_overview_MultiAssayExperiment <- function(data_unfiltered, data_filtered, dataname) {
-  experiment_names <- names(data_unfiltered)
-  mae_info <- data.frame(
-    dataname = dataname,
-    subjects = nrow(SummarizedExperiment::colData(data_unfiltered)),
-    subjects_filtered = nrow(SummarizedExperiment::colData(data_filtered))
-  )
-
-  experiment_obs_info <- do.call("rbind", lapply(
-    experiment_names,
-    function(experiment_name) {
-      transform(
-        get_filter_overview(
-          data_unfiltered[[experiment_name]],
-          data_filtered[[experiment_name]],
-          experiment_name
-        ),
-        dataname = paste0(" - ", dataname)
-      )
-    }
-  ))
-
-  get_experiment_keys <- function(mae, experiment) {
-    sample_subset <- subset(MultiAssayExperiment::sampleMap(mae), subset = colname %in% colnames(experiment))
-    length(unique(sample_subset$primary))
-  }
-
-  experiment_subjects_info <- do.call("rbind", lapply(
-    experiment_names,
-    function(experiment_name) {
-      data.frame(
-        subjects = get_experiment_keys(data_filtered, data_unfiltered[[experiment_name]]),
-        subjects_filtered = get_experiment_keys(data_filtered, data_filtered[[experiment_name]])
-      )
-    }
-  ))
-
-  experiment_info <- cbind(experiment_obs_info, experiment_subjects_info)
-  dplyr::bind_rows(mae_info, experiment_info)
-}
-
-#' @rdname default_filter_panel_internals
-#' @keywords internal
-get_filter_overview_SummarizedExperiment <- function(data_unfiltered, data_filtered, dataname) {
-  get_filter_overview_array(data_unfiltered, data_filtered, dataname)
+get_experiment_keys <- function(mae, experiment) {
+  sample_subset <- subset(MultiAssayExperiment::sampleMap(mae), subset = colname %in% colnames(experiment))
+  length(unique(sample_subset$primary))
 }
