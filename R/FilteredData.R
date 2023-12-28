@@ -33,26 +33,6 @@
 #'
 #' @keywords internal
 #'
-#' @examples
-#' library(shiny)
-#' datasets <- teal.slice:::FilteredData$new(list(iris = iris, mtcars = mtcars))
-#'
-#' # get datanames
-#' datasets$datanames()
-#'
-#' datasets$set_filter_state(
-#'   teal_slices(teal_slice(dataname = "iris", varname = "Species", selected = "virginica"))
-#' )
-#' isolate(datasets$get_call("iris"))
-#'
-#' datasets$set_filter_state(
-#'   teal_slices(teal_slice(dataname = "mtcars", varname = "mpg", selected = c(15, 20)))
-#' )
-#'
-#' isolate(datasets$get_filter_state())
-#' isolate(datasets$get_call("iris"))
-#' isolate(datasets$get_call("mtcars"))
-#'
 FilteredData <- R6::R6Class( # nolint
   "FilteredData",
   ## __Public Methods ====

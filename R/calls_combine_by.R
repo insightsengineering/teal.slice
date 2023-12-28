@@ -10,14 +10,6 @@
 #'
 #' @return call or NULL, if `calls` is an empty list
 #'
-#' @examples
-#' calls <- list(
-#'   quote(SEX == "F"), # subsetting on factor
-#'   quote(AGE >= 20 & AGE <= 50), # subsetting on range
-#'   quote(!SURV) # subsetting on logical
-#' )
-#' teal.slice:::calls_combine_by(calls, "&")
-#'
 #' @return a combined `call`
 #' @keywords internal
 calls_combine_by <- function(calls, operator) {

@@ -6,8 +6,8 @@
 #' @param code (deprecated)
 #' @param check (deprecated)
 #' @examples
-#' library(shiny)
-#' datasets <- teal.slice::init_filtered_data(list(iris = iris, mtcars = mtcars))
+#' datasets <- init_filtered_data(list(iris = iris, mtcars = mtcars))
+#' datasets
 #' @export
 init_filtered_data <- function(x, join_keys = teal.data::join_keys(), code, check) { # nolint
   checkmate::assert_list(x, any.missing = FALSE, names = "unique")
@@ -189,11 +189,6 @@ toggle_title <- function(input_id, titles, one_way = FALSE) {
 #'
 #' @param graph (named `list`) list with node vector elements
 #' @keywords internal
-#'
-#' @examples
-#' teal.slice:::topological_sort(list(A = c(), B = c("A"), C = c("B"), D = c("A")))
-#' teal.slice:::topological_sort(list(D = c("A"), A = c(), B = c("A"), C = c("B")))
-#' teal.slice:::topological_sort(list(D = c("A"), B = c("A"), C = c("B"), A = c()))
 topological_sort <- function(graph) {
   # compute in-degrees
   in_degrees <- list()

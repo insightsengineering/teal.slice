@@ -6,12 +6,6 @@
 \description{
 Stores any object as inert entity. Filtering is not supported.
 }
-\examples{
-library(shiny)
-ds <- teal.slice:::DefaultFilteredDataset$new(letters, "letters")
-isolate(ds$get_filter_state())
-isolate(ds$get_call())
-}
 \keyword{internal}
 \section{Super class}{
 \code{\link[teal.slice:FilteredDataset]{teal.slice::FilteredDataset}} -> \code{DefaultFilteredDataset}

@@ -48,7 +48,7 @@ at which point any code which relies on this exported function will need to be c
 }
 \examples{
 # DataframeFilteredDataset example
-iris_fd <- teal.slice:::init_filtered_dataset(iris, dataname = "iris")
+iris_fd <- init_filtered_dataset(iris, dataname = "iris")
 app <- shinyApp(
   ui = fluidPage(
     iris_fd$ui_add(id = "add"),
@@ -74,7 +74,7 @@ if (interactive()) {
 # MAEFilteredDataset example
 library(MultiAssayExperiment)
 data(miniACC)
-MAE_fd <- teal.slice:::init_filtered_dataset(miniACC, "MAE")
+MAE_fd <- init_filtered_dataset(miniACC, "MAE")
 app <- shinyApp(
   ui = fluidPage(
     MAE_fd$ui_add(id = "add"),
@@ -95,5 +95,5 @@ app <- shinyApp(
 if (interactive()) {
   shinyApp(app$ui, app$server)
 }
+
 }
-\keyword{internal}

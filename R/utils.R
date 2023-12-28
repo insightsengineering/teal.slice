@@ -13,13 +13,6 @@
 #'
 #' @keywords internal
 #'
-#' @examples
-#' method.class <- function(a, b, c, ...) {
-#'   check_ellipsis(...)
-#' }
-#' method.class <- function(a, b, c, ...) {
-#'   check_ellipsis(..., allowed_args = c("y", "z"))
-#' }
 check_ellipsis <- function(..., stop = FALSE, allowed_args = character(0)) {
   if (!missing(...)) {
     checkmate::assert_flag(stop)
@@ -66,19 +59,6 @@ check_ellipsis <- function(..., stop = FALSE, allowed_args = character(0)) {
 #' @param name `character, single or vector` name to check
 #' @keywords internal
 #'
-#' @examples
-#' teal.slice:::check_simple_name("aas2df")
-#' teal.slice:::check_simple_name("ADSL")
-#' teal.slice:::check_simple_name("ADSLmodified")
-#' teal.slice:::check_simple_name("ADSL_modified")
-#' teal.slice:::check_simple_name("ADSL_2")
-#' teal.slice:::check_simple_name("a1")
-#' # the following fail
-#' if (interactive()) {
-#'   teal.slice:::check_simple_name("1a")
-#'   teal.slice:::check_simple_name("ADSL.modified")
-#'   teal.slice:::check_simple_name("a1...")
-#' }
 check_simple_name <- function(name) {
   checkmate::assert_character(name, min.len = 1, any.missing = FALSE)
   if (!grepl("^[[:alpha:]][a-zA-Z0-9_]*$", name, perl = TRUE)) {
@@ -133,12 +113,6 @@ include_js_files <- function(pattern) {
 #'
 #' @return A `c` call.
 #'
-#' @examples
-#' teal.slice:::make_c_call(1:3)
-#' # [1] 1 2 3
-#'
-#' teal.slice:::make_c_call(1)
-#' # [1] 1
 #' @keywords internal
 make_c_call <- function(choices) {
   if (length(choices) > 1) {

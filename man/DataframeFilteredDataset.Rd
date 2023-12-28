@@ -9,16 +9,6 @@ The \code{DataframeFilteredDataset} R6 class
 The \code{DataframeFilteredDataset} R6 class
 }
 \examples{
-library(shiny)
-ds <- teal.slice:::DataframeFilteredDataset$new(iris, "iris")
-ds$set_filter_state(
-  teal_slices(
-    teal_slice(dataname = "iris", varname = "Species", selected = "virginica"),
-    teal_slice(dataname = "iris", varname = "Petal.Length", selected = c(2.0, 5))
-  )
-)
-isolate(ds$get_filter_state())
-isolate(ds$get_call())
 
 ## ------------------------------------------------
 ## Method `DataframeFilteredDataset$set_filter_state`
