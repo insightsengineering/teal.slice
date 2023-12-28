@@ -220,7 +220,7 @@ setMethod(
 ## DataFrame method ----
 setMethod(
   "srv_active",
-  c(data = "data.frame"),
+  c(data = "DataFrame"),
   function(id, data, reactive_state_list, remove_state_callback) {
     moduleServer(id, function(input, output, session) {
       logger::log_trace("srv_active.default initializing")
@@ -294,7 +294,7 @@ setMethod(
 ## array method ----
 setMethod(
   "srv_active",
-  c(data = "data.frame"),
+  c(data = "array"),
   function(id, data, reactive_state_list, remove_state_callback) {
     moduleServer(id, function(input, output, session) {
       logger::log_trace("srv_active.default initializing")
@@ -368,7 +368,7 @@ setMethod(
 ## Matrix method ----
 setMethod(
   "srv_active",
-  c(data = "data.frame"),
+  c(data = "Matrix"),
   function(id, data, reactive_state_list, remove_state_callback) {
     moduleServer(id, function(input, output, session) {
       logger::log_trace("srv_active.default initializing")
