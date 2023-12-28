@@ -136,7 +136,7 @@ setMethod("ui_add", c(data = "SummarizedExperiment"), function(id, data, datanam
 setMethod("ui_add", c(data = "MultiAssayExperiment"), function(id, data, dataname) {
   ns <- NS(id)
   tagList(
-    ui_add_array(ns(dataname), SummarizedExperiment::colData(data), dataname = "subjects"),
+    ui_add(ns(dataname), SummarizedExperiment::colData(data), dataname = "subjects"),
     lapply(
       names(data),
       function(experiment) {
@@ -533,7 +533,7 @@ setMethod("srv_add", c(data = "SummarizedExperiment"), function(id, data, filter
 ## MultiAssayExperiment method ----
 setMethod("srv_add", c(data = "MultiAssayExperiment"), function(id, data, filtered_data, dataname, ...) {
   moduleServer(id, function(input, output, session) {
-    srv_add_array(id, SummarizedExperiment::colData(data), filtered_data, dataname, ...)
+    srv_add(id, SummarizedExperiment::colData(data), filtered_data, dataname, ...)
     lapply(
       names(data),
       function(experiment) {
