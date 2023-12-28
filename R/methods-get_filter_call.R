@@ -9,12 +9,12 @@ setOldClass(c("teal_slice", "list"))
 #'
 #' @name get_filter_call
 #' @rdname get_filter_call
-#' @aliases get_filter_call-ANY,teal_slice-method
-#' @aliases get_filter_call-data.frame,teal_slice-method
-#' @aliases get_filter_call-array,teal_slice-method
-#' @aliases get_filter_call-Matrix,teal_slice-method
-#' @aliases get_filter_call-SummarizedExperiment,teal_slice-method
-#' @aliases get_filter_call-MultiAssayExperiment,teal_slice-method
+#' @aliases get_filter_call-ANY-method
+#' @aliases get_filter_call-data.frame-method
+#' @aliases get_filter_call-array-method
+#' @aliases get_filter_call-Matrix-method
+#' @aliases get_filter_call-SummarizedExperiment-method
+#' @aliases get_filter_call-MultiAssayExperiment-method
 #'
 #' @export
 #'
@@ -24,12 +24,12 @@ setGeneric("get_filter_call", function(data, states_list) {
 })
 
 ## default method ----
-setMethod("get_filter_call", c("ANY", "teal_slice"), function(data, states_list) {
+setMethod("get_filter_call", c(data = "ANY"), function(data, states_list) {
   stop("get_filter_call not implemented for class ", toString(class(data)), call. = FALSE)
 })
 
 ## data.frame method ----
-setMethod("get_filter_call", c("data.frame", "teal_slice"), function(data, states_list) {
+setMethod("get_filter_call", c(data = "data.frame"), function(data, states_list) {
   dataname_lang <- str2lang(states_list[[1L]]$get_state()$dataname)
   states_predicate <- lapply(states_list, function(state) state$get_call())
   combined_predicate <- calls_combine_by(states_predicate, "&")
@@ -42,7 +42,7 @@ setMethod("get_filter_call", c("data.frame", "teal_slice"), function(data, state
 })
 
 ## array method ----
-setMethod("get_filter_call", c("array", "teal_slice"), function(data, states_list) {
+setMethod("get_filter_call", c(data = "array"), function(data, states_list) {
   dataname_lang <- str2lang(states_list[[1L]]$get_state()$dataname)
   states_predicate <- lapply(states_list, function(state) state$get_call())
   combined_predicate <- calls_combine_by(states_predicate, "&")
@@ -55,7 +55,7 @@ setMethod("get_filter_call", c("array", "teal_slice"), function(data, states_lis
 })
 
 ## Matrix method ----
-setMethod("get_filter_call", c("Matrix", "teal_slice"), function(data, states_list) {
+setMethod("get_filter_call", c(data = "Matrix"), function(data, states_list) {
   dataname_lang <- str2lang(states_list[[1L]]$get_state()$dataname)
   states_predicate <- lapply(states_list, function(state) state$get_call())
   combined_predicate <- calls_combine_by(states_predicate, "&")
@@ -68,7 +68,7 @@ setMethod("get_filter_call", c("Matrix", "teal_slice"), function(data, states_li
 })
 
 ## SummarizedExperiment method ----
-setMethod("get_filter_call", c("SummarizedExperiment", "teal_slice"), function(data, states_list) {
+setMethod("get_filter_call", c(data = "SummarizedExperiment"), function(data, states_list) {
   state_list_grouped <- split(
     states_list,
     sapply(states_list, function(x) x$get_state()$arg)
@@ -97,7 +97,7 @@ setMethod("get_filter_call", c("SummarizedExperiment", "teal_slice"), function(d
 })
 
 ## MultiAssayExperiment method ----
-setMethod("get_filter_call", c("MultiAssayExperiment", "teal_slice"), function(data, states_list) {
+setMethod("get_filter_call", c(data = "MultiAssayExperiment"), function(data, states_list) {
   states_grouped <- split(
     states_list,
     sapply(states_list, function(x) if (is.null(x$get_state()$experiment)) "_subjects_" else x$get_state()$experiment)
