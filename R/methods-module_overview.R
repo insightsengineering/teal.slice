@@ -16,7 +16,7 @@
 #' @aliases get_filter_overview-ANY-method
 #' @aliases get_filter_overview-data.frame-method
 #' @aliases get_filter_overview-DataFrame-method
-#' @aliases get_filter_overview-array-method
+#' @aliases get_filter_overview-matrix-method
 #' @aliases get_filter_overview-Matrix-method
 #' @aliases get_filter_overview-SummarizedExperiment-method
 #' @aliases get_filter_overview-MultiAssayExperiment-method
@@ -202,10 +202,10 @@ setMethod(
     )
   })
 
-## array method ----
+## matrix method ----
 setMethod(
   "get_filter_overview",
-  c(data_unfiltered = "array"),
+  c(data_unfiltered = "matrix"),
   function(data_unfiltered, data_filtered, dataname) {
     data.frame(
       dataname = dataname,

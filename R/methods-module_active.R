@@ -22,7 +22,7 @@
 #' @aliases ui_active-ANY-method
 #' @aliases ui_active-data.frame-method
 #' @aliases ui_active-DataFrame-method
-#' @aliases ui_active-array-method
+#' @aliases ui_active-matrix-method
 #' @aliases ui_active-Matrix-method
 #' @aliases ui_active-MultiAssayExperiment-method
 #'
@@ -30,7 +30,7 @@
 #' @aliases srv_active-ANY-method
 #' @aliases srv_active-data.frame-method
 #' @aliases srv_active-DataFrame-method
-#' @aliases srv_active-array-method
+#' @aliases srv_active-matrix-method
 #' @aliases srv_active-Matrix-method
 #' @aliases srv_active-MultiAssayExperiment-method
 #'
@@ -81,8 +81,8 @@ setMethod("ui_active", c(data = "DataFrame"), function(id, data, label = charact
   )
 })
 
-## array method ----
-setMethod("ui_active", c(data = "array"), function(id, data, label = character(0)) {
+## matrix method ----
+setMethod("ui_active", c(data = "matrix"), function(id, data, label = character(0)) {
   ns <- NS(id)
   tagList(
     teal.slice:::include_css_files(pattern = "filter-panel"),
@@ -305,10 +305,10 @@ setMethod(
     })
   })
 
-## array method ----
+## matrix method ----
 setMethod(
   "srv_active",
-  c(data = "array"),
+  c(data = "matrix"),
   function(id, data, reactive_state_list, remove_state_callback) {
     moduleServer(id, function(input, output, session) {
       logger::log_trace("srv_active.default initializing")

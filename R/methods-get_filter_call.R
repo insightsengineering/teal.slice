@@ -11,7 +11,7 @@ setOldClass(c("teal_slice", "list"))
 #' @rdname get_filter_call
 #' @aliases get_filter_call-ANY-method
 #' @aliases get_filter_call-data.frame-method
-#' @aliases get_filter_call-array-method
+#' @aliases get_filter_call-matrix-method
 #' @aliases get_filter_call-Matrix-method
 #' @aliases get_filter_call-SummarizedExperiment-method
 #' @aliases get_filter_call-MultiAssayExperiment-method
@@ -41,8 +41,8 @@ setMethod("get_filter_call", c(data = "data.frame"), function(data, states_list)
   )
 })
 
-## array method ----
-setMethod("get_filter_call", c(data = "array"), function(data, states_list) {
+## matrix method ----
+setMethod("get_filter_call", c(data = "matrix"), function(data, states_list) {
   dataname_lang <- str2lang(states_list[[1L]]$get_state()$dataname)
   states_predicate <- lapply(states_list, function(state) state$get_call())
   combined_predicate <- calls_combine_by(states_predicate, "&")

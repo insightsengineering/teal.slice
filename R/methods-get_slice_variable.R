@@ -20,7 +20,7 @@
 #' @aliases get_slice_variable-ANY,teal_slice-method
 #' @aliases get_slice_variable-data.frame,teal_slice-method
 #' @aliases get_slice_variable-DataFrame,teal_slice-method
-#' @aliases get_slice_variable-array,teal_slice-method
+#' @aliases get_slice_variable-matrix,teal_slice-method
 #' @aliases get_slice_variable-Matrix,teal_slice-method
 #' @aliases get_slice_variable-SummarizedExperiment,teal_slice-method
 #' @aliases get_slice_variable-MultiAssayExperiment,teal_slice-method
@@ -47,8 +47,8 @@ setMethod("get_slice_variable", c("DataFrame", "teal_slice"), function(data, sli
   data[, slice$varname, drop = TRUE]
 })
 
-## array method ----
-setMethod("get_slice_variable", c("array", "teal_slice"), function(data, slice) {
+## matrix method ----
+setMethod("get_slice_variable", c("matrix", "teal_slice"), function(data, slice) {
   data[, slice$varname, drop = TRUE]
 })
 
