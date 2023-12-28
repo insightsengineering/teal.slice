@@ -163,7 +163,7 @@ setMethod(
   c(data = "data.frame"),
   function(id, data, reactive_state_list, remove_state_callback) {
     moduleServer(id, function(input, output, session) {
-      logger::log_trace("srv_active.default initializing")
+      logger::log_trace("srv_active for data.frame initializing")
       output$filter_count <- renderText({
         sprintf(
           "%d filter%s applied",
@@ -179,7 +179,7 @@ setMethod(
       output$trigger_visible_state_change <- renderUI({
         current_state()
         isolate({
-          logger::log_trace("srv_active.default@1 determining added and removed filter states")
+          logger::log_trace("srv_active data.frame @1 determining added and removed filter states")
           # Be aware this returns a list because `current_state` is a list and not `teal_slices`.
           new_states <- setdiff_teal_slices(current_state(), previous_state())
           if (length(new_states) > 0L) {
@@ -197,7 +197,7 @@ setMethod(
 
       output[["cards"]] <- shiny::bindCache(
         shiny::renderUI({
-          logger::log_trace("srv_active.default@2 rendering filter cards")
+          logger::log_trace("srv_active data.frame @2 rendering filter cards")
           lapply(
             current_state(), # observes only if added/removed
             function(state) {
@@ -215,7 +215,7 @@ setMethod(
         ignoreNULL = TRUE,
         {
           added_state_names <- vapply(added_states(), function(x) x$get_state()$id, character(1L))
-          logger::log_trace("srv_active_array@2 triggered by added states: { toString(added_state_names) }")
+          logger::log_trace("srv_active data.frame @2 triggered by added states: { toString(added_state_names) }")
           lapply(added_states(), function(state) {
             fs_callback <- state$server(id = fs_to_shiny_ns(state))
             observeEvent(
@@ -237,7 +237,7 @@ setMethod(
   c(data = "DataFrame"),
   function(id, data, reactive_state_list, remove_state_callback) {
     moduleServer(id, function(input, output, session) {
-      logger::log_trace("srv_active.default initializing")
+      logger::log_trace("srv_active DataFrame initializing")
       output$filter_count <- renderText({
         sprintf(
           "%d filter%s applied",
@@ -253,7 +253,7 @@ setMethod(
       output$trigger_visible_state_change <- renderUI({
         current_state()
         isolate({
-          logger::log_trace("srv_active.default@1 determining added and removed filter states")
+          logger::log_trace("srv_active DataFrame @1 determining added and removed filter states")
           # Be aware this returns a list because `current_state` is a list and not `teal_slices`.
           new_states <- setdiff_teal_slices(current_state(), previous_state())
           if (length(new_states) > 0L) {
@@ -271,7 +271,7 @@ setMethod(
 
       output[["cards"]] <- shiny::bindCache(
         shiny::renderUI({
-          logger::log_trace("srv_active.default@2 rendering filter cards")
+          logger::log_trace("srv_active DataFrame @2 rendering filter cards")
           lapply(
             current_state(), # observes only if added/removed
             function(state) {
@@ -289,7 +289,7 @@ setMethod(
         ignoreNULL = TRUE,
         {
           added_state_names <- vapply(added_states(), function(x) x$get_state()$id, character(1L))
-          logger::log_trace("srv_active_array@2 triggered by added states: { toString(added_state_names) }")
+          logger::log_trace("srv_active DataFrame @2 triggered by added states: { toString(added_state_names) }")
           lapply(added_states(), function(state) {
             fs_callback <- state$server(id = fs_to_shiny_ns(state))
             observeEvent(
@@ -311,7 +311,7 @@ setMethod(
   c(data = "matrix"),
   function(id, data, reactive_state_list, remove_state_callback) {
     moduleServer(id, function(input, output, session) {
-      logger::log_trace("srv_active.default initializing")
+      logger::log_trace("srv_active matrix initializing")
       output$filter_count <- renderText({
         sprintf(
           "%d filter%s applied",
@@ -327,7 +327,7 @@ setMethod(
       output$trigger_visible_state_change <- renderUI({
         current_state()
         isolate({
-          logger::log_trace("srv_active.default@1 determining added and removed filter states")
+          logger::log_trace("srv_active matrix @1 determining added and removed filter states")
           # Be aware this returns a list because `current_state` is a list and not `teal_slices`.
           new_states <- setdiff_teal_slices(current_state(), previous_state())
           if (length(new_states) > 0L) {
@@ -345,7 +345,7 @@ setMethod(
 
       output[["cards"]] <- shiny::bindCache(
         shiny::renderUI({
-          logger::log_trace("srv_active.default@2 rendering filter cards")
+          logger::log_trace("srv_active matrix @2 rendering filter cards")
           lapply(
             current_state(), # observes only if added/removed
             function(state) {
@@ -363,7 +363,7 @@ setMethod(
         ignoreNULL = TRUE,
         {
           added_state_names <- vapply(added_states(), function(x) x$get_state()$id, character(1L))
-          logger::log_trace("srv_active_array@2 triggered by added states: { toString(added_state_names) }")
+          logger::log_trace("srv_active matrix @2 triggered by added states: { toString(added_state_names) }")
           lapply(added_states(), function(state) {
             fs_callback <- state$server(id = fs_to_shiny_ns(state))
             observeEvent(
@@ -385,7 +385,7 @@ setMethod(
   c(data = "Matrix"),
   function(id, data, reactive_state_list, remove_state_callback) {
     moduleServer(id, function(input, output, session) {
-      logger::log_trace("srv_active.default initializing")
+      logger::log_trace("srv_active Matrix initializing")
       output$filter_count <- renderText({
         sprintf(
           "%d filter%s applied",
@@ -401,7 +401,7 @@ setMethod(
       output$trigger_visible_state_change <- renderUI({
         current_state()
         isolate({
-          logger::log_trace("srv_active.default@1 determining added and removed filter states")
+          logger::log_trace("srv_active Matrix @1 determining added and removed filter states")
           # Be aware this returns a list because `current_state` is a list and not `teal_slices`.
           new_states <- setdiff_teal_slices(current_state(), previous_state())
           if (length(new_states) > 0L) {
@@ -419,7 +419,7 @@ setMethod(
 
       output[["cards"]] <- shiny::bindCache(
         shiny::renderUI({
-          logger::log_trace("srv_active.default@2 rendering filter cards")
+          logger::log_trace("srv_active Matrix @2 rendering filter cards")
           lapply(
             current_state(), # observes only if added/removed
             function(state) {
@@ -437,7 +437,7 @@ setMethod(
         ignoreNULL = TRUE,
         {
           added_state_names <- vapply(added_states(), function(x) x$get_state()$id, character(1L))
-          logger::log_trace("srv_active_array@2 triggered by added states: { toString(added_state_names) }")
+          logger::log_trace("srv_active Matrix @2 triggered by added states: { toString(added_state_names) }")
           lapply(added_states(), function(state) {
             fs_callback <- state$server(id = fs_to_shiny_ns(state))
             observeEvent(
@@ -459,7 +459,7 @@ setMethod(
   c(data = "SummarizedExperiment"),
   function(id, data, reactive_state_list, remove_state_callback) {
     moduleServer(id, function(input, output, session) {
-      logger::log_trace("srv_active.default initializing")
+      logger::log_trace("srv_active SummarizedExperiment initializing")
       output$filter_count <- renderText({
         sprintf(
           "%d filter%s applied",
@@ -475,7 +475,7 @@ setMethod(
       output$trigger_visible_state_change <- renderUI({
         current_state()
         isolate({
-          logger::log_trace("srv_active.default@1 determining added and removed filter states")
+          logger::log_trace("srv_active SummarizedExperiment @1 determining added and removed filter states")
           # Be aware this returns a list because `current_state` is a list and not `teal_slices`.
           new_states <- setdiff_teal_slices(current_state(), previous_state())
           if (length(new_states) > 0L) {
@@ -493,7 +493,7 @@ setMethod(
 
       output[["cards"]] <- shiny::bindCache(
         shiny::renderUI({
-          logger::log_trace("srv_active.default@2 rendering filter cards")
+          logger::log_trace("srv_active SummarizedExperiment @2 rendering filter cards")
           lapply(
             current_state(), # observes only if added/removed
             function(state) {
@@ -511,7 +511,7 @@ setMethod(
         ignoreNULL = TRUE,
         {
           added_state_names <- vapply(added_states(), function(x) x$get_state()$id, character(1L))
-          logger::log_trace("srv_active_array@2 triggered by added states: { toString(added_state_names) }")
+          logger::log_trace("srv_active SummarizedExperiment @2 triggered by added states: { toString(added_state_names) }") # nolint
           lapply(added_states(), function(state) {
             fs_callback <- state$server(id = fs_to_shiny_ns(state))
             observeEvent(
@@ -533,7 +533,7 @@ setMethod(
   c(data = "MultiAssayExperiment"),
   function(id, data, reactive_state_list, remove_state_callback) {
     moduleServer(id, function(input, output, session) {
-      logger::log_trace("srv_active_MultiAssayExperiment initializing")
+      logger::log_trace("srv_active MultiAssayExperiment initializing")
 
       reactive_subject_state_list <- reactive({
         Filter(
