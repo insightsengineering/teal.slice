@@ -7,7 +7,7 @@
 \alias{get_filter_overview-ANY-method}
 \alias{get_filter_overview-data.frame-method}
 \alias{get_filter_overview-DataFrame-method}
-\alias{get_filter_overview-array-method}
+\alias{get_filter_overview-matrix-method}
 \alias{get_filter_overview-Matrix-method}
 \alias{get_filter_overview-SummarizedExperiment-method}
 \alias{get_filter_overview-MultiAssayExperiment-method}

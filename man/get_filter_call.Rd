@@ -4,7 +4,8 @@
 \alias{get_filter_call}
 \alias{get_filter_call-ANY-method}
 \alias{get_filter_call-data.frame-method}
-\alias{get_filter_call-array-method}
+\alias{get_filter_call-DataFrame-method}
+\alias{get_filter_call-matrix-method}
 \alias{get_filter_call-Matrix-method}
 \alias{get_filter_call-SummarizedExperiment-method}
 \alias{get_filter_call-MultiAssayExperiment-method}

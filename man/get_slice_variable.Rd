@@ -5,7 +5,7 @@
 \alias{get_slice_variable-ANY,teal_slice-method}
 \alias{get_slice_variable-data.frame,teal_slice-method}
 \alias{get_slice_variable-DataFrame,teal_slice-method}
-\alias{get_slice_variable-array,teal_slice-method}
+\alias{get_slice_variable-matrix,teal_slice-method}
 \alias{get_slice_variable-Matrix,teal_slice-method}
 \alias{get_slice_variable-SummarizedExperiment,teal_slice-method}
 \alias{get_slice_variable-MultiAssayExperiment,teal_slice-method}

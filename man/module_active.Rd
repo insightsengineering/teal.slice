@@ -6,14 +6,14 @@
 \alias{ui_active-ANY-method}
 \alias{ui_active-data.frame-method}
 \alias{ui_active-DataFrame-method}
-\alias{ui_active-array-method}
+\alias{ui_active-matrix-method}
 \alias{ui_active-Matrix-method}
 \alias{ui_active-MultiAssayExperiment-method}
 \alias{srv_active}
 \alias{srv_active-ANY-method}
 \alias{srv_active-data.frame-method}
 \alias{srv_active-DataFrame-method}
-\alias{srv_active-array-method}
+\alias{srv_active-matrix-method}
 \alias{srv_active-Matrix-method}
 \alias{srv_active-MultiAssayExperiment-method}
 \title{Filter panel module active}
