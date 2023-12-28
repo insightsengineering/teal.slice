@@ -60,7 +60,6 @@ setMethod("get_slice_variable", c("Matrix", "teal_slice"), function(data, slice)
 ## SummarizedExperiment method ----
 setMethod("get_slice_variable", c("SummarizedExperiment", "teal_slice"), function(data, slice) {
   if (identical(slice$arg, "subset")) {
-    # from rowData
     SummarizedExperiment::rowData(data)[[slice$varname]]
   } else if (identical(slice$arg, "select")) {
     SummarizedExperiment::colData(data)[[slice$varname]]
@@ -72,7 +71,6 @@ setMethod("get_slice_variable", c("SummarizedExperiment", "teal_slice"), functio
 ## MultiAssayExperiment method ----
 setMethod("get_slice_variable", c("MultiAssayExperiment", "teal_slice"), function(data, slice) {
   if (is.null(slice$experiment)) {
-    # from colData
     SummarizedExperiment::colData(data)[[slice$varname]]
   } else if (slice$experiment %in% names(data)) {
     experiment <- data[[slice$experiment]]
