@@ -109,6 +109,20 @@ setMethod("ui_active", c(data = "Matrix"), function(id, data, label = character(
   )
 })
 
+## SummarizedExperiment method ----
+setMethod("ui_active", c(data = "SummarizedExperiment"), function(id, data, label = character(0)) {
+  ns <- NS(id)
+  tagList(
+    teal.slice:::include_css_files(pattern = "filter-panel"),
+    uiOutput(ns("trigger_visible_state_change"), inline = TRUE),
+    uiOutput(
+      ns("cards"),
+      class = "accordion",
+      `data-label` = ifelse(length(label), paste0("> ", label), ""),
+    )
+  )
+})
+
 ## MultiAssayExperiment method ----
 setMethod("ui_active", c(data = "MultiAssayExperiment"), function(id, data, label) {
   ns <- NS(id)
@@ -369,6 +383,80 @@ setMethod(
 setMethod(
   "srv_active",
   c(data = "Matrix"),
+  function(id, data, reactive_state_list, remove_state_callback) {
+    moduleServer(id, function(input, output, session) {
+      logger::log_trace("srv_active.default initializing")
+      output$filter_count <- renderText({
+        sprintf(
+          "%d filter%s applied",
+          length(reactive_state_list()),
+          if (length(reactive_state_list()) != 1) "s" else ""
+        )
+      })
+
+      current_state <- reactive(reactive_state_list())
+      previous_state <- reactiveVal(NULL) # FilterState list
+      added_states <- reactiveVal(NULL) # FilterState list
+
+      output$trigger_visible_state_change <- renderUI({
+        current_state()
+        isolate({
+          logger::log_trace("srv_active.default@1 determining added and removed filter states")
+          # Be aware this returns a list because `current_state` is a list and not `teal_slices`.
+          new_states <- setdiff_teal_slices(current_state(), previous_state())
+          if (length(new_states) > 0L) {
+            added_states(new_states)
+          }
+
+          previous_state(current_state())
+          NULL
+        })
+      })
+
+      current_state_ids <- reactive({
+        vapply(current_state(), function(x) x$get_state()$id, character(1L))
+      })
+
+      output[["cards"]] <- shiny::bindCache(
+        shiny::renderUI({
+          logger::log_trace("srv_active.default@2 rendering filter cards")
+          lapply(
+            current_state(), # observes only if added/removed
+            function(state) {
+              shiny::isolate( # isolates when existing state changes
+                state$ui(id = session$ns(fs_to_shiny_ns(state)), parent_id = session$ns("cards"))
+              )
+            }
+          )
+        }),
+        current_state_ids()
+      )
+
+      observeEvent(
+        added_states(), # we want to call FilterState module only once when it's added
+        ignoreNULL = TRUE,
+        {
+          added_state_names <- vapply(added_states(), function(x) x$get_state()$id, character(1L))
+          logger::log_trace("srv_active_array@2 triggered by added states: { toString(added_state_names) }")
+          lapply(added_states(), function(state) {
+            fs_callback <- state$server(id = fs_to_shiny_ns(state))
+            observeEvent(
+              once = TRUE, # remove button can be called once, should be destroyed afterwards
+              ignoreInit = TRUE, # ignoreInit: should not matter because we destroy the previous input set of the UI
+              eventExpr = fs_callback(), # when remove button is clicked in the FilterState ui
+              handlerExpr = remove_state_callback(teal_slices(state$get_state()))
+            )
+          })
+          added_states(NULL)
+        }
+      )
+    })
+  })
+
+## SummarizedExperiment method ----
+setMethod(
+  "srv_active",
+  c(data = "SummarizedExperiment"),
   function(id, data, reactive_state_list, remove_state_callback) {
     moduleServer(id, function(input, output, session) {
       logger::log_trace("srv_active.default initializing")
