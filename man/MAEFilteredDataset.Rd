@@ -8,32 +8,6 @@
 
 \code{MAEFilteredDataset} R6 class
 }
-\examples{
-
-## ------------------------------------------------
-## Method `MAEFilteredDataset$set_filter_state`
-## ------------------------------------------------
-
-utils::data(miniACC, package = "MultiAssayExperiment")
-dataset <- teal.slice:::MAEFilteredDataset$new(miniACC, "MAE")
-fs <- teal_slices(
-  teal_slice(
-    dataname = "MAE", varname = "years_to_birth", selected = c(30, 50), keep_na = TRUE
-  ),
-  teal_slice(
-    dataname = "MAE", varname = "vital_status", selected = "1", keep_na = FALSE
-  ),
-  teal_slice(
-    dataname = "MAE", varname = "gender", selected = "female", keep_na = TRUE
-  ),
-  teal_slice(
-    dataname = "MAE", varname = "ARRAY_TYPE", selected = "", keep_na = TRUE
-  )
-)
-dataset$set_filter_state(state = fs)
-shiny::isolate(dataset$get_filter_state())
-
-}
 \keyword{internal}
 \section{Super class}{
 \code{\link[teal.slice:FilteredDataset]{teal.slice::FilteredDataset}} -> \code{MAEFilteredDataset}
@@ -123,32 +97,6 @@ to the referred column.}
 \subsection{Returns}{
 \code{NULL} invisibly
 }
-\subsection{Examples}{
-\if{html}{\out{<div class="r example copy">}}
-\preformatted{utils::data(miniACC, package = "MultiAssayExperiment")
-dataset <- teal.slice:::MAEFilteredDataset$new(miniACC, "MAE")
-fs <- teal_slices(
-  teal_slice(
-    dataname = "MAE", varname = "years_to_birth", selected = c(30, 50), keep_na = TRUE
-  ),
-  teal_slice(
-    dataname = "MAE", varname = "vital_status", selected = "1", keep_na = FALSE
-  ),
-  teal_slice(
-    dataname = "MAE", varname = "gender", selected = "female", keep_na = TRUE
-  ),
-  teal_slice(
-    dataname = "MAE", varname = "ARRAY_TYPE", selected = "", keep_na = TRUE
-  )
-)
-dataset$set_filter_state(state = fs)
-shiny::isolate(dataset$get_filter_state())
-
-}
-\if{html}{\out{</div>}}
-
-}
-
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-MAEFilteredDataset-remove_filter_state"></a>}}

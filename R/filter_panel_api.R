@@ -23,7 +23,8 @@
 #' @seealso [`teal_slice`]
 #'
 #' @examples
-#' utils::data(miniACC, package = "MultiAssayExperiment")
+#' library(MultiAssayExperiment)
+#' data(miniACC)
 #'
 #' datasets <- init_filtered_data(
 #'   x = list(
@@ -131,10 +132,9 @@ clear_filter_states <- function(datasets, force = FALSE) {
 #'
 #' @param datasets (`FilteredData`)
 #' @param datanames (`character`) vector of dataset names
-#'
+#' @return (`expression`)
 #' @export
 #'
-#' @return (`expression`)
 get_filter_expr <- function(datasets, datanames = datasets$datanames()) {
   checkmate::assert_character(datanames, min.len = 1, any.missing = FALSE)
   stopifnot(

@@ -262,7 +262,6 @@ jsonify <- function(x, trim_lines) {
 #' This function is used by the `format` methods for `teal_slice` and `teal_slices`.
 #' @param x `list`, possibly recursive, obtained from `teal_slice` or `teal_slices`.
 #' @return A `JSON` string.
-#' @keywords internal
 #
 #' @param x (`list`) representation of `teal_slices` object.
 #' @keywords internal
@@ -283,6 +282,13 @@ to_json <- function(x) {
   jsonlite::toJSON(no_unbox(x), pretty = TRUE, auto_unbox = TRUE, digits = 16, null = "null")
 }
 
+#' Format POSIXt Time Object
+#' @param x The object to format. Expected to be a `POSIXt` time object.
+#'
+#' @return A formatted string representing the date and time in the format
+#'         "YYYY-MM-DD HH:MM:SS". If the input is not a POSIXt object,
+#'         the original input is returned.
+#' @keywords internal
 format_time <- function(x) {
   if ("POSIXt" %in% class(x)) {
     format(x, format = "%Y-%m-%d %H:%M:%S", usetz = TRUE, tz = "UTC")

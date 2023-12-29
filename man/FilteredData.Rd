@@ -41,33 +41,6 @@ Common arguments are:
 \item \code{varname}: one of the columns in a dataset
 }
 }
-\examples{
-
-## ------------------------------------------------
-## Method `FilteredData$set_filter_state`
-## ------------------------------------------------
-
-utils::data(miniACC, package = "MultiAssayExperiment")
-
-datasets <- teal.slice:::FilteredData$new(list(iris = iris, mae = miniACC))
-
-fs <-
-  teal_slices(
-    teal_slice(dataname = "iris", varname = "Sepal.Length", selected = c(5.1, 6.4),
-               keep_na = TRUE, keep_inf = FALSE),
-    teal_slice(dataname = "iris", varname = "Species", selected = c("setosa", "versicolor"),
-               keep_na = FALSE),
-    teal_slice(dataname = "mae", varname = "years_to_birth", selected = c(30, 50),
-               keep_na = TRUE, keep_inf = FALSE),
-    teal_slice(dataname = "mae", varname = "vital_status", selected = "1", keep_na = FALSE),
-    teal_slice(dataname = "mae", varname = "gender", selected = "female", keep_na = TRUE),
-    teal_slice(dataname = "mae", varname = "ARRAY_TYPE",
-               selected = "", keep_na = TRUE, datalabel = "RPPAArray", arg = "subset")
-  )
-datasets$set_filter_state(state = fs)
-shiny::isolate(datasets$get_filter_state())
-
-}
 \keyword{internal}
 \section{Methods}{
 \subsection{Public methods}{
@@ -440,33 +413,6 @@ Sets active filter states.
 \subsection{Returns}{
 \code{NULL} invisibly
 }
-\subsection{Examples}{
-\if{html}{\out{<div class="r example copy">}}
-\preformatted{utils::data(miniACC, package = "MultiAssayExperiment")
-
-datasets <- teal.slice:::FilteredData$new(list(iris = iris, mae = miniACC))
-
-fs <-
-  teal_slices(
-    teal_slice(dataname = "iris", varname = "Sepal.Length", selected = c(5.1, 6.4),
-               keep_na = TRUE, keep_inf = FALSE),
-    teal_slice(dataname = "iris", varname = "Species", selected = c("setosa", "versicolor"),
-               keep_na = FALSE),
-    teal_slice(dataname = "mae", varname = "years_to_birth", selected = c(30, 50),
-               keep_na = TRUE, keep_inf = FALSE),
-    teal_slice(dataname = "mae", varname = "vital_status", selected = "1", keep_na = FALSE),
-    teal_slice(dataname = "mae", varname = "gender", selected = "female", keep_na = TRUE),
-    teal_slice(dataname = "mae", varname = "ARRAY_TYPE",
-               selected = "", keep_na = TRUE, datalabel = "RPPAArray", arg = "subset")
-  )
-datasets$set_filter_state(state = fs)
-shiny::isolate(datasets$get_filter_state())
-
-}
-\if{html}{\out{</div>}}
-
-}
-
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-FilteredData-remove_filter_state"></a>}}
