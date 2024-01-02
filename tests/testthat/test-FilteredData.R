@@ -465,7 +465,7 @@ testthat::test_that("remove_filter_state removes states specified by `teal_slice
 })
 
 testthat::test_that("remove_filter_state does not remove anchored filters", {
-  datasets <- teal.slice:::FilteredData$new(list(iris = iris, mtcars = mtcars))
+  datasets <- FilteredData$new(list(iris = iris, mtcars = mtcars))
   fs <- teal_slices(
     teal_slice(
       dataname = "iris", varname = "Sepal.Length", selected = c(5.1, 6.4),
@@ -534,7 +534,7 @@ testthat::test_that("clear_filter_states removes filters of desired dataset only
 })
 
 testthat::test_that("clear_filter_states does not remove anchored filters", {
-  datasets <- teal.slice:::FilteredData$new(list(iris = iris, mtcars = mtcars))
+  datasets <- FilteredData$new(list(iris = iris, mtcars = mtcars))
   fs <- teal_slices(
     teal_slice(
       dataname = "iris", varname = "Sepal.Length", selected = c(5.1, 6.4),

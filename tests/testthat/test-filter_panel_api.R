@@ -10,7 +10,7 @@ df2 <- data.frame(
   fact = sample(rep_len(letters, 100)),
   stringsAsFactors = TRUE
 )
-filtered_data <- teal.slice:::init_filtered_data(list(df1 = list(dataset = df1), df2 = list(dataset = df2)))
+filtered_data <- init_filtered_data(list(df1 = list(dataset = df1), df2 = list(dataset = df2)))
 
 # initialize ----
 testthat::test_that("FilterPanelAPI constructor accepts a FilteredData object", {
