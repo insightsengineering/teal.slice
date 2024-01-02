@@ -151,7 +151,7 @@ set_filter_state(
 )
 ```
 
-3. `count_type` defines how observation counts displayed in filter cards
+3. `count_type` defines how observation counts are displayed in filter cards
 
 | "none" | "all" |
 |--------|-------|
