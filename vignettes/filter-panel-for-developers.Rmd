@@ -138,7 +138,7 @@ set_filter_state(
 ```
 
 2. `exclude_varnames` defines which columns in the used data sets are **not** allowed to be filtered on.
-In the following example, all variables except the four will be available to choose from.
+In the following example all variables except the four will be available to choose from.
 ```{r}
 set_filter_state(
   datasets,
