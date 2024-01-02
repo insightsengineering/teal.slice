@@ -23,7 +23,6 @@ countBars <- function(inputId, choices, countsmax, countsnow = NULL) { # nolint
   }
 
   ns <- NS(inputId)
-  counttotal <- sum(countsmax)
 
   mapply(
     countBar,
