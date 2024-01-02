@@ -21,7 +21,7 @@ navbar:
       href: https://github.com/insightsengineering/teal.slice
 
 reference:
-  - title: "`teal` filter-panel API"
+  - title: "teal filter-panel API"
     desc: "Functions used initialize filter-panel and to modify its states."
     contents:
       - init_filtered_data
