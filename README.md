@@ -58,7 +58,7 @@ To understand how to use this package, please refer to the [Introduction to teal
 
 ## Getting help
 
-If you encounter any bug or have a feature request, please file an issue. For questions, discussions, and updates, use the `teal` channel in the workspace.[`pharmaverse` slack workspace](https://pharmaverse.slack.com).
+If you encounter a bug or have a feature request, please file an issue. For questions, discussions, and updates, use the `teal` channel in the [`pharmaverse` slack workspace](https://pharmaverse.slack.com).
 
 ## Stargazers and Forkers
 
