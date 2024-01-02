@@ -15,7 +15,7 @@ vignette: >
 All filter panel classes have dedicated methods to set and get the current filter state.
 These methods include:
 
-- `get_filter_state` - returns the current state of filters in the form of `teal_slices` object
+- `get_filter_state` - returns current state of filters as `teal_slices` object
 - `set_filter_state` - adds or modifies the filters based on `teal_slices` object
 - `remove_filter_state` - removes particular filter states based on `teal_slices` object
 - `clear_filter_states` - removes all filter states
