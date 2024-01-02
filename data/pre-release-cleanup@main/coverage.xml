@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE coverage SYSTEM "https://raw.githubusercontent.com/cobertura/cobertura/master/cobertura/src/site/htdocs/xml/coverage-04.dtd">
-<coverage line-rate="0.661172161172161" branch-rate="0" lines-covered="2888" lines-valid="4368" branches-covered="0" branches-valid="0" complexity="0" version="3.6.4" timestamp="2024-01-02 11:50:29.843916">
+<coverage line-rate="0.661172161172161" branch-rate="0" lines-covered="2888" lines-valid="4368" branches-covered="0" branches-valid="0" complexity="0" version="3.6.4" timestamp="2024-01-02 12:12:26.938989">
   <sources>
     <source>/__w/teal.slice/teal.slice/teal.slice</source>
   </sources>
@@ -3427,12 +3427,11 @@
           <methods>
             <method name="init_filtered_dataset" signature="" line-rate="1" branch-rate="0" complexity="0">
               <lines>
-                <line number="77" hits="107" branch="false"/>
+                <line number="78" hits="107" branch="false"/>
               </lines>
             </method>
             <method name="init_filtered_dataset.data.frame" signature="" line-rate="1" branch-rate="0" complexity="0">
               <lines>
-                <line number="89" hits="83" branch="false"/>
                 <line number="90" hits="83" branch="false"/>
                 <line number="91" hits="83" branch="false"/>
                 <line number="92" hits="83" branch="false"/>
@@ -3441,33 +3440,33 @@
                 <line number="95" hits="83" branch="false"/>
                 <line number="96" hits="83" branch="false"/>
                 <line number="97" hits="83" branch="false"/>
+                <line number="98" hits="83" branch="false"/>
               </lines>
             </method>
             <method name="init_filtered_dataset.MultiAssayExperiment" signature="" line-rate="0.875" branch-rate="0" complexity="0">
               <lines>
-                <line number="109" hits="7" branch="false"/>
-                <line number="110" hits="0" branch="false"/>
-                <line number="112" hits="7" branch="false"/>
+                <line number="110" hits="7" branch="false"/>
+                <line number="111" hits="0" branch="false"/>
                 <line number="113" hits="7" branch="false"/>
                 <line number="114" hits="7" branch="false"/>
                 <line number="115" hits="7" branch="false"/>
                 <line number="116" hits="7" branch="false"/>
                 <line number="117" hits="7" branch="false"/>
+                <line number="118" hits="7" branch="false"/>
               </lines>
             </method>
             <method name="init_filtered_dataset.default" signature="" line-rate="1" branch-rate="0" complexity="0">
               <lines>
-                <line number="129" hits="17" branch="false"/>
                 <line number="130" hits="17" branch="false"/>
                 <line number="131" hits="17" branch="false"/>
                 <line number="132" hits="17" branch="false"/>
                 <line number="133" hits="17" branch="false"/>
+                <line number="134" hits="17" branch="false"/>
               </lines>
             </method>
           </methods>
           <lines>
-            <line number="77" hits="107" branch="false"/>
-            <line number="89" hits="83" branch="false"/>
+            <line number="78" hits="107" branch="false"/>
             <line number="90" hits="83" branch="false"/>
             <line number="91" hits="83" branch="false"/>
             <line number="92" hits="83" branch="false"/>
@@ -3476,19 +3475,20 @@
             <line number="95" hits="83" branch="false"/>
             <line number="96" hits="83" branch="false"/>
             <line number="97" hits="83" branch="false"/>
-            <line number="109" hits="7" branch="false"/>
-            <line number="110" hits="0" branch="false"/>
-            <line number="112" hits="7" branch="false"/>
+            <line number="98" hits="83" branch="false"/>
+            <line number="110" hits="7" branch="false"/>
+            <line number="111" hits="0" branch="false"/>
             <line number="113" hits="7" branch="false"/>
             <line number="114" hits="7" branch="false"/>
             <line number="115" hits="7" branch="false"/>
             <line number="116" hits="7" branch="false"/>
             <line number="117" hits="7" branch="false"/>
-            <line number="129" hits="17" branch="false"/>
+            <line number="118" hits="7" branch="false"/>
             <line number="130" hits="17" branch="false"/>
             <line number="131" hits="17" branch="false"/>
             <line number="132" hits="17" branch="false"/>
             <line number="133" hits="17" branch="false"/>
+            <line number="134" hits="17" branch="false"/>
           </lines>
         </class>
         <class name="FilteredDataset.R" filename="R/FilteredDataset.R" line-rate="0.619318181818182" branch-rate="0" complexity="0">
