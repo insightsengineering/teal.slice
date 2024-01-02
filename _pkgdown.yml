@@ -25,7 +25,6 @@ reference:
     desc: "Functions used initialize filter-panel and to modify its states."
     contents:
       - init_filtered_data
-      - init_filtered_dataset
       - set_filter_state
       - get_filter_state
       - get_filter_expr

@@ -63,6 +63,7 @@
 #'   shinyApp(ui, server)
 #' }
 #'
+#' @keywords internal
 #' @export
 #' @note Although this function is exported for use in other packages, it may be changed or removed in a future release
 #'   at which point any code which relies on this exported function will need to be changed.
