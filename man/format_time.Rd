@@ -2,7 +2,7 @@
 % Please edit documentation in R/teal_slice.R
 \name{format_time}
 \alias{format_time}
-\title{Format POSIXt Time Object}
+\title{Format \code{POSIXt} Time Object}
 \usage{
 format_time(x)
 }
@@ -11,10 +11,10 @@ format_time(x)
 }
 \value{
 A formatted string representing the date and time in the format
-"YYYY-MM-DD HH:MM:SS". If the input is not a POSIXt object,
+\verb{YYYY-MM-DD HH:MM:SS}. If the input is not a \code{POSIXt} object,
 the original input is returned.
 }
 \description{
-Format POSIXt Time Object
+Format \code{POSIXt} Time Object
 }
 \keyword{internal}

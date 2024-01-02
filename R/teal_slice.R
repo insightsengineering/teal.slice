@@ -282,11 +282,11 @@ to_json <- function(x) {
   jsonlite::toJSON(no_unbox(x), pretty = TRUE, auto_unbox = TRUE, digits = 16, null = "null")
 }
 
-#' Format POSIXt Time Object
+#' Format `POSIXt` Time Object
 #' @param x The object to format. Expected to be a `POSIXt` time object.
 #'
 #' @return A formatted string representing the date and time in the format
-#'         "YYYY-MM-DD HH:MM:SS". If the input is not a POSIXt object,
+#'         `YYYY-MM-DD HH:MM:SS`. If the input is not a `POSIXt` object,
 #'         the original input is returned.
 #' @keywords internal
 format_time <- function(x) {
