@@ -11,9 +11,6 @@
   invisible()
 }
 
-# use non-exported function from teal.code
-topological_sort <- getFromNamespace("topological_sort", "teal.data")
-
 ### GLOBAL VARIABLES ###
 
 .filterable_class <- c("logical", "integer", "numeric", "factor", "character", "Date", "POSIXct", "POSIXlt")
