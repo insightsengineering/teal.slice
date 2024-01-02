@@ -12,10 +12,10 @@ vignette: >
 
 ### Getting and setting filter states
 
-All filter panel classes have dedicated methods to set and get current filter state.
+All filter panel classes have dedicated methods to set and get the current filter state.
 These methods include:
 
-- `get_filter_state` - returns the current state of filters in form of `teal_slices` object
+- `get_filter_state` - returns the current state of filters in the form of `teal_slices` object
 - `set_filter_state` - adds or modifies the filters based on `teal_slices` object
 - `remove_filter_state` - removes particular filter states based on `teal_slices` object
 - `clear_filter_states` - removes all filter states
@@ -51,12 +51,12 @@ Each `teal_slice` object contains all the information necessary to:
    - `choices` - determines the set of values or the range that can be selected from
    - `multiple` (only for `ChoiceFilterState`) - allows multiple values to be selected
    - `fixed` - forbids changing state of the `FilterState`
-   - `anchored` - forbids removal of the `FilterState`
+   - `anchored` - forbids the removal of the `FilterState`
    - `title` - displayed title of the filter card
 
 In addition, every `teal_slice` object has an `id`.
 
-It is impossible to create `FilteredData` with slices with duplicated `id`s.
+It is impossible to create `FilteredData` with slices with  duplicates `id`s.
 This is because filter states are both created and modified with the `set_filter_state` method
 so if two consecutive calls to `set_filter_state` are passed a `teal_slice` with the same id,
 the first call will instantiate a `FilterState`, and the second call will modify it.
@@ -138,7 +138,7 @@ set_filter_state(
 ```
 
 2. `exclude_varnames` defines which columns in the used data sets are **not** allowed to be filtered on.
-In following example all variables except the four will be available to choose from.
+In the following example, all variables except the four will be available to choose from.
 ```{r}
 set_filter_state(
   datasets,
@@ -151,7 +151,7 @@ set_filter_state(
 )
 ```
 
-3. `count_type` defines how observations counts displayed in filter cards
+3. `count_type` defines how observation counts displayed in filter cards
 
 | "none" | "all" |
 |--------|-------|
@@ -192,66 +192,66 @@ set_filter_state(
   )
 )
 
-app <- shinyApp(
-  ui = fluidPage(
-    shinyjs::useShinyjs(),
-    fluidRow(
-      column(
-        width = 9,
-        id = "teal_primary_col",
-        shiny::tagList(
-          actionButton("add_species_filter", "Set iris$Species filter"),
-          actionButton("remove_species_filter", "Remove iris$Species filter"),
-          actionButton("remove_all_filters", "Remove all filters"),
-          verbatimTextOutput("rcode"),
-          verbatimTextOutput("filter_state")
-        )
-      ),
-      column(
-        width = 3,
-        id = "teal_secondary_col",
-        datasets$ui_filter_panel("filter_panel")
+ui <- fluidPage(
+  shinyjs::useShinyjs(),
+  fluidRow(
+    column(
+      width = 9,
+      id = "teal_primary_col",
+      shiny::tagList(
+        actionButton("add_species_filter", "Set iris$Species filter"),
+        actionButton("remove_species_filter", "Remove iris$Species filter"),
+        actionButton("remove_all_filters", "Remove all filters"),
+        verbatimTextOutput("rcode"),
+        verbatimTextOutput("filter_state")
       )
+    ),
+    column(
+      width = 3,
+      id = "teal_secondary_col",
+      datasets$ui_filter_panel("filter_panel")
     )
-  ),
-  server = function(input, output, session) {
-    # calling filter panel module
-    datasets$srv_filter_panel("filter_panel")
-
-    # displaying actual filter states
-    output$filter_state <- renderPrint(print(get_filter_state(datasets), trim = FALSE))
-
-    # displaying reproducible filter call
-    output$rcode <- renderText(
-      paste(
-        sapply(c("iris", "mtcars"), datasets$get_call),
-        collapse = "\n"
-      )
-    )
-
-    # programmatic interaction with FilteredData
-    observeEvent(input$add_species_filter, {
-      set_filter_state(
-        datasets,
-        teal_slices(
-          teal_slice(dataname = "iris", varname = "Species", selected = c("setosa", "versicolor"))
-        )
-      )
-    })
-
-    # programmatic removal of the FilterState
-    observeEvent(input$remove_species_filter, {
-      remove_filter_state(
-        datasets,
-        teal_slices(
-          teal_slice(dataname = "iris", varname = "Species")
-        )
-      )
-    })
-    observeEvent(input$remove_all_filters, clear_filter_states(datasets))
-  }
+  )
 )
+
+server <- function(input, output, session) {
+  # calling filter panel module
+  datasets$srv_filter_panel("filter_panel")
+
+  # displaying actual filter states
+  output$filter_state <- renderPrint(print(get_filter_state(datasets), trim = FALSE))
+
+  # displaying reproducible filter call
+  output$rcode <- renderText(
+    paste(
+      sapply(c("iris", "mtcars"), datasets$get_call),
+      collapse = "\n"
+    )
+  )
+
+  # programmatic interaction with FilteredData
+  observeEvent(input$add_species_filter, {
+    set_filter_state(
+      datasets,
+      teal_slices(
+        teal_slice(dataname = "iris", varname = "Species", selected = c("setosa", "versicolor"))
+      )
+    )
+  })
+
+  # programmatic removal of the FilterState
+  observeEvent(input$remove_species_filter, {
+    remove_filter_state(
+      datasets,
+      teal_slices(
+        teal_slice(dataname = "iris", varname = "Species")
+      )
+    )
+  })
+  observeEvent(input$remove_all_filters, clear_filter_states(datasets))
+}
+
 if (interactive()) {
-  shinyApp(app$ui, app$server)
+  shinyApp(ui, server)
 }
 ```
