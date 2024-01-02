@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE coverage SYSTEM "https://raw.githubusercontent.com/cobertura/cobertura/master/cobertura/src/site/htdocs/xml/coverage-04.dtd">
-<coverage line-rate="0.661249713893339" branch-rate="0" lines-covered="2889" lines-valid="4369" branches-covered="0" branches-valid="0" complexity="0" version="3.6.4" timestamp="2023-12-22 15:13:43.544896">
+<coverage line-rate="0.661327231121281" branch-rate="0" lines-covered="2890" lines-valid="4370" branches-covered="0" branches-valid="0" complexity="0" version="3.6.4" timestamp="2024-01-02 11:49:59.633432">
   <sources>
     <source>/__w/teal.slice/teal.slice/teal.slice</source>
   </sources>
   <packages>
-    <package name="teal.slice" line-rate="0.661249713893339" branch-rate="0" complexity="0">
+    <package name="teal.slice" line-rate="0.661327231121281" branch-rate="0" complexity="0">
       <classes>
         <class name="calls_combine_by.R" filename="R/calls_combine_by.R" line-rate="1" branch-rate="0" complexity="0">
           <methods>
@@ -29559,7 +29559,7 @@
             <line number="370" hits="609" branch="false"/>
           </lines>
         </class>
-        <class name="teal_slices.R" filename="R/teal_slices.R" line-rate="0.939759036144578" branch-rate="0" complexity="0">
+        <class name="teal_slices.R" filename="R/teal_slices.R" line-rate="0.94047619047619" branch-rate="0" complexity="0">
           <methods>
             <method name="teal_slices" signature="" line-rate="1" branch-rate="0" complexity="0">
               <lines>
@@ -29678,10 +29678,11 @@
               <lines>
                 <line number="273" hits="1569" branch="false"/>
                 <line number="274" hits="1568" branch="false"/>
-                <line number="275" hits="1059" branch="false"/>
-                <line number="277" hits="509" branch="false"/>
-                <line number="278" hits="508" branch="false"/>
+                <line number="275" hits="1568" branch="false"/>
+                <line number="276" hits="1059" branch="false"/>
+                <line number="278" hits="509" branch="false"/>
                 <line number="279" hits="508" branch="false"/>
+                <line number="280" hits="508" branch="false"/>
               </lines>
             </method>
           </methods>
@@ -29765,10 +29766,11 @@
             <line number="253" hits="14" branch="false"/>
             <line number="273" hits="1569" branch="false"/>
             <line number="274" hits="1568" branch="false"/>
-            <line number="275" hits="1059" branch="false"/>
-            <line number="277" hits="509" branch="false"/>
-            <line number="278" hits="508" branch="false"/>
+            <line number="275" hits="1568" branch="false"/>
+            <line number="276" hits="1059" branch="false"/>
+            <line number="278" hits="509" branch="false"/>
             <line number="279" hits="508" branch="false"/>
+            <line number="280" hits="508" branch="false"/>
           </lines>
         </class>
         <class name="test_utils.R" filename="R/test_utils.R" line-rate="1" branch-rate="0" complexity="0">
