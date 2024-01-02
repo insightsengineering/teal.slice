@@ -48,7 +48,7 @@ Each `teal_slice` object contains all the information necessary to:
 
 3. Control the behavior and appearance of the `FilterState` object:
 
-   - `choices` - determines the set of values or the range that can be selected from
+   - `choices` - determines set of values or range that can be selected from
    - `multiple` (only for `ChoiceFilterState`) - allows multiple values to be selected
    - `fixed` - forbids changing state of the `FilterState`
    - `anchored` - forbids removing the `FilterState`
