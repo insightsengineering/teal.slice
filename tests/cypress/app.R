@@ -1,4 +1,3 @@
-devtools::load_all("/Users/vedha/insightsengineering/teal.slice")
 library(teal)
 
 data <- teal_data() |>
