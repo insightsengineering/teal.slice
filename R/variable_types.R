@@ -38,14 +38,15 @@ variable_types <- function(data, columns = NULL) {
     type <- typeof(data)
     if (type == "double") type <- "numeric"
     types <-
-      if (length(columns) == 0L) {
+      if (is.null(columns)) {
         stats::setNames(rep_len(type, ncol(data)), nm = colnames(data))
       } else {
         stats::setNames(rep_len(type, length(columns)), nm = columns)
       }
   } else {
     types <- vapply(data, function(x) class(x)[1L], character(1L))
-    if (length(columns) != 0L) types <- types[columns]
+    if (!is.null(columns)) types <- types[columns]
+    # alternative after R 4.4.0: `types <- types[columns %||% TRUE]`
   }
   types
 }
