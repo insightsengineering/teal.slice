@@ -299,7 +299,7 @@ FilterState <- R6::R6Class( # nolint
 
       div(
         id = id,
-        class = "panel filter-card",
+        class = "panel filter-card cy-filter-card",
         include_js_files("count-bar-labels.js"),
         div(
           class = "filter-card-header",

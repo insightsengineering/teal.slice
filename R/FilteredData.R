@@ -765,7 +765,7 @@ FilteredData <- R6::R6Class( # nolint
         div(
           id = ns("filters_overview_contents"),
           div(
-            class = "teal_active_summary_filter_panel",
+            class = "teal_active_summary_filter_panel cy-active-summary-table",
             tableOutput(ns("table"))
           )
         )

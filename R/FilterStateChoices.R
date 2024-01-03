@@ -370,7 +370,7 @@ ChoicesFilterState <- R6::R6Class( # nolint
             countsmax = countsmax
           )
           div(
-            class = "choices_state",
+            class = "choices_state cy-factor-selection-inputs",
             if (private$is_multiple()) {
               checkboxGroupInput(
                 inputId = ns("selection"),
@@ -399,15 +399,18 @@ ChoicesFilterState <- R6::R6Class( # nolint
             countmax = countsmax
           )
 
-          teal.widgets::optionalSelectInput(
-            inputId = ns("selection"),
-            choices = stats::setNames(private$get_choices(), labels),
-            selected = private$get_selected(),
-            multiple = private$is_multiple(),
-            options = shinyWidgets::pickerOptions(
-              actionsBox = TRUE,
-              liveSearch = (length(private$get_choices()) > 10),
-              noneSelectedText = "Select a value"
+          div(
+            class = "cy-character-selection-inputs",
+            teal.widgets::optionalSelectInput(
+              inputId = ns("selection"),
+              choices = stats::setNames(private$get_choices(), labels),
+              selected = private$get_selected(),
+              multiple = private$is_multiple(),
+              options = shinyWidgets::pickerOptions(
+                actionsBox = TRUE,
+                liveSearch = (length(private$get_choices()) > 10),
+                noneSelectedText = "Select a value"
+              )
             )
           )
         }

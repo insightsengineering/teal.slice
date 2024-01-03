@@ -265,7 +265,7 @@ LogicalFilterState <- R6::R6Class( # nolint
         }
         div(
           div(
-            class = "choices_state",
+            class = "choices_state cy-logical-selection-inputs",
             uiOutput(ns("trigger_visible"), inline = TRUE),
             ui_input
           ),

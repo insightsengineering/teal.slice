@@ -402,14 +402,17 @@ RangeFilterState <- R6::R6Class( # nolint
     ui_inputs = function(id) {
       ns <- NS(id)
       shiny::isolate({
-        ui_input <- shinyWidgets::numericRangeInput(
-          inputId = ns("selection_manual"),
-          label = NULL,
-          min = private$get_choices()[1L],
-          max = private$get_choices()[2L],
-          value = private$get_selected(),
-          step = private$numeric_step,
-          width = "100%"
+        ui_input <- div(
+          class = "cy-numeric-selection-inputs",
+          shinyWidgets::numericRangeInput(
+            inputId = ns("selection_manual"),
+            label = NULL,
+            min = private$get_choices()[1L],
+            max = private$get_choices()[2L],
+            value = private$get_selected(),
+            step = private$numeric_step,
+            width = "100%"
+          )
         )
         tagList(
           div(

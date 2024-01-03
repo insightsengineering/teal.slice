@@ -275,13 +275,13 @@ DateFilterState <- R6::R6Class( # nolint
           div(
             class = "flex",
             actionButton(
-              class = "date_reset_button",
+              class = "date_reset_button cy-date-from-reset",
               inputId = ns("start_date_reset"),
               label = NULL,
               icon = icon("fas fa-undo")
             ),
             div(
-              class = "w-80 filter_datelike_input",
+              class = "w-80 filter_datelike_input cy-date-inputs",
               dateRangeInput(
                 inputId = ns("selection"),
                 label = NULL,
@@ -293,7 +293,7 @@ DateFilterState <- R6::R6Class( # nolint
               )
             ),
             actionButton(
-              class = "date_reset_button",
+              class = "date_reset_button cy-date-to-reset",
               inputId = ns("end_date_reset"),
               label = NULL,
               icon = icon("fas fa-undo")

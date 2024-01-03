@@ -349,18 +349,24 @@ DatetimeFilterState <- R6::R6Class( # nolint
         div(
           div(
             class = "flex",
-            ui_reset_1,
+            div(
+              class = "cy-datetime-from-reset",
+              ui_reset_1
+            ),
             div(
               class = "flex w-80 filter_datelike_input",
-              div(class = "w-45 text-center", ui_input_1),
+              div(class = "w-45 text-center cy-datetime-from-input", ui_input_1),
               span(
                 class = "input-group-addon w-10",
                 span(class = "input-group-text w-100 justify-content-center", "to"),
                 title = "Times are displayed in the local timezone and are converted to UTC in the analysis"
               ),
-              div(class = "w-45 text-center", ui_input_2)
+              div(class = "w-45 text-center cy-datetime-to-input", ui_input_2)
             ),
-            ui_reset_2
+            div(
+              class = "cy-datetime-to-reset",
+              ui_reset_2
+            )
           ),
           private$keep_na_ui(ns("keep_na"))
         )

@@ -1,0 +1,21 @@
+{
+  "name": "cypress-tests",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "run-app": "Rscript -e \"shiny::runApp('cypress', port = 5555)\"",
+    "run-cypress": "cypress run --project . --env appName=$npm_config_appName",
+    "open-cypress": "cypress open --project . --env appName=$npm_config_appName",
+    "test-e2e": "start-server-and-test run-app http://localhost:5555 run-cypress",
+    "test-e2e-interactive": "start-server-and-test run-app http://localhost:5555 open-cypress"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "cypress": "^13.6.1",
+    "cypress-visual-regression": "^3.0.0",
+    "start-server-and-test": "^2.0.3"
+  }
+}
