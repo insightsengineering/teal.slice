@@ -206,7 +206,7 @@ data_choices_labeled <- function(data,
   if (length(choices) == 0) {
     return(character(0))
   }
-  choice_types <- vt(data = data, columns = choices)
+  choice_types <- variable_types(data = data, columns = choices)
   choice_types[keys] <- "primary_key"
 
   choices_labeled(
