@@ -22,4 +22,7 @@ Ellipsis, ..., are needed as part of method arguments to allow for its arguments
 arguments and for this to pass check(). Hence, ..., should always be empty. This function will check for this
 condition.
 }
+\seealso{
+examples found here: \code{vignette("internal_function_examples", package = "teal.slice")}.
+}
 \keyword{internal}

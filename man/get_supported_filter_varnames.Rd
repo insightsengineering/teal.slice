@@ -17,4 +17,7 @@ the R object containing elements which class can be checked through \code{vapply
 Gets filterable variable names from a given object. The names match variables
 of classes in an vector \code{teal.slice:::.filterable_class}.
 }
+\seealso{
+examples found here: \code{vignette("internal_function_examples", package = "teal.slice")}.
+}
 \keyword{internal}

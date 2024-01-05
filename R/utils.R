@@ -10,7 +10,7 @@
 #'   to allow for unnamed arguments, let "" be one of the elements in this character vector.
 #'
 #' @return \code{NULL} if ... is empty
-#'
+#' @seealso examples found here: `vignette("internal_function_examples", package = "teal.slice")`.
 #' @keywords internal
 #'
 check_ellipsis <- function(..., stop = FALSE, allowed_args = character(0)) {
@@ -112,6 +112,8 @@ include_js_files <- function(pattern) {
 #' @param choices A vector of values.
 #'
 #' @return A `c` call.
+#'
+#' @seealso examples found here: `vignette("internal_function_examples", package = "teal.slice")`.
 #'
 #' @keywords internal
 make_c_call <- function(choices) {

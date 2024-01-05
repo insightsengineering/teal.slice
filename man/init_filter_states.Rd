@@ -37,4 +37,7 @@ additional arguments for specific classes: keys.}
 \description{
 Initialize \code{FilterStates} object
 }
+\seealso{
+examples found here: \code{vignette("internal_function_examples", package = "teal.slice")}.
+}
 \keyword{internal}

@@ -6,6 +6,9 @@
 \description{
 Handles filter states in a \code{data.frame}
 }
+\seealso{
+examples found here: \code{vignette("internal_function_examples", package = "teal.slice")}.
+}
 \keyword{internal}
 \section{Super class}{
 \code{\link[teal.slice:FilterStates]{teal.slice::FilterStates}} -> \code{DFFilterStates}

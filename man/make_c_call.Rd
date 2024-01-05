@@ -17,4 +17,7 @@ A \code{c} call.
 This function takes a vector of values and returns a \code{c} call. If the vector
 has only one element, the element is returned directly.
 }
+\seealso{
+examples found here: \code{vignette("internal_function_examples", package = "teal.slice")}.
+}
 \keyword{internal}

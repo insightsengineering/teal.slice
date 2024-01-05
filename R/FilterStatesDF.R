@@ -1,5 +1,6 @@
 #' @title `FilterStates` subclass for data frames
 #' @description Handles filter states in a `data.frame`
+#' @seealso examples found here: `vignette("internal_function_examples", package = "teal.slice")`.
 #' @keywords internal
 #'
 DFFilterStates <- R6::R6Class( # nolint

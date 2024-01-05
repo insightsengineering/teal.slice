@@ -17,6 +17,7 @@
 #'   text label value.
 #' @param ... (optional)
 #'   additional arguments for specific classes: keys.
+#' @seealso examples found here: `vignette("internal_function_examples", package = "teal.slice")`.
 #' @keywords internal
 #' @export
 #'
@@ -105,6 +106,7 @@ init_filter_states.SummarizedExperiment <- function(data, # nolint
 #' @param data (`object`)\cr
 #'   the R object containing elements which class can be checked through `vapply` or `apply`.
 #' @return `character` vector of matched element names
+#' @seealso examples found here: `vignette("internal_function_examples", package = "teal.slice")`.
 #' @keywords internal
 get_supported_filter_varnames <- function(data) {
   UseMethod("get_supported_filter_varnames")

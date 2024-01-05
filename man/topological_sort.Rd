@@ -16,4 +16,7 @@ in the returned list, parents appear before their children.
 \details{
 Implementation of \code{Kahn} algorithm with a modification to maintain the order of input elements.
 }
+\seealso{
+examples found here: \code{vignette("internal_function_examples", package = "teal.slice")}.
+}
 \keyword{internal}

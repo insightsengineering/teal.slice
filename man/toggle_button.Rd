@@ -34,4 +34,7 @@ which may contain a child \verb{<i>} tag that specifies an icon to be displayed.
 \code{removeClass} and \code{addClass} methods (when \code{one_way = TRUE}) to change icons.
 \code{toggle_title} calls the \code{attr} method to modify the \code{Title} attribute of the button.
 }
+\seealso{
+examples found here: \code{vignette("internal_function_examples", package = "teal.slice")}.
+}
 \keyword{internal}

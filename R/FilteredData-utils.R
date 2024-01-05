@@ -76,7 +76,7 @@ eval_expr_with_msg <- function(expr, env) {
 #'                from the first element of `icons`/`titles` to the second
 #'
 #' @return Invisible NULL.
-#'
+#' @seealso examples found here: `vignette("internal_function_examples", package = "teal.slice")`.
 #' @name toggle_button
 #' @rdname toggle_button
 #' @keywords internal
@@ -139,6 +139,7 @@ toggle_title <- function(input_id, titles, one_way = FALSE) {
 #' Implementation of `Kahn` algorithm with a modification to maintain the order of input elements.
 #'
 #' @param graph (named `list`) list with node vector elements
+#' @seealso examples found here: `vignette("internal_function_examples", package = "teal.slice")`.
 #' @keywords internal
 topological_sort <- function(graph) {
   # compute in-degrees
