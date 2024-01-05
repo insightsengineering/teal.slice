@@ -19,6 +19,9 @@
 #' }
 #' @param ... additional arguments to be saved as a list in `private$extras` field
 #'
+#' @examples
+#' if (interactive()) demo("init_filter_state", "teal.slice")
+#'
 #' @seealso check examples here `vignette("internal_functions_example", package = "teal.slice")`.
 #'
 #' @return `FilterState` object
