@@ -2,6 +2,7 @@
 #' @title `FilterState` object for `POSIXct` variable
 #' @description  Manages choosing a range of date-times
 #' @docType class
+#' @seealso check examples here `vignette("internal_functions_example", package = "teal.slice")`.
 #' @keywords internal
 #'
 DatetimeFilterState <- R6::R6Class( # nolint

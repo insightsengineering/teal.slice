@@ -8,6 +8,9 @@
 
 \code{MAEFilteredDataset} R6 class
 }
+\seealso{
+check examples here \code{vignette("internal_functions_example", package = "teal.slice")}.
+}
 \keyword{internal}
 \section{Super class}{
 \code{\link[teal.slice:FilteredDataset]{teal.slice::FilteredDataset}} -> \code{MAEFilteredDataset}

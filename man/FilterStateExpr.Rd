@@ -10,6 +10,9 @@ Class to handle filter expression.
 \details{
 This class is responsible for displaying filter card and returning filter expression
 }
+\seealso{
+check examples here \code{vignette("internal_functions_example", package = "teal.slice")}.
+}
 \keyword{internal}
 \section{Methods}{
 \subsection{Public methods}{

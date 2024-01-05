@@ -7,6 +7,9 @@
 \description{
 \code{FilterState} subclass representing an empty variable
 }
+\seealso{
+check examples here \code{vignette("internal_functions_example", package = "teal.slice")}.
+}
 \keyword{internal}
 \section{Super class}{
 \code{\link[teal.slice:FilterState]{teal.slice::FilterState}} -> \code{EmptyFilterState}

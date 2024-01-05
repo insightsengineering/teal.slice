@@ -31,6 +31,7 @@
 #' 2. `dataname`: the name of one of the datasets in this `FilteredData`
 #' 3. `varname`: one of the columns in a dataset
 #'
+#' @seealso check examples here `vignette("internal_functions_example", package = "teal.slice")`.
 #' @keywords internal
 #'
 FilteredData <- R6::R6Class( # nolint

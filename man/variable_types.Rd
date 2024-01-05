@@ -18,4 +18,7 @@ The value of \code{NULL} will be interpreted to mean all columns.}
 \description{
 Get classes of selected columns from dataset
 }
+\seealso{
+check examples here \code{vignette("internal_functions_example", package = "teal.slice")}.
+}
 \keyword{internal}

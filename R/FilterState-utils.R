@@ -19,6 +19,8 @@
 #' }
 #' @param ... additional arguments to be saved as a list in `private$extras` field
 #'
+#' @seealso check examples here `vignette("internal_functions_example", package = "teal.slice")`.
+#'
 #' @return `FilterState` object
 #' @keywords internal
 init_filter_state <- function(x,

@@ -37,4 +37,7 @@ unique \code{id} attribute so each can be used independently.
 Progress bar size is dependent on the ratio \code{choicesnow[i] / countsmax[i]}.
 Label is \code{choices[i] (countsnow[i]/countsmax)}
 }
+\seealso{
+check examples here \code{vignette("internal_functions_example", package = "teal.slice")}.
+}
 \keyword{internal}

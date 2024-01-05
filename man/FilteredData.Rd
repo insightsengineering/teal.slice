@@ -41,6 +41,9 @@ Common arguments are:
 \item \code{varname}: one of the columns in a dataset
 }
 }
+\seealso{
+check examples here \code{vignette("internal_functions_example", package = "teal.slice")}.
+}
 \keyword{internal}
 \section{Methods}{
 \subsection{Public methods}{

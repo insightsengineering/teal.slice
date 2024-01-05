@@ -5,6 +5,7 @@
 #'   The value of `NULL` will be interpreted to mean all columns.
 #'
 #' @return (atomic vector of `character`) classes of `columns` from provided `data`
+#' @seealso check examples here `vignette("internal_functions_example", package = "teal.slice")`.
 #' @keywords internal
 #'
 variable_types <- function(data, columns = NULL) {

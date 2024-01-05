@@ -1,5 +1,6 @@
 # MAEFilteredDataset ------
 #' @keywords internal
+#' @seealso check examples here `vignette("internal_functions_example", package = "teal.slice")`.
 #' @title `MAEFilteredDataset` R6 class
 MAEFilteredDataset <- R6::R6Class( # nolint
   classname = "MAEFilteredDataset",

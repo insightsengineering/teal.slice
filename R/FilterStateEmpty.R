@@ -2,6 +2,7 @@
 #' @title `FilterState` object for empty variable
 #' @description `FilterState` subclass representing an empty variable
 #' @docType class
+#' @seealso check examples here `vignette("internal_functions_example", package = "teal.slice")`.
 #' @keywords internal
 #'
 EmptyFilterState <- R6::R6Class( # nolint

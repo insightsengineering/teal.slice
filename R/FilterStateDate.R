@@ -2,6 +2,7 @@
 #' @title `FilterState` object for Date variable
 #' @description Manages choosing a range of Dates
 #' @docType class
+#' @seealso check examples here `vignette("internal_functions_example", package = "teal.slice")`.
 #' @keywords internal
 #'
 DateFilterState <- R6::R6Class( # nolint
