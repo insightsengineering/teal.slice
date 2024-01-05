@@ -15,7 +15,7 @@ vignette: >
 This vignette contains examples for internal classes, methods, and functions of  `teal.slice`. 
 For developer use only.
 
-## FilterState
+## `FilterState`
 
 ### `init_filter_state`
 
@@ -605,7 +605,7 @@ if (interactive()) {
 ```
 
 
-## FilteredData
+## `FilteredData`
 
 ### `FilteredData`
 
@@ -660,7 +660,7 @@ shiny::isolate(datasets$get_filter_state())
 ```
 
 
-## FilteredDataset
+## `FilteredDataset`
 
 ### `DataframeFilteredDataset`
 
