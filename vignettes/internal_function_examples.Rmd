@@ -1034,10 +1034,10 @@ teal.slice:::topological_sort(list(D = c("A"), B = c("A"), C = c("B"), A = c()))
 ### `check_ellipsis`
 
 ```{r eval=FALSE}
-method.class <- function(a, b, c, ...) {
+method_class <- function(a, b, c, ...) {
   teal.slice:::check_ellipsis(...)
 }
-method.class <- function(a, b, c, ...) {
+method_class <- function(a, b, c, ...) {
   teal.slice:::check_ellipsis(..., allowed_args = c("y", "z"))
 }
 ```
