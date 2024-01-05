@@ -7,13 +7,13 @@
 variable_types(data, columns = NULL)
 }
 \arguments{
-\item{data}{(\code{data.frame}) data to determine variable types from}
+\item{data}{(\code{matrix} or \code{data.frame}-like) object to determine variable types from.}
 
-\item{columns}{(atomic vector of \code{character} or \code{NULL}) column names chosen from \code{data}.
-The value of \code{NULL} will be interpreted to mean all columns.}
+\item{columns}{(\code{character}) vector of columns in \code{data} to get classes from.
+Set to \code{NULL} to get classes of all columns.}
 }
 \value{
-(atomic vector of \code{character}) classes of \code{columns} from provided \code{data}
+Character vector of classes of \code{columns} from provided \code{data}.
 }
 \description{
 Get classes of selected columns from dataset
