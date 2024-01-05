@@ -147,7 +147,7 @@ A `FilterState` is created as follows:
 
 All child classes handle missing values, and `RangedFilterState` also handles infinite values.
 
-The `FilterState` constructor also takes the `extract_type` argument, which determines how the call is constructed `extract_type` can be unspecified, `"matrix"` or `"list"` and its value corresponds to the type of the variable prefix in the returned condition call. If `extract_type` is `"list"`, the variable in the condition called is `<dataname>$<varname>`, while for `"matrix"` it would be `<dataname>[, "<varname>"]`.
+The `FilterState` constructor also takes the `extract_type` argument, which determines how the call is constructed `extract_type` can be unspecified, `"matrix"` or `"list"` and its value corresponds to the type of the variable prefix in the returned condition call. If `extract_type` is `"list"`, the variable in the condition call is `<dataname>$<varname>`, while for `"matrix"` it would be `<dataname>[, "<varname>"]`.
 
 ### `FilterStateExpr`
 

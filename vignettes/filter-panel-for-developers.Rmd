@@ -15,8 +15,8 @@ vignette: >
 All filter panel classes have dedicated methods to set and get the current filter state.
 These methods include:
 
-- `get_filter_state` - returns the current state of filters in the form of `teal_slices` object
-- `set_filter_state` - adds or modifies the filters based on `teal_slices` object
+- `get_filter_state` - returns current state of filters as `teal_slices` object
+- `set_filter_state` - adds or modifies filters based on `teal_slices` object
 - `remove_filter_state` - removes particular filter states based on `teal_slices` object
 - `clear_filter_states` - removes all filter states
 
@@ -48,15 +48,15 @@ Each `teal_slice` object contains all the information necessary to:
 
 3. Control the behavior and appearance of the `FilterState` object:
 
-   - `choices` - determines the set of values or the range that can be selected from
+   - `choices` - determines set of values or range that can be selected from
    - `multiple` (only for `ChoiceFilterState`) - allows multiple values to be selected
    - `fixed` - forbids changing state of the `FilterState`
-   - `anchored` - forbids the removal of the `FilterState`
+   - `anchored` - forbids removing the `FilterState`
    - `title` - displayed title of the filter card
 
 In addition, every `teal_slice` object has an `id`.
 
-It is impossible to create `FilteredData` with slices with  duplicates `id`s.
+It is impossible to create `FilteredData` with slices with duplicated `id`s.
 This is because filter states are both created and modified with the `set_filter_state` method
 so if two consecutive calls to `set_filter_state` are passed a `teal_slice` with the same id,
 the first call will instantiate a `FilterState`, and the second call will modify it.
@@ -138,7 +138,7 @@ set_filter_state(
 ```
 
 2. `exclude_varnames` defines which columns in the used data sets are **not** allowed to be filtered on.
-In the following example, all variables except the four will be available to choose from.
+In the following example all variables except the four will be available to choose from.
 ```{r}
 set_filter_state(
   datasets,
@@ -151,7 +151,7 @@ set_filter_state(
 )
 ```
 
-3. `count_type` defines how observation counts displayed in filter cards
+3. `count_type` defines how observation counts are displayed in filter cards
 
 | "none" | "all" |
 |--------|-------|
