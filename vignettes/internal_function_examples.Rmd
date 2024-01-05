@@ -1,11 +1,11 @@
 ---
-title: "Internal function examples"
+title: "Examples for internal functions"
 author: "NEST CoreDev"
 output: 
   rmarkdown::html_vignette:
     toc: true
 vignette: >
-  %\VignetteIndexEntry{internal-function-examples}
+  %\VignetteIndexEntry{Examples for internal functions}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
