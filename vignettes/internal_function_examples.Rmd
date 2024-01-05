@@ -52,7 +52,6 @@ if (interactive()) {
 ```
 ### `DFFilterStates`
 ```{r eval=FALSE}
-
 library(shiny)
 library(shinyjs)
 
@@ -122,10 +121,10 @@ ui <- fluidPage(
 server <- function(input, output, session) {
   filter_states_df$srv_add("add_filters")
   filter_states_df$srv_active("fsdf")
-  
+
   output$call_df <- renderPrint(filter_states_df$get_call())
   output$formatted_df <- renderText(filter_states_df$format())
-  
+
   observeEvent(input$button1_df, {
     filter_state <- teal_slices(teal_slice("dataset", "NUM1", selected = c(0, 30)))
     filter_states_df$set_filter_state(state = filter_state)
@@ -1041,7 +1040,6 @@ method.class <- function(a, b, c, ...) {
 method.class <- function(a, b, c, ...) {
   teal.slice:::check_ellipsis(..., allowed_args = c("y", "z"))
 }
-
 ```
 
 ### `make_c_call`
