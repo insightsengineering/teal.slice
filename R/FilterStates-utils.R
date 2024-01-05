@@ -17,39 +17,10 @@
 #'   text label value.
 #' @param ... (optional)
 #'   additional arguments for specific classes: keys.
+#' @seealso examples found here: `vignette("internal_function_examples", package = "teal.slice")`.
 #' @keywords internal
 #' @export
-#' @examples
-#' library(shiny)
-#' df <- data.frame(
-#'   character = letters,
-#'   numeric = seq_along(letters),
-#'   date = seq(Sys.Date(), length.out = length(letters), by = "1 day"),
-#'   datetime = seq(Sys.time(), length.out = length(letters), by = "33.33 hours")
-#' )
-#' rf <- teal.slice:::init_filter_states(
-#'   data = df,
-#'   dataname = "DF"
-#' )
-#' app <- shinyApp(
-#'   ui = fluidPage(
-#'     actionButton("clear", span(icon("xmark"), "Remove all filters")),
-#'     rf$ui_add(id = "add"),
-#'     rf$ui_active("states"),
-#'     verbatimTextOutput("expr"),
-#'   ),
-#'   server = function(input, output, session) {
-#'     rf$srv_add(id = "add")
-#'     rf$srv_active(id = "states")
-#'     output$expr <- renderText({
-#'       deparse1(rf$get_call(), collapse = "\n")
-#'     })
-#'     observeEvent(input$clear, rf$state_list_empty())
-#'   }
-#' )
-#' if (interactive()) {
-#'   shinyApp(app$ui, app$server)
-#' }
+#'
 init_filter_states <- function(data,
                                data_reactive = reactive(NULL),
                                dataname,
@@ -134,17 +105,8 @@ init_filter_states.SummarizedExperiment <- function(data, # nolint
 #' of classes in an vector `teal.slice:::.filterable_class`.
 #' @param data (`object`)\cr
 #'   the R object containing elements which class can be checked through `vapply` or `apply`.
-#'
-#' @examples
-#' df <- data.frame(
-#'   a = letters[1:3],
-#'   b = 1:3,
-#'   c = Sys.Date() + 1:3,
-#'   d = Sys.time() + 1:3,
-#'   z = complex(3)
-#' )
-#' teal.slice:::get_supported_filter_varnames(df)
 #' @return `character` vector of matched element names
+#' @seealso examples found here: `vignette("internal_function_examples", package = "teal.slice")`.
 #' @keywords internal
 get_supported_filter_varnames <- function(data) {
   UseMethod("get_supported_filter_varnames")

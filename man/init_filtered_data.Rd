@@ -19,6 +19,6 @@ init_filtered_data(x, join_keys = teal.data::join_keys(), code, check)
 Initialize \code{FilteredData}
 }
 \examples{
-library(shiny)
-datasets <- teal.slice::init_filtered_data(list(iris = iris, mtcars = mtcars))
+datasets <- init_filtered_data(list(iris = iris, mtcars = mtcars))
+datasets
 }

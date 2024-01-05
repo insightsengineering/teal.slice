@@ -22,12 +22,7 @@ Ellipsis, ..., are needed as part of method arguments to allow for its arguments
 arguments and for this to pass check(). Hence, ..., should always be empty. This function will check for this
 condition.
 }
-\examples{
-method.class <- function(a, b, c, ...) {
-  check_ellipsis(...)
-}
-method.class <- function(a, b, c, ...) {
-  check_ellipsis(..., allowed_args = c("y", "z"))
-}
+\seealso{
+examples found here: \code{vignette("internal_function_examples", package = "teal.slice")}.
 }
 \keyword{internal}

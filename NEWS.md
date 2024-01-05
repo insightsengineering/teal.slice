@@ -59,7 +59,7 @@
 ### Bug fixes
 
 * Fixed an error where the `RangeFilterState` produced an error when using `bootstrap 4`.
-* Fixed a bug that caused the range slider to omit values selected programmatically through the filter API.
+* Fixed a bug that caused the range slider to omit values selected by the filter API.
 * Fixed a bug where setting incorrect values for Date and Date time ranges caused the app to crash.
 
 ### Miscellaneous

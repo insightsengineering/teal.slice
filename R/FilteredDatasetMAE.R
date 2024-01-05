@@ -1,5 +1,6 @@
 # MAEFilteredDataset ------
 #' @keywords internal
+#' @seealso examples found here: `vignette("internal_function_examples", package = "teal.slice")`.
 #' @title `MAEFilteredDataset` R6 class
 MAEFilteredDataset <- R6::R6Class( # nolint
   classname = "MAEFilteredDataset",
@@ -65,27 +66,6 @@ MAEFilteredDataset <- R6::R6Class( # nolint
     #'  kept in `private$filter_states`. For this object they are `"subjects"` and
     #'  names of the experiments. Values of initial state should be relevant
     #'  to the referred column.
-    #'
-    #' @examples
-    #' utils::data(miniACC, package = "MultiAssayExperiment")
-    #' dataset <- teal.slice:::MAEFilteredDataset$new(miniACC, "MAE")
-    #' fs <- teal_slices(
-    #'   teal_slice(
-    #'     dataname = "MAE", varname = "years_to_birth", selected = c(30, 50), keep_na = TRUE
-    #'   ),
-    #'   teal_slice(
-    #'     dataname = "MAE", varname = "vital_status", selected = "1", keep_na = FALSE
-    #'   ),
-    #'   teal_slice(
-    #'     dataname = "MAE", varname = "gender", selected = "female", keep_na = TRUE
-    #'   ),
-    #'   teal_slice(
-    #'     dataname = "MAE", varname = "ARRAY_TYPE", selected = "", keep_na = TRUE
-    #'   )
-    #' )
-    #' dataset$set_filter_state(state = fs)
-    #' shiny::isolate(dataset$get_filter_state())
-    #'
     #' @return `NULL` invisibly
     #'
     set_filter_state = function(state) {

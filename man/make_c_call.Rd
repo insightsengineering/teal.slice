@@ -17,11 +17,7 @@ A \code{c} call.
 This function takes a vector of values and returns a \code{c} call. If the vector
 has only one element, the element is returned directly.
 }
-\examples{
-teal.slice:::make_c_call(1:3)
-# [1] 1 2 3
-
-teal.slice:::make_c_call(1)
-# [1] 1
+\seealso{
+examples found here: \code{vignette("internal_function_examples", package = "teal.slice")}.
 }
 \keyword{internal}

@@ -37,47 +37,7 @@ unique \code{id} attribute so each can be used independently.
 Progress bar size is dependent on the ratio \code{choicesnow[i] / countsmax[i]}.
 Label is \code{choices[i] (countsnow[i]/countsmax)}
 }
-\examples{
-
-choices <- sample(as.factor(c("a", "b", "c")), size = 20, replace = TRUE)
-counts <- table(choices)
-labels <- teal.slice:::countBars(
-  inputId = "counts",
-  choices = c("a", "b", "c"),
-  countsmax = counts,
-  countsnow = unname(counts)
-)
-
-app <- shinyApp(
-  ui = fluidPage(
-    div(
-      class = "choices_state",
-      teal.slice:::include_js_files("count-bar-labels.js"),
-      teal.slice:::include_css_files(pattern = "filter-panel"),
-      checkboxGroupInput(
-        inputId = "choices",
-        selected = levels(choices),
-        choiceNames = labels,
-        choiceValues = levels(choices),
-        label = NULL
-      )
-    )
-  ),
-  server = function(input, output, session) {
-    observeEvent(input$choices, {
-      new_counts <- counts
-      new_counts[!names(new_counts) \%in\% input$choices] <- 0
-      teal.slice:::updateCountBars(
-        inputId = "counts",
-        choices = levels(choices),
-        countsmax = counts,
-        countsnow = unname(new_counts)
-      )
-    })
-  }
-)
-if (interactive()) {
-  shinyApp(app$ui, app$server)
-}
+\seealso{
+examples found here: \code{vignette("internal_function_examples", package = "teal.slice")}.
 }
 \keyword{internal}

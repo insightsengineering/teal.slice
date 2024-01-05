@@ -19,37 +19,10 @@
 #' }
 #' @param ... additional arguments to be saved as a list in `private$extras` field
 #'
-#' @keywords internal
+#' @seealso examples found here: `vignette("internal_function_examples", package = "teal.slice")`.
 #'
-#' @examples
-#' filter_state <- teal.slice:::init_filter_state(
-#'   x = c(1:10, NA, Inf),
-#'   x_reactive = reactive(c(1:10, NA, Inf)),
-#'   slice = teal_slice(
-#'     varname = "x",
-#'     dataname = "dataname"
-#'   ),
-#'   extract_type = "matrix"
-#' )
-#'
-#' shiny::isolate(filter_state$get_call())
-#' app <- shinyApp(
-#'   ui = fluidPage(
-#'     filter_state$ui(id = "app"),
-#'     verbatimTextOutput("call")
-#'   ),
-#'   server = function(input, output, session) {
-#'     filter_state$server("app")
-#'
-#'     output$call <- renderText(
-#'       deparse1(filter_state$get_call(), collapse = "\n")
-#'     )
-#'   }
-#' )
-#' if (interactive()) {
-#'   shinyApp(app$ui, app$server)
-#' }
 #' @return `FilterState` object
+#' @keywords internal
 init_filter_state <- function(x,
                               x_reactive = reactive(NULL),
                               slice,
@@ -239,12 +212,6 @@ init_filter_state_expr <- function(slice) {
 #'              set to NULL to omit adding the alpha channel
 #'
 #' @return Named `character(1)` containing a hexadecimal color representation.
-#'
-#' @examples
-#' teal.slice:::fetch_bs_color("primary")
-#' teal.slice:::fetch_bs_color("danger", 0.35)
-#' teal.slice:::fetch_bs_color("danger", "80")
-#'
 #' @keywords internal
 #'
 fetch_bs_color <- function(color, alpha = NULL) {
