@@ -5,30 +5,9 @@
 #'   The value of `NULL` will be interpreted to mean all columns.
 #'
 #' @return (atomic vector of `character`) classes of `columns` from provided `data`
+#' @seealso check examples here `vignette("internal_functions_example", package = "teal.slice")`.
 #' @keywords internal
-#' @examples
-#' teal.slice:::variable_types(
-#'   data.frame(
-#'     x = 1:3, y = factor(c("a", "b", "a")), z = c("h1", "h2", "h3"),
-#'     stringsAsFactors = FALSE
-#'   ),
-#'   "x"
-#' )
 #'
-#' teal.slice:::variable_types(
-#'   data.frame(
-#'     x = 1:3, y = factor(c("a", "b", "a")), z = c("h1", "h2", "h3"),
-#'     stringsAsFactors = FALSE
-#'   ),
-#'   c("x", "z")
-#' )
-#'
-#' teal.slice:::variable_types(
-#'   data.frame(
-#'     x = 1:3, y = factor(c("a", "b", "a")), z = c("h1", "h2", "h3"),
-#'     stringsAsFactors = FALSE
-#'   )
-#' )
 variable_types <- function(data, columns = NULL) {
   UseMethod("variable_types")
 }

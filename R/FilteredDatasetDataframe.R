@@ -1,17 +1,8 @@
 # DataframeFilteredDataset ------
 #' @title The `DataframeFilteredDataset` R6 class
+#' @seealso check examples here `vignette("internal_functions_example", package = "teal.slice")`.
 #' @keywords internal
-#' @examples
-#' library(shiny)
-#' ds <- teal.slice:::DataframeFilteredDataset$new(iris, "iris")
-#' ds$set_filter_state(
-#'   teal_slices(
-#'     teal_slice(dataname = "iris", varname = "Species", selected = "virginica"),
-#'     teal_slice(dataname = "iris", varname = "Petal.Length", selected = c(2.0, 5))
-#'   )
-#' )
-#' isolate(ds$get_filter_state())
-#' isolate(ds$get_call())
+#'
 DataframeFilteredDataset <- R6::R6Class( # nolint
   classname = "DataframeFilteredDataset",
   inherit = FilteredDataset,
@@ -166,16 +157,6 @@ DataframeFilteredDataset <- R6::R6Class( # nolint
     #' Set filter state
     #'
     #' @param state (`teal_slice`) object
-    #'
-    #' @examples
-    #' dataset <- teal.slice:::DataframeFilteredDataset$new(iris, "iris")
-    #' fs <- teal_slices(
-    #'   teal_slice(dataname = "iris", varname = "Species", selected = "virginica"),
-    #'   teal_slice(dataname = "iris", varname = "Petal.Length", selected = c(2.0, 5))
-    #' )
-    #' dataset$set_filter_state(state = fs)
-    #' shiny::isolate(dataset$get_filter_state())
-    #'
     #' @return `NULL` invisibly
     #'
     set_filter_state = function(state) {

@@ -7,16 +7,8 @@
 \description{
 \code{FilterState} subclass representing an empty variable
 }
-\examples{
-filter_state <- teal.slice:::EmptyFilterState$new(
-  x = NA,
-  slice = teal_slice(varname = "x", dataname = "data"),
-  extract_type = character(0)
-)
-shiny::isolate(filter_state$get_call())
-filter_state$set_state(teal_slice(dataname = "data", varname = "x", keep_na = TRUE))
-shiny::isolate(filter_state$get_call())
-
+\seealso{
+check examples here \code{vignette("internal_functions_example", package = "teal.slice")}.
 }
 \keyword{internal}
 \section{Super class}{

@@ -31,27 +31,8 @@
 #' 2. `dataname`: the name of one of the datasets in this `FilteredData`
 #' 3. `varname`: one of the columns in a dataset
 #'
+#' @seealso check examples here `vignette("internal_functions_example", package = "teal.slice")`.
 #' @keywords internal
-#'
-#' @examples
-#' library(shiny)
-#' datasets <- teal.slice:::FilteredData$new(list(iris = iris, mtcars = mtcars))
-#'
-#' # get datanames
-#' datasets$datanames()
-#'
-#' datasets$set_filter_state(
-#'   teal_slices(teal_slice(dataname = "iris", varname = "Species", selected = "virginica"))
-#' )
-#' isolate(datasets$get_call("iris"))
-#'
-#' datasets$set_filter_state(
-#'   teal_slices(teal_slice(dataname = "mtcars", varname = "mpg", selected = c(15, 20)))
-#' )
-#'
-#' isolate(datasets$get_filter_state())
-#' isolate(datasets$get_call("iris"))
-#' isolate(datasets$get_call("mtcars"))
 #'
 FilteredData <- R6::R6Class( # nolint
   "FilteredData",
@@ -365,28 +346,6 @@ FilteredData <- R6::R6Class( # nolint
     #' @param state (`teal_slices`) object
     #'
     #' @return `NULL` invisibly
-    #'
-    #' @examples
-    #' utils::data(miniACC, package = "MultiAssayExperiment")
-    #'
-    #' datasets <- teal.slice:::FilteredData$new(list(iris = iris, mae = miniACC))
-    #'
-    #' fs <-
-    #'   teal_slices(
-    #'     teal_slice(dataname = "iris", varname = "Sepal.Length", selected = c(5.1, 6.4),
-    #'                keep_na = TRUE, keep_inf = FALSE),
-    #'     teal_slice(dataname = "iris", varname = "Species", selected = c("setosa", "versicolor"),
-    #'                keep_na = FALSE),
-    #'     teal_slice(dataname = "mae", varname = "years_to_birth", selected = c(30, 50),
-    #'                keep_na = TRUE, keep_inf = FALSE),
-    #'     teal_slice(dataname = "mae", varname = "vital_status", selected = "1", keep_na = FALSE),
-    #'     teal_slice(dataname = "mae", varname = "gender", selected = "female", keep_na = TRUE),
-    #'     teal_slice(dataname = "mae", varname = "ARRAY_TYPE",
-    #'                selected = "", keep_na = TRUE, datalabel = "RPPAArray", arg = "subset")
-    #'   )
-    #' datasets$set_filter_state(state = fs)
-    #' shiny::isolate(datasets$get_filter_state())
-    #'
     set_filter_state = function(state) {
       shiny::isolate({
         logger::log_trace("{ class(self)[1] }$set_filter_state initializing")

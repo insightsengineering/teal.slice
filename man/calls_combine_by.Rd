@@ -22,13 +22,4 @@ a combined \code{call}
 \description{
 Combine list of calls by specific operator
 }
-\examples{
-calls <- list(
-  quote(SEX == "F"), # subsetting on factor
-  quote(AGE >= 20 & AGE <= 50), # subsetting on range
-  quote(!SURV) # subsetting on logical
-)
-teal.slice:::calls_combine_by(calls, "&")
-
-}
 \keyword{internal}

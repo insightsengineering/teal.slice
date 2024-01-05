@@ -18,28 +18,7 @@ The value of \code{NULL} will be interpreted to mean all columns.}
 \description{
 Get classes of selected columns from dataset
 }
-\examples{
-teal.slice:::variable_types(
-  data.frame(
-    x = 1:3, y = factor(c("a", "b", "a")), z = c("h1", "h2", "h3"),
-    stringsAsFactors = FALSE
-  ),
-  "x"
-)
-
-teal.slice:::variable_types(
-  data.frame(
-    x = 1:3, y = factor(c("a", "b", "a")), z = c("h1", "h2", "h3"),
-    stringsAsFactors = FALSE
-  ),
-  c("x", "z")
-)
-
-teal.slice:::variable_types(
-  data.frame(
-    x = 1:3, y = factor(c("a", "b", "a")), z = c("h1", "h2", "h3"),
-    stringsAsFactors = FALSE
-  )
-)
+\seealso{
+check examples here \code{vignette("internal_functions_example", package = "teal.slice")}.
 }
 \keyword{internal}

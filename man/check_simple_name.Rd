@@ -15,18 +15,4 @@ Also, they should not start with a number as R may silently make it valid by cha
 Therefore, we only allow alphanumeric characters with underscores.
 The first character of the \code{name} must be an alphabetic character and can be followed by alphanumeric characters.
 }
-\examples{
-teal.slice:::check_simple_name("aas2df")
-teal.slice:::check_simple_name("ADSL")
-teal.slice:::check_simple_name("ADSLmodified")
-teal.slice:::check_simple_name("ADSL_modified")
-teal.slice:::check_simple_name("ADSL_2")
-teal.slice:::check_simple_name("a1")
-# the following fail
-if (interactive()) {
-  teal.slice:::check_simple_name("1a")
-  teal.slice:::check_simple_name("ADSL.modified")
-  teal.slice:::check_simple_name("a1...")
-}
-}
 \keyword{internal}

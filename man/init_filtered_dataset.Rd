@@ -48,52 +48,49 @@ at which point any code which relies on this exported function will need to be c
 }
 \examples{
 # DataframeFilteredDataset example
-iris_fd <- teal.slice:::init_filtered_dataset(iris, dataname = "iris")
-app <- shinyApp(
-  ui = fluidPage(
-    iris_fd$ui_add(id = "add"),
-    iris_fd$ui_active("dataset"),
-    verbatimTextOutput("call")
-  ),
-  server = function(input, output, session) {
-    iris_fd$srv_add(id = "add")
-    iris_fd$srv_active(id = "dataset")
-
-    output$call <- renderText({
-      paste(
-        vapply(iris_fd$get_call(), deparse1, character(1), collapse = "\n"),
-        collapse = "\n"
-      )
-    })
-  }
+iris_fd <- init_filtered_dataset(iris, dataname = "iris")
+ui <- fluidPage(
+  iris_fd$ui_add(id = "add"),
+  iris_fd$ui_active("dataset"),
+  verbatimTextOutput("call")
 )
+server <- function(input, output, session) {
+  iris_fd$srv_add(id = "add")
+  iris_fd$srv_active(id = "dataset")
+
+  output$call <- renderText({
+    paste(
+      vapply(iris_fd$get_call(), deparse1, character(1), collapse = "\n"),
+      collapse = "\n"
+    )
+  })
+}
 if (interactive()) {
-  shinyApp(app$ui, app$server)
+  shinyApp(ui, server)
 }
 
 # MAEFilteredDataset example
 library(MultiAssayExperiment)
 data(miniACC)
-MAE_fd <- teal.slice:::init_filtered_dataset(miniACC, "MAE")
-app <- shinyApp(
-  ui = fluidPage(
-    MAE_fd$ui_add(id = "add"),
-    MAE_fd$ui_active("dataset"),
-    verbatimTextOutput("call")
-  ),
-  server = function(input, output, session) {
-    MAE_fd$srv_add(id = "add")
-    MAE_fd$srv_active(id = "dataset")
-    output$call <- renderText({
-      paste(
-        vapply(MAE_fd$get_call(), deparse1, character(1), collapse = "\n"),
-        collapse = "\n"
-      )
-    })
-  }
+MAE_fd <- init_filtered_dataset(miniACC, "MAE")
+ui <- fluidPage(
+  MAE_fd$ui_add(id = "add"),
+  MAE_fd$ui_active("dataset"),
+  verbatimTextOutput("call")
 )
-if (interactive()) {
-  shinyApp(app$ui, app$server)
+server <- function(input, output, session) {
+  MAE_fd$srv_add(id = "add")
+  MAE_fd$srv_active(id = "dataset")
+  output$call <- renderText({
+    paste(
+      vapply(MAE_fd$get_call(), deparse1, character(1), collapse = "\n"),
+      collapse = "\n"
+    )
+  })
 }
+if (interactive()) {
+  shinyApp(ui, server)
+}
+
 }
 \keyword{internal}

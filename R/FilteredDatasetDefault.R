@@ -2,12 +2,8 @@
 
 #' @title The `DefaultFilteredDataset` R6 class
 #' @description Stores any object as inert entity. Filtering is not supported.
+#' @seealso check examples here `vignette("internal_functions_example", package = "teal.slice")`.
 #' @keywords internal
-#' @examples
-#' library(shiny)
-#' ds <- teal.slice:::DefaultFilteredDataset$new(letters, "letters")
-#' isolate(ds$get_filter_state())
-#' isolate(ds$get_call())
 DefaultFilteredDataset <- R6::R6Class( # nolint
   classname = "DefaultFilteredDataset",
   inherit = FilteredDataset,
