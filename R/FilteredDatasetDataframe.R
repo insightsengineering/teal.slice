@@ -1,6 +1,6 @@
 # DataframeFilteredDataset ------
 #' @title The `DataframeFilteredDataset` R6 class
-#' @seealso check examples here `vignette("internal_functions_example", package = "teal.slice")`.
+#' @seealso examples found here: `vignette("internal_function_examples", package = "teal.slice")`.
 #' @keywords internal
 #'
 DataframeFilteredDataset <- R6::R6Class( # nolint

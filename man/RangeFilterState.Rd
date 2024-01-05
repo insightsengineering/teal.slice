@@ -8,7 +8,7 @@
 Manages choosing a numeric range
 }
 \seealso{
-check examples here \code{vignette("internal_functions_example", package = "teal.slice")}.
+examples found here: \code{vignette("internal_function_examples", package = "teal.slice")}.
 }
 \keyword{internal}
 \section{Super class}{

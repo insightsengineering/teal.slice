@@ -6,7 +6,7 @@
 #'
 #' @description Class to handle filter expression.
 #'
-#' @seealso check examples here `vignette("internal_functions_example", package = "teal.slice")`.
+#' @seealso examples found here: `vignette("internal_function_examples", package = "teal.slice")`.
 #' @details
 #' This class is responsible for displaying filter card and returning filter expression
 #'

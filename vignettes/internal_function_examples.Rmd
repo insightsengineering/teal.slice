@@ -1,20 +1,23 @@
 ---
-title: "Internal functions example"
+title: "Examples for internal functions"
 author: "NEST CoreDev"
 output: 
   rmarkdown::html_vignette:
     toc: true
 vignette: >
-  %\VignetteIndexEntry{internal-functions-example}
+  %\VignetteIndexEntry{Examples for internal functions}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
 
 ## Introduction
 
-This vignette designed to showcase examples for internal classes, methods, and functions of teal.slice, specifically designed developers.
+This vignette contains examples for internal classes, methods, and functions of  `teal.slice`. 
+For developer use only.
 
-### Example for `init_filter_state`
+## `FilterState`
+
+### `init_filter_state`
 
 ```{r eval=FALSE}
 filter_state <- teal.slice:::init_filter_state(
@@ -46,7 +49,7 @@ if (interactive()) {
 }
 ```
 
-### Example for `ChoicesFilterState`
+### `ChoicesFilterState`
 
 ```{r eval=FALSE}
 filter_state <- teal.slice:::ChoicesFilterState$new(
@@ -148,7 +151,7 @@ if (interactive()) {
 }
 ```
 
-### Example for `DateFilterState`
+### `DateFilterState`
 
 ```{r eval=FALSE}
 filter_state <- teal.slice:::DateFilterState$new(
@@ -244,7 +247,7 @@ if (interactive()) {
 }
 ```
 
-### Example for `DatetimeFilterState`
+### `DatetimeFilterState`
 
 ```{r eval=FALSE}
 filter_state <- teal.slice:::DatetimeFilterState$new(
@@ -346,7 +349,7 @@ if (interactive()) {
 }
 ```
 
-### Example for `EmptyFilterState`
+### `EmptyFilterState`
 
 ```{r eval=FALSE}
 filter_state <- teal.slice:::EmptyFilterState$new(
@@ -359,7 +362,7 @@ filter_state$set_state(teal_slice(dataname = "data", varname = "x", keep_na = TR
 shiny::isolate(filter_state$get_call())
 ```
 
-### Example for `FilterStateExpr`
+### `FilterStateExpr`
 
 ```{r eval=FALSE}
 filter_state <- teal.slice:::FilterStateExpr$new(
@@ -408,7 +411,7 @@ if (interactive()) {
 }
 ```
 
-### Example for `LogicalFilterState`
+### `LogicalFilterState`
 
 ```{r eval=FALSE}
 filter_state <- teal.slice:::LogicalFilterState$new(
@@ -490,7 +493,7 @@ if (interactive()) {
 }
 ```
 
-### Example for `RangeFilterState`
+### `RangeFilterState`
 
 ```{r eval=FALSE}
 filter_state <- teal.slice:::RangeFilterState$new(
@@ -601,7 +604,10 @@ if (interactive()) {
 }
 ```
 
-### Example for `FilteredData`
+
+## `FilteredData`
+
+### `FilteredData`
 
 ```{r eval=FALSE}
 library(shiny)
@@ -653,7 +659,10 @@ datasets$set_filter_state(state = fs)
 shiny::isolate(datasets$get_filter_state())
 ```
 
-### Example for `DataframeFilteredDataset`
+
+## `FilteredDataset`
+
+### `DataframeFilteredDataset`
 
 ```{r eval=FALSE}
 library(shiny)
@@ -679,7 +688,7 @@ dataset$set_filter_state(state = fs)
 shiny::isolate(dataset$get_filter_state())
 ```
 
-### Example for `DefaultFilteredDataset`
+### `DefaultFilteredDataset`
 
 ```{r eval=FALSE}
 library(shiny)
@@ -688,7 +697,7 @@ isolate(ds$get_filter_state())
 isolate(ds$get_call())
 ```
 
-### Example for `MAEFilteredDataset`
+### `MAEFilteredDataset`
 
 ```{r eval=FALSE}
 ## set_filter_state
@@ -712,7 +721,7 @@ dataset$set_filter_state(state = fs)
 shiny::isolate(dataset$get_filter_state())
 ```
 
-#### Example for `calls_combine_by`
+#### `calls_combine_by`
 
 ```{r eval=FALSE}
 calls <- list(
@@ -723,7 +732,10 @@ calls <- list(
 teal.slice:::calls_combine_by(calls, "&")
 ```
 
-### Example for `countBars`
+
+## Functions
+
+### `countBars`
 
 ```{r eval=FALSE}
 choices <- sample(as.factor(c("a", "b", "c")), size = 20, replace = TRUE)
@@ -768,7 +780,7 @@ if (interactive()) {
 }
 ```
 
-### Example for `variable_types`
+### `variable_types`
 
 ```{r eval=FALSE}
 teal.slice:::variable_types(

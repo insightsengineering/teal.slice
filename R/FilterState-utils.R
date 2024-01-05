@@ -22,7 +22,7 @@
 #' @examples
 #' if (interactive()) demo("init_filter_state", "teal.slice")
 #'
-#' @seealso check examples here `vignette("internal_functions_example", package = "teal.slice")`.
+#' @seealso examples found here: `vignette("internal_function_examples", package = "teal.slice")`.
 #'
 #' @return `FilterState` object
 #' @keywords internal
