@@ -1,18 +1,19 @@
 ---
-title: "Internal functions example"
+title: "Internal function examples"
 author: "NEST CoreDev"
 output: 
   rmarkdown::html_vignette:
     toc: true
 vignette: >
-  %\VignetteIndexEntry{internal-functions-example}
+  %\VignetteIndexEntry{internal-function-examples}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
 
 ## Introduction
 
-This vignette designed to showcase examples for internal classes, methods, and functions of teal.slice, specifically designed developers.
+This vignette contains examples for internal classes, methods, and functions of  `teal.slice`. 
+For developer use only.
 
 ## FilterState
 
