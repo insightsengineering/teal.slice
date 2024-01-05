@@ -2,7 +2,7 @@
 #' @title `FilterState` object for numeric variable
 #' @description Manages choosing a numeric range
 #' @docType class
-#' @seealso check examples here `vignette("internal_functions_example", package = "teal.slice")`.
+#' @seealso examples found here: `vignette("internal_function_examples", package = "teal.slice")`.
 #' @keywords internal
 #'
 RangeFilterState <- R6::R6Class( # nolint

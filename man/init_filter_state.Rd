@@ -41,6 +41,6 @@ specifying whether condition calls should be prefixed by \code{dataname}. Possib
 Initializes \code{FilterState} depending on a variable class.\cr
 }
 \seealso{
-check examples here \code{vignette("internal_functions_example", package = "teal.slice")}.
+examples found here: \code{vignette("internal_function_examples", package = "teal.slice")}.
 }
 \keyword{internal}

@@ -2,7 +2,7 @@
 
 #' @title The `DefaultFilteredDataset` R6 class
 #' @description Stores any object as inert entity. Filtering is not supported.
-#' @seealso check examples here `vignette("internal_functions_example", package = "teal.slice")`.
+#' @seealso examples found here: `vignette("internal_function_examples", package = "teal.slice")`.
 #' @keywords internal
 DefaultFilteredDataset <- R6::R6Class( # nolint
   classname = "DefaultFilteredDataset",

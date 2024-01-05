@@ -19,7 +19,7 @@
 #' }
 #' @param ... additional arguments to be saved as a list in `private$extras` field
 #'
-#' @seealso check examples here `vignette("internal_functions_example", package = "teal.slice")`.
+#' @seealso examples found here: `vignette("internal_function_examples", package = "teal.slice")`.
 #'
 #' @return `FilterState` object
 #' @keywords internal

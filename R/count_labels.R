@@ -12,7 +12,7 @@
 #' @param countsnow (`numeric`) actual counts of each element.
 #'  Length should be the same as `choices`.
 #' @return list of `shiny.tag`
-#' @seealso check examples here `vignette("internal_functions_example", package = "teal.slice")`.
+#' @seealso examples found here: `vignette("internal_function_examples", package = "teal.slice")`.
 #' @keywords internal
 countBars <- function(inputId, choices, countsmax, countsnow = NULL) { # nolint
   checkmate::assert_string(inputId)
