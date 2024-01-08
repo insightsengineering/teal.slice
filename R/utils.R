@@ -106,6 +106,8 @@ include_js_files <- function(pattern) {
   return(singleton(lapply(js_files, includeScript)))
 }
 
+#' Build Concatenating Call
+#'
 #' This function takes a vector of values and returns a `c` call. If the vector
 #' has only one element, the element is returned directly.
 #'

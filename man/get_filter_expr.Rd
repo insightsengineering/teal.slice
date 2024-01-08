@@ -12,7 +12,7 @@ get_filter_expr(datasets, datanames = datasets$datanames())
 \item{datanames}{(\code{character}) vector of dataset names}
 }
 \value{
-(\code{expression})
+A character string containing all subsetting expressions.
 }
 \description{
 \ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#stable}{\figure{lifecycle-stable.svg}{options: alt='[Stable]'}}}{\strong{[Stable]}}
