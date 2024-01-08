@@ -130,7 +130,7 @@ dataset$set_filter_state(state = fs)
 shiny::isolate(dataset$get_filter_state())
 ```
 
-#### `calls_combine_by`
+### `calls_combine_by`
 
 ```{r eval=FALSE}
 calls <- list(
