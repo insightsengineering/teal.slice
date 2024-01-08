@@ -22,4 +22,7 @@ a combined \code{call}
 \description{
 Combine list of calls by specific operator
 }
+\seealso{
+examples found here: \code{vignette("internal_function_examples", package = "teal.slice")}.
+}
 \keyword{internal}

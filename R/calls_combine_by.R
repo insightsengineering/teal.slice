@@ -9,7 +9,7 @@
 #'   name/symbol of the operator passed as character string
 #'
 #' @return call or NULL, if `calls` is an empty list
-#'
+#' @seealso examples found here: `vignette("internal_function_examples", package = "teal.slice")`.
 #' @return a combined `call`
 #' @keywords internal
 calls_combine_by <- function(calls, operator) {
