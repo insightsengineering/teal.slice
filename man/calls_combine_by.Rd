@@ -2,25 +2,26 @@
 % Please edit documentation in R/calls_combine_by.R
 \name{calls_combine_by}
 \alias{calls_combine_by}
-\title{Combine calls by operator}
+\title{Compose predicates}
 \usage{
 calls_combine_by(calls, operator)
 }
 \arguments{
-\item{calls}{(\code{list} of calls)\cr
-list containing calls to be combined by \code{operator};
-if empty, NULL is returned}
+\item{calls}{(\code{list})\cr
+containing calls (or symbols) to be combined by \code{operator}}
 
 \item{operator}{(\code{character(1)})\cr
-name/symbol of the operator passed as character string}
+infix operator to use in predicate composition, \emph{e.g.} \code{"&"}}
 }
 \value{
-call or NULL, if \code{calls} is an empty list
-
-a combined \code{call}
+A \code{call} where elements of \code{calls} are composed with \code{operator} or \code{NULL} if \code{calls} is an empty list.
 }
 \description{
-Combine list of calls by specific operator
+Combines calls with a logical operator.
+}
+\details{
+This function is used to combine logical predicates produced by \code{FilterState} objects
+to build a complete subsetting expression.
 }
 \seealso{
 examples found here: \code{vignette("internal_function_examples", package = "teal.slice")}.

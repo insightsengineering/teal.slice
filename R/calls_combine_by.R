@@ -1,23 +1,25 @@
-#' Combine calls by operator
+#' Compose predicates
 #'
-#' Combine list of calls by specific operator
+#' Combines calls with a logical operator.
 #'
-#' @param calls (`list` of calls)\cr
-#'   list containing calls to be combined by `operator`;
-#'   if empty, NULL is returned
+#' This function is used to combine logical predicates produced by `FilterState` objects
+#' to build a complete subsetting expression.
+#'
+#' @param calls (`list`)\cr
+#'   containing calls (or symbols) to be combined by `operator`
 #' @param operator (`character(1)`)\cr
-#'   name/symbol of the operator passed as character string
+#'   infix operator to use in predicate composition, _e.g._ `"&"`
 #'
-#' @return call or NULL, if `calls` is an empty list
+#' @return
+#' A `call` where elements of `calls` are composed with `operator` or `NULL` if `calls` is an empty list.
+#'
 #' @seealso examples found here: `vignette("internal_function_examples", package = "teal.slice")`.
-#' @return a combined `call`
+#'
 #' @keywords internal
 calls_combine_by <- function(calls, operator) {
   checkmate::assert_list(calls)
   if (length(calls) > 0L) checkmate::assert_list(calls, types = c("call", "name"))
   checkmate::assert_string(operator)
-
-  calls <- Filter(x = calls, f = Negate(is.null))
 
   Reduce(
     x = calls,
