@@ -30,7 +30,7 @@
 #'   )
 #' )
 variable_types <- function(data, columns = NULL) {
-  checkmate::assert_multi_class(data, c("data.frame", "DFrame", "matrix"))
+  checkmate::assert_multi_class(data, c("data.frame", "DataFrame", "matrix"))
   checkmate::assert_character(columns, any.missing = FALSE, null.ok = TRUE)
   checkmate::assert_subset(columns, colnames(data))
 
