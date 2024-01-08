@@ -13,6 +13,9 @@ get_default_slice_id(x)
 (\code{character(1)}) \code{id} for a \code{teal_slice} object.
 }
 \description{
+Create a slice id if none provided.
+}
+\details{
 Function returns a default \code{id} for a \code{teal_slice} object which needs
 to be distinct from other \code{teal_slice} objects created for any
 \code{FilterStates} object. Returned \code{id} can be treated as a location of
@@ -24,9 +27,7 @@ a vector on which \code{FilterState} is built:
 which exists in multiple \code{SummarizedExperiment}s or exists in both \code{colData}
 and \code{rowData} of given experiment.
 For such a vector \code{teal.slice} doesn't allow to activate more than one filters.
-}
-}
-\details{
 In case of \code{teal_slice_expr} \code{id} is mandatory and must be unique.
+}
 }
 \keyword{internal}

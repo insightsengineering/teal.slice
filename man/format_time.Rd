@@ -2,19 +2,21 @@
 % Please edit documentation in R/teal_slice.R
 \name{format_time}
 \alias{format_time}
-\title{Format \code{POSIXt} Time Object}
+\title{Format \code{POSIXt} For Storage}
 \usage{
 format_time(x)
 }
 \arguments{
-\item{x}{The object to format. Expected to be a \code{POSIXt} time object.}
+\item{x}{(\code{POSIXt}) vector of date time values or anything else}
 }
 \value{
-A formatted string representing the date and time in the format
-\verb{YYYY-MM-DD HH:MM:SS}. If the input is not a \code{POSIXt} object,
-the original input is returned.
+If \code{x} is of class \code{POSIXt}, a character vector, otherwise \code{x} itself.
 }
 \description{
-Format \code{POSIXt} Time Object
+Convert \code{POSIXt} date time object to character representation in UTC time zone.
+}
+\details{
+Date times are stored as string representations expressed in the UTC time zone.
+The storage format is \verb{YYYY-MM-DD HH:MM:SS}.
 }
 \keyword{internal}

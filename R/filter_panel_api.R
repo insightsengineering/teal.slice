@@ -132,7 +132,7 @@ clear_filter_states <- function(datasets, force = FALSE) {
 #'
 #' @param datasets (`FilteredData`)
 #' @param datanames (`character`) vector of dataset names
-#' @return (`expression`)
+#' @return A character string containing all subsetting expressions.
 #' @export
 #'
 get_filter_expr <- function(datasets, datanames = datasets$datanames()) {

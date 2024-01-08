@@ -2,8 +2,7 @@
 % Please edit documentation in R/utils.R
 \name{make_c_call}
 \alias{make_c_call}
-\title{This function takes a vector of values and returns a \code{c} call. If the vector
-has only one element, the element is returned directly.}
+\title{Build Concatenating Call}
 \usage{
 make_c_call(choices)
 }
