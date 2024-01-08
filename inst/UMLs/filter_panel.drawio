@@ -1,6 +1,6 @@
 <mxfile host="65bd71144e">
     <diagram id="6JaHPTwQ3IZ62b7ubyOW" name="Elements of the filter-panel">
-        <mxGraphModel dx="2960" dy="1175" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
+        <mxGraphModel dx="2370" dy="1175" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
             <root>
                 <mxCell id="0"/>
                 <mxCell id="1" parent="0"/>
@@ -30,7 +30,7 @@
                 <mxCell id="wHSzEoxw40m1ypYUr5Cm-37" value="init_filter_states.data.frame" style="edgeStyle=none;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;fontSize=12;" parent="1" source="wHSzEoxw40m1ypYUr5Cm-32" target="wHSzEoxw40m1ypYUr5Cm-36" edge="1">
                     <mxGeometry relative="1" as="geometry"/>
                 </mxCell>
-                <mxCell id="wHSzEoxw40m1ypYUr5Cm-32" value="DataFrameFilteredDataset" style="rounded=0;whiteSpace=wrap;html=1;fontFamily=Helvetica;fontSize=12;strokeColor=#B3B3B3;" parent="1" vertex="1">
+                <mxCell id="wHSzEoxw40m1ypYUr5Cm-32" value="DataframeFilteredDataset" style="rounded=0;whiteSpace=wrap;html=1;fontFamily=Helvetica;fontSize=12;strokeColor=#B3B3B3;" parent="1" vertex="1">
                     <mxGeometry x="-302.5" y="120" width="120" height="60" as="geometry"/>
                 </mxCell>
                 <mxCell id="wHSzEoxw40m1ypYUr5Cm-39" value="init_filter_states.MAE" style="edgeStyle=none;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;fontSize=12;" parent="1" source="wHSzEoxw40m1ypYUr5Cm-33" target="wHSzEoxw40m1ypYUr5Cm-38" edge="1">
@@ -83,7 +83,7 @@
                         <mxPoint as="offset"/>
                     </mxGeometry>
                 </mxCell>
-                <mxCell id="wHSzEoxw40m1ypYUr5Cm-51" value="DataFrameFilteredDataset" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#e1d5e7;strokeColor=#9673a6;fontSize=14;" parent="1" vertex="1">
+                <mxCell id="wHSzEoxw40m1ypYUr5Cm-51" value="DataframeFilteredDataset" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#e1d5e7;strokeColor=#9673a6;fontSize=14;" parent="1" vertex="1">
                     <mxGeometry x="-390" y="899" width="145" height="60" as="geometry"/>
                 </mxCell>
                 <mxCell id="wHSzEoxw40m1ypYUr5Cm-52" value="ADSL &amp;lt;- filter(&lt;br style=&quot;font-size: 14px;&quot;&gt;&amp;nbsp; ADSL, &lt;br style=&quot;font-size: 14px;&quot;&gt;&amp;nbsp; SEX == &lt;font color=&quot;#006600&quot; style=&quot;font-size: 14px;&quot;&gt;&quot;M&quot;&lt;/font&gt; &amp;amp; AGE &amp;gt;= &lt;font color=&quot;#1900ff&quot; style=&quot;font-size: 14px;&quot;&gt;20&lt;/font&gt; &amp;amp; AGE &amp;lt;= &lt;font color=&quot;#1900ff&quot; style=&quot;font-size: 14px;&quot;&gt;60&lt;/font&gt;&lt;br style=&quot;font-size: 14px;&quot;&gt;)" style="edgeStyle=none;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=0;exitY=0.5;exitDx=0;exitDy=0;entryX=1;entryY=0.5;entryDx=0;entryDy=0;align=left;fontFamily=Courier New;fontSize=14;" parent="1" source="wHSzEoxw40m1ypYUr5Cm-53" target="wHSzEoxw40m1ypYUr5Cm-51" edge="1">
@@ -107,7 +107,7 @@
                         <mxPoint x="-117" y="1" as="offset"/>
                     </mxGeometry>
                 </mxCell>
-                <mxCell id="wHSzEoxw40m1ypYUr5Cm-57" value="DataFrameFilteredDataset" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#e1d5e7;strokeColor=#9673a6;fontSize=14;" parent="1" vertex="1">
+                <mxCell id="wHSzEoxw40m1ypYUr5Cm-57" value="DataframeFilteredDataset" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#e1d5e7;strokeColor=#9673a6;fontSize=14;" parent="1" vertex="1">
                     <mxGeometry x="-390" y="1081" width="145" height="60" as="geometry"/>
                 </mxCell>
                 <mxCell id="wHSzEoxw40m1ypYUr5Cm-60" value="MAEFilteredDataset" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#e1d5e7;strokeColor=#9673a6;fontSize=14;" parent="1" vertex="1">
