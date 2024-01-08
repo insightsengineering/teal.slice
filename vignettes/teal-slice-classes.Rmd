@@ -51,7 +51,7 @@ knitr::include_graphics("./images/filter_panel/filtered_data_init.jpg")
 
 
 As part of the `teal` workflow, `FilteredData`, `FilteredDataset`, and `FilterStates` are created instantly when the data is loaded and remain unchanged.
-One `FilteredData` object is initialized on a list containing supported data objects (`data.frame`, `MAE`).
+One `FilteredData` object is initialized on a list of objects (_e.g._ `data.frame`, `MAE`).
 A `FilteredDataset` is initialized for each data set. One or more `FilterStates` are initialized, depending on the type of data set.
 
 On the other hand, a `FilterState` is initialized each time a new filter is added.
@@ -95,8 +95,9 @@ knitr::include_graphics("./images/filter_panel/class_details_filtered_dataset.jp
 
 The following `FilteredDataset` child classes are currently implemented:
 
-- `DefaultFilteredDataset` for `data.frame`.
+- `DataframeFilteredDataset` for `data.frame`.
 - `MAEFilteredDataset` for `MultiAssayExperiment`.
+- `DefaultFilteredDataset` for all remaining  (unsupported) classes - this subclass is different to the others in that it provides _no_ filtering, its only purpose is to hold and return an object for which filtering is not supported.
 
 ### `FilterStates`
 
@@ -108,7 +109,7 @@ When the app starts, `FilteredDataset` initializes one or more `FilterStates` ob
 For example, a `MAEFilteredDataset` will create one `FilterStates` for its `colData` and one `FilterStates` for each of its experiments.
 Every `FilterStates` will return a separate subsetting call, which will be used to subset the entire `MultiAssayExperiment`.
 
-The following `FilteredDataset` child classes are currently implemented:
+The following `FilteredStates` child classes are currently implemented:
 
 - `DFFilterStates` for `data.frame`; uses `dplyr::filter` to filter on columns.
 - `MAEFilterStates` for`MultiAssayExperiment`; uses `MultiAssayExperiment::subsetByColData` to filter on columns of the `DataFrame` in the `@colData` slot.
@@ -209,7 +210,8 @@ Consider the following scenario:
 
 (1) `FilteredData` contains three data sets: `ADSL`, `ADTTE`, `MAE`, each stored in its own `FiteredDataset` object
 
-(2) `ADSL` is a `data.frame` so it can be filtered with a single `dplyr::filter` call. This data set is stored in `DefaultFilteredDataset`, which holds a single `FilterStates` object.
+(2) `ADSL` is a `data.frame` so it can be filtered with a single `dplyr::filter` call. 
+This data set is stored in `DataframeFilteredDataset`, which holds a single `FilterStates` object.
 
 (3) `FilterStates` constructs a `dplyr::filter` call based on the `FilterState` objects present in its `private$state_list`.
 
@@ -218,7 +220,7 @@ Consider the following scenario:
 
 (5) Two new filters have been added: `SEX` and `AGE`. This causes initialization of appropriate `FilterState` subclasses: `ChoiceFilterState` and `RangeFilterState`.
 Each `FilterState` produces a subsetting expression: `SEX == "F"` and `AGE >= 20 & AGE <= 60`.
-The expressions are combined with `&` and passed to `dplyr::filter`, producing `ADSL <- dplyr::filter(ADSL, SEX == "F" & AGE >= 20 & AGE <= 60)`. `DefaultFilteredDataset` puts this call in a list and returns it to `FilteredData`.
+The expressions are combined with `&` and passed to `dplyr::filter`, producing `ADSL <- dplyr::filter(ADSL, SEX == "F" & AGE >= 20 & AGE <= 60)`. `DataframeFilteredDataset` puts this call in a list and returns it to `FilteredData`.
 
 (6) `ADTTE` is also a `data.frame` so the `FilteredDataset` that stores it works much the same as the one for `ADSL`.
 The one difference is that the `dplyr::filter` call for `ADTTE` is followed by a `dplyr::inner_join` call to merge the filtering result with the parent data set (`ADSL`) so that key columns remain consistent.
@@ -226,7 +228,7 @@ Note that this is only done when `join_keys` is specified - otherwise `ADTTE` wo
 
 (7) The `MAE` data set is a `MultiAssayExperiment`, which contains multiple sub-objects which can be filtered on.
 One of them is `ADSL`-like patient data, stored as a `DataFrame` in `MAE@colData`, and others are experiments, typically `SummarizedExperiment` objects, stored in `MAE@ExperimentList`, which can be extracted using `MAE[["experiment name"]]`.
-Therefore, `FilteredDatasetMAE` has multiple `FilterStates` objects: one for subject data and one for each experiment.
+Therefore, `MAEFilteredDataset` has multiple `FilterStates` objects: one for subject data and one for each experiment.
 
 (7) A `MAEFilterStates` object is initialized for subject data and for this object `MultiAssayExperiment::subsetByColData` function is applied.
 `MultiAssayExperiment::subsetByColData` has two arguments: `x` (data) and `y` (conditions).
