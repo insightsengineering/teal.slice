@@ -1,4 +1,3 @@
-
 #' Whether the variable name is good to use within Show R Code
 #'
 #' Spaces are problematic because the variables must be escaped with backticks.
