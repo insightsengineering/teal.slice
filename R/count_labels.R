@@ -12,7 +12,53 @@
 #' @param countsnow (`numeric`) actual counts of each element.
 #'  Length should be the same as `choices`.
 #' @return list of `shiny.tag`
-#' @seealso examples found here: `vignette("internal_function_examples", package = "teal.slice")`.
+#' @examples
+#' # use non-exported function from teal.slice
+#' include_js_files <- getFromNamespace("include_js_files", "teal.slice")
+#' include_css_files <- getFromNamespace("include_css_files", "teal.slice")
+#' countBars <- getFromNamespace("countBars", "teal.slice")
+#' updateCountBars <- getFromNamespace("updateCountBars", "teal.slice")
+#'
+#' choices <- sample(as.factor(c("a", "b", "c")), size = 20, replace = TRUE)
+#' counts <- table(choices)
+#' labels <- countBars(
+#'   inputId = "counts",
+#'   choices = c("a", "b", "c"),
+#'   countsmax = counts,
+#'   countsnow = unname(counts)
+#' )
+#'
+#'
+#' ui <- fluidPage(
+#'   div(
+#'     class = "choices_state",
+#'     include_js_files("count-bar-labels.js"),
+#'     include_css_files(pattern = "filter-panel"),
+#'     checkboxGroupInput(
+#'       inputId = "choices",
+#'       selected = levels(choices),
+#'       choiceNames = labels,
+#'       choiceValues = levels(choices),
+#'       label = NULL
+#'     )
+#'   )
+#' )
+#' server <- function(input, output, session) {
+#'   observeEvent(input$choices, {
+#'     new_counts <- counts
+#'     new_counts[!names(new_counts) %in% input$choices] <- 0
+#'     updateCountBars(
+#'       inputId = "counts",
+#'       choices = levels(choices),
+#'       countsmax = counts,
+#'       countsnow = unname(new_counts)
+#'     )
+#'   })
+#' }
+#'
+#' if (interactive()) {
+#'   shinyApp(ui, server)
+#' }
 #' @keywords internal
 countBars <- function(inputId, choices, countsmax, countsnow = NULL) { # nolint
   checkmate::assert_string(inputId)

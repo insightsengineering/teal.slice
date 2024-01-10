@@ -106,7 +106,18 @@ init_filter_states.SummarizedExperiment <- function(data, # nolint
 #' @param data (`object`)\cr
 #'   the R object containing elements which class can be checked through `vapply` or `apply`.
 #' @return `character` vector of matched element names
-#' @seealso examples found here: `vignette("internal_function_examples", package = "teal.slice")`.
+#' @examples
+#' # use non-exported function from teal.slice
+#' get_supported_filter_varnames <- getFromNamespace("get_supported_filter_varnames", "teal.slice")
+#'
+#' df <- data.frame(
+#'   a = letters[1:3],
+#'   b = 1:3,
+#'   c = Sys.Date() + 1:3,
+#'   d = Sys.time() + 1:3,
+#'   z = complex(3)
+#' )
+#' get_supported_filter_varnames(df)
 #' @keywords internal
 get_supported_filter_varnames <- function(data) {
   UseMethod("get_supported_filter_varnames")
