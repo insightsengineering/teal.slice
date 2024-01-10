@@ -69,6 +69,7 @@ if (interactive()) {
   shinyApp(ui, server)
 }
 
+\dontshow{if (requireNamespace("MultiAssayExperiment")) (if (getRversion() >= "3.4") withAutoprint else force)(\{ # examplesIf}
 # MAEFilteredDataset example
 library(MultiAssayExperiment)
 data(miniACC)
@@ -91,6 +92,6 @@ server <- function(input, output, session) {
 if (interactive()) {
   shinyApp(ui, server)
 }
-
+\dontshow{\}) # examplesIf}
 }
 \keyword{internal}

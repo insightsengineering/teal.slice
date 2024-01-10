@@ -23,8 +23,12 @@
 #' @seealso [`teal_slice`]
 #'
 #' @examples
-#' library(MultiAssayExperiment)
-#' data(miniACC)
+#' if (requireNamespace("MultiAssayExperiment", quietly = TRUE)) {
+#'   library(MultiAssayExperiment)
+#'   data(miniACC)
+#' } else {
+#'   miniACC <- data.frame()
+#' }
 #'
 #' datasets <- init_filtered_data(
 #'   x = list(

@@ -123,6 +123,7 @@ testthat::test_that("FilterPanelAPI$clear_filter_states remove the filters of th
 # WRAPPER FUNCTIONS ----
 # get_filter_state ----
 testthat::test_that("get_filter_state returns `teal_slices` with features identical to those in input", {
+  testthat::skip_if_not_installed("MultiAssayExperiment")
   utils::data(miniACC, package = "MultiAssayExperiment")
   datasets <- init_filtered_data(
     x = list(
@@ -170,6 +171,7 @@ testthat::test_that("get_filter_state returns `teal_slices` with features identi
 
 # remove_filter_state ----
 testthat::test_that("remove_filter_state removes filter state specified by `teal_slices`", {
+  testthat::skip_if_not_installed("MultiAssayExperiment")
   utils::data(miniACC, package = "MultiAssayExperiment")
   datasets <- init_filtered_data(
     x = list(
@@ -197,6 +199,7 @@ testthat::test_that("remove_filter_state removes filter state specified by `teal
 
 # clear_filter_states ----
 testthat::test_that("clear_filter_states removes all filter states", {
+  testthat::skip_if_not_installed("MultiAssayExperiment")
   utils::data(miniACC, package = "MultiAssayExperiment")
   datasets <- init_filtered_data(
     x = list(

@@ -39,8 +39,12 @@ containing a \code{teal_slice} for every existing \code{FilterState}
 Set, get and remove filter states of \code{FilteredData} object.
 }
 \examples{
-library(MultiAssayExperiment)
-data(miniACC)
+if (requireNamespace("MultiAssayExperiment", quietly = TRUE)) {
+  library(MultiAssayExperiment)
+  data(miniACC)
+} else {
+  miniACC <- data.frame()
+}
 
 datasets <- init_filtered_data(
   x = list(

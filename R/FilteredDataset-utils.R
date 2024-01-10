@@ -40,6 +40,7 @@
 #'   shinyApp(ui, server)
 #' }
 #'
+#' @examplesIf requireNamespace("MultiAssayExperiment")
 #' # MAEFilteredDataset example
 #' library(MultiAssayExperiment)
 #' data(miniACC)
