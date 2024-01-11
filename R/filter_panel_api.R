@@ -85,10 +85,7 @@ NULL
 #' @export
 set_filter_state <- function(datasets, filter) {
   checkmate::assert_multi_class(datasets, c("FilteredData", "FilterPanelAPI"))
-  checkmate::assert(
-    checkmate::check_class(filter, "teal_slices"),
-    checkmate::check_list(filter, min.len = 0, null.ok = TRUE)
-  )
+  checkmate::assert_class(filter, "teal_slices")
   datasets$set_filter_state(filter)
   invisible(NULL)
 }
@@ -108,10 +105,7 @@ get_filter_state <- function(datasets) {
 #' @export
 remove_filter_state <- function(datasets, filter) {
   checkmate::assert_multi_class(datasets, c("FilteredData", "FilterPanelAPI"))
-  checkmate::assert(
-    checkmate::check_class(filter, "teal_slices"),
-    checkmate::check_list(filter, min.len = 0, null.ok = TRUE)
-  )
+  checkmate::assert_class(filter, "teal_slices")
 
   datasets$remove_filter_state(filter)
   invisible(NULL)
