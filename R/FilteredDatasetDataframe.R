@@ -1,5 +1,5 @@
 # DataframeFilteredDataset ------
-#' @title The `DataframeFilteredDataset` R6 class
+#' @title `DataframeFilteredDataset` `R6` class
 #' @seealso examples found here: `vignette("internal_function_examples", package = "teal.slice")`.
 #' @keywords internal
 #'

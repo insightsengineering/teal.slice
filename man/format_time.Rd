@@ -2,7 +2,7 @@
 % Please edit documentation in R/teal_slice.R
 \name{format_time}
 \alias{format_time}
-\title{Format \code{POSIXt} For Storage}
+\title{Format \code{POSIXt} for storage}
 \usage{
 format_time(x)
 }

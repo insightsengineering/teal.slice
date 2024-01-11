@@ -2,11 +2,11 @@
 % Please edit documentation in R/FilteredDatasetMAE.R
 \name{MAEFilteredDataset}
 \alias{MAEFilteredDataset}
-\title{\code{MAEFilteredDataset} R6 class}
+\title{\code{MAEFilteredDataset} \code{R6} class}
 \description{
-\code{MAEFilteredDataset} R6 class
+\code{MAEFilteredDataset} \code{R6} class
 
-\code{MAEFilteredDataset} R6 class
+\code{MAEFilteredDataset} \code{R6} class
 }
 \seealso{
 examples found here: \code{vignette("internal_function_examples", package = "teal.slice")}.

@@ -2,7 +2,7 @@
 % Please edit documentation in R/FilteredDataset.R
 \name{FilteredDataset}
 \alias{FilteredDataset}
-\title{\code{FilterStates} R6 class}
+\title{\code{FilterStates} \code{R6} class}
 \description{
 \code{FilteredDataset} is a class which renders/controls \code{FilterStates}(s)
 Each \code{FilteredDataset} contains \code{filter_states} field - a \code{list} which contains one

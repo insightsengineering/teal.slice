@@ -5,7 +5,7 @@
 \alias{RangeFilterState}
 \title{\code{FilterState} object for numeric variable}
 \description{
-Manages choosing a numeric range
+Manages choosing a numeric range.
 }
 \seealso{
 examples found here: \code{vignette("internal_function_examples", package = "teal.slice")}.

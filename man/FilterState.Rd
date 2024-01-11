@@ -3,13 +3,13 @@
 \docType{class}
 \name{FilterState}
 \alias{FilterState}
-\title{\code{FilterState} Abstract Class}
+\title{\code{FilterState} abstract Class}
 \description{
-Abstract class to encapsulate single filter state
+Abstract class to encapsulate single filter state.
 }
 \details{
 This class is responsible for managing single filter item within
-\code{FilteredData} class. Filter states depend on the variable type:
+\code{FilteredData} class object. Filter states depend on the variable type:
 (\code{logical}, \code{integer}, \code{numeric}, \code{factor}, \code{character}, \code{Date}, \code{POSIXct}, \code{POSIXlt})
 and returns \code{FilterState} object with class corresponding to input variable.
 Class controls single filter entry in \code{module_single_filter_item} and returns
@@ -28,7 +28,7 @@ Each variable's filter state is an \code{R6} object which contains \code{choices
 variable type specific fields (\code{keep_inf}, \code{inf_count}, \code{timezone}).
 Object contains also shiny module (\code{ui} and \code{server}) which manages
 state of the filter through reactive values \code{selected}, \code{keep_na}, \code{keep_inf}
-which trigger \code{get_call()} and every R function call up in reactive chain.
+which trigger \code{get_call()} and every \code{R} function call up in reactive chain.
 \cr
 \cr
 }

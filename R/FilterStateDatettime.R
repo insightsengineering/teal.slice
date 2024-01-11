@@ -1,6 +1,6 @@
 #' @rdname DatetimeFilterState
 #' @title `FilterState` object for `POSIXct` variable
-#' @description  Manages choosing a range of date-times
+#' @description  Manages choosing a range of date-times.
 #' @docType class
 #' @seealso examples found here: `vignette("internal_function_examples", package = "teal.slice")`.
 #' @keywords internal

@@ -4,7 +4,7 @@
 \alias{MatrixFilterStates}
 \title{\code{FilterStates} subclass for matrices}
 \description{
-Handles filter states in a \code{matrix}
+Handles filter states in a \code{matrix}.
 }
 \keyword{internal}
 \section{Super class}{
@@ -54,7 +54,7 @@ Initialize \code{MatrixFilterStates} object
 \if{html}{\out{<div class="arguments">}}
 \describe{
 \item{\code{data}}{(\code{matrix})\cr
-the R object which \code{subset} function is applied on.}
+the \code{R} object which \code{subset} function is applied on.}
 
 \item{\code{data_reactive}}{(\verb{function(sid)})\cr
 should return a \code{matrix} object or \code{NULL}.

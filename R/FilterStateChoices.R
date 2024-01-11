@@ -1,6 +1,6 @@
 #' @name ChoicesFilterState
 #' @title `FilterState` object for factor or character variable
-#' @description Manages choosing elements from a set
+#' @description Manages choosing elements from a set.
 #' @docType class
 #' @seealso examples found here: `vignette("internal_function_examples", package = "teal.slice")`.
 #' @keywords internal

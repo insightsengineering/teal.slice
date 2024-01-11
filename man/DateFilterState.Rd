@@ -5,7 +5,7 @@
 \alias{DateFilterState}
 \title{\code{FilterState} object for Date variable}
 \description{
-Manages choosing a range of Dates
+Manages choosing a range of Dates.
 }
 \seealso{
 examples found here: \code{vignette("internal_function_examples", package = "teal.slice")}.

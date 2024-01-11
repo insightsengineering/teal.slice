@@ -5,7 +5,7 @@
 \alias{DatetimeFilterState}
 \title{\code{FilterState} object for \code{POSIXct} variable}
 \description{
-Manages choosing a range of date-times
+Manages choosing a range of date-times.
 }
 \seealso{
 examples found here: \code{vignette("internal_function_examples", package = "teal.slice")}.

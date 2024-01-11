@@ -47,10 +47,10 @@ check_ellipsis <- function(..., stop = FALSE, allowed_args = character(0)) {
   }
 }
 
-#' Whether the variable name is good to use within Show R Code
+#' Whether the variable name is good to use within `Show R Code`
 #'
 #' Spaces are problematic because the variables must be escaped with backticks.
-#' Also, they should not start with a number as R may silently make it valid by changing it.
+#' Also, they should not start with a number as `R` may silently make it valid by changing it.
 #' Therefore, we only allow alphanumeric characters with underscores.
 #' The first character of the `name` must be an alphabetic character and can be followed by alphanumeric characters.
 #'
@@ -106,7 +106,7 @@ include_js_files <- function(pattern) {
   return(singleton(lapply(js_files, includeScript)))
 }
 
-#' Build Concatenating Call
+#' Build concatenating call
 #'
 #' This function takes a vector of values and returns a `c` call. If the vector
 #' has only one element, the element is returned directly.

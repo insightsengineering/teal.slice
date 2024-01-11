@@ -5,7 +5,7 @@
 \alias{EmptyFilterState}
 \title{\code{FilterState} object for empty variable}
 \description{
-\code{FilterState} subclass representing an empty variable
+\code{FilterState} subclass representing an empty variable.
 }
 \seealso{
 examples found here: \code{vignette("internal_function_examples", package = "teal.slice")}.

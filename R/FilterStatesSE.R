@@ -1,5 +1,5 @@
 #' @title `FilterStates` subclass for `SummarizedExperiments`
-#' @description Handles filter states in a `SummaryExperiment`
+#' @description Handles filter states in a `SummaryExperiment`.
 #' @keywords internal
 #'
 #'
@@ -14,7 +14,7 @@ SEFilterStates <- R6::R6Class( # nolint
     #' Initialize `SEFilterStates` object
     #'
     #' @param data (`SummarizedExperiment`)\cr
-    #'   the R object which `subset` function is applied on.
+    #'   the `R` object which `subset` function is applied on.
     #' @param data_reactive (`function(sid)`)\cr
     #'   should return a `SummarizedExperiment` object or `NULL`.
     #'   This object is needed for the `FilterState` counts being updated

@@ -5,7 +5,7 @@
 \alias{LogicalFilterState}
 \title{\code{FilterState} object for logical variable}
 \description{
-Manages choosing a logical state
+Manages choosing a logical state.
 }
 \seealso{
 examples found here: \code{vignette("internal_function_examples", package = "teal.slice")}.

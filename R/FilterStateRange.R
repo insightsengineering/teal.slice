@@ -1,6 +1,6 @@
 #' @name RangeFilterState
 #' @title `FilterState` object for numeric variable
-#' @description Manages choosing a numeric range
+#' @description Manages choosing a numeric range.
 #' @docType class
 #' @seealso examples found here: `vignette("internal_function_examples", package = "teal.slice")`.
 #' @keywords internal

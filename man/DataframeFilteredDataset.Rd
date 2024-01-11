@@ -2,11 +2,11 @@
 % Please edit documentation in R/FilteredDatasetDataframe.R
 \name{DataframeFilteredDataset}
 \alias{DataframeFilteredDataset}
-\title{The \code{DataframeFilteredDataset} R6 class}
+\title{\code{DataframeFilteredDataset} \code{R6} class}
 \description{
-The \code{DataframeFilteredDataset} R6 class
+\code{DataframeFilteredDataset} \code{R6} class
 
-The \code{DataframeFilteredDataset} R6 class
+\code{DataframeFilteredDataset} \code{R6} class
 }
 \seealso{
 examples found here: \code{vignette("internal_function_examples", package = "teal.slice")}.

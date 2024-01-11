@@ -1,6 +1,6 @@
 #' @name EmptyFilterState
 #' @title `FilterState` object for empty variable
-#' @description `FilterState` subclass representing an empty variable
+#' @description `FilterState` subclass representing an empty variable.
 #' @docType class
 #' @seealso examples found here: `vignette("internal_function_examples", package = "teal.slice")`.
 #' @keywords internal

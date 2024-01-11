@@ -1,6 +1,6 @@
 #' @name LogicalFilterState
 #' @title `FilterState` object for logical variable
-#' @description Manages choosing a logical state
+#' @description Manages choosing a logical state.
 #' @docType class
 #' @seealso examples found here: `vignette("internal_function_examples", package = "teal.slice")`.
 #' @keywords internal

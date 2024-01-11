@@ -8,7 +8,7 @@ get_supported_filter_varnames(data)
 }
 \arguments{
 \item{data}{(\code{object})\cr
-the R object containing elements which class can be checked through \code{vapply} or \code{apply}.}
+the \code{R} object containing elements which class can be checked through \code{vapply} or \code{apply}.}
 }
 \value{
 \code{character} vector of matched element names

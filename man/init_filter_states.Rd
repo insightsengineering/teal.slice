@@ -14,7 +14,7 @@ init_filter_states(
 }
 \arguments{
 \item{data}{(\code{data.frame}, \code{MultiAssayExperiment}, \code{SummarizedExperiment}, \code{matrix})\cr
-the R object which \code{subset} function is applied on.}
+the \code{R} object which \code{subset} function is applied on.}
 
 \item{data_reactive}{(\verb{function(sid)})\cr
 should return an object of the same type as \code{data} or \code{NULL}.
@@ -35,7 +35,7 @@ text label value.}
 additional arguments for specific classes: keys.}
 }
 \description{
-Initialize \code{FilterStates} object
+Initialize \code{FilterStates} object.
 }
 \seealso{
 examples found here: \code{vignette("internal_function_examples", package = "teal.slice")}.

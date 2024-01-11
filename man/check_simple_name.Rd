@@ -2,7 +2,7 @@
 % Please edit documentation in R/utils.R
 \name{check_simple_name}
 \alias{check_simple_name}
-\title{Whether the variable name is good to use within Show R Code}
+\title{Whether the variable name is good to use within \verb{Show R Code}}
 \usage{
 check_simple_name(name)
 }
@@ -11,7 +11,7 @@ check_simple_name(name)
 }
 \description{
 Spaces are problematic because the variables must be escaped with backticks.
-Also, they should not start with a number as R may silently make it valid by changing it.
+Also, they should not start with a number as \code{R} may silently make it valid by changing it.
 Therefore, we only allow alphanumeric characters with underscores.
 The first character of the \code{name} must be an alphabetic character and can be followed by alphanumeric characters.
 }

@@ -1,6 +1,6 @@
 #' @name DateFilterState
 #' @title `FilterState` object for Date variable
-#' @description Manages choosing a range of Dates
+#' @description Manages choosing a range of Dates.
 #' @docType class
 #' @seealso examples found here: `vignette("internal_function_examples", package = "teal.slice")`.
 #' @keywords internal

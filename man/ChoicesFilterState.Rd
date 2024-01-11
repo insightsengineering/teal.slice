@@ -5,7 +5,7 @@
 \alias{ChoicesFilterState}
 \title{\code{FilterState} object for factor or character variable}
 \description{
-Manages choosing elements from a set
+Manages choosing elements from a set.
 }
 \seealso{
 examples found here: \code{vignette("internal_function_examples", package = "teal.slice")}.

@@ -1,4 +1,4 @@
-#' @title `FilterStates` R6 class
+#' @title `FilterStates` `R6` class
 #'
 #' @description
 #' Abstract class that manages adding and removing `FilterState` objects
@@ -6,7 +6,7 @@
 #'
 #' A `FilterStates` object tracks all subsetting expressions
 #' (logical predicates that limit observations) associated with a given dataset
-#' and composes them into a single reproducible R expression
+#' and composes them into a single reproducible `R` expression
 #' that will assign a subset of the original data to a new variable.
 #' This expression is hereafter referred to as *subset expression*.
 #'
@@ -29,7 +29,7 @@ FilterStates <- R6::R6Class( # nolint
     #' `dataname`, and `datalabel`.
     #'
     #' @param data (`data.frame`, `MultiAssayExperiment`, `SummarizedExperiment`, `matrix`)\cr
-    #'   the R object which `subset` function is applied on.
+    #'   the `R` object which `subset` function is applied on.
     #' @param data_reactive (`function(sid)`)\cr
     #'   should return an object of the same type as `data` object or `NULL`.
     #'   This object is needed for the `FilterState` counts being updated
