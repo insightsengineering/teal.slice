@@ -12,11 +12,11 @@
 #'   object created using [teal_slice()].
 #' @param extract_type (`character(0)`, `character(1)`)\cr
 #'   specifying whether condition calls should be prefixed by `dataname`. Possible values:
-#' \itemize{
-#' \item{`character(0)` (default)}{ `varname` in the condition call will not be prefixed}
-#' \item{`"list"`}{ `varname` in the condition call will be returned as `<dataname>$<varname>`}
-#' \item{`"matrix"`}{ `varname` in the condition call will be returned as `<dataname>[, <varname>]`}
-#' }
+#'
+#' * `character(0)` (default) `varname` in the condition call will not be prefixed
+#' * `"list"` `varname` in the condition call will be returned as `<dataname>$<varname>`
+#' * `"matrix"` `varname` in the condition call will be returned as `<dataname>[, <varname>]`
+#'
 #' @param ... additional arguments to be saved as a list in `private$extras` field
 #'
 #' @seealso examples found here: `vignette("internal_function_examples", package = "teal.slice")`.

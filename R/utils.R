@@ -6,10 +6,10 @@
 #'
 #' @param ... it should literally just be ...
 #' @param stop TRUE to raise an error; FALSE will output warning message
-#' @param allowed_args character vector naming arguments that are allowed in the \code{...}.
+#' @param allowed_args character vector naming arguments that are allowed in the `...`.
 #'   to allow for unnamed arguments, let "" be one of the elements in this character vector.
 #'
-#' @return \code{NULL} if ... is empty
+#' @return `NULL` if ... is empty
 #' @seealso examples found here: `vignette("internal_function_examples", package = "teal.slice")`.
 #' @keywords internal
 #'

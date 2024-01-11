@@ -25,7 +25,7 @@ DFFilterStates <- R6::R6Class( # nolint
     #'   on a change in filters. If function returns `NULL` then filtered counts are not shown.
     #'   Function has to have `sid` argument being a character.
     #' @param dataname (`character`)\cr
-    #'   name of the data used in the \emph{subset expression}
+    #'   name of the data used in the *subset expression*
     #'   specified to the function argument attached to this `FilterStates`
     #' @param datalabel (`NULL` or `character(1)`)\cr
     #'   text label value
