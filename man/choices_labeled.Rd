@@ -2,7 +2,7 @@
 % Please edit documentation in R/choices_labeled.R
 \name{choices_labeled}
 \alias{choices_labeled}
-\title{Set "\verb{<choice>:<label>}" type of Names}
+\title{Set "\verb{<choice>:<label>}" type of names}
 \usage{
 choices_labeled(choices, labels, subset = NULL, types = NULL)
 }

@@ -44,6 +44,6 @@ determines \verb{<style="width: <countmax / counttotal>\%""}.}
 \code{shiny.tag} object with a progress bar and a label.
 }
 \description{
-Progress bar with label
+Progress bar with label.
 }
 \keyword{internal}

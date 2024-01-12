@@ -2,13 +2,13 @@
 #' @docType class
 #'
 #'
-#' @title `FilterState` Abstract Class
+#' @title `FilterState` abstract Class
 #'
-#' @description Abstract class to encapsulate single filter state
+#' @description Abstract class to encapsulate single filter state.
 #'
 #' @details
 #' This class is responsible for managing single filter item within
-#' `FilteredData` class. Filter states depend on the variable type:
+#' `FilteredData` class object. Filter states depend on the variable type:
 #' (`logical`, `integer`, `numeric`, `factor`, `character`, `Date`, `POSIXct`, `POSIXlt`)
 #' and returns `FilterState` object with class corresponding to input variable.
 #' Class controls single filter entry in `module_single_filter_item` and returns
@@ -26,7 +26,7 @@
 #' variable type specific fields (`keep_inf`, `inf_count`, `timezone`).
 #' Object contains also shiny module (`ui` and `server`) which manages
 #' state of the filter through reactive values `selected`, `keep_na`, `keep_inf`
-#' which trigger `get_call()` and every R function call up in reactive chain.
+#' which trigger `get_call()` and every `R` function call up in reactive chain.
 #' \cr
 #' \cr
 #' @section Modifying state:
@@ -58,11 +58,11 @@ FilterState <- R6::R6Class( # nolint
     #'   object created by [teal_slice()]
     #' @param extract_type (`character(0)`, `character(1)`)\cr
     #'   specifying whether condition calls should be prefixed by `dataname`. Possible values:
-    #' \itemize{
-    #' \item{`character(0)` (default)}{ `varname` in the condition call will not be prefixed}
-    #' \item{`"list"`}{ `varname` in the condition call will be returned as `<dataname>$<varname>`}
-    #' \item{`"matrix"`}{ `varname` in the condition call will be returned as `<dataname>[, <varname>]`}
-    #' }
+    #'
+    #' * `character(0)` (default) `varname` in the condition call will not be prefixed
+    #' * `"list"` `varname` in the condition call will be returned as `<dataname>$<varname>`
+    #' * `"matrix"` `varname` in the condition call will be returned as `<dataname>[, <varname>]`
+    #'
     #' @param ... additional arguments to be saved as a list in `private$extras` field
     #'
     #' @return self invisibly

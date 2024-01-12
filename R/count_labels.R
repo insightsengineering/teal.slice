@@ -40,7 +40,7 @@ countBars <- function(inputId, choices, countsmax, countsnow = NULL) { # nolint
 
 #' Progress bar with label
 #'
-#' Progress bar with label
+#' Progress bar with label.
 #' @param session (`session`) object passed to function given to `shinyServer`.
 #' @param inputId (`character(1)`) `shiny` id
 #' @param label (`character(1)`) Text to display followed by counts

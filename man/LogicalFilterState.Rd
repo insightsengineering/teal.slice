@@ -5,7 +5,7 @@
 \alias{LogicalFilterState}
 \title{\code{FilterState} object for logical variable}
 \description{
-Manages choosing a logical state
+Manages choosing a logical state.
 }
 \seealso{
 examples found here: \code{vignette("internal_function_examples", package = "teal.slice")}.
@@ -64,9 +64,9 @@ dataset are not shown.}
 \item{\code{extract_type}}{(\code{character(0)}, \code{character(1)})\cr
 whether condition calls should be prefixed by \code{dataname}. Possible values:
 \itemize{
-\item{\code{character(0)} (default)}{ \code{varname} in the condition call will not be prefixed}
-\item{\code{"list"}}{ \code{varname} in the condition call will be returned as \verb{<dataname>$<varname>}}
-\item{\code{"matrix"}}{ \code{varname} in the condition call will be returned as \verb{<dataname>[, <varname>]}}
+\item \code{character(0)} (default) \code{varname} in the condition call will not be prefixed
+\item \code{"list"} \code{varname} in the condition call will be returned as \verb{<dataname>$<varname>}
+\item \code{"matrix"} \code{varname} in the condition call will be returned as \verb{<dataname>[, <varname>]}
 }}
 
 \item{\code{slice}}{(\code{teal_slice})\cr

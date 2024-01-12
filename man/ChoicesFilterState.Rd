@@ -5,7 +5,7 @@
 \alias{ChoicesFilterState}
 \title{\code{FilterState} object for factor or character variable}
 \description{
-Manages choosing elements from a set
+Manages choosing elements from a set.
 }
 \seealso{
 examples found here: \code{vignette("internal_function_examples", package = "teal.slice")}.
@@ -71,9 +71,9 @@ reflected in all places which refer to the same \code{teal_slice}.}
 \item{\code{extract_type}}{(\code{character(0)}, \code{character(1)})\cr
 whether condition calls should be prefixed by \code{dataname}. Possible values:
 \itemize{
-\item{\code{character(0)} (default)}{ \code{varname} in the condition call will not be prefixed}
-\item{\code{"list"}}{ \code{varname} in the condition call will be returned as \verb{<dataname>$<varname>}}
-\item{\code{"matrix"}}{ \code{varname} in the condition call will be returned as \verb{<dataname>[, <varname>]}}
+\item \code{character(0)} (default) \code{varname} in the condition call will not be prefixed
+\item \code{"list"} \code{varname} in the condition call will be returned as \verb{<dataname>$<varname>}
+\item \code{"matrix"} \code{varname} in the condition call will be returned as \verb{<dataname>[, <varname>]}
 }}
 
 \item{\code{...}}{additional arguments to be saved as a list in \code{private$extras} field}

@@ -2,14 +2,14 @@
 % Please edit documentation in R/FilterStates.R
 \name{FilterStates}
 \alias{FilterStates}
-\title{\code{FilterStates} R6 class}
+\title{\code{FilterStates} \code{R6} class}
 \description{
 Abstract class that manages adding and removing \code{FilterState} objects
 and builds a \emph{subset expression}.
 
 A \code{FilterStates} object tracks all subsetting expressions
 (logical predicates that limit observations) associated with a given dataset
-and composes them into a single reproducible R expression
+and composes them into a single reproducible \code{R} expression
 that will assign a subset of the original data to a new variable.
 This expression is hereafter referred to as \emph{subset expression}.
 
@@ -58,7 +58,7 @@ Initializes \code{FilterStates} object by setting
 \if{html}{\out{<div class="arguments">}}
 \describe{
 \item{\code{data}}{(\code{data.frame}, \code{MultiAssayExperiment}, \code{SummarizedExperiment}, \code{matrix})\cr
-the R object which \code{subset} function is applied on.}
+the \code{R} object which \code{subset} function is applied on.}
 
 \item{\code{data_reactive}}{(\verb{function(sid)})\cr
 should return an object of the same type as \code{data} object or \code{NULL}.

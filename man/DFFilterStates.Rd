@@ -4,7 +4,7 @@
 \alias{DFFilterStates}
 \title{\code{FilterStates} subclass for data frames}
 \description{
-Handles filter states in a \code{data.frame}
+Handles filter states in a \code{data.frame}.
 }
 \seealso{
 examples found here: \code{vignette("internal_function_examples", package = "teal.slice")}.
@@ -62,7 +62,7 @@ which means that when calling the subset function associated with this class
 \if{html}{\out{<div class="arguments">}}
 \describe{
 \item{\code{data}}{(\code{data.frame})\cr
-the R object which \code{dplyr::filter} function is applied on.}
+the \code{R} object which \code{dplyr::filter} function is applied on.}
 
 \item{\code{data_reactive}}{(\verb{function(sid)})\cr
 should return a \code{data.frame} object or \code{NULL}.

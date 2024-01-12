@@ -2,7 +2,7 @@
 % Please edit documentation in R/utils.R
 \name{make_c_call}
 \alias{make_c_call}
-\title{Build Concatenating Call}
+\title{Build concatenating call}
 \usage{
 make_c_call(choices)
 }

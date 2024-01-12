@@ -37,7 +37,7 @@ Other variables cannot be used for filtering the data in this class.
 Common arguments are:
 \enumerate{
 \item \code{filtered}: whether to return a filtered result or not
-\item \code{dataname}: the name of one of the datasets in this \code{FilteredData}
+\item \code{dataname}: the name of one of the datasets in this \code{FilteredData} object
 \item \code{varname}: one of the columns in a dataset
 }
 }
@@ -138,7 +138,7 @@ Set list of external filter states available for activation.
 
 Unlike adding new filter from the column, these filters can come with some prespecified settings.
 \code{teal_slices} are wrapped in a \code{reactive} so they can be updated from elsewhere in the app.
-Filters passed in \code{x} are limited to those that can be set for this \code{FilteredData},
+Filters passed in \code{x} are limited to those that can be set for this \code{FilteredData} object,
 i.e. they have the correct \code{dataname} and \code{varname} (waived \code{teal_slice_fixed} as they do not have \code{varname}).
 List is accessible in \code{ui/srv_active} through \code{ui/srv_available_filters}.
 }

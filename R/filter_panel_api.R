@@ -1,7 +1,7 @@
 #' Managing `FilteredData` states
 #'
 #' @description `r lifecycle::badge("experimental")`
-#' Set, get and remove filter states of `FilteredData` object
+#' Set, get and remove filter states of `FilteredData` object.
 #'
 #' @name filter_state_api
 #'
@@ -122,7 +122,7 @@ clear_filter_states <- function(datasets, force = FALSE) {
 #' Gets filter expression for multiple `datanames` taking into account its order.
 #'
 #' @description `r lifecycle::badge("stable")`
-#' To be used in show R code button.
+#' To be used in `Show R Code` button.
 #'
 #' @param datasets (`FilteredData`)
 #' @param datanames (`character`) vector of dataset names

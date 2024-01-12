@@ -1,6 +1,6 @@
 #' Initialize `FilteredData`
 #'
-#' Initialize `FilteredData`
+#' Initialize `FilteredData`.
 #' @param x (named `list`) of datasets.
 #' @param join_keys (`join_keys`) see [teal.data::join_keys()].
 #' @param code (deprecated)
@@ -29,7 +29,7 @@ init_filtered_data <- function(x, join_keys = teal.data::join_keys(), code, chec
 
 #' Evaluate expression with meaningful message
 #'
-#' Method created for the `FilteredData` to execute filter call with
+#' Method created for the `FilteredData` object to execute filter call with
 #' meaningful message. After evaluation used environment should contain
 #' all necessary bindings.
 #' @param expr (`language`)
@@ -142,48 +142,5 @@ toggle_title <- function(input_id, titles, one_way = FALSE) {
 #' @seealso examples found here: `vignette("internal_function_examples", package = "teal.slice")`.
 #' @keywords internal
 topological_sort <- function(graph) {
-  # compute in-degrees
-  in_degrees <- list()
-  for (node in names(graph)) {
-    in_degrees[[node]] <- 0
-    for (to_edge in graph[[node]]) {
-      in_degrees[[to_edge]] <- 0
-    }
-  }
-
-  for (node in graph) {
-    for (to_edge in node) {
-      in_degrees[[to_edge]] <- in_degrees[[to_edge]] + 1
-    }
-  }
-
-  # sort
-  visited <- 0
-  sorted <- list()
-  zero_in <- list()
-  for (node in names(in_degrees)) {
-    if (in_degrees[[node]] == 0) zero_in <- append(zero_in, node)
-  }
-  zero_in <- rev(zero_in)
-
-  while (length(zero_in) != 0) {
-    visited <- visited + 1
-    sorted <- c(zero_in[[1]], sorted)
-    for (edge_to in graph[[zero_in[[1]]]]) {
-      in_degrees[[edge_to]] <- in_degrees[[edge_to]] - 1
-      if (in_degrees[[edge_to]] == 0) {
-        zero_in <- append(zero_in, edge_to, 1)
-      }
-    }
-    zero_in[[1]] <- NULL
-  }
-
-  if (visited != length(in_degrees)) {
-    stop(
-      "Graph is not a directed acyclic graph. Cycles involving nodes: ",
-      paste0(setdiff(names(in_degrees), sorted), collapse = " ")
-    )
-  } else {
-    return(sorted)
-  }
+  utils::getFromNamespace("topological_sort", ns = "teal.data")(graph)
 }
