@@ -1,7 +1,7 @@
 # DataframeFilteredDataset ------
 #' @title The `DataframeFilteredDataset` `R6` class
 #' @example
-#' #' # use non-exported function from teal.slice
+#' # use non-exported function from teal.slice
 #' DataframeFilteredDataset <- getFromNamespace("DataframeFilteredDataset", "teal.slice")
 #'
 #' library(shiny)

@@ -6,9 +6,6 @@
 \description{
 Stores any object as inert entity. Filtering is not supported.
 }
-\seealso{
-examples found here: \code{vignette("internal_function_examples", package = "teal.slice")}.
-}
 \keyword{internal}
 \section{Super class}{
 \code{\link[teal.slice:FilteredDataset]{teal.slice::FilteredDataset}} -> \code{DefaultFilteredDataset}

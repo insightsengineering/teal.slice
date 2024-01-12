@@ -16,7 +16,12 @@ in the returned list, parents appear before their children.
 \details{
 Implementation of \code{Kahn} algorithm with a modification to maintain the order of input elements.
 }
-\seealso{
-examples found here: \code{vignette("internal_function_examples", package = "teal.slice")}.
+\examples{
+# use non-exported function from teal.slice
+topological_sort <- getFromNamespace("topological_sort", "teal.slice")
+
+topological_sort(list(A = c(), B = c("A"), C = c("B"), D = c("A")))
+topological_sort(list(D = c("A"), A = c(), B = c("A"), C = c("B")))
+topological_sort(list(D = c("A"), B = c("A"), C = c("B"), A = c()))
 }
 \keyword{internal}

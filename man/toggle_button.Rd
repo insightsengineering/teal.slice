@@ -34,7 +34,55 @@ which may contain a child \verb{<i>} tag that specifies an icon to be displayed.
 \code{removeClass} and \code{addClass} methods (when \code{one_way = TRUE}) to change icons.
 \code{toggle_title} calls the \code{attr} method to modify the \code{Title} attribute of the button.
 }
-\seealso{
-examples found here: \code{vignette("internal_function_examples", package = "teal.slice")}.
+\examples{
+# use non-exported function from teal.slice
+toggle_icon <- getFromNamespace("toggle_icon", "teal.slice")
+
+library(shiny)
+
+ui <- fluidPage(
+  shinyjs::useShinyjs(),
+  actionButton("hide_content", label = "hide", icon = icon("xmark")),
+  actionButton("show_content", label = "show", icon = icon("check")),
+  actionButton("toggle_content", label = "toggle", icon = icon("angle-down")),
+  br(),
+  div(
+    id = "content",
+    verbatimTextOutput("printout")
+  )
+)
+
+server <- function(input, output, session) {
+  observeEvent(input$hide_content,
+               {
+                 shinyjs::hide("content")
+                 toggle_icon("toggle_content", c("fa-angle-down", "fa-angle-right"), one_way = TRUE)
+               },
+               ignoreInit = TRUE
+  )
+
+  observeEvent(input$show_content,
+               {
+                 shinyjs::show("content")
+                 toggle_icon("toggle_content", c("fa-angle-right", "fa-angle-down"), one_way = TRUE)
+               },
+               ignoreInit = TRUE
+  )
+
+  observeEvent(input$toggle_content,
+               {
+                 shinyjs::toggle("content")
+                 toggle_icon("toggle_content", c("fa-angle-right", "fa-angle-down"))
+               },
+               ignoreInit = TRUE
+  )
+
+  output$printout <- renderPrint({
+    head(faithful, 10)
+  })
+}
+if (interactive()) {
+  shinyApp(ui, server)
+}
 }
 \keyword{internal}

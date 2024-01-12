@@ -2,14 +2,11 @@
 % Please edit documentation in R/FilteredDatasetDataframe.R
 \name{DataframeFilteredDataset}
 \alias{DataframeFilteredDataset}
-\title{\code{DataframeFilteredDataset} \code{R6} class}
+\title{The \code{DataframeFilteredDataset} \code{R6} class}
 \description{
-\code{DataframeFilteredDataset} \code{R6} class
+The \code{DataframeFilteredDataset} \code{R6} class
 
-\code{DataframeFilteredDataset} \code{R6} class
-}
-\seealso{
-examples found here: \code{vignette("internal_function_examples", package = "teal.slice")}.
+The \code{DataframeFilteredDataset} \code{R6} class
 }
 \keyword{internal}
 \section{Super class}{
