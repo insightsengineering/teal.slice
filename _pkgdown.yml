@@ -32,7 +32,7 @@ reference:
       - clear_filter_states
       - teal_slice
       - teal_slices
-  - title: "For Developers"
+  - title: "For developers"
     subtitle: "R6 Classes"
     desc: "Abstract and concrete classes used to build teal functionality."
     contents:

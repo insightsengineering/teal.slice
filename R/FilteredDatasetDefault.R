@@ -1,6 +1,6 @@
 # DefaultFilteredDataset ----
 
-#' @title The `DefaultFilteredDataset` R6 class
+#' @title `DefaultFilteredDataset` `R6` class
 #' @description Stores any object as inert entity. Filtering is not supported.
 #' @example
 #' # use non-exported function from teal.slice

@@ -53,7 +53,7 @@
 #' @param id (`character(1)`) identifier of the filter. Must be specified when `expr` is set.
 #'  When `varname` is specified then `id` is set to `"{dataname} {varname}"` by default.
 #' @param expr (`character(1)`) string providing a logical expression.
-#'  Must be a valid R expression which can be evaluated in the context of the data set.
+#'  Must be a valid `R` expression which can be evaluated in the context of the data set.
 #'  For a `data.frame` `var == "x"` is sufficient, but `MultiAssayExperiment::subsetByColData`
 #'  requires `dataname` prefix, *e.g.* `data$var == "x"`.
 #' @param choices (optional `vector`) specifying allowed choices;
@@ -282,7 +282,7 @@ to_json <- function(x) {
   jsonlite::toJSON(no_unbox(x), pretty = TRUE, auto_unbox = TRUE, digits = 16, null = "null")
 }
 
-#' Format `POSIXt` For Storage
+#' Format `POSIXt` for storage
 #'
 #' Convert `POSIXt` date time object to character representation in UTC time zone.
 #'
@@ -302,7 +302,7 @@ format_time <- function(x) {
   }
 }
 
-#' Justify Colons in `JSON` String
+#' Justify colons in `JSON` string
 #'
 #' This function takes a `JSON` string as input, splits it into lines, and pads element names
 #' with spaces so that colons are justified between lines.
@@ -328,7 +328,7 @@ justify_json <- function(json) {
   vapply(json_lines_split, function(x) paste0(format_name(x[1], name_width), stats::na.omit(x[2])), character(1))
 }
 
-#' Trim Lines in `JSON` String
+#' Trim lines in `JSON` string
 #'
 #' This function takes a `JSON` string as input and returns a modified version of the
 #' input where the values portion of each line is trimmed for a less messy console output.

@@ -1,5 +1,5 @@
 #' @title `FilterStates` subclass for data frames
-#' @description Handles filter states in a `data.frame`
+#' @description Handles filter states in a `data.frame`.
 #' @seealso examples found here: `vignette("internal_function_examples", package = "teal.slice")`.
 #' @keywords internal
 #'
@@ -18,14 +18,14 @@ DFFilterStates <- R6::R6Class( # nolint
     #' (`dplyr::filter`), a list of conditions is passed to unnamed arguments (`...`).
     #'
     #' @param data (`data.frame`)\cr
-    #'   the R object which `dplyr::filter` function is applied on.
+    #'   the `R` object which `dplyr::filter` function is applied on.
     #' @param data_reactive (`function(sid)`)\cr
     #'   should return a `data.frame` object or `NULL`.
     #'   This object is needed for the `FilterState` counts being updated
     #'   on a change in filters. If function returns `NULL` then filtered counts are not shown.
     #'   Function has to have `sid` argument being a character.
     #' @param dataname (`character`)\cr
-    #'   name of the data used in the \emph{subset expression}
+    #'   name of the data used in the *subset expression*
     #'   specified to the function argument attached to this `FilterStates`
     #' @param datalabel (`NULL` or `character(1)`)\cr
     #'   text label value

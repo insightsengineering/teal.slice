@@ -28,7 +28,7 @@
 #'
 #' Common arguments are:
 #' 1. `filtered`: whether to return a filtered result or not
-#' 2. `dataname`: the name of one of the datasets in this `FilteredData`
+#' 2. `dataname`: the name of one of the datasets in this `FilteredData` object
 #' 3. `varname`: one of the columns in a dataset
 #'
 #' @example
@@ -153,7 +153,7 @@ FilteredData <- R6::R6Class( # nolint
     #'
     #' Unlike adding new filter from the column, these filters can come with some prespecified settings.
     #' `teal_slices` are wrapped in a `reactive` so they can be updated from elsewhere in the app.
-    #' Filters passed in `x` are limited to those that can be set for this `FilteredData`,
+    #' Filters passed in `x` are limited to those that can be set for this `FilteredData` object,
     #' i.e. they have the correct `dataname` and `varname` (waived `teal_slice_fixed` as they do not have `varname`).
     #' List is accessible in `ui/srv_active` through `ui/srv_available_filters`.
     #' @param x (`reactive`)\cr

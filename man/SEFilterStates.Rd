@@ -4,7 +4,7 @@
 \alias{SEFilterStates}
 \title{\code{FilterStates} subclass for \code{SummarizedExperiments}}
 \description{
-Handles filter states in a \code{SummaryExperiment}
+Handles filter states in a \code{SummaryExperiment}.
 }
 \keyword{internal}
 \section{Super class}{
@@ -54,7 +54,7 @@ Initialize \code{SEFilterStates} object
 \if{html}{\out{<div class="arguments">}}
 \describe{
 \item{\code{data}}{(\code{SummarizedExperiment})\cr
-the R object which \code{subset} function is applied on.}
+the \code{R} object which \code{subset} function is applied on.}
 
 \item{\code{data_reactive}}{(\verb{function(sid)})\cr
 should return a \code{SummarizedExperiment} object or \code{NULL}.

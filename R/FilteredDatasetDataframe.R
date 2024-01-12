@@ -1,5 +1,5 @@
 # DataframeFilteredDataset ------
-#' @title The `DataframeFilteredDataset` R6 class
+#' @title The `DataframeFilteredDataset` `R6` class
 #' @example
 #' #' # use non-exported function from teal.slice
 #' DataframeFilteredDataset <- getFromNamespace("DataframeFilteredDataset", "teal.slice")

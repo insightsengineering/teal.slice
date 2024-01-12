@@ -1,7 +1,8 @@
 # MAEFilteredDataset ------
+#' @title `MAEFilteredDataset` `R6` class
 #' @keywords internal
 #' @examples
-#' #' # use non-exported function from teal.slice
+#' # use non-exported function from teal.slice
 #' MAEFilteredDataset <- getFromNamespace("MAEFilteredDataset", "teal.slice")
 #'
 #' utils::data(miniACC, package = "MultiAssayExperiment")
@@ -23,7 +24,7 @@
 #' dataset$set_filter_state(state = fs)
 #' shiny::isolate(dataset$get_filter_state())
 #'
-#' @title `MAEFilteredDataset` R6 class
+#' @title `MAEFilteredDataset` `R6` class
 MAEFilteredDataset <- R6::R6Class( # nolint
   classname = "MAEFilteredDataset",
   inherit = FilteredDataset,

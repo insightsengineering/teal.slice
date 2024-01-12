@@ -16,7 +16,7 @@ init_filtered_data(x, join_keys = teal.data::join_keys(), code, check)
 \item{check}{(deprecated)}
 }
 \description{
-Initialize \code{FilteredData}
+Initialize \code{FilteredData}.
 }
 \examples{
 datasets <- init_filtered_data(list(iris = iris, mtcars = mtcars))

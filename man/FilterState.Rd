@@ -3,13 +3,13 @@
 \docType{class}
 \name{FilterState}
 \alias{FilterState}
-\title{\code{FilterState} Abstract Class}
+\title{\code{FilterState} abstract Class}
 \description{
-Abstract class to encapsulate single filter state
+Abstract class to encapsulate single filter state.
 }
 \details{
 This class is responsible for managing single filter item within
-\code{FilteredData} class. Filter states depend on the variable type:
+\code{FilteredData} class object. Filter states depend on the variable type:
 (\code{logical}, \code{integer}, \code{numeric}, \code{factor}, \code{character}, \code{Date}, \code{POSIXct}, \code{POSIXlt})
 and returns \code{FilterState} object with class corresponding to input variable.
 Class controls single filter entry in \code{module_single_filter_item} and returns
@@ -28,7 +28,7 @@ Each variable's filter state is an \code{R6} object which contains \code{choices
 variable type specific fields (\code{keep_inf}, \code{inf_count}, \code{timezone}).
 Object contains also shiny module (\code{ui} and \code{server}) which manages
 state of the filter through reactive values \code{selected}, \code{keep_na}, \code{keep_inf}
-which trigger \code{get_call()} and every R function call up in reactive chain.
+which trigger \code{get_call()} and every \code{R} function call up in reactive chain.
 \cr
 \cr
 }
@@ -94,9 +94,9 @@ object created by \code{\link[=teal_slice]{teal_slice()}}}
 \item{\code{extract_type}}{(\code{character(0)}, \code{character(1)})\cr
 specifying whether condition calls should be prefixed by \code{dataname}. Possible values:
 \itemize{
-\item{\code{character(0)} (default)}{ \code{varname} in the condition call will not be prefixed}
-\item{\code{"list"}}{ \code{varname} in the condition call will be returned as \verb{<dataname>$<varname>}}
-\item{\code{"matrix"}}{ \code{varname} in the condition call will be returned as \verb{<dataname>[, <varname>]}}
+\item \code{character(0)} (default) \code{varname} in the condition call will not be prefixed
+\item \code{"list"} \code{varname} in the condition call will be returned as \verb{<dataname>$<varname>}
+\item \code{"matrix"} \code{varname} in the condition call will be returned as \verb{<dataname>[, <varname>]}
 }}
 
 \item{\code{...}}{additional arguments to be saved as a list in \code{private$extras} field}

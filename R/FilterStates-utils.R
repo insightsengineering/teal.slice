@@ -1,8 +1,8 @@
 #' Initialize `FilterStates` object
 #'
-#' Initialize `FilterStates` object
+#' Initialize `FilterStates` object.
 #' @param data (`data.frame`, `MultiAssayExperiment`, `SummarizedExperiment`, `matrix`)\cr
-#'   the R object which `subset` function is applied on.
+#'   the `R` object which `subset` function is applied on.
 #' @param data_reactive (`function(sid)`)\cr
 #'   should return an object of the same type as `data` or `NULL`.
 #'   This object is needed for the `FilterState` shiny module to update
@@ -104,7 +104,7 @@ init_filter_states.SummarizedExperiment <- function(data, # nolint
 #' Gets filterable variable names from a given object. The names match variables
 #' of classes in an vector `teal.slice:::.filterable_class`.
 #' @param data (`object`)\cr
-#'   the R object containing elements which class can be checked through `vapply` or `apply`.
+#'   the `R` object containing elements which class can be checked through `vapply` or `apply`.
 #' @return `character` vector of matched element names
 #' @examples
 #' # use non-exported function from teal.slice

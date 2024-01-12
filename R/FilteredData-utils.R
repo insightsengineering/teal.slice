@@ -1,6 +1,6 @@
 #' Initialize `FilteredData`
 #'
-#' Initialize `FilteredData`
+#' Initialize `FilteredData`.
 #' @param x (named `list`) of datasets.
 #' @param join_keys (`join_keys`) see [teal.data::join_keys()].
 #' @param code (deprecated)
@@ -29,7 +29,7 @@ init_filtered_data <- function(x, join_keys = teal.data::join_keys(), code, chec
 
 #' Evaluate expression with meaningful message
 #'
-#' Method created for the `FilteredData` to execute filter call with
+#' Method created for the `FilteredData` object to execute filter call with
 #' meaningful message. After evaluation used environment should contain
 #' all necessary bindings.
 #' @param expr (`language`)
