@@ -26,14 +26,14 @@ setGeneric("get_filter_call", function(data, states_list) {
 
 ## default method ----
 setMethod("get_filter_call", c(data = "ANY"), function(data, states_list) {
-  if (length(states_list) == 0L) NULL
+  if (length(states_list) == 0L) return(NULL)
 
   stop("get_filter_call not implemented for class ", toString(class(data)), call. = FALSE)
 })
 
 ## data.frame method ----
 setMethod("get_filter_call", c(data = "data.frame"), function(data, states_list) {
-  if (length(states_list) == 0L) NULL
+  if (length(states_list) == 0L) return(NULL)
 
   dataname_lang <- str2lang(states_list[[1L]]$get_state()$dataname)
   states_predicate <- lapply(states_list, function(state) state$get_call())
@@ -48,7 +48,7 @@ setMethod("get_filter_call", c(data = "data.frame"), function(data, states_list)
 
 ## DataFrame method ----
 setMethod("get_filter_call", c(data = "DataFrame"), function(data, states_list) {
-  if (length(states_list) == 0L) NULL
+  if (length(states_list) == 0L) return(NULL)
 
   dataname_lang <- str2lang(states_list[[1L]]$get_state()$dataname)
   states_predicate <- lapply(states_list, function(state) state$get_call())
@@ -63,7 +63,7 @@ setMethod("get_filter_call", c(data = "DataFrame"), function(data, states_list) 
 
 ## matrix method ----
 setMethod("get_filter_call", c(data = "matrix"), function(data, states_list) {
-  if (length(states_list) == 0L) NULL
+  if (length(states_list) == 0L) return(NULL)
 
   dataname_lang <- str2lang(states_list[[1L]]$get_state()$dataname)
   states_predicate <- lapply(states_list, function(state) state$get_call())
@@ -78,7 +78,7 @@ setMethod("get_filter_call", c(data = "matrix"), function(data, states_list) {
 
 ## Matrix method ----
 setMethod("get_filter_call", c(data = "Matrix"), function(data, states_list) {
-  if (length(states_list) == 0L) NULL
+  if (length(states_list) == 0L) return(NULL)
 
   dataname_lang <- str2lang(states_list[[1L]]$get_state()$dataname)
   states_predicate <- lapply(states_list, function(state) state$get_call())
@@ -93,7 +93,7 @@ setMethod("get_filter_call", c(data = "Matrix"), function(data, states_list) {
 
 ## SummarizedExperiment method ----
 setMethod("get_filter_call", c(data = "SummarizedExperiment"), function(data, states_list) {
-  if (length(states_list) == 0L) NULL
+  if (length(states_list) == 0L) return(NULL)
 
   state_list_grouped <- split(
     states_list,
@@ -124,7 +124,7 @@ setMethod("get_filter_call", c(data = "SummarizedExperiment"), function(data, st
 
 ## MultiAssayExperiment method ----
 setMethod("get_filter_call", c(data = "MultiAssayExperiment"), function(data, states_list) {
-  if (length(states_list) == 0L) NULL
+  if (length(states_list) == 0L) return(NULL)
 
   states_grouped <- split(
     states_list,
