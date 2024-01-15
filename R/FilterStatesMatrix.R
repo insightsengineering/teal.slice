@@ -1,5 +1,5 @@
 #' @title `FilterStates` subclass for matrices
-#' @description Handles filter states in a `matrix`
+#' @description Handles filter states in a `matrix`.
 #' @keywords internal
 #'
 #'
@@ -14,7 +14,7 @@ MatrixFilterStates <- R6::R6Class( # nolint
     #' Initialize `MatrixFilterStates` object
     #'
     #' @param data (`matrix`)\cr
-    #'   the R object which `subset` function is applied on.
+    #'   the `R` object which `subset` function is applied on.
     #' @param data_reactive (`function(sid)`)\cr
     #'   should return a `matrix` object or `NULL`.
     #'   This object is needed for the `FilterState` counts being updated

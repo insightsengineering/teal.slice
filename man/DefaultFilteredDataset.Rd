@@ -2,13 +2,15 @@
 % Please edit documentation in R/FilteredDatasetDefault.R
 \name{DefaultFilteredDataset}
 \alias{DefaultFilteredDataset}
-\title{The \code{DefaultFilteredDataset} R6 class}
+\title{\code{DefaultFilteredDataset} \code{R6} class}
 \description{
 Stores any object as inert entity. Filtering is not supported.
 }
 \examples{
-library(shiny)
-ds <- teal.slice:::DefaultFilteredDataset$new(letters, "letters")
+# use non-exported function from teal.slice
+DefaultFilteredDataset <- getFromNamespace("DefaultFilteredDataset", "teal.slice")
+
+ds <- DefaultFilteredDataset$new(letters, "letters")
 isolate(ds$get_filter_state())
 isolate(ds$get_call())
 }

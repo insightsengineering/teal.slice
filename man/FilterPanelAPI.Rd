@@ -18,7 +18,7 @@ This class is supported by methods to set, get, remove filter states in the filt
 }
 \examples{
 library(teal.slice)
-fd <- teal.slice::init_filtered_data(list(iris = list(dataset = iris)))
+fd <- init_filtered_data(list(iris = list(dataset = iris)))
 fpa <- FilterPanelAPI$new(fd)
 
 # get the actual filter state --> empty named list

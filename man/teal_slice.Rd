@@ -44,7 +44,7 @@ as.teal_slice(x)
 When \code{varname} is specified then \code{id} is set to \code{"{dataname} {varname}"} by default.}
 
 \item{expr}{(\code{character(1)}) string providing a logical expression.
-Must be a valid R expression which can be evaluated in the context of the data set.
+Must be a valid \code{R} expression which can be evaluated in the context of the data set.
 For a \code{data.frame} \code{var == "x"} is sufficient, but \code{MultiAssayExperiment::subsetByColData}
 requires \code{dataname} prefix, \emph{e.g.} \code{data$var == "x"}.}
 

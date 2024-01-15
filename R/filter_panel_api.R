@@ -1,7 +1,7 @@
 #' Managing `FilteredData` states
 #'
 #' @description `r lifecycle::badge("experimental")`
-#' Set, get and remove filter states of `FilteredData` object
+#' Set, get and remove filter states of `FilteredData` object.
 #'
 #' @name filter_state_api
 #'
@@ -23,7 +23,8 @@
 #' @seealso [`teal_slice`]
 #'
 #' @examples
-#' utils::data(miniACC, package = "MultiAssayExperiment")
+#' library(MultiAssayExperiment)
+#' data(miniACC)
 #'
 #' datasets <- init_filtered_data(
 #'   x = list(
@@ -127,14 +128,13 @@ clear_filter_states <- function(datasets, force = FALSE) {
 #' Gets filter expression for multiple `datanames` taking into account its order.
 #'
 #' @description `r lifecycle::badge("stable")`
-#' To be used in show R code button.
+#' To be used in `Show R Code` button.
 #'
 #' @param datasets (`FilteredData`)
 #' @param datanames (`character`) vector of dataset names
-#'
+#' @return A character string containing all subsetting expressions.
 #' @export
 #'
-#' @return (`expression`)
 get_filter_expr <- function(datasets, datanames = datasets$datanames()) {
   checkmate::assert_character(datanames, min.len = 1, any.missing = FALSE)
   stopifnot(

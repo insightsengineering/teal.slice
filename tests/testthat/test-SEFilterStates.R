@@ -26,7 +26,7 @@ get_test_data <- function(no_data = FALSE) {
       )
     )
   } else {
-    obj <- SummarizedExperiment(
+    SummarizedExperiment(
       assays = list(counts = counts),
       rowRanges = row_ranges,
       colData = cdata

@@ -1,55 +1,5 @@
 #' Initializes `FilteredDataset`
 #'
-#' @keywords internal
-#' @examples
-#' # DataframeFilteredDataset example
-#' iris_fd <- teal.slice:::init_filtered_dataset(iris, dataname = "iris")
-#' app <- shinyApp(
-#'   ui = fluidPage(
-#'     iris_fd$ui_add(id = "add"),
-#'     iris_fd$ui_active("dataset"),
-#'     verbatimTextOutput("call")
-#'   ),
-#'   server = function(input, output, session) {
-#'     iris_fd$srv_add(id = "add")
-#'     iris_fd$srv_active(id = "dataset")
-#'
-#'     output$call <- renderText({
-#'       paste(
-#'         vapply(iris_fd$get_call(), deparse1, character(1), collapse = "\n"),
-#'         collapse = "\n"
-#'       )
-#'     })
-#'   }
-#' )
-#' if (interactive()) {
-#'   shinyApp(app$ui, app$server)
-#' }
-#'
-#' # MAEFilteredDataset example
-#' library(MultiAssayExperiment)
-#' data(miniACC)
-#' MAE_fd <- teal.slice:::init_filtered_dataset(miniACC, "MAE")
-#' app <- shinyApp(
-#'   ui = fluidPage(
-#'     MAE_fd$ui_add(id = "add"),
-#'     MAE_fd$ui_active("dataset"),
-#'     verbatimTextOutput("call")
-#'   ),
-#'   server = function(input, output, session) {
-#'     MAE_fd$srv_add(id = "add")
-#'     MAE_fd$srv_active(id = "dataset")
-#'     output$call <- renderText({
-#'       paste(
-#'         vapply(MAE_fd$get_call(), deparse1, character(1), collapse = "\n"),
-#'         collapse = "\n"
-#'       )
-#'     })
-#'   }
-#' )
-#' if (interactive()) {
-#'   shinyApp(app$ui, app$server)
-#' }
 #' @param dataset (`data.frame` or `MultiAssayExperiment`)\cr
 #' @param dataname (`character`)\cr
 #'  A given name for the dataset it may not contain spaces
@@ -67,9 +17,57 @@
 #'   then the names of the vector define the `parent` columns.
 #' @param label (`character`)\cr
 #'   Label to describe the dataset
+#' @examples
+#' # DataframeFilteredDataset example
+#' iris_fd <- init_filtered_dataset(iris, dataname = "iris")
+#' ui <- fluidPage(
+#'   iris_fd$ui_add(id = "add"),
+#'   iris_fd$ui_active("dataset"),
+#'   verbatimTextOutput("call")
+#' )
+#' server <- function(input, output, session) {
+#'   iris_fd$srv_add(id = "add")
+#'   iris_fd$srv_active(id = "dataset")
+#'
+#'   output$call <- renderText({
+#'     paste(
+#'       vapply(iris_fd$get_call(), deparse1, character(1), collapse = "\n"),
+#'       collapse = "\n"
+#'     )
+#'   })
+#' }
+#' if (interactive()) {
+#'   shinyApp(ui, server)
+#' }
+#'
+#' # MAEFilteredDataset example
+#' library(MultiAssayExperiment)
+#' data(miniACC)
+#' MAE_fd <- init_filtered_dataset(miniACC, "MAE")
+#' ui <- fluidPage(
+#'   MAE_fd$ui_add(id = "add"),
+#'   MAE_fd$ui_active("dataset"),
+#'   verbatimTextOutput("call")
+#' )
+#' server <- function(input, output, session) {
+#'   MAE_fd$srv_add(id = "add")
+#'   MAE_fd$srv_active(id = "dataset")
+#'   output$call <- renderText({
+#'     paste(
+#'       vapply(MAE_fd$get_call(), deparse1, character(1), collapse = "\n"),
+#'       collapse = "\n"
+#'     )
+#'   })
+#' }
+#' if (interactive()) {
+#'   shinyApp(ui, server)
+#' }
+#'
+#' @keywords internal
 #' @export
 #' @note Although this function is exported for use in other packages, it may be changed or removed in a future release
 #'   at which point any code which relies on this exported function will need to be changed.
+#'
 init_filtered_dataset <- function(dataset, # nolint
                                   dataname,
                                   keys = character(0),

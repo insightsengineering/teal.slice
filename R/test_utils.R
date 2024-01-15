@@ -1,6 +1,8 @@
 # This file contains helper functions used in unit tests.
 
 # compares specified fields between two `teal_slice` objects
+#' @noRd
+#' @keywords internal
 compare_slices <- function(ts1, ts2, fields) {
   shiny::isolate(
     all(vapply(fields, function(x) identical(ts1[[x]], ts2[[x]]), logical(1L)))
@@ -9,6 +11,8 @@ compare_slices <- function(ts1, ts2, fields) {
 
 
 # compare two teal_slice
+#' @noRd
+#' @keywords internal
 expect_identical_slice <- function(x, y) {
   shiny::isolate({
     testthat::expect_true(
@@ -21,6 +25,8 @@ expect_identical_slice <- function(x, y) {
 }
 
 # compare two teal_slices
+#' @noRd
+#' @keywords internal
 expect_identical_slices <- function(x, y) {
   shiny::isolate({
     mapply(

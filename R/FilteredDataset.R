@@ -1,5 +1,5 @@
 # FilteredDataset abstract --------
-#' @title `FilterStates` R6 class
+#' @title `FilterStates` `R6` class
 #' @description
 #' `FilteredDataset` is a class which renders/controls `FilterStates`(s)
 #' Each `FilteredDataset` contains `filter_states` field - a `list` which contains one

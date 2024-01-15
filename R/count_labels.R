@@ -13,46 +13,51 @@
 #'  Length should be the same as `choices`.
 #' @return list of `shiny.tag`
 #' @examples
+#' # use non-exported function from teal.slice
+#' include_js_files <- getFromNamespace("include_js_files", "teal.slice")
+#' include_css_files <- getFromNamespace("include_css_files", "teal.slice")
+#' countBars <- getFromNamespace("countBars", "teal.slice")
+#' updateCountBars <- getFromNamespace("updateCountBars", "teal.slice")
 #'
 #' choices <- sample(as.factor(c("a", "b", "c")), size = 20, replace = TRUE)
 #' counts <- table(choices)
-#' labels <- teal.slice:::countBars(
+#' labels <- countBars(
 #'   inputId = "counts",
 #'   choices = c("a", "b", "c"),
 #'   countsmax = counts,
 #'   countsnow = unname(counts)
 #' )
 #'
-#' app <- shinyApp(
-#'   ui = fluidPage(
-#'     div(
-#'       class = "choices_state",
-#'       teal.slice:::include_js_files("count-bar-labels.js"),
-#'       teal.slice:::include_css_files(pattern = "filter-panel"),
-#'       checkboxGroupInput(
-#'         inputId = "choices",
-#'         selected = levels(choices),
-#'         choiceNames = labels,
-#'         choiceValues = levels(choices),
-#'         label = NULL
-#'       )
+#'
+#' ui <- fluidPage(
+#'   div(
+#'     class = "choices_state",
+#'     include_js_files("count-bar-labels.js"),
+#'     include_css_files(pattern = "filter-panel"),
+#'     checkboxGroupInput(
+#'       inputId = "choices",
+#'       selected = levels(choices),
+#'       choiceNames = labels,
+#'       choiceValues = levels(choices),
+#'       label = NULL
 #'     )
-#'   ),
-#'   server = function(input, output, session) {
-#'     observeEvent(input$choices, {
-#'       new_counts <- counts
-#'       new_counts[!names(new_counts) %in% input$choices] <- 0
-#'       teal.slice:::updateCountBars(
-#'         inputId = "counts",
-#'         choices = levels(choices),
-#'         countsmax = counts,
-#'         countsnow = unname(new_counts)
-#'       )
-#'     })
-#'   }
+#'   )
 #' )
+#' server <- function(input, output, session) {
+#'   observeEvent(input$choices, {
+#'     new_counts <- counts
+#'     new_counts[!names(new_counts) %in% input$choices] <- 0
+#'     updateCountBars(
+#'       inputId = "counts",
+#'       choices = levels(choices),
+#'       countsmax = counts,
+#'       countsnow = unname(new_counts)
+#'     )
+#'   })
+#' }
+#'
 #' if (interactive()) {
-#'   shinyApp(app$ui, app$server)
+#'   shinyApp(ui, server)
 #' }
 #' @keywords internal
 countBars <- function(inputId, choices, countsmax, countsnow = NULL) { # nolint
@@ -65,7 +70,6 @@ countBars <- function(inputId, choices, countsmax, countsnow = NULL) { # nolint
   }
 
   ns <- NS(inputId)
-  counttotal <- sum(countsmax)
 
   mapply(
     countBar,
@@ -82,7 +86,7 @@ countBars <- function(inputId, choices, countsmax, countsnow = NULL) { # nolint
 
 #' Progress bar with label
 #'
-#' Progress bar with label
+#' Progress bar with label.
 #' @param session (`session`) object passed to function given to `shinyServer`.
 #' @param inputId (`character(1)`) `shiny` id
 #' @param label (`character(1)`) Text to display followed by counts

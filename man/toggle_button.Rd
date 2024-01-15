@@ -35,10 +35,13 @@ which may contain a child \verb{<i>} tag that specifies an icon to be displayed.
 \code{toggle_title} calls the \code{attr} method to modify the \code{Title} attribute of the button.
 }
 \examples{
-library(shiny)
+# use non-exported function from teal.slice
+toggle_icon <- getFromNamespace("toggle_icon", "teal.slice")
+
+library(shinyjs)
 
 ui <- fluidPage(
-  shinyjs::useShinyjs(),
+  useShinyjs(),
   actionButton("hide_content", label = "hide", icon = icon("xmark")),
   actionButton("show_content", label = "show", icon = icon("check")),
   actionButton("toggle_content", label = "toggle", icon = icon("angle-down")),
@@ -51,27 +54,27 @@ ui <- fluidPage(
 
 server <- function(input, output, session) {
   observeEvent(input$hide_content,
-    {
-      shinyjs::hide("content")
-      toggle_icon("toggle_content", c("fa-angle-down", "fa-angle-right"), one_way = TRUE)
-    },
-    ignoreInit = TRUE
+               {
+                 hide("content")
+                 toggle_icon("toggle_content", c("fa-angle-down", "fa-angle-right"), one_way = TRUE)
+               },
+               ignoreInit = TRUE
   )
 
   observeEvent(input$show_content,
-    {
-      shinyjs::show("content")
-      toggle_icon("toggle_content", c("fa-angle-right", "fa-angle-down"), one_way = TRUE)
-    },
-    ignoreInit = TRUE
+               {
+                 show("content")
+                 toggle_icon("toggle_content", c("fa-angle-right", "fa-angle-down"), one_way = TRUE)
+               },
+               ignoreInit = TRUE
   )
 
   observeEvent(input$toggle_content,
-    {
-      shinyjs::toggle("content")
-      toggle_icon("toggle_content", c("fa-angle-right", "fa-angle-down"))
-    },
-    ignoreInit = TRUE
+               {
+                 toggle("content")
+                 toggle_icon("toggle_content", c("fa-angle-right", "fa-angle-down"))
+               },
+               ignoreInit = TRUE
   )
 
   output$printout <- renderPrint({
@@ -81,6 +84,5 @@ server <- function(input, output, session) {
 if (interactive()) {
   shinyApp(ui, server)
 }
-
 }
 \keyword{internal}

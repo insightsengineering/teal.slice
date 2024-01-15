@@ -53,7 +53,7 @@
 #' @param id (`character(1)`) identifier of the filter. Must be specified when `expr` is set.
 #'  When `varname` is specified then `id` is set to `"{dataname} {varname}"` by default.
 #' @param expr (`character(1)`) string providing a logical expression.
-#'  Must be a valid R expression which can be evaluated in the context of the data set.
+#'  Must be a valid `R` expression which can be evaluated in the context of the data set.
 #'  For a `data.frame` `var == "x"` is sufficient, but `MultiAssayExperiment::subsetByColData`
 #'  requires `dataname` prefix, *e.g.* `data$var == "x"`.
 #' @param choices (optional `vector`) specifying allowed choices;
@@ -262,7 +262,6 @@ jsonify <- function(x, trim_lines) {
 #' This function is used by the `format` methods for `teal_slice` and `teal_slices`.
 #' @param x `list`, possibly recursive, obtained from `teal_slice` or `teal_slices`.
 #' @return A `JSON` string.
-#' @keywords internal
 #
 #' @param x (`list`) representation of `teal_slices` object.
 #' @keywords internal
@@ -283,6 +282,18 @@ to_json <- function(x) {
   jsonlite::toJSON(no_unbox(x), pretty = TRUE, auto_unbox = TRUE, digits = 16, null = "null")
 }
 
+#' Format `POSIXt` for storage
+#'
+#' Convert `POSIXt` date time object to character representation in UTC time zone.
+#'
+#' Date times are stored as string representations expressed in the UTC time zone.
+#' The storage format is `YYYY-MM-DD HH:MM:SS`.
+#'
+#' @param x (`POSIXt`) vector of date time values or anything else
+#'
+#' @return If `x` is of class `POSIXt`, a character vector, otherwise `x` itself.
+#'
+#' @keywords internal
 format_time <- function(x) {
   if ("POSIXt" %in% class(x)) {
     format(x, format = "%Y-%m-%d %H:%M:%S", usetz = TRUE, tz = "UTC")
@@ -291,7 +302,7 @@ format_time <- function(x) {
   }
 }
 
-#' Justify Colons in `JSON` String
+#' Justify colons in `JSON` string
 #'
 #' This function takes a `JSON` string as input, splits it into lines, and pads element names
 #' with spaces so that colons are justified between lines.
@@ -317,7 +328,7 @@ justify_json <- function(json) {
   vapply(json_lines_split, function(x) paste0(format_name(x[1], name_width), stats::na.omit(x[2])), character(1))
 }
 
-#' Trim Lines in `JSON` String
+#' Trim lines in `JSON` string
 #'
 #' This function takes a `JSON` string as input and returns a modified version of the
 #' input where the values portion of each line is trimmed for a less messy console output.
@@ -338,6 +349,8 @@ trim_lines_json <- function(x) {
 
 #' Default `teal_slice` id
 #'
+#' Create a slice id if none provided.
+#'
 #' Function returns a default `id` for a `teal_slice` object which needs
 #' to be distinct from other `teal_slice` objects created for any
 #' `FilterStates` object. Returned `id` can be treated as a location of
@@ -348,10 +361,11 @@ trim_lines_json <- function(x) {
 #' which exists in multiple `SummarizedExperiment`s or exists in both `colData`
 #' and `rowData` of given experiment.
 #' For such a vector `teal.slice` doesn't allow to activate more than one filters.
-#'
 #' In case of `teal_slice_expr` `id` is mandatory and must be unique.
+#'
 #' @param x (`teal_slice` or `list`)
 #' @return (`character(1)`) `id` for a `teal_slice` object.
+#'
 #' @keywords internal
 get_default_slice_id <- function(x) {
   checkmate::assert_multi_class(x, c("teal_slice", "list"))

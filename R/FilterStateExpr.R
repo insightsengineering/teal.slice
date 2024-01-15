@@ -6,14 +6,13 @@
 #'
 #' @description Class to handle filter expression.
 #'
-#'
-#' @details
-#' This class is responsible for displaying filter card and returning filter expression
-#'
-#' @keywords internal
-#'
 #' @examples
-#' filter_state <- teal.slice:::FilterStateExpr$new(
+#' # use non-exported function from teal.slice
+#' include_js_files <- getFromNamespace("include_js_files", "teal.slice")
+#' include_css_files <- getFromNamespace("include_css_files", "teal.slice")
+#' FilterStateExpr <- getFromNamespace("FilterStateExpr", "teal.slice")
+#'
+#' filter_state <- FilterStateExpr$new(
 #'   slice = teal_slice(
 #'     dataname = "x",
 #'     id = "FA",
@@ -24,13 +23,12 @@
 #' filter_state$get_call()
 #'
 #' # working filter in an app
-#' library(shiny)
 #' library(shinyjs)
 #'
 #' ui <- fluidPage(
 #'   useShinyjs(),
-#'   teal.slice:::include_css_files(pattern = "filter-panel"),
-#'   teal.slice:::include_js_files(pattern = "count-bar-labels"),
+#'   include_css_files(pattern = "filter-panel"),
+#'   include_js_files(pattern = "count-bar-labels"),
 #'   column(4, div(
 #'     h4("ChoicesFilterState"),
 #'     filter_state$ui("fs")
@@ -55,6 +53,11 @@
 #' if (interactive()) {
 #'   shinyApp(ui, server)
 #' }
+#' @details
+#' This class is responsible for displaying filter card and returning filter expression
+#'
+#' @keywords internal
+#'
 FilterStateExpr <- R6::R6Class( # nolint
   classname = "FilterStateExpr",
   # public methods ----
