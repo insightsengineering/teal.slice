@@ -96,27 +96,27 @@ eval_expr_with_msg <- function(expr, env) {
 #'
 #' server <- function(input, output, session) {
 #'   observeEvent(input$hide_content,
-#'                {
-#'                  hide("content")
-#'                  toggle_icon("toggle_content", c("fa-angle-down", "fa-angle-right"), one_way = TRUE)
-#'                },
-#'                ignoreInit = TRUE
+#'     {
+#'       hide("content")
+#'       toggle_icon("toggle_content", c("fa-angle-down", "fa-angle-right"), one_way = TRUE)
+#'     },
+#'     ignoreInit = TRUE
 #'   )
 #'
 #'   observeEvent(input$show_content,
-#'                {
-#'                  show("content")
-#'                  toggle_icon("toggle_content", c("fa-angle-right", "fa-angle-down"), one_way = TRUE)
-#'                },
-#'                ignoreInit = TRUE
+#'     {
+#'       show("content")
+#'       toggle_icon("toggle_content", c("fa-angle-right", "fa-angle-down"), one_way = TRUE)
+#'     },
+#'     ignoreInit = TRUE
 #'   )
 #'
 #'   observeEvent(input$toggle_content,
-#'                {
-#'                  toggle("content")
-#'                  toggle_icon("toggle_content", c("fa-angle-right", "fa-angle-down"))
-#'                },
-#'                ignoreInit = TRUE
+#'     {
+#'       toggle("content")
+#'       toggle_icon("toggle_content", c("fa-angle-right", "fa-angle-down"))
+#'     },
+#'     ignoreInit = TRUE
 #'   )
 #'
 #'   output$printout <- renderPrint({
