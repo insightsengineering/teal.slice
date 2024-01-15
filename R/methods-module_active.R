@@ -50,7 +50,7 @@ setGeneric("ui_active", function(id, data, label = character(0)) {
 
 ## default method ----
 setMethod("ui_active", c(data = "ANY"), function(id, data, label) {
-  stop("ui_active not implemented for class ", toString(class(data)), call. = FALSE)
+  tagList(NULL)
 })
 
 ## data.frame method ----
@@ -153,7 +153,7 @@ setMethod(
   "srv_active",
   c(data = "ANY"),
   function(id, data, reactive_state_list, remove_state_callback) {
-    stop("srv_active not implemented for class ", toString(class(data)), call. = FALSE)
+    NULL
   })
 
 
