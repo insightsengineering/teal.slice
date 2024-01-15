@@ -7,8 +7,6 @@
 \code{MAEFilteredDataset} \code{R6} class
 
 \code{MAEFilteredDataset} \code{R6} class
-
-\code{MAEFilteredDataset} \code{R6} class
 }
 \examples{
 # use non-exported function from teal.slice
@@ -31,7 +29,7 @@ fs <- teal_slices(
   )
 )
 dataset$set_filter_state(state = fs)
-shiny::isolate(dataset$get_filter_state())
+isolate(dataset$get_filter_state())
 
 }
 \keyword{internal}

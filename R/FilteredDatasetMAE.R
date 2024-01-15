@@ -1,4 +1,5 @@
 # MAEFilteredDataset ------
+
 #' @title `MAEFilteredDataset` `R6` class
 #' @keywords internal
 #' @examples
@@ -22,9 +23,8 @@
 #'   )
 #' )
 #' dataset$set_filter_state(state = fs)
-#' shiny::isolate(dataset$get_filter_state())
+#' isolate(dataset$get_filter_state())
 #'
-#' @title `MAEFilteredDataset` `R6` class
 MAEFilteredDataset <- R6::R6Class( # nolint
   classname = "MAEFilteredDataset",
   inherit = FilteredDataset,

@@ -8,6 +8,29 @@ The \code{DataframeFilteredDataset} \code{R6} class
 
 The \code{DataframeFilteredDataset} \code{R6} class
 }
+\examples{
+# use non-exported function from teal.slice
+DataframeFilteredDataset <- getFromNamespace("DataframeFilteredDataset", "teal.slice")
+
+ds <- DataframeFilteredDataset$new(iris, "iris")
+ds$set_filter_state(
+  teal_slices(
+    teal_slice(dataname = "iris", varname = "Species", selected = "virginica"),
+    teal_slice(dataname = "iris", varname = "Petal.Length", selected = c(2.0, 5))
+  )
+)
+isolate(ds$get_filter_state())
+isolate(ds$get_call())
+
+## set_filter_state
+dataset <- DataframeFilteredDataset$new(iris, "iris")
+fs <- teal_slices(
+  teal_slice(dataname = "iris", varname = "Species", selected = "virginica"),
+  teal_slice(dataname = "iris", varname = "Petal.Length", selected = c(2.0, 5))
+)
+dataset$set_filter_state(state = fs)
+isolate(dataset$get_filter_state())
+}
 \keyword{internal}
 \section{Super class}{
 \code{\link[teal.slice:FilteredDataset]{teal.slice::FilteredDataset}} -> \code{DataframeFilteredDataset}

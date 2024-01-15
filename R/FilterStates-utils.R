@@ -22,7 +22,6 @@
 #' # use non-exported function from teal.slice
 #' init_filter_states <- getFromNamespace("init_filter_states", "teal.slice")
 #'
-#' library(shiny)
 #' df <- data.frame(
 #'   character = letters,
 #'   numeric = seq_along(letters),

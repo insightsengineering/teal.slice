@@ -70,10 +70,7 @@ include_js_files <- function(pattern) {
 #' # use non-exported function from teal.slice
 #' make_c_call <- getFromNamespace("make_c_call", "teal.slice")
 #' make_c_call(1:3)
-#' # [1] 1 2 3
-#'
 #' make_c_call(1)
-#' # [1] 1
 #'
 #' @keywords internal
 make_c_call <- function(choices) {

@@ -34,7 +34,7 @@
 #'   extract_type = "matrix"
 #' )
 #'
-#' shiny::isolate(filter_state$get_call())
+#' isolate(filter_state$get_call())
 #'
 #' ui <- fluidPage(
 #'   filter_state$ui(id = "app"),

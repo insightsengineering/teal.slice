@@ -13,7 +13,7 @@
 #'   x = c(LETTERS, NA),
 #'   slice = teal_slice(varname = "x", dataname = "data")
 #' )
-#' shiny::isolate(filter_state$get_call())
+#' isolate(filter_state$get_call())
 #' filter_state$set_state(
 #'   teal_slice(
 #'     dataname = "data",
@@ -22,10 +22,9 @@
 #'     keep_na = TRUE
 #'   )
 #' )
-#' shiny::isolate(filter_state$get_call())
+#' isolate(filter_state$get_call())
 #'
 #' # working filter in an app
-#' library(shiny)
 #' library(shinyjs)
 #'
 #' data_choices <- c(sample(letters[1:4], 100, replace = TRUE), NA)

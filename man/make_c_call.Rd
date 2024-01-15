@@ -20,10 +20,7 @@ has only one element, the element is returned directly.
 # use non-exported function from teal.slice
 make_c_call <- getFromNamespace("make_c_call", "teal.slice")
 make_c_call(1:3)
-# [1] 1 2 3
-
 make_c_call(1)
-# [1] 1
 
 }
 \keyword{internal}

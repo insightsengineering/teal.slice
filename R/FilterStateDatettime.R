@@ -9,12 +9,12 @@
 #' include_js_files <- getFromNamespace("include_js_files", "teal.slice")
 #' DatetimeFilterState <- getFromNamespace("DatetimeFilterState", "teal.slice")
 #'
-#' filter_state <- teal.slice:::DatetimeFilterState$new(
+#' filter_state <- DatetimeFilterState$new(
 #'   x = c(Sys.time() + seq(0, by = 3600, length.out = 10), NA),
 #'   slice = teal_slice(varname = "x", dataname = "data"),
 #'   extract_type = character(0)
 #' )
-#' shiny::isolate(filter_state$get_call())
+#' isolate(filter_state$get_call())
 #' filter_state$set_state(
 #'   teal_slice(
 #'     dataname = "data",
@@ -23,10 +23,9 @@
 #'     keep_na = TRUE
 #'   )
 #' )
-#' shiny::isolate(filter_state$get_call())
+#' isolate(filter_state$get_call())
 #'
 #' # working filter in an app
-#' library(shiny)
 #' library(shinyjs)
 #'
 #' datetimes <- as.POSIXct(c("2012-01-01 12:00:00", "2020-01-01 12:00:00"))

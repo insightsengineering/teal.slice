@@ -31,11 +31,10 @@
 #' 2. `dataname`: the name of one of the datasets in this `FilteredData` object
 #' 3. `varname`: one of the columns in a dataset
 #'
-#' @example
+#' @examples
 #' # use non-exported function from teal.slice
 #' FilteredData <- getFromNamespace("FilteredData", "teal.slice")
 #'
-#' library(shiny)
 #' datasets <- FilteredData$new(list(iris = iris, mtcars = mtcars))
 #'
 #' # get datanames
@@ -81,7 +80,7 @@
 #'     )
 #'   )
 #' datasets$set_filter_state(state = fs)
-#' shiny::isolate(datasets$get_filter_state())
+#' isolate(datasets$get_filter_state())
 #'
 #' @keywords internal
 #'
