@@ -2,12 +2,9 @@
 % Please edit documentation in R/methods-module_overview.R
 \name{get_filter_overview}
 \alias{get_filter_overview}
-\alias{get_filter_overview.default}
 \title{Get filter overview}
 \usage{
 get_filter_overview(data_unfiltered, data_filtered, dataname)
-
-\method{get_filter_overview}{default}(data_unfiltered, data_filtered, dataname)
 }
 \arguments{
 \item{data_filtered}{(\code{object}) Object of any class but must be the same class as \code{data}}
@@ -15,7 +12,7 @@ get_filter_overview(data_unfiltered, data_filtered, dataname)
 \item{dataname}{(\code{character}) Name of the dataset}
 }
 \value{
-\code{data_frame} with columns \code{dataname} and usually \code{obs}, \code{obs_filtered}.
+\code{data.frame} with columns \code{dataname} and usually \code{obs}, \code{obs_filtered}.
 }
 \description{
 Summary of the dataset in the filter panel
@@ -47,4 +44,3 @@ Same applies to supported data types. If you want to override default methods fo
 data types, say data.frame, you can register a new S3 methods \verb{<method>.data.frame}.
 }
 
-\keyword{internal}

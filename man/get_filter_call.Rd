@@ -2,12 +2,16 @@
 % Please edit documentation in R/methods-get_filter_call.R
 \name{get_filter_call}
 \alias{get_filter_call}
-\alias{get_filter_call.default}
+\alias{get_filter_call-ANY-method}
+\alias{get_filter_call-data.frame-method}
+\alias{get_filter_call-DataFrame-method}
+\alias{get_filter_call-matrix-method}
+\alias{get_filter_call-Matrix-method}
+\alias{get_filter_call-SummarizedExperiment-method}
+\alias{get_filter_call-MultiAssayExperiment-method}
 \title{Get filter call}
 \usage{
 get_filter_call(data, states_list)
-
-\method{get_filter_call}{default}(data, states_list)
 }
 \arguments{
 \item{data}{(\code{object}) Object of any class}
