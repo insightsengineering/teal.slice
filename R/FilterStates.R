@@ -244,10 +244,10 @@ FilterStates <- R6::R6Class( # nolint
     #'
     #' @param data (`data.frame`)\cr
     #'   data which are supposed to be filtered
-    #' @param state (`named list`)\cr
-    #'   should contain values which are initial selection in the `FilterState`.
-    #'   Names of the `list` element should correspond to the name of the
-    #'   column in `data`.
+    #' @param state (`teal_slices`)\cr
+    #'   specifying `FilterState` objects to set filter State;
+    #'   `teal_slice`s  must contain `dataname` correspond to one with which `FilterState`
+    #'   was intitalized.
     #' @return function which throws an error
     set_filter_state = function(state) {
       shiny::isolate({

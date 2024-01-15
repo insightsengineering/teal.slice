@@ -84,11 +84,10 @@ MAEFilteredDataset <- R6::R6Class( # nolint
     #' @description
     #' Set filter state
     #'
-    #' @param state (`named list`)\cr
-    #'  names of the list should correspond to the names of the initialized `FilterStates`
-    #'  kept in `private$filter_states`. For this object they are `"subjects"` and
-    #'  names of the experiments. Values of initial state should be relevant
-    #'  to the referred column.
+    #' @param state (`teal_slices`)\cr
+    #'   specifying `FilterState` objects to set filter State;
+    #'   `teal_slice`s  must contain `dataname` correspond to one with which `FilterState`
+    #'   was intitalized.
     #' @return `NULL` invisibly
     #'
     set_filter_state = function(state) {

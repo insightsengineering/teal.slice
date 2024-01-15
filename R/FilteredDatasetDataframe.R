@@ -177,7 +177,10 @@ DataframeFilteredDataset <- R6::R6Class( # nolint
     #' @description
     #' Set filter state
     #'
-    #' @param state (`teal_slice`) object
+    #' @param state (`teal_slices`)\cr
+    #'   specifying `FilterState` objects to set filter State;
+    #'   `teal_slice`s  must contain `dataname` correspond to one with which `FilterState`
+    #'   was intitalized.
     #' @return `NULL` invisibly
     #'
     set_filter_state = function(state) {
