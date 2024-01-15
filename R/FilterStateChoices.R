@@ -320,7 +320,7 @@ ChoicesFilterState <- R6::R6Class( # nolint
           values <- as.character(values)
           if (anyNA(values)) stop()
         },
-        error = function(e) stop("The vactor of set values must contain values coercible to character.")
+        error = function(e) stop("The vector of set values must contain values coercible to character.")
       )
       values
     },
