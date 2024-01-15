@@ -154,10 +154,7 @@ Set filter state
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
-\item{\code{state}}{(\code{teal_slices})\cr
-specifying \code{FilterState} objects to set filter State;
-\code{teal_slice}s  must contain \code{dataname} correspond to one with which \code{FilterState}
-was intitalized.}
+\item{\code{state}}{(\code{teal_slices})}
 }
 \if{html}{\out{</div>}}
 }
