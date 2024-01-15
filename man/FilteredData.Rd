@@ -62,12 +62,11 @@ datasets$set_filter_state(
 isolate(datasets$get_filter_state())
 isolate(datasets$get_call("iris"))
 isolate(datasets$get_call("mtcars"))
+
 ### set_filter_state
 
 utils::data(miniACC, package = "MultiAssayExperiment")
-
 datasets <- FilteredData$new(list(iris = iris, mae = miniACC))
-
 fs <-
   teal_slices(
     teal_slice(
