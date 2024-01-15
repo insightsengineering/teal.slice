@@ -19,7 +19,38 @@
 #'
 #' @param ... additional arguments to be saved as a list in `private$extras` field
 #'
-#' @seealso examples found here: `vignette("internal_function_examples", package = "teal.slice")`.
+#' @examples
+#' # use non-exported function from teal.slice
+#' include_js_files <- getFromNamespace("include_js_files", "teal.slice")
+#' init_filter_state <- getFromNamespace("init_filter_state", "teal.slice")
+#'
+#' filter_state <- init_filter_state(
+#'   x = c(1:10, NA, Inf),
+#'   x_reactive = reactive(c(1:10, NA, Inf)),
+#'   slice = teal_slice(
+#'     varname = "x",
+#'     dataname = "dataname"
+#'   ),
+#'   extract_type = "matrix"
+#' )
+#'
+#' isolate(filter_state$get_call())
+#'
+#' ui <- fluidPage(
+#'   filter_state$ui(id = "app"),
+#'   verbatimTextOutput("call")
+#' )
+#' server <- function(input, output, session) {
+#'   filter_state$server("app")
+#'
+#'   output$call <- renderText(
+#'     deparse1(filter_state$get_call(), collapse = "\n")
+#'   )
+#' }
+#'
+#' if (interactive()) {
+#'   shinyApp(ui, server)
+#' }
 #'
 #' @return `FilterState` object
 #' @keywords internal

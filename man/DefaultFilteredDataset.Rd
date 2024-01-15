@@ -6,8 +6,13 @@
 \description{
 Stores any object as inert entity. Filtering is not supported.
 }
-\seealso{
-examples found here: \code{vignette("internal_function_examples", package = "teal.slice")}.
+\examples{
+# use non-exported function from teal.slice
+DefaultFilteredDataset <- getFromNamespace("DefaultFilteredDataset", "teal.slice")
+
+ds <- DefaultFilteredDataset$new(letters, "letters")
+isolate(ds$get_filter_state())
+isolate(ds$get_call())
 }
 \keyword{internal}
 \section{Super class}{

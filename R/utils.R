@@ -22,20 +22,6 @@ check_simple_name <- function(name) {
   }
 }
 
-#' Resolve the expected bootstrap theme
-#' @keywords internal
-get_teal_bs_theme <- function() {
-  bs_theme <- getOption("teal.bs_theme")
-  if (is.null(bs_theme)) {
-    NULL
-  } else if (!inherits(bs_theme, "bs_theme")) {
-    warning("teal.bs_theme has to be of a bslib::bs_theme class, the default shiny bootstrap is used.")
-    NULL
-  } else {
-    bs_theme
-  }
-}
-
 #' Include `JS` files from `/inst/js/` package directory to application header
 #'
 #' `system.file` should not be used to access files in other packages, it does
@@ -66,7 +52,11 @@ include_js_files <- function(pattern) {
 #'
 #' @return A `c` call.
 #'
-#' @seealso examples found here: `vignette("internal_function_examples", package = "teal.slice")`.
+#' @examples
+#' # use non-exported function from teal.slice
+#' make_c_call <- getFromNamespace("make_c_call", "teal.slice")
+#' make_c_call(1:3)
+#' make_c_call(1)
 #'
 #' @keywords internal
 make_c_call <- function(choices) {

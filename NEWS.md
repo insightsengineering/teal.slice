@@ -26,7 +26,7 @@
 * It is now possible to initialize the filter panel without the "Add filter variables" panel through `allow_add` in `teal_slices`.
 * It is now possible to set a filter that cannot be removed by the app user. See `anchored` argument in `teal_slice`.
 * It is now possible to set a filter whose selection cannot be changed. See `fixed` argument in `teal_slice`.
-* It is now possible to limit choices within a variable to a single value only. See `multuple` argument in `teal_slice`  .
+* It is now possible to limit choices within a variable to a single value only. See `multiple` argument in `teal_slice`  .
 * Changed appearance of filter cards to a collapsible accordion.
 * Replaced `sliderInput` with interactive `plotly` chart to allow the user to zoom in on the variable distribution.
 * Implemented reactive counts in single filter cards to compare filtered and unfiltered variable distributions. See `count_type` argument in `teal_slices`.
